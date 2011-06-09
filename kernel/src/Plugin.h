@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include "IPluginActivator.h"
-
+#include "PluginManifest.h"
 
 namespace _2Real
 {
@@ -17,8 +17,7 @@ namespace _2Real
 			INSTALLED = 0x00000002,
 			RESOLVED = 0x00000004,
 			STARTING = 0x00000008,
-			STOPPING = 0x00000010,
-			ACTIVE = 0x00000020
+			ACTIVE = 0x00000010,
 		};
 
 		enum PluginActivationPolicy
@@ -29,9 +28,9 @@ namespace _2Real
 
 		~Plugin();
 
-		void start();				//starts an installed plugin
-		void stop();				//stops an installed plugin
-		void uninstall();			//uninstalls a plugin from the framework
+		void start(bool overrideStartingPolicy);	//starts an installed plugin
+		void stop();								//stops an installed plugin
+		void uninstall();							//uninstalls a plugin from the framework
 
 		const PluginState getState();
 
@@ -40,32 +39,27 @@ namespace _2Real
 		Plugin(const std::string& name, PluginFrameworkContext* fwContext);
 		
 		void activate();
-		void deactivate(const bool activated);
-		
+		void deactivate();
 		void startDependencies();
 		void stopDependencies();
-		
+		void resolveDependencies();
+		void removeDependencies();
 		void loadLibrary();
 		void unloadLibrary();
 
 		PluginContext* getContext();
 		PluginFrameworkContext* getFrameworkContext();
 
-		PluginFrameworkContext*		m_FrameworkContext;
-		PluginContext*				m_Context;
-		
+		PluginFrameworkContext*		m_FrameworkContext;		//framework context
+		PluginContext*				m_Context;				//execution context
 		PluginState					m_State;
-		PluginLoader				m_PluginLoader;
-
-		bool						m_isActivating;
-		bool						m_isDeactivating;
-
+		PluginLoader				m_PluginLoader;			//poco classloader
 		std::string					m_PluginName;
 		std::string					m_LibraryPath;
-
-		IPluginActivator*			m_Activator;
-
-		PluginActivationPolicy		m_ActivationPolicy;
+		IPluginActivator*			m_Activator;			//the activator interface, that every plugin needs to implement
+		PluginActivationPolicy		m_ActivationPolicy;		//lazy or eager activation
+		Plugins						m_Dependencies;			//the other plugins on which this one depends
+		PluginManifest				m_Metadata;				//plugin metadata
 
 		friend class PluginFrameworkContext;
 		friend class PluginContext;

@@ -6,10 +6,12 @@
 #include "Poco/Path.h"
 #include "Poco/DirectoryIterator.h"
 
+#include <iostream>
+#include <sstream>
+
 namespace _2Real
 {
-	Plugin::Plugin(const std::string& name, PluginFrameworkContext* fwContext) :	m_FrameworkContext(fwContext), m_State(Plugin::UNINSTALLED), m_isActivating(false), 
-																					m_isDeactivating(false), m_ActivationPolicy(Plugin::ACTIVATION_EAGER), m_Activator(NULL)
+	Plugin::Plugin(const std::string& name, PluginFrameworkContext* fwContext) :	m_FrameworkContext(fwContext), m_State(Plugin::UNINSTALLED), m_ActivationPolicy(Plugin::ACTIVATION_EAGER), m_Activator(NULL)
 	{
 		m_PluginName = name;
 		m_LibraryPath  = std::string(Poco::Path::current() + "..\\..\\plugin\\" + m_PluginName);
@@ -19,6 +21,8 @@ namespace _2Real
 		{
 			m_PluginName = m_PluginName.substr(0, sz-2);
 		}
+
+		m_Metadata.read(Poco::Path::current() + "..\\..\\plugin\\" + m_PluginName + ".xml");
 		 
 		m_Context = new PluginContext(this);
 		m_State = Plugin::INSTALLED;
@@ -31,70 +35,76 @@ namespace _2Real
 		m_FrameworkContext = NULL;
 	}
 
-	void Plugin::start()
+	void Plugin::start(bool overrideStartingPolicy)
 	{
 		if (m_State == Plugin::UNINSTALLED)
 		{
-			throw std::logic_error("Plugin::start trying to start uninstalled plugin");
+			std::cout << "Plugin::start() - plugin is already uninstalled" << std::endl;
+			return;
 		}
 		else if (m_State == Plugin::ACTIVE)
 		{
+			//nothing to do here
+			return;
 		}
-
 		else if (m_State == Plugin::INSTALLED)
 		{
-			try
-			{
-				//m_FrameworkContext->resolvePlugin();
-			}
-			catch (std::logic_error e)
-			{
-				throw;
-			}
-
+			//install all dependencies
+			resolveDependencies();
 			m_State = Plugin::RESOLVED;
 		}
 
-		if (m_ActivationPolicy == Plugin::ACTIVATION_LAZY)
+		if (!overrideStartingPolicy && m_ActivationPolicy == Plugin::ACTIVATION_LAZY)
 		{
 			if (m_State == Plugin::STARTING) 
 			{
+				return;
 			}
 			
 			m_State = STARTING;
 		}
 		else
 		{
-			activate();
+			try
+			{
+				activate();
+			}
+			catch (std::logic_error e)
+			{
+				std::cout << "Plugin::start() - could not activate plugin " << e.what() << std::endl;
+			}
 		}
 	}
 
 	void Plugin::stop()
-	{
-		if (m_State == Plugin::UNINSTALLED)
-		{
-			throw std::logic_error("Plugin::start trying to stop uninstalled plugin");
-		}
-		bool started = false;
-
+	{	
 		switch (m_State)
 		{
+			//is already uninstalled
+			case UNINSTALLED:
+				std::cout << "Plugin::stop() - tried to stop uninstalled plugin" << std::endl;
+				break;
+			
+			//was never started
 			case INSTALLED:
 			case RESOLVED:
-			case STOPPING:
-			case UNINSTALLED:
-				return;
+				break;
 
-			case ACTIVE:
-				started = true;
-			//lazy activation
+			//was waiting to be activated
+			//go back to resolved
 			case STARTING:
+				m_State = RESOLVED;
+				break;
+
+			//was active
+			case ACTIVE:
 				try
 				{
-					//unloadLibrary(started);
+					deactivate();
 				}
-				catch (...)
+				catch (std::logic_error e)
 				{
+					std::cout << "Plugin::stop() - could not deactivate plugin " << e.what() << std::endl;
 				}
 				break;
 		}
@@ -102,125 +112,90 @@ namespace _2Real
 
 	void Plugin::uninstall()
 	{
-		bool resolved = false;
-
 		switch (m_State)
 		{
 		case UNINSTALLED:
-			//throw std::logic_error("Plugin::uninstall trying to uninstall uninstalled plugin");
-		case STARTING:
+			throw std::logic_error("Plugin::uninstall() - plugin is already uninstalled");
+		
 		case ACTIVE:
-		case STOPPING:
-		try
-		{
-			if ((m_State == ACTIVE) | (m_State == STARTING))
-			{
-				try
-				{
-					//unloadLibrary(m_State == ACTIVE);
-				}
-				catch (...)
-				{
-				}
-			}
-		}
-		catch (...)
-		{
-			m_isDeactivating = false;
-		}
+			deactivate();
+			m_State = RESOLVED;
+		
+		case STARTING:
 		case RESOLVED:
-			resolved = true;
-		case INSTALLED:
-			if (resolved)
-			{
-				//event
-			}
+			
+			//remove dependencies from framework
+			removeDependencies();
+			m_State = INSTALLED;
 
+		case INSTALLED:
+			
+			//remove plugin from framework
+			m_FrameworkContext->uninstallPlugin(this);
 			m_State = UNINSTALLED;
-			break;
 		}
 	}
 
 	void Plugin::activate()
 	{
-		if (m_State == Plugin::INSTALLED)
-		{
-			try
-			{
-				//m_FrameworkContext->resolvePlugin(m_Ptr);
-			}
-			catch (...)
-			{
-				throw;
-			}
-			
-			m_State = Plugin::RESOLVED;
-		}
-
 		switch (m_State)
 		{
+		//this should not actually happen, ever
 		case Plugin::INSTALLED:
-			std::logic_error("Plugin::activate internal error");
+			throw std::logic_error("Plugin::activate() - plugin was never resolved");
+		case Plugin::ACTIVE:
+			throw std::logic_error("Plugin::activate() - plugin is already active");
+		case Plugin::UNINSTALLED:
+			throw std::logic_error("Plugin::activate() - plugin is already uninstalled");
+		
+		//can be activated
 		case Plugin::STARTING:
-			if (m_isActivating) 
-			{
-				return;
-			}
 		case Plugin::RESOLVED:
-			m_State = Plugin::STARTING;
-			m_isActivating = true;
 			try
 			{
-				//startDependencies();
+				//start all the plugin on which this one depends first
+				startDependencies();
 				loadLibrary();
 			}
-			catch (...)
+			catch (std::logic_error e)
 			{
-				m_State = Plugin::STOPPING;
-				//removeDependencies();
+				stopDependencies();
+				//go back to resolved state
 				m_State = Plugin::RESOLVED;
-				m_isActivating = false;
-				throw;
+				throw std::logic_error("Plugin::activate could not load library");
 			}
-			m_isActivating = false;
 			break;
-		case Plugin::ACTIVE:
-			break;
-		case Plugin::STOPPING:
-			throw std::logic_error("Plugin::activate start called from stop");
-		case Plugin::UNINSTALLED:
-			throw std::logic_error("Plugin::activate trying to start uninstalled plugin");
 		}
 	}
 
-	void Plugin::deactivate(const bool started)
+	void Plugin::deactivate()
 	{
-		m_State = Plugin::STOPPING;
-		m_isDeactivating = true;
-  
-		try
+		switch (m_State)
 		{
-			if (started && m_Activator)
+		//these should not happen
+		case Plugin::INSTALLED:
+			throw std::logic_error("Plugin::deactivate() - plugin is in installed state");
+		case Plugin::RESOLVED:
+			throw std::logic_error("Plugin::deactivate() - plugin is in resolved state");
+		case Plugin::UNINSTALLED:
+			throw std::logic_error("Plugin::deactivate() - plugin is in uninstalled state");
+		case Plugin::STARTING:
+			throw std::logic_error("Plugin::deactivate() - plugin is in starting state");
+		
+		case Plugin::ACTIVE:
+			try
 			{
-				try
-				{
-					unloadLibrary();
-				}
-				catch (...)
-				{
-				}
+				unloadLibrary();
+			}
+			catch (std::logic_error e)
+			{
+				std::cout << "Plugin::deactivate() - could not unload library " << e.what() << std::endl;
 			}
 
-			//stopDependencies();
-		}
-		catch (...)
-		{
-		}
-
-		if (m_State != Plugin::UNINSTALLED)
-		{
+			stopDependencies();
+			//go back to resolved state
 			m_State = Plugin::RESOLVED;
-			m_isDeactivating = false;
+			break;
 		}
 	}
 
@@ -231,7 +206,7 @@ namespace _2Real
 			m_PluginLoader.loadLibrary(m_LibraryPath);
 			if (!m_PluginLoader.isLibraryLoaded(m_LibraryPath))
 			{
-				throw std::logic_error("Plugin::loadLibrary could not load library");
+				throw std::logic_error("Plugin::loadLibrary() - could not load library");
 			}
 
 			if(m_PluginLoader.canCreate(m_PluginName))
@@ -239,7 +214,7 @@ namespace _2Real
 				m_Activator = m_PluginLoader.create(m_PluginName);
 				if (!m_Activator)
 				{
-					throw std::logic_error("Plugin::loadLibrary could create plugin activator");
+					throw std::logic_error("Plugin::loadLibrary() - could create plugin activator");
 				}
 
 				m_Activator->start(m_Context);
@@ -247,7 +222,7 @@ namespace _2Real
 			}
 			else
 			{
-				throw std::logic_error("Plugin::loadLibrary cannot create plugin activator");
+				throw std::logic_error("Plugin::loadLibrary() - cannot create plugin activator");
 			}
 		}
 		catch(std::logic_error e)
@@ -257,7 +232,7 @@ namespace _2Real
 				m_PluginLoader.unloadLibrary(m_LibraryPath);
 			}
 
-			//error handling
+			throw e;
 		}
 	}
 
@@ -275,13 +250,65 @@ namespace _2Real
 			}
 			else
 			{
-				throw std::logic_error("Plugin::loadLibrary cannot unload library");
+				throw std::logic_error("Plugin::loadLibrary() - library was never loaded");
 			}
 		}
 		catch(std::logic_error e)
 		{
-			//error handling
+			throw e;
 		}
+	}
+
+	void Plugin::resolveDependencies()
+	{
+		/*
+		const std::string dependencies  = m_Metadata.getAttribute("dependencies");
+		std::istringstream pluginstream(dependencies);
+		std::vector<std::string> plugins;
+		plugins.clear();
+
+		std::string plugin;
+		while(std::getline(pluginstream, plugin, ' '))
+		{
+			plugins.push_back(plugin);
+		}
+
+		for (std::vector<std::string>::iterator it = plugins.begin(); it != plugins.end(); it++)
+		{
+			Plugin* p = m_FrameworkContext->installPlugin(*it);
+			m_Dependencies.insert(std::make_pair<std::string, Plugin*>(*it, p));
+		}
+		*/
+	}
+
+	void Plugin::startDependencies()
+	{
+		/*
+		for (std::map<std::string, Plugin*>::iterator it = m_Dependencies.begin(); it != m_Dependencies.end(); it++)
+		{
+			it->second->start(true);
+		}
+		*/
+	}
+
+	void Plugin::removeDependencies()
+	{
+		/*
+		for (std::map<std::string, Plugin*>::iterator it = m_Dependencies.begin(); it != m_Dependencies.end(); it++)
+		{
+			m_FrameworkContext->uninstallPlugin(it->second);
+		}
+		*/
+	}
+
+	void Plugin::stopDependencies()
+	{
+		/*
+		for (std::map<std::string, Plugin*>::iterator it = m_Dependencies.begin(); it != m_Dependencies.end(); it++)
+		{
+			it->second->stop();
+		}
+		*/
 	}
 
 	PluginFrameworkContext* Plugin::getFrameworkContext()

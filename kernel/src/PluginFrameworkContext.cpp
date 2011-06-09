@@ -45,4 +45,10 @@ namespace _2Real
 			}
 		}
 	}
+
+	void PluginFrameworkContext::uninstallPlugin(Plugin* p)
+	{
+		std::map<std::string, Plugin*>::iterator it = m_Plugins.find(p->m_PluginName);
+		m_Plugins.erase(it);
+	}
 }
