@@ -1,3 +1,21 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
 #include "Plugin.h"
 #include "PluginContext.h"
 #include "PluginFrameworkContext.h"
@@ -11,25 +29,26 @@
 
 namespace _2Real
 {
-	Plugin::Plugin(const std::string& name, PluginFrameworkContext* fwContext) :	m_FrameworkContext(fwContext), m_State(Plugin::UNINSTALLED), m_ActivationPolicy(Plugin::ACTIVATION_EAGER), m_Activator(NULL)
+	Plugin::Plugin(const std::string& name, PluginFrameworkContext* fwContext) :
+					m_FrameworkContext(fwContext), m_State(Plugin::UNINSTALLED), m_ActivationPolicy(Plugin::ACTIVATION_EAGER), m_Activator(NULL)
 	{
 		m_PluginName = name;
-		m_LibraryPath  = std::string(Poco::Path::current() + "..\\..\\plugin\\" + m_PluginName);
+		m_LibraryPath  = std::string(Poco::Path::current() + "..\\..\\testplugins\\" + m_PluginName);
+		m_Metadata = new PluginManifest(Poco::Path::current() + "..\\..\\testplugins\\" + m_PluginName + ".xml");
 
 		int sz = m_PluginName.size();
 		if(m_PluginName[sz-1] == 'd' && m_PluginName[sz-2] == '_')
 		{
 			m_PluginName = m_PluginName.substr(0, sz-2);
 		}
-
-		m_Metadata.read(Poco::Path::current() + "..\\..\\plugin\\" + m_PluginName + ".xml");
-		 
+		
 		m_Context = new PluginContext(this);
 		m_State = Plugin::INSTALLED;
 	}
 
 	Plugin::~Plugin()
 	{
+		delete m_Metadata;
 		delete m_Context;
 		delete m_Activator;
 		m_FrameworkContext = NULL;
@@ -203,7 +222,15 @@ namespace _2Real
 	{
 		try {
 			
-			m_PluginLoader.loadLibrary(m_LibraryPath);
+			try
+			{
+				m_PluginLoader.loadLibrary(m_LibraryPath);
+			}
+			catch (Poco::Exception& e)
+			{
+				std::cout << e.message() << " " << e.what() << "" << e.displayText() << std::endl;
+			}
+
 			if (!m_PluginLoader.isLibraryLoaded(m_LibraryPath))
 			{
 				throw std::logic_error("Plugin::loadLibrary() - could not load library");
@@ -244,9 +271,6 @@ namespace _2Real
 			{
 				m_Activator->stop(m_Context);
 				m_PluginLoader.unloadLibrary(m_LibraryPath);
-				
-				delete [] m_Activator;
-				m_Activator = NULL;
 			}
 			else
 			{
@@ -257,6 +281,11 @@ namespace _2Real
 		{
 			throw e;
 		}
+	}
+
+	void Plugin::readMetadata()
+	{
+		m_Metadata->readPluginManifest();
 	}
 
 	void Plugin::resolveDependencies()
@@ -311,12 +340,12 @@ namespace _2Real
 		*/
 	}
 
-	PluginFrameworkContext* Plugin::getFrameworkContext()
+	PluginFrameworkContext* Plugin::frameworkContextPtr()
 	{
 		return m_FrameworkContext;
 	}
 
-	PluginContext* Plugin::getContext()
+	PluginContext* Plugin::contextPtr()
 	{
 		return m_Context;
 	}

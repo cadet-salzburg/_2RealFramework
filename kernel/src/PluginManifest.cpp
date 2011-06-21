@@ -1,15 +1,35 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
 #include "PluginManifest.h"
+
+#include "Poco/SAX/SAXParser.h"
+#include "Poco/SAX/Attributes.h"
+#include "Poco/SAX/InputSource.h"
+
+#include <fstream>
+#include <iostream>
 
 namespace _2Real
 {
-	PluginManifest::PluginManifest()
+	PluginManifest::PluginManifest(std::string path) : m_ManifestFile(path)
 	{
 		m_Attributes.clear();
-	}
-
-	PluginManifest::PluginManifest(const std::string& path)
-	{
-		//todo: read manifest file
 	}
 
 	PluginManifest::~PluginManifest()
@@ -17,24 +37,54 @@ namespace _2Real
 		m_Attributes.clear();
 	}
 
-	const bool read(const std::string& path)
+	void PluginManifest::readPluginManifest()
 	{
-		//todo: read manifest file
-		
-		return true;
-	}
-
-	const std::string PluginManifest::getAttribute(const std::string& key)
-	{
-		std::map<std::string, std::string>::const_iterator it;
-		it = m_Attributes.find(0);
-
-		if (it == m_Attributes.end())
+		if (!m_Attributes.empty())
 		{
-			std::string result = "";
-			return result;
+			return;
 		}
 
-		return it->second;
+		Poco::XML::InputSource xml = Poco::XML::InputSource(m_ManifestFile);
+		Poco::XML::SAXParser parser = Poco::XML::SAXParser();
+		
+		parser.setContentHandler(this);
+		parser.parse(&xml);
+	}
+
+	const std::string PluginManifest::getAttribute(const std::string& key) const
+	{
+	}
+
+	void PluginManifest::startDocument()
+	{
+	}
+
+	void PluginManifest::endDocument()
+	{
+	}
+
+	void PluginManifest::startElement(const Poco::XML::XMLString& namespaceURI, const Poco::XML::XMLString& localName, const Poco::XML::XMLString& qname, const Poco::XML::Attributes& attributes)
+	{
+		if (localName.compare("Dependency") == 0)
+		{
+			int sz = attributes.getLength();
+			for (int i=0; i<sz; i++)
+			{
+				//save only the name of the plugin, for the time being
+				m_Attributes.insert(std::pair<std::string, std::string>("dependency", attributes.getValue(i)));
+			}
+		}
+		else if (localName.compare("ActivationPolicy") == 0)
+		{
+			m_Attributes.insert(std::pair<std::string, std::string>("activation", attributes.getValue(0)));
+		}
+		else
+		{
+			//todo: other attributes
+		}
+	}
+
+	void PluginManifest::endElement(const Poco::XML::XMLString& uri, const Poco::XML::XMLString& localName, const Poco::XML::XMLString& qname)
+	{
 	}
 }

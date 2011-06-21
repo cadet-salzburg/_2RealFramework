@@ -45,6 +45,15 @@
     <ClInclude Include="..\..\src\IPluginActivator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\ServiceNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\FrameworkNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PluginNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Plugin.cpp">
@@ -66,6 +75,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ServiceRegistration.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ServiceNotification.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\FrameworkNotification.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PluginNotification.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
