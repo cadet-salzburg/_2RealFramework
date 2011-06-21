@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +25,6 @@
 */
 
 #include "Poco/BasicEvent.h"
-#include <iostream>
 
 namespace _2Real
 {

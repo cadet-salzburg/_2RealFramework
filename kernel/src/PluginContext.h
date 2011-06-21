@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,25 +48,24 @@ namespace _2Real
 		void removeFrameworkListerner(IPluginActivator& a);		//remove the framework event listener for the plugin
 		void removePluginListerner(IPluginActivator& a);		//remove the plugin event listener for the plugin
 
-
 		/*
 			register service within framework
 		*/
 
-		ServiceRegistration* registerService(const std::string& name, const ServiceProperties& properties, IService* service);
+		ServiceRegPtr registerService(const std::string& name, const ServiceProperties& properties, ServicePtr service);
 
 		/*
 			get reference to a registered service
 		*/
 
-		ServiceReference* findService(const std::string& name, const ServiceProperties& properties);
-		ServiceReference* findService(const std::string& name, const std::string& plugin);
-		ServiceReference* findService(const std::string& name, const std::string& plugin, const ServiceProperties& properties);
+		ServiceRefPtr findService(const std::string& name, const ServiceProperties& properties) const;
+		ServiceRefPtr findService(const std::string& name, const std::string& plugin) const;
+		ServiceRefPtr findService(const std::string& name, const std::string& plugin, const ServiceProperties& properties) const;
 		
 	private:
 
 		Plugin*			m_PluginPtr;							//the plugin this context belongs to
 
-		PluginContext(Plugin* plugin);
+		PluginContext(Plugin* plugin);							//only plugin can create its own context
 	};
 }

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +33,7 @@ namespace _2Real
 
 		//installs a plugin in the framework;
 		//the pointer can the be used to start/stop/uninstall the plugin
-		Plugin* installPlugin(const std::string& pluginName);
+		PluginPtr installPlugin(const std::string& pluginName);
 
 	private:
 

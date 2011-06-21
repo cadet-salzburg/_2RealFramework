@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,15 +65,17 @@ namespace _2Real
 			service related functions
 		*/
 
-		ServiceRegistration* registerService(const std::string& name, const ServiceProperties& properties, IService* service, Plugin* plugin);
-		void unregisterService(const std::string& name, IService* service);
-		ServiceReference* findService(const std::string& name, const std::string& plugin, const ServiceProperties& properties); 
+		ServiceRegPtr registerService(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties, ServicePtr service);
+		void unregisterService(const std::string& serviceName, ServicePtr service);
+		ServiceRefPtr findService(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties); 
 
 		/*
 			plugin related functions
 		*/
 
-		Plugin* installPlugin(const std::string& pluginName);
+		PluginPtr installPlugin(const std::string& pluginName);
 		void uninstallPlugin(Plugin* plugin);
+		void stopPlugin(Plugin* plugin);									//called to generate plugin notification
+		void startPlugin(Plugin* plugin);									//called to generate plugin notification
 	};
 }

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,18 +33,18 @@ namespace _2Real
 	public:
 
 		~ServiceRegistration();
-		void unregister();
 		
-		IService* servicePtr();
-		std::string name();
+		void unregister();
+		const ServicePtr servicePtr() const;
+		const std::string& name() const;
 
 	private:
 
-		PluginFrameworkContext*		m_FrameworkContext;
-		IService*					m_Service;
-		std::string					m_Name;
+		PluginFrameworkContext*		m_FrameworkContextPtr;
+		ServicePtr					m_ServicePtr;
+		std::string					m_ServiceName;
 
-		ServiceRegistration(const std::string name, PluginFrameworkContext* fwContext, IService* service);
+		ServiceRegistration(const std::string serviceName, PluginFrameworkContext* fwContext, ServicePtr service);
 
 		friend class PluginFrameworkContext;
 	};

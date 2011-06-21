@@ -22,34 +22,32 @@
 
 namespace _2Real
 {
-	ServiceReference::ServiceReference(const std::string& name, const ServiceProperties& properties, IService* service, Plugin* plugin) :
-										m_ServiceName(name), m_Properties(properties), m_Service(service), m_Plugin(plugin)
+	ServiceReference::ServiceReference(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties, ServicePtr service) :
+										m_ServiceName(serviceName), m_PluginName(pluginName), m_Properties(properties), m_ServicePtr(service)
 	{
 	}
 
 	ServiceReference::~ServiceReference()
 	{
-		m_Service = NULL;
-		m_Plugin = NULL;
 	}
 
-	std::string& ServiceReference::serviceName()
+	const std::string& ServiceReference::serviceName() const
 	{
 		return m_ServiceName;
 	}
 
-	ServiceProperties& ServiceReference::serviceProperties()
+	const ServiceProperties& ServiceReference::serviceProperties() const
 	{
 		return m_Properties;
 	}
 
-	IService* ServiceReference::servicePtr()
+	ServicePtr ServiceReference::servicePtr() const
 	{
-		return m_Service;
+		return m_ServicePtr;
 	}
 
-	Plugin* ServiceReference::pluginPtr()
+	const std::string& ServiceReference::pluginName() const
 	{
-		return m_Plugin;
+		return m_PluginName;
 	}
 }

@@ -24,9 +24,6 @@
 #include "Poco/Path.h"
 #include "Poco/DirectoryIterator.h"
 
-#include <iostream>
-#include <sstream>
-
 namespace _2Real
 {
 	Plugin::Plugin(const std::string& name, PluginFrameworkContext* fwContext) :
@@ -50,8 +47,21 @@ namespace _2Real
 	{
 		delete m_Metadata;
 		delete m_Context;
-		delete m_Activator;
-		m_FrameworkContext = NULL;
+	}
+
+	const Plugin::PluginState Plugin::state() const
+	{
+		return m_State;
+	}
+		
+	const std::string& Plugin::name() const
+	{
+		return m_PluginName;
+	}
+
+	const std::string& Plugin::attribute(std::string attrib) const
+	{
+		//todo
 	}
 
 	void Plugin::start(bool overrideStartingPolicy)
@@ -270,6 +280,9 @@ namespace _2Real
 			if(m_PluginLoader.isLibraryLoaded(m_LibraryPath))
 			{
 				m_Activator->stop(m_Context);
+				m_PluginLoader.destroy(m_PluginName, m_Activator);
+				delete m_Activator;
+				m_Activator = NULL;
 				m_PluginLoader.unloadLibrary(m_LibraryPath);
 			}
 			else

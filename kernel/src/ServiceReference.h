@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,29 +28,29 @@
 	that is registered in the framework
 */
 
-
 namespace _2Real
 {
 	class ServiceReference
 	{
+
+		friend class PluginFrameworkContext;
+	
 	public:
 
 		~ServiceReference();
 
-		std::string&			serviceName();
-		ServiceProperties&		serviceProperties();
-		IService*				servicePtr();
-		Plugin*					pluginPtr();
+		ServicePtr					servicePtr() const;
+		const std::string&			serviceName() const;
+		const std::string&			pluginName() const;
+		const ServiceProperties&	serviceProperties() const;
 
 	private:
 
-		ServiceReference(const std::string& name, const ServiceProperties& properties, IService* service, Plugin* plugin);
+		ServiceReference(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties, ServicePtr service);
 
-		std::string				m_ServiceName;	//name under which the service is registered
-		IService*				m_Service;		//pointer to the service
-		ServiceProperties		m_Properties;	//the services' properties
-		Plugin*					m_Plugin;		//the plugin that offers the service
-
-		friend class PluginFrameworkContext;
+		std::string					m_ServiceName;	//name under which the service is registered
+		ServicePtr					m_ServicePtr;	//pointer to the service
+		ServiceProperties			m_Properties;	//the services' properties
+		std::string					m_PluginName;	//the plugin that offers the service
 	};
 }

@@ -32,43 +32,40 @@ namespace _2Real
 
 	PluginFrameworkContext::~PluginFrameworkContext()
 	{
-		
-		m_Plugins.clear();
-		m_Services.clear();
 	};
 
-	Plugin* PluginFrameworkContext::installPlugin(const std::string& pluginName)
+	PluginPtr PluginFrameworkContext::installPlugin(const std::string& pluginName)
 	{
-		Plugin* plugin = new Plugin(pluginName, this);
+		PluginPtr plugin = PluginPtr(new Plugin(pluginName, this));
 		plugin->readMetadata();
 
-		m_Plugins.insert(std::pair<std::string, Plugin*>(pluginName, plugin));
-		m_PluginNotificationCenter.postNotification(new PluginNotification(pluginName, "plugin was installed"));
-		
-		return plugin;
+		m_Plugins.insert(std::pair<std::string, PluginPtr>(pluginName, plugin));
+		m_PluginNotificationCenter.postNotification(new PluginNotification(pluginName, "installed"));
+
+		return m_Plugins.find(pluginName)->second;
 	}
 
 	void PluginFrameworkContext::uninstallPlugin(Plugin* plugin)
 	{
-		std::map<std::string, Plugin*>::iterator it = m_Plugins.find(plugin->m_PluginName);
+		Plugins::iterator it = m_Plugins.find(plugin->m_PluginName);
 		m_Plugins.erase(it);
 
-		m_PluginNotificationCenter.postNotification(new PluginNotification(plugin->m_PluginName, "plugin was uninstalled"));
+		m_PluginNotificationCenter.postNotification(new PluginNotification(plugin->m_PluginName, "uninstalled"));
 	}
 
-	ServiceRegistration* PluginFrameworkContext::registerService(const std::string& serviceName, const ServiceProperties& properties, IService* service, Plugin* plugin)
+	ServiceRegPtr PluginFrameworkContext::registerService(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties, ServicePtr service)
 	{
-		ServiceRegistration* reg = new ServiceRegistration(serviceName, this, service);
-		ServiceReference* ref = new ServiceReference(serviceName, properties, service, plugin);
+		ServiceRegPtr reg = ServiceRegPtr(new ServiceRegistration(serviceName, this, service));
+		ServiceRefPtr ref = ServiceRefPtr(new ServiceReference(serviceName, pluginName, properties, service));
 
-		m_Services.insert(std::pair<std::string, ServiceReference*>(serviceName, ref));
+		m_Services.insert(std::pair<std::string, ServiceRefPtr>(serviceName, ref));
 
-		m_ServiceNotificationCenter.postNotification(new ServiceNotification(serviceName, plugin->m_PluginName, "service was added"));
+		m_ServiceNotificationCenter.postNotification(new ServiceNotification(serviceName, pluginName, "added"));
 
 		return reg;
 	}
 
-	void PluginFrameworkContext::unregisterService(const std::string& serviceName, IService* service)
+	void PluginFrameworkContext::unregisterService(const std::string& serviceName, ServicePtr service)
 	{
 		std::pair<Services::iterator, Services::iterator> range = m_Services.equal_range(serviceName);
 		for (Services::iterator it = range.first; it != range.second; it++)
@@ -76,18 +73,18 @@ namespace _2Real
 			if (it->second->servicePtr() == service)
 			{
 				m_Services.erase(it);
-				m_ServiceNotificationCenter.postNotification(new ServiceNotification(serviceName, it->second->pluginPtr()->m_PluginName, "service was removed"));
+				m_ServiceNotificationCenter.postNotification(new ServiceNotification(serviceName, it->second->pluginName(), "removed"));
 			}
 		}
 	}
 
-	ServiceReference* PluginFrameworkContext::findService(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties)
+	ServiceRefPtr PluginFrameworkContext::findService(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties)
 	{
 		std::pair<Services::iterator, Services::iterator> range = m_Services.equal_range(serviceName);
 
 		for (Services::iterator sIter = range.first; sIter != range.second; sIter++)
 		{
-			std::string plugin = sIter->second->pluginPtr()->m_PluginName;
+			std::string plugin = sIter->second->pluginName();
 
 			if (pluginName.empty() || pluginName == plugin)
 			{
@@ -106,7 +103,7 @@ namespace _2Real
 			}
 		}
 
-		return NULL;
+		return ServiceRefPtr(NULL);
 	}
 
 	void PluginFrameworkContext::addServiceListener(IPluginActivator& a)
@@ -126,7 +123,7 @@ namespace _2Real
 
 	void PluginFrameworkContext::removeServiceListener(IPluginActivator& a)
 	{
-		//m_ServiceNotificationCenter.removeObserver(Poco::NObserver<IPluginActivator, ServiceNotification>(a, &IPluginActivator::handleServiceNotification));
+		m_ServiceNotificationCenter.removeObserver(Poco::NObserver<IPluginActivator, ServiceNotification>(a, &IPluginActivator::handleServiceNotification));
 	}
 
 	void PluginFrameworkContext::removeFrameworkListener(IPluginActivator& a)

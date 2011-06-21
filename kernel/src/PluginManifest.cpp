@@ -22,19 +22,14 @@
 #include "Poco/SAX/Attributes.h"
 #include "Poco/SAX/InputSource.h"
 
-#include <fstream>
-#include <iostream>
-
 namespace _2Real
 {
 	PluginManifest::PluginManifest(std::string path) : m_ManifestFile(path)
 	{
-		m_Attributes.clear();
 	}
 
 	PluginManifest::~PluginManifest()
 	{
-		m_Attributes.clear();
 	}
 
 	void PluginManifest::readPluginManifest()

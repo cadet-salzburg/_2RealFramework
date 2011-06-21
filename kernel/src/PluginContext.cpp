@@ -20,6 +20,7 @@
 #include "PluginFrameworkContext.h"
 #include "Plugin.h"
 #include "ServiceRegistration.h"
+#include "ServiceReference.h"
 
 namespace _2Real
 {
@@ -33,24 +34,24 @@ namespace _2Real
 		m_PluginPtr = NULL;
 	}
 
-	ServiceRegistration* PluginContext::registerService(const std::string& name, const ServiceProperties& properties, IService* service)
+	ServiceRegPtr PluginContext::registerService(const std::string& name, const ServiceProperties& properties, ServicePtr service)
 	{
-		return m_PluginPtr->frameworkContextPtr()->registerService(name, properties, service, m_PluginPtr);
+		return m_PluginPtr->frameworkContextPtr()->registerService(name, m_PluginPtr->name(), properties, service);
 	}
 
-	ServiceReference* PluginContext::findService(const std::string& name, const ServiceProperties& properties)
+	ServiceRefPtr PluginContext::findService(const std::string& name, const ServiceProperties& properties) const
 	{
 		std::string p = std::string();
 		return m_PluginPtr->frameworkContextPtr()->findService(name, p, properties);
 	}
 
-	ServiceReference* PluginContext::findService(const std::string& name, const std::string& plugin)
+	ServiceRefPtr PluginContext::findService(const std::string& name, const std::string& plugin) const
 	{
 		ServiceProperties p = ServiceProperties();
 		return m_PluginPtr->frameworkContextPtr()->findService(name, plugin, p);
 	}
 
-	ServiceReference* PluginContext::findService(const std::string& name, const std::string& plugin, const ServiceProperties& properties)
+	ServiceRefPtr PluginContext::findService(const std::string& name, const std::string& plugin, const ServiceProperties& properties) const
 	{
 		return m_PluginPtr->frameworkContextPtr()->findService(name, plugin, properties);
 	}

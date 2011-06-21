@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,9 +51,13 @@ namespace _2Real
 	class IPluginActivator;
 	class IService;
 
-	typedef std::multimap<std::string, ServiceReference*> Services;
+	typedef Poco::SharedPtr<IService> ServicePtr;
+	typedef Poco::SharedPtr<Plugin> PluginPtr;
+	typedef Poco::SharedPtr<ServiceReference> ServiceRefPtr;
+	typedef Poco::SharedPtr<ServiceRegistration> ServiceRegPtr;
+	typedef std::multimap<std::string, ServiceRefPtr> Services;
 	typedef std::multimap<std::string, std::string> PluginMetadata;
-	typedef std::map<std::string, Plugin* > Plugins;
+	typedef std::map<std::string, PluginPtr> Plugins;
 	typedef std::map<std::string, Poco::DynamicAny> ServiceProperties;
 	typedef Poco::ClassLoader<IPluginActivator> PluginLoader;
 	typedef Poco::AutoPtr<ServiceNotification> ServiceNotificationPtr;
