@@ -24,16 +24,16 @@
 
 #include <iostream>
 
-#include "Poco\SharedPtr.h"
-#include "Poco\DynamicAny.h"
-#include "Poco\ClassLoader.h"
-#include "Poco\ClassLibrary.h"
-#include "Poco\Manifest.h"
-#include "Poco\Notification.h"
-#include "Poco\NotificationCenter.h"
-#include "Poco\Observer.h"
-#include "Poco\NObserver.h"
-#include "Poco\SAX\SAXParser.h"
+#include "Poco/SharedPtr.h"
+#include "Poco/DynamicAny.h"
+#include "Poco/ClassLoader.h"
+#include "Poco/ClassLibrary.h"
+#include "Poco/Manifest.h"
+#include "Poco/Notification.h"
+#include "Poco/NotificationCenter.h"
+#include "Poco/Observer.h"
+#include "Poco/NObserver.h"
+#include "Poco/SAX/SAXParser.h"
 
 namespace _2Real
 {
