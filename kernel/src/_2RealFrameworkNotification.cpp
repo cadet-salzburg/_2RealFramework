@@ -16,30 +16,15 @@
 	limitations under the License.
 */
 
-#include "ServiceNotification.h"
+#include "_2RealFrameworkNotification.h"
 
 namespace _2Real
 {
-	ServiceNotification::ServiceNotification(std::string service, std::string plugin, std::string msg) : m_ServiceName(service), m_PluginName(plugin), m_Message(msg)
+	_2RealFrameworkNotification::_2RealFrameworkNotification(std::string _message)
 	{
 	}
 
-	ServiceNotification::~ServiceNotification()
+	_2RealFrameworkNotification::~_2RealFrameworkNotification()
 	{
-	}
-
-	const std::string& ServiceNotification::service() const
-	{
-		return m_ServiceName;
-	}
-
-	const std::string& ServiceNotification::plugin() const
-	{
-		return m_PluginName;
-	}
-
-	const std::string& ServiceNotification::message() const
-	{
-		return m_Message;
 	}
 }

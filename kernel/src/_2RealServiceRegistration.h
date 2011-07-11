@@ -19,25 +19,35 @@
 
 #pragma once
 
-#include "Common.h"
-#include "PluginFrameworkContext.h"
+#include "_2RealFramework.h"
+
+/*
+	returned by the framework context when a service is registered
+	can be used by the plugin activator to unregister a service
+*/
 
 namespace _2Real
-{	
-	class PluginFramework
+{
+	class _2RealServiceRegistration
 	{
 	public:
 
-		PluginFramework();
-		~PluginFramework();
-
-		//installs a plugin in the framework;
-		//the pointer can the be used to start/stop/uninstall the plugin
-		PluginPtr installPlugin(const std::string& pluginName);
+		~_2RealServiceRegistration();
+		
+		void unregister();
+		const _2RealServicePtr servicePtr() const;
+		const std::string& serviceName() const;
+		const std::string& pluginName() const;
 
 	private:
 
-		Poco::Mutex					m_Lock;
-		PluginFrameworkContext		m_Context;
+		_2RealContextPrivate*		m_ContextPtr;
+		_2RealServicePtr			m_ServicePtr;
+		std::string					m_ServiceName;
+		std::string					m_PluginName;
+
+		_2RealServiceRegistration(const std::string& _name, const std::string& _plugin, _2RealContextPrivate* _context, _2RealServicePtr& _service);
+
+		friend class _2RealContextPrivate;
 	};
 }

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,22 +17,43 @@
 	limitations under the License.
 */
 
-#include "PluginFramework.h"
-#include "Plugin.h"
+#pragma once
+
+#include "_2RealFramework.h"
+#include "_2RealContextPrivate.h"
+
+/*
+	entry point into 2real framework
+	as of 7/7/11 replaces the PluginFramework class
+*/
 
 namespace _2Real
 {
-	PluginFramework::PluginFramework()
+	class _2RealContext
 	{
-	}
 
-	PluginFramework::~PluginFramework()
-	{
-	}
+	public:
 
-	PluginPtr PluginFramework::installPlugin(const std::string& pluginName)
-	{		
-		Poco::ScopedLock<Poco::Mutex> lock(m_Lock);
-		return m_Context.installPlugin(pluginName);
-	}
+		~_2RealContext();
+		static _2RealContextPtr instance();						//return value: Poco::SharedPtr (look at _2RealFramework.h for typedefs)
+
+		/*
+		void config();
+		void update();
+		void start();
+		void stop();
+		*/
+		
+	private:
+
+		_2RealContext();
+
+		static _2RealContextPtr		s_ContextPtr;
+		static bool					s_bIsInstanced;
+		static Poco::Mutex			s_Mutex;
+
+		Poco::Mutex					m_Lock;
+		_2RealContextPrivate		m_PrivateContext;
+
+	};
 }

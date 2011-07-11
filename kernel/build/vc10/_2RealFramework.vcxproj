@@ -11,31 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Common.h" />
-    <ClInclude Include="..\..\src\FrameworkNotification.h" />
-    <ClInclude Include="..\..\src\Plugin.h" />
-    <ClInclude Include="..\..\src\IPluginActivator.h" />
-    <ClInclude Include="..\..\src\PluginContext.h" />
-    <ClInclude Include="..\..\src\PluginFramework.h" />
-    <ClInclude Include="..\..\src\PluginFrameworkContext.h" />
-    <ClInclude Include="..\..\src\PluginManifest.h" />
-    <ClInclude Include="..\..\src\IService.h" />
-    <ClInclude Include="..\..\src\PluginNotification.h" />
-    <ClInclude Include="..\..\src\ServiceNotification.h" />
-    <ClInclude Include="..\..\src\ServiceReference.h" />
-    <ClInclude Include="..\..\src\ServiceRegistration.h" />
+    <ClCompile Include="..\..\src\_2RealContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
+    <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\FrameworkNotification.cpp" />
-    <ClCompile Include="..\..\src\Plugin.cpp" />
-    <ClCompile Include="..\..\src\PluginContext.cpp" />
-    <ClCompile Include="..\..\src\PluginFramework.cpp" />
-    <ClCompile Include="..\..\src\PluginFrameworkContext.cpp" />
-    <ClCompile Include="..\..\src\PluginManifest.cpp" />
-    <ClCompile Include="..\..\src\PluginNotification.cpp" />
-    <ClCompile Include="..\..\src\ServiceNotification.cpp" />
-    <ClCompile Include="..\..\src\ServiceReference.cpp" />
-    <ClCompile Include="..\..\src\ServiceRegistration.cpp" />
+    <ClInclude Include="..\..\src\_2RealContext.h" />
+    <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
+    <ClInclude Include="..\..\src\_2RealFramework.h" />
+    <ClInclude Include="..\..\src\_2RealFrameworkNotification.h" />
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealIService.h" />
+    <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\src\_2RealPluginNotification.h" />
+    <ClInclude Include="..\..\src\_2RealServiceNotification.h" />
+    <ClInclude Include="..\..\src\_2RealServiceRegistration.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
@@ -84,7 +80,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(POCO_DIR)\XML\include\;$(POCO_DIR)\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\poco\XML\include\;..\..\..\..\..\externalLibs\poco\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +101,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(POCO_DIR)\XML\include\;$(POCO_DIR)\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\poco\XML\include\;..\..\..\..\..\externalLibs\poco\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

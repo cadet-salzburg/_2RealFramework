@@ -15,76 +15,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Plugin.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PluginFramework.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PluginManifest.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Common.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PluginContext.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PluginFrameworkContext.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ServiceReference.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ServiceRegistration.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\IService.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\IPluginActivator.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ServiceNotification.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\FrameworkNotification.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PluginNotification.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
+    <ClCompile Include="..\..\src\_2RealContext.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealContextPrivate.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPlugin.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPluginContext.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPluginNotification.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceNotification.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Plugin.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PluginFramework.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PluginManifest.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PluginContext.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PluginFrameworkContext.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ServiceReference.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ServiceRegistration.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ServiceNotification.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\FrameworkNotification.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PluginNotification.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
+    <ClInclude Include="..\..\src\_2RealContext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealContextPrivate.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFramework.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFrameworkNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIService.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPlugin.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginContext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceNotification.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceRegistration.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

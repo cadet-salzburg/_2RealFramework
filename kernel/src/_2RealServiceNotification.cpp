@@ -16,38 +16,30 @@
 	limitations under the License.
 */
 
-#include "ServiceReference.h"
-#include "IService.h"
-#include "Plugin.h"
+#include "_2RealServiceNotification.h"
 
 namespace _2Real
 {
-	ServiceReference::ServiceReference(const std::string& serviceName, const std::string& pluginName, const ServiceProperties& properties, ServicePtr service) :
-										m_ServiceName(serviceName), m_PluginName(pluginName), m_Properties(properties), m_ServicePtr(service)
+	_2RealServiceNotification::_2RealServiceNotification(std::string _service, std::string _plugin, std::string _message) : m_ServiceName(_service), m_PluginName(_plugin), m_Message(_message)
 	{
 	}
 
-	ServiceReference::~ServiceReference()
+	_2RealServiceNotification::~_2RealServiceNotification()
 	{
 	}
 
-	const std::string& ServiceReference::serviceName() const
+	const std::string& _2RealServiceNotification::service() const
 	{
 		return m_ServiceName;
 	}
 
-	const ServiceProperties& ServiceReference::serviceProperties() const
-	{
-		return m_Properties;
-	}
-
-	ServicePtr ServiceReference::servicePtr() const
-	{
-		return m_ServicePtr;
-	}
-
-	const std::string& ServiceReference::pluginName() const
+	const std::string& _2RealServiceNotification::plugin() const
 	{
 		return m_PluginName;
+	}
+
+	const std::string& _2RealServiceNotification::message() const
+	{
+		return m_Message;
 	}
 }

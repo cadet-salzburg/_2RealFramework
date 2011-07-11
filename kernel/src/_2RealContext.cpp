@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +17,52 @@
 	limitations under the License.
 */
 
-#include "FrameworkNotification.h"
+#include "_2RealContext.h"
 
 namespace _2Real
 {
-	FrameworkNotification::FrameworkNotification(std::string msg)
+	bool _2RealContext::s_bIsInstanced = false;
+	_2RealContextPtr _2RealContext::s_ContextPtr;
+	Poco::Mutex _2RealContext::s_Mutex;
+
+	_2RealContextPtr _2RealContext::instance()
+	{
+		Poco::ScopedLock<Poco::Mutex> lock(s_Mutex);
+		if(!s_bIsInstanced)
+		{
+			s_ContextPtr = _2RealContextPtr(new _2RealContext());
+			s_bIsInstanced = true;
+			return s_ContextPtr;
+		}
+		else
+		{
+			return s_ContextPtr;
+		}
+	}
+
+	_2RealContext::_2RealContext()
 	{
 	}
 
-	FrameworkNotification::~FrameworkNotification()
+	_2RealContext::~_2RealContext()
 	{
 	}
+
+	/*
+	void _2RealContext::config()
+	{
+	}
+
+	void _2RealContext::update()
+	{
+	}
+
+	void _2RealContext::start()
+	{
+	}
+
+	void _2RealContext::stop()
+	{
+	}
+	*/
 }

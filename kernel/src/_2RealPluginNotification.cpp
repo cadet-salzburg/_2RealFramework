@@ -16,24 +16,24 @@
 	limitations under the License.
 */
 
-#include "PluginNotification.h"
+#include "_2RealPluginNotification.h"
 
 namespace _2Real
 {
-	PluginNotification::PluginNotification(std::string name, std::string msg) : m_PluginName(name), m_Message(msg)
+	_2RealPluginNotification::_2RealPluginNotification(std::string _plugin, std::string _message) : m_PluginName(_plugin), m_Message(_message)
 	{
 	}
 
-	PluginNotification::~PluginNotification()
+	_2RealPluginNotification::~_2RealPluginNotification()
 	{
 	}
 
-	const std::string& PluginNotification::plugin() const
+	const std::string& _2RealPluginNotification::plugin() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string& PluginNotification::message() const
+	const std::string& _2RealPluginNotification::message() const
 	{
 		return m_Message;
 	}
