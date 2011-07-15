@@ -19,11 +19,12 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealContextPrivate.h"
+#include "_2RealIService.h"
 
 namespace _2Real
 {
-	_2RealPlugin::_2RealPlugin(const std::string& _name, const std::string& _path, _2RealContextPrivate* _context) : 
-						m_PluginState(_2RealPlugin::UNINSTALLED), m_PluginName(_name), m_LibraryPath(_path), m_ContextPtr(_context), m_PluginActivator(NULL)
+	_2RealPlugin::_2RealPlugin(const std::string& _name, const std::string& _dir, _2RealContextPrivate* _context) : 
+						m_PluginState(_2RealPlugin::UNINSTALLED), m_PluginName(_name), m_LibraryPath(_dir+_name), m_ContextPtr(_context), m_PluginActivator(NULL)
 	{
 		m_PluginContextPtr = _2RealPluginContextPtr(new _2RealPluginContext(this, _context));
 		m_PluginState = _2RealPlugin::INSTALLED;
@@ -247,5 +248,10 @@ namespace _2Real
 			m_PluginState = _2RealPlugin::UNINSTALLED;
 			break;
 		}
+	}
+
+	_2RealServicePtr _2RealPlugin::createService(const std::string& _params)
+	{
+		return m_PluginActivator->createService(_params);
 	}
 }

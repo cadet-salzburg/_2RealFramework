@@ -19,16 +19,15 @@
 
 #pragma once
 
-/*
-	service interface
-*/
+#include "_2RealFramework.h"
 
 namespace _2Real
 {
-	class _2RealIService
+	class _2RealIData
 	{
-
-	public:
-
+	public:	
+		void setData(const _2RealIMetaData& _metadata, const std::vector<Poco::Any>& _valuedata);
+		_2RealIMetaData metaData();
+		std::vector<Poco::Any> valueData();
 	};
 }

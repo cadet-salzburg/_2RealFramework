@@ -48,10 +48,12 @@ namespace _2Real
 		void start();
 		void stop();
 		void uninstall();
+		
+		_2RealServicePtr createService(const std::string& _params);
 
 	private:
 
-		_2RealPlugin(const std::string& _name, const std::string& _path, _2RealContextPrivate* _context);
+		_2RealPlugin(const std::string& _name, const std::string& _dir, _2RealContextPrivate* _context);
 		
 		void activate();
 		void deactivate();

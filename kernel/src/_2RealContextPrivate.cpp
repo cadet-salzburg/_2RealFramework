@@ -37,7 +37,6 @@ namespace _2Real
 	_2RealPluginPtr _2RealContextPrivate::installPlugin(const std::string& _name, const std::string& _path)
 	{
 		_2RealPluginPtr plugin = _2RealPluginPtr(new _2RealPlugin(_name, _path, this));
-
 		m_Plugins.insert(std::pair<std::string, _2RealPluginPtr>(_name, plugin));
 		if (m_PluginNotificationCenter.hasObservers())
 		{
@@ -60,10 +59,9 @@ namespace _2Real
 
 	_2RealServiceRegPtr _2RealContextPrivate::registerService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service)
 	{
-		std::string name = _plugin + "." + _name;
 		_2RealServiceRegPtr reg = _2RealServiceRegPtr(new _2RealServiceRegistration(_name, _plugin, this, _service));
 	
-		m_Services.insert(std::pair<std::string, _2RealServicePtr>(name, _service));
+		m_Services.insert(std::pair<std::string, _2RealServicePtr>(_plugin + "." + _name, _service));
 
 		if (m_ServiceNotificationCenter.hasObservers())
 		{
@@ -75,8 +73,7 @@ namespace _2Real
 
 	void _2RealContextPrivate::unregisterService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service)
 	{
-		std::string name = _plugin + "." + _name;
-		Services::iterator it = m_Services.find(name);
+		Services::iterator it = m_Services.find(_plugin + "." + _name);
 		m_Services.erase(it);
 		
 		if (m_ServiceNotificationCenter.hasObservers())

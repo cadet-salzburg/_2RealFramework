@@ -20,7 +20,6 @@
 #pragma once
 
 #include "_2RealFramework.h"
-#include "_2RealContextPrivate.h"
 
 /*
 	entry point into 2real framework
@@ -35,15 +34,13 @@ namespace _2Real
 	public:
 
 		~_2RealContext();
-		static _2RealContextPtr instance();						//return value: Poco::SharedPtr (look at _2RealFramework.h for typedefs)
+		static _2RealContextPtr instance();
 
-		/*
 		void config();
 		void update();
-		void start();
+		void start(const std::vector<std::string>& _plugins);
 		void stop();
-		*/
-		
+
 	private:
 
 		_2RealContext();
@@ -53,7 +50,7 @@ namespace _2Real
 		static Poco::Mutex			s_Mutex;
 
 		Poco::Mutex					m_Lock;
-		_2RealContextPrivate		m_PrivateContext;
+		_2RealContextPrivate*		m_PrivateContext;
 
 	};
 }

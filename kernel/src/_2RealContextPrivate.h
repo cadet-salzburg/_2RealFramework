@@ -59,12 +59,12 @@ namespace _2Real
 		Poco::NotificationCenter		m_FrameworkNotificationCenter;								//poco notification center for framework events
 		Poco::NotificationCenter		m_PluginNotificationCenter;									//poco notification center for plugin events
 
-		_2RealPluginPtr loadPlugin(const std::string& path);										//install + start plugin
-		const std::vector<_2RealPluginPtr>& loadAllPlugins(const std::string& directory);			//install + start all plugins from one directory
-		void unloadPlugin(const std::string& path);													//uninstall + stop plugin
-		void unloadAllPlugins();																	//uninstall + stop all plugins
+		//_2RealPluginPtr loadPlugin(const std::string& path);										//install + start plugin
+		//const std::vector<_2RealPluginPtr>& loadAllPlugins(const std::string& directory);			//install + start all plugins from one directory
+		//void unloadPlugin(const std::string& path);												//uninstall + stop plugin
+		//void unloadAllPlugins();																	//uninstall + stop all plugins
 		_2RealPluginPtr installPlugin(const std::string& _name, const std::string& _path);			//install plugin
-		const std::vector<_2RealPluginPtr>& installAllPlugins(const std::string& directory);		//install all plugins from one directory
+		//const std::vector<_2RealPluginPtr>& installAllPlugins(const std::string& directory);		//install all plugins from one directory
 
 		friend class _2RealContext;
 	};

@@ -36,8 +36,6 @@ namespace _2Real
 
 	public:
 
-		virtual ~_2RealIPluginActivator() = 0;
-
 		virtual void start(_2RealPluginContextPtr _context) throw(...) = 0;										//will be called by the framework when a plugin is started
 		virtual void stop(_2RealPluginContextPtr _context) throw(...) = 0;										//will be called by the framework when a plugin is stopped
 
@@ -45,7 +43,7 @@ namespace _2Real
 		virtual void handlePluginNotification(const _2RealPluginNotificationPtr& notification) = 0;				//handle plugin related messages sent by the framework
 		virtual void handleFrameworkNotification(const _2RealFrameworkNotificationPtr& notification) = 0;		//handle framework related messages sent by the framework
 
-		//virtual _2RealServicePtr createService() = 0;
+		virtual _2RealServicePtr createService(const std::string& _params) = 0;									//register service & return pointer
 	};
 }
 

@@ -11,6 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\_2RealContext.h" />
+    <ClInclude Include="..\..\include\_2RealFramework.h" />
+    <ClInclude Include="..\..\include\_2RealFrameworkNotification.h" />
+    <ClInclude Include="..\..\include\_2RealIData.h" />
+    <ClInclude Include="..\..\include\_2RealIMetaData.h" />
+    <ClInclude Include="..\..\include\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\include\_2RealIService.h" />
+    <ClInclude Include="..\..\include\_2RealMap.h" />
+    <ClInclude Include="..\..\include\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\include\_2RealPluginManifest.h" />
+    <ClInclude Include="..\..\include\_2RealPluginNotification.h" />
+    <ClInclude Include="..\..\include\_2RealServiceNotification.h" />
+    <ClInclude Include="..\..\include\_2RealServiceRegistration.h" />
+    <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
+    <ClInclude Include="..\..\src\_2RealPlugin.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp" />
@@ -19,19 +36,6 @@
     <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceNotification.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealContext.h" />
-    <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
-    <ClInclude Include="..\..\src\_2RealFramework.h" />
-    <ClInclude Include="..\..\src\_2RealFrameworkNotification.h" />
-    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
-    <ClInclude Include="..\..\src\_2RealIService.h" />
-    <ClInclude Include="..\..\src\_2RealPlugin.h" />
-    <ClInclude Include="..\..\src\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\src\_2RealPluginNotification.h" />
-    <ClInclude Include="..\..\src\_2RealServiceNotification.h" />
-    <ClInclude Include="..\..\src\_2RealServiceRegistration.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
@@ -101,7 +105,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\poco\XML\include\;..\..\..\..\..\externalLibs\poco\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\..\..\..\externalLibs\poco\XML\include\;..\..\..\..\..\externalLibs\poco\Foundation\include\;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -16,8 +16,10 @@
 	limitations under the License.
 */
 
+#include "_2RealFramework.h"
 #include "_2RealServiceRegistration.h"
 #include "_2RealContext.h"
+#include "_2RealContextPrivate.h"
 #include "_2RealIService.h"
 
 namespace _2Real
@@ -36,7 +38,7 @@ namespace _2Real
 		m_ContextPtr->unregisterService(m_ServiceName, m_PluginName, m_ServicePtr);
 	}
 
-	const _2RealServicePtr _2RealServiceRegistration::servicePtr() const
+	_2RealServicePtr _2RealServiceRegistration::servicePtr()
 	{
 		return m_ServicePtr;
 	}

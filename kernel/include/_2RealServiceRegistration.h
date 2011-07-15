@@ -35,7 +35,7 @@ namespace _2Real
 		~_2RealServiceRegistration();
 		
 		void unregister();
-		const _2RealServicePtr servicePtr() const;
+		_2RealServicePtr servicePtr();
 		const std::string& serviceName() const;
 		const std::string& pluginName() const;
 

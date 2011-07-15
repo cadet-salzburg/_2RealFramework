@@ -40,6 +40,12 @@
 #include "Poco/Observer.h"
 #include "Poco/NObserver.h"
 #include "Poco/SAX/SAXParser.h"
+#include "Poco/Thread.h"
+#include "Poco/ThreadPool.h"
+#include "Poco/Runnable.h"
+#include "Poco/RunnableAdapter.h"
+#include "Poco/BasicEvent.h"
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
@@ -49,12 +55,13 @@ namespace _2Real
 	class _2RealPlugin;
 	class _2RealPluginContext;
 	class _2RealServiceRegistration;
-	//class _2RealServiceReference;
 	class _2RealPluginNotification;
 	class _2RealServiceNotification;
 	class _2RealFrameworkNotification;
 	class _2RealIPluginActivator;
 	class _2RealIService;
+	class _2RealIData;
+	class _2RealIMetaData;
 	
 	typedef Poco::ClassLoader<_2RealIPluginActivator> _2RealPluginLoader;
 	
@@ -68,9 +75,9 @@ namespace _2Real
 	typedef Poco::AutoPtr<_2RealPluginNotification> _2RealPluginNotificationPtr;
 	typedef Poco::AutoPtr<_2RealFrameworkNotification> _2RealFrameworkNotificationPtr;
 
-	//todo: maybe use own class (plugin pool & service pool) instead
 	typedef std::map<std::string, _2RealPluginPtr> Plugins;
 	typedef std::map<std::string, _2RealServicePtr> Services;
 
 	typedef Poco::XML::SAXParser _2RealXMLParser;
+	typedef std::vector<Poco::Any> _2RealValueData;
 }
