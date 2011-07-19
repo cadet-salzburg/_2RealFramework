@@ -21,12 +21,6 @@
     <ClInclude Include="..\..\include\_2RealFramework.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\_2RealIData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\_2RealIMetaData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\_2RealIPluginActivator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -58,6 +52,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\_2RealPluginContext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\_2RealData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,10 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\_2RealContext.h" />
+    <ClInclude Include="..\..\include\_2RealData.h" />
     <ClInclude Include="..\..\include\_2RealFramework.h" />
     <ClInclude Include="..\..\include\_2RealFrameworkNotification.h" />
-    <ClInclude Include="..\..\include\_2RealIData.h" />
-    <ClInclude Include="..\..\include\_2RealIMetaData.h" />
     <ClInclude Include="..\..\include\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\include\_2RealIService.h" />
     <ClInclude Include="..\..\include\_2RealMap.h" />

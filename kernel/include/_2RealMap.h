@@ -101,7 +101,6 @@ namespace _2Real
 	template<typename T, unsigned int N>
 	_2RealMap<T, N>::~_2RealMap()
 	{
-		delete m_Data;
 		m_Data = NULL;
 	}
 

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "_2RealFramework.h"
+#include "_2RealData.h"
 
 /*
 	service interface
@@ -31,13 +32,13 @@ namespace _2Real
 	{
 	public:
 		
-		//virtual _2RealIMetaData metadata() = 0;
+		//virtual _2RealMetaData metadata() = 0;
 		
-		virtual void setup(/*_2RealIData& _data*/) = 0;
-		virtual void run() = 0;								//run() replaces update() and serves as entry point for poco::thread
-		virtual void shutdown() = 0;
+		virtual void setup(_2RealData& _data) = 0;					//service initialization
+		virtual void run() = 0;										//run() replaces update() and serves as entry point for poco::thread
+		virtual void shutdown() = 0;								//clean up function
 		
-		virtual void addListener(_2RealServicePtr _listener) = 0;
-		virtual void inputListener(_2RealIData& _data) = 0;
+		virtual void addListener(_2RealServicePtr _listener) = 0;	//adds another service to listerners
+		virtual void inputListener(_2RealData& _data) = 0;			//reacts to new data
 	};
 }

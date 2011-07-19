@@ -64,6 +64,7 @@ namespace _2Real
 			std::cout << "updating service: " << it->first << std::endl;
 
 			//todo: check metadata to find out if services should actually be threaded
+			//also, use different thread pool
 			_2RealIService* service = it->second.get();
 			Poco::ThreadPool::defaultPool().start(*service);
 		}
@@ -71,21 +72,32 @@ namespace _2Real
 		Poco::ThreadPool::defaultPool().joinAll();
 	}
 
-	void _2RealContext::start(const std::vector<std::string>& _plugins)
+	void _2RealContext::start(const std::vector<std::string>& _init)
 	{
-		//load all plugins & create service chain for testing
+		//load all plugins(ImageProcessing & Kinect) & create service chain for testing
 
-		std::string thingie = std::string();
 		_2RealServicePtr previous;
 		previous.assign(NULL);
 		
-		for (std::vector<std::string>::const_iterator it = _plugins.begin(); it != _plugins.end(); it++)
+		//data used for services' setup function (is the same for both services)
+		_2RealData serviceData;
+		serviceData.setData<unsigned int>("width", 320);
+		serviceData.setData<unsigned int>("height", 240);
+
+		//data used to instantiate service (needed by image inversion)
+		_2RealData pluginData;
+		pluginData.setData<std::string>("datatype", "unsigned char");
+
+		for (std::vector<std::string>::const_iterator it = _init.begin(); it != _init.end(); it++)
 		{
-			_2RealPluginPtr p = m_PrivateContext->installPlugin(*it, Poco::Path::current() + "..\\..\\testplugins\\");
+			_2RealPluginPtr p = m_PrivateContext->installPlugin(*it++, Poco::Path::current() + "..\\..\\testplugins\\");
 			p->load();
 			p->start();
 			
-			_2RealServicePtr s = p->createService(thingie);
+			_2RealServicePtr s = p->createService(*it, pluginData);
+			s->setup(serviceData);
+			
+			//imageinversion is started first & listens to depthmap
 			if (!previous.isNull())
 			{
 				s->addListener(previous);

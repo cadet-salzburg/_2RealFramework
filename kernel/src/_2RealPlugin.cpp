@@ -250,8 +250,8 @@ namespace _2Real
 		}
 	}
 
-	_2RealServicePtr _2RealPlugin::createService(const std::string& _params)
+	_2RealServicePtr _2RealPlugin::createService(const std::string& _name, _2RealData& _config)
 	{
-		return m_PluginActivator->createService(_params);
+		return m_PluginActivator->createService(_name, _config);
 	}
 }

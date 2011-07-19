@@ -49,7 +49,7 @@ namespace _2Real
 		void stop();
 		void uninstall();
 		
-		_2RealServicePtr createService(const std::string& _params);
+		_2RealServicePtr createService(const std::string& _name, _2RealData& _config);
 
 	private:
 
