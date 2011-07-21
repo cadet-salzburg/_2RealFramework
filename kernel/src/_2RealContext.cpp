@@ -21,6 +21,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealIService.h"
 #include "_2RealContextPrivate.h"
+#include "_2RealMetaData.h"
 
 namespace _2Real
 {
@@ -57,54 +58,89 @@ namespace _2Real
 	{
 	}
 
-	void _2RealContext::update()
+	bool _2RealContext::update()
 	{
 		for (std::map<std::string, _2RealServicePtr>::iterator it = m_PrivateContext->m_Services.begin(); it != m_PrivateContext->m_Services.end(); it++)
 		{
-			std::cout << "updating service: " << it->first << std::endl;
-
 			//todo: check metadata to find out if services should actually be threaded
 			//also, use different thread pool
 			_2RealIService* service = it->second.get();
 			Poco::ThreadPool::defaultPool().start(*service);
 		}
-
+		
 		Poco::ThreadPool::defaultPool().joinAll();
+		return true;
 	}
 
-	void _2RealContext::start(const std::vector<std::string>& _init)
+	void _2RealContext::start()
 	{
-		//load all plugins(ImageProcessing & Kinect) & create service chain for testing
+		_2RealServicePtr depth, rnd, add;
 
-		_2RealServicePtr previous;
-		previous.assign(NULL);
-		
-		//data used for services' setup function (is the same for both services)
-		_2RealData serviceData;
-		serviceData.setData<unsigned int>("width", 320);
-		serviceData.setData<unsigned int>("height", 240);
+		_2RealPluginPtr imgproc = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
+		imgproc->load();
+		imgproc->start();
 
-		//data used to instantiate service (needed by image inversion)
-		_2RealData pluginData;
-		pluginData.setData<std::string>("datatype", "unsigned char");
+		std::cout << "started image processing plugin" << std::endl;
 
-		for (std::vector<std::string>::const_iterator it = _init.begin(); it != _init.end(); it++)
+		_2RealData addInit;
+		addInit.insert<std::string>("T", "unsigned short");
+
+		_2RealData addSetup;
+		addSetup.insert<unsigned short>("scaleFactor1", 1);
+		addSetup.insert<unsigned short>("scaleFactor2", 1);
+		addSetup.insert<unsigned short>("backgroundColor", 0);
+		addSetup.insert<std::string>("serviceName", "ImageProcessing.ImageAddition");
+		_2RealMetaData addMetaData;
+		addMetaData.set("inputImage1", "KinectWinSDK.DepthMap.outputImage");
+		addMetaData.set("inputImage2", "ImageProcessing.RandomImage.outputImage");
+		addSetup.insert<_2RealMetaData>("inputMetaData", addMetaData);
+
+		_2RealData rndInit;
+		rndInit.insert<std::string>("T", "unsigned short");
+
+		_2RealData rndSetup;
+		rndSetup.insert<unsigned int>("imageWidth", 320);
+		rndSetup.insert<unsigned int>("imageHeight", 240);
+		rndSetup.insert<std::string>("serviceName", "ImageProcessing.RandomImage");
+
+		add = imgproc->createService("ImageAddition", addInit);
+		if (add.isNull())
 		{
-			_2RealPluginPtr p = m_PrivateContext->installPlugin(*it++, Poco::Path::current() + "..\\..\\testplugins\\");
-			p->load();
-			p->start();
-			
-			_2RealServicePtr s = p->createService(*it, pluginData);
-			s->setup(serviceData);
-			
-			//imageinversion is started first & listens to depthmap
-			if (!previous.isNull())
-			{
-				s->addListener(previous);
-			}
-
-			previous = s;
+			std::cout << "could not create image addition service" << std::endl;
 		}
+
+		add->setup(addSetup);
+
+		std::cout << "created image addition service" << std::endl;
+
+		rnd = imgproc->createService("RandomImage", rndInit);
+		if (rnd.isNull())
+		{
+			std::cout << "could not create random image service" << std::endl;
+		}
+		rnd->setup(rndSetup);
+		rnd->addListener(add);
+
+		std::cout << "created random image service" << std::endl;
+
+		_2RealPluginPtr kinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
+		kinect->load();
+		kinect->start();
+
+		std::cout << "started kinect plugin" << std::endl;
+
+		_2RealData depthInit;
+
+		_2RealData depthSetup;
+		depthSetup.insert<unsigned int>("imageWidth", 320);
+		depthSetup.insert<unsigned int>("imageHeight", 240);
+		depthSetup.insert<std::string>("serviceName", "KinectWinSDK.DepthMap");
+
+		depth = kinect->createService("DepthMap", depthInit);
+		depth->setup(depthSetup);
+		depth->addListener(add);
+
+		std::cout << "created depthmap service" << std::endl;
 	}
 
 	void _2RealContext::stop()

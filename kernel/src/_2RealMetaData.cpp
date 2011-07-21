@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,39 +16,44 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealFramework.h"
-
-/*
-	entry point into 2real framework
-*/
+#include "_2RealMetaData.h"
 
 namespace _2Real
 {
-	class _2RealContext
+	_2RealMetaData::_2RealMetaData()
 	{
+	}
 
-	public:
+	_2RealMetaData::_2RealMetaData(const _2RealMetaData& _src)
+	{
+		m_Data = _src.m_Data;
+	}
 
-		~_2RealContext();
-		static _2RealContextPtr instance();
+	_2RealMetaData& _2RealMetaData::operator= (const _2RealMetaData& _src)
+	{
+		if (this == &_src)
+		{
+			return *this;
+		}
 
-		void config();
-		bool update();
-		void start();
-		void stop();
+		m_Data = _src.m_Data;
+ 
+		return *this;
+	}
 
-	private:
+	void _2RealMetaData::set(std::string _key, std::string _value)
+	{
+		m_Data.insert(std::make_pair<std::string, std::string>(_key, _value));
+	}
 
-		_2RealContext();
+	const std::string _2RealMetaData::get(std::string _key)
+	{
+		std::map<std::string, std::string>::iterator it = m_Data.find(_key);
+		if (it != m_Data.end())
+		{
+			return it->second;
+		}
 
-		static _2RealContextPtr		s_ContextPtr;
-		static bool					s_bIsInstanced;
-		static Poco::Mutex			s_Mutex;
-
-		Poco::Mutex					m_Lock;
-		_2RealContextPrivate*		m_PrivateContext;
-
-	};
+		return std::string();
+	}
 }

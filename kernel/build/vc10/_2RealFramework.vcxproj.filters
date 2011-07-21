@@ -27,9 +27,6 @@
     <ClInclude Include="..\..\include\_2RealIService.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\_2RealMap.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\_2RealServiceRegistration.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -57,6 +54,9 @@
     <ClInclude Include="..\..\include\_2RealData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\_2RealMetadata.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealContextPrivate.cpp">
@@ -81,6 +81,12 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealContext.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealMetaData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

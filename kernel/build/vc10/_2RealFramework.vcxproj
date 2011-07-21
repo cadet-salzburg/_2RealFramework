@@ -17,7 +17,7 @@
     <ClInclude Include="..\..\include\_2RealFrameworkNotification.h" />
     <ClInclude Include="..\..\include\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\include\_2RealIService.h" />
-    <ClInclude Include="..\..\include\_2RealMap.h" />
+    <ClInclude Include="..\..\include\_2RealMetadata.h" />
     <ClInclude Include="..\..\include\_2RealPluginContext.h" />
     <ClInclude Include="..\..\include\_2RealPluginManifest.h" />
     <ClInclude Include="..\..\include\_2RealPluginNotification.h" />
@@ -29,7 +29,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
+    <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetaData.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />

@@ -17,28 +17,28 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealFramework.h"
 #include "_2RealData.h"
-
-/*
-	service interface
-*/
 
 namespace _2Real
 {
-	class _2RealIService : public Poco::Runnable
+	_2RealData::_2RealData() 
 	{
-	public:
-		
-		//virtual _2RealMetaData metadata() = 0;
-		
-		virtual bool setup(_2RealData& _data) = 0;					//service initialization
-		virtual void run() = 0;										//run() replaces update() and serves as entry point for poco::thread
-		virtual void shutdown() = 0;								//clean up function
-		
-		virtual void addListener(_2RealServicePtr _listener) = 0;	//adds another service to listerners
-		virtual void inputListener(_2RealData& _data) = 0;			//reacts to new data
 	};
+
+	_2RealData::_2RealData(const _2RealData& _src)
+	{
+		m_Values= _src.m_Values;
+	}
+
+	_2RealData& _2RealData::operator= (const _2RealData& _src)
+	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+ 
+		m_Values = _src.m_Values;
+	 
+		return *this;
+	}
 }

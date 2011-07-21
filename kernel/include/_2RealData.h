@@ -26,66 +26,61 @@ namespace _2Real
 	class _2RealData
 	{
 
-		typedef std::map<std::string, Poco::Any> Values;
-		typedef std::pair<std::string, Poco::Any> Value;
-
 	public:
 		
-		_2RealData() 
-		{
-		};
-
-		_2RealData(const _2RealData& _src)
-		{
-			m_ValueData = _src.m_ValueData;
-		}
-
-		_2RealData& operator= (const _2RealData& _src)
-		{
-			if (this == &_src)
-			{
-				return *this;
-			}
- 
-			m_ValueData = _src.m_ValueData;
-	 
-			return *this;
-		}
+		_2RealData();
+		_2RealData(const _2RealData& _src);
+		_2RealData& operator= (const _2RealData& _src);
 
 		template<class T>
-		void setData(std::string _name, T _data)
+		void insert(std::string _name, T _data)
 		{
 			Poco::Any data(_data);
-			m_ValueData.insert(Value(_name, data));
+			m_Values.insert(Value(_name, data));
 		}
 
-		template<class T>
-		const T getData(std::string _name)
+		const bool remove(std::string _name)
 		{
-			T returnValue;
+			Values::iterator it = m_Values.find(_name);
+		
+			if (it == m_Values.end())
+			{
+				return false;
+			}
 
-			Values::iterator it = m_ValueData.find(_name);
+			m_Values.erase(it);
+			return true;
+		};
+
+		template<class T>
+		const bool get(std::string _name, T& _value)
+		{
+			Values::iterator it = m_Values.find(_name);
 			
-			if (it != m_ValueData.end())
+			if (it != m_Values.end())
 			{
 				try
 				{
-					T anyValue = Poco::AnyCast<T>(it->second);
-					returnValue = anyValue;
+					T value = Poco::AnyCast<T>(it->second);
+					_value = value;
+					return true;
 				}
 				catch (Poco::BadCastException e)
 				{
-					return returnValue;
+					std::cout << e.what() << std::endl;
+					return false;
 				}
 			}
-			
-			return returnValue;
+
+			return false;
 		};
 
 	private:
 
-		//_2RealMetaData		m_MetaData;
-		Values					m_ValueData;
+		typedef std::map<std::string, Poco::Any> Values;
+		typedef std::pair<std::string, Poco::Any> Value;
+
+		Values		m_Values;
 
 	};
 }
