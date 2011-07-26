@@ -18,10 +18,13 @@
 */
 
 #include "_2RealContext.h"
-#include "_2RealPlugin.h"
-#include "_2RealIService.h"
 #include "_2RealContextPrivate.h"
-#include "_2RealMetaData.h"
+#include "_2RealIService.h"
+#include "_2RealPlugin.h"
+#include "_2RealConfigMetaData.h"
+
+#include "Poco/ThreadPool.h"
+#include "Poco/Path.h"
 
 namespace _2Real
 {
@@ -74,73 +77,58 @@ namespace _2Real
 
 	void _2RealContext::start()
 	{
-		_2RealServicePtr depth, rnd, add;
+		_2RealPluginPtr pImg = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
+		pImg->load();
+		pImg->start();
+	
+		//is null
+		_2RealMetadataPtr mImg = pImg->metadata();
+		
+		_2RealConfigMetadataPtr cRandom(new _2RealConfigMetadata("RandomImage"));
 
-		_2RealPluginPtr imgproc = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
-		imgproc->load();
-		imgproc->start();
+		cRandom->setSetupParameter<std::string>("T", "unsigned short");
+		cRandom->setSetupParameter<std::string>("service name", "ImageProcessing.RandomImage");
+		cRandom->setSetupParameter<unsigned int>("image width", 320);
+		cRandom->setSetupParameter<unsigned int>("image height", 240);
+		
+		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage.image");
 
-		std::cout << "started image processing plugin" << std::endl;
+		_2RealServicePtr sRandom = pImg->createService(cRandom);
 
-		_2RealData addInit;
-		addInit.insert<std::string>("T", "unsigned short");
+		_2RealConfigMetadataPtr cAddition(new _2RealConfigMetadata("ImageAddition"));
 
-		_2RealData addSetup;
-		addSetup.insert<unsigned short>("scaleFactor1", 1);
-		addSetup.insert<unsigned short>("scaleFactor2", 1);
-		addSetup.insert<unsigned short>("backgroundColor", 0);
-		addSetup.insert<std::string>("serviceName", "ImageProcessing.ImageAddition");
-		_2RealMetaData addMetaData;
-		addMetaData.set("inputImage1", "KinectWinSDK.DepthMap.outputImage");
-		addMetaData.set("inputImage2", "ImageProcessing.RandomImage.outputImage");
-		addSetup.insert<_2RealMetaData>("inputMetaData", addMetaData);
+		cAddition->setSetupParameter<std::string>("T", "unsigned short");
+		cAddition->setSetupParameter<std::string>("service name", "ImageProcessing.ImageAddition");
+		cAddition->setSetupParameter<unsigned short>("scale factor 1", 1);
+		cAddition->setSetupParameter<unsigned short>("scale factor 2", 1);
 
-		_2RealData rndInit;
-		rndInit.insert<std::string>("T", "unsigned short");
+		cAddition->setInputParameter<std::string>("input image 1", "ImageProcessing.RandomImage.image");
+		cAddition->setInputParameter<std::string>("input image 2", "KinectWinSDK.Depthmap.image");
 
-		_2RealData rndSetup;
-		rndSetup.insert<unsigned int>("imageWidth", 320);
-		rndSetup.insert<unsigned int>("imageHeight", 240);
-		rndSetup.insert<std::string>("serviceName", "ImageProcessing.RandomImage");
+		cAddition->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage.image");
 
-		add = imgproc->createService("ImageAddition", addInit);
-		if (add.isNull())
-		{
-			std::cout << "could not create image addition service" << std::endl;
-		}
+		_2RealServicePtr sAddition = pImg->createService(cAddition);
 
-		add->setup(addSetup);
+		sRandom->addListener(sAddition);
 
-		std::cout << "created image addition service" << std::endl;
+		_2RealPluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
+		pKinect->load();
+		pKinect->start();
 
-		rnd = imgproc->createService("RandomImage", rndInit);
-		if (rnd.isNull())
-		{
-			std::cout << "could not create random image service" << std::endl;
-		}
-		rnd->setup(rndSetup);
-		rnd->addListener(add);
+		//is null
+		_2RealMetadataPtr mKinect = pKinect->metadata();
 
-		std::cout << "created random image service" << std::endl;
+		_2RealConfigMetadataPtr cDepthmap(new _2RealConfigMetadata("Depthmap"));
 
-		_2RealPluginPtr kinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
-		kinect->load();
-		kinect->start();
+		cDepthmap->setSetupParameter<std::string>("service name", "KinectWinSDK.Depthmap");
+		cDepthmap->setSetupParameter<unsigned int>("image width", 320);
+		cDepthmap->setSetupParameter<unsigned int>("image height", 240);
 
-		std::cout << "started kinect plugin" << std::endl;
+		cDepthmap->setOutputParameter<std::string>("output image", "KinectWinSDK.Depthmap.image");
 
-		_2RealData depthInit;
+		_2RealServicePtr sDepthmap = pKinect->createService(cDepthmap);
 
-		_2RealData depthSetup;
-		depthSetup.insert<unsigned int>("imageWidth", 320);
-		depthSetup.insert<unsigned int>("imageHeight", 240);
-		depthSetup.insert<std::string>("serviceName", "KinectWinSDK.DepthMap");
-
-		depth = kinect->createService("DepthMap", depthInit);
-		depth->setup(depthSetup);
-		depth->addListener(add);
-
-		std::cout << "created depthmap service" << std::endl;
+		sDepthmap->addListener(sAddition);
 	}
 
 	void _2RealContext::stop()

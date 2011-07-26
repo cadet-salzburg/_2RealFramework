@@ -28,17 +28,17 @@ namespace _2Real
 	{
 	}
 
-	const std::string& _2RealServiceNotification::service() const
+	const std::string _2RealServiceNotification::service() const
 	{
 		return m_ServiceName;
 	}
 
-	const std::string& _2RealServiceNotification::plugin() const
+	const std::string _2RealServiceNotification::plugin() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string& _2RealServiceNotification::message() const
+	const std::string _2RealServiceNotification::message() const
 	{
 		return m_Message;
 	}

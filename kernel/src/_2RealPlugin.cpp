@@ -19,6 +19,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealContextPrivate.h"
+#include "_2RealConfigMetadata.h"
 #include "_2RealIService.h"
 
 namespace _2Real
@@ -40,14 +41,24 @@ namespace _2Real
 		return m_PluginState;
 	}
 		
-	const std::string& _2RealPlugin::name() const
+	const std::string _2RealPlugin::name() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string& _2RealPlugin::path() const
+	const std::string _2RealPlugin::path() const
 	{
 		return m_LibraryPath;
+	}
+
+	_2RealMetadataPtr _2RealPlugin::metadata() const
+	{
+		if (m_PluginState == ACTIVE)
+		{
+			return m_PluginActivator->metadata();
+		}
+
+		return NULL;
 	}
 
 	void _2RealPlugin::load()
@@ -250,8 +261,8 @@ namespace _2Real
 		}
 	}
 
-	_2RealServicePtr _2RealPlugin::createService(const std::string& _name, _2RealData& _config)
+	_2RealServicePtr _2RealPlugin::createService(_2RealConfigMetadataPtr _config)
 	{
-		return m_PluginActivator->createService(_name, _config);
+		return m_PluginActivator->createService(_config);
 	}
 }

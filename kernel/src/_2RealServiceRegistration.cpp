@@ -16,9 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealFramework.h"
 #include "_2RealServiceRegistration.h"
-#include "_2RealContext.h"
 #include "_2RealContextPrivate.h"
 #include "_2RealIService.h"
 
@@ -43,12 +41,12 @@ namespace _2Real
 		return m_ServicePtr;
 	}
 
-	const std::string& _2RealServiceRegistration::serviceName() const
+	const std::string _2RealServiceRegistration::serviceName() const
 	{
 		return m_ServiceName;
 	}
 
-	const std::string& _2RealServiceRegistration::pluginName() const
+	const std::string _2RealServiceRegistration::pluginName() const
 	{
 		return m_PluginName;
 	}

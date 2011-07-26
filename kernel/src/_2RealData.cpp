@@ -41,4 +41,8 @@ namespace _2Real
 	 
 		return *this;
 	}
+
+	_2RealData::~_2RealData()
+	{
+	}
 }

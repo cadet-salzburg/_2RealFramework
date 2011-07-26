@@ -21,8 +21,10 @@
 
 #include "_2RealFramework.h"
 
+#include "Poco/Mutex.h"
+
 /*
-	entry point into 2real framework
+	entry point into _2Real framework
 */
 
 namespace _2Real

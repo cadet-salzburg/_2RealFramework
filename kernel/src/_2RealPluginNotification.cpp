@@ -28,12 +28,12 @@ namespace _2Real
 	{
 	}
 
-	const std::string& _2RealPluginNotification::plugin() const
+	const std::string _2RealPluginNotification::plugin() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string& _2RealPluginNotification::message() const
+	const std::string _2RealPluginNotification::message() const
 	{
 		return m_Message;
 	}

@@ -21,6 +21,8 @@
 
 #include "_2RealFramework.h"
 
+#include "Poco/Any.h"
+
 namespace _2Real
 {
 	class _2RealData
@@ -31,6 +33,7 @@ namespace _2Real
 		_2RealData();
 		_2RealData(const _2RealData& _src);
 		_2RealData& operator= (const _2RealData& _src);
+		~_2RealData();
 
 		template<class T>
 		void insert(std::string _name, T _data)
@@ -53,9 +56,9 @@ namespace _2Real
 		};
 
 		template<class T>
-		const bool get(std::string _name, T& _value)
+		const bool get(std::string _name, T& _value) const
 		{
-			Values::iterator it = m_Values.find(_name);
+			Values::const_iterator it = m_Values.find(_name);
 			
 			if (it != m_Values.end())
 			{
@@ -68,7 +71,6 @@ namespace _2Real
 				catch (Poco::BadCastException e)
 				{
 					std::cout << e.what() << std::endl;
-					return false;
 				}
 			}
 

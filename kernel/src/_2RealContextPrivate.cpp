@@ -24,6 +24,8 @@
 #include "_2RealFrameworkNotification.h"
 #include "_2RealPluginNotification.h"
 
+#include "Poco/NObserver.h"
+
 namespace _2Real
 {
 	_2RealContextPrivate::_2RealContextPrivate()
@@ -53,7 +55,6 @@ namespace _2Real
 
 		if (m_PluginNotificationCenter.hasObservers())
 		{
-			std::cout << "UNINSTALLED: " << _plugin->name() << std::endl;
 			m_PluginNotificationCenter.postNotification(new _2RealPluginNotification(_plugin->name(), "uninstalled"));
 		}
 	}

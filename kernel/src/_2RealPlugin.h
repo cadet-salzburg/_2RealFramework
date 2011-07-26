@@ -22,6 +22,8 @@
 #include "_2RealFramework.h"
 #include "_2RealIPluginActivator.h"
 
+#include "Poco/ClassLoader.h"
+
 namespace _2Real
 {
 	class _2RealPlugin
@@ -40,8 +42,9 @@ namespace _2Real
 		~_2RealPlugin();
 
 		const _2RealPluginState state() const;
-		const std::string& name() const;
-		const std::string& path() const;
+		const std::string name() const;
+		const std::string path() const;
+		_2RealMetadataPtr metadata() const;
 		
 		void load();
 		void unload();
@@ -49,9 +52,11 @@ namespace _2Real
 		void stop();
 		void uninstall();
 		
-		_2RealServicePtr createService(const std::string& _name, _2RealData& _config);
+		_2RealServicePtr createService(_2RealConfigMetadataPtr _config);
 
 	private:
+
+		typedef Poco::ClassLoader<_2RealIPluginActivator>	_2RealPluginLoader;
 
 		_2RealPlugin(const std::string& _name, const std::string& _dir, _2RealContextPrivate* _context);
 		

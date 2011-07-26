@@ -25,31 +25,11 @@
 
 #include <iostream>
 
-#include "Poco/File.h"
-#include "Poco/Path.h"
-#include "Poco/DirectoryIterator.h"
-#include "Poco/Mutex.h"
 #include "Poco/SharedPtr.h"
-#include "Poco/DynamicAny.h"
-#include "Poco/ClassLoader.h"
-#include "Poco/ClassLibrary.h"
-#include "Poco/Manifest.h"
-#include "Poco/Notification.h"
-#include "Poco/NotificationQueue.h"
-#include "Poco/NotificationCenter.h"
-#include "Poco/Observer.h"
-#include "Poco/NObserver.h"
-#include "Poco/SAX/SAXParser.h"
-#include "Poco/Thread.h"
-#include "Poco/ThreadPool.h"
-#include "Poco/Runnable.h"
-#include "Poco/RunnableAdapter.h"
-#include "Poco/BasicEvent.h"
-#include "Poco/Delegate.h"
+#include "Poco/AutoPtr.h"
 
 namespace _2Real
 {
-
 	class _2RealContext;
 	class _2RealContextPrivate;
 	class _2RealPlugin;
@@ -60,24 +40,18 @@ namespace _2Real
 	class _2RealFrameworkNotification;
 	class _2RealIPluginActivator;
 	class _2RealIService;
-	class _2RealIData;
-	class _2RealIMetaData;
+	class _2RealData;
+	class _2RealMetadata;
+	class _2RealConfigMetadata;
 	
-	typedef Poco::ClassLoader<_2RealIPluginActivator> _2RealPluginLoader;
-	
-	typedef Poco::SharedPtr<_2RealContext> _2RealContextPtr;
-	typedef Poco::SharedPtr<_2RealPlugin> _2RealPluginPtr;
-	typedef Poco::SharedPtr<_2RealPluginContext> _2RealPluginContextPtr;
-	typedef Poco::SharedPtr<_2RealIService> _2RealServicePtr;
-	typedef Poco::SharedPtr<_2RealServiceRegistration> _2RealServiceRegPtr;
-
-	typedef Poco::AutoPtr<_2RealServiceNotification> _2RealServiceNotificationPtr;
-	typedef Poco::AutoPtr<_2RealPluginNotification> _2RealPluginNotificationPtr;
-	typedef Poco::AutoPtr<_2RealFrameworkNotification> _2RealFrameworkNotificationPtr;
-
-	typedef std::map<std::string, _2RealPluginPtr> Plugins;
-	typedef std::map<std::string, _2RealServicePtr> Services;
-
-	typedef Poco::XML::SAXParser _2RealXMLParser;
-	typedef std::vector<Poco::Any> _2RealValueData;
+	typedef Poco::SharedPtr<_2RealContext>					_2RealContextPtr;
+	typedef Poco::SharedPtr<_2RealPluginContext>			_2RealPluginContextPtr;
+	typedef Poco::SharedPtr<_2RealIService>					_2RealServicePtr;
+	typedef Poco::SharedPtr<_2RealPlugin>					_2RealPluginPtr;
+	typedef Poco::SharedPtr<_2RealServiceRegistration>		_2RealServiceRegPtr;
+	typedef Poco::SharedPtr<_2RealMetadata>					_2RealMetadataPtr;
+	typedef Poco::SharedPtr<_2RealConfigMetadata>			_2RealConfigMetadataPtr;
+	typedef Poco::AutoPtr<_2RealServiceNotification>		_2RealServiceNotificationPtr;
+	typedef Poco::AutoPtr<_2RealPluginNotification>			_2RealPluginNotificationPtr;
+	typedef Poco::AutoPtr<_2RealFrameworkNotification>		_2RealFrameworkNotificationPtr;
 }
