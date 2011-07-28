@@ -30,15 +30,16 @@
 
 namespace _2Real
 {
-	class _2RealIService : public Poco::Runnable
+	class IService : public Poco::Runnable
 	{
 	public:
 		
-		virtual bool setup(_2RealConfigMetadataPtr _config) = 0;	//service initialization
-		virtual void run() = 0;										//run() replaces update() and serves as entry point for poco::thread
-		virtual void shutdown() = 0;								//clean up function
+		virtual bool setup(ConfigMetadataPtr const& _config) = 0;
+		virtual void run() = 0;
+		virtual void shutdown() = 0;
 		
-		virtual void addListener(_2RealServicePtr _listener) = 0;	//adds another service to listerners
-		virtual void inputListener(_2RealData& _data) = 0;			//reacts to new data
+		virtual void addListener(ServicePtr _listener) = 0;		//add other service to listerners
+		virtual void outputData() = 0;									//send new data to listeners
+		virtual void inputListener(Data& _data) = 0;					//react to new data sent by other service
 	};
 }

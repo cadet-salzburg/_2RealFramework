@@ -26,12 +26,12 @@
 
 namespace _2Real
 {
-	class _2RealPlugin
+	class Plugin
 	{
 
 	public:
 
-		enum _2RealPluginState
+		enum PluginState
 		{
 			UNINSTALLED =	0x00000001,
 			INSTALLED	=	0x00000002,
@@ -39,41 +39,39 @@ namespace _2Real
 			ACTIVE		=	0x00000008,
 		};
 
-		~_2RealPlugin();
+		~Plugin();
 
-		const _2RealPluginState state() const;
+		const PluginState state() const;
 		const std::string name() const;
 		const std::string path() const;
-		_2RealMetadataPtr metadata() const;
+		MetadataPtr metadata() const;
 		
 		void load();
 		void unload();
 		void start();
 		void stop();
 		void uninstall();
-		
-		_2RealServicePtr createService(_2RealConfigMetadataPtr _config);
 
 	private:
 
-		typedef Poco::ClassLoader<_2RealIPluginActivator>	_2RealPluginLoader;
+		typedef Poco::ClassLoader<IPluginActivator>	PluginLoader;
 
-		_2RealPlugin(const std::string& _name, const std::string& _dir, _2RealContextPrivate* _context);
+		Plugin(const std::string& _name, const std::string& _dir, ContextPrivate* _context);
 		
 		void activate();
 		void deactivate();
 		void loadLibrary();
 		void unloadLibrary();
 
-		_2RealContextPrivate*		m_ContextPtr;			//framework context
-		_2RealPluginContextPtr		m_PluginContextPtr;		//execution context
-		_2RealPluginState			m_PluginState;			//state of plugin
-		_2RealPluginLoader			m_PluginLoader;			//poco classloader
-		_2RealIPluginActivator*		m_PluginActivator;		//the activator interface as implemented by the plugin
+		ContextPrivate*		m_ContextPtr;			//framework context
+		PluginContextPtr		m_PluginContextPtr;		//execution context
+		PluginState			m_PluginState;			//state of plugin
+		PluginLoader			m_PluginLoader;			//poco classloader
+		IPluginActivator*		m_PluginActivator;		//the activator interface as implemented by the plugin
 		std::string					m_PluginName;			//name of plugin
 		std::string					m_LibraryPath;			//absolute path to dll
 
-		friend class _2RealContextPrivate;
+		friend class ContextPrivate;
 
 	};
 }

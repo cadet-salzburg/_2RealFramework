@@ -24,34 +24,34 @@
 
 namespace _2Real
 {
-	_2RealPlugin::_2RealPlugin(const std::string& _name, const std::string& _dir, _2RealContextPrivate* _context) : 
-						m_PluginState(_2RealPlugin::UNINSTALLED), m_PluginName(_name), m_LibraryPath(_dir+_name), m_ContextPtr(_context), m_PluginActivator(NULL)
+	Plugin::Plugin(const std::string& _name, const std::string& _dir, ContextPrivate* _context) : 
+						m_PluginState(Plugin::UNINSTALLED), m_PluginName(_name), m_LibraryPath(_dir+_name), m_ContextPtr(_context), m_PluginActivator(NULL)
 	{
-		m_PluginContextPtr = _2RealPluginContextPtr(new _2RealPluginContext(this, _context));
-		m_PluginState = _2RealPlugin::INSTALLED;
+		m_PluginContextPtr = PluginContextPtr(new PluginContext(this, _context));
+		m_PluginState = Plugin::INSTALLED;
 	}
 
-	_2RealPlugin::~_2RealPlugin()
+	Plugin::~Plugin()
 	{
 		delete m_PluginContextPtr.assign(NULL);
 	}
 
-	const _2RealPlugin::_2RealPluginState _2RealPlugin::state() const
+	const Plugin::PluginState Plugin::state() const
 	{
 		return m_PluginState;
 	}
 		
-	const std::string _2RealPlugin::name() const
+	const std::string Plugin::name() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string _2RealPlugin::path() const
+	const std::string Plugin::path() const
 	{
 		return m_LibraryPath;
 	}
 
-	_2RealMetadataPtr _2RealPlugin::metadata() const
+	MetadataPtr Plugin::metadata() const
 	{
 		if (m_PluginState == ACTIVE)
 		{
@@ -61,34 +61,34 @@ namespace _2Real
 		return NULL;
 	}
 
-	void _2RealPlugin::load()
+	void Plugin::load()
 	{
 		switch (m_PluginState)
 		{
-			case _2RealPlugin::UNINSTALLED:
-			case _2RealPlugin::LOADED:
-			case _2RealPlugin::ACTIVE:
+			case Plugin::UNINSTALLED:
+			case Plugin::LOADED:
+			case Plugin::ACTIVE:
 				break;
 
-			case _2RealPlugin::INSTALLED:
+			case Plugin::INSTALLED:
 				try
 				{
 					loadLibrary();
 				}
 				catch (std::logic_error e)
 				{
-					std::cout << "_2RealPlugin::load() - could not load the dll " << e.what() << std::endl;
+					std::cout << "Plugin::load() - could not load the dll " << e.what() << std::endl;
 				}
 				break;
 		}
 	}
 
-	void _2RealPlugin::loadLibrary()
+	void Plugin::loadLibrary()
 	{
 		try
 		{
 			m_PluginLoader.loadLibrary(m_LibraryPath);
-			m_PluginState = _2RealPlugin::LOADED;
+			m_PluginState = Plugin::LOADED;
 		}
 		catch (Poco::Exception& e)
 		{
@@ -97,29 +97,29 @@ namespace _2Real
 		}
 	}
 
-	void _2RealPlugin::start()
+	void Plugin::start()
 	{
 		switch (m_PluginState)
 		{
-			case _2RealPlugin::UNINSTALLED:
-			case _2RealPlugin::INSTALLED:
-			case _2RealPlugin::ACTIVE:
+			case Plugin::UNINSTALLED:
+			case Plugin::INSTALLED:
+			case Plugin::ACTIVE:
 				break;
 
-			case _2RealPlugin::LOADED:
+			case Plugin::LOADED:
 				try
 				{
 					activate();
 				}
 				catch (std::logic_error e)
 				{
-					std::cout << "_2RealPlugin::start() - could not activate plugin " << e.what() << std::endl;
+					std::cout << "Plugin::start() - could not activate plugin " << e.what() << std::endl;
 				}
 				break;
 		}
 	}
 
-	void _2RealPlugin::activate()
+	void Plugin::activate()
 	{
 		try {
 			
@@ -132,7 +132,7 @@ namespace _2Real
 				}
 
 				m_PluginActivator->start(m_PluginContextPtr);
-				m_PluginState = _2RealPlugin::ACTIVE;
+				m_PluginState = Plugin::ACTIVE;
 			}
 			else
 			{
@@ -150,29 +150,29 @@ namespace _2Real
 		}
 	}
 
-	void _2RealPlugin::stop()
+	void Plugin::stop()
 	{
 		switch (m_PluginState)
 		{
-			case _2RealPlugin::UNINSTALLED:
-			case _2RealPlugin::INSTALLED:
-			case _2RealPlugin::LOADED:
+			case Plugin::UNINSTALLED:
+			case Plugin::INSTALLED:
+			case Plugin::LOADED:
 				break;
 
-			case _2RealPlugin::ACTIVE:
+			case Plugin::ACTIVE:
 				try
 				{
 					deactivate();
 				}
 				catch (std::logic_error e)
 				{
-					std::cout << "_2RealPlugin::stop() - could not deactivate plugin " << e.what() << std::endl;
+					std::cout << "Plugin::stop() - could not deactivate plugin " << e.what() << std::endl;
 				}
 				break;
 		}
 	}
 
-	void _2RealPlugin::deactivate()
+	void Plugin::deactivate()
 	{
 		try
 		{
@@ -190,43 +190,43 @@ namespace _2Real
 			
 			delete m_PluginActivator;
 			m_PluginActivator = NULL;
-			m_PluginState = _2RealPlugin::LOADED;
+			m_PluginState = Plugin::LOADED;
 		}
 		catch (std::logic_error e)
 		{
 		}
 	}
 
-	void _2RealPlugin::unload()
+	void Plugin::unload()
 	{
 		switch (m_PluginState)
 		{
-			case _2RealPlugin::UNINSTALLED:
-			case _2RealPlugin::INSTALLED:
-			case _2RealPlugin::ACTIVE:
+			case Plugin::UNINSTALLED:
+			case Plugin::INSTALLED:
+			case Plugin::ACTIVE:
 				break;
 
-			case _2RealPlugin::LOADED:
+			case Plugin::LOADED:
 				try
 				{
 					unloadLibrary();
 				}
 				catch (std::logic_error e)
 				{
-					std::cout << "_2RealPlugin::unload() - could not deactivate plugin " << e.what() << std::endl;
+					std::cout << "Plugin::unload() - could not deactivate plugin " << e.what() << std::endl;
 				}
 				break;
 		}
 	}
 
-	void _2RealPlugin::unloadLibrary()
+	void Plugin::unloadLibrary()
 	{
 		try
 		{
 			if(m_PluginLoader.isLibraryLoaded(m_LibraryPath))
 			{
 				m_PluginLoader.unloadLibrary(m_LibraryPath);
-				m_PluginState = _2RealPlugin::INSTALLED;
+				m_PluginState = Plugin::INSTALLED;
 			}
 			else
 			{
@@ -239,30 +239,25 @@ namespace _2Real
 		}
 	}
 	
-	void _2RealPlugin::uninstall()
+	void Plugin::uninstall()
 	{
 		switch (m_PluginState)
 		{
-		case _2RealPlugin::UNINSTALLED:
+		case Plugin::UNINSTALLED:
 			break;
 
-		case _2RealPlugin::ACTIVE:
+		case Plugin::ACTIVE:
 			stop();
-			m_PluginState = _2RealPlugin::LOADED;
+			m_PluginState = Plugin::LOADED;
 
-		case _2RealPlugin::LOADED:
+		case Plugin::LOADED:
 			unload();
-			m_PluginState = _2RealPlugin::INSTALLED;
+			m_PluginState = Plugin::INSTALLED;
 
-		case _2RealPlugin::INSTALLED:
+		case Plugin::INSTALLED:
 			m_ContextPtr->uninstallPlugin(this);
-			m_PluginState = _2RealPlugin::UNINSTALLED;
+			m_PluginState = Plugin::UNINSTALLED;
 			break;
 		}
-	}
-
-	_2RealServicePtr _2RealPlugin::createService(_2RealConfigMetadataPtr _config)
-	{
-		return m_PluginActivator->createService(_config);
 	}
 }

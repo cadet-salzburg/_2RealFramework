@@ -30,12 +30,12 @@
 
 namespace _2Real
 {
-	class _2RealPluginNotification : public Poco::Notification
+	class PluginNotification : public Poco::Notification
 	{
 	public:
 		
-		_2RealPluginNotification(std::string _plugin, std::string _message);
-		~_2RealPluginNotification();
+		PluginNotification(std::string _plugin, std::string _message);
+		~PluginNotification();
 
 		const std::string plugin() const;
 		const std::string message() const;

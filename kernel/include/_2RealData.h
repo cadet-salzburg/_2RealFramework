@@ -25,15 +25,15 @@
 
 namespace _2Real
 {
-	class _2RealData
+	class Data
 	{
 
 	public:
 		
-		_2RealData();
-		_2RealData(const _2RealData& _src);
-		_2RealData& operator= (const _2RealData& _src);
-		~_2RealData();
+		Data();
+		Data(const Data& _src);
+		Data& operator= (const Data& _src);
+		~Data();
 
 		template<class T>
 		void insert(std::string _name, T _data)

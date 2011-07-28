@@ -20,36 +20,36 @@
 
 namespace _2Real
 {
-	_2RealConfigMetadata::_2RealConfigMetadata(std::string _name) : _2RealMetadata(_name)
+	ConfigMetadata::ConfigMetadata(std::string _name) : Metadata(_name)
 	{
 		m_SetupPath.push_back("setup params");
 		m_InputPath.push_back("input params");
 		m_OutputPath.push_back("output params");
 
-		_2RealMetadataPtr setupMetadata(new _2RealMetadata("setup params"));
-		_2RealMetadataPtr inputMetadata(new _2RealMetadata("input params"));
-		_2RealMetadataPtr outputMetadata(new _2RealMetadata("output params"));
+		MetadataPtr setupMetadata(new Metadata("setup params"));
+		MetadataPtr inputMetadata(new Metadata("input params"));
+		MetadataPtr outputMetadata(new Metadata("output params"));
 		
-		_2RealMetadata::insert(setupMetadata);
-		_2RealMetadata::insert(inputMetadata);
-		_2RealMetadata::insert(outputMetadata);
+		Metadata::insert(setupMetadata);
+		Metadata::insert(inputMetadata);
+		Metadata::insert(outputMetadata);
 	}
 
-	_2RealConfigMetadata::_2RealConfigMetadata(const _2RealConfigMetadata& _src) : _2RealMetadata(_src)
+	ConfigMetadata::ConfigMetadata(const ConfigMetadata& _src) : Metadata(_src)
 	{ 
 		m_SetupPath = _src.m_SetupPath;
 		m_InputPath = _src.m_InputPath;
 		m_OutputPath = _src.m_OutputPath;
 	}
 		
-	_2RealConfigMetadata& _2RealConfigMetadata::operator= (const _2RealConfigMetadata& _src)
+	ConfigMetadata& ConfigMetadata::operator= (const ConfigMetadata& _src)
 	{ 
 		if (this == &_src)
 		{
 			return *this;
 		}
 
-		_2RealMetadata::operator=(_src);
+		Metadata::operator=(_src);
 
 		m_SetupPath = _src.m_SetupPath;
 		m_InputPath = _src.m_InputPath;
@@ -58,8 +58,25 @@ namespace _2Real
 		return *this;
 	}
 		
-	_2RealConfigMetadata::~_2RealConfigMetadata()
+	ConfigMetadata::~ConfigMetadata()
 	{ 
 	}
 
+	Data const& ConfigMetadata::setupAttributes() const
+	{
+		const Metadata *metadata = Metadata::child("setup params");
+		return metadata->attributes();
+	}
+
+	Data const& ConfigMetadata::intputAttributes() const
+	{
+		const Metadata *metadata = Metadata::child("input params");
+		return metadata->attributes();
+	}
+
+	Data const& ConfigMetadata::outputAttributes() const
+	{
+		const Metadata *metadata = Metadata::child("output params");
+		return metadata->attributes();
+	}
 }

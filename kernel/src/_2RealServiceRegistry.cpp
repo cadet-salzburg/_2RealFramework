@@ -16,23 +16,32 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceRegistration.h"
-#include "_2RealContextPrivate.h"
+#include "_2RealServiceRegistry.h"
 #include "_2RealIService.h"
+#include "_2RealServiceRegistration.h"
+
+#include "Poco/ThreadPool.h"
 
 namespace _2Real
 {
-	ServiceRegistration::ServiceRegistration(const std::string& _name, ServicePtr& _service) : m_ServicePtr(_service), m_ServiceName(_name)
+	bool ServiceRegistry::update()
 	{
+		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		{
+			//todo: check metadata to find out if services should actually be threaded
+			//also, use different thread pool
+			IService* service = it->second->servicePtr().get();
+			Poco::ThreadPool::defaultPool().start(*service);
+		}
+		
+		Poco::ThreadPool::defaultPool().joinAll();
+
+		return true;
 	}
 
-	ServicePtr ServiceRegistration::servicePtr()
+	void ServiceRegistry::addService(std::string _name, ServicePtr _service)
 	{
-		return m_ServicePtr;
-	}
-
-	std::string const& ServiceRegistration::name() const
-	{
-		return m_ServiceName;
+		ServiceRegPtr reg(new ServiceRegistration(_name, _service));
+		m_Services.insert(ServiceItem(_name, reg));
 	}
 }

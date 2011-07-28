@@ -23,11 +23,11 @@
 
 namespace _2Real
 {
-	class _2RealMetadataReader
+	class MetadataReader
 	{
 	public:
 
-		static _2RealMetadataPtr readXMLFile(std::string _file);
+		static MetadataPtr readXMLFile(std::string _file);
 
 	};
 }

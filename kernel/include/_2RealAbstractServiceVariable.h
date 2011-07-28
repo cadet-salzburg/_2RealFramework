@@ -21,33 +21,25 @@
 
 #include "_2RealFramework.h"
 
-/*
-	returned by the framework context when a service is registered
-	can be used by the plugin activator to unregister a service
-*/
-
 namespace _2Real
 {
-	class _2RealServiceRegistration
+	class AbstractServiceVariable
 	{
+
 	public:
 
-		~_2RealServiceRegistration();
+		AbstractServiceVariable(std::string _name) { m_OriginalName = _name; }
+		std::string const& originalName() const { return m_OriginalName; }
+		std::string const& frameworkName() const { return m_FrameworkName; }
+		void setFrameworkName(std::string _name) { m_FrameworkName = _name; }
 		
-		void unregister();
-		_2RealServicePtr servicePtr();
-		const std::string serviceName() const;
-		const std::string pluginName() const;
+		virtual bool getFrom(const Data &_data) = 0;
+		virtual void insertInto(Data &_data) const = 0;
 
 	private:
 
-		_2RealContextPrivate*		m_ContextPtr;
-		_2RealServicePtr			m_ServicePtr;
-		std::string					m_ServiceName;
-		std::string					m_PluginName;
+		std::string			m_OriginalName;
+		std::string			m_FrameworkName;
 
-		_2RealServiceRegistration(const std::string& _name, const std::string& _plugin, _2RealContextPrivate* _context, _2RealServicePtr& _service);
-
-		friend class _2RealContextPrivate;
 	};
 }

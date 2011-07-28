@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
+    <ClCompile Include="..\..\src\_2RealAbstractService.cpp" />
     <ClCompile Include="..\..\src\_2RealConfigMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
@@ -23,8 +25,13 @@
     <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceNotification.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\_2RealAbstractPluginActivator.h" />
+    <ClInclude Include="..\..\include\_2RealAbstractService.h" />
+    <ClInclude Include="..\..\include\_2RealAbstractServiceVariable.h" />
     <ClInclude Include="..\..\include\_2RealConfigMetadata.h" />
     <ClInclude Include="..\..\include\_2RealContext.h" />
     <ClInclude Include="..\..\include\_2RealData.h" />
@@ -37,9 +44,13 @@
     <ClInclude Include="..\..\include\_2RealPluginContext.h" />
     <ClInclude Include="..\..\include\_2RealPluginNotification.h" />
     <ClInclude Include="..\..\include\_2RealServiceNotification.h" />
-    <ClInclude Include="..\..\include\_2RealServiceRegistration.h" />
+    <ClInclude Include="..\..\include\_2RealServiceParameter.h" />
+    <ClInclude Include="..\..\include\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
+    <ClInclude Include="..\..\src\_2RealServiceRegistration.h" />
+    <ClInclude Include="..\..\src\_2RealServiceRegistry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

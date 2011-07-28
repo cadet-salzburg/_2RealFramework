@@ -29,13 +29,13 @@
 
 namespace _2Real
 {
-	class _2RealContext
+	class Context
 	{
 
 	public:
 
-		~_2RealContext();
-		static _2RealContextPtr instance();
+		~Context();
+		static ContextPtr instance();
 
 		void config();
 		bool update();
@@ -44,14 +44,14 @@ namespace _2Real
 
 	private:
 
-		_2RealContext();
+		Context();
 
-		static _2RealContextPtr		s_ContextPtr;
-		static bool					s_bIsInstanced;
-		static Poco::Mutex			s_Mutex;
+		static ContextPtr		s_ContextPtr;
+		static bool				s_bIsInstanced;
+		static Poco::Mutex		s_Mutex;
 
-		Poco::Mutex					m_Lock;
-		_2RealContextPrivate*		m_PrivateContext;
+		Poco::Mutex				m_Lock;
+		ContextPrivate*			m_PrivateContext;
 
 	};
 }

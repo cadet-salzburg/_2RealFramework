@@ -23,47 +23,52 @@
 
 namespace _2Real
 {
-	_2RealPluginContext::_2RealPluginContext(_2RealPlugin* _plugin, _2RealContextPrivate* _context) : m_PluginPtr(_plugin), m_ContextPtr(_context)
+	PluginContext::PluginContext(Plugin* _plugin, ContextPrivate* _context) : m_PluginPtr(_plugin), m_ContextPtr(_context)
 	{
 	}
 
-	_2RealPluginContext::~_2RealPluginContext()
+	PluginContext::~PluginContext()
 	{
 		m_PluginPtr = NULL;
 		m_ContextPtr = NULL;
 	}
 
-	_2RealServiceRegPtr _2RealPluginContext::registerService(const std::string& _name, _2RealServicePtr& _service)
+	bool PluginContext::registerService(const std::string _name, ServicePtr (*_func)(void))
 	{
-		return m_ContextPtr->registerService(_name, m_PluginPtr->name(), _service);
+		return m_ContextPtr->registerService(_name, m_PluginPtr->name(), _func);
 	}
 
-	void _2RealPluginContext::addServiceListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::unregisterService(const std::string _name)
+	{
+		return m_ContextPtr->invalidateService(_name, m_PluginPtr->name());
+	}
+
+	void PluginContext::addServiceListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->addServiceListener(_activator);
 	}
 
-	void _2RealPluginContext::addFrameworkListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::addFrameworkListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->addFrameworkListener(_activator);
 	}
 
-	void _2RealPluginContext::addPluginListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::addPluginListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->addPluginListener(_activator);
 	}
 
-	void _2RealPluginContext::removeServiceListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::removeServiceListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->removeServiceListener(_activator);
 	}
 
-	void _2RealPluginContext::removeFrameworkListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::removeFrameworkListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->removeFrameworkListener(_activator);
 	}
 
-	void _2RealPluginContext::removePluginListerner(_2RealIPluginActivator& _activator)
+	void PluginContext::removePluginListerner(IPluginActivator& _activator)
 	{
 		m_ContextPtr->removePluginListener(_activator);
 	}

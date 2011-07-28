@@ -28,89 +28,92 @@
 
 namespace _2Real
 {
-	_2RealContextPrivate::_2RealContextPrivate()
+	ContextPrivate::ContextPrivate()
 	{
 	}
 
-	_2RealContextPrivate::~_2RealContextPrivate()
+	ContextPrivate::~ContextPrivate()
 	{
 	}
 
-	_2RealPluginPtr _2RealContextPrivate::installPlugin(const std::string& _name, const std::string& _path)
+	PluginPtr ContextPrivate::installPlugin(const std::string& _name, const std::string& _path)
 	{
-		_2RealPluginPtr plugin = _2RealPluginPtr(new _2RealPlugin(_name, _path, this));
-		m_Plugins.insert(std::pair<std::string, _2RealPluginPtr>(_name, plugin));
+		PluginPtr plugin = PluginPtr(new Plugin(_name, _path, this));
+		m_Plugins.insert(std::pair<std::string, PluginPtr>(_name, plugin));
 		if (m_PluginNotificationCenter.hasObservers())
 		{
-			m_PluginNotificationCenter.postNotification(new _2RealPluginNotification(_name, "installed"));
+			m_PluginNotificationCenter.postNotification(new PluginNotification(_name, "installed"));
 		}
 
 		return m_Plugins.find(_name)->second;
 	}
 
-	void _2RealContextPrivate::uninstallPlugin(_2RealPlugin* _plugin)
+	void ContextPrivate::uninstallPlugin(Plugin* _plugin)
 	{
 		Plugins::iterator it = m_Plugins.find(_plugin->name());
 		m_Plugins.erase(it);
 
 		if (m_PluginNotificationCenter.hasObservers())
 		{
-			m_PluginNotificationCenter.postNotification(new _2RealPluginNotification(_plugin->name(), "uninstalled"));
+			m_PluginNotificationCenter.postNotification(new PluginNotification(_plugin->name(), "uninstalled"));
 		}
 	}
 
-	_2RealServiceRegPtr _2RealContextPrivate::registerService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service)
+	bool ContextPrivate::updateServiceRegistry()
 	{
-		_2RealServiceRegPtr reg = _2RealServiceRegPtr(new _2RealServiceRegistration(_name, _plugin, this, _service));
-	
-		m_Services.insert(std::pair<std::string, _2RealServicePtr>(_plugin + "." + _name, _service));
+		return m_ServiceRegistry.update();
+	}
 
-		if (m_ServiceNotificationCenter.hasObservers())
+	bool ContextPrivate::registerService(const std::string _name, const std::string& _plugin, ServiceFactoryMethod _func)
+	{
+		return m_ServiceFactory.registerService(_name, _func);
+	}
+
+	ServicePtr ContextPrivate::createService(const std::string& _name)
+	{
+		ServicePtr service = m_ServiceFactory.createService(_name);
+
+		if (!service.isNull())
 		{
-			m_ServiceNotificationCenter.postNotification(new _2RealServiceNotification(_name, _plugin, "added"));
+			m_ServiceRegistry.addService(_name, service);
+			return service;
 		}
 
-		return reg;
+		return ServicePtr();
 	}
 
-	void _2RealContextPrivate::unregisterService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service)
+	void ContextPrivate::invalidateService(const std::string _name, const std::string& _plugin)
 	{
-		Services::iterator it = m_Services.find(_plugin + "." + _name);
-		m_Services.erase(it);
-		
-		if (m_ServiceNotificationCenter.hasObservers())
-		{
-			m_PluginNotificationCenter.postNotification(new _2RealServiceNotification(_name, _plugin, "removed"));
-		}
+		return m_ServiceFactory.unregisterService(_name);
 	}
 
-	void _2RealContextPrivate::addServiceListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::addServiceListener(IPluginActivator& _activator)
 	{
-		m_ServiceNotificationCenter.addObserver(Poco::NObserver<_2RealIPluginActivator, _2RealServiceNotification>(_activator, &_2RealIPluginActivator::handleServiceNotification));
+		m_ServiceNotificationCenter.addObserver(Poco::NObserver<IPluginActivator, ServiceNotification>(_activator, &IPluginActivator::handleServiceNotification));
 	}
 
-	void _2RealContextPrivate::addFrameworkListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::addFrameworkListener(IPluginActivator& _activator)
 	{
-		m_FrameworkNotificationCenter.addObserver(Poco::NObserver<_2RealIPluginActivator, _2RealFrameworkNotification>(_activator, &_2RealIPluginActivator::handleFrameworkNotification));
+		m_FrameworkNotificationCenter.addObserver(Poco::NObserver<IPluginActivator, FrameworkNotification>(_activator, &IPluginActivator::handleFrameworkNotification));
 	}
 
-	void _2RealContextPrivate::addPluginListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::addPluginListener(IPluginActivator& _activator)
 	{
-		m_PluginNotificationCenter.addObserver(Poco::NObserver<_2RealIPluginActivator, _2RealPluginNotification>(_activator, &_2RealIPluginActivator::handlePluginNotification));
+		m_PluginNotificationCenter.addObserver(Poco::NObserver<IPluginActivator, PluginNotification>(_activator, &IPluginActivator::handlePluginNotification));
 	}
 
-	void _2RealContextPrivate::removeServiceListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::removeServiceListener(IPluginActivator& _activator)
 	{
-		m_ServiceNotificationCenter.removeObserver(Poco::NObserver<_2RealIPluginActivator, _2RealServiceNotification>(_activator, &_2RealIPluginActivator::handleServiceNotification));
+		m_ServiceNotificationCenter.removeObserver(Poco::NObserver<IPluginActivator, ServiceNotification>(_activator, &IPluginActivator::handleServiceNotification));
 	}
 
-	void _2RealContextPrivate::removeFrameworkListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::removeFrameworkListener(IPluginActivator& _activator)
 	{
-		m_FrameworkNotificationCenter.removeObserver(Poco::NObserver<_2RealIPluginActivator, _2RealFrameworkNotification>(_activator, &_2RealIPluginActivator::handleFrameworkNotification));
+		m_FrameworkNotificationCenter.removeObserver(Poco::NObserver<IPluginActivator, FrameworkNotification>(_activator, &IPluginActivator::handleFrameworkNotification));
 	}
 
-	void _2RealContextPrivate::removePluginListener(_2RealIPluginActivator& _activator)
+	void ContextPrivate::removePluginListener(IPluginActivator& _activator)
 	{
-		m_PluginNotificationCenter.removeObserver(Poco::NObserver<_2RealIPluginActivator, _2RealPluginNotification>(_activator, &_2RealIPluginActivator::handlePluginNotification));
+		m_PluginNotificationCenter.removeObserver(Poco::NObserver<IPluginActivator, PluginNotification>(_activator, &IPluginActivator::handlePluginNotification));
 	}
 }

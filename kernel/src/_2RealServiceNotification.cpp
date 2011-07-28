@@ -20,25 +20,25 @@
 
 namespace _2Real
 {
-	_2RealServiceNotification::_2RealServiceNotification(std::string _service, std::string _plugin, std::string _message) : m_ServiceName(_service), m_PluginName(_plugin), m_Message(_message)
+	ServiceNotification::ServiceNotification(std::string _service, std::string _plugin, std::string _message) : m_ServiceName(_service), m_PluginName(_plugin), m_Message(_message)
 	{
 	}
 
-	_2RealServiceNotification::~_2RealServiceNotification()
+	ServiceNotification::~ServiceNotification()
 	{
 	}
 
-	const std::string _2RealServiceNotification::service() const
+	const std::string ServiceNotification::service() const
 	{
 		return m_ServiceName;
 	}
 
-	const std::string _2RealServiceNotification::plugin() const
+	const std::string ServiceNotification::plugin() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string _2RealServiceNotification::message() const
+	const std::string ServiceNotification::message() const
 	{
 		return m_Message;
 	}

@@ -20,7 +20,7 @@
 
 namespace _2Real
 {
-	_2RealMetadata::_2RealMetadata(const _2RealMetadata& _src)
+	Metadata::Metadata(const Metadata& _src)
 	{
 		m_Name = _src.m_Name;
 		m_Attributes = _src.m_Attributes;
@@ -28,7 +28,7 @@ namespace _2Real
 		m_Children = _src.m_Children;
 	}
 
-	_2RealMetadata& _2RealMetadata::operator= (const _2RealMetadata& _src)
+	Metadata& Metadata::operator= (const Metadata& _src)
 	{
 		if (this == &_src)
 		{
@@ -43,11 +43,11 @@ namespace _2Real
 		return *this;
 	}
 
-	_2RealMetadata::~_2RealMetadata()
+	Metadata::~Metadata()
 	{
 	}
 
-	const bool _2RealMetadata::insert(_2RealMetadataPtr& _metadata)
+	const bool Metadata::insert(MetadataPtr& _metadata)
 	{
 		MetadataMap::iterator it = m_Children.find(_metadata->name());
 		if (it != m_Children.end())
@@ -55,12 +55,12 @@ namespace _2Real
 			return false;
 		}
 
-		m_Children.insert(Metadata(_metadata->name(), _metadata));
+		m_Children.insert(MetadataValue(_metadata->name(), _metadata));
 		_metadata->setFather(this);
 		return true;
 	}
 
-	const bool _2RealMetadata::insert(const std::vector<std::string>& _path, _2RealMetadataPtr& _metadata)
+	const bool Metadata::insert(const std::vector<std::string>& _path, MetadataPtr& _metadata)
 	{
 		if (_path.empty())
 		{
@@ -79,7 +79,7 @@ namespace _2Real
 		return it->second->insert(path, _metadata);
 	}
 
-	const _2RealMetadata* const _2RealMetadata::subtree(const std::vector<std::string>& _path) const
+	const Metadata* const Metadata::subtree(const std::vector<std::string>& _path) const
 	{
 		if (_path.empty())
 		{
@@ -101,7 +101,7 @@ namespace _2Real
 		return it->second->subtree(path);
 	}
 
-	_2RealMetadata* _2RealMetadata::subtree(const std::vector<std::string>& _path)
+	Metadata* Metadata::subtree(const std::vector<std::string>& _path)
 	{
 		if (_path.empty())
 		{
@@ -123,7 +123,7 @@ namespace _2Real
 		return it->second->subtree(path);
 	}
 
-	const _2RealMetadata* const _2RealMetadata::child(std::string _name) const
+	const Metadata* const Metadata::child(std::string _name) const
 	{
 		MetadataMap::const_iterator it = m_Children.find(_name);
 		if (it == m_Children.end())
@@ -134,7 +134,7 @@ namespace _2Real
 		return it->second.get();
 	}
 
-	_2RealMetadata* _2RealMetadata::child(std::string _name)
+	Metadata* Metadata::child(std::string _name)
 	{
 		MetadataMap::iterator it = m_Children.find(_name);
 		if (it == m_Children.end())

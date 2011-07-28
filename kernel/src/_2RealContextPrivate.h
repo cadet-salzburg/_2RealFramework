@@ -20,48 +20,52 @@
 #pragma once
 
 #include "_2RealFramework.h"
+#include "_2RealServiceFactory.h"
+#include "_2RealServiceRegistry.h"
 
 #include "Poco/NotificationCenter.h"
 
 namespace _2Real
 {
-	class _2RealContextPrivate
+	class ContextPrivate
 	{
 
 	public:
 		
-		~_2RealContextPrivate();
+		~ContextPrivate();
 
-		void addServiceListener(_2RealIPluginActivator& _activator);								//called by a plugin, adds service listener
-		void addFrameworkListener(_2RealIPluginActivator& _activator);								//called by a plugin, adds framework listener
-		void addPluginListener(_2RealIPluginActivator& _activator);									//called by a plugin, adds plugin listener
-		void removeServiceListener(_2RealIPluginActivator& _activator);								//called by a plugin, removes service listener
-		void removeFrameworkListener(_2RealIPluginActivator& _activator);							//called by a plugin, removes framework listener
-		void removePluginListener(_2RealIPluginActivator& _activator);								//called by a plugin, removes plugin listener
+		void addServiceListener(IPluginActivator& _activator);									//called by a plugin, adds service listener
+		void addFrameworkListener(IPluginActivator& _activator);								//called by a plugin, adds framework listener
+		void addPluginListener(IPluginActivator& _activator);									//called by a plugin, adds plugin listener
+		void removeServiceListener(IPluginActivator& _activator);								//called by a plugin, removes service listener
+		void removeFrameworkListener(IPluginActivator& _activator);								//called by a plugin, removes framework listener
+		void removePluginListener(IPluginActivator& _activator);								//called by a plugin, removes plugin listener
 
-		_2RealServiceRegPtr registerService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service);
-		void unregisterService(const std::string& _name, const std::string& _plugin, _2RealServicePtr& _service);
+		bool registerService(const std::string _name, const std::string& _plugin, ServiceFactoryMethod _func);
+		void invalidateService(const std::string _name, const std::string& _plugin);
+		ServicePtr createService(const std::string& _name);
+		bool updateServiceRegistry();
 
-		void uninstallPlugin(_2RealPlugin* _plugin);												//called by a plugin, removes plugin from plugin pool
-		void stopPlugin(_2RealPlugin* _plugin);														//called by a plugin, generates plugin stopped message
-		void startPlugin(_2RealPlugin* _plugin);													//called by a plugin, generates plugin started message
+		void uninstallPlugin(Plugin* _plugin);													//called by a plugin, removes plugin from plugin pool
+		void stopPlugin(Plugin* _plugin);														//called by a plugin, generates plugin stopped message
+		void startPlugin(Plugin* _plugin);														//called by a plugin, generates plugin started message
 
 	private:
 
-		typedef std::map<std::string, _2RealPluginPtr>	Plugins;
-		typedef std::map<std::string, _2RealServicePtr>					Services;
+		typedef std::map<std::string, PluginPtr>	Plugins;
 
-		_2RealContextPrivate();
+		ContextPrivate();
 
-		Plugins						m_Plugins;														//map of installed plugins
-		Services					m_Services;														//map of registered services
+		Plugins						m_Plugins;													//map of installed plugins
+		ServiceRegistry				m_ServiceRegistry;
+		ServiceFactory				m_ServiceFactory;
 		
-		Poco::NotificationCenter		m_ServiceNotificationCenter;								//poco notification center for service events
-		Poco::NotificationCenter		m_FrameworkNotificationCenter;								//poco notification center for framework events
-		Poco::NotificationCenter		m_PluginNotificationCenter;									//poco notification center for plugin events
+		Poco::NotificationCenter		m_ServiceNotificationCenter;							//poco notification center for service events
+		Poco::NotificationCenter		m_FrameworkNotificationCenter;							//poco notification center for framework events
+		Poco::NotificationCenter		m_PluginNotificationCenter;								//poco notification center for plugin events
 
-		_2RealPluginPtr installPlugin(const std::string& _name, const std::string& _path);			//install plugin
+		PluginPtr installPlugin(const std::string& _name, const std::string& _path);			//install plugin
 
-		friend class _2RealContext;
+		friend class Context;
 	};
 }

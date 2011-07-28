@@ -22,6 +22,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <list>
 
 #include <iostream>
 
@@ -30,28 +31,45 @@
 
 namespace _2Real
 {
-	class _2RealContext;
-	class _2RealContextPrivate;
-	class _2RealPlugin;
-	class _2RealPluginContext;
-	class _2RealServiceRegistration;
-	class _2RealPluginNotification;
-	class _2RealServiceNotification;
-	class _2RealFrameworkNotification;
-	class _2RealIPluginActivator;
-	class _2RealIService;
-	class _2RealData;
-	class _2RealMetadata;
-	class _2RealConfigMetadata;
+	class Context;
+	class ContextPrivate;
 	
-	typedef Poco::SharedPtr<_2RealContext>					_2RealContextPtr;
-	typedef Poco::SharedPtr<_2RealPluginContext>			_2RealPluginContextPtr;
-	typedef Poco::SharedPtr<_2RealIService>					_2RealServicePtr;
-	typedef Poco::SharedPtr<_2RealPlugin>					_2RealPluginPtr;
-	typedef Poco::SharedPtr<_2RealServiceRegistration>		_2RealServiceRegPtr;
-	typedef Poco::SharedPtr<_2RealMetadata>					_2RealMetadataPtr;
-	typedef Poco::SharedPtr<_2RealConfigMetadata>			_2RealConfigMetadataPtr;
-	typedef Poco::AutoPtr<_2RealServiceNotification>		_2RealServiceNotificationPtr;
-	typedef Poco::AutoPtr<_2RealPluginNotification>			_2RealPluginNotificationPtr;
-	typedef Poco::AutoPtr<_2RealFrameworkNotification>		_2RealFrameworkNotificationPtr;
+	class Plugin;
+	class PluginContext;	
+	//class PluginPool;
+	
+	class ServiceFactory;
+	class ServiceRegistry;
+	class ServiceRegistration;
+	
+	//class Exception;
+	
+	template < typename T >
+	class ServiceVariable;
+	class AbstractServiceVariable;
+	
+	//class Notification;
+	class PluginNotification;
+	class ServiceNotification;
+	class FrameworkNotification;
+	
+	class Data;
+	class Metadata;
+	class ConfigMetadata;
+	
+	class IPluginActivator;
+	class IService;
+	
+	typedef Poco::SharedPtr<Context>				ContextPtr;
+	typedef Poco::SharedPtr<PluginContext>			PluginContextPtr;
+	typedef Poco::SharedPtr<IService>				ServicePtr;
+	typedef Poco::SharedPtr<Plugin>					PluginPtr;
+	typedef Poco::SharedPtr<ServiceRegistration>	ServiceRegPtr;
+	typedef Poco::SharedPtr<Metadata>				MetadataPtr;
+	typedef Poco::SharedPtr<ConfigMetadata>			ConfigMetadataPtr;
+	typedef Poco::AutoPtr<ServiceNotification>		ServiceNotificationPtr;
+	typedef Poco::AutoPtr<PluginNotification>		PluginNotificationPtr;
+	typedef Poco::AutoPtr<FrameworkNotification>	FrameworkNotificationPtr;
+
+	typedef ServicePtr (*ServiceFactoryMethod)(void);
 }

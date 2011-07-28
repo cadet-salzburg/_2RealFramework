@@ -30,13 +30,13 @@
 
 namespace _2Real
 {
-	class _2RealFrameworkNotification : public Poco::Notification
+	class FrameworkNotification : public Poco::Notification
 	{
 
 	public:
 
-		_2RealFrameworkNotification(std::string _message);
-		~_2RealFrameworkNotification();
+		FrameworkNotification(std::string _message);
+		~FrameworkNotification();
 
 	};
 }

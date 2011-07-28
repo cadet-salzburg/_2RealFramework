@@ -24,32 +24,36 @@
 
 namespace _2Real
 {
-	class _2RealConfigMetadata : public _2RealMetadata
+	class ConfigMetadata : public Metadata
 	{
 
 	public:
 
-		_2RealConfigMetadata(std::string _name);
-		_2RealConfigMetadata(const _2RealConfigMetadata& _src);
-		_2RealConfigMetadata& operator= (const _2RealConfigMetadata& _src);
-		~_2RealConfigMetadata();
+		ConfigMetadata(std::string _name);
+		ConfigMetadata(const ConfigMetadata& _src);
+		ConfigMetadata& operator= (const ConfigMetadata& _src);
+		~ConfigMetadata();
+
+		Data const& setupAttributes() const;
+		Data const& intputAttributes() const;
+		Data const& outputAttributes() const;
 
 		template <typename T>
 		const bool setupParameter(std::string _name, T& _value) const
 		{
-			return _2RealMetadata::attribute<T>(m_SetupPath, _name, _value);
+			return Metadata::attribute<T>(m_SetupPath, _name, _value);
 		}
 		
 		template <typename T>
 		const bool inputParameter(std::string _name, T& _value) const
 		{
-			return _2RealMetadata::attribute<T>(m_InputPath, _name, _value);
+			return Metadata::attribute<T>(m_InputPath, _name, _value);
 		}
 		
 		template <typename T>
 		const bool outputParameter(std::string _name, T& _value) const
 		{
-			return _2RealMetadata::attribute<T>(m_OutputPath, _name, _value);
+			return Metadata::attribute<T>(m_OutputPath, _name, _value);
 		}
 
 	private:
@@ -57,25 +61,25 @@ namespace _2Real
 		template <typename T>
 		void setSetupParameter(std::string _name, const T& _value)
 		{
-			_2RealMetadata::setAttribute<T>(m_SetupPath, _name, _value);
+			Metadata::setAttribute<T>(m_SetupPath, _name, _value);
 		}
 
 		template <typename T>
 		void setInputParameter(std::string _name, const T& _value)
 		{
-			_2RealMetadata::setAttribute<T>(m_InputPath, _name, _value);
+			Metadata::setAttribute<T>(m_InputPath, _name, _value);
 		}
 
 		template <typename T>
 		void setOutputParameter(std::string _name, const T& _value)
 		{
-			_2RealMetadata::setAttribute<T>(m_OutputPath, _name, _value);
+			Metadata::setAttribute<T>(m_OutputPath, _name, _value);
 		}
 
 		std::vector<std::string>		m_SetupPath;
 		std::vector<std::string>		m_InputPath;
 		std::vector<std::string>		m_OutputPath;
 
-		friend class _2RealContext;
+		friend class Context;
 	};
 }

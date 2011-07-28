@@ -24,18 +24,19 @@
 
 namespace _2Real
 {
-	class _2RealMetadata
+	class Metadata
 	{
 
 	public:
 
-		_2RealMetadata(std::string _name) : m_Name(_name) {}
-		_2RealMetadata(const _2RealMetadata& _src);
-		_2RealMetadata& operator= (const _2RealMetadata& _src);
-		~_2RealMetadata();
+		Metadata(std::string _name) : m_Name(_name) {}
+		Metadata(const Metadata& _src);
+		Metadata& operator= (const Metadata& _src);
+		~Metadata();
 
-		const _2RealMetadata* const father() const { return m_Father; }
+		const Metadata* const father() const { return m_Father; }
 		const std::string& name() const { return m_Name; }
+		Data const& attributes() const { return m_Attributes; }
 		
 		template<typename T>
 		const bool attribute(const std::vector<std::string>& _path, std::string _attribute, T& _result) const;
@@ -43,13 +44,13 @@ namespace _2Real
 		template<typename T>
 		const bool attribute(std::string _attribute, T& _result) const;
 
-		const _2RealMetadata* const subtree(const std::vector<std::string>& _path) const;
-		const _2RealMetadata* const child(std::string _name) const;
+		const Metadata* const subtree(const std::vector<std::string>& _path) const;
+		const Metadata* const child(std::string _name) const;
 
 	protected:
 
-		const bool insert(_2RealMetadataPtr& _metadata);
-		const bool insert(const std::vector<std::string>& _path, _2RealMetadataPtr& _metadata);
+		const bool insert(MetadataPtr& _metadata);
+		const bool insert(const std::vector<std::string>& _path, MetadataPtr& _metadata);
 
 		template<typename T>
 		const bool setAttribute(std::string _attribute, const T& _value);
@@ -59,29 +60,29 @@ namespace _2Real
 
 	private:
 
-		typedef std::map<std::string, _2RealMetadataPtr> MetadataMap;
-		typedef std::pair<std::string, _2RealMetadataPtr> Metadata;
+		typedef std::map<std::string, MetadataPtr> MetadataMap;
+		typedef std::pair<std::string, MetadataPtr> MetadataValue;
 
-		std::string						m_Name;
-		_2RealData						m_Attributes;
-		MetadataMap						m_Children;
-		_2RealMetadata*					m_Father;
+		std::string					m_Name;
+		Data						m_Attributes;
+		MetadataMap					m_Children;
+		Metadata*					m_Father;
 
-		void setFather(_2RealMetadata* _father) { m_Father = _father; }
+		void setFather(Metadata* _father) { m_Father = _father; }
 		void setName(std::string _name) { m_Name = _name; }
 
-		_2RealMetadata* const father() { return m_Father; }
-		_2RealMetadata* subtree(const std::vector<std::string>& _path);
-		_2RealMetadata* child(std::string _name);
+		Metadata* const father() { return m_Father; }
+		Metadata* subtree(const std::vector<std::string>& _path);
+		Metadata* child(std::string _name);
 
-		friend class _2RealMetadataReader;
-		friend class _2RealContext; 
+		friend class MetadataReader;
+		friend class Context; 
 	};
 
 	template<typename T>
-	const bool _2RealMetadata::attribute(const std::vector<std::string>& _path, std::string _attribute, T& _value) const
+	const bool Metadata::attribute(const std::vector<std::string>& _path, std::string _attribute, T& _value) const
 	{
-		const _2RealMetadata* sub = subtree(_path);
+		const Metadata* sub = subtree(_path);
 		if (sub != NULL && sub->attribute<T>(_attribute, _value))
 		{
 			return true;
@@ -91,15 +92,15 @@ namespace _2Real
 	}
 
 	template<typename T>
-	const bool _2RealMetadata::attribute(std::string _attribute, T& _result) const
+	const bool Metadata::attribute(std::string _attribute, T& _result) const
 	{	
 		return m_Attributes.get<T>(_attribute, _result);
 	}
 
 	template<typename T>
-	const bool _2RealMetadata::setAttribute(const std::vector<std::string>& _path, std::string _attribute, const T& _value)
+	const bool Metadata::setAttribute(const std::vector<std::string>& _path, std::string _attribute, const T& _value)
 	{
-		_2RealMetadata* sub = subtree(_path);
+		Metadata* sub = subtree(_path);
 		if (sub != NULL)
 		{
 			if (sub->setAttribute<T>(_attribute, _value))
@@ -112,7 +113,7 @@ namespace _2Real
 	}
 
 	template<typename T>
-	const bool _2RealMetadata::setAttribute(std::string _attribute, const T& _value)
+	const bool Metadata::setAttribute(std::string _attribute, const T& _value)
 	{
 		m_Attributes.remove(_attribute);
 		m_Attributes.insert<T>(_attribute, _value);

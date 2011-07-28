@@ -28,30 +28,31 @@
 
 namespace _2Real
 {
-	class _2RealPluginContext
+	class PluginContext
 	{
 
 	public:
 
-		~_2RealPluginContext();
+		~PluginContext();
 
-		void addServiceListerner(_2RealIPluginActivator& _activator);								//register a service event listerner for the plugin
-		void addFrameworkListerner(_2RealIPluginActivator& _activator);								//register a framework event listener for the plugin
-		void addPluginListerner(_2RealIPluginActivator& _activator);								//register a plugin event listener for the plugin
-		void removeServiceListerner(_2RealIPluginActivator& _activator);							//remove the service event listerner for the plugin
-		void removeFrameworkListerner(_2RealIPluginActivator& _activator);							//remove the framework event listener for the plugin
-		void removePluginListerner(_2RealIPluginActivator& _activator);								//remove the plugin event listener for the plugin
+		void addServiceListerner(IPluginActivator& _activator);								//register a service event listerner for the plugin
+		void addFrameworkListerner(IPluginActivator& _activator);							//register a framework event listener for the plugin
+		void addPluginListerner(IPluginActivator& _activator);								//register a plugin event listener for the plugin
+		void removeServiceListerner(IPluginActivator& _activator);							//remove the service event listerner for the plugin
+		void removeFrameworkListerner(IPluginActivator& _activator);						//remove the framework event listener for the plugin
+		void removePluginListerner(IPluginActivator& _activator);							//remove the plugin event listener for the plugin
 
-		_2RealServiceRegPtr registerService(const std::string& _name, _2RealServicePtr& _service);	//register a service within the framework
-		
+		bool registerService(const std::string _name, ServicePtr (*_func)(void));
+		void unregisterService(const std::string _name);
+	
 	private:
 
-		_2RealPluginContext(_2RealPlugin* _plugin, _2RealContextPrivate* _context);
+		PluginContext(Plugin* _plugin, ContextPrivate* _context);
 
-		_2RealPlugin*			m_PluginPtr;
-		_2RealContextPrivate*	m_ContextPtr;
+		Plugin*				m_PluginPtr;
+		ContextPrivate*		m_ContextPtr;
 
-		friend class _2RealPlugin;
+		friend class Plugin;
 
 	};
 }

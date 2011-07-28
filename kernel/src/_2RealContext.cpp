@@ -23,21 +23,20 @@
 #include "_2RealPlugin.h"
 #include "_2RealConfigMetaData.h"
 
-#include "Poco/ThreadPool.h"
 #include "Poco/Path.h"
 
 namespace _2Real
 {
-	bool _2RealContext::s_bIsInstanced = false;
-	_2RealContextPtr _2RealContext::s_ContextPtr;
-	Poco::Mutex _2RealContext::s_Mutex;
+	bool Context::s_bIsInstanced = false;
+	ContextPtr Context::s_ContextPtr;
+	Poco::Mutex Context::s_Mutex;
 
-	_2RealContextPtr _2RealContext::instance()
+	ContextPtr Context::instance()
 	{
 		Poco::ScopedLock<Poco::Mutex> lock(s_Mutex);
 		if(!s_bIsInstanced)
 		{
-			s_ContextPtr = _2RealContextPtr(new _2RealContext());
+			s_ContextPtr = ContextPtr(new Context());
 			s_bIsInstanced = true;
 			return s_ContextPtr;
 		}
@@ -47,78 +46,89 @@ namespace _2Real
 		}
 	}
 
-	_2RealContext::_2RealContext()
+	Context::Context()
 	{
-		m_PrivateContext = new _2RealContextPrivate();
+		m_PrivateContext = new ContextPrivate();
 	}
 
-	_2RealContext::~_2RealContext()
+	Context::~Context()
 	{
 		delete m_PrivateContext;
 	}
 
-	void _2RealContext::config()
+	void Context::config()
 	{
 	}
 
-	bool _2RealContext::update()
+	bool Context::update()
 	{
-		for (std::map<std::string, _2RealServicePtr>::iterator it = m_PrivateContext->m_Services.begin(); it != m_PrivateContext->m_Services.end(); it++)
-		{
-			//todo: check metadata to find out if services should actually be threaded
-			//also, use different thread pool
-			_2RealIService* service = it->second.get();
-			Poco::ThreadPool::defaultPool().start(*service);
-		}
-		
-		Poco::ThreadPool::defaultPool().joinAll();
-		return true;
+		return m_PrivateContext->updateServiceRegistry();
 	}
 
-	void _2RealContext::start()
+	void Context::start()
 	{
-		_2RealPluginPtr pImg = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
+		PluginPtr pImg = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
 		pImg->load();
 		pImg->start();
-	
-		//is null
-		_2RealMetadataPtr mImg = pImg->metadata();
-		
-		_2RealConfigMetadataPtr cRandom(new _2RealConfigMetadata("RandomImage"));
 
-		cRandom->setSetupParameter<std::string>("T", "unsigned short");
-		cRandom->setSetupParameter<std::string>("service name", "ImageProcessing.RandomImage");
+		//MetadataPtr mImg = pImg->metadata();
+		
+		ConfigMetadataPtr cRandom(new ConfigMetadata("RandomImage_ushort"));
+
+		cRandom->setSetupParameter<std::string>("service name", "ImageProcessing.RandomImage_ushort");
 		cRandom->setSetupParameter<unsigned int>("image width", 320);
 		cRandom->setSetupParameter<unsigned int>("image height", 240);
 		
-		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage.image");
+		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage_ushort.image");
 
-		_2RealServicePtr sRandom = pImg->createService(cRandom);
+		ServicePtr sRandom = m_PrivateContext->createService("RandomImage_ushort");
 
-		_2RealConfigMetadataPtr cAddition(new _2RealConfigMetadata("ImageAddition"));
+		if (sRandom.isNull())
+		{
+			std::cout << "random service is NULL" << std::endl;
+			return;
+		}
 
-		cAddition->setSetupParameter<std::string>("T", "unsigned short");
-		cAddition->setSetupParameter<std::string>("service name", "ImageProcessing.ImageAddition");
+		if (!sRandom->setup(cRandom))
+		{
+			std::cout << "failed to setup random img service" << std::endl;
+			return;
+		}
+
+		ConfigMetadataPtr cAddition(new ConfigMetadata("ImageAddition_ushort"));
+
+		cAddition->setSetupParameter<std::string>("service name", "ImageProcessing.ImageAddition_ushort");
 		cAddition->setSetupParameter<unsigned short>("scale factor 1", 1);
 		cAddition->setSetupParameter<unsigned short>("scale factor 2", 1);
 
-		cAddition->setInputParameter<std::string>("input image 1", "ImageProcessing.RandomImage.image");
+		cAddition->setInputParameter<std::string>("input image 1", "ImageProcessing.RandomImage_ushort.image");
 		cAddition->setInputParameter<std::string>("input image 2", "KinectWinSDK.Depthmap.image");
 
-		cAddition->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage.image");
+		cAddition->setOutputParameter<std::string>("output image", "ImageProcessing.ImageAddition_ushort.image");
 
-		_2RealServicePtr sAddition = pImg->createService(cAddition);
+		ServicePtr sAddition = m_PrivateContext->createService("ImageAddition_ushort");
+
+		if (sAddition.isNull())
+		{
+			std::cout << "img addition service is NULL" << std::endl;
+			return;
+		}
+		
+		if (!sAddition->setup(cAddition))
+		{
+			std::cout << "failed to setup img addition service" << std::endl;
+			return;
+		}
 
 		sRandom->addListener(sAddition);
 
-		_2RealPluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
+		PluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
 		pKinect->load();
 		pKinect->start();
 
-		//is null
-		_2RealMetadataPtr mKinect = pKinect->metadata();
+		//MetadataPtr mKinect = pKinect->metadata();
 
-		_2RealConfigMetadataPtr cDepthmap(new _2RealConfigMetadata("Depthmap"));
+		ConfigMetadataPtr cDepthmap(new ConfigMetadata("Depthmap"));
 
 		cDepthmap->setSetupParameter<std::string>("service name", "KinectWinSDK.Depthmap");
 		cDepthmap->setSetupParameter<unsigned int>("image width", 320);
@@ -126,14 +136,26 @@ namespace _2Real
 
 		cDepthmap->setOutputParameter<std::string>("output image", "KinectWinSDK.Depthmap.image");
 
-		_2RealServicePtr sDepthmap = pKinect->createService(cDepthmap);
+		ServicePtr sDepthmap = m_PrivateContext->createService("Depthmap");
+
+		if (sDepthmap.isNull())
+		{
+			std::cout << "depthmap service is NULL" << std::endl;
+			return;
+		}
+
+		if (!sDepthmap->setup(cDepthmap))
+		{
+			std::cout << "failed to setup depthmap service" << std::endl;
+			return;
+		}
 
 		sDepthmap->addListener(sAddition);
 	}
 
-	void _2RealContext::stop()
+	void Context::stop()
 	{
-		for (std::map<std::string, _2RealPluginPtr>::iterator it = m_PrivateContext->m_Plugins.begin(); it != m_PrivateContext->m_Plugins.end(); it++)
+		for (std::map<std::string, PluginPtr>::iterator it = m_PrivateContext->m_Plugins.begin(); it != m_PrivateContext->m_Plugins.end(); it++)
 		{
 			(it->second)->stop();
 			(it->second)->unload();

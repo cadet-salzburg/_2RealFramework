@@ -22,17 +22,32 @@
 
 namespace _2Real
 {
-	ServiceRegistration::ServiceRegistration(const std::string& _name, ServicePtr& _service) : m_ServicePtr(_service), m_ServiceName(_name)
+	_2RealServiceRegistration::_2RealServiceRegistration(const std::string& _name, const std::string& _plugin, _2RealContextPrivate* _context, _2RealServicePtr& _service) 
+											: m_ContextPtr(_context), m_ServicePtr(_service), m_ServiceName(_name), m_PluginName(_plugin)
 	{
 	}
 
-	ServicePtr ServiceRegistration::servicePtr()
+	_2RealServiceRegistration::~_2RealServiceRegistration()
+	{
+	}
+
+	void _2RealServiceRegistration::unregister()
+	{
+		m_ContextPtr->unregisterService(m_ServiceName, m_PluginName, m_ServicePtr);
+	}
+
+	_2RealServicePtr _2RealServiceRegistration::servicePtr()
 	{
 		return m_ServicePtr;
 	}
 
-	std::string const& ServiceRegistration::name() const
+	const std::string _2RealServiceRegistration::serviceName() const
 	{
 		return m_ServiceName;
+	}
+
+	const std::string _2RealServiceRegistration::pluginName() const
+	{
+		return m_PluginName;
 	}
 }

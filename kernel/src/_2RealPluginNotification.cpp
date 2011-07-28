@@ -20,20 +20,20 @@
 
 namespace _2Real
 {
-	_2RealPluginNotification::_2RealPluginNotification(std::string _plugin, std::string _message) : m_PluginName(_plugin), m_Message(_message)
+	PluginNotification::PluginNotification(std::string _plugin, std::string _message) : m_PluginName(_plugin), m_Message(_message)
 	{
 	}
 
-	_2RealPluginNotification::~_2RealPluginNotification()
+	PluginNotification::~PluginNotification()
 	{
 	}
 
-	const std::string _2RealPluginNotification::plugin() const
+	const std::string PluginNotification::plugin() const
 	{
 		return m_PluginName;
 	}
 
-	const std::string _2RealPluginNotification::message() const
+	const std::string PluginNotification::message() const
 	{
 		return m_Message;
 	}

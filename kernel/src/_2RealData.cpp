@@ -21,16 +21,16 @@
 
 namespace _2Real
 {
-	_2RealData::_2RealData() 
+	Data::Data() 
 	{
 	};
 
-	_2RealData::_2RealData(const _2RealData& _src)
+	Data::Data(const Data& _src)
 	{
 		m_Values= _src.m_Values;
 	}
 
-	_2RealData& _2RealData::operator= (const _2RealData& _src)
+	Data& Data::operator= (const Data& _src)
 	{
 		if (this == &_src)
 		{
@@ -42,7 +42,7 @@ namespace _2Real
 		return *this;
 	}
 
-	_2RealData::~_2RealData()
+	Data::~Data()
 	{
 	}
 }

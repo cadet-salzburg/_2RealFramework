@@ -20,11 +20,11 @@
 
 namespace _2Real
 {
-	_2RealFrameworkNotification::_2RealFrameworkNotification(std::string _message)
+	FrameworkNotification::FrameworkNotification(std::string _message)
 	{
 	}
 
-	_2RealFrameworkNotification::~_2RealFrameworkNotification()
+	FrameworkNotification::~FrameworkNotification()
 	{
 	}
 }
