@@ -29,6 +29,9 @@ namespace _2Real
 	{
 
 	public:
+
+		typedef std::map<std::string, Poco::Any> DataItems;
+		typedef std::pair<std::string, Poco::Any> NamedDataItem;
 		
 		Data();
 		Data(const Data& _src);
@@ -39,28 +42,28 @@ namespace _2Real
 		void insert(std::string _name, T _data)
 		{
 			Poco::Any data(_data);
-			m_Values.insert(Value(_name, data));
+			m_Data.insert(NamedDataItem(_name, data));
 		}
 
 		const bool remove(std::string _name)
 		{
-			Values::iterator it = m_Values.find(_name);
+			DataItems::iterator it = m_Data.find(_name);
 		
-			if (it == m_Values.end())
+			if (it == m_Data.end())
 			{
 				return false;
 			}
 
-			m_Values.erase(it);
+			m_Data.erase(it);
 			return true;
 		};
 
 		template<class T>
 		const bool get(std::string _name, T& _value) const
 		{
-			Values::const_iterator it = m_Values.find(_name);
+			DataItems::const_iterator it = m_Data.find(_name);
 			
-			if (it != m_Values.end())
+			if (it != m_Data.end())
 			{
 				try
 				{
@@ -77,12 +80,42 @@ namespace _2Real
 			return false;
 		};
 
+		const bool getAny(std::string _name, Poco::Any &_any)
+		{
+			DataItems::const_iterator it = m_Data.find(_name);
+			
+			if (it != m_Data.end())
+			{
+				_any = it->second;
+				return true;
+			}
+
+			return false;
+		}
+
+		void insertAny(std::string _name, Poco::Any& _any)
+		{
+			m_Data.insert(NamedDataItem(_name, _any));
+		}
+
+		const DataItems::const_iterator begin() const
+		{
+			return m_Data.begin();
+		};
+
+		const DataItems::const_iterator end() const
+		{
+			return m_Data.end();
+		}
+
+		const unsigned int size() const 
+		{ 
+			return m_Data.size();
+		}
+
 	private:
 
-		typedef std::map<std::string, Poco::Any> Values;
-		typedef std::pair<std::string, Poco::Any> Value;
-
-		Values		m_Values;
+		DataItems		m_Data;
 
 	};
 }

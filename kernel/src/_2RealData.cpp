@@ -27,7 +27,7 @@ namespace _2Real
 
 	Data::Data(const Data& _src)
 	{
-		m_Values= _src.m_Values;
+		m_Data= _src.m_Data;
 	}
 
 	Data& Data::operator= (const Data& _src)
@@ -37,7 +37,7 @@ namespace _2Real
 			return *this;
 		}
  
-		m_Values = _src.m_Values;
+		m_Data = _src.m_Data;
 	 
 		return *this;
 	}

@@ -43,7 +43,7 @@ namespace _2Real
 
 		bool registerService(const std::string _name, const std::string& _plugin, ServiceFactoryMethod _func);
 		void invalidateService(const std::string _name, const std::string& _plugin);
-		ServicePtr createService(const std::string& _name);
+		ContainerPtr createService(const std::string& _name, ConfigMetadataPtr const& _config);
 		bool updateServiceRegistry();
 
 		void uninstallPlugin(Plugin* _plugin);													//called by a plugin, removes plugin from plugin pool

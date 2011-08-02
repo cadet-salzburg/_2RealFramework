@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +17,32 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceRegistry.h"
-#include "_2RealIService.h"
-#include "_2RealServiceRegistration.h"
+#pragma once
 
-#include "Poco/ThreadPool.h"
+#include "_2RealFramework.h"
+#include "_2RealIService.h"
+
+#include "Poco/Runnable.h"
 
 namespace _2Real
 {
-	bool ServiceRegistry::update()
+	class IContainer : public IService, public Poco::Runnable
 	{
-		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
-		{
-			IService* service = it->second->servicePtr().get();
-			service->update();
-		}
-		
-		return true;
-	}
 
-	void ServiceRegistry::addService(std::string _name, ServicePtr _service)
-	{
-		ServiceRegPtr reg(new ServiceRegistration(_name, _service));
-		m_Services.insert(ServiceItem(_name, reg));
-	}
+	public:
+
+		virtual void start() = 0;
+		virtual void stop() = 0;
+		virtual void run() = 0;
+		virtual void update() = 0;
+		virtual bool setup(ConfigMetadataPtr const& _config) = 0;
+		virtual void shutdown() = 0;
+		virtual void addListener(ServicePtr _listener) = 0;
+		virtual void removeListener(ServicePtr _listener) = 0;
+		virtual void addListener(ContainerPtr _listener) = 0;
+		virtual void removeListener(ContainerPtr _listener) = 0;
+		virtual void serviceListener(DataPtr &_input) = 0;
+		virtual void containerListener(DataPtr &_input) = 0;
+
+	};
 }

@@ -26,38 +26,43 @@
 #include "_2RealServiceParameter.h"
 
 #include "Poco/BasicEvent.h"
-#include "Poco/Delegate.h"
-#include "Poco/Mutex.h"
 
 namespace _2Real
 {
+
 	class AbstractService : public IService
 	{
 
 	public:
-
-		void listenerFunction(Data &_data);
-
-	protected:
-
+	
 		AbstractService() : m_bIsConfigured(false) {}
-
-		virtual void run() = 0;											//needs to be implemented by actual service
-		virtual void shutdown() = 0;									//this one as well
-		virtual bool setup(ConfigMetadataPtr const& _config) = 0;		//and this one, too 
-
-		std::string const& name() const			{ return m_ServiceName; }
-		bool const& isConfigured() const		{ return m_bIsConfigured; }
-
-		const bool configure(ConfigMetadataPtr const& _config);
 		
+		/*
+			Iservice functions that need to be implemented by the user service
+		*/
+		virtual bool setup(ConfigMetadataPtr const& _config) = 0;
+		virtual void update() = 0;
+		virtual void shutdown() = 0;
+
+		/*
+			Iservicefunctions  implemented by this service
+		*/
 		void addListener(ServicePtr _listener);
 		void removeListener(ServicePtr _listener);
-		void outputData();
+		void serviceListener(DataPtr &_input);
+		void outputData(bool _blocking);
+		
+		//configuration function - needs to be called manually in the service's setup
+		const bool configure(ConfigMetadataPtr const& _config);
 
 		template< typename T >
 		void addInputVariable(std::string _name, T &_var)
 		{
+			if (m_bIsConfigured)
+			{
+				return;
+			}
+
 			ServiceVariable< T > *var = new ServiceVariable< T >(_name, _var);
 			m_InputVariables.push_back(var);
 		}
@@ -65,6 +70,11 @@ namespace _2Real
 		template< typename T >
 		void addOutputVariable(std::string _name, T &_var)
 		{
+			if (m_bIsConfigured)
+			{
+				return;
+			}
+
 			ServiceVariable< T > *var = new ServiceVariable< T >(_name, _var);
 			m_OutputVariables.push_back(var);
 		}
@@ -72,37 +82,27 @@ namespace _2Real
 		template< typename T >
 		void addSetupParameter(std::string _name, T &_param)
 		{
+			if (m_bIsConfigured)
+			{
+				return;
+			}
+
 			ServiceParameter< T > *param = new ServiceParameter< T >(_name, _param);
 			m_SetupParameters.push_back(param);
 		}
-		
-		void lock() { m_Lock.lock(); }
-		void unlock() { m_Lock.unlock(); }
 
 	private:
 
-		//friend class ContextPrivate;
+		typedef std::list< AbstractServiceVariable *> VariableList;
+		typedef std::list< AbstractServiceVariable *> ParameterList;
 
-		typedef std::list<AbstractServiceVariable *> VariableList;
-		typedef std::list<AbstractServiceVariable *> ParameterList;
+		Poco::BasicEvent< DataPtr >					m_OutputEvent;
 
-		ConfigMetadataPtr const& config() const	{ return m_Configuration; }
-		const bool hasInputVariables() const	{ return !m_InputVariables.empty(); }
-		const bool hasOutputVariables() const	{ return !m_OutputVariables.empty(); }
-		const bool hasSetupParameters() const	{ return !m_SetupParameters.empty(); }
+		VariableList								m_InputVariables;
+		VariableList								m_OutputVariables;
+		ParameterList								m_SetupParameters;
 
-		Poco::Mutex					m_Lock;
-
-		Poco::BasicEvent< Data >	m_NewDataEvent;
-		bool						m_bIsConfigured;
-
-		std::string					m_ServiceName;
-		
-		VariableList				m_InputVariables;
-		VariableList				m_OutputVariables;
-		ParameterList				m_SetupParameters;
-
-		ConfigMetadataPtr			m_Configuration;
+		bool										m_bIsConfigured;
 
 	};
 }

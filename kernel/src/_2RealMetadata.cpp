@@ -130,7 +130,6 @@ namespace _2Real
 		{
 			return NULL;
 		}
-
 		return it->second.get();
 	}
 

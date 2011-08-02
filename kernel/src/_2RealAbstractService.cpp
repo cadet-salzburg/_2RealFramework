@@ -17,10 +17,12 @@
 */
 
 #include "_2RealAbstractService.h"
+#include "_2RealServiceContainer.h"
+
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
-
 	const bool AbstractService::configure(ConfigMetadataPtr const& _config)
 	{
 		if (m_bIsConfigured)
@@ -28,88 +30,62 @@ namespace _2Real
 			return false;
 		}
 
-		m_ServiceName = _config->name();
-
-		bool noError = true;
-
-		/*
-			those are the setup params;
-			they can be gotten directly from the config metadata's setup attribs
-		*/
 		for (ParameterList::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 		{
-			noError &= (*it)->getFrom(_config->setupAttributes());
+			bool noError = (*it)->getFrom(_config->setupAttributes());
+			if (!noError)
+			{
+				std::cout << "abstract service: error on input vars" << std::endl;
+				return noError;
+			}
 		}
 
-		if (!noError)
-		{
-			std::cout << "abstract service: error on setup params" << std::endl;
-			return noError;
-		}
-
-		/*
-			get the framework defined names for input variables
-		*/
 		for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
 		{
 			std::string frameworkName;
-			_config->inputParameter<std::string>((*it)->originalName(), frameworkName);
+			
+			bool noError = _config->inputParameter<std::string>((*it)->originalName(), frameworkName);
+			if (!noError)
+			{
+				std::cout << "abstract service: error on input vars" << std::endl;
+				return noError;
+			}
+			
 			(*it)->setFrameworkName(frameworkName);
 		}
 
-		if (!noError)
-		{
-			std::cout << "abstract service: error on input vars" << std::endl;
-			return noError;
-		}
-
-		/*
-			get the framework defined names for output variables
-		*/
 		for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
 		{
 			std::string frameworkName;
-			_config->outputParameter<std::string>((*it)->originalName(), frameworkName);
-			(*it)->setFrameworkName(frameworkName);
-		}
 
-		if (!noError)
-		{
-			std::cout << "abstract service: error on output vars" << std::endl;
-			return noError;
+			bool noError = _config->outputParameter<std::string>((*it)->originalName(), frameworkName);
+			if (!noError)
+			{
+				std::cout << "abstract service: error on output vars" << std::endl;
+				return noError;
+			}
+			
+			(*it)->setFrameworkName(frameworkName);
 		}
 
 		m_bIsConfigured = true;
 		return true;
 	}
 
-	void AbstractService::listenerFunction(Data &_data)
+	void AbstractService::serviceListener(DataPtr &_input)
 	{
 		if (m_bIsConfigured && m_InputVariables.size() > 0)
 		{
-			lock();
 			for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
 			{
-				if ((*it)->getFrom(_data))
+				if ((*it)->getFrom(*_input.get()))
 				{
-					std::cout << m_ServiceName << " received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
+					//std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
+				}
+				else
+				{
 				}
 			}
-			unlock();
-		}
-	}
-
-	void AbstractService::outputData()
-	{
-		if (m_bIsConfigured)
-		{
-			Data output;
-			for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
-			{
-				(*it)->insertInto(output);
-			}
-
-			m_NewDataEvent.notify(this, output);
 		}
 	}
 
@@ -117,15 +93,38 @@ namespace _2Real
 	{
 		if (m_bIsConfigured)
 		{
-			m_NewDataEvent += Poco::delegate(_listener.get(), &IService::listenerFunction);
+			m_OutputEvent += Poco::delegate(_listener.get(), &IService::serviceListener);
 		}
 	}
+
 
 	void AbstractService::removeListener(ServicePtr _listener)
 	{
 		if (m_bIsConfigured)
 		{
-			m_NewDataEvent -= Poco::delegate(_listener.get(), &IService::listenerFunction);
+			m_OutputEvent -= Poco::delegate(_listener.get(), &IService::serviceListener);
+		}
+	}
+
+	void AbstractService::outputData(bool _blocking)
+	{
+		if (m_bIsConfigured && m_OutputVariables.size() > 0)
+		{
+			DataPtr output(new Data());
+			for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
+			{
+				(*it)->insertInto(*output.get());
+			}
+			DataPtr result(output);
+
+			if (_blocking)
+			{
+				m_OutputEvent.notify(this, result);
+			}
+			else
+			{
+				m_OutputEvent.notifyAsync(this, result);
+			}
 		}
 	}
 }

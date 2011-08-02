@@ -19,6 +19,8 @@
 #include "_2RealContextPrivate.h"
 #include "_2RealPlugin.h"
 #include "_2RealIService.h"
+#include "_2RealServiceContainer.h"
+#include "_2RealIContainer.h"
 #include "_2RealServiceRegistration.h"
 #include "_2RealServiceNotification.h"
 #include "_2RealFrameworkNotification.h"
@@ -69,17 +71,31 @@ namespace _2Real
 		return m_ServiceFactory.registerService(_name, _func);
 	}
 
-	ServicePtr ContextPrivate::createService(const std::string& _name)
+	ContainerPtr ContextPrivate::createService(const std::string& _name, ConfigMetadataPtr const& _config)
 	{
 		ServicePtr service = m_ServiceFactory.createService(_name);
 
 		if (!service.isNull())
 		{
-			m_ServiceRegistry.addService(_name, service);
-			return service;
+			ServicePtr container(new ServiceContainer(service));
+
+			m_ServiceRegistry.addService(_name, container);
+
+			if (container->setup(_config))
+			{
+				service->addListener(container);
+			}
+			else
+			{
+				std::cout << "error on service configuration" << std::endl;
+			}
+			
+			ContainerPtr result = container.unsafeCast< IContainer >();
+
+			return result;
 		}
 
-		return ServicePtr();
+		return ContainerPtr();
 	}
 
 	void ContextPrivate::invalidateService(const std::string _name, const std::string& _plugin)

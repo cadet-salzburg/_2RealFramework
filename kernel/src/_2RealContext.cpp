@@ -19,9 +19,11 @@
 
 #include "_2RealContext.h"
 #include "_2RealContextPrivate.h"
-#include "_2RealIService.h"
 #include "_2RealPlugin.h"
 #include "_2RealConfigMetaData.h"
+
+#include "_2RealIContainer.h"
+#include "_2RealIService.h"
 
 #include "Poco/Path.h"
 
@@ -72,28 +74,6 @@ namespace _2Real
 		pImg->start();
 
 		//MetadataPtr mImg = pImg->metadata();
-		
-		ConfigMetadataPtr cRandom(new ConfigMetadata("RandomImage_ushort"));
-
-		cRandom->setSetupParameter<std::string>("service name", "ImageProcessing.RandomImage_ushort");
-		cRandom->setSetupParameter<unsigned int>("image width", 320);
-		cRandom->setSetupParameter<unsigned int>("image height", 240);
-		
-		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage_ushort.image");
-
-		ServicePtr sRandom = m_PrivateContext->createService("RandomImage_ushort");
-
-		if (sRandom.isNull())
-		{
-			std::cout << "random service is NULL" << std::endl;
-			return;
-		}
-
-		if (!sRandom->setup(cRandom))
-		{
-			std::cout << "failed to setup random img service" << std::endl;
-			return;
-		}
 
 		ConfigMetadataPtr cAddition(new ConfigMetadata("ImageAddition_ushort"));
 
@@ -106,7 +86,7 @@ namespace _2Real
 
 		cAddition->setOutputParameter<std::string>("output image", "ImageProcessing.ImageAddition_ushort.image");
 
-		ServicePtr sAddition = m_PrivateContext->createService("ImageAddition_ushort");
+		ContainerPtr sAddition = m_PrivateContext->createService("ImageAddition_ushort", cAddition);
 
 		if (sAddition.isNull())
 		{
@@ -114,13 +94,21 @@ namespace _2Real
 			return;
 		}
 		
-		if (!sAddition->setup(cAddition))
+		ConfigMetadataPtr cRandom(new ConfigMetadata("RandomImage_ushort"));
+
+		cRandom->setSetupParameter<std::string>("service name", "ImageProcessing.RandomImage_ushort");
+		cRandom->setSetupParameter<unsigned int>("image width", 320);
+		cRandom->setSetupParameter<unsigned int>("image height", 240);
+		
+		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage_ushort.image");
+
+		ContainerPtr sRandom = m_PrivateContext->createService("RandomImage_ushort", cRandom);
+
+		if (sRandom.isNull())
 		{
-			std::cout << "failed to setup img addition service" << std::endl;
+			std::cout << "random service is NULL" << std::endl;
 			return;
 		}
-
-		sRandom->addListener(sAddition);
 
 		PluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
 		pKinect->load();
@@ -136,7 +124,7 @@ namespace _2Real
 
 		cDepthmap->setOutputParameter<std::string>("output image", "KinectWinSDK.Depthmap.image");
 
-		ServicePtr sDepthmap = m_PrivateContext->createService("Depthmap");
+		ContainerPtr sDepthmap = m_PrivateContext->createService("Depthmap", cDepthmap);
 
 		if (sDepthmap.isNull())
 		{
@@ -144,12 +132,7 @@ namespace _2Real
 			return;
 		}
 
-		if (!sDepthmap->setup(cDepthmap))
-		{
-			std::cout << "failed to setup depthmap service" << std::endl;
-			return;
-		}
-
+		sRandom->addListener(sAddition);
 		sDepthmap->addListener(sAddition);
 	}
 

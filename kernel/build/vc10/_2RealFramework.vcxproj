@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceNotification.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
@@ -47,7 +48,9 @@
     <ClInclude Include="..\..\include\_2RealServiceParameter.h" />
     <ClInclude Include="..\..\include\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
+    <ClInclude Include="..\..\src\_2RealIContainer.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceRegistration.h" />
     <ClInclude Include="..\..\src\_2RealServiceRegistry.h" />

@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\src\_2RealServiceRegistry.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceContainer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealContextPrivate.h">
@@ -129,6 +132,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealServiceRegistration.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIContainer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -60,16 +60,27 @@ namespace _2Real
 	class IPluginActivator;
 	class IService;
 	
-	typedef Poco::SharedPtr<Context>				ContextPtr;
-	typedef Poco::SharedPtr<PluginContext>			PluginContextPtr;
-	typedef Poco::SharedPtr<IService>				ServicePtr;
-	typedef Poco::SharedPtr<Plugin>					PluginPtr;
-	typedef Poco::SharedPtr<ServiceRegistration>	ServiceRegPtr;
-	typedef Poco::SharedPtr<Metadata>				MetadataPtr;
-	typedef Poco::SharedPtr<ConfigMetadata>			ConfigMetadataPtr;
-	typedef Poco::AutoPtr<ServiceNotification>		ServiceNotificationPtr;
-	typedef Poco::AutoPtr<PluginNotification>		PluginNotificationPtr;
-	typedef Poco::AutoPtr<FrameworkNotification>	FrameworkNotificationPtr;
+	class IContainer;
+	class ServiceContainer;
+	
+	typedef Poco::SharedPtr< Context >				ContextPtr;
+	typedef Poco::SharedPtr< PluginContext >		PluginContextPtr;
+	typedef Poco::SharedPtr< IService >				ServicePtr;
+	typedef Poco::SharedPtr< Plugin >				PluginPtr;
+	typedef Poco::SharedPtr< ServiceRegistration >	ServiceRegPtr;
+	typedef Poco::SharedPtr< Metadata >				MetadataPtr;
+	typedef Poco::SharedPtr< ConfigMetadata >		ConfigMetadataPtr;
+	typedef Poco::AutoPtr< ServiceNotification >	ServiceNotificationPtr;
+	typedef Poco::AutoPtr< PluginNotification >		PluginNotificationPtr;
+	typedef Poco::AutoPtr< FrameworkNotification >	FrameworkNotificationPtr;
+
+	typedef Poco::SharedPtr< IContainer >			ContainerPtr;
+	typedef Poco::SharedPtr< Data >					DataPtr;
+	typedef Poco::SharedPtr< ServiceContainer >		ServiceContainerPtr;
+
+	typedef std::string								VariableName;
+	typedef std::string								ParameterName;
+	typedef std::string								ServiceName;
 
 	typedef ServicePtr (*ServiceFactoryMethod)(void);
 }
