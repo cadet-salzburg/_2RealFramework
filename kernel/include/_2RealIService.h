@@ -32,14 +32,21 @@ namespace _2Real
 {
 	class IService : public Poco::Runnable
 	{
+
 	public:
+
+		virtual void listenerFunction(Data& _input) = 0;				//react to new data sent by other service
 		
-		virtual bool setup(ConfigMetadataPtr const& _config) = 0;
-		virtual void run() = 0;
-		virtual void shutdown() = 0;
+	protected:
 		
-		virtual void addListener(ServicePtr _listener) = 0;		//add other service to listerners
-		virtual void outputData() = 0;									//send new data to listeners
-		virtual void inputListener(Data& _data) = 0;					//react to new data sent by other service
+		virtual bool setup(ConfigMetadataPtr const& _config) = 0;		//initialization function
+		virtual void shutdown() = 0;									//cleanup function
+		virtual void run() = 0;											//update function
+
+		virtual void addListener(ServicePtr _listener) = 0;				//add other service to listerners
+		virtual void removeListener(ServicePtr _listener) = 0;			//remove other service from listeners
+
+		friend class Context; /**/
+
 	};
 }

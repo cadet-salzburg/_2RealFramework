@@ -83,14 +83,14 @@ namespace _2Real
 		return true;
 	}
 
-	void AbstractService::inputListener(Data &_input)
+	void AbstractService::listenerFunction(Data &_data)
 	{
 		if (m_bIsConfigured && m_InputVariables.size() > 0)
 		{
 			lock();
 			for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
 			{
-				if ((*it)->getFrom(_input))
+				if ((*it)->getFrom(_data))
 				{
 					std::cout << m_ServiceName << " received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
 				}
@@ -117,7 +117,15 @@ namespace _2Real
 	{
 		if (m_bIsConfigured)
 		{
-			m_NewDataEvent += Poco::delegate(_listener.get(), &IService::inputListener);
+			m_NewDataEvent += Poco::delegate(_listener.get(), &IService::listenerFunction);
+		}
+	}
+
+	void AbstractService::removeListener(ServicePtr _listener)
+	{
+		if (m_bIsConfigured)
+		{
+			m_NewDataEvent -= Poco::delegate(_listener.get(), &IService::listenerFunction);
 		}
 	}
 }

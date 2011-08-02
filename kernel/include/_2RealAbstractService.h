@@ -36,6 +36,10 @@ namespace _2Real
 
 	public:
 
+		void listenerFunction(Data &_data);
+
+	protected:
+
 		AbstractService() : m_bIsConfigured(false) {}
 
 		virtual void run() = 0;											//needs to be implemented by actual service
@@ -48,7 +52,7 @@ namespace _2Real
 		const bool configure(ConfigMetadataPtr const& _config);
 		
 		void addListener(ServicePtr _listener);
-		void inputListener(Data &_data);
+		void removeListener(ServicePtr _listener);
 		void outputData();
 
 		template< typename T >
@@ -77,7 +81,7 @@ namespace _2Real
 
 	private:
 
-		friend class ContextPrivate;
+		//friend class ContextPrivate;
 
 		typedef std::list<AbstractServiceVariable *> VariableList;
 		typedef std::list<AbstractServiceVariable *> ParameterList;
