@@ -34,19 +34,14 @@ namespace _2Real
 	{
 
 	public:
-
-		virtual void listenerFunction(Data& _input) = 0;				//react to new data sent by other service
-		
-	protected:
-		
+	
 		virtual bool setup(ConfigMetadataPtr const& _config) = 0;		//initialization function
 		virtual void shutdown() = 0;									//cleanup function
 		virtual void run() = 0;											//update function
 
 		virtual void addListener(ServicePtr _listener) = 0;				//add other service to listerners
 		virtual void removeListener(ServicePtr _listener) = 0;			//remove other service from listeners
-
-		friend class Context; /**/
+		virtual void listenerFunction(Data& _input) = 0;				//react to new data sent by other service
 
 	};
 }
