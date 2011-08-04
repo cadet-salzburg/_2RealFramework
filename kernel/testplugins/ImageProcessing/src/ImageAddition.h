@@ -1,0 +1,93 @@
+#pragma once
+
+#include "_2RealAbstractService.h"
+
+#include "Image.h"
+
+/*
+	factory method for image addition service; registered in service factory of framework
+*/
+
+template< typename T >
+static _2Real::ServicePtr createImageAddition(void)
+{
+	_2Real::ServicePtr service(new ImageAdditionService< T >());
+	return service;
+}
+
+/*
+	image addition service
+*/
+
+template< typename T >
+class ImageAdditionService : public _2Real::AbstractService
+{
+
+public:
+
+	void shutdown() {};
+	void update();
+	bool setup(_2Real::ConfigMetadataPtr const& _config);
+
+private:
+
+	T										m_ScaleFactor1;			//scale factor for input image 1
+	T										m_ScaleFactor2;			//scale factor for input image 2
+	::Image< T, 2 >							m_InputImage1;			//stores input image 1, input param
+	::Image< T, 2 >							m_InputImage2;			//stores input image 2, input param
+	::Image< T, 2 >							m_OutputImage;			//the resulting image, output param
+};
+
+template< typename T >
+bool ImageAdditionService< T >::setup(_2Real::ConfigMetadataPtr const& _config)
+{
+	/*
+		register all setup parameters, input & output variables as defined in the service metadata
+	*/
+	addSetupParameter< T >("scale factor 1", m_ScaleFactor1);
+	addSetupParameter< T >("scale factor 2", m_ScaleFactor2);
+	addInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
+	addInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
+	addOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
+
+	/*
+		call abstract service -> configure
+	*/
+	return configure(_config);
+};
+
+template< typename T >
+void ImageAdditionService< T >::update()
+{
+	std::cout << "image addition update begin" << std::endl;
+	/*
+		this function performs the actual service
+	*/
+	if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
+	{
+		std::cout << "data is not null" << std::endl;
+		unsigned int width = m_InputImage1.resolution().get(0);
+		unsigned int height = m_InputImage1.resolution().get(1);
+
+		unsigned int sz = width*height;
+		
+		T* tmp = new T[sz];
+		for (unsigned int y=0; y<height; y++)
+		{
+			for (unsigned int x=0; x<width; x++)
+			{
+				unsigned int i = y*width + x;
+				tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
+			}
+		}
+
+		Image< T, 2 >::Resolution res;
+		res.set(0, width);
+		res.set(1, height);
+
+		m_OutputImage.setData(tmp);
+		m_OutputImage.setResolution(res);
+	}
+	
+	std::cout << "image addition update complete" << std::endl;
+};

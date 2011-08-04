@@ -54,7 +54,6 @@ namespace _2Real
 			NameList tmpList = m_InputVariables;
 			
 			DataPtr data(new Data());
-			
 			for (std::list< DataPtr >::reverse_iterator it = m_Data.rbegin(); it != m_Data.rend(); it++)
 			{
 				Data tmp = *it->get();

@@ -56,7 +56,7 @@ namespace _2Real
 
 			m_Data.erase(it);
 			return true;
-		};
+		}
 
 		template<class T>
 		const bool get(std::string _name, T& _value) const
@@ -78,7 +78,7 @@ namespace _2Real
 			}
 
 			return false;
-		};
+		}
 
 		const bool getAny(std::string _name, Poco::Any &_any)
 		{
@@ -101,7 +101,7 @@ namespace _2Real
 		const DataItems::const_iterator begin() const
 		{
 			return m_Data.begin();
-		};
+		}
 
 		const DataItems::const_iterator end() const
 		{
@@ -115,7 +115,7 @@ namespace _2Real
 
 	private:
 
-		DataItems		m_Data;
+		DataItems			m_Data;
 
 	};
 }

@@ -38,7 +38,7 @@ namespace _2Real
 	{
 	}
 
-	PluginPtr ContextPrivate::installPlugin(const std::string& _name, const std::string& _path)
+	PluginPtr ContextPrivate::installPlugin(const std::string _name, const std::string _path)
 	{
 		PluginPtr plugin = PluginPtr(new Plugin(_name, _path, this));
 		m_Plugins.insert(std::pair<std::string, PluginPtr>(_name, plugin));
@@ -53,7 +53,6 @@ namespace _2Real
 	void ContextPrivate::uninstallPlugin(Plugin* _plugin)
 	{
 		Plugins::iterator it = m_Plugins.find(_plugin->name());
-		m_Plugins.erase(it);
 
 		if (m_PluginNotificationCenter.hasObservers())
 		{
@@ -71,7 +70,7 @@ namespace _2Real
 		return m_ServiceFactory.registerService(_name, _func);
 	}
 
-	ContainerPtr ContextPrivate::createService(const std::string& _name, ConfigMetadataPtr const& _config)
+	ContainerPtr ContextPrivate::createService(const std::string _name, ConfigMetadataPtr const _config)
 	{
 		ServicePtr service = m_ServiceFactory.createService(_name);
 

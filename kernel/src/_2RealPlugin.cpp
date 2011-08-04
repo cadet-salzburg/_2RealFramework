@@ -25,8 +25,13 @@
 namespace _2Real
 {
 	Plugin::Plugin(const std::string& _name, const std::string& _dir, ContextPrivate* _context) : 
-						m_PluginState(Plugin::UNINSTALLED), m_PluginName(_name), m_LibraryPath(_dir+_name), m_ContextPtr(_context), m_PluginActivator(NULL)
+						m_PluginState(Plugin::UNINSTALLED), m_PluginName(_name), m_ContextPtr(_context), m_PluginActivator(NULL)
 	{
+#ifdef _DEBUG
+		m_LibraryPath = _dir+_name+"_d";
+#else
+		m_LibraryPath = _dir+_name;
+#endif
 		m_PluginContextPtr = PluginContextPtr(new PluginContext(this, _context));
 		m_PluginState = Plugin::INSTALLED;
 	}

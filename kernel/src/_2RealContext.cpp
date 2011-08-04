@@ -69,11 +69,11 @@ namespace _2Real
 
 	void Context::start()
 	{
-		PluginPtr pImg = m_PrivateContext->installPlugin("ImageProcessing", Poco::Path::current() + "..\\..\\testplugins\\");
+		std::string directory = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+		
+		PluginPtr pImg = m_PrivateContext->installPlugin("ImageProcessing", directory);
 		pImg->load();
 		pImg->start();
-
-		//MetadataPtr mImg = pImg->metadata();
 
 		ConfigMetadataPtr cAddition(new ConfigMetadata("ImageAddition_ushort"));
 
@@ -110,11 +110,9 @@ namespace _2Real
 			return;
 		}
 
-		PluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", Poco::Path::current() + "..\\..\\testplugins\\");
+		PluginPtr pKinect = m_PrivateContext->installPlugin("KinectWinSDK", directory);
 		pKinect->load();
 		pKinect->start();
-
-		//MetadataPtr mKinect = pKinect->metadata();
 
 		ConfigMetadataPtr cDepthmap(new ConfigMetadata("Depthmap"));
 

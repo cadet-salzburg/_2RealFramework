@@ -43,7 +43,7 @@ namespace _2Real
 
 		bool registerService(const std::string _name, const std::string& _plugin, ServiceFactoryMethod _func);
 		void invalidateService(const std::string _name, const std::string& _plugin);
-		ContainerPtr createService(const std::string& _name, ConfigMetadataPtr const& _config);
+		ContainerPtr createService(const std::string _name, ConfigMetadataPtr const _config);
 		bool updateServiceRegistry();
 
 		void uninstallPlugin(Plugin* _plugin);													//called by a plugin, removes plugin from plugin pool
@@ -64,7 +64,7 @@ namespace _2Real
 		Poco::NotificationCenter		m_FrameworkNotificationCenter;							//poco notification center for framework events
 		Poco::NotificationCenter		m_PluginNotificationCenter;								//poco notification center for plugin events
 
-		PluginPtr installPlugin(const std::string& _name, const std::string& _path);			//install plugin
+		PluginPtr installPlugin(const std::string _name, const std::string _path);			//install plugin
 
 		friend class Context;
 	};
