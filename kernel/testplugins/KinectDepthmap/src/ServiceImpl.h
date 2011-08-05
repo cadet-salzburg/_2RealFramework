@@ -3,6 +3,7 @@
 #include "_2RealAbstractService.h"
 
 #include "KinectDepthMap.h"
+#include "Image.h"
 
 class KinectService : public _2Real::AbstractService
 {

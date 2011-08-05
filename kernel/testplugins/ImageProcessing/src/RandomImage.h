@@ -57,7 +57,6 @@ bool RandomImageService< T >::setup(_2Real::ConfigMetadataPtr const& _config)
 template< typename T >
 void RandomImageService< T >::update()
 {
-	std::cout << "random image update begin" << std::endl;
 	/*
 		this function performs the actual service
 	*/
@@ -80,6 +79,4 @@ void RandomImageService< T >::update()
 
 	m_OutputImage.setData(tmp);
 	m_OutputImage.setResolution(res);
-
-	std::cout << "random image update complete" << std::endl;
 };

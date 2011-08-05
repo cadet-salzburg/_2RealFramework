@@ -59,13 +59,17 @@ bool ImageAdditionService< T >::setup(_2Real::ConfigMetadataPtr const& _config)
 template< typename T >
 void ImageAdditionService< T >::update()
 {
-	std::cout << "image addition update begin" << std::endl;
 	/*
 		this function performs the actual service
 	*/
+
+	std::cout << "begin of: image addition update" << std::endl;
+
 	if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
 	{
-		std::cout << "data is not null" << std::endl;
+
+		std::cout << "both input images are not empty" << std::endl;
+		
 		unsigned int width = m_InputImage1.resolution().get(0);
 		unsigned int height = m_InputImage1.resolution().get(1);
 
@@ -88,6 +92,10 @@ void ImageAdditionService< T >::update()
 		m_OutputImage.setData(tmp);
 		m_OutputImage.setResolution(res);
 	}
-	
+	else
+	{
+		std::cout << "at least one input image is empty" << std::endl;
+	}
+
 	std::cout << "image addition update complete" << std::endl;
 };

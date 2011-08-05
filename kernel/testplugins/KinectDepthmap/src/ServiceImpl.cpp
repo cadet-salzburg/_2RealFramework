@@ -53,8 +53,6 @@ void KinectService::update()
 {
 	if (m_bIsInitialized && m_KinectDepthMap.update())
 	{
-		std::cout << "kinect update begin" << std::endl;
 		m_OutputImage = m_KinectDepthMap.depthMap();
-		std::cout << "kinect update complete" << std::endl;
 	}
 }
