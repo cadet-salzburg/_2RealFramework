@@ -40,7 +40,6 @@ namespace _2Real
 		void shutdown();
 		void update();
 
-		//these are not needed
 		void addListener(ServicePtr _listener) {}
 		void removeListener(ServicePtr _listener) {}
 		void serviceListener(DataPtr &_input) {}
@@ -51,7 +50,6 @@ namespace _2Real
 
 		void outputData(bool _blocking);
 
-		//functions to build sequence
 		void beginSequence(ContainerPtr _first)
 		{
 			if (m_bHasFirstElement)
@@ -60,11 +58,9 @@ namespace _2Real
 			}
 
 			m_Containers.push_back(_first);
-			//add container to listeners
 			m_bHasFirstElement = true;
 		}
 
-		//functions to build sequence
 		void endSequence(ContainerPtr _last)
 		{
 			if (m_bHasLastElement)
@@ -73,7 +69,6 @@ namespace _2Real
 			}
 
 			m_Containers.push_back(_last);
-			//add container to listeners
 			m_bHasLastElement = true;
 		}
 
@@ -83,8 +78,6 @@ namespace _2Real
 			{
 				m_Containers.push_back(_element);
 			}
-
-			//hmmm should this thing also create the connections between 
 		}
 
 		ContainerPtr first() { return *m_Containers.begin(); }
@@ -94,7 +87,6 @@ namespace _2Real
 
 		typedef std::list< ContainerPtr > ContainerSequence;
 
-		//list of input containers
 		ContainerSequence		m_Containers;
 
 		//std::list< DataPtr >			m_Data;
