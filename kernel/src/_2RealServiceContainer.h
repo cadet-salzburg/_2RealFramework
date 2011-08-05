@@ -20,20 +20,20 @@
 #pragma once
 
 #include "_2RealFramework.h"
-#include "_2RealIContainer.h"
+#include "_2RealAbstractContainer.h"
 
 #include "Poco/BasicEvent.h"
 
 namespace _2Real
 {
-	class ServiceContainer : public IContainer
+	class ServiceContainer : public AbstractContainer
 	{
 
 	public:
 
-		ServiceContainer(ServicePtr _service);
+		ServiceContainer(ServiceName _name, ServicePtr _service);
 		
-		void start();
+		void start(bool _loop);
 		void stop();
 		void run();
 
@@ -43,30 +43,17 @@ namespace _2Real
 
 		void addListener(ServicePtr _listener);
 		void removeListener(ServicePtr _listener);
-		//this one is called by the contained service obj
 		void serviceListener(DataPtr &_input);
 
-		void addListener(ContainerPtr _listener);
-		void removeListener(ContainerPtr _listener);
-		//this one is called by other containers
-		void containerListener(DataPtr &_input);
-
-		void outputData(bool _blocking);
-		
 	private:
 
-		typedef std::list< VariableName > NameList;
+		typedef std::list< VariableName >	VariableNameList;
 
-		std::list< DataPtr >			m_Data;
-		Poco::Mutex						m_Lock;
+		std::list< DataPtr >				m_Data;
+		Poco::Mutex							m_Lock;
+		Poco::BasicEvent< DataPtr >			m_OutputEvent;
+		VariableNameList					m_InputVariables;
+		ServicePtr							m_ServicePtr;
 
-		bool							m_bRunThreaded;
-		bool							m_bIsConfigured;
-
-		Poco::BasicEvent< DataPtr >		m_OutputEvent;
-	
-		NameList						m_InputVariables;
-		
-		ServicePtr						m_ServicePtr;
 	};
 }

@@ -36,33 +36,35 @@ namespace _2Real
 	class ContextPrivate;
 	
 	class Plugin;
-	class PluginContext;	
-	//class PluginPool;
+	class IPluginActivator;
+	class PluginContext;
+	class PluginPool;
 	
+	class IService;
 	class ServiceFactory;
 	class ServiceRegistry;
 	class ServiceRegistration;
-	
-	//class Exception;
+	class AbstractService;
 	
 	template < typename T >
 	class ServiceVariable;
 	class AbstractServiceVariable;
+	class AbstractServiceParameter;
 	
-	//class Notification;
+	class Notification;
 	class PluginNotification;
 	class ServiceNotification;
 	class FrameworkNotification;
 	
 	class Data;
+	
 	class Metadata;
 	class ConfigMetadata;
-	
-	class IPluginActivator;
-	class IService;
-	
+
 	class IContainer;
 	class ServiceContainer;
+	class SequenceContainer;
+	class SynchronizationContainer;
 	
 	typedef Poco::SharedPtr< Context >				ContextPtr;
 	typedef Poco::SharedPtr< PluginContext >		PluginContextPtr;
@@ -71,17 +73,26 @@ namespace _2Real
 	typedef Poco::SharedPtr< ServiceRegistration >	ServiceRegPtr;
 	typedef Poco::SharedPtr< Metadata >				MetadataPtr;
 	typedef Poco::SharedPtr< ConfigMetadata >		ConfigMetadataPtr;
+	typedef Poco::SharedPtr< IContainer >			ContainerPtr;
+	typedef Poco::SharedPtr< Data >					DataPtr;
+	typedef Poco::SharedPtr< ServiceContainer >		ServiceContainerPtr;
+	
 	typedef Poco::AutoPtr< ServiceNotification >	ServiceNotificationPtr;
 	typedef Poco::AutoPtr< PluginNotification >		PluginNotificationPtr;
 	typedef Poco::AutoPtr< FrameworkNotification >	FrameworkNotificationPtr;
 
-	typedef Poco::SharedPtr< IContainer >			ContainerPtr;
-	typedef Poco::SharedPtr< Data >					DataPtr;
-	typedef Poco::SharedPtr< ServiceContainer >		ServiceContainerPtr;
+	typedef ServicePtr (*ServiceFactoryMethod)(void);
 
+#ifdef _DEBUG
 	typedef std::string								VariableName;
 	typedef std::string								ParameterName;
 	typedef std::string								ServiceName;
+	typedef std::string								PluginName;
+#else
+	typedef std::string								VariableName;
+	typedef std::string								ParameterName;
+	typedef std::string								ServiceName;
+	typedef std::string								PluginName;
+#endif
 
-	typedef ServicePtr (*ServiceFactoryMethod)(void);
 }

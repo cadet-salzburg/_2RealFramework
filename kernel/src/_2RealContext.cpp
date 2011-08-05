@@ -86,7 +86,7 @@ namespace _2Real
 
 		cAddition->setOutputParameter<std::string>("output image", "ImageProcessing.ImageAddition_ushort.image");
 
-		ContainerPtr sAddition = m_PrivateContext->createService("ImageAddition_ushort", cAddition);
+		ServicePtr sAddition = m_PrivateContext->createService("ImageAddition_ushort", cAddition);
 
 		if (sAddition.isNull())
 		{
@@ -102,7 +102,7 @@ namespace _2Real
 		
 		cRandom->setOutputParameter<std::string>("output image", "ImageProcessing.RandomImage_ushort.image");
 
-		ContainerPtr sRandom = m_PrivateContext->createService("RandomImage_ushort", cRandom);
+		ServicePtr sRandom = m_PrivateContext->createService("RandomImage_ushort", cRandom);
 
 		if (sRandom.isNull())
 		{
@@ -122,7 +122,7 @@ namespace _2Real
 
 		cDepthmap->setOutputParameter<std::string>("output image", "KinectWinSDK.Depthmap.image");
 
-		ContainerPtr sDepthmap = m_PrivateContext->createService("Depthmap", cDepthmap);
+		ServicePtr sDepthmap = m_PrivateContext->createService("Depthmap", cDepthmap);
 
 		if (sDepthmap.isNull())
 		{

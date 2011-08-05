@@ -20,87 +20,22 @@
 #pragma once
 
 #include "_2RealFramework.h"
-#include "_2RealIContainer.h"
-
-#include "Poco/BasicEvent.h"
+#include "_2RealGroupContainer.h"
 
 namespace _2Real
 {
-	class ServiceContainer : public IContainer
+	class SequenceContainer : public GroupContainer
 	{
 	public:
 
-		ServiceContainer();
+		SequenceContainer(ServiceName _name) : GroupContainer(_name) {}
 		
-		void start();
-		void stop();
-		void run();
-
-		bool setup(ConfigMetadataPtr const& _config);
-		void shutdown();
 		void update();
 
-		void addListener(ServicePtr _listener) {}
-		void removeListener(ServicePtr _listener) {}
-		void serviceListener(DataPtr &_input) {}
-
-		void addListener(ContainerPtr _listener);
-		void removeListener(ContainerPtr _listener);
-		void containerListener(DataPtr &_input);
-
-		void outputData(bool _blocking);
-
-		void beginSequence(ContainerPtr _first)
-		{
-			if (m_bHasFirstElement)
-			{
-				return;
-			}
-
-			m_Containers.push_back(_first);
-			m_bHasFirstElement = true;
-		}
-
-		void endSequence(ContainerPtr _last)
-		{
-			if (m_bHasLastElement)
-			{
-				return;
-			}
-
-			m_Containers.push_back(_last);
-			m_bHasLastElement = true;
-		}
-
-		void addElement(ContainerPtr _element)
-		{
-			if (m_bHasFirstElement && !m_bHasLastElement)
-			{
-				m_Containers.push_back(_element);
-			}
-		}
-
-		ContainerPtr first() { return *m_Containers.begin(); }
-		ContainerPtr last() { return *m_Containers.end(); }
-
-	private:
-
-		typedef std::list< ContainerPtr > ContainerSequence;
-
-		ContainerSequence		m_Containers;
-
-		//std::list< DataPtr >			m_Data;
-		Poco::Mutex						m_Lock;
-
-		bool							m_bRunThreaded;
-		bool							m_bIsConfigured;
-
-		Poco::BasicEvent< DataPtr >		m_OutputEvent;
+		//void startChildren(bool _startAll);
+		//void stopChildren(bool _stopAll);
+		void run();
 		
-		ServicePtr						m_ServicePtr;
-
-		bool m_bHasFirstElement;
-		bool m_bHasLastElement;
 
 	};
 }

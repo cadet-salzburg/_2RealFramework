@@ -70,31 +70,27 @@ namespace _2Real
 		return m_ServiceFactory.registerService(_name, _func);
 	}
 
-	ContainerPtr ContextPrivate::createService(const std::string _name, ConfigMetadataPtr const _config)
+	ServicePtr ContextPrivate::createService(const std::string _name, ConfigMetadataPtr const _config)
 	{
 		ServicePtr service = m_ServiceFactory.createService(_name);
 
 		if (!service.isNull())
 		{
-			ServicePtr container(new ServiceContainer(service));
+			ServicePtr container(new ServiceContainer("", service));
 
 			m_ServiceRegistry.addService(_name, container);
 
-			if (container->setup(_config))
-			{
-				service->addListener(container);
-			}
-			else
+			if (!container->setup(_config))
 			{
 				std::cout << "error on service configuration" << std::endl;
 			}
 			
-			ContainerPtr result = container.unsafeCast< IContainer >();
+			//ContainerPtr result = container.unsafeCast< IContainer >();
 
-			return result;
+			return container;
 		}
 
-		return ContainerPtr();
+		return ServicePtr();
 	}
 
 	void ContextPrivate::invalidateService(const std::string _name, const std::string& _plugin)

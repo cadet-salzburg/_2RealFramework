@@ -26,18 +26,25 @@
 
 namespace _2Real
 {
-	ServiceContainer::ServiceContainer(ServicePtr _service) : m_ServicePtr(_service), m_bIsConfigured(false), m_bRunThreaded(false)
+	ServiceContainer::ServiceContainer(ServiceName _name, ServicePtr _service) : AbstractContainer(_name), m_ServicePtr(_service)
 	{
 	}
 
-	void ServiceContainer::start()
+	void ServiceContainer::start(bool _loop)
 	{
 		if (!m_bIsConfigured)
 		{
 			return;
 		}
 
-		m_bRunThreaded = true;
+		if (!_loop)
+		{
+			m_bRunOnceOnly = true;
+		}
+		else
+		{
+			m_bRunThreaded = true;
+		}
 	}
 
 	void ServiceContainer::stop()
@@ -49,15 +56,15 @@ namespace _2Real
 	{
 		m_Lock.lock();
 		
-		if (m_bIsConfigured && !m_bRunThreaded)
+		if (m_bIsConfigured && !m_bRunThreaded && !m_bRunOnceOnly)
 		{
-			NameList tmpList = m_InputVariables;
+			VariableNameList tmpList = m_InputVariables;
 			
 			DataPtr data(new Data());
 			for (std::list< DataPtr >::reverse_iterator it = m_Data.rbegin(); it != m_Data.rend(); it++)
 			{
 				Data tmp = *it->get();
-				for (NameList::iterator it = tmpList.begin(); it != tmpList.end(); it++)
+				for (VariableNameList::iterator it = tmpList.begin(); it != tmpList.end(); it++)
 				{
 					Poco::Any result;
 					if (tmp.getAny(*it, result))
@@ -84,12 +91,10 @@ namespace _2Real
 
 	void ServiceContainer::run()
 	{
-		while (m_bRunThreaded)
+		while (m_bRunThreaded || m_bRunOnceOnly)
 		{
-			DataPtr data;
-			m_ServicePtr->serviceListener(data);
-			m_ServicePtr->update();
-			m_ServicePtr->outputData(false);
+			update();
+			m_bRunOnceOnly = false;
 		}
 	}
 
@@ -118,41 +123,18 @@ namespace _2Real
 
 	void ServiceContainer::addListener(ServicePtr _listener)
 	{
-	}
-
-	void ServiceContainer::addListener(ContainerPtr _listener)
-	{
-		if (m_bIsConfigured)
-		{
-			m_OutputEvent += Poco::delegate(_listener.get(), &IContainer::containerListener);
-		}
+		m_ServicePtr->addListener(_listener);
 	}
 
 	void ServiceContainer::removeListener(ServicePtr _listener)
 	{
-	}
-
-	void ServiceContainer::removeListener(ContainerPtr _listener)
-	{
-		if (m_bIsConfigured)
-		{
-			m_OutputEvent -= Poco::delegate(_listener.get(), &IContainer::containerListener);
-		}
-	}
-
-	void ServiceContainer::containerListener(DataPtr &_input)
-	{
-		m_Lock.lock();
-		m_Data.push_back(_input);
-		m_Lock.unlock();
+		m_ServicePtr->removeListener(_listener);
 	}
 
 	void ServiceContainer::serviceListener(DataPtr &_input)
 	{
-		m_OutputEvent.notify(this, _input);
-	}
-
-	void ServiceContainer::outputData(bool _blocking)
-	{
+		m_Lock.lock();
+		m_Data.push_back(_input);
+		m_Lock.unlock();
 	}
 }

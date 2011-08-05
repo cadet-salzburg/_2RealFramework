@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
     <ClCompile Include="..\..\src\test.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractService.cpp" />
@@ -19,6 +20,7 @@
     <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealGroupContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
@@ -50,7 +52,9 @@
     <ClInclude Include="..\..\include\_2RealServiceNotification.h" />
     <ClInclude Include="..\..\include\_2RealServiceParameter.h" />
     <ClInclude Include="..\..\include\_2RealServiceVariable.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
+    <ClInclude Include="..\..\src\_2RealGroupContainer.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealSequenceContainer.h" />
@@ -103,7 +107,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>

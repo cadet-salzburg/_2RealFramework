@@ -79,7 +79,7 @@ namespace _2Real
 		return it->second->insert(path, _metadata);
 	}
 
-	const Metadata* const Metadata::subtree(const std::vector<std::string>& _path) const
+	const MetadataPtr const Metadata::subtree(const std::vector<std::string>& _path) const
 	{
 		if (_path.empty())
 		{
@@ -93,7 +93,7 @@ namespace _2Real
 		}
 		else if (_path.size() == 1)
 		{
-			return it->second.get();
+			return it->second;
 		}
 
 		std::vector<std::string> path = _path;
@@ -101,7 +101,7 @@ namespace _2Real
 		return it->second->subtree(path);
 	}
 
-	Metadata* Metadata::subtree(const std::vector<std::string>& _path)
+	MetadataPtr Metadata::subtree(const std::vector<std::string>& _path)
 	{
 		if (_path.empty())
 		{
@@ -123,17 +123,17 @@ namespace _2Real
 		return it->second->subtree(path);
 	}
 
-	const Metadata* const Metadata::child(std::string _name) const
+	const MetadataPtr const Metadata::child(std::string _name) const
 	{
 		MetadataMap::const_iterator it = m_Children.find(_name);
 		if (it == m_Children.end())
 		{
 			return NULL;
 		}
-		return it->second.get();
+		return it->second;
 	}
 
-	Metadata* Metadata::child(std::string _name)
+	MetadataPtr Metadata::child(std::string _name)
 	{
 		MetadataMap::iterator it = m_Children.find(_name);
 		if (it == m_Children.end())
@@ -141,6 +141,6 @@ namespace _2Real
 			return NULL;
 		}
 
-		return it->second.get();
+		return it->second;
 	}
 }

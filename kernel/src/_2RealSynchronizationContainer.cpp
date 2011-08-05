@@ -23,4 +23,19 @@
 
 namespace _2Real
 {
+	void SynchronizationContainer::update()
+	{
+		if (m_bIsConfigured && !m_bRunThreaded)
+		{
+			for (ContainerList::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+			{
+				//run each child container once, in a separate thread
+				(*it)->start(false);
+				m_ThreadPool.start(*it->get());
+			}
+
+			//wait until all threads are done before returning
+			m_ThreadPool.joinAll();
+		}
+	}
 }

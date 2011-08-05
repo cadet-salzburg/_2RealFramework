@@ -20,16 +20,16 @@
 #pragma once
 
 #include "_2RealFramework.h"
-#include "_2RealIService.h"
-
-#include "Poco/Runnable.h"
+#include "_2RealIContainer.h"
 
 namespace _2Real
 {
-	class IContainer : public IService, public Poco::Runnable
+	class AbstractContainer : public IContainer
 	{
 
 	public:
+
+		AbstractContainer(ServiceName _name) : m_Name(_name), m_bIsConfigured(false), m_bRunThreaded(false), m_bRunOnceOnly(false) {}
 
 		virtual void start(bool _loop) = 0;
 		virtual void stop() = 0;
@@ -37,14 +37,36 @@ namespace _2Real
 		virtual void update() = 0;
 		virtual bool setup(ConfigMetadataPtr const& _config) = 0;
 		virtual void shutdown() = 0;
+		
 		virtual void addListener(ServicePtr _listener) = 0;
 		virtual void removeListener(ServicePtr _listener) = 0;
-		virtual void addListener(ContainerPtr _listener) = 0;
-		virtual void removeListener(ContainerPtr _listener) = 0;
 		virtual void serviceListener(DataPtr &_input) = 0;
-		virtual void containerListener(DataPtr &_input) = 0;
-		virtual void outputData(bool _blocking) = 0;
-		virtual ServiceName const& name() const = 0;
+		
+		/**
+		*	functions for communication between containers -
+		*	might be useless; placeholder for now
+		*/
+		void addListener(ContainerPtr _listener) {}
+		void removeListener(ContainerPtr _listener) {}
+		void containerListener(DataPtr &_input) {}
+		
+		/**
+		*	function to output data - unused
+		*/
+		void outputData(bool _blocking) {}
+		
+		ServiceName const& name() const { return m_Name; }
+
+	protected:
+
+		bool								m_bRunThreaded;
+		bool								m_bRunOnceOnly;
+		bool								m_bIsConfigured;
+
+		/**
+		*	every container is a service; thus it receives a name when created
+		*/
+		ServiceName							m_Name;
 
 	};
 }

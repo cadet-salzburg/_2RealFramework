@@ -43,7 +43,10 @@ namespace _2Real
 
 		bool registerService(const std::string _name, const std::string& _plugin, ServiceFactoryMethod _func);
 		void invalidateService(const std::string _name, const std::string& _plugin);
-		ContainerPtr createService(const std::string _name, ConfigMetadataPtr const _config);
+		
+		//ptr here does not point to service itself, but to container, which is a service too
+		//to get container ptr use poco::cast
+		ServicePtr createService(const std::string _name, ConfigMetadataPtr const _config);
 		bool updateServiceRegistry();
 
 		void uninstallPlugin(Plugin* _plugin);													//called by a plugin, removes plugin from plugin pool

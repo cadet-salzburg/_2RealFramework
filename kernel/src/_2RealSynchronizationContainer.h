@@ -20,18 +20,22 @@
 #pragma once
 
 #include "_2RealFramework.h"
-#include "_2RealIContainer.h"
-
-#include "Poco/BasicEvent.h"
+#include "_2RealGroupContainer.h"
 
 namespace _2Real
 {
-	class SynchronizationContainer : public IContainer
+	class SynchronizationContainer : public GroupContainer
 	{
 
-	public:
+		SynchronizationContainer(ServiceName _name) : GroupContainer(_name) {}
+		
+		void update();
 
-	private:
+		//void startChildren(bool _startAll);
+		//void stopChildren(bool _stopAll);
+
+		void run();
+
 
 	};
 }

@@ -44,8 +44,8 @@ namespace _2Real
 		template<typename T>
 		const bool attribute(std::string _attribute, T& _result) const;
 
-		const Metadata* const subtree(const std::vector<std::string>& _path) const;
-		const Metadata* const child(std::string _name) const;
+		const MetadataPtr subtree(const std::vector<std::string>& _path) const;
+		const MetadataPtr child(std::string _name) const;
 
 	protected:
 
@@ -72,8 +72,8 @@ namespace _2Real
 		void setName(std::string _name) { m_Name = _name; }
 
 		Metadata* const father() { return m_Father; }
-		Metadata* subtree(const std::vector<std::string>& _path);
-		Metadata* child(std::string _name);
+		MetadataPtr subtree(const std::vector<std::string>& _path);
+		MetadataPtr child(std::string _name);
 
 		friend class MetadataReader;
 		friend class Context; 

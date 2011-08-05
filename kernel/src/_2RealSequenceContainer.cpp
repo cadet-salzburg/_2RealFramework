@@ -20,7 +20,61 @@
 #pragma once
 
 #include "_2RealSequenceContainer.h"
+#include "_2RealServiceContainer.h"
 
 namespace _2Real
 {
+	void SequenceContainer::update()
+	{
+		if (m_bIsConfigured && !m_bRunThreaded)
+		{
+			for (ContainerList::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+			{
+				//just update children sequentially
+				(*it)->update();
+			}
+		}
+	}
+
+/*
+	void SequenceContainer::startChildren(bool _startAll)
+	{
+		if (!m_bIsConfigured)
+		{
+			return;
+		}
+
+		if (_startAll)
+		{
+			//all containers run threaded
+			for (ContainerSequence::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+			{
+				(*it)->start(false);
+				m_ThreadPool.start(*it->get());
+			}
+		}
+		else
+		{
+			//service containers -> started in threaded modus
+			//group containers -> all service children started in threaded modus
+			for (ContainerSequence::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+			{
+				if (dynamic_cast< ServiceContainer* >(it->get()))
+				{
+					(*it)->start(false);
+					m_ThreadPool.start(*it->get());
+				}
+				else
+				{
+					//(*it)->startChildren(false);
+				}
+			}
+		}
+	}
+
+	void SequenceContainer::stopChildren(bool _stopAll)
+	{
+	}
+*/
+
 }
