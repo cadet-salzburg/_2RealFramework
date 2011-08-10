@@ -24,7 +24,7 @@ const bool KinectService::init()
 	}
 	else
 	{
-		m_bIsInitialized = true,
+		m_bIsInitialized = true;
 	}
 	
 	return m_bIsInitialized;

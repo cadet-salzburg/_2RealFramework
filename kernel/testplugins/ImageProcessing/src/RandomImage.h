@@ -1,6 +1,7 @@
 #pragma once
 
-#include "_2RealAbstractService.h"
+#include "_2RealIUserService.h"
+#include "_2RealServiceContext.h"
 
 #include "RandomValues.h"
 #include "Image.h"
@@ -10,9 +11,9 @@
 */
 
 template< typename T >
-static _2Real::ServicePtr createRandomImage(void)
+static _2Real::UserServicePtr createRandomImage(void)
 {
-	_2Real::ServicePtr service(new RandomImageService< T >());
+	_2Real::UserServicePtr service(new RandomImageService< T >());
 	return service;
 }
 
@@ -21,14 +22,15 @@ static _2Real::ServicePtr createRandomImage(void)
 */
 
 template< typename T >
-class RandomImageService : public _2Real::AbstractService
+class RandomImageService : public _2Real::IUserService
 {
 
 public:
 
-	void shutdown() {};
+	void shutdown() {}
 	void update();
-	bool setup(_2Real::ConfigMetadataPtr const& _config);
+	void setup(_2Real::ServiceContext *const _context);
+	const bool init() { return true; }
 
 private:
 
@@ -39,19 +41,14 @@ private:
 };
 
 template< typename T >
-bool RandomImageService< T >::setup(_2Real::ConfigMetadataPtr const& _config)
+void RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-	addSetupParameter< unsigned int >("image width", m_iImageWidth);
-	addSetupParameter< unsigned int >("image height", m_iImageHeight);
-	addOutputVariable< ::Image< T, 2 > >("output image", m_OutputImage);
-
-	/*
-		call abstract service -> configure
-	*/
-	return configure(_config);
+	_context->registerSetupParameter< unsigned int >("image width", m_iImageWidth);
+	_context->registerSetupParameter< unsigned int >("image height", m_iImageHeight);
+	_context->registerOutputVariable< ::Image< T, 2 > >("output image", m_OutputImage);
 }
 
 template< typename T >

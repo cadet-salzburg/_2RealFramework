@@ -1,6 +1,7 @@
 #pragma once
 
-#include "_2RealAbstractService.h"
+#include "_2RealIUserService.h"
+#include "_2RealServiceContext.h"
 
 #include "Image.h"
 
@@ -9,9 +10,9 @@
 */
 
 template< typename T >
-static _2Real::ServicePtr createImageAddition(void)
+static _2Real::UserServicePtr createImageAddition(void)
 {
-	_2Real::ServicePtr service(new ImageAdditionService< T >());
+	_2Real::UserServicePtr service(new ImageAdditionService< T >());
 	return service;
 }
 
@@ -20,14 +21,15 @@ static _2Real::ServicePtr createImageAddition(void)
 */
 
 template< typename T >
-class ImageAdditionService : public _2Real::AbstractService
+class ImageAdditionService : public _2Real::IUserService
 {
 
 public:
 
-	void shutdown() {};
+	void shutdown() {}
 	void update();
-	bool setup(_2Real::ConfigMetadataPtr const& _config);
+	void setup(_2Real::ServiceContext *const _context);
+	const bool init() { return true; }
 
 private:
 
@@ -39,21 +41,16 @@ private:
 };
 
 template< typename T >
-bool ImageAdditionService< T >::setup(_2Real::ConfigMetadataPtr const& _config)
+void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-	addSetupParameter< T >("scale factor 1", m_ScaleFactor1);
-	addSetupParameter< T >("scale factor 2", m_ScaleFactor2);
-	addInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
-	addInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
-	addOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
-
-	/*
-		call abstract service -> configure
-	*/
-	return configure(_config);
+	_context->registerSetupParameter< T >("scale factor 1", m_ScaleFactor1);
+	_context->registerSetupParameter< T >("scale factor 2", m_ScaleFactor2);
+	_context->registerInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
+	_context->registerInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
+	_context->registerOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
 };
 
 template< typename T >

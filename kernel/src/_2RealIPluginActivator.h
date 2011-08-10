@@ -22,7 +22,6 @@
 #include "_2RealTypedefs.h"
 
 #include "Poco/ClassLibrary.h"
-#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {

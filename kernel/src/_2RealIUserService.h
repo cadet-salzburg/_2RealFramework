@@ -19,12 +19,10 @@
 
 #pragma once
 
-#include "Poco/SharedPtr.h"
+#include "_2RealTypedefs.h"
 
 namespace _2Real
 {
-
-	class ServiceContext;
 
 	class IUserService
 	{

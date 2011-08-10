@@ -21,7 +21,8 @@
 
 #include "_2RealTypedefs.h"
 
-#include "_2RealAbstractService.h"
+#include "_2RealServiceParameter.h"
+#include "_2RealServiceVariable.h"
 
 #include <string>
 
@@ -41,7 +42,8 @@ namespace _2Real
 		template< typename T >
 		void registerInputVariable(Variable _name, T &_var)
 		{
-			m_ServicePtr->addInputVariable< T >(_name, _var);
+			AbstractServiceVariable *var = new ServiceVariable< T >(_name, _var);
+			registerInputVariable(var);
 		}
 
 		/**
@@ -50,7 +52,8 @@ namespace _2Real
 		template< typename T >
 		void registerOutputVariable(Variable _name, T &_var)
 		{
-			m_ServicePtr->addInputVariable< T >(_name, _var);
+			AbstractServiceVariable *var = new ServiceVariable< T >(_name, _var);
+			registerOutputVariable(var);
 		}
 
 		/**
@@ -59,7 +62,8 @@ namespace _2Real
 		template< typename T >
 		void registerSetupParameter(Variable _name, T &_param)
 		{
-			m_ServicePtr->addSetupParameter< T >(_name, _var);
+			AbstractServiceVariable *param = new ServiceParameter< T >(_name, _param);
+			registerSetupParameter(param);
 		}
 	
 	private:
@@ -83,6 +87,21 @@ namespace _2Real
 		*
 		*/
 		ServiceContext& operator=(const ServiceContext& _src);
+
+		/**
+		*
+		*/
+		void registerSetupParameter(AbstractServiceVariable *_param);
+		
+		/**
+		*
+		*/
+		void registerInputVariable(AbstractServiceVariable *_var);
+		
+		/**
+		*
+		*/
+		void registerOutputVariable(AbstractServiceVariable *_var);
 
 		/**
 		*

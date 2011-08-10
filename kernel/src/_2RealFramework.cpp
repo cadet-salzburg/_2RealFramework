@@ -42,10 +42,8 @@ namespace _2Real
 
 	OutputContainerPtr Framework::createOutputContainer()
 	{
-		std::cout << "private context: creating output container" << std::endl;
 		ServicePtr service = m_FactoryPtr->createService("OutputContainer", "Framework").second;
 		
-		std::cout << "private context: unsafe cast" << std::endl;
 		OutputContainerPtr result = service.unsafeCast< OutputContainer >();
 
 		result->m_bIsConfigured = false;
@@ -56,18 +54,15 @@ namespace _2Real
 			std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
 		}
 
-		std::cout << "private context: returning result" << std::endl;
 		return result;
 	}
 
 	NamedServicePtr Framework::createService(std::string const& _name, std::string const& _plugin)
 	{
-		std::cout << "framework: creating new service object" << std::endl;
-		
+
 		if (_plugin == "Framework")
 		{
 			NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-			std::cout << "framework: created framework service: " << service.first << std::endl;
 			service.second->setName(service.first);
 
 			return service;
@@ -77,10 +72,8 @@ namespace _2Real
 			if (m_FactoryPtr->canCreate(_name, _plugin))
 			{
 				NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-				std::cout << "framework: created user service: " << service.first << std::endl;
 				service.second->setName(service.first);
 				NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-				std::cout << "framework: created service container: " << container.first << std::endl;
 				container.second->setName(container.first);
 			
 				ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
@@ -90,32 +83,25 @@ namespace _2Real
 			}
 			else
 			{
-				std::cout << "framework: loading plugin" << std::endl;
 				std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 				PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
 				
 				if (pluginPtr.isNull())
 				{
-					std::cout << "framework: loading plugin dll" << std::endl;
 					pluginPtr = PluginPtr(new Plugin(_plugin, path, *this));
 					bool success = m_PluginsPtr->installPlugin(pluginPtr);
-					if (success) std::cout << "juhu! " << std::endl;
 				}
 
 				if (pluginPtr->state() != Plugin::INVALID)
 				{
-					std::cout << "framework: not invalid!" << std::endl;
 					NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-					std::cout << "framework: created user service: " << service.first << std::endl;
 					service.second->setName(service.first);
 					NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-					std::cout << "framework: created service container: " << container.first << std::endl;
 					container.second->setName(container.first);
 			
 					ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
 					casted->m_ServicePtr = service.second;
 
-					std::cout << "framework: returning" << std::endl;
 					return container;
 				}
 			}

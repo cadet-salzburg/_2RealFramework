@@ -32,8 +32,6 @@
 
 #include "_2RealTypedefs.h"
 
-#include "_2RealPlugin.h"
-
 namespace _2Real
 {
 	class ServiceReference
@@ -41,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		ServiceReference(PluginPtr &_pluginPtr, UserServiceCreator _creator, bool const& _singleton);
+		ServiceReference(Plugin const *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton);
 		
 		bool const& isSingleton() const;
 		const bool canCreate() const;
@@ -51,10 +49,10 @@ namespace _2Real
 
 	private:
 
-		PluginPtr			m_PluginPtr;
-		UserServiceCreator	m_Creator;
-		unsigned int		m_iNrOfCreations;
-		bool				m_bIsSingleton;
+		Plugin					*m_PluginPtr;
+		UserServiceCreator		m_ServiceCreator;
+		unsigned int			m_iNrOfCreations;
+		bool					m_bIsSingleton;
 
 	};
 }

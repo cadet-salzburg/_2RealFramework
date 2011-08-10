@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "_2RealTypedefs.h"
+
 #include "_2RealAbstractServiceVariable.h"
 #include "_2RealData.h"
 

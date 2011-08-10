@@ -19,16 +19,12 @@
 
 #pragma once
 
-#include <string>
+#include "_2RealTypedefs.h"
 
-#include "Poco/SharedPtr.h"
+#include <string>
 
 namespace _2Real
 {
-
-	class IService;
-	
-	typedef Poco::SharedPtr< IService >		ServicePtr;
 
 	class PluginContext
 	{
@@ -40,12 +36,12 @@ namespace _2Real
 		/**
 		*	registers a service in the framework
 		*/
-		void registerService(const std::string _name, ServicePtr (*_func)(void));
+		void registerService(const std::string _name, UserServicePtr (*_func)(void));
 		
 		/**
 		*	registers a singleton in the framework
 		*/
-		void registerSingleton(const std::string _name, ServicePtr (*_func)(void));
+		void registerSingleton(const std::string _name, UserServicePtr (*_func)(void));
 	
 	private:
 

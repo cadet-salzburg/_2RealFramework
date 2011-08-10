@@ -17,6 +17,8 @@
 */
 
 #include "_2RealAbstractService.h"
+
+#include "_2RealIUserService.h"
 #include "_2RealConfigMetadata.h"
 #include "_2RealAbstractServiceVariable.h"
 #include "_2RealServiceContext.h"
@@ -25,6 +27,41 @@
 
 namespace _2Real
 {
+	
+	AbstractService::AbstractService(ServiceName const& _name, IUserService *const _service) : m_bIsConfigured(false), m_ServiceName(_name), m_UserService(_service)
+	{
+	}
+
+	void AbstractService::update()
+	{
+		m_UserService->update();
+	}
+
+	void AbstractService::shutdown()
+	{
+		m_UserService->shutdown();
+	}
+
+	ServiceName const& AbstractService::name() const
+	{
+		return m_ServiceName;
+	}
+
+	void AbstractService::addInputVariable(AbstractServiceVariable *_var)
+	{
+		m_InputVariables.push_back(_var);
+	}
+
+	void AbstractService::addOutputVariable(AbstractServiceVariable *_var)
+	{
+		m_OutputVariables.push_back(_var);
+	}
+
+	void AbstractService::addSetupParameter(AbstractServiceVariable *_param)
+	{
+		m_SetupParameters.push_back(_param);
+	}
+
 	const bool AbstractService::setup(ConfigMetadataPtr const& _config)
 	{
 		if (m_bIsConfigured)
@@ -39,7 +76,7 @@ namespace _2Real
 			bool noError = (*it)->getFrom(_config->setupAttributes());
 			if (!noError)
 			{
-				std::cout << "abstract service: error on input vars" << std::endl;
+				std::cout << "TODO: error handling; abstract service: error on input vars" << std::endl;
 				return noError;
 			}
 		}
@@ -51,7 +88,7 @@ namespace _2Real
 			bool noError = _config->inputParameter< Variable >((*it)->originalName(), frameworkName);
 			if (!noError)
 			{
-				std::cout << "abstract service: error on input vars" << std::endl;
+				std::cout << "TODO: error handling; abstract service: error on input vars" << std::endl;
 				return noError;
 			}
 			
@@ -65,17 +102,16 @@ namespace _2Real
 			bool noError = _config->outputParameter< Variable >((*it)->originalName(), frameworkName);
 			if (!noError)
 			{
-				std::cout << "abstract service: error on output vars" << std::endl;
+				std::cout << "TODO: error handling; abstract service: error on output vars" << std::endl;
 				return noError;
 			}
 			
 			(*it)->setFrameworkName(frameworkName);
 		}
 
-		m_UserService->init();
+		m_bIsConfigured = m_UserService->init();
 
-		m_bIsConfigured = true;
-		return true;
+		return m_bIsConfigured;
 	}
 
 	void AbstractService::serviceListener(DataPtr &_input)
@@ -86,10 +122,7 @@ namespace _2Real
 			{
 				if ((*it)->getFrom(*_input.get()))
 				{
-					//std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
-				}
-				else
-				{
+					std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
 				}
 			}
 		}

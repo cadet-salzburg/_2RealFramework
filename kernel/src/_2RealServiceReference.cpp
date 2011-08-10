@@ -24,8 +24,8 @@
 
 namespace _2Real
 {
-	ServiceReference::ServiceReference(PluginPtr &_pluginPtr, UserServiceCreator _creator, bool const& _singleton) :
-		m_PluginPtr(_pluginPtr), m_Creator(_creator), m_bIsSingleton(_singleton), m_iNrOfCreations(0)
+	ServiceReference::ServiceReference(Plugin const *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton) :
+		m_PluginPtr(_pluginPtr), m_ServiceCreator(_creator), m_bIsSingleton(_singleton), m_iNrOfCreations(0)
 	{
 	}
 
@@ -51,11 +51,21 @@ namespace _2Real
 
 	UserServicePtr ServiceReference::create()
 	{
+		UserServicePtr result;
+		try
+		{
+			result = m_ServiceCreator();
+		}
+		catch (...)
+		{
+			std::cout << "TODO: error handling!" << std::endl;
+		}
+
 		if (!m_bIsSingleton)
 		{
 			m_iNrOfCreations++;
 		}
 
-		return m_Creator();
+		return result;
 	}
 }

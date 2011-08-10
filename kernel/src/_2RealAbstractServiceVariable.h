@@ -19,19 +19,39 @@
 
 #pragma once
 
+#include "_2RealTypedefs.h"
+
+#include <string>
+
 namespace _2Real
 {
+
 	class AbstractServiceVariable
 	{
 
 	public:
 
-		AbstractServiceVariable(std::string _name) { m_OriginalName = _name; }
-		std::string const& originalName() const { return m_OriginalName; }
-		Variable const& frameworkName() const { return m_FrameworkName; }
-		void setFrameworkName(Variable _name) { m_FrameworkName = _name; }
+		AbstractServiceVariable(std::string const& _name)
+		{
+			m_OriginalName = _name;
+		}
 		
-		virtual bool getFrom(const Data &_data) = 0;
+		std::string const& originalName() const
+		{
+			return m_OriginalName;
+		}
+
+		Variable const& frameworkName() const
+		{
+			return m_FrameworkName;
+		}
+		
+		void setFrameworkName(Variable const& _name)
+		{
+			m_FrameworkName = _name;
+		}
+		
+		virtual bool getFrom(Data const& _data) = 0;
 		virtual void insertInto(Data &_data) const = 0;
 
 	private:
@@ -40,4 +60,5 @@ namespace _2Real
 		Variable				m_FrameworkName;
 
 	};
+
 }

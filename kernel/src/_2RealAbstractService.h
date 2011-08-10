@@ -22,7 +22,7 @@
 #include "_2RealTypedefs.h"
 
 #include "_2RealIService.h"
-#include "_2RealIUserService.h"
+#include "_2RealData.h"
 
 #include <list>
 
@@ -36,20 +36,24 @@ namespace _2Real
 
 	public:
 	
-		AbstractService(ServiceName const& _name, IUserService *const _service) : m_bIsConfigured(false), m_ServiceName(_name), m_UserService(_service) {}
+		AbstractService(ServiceName const& _name, IUserService *const _service);
 		
 		const bool setup(ConfigMetadataPtr const& _config);
-		void update() { m_UserService->update(); }
-		void shutdown() { m_UserService->shutdown(); }
+		void update();
+		void shutdown();
 
 		void addListener(ServicePtr &_listener);
 		void removeListener(ServicePtr &_listener);
 		void serviceListener(DataPtr &_input);
 		void outputData(bool _blocking);
 		
-		ServiceName const& name() const { return m_ServiceName; }
-		void setName(ServiceName const& _name) { m_ServiceName = _name; }
+		ServiceName const& name() const;
 
+		void addInputVariable(AbstractServiceVariable *const _var);
+		void addOutputVariable(AbstractServiceVariable *const _var);
+		void addSetupParameter(AbstractServiceVariable *const _param);
+		
+		/*
 		template< typename T >
 		void addInputVariable(Variable _name, T &_var)
 		{
@@ -85,23 +89,22 @@ namespace _2Real
 			ServiceParameter< T > *param = new ServiceParameter< T >(_name, _param);
 			m_SetupParameters.push_back(param);
 		}
+		*/
 
 	private:
 
 		typedef std::list< AbstractServiceVariable *> VariableList;
 		typedef std::list< AbstractServiceVariable *> ParameterList;
 
-		Poco::BasicEvent< DataPtr >					m_OutputEvent;
+		Poco::BasicEvent< DataPtr >			m_OutputEvent;
 
-		VariableList								m_InputVariables;
-		VariableList								m_OutputVariables;
-		ParameterList								m_SetupParameters;
+		VariableList						m_InputVariables;
+		VariableList						m_OutputVariables;
+		ParameterList						m_SetupParameters;
 
-		bool										m_bIsConfigured;
-
-		IUserService								*m_UserService;
-
-		ServiceName									m_ServiceName;
+		bool								m_bIsConfigured;
+		ServiceName							m_ServiceName;
+		IUserService						*m_UserService;
 
 	};
 }

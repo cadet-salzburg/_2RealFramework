@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "_2RealTypedefs.h"
+
 #include <map>
 
 #include "Poco/Any.h"
