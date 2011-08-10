@@ -11,14 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\_2RealAbstractPluginActivator.h" />
-    <ClInclude Include="..\..\include\_2RealAbstractServiceVariable.h" />
-    <ClInclude Include="..\..\include\_2RealIPluginActivator.h" />
-    <ClInclude Include="..\..\include\_2RealIUserService.h" />
-    <ClInclude Include="..\..\include\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\include\_2RealServiceContext.h" />
-    <ClInclude Include="..\..\include\_2RealServiceVariable.h" />
-    <ClInclude Include="..\..\include\_2RealTypedefs.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealAbstractPluginActivator.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealAbstractServiceVariable.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealIUserService.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealServiceContext.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealServiceVariable.h" />
+    <ClInclude Include="..\..\include_plugin\_2RealTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealConfigMetadata.h" />
     <ClInclude Include="..\..\src\_2RealContext.h" />
