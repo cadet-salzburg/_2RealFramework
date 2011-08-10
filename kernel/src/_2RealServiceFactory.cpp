@@ -104,7 +104,7 @@ namespace _2Real
 
 				if (servicePtr.isNull())
 				{
-					std::cout << "could not create service" << std::endl;
+					std::cout << "TODO: error handling; could not create service" << std::endl;
 				}
 				else
 				{

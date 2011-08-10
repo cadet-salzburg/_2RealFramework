@@ -111,14 +111,13 @@ namespace _2Real
 	template<typename T>
 	const bool Metadata::setAttribute(const std::vector<std::string>& _path, std::string _attribute, const T& _value)
 	{
-		std::cout << "set attrib: " << _path[0] << " " << _attribute << std::endl;
+		//std::cout << "set attrib: " << _path[0] << " " << _attribute << std::endl;
 		MetadataPtr sub = subtree(_path);
 		if (!sub.isNull())
 		{
-			std::cout << m_Name << " " << sub->name() << std::endl;
+			//std::cout << m_Name << " " << sub->name() << std::endl;
 			if (sub->setAttribute<T>(_attribute, _value))
 			{
-				std::cout << "done!" << std::endl;
 				return true;
 			}
 		}
@@ -129,14 +128,9 @@ namespace _2Real
 	template<typename T>
 	const bool Metadata::setAttribute(std::string _attribute, const T& _value)
 	{
-		std::cout << "in subtree "  << m_Name << " " << m_Attributes.size() << std::endl;
+		//std::cout << "in subtree "  << m_Name << " " << m_Attributes.size() << std::endl;
 		
-		if (m_Attributes.remove(_attribute))
-		{
-			std::cout << "removed" << std::endl;
-		}
-
-		std::cout << "try insert " << _attribute << std::endl;
+		m_Attributes.remove(_attribute);
 		m_Attributes.insert< T >(_attribute, _value);
 		return true;
 	}

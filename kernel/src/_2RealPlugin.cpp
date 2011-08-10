@@ -89,7 +89,6 @@ namespace _2Real
 			{
 				if (m_PluginLoader.canCreate(m_PluginName))
 				{
-					std::cout << "plugin:here " << m_LibraryPath << std::endl;
 					m_ActivatorPtr = m_PluginLoader.create(m_PluginName);
 					if (!m_ActivatorPtr)
 					{
@@ -98,9 +97,7 @@ namespace _2Real
 						return;
 					}
 
-					std::cout << "plugin: starting! " << std::endl;
 					m_ActivatorPtr->start(m_ContextPtr);
-					std::cout << "adding fw listener: starting! " << std::endl;
 				}
 				else
 				{
@@ -122,7 +119,6 @@ namespace _2Real
 			}
 
 			m_PluginState = Plugin::ACTIVE;
-			std::cout << "returning! " << std::endl;
 		}
 	}
 

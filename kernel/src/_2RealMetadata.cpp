@@ -55,7 +55,7 @@ namespace _2Real
 			return false;
 		}
 
-		std::cout << "inserting child " << _metadata->name() << " into " << m_Name << std::endl;
+		//std::cout << "inserting child " << _metadata->name() << " into " << m_Name << std::endl;
 		m_Children.insert(MetadataValue(_metadata->name(), _metadata));
 		_metadata->setFather(this);
 		return true;
@@ -104,11 +104,8 @@ namespace _2Real
 
 	MetadataPtr Metadata::subtree(const std::vector<std::string>& _path)
 	{
-		std::cout << "seeking subtree" << std::endl;
-
 		if (_path.empty())
 		{
-			std::cout << "path empty" << std::endl;
 			return MetadataPtr();
 		}
 
@@ -119,7 +116,6 @@ namespace _2Real
 		}
 		else if (_path.size() == 1)
 		{
-			std::cout << "found!" << std::endl;
 			return it->second;
 		}
 

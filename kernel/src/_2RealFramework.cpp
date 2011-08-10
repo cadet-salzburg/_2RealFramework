@@ -63,7 +63,7 @@ namespace _2Real
 		if (_plugin == "Framework")
 		{
 			NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-			service.second->setName(service.first);
+			//service.second->setName(service.first);
 
 			return service;
 		}
@@ -72,9 +72,9 @@ namespace _2Real
 			if (m_FactoryPtr->canCreate(_name, _plugin))
 			{
 				NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-				service.second->setName(service.first);
+				//service.second->setName(service.first);
 				NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-				container.second->setName(container.first);
+				//container.second->setName(container.first);
 			
 				ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
 				casted->m_ServicePtr = service.second;
@@ -95,9 +95,9 @@ namespace _2Real
 				if (pluginPtr->state() != Plugin::INVALID)
 				{
 					NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-					service.second->setName(service.first);
+					//service.second->setName(service.first);
 					NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-					container.second->setName(container.first);
+					//container.second->setName(container.first);
 			
 					ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
 					casted->m_ServicePtr = service.second;

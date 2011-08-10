@@ -56,7 +56,6 @@ namespace _2Real
 				return false;
 			}
 
-			std::cout << "found " << _name << std::endl;
 			m_Data.erase(it);
 			return true;
 		}

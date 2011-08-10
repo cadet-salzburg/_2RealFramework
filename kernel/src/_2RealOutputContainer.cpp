@@ -46,11 +46,9 @@ namespace _2Real
 			return;
 		}
 
-		std::cout << "beginning configuration: " << m_ServiceName << std::endl;
 		m_ConfigurationPtr = ConfigMetadataPtr(new ConfigMetadata(m_ServiceName));
 		m_CurrentConfiguration = m_ConfigurationPtr;
 		m_iVariableCounter = 0;
-		std::cout << "successfully started configuration: " << m_ServiceName << std::endl;
 	}
 
 	const bool OutputContainer::endConfiguration()
@@ -61,7 +59,6 @@ namespace _2Real
 			return false;
 		}
 
-		std::cout << "finalizing configuration for: " << m_ServiceName << std::endl;
 		m_bIsConfigured = true;
 		return true;
 	}
@@ -80,39 +77,29 @@ namespace _2Real
 			return;
 		}
 
-		std::cout << "starting new sequence" << std::endl;
 		GroupContainerPtr previousGroup = m_CurrentGroup;
 		
-		std::cout << "creating service" << std::endl;
 		ServicePtr service = m_FrameworkPtr->createService("SequenceContainer", "Framework").second;
 		
-		std::cout << "unsafe cast container --> group container" << std::endl;
 		m_CurrentGroup = service.unsafeCast< GroupContainer >();
 
 		if (!previousGroup.isNull())
 		{
-			std::cout << "save previous container: " << previousGroup->name() << std::endl;
 			m_GroupContainers.push(previousGroup);
 			
-			std::cout << "adding element to previous container" << std::endl;
 			previousGroup->addElement(m_CurrentGroup);
 		}
 		else
 		{
-			std::cout << "save top level container" << std::endl;
 			m_TopLevelGroup = m_CurrentGroup;
 		}
 
-		std::cout << "creating metadata for container: " << m_CurrentGroup->name() << std::endl;
 		MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentGroup->name()));
-		
-		std::cout << "adding metadata to tree" << std::endl;
+
 		m_CurrentConfiguration->insert(newConfig);
 		
-		std::cout << "unsafe cast: metadata --> config metadata" << std::endl;
 		m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
-		
-		std::cout << "done" << std::endl;
+
 	}
 
 	void OutputContainer::beginSynchronization()
@@ -129,36 +116,26 @@ namespace _2Real
 			return;
 		}
 
-		std::cout << "starting new synchronization" << std::endl;
 		GroupContainerPtr previousGroup = m_CurrentGroup;
 		
-		std::cout << "creating service" << std::endl;
 		ServicePtr service = m_FrameworkPtr->createService("SynchronizationContainer", "Framework").second;
 		
-		std::cout << "unsafe cast container --> group container" << std::endl;
 		m_CurrentGroup = service.unsafeCast< GroupContainer >();
 
 		if (!previousGroup.isNull())
 		{
-			std::cout << "save previous container: " << previousGroup->name() << std::endl;
 			m_GroupContainers.push(previousGroup);
 			
-			std::cout << "adding element to previous container" << std::endl;
 			previousGroup->addElement(m_CurrentGroup);
 		}
 		else
 		{
-			std::cout << "save top level container" << std::endl;
 			m_TopLevelGroup = m_CurrentGroup;
 		}
 
-		std::cout << "creating metadata for container: " << m_CurrentGroup->name() << std::endl;
 		MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentGroup->name()));
-		std::cout << "adding metadata to tree" << std::endl;
 		m_CurrentConfiguration->insert(newConfig);
-		std::cout << "unsafe cast: metadata --> config metadata" << std::endl;
 		m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
-		std::cout << "done" << std::endl;
 	}
 
 	const bool OutputContainer::endGroup()
@@ -168,25 +145,18 @@ namespace _2Real
 			return false;
 		}
 
-		//in process of configuring service
-		//->must finish service config first
 		if (!m_CurrentService.isNull())
 		{
 			std::cout << "cannot begin new configuration" << std::endl;
 			return false;
 		}
 
-		//in process of configuring group
-		//->add group to stack
 		if (!m_GroupContainers.empty())
 		{
-			std::cout << "not empty" << std::endl;
 			m_CurrentGroup = m_GroupContainers.top();
 			m_GroupContainers.pop();
 
-			std::cout << "metadata" << std::endl;
 			MetadataPtr oldConfig = m_CurrentConfiguration->father();
-			std::cout << "unsafe cast" << std::endl;
 			m_CurrentConfiguration = oldConfig.unsafeCast< ConfigMetadata >();
 		}
 
@@ -207,19 +177,15 @@ namespace _2Real
 			return;
 		}
 
-		std::cout << "creating service" << std::endl;
 		ServicePtr service = m_FrameworkPtr->createService(_name, _plugin).second;
 		if (!service.isNull())
 		{
-			std::cout << "unsafe cast" << std::endl;
 			m_CurrentService = service.unsafeCast< ServiceContainer >();
 			
-			std::cout << "metadata" << std::endl;
 			MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->name()));
 			m_CurrentConfiguration->insert(newConfig);
 			m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
 
-			std::cout << "metadata" << std::endl;
 			MetadataPtr serviceConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->serviceName()));
 			m_CurrentConfiguration->insert(serviceConfig);
 			m_CurrentConfiguration = serviceConfig.unsafeCast< ConfigMetadata >();
@@ -232,13 +198,11 @@ namespace _2Real
 
 	const bool OutputContainer::endServiceConfiguration()
 	{
-		//todo: check stuff based on metadata
-		std::cout << "end service config" << std::endl;
+
 		m_CurrentService.assign(NULL);
-		std::cout << "backtrack!" << std::endl;
 		MetadataPtr oldConfig = m_CurrentConfiguration->father()->father();
 		m_CurrentConfiguration = oldConfig.unsafeCast< ConfigMetadata >();
-		std::cout << "done!" << std::endl;
+
 		return true;
 	}
 

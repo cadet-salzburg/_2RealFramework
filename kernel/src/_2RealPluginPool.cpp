@@ -37,9 +37,9 @@ namespace _2Real
 	bool PluginPool::installPlugin(PluginPtr _pluginPtr)
 	{
 		m_PluginMap.insert(NamedPlugin(_pluginPtr->name(), _pluginPtr));
-		std::cout << "plugin pool: loading plugin" << std::endl;
+
 		_pluginPtr->load();
-		std::cout << "plugin pool: activating plugin" << std::endl;
+
 		_pluginPtr->start();
 
 		return (_pluginPtr->state() == Plugin::ACTIVE);
