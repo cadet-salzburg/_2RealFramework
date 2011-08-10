@@ -18,9 +18,9 @@
     <ClInclude Include="..\..\include_plugin\_2RealPluginContext.h" />
     <ClInclude Include="..\..\include_plugin\_2RealServiceContext.h" />
     <ClInclude Include="..\..\include_plugin\_2RealServiceVariable.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealConfigMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealConfiguration.h" />
     <ClInclude Include="..\..\src\_2RealContext.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealFramework.h" />
@@ -39,11 +39,13 @@
     <ClInclude Include="..\..\src\_2RealServiceReference.h" />
     <ClInclude Include="..\..\src\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealSynchronizationContainer.h" />
+    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractServiceVariable.cpp" />
     <ClCompile Include="..\..\src\_2RealConfigMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealConfiguration.cpp" />
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealFramework.cpp" />

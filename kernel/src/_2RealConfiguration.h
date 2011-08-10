@@ -17,8 +17,26 @@
 	limitations under the License.
 */
 
-#include "_2RealConfiguration.h"
+#pragma once
+
+#include "_2RealTypedefs.h"
 
 namespace _2Real
 {
+	class Configuration
+	{
+
+		friend class Framework;
+
+	public:
+
+		
+
+	private:
+
+
+
+		OutputContainer			*m_ContainerPtr;
+
+	};
 }
