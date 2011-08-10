@@ -28,8 +28,7 @@ public:
 
 	void shutdown() {}
 	void update();
-	void setup(_2Real::ServiceContext *const _context);
-	const bool init() { return true; }
+	const bool setup(_2Real::ServiceContext *const _context);
 
 private:
 
@@ -41,16 +40,21 @@ private:
 };
 
 template< typename T >
-void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
+const bool ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-	_context->registerSetupParameter< T >("scale factor 1", m_ScaleFactor1);
-	_context->registerSetupParameter< T >("scale factor 2", m_ScaleFactor2);
-	_context->registerInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
-	_context->registerInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
-	_context->registerOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
+
+	bool success = true;
+
+	success &= _context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
+	success &= _context->getSetupParameter< T >("scale factor 2", m_ScaleFactor2);
+	success &= _context->registerInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
+	success &= _context->registerInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
+	success &= _context->registerOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
+
+	return success;
 };
 
 template< typename T >

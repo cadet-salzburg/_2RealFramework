@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include "Poco/Any.h"
+
 namespace _2Real
 {
 
@@ -31,32 +33,56 @@ namespace _2Real
 
 	public:
 
-		AbstractServiceVariable(std::string const& _name)
-		{
-			m_OriginalName = _name;
-		}
-		
-		std::string const& originalName() const
-		{
-			return m_OriginalName;
-		}
+		/**
+		*
+		*/
+		AbstractServiceVariable(std::string const& _name);
 
-		Variable const& frameworkName() const
-		{
-			return m_FrameworkName;
-		}
-		
-		void setFrameworkName(Variable const& _name)
-		{
-			m_FrameworkName = _name;
-		}
-		
-		virtual bool getFrom(Data const& _data) = 0;
-		virtual void insertInto(Data &_data) const = 0;
+		/**
+		*
+		*/
+		std::string const& originalName() const;
+
+		/**
+		*
+		*/
+		Variable const& frameworkName() const;
+
+		/**
+		*
+		*/
+		void setFrameworkName(Variable const& _name);
+
+		/**
+		*
+		*/
+		virtual const bool getFrom(Data const& _data) = 0;
+
+		/**
+		*
+		*/
+		virtual const bool insertInto(Data &_data) const = 0;
+
+		/**
+		*
+		*/
+		const bool getFrom(Data const& _data, Poco::Any &_any);
+
+		/**
+		*
+		*/
+		const bool insertInto(Data &_data, Poco::Any &_any) const;
 
 	private:
 
+		/**
+		*
+		*/
 		std::string				m_OriginalName;
+
+		/**
+		*
+		*/
 		Variable				m_FrameworkName;
 
 	};

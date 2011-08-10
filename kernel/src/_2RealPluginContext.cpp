@@ -48,13 +48,13 @@ namespace _2Real
 		return *this;
 	}
 
-	void PluginContext::registerService(const std::string _name, ServicePtr (*_func)(void))
+	void PluginContext::registerService(const std::string _name, UserServiceCreator _creator)
 	{
-		m_PluginPtr->registerService(_name, _func, false);
+		m_PluginPtr->registerService(_name, _creator, false);
 	}
 
-	void PluginContext::registerSingleton(const std::string _name, ServicePtr (*_func)(void))
+	void PluginContext::registerSingleton(const std::string _name, UserServiceCreator _creator)
 	{
-		m_PluginPtr->registerService(_name, _func, true);
+		m_PluginPtr->registerService(_name, _creator, true);
 	}
 }

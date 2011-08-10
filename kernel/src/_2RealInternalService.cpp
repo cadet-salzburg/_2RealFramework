@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealAbstractService.h"
+#include "_2RealInternalService.h"
 
 #include "_2RealIUserService.h"
 #include "_2RealConfigMetadata.h"
@@ -28,58 +28,76 @@
 namespace _2Real
 {
 	
-	AbstractService::AbstractService(ServiceName const& _name, IUserService *const _service) : m_bIsConfigured(false), m_ServiceName(_name), m_UserService(_service)
+	InternalService::InternalService(ServiceName const& _name, UserServicePtr &_service) : m_bIsConfigured(false), m_ServiceName(_name), m_UserServicePtr(_service)
 	{
 	}
 
-	void AbstractService::update()
+	void InternalService::update()
 	{
-		m_UserService->update();
+		m_UserServicePtr->update();
 	}
 
-	void AbstractService::shutdown()
+	void InternalService::shutdown()
 	{
-		m_UserService->shutdown();
+		m_UserServicePtr->shutdown();
 	}
 
-	ServiceName const& AbstractService::name() const
+	ServiceName const& InternalService::name() const
 	{
 		return m_ServiceName;
 	}
 
-	void AbstractService::addInputVariable(AbstractServiceVariable *_var)
+	void InternalService::addInputVariable(AbstractServiceVariable *_var)
 	{
 		m_InputVariables.push_back(_var);
 	}
 
-	void AbstractService::addOutputVariable(AbstractServiceVariable *_var)
+	void InternalService::addOutputVariable(AbstractServiceVariable *_var)
 	{
 		m_OutputVariables.push_back(_var);
 	}
 
-	void AbstractService::addSetupParameter(AbstractServiceVariable *_param)
+	bool InternalService::getSetupParameter(AbstractServiceVariable *_param)
 	{
-		m_SetupParameters.push_back(_param);
+
+		if (m_ConfigPtr.isNull())
+		{
+			std::cout << "TODO: error handling; InternalService: - config is null" << std::endl;
+			return false;
+		}
+
+		bool success = true;
+		Variable frameworkName;
+			
+		success &= m_ConfigPtr->setupParameter< Variable >(_param->originalName(), frameworkName);
+		if (!success)
+		{
+			std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
+			return false;
+		}
+			
+		_param->setFrameworkName(frameworkName);
+
+		success &= _param->getFrom(m_ConfigPtr->setupAttributes());
+		if (!success)
+		{
+			std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
+			return false;
+		}
+
+		return true;
 	}
 
-	const bool AbstractService::setup(ConfigMetadataPtr const& _config)
+	const bool InternalService::setup(ConfigMetadataPtr const& _config)
 	{
 		if (m_bIsConfigured)
 		{
 			return false;
 		}
 
-		m_UserService->setup(new ServiceContext(this));
-
-		for (ParameterList::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
-		{
-			bool noError = (*it)->getFrom(_config->setupAttributes());
-			if (!noError)
-			{
-				std::cout << "TODO: error handling; abstract service: error on input vars" << std::endl;
-				return noError;
-			}
-		}
+		m_ConfigPtr = _config;
+		
+		m_UserServicePtr->setup(new ServiceContext(this));
 
 		for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
 		{
@@ -88,7 +106,7 @@ namespace _2Real
 			bool noError = _config->inputParameter< Variable >((*it)->originalName(), frameworkName);
 			if (!noError)
 			{
-				std::cout << "TODO: error handling; abstract service: error on input vars" << std::endl;
+				std::cout << "TODO: error handling; InternalService: error on input vars" << std::endl;
 				return noError;
 			}
 			
@@ -102,19 +120,17 @@ namespace _2Real
 			bool noError = _config->outputParameter< Variable >((*it)->originalName(), frameworkName);
 			if (!noError)
 			{
-				std::cout << "TODO: error handling; abstract service: error on output vars" << std::endl;
+				std::cout << "TODO: error handling; InternalService: error on output vars" << std::endl;
 				return noError;
 			}
 			
 			(*it)->setFrameworkName(frameworkName);
 		}
 
-		m_bIsConfigured = m_UserService->init();
-
 		return m_bIsConfigured;
 	}
 
-	void AbstractService::serviceListener(DataPtr &_input)
+	void InternalService::serviceListener(DataPtr &_input)
 	{
 		if (m_bIsConfigured && m_InputVariables.size() > 0)
 		{
@@ -122,13 +138,13 @@ namespace _2Real
 			{
 				if ((*it)->getFrom(*_input.get()))
 				{
-					std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
+					//std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
 				}
 			}
 		}
 	}
 
-	void AbstractService::addListener(ServicePtr &_listener)
+	void InternalService::addListener(ServicePtr &_listener)
 	{
 		if (m_bIsConfigured)
 		{
@@ -137,7 +153,7 @@ namespace _2Real
 	}
 
 
-	void AbstractService::removeListener(ServicePtr &_listener)
+	void InternalService::removeListener(ServicePtr &_listener)
 	{
 		if (m_bIsConfigured)
 		{
@@ -145,7 +161,7 @@ namespace _2Real
 		}
 	}
 
-	void AbstractService::outputData(bool _blocking)
+	void InternalService::outputData(bool const& _blocking)
 	{
 		if (m_bIsConfigured && m_OutputVariables.size() > 0)
 		{

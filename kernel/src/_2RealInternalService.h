@@ -21,8 +21,10 @@
 
 #include "_2RealTypedefs.h"
 
+#include "_2RealIUserService.h"
 #include "_2RealIService.h"
 #include "_2RealData.h"
+#include "_2RealConfigMetadata.h"
 
 #include <list>
 
@@ -31,12 +33,12 @@
 namespace _2Real
 {
 
-	class AbstractService : public IService
+	class InternalService : public IService
 	{
 
 	public:
 	
-		AbstractService(ServiceName const& _name, IUserService *const _service);
+		InternalService(ServiceName const& _name, UserServicePtr &_service);
 		
 		const bool setup(ConfigMetadataPtr const& _config);
 		void update();
@@ -45,51 +47,13 @@ namespace _2Real
 		void addListener(ServicePtr &_listener);
 		void removeListener(ServicePtr &_listener);
 		void serviceListener(DataPtr &_input);
-		void outputData(bool _blocking);
+		void outputData(bool const& _blocking);
 		
 		ServiceName const& name() const;
 
 		void addInputVariable(AbstractServiceVariable *const _var);
 		void addOutputVariable(AbstractServiceVariable *const _var);
-		void addSetupParameter(AbstractServiceVariable *const _param);
-		
-		/*
-		template< typename T >
-		void addInputVariable(Variable _name, T &_var)
-		{
-			if (m_bIsConfigured)
-			{
-				return;
-			}
-
-			ServiceVariable< T > *var = new ServiceVariable< T >(_name, _var);
-			m_InputVariables.push_back(var);
-		}
-
-		template< typename T >
-		void addOutputVariable(Variable _name, T &_var)
-		{
-			if (m_bIsConfigured)
-			{
-				return;
-			}
-
-			ServiceVariable< T > *var = new ServiceVariable< T >(_name, _var);
-			m_OutputVariables.push_back(var);
-		}
-
-		template< typename T >
-		void addSetupParameter(Variable _name, T &_param)
-		{
-			if (m_bIsConfigured)
-			{
-				return;
-			}
-
-			ServiceParameter< T > *param = new ServiceParameter< T >(_name, _param);
-			m_SetupParameters.push_back(param);
-		}
-		*/
+		bool getSetupParameter(AbstractServiceVariable *const _param);
 
 	private:
 
@@ -102,9 +66,11 @@ namespace _2Real
 		VariableList						m_OutputVariables;
 		ParameterList						m_SetupParameters;
 
+		ConfigMetadataPtr					m_ConfigPtr;
+
 		bool								m_bIsConfigured;
 		ServiceName							m_ServiceName;
-		IUserService						*m_UserService;
+		UserServicePtr						m_UserServicePtr;
 
 	};
 }

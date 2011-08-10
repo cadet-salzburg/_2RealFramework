@@ -21,40 +21,52 @@
 
 #include "_2RealServiceContext.h"
 
-#include "_2RealAbstractService.h"
+#include "_2RealInternalService.h"
 
 namespace _2Real
 {
 
 	ServiceContext::~ServiceContext()
 	{
+		m_ServicePtr = NULL;
 	}
 
-	ServiceContext::ServiceContext(AbstractService *const _service) : m_ServicePtr(_service)
+	ServiceContext::ServiceContext(InternalService *const _service) : m_ServicePtr(_service)
 	{
 	}
 
 	ServiceContext::ServiceContext(const ServiceContext &_src)
 	{
+		m_ServicePtr = _src.m_ServicePtr;
 	}
 
 	ServiceContext& ServiceContext::operator=(const ServiceContext &_src)
 	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+ 
+		m_ServicePtr= _src.m_ServicePtr;
+	 
+		return *this;
 	}
 
-	void ServiceContext::registerSetupParameter(AbstractServiceVariable *_param)
+	const bool ServiceContext::getSetupParameter(AbstractServiceVariable *_param)
 	{
-		//m_ServicePtr->addSetupParameter(_param);
+		return m_ServicePtr->getSetupParameter(_param);
 	}
 
-	void ServiceContext::registerInputVariable(AbstractServiceVariable *_var)
+	const bool ServiceContext::registerInputVariable(AbstractServiceVariable *_var)
 	{
 		m_ServicePtr->addInputVariable(_var);
+		return true;
 	}
 
-	void ServiceContext::registerOutputVariable(AbstractServiceVariable *_var)
+	const bool ServiceContext::registerOutputVariable(AbstractServiceVariable *_var)
 	{
-		//m_ServicePtr->addOutputVariable(_var);
+		m_ServicePtr->addOutputVariable(_var);
+		return true;
 	}
 
 }

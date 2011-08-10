@@ -48,6 +48,9 @@ namespace _2Real
 		*/
 		OutputContainerPtr createOutputContainer();
 
+		GroupContainerPtr createSequenceContainer();
+		GroupContainerPtr createSynchronizationContainer();
+
 		/**
 		*	creates a new service object
 		*/
@@ -56,7 +59,7 @@ namespace _2Real
 		/**
 		*	function to register a service
 		*/
-		void registerService(std::string const& _name, std::string const& _plugin, ServiceCreator _func, bool const& _singleton);
+		void registerService(std::string const& _name, std::string const& _plugin, UserServiceCreator _creator, bool const& _singleton);
 
 	private:
 

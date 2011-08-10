@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	ServiceReference::ServiceReference(Plugin const *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton) :
+	ServiceReference::ServiceReference(Plugin *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton) :
 		m_PluginPtr(_pluginPtr), m_ServiceCreator(_creator), m_bIsSingleton(_singleton), m_iNrOfCreations(0)
 	{
 	}

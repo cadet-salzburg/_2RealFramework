@@ -82,7 +82,7 @@ namespace _2Real
 			return false;
 		}
 
-		const bool getAny(std::string _name, Poco::Any &_any)
+		const bool getAny(std::string _name, Poco::Any &_any) const
 		{
 			DataItems::const_iterator it = m_Data.find(_name);
 			

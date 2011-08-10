@@ -22,6 +22,8 @@
 #include "_2RealTypedefs.h"
 
 #include "_2RealAbstractContainer.h"
+#include "_2RealServiceContainer.h"
+#include "_2RealGroupContainer.h"
 #include "_2RealConfigMetadata.h"
 
 #include <stack>
@@ -34,6 +36,8 @@ namespace _2Real
 		friend class Framework;
 
 	public:
+
+		OutputContainer(ServiceName const& _name) : AbstractContainer(_name) {}
 
 		void beginConfiguration();
 		const bool endConfiguration();
@@ -48,7 +52,15 @@ namespace _2Real
 		template< typename T >
 		void configureSetupParameter(std::string const& _name, T const& value)
 		{
-			m_CurrentConfiguration->setSetupParameter< T >(_name, value);
+			ConfigMetadataPtr test = (m_CurrentConfiguration->child("ImageProcessing.RandomImage_ushort.1")).unsafeCast< ConfigMetadata >();
+			if (test.isNull())
+			{
+				std::cout << "test is null" << std::endl;
+			}
+
+			std::cout << _name << std::endl;
+			test->setSetupParameter< T >(_name, value);
+			//m_CurrentConfiguration->setSetupParameter< T >(_name, value);
 		}
 
 		const Variable configureOutputParameter(std::string const& _name);

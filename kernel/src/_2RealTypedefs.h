@@ -33,7 +33,7 @@ namespace _2Real
 	class AbstractPluginActivator;
 	
 	class IService;
-	class AbstractService;
+	class InternalService;
 	class ServiceContext;
 	class IUserService;
 	
@@ -43,8 +43,6 @@ namespace _2Real
 	class AbstractServiceVariable;
 	template < typename T >
 	class ServiceVariable;
-	template < typename T >
-	class ServiceParameter;
 	
 	class Data;
 	class Metadata;

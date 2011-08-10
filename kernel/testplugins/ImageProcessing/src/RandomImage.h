@@ -29,8 +29,7 @@ public:
 
 	void shutdown() {}
 	void update();
-	void setup(_2Real::ServiceContext *const _context);
-	const bool init() { return true; }
+	const bool setup(_2Real::ServiceContext *const _context);
 
 private:
 
@@ -41,14 +40,19 @@ private:
 };
 
 template< typename T >
-void RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
+const bool RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-	_context->registerSetupParameter< unsigned int >("image width", m_iImageWidth);
-	_context->registerSetupParameter< unsigned int >("image height", m_iImageHeight);
-	_context->registerOutputVariable< ::Image< T, 2 > >("output image", m_OutputImage);
+
+	bool success = true;
+
+	success &= _context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
+	success &= _context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
+	success &= _context->registerOutputVariable< ::Image< T, 2 > >("output image", m_OutputImage);
+
+	return true;
 }
 
 template< typename T >

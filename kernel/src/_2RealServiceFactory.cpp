@@ -18,7 +18,9 @@
 
 #include "_2RealServiceFactory.h"
 
+#include "_2RealInternalService.h"
 #include "_2RealIService.h"
+#include "_2RealIUserService.h"
 #include "_2RealPlugin.h"
 #include "_2RealServiceContainer.h"
 #include "_2RealSequenceContainer.h"
@@ -32,10 +34,6 @@ namespace _2Real
 
 	ServiceFactory::ServiceFactory() : m_iCreationCount(0)
 	{
-		//registerFrameworkService("ServiceContainer", &ServiceFactory::createContainer< ServiceContainer >, false);
-		//registerFrameworkService("OutputContainer", &ServiceFactory::createContainer< OutputContainer >, false);
-		//registerFrameworkService("SequenceContainer", &ServiceFactory::createContainer< SequenceContainer >, false);
-		//registerFrameworkService("SynchronizationContainer", &ServiceFactory::createContainer< SynchronizationContainer >, false);
 	}
 
 	void ServiceFactory::registerService(std::string const& _name, PluginPtr _pluginPtr, UserServiceCreator _creator, bool const& _singleton)
@@ -47,18 +45,6 @@ namespace _2Real
 
 		m_ReferenceMap.insert(NamedServiceRefPtr(service, ref));
 	}
-
-	/*
-	void ServiceFactory::registerFrameworkService(std::string const& _name, ServiceCreator _factory, bool const& _singleton)
-	{
-		PluginPtr pluginPtr = PluginPtr();
-		ServiceRefPtr ref = ServiceRefPtr(new ServiceReference(pluginPtr, _factory, _singleton, true));
-
-		std::string service =  "Framework." + _name;
-
-		m_ReferenceMap.insert(NamedServiceRefPtr(service, ref));
-	}
-	*/
 
 	const bool ServiceFactory::canCreate(std::string const& _name, std::string const& _plugin) const
 	{
@@ -86,12 +72,50 @@ namespace _2Real
 		return false;
 	}
 
+	OutputContainerPtr ServiceFactory::createOutputContainer()
+	{
+		ServiceName name;
+#ifdef _DEBUG
+		std::string tmp = "Framework.OutputContainer";
+		name = generateContainerName(tmp);
+#else
+		name = generateContainerName();
+#endif
+		return OutputContainerPtr(new OutputContainer(name));
+	}
+
+	GroupContainerPtr ServiceFactory::createSequenceContainer()
+	{
+		ServiceName name;
+#ifdef _DEBUG
+		std::string tmp = "Framework.SequenceContainer";
+		name = generateContainerName(tmp);
+#else
+		name = generateContainerName();
+#endif
+		return GroupContainerPtr(new SequenceContainer(name));
+	}
+
+	GroupContainerPtr ServiceFactory::createSynchronizationContainer()
+	{
+		ServiceName name;
+#ifdef _DEBUG
+		std::string tmp = "Framework.SynchronizationContainer";
+		name = generateContainerName(tmp);
+#else
+		name = generateContainerName();
+#endif
+		return GroupContainerPtr(new SynchronizationContainer(name));
+	}
+
 	NamedServicePtr ServiceFactory::createService(std::string const& _name, std::string const& _plugin)
 	{
 		std::string service = _plugin + "." + _name;
 		NamedReferenceMap::iterator it = m_ReferenceMap.find(service);
 
-		ServicePtr servicePtr;
+		UserServicePtr servicePtr;
+		ServicePtr internalServicePtr;
+		ServicePtr containerServicePtr;
 		ServiceName name;
 		if (it != m_ReferenceMap.end())
 		{
@@ -100,28 +124,44 @@ namespace _2Real
 			if (ref->canCreate())
 			{
 
+				std::cout << "service factory: creating service " << _name << " " << _plugin << std::endl; 
 				servicePtr = ref->create();
 
 				if (servicePtr.isNull())
 				{
 					std::cout << "TODO: error handling; could not create service" << std::endl;
 				}
+#ifndef _DEBUG
 				else
 				{
 					m_iCreationCount++;
 				}
+#endif
 
-				name = generateName(*it);
+				name = generateServiceName(*it);
 			}
 		}
 
-		NamedServicePtr result(name, servicePtr);
+		std::cout << name << std::endl;
+		internalServicePtr = ServicePtr(new InternalService(name, servicePtr));
+
+		ServiceName containerName;
+#ifdef _DEBUG
+		containerName = generateContainerName("Framework.ServiceContainer");
+#else
+		containerName = generateContainerName();
+#endif
+
+		containerServicePtr = ServicePtr(new ServiceContainer(containerName, internalServicePtr));
+
+		//store container
+		NamedServicePtr result(name, containerServicePtr);
 		m_ServiceMap.insert(result);
 
 		return result;
 	}
 
-	const ServiceName ServiceFactory::generateName(NamedServiceRefPtr const& _ref) const
+	const ServiceName ServiceFactory::generateServiceName(NamedServiceRefPtr const& _ref) const
 	{
 #ifdef _DEBUG
 		std::stringstream tmp;
@@ -131,5 +171,19 @@ namespace _2Real
 		return m_iCreationCount;
 #endif
 	}
+
+#ifdef _DEBUG
+	const ServiceName ServiceFactory::generateContainerName(std::string const& container) const
+	{
+		std::stringstream tmp;
+		tmp <<  m_iCreationCount;
+		return container + "." + tmp.str();
+	}
+#else
+	const ServiceName ServiceFactory::generateContainerName() const
+	{
+		return m_iCreationCount;
+	}
+#endif
 
 }

@@ -94,7 +94,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		void registerService(std::string const& _name, ServiceCreator _func, bool const& _singleton) const;
+		void registerService(std::string const& _name, UserServiceCreator _creator, bool const& _singleton) const;
 
 	private:
 

@@ -30,6 +30,8 @@ namespace _2Real
 
 	public:
 
+		SynchronizationContainer(ServiceName const& _name) : GroupContainer(_name) {}
+
 		void update();
 
 	};

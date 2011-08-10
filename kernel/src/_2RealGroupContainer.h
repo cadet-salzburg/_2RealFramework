@@ -39,6 +39,8 @@ namespace _2Real
 
 	public:
 
+		GroupContainer(ServiceName const& _name) : AbstractContainer(_name) {}
+
 		void start(bool const& _loop);
 		void stop();
 		void run();

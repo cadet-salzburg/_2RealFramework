@@ -36,6 +36,8 @@ namespace _2Real
 
 	public:
 
+		ServiceContainer(ServiceName const& _name, ServicePtr &_internal) : AbstractContainer(_name), m_ServicePtr(_internal) {}
+
 		void start(bool const& _loop);
 		void stop();
 		void run();

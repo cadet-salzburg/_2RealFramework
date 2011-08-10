@@ -25,7 +25,7 @@
 
 namespace _2Real
 {
-	void ServiceContainer::start(bool _loop)
+	void ServiceContainer::start(bool const& _loop)
 	{
 		if (!m_bIsConfigured)
 		{
@@ -93,7 +93,7 @@ namespace _2Real
 		}
 	}
 
-	bool ServiceContainer::setup(ConfigMetadataPtr const& _config)
+	const bool ServiceContainer::setup(ConfigMetadataPtr const& _config)
 	{
 		if (m_bIsConfigured)
 		{

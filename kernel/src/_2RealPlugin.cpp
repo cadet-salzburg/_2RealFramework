@@ -56,9 +56,9 @@ namespace _2Real
 		return m_MetadataPtr;
 	}
 
-	void Plugin::registerService(std::string const& _name, ServiceCreator _func, bool const& _singleton) const
+	void Plugin::registerService(std::string const& _name, UserServiceCreator _creator, bool const& _singleton) const
 	{
-		m_Framework.registerService(_name, m_PluginName, _func, _singleton);
+		m_Framework.registerService(_name, m_PluginName, _creator, _singleton);
 	}
 
 	void Plugin::load()

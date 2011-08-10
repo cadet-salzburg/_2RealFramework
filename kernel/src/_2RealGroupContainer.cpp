@@ -22,7 +22,7 @@
 
 namespace _2Real
 {
-	bool GroupContainer::setup(ConfigMetadataPtr const& _config)
+	const bool GroupContainer::setup(ConfigMetadataPtr const& _config)
 	{
 		//cannot be reconfigured; meaning all of its child containers cannot be reconfigured either. this might change at a later time.
 		if (m_bIsConfigured)
@@ -97,7 +97,7 @@ namespace _2Real
 		}
 	}
 
-	void GroupContainer::start(bool _loop)
+	void GroupContainer::start(bool const& _loop)
 	{
 		if (!m_bIsConfigured)
 		{

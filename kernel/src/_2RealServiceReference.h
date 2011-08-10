@@ -39,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		ServiceReference(Plugin const *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton);
+		ServiceReference(Plugin *const _pluginPtr, UserServiceCreator _creator, bool const& _singleton);
 		
 		bool const& isSingleton() const;
 		const bool canCreate() const;

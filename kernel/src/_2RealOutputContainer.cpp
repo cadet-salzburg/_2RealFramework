@@ -65,6 +65,8 @@ namespace _2Real
 
 	void OutputContainer::beginSequence()
 	{
+		std::cout << "output container: ssequence group requested" << std::endl;
+
 		if (m_bIsConfigured)
 		{
 			std::cout << "TODO: error message, OutputContainer::beginSequence" << std::endl;
@@ -79,20 +81,26 @@ namespace _2Real
 
 		GroupContainerPtr previousGroup = m_CurrentGroup;
 		
-		ServicePtr service = m_FrameworkPtr->createService("SequenceContainer", "Framework").second;
+		m_CurrentGroup = m_FrameworkPtr->createSequenceContainer();
 		
-		m_CurrentGroup = service.unsafeCast< GroupContainer >();
-
+		std::cout << "output container: successfully created new group container" << std::endl;
+		
 		if (!previousGroup.isNull())
 		{
+			std::cout << "output container: adding to previous group" << std::endl;
+
 			m_GroupContainers.push(previousGroup);
 			
 			previousGroup->addElement(m_CurrentGroup);
 		}
 		else
 		{
+			std::cout << "output container: saving top level group" << std::endl;
+
 			m_TopLevelGroup = m_CurrentGroup;
 		}
+
+		std::cout << "output container: creating metadata" << std::endl;
 
 		MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentGroup->name()));
 
@@ -100,10 +108,14 @@ namespace _2Real
 		
 		m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
 
+		std::cout << "output container: returning" << std::endl;
+
 	}
 
 	void OutputContainer::beginSynchronization()
 	{
+		std::cout << "output container: synchronization group requested" << std::endl;
+
 		if (m_bIsConfigured)
 		{
 			std::cout << "TODO: error message, OutputContainer::beginSynchronization" << std::endl;
@@ -118,18 +130,22 @@ namespace _2Real
 
 		GroupContainerPtr previousGroup = m_CurrentGroup;
 		
-		ServicePtr service = m_FrameworkPtr->createService("SynchronizationContainer", "Framework").second;
-		
-		m_CurrentGroup = service.unsafeCast< GroupContainer >();
+		m_CurrentGroup = m_FrameworkPtr->createSynchronizationContainer();
+
+		std::cout << "output container: successfully created new group container" << std::endl;
 
 		if (!previousGroup.isNull())
 		{
+			std::cout << "output container: adding to previous group" << std::endl;
+
 			m_GroupContainers.push(previousGroup);
 			
 			previousGroup->addElement(m_CurrentGroup);
 		}
 		else
 		{
+			std::cout << "output container: saving top level group" << std::endl;
+
 			m_TopLevelGroup = m_CurrentGroup;
 		}
 
@@ -177,27 +193,39 @@ namespace _2Real
 			return;
 		}
 
+		std::cout << "output container: request user service creation" << std::endl;
 		ServicePtr service = m_FrameworkPtr->createService(_name, _plugin).second;
+		std::cout << "output container: user service created" << std::endl;
+		
 		if (!service.isNull())
 		{
+			std::cout << "output container: attempt unsafe cast" << std::endl;
 			m_CurrentService = service.unsafeCast< ServiceContainer >();
 			
+			std::cout << "output container: create metadata" << std::endl;
 			MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->name()));
 			m_CurrentConfiguration->insert(newConfig);
 			m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
 
 			MetadataPtr serviceConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->serviceName()));
 			m_CurrentConfiguration->insert(serviceConfig);
-			m_CurrentConfiguration = serviceConfig.unsafeCast< ConfigMetadata >();
+			//m_CurrentConfiguration = serviceConfig.unsafeCast< ConfigMetadata >();
 		}
 		else
 		{
+			std::cout << "output container: user service is null" << std::endl;
 			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
 		}
 	}
 
 	const bool OutputContainer::endServiceConfiguration()
 	{
+
+		std::cout << "attempting config of current service now" << std::endl;
+
+		m_CurrentService->setup(m_CurrentConfiguration);
+
+		m_CurrentService->update();
 
 		m_CurrentService.assign(NULL);
 		MetadataPtr oldConfig = m_CurrentConfiguration->father()->father();

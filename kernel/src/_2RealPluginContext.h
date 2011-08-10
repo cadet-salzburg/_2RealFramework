@@ -58,12 +58,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		PluginContext(const PluginContext& _src);
+		PluginContext(const PluginContext &_src);
 		
 		/**
 		*
 		*/
-		PluginContext& operator=(const PluginContext& _src);
+		PluginContext& operator=(const PluginContext &_src);
 
 		/**
 		*

@@ -30,6 +30,8 @@ namespace _2Real
 
 	public:
 
+		SequenceContainer(ServiceName const& _name) : GroupContainer(_name) {}
+
 		void update();
 
 	};

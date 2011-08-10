@@ -15,8 +15,7 @@ public:
 
 	void shutdown();
 	void update();
-	void KinectService::setup(_2Real::ServiceContext *const _context);
-	const bool init();
+	const bool KinectService::setup(_2Real::ServiceContext *const _context);
 
 private:
 

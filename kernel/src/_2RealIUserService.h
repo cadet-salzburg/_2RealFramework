@@ -24,20 +24,19 @@
 namespace _2Real
 {
 
+	/**
+	*	interface for user defined services
+	*/
+
 	class IUserService
 	{
 
 	public:
 
 		/**
-		*	register setup params / input variables / putput variables
+		*	use _context to retrieve setup params & register input / output variables
 		*/
-		virtual void setup(ServiceContext *const _context) = 0;
-
-		/**
-		*	initialization
-		*/
-		virtual const bool init() = 0;
+		virtual const bool setup(ServiceContext *const _context) = 0;
 
 		/**
 		*	cleanup

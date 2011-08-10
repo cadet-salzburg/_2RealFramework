@@ -3,30 +3,31 @@
 using namespace std;
 using namespace _2Real;
 
-void KinectService::setup(ServiceContext *const _context)
-{
-	_context->registerSetupParameter< unsigned int >("image width", m_iImageWidth);
-	_context->registerSetupParameter< unsigned int >("image height", m_iImageHeight);
-	_context->registerOutputVariable< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
-}
-
-const bool KinectService::init()
+const bool KinectService::setup(ServiceContext *const _context)
 {
 	if (m_bIsInitialized)
 	{
 		return false;
 	}
 
-	if (!(m_KinectDepthMap.setup(m_iImageWidth, m_iImageHeight)))
+	bool success = true;
+
+	success &= _context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
+	success &= _context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
+
+	if (!success || !(m_KinectDepthMap.setup(m_iImageWidth, m_iImageHeight)))
 	{
 		cout << "kinect depth map service: setup failed" << endl;
 		return false;
 	}
-	else
+
+	success &= _context->registerOutputVariable< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
+
+	if (success)
 	{
 		m_bIsInitialized = true;
 	}
-	
+
 	return m_bIsInitialized;
 }
 

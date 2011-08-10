@@ -23,6 +23,9 @@
 
 #include "_2RealServiceReference.h"
 
+#include <string>
+#include <map>
+
 namespace _2Real
 {
 	class ServiceFactory
@@ -40,8 +43,6 @@ namespace _2Real
 		*	_singleton = if service in question is a singleton
 		*/
 		void registerService(std::string const& _name, PluginPtr _plugin, UserServiceCreator _creator, bool const& _singleton);
-
-		void registerFrameworkService(std::string const& _name, ServiceCreator _creator);
 
 		/**
 		*	returns true if service in question can be created
@@ -65,6 +66,9 @@ namespace _2Real
 		NamedServicePtr createService(std::string const& _name, std::string const& _plugin);
 
 		NamedServicePtr createServiceContainer(std::string const& _name, std::string const& _plugin);
+		OutputContainerPtr createOutputContainer();
+		GroupContainerPtr createSequenceContainer();
+		GroupContainerPtr createSynchronizationContainer();
 
 	private:
 
@@ -72,15 +76,21 @@ namespace _2Real
 		typedef std::map< std::string, ServiceRefPtr >		NamedReferenceMap;
 		typedef std::map< ServiceName, ServicePtr >			NamedServiceMap;;
 
-		template< class T >
-		static ServicePtr createContainer()
-		{
-			return ServicePtr(new T());
-		}
+		const ServiceName generateServiceName(NamedServiceRefPtr const& _ref) const;
+#ifdef _DEBUG
+		const ServiceName generateContainerName(std::string const& container) const;
+#else
+		const ServiceName generateContainerName() const;
+#endif
 
-		const ServiceName generateName(NamedServiceRefPtr const& _ref) const;
-
+		/**
+		*	references of user defined services
+		*/
 		NamedReferenceMap									m_ReferenceMap;
+		
+		/**
+		*	internal services in existence
+		*/
 		NamedServiceMap										m_ServiceMap;
 
 		unsigned int										m_iCreationCount;

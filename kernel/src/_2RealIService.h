@@ -23,6 +23,9 @@
 
 namespace _2Real
 {
+	/**
+	*	interface for internal services
+	*/
 
 	class IService
 	{

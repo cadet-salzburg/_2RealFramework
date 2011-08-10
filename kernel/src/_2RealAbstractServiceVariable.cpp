@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,39 +16,39 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealTypedefs.h"
-
 #include "_2RealAbstractServiceVariable.h"
+
 #include "_2RealData.h"
 
 namespace _2Real
 {
-	template< typename T >
-	class ServiceParameter : public AbstractServiceVariable
+	AbstractServiceVariable::AbstractServiceVariable(std::string const& _name) : m_OriginalName(_name), m_FrameworkName(Variable())
 	{
-
-	public:
-
-		ServiceParameter(std::string _name, T &_var) : AbstractServiceVariable(_name), m_Variable(_var) { }
-		bool getFrom(const Data &_data);
-		void insertInto(Data &_data) const;
-
-	private:
-
-		T		&m_Variable;
-	};
-
-	template< typename T >
-	bool ServiceParameter< T >::getFrom(const Data &_data)
-	{
-		return _data.get< T >(AbstractServiceVariable::originalName(), m_Variable);
 	}
 
-	template< typename T >
-	void ServiceParameter< T >::insertInto(Data &_data) const
+	std::string const& AbstractServiceVariable::originalName() const
 	{
-		_data.insert< T >(AbstractServiceVariable::originalName(), m_Variable);
+		return m_OriginalName;
+	}
+
+	Variable const& AbstractServiceVariable::frameworkName() const
+	{
+		return m_FrameworkName;
+	}
+
+	void AbstractServiceVariable::setFrameworkName(Variable const& _name)
+	{
+		m_FrameworkName = _name;
+	}
+
+	const bool AbstractServiceVariable::getFrom(Data const& _data, Poco::Any &_any)
+	{
+		return _data.getAny(m_FrameworkName, _any);
+	}
+
+	const bool AbstractServiceVariable::insertInto(Data &_data, Poco::Any &_any) const
+	{
+		_data.insertAny(m_FrameworkName, _any);
+		return true;
 	}
 }

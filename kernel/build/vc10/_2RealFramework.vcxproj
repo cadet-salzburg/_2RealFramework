@@ -12,12 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractService.cpp" />
+    <ClCompile Include="..\..\src\_2RealAbstractServiceVariable.cpp" />
     <ClCompile Include="..\..\src\_2RealConfigMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealFramework.cpp" />
     <ClCompile Include="..\..\src\_2RealGroupContainer.cpp" />
+    <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputContainer.cpp" />
@@ -34,7 +35,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractService.h" />
     <ClInclude Include="..\..\src\_2RealAbstractServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealConfigMetadata.h" />
     <ClInclude Include="..\..\src\_2RealContext.h" />
@@ -43,7 +43,7 @@
     <ClInclude Include="..\..\src\_2RealFrameworkNotification.h" />
     <ClInclude Include="..\..\src\_2RealGroupContainer.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
-    <ClInclude Include="..\..\src\_2RealInternal.h" />
+    <ClInclude Include="..\..\src\_2RealInternalService.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealIUserService.h" />
@@ -57,7 +57,6 @@
     <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
-    <ClInclude Include="..\..\src\_2RealServiceParameter.h" />
     <ClInclude Include="..\..\src\_2RealServiceReference.h" />
     <ClInclude Include="..\..\src\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealSynchronizationContainer.h" />

@@ -90,11 +90,11 @@ namespace _2Real
 
 	};
 
-	template<typename T>
+	template< typename T >
 	const bool Metadata::attribute(const std::vector<std::string>& _path, std::string _attribute, T& _value) const
 	{
 		const MetadataPtr sub = subtree(_path);
-		if (!sub.isNull() && sub->attribute<T>(_attribute, _value))
+		if (!sub.isNull() && sub->attribute< T >(_attribute, _value))
 		{
 			return true;
 		}
@@ -102,10 +102,10 @@ namespace _2Real
 		return false;
 	}
 
-	template<typename T>
+	template< typename T >
 	const bool Metadata::attribute(std::string _attribute, T& _result) const
 	{	
-		return m_Attributes.get<T>(_attribute, _result);
+		return m_Attributes.get< T >(_attribute, _result);
 	}
 
 	template<typename T>

@@ -42,9 +42,7 @@ namespace _2Real
 
 	OutputContainerPtr Framework::createOutputContainer()
 	{
-		ServicePtr service = m_FactoryPtr->createService("OutputContainer", "Framework").second;
-		
-		OutputContainerPtr result = service.unsafeCast< OutputContainer >();
+		OutputContainerPtr result = m_FactoryPtr->createOutputContainer();
 
 		result->m_bIsConfigured = false;
 		result->m_FrameworkPtr = this;
@@ -57,60 +55,83 @@ namespace _2Real
 		return result;
 	}
 
-	NamedServicePtr Framework::createService(std::string const& _name, std::string const& _plugin)
+	GroupContainerPtr Framework::createSequenceContainer()
 	{
+		GroupContainerPtr result = m_FactoryPtr->createSequenceContainer();
 
-		if (_plugin == "Framework")
+		if (result.isNull())
 		{
-			NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-			//service.second->setName(service.first);
-
-			return service;
+			std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
 		}
-		else 
-		{
-			if (m_FactoryPtr->canCreate(_name, _plugin))
-			{
-				NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-				//service.second->setName(service.first);
-				NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-				//container.second->setName(container.first);
-			
-				ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
-				casted->m_ServicePtr = service.second;
 
-				return container;
-			}
-			else
-			{
-				std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
-				PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
-				
-				if (pluginPtr.isNull())
-				{
-					pluginPtr = PluginPtr(new Plugin(_plugin, path, *this));
-					bool success = m_PluginsPtr->installPlugin(pluginPtr);
-				}
-
-				if (pluginPtr->state() != Plugin::INVALID)
-				{
-					NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
-					//service.second->setName(service.first);
-					NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
-					//container.second->setName(container.first);
-			
-					ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
-					casted->m_ServicePtr = service.second;
-
-					return container;
-				}
-			}
-
-			return NamedServicePtr();
-		}
+		return result;
 	}
 
-	void Framework::registerService(std::string const& _name, std::string const& _plugin, ServiceCreator _func, bool const& _singleton)
+	GroupContainerPtr Framework::createSynchronizationContainer()
+	{
+		GroupContainerPtr result = m_FactoryPtr->createSynchronizationContainer();
+
+		if (result.isNull())
+		{
+			std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
+		}
+
+		return result;
+	}
+
+	NamedServicePtr Framework::createService(std::string const& _name, std::string const& _plugin)
+	{
+		std::cout << "framework: checking if service can be created" << std::endl;
+		
+		if (m_FactoryPtr->canCreate(_name, _plugin))
+		{
+			std::cout << "framework: service can be created" << std::endl;
+				
+			//std::cout << "framework: checking if service can be created" << std::endl;
+			//NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
+			//service.second->setName(service.first);
+			//NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
+			//container.second->setName(container.first);
+			
+			//ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
+			//casted->m_ServicePtr = service.second;
+
+			//return container;
+		}
+		else
+		{
+			std::cout << "framework: service can not be created" << std::endl;
+				
+			std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+			PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
+				
+			if (pluginPtr.isNull())
+			{
+				std::cout << "framework: installing plugin" << std::endl;
+					
+				pluginPtr = PluginPtr(new Plugin(_plugin, path, *this));
+				bool success = m_PluginsPtr->installPlugin(pluginPtr);
+			}
+
+			if (pluginPtr->state() != Plugin::INVALID)
+			{
+				std::cout << "attempting to create service now" << std::endl;
+				
+				NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
+
+				if (service.second.isNull())
+				{
+				}
+
+				return service;
+
+			}
+		}
+
+		return NamedServicePtr();
+	}
+
+	void Framework::registerService(std::string const& _name, std::string const& _plugin, UserServiceCreator _creator, bool const& _singleton)
 	{
 		PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
 		
@@ -120,7 +141,7 @@ namespace _2Real
 		}
 		else
 		{
-			m_FactoryPtr->registerService(_name, pluginPtr, _func, _singleton);
+			m_FactoryPtr->registerService(_name, pluginPtr, _creator, _singleton);
 		}
 	}
 

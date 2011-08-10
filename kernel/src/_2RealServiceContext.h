@@ -21,7 +21,6 @@
 
 #include "_2RealTypedefs.h"
 
-#include "_2RealServiceParameter.h"
 #include "_2RealServiceVariable.h"
 
 #include <string>
@@ -29,84 +28,90 @@
 namespace _2Real
 {
 
+	/**
+	*	this class offers a means of communication with the framework
+	*	during its setup method, a user defined service can retrieve the value of its setup params
+	*	as well as register references to its input & output variables
+	*/
+
 	class ServiceContext
 	{
 
-		friend class AbstractService;
+		friend class InternalService;
 
 	public:
 
 		/**
-		*
+		*	registers a reference to an input variable in the framework
 		*/
 		template< typename T >
-		void registerInputVariable(Variable _name, T &_var)
+		const bool registerInputVariable(std::string const& _name, T &_var)
 		{
 			AbstractServiceVariable *var = new ServiceVariable< T >(_name, _var);
-			registerInputVariable(var);
+			return registerInputVariable(var);
 		}
 
 		/**
-		*
+		*	registers a reference to an output variable in the framework
 		*/
 		template< typename T >
-		void registerOutputVariable(Variable _name, T &_var)
+		const bool registerOutputVariable(std::string const& _name, T &_var)
 		{
 			AbstractServiceVariable *var = new ServiceVariable< T >(_name, _var);
-			registerOutputVariable(var);
+			return registerOutputVariable(var);
 		}
 
 		/**
-		*
+		*	retrieves the value of a setup parameter from the framework
 		*/
 		template< typename T >
-		void registerSetupParameter(Variable _name, T &_param)
+		const bool getSetupParameter(std::string const& _name, T &_param)
 		{
-			AbstractServiceVariable *param = new ServiceParameter< T >(_name, _param);
-			registerSetupParameter(param);
+			AbstractServiceVariable *param = new ServiceVariable< T >(_name, _param);
+			return getSetupParameter(param);
 		}
 	
 	private:
 
 		/**
-		*
+		*	private dtor
 		*/
 		~ServiceContext();
 
 		/**
-		*
+		*	private ctor
 		*/
-		ServiceContext(AbstractService *const _service);
+		ServiceContext(InternalService *const _service);
 		
 		/**
-		*
+		*	private copy ctor
 		*/
 		ServiceContext(const ServiceContext& _src);
 		
 		/**
-		*
+		*	private assignment operator
 		*/
 		ServiceContext& operator=(const ServiceContext& _src);
 
 		/**
-		*
+		*	internal method for retrieving setup params
 		*/
-		void registerSetupParameter(AbstractServiceVariable *_param);
+		const bool getSetupParameter(AbstractServiceVariable *_param);
 		
 		/**
-		*
+		*	internal method for registering input variables
 		*/
-		void registerInputVariable(AbstractServiceVariable *_var);
+		const bool registerInputVariable(AbstractServiceVariable *_var);
 		
 		/**
-		*
+		*	internal method for registering ouput variables
 		*/
-		void registerOutputVariable(AbstractServiceVariable *_var);
+		const bool registerOutputVariable(AbstractServiceVariable *_var);
 
 		/**
-		*
+		*	ptr to internal service
 		*/
-		AbstractService			*m_ServicePtr;
+		InternalService			*m_ServicePtr;
 
 	};
 

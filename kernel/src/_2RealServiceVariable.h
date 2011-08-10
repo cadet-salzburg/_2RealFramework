@@ -22,7 +22,8 @@
 #include "_2RealTypedefs.h"
 
 #include "_2RealAbstractServiceVariable.h"
-#include "_2RealData.h"
+
+#include <string>
 
 namespace _2Real
 {
@@ -32,24 +33,49 @@ namespace _2Real
 
 	public:
 
-		ServiceVariable(std::string _name, T &_var) : AbstractServiceVariable(_name), m_Variable(_var) {}
-		bool getFrom(const Data &_data);
-		void insertInto(Data &_data) const;
+		ServiceVariable(std::string const& _name, T &_var);
+		
+		const bool getFrom(const Data &_data);
+		const bool insertInto(Data &_data) const;
 
 	private:
 
 		T		&m_Variable;
+
 	};
 
 	template< typename T >
-	bool ServiceVariable< T >::getFrom(const Data &_data)
+	ServiceVariable< T >::ServiceVariable(std::string const& _name, T &_var) :
+		AbstractServiceVariable(_name), m_Variable(_var)
 	{
-		return _data.get< T >(AbstractServiceVariable::frameworkName(), m_Variable);
 	}
 
 	template< typename T >
-	void ServiceVariable< T >::insertInto(Data &_data) const
+	const bool ServiceVariable< T >::getFrom(const Data &_data)
 	{
-		_data.insert< T >(AbstractServiceVariable::frameworkName(), m_Variable);
+		Poco::Any any;
+		if (AbstractServiceVariable::getFrom(_data, any))
+		{
+			try
+			{
+				m_Variable = Poco::AnyCast< T >(any);
+			}
+			catch (Poco::BadCastException e)
+			{
+				std::cout << "TODO: error handling; bad cast on ServiceVariable::getFrom" << std::endl;
+				return false;
+			}
+		}
+
+		return true;
+		//return _data.get< T >(AbstractServiceVariable::frameworkName(), m_Variable);
+	}
+
+	template< typename T >
+	const bool ServiceVariable< T >::insertInto(Data &_data) const
+	{
+		Poco::Any any(m_Variable);
+		return AbstractServiceVariable::insertInto(_data, any);
+		//_data.insert< T >(AbstractServiceVariable::frameworkName(), m_Variable);
 	}
 }
