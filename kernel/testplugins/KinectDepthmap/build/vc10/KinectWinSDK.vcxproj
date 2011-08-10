@@ -100,7 +100,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\externalLibs\microsoft kinect sdk\include;..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\..\_2RealFramework\kernel\testplugins\userclasses;..\..\..\..\..\..\_2RealFramework\kernel\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\externalLibs\microsoft kinect sdk\include;..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\..\_2RealFramework\kernel\testplugins\userclasses;..\..\..\..\..\..\_2RealFramework\kernel\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>

@@ -11,58 +11,57 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
-    <ClCompile Include="..\..\src\test.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractService.cpp" />
     <ClCompile Include="..\..\src\_2RealConfigMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealContextPrivate.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
-    <ClCompile Include="..\..\src\_2RealFrameworkNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealFramework.cpp" />
     <ClCompile Include="..\..\src\_2RealGroupContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealPluginNotification.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealSequenceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceNotification.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceRegistration.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceRegistry.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceReference.cpp" />
     <ClCompile Include="..\..\src\_2RealSynchronizationContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\_2RealAbstractPluginActivator.h" />
-    <ClInclude Include="..\..\include\_2RealAbstractService.h" />
-    <ClInclude Include="..\..\include\_2RealAbstractServiceVariable.h" />
-    <ClInclude Include="..\..\include\_2RealConfigMetadata.h" />
-    <ClInclude Include="..\..\include\_2RealContext.h" />
-    <ClInclude Include="..\..\include\_2RealData.h" />
-    <ClInclude Include="..\..\include\_2RealFramework.h" />
-    <ClInclude Include="..\..\include\_2RealFrameworkNotification.h" />
-    <ClInclude Include="..\..\include\_2RealIPluginActivator.h" />
-    <ClInclude Include="..\..\include\_2RealIService.h" />
-    <ClInclude Include="..\..\include\_2RealMetadata.h" />
-    <ClInclude Include="..\..\include\_2RealMetadataReader.h" />
-    <ClInclude Include="..\..\include\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\include\_2RealPluginNotification.h" />
-    <ClInclude Include="..\..\include\_2RealServiceNotification.h" />
-    <ClInclude Include="..\..\include\_2RealServiceParameter.h" />
-    <ClInclude Include="..\..\include\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
-    <ClInclude Include="..\..\src\_2RealContextPrivate.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractService.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractServiceVariable.h" />
+    <ClInclude Include="..\..\src\_2RealConfigMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealContext.h" />
+    <ClInclude Include="..\..\src\_2RealData.h" />
+    <ClInclude Include="..\..\src\_2RealFramework.h" />
+    <ClInclude Include="..\..\src\_2RealFrameworkNotification.h" />
     <ClInclude Include="..\..\src\_2RealGroupContainer.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
+    <ClInclude Include="..\..\src\_2RealInternal.h" />
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealIService.h" />
+    <ClInclude Include="..\..\src\_2RealIUserService.h" />
+    <ClInclude Include="..\..\src\_2RealMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
+    <ClInclude Include="..\..\src\_2RealOutputContainer.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealSequenceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
+    <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
-    <ClInclude Include="..\..\src\_2RealServiceRegistration.h" />
-    <ClInclude Include="..\..\src\_2RealServiceRegistry.h" />
+    <ClInclude Include="..\..\src\_2RealServiceParameter.h" />
+    <ClInclude Include="..\..\src\_2RealServiceReference.h" />
+    <ClInclude Include="..\..\src\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealSynchronizationContainer.h" />
+    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
