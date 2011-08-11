@@ -22,9 +22,9 @@
 
 namespace _2Real
 {
-	MetadataPtr AbstractPluginActivator::metadata()
+	const Metadata *const AbstractPluginActivator::metadata() const
 	{
 		//return MetadataReader::readXMLFile();
-		return MetadataPtr();
+		return NULL;
 	}
 }

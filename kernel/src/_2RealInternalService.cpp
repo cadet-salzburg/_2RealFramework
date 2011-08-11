@@ -19,7 +19,7 @@
 #include "_2RealInternalService.h"
 
 #include "_2RealIUserService.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealConfigData.h"
 #include "_2RealAbstractServiceVariable.h"
 #include "_2RealServiceContext.h"
 
@@ -59,8 +59,7 @@ namespace _2Real
 
 	bool InternalService::getSetupParameter(AbstractServiceVariable *_param)
 	{
-
-		if (m_ConfigPtr.isNull())
+		if (m_ConfigPtr == NULL)
 		{
 			std::cout << "TODO: error handling; InternalService: - config is null" << std::endl;
 			return false;
@@ -68,64 +67,67 @@ namespace _2Real
 
 		bool success = true;
 		Variable frameworkName;
-			
-		success &= m_ConfigPtr->setupParameter< Variable >(_param->originalName(), frameworkName);
-		if (!success)
-		{
-			std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
-			return false;
-		}
-			
-		_param->setFrameworkName(frameworkName);
 
-		success &= _param->getFrom(m_ConfigPtr->setupAttributes());
-		if (!success)
-		{
-			std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
-			return false;
-		}
+		////look up name of setup param
+		//success &= m_ConfigPtr->setupParameter(_param->originalName(), frameworkName);
+		//if (!success)
+		//{
+		//	std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
+		//	return false;
+		//}
+
+		////set framework name
+		//_param->setFrameworkName(frameworkName);
+
+		////lookup value of setup param
+		//success &= _param->getFrom(m_ConfigPtr->setupAttributes());
+		//if (!success)
+		//{
+		//	std::cout << "TODO: error handling; InternalService: error on setup params" << std::endl;
+		//	return false;
+		//}
 
 		return true;
 	}
 
-	const bool InternalService::setup(ConfigMetadataPtr const& _config)
+	const bool InternalService::setup(ConfigurationData *const _config)
 	{
 		if (m_bIsConfigured)
 		{
 			return false;
 		}
 
-		m_ConfigPtr = _config;
-		
-		m_UserServicePtr->setup(new ServiceContext(this));
+		//m_ConfigPtr = _config;
+		//
+		//m_UserServicePtr->setup(new ServiceContext(this));
 
-		for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
-		{
-			Variable frameworkName;
-			
-			bool noError = _config->inputParameter< Variable >((*it)->originalName(), frameworkName);
-			if (!noError)
-			{
-				std::cout << "TODO: error handling; InternalService: error on input vars" << std::endl;
-				return noError;
-			}
-			
-			(*it)->setFrameworkName(frameworkName);
-		}
+		//for (VariableList::iterator it = m_InputVariables.begin(); it != m_InputVariables.end(); it++)
+		//{
+		//	Variable frameworkName;
+		//	
+		//	bool noError = _config->inputParameter< Variable >((*it)->originalName(), frameworkName);
+		//	if (!noError)
+		//	{
+		//		std::cout << "TODO: error handling; InternalService: error on input vars" << std::endl;
+		//		return noError;
+		//	}
+		//	
+		//	(*it)->setFrameworkName(frameworkName);
+		//}
 
-		for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
-		{
-			Variable frameworkName;
+		//for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
+		//{
+		//	Variable frameworkName;
 
-			bool noError = _config->outputParameter< Variable >((*it)->originalName(), frameworkName);
-			if (!noError)
-			{
-				std::cout << "TODO: error handling; InternalService: error on output vars" << std::endl;
-				return noError;
-			}
-			
-			(*it)->setFrameworkName(frameworkName);
-		}
+		//	bool noError = _config->outputParameter< Variable >((*it)->originalName(), frameworkName);
+		//	if (!noError)
+		//	{
+		//		std::cout << "TODO: error handling; InternalService: error on output vars" << std::endl;
+		//		return noError;
+		//	}
+		//	
+		//	(*it)->setFrameworkName(frameworkName);
+		//}
 
 		return m_bIsConfigured;
 	}
@@ -138,7 +140,7 @@ namespace _2Real
 			{
 				if ((*it)->getFrom(*_input.get()))
 				{
-					//std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
+					std::cout << "received: " << (*it)->originalName() << " as " << (*it)->frameworkName() << std::endl;
 				}
 			}
 		}
@@ -165,7 +167,7 @@ namespace _2Real
 	{
 		if (m_bIsConfigured && m_OutputVariables.size() > 0)
 		{
-			DataPtr output(new Data());
+			DataPtr output(new VariableData());
 			for (VariableList::iterator it = m_OutputVariables.begin(); it != m_OutputVariables.end(); it++)
 			{
 				(*it)->insertInto(*output.get());

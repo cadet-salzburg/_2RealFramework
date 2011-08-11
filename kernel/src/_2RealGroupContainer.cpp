@@ -18,73 +18,73 @@
 */
 
 #include "_2RealGroupContainer.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealConfigData.h"
 
 namespace _2Real
 {
-	const bool GroupContainer::setup(ConfigMetadataPtr const& _config)
+	const bool GroupContainer::setup(ConfigurationData *const _config)
 	{
-		//cannot be reconfigured; meaning all of its child containers cannot be reconfigured either. this might change at a later time.
-		if (m_bIsConfigured)
-		{
-			std::cout << "group container " << m_ServiceName << " setup: is already configured" << std::endl;
-			return false;
-		}
+		////cannot be reconfigured; meaning all of its child containers cannot be reconfigured either. this might change at a later time.
+		//if (m_bIsConfigured)
+		//{
+		//	std::cout << "group container " << m_ServiceName << " setup: is already configured" << std::endl;
+		//	return false;
+		//}
 
-		//m_Name = _config->name();
+		////m_Name = _config->name();
 
-		//every group container must contain at least one child container
-		if (m_Containers.empty())
-		{
-			std::cout << "group container " << m_ServiceName << " setup: container list is empty" << std::endl;
-			return false;
-		}
+		////every group container must contain at least one child container
+		//if (m_Containers.empty())
+		//{
+		//	std::cout << "group container " << m_ServiceName << " setup: container list is empty" << std::endl;
+		//	return false;
+		//}
 
-		bool success = true;
+		//bool success = true;
 
-		//is a service, thus receives a name in the framework
-		if (m_ServiceName != _config->name())
-		{
-			std::cout << "group container " << m_ServiceName << " setup: configuration metadata's name does not match" << std::endl;
-			success &= false;
-		}
+		////is a service, thus receives a name in the framework
+		//if (m_ServiceName != _config->name())
+		//{
+		//	std::cout << "group container " << m_ServiceName << " setup: configuration metadata's name does not match" << std::endl;
+		//	success &= false;
+		//}
 
-		//group containers offer no service themselves; thus _config's setup/input/output params are ignored
-		//there must be a child config metadata in _config for each child container, with a matching name
-		for (ContainerList::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
-		{
-			ServiceName name = (*it)->name();
-			MetadataPtr meta = _config->child(name);
+		////group containers offer no service themselves; thus _config's setup/input/output params are ignored
+		////there must be a child config metadata in _config for each child container, with a matching name
+		//for (ContainerList::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+		//{
+		//	ServiceName name = (*it)->name();
+		//	MetadataPtr meta = _config->child(name);
 
-			if (meta.isNull())
-			{
-				//this should not happen; todo: exception handling
-				std::cout << "group container " << m_ServiceName << " setup: configuration metadata for " << name << " is null." << std::endl;
-				success &= false;
-			}
+		//	if (meta.isNull())
+		//	{
+		//		//this should not happen; todo: exception handling
+		//		std::cout << "group container " << m_ServiceName << " setup: configuration metadata for " << name << " is null." << std::endl;
+		//		success &= false;
+		//	}
 
-			ConfigMetadataPtr config = meta.unsafeCast< ConfigMetadata >();
+		//	ConfigDataPtr config = meta.unsafeCast< ConfigData >();
 
-			if (config.isNull())
-			{
-				//this should not happen either
-				std::cout << "group container " << m_ServiceName << " setup: metadata for " << name << " is no configuration." << std::endl;
-				success &= false;
-			}
+		//	if (config.isNull())
+		//	{
+		//		//this should not happen either
+		//		std::cout << "group container " << m_ServiceName << " setup: metadata for " << name << " is no configuration." << std::endl;
+		//		success &= false;
+		//	}
 
-			success &= (*it)->setup(config);
-		}
+		//	success &= (*it)->setup(config);
+		//}
 
-		//change capacity of threadpool to match nr of children
-		unsigned int children = m_Containers.size();
-		unsigned int capacity = m_ThreadPool.capacity();
-		m_ThreadPool.addCapacity(children - capacity);
+		////change capacity of threadpool to match nr of children
+		//unsigned int children = m_Containers.size();
+		//unsigned int capacity = m_ThreadPool.capacity();
+		//m_ThreadPool.addCapacity(children - capacity);
 
-		if (success)
-		{
-			m_bIsConfigured = true;
-			return true;
-		}
+		//if (success)
+		//{
+		//	m_bIsConfigured = true;
+		//	return true;
+		//}
 		
 		return false;
 	}

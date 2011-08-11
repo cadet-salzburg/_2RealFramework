@@ -36,7 +36,7 @@ namespace _2Real
 		m_PluginState = Plugin::INSTALLED;
 	}
 
-	Plugin::PluginState const& Plugin::state() const
+	Plugin::ePluginState const& Plugin::state() const
 	{
 		return m_PluginState;
 	}
@@ -51,7 +51,7 @@ namespace _2Real
 		return m_LibraryPath;
 	}
 
-	MetadataPtr const& Plugin::metadata() const
+	const Metadata *const Plugin::metadata() const
 	{
 		return m_MetadataPtr;
 	}

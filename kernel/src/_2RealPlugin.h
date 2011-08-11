@@ -34,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		enum PluginState
+		enum ePluginState
 		{
 			INVALID		=	0x00000000,
 			INSTALLED	=	0x00000001,
@@ -50,7 +50,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		PluginState const& state() const;
+		ePluginState const& state() const;
 		
 		/**
 		*
@@ -65,7 +65,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		MetadataPtr const& metadata() const;
+		const Metadata *const metadata() const;
 		
 		/**
 		*	loads dll; state: installed->loaded
@@ -123,7 +123,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		PluginState				m_PluginState;
+		ePluginState			m_PluginState;
 		
 		/**
 		*
@@ -136,9 +136,9 @@ namespace _2Real
 		std::string				m_LibraryPath;
 		
 		/**
-		*
+		*	this is an owning pointer
 		*/
-		MetadataPtr				m_MetadataPtr;
+		Metadata				*m_MetadataPtr;
 
 	};
 }

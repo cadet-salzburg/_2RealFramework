@@ -24,7 +24,7 @@
 #include "_2RealIUserService.h"
 #include "_2RealIService.h"
 #include "_2RealData.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealConfigData.h"
 
 #include <list>
 
@@ -40,7 +40,7 @@ namespace _2Real
 	
 		InternalService(ServiceName const& _name, UserServicePtr &_service);
 		
-		const bool setup(ConfigMetadataPtr const& _config);
+		const bool setup(ConfigurationData *const _config);
 		void update();
 		void shutdown();
 
@@ -64,9 +64,8 @@ namespace _2Real
 
 		VariableList						m_InputVariables;
 		VariableList						m_OutputVariables;
-		ParameterList						m_SetupParameters;
 
-		ConfigMetadataPtr					m_ConfigPtr;
+		ConfigurationData					*m_ConfigPtr;
 
 		bool								m_bIsConfigured;
 		ServiceName							m_ServiceName;

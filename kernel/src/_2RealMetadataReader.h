@@ -27,7 +27,7 @@ namespace _2Real
 	{
 	public:
 
-		static MetadataPtr readXMLFile(std::string _file);
+		static const Metadata *const readXMLFile(std::string _file);
 
 	};
 }

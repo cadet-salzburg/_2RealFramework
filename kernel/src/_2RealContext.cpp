@@ -19,19 +19,20 @@
 
 #include "_2RealContext.h"
 #include "_2RealFramework.h"
-#include "_2RealOutputContainer.h"
+#include "_2RealConfiguration.h"
 
 namespace _2Real
 {
-	ContextPtr Context::s_ContextPtr;
+	Context* Context::s_ContextPtr;
 	Poco::Mutex Context::s_Mutex;
 
-	ContextPtr Context::instance()
+	Context* const Context::instance()
 	{
 		Poco::ScopedLock< Poco::Mutex > lock(s_Mutex);
-		if(s_ContextPtr.isNull())
+
+		if(s_ContextPtr == NULL)
 		{
-			s_ContextPtr = ContextPtr(new Context());
+			s_ContextPtr = new Context();
 		}
 
 		return s_ContextPtr;
@@ -42,12 +43,19 @@ namespace _2Real
 		m_FrameworkPtr = new Framework();
 	}
 
-	Context::Context(const Context &_src)
+	Context::Context(Context const& _src) : m_FrameworkPtr(_src.m_FrameworkPtr)
 	{
 	}
 	
-	Context& Context::operator=(const Context &_src)
+	Context& Context::operator=(Context const& _src)
 	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+ 
+		m_FrameworkPtr = _src.m_FrameworkPtr; 
+	 
 		return *this;
 	}
 
@@ -56,8 +64,8 @@ namespace _2Real
 		delete m_FrameworkPtr;
 	}
 
-	OutputContainerPtr Context::newConfiguration()
+	Configuration *const Context::createConfiguration()
 	{
-		return m_FrameworkPtr->createOutputContainer();
+		return m_FrameworkPtr->createConfiguration();
 	}
 }

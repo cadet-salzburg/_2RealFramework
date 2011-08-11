@@ -17,34 +17,6 @@
 	limitations under the License.
 */
 
-#include "_2RealData.h"
-
 namespace _2Real
 {
-	Data::Data() 
-	{
-		m_Data.clear();
-	};
-
-	Data::Data(const Data& _src)
-	{
-		m_Data= _src.m_Data;
-	}
-
-	Data& Data::operator= (const Data& _src)
-	{
-		if (this == &_src)
-		{
-			return *this;
-		}
- 
-		m_Data = _src.m_Data;
-	 
-		return *this;
-	}
-
-	Data::~Data()
-	{
-		m_Data.clear();
-	}
 }

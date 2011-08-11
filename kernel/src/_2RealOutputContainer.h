@@ -24,54 +24,55 @@
 #include "_2RealAbstractContainer.h"
 #include "_2RealServiceContainer.h"
 #include "_2RealGroupContainer.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealConfigData.h"
 
 #include <stack>
 
+#include "Poco/BasicEvent.h"
+
 namespace _2Real
 {
+
+	class OutputListener;
+
 	class OutputContainer : public AbstractContainer
 	{
 
 		friend class Framework;
+		friend class ServiceRegistry;
 
 	public:
 
-		OutputContainer(ServiceName const& _name) : AbstractContainer(_name) {}
+		OutputContainer(ServiceName const& _name);
 
-		void beginConfiguration();
+		const bool beginConfiguration(eContainerType const& _type);
+		const bool beginConfiguration();
 		const bool endConfiguration();
 		
-		void beginSequence();
-		void beginSynchronization();
+		const bool beginGroup(eContainerType const& _type);
 		const bool endGroup();
 		
-		void beginServiceConfiguration(std::string const& _name, std::string const& _plugin);
+		const bool beginServiceConfiguration(std::string const& _name, std::string const& _plugin);
 		const bool endServiceConfiguration();
 
-		template< typename T >
-		void configureSetupParameter(std::string const& _name, T const& value)
-		{
-			ConfigMetadataPtr test = (m_CurrentConfiguration->child("ImageProcessing.RandomImage_ushort.1")).unsafeCast< ConfigMetadata >();
-			if (test.isNull())
-			{
-				std::cout << "test is null" << std::endl;
-			}
+		const bool configureSetupParameter(AbstractServiceVariable *const _param);
+		const Variable configureOutputVariable(std::string const& _name);
+		const bool configureInputVariable(std::string const& _name, Variable const& _var);
 
-			std::cout << _name << std::endl;
-			test->setSetupParameter< T >(_name, value);
-			//m_CurrentConfiguration->setSetupParameter< T >(_name, value);
-		}
+		const Variable generateName(std::string const& _name);
 
-		const Variable configureOutputParameter(std::string const& _name);
-		void configureInputParameter(std::string const& _name, Variable const& _var);
+		const bool addOutputListener(OutputListener *const _listener);
+		const bool removeOutputListener(OutputListener *const _listener);
 
-		const Variable generateName(std::string const& _name) const;
 
+
+		/**
+		*	container stuff
+		*/
 		void start(bool const& _loop) {}
 		void stop() {}
 		void run() {}
-		const bool setup(ConfigMetadataPtr const& _config) { return true; }
+		const bool setup(ConfigurationData *const _config) { return true; }
 		void update() {}
 		void shutdown() {}
 		void addListener(ServicePtr &_listener) {}
@@ -80,21 +81,24 @@ namespace _2Real
 
 	private:
 
-		typedef std::stack< GroupContainerPtr >	ContainerStack;
-		typedef std::stack< ConfigMetadataPtr >	ConfigurationStack;
+		typedef std::stack< GroupContainer * >	ContainerStack;
+		typedef std::stack< ConfigurationData * >	ConfigurationStack;
 
-		Framework								*m_FrameworkPtr;
+		Poco::BasicEvent< DataPtr >				m_NewData;
+
+		//ServiceFactory						&m_ServiceFactory;
+		//Framework								*m_FrameworkPtr;
 
 		ContainerStack							m_GroupContainers;
-		ConfigurationStack						m_Configurations;
+		ConfigurationStack						m_ServiceConfigurations;
 
-		GroupContainerPtr						m_TopLevelGroup;
-		ConfigMetadataPtr						m_ConfigurationPtr;
+		GroupContainer							*m_TopLevelContainer;
+		ConfigurationData							*m_TopLevelConfiguration;
 		
-		GroupContainerPtr						m_CurrentGroup;
-		ConfigMetadataPtr						m_CurrentConfiguration;
+		GroupContainer							*m_CurrentGroup;
+		ConfigurationData							*m_CurrentConfiguration;
 		
-		ServiceContainerPtr						m_CurrentService;
+		ServiceContainer						*m_CurrentUserService;
 		
 		bool									m_bIsConfigured;
 		unsigned int							m_iVariableCounter;

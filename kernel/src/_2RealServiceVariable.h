@@ -35,8 +35,8 @@ namespace _2Real
 
 		ServiceVariable(std::string const& _name, T &_var);
 		
-		const bool getFrom(const Data &_data);
-		const bool insertInto(Data &_data) const;
+		const bool getFrom(VariableData const&_data);
+		const bool insertInto(VariableData &_data) const;
 
 	private:
 
@@ -51,7 +51,7 @@ namespace _2Real
 	}
 
 	template< typename T >
-	const bool ServiceVariable< T >::getFrom(const Data &_data)
+	const bool ServiceVariable< T >::getFrom(VariableData const& _data)
 	{
 		Poco::Any any;
 		if (AbstractServiceVariable::getFrom(_data, any))
@@ -68,14 +68,12 @@ namespace _2Real
 		}
 
 		return true;
-		//return _data.get< T >(AbstractServiceVariable::frameworkName(), m_Variable);
 	}
 
 	template< typename T >
-	const bool ServiceVariable< T >::insertInto(Data &_data) const
+	const bool ServiceVariable< T >::insertInto(VariableData &_data) const
 	{
 		Poco::Any any(m_Variable);
 		return AbstractServiceVariable::insertInto(_data, any);
-		//_data.insert< T >(AbstractServiceVariable::frameworkName(), m_Variable);
 	}
 }

@@ -23,101 +23,186 @@
 
 #include <map>
 
+#include "Poco/SharedPtr.h"
 #include "Poco/Any.h"
 
 namespace _2Real
 {
+
+	template< typename T >
 	class Data
 	{
 
 	public:
 
-		typedef std::map<std::string, Poco::Any> DataItems;
-		typedef std::pair<std::string, Poco::Any> NamedDataItem;
-		
+		typedef std::map< T, AnyPtr >		NamedDataMap;
+		typedef std::pair< T, AnyPtr >		NamedData;
+
+		/**
+		*
+		*/
 		Data();
-		Data(const Data& _src);
-		Data& operator= (const Data& _src);
+
+		/**
+		*
+		*/
+		Data(Data const& _src);
+
+		/**
+		*
+		*/
+		Data& operator= (Data const& _src);
+
+		/**
+		*
+		*/
 		~Data();
 
-		template<class T>
-		void insert(std::string _name, T _data)
-		{
-			Poco::Any data(_data);
-			m_Data.insert(NamedDataItem(_name, data));
-		}
+		///**
+		//*	!!!
+		//*	this functions creates a copy of the data
+		//*	will not work for pointers
+		//*/
+		//template< typename T >
+		//void insertData(std::string const& _name, T _data)
+		//{
+		//	T copy(_data);
+		//	AnyPtr any = AnyPtr(new Any(copy));
+		//	m_Data.insert(NamedDataItem(_name, data));
+		//}
 
-		const bool remove(std::string _name)
-		{
-			DataItems::iterator it = m_Data.find(_name);
-		
-			if (it == m_Data.end())
-			{
-				return false;
-			}
+		///**
+		//*
+		//*/
+		//template< typename T >
+		//const bool getData(std::string const& _name, T& _value) const
+		//{
+		//	NamedDataMap::const_iterator it = m_DataMap.find(_name);
+		//	
+		//	if (it != m_Data.end())
+		//	{
+		//		try
+		//		{
+		//			T copy(Poco::AnyCast<T>(it->second));
+		//			_value = copy;
+		//			return true;
+		//		}
+		//		catch (...)
+		//		{
+		//			std::cout << "TODO: error handling; Data::getData(); bad cast" << std::endl;
+		//		}
+		//	}
 
-			m_Data.erase(it);
-			return true;
-		}
+		//	return false;
+		//}
 
-		template<class T>
-		const bool get(std::string _name, T& _value) const
-		{
-			DataItems::const_iterator it = m_Data.find(_name);
-			
-			if (it != m_Data.end())
-			{
-				try
-				{
-					T value = Poco::AnyCast<T>(it->second);
-					_value = value;
-					return true;
-				}
-				catch (Poco::BadCastException e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-			}
+		/**
+		*
+		*/
+		const bool remove(T const& _name);
 
-			return false;
-		}
+		/**
+		*
+		*/
+		const bool contains(T const& _name) const;
 
-		const bool getAny(std::string _name, Poco::Any &_any) const
-		{
-			DataItems::const_iterator it = m_Data.find(_name);
-			
-			if (it != m_Data.end())
-			{
-				_any = it->second;
-				return true;
-			}
+		/**
+		*
+		*/
+		AnyPtr getAny(T const& _name) const;
 
-			return false;
-		}
+		/**
+		*
+		*/
+		void insertAny(T const& _name, AnyPtr &_any);
 
-		void insertAny(std::string _name, Poco::Any& _any)
-		{
-			m_Data.insert(NamedDataItem(_name, _any));
-		}
-
-		const DataItems::const_iterator begin() const
-		{
-			return m_Data.begin();
-		}
-
-		const DataItems::const_iterator end() const
-		{
-			return m_Data.end();
-		}
-
-		const unsigned int size() const 
-		{ 
-			return m_Data.size();
-		}
+		/**
+		*
+		*/
+		unsigned int const& size() const;
 
 	private:
 
-		DataItems			m_Data;
+		/**
+		*
+		*/
+		NamedDataMap		m_DataMap;
 
 	};
+
+	template< typename T >
+	Data< T >::Data() 
+	{
+	}
+
+	template< typename T >
+	Data< T >::Data(Data< T > const& _src)
+	{
+		m_DataMap = _src.m_DataMap;
+	}
+
+	template< typename T >
+	Data< T >& Data< T >::operator=(Data< T > const& _src)
+	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+ 
+		m_DataMap = _src.m_DataMap;
+	 
+		return *this;
+	}
+
+	template< typename T >
+	Data< T >::~Data()
+	{
+	}
+
+	template< typename T >
+	const bool Data< T >::remove(T const& _name)
+	{
+		NamedDataMap::iterator it = m_DataMap.find(_name);
+		
+		if (it == m_DataMap.end())
+		{
+			return false;
+		}
+
+		m_DataMap.erase(it);
+		return true;
+	}
+
+	template< typename T >
+	const bool Data< T >::contains(T const& _name) const
+	{
+		NamedDataMap::iterator it = m_DataMap.find(_name);
+		
+		if (it == m_DataMap.end())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	template< typename T >
+	AnyPtr Data< T >::getAny(T const& _name) const
+	{
+		NamedDataMap::const_iterator it = m_DataMap.find(_name);
+			
+		if (it != m_DataMap.end())
+		{
+			return it->second;
+		}
+
+		return AnyPtr();
+	}
+
+	template< typename T >
+	void Data< T >::insertAny(T const& _name, AnyPtr &_anyPtr)
+	{
+		m_DataMap.insert(NamedData(_name, _anyPtr));
+	}
+
 }

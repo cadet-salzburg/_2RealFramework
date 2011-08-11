@@ -18,12 +18,17 @@
 
 #pragma once
 
+//fucking fucking fuck stupid compiler
+#pragma warning(disable:4503)
+
 #include "Poco/SharedPtr.h"
+#include "Poco/Any.h"
 
 namespace _2Real
 {
 	class Context;
 	class Framework;
+	class Configuration;
 	
 	class Plugin;
 	class PluginContext;
@@ -33,9 +38,9 @@ namespace _2Real
 	class AbstractPluginActivator;
 	
 	class IService;
+	class IUserService;
 	class InternalService;
 	class ServiceContext;
-	class IUserService;
 	
 	class ServiceFactory;
 	class ServiceReference;
@@ -44,30 +49,45 @@ namespace _2Real
 	template < typename T >
 	class ServiceVariable;
 	
+	template< typename T >
 	class Data;
 	class Metadata;
-	class ConfigMetadata;
+	class ConfigurationData;
 
 	class IContainer;
-	class AbstractContainer;
-	
+	class AbstractContainer;	
 	class ServiceContainer;
 	class GroupContainer;
 	class SequenceContainer;
 	class SynchronizationContainer;
 	class OutputContainer;
 
+	enum eContainerType
+	{
+		SEQUENCE			= 0x00000000,
+		SYNCHRONIZATION		= 0x00000001,
+		MUTEX				= 0x00000002,
+	};
+
+	typedef std::string				ServiceName;
+	typedef std::string				ListenerName;
+
+	/**
+	*	TODO: actually make this into a class someday
+	*/
 #ifdef _DEBUG
 	typedef std::string								Variable;
-	typedef std::string								ServiceName;
 #else
 	typedef unsigned int							Variable;
-	typedef unsigned int							ServiceName;
 #endif
-	
-	typedef Poco::SharedPtr< Context >				ContextPtr;
 
-	typedef Poco::SharedPtr< Plugin >				PluginPtr;
+	typedef Data< std::string >		ReadableData;
+	typedef Data< Variable >		VariableData;
+
+	typedef Poco::SharedPtr< Plugin > PluginPtr;
+
+	typedef Poco::SharedPtr< Poco::Any >			AnyPtr;
+	typedef Poco::SharedPtr< VariableData >			DataPtr;
 
 	typedef Poco::SharedPtr< IService >				ServicePtr;
 	typedef Poco::SharedPtr< IUserService >			UserServicePtr;
@@ -75,11 +95,6 @@ namespace _2Real
 	typedef ServicePtr (*ServiceCreator)(ServiceName const& _name, IUserService *const _service);
 	typedef UserServicePtr (*UserServiceCreator)(void);
 	
-	typedef Poco::SharedPtr< Metadata >				MetadataPtr;
-	typedef Poco::SharedPtr< ConfigMetadata >		ConfigMetadataPtr;
-
-	typedef Poco::SharedPtr< Data >					DataPtr;
-
 	typedef Poco::SharedPtr< ServiceReference >		ServiceRefPtr;
 
 	typedef Poco::SharedPtr< IContainer >			ContainerPtr;

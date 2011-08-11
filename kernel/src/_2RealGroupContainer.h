@@ -50,7 +50,7 @@ namespace _2Real
 		*	does nothing & returns false if container is already configured
 		*	otherwise, returns true only if all child containers were successfully configured
 		*/
-		const bool setup(ConfigMetadataPtr const& _config);
+		const bool setup(ConfigurationData *const _config);
 		
 		/**
 		*	calls update function of all child containers

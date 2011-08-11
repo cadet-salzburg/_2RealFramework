@@ -39,7 +39,7 @@ namespace _2Real
 		virtual void stop() = 0;
 		virtual void run() = 0;
 		virtual void update() = 0;
-		virtual const bool setup(ConfigMetadataPtr const& _config) = 0;
+		virtual const bool setup(ConfigurationData *const _config) = 0;
 		virtual void shutdown() = 0;
 		
 		virtual void addListener(ServicePtr &_listener) = 0;

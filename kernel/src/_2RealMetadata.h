@@ -22,74 +22,77 @@
 #include "_2RealData.h"
 
 #include <string>
+#include <map>
 #include <vector>
-
-#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
-	class Metadata;
-
-	typedef Poco::SharedPtr < Metadata > MetadataPtr;
-
 	class Metadata
 	{
 
-		friend class MetadataReader;
-		friend class OutputContainer;
-
 	public:
 
-		Metadata(std::string _name) : m_Name(_name) {}
-		Metadata(const Metadata& _src);
-		Metadata& operator= (const Metadata& _src);
+		Metadata(std::string const& _name, Metadata *const _father);
+		Metadata(Metadata const& _src);
+		Metadata& operator=(Metadata const& _src);
 		~Metadata();
 
-		const Metadata* const father() const { return m_Father; }
-		const std::string& name() const { return m_Name; }
-		Data const& attributes() const { return m_Attributes; }
-		
-		template<typename T>
-		const bool attribute(const std::vector<std::string>& _path, std::string _attribute, T& _result) const;
+		const std::string& name() const;
+		ReadableData const& attributes() const;
 
-		template<typename T>
-		const bool attribute(std::string _attribute, T& _result) const;
+		Metadata *const father();
+		const Metadata *const father() const;
 
-		const MetadataPtr subtree(const std::vector<std::string>& _path) const;
-		const MetadataPtr child(std::string _name) const;
+		Metadata *const child(std::string const& _name);
+		const Metadata *const child(std::string const& _name) const;
 
-		Metadata* const father() { return m_Father; }
+		Metadata *const subtree(std::vector< std::string > const& _path);
+		const Metadata *const subtree(std::vector< std::string > const& _path) const;
 
-	protected:
+		const bool insert(Metadata *const _metadata);
+		const bool insert(std::vector< std::string > const& _path, Metadata *const _metadata);
 
-		const bool insert(MetadataPtr& _metadata);
-		const bool insert(const std::vector<std::string>& _path, MetadataPtr& _metadata);
+		//template<typename T>
+		//const bool attribute(const std::vector<std::string>& _path, std::string _attribute, T& _result) const;
 
-		template<typename T>
-		const bool setAttribute(std::string _attribute, const T& _value);
+		//template<typename T>
+		//const bool attribute(std::string _attribute, T& _result) const;
 
-		template<typename T>
-		const bool setAttribute(const std::vector<std::string>& _path, std::string _attribute, const T& _value);
+		//template< typename T >
+		//const bool setAttribute(std::string const& _attribute, T const& _value);
+
+		//template< typename T >
+		//const bool setAttribute(std::vector< std::string > const& _path, std::string const& _attribute, T const& _value);
 
 	private:
 
-		typedef std::map<std::string, MetadataPtr> MetadataMap;
-		typedef std::pair<std::string, MetadataPtr> MetadataValue;
+		typedef std::map< std::string, Metadata * >		NamedMetadataMap;
+		typedef std::pair< std::string, Metadata * >	NamedChild;
 
-		std::string					m_Name;
-		Data						m_Attributes;
-		MetadataMap					m_Children;
-		Metadata*					m_Father;
+		/**
+		*	tag name
+		*/
+		std::string										m_Name;
 
-		void setFather(Metadata* _father) { m_Father = _father; }
-		void setName(std::string _name) { m_Name = _name; }
-
-		MetadataPtr subtree(const std::vector<std::string>& _path);
-		MetadataPtr child(std::string _name);
+		/**
+		*	attributes - key : string
+		*/
+		ReadableData									m_Attributes;
+		
+		/**
+		*	children
+		*/
+		NamedMetadataMap								m_Children;
+		
+		/**
+		*	father
+		*/
+		Metadata*										m_Father;
 
 	};
 
+	/*
 	template< typename T >
 	const bool Metadata::attribute(const std::vector<std::string>& _path, std::string _attribute, T& _value) const
 	{
@@ -134,4 +137,5 @@ namespace _2Real
 		m_Attributes.insert< T >(_attribute, _value);
 		return true;
 	}
+	*/
 }

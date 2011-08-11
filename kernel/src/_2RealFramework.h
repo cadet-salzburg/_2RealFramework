@@ -52,6 +52,11 @@ namespace _2Real
 		GroupContainerPtr createSynchronizationContainer();
 
 		/**
+		*	creates new configuration object
+		*/
+		Configuration *const createConfiguration();
+
+		/**
 		*	creates a new service object
 		*/
 		NamedServicePtr createService(std::string const& _name, std::string const& _plugin);

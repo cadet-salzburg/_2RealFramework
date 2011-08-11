@@ -35,7 +35,7 @@ namespace _2Real
 		/**
 		*	initialization
 		*/
-		virtual const bool setup(ConfigMetadataPtr const& _config) = 0;
+		virtual const bool setup(ConfigurationData *const _config) = 0;
 
 		/**
 		*	cleanup

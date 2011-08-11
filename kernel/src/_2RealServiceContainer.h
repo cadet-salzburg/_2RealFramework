@@ -42,7 +42,7 @@ namespace _2Real
 		void stop();
 		void run();
 
-		const bool setup(ConfigMetadataPtr const& _config);
+		const bool setup(ConfigurationData *const _config);
 		void shutdown();
 		void update();
 

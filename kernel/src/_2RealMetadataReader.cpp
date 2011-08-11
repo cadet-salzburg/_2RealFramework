@@ -36,11 +36,8 @@ using namespace Poco::XML;
 
 namespace _2Real
 {
-	MetadataPtr MetadataReader::readXMLFile(std::string _file)
+	const Metadata *const MetadataReader::readXMLFile(std::string _file)
 	{
-		
-		MetadataPtr result;
-
 		DOMParser parser;
 		AutoPtr<Document> document = parser.parse(XMLString(_file));
 		NodeIterator it(document, NodeFilter::SHOW_ELEMENT);
@@ -52,7 +49,7 @@ namespace _2Real
 			{
 				NamedNodeMap* map = node->attributes();
 				Node* attrib = map->getNamedItem("name");
-				result = MetadataPtr(new Metadata(attrib->getNodeValue()));
+				
 				attrib->release();
 				map->release();
 			}		
@@ -60,6 +57,6 @@ namespace _2Real
 			node = it.nextNode();
 		}
 
-		return result;
+		return NULL;
 	}
 }

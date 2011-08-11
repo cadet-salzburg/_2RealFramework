@@ -19,10 +19,11 @@
     <ClInclude Include="..\..\include_plugin\_2RealServiceContext.h" />
     <ClInclude Include="..\..\include_plugin\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
-    <ClInclude Include="..\..\src\_2RealConfigMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealConfigData.h" />
     <ClInclude Include="..\..\src\_2RealConfiguration.h" />
     <ClInclude Include="..\..\src\_2RealContext.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
+    <ClInclude Include="..\..\src\_2RealErrorState.h" />
     <ClInclude Include="..\..\src\_2RealFramework.h" />
     <ClInclude Include="..\..\src\_2RealGroupContainer.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealOutputContainer.h" />
+    <ClInclude Include="..\..\src\_2RealOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealSequenceContainer.h" />
@@ -44,16 +46,18 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractServiceVariable.cpp" />
-    <ClCompile Include="..\..\src\_2RealConfigMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealConfigData.cpp" />
     <ClCompile Include="..\..\src\_2RealConfiguration.cpp" />
     <ClCompile Include="..\..\src\_2RealContext.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
+    <ClCompile Include="..\..\src\_2RealErrorState.cpp" />
     <ClCompile Include="..\..\src\_2RealFramework.cpp" />
     <ClCompile Include="..\..\src\_2RealGroupContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputContainer.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputListener.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />

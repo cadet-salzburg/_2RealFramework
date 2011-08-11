@@ -41,14 +41,23 @@ namespace _2Real
 		m_FrameworkName = _name;
 	}
 
-	const bool AbstractServiceVariable::getFrom(Data const& _data, Poco::Any &_any)
+	const bool AbstractServiceVariable::getFrom(VariableData const& _data, Poco::Any &_any)
 	{
-		return _data.getAny(m_FrameworkName, _any);
+		AnyPtr anyPtr = _data.getAny(m_FrameworkName);
+
+		if (anyPtr.isNull())
+		{
+			return false;
+		}
+
+		_any = *anyPtr.get();
+		return true;
 	}
 
-	const bool AbstractServiceVariable::insertInto(Data &_data, Poco::Any &_any) const
+	const bool AbstractServiceVariable::insertInto(VariableData &_data, Poco::Any &_any) const
 	{
-		_data.insertAny(m_FrameworkName, _any);
+		AnyPtr anyPtr = AnyPtr(new Poco::Any(_any));
+		_data.insertAny(m_FrameworkName, anyPtr);
 		return true;
 	}
 }

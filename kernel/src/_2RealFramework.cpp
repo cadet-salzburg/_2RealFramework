@@ -23,6 +23,7 @@
 #include "_2RealOutputContainer.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
+#include "_2RealConfiguration.h"
 
 #include "Poco/Path.h"
 
@@ -44,8 +45,8 @@ namespace _2Real
 	{
 		OutputContainerPtr result = m_FactoryPtr->createOutputContainer();
 
-		result->m_bIsConfigured = false;
-		result->m_FrameworkPtr = this;
+		//result->m_bIsConfigured = false;
+		//result->m_FrameworkPtr = this;
 
 		if (result.isNull())
 		{
@@ -143,6 +144,15 @@ namespace _2Real
 		{
 			m_FactoryPtr->registerService(_name, pluginPtr, _creator, _singleton);
 		}
+	}
+
+	Configuration *const Framework::createConfiguration()
+	{
+		OutputContainer* result = m_FactoryPtr->createOutputContainer();
+		
+		//!!!!!!
+		Configuration* config = new Configuration(result);
+		return config;
 	}
 
 }

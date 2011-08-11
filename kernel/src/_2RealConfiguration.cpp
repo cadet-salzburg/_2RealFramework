@@ -17,232 +17,154 @@
 	limitations under the License.
 */
 
+#include "_2RealTypedefs.h"
+#include "_2RealConfiguration.h"
 #include "_2RealOutputContainer.h"
-
-#include "_2RealGroupContainer.h"
-#include "_2RealServiceContainer.h"
-#include "_2RealFramework.h"
-
-#include "_2RealAbstractContainer.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealOutputListener.h"
 
 namespace _2Real
 {
 
-	const Variable OutputContainer::generateName(std::string const& _name) const
+	Configuration::Configuration(OutputContainer *const _container) : m_ContainerPtr(_container)
 	{
-#ifdef _DEBUG
-		return m_CurrentService->serviceName() + "." + _name;
-#else
-		return ++m_iVariableCounter;
-#endif
 	}
 
-	void OutputContainer::beginConfiguration()
+	Configuration::Configuration(Configuration const& _src) : m_ContainerPtr(_src.m_ContainerPtr)
 	{
-		if (m_bIsConfigured)
-		{
-			std::cout << "TODO: error message" << std::endl;
-			return;
-		}
-
-		m_ConfigurationPtr = ConfigMetadataPtr(new ConfigMetadata(m_ServiceName));
-		m_CurrentConfiguration = m_ConfigurationPtr;
-		m_iVariableCounter = 0;
 	}
 
-	const bool OutputContainer::endConfiguration()
+	Configuration& Configuration::operator=(Configuration const& _src)
 	{
-		if (m_bIsConfigured)
+		if (this == &_src)
 		{
-			std::cout << "TODO: error message" << std::endl;
-			return false;
+			return *this;
 		}
+ 
+		m_ContainerPtr = _src.m_ContainerPtr; 
+	 
+		return *this;
+	}
 
-		m_bIsConfigured = true;
+	Configuration::~Configuration()
+	{
+		for (NamedListenerMap::iterator it = m_Listeners.begin(); it != m_Listeners.end(); it++)
+		{
+			m_ContainerPtr->removeOutputListener(it->second);
+			delete it->second;
+		}
+		
+		delete m_ContainerPtr;
+	}
+
+	const bool Configuration::beginConfiguration(eContainerType const& _type, ErrorState &_error)
+	{
+		return m_ContainerPtr->beginConfiguration(_type);
+	}
+
+	const bool Configuration::beginConfiguration(ErrorState &_error)
+	{
+		return m_ContainerPtr->beginConfiguration();
+	}
+
+	const bool Configuration::endConfiguration(ErrorState &_error)
+	{
+		return m_ContainerPtr->endConfiguration();
+	}
+
+	const bool Configuration::beginGroup(eContainerType const& _type, ErrorState &_error)
+	{
+		return m_ContainerPtr->beginGroup(_type);
+	}
+
+	const bool Configuration::endGroup(ErrorState &_error)
+	{
+		return m_ContainerPtr->endGroup();
+	}
+
+	const bool Configuration::beginServiceConfiguration(std::string const& _name, std::string const& _plugin, ErrorState &_error)
+	{
+		return m_ContainerPtr->beginServiceConfiguration(_name, _plugin);
+	}
+
+	const bool Configuration::endServiceConfiguration(ErrorState &_error)
+	{
+		return m_ContainerPtr->endServiceConfiguration();
+	}
+
+	const bool Configuration::configureSetupParameter(AbstractServiceVariable *_param, ErrorState &_error)
+	{
+		return m_ContainerPtr->configureSetupParameter(_param);
+	}
+
+	const Variable Configuration::configureOutputParameter(std::string const& _name, ErrorState &_error)
+	{
+		return m_ContainerPtr->configureOutputVariable(_name);
+	}
+
+	const bool Configuration::configureInputParameter(std::string const& _name, Variable const& _var, ErrorState &_error)
+	{
+		return m_ContainerPtr->configureInputVariable(_name, _var);
+	}
+
+	const bool Configuration::addOutputListener(std::string const& _name, Variable const& _fwName, OutputListenerCallback _callback, ErrorState &_error)
+	{
+		OutputListener *listener = new OutputListener(_name, _fwName, 0);
+		m_Listeners.insert(NamedListener(_name, listener));
+		m_ContainerPtr->addOutputListener(listener);
 		return true;
 	}
 
-	void OutputContainer::beginSequence()
+	const bool Configuration::removeOutputListener(std::string const& _name, ErrorState &_error)
 	{
-		std::cout << "output container: ssequence group requested" << std::endl;
-
-		if (m_bIsConfigured)
+		NamedListenerMap::iterator it = m_Listeners.find(_name);
+		if (it != m_Listeners.end())
 		{
-			std::cout << "TODO: error message, OutputContainer::beginSequence" << std::endl;
-			return;
+			return m_ContainerPtr->removeOutputListener(it->second);
 		}
 
-		if (!m_CurrentService.isNull())
-		{
-			std::cout << "TODO: error message, OutputContainer::beginSequence" << std::endl;
-			return;
-		}
-
-		GroupContainerPtr previousGroup = m_CurrentGroup;
-		
-		m_CurrentGroup = m_FrameworkPtr->createSequenceContainer();
-		
-		std::cout << "output container: successfully created new group container" << std::endl;
-		
-		if (!previousGroup.isNull())
-		{
-			std::cout << "output container: adding to previous group" << std::endl;
-
-			m_GroupContainers.push(previousGroup);
-			
-			previousGroup->addElement(m_CurrentGroup);
-		}
-		else
-		{
-			std::cout << "output container: saving top level group" << std::endl;
-
-			m_TopLevelGroup = m_CurrentGroup;
-		}
-
-		std::cout << "output container: creating metadata" << std::endl;
-
-		MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentGroup->name()));
-
-		m_CurrentConfiguration->insert(newConfig);
-		
-		m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
-
-		std::cout << "output container: returning" << std::endl;
-
+		return false;
 	}
 
-	void OutputContainer::beginSynchronization()
+	AnyPtr Configuration::getData(std::string const& _name, ErrorState &_error)
 	{
-		std::cout << "output container: synchronization group requested" << std::endl;
-
-		if (m_bIsConfigured)
+		NamedListenerMap::iterator it = m_Listeners.find(_name);
+		if (it != m_Listeners.end())
 		{
-			std::cout << "TODO: error message, OutputContainer::beginSynchronization" << std::endl;
-			return;
+			return it->second->getData();
 		}
 
-		if (!m_CurrentService.isNull())
-		{
-			std::cout << "TODO: error message, OutputContainer::beginSynchronization" << std::endl;
-			return;
-		}
-
-		GroupContainerPtr previousGroup = m_CurrentGroup;
-		
-		m_CurrentGroup = m_FrameworkPtr->createSynchronizationContainer();
-
-		std::cout << "output container: successfully created new group container" << std::endl;
-
-		if (!previousGroup.isNull())
-		{
-			std::cout << "output container: adding to previous group" << std::endl;
-
-			m_GroupContainers.push(previousGroup);
-			
-			previousGroup->addElement(m_CurrentGroup);
-		}
-		else
-		{
-			std::cout << "output container: saving top level group" << std::endl;
-
-			m_TopLevelGroup = m_CurrentGroup;
-		}
-
-		MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentGroup->name()));
-		m_CurrentConfiguration->insert(newConfig);
-		m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
+		return AnyPtr();
 	}
 
-	const bool OutputContainer::endGroup()
+	const bool hasNewData(std::string const& _name, unsigned long const& _compare, ErrorState &_error)
 	{
-		if (m_bIsConfigured)
-		{
-			return false;
-		}
-
-		if (!m_CurrentService.isNull())
-		{
-			std::cout << "cannot begin new configuration" << std::endl;
-			return false;
-		}
-
-		if (!m_GroupContainers.empty())
-		{
-			m_CurrentGroup = m_GroupContainers.top();
-			m_GroupContainers.pop();
-
-			MetadataPtr oldConfig = m_CurrentConfiguration->father();
-			m_CurrentConfiguration = oldConfig.unsafeCast< ConfigMetadata >();
-		}
-
 		return true;
 	}
 
-	void OutputContainer::beginServiceConfiguration(std::string const& _name, std::string const& _plugin)
+	const bool Configuration::updateOnce(bool const& _blocking, ProductionTreeCallback _callback, ErrorState &_error)
 	{
-		if (m_bIsConfigured)
-		{
-			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
-			return;
-		}
-
-		if (!m_CurrentService.isNull())
-		{
-			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
-			return;
-		}
-
-		std::cout << "output container: request user service creation" << std::endl;
-		ServicePtr service = m_FrameworkPtr->createService(_name, _plugin).second;
-		std::cout << "output container: user service created" << std::endl;
-		
-		if (!service.isNull())
-		{
-			std::cout << "output container: attempt unsafe cast" << std::endl;
-			m_CurrentService = service.unsafeCast< ServiceContainer >();
-			
-			std::cout << "output container: create metadata" << std::endl;
-			MetadataPtr newConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->name()));
-			m_CurrentConfiguration->insert(newConfig);
-			m_CurrentConfiguration = newConfig.unsafeCast< ConfigMetadata >();
-
-			MetadataPtr serviceConfig = MetadataPtr(new ConfigMetadata(m_CurrentService->serviceName()));
-			m_CurrentConfiguration->insert(serviceConfig);
-			//m_CurrentConfiguration = serviceConfig.unsafeCast< ConfigMetadata >();
-		}
-		else
-		{
-			std::cout << "output container: user service is null" << std::endl;
-			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
-		}
-	}
-
-	const bool OutputContainer::endServiceConfiguration()
-	{
-
-		std::cout << "attempting config of current service now" << std::endl;
-
-		m_CurrentService->setup(m_CurrentConfiguration);
-
-		m_CurrentService->update();
-
-		m_CurrentService.assign(NULL);
-		MetadataPtr oldConfig = m_CurrentConfiguration->father()->father();
-		m_CurrentConfiguration = oldConfig.unsafeCast< ConfigMetadata >();
-
+		//return m_ContainerPtr->update();
 		return true;
 	}
 
-	const Variable OutputContainer::configureOutputParameter(std::string const& _name)
+	const bool Configuration::runSynchronously(ProductionTreeCallback _callback, ErrorState &_error)
 	{
-		Variable var = generateName(_name);
-		m_CurrentConfiguration->setOutputParameter< Variable >(_name, var);
-		return var;
+		return true;
 	}
 
-	void OutputContainer::configureInputParameter(std::string const& _name, Variable const& _var)
+	const bool Configuration::runAsynchronously(ProductionTreeCallback _callback, ErrorState &_error)
 	{
-		m_CurrentConfiguration->setInputParameter< Variable >(_name, _var);
+		return true;
+	}
+
+	const bool Configuration::stop(ErrorState &_error)
+	{
+		return true;
+	}
+
+	const bool Configuration::setPluginPath(std::string const& _path, ErrorState &_error)
+	{
+		m_PluginPath = _path;
+		return true;
 	}
 }

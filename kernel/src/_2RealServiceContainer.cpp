@@ -19,7 +19,7 @@
 
 #include "_2RealServiceContainer.h"
 #include "_2RealData.h"
-#include "_2RealConfigMetadata.h"
+#include "_2RealConfigData.h"
 
 #include "Poco/Delegate.h"
 
@@ -55,19 +55,16 @@ namespace _2Real
 		{
 			VariableList tmpList = m_InputVariables;
 			
-			DataPtr data(new Data());
+			DataPtr data(new VariableData());
 			for (std::list< DataPtr >::reverse_iterator it = m_Data.rbegin(); it != m_Data.rend(); it++)
 			{
-				Data tmp = *it->get();
+				VariableData tmp = *it->get();
 				for (VariableList::iterator it = tmpList.begin(); it != tmpList.end(); it++)
 				{
-					Poco::Any result;
-					if (tmp.getAny(*it, result))
+					AnyPtr result;
+					if (result = tmp.getAny(*it))
 					{
 						data->insertAny(*it, result);
-					}
-					else
-					{
 					}
 				}
 			}
@@ -93,15 +90,14 @@ namespace _2Real
 		}
 	}
 
-	const bool ServiceContainer::setup(ConfigMetadataPtr const& _config)
+	const bool ServiceContainer::setup(ConfigurationData *const _config)
 	{
 		if (m_bIsConfigured)
 		{
 			return false;
 		}
 
-		//m_Name = _config->name();
-
+		/*
 		const Data variables = _config->child("input params")->attributes();
 		for (Data::DataItems::const_iterator it = variables.begin(); it != variables.end(); it++)
 		{
@@ -110,6 +106,7 @@ namespace _2Real
 		}
 
 		m_bIsConfigured = m_ServicePtr->setup(_config);
+		*/
 		return m_bIsConfigured;
 	}
 
