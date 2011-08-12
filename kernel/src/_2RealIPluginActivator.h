@@ -19,69 +19,36 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include "_2RealTypedefs.h"
+
+#include "Poco/ClassLibrary.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class Framework;
-	class ProductionTree;
-
-	class Context
+	class IPluginActivator
 	{
 
 	public:
 
 		/**
-		*	get instance pointer
+		*	returns plugin metadata
 		*/
-		static Context *const instance();
+		virtual const Metadata *const metadata() const = 0;
 
 		/**
-		*	create new ProductionTree
+		*	plugin can use plugin context ptr to export factory functions
 		*/
-		ProductionTree *const createProductionTree();
-
-	private:
-
-		/**
-		*
-		*/
-		static Context			*s_ContextPtr;
-
-		/**
-		*
-		*/
-		static Poco::Mutex		s_Mutex;
-
-		/**
-		*
-		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
-
+		virtual void start(PluginContext *const _context) = 0;
+	
 	};
+
 }
+
+/**
+*	
+*/
+#define _2REAL_EXPORT_PLUGIN(x)\
+	POCO_BEGIN_MANIFEST(IPluginActivator)\
+	POCO_EXPORT_CLASS(x)\
+	POCO_END_MANIFEST

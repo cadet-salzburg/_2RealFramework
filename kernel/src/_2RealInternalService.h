@@ -40,7 +40,7 @@ namespace _2Real
 	
 		InternalService(ServiceName const& _name, UserServicePtr &_service);
 		
-		const bool setup(ConfigurationData *const _config);
+		const bool setup(ProductionTreeData *const _config);
 		void update();
 		void shutdown();
 
@@ -65,7 +65,7 @@ namespace _2Real
 		VariableList						m_InputVariables;
 		VariableList						m_OutputVariables;
 
-		ConfigurationData					*m_ConfigPtr;
+		ProductionTreeData					*m_ConfigPtr;
 
 		bool								m_bIsConfigured;
 		ServiceName							m_ServiceName;

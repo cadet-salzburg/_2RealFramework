@@ -32,7 +32,7 @@ namespace _2Real
 	class OutputListener
 	{
 
-		friend class Configuration;
+		friend class ProductionTree;
 
 	public:
 
@@ -103,6 +103,13 @@ namespace _2Real
 		*/
 		Poco::Mutex						m_Mutex;
 
+	};
+
+	class ListenerRef
+	{
+		private:
+
+			OutputListener		*m_Listener;
 	};
 
 }

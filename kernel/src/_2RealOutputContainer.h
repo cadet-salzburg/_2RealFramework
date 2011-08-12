@@ -43,17 +43,31 @@ namespace _2Real
 
 	public:
 
+		/**
+		*
+		*/
 		OutputContainer(ServiceName const& _name);
 
-		const bool beginConfiguration(eContainerType const& _type);
-		const bool beginConfiguration();
-		const bool endConfiguration();
+		/**
+		*
+		*/
+		const bool beginProductionTree(eContainerType const& _type);
+		
+		/**
+		*
+		*/
+		const bool beginProductionTree();
+		
+		/**
+		*
+		*/
+		const bool endProductionTree();
 		
 		const bool beginGroup(eContainerType const& _type);
 		const bool endGroup();
 		
-		const bool beginServiceConfiguration(std::string const& _name, std::string const& _plugin);
-		const bool endServiceConfiguration();
+		const bool beginServiceProductionTree(std::string const& _name, std::string const& _plugin);
+		const bool endServiceProductionTree();
 
 		const bool configureSetupParameter(AbstractServiceVariable *const _param);
 		const Variable configureOutputVariable(std::string const& _name);
@@ -72,7 +86,7 @@ namespace _2Real
 		void start(bool const& _loop) {}
 		void stop() {}
 		void run() {}
-		const bool setup(ConfigurationData *const _config) { return true; }
+		const bool setup(ProductionTreeData *const _config) { return true; }
 		void update() {}
 		void shutdown() {}
 		void addListener(ServicePtr &_listener) {}
@@ -82,7 +96,7 @@ namespace _2Real
 	private:
 
 		typedef std::stack< GroupContainer * >	ContainerStack;
-		typedef std::stack< ConfigurationData * >	ConfigurationStack;
+		typedef std::stack< ProductionTreeData * >	ProductionTreeStack;
 
 		Poco::BasicEvent< DataPtr >				m_NewData;
 
@@ -90,13 +104,13 @@ namespace _2Real
 		//Framework								*m_FrameworkPtr;
 
 		ContainerStack							m_GroupContainers;
-		ConfigurationStack						m_ServiceConfigurations;
+		ProductionTreeStack						m_ServiceProductionTrees;
 
 		GroupContainer							*m_TopLevelContainer;
-		ConfigurationData							*m_TopLevelConfiguration;
+		ProductionTreeData							*m_TopLevelProductionTree;
 		
 		GroupContainer							*m_CurrentGroup;
-		ConfigurationData							*m_CurrentConfiguration;
+		ProductionTreeData							*m_CurrentProductionTree;
 		
 		ServiceContainer						*m_CurrentUserService;
 		

@@ -19,69 +19,57 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include "_2RealTypedefs.h"
+
+#include <string>
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class Framework;
-	class ProductionTree;
-
-	class Context
+	class PluginContext
 	{
+
+		friend class Plugin;
 
 	public:
 
 		/**
-		*	get instance pointer
+		*	registers a service in the framework
 		*/
-		static Context *const instance();
-
+		void registerService(const std::string _name, UserServicePtr (*_func)(void));
+		
 		/**
-		*	create new ProductionTree
+		*	registers a singleton in the framework
 		*/
-		ProductionTree *const createProductionTree();
-
+		void registerSingleton(const std::string _name, UserServicePtr (*_func)(void));
+	
 	private:
 
 		/**
 		*
 		*/
-		static Context			*s_ContextPtr;
+		~PluginContext();
 
 		/**
 		*
 		*/
-		static Poco::Mutex		s_Mutex;
+		PluginContext(Plugin *const _plugin);
+		
+		/**
+		*
+		*/
+		PluginContext(const PluginContext &_src);
+		
+		/**
+		*
+		*/
+		PluginContext& operator=(const PluginContext &_src);
 
 		/**
 		*
 		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
+		Plugin			*m_PluginPtr;
 
 	};
+
 }

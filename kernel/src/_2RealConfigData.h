@@ -31,7 +31,7 @@
 namespace _2Real
 {
 
-	class ConfigurationData : public Metadata
+	class ProductionTreeData : public Metadata
 	{
 
 		friend class OutputContainer;
@@ -53,22 +53,22 @@ namespace _2Real
 		/**
 		*
 		*/
-		ConfigurationData(std::string const& _name, ConfigurationData *const _father);
+		ProductionTreeData(std::string const& _name, ProductionTreeData *const _father);
 		
 		/**
 		*
 		*/
-		ConfigurationData(ConfigurationData const&_src);
+		ProductionTreeData(ProductionTreeData const&_src);
 		
 		/**
 		*
 		*/
-		ConfigurationData& operator= (ConfigurationData const& _src);
+		ProductionTreeData& operator= (ProductionTreeData const& _src);
 		
 		/**
 		*
 		*/
-		~ConfigurationData();
+		~ProductionTreeData();
 
 		/**
 		*

@@ -90,7 +90,7 @@ namespace _2Real
 		}
 	}
 
-	const bool ServiceContainer::setup(ConfigurationData *const _config)
+	const bool ServiceContainer::setup(ProductionTreeData *const _config)
 	{
 		if (m_bIsConfigured)
 		{

@@ -22,7 +22,7 @@
 
 namespace _2Real
 {
-	const bool GroupContainer::setup(ConfigurationData *const _config)
+	const bool GroupContainer::setup(ProductionTreeData *const _config)
 	{
 		////cannot be reconfigured; meaning all of its child containers cannot be reconfigured either. this might change at a later time.
 		//if (m_bIsConfigured)
@@ -45,7 +45,7 @@ namespace _2Real
 		////is a service, thus receives a name in the framework
 		//if (m_ServiceName != _config->name())
 		//{
-		//	std::cout << "group container " << m_ServiceName << " setup: configuration metadata's name does not match" << std::endl;
+		//	std::cout << "group container " << m_ServiceName << " setup: ProductionTree metadata's name does not match" << std::endl;
 		//	success &= false;
 		//}
 
@@ -59,7 +59,7 @@ namespace _2Real
 		//	if (meta.isNull())
 		//	{
 		//		//this should not happen; todo: exception handling
-		//		std::cout << "group container " << m_ServiceName << " setup: configuration metadata for " << name << " is null." << std::endl;
+		//		std::cout << "group container " << m_ServiceName << " setup: ProductionTree metadata for " << name << " is null." << std::endl;
 		//		success &= false;
 		//	}
 
@@ -68,7 +68,7 @@ namespace _2Real
 		//	if (config.isNull())
 		//	{
 		//		//this should not happen either
-		//		std::cout << "group container " << m_ServiceName << " setup: metadata for " << name << " is no configuration." << std::endl;
+		//		std::cout << "group container " << m_ServiceName << " setup: metadata for " << name << " is no ProductionTree." << std::endl;
 		//		success &= false;
 		//	}
 

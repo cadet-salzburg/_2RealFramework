@@ -19,69 +19,40 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+/*
+*	this file is going to be removed sooner or later
+*/
+#include "_2RealTypedefs.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	interface for user defined services
 	*/
 
-	class Framework;
-	class ProductionTree;
-
-	class Context
+	class IUserService
 	{
+
+		class ServiceContext;
 
 	public:
 
 		/**
-		*	get instance pointer
+		*	use _context to retrieve setup params & register input / output variables
 		*/
-		static Context *const instance();
+		virtual const bool setup(ServiceContext *const _context) = 0;
 
 		/**
-		*	create new ProductionTree
+		*	cleanup
 		*/
-		ProductionTree *const createProductionTree();
-
-	private:
-
+		virtual void shutdown() = 0;
+		
 		/**
-		*
+		*	update
 		*/
-		static Context			*s_ContextPtr;
-
-		/**
-		*
-		*/
-		static Poco::Mutex		s_Mutex;
-
-		/**
-		*
-		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
-
+		virtual void update() = 0;
+	
 	};
+
 }

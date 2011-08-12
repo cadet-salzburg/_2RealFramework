@@ -23,7 +23,7 @@
 #include "_2RealOutputContainer.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
-#include "_2RealConfiguration.h"
+#include "_2RealProductionTree.h"
 
 #include "Poco/Path.h"
 
@@ -146,12 +146,12 @@ namespace _2Real
 		}
 	}
 
-	Configuration *const Framework::createConfiguration()
+	ProductionTree *const Framework::createProductionTree()
 	{
 		OutputContainer* result = m_FactoryPtr->createOutputContainer();
 		
 		//!!!!!!
-		Configuration* config = new Configuration(result);
+		ProductionTree* config = new ProductionTree(result);
 		return config;
 	}
 

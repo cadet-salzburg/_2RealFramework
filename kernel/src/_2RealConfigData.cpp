@@ -21,17 +21,17 @@
 
 namespace _2Real
 {
-	ConfigurationData::ConfigurationData(std::string const& _name, ConfigurationData *const _father) :
+	ProductionTreeData::ProductionTreeData(std::string const& _name, ProductionTreeData *const _father) :
 		Metadata(_name, _father)
 	{
 	}
 
-	ConfigurationData::ConfigurationData(ConfigurationData const& _src) :
+	ProductionTreeData::ProductionTreeData(ProductionTreeData const& _src) :
 		Metadata(_src), m_SetupValues(_src.m_SetupValues)
 	{
 	}
 
-	ConfigurationData& ConfigurationData::operator=(ConfigurationData const& _src)
+	ProductionTreeData& ProductionTreeData::operator=(ProductionTreeData const& _src)
 	{
 		if (this == &_src)
 		{
@@ -45,16 +45,16 @@ namespace _2Real
 		return *this;
 	}
 
-	ConfigurationData::~ConfigurationData()
+	ProductionTreeData::~ProductionTreeData()
 	{
 	}
 
-	const bool ConfigurationData::configureValue(AbstractServiceVariable *const _var) const
+	const bool ProductionTreeData::configureValue(AbstractServiceVariable *const _var) const
 	{
 		return true;
 	}
 
-	const bool ConfigurationData::configureName(AbstractServiceVariable *const _var) const
+	const bool ProductionTreeData::configureName(AbstractServiceVariable *const _var) const
 	{
 		return true;
 	}

@@ -52,9 +52,9 @@ namespace _2Real
 		GroupContainerPtr createSynchronizationContainer();
 
 		/**
-		*	creates new configuration object
+		*	creates new ProductionTree object
 		*/
-		Configuration *const createConfiguration();
+		ProductionTree *const createProductionTree();
 
 		/**
 		*	creates a new service object

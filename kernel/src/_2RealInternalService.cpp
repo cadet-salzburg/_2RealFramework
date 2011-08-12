@@ -90,7 +90,7 @@ namespace _2Real
 		return true;
 	}
 
-	const bool InternalService::setup(ConfigurationData *const _config)
+	const bool InternalService::setup(ProductionTreeData *const _config)
 	{
 		if (m_bIsConfigured)
 		{

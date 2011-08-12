@@ -38,7 +38,7 @@ namespace _2Real
 ////#endif
 ////	}
 ////
-////	const bool OutputContainer::beginConfiguration()
+////	const bool OutputContainer::beginProductionTree()
 ////	{
 ////		if (m_bIsConfigured)
 ////		{
@@ -46,12 +46,12 @@ namespace _2Real
 ////			return;
 ////		}
 ////
-////		m_ConfigurationPtr = ConfigDataPtr(new ConfigData(m_ServiceName));
-////		m_CurrentConfiguration = m_ConfigurationPtr;
+////		m_ProductionTreePtr = ConfigDataPtr(new ConfigData(m_ServiceName));
+////		m_CurrentProductionTree = m_ProductionTreePtr;
 ////		m_iVariableCounter = 0;
 ////	}
 ////
-////	const bool OutputContainer::beginConfiguration()
+////	const bool OutputContainer::beginProductionTree()
 ////	{
 ////		if (m_bIsConfigured)
 ////		{
@@ -59,12 +59,12 @@ namespace _2Real
 ////			return;
 ////		}
 ////
-////		m_ConfigurationPtr = ConfigDataPtr(new ConfigData(m_ServiceName));
-////		m_CurrentConfiguration = m_ConfigurationPtr;
+////		m_ProductionTreePtr = ConfigDataPtr(new ConfigData(m_ServiceName));
+////		m_CurrentProductionTree = m_ProductionTreePtr;
 ////		m_iVariableCounter = 0;
 ////	}
 ////
-////	const bool OutputContainer::endConfiguration()
+////	const bool OutputContainer::endProductionTree()
 ////	{
 ////		if (m_bIsConfigured)
 ////		{
@@ -117,9 +117,9 @@ namespace _2Real
 ////
 ////		MetadataPtr newConfig = MetadataPtr(new ConfigData(m_CurrentGroup->name()));
 ////
-////		m_CurrentConfiguration->insert(newConfig);
+////		m_CurrentProductionTree->insert(newConfig);
 ////		
-////		m_CurrentConfiguration = newConfig.unsafeCast< ConfigData >();
+////		m_CurrentProductionTree = newConfig.unsafeCast< ConfigData >();
 ////
 ////		std::cout << "output container: returning" << std::endl;
 ////
@@ -163,8 +163,8 @@ namespace _2Real
 ////		}
 ////
 ////		MetadataPtr newConfig = MetadataPtr(new ConfigData(m_CurrentGroup->name()));
-////		m_CurrentConfiguration->insert(newConfig);
-////		m_CurrentConfiguration = newConfig.unsafeCast< ConfigData >();
+////		m_CurrentProductionTree->insert(newConfig);
+////		m_CurrentProductionTree = newConfig.unsafeCast< ConfigData >();
 ////	}
 ////
 ////	const bool OutputContainer::endGroup()
@@ -176,7 +176,7 @@ namespace _2Real
 ////
 ////		if (!m_CurrentService.isNull())
 ////		{
-////			std::cout << "cannot begin new configuration" << std::endl;
+////			std::cout << "cannot begin new ProductionTree" << std::endl;
 ////			return false;
 ////		}
 ////
@@ -185,24 +185,24 @@ namespace _2Real
 ////			m_CurrentGroup = m_GroupContainers.top();
 ////			m_GroupContainers.pop();
 ////
-////			MetadataPtr oldConfig = m_CurrentConfiguration->father();
-////			m_CurrentConfiguration = oldConfig.unsafeCast< ConfigData >();
+////			MetadataPtr oldConfig = m_CurrentProductionTree->father();
+////			m_CurrentProductionTree = oldConfig.unsafeCast< ConfigData >();
 ////		}
 ////
 ////		return true;
 ////	}
 ////
-////	void OutputContainer::beginServiceConfiguration(std::string const& _name, std::string const& _plugin)
+////	void OutputContainer::beginServiceProductionTree(std::string const& _name, std::string const& _plugin)
 ////	{
 ////		if (m_bIsConfigured)
 ////		{
-////			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
+////			std::cout << "TODO: error message, OutputContainer::beginServiceProductionTree" << std::endl;
 ////			return;
 ////		}
 ////
 ////		if (!m_CurrentService.isNull())
 ////		{
-////			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
+////			std::cout << "TODO: error message, OutputContainer::beginServiceProductionTree" << std::endl;
 ////			return;
 ////		}
 ////
@@ -217,32 +217,32 @@ namespace _2Real
 ////			
 ////			std::cout << "output container: create metadata" << std::endl;
 ////			MetadataPtr newConfig = MetadataPtr(new ConfigData(m_CurrentService->name()));
-////			m_CurrentConfiguration->insert(newConfig);
-////			m_CurrentConfiguration = newConfig.unsafeCast< ConfigData >();
+////			m_CurrentProductionTree->insert(newConfig);
+////			m_CurrentProductionTree = newConfig.unsafeCast< ConfigData >();
 ////
 ////			MetadataPtr serviceConfig = MetadataPtr(new ConfigData(m_CurrentService->serviceName()));
-////			m_CurrentConfiguration->insert(serviceConfig);
-////			//m_CurrentConfiguration = serviceConfig.unsafeCast< ConfigData >();
+////			m_CurrentProductionTree->insert(serviceConfig);
+////			//m_CurrentProductionTree = serviceConfig.unsafeCast< ConfigData >();
 ////		}
 ////		else
 ////		{
 ////			std::cout << "output container: user service is null" << std::endl;
-////			std::cout << "TODO: error message, OutputContainer::beginServiceConfiguration" << std::endl;
+////			std::cout << "TODO: error message, OutputContainer::beginServiceProductionTree" << std::endl;
 ////		}
 ////	}
 ////
-////	const bool OutputContainer::endServiceConfiguration()
+////	const bool OutputContainer::endServiceProductionTree()
 ////	{
 ////
 ////		std::cout << "attempting config of current service now" << std::endl;
 ////
-////		m_CurrentService->setup(m_CurrentConfiguration);
+////		m_CurrentService->setup(m_CurrentProductionTree);
 ////
 ////		m_CurrentService->update();
 ////
 ////		m_CurrentService.assign(NULL);
-////		MetadataPtr oldConfig = m_CurrentConfiguration->father()->father();
-////		m_CurrentConfiguration = oldConfig.unsafeCast< ConfigData >();
+////		MetadataPtr oldConfig = m_CurrentProductionTree->father()->father();
+////		m_CurrentProductionTree = oldConfig.unsafeCast< ConfigData >();
 ////
 ////		return true;
 ////	}
@@ -250,12 +250,12 @@ namespace _2Real
 ////	const Variable OutputContainer::configureOutputParameter(std::string const& _name)
 ////	{
 ////		Variable var = generateName(_name);
-////		m_CurrentConfiguration->setOutputParameter< Variable >(_name, var);
+////		m_CurrentProductionTree->setOutputParameter< Variable >(_name, var);
 ////		return var;
 ////	}
 ////
 ////	void OutputContainer::configureInputParameter(std::string const& _name, Variable const& _var)
 ////	{
-////		m_CurrentConfiguration->setInputParameter< Variable >(_name, _var);
+////		m_CurrentProductionTree->setInputParameter< Variable >(_name, _var);
 ////	}
 }

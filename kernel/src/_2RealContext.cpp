@@ -19,7 +19,7 @@
 
 #include "_2RealContext.h"
 #include "_2RealFramework.h"
-#include "_2RealConfiguration.h"
+#include "_2RealProductionTree.h"
 
 namespace _2Real
 {
@@ -64,8 +64,8 @@ namespace _2Real
 		delete m_FrameworkPtr;
 	}
 
-	Configuration *const Context::createConfiguration()
+	ProductionTree *const Context::createProductionTree()
 	{
-		return m_FrameworkPtr->createConfiguration();
+		return m_FrameworkPtr->createProductionTree();
 	}
 }

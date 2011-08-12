@@ -19,69 +19,77 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include "_2RealTypedefs.h"
+
+#include <string>
+
+#include "Poco/Any.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class Framework;
-	class ProductionTree;
-
-	class Context
+	class AbstractServiceVariable
 	{
 
 	public:
 
 		/**
-		*	get instance pointer
+		*
 		*/
-		static Context *const instance();
+		AbstractServiceVariable(std::string const& _name, Variable const& _fwName);
 
 		/**
-		*	create new ProductionTree
+		*
 		*/
-		ProductionTree *const createProductionTree();
+		AbstractServiceVariable(std::string const& _name);
+
+		/**
+		*
+		*/
+		std::string const& originalName() const;
+
+		/**
+		*
+		*/
+		Variable const& frameworkName() const;
+
+		/**
+		*
+		*/
+		void setFrameworkName(Variable const& _name);
+
+		/**
+		*
+		*/
+		virtual const bool getFrom(VariableData const& _data) = 0;
+
+		/**
+		*
+		*/
+		virtual const bool insertInto(VariableData &_data) const = 0;
+
+		/**
+		*
+		*/
+		const bool getFrom(VariableData const& _data, Poco::Any &_any);
+
+		/**
+		*
+		*/
+		const bool insertInto(VariableData &_data, Poco::Any &_any) const;
 
 	private:
 
 		/**
 		*
 		*/
-		static Context			*s_ContextPtr;
+		std::string				m_OriginalName;
 
 		/**
 		*
 		*/
-		static Poco::Mutex		s_Mutex;
-
-		/**
-		*
-		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
+		Variable				m_FrameworkName;
 
 	};
+
 }

@@ -28,7 +28,7 @@ namespace _2Real
 {
 	class Context;
 	class Framework;
-	class Configuration;
+	class ProductionTree;
 	
 	class Plugin;
 	class PluginContext;
@@ -52,7 +52,7 @@ namespace _2Real
 	template< typename T >
 	class Data;
 	class Metadata;
-	class ConfigurationData;
+	class ProductionTreeData;
 
 	class IContainer;
 	class AbstractContainer;	

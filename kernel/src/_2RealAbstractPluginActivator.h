@@ -19,69 +19,26 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include "_2RealIPluginActivator.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class Framework;
-	class ProductionTree;
-
-	class Context
+	class AbstractPluginActivator : public IPluginActivator
 	{
 
 	public:
 
 		/**
-		*	get instance pointer
+		*
 		*/
-		static Context *const instance();
-
-		/**
-		*	create new ProductionTree
-		*/
-		ProductionTree *const createProductionTree();
-
-	private:
+		const Metadata *const metadata() const;
 
 		/**
 		*
 		*/
-		static Context			*s_ContextPtr;
-
-		/**
-		*
-		*/
-		static Poco::Mutex		s_Mutex;
-
-		/**
-		*
-		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
+		virtual void start(PluginContext *const _context) = 0;
 
 	};
+
 }
