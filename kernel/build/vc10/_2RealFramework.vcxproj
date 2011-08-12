@@ -11,14 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include_plugin\_2RealAbstractPluginActivator.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealAbstractServiceVariable.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealIPluginActivator.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealIUserService.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealServiceContext.h" />
-    <ClInclude Include="..\..\include_plugin\_2RealServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractServiceVariable.h" />
     <ClInclude Include="..\..\src\_2RealConfigData.h" />
     <ClInclude Include="..\..\src\_2RealConfiguration.h" />
     <ClInclude Include="..\..\src\_2RealContext.h" />
@@ -28,15 +23,21 @@
     <ClInclude Include="..\..\src\_2RealGroupContainer.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
     <ClInclude Include="..\..\src\_2RealInternalService.h" />
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealIProductionTree.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
+    <ClInclude Include="..\..\src\_2RealIUserService.h" />
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealOutputContainer.h" />
     <ClInclude Include="..\..\src\_2RealOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealProductionTree.h" />
     <ClInclude Include="..\..\src\_2RealSequenceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
+    <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceReference.h" />
     <ClInclude Include="..\..\src\_2RealServiceVariable.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealProductionTree.cpp" />
     <ClCompile Include="..\..\src\_2RealSequenceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
@@ -116,7 +118,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include_application;..\..\include_plugin;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>..\..\bin\_2RealFramework_debug.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
@@ -139,7 +141,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include_application;..\..\include_plugin;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

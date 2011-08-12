@@ -26,15 +26,14 @@
 
 namespace _2Real
 {
-
 	/**
 	*	interface for user defined services
 	*/
 
+	class ServiceContext;
+
 	class IUserService
 	{
-
-		class ServiceContext;
 
 	public:
 
