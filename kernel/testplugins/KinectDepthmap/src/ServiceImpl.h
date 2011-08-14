@@ -1,21 +1,21 @@
 #pragma once
 
-#include "_2RealIUserService.h"
+#include "_2RealIService.h"
 #include "_2RealServiceContext.h"
 
 #include "KinectDepthMap.h"
 #include "Image.h"
 
-class KinectService : public _2Real::IUserService
+class KinectService : public _2Real::IService
 {
 
 public:
 
 	KinectService() : m_bIsInitialized(false) {}
 
-	void shutdown();
-	void update();
-	const bool KinectService::setup(_2Real::ServiceContext *const _context);
+	void shutdown() throw(...);
+	void update() throw(...);
+	void KinectService::setup(_2Real::ServiceContext *const _context) throw(...);
 
 private:
 
@@ -30,8 +30,8 @@ private:
 /*
 	factory function to be registered with the framework
 */
-static _2Real::UserServicePtr createKinectService()
+static _2Real::IService *const createKinectService()
 {
-	_2Real::UserServicePtr service(new KinectService());
+	_2Real::IService *service = new KinectService();
 	return service;
 }

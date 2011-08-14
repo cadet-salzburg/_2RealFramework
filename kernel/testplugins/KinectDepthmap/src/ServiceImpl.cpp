@@ -4,35 +4,41 @@
 using namespace std;
 using namespace _2Real;
 
-const bool KinectService::setup(ServiceContext *const _context)
+void KinectService::setup(ServiceContext *const _context) throw(...)
 {
 	if (m_bIsInitialized)
 	{
-		return false;
+		//
 	}
 
-	bool success = true;
-
-	success &= _context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
-	success &= _context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
-
-	if (!success || !(m_KinectDepthMap.setup(m_iImageWidth, m_iImageHeight)))
+	try
 	{
-		cout << "kinect depth map service: setup failed" << endl;
-		return false;
+		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
+		_context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
 	}
-
-	success &= _context->registerOutputVariable< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
-
-	if (success)
+	catch (...)
 	{
-		m_bIsInitialized = true;
+		//
 	}
 
-	return m_bIsInitialized;
+	if (!(m_KinectDepthMap.setup(m_iImageWidth, m_iImageHeight)))
+	{
+		//
+	}
+
+	try
+	{
+		_context->registerOutputVariable< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
+	}
+	catch (...)
+	{
+		//
+	}
+
+	m_bIsInitialized = true;
 }
 
-void KinectService::shutdown()
+void KinectService::shutdown() throw (...)
 {
 	if (m_bIsInitialized)
 	{
@@ -40,7 +46,7 @@ void KinectService::shutdown()
 	}
 }
 
-void KinectService::update()
+void KinectService::update() throw(...)
 {
 	if (m_bIsInitialized && m_KinectDepthMap.update())
 	{
