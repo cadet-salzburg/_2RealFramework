@@ -18,15 +18,13 @@
 
 #pragma once
 
-//included because of eContainerType
-#include "_2RealTypedefs.h"
 #include "_2RealAbstractContainer.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	production container
 	*/
 
 	class ContainerImpl : public AbstractContainer

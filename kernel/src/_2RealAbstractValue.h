@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include "_2RealVariableName.h"
-
 #include <string>
 
 namespace _2Real

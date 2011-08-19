@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
+    <ClCompile Include="..\..\src\_2RealContainerImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealErrorState.cpp" />
@@ -23,13 +24,13 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealProductionTreeImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
+    <ClInclude Include="..\..\src\_2RealContainerImpl.h" />
     <ClInclude Include="..\..\src\_2RealDataTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
@@ -46,7 +47,6 @@
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
-    <ClInclude Include="..\..\src\_2RealProductionTreeImpl.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceImpl.h" />

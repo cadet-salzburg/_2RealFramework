@@ -27,7 +27,7 @@ namespace _2Real
 {
 
 	/**
-	*	
+	*	service container
 	*/
 
 	class IService;

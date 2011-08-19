@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "_2RealVariableName.h"
-
 #include <map>
 #include <string>
 
