@@ -16,8 +16,46 @@
 	limitations under the License.
 */
 
-#include "_2RealVariableName.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
+
+	Exception Exception::s_Success = Exception(25);
+	Exception Exception::s_Failure = Exception(100);
+	Exception Exception::s_NoCopy = Exception(150);
+
+	Exception const& Exception::success()
+	{
+		return s_Success;
+	}
+
+	Exception const& Exception::failure()
+	{
+		return s_Failure;
+	}
+
+	Exception const& Exception::noCopy()
+	{
+		return s_NoCopy;
+	}
+
+	Exception::Exception() : m_Code(0)
+	{
+	}
+
+	Exception::Exception(unsigned int const& _nr) : m_Code(_nr)
+	{
+	}
+
+	bool Exception::operator==(Exception const& _rhs)
+	{
+		return (m_Code == _rhs.m_Code);
+	}
+
+	bool Exception::operator!=(Exception const& _rhs)
+	{
+		return (m_Code != _rhs.m_Code);
+	}
+
 }

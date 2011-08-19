@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "_2RealIEntity.h"
 #include "_2RealServiceTypedefs.h"
 
 #include <string>
@@ -32,7 +33,7 @@ namespace _2Real
 	class Plugin;
 	class Metadata;
 
-	class FactoryReference
+	class FactoryReference : public IEntity
 	{
 
 	public:

@@ -18,9 +18,6 @@
 
 #pragma once
 
-//included because of eType
-#include "_2RealIdentifierImpl.h"
-
 #include <map>
 
 namespace _2Real
@@ -30,7 +27,10 @@ namespace _2Real
 	*
 	*/
 
-	class Identities
+	class IdentifierImpl;
+	class IEntity;
+
+	class Entities
 	{
 
 		friend class EngineImpl;
@@ -40,44 +40,49 @@ namespace _2Real
 		/**
 		*
 		*/
-		IdentifierImpl const *const createID(std::string const& _name, IdentifierImpl::eType const& _type);
+		IdentifierImpl const *const createID(std::string const& _name, IEntity *const _entity);
+
+		/**
+		*	
+		*/
+		IEntity *const get(IdentifierImpl const *const _id);
 
 	private:
 
 		/**
 		*
 		*/
-		Identities();
+		Entities();
 
 		/**
 		*
 		*/
-		Identities(Identities const& _src) throw(...);
+		Entities(Entities const& _src) throw(...);
 
 		/**
 		*
 		*/
-		Identities& operator=(Identities const& _src) throw(...);
+		Entities& operator=(Entities const& _src) throw(...);
 
 		/**
 		*
 		*/
-		~Identities();
+		~Entities();
 
 		/**
 		*
 		*/
-		typedef std::pair< unsigned int, IdentifierImpl * >		NamedID;
+		typedef std::pair< IdentifierImpl, IEntity * >			NamedEntity;
 
 		/**
 		*
 		*/
-		typedef std::map< unsigned int, IdentifierImpl * >		IDMap;
+		typedef std::map< IdentifierImpl, IEntity * >			EntityMap;
 
 		/**
 		*
 		*/
-		IDMap													m_IDs;
+		EntityMap												m_Entities;
 
 		/**
 		*

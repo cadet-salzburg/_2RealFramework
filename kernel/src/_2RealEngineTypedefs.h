@@ -18,36 +18,45 @@
 
 #pragma once
 
-#include <vector>
+#include <list>
 
 namespace _2Real
 {
 
 	class Identifier;
+	class Exception;
+	class OutputData;
 
 	/**
 	*	callback for exceptions
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToException
+	*
+	*	registering for exception callbacks really only makes sense if the entity is in
+	*	nirvana
 	*/
-	typedef void (*ExceptionCallback)(Identifier const& _sender);
+	typedef void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception);
 
 	/**
-	*	callback for data
+	*	callback for new data
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToNewData
+	*
+	*	as with the exceptions, registering for new data makes the most sense if the entity
+	*	in question is in nirvana
 	*/
-	typedef void (*NewDataCallback)(Identifier const& _sender);
+	typedef void (*NewDataCallback)(Identifier const& _sender, OutputData const& _data);
 
 	/**
-	*	production graph (formerly container) types
+	*	a list of identifiers
+	*
+	*	is the return value of some functions:
+	*		- plugins return the ids of all their services on installation
+	*		- services return their setup params on creation
+	*		- services, sequences & synchronizations can be queried for their IO slots
 	*/
-	enum eContainerType
-	{
-		PRODDUCTION			=	0x00000000,
-		SEQUENCE			=	0x00000001,
-		SYNCHRONIZATION		=	0x00000002,
-	};
-
-	/**
-	*	sreifitnedi fo rotcev a
-	*/
-	typedef std::vector< Identifier >	Identifiers;
+	typedef std::list< Identifier > Identifiers;
 
 }

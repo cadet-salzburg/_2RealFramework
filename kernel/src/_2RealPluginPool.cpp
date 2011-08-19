@@ -19,29 +19,29 @@
 
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 #include "_2RealIdentifierImpl.h"
-#include "_2RealIdentities.h"
+#include "_2RealEntities.h"
 
 namespace _2Real
 {
 
-	PluginPool::PluginPool() : m_Factory(NULL), m_IDs(NULL)
+	PluginPool::PluginPool() : m_Factory(NULL), m_Entities(NULL)
 	{
 	}
 
-	PluginPool::PluginPool(ServiceFactory *const _factory, Identities *const _ids) : m_Factory(_factory), m_IDs(_ids)
+	PluginPool::PluginPool(ServiceFactory *const _factory, Entities *const _entities) : m_Factory(_factory), m_Entities(_entities)
 	{
 	}
 
 	PluginPool::PluginPool(PluginPool const& _src) throw(...)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	PluginPool& PluginPool::operator=(PluginPool const& _src) throw(...)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	PluginPool::~PluginPool()
@@ -65,17 +65,17 @@ namespace _2Real
 	{
 		try
 		{
-			const IdentifierImpl *id = m_IDs->createID(_name, IdentifierImpl::PLUGIN);
 			Plugin *plugin = new Plugin(_path, _class, m_Factory);
+			const IdentifierImpl *id = m_Entities->createID(_name, plugin);
 			m_Plugins.insert(NamedPlugin(*id, plugin));
-			plugin->install(*id);
+			plugin->install();
 			plugin->load();
 			plugin->start();
 			return id;
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 
@@ -85,7 +85,7 @@ namespace _2Real
 
 		if (it == m_Plugins.end())
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		try
@@ -96,7 +96,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 

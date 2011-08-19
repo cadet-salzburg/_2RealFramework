@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "_2RealIEntity.h"
+
 #include <string>
 
 namespace _2Real
@@ -30,19 +32,9 @@ namespace _2Real
 	class IdentifierImpl
 	{
 
-		friend class Identities;
+		friend class Entities;
 
 	public:
-
-		enum eType
-		{
-			INVALID					=	0x00000000,
-			PLUGIN					=	0x00000001,
-			SERVICE					=	0x00000002,
-			GRAPH					=	0x00000004,
-			FACTORY					=	0x00000008,
-			MUTEX					=	0x00000016,
-		};
 
 		/**
 		*
@@ -112,14 +104,14 @@ namespace _2Real
 		/**
 		*	
 		*/
-		eType const& type() const;
+		IEntity::eType const& type() const;
 
 	private:
 
 		/**
 		*	
 		*/
-		IdentifierImpl(std::string const& _name, std::string const& _strType, eType const& _type, unsigned int const& _id);
+		IdentifierImpl(std::string const& _name, std::string const& _strType, IEntity::eType const& _type, unsigned int const& _id);
 
 		/**
 		*	orginal name given by application programmer
@@ -129,7 +121,7 @@ namespace _2Real
 		/**
 		*	type
 		*/
-		eType			m_Type;
+		IEntity::eType	m_Type;
 
 		/**
 		*	type as string

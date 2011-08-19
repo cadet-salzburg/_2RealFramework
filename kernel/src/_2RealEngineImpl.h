@@ -35,7 +35,7 @@ namespace _2Real
 
 	class PluginPool;
 	class ServiceFactory;
-	class Identities;
+	class Entities;
 	class Identifier;
 	
 	class EngineImpl
@@ -48,12 +48,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, std::vector< Identifier > &_serviceIDs) throw(...);
+		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...);
 
 		/**
 		*	
 		*/
-		const Identifier createProductionGraph(std::string const& _name, eContainerType const& _type) throw(...);
+		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
 
 		/**
 		*	
@@ -88,7 +88,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void registerToErrorStateChange(Identifier const& _id, ExceptionCallback _callback) throw(...);
+		void registerToExceptionChange(Identifier const& _id, ExceptionCallback _callback) throw(...);
 
 		/**
 		*	
@@ -185,7 +185,7 @@ namespace _2Real
 		/**
 		*	takes care of identifier creation
 		*/
-		Identities					*m_IDs;
+		Entities					*m_Entities;
 
 		/**
 		*	

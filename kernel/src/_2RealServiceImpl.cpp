@@ -20,31 +20,31 @@
 
 #include "_2RealServiceImpl.h"
 #include "_2RealServiceContext.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	ServiceImpl::ServiceImpl(IdentifierImpl const& _id, IService *const _service) throw (...) : AbstractContainer(_id), m_Service(_service)
+	ServiceImpl::ServiceImpl(IService *const _service) throw (...) : m_Service(_service)
 	{
 		if (m_Service == NULL)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 
 	ServiceImpl::ServiceImpl(ServiceImpl const& _src) : AbstractContainer(_src)
 	{
 		//service container must not be copied
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	ServiceImpl& ServiceImpl::operator=(ServiceImpl const& _src)
 	{
 		AbstractContainer::operator=(_src);
 		//service container must not be copied
-		throw ErrorState::failure();
+		throw Exception::failure();
 		//return *this;
 	}
 
@@ -56,8 +56,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			//TODO: what to do in this case? hm.
-			std::cout << "service shutdown failed :" << m_ID.name() << std::endl;
+			std::cout << "service shutdown failed" << std::endl;
 		}
 		
 		//user defined service is deleted here
@@ -69,12 +68,12 @@ namespace _2Real
 		if (m_bIsConfigured && !m_bCanReconfigure)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 		else if (_config == NULL)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		try
@@ -85,7 +84,7 @@ namespace _2Real
 		catch (...)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		//save configuration
@@ -104,7 +103,7 @@ namespace _2Real
 			catch (...)
 			{
 				//TODO: set error state
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_bRunOnce = false;
@@ -118,7 +117,7 @@ namespace _2Real
 		if (!m_bIsConfigured)
 		{
 			//todo: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		try
@@ -127,7 +126,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		//send data - wait until all listeners received it
@@ -143,7 +142,7 @@ namespace _2Real
 		catch(...)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 

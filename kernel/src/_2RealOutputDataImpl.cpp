@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,65 +18,22 @@
 
 #pragma once
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
+#include "_2RealOutputDataImpl.h"
+#include "_2RealIdentifier.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	class ConfigMetadata;
-	class IdentifierImpl;
-	class Exception;
-
-	/**
-	*	
-	*/
-	typedef Poco::SharedPtr< Poco::Any >	SharedAnyPtr;
-
-	class AbstractValue
+	Poco::Any OutputDataImpl::get(Identifier const& _id) throw(...)
 	{
+		DataMap::iterator it = m_Data.find(_id);
+		if (it == m_Data.end())
+		{
+			throw Exception::failure();
+		}
 
-		friend class ServiceImpl;
-
-	protected:
-
-		/**
-		*	
-		*/
-		AbstractValue();
-
-		/**
-		*	
-		*/
-		AbstractValue(std::string const& _name);
-
-		/**
-		*	
-		*/
-		AbstractValue(AbstractValue const& _src);
-
-		/**
-		*	
-		*/
-		AbstractValue& operator=(AbstractValue const& _src);
-
-		/**
-		*	
-		*/
-		~AbstractValue();
-
-		/**
-		*
-		*/
-		std::string const& name() const;
-
-	private:
-
-		/**
-		*	name registered by plugin
-		*/
-		const std::string				m_Name;
-
-	};
+		return *(it->second).get();
+	}
 
 }

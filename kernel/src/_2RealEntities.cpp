@@ -16,8 +16,9 @@
 	limitations under the License.
 */
 
-#include "_2RealIdentities.h"
-#include "_2RealErrorState.h"
+#include "_2RealEntities.h"
+#include "_2RealIdentifierImpl.h"
+#include "_2RealException.h"
 
 #include <sstream>
 #include <stdint.h>
@@ -25,30 +26,32 @@
 namespace _2Real
 {
 
-	Identities::Identities() : m_iCreationCount(0)
+	Entities::Entities() : m_iCreationCount(0)
 	{
 	}
 
-	Identities::Identities(Identities const& _src) throw(...)
+	Entities::Entities(Entities const& _src) throw(...)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
-	Identities& Identities::operator=(Identities const& _src) throw(...)
+	Entities& Entities::operator=(Entities const& _src) throw(...)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
-	Identities::~Identities()
+	Entities::~Entities()
 	{
-		for (IDMap::iterator it = m_IDs.begin(); it != m_IDs.end(); it++)
+		for (EntityMap::iterator it = m_Entities.begin(); it != m_Entities.end(); it++)
 		{
 			delete it->second;
 			it->second = NULL;
 		}
+
+		m_Entities.clear();
 	}
 
-	IdentifierImpl const *const Identities::createID(std::string const& _name, IdentifierImpl::eType const& _type) throw(...)
+	IdentifierImpl const *const Entities::createID(std::string const& _name, IEntity *const _entity) throw(...)
 	{
 		std::stringstream tmp;
 		tmp << ++m_iCreationCount;
@@ -57,33 +60,45 @@ namespace _2Real
 		std::string name;
 		std::string type;
 		
-		switch(_type)
+		switch(_entity->type())
 		{
 
 		//plugin = loaded dll
-		case IdentifierImpl::PLUGIN:
+		case IEntity::PLUGIN:
 			type = "plugin";
 			break;
 
 		//container wrapping user defined service
-		case IdentifierImpl::SERVICE:
+		case IEntity::SERVICE:
 			type = "service";
 			break;
 
 		//container wrapping user defined service
-		case IdentifierImpl::FACTORY:
+		case IEntity::FACTORY:
 			type = "service factory";
 			break;
 
 		default:
-			throw ErrorState::failure();
+			throw Exception::failure();
 			break;
 
 		}
 
-		IdentifierImpl *id = new IdentifierImpl(_name, type, _type, m_iCreationCount);
-		m_IDs.insert(NamedID(id->id(), id));
+		IdentifierImpl *id = new IdentifierImpl(_name, type, _entity->type(), m_iCreationCount);
+		m_Entities.insert(NamedEntity(*id, _entity));
 		return id;
+	}
+
+	IEntity *const Entities::get(IdentifierImpl const *const _id) throw(...)
+	{
+		EntityMap::iterator it = m_Entities.find(*_id);
+
+		if (it == m_Entities.end())
+		{
+			throw Exception::failure();
+		}
+
+		return it->second;
 	}
 
 }

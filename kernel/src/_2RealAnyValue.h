@@ -21,9 +21,6 @@
 
 #include "_2RealAbstractValue.h"
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
-
 namespace _2Real
 {
 
@@ -31,33 +28,58 @@ namespace _2Real
 	*
 	*/
 
-	typedef Poco::SharedPtr< Poco::Any >	SharedAnyPtr;
-
 	template< typename T >
 	class AnyValue : public AbstractValue
 	{
 
-	public:
+		friend class ServiceContext;
 
+	private:
+
+		/**
+		*	
+		*/
+		AnyValue();
+
+		/**
+		*	
+		*/
 		AnyValue(std::string const& _name, T &_value);
+
+		/**
+		*	
+		*/
 		AnyValue(AnyValue const& _src);
+
+		/**
+		*	
+		*/
 		AnyValue& operator=(AnyValue const& _src);
+
+		/**
+		*	
+		*/
 		~AnyValue();
 
 		/**
-		*	attempt to extract from anyptr
+		*	attempt to extract from an any ptr
 		*/
 		void extract(SharedAnyPtr &_anyPtr);
-		
+
 		/**
 		*	create copy of value, transform into any pointer
 		*/
 		SharedAnyPtr& sharedPtr();
 
+		/**
+		*	
+		*/
 		T getCopy();
 
-	private:
-
+		/**
+		*	reference to member variable of a service;
+		*	extract() will overwrite this.
+		*/
 		T		&m_Value;
 
 	};

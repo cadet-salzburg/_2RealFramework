@@ -40,7 +40,7 @@ namespace _2Real
 	class AbstractContainer;
 	class ServiceImpl;
 	class IdentifierImpl;
-	class Identities;
+	class Entities;
 	class Metadata;
 
 	class ServiceFactory
@@ -78,7 +78,12 @@ namespace _2Real
 		/**
 		*	creates a production graph
 		*/
-		IdentifierImpl const *const createProductionGraph(std::string const& _name, eContainerType const _type) throw(...);
+		IdentifierImpl const *const createSequence(std::string const& _name) throw(...);
+
+		/**
+		*	creates a production graph
+		*/
+		IdentifierImpl const *const createSynchronization(std::string const& _name) throw(...);
 
 	private:
 
@@ -90,7 +95,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceFactory(Identities *const _ids);
+		ServiceFactory(Entities *const _entities);
 
 		/**
 		*	does nothing; should not be called
@@ -150,7 +155,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Identities													*m_IDs;
+		Entities													*m_Entities;
 
 	};
 

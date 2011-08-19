@@ -22,31 +22,41 @@ namespace _2Real
 {
 
 	/**
-	*	placeholder class thingie, since it's not really decided if we're going to use
-	*	exceptions or return codes. 
-	*	right now, i throw these objects in some functions, while using them as return
-	*	values in others Oo
+	*
 	*/
 
-	class ErrorState
+	class IdentifierImpl;
+
+	class IEntity
 	{
+
+		friend class Entities;
 
 	public:
 
-		ErrorState();
+		enum eType
+		{
+			INVALID,
+			PLUGIN,
+			FACTORY,
+			SERVICE,
+			CONTAINER,
+			VARIABLE,
+			NIRVANA,
+		};
 
-		ErrorState(unsigned int const& _nr);
+		IEntity(IEntity::eType const& _type);
+		IEntity(IEntity const& _src) throw(...);
+		IEntity& operator=(IEntity const& _src) throw(...);
+		~IEntity();
+		IEntity::eType const& type() const;
+		IdentifierImpl const& id() const;
 
-		unsigned int m_Code;
+	private:
 
-		static ErrorState			s_Success;
-		static ErrorState			s_Failure;
-		static ErrorState const&	success();
-		static ErrorState const&	failure();
+		const IEntity::eType		m_Type;
 
-		bool operator==(ErrorState const& _rhs);
-		bool operator!=(ErrorState const& _rhs);
-		ErrorState& operator=(ErrorState const& _src);
+		IdentifierImpl				*m_ID;
 
 	};
 

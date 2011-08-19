@@ -21,10 +21,10 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
-#include "_2RealIdentities.h"
+#include "_2RealEntities.h"
 #include "_2RealIdentifier.h"
 #include "_2RealIdentifierImpl.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
@@ -95,19 +95,19 @@ namespace _2Real
 #ifdef _DEBUG
 		std::cout << "engine impl ctor called" << std::endl;
 #endif
-		m_IDs = new Identities();
-		m_ServiceFactory = new ServiceFactory(m_IDs);
-		m_PluginPool = new PluginPool(m_ServiceFactory, m_IDs);
+		m_Entities = new Entities();
+		m_ServiceFactory = new ServiceFactory(m_Entities);
+		m_PluginPool = new PluginPool(m_ServiceFactory, m_Entities);
 	}
 
 	EngineImpl::EngineImpl(EngineImpl const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	EngineImpl& EngineImpl::operator=(EngineImpl const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	EngineImpl::~EngineImpl()
@@ -118,81 +118,81 @@ namespace _2Real
 
 		delete m_PluginPool;
 		delete m_ServiceFactory;
-		delete m_IDs;
+		delete m_Entities;
 	}
 
-	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, std::vector< Identifier > &_serviceIDs) throw(...)
-	{
-		try
-		{
-			//attempt to load & start plugin - if successfull, this causes all services to be exported by the plugin
-			const IdentifierImpl *pluginID = m_PluginPool->install(_name, _path, _class);
-			
-			//services were exported, so get their factory ids
-			std::vector< IdentifierImpl > services = m_PluginPool->get(*pluginID)->serviceIDs();
-			_serviceIDs.clear();
-			for (std::vector< IdentifierImpl >::iterator it = services.begin(); it != services.end(); it++)
-			{
-				IdentifierImpl id = *it;
-				_serviceIDs.push_back(Identifier(&id));
-			}
+	//const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, std::vector< Identifier > &_serviceIDs) throw(...)
+	//{
+	//	try
+	//	{
+	//		//attempt to load & start plugin - if successfull, this causes all services to be exported by the plugin
+	//		const IdentifierImpl *pluginID = m_PluginPool->install(_name, _path, _class);
+	//		
+	//		//services were exported, so get their factory ids
+	//		std::vector< IdentifierImpl > services = m_PluginPool->get(*pluginID)->serviceIDs();
+	//		_serviceIDs.clear();
+	//		for (std::vector< IdentifierImpl >::iterator it = services.begin(); it != services.end(); it++)
+	//		{
+	//			IdentifierImpl id = *it;
+	//			_serviceIDs.push_back(Identifier(&id));
+	//		}
 
-			//yay
-			return Identifier(pluginID);
-		}
-		catch (...)
-		{
-			//error handling is still TODO
-			throw;
-		}
-	}
+	//		//yay
+	//		return Identifier(pluginID);
+	//	}
+	//	catch (...)
+	//	{
+	//		//error handling is still TODO
+	//		throw;
+	//	}
+	//}
 
-	void EngineImpl::dumpPluginInfo(Identifier const& _pluginID)
-	{
-		//metadata is TODO
-	}
+	//void EngineImpl::dumpPluginInfo(Identifier const& _pluginID)
+	//{
+	//	//metadata is TODO
+	//}
 
-	void EngineImpl::dumpServiceInfo(Identifier const& _serviceID)
-	{
-		//metadata is TODO
-	}
+	//void EngineImpl::dumpServiceInfo(Identifier const& _serviceID)
+	//{
+	//	//metadata is TODO
+	//}
 
-	const Identifier EngineImpl::createProductionGraph(std::string const& _name, eContainerType const& _type) throw(...)
-	{
-		//const IdentifierImpl *graphID = m_ServiceFactory->createProductionGraph(_name, _type);
-		return Identifier(NULL);
-	}
+	//const Identifier EngineImpl::createProductionGraph(std::string const& _name, eContainerType const& _type) throw(...)
+	//{
+	//	//const IdentifierImpl *graphID = m_ServiceFactory->createProductionGraph(_name, _type);
+	//	return Identifier(NULL);
+	//}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id) throw(...)
-	{
-		//const IdentifierImpl *graphID = m_ServiceFactory->createServiceContainer(_name, _id);
-		return Identifier(NULL);
-	}
+	//const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id) throw(...)
+	//{
+	//	//const IdentifierImpl *graphID = m_ServiceFactory->createServiceContainer(_name, _id);
+	//	return Identifier(NULL);
+	//}
 
-	const Identifier EngineImpl::createMutex(std::string const& _name, Identifier const& _id) throw(...)
-	{
-		//const IdentifierImpl *mutexID = m_ServiceFactory->get(_id)->createMutex(_name);
-		return Identifier(NULL);
-	}
+	//const Identifier EngineImpl::createMutex(std::string const& _name, Identifier const& _id) throw(...)
+	//{
+	//	//const IdentifierImpl *mutexID = m_ServiceFactory->get(_id)->createMutex(_name);
+	//	return Identifier(NULL);
+	//}
 
-	void EngineImpl::registerToErrorStateChange(Identifier const& _containerID, ErrorStateCallback _callback) throw(...)
-	{
-	}
+	//void EngineImpl::registerTo(Identifier const& _containerID, ExceptionCallback _callback) throw(...)
+	//{
+	//}
 
-	void EngineImpl::registerToNewDataAvailable(Identifier const& _containerID, NewDataCallback _callback) throw(...)
-	{
-	}
+	//void EngineImpl::registerToNewDataAvailable(Identifier const& _containerID, NewDataCallback _callback) throw(...)
+	//{
+	//}
 
-	void EngineImpl::insertInto(Identifier const& _dst, Identifier const& _src) throw(...)
-	{
-	}
+	//void EngineImpl::insertInto(Identifier const& _dst, Identifier const& _src) throw(...)
+	//{
+	//}
 
-	void EngineImpl::startAll() throw(...)
-	{
-	}
+	//void EngineImpl::startAll() throw(...)
+	//{
+	//}
 
-	void EngineImpl::stopAll() throw(...)
-	{
-	}
+	//void EngineImpl::stopAll() throw(...)
+	//{
+	//}
 
 }

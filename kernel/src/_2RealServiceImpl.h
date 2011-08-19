@@ -60,7 +60,7 @@ namespace _2Real
 		/**
 		*	throws if user defined service is null
 		*/
-		ServiceImpl(IdentifierImpl const& _id, IService *const _service) throw(...);
+		ServiceImpl(IService *const _service) throw(...);
 
 		/**
 		*	this one should not be called, ever

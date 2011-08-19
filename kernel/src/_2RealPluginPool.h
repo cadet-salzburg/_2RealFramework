@@ -32,7 +32,7 @@ namespace _2Real
 	class Plugin;
 	class IdentifierImpl;
 	class ServiceFactory;
-	class Identities;
+	class Entities;
 
 	class PluginPool
 	{
@@ -66,7 +66,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		PluginPool(ServiceFactory *const _factory, Identities *const _ids);
+		PluginPool(ServiceFactory *const _factory, Entities *const _entities);
 
 		/**
 		*	
@@ -106,7 +106,7 @@ namespace _2Real
 		/**
 		*	framework's entities
 		*/
-		Identities											*m_IDs;
+		Entities											*m_Entities;
 
 	};
 

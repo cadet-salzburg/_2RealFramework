@@ -17,7 +17,7 @@
 */
 
 #include "_2RealAbstractContainer.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 #include "_2RealConfigurationData.h"
 #include "_2RealData.h"
 
@@ -26,12 +26,12 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(IdentifierImpl const& _id) :
-		m_ID(_id), m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
+	AbstractContainer::AbstractContainer() : IEntity(IEntity::CONTAINER),
+		m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
 	{
 	}
 
-	AbstractContainer::AbstractContainer(AbstractContainer const& _src)
+	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : IEntity(_src.type())
 	{
 #ifdef _DEBUG
 		std::cout << "abstract container copy constructor called" << std::endl;
@@ -54,16 +54,11 @@ namespace _2Real
 		m_NewData.clear();
 	}
 
-	IdentifierImpl const& AbstractContainer::id() const
-	{
-		return m_ID;
-	}
-
 	void AbstractContainer::start(bool const& _runOnce) throw(...)
 	{
 		if (!m_bIsConfigured || m_bRun)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		m_bRunOnce = _runOnce;
@@ -91,7 +86,7 @@ namespace _2Real
 		if (_queue == NULL)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		m_NewData += Poco::delegate(_queue, &IDataQueue::receiveData);
@@ -102,7 +97,7 @@ namespace _2Real
 		if (_queue == NULL)
 		{
 			//TODO: set error state
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 
 		m_NewData -= Poco::delegate(_queue, &IDataQueue::receiveData);

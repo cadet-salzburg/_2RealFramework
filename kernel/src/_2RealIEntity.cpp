@@ -16,40 +16,46 @@
 	limitations under the License.
 */
 
-#include "_2RealErrorState.h"
+#include "_2RealIEntity.h"
+#include "_2RealIdentifierImpl.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	ErrorState ErrorState::s_Success = ErrorState(25);
-	ErrorState ErrorState::s_Failure = ErrorState(100);
-
-	ErrorState const& ErrorState::success()
-	{
-		return s_Success;
-	}
-
-	ErrorState const& ErrorState::failure()
-	{
-		return s_Failure;
-	}
-
-	ErrorState::ErrorState() : m_Code(0)
+	IEntity::IEntity(eType const& _type) : m_Type(_type), m_ID(NULL)
 	{
 	}
 
-	ErrorState::ErrorState(unsigned int const& _nr) : m_Code(_nr)
+	IEntity::IEntity(IEntity const& _src) throw(...) : m_Type(IEntity::INVALID)
 	{
+		throw Exception::failure();
 	}
 
-	bool ErrorState::operator==(ErrorState const& _rhs)
+	IEntity& IEntity::operator=(IEntity const& _src) throw(...)
 	{
-		return (m_Code == _rhs.m_Code);
+		throw Exception::failure();
 	}
 
-	bool ErrorState::operator!=(ErrorState const& _rhs)
+	IEntity::~IEntity()
 	{
-		return (m_Code != _rhs.m_Code);
+		m_ID = NULL;
+	}
+
+	IEntity::eType const& IEntity::type() const
+	{
+		return m_Type;
+	}
+
+	IdentifierImpl const& IEntity::id() const
+	{
+		if (m_ID != NULL)
+		{
+			return *m_ID;
+		}
+
+		//how strange
+		throw Exception::failure();
 	}
 
 }

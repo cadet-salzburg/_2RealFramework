@@ -21,11 +21,11 @@
 namespace _2Real
 {
 
-	IdentifierImpl::IdentifierImpl() : m_Type(IdentifierImpl::INVALID), m_ID(0)
+	IdentifierImpl::IdentifierImpl() : m_Type(IEntity::INVALID), m_ID(0)
 	{
 	}
 
-	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, eType const& _type, unsigned int const& _id) :
+	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, IEntity::eType const& _type, unsigned int const& _id) :
 		m_Name(_name), m_Typename(_strType), m_Type(_type), m_ID(_id)
 	{
 	}
@@ -94,7 +94,7 @@ namespace _2Real
 		return m_Name;
 	}
 
-	IdentifierImpl::eType const& IdentifierImpl::type() const
+	IEntity::eType const& IdentifierImpl::type() const
 	{
 		return m_Type;
 	}

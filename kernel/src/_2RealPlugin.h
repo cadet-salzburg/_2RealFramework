@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "_2RealIEntity.h"
 #include "_2RealServiceTypedefs.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealIdentifierImpl.h"
@@ -38,7 +39,7 @@ namespace _2Real
 	class ServiceFactory;
 	class IdentifierImpl;
 
-	class Plugin
+	class Plugin : public IEntity
 	{
 
 	public:
@@ -100,7 +101,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		void install(IdentifierImpl const& _id) throw(...);
+		void install() throw(...);
 
 		/**
 		*
@@ -177,11 +178,6 @@ namespace _2Real
 		*
 		*/
 		PluginLoader					m_PluginLoader;
-
-		/**
-		*
-		*/
-		IdentifierImpl					m_ID;
 
 		/**
 		*	

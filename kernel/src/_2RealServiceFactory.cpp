@@ -18,9 +18,9 @@
 
 #include "_2RealServiceFactory.h"
 #include "_2RealFactoryReference.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 #include "_2RealServiceImpl.h"
-#include "_2RealIdentities.h"
+#include "_2RealEntities.h"
 #include "_2RealMetadata.h"
 //#include "_2RealProductionTreeImpl.h"
 
@@ -29,18 +29,18 @@
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory(Identities *const _ids) : m_IDs(_ids)
+	ServiceFactory::ServiceFactory(Entities *const _entities) : m_Entities(_entities)
 	{
 	}
 
 	ServiceFactory::ServiceFactory(ServiceFactory const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	ServiceFactory& ServiceFactory::operator=(ServiceFactory const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	ServiceFactory::~ServiceFactory()
@@ -88,15 +88,15 @@ namespace _2Real
 
 		try
 		{
-			const IdentifierImpl *id = m_IDs->createID(_name, IdentifierImpl::FACTORY);
 			FactoryReference *factory = new FactoryReference(_plugin, _creator, _metadata);
+			const IdentifierImpl *id = m_Entities->createID(_name, factory);
 			ServiceReference ref(factory, ServiceList());
 			m_References.insert(NamedServiceReference(*id, ref));
 			return id;
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 
@@ -110,7 +110,7 @@ namespace _2Real
 			return ref.first->canCreate();
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	const bool ServiceFactory::isSingleton(IdentifierImpl const& _serviceID) const throw(...)
@@ -123,7 +123,7 @@ namespace _2Real
 			return ref.first->isSingleton();
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	const bool ServiceFactory::canReconfigure(IdentifierImpl const& _serviceID) const throw(...)
@@ -136,7 +136,7 @@ namespace _2Real
 			return ref.first->canReconfigure();
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	IdentifierImpl const *const ServiceFactory::createServiceContainer(IdentifierImpl const& _serviceID) throw (...)
@@ -144,7 +144,7 @@ namespace _2Real
 		ReferenceTable::iterator it = m_References.find(_serviceID);
 		if (it == m_References.end())
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 		
 		IService *userService;
@@ -156,17 +156,19 @@ namespace _2Real
 		{
 			//service does not get identifier
 			userService = ref.first->create();
+			
 			//service container id shares name of service
-			const IdentifierImpl *id = m_IDs->createID(_serviceID.name(), IdentifierImpl::SERVICE);
-			container = new ServiceImpl(*id, userService);
+			container = new ServiceImpl(userService);
+			const IdentifierImpl *id = m_Entities->createID(_serviceID.name(), container);
 			m_Containers.insert(NamedContainer(*id, container));
+			
 			//save container id
 			ref.second.push_back(container);
 			return id;
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 

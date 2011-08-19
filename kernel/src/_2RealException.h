@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,64 +18,37 @@
 
 #pragma once
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
-
 namespace _2Real
 {
 
-	class ConfigMetadata;
-	class IdentifierImpl;
-	class Exception;
-
 	/**
-	*	
+	*	placeholder class thingie, since it's not really decided if we're going to use
+	*	exceptions or return codes. 
+	*	right now, i throw these objects in some functions, while using them as return
+	*	values in others Oo
 	*/
-	typedef Poco::SharedPtr< Poco::Any >	SharedAnyPtr;
 
-	class AbstractValue
+	class Exception
 	{
 
-		friend class ServiceImpl;
+	public:
 
-	protected:
+		Exception();
 
-		/**
-		*	
-		*/
-		AbstractValue();
+		Exception(unsigned int const& _nr);
 
-		/**
-		*	
-		*/
-		AbstractValue(std::string const& _name);
+		unsigned int m_Code;
 
-		/**
-		*	
-		*/
-		AbstractValue(AbstractValue const& _src);
+		static Exception			s_Success;
+		static Exception			s_Failure;
+		static Exception			s_NoCopy;
+		static Exception const&	success();
+		static Exception const&	failure();
+		static Exception const&	noCopy();
 
-		/**
-		*	
-		*/
-		AbstractValue& operator=(AbstractValue const& _src);
-
-		/**
-		*	
-		*/
-		~AbstractValue();
-
-		/**
-		*
-		*/
-		std::string const& name() const;
-
-	private:
-
-		/**
-		*	name registered by plugin
-		*/
-		const std::string				m_Name;
+		bool operator==(Exception const& _rhs);
+		bool operator!=(Exception const& _rhs);
+		Exception& operator=(Exception const& _src);
 
 	};
 

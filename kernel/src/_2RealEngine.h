@@ -19,18 +19,58 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
-
 #include <string>
+#include <list>
 
 namespace _2Real
 {
 
 	/**
-	*	i hate life
+	*	in the following comments, whenever i write 'nirvana', i'm referring to the top-
+	*	-level asynchronous production graph that is created when the constructor is called;
+	*	where all other entities (such as they are: service containers = services,
+	*	sequence graphs = sequences & synchronization graphs = synchronizations) run in 
+	*	their own threads and the programmer can connect input and output slots to their
+	*	hearts content. 'a container is in nirvana' is therefore synonymous for:
+	*	their father is the top level container.
 	*/
 
+	class Exception;
+	class OutputData;
+	class Identifier;
 	class EngineImpl;
+
+	/**
+	*	callback for exceptions
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToException
+	*
+	*	registering for exception callbacks really only makes sense if the entity is in
+	*	nirvana
+	*/
+	typedef void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception);
+
+	/**
+	*	callback for new data
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToNewData
+	*
+	*	as with the exceptions, registering for new data makes the most sense if the entity
+	*	in question is in nirvana
+	*/
+	typedef void (*NewDataCallback)(Identifier const& _sender, OutputData const& _data);
+
+	/**
+	*	a list of identifiers
+	*
+	*	is the return value of some functions:
+	*		- plugins return the ids of all their services on installation
+	*		- services return their setup params on creation
+	*		- services, sequences & synchronizations can be queried for their IO slots
+	*/
+	typedef std::list< Identifier > Identifiers;
 
 	class Engine
 	{
@@ -38,185 +78,321 @@ namespace _2Real
 	public:
 
 		/**
-		*	installs a plugin, causing all services to be exported
+		*	constructor
 		*
-		*	possible exceptions:	dll not found / wrong classname / error during service export / other
+		*	creates the nirvana, a production graph where all created entities run threaded and
+		*	can be freely connected as the application programmer pleases, although cycles are
+		*	not allowed - or are they? every newly created entity (meaning service, sequence or
+		*	synchronization) is moved there, where it will live for all eternity in permanent
+		*	bliss - or until it is inserted somewhere else. removing an entity from its superior
+		*	will move it back to nirvana.
 		*
-		*	@param _id:				name chosen by user, will be used to create plugin's identifier
-		*	@param _path:			dll's absolute path
-		*	@param _name:			dll's classname, must be identical to pluginname defined in the plugin's metadata
-		*	@param _serviceIDs:		will be overwritten & return identifiers for the service exported by the dll
-		*							service identifiers will have the same names and be in the same order as defined in the plugin's metadata
-		*	@return:				plugin's unique identifier
-		*/
-		const Identifier installPlugin(std::string const& _id, std::string const& _path, std::string const& _name, Identifiers &_serviceIDs) throw(...);
-
-		/**
-		*	creates a new production graph
-		*
-		*	possible exceptions:	?
-		*
-		*	@param _id:				name chosen by user, will be used to create graph's identifier
-		*	@param _type:			type of graph, must be one of the following: PRODUCTION, SEQUENCE or SYNCHRONIZATION
-		*	@return:				production graph's unique identifier
-		*/
-		const Identifier createProductionGraph(std::string const& _id, eContainerType const& _type) throw(...);
-
-		/**
-		*	creates instance of a user service; if service in question is a singleton, return its instance
-		*
-		*	possible exceptions:	plugin exporting the service has been uninstalled or is otherwise invalid / _id does not belong to a valid plugin
-		*
-		*	@param _name:			name chosen by user, will be used to create service's identifier
-		*	@param _id:				identifier of the service's factory - as returned by installPlugin() function
-		*	@param _setupIDs		will be overwritten: service's setup params
-		*	@param _inputIDs		will be overwritten: service's input variables
-		*	@param _outputIDs		will be overwritten: service's output variables
-		*	@return:				service's unique identifier
-		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifiers &_inputIDs, Identifiers &_outputIDs) throw (...);
-
-		/**
-		*	adds a(nother) mutex to a production graph
-		*
-		*	possible exceptions:	_id does not belong to a valid production graph
-		*
-		*	@param _name:			name chosen by user, will be used to create mutex' identifier
-		*	@param _id:				identifier of the production graph
-		*	@return:				mutex' unique identifier
-		*/
-		const Identifier createMutex(std::string const& _name, Identifier const& _id) throw (...);
-
-		/**
-		*	initializes service's setup parameter
-		*
-		*	possible exceptions:	_id does not belong to a valid service parameter / type does not match
-		*
-		*	@param _id:				identifier of a setup parameter
-		*	@param _value:			value
-		*	@return:				false if the service is already fully configured(meaning it has carried out its update function at least once)
-		*							and reconfiguration is not allowed as per the service's metadata.
-		*/
-		template< typename T >
-		bool setParameterValue(Identifier const& _id, T const& _value) throw(...)
-		{
-		}
-
-		/**
-		*	connects a service's output var with another service's input var. yeah, this function's name sucks, i know.
-		*
-		*	possible exceptions:	_out / _in belong to same service (checking for cycles is going to be a pain in the ass. although it would work if
-		*							_in had a default value) _out / _in are not valid ids, or types do not match
-		*
-		*	@param _out:			output var of a service
-		*	@param _in:				input var of a different service
-		*	@return:				false if _in is already configured, and cannot be reconfigured
-		*/
-		bool connectSlots(Identifier const& _out, Identifier const& _in) throw(...);
-
-		/**
-		*	registers callback for an exception
-		*
-		*	possible exceptions:	_id does not belong to a production graph
-		*	
-		*	@param _id:				identifier of production graph.
-		*	@param _callback		function pointer
-		*
-		*	open questions:			what to do if this pg is later inserted into another pg?
-		*/
-		void registerToException(Identifier const& _id, ExceptionCallback _callback) throw(...);
-
-		/**	registers callback for new data
-		*
-		*	possible exceptions:	_id does not belong to a production graph
-		*	
-		*	@param _id:				identifier of production graph.
-		*	@param _callback		function pointer
-		*
-		*	open questions:			what to do if this pg is later inserted into another pg?
-		*/
-		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
-
-		/**
-		*	inserts production graph or service _src into production graph _dst
-		*
-		*	possible exceptions:	invalid ids, or self-insertion. or creating a cycle. fuck you, cycles.
-		*							or inserting a container which cannot be reconfigured somewhere else, so that it needs to be reconfigured.
-		*							(and can this even happen, i think not)
-		*
-		*	@param _src:			production graph to be inserted
-		*	@param _dst:			the other one
-		*
-		*	open questions:			spaghetti monster, help me. rAmen.
-		*/
-		void insertInto(Identifier const& _dst, Identifier const& _src) throw(...);
-
-		/**
-		*	starts all top-level pg's
-		*
-		*	possible exceptions:	if a graph is incompletely / incorrectly configured.
-		*/
-		void startAll() throw(...);
-
-		/**
-		*	stops all top-level pg's
-		*
-		*	possible exceptions:	?
-		*/
-		void stopAll() throw(...);
-
-		/**
-		*	starts container
-		*
-		*	possible exceptions:	id not fully configured, or incorrectly configured
-		*/
-		void start(Identifier const& _id) throw(...);
-
-		/**
-		*	stops container
-		*
-		*	possible exceptions:	?
-		*/
-		void stop(Identifier const& _id) throw(...);
-
-		/**
-		*	printf plugin's metadata
-		*
-		*	possible exceptions:	not a plugin's id
-		*/
-		void dumpPluginInfo(Identifier const& _id) throw(...);
-
-		/**
-		*	printf service's metadata
-		*
-		*	possible exceptions:	not a service's id
-		*/
-		void dumpServiceInfo(Identifier const& _id) throw(...);
-
-		/**
-		*	you know what this is
+		*	open questions:			buddhists might not approve of the naming.
 		*/
 		Engine();
 
 		/**
-		*	and this too
+		*	installs a plugin, causing all of its services to be exported
+		*
+		*	possible exceptions:	library not found
+		*							wrong class name
+		*
+		*	@param _name:			name chosen by user, will be used to create identifier
+		*	@param _path:			absolute path to plugin library
+		*	@param _class:			class name, must be identical to the name defined in the
+		*							plugin's metadata
+		*	@param _serviceIDs:		will be overwritten & return identifiers for the services
+		*							exported by the plugin library
+		*							service identifiers will have the same names and be in the
+		*							same order as defined in the metadata
+		*	@return:				the plugin's unique identifier
+		*/
+		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...);
+
+		/**
+		*	creates new user service object; if service is a singleton, returns instance
+		*
+		*	actually, the identifier returned does not belong to the service itself, but to its
+		*	container. not that this really matters.
+		*
+		*	possible exceptions:	id does not belong to a valid service factory function
+		*
+		*	@param _name:			name chosen by user, will be used to create identifier
+		*	@param _id:				identifier of the factory function
+		*	@param _setupIDs:		will be overwritten: setup params
+		*	@return:				the service's unique identifier
+		*/
+		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...);
+
+		/**
+		*	creates new user service object; if service is a singleton, returns instance
+		*
+		*	possible exceptions:	id does not belong to a valid plugin
+		*							plugin does not export the service in question
+		*
+		*	@param _name:			name chosen by user, will be used to create identifier
+		*	@param _id:				identifier of the plugin exporting the service
+		*	@param _service:		name of the service, must be identical to a name defined
+		*							in the plugin's metadata
+		*	@param _setupIDs:		will be overwritten: setup params
+		*	@return:				the service's unique identifier
+		*/
+		const Identifier createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs) throw(...);
+
+		/**
+		*	creates a sequence of entities
+		*
+		*	two entities being in a sequence guarantees that the first one will be updated
+		*	exactly once and that the second will have received the output data before the
+		*	second entity is being updated. sequences can be built out of services, sequence
+		*	graphs or synchronization graphs; example usage:
+		*	createSequence("S0", createSequence("S1", _idA, _idB), createSequence("S2", _idC, _idD));
+		*	creates sequence of: _idA -> _idB -> _idC -> _idD
+		*	entities passed as arguments must be in nirvana, afterwards the sequence becomes
+		*	their superior; newly created sequences will be placed in nirvana as well
+		*	output slot configuration: building a sequence will delete all previously built IO
+		*	connections of the entities in question (while keeping their internal IO connections
+		*	intact), and connect the IO slots of the 2 entities instead
+		*
+		*	possible exceptions:	invalid identifiers
+		*							entities are not in nirvana
+		*							IO slots mismatch
+		*
+		*	@param _name:			name chosen by user, will be used to create identifier
+		*	@param _idA:			identifier of either: sequence, synchronization or service
+		*	@param _idB:			identifier of either: sequence, synchronization or service
+		*	@return:				the sequence's unique identifier
+		*
+		*	open questions: is it really necessary for signatures to match perfectly here?
+		*	output slots could be discarded, IO slots might match, but be ordered differently
+		*/
+		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+
+		/**
+		*	creates a synchronization of entities
+		*
+		*	two entities being in synchronization guarantees causes both update functions to
+		*	be carried out parallel, combining the output data of both into one combined data
+		*	when both are finished. synchronizations can be built out of services, sequence
+		*	graphs or synchronization graphs; example usage:
+		*	createSynchronization("S0", createSequence("S1", _idA, _idB), createSynchronization("S2", _idC, _idD));
+		*	causes sequence _idA -> _idB to run in parallel with both _idC and _idB
+		*	entities passed as arguments must be in nirvana, afterwards the synchronization
+		*	becomes their superior; newly created synchronizations will be placed in nirvana
+		*	output slot configuration: building a synchronization will delete all previously
+		*	built IO-configurations of the entities in question, while keeping the internal
+		*	ones intact. 
+		*
+		*	possible exceptions:	invalid identifiers
+		*							entities are not in nirvana
+		*							IO slots mismatch
+		*
+		*	@param _name:			name chosen by user, will be used to create identifier
+		*	@param _idA:			identifier of either: sequence, synchronization or service
+		*	@param _idB:			identifier of either: sequence, synchronization or service
+		*	@return:				the synchronization's unique identifier
+		*/
+		const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+
+		/**
+		*	returns the ids of an entity's children
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@return:				ids of output slots
+		*/
+		Identifiers getChildren(Identifier const& _id) throw(...);
+
+		/**
+		*	stops an entity
+		*
+		*	stops an entity as well as all of its children. if the entity in question does
+		*	have a superior that one will be stopped as well, unless the superior is nirvana,
+		*	where stopping should not matter as every entity has their own thread
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*/
+		void stop(Identifier const& _id) throw(...);
+
+		/**
+		*	starts an entity
+		*
+		*	does only work if the entity in question belongs to nirvana. causes a thread to be
+		*	started, where the entity running until stop is called. calling start will perform
+		*	a check on the entity & all its children, making sure all IO slots are connected
+		*
+		*	possible exceptions:	invalid id
+		*							entity not in nirvana
+		*							IO misconfiguration
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*
+		*	open questions: if the entity listens to another entity that is currently paused,
+		*	it might never receive any data, meaning it might never update at all
+		*/
+		void start(Identifier const& _id) throw(...);
+
+		/**
+		*	starts all of nirvanas children at once
+		*
+		*	possible exceptions:	IO misconfiguration if a child
+		*/
+		void startAll() throw(...);
+
+		/**
+		*	function to remove an entity from its superior, back to nirvana
+		*
+		*	moves a service, sequence or synchronization from its superior entity back to
+		*	nirvana. as a consequence, all existing IO connections are removed. the superior
+		*	will be stopped, causing its IO connections to be checked on restart. entities
+		*	already in nirvana are unaffected by this operation.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id				identifier of either: sequence, synchronization or service
+		*/
+		void remove(Identifier const& _id);
+
+		/**
+		*	destroys an entity
+		*
+		*	destroys entity, as well as all of it's children. will stop the superior, if the
+		*	entity is not in nirvana.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*/
+		void destroy(Identifier const& _id) throw(...);
+
+		/**
+		*	inserts an entity into another
+		*
+		*	inserts a service, sequence or synchronization that is currently in nirvana into
+		*	other sequence or synchronization, at the specified index. causes all existing IO
+		*	connections to break.
+		*
+		*	possible exceptions:	invalid ids
+		*							_dst and _src are the same
+		*
+		*	@param _src:			production graph to be inserted
+		*	@param _dst:			the other one
+		*	@param _index:			0, 1, 2 - first, middle, last
+		*
+		*	open questions:			spaghetti monster, help me. rAmen.
+		*/
+		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src) throw(...);
+
+		/**
+		*	returns identifiers of all output slots of an entity
+		*
+		*	returns a vector of all output slots of a sequence, synchronization or service
+		*	in case of a sequence, will be identical to the output of the last child. in case
+		*	of a service, will be identical to the output variables specified in the metadata.
+		*	in case of a synchronization, will be the combined output of all its children.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@return:				ids of output slots
+		*/
+		Identifiers listOutputSlots(Identifier const& _id);
+
+		/**
+		*	returns identifiers of all input slots of an entity
+		*
+		*	returns a vector of all input slots of a sequence, synchronization or simply a
+		*	service. in case of a sequence, will be identical to the input of the first
+		*	child. in case of a service, will be identical to the input variables specified in
+		*	the metadata (might be none). in case of a synchronization, will be the
+		*	combined input of all its children.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@return:				ids of input slots
+		*/
+		Identifiers listInputSlots(Identifier const& _id);
+
+		/**
+		*	connects an input slot with an output slot
+		*
+		*	@param _in:				identifier of input variable
+		*	@param _out:			identifier of output variable
+		*/
+		void connect(Identifier const& _in, Identifier const& _out) throw(...);
+
+		/**
+		*	initializes a service's setup parameter
+		*
+		*	possible exceptions:	invalid id
+		*							types do not match
+		*							service is already configured, reconfiguration not allowed
+		*
+		*	@param _id:				identifier of a setup parameter
+		*	@param _value:			the value
+		*/
+		template< typename T >
+		void setParameterValue(Identifier const& _id, T const& _value) throw(...)
+		{
+		}
+
+		/**
+		*	registers callback for an exception
+		*
+		*	possible exceptions:	invalid id
+		*	
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@param _callback		function pointer
+		*/
+		void registerToException(Identifier const& _id, ExceptionCallback _callback) throw(...);
+
+		/**
+		*	registers callback for new data
+		*
+		*	possible exceptions:	invalid id
+		*	
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@param _callback		function pointer
+		*/
+		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
+
+		/**
+		*	printf plugin metadata
+		*
+		*	possible exceptions:	invalid id
+		*/
+		void dumpPluginInfo(Identifier const& _id) throw(...);
+
+		/**
+		*	printf service metadata
+		*
+		*	possible exceptions:	invalid id
+		*/
+		void dumpServiceInfo(Identifier const& _id) throw(...);
+
+		/**
+		*	
 		*/
 		~Engine();
 
 		/**
-		*	and that cute little critter, too
+		*	
 		*/
 		Engine(Engine const& _src);
 
 		/**
-		*	hi there
+		*	
 		*/
 		Engine& operator=(Engine const& _src);
 
 	private:
 
 		/**
-		*	you made it to the end of the file! congratulations.
+		*	
 		*/
 		EngineImpl				*m_Impl;
 

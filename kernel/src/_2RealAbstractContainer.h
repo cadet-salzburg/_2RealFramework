@@ -19,6 +19,7 @@
 #pragma once
 
 #include "_2RealIContainer.h"
+#include "_2RealIEntity.h"
 #include "_2RealIdentifierImpl.h"
 
 #include <list>
@@ -32,17 +33,12 @@ namespace _2Real
 	*
 	*/
 
-	class AbstractContainer : public IContainer
+	class AbstractContainer : public IContainer, public IEntity
 	{
 
 		friend class ServiceFactory;
 
 	public:
-
-		/**
-		*	returns identifier
-		*/
-		IdentifierImpl const& id() const;
 
 		/**
 		*
@@ -89,7 +85,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		AbstractContainer(IdentifierImpl const& _id);
+		AbstractContainer();
 
 		/**
 		*
@@ -140,11 +136,6 @@ namespace _2Real
 		*
 		*/
 		Poco::BasicEvent< NamedData >		m_NewData;
-
-		/**
-		*
-		*/
-		IdentifierImpl						m_ID;
 
 	};
 

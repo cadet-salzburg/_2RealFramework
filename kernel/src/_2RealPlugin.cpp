@@ -18,25 +18,25 @@
 
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 #include "_2RealServiceFactory.h"
 
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...) :
+	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...) : IEntity(IEntity::PLUGIN),
 		m_LibraryPath(_path), m_ClassName(_class), m_Factory(_factory), m_Activator(NULL), m_Metadata(NULL), m_State(Plugin::UNINSTALLED)
 	{
 	}
 
-	Plugin::Plugin(Plugin const& _src) throw(...)
+	Plugin::Plugin(Plugin const& _src) throw(...) : IEntity(IEntity::PLUGIN)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	Plugin& Plugin::operator=(Plugin const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	Plugin::~Plugin()
@@ -91,7 +91,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 
@@ -99,28 +99,26 @@ namespace _2Real
 	{
 		if (m_State == Plugin::UNINSTALLED)
 		{
-			m_ID = _id;
-
 			if (m_LibraryPath.empty())
 			{
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			if (m_ClassName.empty())
 			{
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			if (m_Factory == NULL)
 			{
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_State = Plugin::INSTALLED;
 		}
 
 		m_State = Plugin::INVALID;
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	void Plugin::uninstall() throw(...)
@@ -143,7 +141,7 @@ namespace _2Real
 		catch (...)
 		{
 			m_State = Plugin::INVALID;
-			throw ErrorState::failure();
+			throw Exception::failure();
 		}
 	}
 
@@ -158,13 +156,13 @@ namespace _2Real
 			catch (...)
 			{
 				m_State = Plugin::INVALID;
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_State = Plugin::LOADED;
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	void Plugin::start() throw(...)
@@ -179,7 +177,7 @@ namespace _2Real
 					if (!m_Activator)
 					{
 						m_State = Plugin::INVALID;
-						throw ErrorState::failure();
+						throw Exception::failure();
 					}
 
 					m_Activator->start(new PluginContext(this));
@@ -187,7 +185,7 @@ namespace _2Real
 				else
 				{
 					m_State = Plugin::INVALID;
-					throw ErrorState::failure();
+					throw Exception::failure();
 				}
 			}
 			catch (...)
@@ -204,13 +202,13 @@ namespace _2Real
 				}
 
 				m_State = Plugin::INVALID;
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_State = Plugin::ACTIVE;
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	void Plugin::stop() throw(...)
@@ -230,13 +228,13 @@ namespace _2Real
 			catch (...)
 			{
 				m_State = Plugin::INVALID;
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_State = Plugin::LOADED;
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	void Plugin::unload() throw(...)
@@ -253,13 +251,13 @@ namespace _2Real
 			catch(...)
 			{
 				m_State = Plugin::INVALID;
-				throw ErrorState::failure();
+				throw Exception::failure();
 			}
 
 			m_State = Plugin::INSTALLED;
 		}
 
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 }

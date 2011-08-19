@@ -19,25 +19,25 @@
 #include "_2RealFactoryReference.h"
 #include "_2RealPlugin.h"
 #include "_2RealMetadata.h"
-#include "_2RealErrorState.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
 	FactoryReference::FactoryReference(Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata) :
-		m_Plugin(_plugin), m_Creator(_creator), m_Metadata(_metadata)
+		IEntity(IEntity::FACTORY), m_Plugin(_plugin), m_Creator(_creator), m_Metadata(_metadata)
 	{
 	}
 
-	FactoryReference::FactoryReference(FactoryReference const& _src) throw(...) :
+	FactoryReference::FactoryReference(FactoryReference const& _src) throw(...) : IEntity(IEntity::PLUGIN),
 		m_Plugin(NULL), m_Metadata(NULL), m_Creator(NULL)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	FactoryReference& FactoryReference::operator=(FactoryReference const& _src)
 	{
-		throw ErrorState::failure();
+		throw Exception::failure();
 	}
 
 	FactoryReference::~FactoryReference()
