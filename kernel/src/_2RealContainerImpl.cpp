@@ -16,23 +16,23 @@
 	limitations under the License.
 */
 
-#include "_2RealProductionContainer.h"
+#include "_2RealContainerImpl.h"
 
 namespace _2Real
 {
 
-	ProductionContainer::ProductionContainer(ContainerName const& _name) : AbstractContainer(_name)
+	ContainerImpl::ContainerImpl(ContainerName const& _name) : AbstractContainer(_name)
 	{
 	}
 
-	ProductionContainer::ProductionContainer(ProductionContainer const& _src) : AbstractContainer(_src)
+	ContainerImpl::ContainerImpl(ContainerImpl const& _src) : AbstractContainer(_src)
 	{
 #ifdef _DEBUG
 		std::cout << "production container container copy constructor called" << std::endl;
 #endif
 	}
 
-	ProductionContainer& ProductionContainer::operator=(ProductionContainer const& _src)
+	ContainerImpl& ContainerImpl::operator=(ContainerImpl const& _src)
 	{
 		AbstractContainer::operator=(_src);
 
@@ -43,14 +43,14 @@ namespace _2Real
 		return *this;
 	}
 
-	ProductionContainer::~ProductionContainer()
+	ContainerImpl::~ContainerImpl()
 	{
 		//NOTE-TO-SELF:
 		//child ptrs are not owning
 		//services must be deleted by factory
 	}
 
-	void ProductionContainer::configure(ConfigurationData *const _dataPtr) throw(...)
+	void ContainerImpl::configure(ConfigurationData *const _dataPtr) throw(...)
 	{
 		if (!m_bIsConfigured || m_bCanReconfigure)
 		{
@@ -86,7 +86,7 @@ namespace _2Real
 		m_ConfigurationPtr = _dataPtr;
 	}
 
-	void ProductionContainer::run() throw(...)
+	void ContainerImpl::run() throw(...)
 	{
 		while (m_bRun || m_bRunOnce)
 		{
@@ -108,7 +108,7 @@ namespace _2Real
 		}
 	}
 
-	void ProductionContainer::update() throw(...)
+	void ContainerImpl::update() throw(...)
 	{
 		if (!m_bIsConfigured)
 		{
@@ -132,7 +132,7 @@ namespace _2Real
 		sendData(true);
 	}
 
-	void ProductionContainer::shutdown() throw(...)
+	void ContainerImpl::shutdown() throw(...)
 	{
 		for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{

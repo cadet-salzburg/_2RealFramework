@@ -18,32 +18,52 @@
 
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
+#include "_2RealErrorState.h"
+#include "_2RealServiceFactory.h"
 
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _name, std::string const& _path, Framework &_context) :
-		m_PluginState(Plugin::INVALID), m_PluginName(_name), m_ActivatorPtr(NULL), m_Framework(_context)
+	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...) :
+		m_LibraryPath(_path), m_ClassName(_class), m_Factory(_factory), m_Activator(NULL), m_Metadata(NULL), m_State(Plugin::UNINSTALLED)
 	{
-#ifdef _DEBUG
-		m_LibraryPath = _path+_name+"_d";
-#else
-		m_LibraryPath = _path+_name;
-#endif
+	}
 
-		m_ContextPtr = new PluginContext(this);
+	Plugin::Plugin(Plugin const& _src) throw(...)
+	{
+		throw ErrorState::failure();
+	}
 
-		m_PluginState = Plugin::INSTALLED;
+	Plugin& Plugin::operator=(Plugin const& _src)
+	{
+		throw ErrorState::failure();
+	}
+
+	Plugin::~Plugin()
+	{
+		if (m_State != Plugin::UNINSTALLED)
+		{
+			try
+			{
+				stop();
+				unload();
+				uninstall();
+			}
+			catch (...)
+			{
+				std::cout << "plugin destruction error" << std::endl;
+			}
+		}
 	}
 
 	Plugin::ePluginState const& Plugin::state() const
 	{
-		return m_PluginState;
+		return m_State;
 	}
 		
 	std::string const& Plugin::name() const
 	{
-		return m_PluginName;
+		return m_ClassName;
 	}
 
 	std::string const& Plugin::path() const
@@ -51,102 +71,177 @@ namespace _2Real
 		return m_LibraryPath;
 	}
 
-	const Metadata *const Plugin::metadata() const
+	Metadata const *const Plugin::metadata() const
 	{
-		return m_MetadataPtr;
+		return m_Metadata;
 	}
 
-	void Plugin::registerService(std::string const& _name, ServiceCreator _creator, bool const& _singleton) const
+	std::vector< IdentifierImpl > const& Plugin::serviceIDs() const
 	{
-		m_Framework.registerService(_name, m_PluginName, _creator, _singleton);
+		return m_Services;
 	}
 
-	void Plugin::load()
+	void Plugin::registerService(std::string const& _name, ServiceCreator _creator) throw (...)
 	{
-		if (m_PluginState == Plugin::INSTALLED)
+		try
 		{
+			//metadata is TODO
+			const IdentifierImpl *id = m_Factory->registerService(_name, this, NULL, _creator);
+			m_Services.push_back(*id);
+		}
+		catch (...)
+		{
+			throw ErrorState::failure();
+		}
+	}
 
+	void Plugin::install(IdentifierImpl const& _id) throw(...)
+	{
+		if (m_State == Plugin::UNINSTALLED)
+		{
+			m_ID = _id;
+
+			if (m_LibraryPath.empty())
+			{
+				throw ErrorState::failure();
+			}
+
+			if (m_ClassName.empty())
+			{
+				throw ErrorState::failure();
+			}
+
+			if (m_Factory == NULL)
+			{
+				throw ErrorState::failure();
+			}
+
+			m_State = Plugin::INSTALLED;
+		}
+
+		m_State = Plugin::INVALID;
+		throw ErrorState::failure();
+	}
+
+	void Plugin::uninstall() throw(...)
+	{
+		try
+		{
+			if (m_State == Plugin::ACTIVE)
+			{
+				stop();
+			}
+
+			if (m_State == Plugin::LOADED)
+			{
+				unload();
+			}
+
+			m_State = Plugin::UNINSTALLED;
+
+		}
+		catch (...)
+		{
+			m_State = Plugin::INVALID;
+			throw ErrorState::failure();
+		}
+	}
+
+	void Plugin::load() throw(...)
+	{
+		if (m_State == Plugin::INSTALLED)
+		{
 			try
 			{
 				m_PluginLoader.loadLibrary(m_LibraryPath);
 			}
 			catch (...)
 			{
-				std::cout << "TODO: error handling; plugin::load" << std::endl;
-				m_PluginState = Plugin::INVALID;
-				return;
+				m_State = Plugin::INVALID;
+				throw ErrorState::failure();
 			}
 
-			m_PluginState = Plugin::LOADED;
+			m_State = Plugin::LOADED;
 		}
+
+		throw ErrorState::failure();
 	}
 
-	void Plugin::start()
+	void Plugin::start() throw(...)
 	{
-		if (m_PluginState == Plugin::LOADED)
+		if (m_State == Plugin::LOADED)
 		{
 			try
 			{
-				if (m_PluginLoader.canCreate(m_PluginName))
+				if (m_PluginLoader.canCreate(m_ClassName))
 				{
-					m_ActivatorPtr = m_PluginLoader.create(m_PluginName);
-					if (!m_ActivatorPtr)
+					m_Activator = m_PluginLoader.create(m_ClassName);
+					if (!m_Activator)
 					{
-						std::cout << "TODO: error handling; plugin::start" << std::endl;
-						m_PluginState = Plugin::INVALID;
-						return;
+						m_State = Plugin::INVALID;
+						throw ErrorState::failure();
 					}
 
-					m_ActivatorPtr->start(m_ContextPtr);
+					m_Activator->start(new PluginContext(this));
 				}
 				else
 				{
-					std::cout << "TODO: error handling; plugin::start" << std::endl;
-					m_PluginState = Plugin::INVALID;
-					return;
+					m_State = Plugin::INVALID;
+					throw ErrorState::failure();
 				}
 			}
 			catch (...)
 			{
-				if (m_ActivatorPtr)
+				if (m_Activator)
 				{
-					delete m_ActivatorPtr;
+					delete m_Activator;
+					m_Activator = NULL;
 				}
 
-				std::cout << "TODO: error handling; plugin::start" << std::endl;
-				m_PluginState = Plugin::INVALID;
-				return;
+				if (!m_Services.empty())
+				{
+					//clean up services
+				}
+
+				m_State = Plugin::INVALID;
+				throw ErrorState::failure();
 			}
 
-			m_PluginState = Plugin::ACTIVE;
+			m_State = Plugin::ACTIVE;
 		}
+
+		throw ErrorState::failure();
 	}
 
-	void Plugin::stop()
+	void Plugin::stop() throw(...)
 	{
-		if (m_PluginState == Plugin::ACTIVE)
+		if (m_State == Plugin::ACTIVE)
 		{
 			try
 			{
-				//TODO::invalidate all services
-				m_PluginLoader.destroy(m_PluginName, m_ActivatorPtr);
+				m_PluginLoader.destroy(m_ClassName, m_Activator);
+				if (!m_Services.empty())
+				{
+					//clean up services
+				}
+				delete m_Activator;
+				m_Activator = NULL;
 			}
 			catch (...)
 			{
-				std::cout << "TODO: error handling; plugin::stop" << std::endl;
-				m_PluginState = Plugin::INVALID;
-				return;
+				m_State = Plugin::INVALID;
+				throw ErrorState::failure();
 			}
 
-			delete m_ActivatorPtr;
-			m_ActivatorPtr = NULL;
-			m_PluginState = Plugin::LOADED;
+			m_State = Plugin::LOADED;
 		}
+
+		throw ErrorState::failure();
 	}
 
-	void Plugin::unload()
+	void Plugin::unload() throw(...)
 	{
-		if (m_PluginState == Plugin::LOADED)
+		if (m_State == Plugin::LOADED)
 		{
 			try
 			{
@@ -157,13 +252,14 @@ namespace _2Real
 			}
 			catch(...)
 			{
-				std::cout << "TODO: error handling; plugin::stop" << std::endl;
-				m_PluginState = Plugin::INVALID;
-				return;
+				m_State = Plugin::INVALID;
+				throw ErrorState::failure();
 			}
 
-			m_PluginState = Plugin::INSTALLED;
+			m_State = Plugin::INSTALLED;
 		}
+
+		throw ErrorState::failure();
 	}
 
 }

@@ -30,24 +30,84 @@ namespace _2Real
 	*/
 
 	class Plugin;
+	class IdentifierImpl;
+	class ServiceFactory;
+	class Identities;
 
 	class PluginPool
 	{
+
+		friend class EngineImpl;
 	
 	public:
-		
-		Plugin *const getPlugin(std::string const& _plugin);
 
-		bool installPlugin(Plugin *const _pluginPtr);
+		/**
+		*	
+		*/
+		IdentifierImpl const *const install(std::string const& _name, std::string const& _path, std::string const& _class) throw(...);
 
-		void uninstallPlugin(std::string const& _plugin);
+		/**
+		*	
+		*/
+		void uninstall(IdentifierImpl const& _id) throw(...);
+
+		/**
+		*
+		*/
+		Plugin const *const get(IdentifierImpl const& _id) const;
 
 	private:
 
-		typedef std::pair< std::string, Plugin * >		NamedPlugin;
-		typedef std::map< std::string, Plugin * >		NamedPluginMap;
+		/**
+		*	
+		*/
+		PluginPool();
 
-		NamedPluginMap									m_PluginMap;
+		/**
+		*	
+		*/
+		PluginPool(ServiceFactory *const _factory, Identities *const _ids);
+
+		/**
+		*	
+		*/
+		PluginPool(PluginPool const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		PluginPool& operator=(PluginPool const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		~PluginPool();
+
+		/**
+		*	yay, typedefs
+		*/
+		typedef std::pair< IdentifierImpl, Plugin * >		NamedPlugin;
+
+		/**
+		*	sfedepyt ,yay
+		*/
+		typedef std::map< IdentifierImpl, Plugin * >		PluginMap;
+
+		/**
+		*	installed plugins
+		*/
+		PluginMap											m_Plugins;
+
+		/**
+		*	framework's service factory
+		*/
+		ServiceFactory										*m_Factory;
+
+		/**
+		*	framework's entities
+		*/
+		Identities											*m_IDs;
 
 	};
+
 }

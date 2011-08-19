@@ -35,7 +35,7 @@ namespace _2Real
 	class ServiceContext
 	{
 
-		friend class ServiceContainer;
+		friend class ServiceImpl;
 
 	public:
 
@@ -79,7 +79,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		ServiceContext(ServiceContainer *const _service);
+		ServiceContext(ServiceImpl *const _service);
 		
 		/**
 		*
@@ -109,7 +109,7 @@ namespace _2Real
 		/**
 		*	ptr to service container
 		*/
-		ServiceContainer		*m_ContainerPtr;
+		ServiceImpl			*m_Container;
 
 	};
 

@@ -17,6 +17,7 @@
 */
 
 #include "_2RealAbstractContainer.h"
+#include "_2RealErrorState.h"
 #include "_2RealConfigurationData.h"
 #include "_2RealData.h"
 
@@ -25,8 +26,8 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(ContainerName const& _name) :
-		m_Name(_name), m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_ConfigurationPtr(NULL)
+	AbstractContainer::AbstractContainer(IdentifierImpl const& _id) :
+		m_ID(_id), m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
 	{
 	}
 
@@ -35,6 +36,7 @@ namespace _2Real
 #ifdef _DEBUG
 		std::cout << "abstract container copy constructor called" << std::endl;
 #endif
+		//does nothing
 	}
 
 	AbstractContainer& AbstractContainer::operator=(AbstractContainer const& _src)
@@ -42,26 +44,26 @@ namespace _2Real
 #ifdef _DEBUG
 		std::cout << "abstract container assignment operator called" << std::endl;
 #endif
-
+		//does nothing
 		return *this;
 	}
 
 	AbstractContainer::~AbstractContainer()
 	{
-		delete m_ConfigurationPtr;
+		delete m_Configuration;
 		m_NewData.clear();
 	}
 
-	ContainerName const& AbstractContainer::name() const
+	IdentifierImpl const& AbstractContainer::id() const
 	{
-		return m_Name;
+		return m_ID;
 	}
 
-	void AbstractContainer::start(bool const& _runOnce)
+	void AbstractContainer::start(bool const& _runOnce) throw(...)
 	{
 		if (!m_bIsConfigured || m_bRun)
 		{
-			return;
+			throw ErrorState::failure();
 		}
 
 		m_bRunOnce = _runOnce;
@@ -79,18 +81,30 @@ namespace _2Real
 		//does nothing
 	}
 
-	bool const& AbstractContainer::canBeReconfigured() const
+	bool const& AbstractContainer::canReconfigure() const
 	{
 		return m_bCanReconfigure;
 	}
 
-	void AbstractContainer::addListener(IDataQueue *const _queue)
+	void AbstractContainer::addListener(IDataQueue *const _queue) throw(...)
 	{
+		if (_queue == NULL)
+		{
+			//TODO: set error state
+			throw ErrorState::failure();
+		}
+
 		m_NewData += Poco::delegate(_queue, &IDataQueue::receiveData);
 	}
 
-	void AbstractContainer::removeListener(IDataQueue *const _queue)
+	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
 	{
+		if (_queue == NULL)
+		{
+			//TODO: set error state
+			throw ErrorState::failure();
+		}
+
 		m_NewData -= Poco::delegate(_queue, &IDataQueue::receiveData);
 	}
 

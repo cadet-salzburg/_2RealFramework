@@ -19,8 +19,7 @@
 #pragma once
 
 #include "_2RealIContainer.h"
-#include "_2RealVariableName.h"
-#include "_2RealContainerName.h"
+#include "_2RealIdentifierImpl.h"
 
 #include <list>
 
@@ -36,26 +35,19 @@ namespace _2Real
 	class AbstractContainer : public IContainer
 	{
 
+		friend class ServiceFactory;
+
 	public:
 
-		AbstractContainer(ContainerName const& _name);
-		AbstractContainer(AbstractContainer const& _src);
-		AbstractContainer& operator=(AbstractContainer const& _src);
-		~AbstractContainer();
-
 		/**
-		*	returns name
+		*	returns identifier
 		*/
-		ContainerName const& name() const;
+		IdentifierImpl const& id() const;
 
-		/**
-		*	functions inherited from IContainer
-		*/
-		
 		/**
 		*
 		*/
-		void start(bool const& _runOnce);
+		void start(bool const& _runOnce) throw(...);
 
 		/**
 		*
@@ -65,11 +57,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		bool const& canBeReconfigured() const;
-
-		/**
-		*	functions inherited from IService
-		*/
+		bool const& canReconfigure() const;
 
 		/**
 		*
@@ -77,18 +65,14 @@ namespace _2Real
 		void setup(ServiceContext *const _contextPtr) throw(...);
 
 		/**
-		*	functions inherited from IDataQueue
-		*/
-
-		/**
 		*	
 		*/
-		void addListener(IDataQueue *const _queue);
+		void addListener(IDataQueue *const _queue) throw(...);
 		
 		/**
 		*
 		*/
-		void removeListener(IDataQueue *const _queue);
+		void removeListener(IDataQueue *const _queue) throw(...);
 		
 		/**
 		*
@@ -102,20 +86,65 @@ namespace _2Real
 
 	protected:
 
+		/**
+		*
+		*/
+		AbstractContainer(IdentifierImpl const& _id);
+
+		/**
+		*
+		*/
+		AbstractContainer(AbstractContainer const& _src);
+
+		/**
+		*
+		*/
+		AbstractContainer& operator=(AbstractContainer const& _src);
+
+		/**
+		*
+		*/
+		~AbstractContainer();
+
+		/**
+		*
+		*/
 		bool								m_bRunOnce;
+
+		/**
+		*
+		*/
 		bool								m_bRun;
+
+		/**
+		*
+		*/
 		bool								m_bIsConfigured;
+
+		/**
+		*
+		*/
 		bool								m_bCanReconfigure;
 
-		ConfigurationData					*m_ConfigurationPtr;
+		/**
+		*
+		*/
+		ConfigurationData					*m_Configuration;
 
+		/**
+		*
+		*/
 		std::list< NamedData >				m_DataList;
 
+		/**
+		*
+		*/
 		Poco::BasicEvent< NamedData >		m_NewData;
 
-	private:
-
-		ContainerName						m_Name;
+		/**
+		*
+		*/
+		IdentifierImpl						m_ID;
 
 	};
 

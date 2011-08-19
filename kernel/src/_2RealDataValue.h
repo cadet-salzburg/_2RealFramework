@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include "_2RealDataTypedefs.h"
-
 #include "Poco/SharedPtr.h"
+#include "Poco/Any.h"
 
 namespace _2Real
 {
@@ -28,37 +27,21 @@ namespace _2Real
 	/**
 	*
 	*/
-	
-	class IDataQueue
+
+	class DataValue
 	{
 
 	public:
 
-		/**
-		*	adds other queue to listeners
-		*	does nothing if queue already listens
-		*	throws if _queue is null
-		*/
-		virtual void addListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	removes other queue from listeners
-		*	does nothng if other queue is not actually a listener
-		*	throws if _queue is null
-		*/
-		virtual void removeListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	function to receive data
-		*/
-		virtual void receiveData(NamedData &_data) = 0;
+		template< typename T >
+		DataValue(T &_value);
 
-		/**
-		*	function to send out data
-		*	@param _blocking - whether or not the function returns immediately after notifying its listeners
-		*/
-		virtual void sendData(bool const& _blocking) = 0;
+	private:
+
+		Poco::SharedPtr< Poco::Any >	m_Value;
 
 	};
 
 }
+
+#include "_2RealDataValue.cpp"

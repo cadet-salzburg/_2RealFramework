@@ -25,6 +25,7 @@ namespace _2Real
 
 	/**
 	*	interface for user defined services
+	*	all containers (=production graph or service container) implement this as well
 	*/
 
 	class IService
@@ -35,7 +36,7 @@ namespace _2Real
 		/**
 		*	setup function
 		*/
-		virtual void setup(ServiceContext *const _contextPtr) throw(...) = 0;
+		virtual void setup(ServiceContext *const _context) throw(...) = 0;
 
 		/**
 		*	update function

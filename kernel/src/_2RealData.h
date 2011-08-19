@@ -80,16 +80,6 @@ namespace _2Real
 
 	};
 
-	/**
-	*
-	*/
-	typedef Data< std::string >							ParameterData;
-	
-	/**
-	*
-	*/
-	typedef Data< VariableName >						VariableData;
-
 }
 
 #include "_2RealData.cpp"

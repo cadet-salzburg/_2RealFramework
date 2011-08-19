@@ -17,164 +17,157 @@
 */
 
 #include "_2RealServiceFactory.h"
+#include "_2RealFactoryReference.h"
+#include "_2RealErrorState.h"
+#include "_2RealServiceImpl.h"
+#include "_2RealIdentities.h"
+#include "_2RealMetadata.h"
+//#include "_2RealProductionTreeImpl.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-//	ServiceFactory::ServiceFactory() : m_iCreationCount(0)
-//	{
-//	}
-//
-//	void ServiceFactory::registerService(std::string const& _name, PluginPtr _pluginPtr, UserServiceCreator _creator, bool const& _singleton)
-//	{
-//
-//		ServiceRefPtr ref = ServiceRefPtr(new ServiceReference(_pluginPtr, _creator, _singleton));
-//
-//		std::string service = _pluginPtr->name() + "." + _name;
-//
-//		m_ReferenceMap.insert(NamedServiceRefPtr(service, ref));
-//	}
-//
-//	const bool ServiceFactory::canCreate(std::string const& _name, std::string const& _plugin) const
-//	{
-//		std::string service = _plugin + "." + _name;
-//		NamedReferenceMap::const_iterator it = m_ReferenceMap.find(service);
-//		
-//		if (it != m_ReferenceMap.end())
-//		{
-//			return it->second->canCreate();
-//		}
-//
-//		return false;
-//	}
-//
-//	const bool ServiceFactory::isSingleton(std::string const& _name, std::string const& _plugin) const
-//	{
-//		std::string service = _plugin + "." + _name;
-//		NamedReferenceMap::const_iterator it = m_ReferenceMap.find(service);
-//		
-//		if (it != m_ReferenceMap.end())
-//		{
-//			return it->second->isSingleton();
-//		}
-//
-//		return false;
-//	}
-//
-//	OutputContainerPtr ServiceFactory::createOutputContainer()
-//	{
-//		ServiceName name;
-//#ifdef _DEBUG
-//		std::string tmp = "Framework.OutputContainer";
-//		name = generateContainerName(tmp);
-//#else
-//		name = generateContainerName();
-//#endif
-//		return OutputContainerPtr(new OutputContainer(name));
-//	}
-//
-//	GroupContainerPtr ServiceFactory::createSequenceContainer()
-//	{
-//		ServiceName name;
-//#ifdef _DEBUG
-//		std::string tmp = "Framework.SequenceContainer";
-//		name = generateContainerName(tmp);
-//#else
-//		name = generateContainerName();
-//#endif
-//		return GroupContainerPtr(new SequenceContainer(name));
-//	}
-//
-//	GroupContainerPtr ServiceFactory::createSynchronizationContainer()
-//	{
-//		ServiceName name;
-//#ifdef _DEBUG
-//		std::string tmp = "Framework.SynchronizationContainer";
-//		name = generateContainerName(tmp);
-//#else
-//		name = generateContainerName();
-//#endif
-//		return GroupContainerPtr(new SynchronizationContainer(name));
-//	}
-//
-//	NamedServicePtr ServiceFactory::createService(std::string const& _name, std::string const& _plugin)
-//	{
-//		std::string service = _plugin + "." + _name;
-//		NamedReferenceMap::iterator it = m_ReferenceMap.find(service);
-//
-//		UserServicePtr servicePtr;
-//		ServicePtr internalServicePtr;
-//		ServicePtr containerServicePtr;
-//		ServiceName name;
-//		if (it != m_ReferenceMap.end())
-//		{
-//			ServiceRefPtr ref = it->second;
-//
-//			if (ref->canCreate())
-//			{
-//
-//				std::cout << "service factory: creating service " << _name << " " << _plugin << std::endl; 
-//				servicePtr = ref->create();
-//
-//				if (servicePtr.isNull())
-//				{
-//					std::cout << "TODO: error handling; could not create service" << std::endl;
-//				}
-//#ifndef _DEBUG
-//				else
-//				{
-//					m_iCreationCount++;
-//				}
-//#endif
-//
-//				name = generateServiceName(*it);
-//			}
-//		}
-//
-//		std::cout << name << std::endl;
-//		internalServicePtr = ServicePtr(new InternalService(name, servicePtr));
-//
-//		ServiceName containerName;
-//#ifdef _DEBUG
-//		containerName = generateContainerName("Framework.ServiceContainer");
-//#else
-//		containerName = generateContainerName();
-//#endif
-//
-//		containerServicePtr = ServicePtr(new ServiceContainer(containerName, internalServicePtr));
-//
-//		//store container
-//		NamedServicePtr result(name, containerServicePtr);
-//		m_ServiceMap.insert(result);
-//
-//		return result;
-//	}
-//
-//	const ServiceName ServiceFactory::generateServiceName(NamedServiceRefPtr const& _ref) const
-//	{
-//#ifdef _DEBUG
-//		std::stringstream tmp;
-//		tmp << _ref.second->creationCount();
-//		return _ref.first + "." + tmp.str();
-//#else
-//		return m_iCreationCount;
-//#endif
-//	}
-//
-//#ifdef _DEBUG
-//	const ServiceName ServiceFactory::generateContainerName(std::string const& container) const
-//	{
-//		std::stringstream tmp;
-//		tmp <<  m_iCreationCount;
-//		return container + "." + tmp.str();
-//	}
-//#else
-//	const ServiceName ServiceFactory::generateContainerName() const
-//	{
-//		return m_iCreationCount;
-//	}
-//#endif
+	ServiceFactory::ServiceFactory(Identities *const _ids) : m_IDs(_ids)
+	{
+	}
+
+	ServiceFactory::ServiceFactory(ServiceFactory const& _src)
+	{
+		throw ErrorState::failure();
+	}
+
+	ServiceFactory& ServiceFactory::operator=(ServiceFactory const& _src)
+	{
+		throw ErrorState::failure();
+	}
+
+	ServiceFactory::~ServiceFactory()
+	{
+		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+		{
+			ServiceReference ref = it->second;
+			
+			//delete factory reference
+			delete ref.first;
+			ref.first = NULL;
+			
+			//service containers are not deleted here, but in the next loop
+			for (ServiceList::iterator it = ref.second.begin();  it != ref.second.end(); it++)
+			{
+				*it = NULL;
+			}
+		}
+
+		for (ContainerMap::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+		{
+			//delete all containers in the framework - deleting a service container will shutdown it's user service & delete it
+			delete it->second;
+			it->second = NULL;
+		}
+	}
+
+	IdentifierImpl const *const ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, Metadata const *const _metadata, ServiceCreator _creator) throw(...)
+	{
+
+		//check if service w/ same name was already registered by same plugin, if so do nothing (no exception, either)
+		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+		{
+			//so there is a service with the same name - the plugin might be different still
+			if (it->first.name() == _name)
+			{
+				ServiceReference ref = it->second;
+				if (ref.first->plugin() == _plugin)
+				{
+					//the plugin pointers are equal, so don't register anything
+					return NULL;
+				}
+			}
+		}
+
+		try
+		{
+			const IdentifierImpl *id = m_IDs->createID(_name, IdentifierImpl::FACTORY);
+			FactoryReference *factory = new FactoryReference(_plugin, _creator, _metadata);
+			ServiceReference ref(factory, ServiceList());
+			m_References.insert(NamedServiceReference(*id, ref));
+			return id;
+		}
+		catch (...)
+		{
+			throw ErrorState::failure();
+		}
+	}
+
+	const bool ServiceFactory::canCreate(IdentifierImpl const& _serviceID) const throw (...)
+	{
+		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		
+		if (it != m_References.end())
+		{
+			ServiceReference ref = it->second;
+			return ref.first->canCreate();
+		}
+
+		throw ErrorState::failure();
+	}
+
+	const bool ServiceFactory::isSingleton(IdentifierImpl const& _serviceID) const throw(...)
+	{
+		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		
+		if (it != m_References.end())
+		{
+			ServiceReference ref = it->second;
+			return ref.first->isSingleton();
+		}
+
+		throw ErrorState::failure();
+	}
+
+	const bool ServiceFactory::canReconfigure(IdentifierImpl const& _serviceID) const throw(...)
+	{
+		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		
+		if (it != m_References.end())
+		{
+			ServiceReference ref = it->second;
+			return ref.first->canReconfigure();
+		}
+
+		throw ErrorState::failure();
+	}
+
+	IdentifierImpl const *const ServiceFactory::createServiceContainer(IdentifierImpl const& _serviceID) throw (...)
+	{
+		ReferenceTable::iterator it = m_References.find(_serviceID);
+		if (it == m_References.end())
+		{
+			throw ErrorState::failure();
+		}
+		
+		IService *userService;
+		ServiceImpl *container;
+		
+		ServiceReference ref = it->second;
+		
+		try
+		{
+			//service does not get identifier
+			userService = ref.first->create();
+			//service container id shares name of service
+			const IdentifierImpl *id = m_IDs->createID(_serviceID.name(), IdentifierImpl::SERVICE);
+			container = new ServiceImpl(*id, userService);
+			m_Containers.insert(NamedContainer(*id, container));
+			//save container id
+			ref.second.push_back(container);
+			return id;
+		}
+		catch (...)
+		{
+			throw ErrorState::failure();
+		}
+	}
 
 }

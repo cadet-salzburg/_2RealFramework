@@ -19,45 +19,97 @@
 
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
+#include "_2RealErrorState.h"
+#include "_2RealIdentifierImpl.h"
+#include "_2RealIdentities.h"
 
 namespace _2Real
 {
 
-	//PluginPtr PluginPool::getPlugin(std::string const& _plugin)
-	//{
-	//	NamedPluginMap::iterator it = m_PluginMap.find(_plugin);
+	PluginPool::PluginPool() : m_Factory(NULL), m_IDs(NULL)
+	{
+	}
 
-	//	if (it != m_PluginMap.end())
-	//	{
-	//		return it->second;
-	//	}
+	PluginPool::PluginPool(ServiceFactory *const _factory, Identities *const _ids) : m_Factory(_factory), m_IDs(_ids)
+	{
+	}
 
-	//	return PluginPtr();
-	//}
+	PluginPool::PluginPool(PluginPool const& _src) throw(...)
+	{
+		throw ErrorState::failure();
+	}
 
-	//bool PluginPool::installPlugin(PluginPtr _pluginPtr)
-	//{
-	//	m_PluginMap.insert(NamedPlugin(_pluginPtr->name(), _pluginPtr));
+	PluginPool& PluginPool::operator=(PluginPool const& _src) throw(...)
+	{
+		throw ErrorState::failure();
+	}
 
-	//	_pluginPtr->load();
+	PluginPool::~PluginPool()
+	{
+		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
+		{
+			try
+			{
+				it->second->uninstall();
+				delete it->second;
+				it->second = NULL;
+			}
+			catch (...)
+			{
+				std::cout << "plugin uninstall error: " << it->first.name() << std::endl;
+			}
+		}
+	}
 
-	//	_pluginPtr->start();
+	IdentifierImpl const *const PluginPool::install(std::string const& _name, std::string const& _path, std::string const& _class) throw(...)
+	{
+		try
+		{
+			const IdentifierImpl *id = m_IDs->createID(_name, IdentifierImpl::PLUGIN);
+			Plugin *plugin = new Plugin(_path, _class, m_Factory);
+			m_Plugins.insert(NamedPlugin(*id, plugin));
+			plugin->install(*id);
+			plugin->load();
+			plugin->start();
+			return id;
+		}
+		catch (...)
+		{
+			throw ErrorState::failure();
+		}
+	}
 
-	//	return (_pluginPtr->state() == Plugin::ACTIVE);
-	//}
+	void PluginPool::uninstall(IdentifierImpl const& _id) throw(...)
+	{
+		PluginMap::iterator it = m_Plugins.find(_id);
 
-	//void PluginPool::uninstallPlugin(std::string const& _plugin)
-	//{
-	//	NamedPluginMap::iterator it = m_PluginMap.find(_plugin);
+		if (it == m_Plugins.end())
+		{
+			throw ErrorState::failure();
+		}
 
-	//	if (it != m_PluginMap.end())
-	//	{
-	//		PluginPtr tmp = it->second;
-	//		tmp->stop();
-	//		tmp->unload();
-	//	}
+		try
+		{
+			it->second->uninstall();
+			delete it->second;
+			it->second = NULL;
+		}
+		catch (...)
+		{
+			throw ErrorState::failure();
+		}
+	}
 
-	//	m_PluginMap.erase(it);
-	//}
+	Plugin const *const PluginPool::get(IdentifierImpl const& _id) const
+	{
+		PluginMap::const_iterator it = m_Plugins.find(_id);
+		
+		if (it != m_Plugins.end())
+		{
+			return it->second;
+		}
+
+		return NULL;
+	}
 
 }

@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "_2RealDataTypedefs.h"
 #include "_2RealData.h"
 
 #include <map>

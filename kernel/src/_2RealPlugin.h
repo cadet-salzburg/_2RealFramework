@@ -19,14 +19,25 @@
 
 #pragma once
 
-#include "_2RealFramework.h"
+#include "_2RealServiceTypedefs.h"
 #include "_2RealIPluginActivator.h"
-#include "_2RealMetadata.h"
+#include "_2RealIdentifierImpl.h"
+
+#include <vector>
 
 #include "Poco/ClassLoader.h"
 
 namespace _2Real
 {
+
+	/**
+	*
+	*/
+
+	class Metadata;
+	class ServiceFactory;
+	class IdentifierImpl;
+
 	class Plugin
 	{
 
@@ -38,105 +49,144 @@ namespace _2Real
 			INSTALLED	=	0x00000001,
 			LOADED		=	0x00000002,
 			ACTIVE		=	0x00000004,
+			UNINSTALLED =	0x00000008,
 		};
 
 		/**
-		*
+		*	
 		*/
-		Plugin(std::string const& _name, std::string const& _path, Framework &_context);
+		Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...);
+
+		/**
+		*	
+		*/
+		Plugin(Plugin const& _src);
+
+		/**
+		*	
+		*/
+		Plugin& operator=(Plugin const& _src);
+
+		/**
+		*	
+		*/
+		~Plugin();
+
+		/**
+		*	
+		*/
+		ePluginState const& state() const;
+
+		/**
+		*	
+		*/
+		std::string const& name() const;
+
+		/**
+		*	
+		*/
+		std::string const& path() const;
+
+		/**
+		*	
+		*/
+		const Metadata *const metadata() const;
 
 		/**
 		*
 		*/
-		ePluginState const& state() const;
-		
+		std::vector< IdentifierImpl > const& serviceIDs() const;
+
 		/**
 		*
 		*/
-		std::string const& name() const;
-		
+		void install(IdentifierImpl const& _id) throw(...);
+
 		/**
 		*
 		*/
-		std::string const& path() const;
-		
-		/**
-		*
-		*/
-		const Metadata *const metadata() const;
-		
+		void uninstall() throw(...);
+
 		/**
 		*	loads dll; state: installed->loaded
 		*	error -> invalid
 		*/
-		void load();
+		void load() throw(...);
 
 		/**
 		*	unloads dll; state: loaded->installed
 		*	error -> invalid
 		*/
-		void unload();
-		
+		void unload() throw(...);
+
 		/**
 		*	starts plugin activator; state: loaded->active
 		*	error -> invalid
 		*/
-		void start();
-		
+		void start() throw(...);
+
 		/**
 		*	stops plugin activator; state: active->loaded
 		*	error -> invalid
 		*/
-		void stop();
+		void stop() throw(...);
 
 		/**
-		*
+		*	called by plugin context
 		*/
-		void registerService(std::string const& _name, ServiceCreator _creator, bool const& _singleton) const;
+		void registerService(std::string const& _name, ServiceCreator _creator);
 
 	private:
 
+		/**
+		*	poit
+		*/
 		typedef Poco::ClassLoader< IPluginActivator >	PluginLoader;
+
+		/**
+		*	
+		*/
+		IPluginActivator				*m_Activator;
+
+		/**
+		*	
+		*/
+		Metadata						*m_Metadata;
 
 		/**
 		*
 		*/
-		Framework				&m_Framework;
-		
+		ServiceFactory					*m_Factory;
+
+		/**
+		*	
+		*/
+		ePluginState					m_State;
+
+		/**
+		*	
+		*/
+		std::string						m_ClassName;
+
+		/**
+		*	
+		*/
+		std::string						m_LibraryPath;
+
 		/**
 		*
 		*/
-		PluginContext			*m_ContextPtr;
-		
+		PluginLoader					m_PluginLoader;
+
 		/**
 		*
 		*/
-		IPluginActivator		*m_ActivatorPtr;
-		
+		IdentifierImpl					m_ID;
+
 		/**
-		*
+		*	
 		*/
-		PluginLoader			m_PluginLoader;
-		
-		/**
-		*
-		*/
-		ePluginState			m_PluginState;
-		
-		/**
-		*
-		*/
-		std::string				m_PluginName;
-		
-		/**
-		*
-		*/
-		std::string				m_LibraryPath;
-		
-		/**
-		*	this is an owning pointer
-		*/
-		Metadata				*m_MetadataPtr;
+		std::vector< IdentifierImpl >	m_Services;
 
 	};
 }

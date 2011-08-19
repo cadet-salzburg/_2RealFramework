@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include "_2RealDataTypedefs.h"
-
-#include "Poco/SharedPtr.h"
+#include <string>
 
 namespace _2Real
 {
@@ -28,36 +26,34 @@ namespace _2Real
 	/**
 	*
 	*/
-	
-	class IDataQueue
+
+	class ProductionTreeImpl;
+	class ProductionContainer;
+	class Service;
+	class PluginName;
+	enum eContainerType;
+
+	class ProductionTree
 	{
 
 	public:
 
 		/**
-		*	adds other queue to listeners
-		*	does nothing if queue already listens
-		*	throws if _queue is null
+		*	
 		*/
-		virtual void addListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	removes other queue from listeners
-		*	does nothng if other queue is not actually a listener
-		*	throws if _queue is null
-		*/
-		virtual void removeListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	function to receive data
-		*/
-		virtual void receiveData(NamedData &_data) = 0;
+		ProductionContainer *const addProductionContainer(eContainerType const& _type);
 
 		/**
-		*	function to send out data
-		*	@param _blocking - whether or not the function returns immediately after notifying its listeners
+		*	
 		*/
-		virtual void sendData(bool const& _blocking) = 0;
+		Service *const addService(PluginName const& _plugin, std::string const& _name);
+
+	private:
+
+		/**
+		*	
+		*/
+		ProductionTreeImpl		*m_Impl;
 
 	};
 

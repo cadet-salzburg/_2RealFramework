@@ -16,73 +16,73 @@
 	limitations under the License.
 */
 
-#include "_2RealFramework.h"
+#include "_2RealEngineImpl.h"
 
 namespace _2Real
 {
-	Framework::Framework()
+	EngineImpl::EngineImpl()
 	{
 		//m_FactoryPtr = new ServiceFactory();
 		//m_PluginsPtr = new PluginPool();
 	}
 
-	Framework::~Framework()
+	EngineImpl::~EngineImpl()
 	{
 		//delete m_FactoryPtr;
 		//delete m_PluginsPtr;
 	}
 
-	//OutputContainerPtr Framework::createOutputContainer()
+	//OutputContainerPtr Engine::createOutputContainer()
 	//{
 	//	OutputContainerPtr result = m_FactoryPtr->createOutputContainer();
 
 	//	//result->m_bIsConfigured = false;
-	//	//result->m_FrameworkPtr = this;
+	//	//result->m_EnginePtr = this;
 
 	//	if (result.isNull())
 	//	{
-	//		std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
+	//		std::cout << "TODO: exception handling; Engine::newOutputContainer(); container ptr is null" << std::endl;
 	//	}
 
 	//	return result;
 	//}
 
-	//GroupContainerPtr Framework::createSequenceContainer()
+	//GroupContainerPtr Engine::createSequenceContainer()
 	//{
 	//	GroupContainerPtr result = m_FactoryPtr->createSequenceContainer();
 
 	//	if (result.isNull())
 	//	{
-	//		std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
+	//		std::cout << "TODO: exception handling; Engine::newOutputContainer(); container ptr is null" << std::endl;
 	//	}
 
 	//	return result;
 	//}
 
-	//GroupContainerPtr Framework::createSynchronizationContainer()
+	//GroupContainerPtr Engine::createSynchronizationContainer()
 	//{
 	//	GroupContainerPtr result = m_FactoryPtr->createSynchronizationContainer();
 
 	//	if (result.isNull())
 	//	{
-	//		std::cout << "TODO: exception handling; Framework::newOutputContainer(); container ptr is null" << std::endl;
+	//		std::cout << "TODO: exception handling; Engine::newOutputContainer(); container ptr is null" << std::endl;
 	//	}
 
 	//	return result;
 	//}
 
-	//NamedServicePtr Framework::createService(std::string const& _name, std::string const& _plugin)
+	//NamedServicePtr Engine::createService(std::string const& _name, std::string const& _plugin)
 	//{
-	//	std::cout << "framework: checking if service can be created" << std::endl;
+	//	std::cout << "Engine: checking if service can be created" << std::endl;
 	//	
 	//	if (m_FactoryPtr->canCreate(_name, _plugin))
 	//	{
-	//		std::cout << "framework: service can be created" << std::endl;
+	//		std::cout << "Engine: service can be created" << std::endl;
 	//			
-	//		//std::cout << "framework: checking if service can be created" << std::endl;
+	//		//std::cout << "Engine: checking if service can be created" << std::endl;
 	//		//NamedServicePtr service = m_FactoryPtr->createService(_name, _plugin);
 	//		//service.second->setName(service.first);
-	//		//NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Framework");
+	//		//NamedServicePtr container = m_FactoryPtr->createService("ServiceContainer", "Engine");
 	//		//container.second->setName(container.first);
 	//		
 	//		//ServiceContainerPtr casted = container.second.unsafeCast< ServiceContainer >();
@@ -92,14 +92,14 @@ namespace _2Real
 	//	}
 	//	else
 	//	{
-	//		std::cout << "framework: service can not be created" << std::endl;
+	//		std::cout << "Engine: service can not be created" << std::endl;
 	//			
-	//		std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+	//		std::string path = "D:\\cadet\\trunk\\_2RealEngine\\kernel\\testplugins\\bin\\";
 	//		PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
 	//			
 	//		if (pluginPtr.isNull())
 	//		{
-	//			std::cout << "framework: installing plugin" << std::endl;
+	//			std::cout << "Engine: installing plugin" << std::endl;
 	//				
 	//			pluginPtr = PluginPtr(new Plugin(_plugin, path, *this));
 	//			bool success = m_PluginsPtr->installPlugin(pluginPtr);
@@ -123,13 +123,13 @@ namespace _2Real
 	//	return NamedServicePtr();
 	//}
 
-	//void Framework::registerService(std::string const& _name, std::string const& _plugin, UserServiceCreator _creator, bool const& _singleton)
+	//void Engine::registerService(std::string const& _name, std::string const& _plugin, UserServiceCreator _creator, bool const& _singleton)
 	//{
 	//	PluginPtr pluginPtr = m_PluginsPtr->getPlugin(_plugin);
 	//	
 	//	if (pluginPtr.isNull())
 	//	{
-	//		std::cout << "TODO: exception handling; Framework::registerService(); plugin ptr is NULL" << std::endl;
+	//		std::cout << "TODO: exception handling; Engine::registerService(); plugin ptr is NULL" << std::endl;
 	//	}
 	//	else
 	//	{
@@ -137,7 +137,7 @@ namespace _2Real
 	//	}
 	//}
 
-	//ProductionTree *const Framework::createProductionTree()
+	//ProductionTree *const Engine::createProductionTree()
 	//{
 	//	OutputContainer* result = m_FactoryPtr->createOutputContainer();
 	//	

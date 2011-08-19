@@ -33,10 +33,10 @@ namespace _2Real
 	class PluginPool;
 	class ServiceFactory;
 
-	class Framework
+	class EngineImpl
 	{
 
-		friend class Context;
+		friend class Engine;
 
 	public:
 
@@ -60,22 +60,22 @@ namespace _2Real
 		/**
 		*	private constructor
 		*/
-		Framework();
+		EngineImpl();
 
 		/**
 		*
 		*/
-		~Framework();
+		~EngineImpl();
 
 		/**
 		*
 		*/
-		Framework(const Context &_src);
+		EngineImpl(const EngineImpl &_src);
 		
 		/**
 		*
 		*/
-		Framework& operator=(const Context &_src);
+		EngineImpl& operator=(const EngineImpl &_src);
 
 		/**
 		*	takes care of installed plugins

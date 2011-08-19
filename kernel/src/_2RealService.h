@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "_2RealDataTypedefs.h"
+#include "_2RealDataValue.h"
 
-#include "Poco/SharedPtr.h"
+#include <string>
 
 namespace _2Real
 {
@@ -28,36 +28,40 @@ namespace _2Real
 	/**
 	*
 	*/
-	
-	class IDataQueue
+
+	class ServiceImpl;
+	class VariableRef;
+
+	class Service
 	{
 
 	public:
 
 		/**
-		*	adds other queue to listeners
-		*	does nothing if queue already listens
-		*	throws if _queue is null
+		*	
 		*/
-		virtual void addListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	removes other queue from listeners
-		*	does nothng if other queue is not actually a listener
-		*	throws if _queue is null
-		*/
-		virtual void removeListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	function to receive data
-		*/
-		virtual void receiveData(NamedData &_data) = 0;
+		template< typename T >
+		void setSetupParameter< T >(std::string const& _name, T const& _value)
+		{
+			DataValue data(_value);
+			setSetupParameter(_name, data);
+		}
 
 		/**
-		*	function to send out data
-		*	@param _blocking - whether or not the function returns immediately after notifying its listeners
+		*	
 		*/
-		virtual void sendData(bool const& _blocking) = 0;
+		VariableRef const& getOutputVariable(std::string const& _name);
+
+		/**
+		*	
+		*/
+		void setInputVariable(std::string const& _name, VariableRef const& _ref);
+
+	private:
+
+		void setSetupParameter(std::string const& _name, DataValue &_data);
+
+		ServiceImpl		*m_Impl;
 
 	};
 

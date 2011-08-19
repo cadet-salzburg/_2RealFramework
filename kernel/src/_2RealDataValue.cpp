@@ -16,35 +16,13 @@
 	limitations under the License.
 */
 
-#pragma once
-
-/**
-*	annoying & ultimately harmless warning about
-*	template expressions that are longer than 255 bytes
-*/
-#pragma warning(disable:4503)
-
 namespace _2Real
 {
 
-	/**
-	*	dun dun dun - its a service
-	*/
-	class IService;
-
-	/**
-	*	function to create user defined service - exported by plugins
-	*/
-	typedef IService *const (*ServiceCreator)(void);
-
-	/**
-	*	different types of containers
-	*/
-	enum eContainerType
+	template< typename T >
+	DataValue::DataValue(T &_value)
 	{
-		PRODUCTION,
-		SEQUENCE,
-		SYNCHRONIZATION,
-	};
+		Poco::SharedPtr< Poco::Any > anyPtr = Poco::SharedPtr< Poco::Any >(new Poco::Any(_value));
+	}
 
 }

@@ -18,38 +18,48 @@
 
 #pragma once
 
+//included because of eContainerType
+#include "_2RealTypedefs.h"
 #include "_2RealAbstractContainer.h"
-#include "_2RealAbstractValue.h"
-
-#include <list>
 
 namespace _2Real
 {
 
 	/**
-	*	container class
-	*	each service container takes care of exactly one user defined service
+	*
 	*/
 
-	class ServiceContainer : public AbstractContainer
+	class ContainerImpl : public AbstractContainer
 	{
 
 	public:
 
-		ServiceContainer(ContainerName const& _name);
-		ServiceContainer(ServiceContainer const& _src);
-		ServiceContainer& operator=(ServiceContainer const& _src);
-		~ServiceContainer();
+		ContainerImpl(ContainerName const& _name);
+		ContainerImpl(ContainerImpl const& _src);
+		ContainerImpl& operator=(ContainerImpl const& _src);
+		~ContainerImpl();
 
 		/**
-		*	configures container - calls setup function of service
+		*	functions inherited from IContainer
+		*/
+
+		/**
+		*
 		*/
 		void configure(ConfigurationData *const _dataPtr) throw(...);
+
+		/**
+		*	function inherited from Poco::Runnable
+		*/
 
 		/**
 		*
 		*/
 		void run() throw(...);
+
+		/**
+		*	functions inherited from IService
+		*/
 
 		/**
 		*
@@ -64,29 +74,28 @@ namespace _2Real
 		/**
 		*
 		*/
-		void getParameterValue(AbstractValue *const _param);
+		void addContainer(eContainerType const& _type);
 
 		/**
 		*
 		*/
-		void registerInputVariable(AbstractValue *const _var);
+		eContainerType const& type();
 
 		/**
 		*
 		*/
-		void registerOutputVariable(AbstractValue *const _var);
+		void setType(eContainerType const& _type);
 
 	private:
 
-		typedef std::list< AbstractValue * >	VariableList;
-
-		VariableList							m_InputVariables;
-		VariableList							m_OutputVariables;
+		typedef std::list< AbstractContainer * >	ContainerList;
 
 		/**
-		*	the user defined service
+		*	child containers
 		*/
-		IService								*m_ServicePtr;
+		ContainerList								m_Children;
+
+		eContainerType								m_Type;
 
 	};
 

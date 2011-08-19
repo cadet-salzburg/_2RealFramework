@@ -20,7 +20,7 @@
 #pragma once
 
 #include "_2RealServiceContext.h"
-#include "_2RealServiceContainer.h"
+#include "_2RealServiceImpl.h"
 
 namespace _2Real
 {
@@ -29,7 +29,7 @@ namespace _2Real
 	{
 	}
 
-	ServiceContext::ServiceContext(ServiceContainer *const _container) : m_ContainerPtr(_container)
+	ServiceContext::ServiceContext(ServiceImpl *const _container) : m_Container(_container)
 	{
 	}
 
@@ -56,17 +56,17 @@ namespace _2Real
 
 	void ServiceContext::getSetupParameter(AbstractValue *_param)
 	{
-		m_ContainerPtr->getParameterValue(_param);
+		m_Container->getParameterValue(_param);
 	}
 
 	void ServiceContext::registerInputVariable(AbstractValue *_var)
 	{
-		m_ContainerPtr->registerInputVariable(_var);
+		m_Container->registerInputVariable(_var);
 	}
 
 	void ServiceContext::registerOutputVariable(AbstractValue *_var)
 	{
-		m_ContainerPtr->registerOutputVariable(_var);
+		m_Container->registerOutputVariable(_var);
 	}
 
 }

@@ -27,7 +27,7 @@ namespace _2Real
 {
 
 	/**
-	*
+	*	
 	*/
 
 	class ConfigurationData;
@@ -38,22 +38,23 @@ namespace _2Real
 	public:
 
 		/**
-		*
+		*	called in preparation of run() (inherited from poco runnable)
+		*	if _runOnce is true, run will return after one update - otherwise, stop needs to be called
 		*/
-		virtual void start(bool const& _runOnce) = 0;
+		virtual void start(bool const& _runOnce) throw(...) = 0;
 
 		/**
-		*
+		*	stops the running container
 		*/
 		virtual void stop() = 0;
 
 		/**
 		*	checks if container can be reconfigured
 		*/
-		virtual bool const& canBeReconfigured() const = 0;
+		virtual bool const& canReconfigure() const = 0;
 
 		/**
-		*	reconfigures container
+		*	(re)configures container
 		*/
 		virtual void configure(ConfigurationData *const _data) throw(...) = 0;
 

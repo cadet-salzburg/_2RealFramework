@@ -16,43 +16,38 @@
 	limitations under the License.
 */
 
-#include "_2RealPluginContext.h"
-#include "_2RealPlugin.h"
+#pragma once
 
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin) : m_Plugin(_plugin)
-	{
-	}
+	/**
+	*	placeholder class thingie, since it's not really decided if we're going to use
+	*	exceptions or return codes. 
+	*	right now, i throw these objects in some functions, while using them as return
+	*	values in others Oo
+	*/
 
-	PluginContext::PluginContext() : m_Plugin(NULL)
+	class ErrorState
 	{
-	}
 
-	PluginContext::~PluginContext()
-	{
-	}
+	public:
 
-	PluginContext::PluginContext(PluginContext const& _src) : m_Plugin(_src.m_Plugin)
-	{
-	}
+		ErrorState();
 
-	PluginContext& PluginContext::operator=(PluginContext const& _src) 
-	{
-		if (this == &_src)
-		{
-			return *this;
-		}
- 
-		m_Plugin = _src.m_Plugin;
-	 
-		return *this;
-	}
+		ErrorState(unsigned int const& _nr);
 
-	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
-	{
-		m_Plugin->registerService(_name, _creator);
-	}
+		unsigned int m_Code;
+
+		static ErrorState			s_Success;
+		static ErrorState			s_Failure;
+		static ErrorState const&	success();
+		static ErrorState const&	failure();
+
+		bool operator==(ErrorState const& _rhs);
+		bool operator!=(ErrorState const& _rhs);
+		ErrorState& operator=(ErrorState const& _src);
+
+	};
 
 }

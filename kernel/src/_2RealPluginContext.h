@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealTypedefs.h"
+#include "_2RealServiceTypedefs.h"
 
 #include <string>
 
@@ -37,12 +37,7 @@ namespace _2Real
 		*	registers a service in the framework
 		*/
 		void registerService(std::string const& _name, ServiceCreator _creator);
-		
-		/**
-		*	registers a singleton in the framework
-		*/
-		void registerSingleton(std::string const& _name, ServiceCreator _creator);
-	
+
 	private:
 
 		/**
@@ -54,6 +49,11 @@ namespace _2Real
 		*
 		*/
 		PluginContext(Plugin *const _plugin);
+
+		/**
+		*
+		*/
+		PluginContext();
 		
 		/**
 		*
@@ -68,7 +68,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Plugin			*m_PluginPtr;
+		Plugin			*m_Plugin;
 
 	};
 

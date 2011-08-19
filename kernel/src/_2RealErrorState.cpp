@@ -16,43 +16,40 @@
 	limitations under the License.
 */
 
-#include "_2RealPluginContext.h"
-#include "_2RealPlugin.h"
+#include "_2RealErrorState.h"
 
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin) : m_Plugin(_plugin)
+	ErrorState ErrorState::s_Success = ErrorState(25);
+	ErrorState ErrorState::s_Failure = ErrorState(100);
+
+	ErrorState const& ErrorState::success()
+	{
+		return s_Success;
+	}
+
+	ErrorState const& ErrorState::failure()
+	{
+		return s_Failure;
+	}
+
+	ErrorState::ErrorState() : m_Code(0)
 	{
 	}
 
-	PluginContext::PluginContext() : m_Plugin(NULL)
+	ErrorState::ErrorState(unsigned int const& _nr) : m_Code(_nr)
 	{
 	}
 
-	PluginContext::~PluginContext()
+	bool ErrorState::operator==(ErrorState const& _rhs)
 	{
+		return (m_Code == _rhs.m_Code);
 	}
 
-	PluginContext::PluginContext(PluginContext const& _src) : m_Plugin(_src.m_Plugin)
+	bool ErrorState::operator!=(ErrorState const& _rhs)
 	{
-	}
-
-	PluginContext& PluginContext::operator=(PluginContext const& _src) 
-	{
-		if (this == &_src)
-		{
-			return *this;
-		}
- 
-		m_Plugin = _src.m_Plugin;
-	 
-		return *this;
-	}
-
-	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
-	{
-		m_Plugin->registerService(_name, _creator);
+		return (m_Code != _rhs.m_Code);
 	}
 
 }

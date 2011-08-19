@@ -18,9 +18,10 @@
 
 #pragma once
 
-#include "_2RealDataTypedefs.h"
+//included because of eType
+#include "_2RealIdentifierImpl.h"
 
-#include "Poco/SharedPtr.h"
+#include <map>
 
 namespace _2Real
 {
@@ -28,36 +29,60 @@ namespace _2Real
 	/**
 	*
 	*/
-	
-	class IDataQueue
+
+	class Identities
 	{
+
+		friend class EngineImpl;
 
 	public:
 
 		/**
-		*	adds other queue to listeners
-		*	does nothing if queue already listens
-		*	throws if _queue is null
+		*
 		*/
-		virtual void addListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	removes other queue from listeners
-		*	does nothng if other queue is not actually a listener
-		*	throws if _queue is null
-		*/
-		virtual void removeListener(IDataQueue *const _queue) throw(...) = 0;
-		
-		/**
-		*	function to receive data
-		*/
-		virtual void receiveData(NamedData &_data) = 0;
+		IdentifierImpl const *const createID(std::string const& _name, IdentifierImpl::eType const& _type);
+
+	private:
 
 		/**
-		*	function to send out data
-		*	@param _blocking - whether or not the function returns immediately after notifying its listeners
+		*
 		*/
-		virtual void sendData(bool const& _blocking) = 0;
+		Identities();
+
+		/**
+		*
+		*/
+		Identities(Identities const& _src) throw(...);
+
+		/**
+		*
+		*/
+		Identities& operator=(Identities const& _src) throw(...);
+
+		/**
+		*
+		*/
+		~Identities();
+
+		/**
+		*
+		*/
+		typedef std::pair< unsigned int, IdentifierImpl * >		NamedID;
+
+		/**
+		*
+		*/
+		typedef std::map< unsigned int, IdentifierImpl * >		IDMap;
+
+		/**
+		*
+		*/
+		IDMap													m_IDs;
+
+		/**
+		*
+		*/
+		unsigned int											m_iCreationCount;
 
 	};
 

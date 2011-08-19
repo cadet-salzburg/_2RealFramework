@@ -18,9 +18,9 @@
 
 #pragma once
 
-//included because of eContainerType
-#include "_2RealTypedefs.h"
-#include "_2RealAbstractContainer.h"
+#include "_2RealServiceTypedefs.h"
+
+#include <string>
 
 namespace _2Real
 {
@@ -29,73 +29,80 @@ namespace _2Real
 	*
 	*/
 
-	class ProductionContainer : public AbstractContainer
+	class Plugin;
+	class Metadata;
+
+	class FactoryReference
 	{
 
 	public:
 
-		ProductionContainer(ContainerName const& _name);
-		ProductionContainer(ProductionContainer const& _src);
-		ProductionContainer& operator=(ProductionContainer const& _src);
-		~ProductionContainer();
-
 		/**
-		*	functions inherited from IContainer
+		*
 		*/
+		FactoryReference(Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata);
 
 		/**
 		*
 		*/
-		void configure(ConfigurationData *const _dataPtr) throw(...);
-
-		/**
-		*	function inherited from Poco::Runnable
-		*/
+		FactoryReference(FactoryReference const& _src) throw(...);
 
 		/**
 		*
 		*/
-		void run() throw(...);
-
-		/**
-		*	functions inherited from IService
-		*/
+		FactoryReference& operator=(FactoryReference const& _src) throw(...);
 
 		/**
 		*
 		*/
-		void update() throw(...);
+		~FactoryReference();
 
 		/**
-		*
+		*	whether reconfiguration is possible
 		*/
-		void shutdown() throw(...);
+		const bool canReconfigure() const;
 
 		/**
-		*
+		*	duh.
 		*/
-		void addContainer(eContainerType const& _type);
+		const bool isSingleton() const;
 
 		/**
-		*
+		*	checks if there is everything ok w/ plugin
 		*/
-		eContainerType const& type();
+		const bool canCreate() const;
 
 		/**
-		*
+		*	plugin pointer
 		*/
-		void setType(eContainerType const& _type);
+		Plugin const *const plugin() const;
+
+		/**
+		*	metadata pointer
+		*/
+		Metadata const *const metadata() const;
+
+		/**
+		*	creates service obj, or returns singleton instance
+		*/
+		IService *const create();
 
 	private:
 
-		typedef std::list< AbstractContainer * >	ContainerList;
+		/**
+		*
+		*/
+		const Plugin		*const m_Plugin;
 
 		/**
-		*	child containers
+		*
 		*/
-		ContainerList								m_Children;
+		const Metadata		*const m_Metadata;
 
-		eContainerType								m_Type;
+		/**
+		*
+		*/
+		const ServiceCreator	m_Creator;
 
 	};
 

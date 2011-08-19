@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,69 +18,36 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include <vector>
 
 namespace _2Real
 {
 
+	class Identifier;
+
 	/**
-	*
+	*	callback for exceptions
 	*/
+	typedef void (*ExceptionCallback)(Identifier const& _sender);
 
-	class Framework;
-	class ProductionTree;
+	/**
+	*	callback for data
+	*/
+	typedef void (*NewDataCallback)(Identifier const& _sender);
 
-	class Context
+	/**
+	*	production graph (formerly container) types
+	*/
+	enum eContainerType
 	{
-
-	public:
-
-		/**
-		*	get instance pointer
-		*/
-		static Context *const instance();
-
-		/**
-		*	create new ProductionTree
-		*/
-		ProductionTree *const createProductionTree();
-
-	private:
-
-		/**
-		*
-		*/
-		static Context			*s_ContextPtr;
-
-		/**
-		*
-		*/
-		static Poco::Mutex		s_Mutex;
-
-		/**
-		*
-		*/
-		Context();
-
-		/**
-		*
-		*/
-		Context(Context const& _src);
-
-		/**
-		*
-		*/
-		Context& operator=(Context const& _src);
-
-		/**
-		*
-		*/
-		~Context();
-
-		/**
-		*
-		*/
-		Framework				*m_FrameworkPtr;
-
+		PRODDUCTION			=	0x00000000,
+		SEQUENCE			=	0x00000001,
+		SYNCHRONIZATION		=	0x00000002,
 	};
+
+	/**
+	*	sreifitnedi fo rotcev a
+	*/
+	typedef std::vector< Identifier >	Identifiers;
+
 }

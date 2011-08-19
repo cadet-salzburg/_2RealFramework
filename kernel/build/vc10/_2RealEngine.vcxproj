@@ -12,54 +12,45 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractValue.cpp" />
-    <ClCompile Include="..\..\src\_2RealAnyValue.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealConfigurationData.cpp" />
-    <ClCompile Include="..\..\src\_2RealContainerName.cpp" />
-    <ClCompile Include="..\..\src\_2RealContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealData.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFramework.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealErrorState.cpp" />
+    <ClCompile Include="..\..\src\_2RealFactoryReference.cpp" />
+    <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealIdentifierImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealIdentities.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealProductionContainer.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
+    <ClCompile Include="..\..\src\_2RealProductionTreeImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
-    <ClCompile Include="..\..\src\_2RealVariableName.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractValue.h" />
-    <ClInclude Include="..\..\src\_2RealAnyValue.h" />
-    <ClInclude Include="..\..\src\_2RealConfigurationData.h" />
-    <ClInclude Include="..\..\src\_2RealContainerName.h" />
-    <ClInclude Include="..\..\src\_2RealContext.h" />
-    <ClInclude Include="..\..\src\_2RealData.h" />
-    <ClInclude Include="..\..\src\_2RealFramework.h" />
+    <ClInclude Include="..\..\src\_2RealDataTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealEngine.h" />
+    <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
+    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealErrorState.h" />
+    <ClInclude Include="..\..\src\_2RealFactoryReference.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
     <ClInclude Include="..\..\src\_2RealIDataQueue.h" />
-    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealIdentifier.h" />
+    <ClInclude Include="..\..\src\_2RealIdentifierImpl.h" />
+    <ClInclude Include="..\..\src\_2RealIdentities.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
-    <ClInclude Include="..\..\src\_2RealProductionContainer.h" />
-    <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
+    <ClInclude Include="..\..\src\_2RealProductionTreeImpl.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
-    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
-    <ClInclude Include="..\..\src\_2RealVariableName.h" />
+    <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
+    <ClInclude Include="..\..\src\_2RealServiceTypedefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
