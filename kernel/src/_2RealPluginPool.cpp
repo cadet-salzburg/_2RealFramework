@@ -20,8 +20,8 @@
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealException.h"
-#include "_2RealIdentifierImpl.h"
 #include "_2RealEntities.h"
+#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -30,18 +30,14 @@ namespace _2Real
 	{
 	}
 
-	PluginPool::PluginPool(ServiceFactory *const _factory, Entities *const _entities) : m_Factory(_factory), m_Entities(_entities)
+	PluginPool::PluginPool(PluginPool const& _src)
 	{
+		throw Exception::noCopy();
 	}
 
-	PluginPool::PluginPool(PluginPool const& _src) throw(...)
+	PluginPool& PluginPool::operator=(PluginPool const& _src)
 	{
-		throw Exception::failure();
-	}
-
-	PluginPool& PluginPool::operator=(PluginPool const& _src) throw(...)
-	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	PluginPool::~PluginPool()
@@ -56,22 +52,22 @@ namespace _2Real
 			}
 			catch (...)
 			{
-				std::cout << "plugin uninstall error: " << it->first.name() << std::endl;
+				std::cout << "plugin uninstall error: " << it->first << std::endl;
 			}
 		}
 	}
 
-	IdentifierImpl const *const PluginPool::install(std::string const& _name, std::string const& _path, std::string const& _class) throw(...)
+	const Identifier PluginPool::install(std::string const& _name, std::string const& _path, std::string const& _class, std::list< Identifier > &_ids) throw(...)
 	{
 		try
 		{
-			Plugin *plugin = new Plugin(_path, _class, m_Factory);
-			const IdentifierImpl *id = m_Entities->createID(_name, plugin);
-			m_Plugins.insert(NamedPlugin(*id, plugin));
+			const Entities::ID id = m_Entities->createPlugin(_name, _path, _class);
+			Plugin *plugin = static_cast< Plugin * >(id.second);
+			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
 			plugin->install();
 			plugin->load();
-			plugin->start();
-			return id;
+			plugin->start(_ids);
+			return id.first;
 		}
 		catch (...)
 		{
@@ -79,7 +75,7 @@ namespace _2Real
 		}
 	}
 
-	void PluginPool::uninstall(IdentifierImpl const& _id) throw(...)
+	void PluginPool::uninstall(unsigned int const& _id) throw(...)
 	{
 		PluginMap::iterator it = m_Plugins.find(_id);
 
@@ -100,7 +96,7 @@ namespace _2Real
 		}
 	}
 
-	Plugin const *const PluginPool::get(IdentifierImpl const& _id) const
+	Plugin const *const PluginPool::get(unsigned int const& _id) const
 	{
 		PluginMap::const_iterator it = m_Plugins.find(_id);
 		

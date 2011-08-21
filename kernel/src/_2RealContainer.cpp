@@ -16,34 +16,26 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealServiceImpl.h"
-#include "_2RealServiceContext.h"
+#include "_2RealContainer.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
-
-	ServiceImpl::ServiceImpl(AbstractContainer *const _father, IService *const _service, IdentifierImpl *const _id) : 
-		AbstractContainer(_father, _id), m_Service(_service)
-	{
-		if (m_Service == NULL)
-		{
-			throw Exception::failure();
-		}
-	}
-
-	ServiceImpl::ServiceImpl(ServiceImpl const& _src) : AbstractContainer(_src)
+	
+	Container::Container(AbstractContainer *const _father, IdentifierImpl *const _id) : AbstractContainer(_father, _id)
 	{
 	}
 
-	ServiceImpl& ServiceImpl::operator=(ServiceImpl const& _src)
+	Container::Container(Container const& _src) : AbstractContainer(_src)
+	{
+	}
+
+	Container& Container::operator=(Container const& _src)
 	{
 		throw Exception::noCopy();
 	}
 
-	ServiceImpl::~ServiceImpl()
+	Container::~Container()
 	{
 		try
 		{
@@ -54,11 +46,10 @@ namespace _2Real
 			std::cout << "service shutdown failed" << std::endl;
 		}
 		
-		//user defined service is deleted here
-		delete m_Service;
+		//TODO: children are deleted here
 	}
 
-	void ServiceImpl::configure(ConfigurationData *const _config) throw(...)
+	void Container::configure(ConfigurationData *const _config)
 	{
 		if (m_bIsConfigured && !m_bCanReconfigure)
 		{
@@ -73,12 +64,10 @@ namespace _2Real
 
 		try
 		{
-			//call user service's setup method
-			m_Service->setup(new ServiceContext(this));
+			//TODO: setup children here
 		}
 		catch (...)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 
@@ -86,53 +75,47 @@ namespace _2Real
 		m_Configuration = _config;
 	}
 
-	void ServiceImpl::run() throw(...)
+	void Container::run()
 	{
 		while (m_bIsConfigured && (m_bRun || m_bRunOnce))
 		{
 			try
 			{
-				//call user service's update method
-				m_Service->update();
 			}
 			catch (...)
 			{
-				//TODO: set error state
+
 				throw Exception::failure();
 			}
 
 			m_bRunOnce = false;
-			//send data without waiting
 			sendData(false);
 		}
 	}
 
-	void ServiceImpl::update() throw(...)
+	void Container::update()
 	{
 		if (!m_bIsConfigured)
 		{
-			//todo: set error state
 			throw Exception::failure();
 		}
 
 		try
 		{
-			m_Service->update();
+
 		}
 		catch (...)
 		{
 			throw Exception::failure();
 		}
 
-		//send data - wait until all listeners received it
 		sendData(true);
 	}
 
-	void ServiceImpl::shutdown() throw(...)
+	void Container::shutdown()
 	{
 		try
 		{
-			m_Service->shutdown();
 		}
 		catch(...)
 		{
@@ -140,20 +123,4 @@ namespace _2Real
 			throw Exception::failure();
 		}
 	}
-
-	void ServiceImpl::getParameterValue(AbstractValue *const _param)
-	{
-		//TODO
-	}
-
-	void ServiceImpl::registerInputVariable(AbstractValue *const _var)
-	{
-		m_InputVariables.push_back(_var);
-	}
-
-	void ServiceImpl::registerOutputVariable(AbstractValue *const _var)
-	{
-		m_OutputVariables.push_back(_var);
-	}
-
 }

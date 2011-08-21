@@ -19,6 +19,7 @@
 #include "_2RealAbstractContainer.h"
 #include "_2RealException.h"
 #include "_2RealConfigurationData.h"
+#include "_2RealIdentifierImpl.h"
 #include "_2RealData.h"
 
 #include "Poco\Delegate.h"
@@ -26,26 +27,18 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer() : IEntity(IEntity::CONTAINER),
-		m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
+	AbstractContainer::AbstractContainer(AbstractContainer *const _father, IdentifierImpl *const _id) : IEntity(_id),
+		m_Father(_father), m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
 	{
 	}
 
-	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : IEntity(_src.type())
+	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : IEntity(_src)
 	{
-#ifdef _DEBUG
-		std::cout << "abstract container copy constructor called" << std::endl;
-#endif
-		//does nothing
 	}
 
 	AbstractContainer& AbstractContainer::operator=(AbstractContainer const& _src)
 	{
-#ifdef _DEBUG
-		std::cout << "abstract container assignment operator called" << std::endl;
-#endif
-		//does nothing
-		return *this;
+		throw Exception::noCopy();
 	}
 
 	AbstractContainer::~AbstractContainer()
@@ -81,11 +74,15 @@ namespace _2Real
 		return m_bCanReconfigure;
 	}
 
+	AbstractContainer *const AbstractContainer::father()
+	{
+		return m_Father;
+	}
+
 	void AbstractContainer::addListener(IDataQueue *const _queue) throw(...)
 	{
 		if (_queue == NULL)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 
@@ -96,7 +93,6 @@ namespace _2Real
 	{
 		if (_queue == NULL)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 

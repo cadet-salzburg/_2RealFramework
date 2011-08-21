@@ -23,8 +23,8 @@
 #include "_2RealServiceFactory.h"
 #include "_2RealEntities.h"
 #include "_2RealIdentifier.h"
-#include "_2RealIdentifierImpl.h"
 #include "_2RealException.h"
+#include "_2RealIEntity.h"
 
 namespace _2Real
 {
@@ -90,24 +90,28 @@ namespace _2Real
 		return false;
 	}
 
-	EngineImpl::EngineImpl() : m_PluginPool(NULL), m_ServiceFactory(NULL)
+	EngineImpl::EngineImpl() : m_Plugins(NULL), m_Factory(NULL)
 	{
 #ifdef _DEBUG
 		std::cout << "engine impl ctor called" << std::endl;
 #endif
 		m_Entities = new Entities();
-		m_ServiceFactory = new ServiceFactory(m_Entities);
-		m_PluginPool = new PluginPool(m_ServiceFactory, m_Entities);
+		m_Factory = new ServiceFactory();
+		m_Plugins = new PluginPool();
+
+		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Plugins;
+		m_Entities->m_Factory = m_Plugins->m_Factory = m_Factory;
+		m_Plugins->m_Entities = m_Factory->m_Entities = m_Entities;
 	}
 
 	EngineImpl::EngineImpl(EngineImpl const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	EngineImpl& EngineImpl::operator=(EngineImpl const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	EngineImpl::~EngineImpl()
@@ -116,36 +120,36 @@ namespace _2Real
 		std::cout << "engine impl dtor called" << std::endl;
 #endif
 
-		delete m_PluginPool;
-		delete m_ServiceFactory;
+		delete m_Plugins;
+		delete m_Factory;
 		delete m_Entities;
 	}
 
-	//const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, std::vector< Identifier > &_serviceIDs) throw(...)
-	//{
-	//	try
-	//	{
-	//		//attempt to load & start plugin - if successfull, this causes all services to be exported by the plugin
-	//		const IdentifierImpl *pluginID = m_PluginPool->install(_name, _path, _class);
-	//		
-	//		//services were exported, so get their factory ids
-	//		std::vector< IdentifierImpl > services = m_PluginPool->get(*pluginID)->serviceIDs();
-	//		_serviceIDs.clear();
-	//		for (std::vector< IdentifierImpl >::iterator it = services.begin(); it != services.end(); it++)
-	//		{
-	//			IdentifierImpl id = *it;
-	//			_serviceIDs.push_back(Identifier(&id));
-	//		}
+	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
+	{
+		try
+		{
+			return m_Plugins->install(_name, _path, _class, _serviceIDs);
+		}
+		catch (...)
+		{
+			//error handling is still TODO
+			throw;
+		}
+	}
 
-	//		//yay
-	//		return Identifier(pluginID);
-	//	}
-	//	catch (...)
-	//	{
-	//		//error handling is still TODO
-	//		throw;
-	//	}
-	//}
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...)
+	{
+		try
+		{
+			return m_Factory->createService(_name, _id, _setupIDs);
+		}
+		catch (...)
+		{
+			//error handling is still TODO
+			throw;
+		}
+	}
 
 	//void EngineImpl::dumpPluginInfo(Identifier const& _pluginID)
 	//{

@@ -23,38 +23,49 @@
 namespace _2Real
 {
 
-	IEntity::IEntity(eType const& _type) : m_Type(_type), m_ID(NULL)
+	IEntity::IEntity(IdentifierImpl *const _id) : m_ID(_id)
 	{
+		if (_id == NULL)
+		{
+			throw Exception::failure();
+		}
 	}
 
-	IEntity::IEntity(IEntity const& _src) throw(...) : m_Type(IEntity::INVALID)
+	IEntity::IEntity(IEntity const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
-	IEntity& IEntity::operator=(IEntity const& _src) throw(...)
+	IEntity& IEntity::operator=(IEntity const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	IEntity::~IEntity()
 	{
-		m_ID = NULL;
+		if (m_ID != NULL)
+		{
+			m_ID->release();
+		}
 	}
 
-	IEntity::eType const& IEntity::type() const
-	{
-		return m_Type;
-	}
-
-	IdentifierImpl const& IEntity::id() const
+	IdentifierImpl::eType const& IEntity::type() const
 	{
 		if (m_ID != NULL)
 		{
-			return *m_ID;
+			return m_ID->type();
 		}
 
-		//how strange
+		throw Exception::failure();
+	}
+
+	unsigned int const& IEntity::id() const
+	{
+		if (m_ID != NULL)
+		{
+			return m_ID->id();
+		}
+
 		throw Exception::failure();
 	}
 

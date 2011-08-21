@@ -41,7 +41,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		FactoryReference(Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata);
+		FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata, IdentifierImpl *const _id);
 
 		/**
 		*
@@ -88,22 +88,29 @@ namespace _2Real
 		*/
 		IService *const create();
 
+		/**
+		*	name
+		*/
+		std::string const& name() const;
+
 	private:
 
 		/**
 		*
 		*/
-		const Plugin		*const m_Plugin;
+		const Plugin			*m_Plugin;
 
 		/**
 		*
 		*/
-		const Metadata		*const m_Metadata;
+		const Metadata			*m_Metadata;
 
 		/**
 		*
 		*/
 		const ServiceCreator	m_Creator;
+
+		const std::string		m_Name;
 
 	};
 

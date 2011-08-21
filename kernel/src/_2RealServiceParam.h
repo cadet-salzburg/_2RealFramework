@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIdentifierImpl.h"
+#include "_2RealIEntity.h"
 
 namespace _2Real
 {
@@ -27,25 +27,21 @@ namespace _2Real
 	*
 	*/
 
-	class IdentifierImpl;
-	enum IdentifierImpl::eType;
+	class ServiceImpl;
 
-	class IEntity
+	class ServiceParam : public IEntity
 	{
 
-	public:
+		ServiceParam(ServiceImpl const *const _service);
+		ServiceParam(ServiceParam const& _src);
+		ServiceParam& operator=(ServiceParam const& _src);
+		~ServiceParam();
 
-		IEntity(IdentifierImpl *const _id);
-		IEntity(IEntity const& _src) throw(...);
-		IEntity& operator=(IEntity const& _src) throw(...);
-		~IEntity();
-		
-		IdentifierImpl::eType const& type() const;
-		unsigned int const& id() const;
+		ServiceImpl const *const service() const;
 
 	private:
-	
-		IdentifierImpl		*m_ID;
+
+		const ServiceImpl			*m_Service;
 
 	};
 

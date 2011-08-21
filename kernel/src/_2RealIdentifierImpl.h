@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "_2RealIEntity.h"
-
 #include <string>
 
 namespace _2Real
@@ -32,9 +30,26 @@ namespace _2Real
 	class IdentifierImpl
 	{
 
-		friend class Entities;
-
 	public:
+
+		enum eType
+		{
+			INVALID,
+			PLUGIN,
+			FACTORY,
+			SERVICE,
+			SEQUENCE,
+			SYNCHRONIZATION,
+			NIRVANA,
+			SETUP,
+			INPUT,
+			OUTPUT
+		};
+
+		/**
+		*	
+		*/
+		IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, IdentifierImpl::eType const& _type, unsigned int const& _id);
 
 		/**
 		*
@@ -99,39 +114,59 @@ namespace _2Real
 		/**
 		*	
 		*/
+		std::string const& info() const;
+
+		/**
+		*	
+		*/
 		unsigned int const& id() const;
 
 		/**
 		*	
 		*/
-		IEntity::eType const& type() const;
+		IdentifierImpl::eType const& type() const;
+
+		/**
+		*
+		*/
+		void retain();
+
+		/**
+		*
+		*/
+		void release();
 
 	private:
 
 		/**
-		*	
-		*/
-		IdentifierImpl(std::string const& _name, std::string const& _strType, IEntity::eType const& _type, unsigned int const& _id);
-
-		/**
 		*	orginal name given by application programmer
 		*/
-		std::string		m_Name;
-
-		/**
-		*	type
-		*/
-		IEntity::eType	m_Type;
+		const std::string			m_Name;
 
 		/**
 		*	type as string
 		*/
-		std::string		m_Typename;
+		const std::string			m_Typename;
+
+		/**
+		*	info
+		*/
+		const std::string			m_Info;
+
+		/**
+		*	type
+		*/
+		const IdentifierImpl::eType	m_Type;
 
 		/**
 		*	unique id
 		*/
-		unsigned int	m_ID;
+		const unsigned int			m_ID;
+
+		/**
+		*	ref count
+		*/
+		unsigned int				m_iRefCount;
 
 	};
 

@@ -20,27 +20,28 @@
 #include "_2RealFactoryReference.h"
 #include "_2RealException.h"
 #include "_2RealServiceImpl.h"
+#include "_2RealIdentifier.h"
 #include "_2RealEntities.h"
 #include "_2RealMetadata.h"
-//#include "_2RealProductionTreeImpl.h"
+#include "_2RealContainer.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory(Entities *const _entities) : m_Entities(_entities)
+	ServiceFactory::ServiceFactory() : m_Entities(NULL), m_Plugins(NULL)
 	{
 	}
 
 	ServiceFactory::ServiceFactory(ServiceFactory const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	ServiceFactory& ServiceFactory::operator=(ServiceFactory const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	ServiceFactory::~ServiceFactory()
@@ -68,31 +69,25 @@ namespace _2Real
 		}
 	}
 
-	IdentifierImpl const *const ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, Metadata const *const _metadata, ServiceCreator _creator) throw(...)
+	const Identifier ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, Metadata const *const _metadata, ServiceCreator _creator) throw(...)
 	{
-
-		//check if service w/ same name was already registered by same plugin, if so do nothing (no exception, either)
-		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-		{
-			//so there is a service with the same name - the plugin might be different still
-			if (it->first.name() == _name)
-			{
-				ServiceReference ref = it->second;
-				if (ref.first->plugin() == _plugin)
-				{
-					//the plugin pointers are equal, so don't register anything
-					return NULL;
-				}
-			}
-		}
-
 		try
 		{
-			FactoryReference *factory = new FactoryReference(_plugin, _creator, _metadata);
-			const IdentifierImpl *id = m_Entities->createID(_name, factory);
+			//check if service w/ same name was already registered by same plugin
+			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+			{
+				ServiceReference ref = it->second;
+				if (ref.first->name() == _name && ref.first->plugin() == _plugin)
+				{
+					throw Exception::failure();
+				}
+			}
+
+			const Entities::ID id = m_Entities->createFactoryRef(_name, _plugin, _creator, _metadata);
+			FactoryReference *factory = static_cast< FactoryReference * >(id.second);
 			ServiceReference ref(factory, ServiceList());
-			m_References.insert(NamedServiceReference(*id, ref));
-			return id;
+			m_References.insert(NamedServiceReference(factory->id(), ref));
+			return id.first;
 		}
 		catch (...)
 		{
@@ -100,9 +95,9 @@ namespace _2Real
 		}
 	}
 
-	const bool ServiceFactory::canCreate(IdentifierImpl const& _serviceID) const throw (...)
+	const bool ServiceFactory::canCreate(unsigned int const& _id) const throw (...)
 	{
-		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		ReferenceTable::const_iterator it = m_References.find(_id);
 		
 		if (it != m_References.end())
 		{
@@ -113,9 +108,9 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const bool ServiceFactory::isSingleton(IdentifierImpl const& _serviceID) const throw(...)
+	const bool ServiceFactory::isSingleton(unsigned int const& _id) const throw(...)
 	{
-		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		ReferenceTable::const_iterator it = m_References.find(_id);
 		
 		if (it != m_References.end())
 		{
@@ -126,9 +121,9 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const bool ServiceFactory::canReconfigure(IdentifierImpl const& _serviceID) const throw(...)
+	const bool ServiceFactory::canReconfigure(unsigned int const& _id) const throw(...)
 	{
-		ReferenceTable::const_iterator it = m_References.find(_serviceID);
+		ReferenceTable::const_iterator it = m_References.find(_id);
 		
 		if (it != m_References.end())
 		{
@@ -139,32 +134,34 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	IdentifierImpl const *const ServiceFactory::createServiceContainer(IdentifierImpl const& _serviceID) throw (...)
-	{
-		ReferenceTable::iterator it = m_References.find(_serviceID);
-		if (it == m_References.end())
-		{
-			throw Exception::failure();
-		}
-		
-		IService *userService;
-		ServiceImpl *container;
-		
-		ServiceReference ref = it->second;
-		
+	const Identifier ServiceFactory::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...)
+	{	
 		try
 		{
+			ReferenceTable::iterator it = m_References.find(_id.id());
+			if (it == m_References.end())
+			{
+				throw Exception::failure();
+			}		
+
+			ServiceReference ref = it->second;
+			FactoryReference factory = *ref.first;
+			ServiceList services = ref.second;
+
 			//service does not get identifier
-			userService = ref.first->create();
+			IService *userService = factory.create();
+
+			const Metadata *data = factory.metadata();
+			//TODO: get metadata & store
 			
 			//service container id shares name of service
-			container = new ServiceImpl(userService);
-			const IdentifierImpl *id = m_Entities->createID(_serviceID.name(), container);
-			m_Containers.insert(NamedContainer(*id, container));
+			const Entities::ID id = m_Entities->createService(_name, NULL, userService);
+			ServiceImpl *service = static_cast< ServiceImpl * >(id.second);
 			
 			//save container id
-			ref.second.push_back(container);
-			return id;
+			services.push_back(service);
+
+			return id.first;
 		}
 		catch (...)
 		{

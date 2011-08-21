@@ -45,7 +45,7 @@ namespace _2Real
 	/**
 	*
 	*/
-	typedef Poco::SharedPtr< VariableData >				SharedDataPtr;
+	typedef Poco::SharedPtr< VariableData >					SharedDataPtr;
 
 	/**
 	*

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "_2RealAbstractValue.h"
 #include "_2RealAbstractContainer.h"
 
 #include <list>
@@ -27,53 +26,36 @@ namespace _2Real
 {
 
 	/**
-	*	service container
+	*
 	*/
 
-	class IService;
-
-	class ServiceImpl : public AbstractContainer
+	class Container : public AbstractContainer
 	{
-
+		
 	public:
 
 		/**
-		*
+		*	
 		*/
-		void getParameterValue(AbstractValue *const _param);
-
-		/**
-		*
-		*/
-		void registerInputVariable(AbstractValue *const _var);
-
-		/**
-		*
-		*/
-		void registerOutputVariable(AbstractValue *const _var);
-
-		/**
-		*	throws if user defined service is null
-		*/
-		ServiceImpl(AbstractContainer *const _father, IService *const _service, IdentifierImpl *const _id) throw(...);
+		Container(AbstractContainer *const _father, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceImpl(ServiceImpl const& _src) throw(...);
+		Container(Container const& _src) throw(...);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceImpl& operator=(ServiceImpl const& _src) throw(...);
+		Container& operator=(Container const& _src) throw(...);
 
 		/**
-		*	destructor also performs shutdown & destroys user defined service
+		*	calls destructor of all children
 		*/
-		~ServiceImpl();
+		~Container();
 
 		/**
-		*	configures container - calls setup function of service
+		*	config calls config of all children
 		*/
 		void configure(ConfigurationData *const _dataPtr) throw(...);
 
@@ -94,25 +76,7 @@ namespace _2Real
 
 	private:
 
-		/**
-		*	
-		*/
-		typedef std::list< AbstractValue * >	VariableList;
-
-		/**
-		*	input variables registred by user defined service
-		*/
-		VariableList							m_InputVariables;
-		
-		/**
-		*	output variables registred by user defined service
-		*/
-		VariableList							m_OutputVariables;
-
-		/**
-		*	the user defined service
-		*/
-		IService								*m_Service;
+		std::list< AbstractContainer * >	m_Children;
 
 	};
 

@@ -34,8 +34,6 @@ namespace _2Real
 	*							mutexes
 	*							a service's setup parameters
 	*							a service's input / output variables
-	*
-	*	note that 2 identifiers may compare as different, although their names and types are the same
 	*/
 
 	class IdentifierImpl;
@@ -44,6 +42,21 @@ namespace _2Real
 	{
 
 	public:
+
+		/**
+		*
+		*/
+		Identifier(Identifier const& _src);
+
+		/**
+		*
+		*/
+		Identifier& operator=(Identifier const& _src);
+
+		/**
+		*
+		*/
+		~Identifier();
 
 		/**
 		*	true if the identifiers refer to the same entity within the framework
@@ -92,24 +105,24 @@ namespace _2Real
 		*/
 		std::string const& info() const;
 
+		/**
+		*	the unique id of the entity
+		*/
+		unsigned int const& id() const;
+
 	private:
 
-		friend class EngineImpl;
+		friend class Entities;
 
 		/**
 		*	identifiers may be created only by the 2 real engine
 		*/
-		Identifier();
+		Identifier(IdentifierImpl *const _id);
 
 		/**
-		*	identifiers may be created only by the 2 real engine
+		*	
 		*/
-		Identifier(IdentifierImpl const *const _impl);
-
-		/**
-		*	dun dun dun.
-		*/
-		const IdentifierImpl			*m_Impl;
+		IdentifierImpl		*m_Impl;
 
 	};
 

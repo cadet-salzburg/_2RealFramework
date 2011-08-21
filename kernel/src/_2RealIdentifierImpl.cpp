@@ -17,37 +17,40 @@
 */
 
 #include "_2RealIdentifierImpl.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	IdentifierImpl::IdentifierImpl() : m_Type(IEntity::INVALID), m_ID(0)
-	{
-	}
-
-	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, IEntity::eType const& _type, unsigned int const& _id) :
-		m_Name(_name), m_Typename(_strType), m_Type(_type), m_ID(_id)
+	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, IdentifierImpl::eType const& _type, unsigned int const& _id) :
+		m_Name(_name), m_Typename(_strType), m_Info(_info), m_Type(_type), m_ID(_id), m_iRefCount(1)
 	{
 	}
 
 	IdentifierImpl::IdentifierImpl(IdentifierImpl const& _src) :
-		m_Name(_src.m_Name), m_Type(_src.m_Type), m_ID(_src.m_ID), m_Typename(_src.m_Typename)
+		m_Name(_src.m_Name), m_Type(_src.m_Type), m_ID(_src.m_ID), m_Typename(_src.m_Typename), m_Info(_src.m_Info)
 	{
+		throw Exception::noCopy();
 	}
 
 	IdentifierImpl& IdentifierImpl::operator=(IdentifierImpl const& _src)
 	{
-		if (this == &_src)
+		throw Exception::noCopy();
+	}
+
+	void IdentifierImpl::retain()
+	{
+		m_iRefCount++;
+	}
+
+	void IdentifierImpl::release()
+	{
+		m_iRefCount--;
+		
+		if (m_iRefCount = NULL)
 		{
-			return *this;
+			delete this;
 		}
-
-		m_Name = _src.m_Name;
-		m_Typename = _src.m_Typename;
-		m_Type = _src.m_Type;
-		m_ID = _src.m_ID;
-
-		return *this;
 	}
 
 	IdentifierImpl::~IdentifierImpl()
@@ -94,7 +97,12 @@ namespace _2Real
 		return m_Name;
 	}
 
-	IEntity::eType const& IdentifierImpl::type() const
+	std::string const& IdentifierImpl::info() const
+	{
+		return m_Info;
+	}
+
+	IdentifierImpl::eType const& IdentifierImpl::type() const
 	{
 		return m_Type;
 	}

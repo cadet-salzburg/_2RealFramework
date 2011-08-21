@@ -17,27 +17,32 @@
 */
 
 #include "_2RealEntities.h"
+#include "_2RealIEntity.h"
+#include "_2RealIdentifier.h"
 #include "_2RealIdentifierImpl.h"
 #include "_2RealException.h"
 
-#include <sstream>
-#include <stdint.h>
+#include "_2RealPlugin.h"
+#include "_2RealServiceImpl.h"
+#include "_2RealFactoryReference.h"
+#include "_2RealContainer.h"
+#include "_2RealServiceParam.h"
 
 namespace _2Real
 {
 
-	Entities::Entities() : m_iCreationCount(0)
+	Entities::Entities() : m_iCreationCount(0), m_Factory(NULL), m_Plugins(NULL)
 	{
 	}
 
-	Entities::Entities(Entities const& _src) throw(...)
+	Entities::Entities(Entities const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
-	Entities& Entities::operator=(Entities const& _src) throw(...)
+	Entities& Entities::operator=(Entities const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	Entities::~Entities()
@@ -47,58 +52,110 @@ namespace _2Real
 			delete it->second;
 			it->second = NULL;
 		}
-
-		m_Entities.clear();
 	}
 
-	IdentifierImpl const *const Entities::createID(std::string const& _name, IEntity *const _entity) throw(...)
+	void Entities::destroy(unsigned int const& _id)
 	{
-		std::stringstream tmp;
-		tmp << ++m_iCreationCount;
-		std::string count = tmp.str();
+		EntityMap::iterator it = m_Entities.find(_id);
 
-		std::string name;
-		std::string type;
-		
-		switch(_entity->type())
+		if (it != m_Entities.end())
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+
+		throw Exception::failure();
+	}
+
+	IEntity *const Entities::get(unsigned int const& _id)
+	{
+		EntityMap::iterator it = m_Entities.find(_id);
+
+		if (it != m_Entities.end())
+		{
+			return it->second;
+		}
+
+		throw Exception::failure();
+	}
+
+	const Entities::ID Entities::createPlugin(std::string const& _name, std::string const& _path, std::string const& _class)
+	{
+		IdentifierImpl *id = new IdentifierImpl(_name, "plugin", _path, IdentifierImpl::PLUGIN, ++m_iCreationCount);
+		Plugin *plugin = new Plugin(_path, _class, m_Factory, id);
+		return Entities::ID(Identifier(id), plugin);
+	}
+
+	const Entities::ID Entities::createService(std::string const& _name, Container *const _father, IService *const _service)
+	{
+		IdentifierImpl *id = new IdentifierImpl(_name, "service", "", IdentifierImpl::SERVICE, ++m_iCreationCount);
+		ServiceImpl *service = new ServiceImpl(_father, _service, id);
+		return Entities::ID(Identifier(id), service);
+	}
+
+	const Entities::ID Entities::createContainer(std::string const& _name, Container *const _father, IdentifierImpl::eType const& _type)
+	{
+
+		IdentifierImpl *id;
+		Container *container;
+		switch(_type)
 		{
 
-		//plugin = loaded dll
-		case IEntity::PLUGIN:
-			type = "plugin";
+		case IdentifierImpl::SEQUENCE:
+			id = new IdentifierImpl(_name, "sequence", "", IdentifierImpl::SEQUENCE, ++m_iCreationCount);
+			container = new Container(_father, id);
 			break;
 
-		//container wrapping user defined service
-		case IEntity::SERVICE:
-			type = "service";
+		case IdentifierImpl::SYNCHRONIZATION:
+			id = new IdentifierImpl(_name, "synchronization", "", IdentifierImpl::SYNCHRONIZATION, ++m_iCreationCount);
+			container = new Container(_father, id);
 			break;
 
-		//container wrapping user defined service
-		case IEntity::FACTORY:
-			type = "service factory";
+		case IdentifierImpl::NIRVANA:
+			id = new IdentifierImpl(_name, "nirvana", "", IdentifierImpl::NIRVANA, ++m_iCreationCount);
+			container = new Container(NULL, id);
 			break;
-
+		
 		default:
 			throw Exception::failure();
 			break;
 
 		}
 
-		IdentifierImpl *id = new IdentifierImpl(_name, type, _entity->type(), m_iCreationCount);
-		m_Entities.insert(NamedEntity(*id, _entity));
-		return id;
+		return Entities::ID(Identifier(id), container);
 	}
 
-	IEntity *const Entities::get(IdentifierImpl const *const _id) throw(...)
+	const Entities::ID Entities::createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata)
 	{
-		EntityMap::iterator it = m_Entities.find(*_id);
+		IdentifierImpl *id = new IdentifierImpl(_name, "factory", _plugin->name(), IdentifierImpl::FACTORY, ++m_iCreationCount);
+		FactoryReference *ref = new FactoryReference(_name, _plugin, _creator, _metadata, id);
+		return Entities::ID(Identifier(id), ref);
+	}
 
-		if (it == m_Entities.end())
+	const Entities::ID Entities::createServiceParam(std::string const& _name, ServiceImpl const *const _service, IdentifierImpl::eType const& _type)
+	{
+
+		IdentifierImpl *id;
+		switch(_type)
 		{
-			throw Exception::failure();
-		}
 
-		return it->second;
+		case IdentifierImpl::SETUP:
+			id = new IdentifierImpl(_name, "setup", "", IdentifierImpl::SETUP, ++m_iCreationCount);
+			break;
+
+		case IdentifierImpl::INPUT:
+			id = new IdentifierImpl(_name, "input", "", IdentifierImpl::INPUT, ++m_iCreationCount);
+			break;
+
+		case IdentifierImpl::OUTPUT:
+			id = new IdentifierImpl(_name, "output", "", IdentifierImpl::OUTPUT, ++m_iCreationCount);
+			break;
+		
+		default:
+			throw Exception::failure();
+			break;
+
+		}
 	}
 
 }

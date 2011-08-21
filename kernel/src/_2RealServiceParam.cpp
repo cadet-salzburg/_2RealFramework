@@ -16,37 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealIdentifierImpl.h"
+#include "_2RealServiceParam.h"
 
 namespace _2Real
 {
-
-	/**
-	*
-	*/
-
-	class IdentifierImpl;
-	enum IdentifierImpl::eType;
-
-	class IEntity
-	{
-
-	public:
-
-		IEntity(IdentifierImpl *const _id);
-		IEntity(IEntity const& _src) throw(...);
-		IEntity& operator=(IEntity const& _src) throw(...);
-		~IEntity();
-		
-		IdentifierImpl::eType const& type() const;
-		unsigned int const& id() const;
-
-	private:
-	
-		IdentifierImpl		*m_ID;
-
-	};
-
 }

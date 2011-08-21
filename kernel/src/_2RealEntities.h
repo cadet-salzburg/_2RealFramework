@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include "_2RealIdentifierImpl.h"
+#include "_2RealServiceTypedefs.h"
+
 #include <map>
 
 namespace _2Real
@@ -27,27 +30,20 @@ namespace _2Real
 	*
 	*/
 
-	class IdentifierImpl;
+	class Metadata;
+	class Identifier;
 	class IEntity;
+	class PluginPool;
+	class ServiceFactory;
+	class IService;
+	class Plugin;
+	class ServiceImpl;
+	class Container;
 
 	class Entities
 	{
 
-		friend class EngineImpl;
-
 	public:
-
-		/**
-		*
-		*/
-		IdentifierImpl const *const createID(std::string const& _name, IEntity *const _entity);
-
-		/**
-		*	
-		*/
-		IEntity *const get(IdentifierImpl const *const _id);
-
-	private:
 
 		/**
 		*
@@ -72,22 +68,58 @@ namespace _2Real
 		/**
 		*
 		*/
-		typedef std::pair< IdentifierImpl, IEntity * >			NamedEntity;
+		typedef std::pair< const Identifier, IEntity *const > ID;
 
 		/**
-		*
+		*	
 		*/
-		typedef std::map< IdentifierImpl, IEntity * >			EntityMap;
+		IEntity *const get(unsigned int const& _id) throw(...);
 
 		/**
-		*
+		*	
 		*/
-		EntityMap												m_Entities;
+		void destroy(unsigned int const& _id) throw(...);
 
 		/**
-		*
+		*	
 		*/
-		unsigned int											m_iCreationCount;
+		const ID createPlugin(std::string const& _name, std::string const& _path, std::string const& _class) throw(...);
+
+		/**
+		*	
+		*/
+		const ID createService(std::string const& _name, Container *const _father, IService *const _service) throw(...);
+
+		/**
+		*	
+		*/
+		const ID createContainer(std::string const& _name, Container *const _father, IdentifierImpl::eType const& _type) throw(...);
+
+		/**
+		*	
+		*/
+		const ID createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata) throw(...);
+
+		/**
+		*	
+		*/
+		const ID createServiceParam(std::string const& _name, ServiceImpl const *const _service, IdentifierImpl::eType const& _type) throw(...);
+
+	private:
+
+		friend class EngineImpl;
+
+		typedef std::pair< unsigned int, IEntity * >	NamedEntity;
+
+		typedef std::map< unsigned int, IEntity * >		EntityMap;
+
+		EntityMap										m_Entities;
+
+		unsigned int									m_iCreationCount;
+
+		ServiceFactory									*m_Factory;
+
+		PluginPool										*m_Plugins;
 
 	};
 

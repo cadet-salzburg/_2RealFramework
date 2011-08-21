@@ -22,9 +22,8 @@
 #include "_2RealIEntity.h"
 #include "_2RealServiceTypedefs.h"
 #include "_2RealIPluginActivator.h"
-#include "_2RealIdentifierImpl.h"
 
-#include <vector>
+#include <list>
 
 #include "Poco/ClassLoader.h"
 
@@ -35,9 +34,9 @@ namespace _2Real
 	*
 	*/
 
+	class Identifier;
 	class Metadata;
 	class ServiceFactory;
-	class IdentifierImpl;
 
 	class Plugin : public IEntity
 	{
@@ -56,7 +55,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...);
+		Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	
@@ -96,7 +95,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		std::vector< IdentifierImpl > const& serviceIDs() const;
+		std::list< Identifier > const& serviceIDs() const;
 
 		/**
 		*
@@ -124,7 +123,7 @@ namespace _2Real
 		*	starts plugin activator; state: loaded->active
 		*	error -> invalid
 		*/
-		void start() throw(...);
+		void start(std::list< Identifier > &_ids) throw(...);
 
 		/**
 		*	stops plugin activator; state: active->loaded
@@ -182,7 +181,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		std::vector< IdentifierImpl >	m_Services;
+		std::list< Identifier >			m_Services;
 
 	};
 }

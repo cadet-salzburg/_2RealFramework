@@ -20,7 +20,6 @@
 
 #include "_2RealIContainer.h"
 #include "_2RealIEntity.h"
-#include "_2RealIdentifierImpl.h"
 
 #include <list>
 
@@ -33,12 +32,30 @@ namespace _2Real
 	*
 	*/
 
-	class AbstractContainer : public IContainer, public IEntity
+	class AbstractContainer : public IEntity, public IContainer
 	{
 
-		friend class ServiceFactory;
-
 	public:
+
+		/**
+		*
+		*/
+		AbstractContainer(AbstractContainer *const _father, IdentifierImpl *const _id);
+
+		/**
+		*
+		*/
+		AbstractContainer(AbstractContainer const& _src);
+
+		/**
+		*
+		*/
+		AbstractContainer& operator=(AbstractContainer const& _src);
+
+		/**
+		*
+		*/
+		~AbstractContainer();
 
 		/**
 		*
@@ -80,27 +97,12 @@ namespace _2Real
 		*/
 		void sendData(bool const& _blocking);
 
+		/**
+		*
+		*/
+		AbstractContainer *const father();
+
 	protected:
-
-		/**
-		*
-		*/
-		AbstractContainer();
-
-		/**
-		*
-		*/
-		AbstractContainer(AbstractContainer const& _src);
-
-		/**
-		*
-		*/
-		AbstractContainer& operator=(AbstractContainer const& _src);
-
-		/**
-		*
-		*/
-		~AbstractContainer();
 
 		/**
 		*
@@ -136,6 +138,8 @@ namespace _2Real
 		*
 		*/
 		Poco::BasicEvent< NamedData >		m_NewData;
+
+		AbstractContainer					*m_Father;
 
 	};
 

@@ -53,12 +53,13 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...);
 
 		/**
 		*	
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id) throw (...);
+		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+
 
 		/**
 		*	
@@ -175,12 +176,12 @@ namespace _2Real
 		/**
 		*	takes care of installed plugins
 		*/
-		PluginPool					*m_PluginPool;
+		PluginPool					*m_Plugins;
 
 		/**
 		*	takes care of service creation
 		*/
-		ServiceFactory				*m_ServiceFactory;
+		ServiceFactory				*m_Factory;
 
 		/**
 		*	takes care of identifier creation

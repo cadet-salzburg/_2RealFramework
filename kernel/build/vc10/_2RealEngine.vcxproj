@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2ReaEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractValue.cpp" />
@@ -19,6 +18,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealConfigurationData.cpp" />
+    <ClCompile Include="..\..\src\_2RealContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -43,14 +43,15 @@
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2ReaEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealAbstractValue.h" />
     <ClInclude Include="..\..\src\_2RealAnyValue.h" />
     <ClInclude Include="..\..\src\_2RealConfigurationData.h" />
+    <ClInclude Include="..\..\src\_2RealContainer.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealDataTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealDataValue.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
+    <ClInclude Include="..\..\src\_2RealServiceParam.h" />
     <ClInclude Include="..\..\src\_2RealServiceTypedefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

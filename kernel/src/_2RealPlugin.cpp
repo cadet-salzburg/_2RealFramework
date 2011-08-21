@@ -20,23 +20,24 @@
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
 #include "_2RealServiceFactory.h"
+#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory) throw(...) : IEntity(IEntity::PLUGIN),
+	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) : IEntity(_id),
 		m_LibraryPath(_path), m_ClassName(_class), m_Factory(_factory), m_Activator(NULL), m_Metadata(NULL), m_State(Plugin::UNINSTALLED)
 	{
 	}
 
-	Plugin::Plugin(Plugin const& _src) throw(...) : IEntity(IEntity::PLUGIN)
+	Plugin::Plugin(Plugin const& _src) throw(...) : IEntity(_src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	Plugin& Plugin::operator=(Plugin const& _src)
 	{
-		throw Exception::failure();
+		throw Exception::noCopy();
 	}
 
 	Plugin::~Plugin()
@@ -76,7 +77,7 @@ namespace _2Real
 		return m_Metadata;
 	}
 
-	std::vector< IdentifierImpl > const& Plugin::serviceIDs() const
+	std::list< Identifier > const& Plugin::serviceIDs() const
 	{
 		return m_Services;
 	}
@@ -86,8 +87,8 @@ namespace _2Real
 		try
 		{
 			//metadata is TODO
-			const IdentifierImpl *id = m_Factory->registerService(_name, this, NULL, _creator);
-			m_Services.push_back(*id);
+			const Identifier id = m_Factory->registerService(_name, this, NULL, _creator);
+			m_Services.push_back(id);
 		}
 		catch (...)
 		{
@@ -95,7 +96,7 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::install(IdentifierImpl const& _id) throw(...)
+	void Plugin::install() throw(...)
 	{
 		if (m_State == Plugin::UNINSTALLED)
 		{
@@ -165,7 +166,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	void Plugin::start() throw(...)
+	void Plugin::start(std::list< Identifier > &_ids) throw(...)
 	{
 		if (m_State == Plugin::LOADED)
 		{
@@ -181,6 +182,8 @@ namespace _2Real
 					}
 
 					m_Activator->start(new PluginContext(this));
+					_ids.clear();
+					_ids = m_Services;
 				}
 				else
 				{

@@ -20,6 +20,7 @@
 #pragma once
 
 #include <map>
+#include <list>
 #include <string>
 
 namespace _2Real
@@ -30,43 +31,19 @@ namespace _2Real
 	*/
 
 	class Plugin;
-	class IdentifierImpl;
 	class ServiceFactory;
+	class Identifier;
 	class Entities;
 
 	class PluginPool
 	{
-
-		friend class EngineImpl;
 	
 	public:
 
 		/**
 		*	
 		*/
-		IdentifierImpl const *const install(std::string const& _name, std::string const& _path, std::string const& _class) throw(...);
-
-		/**
-		*	
-		*/
-		void uninstall(IdentifierImpl const& _id) throw(...);
-
-		/**
-		*
-		*/
-		Plugin const *const get(IdentifierImpl const& _id) const;
-
-	private:
-
-		/**
-		*	
-		*/
 		PluginPool();
-
-		/**
-		*	
-		*/
-		PluginPool(ServiceFactory *const _factory, Entities *const _entities);
 
 		/**
 		*	
@@ -84,14 +61,33 @@ namespace _2Real
 		~PluginPool();
 
 		/**
+		*	
+		*/
+		const Identifier install(std::string const& _name, std::string const& _path, std::string const& _class, std::list< Identifier > &_ids) throw(...);
+
+		/**
+		*	
+		*/
+		void uninstall(unsigned int const& _id) throw(...);
+
+		/**
+		*
+		*/
+		Plugin const *const get(unsigned int const& _id) const;
+
+	private:
+
+		friend class EngineImpl;
+
+		/**
 		*	yay, typedefs
 		*/
-		typedef std::pair< IdentifierImpl, Plugin * >		NamedPlugin;
+		typedef std::pair< unsigned int, Plugin * >			NamedPlugin;
 
 		/**
 		*	sfedepyt ,yay
 		*/
-		typedef std::map< IdentifierImpl, Plugin * >		PluginMap;
+		typedef std::map< unsigned int, Plugin * >			PluginMap;
 
 		/**
 		*	installed plugins
