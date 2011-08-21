@@ -90,7 +90,7 @@ namespace _2Real
 		void destroyProductionGraph(Identifier const& _id) throw(...);
 
 		/**
-		*	
+		*	install plugin, return id + service ids
 		*/
 		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...);
 

@@ -31,6 +31,7 @@ namespace _2Real
 	*/
 
 	class IService;
+	class ServiceParam;
 
 	class ServiceImpl : public AbstractContainer
 	{
@@ -93,6 +94,16 @@ namespace _2Real
 		void shutdown() throw(...);
 
 	private:
+
+		/**
+		*
+		*/
+		typedef std::pair< unsigned int, ServiceParam * >	NamedParameter;
+
+		/**
+		*
+		*/
+		typedef std::map< unsigned int, ServiceParam * >	ParmeterMap;
 
 		/**
 		*	

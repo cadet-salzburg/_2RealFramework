@@ -47,7 +47,7 @@ namespace _2Real
 			try
 			{
 				it->second->uninstall();
-				delete it->second;
+				m_Entities->destroy(it->first);
 				it->second = NULL;
 			}
 			catch (...)
@@ -75,37 +75,37 @@ namespace _2Real
 		}
 	}
 
-	void PluginPool::uninstall(unsigned int const& _id) throw(...)
-	{
-		PluginMap::iterator it = m_Plugins.find(_id);
+	//void PluginPool::uninstall(unsigned int const& _id) throw(...)
+	//{
+	//	PluginMap::iterator it = m_Plugins.find(_id);
 
-		if (it == m_Plugins.end())
-		{
-			throw Exception::failure();
-		}
+	//	if (it == m_Plugins.end())
+	//	{
+	//		throw Exception::failure();
+	//	}
 
-		try
-		{
-			it->second->uninstall();
-			delete it->second;
-			it->second = NULL;
-		}
-		catch (...)
-		{
-			throw Exception::failure();
-		}
-	}
+	//	try
+	//	{
+	//		it->second->uninstall();
+	//		delete it->second;
+	//		it->second = NULL;
+	//	}
+	//	catch (...)
+	//	{
+	//		throw Exception::failure();
+	//	}
+	//}
 
-	Plugin const *const PluginPool::get(unsigned int const& _id) const
-	{
-		PluginMap::const_iterator it = m_Plugins.find(_id);
-		
-		if (it != m_Plugins.end())
-		{
-			return it->second;
-		}
+	//Plugin const *const PluginPool::get(unsigned int const& _id) const
+	//{
+	//	PluginMap::const_iterator it = m_Plugins.find(_id);
+	//	
+	//	if (it != m_Plugins.end())
+	//	{
+	//		return it->second;
+	//	}
 
-		return NULL;
-	}
+	//	return NULL;
+	//}
 
 }

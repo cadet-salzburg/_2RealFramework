@@ -69,12 +69,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void uninstall(unsigned int const& _id) throw(...);
+		//void uninstall(unsigned int const& _id) throw(...);
 
 		/**
 		*
 		*/
-		Plugin const *const get(unsigned int const& _id) const;
+		//Plugin const *const get(unsigned int const& _id) const;
 
 	private:
 

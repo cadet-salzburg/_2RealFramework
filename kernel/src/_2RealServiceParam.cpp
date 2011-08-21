@@ -17,7 +17,31 @@
 */
 
 #include "_2RealServiceParam.h"
+#include "_2RealException.h" 
 
 namespace _2Real
 {
+	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceImpl const *const _service) :
+		IEntity(_id), m_Service(_service)
+	{
+	}
+
+	ServiceParam::ServiceParam(ServiceParam const& _src) : IEntity(_src)
+	{
+		throw Exception::noCopy();
+	}
+
+	ServiceParam& ServiceParam::operator=(ServiceParam const& _src)
+	{
+		throw Exception::noCopy();
+	}
+
+	ServiceParam::~ServiceParam()
+	{
+	}
+
+	ServiceImpl const *const ServiceParam::service() const
+	{
+		return m_Service;
+	}
 }

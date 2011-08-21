@@ -32,9 +32,9 @@ namespace _2Real
 	class ServiceParam : public IEntity
 	{
 
-		ServiceParam(ServiceImpl const *const _service);
-		ServiceParam(ServiceParam const& _src);
-		ServiceParam& operator=(ServiceParam const& _src);
+		ServiceParam(IdentifierImpl *const _id, ServiceImpl const *const _service);
+		ServiceParam(ServiceParam const& _src) throw(...);
+		ServiceParam& operator=(ServiceParam const& _src) throw(...);
 		~ServiceParam();
 
 		ServiceImpl const *const service() const;
