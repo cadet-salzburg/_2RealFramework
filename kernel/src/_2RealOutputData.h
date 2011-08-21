@@ -46,7 +46,6 @@ namespace _2Real
 			try
 			{
 				Poco::Any any = get(_id);
-				//might be critical
 				return Poco::RefAnyCast< T >(any)
 			}
 			catch (Poco::BadCastException e)

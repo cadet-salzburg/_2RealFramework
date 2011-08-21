@@ -31,13 +31,20 @@ namespace _2Real
 
 	class Container : public AbstractContainer
 	{
+
+	private:
+
+		/**
+		*
+		*/
+		typedef std::list< AbstractContainer *const >	ChildList;
 		
 	public:
 
 		/**
 		*	
 		*/
-		Container(AbstractContainer *const _father, IdentifierImpl *const _id) throw(...);
+		Container(IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	this one should not be called, ever
@@ -74,9 +81,42 @@ namespace _2Real
 		*/
 		void shutdown() throw(...);
 
+		/**
+		*
+		*/
+		const unsigned int childCount() const;
+
+		/**
+		*	inserts child before child + _id, throw exception if _id not found among children
+		*/
+		void addBefore(AbstractContainer *const child, unsigned int const& _id) throw(...);
+
+		/**
+		*	adds child in the last position
+		*/
+		void append(AbstractContainer *const child);
+
+		/**
+		*	returns pointer to child, removes from children & appends to _father's children
+		*/
+		AbstractContainer *const getChild(unsigned int const& _id, Container *const _father);
+
+		/**
+		*	returns pointer to child without removing it, NULL otherwise
+		*/
+		AbstractContainer *const getChild(unsigned int const& _id);
+
 	private:
 
-		std::list< AbstractContainer * >	m_Children;
+		/**
+		*	returns iterator to child
+		*/
+		ChildList::iterator findChild(unsigned int const& _id);
+
+		/**
+		*
+		*/
+		ChildList	m_Children;
 
 	};
 

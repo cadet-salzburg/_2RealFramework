@@ -32,6 +32,7 @@ namespace _2Real
 
 	class Plugin;
 	class ServiceFactory;
+	class ProductionGraphs;
 	class Identifier;
 	class Entities;
 
@@ -103,6 +104,11 @@ namespace _2Real
 		*	framework's entities
 		*/
 		Entities											*m_Entities;
+
+		/**
+		*	production graphs
+		*/
+		ProductionGraphs									*m_Graphs;
 
 	};
 

@@ -35,6 +35,7 @@ namespace _2Real
 	class IEntity;
 	class PluginPool;
 	class ServiceFactory;
+	class ProductionGraphs;
 	class IService;
 	class Plugin;
 	class ServiceImpl;
@@ -121,6 +122,10 @@ namespace _2Real
 
 		PluginPool										*m_Plugins;
 
+		/**
+		*	production graphs
+		*/
+		ProductionGraphs								*m_Graphs;
 	};
 
 }

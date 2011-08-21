@@ -30,20 +30,64 @@ namespace _2Real
 {
 
 	/**
-	*
+	*	the 2 real engine
 	*/
 
 	class PluginPool;
 	class ServiceFactory;
+	class ProductionGraphs;
 	class Entities;
 	class Identifier;
 	
 	class EngineImpl
 	{
 
-		friend class Engine;
-
 	public:
+
+		/**
+		*	get instance
+		*/
+		static EngineImpl *const instance() throw(...);
+
+		/**
+		*	
+		*/
+		EngineImpl();
+
+		/**
+		*	engine must not be copied
+		*/
+		EngineImpl(const EngineImpl &_src) throw(...);
+
+		/**
+		*	engine must not be copied
+		*/
+		EngineImpl& operator=(const EngineImpl &_src) throw(...);
+
+		/**
+		*	destruction if engine destroys all entities
+		*/
+		~EngineImpl();
+
+		/**
+		*	ref count++
+		*/
+		void retain() throw(...);
+
+		/**
+		*	ref count--
+		*/
+		void release() throw(...);
+
+		/**
+		*
+		*/
+		const Identifier createProductionGraph(std::string const& _name) throw(...);
+
+		/*
+		*
+		*/
+		void destroyProductionGraph(Identifier const& _id) throw(...);
 
 		/**
 		*	
@@ -53,145 +97,44 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...);
-
-		/**
-		*	
-		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
-
-
-		/**
-		*	
-		*/
-		const Identifier createMutex(std::string const& _name, Identifier const& _id) throw (...);
-
-		/**
-		*
-		*/
-		void setParameterValue(Identifier const& _id) throw(...);
-
-		/**
-		*
-		*/
-		void configureIO(std::string const& _out, Identifier const& _outID, std::string const& _in, Identifier const& _inID) throw(...);
-
-		/**
-		*	
-		*/
-		void dumpPluginInfo(Identifier const& _id);
-
-		/**
-		*	
-		*/
-		void dumpServiceInfo(Identifier const& _id);
-
-		/**
-		*	
-		*/
-		void registerToExceptionChange(Identifier const& _id, ExceptionCallback _callback) throw(...);
-
-		/**
-		*	
-		*/
-		void registerToNewDataAvailable(Identifier const& _id, NewDataCallback _callback) throw(...);
-
-		/**
-		*	
-		*/
-		void insertInto(Identifier const& _dst, Identifier const& _src) throw(...);
-
-		/**
-		*	
-		*/
-		void startAll() throw(...);
-
-		/**
-		*	
-		*/
-		void stopAll() throw(...);
-
-		/**
-		*
-		*/
-		void start(Identifier const& _id) throw(...);
-
-		/**
-		*
-		*/
-		void stop(Identifier const& _id) throw(...);
+		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw(...);
 
 	private:
 
 		/**
-		*
-		*/
-		static EngineImpl *const instance();
-
-		/**
-		*	
-		*/
-		const bool retain();
-
-		/**
-		*	
-		*/
-		const bool release();
-
-		/**
-		*
+		*	singleton instance
 		*/
 		static EngineImpl				*s_Instance;
 
 		/**
-		*
+		*	
 		*/
 		static Poco::Mutex				s_Mutex;
 
 		/**
-		*
+		*	ref count for singleton
 		*/
 		static unsigned int				s_iRefCount;
 
 		/**
-		*	
-		*/
-		EngineImpl();
-
-		/**
-		*	
-		*/
-		~EngineImpl();
-
-		/**
-		*	
-		*/
-		EngineImpl(const EngineImpl &_src);
-
-		/**
-		*	
-		*/
-		EngineImpl& operator=(const EngineImpl &_src);
-
-		/**
 		*	takes care of installed plugins
 		*/
-		PluginPool					*m_Plugins;
+		PluginPool						*m_Plugins;
 
 		/**
 		*	takes care of service creation
 		*/
-		ServiceFactory				*m_Factory;
+		ServiceFactory					*m_Factory;
 
 		/**
 		*	takes care of identifier creation
 		*/
-		Entities					*m_Entities;
+		Entities						*m_Entities;
 
 		/**
-		*	
+		*	manages production graphs
 		*/
-		Poco::Mutex					m_Mutex;
+		ProductionGraphs				*m_Graphs;
 
 	};
 

@@ -25,40 +25,58 @@
 namespace _2Real
 {
 
-	Engine::Engine() : m_Impl(NULL)
+	Engine::Engine(std::string const& _name) : m_Impl(NULL), m_ID(NULL)
 	{
-#ifdef _DEBUG
-		std::cout << "engine ctor called" << std::endl;
-#endif
+		try
+		{
+			m_Impl = EngineImpl::instance();
+			m_ID = new Identifier(m_Impl->createProductionGraph(_name));
+		}
+		catch (...)
+		{
+			if (m_Impl)
+			{
+				m_Impl->release();
+				m_Impl = NULL;
+			}
 
-		m_Impl = EngineImpl::instance();
+			m_ID = NULL;
+
+			throw;
+		}
 	}
 
-	Engine::Engine(Engine const& _src)
-	{
-#ifdef _DEBUG
-		std::cout << "engine copy ctor called" << std::endl;
-#endif
-
-		//increases ref count
+	Engine::Engine(Engine const& _src) : m_Impl(NULL), m_ID(NULL)
+	{		
 		m_Impl = EngineImpl::instance();
+		
+		if (_src.m_ID)
+		{
+			m_ID = new Identifier(*_src.m_ID);
+		}
 	}
 	
 	Engine& Engine::operator=(Engine const& _src)
 	{
-#ifdef _DEBUG
-		std::cout << "engine assignment operator called" << std::endl;
-#endif
-
 		if (this == &_src)
 		{
 			return *this;
 		}
 
-		if (m_Impl == NULL)
+		if (!m_Impl)
 		{
-			//increases ref count
 			m_Impl = EngineImpl::instance();
+		}
+
+		if (m_ID)
+		{
+			//this will delete everything inside of the graph!
+			m_Impl->destroyProductionGraph(*m_ID);
+		}
+
+		if (_src.m_ID)
+		{
+			m_ID = new Identifier(*_src.m_ID);
 		}
 
 		return *this;
@@ -66,67 +84,14 @@ namespace _2Real
 
 	Engine::~Engine()
 	{
-#ifdef _DEBUG
-		std::cout << "engine dtor called" << std::endl;
-#endif
-
+		m_Impl->destroyProductionGraph(*m_ID);
+		delete m_ID;
 		m_Impl->release();
-		m_Impl = NULL;
 	}
 
 	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
 	{
 		return m_Impl->installPlugin(_name, _path, _name, _serviceIDs);
 	}
-
-	//const Exception Engine::dumpPluginInfo(Identifier const& _pluginID)
-	//{
-	//	return m_Impl->dumpPluginInfo(_pluginID);
-	//}
-
-	//const Exception Engine::dumpServiceInfo(Identifier const& _serviceID)
-	//{
-	//	return m_Impl->dumpPluginInfo(_serviceID);
-	//}
-
-	//const Exception Engine::createProductionGraph(std::string const& _containerName, Identifier &_containerID, eContainerType const& _type)
-	//{
-	//	return m_Impl->createProductionGraph(_containerName, _containerID, _type);
-	//}
-
-	//const Exception Engine::createService(Identifier const& _serviceID, std::string const& _containerName, Identifier &_containerID)
-	//{
-	//	return m_Impl->createService(_serviceID, _containerName, _containerID);
-	//}
-
-	//const Exception Engine::createMutex(Identifier const& _containerID, unsigned int const& _count, std::vector< Identifier > &_mutexIDs)
-	//{
-	//	return m_Impl->createMutex(_containerID, _count, _mutexIDs);
-	//}
-
-	//const Exception Engine::registerToExceptionChange(Identifier const& _containerID, ExceptionCallback _callback)
-	//{
-	//	return m_Impl->registerToExceptionChange(_containerID, _callback);
-	//}
-
-	//const Exception Engine::registerToNewDataAvailable(Identifier const& _containerID, NewDataCallback _callback)
-	//{
-	//	return m_Impl->registerToNewDataAvailable(_containerID, _callback);
-	//}
-
-	//const Exception Engine::insertInto(Identifier const& _containerIDDst, Identifier const& _containerIDSrc)
-	//{
-	//	return m_Impl->insertInto(_containerIDDst, _containerIDSrc);
-	//}
-
-	//const Exception Engine::startAll()
-	//{
-	//	return m_Impl->startAll();
-	//}
-
-	//const Exception Engine::pauseAll()
-	//{
-	//	return m_Impl->pauseAll();
-	//}
 
 }

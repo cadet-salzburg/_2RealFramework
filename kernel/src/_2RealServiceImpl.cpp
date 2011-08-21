@@ -25,8 +25,8 @@
 namespace _2Real
 {
 
-	ServiceImpl::ServiceImpl(AbstractContainer *const _father, IService *const _service, IdentifierImpl *const _id) : 
-		AbstractContainer(_father, _id), m_Service(_service)
+	ServiceImpl::ServiceImpl(IService *const _service, IdentifierImpl *const _id) : 
+		AbstractContainer(_id), m_Service(_service)
 	{
 		if (m_Service == NULL)
 		{

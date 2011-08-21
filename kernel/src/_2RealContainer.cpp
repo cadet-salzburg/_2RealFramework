@@ -22,7 +22,7 @@
 namespace _2Real
 {
 	
-	Container::Container(AbstractContainer *const _father, IdentifierImpl *const _id) : AbstractContainer(_father, _id)
+	Container::Container(IdentifierImpl *const _id) : AbstractContainer(_id)
 	{
 	}
 
@@ -49,16 +49,121 @@ namespace _2Real
 		//TODO: children are deleted here
 	}
 
+	const unsigned int Container::childCount() const
+	{
+		return m_Children.size();
+	}
+
+	Container::ChildList::iterator Container::findChild(unsigned int const& _id)
+	{
+		for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			if ((*it)->id() == _id)
+			{
+				return it;
+			}
+		}
+
+		return m_Children.end();
+	}
+
+	void Container::append(AbstractContainer *const _child)
+	{
+		m_Children.push_back(_child);
+		_child->setFather(this);
+	}
+
+	AbstractContainer *const Container::getChild(unsigned int const& _id)
+	{
+
+		AbstractContainer *child;
+		
+		ChildList::iterator it = findChild(_id);	
+		if (it != m_Children.end())
+		{
+			return *it;
+		}
+		else
+		{
+			for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				if ((*it)->type() != IdentifierImpl::SERVICE)
+				{
+					Container *container = static_cast< Container * >(*it);
+					if ((child = container->getChild(_id)) != NULL)
+					{
+						return child;
+					}
+				}
+			}
+			return NULL;
+		}
+	}
+
+	AbstractContainer *const Container::getChild(unsigned int const& _id, Container *const _father)
+	{
+		AbstractContainer *child;
+		
+		ChildList::iterator it = findChild(_id);
+		if (it != m_Children.end())
+		{
+			child = (*it);		
+			if (this != _father)
+			{
+				m_Children.erase(it);
+				_father->append(child);
+				child->setFather(_father);		
+			}
+			return child;
+		}
+		else
+		{
+			for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				if ((*it)->type() != IdentifierImpl::SERVICE)
+				{
+					Container *container = static_cast< Container * >(*it);
+
+					if (container->getChild(_id) != NULL)
+					{
+						container->stop();
+						return container->getChild(_id, _father);
+					}
+				}
+			}
+			return NULL;
+		}
+	}
+
+	void Container::addBefore(AbstractContainer *const _child, unsigned int const& _id)
+	{
+		try
+		{
+			ChildList::iterator it = findChild(_id);
+				
+			if (it == m_Children.end())
+			{
+				throw Exception::failure();
+			}
+				
+			m_Children.insert(it, _child);
+			_child->setFather(this);
+
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
 	void Container::configure(ConfigurationData *const _config)
 	{
 		if (m_bIsConfigured && !m_bCanReconfigure)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 		else if (_config == NULL)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 
@@ -71,7 +176,6 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		//save configuration
 		m_Configuration = _config;
 	}
 
@@ -119,7 +223,6 @@ namespace _2Real
 		}
 		catch(...)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 	}

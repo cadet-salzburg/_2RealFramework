@@ -18,13 +18,13 @@
 
 #include "_2RealEngineImpl.h"
 
-#include "_2RealPlugin.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealEntities.h"
+#include "_2RealProductionGraphs.h"
+#include "_2RealIEntity.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
-#include "_2RealIEntity.h"
 
 namespace _2Real
 {
@@ -35,48 +35,40 @@ namespace _2Real
 	
 	EngineImpl *const EngineImpl::instance()
 	{
-		Poco::ScopedLock< Poco::Mutex > lock(s_Mutex);
-#ifdef _DEBUG
-		std::cout << "engine impl instance() called" << std::endl;
-#endif
-
-		if(s_Instance == NULL)
+		if (s_Mutex.tryLock(10000))
 		{
-			s_Instance = new EngineImpl();
-		}
+			if(s_Instance == NULL)
+			{
+				s_Instance = new EngineImpl();
+			}
 
-#ifdef _DEBUG
-		std::cout << "engine impl ref count increasing" << std::endl;
-#endif
-
-		s_iRefCount++;
-		return s_Instance;
-	}
-
-	const bool EngineImpl::retain()
-	{
-#ifdef _DEBUG
-		std::cout << "engine impl ref count increasing" << std::endl;
-#endif
-
-		if (s_Mutex.tryLock(100))
-		{
 			s_iRefCount++;
 			s_Mutex.unlock();
-			return true;
+
+			return s_Instance;
 		}
-		return false;
+
+		throw Exception::failure();
 	}
 
-	const bool EngineImpl::release()
+	void EngineImpl::retain()
 	{
-#ifdef _DEBUG
-		std::cout << "engine impl ref count decreasing" << std::endl;
-#endif
+		if (s_Mutex.tryLock(1000))
+		{
+			s_iRefCount++;
+			
+			s_Mutex.unlock();
+		}
+		
+		throw Exception::failure();
+	}
 
-		if (s_Mutex.tryLock(100))
+	void EngineImpl::release()
+	{
+		if (s_Mutex.tryLock(1000))
 		{
 			s_iRefCount--;
+			
 			if (s_iRefCount == 0 && s_Instance != NULL)
 			{
 				delete s_Instance;
@@ -84,24 +76,18 @@ namespace _2Real
 			}
 
 			s_Mutex.unlock();
-			return true;
 		}
 
-		return false;
+		throw Exception::failure();
 	}
 
-	EngineImpl::EngineImpl() : m_Plugins(NULL), m_Factory(NULL)
+	EngineImpl::EngineImpl() : 
+		m_Plugins(new PluginPool()), m_Factory(new ServiceFactory()), m_Entities(new Entities()), m_Graphs(new ProductionGraphs())
 	{
-#ifdef _DEBUG
-		std::cout << "engine impl ctor called" << std::endl;
-#endif
-		m_Entities = new Entities();
-		m_Factory = new ServiceFactory();
-		m_Plugins = new PluginPool();
-
-		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Plugins;
-		m_Entities->m_Factory = m_Plugins->m_Factory = m_Factory;
-		m_Plugins->m_Entities = m_Factory->m_Entities = m_Entities;
+		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Plugins = m_Graphs->m_Plugins;
+		m_Entities->m_Factory = m_Plugins->m_Factory = m_Factory = m_Graphs->m_Factory;
+		m_Plugins->m_Entities = m_Factory->m_Entities = m_Entities = m_Graphs->m_Entities;
+		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs;
 	}
 
 	EngineImpl::EngineImpl(EngineImpl const& _src)
@@ -116,13 +102,34 @@ namespace _2Real
 
 	EngineImpl::~EngineImpl()
 	{
-#ifdef _DEBUG
-		std::cout << "engine impl dtor called" << std::endl;
-#endif
-
 		delete m_Plugins;
 		delete m_Factory;
+		delete m_Graphs;
 		delete m_Entities;
+	}
+
+	const Identifier EngineImpl::createProductionGraph(std::string const& _name)
+	{
+		try
+		{
+			return m_Graphs->createNirvana(_name);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::destroyProductionGraph(Identifier const& _id)
+	{
+		try
+		{
+			m_Graphs->destroy(_id, _id);
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
 	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
@@ -133,7 +140,6 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			//error handling is still TODO
 			throw;
 		}
 	}
@@ -146,57 +152,8 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			//error handling is still TODO
 			throw;
 		}
 	}
-
-	//void EngineImpl::dumpPluginInfo(Identifier const& _pluginID)
-	//{
-	//	//metadata is TODO
-	//}
-
-	//void EngineImpl::dumpServiceInfo(Identifier const& _serviceID)
-	//{
-	//	//metadata is TODO
-	//}
-
-	//const Identifier EngineImpl::createProductionGraph(std::string const& _name, eContainerType const& _type) throw(...)
-	//{
-	//	//const IdentifierImpl *graphID = m_ServiceFactory->createProductionGraph(_name, _type);
-	//	return Identifier(NULL);
-	//}
-
-	//const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id) throw(...)
-	//{
-	//	//const IdentifierImpl *graphID = m_ServiceFactory->createServiceContainer(_name, _id);
-	//	return Identifier(NULL);
-	//}
-
-	//const Identifier EngineImpl::createMutex(std::string const& _name, Identifier const& _id) throw(...)
-	//{
-	//	//const IdentifierImpl *mutexID = m_ServiceFactory->get(_id)->createMutex(_name);
-	//	return Identifier(NULL);
-	//}
-
-	//void EngineImpl::registerTo(Identifier const& _containerID, ExceptionCallback _callback) throw(...)
-	//{
-	//}
-
-	//void EngineImpl::registerToNewDataAvailable(Identifier const& _containerID, NewDataCallback _callback) throw(...)
-	//{
-	//}
-
-	//void EngineImpl::insertInto(Identifier const& _dst, Identifier const& _src) throw(...)
-	//{
-	//}
-
-	//void EngineImpl::startAll() throw(...)
-	//{
-	//}
-
-	//void EngineImpl::stopAll() throw(...)
-	//{
-	//}
 
 }

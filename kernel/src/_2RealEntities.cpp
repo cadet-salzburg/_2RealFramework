@@ -89,7 +89,7 @@ namespace _2Real
 	const Entities::ID Entities::createService(std::string const& _name, Container *const _father, IService *const _service)
 	{
 		IdentifierImpl *id = new IdentifierImpl(_name, "service", "", IdentifierImpl::SERVICE, ++m_iCreationCount);
-		ServiceImpl *service = new ServiceImpl(_father, _service, id);
+		ServiceImpl *service = new ServiceImpl(_service, id);
 		return Entities::ID(Identifier(id), service);
 	}
 
@@ -103,17 +103,17 @@ namespace _2Real
 
 		case IdentifierImpl::SEQUENCE:
 			id = new IdentifierImpl(_name, "sequence", "", IdentifierImpl::SEQUENCE, ++m_iCreationCount);
-			container = new Container(_father, id);
+			container = new Container(id);
 			break;
 
 		case IdentifierImpl::SYNCHRONIZATION:
 			id = new IdentifierImpl(_name, "synchronization", "", IdentifierImpl::SYNCHRONIZATION, ++m_iCreationCount);
-			container = new Container(_father, id);
+			container = new Container(id);
 			break;
 
 		case IdentifierImpl::NIRVANA:
 			id = new IdentifierImpl(_name, "nirvana", "", IdentifierImpl::NIRVANA, ++m_iCreationCount);
-			container = new Container(NULL, id);
+			container = new Container(id);
 			break;
 		
 		default:

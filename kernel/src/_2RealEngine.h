@@ -87,9 +87,11 @@ namespace _2Real
 		*	bliss - or until it is inserted somewhere else. removing an entity from its superior
 		*	will move it back to nirvana.
 		*
+		*	@param _name:			name of engine = name of nirvana
+		*
 		*	open questions:			buddhists might not approve of the naming.
 		*/
-		Engine();
+		Engine(std::string const& _name);
 
 		/**
 		*	installs a plugin, causing all of its services to be exported
@@ -395,6 +397,11 @@ namespace _2Real
 		*	
 		*/
 		EngineImpl				*m_Impl;
+
+		/**
+		*
+		*/
+		Identifier				*m_ID;
 
 	};
 

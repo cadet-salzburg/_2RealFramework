@@ -55,7 +55,7 @@ namespace _2Real
 		/**
 		*	throws if user defined service is null
 		*/
-		ServiceImpl(AbstractContainer *const _father, IService *const _service, IdentifierImpl *const _id) throw(...);
+		ServiceImpl(IService *const _service, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	this one should not be called, ever

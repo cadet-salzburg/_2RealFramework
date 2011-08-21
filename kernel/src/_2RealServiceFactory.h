@@ -24,21 +24,20 @@
 
 #include <map>
 #include <list>
-#include <vector>
 
 namespace _2Real
 {
 
 	/**
-	*	currently, this class keeps track of all service factories
-	*	as well as the actual service objects
-	*	and because all containers are services, too, it keeps track of container creation as well
+	*	
+	*	
+	*	
 	*/
 
 	class PluginPool;
 	class Plugin;
 	class FactoryReference;
-	class Container;
+	class ProductionGraphs;
 	class ServiceImpl;
 	class Identifier;
 	class Entities;
@@ -55,12 +54,12 @@ namespace _2Real
 		ServiceFactory();
 
 		/**
-		*	
+		*	factory should never be copied
 		*/
 		ServiceFactory(ServiceFactory const& _src) throw(...);
 
 		/**
-		*	
+		*	factory should never be copied
 		*/
 		ServiceFactory& operator=(ServiceFactory const& _src) throw(...);
 
@@ -94,18 +93,6 @@ namespace _2Real
 		*/
 		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw(...);
 
-		///**
-		//*	creates a production graph
-		//*/
-		//const Identifier createSequence(std::string const& _name) throw(...);
-
-		///**
-		//*	creates a production graph
-		//*/
-		//const Identifier createSynchronization(std::string const& _name) throw(...);
-
-		//const Identifier createNirvana() throw(...);
-
 	private:
 
 		friend class EngineImpl;
@@ -131,24 +118,9 @@ namespace _2Real
 		typedef std::map< unsigned int, ServiceReference >			ReferenceTable;
 
 		/**
-		*	yay, pirates!
-		*/
-		typedef std::pair< unsigned int, Container * >				NamedContainer;
-		
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::map< unsigned int, Container * >				ContainerMap;
-
-		/**
 		*	
 		*/
 		ReferenceTable												m_References;
-
-		/**
-		*	
-		*/
-		ContainerMap												m_Containers;
 
 		/**
 		*
@@ -159,6 +131,11 @@ namespace _2Real
 		*
 		*/
 		PluginPool													*m_Plugins;
+
+		/**
+		*	production graphs
+		*/
+		ProductionGraphs									*m_Graphs;
 
 	};
 

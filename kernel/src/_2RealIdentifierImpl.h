@@ -136,6 +136,11 @@ namespace _2Real
 		*/
 		void release();
 
+		/**
+		*
+		*/
+		void setInfo(std::string const& _info);
+
 	private:
 
 		/**
@@ -151,7 +156,7 @@ namespace _2Real
 		/**
 		*	info
 		*/
-		const std::string			m_Info;
+		std::string			m_Info;
 
 		/**
 		*	type

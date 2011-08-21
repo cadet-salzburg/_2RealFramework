@@ -60,13 +60,6 @@ namespace _2Real
 				*it = NULL;
 			}
 		}
-
-		for (ContainerMap::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
-		{
-			//delete all containers in the framework - deleting a service container will shutdown it's user service & delete it
-			delete it->second;
-			it->second = NULL;
-		}
 	}
 
 	const Identifier ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, Metadata const *const _metadata, ServiceCreator _creator) throw(...)

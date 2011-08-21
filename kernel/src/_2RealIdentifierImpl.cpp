@@ -112,4 +112,10 @@ namespace _2Real
 		return m_ID;
 	}
 
+	void IdentifierImpl::setInfo(std::string const& _info)
+	{
+		m_Info.clear();
+		m_Info = _info;
+	}
+
 }

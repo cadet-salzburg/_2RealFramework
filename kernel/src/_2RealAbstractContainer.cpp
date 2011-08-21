@@ -27,13 +27,19 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(AbstractContainer *const _father, IdentifierImpl *const _id) : IEntity(_id),
-		m_Father(_father), m_bRunOnce(false), m_bRun(false), m_bCanReconfigure(false), m_bIsConfigured(false), m_Configuration(NULL)
+	AbstractContainer::AbstractContainer(IdentifierImpl *const _id) :	IEntity(_id),
+																		m_bRunOnce(false),
+																		m_bRun(false), 
+																		m_bCanReconfigure(false), 
+																		m_bIsConfigured(false), 
+																		m_Father(NULL),
+																		m_Configuration(NULL)
 	{
 	}
 
 	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : IEntity(_src)
 	{
+		throw Exception::noCopy();
 	}
 
 	AbstractContainer& AbstractContainer::operator=(AbstractContainer const& _src)
@@ -43,8 +49,6 @@ namespace _2Real
 
 	AbstractContainer::~AbstractContainer()
 	{
-		delete m_Configuration;
-		m_NewData.clear();
 	}
 
 	void AbstractContainer::start(bool const& _runOnce) throw(...)
@@ -64,7 +68,7 @@ namespace _2Real
 		m_bRun = false;
 	}
 
-	void AbstractContainer::setup(ServiceContext *const _contextPtr) throw(...)
+	void AbstractContainer::setup(ServiceContext *const _contextPtr)
 	{
 		//does nothing
 	}
@@ -74,12 +78,28 @@ namespace _2Real
 		return m_bCanReconfigure;
 	}
 
+	void AbstractContainer::setFather(AbstractContainer *const _father)
+	{
+		if (_father == NULL)
+		{
+			throw Exception::failure();
+		}
+
+		m_Father = _father;
+		IEntity::setInfo("belongs to container: " + _father->name());
+	}
+
 	AbstractContainer *const AbstractContainer::father()
 	{
 		return m_Father;
 	}
 
-	void AbstractContainer::addListener(IDataQueue *const _queue) throw(...)
+	ConfigurationData *const AbstractContainer::configuration()
+	{
+		return m_Configuration;
+	}
+
+	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
 		if (_queue == NULL)
 		{

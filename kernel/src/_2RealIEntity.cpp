@@ -69,4 +69,24 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
+	std::string const& IEntity::name() const
+	{
+		if (m_ID != NULL)
+		{
+			return m_ID->name();
+		}
+
+		throw Exception::failure();
+	}
+
+	void IEntity::setInfo(std::string const& _info)
+	{
+		if (m_ID != NULL)
+		{
+			m_ID->setInfo(_info);
+		}
+
+		throw Exception::failure();
+	}
+
 }

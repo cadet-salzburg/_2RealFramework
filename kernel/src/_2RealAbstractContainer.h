@@ -40,17 +40,17 @@ namespace _2Real
 		/**
 		*
 		*/
-		AbstractContainer(AbstractContainer *const _father, IdentifierImpl *const _id);
+		AbstractContainer(IdentifierImpl *const _id);
 
 		/**
 		*
 		*/
-		AbstractContainer(AbstractContainer const& _src);
+		AbstractContainer(AbstractContainer const& _src) throw(...);
 
 		/**
 		*
 		*/
-		AbstractContainer& operator=(AbstractContainer const& _src);
+		AbstractContainer& operator=(AbstractContainer const& _src) throw(...);
 
 		/**
 		*
@@ -102,6 +102,16 @@ namespace _2Real
 		*/
 		AbstractContainer *const father();
 
+		/**
+		*
+		*/
+		ConfigurationData *const configuration();
+
+		/**
+		*	sets father, throws exception if father is null
+		*/
+		void setFather(AbstractContainer *const _father) throw(...);
+
 	protected:
 
 		/**
@@ -130,6 +140,11 @@ namespace _2Real
 		ConfigurationData					*m_Configuration;
 
 		/**
+		*	father - null for top level containers
+		*/
+		AbstractContainer					*m_Father;
+
+		/**
 		*
 		*/
 		std::list< NamedData >				m_DataList;
@@ -138,8 +153,6 @@ namespace _2Real
 		*
 		*/
 		Poco::BasicEvent< NamedData >		m_NewData;
-
-		AbstractContainer					*m_Father;
 
 	};
 

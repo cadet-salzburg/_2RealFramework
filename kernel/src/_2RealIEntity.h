@@ -42,6 +42,8 @@ namespace _2Real
 		
 		IdentifierImpl::eType const& type() const;
 		unsigned int const& id() const;
+		std::string const& name() const;
+		void setInfo(std::string const& _info);
 
 	private:
 	

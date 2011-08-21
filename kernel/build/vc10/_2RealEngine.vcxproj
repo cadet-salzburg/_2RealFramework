@@ -40,6 +40,7 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
