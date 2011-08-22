@@ -18,20 +18,23 @@
 
 #pragma once
 
-#include "_2RealAbstractValue.h"
+#include "_2RealAbstractRef.h"
 #include "_2RealAbstractContainer.h"
 
 #include <list>
+#include <map>
 
 namespace _2Real
 {
 
 	/**
 	*	service container
+	*	makes sure the user service is updated and stuff
 	*/
 
 	class IService;
 	class ServiceParam;
+	class Identifier;
 
 	class ServiceImpl : public AbstractContainer
 	{
@@ -39,19 +42,24 @@ namespace _2Real
 	public:
 
 		/**
-		*
+		*	returns value of setup param
 		*/
-		void getParameterValue(AbstractValue *const _param);
+		void getParameterValue(std::string const& _name, AbstractRef *const _param) throw(...);
 
 		/**
-		*
+		*	registers ref of input variable
 		*/
-		void registerInputVariable(AbstractValue *const _var);
+		void registerInputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
 
 		/**
-		*
+		*	registers ref of output variable
 		*/
-		void registerOutputVariable(AbstractValue *const _var);
+		void registerOutputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
+
+		/**
+		*	
+		*/
+		typedef std::list< Identifier > IdentifierList;
 
 		/**
 		*	throws if user defined service is null
@@ -74,9 +82,14 @@ namespace _2Real
 		~ServiceImpl();
 
 		/**
-		*	configures container - calls setup function of service
+		*	called by service factory after service creation
 		*/
-		void configure(ConfigurationData *const _dataPtr) throw(...);
+		void addParam(ServiceParam *const _param) throw(...);
+
+		/**
+		*	calls setup function of service when called for the first time
+		*/
+		void checkConfiguration() throw(...);
 
 		/**
 		*	
@@ -96,34 +109,44 @@ namespace _2Real
 	private:
 
 		/**
-		*
+		*	
 		*/
-		typedef std::pair< unsigned int, ServiceParam * >	NamedParameter;
-
-		/**
-		*
-		*/
-		typedef std::map< unsigned int, ServiceParam * >	ParmeterMap;
+		typedef std::pair< const unsigned int, ServiceParam * >	NamedInput;
 
 		/**
 		*	
 		*/
-		typedef std::list< AbstractValue * >	VariableList;
+		typedef std::map< const unsigned int, ServiceParam * >	InputMap;
 
 		/**
-		*	input variables registred by user defined service
+		*	
 		*/
-		VariableList							m_InputVariables;
-		
+		typedef std::pair< const std::string, ServiceParam * >	NamedParam;
+
 		/**
-		*	output variables registred by user defined service
+		*	
 		*/
-		VariableList							m_OutputVariables;
+		typedef std::map< const std::string, ServiceParam * >	ParamMap;
+
+		/**
+		*	input slots - are found by sender id
+		*/
+		InputMap												m_InputParams;
+
+		/**
+		*	output slots
+		*/
+		ParamMap												m_OutputParams;
+
+		/**
+		*	setup params
+		*/
+		ParamMap												m_SetupParams;
 
 		/**
 		*	the user defined service
 		*/
-		IService								*m_Service;
+		IService												*m_Service;
 
 	};
 

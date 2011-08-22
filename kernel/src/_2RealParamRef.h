@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +19,7 @@
 
 #pragma once
 
-#include <map>
-
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
+#include "_2RealAbstractRef.h"
 
 namespace _2Real
 {
@@ -30,25 +28,54 @@ namespace _2Real
 	*
 	*/
 
-	class Identifier;
-
-	class OutputDataImpl
+	template< typename T >
+	class ParamRef : public AbstractRef
 	{
 
 	public:
 
-		Poco::Any get(Identifier const& _id) throw(...);
+		/**
+		*	attempt to extract from an any ptr
+		*/
+		void extractFrom(SharedAny const& _any) throw(...);
+
+		/**
+		*	create copy of value, transform into any pointer
+		*/
+		SharedAny& getAny();
 
 	private:
 
-		typedef Poco::SharedPtr< Poco::Any >		AnyPtr;
+		friend class ServiceContext;
 
-		typedef std::pair< Identifier, AnyPtr >		NamedData;
+		/**
+		*	
+		*/
+		ParamRef(T &_value);
 
-		typedef std::map< Identifier, AnyPtr >		DataMap;
-		
-		DataMap										m_Data;
+		/**
+		*	
+		*/
+		ParamRef(ParamRef const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		ParamRef& operator=(ParamRef const& _src) throw (...);
+
+		/**
+		*	
+		*/
+		~ParamRef();
+
+		/**
+		*	reference to member variable of a service
+		*	extract() will overwrite this.
+		*/
+		T		&m_Value;
 
 	};
 
 }
+
+#include "_2RealParamRef.cpp"

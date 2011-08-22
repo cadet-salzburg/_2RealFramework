@@ -64,7 +64,7 @@ namespace _2Real
 		/**
 		*	config calls config of all children
 		*/
-		void configure(ConfigurationData *const _dataPtr) throw(...);
+		void configure() throw(...);
 
 		/**
 		*	
@@ -82,6 +82,11 @@ namespace _2Real
 		void shutdown() throw(...);
 
 		/**
+		*	calls setup function of service when called for the first time
+		*/
+		void checkConfiguration() throw(...);
+
+		/**
 		*
 		*/
 		const unsigned int childCount() const;
@@ -95,6 +100,11 @@ namespace _2Real
 		*	adds child in the last position
 		*/
 		void append(AbstractContainer *const child);
+
+		/**
+		*	adds child in the last position
+		*/
+		void remove(unsigned int const& _id) throw(...);
 
 		/**
 		*	returns pointer to child, removes from children & appends to _father's children

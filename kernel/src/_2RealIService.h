@@ -21,12 +21,11 @@
 namespace _2Real
 {
 
-	class ServiceContext;
-
 	/**
-	*	interface for user defined services
-	*	all containers (=production graph or service container) implement this as well
+	*	interface for services
 	*/
+
+	class ServiceContext;
 
 	class IService
 	{

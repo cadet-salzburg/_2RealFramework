@@ -19,7 +19,7 @@
 #pragma once
 
 #include "_2RealIEntity.h"
-#include "_2RealServiceTypedefs.h"
+#include "_2RealEngineTypedefs.h"
 
 #include <string>
 

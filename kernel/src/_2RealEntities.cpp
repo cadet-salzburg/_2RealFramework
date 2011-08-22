@@ -86,43 +86,60 @@ namespace _2Real
 		return Entities::ID(Identifier(id), plugin);
 	}
 
-	const Entities::ID Entities::createService(std::string const& _name, Container *const _father, IService *const _service)
+	const Entities::ID Entities::createService(std::string const& _name, IService *const _service)
 	{
-		IdentifierImpl *id = new IdentifierImpl(_name, "service", "", IdentifierImpl::SERVICE, ++m_iCreationCount);
-		ServiceImpl *service = new ServiceImpl(_service, id);
-		return Entities::ID(Identifier(id), service);
+		try
+		{
+			IdentifierImpl *id = new IdentifierImpl(_name, "service", "", IdentifierImpl::SERVICE, ++m_iCreationCount);
+			ServiceImpl *service = new ServiceImpl(_service, id);
+			return Entities::ID(Identifier(id), service);
+		}
+		catch (...)
+		{
+			throw Exception::failure();
+		}
 	}
 
-	const Entities::ID Entities::createContainer(std::string const& _name, Container *const _father, IdentifierImpl::eType const& _type)
+	const Entities::ID Entities::createContainer(std::string const& _name, IdentifierImpl::eType const& _type)
 	{
-
-		IdentifierImpl *id;
-		Container *container;
-		switch(_type)
+		try
 		{
+			IdentifierImpl *id;
+			Container *container;
+			switch(_type)
+			{
 
-		case IdentifierImpl::SEQUENCE:
-			id = new IdentifierImpl(_name, "sequence", "", IdentifierImpl::SEQUENCE, ++m_iCreationCount);
-			container = new Container(id);
-			break;
+			case IdentifierImpl::SEQUENCE:
 
-		case IdentifierImpl::SYNCHRONIZATION:
-			id = new IdentifierImpl(_name, "synchronization", "", IdentifierImpl::SYNCHRONIZATION, ++m_iCreationCount);
-			container = new Container(id);
-			break;
+				id = new IdentifierImpl(_name, "sequence", "", IdentifierImpl::SEQUENCE, ++m_iCreationCount);
+				container = new Container(id);
 
-		case IdentifierImpl::NIRVANA:
-			id = new IdentifierImpl(_name, "nirvana", "", IdentifierImpl::NIRVANA, ++m_iCreationCount);
-			container = new Container(id);
-			break;
+				break;
+
+			case IdentifierImpl::SYNCHRONIZATION:
+				
+				id = new IdentifierImpl(_name, "synchronization", "", IdentifierImpl::SYNCHRONIZATION, ++m_iCreationCount);
+				container = new Container(id);
+
+				break;
+
+			case IdentifierImpl::NIRVANA:
+				id = new IdentifierImpl(_name, "nirvana", "", IdentifierImpl::NIRVANA, ++m_iCreationCount);
+				container = new Container(id);
+				break;
 		
-		default:
-			throw Exception::failure();
-			break;
+			default:
+				throw Exception::failure();
+				break;
 
+			}
+
+			return Entities::ID(Identifier(id), container);
 		}
-
-		return Entities::ID(Identifier(id), container);
+		catch (...)
+		{
+			throw Exception::failure();
+		}
 	}
 
 	const Entities::ID Entities::createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata)
@@ -154,8 +171,10 @@ namespace _2Real
 		default:
 			throw Exception::failure();
 			break;
-
 		}
+
+		ServiceParam *param = new ServiceParam(id, _service);
+		return Entities::ID(Identifier(id), param);
 	}
 
 }

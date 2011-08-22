@@ -18,9 +18,6 @@
 
 #pragma once
 
-#include "_2RealDataTypedefs.h"
-#include "_2RealData.h"
-
 #include <map>
 #include <string>
 #include <vector>
@@ -37,18 +34,64 @@ namespace _2Real
 
 	public:
 
+		/**
+		*	
+		*/
+		typedef std::pair< const std::string, const std::string >	NamedAttribute;
+
+		/**
+		*	
+		*/
+		typedef std::map< const std::string, const std::string >	AttributeMap;
+
+		/**
+		*	
+		*/
 		Metadata(std::string const& _name, Metadata *const _father);
+
+		/**
+		*	
+		*/
 		Metadata(Metadata const& _src);
+
+		/**
+		*	
+		*/
 		Metadata& operator=(Metadata const& _src);
+
+		/**
+		*	
+		*/
 		~Metadata();
 
+		/**
+		*	
+		*/
 		const std::string& name() const;
-		ParameterData const& attributes() const;
 
+		/**
+		*	
+		*/
+		AttributeMap const& attributes() const;
+
+		/**
+		*	
+		*/
 		Metadata *const father();
+
+		/**
+		*	
+		*/
 		const Metadata *const father() const;
 
+		/**
+		*	
+		*/
 		Metadata *const child(std::string const& _name);
+
+		/**
+		*	
+		*/
 		const Metadata *const child(std::string const& _name) const;
 
 		/**
@@ -73,8 +116,15 @@ namespace _2Real
 
 	private:
 
-		typedef std::map< std::string, Metadata * >		NamedMetadataMap;
+		/**
+		*	
+		*/
 		typedef std::pair< std::string, Metadata * >	NamedChild;
+
+		/**
+		*	
+		*/
+		typedef std::map< std::string, Metadata * >		ChildMap;
 
 		/**
 		*	tag name
@@ -82,20 +132,20 @@ namespace _2Real
 		std::string										m_Name;
 
 		/**
-		*	attributes - key : string
+		*	attributes
 		*/
-		ParameterData									m_Attributes;
-		
+		AttributeMap									m_Attributes;
+
 		/**
 		*	children
 		*/
-		NamedMetadataMap								m_Children;
-		
+		ChildMap										m_Children;
+
 		/**
 		*	father
 		*/
 		Metadata										*m_Father;
-	
+
 	};
 
 }

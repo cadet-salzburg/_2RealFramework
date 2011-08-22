@@ -20,6 +20,9 @@
 
 #include "_2RealIEntity.h"
 
+#include "Poco/SharedPtr.h"
+#include "Poco/Any.h"
+
 namespace _2Real
 {
 
@@ -28,20 +31,89 @@ namespace _2Real
 	*/
 
 	class ServiceImpl;
+	class AbstractRef;
 
 	class ServiceParam : public IEntity
 	{
 
+	public:
+
+		/**
+		*	
+		*/
+		typedef Poco::SharedPtr< Poco::Any >						SharedAny;
+
+		/**
+		*	
+		*/
+		typedef std::pair< const unsigned int, const SharedAny >	NamedAny;
+
+		/**
+		*	
+		*/
 		ServiceParam(IdentifierImpl *const _id, ServiceImpl const *const _service);
+
+		/**
+		*	
+		*/
 		ServiceParam(ServiceParam const& _src) throw(...);
+
+		/**
+		*	
+		*/
 		ServiceParam& operator=(ServiceParam const& _src) throw(...);
+
+		/**
+		*	
+		*/
 		~ServiceParam();
 
+		/**
+		*	
+		*/
 		ServiceImpl const *const service() const;
+
+		/**
+		*	
+		*/
+		unsigned int const& senderID() const;
+
+		/**
+		*	
+		*/
+		void setValue(AbstractRef *const _val);
+
+		/**
+		*	
+		*/
+		void listenTo(unsigned int const& _id);
+
+		/**
+		*	
+		*/
+		ServiceParam::NamedAny getAny();
+
+		/**
+		*
+		*/
+		void extractFrom(ServiceParam::SharedAny const& _any) throw(...);
 
 	private:
 
+		/**
+		*	
+		*/
 		const ServiceImpl			*m_Service;
+
+		/**
+		*	what a dumb name
+		*/
+		AbstractRef					*m_Value;
+
+		/**
+		*	
+		*/
+		unsigned int				m_SenderID;
 
 	};
 

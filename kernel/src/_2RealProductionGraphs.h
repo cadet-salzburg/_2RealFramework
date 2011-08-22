@@ -38,17 +38,20 @@ namespace _2Real
 	class ProductionGraphs
 	{
 
+		/**
+		*	engine
+		*/
 		friend class EngineImpl;
 	
 	public:	
 
 		/**
-		*	pointers will be set directly by engine
+		*	standard ctor; pointers will be set directly by engine
 		*/
 		ProductionGraphs();
 
 		/**
-		*	no copies allowed
+		*	no copies allowed for
 		*/
 		ProductionGraphs(ProductionGraphs const& _src) throw(...);
 
@@ -59,28 +62,34 @@ namespace _2Real
 
 		/**
 		*	causes destruction of nirvana - and therefore, of all existing graphs
+
 		*/
 		~ProductionGraphs();
 
 		/**
-		*	create sequence
+		*	create sequence; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
 		const Identifier createSequence(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top) throw(...);
 
 		/**
-		*	create synch
+		*	create sync; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
 		const Identifier createSynchronization(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top) throw(...);
 
 		/**
-		*	create top level pg. if only it was that simple in real life ;)
+		*	creates nirvana. if only it was that simple in real life ;)
 		*/
 		const Identifier createNirvana(std::string const& _name);
 
 		/**
-		*	destroys a container
+		*	destroys a container, stops it's superior
 		*/
 		void destroy(Identifier const& _id, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		const bool isNirvana(Identifier const& _id);
 
 	private:
 
@@ -95,22 +104,22 @@ namespace _2Real
 		typedef	std::map< unsigned int, Container * >	ContainerMap;
 
 		/**
-		*	all top level pgs
+		*	nirvana!
 		*/
 		ContainerMap									m_Containers;
 
 		/**
-		*	plugins
+		*	plugin pool, for communication
 		*/
 		PluginPool										*m_Plugins;
 
 		/**
-		*	services + factory refs
+		*	service factory, for communication
 		*/
 		ServiceFactory									*m_Factory;
 
 		/**
-		*	all entities
+		*	entity table, for communication
 		*/
 		Entities										*m_Entities;
 

@@ -26,7 +26,10 @@
 namespace _2Real
 {
 	ProductionGraphs::ProductionGraphs() :
-		m_Plugins(NULL), m_Factory(NULL), m_Entities(NULL), m_Containers()
+		m_Plugins(NULL),
+		m_Factory(NULL),
+		m_Entities(NULL),
+		m_Containers()
 	{
 	}
 
@@ -65,7 +68,7 @@ namespace _2Real
 		try
 		{
 			unsigned int id = _id.id();
-			IEntity *entity = m_Entities->get(id);	
+			IEntity *entity = m_Entities->get(id);
 			IdentifierImpl::eType type = entity->type();
 			
 			if (type != IdentifierImpl::SEQUENCE && type != IdentifierImpl::SYNCHRONIZATION && type != IdentifierImpl::NIRVANA)
@@ -86,17 +89,21 @@ namespace _2Real
 			}
 			else
 			{
+				//_top must be in container map
 				ContainerMap::iterator it = m_Containers.find(_top.id());
 				if (it == m_Containers.end())
 				{
 					throw Exception::failure();
 				}
-
 				Container *top = it->second;
+
+				//this moves child to top & stops former superior
 				AbstractContainer *a = top->getChild(_id.id(), top);
-				top->remove(_id.id());
+				//cut child out of it's tree structure completely
+				top->remove(a->id());
+				//destroy child
 				m_Entities->destroy(it->first);
-			}	
+			}
 		}
 		catch (...)
 		{
@@ -107,7 +114,9 @@ namespace _2Real
 	{
 		try
 		{
-			const Entities::ID id = m_Entities->createContainer(_name, NULL, IdentifierImpl::NIRVANA);
+			//request container creation
+			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::NIRVANA);
+			//entities returns entity*
 			Container *nirvana = static_cast< Container * >(id.second);
 			m_Containers.insert(NamedContainer(nirvana->id(), nirvana));
 			return id.first;
@@ -123,26 +132,29 @@ namespace _2Real
 		try
 		{
 			//_top must be in container map 
-			ContainerMap::iterator it = m_Containers.find(_top.id());		
+			ContainerMap::iterator it = m_Containers.find(_top.id());
 			if (it == m_Containers.end())
 			{
 				throw Exception::failure();
-			}	
+			}
 			Container *top = it->second;
 
 			//removes children from their respective superiors
-			//also stops them
+			//this operation also stops the superior (if != _top)
 			AbstractContainer *a = top->getChild(_a.id(), top);
 			AbstractContainer *b = top->getChild(_b.id(), top);
 
+			//both containers should exist, i guess (:
 			if (a == NULL || b == NULL)
 			{
 				throw Exception::failure();
 			}
 
-			const Entities::ID id = m_Entities->createContainer(_name, top, IdentifierImpl::SEQUENCE);
-			
-			Container *seq = static_cast< Container * >(id.second);		
+			//request container creation
+			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SEQUENCE);
+			//entities returns entity*
+			Container *seq = static_cast< Container * >(id.second);
+			//append also performs insertion
 			seq->append(a);
 			seq->append(b);
 			
@@ -163,22 +175,25 @@ namespace _2Real
 			if (it == m_Containers.end())
 			{
 				throw Exception::failure();
-			}	
+			}
 			Container *top = it->second;
 
 			//removes children from their respective superiors
-			//also stops them
+			//this operation also stops the superior (if != _top)
 			AbstractContainer *a = top->getChild(_a.id(), top);
 			AbstractContainer *b = top->getChild(_b.id(), top);
 
+			//both containers should exist, i guess (:
 			if (a == NULL || b == NULL)
 			{
 				throw Exception::failure();
 			}
 
-			const Entities::ID id = m_Entities->createContainer(_name, top, IdentifierImpl::SYNCHRONIZATION);
-			
+			//request container creation
+			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SYNCHRONIZATION);
+			//entities returns entity*
 			Container *sync = static_cast< Container * >(id.second);
+			//append also performs insertion
 			sync->append(a);
 			sync->append(b);
 			

@@ -25,48 +25,57 @@
 namespace _2Real
 {
 
-	ServiceContext::~ServiceContext()
-	{
-	}
-
-	ServiceContext::ServiceContext(ServiceImpl *const _container) : m_Container(_container)
+	ServiceContext::ServiceContext(ServiceImpl *const _impl) : m_Impl(_impl)
 	{
 	}
 
 	ServiceContext::ServiceContext(ServiceContext const& _src)
 	{
-#ifdef _DEBUG
-		std::cout << "service context copy constructor called" << std::endl;
-#endif
-
-		//does nothing
-
 	}
 
 	ServiceContext& ServiceContext::operator=(ServiceContext const& _src)
 	{
-#ifdef _DEBUG
-		std::cout << "service context assignment operator called" << std::endl;
-#endif
-
-		//does nothing
 		return *this;
-
 	}
 
-	void ServiceContext::getSetupParameter(AbstractValue *_param)
+	ServiceContext::~ServiceContext()
 	{
-		m_Container->getParameterValue(_param);
 	}
 
-	void ServiceContext::registerInputVariable(AbstractValue *_var)
+	void ServiceContext::getSetupParameter(std::string const& _name, AbstractRef *_param)
 	{
-		m_Container->registerInputVariable(_var);
+		try
+		{
+			m_Impl->getParameterValue(_name, _param);
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
-	void ServiceContext::registerOutputVariable(AbstractValue *_var)
+	void ServiceContext::registerInputSlot(std::string const& _name, AbstractRef *_var)
 	{
-		m_Container->registerOutputVariable(_var);
+		try
+		{
+			m_Impl->registerInputSlot(_name, _var);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void ServiceContext::registerOutputSlot(std::string const& _name, AbstractRef *_var)
+	{
+		try
+		{
+			m_Impl->registerOutputSlot(_name, _var);
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
 }

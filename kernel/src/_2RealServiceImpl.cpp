@@ -20,13 +20,15 @@
 
 #include "_2RealServiceImpl.h"
 #include "_2RealServiceContext.h"
+#include "_2RealServiceParam.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
 
 	ServiceImpl::ServiceImpl(IService *const _service, IdentifierImpl *const _id) : 
-		AbstractContainer(_id), m_Service(_service)
+		AbstractContainer(_id),
+		m_Service(_service)
 	{
 		if (m_Service == NULL)
 		{
@@ -36,6 +38,7 @@ namespace _2Real
 
 	ServiceImpl::ServiceImpl(ServiceImpl const& _src) : AbstractContainer(_src)
 	{
+		throw Exception::noCopy();
 	}
 
 	ServiceImpl& ServiceImpl::operator=(ServiceImpl const& _src)
@@ -54,36 +57,59 @@ namespace _2Real
 			std::cout << "service shutdown failed" << std::endl;
 		}
 		
+		//in out slots are deleted by entity table
+
 		//user defined service is deleted here
 		delete m_Service;
 	}
 
-	void ServiceImpl::configure(ConfigurationData *const _config) throw(...)
+	void ServiceImpl::addParam(ServiceParam *const _param)
 	{
-		if (m_bIsConfigured && !m_bCanReconfigure)
+		if (_param == NULL)
 		{
-			//TODO: set error state
-			throw Exception::failure();
-		}
-		else if (_config == NULL)
-		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 
+		IdentifierImpl::eType type = _param->type();
+
+		if (type == IdentifierImpl::SETUP)
+		{
+			m_SetupParams.insert(NamedParam(_param->name(), _param));
+		}
+		else if (type == IdentifierImpl::INPUT)
+		{
+			m_InputParams.insert(NamedInput(_param->id(), _param));
+		}
+		else if (type == IdentifierImpl::OUTPUT)
+		{
+			m_OutputParams.insert(NamedParam(_param->name(), _param));
+		}
+	}
+
+	void ServiceImpl::checkConfiguration()
+	{
 		try
 		{
-			//call user service's setup method
-			m_Service->setup(new ServiceContext(this));
+			if (!m_bIsConfigured)
+			{
+				//call user service's setup method
+				m_Service->setup(new ServiceContext(this));
+			}
+			else if (m_bCanReconfigure)
+			{
+				//call user service's setup method
+				m_Service->setup(new ServiceContext(this));
+			}
+
+			//check in/out slots
+			//for ()
+
+			m_bIsConfigured = true;
 		}
-		catch (...)
+		catch(...)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
-
-		//save configuration
-		m_Configuration = _config;
 	}
 
 	void ServiceImpl::run() throw(...)
@@ -102,7 +128,7 @@ namespace _2Real
 			}
 
 			m_bRunOnce = false;
-			//send data without waiting
+			//send DataImpl without waiting
 			sendData(false);
 		}
 	}
@@ -124,7 +150,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		//send data - wait until all listeners received it
+		//send DataImpl - wait until all listeners received it
 		sendData(true);
 	}
 
@@ -141,19 +167,45 @@ namespace _2Real
 		}
 	}
 
-	void ServiceImpl::getParameterValue(AbstractValue *const _param)
+	void ServiceImpl::getParameterValue(std::string const& _name, AbstractRef *const _param)
 	{
-		//TODO
+		ParamMap::iterator it = m_SetupParams.find(_name);
+		if (it == m_SetupParams.end())
+		{
+			throw Exception::failure();
+		}
+
+		ServiceParam::SharedAny any = (it->second->getAny()).second;
+		_param->extractFrom(any);
 	}
 
-	void ServiceImpl::registerInputVariable(AbstractValue *const _var)
+	void ServiceImpl::registerInputSlot(std::string const& _name, AbstractRef *const _var)
 	{
-		m_InputVariables.push_back(_var);
+		InputMap::iterator it;
+		for (it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+		{
+			if (it->second->name() == _name)
+			{
+				it->second->setValue(_var);
+				break;
+			}
+		}
+
+		if (it == m_InputParams.end())
+		{
+			throw Exception::failure();
+		}
 	}
 
-	void ServiceImpl::registerOutputVariable(AbstractValue *const _var)
+	void ServiceImpl::registerOutputSlot(std::string const& _name, AbstractRef *const _var)
 	{
-		m_OutputVariables.push_back(_var);
+		ParamMap::iterator it = m_OutputParams.find(_name);
+		if (it == m_OutputParams.end())
+		{
+			throw Exception::failure();
+		}
+
+		it->second->setValue(_var);
 	}
 
 }

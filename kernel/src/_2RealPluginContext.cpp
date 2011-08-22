@@ -22,37 +22,27 @@
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin) : m_Plugin(_plugin)
+	PluginContext::PluginContext(Plugin *const _plugin) :
+		m_Impl(_plugin)
 	{
 	}
 
-	PluginContext::PluginContext() : m_Plugin(NULL)
+	PluginContext::PluginContext(PluginContext const& _src)
 	{
+	}
+
+	PluginContext& PluginContext::operator=(PluginContext const& _src) 
+	{
+		return *this;
 	}
 
 	PluginContext::~PluginContext()
 	{
 	}
 
-	PluginContext::PluginContext(PluginContext const& _src) : m_Plugin(_src.m_Plugin)
-	{
-	}
-
-	PluginContext& PluginContext::operator=(PluginContext const& _src) 
-	{
-		if (this == &_src)
-		{
-			return *this;
-		}
- 
-		m_Plugin = _src.m_Plugin;
-	 
-		return *this;
-	}
-
 	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
 	{
-		m_Plugin->registerService(_name, _creator);
+		m_Impl->registerService(_name, _creator);
 	}
 
 }

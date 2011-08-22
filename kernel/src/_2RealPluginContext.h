@@ -19,19 +19,27 @@
 
 #pragma once
 
-#include "_2RealServiceTypedefs.h"
-
 #include <string>
 
 namespace _2Real
 {
 
+	/**
+	*	plugin's interface for communication with the framework
+	*	allows export of services' factory functions
+	*/
+	
+	class IService;
+
 	class PluginContext
 	{
 
-		friend class Plugin;
-
 	public:
+
+		/**
+		*	service factory function
+		*/
+		typedef IService *const (*const ServiceCreator)(void);
 
 		/**
 		*	registers a service in the framework
@@ -40,20 +48,12 @@ namespace _2Real
 
 	private:
 
-		/**
-		*
-		*/
-		~PluginContext();
+		friend class Plugin;
 
 		/**
 		*
 		*/
 		PluginContext(Plugin *const _plugin);
-
-		/**
-		*
-		*/
-		PluginContext();
 		
 		/**
 		*
@@ -68,7 +68,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		Plugin			*m_Plugin;
+		~PluginContext();
+
+		/**
+		*
+		*/
+		Plugin			*m_Impl;
 
 	};
 

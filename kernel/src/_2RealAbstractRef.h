@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,20 +19,54 @@
 
 #pragma once
 
-/**
-*	annoying & ultimately harmless warning about
-*	template expressions that are longer than 255 bytes
-*/
-#pragma warning(disable:4503)
+#include "Poco/Any.h"
+#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
-	class IService;
+	class AbstractRef
+	{
 
-	/**
-	*	function to create user defined service - exported by plugins
-	*/
-	typedef IService *const (*const ServiceCreator)(void);
+	public:
+
+		/**
+		*	
+		*/
+		typedef Poco::SharedPtr< Poco::Any >	SharedAny;
+
+		/**
+		*
+		*/
+		virtual void extractFrom(SharedAny _any) throw(...) = 0;
+
+		/**
+		*	
+		*/
+		virtual SharedAny& getAny() = 0;
+
+		/**
+		*	
+		*/
+		AbstractRef();
+
+		/**
+		*	
+		*/
+		AbstractRef(AbstractRef const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		AbstractRef& operator=(AbstractRef const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		~AbstractRef();
+
+
+
+	};
 
 }

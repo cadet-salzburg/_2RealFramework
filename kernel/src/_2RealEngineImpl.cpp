@@ -120,11 +120,11 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::destroyProductionGraph(Identifier const& _id)
+	void EngineImpl::destroyProductionGraph(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
-			m_Graphs->destroy(_id, _id);
+			m_Graphs->destroy(_id, _top);
 		}
 		catch (...)
 		{
@@ -132,7 +132,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
+	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs, Identifier const& _top) throw(...)
 	{
 		try
 		{
@@ -144,11 +144,11 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...)
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw (...)
 	{
 		try
 		{
-			return m_Factory->createService(_name, _id, _setupIDs);
+			return m_Factory->createService(_name, _id, _setupIDs, _top);
 		}
 		catch (...)
 		{

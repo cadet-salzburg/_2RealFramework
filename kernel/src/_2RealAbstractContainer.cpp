@@ -18,8 +18,8 @@
 
 #include "_2RealAbstractContainer.h"
 #include "_2RealException.h"
-#include "_2RealConfigurationData.h"
 #include "_2RealIdentifierImpl.h"
+#include "_2RealDataImpl.h"
 #include "_2RealData.h"
 
 #include "Poco\Delegate.h"
@@ -27,13 +27,13 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(IdentifierImpl *const _id) :	IEntity(_id),
-																		m_bRunOnce(false),
-																		m_bRun(false), 
-																		m_bCanReconfigure(false), 
-																		m_bIsConfigured(false), 
-																		m_Father(NULL),
-																		m_Configuration(NULL)
+	AbstractContainer::AbstractContainer(IdentifierImpl *const _id) :
+		IEntity(_id),
+		m_bRunOnce(false),
+		m_bRun(false), 
+		m_bCanReconfigure(false), 
+		m_bIsConfigured(false), 
+		m_Father(NULL)
 	{
 	}
 
@@ -71,6 +71,7 @@ namespace _2Real
 	void AbstractContainer::setup(ServiceContext *const _contextPtr)
 	{
 		//does nothing
+		Data(NULL);
 	}
 
 	bool const& AbstractContainer::canReconfigure() const
@@ -92,11 +93,6 @@ namespace _2Real
 	AbstractContainer *const AbstractContainer::father()
 	{
 		return m_Father;
-	}
-
-	ConfigurationData *const AbstractContainer::configuration()
-	{
-		return m_Configuration;
 	}
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)

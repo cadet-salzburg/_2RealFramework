@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "_2RealServiceTypedefs.h"
 #include "_2RealEngineTypedefs.h"
 
 #include <map>
@@ -91,7 +90,7 @@ namespace _2Real
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw(...);
+		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
 
 	private:
 

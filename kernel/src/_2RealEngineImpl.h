@@ -20,7 +20,6 @@
 #pragma once
 
 #include "_2RealEngineTypedefs.h"
-#include "_2RealServiceTypedefs.h"
 
 #include <vector>
 
@@ -87,17 +86,17 @@ namespace _2Real
 		/*
 		*
 		*/
-		void destroyProductionGraph(Identifier const& _id) throw(...);
+		void destroyProductionGraph(Identifier const& _id, Identifier const& _top) throw(...);
 
 		/**
 		*	install plugin, return id + service ids
 		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...);
+		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs, Identifier const& _top) throw(...);
 
 		/**
 		*	
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw(...);
+		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
 
 	private:
 

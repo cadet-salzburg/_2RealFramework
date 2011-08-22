@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealAnyValue.h"
+#include "_2RealParamRef.h"
 
 #include <string>
 
@@ -27,89 +27,112 @@ namespace _2Real
 {
 
 	/**
-	*	this class offers a means of communication with the framework
-	*	during its setup method, a user defined service can retrieve the value of its setup params
-	*	as well as register references to its input & output variables
+	*	a service's means of communicating with the framework
+	*	allows for querying of setup params & registration of input / output slots
 	*/
 
 	class ServiceContext
 	{
 
-		friend class ServiceImpl;
-
 	public:
 
 		/**
 		*	registers a reference to an input variable in the framework
+		*	name & type must match some input parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void registerInputVariable(std::string const& _name, T &_var)
+		void registerInputSlot(std::string const& _name, T &_var) throw(...)
 		{
-			AbstractValue *value = new AnyValue< T >(_name, _var);
-			registerInputVariable(value);
+			try
+			{
+				AbstractRef *value = new ParamRef< T >(_var);
+				registerInputVariable(_name, value);
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
 
 		/**
 		*	registers a reference to an output variable in the framework
+		*	name & type must match some output parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void registerOutputVariable(std::string const& _name, T &_var)
+		void registerOutputSlot(std::string const& _name, T &_var) throw (...)
 		{
-			AbstractValue *value = new AnyValue< T >(_name, _var);
-			registerOutputVariable(value);
+			try
+			{
+				AbstractRef *value = new ParamRef< T >(_var);
+				registerOutputVariable(_name, value);
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
 
 		/**
 		*	retrieves the value of a setup parameter from the framework
+		*	name & type must match some setup parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void getSetupParameter(std::string const& _name, T &_param)
+		void getSetupParameter(std::string const& _name, T &_param) throw(...)
 		{
-			AbstractValue *value = new AnyValue< T >(_name, _param);
-			getSetupParameter(value);
+			try
+			{
+				AbstractRef *value = new ParamRef< T >(_param);
+				getSetupParameter(_name, value);
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
 	
 	private:
 
+		friend class ServiceImpl;
+
 		/**
-		*
+		*	
 		*/
-		~ServiceContext();
+		ServiceContext(ServiceImpl *const _impl);
 
 		/**
 		*
 		*/
-		ServiceContext(ServiceImpl *const _service);
-		
-		/**
-		*
-		*/
 		ServiceContext(ServiceContext const& _src);
-		
+
 		/**
 		*
 		*/
 		ServiceContext& operator=(ServiceContext const& _src);
 
 		/**
-		*	internal method for retrieving setup params
+		*	
 		*/
-		void getSetupParameter(AbstractValue *const _var);
-		
-		/**
-		*	internal method for registering input variables
-		*/
-		void registerInputVariable(AbstractValue *const _var);
-		
-		/**
-		*	internal method for registering ouput variables
-		*/
-		void registerOutputVariable(AbstractValue *const _param);
+		~ServiceContext();
 
 		/**
-		*	ptr to service container
+		*	internally used method for retrieving setup params
 		*/
-		ServiceImpl			*m_Container;
+		void getSetupParameter(std::string const& _name, AbstractRef *const _var) throw(...);
+
+		/**
+		*	internally used method for registering input slots
+		*/
+		void registerInputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
+
+		/**
+		*	internally used method for registering output slots
+		*/
+		void registerOutputSlot(std::string const& _name, AbstractRef *const _param) throw(...);
+
+		/**
+		*	
+		*/
+		ServiceImpl			*m_Impl;
 
 	};
 

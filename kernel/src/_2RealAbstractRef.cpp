@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +17,28 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealOutputDataImpl.h"
-#include "_2RealIdentifier.h"
+#include "_2RealAbstractRef.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
 
-	Poco::Any OutputDataImpl::get(Identifier const& _id) throw(...)
+	AbstractRef::AbstractRef()
 	{
-		DataMap::iterator it = m_Data.find(_id);
-		if (it == m_Data.end())
-		{
-			throw Exception::failure();
-		}
+	}
 
-		return *(it->second).get();
+	AbstractRef::AbstractRef(AbstractRef const& _src)
+	{
+		throw Exception::noCopy();
+	}
+
+	AbstractRef& AbstractRef::operator=(AbstractRef const& _src)
+	{
+		throw Exception::noCopy();
+	}
+
+	AbstractRef::~AbstractRef()
+	{
 	}
 
 }

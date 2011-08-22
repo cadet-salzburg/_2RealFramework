@@ -73,12 +73,23 @@ namespace _2Real
 		_child->setFather(this);
 	}
 
+	void Container::remove(unsigned int const& _id)
+	{
+		ChildList::iterator it = findChild(_id);
+		if (it != m_Children.end())
+		{
+			m_Children.erase(it);
+		}
+
+		throw Exception::failure();
+	}
+
 	AbstractContainer *const Container::getChild(unsigned int const& _id)
 	{
 
 		AbstractContainer *child;
 		
-		ChildList::iterator it = findChild(_id);	
+		ChildList::iterator it = findChild(_id);
 		if (it != m_Children.end())
 		{
 			return *it;
@@ -156,13 +167,9 @@ namespace _2Real
 		}
 	}
 
-	void Container::configure(ConfigurationData *const _config)
+	void Container::checkConfiguration() throw(...)
 	{
 		if (m_bIsConfigured && !m_bCanReconfigure)
-		{
-			throw Exception::failure();
-		}
-		else if (_config == NULL)
 		{
 			throw Exception::failure();
 		}
@@ -176,7 +183,6 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_Configuration = _config;
 	}
 
 	void Container::run()

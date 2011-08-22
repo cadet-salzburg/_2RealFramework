@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "_2RealEngineTypedefs.h"
+
 #include <string>
 #include <list>
 
@@ -36,41 +38,9 @@ namespace _2Real
 	*/
 
 	class Exception;
-	class OutputData;
+	class Data;
 	class Identifier;
 	class EngineImpl;
-
-	/**
-	*	callback for exceptions
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToException
-	*
-	*	registering for exception callbacks really only makes sense if the entity is in
-	*	nirvana
-	*/
-	typedef void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception);
-
-	/**
-	*	callback for new data
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToNewData
-	*
-	*	as with the exceptions, registering for new data makes the most sense if the entity
-	*	in question is in nirvana
-	*/
-	typedef void (*NewDataCallback)(Identifier const& _sender, OutputData const& _data);
-
-	/**
-	*	a list of identifiers
-	*
-	*	is the return value of some functions:
-	*		- plugins return the ids of all their services on installation
-	*		- services return their setup params on creation
-	*		- services, sequences & synchronizations can be queried for their IO slots
-	*/
-	typedef std::list< Identifier > Identifiers;
 
 	class Engine
 	{
@@ -145,7 +115,7 @@ namespace _2Real
 		*	creates a sequence of entities
 		*
 		*	two entities being in a sequence guarantees that the first one will be updated
-		*	exactly once and that the second will have received the output data before the
+		*	exactly once and that the second will have received the output DataImpl before the
 		*	second entity is being updated. sequences can be built out of services, sequence
 		*	graphs or synchronization graphs; example usage:
 		*	createSequence("S0", createSequence("S1", _idA, _idB), createSequence("S2", _idC, _idD));
@@ -168,13 +138,13 @@ namespace _2Real
 		*	open questions: is it really necessary for signatures to match perfectly here?
 		*	output slots could be discarded, IO slots might match, but be ordered differently
 		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+		const Identifier createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
 
 		/**
 		*	creates a synchronization of entities
 		*
 		*	two entities being in synchronization guarantees causes both update functions to
-		*	be carried out parallel, combining the output data of both into one combined data
+		*	be carried out parallel, combining the output DataImpl of both into one combined DataImpl
 		*	when both are finished. synchronizations can be built out of services, sequence
 		*	graphs or synchronization graphs; example usage:
 		*	createSynchronization("S0", createSequence("S1", _idA, _idB), createSynchronization("S2", _idC, _idD));
@@ -194,7 +164,7 @@ namespace _2Real
 		*	@param _idB:			identifier of either: sequence, synchronization or service
 		*	@return:				the synchronization's unique identifier
 		*/
-		const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+		const Identifier createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
 
 		/**
 		*	returns the ids of an entity's children
@@ -233,7 +203,7 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*
 		*	open questions: if the entity listens to another entity that is currently paused,
-		*	it might never receive any data, meaning it might never update at all
+		*	it might never receive any DataImpl, meaning it might never update at all
 		*/
 		void start(Identifier const& _id) throw(...);
 
@@ -301,7 +271,7 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of output slots
 		*/
-		Identifiers listOutputSlots(Identifier const& _id);
+		Identifiers getOutputSlots(Identifier const& _id);
 
 		/**
 		*	returns identifiers of all input slots of an entity
@@ -317,7 +287,7 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of input slots
 		*/
-		Identifiers listInputSlots(Identifier const& _id);
+		Identifiers getInputSlots(Identifier const& _id);
 
 		/**
 		*	connects an input slot with an output slot
@@ -325,7 +295,7 @@ namespace _2Real
 		*	@param _in:				identifier of input variable
 		*	@param _out:			identifier of output variable
 		*/
-		void connect(Identifier const& _in, Identifier const& _out) throw(...);
+		void link(Identifier const& _in, Identifier const& _out) throw(...);
 
 		/**
 		*	initializes a service's setup parameter
@@ -353,7 +323,7 @@ namespace _2Real
 		void registerToException(Identifier const& _id, ExceptionCallback _callback) throw(...);
 
 		/**
-		*	registers callback for new data
+		*	registers callback for new DataImpl
 		*
 		*	possible exceptions:	invalid id
 		*	

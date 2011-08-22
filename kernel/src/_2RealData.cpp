@@ -16,82 +16,57 @@
 	limitations under the License.
 */
 
+#pragma once
+
+#include "_2RealData.h"
+#include "_2RealIdentifier.h"
+#include "_2RealException.h"
+#include "_2RealDataImpl.h"
+
 namespace _2Real
 {
-	
-	template< typename T >
-	Data< T >::Data() 
+
+	Data::Data(DataImpl *const _impl) :
+		m_Impl(_impl)
 	{
 	}
 
-	template< typename T >
-	Data< T >::Data(Data< T > const& _src)
+	Data::Data(Data const& _src) : m_Impl(NULL)
 	{
-		m_DataMap = _src.m_DataMap;
+		if (_src.m_Impl != NULL)
+		{
+			*m_Impl = *_src.m_Impl;
+		}
 	}
 
-	template< typename T >
-	Data< T >& Data< T >::operator=(Data< T > const& _src)
+	Data& Data::operator=(Data const& _src)
 	{
 		if (this == &_src)
 		{
 			return *this;
 		}
- 
-		m_DataMap = _src.m_DataMap;
-	 
+
+		if (m_Impl)
+		{
+			delete m_Impl;
+		}
+
+		if (_src.m_Impl != NULL)
+		{
+			*m_Impl = *_src.m_Impl;
+		}
+
 		return *this;
 	}
 
-	template< typename T >
-	Data< T >::~Data()
+	Data::~Data()
 	{
+		delete m_Impl;
 	}
 
-	template< typename T >
-	const bool Data< T >::remove(T const& _name)
+	Poco::Any Data::get(Identifier const& _id)
 	{
-		NamedDataMap::iterator it = m_DataMap.find(_name);
-		
-		if (it == m_DataMap.end())
-		{
-			return false;
-		}
-
-		m_DataMap.erase(it);
-		return true;
-	}
-
-	template< typename T >
-	const bool Data< T >::contains(T const& _name) const
-	{
-		NamedDataMap::iterator it = m_DataMap.find(_name);
-		
-		if (it == m_DataMap.end())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	template< typename T >
-	SharedAnyPtr Data< T >::getAny(T const& _name) const
-	{
-		NamedDataMap::const_iterator it = m_DataMap.find(_name);
-			
-		if (it != m_DataMap.end())
-		{
-			return it->second;
-		}
-
-		return AnyPtr();
-	}
-
-	template< typename T >
-	void Data< T >::insertAny(T const& _name, SharedAnyPtr &_anyPtr)
-	{
-		m_DataMap.insert(NamedData(_name, _anyPtr));
+		return m_Impl->getAny(_id.id());
 	}
 
 }

@@ -18,6 +18,7 @@
 
 #include "_2RealServiceFactory.h"
 #include "_2RealFactoryReference.h"
+#include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
 #include "_2RealServiceImpl.h"
 #include "_2RealIdentifier.h"
@@ -127,16 +128,23 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const Identifier ServiceFactory::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs) throw (...)
+	const Identifier ServiceFactory::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw (...)
 	{	
 		try
 		{
+
+			//check if _top is valid
+			if (!m_Graphs->isNirvana(_top))
+			{
+				throw Exception::failure();
+			}
+
+			//find factory ref & service list
 			ReferenceTable::iterator it = m_References.find(_id.id());
 			if (it == m_References.end())
 			{
 				throw Exception::failure();
-			}		
-
+			}
 			ServiceReference ref = it->second;
 			FactoryReference factory = *ref.first;
 			ServiceList services = ref.second;
@@ -144,11 +152,13 @@ namespace _2Real
 			//service does not get identifier
 			IService *userService = factory.create();
 
-			const Metadata *data = factory.metadata();
+			const Metadata *DataImpl = factory.metadata();
 			//TODO: get metadata & store
+
+			//for ()
 			
 			//service container id shares name of service
-			const Entities::ID id = m_Entities->createService(_name, NULL, userService);
+			const Entities::ID id = m_Entities->createService(_name, userService);
 			ServiceImpl *service = static_cast< ServiceImpl * >(id.second);
 			
 			//save container id

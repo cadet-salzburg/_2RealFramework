@@ -18,14 +18,21 @@
 
 #pragma once
 
+/**
+*	annoying & ultimately harmless warning about
+*	template expressions that are longer than 255 bytes
+*/
+#pragma warning(disable:4503)
+
 #include <list>
 
 namespace _2Real
 {
 
+	class Data;
 	class Identifier;
 	class Exception;
-	class OutputData;
+	class IService;
 
 	/**
 	*	callback for exceptions
@@ -39,15 +46,15 @@ namespace _2Real
 	typedef void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception);
 
 	/**
-	*	callback for new data
+	*	callback for new DataImpl
 	*
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToNewData
 	*
-	*	as with the exceptions, registering for new data makes the most sense if the entity
+	*	as with the exceptions, registering for new DataImpl makes the most sense if the entity
 	*	in question is in nirvana
 	*/
-	typedef void (*NewDataCallback)(Identifier const& _sender, OutputData const& _data);
+	typedef void (*NewDataCallback)(Identifier const& _sender, Data const& _data);
 
 	/**
 	*	a list of identifiers
@@ -58,5 +65,10 @@ namespace _2Real
 	*		- services, sequences & synchronizations can be queried for their IO slots
 	*/
 	typedef std::list< Identifier > Identifiers;
+
+	/**
+	*	function to create user defined service - exported by plugins
+	*/
+	typedef IService *const (*const ServiceCreator)(void);
 
 }

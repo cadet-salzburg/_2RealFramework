@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,64 +18,90 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include "Poco/Any.h"
 #include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
-	class ConfigMetadata;
-	class IdentifierImpl;
-	class Exception;
-
 	/**
-	*	
+	*
 	*/
-	typedef Poco::SharedPtr< Poco::Any >	SharedAnyPtr;
 
-	class AbstractValue
+	class DataImpl
 	{
 
-		friend class ServiceImpl;
-
-	protected:
+	public:
 
 		/**
 		*	
 		*/
-		AbstractValue();
+		typedef Poco::SharedPtr< Poco::Any >	SharedAny;
 
 		/**
 		*	
 		*/
-		AbstractValue(std::string const& _name);
+		DataImpl();
 
 		/**
 		*	
 		*/
-		AbstractValue(AbstractValue const& _src);
+		DataImpl(DataImpl const& _src);
 
 		/**
 		*	
 		*/
-		AbstractValue& operator=(AbstractValue const& _src);
+		DataImpl& operator=(DataImpl const& _src);
 
 		/**
 		*	
 		*/
-		~AbstractValue();
+		~DataImpl();
 
 		/**
 		*
 		*/
-		std::string const& name() const;
+		void remove(unsigned int const& _id);
+
+		/**
+		*
+		*/
+		const bool contains(unsigned int const& _id) const;
+
+		/**
+		*
+		*/
+		DataImpl::SharedAny getAny(unsigned int const& _id) const;
+
+		/**
+		*
+		*/
+		void insertAny(unsigned int const& _id, DataImpl::SharedAny &_any);
+
+		/**
+		*
+		*/
+		unsigned int const& size() const;
 
 	private:
 
 		/**
-		*	name registered by plugin
+		*	
 		*/
-		const std::string				m_Name;
+		typedef std::map< const unsigned int, SharedAny >		AnyMap;
+
+		/**
+		*	
+		*/
+		typedef std::pair< const unsigned int, SharedAny >		NamedAny;
+
+		/**
+		*	
+		*/
+		AnyMap													m_Data;
 
 	};
 

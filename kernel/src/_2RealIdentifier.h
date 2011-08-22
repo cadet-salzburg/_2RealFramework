@@ -24,16 +24,15 @@ namespace _2Real
 {
 
 	/**
-	*	identifiers are used to refer to entities within the framework
+	*	identifiers refer to entities in the 2 real engine
 	*
 	*	these entities may be:
 	*							plugins
-	*							a service's factory
-	*							service objects
-	*							production graphs
-	*							mutexes
+	*							service factories
+	*							services
+	*							sequences / synchronizations
 	*							a service's setup parameters
-	*							a service's input / output variables
+	*							a service's input / output slots
 	*/
 
 	class IdentifierImpl;
@@ -84,7 +83,7 @@ namespace _2Real
 		bool operator>(Identifier const& _rhs) const;
 
 		/**
-		*	in case identifiers are tio be used as key for a map. or whatever.
+		*	in case identifiers are to be used as key for a map. or whatever.
 		*/
 		bool operator>=(Identifier const& _rhs) const;
 
@@ -95,8 +94,6 @@ namespace _2Real
 
 		/**
 		*	the entity's name, as string
-		*	typically, the name is given by the application programmer;
-		*	only in the case of service factories, it is chosen by the framework
 		*/
 		std::string const& name() const;
 
@@ -106,7 +103,7 @@ namespace _2Real
 		std::string const& info() const;
 
 		/**
-		*	the unique id of the entity
+		*	the entity's unique id
 		*/
 		unsigned int const& id() const;
 

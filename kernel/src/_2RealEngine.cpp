@@ -71,7 +71,7 @@ namespace _2Real
 		if (m_ID)
 		{
 			//this will delete everything inside of the graph!
-			m_Impl->destroyProductionGraph(*m_ID);
+			m_Impl->destroyProductionGraph(*m_ID, *m_ID);
 		}
 
 		if (_src.m_ID)
@@ -84,14 +84,14 @@ namespace _2Real
 
 	Engine::~Engine()
 	{
-		m_Impl->destroyProductionGraph(*m_ID);
+		m_Impl->destroyProductionGraph(*m_ID, *m_ID);
 		delete m_ID;
 		m_Impl->release();
 	}
 
 	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
 	{
-		return m_Impl->installPlugin(_name, _path, _name, _serviceIDs);
+		return m_Impl->installPlugin(_name, _path, _name, _serviceIDs, *m_ID);
 	}
 
 }

@@ -18,66 +18,79 @@
 
 #pragma once
 
-#include <map>
-#include <string>
+#include "_2RealException.h"
 
 #include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	output data received by the 2 real engine
 	*/
 
-	typedef Poco::SharedPtr< Poco::Any >	SharedAnyPtr;
+	class DataImpl;
+	class Identifier;
 
-	template< typename Key >
 	class Data
 	{
 
 	public:
 
-		Data();
+		/**
+		*	returns the value received from slot _id
+		*/
+		template< typename T >
+		T& get(Identifier const& _id) throw(...)
+		{
+			try
+			{
+				Poco::Any any = get(_id);
+				return Poco::RefAnyCast< T >(any)
+			}
+			catch (Poco::BadCastException e)
+			{
+				throw Exception::failure();
+			}
+			catch (...)
+			{
+				throw;
+			}
+		}
+
+	private:
+
+		friend class AbstractContainer;
+
+		/**
+		*
+		*/
+		Data(DataImpl *const _impl);
+
+		/**
+		*
+		*/
 		Data(Data const& _src);
+
+		/**
+		*
+		*/
 		Data& operator=(Data const& _src);
+
+		/**
+		*	
+		*/
 		~Data();
 
 		/**
 		*
 		*/
-		const bool remove(Key const& _name);
+		Poco::Any get(Identifier const& _id) throw(...);
 
 		/**
 		*
 		*/
-		const bool contains(Key const& _name) const;
-
-		/**
-		*
-		*/
-		SharedAnyPtr getAny(Key const& _name) const;
-
-		/**
-		*
-		*/
-		void insertAny(Key const& _name, SharedAnyPtr &_any);
-
-		/**
-		*
-		*/
-		unsigned int const& size() const;
-
-	private:
-
-		typedef std::map< Key, SharedAnyPtr >	NamedAnyMap;
-		typedef std::pair< Key, SharedAnyPtr >	NamedAny;
-
-		NamedAnyMap		m_DataMap;
+		DataImpl		*m_Impl;
 
 	};
-
 }
-
-#include "_2RealData.cpp"

@@ -19,8 +19,8 @@
 
 #pragma once
 
+#include "_2RealEngineTypedefs.h"
 #include "_2RealIEntity.h"
-#include "_2RealServiceTypedefs.h"
 #include "_2RealIPluginActivator.h"
 
 #include <list>

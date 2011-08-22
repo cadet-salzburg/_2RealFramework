@@ -17,12 +17,17 @@
 */
 
 #include "_2RealServiceParam.h"
-#include "_2RealException.h" 
+#include "_2RealException.h"
+#include "_2RealAbstractRef.h"
 
 namespace _2Real
 {
+
 	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceImpl const *const _service) :
-		IEntity(_id), m_Service(_service)
+		IEntity(_id),
+		m_Service(_service),
+		m_Value(NULL),
+		m_SenderID(0)
 	{
 	}
 
@@ -38,10 +43,37 @@ namespace _2Real
 
 	ServiceParam::~ServiceParam()
 	{
+		delete m_Value;
 	}
 
 	ServiceImpl const *const ServiceParam::service() const
 	{
 		return m_Service;
 	}
+
+	unsigned int const& ServiceParam::senderID() const
+	{
+		return m_SenderID;
+	}
+
+	void ServiceParam::setValue(AbstractRef *const _val)
+	{
+		m_Value = _val;
+	}
+
+	void ServiceParam::listenTo(unsigned int const& _id)
+	{
+		m_SenderID = _id;
+	}
+
+	void ServiceParam::extractFrom(ServiceParam::SharedAny const& _any)
+	{
+		m_Value->extractFrom(_any);
+	}
+
+	ServiceParam::NamedAny ServiceParam::getAny()
+	{
+		return ServiceParam::NamedAny(id(), m_Value->getAny());
+	}
+
 }

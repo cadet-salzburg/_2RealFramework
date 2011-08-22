@@ -7,15 +7,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp">
       <Filter>Plugin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealConfigurationData.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealData.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDataValue.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -31,26 +22,11 @@
     <ClCompile Include="..\..\src\_2RealIEntity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractValue.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAnyValue.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealEntities.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngine.cpp">
-      <Filter>App Interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealIdentifierImpl.cpp">
       <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealIdentifier.cpp">
-      <Filter>App Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOutputDataImpl.cpp">
-      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealPlugin.cpp">
       <Filter>Entities</Filter>
@@ -85,26 +61,28 @@
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp">
       <Filter>Application</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractRef.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealEngine.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealIdentifier.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealData.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealDataImpl.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParamRef.cpp">
+      <Filter>Plugin Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealServiceTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
       <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h">
-      <Filter>Plugin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealConfigurationData.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealData.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDataTypedefs.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDataValue.h">
-      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealEngineImpl.h">
       <Filter>Application</Filter>
@@ -124,12 +102,6 @@
     <ClInclude Include="..\..\src\_2RealEntities.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractValue.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAnyValue.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealIContainer.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -141,12 +113,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIdentifier.h">
       <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutputData.h">
-      <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutputDataImpl.h">
-      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIdentifierImpl.h">
       <Filter>Application</Filter>
@@ -162,18 +128,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealServiceParam.h">
       <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
-      <Filter>Plugin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIService.h">
-      <Filter>Plugin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceContext.h">
-      <Filter>Plugin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginContext.h">
-      <Filter>Plugin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealMetadataReader.h">
       <Filter>Plugin</Filter>
@@ -193,6 +147,33 @@
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h">
       <Filter>Application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealData.h">
+      <Filter>App Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDataImpl.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractRef.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParamRef.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIService.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginContext.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceContext.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">
@@ -209,6 +190,9 @@
     </Filter>
     <Filter Include="App Interface">
       <UniqueIdentifier>{a2940e7c-4bcd-4a55-8034-7af371684f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Interface">
+      <UniqueIdentifier>{d8452f87-eb5b-476c-a1e9-4f7a32e01e14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

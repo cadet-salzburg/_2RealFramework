@@ -27,10 +27,9 @@ namespace _2Real
 {
 
 	/**
-	*	
+	*	we present: the container
+	*	it slices, it dices, it mows your lawn.
 	*/
-
-	class ConfigurationData;
 
 	class IContainer : public IService, public IDataQueue, public Poco::Runnable
 	{
@@ -44,19 +43,19 @@ namespace _2Real
 		virtual void start(bool const& _runOnce) throw(...) = 0;
 
 		/**
-		*	stops the running container
+		*	stops the container
 		*/
 		virtual void stop() = 0;
 
 		/**
-		*	checks if container can be reconfigured
+		*	checks if container can be reconfigured (concerning setup params)
 		*/
 		virtual bool const& canReconfigure() const = 0;
 
 		/**
-		*	(re)configures container
+		*	checks if container is correctly configured - throws if not
 		*/
-		virtual void configure(ConfigurationData *const _data) throw(...) = 0;
+		virtual void checkConfiguration() throw(...) = 0;
 
 	};
 

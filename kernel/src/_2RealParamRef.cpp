@@ -17,64 +17,56 @@
 	limitations under the License.
 */
 
+#include "_2RealException.h"
+
 namespace _2Real
 {
 	
 	template< typename T >
-	AnyValue< T >::AnyValue(std::string const& _name, T &_value) : AbstractValue(_name), m_Value(_value)
+	ParamRef< T >::ParamRef(T &_value) :
+		AbstractRef(),
+		m_Value(_value)
 	{
 	}
 
 	template< typename T >
-	AnyValue< T >::AnyValue(AnyValue< T > const& _src) : AbstractValue(_src), m_Value(_src.m_Value)
+	ParamRef< T >::ParamRef(ParamRef< T > const& _src) :
+		AbstractRef(_src),
+		m_Value(_src.m_Value)
 	{
-#ifdef _DEBUG
-		std::cout << "any value copy constructor called" << std::endl;
-#endif
+		throw Exception::noCopy();
 	}
 
 	template< typename T >
-	AnyValue< T >& AnyValue< T >::operator=(AnyValue< T > const& _src)
+	ParamRef< T >& ParamRef< T >::operator=(ParamRef< T > const& _src)
 	{
-#ifdef _DEBUG
-		std::cout << "any value copy assignment operator called" << std::endl;
-#endif
-
-		return *this;
+		throw Exception::noCopy();
 	}
 
 	template< typename T >
-	AnyValue< T >::~AnyValue()
+	ParamRef< T >::~ParamRef()
 	{
 	}
 
 	template< typename T >
-	void AnyValue< T >::extract(SharedAnyPtr &_anyPtr) throw(...)
+	void ParamRef< T >::extractFrom(AbstractRef::SharedAny const& _any)
 	{
-		T copy;
 		try
 		{
-			copy = Poco::AnyCast< T >(*_anyPtr.get());
+			T copy = Poco::AnyCast< T >(*_anyPtr.get());
+			T = copy;
 		}
-		catch(Poco::BadCastException e)
+		catch (...)
 		{
-			//TODO: exception;
+			throw Exception::failure();
 		}
-		T = copy;
 	}
 
 	template< typename T >
-	SharedAnyPtr& AnyValue< T >::sharedPtr()
+	AbstractRef::SharedAny& ParamRef< T >::getAny()
 	{
 		T copy(m_Value);
 		return SharedAnyPtr(new Poco::Any(copy));
-	}
-
-	template< typename T >
-	T AnyValue< T >::getCopy()
-	{
-		T copy(m_Value);
-		return T;
 	}
 
 }

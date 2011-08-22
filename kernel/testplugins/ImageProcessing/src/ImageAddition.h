@@ -69,7 +69,7 @@ void ImageAdditionService< T >::update() throw(...)
 
 	std::cout << "begin of: image addition update" << std::endl;
 
-	if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
+	if (m_InputImage1.DataImpl() != NULL && m_InputImage2.DataImpl() != NULL)
 	{
 
 		std::cout << "both input images are not empty" << std::endl;
@@ -85,7 +85,7 @@ void ImageAdditionService< T >::update() throw(...)
 			for (unsigned int x=0; x<width; x++)
 			{
 				unsigned int i = y*width + x;
-				tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
+				tmp[i] = m_ScaleFactor1*m_InputImage1.DataImpl()[i] + m_ScaleFactor2*m_InputImage2.DataImpl()[i];
 			}
 		}
 
