@@ -28,7 +28,7 @@ void KinectService::setup(ServiceContext *const _context) throw(...)
 
 	try
 	{
-		_context->registerOutputVariable< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
+		_context->registerOutputSlot< ::Image< unsigned short, 2 > >("output image", m_OutputImage);
 	}
 	catch (...)
 	{

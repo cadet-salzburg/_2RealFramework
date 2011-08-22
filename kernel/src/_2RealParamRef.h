@@ -37,12 +37,12 @@ namespace _2Real
 		/**
 		*	attempt to extract from an any ptr
 		*/
-		void extractFrom(SharedAny const& _any) throw(...);
+		void extractFrom(AbstractRef::SharedAny _any) throw(...);
 
 		/**
 		*	create copy of value, transform into any pointer
 		*/
-		SharedAny& getAny();
+		SharedAny getAny();
 
 	private:
 

@@ -50,9 +50,9 @@ void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context) th
 	{
 		_context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
 		_context->getSetupParameter< T >("scale factor 2", m_ScaleFactor2);
-		_context->registerInputVariable< ::Image< T, 2> >("input image 1", m_InputImage1);
-		_context->registerInputVariable< ::Image< T, 2> >("input image 2", m_InputImage2);
-		_context->registerOutputVariable< ::Image< T, 2> >("output image", m_OutputImage);
+		_context->registerInputSlot< ::Image< T, 2> >("input image 1", m_InputImage1);
+		_context->registerInputSlot< ::Image< T, 2> >("input image 2", m_InputImage2);
+		_context->registerOutputSlot< ::Image< T, 2> >("output image", m_OutputImage);
 	}
 	catch (...)
 	{
@@ -69,7 +69,7 @@ void ImageAdditionService< T >::update() throw(...)
 
 	std::cout << "begin of: image addition update" << std::endl;
 
-	if (m_InputImage1.DataImpl() != NULL && m_InputImage2.DataImpl() != NULL)
+	if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
 	{
 
 		std::cout << "both input images are not empty" << std::endl;
@@ -85,7 +85,7 @@ void ImageAdditionService< T >::update() throw(...)
 			for (unsigned int x=0; x<width; x++)
 			{
 				unsigned int i = y*width + x;
-				tmp[i] = m_ScaleFactor1*m_InputImage1.DataImpl()[i] + m_ScaleFactor2*m_InputImage2.DataImpl()[i];
+				tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
 			}
 		}
 

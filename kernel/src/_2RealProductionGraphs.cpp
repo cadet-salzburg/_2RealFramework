@@ -110,6 +110,17 @@ namespace _2Real
 		}
 	}
 
+	const bool ProductionGraphs::isNirvana(Identifier const& _id)
+	{
+		ContainerMap::iterator it = m_Containers.find(_id.id());
+		if (it == m_Containers.end())
+		{
+			return false;
+		}
+		
+		return true;
+	}
+
 	const Identifier ProductionGraphs::createNirvana(std::string const& _name)
 	{
 		try

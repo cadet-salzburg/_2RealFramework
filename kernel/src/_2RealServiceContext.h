@@ -46,7 +46,7 @@ namespace _2Real
 			try
 			{
 				AbstractRef *value = new ParamRef< T >(_var);
-				registerInputVariable(_name, value);
+				registerInputSlot(_name, value);
 			}
 			catch (...)
 			{
@@ -64,7 +64,7 @@ namespace _2Real
 			try
 			{
 				AbstractRef *value = new ParamRef< T >(_var);
-				registerOutputVariable(_name, value);
+				registerOutputSlot(_name, value);
 			}
 			catch (...)
 			{

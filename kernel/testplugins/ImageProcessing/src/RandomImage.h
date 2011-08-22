@@ -50,7 +50,7 @@ void RandomImageService< T >::setup(_2Real::ServiceContext *const _context) thro
 	{
 		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
 		_context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
-		_context->registerOutputVariable< ::Image< T, 2 > >("output image", m_OutputImage);
+		_context->registerOutputSlot< ::Image< T, 2 > >("output image", m_OutputImage);
 	}
 	catch(...)
 	{

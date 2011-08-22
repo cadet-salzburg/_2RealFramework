@@ -43,7 +43,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		virtual SharedAny& getAny() = 0;
+		virtual SharedAny getAny() = 0;
 
 		/**
 		*	

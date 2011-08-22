@@ -49,12 +49,12 @@ namespace _2Real
 	}
 
 	template< typename T >
-	void ParamRef< T >::extractFrom(AbstractRef::SharedAny const& _any)
+	void ParamRef< T >::extractFrom(AbstractRef::SharedAny _any)
 	{
 		try
 		{
-			T copy = Poco::AnyCast< T >(*_anyPtr.get());
-			T = copy;
+			T copy = Poco::AnyCast< T >(*_any.get());
+			m_Value = copy;
 		}
 		catch (...)
 		{
@@ -63,10 +63,10 @@ namespace _2Real
 	}
 
 	template< typename T >
-	AbstractRef::SharedAny& ParamRef< T >::getAny()
+	AbstractRef::SharedAny ParamRef< T >::getAny()
 	{
 		T copy(m_Value);
-		return SharedAnyPtr(new Poco::Any(copy));
+		return SharedAny(new Poco::Any(copy));
 	}
 
 }
