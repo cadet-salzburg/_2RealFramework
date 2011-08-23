@@ -22,6 +22,7 @@
 #include "_2RealEngineTypedefs.h"
 #include "_2RealIEntity.h"
 #include "_2RealIPluginActivator.h"
+#include "_2RealPluginMetadata.h"
 
 #include <list>
 
@@ -35,7 +36,7 @@ namespace _2Real
 	*/
 
 	class Identifier;
-	class Metadata;
+	class PluginMetadata;
 	class ServiceFactory;
 
 	class Plugin : public IEntity
@@ -55,7 +56,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) throw(...);
+		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	
@@ -80,17 +81,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		std::string const& name() const;
-
-		/**
-		*	
-		*/
-		std::string const& path() const;
-
-		/**
-		*	
-		*/
-		const Metadata *const metadata() const;
+		PluginMetadata const& metadata() const;
 
 		/**
 		*
@@ -144,14 +135,14 @@ namespace _2Real
 		typedef Poco::ClassLoader< IPluginActivator >	PluginLoader;
 
 		/**
-		*	
+		*	absolute filepath
 		*/
-		IPluginActivator				*m_Activator;
+		std::string						m_File;
 
 		/**
 		*	
 		*/
-		Metadata						*m_Metadata;
+		IPluginActivator				*m_Activator;
 
 		/**
 		*
@@ -161,17 +152,12 @@ namespace _2Real
 		/**
 		*	
 		*/
+		PluginMetadata					m_Metadata;
+
+		/**
+		*	
+		*/
 		ePluginState					m_State;
-
-		/**
-		*	
-		*/
-		std::string						m_ClassName;
-
-		/**
-		*	
-		*/
-		std::string						m_LibraryPath;
 
 		/**
 		*

@@ -28,7 +28,7 @@ namespace _2Real
 	*
 	*/
 
-	class Metadata;
+	class PluginMetadata;
 	class PluginContext;
 
 	class IPluginActivator
@@ -39,12 +39,12 @@ namespace _2Real
 		/**
 		*	returns plugin metadata
 		*/
-		virtual const Metadata *const metadata() const = 0;
+		virtual void getMetadata(PluginMetadata &_info) = 0;
 
 		/**
 		*	plugin can use plugin context ptr to export factory functions
 		*/
-		virtual void start(PluginContext *const _context) = 0;
+		virtual void start(PluginContext &_context) = 0;
 	
 	};
 

@@ -91,7 +91,7 @@ namespace _2Real
 		/**
 		*	install plugin, return id + service ids
 		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs, Identifier const& _top) throw(...);
+		const Identifier installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_ids, Identifier const& _top) throw(...);
 
 		/**
 		*	

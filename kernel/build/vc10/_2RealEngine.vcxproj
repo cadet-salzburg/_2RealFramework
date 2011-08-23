@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractRef.cpp" />
     <ClCompile Include="..\..\src\_2RealContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
@@ -33,11 +32,13 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -66,11 +67,13 @@
     <ClInclude Include="..\..\src\_2RealParamRef.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceParam.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

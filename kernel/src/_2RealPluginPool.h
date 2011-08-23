@@ -23,6 +23,8 @@
 #include <list>
 #include <string>
 
+#include "Poco/Path.h"
+
 namespace _2Real
 {
 
@@ -64,7 +66,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const Identifier install(std::string const& _name, std::string const& _path, std::string const& _class, std::list< Identifier > &_ids) throw(...);
+		const Identifier install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< Identifier > &_ids) throw(...);
 
 		/**
 		*	

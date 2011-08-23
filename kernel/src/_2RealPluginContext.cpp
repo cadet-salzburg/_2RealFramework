@@ -17,6 +17,7 @@
 */
 
 #include "_2RealPluginContext.h"
+#include "_2RealMetadataReader.h"
 #include "_2RealPlugin.h"
 
 namespace _2Real
@@ -38,6 +39,7 @@ namespace _2Real
 
 	PluginContext::~PluginContext()
 	{
+		m_Impl = NULL;
 	}
 
 	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)

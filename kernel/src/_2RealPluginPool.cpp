@@ -57,20 +57,54 @@ namespace _2Real
 		}
 	}
 
-	const Identifier PluginPool::install(std::string const& _name, std::string const& _path, std::string const& _class, std::list< Identifier > &_ids) throw(...)
+	const Identifier PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< Identifier > &_ids) throw(...)
 	{
+
+#ifdef _DEBUG
+		std::cout << "plugin pool: attempting to install plugin" << std::endl;
+		std::cout << "path: " << _dir << std::endl;
+		std::cout << "file: " << _file << std::endl;
+		std::cout << "class: " << _class << std::endl;
+#endif
+
 		try
 		{
-			const Entities::ID id = m_Entities->createPlugin(_name, _path, _class);
+			const Entities::ID id = m_Entities->createPlugin(_name, _dir, _file, _class);
+			
 			Plugin *plugin = static_cast< Plugin * >(id.second);
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
+
+#ifdef _DEBUG
+			std::cout << "plugin pool: install plugin" << std::endl;
+#endif
+
 			plugin->install();
+
+#ifdef _DEBUG
+			std::cout << "plugin pool: loading plugin" << std::endl;
+#endif
+
 			plugin->load();
+
+#ifdef _DEBUG
+			std::cout << "plugin pool: starting plugin" << std::endl;
+#endif
+
 			plugin->start(_ids);
+
+#ifdef _DEBUG
+			std::cout << "plugin pool: success" << std::endl;
+#endif
+
 			return id.first;
 		}
 		catch (...)
 		{
+
+#ifdef _DEBUG
+			std::cout << "plugin pool: error on plugin installation" << std::endl;
+#endif
+
 			throw Exception::failure();
 		}
 	}

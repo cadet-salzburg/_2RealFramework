@@ -1,13 +1,14 @@
 #pragma once
 
-#include "_2RealAbstractPluginActivator.h"
-#include "_2RealPluginContext.h"
+#include "_2RealIPluginActivator.h"
 
-class ImageProcessing : public _2Real::AbstractPluginActivator
+class ImageProcessing : public _2Real::IPluginActivator
 {
 
 public:
 
-	void start(_2Real::PluginContext *const _context);
+	void getMetadata(_2Real::PluginMetadata &_info) throw(...);
+
+	void start(_2Real::PluginContext &_context);
 
 };

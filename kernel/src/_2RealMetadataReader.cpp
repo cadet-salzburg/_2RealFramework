@@ -18,42 +18,71 @@
 */
 
 #include "_2RealMetaDataReader.h"
-#include "_2RealMetaData.h"
+#include "_2RealPluginMetadata.h"
+#include "_2RealEngineImpl.h"
+#include "_2RealException.h"
+#include "_2RealPlugin.h"
 
 #include "Poco/SAX/InputSource.h"
 #include "Poco/DOM/DOMParser.h"
 #include "Poco/DOM/Document.h"
 #include "Poco/DOM/NodeFilter.h"
 #include "Poco/DOM/NodeIterator.h"
+#include "Poco/DOM/NodeList.h"
 #include "Poco/DOM/NamedNodeMap.h"
 #include "Poco/DOM/AutoPtr.h"
 
 #include <fstream>
 
+using namespace Poco::XML;
+
 namespace _2Real
 {
 
-	Metadata const *const MetadataReader::readXMLFile(std::string const& _file)
+	void MetadataReader::readMetadata(PluginMetadata &_info)
 	{
-		//DOMParser parser;
-		//AutoPtr<Document> document = parser.parse(XMLString(_file));
-		//NodeIterator it(document, NodeFilter::SHOW_ELEMENT);
-		//Node* node = it.nextNode();
 
-		//while (node)
-		//{
-		//	if (node->nodeName() == "plugin" && node->hasAttributes())
-		//	{
-		//		NamedNodeMap* map = node->attributes();
-		//		Node* attrib = map->getNamedItem("name");
-		//		
-		//		attrib->release();
-		//		map->release();
-		//	}		
-		//	
-		//	node = it.nextNode();
-		//}
+		std::string path = _info.getInstallDirectory() + _info.getClassname() + ".xml";
 
-		return NULL;
+#ifdef _DEBUG
+		std::cout << "metadata reader: reading xml file: " << path << std::endl;
+#endif
+
+		try
+		{
+
+			DOMParser parser;
+			AutoPtr<Document> document = parser.parse(XMLString(path));
+			NodeIterator it(document, NodeFilter::SHOW_ELEMENT);
+			Node* node = it.nextNode();
+
+			PluginMetadata *result = NULL;
+
+			NodeList *list = document->getElementsByTagName("plugin info");
+			
+			std::cout << list->length() << std::endl;
+
+			//while (node)
+			//{
+			//	if (node->nodeName() == "plugin info" && node->hasAttributes())
+			//	{
+			//		NamedNodeMap* map = node->attributes();
+			//		Node* attrib = map->getNamedItem("name");
+
+			//		//create metadata
+			//		result = new PluginMetadata(attrib->nodeValue());
+
+			//		attrib->release();
+			//		map->release();
+			//	}
+
+			//	node = it.nextNode();
+			//}
+		}
+		catch (...)
+		{
+			throw Exception::failure();
+		}
 	}
+
 }

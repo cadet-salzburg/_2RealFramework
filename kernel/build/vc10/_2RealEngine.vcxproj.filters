@@ -4,9 +4,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractPluginActivator.cpp">
-      <Filter>Plugin</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -79,6 +76,8 @@
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <Filter>Plugin Interface</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
@@ -174,6 +173,8 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h">
       <Filter>Plugin Interface</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">

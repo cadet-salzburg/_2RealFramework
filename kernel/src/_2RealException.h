@@ -22,10 +22,16 @@ namespace _2Real
 {
 
 	/**
-	*	placeholder class thingie, since it's not really decided if we're going to use
-	*	exceptions or return codes. 
-	*	right now, i throw these objects in some functions, while using them as return
-	*	values in others Oo
+	*	exception system is incomplete
+	*	if you don't mind me, i'll talk to myself here for a bit.
+	*
+	*	internally used exceptions: stuff that helps me to debug shit
+	*	copy exception - if i copy an an obj that i don't want to copy b/c it has no copy ctor (same goes for assignment)
+	*							internally used only
+	*	invalid id exception:	
+	*
+	*
+	*
 	*/
 
 	class Exception

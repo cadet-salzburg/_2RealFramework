@@ -25,11 +25,8 @@ namespace _2Real
 	*
 	*/
 
-	class VariableName
+	class ErrorcodeTable
 	{
-
-		bool operator<(VariableName const& _rhs);
-
 	};
 
 }

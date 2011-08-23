@@ -30,6 +30,7 @@ namespace _2Real
 	*/
 	
 	class IService;
+	class MetadataReader;
 
 	class PluginContext
 	{

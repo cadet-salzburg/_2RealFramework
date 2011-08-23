@@ -24,6 +24,8 @@
 #include <string>
 #include <list>
 
+#include "Poco/Any.h"
+
 namespace _2Real
 {
 
@@ -70,7 +72,8 @@ namespace _2Real
 		*							wrong class name
 		*
 		*	@param _name:			name chosen by user, will be used to create identifier
-		*	@param _path:			absolute path to plugin library
+		*	@param _dir:			absolute path to installation directory
+		*	@param _file:			filename
 		*	@param _class:			class name, must be identical to the name defined in the
 		*							plugin's metadata
 		*	@param _serviceIDs:		will be overwritten & return identifiers for the services
@@ -79,7 +82,7 @@ namespace _2Real
 		*							same order as defined in the metadata
 		*	@return:				the plugin's unique identifier
 		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...);
+		const Identifier loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs) throw(...);
 
 		/**
 		*	creates new user service object; if service is a singleton, returns instance
@@ -290,7 +293,7 @@ namespace _2Real
 		Identifiers getInputSlots(Identifier const& _id);
 
 		/**
-		*	connects an input slot with an output slot
+		*	links an input slot with an output slot
 		*
 		*	@param _in:				identifier of input variable
 		*	@param _out:			identifier of output variable
@@ -310,6 +313,14 @@ namespace _2Real
 		template< typename T >
 		void setParameterValue(Identifier const& _id, T const& _value) throw(...)
 		{
+			try
+			{
+				Poco::Any any(_value);
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
 
 		/**
@@ -362,6 +373,11 @@ namespace _2Real
 		Engine& operator=(Engine const& _src);
 
 	private:
+
+		/**
+		*	internally used function for setting param values
+		*/
+		void setParameterValue(Identifier const& _id, Poco::Any _any) throw(...);
 
 		/**
 		*	

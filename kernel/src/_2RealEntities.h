@@ -92,7 +92,7 @@ namespace _2Real
 		/**
 		*	requested by plugin pool on plugin installation
 		*/
-		const ID createPlugin(std::string const& _name, std::string const& _path, std::string const& _class) throw(...);
+		const ID createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
 
 		/**
 		*	requested by service factory on service creation. actually creates the service container, not the service

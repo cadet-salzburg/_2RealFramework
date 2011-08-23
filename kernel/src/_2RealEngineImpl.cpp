@@ -39,14 +39,31 @@ namespace _2Real
 		{
 			if(s_Instance == NULL)
 			{
+
+#ifdef _DEBUG
+				std::cout << "engine (singleton): creating new instance" << std::endl;
+#endif
+
 				s_Instance = new EngineImpl();
 			}
+
+#ifdef _DEBUG
+			std::cout << "engine (singleton): success" << std::endl;
+#endif
 
 			s_iRefCount++;
 			s_Mutex.unlock();
 
+#ifdef _DEBUG
+			std::cout << "engine (singleton): success" << std::endl;
+#endif
+
 			return s_Instance;
 		}
+
+#ifdef _DEBUG
+		std::cout << "engine: could not lock mutex for instance creation" << std::endl;
+#endif
 
 		throw Exception::failure();
 	}
@@ -81,13 +98,27 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	EngineImpl::EngineImpl() : 
-		m_Plugins(new PluginPool()), m_Factory(new ServiceFactory()), m_Entities(new Entities()), m_Graphs(new ProductionGraphs())
+	EngineImpl::EngineImpl() :
+		m_Plugins(new PluginPool()),
+		m_Factory(new ServiceFactory()),
+		m_Entities(new Entities()),
+		m_Graphs(new ProductionGraphs())
 	{
-		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Plugins = m_Graphs->m_Plugins;
-		m_Entities->m_Factory = m_Plugins->m_Factory = m_Factory = m_Graphs->m_Factory;
-		m_Plugins->m_Entities = m_Factory->m_Entities = m_Entities = m_Graphs->m_Entities;
-		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs;
+
+#ifdef _DEBUG
+		std::cout << "engine (singleton): ctor" << std::endl;
+#endif
+
+		//this is kind of strange. oh well.
+		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Graphs->m_Plugins = m_Plugins;
+		m_Entities->m_Factory = m_Plugins->m_Factory = m_Graphs->m_Factory = m_Factory;
+		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs = m_Graphs;
+		m_Plugins->m_Entities = m_Factory->m_Entities = m_Graphs->m_Entities = m_Entities;
+
+#ifdef _DEBUG
+		std::cout << "engine (singleton): ctor success" << std::endl;
+#endif
+
 	}
 
 	EngineImpl::EngineImpl(EngineImpl const& _src)
@@ -132,19 +163,25 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs, Identifier const& _top) throw(...)
+	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_ids, Identifier const& _top)
 	{
+
 		try
 		{
-			return m_Plugins->install(_name, _path, _class, _serviceIDs);
+			return m_Plugins->install(_name, _dir, _file, _class, _ids);
 		}
 		catch (...)
 		{
+
+#ifdef _DEBUG
+			std::cout << "engine (singleton): error on plugin loading" << std::endl;
+#endif
+
 			throw;
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw (...)
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top)
 	{
 		try
 		{

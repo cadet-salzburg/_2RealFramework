@@ -25,12 +25,19 @@
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _path, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) : IEntity(_id),
-		m_LibraryPath(_path), m_ClassName(_class), m_Factory(_factory), m_Activator(NULL), m_Metadata(NULL), m_State(Plugin::UNINSTALLED)
+	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) :
+		IEntity(_id),
+		m_Factory(_factory),
+		m_Metadata(_class, _dir),
+		m_Activator(NULL),
+		m_State(Plugin::UNINSTALLED),
+		m_File(_dir + _file)
 	{
 	}
 
-	Plugin::Plugin(Plugin const& _src) throw(...) : IEntity(_src)
+	Plugin::Plugin(Plugin const& _src) throw(...) :
+		IEntity(_src),
+		m_Metadata(_src.m_Metadata)
 	{
 		throw Exception::noCopy();
 	}
@@ -61,18 +68,8 @@ namespace _2Real
 	{
 		return m_State;
 	}
-		
-	std::string const& Plugin::name() const
-	{
-		return m_ClassName;
-	}
 
-	std::string const& Plugin::path() const
-	{
-		return m_LibraryPath;
-	}
-
-	Metadata const *const Plugin::metadata() const
+	PluginMetadata const& Plugin::metadata() const
 	{
 		return m_Metadata;
 	}
@@ -100,12 +97,12 @@ namespace _2Real
 	{
 		if (m_State == Plugin::UNINSTALLED)
 		{
-			if (m_LibraryPath.empty())
+			if (m_Metadata.getInstallDirectory().empty())
 			{
 				throw Exception::failure();
 			}
 
-			if (m_ClassName.empty())
+			if (m_Metadata.getClassname().empty())
 			{
 				throw Exception::failure();
 			}
@@ -115,11 +112,21 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
+#ifdef _DEBUG
+			std::cout << "plugin: installed" << std::endl;
+#endif
+
 			m_State = Plugin::INSTALLED;
 		}
+		else
+		{
+#ifdef _DEBUG
+		std::cout << "plugin: error on istall, was not in uninstalled state" << std::endl;
+#endif
 
-		m_State = Plugin::INVALID;
-		throw Exception::failure();
+			m_State = Plugin::INVALID;
+			throw Exception::failure();
+		}
 	}
 
 	void Plugin::uninstall() throw(...)
@@ -152,7 +159,7 @@ namespace _2Real
 		{
 			try
 			{
-				m_PluginLoader.loadLibrary(m_LibraryPath);
+				m_PluginLoader.loadLibrary(m_File);
 			}
 			catch (...)
 			{
@@ -160,10 +167,21 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
+#ifdef _DEBUG
+			std::cout << "plugin: loaded successfully" << std::endl;
+#endif
+
 			m_State = Plugin::LOADED;
 		}
+		else
+		{
 
-		throw Exception::failure();
+#ifdef _DEBUG
+		std::cout << "plugin: error on load, was not in installed state" << std::endl;
+#endif
+
+			throw Exception::failure();
+		}
 	}
 
 	void Plugin::start(std::list< Identifier > &_ids) throw(...)
@@ -172,16 +190,21 @@ namespace _2Real
 		{
 			try
 			{
-				if (m_PluginLoader.canCreate(m_ClassName))
+				if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
 				{
-					m_Activator = m_PluginLoader.create(m_ClassName);
+					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
 					if (!m_Activator)
 					{
 						m_State = Plugin::INVALID;
 						throw Exception::failure();
 					}
 
-					m_Activator->start(new PluginContext(this));
+					//start
+					PluginContext context(this);
+					m_Activator->start(context);
+					//get metadata
+					m_Activator->getMetadata(m_Metadata);
+					
 					_ids.clear();
 					_ids = m_Services;
 				}
@@ -210,8 +233,15 @@ namespace _2Real
 
 			m_State = Plugin::ACTIVE;
 		}
+		else
+		{
 
-		throw Exception::failure();
+#ifdef _DEBUG
+			std::cout << "plugin: error on start, was not in loaded state" << std::endl;
+#endif
+
+			throw Exception::failure();
+		}
 	}
 
 	void Plugin::stop() throw(...)
@@ -220,7 +250,7 @@ namespace _2Real
 		{
 			try
 			{
-				m_PluginLoader.destroy(m_ClassName, m_Activator);
+				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
 				if (!m_Services.empty())
 				{
 					//clean up services
@@ -246,9 +276,9 @@ namespace _2Real
 		{
 			try
 			{
-				if (m_PluginLoader.isLibraryLoaded(m_LibraryPath))
+				if (m_PluginLoader.isLibraryLoaded(m_File))
 				{
-					m_PluginLoader.unloadLibrary(m_LibraryPath);
+					m_PluginLoader.unloadLibrary(m_File);
 				}
 			}
 			catch(...)

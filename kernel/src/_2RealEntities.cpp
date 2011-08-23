@@ -28,6 +28,8 @@
 #include "_2RealContainer.h"
 #include "_2RealServiceParam.h"
 
+#include <sstream>
+
 namespace _2Real
 {
 
@@ -79,11 +81,29 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const Entities::ID Entities::createPlugin(std::string const& _name, std::string const& _path, std::string const& _class)
+	const Entities::ID Entities::createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class)
 	{
-		IdentifierImpl *id = new IdentifierImpl(_name, "plugin", _path, IdentifierImpl::PLUGIN, ++m_iCreationCount);
-		Plugin *plugin = new Plugin(_path, _class, m_Factory, id);
+
+		++m_iCreationCount;
+
+		//plugin info
+		std::stringstream info;
+		info << "i am a plugin" << std::endl;
+		info << "creation id: " << m_iCreationCount << std::endl;
+		info << "chosen name: " << _name << std::endl;
+		info << "directory:   " << _dir << std::endl;
+		info << "filename:    " << _file << std::endl;
+		info << "classname:   " << _class << std::endl;
+
+#ifdef _DEBUG
+		std::cout << "entity: object creation" << std::endl;
+		std::cout << info.str() << std::endl;
+#endif
+
+		IdentifierImpl *id = new IdentifierImpl(_name, "plugin", info.str(), IdentifierImpl::PLUGIN, m_iCreationCount);
+		Plugin *plugin = new Plugin(_dir, _file, _class, m_Factory, id);
 		return Entities::ID(Identifier(id), plugin);
+
 	}
 
 	const Entities::ID Entities::createService(std::string const& _name, IService *const _service)

@@ -29,11 +29,22 @@ namespace _2Real
 	{
 		try
 		{
+
+#ifdef _DEBUG
+			std::cout << "engine: starting" << std::endl;
+#endif
+
 			m_Impl = EngineImpl::instance();
 			m_ID = new Identifier(m_Impl->createProductionGraph(_name));
+
+#ifdef _DEBUG
+			std::cout << "engine: success " << m_ID->id() << std::endl;
+#endif
+
 		}
 		catch (...)
 		{
+
 			if (m_Impl)
 			{
 				m_Impl->release();
@@ -47,7 +58,7 @@ namespace _2Real
 	}
 
 	Engine::Engine(Engine const& _src) : m_Impl(NULL), m_ID(NULL)
-	{		
+	{
 		m_Impl = EngineImpl::instance();
 		
 		if (_src.m_ID)
@@ -70,7 +81,7 @@ namespace _2Real
 
 		if (m_ID)
 		{
-			//this will delete everything inside of the graph!
+			//this will delete everything inside of the graph
 			m_Impl->destroyProductionGraph(*m_ID, *m_ID);
 		}
 
@@ -89,9 +100,14 @@ namespace _2Real
 		m_Impl->release();
 	}
 
-	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _path, std::string const& _class, Identifiers &_serviceIDs) throw(...)
+	const Identifier Engine::loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs)
 	{
-		return m_Impl->installPlugin(_name, _path, _name, _serviceIDs, *m_ID);
+
+#ifdef _DEBUG
+		std::cout << "engine: " << m_ID->name() << " attempting to load plugin" << std::endl;
+#endif
+
+		return m_Impl->installPlugin(_name, _dir, _file, _class, _serviceIDs, *m_ID);
 	}
 
 }

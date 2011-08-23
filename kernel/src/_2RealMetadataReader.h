@@ -25,17 +25,27 @@ namespace _2Real
 {
 
 	/**
-	*
+	*	helper class for reading plugin metadata
 	*/
 
-	class Metadata;
+	class PluginMetadata;
 
 	class MetadataReader
 	{
 
 	public:
 
-		Metadata const *const readXMLFile(std::string const& _file);
+		/**
+		*	creates plugin metadata from xml file
+		*
+		*	reads xml file located in plugin directory with given name,
+		*	attempts to build plugin metadata from information
+		*	contained in the file. if successful, returns metadata.
+		*
+		*	@param _info:			metadata initialized with classname & classpath
+		*	@throw:					definitions TODO
+		*/
+		void readMetadata(PluginMetadata &_info) throw(...);
 
 	private:
 
