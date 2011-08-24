@@ -23,7 +23,7 @@
 #include "_2RealServiceImpl.h"
 #include "_2RealIdentifier.h"
 #include "_2RealEntities.h"
-#include "_2RealMetadata.h"
+#include "_2RealServiceMetadata.h"
 #include "_2RealContainer.h"
 
 #include <sstream>

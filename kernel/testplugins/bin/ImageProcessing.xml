@@ -1,0 +1,121 @@
+<metadata>
+	
+	<plugin
+		name = "ImageProcessing"
+		author = "Azathoth, chicken of insanity"
+		contact = "www.cadet.at"
+		description = "this test plugin loves template classes"
+		version = "1.1.5"
+	/>
+	
+	<service
+		name = "ImageAddition2D_ushort_uint"
+		description = "this service has a stupid, stupid, stupid name."
+		singleton = "false"
+		reconfigurable = "true"
+	>
+	
+		<!-- userclasses are still todo -->
+		<userclasses>
+			<class name = "image2D_ushort" />
+			<class name = "image2D_uint" />
+		</userclasses>
+	
+		<setup>
+			<param name = "scale factor 1" type = "unsigned short" />
+			<param name = "scale factor 2" type = "unsigned short" />
+		</setup>
+		
+		<input>
+			<param name = "input image 1" type = "image2D_ushort" />
+			<param name = "input image 2" type = "image2D_ushort" />
+		</input>
+		
+		<output>
+			<param name = "output image" type = "image2D_uint" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = "ImageAddition2D_float"
+		description = "same as above, only with more float."
+		singleton = "false"
+		reconfigurable = "true"
+	>
+	
+		<!-- userclasses are still todo -->
+		<userclasses>
+			<class name = "image2D_float" />
+		</userclasses>
+	
+		<setup>
+			<param name = "scale factor 1" type = "float" />
+			<param name = "scale factor 2" type = "float" />
+		</setup>
+		
+		<input>
+			<param name = "input image 1" type = "image2D_float" />
+			<param name = "input image 2" type = "image2D_float" />
+		</input>
+		
+		<output>
+			<param name = "output image" type = "image2D_float" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = "RandomImage2D_ushort"
+		description = "random shorts."
+		singleton = "false"
+		reconfigurable = "true"
+	>
+	
+		<!-- userclasses are still todo -->
+		<userclasses>
+			<class name = "image2D_ushort" />
+		</userclasses>
+		
+		<setup>
+			<param name = "image width" type = "unsigned short" />
+			<param name = "image height" type = "unsigned short" />
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "output image" type = "image2D_ushort" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = "RandomImage2D_float"
+		description = "floating away on my float."
+		singleton = "false"
+		reconfigurable = "true"
+	>
+	
+		<!-- userclasses are still todo -->
+		<userclasses>
+			<class name = "image2D_float" />
+		</userclasses>
+		
+		<setup>
+			<param name = "image width" type = "float" />
+			<param name = "image height" type = "float" />
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "output image" type = "image2D_float" />
+		</output>
+	
+	</service>
+	
+</metadata>
+

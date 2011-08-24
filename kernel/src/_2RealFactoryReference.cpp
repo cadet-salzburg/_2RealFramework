@@ -18,7 +18,7 @@
 
 #include "_2RealFactoryReference.h"
 #include "_2RealPlugin.h"
-#include "_2RealMetadata.h"
+#include "_2RealServiceMetadata.h"
 #include "_2RealException.h"
 
 namespace _2Real

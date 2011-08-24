@@ -49,9 +49,6 @@
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealMetadata.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealContainer.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -76,8 +73,12 @@
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <Filter>Plugin Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
@@ -128,17 +129,11 @@
     <ClInclude Include="..\..\src\_2RealServiceParam.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealMetadataReader.h">
-      <Filter>Plugin</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealPluginPool.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealServiceFactory.h">
       <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealMetadata.h">
-      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealContainer.h">
       <Filter>Entities</Filter>
@@ -151,9 +146,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealDataImpl.h">
       <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h">
-      <Filter>Plugin Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealAbstractRef.h">
       <Filter>Plugin Interface</Filter>
@@ -173,8 +165,15 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h">
       <Filter>Plugin Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealMetadataReader.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
+      <Filter>Plugin Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">

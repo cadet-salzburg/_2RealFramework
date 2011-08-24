@@ -29,18 +29,8 @@ namespace _2Real
 	{
 		try
 		{
-
-#ifdef _DEBUG
-			std::cout << "engine: starting" << std::endl;
-#endif
-
 			m_Impl = EngineImpl::instance();
 			m_ID = new Identifier(m_Impl->createProductionGraph(_name));
-
-#ifdef _DEBUG
-			std::cout << "engine: success " << m_ID->id() << std::endl;
-#endif
-
 		}
 		catch (...)
 		{
@@ -102,12 +92,54 @@ namespace _2Real
 
 	const Identifier Engine::loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs)
 	{
+		try
+		{
+			return m_Impl->installPlugin(_name, _dir, _file, _class, _serviceIDs, *m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on loadPlugin()" << std::endl;
+			throw;
+		}
+	}
 
-#ifdef _DEBUG
-		std::cout << "engine: " << m_ID->name() << " attempting to load plugin" << std::endl;
-#endif
+	void Engine::dumpPluginInfo(Identifier const& pluginID)
+	{
+		try
+		{
+			m_Impl->dumpPluginInfo(pluginID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on dumpPluginInfo()" << std::endl;
+			throw;
+		}
+	}
 
-		return m_Impl->installPlugin(_name, _dir, _file, _class, _serviceIDs, *m_ID);
+	void Engine::dumpServiceInfo(Identifier const& serviceID)
+	{
+		try
+		{
+			m_Impl->dumpServiceInfo(serviceID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on dumpServiceInfo()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::dumpServiceInfo(Identifier const& pluginID, std::string const& name)
+	{
+		try
+		{
+			m_Impl->dumpServiceInfo(pluginID, name);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on dumpServiceInfo()" << std::endl;
+			throw;
+		}
 	}
 
 }

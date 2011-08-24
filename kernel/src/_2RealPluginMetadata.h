@@ -69,7 +69,7 @@ namespace _2Real
 		*
 		*	@param _name:		plugin's classname
 		*/
-		PluginMetadata(std::string const& _name, std::string const& _path);
+		PluginMetadata(std::string const& _name, std::string const& _path) throw(...);
 
 		/**
 		*	sets plugin description
@@ -148,6 +148,13 @@ namespace _2Real
 		*	@return:			service's metadata
 		*/
 		ServiceMetadata const *const getServiceMetadata(std::string const& _name) const;
+
+		/**
+		*	add metadata to file
+		*
+		*	@param:				metadata to add
+		*/
+		void addServiceMetadata(ServiceMetadata *const _info) throw(...);
 
 	private:
 

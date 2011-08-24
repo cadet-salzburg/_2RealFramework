@@ -63,7 +63,7 @@ namespace _2Real
 		*
 		*	open questions:			buddhists might not approve of the naming.
 		*/
-		Engine(std::string const& _name);
+		Engine(std::string const& name);
 
 		/**
 		*	installs a plugin, causing all of its services to be exported
@@ -82,7 +82,28 @@ namespace _2Real
 		*							same order as defined in the metadata
 		*	@return:				the plugin's unique identifier
 		*/
-		const Identifier loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs) throw(...);
+		const Identifier loadPlugin(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifiers &serviceIDs) throw(...);
+
+		/**
+		*	printf plugin metadata
+		*
+		*	possible exceptions:	invalid id
+		*/
+		void dumpPluginInfo(Identifier const& pluginID) throw(...);
+
+		/**
+		*	printf service metadata
+		*
+		*	possible exceptions:	invalid id
+		*/
+		void dumpServiceInfo(Identifier const& serviceID) throw(...);
+
+		/**
+		*	printf service metadata
+		*
+		*	possible exceptions:	invalid id
+		*/
+		void dumpServiceInfo(Identifier const& pluginID, std::string const& serviceName) throw(...);
 
 		/**
 		*	creates new user service object; if service is a singleton, returns instance
@@ -342,20 +363,6 @@ namespace _2Real
 		*	@param _callback		function pointer
 		*/
 		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
-
-		/**
-		*	printf plugin metadata
-		*
-		*	possible exceptions:	invalid id
-		*/
-		void dumpPluginInfo(Identifier const& _id) throw(...);
-
-		/**
-		*	printf service metadata
-		*
-		*	possible exceptions:	invalid id
-		*/
-		void dumpServiceInfo(Identifier const& _id) throw(...);
 
 		/**
 		*	

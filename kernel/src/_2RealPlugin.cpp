@@ -1,3 +1,4 @@
+
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
@@ -83,9 +84,15 @@ namespace _2Real
 	{
 		try
 		{
-			//metadata is TODO
+
 			const Identifier id = m_Factory->registerService(_name, this, NULL, _creator);
 			m_Services.push_back(id);
+
+#ifdef _DEBUG
+			std::cout << "plugin: registered service factory" << std::endl;
+			std::cout << id.id() << std::endl;
+#endif
+
 		}
 		catch (...)
 		{

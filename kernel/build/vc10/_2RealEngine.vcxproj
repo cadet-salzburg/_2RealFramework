@@ -25,7 +25,6 @@
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifierImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealIEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -43,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealAbstractRef.h" />
     <ClInclude Include="..\..\src\_2RealContainer.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
@@ -62,7 +60,6 @@
     <ClInclude Include="..\..\src\_2RealIEntity.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
-    <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealParamRef.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />

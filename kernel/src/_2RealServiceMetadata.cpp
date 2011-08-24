@@ -17,13 +17,15 @@
 */
 
 #include "_2RealServiceMetadata.h"
+#include "_2RealPluginMetadata.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
 
-	ServiceMetadata::ServiceMetadata(std::string const& _name) :
+	ServiceMetadata::ServiceMetadata(std::string const& _name, PluginMetadata const *const _plugin) :
 		m_ServiceName(_name),
+		m_Plugin(_plugin),
 		m_bIsSingleton(false),
 		m_bCanReconfigure(false),
 		m_SetupParams(),
@@ -48,7 +50,7 @@ namespace _2Real
 		m_bIsSingleton = _singleton;
 	}
 
-	void ServiceMetadata::addSetupParam(std::string const& _name)
+	void ServiceMetadata::addSetupParam(std::string const& _name, std::string const& _type)
 	{
 		ParamMap::iterator it = m_SetupParams.find(_name);
 
@@ -57,10 +59,10 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_SetupParams.insert(NamedParam(_name, ""));
+		m_SetupParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
 	}
 
-	void ServiceMetadata::addInputParam(std::string const& _name)
+	void ServiceMetadata::addInputParam(std::string const& _name, std::string const& _type)
 	{
 		ParamMap::iterator it = m_InputParams.find(_name);
 
@@ -69,10 +71,10 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_InputParams.insert(NamedParam(_name, ""));
+		m_InputParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
 	}
 
-	void ServiceMetadata::addOuputParam(std::string const& _name)
+	void ServiceMetadata::addOutputParam(std::string const& _name, std::string const& _type)
 	{
 		ParamMap::iterator it = m_OutputParams.find(_name);
 
@@ -81,7 +83,24 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_OutputParams.insert(NamedParam(_name, ""));
+		m_OutputParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
+	}
+
+	void ServiceMetadata::addUserclass(std::string const& _name)
+	{
+		UserclassMap::iterator it = m_Userclasses.find(_name);
+
+		if (it != m_Userclasses.end())
+		{
+			throw Exception::failure();
+		}
+
+		m_Userclasses.insert(NamedUserclass(_name, ""));
+	}
+
+	std::string const& ServiceMetadata::getName() const
+	{
+		return m_ServiceName;
 	}
 
 	std::string const& ServiceMetadata::getDescription() const
@@ -133,6 +152,35 @@ namespace _2Real
 		}
 
 		return true;
+	}
+
+	const bool ServiceMetadata::hasUserclass(std::string const& _name) const
+	{
+		UserclassMap::const_iterator it = m_Userclasses.find(_name);
+
+		if (it != m_Userclasses.end())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+
+	ServiceMetadata::ParamMetadata::ParamMetadata(std::string const& _name, std::string const& _type) :
+		m_Name(_name),
+		m_Type(_type)
+	{
+	}
+
+	std::string ServiceMetadata::ParamMetadata::getName() const
+	{
+		return m_Name;
+	}
+
+	std::string ServiceMetadata::ParamMetadata::getType() const
+	{
+		return m_Type;
 	}
 
 }

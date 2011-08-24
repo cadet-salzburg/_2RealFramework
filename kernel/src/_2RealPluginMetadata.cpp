@@ -17,6 +17,7 @@
 */
 
 #include "_2RealPluginMetadata.h"
+#include "_2RealServiceMetadata.h"
 
 #include <sstream>
 
@@ -141,6 +142,11 @@ namespace _2Real
 	PluginMetadata::Version const& PluginMetadata::getVersion() const
 	{
 		return m_Version;
+	}
+
+	void PluginMetadata::addServiceMetadata(ServiceMetadata *const _info)
+	{
+		m_Services.insert(NamedService(_info->getName(), _info));
 	}
 
 }

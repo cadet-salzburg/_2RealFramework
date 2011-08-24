@@ -25,31 +25,54 @@ namespace _2Real
 {
 
 	/**
-	*
+	*	metadata representation of a service
 	*/
 
-	class Metadata;
+	class PluginMetadata;
 
 	class ServiceMetadata
 	{
 
-		//class ParamMetadata
-		//{
+		/**
+		*	metadata representation of a param
+		*/
+		class ParamMetadata
+		{
 
-		//	enum eType
-		//	{
-		//	};
+		public:
 
-		//public:
+			/**
+			*	ctor will throw if either _name or _type is empty
+			*/
+			ParamMetadata(std::string const& _name, std::string const& _type) throw(...);
 
-		//	ParamMetadata(std::string const& _name) throw(...);
+			/**
+			*	get parameter name
+			*
+			*	@return:		parameter's name
+			*/
+			std::string getName() const;
 
-		//private:
+			/**
+			*	get parameter type
+			*
+			*	@return:		parameter's type as string
+			*/
+			std::string getType() const;
 
-		//	const std::string		m_Name;
-		//	ParamMetadata::eType	m_Type;
+		private:
 
-		//};
+		/**
+		*	name of the param
+		*/
+		const std::string		m_Name;
+
+		/*
+		*	typename as string
+		*/
+		const std::string		m_Type;
+
+		};
 
 	public:
 
@@ -57,50 +80,70 @@ namespace _2Real
 		*	creates service metadata
 		*
 		*	@param _name:		service's name
+		*	@param _plugin:		plugin the service belongs to
+		*	@throw:				TODO
+			@throw:				TODO
 		*/
-		ServiceMetadata(std::string const& _name);
+		ServiceMetadata(std::string const& _name, PluginMetadata const *const _plugin) throw(...);
 
 		/**
 		*	sets service description
 		*
 		*	@param _dec:		service's description
 		*/
-		void setDescription(std::string const& _desc);
+		void setDescription(std::string const& _desc) throw(...);
 
 		/**
 		*	service's reconfiguration status
 		*
 		*	@param _config:		if service's setup method can be called multiple times
 		*/
-		void setReconfiguration(bool const& _config);
+		void setReconfiguration(bool const& _config) throw(...);
 
 		/**
 		*	service's singleton status
 		*
 		*	@param _singleton:	true if service is a singleton
 		*/
-		void setSingleton(bool const& _singleton);
+		void setSingleton(bool const& _singleton) throw(...);
 
 		/**
 		*	adds setup parameter
 		*
 		*	@param _name:		parameter's name
+		*	@param _type:		parameter's type as string
 		*/
-		void addSetupParam(std::string const& _name);
+		void addSetupParam(std::string const& _name, std::string const& _type) throw(...);
 
 		/**
 		*	adds input parameter
 		*
 		*	@param _name:		parameter's name
+		*	@param _type:		parameter's type as string
 		*/
-		void addInputParam(std::string const& _name);
+		void addInputParam(std::string const& _name, std::string const& _type) throw(...);
 
 		/**
 		*	adds output parameter
 		*
 		*	@param _name:		parameter's name
+		*	@param _type:		parameter's type as string
 		*/
-		void addOuputParam(std::string const& _name);
+		void addOutputParam(std::string const& _name, std::string const& _type) throw(...);
+
+		/**
+		*	adds userclass
+		*
+		*	@param _name:		userclass' name
+		*/
+		void addUserclass(std::string const& _name) throw(...);
+
+		/**
+		*	get service's name
+		*
+		*	@return:			service's name
+		*/
+		std::string const& getName() const;
 
 		/**
 		*	get service's description
@@ -141,56 +184,78 @@ namespace _2Real
 		*/
 		const bool hasOuputParam(std::string const& _name) const;
 
+		/**
+		*	@param _name:		userclass' name
+		*	@return:			true if service has userclass with _name
+		*/
+		const bool hasUserclass(std::string const& _name) const;
+
 	private:
 
 		/**
-		*	
+		*	name
 		*/
 		const std::string				m_ServiceName;
 
 		/**
-		*	
+		*	plugin
+		*/
+		const PluginMetadata			*const m_Plugin;
+
+		/**
+		*	description
 		*/
 		std::string						m_Description;
 
 		/**
-		*	
+		*	if setup can be called more than once
 		*/
 		bool							m_bCanReconfigure;
 
 		/**
-		*	
+		*	if service is singleton
 		*/
 		bool							m_bIsSingleton;
 
 		/**
-		*	
+		*	yay, typedefs
 		*/
-		typedef std::pair< const std::string, const std::string >	NamedParam;
+		typedef std::pair< std::string, ParamMetadata * >	NamedParam;
+
+		/**
+		*	typedefs, yay
+		*/
+		typedef std::map< std::string, ParamMetadata * >	ParamMap;
+
+		/**
+		*	setup params
+		*/
+		ParamMap											m_SetupParams;
+
+		/**
+		*	input params
+		*/
+		ParamMap											m_InputParams;
+
+		/**
+		*	output params
+		*/
+		ParamMap											m_OutputParams;
 
 		/**
 		*	
 		*/
-		typedef std::map< const std::string, const std::string >	ParamMap;
+		typedef std::pair< std::string, std::string >		NamedUserclass;
 
 		/**
 		*	
 		*/
-		ParamMap						m_SetupParams;
+		typedef std::map< std::string, std::string >		UserclassMap;
 
 		/**
-		*	
+		*	user classes (for the time being)
 		*/
-		ParamMap						m_InputParams;
-
-		/**
-		*	
-		*/
-		ParamMap						m_OutputParams;
-
-		/**
-		*	TODO: user class definitions
-		*/
+		UserclassMap										m_Userclasses;
 
 	};
 
