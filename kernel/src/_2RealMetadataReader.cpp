@@ -110,33 +110,33 @@ namespace _2Real
 				attribs = service->attributes();
 
 				name = attribs->getNamedItem("name");
-				ServiceMetadata *meta = new ServiceMetadata(name->nodeValue(), &_info);
+				ServiceMetadata meta(name->nodeValue());
 
 #ifdef _DEBUG
-				std::cout << "plugin defines service: " << meta->getName() << std::endl;
+				std::cout << "plugin defines service: " << meta.getName() << std::endl;
 #endif
 
 				description = attribs->getNamedItem("description");
-				meta->setDescription(description->nodeValue());
+				meta.setDescription(description->nodeValue());
 
 				singleton = attribs->getNamedItem("singleton");
 				if (singleton->nodeValue() == "true")
 				{
-					meta->setSingleton(true);
+					meta.setSingleton(true);
 				}
 				else
 				{
-					meta->setSingleton(false);
+					meta.setSingleton(false);
 				}
 
 				reconfigure = attribs->getNamedItem("reconfigurable");
 				if (reconfigure->nodeValue() == "true")
 				{
-					meta->setReconfiguration(true);
+					meta.setReconfiguration(true);
 				}
 				else
 				{
-					meta->setReconfiguration(false);
+					meta.setReconfiguration(false);
 				}
 
 				//setup params
@@ -183,7 +183,7 @@ namespace _2Real
 									NamedNodeMap* classAttribs = param->attributes();
 									Node* paramname = classAttribs->getNamedItem("name");
 									Node* paramtype = classAttribs->getNamedItem("type");
-									meta->addSetupParam(paramname->nodeValue(), paramtype->nodeValue());
+									meta.addSetupParam(paramname->nodeValue(), paramtype->nodeValue());
 
 #ifdef _DEBUG
 									std::cout << "service has setup param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
@@ -205,7 +205,7 @@ namespace _2Real
 									NamedNodeMap* classAttribs = param->attributes();
 									Node* paramname = classAttribs->getNamedItem("name");
 									Node* paramtype = classAttribs->getNamedItem("type");
-									meta->addInputParam(paramname->nodeValue(), paramtype->nodeValue());
+									meta.addInputParam(paramname->nodeValue(), paramtype->nodeValue());
 
 #ifdef _DEBUG
 	std::cout << "service has input param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
@@ -227,7 +227,7 @@ namespace _2Real
 									NamedNodeMap* classAttribs = param->attributes();
 									Node* paramname = classAttribs->getNamedItem("name");
 									Node* paramtype = classAttribs->getNamedItem("type");
-									meta->addInputParam(paramname->nodeValue(), paramtype->nodeValue());
+									meta.addInputParam(paramname->nodeValue(), paramtype->nodeValue());
 
 #ifdef _DEBUG
 	std::cout << "service has output param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;

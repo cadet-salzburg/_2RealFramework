@@ -147,14 +147,21 @@ namespace _2Real
 		*	@param _name:		name of service
 		*	@return:			service's metadata
 		*/
-		ServiceMetadata const *const getServiceMetadata(std::string const& _name) const;
+		ServiceMetadata const& getServiceMetadata(std::string const& _name) const throw(...);
 
 		/**
 		*	add metadata to file
 		*
 		*	@param:				metadata to add
 		*/
-		void addServiceMetadata(ServiceMetadata *const _info) throw(...);
+		void addServiceMetadata(ServiceMetadata const& _info) throw(...);
+
+		/**
+		*	returns string with plugin information
+		*
+		*	@return:			info
+		*/
+		const std::string info();
 
 	private:
 
@@ -191,12 +198,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::pair< const std::string, ServiceMetadata *const >	NamedService;
+		typedef std::pair< const std::string, ServiceMetadata >	NamedService;
 
 		/**
 		*	
 		*/
-		typedef std::map< const std::string, ServiceMetadata *const >	ServiceMap;
+		typedef std::map< const std::string, ServiceMetadata >	ServiceMap;
 
 		/**
 		*	

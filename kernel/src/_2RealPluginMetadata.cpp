@@ -18,7 +18,9 @@
 
 #include "_2RealPluginMetadata.h"
 #include "_2RealServiceMetadata.h"
+#include "_2RealException.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -144,9 +146,40 @@ namespace _2Real
 		return m_Version;
 	}
 
-	void PluginMetadata::addServiceMetadata(ServiceMetadata *const _info)
+	void PluginMetadata::addServiceMetadata(ServiceMetadata const& _info)
 	{
-		m_Services.insert(NamedService(_info->getName(), _info));
+		m_Services.insert(NamedService(_info.getName(), _info));
+	}
+
+	ServiceMetadata const& PluginMetadata::getServiceMetadata(std::string const& _name) const
+	{
+		ServiceMap::const_iterator it = m_Services.find(_name);
+
+		if (it == m_Services.end())
+		{
+			throw Exception::failure();
+		}
+
+		return it->second;
+	}
+
+	const std::string PluginMetadata::info()
+	{
+		std::stringstream info;
+		info << std::endl;
+		info << m_PluginName << std::endl;
+		info << m_Description << std::endl;
+		info << "installed at " << m_InstallDirectory << std::endl;
+		info << "written by " << m_Author << std::endl;
+		info << "contact " << m_Contact << std::endl;
+		info << "version " << m_Version.asString() << std::endl;
+
+		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		{
+			info << "exports service " << it->first << std::endl;
+		}
+
+		return info.str();
 	}
 
 }

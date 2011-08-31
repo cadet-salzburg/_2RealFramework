@@ -19,6 +19,7 @@
 #pragma once
 
 #include <map>
+#include <list>
 #include <string>
 
 namespace _2Real
@@ -76,6 +77,8 @@ namespace _2Real
 
 	public:
 
+		typedef std::list< std::string >	ParamList;
+
 		/**
 		*	creates service metadata
 		*
@@ -84,7 +87,7 @@ namespace _2Real
 		*	@throw:				TODO
 			@throw:				TODO
 		*/
-		ServiceMetadata(std::string const& _name, PluginMetadata const *const _plugin) throw(...);
+		ServiceMetadata(std::string const& _name) throw(...);
 
 		/**
 		*	sets service description
@@ -190,17 +193,34 @@ namespace _2Real
 		*/
 		const bool hasUserclass(std::string const& _name) const;
 
+		/**
+		*	
+		*/
+		ParamList getInputParams() const;
+
+		/**
+		*	
+		*/
+		ParamList getOutputParams() const;
+
+		/**
+		*	
+		*/
+		ParamList getSetupParams() const;
+
+		/**
+		*	returns string with service information
+		*
+		*	@return:			info
+		*/
+		const std::string info() const;
+
 	private:
 
 		/**
 		*	name
 		*/
 		const std::string				m_ServiceName;
-
-		/**
-		*	plugin
-		*/
-		const PluginMetadata			*const m_Plugin;
 
 		/**
 		*	description
@@ -220,12 +240,12 @@ namespace _2Real
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::pair< std::string, ParamMetadata * >	NamedParam;
+		typedef std::pair< std::string, ParamMetadata >	NamedParam;
 
 		/**
 		*	typedefs, yay
 		*/
-		typedef std::map< std::string, ParamMetadata * >	ParamMap;
+		typedef std::map< std::string, ParamMetadata >	ParamMap;
 
 		/**
 		*	setup params

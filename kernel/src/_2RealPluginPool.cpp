@@ -17,6 +17,7 @@
 	limitations under the License.
 */
 
+#include "_2RealPluginMetadata.h"
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealException.h"
@@ -141,5 +142,17 @@ namespace _2Real
 
 	//	return NULL;
 	//}
+
+	PluginMetadata const& PluginPool::pluginInfo(unsigned int const& _id) const
+	{
+		PluginMap::const_iterator it = m_Plugins.find(_id);
+
+		if (it == m_Plugins.end())
+		{
+			throw Exception::failure();
+		}
+
+		return it->second->metadata();
+	}
 
 }

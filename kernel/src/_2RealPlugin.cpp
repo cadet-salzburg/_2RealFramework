@@ -21,6 +21,7 @@
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
 #include "_2RealServiceFactory.h"
+#include "_2RealServiceMetadata.h"
 #include "_2RealIdentifier.h"
 
 namespace _2Real
@@ -84,15 +85,9 @@ namespace _2Real
 	{
 		try
 		{
-
-			const Identifier id = m_Factory->registerService(_name, this, NULL, _creator);
+			ServiceMetadata data = m_Metadata.getServiceMetadata(_name);
+			const Identifier id = m_Factory->registerService(_name, this, data, _creator);
 			m_Services.push_back(id);
-
-#ifdef _DEBUG
-			std::cout << "plugin: registered service factory" << std::endl;
-			std::cout << id.id() << std::endl;
-#endif
-
 		}
 		catch (...)
 		{
@@ -206,12 +201,13 @@ namespace _2Real
 						throw Exception::failure();
 					}
 
-					//start
 					PluginContext context(this);
-					m_Activator->start(context);
 					//get metadata
 					m_Activator->getMetadata(m_Metadata);
-					
+
+					//start
+					m_Activator->start(context);
+
 					_ids.clear();
 					_ids = m_Services;
 				}

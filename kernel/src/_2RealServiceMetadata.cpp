@@ -20,12 +20,13 @@
 #include "_2RealPluginMetadata.h"
 #include "_2RealException.h"
 
+#include <sstream>
+
 namespace _2Real
 {
 
-	ServiceMetadata::ServiceMetadata(std::string const& _name, PluginMetadata const *const _plugin) :
+	ServiceMetadata::ServiceMetadata(std::string const& _name) :
 		m_ServiceName(_name),
-		m_Plugin(_plugin),
 		m_bIsSingleton(false),
 		m_bCanReconfigure(false),
 		m_SetupParams(),
@@ -59,7 +60,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_SetupParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
+		m_SetupParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
 	void ServiceMetadata::addInputParam(std::string const& _name, std::string const& _type)
@@ -71,7 +72,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_InputParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
+		m_InputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
 	void ServiceMetadata::addOutputParam(std::string const& _name, std::string const& _type)
@@ -83,7 +84,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_OutputParams.insert(NamedParam(_name, new ParamMetadata(_name, _type)));
+		m_OutputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
 	void ServiceMetadata::addUserclass(std::string const& _name)
@@ -96,6 +97,37 @@ namespace _2Real
 		}
 
 		m_Userclasses.insert(NamedUserclass(_name, ""));
+	}
+
+
+	ServiceMetadata::ParamList ServiceMetadata::getInputParams() const
+	{
+		ServiceMetadata::ParamList result;
+		for (ParamMap::const_iterator it = m_InputParams.begin(); it !=m_InputParams.end(); it++)
+		{
+			result.push_back(it->first);
+		}
+		return result;
+	}
+
+	ServiceMetadata::ParamList ServiceMetadata::getOutputParams() const
+	{
+		ServiceMetadata::ParamList result;
+		for (ParamMap::const_iterator it = m_OutputParams.begin(); it !=m_OutputParams.end(); it++)
+		{
+			result.push_back(it->first);
+		}
+		return result;
+	}
+
+	ServiceMetadata::ParamList ServiceMetadata::getSetupParams() const
+	{
+		ServiceMetadata::ParamList result;
+		for (ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
+		{
+			result.push_back(it->first);
+		}
+		return result;
 	}
 
 	std::string const& ServiceMetadata::getName() const
@@ -181,6 +213,54 @@ namespace _2Real
 	std::string ServiceMetadata::ParamMetadata::getType() const
 	{
 		return m_Type;
+	}
+
+	const std::string ServiceMetadata::info() const
+	{
+		std::stringstream info;
+		info << std::endl;
+		info << m_ServiceName << std::endl;
+		info << m_Description << std::endl;
+		
+		if (m_bIsSingleton)
+		{
+			info << "this service is a singleton" << std::endl;
+		}
+
+		if (m_bCanReconfigure)
+		{
+			info << "this service's setup parameters can be reconfigured" << std::endl;
+		}
+		else
+		{
+			info << "this service's setup parameters can be initialized only once" << std::endl;
+		}
+
+		info << "this service defines the following userclasses: " << std::endl;
+		for (UserclassMap::const_iterator it = m_Userclasses.begin(); it != m_Userclasses.end(); it++)
+		{
+			info << it->first << std::endl;
+		}
+
+		info << "this service has setup parameters: " << std::endl;
+		for (ParamMap::const_iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+		{
+			info << it->first << std::endl;
+		}
+
+		info << "this service has input parameters: " << std::endl;
+		for (ParamMap::const_iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+		{
+			info << it->first << std::endl;
+		}
+
+		info << "this service has output parameters: " << std::endl;
+		for (ParamMap::const_iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
+		{
+			info << it->first << std::endl;
+		}
+
+		return info.str();
 	}
 
 }

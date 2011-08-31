@@ -33,6 +33,7 @@ namespace _2Real
 	*/
 
 	class Plugin;
+	class PluginMetadata;
 	class ServiceFactory;
 	class ProductionGraphs;
 	class Identifier;
@@ -77,6 +78,8 @@ namespace _2Real
 		*
 		*/
 		//Plugin const *const get(unsigned int const& _id) const;
+
+		PluginMetadata const& pluginInfo(unsigned int const& _id) const throw(...);
 
 	private:
 

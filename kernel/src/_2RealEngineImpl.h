@@ -1,4 +1,4 @@
-/*
+ /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
 
@@ -96,7 +96,37 @@ namespace _2Real
 		/**
 		*	
 		*/
+		void dumpPluginInfo(Identifier const& _id) const throw(...);
+
+		/**
+		*	
+		*/
+		void dumpServiceInfo(Identifier const& _id) const throw(...);
+
+		/**
+		*	
+		*/
+		void dumpServiceInfo(Identifier const& _id, std::string const& _name) const throw(...);
+
+		/**
+		*	
+		*/
 		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+
+		/**
+		*	
+		*/
+		const Identifier createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		Identifiers getInputSlots(Identifier const& _id) const throw(...);
+
+		/**
+		*
+		*/
+		Identifiers getOutputSlots(Identifier const& _id) const throw(...);
 
 	private:
 

@@ -142,4 +142,56 @@ namespace _2Real
 		}
 	}
 
+	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs)
+	{
+		try
+		{
+			return m_Impl->createService(_name, _id, _setupIDs, *m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on createService()" << std::endl;
+			throw;
+		}
+	}
+
+	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs)
+	{
+		try
+		{
+			return m_Impl->createService(_name, _id, _service, _setupIDs, *m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on createService()" << std::endl;
+			throw;
+		}
+	}
+
+	Identifiers Engine::getInputSlots(Identifier const& _id)
+	{
+		try
+		{
+			return m_Impl->getInputSlots(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on getInputSlots()" << std::endl;
+			throw;
+		}
+	}
+
+	Identifiers Engine::getOutputSlots(Identifier const& _id)
+	{
+		try
+		{
+			return m_Impl->getOutputSlots(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on getOutputSlots()" << std::endl;
+			throw;
+		}
+	}
+
 }

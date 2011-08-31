@@ -30,7 +30,7 @@ namespace _2Real
 	*	
 	*/
 
-	class Metadata;
+	class ServiceMetadata;
 	class Identifier;
 	class IEntity;
 	class PluginPool;
@@ -107,7 +107,7 @@ namespace _2Real
 		/**
 		*	requested by service factory on service registration
 		*/
-		const ID createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata) throw(...);
+		const ID createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata) throw(...);
 
 		/**
 		*	requested by service factory on service creation

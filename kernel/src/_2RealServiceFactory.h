@@ -40,7 +40,7 @@ namespace _2Real
 	class ServiceImpl;
 	class Identifier;
 	class Entities;
-	class Metadata;
+	class ServiceMetadata;
 
 	class ServiceFactory
 	{
@@ -70,7 +70,7 @@ namespace _2Real
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		const Identifier registerService(std::string const& _name, Plugin *const _plugin, Metadata const *const _metadata, ServiceCreator _creator) throw(...);
+		const Identifier registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
 
 		/**
 		*	returns true if service in question can be created
@@ -90,7 +90,22 @@ namespace _2Real
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+		const Identifier createService(std::string const& _name, unsigned int const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+
+		/**
+		*	creates service container holding an instance of user service identified by _serviceID
+		*/
+		const Identifier createService(std::string const& _name, unsigned int const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+
+		/**
+		*	returns metadata of a service
+		*/
+		ServiceMetadata const& serviceInfo(unsigned int const& _id) const throw(...);
+
+		/**
+		*	returns metadata of a service
+		*/
+		ServiceMetadata const& serviceInfo(unsigned int const& _id, std::string const& _name) const throw(...);
 
 	private:
 
@@ -104,7 +119,7 @@ namespace _2Real
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::pair< FactoryReference *, ServiceList >		ServiceReference;
+		typedef std::pair< FactoryReference *, ServiceList * >		ServiceReference;
 
 		/**
 		*	yay, typedefs
@@ -134,7 +149,7 @@ namespace _2Real
 		/**
 		*	production graphs
 		*/
-		ProductionGraphs									*m_Graphs;
+		ProductionGraphs											*m_Graphs;
 
 	};
 

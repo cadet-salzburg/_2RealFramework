@@ -162,7 +162,7 @@ namespace _2Real
 		}
 	}
 
-	const Entities::ID Entities::createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata)
+	const Entities::ID Entities::createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata)
 	{
 		IdentifierImpl *id = new IdentifierImpl(_name, "factory", _plugin->name(), IdentifierImpl::FACTORY, ++m_iCreationCount);
 		FactoryReference *ref = new FactoryReference(_name, _plugin, _creator, _metadata, id);

@@ -18,6 +18,8 @@
 
 #include "_2RealEngineImpl.h"
 
+#include "_2RealPluginMetadata.h"
+#include "_2RealServiceMetadata.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealEntities.h"
@@ -25,6 +27,9 @@
 #include "_2RealIEntity.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealServiceImpl.h"
+
+#include <sstream>
 
 namespace _2Real
 {
@@ -109,7 +114,6 @@ namespace _2Real
 		std::cout << "engine (singleton): ctor" << std::endl;
 #endif
 
-		//this is kind of strange. oh well.
 		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Graphs->m_Plugins = m_Plugins;
 		m_Entities->m_Factory = m_Plugins->m_Factory = m_Graphs->m_Factory = m_Factory;
 		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs = m_Graphs;
@@ -181,11 +185,13 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top)
+	void EngineImpl::dumpPluginInfo(Identifier const& _id) const
 	{
 		try
 		{
-			return m_Factory->createService(_name, _id, _setupIDs, _top);
+			PluginMetadata data = m_Plugins->pluginInfo(_id.id());
+			std::string info = data.info();
+			std::cout << info << std::endl;
 		}
 		catch (...)
 		{
@@ -193,4 +199,84 @@ namespace _2Real
 		}
 	}
 
+	void EngineImpl::dumpServiceInfo(Identifier const& _id) const
+	{
+		try
+		{
+			ServiceMetadata data = m_Factory->serviceInfo(_id.id());
+			std::string info = data.info();
+			std::cout << info << std::endl;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::dumpServiceInfo(Identifier const& _id, std::string const& _name) const
+	{
+		try
+		{
+			ServiceMetadata data = m_Factory->serviceInfo(_id.id(), _name);
+			std::string info = data.info();
+			std::cout << info << std::endl;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top)
+	{
+		try
+		{
+			return m_Factory->createService(_name, _id.id(), _setupIDs, _top);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top)
+	{
+		try
+		{
+			return m_Factory->createService(_name, _id.id(), _service, _setupIDs, _top);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	Identifiers EngineImpl::getInputSlots(Identifier const& _id) const
+	{
+		return Identifiers();
+		//try
+		//{
+		//	IEntity *e = m_Entities->get(_id.id());
+		//	ServiceImpl *s = static_cast< ServiceImpl * >(e);
+		//	return s-
+		//}
+		//catch (...)
+		//{
+		//	throw;
+		//}
+	}
+
+	Identifiers EngineImpl::getOutputSlots(Identifier const& _id) const
+	{
+		return Identifiers();
+		//try
+		//{
+		//	IEntity *e = m_Entities->get(_id.id());
+		//	ServiceImpl *s = static_cast< ServiceImpl * >(e);
+		//}
+		//catch (...)
+		//{
+		//	throw;
+		//}
+	}
 }

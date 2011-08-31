@@ -24,13 +24,13 @@
 namespace _2Real
 {
 
-	FactoryReference::FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata, IdentifierImpl *const _id) :
+	FactoryReference::FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id) :
 		IEntity(_id), m_Name(_name), m_Plugin(_plugin), m_Creator(_creator), m_Metadata(_metadata)
 	{
 	}
 
 	FactoryReference::FactoryReference(FactoryReference const& _src) : 
-	IEntity(_src), m_Plugin(NULL), m_Metadata(NULL), m_Creator(NULL)
+	IEntity(_src), m_Metadata(_src.m_Metadata), m_Plugin(NULL), m_Creator(NULL)
 	{
 		throw Exception::noCopy();
 	}
@@ -66,7 +66,7 @@ namespace _2Real
 		return m_Plugin;
 	}
 
-	Metadata const *const FactoryReference::metadata() const
+	ServiceMetadata const& FactoryReference::metadata() const
 	{
 		return m_Metadata;
 	}

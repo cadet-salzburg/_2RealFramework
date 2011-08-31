@@ -295,7 +295,7 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of output slots
 		*/
-		Identifiers getOutputSlots(Identifier const& _id);
+		Identifiers getOutputSlots(Identifier const& _id) throw(...);
 
 		/**
 		*	returns identifiers of all input slots of an entity
@@ -311,7 +311,7 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of input slots
 		*/
-		Identifiers getInputSlots(Identifier const& _id);
+		Identifiers getInputSlots(Identifier const& _id) throw(...);
 
 		/**
 		*	links an input slot with an output slot

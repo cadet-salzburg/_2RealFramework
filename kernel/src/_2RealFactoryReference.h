@@ -20,6 +20,7 @@
 
 #include "_2RealIEntity.h"
 #include "_2RealEngineTypedefs.h"
+#include "_2RealServiceMetadata.h"
 
 #include <string>
 
@@ -31,7 +32,6 @@ namespace _2Real
 	*/
 
 	class Plugin;
-	class Metadata;
 
 	class FactoryReference : public IEntity
 	{
@@ -41,7 +41,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, Metadata const *const _metadata, IdentifierImpl *const _id);
+		FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id);
 
 		/**
 		*
@@ -81,7 +81,7 @@ namespace _2Real
 		/**
 		*	metadata pointer
 		*/
-		Metadata const *const metadata() const;
+		ServiceMetadata const& metadata() const;
 
 		/**
 		*	creates service obj, or returns singleton instance
@@ -103,13 +103,16 @@ namespace _2Real
 		/**
 		*
 		*/
-		const Metadata			*m_Metadata;
+		const ServiceMetadata	m_Metadata;
 
 		/**
 		*
 		*/
 		const ServiceCreator	m_Creator;
 
+		/**
+		*	
+		*/
 		const std::string		m_Name;
 
 	};
