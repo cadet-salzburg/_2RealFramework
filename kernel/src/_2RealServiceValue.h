@@ -16,42 +16,64 @@
 	limitations under the License.
 */
 
+#pragma once
+
 #include "_2RealServiceParam.h"
-#include "_2RealException.h"
-#include "_2RealAbstractRef.h"
+
+#include "Poco/SharedPtr.h"
+#include "Poco/Any.h"
 
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceImpl *const _service) :
-		IEntity(_id),
-		m_Service(_service),
-		m_bIsInitialized(false)
-	{
-	}
+	/**
+	*
+	*/
 
-	ServiceParam::ServiceParam(ServiceParam const& _src) : IEntity(_src)
-	{
-		throw Exception::noCopy();
-	}
+	class ServiceImpl;
 
-	ServiceParam& ServiceParam::operator=(ServiceParam const& _src)
+	class ServiceValue : public ServiceParam
 	{
-		throw Exception::noCopy();
-	}
 
-	ServiceParam::~ServiceParam()
-	{
-	}
+	public:
 
-	ServiceImpl *const ServiceParam::service()
-	{
-		return m_Service;
-	}
+		/**
+		*	
+		*/
+		ServiceValue(IdentifierImpl *const _id, ServiceImpl *const _service);
 
-	bool const& ServiceParam::isInitialized() const
-	{
-		return m_bIsInitialized;
-	}
+		/**
+		*	
+		*/
+		ServiceValue(ServiceValue const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		ServiceValue& operator=(ServiceValue const& _src) throw(...);
+
+		/**
+		*	
+		*/
+		~ServiceValue();
+
+		/**
+		*	set any
+		*/
+		void setValue(Poco::Any const& _any);
+
+		/**
+		*	return any
+		*/
+		Poco::Any const& value() const;
+
+	private:
+
+		/**
+		*	
+		*/
+		Poco::Any			m_Value;
+
+	};
 
 }

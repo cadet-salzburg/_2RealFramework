@@ -33,7 +33,8 @@ namespace _2Real
 	*/
 
 	class IService;
-	class ServiceParam;
+	class ServiceSlot;
+	class ServiceValue;
 	class Identifier;
 
 	class ServiceImpl : public AbstractContainer
@@ -55,11 +56,6 @@ namespace _2Real
 		*	registers ref of output variable
 		*/
 		void registerOutputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
-
-		/**
-		*	
-		*/
-		typedef std::list< Identifier > IdentifierList;
 
 		/**
 		*	throws if user defined service is null
@@ -84,7 +80,12 @@ namespace _2Real
 		/**
 		*	called by service factory after service creation
 		*/
-		void addParam(ServiceParam *const _param) throw(...);
+		void addSlot(Identifier const& id, ServiceSlot *const _slot) throw(...);
+
+		/**
+		*	called by service factory after service creation
+		*/
+		void addValue(Identifier const& id, ServiceValue *const _value) throw(...);
 
 		/**
 		*	calls setup function of service when called for the first time
@@ -106,32 +107,62 @@ namespace _2Real
 		*/
 		void shutdown() throw(...);
 
+		/**
+		*	
+		*/
+		IdentifierList setupParams() const throw(...);
+
+		/**
+		*	
+		*/
+		IdentifierList inputParams() const throw(...);
+
+		/**
+		*	
+		*/
+		IdentifierList outputParams() const throw(...);
+
 	private:
 
 		/**
-		*	
+		*	input slots are accessed by sender id
 		*/
-		typedef std::pair< const unsigned int, ServiceParam * >	NamedInput;
+		typedef std::pair< const unsigned int, ServiceSlot * >	NamedInput;
 
 		/**
-		*	
+		*	input slots are accessed by sender id
 		*/
-		typedef std::map< const unsigned int, ServiceParam * >	InputMap;
+		typedef std::map< const unsigned int, ServiceSlot * >	InputMap;
 
 		/**
-		*	
+		*	output slots are accessed by name
 		*/
-		typedef std::pair< const std::string, ServiceParam * >	NamedParam;
+		typedef std::pair< const std::string, ServiceSlot * >	NamedParam;
 
 		/**
-		*	
+		*	output slots are accessed by name
 		*/
-		typedef std::map< const std::string, ServiceParam * >	ParamMap;
+		typedef std::map< const std::string, ServiceSlot * >	ParamMap;
 
 		/**
-		*	input slots - are found by sender id
+		*	setup params are accessed by name
+		*/
+		typedef std::pair< const std::string, ServiceValue * >	NamedValue;
+
+		/**
+		*	setup params are accessed by name
+		*/
+		typedef std::map< const std::string, ServiceValue * >	ValueMap;
+
+		/**
+		*	input slots
 		*/
 		InputMap												m_InputParams;
+
+		/**
+		*	
+		*/
+		IdentifierList											m_InputIds;
 
 		/**
 		*	output slots
@@ -139,9 +170,19 @@ namespace _2Real
 		ParamMap												m_OutputParams;
 
 		/**
-		*	setup params
+		*	
 		*/
-		ParamMap												m_SetupParams;
+		IdentifierList											m_OutputIds;
+
+		/**
+		*	setup value
+		*/
+		ValueMap												m_SetupParams;
+
+		/**
+		*	
+		*/
+		IdentifierList											m_SetupIds;
 
 		/**
 		*	the user defined service

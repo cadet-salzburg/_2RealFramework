@@ -83,6 +83,11 @@ namespace _2Real
 		IEntity *const get(unsigned int const& _id) throw(...);
 
 		/**
+		*	return identifier for id TODO
+		*/
+		IEntity *const getIdentifier(unsigned int const& _id) throw(...);
+
+		/**
 		*	destroy entity, throw if not existing
 		*	plugin pool, service factory & production graphs all use this function
 		*	to dispose of stuff they don't want anymore. especially toxic waste.
@@ -112,7 +117,17 @@ namespace _2Real
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createServiceParam(std::string const& _name, ServiceImpl const *const _service, IdentifierImpl::eType const& _type) throw(...);
+		const ID createInputSlot(std::string const& _name, ServiceImpl *const _service) throw(...);
+
+		/**
+		*	requested by service factory on service creation
+		*/
+		const ID createOutputSlot(std::string const& _name, ServiceImpl *const _service) throw(...);
+
+		/**
+		*	requested by service factory on service creation
+		*/
+		const ID createServiceValue(std::string const& _name, ServiceImpl *const _service) throw(...);
 
 	private:
 

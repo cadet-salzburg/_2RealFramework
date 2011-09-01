@@ -28,6 +28,8 @@
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealServiceImpl.h"
+#include "_2RealServiceValue.h"
+#include "_2RealServiceSlot.h"
 
 #include <sstream>
 
@@ -253,30 +255,84 @@ namespace _2Real
 
 	Identifiers EngineImpl::getInputSlots(Identifier const& _id) const
 	{
-		return Identifiers();
-		//try
-		//{
-		//	IEntity *e = m_Entities->get(_id.id());
-		//	ServiceImpl *s = static_cast< ServiceImpl * >(e);
-		//	return s-
-		//}
-		//catch (...)
-		//{
-		//	throw;
-		//}
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *c = static_cast< ServiceImpl * >(e);
+			return c->inputParams();
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
 	Identifiers EngineImpl::getOutputSlots(Identifier const& _id) const
 	{
-		return Identifiers();
-		//try
-		//{
-		//	IEntity *e = m_Entities->get(_id.id());
-		//	ServiceImpl *s = static_cast< ServiceImpl * >(e);
-		//}
-		//catch (...)
-		//{
-		//	throw;
-		//}
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *c = static_cast< ServiceImpl * >(e);
+			return c->outputParams();
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	const Identifier EngineImpl::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
+	{
+		try
+		{
+			return m_Graphs->createSequence(_name, _idA, _idB, _top);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	const Identifier EngineImpl::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
+	{
+		try
+		{
+			return m_Graphs->createSynchronization(_name, _idA, _idB, _top);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::setParameterValue(Identifier const& _id, Poco::Any _any)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			ServiceValue *val = static_cast< ServiceValue * >(e);
+			val->setValue(_any);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::link(Identifier const& _in,  Identifier const& _out)
+	{
+		try
+		{
+			//TODO: some checks
+			IEntity *in = m_Entities->get(_in.id());
+			IEntity *out = m_Entities->get(_out.id());
+			ServiceSlot *inSlot = static_cast< ServiceSlot * >(in);
+			ServiceSlot *outSlot = static_cast< ServiceSlot * >(out);
+			inSlot->listenTo(outSlot->id());
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 }

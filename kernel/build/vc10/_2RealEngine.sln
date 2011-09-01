@@ -8,12 +8,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProcessing", "..\..\te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectWinSDK", "..\..\testplugins\KinectDepthmap\build\vc10\KinectWinSDK.vcxproj", "{C482D908-995A-5787-59C0-60196C0354FA}"
 	ProjectSection(ProjectDependencies) = postProject
-		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61} = {D45D7A51-B42B-8596-E7C5-E6B10296AC61}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealEngine", "_2RealEngine.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealEngineTest", "_2RealEngineTest.vcxproj", "{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61} = {D45D7A51-B42B-8596-E7C5-E6B10296AC61}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -41,17 +41,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef Poco::SharedPtr< Poco::Any >						SharedAny;
-
-		/**
-		*	
-		*/
-		typedef std::pair< const unsigned int, const SharedAny >	NamedAny;
-
-		/**
-		*	
-		*/
-		ServiceParam(IdentifierImpl *const _id, ServiceImpl const *const _service);
+		ServiceParam(IdentifierImpl *const _id, ServiceImpl *const _service);
 
 		/**
 		*	
@@ -71,49 +61,26 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceImpl const *const service() const;
+		ServiceImpl *const service();
 
 		/**
 		*	
 		*/
-		unsigned int const& senderID() const;
+		bool const& isInitialized() const;
+
+	protected:
 
 		/**
 		*	
 		*/
-		void setValue(AbstractRef *const _val);
-
-		/**
-		*	
-		*/
-		void listenTo(unsigned int const& _id);
-
-		/**
-		*	
-		*/
-		ServiceParam::NamedAny getAny();
-
-		/**
-		*
-		*/
-		void extractFrom(ServiceParam::SharedAny const& _any) throw(...);
+		bool				m_bIsInitialized;
 
 	private:
 
 		/**
 		*	
 		*/
-		const ServiceImpl			*m_Service;
-
-		/**
-		*	what a dumb name
-		*/
-		AbstractRef					*m_Value;
-
-		/**
-		*	
-		*/
-		unsigned int				m_SenderID;
+		ServiceImpl			*m_Service;
 
 	};
 

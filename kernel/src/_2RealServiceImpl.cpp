@@ -20,8 +20,10 @@
 
 #include "_2RealServiceImpl.h"
 #include "_2RealServiceContext.h"
-#include "_2RealServiceParam.h"
+#include "_2RealServiceSlot.h"
+#include "_2RealServiceValue.h"
 #include "_2RealException.h"
+#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -63,27 +65,35 @@ namespace _2Real
 		delete m_Service;
 	}
 
-	void ServiceImpl::addParam(ServiceParam *const _param)
+	void ServiceImpl::addSlot(Identifier const& id, ServiceSlot *const _slot)
 	{
-		if (_param == NULL)
+		if (_slot == NULL)
 		{
 			throw Exception::failure();
 		}
 
-		IdentifierImpl::eType type = _param->type();
-
-		if (type == IdentifierImpl::SETUP)
+		IdentifierImpl::eType type = _slot->type();
+		if (type == IdentifierImpl::INPUT)
 		{
-			m_SetupParams.insert(NamedParam(_param->name(), _param));
-		}
-		else if (type == IdentifierImpl::INPUT)
-		{
-			m_InputParams.insert(NamedInput(_param->id(), _param));
+			m_InputParams.insert(NamedInput(_slot->id(), _slot));
+			m_InputIds.push_back(id);
 		}
 		else if (type == IdentifierImpl::OUTPUT)
 		{
-			m_OutputParams.insert(NamedParam(_param->name(), _param));
+			m_OutputParams.insert(NamedParam(_slot->name(), _slot));
+			m_OutputIds.push_back(id);
 		}
+	}
+
+	void ServiceImpl::addValue(Identifier const& id, ServiceValue *const _value)
+	{
+		if (_value == NULL)
+		{
+			throw Exception::failure();
+		}
+
+		m_SetupParams.insert(NamedValue(_value->name(), _value));
+		m_SetupIds.push_back(id);
 	}
 
 	void ServiceImpl::checkConfiguration()
@@ -169,13 +179,13 @@ namespace _2Real
 
 	void ServiceImpl::getParameterValue(std::string const& _name, AbstractRef *const _param)
 	{
-		ParamMap::iterator it = m_SetupParams.find(_name);
+		ValueMap::iterator it = m_SetupParams.find(_name);
 		if (it == m_SetupParams.end())
 		{
 			throw Exception::failure();
 		}
 
-		ServiceParam::SharedAny any = (it->second->getAny()).second;
+		Poco::Any any = (it->second->value());
 		_param->extractFrom(any);
 	}
 
@@ -186,6 +196,12 @@ namespace _2Real
 		{
 			if (it->second->name() == _name)
 			{
+				if (it->second->isInitialized())
+				{
+					//exception occurs b/c of multiple initialization
+					throw Exception::failure();
+				}
+
 				it->second->setValue(_var);
 				break;
 			}
@@ -205,7 +221,27 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
+		if (it->second->isInitialized())
+		{
+			//exception occurs b/c of multiple initialization
+			throw Exception::failure();
+		}
 		it->second->setValue(_var);
+	}
+
+	AbstractContainer::IdentifierList ServiceImpl::inputParams() const
+	{
+		return m_InputIds;
+	}
+
+	AbstractContainer::IdentifierList ServiceImpl::outputParams() const
+	{
+		return m_OutputIds;
+	}
+
+	AbstractContainer::IdentifierList ServiceImpl::setupParams() const
+	{
+		return m_SetupIds;
 	}
 
 }

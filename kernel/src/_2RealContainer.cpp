@@ -18,6 +18,7 @@
 
 #include "_2RealContainer.h"
 #include "_2RealException.h"
+#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -54,6 +55,66 @@ namespace _2Real
 		return m_Children.size();
 	}
 
+
+	AbstractContainer::IdentifierList Container::setupParams() const
+	{
+		return IdentifierList();
+	}
+
+	AbstractContainer::IdentifierList Container::inputParams() const
+	{
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+			throw Exception::failure();
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			IdentifierList result;
+			AbstractContainer *first = m_Children.front();
+			return first->inputParams();
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			IdentifierList result;
+			for (ChildList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				IdentifierList childParams = (*it)->inputParams();
+				result.splice(result.end(), childParams);
+			}
+
+			return result;
+		}
+
+		throw Exception::failure();
+	}
+
+	AbstractContainer::IdentifierList Container::outputParams() const
+	{
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+			throw Exception::failure();
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			IdentifierList result;
+			AbstractContainer *last = m_Children.back();
+			return last->outputParams();
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			IdentifierList result;
+			for (ChildList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				IdentifierList childParams = (*it)->outputParams();
+				result.splice(result.end(), childParams);
+			}
+
+			return result;
+		}
+
+		throw Exception::failure();
+	}
+
 	Container::ChildList::iterator Container::findChild(unsigned int const& _id)
 	{
 		for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
@@ -79,6 +140,7 @@ namespace _2Real
 		if (it != m_Children.end())
 		{
 			m_Children.erase(it);
+			return;
 		}
 
 		throw Exception::failure();
@@ -86,7 +148,6 @@ namespace _2Real
 
 	AbstractContainer *const Container::getChild(unsigned int const& _id)
 	{
-
 		AbstractContainer *child;
 		
 		ChildList::iterator it = findChild(_id);
@@ -123,7 +184,7 @@ namespace _2Real
 			{
 				m_Children.erase(it);
 				_father->append(child);
-				child->setFather(_father);		
+				child->setFather(_father);
 			}
 			return child;
 		}
@@ -131,6 +192,9 @@ namespace _2Real
 		{
 			for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
+
+				std::cout << (*it)->name() << std::endl;
+
 				if ((*it)->type() != IdentifierImpl::SERVICE)
 				{
 					Container *container = static_cast< Container * >(*it);

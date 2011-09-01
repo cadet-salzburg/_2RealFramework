@@ -194,4 +194,56 @@ namespace _2Real
 		}
 	}
 
+	const Identifier Engine::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	{
+		try
+		{
+			return m_Impl->createSequenceContainer(_name, _idA, _idB, *m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on createSequenceContainer()" << std::endl;
+			throw;
+		}
+	}
+
+	const Identifier Engine::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	{
+		try
+		{
+			return m_Impl->createSynchronizationContainer(_name, _idA, _idB, *m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on createSynchronizationContainer()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any)
+	{
+		try
+		{
+			m_Impl->setParameterValue(_id, _any);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on setParameterValue" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::link(Identifier const& _in, Identifier const& _out)
+	{
+		try
+		{
+			m_Impl->link(_in, _out);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on link" << std::endl;
+			throw;
+		}
+	}
+
 }

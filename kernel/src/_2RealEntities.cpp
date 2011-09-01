@@ -26,7 +26,8 @@
 #include "_2RealServiceImpl.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealContainer.h"
-#include "_2RealServiceParam.h"
+#include "_2RealServiceSlot.h"
+#include "_2RealServiceValue.h"
 
 #include <sstream>
 
@@ -102,6 +103,7 @@ namespace _2Real
 
 		IdentifierImpl *id = new IdentifierImpl(_name, "plugin", info.str(), IdentifierImpl::PLUGIN, m_iCreationCount);
 		Plugin *plugin = new Plugin(_dir, _file, _class, m_Factory, id);
+		m_Entities.insert(NamedEntity(id->id(), plugin));
 		return Entities::ID(Identifier(id), plugin);
 
 	}
@@ -112,6 +114,7 @@ namespace _2Real
 		{
 			IdentifierImpl *id = new IdentifierImpl(_name, "service", "", IdentifierImpl::SERVICE, ++m_iCreationCount);
 			ServiceImpl *service = new ServiceImpl(_service, id);
+			m_Entities.insert(NamedEntity(id->id(), service));
 			return Entities::ID(Identifier(id), service);
 		}
 		catch (...)
@@ -132,20 +135,15 @@ namespace _2Real
 			case IdentifierImpl::SEQUENCE:
 
 				id = new IdentifierImpl(_name, "sequence", "", IdentifierImpl::SEQUENCE, ++m_iCreationCount);
-				container = new Container(id);
-
 				break;
 
 			case IdentifierImpl::SYNCHRONIZATION:
 				
 				id = new IdentifierImpl(_name, "synchronization", "", IdentifierImpl::SYNCHRONIZATION, ++m_iCreationCount);
-				container = new Container(id);
-
 				break;
 
 			case IdentifierImpl::NIRVANA:
 				id = new IdentifierImpl(_name, "nirvana", "", IdentifierImpl::NIRVANA, ++m_iCreationCount);
-				container = new Container(id);
 				break;
 		
 			default:
@@ -154,6 +152,8 @@ namespace _2Real
 
 			}
 
+			container = new Container(id);
+			m_Entities.insert(NamedEntity(id->id(), container));
 			return Entities::ID(Identifier(id), container);
 		}
 		catch (...)
@@ -166,35 +166,31 @@ namespace _2Real
 	{
 		IdentifierImpl *id = new IdentifierImpl(_name, "factory", _plugin->name(), IdentifierImpl::FACTORY, ++m_iCreationCount);
 		FactoryReference *ref = new FactoryReference(_name, _plugin, _creator, _metadata, id);
+		m_Entities.insert(NamedEntity(id->id(), ref));
 		return Entities::ID(Identifier(id), ref);
 	}
 
-	const Entities::ID Entities::createServiceParam(std::string const& _name, ServiceImpl const *const _service, IdentifierImpl::eType const& _type)
+	const Entities::ID Entities::createServiceValue(std::string const& _name, ServiceImpl *const _service)
 	{
-
-		IdentifierImpl *id;
-		switch(_type)
-		{
-
-		case IdentifierImpl::SETUP:
-			id = new IdentifierImpl(_name, "setup", "", IdentifierImpl::SETUP, ++m_iCreationCount);
-			break;
-
-		case IdentifierImpl::INPUT:
-			id = new IdentifierImpl(_name, "input", "", IdentifierImpl::INPUT, ++m_iCreationCount);
-			break;
-
-		case IdentifierImpl::OUTPUT:
-			id = new IdentifierImpl(_name, "output", "", IdentifierImpl::OUTPUT, ++m_iCreationCount);
-			break;
-		
-		default:
-			throw Exception::failure();
-			break;
-		}
-
-		ServiceParam *param = new ServiceParam(id, _service);
-		return Entities::ID(Identifier(id), param);
+		IdentifierImpl *id = new IdentifierImpl(_name, "setup value", "", IdentifierImpl::SETUP, ++m_iCreationCount);
+		ServiceValue *val = new ServiceValue(id, _service);
+		m_Entities.insert(NamedEntity(id->id(), val));
+		return Entities::ID(Identifier(id), val);
 	}
 
+	const Entities::ID Entities::createInputSlot(std::string const& _name, ServiceImpl *const _service)
+	{
+		IdentifierImpl *id = new IdentifierImpl(_name, "input slot", "", IdentifierImpl::INPUT, ++m_iCreationCount);
+		ServiceSlot *slot = new ServiceSlot(id, _service);
+		m_Entities.insert(NamedEntity(id->id(), slot));
+		return Entities::ID(Identifier(id), slot);
+	}
+
+	const Entities::ID Entities::createOutputSlot(std::string const& _name, ServiceImpl *const _service)
+	{
+		IdentifierImpl *id = new IdentifierImpl(_name, "output slot", "", IdentifierImpl::OUTPUT, ++m_iCreationCount);
+		ServiceSlot *slot = new ServiceSlot(id, _service);
+		m_Entities.insert(NamedEntity(id->id(), slot));
+		return Entities::ID(Identifier(id), slot);
+	}
 }

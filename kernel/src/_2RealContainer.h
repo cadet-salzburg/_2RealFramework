@@ -116,6 +116,21 @@ namespace _2Real
 		*/
 		AbstractContainer *const getChild(unsigned int const& _id);
 
+		/**
+		*	
+		*/
+		IdentifierList setupParams() const throw(...);
+
+		/**
+		*	
+		*/
+		IdentifierList inputParams() const throw(...);
+
+		/**
+		*	
+		*/
+		IdentifierList outputParams() const throw(...);
+
 	private:
 
 		/**
@@ -126,7 +141,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		ChildList	m_Children;
+		ChildList						m_Children;
 
 	};
 

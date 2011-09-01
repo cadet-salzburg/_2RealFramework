@@ -41,6 +41,11 @@ namespace _2Real
 		virtual void extractFrom(SharedAny _any) throw(...) = 0;
 
 		/**
+		*
+		*/
+		virtual void extractFrom(Poco::Any const& _any) throw(...) = 0;
+
+		/**
 		*	
 		*/
 		virtual SharedAny getAny() = 0;

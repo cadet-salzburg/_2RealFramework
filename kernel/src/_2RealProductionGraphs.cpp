@@ -22,6 +22,9 @@
 #include "_2RealContainer.h"
 #include "_2RealEntities.h"
 #include "_2RealIdentifier.h"
+#include "_2RealServiceSlot.h"
+#include "_2RealServiceValue.h"
+#include "_2RealServiceImpl.h"
 
 namespace _2Real
 {
@@ -152,6 +155,7 @@ namespace _2Real
 
 			//removes children from their respective superiors
 			//this operation also stops the superior (if != _top)
+			//TODO: also remove all listeners & unlink stuff
 			AbstractContainer *a = top->getChild(_a.id(), top);
 			AbstractContainer *b = top->getChild(_b.id(), top);
 
@@ -168,7 +172,38 @@ namespace _2Real
 			//append also performs insertion
 			seq->append(a);
 			seq->append(b);
-			
+
+			//remove from top
+			top->remove(a->id());
+			top->remove(b->id());
+
+			if (a->father() != seq || b->father() != seq)
+			{
+				throw Exception::failure();
+			}
+
+			//move sequence into top...
+			top->append(seq);
+
+			//now, everything is in place -> autolink children
+			AbstractContainer::IdentifierList output = a->outputParams();
+			AbstractContainer::IdentifierList input = b->inputParams();
+			std::cout << output.size() << " " << input.size() << std::endl;
+			//TODO: perform some checks
+			AbstractContainer::IdentifierList::iterator itIn;
+			AbstractContainer::IdentifierList::iterator itOut;
+			for (itIn = input.begin(), itOut = output.begin(); itIn != input.end(); itIn++, itOut++)
+			{
+				IEntity *in = m_Entities->get(itIn->id());
+				IEntity *out = m_Entities->get(itOut->id());
+				ServiceSlot *inParam = static_cast< ServiceSlot * >(in);
+				ServiceSlot *outParam = static_cast< ServiceSlot * >(out);
+				inParam->listenTo(outParam->id());
+				ServiceImpl *serviceIn = inParam->service();
+				ServiceImpl *serviceOut = outParam->service();
+				serviceOut->addListener(serviceIn);
+			}
+
 			return id.first;
 		}
 		catch (...)
@@ -188,9 +223,11 @@ namespace _2Real
 				throw Exception::failure();
 			}
 			Container *top = it->second;
+			//std::cout << top->childCount() << std::endl;
 
 			//removes children from their respective superiors
 			//this operation also stops the superior (if != _top)
+			//TODO: also remove all listeners & unlink stuff
 			AbstractContainer *a = top->getChild(_a.id(), top);
 			AbstractContainer *b = top->getChild(_b.id(), top);
 
@@ -207,7 +244,17 @@ namespace _2Real
 			//append also performs insertion
 			sync->append(a);
 			sync->append(b);
-			
+
+			top->remove(a->id());
+			top->remove(b->id());
+
+			if (a->father() != sync || b->father() != sync)
+			{
+				throw Exception::failure();
+			}
+
+			top->append(sync);
+
 			return id.first;
 		}
 		catch (...)

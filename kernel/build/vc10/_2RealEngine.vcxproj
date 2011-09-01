@@ -39,6 +39,8 @@
     <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
@@ -72,6 +74,8 @@
     <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceParam.h" />
+    <ClInclude Include="..\..\src\_2RealServiceSlot.h" />
+    <ClInclude Include="..\..\src\_2RealServiceValue.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
@@ -123,6 +127,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>..\..\bin\_2RealFramework_debug.pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

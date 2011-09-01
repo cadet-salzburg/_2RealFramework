@@ -151,6 +151,10 @@ namespace _2Real
 		*/
 		ProductionGraphs											*m_Graphs;
 
+		typedef std::multimap< unsigned int, ServiceImpl * >		ServiceTable;
+
+		typedef std::pair< unsigned int, ServiceImpl * >			NamedService;
+
 	};
 
 }

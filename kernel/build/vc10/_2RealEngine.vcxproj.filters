@@ -73,11 +73,17 @@
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <Filter>Plugin Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp">
       <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceSlot.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
+      <Filter>Plugin Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceValue.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +179,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
       <Filter>Plugin Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceSlot.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceValue.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "Poco/Any.h"
 #include "Poco/Mutex.h"
 
 namespace _2Real
@@ -127,6 +128,26 @@ namespace _2Real
 		*
 		*/
 		Identifiers getOutputSlots(Identifier const& _id) const throw(...);
+
+		/**
+		*	
+		*/
+		const Identifier createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top) throw(...);
+
+		/**
+		*	
+		*/
+		const Identifier createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		void setParameterValue(Identifier const& _id, Poco::Any _any) throw(...);
+
+		/**
+		*
+		*/
+		void link(Identifier const& _in, Identifier const& _out) throw(...);
 
 	private:
 

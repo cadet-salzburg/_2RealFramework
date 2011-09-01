@@ -40,6 +40,11 @@ namespace _2Real
 		void extractFrom(AbstractRef::SharedAny _any) throw(...);
 
 		/**
+		*
+		*/
+		void extractFrom(Poco::Any const& _any) throw(...);
+
+		/**
 		*	create copy of value, transform into any pointer
 		*/
 		SharedAny getAny();

@@ -227,7 +227,7 @@ namespace _2Real
 									NamedNodeMap* classAttribs = param->attributes();
 									Node* paramname = classAttribs->getNamedItem("name");
 									Node* paramtype = classAttribs->getNamedItem("type");
-									meta.addInputParam(paramname->nodeValue(), paramtype->nodeValue());
+									meta.addOutputParam(paramname->nodeValue(), paramtype->nodeValue());
 
 #ifdef _DEBUG
 	std::cout << "service has output param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;

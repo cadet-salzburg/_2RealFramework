@@ -39,6 +39,11 @@ namespace _2Real
 	public:
 
 		/**
+		*	
+		*/
+		typedef std::list< Identifier > IdentifierList;
+
+		/**
 		*	thou shall createth
 		*/
 		AbstractContainer(IdentifierImpl *const _id);
@@ -107,6 +112,21 @@ namespace _2Real
 		*	sets father, throws exception if father is null
 		*/
 		void setFather(AbstractContainer *const _father) throw(...);
+
+		/**
+		*	
+		*/
+		virtual IdentifierList setupParams() const throw(...) = 0;
+
+		/**
+		*	
+		*/
+		virtual IdentifierList inputParams() const throw(...) = 0;
+
+		/**
+		*	
+		*/
+		virtual IdentifierList outputParams() const throw(...) = 0;
 
 	protected:
 

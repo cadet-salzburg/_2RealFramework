@@ -63,6 +63,22 @@ namespace _2Real
 	}
 
 	template< typename T >
+	void ParamRef< T >::extractFrom(Poco::Any const& _any)
+	{
+		try
+		{
+			std::cout << "extracting" << std::endl;
+			T copy = Poco::AnyCast< T >(_any);
+			m_Value = copy;
+		}
+		catch (...)
+		{
+			std::cout << "badcast" << std::endl;
+			throw Exception::failure();
+		}
+	}
+
+	template< typename T >
 	AbstractRef::SharedAny ParamRef< T >::getAny()
 	{
 		T copy(m_Value);

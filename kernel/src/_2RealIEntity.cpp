@@ -84,6 +84,7 @@ namespace _2Real
 		if (m_ID != NULL)
 		{
 			m_ID->setInfo(_info);
+			return;
 		}
 
 		throw Exception::failure();

@@ -17,7 +17,8 @@
 */
 
 #include "_2RealServiceFactory.h"
-#include "_2RealServiceParam.h"
+#include "_2RealServiceSlot.h"
+#include "_2RealServiceValue.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
@@ -85,6 +86,8 @@ namespace _2Real
 			const Entities::ID id = m_Entities->createFactoryRef(_name, _plugin, _creator, _metadata);
 			FactoryReference *factory = static_cast< FactoryReference * >(id.second);
 			ServiceList *services = new ServiceList();
+			//!
+			services->push_back(NULL);
 			ServiceReference ref(factory, services);
 			m_References.insert(NamedServiceReference(factory->id(), ref));
 			return id.first;
@@ -154,14 +157,23 @@ namespace _2Real
 			FactoryReference *factory = it->second.first;
 			ServiceList *services = it->second.second;
 
+			if (services == NULL || factory == NULL)
+			{
+				throw Exception::failure();
+			}
+
 			//service does not get identifier
 			IService *userService = factory->create();
+
+			if (userService == NULL)
+			{
+				throw Exception::failure();
+			}
 
 			//service container id shares name of service
 			const Entities::ID id = m_Entities->createService(_name, userService);
 			ServiceImpl *service = static_cast< ServiceImpl * >(id.second);
 			Identifier i = id.first;
-			std::cout << i.name() << std::endl;
 
 			//this is the services metadata
 			const ServiceMetadata data = factory->metadata();
@@ -174,30 +186,36 @@ namespace _2Real
 
 			for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createServiceValue(*it, service);
+				ServiceValue *p = static_cast< ServiceValue* >(i.second);
+				service->addValue(i.first, p);
 				//save setup param
 				_setupIDs.push_back(i.first);
 			}
 
 			for (ParamList::iterator it = input.begin(); it != input.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createInputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
+				service->addSlot(i.first, p);
 			}
 
 			for (ParamList::iterator it = output.begin(); it != output.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createOutputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
+				service->addSlot(i.first, p);
 			}
+
+			//add service to nirvanas children
+			IEntity *e = m_Entities->get(_top.id());
+			Container *top = static_cast< Container * >(e);
+			top->append(service);
 
 			//save container id
 			services->push_back(service);
 
+			//done
 			return id.first;
 		}
 		catch (...)
@@ -208,7 +226,6 @@ namespace _2Real
 
 	const Identifier ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top)
 	{
-		//std::cout << _id << " " << _service << std::endl;
 		try
 		{
 			//check if _top is valid
@@ -218,8 +235,8 @@ namespace _2Real
 			}
 
 			//find factory ref & service list
-			FactoryReference *factory;
-			ServiceList *services;
+			FactoryReference *factory = NULL;
+			ServiceList *services = NULL;
 			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
 				factory = it->second.first;
@@ -230,8 +247,19 @@ namespace _2Real
 				}
 			}
 
+			if (services == NULL || factory == NULL)
+			{
+				std::cout << "FACTORY: NOTEXISTANT REF! " << _service << " " << _id << std::endl;
+				throw Exception::failure();
+			}
+
 			//service does not get identifier
 			IService *userService = factory->create();
+
+			if (userService == NULL)
+			{
+				throw Exception::failure();
+			}
 
 			//service container id shares name of service
 			const Entities::ID id = m_Entities->createService(_name, userService);
@@ -248,26 +276,31 @@ namespace _2Real
 
 			for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createServiceValue(*it, service);
+				ServiceValue *p = static_cast< ServiceValue* >(i.second);
+				service->addValue(i.first, p);
 				//save setup param
 				_setupIDs.push_back(i.first);
 			}
 
 			for (ParamList::iterator it = input.begin(); it != input.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createInputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
+				service->addSlot(i.first, p);
 			}
 
 			for (ParamList::iterator it = output.begin(); it != output.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceParam(*it, service, IdentifierImpl::SETUP);
-				ServiceParam *p = static_cast< ServiceParam * >(i.second);
-				service->addParam(p);
+				const Entities::ID i = m_Entities->createOutputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
+				service->addSlot(i.first, p);
 			}
+
+			//add service to nirvanas children
+			IEntity *e = m_Entities->get(_top.id());
+			Container *top = static_cast< Container * >(e);
+			top->append(service);
 
 			//save container id
 			services->push_back(service);

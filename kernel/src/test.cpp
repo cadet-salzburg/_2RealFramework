@@ -29,6 +29,10 @@ using namespace _2Real;
 
 std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 
+/**
+*	querying every little shit is kinda unnecessary
+*	but i'm doing it anyway
+*/
 void main(int argc, char** argv)
 {
 
@@ -71,7 +75,7 @@ void main(int argc, char** argv)
 	Identifier rand1 = testEngine.createService("random image service 1", plugin, "RandomImage2D_float", setupIDs1);
 
 	std::cout << "created service: " << rand1.name() << std::endl;
-	std::cout << rand1.info() << std::endl;
+	//std::cout << rand1.info() << std::endl;
 	for (Identifiers::iterator it = setupIDs1.begin(); it != setupIDs1.end(); it++)
 	{
 		std::cout << "returned setup param: " << it->name() << std::endl;
@@ -80,28 +84,131 @@ void main(int argc, char** argv)
 	/**
 	*	get input params
 	*/
-	//std::list< Identifier > inputIDs1 = testEngine.getInputSlots(rand1);
-	//for (Identifiers::iterator it = setupIDs1.begin(); it != setupIDs1.end(); it++)
-	//{
-	//	std::cout << "returned input param: " << it->name() << std::endl;
-	//}
+	std::list< Identifier > inputIDs1 = testEngine.getInputSlots(rand1);
+	for (Identifiers::iterator it = inputIDs1.begin(); it != inputIDs1.end(); it++)
+	{
+		std::cout << "returned input param: " << it->name() << std::endl;
+	}
 
 	/**
 	*	get output params
 	*/
-	//std::list< Identifier > outputIDs1 = testEngine.getOutputSlots(rand1);
-	//for (Identifiers::iterator it = setupIDs1.begin(); it != setupIDs1.end(); it++)
-	//{
-	//	std::cout << "returned output param: " << it->name() << std::endl;
-	//}
+	std::list< Identifier > outputIDs1 = testEngine.getOutputSlots(rand1);
+	for (Identifiers::iterator it = outputIDs1.begin(); it != outputIDs1.end(); it++)
+	{
+		std::cout << "returned output param: " << it->name() << std::endl;
+	}
+
+	std::cout << std::endl;
 
 	/**
 	*	create second service
 	*/
-	//std::list< Identifier > setupIDs2;
-	//Identifier rand2 = testEngine.createService("random image service 2", plugin, "RandomImage_float", setupIDs1);
-	//std::list< Identifier > inputIDs2 = testEngine.getInputSlots(rand2);
-	//std::list< Identifier > outputIDs2 = testEngine.getOutputSlots(rand2);
+	std::list< Identifier > setupIDs2;
+	Identifier rand2 = testEngine.createService("random image service 2", plugin, "RandomImage2D_float", setupIDs2);
+	std::cout << "created service: " << rand2.name() << std::endl;
+	//std::cout << rand2.info() << std::endl;
+	for (Identifiers::iterator it = setupIDs2.begin(); it != setupIDs2.end(); it++)
+	{
+		std::cout << "returned setup param: " << it->name() << std::endl;
+	}
+	std::list< Identifier > inputIDs2 = testEngine.getInputSlots(rand2);
+	std::list< Identifier > outputIDs2 = testEngine.getOutputSlots(rand2);
+	for (Identifiers::iterator it = inputIDs2.begin(); it != inputIDs2.end(); it++)
+	{
+		std::cout << "returned input param: " << it->name() << std::endl;
+	}
+	for (Identifiers::iterator it = outputIDs2.begin(); it != outputIDs2.end(); it++)
+	{
+		std::cout << "returned output param: " << it->name() << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	/**
+	*	create third service
+	*/
+	std::list< Identifier > setupIDs3;
+	Identifier add = testEngine.createService("addition service", plugin, "ImageAddition2D_float", setupIDs3);
+	std::cout << "created service: " << add.name() << std::endl;
+	//std::cout << add.info() << std::endl;
+	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
+	{
+		std::cout << "returned setup param: " << it->name() << std::endl;
+	}
+	std::list< Identifier > inputIDs3 = testEngine.getInputSlots(add);
+	std::list< Identifier > outputIDs3 = testEngine.getOutputSlots(add);
+	for (Identifiers::iterator it = inputIDs3.begin(); it != inputIDs3.end(); it++)
+	{
+		std::cout << "returned input param: " << it->name() << std::endl;
+	}
+	for (Identifiers::iterator it = outputIDs3.begin(); it != outputIDs3.end(); it++)
+	{
+		std::cout << "returned output param: " << it->name() << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	/**
+	*	synchronize rand1 & rand2
+	*/
+	Identifier sync = testEngine.createSynchronizationContainer("man this really stinks", rand1, rand2);
+	std::cout << "created syncronization " << sync.name() << std::endl;
+
+	/**
+	*	query output params & input params
+	*	input params should be empty (rand img has no input)
+	*/
+	std::list< Identifier > inputIDs4 = testEngine.getInputSlots(sync);
+	std::list< Identifier > outputIDs4 = testEngine.getOutputSlots(sync);
+	for (Identifiers::iterator it = inputIDs4.begin(); it != inputIDs4.end(); it++)
+	{
+		std::cout << "returned input param: " << it->name() << std::endl;
+	}
+	for (Identifiers::iterator it = outputIDs4.begin(); it != outputIDs4.end(); it++)
+	{
+		std::cout << "returned output param: " << it->name() << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	/**
+	*	create sequence of sync & add
+	*/
+	Identifier seq = testEngine.createSequenceContainer("yay, my life sucks less than this program", sync, add);
+	std::cout << "created sequence " << seq.name() << std::endl;
+
+	/**
+	*	query input & output params
+	*	the input params are empty, obviously
+	*	('sync' is first in sequence, and has no input)
+	*	the output params are the output params of 'add'
+	*	!!!
+	*	also, creating a sequence will link input / output slots!
+	*	(and throw an exception if it does not work, i.e. b/c the slots do not match)
+	*/
+	std::list< Identifier > inputIDs5 = testEngine.getInputSlots(seq);
+	std::list< Identifier > outputIDs5 = testEngine.getOutputSlots(seq);
+	for (Identifiers::iterator it = inputIDs5.begin(); it != inputIDs5.end(); it++)
+	{
+		std::cout << "returned input param: " << it->name() << std::endl;
+	}
+	for (Identifiers::iterator it = outputIDs5.begin(); it != outputIDs5.end(); it++)
+	{
+		std::cout << "returned output param: " << it->name() << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	/**
+	*	initialize add
+	*/
+	//TODO: change identifiers from list to vector so that they can be accessed by []
+	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
+	{
+		std::cout << it->name() << std::endl;
+		testEngine.setParameterValue(*it, 1.0f);
+	}
 
 	Sleep(100000);
 

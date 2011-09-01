@@ -136,6 +136,37 @@ namespace _2Real
 		const Identifier createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs) throw(...);
 
 		/**
+		*	returns identifiers of all output slots of an entity
+		*
+		*	returns a vector of all output slots of a sequence, synchronization or service
+		*	in case of a sequence, will be identical to the output of the last child. in case
+		*	of a service, will be identical to the output variables specified in the metadata.
+		*	in case of a synchronization, will be the combined output of all its children.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@return:				ids of output slots
+		*/
+		Identifiers getOutputSlots(Identifier const& _id) throw(...);
+
+		/**
+		*	returns identifiers of all input slots of an entity
+		*
+		*	returns a vector of all input slots of a sequence, synchronization or simply a
+		*	service. in case of a sequence, will be identical to the input of the first
+		*	child. in case of a service, will be identical to the input variables specified in
+		*	the metadata (might be none). in case of a synchronization, will be the
+		*	combined input of all its children.
+		*
+		*	possible exceptions:	invalid id
+		*
+		*	@param _id:				identifier of either: sequence, synchronization or service
+		*	@return:				ids of input slots
+		*/
+		Identifiers getInputSlots(Identifier const& _id) throw(...);
+
+		/**
 		*	creates a sequence of entities
 		*
 		*	two entities being in a sequence guarantees that the first one will be updated
@@ -189,6 +220,38 @@ namespace _2Real
 		*	@return:				the synchronization's unique identifier
 		*/
 		const Identifier createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB) throw(...);
+
+		/**
+		*	links an input slot with an output slot
+		*
+		*	@param _in:				identifier of input variable
+		*	@param _out:			identifier of output variable
+		*/
+		void link(Identifier const& _in, Identifier const& _out) throw(...);
+
+		/**
+		*	initializes a service's setup parameter
+		*
+		*	possible exceptions:	invalid id
+		*							types do not match
+		*							service is already configured, reconfiguration not allowed
+		*
+		*	@param _id:				identifier of a setup parameter
+		*	@param _value:			the value
+		*/
+		template< typename T >
+		void setParameterValue(Identifier const& _id, T const& _value) throw(...)
+		{
+			try
+			{
+				Poco::Any any(_value);
+				setParameterValue(_id, any);
+			}
+			catch (...)
+			{
+				throw;
+			}
+		}
 
 		/**
 		*	returns the ids of an entity's children
@@ -281,68 +344,6 @@ namespace _2Real
 		*	open questions:			spaghetti monster, help me. rAmen.
 		*/
 		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src) throw(...);
-
-		/**
-		*	returns identifiers of all output slots of an entity
-		*
-		*	returns a vector of all output slots of a sequence, synchronization or service
-		*	in case of a sequence, will be identical to the output of the last child. in case
-		*	of a service, will be identical to the output variables specified in the metadata.
-		*	in case of a synchronization, will be the combined output of all its children.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param _id:				identifier of either: sequence, synchronization or service
-		*	@return:				ids of output slots
-		*/
-		Identifiers getOutputSlots(Identifier const& _id) throw(...);
-
-		/**
-		*	returns identifiers of all input slots of an entity
-		*
-		*	returns a vector of all input slots of a sequence, synchronization or simply a
-		*	service. in case of a sequence, will be identical to the input of the first
-		*	child. in case of a service, will be identical to the input variables specified in
-		*	the metadata (might be none). in case of a synchronization, will be the
-		*	combined input of all its children.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param _id:				identifier of either: sequence, synchronization or service
-		*	@return:				ids of input slots
-		*/
-		Identifiers getInputSlots(Identifier const& _id) throw(...);
-
-		/**
-		*	links an input slot with an output slot
-		*
-		*	@param _in:				identifier of input variable
-		*	@param _out:			identifier of output variable
-		*/
-		void link(Identifier const& _in, Identifier const& _out) throw(...);
-
-		/**
-		*	initializes a service's setup parameter
-		*
-		*	possible exceptions:	invalid id
-		*							types do not match
-		*							service is already configured, reconfiguration not allowed
-		*
-		*	@param _id:				identifier of a setup parameter
-		*	@param _value:			the value
-		*/
-		template< typename T >
-		void setParameterValue(Identifier const& _id, T const& _value) throw(...)
-		{
-			try
-			{
-				Poco::Any any(_value);
-			}
-			catch (...)
-			{
-				throw;
-			}
-		}
 
 		/**
 		*	registers callback for an exception

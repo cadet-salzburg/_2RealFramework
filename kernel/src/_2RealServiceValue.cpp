@@ -16,42 +16,46 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceParam.h"
+#include "_2RealServiceValue.h"
 #include "_2RealException.h"
 #include "_2RealAbstractRef.h"
 
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceImpl *const _service) :
-		IEntity(_id),
-		m_Service(_service),
-		m_bIsInitialized(false)
+	ServiceValue::ServiceValue(IdentifierImpl *const _id, ServiceImpl *const _service) :
+		ServiceParam(_id, _service)
 	{
 	}
 
-	ServiceParam::ServiceParam(ServiceParam const& _src) : IEntity(_src)
+	ServiceValue::ServiceValue(ServiceValue const& _src) : ServiceParam(_src)
 	{
 		throw Exception::noCopy();
 	}
 
-	ServiceParam& ServiceParam::operator=(ServiceParam const& _src)
+	ServiceValue& ServiceValue::operator=(ServiceValue const& _src)
 	{
 		throw Exception::noCopy();
 	}
 
-	ServiceParam::~ServiceParam()
+	ServiceValue::~ServiceValue()
 	{
 	}
 
-	ServiceImpl *const ServiceParam::service()
+	void ServiceValue::setValue(Poco::Any const& _any)
 	{
-		return m_Service;
+		m_bIsInitialized = true;
+		m_Value = _any;
 	}
 
-	bool const& ServiceParam::isInitialized() const
+	Poco::Any const& ServiceValue::value() const
 	{
-		return m_bIsInitialized;
+		if (!m_bIsInitialized)
+		{
+			throw Exception::failure();
+		}
+
+		return m_Value;
 	}
 
 }
