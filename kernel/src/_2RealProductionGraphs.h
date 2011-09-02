@@ -33,7 +33,6 @@ namespace _2Real
 	class ServiceFactory;
 	class Entities;
 	class Container;
-	class Identifier;
 
 	class ProductionGraphs
 	{
@@ -69,27 +68,27 @@ namespace _2Real
 		/**
 		*	create sequence; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top) throw(...);
+		const unsigned int createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top) throw(...);
 
 		/**
 		*	create sync; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
-		const Identifier createSynchronization(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top) throw(...);
+		const unsigned int createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top) throw(...);
 
 		/**
 		*	creates nirvana. if only it was that simple in real life ;)
 		*/
-		const Identifier createNirvana(std::string const& _name);
+		const unsigned int createNirvana(std::string const& _name);
 
 		/**
 		*	destroys a container, stops it's superior
 		*/
-		void destroy(Identifier const& _id, Identifier const& _top) throw(...);
+		void destroy(unsigned int const& _id, unsigned int const& _top) throw(...);
 
 		/**
 		*
 		*/
-		const bool isNirvana(Identifier const& _id);
+		const bool isNirvana(unsigned int const& _id);
 
 	private:
 

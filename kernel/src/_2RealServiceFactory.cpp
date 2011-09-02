@@ -23,7 +23,6 @@
 #include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
 #include "_2RealServiceImpl.h"
-#include "_2RealIdentifier.h"
 #include "_2RealEntities.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealContainer.h"
@@ -69,7 +68,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator)
+	const unsigned int ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator)
 	{
 		try
 		{
@@ -137,7 +136,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const Identifier ServiceFactory::createService(std::string const& _name, unsigned int const& _id, Identifiers &_setupIDs, Identifier const& _top)
+	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > _ids, unsigned int const& _top)
 	{
 		try
 		{
@@ -173,7 +172,7 @@ namespace _2Real
 			//service container id shares name of service
 			const Entities::ID id = m_Entities->createService(_name, userService);
 			ServiceImpl *service = static_cast< ServiceImpl * >(id.second);
-			Identifier i = id.first;
+			unsigned int serviceID = id.first;
 
 			//this is the services metadata
 			const ServiceMetadata data = factory->metadata();
@@ -186,29 +185,29 @@ namespace _2Real
 
 			for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceValue(*it, service);
-				ServiceValue *p = static_cast< ServiceValue* >(i.second);
-				service->addValue(i.first, p);
+				const Entities::ID e = m_Entities->createServiceValue(*it, service);
+				ServiceValue *p = static_cast< ServiceValue* >(e.second);
+				service->addValue(e.first, p);
 				//save setup param
-				_setupIDs.push_back(i.first);
+				_ids.push_back(e.first);
 			}
 
 			for (ParamList::iterator it = input.begin(); it != input.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createInputSlot(*it, service);
-				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
-				service->addSlot(i.first, p);
+				const Entities::ID e = m_Entities->createInputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(e.second);
+				service->addSlot(e.first, p);
 			}
 
 			for (ParamList::iterator it = output.begin(); it != output.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createOutputSlot(*it, service);
-				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
-				service->addSlot(i.first, p);
+				const Entities::ID e = m_Entities->createOutputSlot(*it, service);
+				ServiceSlot *p = static_cast< ServiceSlot * >(e.second);
+				service->addSlot(e.first, p);
 			}
 
 			//add service to nirvanas children
-			IEntity *e = m_Entities->get(_top.id());
+			IEntity *e = m_Entities->get(_top);
 			Container *top = static_cast< Container * >(e);
 			top->append(service);
 
@@ -216,7 +215,7 @@ namespace _2Real
 			services->push_back(service);
 
 			//done
-			return id.first;
+			return serviceID;
 		}
 		catch (...)
 		{
@@ -224,7 +223,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top)
+	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > _ids, unsigned int const& _top)
 	{
 		try
 		{
@@ -280,7 +279,7 @@ namespace _2Real
 				ServiceValue *p = static_cast< ServiceValue* >(i.second);
 				service->addValue(i.first, p);
 				//save setup param
-				_setupIDs.push_back(i.first);
+				_ids.push_back(i.first);
 			}
 
 			for (ParamList::iterator it = input.begin(); it != input.end(); it++)
@@ -298,7 +297,7 @@ namespace _2Real
 			}
 
 			//add service to nirvanas children
-			IEntity *e = m_Entities->get(_top.id());
+			IEntity *e = m_Entities->get(_top);
 			Container *top = static_cast< Container * >(e);
 			top->append(service);
 

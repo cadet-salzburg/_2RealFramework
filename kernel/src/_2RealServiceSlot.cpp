@@ -26,7 +26,7 @@ namespace _2Real
 	ServiceSlot::ServiceSlot(IdentifierImpl *const _id, ServiceImpl *const _service) :
 		ServiceParam(_id, _service),
 		m_Value(NULL),
-		m_SenderID(0),
+		m_Linked(NULL),
 		m_bIsLinked(false)
 	{
 	}
@@ -46,9 +46,9 @@ namespace _2Real
 		delete m_Value;
 	}
 
-	unsigned int const& ServiceSlot::senderID() const
+	ServiceSlot *const ServiceSlot::linked()
 	{
-		return m_SenderID;
+		return m_Linked;
 	}
 
 	void ServiceSlot::setValue(AbstractRef *const _val)
@@ -57,10 +57,10 @@ namespace _2Real
 		m_Value = _val;
 	}
 
-	void ServiceSlot::listenTo(unsigned int const& _id)
+	void ServiceSlot::linkWith(ServiceSlot *const _link)
 	{
 		m_bIsLinked = true;
-		m_SenderID = _id;
+		m_Linked = _link;
 	}
 
 	void ServiceSlot::extractFrom(ServiceSlot::SharedAny const& _any)
@@ -81,6 +81,12 @@ namespace _2Real
 		}
 
 		return ServiceSlot::NamedAny(id(), m_Value->getAny());
+	}
+
+	void ServiceSlot::reset()
+	{
+		m_bIsLinked = false;
+		m_Linked = NULL;
 	}
 
 }

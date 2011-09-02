@@ -21,7 +21,6 @@
 #include "_2RealException.h"
 #include "_2RealContainer.h"
 #include "_2RealEntities.h"
-#include "_2RealIdentifier.h"
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
 #include "_2RealServiceImpl.h"
@@ -66,12 +65,11 @@ namespace _2Real
 		m_Containers.clear();
 	}
 
-	void ProductionGraphs::destroy(Identifier const& _id, Identifier const& _top)
+	void ProductionGraphs::destroy(unsigned int const& _id, unsigned int const& _top)
 	{
 		try
 		{
-			unsigned int id = _id.id();
-			IEntity *entity = m_Entities->get(id);
+			IEntity *entity = m_Entities->get(_id);
 			IdentifierImpl::eType type = entity->type();
 			
 			if (type != IdentifierImpl::SEQUENCE && type != IdentifierImpl::SYNCHRONIZATION && type != IdentifierImpl::NIRVANA)
@@ -80,7 +78,7 @@ namespace _2Real
 			}
 			else if (type == IdentifierImpl::NIRVANA)
 			{
-				ContainerMap::iterator it = m_Containers.find(id);
+				ContainerMap::iterator it = m_Containers.find(_id);
 				if (it == m_Containers.end())
 				{
 					throw Exception::failure();
@@ -93,18 +91,14 @@ namespace _2Real
 			else
 			{
 				//_top must be in container map
-				ContainerMap::iterator it = m_Containers.find(_top.id());
+				ContainerMap::iterator it = m_Containers.find(_top);
 				if (it == m_Containers.end())
 				{
 					throw Exception::failure();
 				}
 				Container *top = it->second;
 
-				//this moves child to top & stops former superior
-				AbstractContainer *a = top->getChild(_id.id(), top);
-				//cut child out of it's tree structure completely
-				top->remove(a->id());
-				//destroy child
+				AbstractContainer *a = top->getChild(_id);
 				m_Entities->destroy(it->first);
 			}
 		}
@@ -113,9 +107,9 @@ namespace _2Real
 		}
 	}
 
-	const bool ProductionGraphs::isNirvana(Identifier const& _id)
+	const bool ProductionGraphs::isNirvana(unsigned int const& _id)
 	{
-		ContainerMap::iterator it = m_Containers.find(_id.id());
+		ContainerMap::iterator it = m_Containers.find(_id);
 		if (it == m_Containers.end())
 		{
 			return false;
@@ -124,7 +118,7 @@ namespace _2Real
 		return true;
 	}
 
-	const Identifier ProductionGraphs::createNirvana(std::string const& _name)
+	const unsigned int ProductionGraphs::createNirvana(std::string const& _name)
 	{
 		try
 		{
@@ -141,23 +135,24 @@ namespace _2Real
 		}
 	}
 
-	const Identifier ProductionGraphs::createSequence(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top)
+	const unsigned int ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	{
 		try
 		{
 			//_top must be in container map 
-			ContainerMap::iterator it = m_Containers.find(_top.id());
+			ContainerMap::iterator it = m_Containers.find(_top);
 			if (it == m_Containers.end())
 			{
 				throw Exception::failure();
 			}
 			Container *top = it->second;
 
-			//removes children from their respective superiors
-			//this operation also stops the superior (if != _top)
-			//TODO: also remove all listeners & unlink stuff
-			AbstractContainer *a = top->getChild(_a.id(), top);
-			AbstractContainer *b = top->getChild(_b.id(), top);
+			//find children
+			//after this op, the children's former root will be stopped
+			//their father will be NULL
+			//all IO connections will have been broken
+			AbstractContainer *a = top->getChild(_a);
+			AbstractContainer *b = top->getChild(_b);
 
 			//both containers should exist, i guess (:
 			if (a == NULL || b == NULL)
@@ -165,44 +160,37 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
-			//request container creation
+			//request container creation -returns entity*
 			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SEQUENCE);
-			//entities returns entity*
 			Container *seq = static_cast< Container * >(id.second);
-			//append also performs insertion
+			
+			//add containers to newly created sequence
 			seq->append(a);
 			seq->append(b);
 
-			//remove from top
-			top->remove(a->id());
-			top->remove(b->id());
-
-			if (a->father() != seq || b->father() != seq)
-			{
-				throw Exception::failure();
-			}
-
-			//move sequence into top...
-			top->append(seq);
-
 			//now, everything is in place -> autolink children
+			//TODO: perform some checks
+			//like, if the params even match in number and type etc
 			AbstractContainer::IdentifierList output = a->outputParams();
 			AbstractContainer::IdentifierList input = b->inputParams();
-			std::cout << output.size() << " " << input.size() << std::endl;
-			//TODO: perform some checks
 			AbstractContainer::IdentifierList::iterator itIn;
 			AbstractContainer::IdentifierList::iterator itOut;
-			for (itIn = input.begin(), itOut = output.begin(); itIn != input.end(); itIn++, itOut++)
+			for (itIn = input.begin(), itOut = output.begin(); itIn != input.end(), itOut != output.end(); itIn++, itOut++)
 			{
-				IEntity *in = m_Entities->get(itIn->id());
-				IEntity *out = m_Entities->get(itOut->id());
+				IEntity *in = m_Entities->get(*itIn);
+				IEntity *out = m_Entities->get(*itOut);
 				ServiceSlot *inParam = static_cast< ServiceSlot * >(in);
 				ServiceSlot *outParam = static_cast< ServiceSlot * >(out);
-				inParam->listenTo(outParam->id());
+				inParam->linkWith(outParam);
+				outParam->linkWith(inParam);
 				ServiceImpl *serviceIn = inParam->service();
 				ServiceImpl *serviceOut = outParam->service();
 				serviceOut->addListener(serviceIn);
+				serviceIn->listenTo(serviceOut);
 			}
+
+			//finally, move sequence into nirvana
+			top->append(seq);
 
 			return id.first;
 		}
@@ -212,47 +200,43 @@ namespace _2Real
 		}
 	}
 
-	const Identifier ProductionGraphs::createSynchronization(std::string const& _name, Identifier const& _a, Identifier const& _b, Identifier const& _top)
+	const unsigned int ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	{
 		try
 		{
 			//_top must be in container map 
-			ContainerMap::iterator it = m_Containers.find(_top.id());
+			ContainerMap::iterator it = m_Containers.find(_top);
 			if (it == m_Containers.end())
 			{
 				throw Exception::failure();
 			}
+
 			Container *top = it->second;
-			//std::cout << top->childCount() << std::endl;
 
-			//removes children from their respective superiors
-			//this operation also stops the superior (if != _top)
-			//TODO: also remove all listeners & unlink stuff
-			AbstractContainer *a = top->getChild(_a.id(), top);
-			AbstractContainer *b = top->getChild(_b.id(), top);
+			//find children
+			//after this op, the children's former root will be stopped
+			//their father will be NULL
+			//all IO connections will have been broken
+			AbstractContainer *a = top->getChild(_a);
+			AbstractContainer *b = top->getChild(_b);
 
-			//both containers should exist, i guess (:
+			////both containers should exist, i guess (:
 			if (a == NULL || b == NULL)
 			{
 				throw Exception::failure();
 			}
 
-			//request container creation
+			//request container creation -returns entity*
 			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SYNCHRONIZATION);
-			//entities returns entity*
 			Container *sync = static_cast< Container * >(id.second);
-			//append also performs insertion
+
+			//add to containers to newly created synchronization
 			sync->append(a);
 			sync->append(b);
 
-			top->remove(a->id());
-			top->remove(b->id());
+			//in a sync, no internal linking of slots takes place
 
-			if (a->father() != sync || b->father() != sync)
-			{
-				throw Exception::failure();
-			}
-
+			//finally, move sync into nirvana
 			top->append(sync);
 
 			return id.first;

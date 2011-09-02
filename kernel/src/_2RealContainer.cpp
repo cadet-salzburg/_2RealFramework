@@ -18,7 +18,6 @@
 
 #include "_2RealContainer.h"
 #include "_2RealException.h"
-#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -76,7 +75,7 @@ namespace _2Real
 		else if (type() == IdentifierImpl::SYNCHRONIZATION)
 		{
 			IdentifierList result;
-			for (ChildList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
 				IdentifierList childParams = (*it)->inputParams();
 				result.splice(result.end(), childParams);
@@ -103,7 +102,7 @@ namespace _2Real
 		else if (type() == IdentifierImpl::SYNCHRONIZATION)
 		{
 			IdentifierList result;
-			for (ChildList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
 				IdentifierList childParams = (*it)->outputParams();
 				result.splice(result.end(), childParams);
@@ -115,9 +114,9 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	Container::ChildList::iterator Container::findChild(unsigned int const& _id)
+	AbstractContainer::ContainerList::iterator Container::findChild(unsigned int const& _id)
 	{
-		for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
 			if ((*it)->id() == _id)
 			{
@@ -130,35 +129,137 @@ namespace _2Real
 
 	void Container::append(AbstractContainer *const _child)
 	{
+		AbstractContainer *last = NULL;
+		if (!m_Children.empty())
+		{
+			last = m_Children.back();
+		}
+
 		m_Children.push_back(_child);
 		_child->setFather(this);
+
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			//add listener
+			_child->addListener(this);
+			listenTo(_child);
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			if (last != NULL)
+			{
+				//listen to the new last element
+				last->removeListener(this);
+				stopListeningTo(last);
+			}
+
+			_child->addListener(this);
+			listenTo(_child);
+		}
 	}
 
 	void Container::remove(unsigned int const& _id)
 	{
-		ChildList::iterator it = findChild(_id);
-		if (it != m_Children.end())
+		AbstractContainer::ContainerList::iterator it = findChild(_id);
+		if (it == m_Children.end())
 		{
-			m_Children.erase(it);
-			return;
+			throw Exception::failure();
 		}
 
-		throw Exception::failure();
+		AbstractContainer *child = *it;
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+			//simply erase
+			m_Children.erase(it);
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			//stop superior
+			this->root()->stop();
+
+			child->setFather(NULL);
+			child->resetIO();
+
+			//erase from children
+			m_Children.erase(it);
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			//stop superior
+			 this->root()->stop();
+
+			 child->setFather(NULL);
+			 child->resetIO();
+
+			//check if this was the last child in sequence
+			if (child == m_Children.back())
+			{
+				//delete from children
+				m_Children.erase(it);
+				
+				AbstractContainer *last = m_Children.back();
+				if (last != NULL)
+				{
+					//listen to the new last child
+					last->addListener(this);
+					listenTo(last);
+				}
+			}
+			else
+			{
+				//delete from children
+				m_Children.erase(it);
+			}
+		}
+	}
+
+	AbstractContainer *const Container::root()
+	{
+		try
+		{
+			if (m_Father->type() == IdentifierImpl::NIRVANA)
+			{
+				return this;
+			}
+			else if (m_Father->type() == IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+			else if (m_Father == NULL)
+			{
+				throw Exception::failure();
+			}
+			else 
+			{
+				Container *father = static_cast< Container * >(m_Father);
+				return father->root();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
 	AbstractContainer *const Container::getChild(unsigned int const& _id)
 	{
 		AbstractContainer *child;
-		
-		ChildList::iterator it = findChild(_id);
+		AbstractContainer::ContainerList::iterator it = findChild(_id);
 		if (it != m_Children.end())
 		{
-			return *it;
+			child = *it;
+			remove(child->id());
+			return child;
 		}
 		else
 		{
-			for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			//search children
+			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
+				//only containers have children
 				if ((*it)->type() != IdentifierImpl::SERVICE)
 				{
 					Container *container = static_cast< Container * >(*it);
@@ -168,44 +269,8 @@ namespace _2Real
 					}
 				}
 			}
-			return NULL;
-		}
-	}
 
-	AbstractContainer *const Container::getChild(unsigned int const& _id, Container *const _father)
-	{
-		AbstractContainer *child;
-		
-		ChildList::iterator it = findChild(_id);
-		if (it != m_Children.end())
-		{
-			child = (*it);		
-			if (this != _father)
-			{
-				m_Children.erase(it);
-				_father->append(child);
-				child->setFather(_father);
-			}
-			return child;
-		}
-		else
-		{
-			for (ChildList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-
-				std::cout << (*it)->name() << std::endl;
-
-				if ((*it)->type() != IdentifierImpl::SERVICE)
-				{
-					Container *container = static_cast< Container * >(*it);
-
-					if (container->getChild(_id) != NULL)
-					{
-						container->stop();
-						return container->getChild(_id, _father);
-					}
-				}
-			}
+			//nothing found - return null
 			return NULL;
 		}
 	}
@@ -214,7 +279,7 @@ namespace _2Real
 	{
 		try
 		{
-			ChildList::iterator it = findChild(_id);
+			AbstractContainer::ContainerList::iterator it = findChild(_id);
 				
 			if (it == m_Children.end())
 			{
@@ -255,15 +320,44 @@ namespace _2Real
 		{
 			try
 			{
+				if (type() == IdentifierImpl::NIRVANA)
+				{
+					throw Exception::failure();
+				}
+				else if (type() == IdentifierImpl::SEQUENCE)
+				{
+					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+					{
+						//if child is a service, will send data (blocking)
+						(*it)->update();
+					}
+				}
+				else if (type() == IdentifierImpl::SYNCHRONIZATION)
+				{
+					//initialize children for running once only
+					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+					{
+						(*it)->start(true);
+					}
+
+					//start threads
+					//service containers will send their data automatically at the end of update (blocking)
+					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+					{
+						m_Threads.start(**it, (*it)->name());
+					}
+
+					//wait until everyone has finished
+					m_Threads.joinAll();
+				}
 			}
 			catch (...)
 			{
-
+				m_bRunOnce = false;
 				throw Exception::failure();
 			}
 
 			m_bRunOnce = false;
-			sendData(false);
 		}
 	}
 
@@ -276,14 +370,42 @@ namespace _2Real
 
 		try
 		{
+			if (type() == IdentifierImpl::NIRVANA)
+			{
+				//nirvana can never be updated, ever
+				throw Exception::failure();
+			}
+			else if (type() == IdentifierImpl::SEQUENCE)
+			{
+				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					//if child is a service, will send data (blocking)
+					(*it)->update();
+				}
+			}
+			else if (type() == IdentifierImpl::SYNCHRONIZATION)
+			{
+				//initialize children for running once only
+				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					(*it)->start(true);
+				}
 
+				//start threads
+				//service containers will send their data automatically at the end of run (blocking)
+				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					m_Threads.start(**it, (*it)->name());
+				}
+
+				//wait until everyone has finished
+				m_Threads.joinAll();
+			}
 		}
 		catch (...)
 		{
 			throw Exception::failure();
 		}
-
-		sendData(true);
 	}
 
 	void Container::shutdown()
@@ -295,5 +417,22 @@ namespace _2Real
 		{
 			throw Exception::failure();
 		}
+	}
+
+	void Container::resetIO()
+	{
+		AbstractContainer::ContainerList::iterator it;
+
+		for (it = m_Listeners.begin(); it != m_Listeners.end(); it++)
+		{
+			(*it)->stopListeningTo(this);
+		}
+		m_Listeners.clear();
+
+		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
+		{
+			(*it)->removeListener(this);
+		}
+		m_Senders.clear();
 	}
 }

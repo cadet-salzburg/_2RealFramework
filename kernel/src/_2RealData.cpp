@@ -19,7 +19,6 @@
 #pragma once
 
 #include "_2RealData.h"
-#include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealDataImpl.h"
 
@@ -64,9 +63,9 @@ namespace _2Real
 		delete m_Impl;
 	}
 
-	Poco::Any Data::get(Identifier const& _id)
+	Poco::Any Data::get(unsigned int const& _id)
 	{
-		return m_Impl->getAny(_id.id());
+		return m_Impl->getAny(_id);
 	}
 
 }

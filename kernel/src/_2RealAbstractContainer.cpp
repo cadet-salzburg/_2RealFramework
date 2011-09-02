@@ -70,7 +70,6 @@ namespace _2Real
 
 	void AbstractContainer::setup(ServiceContext *const _contextPtr)
 	{
-		//does nothing
 		Data(NULL);
 	}
 
@@ -102,7 +101,9 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_NewData += Poco::delegate(_queue, &IDataQueue::receiveData);
+		AbstractContainer *container = static_cast< AbstractContainer * >(_queue);
+		m_Listeners.push_back(container);
+		m_NewData += Poco::delegate(container, &AbstractContainer::receiveData);
 	}
 
 	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
@@ -112,7 +113,16 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		m_NewData -= Poco::delegate(_queue, &IDataQueue::receiveData);
+		AbstractContainer *container = static_cast< AbstractContainer * >(_queue);
+		for (ContainerList::iterator it = m_Listeners.begin(); it != m_Listeners.end(); it++)
+		{
+			if (*it == container)
+			{
+				m_Listeners.erase(it);
+				break;
+			}
+		}
+		m_NewData -= Poco::delegate(container, &AbstractContainer::receiveData);
 	}
 
 	void AbstractContainer::receiveData(NamedData &_data)
@@ -132,4 +142,32 @@ namespace _2Real
 		}
 	}
 
+	void AbstractContainer::registerExceptionCallback(void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception))
+	{
+		//m_Exception += Poco::delegate(container, &AbstractContainer::receiveData);
+	}
+
+	void AbstractContainer::registerDataCallback(void (*NewDataCallback)(Identifier const& _sender, Data const& _data))
+	{
+
+	}
+
+	//TODO check for multiple entries
+	void AbstractContainer::listenTo(AbstractContainer *const _sender)
+	{
+		m_Senders.push_back(_sender);
+	}
+
+	//TODO check for multiple entries
+	void AbstractContainer::stopListeningTo(AbstractContainer *const _sender)
+	{
+		for (ContainerList::iterator it = m_Senders.begin(); it != m_Senders.end(); it++)
+		{
+			if (*it == _sender)
+			{
+				m_Senders.erase(it);
+				break;
+			}
+		}
+	}
 }

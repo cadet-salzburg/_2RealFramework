@@ -30,6 +30,22 @@ using namespace _2Real;
 std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 
 /**
+*	test callback for exceptions in container
+*/
+void exceptionOccured(Identifier const& _sender, Exception const& _exception)
+{
+	std::cout << "an exception occured" << std::endl;
+}
+
+/**
+*	test callback for data available from container
+*/
+void dataAvailable(Identifier const& _sender, Data const& _data)
+{
+	std::cout << "new data available" << std::endl;
+}
+
+/**
 *	querying every little shit is kinda unnecessary
 *	but i'm doing it anyway
 */
@@ -178,6 +194,7 @@ void main(int argc, char** argv)
 	Identifier seq = testEngine.createSequenceContainer("yay, my life sucks less than this program", sync, add);
 	std::cout << "created sequence " << seq.name() << std::endl;
 
+
 	/**
 	*	query input & output params
 	*	the input params are empty, obviously
@@ -209,6 +226,9 @@ void main(int argc, char** argv)
 		std::cout << it->name() << std::endl;
 		testEngine.setParameterValue(*it, 1.0f);
 	}
+
+	testEngine.registerToException(seq, exceptionOccured);
+	testEngine.registerToNewData(seq, dataAvailable);
 
 	Sleep(100000);
 

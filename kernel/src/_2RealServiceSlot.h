@@ -71,12 +71,12 @@ namespace _2Real
 		/**
 		*	return sender id
 		*/
-		unsigned int const& senderID() const;
+		ServiceSlot *const linked();
 
 		/**
-		*	set sender id
+		*	link with other slot
 		*/
-		void listenTo(unsigned int const& _id);
+		void linkWith(ServiceSlot *const _link);
 
 		/**
 		*	true if sender id has been set
@@ -98,6 +98,11 @@ namespace _2Real
 		*/
 		void extractFrom(ServiceSlot::SharedAny const& _any) throw(...);
 
+		/**
+		*	reset sender
+		*/
+		void reset();
+
 	private:
 
 		/**
@@ -108,7 +113,7 @@ namespace _2Real
 		/**
 		*	id of corresponding output slot
 		*/
-		unsigned int				m_SenderID;
+		ServiceSlot					*m_Linked;
 
 		/**
 		*	true if sender id has been set

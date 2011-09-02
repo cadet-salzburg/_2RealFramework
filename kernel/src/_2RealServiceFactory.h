@@ -38,7 +38,6 @@ namespace _2Real
 	class FactoryReference;
 	class ProductionGraphs;
 	class ServiceImpl;
-	class Identifier;
 	class Entities;
 	class ServiceMetadata;
 
@@ -70,7 +69,7 @@ namespace _2Real
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		const Identifier registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
+		const unsigned int registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
 
 		/**
 		*	returns true if service in question can be created
@@ -90,12 +89,12 @@ namespace _2Real
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const Identifier createService(std::string const& _name, unsigned int const& _id, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > _ids, unsigned int const& _top) throw(...);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const Identifier createService(std::string const& _name, unsigned int const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top) throw(...);
+		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > _ids, unsigned int const& _top) throw(...);
 
 		/**
 		*	returns metadata of a service

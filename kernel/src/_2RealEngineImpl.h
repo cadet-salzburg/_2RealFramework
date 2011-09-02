@@ -20,6 +20,7 @@
 #pragma once
 
 #include "_2RealEngineTypedefs.h"
+#include "_2RealIDataQueue.h"
 
 #include <vector>
 
@@ -148,6 +149,16 @@ namespace _2Real
 		*
 		*/
 		void link(Identifier const& _in, Identifier const& _out) throw(...);
+
+		/**
+		*	
+		*/
+		void registerToException(Identifier const& _id, ExceptionCallback _callback) throw(...);
+
+		/**
+		*	
+		*/
+		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
 
 	private:
 

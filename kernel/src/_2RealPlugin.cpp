@@ -22,7 +22,6 @@
 #include "_2RealException.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealServiceMetadata.h"
-#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -76,7 +75,7 @@ namespace _2Real
 		return m_Metadata;
 	}
 
-	std::list< Identifier > const& Plugin::serviceIDs() const
+	std::list< unsigned int > const& Plugin::serviceIDs() const
 	{
 		return m_Services;
 	}
@@ -86,7 +85,7 @@ namespace _2Real
 		try
 		{
 			ServiceMetadata data = m_Metadata.getServiceMetadata(_name);
-			const Identifier id = m_Factory->registerService(_name, this, data, _creator);
+			const unsigned int id = m_Factory->registerService(_name, this, data, _creator);
 			m_Services.push_back(id);
 		}
 		catch (...)
@@ -186,7 +185,7 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::start(std::list< Identifier > &_ids) throw(...)
+	void Plugin::start(std::list< unsigned int > &_ids) throw(...)
 	{
 		if (m_State == Plugin::LOADED)
 		{

@@ -35,7 +35,6 @@ namespace _2Real
 	class IService;
 	class ServiceSlot;
 	class ServiceValue;
-	class Identifier;
 
 	class ServiceImpl : public AbstractContainer
 	{
@@ -80,12 +79,12 @@ namespace _2Real
 		/**
 		*	called by service factory after service creation
 		*/
-		void addSlot(Identifier const& id, ServiceSlot *const _slot) throw(...);
+		void addSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
 
 		/**
 		*	called by service factory after service creation
 		*/
-		void addValue(Identifier const& id, ServiceValue *const _value) throw(...);
+		void addValue(unsigned int const& id, ServiceValue *const _value) throw(...);
 
 		/**
 		*	calls setup function of service when called for the first time
@@ -121,6 +120,11 @@ namespace _2Real
 		*	
 		*/
 		IdentifierList outputParams() const throw(...);
+
+		/**
+		*	
+		*/
+		void resetIO();
 
 	private:
 

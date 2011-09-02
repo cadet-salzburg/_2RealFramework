@@ -23,7 +23,6 @@
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
 #include "_2RealException.h"
-#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
@@ -65,7 +64,7 @@ namespace _2Real
 		delete m_Service;
 	}
 
-	void ServiceImpl::addSlot(Identifier const& id, ServiceSlot *const _slot)
+	void ServiceImpl::addSlot(unsigned int const& id, ServiceSlot *const _slot)
 	{
 		if (_slot == NULL)
 		{
@@ -85,7 +84,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceImpl::addValue(Identifier const& id, ServiceValue *const _value)
+	void ServiceImpl::addValue(unsigned int const& id, ServiceValue *const _value)
 	{
 		if (_value == NULL)
 		{
@@ -133,13 +132,12 @@ namespace _2Real
 			}
 			catch (...)
 			{
-				//TODO: set error state
+				m_bRunOnce = false;
 				throw Exception::failure();
 			}
 
+			sendData(m_bRunOnce);
 			m_bRunOnce = false;
-			//send DataImpl without waiting
-			sendData(false);
 		}
 	}
 
@@ -160,7 +158,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		//send DataImpl - wait until all listeners received it
+		//send data- wait until all listeners received it
 		sendData(true);
 	}
 
@@ -242,6 +240,34 @@ namespace _2Real
 	AbstractContainer::IdentifierList ServiceImpl::setupParams() const
 	{
 		return m_SetupIds;
+	}
+
+	void ServiceImpl::resetIO()
+	{
+		InputMap::iterator in;
+		for (in = m_InputParams.begin(); in != m_InputParams.end(); in++)
+		{
+			in->second->reset();
+		}
+
+		ParamMap::iterator out;
+		for (out = m_OutputParams.begin(); out != m_OutputParams.end(); out++)
+		{
+			out->second->reset();
+		}
+
+		AbstractContainer::ContainerList::iterator it;
+		for (it = m_Listeners.begin(); it != m_Listeners.end(); it++)
+		{
+			(*it)->stopListeningTo(this);
+		}
+		m_Listeners.clear();
+
+		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
+		{
+			(*it)->removeListener(this);
+		}
+		m_Senders.clear();
 	}
 
 }

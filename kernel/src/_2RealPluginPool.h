@@ -36,7 +36,6 @@ namespace _2Real
 	class PluginMetadata;
 	class ServiceFactory;
 	class ProductionGraphs;
-	class Identifier;
 	class Entities;
 
 	class PluginPool
@@ -67,7 +66,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const Identifier install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< Identifier > &_ids) throw(...);
+		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< unsigned int > &_ids) throw(...);
 
 		/**
 		*	

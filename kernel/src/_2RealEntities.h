@@ -75,7 +75,7 @@ namespace _2Real
 		/**
 		*	i can haz typedef
 		*/
-		typedef std::pair< const Identifier, IEntity *const > ID;
+		typedef std::pair< const unsigned int, IEntity *const > ID;
 
 		/**
 		*	return entity, throw exception if not existing
@@ -83,9 +83,9 @@ namespace _2Real
 		IEntity *const get(unsigned int const& _id) throw(...);
 
 		/**
-		*	return identifier for id TODO
+		*	builds an identifier for an id
 		*/
-		IEntity *const getIdentifier(unsigned int const& _id) throw(...);
+		const Identifier getIdentifier(unsigned int const& _id) const throw(...);
 
 		/**
 		*	destroy entity, throw if not existing

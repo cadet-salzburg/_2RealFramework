@@ -149,7 +149,8 @@ namespace _2Real
 	{
 		try
 		{
-			return m_Graphs->createNirvana(_name);
+			unsigned int id = m_Graphs->createNirvana(_name);
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
@@ -161,7 +162,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_Graphs->destroy(_id, _top);
+			m_Graphs->destroy(_id.id(), _top.id());
 		}
 		catch (...)
 		{
@@ -174,15 +175,16 @@ namespace _2Real
 
 		try
 		{
-			return m_Plugins->install(_name, _dir, _file, _class, _ids);
+			std::list< unsigned int > ids;
+			unsigned int id = m_Plugins->install(_name, _dir, _file, _class, ids);
+			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
+			{
+				_ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
-
-#ifdef _DEBUG
-			std::cout << "engine (singleton): error on plugin loading" << std::endl;
-#endif
-
 			throw;
 		}
 	}
@@ -229,11 +231,17 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs, Identifier const& _top)
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_ids, Identifier const& _top)
 	{
 		try
 		{
-			return m_Factory->createService(_name, _id.id(), _setupIDs, _top);
+			std::list< unsigned int > ids;
+			unsigned int id = m_Factory->createService(_name, _id.id(), ids, _top.id());
+			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
+			{
+				_ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
@@ -241,11 +249,17 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs, Identifier const& _top)
+	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_ids, Identifier const& _top)
 	{
 		try
 		{
-			return m_Factory->createService(_name, _id.id(), _service, _setupIDs, _top);
+			std::list< unsigned int > ids;
+			unsigned int id = m_Factory->createService(_name, _id.id(), _service, ids, _top.id());
+			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
+			{
+				_ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
@@ -257,9 +271,16 @@ namespace _2Real
 	{
 		try
 		{
+			std::list< unsigned int > slots;
+			std::list< Identifier > ids;
 			IEntity *e = m_Entities->get(_id.id());
 			AbstractContainer *c = static_cast< ServiceImpl * >(e);
-			return c->inputParams();
+			slots = c->inputParams();
+			for (std::list< unsigned int >::iterator it = slots.begin(); it != slots.end(); it++)
+			{
+				ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return ids;
 		}
 		catch (...)
 		{
@@ -271,9 +292,16 @@ namespace _2Real
 	{
 		try
 		{
+			std::list< unsigned int > slots;
+			std::list< Identifier > ids;
 			IEntity *e = m_Entities->get(_id.id());
 			AbstractContainer *c = static_cast< ServiceImpl * >(e);
-			return c->outputParams();
+			slots = c->outputParams();
+			for (std::list< unsigned int >::iterator it = slots.begin(); it != slots.end(); it++)
+			{
+				ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return ids;
 		}
 		catch (...)
 		{
@@ -285,7 +313,8 @@ namespace _2Real
 	{
 		try
 		{
-			return m_Graphs->createSequence(_name, _idA, _idB, _top);
+			unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
@@ -297,7 +326,8 @@ namespace _2Real
 	{
 		try
 		{
-			return m_Graphs->createSynchronization(_name, _idA, _idB, _top);
+			unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
+			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
 		{
@@ -323,12 +353,91 @@ namespace _2Real
 	{
 		try
 		{
-			//TODO: some checks
 			IEntity *in = m_Entities->get(_in.id());
 			IEntity *out = m_Entities->get(_out.id());
 			ServiceSlot *inSlot = static_cast< ServiceSlot * >(in);
 			ServiceSlot *outSlot = static_cast< ServiceSlot * >(out);
-			inSlot->listenTo(outSlot->id());
+			ServiceImpl *inService = inSlot->service();
+			ServiceImpl *outService = outSlot->service();
+
+			//TODO: some checks
+			//like if there is a cycle
+
+			//first, find out if in was already linked
+			//& reset if it was
+			if (inSlot->isLinked())
+			{
+				ServiceSlot *senderSlot = inSlot->linked();
+				inSlot->reset();
+				senderSlot->reset();
+				ServiceImpl *senderService = senderSlot->service();
+				senderService->removeListener(inService);
+				inService->stopListeningTo(senderService);
+				//sender service now sends its data nowhere
+			}
+
+			//second, find out if out was already linked
+			//& reset if it was
+			if (outSlot->isLinked())
+			{
+				ServiceSlot *listenerSlot = outSlot->linked();
+				outSlot->reset();
+				listenerSlot->reset();
+				ServiceImpl *listenerService = listenerSlot->service();
+				outService->removeListener(listenerService);
+				listenerService->stopListeningTo(outService);
+				//listener service now does not receive anything anymore
+			}
+
+			//connect in & out
+			inSlot->linkWith(outSlot);
+			outSlot->linkWith(inSlot);
+			outService->addListener(inService);
+			inService->listenTo(outService);
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			AbstractContainer *father = container->father();
+			if (m_Graphs->isNirvana(father->id()))
+			{
+				container->registerExceptionCallback(_callback);
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::registerToNewData(Identifier const& _id, NewDataCallback _callback)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			AbstractContainer *father = container->father();
+			if (m_Graphs->isNirvana(father->id()))
+			{
+				container->registerDataCallback(_callback);
+			}
+			else
+			{
+				throw Exception::failure();
+			}
 		}
 		catch (...)
 		{

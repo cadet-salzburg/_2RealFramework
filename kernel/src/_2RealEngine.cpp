@@ -228,7 +228,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			std::cout << "engine: error on setParameterValue" << std::endl;
+			std::cout << "engine: error on setParameterValue()" << std::endl;
 			throw;
 		}
 	}
@@ -241,9 +241,34 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			std::cout << "engine: error on link" << std::endl;
+			std::cout << "engine: error on link()" << std::endl;
 			throw;
 		}
 	}
 
+	void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	{
+		try
+		{
+			m_Impl->registerToException(_id, _callback);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on registerToException()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::registerToNewData(Identifier const& _id, NewDataCallback _callback)
+	{
+		try
+		{
+			m_Impl->registerToNewData(_id, _callback);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on registerToNewData()" << std::endl;
+			throw;
+		}
+	}
 }

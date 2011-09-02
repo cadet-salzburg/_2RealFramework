@@ -35,7 +35,6 @@ namespace _2Real
 	*
 	*/
 
-	class Identifier;
 	class PluginMetadata;
 	class ServiceFactory;
 
@@ -86,7 +85,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		std::list< Identifier > const& serviceIDs() const;
+		std::list< unsigned int > const& serviceIDs() const;
 
 		/**
 		*
@@ -114,7 +113,7 @@ namespace _2Real
 		*	starts plugin activator; state: loaded->active
 		*	error -> invalid
 		*/
-		void start(std::list< Identifier > &_ids) throw(...);
+		void start(std::list< unsigned int > &_ids) throw(...);
 
 		/**
 		*	stops plugin activator; state: active->loaded
@@ -167,7 +166,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		std::list< Identifier >			m_Services;
+		std::list< unsigned int >		m_Services;
 
 	};
 }

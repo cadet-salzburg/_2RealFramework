@@ -41,7 +41,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::list< Identifier > IdentifierList;
+		typedef std::list< unsigned int > IdentifierList;
 
 		/**
 		*	thou shall createth
@@ -128,52 +128,97 @@ namespace _2Real
 		*/
 		virtual IdentifierList outputParams() const throw(...) = 0;
 
+		/**
+		*	
+		*/
+		void registerExceptionCallback(void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception)) throw(...);
+
+		/**
+		*
+		*/
+		void registerDataCallback(void (*NewDataCallback)(Identifier const& _sender, Data const& _data)) throw(...);
+
+		/**
+		*	
+		*/
+		void listenTo(AbstractContainer *const _sender) throw(...);
+
+		/**
+		*	
+		*/
+		void stopListeningTo(AbstractContainer *const _sender) throw(...);
+
+		/**
+		*	
+		*/
+		virtual void resetIO() = 0;
+
 	protected:
 
 		/**
 		*	true if container is running once (child of sync)
 		*/
-		bool								m_bRunOnce;
+		bool										m_bRunOnce;
 
 		/**
 		*	true is container is running threaded (child of nirvana)
 		*/
-		bool								m_bRun;
+		bool										m_bRun;
 
 		/**
 		*	will be true after the first call tho check configuration
 		*/
-		bool								m_bIsConfigured;
+		bool										m_bIsConfigured;
 
 		/**
 		*	true if setup params can be changed
 		*/
-		bool								m_bCanReconfigure;
+		bool										m_bCanReconfigure;
 
 		/**
 		*	father - null for top level containers
 		*/
-		AbstractContainer					*m_Father;
+		AbstractContainer							*m_Father;
 
 		/**
 		*	list of received DataImpl items
 		*/
-		std::list< NamedData >				m_DataList;
+		std::list< NamedData >						m_DataList;
 
 		/**
-		*	used for send new DataImpl to listeners
+		*	used to send new data to listeners
 		*/
-		Poco::BasicEvent< NamedData >		m_NewData;
+		Poco::BasicEvent< NamedData >				m_NewData;
+
+		/**
+		*	used to notify listeners of exceptions
+		*/
+		Poco::BasicEvent< Exception >				m_Exception;
 
 		/**
 		*	
 		*/
-		ExceptionCallback					m_ExceptionCallback;
+		typedef std::list< AbstractContainer * >	ContainerList;
+
+		/**
+		*	all containers that this one listens to
+		*/
+		ContainerList								m_Senders;
+
+		/**
+		*	all containers that listen to this one
+		*/
+		ContainerList								m_Listeners;
 
 		/**
 		*	
 		*/
-		NewDataCallback						m_NewDataCallback;
+		ExceptionCallback							m_ExceptionCallback;
+
+		/**
+		*	
+		*/
+		NewDataCallback								m_NewDataCallback;
 
 	};
 

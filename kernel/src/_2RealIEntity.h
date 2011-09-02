@@ -33,6 +33,8 @@ namespace _2Real
 	class IEntity
 	{
 
+		friend class Entities;
+
 	public:
 
 		IEntity(IdentifierImpl *const _id);

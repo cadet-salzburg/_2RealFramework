@@ -32,13 +32,6 @@ namespace _2Real
 	class Container : public AbstractContainer
 	{
 
-	private:
-
-		/**
-		*
-		*/
-		typedef std::list< AbstractContainer *const >	ChildList;
-		
 	public:
 
 		/**
@@ -87,7 +80,7 @@ namespace _2Real
 		void checkConfiguration() throw(...);
 
 		/**
-		*
+		*	returns nr of children
 		*/
 		const unsigned int childCount() const;
 
@@ -102,19 +95,19 @@ namespace _2Real
 		void append(AbstractContainer *const child);
 
 		/**
-		*	adds child in the last position
+		*	removes child. completely stops production graph, breaks all IO connections & removes all listeners
 		*/
 		void remove(unsigned int const& _id) throw(...);
 
 		/**
-		*	returns pointer to child, removes from children & appends to _father's children
-		*/
-		AbstractContainer *const getChild(unsigned int const& _id, Container *const _father);
-
-		/**
-		*	returns pointer to child without removing it, NULL otherwise
+		*	returns pointer to child if found within children, NULL otherwise
 		*/
 		AbstractContainer *const getChild(unsigned int const& _id);
+
+		/**
+		*	returns pointer to production graph root
+		*/
+		AbstractContainer *const root();
 
 		/**
 		*	
@@ -131,17 +124,27 @@ namespace _2Real
 		*/
 		IdentifierList outputParams() const throw(...);
 
+		/**
+		*	
+		*/
+		void resetIO();
+
 	private:
 
 		/**
 		*	returns iterator to child
 		*/
-		ChildList::iterator findChild(unsigned int const& _id);
+		ContainerList::iterator findChild(unsigned int const& _id);
 
 		/**
 		*
 		*/
-		ChildList						m_Children;
+		ContainerList					m_Children;
+
+		/**
+		*	
+		*/
+		Poco::ThreadPool				m_Threads;
 
 	};
 

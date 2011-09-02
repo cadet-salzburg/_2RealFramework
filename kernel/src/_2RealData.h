@@ -30,7 +30,6 @@ namespace _2Real
 	*/
 
 	class DataImpl;
-	class Identifier;
 
 	class Data
 	{
@@ -41,7 +40,7 @@ namespace _2Real
 		*	returns the value received from slot _id
 		*/
 		template< typename T >
-		T& get(Identifier const& _id) throw(...)
+		T& get(unsigned int const& _id) throw(...)
 		{
 			try
 			{
@@ -85,7 +84,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Poco::Any get(Identifier const& _id) throw(...);
+		Poco::Any get(unsigned int const& _id) throw(...);
 
 		/**
 		*
