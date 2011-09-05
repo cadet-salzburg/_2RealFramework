@@ -99,19 +99,51 @@ namespace _2Real
 	{
 		try
 		{
-			if (!m_bIsConfigured)
+			if (!m_bIsConfigured || m_bCanReconfigure)
 			{
-				//call user service's setup method
-				m_Service->setup(new ServiceContext(this));
-			}
-			else if (m_bCanReconfigure)
-			{
-				//call user service's setup method
 				m_Service->setup(new ServiceContext(this));
 			}
 
-			//check in/out slots
-			//for ()
+			//check if all input params are linked
+			for (InputMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+			{
+				if (!it->second->isLinked())
+				{
+					std::cout << "SERVICE CHECK CONFIG: input param not linked " << it->second->name() << std::endl;
+					throw Exception::failure();
+				}
+				if (!it->second->isInitialized())
+				{
+					std::cout << "SERVICE CHECK CONFIG: input param not initialized " << it->second->name() << std::endl;
+					throw Exception::failure();
+				}
+			}
+
+			//check if all output params are linked
+			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
+			{
+				//not every output slot needs to be linked
+				//if (!it->second->isLinked())
+				//{
+					//std::cout << "SERVICE CHECK CONFIG: output param not linked " << it->second->name() << std::endl;
+					//throw Exception::failure();
+				//}
+				if (!it->second->isInitialized())
+				{
+					std::cout << "SERVICE CHECK CONFIG: output param not initialized " << it->second->name() << std::endl;
+					throw Exception::failure();
+				}
+			}
+
+			//check if all setup params are initialized
+			for (ValueMap::iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			{
+				if (!it->second->isInitialized())
+				{
+					std::cout << "SERVICE CHECK CONFIG: setup param not initialized " << it->second->name() << std::endl;
+					throw Exception::failure();
+				}
+			}
 
 			m_bIsConfigured = true;
 		}
@@ -123,43 +155,53 @@ namespace _2Real
 
 	void ServiceImpl::run() throw(...)
 	{
+		std::cout << "SERVICE RUN: " << name() << std::endl;
 		while (m_bIsConfigured && (m_bRun || m_bRunOnce))
 		{
 			try
 			{
 				//call user service's update method
+				std::cout << "SERVICE RUN: updating now " << name() << std::endl;
 				m_Service->update();
+				std::cout << "SERVICE RUN: updated " << name() << std::endl;
+				//sendData(m_bRunOnce);
+				std::cout << "SERVICE RUN: sent data " << name() << std::endl;
+				m_bRunOnce = false;
+				std::cout << "SERVICE RUN: success " << name() << std::endl;
 			}
 			catch (...)
 			{
+				std::cout << "SERVICE RUN: error " << name() << std::endl;
+				m_bRun = false;
 				m_bRunOnce = false;
-				throw Exception::failure();
+				stop();
+				//throw Exception::failure();
 			}
-
-			sendData(m_bRunOnce);
-			m_bRunOnce = false;
 		}
 	}
 
 	void ServiceImpl::update() throw(...)
 	{
-		if (!m_bIsConfigured)
-		{
-			//todo: set error state
-			throw Exception::failure();
-		}
-
 		try
 		{
+			std::cout << "SERVICE UPDATE: " << name() << std::endl;
+			
+			if (!m_bIsConfigured)
+			{
+				throw Exception::failure();
+			}
+
+			std::cout << "SERVICE UPDATE: updating now " << name() << std::endl;
 			m_Service->update();
+			std::cout << "SERVICE UPDATE: sending data " << name() << std::endl;
+			//sendData(true);
+			std::cout << "SERVICE UPDATE: success " << name() << std::endl;
 		}
 		catch (...)
 		{
+			std::cout << "SERVICE UPDATE: error " << name() << std::endl;
 			throw Exception::failure();
 		}
-
-		//send data- wait until all listeners received it
-		sendData(true);
 	}
 
 	void ServiceImpl::shutdown() throw(...)

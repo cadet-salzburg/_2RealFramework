@@ -136,7 +136,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > _ids, unsigned int const& _top)
+	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top)
 	{
 		try
 		{
@@ -223,7 +223,7 @@ namespace _2Real
 		}
 	}
 
-	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > _ids, unsigned int const& _top)
+	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > &_ids, unsigned int const& _top)
 	{
 		try
 		{
@@ -275,11 +275,11 @@ namespace _2Real
 
 			for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const Entities::ID i = m_Entities->createServiceValue(*it, service);
-				ServiceValue *p = static_cast< ServiceValue* >(i.second);
-				service->addValue(i.first, p);
+				const Entities::ID e = m_Entities->createServiceValue(*it, service);
+				ServiceValue *p = static_cast< ServiceValue* >(e.second);
+				service->addValue(e.first, p);
 				//save setup param
-				_ids.push_back(i.first);
+				_ids.push_back(e.first);
 			}
 
 			for (ParamList::iterator it = input.begin(); it != input.end(); it++)

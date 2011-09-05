@@ -67,13 +67,11 @@ namespace _2Real
 	{
 		try
 		{
-			std::cout << "extracting" << std::endl;
 			T copy = Poco::AnyCast< T >(_any);
 			m_Value = copy;
 		}
 		catch (...)
 		{
-			std::cout << "badcast" << std::endl;
 			throw Exception::failure();
 		}
 	}

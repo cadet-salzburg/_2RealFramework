@@ -85,6 +85,11 @@ namespace _2Real
 		const unsigned int childCount() const;
 
 		/**
+		*	
+		*/
+		std::list< unsigned int > children() const;
+
+		/**
 		*	inserts child before child + _id, throw exception if _id not found among children
 		*/
 		void addBefore(AbstractContainer *const child, unsigned int const& _id) throw(...);
@@ -108,6 +113,16 @@ namespace _2Real
 		*	returns pointer to production graph root
 		*/
 		AbstractContainer *const root();
+
+		/**
+		*	
+		*/
+		void startChild(unsigned int const& _id) throw(...);
+
+		/**
+		*
+		*/
+		void stopChild(unsigned int const& _id) throw(...);
 
 		/**
 		*	

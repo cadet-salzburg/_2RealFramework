@@ -218,17 +218,43 @@ void main(int argc, char** argv)
 	std::cout << std::endl;
 
 	/**
-	*	initialize add
+	*	initialize random image setup params
+	*/
+	unsigned int w = 400;
+	unsigned int h = 400;
+	for (Identifiers::iterator it = setupIDs1.begin(); it != setupIDs1.end(); it++)
+	{
+		testEngine.setParameterValue(*it, w);
+	}
+
+	for (Identifiers::iterator it = setupIDs2.begin(); it != setupIDs2.end(); it++)
+	{
+		testEngine.setParameterValue(*it, w);
+	}
+
+	/**
+	*	initialize addition params
 	*/
 	//TODO: change identifiers from list to vector so that they can be accessed by []
 	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
 	{
-		std::cout << it->name() << std::endl;
 		testEngine.setParameterValue(*it, 1.0f);
 	}
 
-	testEngine.registerToException(seq, exceptionOccured);
-	testEngine.registerToNewData(seq, dataAvailable);
+	//testEngine.registerToException(seq, exceptionOccured);
+	//testEngine.registerToNewData(seq, dataAvailable);
+	std::list< Identifier > children1 = testEngine.getChildren(sync);
+	std::list< Identifier > children2 = testEngine.getChildren(seq);
+	for (Identifiers::iterator it = children1.begin(); it != children1.end(); it++)
+	{
+		std::cout << it->name() << std::endl;
+	}
+	for (Identifiers::iterator it = children2.begin(); it != children2.end(); it++)
+	{
+		std::cout << it->name() << std::endl;
+	}
+
+	testEngine.start(seq);
 
 	Sleep(100000);
 

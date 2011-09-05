@@ -89,12 +89,12 @@ namespace _2Real
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > _ids, unsigned int const& _top) throw(...);
+		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > _ids, unsigned int const& _top) throw(...);
+		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
 
 		/**
 		*	returns metadata of a service

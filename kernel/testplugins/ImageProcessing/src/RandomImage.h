@@ -45,15 +45,26 @@ void RandomImageService< T >::setup(_2Real::ServiceContext *const _context) thro
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-
 	try
 	{
+		std::cout << "RANDOM IMAGE SETUP" << std::endl;
+
 		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
+
+		std::cout << "RANDOM IMAGE SETUP: width = " << m_iImageWidth << std::endl;
+
 		_context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
+
+		std::cout << "RANDOM IMAGE SETUP: height = " << m_iImageHeight << std::endl;
+
 		_context->registerOutputSlot< ::Image< T, 2 > >("output image", m_OutputImage);
+
+		std::cout << "RANDOM IMAGE SETUP: success" << std::endl;
 	}
 	catch(...)
 	{
+		std::cout << "RANDOM IMAGE SETUP: ERROR " << std::endl;
+		throw;
 	}
 
 }
@@ -64,23 +75,35 @@ void RandomImageService< T >::update() throw(...)
 	/*
 		this function performs the actual service
 	*/
-	unsigned int sz = m_iImageHeight*m_iImageWidth;
-		
-	T* tmp = new T[sz];
-
-	for (unsigned int y=0; y<m_iImageHeight; y++)
+	try
 	{
-		for (unsigned int x=0; x<m_iImageWidth; x++)
+		std::cout << "RANDOM IMAGE UPDATE" << std::endl;
+		
+		unsigned int sz = m_iImageHeight*m_iImageWidth;
+		
+		T* tmp = new T[sz];
+
+		for (unsigned int y=0; y<m_iImageHeight; y++)
 		{
-			unsigned int i = y*m_iImageWidth + x;
-			tmp[i] = random_t< T >();
+			for (unsigned int x=0; x<m_iImageWidth; x++)
+			{
+				unsigned int i = y*m_iImageWidth + x;
+				tmp[i] = random_t< T >();
+			}
 		}
+
+		Image< T, 2 >::Resolution res;
+		res.set(0, m_iImageWidth);
+		res.set(1, m_iImageHeight);
+
+		m_OutputImage.setData(tmp);
+		m_OutputImage.setResolution(res);
+
+		std::cout << "RANDOM IMAGE UPDATE: success" << std::endl;
 	}
-
-	Image< T, 2 >::Resolution res;
-	res.set(0, m_iImageWidth);
-	res.set(1, m_iImageHeight);
-
-	m_OutputImage.setData(tmp);
-	m_OutputImage.setResolution(res);
+	catch (...)
+	{
+		std::cout << "RANDOM IMAGE UPDATE: error" << std::endl;
+		throw;
+	}
 };

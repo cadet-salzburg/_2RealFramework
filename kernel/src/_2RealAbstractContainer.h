@@ -33,6 +33,8 @@ namespace _2Real
 	*	implements some container functionality, and adds some
 	*/
 
+	class DataQueue;
+
 	class AbstractContainer : public IEntity, public IContainer
 	{
 
@@ -219,6 +221,11 @@ namespace _2Real
 		*	
 		*/
 		NewDataCallback								m_NewDataCallback;
+
+		/**
+		*	allows listening to the container from the outside
+		*/
+		DataQueue									*m_OutputQueue;
 
 	};
 

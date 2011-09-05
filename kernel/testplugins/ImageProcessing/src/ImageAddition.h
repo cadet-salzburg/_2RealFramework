@@ -45,19 +45,29 @@ void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context) th
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
-
 	try
 	{
+		std::cout << "IMAGE ADDITION SETUP" << std::endl;
+
 		_context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
+
+		std::cout << "IMAGE ADDITION SETUP: scale factor 1 = " << m_ScaleFactor1 << std::endl;
+
 		_context->getSetupParameter< T >("scale factor 2", m_ScaleFactor2);
+
+		std::cout << "IMAGE ADDITION SETUP: scale factor 2 = " << m_ScaleFactor2 << std::endl;
+
 		_context->registerInputSlot< ::Image< T, 2> >("input image 1", m_InputImage1);
 		_context->registerInputSlot< ::Image< T, 2> >("input image 2", m_InputImage2);
 		_context->registerOutputSlot< ::Image< T, 2> >("output image", m_OutputImage);
+
+		std::cout << "IMAGE ADDITION SETUP: success" << std::endl;
 	}
 	catch (...)
 	{
+		std::cout << "IMAGE ADDITION SETUP: error" << std::endl;
+		throw;
 	}
-
 };
 
 template< typename T >
@@ -66,40 +76,45 @@ void ImageAdditionService< T >::update() throw(...)
 	/*
 		this function performs the actual service
 	*/
-
-	std::cout << "begin of: image addition update" << std::endl;
-
-	if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
+	try
 	{
+		std::cout << "IMAGE ADDITION UPDATE" << std::endl;
 
-		std::cout << "both input images are not empty" << std::endl;
-		
-		unsigned int width = m_InputImage1.resolution().get(0);
-		unsigned int height = m_InputImage1.resolution().get(1);
-
-		unsigned int sz = width*height;
-		
-		T* tmp = new T[sz];
-		for (unsigned int y=0; y<height; y++)
+		if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
 		{
-			for (unsigned int x=0; x<width; x++)
+			unsigned int width = m_InputImage1.resolution().get(0);
+			unsigned int height = m_InputImage1.resolution().get(1);
+
+			unsigned int sz = width*height;
+		
+			T* tmp = new T[sz];
+			for (unsigned int y=0; y<height; y++)
 			{
-				unsigned int i = y*width + x;
-				tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
+				for (unsigned int x=0; x<width; x++)
+				{
+					unsigned int i = y*width + x;
+					tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
+				}
 			}
+
+			Image< T, 2 >::Resolution res;
+			res.set(0, width);
+			res.set(1, height);
+
+			m_OutputImage.setData(tmp);
+			m_OutputImage.setResolution(res);
+
+			std::cout << "IMAGE ADDITION UPDATE: success" << std::endl;
 		}
-
-		Image< T, 2 >::Resolution res;
-		res.set(0, width);
-		res.set(1, height);
-
-		m_OutputImage.setData(tmp);
-		m_OutputImage.setResolution(res);
+		else
+		{
+			std::cout << "IMAGE ADDITION UPDATE: at least one image is empty" << std::endl;
+			throw Exception::failure();
+		}
 	}
-	else
+	catch (...)
 	{
-		std::cout << "at least one input image is empty" << std::endl;
+		std::cout << "IMAGE ADDITION UPDATE: error" << std::endl;
+		throw;
 	}
-
-	std::cout << "image addition update complete" << std::endl;
 };

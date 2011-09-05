@@ -24,6 +24,7 @@
 #include "_2RealServiceFactory.h"
 #include "_2RealEntities.h"
 #include "_2RealProductionGraphs.h"
+#include "_2RealContainer.h"
 #include "_2RealIEntity.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
@@ -236,11 +237,17 @@ namespace _2Real
 		try
 		{
 			std::list< unsigned int > ids;
+			ids.clear();
+
 			unsigned int id = m_Factory->createService(_name, _id.id(), ids, _top.id());
+			std::cout << ids.size() << std::endl;
+
 			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
 			{
+				std::cout << "TRANSFORMING setup value" << std::endl;
 				_ids.push_back(m_Entities->getIdentifier(*it));
 			}
+			
 			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
@@ -254,11 +261,17 @@ namespace _2Real
 		try
 		{
 			std::list< unsigned int > ids;
+			ids.clear();
+
 			unsigned int id = m_Factory->createService(_name, _id.id(), _service, ids, _top.id());
+			std::cout << ids.size() << std::endl;
+
 			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
 			{
+				std::cout << "TRANSFORMING setup value" << std::endl;
 				_ids.push_back(m_Entities->getIdentifier(*it));
 			}
+
 			return m_Entities->getIdentifier(id);
 		}
 		catch (...)
@@ -433,6 +446,77 @@ namespace _2Real
 			if (m_Graphs->isNirvana(father->id()))
 			{
 				container->registerDataCallback(_callback);
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	Identifiers EngineImpl::getChildren(Identifier const& _id)
+	{
+		try
+		{
+			std::list< unsigned int > children;
+			std::list< Identifier > ids;
+			children.clear();
+			ids.clear();
+
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			Container *father = static_cast< Container * >(container);
+			children = father->children();
+			for (std::list< unsigned int >::iterator it = children.begin(); it != children.end(); it++)
+			{
+				ids.push_back(m_Entities->getIdentifier(*it));
+			}
+			return ids;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::start(Identifier const& _id)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			Container *father = static_cast< Container * >(container->father());
+			if (m_Graphs->isNirvana(father->id()))
+			{
+				//this is nirvana. will create thread & start child
+				father->startChild(_id.id());
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::stop(Identifier const& _id)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			Container *father = static_cast< Container * >(container->father());
+			if (m_Graphs->isNirvana(father->id()))
+			{
+				//this is nirvana. will create thread & start child
+				father->stopChild(_id.id());
 			}
 			else
 			{

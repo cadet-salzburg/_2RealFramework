@@ -26,10 +26,10 @@ void ImageProcessing::start(PluginContext &_context)
 		export service factory methods
 	*/
 
-	_context.registerService("ImageAddition2D_ushort_uint", &::createImageAddition< unsigned short >);
-	_context.registerService("ImageAddition2D_float", &::createImageAddition< unsigned int >);
+	_context.registerService("ImageAddition2D_ushort", &::createImageAddition< unsigned short >);
+	_context.registerService("ImageAddition2D_float", &::createImageAddition< float >);
 	_context.registerService("RandomImage2D_ushort", &::createRandomImage< unsigned short >);
-	_context.registerService("RandomImage2D_float", &::createRandomImage< unsigned int >);
+	_context.registerService("RandomImage2D_float", &::createRandomImage< float >);
 }
 
 /**

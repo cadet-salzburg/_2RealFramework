@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\src\_2RealContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealDataImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealDataQueue.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEntities.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="..\..\src\_2RealContainer.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealDataImpl.h" />
+    <ClInclude Include="..\..\src\_2RealDataQueue.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />

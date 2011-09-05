@@ -250,7 +250,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->registerToException(_id, _callback);
+			//m_Impl->registerToException(_id, _callback);
 		}
 		catch (...)
 		{
@@ -263,11 +263,50 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->registerToNewData(_id, _callback);
+			//m_Impl->registerToNewData(_id, _callback);
 		}
 		catch (...)
 		{
 			std::cout << "engine: error on registerToNewData()" << std::endl;
+			throw;
+		}
+	}
+
+	Identifiers Engine::getChildren(Identifier const& _id)
+	{
+		try
+		{
+			return m_Impl->getChildren(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on getChildren()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::start(Identifier const& _id)
+	{
+		try
+		{
+			m_Impl->start(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on start()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::stop(Identifier const& _id)
+	{
+		try
+		{
+			m_Impl->stop(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on stop()" << std::endl;
 			throw;
 		}
 	}

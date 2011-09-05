@@ -160,6 +160,21 @@ namespace _2Real
 		*/
 		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
 
+		/**
+		*	
+		*/
+		Identifiers getChildren(Identifier const& _id) throw(...);
+
+		/**
+		*	
+		*/
+		void start(Identifier const& _id) throw(...);
+
+		/**
+		*	
+		*/
+		void stop(Identifier const& _id) throw(...);
+
 	private:
 
 		/**

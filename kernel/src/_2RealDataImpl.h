@@ -86,6 +86,11 @@ namespace _2Real
 		*/
 		unsigned int const& size() const;
 
+		/**
+		*
+		*/
+		void merge(DataImpl const& src);
+
 	private:
 
 		/**

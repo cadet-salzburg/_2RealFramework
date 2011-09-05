@@ -31,7 +31,7 @@ namespace _2Real
 		IEntity(_id),
 		m_bRunOnce(false),
 		m_bRun(false), 
-		m_bCanReconfigure(false), 
+		m_bCanReconfigure(true), 
 		m_bIsConfigured(false), 
 		m_Father(NULL)
 	{
@@ -53,7 +53,7 @@ namespace _2Real
 
 	void AbstractContainer::start(bool const& _runOnce) throw(...)
 	{
-		if (!m_bIsConfigured || m_bRun)
+		if (!m_bIsConfigured)
 		{
 			throw Exception::failure();
 		}
@@ -96,6 +96,8 @@ namespace _2Real
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
+		std::cout << "adding listener to container: " << name() << std::endl;
+
 		if (_queue == NULL)
 		{
 			throw Exception::failure();
@@ -108,6 +110,8 @@ namespace _2Real
 
 	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
 	{
+		std::cout << "removing listener from container: " << name() << std::endl;
+
 		if (_queue == NULL)
 		{
 			throw Exception::failure();
@@ -122,16 +126,66 @@ namespace _2Real
 				break;
 			}
 		}
+
 		m_NewData -= Poco::delegate(container, &AbstractContainer::receiveData);
 	}
 
 	void AbstractContainer::receiveData(NamedData &_data)
 	{
+		unsigned int sender = _data.first;
+
+		ContainerList::iterator it;
+		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
+		{
+			if ((*it)->id() == sender)
+			{
+				break;
+			}
+		}
+
+		if (it == m_Senders.end())
+		{
+			std::cout << "data received, id not in senders" << std::endl;
+			throw Exception::failure();
+		}
+
 		m_DataList.push_back(_data);
 	}
 
 	void AbstractContainer::sendData(bool const& _blocking)
 	{
+		IdentifierList output = this->outputParams();
+		DataImpl outputData;
+		unsigned int name = this->id();
+
+		std::cout << "size of data list " << m_DataList.size() << std::endl;
+
+		ContainerList tmp(m_Senders);
+		for (std::list< NamedData >::iterator r = m_DataList.end(); r != m_DataList.begin(); r--)
+		{
+			unsigned int sender = r->first;
+			DataImpl data = *(r->second).get();
+
+			ContainerList::iterator s;
+			for (ContainerList::iterator it = tmp.begin(); it != tmp.end(); it++)
+			{
+				if ((*it)->id() == sender)
+				{
+					s = it;
+					break;
+				}
+			}
+			tmp.erase(s);
+
+			//copy data packet
+			//outputData.insertAny(data.begin(), data.end());
+		}
+
+		if (!tmp.empty())
+		{
+			std::cout << "tmp not empty!" << std::endl;
+		}
+
 		if (_blocking)
 		{
 			m_NewData.notify(this, m_DataList.front());
@@ -144,7 +198,7 @@ namespace _2Real
 
 	void AbstractContainer::registerExceptionCallback(void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception))
 	{
-		//m_Exception += Poco::delegate(container, &AbstractContainer::receiveData);
+
 	}
 
 	void AbstractContainer::registerDataCallback(void (*NewDataCallback)(Identifier const& _sender, Data const& _data))
@@ -152,15 +206,17 @@ namespace _2Real
 
 	}
 
-	//TODO check for multiple entries
 	void AbstractContainer::listenTo(AbstractContainer *const _sender)
 	{
+		std::cout << "container: " << name() << " listens to " << _sender->name() << std::endl;
+
 		m_Senders.push_back(_sender);
 	}
 
-	//TODO check for multiple entries
 	void AbstractContainer::stopListeningTo(AbstractContainer *const _sender)
 	{
+		std::cout << "container: " << name() << " stops listening to " << _sender->name() << std::endl;
+
 		for (ContainerList::iterator it = m_Senders.begin(); it != m_Senders.end(); it++)
 		{
 			if (*it == _sender)

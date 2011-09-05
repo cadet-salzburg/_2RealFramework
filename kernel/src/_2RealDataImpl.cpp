@@ -87,4 +87,9 @@ namespace _2Real
 		m_Data.insert(NamedAny(_id, _any));
 	}
 
+	void DataImpl::merge(DataImpl const& _src)
+	{
+		m_Data.insert(_src.m_Data.begin(), _src.m_Data.end());
+	}
+
 }

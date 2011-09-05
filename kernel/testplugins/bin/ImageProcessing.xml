@@ -9,8 +9,8 @@
 	/>
 	
 	<service
-		name = "ImageAddition2D_ushort_uint"
-		description = "this service has a stupid, stupid, stupid name."
+		name = "ImageAddition2D_ushort"
+		description = "this service has a stupid name."
 		singleton = "false"
 		reconfigurable = "true"
 	>
@@ -32,7 +32,7 @@
 		</input>
 		
 		<output>
-			<param name = "output image" type = "image2D_uint" />
+			<param name = "output image" type = "image2D_ushort" />
 		</output>
 	
 	</service>
