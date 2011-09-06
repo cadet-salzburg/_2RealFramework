@@ -54,7 +54,7 @@ namespace _2Real
 	*	as with the exceptions, registering for new DataImpl makes the most sense if the entity
 	*	in question is in nirvana
 	*/
-	typedef void (*NewDataCallback)(Identifier const& _sender, Data const& _data);
+	typedef void (*NewDataCallback)(std::pair< Identifier, Data > &_data);
 
 	/**
 	*	a list of identifiers

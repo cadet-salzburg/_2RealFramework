@@ -25,6 +25,8 @@
 #include "_2RealServiceValue.h"
 #include "_2RealServiceImpl.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 	ProductionGraphs::ProductionGraphs() :

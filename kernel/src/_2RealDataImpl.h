@@ -84,7 +84,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		unsigned int const& size() const;
+		const unsigned int size() const;
 
 		/**
 		*

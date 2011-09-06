@@ -144,6 +144,11 @@ namespace _2Real
 		*/
 		void resetIO();
 
+		/**
+		*	
+		*/
+		void sendData(bool const& _blocking);
+
 	private:
 
 		/**

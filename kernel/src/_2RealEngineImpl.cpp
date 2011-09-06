@@ -33,6 +33,7 @@
 #include "_2RealServiceSlot.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {
@@ -423,7 +424,6 @@ namespace _2Real
 			AbstractContainer *father = container->father();
 			if (m_Graphs->isNirvana(father->id()))
 			{
-				container->registerExceptionCallback(_callback);
 			}
 			else
 			{
@@ -445,7 +445,7 @@ namespace _2Real
 			AbstractContainer *father = container->father();
 			if (m_Graphs->isNirvana(father->id()))
 			{
-				container->registerDataCallback(_callback);
+				//container->registerDataCallback(_callback);
 			}
 			else
 			{

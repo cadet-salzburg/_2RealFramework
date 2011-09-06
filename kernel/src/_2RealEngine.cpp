@@ -22,6 +22,8 @@
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 

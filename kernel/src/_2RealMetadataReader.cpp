@@ -34,6 +34,7 @@
 #include "Poco/DOM/AutoPtr.h"
 
 #include <sstream>
+#include <iostream>
 
 using namespace Poco::XML;
 

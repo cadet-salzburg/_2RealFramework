@@ -29,6 +29,7 @@
 #include "_2RealPlugin.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {

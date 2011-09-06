@@ -23,6 +23,8 @@
 #include "_2RealException.h"
 #include "_2RealEntities.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 

@@ -63,18 +63,16 @@ namespace _2Real
 
 		if (m_Received.empty())
 		{
-			Poco::SharedPtr< DataImpl > packet = Poco::SharedPtr< DataImpl >(new DataImpl());
+			DataImpl *output = new DataImpl();
 
 			for (std::list< NamedData >::iterator it = m_DataList.end(); it != m_DataList.begin(); it--)
 			{
-				unsigned int sender = it->first;
 				DataImpl data = *it->second.get();
-
-				//merge datas
-				packet->merge(data);
+				output->merge(data);
 			}
 
-			std::pair< Identifier, Data > result = std::make_pair(m_Sender, data);
+			Data outputData(output);
+			std::pair< Identifier, Data > result = std::make_pair(m_Sender, outputData);
 
 			//send data
 			m_DataEvent.notifyAsync(this, result);

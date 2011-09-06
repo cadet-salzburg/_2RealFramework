@@ -103,7 +103,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void sendData(bool const& _blocking);
+		virtual void sendData(bool const& _blocking);
 
 		/**
 		*	returns father
@@ -133,16 +133,6 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void registerExceptionCallback(void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception)) throw(...);
-
-		/**
-		*
-		*/
-		void registerDataCallback(void (*NewDataCallback)(Identifier const& _sender, Data const& _data)) throw(...);
-
-		/**
-		*	
-		*/
 		void listenTo(AbstractContainer *const _sender) throw(...);
 
 		/**
@@ -156,6 +146,8 @@ namespace _2Real
 		virtual void resetIO() = 0;
 
 	protected:
+
+		Poco::Mutex									m_Mutex;
 
 		/**
 		*	true if container is running once (child of sync)
@@ -211,16 +203,6 @@ namespace _2Real
 		*	all containers that listen to this one
 		*/
 		ContainerList								m_Listeners;
-
-		/**
-		*	
-		*/
-		ExceptionCallback							m_ExceptionCallback;
-
-		/**
-		*	
-		*/
-		NewDataCallback								m_NewDataCallback;
 
 		/**
 		*	allows listening to the container from the outside

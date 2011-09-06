@@ -7,6 +7,8 @@
 #include "ImageAddition.h"
 #include "RandomImage.h"
 
+#include <iostream>
+
 using namespace _2Real;
 
 void ImageProcessing::getMetadata(PluginMetadata &_info)

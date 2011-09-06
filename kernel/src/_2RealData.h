@@ -57,14 +57,10 @@ namespace _2Real
 			}
 		}
 
-	private:
-
-		friend class AbstractContainer;
-
 		/**
-		*
+		*	
 		*/
-		Data(DataImpl *const _impl);
+		~Data();
 
 		/**
 		*
@@ -76,10 +72,14 @@ namespace _2Real
 		*/
 		Data& operator=(Data const& _src);
 
+	private:
+
+		friend class DataQueue;
+
 		/**
-		*	
+		*
 		*/
-		~Data();
+		Data(DataImpl *const _impl);
 
 		/**
 		*

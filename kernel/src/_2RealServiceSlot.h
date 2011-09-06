@@ -46,7 +46,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::pair< const unsigned int, const SharedAny >	NamedAny;
+		typedef std::pair< unsigned int, SharedAny >				NamedAny;
 
 		/**
 		*	

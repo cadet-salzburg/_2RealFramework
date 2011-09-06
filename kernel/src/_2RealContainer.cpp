@@ -19,6 +19,8 @@
 #include "_2RealContainer.h"
 #include "_2RealException.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 	
@@ -425,7 +427,7 @@ namespace _2Real
 					}
 					//if (!m_Listeners.empty())
 					//{
-					//	sendData(false);
+						sendData(false);
 					//}
 					std::cout << "SEQUENCE CONTAINER RUN: success" << std::endl;
 				}
@@ -453,7 +455,7 @@ namespace _2Real
 
 					//if (!m_Listeners.empty())
 					//{
-					//	sendData(false);
+						sendData(false);
 					//}
 					std::cout << "SYNCHRONIZATION CONTAINER RUN: success" << std::endl;
 				}
@@ -498,7 +500,7 @@ namespace _2Real
 				}
 				//if (!m_Listeners.empty())
 				//{
-				//	sendData(false);
+					sendData(false);
 				//}
 				std::cout << "SEQUENCE CONTAINER UPDATE: success" << std::endl;
 			}
@@ -523,10 +525,12 @@ namespace _2Real
 				//wait until everyone has finished
 				m_Threads.joinAll();
 				std::cout << "SYNCHRONIZATION CONTAINER UPDATE: all threads completed" << std::endl;
+				
 				//if (!m_Listeners.empty())
 				//{
-				//	sendData(false);
+					sendData(false);
 				//}
+
 				std::cout << "SYNCHRONIZATION CONTAINER UPDATE: success" << std::endl;
 			}
 		}
@@ -546,6 +550,13 @@ namespace _2Real
 		{
 			throw Exception::failure();
 		}
+	}
+
+	void Container::sendData(bool const& _blocking)
+	{
+		std::cout << "CONTAINER SENDING DATA! " << name() << std::endl;
+
+		AbstractContainer::sendData(_blocking);
 	}
 
 	void Container::resetIO()

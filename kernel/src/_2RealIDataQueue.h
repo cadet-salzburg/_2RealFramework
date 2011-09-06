@@ -37,7 +37,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::pair< const unsigned int , Poco::SharedPtr< DataImpl > >	NamedData;
+		typedef std::pair< unsigned int , Poco::SharedPtr< DataImpl > >	NamedData;
 
 		/**
 		*	adds other queue to listeners

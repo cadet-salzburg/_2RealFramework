@@ -6,6 +6,8 @@
 #include "RandomValues.h"
 #include "Image.h"
 
+#include <iostream>
+
 /*
 	factory method for random image service; registered in service factory of framework
 */

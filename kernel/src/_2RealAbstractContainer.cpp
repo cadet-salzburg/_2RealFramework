@@ -24,6 +24,8 @@
 
 #include "Poco\Delegate.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -70,7 +72,6 @@ namespace _2Real
 
 	void AbstractContainer::setup(ServiceContext *const _contextPtr)
 	{
-		Data(NULL);
 	}
 
 	bool const& AbstractContainer::canReconfigure() const
@@ -132,7 +133,11 @@ namespace _2Real
 
 	void AbstractContainer::receiveData(NamedData &_data)
 	{
+		m_Mutex.lock();
+
 		unsigned int sender = _data.first;
+		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: " << name() << " received data from " << sender << std::endl;
+		std::cout << m_Senders.size() << std::endl;
 
 		ContainerList::iterator it;
 		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
@@ -145,65 +150,33 @@ namespace _2Real
 
 		if (it == m_Senders.end())
 		{
-			std::cout << "data received, id not in senders" << std::endl;
+			std::cout << "ABSTRACT CONTAINER RECEIVE DATA: data received, id not in senders" << name() << " " << sender << std::endl;
+			m_Mutex.unlock();
 			throw Exception::failure();
 		}
 
+		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: data received, id: " << name() << " " << sender << std::endl;
 		m_DataList.push_back(_data);
+
+		NamedData test = m_DataList.back();
+		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: test: " << name() << " " << test.first << std::endl;
+		m_Mutex.unlock();
 	}
 
 	void AbstractContainer::sendData(bool const& _blocking)
 	{
-		IdentifierList output = this->outputParams();
-		DataImpl outputData;
-		unsigned int name = this->id();
-
-		std::cout << "size of data list " << m_DataList.size() << std::endl;
-
-		ContainerList tmp(m_Senders);
-		for (std::list< NamedData >::iterator r = m_DataList.end(); r != m_DataList.begin(); r--)
-		{
-			unsigned int sender = r->first;
-			DataImpl data = *(r->second).get();
-
-			ContainerList::iterator s;
-			for (ContainerList::iterator it = tmp.begin(); it != tmp.end(); it++)
-			{
-				if ((*it)->id() == sender)
-				{
-					s = it;
-					break;
-				}
-			}
-			tmp.erase(s);
-
-			//copy data packet
-			//outputData.insertAny(data.begin(), data.end());
-		}
-
-		if (!tmp.empty())
-		{
-			std::cout << "tmp not empty!" << std::endl;
-		}
-
 		if (_blocking)
 		{
-			m_NewData.notify(this, m_DataList.front());
+			NamedData data = m_DataList.back();
+			m_NewData.notify(this, data);
+			m_DataList.clear();
 		}
 		else
 		{
-			m_NewData.notifyAsync(this, m_DataList.front());
+			NamedData data = m_DataList.back();
+			m_NewData.notify(this, data);
+			m_DataList.clear();
 		}
-	}
-
-	void AbstractContainer::registerExceptionCallback(void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception))
-	{
-
-	}
-
-	void AbstractContainer::registerDataCallback(void (*NewDataCallback)(Identifier const& _sender, Data const& _data))
-	{
-
 	}
 
 	void AbstractContainer::listenTo(AbstractContainer *const _sender)

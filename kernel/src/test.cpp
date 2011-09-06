@@ -24,6 +24,7 @@
 #include <windows.h>
 
 #include <list>
+#include <iostream>
 
 using namespace _2Real;
 
@@ -55,19 +56,23 @@ void main(int argc, char** argv)
 	/**
 	*	get instance of 2 real thingie
 	*/
-	Engine testEngine("my test engine sucks");
+	Engine testEngine("ENGINE");
 
 	/**
 	*	load a test plugin
 	*	get identifiers of all services
 	*/
 	std::list< Identifier > ids;
-	Identifier plugin = testEngine.loadPlugin("my test plugin sucks more", path, "ImageProcessing_d.dll", "ImageProcessing", ids);
+#ifdef _DEBUG
+	Identifier plugin = testEngine.loadPlugin("IMG_PROC", path, "ImageProcessing_d.dll", "ImageProcessing", ids);
+#else
+	Identifier plugin = testEngine.loadPlugin("IMG_PROC", path, "ImageProcessing.dll", "ImageProcessing", ids);
+#endif
 
 	/**
 	*	print plugin infos
 	*/
-	std::cout << "plugin info by id " << plugin.id() << std::endl;
+	std::cout << "plugin info:" << std::endl;
 	testEngine.dumpPluginInfo(plugin);
 
 	/**
@@ -88,7 +93,7 @@ void main(int argc, char** argv)
 	*	also returns setup params
 	*/
 	std::list< Identifier > setupIDs1;
-	Identifier rand1 = testEngine.createService("random image service 1", plugin, "RandomImage2D_float", setupIDs1);
+	Identifier rand1 = testEngine.createService("RAND_1", plugin, "RandomImage2D_float", setupIDs1);
 
 	std::cout << "created service: " << rand1.name() << std::endl;
 	//std::cout << rand1.info() << std::endl;
@@ -121,7 +126,7 @@ void main(int argc, char** argv)
 	*	create second service
 	*/
 	std::list< Identifier > setupIDs2;
-	Identifier rand2 = testEngine.createService("random image service 2", plugin, "RandomImage2D_float", setupIDs2);
+	Identifier rand2 = testEngine.createService("RAND_2", plugin, "RandomImage2D_float", setupIDs2);
 	std::cout << "created service: " << rand2.name() << std::endl;
 	//std::cout << rand2.info() << std::endl;
 	for (Identifiers::iterator it = setupIDs2.begin(); it != setupIDs2.end(); it++)
@@ -145,7 +150,7 @@ void main(int argc, char** argv)
 	*	create third service
 	*/
 	std::list< Identifier > setupIDs3;
-	Identifier add = testEngine.createService("addition service", plugin, "ImageAddition2D_float", setupIDs3);
+	Identifier add = testEngine.createService("ADD", plugin, "ImageAddition2D_float", setupIDs3);
 	std::cout << "created service: " << add.name() << std::endl;
 	//std::cout << add.info() << std::endl;
 	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
@@ -168,7 +173,7 @@ void main(int argc, char** argv)
 	/**
 	*	synchronize rand1 & rand2
 	*/
-	Identifier sync = testEngine.createSynchronizationContainer("man this really stinks", rand1, rand2);
+	Identifier sync = testEngine.createSynchronizationContainer("SYNC", rand1, rand2);
 	std::cout << "created syncronization " << sync.name() << std::endl;
 
 	/**
@@ -191,7 +196,7 @@ void main(int argc, char** argv)
 	/**
 	*	create sequence of sync & add
 	*/
-	Identifier seq = testEngine.createSequenceContainer("yay, my life sucks less than this program", sync, add);
+	Identifier seq = testEngine.createSequenceContainer("SEQ", sync, add);
 	std::cout << "created sequence " << seq.name() << std::endl;
 
 

@@ -23,6 +23,8 @@
 #include "_2RealServiceFactory.h"
 #include "_2RealServiceMetadata.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 

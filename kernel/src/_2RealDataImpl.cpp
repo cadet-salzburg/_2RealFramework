@@ -92,4 +92,9 @@ namespace _2Real
 		m_Data.insert(_src.m_Data.begin(), _src.m_Data.end());
 	}
 
+	const unsigned int DataImpl::size() const
+	{
+		return m_Data.size();
+	}
+
 }

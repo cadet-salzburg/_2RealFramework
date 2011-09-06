@@ -5,6 +5,8 @@
 
 #include "Image.h"
 
+#include <iostream>
+
 /*
 	factory method for image addition service; registered in service factory of framework
 */
@@ -94,6 +96,10 @@ void ImageAdditionService< T >::update() throw(...)
 				{
 					unsigned int i = y*width + x;
 					tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
+					//if (x < 10 && y < 10)
+					//{
+					//	std::cout << m_InputImage1.data()[i] << " " << m_InputImage2.data()[i] << " " << tmp[i] << std::endl;
+					//}
 				}
 			}
 
