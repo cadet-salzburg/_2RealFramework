@@ -291,7 +291,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->start(_id);
+			m_Impl->start(_id, *m_ID);
 		}
 		catch (...)
 		{
@@ -300,15 +300,67 @@ namespace _2Real
 		}
 	}
 
+	void Engine::startAll()
+	{
+		try
+		{
+			m_Impl->startAll(*m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on startAll()" << std::endl;
+			throw;
+		}
+	}
+
 	void Engine::stop(Identifier const& _id)
 	{
 		try
 		{
-			m_Impl->stop(_id);
+			m_Impl->stop(_id, *m_ID);
 		}
 		catch (...)
 		{
 			std::cout << "engine: error on stop()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::stopAll()
+	{
+		try
+		{
+			m_Impl->stopAll(*m_ID);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on staopAll()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::destroy(Identifier const& _id)
+	{
+		try
+		{
+			//m_Impl->destroy(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on destroy()" << std::endl;
+			throw;
+		}
+	}
+
+	void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
+	{
+		try
+		{
+			//m_Impl->destroy(_id);
+		}
+		catch (...)
+		{
+			std::cout << "engine: error on insert()" << std::endl;
 			throw;
 		}
 	}

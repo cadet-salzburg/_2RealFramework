@@ -92,7 +92,7 @@ namespace _2Real
 		/**
 		*	inserts child before child + _id, throw exception if _id not found among children
 		*/
-		void addBefore(AbstractContainer *const child, unsigned int const& _id) throw(...);
+		void insert(AbstractContainer *const child, unsigned int const& _id) throw(...);
 
 		/**
 		*	adds child in the last position
@@ -108,11 +108,6 @@ namespace _2Real
 		*	returns pointer to child if found within children, NULL otherwise
 		*/
 		AbstractContainer *const getChild(unsigned int const& _id);
-
-		/**
-		*	returns pointer to production graph root
-		*/
-		AbstractContainer *const root();
 
 		/**
 		*	

@@ -143,6 +143,11 @@ namespace _2Real
 		/**
 		*
 		*/
+		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
 		void setParameterValue(Identifier const& _id, Poco::Any _any) throw(...);
 
 		/**
@@ -168,12 +173,27 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void start(Identifier const& _id) throw(...);
+		void start(Identifier const& _id, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		void startAll(Identifier const& _top) throw(...);
 
 		/**
 		*	
 		*/
-		void stop(Identifier const& _id) throw(...);
+		void stop(Identifier const& _id, Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		void stopAll(Identifier const& _top) throw(...);
+
+		/**
+		*
+		*/
+		void destroy(Identifier const& _id, Identifier const& _top) throw(...);
 
 	private:
 

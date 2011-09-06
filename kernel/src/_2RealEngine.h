@@ -302,18 +302,11 @@ namespace _2Real
 		void startAll() throw(...);
 
 		/**
-		*	function to remove an entity from its superior, back to nirvana
+		*	starts all of nirvanas children at once
 		*
-		*	moves a service, sequence or synchronization from its superior entity back to
-		*	nirvana. as a consequence, all existing IO connections are removed. the superior
-		*	will be stopped, causing its IO connections to be checked on restart. entities
-		*	already in nirvana are unaffected by this operation.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param _id				identifier of either: sequence, synchronization or service
+		*	possible exceptions:	IO misconfiguration if a child
 		*/
-		void remove(Identifier const& _id);
+		void stopAll() throw(...);
 
 		/**
 		*	destroys an entity

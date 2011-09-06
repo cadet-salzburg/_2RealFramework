@@ -145,6 +145,11 @@ namespace _2Real
 		*/
 		virtual void resetIO() = 0;
 
+		/**
+		*	returns pointer to production graph root
+		*/
+		AbstractContainer *const root();
+
 	protected:
 
 		Poco::Mutex									m_Mutex;

@@ -241,11 +241,9 @@ namespace _2Real
 			ids.clear();
 
 			unsigned int id = m_Factory->createService(_name, _id.id(), ids, _top.id());
-			std::cout << ids.size() << std::endl;
 
 			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
 			{
-				std::cout << "TRANSFORMING setup value" << std::endl;
 				_ids.push_back(m_Entities->getIdentifier(*it));
 			}
 			
@@ -265,11 +263,9 @@ namespace _2Real
 			ids.clear();
 
 			unsigned int id = m_Factory->createService(_name, _id.id(), _service, ids, _top.id());
-			std::cout << ids.size() << std::endl;
 
 			for (std::list< unsigned int >::iterator it = ids.begin(); it != ids.end(); it++)
 			{
-				std::cout << "TRANSFORMING setup value" << std::endl;
 				_ids.push_back(m_Entities->getIdentifier(*it));
 			}
 
@@ -483,16 +479,38 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::start(Identifier const& _id)
+	void EngineImpl::start(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
 			IEntity *e = m_Entities->get(_id.id());
-			AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			Container *father = static_cast< Container * >(container->father());
-			if (m_Graphs->isNirvana(father->id()))
+
+			if (!e)
 			{
-				//this is nirvana. will create thread & start child
+				throw Exception::failure();
+			}
+			else if (e->type() != IdentifierImpl::SEQUENCE && e->type() != IdentifierImpl::SYNCHRONIZATION &&  e->type() != IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+
+			IEntity *n = m_Entities->get(_top.id());
+
+			if (!n)
+			{
+				throw Exception::failure();
+			}
+
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			Container *nirvana = static_cast< Container * >(n);
+			Container *father = static_cast< Container * >(container->father());
+			
+			if (nirvana != father)
+			{
+				throw Exception::failure();
+			}
+			else if (m_Graphs->isNirvana(father->id()))
+			{
 				father->startChild(_id.id());
 			}
 			else
@@ -506,22 +524,223 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::stop(Identifier const& _id)
+	void EngineImpl::startAll(Identifier const& _top)
+	{
+		try
+		{
+			if (m_Graphs->isNirvana(_top.id()))
+			{
+				IEntity *e = m_Entities->get(_top.id());
+
+				if (!e)
+				{
+					throw Exception::failure();
+				}
+				else if (e->type() != IdentifierImpl::NIRVANA)
+				{
+					throw Exception::failure();
+				}
+
+				Container *nirvana = static_cast< Container * >(e);
+				std::list< unsigned int > children = nirvana->children();
+				for (std::list< unsigned int >::iterator it = children.begin(); it != children.end(); it++)
+				{
+					nirvana->startChild(*it);
+				}
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::stop(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
 			IEntity *e = m_Entities->get(_id.id());
-			AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			Container *father = static_cast< Container * >(container->father());
-			if (m_Graphs->isNirvana(father->id()))
+
+			if (!e)
 			{
-				//this is nirvana. will create thread & start child
+				throw Exception::failure();
+			}
+			else if (e->type() != IdentifierImpl::SEQUENCE && e->type() != IdentifierImpl::SYNCHRONIZATION &&  e->type() != IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+
+			IEntity *n = m_Entities->get(_top.id());
+
+			if (!n)
+			{
+				throw Exception::failure();
+			}
+			else if (n->type() != IdentifierImpl::NIRVANA)
+			{
+				throw Exception::failure();
+			}
+
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			Container *nirvana = static_cast< Container * >(n);
+			Container *father = static_cast< Container * >(container->father());
+			if (nirvana != father)
+			{
+				throw Exception::failure();
+			}
+			else if (m_Graphs->isNirvana(father->id()))
+			{
 				father->stopChild(_id.id());
 			}
 			else
 			{
 				throw Exception::failure();
 			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::stopAll(Identifier const& _top)
+	{
+		try
+		{
+			if (m_Graphs->isNirvana(_top.id()))
+			{
+				IEntity *e = m_Entities->get(_top.id());
+
+				if (!e)
+				{
+					throw Exception::failure();
+				}
+
+				Container *nirvana = static_cast< Container * >(e);
+				std::list< unsigned int > children = nirvana->children();
+				for (std::list< unsigned int >::iterator it = children.begin(); it != children.end(); it++)
+				{
+					nirvana->stopChild(*it);
+				}
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::destroy(Identifier const& _id, Identifier const& _top)
+	{
+		try
+		{
+			IEntity *e = m_Entities->get(_id.id());
+
+			if (!e)
+			{
+				throw Exception::failure();
+			}
+			else if (e->type() != IdentifierImpl::SEQUENCE && e->type() != IdentifierImpl::SYNCHRONIZATION &&  e->type() != IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+
+			AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			AbstractContainer *root = container->root();
+
+			if (!root)
+			{
+				throw Exception::failure();
+			}
+
+			IEntity *n = m_Entities->get(_top.id());
+
+			if (!n)
+			{
+				throw Exception::failure();
+			}
+
+			Container *nirvana = static_cast< Container * >(n);
+			Container *father = static_cast< Container * >(root->father());
+			if (nirvana != father)
+			{
+				throw Exception::failure();
+			}
+			else if (m_Graphs->isNirvana(nirvana->id()))
+			{
+				nirvana->stopChild(root->id());
+			}
+			else
+			{
+				throw Exception::failure();
+			}
+
+			container->resetIO();
+			//will call destructor-> destroy children
+			m_Entities->destroy(_id.id());
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void EngineImpl::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top)
+	{
+		try
+		{
+			IEntity *src = m_Entities->get(_src.id());
+			if (!src)
+			{
+				throw Exception::failure();
+			}
+			else if (src->type() != IdentifierImpl::SEQUENCE && src->type() != IdentifierImpl::SYNCHRONIZATION &&  src->type() != IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+			AbstractContainer *srcContainer = static_cast< AbstractContainer * >(src);
+			Container *srcFather = static_cast< Container * >(srcContainer->father());
+			Container *srcRoot = static_cast< Container * >(srcContainer->root());
+
+			IEntity *dst = m_Entities->get(_dst.id());
+			if (!dst)
+			{
+				throw Exception::failure();
+			}
+			else if (dst->type() != IdentifierImpl::SEQUENCE && dst->type() != IdentifierImpl::SYNCHRONIZATION)
+			{
+				throw Exception::failure();
+			}
+			Container *dstContainer = static_cast< Container * >(dst);
+			Container *dstRoot = static_cast< Container * >(dstContainer->root());
+
+			IEntity *top = m_Entities->get(_top.id());
+			if (!top)
+			{
+				throw Exception::failure();
+			}
+			else if (top->type() != IdentifierImpl::NIRVANA)
+			{
+				throw Exception::failure();
+			}
+			Container *nirvana = static_cast< Container * >(top);
+
+			//will throw exception if child does not exist
+			nirvana->stopChild(srcRoot->id());
+			nirvana->stopChild(dstRoot->id());
+
+			//will break io connections
+			srcFather->remove(srcContainer->id());
+
+			dstContainer->insert(srcContainer, _index+1);
 		}
 		catch (...)
 		{

@@ -158,7 +158,6 @@ namespace _2Real
 
 	void ServiceImpl::run() throw(...)
 	{
-		std::cout << "SERVICE RUN: " << name() << std::endl;
 		while (m_bRun || m_bRunOnce)
 		{
 			try
@@ -167,8 +166,7 @@ namespace _2Real
 				{
 					throw Exception::failure();
 				}
-
-				std::cout << "SERVICE UPDATE: available data: " << m_DataList.size() << " " << name() << std::endl;
+				std::cout << "SERVICE RUN: " << name() << " nr of available data: " << m_DataList.size() << std::endl;
 
 				//extract data
 				DataImpl input;
@@ -178,7 +176,7 @@ namespace _2Real
 				for (data = m_DataList.rbegin(); data != m_DataList.rend(); data++)
 				{
 					unsigned int sender = data->first;
-					std::cout << "SERVICE UPDATE " << sender << std::endl;
+					std::cout << "SERVICE RUN " << name() << " data available from " << sender << std::endl;
 					for (container = copy.begin(); container != copy.end(); container++)
 					{
 						if (sender == (*container)->id())
@@ -199,28 +197,25 @@ namespace _2Real
 					}
 				}
 
-				std::cout << "SERVICE UPDATE: nr of input params: " << input.size() << std::endl;
+				std::cout << "SERVICE RUN: " << name() << " nr of input params: " << input.size() << std::endl;
 
 				for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 				{
 					unsigned int id = in->second->linked()->id();
-					std::cout << id << std::endl;
 					if (input.contains(id))
 					{
-						std::cout << "SERVICE UPDATE: found " << id << " for " << in->second->name() << std::endl;
+						std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
 					}
 					DataImpl::SharedAny any = input.getAny(id);
 					in->second->extractFrom(any);
 				}
 
 				//call user service's update method
-				std::cout << "SERVICE RUN: updating now " << name() << std::endl;
+				std::cout << "SERVICE RUN: " << name() << " updating now " << std::endl;
 				m_Service->update();
-				std::cout << "SERVICE RUN: updated " << name() << std::endl;
 				sendData(m_bRunOnce);
-				std::cout << "SERVICE RUN: sent data " << name() << std::endl;
 				m_bRunOnce = false;
-				std::cout << "SERVICE RUN: success " << name() << std::endl;
+				std::cout << "SERVICE RUN: " << name() << " success " << std::endl;
 			}
 			catch (...)
 			{
@@ -237,14 +232,12 @@ namespace _2Real
 	{
 		try
 		{
-			std::cout << "SERVICE UPDATE: " << name() << std::endl;
-			
 			if (!m_bIsConfigured)
 			{
 				throw Exception::failure();
 			}
 
-			std::cout << "SERVICE UPDATE: available data: " << m_DataList.size() << " " << name() << std::endl;
+			std::cout << "SERVICE UPDATE: " << name() << " nr of available data: " << m_DataList.size() << std::endl;
 
 			//extract data
 			DataImpl input;
@@ -254,7 +247,7 @@ namespace _2Real
 			for (data = m_DataList.rbegin(); data != m_DataList.rend(); data++)
 			{
 				unsigned int sender = data->first;
-				std::cout << "SERVICE UPDATE " << sender << std::endl;
+				std::cout << "SERVICE UPDATE: " << name() << " data available from " << sender << std::endl;
 				for (container = copy.begin(); container != copy.end(); container++)
 				{
 					if (sender == (*container)->id())
@@ -275,25 +268,23 @@ namespace _2Real
 				}
 			}
 
-			std::cout << "SERVICE UPDATE: nr of input params: " << input.size() << std::endl;
+			std::cout << "SERVICE UPDATE: " << name() << " nr of input params: " << input.size() << std::endl;
 
 			for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 			{
 				unsigned int id = in->second->linked()->id();
-				std::cout << id << std::endl;
 				if (input.contains(id))
 				{
-					std::cout << "SERVICE UPDATE: found " << id << " for " << in->second->name() << std::endl;
+					std::cout << "SERVICE UPDATE: " << name() << " found data for " << in->second->name() << std::endl;
 				}
 				DataImpl::SharedAny any = input.getAny(id);
 				in->second->extractFrom(any);
 			}
 
-			std::cout << "SERVICE UPDATE: updating now " << name() << std::endl;
+			std::cout << "SERVICE UPDATE: " << name() << " updating now " << std::endl;
 			m_Service->update();
-			std::cout << "SERVICE UPDATE: sending data " << name() << std::endl;
 			sendData(true);
-			std::cout << "SERVICE UPDATE: success " << name() << std::endl;
+			std::cout << "SERVICE UPDATE: " << name() << " success " << std::endl;
 		}
 		catch (...)
 		{
@@ -412,7 +403,7 @@ namespace _2Real
 
 	void ServiceImpl::sendData(bool const& _blocking)
 	{
-		std::cout << "SERVICE IMPL SEND DATA: " << name() << std::endl;
+		std::cout << "SERVICE SEND DATA: " << name() << std::endl;
 
 		Poco::SharedPtr< DataImpl > outputData = Poco::SharedPtr< DataImpl >(new DataImpl());
 		unsigned int name = id();
@@ -420,7 +411,7 @@ namespace _2Real
 		for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
 		{
 			ServiceSlot *slot = it->second;
-			std::cout << "SERVICE IMPL SEND DATA: inserting slot value " << slot->name() << std::endl;
+			std::cout << "SERVICE SEND DATA: inserting slot value " << slot->name() << std::endl;
 			ServiceSlot::NamedAny any = slot->getAny();
 			outputData->insertAny(any.first, any.second);
 		}

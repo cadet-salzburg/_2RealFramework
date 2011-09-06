@@ -28,7 +28,7 @@
 
 using namespace _2Real;
 
-std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+std::string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 
 /**
 *	test callback for exceptions in container
@@ -260,6 +260,10 @@ void main(int argc, char** argv)
 	}
 
 	testEngine.start(seq);
+
+	Sleep(1000);
+
+	testEngine.stop(seq);
 
 	Sleep(100000);
 

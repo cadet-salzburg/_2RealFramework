@@ -79,6 +79,33 @@ namespace _2Real
 		return m_bCanReconfigure;
 	}
 
+	AbstractContainer *const AbstractContainer::root()
+	{
+		try
+		{
+			if (m_Father->type() == IdentifierImpl::NIRVANA)
+			{
+				return this;
+			}
+			else if (m_Father->type() == IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+			else if (m_Father == NULL)
+			{
+				throw Exception::failure();
+			}
+			else 
+			{
+				return m_Father->root();
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
 	void AbstractContainer::setFather(AbstractContainer *const _father)
 	{
 		if (_father == NULL)
@@ -97,7 +124,7 @@ namespace _2Real
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
-		std::cout << "adding listener to container: " << name() << std::endl;
+		std::cout << "ABSTRACT CONTAINER ADD LISTENER: " << name() << std::endl;
 
 		if (_queue == NULL)
 		{
@@ -111,7 +138,7 @@ namespace _2Real
 
 	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
 	{
-		std::cout << "removing listener from container: " << name() << std::endl;
+		std::cout << "ABSTRACT CONTAINER REMOVE LISTENER " << name() << std::endl;
 
 		if (_queue == NULL)
 		{
@@ -137,7 +164,7 @@ namespace _2Real
 
 		unsigned int sender = _data.first;
 		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: " << name() << " received data from " << sender << std::endl;
-		std::cout << m_Senders.size() << std::endl;
+		//std::cout << m_Senders.size() << std::endl;
 
 		ContainerList::iterator it;
 		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
@@ -155,11 +182,7 @@ namespace _2Real
 			throw Exception::failure();
 		}
 
-		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: data received, id: " << name() << " " << sender << std::endl;
 		m_DataList.push_back(_data);
-
-		NamedData test = m_DataList.back();
-		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: test: " << name() << " " << test.first << std::endl;
 		m_Mutex.unlock();
 	}
 
@@ -181,15 +204,11 @@ namespace _2Real
 
 	void AbstractContainer::listenTo(AbstractContainer *const _sender)
 	{
-		std::cout << "container: " << name() << " listens to " << _sender->name() << std::endl;
-
 		m_Senders.push_back(_sender);
 	}
 
 	void AbstractContainer::stopListeningTo(AbstractContainer *const _sender)
 	{
-		std::cout << "container: " << name() << " stops listening to " << _sender->name() << std::endl;
-
 		for (ContainerList::iterator it = m_Senders.begin(); it != m_Senders.end(); it++)
 		{
 			if (*it == _sender)
