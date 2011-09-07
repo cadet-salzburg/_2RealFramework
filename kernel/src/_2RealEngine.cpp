@@ -239,7 +239,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->link(_in, _out);
+			m_Impl->link(_in, _out, *m_ID);
 		}
 		catch (...)
 		{

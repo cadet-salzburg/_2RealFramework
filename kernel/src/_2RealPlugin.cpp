@@ -38,7 +38,7 @@ namespace _2Real
 	{
 	}
 
-	Plugin::Plugin(Plugin const& _src) throw(...) :
+	Plugin::Plugin(Plugin const& _src) :
 		IEntity(_src),
 		m_Metadata(_src.m_Metadata)
 	{
@@ -82,7 +82,7 @@ namespace _2Real
 		return m_Services;
 	}
 
-	void Plugin::registerService(std::string const& _name, ServiceCreator _creator) throw (...)
+	void Plugin::registerService(std::string const& _name, ServiceCreator _creator)
 	{
 		try
 		{
@@ -96,7 +96,7 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::install() throw(...)
+	void Plugin::install()
 	{
 		if (m_State == Plugin::UNINSTALLED)
 		{
@@ -115,18 +115,10 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
-#ifdef _DEBUG
-			std::cout << "plugin: installed" << std::endl;
-#endif
-
 			m_State = Plugin::INSTALLED;
 		}
 		else
 		{
-#ifdef _DEBUG
-		std::cout << "plugin: error on istall, was not in uninstalled state" << std::endl;
-#endif
-
 			m_State = Plugin::INVALID;
 			throw Exception::failure();
 		}
@@ -147,7 +139,6 @@ namespace _2Real
 			}
 
 			m_State = Plugin::UNINSTALLED;
-
 		}
 		catch (...)
 		{
@@ -156,7 +147,7 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::load() throw(...)
+	void Plugin::load()
 	{
 		if (m_State == Plugin::INSTALLED)
 		{
@@ -170,24 +161,15 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
-#ifdef _DEBUG
-			std::cout << "plugin: loaded successfully" << std::endl;
-#endif
-
 			m_State = Plugin::LOADED;
 		}
 		else
 		{
-
-#ifdef _DEBUG
-		std::cout << "plugin: error on load, was not in installed state" << std::endl;
-#endif
-
 			throw Exception::failure();
 		}
 	}
 
-	void Plugin::start(std::list< unsigned int > &_ids) throw(...)
+	void Plugin::start(std::list< unsigned int > &_ids)
 	{
 		if (m_State == Plugin::LOADED)
 		{
@@ -239,62 +221,46 @@ namespace _2Real
 		}
 		else
 		{
-
-#ifdef _DEBUG
-			std::cout << "plugin: error on start, was not in loaded state" << std::endl;
-#endif
-
 			throw Exception::failure();
 		}
 	}
 
-	void Plugin::stop() throw(...)
+	void Plugin::stop()
 	{
-		if (m_State == Plugin::ACTIVE)
+		try
 		{
-			try
+			if (m_State == Plugin::ACTIVE)
 			{
 				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
-				if (!m_Services.empty())
-				{
-					//clean up services
-				}
 				delete m_Activator;
-				m_Activator = NULL;
+				m_State = Plugin::LOADED;
 			}
-			catch (...)
-			{
-				m_State = Plugin::INVALID;
-				throw Exception::failure();
-			}
-
-			m_State = Plugin::LOADED;
 		}
-
-		throw Exception::failure();
+		catch (...)
+		{
+			m_State = Plugin::INVALID;
+			throw Exception::failure();
+		}
 	}
 
-	void Plugin::unload() throw(...)
+	void Plugin::unload()
 	{
-		if (m_State == Plugin::LOADED)
+		try
 		{
-			try
+			if (m_State == Plugin::LOADED)
 			{
 				if (m_PluginLoader.isLibraryLoaded(m_File))
 				{
 					m_PluginLoader.unloadLibrary(m_File);
 				}
 			}
-			catch(...)
-			{
-				m_State = Plugin::INVALID;
-				throw Exception::failure();
-			}
 
 			m_State = Plugin::INSTALLED;
 		}
-
-		throw Exception::failure();
+		catch (...)
+		{
+			m_State = Plugin::INVALID;
+			throw Exception::failure();
+		}
 	}
-
 }

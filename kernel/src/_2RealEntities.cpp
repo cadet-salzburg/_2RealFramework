@@ -57,6 +57,119 @@ namespace _2Real
 		}
 	}
 
+	void Entities::destroy(Container *_obj)
+	{
+		try
+		{
+			if (_obj->type() != IdentifierImpl::NIRVANA)
+			{
+				_obj->resetIO();
+			}
+			std::list< unsigned int > ids;
+			std::list< unsigned int >::iterator it;
+			ids = _obj->children();
+			for (it = ids.begin(); it != ids.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			delete _obj;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void Entities::destroy(ServiceImpl *_obj)
+	{
+		try
+		{
+			_obj->resetIO();
+			
+			std::list< unsigned int > ids;
+			std::list< unsigned int >::iterator it;
+			
+			ids = _obj->setupParamIDs();
+			for (it = ids.begin(); it != ids.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			ids = _obj->inputParamIDs();
+			for (it = ids.begin(); it != ids.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			ids = _obj->outputParamIDs();
+			for (it = ids.begin(); it != ids.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			delete _obj;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void Entities::destroy(ServiceSlot *_obj)
+	{
+		try
+		{
+			delete _obj;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void Entities::destroy(ServiceValue *_obj)
+	{
+		try
+		{
+			delete _obj;
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+	void Entities::destroy(Plugin *_obj)
+	{
+		try
+		{
+			std::list< unsigned int > ids;
+			std::list< unsigned int >::iterator it;
+			ids = _obj->serviceIDs();
+			for (it = ids.begin(); it != ids.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			delete _obj;
+		}
+		catch (...)
+		{
+		}
+	}
+
+	void Entities::destroy(FactoryReference *_obj)
+	{
+		try
+		{
+			delete _obj;
+		}
+		catch (...)
+		{
+		}
+	}
+
 	void Entities::destroy(unsigned int const& _id)
 	{
 		EntityMap::iterator it = m_Entities.find(_id);
@@ -66,23 +179,44 @@ namespace _2Real
 			IEntity *e = it->second;
 			IdentifierImpl::eType type = e->type();
 
-			if (type == IdentifierImpl::NIRVANA || type == IdentifierImpl::SEQUENCE || IdentifierImpl::SYNCHRONIZATION)
+			if (type == IdentifierImpl::SERVICE)
 			{
-				std::cout << "deleting container" << std::endl;
-				Container *container = static_cast< Container * >(e);
-				delete container;
-			}
-			else if (type == IdentifierImpl::SERVICE)
-			{
-				std::cout << "deleting service container" << std::endl;
 				ServiceImpl *service = static_cast< ServiceImpl * >(e);
-				delete service;
+				destroy(service);
+			}
+			else if (type == IdentifierImpl::NIRVANA || e->type() == IdentifierImpl::SEQUENCE || type == IdentifierImpl::SYNCHRONIZATION)
+			{
+				Container *container = static_cast< Container * >(e);
+				destroy(container);
+			}
+			else if (type == IdentifierImpl::INPUT || type == IdentifierImpl::OUTPUT)
+			{
+				ServiceSlot *slot = static_cast< ServiceSlot * >(e);
+				destroy(slot);
+			}
+			else if (type == IdentifierImpl::SETUP)
+			{
+				ServiceValue *value = static_cast< ServiceValue * >(e);
+				destroy(value);
+			}
+			else if (type == IdentifierImpl::PLUGIN)
+			{
+				Plugin *plugin = static_cast< Plugin * >(e);
+				destroy(plugin);
+			}
+			else if (type == IdentifierImpl::FACTORY)
+			{
+				FactoryReference *ref = static_cast< FactoryReference * >(e);
+				destroy(ref);
 			}
 
 			it->second = NULL;
+			m_Entities.erase(it);
 		}
-
-		throw Exception::failure();
+		else
+		{
+			throw Exception::failure();
+		}
 	}
 
 	IEntity *const Entities::get(unsigned int const& _id)
@@ -122,11 +256,6 @@ namespace _2Real
 		info << "directory:   " << _dir << std::endl;
 		info << "filename:    " << _file << std::endl;
 		info << "classname:   " << _class << std::endl;
-
-#ifdef _DEBUG
-		std::cout << "entity: object creation" << std::endl;
-		std::cout << info.str() << std::endl;
-#endif
 
 		IdentifierImpl *id = new IdentifierImpl(_name, "plugin", info.str(), IdentifierImpl::PLUGIN, m_iCreationCount);
 		Plugin *plugin = new Plugin(_dir, _file, _class, m_Factory, id);

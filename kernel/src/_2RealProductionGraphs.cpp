@@ -53,13 +53,11 @@ namespace _2Real
 		{
 			try
 			{
-				//destroys all children as well
 				m_Entities->destroy(it->first);
 				it->second = NULL;
 			}
 			catch (...)
 			{
-				//TODO
 				std::cout << "error on production graph destruction" << std::endl;
 			}
 		}
@@ -71,37 +69,22 @@ namespace _2Real
 	{
 		try
 		{
-			IEntity *entity = m_Entities->get(_id);
-			IdentifierImpl::eType type = entity->type();
-			
-			if (type != IdentifierImpl::SEQUENCE && type != IdentifierImpl::SYNCHRONIZATION && type != IdentifierImpl::NIRVANA)
+			IEntity *e = m_Entities->get(_id);
+			if (e->type() != IdentifierImpl::NIRVANA)
 			{
 				throw Exception::failure();
 			}
-			else if (type == IdentifierImpl::NIRVANA)
-			{
-				ContainerMap::iterator it = m_Containers.find(_id);
-				if (it == m_Containers.end())
-				{
-					throw Exception::failure();
-				}
 
-				m_Containers.erase(it);
-				m_Entities->destroy(_id);
-			}
-			else
+			ContainerMap::iterator it = m_Containers.find(_id);
+			if (it == m_Containers.end())
 			{
-				//_top must be in container map
-				ContainerMap::iterator it = m_Containers.find(_top);
-				if (it == m_Containers.end())
-				{
-					throw Exception::failure();
-				}
-				Container *top = it->second;
-
-				AbstractContainer *a = top->getChild(_id);
-				m_Entities->destroy(it->first);
+				throw Exception::failure();
 			}
+
+			Container *container = static_cast< Container * >(e);
+			container->shutdown();
+			m_Entities->destroy(_id);
+			m_Containers.erase(it);
 		}
 		catch (...)
 		{

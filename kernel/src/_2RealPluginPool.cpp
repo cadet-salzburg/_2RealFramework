@@ -44,25 +44,24 @@ namespace _2Real
 
 	PluginPool::~PluginPool()
 	{
-		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
+		try
 		{
-			std::cout << "plugin pool dtor" << std::endl;
-			try
+			for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
 			{
 				it->second->uninstall();
 				m_Entities->destroy(it->first);
-				it->second = NULL;
 			}
-			catch (...)
-			{
-				std::cout << "plugin uninstall error: " << it->first << std::endl;
-			}
+
+			m_Plugins.clear();
+		}
+		catch (...)
+		{
+			std::cout << "error on plugin pool destruction" << std::endl;
 		}
 	}
 
 	const unsigned int PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< unsigned int > &_ids) throw(...)
 	{
-
 		try
 		{
 			const Entities::ID id = m_Entities->createPlugin(_name, _dir, _file, _class);
@@ -80,49 +79,13 @@ namespace _2Real
 		}
 	}
 
-	//void PluginPool::uninstall(unsigned int const& _id) throw(...)
-	//{
-	//	PluginMap::iterator it = m_Plugins.find(_id);
-
-	//	if (it == m_Plugins.end())
-	//	{
-	//		throw Exception::failure();
-	//	}
-
-	//	try
-	//	{
-	//		it->second->uninstall();
-	//		delete it->second;
-	//		it->second = NULL;
-	//	}
-	//	catch (...)
-	//	{
-	//		throw Exception::failure();
-	//	}
-	//}
-
-	//Plugin const *const PluginPool::get(unsigned int const& _id) const
-	//{
-	//	PluginMap::const_iterator it = m_Plugins.find(_id);
-	//	
-	//	if (it != m_Plugins.end())
-	//	{
-	//		return it->second;
-	//	}
-
-	//	return NULL;
-	//}
-
 	PluginMetadata const& PluginPool::pluginInfo(unsigned int const& _id) const
 	{
 		PluginMap::const_iterator it = m_Plugins.find(_id);
-
 		if (it == m_Plugins.end())
 		{
 			throw Exception::failure();
 		}
-
 		return it->second->metadata();
 	}
-
 }

@@ -45,12 +45,9 @@ namespace _2Real
 
 	IEntity::~IEntity()
 	{
-		std::cout << "entity dtor" << std::endl;
 		if (m_ID)
 		{
-			std::cout << "releasing" << std::endl;
 			m_ID->release();
-			std::cout << "done" << std::endl;
 		}
 	}
 

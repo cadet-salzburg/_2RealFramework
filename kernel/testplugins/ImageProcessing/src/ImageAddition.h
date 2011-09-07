@@ -49,15 +49,15 @@ void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context) th
 	*/
 	try
 	{
-		std::cout << "IMAGE ADDITION SETUP" << std::endl;
+		//std::cout << "IMAGE ADDITION SETUP" << std::endl;
 
 		_context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
 
-		std::cout << "IMAGE ADDITION SETUP: scale factor 1 = " << m_ScaleFactor1 << std::endl;
+		//std::cout << "IMAGE ADDITION SETUP: scale factor 1 = " << m_ScaleFactor1 << std::endl;
 
 		_context->getSetupParameter< T >("scale factor 2", m_ScaleFactor2);
 
-		std::cout << "IMAGE ADDITION SETUP: scale factor 2 = " << m_ScaleFactor2 << std::endl;
+		//std::cout << "IMAGE ADDITION SETUP: scale factor 2 = " << m_ScaleFactor2 << std::endl;
 
 		_context->registerInputSlot< ::Image< T, 2> >("input image 1", m_InputImage1);
 		_context->registerInputSlot< ::Image< T, 2> >("input image 2", m_InputImage2);
@@ -96,7 +96,7 @@ void ImageAdditionService< T >::update() throw(...)
 				{
 					unsigned int i = y*width + x;
 					tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
-					//if (x < 10 && y < 10)
+					//if (x < 1 && y < 1)
 					//{
 					//	std::cout << m_InputImage1.data()[i] << " " << m_InputImage2.data()[i] << " " << tmp[i] << std::endl;
 					//}

@@ -40,6 +40,9 @@ namespace _2Real
 	class Plugin;
 	class ServiceImpl;
 	class Container;
+	class FactoryReference;
+	class ServiceSlot;
+	class ServiceValue;
 
 	class Entities
 	{
@@ -86,6 +89,18 @@ namespace _2Real
 		*	builds an identifier for an id
 		*/
 		const Identifier getIdentifier(unsigned int const& _id) const throw(...);
+
+		void Entities::destroy(Container *_obj) throw(...);
+
+		void Entities::destroy(ServiceImpl *_obj) throw(...);
+
+		void Entities::destroy(ServiceSlot *_obj) throw(...);
+
+		void Entities::destroy(ServiceValue *_obj) throw(...);
+
+		void Entities::destroy(Plugin *_obj) throw(...);
+
+		void Entities::destroy(FactoryReference *_obj) throw(...);
 
 		/**
 		*	destroy entity, throw if not existing

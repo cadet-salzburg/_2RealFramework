@@ -48,31 +48,12 @@ namespace _2Real
 		{
 			if(s_Instance == NULL)
 			{
-
-#ifdef _DEBUG
-				std::cout << "engine (singleton): creating new instance" << std::endl;
-#endif
-
 				s_Instance = new EngineImpl();
 			}
-
-#ifdef _DEBUG
-			std::cout << "engine (singleton): success" << std::endl;
-#endif
-
 			s_iRefCount++;
 			s_Mutex.unlock();
-
-#ifdef _DEBUG
-			std::cout << "engine (singleton): success" << std::endl;
-#endif
-
 			return s_Instance;
 		}
-
-#ifdef _DEBUG
-		std::cout << "engine: could not lock mutex for instance creation" << std::endl;
-#endif
 
 		throw Exception::failure();
 	}
@@ -102,6 +83,7 @@ namespace _2Real
 			}
 
 			s_Mutex.unlock();
+			return;
 		}
 
 		throw Exception::failure();
@@ -113,20 +95,10 @@ namespace _2Real
 		m_Entities(new Entities()),
 		m_Graphs(new ProductionGraphs())
 	{
-
-#ifdef _DEBUG
-		std::cout << "engine (singleton): ctor" << std::endl;
-#endif
-
 		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Graphs->m_Plugins = m_Plugins;
 		m_Entities->m_Factory = m_Plugins->m_Factory = m_Graphs->m_Factory = m_Factory;
 		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs = m_Graphs;
 		m_Plugins->m_Entities = m_Factory->m_Entities = m_Graphs->m_Entities = m_Entities;
-
-#ifdef _DEBUG
-		std::cout << "engine (singleton): ctor success" << std::endl;
-#endif
-
 	}
 
 	EngineImpl::EngineImpl(EngineImpl const& _src)
@@ -164,6 +136,7 @@ namespace _2Real
 	{
 		try
 		{
+
 			m_Graphs->destroy(_id.id(), _top.id());
 		}
 		catch (...)
@@ -359,56 +332,38 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::link(Identifier const& _in,  Identifier const& _out)
+	void EngineImpl::link(Identifier const& _in,  Identifier const& _out, Identifier const& _top)
 	{
-		//try
-		//{
-		//	IEntity *in = m_Entities->get(_in.id());
-		//	IEntity *out = m_Entities->get(_out.id());
-		//	ServiceSlot *inSlot = static_cast< ServiceSlot * >(in);
-		//	ServiceSlot *outSlot = static_cast< ServiceSlot * >(out);
-		//	ServiceImpl *inService = inSlot->service();
-		//	ServiceImpl *outService = outSlot->service();
+		try
+		{
+			IEntity *in = m_Entities->get(_in.id());
+			IEntity *out = m_Entities->get(_out.id());
+			IEntity *top = m_Entities->get(_top.id());
+			Container *nirvana = static_cast< Container * >(top);
+			ServiceSlot *inSlot = static_cast< ServiceSlot * >(in);
+			ServiceSlot *outSlot = static_cast< ServiceSlot * >(out);
+			ServiceImpl *inService = inSlot->service();
+			ServiceImpl *outService = outSlot->service();
+			Container *inFather = static_cast< Container * >(inService->father());
+			Container *outFather = static_cast< Container * >(outService->father());
 
-		//	//TODO: some checks
-		//	//like if there is a cycle
+			if (inFather != nirvana || outFather != nirvana)
+			{
+				throw Exception::failure();
+			}
+			if (inService == outService)
+			{
+				throw Exception::failure();
+			}
 
-		//	//first, find out if in was already linked
-		//	//& reset if it was
-		//	if (inSlot->isLinked())
-		//	{
-		//		ServiceSlot *senderSlot = inSlot->linked();
-		//		inSlot->reset();
-		//		senderSlot->reset();
-		//		ServiceImpl *senderService = senderSlot->service();
-		//		senderService->removeListener(inService);
-		//		inService->stopListeningTo(senderService);
-		//		//sender service now sends its data nowhere
-		//	}
-
-		//	//second, find out if out was already linked
-		//	//& reset if it was
-		//	if (outSlot->isLinked())
-		//	{
-		//		ServiceSlot *listenerSlot = outSlot->linked();
-		//		outSlot->reset();
-		//		listenerSlot->reset();
-		//		ServiceImpl *listenerService = listenerSlot->service();
-		//		outService->removeListener(listenerService);
-		//		listenerService->stopListeningTo(outService);
-		//		//listener service now does not receive anything anymore
-		//	}
-
-		//	//connect in & out
-		//	inSlot->linkWith(outSlot);
-		//	outSlot->linkWith(inSlot);
-		//	outService->addListener(inService);
-		//	inService->listenTo(outService);
-		//}
-		//catch (...)
-		//{
-		//	throw;
-		//}
+			nirvana->stopChild(_in.id());
+			nirvana->stopChild(_out.id());
+			outSlot->linkWith(inSlot);
+		}
+		catch (...)
+		{
+			throw;
+		}
 	}
 
 	void EngineImpl::registerToException(Identifier const& _id, ExceptionCallback _callback)
@@ -649,19 +604,20 @@ namespace _2Real
 	{
 		try
 		{
-			IEntity *e = m_Entities->get(_id.id());
-
+			unsigned int id = _id.id();
+			IEntity *e = m_Entities->get(id);
 			if (!e)
 			{
 				throw Exception::failure();
 			}
-			else if (e->type() != IdentifierImpl::SEQUENCE && e->type() != IdentifierImpl::SYNCHRONIZATION &&  e->type() != IdentifierImpl::SERVICE)
+
+			IdentifierImpl::eType type = e->type();
+			if (type != IdentifierImpl::SEQUENCE && type != IdentifierImpl::SYNCHRONIZATION && type != IdentifierImpl::SERVICE)
 			{
 				throw Exception::failure();
 			}
 
 			AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			
 			Container *father = static_cast< Container * >(container->father());
 			if (!father)
 			{
@@ -673,7 +629,6 @@ namespace _2Real
 			{
 				throw Exception::failure();
 			}
-
 			IEntity *n = m_Entities->get(_top.id());
 			if (!n)
 			{
@@ -688,28 +643,11 @@ namespace _2Real
 			}
 
 			//remove container from its father
-			father->remove(_id.id());
-
-
-			/*
-			else if (m_Graphs->isNirvana(nirvana->id()))
-			{
-				nirvana->stopChild(root->id());
-			}
-			else
-			{
-				throw Exception::failure();
-			}
-
-			if (root = container)
-			{
-				//reset IO
-				//this will stop all containers which depend on root as well
-				root->resetIO();
-			}*/
-
-			//will call destructor-> destroy all children, input / output params etc
-			m_Entities->destroy(_id.id());
+			//this stops the container
+			//& resets IO
+			father->remove(id);
+			container->shutdown();
+			m_Entities->destroy(id);
 		}
 		catch (...)
 		{
@@ -721,50 +659,51 @@ namespace _2Real
 	{
 		try
 		{
-			//IEntity *src = m_Entities->get(_src.id());
-			//if (!src)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (src->type() != IdentifierImpl::SEQUENCE && src->type() != IdentifierImpl::SYNCHRONIZATION &&  src->type() != IdentifierImpl::SERVICE)
-			//{
-			//	throw Exception::failure();
-			//}
-			//AbstractContainer *srcContainer = static_cast< AbstractContainer * >(src);
-			//Container *srcFather = static_cast< Container * >(srcContainer->father());
-			//Container *srcRoot = static_cast< Container * >(srcContainer->root());
+			IEntity *src = m_Entities->get(_src.id());
+			if (!src)
+			{
+				throw Exception::failure();
+			}
+			else if (src->type() != IdentifierImpl::SEQUENCE && src->type() != IdentifierImpl::SYNCHRONIZATION &&  src->type() != IdentifierImpl::SERVICE)
+			{
+				throw Exception::failure();
+			}
+			AbstractContainer *srcContainer = static_cast< AbstractContainer * >(src);
+			Container *srcFather = static_cast< Container * >(srcContainer->father());
+			Container *srcRoot = static_cast< Container * >(srcContainer->root());
 
-			//IEntity *dst = m_Entities->get(_dst.id());
-			//if (!dst)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (dst->type() != IdentifierImpl::SEQUENCE && dst->type() != IdentifierImpl::SYNCHRONIZATION)
-			//{
-			//	throw Exception::failure();
-			//}
-			//Container *dstContainer = static_cast< Container * >(dst);
-			//Container *dstRoot = static_cast< Container * >(dstContainer->root());
+			IEntity *dst = m_Entities->get(_dst.id());
+			if (!dst)
+			{
+				throw Exception::failure();
+			}
+			else if (dst->type() != IdentifierImpl::SEQUENCE && dst->type() != IdentifierImpl::SYNCHRONIZATION)
+			{
+				throw Exception::failure();
+			}
+			Container *dstContainer = static_cast< Container * >(dst);
+			Container *dstRoot = static_cast< Container * >(dstContainer->root());
 
-			//IEntity *top = m_Entities->get(_top.id());
-			//if (!top)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (top->type() != IdentifierImpl::NIRVANA)
-			//{
-			//	throw Exception::failure();
-			//}
-			//Container *nirvana = static_cast< Container * >(top);
+			IEntity *top = m_Entities->get(_top.id());
+			if (!top)
+			{
+				throw Exception::failure();
+			}
+			else if (top->type() != IdentifierImpl::NIRVANA)
+			{
+				throw Exception::failure();
+			}
+			Container *nirvana = static_cast< Container * >(top);
 
-			////will throw exception if child does not exist
-			//nirvana->stopChild(srcRoot->id());
-			//nirvana->stopChild(dstRoot->id());
+			if (_index > dstContainer->childCount())
+			{
+				throw Exception::failure();
+			}
 
-			////will break io connections
-			//srcFather->remove(srcContainer->id());
-
-			//dstContainer->insert(srcContainer, _index+1);
+			nirvana->stopChild(srcRoot->id());
+			nirvana->stopChild(dstRoot->id());
+			srcFather->remove(srcContainer->id());
+			dstContainer->add(srcContainer, _index);
 		}
 		catch (...)
 		{

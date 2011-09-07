@@ -26,7 +26,8 @@
 
 using namespace _2Real;
 
-std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+//std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+std::string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 
 /**
 *	test callback for exceptions in container
@@ -244,8 +245,6 @@ void main(int argc, char** argv)
 		testEngine.setParameterValue(*it, 1.0f);
 	}
 
-	//testEngine.registerToException(seq, exceptionOccured);
-	//testEngine.registerToNewData(seq, dataAvailable);
 	std::list< Identifier > children1 = testEngine.getChildren(sync);
 	std::list< Identifier > children2 = testEngine.getChildren(seq);
 	for (Identifiers::iterator it = children1.begin(); it != children1.end(); it++)
@@ -258,9 +257,32 @@ void main(int argc, char** argv)
 	}
 
 	testEngine.start(seq);
-	testEngine.stop(seq);
-	testEngine.start(seq);
 
-	//int bla = 0;
-	//std::cin >> bla;
+	//testEngine.registerToException(seq, exceptionOccured);
+	//testEngine.registerToNewData(seq, dataAvailable);
+
+	while (1)
+	{
+		char end;
+		std::cin >> end;
+		if (end == 'b')
+		{
+			break;
+		}
+	}
+
+	testEngine.stop(seq);
+	std::cout << "stopped " << seq.name() << std::endl;
+
+	while (1)
+	{
+		char end;
+		std::cin >> end;
+		if (end == 'b')
+		{
+			break;
+		}
+	}
+
+	std::cout << "GOODBYE" << std::endl;
 }

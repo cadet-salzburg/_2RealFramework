@@ -50,22 +50,22 @@ namespace _2Real
 
 	ServiceFactory::~ServiceFactory()
 	{
-		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+		try
 		{
-			ServiceReference ref = it->second;
-			
-			//delete factory reference
-			delete ref.first;
-			ref.first = NULL;
-			
-			//service containers are not deleted here, but in the next loop
-			for (ServiceList::iterator it = ref.second->begin();  it != ref.second->end(); it++)
+			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
-				*it = NULL;
+				ServiceReference ref = it->second;
+				for (ServiceList::iterator r = ref.second->begin();  r != ref.second->end(); r++)
+				{
+					*r = NULL;
+				}
+				ref.second->clear();
+				delete ref.second;
 			}
-
-			delete ref.second;
-			ref.second = NULL;
+		}
+		catch (...)
+		{
+			std::cout << "error on service factory destruction" << std::endl;
 		}
 	}
 
@@ -249,7 +249,6 @@ namespace _2Real
 
 			if (services == NULL || factory == NULL)
 			{
-				std::cout << "FACTORY: NOTEXISTANT REF! " << _service << " " << _id << std::endl;
 				throw Exception::failure();
 			}
 

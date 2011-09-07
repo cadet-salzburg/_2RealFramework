@@ -47,22 +47,22 @@ namespace _2Real
 		typedef std::list< unsigned int > IdentifierList;
 
 		/**
-		*	thou shall createth
+		*	
 		*/
 		AbstractContainer(IdentifierImpl *const _id);
 
 		/**
-		*	thou shalt not copieth
+		*	
 		*/
 		AbstractContainer(AbstractContainer const& _src) throw(...);
 
 		/**
-		*	thou shalt not assigneth
+		*	
 		*/
 		AbstractContainer& operator=(AbstractContainer const& _src) throw(...);
 
 		/**
-		*	thou shall deleteth
+		*	
 		*/
 		~AbstractContainer();
 
@@ -224,7 +224,6 @@ namespace _2Real
 		*	allows listening to the container from the outside
 		*/
 		DataQueue									*m_OutputQueue;
-
 	};
 
 }

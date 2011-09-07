@@ -49,15 +49,15 @@ void RandomImageService< T >::setup(_2Real::ServiceContext *const _context) thro
 	*/
 	try
 	{
-		std::cout << "RANDOM IMAGE SETUP" << std::endl;
+		//std::cout << "RANDOM IMAGE SETUP" << std::endl;
 
 		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
 
-		std::cout << "RANDOM IMAGE SETUP: width = " << m_iImageWidth << std::endl;
+		//std::cout << "RANDOM IMAGE SETUP: width = " << m_iImageWidth << std::endl;
 
 		_context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
 
-		std::cout << "RANDOM IMAGE SETUP: height = " << m_iImageHeight << std::endl;
+		//std::cout << "RANDOM IMAGE SETUP: height = " << m_iImageHeight << std::endl;
 
 		_context->registerOutputSlot< ::Image< T, 2 > >("output image", m_OutputImage);
 
@@ -91,6 +91,10 @@ void RandomImageService< T >::update() throw(...)
 			{
 				unsigned int i = y*m_iImageWidth + x;
 				tmp[i] = random_t< T >();
+				//if (x < 1 && y < 1)
+				//{
+				//	std::cout << tmp[i] << std::endl;
+				//}
 			}
 		}
 

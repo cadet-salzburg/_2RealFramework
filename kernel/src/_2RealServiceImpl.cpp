@@ -53,48 +53,7 @@ namespace _2Real
 
 	ServiceImpl::~ServiceImpl()
 	{
-		try
-		{
-			//resets all slots, clears listeners & senders
-			resetIO();
-
-			shutdown();
-
-			//service slots are deleted here
-			for (ParamMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
-			{
-				delete it->second;
-				it->second = NULL;
-			}
-
-			for (ValueMap::iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
-			{
-				delete it->second;
-				it->second = NULL;
-			}
-
-			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
-			{
-				delete it->second;
-				it->second = NULL;
-			}
-
-			m_InputParams.clear();
-			m_OutputParams.clear();
-			m_SetupParams.clear();
-			m_InputIds.clear();
-			m_OutputIds.clear();
-			m_SetupIds.clear();
-			m_InputSlots.clear();
-			m_OutputSlots.clear();
-
-			//user defined service is deleted here
-			delete m_Service;
-		}
-		catch (...)
-		{
-			std::cout << "service shutdown failed" << std::endl;
-		}
+		delete m_Service;
 	}
 
 	void ServiceImpl::addSlot(unsigned int const& id, ServiceSlot *const _slot)
@@ -341,6 +300,8 @@ namespace _2Real
 	{
 		try
 		{
+			std::cout << "SERVICE SHUTDOWN: " << name() << std::endl;
+			
 			m_Service->shutdown();
 		}
 		catch(...)

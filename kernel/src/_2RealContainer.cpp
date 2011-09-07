@@ -48,23 +48,6 @@ namespace _2Real
 
 	Container::~Container()
 	{
-		try
-		{
-			std::cout << "SHUTDOWN" << std::endl;
-			//shutdown recursively shuts down all children
-			shutdown();
-
-			//delete recursively deletes all children
-			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				delete *it;
-				*it = NULL;
-			}
-		}
-		catch (...)
-		{
-			std::cout << "container shutdown failed " << name() << std::endl;
-		}
 	}
 
 	const unsigned int Container::childCount() const
@@ -376,7 +359,7 @@ namespace _2Real
 				AbstractContainer *root = this->root();
 				Container *nirvana = static_cast< Container * >(root->father());
 				nirvana->stopChild(root->id());
-				child->resetIO();
+				this->resetIO();
 				m_Children.erase(it);
 			}
 			else if (type() == IdentifierImpl::SEQUENCE)
@@ -426,26 +409,55 @@ namespace _2Real
 
 			if (_index == m_Children.size())
 			{
+				if (type() == IdentifierImpl::SEQUENCE && m_Children.size() >= 1)
+				{
+					AbstractContainer *old = m_Children.back();
+					if (old)
+					{
+						old->resetIO();
+					}
+				}
+				if (type() == IdentifierImpl::SYNCHRONIZATION)
+				{
+					this->resetIO();
+				}
+
 				m_Children.push_back(_child);
 			}
 			else if (_index == 0)
 			{
+				if (type() == IdentifierImpl::SEQUENCE && m_Children.size() >= 1)
+				{
+					AbstractContainer *old = m_Children.front();
+					if (old)
+					{
+						old->resetIO();
+					}
+				}
+				if (type() == IdentifierImpl::SYNCHRONIZATION)
+				{
+					this->resetIO();
+				}
+
 				m_Children.push_front(_child);
 			}
 			else
 			{
-				std::cout << "CONTAINER: add child " << name() << ", searching position" << std::endl;
-				AbstractContainer::ContainerList::iterator pos = findPosition(_index);
+				if (type() == IdentifierImpl::SYNCHRONIZATION)
+				{
+					this->resetIO();
+				}
 
+				AbstractContainer::ContainerList::iterator pos = findPosition(_index);
 				m_Children.insert(pos, _child);
 			}
 
 			_child->setFather(this);
 
-			if (type() == IdentifierImpl::SEQUENCE && (_index == 0 || _index == m_Children.size()))
-			{
-				resetIO();
-			}
+			//if (type() == IdentifierImpl::SEQUENCE && (_index == 0 || _index == m_Children.size()))
+			//{
+			//	resetIO();
+			//}
 		}
 		catch (...)
 		{
@@ -559,7 +571,7 @@ namespace _2Real
 				}
 				if (type() == IdentifierImpl::SEQUENCE)
 				{
-					//std::cout << "SEQ RUN: " << name() << std::endl;
+					std::cout << "SEQ RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
 						(*it)->update();
@@ -572,7 +584,6 @@ namespace _2Real
 					std::cout << "SYNC RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
-						//std::cout << "SYNC RUN: " << name() << " starting " << (*it)->name() << std::endl;
 						(*it)->start(true);
 						m_ThreadPool.start(**it, (*it)->name());
 					}
@@ -619,7 +630,7 @@ namespace _2Real
 			}
 			else if (type() == IdentifierImpl::SYNCHRONIZATION)
 			{
-				//std::cout << "SYNC UPDATE: " << name() << std::endl;
+				std::cout << "SYNC UPDATE: " << name() << std::endl;
 				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 				{
 					(*it)->start(true);
@@ -642,22 +653,34 @@ namespace _2Real
 	{
 		try
 		{
+			std::cout << "CONTAINER SHUTDOWN: " << name() << std::endl;
+
+			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				(*it)->stop();
+			}
+
 			if (type() == IdentifierImpl::NIRVANA)
 			{
+				std::cout << "CONTAINER SHUTDOWN: clearing threads" << name() << std::endl;
 				for (std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.begin(); it != m_Threads.end(); it++)
 				{
 					it->second->join();
 					delete it->second;
 				}
+				std::cout << "CONTAINER SHUTDOWN: clearing threads" << name() << std::endl;
+				m_Threads.clear();
 			}
 			else if (type() == IdentifierImpl::SYNCHRONIZATION)
 			{
+				std::cout << "CONTAINER SHUTDOWN: clearing threadpool" << name() << std::endl;
 				for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 				{
 					(*it)->stop();
 				}
 
 				m_ThreadPool.joinAll();
+				std::cout << "CONTAINER SHUTDOWN: clearing threadpool" << name() << std::endl;
 			}
 
 			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
@@ -667,6 +690,7 @@ namespace _2Real
 		}
 		catch(...)
 		{
+			std::cout << "CONTAINER SHUTDOWN: error " << name() << std::endl;
 			throw Exception::failure();
 		}
 	}

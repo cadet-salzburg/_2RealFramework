@@ -153,7 +153,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		void link(Identifier const& _in, Identifier const& _out) throw(...);
+		void link(Identifier const& _in, Identifier const& _out, Identifier const& _top) throw(...);
 
 		/**
 		*	
