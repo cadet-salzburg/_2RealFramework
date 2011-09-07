@@ -21,6 +21,7 @@
 #include "_2RealIdentifierImpl.h"
 #include "_2RealDataImpl.h"
 #include "_2RealData.h"
+#include "_2RealServiceSlot.h"
 
 #include "Poco\Delegate.h"
 
@@ -68,6 +69,8 @@ namespace _2Real
 	{
 		m_bRunOnce = false;
 		m_bRun = false;
+
+
 	}
 
 	void AbstractContainer::setup(ServiceContext *const _contextPtr)
@@ -160,45 +163,77 @@ namespace _2Real
 
 	void AbstractContainer::receiveData(NamedData &_data)
 	{
-		m_Mutex.lock();
-
-		unsigned int sender = _data.first;
-		std::cout << "ABSTRACT CONTAINER RECEIVE DATA: " << name() << " received data from " << sender << std::endl;
-		//std::cout << m_Senders.size() << std::endl;
-
-		ContainerList::iterator it;
-		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
+		try
 		{
-			if ((*it)->id() == sender)
+			m_Mutex.lock();
+
+			if (type() != IdentifierImpl::SERVICE)
 			{
-				break;
+				throw Exception::failure();
 			}
-		}
+			
+			unsigned int sender = _data.first;
 
-		if (it == m_Senders.end())
-		{
-			std::cout << "ABSTRACT CONTAINER RECEIVE DATA: data received, id not in senders" << name() << " " << sender << std::endl;
+			ContainerList::iterator it;
+			for (it = m_Senders.begin(); it != m_Senders.end(); it++)
+			{
+				if ((*it)->id() == sender)
+				{
+					break;
+				}
+			}
+
+			if (it == m_Senders.end())
+			{
+				throw Exception::failure();
+			}
+
+			m_DataList.push_back(_data);
+
 			m_Mutex.unlock();
-			throw Exception::failure();
 		}
-
-		m_DataList.push_back(_data);
-		m_Mutex.unlock();
+		catch (...)
+		{
+			std::cout << "ABSTRACT CONTAINER RECEIVE DATA: error" << std::endl;
+			m_Mutex.unlock();
+			throw;
+		}
 	}
 
 	void AbstractContainer::sendData(bool const& _blocking)
 	{
-		if (_blocking)
+		try
 		{
-			NamedData data = m_DataList.back();
-			m_NewData.notify(this, data);
-			m_DataList.clear();
+			//std::cout << "SEND DATA: " << name() << std::endl;
+			
+			Poco::SharedPtr< DataImpl > outputData = Poco::SharedPtr< DataImpl >(new DataImpl());
+			unsigned int name = id();
+
+			std::list< ServiceSlot * > out = this->outputSlots();
+			std::list< ServiceSlot * >::iterator it;
+
+			for (it = out.begin(); it != out.end(); it++)
+			{
+				ServiceSlot *slot = *it;
+				ServiceSlot::NamedAny any = slot->getAny();
+				outputData->insertAny(any.first, any.second);
+			}
+
+			NamedData data(name, outputData);
+
+			if (_blocking)
+			{
+				m_NewData.notify(this, data);
+			}
+			else
+			{
+				m_NewData.notifyAsync(this, data);
+			}
 		}
-		else
+		catch (...)
 		{
-			NamedData data = m_DataList.back();
-			m_NewData.notify(this, data);
-			m_DataList.clear();
+			std::cout << "SEND DATA: error " << name() << std::endl;
+			throw;
 		}
 	}
 
@@ -216,6 +251,27 @@ namespace _2Real
 				m_Senders.erase(it);
 				break;
 			}
+		}
+	}
+
+	void AbstractContainer::resetIO()
+	{
+		std::list< ServiceSlot * > input = this->inputSlots();
+		std::list< ServiceSlot * > output = this->outputSlots();
+
+		std::list< ServiceSlot * >::iterator it;
+		for (it = input.begin(); it != input.end(); it++)
+		{
+			ServiceSlot *out = (*it)->linked();
+			if (out)
+			{
+				out->reset();
+			}
+		}
+
+		for (it = output.begin(); it != output.end(); it++)
+		{
+			(*it)->reset();
 		}
 	}
 }

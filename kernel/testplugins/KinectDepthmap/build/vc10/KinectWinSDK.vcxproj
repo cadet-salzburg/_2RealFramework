@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Verbose|Win32">
+      <Configuration>Verbose</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Verbose|x64">
+      <Configuration>Verbose</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\KinectDepthMap.cpp" />

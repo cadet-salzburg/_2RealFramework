@@ -79,7 +79,7 @@ void RandomImageService< T >::update() throw(...)
 	*/
 	try
 	{
-		std::cout << "RANDOM IMAGE UPDATE" << std::endl;
+		//std::cout << "RANDOM IMAGE UPDATE" << std::endl;
 		
 		unsigned int sz = m_iImageHeight*m_iImageWidth;
 		
@@ -101,7 +101,7 @@ void RandomImageService< T >::update() throw(...)
 		m_OutputImage.setData(tmp);
 		m_OutputImage.setResolution(res);
 
-		std::cout << "RANDOM IMAGE UPDATE: success" << std::endl;
+		//std::cout << "RANDOM IMAGE UPDATE: success" << std::endl;
 	}
 	catch (...)
 	{

@@ -19,6 +19,9 @@
 #include "_2RealServiceSlot.h"
 #include "_2RealException.h"
 #include "_2RealAbstractRef.h"
+#include "_2RealServiceImpl.h"
+
+#include <iostream>
 
 namespace _2Real
 {
@@ -59,8 +62,40 @@ namespace _2Real
 
 	void ServiceSlot::linkWith(ServiceSlot *const _link)
 	{
-		m_bIsLinked = true;
-		m_Linked = _link;
+		try
+		{
+			if (!_link)
+			{
+				throw Exception::failure();
+			}
+
+			//output is responsible for linking
+			if (type() == IdentifierImpl::OUTPUT)
+			{
+				if (_link == m_Linked)
+				{
+					//do nothing
+					return;
+				}
+				else if (m_bIsLinked)
+				{
+					//reset includes input
+					reset();
+				}
+
+				(_link->service())->listenTo(this->service());
+				(this->service())->addListener(_link->service());
+				_link->linkWith(this);
+			}
+
+			m_Linked = _link;
+			m_bIsLinked = true;
+		}
+		catch (...)
+		{
+			m_bIsLinked = false;
+			throw;
+		}
 	}
 
 	void ServiceSlot::extractFrom(ServiceSlot::SharedAny const& _any)
@@ -85,8 +120,24 @@ namespace _2Real
 
 	void ServiceSlot::reset()
 	{
-		m_bIsLinked = false;
-		m_Linked = NULL;
+		try
+		{
+			if (m_bIsLinked && type() == IdentifierImpl::OUTPUT)
+			{
+				(m_Linked->service())->stopListeningTo(this->service());
+				(this->service())->removeListener(m_Linked->service());
+				//resets input slot
+				m_Linked->reset();
+			}
+
+			m_Linked = NULL;
+			m_bIsLinked = false;
+		}
+		catch (...)
+		{
+			m_bIsLinked = false;
+			throw;
+		}
 	}
 
 }

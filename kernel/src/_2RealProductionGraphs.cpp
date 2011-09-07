@@ -86,9 +86,8 @@ namespace _2Real
 					throw Exception::failure();
 				}
 
-				it->second = NULL;
 				m_Containers.erase(it);
-				m_Entities->destroy(it->first);
+				m_Entities->destroy(_id);
 			}
 			else
 			{
@@ -106,6 +105,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
+			throw;
 		}
 	}
 
@@ -166,33 +166,12 @@ namespace _2Real
 			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SEQUENCE);
 			Container *seq = static_cast< Container * >(id.second);
 			
+			//move sequence into nirvana
+			top->add(seq, 0);
+
 			//add containers to newly created sequence
-			seq->append(a);
-			seq->append(b);
-
-			//now, everything is in place -> autolink children
-			//TODO: perform some checks
-			//like, if the params even match in number and type etc
-			AbstractContainer::IdentifierList output = a->outputParams();
-			AbstractContainer::IdentifierList input = b->inputParams();
-			AbstractContainer::IdentifierList::iterator itIn;
-			AbstractContainer::IdentifierList::iterator itOut;
-			for (itIn = input.begin(), itOut = output.begin(); itIn != input.end(), itOut != output.end(); itIn++, itOut++)
-			{
-				IEntity *in = m_Entities->get(*itIn);
-				IEntity *out = m_Entities->get(*itOut);
-				ServiceSlot *inParam = static_cast< ServiceSlot * >(in);
-				ServiceSlot *outParam = static_cast< ServiceSlot * >(out);
-				inParam->linkWith(outParam);
-				outParam->linkWith(inParam);
-				ServiceImpl *serviceIn = inParam->service();
-				ServiceImpl *serviceOut = outParam->service();
-				serviceOut->addListener(serviceIn);
-				serviceIn->listenTo(serviceOut);
-			}
-
-			//finally, move sequence into nirvana
-			top->append(seq);
+			seq->add(b, 0);
+			seq->add(a, 0);
 
 			return id.first;
 		}
@@ -232,14 +211,12 @@ namespace _2Real
 			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SYNCHRONIZATION);
 			Container *sync = static_cast< Container * >(id.second);
 
+			//move sync into nirvana
+			top->add(sync, 0);
+
 			//add to containers to newly created synchronization
-			sync->append(a);
-			sync->append(b);
-
-			//in a sync, no internal linking of slots takes place
-
-			//finally, move sync into nirvana
-			top->append(sync);
+			sync->add(a, 0);
+			sync->add(b, 1);
 
 			return id.first;
 		}

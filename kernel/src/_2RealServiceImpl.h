@@ -109,47 +109,37 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList setupParams() const throw(...);
+		IdentifierList setupParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList inputParams() const throw(...);
+		IdentifierList inputParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList outputParams() const throw(...);
+		IdentifierList outputParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		void resetIO();
+		std::list< ServiceSlot * > inputSlots() throw(...);
 
 		/**
 		*	
 		*/
-		void sendData(bool const& _blocking);
+		std::list< ServiceSlot * > outputSlots() throw(...);
 
 	private:
 
 		/**
-		*	input slots are accessed by sender id
-		*/
-		typedef std::pair< const unsigned int, ServiceSlot * >	NamedInput;
-
-		/**
-		*	input slots are accessed by sender id
-		*/
-		typedef std::map< const unsigned int, ServiceSlot * >	InputMap;
-
-		/**
-		*	output slots are accessed by name
+		*	slots are accessed by name
 		*/
 		typedef std::pair< const std::string, ServiceSlot * >	NamedParam;
 
 		/**
-		*	output slots are accessed by name
+		*	slots are accessed by name
 		*/
 		typedef std::map< const std::string, ServiceSlot * >	ParamMap;
 
@@ -164,14 +154,19 @@ namespace _2Real
 		typedef std::map< const std::string, ServiceValue * >	ValueMap;
 
 		/**
-		*	input slots
+		*	input slots as map
 		*/
-		InputMap												m_InputParams;
+		ParamMap												m_InputParams;
 
 		/**
 		*	
 		*/
 		IdentifierList											m_InputIds;
+
+		/**
+		*	
+		*/
+		std::list< ServiceSlot * >								m_InputSlots;
 
 		/**
 		*	output slots
@@ -182,6 +177,11 @@ namespace _2Real
 		*	
 		*/
 		IdentifierList											m_OutputIds;
+
+		/**
+		*	
+		*/
+		std::list< ServiceSlot * >								m_OutputSlots;
 
 		/**
 		*	setup value

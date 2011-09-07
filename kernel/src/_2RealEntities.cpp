@@ -63,7 +63,22 @@ namespace _2Real
 
 		if (it != m_Entities.end())
 		{
-			delete it->second;
+			IEntity *e = it->second;
+			IdentifierImpl::eType type = e->type();
+
+			if (type == IdentifierImpl::NIRVANA || type == IdentifierImpl::SEQUENCE || IdentifierImpl::SYNCHRONIZATION)
+			{
+				std::cout << "deleting container" << std::endl;
+				Container *container = static_cast< Container * >(e);
+				delete container;
+			}
+			else if (type == IdentifierImpl::SERVICE)
+			{
+				std::cout << "deleting service container" << std::endl;
+				ServiceImpl *service = static_cast< ServiceImpl * >(e);
+				delete service;
+			}
+
 			it->second = NULL;
 		}
 

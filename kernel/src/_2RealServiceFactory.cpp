@@ -210,7 +210,7 @@ namespace _2Real
 			//add service to nirvanas children
 			IEntity *e = m_Entities->get(_top);
 			Container *top = static_cast< Container * >(e);
-			top->append(service);
+			top->add(service, 0);
 
 			//save container id
 			services->push_back(service);
@@ -300,7 +300,7 @@ namespace _2Real
 			//add service to nirvanas children
 			IEntity *e = m_Entities->get(_top);
 			Container *top = static_cast< Container * >(e);
-			top->append(service);
+			top->add(service, 0);
 
 			//save container id
 			services->push_back(service);

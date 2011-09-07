@@ -20,6 +20,8 @@
 #include "_2RealIdentifierImpl.h"
 #include "_2RealException.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -43,9 +45,12 @@ namespace _2Real
 
 	IEntity::~IEntity()
 	{
-		if (m_ID != NULL)
+		std::cout << "entity dtor" << std::endl;
+		if (m_ID)
 		{
+			std::cout << "releasing" << std::endl;
 			m_ID->release();
+			std::cout << "done" << std::endl;
 		}
 	}
 

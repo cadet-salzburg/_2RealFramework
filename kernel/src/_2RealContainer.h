@@ -21,12 +21,17 @@
 #include "_2RealAbstractContainer.h"
 
 #include <list>
+#include <map>
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	currently represents sequence containers, synchronization containers &
+	*	the top level containers (nirvana)
+	*	concrete behaviour is defined by the type() of the container
+	*	doing this seemed like a good idea at some point, some weeks ago
+	*	TODO: create individual classes. this class is a huge mess, and it pisses me of :/
 	*/
 
 	class Container : public AbstractContainer
@@ -92,12 +97,7 @@ namespace _2Real
 		/**
 		*	inserts child before child + _id, throw exception if _id not found among children
 		*/
-		void insert(AbstractContainer *const child, unsigned int const& _id) throw(...);
-
-		/**
-		*	adds child in the last position
-		*/
-		void append(AbstractContainer *const child);
+		void add(AbstractContainer *const _child, unsigned int const& _index) throw(...);
 
 		/**
 		*	removes child. completely stops production graph, breaks all IO connections & removes all listeners
@@ -122,27 +122,27 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList setupParams() const throw(...);
+		IdentifierList setupParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList inputParams() const throw(...);
+		IdentifierList inputParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList outputParams() const throw(...);
+		IdentifierList outputParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		void resetIO();
+		std::list< ServiceSlot * > inputSlots() throw(...);
 
 		/**
 		*	
 		*/
-		void sendData(bool const& _blocking);
+		std::list< ServiceSlot * > outputSlots() throw(...);
 
 	private:
 
@@ -152,14 +152,25 @@ namespace _2Real
 		ContainerList::iterator findChild(unsigned int const& _id);
 
 		/**
-		*
+		*	returns iterator to position
 		*/
-		ContainerList					m_Children;
+		ContainerList::iterator findPosition(unsigned int const& _index);
 
 		/**
-		*	
+		*	child container list
 		*/
-		Poco::ThreadPool				m_Threads;
+		ContainerList								m_Children;
+
+		/**
+		*	threads. used by nirvana. stupid poco threadpool wont let me
+		*	join individual threads.
+		*/
+		std::map< unsigned int, Poco::Thread * >	m_Threads;
+
+		/**
+		*	threadpool. used by sync containers. i hate life.
+		*/
+		Poco::ThreadPool							m_ThreadPool;
 
 	};
 

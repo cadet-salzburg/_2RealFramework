@@ -18,22 +18,31 @@
 
 #include "_2RealContainer.h"
 #include "_2RealException.h"
+#include "_2RealServiceImpl.h"
+#include "_2RealServiceSlot.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 	
-	Container::Container(IdentifierImpl *const _id) : AbstractContainer(_id)
+	Container::Container(IdentifierImpl *const _id) :
+		AbstractContainer(_id),
+		m_Children(),
+		//TODO: find some good init values for the thread pool
+		m_Threads()
 	{
 	}
 
 	Container::Container(Container const& _src) : AbstractContainer(_src)
 	{
+		//no copies allowed
+		throw Exception::noCopy();
 	}
 
 	Container& Container::operator=(Container const& _src)
 	{
+		//no copies allowed
 		throw Exception::noCopy();
 	}
 
@@ -41,20 +50,21 @@ namespace _2Real
 	{
 		try
 		{
+			std::cout << "SHUTDOWN" << std::endl;
+			//shutdown recursively shuts down all children
 			shutdown();
+
+			//delete recursively deletes all children
+			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				delete *it;
+				*it = NULL;
+			}
 		}
 		catch (...)
 		{
-			std::cout << "service shutdown failed" << std::endl;
+			std::cout << "container shutdown failed " << name() << std::endl;
 		}
-		
-		for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			delete *it;
-			*it = NULL;
-		}
-
-		m_Children.clear();
 	}
 
 	const unsigned int Container::childCount() const
@@ -77,6 +87,11 @@ namespace _2Real
 	{
 		try
 		{
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER: start child " << name() << ", id of child: " << _id << std::endl;
+#endif
+
 			//must be nirvana
 			if (type() != IdentifierImpl::NIRVANA)
 			{
@@ -99,9 +114,33 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
+			std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.find(child->id());
+			if (it != m_Threads.end())
+			{
+				//container runs already
+				throw Exception::failure();
+			}
+
+			Poco::Thread *thread = new Poco::Thread();
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER: start child " << name() << " checking configuration" << std::endl;
+#endif
+
 			child->checkConfiguration();
+			//child runs until stop
 			child->start(false);
-			m_Threads.start(*child, child->name());
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER: start child " << name() << "starting thread" << std::endl;
+#endif
+
+			thread->start(*child);
+			m_Threads.insert(std::pair< unsigned int, Poco::Thread * >(child->id(), thread));
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER: start child " << name() << " success" << std::endl;
+#endif
 		}
 		catch (...)
 		{
@@ -113,6 +152,11 @@ namespace _2Real
 	{
 		try
 		{
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER: stop child " << name() << ", id of child: " << _id << std::endl;
+#endif
+
 			//must be nirvana
 			if (type() != IdentifierImpl::NIRVANA)
 			{
@@ -135,8 +179,24 @@ namespace _2Real
 				throw Exception::failure();
 			}
 
-			//thread will complete update cycle!
+			//thread will complete update cycle
 			child->stop();
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER stop child: " << name() << " waiting for completion" << std::endl;
+#endif
+
+			//wait
+			std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.find(child->id());
+			if (it != m_Threads.end())
+			{
+				it->second->join();
+				m_Threads.erase(it);
+			}
+
+#ifdef _VERBOSE
+			std::cout << "CONTAINER stop child: " << name() << " success" << std::endl;
+#endif
 		}
 		catch (...)
 		{
@@ -144,13 +204,13 @@ namespace _2Real
 		}
 	}
 
-	AbstractContainer::IdentifierList Container::setupParams() const
+	AbstractContainer::IdentifierList Container::setupParamIDs() const
 	{
 		//container has no setup params
 		throw Exception::failure();
 	}
 
-	AbstractContainer::IdentifierList Container::inputParams() const
+	AbstractContainer::IdentifierList Container::inputParamIDs() const
 	{
 		if (type() == IdentifierImpl::NIRVANA)
 		{
@@ -161,7 +221,7 @@ namespace _2Real
 		{
 			//sequence: input = first child's input
 			AbstractContainer *first = m_Children.front();
-			return first->inputParams();
+			return first->inputParamIDs();
 		}
 		else if (type() == IdentifierImpl::SYNCHRONIZATION)
 		{
@@ -169,7 +229,7 @@ namespace _2Real
 			IdentifierList result;
 			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				IdentifierList childParams = (*it)->inputParams();
+				IdentifierList childParams = (*it)->inputParamIDs();
 				result.splice(result.end(), childParams);
 			}
 
@@ -179,7 +239,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	AbstractContainer::IdentifierList Container::outputParams() const
+	AbstractContainer::IdentifierList Container::outputParamIDs() const
 	{
 		if (type() == IdentifierImpl::NIRVANA)
 		{
@@ -190,7 +250,7 @@ namespace _2Real
 		{
 			//sequence: output = last child's output
 			AbstractContainer *last = m_Children.back();
-			return last->outputParams();
+			return last->outputParamIDs();
 		}
 		else if (type() == IdentifierImpl::SYNCHRONIZATION)
 		{
@@ -198,7 +258,65 @@ namespace _2Real
 			IdentifierList result;
 			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				IdentifierList childParams = (*it)->outputParams();
+				IdentifierList childParams = (*it)->outputParamIDs();
+				result.splice(result.end(), childParams);
+			}
+
+			return result;
+		}
+
+		throw Exception::failure();
+	}
+
+	std::list< ServiceSlot * > Container::inputSlots()
+	{
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+			//nirvana has no output params
+			throw Exception::failure();
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			//sequence: output = last child's output
+			AbstractContainer *last = m_Children.back();
+			return last->outputSlots();
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			//sync: output = union of all children's output
+			std::list< ServiceSlot * > result;
+			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				std::list< ServiceSlot * > childParams = (*it)->outputSlots();
+				result.splice(result.end(), childParams);
+			}
+
+			return result;
+		}
+
+		throw Exception::failure();
+	}
+
+	std::list< ServiceSlot * > Container::outputSlots()
+	{
+		if (type() == IdentifierImpl::NIRVANA)
+		{
+			//nirvana has no output params
+			throw Exception::failure();
+		}
+		else if (type() == IdentifierImpl::SEQUENCE)
+		{
+			//sequence: output = last child's output
+			AbstractContainer *last = m_Children.back();
+			return last->outputSlots();
+		}
+		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		{
+			//sync: output = union of all children's output
+			std::list< ServiceSlot * > result;
+			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				std::list< ServiceSlot * > childParams = (*it)->outputSlots();
 				result.splice(result.end(), childParams);
 			}
 
@@ -221,100 +339,116 @@ namespace _2Real
 		return m_Children.end();
 	}
 
-	void Container::append(AbstractContainer *const _child)
+	AbstractContainer::ContainerList::iterator Container::findPosition(unsigned int const& _index)
 	{
-		//AbstractContainer *last = NULL;
-		//if (!m_Children.empty())
-		//{
-		//	last = m_Children.back();
-		//}
+		AbstractContainer::ContainerList::iterator position = m_Children.begin();
+		position++;
+		for (unsigned int count = 0; count < _index; count++)
+		{
+			position++;
+		}
 
-		m_Children.push_back(_child);
-		_child->setFather(this);
-
-		//if (type() == IdentifierImpl::NIRVANA)
-		//{
-		//	return;
-		//}
-
-		//Container *father = static_cast< Container * >(this->father());
-		//if (father->type() == IdentifierImpl::NIRVANA)
-		//{
-		//	//do nothing
-		//}
-		//else if (father->type() == IdentifierImpl::SEQUENCE)
-		//{
-		//	//last of a sequence
-		//}
-
-		//if (type() == IdentifierImpl::NIRVANA)
-		//{
-		//}
-		//else if (type() == IdentifierImpl::SYNCHRONIZATION)
-		//{
-		//	//add listener
-		//	//_child->addListener(this);
-		//	//listenTo(_child);
-		//}
-		//else if (type() == IdentifierImpl::SEQUENCE)
-		//{
-		//	//if (last != NULL)
-		//	//{
-		//		//listen to the new last element
-		//		//last->removeListener(this);
-		//		//stopListeningTo(last);
-		//	//}
-		//	//_child->addListener(this);
-		//	//listenTo(_child);
-		//}
+		return position;
 	}
 
 	void Container::remove(unsigned int const& _id)
 	{
-		AbstractContainer::ContainerList::iterator it = findChild(_id);
-		if (it == m_Children.end())
+		try
 		{
-			throw Exception::failure();
-		}
+			std::cout << "CONTAINER: remove " << name() << " " << _id << std::endl;
 
-		AbstractContainer *child = *it;
-		if (type() == IdentifierImpl::NIRVANA)
-		{
-			child->resetIO();
-			m_Children.erase(it);
+			AbstractContainer::ContainerList::iterator it = findChild(_id);
+			if (it == m_Children.end())
+			{
+				throw Exception::failure();
+			}
+			AbstractContainer *child = *it;
+		
+			if (type() == IdentifierImpl::NIRVANA)
+			{
+				//reset all dependent containers as well
+				stopChild(child->id());
+				child->resetIO();
+				m_Children.erase(it);
+			}
+			else if (type() == IdentifierImpl::SYNCHRONIZATION)
+			{
+				AbstractContainer *root = this->root();
+				Container *nirvana = static_cast< Container * >(root->father());
+				nirvana->stopChild(root->id());
+				child->resetIO();
+				m_Children.erase(it);
+			}
+			else if (type() == IdentifierImpl::SEQUENCE)
+			{
+				AbstractContainer *root = this->root();
+				Container *nirvana = static_cast< Container * >(root->father());
+				nirvana->stopChild(root->id());
+				child->resetIO();
+				m_Children.erase(it);
+			}
 		}
-		else if (type() == IdentifierImpl::SYNCHRONIZATION)
+		catch (...)
 		{
-			root()->stop();
-			child->setFather(NULL);
-			child->resetIO();
-			m_Children.erase(it);
+			throw;
 		}
-		else if (type() == IdentifierImpl::SEQUENCE)
+	}
+
+	void Container::add(AbstractContainer *const _child, unsigned int const& _index)
+	{
+		try
 		{
-			root()->stop();
-			child->setFather(NULL);
-			child->resetIO();
-			m_Children.erase(it);
-			////check if this was the last child in sequence
-			//if (child == m_Children.back())
-			//{
-			//	//delete from children
-			//	m_Children.erase(it);
-			//	
-			//	AbstractContainer *last = m_Children.back();
-			//	if (last != NULL)
-			//	{
-			//		//listen to the new last child
-			//		//last->addListener(this);
-			//		//listenTo(last);
-			//	}
-			//}
-			//else
-			//{
-			//	//delete from children
-			//	m_Children.erase(it);
-			//}
+			std::cout << "CONTAINER: add child " << name() << ", child id: " << _child->id() << " at index: " << _index << std::endl;
+
+			//make sure child does not already exist in list
+			AbstractContainer::ContainerList::iterator it = findChild(_child->id());
+			if (it != m_Children.end())
+			{
+				std::cout << "CONTAINER: add child " << name() << ", child already exists" << std::endl;
+				throw Exception::failure();
+			}
+
+			if (_index > m_Children.size())
+			{
+				std::cout << "CONTAINER: add child " << name() << ", invalid index" << std::endl;
+				throw Exception::failure();
+			}
+
+			std::cout << "CONTAINER: add child " << name() << ", stopping root" << std::endl;
+
+			//stop root
+			if (type() == IdentifierImpl::SYNCHRONIZATION || type() == IdentifierImpl::SEQUENCE)
+			{
+				AbstractContainer *root = this->root();
+				Container *nirvana = static_cast< Container * >(root->father());
+				nirvana->stopChild(root->id());
+			}
+
+			if (_index == m_Children.size())
+			{
+				m_Children.push_back(_child);
+			}
+			else if (_index == 0)
+			{
+				m_Children.push_front(_child);
+			}
+			else
+			{
+				std::cout << "CONTAINER: add child " << name() << ", searching position" << std::endl;
+				AbstractContainer::ContainerList::iterator pos = findPosition(_index);
+
+				m_Children.insert(pos, _child);
+			}
+
+			_child->setFather(this);
+
+			if (type() == IdentifierImpl::SEQUENCE && (_index == 0 || _index == m_Children.size()))
+			{
+				resetIO();
+			}
+		}
+		catch (...)
+		{
 		}
 	}
 
@@ -349,39 +483,52 @@ namespace _2Real
 		}
 	}
 
-	void Container::insert(AbstractContainer *const _child, unsigned int const& _index)
-	{
-		try
-		{
-			if (_index > childCount())
-			{
-				throw Exception::failure();
-			}
-
-			ContainerList::iterator insert = m_Children.begin();
-			insert++;
-			for (unsigned int count = 0; count <= _index; count++)
-			{
-				insert++;
-			}
-
-			m_Children.insert(insert, _child);
-			_child->setFather(this);
-
-			//TODO: io slots?
-		}
-		catch (...)
-		{
-			throw;
-		}
-	}
-
 	void Container::checkConfiguration()
 	{
 		try
 		{
-			m_bIsConfigured = false;
+			//if this is a sequence, link all children
+			//however, the input of first element / output of last element stays unlinked
+			//this is done because check config is called recursively starting with the root
+			//& the father of a container is responsible for linking first input / last output
+			//or, if the father is nirvana (in case of the root), the linking must be done by the user.
+			if (type() == IdentifierImpl::SEQUENCE)
+			{
+				std::cout << "CONTAINER CHECK CONFIG: " << name() << std::endl;
+				std::list< ServiceSlot * > outSlots;
+				std::list< ServiceSlot * > inSlots;
+				ContainerList::iterator out;
+				ContainerList::iterator in;
+				std::list< ServiceSlot * >::iterator outSlot;
+				std::list< ServiceSlot * >::iterator inSlot;
+				
+				in = m_Children.begin();
+				in++;
+				for (out = m_Children.begin(); in != m_Children.end(); in++, out++)
+				{
+					outSlots = (*out)->outputSlots();
+					inSlots = (*in)->inputSlots();
 
+					if (outSlots.size() != inSlots.size())
+					{
+						//this is a simple test to see if input / output slots match in number
+						std::cout << "CONTAINER CHECK: input / output slots don't match in numbers" << std::endl;
+						std::cout << (*out)->name() << " " << outSlots.size() << " " << (*in)->name() << " " << inSlots.size() << std::endl;
+						throw Exception::failure();
+					}
+
+					for (inSlot = inSlots.begin(), outSlot = outSlots.begin(); inSlot != inSlots.end(); inSlot++, outSlot++)
+					{
+						//TODO: check if types match!
+						ServiceSlot *a = *outSlot;
+						ServiceSlot *b = *inSlot;
+						//breaks former linkage if it differs
+						a->linkWith(b);
+					}
+				}
+			}
+
+			//now, do the same for all children
 			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
 				(*it)->checkConfiguration();
@@ -391,6 +538,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
+			m_bIsConfigured = false;
 			throw Exception::failure();
 		}
 	}
@@ -403,56 +551,34 @@ namespace _2Real
 			{
 				if (!m_bIsConfigured)
 				{
-					std::cout << "CONTAINER UPDATE: not configured" << std::endl;
 					throw Exception::failure();
 				}
 				if (type() == IdentifierImpl::NIRVANA)
 				{
-					std::cout << "CONTAINER RUN: is nirvana" << std::endl;
 					throw Exception::failure();
 				}
-				else if (type() == IdentifierImpl::SEQUENCE)
+				if (type() == IdentifierImpl::SEQUENCE)
 				{
+					//std::cout << "SEQ RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
-						//if child is a service, will send data (blocking)
-						std::cout << "SEQ RUN: updating now "  << (*it)->name() << std::endl;
 						(*it)->update();
 					}
 
-					//if (!m_Listeners.empty())
-					//{
-					//	sendData(false);
-					//}
-
-					std::cout << "SEQ RUN: success" << std::endl;
+					sendData(false);
 				}
 				else if (type() == IdentifierImpl::SYNCHRONIZATION)
 				{
-					//initialize children for running once only
+					std::cout << "SYNC RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
+						//std::cout << "SYNC RUN: " << name() << " starting " << (*it)->name() << std::endl;
 						(*it)->start(true);
+						m_ThreadPool.start(**it, (*it)->name());
 					}
 
-					//start threads
-					//service containers will send their data automatically at the end of update (blocking)
-					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-					{
-						std::cout << "SYNC RUN: starting thread for " << (*it)->name() << std::endl;
-						m_Threads.start(**it, (*it)->name());
-					}
-
-					//wait until everyone has finished
-					m_Threads.joinAll();
-					std::cout << "SYNC RUN: all threads completed" << std::endl;
-
-					//if (!m_Listeners.empty())
-					//{
-					//	sendData(false);
-					//}
-
-					std::cout << "SYNC RUN: success" << std::endl;
+					m_ThreadPool.joinAll();
+					sendData(false);
 				}
 
 				m_bRunOnce = false;
@@ -462,10 +588,9 @@ namespace _2Real
 				std::cout << "CONTAINER RUN: error" << std::endl;
 				m_bRun = false;
 				m_bRunOnce = false;
-				//this is a container. if run was called, that means the father is nirvana.
-				//stop everything, tell father that this happened
-				stop();
-				//throw Exception::failure();
+				Container *root = static_cast< Container * >(this->root());
+				Container *nirvana = static_cast< Container * >(root->father());
+				nirvana->stopChild(root->id());
 			}
 		}
 	}
@@ -476,55 +601,34 @@ namespace _2Real
 		{
 			if (!m_bIsConfigured)
 			{
-				std::cout << "CONTAINER UPDATE: not configured" << std::endl;
 				throw Exception::failure();
 			}
 			if (type() == IdentifierImpl::NIRVANA)
 			{
-				std::cout << "CONTAINER UPDATE: is nirvana" << std::endl;
 				throw Exception::failure();
 			}
 			else if (type() == IdentifierImpl::SEQUENCE)
 			{
+				std::cout << "SEQ UPDATE: " << name() << std::endl;
 				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 				{
-					std::cout << "SEQ UPDATE: updating " << (*it)->name() << std::endl;
 					(*it)->update();
 				}
 
-				//if (!m_Listeners.empty())
-				//{
-				//	sendData(false);
-				//}
-
-				std::cout << "SEQ UPDATE: success" << std::endl;
+				sendData(false);
 			}
 			else if (type() == IdentifierImpl::SYNCHRONIZATION)
 			{
-				//initialize children for running once only
+				//std::cout << "SYNC UPDATE: " << name() << std::endl;
 				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 				{
 					(*it)->start(true);
+					m_ThreadPool.start(**it, (*it)->name());
 				}
 
-				//start threads
-				//service containers will send their data automatically at the end of run (blocking)
-				for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					std::cout << "SYNC UPDATE: starting thread for " << (*it)->name() << std::endl;
-					m_Threads.start(**it, (*it)->name());
-				}
+				m_ThreadPool.joinAll();
 
-				//wait until everyone has finished
-				m_Threads.joinAll();
-				std::cout << "SYNC UPDATE: all threads completed" << std::endl;
-				
-				//if (!m_Listeners.empty())
-				//{
-				//	sendData(false);
-				//}
-
-				std::cout << "SYNC UPDATE: success" << std::endl;
+				sendData(false);
 			}
 		}
 		catch (...)
@@ -538,7 +642,24 @@ namespace _2Real
 	{
 		try
 		{
-			m_Threads.joinAll();
+			if (type() == IdentifierImpl::NIRVANA)
+			{
+				for (std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.begin(); it != m_Threads.end(); it++)
+				{
+					it->second->join();
+					delete it->second;
+				}
+			}
+			else if (type() == IdentifierImpl::SYNCHRONIZATION)
+			{
+				for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					(*it)->stop();
+				}
+
+				m_ThreadPool.joinAll();
+			}
+
 			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
 				(*it)->shutdown();
@@ -548,27 +669,5 @@ namespace _2Real
 		{
 			throw Exception::failure();
 		}
-	}
-
-	void Container::sendData(bool const& _blocking)
-	{
-		AbstractContainer::sendData(_blocking);
-	}
-
-	void Container::resetIO()
-	{
-		//AbstractContainer::ContainerList::iterator it;
-
-		//for (it = m_Listeners.begin(); it != m_Listeners.end(); it++)
-		//{
-		//	(*it)->stopListeningTo(this);
-		//}
-		//m_Listeners.clear();
-
-		//for (it = m_Senders.begin(); it != m_Senders.end(); it++)
-		//{
-		//	(*it)->removeListener(this);
-		//}
-		//m_Senders.clear();
 	}
 }

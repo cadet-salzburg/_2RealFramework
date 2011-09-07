@@ -80,7 +80,7 @@ void ImageAdditionService< T >::update() throw(...)
 	*/
 	try
 	{
-		std::cout << "IMAGE ADDITION UPDATE" << std::endl;
+		//std::cout << "IMAGE ADDITION UPDATE" << std::endl;
 
 		if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
 		{
@@ -110,7 +110,7 @@ void ImageAdditionService< T >::update() throw(...)
 			m_OutputImage.setData(tmp);
 			m_OutputImage.setResolution(res);
 
-			std::cout << "IMAGE ADDITION UPDATE: success" << std::endl;
+			//std::cout << "IMAGE ADDITION UPDATE: success" << std::endl;
 		}
 		else
 		{

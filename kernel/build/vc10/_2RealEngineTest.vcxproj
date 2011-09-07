@@ -9,6 +9,10 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Verbose|Win32">
+      <Configuration>Verbose</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\test.cpp" />

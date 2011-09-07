@@ -24,6 +24,7 @@
 #include "_2RealServiceValue.h"
 #include "_2RealException.h"
 #include "_2RealDataImpl.h"
+#include "_2RealContainer.h"
 
 #include <iostream>
 
@@ -54,17 +55,46 @@ namespace _2Real
 	{
 		try
 		{
+			//resets all slots, clears listeners & senders
+			resetIO();
+
 			shutdown();
+
+			//service slots are deleted here
+			for (ParamMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+			{
+				delete it->second;
+				it->second = NULL;
+			}
+
+			for (ValueMap::iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			{
+				delete it->second;
+				it->second = NULL;
+			}
+
+			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
+			{
+				delete it->second;
+				it->second = NULL;
+			}
+
+			m_InputParams.clear();
+			m_OutputParams.clear();
+			m_SetupParams.clear();
+			m_InputIds.clear();
+			m_OutputIds.clear();
+			m_SetupIds.clear();
+			m_InputSlots.clear();
+			m_OutputSlots.clear();
+
+			//user defined service is deleted here
+			delete m_Service;
 		}
 		catch (...)
 		{
 			std::cout << "service shutdown failed" << std::endl;
 		}
-		
-		//in out slots are deleted by entity table
-
-		//user defined service is deleted here
-		delete m_Service;
 	}
 
 	void ServiceImpl::addSlot(unsigned int const& id, ServiceSlot *const _slot)
@@ -77,13 +107,15 @@ namespace _2Real
 		IdentifierImpl::eType type = _slot->type();
 		if (type == IdentifierImpl::INPUT)
 		{
-			m_InputParams.insert(NamedInput(_slot->id(), _slot));
+			m_InputParams.insert(NamedParam(_slot->name(), _slot));
 			m_InputIds.push_back(id);
+			m_InputSlots.push_back(_slot);
 		}
 		else if (type == IdentifierImpl::OUTPUT)
 		{
 			m_OutputParams.insert(NamedParam(_slot->name(), _slot));
 			m_OutputIds.push_back(id);
+			m_OutputSlots.push_back(_slot);
 		}
 	}
 
@@ -108,7 +140,7 @@ namespace _2Real
 			}
 
 			//check if all input params are linked
-			for (InputMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+			for (ParamMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
 			{
 				if (!it->second->isLinked())
 				{
@@ -125,12 +157,6 @@ namespace _2Real
 			//check if all output params are linked
 			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
 			{
-				//not every output slot needs to be linked
-				//if (!it->second->isLinked())
-				//{
-					//std::cout << "SERVICE CHECK CONFIG: output param not linked " << it->second->name() << std::endl;
-					//throw Exception::failure();
-				//}
 				if (!it->second->isInitialized())
 				{
 					std::cout << "SERVICE CHECK CONFIG: output param not initialized " << it->second->name() << std::endl;
@@ -152,23 +178,24 @@ namespace _2Real
 		}
 		catch(...)
 		{
+			m_bIsConfigured = false;
 			throw Exception::failure();
 		}
 	}
 
-	void ServiceImpl::run() throw(...)
+	void ServiceImpl::run()
 	{
 		while (m_bRun || m_bRunOnce)
 		{
 			try
 			{
+				m_Mutex.lock();
+				
 				if (!m_bIsConfigured)
 				{
 					throw Exception::failure();
 				}
-				std::cout << "SERVICE RUN: " << name() << " nr of available data: " << m_DataList.size() << std::endl;
 
-				//extract data
 				DataImpl input;
 				ContainerList copy(m_Senders);
 				ContainerList::iterator container;
@@ -176,7 +203,11 @@ namespace _2Real
 				for (data = m_DataList.rbegin(); data != m_DataList.rend(); data++)
 				{
 					unsigned int sender = data->first;
-					std::cout << "SERVICE RUN " << name() << " data available from " << sender << std::endl;
+
+#ifdef _VERBOSE
+	std::cout << "SERVICE RUN " << name() << " data available from " << sender << std::endl;
+#endif
+
 					for (container = copy.begin(); container != copy.end(); container++)
 					{
 						if (sender == (*container)->id())
@@ -197,47 +228,54 @@ namespace _2Real
 					}
 				}
 
-				std::cout << "SERVICE RUN: " << name() << " nr of input params: " << input.size() << std::endl;
+				m_DataList.clear();
+				m_Mutex.unlock();
 
-				for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
+				for (ParamMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 				{
 					unsigned int id = in->second->linked()->id();
 					if (input.contains(id))
 					{
-						std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
+#ifdef _VERBOSE
+	std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
+#endif
+						DataImpl::SharedAny any = input.getAny(id);
+						in->second->extractFrom(any);
 					}
-					DataImpl::SharedAny any = input.getAny(id);
-					in->second->extractFrom(any);
+					else
+					{
+						throw Exception::failure();
+					}
 				}
 
 				//call user service's update method
-				std::cout << "SERVICE RUN: " << name() << " updating now " << std::endl;
 				m_Service->update();
 				sendData(m_bRunOnce);
 				m_bRunOnce = false;
-				std::cout << "SERVICE RUN: " << name() << " success " << std::endl;
 			}
 			catch (...)
 			{
 				std::cout << "SERVICE RUN: error " << name() << std::endl;
+				m_Mutex.unlock();
 				m_bRun = false;
 				m_bRunOnce = false;
-				stop();
-				//throw Exception::failure();
+				Container *root = static_cast< Container * >(this->root());
+				Container *nirvana = static_cast< Container * >(root->father());
+				nirvana->stopChild(root->id());
 			}
 		}
 	}
 
-	void ServiceImpl::update() throw(...)
+	void ServiceImpl::update()
 	{
 		try
 		{
+			m_Mutex.lock();
+
 			if (!m_bIsConfigured)
 			{
 				throw Exception::failure();
 			}
-
-			std::cout << "SERVICE UPDATE: " << name() << " nr of available data: " << m_DataList.size() << std::endl;
 
 			//extract data
 			DataImpl input;
@@ -247,7 +285,11 @@ namespace _2Real
 			for (data = m_DataList.rbegin(); data != m_DataList.rend(); data++)
 			{
 				unsigned int sender = data->first;
-				std::cout << "SERVICE UPDATE: " << name() << " data available from " << sender << std::endl;
+
+#ifdef _VERBOSE
+				std::cout << "SERVICE UPDATE " << name() << " data available from " << sender << std::endl;
+#endif
+
 				for (container = copy.begin(); container != copy.end(); container++)
 				{
 					if (sender == (*container)->id())
@@ -268,32 +310,34 @@ namespace _2Real
 				}
 			}
 
-			std::cout << "SERVICE UPDATE: " << name() << " nr of input params: " << input.size() << std::endl;
+			m_DataList.clear();
+			m_Mutex.unlock();
 
-			for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
+			for (ParamMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 			{
 				unsigned int id = in->second->linked()->id();
 				if (input.contains(id))
 				{
-					std::cout << "SERVICE UPDATE: " << name() << " found data for " << in->second->name() << std::endl;
+#ifdef _VERBOSE
+					std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
+#endif
+					DataImpl::SharedAny any = input.getAny(id);
+					in->second->extractFrom(any);
 				}
-				DataImpl::SharedAny any = input.getAny(id);
-				in->second->extractFrom(any);
 			}
 
-			std::cout << "SERVICE UPDATE: " << name() << " updating now " << std::endl;
 			m_Service->update();
 			sendData(true);
-			std::cout << "SERVICE UPDATE: " << name() << " success " << std::endl;
 		}
 		catch (...)
 		{
 			std::cout << "SERVICE UPDATE: error " << name() << std::endl;
+			m_Mutex.unlock();
 			throw Exception::failure();
 		}
 	}
 
-	void ServiceImpl::shutdown() throw(...)
+	void ServiceImpl::shutdown()
 	{
 		try
 		{
@@ -301,7 +345,6 @@ namespace _2Real
 		}
 		catch(...)
 		{
-			//TODO: set error state
 			throw Exception::failure();
 		}
 	}
@@ -320,26 +363,16 @@ namespace _2Real
 
 	void ServiceImpl::registerInputSlot(std::string const& _name, AbstractRef *const _var)
 	{
-		InputMap::iterator it;
-		for (it = m_InputParams.begin(); it != m_InputParams.end(); it++)
-		{
-			if (it->second->name() == _name)
-			{
-				if (it->second->isInitialized())
-				{
-					//exception occurs b/c of multiple initialization
-					throw Exception::failure();
-				}
-
-				it->second->setValue(_var);
-				break;
-			}
-		}
-
+		ParamMap::iterator it = m_InputParams.find(_name);
 		if (it == m_InputParams.end())
 		{
 			throw Exception::failure();
 		}
+		//if (it->second->isInitialized())
+		//{
+		//	throw Exception::failure();
+		//}
+		it->second->setValue(_var);
 	}
 
 	void ServiceImpl::registerOutputSlot(std::string const& _name, AbstractRef *const _var)
@@ -349,76 +382,35 @@ namespace _2Real
 		{
 			throw Exception::failure();
 		}
-
-		if (it->second->isInitialized())
-		{
-			//exception occurs b/c of multiple initialization
-			throw Exception::failure();
-		}
+		//if (it->second->isInitialized())
+		//{
+		//	throw Exception::failure();
+		//}
 		it->second->setValue(_var);
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::inputParams() const
+	AbstractContainer::IdentifierList ServiceImpl::inputParamIDs() const
 	{
 		return m_InputIds;
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::outputParams() const
+	AbstractContainer::IdentifierList ServiceImpl::outputParamIDs() const
 	{
 		return m_OutputIds;
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::setupParams() const
+	AbstractContainer::IdentifierList ServiceImpl::setupParamIDs() const
 	{
 		return m_SetupIds;
 	}
 
-	void ServiceImpl::resetIO()
+	std::list< ServiceSlot * > ServiceImpl::inputSlots()
 	{
-		InputMap::iterator in;
-		for (in = m_InputParams.begin(); in != m_InputParams.end(); in++)
-		{
-			in->second->reset();
-		}
-
-		ParamMap::iterator out;
-		for (out = m_OutputParams.begin(); out != m_OutputParams.end(); out++)
-		{
-			out->second->reset();
-		}
-
-		AbstractContainer::ContainerList::iterator it;
-		for (it = m_Listeners.begin(); it != m_Listeners.end(); it++)
-		{
-			(*it)->stopListeningTo(this);
-		}
-		m_Listeners.clear();
-
-		for (it = m_Senders.begin(); it != m_Senders.end(); it++)
-		{
-			(*it)->removeListener(this);
-		}
-		m_Senders.clear();
+		return m_InputSlots;
 	}
 
-	void ServiceImpl::sendData(bool const& _blocking)
+	std::list< ServiceSlot * > ServiceImpl::outputSlots()
 	{
-		std::cout << "SERVICE SEND DATA: " << name() << std::endl;
-
-		Poco::SharedPtr< DataImpl > outputData = Poco::SharedPtr< DataImpl >(new DataImpl());
-		unsigned int name = id();
-
-		for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
-		{
-			ServiceSlot *slot = it->second;
-			std::cout << "SERVICE SEND DATA: inserting slot value " << slot->name() << std::endl;
-			ServiceSlot::NamedAny any = slot->getAny();
-			outputData->insertAny(any.first, any.second);
-		}
-
-		m_DataList.push_back(NamedData(name, outputData));
-
-		AbstractContainer::sendData(_blocking);
+		return m_OutputSlots;
 	}
-
 }

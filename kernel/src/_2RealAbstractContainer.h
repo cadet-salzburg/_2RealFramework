@@ -34,6 +34,7 @@ namespace _2Real
 	*/
 
 	class DataQueue;
+	class ServiceSlot;
 
 	class AbstractContainer : public IEntity, public IContainer
 	{
@@ -103,7 +104,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		virtual void sendData(bool const& _blocking);
+		void sendData(bool const& _blocking);
 
 		/**
 		*	returns father
@@ -118,17 +119,27 @@ namespace _2Real
 		/**
 		*	
 		*/
-		virtual IdentifierList setupParams() const throw(...) = 0;
+		virtual IdentifierList setupParamIDs() const throw(...) = 0;
 
 		/**
 		*	
 		*/
-		virtual IdentifierList inputParams() const throw(...) = 0;
+		virtual IdentifierList inputParamIDs() const throw(...) = 0;
 
 		/**
 		*	
 		*/
-		virtual IdentifierList outputParams() const throw(...) = 0;
+		virtual IdentifierList outputParamIDs() const throw(...) = 0;
+
+		/**
+		*	
+		*/
+		virtual std::list< ServiceSlot * > inputSlots() throw(...) = 0;
+
+		/**
+		*	
+		*/
+		virtual std::list< ServiceSlot * > outputSlots() throw(...) = 0;
 
 		/**
 		*	
@@ -143,7 +154,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		virtual void resetIO() = 0;
+		void resetIO();
 
 		/**
 		*	returns pointer to production graph root

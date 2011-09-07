@@ -46,6 +46,7 @@ namespace _2Real
 	{
 		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
 		{
+			std::cout << "plugin pool dtor" << std::endl;
 			try
 			{
 				it->second->uninstall();
