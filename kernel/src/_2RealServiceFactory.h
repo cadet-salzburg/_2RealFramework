@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
-
 #include <map>
 #include <list>
 
@@ -40,11 +38,17 @@ namespace _2Real
 	class ServiceImpl;
 	class Entities;
 	class ServiceMetadata;
+	class IService;
 
 	class ServiceFactory
 	{
 
 	public:
+
+		/**
+		*	service factory function
+		*/
+		typedef IService *const (*const ServiceCreator)(void);
 
 		/**
 		*	
@@ -108,7 +112,7 @@ namespace _2Real
 
 	private:
 
-		friend class EngineImpl;
+		friend class Engine;
 
 		/**
 		*	yay, typedefs

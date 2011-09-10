@@ -82,7 +82,7 @@ namespace _2Real
 
 	private:
 
-		friend class EngineImpl;
+		friend class Engine;
 
 		/**
 		*	yay, typedefs

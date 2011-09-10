@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
 #include "_2RealIEntity.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
@@ -37,11 +36,17 @@ namespace _2Real
 
 	class PluginMetadata;
 	class ServiceFactory;
+	class IService;
 
 	class Plugin : public IEntity
 	{
 
 	public:
+
+		/**
+		*	service factory function
+		*/
+		typedef IService *const (*const ServiceCreator)(void);
 
 		enum ePluginState
 		{

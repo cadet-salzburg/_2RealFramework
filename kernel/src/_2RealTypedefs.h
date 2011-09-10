@@ -24,7 +24,7 @@
 */
 #pragma warning(disable:4503)
 
-#include <list>
+#include <vector>
 
 namespace _2Real
 {
@@ -32,43 +32,31 @@ namespace _2Real
 	class Data;
 	class Identifier;
 	class Exception;
-	class IService;
 
 	/**
 	*	callback for exceptions
 	*
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToException
-	*
-	*	registering for exception callbacks really only makes sense if the entity is in
-	*	nirvana
 	*/
-	typedef void (*ExceptionCallback)(Identifier const& _sender, Exception const& _exception);
+	typedef void (*ExceptionCallback)(std::pair< Identifier, Exception > &_exception);
 
 	/**
-	*	callback for new DataImpl
+	*	callback for new data
 	*
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToNewData
-	*
-	*	as with the exceptions, registering for new DataImpl makes the most sense if the entity
-	*	in question is in nirvana
 	*/
 	typedef void (*NewDataCallback)(std::pair< Identifier, Data > &_data);
 
 	/**
-	*	a list of identifiers
+	*	a vector of identifiers
 	*
 	*	is the return value of some functions:
 	*		- plugins return the ids of all their services on installation
-	*		- services return their setup params on creation
-	*		- services, sequences & synchronizations can be queried for their IO slots
+	*		- services can be queried for the ids of setup params
+	*		- services, sequences & synchronizations can be queried for the ids of IO slots
+	*		- sequences & synchronizations can be queries for the ids of children
 	*/
-	typedef std::list< Identifier > Identifiers;
-
-	/**
-	*	function to create user defined service - exported by plugins
-	*/
-	typedef IService *const (*const ServiceCreator)(void);
-
+	typedef std::vector< Identifier > Identifiers;
 }

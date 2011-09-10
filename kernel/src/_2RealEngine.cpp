@@ -27,11 +27,11 @@
 namespace _2Real
 {
 
-	Engine::Engine(std::string const& _name) : m_Impl(NULL), m_ID(NULL)
+	System::System(std::string const& _name) : m_Impl(NULL), m_ID(NULL)
 	{
 		try
 		{
-			m_Impl = EngineImpl::instance();
+			m_Impl = Engine::instance();
 			m_ID = new Identifier(m_Impl->createProductionGraph(_name));
 		}
 		catch (...)
@@ -49,9 +49,9 @@ namespace _2Real
 		}
 	}
 
-	Engine::Engine(Engine const& _src) : m_Impl(NULL), m_ID(NULL)
+	System::System(System const& _src) : m_Impl(NULL), m_ID(NULL)
 	{
-		m_Impl = EngineImpl::instance();
+		m_Impl = Engine::instance();
 		
 		if (_src.m_ID)
 		{
@@ -59,7 +59,7 @@ namespace _2Real
 		}
 	}
 	
-	Engine& Engine::operator=(Engine const& _src)
+	System& System::operator=(System const& _src)
 	{
 		if (this == &_src)
 		{
@@ -68,7 +68,7 @@ namespace _2Real
 
 		if (!m_Impl)
 		{
-			m_Impl = EngineImpl::instance();
+			m_Impl = Engine::instance();
 		}
 
 		if (m_ID)
@@ -85,14 +85,14 @@ namespace _2Real
 		return *this;
 	}
 
-	Engine::~Engine()
+	System::~System()
 	{
 		m_Impl->destroyProductionGraph(*m_ID, *m_ID);
 		delete m_ID;
 		m_Impl->release();
 	}
 
-	const Identifier Engine::loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs)
+	const Identifier System::loadPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_serviceIDs)
 	{
 		try
 		{
@@ -105,7 +105,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::dumpPluginInfo(Identifier const& pluginID)
+	void System::dumpPluginInfo(Identifier const& pluginID)
 	{
 		try
 		{
@@ -118,7 +118,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::dumpServiceInfo(Identifier const& serviceID)
+	void System::dumpServiceInfo(Identifier const& serviceID)
 	{
 		try
 		{
@@ -131,7 +131,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::dumpServiceInfo(Identifier const& pluginID, std::string const& name)
+	void System::dumpServiceInfo(Identifier const& pluginID, std::string const& name)
 	{
 		try
 		{
@@ -144,7 +144,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs)
+	const Identifier System::createService(std::string const& _name, Identifier const& _id, Identifiers &_setupIDs)
 	{
 		try
 		{
@@ -157,7 +157,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs)
+	const Identifier System::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_setupIDs)
 	{
 		try
 		{
@@ -170,7 +170,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers Engine::getInputSlots(Identifier const& _id)
+	Identifiers System::getInputSlots(Identifier const& _id)
 	{
 		try
 		{
@@ -183,7 +183,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers Engine::getOutputSlots(Identifier const& _id)
+	Identifiers System::getOutputSlots(Identifier const& _id)
 	{
 		try
 		{
@@ -196,7 +196,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier Engine::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	const Identifier System::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
 	{
 		try
 		{
@@ -209,7 +209,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier Engine::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	const Identifier System::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
 	{
 		try
 		{
@@ -222,7 +222,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any)
+	void System::setParameterValue(Identifier const& _id, Poco::Any _any)
 	{
 		try
 		{
@@ -235,7 +235,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::link(Identifier const& _in, Identifier const& _out)
+	void System::link(Identifier const& _in, Identifier const& _out)
 	{
 		try
 		{
@@ -248,7 +248,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	void System::registerToException(Identifier const& _id, ExceptionCallback _callback)
 	{
 		try
 		{
@@ -261,7 +261,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::registerToNewData(Identifier const& _id, NewDataCallback _callback)
+	void System::registerToNewData(Identifier const& _id, NewDataCallback _callback)
 	{
 		try
 		{
@@ -274,7 +274,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers Engine::getChildren(Identifier const& _id)
+	Identifiers System::getChildren(Identifier const& _id)
 	{
 		try
 		{
@@ -287,7 +287,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::start(Identifier const& _id)
+	void System::start(Identifier const& _id)
 	{
 		try
 		{
@@ -300,7 +300,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::startAll()
+	void System::startAll()
 	{
 		try
 		{
@@ -313,7 +313,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::stop(Identifier const& _id)
+	void System::stop(Identifier const& _id)
 	{
 		try
 		{
@@ -326,7 +326,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::stopAll()
+	void System::stopAll()
 	{
 		try
 		{
@@ -339,7 +339,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::destroy(Identifier const& _id)
+	void System::destroy(Identifier const& _id)
 	{
 		try
 		{
@@ -352,7 +352,7 @@ namespace _2Real
 		}
 	}
 
-	void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
+	void System::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
 	{
 		try
 		{

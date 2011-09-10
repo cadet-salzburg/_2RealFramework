@@ -40,7 +40,7 @@ namespace _2Real
 		/**
 		*	engine
 		*/
-		friend class EngineImpl;
+		friend class Engine;
 	
 	public:	
 

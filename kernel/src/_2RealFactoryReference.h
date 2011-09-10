@@ -19,7 +19,6 @@
 #pragma once
 
 #include "_2RealIEntity.h"
-#include "_2RealEngineTypedefs.h"
 #include "_2RealServiceMetadata.h"
 
 #include <string>
@@ -32,11 +31,17 @@ namespace _2Real
 	*/
 
 	class Plugin;
+	class IService;
 
 	class FactoryReference : public IEntity
 	{
 
 	public:
+
+		/**
+		*	service factory function
+		*/
+		typedef IService *const (*const ServiceCreator)(void);
 
 		/**
 		*

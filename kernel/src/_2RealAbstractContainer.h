@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
 #include "_2RealIContainer.h"
 #include "_2RealIEntity.h"
 
@@ -35,6 +34,7 @@ namespace _2Real
 
 	class DataQueue;
 	class ServiceSlot;
+	class Exception;
 
 	class AbstractContainer : public IEntity, public IContainer
 	{

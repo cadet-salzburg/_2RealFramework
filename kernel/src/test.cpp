@@ -55,7 +55,7 @@ void main(int argc, char** argv)
 	/**
 	*	get instance of 2 real thingie
 	*/
-	Engine testEngine("ENGINE");
+	System testEngine("ENGINE");
 
 	/**
 	*	load a test plugin

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
 #include "_2RealIdentifierImpl.h"
 
 #include <map>
@@ -50,9 +49,14 @@ namespace _2Real
 		/**
 		*	engine will set pointers to plugin pool, service factory & production graph map
 		*/
-		friend class EngineImpl;
+		friend class Engine;
 
 	public:
+
+		/**
+		*	service factory function
+		*/
+		typedef IService *const (*const ServiceCreator)(void);
 
 		/**
 		*	standard ctor; pointer are set directly by engine

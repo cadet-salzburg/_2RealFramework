@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
+#include "_2RealTypedefs.h"
 #include "_2RealIDataQueue.h"
 
 #include <vector>
@@ -40,7 +40,7 @@ namespace _2Real
 	class Entities;
 	class Identifier;
 	
-	class EngineImpl
+	class Engine
 	{
 
 	public:
@@ -48,27 +48,27 @@ namespace _2Real
 		/**
 		*	get instance
 		*/
-		static EngineImpl *const instance() throw(...);
+		static Engine *const instance() throw(...);
 
 		/**
 		*	
 		*/
-		EngineImpl();
+		Engine();
 
 		/**
 		*	engine must not be copied
 		*/
-		EngineImpl(const EngineImpl &_src) throw(...);
+		Engine(const Engine &_src) throw(...);
 
 		/**
 		*	engine must not be copied
 		*/
-		EngineImpl& operator=(const EngineImpl &_src) throw(...);
+		Engine& operator=(const Engine &_src) throw(...);
 
 		/**
 		*	destruction if engine destroys all entities
 		*/
-		~EngineImpl();
+		~Engine();
 
 		/**
 		*	ref count++
@@ -200,7 +200,7 @@ namespace _2Real
 		/**
 		*	singleton instance
 		*/
-		static EngineImpl				*s_Instance;
+		static Engine				*s_Instance;
 
 		/**
 		*	

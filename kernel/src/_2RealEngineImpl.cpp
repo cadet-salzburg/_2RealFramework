@@ -38,17 +38,17 @@
 namespace _2Real
 {
 
-	EngineImpl *EngineImpl::s_Instance = NULL;
-	unsigned int EngineImpl::s_iRefCount = 0;
-	Poco::Mutex EngineImpl::s_Mutex;
+	Engine *Engine::s_Instance = NULL;
+	unsigned int Engine::s_iRefCount = 0;
+	Poco::Mutex Engine::s_Mutex;
 	
-	EngineImpl *const EngineImpl::instance()
+	Engine *const Engine::instance()
 	{
 		if (s_Mutex.tryLock(10000))
 		{
 			if(s_Instance == NULL)
 			{
-				s_Instance = new EngineImpl();
+				s_Instance = new Engine();
 			}
 			s_iRefCount++;
 			s_Mutex.unlock();
@@ -58,7 +58,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	void EngineImpl::retain()
+	void Engine::retain()
 	{
 		if (s_Mutex.tryLock(1000))
 		{
@@ -70,7 +70,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	void EngineImpl::release()
+	void Engine::release()
 	{
 		if (s_Mutex.tryLock(1000))
 		{
@@ -89,7 +89,7 @@ namespace _2Real
 		throw Exception::failure();
 	}
 
-	EngineImpl::EngineImpl() :
+	Engine::Engine() :
 		m_Plugins(new PluginPool()),
 		m_Factory(new ServiceFactory()),
 		m_Entities(new Entities()),
@@ -101,17 +101,17 @@ namespace _2Real
 		m_Plugins->m_Entities = m_Factory->m_Entities = m_Graphs->m_Entities = m_Entities;
 	}
 
-	EngineImpl::EngineImpl(EngineImpl const& _src)
+	Engine::Engine(Engine const& _src)
 	{
 		throw Exception::noCopy();
 	}
 
-	EngineImpl& EngineImpl::operator=(EngineImpl const& _src)
+	Engine& Engine::operator=(Engine const& _src)
 	{
 		throw Exception::noCopy();
 	}
 
-	EngineImpl::~EngineImpl()
+	Engine::~Engine()
 	{
 		delete m_Graphs;
 		delete m_Plugins;
@@ -119,7 +119,7 @@ namespace _2Real
 		delete m_Entities;
 	}
 
-	const Identifier EngineImpl::createProductionGraph(std::string const& _name)
+	const Identifier Engine::createProductionGraph(std::string const& _name)
 	{
 		try
 		{
@@ -132,7 +132,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::destroyProductionGraph(Identifier const& _id, Identifier const& _top)
+	void Engine::destroyProductionGraph(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
@@ -145,7 +145,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_ids, Identifier const& _top)
+	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifiers &_ids, Identifier const& _top)
 	{
 
 		try
@@ -164,7 +164,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::dumpPluginInfo(Identifier const& _id) const
+	void Engine::dumpPluginInfo(Identifier const& _id) const
 	{
 		try
 		{
@@ -178,7 +178,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::dumpServiceInfo(Identifier const& _id) const
+	void Engine::dumpServiceInfo(Identifier const& _id) const
 	{
 		try
 		{
@@ -192,7 +192,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::dumpServiceInfo(Identifier const& _id, std::string const& _name) const
+	void Engine::dumpServiceInfo(Identifier const& _id, std::string const& _name) const
 	{
 		try
 		{
@@ -206,7 +206,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, Identifiers &_ids, Identifier const& _top)
+	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, Identifiers &_ids, Identifier const& _top)
 	{
 		try
 		{
@@ -228,7 +228,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_ids, Identifier const& _top)
+	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifiers &_ids, Identifier const& _top)
 	{
 		try
 		{
@@ -250,7 +250,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers EngineImpl::getInputSlots(Identifier const& _id) const
+	Identifiers Engine::getInputSlots(Identifier const& _id) const
 	{
 		try
 		{
@@ -271,7 +271,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers EngineImpl::getOutputSlots(Identifier const& _id) const
+	Identifiers Engine::getOutputSlots(Identifier const& _id) const
 	{
 		try
 		{
@@ -292,7 +292,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
+	const Identifier Engine::createSequenceContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
 	{
 		try
 		{
@@ -305,7 +305,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier EngineImpl::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
+	const Identifier Engine::createSynchronizationContainer(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top)
 	{
 		try
 		{
@@ -318,7 +318,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::setParameterValue(Identifier const& _id, Poco::Any _any)
+	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any)
 	{
 		try
 		{
@@ -332,7 +332,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::link(Identifier const& _in,  Identifier const& _out, Identifier const& _top)
+	void Engine::link(Identifier const& _in,  Identifier const& _out, Identifier const& _top)
 	{
 		try
 		{
@@ -366,7 +366,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback)
 	{
 		try
 		{
@@ -387,7 +387,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::registerToNewData(Identifier const& _id, NewDataCallback _callback)
+	void Engine::registerToNewData(Identifier const& _id, NewDataCallback _callback)
 	{
 		try
 		{
@@ -409,7 +409,7 @@ namespace _2Real
 		}
 	}
 
-	Identifiers EngineImpl::getChildren(Identifier const& _id)
+	Identifiers Engine::getChildren(Identifier const& _id)
 	{
 		try
 		{
@@ -434,7 +434,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::start(Identifier const& _id, Identifier const& _top)
+	void Engine::start(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
@@ -479,7 +479,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::startAll(Identifier const& _top)
+	void Engine::startAll(Identifier const& _top)
 	{
 		try
 		{
@@ -514,7 +514,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::stop(Identifier const& _id, Identifier const& _top)
+	void Engine::stop(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
@@ -569,7 +569,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::stopAll(Identifier const& _top)
+	void Engine::stopAll(Identifier const& _top)
 	{
 		try
 		{
@@ -600,7 +600,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::destroy(Identifier const& _id, Identifier const& _top)
+	void Engine::destroy(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
@@ -655,7 +655,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top)
+	void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top)
 	{
 		try
 		{
