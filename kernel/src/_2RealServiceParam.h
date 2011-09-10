@@ -30,10 +30,10 @@ namespace _2Real
 	*
 	*/
 
-	class ServiceImpl;
+	class ServiceContainer;
 	class AbstractRef;
 
-	class ServiceParam : public IEntity
+	class ServiceParam : public Entity
 	{
 
 	public:
@@ -41,7 +41,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceParam(IdentifierImpl *const _id, ServiceImpl *const _service);
+		ServiceParam(IdentifierImpl *const _id, ServiceContainer *const _service);
 
 		/**
 		*	
@@ -61,7 +61,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceImpl *const service();
+		ServiceContainer *const service();
 
 		/**
 		*	
@@ -80,7 +80,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceImpl			*m_Service;
+		ServiceContainer			*m_Service;
 
 	};
 

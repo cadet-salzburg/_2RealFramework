@@ -34,13 +34,13 @@ namespace _2Real
 		AbstractRef(_src),
 		m_Value(_src.m_Value)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	template< typename T >
 	ParamRef< T >& ParamRef< T >::operator=(ParamRef< T > const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	template< typename T >
@@ -56,9 +56,9 @@ namespace _2Real
 			T copy = Poco::AnyCast< T >(*_any.get());
 			m_Value = copy;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
@@ -70,9 +70,9 @@ namespace _2Real
 			T copy = Poco::AnyCast< T >(_any);
 			m_Value = copy;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw Exception::failure();
+			throw e;
 		}
 	}
 

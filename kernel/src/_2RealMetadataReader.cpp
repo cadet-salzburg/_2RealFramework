@@ -20,7 +20,7 @@
 #include "_2RealMetaDataReader.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealPluginMetadata.h"
-#include "_2RealEngineImpl.h"
+#include "_2RealEngine.h"
 #include "_2RealException.h"
 #include "_2RealPlugin.h"
 
@@ -57,7 +57,7 @@ namespace _2Real
 			plugins = document->getElementsByTagName("plugin");
 			if (plugins == NULL || plugins->length() > 1)
 			{
-				throw Exception::failure();
+				throw Exception("metadata format error: plugin element must be defined exactly once");
 			}
 
 			plugin = plugins->item(0);
@@ -66,7 +66,7 @@ namespace _2Real
 			name = attribs->getNamedItem("name");
 			if (_info.getClassname() != name->nodeValue())
 			{
-				throw Exception::failure();
+				throw Exception("metadata format error: plugin's name must match class name");
 			}
 
 			author = attribs->getNamedItem("author");
@@ -90,7 +90,7 @@ namespace _2Real
 			services = document->getElementsByTagName("service");
 			if (services == NULL)
 			{
-				throw Exception::failure();
+				throw Exception("metadata format error: there must be at least one service element");
 			}
 
 			for (unsigned int i=0; i<services->length(); i++)
@@ -130,7 +130,7 @@ namespace _2Real
 				NodeList *children = service->childNodes();
 				if (children == NULL)
 				{
-					throw Exception::failure();
+					throw Exception("metadata format error: service must at least have output parameters");
 				}
 
 				for (unsigned int j = 0; j < children->length(); j++)
@@ -232,7 +232,7 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			throw Exception::failure();
+			throw Exception("incorrect metadata file");
 		}
 	}
 }

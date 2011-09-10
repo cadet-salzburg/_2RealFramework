@@ -34,12 +34,12 @@ namespace _2Real
 
 	PluginPool::PluginPool(PluginPool const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	PluginPool& PluginPool::operator=(PluginPool const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	PluginPool::~PluginPool()
@@ -54,38 +54,69 @@ namespace _2Real
 
 			m_Plugins.clear();
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			std::cout << "error on plugin pool destruction" << std::endl;
+			std::cout << "error on plugin pool destruction " << e.what() << std::endl;
 		}
 	}
 
-	const unsigned int PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< unsigned int > &_ids) throw(...)
+	const unsigned int PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class)
 	{
 		try
 		{
-			const Entities::ID id = m_Entities->createPlugin(_name, _dir, _file, _class);
+			const EntityTable::ID id = m_Entities->createPlugin(_name, _dir, _file, _class);
 			Plugin *plugin = static_cast< Plugin * >(id.second);
 			m_Plugins.insert(NamedPlugin(id.first, plugin));
 
 			plugin->install();
 			plugin->load();
-			plugin->start(_ids);
+			plugin->start();
+
 			return id.first;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
-	PluginMetadata const& PluginPool::pluginInfo(unsigned int const& _id) const
+	Plugin const *const PluginPool::getPlugin(unsigned int const& _id) const
 	{
 		PluginMap::const_iterator it = m_Plugins.find(_id);
 		if (it == m_Plugins.end())
 		{
-			throw Exception::failure();
+			throw Exception("could not retrieve plugin - does not exist");
 		}
-		return it->second->metadata();
+		else if (!it->second)
+		{
+			throw Exception("internal error - null pointer stored in plugin pool");
+		}
+		return it->second;
+	}
+
+	Plugin *const PluginPool::getPlugin(unsigned int const& _id)
+	{
+		PluginMap::iterator it = m_Plugins.find(_id);
+		if (it == m_Plugins.end())
+		{
+			throw Exception("could not retrieve plugin - does not exist");
+		}
+		else if (!it->second)
+		{
+			throw Exception("internal error - null pointer in plugin pool");
+		}
+		return it->second;
+	}
+
+	PluginMetadata const& PluginPool::pluginInfo(unsigned int const& _id) const
+	{
+		try
+		{
+			return getPlugin(_id)->metadata();
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
 	}
 }

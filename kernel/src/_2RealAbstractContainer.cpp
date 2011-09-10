@@ -31,7 +31,7 @@ namespace _2Real
 {
 
 	AbstractContainer::AbstractContainer(IdentifierImpl *const _id) :
-		IEntity(_id),
+		Entity(_id),
 		m_bRunOnce(false),
 		m_bRun(false), 
 		m_bCanReconfigure(true), 
@@ -40,14 +40,14 @@ namespace _2Real
 	{
 	}
 
-	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : IEntity(_src)
+	AbstractContainer::AbstractContainer(AbstractContainer const& _src) : Entity(_src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy an entity");
 	}
 
 	AbstractContainer& AbstractContainer::operator=(AbstractContainer const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy an entity");
 	}
 
 	AbstractContainer::~AbstractContainer()
@@ -58,7 +58,7 @@ namespace _2Real
 	{
 		if (!m_bIsConfigured)
 		{
-			throw Exception::failure();
+			throw Exception("could not start container " + name() + ", was not configured");
 		}
 
 		m_bRunOnce = _runOnce;
@@ -67,10 +67,9 @@ namespace _2Real
 
 	void AbstractContainer::stop()
 	{
+		//calling stop will cause a running thread to finish once their update cycle is completed
 		m_bRunOnce = false;
 		m_bRun = false;
-
-
 	}
 
 	void AbstractContainer::setup(ServiceContext *const _contextPtr)
@@ -86,38 +85,33 @@ namespace _2Real
 	{
 		try
 		{
-			if (m_Father->type() == IdentifierImpl::NIRVANA)
+			if (m_Father->type() == Entity::NIRVANA)
 			{
 				return this;
 			}
-			else if (m_Father->type() == IdentifierImpl::SERVICE)
+			else if (!m_Father)
 			{
-				throw Exception::failure();
-			}
-			else if (m_Father == NULL)
-			{
-				throw Exception::failure();
+				throw Exception("internal error: container " + name() + "'s father is null");
 			}
 			else 
 			{
 				return m_Father->root();
 			}
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
 
 	void AbstractContainer::setFather(AbstractContainer *const _father)
 	{
-		if (_father == NULL)
+		if (!_father)
 		{
-			throw Exception::failure();
+			throw Exception("internal error: attempted to set " + name() + "'s father to null");
 		}
-
 		m_Father = _father;
-		IEntity::setInfo("belongs to container: " + _father->name());
+		Entity::setInfo("belongs to container: " + _father->name());
 	}
 
 	AbstractContainer *const AbstractContainer::father()
@@ -127,13 +121,10 @@ namespace _2Real
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
-		std::cout << "ABSTRACT CONTAINER ADD LISTENER: " << name() << std::endl;
-
-		if (_queue == NULL)
+		if (!_queue)
 		{
-			throw Exception::failure();
+			throw Exception("internal error: attempted to add listener to " + name() + " , null pointer");
 		}
-
 		AbstractContainer *container = static_cast< AbstractContainer * >(_queue);
 		m_Listeners.push_back(container);
 		m_NewData += Poco::delegate(container, &AbstractContainer::receiveData);
@@ -141,11 +132,9 @@ namespace _2Real
 
 	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
 	{
-		std::cout << "ABSTRACT CONTAINER REMOVE LISTENER " << name() << std::endl;
-
-		if (_queue == NULL)
+		if (!_queue)
 		{
-			throw Exception::failure();
+			throw Exception("internal error: attempted to remove listener from " + name() + " , null pointer");
 		}
 
 		AbstractContainer *container = static_cast< AbstractContainer * >(_queue);
@@ -167,13 +156,9 @@ namespace _2Real
 		{
 			m_Mutex.lock();
 
-			if (type() != IdentifierImpl::SERVICE)
-			{
-				throw Exception::failure();
-			}
-			
 			unsigned int sender = _data.first;
 
+			//TODO: senders as list not a good idea?
 			ContainerList::iterator it;
 			for (it = m_Senders.begin(); it != m_Senders.end(); it++)
 			{
@@ -182,21 +167,18 @@ namespace _2Real
 					break;
 				}
 			}
-
 			if (it == m_Senders.end())
 			{
-				throw Exception::failure();
+				throw Exception("internal error: " + name() + " received data from unknown sender");
 			}
 
 			m_DataList.push_back(_data);
-
 			m_Mutex.unlock();
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			std::cout << "ABSTRACT CONTAINER RECEIVE DATA: error" << std::endl;
 			m_Mutex.unlock();
-			throw;
+			throw e;
 		}
 	}
 
@@ -204,9 +186,7 @@ namespace _2Real
 	{
 		try
 		{
-			//std::cout << "SEND DATA: " << name() << std::endl;
-			
-			Poco::SharedPtr< DataImpl > outputData = Poco::SharedPtr< DataImpl >(new DataImpl());
+			Poco::SharedPtr< DataPacket > outputData = Poco::SharedPtr< DataPacket >(new DataPacket());
 			unsigned int name = id();
 
 			std::list< ServiceSlot * > out = this->outputSlots();
@@ -230,10 +210,9 @@ namespace _2Real
 				m_NewData.notifyAsync(this, data);
 			}
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			std::cout << "SEND DATA: error " << name() << std::endl;
-			throw;
+			throw e;
 		}
 	}
 

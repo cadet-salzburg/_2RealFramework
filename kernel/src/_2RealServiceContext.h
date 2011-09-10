@@ -92,12 +92,12 @@ namespace _2Real
 	
 	private:
 
-		friend class ServiceImpl;
+		friend class ServiceContainer;
 
 		/**
 		*	
 		*/
-		ServiceContext(ServiceImpl *const _impl);
+		ServiceContext(ServiceContainer *const _impl);
 
 		/**
 		*
@@ -132,7 +132,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceImpl			*m_Impl;
+		ServiceContainer			*m_Impl;
 
 	};
 

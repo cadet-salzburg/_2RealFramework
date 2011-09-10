@@ -4,13 +4,7 @@
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealErrorCodeTable.cpp">
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealFactoryReference.cpp">
@@ -58,9 +52,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractRef.cpp">
       <Filter>Plugin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngine.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -86,21 +77,14 @@
       <Filter>Plugin</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealDataQueue.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystem.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngineImpl.h">
-      <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h">
-      <Filter>Application</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealException.h">
-      <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealErrorCodeTable.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealFactoryReference.h">
@@ -114,9 +98,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIDataQueue.h">
       <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngine.h">
-      <Filter>App Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIdentifier.h">
       <Filter>App Interface</Filter>
@@ -188,6 +169,10 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealDataQueue.h" />
+    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealSystem.h" />
+    <ClInclude Include="..\..\src\_2RealEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">

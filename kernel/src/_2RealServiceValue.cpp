@@ -23,19 +23,19 @@
 namespace _2Real
 {
 
-	ServiceValue::ServiceValue(IdentifierImpl *const _id, ServiceImpl *const _service) :
+	ServiceValue::ServiceValue(IdentifierImpl *const _id, ServiceContainer *const _service) :
 		ServiceParam(_id, _service)
 	{
 	}
 
 	ServiceValue::ServiceValue(ServiceValue const& _src) : ServiceParam(_src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceValue& ServiceValue::operator=(ServiceValue const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceValue::~ServiceValue()
@@ -52,7 +52,7 @@ namespace _2Real
 	{
 		if (!m_bIsInitialized)
 		{
-			throw Exception::failure();
+			throw Exception("ServiceValue::value(), " + name() + " is uninitialized");
 		}
 
 		return m_Value;

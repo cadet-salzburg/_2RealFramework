@@ -122,17 +122,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList setupParamIDs() const throw(...);
+		IDs setupParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList inputParamIDs() const throw(...);
+		IDs inputSlotIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList outputParamIDs() const throw(...);
+		IDs outputSlotIDs() const throw(...);
 
 		/**
 		*	

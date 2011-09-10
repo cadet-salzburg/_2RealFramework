@@ -49,37 +49,37 @@ namespace _2Real
 
 	void DataQueue::receiveData(NamedData &_data)
 	{
-		m_DataList.push_back(_data);
+		//m_DataList.push_back(_data);
 
-		DataImpl received = *_data.second.get();
+		//DataImpl received = *_data.second.get();
 
-		for (std::list< unsigned int >::iterator it = m_Received.begin(); it != m_Received.end(); it++)
-		{
-			if (received.contains(*it))
-			{
-				m_Received.erase(it);
-			}
-		}
+		//for (std::list< unsigned int >::iterator it = m_Received.begin(); it != m_Received.end(); it++)
+		//{
+		//	if (received.contains(*it))
+		//	{
+		//		m_Received.erase(it);
+		//	}
+		//}
 
-		if (m_Received.empty())
-		{
-			DataImpl *output = new DataImpl();
+		//if (m_Received.empty())
+		//{
+		//	DataImpl *output = new DataImpl();
 
-			for (std::list< NamedData >::iterator it = m_DataList.end(); it != m_DataList.begin(); it--)
-			{
-				DataImpl data = *it->second.get();
-				output->merge(data);
-			}
+		//	for (std::list< NamedData >::iterator it = m_DataList.end(); it != m_DataList.begin(); it--)
+		//	{
+		//		DataImpl data = *it->second.get();
+		//		output->merge(data);
+		//	}
 
-			Data outputData(output);
-			std::pair< Identifier, Data > result = std::make_pair(m_Sender, outputData);
+		//	Data outputData(output);
+		//	std::pair< Identifier, Data > result = std::make_pair(m_Sender, outputData);
 
-			//send data
-			m_DataEvent.notifyAsync(this, result);
+		//	//send data
+		//	m_DataEvent.notifyAsync(this, result);
 
-			//reset ids
-			m_Received = m_IDs;
-		}
+		//	//reset ids
+		//	m_Received = m_IDs;
+		//}
 	}
 
 	void DataQueue::sendData(bool const& _blocking)

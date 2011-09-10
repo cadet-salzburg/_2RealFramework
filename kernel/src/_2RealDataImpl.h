@@ -31,7 +31,7 @@ namespace _2Real
 	*
 	*/
 
-	class DataImpl
+	class DataPacket
 	{
 
 	public:
@@ -44,22 +44,22 @@ namespace _2Real
 		/**
 		*	
 		*/
-		DataImpl();
+		DataPacket();
 
 		/**
 		*	
 		*/
-		DataImpl(DataImpl const& _src);
+		DataPacket(DataPacket const& _src);
 
 		/**
 		*	
 		*/
-		DataImpl& operator=(DataImpl const& _src);
+		DataPacket& operator=(DataPacket const& _src);
 
 		/**
 		*	
 		*/
-		~DataImpl();
+		~DataPacket();
 
 		/**
 		*
@@ -74,12 +74,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		DataImpl::SharedAny getAny(unsigned int const& _id) const;
+		DataPacket::SharedAny getAny(unsigned int const& _id) const;
 
 		/**
 		*
 		*/
-		void insertAny(unsigned int const& _id, DataImpl::SharedAny &_any);
+		void insertAny(unsigned int const& _id, DataPacket::SharedAny &_any);
 
 		/**
 		*
@@ -89,7 +89,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		void merge(DataImpl const& src);
+		void merge(DataPacket const& src);
 
 	private:
 

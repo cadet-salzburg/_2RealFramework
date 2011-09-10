@@ -22,16 +22,16 @@
 namespace _2Real
 {
 
-	DataImpl::DataImpl()
+	DataPacket::DataPacket()
 	{
 	}
 
-	DataImpl::DataImpl(DataImpl const& _src)
+	DataPacket::DataPacket(DataPacket const& _src)
 	{
 		m_Data = _src.m_Data;
 	}
 
-	DataImpl& DataImpl::operator=(DataImpl const& _src)
+	DataPacket& DataPacket::operator=(DataPacket const& _src)
 	{
 		if (this == &_src)
 		{
@@ -44,11 +44,11 @@ namespace _2Real
 		return *this;
 	}
 
-	DataImpl::~DataImpl()
+	DataPacket::~DataPacket()
 	{
 	}
 
-	void DataImpl::remove(unsigned int const& _id)
+	void DataPacket::remove(unsigned int const& _id)
 	{
 		AnyMap::iterator it = m_Data.find(_id);
 		
@@ -58,7 +58,7 @@ namespace _2Real
 		}
 	}
 
-	const bool DataImpl::contains(unsigned int const& _id) const
+	const bool DataPacket::contains(unsigned int const& _id) const
 	{
 		AnyMap::const_iterator it = m_Data.find(_id);
 		
@@ -70,7 +70,7 @@ namespace _2Real
 		return true;
 	}
 
-	DataImpl::SharedAny DataImpl::getAny(unsigned int const& _id) const
+	DataPacket::SharedAny DataPacket::getAny(unsigned int const& _id) const
 	{
 		AnyMap::const_iterator it = m_Data.find(_id);
 			
@@ -82,17 +82,17 @@ namespace _2Real
 		return SharedAny();
 	}
 
-	void DataImpl::insertAny(unsigned int const& _id, DataImpl::SharedAny &_any)
+	void DataPacket::insertAny(unsigned int const& _id, DataPacket::SharedAny &_any)
 	{
 		m_Data.insert(NamedAny(_id, _any));
 	}
 
-	void DataImpl::merge(DataImpl const& _src)
+	void DataPacket::merge(DataPacket const& _src)
 	{
 		m_Data.insert(_src.m_Data.begin(), _src.m_Data.end());
 	}
 
-	const unsigned int DataImpl::size() const
+	const unsigned int DataPacket::size() const
 	{
 		return m_Data.size();
 	}

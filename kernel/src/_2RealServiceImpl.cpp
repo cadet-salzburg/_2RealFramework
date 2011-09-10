@@ -31,46 +31,46 @@
 namespace _2Real
 {
 
-	ServiceImpl::ServiceImpl(IService *const _service, IdentifierImpl *const _id) : 
+	ServiceContainer::ServiceContainer(IService *const _service, IdentifierImpl *const _id) : 
 		AbstractContainer(_id),
 		m_Service(_service)
 	{
 		if (m_Service == NULL)
 		{
-			throw Exception::failure();
+			throw Exception("service container could not be created - null pointer");
 		}
 	}
 
-	ServiceImpl::ServiceImpl(ServiceImpl const& _src) : AbstractContainer(_src)
+	ServiceContainer::ServiceContainer(ServiceContainer const& _src) : AbstractContainer(_src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
-	ServiceImpl& ServiceImpl::operator=(ServiceImpl const& _src)
+	ServiceContainer& ServiceContainer::operator=(ServiceContainer const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
-	ServiceImpl::~ServiceImpl()
+	ServiceContainer::~ServiceContainer()
 	{
 		delete m_Service;
 	}
 
-	void ServiceImpl::addSlot(unsigned int const& id, ServiceSlot *const _slot)
+	void ServiceContainer::addSlot(unsigned int const& id, ServiceSlot *const _slot)
 	{
 		if (_slot == NULL)
 		{
-			throw Exception::failure();
+			throw Exception("service slot could not be added - null pointer");
 		}
 
-		IdentifierImpl::eType type = _slot->type();
-		if (type == IdentifierImpl::INPUT)
+		Entity::eType type = _slot->type();
+		if (type == Entity::INPUT)
 		{
 			m_InputParams.insert(NamedParam(_slot->name(), _slot));
 			m_InputIds.push_back(id);
 			m_InputSlots.push_back(_slot);
 		}
-		else if (type == IdentifierImpl::OUTPUT)
+		else if (type == Entity::OUTPUT)
 		{
 			m_OutputParams.insert(NamedParam(_slot->name(), _slot));
 			m_OutputIds.push_back(id);
@@ -78,18 +78,18 @@ namespace _2Real
 		}
 	}
 
-	void ServiceImpl::addValue(unsigned int const& id, ServiceValue *const _value)
+	void ServiceContainer::addValue(unsigned int const& id, ServiceValue *const _value)
 	{
 		if (_value == NULL)
 		{
-			throw Exception::failure();
+			throw Exception("setup parameter could not be added - null pointer");
 		}
 
 		m_SetupParams.insert(NamedValue(_value->name(), _value));
 		m_SetupIds.push_back(id);
 	}
 
-	void ServiceImpl::checkConfiguration()
+	void ServiceContainer::checkConfiguration()
 	{
 		try
 		{
@@ -98,28 +98,25 @@ namespace _2Real
 				m_Service->setup(new ServiceContext(this));
 			}
 
-			//check if all input params are linked
+			//check if all input params are linked & initialized
 			for (ParamMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
 			{
 				if (!it->second->isLinked())
 				{
-					std::cout << "SERVICE CHECK CONFIG: input param not linked " << it->second->name() << std::endl;
-					throw Exception::failure();
+					throw Exception("service setup error: input slot " + it->first + " is not linked");
 				}
 				if (!it->second->isInitialized())
 				{
-					std::cout << "SERVICE CHECK CONFIG: input param not initialized " << it->second->name() << std::endl;
-					throw Exception::failure();
+					throw Exception("service setup error: input slot " + it->first + " was not initialized by the service");
 				}
 			}
 
-			//check if all output params are linked
+			//check if all output params are initialized
 			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
 			{
 				if (!it->second->isInitialized())
 				{
-					std::cout << "SERVICE CHECK CONFIG: output param not initialized " << it->second->name() << std::endl;
-					throw Exception::failure();
+					throw Exception("service setup error: output slot " + it->first + " was not initialized by the service");
 				}
 			}
 
@@ -128,34 +125,33 @@ namespace _2Real
 			{
 				if (!it->second->isInitialized())
 				{
-					std::cout << "SERVICE CHECK CONFIG: setup param not initialized " << it->second->name() << std::endl;
-					throw Exception::failure();
+					throw Exception("service setup error: value for setup parameter " + it->first + " was not provided");
 				}
 			}
 
 			m_bIsConfigured = true;
 		}
-		catch(...)
+		catch(Exception &e)
 		{
 			m_bIsConfigured = false;
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
-	void ServiceImpl::run()
+	void ServiceContainer::run()
 	{
 		while (m_bRun || m_bRunOnce)
 		{
 			try
 			{
 				m_Mutex.lock();
-				
+
 				if (!m_bIsConfigured)
 				{
-					throw Exception::failure();
+					throw Exception("attempted to update incorrectly configured service " + name());
 				}
 
-				DataImpl input;
+				DataPacket input;
 				ContainerList copy(m_Senders);
 				ContainerList::iterator container;
 				std::list< NamedData >::reverse_iterator data;
@@ -198,34 +194,34 @@ namespace _2Real
 #ifdef _VERBOSE
 	std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
 #endif
-						DataImpl::SharedAny any = input.getAny(id);
+						DataPacket::SharedAny any = input.getAny(id);
 						in->second->extractFrom(any);
 					}
 					else
 					{
-						throw Exception::failure();
+						throw Exception("attempted to update service with lacking input data: " + in->second->name());
 					}
 				}
 
-				//call user service's update method
 				m_Service->update();
 				sendData(m_bRunOnce);
 				m_bRunOnce = false;
 			}
-			catch (...)
+			catch (Exception &e)
 			{
-				std::cout << "SERVICE RUN: error " << name() << std::endl;
 				m_Mutex.unlock();
 				m_bRun = false;
 				m_bRunOnce = false;
 				Container *root = static_cast< Container * >(this->root());
 				Container *nirvana = static_cast< Container * >(root->father());
 				nirvana->stopChild(root->id());
+
+				//TODO: callback if registered
 			}
 		}
 	}
 
-	void ServiceImpl::update()
+	void ServiceContainer::update()
 	{
 		try
 		{
@@ -233,11 +229,11 @@ namespace _2Real
 
 			if (!m_bIsConfigured)
 			{
-				throw Exception::failure();
+				throw Exception("attempted to update incorrectly configured service " + name());
 			}
 
 			//extract data
-			DataImpl input;
+			DataPacket input;
 			ContainerList copy(m_Senders);
 			ContainerList::iterator container;
 			std::list< NamedData >::reverse_iterator data;
@@ -280,97 +276,90 @@ namespace _2Real
 #ifdef _VERBOSE
 					std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
 #endif
-					DataImpl::SharedAny any = input.getAny(id);
+					DataPacket::SharedAny any = input.getAny(id);
 					in->second->extractFrom(any);
+				}
+				else
+				{
+					throw Exception("attempted to update service with lacking input data: " + in->second->name());
 				}
 			}
 
 			m_Service->update();
 			sendData(true);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			std::cout << "SERVICE UPDATE: error " << name() << std::endl;
 			m_Mutex.unlock();
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
-	void ServiceImpl::shutdown()
+	void ServiceContainer::shutdown()
 	{
 		try
 		{
-			std::cout << "SERVICE SHUTDOWN: " << name() << std::endl;
-			
 			m_Service->shutdown();
 		}
-		catch(...)
+		catch(Exception &e)
 		{
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
-	void ServiceImpl::getParameterValue(std::string const& _name, AbstractRef *const _param)
+	void ServiceContainer::getParameterValue(std::string const& _name, AbstractRef *const _param)
 	{
 		ValueMap::iterator it = m_SetupParams.find(_name);
 		if (it == m_SetupParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("attempted to query non-existant setup parameter");
 		}
 
 		Poco::Any any = (it->second->value());
 		_param->extractFrom(any);
 	}
 
-	void ServiceImpl::registerInputSlot(std::string const& _name, AbstractRef *const _var)
+	void ServiceContainer::registerInputSlot(std::string const& _name, AbstractRef *const _var)
 	{
 		ParamMap::iterator it = m_InputParams.find(_name);
 		if (it == m_InputParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("attempted to register non-existant input slots");
 		}
-		//if (it->second->isInitialized())
-		//{
-		//	throw Exception::failure();
-		//}
 		it->second->setValue(_var);
 	}
 
-	void ServiceImpl::registerOutputSlot(std::string const& _name, AbstractRef *const _var)
+	void ServiceContainer::registerOutputSlot(std::string const& _name, AbstractRef *const _var)
 	{
 		ParamMap::iterator it = m_OutputParams.find(_name);
 		if (it == m_OutputParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("attempted to register non-existant output slot");
 		}
-		//if (it->second->isInitialized())
-		//{
-		//	throw Exception::failure();
-		//}
 		it->second->setValue(_var);
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::inputParamIDs() const
+	IDs ServiceContainer::inputSlotIDs() const
 	{
 		return m_InputIds;
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::outputParamIDs() const
+	IDs ServiceContainer::outputSlotIDs() const
 	{
 		return m_OutputIds;
 	}
 
-	AbstractContainer::IdentifierList ServiceImpl::setupParamIDs() const
+	IDs ServiceContainer::setupParamIDs() const
 	{
 		return m_SetupIds;
 	}
 
-	std::list< ServiceSlot * > ServiceImpl::inputSlots()
+	std::list< ServiceSlot * > ServiceContainer::inputSlots()
 	{
 		return m_InputSlots;
 	}
 
-	std::list< ServiceSlot * > ServiceImpl::outputSlots()
+	std::list< ServiceSlot * > ServiceContainer::outputSlots()
 	{
 		return m_OutputSlots;
 	}

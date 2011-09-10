@@ -18,15 +18,10 @@
 
 #pragma once
 
+#include <vector>
+
 namespace _2Real
 {
-
-	/**
-	*
-	*/
-
-	class ErrorcodeTable
-	{
-	};
-
+	typedef std::vector< unsigned int > IDs;
+	typedef std::vector< unsigned int >::iterator IDIterator;
 }

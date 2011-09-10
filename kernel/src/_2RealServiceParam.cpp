@@ -23,28 +23,28 @@
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceImpl *const _service) :
-		IEntity(_id),
+	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceContainer *const _service) :
+		Entity(_id),
 		m_Service(_service),
 		m_bIsInitialized(false)
 	{
 	}
 
-	ServiceParam::ServiceParam(ServiceParam const& _src) : IEntity(_src)
+	ServiceParam::ServiceParam(ServiceParam const& _src) : Entity(_src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceParam& ServiceParam::operator=(ServiceParam const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceParam::~ServiceParam()
 	{
 	}
 
-	ServiceImpl *const ServiceParam::service()
+	ServiceContainer *const ServiceParam::service()
 	{
 		return m_Service;
 	}

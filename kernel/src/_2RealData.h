@@ -29,7 +29,7 @@ namespace _2Real
 	*	output data received by the 2 real engine
 	*/
 
-	class DataImpl;
+	class DataPacket;
 
 	class Data
 	{
@@ -79,7 +79,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Data(DataImpl *const _impl);
+		Data(DataPacket *const _impl);
 
 		/**
 		*
@@ -89,7 +89,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		DataImpl		*m_Impl;
+		DataPacket		*m_Impl;
 
 	};
 }

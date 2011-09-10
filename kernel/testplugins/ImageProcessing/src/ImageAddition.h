@@ -42,46 +42,33 @@ private:
 };
 
 template< typename T >
-void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context) throw(...)
+void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
 	try
 	{
-		//std::cout << "IMAGE ADDITION SETUP" << std::endl;
-
 		_context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
-
-		//std::cout << "IMAGE ADDITION SETUP: scale factor 1 = " << m_ScaleFactor1 << std::endl;
-
 		_context->getSetupParameter< T >("scale factor 2", m_ScaleFactor2);
-
-		//std::cout << "IMAGE ADDITION SETUP: scale factor 2 = " << m_ScaleFactor2 << std::endl;
-
 		_context->registerInputSlot< ::Image< T, 2> >("input image 1", m_InputImage1);
 		_context->registerInputSlot< ::Image< T, 2> >("input image 2", m_InputImage2);
 		_context->registerOutputSlot< ::Image< T, 2> >("output image", m_OutputImage);
-
-		std::cout << "IMAGE ADDITION SETUP: success" << std::endl;
 	}
-	catch (...)
+	catch (Exception &e)
 	{
-		std::cout << "IMAGE ADDITION SETUP: error" << std::endl;
-		throw;
+		throw e;
 	}
 };
 
 template< typename T >
-void ImageAdditionService< T >::update() throw(...)
+void ImageAdditionService< T >::update()
 {
 	/*
 		this function performs the actual service
 	*/
 	try
 	{
-		//std::cout << "IMAGE ADDITION UPDATE" << std::endl;
-
 		if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
 		{
 			unsigned int width = m_InputImage1.resolution().get(0);
@@ -109,18 +96,14 @@ void ImageAdditionService< T >::update() throw(...)
 
 			m_OutputImage.setData(tmp);
 			m_OutputImage.setResolution(res);
-
-			//std::cout << "IMAGE ADDITION UPDATE: success" << std::endl;
 		}
 		else
 		{
-			std::cout << "IMAGE ADDITION UPDATE: at least one image is empty" << std::endl;
-			throw Exception::failure();
+			throw Exception("service update: invalid input data");
 		}
 	}
-	catch (...)
+	catch (Exception &e)
 	{
-		std::cout << "IMAGE ADDITION UPDATE: error" << std::endl;
-		throw;
+		throw e;
 	}
 };

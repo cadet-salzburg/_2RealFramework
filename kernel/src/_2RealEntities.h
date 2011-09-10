@@ -31,19 +31,19 @@ namespace _2Real
 
 	class ServiceMetadata;
 	class Identifier;
-	class IEntity;
+	class Entity;
 	class PluginPool;
 	class ServiceFactory;
 	class ProductionGraphs;
 	class IService;
 	class Plugin;
-	class ServiceImpl;
+	class ServiceContainer;
 	class Container;
 	class FactoryReference;
 	class ServiceSlot;
 	class ServiceValue;
 
-	class Entities
+	class EntityTable
 	{
 
 		/**
@@ -61,50 +61,50 @@ namespace _2Real
 		/**
 		*	standard ctor; pointer are set directly by engine
 		*/
-		Entities();
+		EntityTable();
 
 		/**
 		*	copy kills music
 		*/
-		Entities(Entities const& _src) throw(...);
+		EntityTable(EntityTable const& _src) throw(...);
 
 		/**
 		*	as does assignment
 		*/
-		Entities& operator=(Entities const& _src) throw(...);
+		EntityTable& operator=(EntityTable const& _src) throw(...);
 
 		/**
 		*	this kills every entity in existence.
 		*	well, entities created by the 2 real engine anyway; porn videos are not affected.
 		*/
-		~Entities();
+		~EntityTable();
 
 		/**
 		*	i can haz typedef
 		*/
-		typedef std::pair< const unsigned int, IEntity *const > ID;
+		typedef std::pair< const unsigned int, Entity *const > ID;
 
 		/**
 		*	return entity, throw exception if not existing
 		*/
-		IEntity *const get(unsigned int const& _id) throw(...);
+		Entity *const get(unsigned int const& _id) throw(...);
 
 		/**
-		*	builds an identifier for an id
+		*	returns an identifier for an id
 		*/
 		const Identifier getIdentifier(unsigned int const& _id) const throw(...);
 
-		void Entities::destroy(Container *_obj) throw(...);
+		void EntityTable::destroy(Container *_obj) throw(...);
 
-		void Entities::destroy(ServiceImpl *_obj) throw(...);
+		void EntityTable::destroy(ServiceContainer *_obj) throw(...);
 
-		void Entities::destroy(ServiceSlot *_obj) throw(...);
+		void EntityTable::destroy(ServiceSlot *_obj) throw(...);
 
-		void Entities::destroy(ServiceValue *_obj) throw(...);
+		void EntityTable::destroy(ServiceValue *_obj) throw(...);
 
-		void Entities::destroy(Plugin *_obj) throw(...);
+		void EntityTable::destroy(Plugin *_obj) throw(...);
 
-		void Entities::destroy(FactoryReference *_obj) throw(...);
+		void EntityTable::destroy(FactoryReference *_obj) throw(...);
 
 		/**
 		*	destroy entity, throw if not existing
@@ -126,7 +126,22 @@ namespace _2Real
 		/**
 		*	requested by production graph map on sequence / sync / nirvana creation
 		*/
-		const ID createContainer(std::string const& _name, IdentifierImpl::eType const& _type) throw(...);
+		const ID createContainer(std::string const& _name, Entity::eType const& _type) throw(...);
+
+		/**
+		*	requested by production graph map on sequence / sync / nirvana creation
+		*/
+		const ID createSequence(std::string const& _name) throw(...);
+
+		/**
+		*	requested by production graph map on sequence / sync / nirvana creation
+		*/
+		const ID createSystem(std::string const& _name) throw(...);
+
+		/**
+		*	requested by production graph map on sequence / sync / nirvana creation
+		*/
+		const ID createSynchronization(std::string const& _name) throw(...);
 
 		/**
 		*	requested by service factory on service registration
@@ -136,29 +151,29 @@ namespace _2Real
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createInputSlot(std::string const& _name, ServiceImpl *const _service) throw(...);
+		const ID createInputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createOutputSlot(std::string const& _name, ServiceImpl *const _service) throw(...);
+		const ID createOutputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createServiceValue(std::string const& _name, ServiceImpl *const _service) throw(...);
+		const ID createServiceValue(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 	private:
 
 		/**
 		*	i can haz typedef
 		*/
-		typedef std::pair< unsigned int, IEntity * >	NamedEntity;
+		typedef std::pair< unsigned int, Entity * >	NamedEntity;
 
 		/**
 		*	i can haz typedef
 		*/
-		typedef std::map< unsigned int, IEntity * >		EntityMap;
+		typedef std::map< unsigned int, Entity * >		EntityMap;
 
 		/**
 		*	entities

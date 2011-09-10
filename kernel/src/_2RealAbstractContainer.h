@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "_2RealEngineTypedefs.h"
 #include "_2RealIContainer.h"
 #include "_2RealIEntity.h"
 
@@ -36,15 +37,10 @@ namespace _2Real
 	class ServiceSlot;
 	class Exception;
 
-	class AbstractContainer : public IEntity, public IContainer
+	class AbstractContainer : public Entity, public IContainer
 	{
 
 	public:
-
-		/**
-		*	
-		*/
-		typedef std::list< unsigned int > IdentifierList;
 
 		/**
 		*	
@@ -64,15 +60,20 @@ namespace _2Real
 		/**
 		*	
 		*/
-		~AbstractContainer();
+		virtual ~AbstractContainer();
 
 		/**
-		*	
+		*	returns pointer to production graph root
+		*/
+		AbstractContainer *const root();
+
+		/**
+		*	prepares for run()
 		*/
 		void start(bool const& _runOnce) throw(...);
 
 		/**
-		*	
+		*	stops run()
 		*/
 		void stop();
 
@@ -119,17 +120,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		virtual IdentifierList setupParamIDs() const throw(...) = 0;
+		virtual IDs setupParamIDs() const throw(...) = 0;
 
 		/**
 		*	
 		*/
-		virtual IdentifierList inputParamIDs() const throw(...) = 0;
+		virtual IDs inputSlotIDs() const throw(...) = 0;
 
 		/**
 		*	
 		*/
-		virtual IdentifierList outputParamIDs() const throw(...) = 0;
+		virtual IDs outputSlotIDs() const throw(...) = 0;
 
 		/**
 		*	
@@ -155,11 +156,6 @@ namespace _2Real
 		*	
 		*/
 		void resetIO();
-
-		/**
-		*	returns pointer to production graph root
-		*/
-		AbstractContainer *const root();
 
 	protected:
 

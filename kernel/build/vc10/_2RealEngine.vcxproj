@@ -22,9 +22,7 @@
     <ClCompile Include="..\..\src\_2RealDataImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealDataQueue.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEntities.cpp" />
-    <ClCompile Include="..\..\src\_2RealErrorCodeTable.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealFactoryReference.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
@@ -48,6 +46,7 @@
     <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceValue.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
@@ -57,10 +56,8 @@
     <ClInclude Include="..\..\src\_2RealDataImpl.h" />
     <ClInclude Include="..\..\src\_2RealDataQueue.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
-    <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealEntities.h" />
-    <ClInclude Include="..\..\src\_2RealErrorCodeTable.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFactoryReference.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
@@ -84,6 +81,8 @@
     <ClInclude Include="..\..\src\_2RealServiceParam.h" />
     <ClInclude Include="..\..\src\_2RealServiceSlot.h" />
     <ClInclude Include="..\..\src\_2RealServiceValue.h" />
+    <ClInclude Include="..\..\src\_2RealSystem.h" />
+    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

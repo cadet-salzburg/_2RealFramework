@@ -36,7 +36,7 @@ namespace _2Real
 	class PluginMetadata;
 	class ServiceFactory;
 	class ProductionGraphs;
-	class Entities;
+	class EntityTable;
 
 	class PluginPool
 	{
@@ -66,18 +66,21 @@ namespace _2Real
 		/**
 		*	
 		*/
-		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, std::list< unsigned int > &_ids) throw(...);
-
-		/**
-		*	
-		*/
-		//void uninstall(unsigned int const& _id) throw(...);
+		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
 
 		/**
 		*
 		*/
-		//Plugin const *const get(unsigned int const& _id) const;
+		Plugin *const getPlugin(unsigned int const& _id);
 
+		/**
+		*
+		*/
+		Plugin const *const getPlugin(unsigned int const& _id) const;
+
+		/**
+		*	
+		*/
 		PluginMetadata const& pluginInfo(unsigned int const& _id) const throw(...);
 
 	private:
@@ -107,7 +110,7 @@ namespace _2Real
 		/**
 		*	framework's entities
 		*/
-		Entities											*m_Entities;
+		EntityTable											*m_Entities;
 
 		/**
 		*	production graphs

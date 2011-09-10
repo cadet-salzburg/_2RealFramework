@@ -35,8 +35,8 @@ namespace _2Real
 	class Plugin;
 	class FactoryReference;
 	class ProductionGraphs;
-	class ServiceImpl;
-	class Entities;
+	class ServiceContainer;
+	class EntityTable;
 	class ServiceMetadata;
 	class IService;
 
@@ -75,35 +75,35 @@ namespace _2Real
 		*/
 		const unsigned int registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
 
-		/**
-		*	returns true if service in question can be created
-		*/
-		const bool canCreate(unsigned int const& _id) const;
+		///**
+		//*	returns true if service in question can be created
+		//*/
+		//const bool canCreate(unsigned int const& _id) const;
 
-		/**
-		*	returns true if the service in question is a singleton
-		*/
-		const bool isSingleton(unsigned int const& _id) const;
+		///**
+		//*	returns true if the service in question is a singleton
+		//*/
+		//const bool isSingleton(unsigned int const& _id) const;
 
-		/**
-		*	returns true if the service in question can be reconfigured
-		*/
-		const bool canReconfigure(unsigned int const& _id) const;
+		///**
+		//*	returns true if the service in question can be reconfigured
+		//*/
+		//const bool canReconfigure(unsigned int const& _id) const;
+
+		///**
+		//*	creates service container holding an instance of user service identified by _serviceID
+		//*/
+		//const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
+		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, unsigned int const& _top) throw(...);
 
-		/**
-		*	creates service container holding an instance of user service identified by _serviceID
-		*/
-		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
-
-		/**
-		*	returns metadata of a service
-		*/
-		ServiceMetadata const& serviceInfo(unsigned int const& _id) const throw(...);
+		///**
+		//*	returns metadata of a service
+		//*/
+		//ServiceMetadata const& serviceInfo(unsigned int const& _id) const throw(...);
 
 		/**
 		*	returns metadata of a service
@@ -117,7 +117,7 @@ namespace _2Real
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::list< ServiceImpl * >							ServiceList;
+		typedef std::list< ServiceContainer * >							ServiceList;
 
 		/**
 		*	yay, typedefs
@@ -142,7 +142,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Entities													*m_Entities;
+		EntityTable													*m_Entities;
 
 		/**
 		*
@@ -154,9 +154,9 @@ namespace _2Real
 		*/
 		ProductionGraphs											*m_Graphs;
 
-		typedef std::multimap< unsigned int, ServiceImpl * >		ServiceTable;
+		typedef std::multimap< unsigned int, ServiceContainer * >		ServiceTable;
 
-		typedef std::pair< unsigned int, ServiceImpl * >			NamedService;
+		typedef std::pair< unsigned int, ServiceContainer * >			NamedService;
 
 	};
 

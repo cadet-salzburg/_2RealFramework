@@ -32,7 +32,7 @@ namespace _2Real
 		}
 		else
 		{
-			throw Exception::failure();
+			throw Exception("could not create identifier - null pointer");
 		}
 	}
 

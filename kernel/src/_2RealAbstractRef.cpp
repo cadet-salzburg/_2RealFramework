@@ -29,12 +29,12 @@ namespace _2Real
 
 	AbstractRef::AbstractRef(AbstractRef const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	AbstractRef& AbstractRef::operator=(AbstractRef const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	AbstractRef::~AbstractRef()

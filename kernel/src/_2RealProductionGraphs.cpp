@@ -30,93 +30,102 @@
 namespace _2Real
 {
 	ProductionGraphs::ProductionGraphs() :
-		m_Plugins(NULL),
-		m_Factory(NULL),
 		m_Entities(NULL),
-		m_Containers()
+		m_Systems()
 	{
 	}
 
 	ProductionGraphs::ProductionGraphs(ProductionGraphs const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("internal error: attempted to copy production graphs");
 	}
 
 	ProductionGraphs& ProductionGraphs::operator=(ProductionGraphs const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("internal error: attempted to copy production graphs");
 	}
 
 	ProductionGraphs::~ProductionGraphs()
 	{
-		for (ContainerMap::iterator it = m_Containers.begin(); it != m_Containers.end(); it++)
+		try
 		{
-			try
+			for (SystemMap::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
 			{
 				m_Entities->destroy(it->first);
-				it->second = NULL;
-			}
-			catch (...)
-			{
-				std::cout << "error on production graph destruction" << std::endl;
 			}
 		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
 
-		m_Containers.clear();
+	const unsigned int ProductionGraphs::createSystem(std::string const& _name)
+	{
+		try
+		{
+			//request container creation
+			const EntityTable::ID id = m_Entities->createSystem(_name);
+			Container *nirvana = static_cast< Container * >(id.second);
+			m_Systems.insert(NamedSystem(nirvana->id(), nirvana));
+			return id.first;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void ProductionGraphs::destroySystem(unsigned int const& _id)
+	{
+		try
+		{
+			SystemMap::iterator it = m_Systems.find(_id);
+
+			if (it == m_Systems.end())
+			{
+				throw Exception("internal error, attempted to destroy a system which does not exist");
+			}
+
+			Container *nirvana = it->second;
+			//stops & shuts down all children
+			nirvana->shutdown();
+			//deletes all children
+			m_Entities->destroy(_id);
+			m_Systems.erase(it);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	Container *const ProductionGraphs::getSystem(unsigned int const& _id)
+	{
+		SystemMap::const_iterator it = m_Systems.find(_id);
+		if (it == m_Systems.end())
+		{
+			throw Exception("internal error, tried to access nonexistant system");
+		}
+		else if (!it->second)
+		{
+			throw Exception("internal error, null pointer stored in production graphs");
+		}
+		return it->second;
 	}
 
 	void ProductionGraphs::destroy(unsigned int const& _id, unsigned int const& _top)
 	{
 		try
 		{
-			IEntity *e = m_Entities->get(_id);
-			if (e->type() != IdentifierImpl::NIRVANA)
-			{
-				throw Exception::failure();
-			}
-
-			ContainerMap::iterator it = m_Containers.find(_id);
-			if (it == m_Containers.end())
-			{
-				throw Exception::failure();
-			}
-
-			Container *container = static_cast< Container * >(e);
+			Container *nirvana = getSystem(_top);
+			AbstractContainer *container = nirvana->getChild(_id);
 			container->shutdown();
 			m_Entities->destroy(_id);
-			m_Containers.erase(it);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
-		}
-	}
-
-	const bool ProductionGraphs::isNirvana(unsigned int const& _id)
-	{
-		ContainerMap::iterator it = m_Containers.find(_id);
-		if (it == m_Containers.end())
-		{
-			return false;
-		}
-		
-		return true;
-	}
-
-	const unsigned int ProductionGraphs::createNirvana(std::string const& _name)
-	{
-		try
-		{
-			//request container creation
-			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::NIRVANA);
-			//entities returns entity*
-			Container *nirvana = static_cast< Container * >(id.second);
-			m_Containers.insert(NamedContainer(nirvana->id(), nirvana));
-			return id.first;
-		}
-		catch (...)
-		{
-			throw;
+			throw e;
 		}
 	}
 
@@ -124,33 +133,15 @@ namespace _2Real
 	{
 		try
 		{
-			//_top must be in container map 
-			ContainerMap::iterator it = m_Containers.find(_top);
-			if (it == m_Containers.end())
-			{
-				throw Exception::failure();
-			}
-			Container *top = it->second;
+			Container *nirvana = getSystem(_top);
+			AbstractContainer *a = nirvana->getChild(_a);
+			AbstractContainer *b = nirvana->getChild(_b);
 
-			//find children
-			//after this op, the children's former root will be stopped
-			//their father will be NULL
-			//all IO connections will have been broken
-			AbstractContainer *a = top->getChild(_a);
-			AbstractContainer *b = top->getChild(_b);
-
-			//both containers should exist, i guess (:
-			if (a == NULL || b == NULL)
-			{
-				throw Exception::failure();
-			}
-
-			//request container creation -returns entity*
-			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SEQUENCE);
+			const EntityTable::ID id = m_Entities->createSequence(_name);
 			Container *seq = static_cast< Container * >(id.second);
 			
 			//move sequence into nirvana
-			top->add(seq, 0);
+			nirvana->add(seq, 0);
 
 			//add containers to newly created sequence
 			seq->add(b, 0);
@@ -158,9 +149,9 @@ namespace _2Real
 
 			return id.first;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
 
@@ -168,34 +159,15 @@ namespace _2Real
 	{
 		try
 		{
-			//_top must be in container map 
-			ContainerMap::iterator it = m_Containers.find(_top);
-			if (it == m_Containers.end())
-			{
-				throw Exception::failure();
-			}
+			Container *nirvana = getSystem(_top);
+			AbstractContainer *a = nirvana->getChild(_a);
+			AbstractContainer *b = nirvana->getChild(_b);
 
-			Container *top = it->second;
-
-			//find children
-			//after this op, the children's former root will be stopped
-			//their father will be NULL
-			//all IO connections will have been broken
-			AbstractContainer *a = top->getChild(_a);
-			AbstractContainer *b = top->getChild(_b);
-
-			////both containers should exist, i guess (:
-			if (a == NULL || b == NULL)
-			{
-				throw Exception::failure();
-			}
-
-			//request container creation -returns entity*
-			const Entities::ID id = m_Entities->createContainer(_name, IdentifierImpl::SYNCHRONIZATION);
+			const EntityTable::ID id = m_Entities->createSynchronization(_name);
 			Container *sync = static_cast< Container * >(id.second);
 
 			//move sync into nirvana
-			top->add(sync, 0);
+			nirvana->add(sync, 0);
 
 			//add to containers to newly created synchronization
 			sync->add(a, 0);
@@ -203,10 +175,9 @@ namespace _2Real
 
 			return id.first;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
-
 }

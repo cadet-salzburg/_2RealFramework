@@ -38,7 +38,7 @@ namespace _2Real
 	class ServiceFactory;
 	class IService;
 
-	class Plugin : public IEntity
+	class Plugin : public Entity
 	{
 
 	public:

@@ -26,22 +26,17 @@ namespace _2Real
 {
 
 	/**
-	*	stores top level production graphs
+	*	stores top level production graphs = systems
+	*	needs to be refactored
+	*	(but not as badly as some other classes)
 	*/
 
-	class PluginPool;
-	class ServiceFactory;
-	class Entities;
+	class EntityTable;
 	class Container;
 
 	class ProductionGraphs
 	{
 
-		/**
-		*	engine
-		*/
-		friend class Engine;
-	
 	public:	
 
 		/**
@@ -50,7 +45,7 @@ namespace _2Real
 		ProductionGraphs();
 
 		/**
-		*	no copies allowed for
+		*	no copies allowed
 		*/
 		ProductionGraphs(ProductionGraphs const& _src) throw(...);
 
@@ -60,8 +55,7 @@ namespace _2Real
 		ProductionGraphs& operator=(ProductionGraphs const& _src) throw(...);
 
 		/**
-		*	causes destruction of nirvana - and therefore, of all existing graphs
-
+		*	causes destruction of all existing systems
 		*/
 		~ProductionGraphs();
 
@@ -76,51 +70,48 @@ namespace _2Real
 		const unsigned int createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top) throw(...);
 
 		/**
-		*	creates nirvana. if only it was that simple in real life ;)
+		*	creates a new system
 		*/
-		const unsigned int createNirvana(std::string const& _name);
+		const unsigned int createSystem(std::string const& _name);
 
 		/**
-		*	destroys a container, stops it's superior
+		*	returns system, throws if nonexistant
+		*/
+		Container *const getSystem(unsigned int const& _id) throw(...);
+
+		/**
+		*	destroys a system (and everything inside it)
+		*/
+		void destroySystem(unsigned int const& _id) throw(...);
+
+		/**
+		*	destroys container, stops container's root
 		*/
 		void destroy(unsigned int const& _id, unsigned int const& _top) throw(...);
 
-		/**
-		*
-		*/
-		const bool isNirvana(unsigned int const& _id);
-
 	private:
 
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< unsigned int, Container * >	NamedContainer;
+		friend class Engine;
 
 		/**
 		*	yay, typedefs
 		*/
-		typedef	std::map< unsigned int, Container * >	ContainerMap;
+		typedef std::pair< unsigned int, Container * >	NamedSystem;
 
 		/**
-		*	nirvana!
+		*	yay, typedefs
 		*/
-		ContainerMap									m_Containers;
+		typedef	std::map< unsigned int, Container * >	SystemMap;
 
 		/**
-		*	plugin pool, for communication
+		*	systems in existence
 		*/
-		PluginPool										*m_Plugins;
-
-		/**
-		*	service factory, for communication
-		*/
-		ServiceFactory									*m_Factory;
+		SystemMap										m_Systems;
 
 		/**
 		*	entity table, for communication
 		*/
-		Entities										*m_Entities;
+		EntityTable										*m_Entities;
 
 	};
 

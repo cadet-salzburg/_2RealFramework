@@ -26,7 +26,7 @@
 namespace _2Real
 {
 
-	ServiceSlot::ServiceSlot(IdentifierImpl *const _id, ServiceImpl *const _service) :
+	ServiceSlot::ServiceSlot(IdentifierImpl *const _id, ServiceContainer *const _service) :
 		ServiceParam(_id, _service),
 		m_Value(NULL),
 		m_Linked(NULL),
@@ -36,12 +36,12 @@ namespace _2Real
 
 	ServiceSlot::ServiceSlot(ServiceSlot const& _src) : ServiceParam(_src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceSlot& ServiceSlot::operator=(ServiceSlot const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	ServiceSlot::~ServiceSlot()
@@ -66,11 +66,11 @@ namespace _2Real
 		{
 			if (!_link)
 			{
-				throw Exception::failure();
+				throw Exception("IO slot linkage failed - null pointer");
 			}
 
 			//output is responsible for linking
-			if (type() == IdentifierImpl::OUTPUT)
+			if (type() == Entity::OUTPUT)
 			{
 				if (_link == m_Linked)
 				{
@@ -112,7 +112,7 @@ namespace _2Real
 	{
 		if (!m_bIsInitialized)
 		{
-			throw Exception::failure();
+			throw Exception("IO slot value could not be retrieved - slot is uninitialized");
 		}
 
 		return ServiceSlot::NamedAny(id(), m_Value->getAny());
@@ -122,7 +122,7 @@ namespace _2Real
 	{
 		try
 		{
-			if (m_bIsLinked && type() == IdentifierImpl::OUTPUT)
+			if (m_bIsLinked && type() == Entity::OUTPUT)
 			{
 				(m_Linked->service())->stopListeningTo(this->service());
 				(this->service())->removeListener(m_Linked->service());
@@ -133,10 +133,10 @@ namespace _2Real
 			m_Linked = NULL;
 			m_bIsLinked = false;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
 			m_bIsLinked = false;
-			throw;
+			throw e;
 		}
 	}
 

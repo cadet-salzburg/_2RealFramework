@@ -33,7 +33,7 @@ namespace _2Real
 	class Plugin;
 	class IService;
 
-	class FactoryReference : public IEntity
+	class FactoryReference : public Entity
 	{
 
 	public:

@@ -22,6 +22,7 @@
 #include "_2RealDataImpl.h"
 #include "_2RealIdentifier.h"
 #include "_2RealEngineTypedefs.h"
+#include "_2RealTypedefs.h"
 
 #include <list>
 

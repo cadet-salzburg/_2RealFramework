@@ -57,7 +57,7 @@ namespace _2Real
 
 		if (it != m_SetupParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("setup parameter " + _name + " already exists");
 		}
 
 		m_SetupParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
@@ -69,7 +69,7 @@ namespace _2Real
 
 		if (it != m_InputParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("input slot " + _name + " already exists");
 		}
 
 		m_InputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
@@ -81,7 +81,7 @@ namespace _2Real
 
 		if (it != m_OutputParams.end())
 		{
-			throw Exception::failure();
+			throw Exception("output slot " + _name + " already exists");
 		}
 
 		m_OutputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
@@ -93,7 +93,7 @@ namespace _2Real
 
 		if (it != m_Userclasses.end())
 		{
-			throw Exception::failure();
+			throw Exception("user class " + _name + " already exists");
 		}
 
 		m_Userclasses.insert(NamedUserclass(_name, ""));

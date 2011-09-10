@@ -36,7 +36,7 @@ namespace _2Real
 	class ServiceSlot;
 	class ServiceValue;
 
-	class ServiceImpl : public AbstractContainer
+	class ServiceContainer : public AbstractContainer
 	{
 
 	public:
@@ -59,22 +59,22 @@ namespace _2Real
 		/**
 		*	throws if user defined service is null
 		*/
-		ServiceImpl(IService *const _service, IdentifierImpl *const _id) throw(...);
+		ServiceContainer(IService *const _service, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceImpl(ServiceImpl const& _src) throw(...);
+		ServiceContainer(ServiceContainer const& _src) throw(...);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceImpl& operator=(ServiceImpl const& _src) throw(...);
+		ServiceContainer& operator=(ServiceContainer const& _src) throw(...);
 
 		/**
 		*	destructor also performs shutdown & destroys user defined service
 		*/
-		~ServiceImpl();
+		~ServiceContainer();
 
 		/**
 		*	called by service factory after service creation
@@ -109,17 +109,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList setupParamIDs() const throw(...);
+		IDs setupParamIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList inputParamIDs() const throw(...);
+		IDs inputSlotIDs() const throw(...);
 
 		/**
 		*	
 		*/
-		IdentifierList outputParamIDs() const throw(...);
+		IDs outputSlotIDs() const throw(...);
 
 		/**
 		*	
@@ -161,7 +161,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList											m_InputIds;
+		IDs														m_InputIds;
 
 		/**
 		*	
@@ -176,7 +176,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList											m_OutputIds;
+		IDs														m_OutputIds;
 
 		/**
 		*	
@@ -191,7 +191,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierList											m_SetupIds;
+		IDs														m_SetupIds;
 
 		/**
 		*	the user defined service

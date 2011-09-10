@@ -157,7 +157,7 @@ namespace _2Real
 
 		if (it == m_Services.end())
 		{
-			throw Exception::failure();
+			throw Exception("could not retrieve service metadata - metadata not found");
 		}
 
 		return it->second;

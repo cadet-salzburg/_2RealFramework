@@ -27,7 +27,7 @@ namespace _2Real
 	*
 	*/
 
-	class DataImpl;
+	class DataPacket;
 	
 	class IDataQueue
 	{
@@ -37,7 +37,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::pair< unsigned int , Poco::SharedPtr< DataImpl > >	NamedData;
+		typedef std::pair< unsigned int , Poco::SharedPtr< DataPacket > >	NamedData;
 
 		/**
 		*	adds other queue to listeners

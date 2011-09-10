@@ -22,7 +22,7 @@
 namespace _2Real
 {
 
-	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, IdentifierImpl::eType const& _type, unsigned int const& _id) :
+	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id) :
 		m_Name(_name), m_Typename(_strType), m_Info(_info), m_Type(_type), m_ID(_id), m_iRefCount(1)
 	{
 	}
@@ -30,12 +30,12 @@ namespace _2Real
 	IdentifierImpl::IdentifierImpl(IdentifierImpl const& _src) :
 		m_Name(_src.m_Name), m_Type(_src.m_Type), m_ID(_src.m_ID), m_Typename(_src.m_Typename), m_Info(_src.m_Info)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	IdentifierImpl& IdentifierImpl::operator=(IdentifierImpl const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	void IdentifierImpl::retain()
@@ -102,7 +102,7 @@ namespace _2Real
 		return m_Info;
 	}
 
-	IdentifierImpl::eType const& IdentifierImpl::type() const
+	Entity::eType const& IdentifierImpl::type() const
 	{
 		return m_Type;
 	}

@@ -109,7 +109,7 @@ namespace _2Real
 
 	private:
 
-		friend class Entities;
+		friend class EntityTable;
 
 		/**
 		*	identifiers may be created only by the 2 real engine

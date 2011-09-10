@@ -29,7 +29,7 @@ namespace _2Real
 {
 
 	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) :
-		IEntity(_id),
+		Entity(_id),
 		m_Factory(_factory),
 		m_Metadata(_class, _dir),
 		m_Activator(NULL),
@@ -39,15 +39,15 @@ namespace _2Real
 	}
 
 	Plugin::Plugin(Plugin const& _src) :
-		IEntity(_src),
+		Entity(_src),
 		m_Metadata(_src.m_Metadata)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	Plugin& Plugin::operator=(Plugin const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
 	Plugin::~Plugin()
@@ -90,9 +90,9 @@ namespace _2Real
 			const unsigned int id = m_Factory->registerService(_name, this, data, _creator);
 			m_Services.push_back(id);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
@@ -102,17 +102,12 @@ namespace _2Real
 		{
 			if (m_Metadata.getInstallDirectory().empty())
 			{
-				throw Exception::failure();
+				throw Exception("could not install plugin - no install directory was given");
 			}
 
 			if (m_Metadata.getClassname().empty())
 			{
-				throw Exception::failure();
-			}
-
-			if (m_Factory == NULL)
-			{
-				throw Exception::failure();
+				throw Exception("could not install plugin - no classname was given");
 			}
 
 			m_State = Plugin::INSTALLED;
@@ -120,7 +115,7 @@ namespace _2Real
 		else
 		{
 			m_State = Plugin::INVALID;
-			throw Exception::failure();
+			throw Exception("plugin is already installed");
 		}
 	}
 
@@ -140,10 +135,10 @@ namespace _2Real
 
 			m_State = Plugin::UNINSTALLED;
 		}
-		catch (...)
+		catch (Exception &e)
 		{
 			m_State = Plugin::INVALID;
-			throw Exception::failure();
+			throw e;
 		}
 	}
 
@@ -158,14 +153,14 @@ namespace _2Real
 			catch (...)
 			{
 				m_State = Plugin::INVALID;
-				throw Exception::failure();
+				throw Exception("could not install plugin - could not load dll");
 			}
 
 			m_State = Plugin::LOADED;
 		}
 		else
 		{
-			throw Exception::failure();
+			throw Exception("plugin is already loaded");
 		}
 	}
 
@@ -181,7 +176,7 @@ namespace _2Real
 					if (!m_Activator)
 					{
 						m_State = Plugin::INVALID;
-						throw Exception::failure();
+						throw Exception("");
 					}
 
 					PluginContext context(this);
@@ -197,7 +192,7 @@ namespace _2Real
 				else
 				{
 					m_State = Plugin::INVALID;
-					throw Exception::failure();
+					throw Exception("");
 				}
 			}
 			catch (...)
@@ -214,14 +209,14 @@ namespace _2Real
 				}
 
 				m_State = Plugin::INVALID;
-				throw Exception::failure();
+				throw Exception("could not install plugin - poco::classloader error");
 			}
 
 			m_State = Plugin::ACTIVE;
 		}
 		else
 		{
-			throw Exception::failure();
+			throw Exception("plugin is already installed");
 		}
 	}
 
@@ -239,7 +234,7 @@ namespace _2Real
 		catch (...)
 		{
 			m_State = Plugin::INVALID;
-			throw Exception::failure();
+			throw Exception("could not uninstall plugin - poco::classloader error");
 		}
 	}
 
@@ -260,7 +255,7 @@ namespace _2Real
 		catch (...)
 		{
 			m_State = Plugin::INVALID;
-			throw Exception::failure();
+			throw Exception("could not uninstall plugin - poco::classloader error");
 		}
 	}
 }

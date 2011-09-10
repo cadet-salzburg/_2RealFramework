@@ -25,7 +25,7 @@
 namespace _2Real
 {
 
-	ServiceContext::ServiceContext(ServiceImpl *const _impl) : m_Impl(_impl)
+	ServiceContext::ServiceContext(ServiceContainer *const _impl) : m_Impl(_impl)
 	{
 	}
 

@@ -30,7 +30,7 @@ namespace _2Real
 	*
 	*/
 
-	class ServiceImpl;
+	class ServiceContainer;
 
 	class ServiceValue : public ServiceParam
 	{
@@ -40,7 +40,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceValue(IdentifierImpl *const _id, ServiceImpl *const _service);
+		ServiceValue(IdentifierImpl *const _id, ServiceContainer *const _service);
 
 		/**
 		*	
@@ -55,7 +55,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		~ServiceValue();
+		virtual ~ServiceValue();
 
 		/**
 		*	set any

@@ -25,7 +25,7 @@
 namespace _2Real
 {
 
-	Data::Data(DataImpl *const _impl) :
+	Data::Data(DataPacket *const _impl) :
 		m_Impl(_impl)
 	{
 	}

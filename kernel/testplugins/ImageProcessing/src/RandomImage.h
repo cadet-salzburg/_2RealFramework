@@ -42,45 +42,32 @@ private:
 };
 
 template< typename T >
-void RandomImageService< T >::setup(_2Real::ServiceContext *const _context) throw(...)
+void RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
 {
 	/*
 		register all setup parameters, input & output variables as defined in the service metadata
 	*/
 	try
 	{
-		//std::cout << "RANDOM IMAGE SETUP" << std::endl;
-
 		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
-
-		//std::cout << "RANDOM IMAGE SETUP: width = " << m_iImageWidth << std::endl;
-
 		_context->getSetupParameter< unsigned int >("image height", m_iImageHeight);
-
-		//std::cout << "RANDOM IMAGE SETUP: height = " << m_iImageHeight << std::endl;
-
 		_context->registerOutputSlot< ::Image< T, 2 > >("output image", m_OutputImage);
-
-		std::cout << "RANDOM IMAGE SETUP: success" << std::endl;
 	}
-	catch(...)
+	catch(Exception &e)
 	{
-		std::cout << "RANDOM IMAGE SETUP: ERROR " << std::endl;
-		throw;
+		throw e;
 	}
 
 }
 
 template< typename T >
-void RandomImageService< T >::update() throw(...)
+void RandomImageService< T >::update()
 {
 	/*
 		this function performs the actual service
 	*/
 	try
 	{
-		//std::cout << "RANDOM IMAGE UPDATE" << std::endl;
-		
 		unsigned int sz = m_iImageHeight*m_iImageWidth;
 		
 		T* tmp = new T[sz];
@@ -104,12 +91,9 @@ void RandomImageService< T >::update() throw(...)
 
 		m_OutputImage.setData(tmp);
 		m_OutputImage.setResolution(res);
-
-		//std::cout << "RANDOM IMAGE UPDATE: success" << std::endl;
 	}
-	catch (...)
+	catch (Exception &e)
 	{
-		std::cout << "RANDOM IMAGE UPDATE: error" << std::endl;
-		throw;
+		throw e;
 	}
 };

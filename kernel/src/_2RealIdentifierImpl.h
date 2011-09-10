@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "_2RealIEntity.h"
+
 #include <string>
 
 namespace _2Real
@@ -32,24 +34,10 @@ namespace _2Real
 
 	public:
 
-		enum eType
-		{
-			INVALID,
-			PLUGIN,
-			FACTORY,
-			SERVICE,
-			SEQUENCE,
-			SYNCHRONIZATION,
-			NIRVANA,
-			SETUP,
-			INPUT,
-			OUTPUT
-		};
-
 		/**
 		*	
 		*/
-		IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, IdentifierImpl::eType const& _type, unsigned int const& _id);
+		IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id);
 
 		/**
 		*
@@ -124,7 +112,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierImpl::eType const& type() const;
+		Entity::eType const& type() const;
 
 		/**
 		*
@@ -156,12 +144,12 @@ namespace _2Real
 		/**
 		*	info
 		*/
-		std::string			m_Info;
+		std::string					m_Info;
 
 		/**
 		*	type
 		*/
-		const IdentifierImpl::eType	m_Type;
+		const Entity::eType			m_Type;
 
 		/**
 		*	unique id

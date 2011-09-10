@@ -18,31 +18,44 @@
 
 #pragma once
 
-#include "_2RealIdentifierImpl.h"
+#include <string>
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	entity - plugin/ service / service creator / container / service param / service slot
 	*/
 
 	class IdentifierImpl;
-	enum IdentifierImpl::eType;
 
-	class IEntity
+	class Entity
 	{
 
-		friend class Entities;
+		friend class EntityTable;
 
 	public:
 
-		IEntity(IdentifierImpl *const _id);
-		IEntity(IEntity const& _src) throw(...);
-		IEntity& operator=(IEntity const& _src) throw(...);
-		~IEntity();
+		enum eType
+		{
+			INVALID,
+			PLUGIN,
+			FACTORY,
+			SERVICE,
+			SEQUENCE,
+			SYNCHRONIZATION,
+			NIRVANA,
+			SETUP,
+			INPUT,
+			OUTPUT
+		};
+
+		Entity(IdentifierImpl *const _id);
+		Entity(Entity const& _src) throw(...);
+		Entity& operator=(Entity const& _src) throw(...);
+		virtual ~Entity();
 		
-		IdentifierImpl::eType const& type() const;
+		eType const& type() const;
 		unsigned int const& id() const;
 		std::string const& name() const;
 		void setInfo(std::string const& _info);

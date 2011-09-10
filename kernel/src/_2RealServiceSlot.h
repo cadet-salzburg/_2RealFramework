@@ -30,7 +30,7 @@ namespace _2Real
 	*	represents an input or output slot of a service
 	*/
 
-	class ServiceImpl;
+	class ServiceContainer;
 	class AbstractRef;
 
 	class ServiceSlot : public ServiceParam
@@ -51,7 +51,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceSlot(IdentifierImpl *const _id, ServiceImpl *const _service);
+		ServiceSlot(IdentifierImpl *const _id, ServiceContainer *const _service);
 
 		/**
 		*	

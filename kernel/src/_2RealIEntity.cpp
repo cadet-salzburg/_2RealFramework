@@ -17,33 +17,34 @@
 */
 
 #include "_2RealIEntity.h"
-#include "_2RealIdentifierImpl.h"
 #include "_2RealException.h"
+#include "_2RealIdentifierImpl.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	IEntity::IEntity(IdentifierImpl *const _id) : m_ID(_id)
+	Entity::Entity(IdentifierImpl *const _id) :
+		m_ID(_id)
 	{
 		if (_id == NULL)
 		{
-			throw Exception::failure();
+			throw Exception("internal error - entity creation with null pointer");
 		}
 	}
 
-	IEntity::IEntity(IEntity const& _src)
+	Entity::Entity(Entity const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
-	IEntity& IEntity::operator=(IEntity const& _src)
+	Entity& Entity::operator=(Entity const& _src)
 	{
-		throw Exception::noCopy();
+		throw Exception("attempted to copy entity");
 	}
 
-	IEntity::~IEntity()
+	Entity::~Entity()
 	{
 		if (m_ID)
 		{
@@ -51,37 +52,37 @@ namespace _2Real
 		}
 	}
 
-	IdentifierImpl::eType const& IEntity::type() const
+	Entity::eType const& Entity::type() const
 	{
 		if (m_ID != NULL)
 		{
 			return m_ID->type();
 		}
 
-		throw Exception::failure();
+		throw Exception("internal error - identifier of entity is null");
 	}
 
-	unsigned int const& IEntity::id() const
+	unsigned int const& Entity::id() const
 	{
 		if (m_ID != NULL)
 		{
 			return m_ID->id();
 		}
 
-		throw Exception::failure();
+		throw Exception("internal error - identifier of entity is null");
 	}
 
-	std::string const& IEntity::name() const
+	std::string const& Entity::name() const
 	{
 		if (m_ID != NULL)
 		{
 			return m_ID->name();
 		}
 
-		throw Exception::failure();
+		throw Exception("internal error - identifier of entity is null");
 	}
 
-	void IEntity::setInfo(std::string const& _info)
+	void Entity::setInfo(std::string const& _info)
 	{
 		if (m_ID != NULL)
 		{
@@ -89,7 +90,7 @@ namespace _2Real
 			return;
 		}
 
-		throw Exception::failure();
+		throw Exception("internal error - identifier of entity is null");
 	}
 
 }

@@ -18,44 +18,22 @@
 
 #pragma once
 
+#include <stdexcept>
+
 namespace _2Real
 {
 
 	/**
-	*	exception system is incomplete
-	*	if you don't mind me, i'll talk to myself here for a bit.
-	*
-	*	internally used exceptions: stuff that helps me to debug shit
-	*	copy exception - if i copy an an obj that i don't want to copy b/c it has no copy ctor (same goes for assignment)
-	*							internally used only
-	*	invalid id exception:	
-	*
-	*
-	*
+	*	the exception stuff is not fully fleshed out yet
 	*/
 
-	class Exception
+	class Exception : public std::runtime_error
 	{
 
 	public:
 
-		Exception();
+		Exception(std::string const& _msg);
 
-		Exception(unsigned int const& _nr);
-
-		unsigned int m_Code;
-
-		static Exception			s_Success;
-		static Exception			s_Failure;
-		static Exception			s_NoCopy;
-		static Exception const&	success();
-		static Exception const&	failure();
-		static Exception const&	noCopy();
-
-		bool operator==(Exception const& _rhs);
-		bool operator!=(Exception const& _rhs);
-		Exception& operator=(Exception const& _src);
-
-	};
+	}; 
 
 }
