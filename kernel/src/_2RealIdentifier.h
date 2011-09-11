@@ -35,7 +35,7 @@ namespace _2Real
 	*							a service's input / output slots
 	*/
 
-	class IdentifierImpl;
+	class Id;
 
 	class Identifier
 	{
@@ -114,12 +114,12 @@ namespace _2Real
 		/**
 		*	identifiers may be created only by the 2 real engine
 		*/
-		Identifier(IdentifierImpl *const _id);
+		Identifier(Id *const _id);
 
 		/**
 		*	
 		*/
-		IdentifierImpl		*m_Impl;
+		Id		*m_Impl;
 
 	};
 

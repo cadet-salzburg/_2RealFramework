@@ -17,17 +17,17 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractRef.cpp" />
+    <ClCompile Include="..\..\src\_2RealApplicationCallback.cpp" />
     <ClCompile Include="..\..\src\_2RealContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealData.cpp" />
-    <ClCompile Include="..\..\src\_2RealDataImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealDataQueue.cpp" />
+    <ClCompile Include="..\..\src\_2RealDataPacket.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\_2RealEntities.cpp" />
+    <ClCompile Include="..\..\src\_2RealEntity.cpp" />
+    <ClCompile Include="..\..\src\_2RealEntityTable.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealFactoryReference.cpp" />
+    <ClCompile Include="..\..\src\_2RealId.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
-    <ClCompile Include="..\..\src\_2RealIdentifierImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealIEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -39,9 +39,9 @@
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceSlot.cpp" />
@@ -51,20 +51,20 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
     <ClInclude Include="..\..\src\_2RealAbstractRef.h" />
+    <ClInclude Include="..\..\src\_2RealApplicationCallback.h" />
     <ClInclude Include="..\..\src\_2RealContainer.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
-    <ClInclude Include="..\..\src\_2RealDataImpl.h" />
-    <ClInclude Include="..\..\src\_2RealDataQueue.h" />
+    <ClInclude Include="..\..\src\_2RealDataPacket.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
-    <ClInclude Include="..\..\src\_2RealEntities.h" />
+    <ClInclude Include="..\..\src\_2RealEntity.h" />
+    <ClInclude Include="..\..\src\_2RealEntityTable.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFactoryReference.h" />
     <ClInclude Include="..\..\src\_2RealIContainer.h" />
+    <ClInclude Include="..\..\src\_2RealId.h" />
     <ClInclude Include="..\..\src\_2RealIDataQueue.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
-    <ClInclude Include="..\..\src\_2RealIdentifierImpl.h" />
-    <ClInclude Include="..\..\src\_2RealIEntity.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
@@ -74,9 +74,9 @@
     <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
+    <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
-    <ClInclude Include="..\..\src\_2RealServiceImpl.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceParam.h" />
     <ClInclude Include="..\..\src\_2RealServiceSlot.h" />
@@ -129,7 +129,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_VERBOSE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -153,7 +153,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_VERBOSE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

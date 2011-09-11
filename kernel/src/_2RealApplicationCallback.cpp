@@ -16,63 +16,63 @@
 	limitations under the License.
 */
 
-#include "_2RealDataQueue.h"
+#include "_2RealApplicationCallback.h"
 #include "_2RealData.h"
-#include "_2RealDataImpl.h"
+#include "_2RealDataPacket.h"
 
 #include "Poco/Delegate.h"
 
 namespace _2Real
 {
 
-	DataQueue::DataQueue(Identifier const& _id) :
+	ApplicationCallback::ApplicationCallback(Identifier const& _id) :
 		m_Sender(_id),
 		m_bHasDataListeners(false),
 		m_bHasExceptionListeners(false)
 	{
 	}
 
-	void DataQueue::registerDataCallback(NewDataCallback _callback)
+	void ApplicationCallback::registerDataCallback(NewDataCallback _callback)
 	{
 		m_bHasDataListeners = true;
 		m_DataEvent += Poco::delegate(_callback);
 	}
 
-	void DataQueue::registerExceptionCallback(ExceptionCallback _callback)
+	void ApplicationCallback::registerExceptionCallback(ExceptionCallback _callback)
 	{
 		m_bHasExceptionListeners = true;
 		m_ExceptionEvent += Poco::delegate(_callback);
 	}
 
-	void DataQueue::unregisterDataCallback()
+	void ApplicationCallback::unregisterDataCallback()
 	{
 		m_bHasDataListeners = false;
 		m_DataEvent.clear();
 	}
 
-	void DataQueue::unregisterExceptionCallback()
+	void ApplicationCallback::unregisterExceptionCallback()
 	{
 		m_bHasExceptionListeners = false;
 		m_ExceptionEvent.clear();
 	}
 
-	void DataQueue::sendData(Poco::SharedPtr< DataPacket >& _data)
+	void ApplicationCallback::sendData(Poco::SharedPtr< DataPacket >& _data)
 	{
 		Data data(_data, m_Sender);
 		m_DataEvent.notifyAsync(this, data);
 	}
 
-	void DataQueue::sendException(Exception const& _exception)
+	void ApplicationCallback::sendException(Exception const& _exception)
 	{
 		m_ExceptionEvent.notifyAsync(this, m_Sender);
 	}
 
-	bool const& DataQueue::hasDataListeners() const
+	bool const& ApplicationCallback::hasDataListeners() const
 	{
 		return m_bHasDataListeners;
 	}
 
-	bool const& DataQueue::hasExceptionListeners() const
+	bool const& ApplicationCallback::hasExceptionListeners() const
 	{
 		return m_bHasExceptionListeners;
 	}

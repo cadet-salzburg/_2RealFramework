@@ -23,7 +23,7 @@
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(IdentifierImpl *const _id, ServiceContainer *const _service) :
+	ServiceParam::ServiceParam(Id *const _id, ServiceContainer *const _service) :
 		Entity(_id),
 		m_Service(_service),
 		m_bIsInitialized(false)

@@ -20,7 +20,7 @@
 
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
-#include "_2RealDataImpl.h"
+#include "_2RealDataPacket.h"
 
 #include "Poco/Any.h"
 #include "Poco/SharedPtr.h"
@@ -64,7 +64,7 @@ namespace _2Real
 
 	private:
 
-		friend class DataQueue;
+		friend class ApplicationCallback;
 
 		/**
 		*

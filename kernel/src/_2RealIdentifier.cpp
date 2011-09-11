@@ -17,13 +17,13 @@
 */
 
 #include "_2RealIdentifier.h"
-#include "_2RealIdentifierImpl.h"
+#include "_2RealId.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
 
-	Identifier::Identifier(IdentifierImpl *const _id) : m_Impl(NULL)
+	Identifier::Identifier(Id *const _id) : m_Impl(NULL)
 	{
 		if (_id != NULL)
 		{

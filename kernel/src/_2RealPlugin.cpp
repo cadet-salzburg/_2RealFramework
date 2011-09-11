@@ -28,7 +28,7 @@
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, IdentifierImpl *const _id) :
+	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, Id *const _id) :
 		Entity(_id),
 		m_Metadata(_class, _dir),
 		m_Activator(NULL),
@@ -125,14 +125,8 @@ namespace _2Real
 				}
 
 				m_Activator->getMetadata(m_Metadata);
-#ifdef _VERBOSE
-	std::cout << "plugin installation: metadata loaded" << std::endl;
-#endif
 				PluginContext context(this, _factory);
 				m_Activator->setup(context);
-#ifdef _VERBOSE
-	std::cout << "plugin Installation: setup success" << std::endl;
-#endif
 			}
 			else
 			{

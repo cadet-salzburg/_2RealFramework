@@ -20,7 +20,7 @@
 #pragma once
 
 #include "_2RealEngineTypedefs.h"
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
 
@@ -46,7 +46,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, IdentifierImpl *const _id) throw(...);
+		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, Id *const _id) throw(...);
 
 		/**
 		*	

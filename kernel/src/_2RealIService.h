@@ -47,6 +47,13 @@ namespace _2Real
 		*/
 		virtual void shutdown() throw(...) = 0;
 
+		/**
+		*	destructor
+		*/
+		virtual ~IService() = 0;
+
 	};
 	
+	inline IService::~IService() {}
+
 }

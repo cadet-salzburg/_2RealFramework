@@ -21,7 +21,7 @@
 #include "_2RealTypedefs.h"
 #include "_2RealEngineTypedefs.h"
 #include "_2RealIContainer.h"
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 
 #include <list>
 
@@ -34,7 +34,7 @@ namespace _2Real
 	*	implements some container functionality, and adds some
 	*/
 
-	class DataQueue;
+	class ApplicationCallback;
 	class ServiceSlot;
 	class Exception;
 
@@ -46,7 +46,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		AbstractContainer(IdentifierImpl *const _id, DataQueue *const _comm);
+		AbstractContainer(Id *const _id, ApplicationCallback *const _comm);
 
 		/**
 		*	
@@ -225,7 +225,7 @@ namespace _2Real
 		/**
 		*	allows listening to the container from the outside
 		*/
-		DataQueue									*m_Output;
+		ApplicationCallback							*m_Output;
 	};
 
 }

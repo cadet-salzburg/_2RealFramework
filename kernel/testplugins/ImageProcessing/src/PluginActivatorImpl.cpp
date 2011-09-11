@@ -14,11 +14,8 @@ using namespace _2Real;
 
 void ImageProcessing::getMetadata(PluginMetadata &_info)
 {
-	/**
-	*	uses the metadata reader helper class
-	*	(one could build the metadata manually, too)
-	*/
-
+	//uses the metadata reader helper class
+	//(one could build the metadata manually, too)
 	try
 	{
 		MetadataReader reader;
@@ -32,10 +29,7 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 
 void ImageProcessing::setup(PluginContext &_context)
 {
-	/**
-		export service factory methods
-	*/
-
+	//export service factory methods
 	try
 	{
 		_context.registerService("ImageAddition2D_ushort", &::createImageAddition< unsigned short >);
@@ -51,7 +45,6 @@ void ImageProcessing::setup(PluginContext &_context)
 	}
 }
 
-/**
-*	this macro is needed for the poco classloader
-*/
+//this macro is needed for the poco classloader
+//it's mandatory that this is the same name as the one defined as pluginname in metadata
 _2REAL_EXPORT_PLUGIN(ImageProcessing)

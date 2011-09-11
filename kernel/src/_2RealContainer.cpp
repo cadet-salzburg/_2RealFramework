@@ -18,16 +18,16 @@
 
 #include "_2RealContainer.h"
 #include "_2RealException.h"
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 #include "_2RealServiceSlot.h"
-#include "_2RealDataQueue.h"
+#include "_2RealApplicationCallback.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 	
-	Container::Container(IdentifierImpl *const _id, DataQueue *const _output) :
+	Container::Container(Id *const _id, ApplicationCallback *const _output) :
 		AbstractContainer(_id, _output),
 		m_Children(),
 		//TODO: find some good init values for the thread pool
@@ -98,9 +98,6 @@ namespace _2Real
 				return;
 			}
 
-#ifdef _VERBOSE
-			std::cout << "system: " << name() << " is starting child: " << _id << std::endl;
-#endif
 			Poco::Thread *thread = new Poco::Thread();
 			child->checkConfiguration();
 			child->start(false);
@@ -138,9 +135,6 @@ namespace _2Real
 			std::map< unsigned int, Poco::Thread * >::iterator thread = m_Threads.find(child->id());
 			if (thread != m_Threads.end())
 			{
-#ifdef _VERBOSE
-				std::cout << "system: " << name() << " is stopping child: " << _id << std::endl;
-#endif
 				child->stop();
 				thread->second->join();
 				delete thread->second;

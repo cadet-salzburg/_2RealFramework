@@ -20,10 +20,10 @@
 #include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
 #include "_2RealContainer.h"
-#include "_2RealEntities.h"
+#include "_2RealEntityTable.h"
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 
 #include <iostream>
 
@@ -55,11 +55,11 @@ namespace _2Real
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+				std::cout << "error on production graphs destruction: " << e.what() << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "error on service factory destruction" << std::endl;
+				std::cout << "error on production graphs destruction" << std::endl;
 			}
 		}
 	}
@@ -83,9 +83,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-		std::cout << "production graphs: destroying system " << _id << std::endl;
-#endif
 			SystemMap::iterator it = m_Systems.find(_id);
 
 			if (it == m_Systems.end())
@@ -96,17 +93,10 @@ namespace _2Real
 			Container *nirvana = it->second;
 
 			//stops & shuts down all children
-#ifdef _VERBOSE
-		std::cout << "production graphs: shutdown system " << _id << std::endl;
-#endif
 			nirvana->shutdown();
 			//deletes all children
 			m_Entities->destroy(nirvana);
 			m_Systems.erase(it);
-
-#ifdef _VERBOSE
-		std::cout << "production graphs: destroyed system" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{

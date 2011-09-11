@@ -42,7 +42,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Container(IdentifierImpl *const _id, DataQueue *const _output) throw(...);
+		Container(Id *const _id, ApplicationCallback *const _output) throw(...);
 
 		/**
 		*	this one should not be called, ever

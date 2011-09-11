@@ -40,7 +40,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceValue(IdentifierImpl *const _id, ServiceContainer *const _service);
+		ServiceValue(Id *const _id, ServiceContainer *const _service);
 
 		/**
 		*	

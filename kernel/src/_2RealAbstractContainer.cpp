@@ -18,11 +18,11 @@
 
 #include "_2RealAbstractContainer.h"
 #include "_2RealException.h"
-#include "_2RealIdentifierImpl.h"
-#include "_2RealDataImpl.h"
+#include "_2RealId.h"
+#include "_2RealDataPacket.h"
 #include "_2RealData.h"
 #include "_2RealServiceSlot.h"
-#include "_2RealDataQueue.h"
+#include "_2RealApplicationCallback.h"
 
 #include "Poco\Delegate.h"
 
@@ -32,7 +32,7 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(IdentifierImpl *const _id, DataQueue *const _output) :
+	AbstractContainer::AbstractContainer(Id *const _id, ApplicationCallback *const _output) :
 		Entity(_id),
 		m_bRunOnce(false),
 		m_bRun(false), 
@@ -144,7 +144,6 @@ namespace _2Real
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
-		std::cout << "adding listener to " << name() << std::endl;
 		if (!_queue)
 		{
 			throw Exception("internal error: attempted to add listener to " + name() + " , null pointer");
@@ -178,8 +177,6 @@ namespace _2Real
 	{
 		try
 		{
-			//std::cout << name() << std::endl;
-
 			m_Mutex.lock();
 
 			unsigned int sender = _data.first;

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 #include "_2RealServiceMetadata.h"
 
 #include <string>
@@ -45,7 +45,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id);
+		FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, Id *const _id);
 
 		/**
 		*

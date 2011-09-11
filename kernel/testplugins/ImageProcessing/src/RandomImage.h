@@ -8,10 +8,6 @@
 
 #include <iostream>
 
-/*
-	factory method for random image service; registered in service factory of framework
-*/
-
 template< typename T >
 static _2Real::IService *const createRandomImage(void)
 {
@@ -19,23 +15,20 @@ static _2Real::IService *const createRandomImage(void)
 	return service;
 }
 
-/*
-	random image service
-*/
-
 template< typename T >
 class RandomImageService : public _2Real::IService
 {
 
 public:
 
-	void shutdown() throw(...) {}
+	void shutdown() throw(...) {}	//nothing to do in shutdown
 	void update() throw(...);
 	void setup(_2Real::ServiceContext *const _context) throw(...);
+	~RandomImageService() {}
 
 private:
 
-	::Image< T, 2 >			m_OutputImage;			//the resulting image, output param
+	::Image< T, 2 >			m_OutputImage;			//the resulting image, output slot
 	unsigned int			m_iImageWidth;			//desired width of result image, setup param
 	unsigned int			m_iImageHeight;			//desired height of result image, setup param
 
@@ -44,9 +37,7 @@ private:
 template< typename T >
 void RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
 {
-	/*
-		register all setup parameters, input & output variables as defined in the service metadata
-	*/
+	//register all setup parameters, input & output variables as defined in the service metadata
 	try
 	{
 		_context->getSetupParameter< unsigned int >("image width", m_iImageWidth);
@@ -63,9 +54,6 @@ void RandomImageService< T >::setup(_2Real::ServiceContext *const _context)
 template< typename T >
 void RandomImageService< T >::update()
 {
-	/*
-		this function performs the actual service
-	*/
 	try
 	{
 		unsigned int sz = m_iImageHeight*m_iImageWidth;
@@ -78,10 +66,6 @@ void RandomImageService< T >::update()
 			{
 				unsigned int i = y*m_iImageWidth + x;
 				tmp[i] = random_t< T >();
-				//if (x < 1 && y < 1)
-				//{
-				//	std::cout << "random value: " << tmp[i] << std::endl;
-				//}
 			}
 		}
 
@@ -92,8 +76,8 @@ void RandomImageService< T >::update()
 		m_OutputImage.setData(tmp);
 		m_OutputImage.setResolution(res);
 	}
-	catch (Exception &e)
+	catch (...)
 	{
-		throw e;
+		throw Exception("error on random image update");
 	}
 };

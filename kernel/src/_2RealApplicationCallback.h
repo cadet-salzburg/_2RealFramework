@@ -33,12 +33,12 @@ namespace _2Real
 
 	class DataPacket;
 
-	class DataQueue
+	class ApplicationCallback
 	{
 
 	public:
 
-		DataQueue(Identifier const& _id);
+		ApplicationCallback(Identifier const& _id);
 
 		void registerDataCallback(NewDataCallback _callback);
 

@@ -16,34 +16,34 @@
 	limitations under the License.
 */
 
-#include "_2RealIdentifierImpl.h"
+#include "_2RealId.h"
 #include "_2RealException.h"
 
 namespace _2Real
 {
 
-	IdentifierImpl::IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id) :
+	Id::Id(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id) :
 		m_Name(_name), m_Typename(_strType), m_Info(_info), m_Type(_type), m_ID(_id), m_iRefCount(1)
 	{
 	}
 
-	IdentifierImpl::IdentifierImpl(IdentifierImpl const& _src) :
+	Id::Id(Id const& _src) :
 		m_Name(_src.m_Name), m_Type(_src.m_Type), m_ID(_src.m_ID), m_Typename(_src.m_Typename), m_Info(_src.m_Info)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	IdentifierImpl& IdentifierImpl::operator=(IdentifierImpl const& _src)
+	Id& Id::operator=(Id const& _src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	void IdentifierImpl::retain()
+	void Id::retain()
 	{
 		m_iRefCount++;
 	}
 
-	void IdentifierImpl::release()
+	void Id::release()
 	{
 		m_iRefCount--;
 		
@@ -53,66 +53,66 @@ namespace _2Real
 		}
 	}
 
-	IdentifierImpl::~IdentifierImpl()
+	Id::~Id()
 	{
 	}
 
-	bool IdentifierImpl::operator==(IdentifierImpl const& _rhs) const
+	bool Id::operator==(Id const& _rhs) const
 	{
 		return (m_ID == _rhs.m_ID);
 	}
 
-	bool IdentifierImpl::operator!=(IdentifierImpl const& _rhs) const
+	bool Id::operator!=(Id const& _rhs) const
 	{
 		return !(m_ID == _rhs.m_ID);
 	}
 
-	bool IdentifierImpl::operator<(IdentifierImpl const& _rhs) const
+	bool Id::operator<(Id const& _rhs) const
 	{
 		return (m_ID < _rhs.m_ID);
 	}
 
-	bool IdentifierImpl::operator<=(IdentifierImpl const& _rhs) const
+	bool Id::operator<=(Id const& _rhs) const
 	{
 		return (m_ID <= _rhs.m_ID);
 	}
 
-	bool IdentifierImpl::operator>(IdentifierImpl const& _rhs) const
+	bool Id::operator>(Id const& _rhs) const
 	{
 		return (m_ID > _rhs.m_ID);
 	}
 
-	bool IdentifierImpl::operator>=(IdentifierImpl const& _rhs) const
+	bool Id::operator>=(Id const& _rhs) const
 	{
 		return (m_ID >= _rhs.m_ID);
 	}
 
-	std::string const& IdentifierImpl::strType() const
+	std::string const& Id::strType() const
 	{
 		return m_Typename;
 	}
 
-	std::string const& IdentifierImpl::name() const
+	std::string const& Id::name() const
 	{
 		return m_Name;
 	}
 
-	std::string const& IdentifierImpl::info() const
+	std::string const& Id::info() const
 	{
 		return m_Info;
 	}
 
-	Entity::eType const& IdentifierImpl::type() const
+	Entity::eType const& Id::type() const
 	{
 		return m_Type;
 	}
 
-	unsigned int const& IdentifierImpl::id() const
+	unsigned int const& Id::id() const
 	{
 		return m_ID;
 	}
 
-	void IdentifierImpl::setInfo(std::string const& _info)
+	void Id::setInfo(std::string const& _info)
 	{
 		m_Info.clear();
 		m_Info = _info;

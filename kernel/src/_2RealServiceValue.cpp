@@ -23,7 +23,7 @@
 namespace _2Real
 {
 
-	ServiceValue::ServiceValue(IdentifierImpl *const _id, ServiceContainer *const _service) :
+	ServiceValue::ServiceValue(Id *const _id, ServiceContainer *const _service) :
 		ServiceParam(_id, _service)
 	{
 	}

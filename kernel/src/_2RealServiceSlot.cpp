@@ -19,14 +19,14 @@
 #include "_2RealServiceSlot.h"
 #include "_2RealException.h"
 #include "_2RealAbstractRef.h"
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	ServiceSlot::ServiceSlot(IdentifierImpl *const _id, ServiceContainer *const _service) :
+	ServiceSlot::ServiceSlot(Id *const _id, ServiceContainer *const _service) :
 		ServiceParam(_id, _service),
 		m_Value(NULL),
 		m_Linked(NULL),

@@ -23,13 +23,13 @@
 #include "_2RealServiceMetadata.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
-#include "_2RealEntities.h"
+#include "_2RealEntityTable.h"
 #include "_2RealProductionGraphs.h"
 #include "_2RealContainer.h"
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 #include "_2RealServiceValue.h"
 #include "_2RealServiceSlot.h"
 
@@ -119,9 +119,6 @@ namespace _2Real
 		delete m_Factory;
 		delete m_Plugins;
 		delete m_Entities;
-#ifdef _VERBOSE
-		std::cout << "2real engine deleted" << std::endl;
-#endif
 	}
 
 	const Identifier Engine::createSystem(std::string const& _name)

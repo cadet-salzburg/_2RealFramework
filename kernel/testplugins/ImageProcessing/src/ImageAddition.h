@@ -7,20 +7,12 @@
 
 #include <iostream>
 
-/*
-	factory method for image addition service; registered in service factory of framework
-*/
-
 template< typename T >
 static _2Real::IService *const createImageAddition(void)
 {
 	_2Real::IService *service = new ImageAdditionService< T >();
 	return service;
 }
-
-/*
-	image addition service
-*/
 
 template< typename T >
 class ImageAdditionService : public _2Real::IService
@@ -31,22 +23,21 @@ public:
 	void shutdown() throw(...) {}
 	void update() throw(...);
 	void setup(_2Real::ServiceContext *const _context) throw(...);
+	~ImageAdditionService() {}
 
 private:
 
 	T										m_ScaleFactor1;			//scale factor for input image 1
 	T										m_ScaleFactor2;			//scale factor for input image 2
-	::Image< T, 2 >							m_InputImage1;			//stores input image 1, input param
-	::Image< T, 2 >							m_InputImage2;			//stores input image 2, input param
-	::Image< T, 2 >							m_OutputImage;			//the resulting image, output param
+	::Image< T, 2 >							m_InputImage1;			//stores input image 1, input slot
+	::Image< T, 2 >							m_InputImage2;			//stores input image 2, input slot
+	::Image< T, 2 >							m_OutputImage;			//the resulting image, output slot
 };
 
 template< typename T >
 void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
 {
-	/*
-		register all setup parameters, input & output variables as defined in the service metadata
-	*/
+	//register all setup parameters, input & output variables as defined in the service metadata
 	try
 	{
 		_context->getSetupParameter< T >("scale factor 1", m_ScaleFactor1);
@@ -64,9 +55,6 @@ void ImageAdditionService< T >::setup(_2Real::ServiceContext *const _context)
 template< typename T >
 void ImageAdditionService< T >::update()
 {
-	/*
-		this function performs the actual service
-	*/
 	try
 	{
 		if (m_InputImage1.data() != NULL && m_InputImage2.data() != NULL)
@@ -83,10 +71,6 @@ void ImageAdditionService< T >::update()
 				{
 					unsigned int i = y*width + x;
 					tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
-					//if (x < 1 && y < 1)
-					//{
-					//	std::cout << "addition: " << m_InputImage1.data()[i] << " " << m_InputImage2.data()[i] << " " << tmp[i] << std::endl;
-					//}
 				}
 			}
 
@@ -105,5 +89,9 @@ void ImageAdditionService< T >::update()
 	catch (Exception &e)
 	{
 		throw e;
+	}
+	catch (...)
+	{
+		throw Exception("error on image addition update");
 	}
 };

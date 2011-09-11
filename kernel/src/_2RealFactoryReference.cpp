@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	FactoryReference::FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id) :
+	FactoryReference::FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, Id *const _id) :
 		Entity(_id),
 		m_Name(_name),
 		m_Plugin(_pluginID),

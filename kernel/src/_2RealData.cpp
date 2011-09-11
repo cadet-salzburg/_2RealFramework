@@ -19,7 +19,7 @@
 #pragma once
 
 #include "_2RealData.h"
-#include "_2RealDataImpl.h"
+#include "_2RealDataPacket.h"
 
 #include <iostream>
 

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 
 #include <string>
 
@@ -29,7 +29,7 @@ namespace _2Real
 	*	
 	*/
 
-	class IdentifierImpl
+	class Id
 	{
 
 	public:
@@ -37,57 +37,57 @@ namespace _2Real
 		/**
 		*	
 		*/
-		IdentifierImpl(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id);
+		Id(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id);
 
 		/**
 		*
 		*/
-		IdentifierImpl();
+		Id();
 
 		/**
 		*	
 		*/
-		IdentifierImpl(IdentifierImpl const& _src);
+		Id(Id const& _src);
 
 		/**
 		*	
 		*/
-		IdentifierImpl& operator=(IdentifierImpl const& _src);
+		Id& operator=(Id const& _src);
 
 		/**
 		*	
 		*/
-		~IdentifierImpl();
+		~Id();
 
 		/**
 		*	
 		*/
-		bool operator==(IdentifierImpl const& _rhs) const;
+		bool operator==(Id const& _rhs) const;
 
 		/**
 		*	
 		*/
-		bool operator!=(IdentifierImpl const& _rhs) const;
+		bool operator!=(Id const& _rhs) const;
 
 		/**
 		*
 		*/
-		bool operator<(IdentifierImpl const& _rhs) const;
+		bool operator<(Id const& _rhs) const;
 
 		/**
 		*
 		*/
-		bool operator<=(IdentifierImpl const& _rhs) const;
+		bool operator<=(Id const& _rhs) const;
 
 		/**
 		*
 		*/
-		bool operator>(IdentifierImpl const& _rhs) const;
+		bool operator>(Id const& _rhs) const;
 
 		/**
 		*
 		*/
-		bool operator>=(IdentifierImpl const& _rhs) const;
+		bool operator>=(Id const& _rhs) const;
 
 		/**
 		*	

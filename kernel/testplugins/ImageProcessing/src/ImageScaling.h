@@ -24,6 +24,7 @@ public:
 	void shutdown() throw(...) {}
 	void update() throw(...);
 	void setup(_2Real::ServiceContext *const _context) throw(...);
+	~ImageScalingService() {}
 
 private:
 
@@ -36,9 +37,7 @@ private:
 template< typename T >
 void ImageScalingService< T >::setup(_2Real::ServiceContext *const _context)
 {
-	/*
-		register all setup parameters, input & output variables as defined in the service metadata
-	*/
+	//register all setup parameters, input & output variables as defined in the service metadata
 	try
 	{
 		_context->getSetupParameter< T >("scale factor", m_Scale);
@@ -71,10 +70,6 @@ void ImageScalingService< T >::update()
 				{
 					unsigned int i = y*width + x;
 					tmp[i] = m_Scale*m_InputImage.data()[i];
-					//if (x < 1 && y < 1)
-					//{
-					//	std::cout << "scaling: " << m_Scale << " input " << m_InputImage.data()[i] << "output " << tmp[i] << std::endl;
-					//}
 				}
 			}
 
@@ -93,5 +88,9 @@ void ImageScalingService< T >::update()
 	catch (Exception &e)
 	{
 		throw e;
+	}
+	catch (...)
+	{
+		throw Exception("error on image scaling update");
 	}
 };

@@ -16,20 +16,20 @@
 	limitations under the License.
 */
 
-#include "_2RealEntities.h"
+#include "_2RealEntityTable.h"
 #include "_2RealEngineTypedefs.h"
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 #include "_2RealIdentifier.h"
-#include "_2RealIdentifierImpl.h"
+#include "_2RealId.h"
 #include "_2RealException.h"
 
 #include "_2RealPlugin.h"
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealContainer.h"
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
-#include "_2RealDataQueue.h"
+#include "_2RealApplicationCallback.h"
 
 #include <sstream>
 #include <iostream>
@@ -63,11 +63,11 @@ namespace _2Real
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+				std::cout << "error on entity table destruction: " << e.what() << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "error on service factory destruction" << std::endl;
+				std::cout << "error on entity table destruction" << std::endl;
 			}
 		}
 	}
@@ -76,9 +76,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a container: " << _obj->name() << std::endl;
-#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
@@ -105,9 +102,6 @@ namespace _2Real
 
 			delete _obj;
 			m_Entities.erase(e);
-#ifdef _VERBOSE
-			std::cout << "entity table: container was destroyed successfully" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{
@@ -140,9 +134,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a service: " << _obj->name() << std::endl;
-#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
@@ -175,9 +166,6 @@ namespace _2Real
 
 			delete _obj;
 			m_Entities.erase(e);
-#ifdef _VERBOSE
-			std::cout << "entity table: service was destroyed successfully" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{
@@ -189,9 +177,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a service slot: " << _obj->name() << std::endl;
-#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
@@ -215,9 +200,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a service value: " << _obj->name() << std::endl;
-#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
@@ -241,10 +223,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a plugin: " << _obj->name() << std::endl;
-#endif
-
 			std::list< FactoryReference * > services = _obj->services();
 			for (std::list<FactoryReference * >::iterator it = services.begin(); it != services.end(); it++)
 			{
@@ -263,9 +241,6 @@ namespace _2Real
 
 			delete _obj;
 			m_Entities.erase(e);
-#ifdef _VERBOSE
-			std::cout << "entity table: plugin was destroyed successfully" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{
@@ -277,9 +252,6 @@ namespace _2Real
 	{
 		try
 		{
-#ifdef _VERBOSE
-			std::cout << "entity table: destroying a service factory entry: " << _obj->name() << std::endl;
-#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
@@ -353,9 +325,6 @@ namespace _2Real
 		{
 			++m_iCreationCount;
 
-			std::cout << "entity table creation count: " << m_iCreationCount << std::endl;
-
-
 			std::stringstream info;
 			info << "i am a plugin" << std::endl;
 			info << "creation id:\t" << m_iCreationCount << std::endl;
@@ -364,7 +333,7 @@ namespace _2Real
 			info << "filename:\t" << _file << std::endl;
 			info << "classname:\t" << _class << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "plugin", info.str(), Entity::PLUGIN, m_iCreationCount);
+			Id *id = new Id(_name, "plugin", info.str(), Entity::PLUGIN, m_iCreationCount);
 			Plugin *plugin = new Plugin(_dir, _file, _class, id);
 			m_Entities.insert(NamedEntity(id->id(), plugin));
 			return plugin;
@@ -386,9 +355,9 @@ namespace _2Real
 			info << "creation id:\t" << m_iCreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "service", info.str(), Entity::SERVICE, m_iCreationCount);
+			Id *id = new Id(_name, "service", info.str(), Entity::SERVICE, m_iCreationCount);
 			Identifier i(id);
-			DataQueue *output = new DataQueue(i);
+			ApplicationCallback *output = new ApplicationCallback(i);
 			ServiceContainer *service = new ServiceContainer(_service, id, output);
 			m_Entities.insert(NamedEntity(id->id(), service));
 			return service;
@@ -410,11 +379,11 @@ namespace _2Real
 			info << "creation id:\t" << m_iCreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 
-			IdentifierImpl *id;
+			Id *id;
 			Container *container;
-			id = new IdentifierImpl(_name, "system", info.str(), Entity::SYSTEM, m_iCreationCount);
+			id = new Id(_name, "system", info.str(), Entity::SYSTEM, m_iCreationCount);
 			Identifier i(id);
-			DataQueue *output = new DataQueue(i);
+			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
@@ -436,11 +405,11 @@ namespace _2Real
 			info << "creation id:\t" << m_iCreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 
-			IdentifierImpl *id;
+			Id *id;
 			Container *container;
-			id = new IdentifierImpl(_name, "sequence", info.str(), Entity::SEQUENCE, m_iCreationCount);
+			id = new Id(_name, "sequence", info.str(), Entity::SEQUENCE, m_iCreationCount);
 			Identifier i(id);
-			DataQueue *output = new DataQueue(i);
+			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
@@ -462,11 +431,11 @@ namespace _2Real
 			info << "creation id:\t\t" << m_iCreationCount << std::endl;
 			info << "chosen name:\t\t" << _name << std::endl;
 
-			IdentifierImpl *id;
+			Id *id;
 			Container *container;
-			id = new IdentifierImpl(_name, "synchronization", info.str(), Entity::SYNCHRONIZATION, m_iCreationCount);
+			id = new Id(_name, "synchronization", info.str(), Entity::SYNCHRONIZATION, m_iCreationCount);
 			Identifier i(id);
-			DataQueue *output = new DataQueue(i);
+			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
@@ -488,7 +457,7 @@ namespace _2Real
 			info << "creation id:\t\t" << m_iCreationCount << std::endl;
 			info << "service name:\t\t" << _name << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "factory", info.str(), Entity::FACTORY, m_iCreationCount);
+			Id *id = new Id(_name, "factory", info.str(), Entity::FACTORY, m_iCreationCount);
 			FactoryReference *ref = new FactoryReference(_name, _pluginID, _creator, _metadata, id);
 			m_Entities.insert(NamedEntity(id->id(), ref));
 			return ref;
@@ -510,7 +479,7 @@ namespace _2Real
 			info << "creation id:\t" << m_iCreationCount << std::endl;
 			info << "param name: \t" << _name << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
+			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
 			ServiceValue *val = new ServiceValue(id, _service);
 			m_Entities.insert(NamedEntity(id->id(), val));
 			return val;
@@ -532,7 +501,7 @@ namespace _2Real
 			info << "creation id:\t\t" << m_iCreationCount << std::endl;
 			info << "slot name:\t\t" << _name << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
+			Id *id = new Id(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
 			ServiceSlot *slot = new ServiceSlot(id, _service);
 			m_Entities.insert(NamedEntity(id->id(), slot));
 			return slot;
@@ -554,7 +523,7 @@ namespace _2Real
 			info << "creation id:\t\t" << m_iCreationCount << std::endl;
 			info << "slot name:\t\t" << _name << std::endl;
 
-			IdentifierImpl *id = new IdentifierImpl(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
+			Id *id = new Id(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
 			ServiceSlot *slot = new ServiceSlot(id, _service);
 			m_Entities.insert(NamedEntity(id->id(), slot));
 			return slot;

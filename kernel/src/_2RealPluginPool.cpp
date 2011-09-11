@@ -21,7 +21,7 @@
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealException.h"
-#include "_2RealEntities.h"
+#include "_2RealEntityTable.h"
 
 #include <iostream>
 
@@ -51,19 +51,16 @@ namespace _2Real
 			try
 			{
 				unsigned int id = it->first;
-#ifdef _VERBOSE
-				std::cout << "uninstalling plugin " << it->second->name() << std::endl;
-#endif
 				uninstall(id);
 				m_Entities->destroy(it->second);
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+				std::cout << "error on plugin pool destruction: " << e.what() << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "error on service factory destruction" << std::endl;
+				std::cout << "error on plugin pool destruction" << std::endl;
 			}
 		}
 	}
@@ -74,17 +71,8 @@ namespace _2Real
 		{
 
 			Plugin *plugin = m_Entities->createPlugin(_name, _dir, _file, _class);
-
-#ifdef _VERBOSE
-		std::cout << "plugin pool: installing dll " << _dir << " " << _file << std::endl;
-#endif
-
 			plugin->install(m_Factory);
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
-
-#ifdef _VERBOSE
-		std::cout << "plugin pool: success" << std::endl;
-#endif
 			return plugin->id();
 		}
 		catch (Exception &e)

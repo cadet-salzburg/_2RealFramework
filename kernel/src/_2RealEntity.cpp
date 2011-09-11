@@ -16,16 +16,16 @@
 	limitations under the License.
 */
 
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 #include "_2RealException.h"
-#include "_2RealIdentifierImpl.h"
+#include "_2RealId.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	Entity::Entity(IdentifierImpl *const _id) :
+	Entity::Entity(Id *const _id) :
 		m_ID(_id)
 	{
 		if (_id == NULL)

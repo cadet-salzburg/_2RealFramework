@@ -29,29 +29,16 @@
 
 using namespace _2Real;
 
-unsigned int outID1;
-unsigned int outID2;
+unsigned int outID;
 
 //path to test plugins
-std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+//std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+std::string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 
-void exceptionOccured(Identifier &_id)
-{
-	std::cout << "an exception occured in " << _id.name() << std::endl;
-}
-
-void dataAvailable1(Data &_data)
+void dataAvailable(Data &_data)
 {
 	std::cout << "new data available from " << _data.id().name() << std::endl;
-	Image< float, 2 > img = _data.get< Image< float, 2 > >(outID1);
-	std::cout << img.data()[0] << std::endl;
-}
-
-void dataAvailable2(Data &_data)
-{
-	std::cout << "new data available from " << _data.id().name() << std::endl;
-	Image< float, 2 > img = _data.get< Image< float, 2 > >(outID2);
-	std::cout << img.data()[0] << std::endl;
+	//Image< float, 2 > img = _data.get< Image< float, 2 > >(outID);
 }
 
 void main(int argc, char** argv)
@@ -81,19 +68,20 @@ void main(int argc, char** argv)
 	Identifier plugin = testSystem.loadPlugin("IMG_PROC", path, "ImageProcessing.dll", "ImageProcessing");
 #endif
 
-		////plugin infos
-		//std::cout << "plugin info:" << std::endl;
-		//testSystem.dumpPluginInfo(plugin);
+		//plugin infos
+		std::cout << "plugin info:" << std::endl;
+		testSystem.dumpPluginInfo(plugin);
 
-		////some service infos
-		//std::cout << "service info:" << std::endl;
-		//testSystem.dumpServiceInfo(plugin, "RandomImage2D_float");
-		//std::cout << "service info:" << std::endl;
-		//testSystem.dumpServiceInfo(plugin, "ImageAddition2D_float");
-		//std::cout << "service info:" << std::endl;
-		//testSystem.dumpServiceInfo(plugin, "ImageScaling2D_float");
+		//some service infos
+		std::cout << "service info:" << std::endl;
+		testSystem.dumpServiceInfo(plugin, "RandomImage2D_float");
+		std::cout << "service info:" << std::endl;
+		testSystem.dumpServiceInfo(plugin, "ImageAddition2D_float");
+		std::cout << "service info:" << std::endl;
+		testSystem.dumpServiceInfo(plugin, "ImageScaling2D_float");
 
 		//create some services
+		//& initialize them
 		Identifier scale1 = testSystem.createService("SCALE_1", plugin, "ImageScaling2D_float");
 		setup = testSystem.getSetupParameters(scale1);
 		testSystem.setParameterValue(setup[0], f2);
@@ -117,27 +105,96 @@ void main(int argc, char** argv)
 		testSystem.setParameterValue(setup[0], f1);
 		testSystem.setParameterValue(setup[1], f1);
 
+		children = testSystem.getChildren(sys);
+		std::cout << "system's children: ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+
 		//make a sync of rand 1 and rand 2
 		Identifier sync = testSystem.createSynchronization("SYNC", rand1, rand2);
+
+		children = testSystem.getChildren(sys);
+		std::cout << "system's children: ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		children = testSystem.getChildren(sync);
+		std::cout << "sync's children:   ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+		
 		//make a sequence of sync & add
 		Identifier seq = testSystem.createSequence("SEQ", sync, add);
+
+		children = testSystem.getChildren(sys);
+		std::cout << "system's children: ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		children = testSystem.getChildren(sync);
+		std::cout << "sync's children:   ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		children = testSystem.getChildren(seq);
+		std::cout << "seq's children:    ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+		
 		//put scale1 into seq as last element
 		testSystem.append(seq, scale1);
 		//this command would have the same result
 		//testSystem.insert(seq, 2, scale);
 
+		children = testSystem.getChildren(sys);
+		std::cout << "system's children: ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		children = testSystem.getChildren(sync);
+		std::cout << "sync's children:   ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		children = testSystem.getChildren(seq);
+		std::cout << "seq's children:    ";
+		for (std::vector< Identifier >::iterator it = children.begin(); it != children.end(); it++)
+		{
+			std::cout << (*it).name() << " ";
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+
 		//link the output of sequence with the input of scale2
 		//assuming they match
 		testSystem.link(scale2, seq);
 
+		//register a callback
 		output = testSystem.getOutputSlots(seq);
-		outID1 = output[0].id();
-
-		output = testSystem.getOutputSlots(scale2);
-		outID2 = output[0].id();
-
-		testSystem.registerToNewData(seq, ::dataAvailable1);
-		testSystem.registerToNewData(scale2, ::dataAvailable2);
+		outID = output[0].id();
+		testSystem.registerToNewData(scale2, ::dataAvailable);
 
 		while (1)
 		{
@@ -145,26 +202,34 @@ void main(int argc, char** argv)
 			std::cin >> thingie;
 			if (thingie == 'a')
 			{
+				//starts seq only
 				testSystem.start(seq);
 			}
 			else if (thingie == 'b')
 			{
+				//stops seq
 				testSystem.stop(seq);
 			}
 			else if (thingie == 'c')
 			{
+				//starts scale 2 only
+				//this alone will not produce an output
+				//as seq is needed as well
 				testSystem.start(scale2);
 			}
 			else if (thingie == 'd')
 			{
+				//stops scale 2
 				testSystem.stop(scale2);
 			}
 			else if (thingie == 'e')
 			{
+				//starts both seq & scale 2
 				testSystem.startAll();
 			}
 			else if (thingie == 'f')
 			{
+				//stops everything
 				testSystem.stopAll();
 			}
 			else if (thingie == 's')

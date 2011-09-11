@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealDataImpl.h"
+#include "_2RealDataPacket.h"
 #include "_2RealException.h"
 
 #include <iostream>

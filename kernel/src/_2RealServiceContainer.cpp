@@ -18,21 +18,21 @@
 
 #pragma once
 
-#include "_2RealServiceImpl.h"
+#include "_2RealServiceContainer.h"
 #include "_2RealServiceContext.h"
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
 #include "_2RealException.h"
-#include "_2RealDataImpl.h"
+#include "_2RealDataPacket.h"
 #include "_2RealContainer.h"
-#include "_2RealDataQueue.h"
+#include "_2RealApplicationCallback.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	ServiceContainer::ServiceContainer(IService *const _service, IdentifierImpl *const _id, DataQueue *const _output) : 
+	ServiceContainer::ServiceContainer(IService *const _service, Id *const _id, ApplicationCallback *const _output) : 
 		AbstractContainer(_id, _output),
 		m_Service(_service)
 	{

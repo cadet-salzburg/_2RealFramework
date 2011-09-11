@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIEntity.h"
+#include "_2RealEntity.h"
 
 #include "Poco/SharedPtr.h"
 #include "Poco/Any.h"
@@ -41,7 +41,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceParam(IdentifierImpl *const _id, ServiceContainer *const _service);
+		ServiceParam(Id *const _id, ServiceContainer *const _service);
 
 		/**
 		*	

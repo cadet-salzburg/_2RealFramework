@@ -27,7 +27,7 @@ namespace _2Real
 	*	entity - plugin/ service / service creator / container / service param / service slot
 	*/
 
-	class IdentifierImpl;
+	class Id;
 
 	class Entity
 	{
@@ -50,7 +50,7 @@ namespace _2Real
 			OUTPUT
 		};
 
-		Entity(IdentifierImpl *const _id);
+		Entity(Id *const _id);
 		Entity(Entity const& _src) throw(...);
 		Entity& operator=(Entity const& _src) throw(...);
 		virtual ~Entity();
@@ -63,7 +63,7 @@ namespace _2Real
 
 	private:
 	
-		IdentifierImpl		*m_ID;
+		Id		*m_ID;
 
 	};
 

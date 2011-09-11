@@ -102,7 +102,7 @@ namespace _2Real
 				name = attribs->getNamedItem("name");
 				ServiceMetadata meta(name->nodeValue());
 #ifdef _VERBOSE
-				std::cout << "plugin defines service: " << meta.getName() << std::endl;
+	std::cout << "plugin defines service: " << meta.getName() << std::endl;
 #endif
 				description = attribs->getNamedItem("description");
 				meta.setDescription(description->nodeValue());
@@ -172,7 +172,7 @@ namespace _2Real
 									Node* paramtype = classAttribs->getNamedItem("type");
 									meta.addSetupParam(paramname->nodeValue(), paramtype->nodeValue());
 #ifdef _VERBOSE
-									std::cout << "service has setup param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
+	std::cout << "service has setup param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
 #endif
 								}
 							}

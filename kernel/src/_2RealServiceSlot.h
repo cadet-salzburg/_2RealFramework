@@ -51,7 +51,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceSlot(IdentifierImpl *const _id, ServiceContainer *const _service);
+		ServiceSlot(Id *const _id, ServiceContainer *const _service);
 
 		/**
 		*	
