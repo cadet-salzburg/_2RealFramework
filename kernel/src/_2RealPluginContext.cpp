@@ -47,7 +47,8 @@ namespace _2Real
 	{
 		try
 		{
-			m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
+			FactoryReference *ref = m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
+			m_Plugin->addService(ref);
 		}
 		catch (Exception &e)
 		{

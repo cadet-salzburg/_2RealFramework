@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "_2RealIDataQueue.h"
-#include "_2RealDataImpl.h"
 #include "_2RealIdentifier.h"
 #include "_2RealEngineTypedefs.h"
 #include "_2RealTypedefs.h"
+#include "_2RealData.h"
+#include "_2RealException.h"
 
 #include <list>
 
@@ -31,47 +31,56 @@
 namespace _2Real
 {
 
-	class DataQueue : public IDataQueue
+	class DataPacket;
+
+	class DataQueue
 	{
 
 	public:
 
-		DataQueue(Identifier const& _id, NewDataCallback _callback);
+		DataQueue(Identifier const& _id);
 
-		void setIDs(std::list< unsigned int > const& _ids) throw(...);
+		void registerDataCallback(NewDataCallback _callback);
 
-		void addListener(IDataQueue *const _queue) throw(...);
+		void unregisterDataCallback();
 
-		void removeListener(IDataQueue *const _queue) throw(...);
+		void registerExceptionCallback(ExceptionCallback _callback);
 
-		void receiveData(NamedData &_data);
+		void unregisterExceptionCallback();
 
-		void sendData(bool const& _blocking);
+		void sendData(Poco::SharedPtr< DataPacket >& _data);
+
+		void sendException(Exception const& _exception);
+
+		bool const& hasDataListeners() const;
+
+		bool const& hasExceptionListeners() const;
 
 	private:
 
+		/**
+		*	sender id
+		*/
 		Identifier						m_Sender;
-
-		/**
-		*	all the slots this queue listens to
-		*/
-		std::list< unsigned int >		m_IDs;
-
-		/**
-		*	all the slots this queue listens to
-		*/
-		std::list< unsigned int >		m_Received;
-
-		/**
-		*	
-		*/
-		std::list< NamedData >			m_DataList;
 
 		/**
 		*
 		*/
-		Poco::BasicEvent< std::pair< Identifier, Data > >	m_DataEvent;
+		Poco::BasicEvent< Data >		m_DataEvent;
 
+		/**
+		*
+		*/
+		Poco::BasicEvent< Identifier >	m_ExceptionEvent;
+
+		/**
+		*	
+		*/
+		bool							m_bHasDataListeners;
+
+		/**
+		*
+		*/
+		bool							m_bHasExceptionListeners;
 	};
-
 }

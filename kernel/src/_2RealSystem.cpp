@@ -149,7 +149,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->getSetupParameters(_id, *m_ID);
+			return m_Engine->getSetupParameters(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -161,7 +161,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->getInputSlots(_id, *m_ID);
+			return m_Engine->getInputSlots(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -173,7 +173,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->getOutputSlots(_id, *m_ID);
+			return m_Engine->getOutputSlots(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -185,7 +185,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->createSequence(_name, _idA, _idB, *m_ID);
+			return m_Engine->createSequence(_name, _idA, _idB, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -197,7 +197,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->createSynchronization(_name, _idA, _idB, *m_ID);
+			return m_Engine->createSynchronization(_name, _idA, _idB, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -209,7 +209,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->setParameterValue(_id, _any, *m_ID);
+			m_Engine->setParameterValue(_id, _any, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -221,7 +221,19 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->link(_in, _out, *m_ID);
+			m_Engine->link(_in, _out, *m_ID);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void System::linkSlots(Identifier const& _in, Identifier const& _out)
+	{
+		try
+		{
+			m_Engine->linkSlots(_in, _out, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -233,7 +245,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->registerToException(_id, _callback, *m_ID);
+			m_Engine->registerToException(_id, _callback, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -245,7 +257,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->registerToNewData(_id, _callback, *m_ID);
+			m_Engine->registerToNewData(_id, _callback, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -257,7 +269,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->getChildren(_id, *m_ID);
+			return m_Engine->getChildren(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -269,7 +281,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->start(_id, *m_ID);
+			m_Engine->start(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -281,7 +293,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->startAll(*m_ID);
+			m_Engine->startAll(*m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -293,7 +305,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->stop(_id, *m_ID);
+			m_Engine->stop(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -305,7 +317,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->stopAll(*m_ID);
+			m_Engine->stopAll(*m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -317,7 +329,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->destroy(_id, *m_ID);
+			m_Engine->destroy(_id, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -329,7 +341,19 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->destroy(_id, *m_ID);
+			m_Engine->insert(_dst, _index, _src, *m_ID);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void System::append(Identifier const& _dst, Identifier const& _src)
+	{
+		try
+		{
+			m_Engine->append(_dst, _src, *m_ID);
 		}
 		catch (Exception &e)
 		{

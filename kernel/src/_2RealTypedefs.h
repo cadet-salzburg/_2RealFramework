@@ -39,7 +39,7 @@ namespace _2Real
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToException
 	*/
-	typedef void (*ExceptionCallback)(std::pair< Identifier, Exception > &_exception);
+	typedef void (*ExceptionCallback)(Identifier &_id);
 
 	/**
 	*	callback for new data
@@ -47,7 +47,7 @@ namespace _2Real
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToNewData
 	*/
-	typedef void (*NewDataCallback)(std::pair< Identifier, Data > &_data);
+	typedef void (*NewDataCallback)(Data &_data);
 
 	/**
 	*	a vector of identifiers

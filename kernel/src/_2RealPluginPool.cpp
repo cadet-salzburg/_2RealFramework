@@ -51,12 +51,19 @@ namespace _2Real
 			try
 			{
 				unsigned int id = it->first;
+#ifdef _VERBOSE
+				std::cout << "uninstalling plugin " << it->second->name() << std::endl;
+#endif
 				uninstall(id);
 				m_Entities->destroy(it->second);
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on plugin pool destruction " << e.what() << std::endl;
+				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "error on service factory destruction" << std::endl;
 			}
 		}
 	}

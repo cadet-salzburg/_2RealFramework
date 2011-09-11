@@ -6,6 +6,7 @@
 
 #include "ImageAddition.h"
 #include "RandomImage.h"
+#include "ImageScaling.h"
 
 #include <iostream>
 
@@ -41,6 +42,8 @@ void ImageProcessing::setup(PluginContext &_context)
 		_context.registerService("ImageAddition2D_float", &::createImageAddition< float >);
 		_context.registerService("RandomImage2D_ushort", &::createRandomImage< unsigned short >);
 		_context.registerService("RandomImage2D_float", &::createRandomImage< float >);
+		_context.registerService("ImageScaling2D_ushort", &::createImageScaling< unsigned short >);
+		_context.registerService("ImageScaling2D_float", &::createImageScaling< float >);
 	}
 	catch (Exception &e)
 	{

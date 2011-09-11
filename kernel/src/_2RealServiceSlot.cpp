@@ -66,7 +66,7 @@ namespace _2Real
 		{
 			if (!_link)
 			{
-				throw Exception("IO slot linkage failed - null pointer");
+				throw Exception("internal error: IO slot linkage failed - null pointer");
 			}
 
 			//output is responsible for linking
@@ -76,6 +76,10 @@ namespace _2Real
 				{
 					//do nothing
 					return;
+				}
+				else if (_link->type() != Entity::INPUT)
+				{
+					throw Exception("internal error: IO slot linkage failed - output must be linked with input");
 				}
 				else if (m_bIsLinked)
 				{

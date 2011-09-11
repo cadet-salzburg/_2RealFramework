@@ -20,14 +20,15 @@
 #include "_2RealException.h"
 #include "_2RealServiceImpl.h"
 #include "_2RealServiceSlot.h"
+#include "_2RealDataQueue.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 	
-	Container::Container(IdentifierImpl *const _id) :
-		AbstractContainer(_id),
+	Container::Container(IdentifierImpl *const _id, DataQueue *const _output) :
+		AbstractContainer(_id, _output),
 		m_Children(),
 		//TODO: find some good init values for the thread pool
 		m_Threads()
@@ -73,60 +74,39 @@ namespace _2Real
 	{
 		try
 		{
-
-#ifdef _VERBOSE
-			std::cout << "CONTAINER: start child " << name() << ", id of child: " << _id << std::endl;
-#endif
-
-			//must be nirvana
+			//must be system
 			if (type() != Entity::SYSTEM)
 			{
-				throw Exception("only system can start children");
+				throw Exception("internal error: only system can start children");
 			}
 
-			AbstractContainer *child = NULL;
-			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			ContainerList::iterator it = this->child(_id);
+			if (it == m_Children.end())
 			{
-				if ((*it)->id() == _id)
-				{
-					child = *it;
-					break;
-				}
+				throw Exception("could not start container, " + name() + " does not contain this container");
 			}
-
-			//child must exist
-			if (!child)
+			if (!(*it))
 			{
-				throw Exception("could not start child - child does not exist");
+				throw Exception("internal error - null pointer stored in system");
 			}
 
-			std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.find(child->id());
-			if (it != m_Threads.end())
+			AbstractContainer *child = *it;
+			std::map< unsigned int, Poco::Thread * >::iterator t = m_Threads.find(child->id());
+			if (t != m_Threads.end())
 			{
-				//container runs already
-				throw Exception("could not start child - child already running");
+				//container runs already, ignoring this
+				return;
 			}
 
+#ifdef _VERBOSE
+			std::cout << "system: " << name() << " is starting child: " << _id << std::endl;
+#endif
 			Poco::Thread *thread = new Poco::Thread();
-
-#ifdef _VERBOSE
-			std::cout << "CONTAINER: start child " << name() << " checking configuration" << std::endl;
-#endif
-
 			child->checkConfiguration();
-			//child runs until stop
 			child->start(false);
-
-#ifdef _VERBOSE
-			std::cout << "CONTAINER: start child " << name() << "starting thread" << std::endl;
-#endif
-
 			thread->start(*child);
 			m_Threads.insert(std::pair< unsigned int, Poco::Thread * >(child->id(), thread));
 
-#ifdef _VERBOSE
-			std::cout << "CONTAINER: start child " << name() << " success" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{
@@ -138,51 +118,34 @@ namespace _2Real
 	{
 		try
 		{
-
-#ifdef _VERBOSE
-			std::cout << "CONTAINER: stop child " << name() << ", id of child: " << _id << std::endl;
-#endif
-
-			//must be nirvana
+			//must be system
 			if (type() != Entity::SYSTEM)
 			{
-				throw Exception("only system can stop children");
+				throw Exception("internal error: only system can stop children");
 			}
 
-			AbstractContainer *child = NULL;
-			for (ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			ContainerList::iterator it = this->child(_id);
+			if (it == m_Children.end())
 			{
-				if ((*it)->id() == _id)
-				{
-					child = *it;
-					break;
-				}
+				throw Exception("could not stop container, " + name() + " does not contain this container");
 			}
-
-			//child must exist
-			if (!child)
+			if (!(*it))
 			{
-				throw Exception("could not start child - child does not exist");
+				throw Exception("internal error - null pointer stored in system");
 			}
 
-			//thread will complete update cycle
-			child->stop();
-
+			AbstractContainer *child = *it;
+			std::map< unsigned int, Poco::Thread * >::iterator thread = m_Threads.find(child->id());
+			if (thread != m_Threads.end())
+			{
 #ifdef _VERBOSE
-			std::cout << "CONTAINER stop child: " << name() << " waiting for completion" << std::endl;
+				std::cout << "system: " << name() << " is stopping child: " << _id << std::endl;
 #endif
-
-			//wait
-			std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.find(child->id());
-			if (it != m_Threads.end())
-			{
-				it->second->join();
-				m_Threads.erase(it);
+				child->stop();
+				thread->second->join();
+				delete thread->second;
+				m_Threads.erase(thread);
 			}
-
-#ifdef _VERBOSE
-			std::cout << "CONTAINER stop child: " << name() << " success" << std::endl;
-#endif
 		}
 		catch (Exception &e)
 		{
@@ -198,12 +161,7 @@ namespace _2Real
 
 	IDs Container::inputSlotIDs() const
 	{
-		if (type() == Entity::SYSTEM)
-		{
-			//nirvana has no input params
-			throw Exception("system has no input slots");
-		}
-		else if (type() == Entity::SEQUENCE)
+		if (type() == Entity::SEQUENCE)
 		{
 			//sequence: input = first child's input
 			AbstractContainer *first = m_Children.front();
@@ -221,16 +179,16 @@ namespace _2Real
 
 			return result;
 		}
-	}
-
-	IDs Container::outputSlotIDs() const
-	{
-		if (type() == Entity::SYSTEM)
+		else
 		{
 			//nirvana has no output params
 			throw Exception("system has no output slots");
 		}
-		else if (type() == Entity::SEQUENCE)
+	}
+
+	IDs Container::outputSlotIDs() const
+	{
+		if (type() == Entity::SEQUENCE)
 		{
 			//sequence: output = last child's output
 			AbstractContainer *last = m_Children.back();
@@ -248,20 +206,20 @@ namespace _2Real
 
 			return result;
 		}
+		else
+		{
+			//nirvana has no output params
+			throw Exception("system has no output slots");
+		}
 	}
 
 	std::list< ServiceSlot * > Container::inputSlots()
 	{
-		if (type() == Entity::SYSTEM)
-		{
-			//nirvana has no output params
-			throw Exception("system has no input slots");
-		}
-		else if (type() == Entity::SEQUENCE)
+		if (type() == Entity::SEQUENCE)
 		{
 			//sequence: output = last child's output
-			AbstractContainer *last = m_Children.back();
-			return last->outputSlots();
+			AbstractContainer *first = m_Children.front();
+			return first->inputSlots();
 		}
 		else if (type() == Entity::SYNCHRONIZATION)
 		{
@@ -269,22 +227,22 @@ namespace _2Real
 			std::list< ServiceSlot * > result;
 			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				std::list< ServiceSlot * > childParams = (*it)->outputSlots();
+				std::list< ServiceSlot * > childParams = (*it)->inputSlots();
 				result.splice(result.end(), childParams);
 			}
 
 			return result;
+		}
+		else
+		{
+			//nirvana has no output params
+			throw Exception("system has no output slots");
 		}
 	}
 
 	std::list< ServiceSlot * > Container::outputSlots()
 	{
-		if (type() == Entity::SYSTEM)
-		{
-			//nirvana has no output params
-			throw Exception("system has no output slots");
-		}
-		else if (type() == Entity::SEQUENCE)
+		if (type() == Entity::SEQUENCE)
 		{
 			//sequence: output = last child's output
 			AbstractContainer *last = m_Children.back();
@@ -302,9 +260,14 @@ namespace _2Real
 
 			return result;
 		}
+		else
+		{
+			//nirvana has no output params
+			throw Exception("system has no output slots");
+		}
 	}
 
-	AbstractContainer::ContainerList::iterator Container::findChild(unsigned int const& _id)
+	AbstractContainer::ContainerList::iterator Container::child(unsigned int const& _id)
 	{
 		for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
@@ -317,10 +280,33 @@ namespace _2Real
 		return m_Children.end();
 	}
 
-	AbstractContainer::ContainerList::iterator Container::findPosition(unsigned int const& _index)
+	AbstractContainer::ContainerList::const_iterator Container::child(unsigned int const& _id) const
+	{
+		for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			if ((*it)->id() == _id)
+			{
+				return it;
+			}
+		}
+
+		return m_Children.end();
+	}
+
+	AbstractContainer::ContainerList::iterator Container::position(unsigned int const& _index)
 	{
 		AbstractContainer::ContainerList::iterator position = m_Children.begin();
-		position++;
+		for (unsigned int count = 0; count < _index; count++)
+		{
+			position++;
+		}
+
+		return position;
+	}
+
+	AbstractContainer::ContainerList::const_iterator Container::position(unsigned int const& _index) const
+	{
+		AbstractContainer::ContainerList::const_iterator position = m_Children.begin();
 		for (unsigned int count = 0; count < _index; count++)
 		{
 			position++;
@@ -333,16 +319,16 @@ namespace _2Real
 	{
 		try
 		{
-			AbstractContainer::ContainerList::iterator it = findChild(_id);
+			//find the container in question
+			AbstractContainer::ContainerList::iterator it = child(_id);
 			if (it == m_Children.end())
 			{
-				throw Exception("could not remove child - child does not exist");
+				throw Exception("internal error: could not remove child from container - does not exist");
 			}
 			AbstractContainer *child = *it;
 		
 			if (type() == Entity::SYSTEM)
 			{
-				//reset all dependent containers as well
 				stopChild(child->id());
 				child->resetIO();
 				m_Children.erase(it);
@@ -375,15 +361,15 @@ namespace _2Real
 		try
 		{
 			//make sure child does not already exist in list
-			AbstractContainer::ContainerList::iterator it = findChild(_child->id());
+			AbstractContainer::ContainerList::iterator it = child(_child->id());
 			if (it != m_Children.end())
 			{
-				throw Exception("could not add child - child already exists");
+				throw Exception("internal error: could not add child to container - already exists");
 			}
 
 			if (_index > m_Children.size())
 			{
-				throw Exception("could not add child - index > childcount");
+				throw Exception("internal error: could not add child to container - index > childcount");
 			}
 
 			//stop root
@@ -435,7 +421,7 @@ namespace _2Real
 					this->resetIO();
 				}
 
-				AbstractContainer::ContainerList::iterator pos = findPosition(_index);
+				AbstractContainer::ContainerList::iterator pos = position(_index);
 				m_Children.insert(pos, _child);
 			}
 
@@ -448,10 +434,10 @@ namespace _2Real
 		}
 	}
 
-	AbstractContainer *const Container::getChild(unsigned int const& _id)
+	AbstractContainer *const Container::get(unsigned int const& _id)
 	{
 		AbstractContainer *child;
-		AbstractContainer::ContainerList::iterator it = findChild(_id);
+		AbstractContainer::ContainerList::iterator it = this->child(_id);
 		if (it != m_Children.end())
 		{
 			child = *it;
@@ -467,9 +453,67 @@ namespace _2Real
 				if ((*it)->type() != Entity::SERVICE)
 				{
 					Container *container = static_cast< Container * >(*it);
-					if ((child = container->getChild(_id)) != NULL)
+					if ((child = container->get(_id)) != NULL)
 					{
 						return child;
+					}
+				}
+			}
+
+			//nothing found - return null
+			return NULL;
+		}
+	}
+
+	AbstractContainer const *const Container::find(unsigned int const& _id) const
+	{
+		AbstractContainer::ContainerList::const_iterator it = this->child(_id);
+		if (it != m_Children.end())
+		{
+			return *it;
+		}
+		else
+		{
+			//search children
+			for (it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				//only containers have children
+				if ((*it)->type() != Entity::SERVICE)
+				{
+					Container *child = static_cast< Container * >(*it);
+					const AbstractContainer *res = child->find(_id);
+					if (res)
+					{
+						return res;
+					}
+				}
+			}
+
+			//nothing found - return null
+			return NULL;
+		}
+	}
+
+	AbstractContainer *const Container::find(unsigned int const& _id)
+	{
+		AbstractContainer::ContainerList::iterator it = this->child(_id);
+		if (it != m_Children.end())
+		{
+			return *it;
+		}
+		else
+		{
+			//search children
+			for (it = m_Children.begin(); it != m_Children.end(); it++)
+			{
+				//only containers have children
+				if ((*it)->type() != Entity::SERVICE)
+				{
+					Container *child = static_cast< Container * >(*it);
+					AbstractContainer *res = child->find(_id);
+					if (res)
+					{
+						return res;
 					}
 				}
 			}
@@ -552,7 +596,6 @@ namespace _2Real
 				}
 				if (type() == Entity::SEQUENCE)
 				{
-					std::cout << "SEQ RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
 						(*it)->update();
@@ -562,7 +605,6 @@ namespace _2Real
 				}
 				else if (type() == Entity::SYNCHRONIZATION)
 				{
-					std::cout << "SYNC RUN: " << name() << std::endl;
 					for (AbstractContainer::ContainerList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 					{
 						(*it)->start(true);
@@ -582,6 +624,7 @@ namespace _2Real
 				Container *root = static_cast< Container * >(this->root());
 				Container *nirvana = static_cast< Container * >(root->father());
 				nirvana->stopChild(root->id());
+				m_Output->sendException(e);
 			}
 		}
 	}

@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ImageAddition.h" />
+    <ClInclude Include="..\..\src\ImageScaling.h" />
     <ClInclude Include="..\..\src\PluginActivatorImpl.h" />
     <ClInclude Include="..\..\src\RandomImage.h" />
     <ClInclude Include="..\..\src\RandomValues.h" />

@@ -20,7 +20,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
-#include "_2RealServiceFactory.h"
+#include "_2RealFactoryReference.h"
 #include "_2RealServiceMetadata.h"
 
 #include <iostream>
@@ -63,6 +63,21 @@ namespace _2Real
 		}
 	}
 
+	void Plugin::addService(FactoryReference *ref)
+	{
+		m_Services.push_back(ref);
+	}
+
+	std::list< FactoryReference * > const& Plugin::services() const
+	{
+		return m_Services;
+	}
+
+	std::list< FactoryReference * > const& Plugin::services()
+	{
+		return m_Services;
+	}
+
 	PluginMetadata const& Plugin::pluginMetadata() const
 	{
 		return m_Metadata;
@@ -71,11 +86,6 @@ namespace _2Real
 	ServiceMetadata const& Plugin::serviceMetadata(std::string const& _name) const
 	{
 		return m_Metadata.getServiceMetadata(_name);
-	}
-
-	IDs const& Plugin::serviceIDs() const
-	{
-		return m_ServiceIDs;
 	}
 
 	void Plugin::install(ServiceFactory *const _factory)
@@ -137,10 +147,7 @@ namespace _2Real
 				m_Activator = NULL;
 			}
 
-			if (!m_ServiceIDs.empty())
-			{
-				//TODO: clean up services
-			}
+			//TODO: clean up services if they exist!
 
 			throw e;
 		}
@@ -150,12 +157,13 @@ namespace _2Real
 	{
 		try
 		{
+			m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+
 			if (m_PluginLoader.isLibraryLoaded(m_File))
 			{
 				m_PluginLoader.unloadLibrary(m_File);
 			}
 
-			m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
 			delete m_Activator;
 			m_Activator = NULL;
 		}

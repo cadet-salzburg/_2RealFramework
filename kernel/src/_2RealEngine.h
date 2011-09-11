@@ -148,7 +148,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		void setParameterValue(Identifier const& _id, Poco::Any _any) throw(...);
+		void setParameterValue(Identifier const& _id, Poco::Any _any, Identifier const& _top) throw(...);
 
 		/**
 		*
@@ -156,19 +156,24 @@ namespace _2Real
 		void link(Identifier const& _in, Identifier const& _out, Identifier const& _top) throw(...);
 
 		/**
-		*	
+		*
 		*/
-		void registerToException(Identifier const& _id, ExceptionCallback _callback) throw(...);
+		void linkSlots(Identifier const& _in, Identifier const& _out, Identifier const& _top) throw(...);
 
 		/**
 		*	
 		*/
-		void registerToNewData(Identifier const& _id, NewDataCallback _callback) throw(...);
+		void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _top) throw(...);
 
 		/**
 		*	
 		*/
-		Identifiers getChildren(Identifier const& _id) throw(...);
+		void registerToNewData(Identifier const& _id, NewDataCallback _callback, Identifier const& _top) throw(...);
+
+		/**
+		*	
+		*/
+		Identifiers getChildren(Identifier const& _id, Identifier const& _top) throw(...);
 
 		/**
 		*	

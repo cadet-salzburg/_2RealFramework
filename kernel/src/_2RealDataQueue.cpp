@@ -18,72 +18,62 @@
 
 #include "_2RealDataQueue.h"
 #include "_2RealData.h"
+#include "_2RealDataImpl.h"
 
 #include "Poco/Delegate.h"
 
 namespace _2Real
 {
 
-	DataQueue::DataQueue(Identifier const& _id, NewDataCallback _callback) :
-		m_Sender(_id)
+	DataQueue::DataQueue(Identifier const& _id) :
+		m_Sender(_id),
+		m_bHasDataListeners(false),
+		m_bHasExceptionListeners(false)
 	{
+	}
+
+	void DataQueue::registerDataCallback(NewDataCallback _callback)
+	{
+		m_bHasDataListeners = true;
 		m_DataEvent += Poco::delegate(_callback);
 	}
 
-	void DataQueue::setIDs(std::list< unsigned int > const& _ids)
+	void DataQueue::registerExceptionCallback(ExceptionCallback _callback)
 	{
-		m_IDs = _ids;
-		m_Received = m_IDs;
-		m_DataList.clear();
+		m_bHasExceptionListeners = true;
+		m_ExceptionEvent += Poco::delegate(_callback);
 	}
 
-	void DataQueue::addListener(IDataQueue *const _queue)
+	void DataQueue::unregisterDataCallback()
 	{
-		//empty
+		m_bHasDataListeners = false;
+		m_DataEvent.clear();
 	}
 
-	void DataQueue::removeListener(IDataQueue *const _queue)
+	void DataQueue::unregisterExceptionCallback()
 	{
-		//empty
+		m_bHasExceptionListeners = false;
+		m_ExceptionEvent.clear();
 	}
 
-	void DataQueue::receiveData(NamedData &_data)
+	void DataQueue::sendData(Poco::SharedPtr< DataPacket >& _data)
 	{
-		//m_DataList.push_back(_data);
-
-		//DataImpl received = *_data.second.get();
-
-		//for (std::list< unsigned int >::iterator it = m_Received.begin(); it != m_Received.end(); it++)
-		//{
-		//	if (received.contains(*it))
-		//	{
-		//		m_Received.erase(it);
-		//	}
-		//}
-
-		//if (m_Received.empty())
-		//{
-		//	DataImpl *output = new DataImpl();
-
-		//	for (std::list< NamedData >::iterator it = m_DataList.end(); it != m_DataList.begin(); it--)
-		//	{
-		//		DataImpl data = *it->second.get();
-		//		output->merge(data);
-		//	}
-
-		//	Data outputData(output);
-		//	std::pair< Identifier, Data > result = std::make_pair(m_Sender, outputData);
-
-		//	//send data
-		//	m_DataEvent.notifyAsync(this, result);
-
-		//	//reset ids
-		//	m_Received = m_IDs;
-		//}
+		Data data(_data, m_Sender);
+		m_DataEvent.notifyAsync(this, data);
 	}
 
-	void DataQueue::sendData(bool const& _blocking)
+	void DataQueue::sendException(Exception const& _exception)
 	{
-		//empty
+		m_ExceptionEvent.notifyAsync(this, m_Sender);
+	}
+
+	bool const& DataQueue::hasDataListeners() const
+	{
+		return m_bHasDataListeners;
+	}
+
+	bool const& DataQueue::hasExceptionListeners() const
+	{
+		return m_bHasExceptionListeners;
 	}
 }

@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "_2RealEngineTypedefs.h"
+
 #include <map>
 #include <list>
 
@@ -73,7 +75,7 @@ namespace _2Real
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		const unsigned int registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
+		FactoryReference *const registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
@@ -94,6 +96,16 @@ namespace _2Real
 		*
 		*/
 		ServiceMetadata const& info(unsigned int const& _plugin, std::string const& _service) const throw(...);
+
+		/**
+		*	
+		*/
+		std::list< FactoryReference * > getServices(unsigned int const& _plugin) throw(...);
+
+		/**
+		*	
+		*/
+		IDs getServiceIDs(unsigned int const& _plugin) const throw(...);
 
 	private:
 

@@ -59,7 +59,7 @@ namespace _2Real
 		/**
 		*	throws if user defined service is null
 		*/
-		ServiceContainer(IService *const _service, IdentifierImpl *const _id) throw(...);
+		ServiceContainer(IService *const _service, IdentifierImpl *const _id, DataQueue *const _output) throw(...);
 
 		/**
 		*	this one should not be called, ever

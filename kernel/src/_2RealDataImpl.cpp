@@ -19,6 +19,8 @@
 #include "_2RealDataImpl.h"
 #include "_2RealException.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -78,7 +80,6 @@ namespace _2Real
 		{
 			return it->second;
 		}
-
 		return SharedAny();
 	}
 

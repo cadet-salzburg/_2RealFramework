@@ -55,7 +55,11 @@ namespace _2Real
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on production graphs destruction: " << e.what() << std::endl;
+				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "error on service factory destruction" << std::endl;
 			}
 		}
 	}
@@ -129,7 +133,7 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = getSystem(_top);
-			AbstractContainer *container = nirvana->getChild(_id);
+			AbstractContainer *container = nirvana->get(_id);
 			container->shutdown();
 			m_Entities->destroy(container);
 		}
@@ -144,8 +148,8 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = getSystem(_top);
-			AbstractContainer *a = nirvana->getChild(_a);
-			AbstractContainer *b = nirvana->getChild(_b);
+			AbstractContainer *a = nirvana->get(_a);
+			AbstractContainer *b = nirvana->get(_b);
 
 			Container *seq = m_Entities->createSequence(_name);
 			
@@ -169,8 +173,8 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = getSystem(_top);
-			AbstractContainer *a = nirvana->getChild(_a);
-			AbstractContainer *b = nirvana->getChild(_b);
+			AbstractContainer *a = nirvana->get(_a);
+			AbstractContainer *b = nirvana->get(_b);
 
 			Container *sync = m_Entities->createSynchronization(_name);
 

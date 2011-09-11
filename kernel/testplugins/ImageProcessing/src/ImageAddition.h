@@ -85,7 +85,7 @@ void ImageAdditionService< T >::update()
 					tmp[i] = m_ScaleFactor1*m_InputImage1.data()[i] + m_ScaleFactor2*m_InputImage2.data()[i];
 					//if (x < 1 && y < 1)
 					//{
-					//	std::cout << m_InputImage1.data()[i] << " " << m_InputImage2.data()[i] << " " << tmp[i] << std::endl;
+					//	std::cout << "addition: " << m_InputImage1.data()[i] << " " << m_InputImage2.data()[i] << " " << tmp[i] << std::endl;
 					//}
 				}
 			}

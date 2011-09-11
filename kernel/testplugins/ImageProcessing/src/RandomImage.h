@@ -80,7 +80,7 @@ void RandomImageService< T >::update()
 				tmp[i] = random_t< T >();
 				//if (x < 1 && y < 1)
 				//{
-				//	std::cout << tmp[i] << std::endl;
+				//	std::cout << "random value: " << tmp[i] << std::endl;
 				//}
 			}
 		}

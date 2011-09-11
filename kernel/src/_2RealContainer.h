@@ -42,7 +42,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Container(IdentifierImpl *const _id) throw(...);
+		Container(IdentifierImpl *const _id, DataQueue *const _output) throw(...);
 
 		/**
 		*	this one should not be called, ever
@@ -110,9 +110,20 @@ namespace _2Real
 		void remove(unsigned int const& _id) throw(...);
 
 		/**
-		*	returns pointer to child if found within children, NULL otherwise
+		*	returns pointer to container if located somewhere in tree, null otherwise
+		*	also performs remove!
 		*/
-		AbstractContainer *const getChild(unsigned int const& _id);
+		AbstractContainer *const get(unsigned int const& _id);
+
+		/**
+		*	returns pointer to container if located somewhere in tree, null otherwise
+		*/
+		AbstractContainer const *const find(unsigned int const& _id) const;
+
+		/**
+		*	returns pointer to container if located somewhere in tree, null otherwise
+		*/
+		AbstractContainer *const find(unsigned int const& _id);
 
 		/**
 		*	
@@ -154,12 +165,22 @@ namespace _2Real
 		/**
 		*	returns iterator to child
 		*/
-		ContainerList::iterator findChild(unsigned int const& _id);
+		ContainerList::iterator child(unsigned int const& _id);
+
+		/**
+		*	returns const iterator to child
+		*/
+		ContainerList::const_iterator child(unsigned int const& _id) const;
 
 		/**
 		*	returns iterator to position
 		*/
-		ContainerList::iterator findPosition(unsigned int const& _index);
+		ContainerList::iterator position(unsigned int const& _index);
+
+		/**
+		*	returns const iterator to position
+		*/
+		ContainerList::const_iterator position(unsigned int const& _index) const;
 
 		/**
 		*	child container list

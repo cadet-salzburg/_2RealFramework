@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "_2RealTypedefs.h"
 #include "_2RealEngineTypedefs.h"
 #include "_2RealIContainer.h"
 #include "_2RealIEntity.h"
@@ -45,7 +46,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		AbstractContainer(IdentifierImpl *const _id);
+		AbstractContainer(IdentifierImpl *const _id, DataQueue *const _comm);
 
 		/**
 		*	
@@ -157,6 +158,16 @@ namespace _2Real
 		*/
 		void resetIO();
 
+		/**
+		*	
+		*/
+		void registerExceptionCallback(ExceptionCallback _callback);
+
+		/**
+		*	
+		*/
+		void registerDataCallback(NewDataCallback _callback);
+
 	protected:
 
 		Poco::Mutex									m_Mutex;
@@ -197,11 +208,6 @@ namespace _2Real
 		Poco::BasicEvent< NamedData >				m_NewData;
 
 		/**
-		*	used to notify listeners of exceptions
-		*/
-		Poco::BasicEvent< Exception >				m_Exception;
-
-		/**
 		*	
 		*/
 		typedef std::list< AbstractContainer * >	ContainerList;
@@ -219,7 +225,7 @@ namespace _2Real
 		/**
 		*	allows listening to the container from the outside
 		*/
-		DataQueue									*m_OutputQueue;
+		DataQueue									*m_Output;
 	};
 
 }

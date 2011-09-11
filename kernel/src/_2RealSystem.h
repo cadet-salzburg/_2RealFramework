@@ -338,6 +338,9 @@ namespace _2Real
 		*/
 		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src) throw(...);
 
+		/**
+		*	link insert, with index being the last place in the children
+		*/
 		void append(Identifier const& dst, Identifier const& id) throw(...);
 
 		/**

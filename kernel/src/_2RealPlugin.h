@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "_2RealIEntity.h"
 #include "_2RealEngineTypedefs.h"
+#include "_2RealIEntity.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
 
@@ -35,7 +35,7 @@ namespace _2Real
 	*	plugin class; responsible for loading dlls & storing plugin metadata
 	*/
 
-	class PluginMetadata;
+	class FactoryReference;
 	class ServiceFactory;
 
 	class Plugin : public Entity
@@ -76,7 +76,17 @@ namespace _2Real
 		/**
 		*
 		*/
-		IDs const& serviceIDs() const;
+		std::list< FactoryReference *> const& services() const;
+
+		/**
+		*
+		*/
+		std::list< FactoryReference *> const& services();
+
+		/**
+		*
+		*/
+		void addService(FactoryReference *ref);
 
 		/**
 		*
@@ -116,9 +126,9 @@ namespace _2Real
 		PluginLoader					m_PluginLoader;
 
 		/**
-		*	services exported by the plugin
+		*	services
 		*/
-		IDs								m_ServiceIDs;
+		std::list< FactoryReference *>	m_Services;
 
 	};
 }

@@ -29,8 +29,10 @@
 #include "_2RealContainer.h"
 #include "_2RealServiceSlot.h"
 #include "_2RealServiceValue.h"
+#include "_2RealDataQueue.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {
@@ -54,8 +56,19 @@ namespace _2Real
 	{
 		for (EntityMap::iterator it = m_Entities.begin(); it != m_Entities.end(); it++)
 		{
-			//TODO: destroy
-			delete it->second;
+			try
+			{
+				std::cout << "internal error: entity left in entity table" << std::endl;
+				//delete it->second;
+			}
+			catch (Exception &e)
+			{
+				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "error on service factory destruction" << std::endl;
+			}
 		}
 	}
 
@@ -63,10 +76,17 @@ namespace _2Real
 	{
 		try
 		{
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a container: " << _obj->name() << std::endl;
+#endif
 			EntityMap::iterator e = m_Entities.find(_obj->id());
 			if (e == m_Entities.end())
 			{
 				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
 			}
 
 			if (_obj->type() != Entity::SYSTEM)
@@ -85,6 +105,9 @@ namespace _2Real
 
 			delete _obj;
 			m_Entities.erase(e);
+#ifdef _VERBOSE
+			std::cout << "entity table: container was destroyed successfully" << std::endl;
+#endif
 		}
 		catch (Exception &e)
 		{
@@ -96,7 +119,16 @@ namespace _2Real
 	{
 		try
 		{
-			//
+			if (_obj->type() == Entity::SERVICE)
+			{
+				ServiceContainer *service = static_cast< ServiceContainer * >(_obj);
+				destroy(service);
+			}
+			else
+			{
+				Container *container = static_cast< Container * >(_obj);
+				destroy(container);
+			}
 		}
 		catch (Exception &e)
 		{
@@ -108,28 +140,44 @@ namespace _2Real
 	{
 		try
 		{
-			//IO needs to be reset here
-			//_obj->resetIO();
-			//
-			//std::list< ServiceValue * > setup = _obj->setupParams();
-			//for (std::list< ServiceValue * >::iterator it = setup.begin(); it != setup.end(); it++)
-			//{
-			//	destroy(*it);
-			//}
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a service: " << _obj->name() << std::endl;
+#endif
+			EntityMap::iterator e = m_Entities.find(_obj->id());
+			if (e == m_Entities.end())
+			{
+				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
+			}
 
-			//std::list< ServiceSlot * > input = _obj->inputSlots();
-			//for (std::list< ServiceSlot * >::iterator it = input.begin(); it != input.end(); it++)
-			//{
-			//	destroy(*it);
-			//}
+			_obj->resetIO();
 
-			//std::list< ServiceSlot * > output = _obj->outputSlots();
-			//for (std::list< ServiceSlot * >::iterator it = output.begin(); it != output.end(); it++)
-			//{
-			//	destroy(*it);
-			//}
+			std::list< ServiceValue * > setup = _obj->setupParams();
+			for (std::list< ServiceValue * >::iterator it = setup.begin(); it != setup.end(); it++)
+			{
+				destroy(*it);
+			}
 
-			//delete _obj;
+			std::list< ServiceSlot * > input = _obj->inputSlots();
+			for (std::list< ServiceSlot * >::iterator it = input.begin(); it != input.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			std::list< ServiceSlot * > output = _obj->outputSlots();
+			for (std::list< ServiceSlot * >::iterator it = output.begin(); it != output.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			delete _obj;
+			m_Entities.erase(e);
+#ifdef _VERBOSE
+			std::cout << "entity table: service was destroyed successfully" << std::endl;
+#endif
 		}
 		catch (Exception &e)
 		{
@@ -141,7 +189,21 @@ namespace _2Real
 	{
 		try
 		{
-			//delete _obj;
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a service slot: " << _obj->name() << std::endl;
+#endif
+			EntityMap::iterator e = m_Entities.find(_obj->id());
+			if (e == m_Entities.end())
+			{
+				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
+			}
+
+			delete _obj;
+			m_Entities.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -153,7 +215,21 @@ namespace _2Real
 	{
 		try
 		{
-			//delete _obj;
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a service value: " << _obj->name() << std::endl;
+#endif
+			EntityMap::iterator e = m_Entities.find(_obj->id());
+			if (e == m_Entities.end())
+			{
+				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
+			}
+
+			delete _obj;
+			m_Entities.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -165,15 +241,31 @@ namespace _2Real
 	{
 		try
 		{
-			//IDs ids;
-			//IDIterator it;
-			//ids = _obj->serviceIDs();
-			//for (it = ids.begin(); it != ids.end(); it++)
-			//{
-			//	destroy(*it);
-			//}
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a plugin: " << _obj->name() << std::endl;
+#endif
 
-			//delete _obj;
+			std::list< FactoryReference * > services = _obj->services();
+			for (std::list<FactoryReference * >::iterator it = services.begin(); it != services.end(); it++)
+			{
+				destroy(*it);
+			}
+
+			EntityMap::iterator e = m_Entities.find(_obj->id());
+			if (e == m_Entities.end())
+			{
+				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
+			}
+
+			delete _obj;
+			m_Entities.erase(e);
+#ifdef _VERBOSE
+			std::cout << "entity table: plugin was destroyed successfully" << std::endl;
+#endif
 		}
 		catch (Exception &e)
 		{
@@ -185,7 +277,21 @@ namespace _2Real
 	{
 		try
 		{
+#ifdef _VERBOSE
+			std::cout << "entity table: destroying a service factory entry: " << _obj->name() << std::endl;
+#endif
+			EntityMap::iterator e = m_Entities.find(_obj->id());
+			if (e == m_Entities.end())
+			{
+				throw Exception("internal error: entity not in entity map");
+			}
+			else if (!e->second)
+			{
+				throw Exception("internal error: null pointer stored in entity map");
+			}
+
 			//delete _obj;
+			m_Entities.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -252,11 +358,11 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a plugin" << std::endl;
-			info << "creation id: " << m_iCreationCount << std::endl;
-			info << "chosen name: " << _name << std::endl;
-			info << "directory:   " << _dir << std::endl;
-			info << "filename:    " << _file << std::endl;
-			info << "classname:   " << _class << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "chosen name:\t" << _name << std::endl;
+			info << "directory:\t" << _dir << std::endl;
+			info << "filename:\t" << _file << std::endl;
+			info << "classname:\t" << _class << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "plugin", info.str(), Entity::PLUGIN, m_iCreationCount);
 			Plugin *plugin = new Plugin(_dir, _file, _class, id);
@@ -277,11 +383,13 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a service" << std::endl;
-			info << "creation id:  " << m_iCreationCount << std::endl;
-			info << "chosen name:  " << _name << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "chosen name:\t" << _name << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "service", info.str(), Entity::SERVICE, m_iCreationCount);
-			ServiceContainer *service = new ServiceContainer(_service, id);
+			Identifier i(id);
+			DataQueue *output = new DataQueue(i);
+			ServiceContainer *service = new ServiceContainer(_service, id, output);
 			m_Entities.insert(NamedEntity(id->id(), service));
 			return service;
 		}
@@ -299,13 +407,15 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a system" << std::endl;
-			info << "creation id: " << m_iCreationCount << std::endl;
-			info << "chosen name: " << _name << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "chosen name:\t" << _name << std::endl;
 
 			IdentifierImpl *id;
 			Container *container;
 			id = new IdentifierImpl(_name, "system", info.str(), Entity::SYSTEM, m_iCreationCount);
-			container = new Container(id);
+			Identifier i(id);
+			DataQueue *output = new DataQueue(i);
+			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
 		}
@@ -323,13 +433,15 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a sequence" << std::endl;
-			info << "creation id:   " << m_iCreationCount << std::endl;
-			info << "chosen name:   " << _name << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "chosen name:\t" << _name << std::endl;
 
 			IdentifierImpl *id;
 			Container *container;
 			id = new IdentifierImpl(_name, "sequence", info.str(), Entity::SEQUENCE, m_iCreationCount);
-			container = new Container(id);
+			Identifier i(id);
+			DataQueue *output = new DataQueue(i);
+			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
 		}
@@ -347,13 +459,15 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a synchronization" << std::endl;
-			info << "creation id:          " << m_iCreationCount << std::endl;
-			info << "chosen name:          " << _name << std::endl;
+			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "chosen name:\t\t" << _name << std::endl;
 
 			IdentifierImpl *id;
 			Container *container;
 			id = new IdentifierImpl(_name, "synchronization", info.str(), Entity::SYNCHRONIZATION, m_iCreationCount);
-			container = new Container(id);
+			Identifier i(id);
+			DataQueue *output = new DataQueue(i);
+			container = new Container(id, output);
 			m_Entities.insert(NamedEntity(id->id(), container));
 			return container;
 		}
@@ -371,8 +485,8 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a factory reference" << std::endl;
-			info << "creation id:            " << m_iCreationCount << std::endl;
-			info << "name:                   " << _name << std::endl;
+			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "service name:\t\t" << _name << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "factory", info.str(), Entity::FACTORY, m_iCreationCount);
 			FactoryReference *ref = new FactoryReference(_name, _pluginID, _creator, _metadata, id);
@@ -393,8 +507,8 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am a setup parameter" << std::endl;
-			info << "creation id:          " << m_iCreationCount << std::endl;
-			info << "name:                 " << _name << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "param name: \t" << _name << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
 			ServiceValue *val = new ServiceValue(id, _service);
@@ -414,9 +528,9 @@ namespace _2Real
 			++m_iCreationCount;
 
 			std::stringstream info;
-			info << "i am an inpu slot" << std::endl;
-			info << "creation id:     " << m_iCreationCount << std::endl;
-			info << "name:            " << _name << std::endl;
+			info << "i am an input slot" << std::endl;
+			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "slot name:\t\t" << _name << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
 			ServiceSlot *slot = new ServiceSlot(id, _service);
@@ -437,8 +551,8 @@ namespace _2Real
 
 			std::stringstream info;
 			info << "i am an output slot" << std::endl;
-			info << "creation id:       " << m_iCreationCount << std::endl;
-			info << "name:              " << _name << std::endl;
+			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "slot name:\t\t" << _name << std::endl;
 
 			IdentifierImpl *id = new IdentifierImpl(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
 			ServiceSlot *slot = new ServiceSlot(id, _service);

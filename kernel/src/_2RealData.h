@@ -19,18 +19,18 @@
 #pragma once
 
 #include "_2RealException.h"
+#include "_2RealIdentifier.h"
+#include "_2RealDataImpl.h"
 
 #include "Poco/Any.h"
+#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
 	/**
-	*	output data received by the 2 real engine
+	*	output data received by a container
 	*/
-
-	class DataPacket;
-
 	class Data
 	{
 
@@ -40,37 +40,27 @@ namespace _2Real
 		*	returns the value received from slot _id
 		*/
 		template< typename T >
-		T& get(unsigned int const& _id) throw(...)
+		T get(unsigned int const& _id) throw(...)
 		{
 			try
 			{
-				Poco::Any any = get(_id);
-				return Poco::RefAnyCast< T >(any)
+				Poco::SharedPtr< Poco::Any > any = get(_id);
+				return Poco::AnyCast< T >(*(any.get()));
 			}
 			catch (Poco::BadCastException e)
 			{
-				throw Exception::failure();
+				throw Exception("the datatype does not match the output slot");
 			}
-			catch (...)
+			catch (Exception &e)
 			{
-				throw;
+				throw e;
 			}
 		}
 
 		/**
-		*	
+		*	returns sender's identifier
 		*/
-		~Data();
-
-		/**
-		*
-		*/
-		Data(Data const& _src);
-
-		/**
-		*
-		*/
-		Data& operator=(Data const& _src);
+		const Identifier id() const;
 
 	private:
 
@@ -79,17 +69,22 @@ namespace _2Real
 		/**
 		*
 		*/
-		Data(DataPacket *const _impl);
+		Data(Poco::SharedPtr< DataPacket > _data, Identifier const& _id);
 
 		/**
 		*
 		*/
-		Poco::Any get(unsigned int const& _id) throw(...);
+		Poco::SharedPtr< Poco::Any > get(unsigned int const& _id) throw(...);
 
 		/**
 		*
 		*/
-		DataPacket		*m_Impl;
+		Poco::SharedPtr< DataPacket >	m_Data;
+
+		/**
+		*	
+		*/
+		Identifier						m_ID;
 
 	};
 }

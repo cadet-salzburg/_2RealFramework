@@ -20,268 +20,154 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealData.h"
 
 #include <list>
 #include <iostream>
 
+#include "Image.h"
+
 using namespace _2Real;
 
-//std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
-std::string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+unsigned int outID1;
+unsigned int outID2;
 
-/**
-*	test callback for exceptions in container
-*/
-void exceptionOccured(Identifier const& _sender, Exception const& _exception)
+//path to test plugins
+std::string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+
+void exceptionOccured(Identifier &_id)
 {
-	std::cout << "an exception occured" << std::endl;
+	std::cout << "an exception occured in " << _id.name() << std::endl;
 }
 
-/**
-*	test callback for data available from container
-*/
-void dataAvailable(Identifier const& _sender, Data const& _data)
+void dataAvailable1(Data &_data)
 {
-	std::cout << "new data available" << std::endl;
+	std::cout << "new data available from " << _data.id().name() << std::endl;
+	Image< float, 2 > img = _data.get< Image< float, 2 > >(outID1);
+	std::cout << img.data()[0] << std::endl;
+}
+
+void dataAvailable2(Data &_data)
+{
+	std::cout << "new data available from " << _data.id().name() << std::endl;
+	Image< float, 2 > img = _data.get< Image< float, 2 > >(outID2);
+	std::cout << img.data()[0] << std::endl;
 }
 
 void main(int argc, char** argv)
 {
 	try
 	{
+		//some identifier vectors for querying stuff
+		Identifiers setup;
+		Identifiers input;
+		Identifiers output;
+		Identifiers children;
+
+		//some setup params
+		unsigned int width = 640;
+		unsigned int heigth = 480;
+		float f1 = 1.0f;
+		float f2 = 2.0f;
+		float f3 = 4.0f;
+
 		//create a system
 		System testSystem("TEST");
-
 		Identifier sys = testSystem.getID();
 
-		std::cout << sys.info() << std::endl;
-
-		//load test plugin
 #ifdef _DEBUG
 	Identifier plugin = testSystem.loadPlugin("IMG_PROC", path, "ImageProcessing_d.dll", "ImageProcessing");
 #else
 	Identifier plugin = testSystem.loadPlugin("IMG_PROC", path, "ImageProcessing.dll", "ImageProcessing");
 #endif
 
-		//print plugin infos
-		std::cout << "plugin info:" << std::endl;
-		testSystem.dumpPluginInfo(plugin);
+		////plugin infos
+		//std::cout << "plugin info:" << std::endl;
+		//testSystem.dumpPluginInfo(plugin);
 
-		//TODO function to query exported services by id / by name
-		//right now 
+		////some service infos
+		//std::cout << "service info:" << std::endl;
+		//testSystem.dumpServiceInfo(plugin, "RandomImage2D_float");
+		//std::cout << "service info:" << std::endl;
+		//testSystem.dumpServiceInfo(plugin, "ImageAddition2D_float");
+		//std::cout << "service info:" << std::endl;
+		//testSystem.dumpServiceInfo(plugin, "ImageScaling2D_float");
 
-		//printf service infos
-		std::cout << "service info:" << std::endl;
-		testSystem.dumpServiceInfo(plugin, "RandomImage2D_float");
-		std::cout << "service info:" << std::endl;
-		testSystem.dumpServiceInfo(plugin, "ImageAddition2D_float");
+		//create some services
+		Identifier scale1 = testSystem.createService("SCALE_1", plugin, "ImageScaling2D_float");
+		setup = testSystem.getSetupParameters(scale1);
+		testSystem.setParameterValue(setup[0], f2);
 
-		//create a service
+		Identifier scale2 = testSystem.createService("SCALE_2", plugin, "ImageScaling2D_float");
+		setup = testSystem.getSetupParameters(scale2);
+		testSystem.setParameterValue(setup[0], f3);
+
 		Identifier rand1 = testSystem.createService("RAND_1", plugin, "RandomImage2D_float");
-		std::cout << "created service: " << rand1.name() << std::endl;
-		std::cout << rand1.info() << std::endl;
+		setup = testSystem.getSetupParameters(rand1);
+		testSystem.setParameterValue(setup[0], width);
+		testSystem.setParameterValue(setup[1], heigth);
 
-		//Identifiers setupRand1 = testSystem.getSetupParameters(rand1);
-		//Identifiers inputRand1 = testSystem.getInputSlots(rand1);
-		//Identifiers outputRand1 = testSystem.getOutputSlots(rand1);
-
-		//for (Identifiers::iterator it = setupRand1.begin(); it != setupRand1.end(); it++)
-		//{
-		//	std::cout << "setup param: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = inputRand1.begin(); it != inputRand1.end(); it++)
-		//{
-		//	std::cout << "input slot: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = outputRand1.begin(); it != outputRand1.end(); it++)
-		//{
-		//	std::cout << "output slot: " << it->name() << std::endl;
-		//}
-
-		std::cout << std::endl;
-
-		//create a service
 		Identifier rand2 = testSystem.createService("RAND_2", plugin, "RandomImage2D_float");
-		std::cout << "created service: " << rand2.name() << std::endl;
-		std::cout << rand2.info() << std::endl;
+		setup = testSystem.getSetupParameters(rand2);
+		testSystem.setParameterValue(setup[0], width);
+		testSystem.setParameterValue(setup[1], heigth);
 
-		//Identifiers setupRand2 = testSystem.getSetupParameters(rand2);
-		//Identifiers inputRand2 = testSystem.getInputSlots(rand2);
-		//Identifiers outputRand2 = testSystem.getOutputSlots(rand2);
-
-		//for (Identifiers::iterator it = setupRand2.begin(); it != setupRand2.end(); it++)
-		//{
-		//	std::cout << "setup param: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = inputRand2.begin(); it != inputRand2.end(); it++)
-		//{
-		//	std::cout << "input slot: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = outputRand2.begin(); it != outputRand2.end(); it++)
-		//{
-		//	std::cout << "output slot: " << it->name() << std::endl;
-		//}
-
-		std::cout << std::endl;
-
-		//create a service
 		Identifier add = testSystem.createService("ADD", plugin, "ImageAddition2D_float");
-		std::cout << "created service: " << add.name() << std::endl;
-		std::cout << add.info() << std::endl;
+		setup = testSystem.getSetupParameters(add);
+		testSystem.setParameterValue(setup[0], f1);
+		testSystem.setParameterValue(setup[1], f1);
 
-		//Identifiers setupRand2 = testSystem.getSetupParameters(rand2);
-		//Identifiers inputRand2 = testSystem.getInputSlots(rand2);
-		//Identifiers outputRand2 = testSystem.getOutputSlots(rand2);
+		//make a sync of rand 1 and rand 2
+		Identifier sync = testSystem.createSynchronization("SYNC", rand1, rand2);
+		//make a sequence of sync & add
+		Identifier seq = testSystem.createSequence("SEQ", sync, add);
+		//put scale1 into seq as last element
+		testSystem.append(seq, scale1);
+		//this command would have the same result
+		//testSystem.insert(seq, 2, scale);
 
-		//for (Identifiers::iterator it = setupRand2.begin(); it != setupRand2.end(); it++)
-		//{
-		//	std::cout << "setup param: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = inputRand2.begin(); it != inputRand2.end(); it++)
-		//{
-		//	std::cout << "input slot: " << it->name() << std::endl;
-		//}
-		//for (Identifiers::iterator it = outputRand2.begin(); it != outputRand2.end(); it++)
-		//{
-		//	std::cout << "output slot: " << it->name() << std::endl;
-		//}
+		//link the output of sequence with the input of scale2
+		//assuming they match
+		testSystem.link(scale2, seq);
 
-		std::cout << std::endl;
+		output = testSystem.getOutputSlots(seq);
+		outID1 = output[0].id();
 
-//	/**
-//	*	create third service
-//	*/
-//	std::list< Identifier > setupIDs3;
-//	Identifier add = testEngine.createService("ADD", plugin, "ImageAddition2D_float", setupIDs3);
-//	std::cout << "created service: " << add.name() << std::endl;
-//	//std::cout << add.info() << std::endl;
-//	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
-//	{
-//		std::cout << "returned setup param: " << it->name() << std::endl;
-//	}
-//	std::list< Identifier > inputIDs3 = testEngine.getInputSlots(add);
-//	std::list< Identifier > outputIDs3 = testEngine.getOutputSlots(add);
-//	for (Identifiers::iterator it = inputIDs3.begin(); it != inputIDs3.end(); it++)
-//	{
-//		std::cout << "returned input param: " << it->name() << std::endl;
-//	}
-//	for (Identifiers::iterator it = outputIDs3.begin(); it != outputIDs3.end(); it++)
-//	{
-//		std::cout << "returned output param: " << it->name() << std::endl;
-//	}
-//
-//	std::cout << std::endl;
-//
-//	/**
-//	*	synchronize rand1 & rand2
-//	*/
-//	Identifier sync = testEngine.createSynchronizationContainer("SYNC", rand1, rand2);
-//	std::cout << "created syncronization " << sync.name() << std::endl;
-//
-//	/**
-//	*	query output params & input params
-//	*	input params should be empty (rand img has no input)
-//	*/
-//	std::list< Identifier > inputIDs4 = testEngine.getInputSlots(sync);
-//	std::list< Identifier > outputIDs4 = testEngine.getOutputSlots(sync);
-//	for (Identifiers::iterator it = inputIDs4.begin(); it != inputIDs4.end(); it++)
-//	{
-//		std::cout << "returned input param: " << it->name() << std::endl;
-//	}
-//	for (Identifiers::iterator it = outputIDs4.begin(); it != outputIDs4.end(); it++)
-//	{
-//		std::cout << "returned output param: " << it->name() << std::endl;
-//	}
-//
-//	std::cout << std::endl;
-//
-//	/**
-//	*	create sequence of sync & add
-//	*/
-//	Identifier seq = testEngine.createSequenceContainer("SEQ", sync, add);
-//	std::cout << "created sequence " << seq.name() << std::endl;
-//
-//
-//	/**
-//	*	query input & output params
-//	*	the input params are empty, obviously
-//	*	('sync' is first in sequence, and has no input)
-//	*	the output params are the output params of 'add'
-//	*	!!!
-//	*	also, creating a sequence will link input / output slots!
-//	*	(and throw an exception if it does not work, i.e. b/c the slots do not match)
-//	*/
-//	std::list< Identifier > inputIDs5 = testEngine.getInputSlots(seq);
-//	std::list< Identifier > outputIDs5 = testEngine.getOutputSlots(seq);
-//	for (Identifiers::iterator it = inputIDs5.begin(); it != inputIDs5.end(); it++)
-//	{
-//		std::cout << "returned input param: " << it->name() << std::endl;
-//	}
-//	for (Identifiers::iterator it = outputIDs5.begin(); it != outputIDs5.end(); it++)
-//	{
-//		std::cout << "returned output param: " << it->name() << std::endl;
-//	}
-//
-//	std::cout << std::endl;
-//
-//	/**
-//	*	initialize random image setup params
-//	*/
-//	unsigned int w = 400;
-//	unsigned int h = 400;
-//	for (Identifiers::iterator it = setupIDs1.begin(); it != setupIDs1.end(); it++)
-//	{
-//		testEngine.setParameterValue(*it, w);
-//	}
-//
-//	for (Identifiers::iterator it = setupIDs2.begin(); it != setupIDs2.end(); it++)
-//	{
-//		testEngine.setParameterValue(*it, w);
-//	}
-//
-//	/**
-//	*	initialize addition params
-//	*/
-//	//TODO: change identifiers from list to vector so that they can be accessed by []
-//	for (Identifiers::iterator it = setupIDs3.begin(); it != setupIDs3.end(); it++)
-//	{
-//		testEngine.setParameterValue(*it, 1.0f);
-//	}
-//
-//	std::list< Identifier > children1 = testEngine.getChildren(sync);
-//	std::list< Identifier > children2 = testEngine.getChildren(seq);
-//	for (Identifiers::iterator it = children1.begin(); it != children1.end(); it++)
-//	{
-//		std::cout << it->name() << std::endl;
-//	}
-//	for (Identifiers::iterator it = children2.begin(); it != children2.end(); it++)
-//	{
-//		std::cout << it->name() << std::endl;
-//	}
-//
-//	testEngine.start(seq);
-//
-//	//testEngine.registerToException(seq, exceptionOccured);
-//	//testEngine.registerToNewData(seq, dataAvailable);
-//
-//	while (1)
-//	{
-//		char end;
-//		std::cin >> end;
-//		if (end == 'b')
-//		{
-//			break;
-//		}
-//	}
-//
-//	testEngine.stop(seq);
-//	std::cout << "stopped " << seq.name() << std::endl;
-//
+		output = testSystem.getOutputSlots(scale2);
+		outID2 = output[0].id();
+
+		testSystem.registerToNewData(seq, ::dataAvailable1);
+		testSystem.registerToNewData(scale2, ::dataAvailable2);
+
 		while (1)
 		{
-			char end;
-			std::cin >> end;
-			if (end == 's')
+			char thingie;
+			std::cin >> thingie;
+			if (thingie == 'a')
+			{
+				testSystem.start(seq);
+			}
+			else if (thingie == 'b')
+			{
+				testSystem.stop(seq);
+			}
+			else if (thingie == 'c')
+			{
+				testSystem.start(scale2);
+			}
+			else if (thingie == 'd')
+			{
+				testSystem.stop(scale2);
+			}
+			else if (thingie == 'e')
+			{
+				testSystem.startAll();
+			}
+			else if (thingie == 'f')
+			{
+				testSystem.stopAll();
+			}
+			else if (thingie == 's')
 			{
 				break;
 			}
@@ -290,5 +176,15 @@ void main(int argc, char** argv)
 	catch (Exception &e)
 	{
 		std::cout << e.what() << std::endl;
+
+		while (1)
+		{
+			char thingie;
+			std::cin >> thingie;
+			if (thingie == 's')
+			{
+				break;
+			}
+		}
 	}
 }

@@ -116,9 +116,12 @@ namespace _2Real
 	Engine::~Engine()
 	{
 		delete m_Graphs;
-		delete m_Plugins;
 		delete m_Factory;
+		delete m_Plugins;
 		delete m_Entities;
+#ifdef _VERBOSE
+		std::cout << "2real engine deleted" << std::endl;
+#endif
 	}
 
 	const Identifier Engine::createSystem(std::string const& _name)
@@ -209,44 +212,26 @@ namespace _2Real
 	{
 		try
 		{
-			//IDs ids;
-			//Identifiers setup;
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			const AbstractContainer *container = nirvana->find(_id.id());
 
-			//Entity *e = m_Entities->get(_id.id());
-			//if (!e)
-			//{
-			//	throw Exception("non-existant entity");
-			//}
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
+			else if (container->type() != Entity::SERVICE)
+			{
+				throw Exception("only setup params of a service can be queried");
+			}
 
-			//Entity::eType type = e->type();
-			//if (type != Entity::SERVICE)
-			//{
-			//	throw Exception("the entity is not a service");
-			//}
+			Identifiers setup;
+			IDs ids = container->setupParamIDs();
+			for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			{
+				setup.push_back(m_Entities->getIdentifier(*it));
+			}
 
-			//ServiceContainer *service = static_cast< ServiceContainer * >(e);
-			//AbstractContainer *root = service->root();
-
-			//Entity *top = m_Entities->get(_top.id());
-			//if (!top)
-			//{
-			//	//what the fuck?
-			//	throw Exception("non-existant system");
-			//}
-
-			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			//if (root != system)
-			//{
-			//	//this could happen if there is more than one system and the user mixes them up
-			//	throw Exception("the entity does not belong to the system");
-			//}
-
-			//ids = service->setupParamIDs();
-			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			//{
-			//	setup.push_back(m_Entities->getIdentifier(*it));
-			//}
-			//return setup;
+			return setup;
 		}
 		catch (Exception &e)
 		{
@@ -258,44 +243,22 @@ namespace _2Real
 	{
 		try
 		{
-			//IDs ids;
-			//Identifiers input;
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			const AbstractContainer *container = nirvana->find(_id.id());
 
-			//Entity *e = m_Entities->get(_id.id());
-			//if (!e)
-			//{
-			//	throw Exception("non-existant entity");
-			//}
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
 
-			//Entity::eType type = e->type();
-			//if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
-			//{
-			//	throw Exception("the entity is neither service nor sequence nor synchronization");
-			//}
+			Identifiers input;
+			IDs ids = container->inputSlotIDs();
+			for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			{
+				input.push_back(m_Entities->getIdentifier(*it));
+			}
 
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//AbstractContainer *root = container->root();
-
-			//Entity *top = m_Entities->get(_top.id());
-			//if (!top)
-			//{
-			//	//what the fuck?
-			//	throw Exception("non-existant system");
-			//}
-			//
-			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			//if (root != system)
-			//{
-			//	//this could happen if there is more than one system and the user mixes them up
-			//	throw Exception("the entity does not belong to this system");
-			//}
-
-			//ids = container->inputSlotIDs();
-			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			//{
-			//	input.push_back(m_Entities->getIdentifier(*it));
-			//}
-			//return input;
+			return input;
 		}
 		catch (Exception &e)
 		{
@@ -307,44 +270,22 @@ namespace _2Real
 	{
 		try
 		{
-			//IDs ids;
-			//Identifiers output;
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			const AbstractContainer *container = nirvana->find(_id.id());
 
-			//Entity *e = m_Entities->get(_id.id());
-			//if (!e)
-			//{
-			//	throw Exception("non-existant entity");
-			//}
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
 
-			//Entity::eType type = e->type();
-			//if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
-			//{
-			//	throw Exception("the entity is neither service nor sequence nor synchronization");
-			//}
+			Identifiers output;
+			IDs ids = container->outputSlotIDs();
+			for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			{
+				output.push_back(m_Entities->getIdentifier(*it));
+			}
 
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//AbstractContainer *root = container->root();
-
-			//Entity *top = m_Entities->get(_top.id());
-			//if (!top)
-			//{
-			//	//what the fuck?
-			//	throw Exception("non-existant system");
-			//}
-
-			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			//if (root != system)
-			//{
-			//	//this could happen if there is more than one system and the user mixes them up
-			//	throw Exception("the entity does not belong to this system");
-			//}
-
-			//ids = container->outputSlotIDs();
-			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			//{
-			//	output.push_back(m_Entities->getIdentifier(*it));
-			//}
-			//return output;
+			return output;
 		}
 		catch (Exception &e)
 		{
@@ -356,8 +297,8 @@ namespace _2Real
 	{
 		try
 		{
-			//unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
-			//return m_Entities->getIdentifier(id);
+			unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
+			return m_Entities->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -369,8 +310,8 @@ namespace _2Real
 	{
 		try
 		{
-			//unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
-			//return m_Entities->getIdentifier(id);
+			unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
+			return m_Entities->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -378,13 +319,19 @@ namespace _2Real
 		}
 	}
 
-	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any)
+	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any, Identifier const& _top)
 	{
 		try
 		{
-			//Entity *e = m_Entities->get(_id.id());
-			//ServiceValue *val = static_cast< ServiceValue * >(e);
-			//val->setValue(_any);
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			Entity *e = m_Entities->get(_id.id());
+			ServiceValue *val = static_cast< ServiceValue * >(e);
+			ServiceContainer *service = val->service();
+			if (!(nirvana->find(service->id())))
+			{
+				throw Exception("in this system, no service has this setup param " + _id.name());
+			}
+			val->setValue(_any);
 		}
 		catch (Exception &e)
 		{
@@ -396,25 +343,46 @@ namespace _2Real
 	{
 		try
 		{
-			//Entity *in = m_Entities->get(_in.id());
-			//Entity *out = m_Entities->get(_out.id());
-			//Entity *top = m_Entities->get(_top.id());
-			//Container *nirvana = static_cast< Container * >(top);
-			//ServiceSlot *inSlot = static_cast< ServiceSlot * >(in);
-			//ServiceSlot *outSlot = static_cast< ServiceSlot * >(out);
-			//ServiceContainer *inService = inSlot->service();
-			//ServiceContainer *outService = outSlot->service();
-			//Container *inFather = static_cast< Container * >(inService->father());
-			//Container *outFather = static_cast< Container * >(outService->father());
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *in = nirvana->find(_in.id());
+			if (!in)
+			{
+				throw Exception("this system does not contain " + _in.name());
+			}
+			else if (in->father() != nirvana)
+			{
+				throw Exception(_in.name() + " is not a child of system");
+			}
+			AbstractContainer *out = nirvana->find(_out.id());
+			if (!out)
+			{
+				throw Exception("this system does not contain " + _out.name());
+			}
+			else if (out->father() != nirvana)
+			{
+				throw Exception(_out.name() + " is not a child of system");
+			}
+			if (in == out)
+			{
+				throw Exception(_in.name() + " is identical to " + _out.name());
+			}
 
-			//if (inService == outService)
-			//{
-			//	throw Exception("could not link IO slots - slots belong to same service");
-			//}
+			std::list< ServiceSlot * > inSlots = in->inputSlots();
+			std::list< ServiceSlot * > outSlots = out->outputSlots();
+			std::list< ServiceSlot * >::iterator inIt;
+			std::list< ServiceSlot * >::iterator outIt;
 
-			//nirvana->stopChild(_in.id());
-			//nirvana->stopChild(_out.id());
-			//outSlot->linkWith(inSlot);
+			if (inSlots.size() != outSlots.size())
+			{
+				throw Exception("can not link " + _in.name() + " " + _out.name() + " , IO mismatch");
+			}
+
+			nirvana->stopChild(_in.id());
+			nirvana->stopChild(_out.id());
+			for (inIt = inSlots.begin(), outIt = outSlots.begin(); inIt != inSlots.end(), outIt != outSlots.end(); inIt++, outIt++)
+			{
+				(*outIt)->linkWith(*inIt);
+			}
 		}
 		catch (Exception &e)
 		{
@@ -422,20 +390,42 @@ namespace _2Real
 		}
 	}
 
-	void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	void Engine::linkSlots(Identifier const& _in,  Identifier const& _out, Identifier const& _top)
 	{
 		try
 		{
-			//Entity *e = m_Entities->get(_id.id());
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//AbstractContainer *father = container->father();
-			//if (m_Graphs->isSystem(father->id()))
-			//{
-			//}
-			//else
-			//{
-			//	throw Exception("");
-			//}
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+
+			Entity *eIn = m_Entities->get(_in.id());
+			Entity *eOut = m_Entities->get(_out.id());
+			ServiceSlot *in = static_cast< ServiceSlot * >(eIn);
+			ServiceSlot *out = static_cast< ServiceSlot * >(eOut);
+			ServiceContainer *inService = in->service();
+			ServiceContainer *outService = out->service();
+			
+			if (!(nirvana->find(inService->id())))
+			{
+				throw Exception("in this system, no service has this input param " + _in.name());
+			}
+			else if (!(nirvana->find(outService->id())))
+			{
+				throw Exception("in this system, no service has this output param " + _out.name());
+			}
+			else if (inService == outService)
+			{
+				throw Exception(_in.name() + " belongs to the same service as " + _out.name());
+			}
+
+			AbstractContainer *inRoot = inService->root();
+			AbstractContainer *outRoot = outService->root();
+			if (inRoot == outRoot)
+			{
+				throw Exception(_in.name() + " belongs to the same production graph as " + _out.name());
+			}
+
+			nirvana->stopChild(inRoot->id());
+			nirvana->stopChild(outRoot->id());
+			out->linkWith(in);
 		}
 		catch (Exception &e)
 		{
@@ -443,21 +433,18 @@ namespace _2Real
 		}
 	}
 
-	void Engine::registerToNewData(Identifier const& _id, NewDataCallback _callback)
+	void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _top)
 	{
 		try
 		{
-			//Entity *e = m_Entities->get(_id.id());
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//AbstractContainer *father = container->father();
-			//if (m_Graphs->isSystem(father->id()))
-			//{
-			//	//container->registerDataCallback(_callback);
-			//}
-			//else
-			//{
-			//	//throw Exception::failure();
-			//}
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *container = nirvana->find(_id.id());
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
+
+			container->registerExceptionCallback(_callback);
 		}
 		catch (Exception &e)
 		{
@@ -465,29 +452,57 @@ namespace _2Real
 		}
 	}
 
-	Identifiers Engine::getChildren(Identifier const& _id)
+	void Engine::registerToNewData(Identifier const& _id, NewDataCallback _callback, Identifier const& _top)
+	{
+		try
+		{
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *container = nirvana->find(_id.id());
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
+
+			container->registerDataCallback(_callback);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	Identifiers Engine::getChildren(Identifier const& _id, Identifier const& _top)
 	{
 		try
 		{
 			IDs ids;
-			Identifiers identifiers;
+			Identifiers children;
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			if (_id == _top)
+			{
+				ids = nirvana->childIDs();
+			}
+			else
+			{
+				const AbstractContainer *container = nirvana->find(_id.id());
+				if (!container)
+				{
+					throw Exception("this system does not contain " + _id.name());
+				}
+				else if (container->type() == Entity::SERVICE)
+				{
+					throw Exception("services do not have children");
+				}
 
-			////
-			//Entity *e = m_Entities->get(_id.id());
-			//if (!(e->type() == Entity::SEQUENCE || e->type() == Entity::SYNCHRONIZATION || e->type() == Entity::SYSTEM))
-			//{
+				const Container *c = static_cast< const Container * >(container);
+				ids = c->childIDs();
+			}
 
-			//}
-
-			////children is a container function
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//Container *father = static_cast< Container * >(container);
-			//ids = father->children();
-			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			//{
-			//	identifiers.push_back(m_Entities->getIdentifier(*it));
-			//}
-			return identifiers;
+			for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			{
+				children.push_back(m_Entities->getIdentifier(*it));
+			}
+			return children;
 		}
 		catch (Exception &e)
 		{
@@ -499,40 +514,8 @@ namespace _2Real
 	{
 		try
 		{
-			//Entity *e = m_Entities->get(_id.id());
-
-			//if (!e)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (e->type() != Entity::SEQUENCE && e->type() != Entity::SYNCHRONIZATION &&  e->type() != Entity::SERVICE)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//Entity *n = m_Entities->get(_top.id());
-
-			//if (!n)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//Container *nirvana = static_cast< Container * >(n);
-			//Container *father = static_cast< Container * >(container->father());
-			//
-			//if (nirvana != father)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (m_Graphs->isSystem(father->id()))
-			//{
-			//	father->startChild(_id.id());
-			//}
-			//else
-			//{
-			//	throw Exception::failure();
-			//}
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			nirvana->startChild(_id.id());
 		}
 		catch (Exception &e)
 		{
@@ -544,30 +527,12 @@ namespace _2Real
 	{
 		try
 		{
-			//if (m_Graphs->isSystem(_top.id()))
-			//{
-			//	Entity *e = m_Entities->get(_top.id());
-
-			//	if (!e)
-			//	{
-			//		throw Exception::failure();
-			//	}
-			//	else if (e->type() != Entity::SYSTEM)
-			//	{
-			//		throw Exception::failure();
-			//	}
-
-			//	Container *nirvana = static_cast< Container * >(e);
-			//	std::list< unsigned int > children = nirvana->children();
-			//	for (std::list< unsigned int >::iterator it = children.begin(); it != children.end(); it++)
-			//	{
-			//		nirvana->startChild(*it);
-			//	}
-			//}
-			//else
-			//{
-			//	throw Exception::failure();
-			//}
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			IDs children = nirvana->childIDs();
+			for (IDIterator it = children.begin(); it != children.end(); it++)
+			{
+				nirvana->startChild(*it);
+			}
 		}
 		catch (Exception &e)
 		{
@@ -579,50 +544,8 @@ namespace _2Real
 	{
 		try
 		{
-			//Entity *e = m_Entities->get(_id.id());
-
-			//if (!e)
-			//{
-			//	//id does not exist
-			//	throw Exception::failure();
-			//}
-			//else if (e->type() != Entity::SEQUENCE && e->type() != Entity::SYNCHRONIZATION &&  e->type() != Entity::SERVICE)
-			//{
-			//	//id != container
-			//	throw Exception::failure();
-			//}
-
-			//Entity *n = m_Entities->get(_top.id());
-
-			//if (!n)
-			//{
-			//	//top does not exist
-			//	throw Exception::failure();
-			//}
-			//else if (n->type() != Entity::SYSTEM)
-			//{
-			//	//top != nirvana
-			//	throw Exception::failure();
-			//}
-
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//Container *root = static_cast< Container * >(container->root());
-			//Container *nirvana = static_cast< Container * >(n);
-			//Container *father = static_cast< Container * >(root->father());
-			//if (nirvana != father)
-			//{
-			//	//id is not a child of top
-			//	throw Exception::failure();
-			//}
-			//else if (m_Graphs->isSystem(father->id()))
-			//{
-			//	//stops root (will complete last update cycle)
-			//	father->stopChild(root->id());
-			//}
-			//else
-			//{
-			//	throw Exception::failure();
-			//}
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			nirvana->stopChild(_id.id());
 		}
 		catch (Exception &e)
 		{
@@ -634,81 +557,12 @@ namespace _2Real
 	{
 		try
 		{
-			//if (m_Graphs->isSystem(_top.id()))
-			//{
-			//	Entity *e = m_Entities->get(_top.id());
-
-			//	if (!e)
-			//	{
-			//		throw Exception::failure();
-			//	}
-
-			//	Container *nirvana = static_cast< Container * >(e);
-			//	std::list< unsigned int > children = nirvana->children();
-			//	for (std::list< unsigned int >::iterator it = children.begin(); it != children.end(); it++)
-			//	{
-			//		nirvana->stopChild(*it);
-			//	}
-			//}
-			//else
-			//{
-			//	throw Exception::failure();
-			//}
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void Engine::destroy(Identifier const& _id, Identifier const& _top)
-	{
-		try
-		{
-			//unsigned int id = _id.id();
-			//Entity *e = m_Entities->get(id);
-			//if (!e)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//Entity::eType type = e->type();
-			//if (type != Entity::SEQUENCE && type != Entity::SYNCHRONIZATION && type != Entity::SERVICE)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			//Container *father = static_cast< Container * >(container->father());
-			//if (!father)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//AbstractContainer *root = container->root();
-			//if (!root)
-			//{
-			//	throw Exception::failure();
-			//}
-			//Entity *n = m_Entities->get(_top.id());
-			//if (!n)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//Container *nirvana = static_cast< Container * >(n);
-			//Container *rootFather = static_cast< Container * >(root->father());
-			//if (nirvana != rootFather)
-			//{
-			//	throw Exception::failure();
-			//}
-
-			////remove container from its father
-			////this stops the container
-			////& resets IO
-			//father->remove(id);
-			//container->shutdown();
-			//m_Entities->destroy(id);
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			IDs children = nirvana->childIDs();
+			for (IDIterator it = children.begin(); it != children.end(); it++)
+			{
+				nirvana->stopChild(*it);
+			}
 		}
 		catch (Exception &e)
 		{
@@ -720,51 +574,76 @@ namespace _2Real
 	{
 		try
 		{
-			//Entity *src = m_Entities->get(_src.id());
-			//if (!src)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (src->type() != Entity::SEQUENCE && src->type() != Entity::SYNCHRONIZATION &&  src->type() != Entity::SERVICE)
-			//{
-			//	throw Exception::failure();
-			//}
-			//AbstractContainer *srcContainer = static_cast< AbstractContainer * >(src);
-			//Container *srcFather = static_cast< Container * >(srcContainer->father());
-			//Container *srcRoot = static_cast< Container * >(srcContainer->root());
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *src = nirvana->get(_src.id());
+			if (!src)
+			{
+				throw Exception("this system does not contain " + _src.name());
+			}
+			if (_dst.id() != _top.id())
+			{
+				AbstractContainer *dst = nirvana->find(_dst.id());
+				if (!dst)
+				{
+					throw Exception("this system does not contain " + _dst.name());
+				}
+				Container *container = static_cast< Container * >(dst);
+				container->add(src, _index);
+			}
+			else
+			{
+				nirvana->add(src, _index);
+			}
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
 
-			//Entity *dst = m_Entities->get(_dst.id());
-			//if (!dst)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (dst->type() != Entity::SEQUENCE && dst->type() != Entity::SYNCHRONIZATION)
-			//{
-			//	throw Exception::failure();
-			//}
-			//Container *dstContainer = static_cast< Container * >(dst);
-			//Container *dstRoot = static_cast< Container * >(dstContainer->root());
+	void Engine::append(Identifier const& _dst, Identifier const& _src, Identifier const& _top)
+	{
+		try
+		{
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *src = nirvana->get(_src.id());
+			if (!src)
+			{
+				throw Exception("this system does not contain " + _src.name());
+			}
+			if (_dst.id() != _top.id())
+			{
+				AbstractContainer *dst = nirvana->find(_dst.id());
+				if (!dst)
+				{
+					throw Exception("this system does not contain " + _dst.name());
+				}
+				Container *container = static_cast< Container * >(dst);
+				container->add(src, container->childCount());
+			}
+			else
+			{
+				nirvana->add(src, nirvana->childCount());
+			}
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
 
-			//Entity *top = m_Entities->get(_top.id());
-			//if (!top)
-			//{
-			//	throw Exception::failure();
-			//}
-			//else if (top->type() != Entity::SYSTEM)
-			//{
-			//	throw Exception::failure();
-			//}
-			//Container *nirvana = static_cast< Container * >(top);
-
-			//if (_index > dstContainer->childCount())
-			//{
-			//	throw Exception::failure();
-			//}
-
-			//nirvana->stopChild(srcRoot->id());
-			//nirvana->stopChild(dstRoot->id());
-			//srcFather->remove(srcContainer->id());
-			//dstContainer->add(srcContainer, _index);
+	void Engine::destroy(Identifier const& _id, Identifier const& _top)
+	{
+		try
+		{
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			AbstractContainer *container = nirvana->get(_id.id());
+			if (!container)
+			{
+				throw Exception("this system does not contain " + _id.name());
+			}
+			container->shutdown();
+			m_Entities->destroy(container);
 		}
 		catch (Exception &e)
 		{

@@ -25,14 +25,15 @@
 #include "_2RealException.h"
 #include "_2RealDataImpl.h"
 #include "_2RealContainer.h"
+#include "_2RealDataQueue.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	ServiceContainer::ServiceContainer(IService *const _service, IdentifierImpl *const _id) : 
-		AbstractContainer(_id),
+	ServiceContainer::ServiceContainer(IService *const _service, IdentifierImpl *const _id, DataQueue *const _output) : 
+		AbstractContainer(_id, _output),
 		m_Service(_service)
 	{
 		if (m_Service == NULL)
@@ -162,10 +163,6 @@ namespace _2Real
 				{
 					unsigned int sender = data->first;
 
-#ifdef _VERBOSE
-	std::cout << "SERVICE RUN " << name() << " data available from " << sender << std::endl;
-#endif
-
 					for (container = copy.begin(); container != copy.end(); container++)
 					{
 						if (sender == (*container)->id())
@@ -189,26 +186,34 @@ namespace _2Real
 				m_DataList.clear();
 				m_Mutex.unlock();
 
+				bool canUpdate = true;
 				for (ParamMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 				{
 					unsigned int id = in->second->linked()->id();
 					if (input.contains(id))
 					{
-#ifdef _VERBOSE
-	std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
-#endif
 						DataPacket::SharedAny any = input.getAny(id);
 						in->second->extractFrom(any);
 					}
 					else
 					{
-						throw Exception("attempted to update service with lacking input data: " + in->second->name());
+						if (m_bRunOnce)
+						{
+							throw Exception("attempted to update service with lacking input data: " + in->second->name());
+						}
+						else
+						{
+							canUpdate = false;
+						}
 					}
 				}
 
-				m_Service->update();
-				sendData(m_bRunOnce);
-				m_bRunOnce = false;
+				if (canUpdate)
+				{
+					m_Service->update();
+					sendData(m_bRunOnce);
+					m_bRunOnce = false;
+				}
 			}
 			catch (Exception &e)
 			{
@@ -218,8 +223,7 @@ namespace _2Real
 				Container *root = static_cast< Container * >(this->root());
 				Container *nirvana = static_cast< Container * >(root->father());
 				nirvana->stopChild(root->id());
-
-				//TODO: callback if registered
+				m_Output->sendException(e);
 			}
 		}
 	}
@@ -243,10 +247,6 @@ namespace _2Real
 			for (data = m_DataList.rbegin(); data != m_DataList.rend(); data++)
 			{
 				unsigned int sender = data->first;
-
-#ifdef _VERBOSE
-				std::cout << "SERVICE UPDATE " << name() << " data available from " << sender << std::endl;
-#endif
 
 				for (container = copy.begin(); container != copy.end(); container++)
 				{
@@ -276,9 +276,6 @@ namespace _2Real
 				unsigned int id = in->second->linked()->id();
 				if (input.contains(id))
 				{
-#ifdef _VERBOSE
-					std::cout << "SERVICE RUN: " << name() << " found data for " << in->second->name() << std::endl;
-#endif
 					DataPacket::SharedAny any = input.getAny(id);
 					in->second->extractFrom(any);
 				}

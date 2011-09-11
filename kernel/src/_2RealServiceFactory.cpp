@@ -51,18 +51,22 @@ namespace _2Real
 
 	ServiceFactory::~ServiceFactory()
 	{
-		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-		{
-			try
-			{
-				//unsigned int id = it->first;
-				//m_Entities->destroyFactoryRef(id);
-			}
-			catch (Exception &e)
-			{
-				std::cout << "error on service factory destruction: " << e.what() << std::endl;
-			}
-		}
+		//for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+		//{
+		//	try
+		//	{
+		//		unsigned int id = it->first;
+		//		m_Entities->destroy(it->second);
+		//	}
+		//	catch (Exception &e)
+		//	{
+		//		std::cout << "error on service factory destruction: " << e.what() << std::endl;
+		//	}
+		//	catch (...)
+		//	{
+		//		std::cout << "error on service factory destruction" << std::endl;
+		//	}
+		//}
 	}
 
 	FactoryReference const *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service) const
@@ -113,7 +117,7 @@ namespace _2Real
 		return it->second;
 	}
 
-	const unsigned int ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
+	FactoryReference *const ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
 	{
 		try
 		{
@@ -129,6 +133,7 @@ namespace _2Real
 
 			FactoryReference *factory = m_Entities->createFactoryRef(_name, _pluginID, _creator, _metadata);
 			m_References.insert(NamedReference(factory->id(), factory));
+			return factory;
 		}
 		catch (Exception &e)
 		{
@@ -192,6 +197,48 @@ namespace _2Real
 		{
 			const FactoryReference *factory = ref(_plugin, _service);
 			return factory->metadata();
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	std::list< FactoryReference * > ServiceFactory::getServices(unsigned int const& _plugin)
+	{
+		try
+		{
+			std::list< FactoryReference * > result;
+			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+			{
+				FactoryReference *ref = it->second;
+				if (ref->plugin() == _plugin)
+				{
+					result.push_back(ref);
+				}
+			}
+			return result;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	IDs ServiceFactory::getServiceIDs(unsigned int const& _plugin) const
+	{
+		try
+		{
+			IDs result;
+			for (ReferenceTable::const_iterator it = m_References.begin(); it != m_References.end(); it++)
+			{
+				FactoryReference *ref = it->second;
+				if (ref->plugin() == _plugin)
+				{
+					result.push_back(ref->id());
+				}
+			}
+			return result;
 		}
 		catch (Exception &e)
 		{

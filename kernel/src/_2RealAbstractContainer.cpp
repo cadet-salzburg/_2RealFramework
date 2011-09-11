@@ -22,6 +22,7 @@
 #include "_2RealDataImpl.h"
 #include "_2RealData.h"
 #include "_2RealServiceSlot.h"
+#include "_2RealDataQueue.h"
 
 #include "Poco\Delegate.h"
 
@@ -31,13 +32,14 @@
 namespace _2Real
 {
 
-	AbstractContainer::AbstractContainer(IdentifierImpl *const _id) :
+	AbstractContainer::AbstractContainer(IdentifierImpl *const _id, DataQueue *const _output) :
 		Entity(_id),
 		m_bRunOnce(false),
 		m_bRun(false), 
 		m_bCanReconfigure(true), 
 		m_bIsConfigured(false), 
-		m_Father(NULL)
+		m_Father(NULL),
+		m_Output(_output)
 	{
 	}
 
@@ -53,6 +55,7 @@ namespace _2Real
 
 	AbstractContainer::~AbstractContainer()
 	{
+		delete m_Output;
 	}
 
 	void AbstractContainer::start(bool const& _runOnce) throw(...)
@@ -114,7 +117,7 @@ namespace _2Real
 
 		std::stringstream info;
 		info << this->info();
-		info << "father: " + _father->name() << std::endl;
+		info << "father:\t\t" + _father->name() << std::endl;
 		m_Father = _father;
 		AbstractContainer *root;
 		AbstractContainer *nirvana;
@@ -129,8 +132,8 @@ namespace _2Real
 			root = this;
 			nirvana = _father;
 		}
-		info << "graph root: " + root->name() << std::endl;
-		info << "system: " + nirvana->name() << std::endl;
+		info << "graph root:\t" + root->name() << std::endl;
+		info << "system:\t\t" + nirvana->name() << std::endl;
 		Entity::setInfo(info.str());
 	}
 
@@ -141,6 +144,7 @@ namespace _2Real
 
 	void AbstractContainer::addListener(IDataQueue *const _queue)
 	{
+		std::cout << "adding listener to " << name() << std::endl;
 		if (!_queue)
 		{
 			throw Exception("internal error: attempted to add listener to " + name() + " , null pointer");
@@ -174,6 +178,8 @@ namespace _2Real
 	{
 		try
 		{
+			//std::cout << name() << std::endl;
+
 			m_Mutex.lock();
 
 			unsigned int sender = _data.first;
@@ -206,28 +212,38 @@ namespace _2Real
 	{
 		try
 		{
-			Poco::SharedPtr< DataPacket > outputData = Poco::SharedPtr< DataPacket >(new DataPacket());
-			unsigned int name = id();
-
-			std::list< ServiceSlot * > out = this->outputSlots();
-			std::list< ServiceSlot * >::iterator it;
-
-			for (it = out.begin(); it != out.end(); it++)
+			if (type() == Entity::SERVICE || m_Output->hasDataListeners())
 			{
-				ServiceSlot *slot = *it;
-				ServiceSlot::NamedAny any = slot->getAny();
-				outputData->insertAny(any.first, any.second);
-			}
+				Poco::SharedPtr< DataPacket > outputData = Poco::SharedPtr< DataPacket >(new DataPacket());
+				unsigned int name = id();
 
-			NamedData data(name, outputData);
+				std::list< ServiceSlot * > out = this->outputSlots();
+				std::list< ServiceSlot * >::iterator it;
 
-			if (_blocking)
-			{
-				m_NewData.notify(this, data);
-			}
-			else
-			{
-				m_NewData.notifyAsync(this, data);
+				for (it = out.begin(); it != out.end(); it++)
+				{
+					ServiceSlot *slot = *it;
+					ServiceSlot::NamedAny any = slot->getAny();
+					outputData->insertAny(any.first, any.second);
+				}
+
+				if (type() == Entity::SERVICE)
+				{
+					NamedData data(name, outputData);
+
+					if (_blocking)
+					{
+						m_NewData.notify(this, data);
+					}
+					else
+					{
+						m_NewData.notifyAsync(this, data);
+					}
+				}
+				if (m_Output->hasDataListeners())
+				{
+					m_Output->sendData(outputData);
+				}
 			}
 		}
 		catch (Exception &e)
@@ -272,5 +288,15 @@ namespace _2Real
 		{
 			(*it)->reset();
 		}
+	}
+
+	void AbstractContainer::registerExceptionCallback(ExceptionCallback _callback)
+	{
+		m_Output->registerExceptionCallback(_callback);
+	}
+
+	void AbstractContainer::registerDataCallback(NewDataCallback _callback)
+	{
+		m_Output->registerDataCallback(_callback);
 	}
 }

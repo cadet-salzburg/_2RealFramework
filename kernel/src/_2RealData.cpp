@@ -19,53 +19,26 @@
 #pragma once
 
 #include "_2RealData.h"
-#include "_2RealException.h"
 #include "_2RealDataImpl.h"
+
+#include <iostream>
 
 namespace _2Real
 {
 
-	Data::Data(DataPacket *const _impl) :
-		m_Impl(_impl)
+	Data::Data(Poco::SharedPtr< DataPacket > _data, Identifier const& _id) :
+		m_Data(_data),
+		m_ID(_id)
 	{
 	}
 
-	Data::Data(Data const& _src) : m_Impl(NULL)
+	Poco::SharedPtr< Poco::Any > Data::get(unsigned int const& _id)
 	{
-		if (_src.m_Impl != NULL)
-		{
-			*m_Impl = *_src.m_Impl;
-		}
+		return m_Data->getAny(_id);
 	}
 
-	Data& Data::operator=(Data const& _src)
+	const Identifier Data::id() const
 	{
-		if (this == &_src)
-		{
-			return *this;
-		}
-
-		if (m_Impl)
-		{
-			delete m_Impl;
-		}
-
-		if (_src.m_Impl != NULL)
-		{
-			*m_Impl = *_src.m_Impl;
-		}
-
-		return *this;
+		return m_ID;
 	}
-
-	Data::~Data()
-	{
-		delete m_Impl;
-	}
-
-	Poco::Any Data::get(unsigned int const& _id)
-	{
-		return m_Impl->getAny(_id);
-	}
-
 }
