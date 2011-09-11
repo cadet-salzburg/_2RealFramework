@@ -53,15 +53,20 @@ namespace _2Real
 		return m_Children.size();
 	}
 
-	std::list< unsigned int > Container::children() const
+	IDs Container::childIDs() const
 	{
-		std::list< unsigned int > ids;
+		IDs ids;
 		for (ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
 			ids.push_back((*it)->id());
 		}
 
 		return ids;
+	}
+
+	std::list< AbstractContainer * > Container::children()
+	{
+		return m_Children;
 	}
 
 	void Container::startChild(unsigned int const& _id)
@@ -74,7 +79,7 @@ namespace _2Real
 #endif
 
 			//must be nirvana
-			if (type() != Entity::NIRVANA)
+			if (type() != Entity::SYSTEM)
 			{
 				throw Exception("only system can start children");
 			}
@@ -139,7 +144,7 @@ namespace _2Real
 #endif
 
 			//must be nirvana
-			if (type() != Entity::NIRVANA)
+			if (type() != Entity::SYSTEM)
 			{
 				throw Exception("only system can stop children");
 			}
@@ -193,7 +198,7 @@ namespace _2Real
 
 	IDs Container::inputSlotIDs() const
 	{
-		if (type() == Entity::NIRVANA)
+		if (type() == Entity::SYSTEM)
 		{
 			//nirvana has no input params
 			throw Exception("system has no input slots");
@@ -220,7 +225,7 @@ namespace _2Real
 
 	IDs Container::outputSlotIDs() const
 	{
-		if (type() == Entity::NIRVANA)
+		if (type() == Entity::SYSTEM)
 		{
 			//nirvana has no output params
 			throw Exception("system has no output slots");
@@ -247,7 +252,7 @@ namespace _2Real
 
 	std::list< ServiceSlot * > Container::inputSlots()
 	{
-		if (type() == Entity::NIRVANA)
+		if (type() == Entity::SYSTEM)
 		{
 			//nirvana has no output params
 			throw Exception("system has no input slots");
@@ -274,7 +279,7 @@ namespace _2Real
 
 	std::list< ServiceSlot * > Container::outputSlots()
 	{
-		if (type() == Entity::NIRVANA)
+		if (type() == Entity::SYSTEM)
 		{
 			//nirvana has no output params
 			throw Exception("system has no output slots");
@@ -335,7 +340,7 @@ namespace _2Real
 			}
 			AbstractContainer *child = *it;
 		
-			if (type() == Entity::NIRVANA)
+			if (type() == Entity::SYSTEM)
 			{
 				//reset all dependent containers as well
 				stopChild(child->id());
@@ -436,10 +441,6 @@ namespace _2Real
 
 			_child->setFather(this);
 
-			//if (type() == Entity::SEQUENCE && (_index == 0 || _index == m_Children.size()))
-			//{
-			//	resetIO();
-			//}
 		}
 		catch (Exception &e)
 		{
@@ -545,7 +546,7 @@ namespace _2Real
 				{
 					throw Exception("could not update container - is incorrectly configured");
 				}
-				if (type() == Entity::NIRVANA)
+				if (type() == Entity::SYSTEM)
 				{
 					throw Exception("could not update - is system");
 				}
@@ -593,7 +594,7 @@ namespace _2Real
 			{
 				throw Exception("could not update container - is incorrectly configured");
 			}
-			if (type() == Entity::NIRVANA)
+			if (type() == Entity::SYSTEM)
 			{
 				throw Exception("could not update container - is system");
 			}
@@ -634,7 +635,7 @@ namespace _2Real
 				(*it)->stop();
 			}
 
-			if (type() == Entity::NIRVANA)
+			if (type() == Entity::SYSTEM)
 			{
 				for (std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.begin(); it != m_Threads.end(); it++)
 				{

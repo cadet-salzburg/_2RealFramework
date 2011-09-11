@@ -79,12 +79,17 @@ namespace _2Real
 		/**
 		*	called by service factory after service creation
 		*/
-		void addSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
+		void addInputSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
 
 		/**
 		*	called by service factory after service creation
 		*/
-		void addValue(unsigned int const& id, ServiceValue *const _value) throw(...);
+		void addOutputSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
+
+		/**
+		*	called by service factory after service creation
+		*/
+		void addSetupValue(unsigned int const& id, ServiceValue *const _value) throw(...);
 
 		/**
 		*	calls setup function of service when called for the first time
@@ -130,6 +135,11 @@ namespace _2Real
 		*	
 		*/
 		std::list< ServiceSlot * > outputSlots() throw(...);
+
+		/**
+		*	
+		*/
+		std::list< ServiceValue * > setupParams() throw(...);
 
 	private:
 
@@ -192,6 +202,11 @@ namespace _2Real
 		*	
 		*/
 		IDs														m_SetupIds;
+
+		/**
+		*	
+		*/
+		std::list< ServiceValue * >								m_SetupValues;
 
 		/**
 		*	the user defined service

@@ -22,6 +22,20 @@
 
 namespace _2Real
 {
+	/**
+	*
+	*/
 	typedef std::vector< unsigned int > IDs;
+	
+	/**
+	*
+	*/
 	typedef std::vector< unsigned int >::iterator IDIterator;
+
+	class IService;
+
+	/**
+	*	service factory function
+	*/
+	typedef IService *const (*const ServiceCreator)(void);
 }

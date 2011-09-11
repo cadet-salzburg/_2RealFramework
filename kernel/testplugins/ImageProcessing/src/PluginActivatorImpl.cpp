@@ -18,20 +18,34 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 	*	(one could build the metadata manually, too)
 	*/
 
-	MetadataReader reader;
-	reader.readMetadata(_info);
+	try
+	{
+		MetadataReader reader;
+		reader.readMetadata(_info);
+	}
+	catch (Exception &e)
+	{
+		throw e;
+	}
 }
 
-void ImageProcessing::start(PluginContext &_context)
+void ImageProcessing::setup(PluginContext &_context)
 {
 	/**
 		export service factory methods
 	*/
 
-	_context.registerService("ImageAddition2D_ushort", &::createImageAddition< unsigned short >);
-	_context.registerService("ImageAddition2D_float", &::createImageAddition< float >);
-	_context.registerService("RandomImage2D_ushort", &::createRandomImage< unsigned short >);
-	_context.registerService("RandomImage2D_float", &::createRandomImage< float >);
+	try
+	{
+		_context.registerService("ImageAddition2D_ushort", &::createImageAddition< unsigned short >);
+		_context.registerService("ImageAddition2D_float", &::createImageAddition< float >);
+		_context.registerService("RandomImage2D_ushort", &::createRandomImage< unsigned short >);
+		_context.registerService("RandomImage2D_float", &::createRandomImage< float >);
+	}
+	catch (Exception &e)
+	{
+		throw e;
+	}
 }
 
 /**

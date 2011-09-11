@@ -44,7 +44,7 @@ namespace _2Real
 			SERVICE,
 			SEQUENCE,
 			SYNCHRONIZATION,
-			NIRVANA,
+			SYSTEM,
 			SETUP,
 			INPUT,
 			OUTPUT
@@ -58,6 +58,7 @@ namespace _2Real
 		eType const& type() const;
 		unsigned int const& id() const;
 		std::string const& name() const;
+		std::string const& info() const;
 		void setInfo(std::string const& _info);
 
 	private:

@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "_2RealEngineTypedefs.h"
 #include "_2RealIdentifierImpl.h"
 
 #include <map>
@@ -32,11 +33,8 @@ namespace _2Real
 	class ServiceMetadata;
 	class Identifier;
 	class Entity;
-	class PluginPool;
-	class ServiceFactory;
-	class ProductionGraphs;
-	class IService;
 	class Plugin;
+	class AbstractContainer;
 	class ServiceContainer;
 	class Container;
 	class FactoryReference;
@@ -45,11 +43,6 @@ namespace _2Real
 
 	class EntityTable
 	{
-
-		/**
-		*	engine will set pointers to plugin pool, service factory & production graph map
-		*/
-		friend class Engine;
 
 	public:
 
@@ -74,15 +67,9 @@ namespace _2Real
 		EntityTable& operator=(EntityTable const& _src) throw(...);
 
 		/**
-		*	this kills every entity in existence.
-		*	well, entities created by the 2 real engine anyway; porn videos are not affected.
+		*	kill all entities - entity table is deleted last
 		*/
 		~EntityTable();
-
-		/**
-		*	i can haz typedef
-		*/
-		typedef std::pair< const unsigned int, Entity *const > ID;
 
 		/**
 		*	return entity, throw exception if not existing
@@ -90,85 +77,101 @@ namespace _2Real
 		Entity *const get(unsigned int const& _id) throw(...);
 
 		/**
+		*	return entity, throw exception if not existing
+		*/
+		Entity const *const get(unsigned int const& _id) const throw(...);
+
+		/**
 		*	returns an identifier for an id
 		*/
 		const Identifier getIdentifier(unsigned int const& _id) const throw(...);
 
-		void EntityTable::destroy(Container *_obj) throw(...);
-
-		void EntityTable::destroy(ServiceContainer *_obj) throw(...);
-
-		void EntityTable::destroy(ServiceSlot *_obj) throw(...);
-
-		void EntityTable::destroy(ServiceValue *_obj) throw(...);
-
-		void EntityTable::destroy(Plugin *_obj) throw(...);
-
-		void EntityTable::destroy(FactoryReference *_obj) throw(...);
+		/**
+		*	destroys a container
+		*/
+		void EntityTable::destroy(AbstractContainer *_obj) throw(...);
 
 		/**
-		*	destroy entity, throw if not existing
-		*	plugin pool, service factory & production graphs all use this function
-		*	to dispose of stuff they don't want anymore. especially toxic waste.
+		*	destroys a container
 		*/
-		void destroy(unsigned int const& _id) throw(...);
+		void EntityTable::destroy(Container *_obj) throw(...);
+
+		/**
+		*	destroys service container
+		*/
+		void EntityTable::destroy(ServiceContainer *_obj) throw(...);
+
+		/**
+		*	destroys IO slot
+		*/
+		void EntityTable::destroy(ServiceSlot *_obj) throw(...);
+
+		/**
+		*	destroys setup param
+		*/
+		void EntityTable::destroy(ServiceValue *_obj) throw(...);
+
+		/**
+		*	destroys plugin
+		*/
+		void EntityTable::destroy(Plugin *_obj) throw(...);
+
+		/**
+		*	destroys factory ref
+		*/
+		void EntityTable::destroy(FactoryReference *_obj) throw(...);
 
 		/**
 		*	requested by plugin pool on plugin installation
 		*/
-		const ID createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
+		Plugin *const createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
 
 		/**
 		*	requested by service factory on service creation. actually creates the service container, not the service
 		*/
-		const ID createService(std::string const& _name, IService *const _service) throw(...);
+		ServiceContainer *const createService(std::string const& _name, IService *const _service) throw(...);
 
 		/**
-		*	requested by production graph map on sequence / sync / nirvana creation
+		*	requested by production graph map on system creation
 		*/
-		const ID createContainer(std::string const& _name, Entity::eType const& _type) throw(...);
+		Container *const createSequence(std::string const& _name) throw(...);
 
 		/**
-		*	requested by production graph map on sequence / sync / nirvana creation
+		*	requested by production graph map on seq creation
 		*/
-		const ID createSequence(std::string const& _name) throw(...);
+		Container *const createSystem(std::string const& _name) throw(...);
 
 		/**
-		*	requested by production graph map on sequence / sync / nirvana creation
+		*	requested by production graph map on sync creation
 		*/
-		const ID createSystem(std::string const& _name) throw(...);
-
-		/**
-		*	requested by production graph map on sequence / sync / nirvana creation
-		*/
-		const ID createSynchronization(std::string const& _name) throw(...);
+		Container *const createSynchronization(std::string const& _name) throw(...);
 
 		/**
 		*	requested by service factory on service registration
 		*/
-		const ID createFactoryRef(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata) throw(...);
+		FactoryReference *const createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createInputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceSlot *const createInputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createOutputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceSlot *const createOutputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		const ID createServiceValue(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceValue *const createServiceValue(std::string const& _name, ServiceContainer *const _service) throw(...);
 
 	private:
 
 		/**
 		*	i can haz typedef
 		*/
-		typedef std::pair< unsigned int, Entity * >	NamedEntity;
+		typedef std::pair< unsigned int, Entity * >		NamedEntity;
 
 		/**
 		*	i can haz typedef
@@ -185,20 +188,6 @@ namespace _2Real
 		*/
 		unsigned int									m_iCreationCount;
 
-		/**
-		*	service factory for communication
-		*/
-		ServiceFactory									*m_Factory;
-
-		/**
-		*	plugin pool, for communication
-		*/
-		PluginPool										*m_Plugins;
-
-		/**
-		*	production graphs, for communication
-		*/
-		ProductionGraphs								*m_Graphs;
 	};
 
 }

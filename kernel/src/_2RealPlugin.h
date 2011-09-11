@@ -20,6 +20,7 @@
 #pragma once
 
 #include "_2RealIEntity.h"
+#include "_2RealEngineTypedefs.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
 
@@ -31,12 +32,11 @@ namespace _2Real
 {
 
 	/**
-	*
+	*	plugin class; responsible for loading dlls & storing plugin metadata
 	*/
 
 	class PluginMetadata;
 	class ServiceFactory;
-	class IService;
 
 	class Plugin : public Entity
 	{
@@ -44,33 +44,19 @@ namespace _2Real
 	public:
 
 		/**
-		*	service factory function
+		*	
 		*/
-		typedef IService *const (*const ServiceCreator)(void);
-
-		enum ePluginState
-		{
-			INVALID		=	0x00000000,
-			INSTALLED	=	0x00000001,
-			LOADED		=	0x00000002,
-			ACTIVE		=	0x00000004,
-			UNINSTALLED =	0x00000008,
-		};
+		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, IdentifierImpl *const _id) throw(...);
 
 		/**
 		*	
 		*/
-		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) throw(...);
+		Plugin(Plugin const& _src) throw(...);
 
 		/**
 		*	
 		*/
-		Plugin(Plugin const& _src);
-
-		/**
-		*	
-		*/
-		Plugin& operator=(Plugin const& _src);
+		Plugin& operator=(Plugin const& _src) throw (...);
 
 		/**
 		*	
@@ -80,56 +66,27 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ePluginState const& state() const;
+		PluginMetadata const& pluginMetadata() const;
 
 		/**
 		*	
 		*/
-		PluginMetadata const& metadata() const;
+		ServiceMetadata const& serviceMetadata(std::string const& _name) const;
 
 		/**
 		*
 		*/
-		std::list< unsigned int > const& serviceIDs() const;
+		IDs const& serviceIDs() const;
 
 		/**
 		*
 		*/
-		void install() throw(...);
+		void install(ServiceFactory *const _factory) throw(...);
 
 		/**
 		*
 		*/
 		void uninstall() throw(...);
-
-		/**
-		*	loads dll; state: installed->loaded
-		*	error -> invalid
-		*/
-		void load() throw(...);
-
-		/**
-		*	unloads dll; state: loaded->installed
-		*	error -> invalid
-		*/
-		void unload() throw(...);
-
-		/**
-		*	starts plugin activator; state: loaded->active
-		*	error -> invalid
-		*/
-		void start(std::list< unsigned int > &_ids) throw(...);
-
-		/**
-		*	stops plugin activator; state: active->loaded
-		*	error -> invalid
-		*/
-		void stop() throw(...);
-
-		/**
-		*	called by plugin context
-		*/
-		void registerService(std::string const& _name, ServiceCreator _creator);
 
 	private:
 
@@ -139,39 +96,29 @@ namespace _2Real
 		typedef Poco::ClassLoader< IPluginActivator >	PluginLoader;
 
 		/**
-		*	absolute filepath
+		*	dll filepath
 		*/
 		std::string						m_File;
 
 		/**
-		*	
+		*	plugin activator implemented by user plugin
 		*/
 		IPluginActivator				*m_Activator;
 
 		/**
-		*
-		*/
-		ServiceFactory					*m_Factory;
-
-		/**
-		*	
+		*	metadata
 		*/
 		PluginMetadata					m_Metadata;
 
 		/**
-		*	
-		*/
-		ePluginState					m_State;
-
-		/**
-		*
+		*	poco classloader
 		*/
 		PluginLoader					m_PluginLoader;
 
 		/**
-		*	
+		*	services exported by the plugin
 		*/
-		std::list< unsigned int >		m_Services;
+		IDs								m_ServiceIDs;
 
 	};
 }

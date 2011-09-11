@@ -92,7 +92,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		std::list< unsigned int > children() const;
+		IDs childIDs() const;
+
+		/**
+		*	
+		*/
+		std::list< AbstractContainer * > children();
 
 		/**
 		*	inserts child before child + _id, throw exception if _id not found among children

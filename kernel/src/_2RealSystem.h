@@ -55,6 +55,8 @@ namespace _2Real
 
 		/**
 		*	returns the system's own identifier
+		*
+		*	@return:				system identifier
 		*/
 		const Identifier getID();
 

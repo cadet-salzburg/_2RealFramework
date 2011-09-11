@@ -9,6 +9,6 @@ public:
 
 	void getMetadata(_2Real::PluginMetadata &_info) throw(...);
 
-	void start(_2Real::PluginContext &_context);
+	void setup(_2Real::PluginContext &_context) throw (...);
 
 };

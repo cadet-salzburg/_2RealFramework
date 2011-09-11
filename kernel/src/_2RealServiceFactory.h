@@ -73,42 +73,27 @@ namespace _2Real
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		const unsigned int registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
-
-		///**
-		//*	returns true if service in question can be created
-		//*/
-		//const bool canCreate(unsigned int const& _id) const;
-
-		///**
-		//*	returns true if the service in question is a singleton
-		//*/
-		//const bool isSingleton(unsigned int const& _id) const;
-
-		///**
-		//*	returns true if the service in question can be reconfigured
-		//*/
-		//const bool canReconfigure(unsigned int const& _id) const;
-
-		///**
-		//*	creates service container holding an instance of user service identified by _serviceID
-		//*/
-		//const unsigned int createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top) throw(...);
+		const unsigned int registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		const unsigned int createService(std::string const& _name, unsigned int const& _id, std::string const& _service, unsigned int const& _top) throw(...);
-
-		///**
-		//*	returns metadata of a service
-		//*/
-		//ServiceMetadata const& serviceInfo(unsigned int const& _id) const throw(...);
+		ServiceContainer *const createService(std::string const& _name, unsigned int const& _id, std::string const& _service) throw(...);
 
 		/**
-		*	returns metadata of a service
+		*
 		*/
-		ServiceMetadata const& serviceInfo(unsigned int const& _id, std::string const& _name) const throw(...);
+		FactoryReference const *const ref(unsigned int const& _plugin, std::string const& _service) const throw(...);
+
+		/**
+		*
+		*/
+		FactoryReference *const ref(unsigned int const& _plugin, std::string const& _service) throw(...);
+
+		/**
+		*
+		*/
+		ServiceMetadata const& info(unsigned int const& _plugin, std::string const& _service) const throw(...);
 
 	private:
 
@@ -117,22 +102,12 @@ namespace _2Real
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::list< ServiceContainer * >							ServiceList;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< FactoryReference *, ServiceList * >		ServiceReference;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< unsigned int, ServiceReference >			NamedServiceReference;
+		typedef std::pair< unsigned int, FactoryReference * >		NamedReference;
 		
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::map< unsigned int, ServiceReference >			ReferenceTable;
+		typedef std::map< unsigned int, FactoryReference * >		ReferenceTable;
 
 		/**
 		*	
@@ -143,20 +118,6 @@ namespace _2Real
 		*
 		*/
 		EntityTable													*m_Entities;
-
-		/**
-		*
-		*/
-		PluginPool													*m_Plugins;
-
-		/**
-		*	production graphs
-		*/
-		ProductionGraphs											*m_Graphs;
-
-		typedef std::multimap< unsigned int, ServiceContainer * >		ServiceTable;
-
-		typedef std::pair< unsigned int, ServiceContainer * >			NamedService;
 
 	};
 

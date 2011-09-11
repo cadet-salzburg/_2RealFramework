@@ -24,10 +24,10 @@
 namespace _2Real
 {
 
-	FactoryReference::FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id) :
+	FactoryReference::FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id) :
 		Entity(_id),
 		m_Name(_name),
-		m_Plugin(_plugin),
+		m_Plugin(_pluginID),
 		m_Creator(_creator),
 		m_Metadata(_metadata)
 	{
@@ -36,39 +36,23 @@ namespace _2Real
 	FactoryReference::FactoryReference(FactoryReference const& _src) :
 		Entity(_src),
 		m_Metadata(_src.m_Metadata),
-		m_Plugin(NULL),
+		m_Plugin(0),
+		m_Name(""),
 		m_Creator(NULL)
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy an entity");
 	}
 
 	FactoryReference& FactoryReference::operator=(FactoryReference const& _src)
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy an entity");
 	}
 
 	FactoryReference::~FactoryReference()
 	{
 	}
 
-	const bool FactoryReference::canReconfigure() const
-	{
-		//TODO
-		return false;
-	}
-
-	const bool FactoryReference::isSingleton() const
-	{
-		//TODO
-		return false;
-	}
-
-	const bool FactoryReference::canCreate() const
-	{
-		return (m_Plugin != NULL && m_Plugin->state() == Plugin::ACTIVE);
-	}
-
-	Plugin const *const FactoryReference::plugin() const
+	unsigned int const& FactoryReference::plugin() const
 	{
 		return m_Plugin;
 	}
@@ -78,14 +62,14 @@ namespace _2Real
 		return m_Metadata;
 	}
 
-	IService *const FactoryReference::create()
-	{
-		return m_Creator();
-	}
-
 	std::string const& FactoryReference::name() const
 	{
 		return m_Name;
+	}
+
+	IService *const FactoryReference::create()
+	{
+		return m_Creator();
 	}
 
 }

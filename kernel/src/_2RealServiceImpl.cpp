@@ -56,29 +56,31 @@ namespace _2Real
 		delete m_Service;
 	}
 
-	void ServiceContainer::addSlot(unsigned int const& id, ServiceSlot *const _slot)
+	void ServiceContainer::addInputSlot(unsigned int const& id, ServiceSlot *const _slot)
 	{
 		if (_slot == NULL)
 		{
 			throw Exception("service slot could not be added - null pointer");
 		}
 
-		Entity::eType type = _slot->type();
-		if (type == Entity::INPUT)
-		{
-			m_InputParams.insert(NamedParam(_slot->name(), _slot));
-			m_InputIds.push_back(id);
-			m_InputSlots.push_back(_slot);
-		}
-		else if (type == Entity::OUTPUT)
-		{
-			m_OutputParams.insert(NamedParam(_slot->name(), _slot));
-			m_OutputIds.push_back(id);
-			m_OutputSlots.push_back(_slot);
-		}
+		m_InputParams.insert(NamedParam(_slot->name(), _slot));
+		m_InputIds.push_back(id);
+		m_InputSlots.push_back(_slot);
 	}
 
-	void ServiceContainer::addValue(unsigned int const& id, ServiceValue *const _value)
+	void ServiceContainer::addOutputSlot(unsigned int const& id, ServiceSlot *const _slot)
+	{
+		if (_slot == NULL)
+		{
+			throw Exception("service slot could not be added - null pointer");
+		}
+
+		m_OutputParams.insert(NamedParam(_slot->name(), _slot));
+		m_OutputIds.push_back(id);
+		m_OutputSlots.push_back(_slot);
+	}
+
+	void ServiceContainer::addSetupValue(unsigned int const& id, ServiceValue *const _value)
 	{
 		if (_value == NULL)
 		{
@@ -87,6 +89,7 @@ namespace _2Real
 
 		m_SetupParams.insert(NamedValue(_value->name(), _value));
 		m_SetupIds.push_back(id);
+		m_SetupValues.push_back(_value);
 	}
 
 	void ServiceContainer::checkConfiguration()
@@ -363,4 +366,10 @@ namespace _2Real
 	{
 		return m_OutputSlots;
 	}
+
+	std::list< ServiceValue * > ServiceContainer::setupParams()
+	{
+		return m_SetupValues;
+	}
+
 }

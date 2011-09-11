@@ -30,7 +30,6 @@ namespace _2Real
 	*
 	*/
 
-	class Plugin;
 	class IService;
 
 	class FactoryReference : public Entity
@@ -46,7 +45,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		FactoryReference(std::string const& _name, Plugin const *const _plugin, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id);
+		FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, IdentifierImpl *const _id);
 
 		/**
 		*
@@ -64,46 +63,31 @@ namespace _2Real
 		~FactoryReference();
 
 		/**
-		*	whether reconfiguration is possible
+		*	plugin id
 		*/
-		const bool canReconfigure() const;
+		unsigned int const& plugin() const;
 
 		/**
-		*	duh.
-		*/
-		const bool isSingleton() const;
-
-		/**
-		*	checks if there is everything ok w/ plugin
-		*/
-		const bool canCreate() const;
-
-		/**
-		*	plugin pointer
-		*/
-		Plugin const *const plugin() const;
-
-		/**
-		*	metadata pointer
+		*	metadata
 		*/
 		ServiceMetadata const& metadata() const;
-
-		/**
-		*	creates service obj, or returns singleton instance
-		*/
-		IService *const create();
 
 		/**
 		*	name
 		*/
 		std::string const& name() const;
 
+		/**
+		*	creates service obj, or returns singleton instance
+		*/
+		IService *const create();
+
 	private:
 
 		/**
 		*
 		*/
-		const Plugin			*m_Plugin;
+		const unsigned int		m_Plugin;
 
 		/**
 		*

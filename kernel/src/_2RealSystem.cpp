@@ -101,7 +101,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->installPlugin(_name, _directory, _file, _classname, *m_ID);
+			return m_Engine->installPlugin(_name, _directory, _file, _classname, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -113,7 +113,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->dumpPluginInfo(_pluginID, *m_ID);
+			m_Engine->dumpPluginInfo(_pluginID, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -125,7 +125,7 @@ namespace _2Real
 	{
 		try
 		{
-			//return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
+			return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
 		}
 		catch (Exception &e)
 		{
@@ -137,7 +137,7 @@ namespace _2Real
 	{
 		try
 		{
-			//m_Engine->dumpServiceInfo(_pluginID, _serviceName, *m_ID);
+			m_Engine->dumpServiceInfo(_pluginID, _serviceName, *m_ID);
 		}
 		catch (Exception &e)
 		{

@@ -56,7 +56,7 @@ namespace _2Real
 			return s_Instance;
 		}
 
-		throw Exception("engine instance(): could not lock mutex.");
+		throw Exception("internal error: could not create instance");
 	}
 
 	void Engine::retain()
@@ -69,7 +69,7 @@ namespace _2Real
 			return;
 		}
 		
-		throw Exception("engine retain(): could not lock mutex");
+		throw Exception("internal error: could not retain engine");
 	}
 
 	void Engine::release()
@@ -88,30 +88,29 @@ namespace _2Real
 			return;
 		}
 
-		throw Exception("engine release(): could not lock mutex");
+		throw Exception("internal error: could not release engine");
 	}
 
 	Engine::Engine() :
-		m_Plugins(new PluginPool()),
-		m_Factory(new ServiceFactory()),
 		m_Entities(new EntityTable()),
+		m_Factory(new ServiceFactory()),
+		m_Plugins(new PluginPool()),
 		m_Graphs(new ProductionGraphs())
 	{
-		//this is really ugly oO
-		m_Entities->m_Plugins = m_Factory->m_Plugins = m_Plugins;
-		m_Entities->m_Factory = m_Plugins->m_Factory = m_Factory;
-		m_Entities->m_Graphs = m_Plugins->m_Graphs = m_Factory->m_Graphs = m_Graphs;
-		m_Plugins->m_Entities = m_Factory->m_Entities = m_Graphs->m_Entities = m_Entities;
+		m_Plugins->m_Entities = m_Entities;
+		m_Plugins->m_Factory = m_Factory;
+		m_Factory->m_Entities = m_Entities;
+		m_Graphs->m_Entities = m_Entities;
 	}
 
 	Engine::Engine(Engine const& _src)
 	{
-		throw Exception("engine: attempted copy");
+		throw Exception("internal error: attempted to copy engine");
 	}
 
 	Engine& Engine::operator=(Engine const& _src)
 	{
-		throw Exception("engine: attempted assignment");
+		throw Exception("internal error: attempted to copy engine");
 	}
 
 	Engine::~Engine()
@@ -126,7 +125,6 @@ namespace _2Real
 	{
 		try
 		{
-			//at some point, nirvana should be renamed system
 			unsigned int id = m_Graphs->createSystem(_name);
 			return m_Entities->getIdentifier(id);
 		}
@@ -140,7 +138,6 @@ namespace _2Real
 	{
 		try
 		{
-			//destroys nirvana, and everything within it
 			m_Graphs->destroySystem(_id.id());
 		}
 		catch (Exception &e)
@@ -167,7 +164,7 @@ namespace _2Real
 	{
 		try
 		{
-			PluginMetadata data = m_Plugins->pluginInfo(_id.id());
+			PluginMetadata data = m_Plugins->info(_id.id());
 			std::string info = data.info();
 			std::cout << info << std::endl;
 		}
@@ -181,7 +178,7 @@ namespace _2Real
 	{
 		try
 		{
-			ServiceMetadata data = m_Factory->serviceInfo(_id.id(), _name);
+			ServiceMetadata data = m_Factory->info(_id.id(), _name);
 			std::string info = data.info();
 			std::cout << info << std::endl;
 		}
@@ -195,8 +192,12 @@ namespace _2Real
 	{
 		try
 		{
-			unsigned int id = m_Factory->createService(_name, _id.id(), _service, _top.id());
-			return m_Entities->getIdentifier(id);
+			ServiceContainer *service = m_Factory->createService(_name, _id.id(), _service);
+			Container *nirvana = m_Graphs->getSystem(_top.id());
+			//move into system at last index
+			unsigned int index = nirvana->childCount();
+			nirvana->add(service, index);
+			return m_Entities->getIdentifier(service->id());
 		}
 		catch (Exception &e)
 		{
@@ -208,44 +209,44 @@ namespace _2Real
 	{
 		try
 		{
-			IDs ids;
-			Identifiers setup;
+			//IDs ids;
+			//Identifiers setup;
 
-			Entity *e = m_Entities->get(_id.id());
-			if (!e)
-			{
-				throw Exception("non-existant entity");
-			}
+			//Entity *e = m_Entities->get(_id.id());
+			//if (!e)
+			//{
+			//	throw Exception("non-existant entity");
+			//}
 
-			Entity::eType type = e->type();
-			if (type != Entity::SERVICE)
-			{
-				throw Exception("the entity is not a service");
-			}
+			//Entity::eType type = e->type();
+			//if (type != Entity::SERVICE)
+			//{
+			//	throw Exception("the entity is not a service");
+			//}
 
-			ServiceContainer *service = static_cast< ServiceContainer * >(e);
-			AbstractContainer *root = service->root();
+			//ServiceContainer *service = static_cast< ServiceContainer * >(e);
+			//AbstractContainer *root = service->root();
 
-			Entity *top = m_Entities->get(_top.id());
-			if (!top)
-			{
-				//what the fuck?
-				throw Exception("non-existant system");
-			}
+			//Entity *top = m_Entities->get(_top.id());
+			//if (!top)
+			//{
+			//	//what the fuck?
+			//	throw Exception("non-existant system");
+			//}
 
-			AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			if (root != system)
-			{
-				//this could happen if there is more than one system and the user mixes them up
-				throw Exception("the entity does not belong to the system");
-			}
+			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
+			//if (root != system)
+			//{
+			//	//this could happen if there is more than one system and the user mixes them up
+			//	throw Exception("the entity does not belong to the system");
+			//}
 
-			ids = service->setupParamIDs();
-			for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			{
-				setup.push_back(m_Entities->getIdentifier(*it));
-			}
-			return setup;
+			//ids = service->setupParamIDs();
+			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			//{
+			//	setup.push_back(m_Entities->getIdentifier(*it));
+			//}
+			//return setup;
 		}
 		catch (Exception &e)
 		{
@@ -257,44 +258,44 @@ namespace _2Real
 	{
 		try
 		{
-			IDs ids;
-			Identifiers input;
+			//IDs ids;
+			//Identifiers input;
 
-			Entity *e = m_Entities->get(_id.id());
-			if (!e)
-			{
-				throw Exception("non-existant entity");
-			}
+			//Entity *e = m_Entities->get(_id.id());
+			//if (!e)
+			//{
+			//	throw Exception("non-existant entity");
+			//}
 
-			Entity::eType type = e->type();
-			if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
-			{
-				throw Exception("the entity is neither service nor sequence nor synchronization");
-			}
+			//Entity::eType type = e->type();
+			//if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
+			//{
+			//	throw Exception("the entity is neither service nor sequence nor synchronization");
+			//}
 
-			AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			AbstractContainer *root = container->root();
+			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			//AbstractContainer *root = container->root();
 
-			Entity *top = m_Entities->get(_top.id());
-			if (!top)
-			{
-				//what the fuck?
-				throw Exception("non-existant system");
-			}
-			
-			AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			if (root != system)
-			{
-				//this could happen if there is more than one system and the user mixes them up
-				throw Exception("the entity does not belong to this system");
-			}
+			//Entity *top = m_Entities->get(_top.id());
+			//if (!top)
+			//{
+			//	//what the fuck?
+			//	throw Exception("non-existant system");
+			//}
+			//
+			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
+			//if (root != system)
+			//{
+			//	//this could happen if there is more than one system and the user mixes them up
+			//	throw Exception("the entity does not belong to this system");
+			//}
 
-			ids = container->inputSlotIDs();
-			for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			{
-				input.push_back(m_Entities->getIdentifier(*it));
-			}
-			return input;
+			//ids = container->inputSlotIDs();
+			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			//{
+			//	input.push_back(m_Entities->getIdentifier(*it));
+			//}
+			//return input;
 		}
 		catch (Exception &e)
 		{
@@ -306,44 +307,44 @@ namespace _2Real
 	{
 		try
 		{
-			IDs ids;
-			Identifiers output;
+			//IDs ids;
+			//Identifiers output;
 
-			Entity *e = m_Entities->get(_id.id());
-			if (!e)
-			{
-				throw Exception("non-existant entity");
-			}
+			//Entity *e = m_Entities->get(_id.id());
+			//if (!e)
+			//{
+			//	throw Exception("non-existant entity");
+			//}
 
-			Entity::eType type = e->type();
-			if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
-			{
-				throw Exception("the entity is neither service nor sequence nor synchronization");
-			}
+			//Entity::eType type = e->type();
+			//if (!(type == Entity::SERVICE || type == Entity::SEQUENCE || type == Entity::SYNCHRONIZATION))
+			//{
+			//	throw Exception("the entity is neither service nor sequence nor synchronization");
+			//}
 
-			AbstractContainer *container = static_cast< AbstractContainer * >(e);
-			AbstractContainer *root = container->root();
+			//AbstractContainer *container = static_cast< AbstractContainer * >(e);
+			//AbstractContainer *root = container->root();
 
-			Entity *top = m_Entities->get(_top.id());
-			if (!top)
-			{
-				//what the fuck?
-				throw Exception("non-existant system");
-			}
+			//Entity *top = m_Entities->get(_top.id());
+			//if (!top)
+			//{
+			//	//what the fuck?
+			//	throw Exception("non-existant system");
+			//}
 
-			AbstractContainer *system = static_cast< AbstractContainer * >(top);
-			if (root != system)
-			{
-				//this could happen if there is more than one system and the user mixes them up
-				throw Exception("the entity does not belong to this system");
-			}
+			//AbstractContainer *system = static_cast< AbstractContainer * >(top);
+			//if (root != system)
+			//{
+			//	//this could happen if there is more than one system and the user mixes them up
+			//	throw Exception("the entity does not belong to this system");
+			//}
 
-			ids = container->outputSlotIDs();
-			for (IDIterator it = ids.begin(); it != ids.end(); it++)
-			{
-				output.push_back(m_Entities->getIdentifier(*it));
-			}
-			return output;
+			//ids = container->outputSlotIDs();
+			//for (IDIterator it = ids.begin(); it != ids.end(); it++)
+			//{
+			//	output.push_back(m_Entities->getIdentifier(*it));
+			//}
+			//return output;
 		}
 		catch (Exception &e)
 		{
@@ -355,8 +356,8 @@ namespace _2Real
 	{
 		try
 		{
-			unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
-			return m_Entities->getIdentifier(id);
+			//unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
+			//return m_Entities->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -368,8 +369,8 @@ namespace _2Real
 	{
 		try
 		{
-			unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
-			return m_Entities->getIdentifier(id);
+			//unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
+			//return m_Entities->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -473,7 +474,7 @@ namespace _2Real
 
 			////
 			//Entity *e = m_Entities->get(_id.id());
-			//if (!(e->type() == Entity::SEQUENCE || e->type() == Entity::SYNCHRONIZATION || e->type() == Entity::NIRVANA))
+			//if (!(e->type() == Entity::SEQUENCE || e->type() == Entity::SYNCHRONIZATION || e->type() == Entity::SYSTEM))
 			//{
 
 			//}
@@ -551,7 +552,7 @@ namespace _2Real
 			//	{
 			//		throw Exception::failure();
 			//	}
-			//	else if (e->type() != Entity::NIRVANA)
+			//	else if (e->type() != Entity::SYSTEM)
 			//	{
 			//		throw Exception::failure();
 			//	}
@@ -598,7 +599,7 @@ namespace _2Real
 			//	//top does not exist
 			//	throw Exception::failure();
 			//}
-			//else if (n->type() != Entity::NIRVANA)
+			//else if (n->type() != Entity::SYSTEM)
 			//{
 			//	//top != nirvana
 			//	throw Exception::failure();
@@ -749,7 +750,7 @@ namespace _2Real
 			//{
 			//	throw Exception::failure();
 			//}
-			//else if (top->type() != Entity::NIRVANA)
+			//else if (top->type() != Entity::SYSTEM)
 			//{
 			//	throw Exception::failure();
 			//}

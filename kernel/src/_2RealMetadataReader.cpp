@@ -229,6 +229,11 @@ namespace _2Real
 				}
 				_info.addServiceMetadata(meta);
 			}
+
+#ifdef _VERBOSE
+	std::cout << "plugin metadata loaded" << std::endl;
+#endif
+
 		}
 		catch (...)
 		{

@@ -34,63 +34,101 @@
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory() : m_Entities(NULL), m_Plugins(NULL)
+	ServiceFactory::ServiceFactory() :
+		m_Entities(NULL)
 	{
 	}
 
 	ServiceFactory::ServiceFactory(ServiceFactory const& _src)
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy service factory");
 	}
 
 	ServiceFactory& ServiceFactory::operator=(ServiceFactory const& _src)
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy service factory");
 	}
 
 	ServiceFactory::~ServiceFactory()
 	{
-		try
+		for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 		{
-			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
+			try
 			{
-				ServiceReference ref = it->second;
-				for (ServiceList::iterator r = ref.second->begin();  r != ref.second->end(); r++)
-				{
-					*r = NULL;
-				}
-				ref.second->clear();
-				delete ref.second;
+				//unsigned int id = it->first;
+				//m_Entities->destroyFactoryRef(id);
 			}
-		}
-		catch (...)
-		{
-			std::cout << "error on service factory destruction" << std::endl;
+			catch (Exception &e)
+			{
+				std::cout << "error on service factory destruction: " << e.what() << std::endl;
+			}
 		}
 	}
 
-	const unsigned int ServiceFactory::registerService(std::string const& _name, Plugin *const _plugin, ServiceMetadata const& _metadata, ServiceCreator _creator)
+	FactoryReference const *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service) const
+	{
+		ReferenceTable::const_iterator it;
+		for (it = m_References.begin(); it != m_References.end(); it++)
+		{
+			FactoryReference *ref = it->second;
+			if (ref->name() == _service && ref->plugin() == _plugin)
+			{
+				break;
+			}
+		}
+
+		if (it == m_References.end())
+		{
+			throw Exception("could not retrieve factory ref - does not exist");
+		}
+		else if (!it->second)
+		{
+			throw Exception("internal error - null pointer stored in service factory");
+		}
+
+		return it->second;
+	}
+
+	FactoryReference *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service)
+	{
+		ReferenceTable::iterator it;
+		for (it = m_References.begin(); it != m_References.end(); it++)
+		{
+			FactoryReference *ref = it->second;
+			if (ref->name() == _service && ref->plugin() == _plugin)
+			{
+				break;
+			}
+		}
+
+		if (it == m_References.end())
+		{
+			throw Exception("could not retrieve factory ref - does not exist");
+		}
+		else if (!it->second)
+		{
+			throw Exception("internal error - null pointer stored in service factory");
+		}
+
+		return it->second;
+	}
+
+	const unsigned int ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
 	{
 		try
 		{
 			//check if service w/ same name was already registered by same plugin
 			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
-				ServiceReference ref = it->second;
-				if (ref.first->name() == _name && ref.first->plugin() == _plugin)
+				FactoryReference *ref = it->second;
+				if (ref->name() == _name && ref->plugin() == _pluginID)
 				{
-					throw Exception("attempted to register a service that already exists");
+					throw Exception("could not register service - service with same name was already registered by plugin");
 				}
 			}
 
-			const EntityTable::ID id = m_Entities->createFactoryRef(_name, _plugin, _creator, _metadata);
-			FactoryReference *factory = static_cast< FactoryReference * >(id.second);
-			ServiceList *services = new ServiceList();
-			//!
-			services->push_back(NULL);
-			ServiceReference ref(factory, services);
-			m_References.insert(NamedServiceReference(factory->id(), ref));
-			return id.first;
+			FactoryReference *factory = m_Entities->createFactoryRef(_name, _pluginID, _creator, _metadata);
+			m_References.insert(NamedReference(factory->id(), factory));
 		}
 		catch (Exception &e)
 		{
@@ -98,208 +136,49 @@ namespace _2Real
 		}
 	}
 
-	//const bool ServiceFactory::canCreate(unsigned int const& _id) const
-	//{
-	//	ReferenceTable::const_iterator it = m_References.find(_id);
-	//	
-	//	if (it != m_References.end())
-	//	{
-	//		ServiceReference ref = it->second;
-	//		return ref.first->canCreate();
-	//	}
-
-	//	throw Exception::failure();
-	//}
-
-	//const bool ServiceFactory::isSingleton(unsigned int const& _id) const
-	//{
-	//	ReferenceTable::const_iterator it = m_References.find(_id);
-	//	
-	//	if (it != m_References.end())
-	//	{
-	//		ServiceReference ref = it->second;
-	//		return ref.first->isSingleton();
-	//	}
-
-	//	throw Exception::failure();
-	//}
-
-	//const bool ServiceFactory::canReconfigure(unsigned int const& _id) const
-	//{
-	//	ReferenceTable::const_iterator it = m_References.find(_id);
-	//	
-	//	if (it != m_References.end())
-	//	{
-	//		ServiceReference ref = it->second;
-	//		return ref.first->canReconfigure();
-	//	}
-
-	//	throw Exception::failure();
-	//}
-
-	//const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::list< unsigned int > &_ids, unsigned int const& _top)
-	//{
-	//	try
-	//	{
-	//		//check if _top is valid
-	//		if (!m_Graphs->isSystem(_top))
-	//		{
-	//			throw Exception("non-existant system");
-	//		}
-
-	//		//find factory ref & service list
-	//		ReferenceTable::iterator it = m_References.find(_id);
-	//		if (it == m_References.end())
-	//		{
-	//			throw Exception("non ex");
-	//		}
-
-	//		FactoryReference *factory = it->second.first;
-	//		ServiceList *services = it->second.second;
-
-	//		if (services == NULL || factory == NULL)
-	//		{
-	//			throw Exception::failure();
-	//		}
-
-	//		//service does not get identifier
-	//		IService *userService = factory->create();
-
-	//		if (userService == NULL)
-	//		{
-	//			throw Exception::failure();
-	//		}
-
-	//		//service container id shares name of service
-	//		const EntityTable::ID id = m_Entities->createService(_name, userService);
-	//		ServiceContainer *service = static_cast< ServiceContainer * >(id.second);
-	//		unsigned int serviceID = id.first;
-
-	//		//this is the services metadata
-	//		const ServiceMetadata data = factory->metadata();
-
-	//		//now, what is needed are input / output / setup ids
-	//		typedef std::list< std::string > ParamList;
-	//		ParamList setup = data.getSetupParams();
-	//		ParamList input = data.getInputParams();
-	//		ParamList output = data.getOutputParams();
-
-	//		for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
-	//		{
-	//			const EntityTable::ID e = m_Entities->createServiceValue(*it, service);
-	//			ServiceValue *p = static_cast< ServiceValue* >(e.second);
-	//			service->addValue(e.first, p);
-	//			//save setup param
-	//			_ids.push_back(e.first);
-	//		}
-
-	//		for (ParamList::iterator it = input.begin(); it != input.end(); it++)
-	//		{
-	//			const EntityTable::ID e = m_Entities->createInputSlot(*it, service);
-	//			ServiceSlot *p = static_cast< ServiceSlot * >(e.second);
-	//			service->addSlot(e.first, p);
-	//		}
-
-	//		for (ParamList::iterator it = output.begin(); it != output.end(); it++)
-	//		{
-	//			const EntityTable::ID e = m_Entities->createOutputSlot(*it, service);
-	//			ServiceSlot *p = static_cast< ServiceSlot * >(e.second);
-	//			service->addSlot(e.first, p);
-	//		}
-
-	//		//add service to nirvanas children
-	//		Entity *e = m_Entities->get(_top);
-	//		Container *top = static_cast< Container * >(e);
-	//		top->add(service, 0);
-
-	//		//save container id
-	//		services->push_back(service);
-
-	//		//done
-	//		return serviceID;
-	//	}
-	//	catch (...)
-	//	{
-	//		throw Exception::failure();
-	//	}
-	//}
-
-	const unsigned int ServiceFactory::createService(std::string const& _name, unsigned int const& _id, std::string const& _service, unsigned int const& _top)
+	ServiceContainer *const ServiceFactory::createService(std::string const& _name, unsigned int const& _plugin, std::string const& _service)
 	{
 		try
 		{
-			Container *nirvana = m_Graphs->getSystem(_top);
-
-			//find factory ref & service list
-			FactoryReference *factory = NULL;
-			ServiceList *services = NULL;
-			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-			{
-				factory = it->second.first;
-				if (factory->plugin()->id() == _id && factory->name() == _service)
-				{
-					services = it->second.second;
-					break;
-				}
-			}
-
-			if (services == NULL || factory == NULL)
-			{
-				throw Exception("corrupted factory reference");
-			}
-
-			//service does not get identifier
+			FactoryReference *factory = ref(_plugin, _service);
 			IService *userService = factory->create();
 
 			if (userService == NULL)
 			{
-				throw Exception("failed to create instance of user service");
+				throw Exception("internal error: could not create instance of service " + _service);
 			}
 
-			//service container id shares name of service
-			const EntityTable::ID id = m_Entities->createService(_name, userService);
-			ServiceContainer *service = static_cast< ServiceContainer * >(id.second);
-
-			//this is the services metadata
+			//service container gets identifier
+			ServiceContainer *service = m_Entities->createService(_name, userService);
 			const ServiceMetadata data = factory->metadata();
 
-			//now, what is needed are input / output / setup ids
-			typedef std::list< std::string > ParamList;
-			ParamList setup = data.getSetupParams();
-			ParamList input = data.getInputParams();
-			ParamList output = data.getOutputParams();
+			//get setup / input / output from metadata
+			typedef std::list< std::string > StringList;
+			StringList setup = data.getSetupParams();
+			StringList input = data.getInputParams();
+			StringList output = data.getOutputParams();
 
-			for (ParamList::iterator it = setup.begin(); it != setup.end(); it++)
+			//add to service container
+			for (StringList::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const EntityTable::ID e = m_Entities->createServiceValue(*it, service);
-				ServiceValue *p = static_cast< ServiceValue* >(e.second);
-				service->addValue(e.first, p);
+				ServiceValue *val = m_Entities->createServiceValue(*it, service);
+				service->addSetupValue(val->id(), val);
 			}
 
-			for (ParamList::iterator it = input.begin(); it != input.end(); it++)
+			for (StringList::iterator it = input.begin(); it != input.end(); it++)
 			{
-				const EntityTable::ID i = m_Entities->createInputSlot(*it, service);
-				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
-				service->addSlot(i.first, p);
+				ServiceSlot *slot = m_Entities->createInputSlot(*it, service);
+				service->addInputSlot(slot->id(), slot);
 			}
 
-			for (ParamList::iterator it = output.begin(); it != output.end(); it++)
+			for (StringList::iterator it = output.begin(); it != output.end(); it++)
 			{
-				const EntityTable::ID i = m_Entities->createOutputSlot(*it, service);
-				ServiceSlot *p = static_cast< ServiceSlot * >(i.second);
-				service->addSlot(i.first, p);
+				ServiceSlot *slot = m_Entities->createOutputSlot(*it, service);
+				service->addOutputSlot(slot->id(), slot);
 			}
-
-			//add service to nirvanas children
-			Entity *e = m_Entities->get(_top);
-			Container *top = static_cast< Container * >(e);
-			top->add(service, 0);
-
-			//save container id
-			services->push_back(service);
 
 			//done
-			return id.first;
+			return service;
 		}
 		catch (Exception &e)
 		{
@@ -307,30 +186,16 @@ namespace _2Real
 		}
 	}
 
-	//ServiceMetadata const& ServiceFactory::serviceInfo(unsigned int const& _id) const
-	//{
-	//	ReferenceTable::const_iterator it = m_References.find(_id);
-
-	//	if (it == m_References.end())
-	//	{
-	//		throw Exception::failure();
-	//	}
-	//
-	//	FactoryReference *ref = it->second.first;
-	//	return ref->metadata();
-	//}
-
-	ServiceMetadata const& ServiceFactory::serviceInfo(unsigned int const& _id, std::string const& _name) const
+	ServiceMetadata const& ServiceFactory::info(unsigned int const& _plugin, std::string const& _service) const
 	{
-		for (ReferenceTable::const_iterator it = m_References.begin(); it != m_References.end(); it++)
+		try
 		{
-			FactoryReference *ref = it->second.first;
-			if (ref->plugin()->id() == _id && ref->name() == _name)
-			{
-				return ref->metadata();
-			}
+			const FactoryReference *factory = ref(_plugin, _service);
+			return factory->metadata();
 		}
-
-		throw Exception("the service does not exist");
+		catch (Exception &e)
+		{
+			throw e;
+		}
 	}
 }

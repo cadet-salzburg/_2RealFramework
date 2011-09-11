@@ -28,77 +28,59 @@
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, ServiceFactory *const _factory, IdentifierImpl *const _id) :
+	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, IdentifierImpl *const _id) :
 		Entity(_id),
-		m_Factory(_factory),
 		m_Metadata(_class, _dir),
 		m_Activator(NULL),
-		m_State(Plugin::UNINSTALLED),
 		m_File(_dir + _file)
 	{
 	}
 
 	Plugin::Plugin(Plugin const& _src) :
 		Entity(_src),
-		m_Metadata(_src.m_Metadata)
+		m_Metadata("", "")
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy an entity");
 	}
 
 	Plugin& Plugin::operator=(Plugin const& _src)
 	{
-		throw Exception("attempted to copy entity");
+		throw Exception("internal error: attempted to copy an entity");
 	}
 
 	Plugin::~Plugin()
 	{
-		if (m_State != Plugin::UNINSTALLED)
+		try
 		{
-			try
+			if (m_Activator)
 			{
-				stop();
-				unload();
 				uninstall();
 			}
-			catch (...)
-			{
-				std::cout << "plugin destruction error" << std::endl;
-			}
+		}
+		catch (Exception &e)
+		{
+			std::cout << "plugin destruction error: " << e.what() << std::endl;
 		}
 	}
 
-	Plugin::ePluginState const& Plugin::state() const
-	{
-		return m_State;
-	}
-
-	PluginMetadata const& Plugin::metadata() const
+	PluginMetadata const& Plugin::pluginMetadata() const
 	{
 		return m_Metadata;
 	}
 
-	std::list< unsigned int > const& Plugin::serviceIDs() const
+	ServiceMetadata const& Plugin::serviceMetadata(std::string const& _name) const
 	{
-		return m_Services;
+		return m_Metadata.getServiceMetadata(_name);
 	}
 
-	void Plugin::registerService(std::string const& _name, ServiceCreator _creator)
+	IDs const& Plugin::serviceIDs() const
+	{
+		return m_ServiceIDs;
+	}
+
+	void Plugin::install(ServiceFactory *const _factory)
 	{
 		try
-		{
-			ServiceMetadata data = m_Metadata.getServiceMetadata(_name);
-			const unsigned int id = m_Factory->registerService(_name, this, data, _creator);
-			m_Services.push_back(id);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void Plugin::install()
-	{
-		if (m_State == Plugin::UNINSTALLED)
 		{
 			if (m_Metadata.getInstallDirectory().empty())
 			{
@@ -110,12 +92,57 @@ namespace _2Real
 				throw Exception("could not install plugin - no classname was given");
 			}
 
-			m_State = Plugin::INSTALLED;
+			try
+			{
+				m_PluginLoader.loadLibrary(m_File);
+			}
+			catch (...)
+			{
+				//poco error
+				throw Exception("could not install plugin - could not load dll");
+			}
+
+			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
+			{
+				try
+				{
+					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
+				}
+				catch (...)
+				{
+					//poco error
+					throw Exception("could not install plugin - could not load dll");
+				}
+
+				m_Activator->getMetadata(m_Metadata);
+#ifdef _VERBOSE
+	std::cout << "plugin installation: metadata loaded" << std::endl;
+#endif
+				PluginContext context(this, _factory);
+				m_Activator->setup(context);
+#ifdef _VERBOSE
+	std::cout << "plugin Installation: setup success" << std::endl;
+#endif
+			}
+			else
+			{
+				throw Exception("could not install plugin - could not load dll");
+			}
 		}
-		else
+		catch (Exception &e)
 		{
-			m_State = Plugin::INVALID;
-			throw Exception("plugin is already installed");
+			if (m_Activator)
+			{
+				delete m_Activator;
+				m_Activator = NULL;
+			}
+
+			if (!m_ServiceIDs.empty())
+			{
+				//TODO: clean up services
+			}
+
+			throw e;
 		}
 	}
 
@@ -123,139 +150,18 @@ namespace _2Real
 	{
 		try
 		{
-			if (m_State == Plugin::ACTIVE)
+			if (m_PluginLoader.isLibraryLoaded(m_File))
 			{
-				stop();
+				m_PluginLoader.unloadLibrary(m_File);
 			}
 
-			if (m_State == Plugin::LOADED)
-			{
-				unload();
-			}
-
-			m_State = Plugin::UNINSTALLED;
+			m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+			delete m_Activator;
+			m_Activator = NULL;
 		}
 		catch (Exception &e)
 		{
-			m_State = Plugin::INVALID;
 			throw e;
-		}
-	}
-
-	void Plugin::load()
-	{
-		if (m_State == Plugin::INSTALLED)
-		{
-			try
-			{
-				m_PluginLoader.loadLibrary(m_File);
-			}
-			catch (...)
-			{
-				m_State = Plugin::INVALID;
-				throw Exception("could not install plugin - could not load dll");
-			}
-
-			m_State = Plugin::LOADED;
-		}
-		else
-		{
-			throw Exception("plugin is already loaded");
-		}
-	}
-
-	void Plugin::start(std::list< unsigned int > &_ids)
-	{
-		if (m_State == Plugin::LOADED)
-		{
-			try
-			{
-				if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
-				{
-					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
-					if (!m_Activator)
-					{
-						m_State = Plugin::INVALID;
-						throw Exception("");
-					}
-
-					PluginContext context(this);
-					//get metadata
-					m_Activator->getMetadata(m_Metadata);
-
-					//start
-					m_Activator->start(context);
-
-					_ids.clear();
-					_ids = m_Services;
-				}
-				else
-				{
-					m_State = Plugin::INVALID;
-					throw Exception("");
-				}
-			}
-			catch (...)
-			{
-				if (m_Activator)
-				{
-					delete m_Activator;
-					m_Activator = NULL;
-				}
-
-				if (!m_Services.empty())
-				{
-					//clean up services
-				}
-
-				m_State = Plugin::INVALID;
-				throw Exception("could not install plugin - poco::classloader error");
-			}
-
-			m_State = Plugin::ACTIVE;
-		}
-		else
-		{
-			throw Exception("plugin is already installed");
-		}
-	}
-
-	void Plugin::stop()
-	{
-		try
-		{
-			if (m_State == Plugin::ACTIVE)
-			{
-				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
-				delete m_Activator;
-				m_State = Plugin::LOADED;
-			}
-		}
-		catch (...)
-		{
-			m_State = Plugin::INVALID;
-			throw Exception("could not uninstall plugin - poco::classloader error");
-		}
-	}
-
-	void Plugin::unload()
-	{
-		try
-		{
-			if (m_State == Plugin::LOADED)
-			{
-				if (m_PluginLoader.isLibraryLoaded(m_File))
-				{
-					m_PluginLoader.unloadLibrary(m_File);
-				}
-			}
-
-			m_State = Plugin::INSTALLED;
-		}
-		catch (...)
-		{
-			m_State = Plugin::INVALID;
-			throw Exception("could not uninstall plugin - poco::classloader error");
 		}
 	}
 }

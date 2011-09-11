@@ -64,24 +64,29 @@ namespace _2Real
 		~PluginPool();
 
 		/**
-		*	
+		*	installs plugin
 		*/
 		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
 
 		/**
-		*
+		*	uninstalls plugin
 		*/
-		Plugin *const getPlugin(unsigned int const& _id);
+		void uninstall(unsigned int const& _id) throw(...);
 
 		/**
-		*
+		*	returns plugin pointer
 		*/
-		Plugin const *const getPlugin(unsigned int const& _id) const;
+		Plugin *const plugin(unsigned int const& _id) throw (...);
 
 		/**
-		*	
+		*	returns plugin pointer
 		*/
-		PluginMetadata const& pluginInfo(unsigned int const& _id) const throw(...);
+		Plugin const *const plugin(unsigned int const& _id) const throw(...);
+
+		/**
+		*	returns plugin info
+		*/
+		PluginMetadata const& info(unsigned int const& _id) const throw(...);
 
 	private:
 
@@ -103,19 +108,14 @@ namespace _2Real
 		PluginMap											m_Plugins;
 
 		/**
-		*	framework's service factory
-		*/
-		ServiceFactory										*m_Factory;
-
-		/**
 		*	framework's entities
 		*/
 		EntityTable											*m_Entities;
 
 		/**
-		*	production graphs
+		*
 		*/
-		ProductionGraphs									*m_Graphs;
+		ServiceFactory										*m_Factory;
 
 	};
 

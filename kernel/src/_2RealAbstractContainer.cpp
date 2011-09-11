@@ -26,6 +26,7 @@
 #include "Poco\Delegate.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
@@ -85,7 +86,7 @@ namespace _2Real
 	{
 		try
 		{
-			if (m_Father->type() == Entity::NIRVANA)
+			if (m_Father->type() == Entity::SYSTEM)
 			{
 				return this;
 			}
@@ -110,8 +111,27 @@ namespace _2Real
 		{
 			throw Exception("internal error: attempted to set " + name() + "'s father to null");
 		}
+
+		std::stringstream info;
+		info << this->info();
+		info << "father: " + _father->name() << std::endl;
 		m_Father = _father;
-		Entity::setInfo("belongs to container: " + _father->name());
+		AbstractContainer *root;
+		AbstractContainer *nirvana;
+		
+		if (_father->type() != Entity::SYSTEM)
+		{
+			root = _father->root();
+			nirvana = root->father();
+		}
+		else
+		{
+			root = this;
+			nirvana = _father;
+		}
+		info << "graph root: " + root->name() << std::endl;
+		info << "system: " + nirvana->name() << std::endl;
+		Entity::setInfo(info.str());
 	}
 
 	AbstractContainer *const AbstractContainer::father()

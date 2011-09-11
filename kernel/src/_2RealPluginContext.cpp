@@ -17,14 +17,16 @@
 */
 
 #include "_2RealPluginContext.h"
-#include "_2RealMetadataReader.h"
 #include "_2RealPlugin.h"
+#include "_2RealServiceFactory.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin) :
-		m_Impl(_plugin)
+	PluginContext::PluginContext(Plugin *const _plugin, ServiceFactory *const _factory) :
+		m_Plugin(_plugin),
+		m_Factory(_factory)
 	{
 	}
 
@@ -39,12 +41,18 @@ namespace _2Real
 
 	PluginContext::~PluginContext()
 	{
-		m_Impl = NULL;
 	}
 
 	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
 	{
-		m_Impl->registerService(_name, _creator);
+		try
+		{
+			m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
 	}
 
 }

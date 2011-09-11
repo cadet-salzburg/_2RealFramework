@@ -47,16 +47,16 @@ namespace _2Real
 
 	ProductionGraphs::~ProductionGraphs()
 	{
-		try
+		for (SystemMap::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
 		{
-			for (SystemMap::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
+			try
 			{
-				m_Entities->destroy(it->first);
+				m_Entities->destroy(it->second);
 			}
-		}
-		catch (Exception &e)
-		{
-			throw e;
+			catch (Exception &e)
+			{
+				std::cout << "error on production graphs destruction: " << e.what() << std::endl;
+			}
 		}
 	}
 
@@ -65,10 +65,9 @@ namespace _2Real
 		try
 		{
 			//request container creation
-			const EntityTable::ID id = m_Entities->createSystem(_name);
-			Container *nirvana = static_cast< Container * >(id.second);
+			Container *nirvana = m_Entities->createSystem(_name);
 			m_Systems.insert(NamedSystem(nirvana->id(), nirvana));
-			return id.first;
+			return nirvana->id();
 		}
 		catch (Exception &e)
 		{
@@ -80,6 +79,9 @@ namespace _2Real
 	{
 		try
 		{
+#ifdef _VERBOSE
+		std::cout << "production graphs: destroying system " << _id << std::endl;
+#endif
 			SystemMap::iterator it = m_Systems.find(_id);
 
 			if (it == m_Systems.end())
@@ -88,11 +90,19 @@ namespace _2Real
 			}
 
 			Container *nirvana = it->second;
+
 			//stops & shuts down all children
+#ifdef _VERBOSE
+		std::cout << "production graphs: shutdown system " << _id << std::endl;
+#endif
 			nirvana->shutdown();
 			//deletes all children
-			m_Entities->destroy(_id);
+			m_Entities->destroy(nirvana);
 			m_Systems.erase(it);
+
+#ifdef _VERBOSE
+		std::cout << "production graphs: destroyed system" << std::endl;
+#endif
 		}
 		catch (Exception &e)
 		{
@@ -121,7 +131,7 @@ namespace _2Real
 			Container *nirvana = getSystem(_top);
 			AbstractContainer *container = nirvana->getChild(_id);
 			container->shutdown();
-			m_Entities->destroy(_id);
+			m_Entities->destroy(container);
 		}
 		catch (Exception &e)
 		{
@@ -137,8 +147,7 @@ namespace _2Real
 			AbstractContainer *a = nirvana->getChild(_a);
 			AbstractContainer *b = nirvana->getChild(_b);
 
-			const EntityTable::ID id = m_Entities->createSequence(_name);
-			Container *seq = static_cast< Container * >(id.second);
+			Container *seq = m_Entities->createSequence(_name);
 			
 			//move sequence into nirvana
 			nirvana->add(seq, 0);
@@ -147,7 +156,7 @@ namespace _2Real
 			seq->add(b, 0);
 			seq->add(a, 0);
 
-			return id.first;
+			return seq->id();
 		}
 		catch (Exception &e)
 		{
@@ -163,8 +172,7 @@ namespace _2Real
 			AbstractContainer *a = nirvana->getChild(_a);
 			AbstractContainer *b = nirvana->getChild(_b);
 
-			const EntityTable::ID id = m_Entities->createSynchronization(_name);
-			Container *sync = static_cast< Container * >(id.second);
+			Container *sync = m_Entities->createSynchronization(_name);
 
 			//move sync into nirvana
 			nirvana->add(sync, 0);
@@ -173,7 +181,7 @@ namespace _2Real
 			sync->add(a, 0);
 			sync->add(b, 1);
 
-			return id.first;
+			return sync->id();
 		}
 		catch (Exception &e)
 		{

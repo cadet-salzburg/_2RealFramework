@@ -30,6 +30,7 @@ namespace _2Real
 	*/
 	
 	class IService;
+	class ServiceFactory;
 	class MetadataReader;
 
 	class PluginContext
@@ -45,7 +46,7 @@ namespace _2Real
 		/**
 		*	registers a service in the framework
 		*/
-		void registerService(std::string const& _name, ServiceCreator _creator);
+		void registerService(std::string const& _name, ServiceCreator _creator) throw(...);
 
 	private:
 
@@ -54,7 +55,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		PluginContext(Plugin *const _plugin);
+		PluginContext(Plugin *const _plugin, ServiceFactory *const _factory);
 		
 		/**
 		*
@@ -74,7 +75,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		Plugin			*m_Impl;
+		Plugin			*m_Plugin;
+
+		/**
+		*
+		*/
+		ServiceFactory	*m_Factory;
 
 	};
 

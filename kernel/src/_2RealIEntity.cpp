@@ -81,6 +81,16 @@ namespace _2Real
 
 		throw Exception("internal error - identifier of entity is null");
 	}
+	
+	std::string const& Entity::info() const
+	{
+		if (m_ID != NULL)
+		{
+			return m_ID->info();
+		}
+
+		throw Exception("internal error - identifier of entity is null");
+	}
 
 	void Entity::setInfo(std::string const& _info)
 	{
