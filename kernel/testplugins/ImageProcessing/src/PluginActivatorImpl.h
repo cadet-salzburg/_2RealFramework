@@ -11,4 +11,6 @@ public:
 
 	void setup(_2Real::PluginContext &_context) throw (...);
 
+	~ImageProcessing() {}
+
 };

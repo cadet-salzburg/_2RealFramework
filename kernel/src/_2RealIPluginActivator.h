@@ -46,7 +46,14 @@ namespace _2Real
 		*/
 		virtual void setup(PluginContext &_context) throw (...) = 0;
 	
+		/**
+		*	destructor
+		*/
+		virtual ~IPluginActivator() = 0;
+
 	};
+	
+	inline IPluginActivator::~IPluginActivator() {}
 
 }
 
