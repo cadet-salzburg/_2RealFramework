@@ -21,6 +21,7 @@
 #include "_2RealException.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {
@@ -99,33 +100,35 @@ namespace _2Real
 		m_Userclasses.insert(NamedUserclass(_name, ""));
 	}
 
-
-	ServiceMetadata::ParamList ServiceMetadata::getInputParams() const
+	ServiceMetadata::StringMap ServiceMetadata::getInputParams() const
 	{
-		ServiceMetadata::ParamList result;
+		ServiceMetadata::StringMap result;
 		for (ParamMap::const_iterator it = m_InputParams.begin(); it !=m_InputParams.end(); it++)
 		{
-			result.push_back(it->first);
+			ParamMetadata data = it->second;
+			result.insert(std::make_pair(data.getName(), data.getType()));
 		}
 		return result;
 	}
 
-	ServiceMetadata::ParamList ServiceMetadata::getOutputParams() const
+	ServiceMetadata::StringMap ServiceMetadata::getOutputParams() const
 	{
-		ServiceMetadata::ParamList result;
+		ServiceMetadata::StringMap result;
 		for (ParamMap::const_iterator it = m_OutputParams.begin(); it !=m_OutputParams.end(); it++)
 		{
-			result.push_back(it->first);
+			ParamMetadata data = it->second;
+			result.insert(std::make_pair(data.getName(), data.getType()));
 		}
 		return result;
 	}
 
-	ServiceMetadata::ParamList ServiceMetadata::getSetupParams() const
+	ServiceMetadata::StringMap ServiceMetadata::getSetupParams() const
 	{
-		ServiceMetadata::ParamList result;
+		ServiceMetadata::StringMap result;
 		for (ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
 		{
-			result.push_back(it->first);
+			ParamMetadata data = it->second;
+			result.insert(std::make_pair(data.getName(), data.getType()));
 		}
 		return result;
 	}

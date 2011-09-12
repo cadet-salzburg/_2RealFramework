@@ -40,7 +40,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceValue(Id *const _id, ServiceContainer *const _service);
+		ServiceValue(Id *const _id, ServiceContainer *const _service, std::string const& _type);
 
 		/**
 		*	

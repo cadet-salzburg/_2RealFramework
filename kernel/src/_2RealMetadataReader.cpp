@@ -150,6 +150,7 @@ namespace _2Real
 								{
 									NamedNodeMap* classAttribs = userclass->attributes();
 									Node* classname = classAttribs->getNamedItem("name");
+									meta.addUserclass(classname->nodeValue());
 #ifdef _VERBOSE
 	std::cout << "service defines userclass: " << classname->nodeValue() << std::endl;
 #endif

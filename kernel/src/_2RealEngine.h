@@ -230,7 +230,7 @@ namespace _2Real
 		/**
 		*	takes care of identifier creation
 		*/
-		EntityTable						*m_Entities;
+		EntityTable						*m_EntityTable;
 
 		/**
 		*	manages production graphs

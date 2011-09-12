@@ -26,8 +26,8 @@
 namespace _2Real
 {
 
-	ServiceSlot::ServiceSlot(Id *const _id, ServiceContainer *const _service) :
-		ServiceParam(_id, _service),
+	ServiceSlot::ServiceSlot(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
+		ServiceParam(_id, _service, _type),
 		m_Value(NULL),
 		m_Linked(NULL),
 		m_bIsLinked(false)
@@ -80,6 +80,10 @@ namespace _2Real
 				else if (_link->type() != Entity::INPUT)
 				{
 					throw Exception("internal error: IO slot linkage failed - output must be linked with input");
+				}
+				else if (_link->datatype() != m_Typename)
+				{
+					throw Exception("internal error: IO slot linkage failed - datatype mismatch");
 				}
 				else if (m_bIsLinked)
 				{

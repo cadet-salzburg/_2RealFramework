@@ -23,8 +23,8 @@
 namespace _2Real
 {
 
-	ServiceValue::ServiceValue(Id *const _id, ServiceContainer *const _service) :
-		ServiceParam(_id, _service)
+	ServiceValue::ServiceValue(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
+		ServiceParam(_id, _service, _type)
 	{
 	}
 

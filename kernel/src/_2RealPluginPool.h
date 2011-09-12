@@ -110,7 +110,7 @@ namespace _2Real
 		/**
 		*	framework's entities
 		*/
-		EntityTable											*m_Entities;
+		EntityTable											*m_EntityTable;
 
 		/**
 		*

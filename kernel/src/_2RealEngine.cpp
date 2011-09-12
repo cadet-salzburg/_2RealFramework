@@ -92,15 +92,15 @@ namespace _2Real
 	}
 
 	Engine::Engine() :
-		m_Entities(new EntityTable()),
+		m_EntityTable(new EntityTable()),
 		m_Factory(new ServiceFactory()),
 		m_Plugins(new PluginPool()),
 		m_Graphs(new ProductionGraphs())
 	{
-		m_Plugins->m_Entities = m_Entities;
+		m_Plugins->m_EntityTable = m_EntityTable;
 		m_Plugins->m_Factory = m_Factory;
-		m_Factory->m_Entities = m_Entities;
-		m_Graphs->m_Entities = m_Entities;
+		m_Factory->m_EntityTable = m_EntityTable;
+		m_Graphs->m_EntityTable = m_EntityTable;
 	}
 
 	Engine::Engine(Engine const& _src)
@@ -118,7 +118,7 @@ namespace _2Real
 		delete m_Graphs;
 		delete m_Factory;
 		delete m_Plugins;
-		delete m_Entities;
+		delete m_EntityTable;
 	}
 
 	const Identifier Engine::createSystem(std::string const& _name)
@@ -126,7 +126,7 @@ namespace _2Real
 		try
 		{
 			unsigned int id = m_Graphs->createSystem(_name);
-			return m_Entities->getIdentifier(id);
+			return m_EntityTable->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -152,7 +152,7 @@ namespace _2Real
 		{
 			//loads plugin & carries out init
 			unsigned int id = m_Plugins->install(_name, _dir, _file, _class);
-			return m_Entities->getIdentifier(id);
+			return m_EntityTable->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -197,7 +197,7 @@ namespace _2Real
 			//move into system at last index
 			unsigned int index = nirvana->childCount();
 			nirvana->add(service, index);
-			return m_Entities->getIdentifier(service->id());
+			return m_EntityTable->getIdentifier(service->id());
 		}
 		catch (Exception &e)
 		{
@@ -225,7 +225,7 @@ namespace _2Real
 			IDs ids = container->setupParamIDs();
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
-				setup.push_back(m_Entities->getIdentifier(*it));
+				setup.push_back(m_EntityTable->getIdentifier(*it));
 			}
 
 			return setup;
@@ -252,7 +252,7 @@ namespace _2Real
 			IDs ids = container->inputSlotIDs();
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
-				input.push_back(m_Entities->getIdentifier(*it));
+				input.push_back(m_EntityTable->getIdentifier(*it));
 			}
 
 			return input;
@@ -279,7 +279,7 @@ namespace _2Real
 			IDs ids = container->outputSlotIDs();
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
-				output.push_back(m_Entities->getIdentifier(*it));
+				output.push_back(m_EntityTable->getIdentifier(*it));
 			}
 
 			return output;
@@ -295,7 +295,7 @@ namespace _2Real
 		try
 		{
 			unsigned int id = m_Graphs->createSequence(_name, _idA.id(), _idB.id(), _top.id());
-			return m_Entities->getIdentifier(id);
+			return m_EntityTable->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -308,7 +308,7 @@ namespace _2Real
 		try
 		{
 			unsigned int id = m_Graphs->createSynchronization(_name, _idA.id(), _idB.id(), _top.id());
-			return m_Entities->getIdentifier(id);
+			return m_EntityTable->getIdentifier(id);
 		}
 		catch (Exception &e)
 		{
@@ -321,7 +321,7 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = m_Graphs->getSystem(_top.id());
-			Entity *e = m_Entities->get(_id.id());
+			Entity *e = m_EntityTable->get(_id.id());
 			ServiceValue *val = static_cast< ServiceValue * >(e);
 			ServiceContainer *service = val->service();
 			if (!(nirvana->find(service->id())))
@@ -393,8 +393,8 @@ namespace _2Real
 		{
 			Container *nirvana = m_Graphs->getSystem(_top.id());
 
-			Entity *eIn = m_Entities->get(_in.id());
-			Entity *eOut = m_Entities->get(_out.id());
+			Entity *eIn = m_EntityTable->get(_in.id());
+			Entity *eOut = m_EntityTable->get(_out.id());
 			ServiceSlot *in = static_cast< ServiceSlot * >(eIn);
 			ServiceSlot *out = static_cast< ServiceSlot * >(eOut);
 			ServiceContainer *inService = in->service();
@@ -497,7 +497,7 @@ namespace _2Real
 
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
-				children.push_back(m_Entities->getIdentifier(*it));
+				children.push_back(m_EntityTable->getIdentifier(*it));
 			}
 			return children;
 		}
@@ -640,7 +640,7 @@ namespace _2Real
 				throw Exception("this system does not contain " + _id.name());
 			}
 			container->shutdown();
-			m_Entities->destroy(container);
+			m_EntityTable->destroy(container);
 		}
 		catch (Exception &e)
 		{

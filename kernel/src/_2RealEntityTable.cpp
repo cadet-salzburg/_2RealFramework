@@ -54,7 +54,7 @@ namespace _2Real
 
 	EntityTable::~EntityTable()
 	{
-		for (EntityMap::iterator it = m_Entities.begin(); it != m_Entities.end(); it++)
+		for (EntityMap::iterator it = m_EntityTable.begin(); it != m_EntityTable.end(); it++)
 		{
 			try
 			{
@@ -76,8 +76,8 @@ namespace _2Real
 	{
 		try
 		{
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -101,7 +101,7 @@ namespace _2Real
 			}
 
 			delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -134,8 +134,8 @@ namespace _2Real
 	{
 		try
 		{
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -165,7 +165,7 @@ namespace _2Real
 			}
 
 			delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -177,8 +177,8 @@ namespace _2Real
 	{
 		try
 		{
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -188,7 +188,7 @@ namespace _2Real
 			}
 
 			delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -200,8 +200,8 @@ namespace _2Real
 	{
 		try
 		{
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -211,7 +211,7 @@ namespace _2Real
 			}
 
 			delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -229,8 +229,8 @@ namespace _2Real
 				destroy(*it);
 			}
 
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -240,7 +240,7 @@ namespace _2Real
 			}
 
 			delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -252,8 +252,8 @@ namespace _2Real
 	{
 		try
 		{
-			EntityMap::iterator e = m_Entities.find(_obj->id());
-			if (e == m_Entities.end())
+			EntityMap::iterator e = m_EntityTable.find(_obj->id());
+			if (e == m_EntityTable.end())
 			{
 				throw Exception("internal error: entity not in entity map");
 			}
@@ -263,7 +263,7 @@ namespace _2Real
 			}
 
 			//delete _obj;
-			m_Entities.erase(e);
+			m_EntityTable.erase(e);
 		}
 		catch (Exception &e)
 		{
@@ -273,9 +273,9 @@ namespace _2Real
 
 	Entity const *const EntityTable::get(unsigned int const& _id) const
 	{
-		EntityMap::const_iterator it = m_Entities.find(_id);
+		EntityMap::const_iterator it = m_EntityTable.find(_id);
 
-		if (it == m_Entities.end())
+		if (it == m_EntityTable.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -289,9 +289,9 @@ namespace _2Real
 
 	Entity *const EntityTable::get(unsigned int const& _id)
 	{
-		EntityMap::iterator it = m_Entities.find(_id);
+		EntityMap::iterator it = m_EntityTable.find(_id);
 
-		if (it == m_Entities.end())
+		if (it == m_EntityTable.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -305,9 +305,9 @@ namespace _2Real
 
 	const Identifier EntityTable::getIdentifier(unsigned int const& _id) const
 	{
-		EntityMap::const_iterator it = m_Entities.find(_id);
+		EntityMap::const_iterator it = m_EntityTable.find(_id);
 
-		if (it == m_Entities.end())
+		if (it == m_EntityTable.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -335,7 +335,7 @@ namespace _2Real
 
 			Id *id = new Id(_name, "plugin", info.str(), Entity::PLUGIN, m_iCreationCount);
 			Plugin *plugin = new Plugin(_dir, _file, _class, id);
-			m_Entities.insert(NamedEntity(id->id(), plugin));
+			m_EntityTable.insert(NamedEntity(id->id(), plugin));
 			return plugin;
 		}
 		catch (Exception &e)
@@ -359,7 +359,7 @@ namespace _2Real
 			Identifier i(id);
 			ApplicationCallback *output = new ApplicationCallback(i);
 			ServiceContainer *service = new ServiceContainer(_service, id, output);
-			m_Entities.insert(NamedEntity(id->id(), service));
+			m_EntityTable.insert(NamedEntity(id->id(), service));
 			return service;
 		}
 		catch (Exception &e)
@@ -385,7 +385,7 @@ namespace _2Real
 			Identifier i(id);
 			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
-			m_Entities.insert(NamedEntity(id->id(), container));
+			m_EntityTable.insert(NamedEntity(id->id(), container));
 			return container;
 		}
 		catch (Exception &e)
@@ -411,7 +411,7 @@ namespace _2Real
 			Identifier i(id);
 			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
-			m_Entities.insert(NamedEntity(id->id(), container));
+			m_EntityTable.insert(NamedEntity(id->id(), container));
 			return container;
 		}
 		catch (Exception &e)
@@ -437,7 +437,7 @@ namespace _2Real
 			Identifier i(id);
 			ApplicationCallback *output = new ApplicationCallback(i);
 			container = new Container(id, output);
-			m_Entities.insert(NamedEntity(id->id(), container));
+			m_EntityTable.insert(NamedEntity(id->id(), container));
 			return container;
 		}
 		catch (Exception &e)
@@ -459,7 +459,7 @@ namespace _2Real
 
 			Id *id = new Id(_name, "factory", info.str(), Entity::FACTORY, m_iCreationCount);
 			FactoryReference *ref = new FactoryReference(_name, _pluginID, _creator, _metadata, id);
-			m_Entities.insert(NamedEntity(id->id(), ref));
+			m_EntityTable.insert(NamedEntity(id->id(), ref));
 			return ref;
 		}
 		catch (Exception &e)
@@ -468,7 +468,7 @@ namespace _2Real
 		}
 	}
 
-	ServiceValue *const EntityTable::createServiceValue(std::string const& _name, ServiceContainer *const _service)
+	ServiceValue *const EntityTable::createServiceValue(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -480,8 +480,8 @@ namespace _2Real
 			info << "param name: \t" << _name << std::endl;
 
 			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
-			ServiceValue *val = new ServiceValue(id, _service);
-			m_Entities.insert(NamedEntity(id->id(), val));
+			ServiceValue *val = new ServiceValue(id, _service, _type);
+			m_EntityTable.insert(NamedEntity(id->id(), val));
 			return val;
 		}
 		catch (Exception &e)
@@ -490,7 +490,7 @@ namespace _2Real
 		}
 	}
 
-	ServiceSlot *const EntityTable::createInputSlot(std::string const& _name, ServiceContainer *const _service)
+	ServiceSlot *const EntityTable::createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -502,8 +502,8 @@ namespace _2Real
 			info << "slot name:\t\t" << _name << std::endl;
 
 			Id *id = new Id(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
-			ServiceSlot *slot = new ServiceSlot(id, _service);
-			m_Entities.insert(NamedEntity(id->id(), slot));
+			ServiceSlot *slot = new ServiceSlot(id, _service, _type);
+			m_EntityTable.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}
 		catch (Exception &e)
@@ -512,7 +512,7 @@ namespace _2Real
 		}
 	}
 
-	ServiceSlot *const EntityTable::createOutputSlot(std::string const& _name, ServiceContainer *const _service)
+	ServiceSlot *const EntityTable::createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -524,8 +524,8 @@ namespace _2Real
 			info << "slot name:\t\t" << _name << std::endl;
 
 			Id *id = new Id(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
-			ServiceSlot *slot = new ServiceSlot(id, _service);
-			m_Entities.insert(NamedEntity(id->id(), slot));
+			ServiceSlot *slot = new ServiceSlot(id, _service, _type);
+			m_EntityTable.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}
 		catch (Exception &e)

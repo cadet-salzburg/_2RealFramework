@@ -30,7 +30,7 @@
 namespace _2Real
 {
 	ProductionGraphs::ProductionGraphs() :
-		m_Entities(NULL),
+		m_EntityTable(NULL),
 		m_Systems()
 	{
 	}
@@ -51,7 +51,7 @@ namespace _2Real
 		{
 			try
 			{
-				m_Entities->destroy(it->second);
+				m_EntityTable->destroy(it->second);
 			}
 			catch (Exception &e)
 			{
@@ -69,7 +69,7 @@ namespace _2Real
 		try
 		{
 			//request container creation
-			Container *nirvana = m_Entities->createSystem(_name);
+			Container *nirvana = m_EntityTable->createSystem(_name);
 			m_Systems.insert(NamedSystem(nirvana->id(), nirvana));
 			return nirvana->id();
 		}
@@ -95,7 +95,7 @@ namespace _2Real
 			//stops & shuts down all children
 			nirvana->shutdown();
 			//deletes all children
-			m_Entities->destroy(nirvana);
+			m_EntityTable->destroy(nirvana);
 			m_Systems.erase(it);
 		}
 		catch (Exception &e)
@@ -125,7 +125,7 @@ namespace _2Real
 			Container *nirvana = getSystem(_top);
 			AbstractContainer *container = nirvana->get(_id);
 			container->shutdown();
-			m_Entities->destroy(container);
+			m_EntityTable->destroy(container);
 		}
 		catch (Exception &e)
 		{
@@ -141,7 +141,7 @@ namespace _2Real
 			AbstractContainer *a = nirvana->get(_a);
 			AbstractContainer *b = nirvana->get(_b);
 
-			Container *seq = m_Entities->createSequence(_name);
+			Container *seq = m_EntityTable->createSequence(_name);
 			
 			//move sequence into nirvana
 			nirvana->add(seq, 0);
@@ -166,7 +166,7 @@ namespace _2Real
 			AbstractContainer *a = nirvana->get(_a);
 			AbstractContainer *b = nirvana->get(_b);
 
-			Container *sync = m_Entities->createSynchronization(_name);
+			Container *sync = m_EntityTable->createSynchronization(_name);
 
 			//move sync into nirvana
 			nirvana->add(sync, 0);

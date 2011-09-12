@@ -35,7 +35,7 @@ namespace _2Real
 {
 
 	ServiceFactory::ServiceFactory() :
-		m_Entities(NULL)
+		m_EntityTable(NULL)
 	{
 	}
 
@@ -56,7 +56,7 @@ namespace _2Real
 		//	try
 		//	{
 		//		unsigned int id = it->first;
-		//		m_Entities->destroy(it->second);
+		//		m_EntityTable->destroy(it->second);
 		//	}
 		//	catch (Exception &e)
 		//	{
@@ -131,7 +131,7 @@ namespace _2Real
 				}
 			}
 
-			FactoryReference *factory = m_Entities->createFactoryRef(_name, _pluginID, _creator, _metadata);
+			FactoryReference *factory = m_EntityTable->createFactoryRef(_name, _pluginID, _creator, _metadata);
 			m_References.insert(NamedReference(factory->id(), factory));
 			return factory;
 		}
@@ -154,31 +154,31 @@ namespace _2Real
 			}
 
 			//service container gets identifier
-			ServiceContainer *service = m_Entities->createService(_name, userService);
+			ServiceContainer *service = m_EntityTable->createService(_name, userService);
 			const ServiceMetadata data = factory->metadata();
 
 			//get setup / input / output from metadata
-			typedef std::list< std::string > StringList;
-			StringList setup = data.getSetupParams();
-			StringList input = data.getInputParams();
-			StringList output = data.getOutputParams();
+			typedef std::map< std::string, std::string > StringMap;
+			StringMap setup = data.getSetupParams();
+			StringMap input = data.getInputParams();
+			StringMap output = data.getOutputParams();
 
 			//add to service container
-			for (StringList::iterator it = setup.begin(); it != setup.end(); it++)
+			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				ServiceValue *val = m_Entities->createServiceValue(*it, service);
+				ServiceValue *val = m_EntityTable->createServiceValue(it->first, it->second, service);
 				service->addSetupValue(val->id(), val);
 			}
 
-			for (StringList::iterator it = input.begin(); it != input.end(); it++)
+			for (StringMap::iterator it = input.begin(); it != input.end(); it++)
 			{
-				ServiceSlot *slot = m_Entities->createInputSlot(*it, service);
+				ServiceSlot *slot = m_EntityTable->createInputSlot(it->first, it->second, service);
 				service->addInputSlot(slot->id(), slot);
 			}
 
-			for (StringList::iterator it = output.begin(); it != output.end(); it++)
+			for (StringMap::iterator it = output.begin(); it != output.end(); it++)
 			{
-				ServiceSlot *slot = m_Entities->createOutputSlot(*it, service);
+				ServiceSlot *slot = m_EntityTable->createOutputSlot(it->first, it->second, service);
 				service->addOutputSlot(slot->id(), slot);
 			}
 

@@ -129,7 +129,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		EntityTable													*m_Entities;
+		EntityTable													*m_EntityTable;
 
 	};
 

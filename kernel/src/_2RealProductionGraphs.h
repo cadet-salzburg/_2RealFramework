@@ -111,7 +111,7 @@ namespace _2Real
 		/**
 		*	entity table, for communication
 		*/
-		EntityTable										*m_Entities;
+		EntityTable										*m_EntityTable;
 
 	};
 

@@ -154,17 +154,17 @@ namespace _2Real
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceSlot *const createInputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceSlot *const createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceSlot *const createOutputSlot(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceSlot *const createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceValue *const createServiceValue(std::string const& _name, ServiceContainer *const _service) throw(...);
+		ServiceValue *const createServiceValue(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
 
 	private:
 
@@ -181,7 +181,7 @@ namespace _2Real
 		/**
 		*	entities
 		*/
-		EntityMap										m_Entities;
+		EntityMap										m_EntityTable;
 
 		/**
 		*	creation count is used as unique id

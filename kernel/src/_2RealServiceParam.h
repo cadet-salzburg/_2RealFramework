@@ -23,6 +23,8 @@
 #include "Poco/SharedPtr.h"
 #include "Poco/Any.h"
 
+#include <string>
+
 namespace _2Real
 {
 
@@ -41,7 +43,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceParam(Id *const _id, ServiceContainer *const _service);
+		ServiceParam(Id *const _id, ServiceContainer *const _service, std::string const& _type);
 
 		/**
 		*	
@@ -68,6 +70,11 @@ namespace _2Real
 		*/
 		bool const& isInitialized() const;
 
+		/**
+		*
+		*/
+		std::string const& datatype() const;
+
 	protected:
 
 		/**
@@ -75,7 +82,10 @@ namespace _2Real
 		*/
 		bool				m_bIsInitialized;
 
-	private:
+		/**
+		*
+		*/
+		const std::string			m_Typename;
 
 		/**
 		*	

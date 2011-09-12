@@ -41,11 +41,11 @@ namespace _2Real
 		*	not allowed - or are they? every newly created entity (meaning service, sequence or
 		*	synchronization) is moved there, where it will live for all eternity in permanent
 		*	bliss - or until it is inserted somewhere else.
-		*	it is possible to create multiple systems. services, sequences ans synchronizations
+		*	it is possible to create multiple systems. services, sequences and synchronizations
 		*	are created in relation a a particular system, and can never be moved elsewhere -
 		*	or linked with an entity of another system
 		*
-		*	@param name:			name of system = name of nirvana
+		*	@param name:			name of system
 		*
 		*	open questions:			buddhists might disapprove of calling a production graph 'nirvana'
 		*							also, this class has now been named: engine / context / framework,
@@ -89,7 +89,6 @@ namespace _2Real
 		*	printf service metadata
 		*
 		*	possible exceptions:	invalid id
-		*							non-existant service
 		*
 		*	@param pluginID:		identifier of an installed plugin
 		*	@param serviceName:		name of a service exported by the plugin
@@ -147,20 +146,18 @@ namespace _2Real
 		*	creates a sequence of entities
 		*
 		*	two entities being in a sequence guarantees that the first one will be updated
-		*	exactly once and that the second will have received the output DataImpl before the
-		*	second entity is being updated. sequences can be built out of services, sequence
-		*	graphs or synchronization graphs; example usage:
+		*	exactly once and that the second will have received the output data before the
+		*	second entity is being updated. sequences can be built out of services, sequences
+		*	or synchronizations; example usage:
 		*	createSequence("S0", createSequence("S1", _idA, _idB), createSequence("S2", _idC, _idD));
 		*	creates sequence of: _idA -> _idB -> _idC -> _idD
-		*	entities passed as arguments must be in nirvana, afterwards the sequence becomes
-		*	their superior; newly created sequences will be placed in nirvana as well
+		*	newly created sequences will be placed in nirvana; elements used to build the sequence
+		*	will be removed from threi repsective superiors & their roots will be stopped
 		*	output slot configuration: building a sequence will delete all previously built IO
 		*	connections of the entities in question (while keeping their internal IO connections
-		*	intact), and connect the IO slots of the 2 entities instead
+		*	intact)
 		*
 		*	possible exceptions:	invalid identifiers
-		*							entities are not in nirvana
-		*							IO slots mismatch
 		*
 		*	@param name:			name chosen by user, will be used to create identifier
 		*	@param idA:				identifier of either: sequence, synchronization or service
@@ -176,20 +173,18 @@ namespace _2Real
 		*	creates a synchronization of entities
 		*
 		*	two entities being in synchronization guarantees causes both update functions to
-		*	be carried out parallel, combining the output DataImpl of both into one combined DataImpl
-		*	when both are finished. synchronizations can be built out of services, sequence
-		*	graphs or synchronization graphs; example usage:
+		*	be carried out parallel, combining the output data of both into one combined data
+		*	when both are finished. synchronizations can be built out of services, sequences
+		*	or synchronizations; example usage:
 		*	createSynchronization("S0", createSequence("S1", _idA, _idB), createSynchronization("S2", _idC, _idD));
 		*	causes sequence _idA -> _idB to run in parallel with both _idC and _idB
-		*	entities passed as arguments must be in nirvana, afterwards the synchronization
-		*	becomes their superior; newly created synchronizations will be placed in nirvana
+		*	newly created synchronizations will be placed in nirvana; elments used to create the
+		*	synchronization will be removed from their respective superior & their roots will be stopped
 		*	output slot configuration: building a synchronization will delete all previously
 		*	built IO-configurations of the entities in question, while keeping the internal
 		*	ones intact. 
 		*
 		*	possible exceptions:	invalid identifiers
-		*							entities are not in nirvana
-		*							IO slots mismatch
 		*
 		*	@param name:			name chosen by user, will be used to create identifier
 		*	@param idA:				identifier of either: sequence, synchronization or service
@@ -258,7 +253,7 @@ namespace _2Real
 		*
 		*	possible exceptions:	invalid id
 		*
-		*	@param id:				identifier of either: sequence, synchronization or service
+		*	@param id:				identifier of either: sequence, synchronization
 		*	@return:				ids of output slots
 		*/
 		Identifiers getChildren(Identifier const& id) throw(...);
@@ -267,7 +262,7 @@ namespace _2Real
 		*	starts an entity
 		*
 		*	does only work if the entity in question belongs to nirvana. causes a thread to be
-		*	started, where the entity running until stop is called. calling start will perform
+		*	started, where the entity is running until stop is called. calling start will perform
 		*	a check on the entity & all its children, making sure all IO slots are connected
 		*
 		*	possible exceptions:	invalid id
@@ -291,9 +286,7 @@ namespace _2Real
 		/**
 		*	stops an entity
 		*
-		*	stops an entity as well as all of its children. if the entity in question does
-		*	have a superior that one will be stopped as well, unless the superior is nirvana,
-		*	where stopping should not matter as every entity has their own thread
+		*	stops an entity . entity must be in nirvana.
 		*
 		*	possible exceptions:	invalid id
 		*
@@ -302,9 +295,7 @@ namespace _2Real
 		void stop(Identifier const& id) throw(...);
 
 		/**
-		*	starts all of nirvanas children at once
-		*
-		*	possible exceptions:	IO misconfiguration if a child
+		*	stops all of nirvanas children at once
 		*/
 		void stopAll() throw(...);
 
@@ -339,7 +330,13 @@ namespace _2Real
 		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src) throw(...);
 
 		/**
-		*	link insert, with index being the last place in the children
+		*	like insert, with index being the last place in the children
+		*
+		*	possible exceptions:	invalid ids
+		*							_dst and _src are the same
+		*
+		*	@param _src:			production graph to be inserted
+		*	@param _dst:			the other one
 		*/
 		void append(Identifier const& dst, Identifier const& id) throw(...);
 

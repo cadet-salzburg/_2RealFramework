@@ -77,7 +77,7 @@ namespace _2Real
 
 	public:
 
-		typedef std::list< std::string >	ParamList;
+		typedef std::map< std::string, std::string >	StringMap;
 
 		/**
 		*	creates service metadata
@@ -139,7 +139,7 @@ namespace _2Real
 		*
 		*	@param _name:		userclass' name
 		*/
-		void addUserclass(std::string const& _name) throw(...);
+		void addUserclass(std::string const& _names) throw(...);
 
 		/**
 		*	get service's name
@@ -196,17 +196,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ParamList getInputParams() const;
+		StringMap getInputParams() const;
 
 		/**
 		*	
 		*/
-		ParamList getOutputParams() const;
+		StringMap getOutputParams() const;
 
 		/**
 		*	
 		*/
-		ParamList getSetupParams() const;
+		StringMap getSetupParams() const;
 
 		/**
 		*	returns string with service information

@@ -29,7 +29,7 @@ namespace _2Real
 {
 
 	PluginPool::PluginPool() :
-		m_Entities(NULL),
+		m_EntityTable(NULL),
 		m_Factory(NULL)
 	{
 	}
@@ -52,7 +52,7 @@ namespace _2Real
 			{
 				unsigned int id = it->first;
 				uninstall(id);
-				m_Entities->destroy(it->second);
+				m_EntityTable->destroy(it->second);
 			}
 			catch (Exception &e)
 			{
@@ -70,7 +70,7 @@ namespace _2Real
 		try
 		{
 
-			Plugin *plugin = m_Entities->createPlugin(_name, _dir, _file, _class);
+			Plugin *plugin = m_EntityTable->createPlugin(_name, _dir, _file, _class);
 			plugin->install(m_Factory);
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
 			return plugin->id();

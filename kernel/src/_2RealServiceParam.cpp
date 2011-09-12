@@ -23,10 +23,11 @@
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(Id *const _id, ServiceContainer *const _service) :
+	ServiceParam::ServiceParam(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
 		Entity(_id),
 		m_Service(_service),
-		m_bIsInitialized(false)
+		m_bIsInitialized(false),
+		m_Typename(_type)
 	{
 	}
 
@@ -52,6 +53,11 @@ namespace _2Real
 	bool const& ServiceParam::isInitialized() const
 	{
 		return m_bIsInitialized;
+	}
+
+	std::string const& ServiceParam::datatype() const
+	{
+		return m_Typename;
 	}
 
 }
