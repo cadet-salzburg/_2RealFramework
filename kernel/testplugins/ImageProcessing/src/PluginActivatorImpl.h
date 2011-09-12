@@ -9,7 +9,7 @@ public:
 
 	void getMetadata(_2Real::PluginMetadata &_info) throw(...);
 
-	void setup(_2Real::PluginContext &_context) throw (...);
+	void init(_2Real::PluginContext &_context) throw (...);
 
 	~ImageProcessing() {}
 

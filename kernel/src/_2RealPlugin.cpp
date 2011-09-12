@@ -126,7 +126,7 @@ namespace _2Real
 
 				m_Activator->getMetadata(m_Metadata);
 				PluginContext context(this, _factory);
-				m_Activator->setup(context);
+				m_Activator->init(context);
 			}
 			else
 			{

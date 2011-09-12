@@ -44,7 +44,7 @@ namespace _2Real
 		/**
 		*	plugin can use plugin context ptr to export factory functions
 		*/
-		virtual void setup(PluginContext &_context) throw (...) = 0;
+		virtual void init(PluginContext &_context) throw (...) = 0;
 	
 		/**
 		*	destructor

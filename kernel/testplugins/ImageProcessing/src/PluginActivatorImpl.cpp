@@ -27,7 +27,7 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 	}
 }
 
-void ImageProcessing::setup(PluginContext &_context)
+void ImageProcessing::init(PluginContext &_context)
 {
 	//export service factory methods
 	try
