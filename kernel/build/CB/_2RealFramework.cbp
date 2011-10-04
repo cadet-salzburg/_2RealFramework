@@ -41,32 +41,72 @@
 			<Add library="PocoNet" />
 			<Add library="PocoXML" />
 		</Linker>
-		<Unit filename="../../src/Common.h" />
-		<Unit filename="../../src/FrameworkNotification.cpp" />
-		<Unit filename="../../src/FrameworkNotification.h" />
-		<Unit filename="../../src/IPluginActivator.h" />
-		<Unit filename="../../src/IService.h" />
-		<Unit filename="../../src/Plugin.cpp" />
-		<Unit filename="../../src/Plugin.h" />
-		<Unit filename="../../src/PluginContext.cpp" />
-		<Unit filename="../../src/PluginContext.h" />
-		<Unit filename="../../src/PluginFramework.cpp" />
-		<Unit filename="../../src/PluginFramework.h" />
-		<Unit filename="../../src/PluginFrameworkContext.cpp" />
-		<Unit filename="../../src/PluginFrameworkContext.h" />
-		<Unit filename="../../src/PluginManifest.cpp" />
-		<Unit filename="../../src/PluginManifest.h" />
-		<Unit filename="../../src/PluginNotification.cpp" />
-		<Unit filename="../../src/PluginNotification.h" />
-		<Unit filename="../../src/ServiceNotification.cpp" />
-		<Unit filename="../../src/ServiceNotification.h" />
-		<Unit filename="../../src/ServiceReference.cpp" />
-		<Unit filename="../../src/ServiceReference.h" />
-		<Unit filename="../../src/ServiceRegistration.cpp" />
-		<Unit filename="../../src/ServiceRegistration.h" />
+		<Unit filename="../../src/_2RealAbstractContainer.cpp" />
+		<Unit filename="../../src/_2RealAbstractContainer.h" />
+		<Unit filename="../../src/_2RealAbstractRef.cpp" />
+		<Unit filename="../../src/_2RealAbstractRef.h" />
+		<Unit filename="../../src/_2RealApplicationCallback.cpp" />
+		<Unit filename="../../src/_2RealApplicationCallback.h" />
+		<Unit filename="../../src/_2RealContainer.cpp" />
+		<Unit filename="../../src/_2RealContainer.h" />
+		<Unit filename="../../src/_2RealData.cpp" />
+		<Unit filename="../../src/_2RealData.h" />
+		<Unit filename="../../src/_2RealDataPacket.cpp" />
+		<Unit filename="../../src/_2RealDataPacket.h" />
+		<Unit filename="../../src/_2RealEngine.cpp" />
+		<Unit filename="../../src/_2RealEngine.h" />
+		<Unit filename="../../src/_2RealEngineTypedefs.h" />
+		<Unit filename="../../src/_2RealEntity.cpp" />
+		<Unit filename="../../src/_2RealEntity.h" />
+		<Unit filename="../../src/_2RealEntityTable.cpp" />
+		<Unit filename="../../src/_2RealEntityTable.h" />
+		<Unit filename="../../src/_2RealException.cpp" />
+		<Unit filename="../../src/_2RealException.h" />
+		<Unit filename="../../src/_2RealFactoryReference.cpp" />
+		<Unit filename="../../src/_2RealFactoryReference.h" />
+		<Unit filename="../../src/_2RealIContainer.h" />
+		<Unit filename="../../src/_2RealIDataQueue.h" />
+		<Unit filename="../../src/_2RealIPluginActivator.h" />
+		<Unit filename="../../src/_2RealIService.h" />
+		<Unit filename="../../src/_2RealId.cpp" />
+		<Unit filename="../../src/_2RealId.h" />
+		<Unit filename="../../src/_2RealIdentifier.cpp" />
+		<Unit filename="../../src/_2RealIdentifier.h" />
+		<Unit filename="../../src/_2RealMetadataReader.cpp" />
+		<Unit filename="../../src/_2RealMetadataReader.h" />
+		<Unit filename="../../src/_2RealParamRef.cpp" />
+		<Unit filename="../../src/_2RealParamRef.h" />
+		<Unit filename="../../src/_2RealPlugin.cpp" />
+		<Unit filename="../../src/_2RealPlugin.h" />
+		<Unit filename="../../src/_2RealPluginContext.cpp" />
+		<Unit filename="../../src/_2RealPluginContext.h" />
+		<Unit filename="../../src/_2RealPluginMetadata.cpp" />
+		<Unit filename="../../src/_2RealPluginMetadata.h" />
+		<Unit filename="../../src/_2RealPluginPool.cpp" />
+		<Unit filename="../../src/_2RealPluginPool.h" />
+		<Unit filename="../../src/_2RealProductionGraphs.cpp" />
+		<Unit filename="../../src/_2RealProductionGraphs.h" />
+		<Unit filename="../../src/_2RealServiceContainer.cpp" />
+		<Unit filename="../../src/_2RealServiceContainer.h" />
+		<Unit filename="../../src/_2RealServiceContext.cpp" />
+		<Unit filename="../../src/_2RealServiceContext.h" />
+		<Unit filename="../../src/_2RealServiceFactory.cpp" />
+		<Unit filename="../../src/_2RealServiceFactory.h" />
+		<Unit filename="../../src/_2RealServiceMetadata.cpp" />
+		<Unit filename="../../src/_2RealServiceMetadata.h" />
+		<Unit filename="../../src/_2RealServiceParam.cpp" />
+		<Unit filename="../../src/_2RealServiceParam.h" />
+		<Unit filename="../../src/_2RealServiceSlot.cpp" />
+		<Unit filename="../../src/_2RealServiceSlot.h" />
+		<Unit filename="../../src/_2RealServiceValue.cpp" />
+		<Unit filename="../../src/_2RealServiceValue.h" />
+		<Unit filename="../../src/_2RealSystem.cpp" />
+		<Unit filename="../../src/_2RealSystem.h" />
+		<Unit filename="../../src/_2RealTypedefs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

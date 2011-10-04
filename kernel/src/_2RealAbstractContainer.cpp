@@ -24,7 +24,7 @@
 #include "_2RealServiceSlot.h"
 #include "_2RealApplicationCallback.h"
 
-#include "Poco\Delegate.h"
+#include "Poco/Delegate.h"
 
 #include <iostream>
 #include <sstream>
@@ -35,9 +35,9 @@ namespace _2Real
 	AbstractContainer::AbstractContainer(Id *const _id, ApplicationCallback *const _output) :
 		Entity(_id),
 		m_bRunOnce(false),
-		m_bRun(false), 
-		m_bCanReconfigure(true), 
-		m_bIsConfigured(false), 
+		m_bRun(false),
+		m_bCanReconfigure(true),
+		m_bIsConfigured(false),
 		m_Father(NULL),
 		m_Output(_output)
 	{
@@ -97,7 +97,7 @@ namespace _2Real
 			{
 				throw Exception("internal error: container " + name() + "'s father is null");
 			}
-			else 
+			else
 			{
 				return m_Father->root();
 			}
@@ -121,7 +121,7 @@ namespace _2Real
 		m_Father = _father;
 		AbstractContainer *root;
 		AbstractContainer *nirvana;
-		
+
 		if (_father->type() != Entity::SYSTEM)
 		{
 			root = _father->root();
