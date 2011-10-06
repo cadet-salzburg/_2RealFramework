@@ -44,14 +44,14 @@ namespace _2Real
 		*	does nothing if queue already listens
 		*	throws if _queue is null
 		*/
-		virtual void addListener(IDataQueue *const _queue) throw(...) = 0;
+		virtual void addListener(IDataQueue *const _queue) = 0;
 
 		/**
 		*	removes other queue from listeners
 		*	does nothing if other queue is not actually a listener
 		*	throws if _queue is null
 		*/
-		virtual void removeListener(IDataQueue *const _queue) throw(...) = 0;
+		virtual void removeListener(IDataQueue *const _queue) = 0;
 
 		/**
 		*	function to receive DataImpl

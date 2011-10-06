@@ -42,17 +42,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		Container(Id *const _id, ApplicationCallback *const _output) throw(...);
+		Container(Id *const _id, ApplicationCallback *const _output);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		Container(Container const& _src) throw(...);
+		Container(Container const& _src);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		Container& operator=(Container const& _src) throw(...);
+		Container& operator=(Container const& _src);
 
 		/**
 		*	calls destructor of all children
@@ -62,27 +62,27 @@ namespace _2Real
 		/**
 		*	config calls config of all children
 		*/
-		void configure() throw(...);
+		void configure();
 
 		/**
 		*	
 		*/
-		void run() throw(...);
+		void run();
 
 		/**
 		*	
 		*/
-		void update() throw(...);
+		void update();
 
 		/**
 		*	
 		*/
-		void shutdown() throw(...);
+		void shutdown();
 
 		/**
 		*	calls setup function of service when called for the first time
 		*/
-		void checkConfiguration() throw(...);
+		void checkConfiguration();
 
 		/**
 		*	returns nr of children
@@ -102,12 +102,12 @@ namespace _2Real
 		/**
 		*	inserts child before child + _id, throw exception if _id not found among children
 		*/
-		void add(AbstractContainer *const _child, unsigned int const& _index) throw(...);
+		void add(AbstractContainer *const _child, unsigned int const& _index);
 
 		/**
 		*	removes child. completely stops production graph, breaks all IO connections & removes all listeners
 		*/
-		void remove(unsigned int const& _id) throw(...);
+		void remove(unsigned int const& _id);
 
 		/**
 		*	returns pointer to container if located somewhere in tree, null otherwise
@@ -128,37 +128,37 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void startChild(unsigned int const& _id) throw(...);
+		void startChild(unsigned int const& _id);
 
 		/**
 		*
 		*/
-		void stopChild(unsigned int const& _id) throw(...);
+		void stopChild(unsigned int const& _id);
 
 		/**
 		*	
 		*/
-		IDs setupParamIDs() const throw(...);
+		IDs setupParamIDs() const;
 
 		/**
 		*	
 		*/
-		IDs inputSlotIDs() const throw(...);
+		IDs inputSlotIDs() const;
 
 		/**
 		*	
 		*/
-		IDs outputSlotIDs() const throw(...);
+		IDs outputSlotIDs() const;
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * > inputSlots() throw(...);
+		std::list< InputSlot * > inputSlots();
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * > outputSlots() throw(...);
+		std::list< OutputSlot * > outputSlots();
 
 	private:
 

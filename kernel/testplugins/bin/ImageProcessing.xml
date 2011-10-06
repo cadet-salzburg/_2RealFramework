@@ -6,7 +6,13 @@
 		contact = "www.cadet.at"
 		description = "this test plugin loves template classes"
 		version = "1.1.5"
-	/>
+	>
+	
+	<setup>
+			<param name = "input vector" type = "vector string" />
+	</setup>
+	
+	</plugin>
 	
 	<service
 		name = "ImageAddition2D_ushort"
@@ -14,11 +20,6 @@
 		singleton = "false"
 		reconfigurable = "true"
 	>
-	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_ushort" />
-		</userclasses>
 	
 		<setup>
 			<param name = "scale factor 1" type = "unsigned short" />
@@ -43,11 +44,6 @@
 		reconfigurable = "true"
 	>
 	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_float" />
-		</userclasses>
-	
 		<setup>
 			<param name = "scale factor 1" type = "float" />
 			<param name = "scale factor 2" type = "float" />
@@ -71,11 +67,6 @@
 		reconfigurable = "true"
 	>
 	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_ushort" />
-		</userclasses>
-	
 		<setup>
 			<param name = "scale factor" type = "unsigned short" />
 		</setup>
@@ -96,11 +87,6 @@
 		singleton = "false"
 		reconfigurable = "true"
 	>
-	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_float" />
-		</userclasses>
 	
 		<setup>
 			<param name = "scale factor" type = "float" />
@@ -123,11 +109,6 @@
 		singleton = "false"
 		reconfigurable = "true"
 	>
-	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_ushort" />
-		</userclasses>
 		
 		<setup>
 			<param name = "image width" type = "unsigned short" />
@@ -149,11 +130,6 @@
 		singleton = "false"
 		reconfigurable = "true"
 	>
-	
-		<!-- userclasses are still todo -->
-		<userclasses>
-			<class name = "image2D_float" />
-		</userclasses>
 		
 		<setup>
 			<param name = "image width" type = "float" />

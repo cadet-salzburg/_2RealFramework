@@ -23,6 +23,7 @@
 #include "_2RealEngine.h"
 #include "_2RealException.h"
 #include "_2RealPlugin.h"
+#include "_2RealTypeTable.h"
 
 #include "Poco/SAX/InputSource.h"
 #include "Poco/DOM/DOMParser.h"
@@ -35,210 +36,243 @@
 
 #include <sstream>
 #include <iostream>
+#include <typeinfo>
 
 using namespace Poco::XML;
 
 namespace _2Real
 {
+	std::map< std::string, std::string > MetadataReader::s_Typenames = TypeTable().getTable();
 
-	void MetadataReader::readMetadata(PluginMetadata &_info)
+	const std::string MetadataReader::getNodeAttribute(std::string const& _name, Node *const _node)
 	{
 		try
 		{
-			std::string path = _info.getInstallDirectory() + _info.getClassname() + ".xml";
-			
-			Node *plugin, *service, *name, *author, *description, *version, *contact, *reconfigure, *singleton;
-			NodeList *plugins, *services;
-			NamedNodeMap *attribs;
-			DOMParser parser;
-
-			AutoPtr<Document> document = parser.parse(XMLString(path));
-
-			plugins = document->getElementsByTagName("plugin");
-			if (plugins == NULL || plugins->length() > 1)
+			NamedNodeMap *attribs = _node->attributes();
+			if (!attribs)
 			{
-				throw Exception("metadata format error: plugin element must be defined exactly once");
+				throw Exception("metadata format error: element " + _node->nodeName() + "has no attributes");
 			}
 
-			plugin = plugins->item(0);
-			attribs = plugin->attributes();
+			Node *attrib = attribs->getNamedItem(_name);
+			if (!attrib)
+			{
+				attribs->release();
+				throw Exception("metadata format error: node " + _node->nodeName() + " lacks attribute " + _name);
+			}
 
-			name = attribs->getNamedItem("name");
-			if (_info.getClassname() != name->nodeValue())
+			std::string result = _name;
+			if (_name == "type")
+			{
+				result = getParameterType(attrib);
+			}
+			else
+			{
+				result = attrib->nodeValue();
+			}
+
+			return result;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	const std::string MetadataReader::getParameterType(Node *const _attrib)
+	{
+		try
+		{
+			std::string type = _attrib->nodeValue();
+			return getTypename(type);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	const std::string MetadataReader::getTypename(std::string const &_type) const
+	{
+		std::map< std::string, std::string >::const_iterator it = s_Typenames.find(_type);
+		if (it == s_Typenames.end())
+		{
+			throw Exception("metadata format error: unknown parameter type");
+		}
+
+		return it->second;
+	}
+
+	Node *const MetadataReader::getChildNode(std::string const& _name, Node *const _parent)
+	{
+		NodeList *children = _parent->childNodes();
+		
+		if (!children)
+		{
+			throw Exception("metadata format error: xml node " + _parent->localName() + " has no child nodes");
+		}
+
+		for (unsigned long i=0; i<children->length(); i++)
+		{
+			Node *child = children->item(i);
+			if (child->localName() == _name)
+			{
+				children->release();
+				return child;
+			}
+		}
+
+		children->release();
+		return NULL;
+	}
+
+	void MetadataReader::processPluginNode(PluginMetadata &_info, Node *const _plugin)
+	{
+		try
+		{
+			if (_info.getClassname() != getNodeAttribute("name", _plugin))
 			{
 				throw Exception("metadata format error: plugin's name must match class name");
 			}
 
-			author = attribs->getNamedItem("author");
-			_info.setAuthor(author->nodeValue());
+			_info.setAuthor(getNodeAttribute("author", _plugin));
+			_info.setContact(getNodeAttribute("contact", _plugin));
+			_info.setDescription(getNodeAttribute("description", _plugin));
 
-			contact = attribs->getNamedItem("contact");
-			_info.setContact(contact->nodeValue());
-
-			description = attribs->getNamedItem("description");
-			_info.setDescription(description->nodeValue());
-
-			version = attribs->getNamedItem("version");
+			std::string version = getNodeAttribute("version", _plugin);
 			std::stringstream tmp;
-			tmp << version->nodeValue();
+			tmp << version;
 			unsigned int major, minor, revision;
 			unsigned char sep;
 			tmp >> major >> sep >> minor >> sep >> revision;
 			PluginMetadata::Version v(major, minor, revision);
 			_info.setVersion(v);
 
-			services = document->getElementsByTagName("service");
-			if (services == NULL)
+			Node *setup = getChildNode("setup", _plugin);
+			if (setup->hasChildNodes())
 			{
-				throw Exception("metadata format error: there must be at least one service element");
+				NodeList *children = setup->childNodes();
+				for (unsigned long i=0; i<children->length(); i++)
+				{
+					Node* param = children->item(i);
+					if (param->localName() == "param")
+					{
+						std::string name = getNodeAttribute("name", param);
+						std::string type = getNodeAttribute("type", param);
+						_info.addSetupParam(name, type);
+					}
+				}
 			}
-
-			for (unsigned int i=0; i<services->length(); i++)
-			{
-
-				service = services->item(i);
-				attribs = service->attributes();
-
-				name = attribs->getNamedItem("name");
-				ServiceMetadata meta(name->nodeValue());
-#ifdef _VERBOSE
-	std::cout << "plugin defines service: " << meta.getName() << std::endl;
-#endif
-				description = attribs->getNamedItem("description");
-				meta.setDescription(description->nodeValue());
-
-				singleton = attribs->getNamedItem("singleton");
-				if (singleton->nodeValue() == "true")
-				{
-					meta.setSingleton(true);
-				}
-				else
-				{
-					meta.setSingleton(false);
-				}
-
-				reconfigure = attribs->getNamedItem("reconfigurable");
-				if (reconfigure->nodeValue() == "true")
-				{
-					meta.setReconfiguration(true);
-				}
-				else
-				{
-					meta.setReconfiguration(false);
-				}
-
-				NodeList *children = service->childNodes();
-				if (children == NULL)
-				{
-					throw Exception("metadata format error: service must at least have output parameters");
-				}
-
-				for (unsigned int j = 0; j < children->length(); j++)
-				{
-					Node *child = children->item(j);
-					XMLString childTag = child->localName();
-
-					if (childTag == "userclasses")
-					{
-						NodeList *classes = child->childNodes();
-						if (classes->length() != NULL)
-						{
-							for (unsigned int k = 0; k < classes->length(); k++)
-							{
-								Node *userclass = classes->item(k);
-								if (userclass->localName() == "class")
-								{
-									NamedNodeMap* classAttribs = userclass->attributes();
-									Node* classname = classAttribs->getNamedItem("name");
-									meta.addUserclass(classname->nodeValue());
-#ifdef _VERBOSE
-	std::cout << "service defines userclass: " << classname->nodeValue() << std::endl;
-#endif
-								}
-							}
-						}
-					}
-					else if (childTag == "setup")
-					{
-						NodeList *params = child->childNodes();
-						if (params->length() != NULL)
-						{
-							for (unsigned int k = 0; k<params->length(); k++)
-							{
-								Node* param = params->item(k);
-								if (param->localName() == "param")
-								{
-									NamedNodeMap* classAttribs = param->attributes();
-									Node* paramname = classAttribs->getNamedItem("name");
-									Node* paramtype = classAttribs->getNamedItem("type");
-									meta.addSetupParam(paramname->nodeValue(), paramtype->nodeValue());
-#ifdef _VERBOSE
-	std::cout << "service has setup param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
-#endif
-								}
-							}
-						}
-					}
-					else if (childTag == "input")
-					{
-						NodeList *params = child->childNodes();
-						if (params->length() != NULL)
-						{
-							for (unsigned int k = 0; k<params->length(); k++)
-							{
-								Node* param = params->item(k);
-								if (param->localName() == "param")
-								{
-									NamedNodeMap* classAttribs = param->attributes();
-									Node* paramname = classAttribs->getNamedItem("name");
-									Node* paramtype = classAttribs->getNamedItem("type");
-									meta.addInputParam(paramname->nodeValue(), paramtype->nodeValue());
-#ifdef _VERBOSE
-	std::cout << "service has input param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
-#endif
-								}
-							}
-						}
-					}
-					else if (childTag == "output")
-					{
-						NodeList *params = child->childNodes();
-						if (params->length() != NULL)
-						{
-							for (unsigned int k = 0; k<params->length(); k++)
-							{
-								Node* param = params->item(k);
-								if (param->localName() == "param")
-								{
-									NamedNodeMap* classAttribs = param->attributes();
-									Node* paramname = classAttribs->getNamedItem("name");
-									Node* paramtype = classAttribs->getNamedItem("type");
-									meta.addOutputParam(paramname->nodeValue(), paramtype->nodeValue());
-#ifdef _VERBOSE
-	std::cout << "service has output param: " << paramname->nodeValue() << " " << paramtype->nodeValue() << std::endl;
-#endif
-								}
-							}
-						}
-					}
-					else if (!childTag.empty())
-					{
-#ifdef _VERBOSE
-	std::cout << "service's description contains unsupported element that will be ignored: " << childTag << std::endl;
-#endif
-					}
-				}
-				_info.addServiceMetadata(meta);
-			}
-
-#ifdef _VERBOSE
-	std::cout << "plugin metadata loaded" << std::endl;
-#endif
-
+			setup->release();
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw Exception("incorrect metadata file");
+			throw e;
 		}
 	}
+
+	void MetadataReader::processServiceNode(PluginMetadata &_info, Node *const _service)
+	{
+		try
+		{
+			ServiceMetadata meta(getNodeAttribute("name", _service));
+			meta.setDescription(getNodeAttribute("description", _service));
+
+			//std::string singleton = getAttribute("singleton", _service);
+			//std::string reconfigurable = getAttribute("reconfigurable", _service);
+
+			Node *setup = getChildNode("setup", _service);
+			if (setup->hasChildNodes())
+			{
+				NodeList *children = setup->childNodes();
+				for (unsigned long i=0; i<children->length(); i++)
+				{
+					Node* param = children->item(i);
+					if (param->localName() == "param")
+					{
+						std::string name = getNodeAttribute("name", param);
+						std::string type = getNodeAttribute("type", param);
+						meta.addSetupParam(name, type);
+					}
+				}
+			}
+			//setup->release();
+
+			Node *input = getChildNode("input", _service);
+			if (input->hasChildNodes())
+			{
+				NodeList *children = input->childNodes();
+				for (unsigned long i=0; i<children->length(); i++)
+				{
+					Node* param = children->item(i);
+					if (param->localName() == "param")
+					{
+						std::string name = getNodeAttribute("name", param);
+						std::string type = getNodeAttribute("type", param);
+						meta.addInputParam(name, type);
+					}
+				}
+			}
+			//input->release();
+
+			Node *output = getChildNode("output", _service);
+			if (output->hasChildNodes())
+			{
+				NodeList *children = output->childNodes();
+				for (unsigned long i=0; i<children->length(); i++)
+				{
+					Node* param = children->item(i);
+					if (param->localName() == "param")
+					{
+						std::string name = getNodeAttribute("name", param);
+						std::string type = getNodeAttribute("type", param);
+						meta.addOutputParam(name, type);
+					}
+				}
+			}
+			//output->release();
+
+			_info.addServiceMetadata(meta);
+		}
+		catch (Exception &e)
+		{
+			std::cout << "caught an exception" << std::endl;
+			throw e;
+		}
+	}
+
+	void MetadataReader::readMetadata(PluginMetadata &_info)
+	{
+		try
+		{
+			std::string path = _info.getInstallDirectory() + _info.getClassname() + ".xml";
+
+			DOMParser parser;
+			AutoPtr<Document> document = parser.parse(XMLString(path));
+
+			NodeList *plugins = document->getElementsByTagName("plugin");
+			if (!plugins || plugins->length() > 1)
+			{
+				throw Exception("metadata format error: plugin element must be defined exactly once");
+			}
+
+			processPluginNode(_info, plugins->item(0));
+
+			NodeList *services = document->getElementsByTagName("service");
+			if (!services)
+			{
+				throw Exception("metadata format error: plugin metadata must define at least one service");
+			}
+
+			for (unsigned long i=0; i<services->length(); i++)
+			{
+				processServiceNode(_info, services->item(i));
+			}
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
 }

@@ -23,21 +23,32 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 	}
 	catch (Exception &e)
 	{
+		std::cout << "dll: e caught" << std::endl;
 		throw e;
 	}
 }
 
-void ImageProcessing::init(PluginContext &_context)
+void ImageProcessing::setup(PluginContext &_context)
 {
 	//export service factory methods
 	try
 	{
+
+		//query test parameters - those are not actually needed here ;)
+		std::vector< std::string > vec;
+		_context.getSetupParameter("input vector", vec);
+		for (unsigned int i=0; i<vec.size(); i++)
+		{
+			std::cout << vec[i] << std::endl;
+		}
+
 		_context.registerService("ImageAddition2D_ushort", &::createImageAddition< unsigned short >);
 		_context.registerService("ImageAddition2D_float", &::createImageAddition< float >);
 		_context.registerService("RandomImage2D_ushort", &::createRandomImage< unsigned short >);
 		_context.registerService("RandomImage2D_float", &::createRandomImage< float >);
 		_context.registerService("ImageScaling2D_ushort", &::createImageScaling< unsigned short >);
 		_context.registerService("ImageScaling2D_float", &::createImageScaling< float >);
+
 	}
 	catch (Exception &e)
 	{

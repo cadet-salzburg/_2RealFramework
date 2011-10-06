@@ -39,12 +39,12 @@ namespace _2Real
 		/**
 		*	returns plugin metadata
 		*/
-		virtual void getMetadata(PluginMetadata &_info) throw(...) = 0;
+		virtual void getMetadata(PluginMetadata &_info) = 0;
 
 		/**
 		*	plugin can use plugin context ptr to export factory functions
 		*/
-		virtual void init(PluginContext &_context) throw (...) = 0;
+		virtual void setup(PluginContext &_context) = 0;
 	
 		/**
 		*	destructor

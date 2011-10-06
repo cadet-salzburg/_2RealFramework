@@ -38,8 +38,11 @@ namespace _2Real
 	class ServiceContainer;
 	class Container;
 	class FactoryReference;
-	class ServiceSlot;
-	class ServiceValue;
+	class InputSlot;
+	class OutputSlot;
+	class ServiceParameter;
+	class PluginParameter;
+	class Parameter;
 
 	class EntityTable
 	{
@@ -59,12 +62,12 @@ namespace _2Real
 		/**
 		*	copy kills music
 		*/
-		EntityTable(EntityTable const& _src) throw(...);
+		EntityTable(EntityTable const& _src);
 
 		/**
 		*	as does assignment
 		*/
-		EntityTable& operator=(EntityTable const& _src) throw(...);
+		EntityTable& operator=(EntityTable const& _src);
 
 		/**
 		*	kill all entities - entity table is deleted last
@@ -74,97 +77,97 @@ namespace _2Real
 		/**
 		*	return entity, throw exception if not existing
 		*/
-		Entity *const get(unsigned int const& _id) throw(...);
+		Entity *const get(unsigned int const& _id);
 
 		/**
 		*	return entity, throw exception if not existing
 		*/
-		Entity const *const get(unsigned int const& _id) const throw(...);
+		Entity const *const get(unsigned int const& _id) const;
 
 		/**
 		*	returns an identifier for an id
 		*/
-		const Identifier getIdentifier(unsigned int const& _id) const throw(...);
+		const Identifier getIdentifier(unsigned int const& _id) const;
 
 		/**
 		*	destroys a container
 		*/
-		void EntityTable::destroy(AbstractContainer *_obj) throw(...);
+		void EntityTable::destroy(AbstractContainer *_obj);
 
 		/**
 		*	destroys a container
 		*/
-		void EntityTable::destroy(Container *_obj) throw(...);
+		void EntityTable::destroy(Container *_obj);
 
 		/**
 		*	destroys service container
 		*/
-		void EntityTable::destroy(ServiceContainer *_obj) throw(...);
+		void EntityTable::destroy(ServiceContainer *_obj);
 
 		/**
 		*	destroys IO slot
 		*/
-		void EntityTable::destroy(ServiceSlot *_obj) throw(...);
-
-		/**
-		*	destroys setup param
-		*/
-		void EntityTable::destroy(ServiceValue *_obj) throw(...);
+		void EntityTable::destroy(Parameter *_obj);
 
 		/**
 		*	destroys plugin
 		*/
-		void EntityTable::destroy(Plugin *_obj) throw(...);
+		void EntityTable::destroy(Plugin *_obj);
 
 		/**
 		*	destroys factory ref
 		*/
-		void EntityTable::destroy(FactoryReference *_obj) throw(...);
+		void EntityTable::destroy(FactoryReference *_obj);
 
 		/**
 		*	requested by plugin pool on plugin installation
 		*/
-		Plugin *const createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
+		Plugin *const createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class);
 
 		/**
 		*	requested by service factory on service creation. actually creates the service container, not the service
 		*/
-		ServiceContainer *const createService(std::string const& _name, IService *const _service) throw(...);
+		ServiceContainer *const createService(std::string const& _name, IService *const _service);
 
 		/**
 		*	requested by production graph map on system creation
 		*/
-		Container *const createSequence(std::string const& _name) throw(...);
+		Container *const createSequence(std::string const& _name);
 
 		/**
 		*	requested by production graph map on seq creation
 		*/
-		Container *const createSystem(std::string const& _name) throw(...);
+		Container *const createSystem(std::string const& _name);
 
 		/**
 		*	requested by production graph map on sync creation
 		*/
-		Container *const createSynchronization(std::string const& _name) throw(...);
+		Container *const createSynchronization(std::string const& _name);
 
 		/**
 		*	requested by service factory on service registration
 		*/
-		FactoryReference *const createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata) throw(...);
+		FactoryReference *const createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceSlot *const createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
+		InputSlot *const createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceSlot *const createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
+		OutputSlot *const createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
 
 		/**
 		*	requested by service factory on service creation
 		*/
-		ServiceValue *const createServiceValue(std::string const& _name, std::string const& _type, ServiceContainer *const _service) throw(...);
+		ServiceParameter *const createSetupParameter(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
+
+		/**
+		*	requested by plugin pool on plugin installation
+		*/
+		PluginParameter *const createSetupParameter(std::string const& _name, std::string const& _type, Plugin *const _plugin);
 
 	private:
 

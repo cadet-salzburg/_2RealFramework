@@ -18,12 +18,7 @@
 
 #pragma once
 
-#include "_2RealEntity.h"
-
-#include "Poco/SharedPtr.h"
-#include "Poco/Any.h"
-
-#include <string>
+#include "_2RealSetupParameter.h"
 
 namespace _2Real
 {
@@ -33,9 +28,8 @@ namespace _2Real
 	*/
 
 	class ServiceContainer;
-	class AbstractRef;
 
-	class ServiceParam : public Entity
+	class ServiceParameter : public SetupParameter
 	{
 
 	public:
@@ -43,54 +37,39 @@ namespace _2Real
 		/**
 		*	
 		*/
-		ServiceParam(Id *const _id, ServiceContainer *const _service, std::string const& _type);
+		ServiceParameter(Id *const _id, ServiceContainer *const _service, std::string const& _type);
 
 		/**
 		*	
 		*/
-		ServiceParam(ServiceParam const& _src) throw(...);
+		ServiceParameter(ServiceParameter const& _src);
 
 		/**
 		*	
 		*/
-		ServiceParam& operator=(ServiceParam const& _src) throw(...);
+		ServiceParameter& operator=(ServiceParameter const& _src);
 
 		/**
 		*	
 		*/
-		~ServiceParam();
+		~ServiceParameter();
 
 		/**
-		*	
+		*	returns owning service container
 		*/
-		ServiceContainer *const service();
+		ServiceContainer *const			service();
 
 		/**
-		*	
+		*	returns owning service container - const version
 		*/
-		bool const& isInitialized() const;
+		ServiceContainer *const			service() const;
+
+	private:
 
 		/**
-		*
+		*	the service container this parameter belongs to
 		*/
-		std::string const& datatype() const;
-
-	protected:
-
-		/**
-		*	
-		*/
-		bool				m_bIsInitialized;
-
-		/**
-		*
-		*/
-		const std::string			m_Typename;
-
-		/**
-		*	
-		*/
-		ServiceContainer			*m_Service;
+		ServiceContainer				*m_Service;
 
 	};
 

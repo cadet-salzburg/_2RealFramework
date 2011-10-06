@@ -40,7 +40,7 @@ namespace _2Real
 		*	returns the value received from slot _id
 		*/
 		template< typename T >
-		T get(unsigned int const& _id) throw(...)
+		T get(unsigned int const& _id)
 		{
 			try
 			{
@@ -74,7 +74,7 @@ namespace _2Real
 		/**
 		*
 		*/
-		Poco::SharedPtr< Poco::Any > get(unsigned int const& _id) throw(...);
+		Poco::SharedPtr< Poco::Any > get(unsigned int const& _id);
 
 		/**
 		*

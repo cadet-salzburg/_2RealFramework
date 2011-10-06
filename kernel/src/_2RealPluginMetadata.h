@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include "_2RealParameterMetadata.h"
+#include "_2RealServiceMetadata.h"
+
 #include <map>
 #include <string>
 
@@ -27,8 +30,6 @@ namespace _2Real
 	/**
 	*
 	*/
-
-	class ServiceMetadata;
 
 	class PluginMetadata
 	{
@@ -69,7 +70,7 @@ namespace _2Real
 		*
 		*	@param _name:		plugin's classname
 		*/
-		PluginMetadata(std::string const& _name, std::string const& _path) throw(...);
+		PluginMetadata(std::string const& _name, std::string const& _path);
 
 		/**
 		*	sets plugin description
@@ -147,14 +148,14 @@ namespace _2Real
 		*	@param _name:		name of service
 		*	@return:			service's metadata
 		*/
-		ServiceMetadata const& getServiceMetadata(std::string const& _name) const throw(...);
+		ServiceMetadata const& getServiceMetadata(std::string const& _name) const;
 
 		/**
 		*	add metadata to file
 		*
 		*	@param:				metadata to add
 		*/
-		void addServiceMetadata(ServiceMetadata const& _info) throw(...);
+		void addServiceMetadata(ServiceMetadata const& _info);
 
 		/**
 		*	returns string with plugin information
@@ -162,6 +163,25 @@ namespace _2Real
 		*	@return:			info
 		*/
 		const std::string info();
+
+		/**
+		*	adds setup parameter
+		*
+		*	@param _name:		parameter's name
+		*	@param _type:		parameter's type as string
+		*/
+		void addSetupParam(std::string const& _name, std::string const& _type);
+
+		/**
+		*	@param _name:		parameter's name
+		*	@return:			true if service has setup param with _name
+		*/
+		const bool hasSetupParam(std::string const& _name) const;
+
+		/**
+		*	
+		*/
+		ParamMetadata::StringMap getSetupParams() const;
 
 	private:
 
@@ -198,17 +218,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		typedef std::pair< const std::string, ServiceMetadata >	NamedService;
+		ServiceMetadata::ServiceMap		m_Services;
 
 		/**
-		*	
+		*	setup params
 		*/
-		typedef std::map< const std::string, ServiceMetadata >	ServiceMap;
-
-		/**
-		*	
-		*/
-		ServiceMap						m_Services;
+		ParamMetadata::ParamMap			m_SetupParams;
 
 	};
 

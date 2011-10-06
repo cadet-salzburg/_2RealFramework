@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "_2RealParameterMetadata.h"
+
 #include <map>
 #include <list>
 #include <string>
@@ -29,86 +31,49 @@ namespace _2Real
 	*	metadata representation of a service
 	*/
 
-	class PluginMetadata;
-
 	class ServiceMetadata
 	{
 
-		/**
-		*	metadata representation of a param
-		*/
-		class ParamMetadata
-		{
-
-		public:
-
-			/**
-			*	ctor will throw if either _name or _type is empty
-			*/
-			ParamMetadata(std::string const& _name, std::string const& _type) throw(...);
-
-			/**
-			*	get parameter name
-			*
-			*	@return:		parameter's name
-			*/
-			std::string getName() const;
-
-			/**
-			*	get parameter type
-			*
-			*	@return:		parameter's type as string
-			*/
-			std::string getType() const;
-
-		private:
-
-		/**
-		*	name of the param
-		*/
-		const std::string		m_Name;
-
-		/*
-		*	typename as string
-		*/
-		const std::string		m_Type;
-
-		};
-
 	public:
 
-		typedef std::map< std::string, std::string >	StringMap;
+		/**
+		*	
+		*/
+		typedef std::pair< const std::string, ServiceMetadata >	NamedService;
+
+		/**
+		*	
+		*/
+		typedef std::map< const std::string, ServiceMetadata >	ServiceMap;
 
 		/**
 		*	creates service metadata
 		*
 		*	@param _name:		service's name
 		*	@param _plugin:		plugin the service belongs to
-		*	@throw:				TODO
-			@throw:				TODO
 		*/
-		ServiceMetadata(std::string const& _name) throw(...);
+		ServiceMetadata(std::string const& _name);
 
 		/**
 		*	sets service description
 		*
 		*	@param _dec:		service's description
 		*/
-		void setDescription(std::string const& _desc) throw(...);
+		void setDescription(std::string const& _desc);
 
 		/**
 		*	service's reconfiguration status
 		*
 		*	@param _config:		if service's setup method can be called multiple times
 		*/
-		void setReconfiguration(bool const& _config) throw(...);
+		void setReconfiguration(bool const& _config);
 
 		/**
 		*	service's singleton status
 		*
 		*	@param _singleton:	true if service is a singleton
 		*/
-		void setSingleton(bool const& _singleton) throw(...);
+		void setSingleton(bool const& _singleton);
 
 		/**
 		*	adds setup parameter
@@ -116,7 +81,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addSetupParam(std::string const& _name, std::string const& _type) throw(...);
+		void addSetupParam(std::string const& _name, std::string const& _type);
 
 		/**
 		*	adds input parameter
@@ -124,7 +89,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addInputParam(std::string const& _name, std::string const& _type) throw(...);
+		void addInputParam(std::string const& _name, std::string const& _type);
 
 		/**
 		*	adds output parameter
@@ -132,14 +97,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addOutputParam(std::string const& _name, std::string const& _type) throw(...);
-
-		/**
-		*	adds userclass
-		*
-		*	@param _name:		userclass' name
-		*/
-		void addUserclass(std::string const& _names) throw(...);
+		void addOutputParam(std::string const& _name, std::string const& _type);
 
 		/**
 		*	get service's name
@@ -188,25 +146,19 @@ namespace _2Real
 		const bool hasOuputParam(std::string const& _name) const;
 
 		/**
-		*	@param _name:		userclass' name
-		*	@return:			true if service has userclass with _name
+		*	
 		*/
-		const bool hasUserclass(std::string const& _name) const;
+		ParamMetadata::StringMap getInputParams() const;
 
 		/**
 		*	
 		*/
-		StringMap getInputParams() const;
+		ParamMetadata::StringMap getOutputParams() const;
 
 		/**
 		*	
 		*/
-		StringMap getOutputParams() const;
-
-		/**
-		*	
-		*/
-		StringMap getSetupParams() const;
+		ParamMetadata::StringMap getSetupParams() const;
 
 		/**
 		*	returns string with service information
@@ -220,62 +172,37 @@ namespace _2Real
 		/**
 		*	name
 		*/
-		const std::string				m_ServiceName;
+		const std::string									m_ServiceName;
 
 		/**
 		*	description
 		*/
-		std::string						m_Description;
+		std::string											m_Description;
 
 		/**
 		*	if setup can be called more than once
 		*/
-		bool							m_bCanReconfigure;
+		bool												m_bCanReconfigure;
 
 		/**
 		*	if service is singleton
 		*/
-		bool							m_bIsSingleton;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< std::string, ParamMetadata >	NamedParam;
-
-		/**
-		*	typedefs, yay
-		*/
-		typedef std::map< std::string, ParamMetadata >	ParamMap;
+		bool												m_bIsSingleton;
 
 		/**
 		*	setup params
 		*/
-		ParamMap											m_SetupParams;
+		ParamMetadata::ParamMap								m_SetupParams;
 
 		/**
 		*	input params
 		*/
-		ParamMap											m_InputParams;
+		ParamMetadata::ParamMap								m_InputParams;
 
 		/**
 		*	output params
 		*/
-		ParamMap											m_OutputParams;
-
-		/**
-		*	
-		*/
-		typedef std::pair< std::string, std::string >		NamedUserclass;
-
-		/**
-		*	
-		*/
-		typedef std::map< std::string, std::string >		UserclassMap;
-
-		/**
-		*	user classes (for the time being)
-		*/
-		UserclassMap										m_Userclasses;
+		ParamMetadata::ParamMap								m_OutputParams;
 
 	};
 

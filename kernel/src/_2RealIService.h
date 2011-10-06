@@ -35,17 +35,17 @@ namespace _2Real
 		/**
 		*	setup function
 		*/
-		virtual void setup(ServiceContext *const _context) throw(...) = 0;
+		virtual void setup(ServiceContext *const _context) = 0;
 
 		/**
 		*	update function
 		*/
-		virtual void update() throw(...) = 0;
+		virtual void update() = 0;
 
 		/**
 		*	shutdown function
 		*/
-		virtual void shutdown() throw(...) = 0;
+		virtual void shutdown() = 0;
 
 		/**
 		*	destructor

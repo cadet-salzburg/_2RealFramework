@@ -16,48 +16,71 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceParam.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
 #include "_2RealException.h"
 #include "_2RealAbstractRef.h"
+#include "_2RealServiceContainer.h"
 
 namespace _2Real
 {
 
-	ServiceParam::ServiceParam(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
-		Entity(_id),
-		m_Service(_service),
-		m_bIsInitialized(false),
-		m_Typename(_type)
+	InputSlot::InputSlot(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
+		IOSlot(_id, _service, _type)
 	{
 	}
 
-	ServiceParam::ServiceParam(ServiceParam const& _src) : Entity(_src)
+	InputSlot::InputSlot(InputSlot const& _src) : IOSlot(_src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	ServiceParam& ServiceParam::operator=(ServiceParam const& _src)
+	InputSlot& InputSlot::operator=(InputSlot const& _src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	ServiceParam::~ServiceParam()
+	InputSlot::~InputSlot()
 	{
 	}
 
-	ServiceContainer *const ServiceParam::service()
+	OutputSlot *const InputSlot::linkedOutput()
 	{
-		return m_Service;
+		return static_cast< OutputSlot * >(m_Linked);
 	}
 
-	bool const& ServiceParam::isInitialized() const
+	void InputSlot::extractFrom(IOSlot::SharedAny const& _any)
 	{
-		return m_bIsInitialized;
+		m_Ref->extractFrom(_any);
 	}
 
-	std::string const& ServiceParam::datatype() const
+	void InputSlot::linkWith(OutputSlot *const _output)
 	{
-		return m_Typename;
+		try
+		{
+			if (!_output)
+			{
+				throw Exception("internal error: IO slot linkage failed - null pointer");
+			}
+
+			m_Linked = _output;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void InputSlot::reset()
+	{
+		try
+		{
+			m_Linked = NULL;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
 	}
 
 }

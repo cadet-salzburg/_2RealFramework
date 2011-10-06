@@ -20,6 +20,18 @@
 #pragma once
 
 #include <string>
+#include <map>
+#include <vector>
+#include <typeinfo>
+
+namespace Poco
+{
+	namespace XML
+	{
+		class NamedNodeMap;
+		class Node;
+	}
+}
 
 namespace _2Real
 {
@@ -45,9 +57,26 @@ namespace _2Real
 		*	@param _info:			metadata initialized with classname & classpath
 		*	@throw:					definitions TODO
 		*/
-		void readMetadata(PluginMetadata &_info) throw(...);
+		void readMetadata(PluginMetadata &info);
 
 	private:
+
+		/**
+		*
+		*/
+		static std::map< std::string, std::string >		s_Typenames;
+
+		void											processPluginNode(PluginMetadata &info, Poco::XML::Node *const plugin);
+
+		void											processServiceNode(PluginMetadata &info, Poco::XML::Node *const service);
+
+		Poco::XML::Node *const							getChildNode(std::string const& name, Poco::XML::Node *const parent);
+
+		const std::string								getTypename(std::string const& type) const;
+
+		const std::string								getParameterType(Poco::XML::Node *const attrib);
+
+		const std::string								getNodeAttribute(std::string const& name, Poco::XML::Node *const node);
 
 	};
 

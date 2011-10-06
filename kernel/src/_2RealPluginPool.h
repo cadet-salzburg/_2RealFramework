@@ -51,12 +51,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		PluginPool(PluginPool const& _src) throw(...);
+		PluginPool(PluginPool const& _src);
 
 		/**
 		*	
 		*/
-		PluginPool& operator=(PluginPool const& _src) throw(...);
+		PluginPool& operator=(PluginPool const& _src);
 
 		/**
 		*	
@@ -66,27 +66,27 @@ namespace _2Real
 		/**
 		*	installs plugin
 		*/
-		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class) throw(...);
+		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class);
 
 		/**
 		*	uninstalls plugin
 		*/
-		void uninstall(unsigned int const& _id) throw(...);
+		void uninstall(unsigned int const& _id);
 
 		/**
 		*	returns plugin pointer
 		*/
-		Plugin *const plugin(unsigned int const& _id) throw (...);
+		Plugin *const plugin(unsigned int const& _id);
 
 		/**
 		*	returns plugin pointer
 		*/
-		Plugin const *const plugin(unsigned int const& _id) const throw(...);
+		Plugin const *const plugin(unsigned int const& _id) const;
 
 		/**
 		*	returns plugin info
 		*/
-		PluginMetadata const& info(unsigned int const& _id) const throw(...);
+		PluginMetadata const& info(unsigned int const& _id) const;
 
 	private:
 

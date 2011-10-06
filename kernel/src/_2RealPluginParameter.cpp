@@ -16,25 +16,41 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include <stdexcept>
+#include "_2RealPluginParameter.h"
+#include "_2RealException.h"
+#include "_2RealPlugin.h"
 
 namespace _2Real
 {
 
-	/**
-	*	the exception stuff is not fully fleshed out yet
-	*/
-
-	class Exception : public std::runtime_error
+	PluginParameter::PluginParameter(Id *const _id, Plugin *const _plugin, std::string const& _type) :
+		SetupParameter(_id, _type),
+		m_Plugin(_plugin)
 	{
+	}
 
-	public:
+	PluginParameter::PluginParameter(PluginParameter const& _src) : SetupParameter(_src)
+	{
+		throw Exception("attempted to copy entity");
+	}
 
-		Exception(std::string const& _msg);
-		//void append(std::string const& _msg);
+	PluginParameter& PluginParameter::operator=(PluginParameter const& _src)
+	{
+		throw Exception("attempted to copy entity");
+	}
 
-	}; 
+	PluginParameter::~PluginParameter()
+	{
+	}
+
+	Plugin *const PluginParameter::plugin()
+	{
+		return m_Plugin;
+	}
+
+	Plugin *const PluginParameter::plugin() const
+	{
+		return m_Plugin;
+	}
 
 }

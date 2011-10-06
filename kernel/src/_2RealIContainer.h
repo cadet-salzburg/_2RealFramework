@@ -40,7 +40,7 @@ namespace _2Real
 		*	called in preparation of run() (inherited from poco runnable)
 		*	if _runOnce is true, run will return after one update - otherwise, stop needs to be called
 		*/
-		virtual void start(bool const& _runOnce) throw(...) = 0;
+		virtual void start(bool const& _runOnce) = 0;
 
 		/**
 		*	stops the container
@@ -55,7 +55,7 @@ namespace _2Real
 		/**
 		*	checks if container is correctly configured - throws if not
 		*/
-		virtual void checkConfiguration() throw(...) = 0;
+		virtual void checkConfiguration() = 0;
 
 	};
 

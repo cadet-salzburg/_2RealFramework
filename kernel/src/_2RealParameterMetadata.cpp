@@ -16,25 +16,25 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include <stdexcept>
+#include "_2RealParameterMetadata.h"
 
 namespace _2Real
 {
 
-	/**
-	*	the exception stuff is not fully fleshed out yet
-	*/
-
-	class Exception : public std::runtime_error
+	ParamMetadata::ParamMetadata(std::string const& _name, std::string const& _type) :
+		m_Name(_name),
+		m_Type(_type)
 	{
+	}
 
-	public:
+	std::string ParamMetadata::getName() const
+	{
+		return m_Name;
+	}
 
-		Exception(std::string const& _msg);
-		//void append(std::string const& _msg);
-
-	}; 
+	std::string ParamMetadata::getType() const
+	{
+		return m_Type;
+	}
 
 }

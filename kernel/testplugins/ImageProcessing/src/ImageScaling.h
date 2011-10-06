@@ -21,9 +21,9 @@ class ImageScalingService : public _2Real::IService
 
 public:
 
-	void shutdown() throw(...) {}
-	void update() throw(...);
-	void setup(_2Real::ServiceContext *const _context) throw(...);
+	void shutdown() {}
+	void update();
+	void setup(_2Real::ServiceContext *const _context);
 	~ImageScalingService() {}
 
 private:
@@ -88,9 +88,5 @@ void ImageScalingService< T >::update()
 	catch (Exception &e)
 	{
 		throw e;
-	}
-	catch (...)
-	{
-		throw Exception("error on image scaling update");
 	}
 };

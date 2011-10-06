@@ -19,7 +19,8 @@
 #include "_2RealContainer.h"
 #include "_2RealException.h"
 #include "_2RealServiceContainer.h"
-#include "_2RealServiceSlot.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
 #include "_2RealApplicationCallback.h"
 
 #include <iostream>
@@ -207,7 +208,7 @@ namespace _2Real
 		}
 	}
 
-	std::list< ServiceSlot * > Container::inputSlots()
+	std::list< InputSlot * > Container::inputSlots()
 	{
 		if (type() == Entity::SEQUENCE)
 		{
@@ -218,10 +219,10 @@ namespace _2Real
 		else if (type() == Entity::SYNCHRONIZATION)
 		{
 			//sync: output = union of all children's output
-			std::list< ServiceSlot * > result;
+			std::list< InputSlot * > result;
 			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				std::list< ServiceSlot * > childParams = (*it)->inputSlots();
+				std::list< InputSlot * > childParams = (*it)->inputSlots();
 				result.splice(result.end(), childParams);
 			}
 
@@ -234,7 +235,7 @@ namespace _2Real
 		}
 	}
 
-	std::list< ServiceSlot * > Container::outputSlots()
+	std::list< OutputSlot * > Container::outputSlots()
 	{
 		if (type() == Entity::SEQUENCE)
 		{
@@ -245,10 +246,10 @@ namespace _2Real
 		else if (type() == Entity::SYNCHRONIZATION)
 		{
 			//sync: output = union of all children's output
-			std::list< ServiceSlot * > result;
+			std::list< OutputSlot * > result;
 			for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				std::list< ServiceSlot * > childParams = (*it)->outputSlots();
+				std::list< OutputSlot * > childParams = (*it)->outputSlots();
 				result.splice(result.end(), childParams);
 			}
 
@@ -528,12 +529,12 @@ namespace _2Real
 			//or, if the father is nirvana (in case of the root), the linking must be done by the user.
 			if (type() == Entity::SEQUENCE)
 			{
-				std::list< ServiceSlot * > outSlots;
-				std::list< ServiceSlot * > inSlots;
+				std::list< OutputSlot * > outSlots;
+				std::list< InputSlot * > inSlots;
 				ContainerList::iterator out;
 				ContainerList::iterator in;
-				std::list< ServiceSlot * >::iterator outSlot;
-				std::list< ServiceSlot * >::iterator inSlot;
+				std::list< OutputSlot * >::iterator outSlot;
+				std::list< InputSlot * >::iterator inSlot;
 				
 				in = m_Children.begin();
 				in++;
@@ -551,8 +552,8 @@ namespace _2Real
 					for (inSlot = inSlots.begin(), outSlot = outSlots.begin(); inSlot != inSlots.end(); inSlot++, outSlot++)
 					{
 						//TODO: check if types match!
-						ServiceSlot *a = *outSlot;
-						ServiceSlot *b = *inSlot;
+						OutputSlot *a = *outSlot;
+						InputSlot *b = *inSlot;
 						//breaks former linkage if it differs
 						a->linkWith(b);
 					}

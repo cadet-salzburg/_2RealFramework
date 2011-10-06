@@ -20,8 +20,9 @@
 
 #include "_2RealServiceContainer.h"
 #include "_2RealServiceContext.h"
-#include "_2RealServiceSlot.h"
-#include "_2RealServiceValue.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealServiceParameter.h"
 #include "_2RealException.h"
 #include "_2RealDataPacket.h"
 #include "_2RealContainer.h"
@@ -57,38 +58,38 @@ namespace _2Real
 		delete m_Service;
 	}
 
-	void ServiceContainer::addInputSlot(unsigned int const& id, ServiceSlot *const _slot)
+	void ServiceContainer::addInputSlot(unsigned int const& id, InputSlot *const _slot)
 	{
 		if (_slot == NULL)
 		{
 			throw Exception("service slot could not be added - null pointer");
 		}
 
-		m_InputParams.insert(NamedParam(_slot->name(), _slot));
+		m_InputParams.insert(NamedInput(_slot->name(), _slot));
 		m_InputIds.push_back(id);
 		m_InputSlots.push_back(_slot);
 	}
 
-	void ServiceContainer::addOutputSlot(unsigned int const& id, ServiceSlot *const _slot)
+	void ServiceContainer::addOutputSlot(unsigned int const& id, OutputSlot *const _slot)
 	{
 		if (_slot == NULL)
 		{
 			throw Exception("service slot could not be added - null pointer");
 		}
 
-		m_OutputParams.insert(NamedParam(_slot->name(), _slot));
+		m_OutputParams.insert(NamedOutput(_slot->name(), _slot));
 		m_OutputIds.push_back(id);
 		m_OutputSlots.push_back(_slot);
 	}
 
-	void ServiceContainer::addSetupValue(unsigned int const& id, ServiceValue *const _value)
+	void ServiceContainer::addSetupValue(unsigned int const& id, ServiceParameter *const _value)
 	{
 		if (_value == NULL)
 		{
 			throw Exception("setup parameter could not be added - null pointer");
 		}
 
-		m_SetupParams.insert(NamedValue(_value->name(), _value));
+		m_SetupParams.insert(NamedParam(_value->name(), _value));
 		m_SetupIds.push_back(id);
 		m_SetupValues.push_back(_value);
 	}
@@ -103,7 +104,7 @@ namespace _2Real
 			}
 
 			//check if all input params are linked & initialized
-			for (ParamMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+			for (InputMap::iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
 			{
 				if (!it->second->isLinked())
 				{
@@ -116,7 +117,7 @@ namespace _2Real
 			}
 
 			//check if all output params are initialized
-			for (ParamMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
+			for (OutputMap::iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
 			{
 				if (!it->second->isInitialized())
 				{
@@ -125,7 +126,7 @@ namespace _2Real
 			}
 
 			//check if all setup params are initialized
-			for (ValueMap::iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			for (ParamMap::iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
 			{
 				if (!it->second->isInitialized())
 				{
@@ -187,9 +188,9 @@ namespace _2Real
 				m_Mutex.unlock();
 
 				bool canUpdate = true;
-				for (ParamMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
+				for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 				{
-					unsigned int id = in->second->linked()->id();
+					unsigned int id = in->second->linkedOutput()->id();
 					if (input.contains(id))
 					{
 						DataPacket::SharedAny any = input.getAny(id);
@@ -271,9 +272,9 @@ namespace _2Real
 			m_DataList.clear();
 			m_Mutex.unlock();
 
-			for (ParamMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
+			for (InputMap::iterator in = m_InputParams.begin(); in != m_InputParams.end(); in++)
 			{
-				unsigned int id = in->second->linked()->id();
+				unsigned int id = in->second->linkedOutput()->id();
 				if (input.contains(id))
 				{
 					DataPacket::SharedAny any = input.getAny(id);
@@ -309,7 +310,7 @@ namespace _2Real
 
 	void ServiceContainer::getParameterValue(std::string const& _name, AbstractRef *const _param)
 	{
-		ValueMap::iterator it = m_SetupParams.find(_name);
+		ParamMap::iterator it = m_SetupParams.find(_name);
 		if (it == m_SetupParams.end())
 		{
 			throw Exception("attempted to query non-existant setup parameter");
@@ -319,24 +320,24 @@ namespace _2Real
 		_param->extractFrom(any);
 	}
 
-	void ServiceContainer::registerInputSlot(std::string const& _name, AbstractRef *const _var)
+	void ServiceContainer::registerInputSlot(std::string const& _name, AbstractRef *const _ref)
 	{
-		ParamMap::iterator it = m_InputParams.find(_name);
+		InputMap::iterator it = m_InputParams.find(_name);
 		if (it == m_InputParams.end())
 		{
 			throw Exception("attempted to register non-existant input slots");
 		}
-		it->second->setValue(_var);
+		it->second->setReference(_ref);
 	}
 
-	void ServiceContainer::registerOutputSlot(std::string const& _name, AbstractRef *const _var)
+	void ServiceContainer::registerOutputSlot(std::string const& _name, AbstractRef *const _ref)
 	{
-		ParamMap::iterator it = m_OutputParams.find(_name);
+		OutputMap::iterator it = m_OutputParams.find(_name);
 		if (it == m_OutputParams.end())
 		{
 			throw Exception("attempted to register non-existant output slot");
 		}
-		it->second->setValue(_var);
+		it->second->setReference(_ref);
 	}
 
 	IDs ServiceContainer::inputSlotIDs() const
@@ -354,17 +355,17 @@ namespace _2Real
 		return m_SetupIds;
 	}
 
-	std::list< ServiceSlot * > ServiceContainer::inputSlots()
+	std::list< InputSlot * > ServiceContainer::inputSlots()
 	{
 		return m_InputSlots;
 	}
 
-	std::list< ServiceSlot * > ServiceContainer::outputSlots()
+	std::list< OutputSlot * > ServiceContainer::outputSlots()
 	{
 		return m_OutputSlots;
 	}
 
-	std::list< ServiceValue * > ServiceContainer::setupParams()
+	std::list< ServiceParameter * > ServiceContainer::setupParams()
 	{
 		return m_SetupValues;
 	}

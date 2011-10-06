@@ -22,6 +22,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealException.h"
 #include "_2RealEntityTable.h"
+#include "_2RealPluginParameter.h"
 
 #include <iostream>
 
@@ -58,10 +59,6 @@ namespace _2Real
 			{
 				std::cout << "error on plugin pool destruction: " << e.what() << std::endl;
 			}
-			catch (...)
-			{
-				std::cout << "error on plugin pool destruction" << std::endl;
-			}
 		}
 	}
 
@@ -71,8 +68,19 @@ namespace _2Real
 		{
 
 			Plugin *plugin = m_EntityTable->createPlugin(_name, _dir, _file, _class);
-			plugin->install(m_Factory);
+			plugin->install();
+
+			const PluginMetadata data = plugin->pluginMetadata();
+			typedef std::map< std::string, std::string > StringMap;
+			StringMap setup = data.getSetupParams();
+			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
+			{
+				PluginParameter *param = m_EntityTable->createSetupParameter(it->first, it->second, plugin);
+				plugin->addSetupParameter(param->id(), param);
+			}
+
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
+			
 			return plugin->id();
 		}
 		catch (Exception &e)

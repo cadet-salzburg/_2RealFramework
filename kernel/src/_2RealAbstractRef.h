@@ -22,6 +22,8 @@
 #include "Poco/Any.h"
 #include "Poco/SharedPtr.h"
 
+#include <string>
+
 namespace _2Real
 {
 
@@ -38,12 +40,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		virtual void extractFrom(SharedAny _any) throw(...) = 0;
+		virtual void extractFrom(SharedAny _any) = 0;
 
 		/**
 		*
 		*/
-		virtual void extractFrom(Poco::Any const& _any) throw(...) = 0;
+		virtual void extractFrom(Poco::Any const& _any) = 0;
 
 		/**
 		*	
@@ -53,24 +55,31 @@ namespace _2Real
 		/**
 		*	
 		*/
-		AbstractRef();
+		AbstractRef(std::string const& _type);
 
 		/**
 		*	
 		*/
-		AbstractRef(AbstractRef const& _src) throw(...);
+		AbstractRef(AbstractRef const& _src);
 
 		/**
 		*	
 		*/
-		AbstractRef& operator=(AbstractRef const& _src) throw(...);
+		AbstractRef& operator=(AbstractRef const& _src);
 
 		/**
 		*	
 		*/
 		~AbstractRef();
 
+		/**
+		*
+		*/
+		std::string const& type() const;
 
+	private:
+
+		std::string		m_Typename;
 
 	};
 

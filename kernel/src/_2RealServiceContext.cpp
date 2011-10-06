@@ -25,7 +25,7 @@
 namespace _2Real
 {
 
-	ServiceContext::ServiceContext(ServiceContainer *const _impl) : m_Impl(_impl)
+	ServiceContext::ServiceContext(ServiceContainer *const _impl) : m_Container(_impl)
 	{
 	}
 
@@ -46,11 +46,11 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->getParameterValue(_name, _param);
+			m_Container->getParameterValue(_name, _param);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
 
@@ -58,11 +58,11 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->registerInputSlot(_name, _var);
+			m_Container->registerInputSlot(_name, _var);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
 
@@ -70,11 +70,11 @@ namespace _2Real
 	{
 		try
 		{
-			m_Impl->registerOutputSlot(_name, _var);
+			m_Container->registerOutputSlot(_name, _var);
 		}
-		catch (...)
+		catch (Exception &e)
 		{
-			throw;
+			throw e;
 		}
 	}
 

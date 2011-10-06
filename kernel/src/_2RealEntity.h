@@ -51,8 +51,8 @@ namespace _2Real
 		};
 
 		Entity(Id *const _id);
-		Entity(Entity const& _src) throw(...);
-		Entity& operator=(Entity const& _src) throw(...);
+		Entity(Entity const& _src);
+		Entity& operator=(Entity const& _src);
 		virtual ~Entity();
 		
 		eType const& type() const;

@@ -48,7 +48,7 @@ namespace _2Real
 		/**
 		*	get instance
 		*/
-		static Engine *const instance() throw(...);
+		static Engine *const instance();
 
 		/**
 		*	
@@ -58,12 +58,12 @@ namespace _2Real
 		/**
 		*	engine must not be copied
 		*/
-		Engine(const Engine &_src) throw(...);
+		Engine(const Engine &_src);
 
 		/**
 		*	engine must not be copied
 		*/
-		Engine& operator=(const Engine &_src) throw(...);
+		Engine& operator=(const Engine &_src);
 
 		/**
 		*	destruction of engine destroys all entities
@@ -73,132 +73,137 @@ namespace _2Real
 		/**
 		*	ref count++
 		*/
-		void retain() throw(...);
+		void retain();
 
 		/**
 		*	ref count--
 		*/
-		void release() throw(...);
+		void release();
 
 		/**
 		*	creates a system = nirvana
 		*/
-		const Identifier createSystem(std::string const& _name) throw(...);
+		const Identifier createSystem(std::string const& _name);
 
 		/*
 		*	destroys a system = nirvana
 		*/
-		void destroySystem(Identifier const& _id) throw(...);
+		void destroySystem(Identifier const& _id);
 
 		/**
 		*	install plugin, return id
 		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifier const& _top) throw(...);
+		const Identifier installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifier const& _top);
+
+		/**
+		*	start plugin
+		*/
+		void startPlugin(Identifier const& _plugin, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		void dumpPluginInfo(Identifier const& _plugin, Identifier const& _top) const throw(...);
+		void dumpPluginInfo(Identifier const& _plugin, Identifier const& _top) const;
 
 		/**
 		*	
 		*/
-		void dumpServiceInfo(Identifier const& _plugin, std::string const& _service, Identifier const& _top) const throw(...);
+		void dumpServiceInfo(Identifier const& _plugin, std::string const& _service, Identifier const& _top) const;
 
 		/**
 		*	
 		*/
-		const Identifier createService(std::string const& _name, Identifier const& _plugin, std::string const& _service, Identifier const& _top) throw(...);
+		const Identifier createService(std::string const& _name, Identifier const& _plugin, std::string const& _service, Identifier const& _top);
 
 		/**
 		*
 		*/
-		Identifiers getSetupParameters(Identifier const& _id, Identifier const& _top) const throw(...);
+		Identifiers getSetupParameters(Identifier const& _id, Identifier const& _top) const;
 
 		/**
 		*
 		*/
-		Identifiers getInputSlots(Identifier const& _id, Identifier const& _top) const throw(...);
+		Identifiers getInputSlots(Identifier const& _id, Identifier const& _top) const;
 
 		/**
 		*
 		*/
-		Identifiers getOutputSlots(Identifier const& _id, Identifier const& _top) const throw(...);
+		Identifiers getOutputSlots(Identifier const& _id, Identifier const& _top) const;
 
 		/**
 		*	
 		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top) throw(...);
+		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top) throw(...);
+		const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top) throw(...);
+		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void append(Identifier const& _dst, Identifier const& _src, Identifier const& _top) throw(...);
+		void append(Identifier const& _dst, Identifier const& _src, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void setParameterValue(Identifier const& _id, Poco::Any _any, Identifier const& _top) throw(...);
+		void setParameterValue(Identifier const& _id, Poco::Any _any, std::string const& _type, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void link(Identifier const& _in, Identifier const& _out, Identifier const& _top) throw(...);
+		void link(Identifier const& _in, Identifier const& _out, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void linkSlots(Identifier const& _in, Identifier const& _out, Identifier const& _top) throw(...);
+		void linkSlots(Identifier const& _in, Identifier const& _out, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _top) throw(...);
+		void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		void registerToNewData(Identifier const& _id, NewDataCallback _callback, Identifier const& _top) throw(...);
+		void registerToNewData(Identifier const& _id, NewDataCallback _callback, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		Identifiers getChildren(Identifier const& _id, Identifier const& _top) throw(...);
+		Identifiers getChildren(Identifier const& _id, Identifier const& _top);
 
 		/**
 		*	
 		*/
-		void start(Identifier const& _id, Identifier const& _top) throw(...);
+		void start(Identifier const& _id, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void startAll(Identifier const& _top) throw(...);
+		void startAll(Identifier const& _top);
 
 		/**
 		*	
 		*/
-		void stop(Identifier const& _id, Identifier const& _top) throw(...);
+		void stop(Identifier const& _id, Identifier const& _top);
 
 		/**
 		*
 		*/
-		void stopAll(Identifier const& _top) throw(...);
+		void stopAll(Identifier const& _top);
 
 		/**
 		*
 		*/
-		void destroy(Identifier const& _id, Identifier const& _top) throw(...);
+		void destroy(Identifier const& _id, Identifier const& _top);
 
 	private:
 

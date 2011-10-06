@@ -47,12 +47,12 @@ namespace _2Real
 		/**
 		*	no copies allowed
 		*/
-		ProductionGraphs(ProductionGraphs const& _src) throw(...);
+		ProductionGraphs(ProductionGraphs const& _src);
 
 		/**
 		*	no assignment allowed
 		*/
-		ProductionGraphs& operator=(ProductionGraphs const& _src) throw(...);
+		ProductionGraphs& operator=(ProductionGraphs const& _src);
 
 		/**
 		*	causes destruction of all existing systems
@@ -62,12 +62,12 @@ namespace _2Real
 		/**
 		*	create sequence; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
-		const unsigned int createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top) throw(...);
+		const unsigned int createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top);
 
 		/**
 		*	create sync; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
 		*/
-		const unsigned int createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top) throw(...);
+		const unsigned int createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top);
 
 		/**
 		*	creates a new system
@@ -77,17 +77,17 @@ namespace _2Real
 		/**
 		*	returns system, throws if nonexistant
 		*/
-		Container *const getSystem(unsigned int const& _id) throw(...);
+		Container *const getSystem(unsigned int const& _id);
 
 		/**
 		*	destroys a system (and everything inside it)
 		*/
-		void destroySystem(unsigned int const& _id) throw(...);
+		void destroySystem(unsigned int const& _id);
 
 		/**
 		*	destroys container, stops container's root
 		*/
-		void destroy(unsigned int const& _id, unsigned int const& _top) throw(...);
+		void destroy(unsigned int const& _id, unsigned int const& _top);
 
 	private:
 

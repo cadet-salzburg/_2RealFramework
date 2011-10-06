@@ -16,25 +16,41 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include <stdexcept>
+#include "_2RealParameter.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	/**
-	*	the exception stuff is not fully fleshed out yet
-	*/
-
-	class Exception : public std::runtime_error
+	Parameter::Parameter(Id *const _id, std::string const& _type) :
+		Entity(_id),
+		m_bIsInitialized(false),
+		m_Typename(_type)
 	{
+	}
 
-	public:
+	Parameter::Parameter(Parameter const& _src) : Entity(_src)
+	{
+		throw Exception("attempted to copy entity");
+	}
 
-		Exception(std::string const& _msg);
-		//void append(std::string const& _msg);
+	Parameter& Parameter::operator=(Parameter const& _src)
+	{
+		throw Exception("attempted to copy entity");
+	}
 
-	}; 
+	Parameter::~Parameter()
+	{
+	}
+
+	bool const& Parameter::isInitialized() const
+	{
+		return m_bIsInitialized;
+	}
+
+	std::string const& Parameter::datatype() const
+	{
+		return m_Typename;
+	}
 
 }

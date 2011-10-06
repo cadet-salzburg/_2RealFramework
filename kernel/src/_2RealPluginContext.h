@@ -19,7 +19,10 @@
 
 #pragma once
 
+#include "_2RealParamRef.h"
+
 #include <string>
+#include <typeinfo>
 
 namespace _2Real
 {
@@ -27,6 +30,7 @@ namespace _2Real
 	/**
 	*	plugin's interface for communication with the framework
 	*	allows export of services' factory functions
+	*	as well as querying of setup parameters
 	*/
 	
 	class IService;
@@ -46,41 +50,39 @@ namespace _2Real
 		/**
 		*	registers a service in the framework
 		*/
-		void registerService(std::string const& _name, ServiceCreator _creator) throw(...);
+		void registerService(std::string const& name, ServiceCreator creator);
+
+		/**
+		*	retrieves the value of a setup parameter from the framework
+		*	name & type must match some setup parameter defined in plugin metadata
+		*/
+		template< typename T >
+		void getSetupParameter(std::string const& name, T &param)
+		{
+			try
+			{
+				AbstractRef *ref = new ParamRef< T >(param);
+				getSetupParameter(name, ref);
+			}
+			catch (Exception &e)
+			{
+				throw e;
+			}
+		}
 
 	private:
 
 		friend class Plugin;
 
-		/**
-		*
-		*/
-		PluginContext(Plugin *const _plugin, ServiceFactory *const _factory);
-		
-		/**
-		*
-		*/
-		PluginContext(PluginContext const& _src);
-		
-		/**
-		*
-		*/
-		PluginContext& operator=(PluginContext const& _src);
-
-		/**
-		*
-		*/
+		PluginContext(Plugin *const plugin, ServiceFactory *const factory);
+		PluginContext(PluginContext const& src);
+		PluginContext& operator=(PluginContext const& src);
 		~PluginContext();
 
-		/**
-		*
-		*/
-		Plugin			*m_Plugin;
+		void				getSetupParameter(std::string const& name, AbstractRef *const ref);
 
-		/**
-		*
-		*/
-		ServiceFactory	*m_Factory;
+		Plugin				*m_Plugin;
+		ServiceFactory		*m_Factory;
 
 	};
 

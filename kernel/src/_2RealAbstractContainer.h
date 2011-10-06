@@ -35,7 +35,8 @@ namespace _2Real
 	*/
 
 	class ApplicationCallback;
-	class ServiceSlot;
+	class InputSlot;
+	class OutputSlot;
 	class Exception;
 
 	class AbstractContainer : public Entity, public IContainer
@@ -51,12 +52,12 @@ namespace _2Real
 		/**
 		*	
 		*/
-		AbstractContainer(AbstractContainer const& _src) throw(...);
+		AbstractContainer(AbstractContainer const& _src);
 
 		/**
 		*	
 		*/
-		AbstractContainer& operator=(AbstractContainer const& _src) throw(...);
+		AbstractContainer& operator=(AbstractContainer const& _src);
 
 		/**
 		*	
@@ -71,7 +72,7 @@ namespace _2Real
 		/**
 		*	prepares for run()
 		*/
-		void start(bool const& _runOnce) throw(...);
+		void start(bool const& _runOnce);
 
 		/**
 		*	stops run()
@@ -86,17 +87,17 @@ namespace _2Real
 		/**
 		*	
 		*/
-		void setup(ServiceContext *const _contextPtr) throw(...);
+		void setup(ServiceContext *const _contextPtr);
 
 		/**
 		*	
 		*/
-		void addListener(IDataQueue *const _queue) throw(...);
+		void addListener(IDataQueue *const _queue);
 		
 		/**
 		*	
 		*/
-		void removeListener(IDataQueue *const _queue) throw(...);
+		void removeListener(IDataQueue *const _queue);
 		
 		/**
 		*	
@@ -116,42 +117,42 @@ namespace _2Real
 		/**
 		*	sets father, throws exception if father is null
 		*/
-		void setFather(AbstractContainer *const _father) throw(...);
+		void setFather(AbstractContainer *const _father);
 
 		/**
 		*	
 		*/
-		virtual IDs setupParamIDs() const throw(...) = 0;
+		virtual IDs setupParamIDs() const = 0;
 
 		/**
 		*	
 		*/
-		virtual IDs inputSlotIDs() const throw(...) = 0;
+		virtual IDs inputSlotIDs() const = 0;
 
 		/**
 		*	
 		*/
-		virtual IDs outputSlotIDs() const throw(...) = 0;
+		virtual IDs outputSlotIDs() const = 0;
 
 		/**
 		*	
 		*/
-		virtual std::list< ServiceSlot * > inputSlots() throw(...) = 0;
+		virtual std::list< InputSlot * > inputSlots() = 0;
 
 		/**
 		*	
 		*/
-		virtual std::list< ServiceSlot * > outputSlots() throw(...) = 0;
+		virtual std::list< OutputSlot * > outputSlots() = 0;
 
 		/**
 		*	
 		*/
-		void listenTo(AbstractContainer *const _sender) throw(...);
+		void listenTo(AbstractContainer *const _sender);
 
 		/**
 		*	
 		*/
-		void stopListeningTo(AbstractContainer *const _sender) throw(...);
+		void stopListeningTo(AbstractContainer *const _sender);
 
 		/**
 		*	

@@ -88,8 +88,8 @@ namespace _2Real
 	PluginMetadata::PluginMetadata(std::string const& _name, std::string const& _path) :
 		m_PluginName(_name),
 		m_InstallDirectory(_path),
-		m_Description("the holy plugin"),
-		m_Author("spaghetti monster"),
+		m_Description("this plugin is holy"),
+		m_Author("the spaghetti monster"),
 		m_Contact("through prayer"),
 		m_Version(PluginMetadata::Version(0, 0, 0)),
 		m_Services()
@@ -148,12 +148,12 @@ namespace _2Real
 
 	void PluginMetadata::addServiceMetadata(ServiceMetadata const& _info)
 	{
-		m_Services.insert(NamedService(_info.getName(), _info));
+		m_Services.insert(ServiceMetadata::NamedService(_info.getName(), _info));
 	}
 
 	ServiceMetadata const& PluginMetadata::getServiceMetadata(std::string const& _name) const
 	{
-		ServiceMap::const_iterator it = m_Services.find(_name);
+		ServiceMetadata::ServiceMap::const_iterator it = m_Services.find(_name);
 
 		if (it == m_Services.end())
 		{
@@ -163,20 +163,65 @@ namespace _2Real
 		return it->second;
 	}
 
+	void PluginMetadata::addSetupParam(std::string const& _name, std::string const& _type)
+	{
+		ParamMetadata::ParamMap::iterator it = m_SetupParams.find(_name);
+
+		if (it != m_SetupParams.end())
+		{
+			throw Exception("setup parameter " + _name + " already exists");
+		}
+
+		m_SetupParams.insert(ParamMetadata::NamedParam(_name, ParamMetadata(_name, _type)));
+	}
+
+	ParamMetadata::StringMap PluginMetadata::getSetupParams() const
+	{
+		ParamMetadata::StringMap result;
+		for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
+		{
+			ParamMetadata data = it->second;
+			result.insert(std::make_pair(data.getName(), data.getType()));
+		}
+		return result;
+	}
+
+	const bool PluginMetadata::hasSetupParam(std::string const& _name) const
+	{
+		ParamMetadata::ParamMap::const_iterator it = m_SetupParams.find(_name);
+
+		if (it != m_SetupParams.end())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 	const std::string PluginMetadata::info()
 	{
 		std::stringstream info;
 		info << std::endl;
-		info << m_PluginName << std::endl;
-		info << m_Description << std::endl;
-		info << "installed at " << m_InstallDirectory << std::endl;
-		info << "written by " << m_Author << std::endl;
-		info << "contact " << m_Contact << std::endl;
-		info << "version " << m_Version.asString() << std::endl;
+		info << "plugin:\t" <<m_PluginName << std::endl;
+		info << "description:\t" << m_Description << std::endl;
+		info << "installed at\t" << m_InstallDirectory << std::endl;
+		info << "written by\t" << m_Author << std::endl;
+		info << "contact\t\t" << m_Contact << std::endl;
+		info << "version\t\t" << m_Version.asString() << std::endl;
 
-		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		if (!m_SetupParams.empty())
 		{
-			info << "exports service " << it->first << std::endl;
+			info << "this plugin has setup parameters:\t" << std::endl;
+			for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			{
+				info << it->first << ":\t" << it->second.getType() << std::endl;
+			}
+		}
+
+		info << "this plugin exports the following services:" << std::endl;
+		for (ServiceMetadata::ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		{
+			info << "service\t" << it->first << std::endl;
 		}
 
 		return info.str();

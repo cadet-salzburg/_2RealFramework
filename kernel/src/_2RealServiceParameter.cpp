@@ -16,46 +16,41 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceValue.h"
+#include "_2RealServiceParameter.h"
 #include "_2RealException.h"
-#include "_2RealAbstractRef.h"
+#include "_2RealServiceContainer.h"
 
 namespace _2Real
 {
 
-	ServiceValue::ServiceValue(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
-		ServiceParam(_id, _service, _type)
+	ServiceParameter::ServiceParameter(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
+		SetupParameter(_id, _type),
+		m_Service(_service)
 	{
 	}
 
-	ServiceValue::ServiceValue(ServiceValue const& _src) : ServiceParam(_src)
+	ServiceParameter::ServiceParameter(ServiceParameter const& _src) : SetupParameter(_src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	ServiceValue& ServiceValue::operator=(ServiceValue const& _src)
+	ServiceParameter& ServiceParameter::operator=(ServiceParameter const& _src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	ServiceValue::~ServiceValue()
+	ServiceParameter::~ServiceParameter()
 	{
 	}
 
-	void ServiceValue::setValue(Poco::Any const& _any)
+	ServiceContainer *const ServiceParameter::service()
 	{
-		m_bIsInitialized = true;
-		m_Value = _any;
+		return m_Service;
 	}
 
-	Poco::Any const& ServiceValue::value() const
+	ServiceContainer *const ServiceParameter::service() const
 	{
-		if (!m_bIsInitialized)
-		{
-			throw Exception("ServiceValue::value(), " + name() + " is uninitialized");
-		}
-
-		return m_Value;
+		return m_Service;
 	}
 
 }

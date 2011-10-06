@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,34 +16,64 @@
 	limitations under the License.
 */
 
-#include "_2RealAbstractRef.h"
+#include "_2RealIOSlot.h"
 #include "_2RealException.h"
+#include "_2RealAbstractRef.h"
+#include "_2RealServiceContainer.h"
+
+#include <iostream>
 
 namespace _2Real
 {
 
-	AbstractRef::AbstractRef(std::string const& _type) :
-		m_Typename(_type)
+	IOSlot::IOSlot(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
+		Parameter(_id, _type),
+		m_Service(_service),
+		m_Linked(NULL),
+		m_Ref(NULL)
 	{
 	}
 
-	AbstractRef::AbstractRef(AbstractRef const& _src)
+	IOSlot::IOSlot(IOSlot const& _src) : Parameter(_src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	AbstractRef& AbstractRef::operator=(AbstractRef const& _src)
+	IOSlot& IOSlot::operator=(IOSlot const& _src)
 	{
 		throw Exception("attempted to copy entity");
 	}
 
-	AbstractRef::~AbstractRef()
+	IOSlot::~IOSlot()
 	{
+		delete m_Ref;
 	}
 
-	std::string const& AbstractRef::type() const
+	void IOSlot::setReference(AbstractRef *const _ref)
 	{
-		return m_Typename;
+		m_Ref = _ref;
+	}
+
+	const bool IOSlot::isLinked() const
+	{
+		if (m_Linked)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	ServiceContainer *const IOSlot::service()
+	{
+		return m_Service;
+	}
+
+	ServiceContainer *const IOSlot::service() const
+	{
+		return m_Service;
 	}
 
 }

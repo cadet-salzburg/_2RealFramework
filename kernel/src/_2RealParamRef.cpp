@@ -21,10 +21,9 @@
 
 namespace _2Real
 {
-	
 	template< typename T >
 	ParamRef< T >::ParamRef(T &_value) :
-		AbstractRef(),
+		AbstractRef(typeid(T).name()),
 		m_Value(_value)
 	{
 	}

@@ -13,9 +13,6 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceParam.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -33,12 +30,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <Filter>Plugin Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceSlot.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceValue.cpp">
-      <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealApplicationCallback.cpp">
       <Filter>Engine</Filter>
@@ -85,6 +76,15 @@
     <ClCompile Include="..\..\src\_2RealId.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTypeTable.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
@@ -106,9 +106,6 @@
       <Filter>App Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealPlugin.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceParam.h">
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealPluginPool.h">
@@ -153,12 +150,6 @@
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
       <Filter>Plugin Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceSlot.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceValue.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealApplicationCallback.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -189,6 +180,15 @@
     <ClInclude Include="..\..\src\_2RealId.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTypeTable.h" />
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealInputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealParameter.h" />
+    <ClInclude Include="..\..\src\_2RealPluginParameter.h" />
+    <ClInclude Include="..\..\src\_2RealServiceParameter.h" />
+    <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
+    <ClInclude Include="..\..\src\_2RealIOSlot.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">

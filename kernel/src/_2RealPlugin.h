@@ -37,6 +37,8 @@ namespace _2Real
 
 	class FactoryReference;
 	class ServiceFactory;
+	class PluginParameter;
+	class AbstractRef;
 
 	class Plugin : public Entity
 	{
@@ -44,91 +46,126 @@ namespace _2Real
 	public:
 
 		/**
-		*	
+		*	dir: install directory, file: name of dll, classname: name of exported class
 		*/
-		Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, Id *const _id) throw(...);
-
-		/**
-		*	
-		*/
-		Plugin(Plugin const& _src) throw(...);
-
-		/**
-		*	
-		*/
-		Plugin& operator=(Plugin const& _src) throw (...);
-
-		/**
-		*	
-		*/
+		Plugin(std::string const& dir, std::string const& file, std::string const& classname, Id *const id);
+		Plugin(Plugin const& _src);
+		Plugin& operator=(Plugin const& _src);
 		~Plugin();
 
-		/**
-		*	
-		*/
-		PluginMetadata const& pluginMetadata() const;
+		typedef std::list< FactoryReference * >						ServiceTemplates;
+		typedef Poco::ClassLoader< IPluginActivator >				PluginLoader;
 
 		/**
-		*	
+		*	installation: inserts plugin into plugin pool, loads metadata
 		*/
-		ServiceMetadata const& serviceMetadata(std::string const& _name) const;
+		void														install();
 
 		/**
-		*
+		*	kicks plugin out of framework
 		*/
-		std::list< FactoryReference *> const& services() const;
+		void														uninstall();
 
 		/**
-		*
+		*	calls plugin activator's setup
 		*/
-		std::list< FactoryReference *> const& services();
+		void														setup(ServiceFactory *const factory);
 
 		/**
-		*
+		*	called by plugin context during plugin activator's setup
 		*/
-		void addService(FactoryReference *ref);
+		void														addService(FactoryReference *ref);
 
 		/**
-		*
+		*	function to get a setup param
 		*/
-		void install(ServiceFactory *const _factory) throw(...);
+		//void														getSetupParam(std::string const& name, int &param);
 
 		/**
-		*
+		*	get plugin metadata
 		*/
-		void uninstall() throw(...);
+		PluginMetadata const&										pluginMetadata() const;
+
+		/**
+		*	get service metadata
+		*/
+		ServiceMetadata const&										serviceMetadata(std::string const& name) const;
+
+		/**
+		*	list of services exported by plugin
+		*/
+		ServiceTemplates const&										services() const;
+
+		/**
+		*	list of services exported by plugin
+		*/
+		ServiceTemplates const&										services();
+
+		/**
+		*	returns true if plugin's setup has been called at least once
+		*/
+		bool const&													isInitialized() const;
+
+		/**
+		*	ids of setup params
+		*/
+		IDs															setupParamIDs() const;
+
+		/**
+		*	setup parameters
+		*/
+		void														addSetupParameter(unsigned int const& id, PluginParameter *const _param);
+
+		/**
+		*	retrieves value of a setup parameter
+		*/
+		void														getParameterValue(std::string const& _name, AbstractRef *const _param);
 
 	private:
 
+		typedef std::pair< const std::string, PluginParameter * >	NamedParam;
+		typedef std::map< const std::string, PluginParameter * >	ParamMap;
+
 		/**
-		*	poit
+		*	setup parameters
 		*/
-		typedef Poco::ClassLoader< IPluginActivator >	PluginLoader;
+		ParamMap													m_SetupParams;
+
+		/**
+		*	setup parameter ids
+		*/
+		IDs															m_SetupIds;
 
 		/**
 		*	dll filepath
 		*/
-		std::string						m_File;
+		std::string													m_File;
 
 		/**
 		*	plugin activator implemented by user plugin
 		*/
-		IPluginActivator				*m_Activator;
+		IPluginActivator											*m_Activator;
 
 		/**
 		*	metadata
 		*/
-		PluginMetadata					m_Metadata;
+		PluginMetadata												m_Metadata;
 
 		/**
 		*	poco classloader
 		*/
-		PluginLoader					m_PluginLoader;
+		PluginLoader												m_PluginLoader;
 
 		/**
 		*	services
 		*/
-		std::list< FactoryReference *>	m_Services;
+		ServiceTemplates											m_Services;
+
+		/**
+		*	true if plugin's setup has been called at least once
+		*/
+		bool														m_bIsInitialized;
 
 	};
+
 }

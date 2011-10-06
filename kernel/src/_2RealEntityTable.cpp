@@ -27,8 +27,10 @@
 #include "_2RealServiceContainer.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealContainer.h"
-#include "_2RealServiceSlot.h"
-#include "_2RealServiceValue.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealPluginParameter.h"
+#include "_2RealServiceParameter.h"
 #include "_2RealApplicationCallback.h"
 
 #include <sstream>
@@ -58,16 +60,12 @@ namespace _2Real
 		{
 			try
 			{
-				std::cout << "internal error: entity left in entity table" << std::endl;
+				std::cout << "shutdown: entity left in entity table: " << it->second->info() << std::endl;
 				//delete it->second;
 			}
 			catch (Exception &e)
 			{
 				std::cout << "error on entity table destruction: " << e.what() << std::endl;
-			}
-			catch (...)
-			{
-				std::cout << "error on entity table destruction" << std::endl;
 			}
 		}
 	}
@@ -146,20 +144,20 @@ namespace _2Real
 
 			_obj->resetIO();
 
-			std::list< ServiceValue * > setup = _obj->setupParams();
-			for (std::list< ServiceValue * >::iterator it = setup.begin(); it != setup.end(); it++)
+			std::list< ServiceParameter * > setup = _obj->setupParams();
+			for (std::list< ServiceParameter * >::iterator it = setup.begin(); it != setup.end(); it++)
 			{
 				destroy(*it);
 			}
 
-			std::list< ServiceSlot * > input = _obj->inputSlots();
-			for (std::list< ServiceSlot * >::iterator it = input.begin(); it != input.end(); it++)
+			std::list< InputSlot * > input = _obj->inputSlots();
+			for (std::list< InputSlot * >::iterator it = input.begin(); it != input.end(); it++)
 			{
 				destroy(*it);
 			}
 
-			std::list< ServiceSlot * > output = _obj->outputSlots();
-			for (std::list< ServiceSlot * >::iterator it = output.begin(); it != output.end(); it++)
+			std::list< OutputSlot * > output = _obj->outputSlots();
+			for (std::list< OutputSlot * >::iterator it = output.begin(); it != output.end(); it++)
 			{
 				destroy(*it);
 			}
@@ -173,30 +171,7 @@ namespace _2Real
 		}
 	}
 
-	void EntityTable::destroy(ServiceSlot *_obj)
-	{
-		try
-		{
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
-			{
-				throw Exception("internal error: entity not in entity map");
-			}
-			else if (!e->second)
-			{
-				throw Exception("internal error: null pointer stored in entity map");
-			}
-
-			delete _obj;
-			m_EntityTable.erase(e);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void EntityTable::destroy(ServiceValue *_obj)
+	void EntityTable::destroy(Parameter *_obj)
 	{
 		try
 		{
@@ -468,7 +443,7 @@ namespace _2Real
 		}
 	}
 
-	ServiceValue *const EntityTable::createServiceValue(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	ServiceParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -480,9 +455,9 @@ namespace _2Real
 			info << "param name: \t" << _name << std::endl;
 
 			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
-			ServiceValue *val = new ServiceValue(id, _service, _type);
-			m_EntityTable.insert(NamedEntity(id->id(), val));
-			return val;
+			ServiceParameter *param = new ServiceParameter(id, _service, _type);
+			m_EntityTable.insert(NamedEntity(id->id(), param));
+			return param;
 		}
 		catch (Exception &e)
 		{
@@ -490,7 +465,29 @@ namespace _2Real
 		}
 	}
 
-	ServiceSlot *const EntityTable::createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	PluginParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _type, Plugin *const _plugin)
+	{
+		try
+		{
+			++m_iCreationCount;
+
+			std::stringstream info;
+			info << "i am a setup parameter" << std::endl;
+			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "param name: \t" << _name << std::endl;
+
+			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
+			PluginParameter *param = new PluginParameter(id, _plugin, _type);
+			m_EntityTable.insert(NamedEntity(id->id(), param));
+			return param;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	InputSlot *const EntityTable::createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -502,7 +499,7 @@ namespace _2Real
 			info << "slot name:\t\t" << _name << std::endl;
 
 			Id *id = new Id(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
-			ServiceSlot *slot = new ServiceSlot(id, _service, _type);
+			InputSlot *slot = new InputSlot(id, _service, _type);
 			m_EntityTable.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}
@@ -512,7 +509,7 @@ namespace _2Real
 		}
 	}
 
-	ServiceSlot *const EntityTable::createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	OutputSlot *const EntityTable::createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
 	{
 		try
 		{
@@ -524,7 +521,7 @@ namespace _2Real
 			info << "slot name:\t\t" << _name << std::endl;
 
 			Id *id = new Id(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
-			ServiceSlot *slot = new ServiceSlot(id, _service, _type);
+			OutputSlot *slot = new OutputSlot(id, _service, _type);
 			m_EntityTable.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}

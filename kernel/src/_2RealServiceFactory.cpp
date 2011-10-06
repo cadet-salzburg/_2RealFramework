@@ -17,8 +17,9 @@
 */
 
 #include "_2RealServiceFactory.h"
-#include "_2RealServiceSlot.h"
-#include "_2RealServiceValue.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealServiceParameter.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
@@ -61,10 +62,6 @@ namespace _2Real
 		//	catch (Exception &e)
 		//	{
 		//		std::cout << "error on service factory destruction: " << e.what() << std::endl;
-		//	}
-		//	catch (...)
-		//	{
-		//		std::cout << "error on service factory destruction" << std::endl;
 		//	}
 		//}
 	}
@@ -166,19 +163,19 @@ namespace _2Real
 			//add to service container
 			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				ServiceValue *val = m_EntityTable->createServiceValue(it->first, it->second, service);
+				ServiceParameter *val = m_EntityTable->createSetupParameter(it->first, it->second, service);
 				service->addSetupValue(val->id(), val);
 			}
 
 			for (StringMap::iterator it = input.begin(); it != input.end(); it++)
 			{
-				ServiceSlot *slot = m_EntityTable->createInputSlot(it->first, it->second, service);
+				InputSlot *slot = m_EntityTable->createInputSlot(it->first, it->second, service);
 				service->addInputSlot(slot->id(), slot);
 			}
 
 			for (StringMap::iterator it = output.begin(); it != output.end(); it++)
 			{
-				ServiceSlot *slot = m_EntityTable->createOutputSlot(it->first, it->second, service);
+				OutputSlot *slot = m_EntityTable->createOutputSlot(it->first, it->second, service);
 				service->addOutputSlot(slot->id(), slot);
 			}
 

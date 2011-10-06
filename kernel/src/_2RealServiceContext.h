@@ -22,6 +22,7 @@
 #include "_2RealParamRef.h"
 
 #include <string>
+#include <typeinfo>
 
 namespace _2Real
 {
@@ -41,16 +42,16 @@ namespace _2Real
 		*	name & type must match some input parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void registerInputSlot(std::string const& _name, T &_var) throw(...)
+		void registerInputSlot(std::string const& name, T &var)
 		{
 			try
 			{
-				AbstractRef *value = new ParamRef< T >(_var);
-				registerInputSlot(_name, value);
+				AbstractRef *value = new ParamRef< T >(var);
+				registerInputSlot(name, value);
 			}
-			catch (...)
+			catch (Exception &e)
 			{
-				throw;
+				throw e;
 			}
 		}
 
@@ -59,16 +60,16 @@ namespace _2Real
 		*	name & type must match some output parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void registerOutputSlot(std::string const& _name, T &_var) throw (...)
+		void registerOutputSlot(std::string const& name, T &var)
 		{
 			try
 			{
-				AbstractRef *value = new ParamRef< T >(_var);
-				registerOutputSlot(_name, value);
+				AbstractRef *value = new ParamRef< T >(var);
+				registerOutputSlot(name, value);
 			}
-			catch (...)
+			catch (Exception &e)
 			{
-				throw;
+				throw e;
 			}
 		}
 
@@ -77,16 +78,16 @@ namespace _2Real
 		*	name & type must match some setup parameter defined in plugin metadata
 		*/
 		template< typename T >
-		void getSetupParameter(std::string const& _name, T &_param) throw(...)
+		void getSetupParameter(std::string const& name, T &param)
 		{
 			try
 			{
-				AbstractRef *value = new ParamRef< T >(_param);
-				getSetupParameter(_name, value);
+				AbstractRef *value = new ParamRef< T >(param);
+				getSetupParameter(name, value);
 			}
-			catch (...)
+			catch (Exception &e)
 			{
-				throw;
+				throw e;
 			}
 		}
 	
@@ -117,22 +118,22 @@ namespace _2Real
 		/**
 		*	internally used method for retrieving setup params
 		*/
-		void getSetupParameter(std::string const& _name, AbstractRef *const _var) throw(...);
+		void getSetupParameter(std::string const& _name, AbstractRef *const _var);
 
 		/**
 		*	internally used method for registering input slots
 		*/
-		void registerInputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
+		void registerInputSlot(std::string const& _name, AbstractRef *const _var);
 
 		/**
 		*	internally used method for registering output slots
 		*/
-		void registerOutputSlot(std::string const& _name, AbstractRef *const _param) throw(...);
+		void registerOutputSlot(std::string const& _name, AbstractRef *const _param);
 
 		/**
 		*	
 		*/
-		ServiceContainer			*m_Impl;
+		ServiceContainer			*m_Container;
 
 	};
 

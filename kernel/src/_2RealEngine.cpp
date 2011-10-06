@@ -30,8 +30,11 @@
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealServiceContainer.h"
-#include "_2RealServiceValue.h"
-#include "_2RealServiceSlot.h"
+#include "_2RealPlugin.h"
+#include "_2RealInputSlot.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealPluginParameter.h"
+#include "_2RealServiceParameter.h"
 
 #include <sstream>
 #include <iostream>
@@ -150,9 +153,23 @@ namespace _2Real
 	{
 		try
 		{
-			//loads plugin & carries out init
 			unsigned int id = m_Plugins->install(_name, _dir, _file, _class);
 			return m_EntityTable->getIdentifier(id);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void Engine::startPlugin(Identifier const& _plugin, Identifier const& _top)
+	{
+		try
+		{
+			//unsigned int id = m_Plugins->install(_name, _dir, _file, _class);
+			//return m_EntityTable->getIdentifier(id);
+			Plugin *plugin = m_Plugins->plugin(_plugin.id());
+			plugin->setup(m_Factory);
 		}
 		catch (Exception &e)
 		{
@@ -210,19 +227,32 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = m_Graphs->getSystem(_top.id());
+			
 			const AbstractContainer *container = nirvana->find(_id.id());
 
-			if (!container)
+			const Plugin *plugin = m_Plugins->plugin(_id.id());
+
+			if (!container && !plugin)
 			{
 				throw Exception("this system does not contain " + _id.name());
 			}
-			else if (container->type() != Entity::SERVICE)
+			else if (container && container->type() != Entity::SERVICE)
 			{
 				throw Exception("only setup params of a service can be queried");
 			}
 
 			Identifiers setup;
-			IDs ids = container->setupParamIDs();
+			IDs ids;
+
+			if (container)
+			{
+				ids = container->setupParamIDs();
+			}
+			else
+			{
+				ids = plugin->setupParamIDs();
+			}
+
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
 				setup.push_back(m_EntityTable->getIdentifier(*it));
@@ -316,19 +346,22 @@ namespace _2Real
 		}
 	}
 
-	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any, Identifier const& _top)
+	void Engine::setParameterValue(Identifier const& _id, Poco::Any _any, std::string const& _type, Identifier const& _top)
 	{
 		try
 		{
 			Container *nirvana = m_Graphs->getSystem(_top.id());
 			Entity *e = m_EntityTable->get(_id.id());
-			ServiceValue *val = static_cast< ServiceValue * >(e);
-			ServiceContainer *service = val->service();
-			if (!(nirvana->find(service->id())))
+
+			SetupParameter *param = static_cast< SetupParameter * >(e);
+
+			if (param->datatype() != _type)
 			{
-				throw Exception("in this system, no service has this setup param " + _id.name());
+				throw Exception("datatype mismatch: " + param->datatype() + " " + _type);
 			}
-			val->setValue(_any);
+
+			param->setValue(_any);
+
 		}
 		catch (Exception &e)
 		{
@@ -364,10 +397,10 @@ namespace _2Real
 				throw Exception(_in.name() + " is identical to " + _out.name());
 			}
 
-			std::list< ServiceSlot * > inSlots = in->inputSlots();
-			std::list< ServiceSlot * > outSlots = out->outputSlots();
-			std::list< ServiceSlot * >::iterator inIt;
-			std::list< ServiceSlot * >::iterator outIt;
+			std::list< InputSlot * > inSlots = in->inputSlots();
+			std::list< OutputSlot * > outSlots = out->outputSlots();
+			std::list< InputSlot * >::iterator inIt;
+			std::list< OutputSlot * >::iterator outIt;
 
 			if (inSlots.size() != outSlots.size())
 			{
@@ -395,8 +428,8 @@ namespace _2Real
 
 			Entity *eIn = m_EntityTable->get(_in.id());
 			Entity *eOut = m_EntityTable->get(_out.id());
-			ServiceSlot *in = static_cast< ServiceSlot * >(eIn);
-			ServiceSlot *out = static_cast< ServiceSlot * >(eOut);
+			InputSlot *in = static_cast< InputSlot * >(eIn);
+			OutputSlot *out = static_cast< OutputSlot * >(eOut);
 			ServiceContainer *inService = in->service();
 			ServiceContainer *outService = out->service();
 			

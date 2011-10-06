@@ -7,9 +7,9 @@ class ImageProcessing : public _2Real::IPluginActivator
 
 public:
 
-	void getMetadata(_2Real::PluginMetadata &_info) throw(...);
+	void getMetadata(_2Real::PluginMetadata &info);
 
-	void init(_2Real::PluginContext &_context) throw (...);
+	void setup(_2Real::PluginContext &context);
 
 	~ImageProcessing() {}
 

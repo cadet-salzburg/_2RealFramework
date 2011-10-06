@@ -22,18 +22,35 @@
 #include "_2RealException.h"
 #include "_2RealFactoryReference.h"
 #include "_2RealServiceMetadata.h"
+#include "_2RealPluginParameter.h"
+#include "_2RealAbstractRef.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _class, Id *const _id) :
+	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _classname, Id *const _id) :
 		Entity(_id),
-		m_Metadata(_class, _dir),
+		m_Metadata(_classname, _dir),
 		m_Activator(NULL),
-		m_File(_dir + _file)
+		m_File(_dir + _file),
+		m_bIsInitialized(false)
 	{
+		if (_dir.empty())
+		{
+			throw Exception("could not create plugin - no install directory");
+		}
+
+		if (_file.empty())
+		{
+			throw Exception("could not create plugin - no dll filename");
+		}
+
+		if (_classname.empty())
+		{
+			throw Exception("could not create plugin - no classname");
+		}
 	}
 
 	Plugin::Plugin(Plugin const& _src) :
@@ -45,7 +62,7 @@ namespace _2Real
 
 	Plugin& Plugin::operator=(Plugin const& _src)
 	{
-		throw Exception("internal error: attempted to copy an entity");
+		throw Exception("internal error: attempted to assign an entity");
 	}
 
 	Plugin::~Plugin()
@@ -59,7 +76,7 @@ namespace _2Real
 		}
 		catch (Exception &e)
 		{
-			std::cout << "plugin destruction error: " << e.what() << std::endl;
+			std::cout << "destruction error: " << e.what() << std::endl;
 		}
 	}
 
@@ -68,12 +85,12 @@ namespace _2Real
 		m_Services.push_back(ref);
 	}
 
-	std::list< FactoryReference * > const& Plugin::services() const
+	Plugin::ServiceTemplates const& Plugin::services() const
 	{
 		return m_Services;
 	}
 
-	std::list< FactoryReference * > const& Plugin::services()
+	Plugin::ServiceTemplates const& Plugin::services()
 	{
 		return m_Services;
 	}
@@ -88,29 +105,57 @@ namespace _2Real
 		return m_Metadata.getServiceMetadata(_name);
 	}
 
-	void Plugin::install(ServiceFactory *const _factory)
+	bool const& Plugin::isInitialized() const
+	{
+		return m_bIsInitialized;
+	}
+
+	IDs Plugin::setupParamIDs() const
+	{
+		return m_SetupIds;
+	}
+
+	
+	void Plugin::addSetupParameter(unsigned int const& id, PluginParameter *const _param)
+	{
+		if (_param == NULL)
+		{
+			throw Exception("setup parameter could not be added - null pointer");
+		}
+
+		m_SetupParams.insert(NamedParam(_param->name(), _param));
+		m_SetupIds.push_back(id);
+	}
+
+	void Plugin::getParameterValue(std::string const& _name, AbstractRef *const _param)
+	{
+		ParamMap::iterator it = m_SetupParams.find(_name);
+		if (it == m_SetupParams.end())
+		{
+			throw Exception("attempted to query non-existant setup parameter");
+		}
+
+		Poco::Any any = (it->second->value());
+		_param->extractFrom(any);
+	}
+
+	void Plugin::install()
 	{
 		try
 		{
-			if (m_Metadata.getInstallDirectory().empty())
-			{
-				throw Exception("could not install plugin - no install directory was given");
-			}
-
-			if (m_Metadata.getClassname().empty())
-			{
-				throw Exception("could not install plugin - no classname was given");
-			}
+			//1st, load dll
 
 			try
 			{
 				m_PluginLoader.loadLibrary(m_File);
 			}
-			catch (...)
+			catch (Poco::LibraryLoadException &e)
 			{
-				//poco error
-				throw Exception("could not install plugin - could not load dll");
+				//a poco error occured
+				throw Exception(e.what());
 			}
+
+			//2nd, create plugin activator instance
 
 			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
 			{
@@ -118,36 +163,54 @@ namespace _2Real
 				{
 					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
 				}
-				catch (...)
+				catch (Poco::NotFoundException &e)
 				{
-					//poco error
-					throw Exception("could not install plugin - could not load dll");
+					//a poco error occured
+					throw Exception(e.what());
 				}
-
-				m_Activator->getMetadata(m_Metadata);
-				PluginContext context(this, _factory);
-				m_Activator->init(context);
 			}
 			else
 			{
 				throw Exception("could not install plugin - could not load dll");
 			}
+
+			//3rd, read the metadata
+
+			m_Activator->getMetadata(m_Metadata);
 		}
 		catch (Exception &e)
 		{
 			if (m_Activator)
 			{
-				delete m_Activator;
+				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
 				m_Activator = NULL;
 			}
-
-			//TODO: clean up services if they exist!
 
 			throw e;
 		}
 	}
 
-	void Plugin::uninstall() throw(...)
+	void Plugin::setup(ServiceFactory *const _factory)
+	{
+		try
+		{
+			if (!m_Activator)
+			{
+				throw Exception("internal error: attempted to set up uninstalled plugin");
+			}
+
+			PluginContext context(this, _factory);
+			m_Activator->setup(context);
+
+			m_bIsInitialized = true;
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
+	void Plugin::uninstall()
 	{
 		try
 		{
@@ -158,7 +221,7 @@ namespace _2Real
 				m_PluginLoader.unloadLibrary(m_File);
 			}
 
-			delete m_Activator;
+			//delete m_Activator;
 			m_Activator = NULL;
 		}
 		catch (Exception &e)

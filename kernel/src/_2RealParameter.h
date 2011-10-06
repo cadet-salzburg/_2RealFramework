@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,10 +18,9 @@
 
 #pragma once
 
-#include "_2RealAbstractRef.h"
+#include "_2RealEntity.h"
 
 #include <string>
-#include <typeinfo>
 
 namespace _2Real
 {
@@ -31,45 +29,53 @@ namespace _2Real
 	*
 	*/
 
-	template< typename T >
-	class ParamRef : public AbstractRef
+	class Parameter : public Entity
 	{
 
 	public:
 
 		/**
-		*	attempt to extract from an any ptr
+		*	
 		*/
-		void			extractFrom(AbstractRef::SharedAny _any);
+		Parameter(Id *const _id, std::string const& _type);
+
+		/**
+		*	
+		*/
+		Parameter(Parameter const& _src);
+
+		/**
+		*	
+		*/
+		Parameter& operator=(Parameter const& _src);
+
+		/**
+		*	
+		*/
+		virtual ~Parameter();
+
+		/**
+		*	true if value has been set at some point
+		*/
+		bool const& isInitialized() const;
+
+		/**
+		*	typename as string
+		*/
+		std::string const& datatype() const;
+
+	protected:
+
+		/**
+		*	
+		*/
+		bool						m_bIsInitialized;
 
 		/**
 		*
 		*/
-		void			extractFrom(Poco::Any const& _any);
-
-		/**
-		*	create copy of value, transform into any pointer
-		*/
-		SharedAny		getAny();
-
-	private:
-
-		friend class ServiceContext;
-		friend class PluginContext;
-
-		ParamRef(T &_value);
-		ParamRef(ParamRef const& _src);
-		ParamRef& operator=(ParamRef const& _src);
-		~ParamRef();
-
-		/**
-		*	reference to member variable of a service
-		*	extract() will overwrite this.
-		*/
-		T				&m_Value;
+		const std::string			m_Typename;
 
 	};
 
 }
-
-#include "_2RealParamRef.cpp"

@@ -60,12 +60,12 @@ namespace _2Real
 		/**
 		*	factory should never be copied
 		*/
-		ServiceFactory(ServiceFactory const& _src) throw(...);
+		ServiceFactory(ServiceFactory const& _src);
 
 		/**
 		*	factory should never be copied
 		*/
-		ServiceFactory& operator=(ServiceFactory const& _src) throw(...);
+		ServiceFactory& operator=(ServiceFactory const& _src);
 
 		/**
 		*	
@@ -75,37 +75,37 @@ namespace _2Real
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		FactoryReference *const registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator) throw(...);
+		FactoryReference *const registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		ServiceContainer *const createService(std::string const& _name, unsigned int const& _id, std::string const& _service) throw(...);
+		ServiceContainer *const createService(std::string const& _name, unsigned int const& _id, std::string const& _service);
 
 		/**
 		*
 		*/
-		FactoryReference const *const ref(unsigned int const& _plugin, std::string const& _service) const throw(...);
+		FactoryReference const *const ref(unsigned int const& _plugin, std::string const& _service) const;
 
 		/**
 		*
 		*/
-		FactoryReference *const ref(unsigned int const& _plugin, std::string const& _service) throw(...);
+		FactoryReference *const ref(unsigned int const& _plugin, std::string const& _service);
 
 		/**
 		*
 		*/
-		ServiceMetadata const& info(unsigned int const& _plugin, std::string const& _service) const throw(...);
+		ServiceMetadata const& info(unsigned int const& _plugin, std::string const& _service) const;
 
 		/**
 		*	
 		*/
-		std::list< FactoryReference * > getServices(unsigned int const& _plugin) throw(...);
+		std::list< FactoryReference * > getServices(unsigned int const& _plugin);
 
 		/**
 		*	
 		*/
-		IDs getServiceIDs(unsigned int const& _plugin) const throw(...);
+		IDs getServiceIDs(unsigned int const& _plugin) const;
 
 	private:
 

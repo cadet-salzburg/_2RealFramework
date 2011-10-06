@@ -21,9 +21,9 @@ class RandomImageService : public _2Real::IService
 
 public:
 
-	void shutdown() throw(...) {}	//nothing to do in shutdown
-	void update() throw(...);
-	void setup(_2Real::ServiceContext *const _context) throw(...);
+	void shutdown() {}	//nothing to do in shutdown
+	void update();
+	void setup(_2Real::ServiceContext *const _context);
 	~RandomImageService() {}
 
 private:
@@ -76,8 +76,8 @@ void RandomImageService< T >::update()
 		m_OutputImage.setData(tmp);
 		m_OutputImage.setResolution(res);
 	}
-	catch (...)
+	catch (Exception &e)
 	{
-		throw Exception("error on random image update");
+		throw e;
 	}
 };

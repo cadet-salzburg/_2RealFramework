@@ -33,8 +33,9 @@ namespace _2Real
 	*/
 
 	class IService;
-	class ServiceSlot;
-	class ServiceValue;
+	class InputSlot;
+	class OutputSlot;
+	class ServiceParameter;
 
 	class ServiceContainer : public AbstractContainer
 	{
@@ -44,32 +45,32 @@ namespace _2Real
 		/**
 		*	returns value of setup param
 		*/
-		void getParameterValue(std::string const& _name, AbstractRef *const _param) throw(...);
+		void getParameterValue(std::string const& _name, AbstractRef *const _param);
 
 		/**
 		*	registers ref of input variable
 		*/
-		void registerInputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
+		void registerInputSlot(std::string const& _name, AbstractRef *const _var);
 
 		/**
 		*	registers ref of output variable
 		*/
-		void registerOutputSlot(std::string const& _name, AbstractRef *const _var) throw(...);
+		void registerOutputSlot(std::string const& _name, AbstractRef *const _var);
 
 		/**
 		*	throws if user defined service is null
 		*/
-		ServiceContainer(IService *const _service, Id *const _id, ApplicationCallback *const _output) throw(...);
+		ServiceContainer(IService *const _service, Id *const _id, ApplicationCallback *const _output);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceContainer(ServiceContainer const& _src) throw(...);
+		ServiceContainer(ServiceContainer const& _src);
 
 		/**
 		*	this one should not be called, ever
 		*/
-		ServiceContainer& operator=(ServiceContainer const& _src) throw(...);
+		ServiceContainer& operator=(ServiceContainer const& _src);
 
 		/**
 		*	destructor also performs shutdown & destroys user defined service
@@ -79,139 +80,126 @@ namespace _2Real
 		/**
 		*	called by service factory after service creation
 		*/
-		void addInputSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
+		void addInputSlot(unsigned int const& id, InputSlot *const _slot);
 
 		/**
 		*	called by service factory after service creation
 		*/
-		void addOutputSlot(unsigned int const& id, ServiceSlot *const _slot) throw(...);
+		void addOutputSlot(unsigned int const& id, OutputSlot *const _slot);
 
 		/**
 		*	called by service factory after service creation
 		*/
-		void addSetupValue(unsigned int const& id, ServiceValue *const _value) throw(...);
+		void addSetupValue(unsigned int const& id, ServiceParameter *const _value);
 
 		/**
 		*	calls setup function of service when called for the first time
 		*/
-		void checkConfiguration() throw(...);
+		void checkConfiguration();
 
 		/**
 		*	
 		*/
-		void run() throw(...);
+		void run();
 
 		/**
 		*	
 		*/
-		void update() throw(...);
+		void update();
 
 		/**
 		*	
 		*/
-		void shutdown() throw(...);
+		void shutdown();
 
 		/**
 		*	
 		*/
-		IDs setupParamIDs() const throw(...);
+		IDs setupParamIDs() const;
 
 		/**
 		*	
 		*/
-		IDs inputSlotIDs() const throw(...);
+		IDs inputSlotIDs() const;
 
 		/**
 		*	
 		*/
-		IDs outputSlotIDs() const throw(...);
+		IDs outputSlotIDs() const;
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * > inputSlots() throw(...);
+		std::list< InputSlot * > inputSlots();
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * > outputSlots() throw(...);
+		std::list< OutputSlot * > outputSlots();
 
 		/**
 		*	
 		*/
-		std::list< ServiceValue * > setupParams() throw(...);
+		std::list< ServiceParameter * > setupParams();
 
 	private:
 
-		/**
-		*	slots are accessed by name
-		*/
-		typedef std::pair< const std::string, ServiceSlot * >	NamedParam;
-
-		/**
-		*	slots are accessed by name
-		*/
-		typedef std::map< const std::string, ServiceSlot * >	ParamMap;
-
-		/**
-		*	setup params are accessed by name
-		*/
-		typedef std::pair< const std::string, ServiceValue * >	NamedValue;
-
-		/**
-		*	setup params are accessed by name
-		*/
-		typedef std::map< const std::string, ServiceValue * >	ValueMap;
+		typedef std::pair< std::string, InputSlot * >				NamedInput;
+		typedef std::map< std::string, InputSlot * >				InputMap;
+		typedef std::pair< std::string, OutputSlot * >				NamedOutput;
+		typedef std::map< std::string, OutputSlot * >				OutputMap;
+		typedef std::pair< std::string, ServiceParameter * >		NamedParam;
+		typedef std::map< std::string, ServiceParameter * >			ParamMap;
 
 		/**
 		*	input slots as map
 		*/
-		ParamMap												m_InputParams;
+		InputMap													m_InputParams;
 
 		/**
 		*	
 		*/
-		IDs														m_InputIds;
+		IDs															m_InputIds;
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * >								m_InputSlots;
+		std::list< InputSlot * >									m_InputSlots;
 
 		/**
 		*	output slots
 		*/
-		ParamMap												m_OutputParams;
+		OutputMap													m_OutputParams;
 
 		/**
 		*	
 		*/
-		IDs														m_OutputIds;
+		IDs															m_OutputIds;
 
 		/**
 		*	
 		*/
-		std::list< ServiceSlot * >								m_OutputSlots;
+		std::list< OutputSlot * >									m_OutputSlots;
 
 		/**
 		*	setup value
 		*/
-		ValueMap												m_SetupParams;
+		ParamMap													m_SetupParams;
 
 		/**
 		*	
 		*/
-		IDs														m_SetupIds;
+		IDs															m_SetupIds;
 
 		/**
 		*	
 		*/
-		std::list< ServiceValue * >								m_SetupValues;
+		std::list< ServiceParameter * >								m_SetupValues;
 
 		/**
 		*	the user defined service
 		*/
-		IService												*m_Service;
+		IService													*m_Service;
 
 	};
 

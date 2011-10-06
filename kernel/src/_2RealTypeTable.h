@@ -18,61 +18,37 @@
 
 #pragma once
 
-#include "_2RealServiceParam.h"
+#include "_2RealException.h"
 
-#include "Poco/SharedPtr.h"
-#include "Poco/Any.h"
+#include <map>
+#include <string>
+#include <vector>
+#include <typeinfo>
+#include <iostream>
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class ServiceContainer;
-
-	class ServiceValue : public ServiceParam
+	class TypeTable
 	{
 
 	public:
 
-		/**
-		*	
-		*/
-		ServiceValue(Id *const _id, ServiceContainer *const _service, std::string const& _type);
+		TypeTable();
 
-		/**
-		*	
-		*/
-		ServiceValue(ServiceValue const& _src) throw(...);
-
-		/**
-		*	
-		*/
-		ServiceValue& operator=(ServiceValue const& _src) throw(...);
-
-		/**
-		*	
-		*/
-		virtual ~ServiceValue();
-
-		/**
-		*	set any
-		*/
-		void setValue(Poco::Any const& _any);
-
-		/**
-		*	return any
-		*/
-		Poco::Any const& value() const;
+		std::map< std::string, std::string > getTable();
 
 	private:
 
-		/**
-		*	
-		*/
-		Poco::Any			m_Value;
+		template< typename T >
+		void insertType(std::string name)
+		{
+			m_TypeTable[name] = typeid(T).name();
+			m_TypeTable["vector " + name] = typeid(std::vector< T >).name();
+			m_TypeTable["vector2D " + name] = typeid(std::vector< std::vector< T > >).name();
+		}
+
+		std::map< std::string, std::string >		m_TypeTable;
 
 	};
 

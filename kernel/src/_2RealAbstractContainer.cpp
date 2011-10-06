@@ -21,7 +21,8 @@
 #include "_2RealId.h"
 #include "_2RealDataPacket.h"
 #include "_2RealData.h"
-#include "_2RealServiceSlot.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealInputSlot.h"
 #include "_2RealApplicationCallback.h"
 
 #include "Poco/Delegate.h"
@@ -58,7 +59,7 @@ namespace _2Real
 		delete m_Output;
 	}
 
-	void AbstractContainer::start(bool const& _runOnce) throw(...)
+	void AbstractContainer::start(bool const& _runOnce)
 	{
 		if (!m_bIsConfigured)
 		{
@@ -153,7 +154,7 @@ namespace _2Real
 		m_NewData += Poco::delegate(container, &AbstractContainer::receiveData);
 	}
 
-	void AbstractContainer::removeListener(IDataQueue *const _queue) throw(...)
+	void AbstractContainer::removeListener(IDataQueue *const _queue)
 	{
 		if (!_queue)
 		{
@@ -214,13 +215,13 @@ namespace _2Real
 				Poco::SharedPtr< DataPacket > outputData = Poco::SharedPtr< DataPacket >(new DataPacket());
 				unsigned int name = id();
 
-				std::list< ServiceSlot * > out = this->outputSlots();
-				std::list< ServiceSlot * >::iterator it;
+				std::list< OutputSlot * > out = this->outputSlots();
+				std::list< OutputSlot * >::iterator it;
 
 				for (it = out.begin(); it != out.end(); it++)
 				{
-					ServiceSlot *slot = *it;
-					ServiceSlot::NamedAny any = slot->getAny();
+					OutputSlot *slot = *it;
+					IOSlot::NamedAny any = slot->getAsAny();
 					outputData->insertAny(any.first, any.second);
 				}
 
@@ -268,22 +269,23 @@ namespace _2Real
 
 	void AbstractContainer::resetIO()
 	{
-		std::list< ServiceSlot * > input = this->inputSlots();
-		std::list< ServiceSlot * > output = this->outputSlots();
+		std::list< InputSlot * > input = this->inputSlots();
+		std::list< OutputSlot * > output = this->outputSlots();
 
-		std::list< ServiceSlot * >::iterator it;
-		for (it = input.begin(); it != input.end(); it++)
+		std::list< InputSlot * >::iterator in;
+		for (in = input.begin(); in != input.end(); in++)
 		{
-			ServiceSlot *out = (*it)->linked();
+			OutputSlot *out = (*in)->linkedOutput();
 			if (out)
 			{
 				out->reset();
 			}
 		}
 
-		for (it = output.begin(); it != output.end(); it++)
+		std::list< OutputSlot * >::iterator out;
+		for (out = output.begin(); out != output.end(); out++)
 		{
-			(*it)->reset();
+			(*out)->reset();
 		}
 	}
 

@@ -54,56 +54,44 @@ namespace _2Real
 
 	void ServiceMetadata::addSetupParam(std::string const& _name, std::string const& _type)
 	{
-		ParamMap::iterator it = m_SetupParams.find(_name);
+		ParamMetadata::ParamMap::iterator it = m_SetupParams.find(_name);
 
 		if (it != m_SetupParams.end())
 		{
 			throw Exception("setup parameter " + _name + " already exists");
 		}
 
-		m_SetupParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
+		m_SetupParams.insert(ParamMetadata::NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
 	void ServiceMetadata::addInputParam(std::string const& _name, std::string const& _type)
 	{
-		ParamMap::iterator it = m_InputParams.find(_name);
+		ParamMetadata::ParamMap::iterator it = m_InputParams.find(_name);
 
 		if (it != m_InputParams.end())
 		{
 			throw Exception("input slot " + _name + " already exists");
 		}
 
-		m_InputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
+		m_InputParams.insert(ParamMetadata::NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
 	void ServiceMetadata::addOutputParam(std::string const& _name, std::string const& _type)
 	{
-		ParamMap::iterator it = m_OutputParams.find(_name);
+		ParamMetadata::ParamMap::iterator it = m_OutputParams.find(_name);
 
 		if (it != m_OutputParams.end())
 		{
 			throw Exception("output slot " + _name + " already exists");
 		}
 
-		m_OutputParams.insert(NamedParam(_name, ParamMetadata(_name, _type)));
+		m_OutputParams.insert(ParamMetadata::NamedParam(_name, ParamMetadata(_name, _type)));
 	}
 
-	void ServiceMetadata::addUserclass(std::string const& _name)
+	ParamMetadata::StringMap ServiceMetadata::getInputParams() const
 	{
-		UserclassMap::iterator it = m_Userclasses.find(_name);
-
-		if (it != m_Userclasses.end())
-		{
-			throw Exception("user class " + _name + " already exists");
-		}
-
-		m_Userclasses.insert(NamedUserclass(_name, ""));
-	}
-
-	ServiceMetadata::StringMap ServiceMetadata::getInputParams() const
-	{
-		ServiceMetadata::StringMap result;
-		for (ParamMap::const_iterator it = m_InputParams.begin(); it !=m_InputParams.end(); it++)
+		ParamMetadata::StringMap result;
+		for (ParamMetadata::ParamMap::const_iterator it = m_InputParams.begin(); it !=m_InputParams.end(); it++)
 		{
 			ParamMetadata data = it->second;
 			result.insert(std::make_pair(data.getName(), data.getType()));
@@ -111,10 +99,10 @@ namespace _2Real
 		return result;
 	}
 
-	ServiceMetadata::StringMap ServiceMetadata::getOutputParams() const
+	ParamMetadata::StringMap ServiceMetadata::getOutputParams() const
 	{
-		ServiceMetadata::StringMap result;
-		for (ParamMap::const_iterator it = m_OutputParams.begin(); it !=m_OutputParams.end(); it++)
+		ParamMetadata::StringMap result;
+		for (ParamMetadata::ParamMap::const_iterator it = m_OutputParams.begin(); it !=m_OutputParams.end(); it++)
 		{
 			ParamMetadata data = it->second;
 			result.insert(std::make_pair(data.getName(), data.getType()));
@@ -122,10 +110,10 @@ namespace _2Real
 		return result;
 	}
 
-	ServiceMetadata::StringMap ServiceMetadata::getSetupParams() const
+	ParamMetadata::StringMap ServiceMetadata::getSetupParams() const
 	{
-		ServiceMetadata::StringMap result;
-		for (ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
+		ParamMetadata::StringMap result;
+		for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
 		{
 			ParamMetadata data = it->second;
 			result.insert(std::make_pair(data.getName(), data.getType()));
@@ -155,7 +143,7 @@ namespace _2Real
 
 	const bool ServiceMetadata::hasSetupParam(std::string const& _name) const
 	{
-		ParamMap::const_iterator it = m_SetupParams.find(_name);
+		ParamMetadata::ParamMap::const_iterator it = m_SetupParams.find(_name);
 
 		if (it != m_SetupParams.end())
 		{
@@ -167,7 +155,7 @@ namespace _2Real
 
 	const bool ServiceMetadata::hasInputParam(std::string const& _name) const
 	{
-		ParamMap::const_iterator it = m_InputParams.find(_name);
+		ParamMetadata::ParamMap::const_iterator it = m_InputParams.find(_name);
 
 		if (it != m_InputParams.end())
 		{
@@ -179,7 +167,7 @@ namespace _2Real
 
 	const bool ServiceMetadata::hasOuputParam(std::string const& _name) const
 	{
-		ParamMap::const_iterator it = m_OutputParams.find(_name);
+		ParamMetadata::ParamMap::const_iterator it = m_OutputParams.find(_name);
 
 		if (it != m_OutputParams.end())
 		{
@@ -189,78 +177,52 @@ namespace _2Real
 		return true;
 	}
 
-	const bool ServiceMetadata::hasUserclass(std::string const& _name) const
-	{
-		UserclassMap::const_iterator it = m_Userclasses.find(_name);
-
-		if (it != m_Userclasses.end())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-
-	ServiceMetadata::ParamMetadata::ParamMetadata(std::string const& _name, std::string const& _type) :
-		m_Name(_name),
-		m_Type(_type)
-	{
-	}
-
-	std::string ServiceMetadata::ParamMetadata::getName() const
-	{
-		return m_Name;
-	}
-
-	std::string ServiceMetadata::ParamMetadata::getType() const
-	{
-		return m_Type;
-	}
-
 	const std::string ServiceMetadata::info() const
 	{
 		std::stringstream info;
 		info << std::endl;
 		info << m_ServiceName << std::endl;
 		info << m_Description << std::endl;
-		
-		if (m_bIsSingleton)
+
+		//if (m_bIsSingleton)
+		//{
+		//	info << "this service is a singleton" << std::endl;
+		//}
+
+		//if (m_bCanReconfigure)
+		//{
+		//	info << "this service's setup parameters can be reconfigured" << std::endl;
+		//}
+		//else
+		//{
+		//	info << "this service's setup parameters can be initialized only once" << std::endl;
+		//}
+
+		if (!m_SetupParams.empty())
 		{
-			info << "this service is a singleton" << std::endl;
+			info << "this service has setup parameters: " << std::endl;
+			for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			{
+				info << it->first << std::endl;
+			}
 		}
 
-		if (m_bCanReconfigure)
+		if (!m_InputParams.empty())
 		{
-			info << "this service's setup parameters can be reconfigured" << std::endl;
-		}
-		else
-		{
-			info << "this service's setup parameters can be initialized only once" << std::endl;
-		}
-
-		info << "this service defines the following userclasses: " << std::endl;
-		for (UserclassMap::const_iterator it = m_Userclasses.begin(); it != m_Userclasses.end(); it++)
-		{
-			info << it->first << std::endl;
+			info << "this service has input parameters: " << std::endl;
+			for (ParamMetadata::ParamMap::const_iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
+			{
+				info << it->first << std::endl;
+			}
 		}
 
-		info << "this service has setup parameters: " << std::endl;
-		for (ParamMap::const_iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+		if (!m_OutputParams.empty())
 		{
-			info << it->first << std::endl;
-		}
-
-		info << "this service has input parameters: " << std::endl;
-		for (ParamMap::const_iterator it = m_InputParams.begin(); it != m_InputParams.end(); it++)
-		{
-			info << it->first << std::endl;
-		}
-
-		info << "this service has output parameters: " << std::endl;
-		for (ParamMap::const_iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
-		{
-			info << it->first << std::endl;
+			info << "this service has output parameters: " << std::endl;
+			for (ParamMetadata::ParamMap::const_iterator it = m_OutputParams.begin(); it != m_OutputParams.end(); it++)
+			{
+				info << it->first << std::endl;
+			}
 		}
 
 		return info.str();

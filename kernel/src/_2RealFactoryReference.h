@@ -50,12 +50,12 @@ namespace _2Real
 		/**
 		*
 		*/
-		FactoryReference(FactoryReference const& _src) throw(...);
+		FactoryReference(FactoryReference const& _src);
 
 		/**
 		*
 		*/
-		FactoryReference& operator=(FactoryReference const& _src) throw(...);
+		FactoryReference& operator=(FactoryReference const& _src);
 
 		/**
 		*

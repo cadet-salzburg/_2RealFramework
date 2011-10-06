@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,57 +18,47 @@
 
 #pragma once
 
-#include "_2RealAbstractRef.h"
-
-#include <string>
-#include <typeinfo>
+#include "_2RealIOSlot.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	represents an input slot of a service
 	*/
 
-	template< typename T >
-	class ParamRef : public AbstractRef
+	class OutputSlot;
+
+	class InputSlot : public IOSlot
 	{
 
 	public:
 
-		/**
-		*	attempt to extract from an any ptr
-		*/
-		void			extractFrom(AbstractRef::SharedAny _any);
+		InputSlot(Id *const id, ServiceContainer *const service, std::string const& type);
+		InputSlot(InputSlot const& src);
+		InputSlot& operator=(InputSlot const& src);
+		~InputSlot();
 
 		/**
-		*
+		*	return sender id
 		*/
-		void			extractFrom(Poco::Any const& _any);
+		OutputSlot *const		linkedOutput();
 
 		/**
-		*	create copy of value, transform into any pointer
+		*	link with other slot
 		*/
-		SharedAny		getAny();
-
-	private:
-
-		friend class ServiceContext;
-		friend class PluginContext;
-
-		ParamRef(T &_value);
-		ParamRef(ParamRef const& _src);
-		ParamRef& operator=(ParamRef const& _src);
-		~ParamRef();
+		void					linkWith(OutputSlot *const output);
 
 		/**
-		*	reference to member variable of a service
-		*	extract() will overwrite this.
+		*	get value from any
 		*/
-		T				&m_Value;
+		void					extractFrom(IOSlot::SharedAny const& any);
+
+		/**
+		*	breaks IO linkage
+		*/
+		void					reset();
 
 	};
 
 }
-
-#include "_2RealParamRef.cpp"

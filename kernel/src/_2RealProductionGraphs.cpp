@@ -21,8 +21,6 @@
 #include "_2RealException.h"
 #include "_2RealContainer.h"
 #include "_2RealEntityTable.h"
-#include "_2RealServiceSlot.h"
-#include "_2RealServiceValue.h"
 #include "_2RealServiceContainer.h"
 
 #include <iostream>
@@ -56,10 +54,6 @@ namespace _2Real
 			catch (Exception &e)
 			{
 				std::cout << "error on production graphs destruction: " << e.what() << std::endl;
-			}
-			catch (...)
-			{
-				std::cout << "error on production graphs destruction" << std::endl;
 			}
 		}
 	}

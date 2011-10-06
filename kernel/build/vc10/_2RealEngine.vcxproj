@@ -24,7 +24,12 @@
     <ClCompile Include="..\..\src\_2RealFactoryReference.cpp" />
     <ClCompile Include="..\..\src\_2RealId.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealParamRef.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -32,16 +37,17 @@
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContainer.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceParam.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceSlot.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceValue.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
+    <ClCompile Include="..\..\src\_2RealTypeTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractContainer.h" />
@@ -60,24 +66,30 @@
     <ClInclude Include="..\..\src\_2RealId.h" />
     <ClInclude Include="..\..\src\_2RealIDataQueue.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
+    <ClInclude Include="..\..\src\_2RealInputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealIOSlot.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
+    <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealParameter.h" />
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\_2RealParamRef.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPluginParameter.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
     <ClInclude Include="..\..\src\_2RealServiceContainer.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealServiceParam.h" />
-    <ClInclude Include="..\..\src\_2RealServiceSlot.h" />
-    <ClInclude Include="..\..\src\_2RealServiceValue.h" />
+    <ClInclude Include="..\..\src\_2RealServiceParameter.h" />
+    <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealTypeTable.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

@@ -109,6 +109,18 @@ namespace _2Real
 		}
 	}
 
+	void System::startPlugin(Identifier const& _pluginID)
+	{
+		try
+		{
+			return m_Engine->startPlugin(_pluginID, *m_ID);
+		}
+		catch (Exception &e)
+		{
+			throw e;
+		}
+	}
+
 	void System::dumpPluginInfo(Identifier const& _pluginID)
 	{
 		try
@@ -205,11 +217,11 @@ namespace _2Real
 		}
 	}
 
-	void System::setParameterValue(Identifier const& _id, Poco::Any _any)
+	void System::setParameterValue(Identifier const& _id, Poco::Any _any, type_info const& _info)
 	{
 		try
 		{
-			m_Engine->setParameterValue(_id, _any, *m_ID);
+			m_Engine->setParameterValue(_id, _any, _info.name(), *m_ID);
 		}
 		catch (Exception &e)
 		{
