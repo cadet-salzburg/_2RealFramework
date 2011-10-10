@@ -13,8 +13,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealEngineTest", "_2RealE
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealEngineTypes", "_2RealEngineTypes.vcxproj", "{6CD383F1-2500-4867-B0D4-887CC806A082}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,12 +41,6 @@ Global
 		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.ActiveCfg = Release|Win32
 		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.Build.0 = Release|Win32
 		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|x64.ActiveCfg = Release|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Debug|Win32.Build.0 = Debug|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Debug|x64.ActiveCfg = Debug|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Release|Win32.ActiveCfg = Release|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Release|Win32.Build.0 = Release|Win32
-		{6CD383F1-2500-4867-B0D4-887CC806A082}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
