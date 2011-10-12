@@ -120,7 +120,7 @@ namespace _2Real
 		PluginMap::iterator it = m_Plugins.find(_id);
 		if (it == m_Plugins.end())
 		{
-			throw Exception("could not retrieve plugin - does not exist");
+			return NULL;
 		}
 		else if (!it->second)
 		{

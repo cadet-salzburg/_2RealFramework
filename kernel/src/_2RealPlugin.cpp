@@ -144,7 +144,6 @@ namespace _2Real
 		try
 		{
 			//1st, load dll
-
 			try
 			{
 				m_PluginLoader.loadLibrary(m_File);
@@ -156,7 +155,6 @@ namespace _2Real
 			}
 
 			//2nd, create plugin activator instance
-
 			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
 			{
 				try
@@ -175,7 +173,6 @@ namespace _2Real
 			}
 
 			//3rd, read the metadata
-
 			m_Activator->getMetadata(m_Metadata);
 		}
 		catch (Exception &e)
@@ -214,14 +211,13 @@ namespace _2Real
 	{
 		try
 		{
+			delete m_Activator;
 			m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
 
 			if (m_PluginLoader.isLibraryLoaded(m_File))
 			{
 				m_PluginLoader.unloadLibrary(m_File);
 			}
-
-			//delete m_Activator;
 			m_Activator = NULL;
 		}
 		catch (Exception &e)

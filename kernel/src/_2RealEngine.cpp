@@ -227,11 +227,8 @@ namespace _2Real
 		try
 		{
 			Container *nirvana = m_Graphs->getSystem(_top.id());
-			
 			const AbstractContainer *container = nirvana->find(_id.id());
-
 			const Plugin *plugin = m_Plugins->plugin(_id.id());
-
 			if (!container && !plugin)
 			{
 				throw Exception("this system does not contain " + _id.name());
@@ -240,7 +237,6 @@ namespace _2Real
 			{
 				throw Exception("only setup params of a service can be queried");
 			}
-
 			Identifiers setup;
 			IDs ids;
 
@@ -252,12 +248,10 @@ namespace _2Real
 			{
 				ids = plugin->setupParamIDs();
 			}
-
 			for (IDIterator it = ids.begin(); it != ids.end(); it++)
 			{
 				setup.push_back(m_EntityTable->getIdentifier(*it));
 			}
-
 			return setup;
 		}
 		catch (Exception &e)

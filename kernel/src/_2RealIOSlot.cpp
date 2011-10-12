@@ -52,6 +52,7 @@ namespace _2Real
 	void IOSlot::setReference(AbstractRef *const _ref)
 	{
 		m_Ref = _ref;
+		m_bIsInitialized = true;
 	}
 
 	const bool IOSlot::isLinked() const

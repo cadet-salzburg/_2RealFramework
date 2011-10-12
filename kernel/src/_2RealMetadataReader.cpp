@@ -236,7 +236,6 @@ namespace _2Real
 		}
 		catch (Exception &e)
 		{
-			std::cout << "caught an exception" << std::endl;
 			throw e;
 		}
 	}

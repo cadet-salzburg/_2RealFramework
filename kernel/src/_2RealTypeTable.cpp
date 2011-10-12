@@ -17,8 +17,6 @@
 */
 
 #include "_2RealTypeTable.h"
-//todo: userclass dir
-#include "Image.h"
 
 namespace _2Real
 {
@@ -36,8 +34,9 @@ namespace _2Real
 		this->insertType< double >("double");
 		this->insertType< bool >("bool");
 		this->insertType< std::string >("string");
-		this->insertType< Image< float, 2 > >("image2D_ushort");
-		this->insertType< Image< unsigned short, 2 > >("image2D_float");
+		//this->insertType< Image< float, 2 > >("image2D_ushort");
+		//this->insertType< Image< unsigned short, 2 > >("image2D_float");
+		//this->insertType< ImageBuffer >("imagebuffer");
 	}
 
 	std::map< std::string, std::string > TypeTable::getTable()

@@ -46,6 +46,7 @@ namespace _2Real
 	void SetupParameter::setValue(Poco::Any const& _any)
 	{
 		m_Value = _any;
+		m_bIsInitialized = true;
 	}
 
 	Poco::Any const& SetupParameter::value() const
