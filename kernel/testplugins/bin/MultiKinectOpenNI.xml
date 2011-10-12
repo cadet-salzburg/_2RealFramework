@@ -3,7 +3,7 @@
 	<plugin
 		name = 			"MultiKinectOpenNI"
 		author = 		"Gerlinde Emsenhuber"
-		contact = 		"try praying really hard."
+		contact = 		"gerlinde.emsenhuber@fh-salzburg.ac.at"
 		description = 	"test plugin based on 2real kinect wrapper."
 		version = 		"0.0.0"
 	>
