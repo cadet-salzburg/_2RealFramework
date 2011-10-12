@@ -5,7 +5,7 @@
 
 #include "ImageBuffer.h"
 
-#include "D:\cadet\trunk\projects\_2RealKinectWrapper\include\_2RealKinect.h"
+#include "_2RealKinect.h"
 
 _2Real::IService *const createImageService();
 
