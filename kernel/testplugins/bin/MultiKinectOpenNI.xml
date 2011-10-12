@@ -1,0 +1,135 @@
+<metadata>
+	
+	<plugin
+		name = 			"MultiKinectOpenNI"
+		author = 		"Gerlinde Emsenhuber"
+		contact = 		"try praying really hard."
+		description = 	"test plugin based on 2real kinect wrapper."
+		version = 		"0.0.0"
+	>
+	
+	<setup>
+			<!-- how wonderful, the whole fucking initialization is based on enums. -->
+			<!-- generator flags: color, depth, infrared, user id, user colored. -->
+			<!-- if 'color' is present, 'infrared' will be ignored as they are mutually exclusive. -->
+			<!-- if 'user' is present, 'user colored' will be ignored as they are mutually exclusive. -->
+			<param name = "generator flags"		type = "vector string" />
+			<!-- i wish there were default setup params ;) -->
+			<param name = "align color depth"	type = "bool" />
+			<!-- generator flags: color640X480, depth640X480, infrared640X480, infrared320X240, mirrored. -->
+			<!-- blablabla mutually exclusive flags ignored blablabla. -->
+			<param name = "image flags"			type = "vector string" />
+			<!-- if logfile is empty, log info will go to std::out instead. -->
+			<param name = "log file" 			type = "string" />
+			<!-- one of: debug, info, error, warning, none -->
+			<param name = "log level" 			type = "string" />
+	</setup>
+	
+	</plugin>
+	
+	<service
+		name = 			"Image Generator"
+		description = 	"generic image generator."
+	>
+	
+		<setup>
+			<!-- device id. somehow, this should not be greater than (NUMBER_OF_RUNNING_DEVICES - 1). -->
+			<!-- (fyi, this means: the service setup will fail if device id > (NUMBER_OF_RUNNING_DEVICES - 1). -->
+			<param name = "device id" 			type = "unsigned int" />
+			<!-- type of the generator. one of: color, depth, infrared, user id, user colored. -->
+			<param name = "image type"			type = "string" />
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<!-- todo: the framework could really use some cool helper classes. -->
+			<!-- i included this sucky one in the typetable for the time being. but i'm going to delete it again. -->
+			<param name = "output" 				type = "imagebuffer" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = 			"Active Users"
+		description = 	"will return active user ids."
+	>
+	
+		<setup>
+			<param name = "device id" 			type = "unsigned int" />
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "output" 				type = "vector unsigned char" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = 			"Tracked Users"
+		description = 	"will return tracked user ids."
+	>
+	
+		<setup>
+			<param name = "device id" 			type = "unsigned int" />
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "output" 				type = "vector unsigned char" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = 			"Screen Skeleton Tracker"
+		description = 	"will return skeletons of a tracked user, in screen coords."
+	>
+	
+		<setup>
+			<param name = "device id" 			type = "unsigned int" />
+		</setup>
+		
+		<input>
+			<param name = "user id"				type = "unsigned int" />
+		</input>
+		
+		<output>
+			<!-- output is a vector of joints, which are themselves 2-component vectors. -->
+			<!-- although, 2-component vectors might one day be available as helper classes. -->
+			<!-- if the user with desired id is not active, this vector will be empty. -->
+			<param name = "skeleton" 			type = "vector2D float" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = 			"World Skeleton Tracker"
+		description = 	"will return skeletons of a tracked user, in world coords"
+	>
+	
+		<setup>
+			<param name = "device id" 			type = "unsigned int" />
+		</setup>
+		
+		<input>
+			<param name = "user id"				type = "unsigned int" />
+		</input>
+		
+		<output>
+			<!-- output is a vector of joints, which are themselves 3-component vectors. -->
+			<!-- although, 3-component vectors might one day be available as helper classes. -->
+			<!-- if the user with desired id is not active, this vector will be empty. -->
+			<param name = "skeleton" 			type = "vector2D float" />
+		</output>
+	
+	</service>
+	
+</metadata>
+

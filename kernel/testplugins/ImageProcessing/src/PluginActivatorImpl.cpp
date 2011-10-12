@@ -23,7 +23,6 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 	}
 	catch (Exception &e)
 	{
-		std::cout << "dll: e caught" << std::endl;
 		throw e;
 	}
 }

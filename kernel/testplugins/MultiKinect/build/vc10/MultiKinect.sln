@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiKinect", "MultiKinect.vcxproj", "{3F13D52A-DF30-C1B9-B75C-02A743139C41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		MultiKinectOpenNI_debug|Win32 = MultiKinectOpenNI_debug|Win32
+		MultiKinectOpenNI_debug|x64 = MultiKinectOpenNI_debug|x64
+		MultiKinectOpenNI|Win32 = MultiKinectOpenNI|Win32
+		MultiKinectOpenNI|x64 = MultiKinectOpenNI|x64
+		MultiKinectWinSdk_debug|Win32 = MultiKinectWinSdk_debug|Win32
+		MultiKinectWinSdk_debug|x64 = MultiKinectWinSdk_debug|x64
+		MultiKinectWinSdk|Win32 = MultiKinectWinSdk|Win32
+		MultiKinectWinSdk|x64 = MultiKinectWinSdk|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI_debug|Win32.ActiveCfg = MultiKinectOpenNI_debug|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI_debug|Win32.Build.0 = MultiKinectOpenNI_debug|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI_debug|x64.ActiveCfg = MultiKinectOpenNI_debug|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI_debug|x64.Build.0 = MultiKinectOpenNI_debug|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI|Win32.ActiveCfg = MultiKinectOpenNI|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI|x64.ActiveCfg = MultiKinectOpenNI|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectOpenNI|x64.Build.0 = MultiKinectOpenNI|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk_debug|Win32.ActiveCfg = MultiKinectWinSdk_debug|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk_debug|Win32.Build.0 = MultiKinectWinSdk_debug|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk_debug|x64.ActiveCfg = MultiKinectWinSdk_debug|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk_debug|x64.Build.0 = MultiKinectWinSdk_debug|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk|Win32.ActiveCfg = MultiKinectWinSdk|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk|Win32.Build.0 = MultiKinectWinSdk|Win32
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk|x64.ActiveCfg = MultiKinectWinSdk|x64
+		{3F13D52A-DF30-C1B9-B75C-02A743139C41}.MultiKinectWinSdk|x64.Build.0 = MultiKinectWinSdk|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
