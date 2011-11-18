@@ -20,6 +20,8 @@
 #pragma once
 
 #include "_2RealEngineTypedefs.h"
+#include "_2RealEngine.h"
+#include "_2RealEntityTable.h"
 
 #include <map>
 #include <list>
@@ -35,9 +37,9 @@ namespace _2Real
 
 	class PluginPool;
 	class Plugin;
-	class FactoryReference;
+	class ServiceTemplate;
 	class ProductionGraphs;
-	class ServiceContainer;
+	class Service;
 	class EntityTable;
 	class ServiceMetadata;
 	class IService;
@@ -52,45 +54,28 @@ namespace _2Real
 		*/
 		typedef IService *const (*const ServiceCreator)(void);
 
-		/**
-		*	
-		*/
-		ServiceFactory();
-
-		/**
-		*	factory should never be copied
-		*/
-		ServiceFactory(ServiceFactory const& _src);
-
-		/**
-		*	factory should never be copied
-		*/
-		ServiceFactory& operator=(ServiceFactory const& _src);
-
-		/**
-		*	
-		*/
-		~ServiceFactory();
+		ServiceFactory(Engine &engine);
+		virtual ~ServiceFactory();
 
 		/**
 		*	registers factory function of a service, returns identifier of factory function
 		*/
-		FactoryReference *const registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator);
+		ServiceTemplate *const registerService(std::string const& _name, unsigned int const& _id, ServiceMetadata const& _metadata, ServiceCreator _creator);
 
 		/**
 		*	creates service container holding an instance of user service identified by _serviceID
 		*/
-		ServiceContainer *const createService(std::string const& _name, unsigned int const& _id, std::string const& _service);
+		Service *const createService(std::string const& _name, unsigned int const& _id, std::string const& _service, SystemGraph *const system);
 
 		/**
 		*
 		*/
-		FactoryReference const *const ref(unsigned int const& _plugin, std::string const& _service) const;
+		ServiceTemplate const *const ref(unsigned int const& _plugin, std::string const& _service) const;
 
 		/**
 		*
 		*/
-		FactoryReference *const ref(unsigned int const& _plugin, std::string const& _service);
+		ServiceTemplate *const ref(unsigned int const& _plugin, std::string const& _service);
 
 		/**
 		*
@@ -100,7 +85,7 @@ namespace _2Real
 		/**
 		*	
 		*/
-		std::list< FactoryReference * > getServices(unsigned int const& _plugin);
+		std::list< ServiceTemplate * > getServices(unsigned int const& _plugin);
 
 		/**
 		*	
@@ -109,27 +94,12 @@ namespace _2Real
 
 	private:
 
-		friend class Engine;
+		typedef std::pair< unsigned int, ServiceTemplate * >		NamedReference;
+		typedef std::map< unsigned int, ServiceTemplate * >		ReferenceTable;
 
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< unsigned int, FactoryReference * >		NamedReference;
-		
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::map< unsigned int, FactoryReference * >		ReferenceTable;
-
-		/**
-		*	
-		*/
 		ReferenceTable												m_References;
 
-		/**
-		*
-		*/
-		EntityTable													*m_EntityTable;
+		Engine														&m_Engine;
 
 	};
 

@@ -19,6 +19,11 @@
 #pragma once
 
 #include "_2RealIOSlot.h"
+#include "_2RealData.h"
+
+#include "Poco\Mutex.h"
+
+#include <map>
 
 namespace _2Real
 {
@@ -29,35 +34,57 @@ namespace _2Real
 
 	class OutputSlot;
 
+	typedef std::pair< Poco::Timestamp, SharedAny >		TimestampedData;
+
 	class InputSlot : public IOSlot
 	{
 
 	public:
 
-		InputSlot(Id *const id, ServiceContainer *const service, std::string const& type);
-		InputSlot(InputSlot const& src);
-		InputSlot& operator=(InputSlot const& src);
+		InputSlot(Id *const id, Service *const service, std::string const& type, std::string const& key);
 		~InputSlot();
 
-		/**
-		*	return sender id
-		*/
-		OutputSlot *const		linkedOutput();
+		OutputSlot *const linkedOutput()
+		{
+			return m_Output;
+		}
 
-		/**
-		*	link with other slot
-		*/
-		void					linkWith(OutputSlot *const output);
+		OutputSlot const *const linkedOutput() const
+		{
+			return m_Output;
+		}
 
-		/**
-		*	get value from any
-		*/
-		void					extractFrom(IOSlot::SharedAny const& any);
+		const bool isLinked() const
+		{
+			if (m_Output)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
-		/**
-		*	breaks IO linkage
-		*/
-		void					reset();
+		//void linkWith(OutputSlot *const output);
+		//void reset();
+
+		void updateCurrent();
+		void clearCurrent();
+		void receiveData(Data &data);
+
+		const TimestampedData getNewest() const;
+		const TimestampedData getOldest() const;
+
+	private:
+
+		typedef std::map< Poco::Timestamp, SharedAny >		DataTable;
+
+		Poco::FastMutex				m_Mutex;
+		DataTable					m_ReceivedTable;
+		DataTable					m_CurrentTable;
+
+		OutputSlot					*m_Output;
 
 	};
 

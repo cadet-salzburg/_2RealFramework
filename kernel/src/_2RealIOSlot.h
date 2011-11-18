@@ -19,9 +19,7 @@
 #pragma once
 
 #include "_2RealParameter.h"
-
-#include "Poco/SharedPtr.h"
-#include "Poco/Any.h"
+#include "_2RealSharedAny.h"
 
 namespace _2Real
 {
@@ -30,63 +28,48 @@ namespace _2Real
 	*	represents an input or output slot of a service
 	*/
 
-	class AbstractRef;
-	class ServiceContainer;
+	class Service;
 
 	class IOSlot : public Parameter
 	{
 
 	public:
 
-		IOSlot(Id *const id, ServiceContainer *const _service, std::string const& type);
-		IOSlot(IOSlot const& src);
-		IOSlot& operator=(IOSlot const& src);
+		IOSlot(Id *const id, Service *const service, std::string const& type, std::string const& key);
 		virtual ~IOSlot();
-
-		typedef Poco::SharedPtr< Poco::Any >			SharedAny;
-		typedef std::pair< unsigned int, SharedAny >	NamedAny;
-
-		/**
-		*	true if io slot has been linked
-		*/
-		const bool										isLinked() const;
-
-		/**
-		*	sets abstract ref
-		*/
-		void											setReference(AbstractRef *const ref);
 
 		/**
 		*	returns owning service
 		*/
-		ServiceContainer *const							service();
+		Service *const service()
+		{
+			return m_Service;
+		}
 
 		/**
 		*	returns owning service - const version
 		*/
-		ServiceContainer *const							service() const;
+		Service const *const service() const
+		{
+			return m_Service;
+		}
 
 		/**
 		*	resets linkage
 		*/
-		virtual void									reset() = 0;
+		//virtual void						reset() = 0;
+
+		/**
+		*	true if io slot has been linked
+		*/
+		//virtual const bool					isLinked() const = 0;
 
 	protected:
 
 		/**
-		*	what a dumb name
-		*/
-		AbstractRef										*m_Ref;
-
-		/**
-		*	id of linked slot
-		*/
-		IOSlot											*m_Linked;
-
-		/**
 		*	owning service
 		*/
-		ServiceContainer								*m_Service;
+		Service					*const m_Service;
 
 	};
 

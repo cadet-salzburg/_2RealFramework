@@ -20,71 +20,112 @@
 
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
-#include "_2RealDataPacket.h"
+#include "_2RealSharedAny.h"
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
+#include "Poco\Timestamp.h"
 
 namespace _2Real
 {
 
-	/**
-	*	output data received by a container
-	*/
 	class Data
 	{
 
 	public:
 
-		/**
-		*	returns the value received from slot _id
-		*/
-		template< typename T >
-		T get(unsigned int const& _id)
+		virtual ~Data()
 		{
-			try
-			{
-				Poco::SharedPtr< Poco::Any > any = get(_id);
-				return Poco::AnyCast< T >(*(any.get()));
-			}
-			catch (Poco::BadCastException e)
-			{
-				throw Exception("the datatype does not match the output slot");
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
 		}
 
-		/**
-		*	returns sender's identifier
-		*/
-		const Identifier id() const;
+		//Identifier const& id() const
+		//{
+		//	return m_Id;
+		//}
+
+		template< typename Datatype >
+		Datatype const& getData()
+		{
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
+			return *ptr.get();
+		}
+
+		SharedAny const& data() const
+		{
+			return m_Data;
+		}
+
+		Poco::Timestamp const& timestamp() const
+		{
+			return m_Timestamp;
+		}
 
 	private:
 
-		friend class ApplicationCallback;
+		friend class OutputSlot;
 
-		/**
-		*
-		*/
-		Data(Poco::SharedPtr< DataPacket > _data, Identifier const& _id);
+		Data() :
+			m_Data(SharedAny()),
+			m_Timestamp(Poco::Timestamp())
+		{
+		}
 
-		/**
-		*
-		*/
-		Poco::SharedPtr< Poco::Any > get(unsigned int const& _id);
+		//Data(Identifier const& id, SharedAny const& data, Poco::Timestamp const& time) :
+		//	m_Id(id),
+		//	m_Data(data),
+		//	m_Timestamp(time)
+		//{
+		//}
 
-		/**
-		*
-		*/
-		Poco::SharedPtr< DataPacket >	m_Data;
+		Data(SharedAny const& data, Poco::Timestamp const& time) :
+			m_Data(data),
+			m_Timestamp(time)
+		{
+		}
 
-		/**
-		*	
-		*/
-		Identifier						m_ID;
+		//Identifier			const m_Id;
+		SharedAny			m_Data;
+		Poco::Timestamp		m_Timestamp;
 
 	};
+
+	//class DataHandle : public ParameterHandle
+	//{
+
+	//public:
+
+	//	DataHandle();
+	//	DataHandle(InputHandle const& src);
+	//	DataHandle& operator=(DataHandle const& src);
+	//	~DataHandle();
+
+	//	template< typename Datatype >
+	//	Datatype const& data()
+	//	{
+	//		if (!m_Output)
+	//		{
+	//			throw BadHandleException(m_Name);
+	//		}
+
+	//		try
+	//		{
+	//			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >();
+	//			return *ptr.get();
+	//		}
+	//		catch (Exception &e)
+	//		{
+	//			throw e;
+	//		}
+	//	}
+
+	//private:
+
+	//	friend class OutputSlot;
+
+	//	DataHandle(OutputSlot *slot);
+
+	//	SharedAny		data();
+
+	//	InputSlot		*m_Input;
+
+	//};
+
 }

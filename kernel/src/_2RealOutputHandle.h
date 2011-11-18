@@ -18,59 +18,45 @@
 
 #pragma once
 
-#include "_2RealException.h"
+#include "_2RealParameterHandle.h"
 
 namespace _2Real
 {
 
-	/**
-	*	interface for services
-	*/
+	class OutputSlot;
+	class SharedAny;
 
-	class ServiceContext;
-
-	class IService
+	class OutputHandle : public ParameterHandle
 	{
 
 	public:
 
-		/**
-		*	setup function
-		*/
-		virtual void setup(ServiceContext &context) = 0;
+		OutputHandle();
+		OutputHandle(OutputHandle const& src);
+		OutputHandle& operator=(OutputHandle const& src);
+		~OutputHandle();
 
-		/**
-		*	update function
-		*/
-		virtual void update() = 0;
-
-		/**
-		*	shutdown function
-		*/
-		virtual void shutdown() = 0;
-
-		/**
-		*	destructor
-		*/
-		virtual ~IService() = 0;
-
-	};
-	
-	inline IService::~IService() {}
-
-	/**
-	*	if anything goes wrong during setup / update / shutdown,
-	*	a service exception should be thrown
-	*/
-	class ServiceException : public Exception
-	{
-
-	public:
-
-		ServiceException(std::string const& message) :
-			Exception(message)
+		template< typename Datatype >
+		Datatype & data()
 		{
+			if (!m_Output)
+			{
+				throw BadHandleException(m_Name);
+			}
+
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
+			return *ptr.get();
 		}
+
+	private:
+
+		friend class Service;
+
+		OutputHandle(OutputSlot *slot);
+
+		SharedAny			data();
+
+		OutputSlot			*m_Output;
 
 	};
 

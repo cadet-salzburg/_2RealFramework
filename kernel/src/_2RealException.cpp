@@ -21,8 +21,12 @@
 namespace _2Real
 {
 
-	Exception::Exception(std::string const& _msg) :
-		std::runtime_error(_msg)
+	Exception::Exception(std::string const& _message) :
+		std::runtime_error(_message)
+	{
+	}
+
+	Exception::~Exception()
 	{
 	}
 

@@ -19,14 +19,25 @@
 #pragma once
 
 #include "_2RealEntity.h"
-
-#include <string>
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
+	class BadParameterException : public Exception
+	{
+
+	public:
+
+		BadParameterException(std::string const& name, std::string const& action) :
+			Exception(std::string("parameter : ").append(name).append(" is argh"))
+			{
+			}
+
+	};
+
 	/**
-	*
+	*	base parameter class for service-setup / service-input / service-output / plugin-setup
 	*/
 
 	class Parameter : public Entity
@@ -34,47 +45,38 @@ namespace _2Real
 
 	public:
 
-		/**
-		*	
-		*/
-		Parameter(Id *const _id, std::string const& _type);
-
-		/**
-		*	
-		*/
-		Parameter(Parameter const& _src);
-
-		/**
-		*	
-		*/
-		Parameter& operator=(Parameter const& _src);
-
-		/**
-		*	
-		*/
+		Parameter(Id *const _id, std::string const& type, std::string const& key);
 		virtual ~Parameter();
 
 		/**
-		*	true if value has been set at some point
+		*	=?
 		*/
-		bool const& isInitialized() const;
+		bool const& isInitialized() const
+		{
+			return m_IsInitialized;
+		}
 
 		/**
-		*	typename as string
+		*	returns keyword as string
 		*/
-		std::string const& datatype() const;
+		std::string const& keyword() const
+		{
+			return m_Keyword;
+		}
+
+		/**
+		*	returns typename as string
+		*/
+		std::string const& datatype() const
+		{
+			return m_Datatype;
+		}
 
 	protected:
 
-		/**
-		*	
-		*/
-		bool						m_bIsInitialized;
-
-		/**
-		*
-		*/
-		const std::string			m_Typename;
+		bool						m_IsInitialized;
+		const std::string			m_Datatype;
+		const std::string			m_Keyword;
 
 	};
 

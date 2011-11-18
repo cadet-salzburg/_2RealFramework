@@ -19,6 +19,11 @@
 #pragma once
 
 #include "_2RealIOSlot.h"
+#include "_2RealData.h"
+
+#include "Poco\Mutex.h"
+#include "Poco\BasicEvent.h"
+#include "Poco\Timestamp.h"
 
 namespace _2Real
 {
@@ -29,35 +34,65 @@ namespace _2Real
 
 	class InputSlot;
 
+	typedef void (*DataCallback)(Data &_data);
+
 	class OutputSlot : public IOSlot
 	{
 
 	public:
 
-		OutputSlot(Id *const id, ServiceContainer *const service, std::string const& type);
-		OutputSlot(OutputSlot const& src);
-		OutputSlot& operator=(OutputSlot const& src);
-		~OutputSlot();
+		OutputSlot(Id *const id, Service *const service, std::string const& type, std::string const& key, SharedAny init);
+		virtual ~OutputSlot();
 
-		/**
-		*	
-		*/
-		InputSlot *const		linkedInput();
+		void init(SharedAny const& initialValue);
 
-		/**
-		*	link with input slot
-		*/
-		void					linkWith(InputSlot *const input);
+		InputSlot *const linkedInput()
+		{
+			return m_Input;
+		}
 
-		/**
-		*	return value as named any
-		*/
-		IOSlot::NamedAny		getAsAny();
+		InputSlot const *const linkedInput() const
+		{
+			return m_Input;
+		}
 
-		/**
-		*	breaks IO linkage
-		*/
-		void					reset();
+		const bool isLinked() const
+		{
+			if (m_Input)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		SharedAny data()
+		{
+			return m_WriteData;
+		}
+
+		void registerCallback(DataCallback callback);
+		void unregisterCallback(DataCallback callback);
+
+	private:
+
+		friend class Service;
+		friend class Engine;
+
+		void update();
+		void addListener(InputSlot *listener);
+
+		InputSlot								*m_Input;
+
+		Poco::FastMutex							m_Mutex;
+
+		Data									m_CurrentData;
+
+		SharedAny								m_WriteData;
+
+		Poco::BasicEvent< Data >				m_Event;
 
 	};
 

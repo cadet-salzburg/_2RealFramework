@@ -34,32 +34,12 @@ namespace _2Real
 		}
 	}
 
-	Entity::Entity(Entity const& _src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	Entity& Entity::operator=(Entity const& _src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
 	Entity::~Entity()
 	{
 		if (m_ID)
 		{
 			m_ID->release();
 		}
-	}
-
-	Entity::eType const& Entity::type() const
-	{
-		if (m_ID != NULL)
-		{
-			return m_ID->type();
-		}
-
-		throw Exception("internal error - identifier of entity is null");
 	}
 
 	unsigned int const& Entity::id() const

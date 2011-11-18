@@ -20,57 +20,47 @@
 
 #include "_2RealException.h"
 
+#include "Poco\Mutex.h"
+
 namespace _2Real
 {
 
 	/**
-	*	interface for services
+	*	singleton holder helper class
 	*/
 
-	class ServiceContext;
-
-	class IService
+	template< typename T >
+	class SingletonHolder
 	{
 
 	public:
 
-		/**
-		*	setup function
-		*/
-		virtual void setup(ServiceContext &context) = 0;
-
-		/**
-		*	update function
-		*/
-		virtual void update() = 0;
-
-		/**
-		*	shutdown function
-		*/
-		virtual void shutdown() = 0;
-
-		/**
-		*	destructor
-		*/
-		virtual ~IService() = 0;
-
-	};
-	
-	inline IService::~IService() {}
-
-	/**
-	*	if anything goes wrong during setup / update / shutdown,
-	*	a service exception should be thrown
-	*/
-	class ServiceException : public Exception
-	{
-
-	public:
-
-		ServiceException(std::string const& message) :
-			Exception(message)
+		SingletonHolder() :
+			m_Held(NULL)
 		{
 		}
+
+		~SingletonHolder()
+		{
+			delete m_Held;
+		}
+
+		T* instance()
+		{
+			Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+			if (!m_Held)
+			{
+				m_Held = new T();
+			}
+
+			return m_Held;
+		}
+
+	private:
+
+		T*					m_Held;
+		Poco::FastMutex		m_Mutex;
 
 	};
 

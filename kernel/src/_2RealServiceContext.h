@@ -19,18 +19,20 @@
 
 #pragma once
 
-#include "_2RealParamRef.h"
+#include "_2RealInputHandle.h"
+#include "_2RealOutputHandle.h"
+#include "_2RealSharedAny.h"
 
 #include <string>
-#include <typeinfo>
 
 namespace _2Real
 {
 
 	/**
 	*	a service's means of communicating with the framework
-	*	allows for querying of setup params & registration of input / output slots
 	*/
+
+	class Service;
 
 	class ServiceContext
 	{
@@ -38,102 +40,49 @@ namespace _2Real
 	public:
 
 		/**
-		*	registers a reference to an input variable in the framework
-		*	name & type must match some input parameter defined in plugin metadata
+		*	creates an input handle for an input slot
+		*	
+		*	@param name:	name of slot
+		*	@return:		input handle
+		*	@throw:			InvalidParameterException
 		*/
-		template< typename T >
-		void registerInputSlot(std::string const& name, T &var)
-		{
-			try
-			{
-				AbstractRef *value = new ParamRef< T >(var);
-				registerInputSlot(name, value);
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
-		}
+		InputHandle getInputHandle(std::string const& name);
 
 		/**
-		*	registers a reference to an output variable in the framework
-		*	name & type must match some output parameter defined in plugin metadata
+		*	creates an output handle for an output slot
+		*	
+		*	@param name:	name of slot
+		*	@return:		output handle
+		*	@throw:			InvalidParameterException
 		*/
-		template< typename T >
-		void registerOutputSlot(std::string const& name, T &var)
-		{
-			try
-			{
-				AbstractRef *value = new ParamRef< T >(var);
-				registerOutputSlot(name, value);
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
-		}
+		OutputHandle getOutputHandle(std::string const& name);
 
 		/**
-		*	retrieves the value of a setup parameter from the framework
-		*	name & type must match some setup parameter defined in plugin metadata
+		*	returns the value of a setup parameter
+		*	
+		*	@param name:		name of a setup parameter
+		*	@return:			constant reference to setup parameter
+		*	@throw:				InvalidParameterException, DatatypeMismatchException
 		*/
-		template< typename T >
-		void getSetupParameter(std::string const& name, T &param)
+		template< typename Datatype >
+		Datatype const& getParameterValue(std::string const& name)
 		{
-			try
-			{
-				AbstractRef *value = new ParamRef< T >(param);
-				getSetupParameter(name, value);
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(getSetupParameter(name));
+			return *ptr.get();
 		}
 	
 	private:
 
-		friend class ServiceContainer;
+		friend class Service;
 
-		/**
-		*	
-		*/
-		ServiceContext(ServiceContainer *const _impl);
-
-		/**
-		*
-		*/
-		ServiceContext(ServiceContext const& _src);
-
-		/**
-		*
-		*/
-		ServiceContext& operator=(ServiceContext const& _src);
-
-		/**
-		*	
-		*/
+		ServiceContext(Service *const container);
+		ServiceContext(ServiceContext const& src);
+		ServiceContext& operator=(ServiceContext const& src);
 		~ServiceContext();
 
-		/**
-		*	internally used method for retrieving setup params
-		*/
-		void getSetupParameter(std::string const& _name, AbstractRef *const _var);
+		SharedAny			getSetupParameter(std::string const& name);
 
-		/**
-		*	internally used method for registering input slots
-		*/
-		void registerInputSlot(std::string const& _name, AbstractRef *const _var);
-
-		/**
-		*	internally used method for registering output slots
-		*/
-		void registerOutputSlot(std::string const& _name, AbstractRef *const _param);
-
-		/**
-		*	
-		*/
-		ServiceContainer			*m_Container;
+		Service				*const m_Service;
 
 	};
 

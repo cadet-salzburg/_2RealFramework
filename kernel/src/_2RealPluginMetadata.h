@@ -20,6 +20,7 @@
 
 #include "_2RealParameterMetadata.h"
 #include "_2RealServiceMetadata.h"
+#include "_2RealSharedAny.h"
 
 #include <map>
 #include <string>
@@ -30,6 +31,8 @@ namespace _2Real
 	/**
 	*
 	*/
+
+	class TypeTable;
 
 	class PluginMetadata
 	{
@@ -70,7 +73,7 @@ namespace _2Real
 		*
 		*	@param _name:		plugin's classname
 		*/
-		PluginMetadata(std::string const& _name, std::string const& _path);
+		PluginMetadata(std::string const& name, std::string const& file, std::string const& path, TypeTable const& types);
 
 		/**
 		*	sets plugin description
@@ -136,6 +139,15 @@ namespace _2Real
 		std::string const& getClassname() const;
 
 		/**
+		*	get plugin filename
+		*
+		*	@return:			plugin's classname
+		*/
+		std::string const& getFilename() const;
+
+
+
+		/**
 		*	get plugin version
 		*
 		*	@return:			plugin's version
@@ -148,7 +160,7 @@ namespace _2Real
 		*	@param _name:		name of service
 		*	@return:			service's metadata
 		*/
-		ServiceMetadata const& getServiceMetadata(std::string const& _name) const;
+
 
 		/**
 		*	add metadata to file
@@ -170,60 +182,30 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addSetupParam(std::string const& _name, std::string const& _type);
+		void addSetupParameter(std::string const& _name, std::string const& _type);
 
-		/**
-		*	@param _name:		parameter's name
-		*	@return:			true if service has setup param with _name
-		*/
-		const bool hasSetupParam(std::string const& _name) const;
-
-		/**
-		*	
-		*/
-		ParamMetadata::StringMap getSetupParams() const;
+		ParameterMetadata::StringMap		getSetupParameters() const;
+		ServiceMetadata const&			getServiceMetadata(std::string const& name) const;
 
 	private:
 
-		/**
-		*	
-		*/
-		std::string						m_PluginName;
+		friend class MetadataReader;
 
 		/**
-		*	
+		*	get available keywords
 		*/
-		std::string						m_InstallDirectory;
+		TypeTable const& getTypes() const;
 
-		/**
-		*	
-		*/
+		TypeTable						const& m_Types;
+		std::string						const m_Classname;
+		std::string						const m_Filename;
+		std::string						const m_InstallDirectory;
 		std::string						m_Description;
-
-		/**
-		*	
-		*/
 		std::string						m_Author;
-
-		/**
-		*	
-		*/
 		std::string						m_Contact;
-
-		/**
-		*	
-		*/
 		PluginMetadata::Version			m_Version;
-
-		/**
-		*	
-		*/
 		ServiceMetadata::ServiceMap		m_Services;
-
-		/**
-		*	setup params
-		*/
-		ParamMetadata::ParamMap			m_SetupParams;
+		ParameterMetadata::ParameterMap			m_SetupParameters;
 
 	};
 

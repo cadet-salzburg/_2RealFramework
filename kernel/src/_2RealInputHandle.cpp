@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,46 +16,57 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealServiceContext.h"
-#include "_2RealService.h"
+#include "_2RealInputHandle.h"
+#include "_2RealInputSlot.h"
+#include "_2RealSharedAny.h"
 
 namespace _2Real
 {
 
-	ServiceContext::ServiceContext(Service *const _service) :
-		m_Service(_service)
+	InputHandle::InputHandle() :
+		ParameterHandle(""),
+		m_Input(NULL)
 	{
 	}
 
-	ServiceContext::ServiceContext(ServiceContext const& _src) :
-		m_Service(_src.m_Service)
+	InputHandle::InputHandle(InputSlot *_slot) :
+		ParameterHandle(_slot->name()),
+		m_Input(_slot)
 	{
 	}
 
-	ServiceContext& ServiceContext::operator=(ServiceContext const& _src)
+	InputHandle::InputHandle(InputHandle const& _src) :
+		ParameterHandle(_src),
+		m_Input(_src.m_Input)
 	{
+	}
+
+	InputHandle& InputHandle::operator=(InputHandle const& _src)
+	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+
+		ParameterHandle::operator=(_src);
+		m_Input = _src.m_Input;
+
 		return *this;
 	}
 
-	ServiceContext::~ServiceContext()
+	InputHandle::~InputHandle()
 	{
+		//input slot is deleted by framework
 	}
 
-	SharedAny ServiceContext::getSetupParameter(std::string const& _name)
+	SharedAny InputHandle::newest()
 	{
-		return m_Service->getParameterValue(_name);
+		return m_Input->getNewest().second;
 	}
 
-	InputHandle ServiceContext::getInputHandle(std::string const& _name)
+	SharedAny InputHandle::oldest()
 	{
-		return m_Service->createInputHandle(_name);
-	}
-
-	OutputHandle ServiceContext::getOutputHandle(std::string const& _name)
-	{
-		return m_Service->createOutputHandle(_name);
+		return m_Input->getOldest().second;
 	}
 
 }

@@ -31,7 +31,8 @@ namespace _2Real
 
 	class Data;
 	class Identifier;
-	class Exception;
+	class RunnableException;
+
 
 	/**
 	*	callback for exceptions
@@ -39,7 +40,7 @@ namespace _2Real
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToException
 	*/
-	typedef void (*ExceptionCallback)(Identifier &_id);
+	typedef void (*ExceptionCallback)(RunnableException &exception);
 
 	/**
 	*	callback for new data
@@ -47,7 +48,7 @@ namespace _2Real
 	*	there are 3 entities which allow for a exception callback registration:
 	*	services, sequences & synchronizations - see @registerToNewData
 	*/
-	typedef void (*NewDataCallback)(Data &_data);
+	typedef void (*DataCallback)(Data &_data);
 
 	/**
 	*	a vector of identifiers

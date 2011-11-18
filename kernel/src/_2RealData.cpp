@@ -16,29 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
 #include "_2RealData.h"
-#include "_2RealDataPacket.h"
-
-#include <iostream>
 
 namespace _2Real
 {
-
-	Data::Data(Poco::SharedPtr< DataPacket > _data, Identifier const& _id) :
-		m_Data(_data),
-		m_ID(_id)
-	{
-	}
-
-	Poco::SharedPtr< Poco::Any > Data::get(unsigned int const& _id)
-	{
-		return m_Data->getAny(_id);
-	}
-
-	const Identifier Data::id() const
-	{
-		return m_ID;
-	}
 }

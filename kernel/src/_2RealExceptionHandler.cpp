@@ -16,41 +16,33 @@
 	limitations under the License.
 */
 
-#include "_2RealPluginParameter.h"
-#include "_2RealException.h"
-#include "_2RealPlugin.h"
+#include "_2RealExceptionHandler.h"
+#include "_2RealData.h"
+#include "_2RealRunnableException.h"
+
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
 
-	PluginParameter::PluginParameter(Id *const _id, Plugin *const _plugin, std::string const& _type) :
-		SetupParameter(_id, _type),
-		m_Plugin(_plugin)
+	ExceptionHandler::ExceptionHandler(Identifier const& _system) :
+		m_System(_system)
 	{
 	}
 
-	PluginParameter::PluginParameter(PluginParameter const& _src) : SetupParameter(_src)
+	void ExceptionHandler::registerExceptionCallback(ExceptionCallback _callback)
 	{
-		throw Exception("attempted to copy entity");
+		m_Event += Poco::delegate(_callback);
 	}
 
-	PluginParameter& PluginParameter::operator=(PluginParameter const& _src)
+	void ExceptionHandler::unregisterExceptionCallback(ExceptionCallback _callback)
 	{
-		throw Exception("attempted to copy entity");
+		m_Event -= Poco::delegate(_callback);
 	}
 
-	PluginParameter::~PluginParameter()
+	void ExceptionHandler::handleException(Exception const& _exception)
 	{
+		RunnableException e(_exception.what(), m_System, m_System);
+		m_Event.notifyAsync(this, e);
 	}
-
-	Plugin *const PluginParameter::plugin()
-	{
-		return m_Plugin;
-	}
-
-	Plugin *const PluginParameter::plugin() const
-	{
-		return m_Plugin;
-	}
-
 }

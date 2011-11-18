@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,57 +18,41 @@
 
 #pragma once
 
-#include "_2RealAbstractRef.h"
-
-#include <string>
-#include <typeinfo>
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	template< typename T >
-	class ParamRef : public AbstractRef
+	class BadHandleException : public Exception
 	{
 
 	public:
 
-		/**
-		*	attempt to extract from an any ptr
-		*/
-		void			extractFrom(AbstractRef::SharedAny _any);
+		BadHandleException(std::string const& name) :
+			Exception(std::string("handle : ").append(name).append(" is uninitialized"))
+			{
+			}
 
-		/**
-		*
-		*/
-		void			extractFrom(Poco::Any const& _any);
+	};
 
-		/**
-		*	create copy of value, transform into any pointer
-		*/
-		SharedAny		getAny();
+	class ParameterHandle
+	{
 
-	private:
+	public:
 
-		friend class ServiceContext;
-		friend class PluginContext;
+		ParameterHandle();
+		ParameterHandle(std::string const& name);
+		virtual ~ParameterHandle();
 
-		ParamRef(T &_value);
-		ParamRef(ParamRef const& _src);
-		ParamRef& operator=(ParamRef const& _src);
-		~ParamRef();
+		std::string const& name() const
+		{
+			return m_Name;
+		}
 
-		/**
-		*	reference to member variable of a service
-		*	extract() will overwrite this.
-		*/
-		T				&m_Value;
+	protected:
+
+		std::string			m_Name;
 
 	};
 
 }
-
-#include "_2RealParamRef.cpp"

@@ -20,49 +20,22 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
-#include "_2RealFactoryReference.h"
+#include "_2RealServiceTemplate.h"
 #include "_2RealServiceMetadata.h"
-#include "_2RealPluginParameter.h"
-#include "_2RealAbstractRef.h"
+#include "_2RealSetupParameter.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	Plugin::Plugin(std::string const& _dir, std::string const& _file, std::string const& _classname, Id *const _id) :
+	Plugin::Plugin(PluginMetadata *const _info, Id *const _id) :
 		Entity(_id),
-		m_Metadata(_classname, _dir),
+		m_Metadata(_info),
 		m_Activator(NULL),
-		m_File(_dir + _file),
-		m_bIsInitialized(false)
+		m_IsInitialized(false)
 	{
-		if (_dir.empty())
-		{
-			throw Exception("could not create plugin - no install directory");
-		}
-
-		if (_file.empty())
-		{
-			throw Exception("could not create plugin - no dll filename");
-		}
-
-		if (_classname.empty())
-		{
-			throw Exception("could not create plugin - no classname");
-		}
-	}
-
-	Plugin::Plugin(Plugin const& _src) :
-		Entity(_src),
-		m_Metadata("", "")
-	{
-		throw Exception("internal error: attempted to copy an entity");
-	}
-
-	Plugin& Plugin::operator=(Plugin const& _src)
-	{
-		throw Exception("internal error: attempted to assign an entity");
+		m_File = m_Metadata->getInstallDirectory() + m_Metadata->getFilename();
 	}
 
 	Plugin::~Plugin()
@@ -73,6 +46,8 @@ namespace _2Real
 			{
 				uninstall();
 			}
+
+			delete m_Metadata;
 		}
 		catch (Exception &e)
 		{
@@ -80,63 +55,85 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::addService(FactoryReference *ref)
+	void Plugin::addService(ServiceTemplate *_service)
 	{
-		m_Services.push_back(ref);
+		m_Services.insert(NamedTemplate(_service->name(), _service));
 	}
 
-	Plugin::ServiceTemplates const& Plugin::services() const
+	void Plugin::addSetupParameter(SetupParameter *const _param)
 	{
-		return m_Services;
-	}
-
-	Plugin::ServiceTemplates const& Plugin::services()
-	{
-		return m_Services;
+		m_SetupParameters.insert(NamedParameter(_param->name(), _param));
 	}
 
 	PluginMetadata const& Plugin::pluginMetadata() const
 	{
-		return m_Metadata;
+		return *m_Metadata;
 	}
 
 	ServiceMetadata const& Plugin::serviceMetadata(std::string const& _name) const
 	{
-		return m_Metadata.getServiceMetadata(_name);
+		return m_Metadata->getServiceMetadata(_name);
 	}
 
 	bool const& Plugin::isInitialized() const
 	{
-		return m_bIsInitialized;
+		return m_IsInitialized;
 	}
 
-	IDs Plugin::setupParamIDs() const
+	std::list< unsigned int > Plugin::setupParameterIDs() const
 	{
-		return m_SetupIds;
-	}
-
-	
-	void Plugin::addSetupParameter(unsigned int const& id, PluginParameter *const _param)
-	{
-		if (_param == NULL)
+		std::list< unsigned int > result;
+		for (ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 		{
-			throw Exception("setup parameter could not be added - null pointer");
+			result.push_back(it->second->id());
 		}
 
-		m_SetupParams.insert(NamedParam(_param->name(), _param));
-		m_SetupIds.push_back(id);
+		return result;
 	}
 
-	void Plugin::getParameterValue(std::string const& _name, AbstractRef *const _param)
+	std::list< unsigned int > Plugin::serviceIDs() const
 	{
-		ParamMap::iterator it = m_SetupParams.find(_name);
-		if (it == m_SetupParams.end())
+		std::list< unsigned int > result;
+		for (TemplateMap::const_iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		{
+			result.push_back(it->second->id());
+		}
+
+		return result;
+	}
+
+	SetupParameter *const Plugin::getSetupParameter(std::string const& _name)
+	{
+		ParameterMap::iterator it = m_SetupParameters.find(_name);
+		if (it == m_SetupParameters.end())
 		{
 			throw Exception("attempted to query non-existant setup parameter");
 		}
 
-		Poco::Any any = (it->second->value());
-		_param->extractFrom(any);
+		return it->second;
+	}
+
+	ServiceTemplate *const Plugin::getServiceTemplate(std::string const& _name)
+	{
+		TemplateMap::iterator it = m_Services.find(_name);
+		if (it == m_Services.end())
+		{
+			throw Exception("attempted to query non-existant service template");
+		}
+
+		return it->second;
+	}
+
+	SharedAny Plugin::getParameterValue(std::string const& _name)
+	{
+		ParameterMap::iterator it = m_SetupParameters.find(_name);
+		if (it == m_SetupParameters.end())
+		{
+			throw Exception("attempted to query non-existant setup parameter");
+		}
+
+		SharedAny any = (it->second->get());
+		return any;
 	}
 
 	void Plugin::install()
@@ -155,11 +152,11 @@ namespace _2Real
 			}
 
 			//2nd, create plugin activator instance
-			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
+			if (m_PluginLoader.canCreate(m_Metadata->getClassname()))
 			{
 				try
 				{
-					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
+					m_Activator = m_PluginLoader.create(m_Metadata->getClassname());
 				}
 				catch (Poco::NotFoundException &e)
 				{
@@ -173,13 +170,13 @@ namespace _2Real
 			}
 
 			//3rd, read the metadata
-			m_Activator->getMetadata(m_Metadata);
+			m_Activator->getMetadata(*m_Metadata);
 		}
 		catch (Exception &e)
 		{
 			if (m_Activator)
 			{
-				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+				m_PluginLoader.destroy(m_Metadata->getClassname(), m_Activator);
 				m_Activator = NULL;
 			}
 
@@ -199,7 +196,7 @@ namespace _2Real
 			PluginContext context(this, _factory);
 			m_Activator->setup(context);
 
-			m_bIsInitialized = true;
+			m_IsInitialized = true;
 		}
 		catch (Exception &e)
 		{
@@ -212,13 +209,14 @@ namespace _2Real
 		try
 		{
 			delete m_Activator;
-			m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+			m_Activator = NULL;
+
+			//m_PluginLoader.destroy(m_Metadata->getClassname(), m_Activator);
 
 			if (m_PluginLoader.isLibraryLoaded(m_File))
 			{
 				m_PluginLoader.unloadLibrary(m_File);
 			}
-			m_Activator = NULL;
 		}
 		catch (Exception &e)
 		{

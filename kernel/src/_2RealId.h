@@ -25,108 +25,31 @@
 namespace _2Real
 {
 
-	/**
-	*	
-	*/
-
 	class Id
 	{
 
 	public:
 
-		/**
-		*	
-		*/
-		Id(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id);
-
-		/**
-		*
-		*/
+		Id(std::string const& _name, std::string const& _strType, std::string const& _info, unsigned int const& _id);
 		Id();
-
-		/**
-		*	
-		*/
 		Id(Id const& _src);
-
-		/**
-		*	
-		*/
 		Id& operator=(Id const& _src);
-
-		/**
-		*	
-		*/
 		~Id();
 
-		/**
-		*	
-		*/
 		bool operator==(Id const& _rhs) const;
-
-		/**
-		*	
-		*/
 		bool operator!=(Id const& _rhs) const;
-
-		/**
-		*
-		*/
 		bool operator<(Id const& _rhs) const;
-
-		/**
-		*
-		*/
 		bool operator<=(Id const& _rhs) const;
-
-		/**
-		*
-		*/
 		bool operator>(Id const& _rhs) const;
-
-		/**
-		*
-		*/
 		bool operator>=(Id const& _rhs) const;
 
-		/**
-		*	
-		*/
 		std::string const& strType() const;
-
-		/**
-		*	
-		*/
 		std::string const& name() const;
-
-		/**
-		*	
-		*/
 		std::string const& info() const;
-
-		/**
-		*	
-		*/
 		unsigned int const& id() const;
 
-		/**
-		*	
-		*/
-		Entity::eType const& type() const;
-
-		/**
-		*
-		*/
 		void retain();
-
-		/**
-		*
-		*/
 		void release();
-
-		/**
-		*
-		*/
 		void setInfo(std::string const& _info);
 
 	private:
@@ -145,11 +68,6 @@ namespace _2Real
 		*	info
 		*/
 		std::string					m_Info;
-
-		/**
-		*	type
-		*/
-		const Entity::eType			m_Type;
 
 		/**
 		*	unique id

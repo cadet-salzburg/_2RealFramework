@@ -36,15 +36,7 @@ namespace _2Real
 		}
 		catch (Exception &e)
 		{
-
-			if (m_Engine)
-			{
-				m_Engine->release();
-				m_Engine = NULL;
-			}
-
 			delete m_ID;
-
 			throw e;
 		}
 	}
@@ -73,7 +65,6 @@ namespace _2Real
 
 		if (m_ID)
 		{
-			//this will delete everything inside of the graph
 			m_Engine->destroySystem(*m_ID);
 		}
 
@@ -89,7 +80,6 @@ namespace _2Real
 	{
 		m_Engine->destroySystem(*m_ID);
 		delete m_ID;
-		m_Engine->release();
 	}
 
 	const Identifier System::getID()
@@ -99,277 +89,219 @@ namespace _2Real
 
 	const Identifier System::loadPlugin(std::string const& _name, std::string const& _directory, std::string const& _file, std::string const& _classname)
 	{
-		try
-		{
-			return m_Engine->installPlugin(_name, _directory, _file, _classname, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return m_Engine->installPlugin(_name, _directory, _file, _classname, *m_ID);
 	}
 
 	void System::startPlugin(Identifier const& _pluginID)
 	{
-		try
-		{
-			return m_Engine->startPlugin(_pluginID, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return m_Engine->startPlugin(_pluginID, *m_ID);
 	}
 
 	void System::dumpPluginInfo(Identifier const& _pluginID)
 	{
-		try
-		{
-			m_Engine->dumpPluginInfo(_pluginID, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	const Identifier System::createService(std::string const& _name, Identifier const& _pluginID, std::string const& _serviceName)
-	{
-		try
-		{
-			return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->dumpPluginInfo(_pluginID, *m_ID);
 	}
 
 	void System::dumpServiceInfo(Identifier const& _pluginID, std::string const& _serviceName)
 	{
-		try
-		{
-			m_Engine->dumpServiceInfo(_pluginID, _serviceName, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->dumpServiceInfo(_pluginID, _serviceName, *m_ID);
 	}
 
-	Identifiers System::getSetupParameters(Identifier const& _id)
+	const Identifier System::createService(std::string const& _name, Identifier const& _pluginID, std::string const& _serviceName)
 	{
-		try
-		{
-			return m_Engine->getSetupParameters(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
 	}
 
-	Identifiers System::getInputSlots(Identifier const& _id)
+	void System::setParameterValue(Identifier const& _id, std::string const& _paramName, SharedAny _any, type_info const& _info)
 	{
-		try
-		{
-			return m_Engine->getInputSlots(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->setParameterValue(_id, _paramName, _any, _info.name(), *m_ID);
 	}
 
-	Identifiers System::getOutputSlots(Identifier const& _id)
+	//Identifiers System::getInputSlots(Identifier const& _id)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->getInputSlots(_id, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//Identifiers System::getOutputSlots(Identifier const& _id)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->getOutputSlots(_id, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//const Identifier System::createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->createSequence(_name, _idA, _idB, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//const Identifier System::createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->createSynchronization(_name, _idA, _idB, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void System::link(Identifier const& _in, Identifier const& _out)
+	//{
+	//	try
+	//	{
+	//		m_Engine->link(_in, _out, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	void System::linkSlots(Identifier const& _idIn, std::string const& _nameIn, Identifier const& _idOut, std::string const& _nameOut)
 	{
-		try
-		{
-			return m_Engine->getOutputSlots(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->linkSlots(_idIn, _nameIn, _idOut, _nameOut, *m_ID);
 	}
 
-	const Identifier System::createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
+	//void System::registerToException(Identifier const& _id, ExceptionCallback _callback)
+	//{
+	//	try
+	//	{
+	//		m_Engine->registerToException(_id, _callback, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	void System::registerToNewData(Identifier const& _service, std::string const& _name, DataCallback _callback)
 	{
-		try
-		{
-			return m_Engine->createSequence(_name, _idA, _idB, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->registerToNewData(_service, _name, _callback, *m_ID);
 	}
 
-	const Identifier System::createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
-	{
-		try
-		{
-			return m_Engine->createSynchronization(_name, _idA, _idB, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::unregisterFromNewData(Identifier const& _service, std::string const& _out, DataCallback _callback)
+	//{
+	//	try
+	//	{
+	//		m_Engine->unregisterFromNewData(_service, _out, _callback, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
-	void System::setParameterValue(Identifier const& _id, Poco::Any _any, type_info const& _info)
-	{
-		try
-		{
-			m_Engine->setParameterValue(_id, _any, _info.name(), *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//DataHandle System::getDataHandle(Identifier const& _service, std::string const& _out)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->createDataHandle(_service, _out, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
-	void System::link(Identifier const& _in, Identifier const& _out)
-	{
-		try
-		{
-			m_Engine->link(_in, _out, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void System::linkSlots(Identifier const& _in, Identifier const& _out)
-	{
-		try
-		{
-			m_Engine->linkSlots(_in, _out, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void System::registerToException(Identifier const& _id, ExceptionCallback _callback)
-	{
-		try
-		{
-			m_Engine->registerToException(_id, _callback, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void System::registerToNewData(Identifier const& _id, NewDataCallback _callback)
-	{
-		try
-		{
-			m_Engine->registerToNewData(_id, _callback, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	Identifiers System::getChildren(Identifier const& _id)
-	{
-		try
-		{
-			return m_Engine->getChildren(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//Identifiers System::getChildren(Identifier const& _id)
+	//{
+	//	try
+	//	{
+	//		return m_Engine->getChildren(_id, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
 	void System::start(Identifier const& _id)
 	{
-		try
-		{
-			m_Engine->start(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->start(_id, *m_ID);
 	}
 
-	void System::startAll()
-	{
-		try
-		{
-			m_Engine->startAll(*m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::startAll()
+	//{
+	//	try
+	//	{
+	//		m_Engine->startAll(*m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
 	void System::stop(Identifier const& _id)
 	{
-		try
-		{
-			m_Engine->stop(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Engine->stop(_id, *m_ID);
 	}
 
-	void System::stopAll()
-	{
-		try
-		{
-			m_Engine->stopAll(*m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::stopAll()
+	//{
+	//	try
+	//	{
+	//		m_Engine->stopAll(*m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
-	void System::destroy(Identifier const& _id)
-	{
-		try
-		{
-			m_Engine->destroy(_id, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::destroy(Identifier const& _id)
+	//{
+	//	try
+	//	{
+	//		m_Engine->destroy(_id, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
-	void System::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
-	{
-		try
-		{
-			m_Engine->insert(_dst, _index, _src, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
+	//{
+	//	try
+	//	{
+	//		m_Engine->insert(_dst, _index, _src, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 
-	void System::append(Identifier const& _dst, Identifier const& _src)
-	{
-		try
-		{
-			m_Engine->append(_dst, _src, *m_ID);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
+	//void System::append(Identifier const& _dst, Identifier const& _src)
+	//{
+	//	try
+	//	{
+	//		m_Engine->append(_dst, _src, *m_ID);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
 }

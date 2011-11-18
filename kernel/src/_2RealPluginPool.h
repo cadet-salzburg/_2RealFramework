@@ -19,8 +19,10 @@
 
 #pragma once
 
+#include "_2RealEngine.h"
+#include "_2RealException.h"
+
 #include <map>
-#include <list>
 #include <string>
 
 #include "Poco/Path.h"
@@ -28,78 +30,46 @@
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
 	class Plugin;
 	class PluginMetadata;
-	class ServiceFactory;
-	class ProductionGraphs;
-	class EntityTable;
+	class Identifier;
 
 	class PluginPool
 	{
 	
 	public:
 
-		/**
-		*	
-		*/
-		PluginPool();
-
-		/**
-		*	
-		*/
-		PluginPool(PluginPool const& _src);
-
-		/**
-		*	
-		*/
-		PluginPool& operator=(PluginPool const& _src);
-
-		/**
-		*	
-		*/
-		~PluginPool();
+		PluginPool(Engine &engine);
+		virtual ~PluginPool();
 
 		/**
 		*	installs plugin
 		*/
-		const unsigned int install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class);
+		const unsigned int install(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname);
+
+		/**
+		*
+		*/
+		const bool contains(Identifier const& id) const;
 
 		/**
 		*	uninstalls plugin
 		*/
-		void uninstall(unsigned int const& _id);
+		void uninstall(Identifier const& id);
 
 		/**
 		*	returns plugin pointer
 		*/
-		Plugin *const plugin(unsigned int const& _id);
+		Plugin *const plugin(Identifier const& id);
 
 		/**
 		*	returns plugin pointer
 		*/
-		Plugin const *const plugin(unsigned int const& _id) const;
-
-		/**
-		*	returns plugin info
-		*/
-		PluginMetadata const& info(unsigned int const& _id) const;
+		Plugin const *const plugin(Identifier const& id) const;
 
 	private:
 
-		friend class Engine;
-
-		/**
-		*	yay, typedefs
-		*/
 		typedef std::pair< unsigned int, Plugin * >			NamedPlugin;
-
-		/**
-		*	sfedepyt ,yay
-		*/
 		typedef std::map< unsigned int, Plugin * >			PluginMap;
 
 		/**
@@ -108,14 +78,21 @@ namespace _2Real
 		PluginMap											m_Plugins;
 
 		/**
-		*	framework's entities
+		*	the 2 real engine
 		*/
-		EntityTable											*m_EntityTable;
+		Engine												&m_Engine;
 
-		/**
-		*
-		*/
-		ServiceFactory										*m_Factory;
+	};
+
+	class PluginNotFoundException : public Exception
+	{
+
+		friend class PluginPool;
+		
+		PluginNotFoundException(std::string const& name) :
+			Exception(std::string("plugin pool does not contain ").append(name))
+		{
+		}
 
 	};
 

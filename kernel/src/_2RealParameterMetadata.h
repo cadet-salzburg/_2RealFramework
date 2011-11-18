@@ -28,7 +28,7 @@ namespace _2Real
 	*	metadata representation of a param
 	*/
 
-	class ParamMetadata
+	class ParameterMetadata
 	{
 
 	public:
@@ -38,17 +38,17 @@ namespace _2Real
 		/**
 		*	yay, typedefs
 		*/
-		typedef std::pair< std::string, ParamMetadata >		NamedParam;
+		typedef std::pair< std::string, ParameterMetadata >		NamedParameter;
 
 		/**
 		*	typedefs, yay
 		*/
-		typedef std::map< std::string, ParamMetadata >		ParamMap;
+		typedef std::map< std::string, ParameterMetadata >		ParameterMap;
 
 		/**
 		*	ctor will throw if either _name or _type is empty
 		*/
-		ParamMetadata(std::string const& _name, std::string const& _type);
+		ParameterMetadata(std::string const& _name, std::string const& _type);
 
 		/**
 		*	get parameter name

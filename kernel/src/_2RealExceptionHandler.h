@@ -21,7 +21,6 @@
 #include "_2RealIdentifier.h"
 #include "_2RealEngineTypedefs.h"
 #include "_2RealTypedefs.h"
-#include "_2RealData.h"
 #include "_2RealException.h"
 
 #include <list>
@@ -31,56 +30,24 @@
 namespace _2Real
 {
 
-	class DataPacket;
-
-	class ApplicationCallback
+	class ExceptionHandler
 	{
 
 	public:
 
-		ApplicationCallback(Identifier const& _id);
+		ExceptionHandler(Identifier const& system);
 
-		void registerDataCallback(NewDataCallback _callback);
+		void registerExceptionCallback(ExceptionCallback callback);
 
-		void unregisterDataCallback();
+		void unregisterExceptionCallback(ExceptionCallback callback);
 
-		void registerExceptionCallback(ExceptionCallback _callback);
-
-		void unregisterExceptionCallback();
-
-		void sendData(Poco::SharedPtr< DataPacket >& _data);
-
-		void sendException(Exception const& _exception);
-
-		bool const& hasDataListeners() const;
-
-		bool const& hasExceptionListeners() const;
+		void handleException(Exception const& _exception);
 
 	private:
 
-		/**
-		*	sender id
-		*/
-		Identifier						m_Sender;
+		Poco::BasicEvent< RunnableException >	m_Event;
 
-		/**
-		*
-		*/
-		Poco::BasicEvent< Data >		m_DataEvent;
+		Identifier								const m_System;
 
-		/**
-		*
-		*/
-		Poco::BasicEvent< Identifier >	m_ExceptionEvent;
-
-		/**
-		*	
-		*/
-		bool							m_bHasDataListeners;
-
-		/**
-		*
-		*/
-		bool							m_bHasExceptionListeners;
 	};
 }

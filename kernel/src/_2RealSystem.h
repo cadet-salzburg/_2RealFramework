@@ -20,14 +20,17 @@
 #pragma once
 
 #include "_2RealTypedefs.h"
+#include "_2RealInputHandle.h"
+#include "_2RealSharedAny.h"
 
 #include <string>
 
-#include "Poco/Any.h"
+#include "Poco\AbstractDelegate.h"
 
 namespace _2Real
 {
 	class Engine;
+
 	class System
 	{
 
@@ -122,7 +125,9 @@ namespace _2Real
 		*	@param _id:				identifier of service / plugin
 		*	@return:				ids of setup params
 		*/
-		Identifiers getSetupParameters(Identifier const& id);
+		//Identifiers getSetupParameters(Identifier const& id);
+
+		//TODO
 
 		/**
 		*	initializes a service's setup parameter
@@ -134,18 +139,13 @@ namespace _2Real
 		*	@param value:			the value
 		*/
 		template< typename T >
-		void setParameterValue(Identifier const& paramID, T const& value)
+		void setParameterValue(Identifier const& id, std::string const& name, T const& value)
 		{
-			try
-			{
-				Poco::Any any(value);
-				setParameterValue(paramID, any, typeid(T));
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
+			SharedAny any(value);
+			setParameterValue(id, name, any, typeid(T));
 		}
+
+		//TODO
 
 		/**
 		*	creates a sequence of entities
@@ -172,7 +172,7 @@ namespace _2Real
 		*	open questions: is it really necessary for signatures to match perfectly here?
 		*	output slots could be discarded, IO slots might match, but be ordered differently
 		*/
-		const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
+		//const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
 
 		/**
 		*	creates a synchronization of entities
@@ -196,7 +196,7 @@ namespace _2Real
 		*	@param idB:				identifier of either: sequence, synchronization or service
 		*	@return:				the synchronization's unique identifier
 		*/
-		const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
+		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
 
 		/**
 		*	links two entities
@@ -207,7 +207,7 @@ namespace _2Real
 		*	@param in:				identifier of service / sequence / synchronization
 		*	@param out:				identifier of service / sequence / synchronization
 		*/
-		void link(Identifier const& in, Identifier const& out);
+		//void link(Identifier const& in, Identifier const& out);
 
 		/**
 		*	returns identifiers of all output slots of an entity
@@ -222,7 +222,7 @@ namespace _2Real
 		*	@param id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of output slots
 		*/
-		Identifiers getOutputSlots(Identifier const& id);
+		//Identifiers getOutputSlots(Identifier const& id);
 
 		/**
 		*	returns identifiers of all input slots of an entity
@@ -238,7 +238,7 @@ namespace _2Real
 		*	@param id:				identifier of either: sequence, synchronization or service
 		*	@return:				ids of input slots
 		*/
-		Identifiers getInputSlots(Identifier const& id);
+		//Identifiers getInputSlots(Identifier const& id);
 
 		/**
 		*	links an input slot with an output slot
@@ -251,7 +251,7 @@ namespace _2Real
 		*	@param in:				identifier of input slot
 		*	@param out:				identifier of output slot
 		*/
-		void linkSlots(Identifier const& in, Identifier const& out);
+		void linkSlots(Identifier const& idA, std::string const& nameA, Identifier const& IdB, std::string const& nameB);
 
 		/**
 		*	returns the ids of an entity's children
@@ -261,7 +261,7 @@ namespace _2Real
 		*	@param id:				identifier of either: sequence, synchronization
 		*	@return:				ids of output slots
 		*/
-		Identifiers getChildren(Identifier const& id);
+		//Identifiers getChildren(Identifier const& id);
 
 		/**
 		*	starts an entity
@@ -286,7 +286,7 @@ namespace _2Real
 		*
 		*	possible exceptions:	IO misconfiguration if a child
 		*/
-		void startAll();
+		//void startAll();
 
 		/**
 		*	stops an entity
@@ -302,7 +302,7 @@ namespace _2Real
 		/**
 		*	stops all of nirvanas children at once
 		*/
-		void stopAll();
+		//void stopAll();
 
 		/**
 		*	destroys an entity
@@ -314,7 +314,7 @@ namespace _2Real
 		*
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*/
-		void destroy(Identifier const& id);
+		//void destroy(Identifier const& id);
 
 		/**
 		*	inserts an entity into another
@@ -332,7 +332,7 @@ namespace _2Real
 		*
 		*	open questions:			spaghetti monster, help me. rAmen.
 		*/
-		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src);
+		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src);
 
 		/**
 		*	like insert, with index being the last place in the children
@@ -343,7 +343,7 @@ namespace _2Real
 		*	@param _src:			production graph to be inserted
 		*	@param _dst:			the other one
 		*/
-		void append(Identifier const& dst, Identifier const& id);
+		//void append(Identifier const& dst, Identifier const& id);
 
 		/**
 		*	registers callback for an exception
@@ -353,31 +353,53 @@ namespace _2Real
 		*	@param _id:				identifier of either: sequence, synchronization or service
 		*	@param _callback		function pointer
 		*/
-		void registerToException(Identifier const& _id, ExceptionCallback _callback);
+		//void registerToException(Identifier const& _id, ExceptionCallback _callback);
 
 		/**
-		*	registers callback for new DataImpl
+		*	registers callback for the output of a service output slot
 		*
-		*	possible exceptions:	invalid id
+		*	possible exceptions:	to be defined
 		*	
-		*	@param _id:				identifier of either: sequence, synchronization or service
-		*	@param _callback		function pointer
+		*	@param service:			identifier of either a service
+		*	@param name:			name of an output parameter
+		*	@param callback			the function pointer
 		*/
-		void registerToNewData(Identifier const& _id, NewDataCallback _callback);
+		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
 
 		/**
-		*	you know what this is :)
+		*	registers callback for an output slot
+		*
+		*	possible exceptions:	
+		*	
+		*	@param service:			identifier of a service
+		*	@param out:				name of an output parameter
+		*	@param callback:		function pointer
 		*/
+		//void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback);
+
+		/**
+		*	unregisters callback for an output slot
+		*
+		*	possible exceptions:	
+		*	
+		*	@param service:			identifier of a service
+		*	@param out:				name of an output parameter
+		*	@param callback			function pointer
+		*/
+		//void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback);
+
+		/**
+		*	creates handle for an output slot
+		*
+		*	possible exceptions:	
+		*	
+		*	@param service:			identifier of a service
+		*	@param out:				name of an output parameter
+		*/
+		//DataHandle getDataHandle(Identifier const& service, std::string const& out);
+
 		~System();
-
-		/**
-		*	and that, too
-		*/
 		System(System const& src);
-
-		/**
-		*	and then there's that cute little critter as well
-		*/
 		System& operator=(System const& src);
 
 	private:
@@ -385,7 +407,7 @@ namespace _2Real
 		/**
 		*	internally used function for setting param values
 		*/
-		void setParameterValue(Identifier const& id, Poco::Any any, type_info const& _info);
+		void setParameterValue(Identifier const& id, std::string const& name, SharedAny any, type_info const& info);
 
 		/**
 		*	the 2 real engine

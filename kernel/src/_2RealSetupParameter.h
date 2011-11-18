@@ -19,14 +19,13 @@
 #pragma once
 
 #include "_2RealParameter.h"
-
-#include "Poco/Any.h"
+#include "_2RealSharedAny.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	class for setup parameters: service-setup & plugin-setup
 	*/
 
 	class SetupParameter : public Parameter
@@ -34,42 +33,29 @@ namespace _2Real
 
 	public:
 
-		/**
-		*	
-		*/
-		SetupParameter(Id *const _id, std::string const& _type);
-
-		/**
-		*	
-		*/
-		SetupParameter(SetupParameter const& _src);
-
-		/**
-		*	
-		*/
-		SetupParameter& operator=(SetupParameter const& _src);
-
-		/**
-		*	
-		*/
+		SetupParameter(Id *const id, std::string const& type, std::string const& key);
 		virtual ~SetupParameter();
 
 		/**
-		*	set any
+		*	sets parameter data
 		*/
-		void					setValue(Poco::Any const& _any);
+		void set(SharedAny const& data)
+		{
+			m_Data = data;
+			//m_IsInitialized = true;
+		}
 
 		/**
-		*	return any
+		*	returns parameter data
 		*/
-		Poco::Any const&		value() const;
+		SharedAny const& get() const
+		{
+			return m_Data;
+		}
 
 	protected:
 
-		/**
-		*	the any value
-		*/
-		Poco::Any				m_Value;
+		SharedAny				m_Data;
 
 	};
 

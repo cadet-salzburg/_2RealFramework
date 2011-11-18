@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealFactoryReference.h"
+#include "_2RealServiceTemplate.h"
 #include "_2RealPlugin.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealException.h"
@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	FactoryReference::FactoryReference(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, Id *const _id) :
+	ServiceTemplate::ServiceTemplate(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, Id *const _id) :
 		Entity(_id),
 		m_Name(_name),
 		m_Plugin(_pluginID),
@@ -33,7 +33,7 @@ namespace _2Real
 	{
 	}
 
-	FactoryReference::FactoryReference(FactoryReference const& _src) :
+	ServiceTemplate::ServiceTemplate(ServiceTemplate const& _src) :
 		Entity(_src),
 		m_Metadata(_src.m_Metadata),
 		m_Plugin(0),
@@ -43,31 +43,31 @@ namespace _2Real
 		throw Exception("internal error: attempted to copy an entity");
 	}
 
-	FactoryReference& FactoryReference::operator=(FactoryReference const& _src)
+	ServiceTemplate& ServiceTemplate::operator=(ServiceTemplate const& _src)
 	{
 		throw Exception("internal error: attempted to copy an entity");
 	}
 
-	FactoryReference::~FactoryReference()
+	ServiceTemplate::~ServiceTemplate()
 	{
 	}
 
-	unsigned int const& FactoryReference::plugin() const
+	unsigned int const& ServiceTemplate::plugin() const
 	{
 		return m_Plugin;
 	}
 
-	ServiceMetadata const& FactoryReference::metadata() const
+	ServiceMetadata const& ServiceTemplate::metadata() const
 	{
 		return m_Metadata;
 	}
 
-	std::string const& FactoryReference::name() const
+	std::string const& ServiceTemplate::name() const
 	{
 		return m_Name;
 	}
 
-	IService *const FactoryReference::create()
+	IService *const ServiceTemplate::create()
 	{
 		return m_Creator();
 	}

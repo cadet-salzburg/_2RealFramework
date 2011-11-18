@@ -17,40 +17,20 @@
 */
 
 #include "_2RealParameter.h"
-#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	Parameter::Parameter(Id *const _id, std::string const& _type) :
-		Entity(_id),
-		m_bIsInitialized(false),
-		m_Typename(_type)
+	Parameter::Parameter(Id *const id, std::string const& type, std::string const& key) :
+		Entity(id),
+		m_IsInitialized(false),
+		m_Datatype(type),
+		m_Keyword(key)
 	{
-	}
-
-	Parameter::Parameter(Parameter const& _src) : Entity(_src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	Parameter& Parameter::operator=(Parameter const& _src)
-	{
-		throw Exception("attempted to copy entity");
 	}
 
 	Parameter::~Parameter()
 	{
-	}
-
-	bool const& Parameter::isInitialized() const
-	{
-		return m_bIsInitialized;
-	}
-
-	std::string const& Parameter::datatype() const
-	{
-		return m_Typename;
 	}
 
 }

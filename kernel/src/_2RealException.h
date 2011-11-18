@@ -23,17 +23,19 @@
 namespace _2Real
 {
 
-	/**
-	*	the exception stuff is not fully fleshed out yet
-	*/
-
 	class Exception : public std::runtime_error
 	{
 
 	public:
 
-		Exception(std::string const& _msg);
-		//void append(std::string const& _msg);
+		Exception(std::string const& message) :
+			std::runtime_error(message)
+		{
+		}
+
+		virtual ~Exception()
+		{
+		}
 
 	}; 
 

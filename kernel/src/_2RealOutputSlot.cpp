@@ -19,98 +19,115 @@
 #include "_2RealOutputSlot.h"
 #include "_2RealInputSlot.h"
 #include "_2RealException.h"
-#include "_2RealAbstractRef.h"
-#include "_2RealServiceContainer.h"
+#include "_2RealService.h"
+
+#include "Poco\Delegate.h"
 
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
-		IOSlot(_id, _service, _type)
+	OutputSlot::OutputSlot(Id *const _id, Service *const _service, std::string const& _type, std::string const& _key, SharedAny init) :
+		IOSlot(_id, _service, _type, _key)
 	{
-	}
-
-	OutputSlot::OutputSlot(OutputSlot const& _src) : IOSlot(_src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	OutputSlot& OutputSlot::operator=(OutputSlot const& _src)
-	{
-		throw Exception("attempted to copy entity");
+		this->init(init);
 	}
 
 	OutputSlot::~OutputSlot()
 	{
 	}
 
-	InputSlot *const OutputSlot::linkedInput()
+	//void OutputSlot::linkWith(InputSlot *const _input)
+	//{
+	//	try
+	//	{
+	//		if (!_input)
+	//		{
+	//			throw Exception("internal error: IO slot linkage failed - null pointer");
+	//		}
+	//		else if (_input == m_Linked)
+	//		{
+	//			return;
+	//		}
+	//		else if (_input->datatype() != m_Typename)
+	//		{
+	//			throw Exception("internal error: IO slot linkage failed - datatype mismatch");
+	//		}
+
+	//		if (m_Linked)
+	//		{
+	//			//this will call input's reset as well
+	//			reset();
+	//		}
+
+	//		_input->service()->listenTo(m_Service);
+	//		m_Service->addListener(_input->service());
+	//		_input->linkWith(this);
+
+	//		m_Linked = _input;
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		m_Linked = NULL;
+	//		throw e;
+	//	}
+	//}
+
+	//void OutputSlot::reset()
+	//{
+	//	try
+	//	{
+	//		if (m_Linked)
+	//		{
+	//			InputSlot *input = static_cast< InputSlot * >(m_Linked);
+	//			input->service()->stopListeningTo(m_Service);
+	//			m_Service->removeListener(input->service());
+	//			input->reset();
+	//			m_Linked = NULL;
+	//		}
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	void OutputSlot::init(SharedAny const& initialData)
 	{
-		return static_cast< InputSlot * >(m_Linked);
+		m_WriteData = initialData;
+		m_IsInitialized = true;
+
+		//sends initial data to all listeners
+		update();
 	}
 
-	void OutputSlot::linkWith(InputSlot *const _input)
+	void OutputSlot::update()
 	{
-		try
-		{
-			if (!_input)
-			{
-				throw Exception("internal error: IO slot linkage failed - null pointer");
-			}
-			else if (_input == m_Linked)
-			{
-				return;
-			}
-			else if (_input->datatype() != m_Typename)
-			{
-				throw Exception("internal error: IO slot linkage failed - datatype mismatch");
-			}
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-			if (m_Linked)
-			{
-				//this will call input's reset as well
-				reset();
-			}
-
-			_input->service()->listenTo(m_Service);
-			m_Service->addListener(_input->service());
-			_input->linkWith(this);
-
-			m_Linked = _input;
-		}
-		catch (Exception &e)
-		{
-			m_Linked = NULL;
-			throw e;
-		}
+		//store data - in case a new listener is added somewhere in between
+		m_CurrentData = Data(m_WriteData, Poco::Timestamp());
+		m_Event.notify(this, m_CurrentData);
+		m_WriteData.clone(m_WriteData);
 	}
 
-	OutputSlot::NamedAny OutputSlot::getAsAny()
+	void OutputSlot::addListener(InputSlot *listener)
 	{
-		if (!m_Ref)
-		{
-			throw Exception("output slot value could not be retrieved - slot is uninitialized");
-		}
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		m_Event += Poco::delegate(listener, &InputSlot::receiveData);
 
-		return IOSlot::NamedAny(id(), m_Ref->getAny());
+		//makes sure the newly added listener receives the current data
+		//because, if the service writing the output has a long update function
+		//while the service reading it has a short update function, well....
+		listener->receiveData(m_CurrentData);
 	}
 
-	void OutputSlot::reset()
+	void OutputSlot::registerCallback(DataCallback callback)
 	{
-		try
-		{
-			if (m_Linked)
-			{
-				InputSlot *input = static_cast< InputSlot * >(m_Linked);
-				input->service()->stopListeningTo(m_Service);
-				m_Service->removeListener(input->service());
-				input->reset();
-				m_Linked = NULL;
-			}
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		m_Event += Poco::delegate(callback);
+	}
+
+	void OutputSlot::unregisterCallback(DataCallback callback)
+	{
+		m_Event -= Poco::delegate(callback);
 	}
 }

@@ -35,106 +35,68 @@ namespace _2Real
 	*	plugin class; responsible for loading dlls & storing plugin metadata
 	*/
 
-	class FactoryReference;
+	class ServiceTemplate;
 	class ServiceFactory;
-	class PluginParameter;
-	class AbstractRef;
+	class SetupParameter;
+
+	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
+	typedef std::map< std::string, SetupParameter * >		ParameterMap;
+	typedef std::pair< std::string, ServiceTemplate * >	NamedTemplate;
+	typedef std::map< std::string, ServiceTemplate * >	TemplateMap;
 
 	class Plugin : public Entity
 	{
 
 	public:
 
-		/**
-		*	dir: install directory, file: name of dll, classname: name of exported class
-		*/
-		Plugin(std::string const& dir, std::string const& file, std::string const& classname, Id *const id);
-		Plugin(Plugin const& _src);
-		Plugin& operator=(Plugin const& _src);
-		~Plugin();
+		Plugin(PluginMetadata *const info, Id *const id);
+		virtual ~Plugin();
 
-		typedef std::list< FactoryReference * >						ServiceTemplates;
-		typedef Poco::ClassLoader< IPluginActivator >				PluginLoader;
-
-		/**
-		*	installation: inserts plugin into plugin pool, loads metadata
-		*/
 		void														install();
-
-		/**
-		*	kicks plugin out of framework
-		*/
 		void														uninstall();
-
-		/**
-		*	calls plugin activator's setup
-		*/
 		void														setup(ServiceFactory *const factory);
 
-		/**
-		*	called by plugin context during plugin activator's setup
-		*/
-		void														addService(FactoryReference *ref);
+		void														addService(ServiceTemplate *service);
+		void														addSetupParameter(SetupParameter *const param);
 
-		/**
-		*	function to get a setup param
-		*/
-		//void														getSetupParam(std::string const& name, int &param);
-
-		/**
-		*	get plugin metadata
-		*/
 		PluginMetadata const&										pluginMetadata() const;
-
-		/**
-		*	get service metadata
-		*/
 		ServiceMetadata const&										serviceMetadata(std::string const& name) const;
 
-		/**
-		*	list of services exported by plugin
-		*/
-		ServiceTemplates const&										services() const;
+		TemplateMap const& services() const
+		{
+			return m_Services;
+		}
 
-		/**
-		*	list of services exported by plugin
-		*/
-		ServiceTemplates const&										services();
+		TemplateMap& services()
+		{
+			return m_Services;
+		}
 
-		/**
-		*	returns true if plugin's setup has been called at least once
-		*/
-		bool const&													isInitialized() const;
+		ParameterMap const& setupParameters() const
+		{
+			return m_SetupParameters;
+		}
 
-		/**
-		*	ids of setup params
-		*/
-		IDs															setupParamIDs() const;
+		ParameterMap& setupParameters()
+		{
+			return m_SetupParameters;
+		}
 
-		/**
-		*	setup parameters
-		*/
-		void														addSetupParameter(unsigned int const& id, PluginParameter *const _param);
+		std::list< unsigned int > serviceIDs() const;
+		std::list< unsigned int > setupParameterIDs() const;
 
-		/**
-		*	retrieves value of a setup parameter
-		*/
-		void														getParameterValue(std::string const& _name, AbstractRef *const _param);
+		ServiceTemplate *const getServiceTemplate(std::string const& name);
+		SetupParameter *const getSetupParameter(std::string const& name);
+
+		bool const& isInitialized() const;
+		SharedAny getParameterValue(std::string const& name);
 
 	private:
 
-		typedef std::pair< const std::string, PluginParameter * >	NamedParam;
-		typedef std::map< const std::string, PluginParameter * >	ParamMap;
+		typedef Poco::ClassLoader< IPluginActivator >				PluginLoader;
 
-		/**
-		*	setup parameters
-		*/
-		ParamMap													m_SetupParams;
-
-		/**
-		*	setup parameter ids
-		*/
-		IDs															m_SetupIds;
+		ParameterMap													m_SetupParameters;
+		TemplateMap													m_Services;
 
 		/**
 		*	dll filepath
@@ -149,7 +111,7 @@ namespace _2Real
 		/**
 		*	metadata
 		*/
-		PluginMetadata												m_Metadata;
+		PluginMetadata												*const m_Metadata;
 
 		/**
 		*	poco classloader
@@ -157,14 +119,9 @@ namespace _2Real
 		PluginLoader												m_PluginLoader;
 
 		/**
-		*	services
-		*/
-		ServiceTemplates											m_Services;
-
-		/**
 		*	true if plugin's setup has been called at least once
 		*/
-		bool														m_bIsInitialized;
+		bool														m_IsInitialized;
 
 	};
 

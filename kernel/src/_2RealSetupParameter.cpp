@@ -17,41 +17,17 @@
 */
 
 #include "_2RealSetupParameter.h"
-#include "_2RealException.h"
-
-#include <iostream>
 
 namespace _2Real
 {
 
-	SetupParameter::SetupParameter(Id *const _id, std::string const& _type) :
-		Parameter(_id, _type)
+	SetupParameter::SetupParameter(Id *const _id, std::string const& _type, std::string const& _key) :
+		Parameter(_id, _type, _key)
 	{
-	}
-
-	SetupParameter::SetupParameter(SetupParameter const& _src) : Parameter(_src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	SetupParameter& SetupParameter::operator=(SetupParameter const& _src)
-	{
-		throw Exception("attempted to copy entity");
 	}
 
 	SetupParameter::~SetupParameter()
 	{
-	}
-
-	void SetupParameter::setValue(Poco::Any const& _any)
-	{
-		m_Value = _any;
-		m_bIsInitialized = true;
-	}
-
-	Poco::Any const& SetupParameter::value() const
-	{
-		return m_Value;
 	}
 
 }

@@ -81,7 +81,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addSetupParam(std::string const& _name, std::string const& _type);
+		void addSetupParameter(std::string const& _name, std::string const& _type);
 
 		/**
 		*	adds input parameter
@@ -89,7 +89,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addInputParam(std::string const& _name, std::string const& _type);
+		void addInputParameter(std::string const& _name, std::string const& _type);
 
 		/**
 		*	adds output parameter
@@ -97,7 +97,7 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@param _type:		parameter's type as string
 		*/
-		void addOutputParam(std::string const& _name, std::string const& _type);
+		void addOutputParameter(std::string const& _name, std::string const& _type);
 
 		/**
 		*	get service's name
@@ -131,34 +131,34 @@ namespace _2Real
 		*	@param _name:		parameter's name
 		*	@return:			true if service has setup param with _name
 		*/
-		const bool hasSetupParam(std::string const& _name) const;
+		const bool hasSetupParameter(std::string const& _name) const;
 
 		/**
 		*	@param _name:		parameter's name
 		*	@return:			true if service has input param with _name
 		*/
-		const bool hasInputParam(std::string const& _name) const;
+		const bool hasInputParameter(std::string const& _name) const;
 
 		/**
 		*	@param _name:		parameter's name
 		*	@return:			true if service has output param with _name
 		*/
-		const bool hasOuputParam(std::string const& _name) const;
+		const bool hasOuputParameter(std::string const& _name) const;
 
 		/**
 		*	
 		*/
-		ParamMetadata::StringMap getInputParams() const;
+		ParameterMetadata::StringMap getInputParameters() const;
 
 		/**
 		*	
 		*/
-		ParamMetadata::StringMap getOutputParams() const;
+		ParameterMetadata::StringMap getOutputParameters() const;
 
 		/**
 		*	
 		*/
-		ParamMetadata::StringMap getSetupParams() const;
+		ParameterMetadata::StringMap getSetupParameters() const;
 
 		/**
 		*	returns string with service information
@@ -192,17 +192,17 @@ namespace _2Real
 		/**
 		*	setup params
 		*/
-		ParamMetadata::ParamMap								m_SetupParams;
+		ParameterMetadata::ParameterMap								m_SetupParameters;
 
 		/**
 		*	input params
 		*/
-		ParamMetadata::ParamMap								m_InputParams;
+		ParameterMetadata::ParameterMap								m_InputParameters;
 
 		/**
 		*	output params
 		*/
-		ParamMetadata::ParamMap								m_OutputParams;
+		ParameterMetadata::ParameterMap								m_OutputParameters;
 
 	};
 

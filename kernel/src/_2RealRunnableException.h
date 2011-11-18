@@ -16,41 +16,43 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceParameter.h"
+#pragma once
+
 #include "_2RealException.h"
-#include "_2RealServiceContainer.h"
+#include "_2RealIdentifier.h"
 
 namespace _2Real
 {
 
-	ServiceParameter::ServiceParameter(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
-		SetupParameter(_id, _type),
-		m_Service(_service)
+	class RunnableException : public Exception
 	{
-	}
 
-	ServiceParameter::ServiceParameter(ServiceParameter const& _src) : SetupParameter(_src)
-	{
-		throw Exception("attempted to copy entity");
-	}
+	public:
 
-	ServiceParameter& ServiceParameter::operator=(ServiceParameter const& _src)
-	{
-		throw Exception("attempted to copy entity");
-	}
+		Identifier const& system()
+		{
+			return m_System;
+		}
 
-	ServiceParameter::~ServiceParameter()
-	{
-	}
+		Identifier const& sender()
+		{
+			return m_Sender;
+		}
 
-	ServiceContainer *const ServiceParameter::service()
-	{
-		return m_Service;
-	}
+	private:
 
-	ServiceContainer *const ServiceParameter::service() const
-	{
-		return m_Service;
-	}
+		friend class ExceptionHandler;
+
+		RunnableException(std::string const& message, Identifier const& sender, Identifier const& system) :
+			Exception(message),
+			m_System(system),
+			m_Sender(sender)
+		{
+		}
+
+		Identifier	m_System;
+		Identifier	m_Sender;
+
+	};
 
 }

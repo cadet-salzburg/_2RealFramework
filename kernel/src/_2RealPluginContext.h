@@ -19,10 +19,11 @@
 
 #pragma once
 
-#include "_2RealParamRef.h"
+#include "_2RealSharedAny.h"
 
 #include <string>
-#include <typeinfo>
+
+#include "Poco\SharedPtr.h"
 
 namespace _2Real
 {
@@ -35,7 +36,8 @@ namespace _2Real
 	
 	class IService;
 	class ServiceFactory;
-	class MetadataReader;
+
+	typedef IService *const (*const ServiceCreator)(void);
 
 	class PluginContext
 	{
@@ -43,31 +45,26 @@ namespace _2Real
 	public:
 
 		/**
-		*	service factory function
-		*/
-		typedef IService *const (*const ServiceCreator)(void);
-
-		/**
 		*	registers a service in the framework
+		*	
+		*	@param name:		name of service
+		*	@param creator:		function used to create a service obj
+		*	@throw:				InvalidServiceException
 		*/
 		void registerService(std::string const& name, ServiceCreator creator);
 
 		/**
-		*	retrieves the value of a setup parameter from the framework
-		*	name & type must match some setup parameter defined in plugin metadata
+		*	returns the value of a setup parameter
+		*	
+		*	@param name:		name of a setup parameter
+		*	@return:			constant reference to setup parameter
+		*	@throw:				InvalidParameterException, DatatypeMismatchException
 		*/
-		template< typename T >
-		void getSetupParameter(std::string const& name, T &param)
+		template< typename Datatype >
+		Datatype const& getParameterValue(std::string const& name)
 		{
-			try
-			{
-				AbstractRef *ref = new ParamRef< T >(param);
-				getSetupParameter(name, ref);
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(getSetupParameter(name));
+			return *ptr.get();
 		}
 
 	private:
@@ -79,10 +76,10 @@ namespace _2Real
 		PluginContext& operator=(PluginContext const& src);
 		~PluginContext();
 
-		void				getSetupParameter(std::string const& name, AbstractRef *const ref);
+		SharedAny			getSetupParameter(std::string const& name);
 
-		Plugin				*m_Plugin;
-		ServiceFactory		*m_Factory;
+		Plugin				*const m_Plugin;
+		ServiceFactory		*const m_Factory;
 
 	};
 

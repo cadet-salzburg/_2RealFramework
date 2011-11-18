@@ -17,64 +17,18 @@
 */
 
 #include "_2RealIOSlot.h"
-#include "_2RealException.h"
-#include "_2RealAbstractRef.h"
-#include "_2RealServiceContainer.h"
-
-#include <iostream>
 
 namespace _2Real
 {
 
-	IOSlot::IOSlot(Id *const _id, ServiceContainer *const _service, std::string const& _type) :
-		Parameter(_id, _type),
-		m_Service(_service),
-		m_Linked(NULL),
-		m_Ref(NULL)
+	IOSlot::IOSlot(Id *const _id, Service *const _service, std::string const& _type, std::string const& _key) :
+		Parameter(_id, _type, _key),
+		m_Service(_service)
 	{
-	}
-
-	IOSlot::IOSlot(IOSlot const& _src) : Parameter(_src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	IOSlot& IOSlot::operator=(IOSlot const& _src)
-	{
-		throw Exception("attempted to copy entity");
 	}
 
 	IOSlot::~IOSlot()
 	{
-		delete m_Ref;
-	}
-
-	void IOSlot::setReference(AbstractRef *const _ref)
-	{
-		m_Ref = _ref;
-		m_bIsInitialized = true;
-	}
-
-	const bool IOSlot::isLinked() const
-	{
-		if (m_Linked)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	ServiceContainer *const IOSlot::service()
-	{
-		return m_Service;
-	}
-
-	ServiceContainer *const IOSlot::service() const
-	{
-		return m_Service;
 	}
 
 }

@@ -17,21 +17,24 @@
 */
 
 #include "_2RealEntityTable.h"
-#include "_2RealEngineTypedefs.h"
-#include "_2RealEntity.h"
-#include "_2RealIdentifier.h"
-#include "_2RealId.h"
-#include "_2RealException.h"
 
-#include "_2RealPlugin.h"
-#include "_2RealServiceContainer.h"
-#include "_2RealFactoryReference.h"
-#include "_2RealContainer.h"
+#include "_2RealEntity.h"
+//#include "_2RealIdentifier.h"
+//#include "_2RealId.h"
+//#include "_2RealException.h"
+//#include "_2RealEngine.h"
+#include "_2RealTypes.h"
+
+#include "_2RealExceptionHandler.h"
+#include "_2RealSystemGraph.h"
+#include "_2RealService.h"
+#include "_2RealSequence.h"
+#include "_2RealSynchronization.h"
+#include "_2RealSetupParameter.h"
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
-#include "_2RealPluginParameter.h"
-#include "_2RealServiceParameter.h"
-#include "_2RealApplicationCallback.h"
+#include "_2RealPlugin.h"
+#include "_2RealServiceTemplate.h"
 
 #include <sstream>
 #include <iostream>
@@ -39,218 +42,143 @@
 namespace _2Real
 {
 
-	EntityTable::EntityTable() :
-		m_iCreationCount(0)
+	EntityTable::EntityTable(Engine &_engine) :
+		m_Entities(),
+		m_Engine(_engine),
+		m_CreationCount(0)
 	{
-	}
-
-	EntityTable::EntityTable(EntityTable const& _src)
-	{
-		throw Exception("internal error: attempted to copy entity table");
-	}
-
-	EntityTable& EntityTable::operator=(EntityTable const& _src)
-	{
-		throw Exception("internal error: attempted to copy entity table");
 	}
 
 	EntityTable::~EntityTable()
 	{
-		for (EntityMap::iterator it = m_EntityTable.begin(); it != m_EntityTable.end(); it++)
+		for (EntityMap::iterator it = m_Entities.begin(); it != m_Entities.end(); it++)
 		{
-			try
-			{
-				std::cout << "shutdown: entity left in entity table: " << it->second->info() << std::endl;
-				//delete it->second;
-			}
-			catch (Exception &e)
-			{
-				std::cout << "error on entity table destruction: " << e.what() << std::endl;
-			}
+			//~~~
+			std::cout << "shutdown: entity left in entity table: " << it->second->info() << std::endl;
 		}
 	}
 
-	void EntityTable::destroy(Container *_obj)
+	void EntityTable::destroy(SystemGraph *_obj)
 	{
-		try
+		EntityMap::iterator e = m_Entities.find(_obj->id());
+
+		std::list< Runnable * > children;
+		std::list< Runnable * >::iterator it;
+		children = _obj->children();
+
+		for (it = children.begin(); it != children.end(); it++)
 		{
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
+			if ((*it)->hasParameters())
 			{
-				throw Exception("internal error: entity not in entity map");
-			}
-			else if (!e->second)
-			{
-				throw Exception("internal error: null pointer stored in entity map");
-			}
-
-			if (_obj->type() != Entity::SYSTEM)
-			{
-				_obj->resetIO();
-			}
-			
-			std::list< AbstractContainer * > children;
-			std::list< AbstractContainer * >::iterator it;
-			children = _obj->children();
-
-			for (it = children.begin(); it != children.end(); it++)
-			{
-				destroy(*it);
-			}
-
-			delete _obj;
-			m_EntityTable.erase(e);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	void EntityTable::destroy(AbstractContainer *_obj)
-	{
-		try
-		{
-			if (_obj->type() == Entity::SERVICE)
-			{
-				ServiceContainer *service = static_cast< ServiceContainer * >(_obj);
+				Service *service = static_cast< Service * >(*it);
 				destroy(service);
 			}
 			else
 			{
-				Container *container = static_cast< Container * >(_obj);
-				destroy(container);
+				RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
+				destroy(graph);
 			}
 		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+
+		delete _obj;
+		m_Entities.erase(e);
 	}
 
-	void EntityTable::destroy(ServiceContainer *_obj)
+	void EntityTable::destroy(RunnableGraph *_obj)
 	{
-		try
+		EntityMap::iterator e = m_Entities.find(_obj->id());
+
+		std::list< Runnable * > children;
+		std::list< Runnable * >::iterator it;
+		children = _obj->children();
+
+		for (it = children.begin(); it != children.end(); it++)
 		{
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
+			if ((*it)->hasParameters())
 			{
-				throw Exception("internal error: entity not in entity map");
+				Service *service = static_cast< Service * >(*it);
+				destroy(service);
 			}
-			else if (!e->second)
+			else
 			{
-				throw Exception("internal error: null pointer stored in entity map");
+				RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
+				destroy(graph);
 			}
-
-			_obj->resetIO();
-
-			std::list< ServiceParameter * > setup = _obj->setupParams();
-			for (std::list< ServiceParameter * >::iterator it = setup.begin(); it != setup.end(); it++)
-			{
-				destroy(*it);
-			}
-
-			std::list< InputSlot * > input = _obj->inputSlots();
-			for (std::list< InputSlot * >::iterator it = input.begin(); it != input.end(); it++)
-			{
-				destroy(*it);
-			}
-
-			std::list< OutputSlot * > output = _obj->outputSlots();
-			for (std::list< OutputSlot * >::iterator it = output.begin(); it != output.end(); it++)
-			{
-				destroy(*it);
-			}
-
-			delete _obj;
-			m_EntityTable.erase(e);
 		}
-		catch (Exception &e)
+
+		delete _obj;
+		m_Entities.erase(e);
+	}
+
+	void EntityTable::destroy(Service *_obj)
+	{
+		EntityMap::iterator e = m_Entities.find(_obj->id());
+
+		//_obj->resetIO();
+
+		ParameterMap setup = _obj->setupParameters();
+		for (ParameterMap::iterator it = setup.begin(); it != setup.end(); it++)
 		{
-			throw e;
+			destroy(it->second);
 		}
+
+		InputMap input = _obj->inputSlots();
+		for (InputMap::iterator it = input.begin(); it != input.end(); it++)
+		{
+			destroy(it->second);
+		}
+
+		OutputMap output = _obj->outputSlots();
+		for (OutputMap::iterator it = output.begin(); it != output.end(); it++)
+		{
+			destroy(it->second);
+		}
+
+		delete _obj;
+		m_Entities.erase(e);
 	}
 
 	void EntityTable::destroy(Parameter *_obj)
 	{
-		try
-		{
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
-			{
-				throw Exception("internal error: entity not in entity map");
-			}
-			else if (!e->second)
-			{
-				throw Exception("internal error: null pointer stored in entity map");
-			}
+		EntityMap::iterator e = m_Entities.find(_obj->id());
 
-			delete _obj;
-			m_EntityTable.erase(e);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		delete _obj;
+		m_Entities.erase(e);
 	}
 
 	void EntityTable::destroy(Plugin *_obj)
 	{
-		try
-		{
-			std::list< FactoryReference * > services = _obj->services();
-			for (std::list<FactoryReference * >::iterator it = services.begin(); it != services.end(); it++)
-			{
-				destroy(*it);
-			}
+		EntityMap::iterator e = m_Entities.find(_obj->id());
 
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
-			{
-				throw Exception("internal error: entity not in entity map");
-			}
-			else if (!e->second)
-			{
-				throw Exception("internal error: null pointer stored in entity map");
-			}
-
-			delete _obj;
-			m_EntityTable.erase(e);
-		}
-		catch (Exception &e)
+		TemplateMap &services = _obj->services();
+		for (TemplateMap::iterator it = services.begin(); it != services.end(); it++)
 		{
-			throw e;
+			destroy(it->second);
 		}
+
+		//~~~
+		//IDs ids = _obj->setupParameterIDs();
+		//for (std::list< SetupParameter * >::iterator it = parameters.begin(); it != parameters.end(); it++)
+		//{
+		//	destroy(*it);
+		//}
+
+		delete _obj;
+		m_Entities.erase(e);
 	}
 
-	void EntityTable::destroy(FactoryReference *_obj)
+	void EntityTable::destroy(ServiceTemplate *_obj)
 	{
-		try
-		{
-			EntityMap::iterator e = m_EntityTable.find(_obj->id());
-			if (e == m_EntityTable.end())
-			{
-				throw Exception("internal error: entity not in entity map");
-			}
-			else if (!e->second)
-			{
-				throw Exception("internal error: null pointer stored in entity map");
-			}
-
-			//delete _obj;
-			m_EntityTable.erase(e);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		EntityMap::iterator e = m_Entities.find(_obj->id());
+		//delete _obj;
+		m_Entities.erase(e);
 	}
 
 	Entity const *const EntityTable::get(unsigned int const& _id) const
 	{
-		EntityMap::const_iterator it = m_EntityTable.find(_id);
+		EntityMap::const_iterator it = m_Entities.find(_id);
 
-		if (it == m_EntityTable.end())
+		if (it == m_Entities.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -264,9 +192,9 @@ namespace _2Real
 
 	Entity *const EntityTable::get(unsigned int const& _id)
 	{
-		EntityMap::iterator it = m_EntityTable.find(_id);
+		EntityMap::iterator it = m_Entities.find(_id);
 
-		if (it == m_EntityTable.end())
+		if (it == m_Entities.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -280,9 +208,9 @@ namespace _2Real
 
 	const Identifier EntityTable::getIdentifier(unsigned int const& _id) const
 	{
-		EntityMap::const_iterator it = m_EntityTable.find(_id);
+		EntityMap::const_iterator it = m_Entities.find(_id);
 
-		if (it == m_EntityTable.end())
+		if (it == m_Entities.end())
 		{
 			throw Exception("internal error: could not find entity in entity table");
 		}
@@ -298,19 +226,21 @@ namespace _2Real
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a plugin" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t" << m_CreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 			info << "directory:\t" << _dir << std::endl;
 			info << "filename:\t" << _file << std::endl;
 			info << "classname:\t" << _class << std::endl;
 
-			Id *id = new Id(_name, "plugin", info.str(), Entity::PLUGIN, m_iCreationCount);
-			Plugin *plugin = new Plugin(_dir, _file, _class, id);
-			m_EntityTable.insert(NamedEntity(id->id(), plugin));
+			Id *id = new Id(_name, "plugin", info.str(), m_CreationCount);
+
+			PluginMetadata *meta = new PluginMetadata(_class, _file, _dir, m_Engine.types());
+			Plugin *plugin = new Plugin(meta, id);
+			m_Entities.insert(NamedEntity(id->id(), plugin));
 			return plugin;
 		}
 		catch (Exception &e)
@@ -319,22 +249,21 @@ namespace _2Real
 		}
 	}
 
-	ServiceContainer *const EntityTable::createService(std::string const& _name, IService *const _service)
+	Service *const EntityTable::createService(std::string const& _name, SystemGraph *const _system, IService *const _service)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a service" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t" << m_CreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 
-			Id *id = new Id(_name, "service", info.str(), Entity::SERVICE, m_iCreationCount);
+			Id *id = new Id(_name, "service", info.str(), m_CreationCount);
 			Identifier i(id);
-			ApplicationCallback *output = new ApplicationCallback(i);
-			ServiceContainer *service = new ServiceContainer(_service, id, output);
-			m_EntityTable.insert(NamedEntity(id->id(), service));
+			Service *service = new Service(_service, id, _system);
+			m_Entities.insert(NamedEntity(id->id(), service));
 			return service;
 		}
 		catch (Exception &e)
@@ -343,25 +272,25 @@ namespace _2Real
 		}
 	}
 
-	Container *const EntityTable::createSystem(std::string const& _name)
+	SystemGraph *const EntityTable::createSystem(std::string const& _name)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a system" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t" << m_CreationCount << std::endl;
 			info << "chosen name:\t" << _name << std::endl;
 
-			Id *id;
-			Container *container;
-			id = new Id(_name, "system", info.str(), Entity::SYSTEM, m_iCreationCount);
+			Id *id = new Id(_name, "system", info.str(), m_CreationCount);
+
 			Identifier i(id);
-			ApplicationCallback *output = new ApplicationCallback(i);
-			container = new Container(id, output);
-			m_EntityTable.insert(NamedEntity(id->id(), container));
-			return container;
+			ExceptionHandler *output = new ExceptionHandler(i);
+
+			SystemGraph *graph = new SystemGraph(id, output);
+			m_Entities.insert(NamedEntity(id->id(), graph));
+			return graph;
 		}
 		catch (Exception &e)
 		{
@@ -369,25 +298,26 @@ namespace _2Real
 		}
 	}
 
-	Container *const EntityTable::createSequence(std::string const& _name)
+	Sequence *const EntityTable::createSequence(std::string const& _name, SystemGraph *const _system)
 	{
 		try
 		{
-			++m_iCreationCount;
+			//++m_CreationCount;
 
-			std::stringstream info;
-			info << "i am a sequence" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
-			info << "chosen name:\t" << _name << std::endl;
+			//std::stringstream info;
+			//info << "i am a sequence" << std::endl;
+			//info << "creation id:\t" << m_CreationCount << std::endl;
+			//info << "chosen name:\t" << _name << std::endl;
 
-			Id *id;
-			Container *container;
-			id = new Id(_name, "sequence", info.str(), Entity::SEQUENCE, m_iCreationCount);
-			Identifier i(id);
-			ApplicationCallback *output = new ApplicationCallback(i);
-			container = new Container(id, output);
-			m_EntityTable.insert(NamedEntity(id->id(), container));
-			return container;
+			//Id *id = new Id(_name, "sequence", info.str(), m_CreationCount);
+
+			//Identifier i(id);
+			//ExceptionHandler *output = new ExceptionHandler(i);
+
+			//Sequence *seq = new Sequence(id, output);
+			//m_Entities.insert(NamedEntity(id->id(), seq));
+			Sequence *seq;
+			return seq;
 		}
 		catch (Exception &e)
 		{
@@ -395,25 +325,26 @@ namespace _2Real
 		}
 	}
 
-	Container *const EntityTable::createSynchronization(std::string const& _name)
+	Synchronization *const EntityTable::createSynchronization(std::string const& _name, SystemGraph *const _system)
 	{
 		try
 		{
-			++m_iCreationCount;
+			//++m_CreationCount;
 
-			std::stringstream info;
-			info << "i am a synchronization" << std::endl;
-			info << "creation id:\t\t" << m_iCreationCount << std::endl;
-			info << "chosen name:\t\t" << _name << std::endl;
+			//std::stringstream info;
+			//info << "i am a synchronization" << std::endl;
+			//info << "creation id:\t\t" << m_CreationCount << std::endl;
+			//info << "chosen name:\t\t" << _name << std::endl;
 
-			Id *id;
-			Container *container;
-			id = new Id(_name, "synchronization", info.str(), Entity::SYNCHRONIZATION, m_iCreationCount);
-			Identifier i(id);
-			ApplicationCallback *output = new ApplicationCallback(i);
-			container = new Container(id, output);
-			m_EntityTable.insert(NamedEntity(id->id(), container));
-			return container;
+			//Id *id = new Id(_name, "synchronization", info.str(), m_CreationCount);
+
+			//Identifier i(id);
+			//ExceptionHandler *output = new ExceptionHandler(i);
+
+			//Synchronization *sync = new Synchronization(id, output);
+			//m_Entities.insert(NamedEntity(id->id(), sync));
+			Synchronization *sync;
+			return sync;
 		}
 		catch (Exception &e)
 		{
@@ -421,20 +352,20 @@ namespace _2Real
 		}
 	}
 
-	FactoryReference *const EntityTable::createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata)
+	ServiceTemplate *const EntityTable::createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a factory reference" << std::endl;
-			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t\t" << m_CreationCount << std::endl;
 			info << "service name:\t\t" << _name << std::endl;
 
-			Id *id = new Id(_name, "factory", info.str(), Entity::FACTORY, m_iCreationCount);
-			FactoryReference *ref = new FactoryReference(_name, _pluginID, _creator, _metadata, id);
-			m_EntityTable.insert(NamedEntity(id->id(), ref));
+			Id *id = new Id(_name, "factory", info.str(), m_CreationCount);
+			ServiceTemplate *ref = new ServiceTemplate(_name, _pluginID, _creator, _metadata, id);
+			m_Entities.insert(NamedEntity(id->id(), ref));
 			return ref;
 		}
 		catch (Exception &e)
@@ -443,20 +374,21 @@ namespace _2Real
 		}
 	}
 
-	ServiceParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	SetupParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _key, Service *const _service)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a setup parameter" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t" << m_CreationCount << std::endl;
 			info << "param name: \t" << _name << std::endl;
 
-			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
-			ServiceParameter *param = new ServiceParameter(id, _service, _type);
-			m_EntityTable.insert(NamedEntity(id->id(), param));
+			Id *id = new Id(_name, "setup parameter", info.str(), m_CreationCount);
+			std::string type = m_Engine.types().getTypename(_key);
+			SetupParameter *param = new SetupParameter(id, type, _key);
+			m_Entities.insert(NamedEntity(id->id(), param));
 			return param;
 		}
 		catch (Exception &e)
@@ -465,20 +397,21 @@ namespace _2Real
 		}
 	}
 
-	PluginParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _type, Plugin *const _plugin)
+	SetupParameter *const EntityTable::createSetupParameter(std::string const& _name, std::string const& _key, Plugin *const _plugin)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am a setup parameter" << std::endl;
-			info << "creation id:\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t" << m_CreationCount << std::endl;
 			info << "param name: \t" << _name << std::endl;
 
-			Id *id = new Id(_name, "setup parameter", info.str(), Entity::SETUP, m_iCreationCount);
-			PluginParameter *param = new PluginParameter(id, _plugin, _type);
-			m_EntityTable.insert(NamedEntity(id->id(), param));
+			Id *id = new Id(_name, "setup parameter", info.str(), m_CreationCount);
+			std::string type = m_Engine.types().getTypename(_key);
+			SetupParameter *param = new SetupParameter(id, type, _key);
+			m_Entities.insert(NamedEntity(id->id(), param));
 			return param;
 		}
 		catch (Exception &e)
@@ -487,20 +420,21 @@ namespace _2Real
 		}
 	}
 
-	InputSlot *const EntityTable::createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	InputSlot *const EntityTable::createInputSlot(std::string const& _name, std::string const& _key, Service *const _service)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am an input slot" << std::endl;
-			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t\t" << m_CreationCount << std::endl;
 			info << "slot name:\t\t" << _name << std::endl;
 
-			Id *id = new Id(_name, "input slot", info.str(), Entity::INPUT, m_iCreationCount);
-			InputSlot *slot = new InputSlot(id, _service, _type);
-			m_EntityTable.insert(NamedEntity(id->id(), slot));
+			Id *id = new Id(_name, "input slot", info.str(), m_CreationCount);
+			std::string type = m_Engine.types().getTypename(_key);
+			InputSlot *slot = new InputSlot(id, _service, type, _key);
+			m_Entities.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}
 		catch (Exception &e)
@@ -509,20 +443,24 @@ namespace _2Real
 		}
 	}
 
-	OutputSlot *const EntityTable::createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service)
+	OutputSlot *const EntityTable::createOutputSlot(std::string const& _name, std::string const& _key, Service *const _service)
 	{
 		try
 		{
-			++m_iCreationCount;
+			++m_CreationCount;
 
 			std::stringstream info;
 			info << "i am an output slot" << std::endl;
-			info << "creation id:\t\t" << m_iCreationCount << std::endl;
+			info << "creation id:\t\t" << m_CreationCount << std::endl;
 			info << "slot name:\t\t" << _name << std::endl;
 
-			Id *id = new Id(_name, "output slot", info.str(), Entity::OUTPUT, m_iCreationCount);
-			OutputSlot *slot = new OutputSlot(id, _service, _type);
-			m_EntityTable.insert(NamedEntity(id->id(), slot));
+			Id *id = new Id(_name, "output slot", info.str(), m_CreationCount);
+			std::string type = m_Engine.types().getTypename(_key);
+			SharedAny init;
+			// ~~ createfromkeyword
+			m_Engine.types().create(_key, init);
+			OutputSlot *slot = new OutputSlot(id, _service, type, _key, init);
+			m_Entities.insert(NamedEntity(id->id(), slot));
 			return slot;
 		}
 		catch (Exception &e)

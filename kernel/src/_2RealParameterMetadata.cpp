@@ -21,18 +21,18 @@
 namespace _2Real
 {
 
-	ParamMetadata::ParamMetadata(std::string const& _name, std::string const& _type) :
+	ParameterMetadata::ParameterMetadata(std::string const& _name, std::string const& _type) :
 		m_Name(_name),
 		m_Type(_type)
 	{
 	}
 
-	std::string ParamMetadata::getName() const
+	std::string ParameterMetadata::getName() const
 	{
 		return m_Name;
 	}
 
-	std::string ParamMetadata::getType() const
+	std::string ParameterMetadata::getType() const
 	{
 		return m_Type;
 	}

@@ -22,13 +22,20 @@
 namespace _2Real
 {
 
-	Id::Id(std::string const& _name, std::string const& _strType, std::string const& _info, Entity::eType const& _type, unsigned int const& _id) :
-		m_Name(_name), m_Typename(_strType), m_Info(_info), m_Type(_type), m_ID(_id), m_iRefCount(1)
+	Id::Id(std::string const& _name, std::string const& _strType, std::string const& _info, unsigned int const& _id) :
+		m_Name(_name),
+		m_Typename(_strType),
+		m_Info(_info),
+		m_ID(_id),
+		m_iRefCount(1)
 	{
 	}
 
 	Id::Id(Id const& _src) :
-		m_Name(_src.m_Name), m_Type(_src.m_Type), m_ID(_src.m_ID), m_Typename(_src.m_Typename), m_Info(_src.m_Info)
+		m_Name(_src.m_Name), 
+		m_ID(_src.m_ID),
+		m_Typename(_src.m_Typename),
+		m_Info(_src.m_Info)
 	{
 		throw Exception("attempted to copy entity");
 	}
@@ -100,11 +107,6 @@ namespace _2Real
 	std::string const& Id::info() const
 	{
 		return m_Info;
-	}
-
-	Entity::eType const& Id::type() const
-	{
-		return m_Type;
 	}
 
 	unsigned int const& Id::id() const

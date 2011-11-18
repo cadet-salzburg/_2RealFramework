@@ -18,178 +18,84 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
+//#include "_2RealEngineTypedefs.h"
 #include "_2RealId.h"
+#include "_2RealEngine.h"
+#include "_2RealException.h"
 
 #include <map>
 
 namespace _2Real
 {
 
-	/**
-	*	
-	*/
+	class IService;
+	typedef IService *const (*const ServiceCreator)(void);
 
-	class ServiceMetadata;
-	class Identifier;
-	class Entity;
-	class Plugin;
-	class AbstractContainer;
-	class ServiceContainer;
-	class Container;
-	class FactoryReference;
+	class SystemGraph;
+	class RunnableGraph;
+	class Sequence;
+	class Synchronization;
+	class Service;
+	class Parameter;
 	class InputSlot;
 	class OutputSlot;
-	class ServiceParameter;
-	class PluginParameter;
-	class Parameter;
+	class SetupParameter;
+	class Plugin;
+	class ServiceTemplate;
+	class ServiceMetadata;
+	class PluginMetadata;
 
 	class EntityTable
 	{
 
 	public:
 
-		/**
-		*	service factory function
-		*/
-		typedef IService *const (*const ServiceCreator)(void);
+		EntityTable(Engine &engine);
+		virtual ~EntityTable();
 
-		/**
-		*	standard ctor; pointer are set directly by engine
-		*/
-		EntityTable();
+		Entity *const get(unsigned int const& id);
+		Entity const *const get(unsigned int const& id) const;
+		const Identifier getIdentifier(unsigned int const& id) const;
 
-		/**
-		*	copy kills music
-		*/
-		EntityTable(EntityTable const& _src);
+		void EntityTable::destroy(SystemGraph *obj);
+		void EntityTable::destroy(RunnableGraph *obj);
+		void EntityTable::destroy(Service *obj);
+		void EntityTable::destroy(Parameter *obj);
+		void EntityTable::destroy(Plugin *obj);
+		void EntityTable::destroy(ServiceTemplate *obj);
 
-		/**
-		*	as does assignment
-		*/
-		EntityTable& operator=(EntityTable const& _src);
-
-		/**
-		*	kill all entities - entity table is deleted last
-		*/
-		~EntityTable();
-
-		/**
-		*	return entity, throw exception if not existing
-		*/
-		Entity *const get(unsigned int const& _id);
-
-		/**
-		*	return entity, throw exception if not existing
-		*/
-		Entity const *const get(unsigned int const& _id) const;
-
-		/**
-		*	returns an identifier for an id
-		*/
-		const Identifier getIdentifier(unsigned int const& _id) const;
-
-		/**
-		*	destroys a container
-		*/
-		void EntityTable::destroy(AbstractContainer *_obj);
-
-		/**
-		*	destroys a container
-		*/
-		void EntityTable::destroy(Container *_obj);
-
-		/**
-		*	destroys service container
-		*/
-		void EntityTable::destroy(ServiceContainer *_obj);
-
-		/**
-		*	destroys IO slot
-		*/
-		void EntityTable::destroy(Parameter *_obj);
-
-		/**
-		*	destroys plugin
-		*/
-		void EntityTable::destroy(Plugin *_obj);
-
-		/**
-		*	destroys factory ref
-		*/
-		void EntityTable::destroy(FactoryReference *_obj);
-
-		/**
-		*	requested by plugin pool on plugin installation
-		*/
 		Plugin *const createPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class);
+		Service *const createService(std::string const& _name, SystemGraph *const system, IService *const _service);
+		ServiceTemplate *const createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata);
 
-		/**
-		*	requested by service factory on service creation. actually creates the service container, not the service
-		*/
-		ServiceContainer *const createService(std::string const& _name, IService *const _service);
+		SystemGraph *const createSystem(std::string const& _name);
+		Sequence *const createSequence(std::string const& _name, SystemGraph *const system);
+		Synchronization *const createSynchronization(std::string const& _name, SystemGraph *const system);
 
-		/**
-		*	requested by production graph map on system creation
-		*/
-		Container *const createSequence(std::string const& _name);
-
-		/**
-		*	requested by production graph map on seq creation
-		*/
-		Container *const createSystem(std::string const& _name);
-
-		/**
-		*	requested by production graph map on sync creation
-		*/
-		Container *const createSynchronization(std::string const& _name);
-
-		/**
-		*	requested by service factory on service registration
-		*/
-		FactoryReference *const createFactoryRef(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata);
-
-		/**
-		*	requested by service factory on service creation
-		*/
-		InputSlot *const createInputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
-
-		/**
-		*	requested by service factory on service creation
-		*/
-		OutputSlot *const createOutputSlot(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
-
-		/**
-		*	requested by service factory on service creation
-		*/
-		ServiceParameter *const createSetupParameter(std::string const& _name, std::string const& _type, ServiceContainer *const _service);
-
-		/**
-		*	requested by plugin pool on plugin installation
-		*/
-		PluginParameter *const createSetupParameter(std::string const& _name, std::string const& _type, Plugin *const _plugin);
+		InputSlot *const createInputSlot(std::string const& name, std::string const& key, Service *const service);
+		OutputSlot *const createOutputSlot(std::string const& name, std::string const& key, Service *const service);
+		SetupParameter *const createSetupParameter(std::string const& name, std::string const& key, Service *const service);
+		SetupParameter *const createSetupParameter(std::string const& name, std::string const& key, Plugin *const plugin);
 
 	private:
 
-		/**
-		*	i can haz typedef
-		*/
 		typedef std::pair< unsigned int, Entity * >		NamedEntity;
-
-		/**
-		*	i can haz typedef
-		*/
 		typedef std::map< unsigned int, Entity * >		EntityMap;
 
 		/**
 		*	entities
 		*/
-		EntityMap										m_EntityTable;
+		EntityMap										m_Entities;
 
 		/**
-		*	creation count is used as unique id
+		*	the 2 real engine
 		*/
-		unsigned int									m_iCreationCount;
+		Engine											&m_Engine;
+
+		/**
+		*	uinque id for entities
+		*/
+		unsigned int									m_CreationCount;
 
 	};
 

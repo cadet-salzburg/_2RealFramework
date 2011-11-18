@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,67 +18,26 @@
 
 #pragma once
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
-
-#include <string>
+#include "_2RealRunnable.h"
+#include "_2RealGraph.h"
 
 namespace _2Real
 {
 
-	class AbstractRef
+	class RunnableGraph : public Runnable, public Graph
 	{
 
 	public:
 
-		/**
-		*	
-		*/
-		typedef Poco::SharedPtr< Poco::Any >	SharedAny;
+		RunnableGraph(Id *const id, SystemGraph *const system);
+		virtual ~RunnableGraph();
 
-		/**
-		*
-		*/
-		virtual void extractFrom(SharedAny _any) = 0;
-
-		/**
-		*
-		*/
-		virtual void extractFrom(Poco::Any const& _any) = 0;
-
-		/**
-		*	
-		*/
-		virtual SharedAny getAny() = 0;
-
-		/**
-		*	
-		*/
-		AbstractRef(std::string const& _type);
-
-		/**
-		*	
-		*/
-		AbstractRef(AbstractRef const& _src);
-
-		/**
-		*	
-		*/
-		AbstractRef& operator=(AbstractRef const& _src);
-
-		/**
-		*	
-		*/
-		~AbstractRef();
-
-		/**
-		*
-		*/
-		std::string const& type() const;
+		const bool hasParameters() const
+		{
+			return false;
+		}
 
 	private:
-
-		std::string		m_Typename;
 
 	};
 

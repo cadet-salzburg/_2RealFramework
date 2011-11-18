@@ -18,59 +18,38 @@
 
 #pragma once
 
-#include "_2RealException.h"
+#include "_2RealRunnableGraph.h"
+
+#include "Poco/Threadpool.h"
 
 namespace _2Real
 {
 
-	/**
-	*	interface for services
-	*/
+	class SystemGraph;
 
-	class ServiceContext;
-
-	class IService
+	class Sequence : public RunnableGraph
 	{
 
 	public:
 
-		/**
-		*	setup function
-		*/
-		virtual void setup(ServiceContext &context) = 0;
+		Sequence(Id *const id, SystemGraph *const system);
+		virtual ~Sequence();
 
-		/**
-		*	update function
-		*/
-		virtual void update() = 0;
+		virtual void run();
+		virtual void update();
+		virtual void shutdown();
+		virtual void checkConfiguration();
 
-		/**
-		*	shutdown function
-		*/
-		virtual void shutdown() = 0;
+		virtual void insertChild(Runnable *const child, unsigned int const& index);
+		virtual void removeChild(unsigned int const& id);
 
-		/**
-		*	destructor
-		*/
-		virtual ~IService() = 0;
+		virtual Runnable *const getChild(unsigned int const& id);
+		virtual Runnable *const findChild(unsigned int const& id);
+		virtual Runnable const *const findChild(unsigned int const& id) const;
 
-	};
-	
-	inline IService::~IService() {}
+	private:
 
-	/**
-	*	if anything goes wrong during setup / update / shutdown,
-	*	a service exception should be thrown
-	*/
-	class ServiceException : public Exception
-	{
-
-	public:
-
-		ServiceException(std::string const& message) :
-			Exception(message)
-		{
-		}
+		Poco::ThreadPool							m_ThreadPool;
 
 	};
 

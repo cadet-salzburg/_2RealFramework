@@ -16,40 +16,21 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealException.h"
-
-#include <map>
-#include <string>
-#include <vector>
-#include <typeinfo>
-#include <iostream>
+#include "_2RealParameterHandle.h"
 
 namespace _2Real
 {
-
-	class TypeTable
+	ParameterHandle::ParameterHandle() :
+		m_Name("")
 	{
+	}
 
-	public:
+	ParameterHandle::ParameterHandle(std::string const& name) :
+		m_Name(name)
+	{
+	}
 
-		TypeTable();
-
-		std::map< std::string, std::string > getTable();
-
-	private:
-
-		template< typename T >
-		void insertType(std::string name)
-		{
-			m_TypeTable[name] = typeid(T).name();
-			m_TypeTable["vector " + name] = typeid(std::vector< T >).name();
-			m_TypeTable["vector2D " + name] = typeid(std::vector< std::vector< T > >).name();
-		}
-
-		std::map< std::string, std::string >		m_TypeTable;
-
-	};
-
+	ParameterHandle::~ParameterHandle()
+	{
+	}
 }

@@ -19,13 +19,14 @@
 
 #pragma once
 
+#include "_2RealException.h"
 #include "Poco/ClassLibrary.h"
 
 namespace _2Real
 {
 
 	/**
-	*
+	*	interfcae for plugins
 	*/
 
 	class PluginMetadata;
@@ -37,29 +38,45 @@ namespace _2Real
 	public:
 
 		/**
-		*	returns plugin metadata
+		*	called before setup
+		*
+		*	@param metadata:	PluginMetadata object which can be passed to MetadataReader
+		*	@throw:				MetadataFormatException
 		*/
-		virtual void getMetadata(PluginMetadata &_info) = 0;
+		virtual void getMetadata(PluginMetadata &metadata) = 0;
 
 		/**
-		*	plugin can use plugin context ptr to export factory functions
+		*	setup should export services
+		*
+		*	@param context:		can be used to query setup parameters, as well as export services
+		*	@throw				InvalidParameterException, PluginException
 		*/
-		virtual void setup(PluginContext &_context) = 0;
+		virtual void setup(PluginContext &context) = 0;
 	
-		/**
-		*	destructor
-		*/
 		virtual ~IPluginActivator() = 0;
 
 	};
 	
 	inline IPluginActivator::~IPluginActivator() {}
 
+	/**
+	*	if anything goes wrong during setup
+	*	a plugin exception should be thrown
+	*/
+	class PluginException : public Exception
+	{
+
+	public:
+
+		PluginException(std::string const& message) :
+			Exception(message)
+		{
+		}
+
+	};
+
 }
 
-/**
-*	
-*/
 #define _2REAL_EXPORT_PLUGIN(x)\
 	POCO_BEGIN_MANIFEST(IPluginActivator)\
 	POCO_EXPORT_CLASS(x)\

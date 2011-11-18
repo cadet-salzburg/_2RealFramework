@@ -23,10 +23,6 @@
 namespace _2Real
 {
 
-	/**
-	*	entity - plugin/ service / service creator / container / service param / service slot
-	*/
-
 	class Id;
 
 	class Entity
@@ -36,34 +32,17 @@ namespace _2Real
 
 	public:
 
-		enum eType
-		{
-			INVALID,
-			PLUGIN,
-			FACTORY,
-			SERVICE,
-			SEQUENCE,
-			SYNCHRONIZATION,
-			SYSTEM,
-			SETUP,
-			INPUT,
-			OUTPUT
-		};
-
-		Entity(Id *const _id);
-		Entity(Entity const& _src);
-		Entity& operator=(Entity const& _src);
+		Entity(Id *const id);
 		virtual ~Entity();
-		
-		eType const& type() const;
+
 		unsigned int const& id() const;
 		std::string const& name() const;
 		std::string const& info() const;
-		void setInfo(std::string const& _info);
+		void setInfo(std::string const& info);
 
 	private:
 	
-		Id		*m_ID;
+		Id		*const m_ID;
 
 	};
 

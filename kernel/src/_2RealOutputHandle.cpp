@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,34 +16,52 @@
 	limitations under the License.
 */
 
-#include "_2RealAbstractRef.h"
-#include "_2RealException.h"
+#include "_2RealOutputHandle.h"
+#include "_2RealOutputSlot.h"
+#include "_2RealSharedAny.h"
 
 namespace _2Real
 {
 
-	AbstractRef::AbstractRef(std::string const& _type) :
-		m_Typename(_type)
+	OutputHandle::OutputHandle() :
+		ParameterHandle(""),
+		m_Output(0)
 	{
 	}
 
-	AbstractRef::AbstractRef(AbstractRef const& _src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	AbstractRef& AbstractRef::operator=(AbstractRef const& _src)
-	{
-		throw Exception("attempted to copy entity");
-	}
-
-	AbstractRef::~AbstractRef()
+	OutputHandle::OutputHandle(OutputSlot *_slot) :
+		ParameterHandle(_slot->name()),
+		m_Output(_slot)
 	{
 	}
 
-	std::string const& AbstractRef::type() const
+	OutputHandle::OutputHandle(OutputHandle const& _src) :
+		ParameterHandle(_src),
+		m_Output(_src.m_Output)
 	{
-		return m_Typename;
+	}
+
+	OutputHandle& OutputHandle::operator=(OutputHandle const& _src)
+	{
+		if (this == &_src)
+		{
+			return *this;
+		}
+
+		ParameterHandle::operator=(_src);
+		m_Output = _src.m_Output;
+
+		return *this;
+	}
+
+	OutputHandle::~OutputHandle()
+	{
+		//output slot is deleted by framework
+	}
+
+	SharedAny OutputHandle::data()
+	{
+		return m_Output->data();
 	}
 
 }

@@ -18,11 +18,10 @@
 
 #pragma once
 
-#include <map>
-#include <string>
+#include "_2RealEntity.h"
+#include "_2RealServiceMetadata.h"
 
-#include "Poco/Any.h"
-#include "Poco/SharedPtr.h"
+#include <string>
 
 namespace _2Real
 {
@@ -31,82 +30,79 @@ namespace _2Real
 	*
 	*/
 
-	class DataPacket
+	class IService;
+
+	class ServiceTemplate : public Entity
 	{
 
 	public:
 
 		/**
-		*	
+		*	service factory function
 		*/
-		typedef Poco::SharedPtr< Poco::Any >	SharedAny;
-
-		/**
-		*	
-		*/
-		DataPacket();
-
-		/**
-		*	
-		*/
-		DataPacket(DataPacket const& _src);
-
-		/**
-		*	
-		*/
-		DataPacket& operator=(DataPacket const& _src);
-
-		/**
-		*	
-		*/
-		~DataPacket();
+		typedef IService *const (*const ServiceCreator)(void);
 
 		/**
 		*
 		*/
-		void remove(unsigned int const& _id);
+		ServiceTemplate(std::string const& _name, unsigned int const& _pluginID, ServiceCreator _creator, ServiceMetadata const& _metadata, Id *const _id);
 
 		/**
 		*
 		*/
-		const bool contains(unsigned int const& _id) const;
+		ServiceTemplate(ServiceTemplate const& _src);
 
 		/**
 		*
 		*/
-		DataPacket::SharedAny getAny(unsigned int const& _id) const;
+		ServiceTemplate& operator=(ServiceTemplate const& _src);
 
 		/**
 		*
 		*/
-		void insertAny(unsigned int const& _id, DataPacket::SharedAny &_any);
+		~ServiceTemplate();
 
 		/**
-		*
+		*	plugin id
 		*/
-		const unsigned int size() const;
+		unsigned int const& plugin() const;
 
 		/**
-		*
+		*	metadata
 		*/
-		void merge(DataPacket const& src);
+		ServiceMetadata const& metadata() const;
+
+		/**
+		*	name
+		*/
+		std::string const& name() const;
+
+		/**
+		*	creates service obj, or returns singleton instance
+		*/
+		IService *const create();
 
 	private:
 
 		/**
-		*	
+		*
 		*/
-		typedef std::map< const unsigned int, SharedAny >		AnyMap;
+		const unsigned int		m_Plugin;
+
+		/**
+		*
+		*/
+		const ServiceMetadata	m_Metadata;
+
+		/**
+		*
+		*/
+		const ServiceCreator	m_Creator;
 
 		/**
 		*	
 		*/
-		typedef std::pair< const unsigned int, SharedAny >		NamedAny;
-
-		/**
-		*	
-		*/
-		AnyMap													m_Data;
+		const std::string		m_Name;
 
 	};
 

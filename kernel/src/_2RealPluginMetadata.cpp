@@ -19,6 +19,7 @@
 #include "_2RealPluginMetadata.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealException.h"
+#include "_2RealTypes.h"
 
 #include <iostream>
 #include <sstream>
@@ -85,14 +86,16 @@ namespace _2Real
 		return m_Revision;
 	}
 
-	PluginMetadata::PluginMetadata(std::string const& _name, std::string const& _path) :
-		m_PluginName(_name),
+	PluginMetadata::PluginMetadata(std::string const& _name, std::string const& _file, std::string const& _path, TypeTable const& _types) :
+		m_Classname(_name),
+		m_Filename(_file),
 		m_InstallDirectory(_path),
 		m_Description("this plugin is holy"),
 		m_Author("the spaghetti monster"),
 		m_Contact("through prayer"),
 		m_Version(PluginMetadata::Version(0, 0, 0)),
-		m_Services()
+		m_Services(),
+		m_Types(_types)
 	{
 	}
 
@@ -118,7 +121,12 @@ namespace _2Real
 
 	std::string const& PluginMetadata::getClassname() const
 	{
-		return m_PluginName;
+		return m_Classname;
+	}
+
+	std::string const& PluginMetadata::getFilename() const
+	{
+		return m_Filename;
 	}
 
 	std::string const& PluginMetadata::getInstallDirectory() const
@@ -163,56 +171,56 @@ namespace _2Real
 		return it->second;
 	}
 
-	void PluginMetadata::addSetupParam(std::string const& _name, std::string const& _type)
+	void PluginMetadata::addSetupParameter(std::string const& _name, std::string const& _type)
 	{
-		ParamMetadata::ParamMap::iterator it = m_SetupParams.find(_name);
+		ParameterMetadata::ParameterMap::iterator it = m_SetupParameters.find(_name);
 
-		if (it != m_SetupParams.end())
+		if (it != m_SetupParameters.end())
 		{
 			throw Exception("setup parameter " + _name + " already exists");
 		}
 
-		m_SetupParams.insert(ParamMetadata::NamedParam(_name, ParamMetadata(_name, _type)));
+		m_SetupParameters.insert(ParameterMetadata::NamedParameter(_name, ParameterMetadata(_name, _type)));
 	}
 
-	ParamMetadata::StringMap PluginMetadata::getSetupParams() const
+	ParameterMetadata::StringMap PluginMetadata::getSetupParameters() const
 	{
-		ParamMetadata::StringMap result;
-		for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it !=m_SetupParams.end(); it++)
+		ParameterMetadata::StringMap result;
+		for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); it++)
 		{
-			ParamMetadata data = it->second;
+			ParameterMetadata data = it->second;
 			result.insert(std::make_pair(data.getName(), data.getType()));
 		}
 		return result;
 	}
 
-	const bool PluginMetadata::hasSetupParam(std::string const& _name) const
-	{
-		ParamMetadata::ParamMap::const_iterator it = m_SetupParams.find(_name);
+	//const bool PluginMetadata::hasSetupParameter(std::string const& _name) const
+	//{
+	//	ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.find(_name);
 
-		if (it != m_SetupParams.end())
-		{
-			return false;
-		}
+	//	if (it != m_SetupParameters.end())
+	//	{
+	//		return false;
+	//	}
 
-		return true;
-	}
+	//	return true;
+	//}
 
 	const std::string PluginMetadata::info()
 	{
 		std::stringstream info;
 		info << std::endl;
-		info << "plugin:\t" <<m_PluginName << std::endl;
+		info << "plugin:\t" <<m_Classname << std::endl;
 		info << "description:\t" << m_Description << std::endl;
 		info << "installed at\t" << m_InstallDirectory << std::endl;
 		info << "written by\t" << m_Author << std::endl;
 		info << "contact\t\t" << m_Contact << std::endl;
 		info << "version\t\t" << m_Version.asString() << std::endl;
 
-		if (!m_SetupParams.empty())
+		if (!m_SetupParameters.empty())
 		{
 			info << "this plugin has setup parameters:\t" << std::endl;
-			for (ParamMetadata::ParamMap::const_iterator it = m_SetupParams.begin(); it != m_SetupParams.end(); it++)
+			for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 			{
 				info << it->first << ":\t" << it->second.getType() << std::endl;
 			}
@@ -225,6 +233,11 @@ namespace _2Real
 		}
 
 		return info.str();
+	}
+
+	TypeTable const& PluginMetadata::getTypes() const
+	{
+		return m_Types;
 	}
 
 }

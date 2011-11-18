@@ -20,227 +20,146 @@
 #pragma once
 
 #include "_2RealTypedefs.h"
-#include "_2RealIDataQueue.h"
+#include "_2RealSharedAny.h"
+#include "_2RealData.h"
 
 #include <vector>
 
-#include "Poco/Any.h"
-#include "Poco/Mutex.h"
+#include "Poco\AbstractDelegate.h"
 
 namespace _2Real
 {
-
-	/**
-	*	the 2 real engine
-	*/
 
 	class PluginPool;
 	class ServiceFactory;
 	class ProductionGraphs;
 	class EntityTable;
 	class Identifier;
+	class TypeTable;
+	class EngineTime;
 	
 	class Engine
 	{
 
 	public:
 
-		/**
-		*	get instance
-		*/
 		static Engine *const instance();
 
-		/**
-		*	
-		*/
-		Engine();
+		PluginPool & plugins()
+		{
+			return *m_Plugins;
+		}
 
-		/**
-		*	engine must not be copied
-		*/
-		Engine(const Engine &_src);
+		PluginPool const& plugins() const
+		{
+			return *m_Plugins;
+		}
 
-		/**
-		*	engine must not be copied
-		*/
-		Engine& operator=(const Engine &_src);
+		ServiceFactory & factory()
+		{
+			return *m_Factory;
+		}
 
-		/**
-		*	destruction of engine destroys all entities
-		*/
-		~Engine();
+		ServiceFactory const& factory() const
+		{
+			return *m_Factory;
+		}
 
-		/**
-		*	ref count++
-		*/
-		void retain();
+		ProductionGraphs & graphs()
+		{
+			return *m_Graphs;
+		}
 
-		/**
-		*	ref count--
-		*/
-		void release();
+		ProductionGraphs const& graphs() const
+		{
+			return *m_Graphs;
+		}
 
-		/**
-		*	creates a system = nirvana
-		*/
-		const Identifier createSystem(std::string const& _name);
+		EntityTable & entities()
+		{
+			return *m_Entities;
+		}
+
+		EntityTable const& entities() const
+		{
+			return *m_Entities;
+		}
+
+		TypeTable & types()
+		{
+			return *m_Types;
+		}
+
+		TypeTable const& types() const
+		{
+			return *m_Types;
+		}
+
+		//EngineTime & time()
+		//{
+		//	return *m_Time;
+		//}
+
+		//EngineTime const& time() const
+		//{
+		//	return *m_Time;
+		//}
+
+		const Identifier createSystem(std::string const& name);
+		void destroySystem(Identifier const& id);
+		
+		const Identifier installPlugin(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system);
+		void startPlugin(Identifier const& plugin, Identifier const& system);
+
+		void dumpPluginInfo(Identifier const& plugin, Identifier const& system) const;
+		void dumpServiceInfo(Identifier const& plugin, std::string const& service, Identifier const& system) const;
+		
+		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
+
+		void setParameterValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
+
+		//Identifiers getSetupParameters(Identifier const& _id, Identifier const& _system) const;
+		//Identifiers getInputSlots(Identifier const& _id, Identifier const& _system) const;
+		//Identifiers getOutputSlots(Identifier const& _id, Identifier const& _system) const;
+		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
+		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
+		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
+		//void append(Identifier const& _dst, Identifier const& _src, Identifier const& _system);
+		
+		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
+		void linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system);
+		//void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _system);
+
+		//Identifiers getChildren(Identifier const& _id, Identifier const& _system);
+		void start(Identifier const& id, Identifier const& system);
+		//void startAll(Identifier const& _system);
+		void stop(Identifier const& id, Identifier const& system);
+		//void stopAll(Identifier const& _system);
+		//void destroy(Identifier const& _id, Identifier const& _system);
 
 		/*
-		*	destroys a system = nirvana
+		*	the functionality used for receiving data from output slots
 		*/
-		void destroySystem(Identifier const& _id);
-
-		/**
-		*	install plugin, return id
-		*/
-		const Identifier installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifier const& _top);
-
-		/**
-		*	start plugin
-		*/
-		void startPlugin(Identifier const& _plugin, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		void dumpPluginInfo(Identifier const& _plugin, Identifier const& _top) const;
-
-		/**
-		*	
-		*/
-		void dumpServiceInfo(Identifier const& _plugin, std::string const& _service, Identifier const& _top) const;
-
-		/**
-		*	
-		*/
-		const Identifier createService(std::string const& _name, Identifier const& _plugin, std::string const& _service, Identifier const& _top);
-
-		/**
-		*
-		*/
-		Identifiers getSetupParameters(Identifier const& _id, Identifier const& _top) const;
-
-		/**
-		*
-		*/
-		Identifiers getInputSlots(Identifier const& _id, Identifier const& _top) const;
-
-		/**
-		*
-		*/
-		Identifiers getOutputSlots(Identifier const& _id, Identifier const& _top) const;
-
-		/**
-		*	
-		*/
-		const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void append(Identifier const& _dst, Identifier const& _src, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void setParameterValue(Identifier const& _id, Poco::Any _any, std::string const& _type, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void link(Identifier const& _in, Identifier const& _out, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void linkSlots(Identifier const& _in, Identifier const& _out, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		void registerToNewData(Identifier const& _id, NewDataCallback _callback, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		Identifiers getChildren(Identifier const& _id, Identifier const& _top);
-
-		/**
-		*	
-		*/
-		void start(Identifier const& _id, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void startAll(Identifier const& _top);
-
-		/**
-		*	
-		*/
-		void stop(Identifier const& _id, Identifier const& _top);
-
-		/**
-		*
-		*/
-		void stopAll(Identifier const& _top);
-
-		/**
-		*
-		*/
-		void destroy(Identifier const& _id, Identifier const& _top);
+		void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
+		//void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
+		//DataHandle createDataHandle(Identifier const& service, std::string const& out, Identifier const& system);
 
 	private:
 
-		/**
-		*	singleton instance
-		*/
-		static Engine				*s_Instance;
+		template< typename T >
+		friend class SingletonHolder;
 
-		/**
-		*	
-		*/
-		static Poco::Mutex				s_Mutex;
+		Engine();
+		Engine(const Engine &_src);
+		Engine& operator=(const Engine &_src);
+		~Engine();
 
-		/**
-		*	ref count for singleton
-		*/
-		static unsigned int				s_iRefCount;
-
-		/**
-		*	takes care of installed plugins
-		*/
-		PluginPool						*m_Plugins;
-
-		/**
-		*	takes care of service creation
-		*/
-		ServiceFactory					*m_Factory;
-
-		/**
-		*	takes care of identifier creation
-		*/
-		EntityTable						*m_EntityTable;
-
-		/**
-		*	manages production graphs
-		*/
-		ProductionGraphs				*m_Graphs;
+		PluginPool				*m_Plugins;
+		ServiceFactory			*m_Factory;
+		EntityTable				*m_Entities;
+		ProductionGraphs		*m_Graphs;
+		TypeTable				*m_Types;
+		//EngineTime				*m_Time;
 
 	};
 

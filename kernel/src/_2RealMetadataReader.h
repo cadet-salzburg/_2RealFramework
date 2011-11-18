@@ -19,10 +19,10 @@
 
 #pragma once
 
+#include "_2RealPluginMetadata.h"
+#include "_2RealException.h"
+
 #include <string>
-#include <map>
-#include <vector>
-#include <typeinfo>
 
 namespace Poco
 {
@@ -40,7 +40,15 @@ namespace _2Real
 	*	helper class for reading plugin metadata
 	*/
 
-	class PluginMetadata;
+	class MetadataFormatException : public Exception
+	{
+		friend class MetadataReader;
+
+		MetadataFormatException(std::string const& message) :
+			Exception(message)
+		{
+		}
+	};
 
 	class MetadataReader
 	{
@@ -54,29 +62,22 @@ namespace _2Real
 		*	attempts to build plugin metadata from information
 		*	contained in the file. if successful, returns metadata.
 		*
-		*	@param _info:			metadata initialized with classname & classpath
-		*	@throw:					definitions TODO
+		*	@param info:			metadata initialized with classname & classpath
+		*	@throw:					MetadataFormatException
 		*/
-		void readMetadata(PluginMetadata &info);
+		MetadataReader(PluginMetadata &info);
+
+		void readMetadata();
 
 	private:
 
-		/**
-		*
-		*/
-		static std::map< std::string, std::string >		s_Typenames;
+		PluginMetadata					&m_Metadata;
 
-		void											processPluginNode(PluginMetadata &info, Poco::XML::Node *const plugin);
-
-		void											processServiceNode(PluginMetadata &info, Poco::XML::Node *const service);
-
-		Poco::XML::Node *const							getChildNode(std::string const& name, Poco::XML::Node *const parent);
-
-		const std::string								getTypename(std::string const& type) const;
-
-		const std::string								getParameterType(Poco::XML::Node *const attrib);
-
-		const std::string								getNodeAttribute(std::string const& name, Poco::XML::Node *const node);
+		void							processPluginNode(PluginMetadata &info, Poco::XML::Node *const plugin);
+		void							processServiceNode(PluginMetadata &info, Poco::XML::Node *const service);
+		Poco::XML::Node *const			getChildNode(std::string const& name, Poco::XML::Node *const parent);
+		const std::string				getParameterType(Poco::XML::Node *const attrib);
+		const std::string				getNodeAttribute(std::string const& name, Poco::XML::Node *const node);
 
 	};
 

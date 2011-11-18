@@ -19,15 +19,14 @@
 #include "_2RealServiceFactory.h"
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
-#include "_2RealServiceParameter.h"
-#include "_2RealFactoryReference.h"
+#include "_2RealServiceTemplate.h"
 #include "_2RealProductionGraphs.h"
 #include "_2RealException.h"
-#include "_2RealServiceContainer.h"
+#include "_2RealService.h"
 #include "_2RealEntityTable.h"
 #include "_2RealServiceMetadata.h"
-#include "_2RealContainer.h"
 #include "_2RealPlugin.h"
+#include "_2RealSetupParameter.h"
 
 #include <sstream>
 #include <iostream>
@@ -35,19 +34,10 @@
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory() :
-		m_EntityTable(NULL)
+	ServiceFactory::ServiceFactory(Engine &_engine) :
+		m_References(),
+		m_Engine(_engine)
 	{
-	}
-
-	ServiceFactory::ServiceFactory(ServiceFactory const& _src)
-	{
-		throw Exception("internal error: attempted to copy service factory");
-	}
-
-	ServiceFactory& ServiceFactory::operator=(ServiceFactory const& _src)
-	{
-		throw Exception("internal error: attempted to copy service factory");
 	}
 
 	ServiceFactory::~ServiceFactory()
@@ -57,7 +47,7 @@ namespace _2Real
 		//	try
 		//	{
 		//		unsigned int id = it->first;
-		//		m_EntityTable->destroy(it->second);
+		//		m_Engine.entities()->destroy(it->second);
 		//	}
 		//	catch (Exception &e)
 		//	{
@@ -66,12 +56,12 @@ namespace _2Real
 		//}
 	}
 
-	FactoryReference const *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service) const
+	ServiceTemplate const *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service) const
 	{
 		ReferenceTable::const_iterator it;
 		for (it = m_References.begin(); it != m_References.end(); it++)
 		{
-			FactoryReference *ref = it->second;
+			ServiceTemplate *ref = it->second;
 			if (ref->name() == _service && ref->plugin() == _plugin)
 			{
 				break;
@@ -90,12 +80,12 @@ namespace _2Real
 		return it->second;
 	}
 
-	FactoryReference *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service)
+	ServiceTemplate *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service)
 	{
 		ReferenceTable::iterator it;
 		for (it = m_References.begin(); it != m_References.end(); it++)
 		{
-			FactoryReference *ref = it->second;
+			ServiceTemplate *ref = it->second;
 			if (ref->name() == _service && ref->plugin() == _plugin)
 			{
 				break;
@@ -114,21 +104,21 @@ namespace _2Real
 		return it->second;
 	}
 
-	FactoryReference *const ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
+	ServiceTemplate *const ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
 	{
 		try
 		{
 			//check if service w/ same name was already registered by same plugin
 			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
-				FactoryReference *ref = it->second;
+				ServiceTemplate *ref = it->second;
 				if (ref->name() == _name && ref->plugin() == _pluginID)
 				{
 					throw Exception("could not register service - service with same name was already registered by plugin");
 				}
 			}
 
-			FactoryReference *factory = m_EntityTable->createFactoryRef(_name, _pluginID, _creator, _metadata);
+			ServiceTemplate *factory = m_Engine.entities().createFactoryRef(_name, _pluginID, _creator, _metadata);
 			m_References.insert(NamedReference(factory->id(), factory));
 			return factory;
 		}
@@ -138,11 +128,11 @@ namespace _2Real
 		}
 	}
 
-	ServiceContainer *const ServiceFactory::createService(std::string const& _name, unsigned int const& _plugin, std::string const& _service)
+	Service *const ServiceFactory::createService(std::string const& _name, unsigned int const& _plugin, std::string const& _service, SystemGraph *const _system)
 	{
 		try
 		{
-			FactoryReference *factory = ref(_plugin, _service);
+			ServiceTemplate *factory = ref(_plugin, _service);
 			IService *userService = factory->create();
 
 			if (userService == NULL)
@@ -151,32 +141,36 @@ namespace _2Real
 			}
 
 			//service container gets identifier
-			ServiceContainer *service = m_EntityTable->createService(_name, userService);
+			Service *service = m_Engine.entities().createService(_name, _system, userService);
 			const ServiceMetadata data = factory->metadata();
 
 			//get setup / input / output from metadata
 			typedef std::map< std::string, std::string > StringMap;
-			StringMap setup = data.getSetupParams();
-			StringMap input = data.getInputParams();
-			StringMap output = data.getOutputParams();
+			StringMap setup = data.getSetupParameters();
+			StringMap input = data.getInputParameters();
+			StringMap output = data.getOutputParameters();
 
 			//add to service container
 			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				ServiceParameter *val = m_EntityTable->createSetupParameter(it->first, it->second, service);
-				service->addSetupValue(val->id(), val);
+				SetupParameter *val = m_Engine.entities().createSetupParameter(it->first, it->second, service);
+				service->addSetupParameter(val);
 			}
 
 			for (StringMap::iterator it = input.begin(); it != input.end(); it++)
 			{
-				InputSlot *slot = m_EntityTable->createInputSlot(it->first, it->second, service);
-				service->addInputSlot(slot->id(), slot);
+				InputSlot *slot = m_Engine.entities().createInputSlot(it->first, it->second, service);
+				service->addInputSlot(slot);
 			}
 
 			for (StringMap::iterator it = output.begin(); it != output.end(); it++)
 			{
-				OutputSlot *slot = m_EntityTable->createOutputSlot(it->first, it->second, service);
-				service->addOutputSlot(slot->id(), slot);
+				OutputSlot *slot = m_Engine.entities().createOutputSlot(it->first, it->second, service);
+				service->addOutputSlot(slot);
+
+				//this creates an input slot capable
+				InputSlot *listener = m_Engine.entities().createInputSlot(it->first, it->second, service);
+				//service->addListenerSlot(slot->id(), listener);
 			}
 
 			//done
@@ -192,7 +186,7 @@ namespace _2Real
 	{
 		try
 		{
-			const FactoryReference *factory = ref(_plugin, _service);
+			const ServiceTemplate *factory = ref(_plugin, _service);
 			return factory->metadata();
 		}
 		catch (Exception &e)
@@ -201,14 +195,14 @@ namespace _2Real
 		}
 	}
 
-	std::list< FactoryReference * > ServiceFactory::getServices(unsigned int const& _plugin)
+	std::list< ServiceTemplate * > ServiceFactory::getServices(unsigned int const& _plugin)
 	{
 		try
 		{
-			std::list< FactoryReference * > result;
+			std::list< ServiceTemplate * > result;
 			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
-				FactoryReference *ref = it->second;
+				ServiceTemplate *ref = it->second;
 				if (ref->plugin() == _plugin)
 				{
 					result.push_back(ref);
@@ -229,7 +223,7 @@ namespace _2Real
 			IDs result;
 			for (ReferenceTable::const_iterator it = m_References.begin(); it != m_References.end(); it++)
 			{
-				FactoryReference *ref = it->second;
+				ServiceTemplate *ref = it->second;
 				if (ref->plugin() == _plugin)
 				{
 					result.push_back(ref->id());

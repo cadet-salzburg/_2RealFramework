@@ -19,100 +19,84 @@
 
 #pragma once
 
+#include "_2RealEngine.h"
+#include "_2RealException.h"
+
 #include <map>
 #include <string>
 
 namespace _2Real
 {
 
-	/**
-	*	stores top level production graphs = systems
-	*	needs to be refactored
-	*	(but not as badly as some other classes)
-	*/
+	class Identifier;
+	class SystemGraph;
+	class RunnableGraph;
+	class Runnable;
 
-	class EntityTable;
-	class Container;
+	typedef std::pair< unsigned int, SystemGraph * >	NamedSystem;
+	typedef	std::map< unsigned int, SystemGraph * >		SystemTable;
 
 	class ProductionGraphs
 	{
 
 	public:	
 
-		/**
-		*	standard ctor; pointers will be set directly by engine
-		*/
-		ProductionGraphs();
+		ProductionGraphs(Engine &engine);
+		virtual ~ProductionGraphs();
 
 		/**
-		*	no copies allowed
+		*	create sequence; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
 		*/
-		ProductionGraphs(ProductionGraphs const& _src);
+		const unsigned int createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
 		/**
-		*	no assignment allowed
+		*	create syncronization; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
 		*/
-		ProductionGraphs& operator=(ProductionGraphs const& _src);
-
-		/**
-		*	causes destruction of all existing systems
-		*/
-		~ProductionGraphs();
-
-		/**
-		*	create sequence; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
-		*/
-		const unsigned int createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top);
-
-		/**
-		*	create sync; _a & _b must be two existing containers, _top must be member of container map, result will be placed in _top
-		*/
-		const unsigned int createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top);
+		const unsigned int createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
 		/**
 		*	creates a new system
 		*/
-		const unsigned int createSystem(std::string const& _name);
+		const unsigned int createSystemGraph(std::string const& name);
+
+
+		SystemGraph *const getSystemGraph(Identifier const& id);
+		SystemGraph const *const getSystemGraph(Identifier const& id) const;
 
 		/**
-		*	returns system, throws if nonexistant
+		*	
 		*/
-		Container *const getSystem(unsigned int const& _id);
+		const bool isSystemGraph(Identifier const& id);
 
 		/**
 		*	destroys a system (and everything inside it)
 		*/
-		void destroySystem(unsigned int const& _id);
+		void destroySystemGraph(Identifier const& id);
 
 		/**
-		*	destroys container, stops container's root
+		*	destroys a runnable & everything it may contain
 		*/
-		void destroy(unsigned int const& _id, unsigned int const& _top);
+		//does this really belong here?
+		void destroyRunnable(unsigned int const& id, unsigned int const& top);
+
+		Runnable *const belongsToSystem(Identifier const& system, Identifier const& runnable) const;
 
 	private:
-
-		friend class Engine;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< unsigned int, Container * >	NamedSystem;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef	std::map< unsigned int, Container * >	SystemMap;
 
 		/**
 		*	systems in existence
 		*/
-		SystemMap										m_Systems;
+		SystemTable					m_Systems;
 
 		/**
-		*	entity table, for communication
+		*	the 2 real engine
 		*/
-		EntityTable										*m_EntityTable;
+		Engine						&m_Engine;
 
+	};
+
+	class SystemGraphsException : public Exception
+	{
 	};
 
 }

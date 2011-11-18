@@ -17,32 +17,22 @@
 	limitations under the License.
 */
 
-#include "_2RealPluginMetadata.h"
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
-#include "_2RealException.h"
+#include "_2RealPluginMetadata.h"
 #include "_2RealEntityTable.h"
-#include "_2RealPluginParameter.h"
+#include "_2RealIdentifier.h"
+#include "_2RealSetupParameter.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	PluginPool::PluginPool() :
-		m_EntityTable(NULL),
-		m_Factory(NULL)
+	PluginPool::PluginPool(Engine &_engine) :
+		m_Plugins(),
+		m_Engine(_engine)
 	{
-	}
-
-	PluginPool::PluginPool(PluginPool const& _src)
-	{
-		throw Exception("internal error: attempted to copy an entity");
-	}
-
-	PluginPool& PluginPool::operator=(PluginPool const& _src)
-	{
-		throw Exception("internal error: attempted to copy an entity");
 	}
 
 	PluginPool::~PluginPool()
@@ -51,9 +41,8 @@ namespace _2Real
 		{
 			try
 			{
-				unsigned int id = it->first;
-				uninstall(id);
-				m_EntityTable->destroy(it->second);
+				it->second->uninstall();
+				m_Engine.entities().destroy(it->second);
 			}
 			catch (Exception &e)
 			{
@@ -66,17 +55,16 @@ namespace _2Real
 	{
 		try
 		{
-
-			Plugin *plugin = m_EntityTable->createPlugin(_name, _dir, _file, _class);
+			Plugin *plugin = m_Engine.entities().createPlugin(_name, _dir, _file, _class);
 			plugin->install();
 
 			const PluginMetadata data = plugin->pluginMetadata();
 			typedef std::map< std::string, std::string > StringMap;
-			StringMap setup = data.getSetupParams();
+			StringMap setup = data.getSetupParameters();
 			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				PluginParameter *param = m_EntityTable->createSetupParameter(it->first, it->second, plugin);
-				plugin->addSetupParameter(param->id(), param);
+				SetupParameter *param = m_Engine.entities().createSetupParameter(it->first, it->second, plugin);
+				plugin->addSetupParameter(param);
 			}
 
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
@@ -89,55 +77,38 @@ namespace _2Real
 		}
 	}
 
-	void PluginPool::uninstall(unsigned int const& _id)
+	const bool PluginPool::contains(Identifier const& _id) const
 	{
-		try
-		{
-			plugin(_id)->uninstall();
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		PluginMap::const_iterator it = m_Plugins.find(_id.id());
+		return (it != m_Plugins.end());
 	}
 
-	Plugin const *const PluginPool::plugin(unsigned int const& _id) const
+	void PluginPool::uninstall(Identifier const& _id)
 	{
-		PluginMap::const_iterator it = m_Plugins.find(_id);
+		plugin(_id)->uninstall();
+	}
+
+	Plugin const *const PluginPool::plugin(Identifier const& _id) const
+	{
+		PluginMap::const_iterator it = m_Plugins.find(_id.id());
+		
 		if (it == m_Plugins.end())
 		{
-			throw Exception("could not retrieve plugin - does not exist");
+			throw PluginNotFoundException(_id.name());
 		}
-		else if (!it->second)
-		{
-			throw Exception("internal error - null pointer stored in plugin pool");
-		}
+
 		return it->second;
 	}
 
-	Plugin *const PluginPool::plugin(unsigned int const& _id)
+	Plugin *const PluginPool::plugin(Identifier const& _id)
 	{
-		PluginMap::iterator it = m_Plugins.find(_id);
+		PluginMap::iterator it = m_Plugins.find(_id.id());
+		
 		if (it == m_Plugins.end())
 		{
-			return NULL;
+			throw PluginNotFoundException(_id.name());
 		}
-		else if (!it->second)
-		{
-			throw Exception("internal error - null pointer stored in plugin pool");
-		}
-		return it->second;
-	}
 
-	PluginMetadata const& PluginPool::info(unsigned int const& _id) const
-	{
-		try
-		{
-			return plugin(_id)->pluginMetadata();
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return it->second;
 	}
 }

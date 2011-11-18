@@ -16,61 +16,18 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealSetupParameter.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
-	class Plugin;
-
-	class PluginParameter : public SetupParameter
+	Exception::Exception(std::string const& _message) :
+		std::runtime_error(_message)
 	{
+	}
 
-	public:
-
-		/**
-		*	
-		*/
-		PluginParameter(Id *const _id, Plugin *const _plugin, std::string const& _type);
-
-		/**
-		*	
-		*/
-		PluginParameter(PluginParameter const& _src);
-
-		/**
-		*	
-		*/
-		PluginParameter& operator=(PluginParameter const& _src);
-
-		/**
-		*	
-		*/
-		~PluginParameter();
-
-		/**
-		*	returns owning plugin
-		*/
-		Plugin *const			plugin();
-
-		/**
-		*	returns owning plugin - const version
-		*/
-		Plugin *const			plugin() const;
-
-	private:
-
-		/**
-		*	the plugin this parameter belongs to
-		*/
-		Plugin					*m_Plugin;
-
-	};
+	Exception::~Exception()
+	{
+	}
 
 }

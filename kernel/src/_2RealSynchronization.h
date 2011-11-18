@@ -18,58 +18,38 @@
 
 #pragma once
 
-#include "_2RealSetupParameter.h"
+#include "_2RealRunnableGraph.h"
+
+#include "Poco/Threadpool.h"
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
+	class SystemGraph;
 
-	class ServiceContainer;
-
-	class ServiceParameter : public SetupParameter
+	class Synchronization : public RunnableGraph
 	{
 
 	public:
 
-		/**
-		*	
-		*/
-		ServiceParameter(Id *const _id, ServiceContainer *const _service, std::string const& _type);
+		Synchronization(Id *const id, SystemGraph *const system);
+		virtual ~Synchronization();
 
-		/**
-		*	
-		*/
-		ServiceParameter(ServiceParameter const& _src);
+		virtual void run();
+		virtual void update();
+		virtual void shutdown();
+		virtual void checkConfiguration();
 
-		/**
-		*	
-		*/
-		ServiceParameter& operator=(ServiceParameter const& _src);
+		virtual void insertChild(Runnable *const child, unsigned int const& index);
+		virtual void removeChild(unsigned int const& id);
 
-		/**
-		*	
-		*/
-		~ServiceParameter();
-
-		/**
-		*	returns owning service container
-		*/
-		ServiceContainer *const			service();
-
-		/**
-		*	returns owning service container - const version
-		*/
-		ServiceContainer *const			service() const;
+		virtual Runnable *const getChild(unsigned int const& id);
+		virtual Runnable *const findChild(unsigned int const& id);
+		virtual Runnable const *const findChild(unsigned int const& id) const;
 
 	private:
 
-		/**
-		*	the service container this parameter belongs to
-		*/
-		ServiceContainer				*m_Service;
+		Poco::ThreadPool							m_ThreadPool;
 
 	};
 

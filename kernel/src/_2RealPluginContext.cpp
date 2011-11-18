@@ -20,7 +20,6 @@
 #include "_2RealPlugin.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealException.h"
-#include "_2RealAbstractRef.h"
 
 #include <iostream>
 
@@ -33,7 +32,9 @@ namespace _2Real
 	{
 	}
 
-	PluginContext::PluginContext(PluginContext const& _src)
+	PluginContext::PluginContext(PluginContext const& _src) :
+		m_Plugin(_src.m_Plugin),
+		m_Factory(_src.m_Factory)
 	{
 	}
 
@@ -48,27 +49,13 @@ namespace _2Real
 
 	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
 	{
-		try
-		{
-			FactoryReference *ref = m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
-			m_Plugin->addService(ref);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		ServiceTemplate *service = m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
+		m_Plugin->addService(service);
 	}
 
-	void PluginContext::getSetupParameter(std::string const& _name, AbstractRef *_ref)
+	SharedAny PluginContext::getSetupParameter(std::string const& _name)
 	{
-		try
-		{
-			m_Plugin->getParameterValue(_name, _ref);
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return m_Plugin->getParameterValue(_name);
 	}
 
 }
