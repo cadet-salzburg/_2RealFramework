@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Generators.h" />
-    <ClInclude Include="..\..\src\ImageBuffer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <Keyword>Win32Proj</Keyword>

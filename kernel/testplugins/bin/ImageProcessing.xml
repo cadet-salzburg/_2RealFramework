@@ -2,145 +2,73 @@
 	
 	<plugin
 		name = "ImageProcessing"
-		author = "Azathoth, chicken of insanity"
+		author = "The Jabberwocky"
 		contact = "www.cadet.at"
-		description = "this test plugin loves template classes"
-		version = "1.1.5"
+		description = "some stuff for testing framework functionality"
+		version = "2.0.0"
 	>
 	
 	<setup>
-			<param name = "input vector" type = "vector string" />
 	</setup>
 	
 	</plugin>
 	
 	<service
-		name = "ImageAddition2D_ushort"
-		description = "this service has a stupid name."
-		singleton = "false"
-		reconfigurable = "true"
+		name = "ToFloat_uchar"
+		description = "converts a pixelbuffer of unsigned chars [0, 255] to floating point format [0.0f, 1.0f]"
 	>
-	
+		
 		<setup>
-			<param name = "scale factor 1" type = "unsigned short" />
-			<param name = "scale factor 2" type = "unsigned short" />
 		</setup>
 		
 		<input>
-			<param name = "input image 1" type = "image2D_ushort" />
-			<param name = "input image 2" type = "image2D_ushort" />
+			<param name = "input image" type = "buffer2D_uchar" />
 		</input>
 		
 		<output>
-			<param name = "output image" type = "image2D_ushort" />
+			<param name = "output image" type = "buffer2D_float" />
 		</output>
 	
 	</service>
 	
 	<service
-		name = "ImageAddition2D_float"
-		description = "same as above, only with more float."
-		singleton = "false"
-		reconfigurable = "true"
+		name = "ImageAccumulation_uchar"
+		description = "calculates the average of several unsigned char [0, 255] pixelbuffers, output: floating point format [0.0f, 1.0f]"
 	>
-	
+		
 		<setup>
-			<param name = "scale factor 1" type = "float" />
-			<param name = "scale factor 2" type = "float" />
+			<!-- the number of images to accumulate -->
+			<param name = "buffer size" type = "unsigned char" />
 		</setup>
 		
 		<input>
-			<param name = "input image 1" type = "image2D_float" />
-			<param name = "input image 2" type = "image2D_float" />
+			<param name = "input image" type = "buffer2D_uchar" />
 		</input>
 		
 		<output>
-			<param name = "output image" type = "image2D_float" />
-		</output>
-	
-	</service>
-	
-		<service
-		name = "ImageScaling2D_ushort"
-		description = "argh"
-		singleton = "false"
-		reconfigurable = "true"
-	>
-	
-		<setup>
-			<param name = "scale factor" type = "unsigned short" />
-		</setup>
-		
-		<input>
-			<param name = "input image" type = "image2D_ushort" />
-		</input>
-		
-		<output>
-			<param name = "output image" type = "image2D_ushort" />
+			<param name = "output image" type = "buffer2D_float" />
 		</output>
 	
 	</service>
 	
 	<service
-		name = "ImageScaling2D_float"
-		description = "argh argh"
-		singleton = "false"
-		reconfigurable = "true"
+		name = "ImageAccumulation"
+		description = "calculates the average of several float pixelbuffers"
 	>
 	
+	<!-- this service is not actually implemented right now -->
+		
 		<setup>
-			<param name = "scale factor" type = "float" />
+			<!-- the number of images to accumulate -->
+			<param name = "buffer size" type = "unsigned char" />
 		</setup>
 		
 		<input>
-			<param name = "input image" type = "image2D_float" />
+			<param name = "input image" type = "buffer2D_float" />
 		</input>
 		
 		<output>
-			<param name = "output image" type = "image2D_float" />
-		</output>
-	
-	</service>
-	
-	
-	<service
-		name = "RandomImage2D_ushort"
-		description = "random shorts."
-		singleton = "false"
-		reconfigurable = "true"
-	>
-		
-		<setup>
-			<param name = "image width" type = "unsigned short" />
-			<param name = "image height" type = "unsigned short" />
-		</setup>
-		
-		<input>
-		</input>
-		
-		<output>
-			<param name = "output image" type = "image2D_ushort" />
-		</output>
-	
-	</service>
-	
-	<service
-		name = "RandomImage2D_float"
-		description = "floating away on my float."
-		singleton = "false"
-		reconfigurable = "true"
-	>
-		
-		<setup>
-			<param name = "image width" type = "float" />
-			<param name = "image height" type = "float" />
-		</setup>
-		
-		<input>
-		</input>
-		
-		<output>
-			<param name = "output image" type = "image2D_float" />
+			<param name = "output image" type = "buffer2D_float" />
 		</output>
 	
 	</service>

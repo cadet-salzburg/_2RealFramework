@@ -38,14 +38,12 @@ public:
 private:
 
 	_2RealKinect*	m_2RealKinect;
+	bool			m_AlignColorDepth;
 	unsigned int	m_GeneratorFlags;
 	unsigned int	m_ImageFlags;
 	_2RealLogLevel	m_LogLevel;
 	string			m_LogPath;
 	ofstream		m_LogStream;
-	bool			m_bDepthService;
-	bool			m_bColorService;
-	bool			m_bUserService;
 
 	void			getGeneratorFlags(PluginContext &context);
 	void			getImageFlags(PluginContext &context);
@@ -60,7 +58,6 @@ private:
 {
 	if (m_2RealKinect)
 	{
-		cout << "shutting down" << std::endl;
 		m_2RealKinect->shutdown();
 	}
 }
@@ -73,16 +70,8 @@ void
 #endif
 	getMetadata(PluginMetadata &info)
 {
-	try
-	{
-		MetadataReader reader;
-		reader.readMetadata(info);
-	}
-	catch (Exception &e)
-	{
-		cout << "multi kinect: exception while reading metadata" << endl;
-		throw e;
-	}
+	MetadataReader reader(info);
+	reader.readMetadata();
 }
 
 void
@@ -93,35 +82,22 @@ void
 #endif
 	setup(PluginContext &context)
 {
-	try
-	{
-		getImageFlags(context);
-		getGeneratorFlags(context);
-		getLogSettings(context);
+	getGeneratorFlags(context);
+	getImageFlags(context);
+	getLogSettings(context);
 
-		context.registerService("Image Generator", &::createImageService);
-
-		m_2RealKinect = _2RealKinect::getInstance();
+	m_2RealKinect = _2RealKinect::getInstance();
 	
-		m_2RealKinect->setLogLevel(m_LogLevel);
-		if (!m_LogPath.empty())
-		{
-			m_LogStream.open(m_LogPath);
-			m_2RealKinect->setLogOutputStream(&m_LogStream);
-		}
+	m_2RealKinect->setLogLevel(m_LogLevel);
+	if (!m_LogPath.empty())
+	{
+		m_LogStream.open(m_LogPath);
+		m_2RealKinect->setLogOutputStream(&m_LogStream);
+	}
 
-		m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
-	}
-	catch (Exception &e)
-	{
-		cout << "multi kinect: exception while executing setup" << endl;
-		throw e;
-	}
-	catch (...)
-	{
-		cout << "multi kinect: exception while executing setup" << endl;
-		throw Exception("exception during plugin setup");
-	}
+	context.registerService("Image Generator", &::createImageService);
+
+	m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
 }
 
 void
@@ -132,36 +108,52 @@ void
 #endif
 	getGeneratorFlags(PluginContext &context)
 {
-	try
+	m_AlignColorDepth = context.getParameterValue< bool >("align color depth");
+	vector< string > flags = context.getParameterValue< vector < string > >("generator flags");
+
+	m_GeneratorFlags = 0;
+
+	unsigned int depth = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
 	{
-		m_GeneratorFlags = 0;
-		m_bDepthService = false;
-		m_bColorService = false;
-		m_bUserService = false;
-
-		context.getSetupParameter("use depth", m_bDepthService);
-		if (m_bDepthService)
+		if (*it == "depth")
 		{
-			m_GeneratorFlags |= DEPTHIMAGE;
-		}
-
-		context.getSetupParameter("use color", m_bColorService);
-		if (m_bColorService)
-		{
-			m_GeneratorFlags |= COLORIMAGE;
-		}
-
-		context.getSetupParameter("use usermap", m_bUserService);
-		if (m_bUserService)
-		{
-			m_GeneratorFlags |= USERIMAGE;
+			depth = ::DEPTHIMAGE;
+			break;
 		}
 	}
-	catch (Exception &e)
+
+	unsigned int color = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
 	{
-		cout << "multi kinect: exception in getGeneratorFlags()" << endl;
-		throw e;
+		if (*it == "color")
+		{
+			color = ::COLORIMAGE;
+			break;
+		}
+		else if (*it == "infrared")
+		{
+			color = ::INFRAREDIMAGE;
+			break;
+		}
 	}
+
+	unsigned int user = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
+	{
+		if (*it == "user id")
+		{
+			user = ::USERIMAGE;
+			break;
+		}
+		else if (*it == "user colored")
+		{
+			user = ::USERIMAGE_COLORED;
+			break;
+		}
+	}
+
+	m_GeneratorFlags = depth | color | user;
 }
 
 void
@@ -172,46 +164,51 @@ void
 #endif
 	getImageFlags(PluginContext &context)
 {
-	try
+	vector< string > flags = context.getParameterValue< vector < string > >("image flags");
+
+	m_ImageFlags = 0;
+
+	unsigned int depth = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
 	{
-		m_ImageFlags = 0;
-
-		string imageResolution;
-		string depthResolution;
-		bool useMirroring = true;
-
-		context.getSetupParameter("use mirroring", useMirroring);
-		if (useMirroring)
+		if (*it == "depth640X480")
 		{
-			m_ImageFlags |= IMAGE_MIRRORING;
-		}
-
-		context.getSetupParameter("image resolution", imageResolution);
-		if (imageResolution == "640x480")
-		{
-			m_ImageFlags |= IMAGE_COLOR_640X480;
+			depth = ::IMAGE_USER_DEPTH_640X480;
+			break;
 		}
 		else
 		{
-			m_ImageFlags |= IMAGE_COLOR_640X480;
+			depth = ::IMAGE_USER_DEPTH_640X480;
+			break;
 		}
+	}
 
-		context.getSetupParameter("depth resolution", depthResolution);
-		if (depthResolution == "640x480")
+	unsigned int color = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
+	{
+		if (*it == "color640X480")
 		{
-			m_ImageFlags |= IMAGE_USER_DEPTH_640X480;
+			depth = ::IMAGE_COLOR_640X480;
+			break;
 		}
 		else
 		{
-			m_ImageFlags |= IMAGE_USER_DEPTH_640X480;
+			depth = ::IMAGE_COLOR_640X480;
+			break;
 		}
+	}
 
-	}
-	catch (Exception &e)
+	unsigned int mirrored = 0;
+	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
 	{
-		cout << "multi kinect: exception in getImageFlags()" << endl;
-		throw e;
+		if (*it == "mirrored")
+		{
+			depth = ::IMAGE_MIRRORING;
+			break;
+		}
 	}
+
+	m_ImageFlags = depth | color | mirrored;
 }
 
 void
@@ -222,43 +219,34 @@ void
 #endif
 	getLogSettings(PluginContext &context)
 {
-	try
-	{
-		m_LogPath = string();
-		m_LogLevel = none;
-		string level;
+	m_LogPath = string();
 
-		context.getSetupParameter("log file", m_LogPath);
-		context.getSetupParameter("log level", level);
-		if (level == "none")
-		{
-			m_LogLevel = none;
-		}
-		else if (level == "error")
-		{
-			m_LogLevel = error;
-		}
-		else if (level == "warn")
-		{
-			m_LogLevel = warn;
-		}
-		else if (level == "info")
-		{
-			m_LogLevel = info;
-		}
-		else if (level == "debug")
-		{
-			m_LogLevel = debug;
-		}
-		else
-		{
-			throw Exception("invalid parameter - log level");
-		}
-	}
-	catch (Exception &e)
+	m_LogPath = context.getParameterValue< string >("log file");
+	string level = context.getParameterValue< string >("log level");
+
+	if (level == "none")
 	{
-		cout << "multi kinect: exception in getLogSettings()" << endl;
-		throw e;
+		m_LogLevel = none;
+	}
+	else if (level == "error")
+	{
+		m_LogLevel = error;
+	}
+	else if (level == "warn")
+	{
+		m_LogLevel = warn;
+	}
+	else if (level == "info")
+	{
+		m_LogLevel = info;
+	}
+	else if (level == "debug")
+	{
+		m_LogLevel = debug;
+	}
+	else
+	{
+		throw PluginException("invalid parameter - log level");
 	}
 }
 

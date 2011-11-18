@@ -3,9 +3,9 @@
 #include "_2RealIService.h"
 #include "_2RealServiceContext.h"
 
-#include "ImageBuffer.h"
-
 #include "_2RealKinect.h"
+
+#include "_2RealImagebuffer.h"
 
 _2Real::IService *const createImageService();
 
@@ -16,7 +16,7 @@ public:
 
 	void shutdown() {}
 	void update();
-	void setup(_2Real::ServiceContext *const context);
+	void setup(_2Real::ServiceContext &context);
 	~ImageService() {}
 
 private:
@@ -24,6 +24,8 @@ private:
 	_2Real::_2RealKinect		*m_2RealKinect;
 	_2Real::_2RealGenerator		m_Generator;
 	unsigned int				m_DeviceId;
-	ImageBuffer					m_Output;
+	_2Real::OutputHandle		m_Output;
+	unsigned int				m_Channels;
+	unsigned int				m_Bpp;
 
 };

@@ -2,9 +2,9 @@
 	
 	<plugin
 		name = 			"MultiKinectOpenNI"
-		author = 		"Gerlinde Emsenhuber"
+		author = 		"Azatoth, Chicken of Insanity"
 		contact = 		"gerlinde.emsenhuber@fh-salzburg.ac.at"
-		description = 	"test plugin based on 2real kinect wrapper."
+		description = 	"test plugin based on 2real kinect wrapper. it sucks."
 		version = 		"0.0.0"
 	>
 	
@@ -24,14 +24,17 @@
 	
 	</plugin>
 	
+	<!-- after thinking about how the kinect works some more, i don't think that this is the best way of handling it within a service. -->
+	<!-- anyway, this service stays the way it is for testing purposes. -->
+	
 	<service
 		name = 			"Image Generator"
-		description = 	"generic image generator."
+		description = 	"generic image generator - sends out a pixelbuffer of unsigned chars containing the current image"
 	>
 	
 		<setup>
 			<!-- device id. somehow, this should not be greater than (NUMBER_OF_RUNNING_DEVICES - 1). -->
-			<!-- (fyi, this means: the service setup will fail if device id > (NUMBER_OF_RUNNING_DEVICES - 1). -->
+			<!-- (this means: the service setup will fail if device id > (NUMBER_OF_RUNNING_DEVICES - 1). -->
 			<param name = "device id" 			type = "unsigned int" />
 			<!-- type of the generator. one of: color, depth, infrared, user id, user colored. -->
 			<param name = "image type"			type = "string" />
@@ -41,89 +44,10 @@
 		</input>
 		
 		<output>
-			<!-- todo: the framework could really use some cool helper classes. -->
-			<param name = "output" 				type = "imagebuffer" />
+			<param name = "output image" 		type = "buffer2D_uchar" />
 		</output>
 	
-	</service>
-	
-	<service
-		name = 			"Active Users"
-		description = 	"will return active user ids."
-	>
-	
-		<setup>
-			<param name = "device id" 			type = "unsigned int" />
-		</setup>
-		
-		<input>
-		</input>
-		
-		<output>
-			<param name = "output" 				type = "vector unsigned char" />
-		</output>
-	
-	</service>
-	
-	<service
-		name = 			"Tracked Users"
-		description = 	"will return tracked user ids."
-	>
-	
-		<setup>
-			<param name = "device id" 			type = "unsigned int" />
-		</setup>
-		
-		<input>
-		</input>
-		
-		<output>
-			<param name = "output" 				type = "vector unsigned char" />
-		</output>
-	
-	</service>
-	
-	<service
-		name = 			"Screen Skeleton Tracker"
-		description = 	"will return skeletons of a tracked user, in screen coords."
-	>
-	
-		<setup>
-			<param name = "device id" 			type = "unsigned int" />
-		</setup>
-		
-		<input>
-			<param name = "user id"				type = "unsigned int" />
-		</input>
-		
-		<output>
-			<!-- output is a vector of joints, which are themselves 2-component vectors. -->
-			<!-- if the user with desired id is not active, this vector will be empty. -->
-			<param name = "skeleton" 			type = "vector2D float" />
-		</output>
-	
-	</service>
-	
-	<service
-		name = 			"World Skeleton Tracker"
-		description = 	"will return skeletons of a tracked user, in world coords"
-	>
-	
-		<setup>
-			<param name = "device id" 			type = "unsigned int" />
-		</setup>
-		
-		<input>
-			<param name = "user id"				type = "unsigned int" />
-		</input>
-		
-		<output>
-			<!-- output is a vector of joints, which are themselves 3-component vectors. -->
-			<!-- if the user with desired id is not active, this vector will be empty. -->
-			<param name = "skeleton" 			type = "vector2D float" />
-		</output>
-	
-	</service>
+	</service>	
 	
 </metadata>
 

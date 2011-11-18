@@ -1,9 +1,9 @@
 #include "Generators.h"
 
+#include <iostream>
+
 using namespace _2Real;
 using namespace std;
-
-#include <iostream>
 
 _2Real::IService *const createImageService()
 {
@@ -11,14 +11,15 @@ _2Real::IService *const createImageService()
 	return service;
 }
 
-void ImageService::setup(ServiceContext *const context)
+void ImageService::setup(ServiceContext &context)
 {
 	try
 	{
+		//cout << "ImageService: setup " << endl;
+
 		m_2RealKinect = _2RealKinect::getInstance();
 
-		string generator;
-		context->getSetupParameter("image type", generator);
+		string const& generator = context.getParameterValue< string >("image type");
 
 		if (generator == "color")
 		{
@@ -42,20 +43,34 @@ void ImageService::setup(ServiceContext *const context)
 		}
 		else
 		{
-			throw Exception("generator type " + generator + " is invalid");
+			throw ServiceException("generator type " + generator + " is invalid");
 		}
 
-		context->getSetupParameter("device id", m_DeviceId);
-		context->registerOutputSlot("output", m_Output);
+		m_DeviceId = context.getParameterValue< unsigned int >("device id");
+		
+		m_Output = context.getOutputHandle("output image");
+
+		if (m_Generator == DEPTHIMAGE)
+		{
+			m_Channels = 1;
+		}
+		else
+		{
+			m_Channels = 3;
+		}
+
+		m_Bpp = m_Channels*sizeof(unsigned char);
+
+		//cout << "ImageService: initialization: device id " << m_DeviceId << ", channels: " << (unsigned int)m_Channels << ", bytes per pixel: " << m_Bpp << ", generator type: " << generator << endl;
+		//cout << "ImageService: setup finished" << endl;
 	}
 	catch (Exception &e)
 	{
-		string exc = e.what();
-		throw Exception(exc + "depth image service - error in setup()");
+		throw e;
 	}
 	catch (...)
 	{
-		throw Exception("depth image service - error in setup()");
+		throw ServiceException("unexpected error in setup");
 	}
 }
 
@@ -63,12 +78,26 @@ void ImageService::update()
 {
 	try
 	{
-		m_Output.buffer = m_2RealKinect->getImageData(m_DeviceId, m_Generator);
-		m_Output.height = m_2RealKinect->getImageHeight(m_DeviceId, m_Generator);
-		m_Output.width = m_2RealKinect->getImageWidth(m_DeviceId, m_Generator);
+		//cout << "ImageService: update " << endl;
+
+		m_Output.data< Buffer2D_uchar >().assign(	m_2RealKinect->getImageData(m_DeviceId, m_Generator),
+													m_2RealKinect->getImageHeight(m_DeviceId, m_Generator),
+													m_2RealKinect->getImageWidth(m_DeviceId, m_Generator),
+													m_Channels,
+													false);
+
+		//cout << "ImageService: update finished" << endl;
+	}
+	catch (BadCastException &e)
+	{
+		throw e;
+	}
+	catch (PixelbufferException &e)
+	{
+		throw e;
 	}
 	catch (...)
 	{
-		throw Exception("depth image service - error in update()");
+		throw ServiceException("ImageService: unexpected error in update");
 	}
 }
