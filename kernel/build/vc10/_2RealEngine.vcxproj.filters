@@ -1,207 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealAbstractContainer.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealException.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFactoryReference.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPlugin.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealContainer.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealIdentifier.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParamRef.cpp">
-      <Filter>Plugin Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealApplicationCallback.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealData.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDataPacket.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngine.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEntity.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceContainer.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEntityTable.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractRef.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginContext.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceContext.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystem.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealId.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTypeTable.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealPluginParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealTypes.cpp" />
+    <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
+    <ClCompile Include="..\..\src\_2RealId.cpp" />
+    <ClCompile Include="..\..\src\_2RealEntity.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystem.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealEntityTable.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealGraph.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
+    <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
+    <ClCompile Include="..\..\src\_2RealSequence.cpp" />
+    <ClCompile Include="..\..\src\_2RealService.cpp" />
+    <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealAbstractContainer.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealException.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFactoryReference.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIContainer.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIDataQueue.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIdentifier.h">
-      <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPlugin.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginPool.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceFactory.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealContainer.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealProductionGraphs.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealData.h">
-      <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractRef.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParamRef.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIService.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginContext.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceContext.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginMetadata.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealMetadataReader.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
-      <Filter>Plugin Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealApplicationCallback.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDataPacket.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngine.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEntity.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceContainer.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEntityTable.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystem.h">
-      <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTypedefs.h">
-      <Filter>App Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealId.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTypeTable.h" />
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\_2RealInputSlot.h" />
     <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
-    <ClInclude Include="..\..\src\_2RealPluginParameter.h" />
-    <ClInclude Include="..\..\src\_2RealServiceParameter.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealIOSlot.h" />
+    <ClInclude Include="..\..\src\_2RealSharedAny.h" />
+    <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
+    <ClInclude Include="..\..\src\_2RealTypes.h" />
+    <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
+    <ClInclude Include="..\..\src\_2RealInputHandle.h" />
+    <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
+    <ClInclude Include="..\..\src\_2RealData.h" />
+    <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
+    <ClInclude Include="..\..\src\_2RealPluginContext.h" />
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealServiceContext.h" />
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPlugin.h" />
+    <ClInclude Include="..\..\src\_2RealId.h" />
+    <ClInclude Include="..\..\src\_2RealEntity.h" />
+    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
+    <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
+    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealEngine.h" />
+    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealEntityTable.h" />
+    <ClInclude Include="..\..\src\_2RealException.h" />
+    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
+    <ClInclude Include="..\..\src\_2RealSystem.h" />
+    <ClInclude Include="..\..\src\_2RealIdentifier.h" />
+    <ClInclude Include="..\..\src\_2RealGraph.h" />
+    <ClInclude Include="..\..\src\_2RealImagebuffer.h" />
+    <ClInclude Include="..\..\src\_2RealRunnable.h" />
+    <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
+    <ClInclude Include="..\..\src\_2RealSynchronization.h" />
+    <ClInclude Include="..\..\src\_2RealSequence.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
+    <ClInclude Include="..\..\src\_2RealService.h" />
+    <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
+    <ClInclude Include="..\..\src\_2RealServiceTemplate.h" />
+    <ClInclude Include="..\..\src\_2RealIService.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Entities">
-      <UniqueIdentifier>{5ce4f006-1d9a-41fd-940d-f674ab592b2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App Interface">
-      <UniqueIdentifier>{a2940e7c-4bcd-4a55-8034-7af371684f27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugin Interface">
-      <UniqueIdentifier>{d8452f87-eb5b-476c-a1e9-4f7a32e01e14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{491e14bb-4d15-4763-810e-06e06361f8c3}</UniqueIdentifier>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{08879513-94b1-47e8-9d74-639e37f0d323}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
