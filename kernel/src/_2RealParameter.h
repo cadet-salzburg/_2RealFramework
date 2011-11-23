@@ -45,7 +45,7 @@ namespace _2Real
 
 	public:
 
-		Parameter(Id *const _id, std::string const& type, std::string const& key);
+		Parameter(Identifier const& id, std::string const& type, std::string const& key);
 		virtual ~Parameter();
 
 		/**

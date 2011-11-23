@@ -21,6 +21,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginMetadata.h"
 #include "_2RealEntityTable.h"
+#include "_2RealTypes.h"
 #include "_2RealIdentifier.h"
 #include "_2RealSetupParameter.h"
 
@@ -39,37 +40,47 @@ namespace _2Real
 	{
 		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
 		{
+			std::string name;
 			try
 			{
+				name = it->second->name();
+				std::cout << "deleting plugin: " << name << std::endl;
 				it->second->uninstall();
-				m_Engine.entities().destroy(it->second);
+				delete it->second;
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on plugin pool destruction: " << e.what() << std::endl;
+				std::cout << e.what() << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "error on plugin destruction: " << name << std::endl;
 			}
 		}
 	}
 
-	const unsigned int PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class)
+	const Identifier PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class)
 	{
 		try
 		{
-			Plugin *plugin = m_Engine.entities().createPlugin(_name, _dir, _file, _class);
+			const Identifier id = m_Engine.entities().createIdentifier(_name, "plugin");
+
+			PluginMetadata *data = new PluginMetadata(_class, _file, _dir, m_Engine.types());
+			Plugin *plugin = new Plugin(id, data);
 			plugin->install();
 
-			const PluginMetadata data = plugin->pluginMetadata();
 			typedef std::map< std::string, std::string > StringMap;
-			StringMap setup = data.getSetupParameters();
+			StringMap setup = data->getSetupParameters();
 			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				SetupParameter *param = m_Engine.entities().createSetupParameter(it->first, it->second, plugin);
+				const Identifier id = m_Engine.entities().createIdentifier(it->first, "plugin setup parameter");
+				SetupParameter *param = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
 				plugin->addSetupParameter(param);
 			}
 
 			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
 			
-			return plugin->id();
+			return id;
 		}
 		catch (Exception &e)
 		{

@@ -16,8 +16,6 @@
 	limitations under the License.
 */
 
-#pragma once
-
 #include "_2RealService.h"
 #include "_2RealServiceContext.h"
 #include "_2RealInputSlot.h"
@@ -34,7 +32,7 @@
 namespace _2Real
 {
 
-	Service::Service(IService *const _service, Id *const _id, SystemGraph *const _system) : 
+	Service::Service(IService *const _service, Identifier const& _id, SystemGraph *const _system) : 
 		Runnable(_id, _system),
 		m_Service(_service)
 	{
@@ -43,6 +41,51 @@ namespace _2Real
 	Service::~Service()
 	{
 		delete m_Service;
+
+		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = it->second->name();
+				std::cout << "deleting input slot: " << name << std::endl;
+				delete it->second;
+			}
+			catch (...)
+			{
+				std::cout << "error on input slot destruction: " << name << std::endl;
+			}
+		}
+
+		for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = it->second->name();
+				std::cout << "deleting output slot: " << name << std::endl;
+				delete it->second;
+			}
+			catch (...)
+			{
+				std::cout << "error on output slot destruction: " << name << std::endl;
+			}
+		}
+
+		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = it->second->name();
+				std::cout << "deleting setup parameter: " << name << std::endl;
+				delete it->second;
+			}
+			catch (...)
+			{
+				std::cout << "error on setup parameter destruction: " << name << std::endl;
+			}
+		}
 	}
 
 	void Service::addInputSlot(InputSlot *const _slot)

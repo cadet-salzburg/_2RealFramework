@@ -37,7 +37,7 @@ namespace _2Real
 	class IService;
 	class ServiceFactory;
 
-	typedef IService *const (*const ServiceCreator)(void);
+	typedef IService *const (*ServiceCreator)(void);
 
 	class PluginContext
 	{
@@ -71,15 +71,13 @@ namespace _2Real
 
 		friend class Plugin;
 
-		PluginContext(Plugin *const plugin, ServiceFactory *const factory);
+		PluginContext(Plugin *const plugin);
 		PluginContext(PluginContext const& src);
 		PluginContext& operator=(PluginContext const& src);
-		~PluginContext();
 
 		SharedAny			getSetupParameter(std::string const& name);
 
 		Plugin				*const m_Plugin;
-		ServiceFactory		*const m_Factory;
 
 	};
 

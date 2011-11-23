@@ -35,7 +35,7 @@ namespace _2Real
 	public:
 
 		// ~~todo: give system graph access to the engine's threadpool
-		SystemGraph(Id *const id, ExceptionHandler *const handler);
+		SystemGraph(Identifier const& id, ExceptionHandler *const handler);
 		virtual ~SystemGraph();
 
 		void startChild(unsigned int const& id);

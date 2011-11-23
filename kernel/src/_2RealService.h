@@ -54,7 +54,7 @@ namespace _2Real
 
 	public:
 
-		Service(IService *const service, Id *const id, SystemGraph *const system);
+		Service(IService *const service, Identifier const& id, SystemGraph *const system);
 		virtual ~Service();
 
 		/**

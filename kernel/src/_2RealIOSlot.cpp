@@ -21,7 +21,7 @@
 namespace _2Real
 {
 
-	IOSlot::IOSlot(Id *const _id, Service *const _service, std::string const& _type, std::string const& _key) :
+	IOSlot::IOSlot(Identifier const& _id, Service *const _service, std::string const& _type, std::string const& _key) :
 		Parameter(_id, _type, _key),
 		m_Service(_service)
 	{

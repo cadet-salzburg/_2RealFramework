@@ -42,16 +42,6 @@ namespace _2Real
 		m_Description = _desc;
 	}
 
-	void ServiceMetadata::setReconfiguration(bool const& _config)
-	{
-		m_bCanReconfigure = _config;
-	}
-
-	void ServiceMetadata::setSingleton(bool const& _singleton)
-	{
-		m_bIsSingleton = _singleton;
-	}
-
 	void ServiceMetadata::addSetupParameter(std::string const& _name, std::string const& _type)
 	{
 		ParameterMetadata::ParameterMap::iterator it = m_SetupParameters.find(_name);
@@ -131,16 +121,6 @@ namespace _2Real
 		return m_Description;
 	}
 
-	bool const& ServiceMetadata::canReconfigure() const
-	{
-		return m_bCanReconfigure;
-	}
-
-	bool const& ServiceMetadata::isSingleton() const
-	{
-		return m_bIsSingleton;
-	}
-
 	const bool ServiceMetadata::hasSetupParameter(std::string const& _name) const
 	{
 		ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.find(_name);
@@ -181,29 +161,15 @@ namespace _2Real
 	{
 		std::stringstream info;
 		info << std::endl;
-		info << m_ServiceName << std::endl;
-		info << m_Description << std::endl;
-
-		//if (m_bIsSingleton)
-		//{
-		//	info << "this service is a singleton" << std::endl;
-		//}
-
-		//if (m_bCanReconfigure)
-		//{
-		//	info << "this service's setup parameters can be reconfigured" << std::endl;
-		//}
-		//else
-		//{
-		//	info << "this service's setup parameters can be initialized only once" << std::endl;
-		//}
+		info << "service:\t" << m_ServiceName << std::endl;
+		info << "description:\t" << m_Description << std::endl;
 
 		if (!m_SetupParameters.empty())
 		{
 			info << "this service has setup parameters: " << std::endl;
 			for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 			{
-				info << it->first << std::endl;
+				info << it->first << " " << it->second.getType() << std::endl;
 			}
 		}
 
@@ -212,7 +178,7 @@ namespace _2Real
 			info << "this service has input parameters: " << std::endl;
 			for (ParameterMetadata::ParameterMap::const_iterator it = m_InputParameters.begin(); it != m_InputParameters.end(); it++)
 			{
-				info << it->first << std::endl;
+				info << it->first << " " << it->second.getType() << std::endl;
 			}
 		}
 
@@ -221,7 +187,7 @@ namespace _2Real
 			info << "this service has output parameters: " << std::endl;
 			for (ParameterMetadata::ParameterMap::const_iterator it = m_OutputParameters.begin(); it != m_OutputParameters.end(); it++)
 			{
-				info << it->first << std::endl;
+				info << it->first << " " << it->second.getType() << std::endl;
 			}
 		}
 

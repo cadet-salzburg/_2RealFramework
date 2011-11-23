@@ -26,7 +26,7 @@
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Id *const _id, Service *const _service, std::string const& _type, std::string const& _key, SharedAny init) :
+	OutputSlot::OutputSlot(Identifier const& _id, Service *const _service, std::string const& _type, std::string const& _key, SharedAny init) :
 		IOSlot(_id, _service, _type, _key)
 	{
 		this->init(init);
@@ -95,8 +95,6 @@ namespace _2Real
 	{
 		m_WriteData = initialData;
 		m_IsInitialized = true;
-
-		//sends initial data to all listeners
 		update();
 	}
 
@@ -106,7 +104,7 @@ namespace _2Real
 
 		//store data - in case a new listener is added somewhere in between
 		m_CurrentData = Data(m_WriteData, Poco::Timestamp());
-		m_Event.notify(this, m_CurrentData);
+		m_Event.notifyAsync(this, m_CurrentData);
 		m_WriteData.clone(m_WriteData);
 	}
 

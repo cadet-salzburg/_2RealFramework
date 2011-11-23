@@ -18,31 +18,31 @@
 
 #pragma once
 
+#include "_2RealIdentifier.h"
+
 #include <string>
 
 namespace _2Real
 {
 
-	class Id;
-
 	class Entity
 	{
 
-		friend class EntityTable;
-
 	public:
 
-		Entity(Id *const id);
+		Entity(Identifier const& id);
 		virtual ~Entity();
 
 		unsigned int const& id() const;
 		std::string const& name() const;
-		std::string const& info() const;
-		void setInfo(std::string const& info);
+		std::string const& type() const;
+
+		//std::string const& info() const;
+		//void setInfo(std::string const& info);
 
 	private:
-	
-		Id		*const m_ID;
+
+		const Identifier		m_Id;
 
 	};
 

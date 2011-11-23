@@ -27,7 +27,7 @@
 namespace _2Real
 {
 	
-	Synchronization::Synchronization(Id *const _id, SystemGraph *const _system) :
+	Synchronization::Synchronization(Identifier const& _id, SystemGraph *const _system) :
 		RunnableGraph(_id, _system)
 	{
 	}

@@ -73,7 +73,7 @@ namespace _2Real
 		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
 		m_Types->registerType< Buffer2D_uchar >("buffer2D_uchar");
 
-		m_Entities = new EntityTable(*this);
+		m_Entities = new EntityTable();
 		m_Plugins = new PluginPool(*this);
 		m_Factory = new ServiceFactory(*this);
 		m_Graphs = new ProductionGraphs(*this);
@@ -98,13 +98,15 @@ namespace _2Real
 		delete m_Plugins;
 		delete m_Entities;
 		delete m_Types;
+		
 		//delete m_Time;
+
+		std::cout << "ENGINE: goodbye" << std::endl;
 	}
 
 	const Identifier Engine::createSystem(std::string const& _name)
 	{
-		unsigned int id = m_Graphs->createSystemGraph(_name);
-		return m_Entities->getIdentifier(id);
+		return m_Graphs->createSystemGraph(_name);
 	}
 
 	void Engine::destroySystem(Identifier const& _id)
@@ -114,14 +116,13 @@ namespace _2Real
 
 	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifier const& _system)
 	{
-		unsigned int id = m_Plugins->install(_name, _dir, _file, _class);
-		return m_Entities->getIdentifier(id);
+		return m_Plugins->install(_name, _dir, _file, _class);
 	}
 
 	void Engine::startPlugin(Identifier const& _plugin, Identifier const& _system)
 	{
 		Plugin *plugin = m_Plugins->plugin(_plugin);
-		plugin->setup(m_Factory);
+		plugin->setup();
 	}
 
 	void Engine::dumpPluginInfo(Identifier const& _plugin, Identifier const& _system) const
@@ -134,7 +135,7 @@ namespace _2Real
 
 	void Engine::dumpServiceInfo(Identifier const& _id, std::string const& _name, Identifier const& _system) const
 	{
-		ServiceMetadata data = m_Factory->info(_id.id(), _name);
+		ServiceMetadata data = m_Plugins->plugin(_id)->serviceMetadata(_name);
 
 		std::string info = data.info();
 		std::cout << info << std::endl;
@@ -142,13 +143,8 @@ namespace _2Real
 
 	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifier const& _system)
 	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
-		Service *service = m_Factory->createService(_name, _id.id(), _service, nirvana);
-			
-		//move into system at last index
-		unsigned int index = nirvana->childCount();
-		nirvana->insertChild(service, index);
-		return m_Entities->getIdentifier(service->id());
+		Plugin *const plugin = m_Plugins->plugin(_id);
+		return m_Factory->createService(_name, plugin, _service, m_Graphs->getSystemGraph(_system));
 	}
 
 	//Identifiers Engine::getSetupParameters(Identifier const& _id, Identifier const& _system) const
@@ -275,13 +271,11 @@ namespace _2Real
 		{
 			Plugin *plugin = m_Plugins->plugin(_id);
 			SetupParameter *param = plugin->getSetupParameter(_param);
-
 			if (param->datatype() != _type)
 			{
 				//BadDatatypeException
 				throw Exception("datatype mismatch: " + param->datatype() + " " + _type);
 			}
-
 			param->set(_value);
 		}
 		else
@@ -300,6 +294,7 @@ namespace _2Real
 							//BadDatatypeException
 							throw Exception("datatype mismatch: " + param->datatype() + " " + _type);
 						}
+
 						param->set(_value);
 					}
 					else

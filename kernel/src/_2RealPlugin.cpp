@@ -20,7 +20,6 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
-#include "_2RealServiceTemplate.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealSetupParameter.h"
 
@@ -29,7 +28,7 @@
 namespace _2Real
 {
 
-	Plugin::Plugin(PluginMetadata *const _info, Id *const _id) :
+	Plugin::Plugin(Identifier const& _id, PluginMetadata *const _info) :
 		Entity(_id),
 		m_Metadata(_info),
 		m_Activator(NULL),
@@ -46,18 +45,65 @@ namespace _2Real
 			{
 				uninstall();
 			}
-
-			delete m_Metadata;
 		}
-		catch (Exception &e)
+		catch (...)
 		{
-			std::cout << "destruction error: " << e.what() << std::endl;
+			std::cout << "uninstall error" << std::endl;
+		}
+
+		delete m_Metadata;
+
+		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = it->second->name();
+				std::cout << "deleting setup parameter: " << name << std::endl;
+				delete it->second;
+			}
+			catch (...)
+			{
+				std::cout << "error on setup parameter destruction: " << name << std::endl;
+			}
+		}
+
+		for (TemplateMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = it->first;
+				std::cout << "deleting service template: " << name << std::endl;
+				it->second = NULL;
+			}
+			catch (...)
+			{
+				std::cout << "error on service template destruction: " << name << std::endl;
+			}
 		}
 	}
 
-	void Plugin::addService(ServiceTemplate *_service)
+	void Plugin::registerService(std::string const& _name, ServiceCreator _service)
 	{
-		m_Services.insert(NamedTemplate(_service->name(), _service));
+		TemplateMap::iterator it = m_Services.find(_name);
+		if (it != m_Services.end())
+		{
+			//exception
+		}
+
+		m_Services.insert(NamedTemplate(_name, _service));
+	}
+
+	IService *const Plugin::createService(std::string const& _name)
+	{
+		TemplateMap::iterator it = m_Services.find(_name);
+		if (it != m_Services.end())
+		{
+			//exception
+		}
+
+		return it->second();
 	}
 
 	void Plugin::addSetupParameter(SetupParameter *const _param)
@@ -91,16 +137,16 @@ namespace _2Real
 		return result;
 	}
 
-	std::list< unsigned int > Plugin::serviceIDs() const
-	{
-		std::list< unsigned int > result;
-		for (TemplateMap::const_iterator it = m_Services.begin(); it != m_Services.end(); it++)
-		{
-			result.push_back(it->second->id());
-		}
+	//std::list< unsigned int > Plugin::serviceIDs() const
+	//{
+	//	std::list< unsigned int > result;
+	//	for (TemplateMap::const_iterator it = m_Services.begin(); it != m_Services.end(); it++)
+	//	{
+	//		result.push_back(it->second->id());
+	//	}
 
-		return result;
-	}
+	//	return result;
+	//}
 
 	SetupParameter *const Plugin::getSetupParameter(std::string const& _name)
 	{
@@ -113,16 +159,16 @@ namespace _2Real
 		return it->second;
 	}
 
-	ServiceTemplate *const Plugin::getServiceTemplate(std::string const& _name)
-	{
-		TemplateMap::iterator it = m_Services.find(_name);
-		if (it == m_Services.end())
-		{
-			throw Exception("attempted to query non-existant service template");
-		}
+	//ServiceTemplate *const Plugin::getServiceTemplate(std::string const& _name)
+	//{
+	//	TemplateMap::iterator it = m_Services.find(_name);
+	//	if (it == m_Services.end())
+	//	{
+	//		throw Exception("attempted to query non-existant service template");
+	//	}
 
-		return it->second;
-	}
+	//	return it->second;
+	//}
 
 	SharedAny Plugin::getParameterValue(std::string const& _name)
 	{
@@ -184,43 +230,27 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::setup(ServiceFactory *const _factory)
+	void Plugin::setup()
 	{
-		try
+		if (!m_Activator)
 		{
-			if (!m_Activator)
-			{
-				throw Exception("internal error: attempted to set up uninstalled plugin");
-			}
-
-			PluginContext context(this, _factory);
-			m_Activator->setup(context);
-
-			m_IsInitialized = true;
+			throw Exception("internal error: attempted to set up uninstalled plugin");
 		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+
+		PluginContext context(this);
+		m_Activator->setup(context);
+
+		m_IsInitialized = true;
 	}
 
 	void Plugin::uninstall()
 	{
-		try
-		{
-			delete m_Activator;
-			m_Activator = NULL;
+		delete m_Activator;
+		m_Activator = NULL;
 
-			//m_PluginLoader.destroy(m_Metadata->getClassname(), m_Activator);
-
-			if (m_PluginLoader.isLibraryLoaded(m_File))
-			{
-				m_PluginLoader.unloadLibrary(m_File);
-			}
-		}
-		catch (Exception &e)
+		if (m_PluginLoader.isLibraryLoaded(m_File))
 		{
-			throw e;
+			m_PluginLoader.unloadLibrary(m_File);
 		}
 	}
 }

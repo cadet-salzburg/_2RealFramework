@@ -25,37 +25,12 @@ namespace _2Real
 
 	/**
 	*	identifiers refer to entities in the 2 real engine
-	*
-	*	these entities may be:
-	*							plugins
-	*							service factories
-	*							services
-	*							sequences / synchronizations
-	*							a service's setup parameters
-	*							a service's input / output slots
 	*/
-
-	class Id;
 
 	class Identifier
 	{
 
 	public:
-
-		/**
-		*
-		*/
-		Identifier(Identifier const& _src);
-
-		/**
-		*
-		*/
-		Identifier& operator=(Identifier const& _src);
-
-		/**
-		*
-		*/
-		~Identifier();
 
 		/**
 		*	true if the identifiers refer to the same entity within the framework
@@ -90,36 +65,59 @@ namespace _2Real
 		/**
 		*	the entity's type, as string
 		*/
-		std::string const& type() const;
+		std::string const& type() const
+		{
+			return m_Type;
+		}
 
 		/**
 		*	the entity's name, as string
 		*/
-		std::string const& name() const;
+		std::string const& name() const
+		{
+			return m_Name;
+		}
 
 		/**
 		*	some additional info about the entity
 		*/
-		std::string const& info() const;
+		//std::string const& info() const;
 
 		/**
 		*	the entity's unique id
 		*/
-		unsigned int const& id() const;
+		unsigned int const& id() const
+		{
+			return m_Id;
+		}
 
 	private:
 
+		friend class Entity;
 		friend class EntityTable;
 
-		/**
-		*	identifiers may be created only by the 2 real engine
-		*/
-		Identifier(Id *const _id);
+		Identifier(std::string const& name, std::string const& type, unsigned int const& id);
 
 		/**
-		*	
+		*	orginal name given by application programmer
 		*/
-		Id		*m_Impl;
+		const std::string			m_Name;
+
+		/**
+		*	type as string
+		*/
+		const std::string			m_Type;
+
+		/**
+		*	info
+		*/
+		//std::string				m_Info;
+
+		/**
+		*	unique id
+		*/
+		const unsigned int			m_Id;
+
 
 	};
 

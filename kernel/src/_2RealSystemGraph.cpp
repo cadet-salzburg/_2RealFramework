@@ -20,10 +20,12 @@
 #include "_2RealRunnable.h"
 #include "_2RealExceptionHandler.h"
 
+#include <iostream>
+
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Id *const id, ExceptionHandler *const _handler) :
-		Entity(id),
+	SystemGraph::SystemGraph(Identifier const& _id, ExceptionHandler *const _handler) :
+		Entity(_id),
 		Graph(),
 		m_ExceptionHandler(_handler)
 	{
@@ -31,7 +33,33 @@ namespace _2Real
 
 	SystemGraph::~SystemGraph()
 	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			(*it)->stop();
+		}
+
+		for (std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.begin(); it != m_Threads.end(); it++)
+		{
+			it->second->join();
+			delete it->second;
+		}
+
 		delete m_ExceptionHandler;
+
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			std::string name;
+			try
+			{
+				name = (*it)->name();
+				std::cout << "deleting runnable: " << name << std::endl;
+				delete *it;
+			}
+			catch (...)
+			{
+				std::cout << "error on runnable destruction: " << name << std::endl;
+			}
+		}
 	}
 
 	void SystemGraph::insertChild(Runnable *const child, unsigned int const& index)

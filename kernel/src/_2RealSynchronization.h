@@ -32,7 +32,7 @@ namespace _2Real
 
 	public:
 
-		Synchronization(Id *const id, SystemGraph *const system);
+		Synchronization(Identifier const& id, SystemGraph *const system);
 		virtual ~Synchronization();
 
 		virtual void run();

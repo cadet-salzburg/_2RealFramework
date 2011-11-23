@@ -17,223 +17,72 @@
 */
 
 #include "_2RealServiceFactory.h"
+#include "_2RealPlugin.h"
+#include "_2RealEntityTable.h"
+#include "_2RealTypes.h"
+#include "_2RealSystemGraph.h"
+#include "_2RealService.h"
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
-#include "_2RealServiceTemplate.h"
-#include "_2RealProductionGraphs.h"
-#include "_2RealException.h"
-#include "_2RealService.h"
-#include "_2RealEntityTable.h"
-#include "_2RealServiceMetadata.h"
-#include "_2RealPlugin.h"
 #include "_2RealSetupParameter.h"
 
-#include <sstream>
-#include <iostream>
+//#include <sstream>
+//#include <iostream>
 
 namespace _2Real
 {
 
 	ServiceFactory::ServiceFactory(Engine &_engine) :
-		m_References(),
 		m_Engine(_engine)
 	{
 	}
 
-	ServiceFactory::~ServiceFactory()
+	const Identifier ServiceFactory::createService(std::string const& _name, Plugin *const _plugin, std::string const& _service, SystemGraph *const _system)
 	{
-		//for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-		//{
-		//	try
-		//	{
-		//		unsigned int id = it->first;
-		//		m_Engine.entities()->destroy(it->second);
-		//	}
-		//	catch (Exception &e)
-		//	{
-		//		std::cout << "error on service factory destruction: " << e.what() << std::endl;
-		//	}
-		//}
-	}
+		IService *userService = _plugin->createService(_service);
 
-	ServiceTemplate const *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service) const
-	{
-		ReferenceTable::const_iterator it;
-		for (it = m_References.begin(); it != m_References.end(); it++)
+		if (userService == NULL)
 		{
-			ServiceTemplate *ref = it->second;
-			if (ref->name() == _service && ref->plugin() == _plugin)
-			{
-				break;
-			}
+			throw Exception("service factory: internal exception - could not create instance of service " + _service);
 		}
 
-		if (it == m_References.end())
-		{
-			throw Exception("could not retrieve factory ref - does not exist");
-		}
-		else if (!it->second)
-		{
-			throw Exception("internal error - null pointer stored in service factory");
-		}
+		const Identifier id = m_Engine.entities().createIdentifier(_name, "service");
+		Service *service = new Service(userService, id, _system);
 
-		return it->second;
-	}
+		const ServiceMetadata data = _plugin->serviceMetadata(_service);
 
-	ServiceTemplate *const ServiceFactory::ref(unsigned int const& _plugin, std::string const& _service)
-	{
-		ReferenceTable::iterator it;
-		for (it = m_References.begin(); it != m_References.end(); it++)
+		typedef std::map< std::string, std::string > StringMap;
+		StringMap setup = data.getSetupParameters();
+		StringMap input = data.getInputParameters();
+		StringMap output = data.getOutputParameters();
+
+		for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 		{
-			ServiceTemplate *ref = it->second;
-			if (ref->name() == _service && ref->plugin() == _plugin)
-			{
-				break;
-			}
+			const Identifier id = m_Engine.entities().createIdentifier(it->first, "setup parameter");
+			SetupParameter *setup = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
+			service->addSetupParameter(setup);
 		}
 
-		if (it == m_References.end())
+		for (StringMap::iterator it = input.begin(); it != input.end(); it++)
 		{
-			throw Exception("could not retrieve factory ref - does not exist");
-		}
-		else if (!it->second)
-		{
-			throw Exception("internal error - null pointer stored in service factory");
+			const Identifier id = m_Engine.entities().createIdentifier(it->first, "input slot");
+			InputSlot *in = new InputSlot(id, service, m_Engine.types().getTypename(it->second), it->second);
+			service->addInputSlot(in);
 		}
 
-		return it->second;
-	}
-
-	ServiceTemplate *const ServiceFactory::registerService(std::string const& _name, unsigned int const& _pluginID, ServiceMetadata const& _metadata, ServiceCreator _creator)
-	{
-		try
+		for (StringMap::iterator it = output.begin(); it != output.end(); it++)
 		{
-			//check if service w/ same name was already registered by same plugin
-			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-			{
-				ServiceTemplate *ref = it->second;
-				if (ref->name() == _name && ref->plugin() == _pluginID)
-				{
-					throw Exception("could not register service - service with same name was already registered by plugin");
-				}
-			}
-
-			ServiceTemplate *factory = m_Engine.entities().createFactoryRef(_name, _pluginID, _creator, _metadata);
-			m_References.insert(NamedReference(factory->id(), factory));
-			return factory;
+			SharedAny init;
+			// ~~ createfromkeyword
+			m_Engine.types().create(it->second, init);
+			const Identifier id = m_Engine.entities().createIdentifier(it->first, "output slot");
+			OutputSlot *out = new OutputSlot(id, service, m_Engine.types().getTypename(it->second), it->second, init);
+			service->addOutputSlot(out);
 		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
 
-	Service *const ServiceFactory::createService(std::string const& _name, unsigned int const& _plugin, std::string const& _service, SystemGraph *const _system)
-	{
-		try
-		{
-			ServiceTemplate *factory = ref(_plugin, _service);
-			IService *userService = factory->create();
+		unsigned int index = _system->childCount();
+		_system->insertChild(service, index);
 
-			if (userService == NULL)
-			{
-				throw Exception("internal error: could not create instance of service " + _service);
-			}
-
-			//service container gets identifier
-			Service *service = m_Engine.entities().createService(_name, _system, userService);
-			const ServiceMetadata data = factory->metadata();
-
-			//get setup / input / output from metadata
-			typedef std::map< std::string, std::string > StringMap;
-			StringMap setup = data.getSetupParameters();
-			StringMap input = data.getInputParameters();
-			StringMap output = data.getOutputParameters();
-
-			//add to service container
-			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
-			{
-				SetupParameter *val = m_Engine.entities().createSetupParameter(it->first, it->second, service);
-				service->addSetupParameter(val);
-			}
-
-			for (StringMap::iterator it = input.begin(); it != input.end(); it++)
-			{
-				InputSlot *slot = m_Engine.entities().createInputSlot(it->first, it->second, service);
-				service->addInputSlot(slot);
-			}
-
-			for (StringMap::iterator it = output.begin(); it != output.end(); it++)
-			{
-				OutputSlot *slot = m_Engine.entities().createOutputSlot(it->first, it->second, service);
-				service->addOutputSlot(slot);
-
-				//this creates an input slot capable
-				InputSlot *listener = m_Engine.entities().createInputSlot(it->first, it->second, service);
-				//service->addListenerSlot(slot->id(), listener);
-			}
-
-			//done
-			return service;
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	ServiceMetadata const& ServiceFactory::info(unsigned int const& _plugin, std::string const& _service) const
-	{
-		try
-		{
-			const ServiceTemplate *factory = ref(_plugin, _service);
-			return factory->metadata();
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	std::list< ServiceTemplate * > ServiceFactory::getServices(unsigned int const& _plugin)
-	{
-		try
-		{
-			std::list< ServiceTemplate * > result;
-			for (ReferenceTable::iterator it = m_References.begin(); it != m_References.end(); it++)
-			{
-				ServiceTemplate *ref = it->second;
-				if (ref->plugin() == _plugin)
-				{
-					result.push_back(ref);
-				}
-			}
-			return result;
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
-	}
-
-	IDs ServiceFactory::getServiceIDs(unsigned int const& _plugin) const
-	{
-		try
-		{
-			IDs result;
-			for (ReferenceTable::const_iterator it = m_References.begin(); it != m_References.end(); it++)
-			{
-				ServiceTemplate *ref = it->second;
-				if (ref->plugin() == _plugin)
-				{
-					result.push_back(ref->id());
-				}
-			}
-			return result;
-		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+		return id;
 	}
 }

@@ -18,44 +18,27 @@
 
 #pragma once
 
-#include "_2RealParameter.h"
-#include "_2RealSharedAny.h"
+#include "_2RealRunnable.h"
+#include "_2RealIService.h"
 
 namespace _2Real
 {
 
+	class ServiceMetadata;
+
 	/**
-	*	class for setup parameters: service-setup & plugin-setup
+	*	services provided by the 2 real engine
 	*/
 
-	class SetupParameter : public Parameter
+	class InternalService : public Runnable, public IService
 	{
 
 	public:
 
-		SetupParameter(Identifier const& id, std::string const& type, std::string const& key);
-		virtual ~SetupParameter();
+		InternalService(Identifier const& id, SystemGraph *const system);
+		virtual ~InternalService();
 
-		/**
-		*	sets parameter data
-		*/
-		void set(SharedAny const& data)
-		{
-			m_Data = data;
-			//m_IsInitialized = true;
-		}
-
-		/**
-		*	returns parameter data
-		*/
-		SharedAny const& get() const
-		{
-			return m_Data;
-		}
-
-	protected:
-
-		SharedAny				m_Data;
+		//ServiceMetadata const& getMetadata();
 
 	};
 

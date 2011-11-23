@@ -32,7 +32,7 @@ namespace _2Real
 
 	public:
 
-		Sequence(Id *const id, SystemGraph *const system);
+		Sequence(Identifier const& id, SystemGraph *const system);
 		virtual ~Sequence();
 
 		virtual void run();

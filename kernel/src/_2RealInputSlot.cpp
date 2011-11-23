@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	InputSlot::InputSlot(Id *const _id, Service *const _service, std::string const& _type, std::string const& _key) :
+	InputSlot::InputSlot(Identifier const& _id, Service *const _service, std::string const& _type, std::string const& _key) :
 		IOSlot(_id, _service, _type, _key)
 	{
 	}

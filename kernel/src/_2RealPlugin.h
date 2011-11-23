@@ -30,33 +30,29 @@
 
 namespace _2Real
 {
+	class IService;
+	typedef IService *const (*ServiceCreator)(void);
 
-	/**
-	*	plugin class; responsible for loading dlls & storing plugin metadata
-	*/
-
-	class ServiceTemplate;
-	class ServiceFactory;
 	class SetupParameter;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
-	typedef std::map< std::string, SetupParameter * >		ParameterMap;
-	typedef std::pair< std::string, ServiceTemplate * >	NamedTemplate;
-	typedef std::map< std::string, ServiceTemplate * >	TemplateMap;
+	typedef std::map< std::string, SetupParameter * >	ParameterMap;
+	typedef std::pair< std::string, ServiceCreator >	NamedTemplate;
+	typedef std::map< std::string, ServiceCreator >		TemplateMap;
 
 	class Plugin : public Entity
 	{
 
 	public:
 
-		Plugin(PluginMetadata *const info, Id *const id);
+		Plugin(Identifier const& id, PluginMetadata *const info);
 		virtual ~Plugin();
 
 		void														install();
 		void														uninstall();
-		void														setup(ServiceFactory *const factory);
+		void														setup();
 
-		void														addService(ServiceTemplate *service);
+		void														registerService(std::string const& name, ServiceCreator service);
 		void														addSetupParameter(SetupParameter *const param);
 
 		PluginMetadata const&										pluginMetadata() const;
@@ -82,20 +78,22 @@ namespace _2Real
 			return m_SetupParameters;
 		}
 
-		std::list< unsigned int > serviceIDs() const;
+		//std::list< unsigned int > serviceIDs() const;
 		std::list< unsigned int > setupParameterIDs() const;
 
-		ServiceTemplate *const getServiceTemplate(std::string const& name);
+		//ServiceTemplate *const getServiceTemplate(std::string const& name);
 		SetupParameter *const getSetupParameter(std::string const& name);
 
 		bool const& isInitialized() const;
 		SharedAny getParameterValue(std::string const& name);
 
+		IService *const createService(std::string const& name);
+
 	private:
 
 		typedef Poco::ClassLoader< IPluginActivator >				PluginLoader;
 
-		ParameterMap													m_SetupParameters;
+		ParameterMap												m_SetupParameters;
 		TemplateMap													m_Services;
 
 		/**

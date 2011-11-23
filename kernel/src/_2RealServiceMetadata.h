@@ -62,20 +62,6 @@ namespace _2Real
 		void setDescription(std::string const& _desc);
 
 		/**
-		*	service's reconfiguration status
-		*
-		*	@param _config:		if service's setup method can be called multiple times
-		*/
-		void setReconfiguration(bool const& _config);
-
-		/**
-		*	service's singleton status
-		*
-		*	@param _singleton:	true if service is a singleton
-		*/
-		void setSingleton(bool const& _singleton);
-
-		/**
 		*	adds setup parameter
 		*
 		*	@param _name:		parameter's name
@@ -112,20 +98,6 @@ namespace _2Real
 		*	@return:			service's description
 		*/
 		std::string const& getDescription() const;
-
-		/**
-		*	returns service's reconfiguration status
-		*
-		*	@return:			true if service's setup method can be called multiple times
-		*/
-		bool const& canReconfigure() const;
-
-		/**
-		*	returns service's singleton status
-		*
-		*	@return:			true if plugin is singleton
-		*/
-		bool const& isSingleton() const;
 
 		/**
 		*	@param _name:		parameter's name

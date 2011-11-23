@@ -37,5 +37,5 @@ namespace _2Real
 	/**
 	*	service factory function
 	*/
-	typedef IService *const (*const ServiceCreator)(void);
+	typedef IService *const (*ServiceCreator)(void);
 }

@@ -356,47 +356,39 @@ namespace _2Real
 		//void registerToException(Identifier const& _id, ExceptionCallback _callback);
 
 		/**
-		*	registers callback for the output of a service output slot
+		*	registers callback for a service's output slot
 		*
 		*	possible exceptions:	to be defined
 		*	
-		*	@param service:			identifier of either a service
-		*	@param name:			name of an output parameter
+		*	@param service:			identifier of a service
+		*	@param name:			name of output slot belonging to the service
 		*	@param callback			the function pointer
 		*/
 		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
 
 		/**
-		*	registers callback for an output slot
+		*	unregisters callback for a service's output slot
 		*
-		*	possible exceptions:	
+		*	possible exceptions:	to be defined
 		*	
 		*	@param service:			identifier of a service
-		*	@param out:				name of an output parameter
-		*	@param callback:		function pointer
+		*	@param name:			name of output slot belonging to the service
+		*	@param callback			the function pointer
 		*/
-		//void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback);
+		//void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
 
 		/**
-		*	unregisters callback for an output slot
+		*	returns current data of a service's input/output slot
+		*	output slot: returns newest
+		*	input slot: returns the one....
 		*
-		*	possible exceptions:	
+		*	possible exceptions:	to be defined
 		*	
 		*	@param service:			identifier of a service
-		*	@param out:				name of an output parameter
-		*	@param callback			function pointer
+		*	@param out:				name of an input / output param
 		*/
-		//void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback);
-
-		/**
-		*	creates handle for an output slot
-		*
-		*	possible exceptions:	
-		*	
-		*	@param service:			identifier of a service
-		*	@param out:				name of an output parameter
-		*/
-		//DataHandle getDataHandle(Identifier const& service, std::string const& out);
+		template< typename Datatype >
+		Datatype const& getData(Identifier const& service, std::string const& name);
 
 		~System();
 		System(System const& src);

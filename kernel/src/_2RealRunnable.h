@@ -39,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		Runnable(Id *const id, SystemGraph *const system) :
+		Runnable(Identifier const& id, SystemGraph *const system) :
 			Entity(id),
 			m_System(system)
 		{

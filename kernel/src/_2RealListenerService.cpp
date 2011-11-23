@@ -16,47 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealParameter.h"
-#include "_2RealSharedAny.h"
+#include "_2RealListenerService.h"
 
 namespace _2Real
 {
-
-	/**
-	*	class for setup parameters: service-setup & plugin-setup
-	*/
-
-	class SetupParameter : public Parameter
-	{
-
-	public:
-
-		SetupParameter(Identifier const& id, std::string const& type, std::string const& key);
-		virtual ~SetupParameter();
-
-		/**
-		*	sets parameter data
-		*/
-		void set(SharedAny const& data)
-		{
-			m_Data = data;
-			//m_IsInitialized = true;
-		}
-
-		/**
-		*	returns parameter data
-		*/
-		SharedAny const& get() const
-		{
-			return m_Data;
-		}
-
-	protected:
-
-		SharedAny				m_Data;
-
-	};
-
 }

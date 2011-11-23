@@ -210,7 +210,7 @@ namespace _2Real
 	{
 		std::stringstream info;
 		info << std::endl;
-		info << "plugin:\t" <<m_Classname << std::endl;
+		info << "plugin:\t" << m_Classname << std::endl;
 		info << "description:\t" << m_Description << std::endl;
 		info << "installed at\t" << m_InstallDirectory << std::endl;
 		info << "written by\t" << m_Author << std::endl;

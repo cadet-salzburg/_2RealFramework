@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		IOSlot(Id *const id, Service *const service, std::string const& type, std::string const& key);
+		IOSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key);
 		virtual ~IOSlot();
 
 		/**

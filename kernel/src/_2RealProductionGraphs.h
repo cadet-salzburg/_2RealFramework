@@ -47,17 +47,17 @@ namespace _2Real
 		/**
 		*	create sequence; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
 		*/
-		const unsigned int createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
+		const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
 		/**
 		*	create syncronization; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
 		*/
-		const unsigned int createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
+		const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
 		/**
 		*	creates a new system
 		*/
-		const unsigned int createSystemGraph(std::string const& name);
+		const Identifier createSystemGraph(std::string const& name);
 
 
 		SystemGraph *const getSystemGraph(Identifier const& id);

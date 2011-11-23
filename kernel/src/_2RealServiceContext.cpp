@@ -17,8 +17,6 @@
 	limitations under the License.
 */
 
-#pragma once
-
 #include "_2RealServiceContext.h"
 #include "_2RealService.h"
 

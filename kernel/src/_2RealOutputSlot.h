@@ -41,7 +41,7 @@ namespace _2Real
 
 	public:
 
-		OutputSlot(Id *const id, Service *const service, std::string const& type, std::string const& key, SharedAny init);
+		OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, SharedAny init);
 		virtual ~OutputSlot();
 
 		void init(SharedAny const& initialValue);
@@ -75,23 +75,15 @@ namespace _2Real
 
 		void registerCallback(DataCallback callback);
 		void unregisterCallback(DataCallback callback);
-
-	private:
-
-		friend class Service;
-		friend class Engine;
-
 		void update();
 		void addListener(InputSlot *listener);
 
+	private:
+
 		InputSlot								*m_Input;
-
 		Poco::FastMutex							m_Mutex;
-
 		Data									m_CurrentData;
-
 		SharedAny								m_WriteData;
-
 		Poco::BasicEvent< Data >				m_Event;
 
 	};

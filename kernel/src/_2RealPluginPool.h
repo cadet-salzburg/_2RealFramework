@@ -45,7 +45,7 @@ namespace _2Real
 		/**
 		*	installs plugin
 		*/
-		const unsigned int install(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname);
+		const Identifier install(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname);
 
 		/**
 		*

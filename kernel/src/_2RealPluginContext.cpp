@@ -26,15 +26,13 @@
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin, ServiceFactory *const _factory) :
-		m_Plugin(_plugin),
-		m_Factory(_factory)
+	PluginContext::PluginContext(Plugin *const _plugin) :
+		m_Plugin(_plugin)
 	{
 	}
 
 	PluginContext::PluginContext(PluginContext const& _src) :
-		m_Plugin(_src.m_Plugin),
-		m_Factory(_src.m_Factory)
+		m_Plugin(_src.m_Plugin)
 	{
 	}
 
@@ -43,14 +41,9 @@ namespace _2Real
 		return *this;
 	}
 
-	PluginContext::~PluginContext()
-	{
-	}
-
 	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
 	{
-		ServiceTemplate *service = m_Factory->registerService(_name, m_Plugin->id(), m_Plugin->serviceMetadata(_name), _creator);
-		m_Plugin->addService(service);
+		m_Plugin->registerService(_name, _creator);
 	}
 
 	SharedAny PluginContext::getSetupParameter(std::string const& _name)

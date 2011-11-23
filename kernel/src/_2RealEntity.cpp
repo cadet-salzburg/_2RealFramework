@@ -17,70 +17,41 @@
 */
 
 #include "_2RealEntity.h"
-#include "_2RealException.h"
-#include "_2RealId.h"
-
-#include <iostream>
 
 namespace _2Real
 {
 
-	Entity::Entity(Id *const _id) :
-		m_ID(_id)
+	Entity::Entity(Identifier const& _id) :
+		m_Id(_id)
 	{
-		if (_id == NULL)
-		{
-			throw Exception("internal error - entity creation with null pointer");
-		}
 	}
 
 	Entity::~Entity()
 	{
-		if (m_ID)
-		{
-			m_ID->release();
-		}
 	}
 
 	unsigned int const& Entity::id() const
 	{
-		if (m_ID != NULL)
-		{
-			return m_ID->id();
-		}
-
-		throw Exception("internal error - identifier of entity is null");
+		return m_Id.id();
 	}
 
 	std::string const& Entity::name() const
 	{
-		if (m_ID != NULL)
-		{
-			return m_ID->name();
-		}
-
-		throw Exception("internal error - identifier of entity is null");
+		return m_Id.name();
 	}
-	
-	std::string const& Entity::info() const
+
+	std::string const& Entity::type() const
 	{
-		if (m_ID != NULL)
-		{
-			return m_ID->info();
-		}
-
-		throw Exception("internal error - identifier of entity is null");
+		return m_Id.type();
 	}
 
-	void Entity::setInfo(std::string const& _info)
-	{
-		if (m_ID != NULL)
-		{
-			m_ID->setInfo(_info);
-			return;
-		}
+	//std::string const& Entity::info() const
+	//{
+	//	return m_Id.info();
+	//}
 
-		throw Exception("internal error - identifier of entity is null");
-	}
+	//void Entity::setInfo(std::string const& _info)
+	//{
+	//}
 
 }

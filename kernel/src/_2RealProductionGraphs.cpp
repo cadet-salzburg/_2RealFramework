@@ -38,22 +38,30 @@ namespace _2Real
 	{
 		for (SystemTable::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
 		{
+			std::string name;
 			try
 			{
-				m_Engine.entities().destroy(it->second);
+				name = it->second->name();
+				std::cout << "deleting system: " << name << std::endl;
+				delete it->second;
 			}
 			catch (Exception &e)
 			{
-				std::cout << "error on production graphs destruction: " << e.what() << std::endl;
+				std::cout << e.what() << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "error on system destruction: " << name << std::endl;
 			}
 		}
 	}
 
-	const unsigned int ProductionGraphs::createSystemGraph(std::string const& _name)
+	const Identifier ProductionGraphs::createSystemGraph(std::string const& _name)
 	{
-		SystemGraph *nirvana = m_Engine.entities().createSystem(_name);
-		m_Systems.insert(NamedSystem(nirvana->id(), nirvana));
-		return nirvana->id();
+		const Identifier id = m_Engine.entities().createIdentifier(_name, "system");
+		SystemGraph *graph = new SystemGraph(id, new ExceptionHandler(id));
+		m_Systems.insert(NamedSystem(id.id(), graph));
+		return id;
 	}
 
 	void ProductionGraphs::destroySystemGraph(Identifier const& _id)
@@ -67,9 +75,9 @@ namespace _2Real
 
 		SystemGraph *nirvana = it->second;
 		nirvana->stopAll();
-			
+
 		//deletes all children
-		m_Engine.entities().destroy(nirvana);
+		delete nirvana;
 		m_Systems.erase(it);
 	}
 
@@ -111,7 +119,7 @@ namespace _2Real
 		//m_Engine.entities().destroy(container);
 	}
 
-	const unsigned int ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	const Identifier ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	{
 		//Container *nirvana = getSystem(_top);
 		//AbstractContainer *a = nirvana->get(_a);
@@ -127,10 +135,10 @@ namespace _2Real
 		//seq->add(a, 0);
 
 		//return seq->id();
-		return 0;
+		return m_Engine.entities().createIdentifier(_name, "sequence");
 	}
 
-	const unsigned int ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	const Identifier ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	{
 		//Container *nirvana = getSystem(_top);
 		//AbstractContainer *a = nirvana->get(_a);
@@ -146,7 +154,7 @@ namespace _2Real
 		//sync->add(b, 1);
 
 		//return sync->id();
-		return 0;
+		return m_Engine.entities().createIdentifier(_name, "synchronization");
 	}
 
 	Runnable *const ProductionGraphs::belongsToSystem(Identifier const& _system, Identifier const& _runnable) const

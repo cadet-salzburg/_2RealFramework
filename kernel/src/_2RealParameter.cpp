@@ -21,7 +21,7 @@
 namespace _2Real
 {
 
-	Parameter::Parameter(Id *const id, std::string const& type, std::string const& key) :
+	Parameter::Parameter(Identifier const& id, std::string const& type, std::string const& key) :
 		Entity(id),
 		m_IsInitialized(false),
 		m_Datatype(type),

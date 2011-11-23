@@ -117,12 +117,8 @@ void processEvent(SDL_Event *e)
 int main(int argc, char *argv[])
 {
 
-	{
-
 	SDL_Window *mainwindow;
 	SDL_GLContext maincontext;
-
-	{
 
 	try
 	{
@@ -157,11 +153,13 @@ int main(int argc, char *argv[])
 		Identifier imgPlugin = testSystem.loadPlugin("IMG", path, "ImageProcessing.dll", "ImageProcessing");
 #endif
 
-		cout << "main: PLUGINS LOADED" << endl << endl;
+		cout << "main: PLUGINS LOADED" << endl;
 
-		//maybe not write to std::out?
 		testSystem.dumpPluginInfo(kinectPlugin);
 		testSystem.dumpPluginInfo(imgPlugin);
+		testSystem.dumpServiceInfo(kinectPlugin, "Image Generator");
+		testSystem.dumpServiceInfo(imgPlugin, "ImageAccumulation_uchar");
+		testSystem.dumpServiceInfo(imgPlugin, "ToFloat_uchar");
 
 		vector< string > genFlags;
 		genFlags.push_back("color");
@@ -179,7 +177,7 @@ int main(int argc, char *argv[])
 		testSystem.setParameterValue< string >(kinectPlugin, "log file", std::string("kinectwrapper.txt"));
 		testSystem.setParameterValue< string >(kinectPlugin, "log level", std::string("info"));
 
-		cout << "main: KINECT PLUGIN SETUP PARAMS SET" << endl << endl;
+		cout << "main: KINECT PLUGIN SETUP PARAMS SET" << endl;
 
 		testSystem.startPlugin(kinectPlugin);
 
@@ -248,8 +246,11 @@ int main(int argc, char *argv[])
 		testSystem.stop(avg);
 
 		cout << "main: AVG SERVICE STOPPED" << endl << endl;
+
+		//test system falls out of scope here
+		//->services are deleted
 	}
-	catch (Exception &e)
+	catch (_2Real::Exception &e)
 	{
 		cout << e.what() << endl;
 	}
@@ -262,8 +263,6 @@ int main(int argc, char *argv[])
 	SDL_DestroyWindow(mainwindow);
 	SDL_Quit();
 
-	}
-
 	while(1)
 	{
 		unsigned char thingie;
@@ -274,7 +273,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	}
-
 	return 0;
+
+	//engine dtor is called
+	//plugins are uninstalled.
 }

@@ -41,7 +41,7 @@ namespace _2Real
 
 	public:
 
-		InputSlot(Id *const id, Service *const service, std::string const& type, std::string const& key);
+		InputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key);
 		~InputSlot();
 
 		OutputSlot *const linkedOutput()

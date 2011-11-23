@@ -29,7 +29,7 @@ namespace _2Real
 
 	public:
 
-		RunnableGraph(Id *const id, SystemGraph *const system);
+		RunnableGraph(Identifier const& id, SystemGraph *const system);
 		virtual ~RunnableGraph();
 
 		const bool hasParameters() const
