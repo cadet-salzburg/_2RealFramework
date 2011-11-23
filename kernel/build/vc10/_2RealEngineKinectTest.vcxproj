@@ -63,13 +63,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\testplugins\userclasses;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\sdl\include;..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\bin;..\..\..\..\..\externalLibs\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealEngine_debug.lib;PocoFoundationd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\glew\lib;..\..\..\..\..\externalLibs\sdl\lib;..\..\bin;..\..\..\..\..\externalLibs\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL.lib;SDLmain.lib;_2RealEngine_debug.lib;PocoFoundationd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <LinkTimeCodeGeneration>
@@ -86,14 +86,14 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\sdks\glew\include;D:\sdks\sdl\include;..\..\testplugins\userclasses;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\sdl\include;..\..\testplugins\userclasses;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\sdks\glew\lib;D:\sdks\sdl\lib;..\..\bin;..\..\..\..\..\externalLibs\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\glew\lib;..\..\..\..\..\externalLibs\sdl\lib;..\..\bin;..\..\..\..\..\externalLibs\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;SDL.lib;SDLmain.lib;_2RealEngine.lib;PocoFoundation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
