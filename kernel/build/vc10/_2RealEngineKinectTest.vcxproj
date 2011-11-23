@@ -63,7 +63,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\sdl\include;..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\sdl\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,7 +86,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\sdl\include;..\..\testplugins\userclasses;..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\externalLibs\glew\include;..\..\..\..\..\externalLibs\sdl\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

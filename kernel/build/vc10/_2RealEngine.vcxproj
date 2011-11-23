@@ -16,11 +16,12 @@
     <ClCompile Include="..\..\src\_2RealEntityTable.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
-    <ClCompile Include="..\..\src\_2RealId.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
     <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
@@ -37,7 +38,6 @@
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceTemplate.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
@@ -53,14 +53,15 @@
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealGraph.h" />
-    <ClInclude Include="..\..\src\_2RealId.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealImagebuffer.h" />
     <ClInclude Include="..\..\src\_2RealInputHandle.h" />
     <ClInclude Include="..\..\src\_2RealInputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealInternalService.h" />
     <ClInclude Include="..\..\src\_2RealIOSlot.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
+    <ClInclude Include="..\..\src\_2RealListenerService.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealRunnable.h" />
     <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
@@ -79,7 +80,6 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealServiceTemplate.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSharedAny.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />

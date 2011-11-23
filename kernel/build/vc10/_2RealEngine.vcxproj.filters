@@ -4,7 +4,6 @@
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealTypes.cpp" />
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
@@ -12,7 +11,6 @@
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
-    <ClCompile Include="..\..\src\_2RealId.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
@@ -32,7 +30,9 @@
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />
     <ClCompile Include="..\..\src\_2RealService.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceTemplate.cpp" />
+    <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
+    <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
@@ -54,7 +54,6 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
-    <ClInclude Include="..\..\src\_2RealId.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
@@ -75,13 +74,14 @@
     <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
     <ClInclude Include="..\..\src\_2RealService.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
-    <ClInclude Include="..\..\src\_2RealServiceTemplate.h" />
     <ClInclude Include="..\..\src\_2RealIService.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInternalService.h" />
+    <ClInclude Include="..\..\src\_2RealListenerService.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">
