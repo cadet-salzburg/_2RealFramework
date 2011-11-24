@@ -157,7 +157,7 @@ void ImageAccumulationService< ImageData >::update()
 	}
 	catch (Exception &e)
 	{
-		throw e;
+		throw ServiceException(e.what());
 	}
 	catch (...)
 	{

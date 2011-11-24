@@ -40,9 +40,9 @@ namespace _2Real
 		m_Event -= Poco::delegate(_callback);
 	}
 
-	void ExceptionHandler::handleException(Exception const& _exception)
+	void ExceptionHandler::handleException(Exception const& _exception, Identifier const& _sender)
 	{
-		RunnableException e(_exception.what(), m_System, m_System);
-		m_Event.notifyAsync(this, e);
+		RunnableException e(_exception.what(), _sender, m_System);
+		m_Event.notify(this, e);
 	}
 }

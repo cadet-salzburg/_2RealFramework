@@ -153,7 +153,7 @@ namespace _2Real
 		ParameterMap::iterator it = m_SetupParameters.find(_name);
 		if (it == m_SetupParameters.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			throw Exception("attempted to query non-existant setup parameter " + _name);
 		}
 
 		return it->second;

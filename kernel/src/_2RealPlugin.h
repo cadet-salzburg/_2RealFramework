@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "_2RealEngineTypedefs.h"
 #include "_2RealEntity.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"

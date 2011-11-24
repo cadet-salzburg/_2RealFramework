@@ -13,9 +13,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\test.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealImageStream.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

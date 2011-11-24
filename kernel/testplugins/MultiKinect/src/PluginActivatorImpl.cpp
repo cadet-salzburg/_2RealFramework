@@ -95,7 +95,7 @@ void
 		m_2RealKinect->setLogOutputStream(&m_LogStream);
 	}
 
-	context.registerService("Image Generator", &::createImageService);
+	context.registerService("Image Generator", ::createImageService);
 
 	m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
 }

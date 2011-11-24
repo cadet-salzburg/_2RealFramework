@@ -35,7 +35,7 @@ namespace _2Real
 	public:
 
 		// ~~todo: give system graph access to the engine's threadpool
-		SystemGraph(Identifier const& id, ExceptionHandler *const handler);
+		SystemGraph(Identifier const& id);
 		virtual ~SystemGraph();
 
 		void startChild(unsigned int const& id);
@@ -48,6 +48,9 @@ namespace _2Real
 
 		void handleException(Runnable *const child, Exception &e);
 
+		void registerExceptionCallback(ExceptionCallback callback);
+		void unregisterExceptionCallback(ExceptionCallback callback);
+
 	private:
 
 		/**
@@ -56,7 +59,7 @@ namespace _2Real
 		*/
 		std::map< unsigned int, Poco::Thread * >	m_Threads;
 
-		ExceptionHandler							*m_ExceptionHandler;
+		ExceptionHandler							m_ExceptionHandler;
 
 	};
 

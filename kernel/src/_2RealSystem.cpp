@@ -182,34 +182,25 @@ namespace _2Real
 		m_Engine->linkSlots(_idIn, _nameIn, _idOut, _nameOut, *m_ID);
 	}
 
-	//void System::registerToException(Identifier const& _id, ExceptionCallback _callback)
-	//{
-	//	try
-	//	{
-	//		m_Engine->registerToException(_id, _callback, *m_ID);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::registerToException(ExceptionCallback _callback)
+	{
+		m_Engine->registerToException(_callback, *m_ID);
+	}
+
+	void System::unregisterFromException(ExceptionCallback _callback)
+	{
+		m_Engine->unregisterFromException(_callback, *m_ID);
+	}
 
 	void System::registerToNewData(Identifier const& _service, std::string const& _name, DataCallback _callback)
 	{
 		m_Engine->registerToNewData(_service, _name, _callback, *m_ID);
 	}
 
-	//void System::unregisterFromNewData(Identifier const& _service, std::string const& _out, DataCallback _callback)
-	//{
-	//	try
-	//	{
-	//		m_Engine->unregisterFromNewData(_service, _out, _callback, *m_ID);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::unregisterFromNewData(Identifier const& _service, std::string const& _name, DataCallback _callback)
+	{
+		m_Engine->unregisterFromNewData(_service, _name, _callback, *m_ID);
+	}
 
 	//DataHandle System::getDataHandle(Identifier const& _service, std::string const& _out)
 	//{

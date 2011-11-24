@@ -19,8 +19,6 @@
 #pragma once
 
 #include "_2RealIdentifier.h"
-#include "_2RealEngineTypedefs.h"
-#include "_2RealTypedefs.h"
 #include "_2RealException.h"
 
 #include <list>
@@ -29,6 +27,10 @@
 
 namespace _2Real
 {
+
+	class RunnableException;
+
+	typedef void (*ExceptionCallback)(RunnableException &exception);
 
 	class ExceptionHandler
 	{
@@ -41,7 +43,7 @@ namespace _2Real
 
 		void unregisterExceptionCallback(ExceptionCallback callback);
 
-		void handleException(Exception const& _exception);
+		void handleException(Exception const& _exception, Identifier const& _sender);
 
 	private:
 

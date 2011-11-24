@@ -19,17 +19,33 @@
 
 #pragma once
 
-#include "_2RealTypedefs.h"
-#include "_2RealInputHandle.h"
 #include "_2RealSharedAny.h"
 
 #include <string>
 
-#include "Poco\AbstractDelegate.h"
-
 namespace _2Real
 {
+
 	class Engine;
+	class Data;
+	class Identifier;
+	class RunnableException;
+
+	/**
+	*	callback for exceptions
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToException
+	*/
+	typedef void (*ExceptionCallback)(RunnableException &exception);
+
+	/**
+	*	callback for new data
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToNewData
+	*/
+	typedef void (*DataCallback)(Data &data);
 
 	class System
 	{
@@ -118,19 +134,7 @@ namespace _2Real
 		const Identifier createService(std::string const& name, Identifier const& pluginID, std::string const& serviceName);
 
 		/**
-		*	returns identifiers of all setup params of a service or plugin
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param _id:				identifier of service / plugin
-		*	@return:				ids of setup params
-		*/
-		//Identifiers getSetupParameters(Identifier const& id);
-
-		//TODO
-
-		/**
-		*	initializes a service's setup parameter
+		*	initializes a service's or plugin's setup parameter
 		*
 		*	possible exceptions:	invalid id
 		*							types do not match
@@ -210,48 +214,14 @@ namespace _2Real
 		//void link(Identifier const& in, Identifier const& out);
 
 		/**
-		*	returns identifiers of all output slots of an entity
-		*
-		*	returns a vector of all output slots of a sequence, synchronization or service
-		*	in case of a sequence, will be identical to the output of the last child. in case
-		*	of a service, will be identical to the output variables specified in the metadata.
-		*	in case of a synchronization, will be the combined output of all its children.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param id:				identifier of either: sequence, synchronization or service
-		*	@return:				ids of output slots
-		*/
-		//Identifiers getOutputSlots(Identifier const& id);
-
-		/**
-		*	returns identifiers of all input slots of an entity
-		*
-		*	returns a vector of all input slots of a sequence, synchronization or simply a
-		*	service. in case of a sequence, will be identical to the input of the first
-		*	child. in case of a service, will be identical to the input variables specified in
-		*	the metadata (might be none). in case of a synchronization, will be the
-		*	combined input of all its children.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param id:				identifier of either: sequence, synchronization or service
-		*	@return:				ids of input slots
-		*/
-		//Identifiers getInputSlots(Identifier const& id);
-
-		/**
 		*	links an input slot with an output slot
 		*
 		*	possible exceptions:	invalid ids
 		*							type mismatch
 		*							slots belong to the same entity
 		*							linkage results in a cycle (cycle checking is TODO)
-		*
-		*	@param in:				identifier of input slot
-		*	@param out:				identifier of output slot
 		*/
-		void linkSlots(Identifier const& idA, std::string const& nameA, Identifier const& IdB, std::string const& nameB);
+		void linkSlots(Identifier const& serviceOut, std::string const& outName, Identifier const& serviceIn, std::string const& inName);
 
 		/**
 		*	returns the ids of an entity's children
@@ -346,14 +316,18 @@ namespace _2Real
 		//void append(Identifier const& dst, Identifier const& id);
 
 		/**
-		*	registers callback for an exception
-		*
-		*	possible exceptions:	invalid id
+		*	registers exception callback for a system
 		*	
-		*	@param _id:				identifier of either: sequence, synchronization or service
-		*	@param _callback		function pointer
+		*	@param callback			function pointer
 		*/
-		//void registerToException(Identifier const& _id, ExceptionCallback _callback);
+		void registerToException(ExceptionCallback callback);
+
+		/**
+		*	unregisters exception callback for a system
+		*	
+		*	@param callback			function pointer
+		*/
+		void unregisterFromException(ExceptionCallback callback);
 
 		/**
 		*	registers callback for a service's output slot
@@ -375,7 +349,7 @@ namespace _2Real
 		*	@param name:			name of output slot belonging to the service
 		*	@param callback			the function pointer
 		*/
-		//void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
+		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
 
 		/**
 		*	returns current data of a service's input/output slot

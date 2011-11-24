@@ -20,9 +20,9 @@ void ImageProcessing::getMetadata(PluginMetadata &_info)
 
 void ImageProcessing::setup(PluginContext &_context)
 {
-	_context.registerService("ImageAccumulation_uchar", &::createImageAccumulation< unsigned char >);
-	//_context.registerService("ImageAccumulation", &::createImageAccumulation< float >);
-	_context.registerService("ToFloat_uchar", &::createFloatConversion< unsigned char >);
+	_context.registerService("ImageAccumulation_uchar", ::createImageAccumulation< unsigned char >);
+	//_context.registerService("ImageAccumulation", ::createImageAccumulation< float >);
+	_context.registerService("ToFloat_uchar", ::createFloatConversion< unsigned char >);
 }
 
 _2REAL_EXPORT_PLUGIN(ImageProcessing)

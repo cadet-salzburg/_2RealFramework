@@ -18,7 +18,6 @@
 */
 
 #include "_2RealProductionGraphs.h"
-#include "_2RealEntityTable.h"
 #include "_2RealSystemGraph.h"
 #include "_2RealRunnable.h"
 #include "_2RealRunnableGraph.h"
@@ -58,8 +57,8 @@ namespace _2Real
 
 	const Identifier ProductionGraphs::createSystemGraph(std::string const& _name)
 	{
-		const Identifier id = m_Engine.entities().createIdentifier(_name, "system");
-		SystemGraph *graph = new SystemGraph(id, new ExceptionHandler(id));
+		const Identifier id = Entity::createIdentifier(_name, "system");
+		SystemGraph *graph = new SystemGraph(id);
 		m_Systems.insert(NamedSystem(id.id(), graph));
 		return id;
 	}
@@ -135,7 +134,7 @@ namespace _2Real
 		//seq->add(a, 0);
 
 		//return seq->id();
-		return m_Engine.entities().createIdentifier(_name, "sequence");
+		return Entity::createIdentifier(_name, "sequence");
 	}
 
 	const Identifier ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
@@ -154,7 +153,7 @@ namespace _2Real
 		//sync->add(b, 1);
 
 		//return sync->id();
-		return m_Engine.entities().createIdentifier(_name, "synchronization");
+		return Entity::createIdentifier(_name, "synchronization");
 	}
 
 	Runnable *const ProductionGraphs::belongsToSystem(Identifier const& _system, Identifier const& _runnable) const

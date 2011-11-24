@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealEntityTable.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
@@ -47,9 +46,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
-    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
-    <ClInclude Include="..\..\src\_2RealEntityTable.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealGraph.h" />
@@ -86,7 +83,6 @@
     <ClInclude Include="..\..\src\_2RealSynchronization.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
-    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealTypes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

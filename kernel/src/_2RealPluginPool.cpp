@@ -20,7 +20,6 @@
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealPluginMetadata.h"
-#include "_2RealEntityTable.h"
 #include "_2RealTypes.h"
 #include "_2RealIdentifier.h"
 #include "_2RealSetupParameter.h"
@@ -63,7 +62,7 @@ namespace _2Real
 	{
 		try
 		{
-			const Identifier id = m_Engine.entities().createIdentifier(_name, "plugin");
+			const Identifier id = Entity::createIdentifier(_name, "plugin");//m_Engine.entities().createIdentifier(_name, "plugin");
 
 			PluginMetadata *data = new PluginMetadata(_class, _file, _dir, m_Engine.types());
 			Plugin *plugin = new Plugin(id, data);
@@ -73,7 +72,7 @@ namespace _2Real
 			StringMap setup = data->getSetupParameters();
 			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 			{
-				const Identifier id = m_Engine.entities().createIdentifier(it->first, "plugin setup parameter");
+				const Identifier id = Entity::createIdentifier(it->first, "plugin setup parameter");//m_Engine.entities().createIdentifier(it->first, "plugin setup parameter");
 				SetupParameter *param = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
 				plugin->addSetupParameter(param);
 			}

@@ -19,7 +19,12 @@
 
 #pragma once
 
-#include "_2RealTypedefs.h"
+/**
+*	annoying & ultimately harmless warning about
+*	template expressions that are longer than 255 bytes
+*/
+#pragma warning(disable:4503)
+
 #include "_2RealSharedAny.h"
 #include "_2RealData.h"
 
@@ -30,10 +35,28 @@
 namespace _2Real
 {
 
+	class Data;
+	class RunnableException;
+
+	/**
+	*	callback for exceptions
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToException
+	*/
+	typedef void (*ExceptionCallback)(RunnableException &exception);
+
+	/**
+	*	callback for new data
+	*
+	*	there are 3 entities which allow for a exception callback registration:
+	*	services, sequences & synchronizations - see @registerToNewData
+	*/
+	typedef void (*DataCallback)(Data &data);
+
 	class PluginPool;
 	class ServiceFactory;
 	class ProductionGraphs;
-	class EntityTable;
 	class Identifier;
 	class TypeTable;
 	class EngineTime;
@@ -75,16 +98,6 @@ namespace _2Real
 			return *m_Graphs;
 		}
 
-		EntityTable & entities()
-		{
-			return *m_Entities;
-		}
-
-		EntityTable const& entities() const
-		{
-			return *m_Entities;
-		}
-
 		TypeTable & types()
 		{
 			return *m_Types;
@@ -94,16 +107,6 @@ namespace _2Real
 		{
 			return *m_Types;
 		}
-
-		//EngineTime & time()
-		//{
-		//	return *m_Time;
-		//}
-
-		//EngineTime const& time() const
-		//{
-		//	return *m_Time;
-		//}
 
 		const Identifier createSystem(std::string const& name);
 		void destroySystem(Identifier const& id);
@@ -118,9 +121,6 @@ namespace _2Real
 
 		void setParameterValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
 
-		//Identifiers getSetupParameters(Identifier const& _id, Identifier const& _system) const;
-		//Identifiers getInputSlots(Identifier const& _id, Identifier const& _system) const;
-		//Identifiers getOutputSlots(Identifier const& _id, Identifier const& _system) const;
 		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
 		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
 		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
@@ -128,21 +128,18 @@ namespace _2Real
 		
 		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
 		void linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system);
-		//void registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _system);
 
-		//Identifiers getChildren(Identifier const& _id, Identifier const& _system);
 		void start(Identifier const& id, Identifier const& system);
 		//void startAll(Identifier const& _system);
 		void stop(Identifier const& id, Identifier const& system);
 		//void stopAll(Identifier const& _system);
+		
 		//void destroy(Identifier const& _id, Identifier const& _system);
 
-		/*
-		*	the functionality used for receiving data from output slots
-		*/
 		void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
-		//void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
-		//DataHandle createDataHandle(Identifier const& service, std::string const& out, Identifier const& system);
+		void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
+		void registerToException(ExceptionCallback callback, Identifier const& system);
+		void unregisterFromException(ExceptionCallback callback, Identifier const& system);
 
 	private:
 
@@ -156,7 +153,6 @@ namespace _2Real
 
 		PluginPool				*m_Plugins;
 		ServiceFactory			*m_Factory;
-		EntityTable				*m_Entities;
 		ProductionGraphs		*m_Graphs;
 		TypeTable				*m_Types;
 		//EngineTime				*m_Time;

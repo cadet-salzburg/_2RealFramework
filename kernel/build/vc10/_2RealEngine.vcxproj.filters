@@ -11,7 +11,6 @@
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
-    <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
@@ -20,7 +19,6 @@
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealEntityTable.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
@@ -33,6 +31,7 @@
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
     <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
@@ -59,10 +58,7 @@
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
-    <ClInclude Include="..\..\src\_2RealEngineTypedefs.h" />
-    <ClInclude Include="..\..\src\_2RealEntityTable.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
-    <ClInclude Include="..\..\src\_2RealTypedefs.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealGraph.h" />

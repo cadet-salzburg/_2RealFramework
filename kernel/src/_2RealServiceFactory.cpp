@@ -18,7 +18,6 @@
 
 #include "_2RealServiceFactory.h"
 #include "_2RealPlugin.h"
-#include "_2RealEntityTable.h"
 #include "_2RealTypes.h"
 #include "_2RealSystemGraph.h"
 #include "_2RealService.h"
@@ -46,7 +45,7 @@ namespace _2Real
 			throw Exception("service factory: internal exception - could not create instance of service " + _service);
 		}
 
-		const Identifier id = m_Engine.entities().createIdentifier(_name, "service");
+		const Identifier id = Entity::createIdentifier(_name, "service");
 		Service *service = new Service(userService, id, _system);
 
 		const ServiceMetadata data = _plugin->serviceMetadata(_service);
@@ -58,14 +57,14 @@ namespace _2Real
 
 		for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
 		{
-			const Identifier id = m_Engine.entities().createIdentifier(it->first, "setup parameter");
+			const Identifier id = Entity::createIdentifier(it->first, "setup parameter");
 			SetupParameter *setup = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
 			service->addSetupParameter(setup);
 		}
 
 		for (StringMap::iterator it = input.begin(); it != input.end(); it++)
 		{
-			const Identifier id = m_Engine.entities().createIdentifier(it->first, "input slot");
+			const Identifier id = Entity::createIdentifier(it->first, "input slot");
 			InputSlot *in = new InputSlot(id, service, m_Engine.types().getTypename(it->second), it->second);
 			service->addInputSlot(in);
 		}
@@ -75,7 +74,7 @@ namespace _2Real
 			SharedAny init;
 			// ~~ createfromkeyword
 			m_Engine.types().create(it->second, init);
-			const Identifier id = m_Engine.entities().createIdentifier(it->first, "output slot");
+			const Identifier id = Entity::createIdentifier(it->first, "output slot");
 			OutputSlot *out = new OutputSlot(id, service, m_Engine.types().getTypename(it->second), it->second, init);
 			service->addOutputSlot(out);
 		}

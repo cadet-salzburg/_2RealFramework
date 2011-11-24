@@ -20,7 +20,9 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealRunnableException.h"
 #include "_2RealData.h"
+#include "_2RealImagebuffer.h"
 
 #include "GL/glew.h"
 #include "GL/wglew.h"
@@ -30,30 +32,29 @@
 #include <iostream>
 #include <map>
 
-#include "_2RealImagebuffer.h"
+#include "Poco\Mutex.h"
 
 using namespace _2Real;
 using namespace std;
+using namespace Poco;
 
-/**
-*	stuff
-*/
-
-unsigned int outID;
 string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 //string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 bool run;
 Buffer2D_float tmp;
 Buffer2D_float buffer;
 GLuint tex;
-
-void depthDataAvailable(Data &data)
-{
-}
+FastMutex mutex;
 
 void imgDataAvailable(Data &data)
 {
+	FastMutex::ScopedLock lock(mutex);
 	tmp = data.getData< Buffer2D_float >();
+}
+
+void systemException(RunnableException &e)
+{
+	std::cout << "exception in " << e.system().name() << " by " << e.sender().name() << " : " << e.what() << std::endl;
 }
 
 void init()
@@ -91,7 +92,10 @@ void render()
 
 void loop()
 {
-	buffer = tmp;
+	{
+		FastMutex::ScopedLock lock(mutex);
+		buffer = tmp;
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -99,7 +103,7 @@ void loop()
 	glTranslatef(-1.0f, -1.0f, 0.0f);
 
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 640, 480, 0, GL_RGB, GL_FLOAT, (const GLvoid*)buffer.rawData());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 640, 480, 0, GL_RGB, GL_FLOAT, (const GLvoid *)buffer.rawData());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -133,24 +137,23 @@ int main(int argc, char *argv[])
 		GLenum err = glewInit();
 		if (err != GLEW_OK)
 		{
-			throw Exception("glew error");
+			throw _2Real::Exception("glew error");
 		}
 
 		SDL_GL_SetSwapInterval(1);
 
 		init();
 
-		Identifiers setup;
-		Identifiers output;
+		//////////////////////////////////////////////framework part starts here/////////////////////////////////////////////////////////////////////////////////
 
-		System testSystem("TEST");
+		System testSystem("test system");
 
 #ifdef _DEBUG
 		Identifier kinectPlugin = testSystem.loadPlugin("KINECT", path, "MultiKinectOpenNI_d.dll", "MultiKinect");
 		Identifier imgPlugin = testSystem.loadPlugin("IMG", path, "ImageProcessing_d.dll", "ImageProcessing");
 #else
-		Identifier kinectPlugin = testSystem.loadPlugin("KINECT", path, "MultiKinectOpenNI.dll", "MultiKinectOpenNI");
-		Identifier imgPlugin = testSystem.loadPlugin("IMG", path, "ImageProcessing.dll", "ImageProcessing");
+		Identifier kinectPlugin = testSystem.loadPlugin("kinect plugin", path, "MultiKinectOpenNI.dll", "MultiKinectOpenNI");
+		Identifier imgPlugin = testSystem.loadPlugin("image processing plugin", path, "ImageProcessing.dll", "ImageProcessing");
 #endif
 
 		cout << "main: PLUGINS LOADED" << endl;
@@ -187,7 +190,7 @@ int main(int argc, char *argv[])
 
 		cout << "main: IMG PLUGIN STARTED" << endl;
 
-		Identifier depth = testSystem.createService("DEPTH", kinectPlugin, "Image Generator");
+		Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
 
 		cout << "main: DEPTH SERVICE CREATED" << endl;
 
@@ -196,15 +199,15 @@ int main(int argc, char *argv[])
 
 		cout << "main: DEPTH SERVICE SETUP PARAMS SET" << endl;
 
-		//testSystem.registerToNewData(depth, "output image", ::depthDataAvailable);
+		testSystem.registerToException(::systemException);
 
-		//cout << "main: DEPTH LISTENER REGISTERED" << endl;
+		cout << "main: EXCEPTION LISTENER REGISTERED" << endl;
 
 		testSystem.start(depth);
 
 		cout << "main: DEPTH SERVICE STARTED" << endl;
 
-		Identifier avg = testSystem.createService("AVG", imgPlugin, "ImageAccumulation_uchar");
+		Identifier avg = testSystem.createService("image accumulation", imgPlugin, "ImageAccumulation_uchar");
 
 		cout << "main: AVG SERVICE CREATED" << endl;
 
@@ -241,7 +244,7 @@ int main(int argc, char *argv[])
 
 		testSystem.stop(depth);
 
-		cout << "main: DEPTH SERVICE STOPPED" << endl << endl;
+		cout << "main: DEPTH SERVICE STOPPED" << endl;
 
 		testSystem.stop(avg);
 
@@ -256,7 +259,7 @@ int main(int argc, char *argv[])
 	}
 	catch (...)
 	{
-		cout << "an exception occurred" << endl;
+		cout << "an unknown exception occurred" << endl;
 	}
 
 	SDL_GL_DeleteContext(maincontext);
@@ -265,9 +268,10 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		unsigned char thingie;
-		std::cin >> thingie;
-		if (thingie == 'a')
+		string line;
+		char lineEnd = '\n';
+		getline(cin, line, lineEnd);
+		if (line == "quit")
 		{
 			break;
 		}
@@ -275,6 +279,6 @@ int main(int argc, char *argv[])
 
 	return 0;
 
-	//engine dtor is called
-	//plugins are uninstalled.
+	//engine is destroyed here
+	//->plugins are uninstalled
 }

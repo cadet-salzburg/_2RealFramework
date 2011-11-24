@@ -24,10 +24,10 @@
 
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Identifier const& _id, ExceptionHandler *const _handler) :
+	SystemGraph::SystemGraph(Identifier const& _id) :
 		Entity(_id),
 		Graph(),
-		m_ExceptionHandler(_handler)
+		m_ExceptionHandler(_id)
 	{
 	}
 
@@ -44,8 +44,6 @@ namespace _2Real
 			delete it->second;
 		}
 
-		delete m_ExceptionHandler;
-
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
 			std::string name;
@@ -60,6 +58,16 @@ namespace _2Real
 				std::cout << "error on runnable destruction: " << name << std::endl;
 			}
 		}
+	}
+
+	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
+	{
+		m_ExceptionHandler.registerExceptionCallback(callback);
+	}
+
+	void SystemGraph::unregisterExceptionCallback(ExceptionCallback callback)
+	{
+		m_ExceptionHandler.unregisterExceptionCallback(callback);
 	}
 
 	void SystemGraph::insertChild(Runnable *const child, unsigned int const& index)
@@ -84,9 +92,9 @@ namespace _2Real
 
 	void SystemGraph::handleException(Runnable *const child, Exception &e)
 	{
-		m_ExceptionHandler->handleException(e);
-		Graph *subgraph = child->father();
-
+		m_ExceptionHandler.handleException(e, child->identifier());
+		//Graph *subgraph = child->father();
+		//stopChild(subgraph->id());
 	}
 
 	void SystemGraph::startChild(unsigned int const& id)

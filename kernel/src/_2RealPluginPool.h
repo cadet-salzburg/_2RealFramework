@@ -42,6 +42,11 @@ namespace _2Real
 		PluginPool(Engine &engine);
 		virtual ~PluginPool();
 
+		const unsigned int size() const
+		{
+			return m_Plugins.size();
+		}
+
 		/**
 		*	installs plugin
 		*/

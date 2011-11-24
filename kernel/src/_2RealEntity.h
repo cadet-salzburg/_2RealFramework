@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "Poco\Mutex.h"
+
 namespace _2Real
 {
 
@@ -33,16 +35,34 @@ namespace _2Real
 		Entity(Identifier const& id);
 		virtual ~Entity();
 
-		unsigned int const& id() const;
-		std::string const& name() const;
-		std::string const& type() const;
+		static const Identifier createIdentifier(std::string const& name, std::string const& type);
 
-		//std::string const& info() const;
-		//void setInfo(std::string const& info);
+		Identifier const& identifier() const
+		{
+			return m_Id;
+		}
+
+		unsigned int const& id() const
+		{
+			return m_Id.id();
+		}
+
+		std::string const& name() const
+		{
+			return m_Id.name();
+		}
+
+		std::string const& type() const
+		{
+			return m_Id.type();
+		}
 
 	private:
 
-		const Identifier		m_Id;
+		const Identifier			m_Id;
+
+		static unsigned int			m_CreationCount;
+		static Poco::FastMutex		m_Mutex;
 
 	};
 

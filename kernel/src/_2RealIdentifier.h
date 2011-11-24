@@ -24,7 +24,13 @@ namespace _2Real
 {
 
 	/**
-	*	identifiers refer to entities in the 2 real engine
+	*	identifiers refer to entities in the 2 real engine;
+	*	specifically, to entities created at the application programmer's request
+	*	- plugins
+	*	- concrete instances of the services exported by a plugin
+	*	- systems
+	*	- sequence graphs
+	*	- synchronization graphs
 	*/
 
 	class Identifier
@@ -33,45 +39,9 @@ namespace _2Real
 	public:
 
 		/**
-		*	true if the identifiers refer to the same entity within the framework
-		*/
-		bool operator==(Identifier const& _rhs) const;
-
-		/**
-		*	true if the identifiers refer to different entities within the framework
-		*/
-		bool operator!=(Identifier const& _rhs) const;
-
-		/**
-		*	in case identifiers are to be used as key for a map. or whatever.
-		*/
-		bool operator<(Identifier const& _rhs) const;
-
-		/**
-		*	in case identifiers are to be used as key for a map. or whatever.
-		*/
-		bool operator<=(Identifier const& _rhs) const;
-
-		/**
-		*	in case identifiers are to be used as key for a map. or whatever.
-		*/
-		bool operator>(Identifier const& _rhs) const;
-
-		/**
-		*	in case identifiers are to be used as key for a map. or whatever.
-		*/
-		bool operator>=(Identifier const& _rhs) const;
-
-		/**
-		*	the entity's type, as string
-		*/
-		std::string const& type() const
-		{
-			return m_Type;
-		}
-
-		/**
-		*	the entity's name, as string
+		*	returns the entity's name
+		*
+		*	@return:		name as chosen by the application programmer
 		*/
 		std::string const& name() const
 		{
@@ -79,45 +49,64 @@ namespace _2Real
 		}
 
 		/**
-		*	some additional info about the entity
+		*	returns the entity's type, as string
+		*
+		*	@return:		type: plugin, system, sequence, synchronization,
+		*					service (= a concrete instance of a plugin-exported service)
 		*/
-		//std::string const& info() const;
+		std::string const& type() const
+		{
+			return m_Type;
+		}
 
 		/**
-		*	the entity's unique id
+		*	returns the entity's id
+		*
+		*	@return:		the entity's unique id
 		*/
 		unsigned int const& id() const
 		{
 			return m_Id;
 		}
 
+		/**
+		*	true if the identifiers refer to the same entity within the framework
+		*/
+		bool operator==(Identifier const& rhs) const;
+
+		/**
+		*	true if the identifiers refer to different entities within the framework
+		*/
+		bool operator!=(Identifier const& rhs) const;
+
+		/*
+		*	identifiers can be sorted in a strict monotonic order
+		*/
+		bool operator<(Identifier const& rhs) const;
+		bool operator<=(Identifier const& rhs) const;
+		bool operator>(Identifier const& rhs) const;
+		bool operator>=(Identifier const& rhs) const;
+
 	private:
 
 		friend class Entity;
-		friend class EntityTable;
 
 		Identifier(std::string const& name, std::string const& type, unsigned int const& id);
 
 		/**
-		*	orginal name given by application programmer
+		*	name chosen by the application programmer
 		*/
 		const std::string			m_Name;
 
 		/**
-		*	type as string
+		*	type as string (plugin, service, sequence, synchronization, system)
 		*/
 		const std::string			m_Type;
-
-		/**
-		*	info
-		*/
-		//std::string				m_Info;
 
 		/**
 		*	unique id
 		*/
 		const unsigned int			m_Id;
-
 
 	};
 

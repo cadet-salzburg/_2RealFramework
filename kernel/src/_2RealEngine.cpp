@@ -17,7 +17,6 @@
 */
 
 #include "_2RealEngine.h"
-#include "_2RealEngineTypedefs.h"
 
 #include "_2RealImagebuffer.h"
 
@@ -27,7 +26,6 @@
 #include "_2RealServiceMetadata.h"
 #include "_2RealPluginPool.h"
 #include "_2RealServiceFactory.h"
-#include "_2RealEntityTable.h"
 #include "_2RealProductionGraphs.h"
 #include "_2RealEntity.h"
 #include "_2RealIdentifier.h"
@@ -73,7 +71,6 @@ namespace _2Real
 		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
 		m_Types->registerType< Buffer2D_uchar >("buffer2D_uchar");
 
-		m_Entities = new EntityTable();
 		m_Plugins = new PluginPool(*this);
 		m_Factory = new ServiceFactory(*this);
 		m_Graphs = new ProductionGraphs(*this);
@@ -96,7 +93,6 @@ namespace _2Real
 		delete m_Graphs;
 		delete m_Factory;
 		delete m_Plugins;
-		delete m_Entities;
 		delete m_Types;
 		
 		//delete m_Time;
@@ -426,24 +422,17 @@ namespace _2Real
 		out->addListener(in);
 	}
 
-	//void Engine::registerToException(Identifier const& _id, ExceptionCallback _callback, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		AbstractContainer *container = nirvana->find(_id.id());
-	//		if (!container)
-	//		{
-	//			throw Exception("this system does not contain " + _id.name());
-	//		}
+	void Engine::registerToException(ExceptionCallback _callback, Identifier const& _system)
+	{
+		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
+		nirvana->registerExceptionCallback(_callback);
+	}
 
-	//		container->registerExceptionCallback(_callback);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void Engine::unregisterFromException(ExceptionCallback _callback, Identifier const& _system)
+	{
+		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
+		nirvana->unregisterExceptionCallback(_callback);
+	}
 
 	void Engine::registerToNewData(Identifier const& _service, std::string const& _name, DataCallback _callback, Identifier const& _system)
 	{
@@ -452,9 +441,9 @@ namespace _2Real
 		{
 			if (runnable->hasParameters())
 			{
-					Service *service = static_cast< Service * >(runnable);
-					OutputSlot *slot = service->getOutputSlot(_name);
-					slot->registerCallback(_callback);
+				Service *service = static_cast< Service * >(runnable);
+				OutputSlot *slot = service->getOutputSlot(_name);
+				slot->registerCallback(_callback);
 			}
 			else
 			{
@@ -466,22 +455,26 @@ namespace _2Real
 		}
 	}
 
-	//void Engine::unregisterFromNewData(Identifier const& _service, std::string const& _out, DataCallback _callback, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		AbstractContainer *child = nirvana->find(_service.id());
-	//		Service *service = static_cast< Service * >(child);
-	//		OutputSlot *out = service->getOutputSlotByName(_out);
-
-	//		out->unregisterCallback(_callback);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void Engine::unregisterFromNewData(Identifier const& _service, std::string const& _name, DataCallback _callback, Identifier const& _system)
+	{
+		Runnable *runnable = NULL;
+		if ((runnable = m_Graphs->belongsToSystem(_system, _service)))
+		{
+			if (runnable->hasParameters())
+			{
+				Service *service = static_cast< Service * >(runnable);
+				OutputSlot *slot = service->getOutputSlot(_name);
+				slot->unregisterCallback(_callback);
+			}
+			else
+			{
+				//
+			}
+		}
+		else
+		{
+		}
+	}
 
 	////DataHandle Engine::createDataHandle(Identifier const& _service, std::string const& _out, Identifier const& _system)
 	////{
