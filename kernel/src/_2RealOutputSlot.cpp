@@ -21,7 +21,7 @@
 #include "_2RealException.h"
 #include "_2RealService.h"
 
-#include "Poco\Delegate.h"
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {

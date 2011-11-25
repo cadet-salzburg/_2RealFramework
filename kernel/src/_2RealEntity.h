@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include "Poco\Mutex.h"
+#include "Poco/Mutex.h"
 
 namespace _2Real
 {
@@ -56,6 +56,8 @@ namespace _2Real
 		{
 			return m_Id.type();
 		}
+
+		static const Identifier		NoEntity();
 
 	private:
 

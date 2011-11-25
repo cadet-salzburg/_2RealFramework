@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
+    <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
@@ -78,6 +79,7 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInternalService.h" />
     <ClInclude Include="..\..\src\_2RealListenerService.h" />
+    <ClInclude Include="..\..\src\_2RealThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

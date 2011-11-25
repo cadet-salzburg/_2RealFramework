@@ -21,11 +21,10 @@
 #include "_2RealGraph.h"
 #include "_2RealEntity.h"
 #include "_2RealExceptionHandler.h"
+#include "_2RealThreadPool.h"
 
 #include <map>
 #include <list>
-
-#include "Poco\Thread.h"
 
 namespace _2Real
 {
@@ -34,7 +33,6 @@ namespace _2Real
 
 	public:
 
-		// ~~todo: give system graph access to the engine's threadpool
 		SystemGraph(Identifier const& id);
 		virtual ~SystemGraph();
 
@@ -46,20 +44,15 @@ namespace _2Real
 		void insertChild(Runnable *const child, unsigned int const& index);
 		void removeChild(unsigned int const& id);
 
-		void handleException(Runnable *const child, Exception &e);
+		void handleException(Runnable &child, Exception &exception);
 
 		void registerExceptionCallback(ExceptionCallback callback);
 		void unregisterExceptionCallback(ExceptionCallback callback);
 
 	private:
 
-		/**
-		*	argh argh argh
-		*	argh argh argh
-		*/
-		std::map< unsigned int, Poco::Thread * >	m_Threads;
-
-		ExceptionHandler							m_ExceptionHandler;
+		ThreadPool			m_Threads;
+		ExceptionHandler	m_ExceptionHandler;
 
 	};
 

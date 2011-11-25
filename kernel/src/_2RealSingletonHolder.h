@@ -20,7 +20,7 @@
 
 #include "_2RealException.h"
 
-#include "Poco\Mutex.h"
+#include "Poco/Mutex.h"
 
 namespace _2Real
 {

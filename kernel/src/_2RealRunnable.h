@@ -21,7 +21,7 @@
 #include "_2RealEntity.h"
 #include "_2RealException.h"
 
-#include "Poco\Runnable.h"
+#include "Poco/Runnable.h"
 
 namespace _2Real
 {

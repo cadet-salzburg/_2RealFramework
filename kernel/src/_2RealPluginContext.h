@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include "Poco\SharedPtr.h"
+#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {

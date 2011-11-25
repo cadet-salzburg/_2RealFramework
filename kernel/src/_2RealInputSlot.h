@@ -21,7 +21,7 @@
 #include "_2RealIOSlot.h"
 #include "_2RealData.h"
 
-#include "Poco\Mutex.h"
+#include "Poco/Mutex.h"
 
 #include <map>
 

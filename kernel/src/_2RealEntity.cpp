@@ -23,7 +23,7 @@
 namespace _2Real
 {
 
-	unsigned int Entity::m_CreationCount = 0;
+	unsigned int Entity::m_CreationCount = 1;
 	Poco::FastMutex Entity::m_Mutex;
 	
 	const Identifier Entity::createIdentifier(std::string const& _name, std::string const& _type)
@@ -39,6 +39,11 @@ namespace _2Real
 
 	Entity::~Entity()
 	{
+	}
+
+	const Identifier Entity::NoEntity()
+	{
+		return Identifier("", "", 0);
 	}
 
 }

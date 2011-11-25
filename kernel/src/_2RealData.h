@@ -22,7 +22,7 @@
 #include "_2RealIdentifier.h"
 #include "_2RealSharedAny.h"
 
-#include "Poco\Timestamp.h"
+#include "Poco/Timestamp.h"
 
 namespace _2Real
 {

@@ -30,7 +30,7 @@
 
 #include <vector>
 
-#include "Poco\AbstractDelegate.h"
+#include "Poco/AbstractDelegate.h"
 
 namespace _2Real
 {

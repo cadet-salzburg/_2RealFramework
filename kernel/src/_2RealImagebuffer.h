@@ -2,7 +2,7 @@
 
 #include "_2RealException.h"
 
-#include "Poco\SharedPtr.h"
+#include "Poco/SharedPtr.h"
 
 #include <iostream>
 #include <sstream>

@@ -21,9 +21,9 @@
 #include "_2RealIOSlot.h"
 #include "_2RealData.h"
 
-#include "Poco\Mutex.h"
-#include "Poco\BasicEvent.h"
-#include "Poco\Timestamp.h"
+#include "Poco/Mutex.h"
+#include "Poco/BasicEvent.h"
+#include "Poco/Timestamp.h"
 
 namespace _2Real
 {

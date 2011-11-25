@@ -27,7 +27,8 @@ namespace _2Real
 	SystemGraph::SystemGraph(Identifier const& _id) :
 		Entity(_id),
 		Graph(),
-		m_ExceptionHandler(_id)
+		m_ExceptionHandler(_id),
+		m_Threads(4, 20, 10000, 0)
 	{
 	}
 
@@ -38,11 +39,8 @@ namespace _2Real
 			(*it)->stop();
 		}
 
-		for (std::map< unsigned int, Poco::Thread * >::iterator it = m_Threads.begin(); it != m_Threads.end(); it++)
-		{
-			it->second->join();
-			delete it->second;
-		}
+		m_Threads.joinAll();
+		m_Threads.stopAll();
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
@@ -72,14 +70,23 @@ namespace _2Real
 
 	void SystemGraph::insertChild(Runnable *const child, unsigned int const& index)
 	{
-		//system graph -> order does not matter
 		m_Children.push_back(child);
+
+		//if (m_Threads.capacity() < m_Children.size())
+		//{
+		//	m_Threads.addCapacity(1);
+		//}
 	}
 
 	void SystemGraph::removeChild(unsigned int const& id)
 	{
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
+
+		//if (m_Threads.capacity() < m_Children.size())
+		//{
+		//	m_Threads.addCapacity(1);
+		//}
 	}
 
 	void SystemGraph::startAll()
@@ -90,9 +97,9 @@ namespace _2Real
 	{
 	}
 
-	void SystemGraph::handleException(Runnable *const child, Exception &e)
+	void SystemGraph::handleException(Runnable &_child, Exception &_exception)
 	{
-		m_ExceptionHandler.handleException(e, child->identifier());
+		m_ExceptionHandler.handleException(_exception, _child.identifier());
 		//Graph *subgraph = child->father();
 		//stopChild(subgraph->id());
 	}
@@ -107,17 +114,10 @@ namespace _2Real
 		}
 
 		Runnable *child = *it;
-		std::map< unsigned int, Poco::Thread * >::iterator t = m_Threads.find(child->id());
-		if (t != m_Threads.end())
-		{
-			return;
-		}
-
-		Poco::Thread *thread = new Poco::Thread();
 		child->checkConfiguration();
 		child->start(false);
-		thread->start(*child);
-		m_Threads.insert(std::pair< unsigned int, Poco::Thread * >(child->id(), thread));
+
+		m_Threads.start(*it);
 	}
 
 	void SystemGraph::stopChild(unsigned int const& _id)
@@ -127,20 +127,20 @@ namespace _2Real
 		{
 			throw Exception("could not start container, " + name() + " does not contain this container");
 		}
-		if (!(*it))
-		{
-			throw Exception(std::string("internal error - null pointer stored in system graph: ").append(this->name()));
-		}
+		//if (!(*it))
+		//{
+		//	throw Exception(std::string("internal error - null pointer stored in system graph: ").append(this->name()));
+		//}
 
-		Runnable *child = *it;
-		std::map< unsigned int, Poco::Thread * >::iterator thread = m_Threads.find(child->id());
-		if (thread != m_Threads.end())
-		{
-			child->stop();
-			thread->second->join();
-			delete thread->second;
-			m_Threads.erase(thread);
-		}
+		//Runnable *child = *it;
+		//std::map< unsigned int, Poco::Thread * >::iterator thread = m_Threads.find(child->id());
+		//if (thread != m_Threads.end())
+		//{
+		//	child->stop();
+		//	thread->second->join();
+		//	delete thread->second;
+		//	m_Threads.erase(thread);
+		//}
 	}
 
 }

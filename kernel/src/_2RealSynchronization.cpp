@@ -280,7 +280,7 @@ namespace _2Real
 				m_Run = false;
 				m_RunOnce = false;
 
-				m_System->handleException(this, e);
+				m_System->handleException(*this, e);
 			}
 		}
 	}
@@ -306,7 +306,7 @@ namespace _2Real
 		}
 		catch (Exception &e)
 		{
-			m_System->handleException(this, e);
+			m_System->handleException(*this, e);
 		}
 	}
 
