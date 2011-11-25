@@ -1,0 +1,50 @@
+<metadata>
+	
+	<plugin
+		name = "OpenCVvideoplayer"
+		author = "-o_o-"
+		contact = "www.cadet.at"
+		description = "a very basic videoplayer"
+		version = "0.1.0"
+	>
+	
+	<setup>
+		<param name = "first parameter" type = "string" />
+	</setup>
+	
+	</plugin>
+	
+	<service
+		name = "playvideo"
+		description = "plays a video and spits out the current framenumber of the video"
+	>
+		<setup>
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "output image" type = "buffer2D_uchar" />
+		</output>
+	
+	</service>
+	
+	<service
+		name = "get fn"
+		description = "spits out the current framenumber of the video"
+	>
+		<setup>
+		</setup>
+		
+		<input>
+		</input>
+		
+		<output>
+			<param name = "framenumber" type = "unsigned int" />
+		</output>
+	
+	</service>
+		
+</metadata>
+
