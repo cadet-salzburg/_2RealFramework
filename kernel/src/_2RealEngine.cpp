@@ -532,10 +532,10 @@ namespace _2Real
 	//	}
 	//}
 
-	void Engine::start(Identifier const& _id, Identifier const& _system)
+	void Engine::start(Identifier const& runnable, Identifier const& system)
 	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
-		nirvana->startChild(_id.id());
+		SystemGraph *nirvana = m_Graphs->getSystemGraph(system);
+		nirvana->startChild(runnable);
 	}
 
 	//void Engine::startAll(Identifier const& _system)
@@ -555,10 +555,10 @@ namespace _2Real
 	//	}
 	//}
 
-	void Engine::stop(Identifier const& _id, Identifier const& _system)
+	void Engine::stop(Identifier const& runnable, Identifier const& system)
 	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
-		nirvana->stopChild(_id.id());
+		SystemGraph *nirvana = m_Graphs->getSystemGraph(system);
+		nirvana->stopChild(runnable);
 	}
 
 	//void Engine::ssystemAll(Identifier const& _system)

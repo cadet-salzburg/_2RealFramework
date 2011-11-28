@@ -36,18 +36,28 @@ namespace _2Real
 		SystemGraph(Identifier const& id);
 		virtual ~SystemGraph();
 
-		void startChild(unsigned int const& id);
-		void stopChild(unsigned int const& id);
+		void startChild(Identifier const& child);
+		void stopChild(Identifier const& child);
 		void stopAll();
 		void startAll();
 
 		void insertChild(Runnable *const child, unsigned int const& index);
-		void removeChild(unsigned int const& id);
+		void removeChild(Identifier const& id);
 
 		void handleException(Runnable &child, Exception &exception);
 
 		void registerExceptionCallback(ExceptionCallback callback);
 		void unregisterExceptionCallback(ExceptionCallback callback);
+
+		ThreadPool &threadpool()
+		{
+			return m_Threads;
+		}
+
+		ThreadPool const& threadpool() const
+		{
+			return m_Threads;
+		}
 
 	private:
 

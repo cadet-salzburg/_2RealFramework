@@ -156,14 +156,14 @@ namespace _2Real
 		return Entity::createIdentifier(_name, "synchronization");
 	}
 
-	Runnable *const ProductionGraphs::belongsToSystem(Identifier const& _system, Identifier const& _runnable) const
+	Runnable *const ProductionGraphs::belongsToSystem(Identifier const& system, Identifier const& runnable) const
 	{
-		SystemGraph const* nirvana = getSystemGraph(_system);
+		SystemGraph const* nirvana = getSystemGraph(system);
 		std::list< Runnable * > children = nirvana->children();
 
 		for (std::list< Runnable * >::const_iterator it = children.begin(); it != children.end(); it++)
 		{
-			if ((*it)->id() == _runnable.id())
+			if ((*it)->id() == runnable.id())
 			{
 				return *it;
 			}
@@ -172,7 +172,7 @@ namespace _2Real
 			{
 				RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
 				Runnable *child = NULL;
-				if ((child = graph->findChild(_runnable.id())))
+				if ((child = graph->findChild(runnable)))
 				{
 					return child;
 				}

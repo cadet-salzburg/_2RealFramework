@@ -24,11 +24,11 @@
 
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Identifier const& _id) :
-		Entity(_id),
+	SystemGraph::SystemGraph(Identifier const& id) :
+		Entity(id),
 		Graph(),
-		m_ExceptionHandler(_id),
-		m_Threads(4, 20, 10000, 0)
+		m_ExceptionHandler(id),
+		m_Threads(10, 20, 1000, 0, id.name())
 	{
 	}
 
@@ -71,46 +71,43 @@ namespace _2Real
 	void SystemGraph::insertChild(Runnable *const child, unsigned int const& index)
 	{
 		m_Children.push_back(child);
-
-		//if (m_Threads.capacity() < m_Children.size())
-		//{
-		//	m_Threads.addCapacity(1);
-		//}
+		m_Threads.addCapacity(1);
 	}
 
-	void SystemGraph::removeChild(unsigned int const& id)
+	void SystemGraph::removeChild(Identifier const& id)
 	{
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
-
-		//if (m_Threads.capacity() < m_Children.size())
-		//{
-		//	m_Threads.addCapacity(1);
-		//}
+	
+		m_Threads.addCapacity(1);
 	}
 
 	void SystemGraph::startAll()
 	{
+		//todo
 	}
 
 	void SystemGraph::stopAll()
 	{
+		//todo
 	}
 
-	void SystemGraph::handleException(Runnable &_child, Exception &_exception)
+	void SystemGraph::handleException(Runnable &child, Exception &exception)
 	{
-		m_ExceptionHandler.handleException(_exception, _child.identifier());
+		m_ExceptionHandler.handleException(exception, child.identifier());
 		//Graph *subgraph = child->father();
 		//stopChild(subgraph->id());
 	}
 
-	void SystemGraph::startChild(unsigned int const& id)
+	void SystemGraph::startChild(Identifier const& id)
 	{
-		RunnableList::iterator it = this->iteratorId(id);
+		std::cout << "system graph: " << name() << ", starting child " << id.name() << std::endl;
+
+		RunnableList::iterator it = iteratorId(id);
 
 		if (it == m_Children.end())
 		{
-			//throw ChildNotFoundException(name(), id.name());
+			throw ChildNotFoundException(id.name());
 		}
 
 		Runnable *child = *it;
@@ -120,27 +117,19 @@ namespace _2Real
 		m_Threads.start(*it);
 	}
 
-	void SystemGraph::stopChild(unsigned int const& _id)
+	void SystemGraph::stopChild(Identifier const& id)
 	{
-		RunnableList::iterator it = this->iteratorId(_id);
+		std::cout << "system graph: " << name() << ", stopping child " << id.name() << std::endl;
+
+		RunnableList::iterator it = iteratorId(id);
+		
 		if (it == m_Children.end())
 		{
-			throw Exception("could not start container, " + name() + " does not contain this container");
+			throw ChildNotFoundException(id.name());
 		}
-		//if (!(*it))
-		//{
-		//	throw Exception(std::string("internal error - null pointer stored in system graph: ").append(this->name()));
-		//}
 
-		//Runnable *child = *it;
-		//std::map< unsigned int, Poco::Thread * >::iterator thread = m_Threads.find(child->id());
-		//if (thread != m_Threads.end())
-		//{
-		//	child->stop();
-		//	thread->second->join();
-		//	delete thread->second;
-		//	m_Threads.erase(thread);
-		//}
+		(*it)->stop();
+		m_Threads.join(id);
 	}
 
 }

@@ -35,32 +35,43 @@ namespace _2Real
 
 	public:
 
-		ThreadPool(unsigned int const& min, unsigned int const& max, unsigned int const& idleTime, unsigned int const& stackSize, std::string const& name);
+		ThreadPool(unsigned int const& capacity, unsigned int const& max, unsigned int const& idleTime, unsigned int const& stackSize, std::string const& name);
 		~ThreadPool();
-
-		/**
-		*	returns nr of allocated threads
-		*	(somewhre in between min & max capacity)
-		*/
-		const unsigned int allocated() const;
-
-		/**
-		*	returns nr of allocated, not-idle threads
-		*/
-		const unsigned int used() const;
 
 		/**
 		*	starts a runnable
 		*/
 		void start(Runnable *const target);
 
+		/**
+		*	joins & deletes all threads
+		*/
 		void stopAll();
+
+		/**
+		*	joins all threads
+		*/
 		void joinAll();
 
+		/**
+		*	joins & deletes a thread
+		*/
 		void stop(Identifier const& id);
+
+		/**
+		*	joins a thread
+		*/
 		void join(Identifier const& id);
 
+		/**
+		*
+		*/
 		void collect();
+
+		/**
+		*	increases capacity
+		*/
+		void addCapacity(int const& n);
 
 	private:
 
@@ -79,7 +90,14 @@ namespace _2Real
 
 		std::string					m_Name;
 
+		/**
+		*	nr of allocated threads
+		*/
 		unsigned int				m_Capacity;
+
+		/*
+		*	max nr of threads
+		*/
 		unsigned int				m_MaxCapacity;
 		unsigned int				m_IdleTime;
 		unsigned int				m_StackSize;

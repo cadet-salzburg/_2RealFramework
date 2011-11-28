@@ -30,22 +30,22 @@ namespace _2Real
 	{
 	}
 
-	std::list< unsigned int > Graph::childIDs() const
+	std::list< Identifier > Graph::childIDs() const
 	{
-		std::list< unsigned int > result;
+		std::list< Identifier > result;
 		for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			result.push_back((*it)->id());
+			result.push_back((*it)->identifier());
 		}
 
 		return result;
 	}
 
-	RunnableList::iterator Graph::iteratorId(unsigned int const& _id)
+	RunnableList::iterator Graph::iteratorId(Identifier const& id)
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->id() == _id)
+			if ((*it)->identifier() == id)
 			{
 				return it;
 			}
@@ -54,11 +54,11 @@ namespace _2Real
 		return m_Children.end();
 	}
 
-	RunnableList::const_iterator Graph::iteratorId(unsigned int const& _id) const
+	RunnableList::const_iterator Graph::iteratorId(Identifier const& id) const
 	{
 		for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->id() == _id)
+			if ((*it)->identifier() == id)
 			{
 				return it;
 			}
@@ -89,14 +89,14 @@ namespace _2Real
 		return position;
 	}
 
-	const bool Graph::isChild(unsigned int const& _id) const
+	const bool Graph::isChild(Identifier const& id) const
 	{
-		return (iteratorId(_id) != m_Children.end());
+		return (iteratorId(id) != m_Children.end());
 	}
 
-	const bool Graph::isInGraph(unsigned int const& _id) const
+	const bool Graph::isInGraph(Identifier const& id) const
 	{
-		RunnableList::const_iterator it = iteratorId(_id);
+		RunnableList::const_iterator it = iteratorId(id);
 		if (it != m_Children.end())
 		{
 			return true;
@@ -108,7 +108,7 @@ namespace _2Real
 				if (!(*it)->hasParameters())
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					if (child->isChild(_id))
+					if (child->isChild(id))
 					{
 						return true;
 					}
@@ -119,15 +119,15 @@ namespace _2Real
 		}
 	}
 
-	Runnable *const Graph::getChild(unsigned int const& _id)
+	Runnable *const Graph::getChild(Identifier const& id)
 	{
 		Runnable *child;
-		RunnableList::iterator it = this->iteratorId(_id);
+		RunnableList::iterator it = iteratorId(id);
 		
 		if (it != m_Children.end())
 		{
 			child = *it;
-			removeChild(child->id());
+			removeChild(child->identifier());
 			return child;
 		}
 		else
@@ -137,7 +137,7 @@ namespace _2Real
 				if (!(*it)->hasParameters())
 				{
 					RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
-					if ((child = graph->getChild(_id)) != NULL)
+					if ((child = graph->getChild(id)) != NULL)
 					{
 						return child;
 					}
@@ -145,12 +145,12 @@ namespace _2Real
 			}
 		}
 
-		throw ChildNotFoundException();
+		throw ChildNotFoundException(id.name());
 	}
 
-	Runnable const *const Graph::findChild(unsigned int const& _id) const
+	Runnable const *const Graph::findChild(Identifier const& id) const
 	{
-		RunnableList::const_iterator it = this->iteratorId(_id);
+		RunnableList::const_iterator it = this->iteratorId(id);
 		if (it != m_Children.end())
 		{
 			return *it;
@@ -162,7 +162,7 @@ namespace _2Real
 				if (!(*it)->hasParameters())
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					const Runnable *result = child->findChild(_id);
+					const Runnable *result = child->findChild(id);
 					if (result)
 					{
 						return result;
@@ -171,12 +171,12 @@ namespace _2Real
 			}
 		}
 
-		throw ChildNotFoundException();
+		throw ChildNotFoundException(id.name());
 	}
 
-	Runnable *const Graph::findChild(unsigned int const& _id)
+	Runnable *const Graph::findChild(Identifier const& id)
 	{
-		RunnableList::iterator it = this->iteratorId(_id);
+		RunnableList::iterator it = this->iteratorId(id);
 		
 		if (it != m_Children.end())
 		{
@@ -189,7 +189,7 @@ namespace _2Real
 				if (!(*it)->hasParameters())
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					Runnable *result = child->findChild(_id);
+					Runnable *result = child->findChild(id);
 					if (result)
 					{
 						return result;
@@ -198,7 +198,7 @@ namespace _2Real
 			}
 		}
 
-		throw ChildNotFoundException();
+		throw ChildNotFoundException(id.name());
 	}
 
 }

@@ -41,11 +41,11 @@ namespace _2Real
 		virtual void checkConfiguration();
 
 		virtual void insertChild(Runnable *const child, unsigned int const& index);
-		virtual void removeChild(unsigned int const& id);
+		virtual void removeChild(Identifier const& id);
 
-		virtual Runnable *const getChild(unsigned int const& id);
-		virtual Runnable *const findChild(unsigned int const& id);
-		virtual Runnable const *const findChild(unsigned int const& id) const;
+		//virtual Runnable *const getChild(unsigned int const& id);
+		//virtual Runnable *const findChild(unsigned int const& id);
+		//virtual Runnable const *const findChild(unsigned int const& id) const;
 
 	private:
 

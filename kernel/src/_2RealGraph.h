@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "_2RealEntity.h"
 #include "_2RealException.h"
 
 #include <list>
@@ -33,6 +32,8 @@ namespace _2Real
 	class Runnable;
 	typedef std::list< Runnable * >	RunnableList;
 
+	class Identifier;
+
 	class Graph
 	{
 
@@ -46,7 +47,7 @@ namespace _2Real
 			return m_Children.size();
 		}
 
-		std::list< unsigned int > childIDs() const;
+		std::list< Identifier > childIDs() const;
 
 		std::list< Runnable * > & children()
 		{
@@ -58,23 +59,23 @@ namespace _2Real
 			return m_Children;
 		}
 
-		bool const isChild(unsigned int const& id) const;
-		bool const isInGraph(unsigned int const& id) const;
+		bool const isChild(Identifier const& id) const;
+		bool const isInGraph(Identifier const& id) const;
 
-		Runnable *const			getChild(unsigned int const& id);
-		Runnable *const			findChild(unsigned int const& id);
-		Runnable const*const	findChild(unsigned int const& id) const;
+		Runnable *const			getChild(Identifier const& id);
+		Runnable *const			findChild(Identifier const& id);
+		Runnable const*const	findChild(Identifier const& id) const;
 
 		/**
 		*	those are different depending on the concrete type of graph
 		*/
 		virtual void insertChild(Runnable *const child, unsigned int const& index) = 0;
-		virtual void removeChild(unsigned int const& id) = 0;
+		virtual void removeChild(Identifier const& id) = 0;
 
 	protected:
 
-		RunnableList::iterator				iteratorId(unsigned int const& id);
-		RunnableList::const_iterator		iteratorId(unsigned int const& id) const;
+		RunnableList::iterator				iteratorId(Identifier const& id);
+		RunnableList::const_iterator		iteratorId(Identifier const& id) const;
 		RunnableList::iterator				iteratorPosition(unsigned int const& pos);
 		RunnableList::const_iterator		iteratorPosition(unsigned int const& pos) const;
 
@@ -85,10 +86,10 @@ namespace _2Real
 	class ChildNotFoundException : public Exception
 	{
 
-		friend class Graph;
+	public:
 
-		ChildNotFoundException() :
-			Exception("")
+		ChildNotFoundException(std::string const& child) :
+			Exception(std::string("runnable ").append(child).append(" not found"))
 		{
 		}
 

@@ -34,7 +34,9 @@ namespace _2Real
 
 	Service::Service(IService *const _service, Identifier const& _id, SystemGraph *const _system) : 
 		Runnable(_id, _system),
-		m_Service(_service)
+		m_Service(_service),
+		m_Timer(),
+		m_MaxDelay(16665)
 	{
 	}
 
@@ -150,6 +152,8 @@ namespace _2Real
 		{
 			try
 			{
+				m_Timer.update();
+				
 				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 				{
 					it->second->updateCurrent();
@@ -159,11 +163,27 @@ namespace _2Real
 				
 				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
 				{
-					//currently: blocking
 					it->second->update();
 				}
 
-				m_RunOnce = false;
+				if (m_RunOnce)
+				{
+					m_RunOnce = false;
+				}
+				else
+				{
+
+					long elapsed = m_Timer.elapsed();
+
+					long sleep = (m_MaxDelay - elapsed)/1000;
+					//std::cout << name() << " " << sleep << " " << elapsed << std::endl;
+
+					if (sleep > 0)
+					{
+						Poco::Thread::sleep(sleep);
+					}
+
+				}
 			}
 			catch (ServiceException &e)
 			{
@@ -200,7 +220,6 @@ namespace _2Real
 
 			for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
 			{
-				//currently: blocking
 				it->second->update();
 			}
 		}

@@ -144,9 +144,9 @@ namespace _2Real
 	//	}
 	//}
 
-	void Synchronization::removeChild(unsigned int const& _id)
+	void Synchronization::removeChild(Identifier const& id)
 	{
-		RunnableList::iterator it = iteratorId(_id);
+		RunnableList::iterator it = iteratorId(id);
 			
 		if (it == m_Children.end())
 		{
@@ -155,7 +155,7 @@ namespace _2Real
 
 		Runnable *child = *it;
 
-		m_System->stopChild(this->root()->id());
+		m_System->stopChild(this->root()->identifier());
 		//this->resetIO();
 
 		m_Children.erase(it);
@@ -163,7 +163,7 @@ namespace _2Real
 
 	void Synchronization::insertChild(Runnable *const _child, unsigned int const& _index)
 	{
-		RunnableList::iterator it = iteratorId(_child->id());
+		RunnableList::iterator it = iteratorId(_child->identifier());
 		
 		if (it != m_Children.end())
 		{
@@ -174,7 +174,7 @@ namespace _2Real
 			throw Exception("internal error: could not add child to container - index > childcount");
 		}
 
-		m_System->stopChild(this->root()->id());
+		m_System->stopChild(this->root()->identifier());
 
 		if (_index == m_Children.size())
 		{

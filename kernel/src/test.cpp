@@ -242,13 +242,46 @@ int main(int argc, char *argv[])
 			SDL_GL_SwapWindow(mainwindow);
 		}
 
+		//while(1)
+		//{
+		//	string line;
+		//	char lineEnd = '\n';
+		//	getline(cin, line, lineEnd);
+		//	if (line == "proceed")
+		//	{
+		//		break;
+		//	}
+		//}
+
 		testSystem.stop(depth);
 
 		cout << "main: DEPTH SERVICE STOPPED" << endl;
 
+		//while(1)
+		//{
+		//	string line;
+		//	char lineEnd = '\n';
+		//	getline(cin, line, lineEnd);
+		//	if (line == "proceed")
+		//	{
+		//		break;
+		//	}
+		//}
+
 		testSystem.stop(avg);
 
 		cout << "main: AVG SERVICE STOPPED" << endl << endl;
+
+		//while(1)
+		//{
+		//	string line;
+		//	char lineEnd = '\n';
+		//	getline(cin, line, lineEnd);
+		//	if (line == "proceed")
+		//	{
+		//		break;
+		//	}
+		//}
 
 		//test system falls out of scope here
 		//->services are deleted

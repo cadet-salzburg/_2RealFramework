@@ -23,6 +23,8 @@
 
 #include "Poco/Runnable.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 

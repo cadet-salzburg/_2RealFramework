@@ -23,6 +23,8 @@
 //#include "_2RealOutputHandle.h"
 //#include "_2RealSharedAny.h"
 
+#include "Poco/Timestamp.h"
+
 #include <list>
 #include <map>
 
@@ -126,6 +128,10 @@ namespace _2Real
 		ParameterMap										m_SetupParameters;
 
 		IService											*m_Service;
+
+		Poco::Timestamp										m_Timer;
+
+		long												m_MaxDelay;
 
 	};
 
