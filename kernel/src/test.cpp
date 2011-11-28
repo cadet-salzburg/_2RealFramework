@@ -205,13 +205,15 @@ int main(int argc, char *argv[])
 
 		testSystem.start(depth);
 
+		testSystem.setUpdateRate(depth, 100.0f);
+
 		cout << "main: DEPTH SERVICE STARTED" << endl;
 
 		Identifier avg = testSystem.createService("image accumulation", imgPlugin, "ImageAccumulation_uchar");
 
 		cout << "main: AVG SERVICE CREATED" << endl;
 
-		testSystem.setParameterValue< unsigned char >(avg, "buffer size", unsigned char(50));
+		testSystem.setParameterValue< unsigned char >(avg, "buffer size", unsigned char(10));
 
 		cout << "main: AVG SERVICE SETUP PARAMS SET" << endl;
 
@@ -224,6 +226,8 @@ int main(int argc, char *argv[])
 		cout << "main: AVG LISTENER REGISTERED" << endl;
 
 		testSystem.start(avg);
+
+		testSystem.setUpdateRate(avg, 100.0f);
 
 		cout << "main: AVG STARTED" << endl;
 
@@ -242,46 +246,13 @@ int main(int argc, char *argv[])
 			SDL_GL_SwapWindow(mainwindow);
 		}
 
-		//while(1)
-		//{
-		//	string line;
-		//	char lineEnd = '\n';
-		//	getline(cin, line, lineEnd);
-		//	if (line == "proceed")
-		//	{
-		//		break;
-		//	}
-		//}
-
 		testSystem.stop(depth);
 
 		cout << "main: DEPTH SERVICE STOPPED" << endl;
 
-		//while(1)
-		//{
-		//	string line;
-		//	char lineEnd = '\n';
-		//	getline(cin, line, lineEnd);
-		//	if (line == "proceed")
-		//	{
-		//		break;
-		//	}
-		//}
-
 		testSystem.stop(avg);
 
 		cout << "main: AVG SERVICE STOPPED" << endl << endl;
-
-		//while(1)
-		//{
-		//	string line;
-		//	char lineEnd = '\n';
-		//	getline(cin, line, lineEnd);
-		//	if (line == "proceed")
-		//	{
-		//		break;
-		//	}
-		//}
 
 		//test system falls out of scope here
 		//->services are deleted

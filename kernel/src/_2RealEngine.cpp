@@ -75,7 +75,7 @@ namespace _2Real
 		m_Factory = new ServiceFactory(*this);
 		m_Graphs = new ProductionGraphs(*this);
 
-		//m_Time = new EngineTime();
+		m_Timer.update();
 	}
 
 	Engine::Engine(Engine const& _src)
@@ -261,42 +261,60 @@ namespace _2Real
 	//	}
 	//}
 
-	void Engine::setParameterValue(Identifier const& _id, std::string const& _param, SharedAny _value, std::string const& _type, Identifier const& _system)
+	void Engine::setParameterValue(Identifier const& entity, std::string const& name, SharedAny value, std::string const& type, Identifier const& system)
 	{
-		if (m_Plugins->contains(_id))
+		if (m_Plugins->contains(entity))
 		{
-			Plugin *plugin = m_Plugins->plugin(_id);
-			SetupParameter *param = plugin->getSetupParameter(_param);
-			if (param->datatype() != _type)
+			Plugin *plugin = m_Plugins->plugin(entity);
+			SetupParameter *param = plugin->getSetupParameter(name);
+			if (param->datatype() != type)
 			{
 				//BadDatatypeException
-				throw Exception("datatype mismatch: " + param->datatype() + " " + _type);
+				throw Exception("datatype mismatch: " + param->datatype() + " " + type);
 			}
-			param->set(_value);
+			param->set(value);
 		}
 		else
 		{
 			Runnable *runnable = NULL;
-			if ((runnable = m_Graphs->belongsToSystem(_system, _id)) != NULL)
+			//~~ this is a weird function
+			if ((runnable = m_Graphs->belongsToSystem(system, entity)) != NULL)
 			{
-				if (runnable->hasParameters())
+				if ((runnable->type() == "service"))
 				{
 					Service *service = static_cast< Service * >(runnable);
-					SetupParameter *param = service->getSetupParameter(_param);
-					if (param)
+					if (service->hasSetupParameter(name))
 					{
-						if (param->datatype() != _type)
+						SetupParameter *param = service->getSetupParameter(name);
+						if (param->datatype() != type)
 						{
 							//BadDatatypeException
-							throw Exception("datatype mismatch: " + param->datatype() + " " + _type);
+							throw Exception("datatype mismatch: " + param->datatype() + " " + type);
 						}
-
-						param->set(_value);
+						param->set(value);
+					}
+					if (service->hasInputSlot(name))
+					{
+						InputSlot *slot = service->getInputSlot(name);
+						if (slot->datatype() != type)
+						{
+							//BadDatatypeException
+							throw Exception("datatype mismatch: " + slot->datatype() + " " + type);
+						}
+						if (slot->isLinked())
+						{
+							slot->reset();
+						}
+						
+						//oO
+						m_Timer.update();
+						Data data(value, m_Timer.elapsed());
+						slot->set(data);
 					}
 					else
 					{
 						//InvalidParameterException
-						//_id is a service belongin to _system, but has no setup param named like that
+						//_id is a service belongin to _system, but has no setup/input param named like that
 					}
 				}
 				else
@@ -310,6 +328,32 @@ namespace _2Real
 				//InvalidEntityException
 				//_id is not a runnable belonging to system
 			}
+		}
+	}
+
+	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
+	{
+		Runnable *runnable = NULL;
+		if ((runnable = m_Graphs->belongsToSystem(system, id)) != NULL)
+		{
+			if (runnable->type() == "service")
+			{
+				std::cout << "setting update rate" << std::endl;
+				Service *service = static_cast< Service * >(runnable);
+				service->setUpdateRate(updatesPerSecond);
+			}
+			else
+			{
+				std::cout << "not a service" << std::endl;
+				//InvalidEntityException
+				//_id really belongs to _system, but is not a service
+			}
+		}
+		else
+		{
+			std::cout << "wrong system" << std::endl;
+			//InvalidEntityException
+			//_id is not a runnable belonging to system
 		}
 	}
 
@@ -372,7 +416,7 @@ namespace _2Real
 
 		if ((runnable = m_Graphs->belongsToSystem(_system, _idIn)) != NULL)
 		{
-			if (runnable->hasParameters())
+			if (runnable->type() == "service")
 			{
 				Service *serviceIn = static_cast< Service * >(runnable);
 				in = serviceIn->getInputSlot(_nameIn);
@@ -397,7 +441,7 @@ namespace _2Real
 		runnable = NULL;
 		if ((runnable = m_Graphs->belongsToSystem(_system, _idOut)) != NULL)
 		{
-			if (runnable->hasParameters())
+			if (runnable->type() == "service")
 			{
 				Service *serviceOut = static_cast< Service * >(runnable);
 				out = serviceOut->getOutputSlot(_nameOut);
@@ -420,6 +464,7 @@ namespace _2Real
 		}
 
 		out->addListener(in);
+		in->linkWith(out);
 	}
 
 	void Engine::registerToException(ExceptionCallback _callback, Identifier const& _system)
@@ -439,7 +484,7 @@ namespace _2Real
 		Runnable *runnable = NULL;
 		if ((runnable = m_Graphs->belongsToSystem(_system, _service)))
 		{
-			if (runnable->hasParameters())
+			if (runnable->type() == "service")
 			{
 				Service *service = static_cast< Service * >(runnable);
 				OutputSlot *slot = service->getOutputSlot(_name);
@@ -460,7 +505,7 @@ namespace _2Real
 		Runnable *runnable = NULL;
 		if ((runnable = m_Graphs->belongsToSystem(_system, _service)))
 		{
-			if (runnable->hasParameters())
+			if (runnable->type() == "service")
 			{
 				Service *service = static_cast< Service * >(runnable);
 				OutputSlot *slot = service->getOutputSlot(_name);

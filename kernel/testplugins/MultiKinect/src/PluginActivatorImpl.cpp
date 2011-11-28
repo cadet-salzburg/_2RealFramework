@@ -5,11 +5,6 @@
 
 #include "Generators.h"
 
-#ifdef _WINSDK
-	#define TARGET_MSKINECTSDK
-#endif
-
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -17,20 +12,12 @@
 using namespace _2Real;
 using namespace std;
 
-#ifdef _WINSDK
-	class MultiKinectWinSdk : public IPluginActivator
-#elif _OPENNI
-	class MultiKinectOpenNI : public IPluginActivator
-#endif
+class MultiKinectOpenNI : public IPluginActivator
 {
 
 public:
 
-#ifdef _WINSDK
-	~MultiKinectWinSdk();
-#elif _OPENNI
 	~MultiKinectOpenNI();
-#endif
 
 	void			getMetadata(PluginMetadata &info);
 	void			setup(PluginContext &context);
@@ -50,11 +37,7 @@ private:
 	void			getLogSettings(PluginContext &context);
 };
 
-#ifdef _WINSDK
-	MultiKinectWinSdk::~MultiKinectWinSdk()
-#elif _OPENNI
-	MultiKinectOpenNI::~MultiKinectOpenNI()
-#endif
+MultiKinectOpenNI::~MultiKinectOpenNI()
 {
 	if (m_2RealKinect)
 	{
@@ -62,25 +45,13 @@ private:
 	}
 }
 
-void
-#ifdef _WINSDK
-	MultiKinectWinSdk::
-#elif _OPENNI
-	MultiKinectOpenNI::
-#endif
-	getMetadata(PluginMetadata &info)
+void MultiKinectOpenNI::getMetadata(PluginMetadata &info)
 {
 	MetadataReader reader(info);
 	reader.readMetadata();
 }
 
-void
-#ifdef _WINSDK
-	MultiKinectWinSdk::
-#elif _OPENNI
-	MultiKinectOpenNI::
-#endif
-	setup(PluginContext &context)
+void MultiKinectOpenNI::setup(PluginContext &context)
 {
 	getGeneratorFlags(context);
 	getImageFlags(context);
@@ -100,13 +71,7 @@ void
 	m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
 }
 
-void
-#ifdef _WINSDK
-	MultiKinectWinSdk::
-#elif _OPENNI
-	MultiKinectOpenNI::
-#endif
-	getGeneratorFlags(PluginContext &context)
+void MultiKinectOpenNI::getGeneratorFlags(PluginContext &context)
 {
 	m_AlignColorDepth = context.getParameterValue< bool >("align color depth");
 	vector< string > flags = context.getParameterValue< vector < string > >("generator flags");
@@ -156,13 +121,7 @@ void
 	m_GeneratorFlags = depth | color | user;
 }
 
-void
-#ifdef _WINSDK
-	MultiKinectWinSdk::
-#elif _OPENNI
-	MultiKinectOpenNI::
-#endif
-	getImageFlags(PluginContext &context)
+void MultiKinectOpenNI::getImageFlags(PluginContext &context)
 {
 	vector< string > flags = context.getParameterValue< vector < string > >("image flags");
 
@@ -211,13 +170,7 @@ void
 	m_ImageFlags = depth | color | mirrored;
 }
 
-void
-#ifdef _WINSDK
-	MultiKinectWinSdk::
-#elif _OPENNI
-	MultiKinectOpenNI::
-#endif
-	getLogSettings(PluginContext &context)
+void MultiKinectOpenNI::getLogSettings(PluginContext &context)
 {
 	m_LogPath = string();
 
@@ -250,8 +203,4 @@ void
 	}
 }
 
-#ifdef _WINSDK
-	_2REAL_EXPORT_PLUGIN(MultiKinectWinSdk)
-#elif _OPENNI
-	_2REAL_EXPORT_PLUGIN(MultiKinectOpenNI)
-#endif
+_2REAL_EXPORT_PLUGIN(MultiKinectOpenNI)

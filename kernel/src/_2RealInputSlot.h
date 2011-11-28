@@ -44,30 +44,19 @@ namespace _2Real
 		InputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key);
 		~InputSlot();
 
-		OutputSlot *const linkedOutput()
-		{
-			return m_Output;
-		}
+		void reset();
 
-		OutputSlot const *const linkedOutput() const
+		void linkWith(OutputSlot *const output)
 		{
-			return m_Output;
+			m_Output = output;
 		}
 
 		const bool isLinked() const
 		{
-			if (m_Output)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return (m_Output != NULL);
 		}
 
-		//void linkWith(OutputSlot *const output);
-		//void reset();
+		void set(Data const& data);
 
 		void updateCurrent();
 		void clearCurrent();
@@ -75,15 +64,15 @@ namespace _2Real
 
 		const TimestampedData getNewest() const;
 		const TimestampedData getOldest() const;
+		const TimestampedData getData() const;
 
 	private:
 
 		typedef std::map< Poco::Timestamp, SharedAny >		DataTable;
 
-		Poco::FastMutex				m_Mutex;
+		mutable Poco::FastMutex		m_Mutex;
 		DataTable					m_ReceivedTable;
 		DataTable					m_CurrentTable;
-
 		OutputSlot					*m_Output;
 
 	};

@@ -112,6 +112,11 @@ namespace _2Real
 		return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
 	}
 
+	void System::setUpdateRate(Identifier const& id, float const& updatesPerSecond)
+	{
+		m_Engine->setUpdateRate(id, updatesPerSecond, *m_ID);
+	}
+
 	void System::setParameterValue(Identifier const& _id, std::string const& _paramName, SharedAny _any, type_info const& _info)
 	{
 		m_Engine->setParameterValue(_id, _paramName, _any, _info.name(), *m_ID);

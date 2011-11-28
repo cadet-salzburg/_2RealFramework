@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "Poco/AbstractDelegate.h"
+#include "Poco/Timestamp.h"
 
 namespace _2Real
 {
@@ -118,6 +119,7 @@ namespace _2Real
 		void dumpServiceInfo(Identifier const& plugin, std::string const& service, Identifier const& system) const;
 		
 		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
+		void setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system);
 
 		void setParameterValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
 
@@ -155,7 +157,7 @@ namespace _2Real
 		ServiceFactory			*m_Factory;
 		ProductionGraphs		*m_Graphs;
 		TypeTable				*m_Types;
-		//EngineTime				*m_Time;
+		Poco::Timestamp			m_Timer;
 
 	};
 

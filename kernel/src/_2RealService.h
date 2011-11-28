@@ -59,16 +59,10 @@ namespace _2Real
 		Service(IService *const service, Identifier const& id, SystemGraph *const system);
 		virtual ~Service();
 
-		/**
-		*	functions for service context
-		*/
 		SharedAny getParameterValue(std::string const& name);
 		InputHandle createInputHandle(std::string const& name);
 		OutputHandle createOutputHandle(std::string const& name);
 
-		/**
-		*	functions for service factory
-		*/
 		void addInputSlot(InputSlot *const slot);
 		void addOutputSlot(OutputSlot *const slot);
 		void addSetupParameter(SetupParameter *const parameter);
@@ -78,9 +72,9 @@ namespace _2Real
 		void update();
 		void shutdown();
 		
-		std::list< unsigned int > setupParameterIDs() const;
-		std::list< unsigned int > inputSlotIDs() const;
-		std::list< unsigned int > outputSlotIDs() const;
+		std::list< Identifier > setupParameterIDs() const;
+		std::list< Identifier > inputSlotIDs() const;
+		std::list< Identifier > outputSlotIDs() const;
 
 		InputMap & inputSlots()
 		{
@@ -112,14 +106,15 @@ namespace _2Real
 			return m_SetupParameters;
 		}
 
-		const bool hasParameters() const
-		{
-			return true;
-		}
+		const bool hasInputSlot(std::string const& name) const;
+		const bool hasOutputSlot(std::string const& name) const;
+		const bool hasSetupParameter(std::string const& name) const;
 
 		OutputSlot *const getOutputSlot(std::string const& name);
 		InputSlot *const getInputSlot(std::string const& name);
 		SetupParameter *const getSetupParameter(std::string const& name);
+
+		void setUpdateRate(float const& updatesPerSecond);
 
 	private:
 
@@ -130,8 +125,8 @@ namespace _2Real
 		IService											*m_Service;
 
 		Poco::Timestamp										m_Timer;
-
 		long												m_MaxDelay;
+		float												m_UpdatesPerSecond;
 
 	};
 

@@ -168,7 +168,7 @@ namespace _2Real
 				return *it;
 			}
 			// ~~has parameters
-			else if (!(*it)->hasParameters())
+			else if (!((*it)->type() == "service"))
 			{
 				RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
 				Runnable *child = NULL;

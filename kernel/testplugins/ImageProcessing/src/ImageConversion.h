@@ -95,7 +95,7 @@ void FloatConversionService< ImageData >::update()
 	{
 		//cout << "FloatConversionService: update " << endl;
 
-		Pixelbuffer< ImageData > const& newImage(m_Input.getNewestData< Pixelbuffer < ImageData > >());
+		Pixelbuffer< ImageData > const& newImage(m_Input.data< Pixelbuffer < ImageData > >());
 		Pixelbuffer< float > & outImage(m_Output.data< Pixelbuffer < float > >());
 
 		unsigned int size = newImage.size();

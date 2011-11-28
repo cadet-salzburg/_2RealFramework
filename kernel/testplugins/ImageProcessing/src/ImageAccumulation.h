@@ -92,7 +92,7 @@ void ImageAccumulationService< ImageData >::update()
 	{
 		//cout << "ImageAccumulationService: update " << endl;
 
-		Pixelbuffer< ImageData > const& newImage(m_Input.getNewestData< Pixelbuffer < ImageData > >());
+		Pixelbuffer< ImageData > const& newImage(m_Input.data< Pixelbuffer < ImageData > >());
 		Pixelbuffer< float > & outImage = m_Output.data< Pixelbuffer < float > >();
 
 		unsigned int width = newImage.width();

@@ -37,7 +37,7 @@ namespace _2Real
 		~InputHandle();
 
 		template< typename Datatype >
-		Datatype const& getNewestData()
+		Datatype const& data()
 		{
 			if (!m_Input)
 			{
@@ -55,24 +55,43 @@ namespace _2Real
 			}
 		}
 
-		template< typename Datatype >
-		Datatype const& getOldestData()
-		{
-			if (!m_Input)
-			{
-				throw BadHandleException(m_Name);
-			}
+		//template< typename Datatype >
+		//Datatype const& getNewestData()
+		//{
+		//	if (!m_Input)
+		//	{
+		//		throw BadHandleException(m_Name);
+		//	}
 
-			try
-			{
-				Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(oldest());
-				return *ptr.get();
-			}
-			catch (Poco::Exception &e)
-			{
-				throw e;
-			}
-		}
+		//	try
+		//	{
+		//		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
+		//		return *ptr.get();
+		//	}
+		//	catch (Exception &e)
+		//	{
+		//		throw e;
+		//	}
+		//}
+
+		//template< typename Datatype >
+		//Datatype const& getOldestData()
+		//{
+		//	if (!m_Input)
+		//	{
+		//		throw BadHandleException(m_Name);
+		//	}
+
+		//	try
+		//	{
+		//		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(oldest());
+		//		return *ptr.get();
+		//	}
+		//	catch (Poco::Exception &e)
+		//	{
+		//		throw e;
+		//	}
+		//}
 
 	private:
 

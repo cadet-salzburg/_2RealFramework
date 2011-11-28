@@ -46,37 +46,33 @@ namespace _2Real
 
 		void init(SharedAny const& initialValue);
 
-		InputSlot *const linkedInput()
-		{
-			return m_Input;
-		}
+		//InputSlot *const linkedInput()
+		//{
+		//	return m_Input;
+		//}
 
-		InputSlot const *const linkedInput() const
-		{
-			return m_Input;
-		}
+		//InputSlot const *const linkedInput() const
+		//{
+		//	return m_Input;
+		//}
 
-		const bool isLinked() const
-		{
-			if (m_Input)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+		//const bool isLinked() const
+		//{
+		//	return (m_Input != NULL);
+		//}
 
 		SharedAny data()
 		{
 			return m_WriteData;
 		}
 
+		void update();
+		//void reset();
+
 		void registerCallback(DataCallback callback);
 		void unregisterCallback(DataCallback callback);
-		void update();
 		void addListener(InputSlot *listener);
+		void removeListener(InputSlot *listener);
 
 	private:
 

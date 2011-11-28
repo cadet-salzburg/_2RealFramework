@@ -105,7 +105,7 @@ namespace _2Real
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!(*it)->hasParameters())
+				if (!((*it)->type() == "service"))
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
 					if (child->isChild(id))
@@ -134,7 +134,7 @@ namespace _2Real
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!(*it)->hasParameters())
+				if (!((*it)->type() == "service"))
 				{
 					RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
 					if ((child = graph->getChild(id)) != NULL)
@@ -159,7 +159,7 @@ namespace _2Real
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!(*it)->hasParameters())
+				if (!((*it)->type() == "service"))
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
 					const Runnable *result = child->findChild(id);
@@ -186,7 +186,7 @@ namespace _2Real
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!(*it)->hasParameters())
+				if (!((*it)->type() == "service"))
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
 					Runnable *result = child->findChild(id);

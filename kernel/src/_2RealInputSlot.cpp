@@ -24,8 +24,9 @@
 namespace _2Real
 {
 
-	InputSlot::InputSlot(Identifier const& _id, Service *const _service, std::string const& _type, std::string const& _key) :
-		IOSlot(_id, _service, _type, _key)
+	InputSlot::InputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key) :
+		IOSlot(id, service, type, key),
+		m_Output(NULL)
 	{
 	}
 
@@ -46,17 +47,29 @@ namespace _2Real
 
 	void InputSlot::clearCurrent()
 	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_CurrentTable.clear();
 	}
 
 	void InputSlot::receiveData(Data &data)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_ReceivedTable.insert(TimestampedData(data.timestamp(), data.data()));
+	}
+
+	const TimestampedData InputSlot::getData() const
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		return getNewest();
 	}
 
 	const TimestampedData InputSlot::getNewest() const
 	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		if (m_CurrentTable.empty())
 		{
 			throw Exception("internal exception: input slot " + name() + " has no data.");
@@ -69,6 +82,8 @@ namespace _2Real
 
 	const TimestampedData InputSlot::getOldest() const
 	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		if (m_CurrentTable.empty())
 		{
 			throw Exception("internal exception: input slot " + name() + " has no data.");
@@ -80,33 +95,24 @@ namespace _2Real
 		return *oldest;
 	}
 
-	//void InputSlot::linkWith(OutputSlot *const _output)
-	//{
-	//	try
-	//	{
-	//		if (!_output)
-	//		{
-	//			throw Exception("internal error: IO slot linkage failed - null pointer");
-	//		}
+	void InputSlot::reset()
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		
+		if (isLinked())
+		{
+			m_Output->removeListener(this);
+		}
 
-	//		m_Linked = _output;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+		m_Output = NULL;
+	}
 
-	//void InputSlot::reset()
-	//{
-	//	try
-	//	{
-	//		m_Linked = NULL;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void InputSlot::set(Data const& data)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_ReceivedTable.clear();
+		m_ReceivedTable.insert(TimestampedData(data.timestamp(), data.data()));
+	}
 
 }

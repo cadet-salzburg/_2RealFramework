@@ -133,6 +133,8 @@ namespace _2Real
 		*/
 		const Identifier createService(std::string const& name, Identifier const& pluginID, std::string const& serviceName);
 
+		void setUpdateRate(Identifier const& id, float const& updatesPerSecond);
+
 		/**
 		*	initializes a service's or plugin's setup parameter
 		*

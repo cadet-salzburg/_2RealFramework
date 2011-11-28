@@ -36,65 +36,11 @@ namespace _2Real
 	{
 	}
 
-	//void OutputSlot::linkWith(InputSlot *const _input)
-	//{
-	//	try
-	//	{
-	//		if (!_input)
-	//		{
-	//			throw Exception("internal error: IO slot linkage failed - null pointer");
-	//		}
-	//		else if (_input == m_Linked)
-	//		{
-	//			return;
-	//		}
-	//		else if (_input->datatype() != m_Typename)
-	//		{
-	//			throw Exception("internal error: IO slot linkage failed - datatype mismatch");
-	//		}
-
-	//		if (m_Linked)
-	//		{
-	//			//this will call input's reset as well
-	//			reset();
-	//		}
-
-	//		_input->service()->listenTo(m_Service);
-	//		m_Service->addListener(_input->service());
-	//		_input->linkWith(this);
-
-	//		m_Linked = _input;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		m_Linked = NULL;
-	//		throw e;
-	//	}
-	//}
-
-	//void OutputSlot::reset()
-	//{
-	//	try
-	//	{
-	//		if (m_Linked)
-	//		{
-	//			InputSlot *input = static_cast< InputSlot * >(m_Linked);
-	//			input->service()->stopListeningTo(m_Service);
-	//			m_Service->removeListener(input->service());
-	//			input->reset();
-	//			m_Linked = NULL;
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
 	void OutputSlot::init(SharedAny const& initialData)
 	{
 		m_WriteData = initialData;
 		m_IsInitialized = true;
+
 		update();
 	}
 
@@ -119,13 +65,21 @@ namespace _2Real
 		listener->receiveData(m_CurrentData);
 	}
 
+	void OutputSlot::removeListener(InputSlot *listener)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		m_Event -= Poco::delegate(listener, &InputSlot::receiveData);
+	}
+
 	void OutputSlot::registerCallback(DataCallback callback)
 	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 		m_Event += Poco::delegate(callback);
 	}
 
 	void OutputSlot::unregisterCallback(DataCallback callback)
 	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 		m_Event -= Poco::delegate(callback);
 	}
 }

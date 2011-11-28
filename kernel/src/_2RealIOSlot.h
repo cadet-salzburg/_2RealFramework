@@ -54,16 +54,6 @@ namespace _2Real
 			return m_Service;
 		}
 
-		/**
-		*	resets linkage
-		*/
-		//virtual void						reset() = 0;
-
-		/**
-		*	true if io slot has been linked
-		*/
-		//virtual const bool					isLinked() const = 0;
-
 	protected:
 
 		/**

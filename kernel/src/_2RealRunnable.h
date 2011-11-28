@@ -68,8 +68,6 @@ namespace _2Real
 		virtual void shutdown() = 0;
 		virtual void checkConfiguration() = 0;
 
-		virtual const bool hasParameters() const = 0;
-
 		RunnableGraph *const root()
 		{
 			return m_Root;

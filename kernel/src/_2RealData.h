@@ -36,11 +36,6 @@ namespace _2Real
 		{
 		}
 
-		//Identifier const& id() const
-		//{
-		//	return m_Id;
-		//}
-
 		template< typename Datatype >
 		Datatype const& getData()
 		{
@@ -61,6 +56,7 @@ namespace _2Real
 	private:
 
 		friend class OutputSlot;
+		friend class Engine;
 
 		Data() :
 			m_Data(SharedAny()),
@@ -68,64 +64,15 @@ namespace _2Real
 		{
 		}
 
-		//Data(Identifier const& id, SharedAny const& data, Poco::Timestamp const& time) :
-		//	m_Id(id),
-		//	m_Data(data),
-		//	m_Timestamp(time)
-		//{
-		//}
-
 		Data(SharedAny const& data, Poco::Timestamp const& time) :
 			m_Data(data),
 			m_Timestamp(time)
 		{
 		}
 
-		//Identifier			const m_Id;
 		SharedAny			m_Data;
 		Poco::Timestamp		m_Timestamp;
 
 	};
-
-	//class DataHandle : public ParameterHandle
-	//{
-
-	//public:
-
-	//	DataHandle();
-	//	DataHandle(InputHandle const& src);
-	//	DataHandle& operator=(DataHandle const& src);
-	//	~DataHandle();
-
-	//	template< typename Datatype >
-	//	Datatype const& data()
-	//	{
-	//		if (!m_Output)
-	//		{
-	//			throw BadHandleException(m_Name);
-	//		}
-
-	//		try
-	//		{
-	//			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >();
-	//			return *ptr.get();
-	//		}
-	//		catch (Exception &e)
-	//		{
-	//			throw e;
-	//		}
-	//	}
-
-	//private:
-
-	//	friend class OutputSlot;
-
-	//	DataHandle(OutputSlot *slot);
-
-	//	SharedAny		data();
-
-	//	InputSlot		*m_Input;
-
-	//};
 
 }
