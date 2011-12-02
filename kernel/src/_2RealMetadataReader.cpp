@@ -20,10 +20,7 @@
 #include "_2RealMetaDataReader.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealPluginMetadata.h"
-#include "_2RealEngine.h"
 #include "_2RealException.h"
-#include "_2RealPlugin.h"
-#include "_2RealTypes.h"
 
 #include "Poco/SAX/InputSource.h"
 #include "Poco/DOM/DOMParser.h"
@@ -34,165 +31,145 @@
 #include "Poco/DOM/NamedNodeMap.h"
 #include "Poco/DOM/AutoPtr.h"
 
-#include <sstream>
-#include <iostream>
-#include <typeinfo>
-
 using namespace Poco::XML;
 
 namespace _2Real
 {
 
-	const std::string MetadataReader::getNodeAttribute(std::string const& _name, Node *const _node)
+	const std::string MetadataReader::getNodeAttribute(std::string const& name, Node &node)
 	{
-		NamedNodeMap *attribs = _node->attributes();
-		if (!attribs)
+		NamedNodeMap *attributes = node.attributes();
+		if (!attributes)
 		{
-			throw MetadataFormatException("xml node \'" + _node->nodeName() + "\' has no attributes");
+			throw MetadataFormatException("xml node \'" + node.nodeName() + "\' has no attributes");
 		}
 
-		Node *attrib = attribs->getNamedItem(_name);
+		Node *attrib = attributes->getNamedItem(name);
 		if (!attrib)
 		{
-			attribs->release();
-			throw MetadataFormatException("xml node \'" + _node->nodeName() + "\' has no attribute \'" + _name + "\'");
-		}
-
-		if (_name == "type" && !m_Metadata.getTypes().contains(attrib->nodeValue()))
-		{
-			throw MetadataFormatException("xml node \'" + _node->nodeName() + "\' has unknown type \'" + attrib->nodeValue() + "\'");
+			attributes->release();
+			throw MetadataFormatException("xml node \'" + node.nodeName() + "\' has no attribute \'" + name + "\'");
 		}
 
 		return attrib->nodeValue();
 	}
 
-	const std::string MetadataReader::getParameterType(Node *const _attrib)
+	Node & MetadataReader::getChildNode(std::string const& name, Node &parent)
 	{
-		std::string type = _attrib->nodeValue();
-		return m_Metadata.getTypes().getTypename(type);
-	}
-
-
-	Node *const MetadataReader::getChildNode(std::string const& _name, Node *const _parent)
-	{
-		NodeList *children = _parent->childNodes();
+		NodeList *children = parent.childNodes();
 		
 		if (!children)
 		{
-			throw MetadataFormatException("xml node \'" + _parent->localName() + "\' has no child node named \'" + _name + "\'");
+			throw MetadataFormatException("xml node \'" + parent.localName() + "\' has no child nodes");
 		}
 
 		for (unsigned long i=0; i<children->length(); i++)
 		{
 			Node *child = children->item(i);
-			if (child->localName() == _name)
+			if (child->localName() == name)
 			{
 				children->release();
-				return child;
+				return *child;
 			}
 		}
 
-		children->release();
-		return NULL;
+		throw MetadataFormatException("xml node \'" + parent.localName() + "\' has no child node named \'" + name + "\'");
 	}
 
-	void MetadataReader::processPluginNode(PluginMetadata &_info, Node *const _plugin)
+	void MetadataReader::processPluginNode(Node &plugin)
 	{
-		if (_info.getClassname() != getNodeAttribute("name", _plugin))
+
+		if (m_Metadata.getClassname() != getNodeAttribute("name", plugin))
 		{
 			throw MetadataFormatException("attribute \'name\' of plugin does not match classname");
 		}
 
-		_info.setAuthor(getNodeAttribute("author", _plugin));
-		_info.setContact(getNodeAttribute("contact", _plugin));
-		_info.setDescription(getNodeAttribute("description", _plugin));
+		m_Metadata.setAuthor(getNodeAttribute("author", plugin));
+		m_Metadata.setContact(getNodeAttribute("contact", plugin));
+		m_Metadata.setDescription(getNodeAttribute("description", plugin));
 
-		std::string version = getNodeAttribute("version", _plugin);
+		std::string version = getNodeAttribute("version", plugin);
 		std::stringstream tmp;
 		tmp << version;
 		unsigned int major, minor, revision;
 		unsigned char sep;
 		tmp >> major >> sep >> minor >> sep >> revision;
-		PluginMetadata::Version v(major, minor, revision);
-		_info.setVersion(v);
+		Version v(major, minor, revision);
+		m_Metadata.setVersion(v);
 
-		Node *setup = getChildNode("setup", _plugin);
-		if (setup->hasChildNodes())
+		Node &setup = getChildNode("setup", plugin);
+		if (setup.hasChildNodes())
 		{
-			NodeList *children = setup->childNodes();
+			NodeList *children = setup.childNodes();
 			for (unsigned long i=0; i<children->length(); i++)
 			{
 				Node* param = children->item(i);
 				if (param->localName() == "param")
 				{
-					std::string name = getNodeAttribute("name", param);
-					std::string type = getNodeAttribute("type", param);
-					_info.addSetupParameter(name, type);
+					std::string name = getNodeAttribute("name", *param);
+					std::string type = getNodeAttribute("type", *param);
+					m_Metadata.addSetupParameter(name, type);
 				}
 			}
 		}
-
-		setup->release();
 	}
 
-	void MetadataReader::processServiceNode(PluginMetadata &_info, Node *const _service)
+	void MetadataReader::processServiceNode(Node &service)
 	{
-		ServiceMetadata meta(getNodeAttribute("name", _service));
-		meta.setDescription(getNodeAttribute("description", _service));
+		ServiceMetadata &meta = m_Metadata.addServiceMetadata(getNodeAttribute("name", service));
+		meta.setDescription(getNodeAttribute("description", service));
 
-		Node *setup = getChildNode("setup", _service);
-		if (setup->hasChildNodes())
+		Node &setup = getChildNode("setup", service);
+		if (setup.hasChildNodes())
 		{
-			NodeList *children = setup->childNodes();
+			NodeList *children = setup.childNodes();
 			for (unsigned long i=0; i<children->length(); i++)
 			{
 				Node* param = children->item(i);
 				if (param->localName() == "param")
 				{
-					std::string name = getNodeAttribute("name", param);
-					std::string type = getNodeAttribute("type", param);
+					std::string name = getNodeAttribute("name", *param);
+					std::string type = getNodeAttribute("type", *param);
 					meta.addSetupParameter(name, type);
 				}
 			}
 		}
 
-		Node *input = getChildNode("input", _service);
-		if (input->hasChildNodes())
+		Node &input = getChildNode("input", service);
+		if (input.hasChildNodes())
 		{
-			NodeList *children = input->childNodes();
+			NodeList *children = input.childNodes();
 			for (unsigned long i=0; i<children->length(); i++)
 			{
 				Node* param = children->item(i);
 				if (param->localName() == "param")
 				{
-					std::string name = getNodeAttribute("name", param);
-					std::string type = getNodeAttribute("type", param);
-					meta.addInputParameter(name, type);
+					std::string name = getNodeAttribute("name", *param);
+					std::string type = getNodeAttribute("type", *param);
+					meta.addInputSlot(name, type);
 				}
 			}
 		}
 
-		Node *output = getChildNode("output", _service);
-		if (output->hasChildNodes())
+		Node &output = getChildNode("output", service);
+		if (output.hasChildNodes())
 		{
-			NodeList *children = output->childNodes();
+			NodeList *children = output.childNodes();
 			for (unsigned long i=0; i<children->length(); i++)
 			{
 				Node* param = children->item(i);
 				if (param->localName() == "param")
 				{
-					std::string name = getNodeAttribute("name", param);
-					std::string type = getNodeAttribute("type", param);
-					meta.addOutputParameter(name, type);
+					std::string name = getNodeAttribute("name", *param);
+					std::string type = getNodeAttribute("type", *param);
+					meta.addOutputSlot(name, type);
 				}
 			}
 		}
-
-		_info.addServiceMetadata(meta);
 	}
 
-	MetadataReader::MetadataReader(PluginMetadata &_info) :
-		m_Metadata(_info)
+	MetadataReader::MetadataReader(PluginMetadata &info) :
+		m_Metadata(info)
 	{
 	}
 
@@ -210,10 +187,10 @@ namespace _2Real
 		}
 		else if (plugins->length() > 1)
 		{
-			throw MetadataFormatException("xml element \'plugin\' should be unique");
+			throw MetadataFormatException("xml element \'plugin\' must be unique");
 		}
 
-		processPluginNode(m_Metadata, plugins->item(0));
+		processPluginNode(*(plugins->item(0)));
 
 		NodeList *services = document->getElementsByTagName("service");
 		if (!services)
@@ -223,7 +200,7 @@ namespace _2Real
 
 		for (unsigned long i=0; i<services->length(); i++)
 		{
-			processServiceNode(m_Metadata, services->item(i));
+			processServiceNode(*(services->item(i)));
 		}
 	}
 

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "_2RealIOSlot.h"
+#include "_2RealOutputListener.h"
 #include "_2RealData.h"
 
 #include "Poco/Mutex.h"
@@ -36,7 +37,7 @@ namespace _2Real
 
 	typedef std::pair< Poco::Timestamp, SharedAny >		TimestampedData;
 
-	class InputSlot : public IOSlot
+	class InputSlot : public IOSlot, public OutputListener
 	{
 
 	public:
@@ -46,9 +47,9 @@ namespace _2Real
 
 		void reset();
 
-		void linkWith(OutputSlot *const output)
+		void linkWith(OutputSlot &output)
 		{
-			m_Output = output;
+			m_Output = &output;
 		}
 
 		const bool isLinked() const

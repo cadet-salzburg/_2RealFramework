@@ -69,12 +69,4 @@ namespace _2Real
 		}
 	}
 
-	void TypeTable::debug() const
-	{
-		for(DatatypeTable::const_iterator it = m_Types.begin(); it != m_Types.end(); it++)
-		{
-			std::cout << it->first << " " << it->second.type().name() << std::endl;
-		}
-	}
-
 }

@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="MultiKinectOpenNI_debug_MD|Win32">
+      <Configuration>MultiKinectOpenNI_debug_MD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MultiKinectOpenNI_debug_MD|x64">
+      <Configuration>MultiKinectOpenNI_debug_MD</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="MultiKinectOpenNI_debug|Win32">
       <Configuration>MultiKinectOpenNI_debug</Configuration>
       <Platform>Win32</Platform>
@@ -9,28 +17,20 @@
       <Configuration>MultiKinectOpenNI_debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="MultiKinectOpenNI_MD|Win32">
+      <Configuration>MultiKinectOpenNI_MD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MultiKinectOpenNI_MD|x64">
+      <Configuration>MultiKinectOpenNI_MD</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="MultiKinectOpenNI|Win32">
       <Configuration>MultiKinectOpenNI</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="MultiKinectOpenNI|x64">
       <Configuration>MultiKinectOpenNI</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="MultiKinectWinSdk_debug|Win32">
-      <Configuration>MultiKinectWinSdk_debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="MultiKinectWinSdk_debug|x64">
-      <Configuration>MultiKinectWinSdk_debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="MultiKinectWinSdk|Win32">
-      <Configuration>MultiKinectWinSdk</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="MultiKinectWinSdk|x64">
-      <Configuration>MultiKinectWinSdk</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -45,35 +45,35 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
   </PropertyGroup>
@@ -83,53 +83,46 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-    <OutDir>..\..\..\bin\</OutDir>
-    <TargetName>MultiKinectWinSdk_d</TargetName>
-    <TargetExt>.dll</TargetExt>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>..\..\..\bin\</OutDir>
-    <TargetName>MultiKinectOpenNI_d</TargetName>
+    <TargetName>MultiKinectOpenNI_mtd</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <OutDir>..\..\bin\</OutDir>
-    <TargetName>$(ProjectName)_debug</TargetName>
+    <OutDir>..\..\..\bin\</OutDir>
+    <TargetName>MultiKinectOpenNI_mdd</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -138,13 +131,12 @@
     <OutDir>..\..\bin\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|x64'">
+    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
-    <OutDir>..\..\..\bin\</OutDir>
-    <TargetExt>.dll</TargetExt>
-    <TargetName>MultiKinectWinSdk</TargetName>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\bin\</OutDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -152,15 +144,23 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.dll</TargetExt>
-    <TargetName>MultiKinectOpenNI</TargetName>
+    <TargetName>MultiKinectOpenNI_mt</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>..\..\..\bin\</OutDir>
+    <TargetExt>.dll</TargetExt>
+    <TargetName>MultiKinectOpenNI_md</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
@@ -175,10 +175,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenN|Win32'">
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_WINSDK;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_OPENNI;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -188,11 +188,11 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>_2RealEngine_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OPEN_NI_LIB);..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealEngine_mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENNI;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -205,24 +205,8 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>_2RealEngine_debug_mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>_2RealEngine_mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk_debug|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\glm\include;D:\sdl\include;$(CUDA_PATH)\include;$(AMDAPPSDKROOT)\include;$(_2REAL_DIR)\modules\_2RealOpenNI\_2RealOpenNiWrapper\_2RealOpenNILib\include;$(GLM_DIR)\;$(SDL_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>OpenCL.lib;glew32d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\Win32;$(AMDAPPSDKROOT)\lib\x86;$(SDL_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug|x64'">
@@ -241,13 +225,29 @@
       <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\Win32;$(AMDAPPSDKROOT)\lib\x86;$(SDL_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_debug_MD|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>_WINSDK;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\include\;..\..\..\..\testplugins\userclasses;..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\glm\include;D:\sdl\include;$(CUDA_PATH)\include;$(AMDAPPSDKROOT)\include;$(_2REAL_DIR)\modules\_2RealOpenNI\_2RealOpenNiWrapper\_2RealOpenNILib\include;$(GLM_DIR)\;$(SDL_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>OpenCL.lib;glew32d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\Win32;$(AMDAPPSDKROOT)\lib\x86;$(SDL_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_OPENNI;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\include;..\..\..\..\testplugins\userclasses;..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -255,13 +255,13 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>_2RealEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealEngine_mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENNI;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -275,13 +275,13 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>_2RealEngine_mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>_2RealEngine_md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectWinSdk|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -298,7 +298,7 @@
       <AdditionalLibraryDirectories>$(AMDAPPSDKROOT)\lib\x86;D:\sdl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_MD|x64'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

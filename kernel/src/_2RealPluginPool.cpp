@@ -19,106 +19,117 @@
 
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
-#include "_2RealPluginMetadata.h"
-#include "_2RealTypes.h"
 #include "_2RealIdentifier.h"
+#include "_2RealTypes.h"
 #include "_2RealSetupParameter.h"
+#include "_2RealSystemGraph.h"
 
-#include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
 
-	PluginPool::PluginPool(Engine &_engine) :
+	PluginPool::PluginPool(SystemGraph const& system) :
 		m_Plugins(),
-		m_Engine(_engine)
+		m_System(system)
 	{
 	}
 
 	PluginPool::~PluginPool()
 	{
-		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
+		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
 		{
-			std::string name;
 			try
 			{
-				name = it->second->name();
-				std::cout << "deleting plugin: " << name << std::endl;
+				Identifier id = it->first;
+				Engine::instance()->getLogStream() << "plugin pool: uninstalling " << id << "\n";
+			
 				it->second->uninstall();
 				delete it->second;
 			}
-			catch (Exception &e)
+			catch (_2Real::Exception &e)
 			{
-				std::cout << e.what() << std::endl;
+				Engine::instance()->getLogStream() << "plugin pool: error on plugin destruction " << e.what() << "\n";
 			}
 			catch (...)
 			{
-				std::cout << "error on plugin destruction: " << name << std::endl;
+				Engine::instance()->getLogStream() << "plugin pool: error on plugin destruction\n";
 			}
 		}
+
+		m_Plugins.clear();
 	}
 
-	const Identifier PluginPool::install(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class)
+	const Identifier PluginPool::install(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname)
 	{
-		try
+		_2Real::Engine *engine = Engine::instance();
+		engine->getLogStream() << "plugin pool: installing\n";
+		engine->getLogStream() << name << " " << directory << " " << file << " " << classname << "\n";
+		engine->getLogStream() << "plugin pool: initial size: " << m_Plugins.size() << "\n";
+
+		const Identifier id = Entity::createIdentifier(name, "plugin");
+		Plugin *plugin = new Plugin(id, directory, file, classname, m_System);
+		engine->getLogStream() << "plugin pool: installing now\n";
+		plugin->install();
+		engine->getLogStream() << "plugin pool: installed sucessfully, creating setup parameters\n";
+
+		ParameterMap const& setup = plugin->setupParameters();
+		for (ParameterMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
-			const Identifier id = Entity::createIdentifier(_name, "plugin");//m_Engine.entities().createIdentifier(_name, "plugin");
-
-			PluginMetadata *data = new PluginMetadata(_class, _file, _dir, m_Engine.types());
-			Plugin *plugin = new Plugin(id, data);
-			plugin->install();
-
-			typedef std::map< std::string, std::string > StringMap;
-			StringMap setup = data->getSetupParameters();
-			for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
-			{
-				const Identifier id = Entity::createIdentifier(it->first, "plugin setup parameter");//m_Engine.entities().createIdentifier(it->first, "plugin setup parameter");
-				SetupParameter *param = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
-				plugin->addSetupParameter(param);
-			}
-
-			m_Plugins.insert(NamedPlugin(plugin->id(), plugin));
-			
-			return id;
+			const Identifier id = Entity::createIdentifier(it->first, "plugin setup parameter");
+			std::string const& keyword = it->second->datatype();
+			std::string const& type = engine->types().getTypename(keyword);
+			engine->getLogStream() << "plugin pool: creating setup parameter " << it->first << " " << keyword << " " << type << "\n";
+			SetupParameter *param = new SetupParameter(id, type, keyword);
+			plugin->addSetupParameter(param);
 		}
-		catch (Exception &e)
-		{
-			throw e;
-		}
+
+		//engine->getLogStream() << "plugin pool: installed succesfully, uninstalling now\n";
+		//plugin->uninstall();
+		//engine->getLogStream() << "plugin pool: uninstalled successfully\n";
+		//delete plugin;
+
+		m_Plugins.insert(NamedPlugin(id, plugin));
+		engine->getLogStream() << "plugin pool: new size: " << m_Plugins.size() << "\n";
+		return id;
 	}
 
-	const bool PluginPool::contains(Identifier const& _id) const
+	const bool PluginPool::contains(Identifier const& id) const
 	{
-		PluginMap::const_iterator it = m_Plugins.find(_id.id());
+		PluginMap::const_iterator it = m_Plugins.find(id);
 		return (it != m_Plugins.end());
 	}
 
-	void PluginPool::uninstall(Identifier const& _id)
+	void PluginPool::uninstall(Identifier const& id)
 	{
-		plugin(_id)->uninstall();
+		getPlugin(id).uninstall();
 	}
 
-	Plugin const *const PluginPool::plugin(Identifier const& _id) const
+	Plugin & PluginPool::getPlugin(Identifier const& id)
 	{
-		PluginMap::const_iterator it = m_Plugins.find(_id.id());
+		PluginMap::iterator it = m_Plugins.find(id);
 		
 		if (it == m_Plugins.end())
 		{
-			throw PluginNotFoundException(_id.name());
+			std::ostringstream msg;
+			msg << "internal error: plugin " << id.name() << " not found in plugin pool";
+			throw _2Real::Exception(msg.str());
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 
-	Plugin *const PluginPool::plugin(Identifier const& _id)
+	Plugin const& PluginPool::getPlugin(Identifier const& id) const
 	{
-		PluginMap::iterator it = m_Plugins.find(_id.id());
-		
+		PluginMap::const_iterator it = m_Plugins.find(id);
+
 		if (it == m_Plugins.end())
 		{
-			throw PluginNotFoundException(_id.name());
+			std::ostringstream msg;
+			msg << "internal error: plugin " << id.name() << " not found in plugin pool";
+			throw _2Real::Exception(msg.str());
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 }

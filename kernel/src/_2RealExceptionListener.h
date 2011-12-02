@@ -18,41 +18,21 @@
 
 #pragma once
 
-#include "_2RealException.h"
-#include "_2RealIdentifier.h"
-
 namespace _2Real
 {
 
-	class RunnableException : public Exception
+	class RunnableException;
+
+	class ExceptionListener
 	{
 
 	public:
 
-		Identifier const& system()
-		{
-			return m_System;
-		}
-
-		Identifier const& sender()
-		{
-			return m_Sender;
-		}
-
-	private:
-
-		friend class ExceptionHandler;
-
-		RunnableException(std::string const& message, Identifier const& sender, Identifier const& system) :
-			Exception(message),
-			m_System(system),
-			m_Sender(sender)
-		{
-		}
-
-		Identifier	m_System;
-		Identifier	m_Sender;
+		virtual ~ExceptionListener() = 0;
+		virtual void receiveException(RunnableException &exception) = 0;
 
 	};
+
+	inline ExceptionListener::~ExceptionListener() {}
 
 }

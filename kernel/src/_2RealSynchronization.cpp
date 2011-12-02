@@ -155,7 +155,7 @@ namespace _2Real
 
 		Runnable *child = *it;
 
-		m_System->stopChild(this->root()->identifier());
+		m_System.stopChild(this->root()->identifier());
 		//this->resetIO();
 
 		m_Children.erase(it);
@@ -174,7 +174,7 @@ namespace _2Real
 			throw Exception("internal error: could not add child to container - index > childcount");
 		}
 
-		m_System->stopChild(this->root()->identifier());
+		m_System.stopChild(this->root()->identifier());
 
 		if (_index == m_Children.size())
 		{
@@ -280,7 +280,7 @@ namespace _2Real
 				m_Run = false;
 				m_RunOnce = false;
 
-				m_System->handleException(*this, e);
+				m_System.handleException(*this, e);
 			}
 		}
 	}
@@ -301,34 +301,25 @@ namespace _2Real
 			}
 
 			m_ThreadPool.joinAll();
-
-			//sendData(false);
 		}
 		catch (Exception &e)
 		{
-			m_System->handleException(*this, e);
+			m_System.handleException(*this, e);
 		}
 	}
 
 	void Synchronization::shutdown()
 	{
-		try
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				(*it)->stop();
-			}
-
-			m_ThreadPool.joinAll();
-
-			for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				(*it)->shutdown();
-			}
+			(*it)->stop();
 		}
-		catch (Exception &e)
+
+		m_ThreadPool.joinAll();
+
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			throw e;
+			(*it)->shutdown();
 		}
 	}
 }

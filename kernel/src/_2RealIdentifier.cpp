@@ -21,41 +21,110 @@
 namespace _2Real
 {
 
-	Identifier::Identifier(std::string const& _name, std::string const& _type, unsigned int const& _id) :
-		m_Name(_name),
-		m_Type(_type),
-		m_Id(_id)
+	Identifier::Identifier() :
+		m_Name(""),
+		m_Type(""),
+		m_Id(0)
 	{
 	}
 
-	bool Identifier::operator==(Identifier const& _rhs) const
+	Identifier::Identifier(std::string const& name, std::string const& type, unsigned int const& id) :
+		m_Name(name),
+		m_Type(type),
+		m_Id(id)
 	{
-		return (m_Id == _rhs.m_Id);
 	}
 
-	bool Identifier::operator!=(Identifier const& _rhs) const
+	Identifier::Identifier(Identifier const& src) :
+		m_Name(src.m_Name),
+		m_Type(src.m_Type),
+		m_Id(src.m_Id)
 	{
-		return !(m_Id == _rhs.m_Id);
 	}
 
-	bool Identifier::operator<(Identifier const& _rhs) const
+	Identifier& Identifier::operator=(Identifier const& src)
 	{
-		return (m_Id < _rhs.m_Id);
+		m_Name = src.m_Name;
+		m_Type = src.m_Type;
+		m_Id = src.m_Id;
+
+		return *this;
 	}
 
-	bool Identifier::operator<=(Identifier const& _rhs) const
+	unsigned int const& Identifier::id() const
 	{
-		return (m_Id <= _rhs.m_Id);
+		return m_Id;
 	}
 
-	bool Identifier::operator>(Identifier const& _rhs) const
+	std::string const& Identifier::name() const
 	{
-		return (m_Id > _rhs.m_Id);
+		return m_Name;
 	}
 
-	bool Identifier::operator>=(Identifier const& _rhs) const
+	std::string const& Identifier::type() const
 	{
-		return (m_Id  >= _rhs.m_Id );
+		return m_Type;
+	}
+
+	const bool Identifier::operator==(Identifier const& rhs) const
+	{
+		return (m_Id == rhs.m_Id);
+	}
+
+	const bool Identifier::operator!=(Identifier const& rhs) const
+	{
+		return !(m_Id == rhs.m_Id);
+	}
+
+	const bool Identifier::operator<(Identifier const& rhs) const
+	{
+		return (m_Id < rhs.m_Id);
+	}
+
+	const bool Identifier::operator<=(Identifier const& rhs) const
+	{
+		return (m_Id <= rhs.m_Id);
+	}
+
+	const bool Identifier::operator>(Identifier const& rhs) const
+	{
+		return (m_Id > rhs.m_Id);
+	}
+
+	const bool Identifier::operator>=(Identifier const& rhs) const
+	{
+		return (m_Id  >= rhs.m_Id );
+	}
+
+	const bool Identifier::isPlugin() const
+	{
+		return (m_Type == "plugin");
+	}
+
+	const bool Identifier::isService() const
+	{
+		return (m_Type == "service");
+	}
+
+	const bool Identifier::isSetupAble() const
+	{
+		return (m_Type == "plugin" || m_Type == "service");
+	}
+
+	const bool Identifier::isRunAble() const
+	{
+		return (m_Type == "service" || m_Type == "sequence" || m_Type == "synchronization");
+	}
+
+	const bool Identifier::isContainer() const
+	{
+		return (m_Type == "system" || m_Type == "sequence" || m_Type == "synchronization");
+	}
+
+	std::ostream& operator<<(std::ostream& out, Identifier const& id)
+	{
+		out << id.name() << " " << id.type() << " " << id.id();
+		return out;
 	}
 
 }

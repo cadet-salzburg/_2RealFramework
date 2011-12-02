@@ -41,7 +41,7 @@ namespace _2Real
 
 	public:
 
-		Runnable(Identifier const& id, SystemGraph *const system) :
+		Runnable(Identifier const& id, SystemGraph &system) :
 			Entity(id),
 			m_System(system)
 		{
@@ -78,28 +78,27 @@ namespace _2Real
 			return m_Root;
 		}
 
-		void setFather(Graph *const father)
+		void setFather(RunnableGraph *const father)
 		{
 			m_Father = father;
 		}
 
-		Graph *const father()
-		{
-			return m_Father;
-
-		}
-
-		Graph const *const father() const
+		RunnableGraph *const father()
 		{
 			return m_Father;
 		}
 
-		SystemGraph *const system()
+		RunnableGraph const *const father() const
+		{
+			return m_Father;
+		}
+
+		SystemGraph &system()
 		{
 			return m_System;
 		}
 
-		SystemGraph const *const system() const
+		SystemGraph const& system() const
 		{
 			return m_System;
 		}
@@ -109,9 +108,9 @@ namespace _2Real
 		bool					m_Run;
 		bool					m_RunOnce;
 
-		SystemGraph				*const m_System;
+		SystemGraph				&m_System;
 		RunnableGraph			*m_Root;
-		Graph					*m_Father;
+		RunnableGraph			*m_Father;	//m_Father == this  ->->child of root
 
 	};
 

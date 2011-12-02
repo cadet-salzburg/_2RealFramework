@@ -36,8 +36,9 @@
 #include "_2RealSetupParameter.h"
 #include "_2RealService.h"
 #include "_2RealSystemGraph.h"
-
 #include "_2RealSingletonHolder.h"
+#include "_2RealExceptionListener.h"
+#include "_2RealOutputListener.h"
 
 #include <sstream>
 #include <iostream>
@@ -51,8 +52,20 @@ namespace _2Real
 		return holder.instance();
 	}
 
-	Engine::Engine()
+	Engine::Engine() :
+		m_Graphs(NULL),
+		m_Factory(NULL),
+		m_Types(NULL),
+		m_Timer()
 	{
+		std::string logpath = "engine.txt";
+		m_LogFile.open(logpath.c_str());
+	
+		if (!m_LogFile.is_open())
+		{
+			throw std::exception();
+		}
+
 		m_Types = new TypeTable(*this);
 		m_Types->registerType< char >("char");
 		m_Types->registerType< unsigned char >("unsigned char");
@@ -71,79 +84,581 @@ namespace _2Real
 		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
 		m_Types->registerType< Buffer2D_uchar >("buffer2D_uchar");
 
-		m_Plugins = new PluginPool(*this);
 		m_Factory = new ServiceFactory(*this);
 		m_Graphs = new ProductionGraphs(*this);
+		//m_Timer.update();
 
-		m_Timer.update();
+		m_LogFile <<"engine: 2real engine started" << std::endl;
 	}
 
 	Engine::Engine(Engine const& _src)
 	{
-		throw Exception("internal error: attempted to copy engine");
+		throw _2Real::Exception("internal error: attempted to copy engine");
 	}
 
 	Engine& Engine::operator=(Engine const& _src)
 	{
-		throw Exception("internal error: attempted to copy engine");
+		throw _2Real::Exception("internal error: attempted to copy engine");
 	}
 
 	Engine::~Engine()
 	{
 		delete m_Graphs;
+		m_LogFile << "engine: killed all systems" << std::endl;
 		delete m_Factory;
-		delete m_Plugins;
+		m_LogFile << "engine: killed the factory" << std::endl;
 		delete m_Types;
-		
-		//delete m_Time;
-
-		std::cout << "ENGINE: goodbye" << std::endl;
+		m_LogFile << "engine: killed all types" << std::endl;
+		m_LogFile << "engine: goodbye" << std::endl;
+		m_LogFile.close();
 	}
 
-	const Identifier Engine::createSystem(std::string const& _name)
+	const Identifier Engine::createSystem(std::string const& name)
 	{
-		return m_Graphs->createSystemGraph(_name);
+		m_LogFile << "engine: system creation requested" << std::endl;
+		const Identifier result = m_Graphs->createSystemGraph(name);
+		m_LogFile << "engine: system creation succeeded " << result << std::endl;
+
+		return result;
 	}
 
-	void Engine::destroySystem(Identifier const& _id)
+	void Engine::destroySystem(Identifier const& system)
 	{
-		m_Graphs->destroySystemGraph(_id);
+		if (m_Graphs->contains(system))
+		{
+			m_LogFile << "engine: system destruction requested " << system << std::endl;
+			m_Graphs->destroySystemGraph(system);
+			m_LogFile << "engine: system destruction succeeded " << system << std::endl;
+		}
+		else
+		{
+		}
 	}
 
-	const Identifier Engine::installPlugin(std::string const& _name, std::string const& _dir, std::string const& _file, std::string const& _class, Identifier const& _system)
+	const Identifier Engine::load(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system)
 	{
-		return m_Plugins->install(_name, _dir, _file, _class);
+		m_LogFile << "engine: plugin installation requested" << std::endl;
+
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		const Identifier result = nirvana.plugins().install(name, dir, file, classname);
+
+		m_LogFile << "engine: plugin installation succeeded " << result << std::endl;
+
+		return result;
 	}
 
-	void Engine::startPlugin(Identifier const& _plugin, Identifier const& _system)
+	void Engine::setup(Identifier const& id, Identifier const& system)
 	{
-		Plugin *plugin = m_Plugins->plugin(_plugin);
-		plugin->setup();
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (!id.isSetupAble())
+		{
+			//throw InvalidIdentifierException();
+		}
+
+		if (nirvana.plugins().contains(id))
+		{
+			m_LogFile << "engine: plugin setup requested " << id << std::endl;
+
+			Plugin &plugin = nirvana.plugins().getPlugin(id);
+			plugin.setup();
+		}
+		else if (nirvana.contains(id))
+		{
+			m_LogFile << "engine: service setup requested " << id << std::endl;
+
+			Runnable &child = nirvana.getChild(id);
+			if (child.isService())
+			{
+				Service &service = static_cast< Service & >(child);
+				service.checkConfiguration();
+			}
+			else
+			{
+				//internal exception
+			}
+		}
+		else
+		{
+			//invalid system exception
+		}
 	}
 
-	void Engine::dumpPluginInfo(Identifier const& _plugin, Identifier const& _system) const
+	void Engine::dumpPluginInfo(Identifier const& id, Identifier const& system) const
 	{
-		PluginMetadata data = m_Plugins->plugin(_plugin)->pluginMetadata();
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
 
-		std::string info = data.info();
-		std::cout << info << std::endl;
+		if (!id.isPlugin())
+		{
+		}
+
+		if (nirvana.plugins().contains(id))
+		{
+			PluginMetadata const& data = nirvana.plugins().getPlugin(id).getMetadata();
+			std::string info = data.info();
+			//m_LogFile << info << std::endl;
+		}
+		else
+		{
+		}
 	}
 
-	void Engine::dumpServiceInfo(Identifier const& _id, std::string const& _name, Identifier const& _system) const
+	const Identifier Engine::createService(std::string const& name, Identifier const& id, std::string const& service, Identifier const& system)
 	{
-		ServiceMetadata data = m_Plugins->plugin(_id)->serviceMetadata(_name);
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
 
-		std::string info = data.info();
-		std::cout << info << std::endl;
+		if (nirvana.plugins().contains(id))
+		{
+			Plugin &plugin = nirvana.plugins().getPlugin(id);
+			
+			if (plugin.exportsService(service))
+			{
+				return m_Factory->createService(name, plugin, service, nirvana);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+
+		return Entity::NoEntity();
 	}
 
-	const Identifier Engine::createService(std::string const& _name, Identifier const& _id, std::string const& _service, Identifier const& _system)
+	void Engine::setValue(Identifier const& id, std::string const& name, SharedAny value, std::string const& type, Identifier const& system)
 	{
-		Plugin *const plugin = m_Plugins->plugin(_id);
-		return m_Factory->createService(_name, plugin, _service, m_Graphs->getSystemGraph(_system));
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.plugins().contains(id))
+		{
+			Plugin &plugin = nirvana.plugins().getPlugin(id);
+			SetupParameter &param = plugin.getSetupParameter(name);
+			if (param.datatype() != type)
+			{
+				//BadDatatypeException
+				throw Exception("datatype mismatch: " + param.datatype() + " " + type);
+			}
+			param.set(value);
+		}
+		else
+		{
+			if (nirvana.contains(id))
+			{
+				Runnable &child = nirvana.getChild(id);
+				if (child.type() == "service")
+				{
+					Service &service = static_cast< Service & >(child);
+					if (service.hasSetupParameter(name))
+					{
+						SetupParameter &param = service.getSetupParameter(name);
+						if (param.datatype() != type)
+						{
+							//BadDatatypeException
+							throw Exception("datatype mismatch: " + param.datatype() + " " + type);
+						}
+						param.set(value);
+					}
+					else if (service.hasInputSlot(name))
+					{
+						InputSlot &slot = service.getInputSlot(name);
+						if (slot.datatype() != type)
+						{
+							//BadDatatypeException
+							throw Exception("datatype mismatch: " + slot.datatype() + " " + type);
+						}
+						if (slot.isLinked())
+						{
+							slot.reset();
+						}
+
+						m_Timer.update();
+						Data data(value, m_Timer.elapsed());
+						slot.set(data);
+					}
+					else
+					{
+					}
+				}
+				else
+				{
+				}
+			}
+			else
+			{
+			}
+		}
 	}
 
-	//Identifiers Engine::getSetupParameters(Identifier const& _id, Identifier const& _system) const
+	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(id))
+		{
+			Runnable &child = nirvana.getChild(id);
+			if (child.type() == "service")
+			{
+				Service &service = static_cast< Service & >(child);
+				service.setUpdateRate(updatesPerSecond);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(idIn) && nirvana.contains(idOut))
+		{
+			Runnable &childIn = nirvana.getChild(idIn);
+			Runnable &childOut = nirvana.getChild(idOut);
+			if (childIn.type() == "service" && childOut.type() == "service")
+			{
+				Service &serviceIn = static_cast< Service & >(childIn);
+				Service &serviceOut = static_cast< Service & >(childOut);
+
+				if (serviceIn.hasInputSlot(nameIn) && serviceOut.hasOutputSlot(nameOut))
+				{
+					InputSlot &in = serviceIn.getInputSlot(nameIn);
+					OutputSlot &out = serviceOut.getOutputSlot(nameOut);
+
+					out.addListener(in);
+					in.linkWith(out);
+				}
+				else
+				{
+				}
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::registerToException(ExceptionCallback callback, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.registerExceptionCallback(callback);
+	}
+
+	void Engine::unregisterFromException(ExceptionCallback callback, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.unregisterExceptionCallback(callback);
+	}
+
+	void Engine::registerToNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(id))
+		{
+			Runnable &child = nirvana.getChild(id);
+			if (child.type() == "service")
+			{
+				Service &service = static_cast< Service & >(child);
+				OutputSlot &out = service.getOutputSlot(name);
+				out.registerCallback(callback);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(id))
+		{
+			Runnable &child = nirvana.getChild(id);
+			if (child.type() == "service")
+			{
+				Service &service = static_cast< Service & >(child);
+				OutputSlot &out = service.getOutputSlot(name);
+				out.unregisterCallback(callback);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::registerToNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(id))
+		{
+			Runnable &child = nirvana.getChild(id);
+			if (child.type() == "service")
+			{
+				Service &service = static_cast< Service & >(child);
+				OutputSlot &out = service.getOutputSlot(name);
+				out.addListener(listener);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		if (nirvana.contains(id))
+		{
+			Runnable &child = nirvana.getChild(id);
+			if (child.type() == "service")
+			{
+				Service &service = static_cast< Service & >(child);
+				OutputSlot &out = service.getOutputSlot(name);
+				out.removeListener(listener);
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+		}
+	}
+
+	void Engine::registerToException(ExceptionListener &listener, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.registerExceptionListener(listener);
+	}
+
+	void Engine::unregisterFromException(ExceptionListener &listener, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.unregisterExceptionListener(listener);
+	}
+
+	void Engine::start(Identifier const& id, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.startChild(id);
+	}
+
+	void Engine::stop(Identifier const& id, Identifier const& system)
+	{
+		//crashes if system does not exist
+		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+
+		nirvana.stopChild(id);
+	}
+
+	////DataHandle Engine::createDataHandle(Identifier const& _service, std::string const& _out, Identifier const& _system)
+	////{
+	////	try
+	////	{
+	////		Container *nirvana = m_Graphs->getSystem(_system.id());
+	////		AbstractContainer *child = nirvana->find(_service.id());
+	////		Service *service = static_cast< Service * >(child);
+	////		OutputSlot *out = service->getOutputSlotByName(_out);
+	////		
+	////		return out->createHandle();
+	////	}
+	////	catch (Exception &e)
+	////	{
+	////		throw e;
+	////	}
+	////}
+
+	//Identifiers Engine::getChildren(Identifier const& _id, Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		IDs ids;
+	//		Identifiers children;
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		if (_id == _system)
+	//		{
+	//			ids = nirvana->childIDs();
+	//		}
+	//		else
+	//		{
+	//			const AbstractContainer *container = nirvana->find(_id.id());
+	//			if (!container)
+	//			{
+	//				throw Exception("this system does not contain " + _id.name());
+	//			}
+	//			else if (container->type() == Entity::SERVICE)
+	//			{
+	//				throw Exception("services do not have children");
+	//			}
+
+	//			const Container *c = static_cast< const Container * >(container);
+	//			ids = c->childIDs();
+	//		}
+
+	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
+	//		{
+	//			children.push_back(m_Entities->getIdentifier(*it));
+	//		}
+	//		return children;
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void Engine::startAll(Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		IDs children = nirvana->childIDs();
+	//		for (IDIterator it = children.begin(); it != children.end(); it++)
+	//		{
+	//			nirvana->startChild(*it);
+	//		}
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void Engine::ssystemAll(Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		IDs children = nirvana->childIDs();
+	//		for (IDIterator it = children.begin(); it != children.end(); it++)
+	//		{
+	//			nirvana->ssystemChild(*it);
+	//		}
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		AbstractContainer *src = nirvana->get(_src.id());
+	//		if (!src)
+	//		{
+	//			throw Exception("this system does not contain " + _src.name());
+	//		}
+	//		if (_dst.id() != _system.id())
+	//		{
+	//			AbstractContainer *dst = nirvana->find(_dst.id());
+	//			if (!dst)
+	//			{
+	//				throw Exception("this system does not contain " + _dst.name());
+	//			}
+	//			Container *container = static_cast< Container * >(dst);
+	//			container->add(src, _index);
+	//		}
+	//		else
+	//		{
+	//			nirvana->add(src, _index);
+	//		}
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void Engine::append(Identifier const& _dst, Identifier const& _src, Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		AbstractContainer *src = nirvana->get(_src.id());
+	//		if (!src)
+	//		{
+	//			throw Exception("this system does not contain " + _src.name());
+	//		}
+	//		if (_dst.id() != _system.id())
+	//		{
+	//			AbstractContainer *dst = nirvana->find(_dst.id());
+	//			if (!dst)
+	//			{
+	//				throw Exception("this system does not contain " + _dst.name());
+	//			}
+	//			Container *container = static_cast< Container * >(dst);
+	//			container->add(src, container->childCount());
+	//		}
+	//		else
+	//		{
+	//			nirvana->add(src, nirvana->childCount());
+	//		}
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+	//void Engine::destroy(Identifier const& _id, Identifier const& _system)
+	//{
+	//	try
+	//	{
+	//		Container *nirvana = m_Graphs->getSystem(_system.id());
+	//		AbstractContainer *container = nirvana->get(_id.id());
+	//		if (!container)
+	//		{
+	//			throw Exception("this system does not contain " + _id.name());
+	//		}
+	//		container->shutdown();
+	//		m_Entities->destroy(container);
+	//	}
+	//	catch (Exception &e)
+	//	{
+	//		throw e;
+	//	}
+	//}
+
+		//Identifiers Engine::getSetupParameters(Identifier const& _id, Identifier const& _system) const
 	//{
 	//	try
 	//	{
@@ -261,102 +776,6 @@ namespace _2Real
 	//	}
 	//}
 
-	void Engine::setParameterValue(Identifier const& entity, std::string const& name, SharedAny value, std::string const& type, Identifier const& system)
-	{
-		if (m_Plugins->contains(entity))
-		{
-			Plugin *plugin = m_Plugins->plugin(entity);
-			SetupParameter *param = plugin->getSetupParameter(name);
-			if (param->datatype() != type)
-			{
-				//BadDatatypeException
-				throw Exception("datatype mismatch: " + param->datatype() + " " + type);
-			}
-			param->set(value);
-		}
-		else
-		{
-			Runnable *runnable = NULL;
-			//~~ this is a weird function
-			if ((runnable = m_Graphs->belongsToSystem(system, entity)) != NULL)
-			{
-				if ((runnable->type() == "service"))
-				{
-					Service *service = static_cast< Service * >(runnable);
-					if (service->hasSetupParameter(name))
-					{
-						SetupParameter *param = service->getSetupParameter(name);
-						if (param->datatype() != type)
-						{
-							//BadDatatypeException
-							throw Exception("datatype mismatch: " + param->datatype() + " " + type);
-						}
-						param->set(value);
-					}
-					if (service->hasInputSlot(name))
-					{
-						InputSlot *slot = service->getInputSlot(name);
-						if (slot->datatype() != type)
-						{
-							//BadDatatypeException
-							throw Exception("datatype mismatch: " + slot->datatype() + " " + type);
-						}
-						if (slot->isLinked())
-						{
-							slot->reset();
-						}
-						
-						//oO
-						m_Timer.update();
-						Data data(value, m_Timer.elapsed());
-						slot->set(data);
-					}
-					else
-					{
-						//InvalidParameterException
-						//_id is a service belongin to _system, but has no setup/input param named like that
-					}
-				}
-				else
-				{
-					//InvalidEntityException
-					//_id really belongs to _system, but is not a service
-				}
-			}
-			else
-			{
-				//InvalidEntityException
-				//_id is not a runnable belonging to system
-			}
-		}
-	}
-
-	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
-	{
-		Runnable *runnable = NULL;
-		if ((runnable = m_Graphs->belongsToSystem(system, id)) != NULL)
-		{
-			if (runnable->type() == "service")
-			{
-				std::cout << "setting update rate" << std::endl;
-				Service *service = static_cast< Service * >(runnable);
-				service->setUpdateRate(updatesPerSecond);
-			}
-			else
-			{
-				std::cout << "not a service" << std::endl;
-				//InvalidEntityException
-				//_id really belongs to _system, but is not a service
-			}
-		}
-		else
-		{
-			std::cout << "wrong system" << std::endl;
-			//InvalidEntityException
-			//_id is not a runnable belonging to system
-		}
-	}
-
 	//void Engine::link(Identifier const& _in,  Identifier const& _out, Identifier const& _system)
 	//{
 	//	try
@@ -408,299 +827,4 @@ namespace _2Real
 	//	}
 	//}
 
-	void Engine::linkSlots(Identifier const& _idIn, std::string const& _nameIn, Identifier const& _idOut, std::string const& _nameOut, Identifier const& _system)
-	{
-		Runnable *runnable = NULL;
-		InputSlot *in = NULL;
-		OutputSlot *out = NULL;
-
-		if ((runnable = m_Graphs->belongsToSystem(_system, _idIn)) != NULL)
-		{
-			if (runnable->type() == "service")
-			{
-				Service *serviceIn = static_cast< Service * >(runnable);
-				in = serviceIn->getInputSlot(_nameIn);
-				if (!in)
-				{
-					//InvalidParameterException
-					//_id is a service belongin to _system, but has no setup param named like that
-				}
-			}
-			else
-			{
-				//InvalidEntityException
-				//_id really belongs to _system, but is not a service
-			}
-		}
-		else
-		{
-			//InvalidEntityException
-			//_id is not a runnable belonging to system
-		}
-
-		runnable = NULL;
-		if ((runnable = m_Graphs->belongsToSystem(_system, _idOut)) != NULL)
-		{
-			if (runnable->type() == "service")
-			{
-				Service *serviceOut = static_cast< Service * >(runnable);
-				out = serviceOut->getOutputSlot(_nameOut);
-				if (!out)
-				{
-					//InvalidParameterException
-					//_id is a service belongin to _system, but has no setup param named like that
-				}
-			}
-			else
-			{
-				//InvalidEntityException
-				//_id really belongs to _system, but is not a service
-			}
-		}
-		else
-		{
-			//InvalidEntityException
-			//_id is not a runnable belonging to system
-		}
-
-		out->addListener(in);
-		in->linkWith(out);
-	}
-
-	void Engine::registerToException(ExceptionCallback _callback, Identifier const& _system)
-	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
-		nirvana->registerExceptionCallback(_callback);
-	}
-
-	void Engine::unregisterFromException(ExceptionCallback _callback, Identifier const& _system)
-	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(_system);
-		nirvana->unregisterExceptionCallback(_callback);
-	}
-
-	void Engine::registerToNewData(Identifier const& _service, std::string const& _name, DataCallback _callback, Identifier const& _system)
-	{
-		Runnable *runnable = NULL;
-		if ((runnable = m_Graphs->belongsToSystem(_system, _service)))
-		{
-			if (runnable->type() == "service")
-			{
-				Service *service = static_cast< Service * >(runnable);
-				OutputSlot *slot = service->getOutputSlot(_name);
-				slot->registerCallback(_callback);
-			}
-			else
-			{
-				//
-			}
-		}
-		else
-		{
-		}
-	}
-
-	void Engine::unregisterFromNewData(Identifier const& _service, std::string const& _name, DataCallback _callback, Identifier const& _system)
-	{
-		Runnable *runnable = NULL;
-		if ((runnable = m_Graphs->belongsToSystem(_system, _service)))
-		{
-			if (runnable->type() == "service")
-			{
-				Service *service = static_cast< Service * >(runnable);
-				OutputSlot *slot = service->getOutputSlot(_name);
-				slot->unregisterCallback(_callback);
-			}
-			else
-			{
-				//
-			}
-		}
-		else
-		{
-		}
-	}
-
-	////DataHandle Engine::createDataHandle(Identifier const& _service, std::string const& _out, Identifier const& _system)
-	////{
-	////	try
-	////	{
-	////		Container *nirvana = m_Graphs->getSystem(_system.id());
-	////		AbstractContainer *child = nirvana->find(_service.id());
-	////		Service *service = static_cast< Service * >(child);
-	////		OutputSlot *out = service->getOutputSlotByName(_out);
-	////		
-	////		return out->createHandle();
-	////	}
-	////	catch (Exception &e)
-	////	{
-	////		throw e;
-	////	}
-	////}
-
-	//Identifiers Engine::getChildren(Identifier const& _id, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		IDs ids;
-	//		Identifiers children;
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		if (_id == _system)
-	//		{
-	//			ids = nirvana->childIDs();
-	//		}
-	//		else
-	//		{
-	//			const AbstractContainer *container = nirvana->find(_id.id());
-	//			if (!container)
-	//			{
-	//				throw Exception("this system does not contain " + _id.name());
-	//			}
-	//			else if (container->type() == Entity::SERVICE)
-	//			{
-	//				throw Exception("services do not have children");
-	//			}
-
-	//			const Container *c = static_cast< const Container * >(container);
-	//			ids = c->childIDs();
-	//		}
-
-	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
-	//		{
-	//			children.push_back(m_Entities->getIdentifier(*it));
-	//		}
-	//		return children;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	void Engine::start(Identifier const& runnable, Identifier const& system)
-	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(system);
-		nirvana->startChild(runnable);
-	}
-
-	//void Engine::startAll(Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		IDs children = nirvana->childIDs();
-	//		for (IDIterator it = children.begin(); it != children.end(); it++)
-	//		{
-	//			nirvana->startChild(*it);
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	void Engine::stop(Identifier const& runnable, Identifier const& system)
-	{
-		SystemGraph *nirvana = m_Graphs->getSystemGraph(system);
-		nirvana->stopChild(runnable);
-	}
-
-	//void Engine::ssystemAll(Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		IDs children = nirvana->childIDs();
-	//		for (IDIterator it = children.begin(); it != children.end(); it++)
-	//		{
-	//			nirvana->ssystemChild(*it);
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		AbstractContainer *src = nirvana->get(_src.id());
-	//		if (!src)
-	//		{
-	//			throw Exception("this system does not contain " + _src.name());
-	//		}
-	//		if (_dst.id() != _system.id())
-	//		{
-	//			AbstractContainer *dst = nirvana->find(_dst.id());
-	//			if (!dst)
-	//			{
-	//				throw Exception("this system does not contain " + _dst.name());
-	//			}
-	//			Container *container = static_cast< Container * >(dst);
-	//			container->add(src, _index);
-	//		}
-	//		else
-	//		{
-	//			nirvana->add(src, _index);
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//void Engine::append(Identifier const& _dst, Identifier const& _src, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		AbstractContainer *src = nirvana->get(_src.id());
-	//		if (!src)
-	//		{
-	//			throw Exception("this system does not contain " + _src.name());
-	//		}
-	//		if (_dst.id() != _system.id())
-	//		{
-	//			AbstractContainer *dst = nirvana->find(_dst.id());
-	//			if (!dst)
-	//			{
-	//				throw Exception("this system does not contain " + _dst.name());
-	//			}
-	//			Container *container = static_cast< Container * >(dst);
-	//			container->add(src, container->childCount());
-	//		}
-	//		else
-	//		{
-	//			nirvana->add(src, nirvana->childCount());
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//void Engine::destroy(Identifier const& _id, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		AbstractContainer *container = nirvana->get(_id.id());
-	//		if (!container)
-	//		{
-	//			throw Exception("this system does not contain " + _id.name());
-	//		}
-	//		container->shutdown();
-	//		m_Entities->destroy(container);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
 }

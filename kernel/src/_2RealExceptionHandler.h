@@ -28,6 +28,7 @@
 namespace _2Real
 {
 
+	class ExceptionListener;
 	class RunnableException;
 
 	typedef void (*ExceptionCallback)(RunnableException &exception);
@@ -39,9 +40,15 @@ namespace _2Real
 
 		ExceptionHandler(Identifier const& system);
 
+		~ExceptionHandler();
+
 		void registerExceptionCallback(ExceptionCallback callback);
 
 		void unregisterExceptionCallback(ExceptionCallback callback);
+
+		void registerExceptionListener(ExceptionListener &listener);
+
+		void unregisterExceptionListener(ExceptionListener &listener);
 
 		void handleException(Exception const& _exception, Identifier const& _sender);
 

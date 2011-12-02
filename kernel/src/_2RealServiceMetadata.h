@@ -21,7 +21,6 @@
 #include "_2RealParameterMetadata.h"
 
 #include <map>
-#include <list>
 #include <string>
 
 namespace _2Real
@@ -31,59 +30,78 @@ namespace _2Real
 	*	metadata representation of a service
 	*/
 
+	typedef std::pair< std::string, ParameterMetadata >	NamedParameterData;
+	typedef std::map< std::string, ParameterMetadata >	ParameterDataMap;
+	typedef std::map< std::string, std::string >		StringMap;
+
 	class ServiceMetadata
 	{
 
 	public:
 
 		/**
-		*	
-		*/
-		typedef std::pair< const std::string, ServiceMetadata >	NamedService;
-
-		/**
-		*	
-		*/
-		typedef std::map< const std::string, ServiceMetadata >	ServiceMap;
-
-		/**
-		*	creates service metadata
-		*
-		*	@param _name:		service's name
-		*	@param _plugin:		plugin the service belongs to
-		*/
-		ServiceMetadata(std::string const& _name);
-
-		/**
 		*	sets service description
 		*
-		*	@param _dec:		service's description
+		*	@param decscription:	service's description
 		*/
-		void setDescription(std::string const& _desc);
+		void setDescription(std::string const& description);
 
 		/**
 		*	adds setup parameter
 		*
-		*	@param _name:		parameter's name
-		*	@param _type:		parameter's type as string
+		*	@param name:			parameter's name
+		*	@param type:			parameter's keyword
 		*/
-		void addSetupParameter(std::string const& _name, std::string const& _type);
+		void addSetupParameter(std::string const& name, std::string const& type);
 
 		/**
-		*	adds input parameter
+		*	adds input slot
 		*
-		*	@param _name:		parameter's name
-		*	@param _type:		parameter's type as string
+		*	@param name:			slot's name
+		*	@param type:			slot's keyword
 		*/
-		void addInputParameter(std::string const& _name, std::string const& _type);
+		void addInputSlot(std::string const& name, std::string const& type);
 
 		/**
-		*	adds output parameter
+		*	adds output slot
 		*
-		*	@param _name:		parameter's name
-		*	@param _type:		parameter's type as string
+		*	@param name:			slot's name
+		*	@param type:			slot's keyword
 		*/
-		void addOutputParameter(std::string const& _name, std::string const& _type);
+		void addOutputSlot(std::string const& name, std::string const& type);
+
+		/**
+		*	add setup parameter without keyword
+		*
+		*	@param name:			parameter's name
+		*/
+		template< typename T >
+		void addSetupParameter(std::string const& name)
+		{
+			addSetupParameterByType(name, typeid(T).name());
+		}
+
+		/**
+		*	add input slot without keyword
+		*
+		*	@param name:			slot's name
+		*/
+		template< typename T >
+		void addInputSlot(std::string const& name)
+		{
+			addInputSlotByType(name, typeid(T).name());
+		}
+
+		/**
+		*	add output slot without keyword
+		*
+		*	@param name:			slot's name
+		*/
+		template< typename T >
+		void addOutputSlot(std::string const& name)
+		{
+			addOutputSlotByType(name, typeid(T).name());
+		}
 
 		/**
 		*	get service's name
@@ -100,51 +118,64 @@ namespace _2Real
 		std::string const& getDescription() const;
 
 		/**
-		*	@param _name:		parameter's name
-		*	@return:			true if service has setup param with _name
+		*	@param name:		parameter's name
+		*	@return:			true if service has a setup parameter with name
 		*/
-		const bool hasSetupParameter(std::string const& _name) const;
+		const bool hasSetupParameter(std::string const& name) const;
 
 		/**
-		*	@param _name:		parameter's name
-		*	@return:			true if service has input param with _name
+		*	@param name:		parameter's name
+		*	@return:			true if service has an input slot with name
 		*/
-		const bool hasInputParameter(std::string const& _name) const;
+		const bool hasInputParameter(std::string const& name) const;
 
 		/**
-		*	@param _name:		parameter's name
-		*	@return:			true if service has output param with _name
+		*	@param name:		parameter's name
+		*	@return:			true if service has an output slot with name
 		*/
-		const bool hasOuputParameter(std::string const& _name) const;
+		const bool hasOuputParameter(std::string const& name) const;
 
 		/**
-		*	
+		*	@return: map with setup parameters, name = key, keyword = value
 		*/
-		ParameterMetadata::StringMap getInputParameters() const;
+		const std::map< std::string, std::string > getInputParameters() const;
 
 		/**
-		*	
+		*	@return: map with input slots, name = key, keyword = value
 		*/
-		ParameterMetadata::StringMap getOutputParameters() const;
+		const std::map< std::string, std::string > getOutputParameters() const;
 
 		/**
-		*	
+		*	@return: map with output slot, name = key, keyword = value
 		*/
-		ParameterMetadata::StringMap getSetupParameters() const;
+		const std::map< std::string, std::string > getSetupParameters() const;
 
 		/**
 		*	returns string with service information
 		*
-		*	@return:			info
+		*	@return:			information
 		*/
 		const std::string info() const;
 
 	private:
 
+		friend class PluginMetadata;
+
+		ServiceMetadata(std::string const& name, StringMap const& types);
+
+		void addSetupParameterByType(std::string const& name, std::string const& type);
+		void addInputSlotByType(std::string const& name, std::string const& type);
+		void addOutputSlotByType(std::string const& name, std::string const& type);
+
 		/**
 		*	name
 		*/
-		const std::string									m_ServiceName;
+		std::string											const m_ServiceName;
+
+		/**
+		*	allowed parameter types
+		*/
+		StringMap											const& m_AllowedTypes;
 
 		/**
 		*	description
@@ -152,29 +183,19 @@ namespace _2Real
 		std::string											m_Description;
 
 		/**
-		*	if setup can be called more than once
+		*	setup parameters
 		*/
-		bool												m_bCanReconfigure;
+		std::map< std::string, ParameterMetadata >			m_SetupParameters;
 
 		/**
-		*	if service is singleton
+		*	input slots
 		*/
-		bool												m_bIsSingleton;
+		std::map< std::string, ParameterMetadata >			m_InputParameters;
 
 		/**
-		*	setup params
+		*	output slots
 		*/
-		ParameterMetadata::ParameterMap								m_SetupParameters;
-
-		/**
-		*	input params
-		*/
-		ParameterMetadata::ParameterMap								m_InputParameters;
-
-		/**
-		*	output params
-		*/
-		ParameterMetadata::ParameterMap								m_OutputParameters;
+		std::map< std::string, ParameterMetadata >			m_OutputParameters;
 
 	};
 

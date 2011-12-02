@@ -68,7 +68,6 @@ namespace _2Real
 		SharedAny getDatatype(std::string const& keyword) const;
 		const std::string getTypename(std::string const& keyword) const;
 		const bool contains(std::string const& keyword) const;
-		void debug() const;
 
 	private:
 

@@ -21,6 +21,7 @@
 
 #include "_2RealSharedAny.h"
 
+#include <map>
 #include <string>
 
 #include "Poco/SharedPtr.h"
@@ -71,13 +72,13 @@ namespace _2Real
 
 		friend class Plugin;
 
-		PluginContext(Plugin *const plugin);
+		PluginContext(Plugin &plugin);
 		PluginContext(PluginContext const& src);
 		PluginContext& operator=(PluginContext const& src);
 
 		SharedAny			getSetupParameter(std::string const& name);
 
-		Plugin				*const m_Plugin;
+		Plugin				&m_Plugin;
 
 	};
 

@@ -26,16 +26,17 @@
 #include "_2RealOutputHandle.h"
 #include "_2RealIService.h"
 #include "_2RealSystemGraph.h"
+#include "_2RealEngine.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
 
-	Service::Service(IService *const service, Identifier const& id, SystemGraph *const system) : 
+	Service::Service(Identifier const& id, IService *const service, SystemGraph &system) : 
 		Runnable(id, system),
 		m_Service(service),
-		m_Timer(),
 		m_MaxDelay(long(1000.0f/30.0f)),
 		m_UpdatesPerSecond(30.0f)
 	{
@@ -47,63 +48,33 @@ namespace _2Real
 
 		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 		{
-			std::string name;
-			try
-			{
-				name = it->second->name();
-				std::cout << "deleting input slot: " << name << std::endl;
-				delete it->second;
-			}
-			catch (...)
-			{
-				std::cout << "error on input slot destruction: " << name << std::endl;
-			}
+			delete it->second;
 		}
 
 		for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
 		{
-			std::string name;
-			try
-			{
-				name = it->second->name();
-				std::cout << "deleting output slot: " << name << std::endl;
-				delete it->second;
-			}
-			catch (...)
-			{
-				std::cout << "error on output slot destruction: " << name << std::endl;
-			}
+			delete it->second;
 		}
 
 		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 		{
-			std::string name;
-			try
-			{
-				name = it->second->name();
-				std::cout << "deleting setup parameter: " << name << std::endl;
-				delete it->second;
-			}
-			catch (...)
-			{
-				std::cout << "error on setup parameter destruction: " << name << std::endl;
-			}
+			delete it->second;
 		}
 	}
 
-	void Service::addInputSlot(InputSlot *const slot)
+	void Service::addInputSlot(InputSlot &slot)
 	{
-		m_InputSlots.insert(NamedInput(slot->name(), slot));
+		m_InputSlots.insert(NamedInput(slot.name(), &slot));
 	}
 
-	void Service::addOutputSlot(OutputSlot *const slot)
+	void Service::addOutputSlot(OutputSlot &slot)
 	{
-		m_OutputSlots.insert(NamedOutput(slot->name(), slot));
+		m_OutputSlots.insert(NamedOutput(slot.name(), &slot));
 	}
 
-	void Service::addSetupParameter(SetupParameter *const parameter)
+	void Service::addSetupParameter(SetupParameter &parameter)
 	{
-		m_SetupParameters.insert(NamedParameter(parameter->name(), parameter));
+		m_SetupParameters.insert(NamedParameter(parameter.name(), &parameter));
 	}
 
 	const bool Service::hasInputSlot(std::string const& name) const
@@ -132,36 +103,10 @@ namespace _2Real
 
 	void Service::checkConfiguration()
 	{
-		ServiceContext context(this);
+		ServiceContext context(*this);
 		m_Service->setup(context);
 
-		//for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputParameters.end(); it++)
-		//{
-		//	if (!it->second->isLinked())
-		//	{
-		//		throw Exception("service setup error: input slot " + it->first + " is not linked");
-		//	}
-		//	if (!it->second->isInitialized())
-		//	{
-		//		throw Exception("service setup error: input slot " + it->first + " was not initialized by the service");
-		//	}
-		//}
-
-		//for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputParameters.end(); it++)
-		//{
-		//	if (!it->second->isInitialized())
-		//	{
-		//		throw Exception("service setup error: output slot " + it->first + " was not initialized by the service");
-		//	}
-		//}
-
-		//for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
-		//{
-		//	if (!it->second->isInitialized())
-		//	{
-		//		throw Exception("service setup error: value for setup parameter " + it->first + " was not provided");
-		//	}
-		//}
+		//TODO
 	}
 
 	void Service::run()
@@ -170,7 +115,7 @@ namespace _2Real
 		{
 			try
 			{
-				m_Timer.update();
+				//Engine::instance()->
 				
 				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 				{
@@ -190,7 +135,7 @@ namespace _2Real
 				}
 				else
 				{
-					long elapsed = m_Timer.elapsed()/1000;
+					long elapsed = 0;//m_Timer.elapsed()/1000;
 					long sleep = m_MaxDelay - elapsed;
 					if (sleep > 0)
 					{
@@ -198,19 +143,12 @@ namespace _2Real
 					}
 				}
 			}
-			catch (ServiceException &e)
+			catch (_2Real::Exception &e)
 			{
 				m_Run = false;
 				m_RunOnce = false;
 
-				m_System->handleException(*this, e);
-			}
-			catch (Exception &e)
-			{
-				m_Run = false;
-				m_RunOnce = false;
-
-				m_System->handleException(*this, e);
+				m_System.handleException(*this, e);
 			}
 		}
 	}
@@ -231,19 +169,12 @@ namespace _2Real
 				it->second->update();
 			}
 		}
-		catch (ServiceException &e)
+		catch (_2Real::Exception &e)
 		{
 			m_Run = false;
 			m_RunOnce = false;
 
-			m_System->handleException(*this, e);
-		}
-		catch (Exception &e)
-		{
-			m_Run = false;
-			m_RunOnce = false;
-
-			m_System->handleException(*this, e);
+			m_System.handleException(*this, e);
 		}
 	}
 
@@ -285,9 +216,9 @@ namespace _2Real
 		return result;
 	}
 
-	SharedAny Service::getParameterValue(std::string const& name)
+	SharedAny Service::getParameterValue(std::string const& name) const
 	{
-		ParameterMap::iterator it = m_SetupParameters.find(name);
+		ParameterMap::const_iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())
 		{
 			throw Exception("attempted to query non-existant setup parameter");
@@ -296,9 +227,9 @@ namespace _2Real
 		return it->second->get();
 	}
 
-	InputHandle Service::createInputHandle(std::string const& name)
+	InputHandle Service::createInputHandle(std::string const& name) const
 	{
-		InputMap::iterator it = m_InputSlots.find(name);
+		InputMap::const_iterator it = m_InputSlots.find(name);
 		if (it == m_InputSlots.end())
 		{
 			throw Exception("attempted to query non-existant setup parameter");
@@ -308,9 +239,9 @@ namespace _2Real
 		return handle;
 	}
 
-	OutputHandle Service::createOutputHandle(std::string const& name)
+	OutputHandle Service::createOutputHandle(std::string const& name) const
 	{
-		OutputMap::iterator it = m_OutputSlots.find(name);
+		OutputMap::const_iterator it = m_OutputSlots.find(name);
 		if (it == m_OutputSlots.end())
 		{
 			throw Exception("attempted to query non-existant setup parameter");
@@ -320,7 +251,7 @@ namespace _2Real
 		return handle;
 	}
 
-	OutputSlot *const Service::getOutputSlot(std::string const& name)
+	OutputSlot & Service::getOutputSlot(std::string const& name)
 	{
 		OutputMap::iterator it = m_OutputSlots.find(name);
 		if (it == m_OutputSlots.end())
@@ -328,10 +259,10 @@ namespace _2Real
 			throw Exception("attempted to query non-existant setup parameter");
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 
-	InputSlot *const Service::getInputSlot(std::string const& name)
+	InputSlot & Service::getInputSlot(std::string const& name)
 	{
 		InputMap::iterator it = m_InputSlots.find(name);
 		if (it == m_InputSlots.end())
@@ -339,10 +270,10 @@ namespace _2Real
 			throw Exception("attempted to query non-existant setup parameter");
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 
-	SetupParameter *const Service::getSetupParameter(std::string const& name)
+	SetupParameter & Service::getSetupParameter(std::string const& name)
 	{
 		ParameterMap::iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())
@@ -350,7 +281,40 @@ namespace _2Real
 			throw Exception("attempted to query non-existant setup parameter");
 		}
 
-		return it->second;
+		return *(it->second);
+	}
+
+	OutputSlot const& Service::getOutputSlot(std::string const& name) const
+	{
+		OutputMap::const_iterator it = m_OutputSlots.find(name);
+		if (it == m_OutputSlots.end())
+		{
+			throw Exception("attempted to query non-existant setup parameter");
+		}
+
+		return *(it->second);
+	}
+
+	InputSlot const& Service::getInputSlot(std::string const& name) const
+	{
+		InputMap::const_iterator it = m_InputSlots.find(name);
+		if (it == m_InputSlots.end())
+		{
+			throw Exception("attempted to query non-existant setup parameter");
+		}
+
+		return *(it->second);
+	}
+
+	SetupParameter const& Service::getSetupParameter(std::string const& name) const
+	{
+		ParameterMap::const_iterator it = m_SetupParameters.find(name);
+		if (it == m_SetupParameters.end())
+		{
+			throw Exception("attempted to query non-existant setup parameter");
+		}
+
+		return *(it->second);
 	}
 
 }

@@ -27,106 +27,66 @@
 namespace _2Real
 {
 
-	System::System(std::string const& _name) : m_Engine(NULL), m_ID(NULL)
+	System::System(std::string const& name) :
+		m_Id(Engine::instance()->createSystem(name))
 	{
-		try
-		{
-			m_Engine = Engine::instance();
-			m_ID = new Identifier(m_Engine->createSystem(_name));
-		}
-		catch (Exception &e)
-		{
-			delete m_ID;
-			throw e;
-		}
 	}
 
-	System::System(System const& _src) : m_Engine(NULL), m_ID(NULL)
+	System::System(System const& src) :
+		m_Id(src.m_Id)
 	{
-		m_Engine = Engine::instance();
-		
-		if (_src.m_ID)
-		{
-			m_ID = new Identifier(*_src.m_ID);
-		}
 	}
 	
-	System& System::operator=(System const& _src)
+	System& System::operator=(System const& src)
 	{
-		if (this == &_src)
-		{
-			return *this;
-		}
-
-		if (!m_Engine)
-		{
-			m_Engine = Engine::instance();
-		}
-
-		if (m_ID)
-		{
-			m_Engine->destroySystem(*m_ID);
-		}
-
-		if (_src.m_ID)
-		{
-			m_ID = new Identifier(*_src.m_ID);
-		}
-
 		return *this;
 	}
 
 	System::~System()
 	{
-		m_Engine->destroySystem(*m_ID);
-		delete m_ID;
+		Engine::instance()->destroySystem(m_Id);
 	}
 
 	const Identifier System::getID()
 	{
-		return *m_ID;
+		return m_Id;
 	}
 
-	const Identifier System::loadPlugin(std::string const& _name, std::string const& _directory, std::string const& _file, std::string const& _classname)
+	const Identifier System::load(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname)
 	{
-		return m_Engine->installPlugin(_name, _directory, _file, _classname, *m_ID);
+		return Engine::instance()->load(name, directory, file, classname, m_Id);
 	}
 
-	void System::startPlugin(Identifier const& _pluginID)
+	void System::setup(Identifier const& id)
 	{
-		return m_Engine->startPlugin(_pluginID, *m_ID);
+		return Engine::instance()->setup(id, m_Id);
 	}
 
-	void System::dumpPluginInfo(Identifier const& _pluginID)
+	void System::dumpInfo(Identifier const& plugin)
 	{
-		m_Engine->dumpPluginInfo(_pluginID, *m_ID);
+		Engine::instance()->dumpPluginInfo(plugin, m_Id);
 	}
 
-	void System::dumpServiceInfo(Identifier const& _pluginID, std::string const& _serviceName)
+	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service)
 	{
-		m_Engine->dumpServiceInfo(_pluginID, _serviceName, *m_ID);
+		return Engine::instance()->createService(name, plugin, service, m_Id);
 	}
 
-	const Identifier System::createService(std::string const& _name, Identifier const& _pluginID, std::string const& _serviceName)
+	void System::setUpdateRate(Identifier const& runnable, float const& updatesPerSecond)
 	{
-		return m_Engine->createService(_name, _pluginID, _serviceName, *m_ID);
+		Engine::instance()->setUpdateRate(runnable, updatesPerSecond, m_Id);
 	}
 
-	void System::setUpdateRate(Identifier const& id, float const& updatesPerSecond)
+	void System::setValueInternal(Identifier const& id, std::string const& param, SharedAny value, type_info const& info)
 	{
-		m_Engine->setUpdateRate(id, updatesPerSecond, *m_ID);
-	}
-
-	void System::setParameterValue(Identifier const& _id, std::string const& _paramName, SharedAny _any, type_info const& _info)
-	{
-		m_Engine->setParameterValue(_id, _paramName, _any, _info.name(), *m_ID);
+		Engine::instance()->setValue(id, param, value, info.name(), m_Id);
 	}
 
 	//Identifiers System::getInputSlots(Identifier const& _id)
 	//{
 	//	try
 	//	{
-	//		return m_Engine->getInputSlots(_id, *m_ID);
+	//		return m_Engine->getInputSlots(_id, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -138,7 +98,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		return m_Engine->getOutputSlots(_id, *m_ID);
+	//		return m_Engine->getOutputSlots(_id, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -150,7 +110,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		return m_Engine->createSequence(_name, _idA, _idB, *m_ID);
+	//		return m_Engine->createSequence(_name, _idA, _idB, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -162,7 +122,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		return m_Engine->createSynchronization(_name, _idA, _idB, *m_ID);
+	//		return m_Engine->createSynchronization(_name, _idA, _idB, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -174,7 +134,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		m_Engine->link(_in, _out, *m_ID);
+	//		m_Engine->link(_in, _out, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -182,36 +142,56 @@ namespace _2Real
 	//	}
 	//}
 
-	void System::linkSlots(Identifier const& _idIn, std::string const& _nameIn, Identifier const& _idOut, std::string const& _nameOut)
+	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
-		m_Engine->linkSlots(_idIn, _nameIn, _idOut, _nameOut, *m_ID);
+		Engine::instance()->linkSlots(outService, outName, inService, inName, m_Id);
 	}
 
-	void System::registerToException(ExceptionCallback _callback)
+	void System::registerToException(ExceptionCallback callback)
 	{
-		m_Engine->registerToException(_callback, *m_ID);
+		Engine::instance()->registerToException(callback, m_Id);
 	}
 
-	void System::unregisterFromException(ExceptionCallback _callback)
+	void System::unregisterFromException(ExceptionCallback callback)
 	{
-		m_Engine->unregisterFromException(_callback, *m_ID);
+		Engine::instance()->unregisterFromException(callback, m_Id);
 	}
 
-	void System::registerToNewData(Identifier const& _service, std::string const& _name, DataCallback _callback)
+	void System::registerToException(ExceptionListener &listener)
 	{
-		m_Engine->registerToNewData(_service, _name, _callback, *m_ID);
+		Engine::instance()->registerToException(listener, m_Id);
 	}
 
-	void System::unregisterFromNewData(Identifier const& _service, std::string const& _name, DataCallback _callback)
+	void System::unregisterFromException(ExceptionListener &listener)
 	{
-		m_Engine->unregisterFromNewData(_service, _name, _callback, *m_ID);
+		Engine::instance()->unregisterFromException(listener, m_Id);
+	}
+
+	void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	{
+		Engine::instance()->registerToNewData(service, name, callback, m_Id);
+	}
+
+	void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	{
+		Engine::instance()->unregisterFromNewData(service, name, callback, m_Id);
+	}
+
+	void System::registerToNewData(Identifier const& service, std::string const& name, OutputListener &listener)
+	{
+		Engine::instance()->registerToNewData(service, name, listener, m_Id);
+	}
+
+	void System::unregisterFromNewData(Identifier const& service, std::string const& name, OutputListener &listener)
+	{
+		Engine::instance()->unregisterFromNewData(service, name, listener, m_Id);
 	}
 
 	//DataHandle System::getDataHandle(Identifier const& _service, std::string const& _out)
 	//{
 	//	try
 	//	{
-	//		return m_Engine->createDataHandle(_service, _out, *m_ID);
+	//		return m_Engine->createDataHandle(_service, _out, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -223,7 +203,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		return m_Engine->getChildren(_id, *m_ID);
+	//		return m_Engine->getChildren(_id, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -231,16 +211,16 @@ namespace _2Real
 	//	}
 	//}
 
-	void System::start(Identifier const& _id)
+	void System::start(Identifier const& id)
 	{
-		m_Engine->start(_id, *m_ID);
+		Engine::instance()->start(id, m_Id);
 	}
 
 	//void System::startAll()
 	//{
 	//	try
 	//	{
-	//		m_Engine->startAll(*m_ID);
+	//		m_Engine->startAll(*m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -248,16 +228,16 @@ namespace _2Real
 	//	}
 	//}
 
-	void System::stop(Identifier const& _id)
+	void System::stop(Identifier const& id)
 	{
-		m_Engine->stop(_id, *m_ID);
+		Engine::instance()->stop(id, m_Id);
 	}
 
 	//void System::stopAll()
 	//{
 	//	try
 	//	{
-	//		m_Engine->stopAll(*m_ID);
+	//		m_Engine->stopAll(*m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -269,7 +249,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		m_Engine->destroy(_id, *m_ID);
+	//		m_Engine->destroy(_id, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -281,7 +261,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		m_Engine->insert(_dst, _index, _src, *m_ID);
+	//		m_Engine->insert(_dst, _index, _src, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{
@@ -293,7 +273,7 @@ namespace _2Real
 	//{
 	//	try
 	//	{
-	//		m_Engine->append(_dst, _src, *m_ID);
+	//		m_Engine->append(_dst, _src, *m_Id);
 	//	}
 	//	catch (Exception &e)
 	//	{

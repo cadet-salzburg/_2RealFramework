@@ -16,25 +16,23 @@
 	limitations under the License.
 */
 
-#include "_2RealParameterMetadata.h"
+#pragma once
 
 namespace _2Real
 {
 
-	ParameterMetadata::ParameterMetadata(std::string const& _name, std::string const& _type) :
-		m_Name(_name),
-		m_Type(_type)
-	{
-	}
+	class Data;
 
-	std::string ParameterMetadata::getName() const
+	class OutputListener
 	{
-		return m_Name;
-	}
 
-	std::string ParameterMetadata::getType() const
-	{
-		return m_Type;
-	}
+	public:
+
+		virtual ~OutputListener() = 0;
+		virtual void receiveData(Data &data) = 0;
+
+	};
+
+	inline OutputListener::~OutputListener() {}
 
 }

@@ -36,6 +36,7 @@ namespace _2Real
 		virtual ~Entity();
 
 		static const Identifier createIdentifier(std::string const& name, std::string const& type);
+		static const Identifier NoEntity();
 
 		Identifier const& identifier() const
 		{
@@ -57,7 +58,31 @@ namespace _2Real
 			return m_Id.type();
 		}
 
-		static const Identifier		NoEntity();
+		const bool isPlugin() const
+		{
+			return (m_Id.type() == "plugin");
+		}
+
+		const bool isService() const
+		{
+			return (m_Id.type() == "service");
+		}
+
+		const bool isSetupAble() const
+		{
+			return (m_Id.type() == "plugin" || m_Id.type() == "service");
+		}
+
+		const bool isRunnable() const
+		{
+			return (m_Id.type() == "service" || m_Id.type() == "sequence" || m_Id.type() == "synchronization");
+		}
+
+		const bool isGraph() const
+		{
+			 return (m_Id.type() == "sequence"|| m_Id.type() == "synchronization" || m_Id.type() == "system");
+		}
+
 
 	private:
 

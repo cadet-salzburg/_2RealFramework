@@ -28,10 +28,9 @@
 #include "_2RealSharedAny.h"
 #include "_2RealData.h"
 
-#include <vector>
-
-#include "Poco/AbstractDelegate.h"
 #include "Poco/Timestamp.h"
+
+#include <fstream>
 
 namespace _2Real
 {
@@ -39,28 +38,15 @@ namespace _2Real
 	class Data;
 	class RunnableException;
 
-	/**
-	*	callback for exceptions
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToException
-	*/
 	typedef void (*ExceptionCallback)(RunnableException &exception);
-
-	/**
-	*	callback for new data
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToNewData
-	*/
 	typedef void (*DataCallback)(Data &data);
 
-	class PluginPool;
 	class ServiceFactory;
 	class ProductionGraphs;
 	class Identifier;
 	class TypeTable;
-	class EngineTime;
+	class OutputListener;
+	class ExceptionListener;
 	
 	class Engine
 	{
@@ -68,36 +54,6 @@ namespace _2Real
 	public:
 
 		static Engine *const instance();
-
-		PluginPool & plugins()
-		{
-			return *m_Plugins;
-		}
-
-		PluginPool const& plugins() const
-		{
-			return *m_Plugins;
-		}
-
-		ServiceFactory & factory()
-		{
-			return *m_Factory;
-		}
-
-		ServiceFactory const& factory() const
-		{
-			return *m_Factory;
-		}
-
-		ProductionGraphs & graphs()
-		{
-			return *m_Graphs;
-		}
-
-		ProductionGraphs const& graphs() const
-		{
-			return *m_Graphs;
-		}
 
 		TypeTable & types()
 		{
@@ -109,19 +65,23 @@ namespace _2Real
 			return *m_Types;
 		}
 
+		std::ofstream & getLogStream()
+		{
+			return m_LogFile;
+		}
+
 		const Identifier createSystem(std::string const& name);
 		void destroySystem(Identifier const& id);
 		
-		const Identifier installPlugin(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system);
-		void startPlugin(Identifier const& plugin, Identifier const& system);
+		const Identifier load(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system);
+		void setup(Identifier const& id, Identifier const& system);
 
 		void dumpPluginInfo(Identifier const& plugin, Identifier const& system) const;
-		void dumpServiceInfo(Identifier const& plugin, std::string const& service, Identifier const& system) const;
 		
 		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
 		void setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system);
 
-		void setParameterValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
+		void setValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
 
 		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
 		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
@@ -142,6 +102,10 @@ namespace _2Real
 		void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
 		void registerToException(ExceptionCallback callback, Identifier const& system);
 		void unregisterFromException(ExceptionCallback callback, Identifier const& system);
+		void registerToNewData(Identifier const& service, std::string const& out, OutputListener &listener, Identifier const& system);
+		void unregisterFromNewData(Identifier const& service, std::string const& out, OutputListener &listener, Identifier const& system);
+		void registerToException(ExceptionListener &listener, Identifier const& system);
+		void unregisterFromException(ExceptionListener &listener, Identifier const& system);
 
 	private:
 
@@ -153,11 +117,12 @@ namespace _2Real
 		Engine& operator=(const Engine &_src);
 		~Engine();
 
-		PluginPool				*m_Plugins;
 		ServiceFactory			*m_Factory;
 		ProductionGraphs		*m_Graphs;
 		TypeTable				*m_Types;
 		Poco::Timestamp			m_Timer;
+
+		std::ofstream			m_LogFile;
 
 	};
 

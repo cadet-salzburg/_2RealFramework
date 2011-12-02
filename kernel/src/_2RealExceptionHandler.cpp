@@ -18,31 +18,52 @@
 
 #include "_2RealExceptionHandler.h"
 #include "_2RealData.h"
-#include "_2RealRunnableException.h"
+#include "_2RealException.h"
+#include "_2RealExceptionListener.h"
+#include "_2RealEngine.h"
 
 #include "Poco/Delegate.h"
 
 namespace _2Real
 {
 
-	ExceptionHandler::ExceptionHandler(Identifier const& _system) :
-		m_System(_system)
+	ExceptionHandler::ExceptionHandler(Identifier const& system) :
+		m_System(system)
 	{
 	}
 
-	void ExceptionHandler::registerExceptionCallback(ExceptionCallback _callback)
+	ExceptionHandler::~ExceptionHandler()
 	{
-		m_Event += Poco::delegate(_callback);
+		Engine::instance()->getLogStream() << "exception handler: destructor called\n";
+
+		m_Event.clear();
+
+		Engine::instance()->getLogStream() << "exception handler: destruction complete\n";
 	}
 
-	void ExceptionHandler::unregisterExceptionCallback(ExceptionCallback _callback)
+	void ExceptionHandler::registerExceptionCallback(ExceptionCallback callback)
 	{
-		m_Event -= Poco::delegate(_callback);
+		m_Event += Poco::delegate(callback);
 	}
 
-	void ExceptionHandler::handleException(Exception const& _exception, Identifier const& _sender)
+	void ExceptionHandler::unregisterExceptionCallback(ExceptionCallback callback)
 	{
-		RunnableException e(_exception.what(), _sender, m_System);
+		m_Event -= Poco::delegate(callback);
+	}
+
+	void ExceptionHandler::registerExceptionListener(ExceptionListener &listener)
+	{
+		m_Event += Poco::delegate(&listener, &ExceptionListener::receiveException);
+	}
+
+	void ExceptionHandler::unregisterExceptionListener(ExceptionListener &listener)
+	{
+		m_Event -= Poco::delegate(&listener, &ExceptionListener::receiveException);
+	}
+
+	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
+	{
+		RunnableException e(exception.what(), sender, m_System);
 		m_Event.notify(this, e);
 	}
 }

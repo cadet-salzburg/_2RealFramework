@@ -101,7 +101,7 @@ namespace _2Real
 		
 		if (isLinked())
 		{
-			m_Output->removeListener(this);
+			m_Output->removeListener(*this);
 		}
 
 		m_Output = NULL;

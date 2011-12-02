@@ -38,7 +38,7 @@ namespace _2Real
 
 		ServiceFactory(Engine &engine);
 
-		const Identifier createService(std::string const& name, Plugin *const plugin, std::string const& service, SystemGraph *const system);
+		const Identifier createService(std::string const& name, Plugin const& plugin, std::string const& service, SystemGraph &system);
 
 	private:
 

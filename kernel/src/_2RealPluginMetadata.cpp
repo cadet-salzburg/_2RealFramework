@@ -27,106 +27,67 @@
 namespace _2Real
 {
 
-	PluginMetadata::Version::Version(unsigned int const& _major, unsigned int const& _minor, unsigned int const& _revision) :
-		m_Major(_major),
-		m_Minor(_minor),
-		m_Revision(_revision)
-	{
-	}
-
-	PluginMetadata::Version::Version(Version const& _src) :
-		m_Major(_src.m_Major),
-		m_Minor(_src.m_Minor),
-		m_Revision(_src.m_Revision)
-	{
-	}
-
-	PluginMetadata::Version::~Version()
-	{
-	}
-
-	PluginMetadata::Version& PluginMetadata::Version::operator=(Version const& _src)
-	{
-		m_Major = _src.m_Major;
-		m_Minor = _src.m_Minor;
-		m_Revision = _src.m_Revision;
-
-		return *this;
-	}
-
-	bool PluginMetadata::Version::operator==(Version const& _rhs)
-	{
-		return (m_Major == _rhs.m_Major && m_Minor == _rhs.m_Minor && m_Revision == _rhs.m_Revision);
-	}
-
-	bool PluginMetadata::Version::operator<(Version const& _rhs)
-	{
-		return (m_Major < _rhs.m_Major && m_Minor < _rhs.m_Minor && m_Revision < _rhs.m_Revision);
-	}
-
-	const std::string PluginMetadata::Version::asString() const
-	{
-		std::stringstream result;
-		result << m_Major << "." << m_Minor << "." << m_Revision;
-		return result.str();
-	}
-
-	unsigned int const& PluginMetadata::Version::major() const
-	{
-		return m_Major;
-	}
-
-	unsigned int const& PluginMetadata::Version::minor() const
-	{
-		return m_Minor;
-	}
-
-	unsigned int const& PluginMetadata::Version::revision() const
-	{
-		return m_Revision;
-	}
-
-	PluginMetadata::PluginMetadata(std::string const& _name, std::string const& _file, std::string const& _path, TypeTable const& _types) :
-		m_Classname(_name),
-		m_Filename(_file),
-		m_InstallDirectory(_path),
+	PluginMetadata::PluginMetadata(std::string const& classname, std::string const& path, StringMap const& types) :
+		m_Classname(classname),
+		m_InstallDirectory(path),
 		m_Description("this plugin is holy"),
 		m_Author("the spaghetti monster"),
 		m_Contact("through prayer"),
-		m_Version(PluginMetadata::Version(0, 0, 0)),
+		m_Version(Version(0, 0, 0)),
 		m_Services(),
-		m_Types(_types)
+		m_SetupParameters(),
+		m_AllowedTypes(types)
 	{
 	}
 
-	void PluginMetadata::setDescription(std::string const& _desc)
+	//TypeTable const& PluginMetadata::types() const
+	//{
+	//	return *m_Types;
+	//}
+
+	//std::ofstream & PluginMetadata::logstream()
+	//{
+	//	return m_Logstream;
+	//}
+
+	ServiceMetadata & PluginMetadata::addServiceMetadata(std::string const& name)
 	{
-		m_Description = _desc;
+		ServiceDataMap::iterator it = m_Services.find(name);
+
+		if (it != m_Services.end())
+		{
+			std::ostringstream msg;
+			msg << "metadata error: service " << name << " already exists";
+			throw _2Real::Exception(msg.str());
+		}
+
+		ServiceMetadata metadata(name, m_AllowedTypes);
+		m_Services.insert(NamedServiceData(name, metadata));
 	}
 
-	void PluginMetadata::setVersion(PluginMetadata::Version const& _version)
+	void PluginMetadata::setDescription(std::string const& desc)
 	{
-		m_Version = _version;
+		m_Description = desc;
 	}
 
-	void PluginMetadata::setAuthor(std::string const& _author)
+	void PluginMetadata::setVersion(Version const& version)
 	{
-		m_Author = _author;
+		m_Version = version;
 	}
 
-	void PluginMetadata::setContact(std::string const& _contact)
+	void PluginMetadata::setAuthor(std::string const& author)
 	{
-		m_Contact = _contact;
+		m_Author = author;
+	}
+
+	void PluginMetadata::setContact(std::string const& contact)
+	{
+		m_Contact = contact;
 	}
 
 	std::string const& PluginMetadata::getClassname() const
 	{
 		return m_Classname;
-	}
-
-	std::string const& PluginMetadata::getFilename() const
-	{
-		return m_Filename;
 	}
 
 	std::string const& PluginMetadata::getInstallDirectory() const
@@ -149,66 +110,54 @@ namespace _2Real
 		return m_Contact;
 	}
 
-	PluginMetadata::Version const& PluginMetadata::getVersion() const
+	Version const& PluginMetadata::getVersion() const
 	{
 		return m_Version;
 	}
 
-	void PluginMetadata::addServiceMetadata(ServiceMetadata const& _info)
+	ServiceMetadata const& PluginMetadata::getServiceMetadata(std::string const& name) const
 	{
-		m_Services.insert(ServiceMetadata::NamedService(_info.getName(), _info));
-	}
-
-	ServiceMetadata const& PluginMetadata::getServiceMetadata(std::string const& _name) const
-	{
-		ServiceMetadata::ServiceMap::const_iterator it = m_Services.find(_name);
+		ServiceDataMap::const_iterator it = m_Services.find(name);
 
 		if (it == m_Services.end())
 		{
-			throw Exception("could not retrieve service metadata - metadata not found");
+			std::ostringstream msg;
+			msg << "metadata error: service " << name << " not found";
+			throw _2Real::Exception(msg.str());
 		}
 
 		return it->second;
 	}
 
-	void PluginMetadata::addSetupParameter(std::string const& _name, std::string const& _type)
+	void PluginMetadata::addSetupParameter(std::string const& name, std::string const& type)
 	{
-		ParameterMetadata::ParameterMap::iterator it = m_SetupParameters.find(_name);
+		ParameterDataMap::iterator it = m_SetupParameters.find(name);
 
 		if (it != m_SetupParameters.end())
 		{
-			throw Exception("setup parameter " + _name + " already exists");
+			std::ostringstream msg;
+			msg << "metadata error: setup parameter " << name << " already exists";
+			throw _2Real::Exception(msg.str());
 		}
 
-		m_SetupParameters.insert(ParameterMetadata::NamedParameter(_name, ParameterMetadata(_name, _type)));
+		m_SetupParameters.insert(NamedParameterData(name, ParameterMetadata(name, type)));
 	}
 
-	ParameterMetadata::StringMap PluginMetadata::getSetupParameters() const
-	{
-		ParameterMetadata::StringMap result;
-		for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); it++)
-		{
-			ParameterMetadata data = it->second;
-			result.insert(std::make_pair(data.getName(), data.getType()));
-		}
-		return result;
-	}
-
-	//const bool PluginMetadata::hasSetupParameter(std::string const& _name) const
+	//const StringMap PluginMetadata::getSetupParameters() const
 	//{
-	//	ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.find(_name);
-
-	//	if (it != m_SetupParameters.end())
+	//	std::map< std::string, std::string > result;
+	//	for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); it++)
 	//	{
-	//		return false;
+	//		ParameterMetadata data = it->second;
+	//		result.insert(std::make_pair(data.getName(), data.getType()));
 	//	}
 
-	//	return true;
+	//	return result;
 	//}
 
-	const std::string PluginMetadata::info()
+	const std::string PluginMetadata::info() const
 	{
-		std::stringstream info;
+		std::ostringstream info;
 		info << std::endl;
 		info << "plugin:\t" << m_Classname << std::endl;
 		info << "description:\t" << m_Description << std::endl;
@@ -220,24 +169,20 @@ namespace _2Real
 		if (!m_SetupParameters.empty())
 		{
 			info << "this plugin has setup parameters:\t" << std::endl;
-			for (ParameterMetadata::ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
+			for (ParameterDataMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 			{
 				info << it->first << ":\t" << it->second.getType() << std::endl;
 			}
 		}
 
 		info << "this plugin exports the following services:" << std::endl;
-		for (ServiceMetadata::ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); it++)
+		for (ServiceDataMap::const_iterator it = m_Services.begin(); it != m_Services.end(); it++)
 		{
 			info << "service\t" << it->first << std::endl;
+			info << it->second.info();
 		}
 
 		return info.str();
-	}
-
-	TypeTable const& PluginMetadata::getTypes() const
-	{
-		return m_Types;
 	}
 
 }

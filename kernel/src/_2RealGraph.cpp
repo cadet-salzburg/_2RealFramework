@@ -16,8 +16,12 @@
 	limitations under the License.
 */
 
+#include "_2RealException.h"
 #include "_2RealGraph.h"
 #include "_2RealRunnableGraph.h"
+
+#include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
@@ -94,21 +98,21 @@ namespace _2Real
 		return (iteratorId(id) != m_Children.end());
 	}
 
-	const bool Graph::isInGraph(Identifier const& id) const
+	const bool Graph::contains(Identifier const& id) const
 	{
-		RunnableList::const_iterator it = iteratorId(id);
-		if (it != m_Children.end())
+		if (isChild(id))
 		{
 			return true;
 		}
 		else
 		{
-			for (it = m_Children.begin(); it != m_Children.end(); it++)
+			RunnableList::const_iterator it;
+			for (it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				if (!((*it)->type() == "service"))
+				if ((*it)->type() != "service")
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					if (child->isChild(id))
+					if (child->contains(id))
 					{
 						return true;
 					}
@@ -119,86 +123,58 @@ namespace _2Real
 		}
 	}
 
-	Runnable *const Graph::getChild(Identifier const& id)
+	Runnable & Graph::getChild(Identifier const& id)
 	{
-		Runnable *child;
 		RunnableList::iterator it = iteratorId(id);
-		
 		if (it != m_Children.end())
 		{
-			child = *it;
-			removeChild(child->identifier());
-			return child;
+			return **it;
 		}
 		else
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!((*it)->type() == "service"))
-				{
-					RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
-					if ((child = graph->getChild(id)) != NULL)
-					{
-						return child;
-					}
-				}
-			}
-		}
-
-		throw ChildNotFoundException(id.name());
-	}
-
-	Runnable const *const Graph::findChild(Identifier const& id) const
-	{
-		RunnableList::const_iterator it = this->iteratorId(id);
-		if (it != m_Children.end())
-		{
-			return *it;
-		}
-		else
-		{
-			for (it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				if (!((*it)->type() == "service"))
+				if ((*it)->type() != "service")
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					const Runnable *result = child->findChild(id);
-					if (result)
+					if (child->contains(id))
 					{
-						return result;
+						return child->getChild(id);
 					}
 				}
 			}
 		}
 
-		throw ChildNotFoundException(id.name());
+		std::ostringstream msg;
+		msg << "internal error: child " << id.name() << " not found in graph";
+		throw _2Real::Exception(msg.str());
 	}
 
-	Runnable *const Graph::findChild(Identifier const& id)
+	Runnable const& Graph::getChild(Identifier const& id) const
 	{
-		RunnableList::iterator it = this->iteratorId(id);
-		
+		RunnableList::const_iterator it = iteratorId(id);
 		if (it != m_Children.end())
 		{
-			return *it;
+			return **it;
 		}
 		else
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if (!((*it)->type() == "service"))
+				if ((*it)->type() != "service")
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					Runnable *result = child->findChild(id);
-					if (result)
+					if (child->contains(id))
 					{
-						return result;
+						return child->getChild(id);
 					}
 				}
 			}
 		}
 
-		throw ChildNotFoundException(id.name());
+		std::ostringstream msg;
+		msg << "internal error: child " << id.name() << " not found in graph";
+		throw _2Real::Exception(msg.str());
 	}
 
 }

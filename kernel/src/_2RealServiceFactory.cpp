@@ -36,51 +36,45 @@ namespace _2Real
 	{
 	}
 
-	const Identifier ServiceFactory::createService(std::string const& _name, Plugin *const _plugin, std::string const& _service, SystemGraph *const _system)
+	const Identifier ServiceFactory::createService(std::string const& name, Plugin const& plugin, std::string const& service, SystemGraph &system)
 	{
-		IService *userService = _plugin->createService(_service);
+		IService *userService = plugin.createService(service);
 
-		if (userService == NULL)
-		{
-			throw Exception("service factory: internal exception - could not create instance of service " + _service);
-		}
+		const Identifier id = Entity::createIdentifier(name, "service");
+		Service *runnable = new Service(id, userService, system);
 
-		const Identifier id = Entity::createIdentifier(_name, "service");
-		Service *service = new Service(userService, id, _system);
-
-		const ServiceMetadata data = _plugin->serviceMetadata(_service);
+		const ServiceMetadata data = plugin.getMetadata(service);
 
 		typedef std::map< std::string, std::string > StringMap;
-		StringMap setup = data.getSetupParameters();
-		StringMap input = data.getInputParameters();
-		StringMap output = data.getOutputParameters();
+		StringMap const& setup = data.getSetupParameters();
+		StringMap const& input = data.getInputParameters();
+		StringMap const& output = data.getOutputParameters();
 
-		for (StringMap::iterator it = setup.begin(); it != setup.end(); it++)
+		for (StringMap::const_iterator it = setup.begin(); it != setup.end(); it++)
 		{
 			const Identifier id = Entity::createIdentifier(it->first, "setup parameter");
 			SetupParameter *setup = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
-			service->addSetupParameter(setup);
+			runnable->addSetupParameter(*setup);
 		}
 
-		for (StringMap::iterator it = input.begin(); it != input.end(); it++)
+		for (StringMap::const_iterator it = input.begin(); it != input.end(); it++)
 		{
 			const Identifier id = Entity::createIdentifier(it->first, "input slot");
-			InputSlot *in = new InputSlot(id, service, m_Engine.types().getTypename(it->second), it->second);
-			service->addInputSlot(in);
+			InputSlot *in = new InputSlot(id, runnable, m_Engine.types().getTypename(it->second), it->second);
+			runnable->addInputSlot(*in);
 		}
 
-		for (StringMap::iterator it = output.begin(); it != output.end(); it++)
+		for (StringMap::const_iterator it = output.begin(); it != output.end(); it++)
 		{
 			SharedAny init;
-			// ~~ createfromkeyword
 			m_Engine.types().create(it->second, init);
 			const Identifier id = Entity::createIdentifier(it->first, "output slot");
-			OutputSlot *out = new OutputSlot(id, service, m_Engine.types().getTypename(it->second), it->second, init);
-			service->addOutputSlot(out);
+			OutputSlot *out = new OutputSlot(id, runnable, m_Engine.types().getTypename(it->second), it->second, init);
+			runnable->addOutputSlot(*out);
 		}
 
-		unsigned int index = _system->childCount();
-		_system->insertChild(service, index);
+		unsigned int index = system.childCount();
+		system.insertChild(*runnable, index);
 
 		return id;
 	}

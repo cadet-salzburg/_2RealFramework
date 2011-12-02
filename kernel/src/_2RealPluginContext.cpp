@@ -18,37 +18,48 @@
 
 #include "_2RealPluginContext.h"
 #include "_2RealPlugin.h"
-#include "_2RealServiceFactory.h"
-#include "_2RealException.h"
-
-#include <iostream>
+#include "_2RealSetupParameter.h"
 
 namespace _2Real
 {
 
-	PluginContext::PluginContext(Plugin *const _plugin) :
-		m_Plugin(_plugin)
+	PluginContext::PluginContext(Plugin &plugin) :
+		m_Plugin(plugin)
 	{
 	}
 
-	PluginContext::PluginContext(PluginContext const& _src) :
-		m_Plugin(_src.m_Plugin)
+	PluginContext::PluginContext(PluginContext const& src) :
+		m_Plugin(src.m_Plugin)
 	{
 	}
 
-	PluginContext& PluginContext::operator=(PluginContext const& _src) 
+	PluginContext& PluginContext::operator=(PluginContext const& src) 
 	{
 		return *this;
 	}
 
-	void PluginContext::registerService(std::string const& _name, ServiceCreator _creator)
+	void PluginContext::registerService(std::string const& name, ServiceCreator creator)
 	{
-		m_Plugin->registerService(_name, _creator);
+		if (m_Plugin.canExportService(name) && !m_Plugin.exportsService(name))
+		{
+			m_Plugin.registerService(name, creator);
+		}
+		else
+		{
+			throw InvalidServiceException(name);
+		}
 	}
 
-	SharedAny PluginContext::getSetupParameter(std::string const& _name)
+	SharedAny PluginContext::getSetupParameter(std::string const& name)
 	{
-		return m_Plugin->getParameterValue(_name);
+		if (m_Plugin.hasSetupParameter(name))
+		{
+			return m_Plugin.getSetupParameter(name).get();
+		}
+		else
+		{
+			throw InvalidParameterException("setup parameter", name);
+		}
 	}
 
 }

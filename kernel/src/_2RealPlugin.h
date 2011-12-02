@@ -23,8 +23,6 @@
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
 
-#include <list>
-
 #include "Poco/ClassLoader.h"
 
 namespace _2Real
@@ -33,92 +31,106 @@ namespace _2Real
 	typedef IService *const (*ServiceCreator)(void);
 
 	class SetupParameter;
+	class SharedAny;
+	class SystemGraph;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
 	typedef std::pair< std::string, ServiceCreator >	NamedTemplate;
 	typedef std::map< std::string, ServiceCreator >		TemplateMap;
+	typedef Poco::ClassLoader< IPluginActivator >		PluginLoader;
 
 	class Plugin : public Entity
 	{
 
 	public:
 
-		Plugin(Identifier const& id, PluginMetadata *const info);
-		virtual ~Plugin();
+		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const &system);
+		~Plugin();
 
-		void														install();
-		void														uninstall();
-		void														setup();
+		void							install();
+		void							uninstall();
+		void							setup();
 
-		void														registerService(std::string const& name, ServiceCreator service);
-		void														addSetupParameter(SetupParameter *const param);
+		void							registerService(std::string const& name, ServiceCreator service);
+		void							addSetupParameter(SetupParameter *const param);
 
-		PluginMetadata const&										pluginMetadata() const;
-		ServiceMetadata const&										serviceMetadata(std::string const& name) const;
+		const bool						canExportService(std::string const& name) const;
+		const bool						exportsService(std::string const& name) const;
+		const bool						hasSetupParameter(std::string const& name) const;
+		bool const&						isInitialized() const;
 
-		TemplateMap const& services() const
-		{
-			return m_Services;
-		}
+		PluginMetadata const&			getMetadata() const;
+		ServiceMetadata const&			getMetadata(std::string const& name) const;
 
-		TemplateMap& services()
-		{
-			return m_Services;
-		}
+		SetupParameter &				getSetupParameter(std::string const& name);
+		SetupParameter const&			getSetupParameter(std::string const& name) const;
+
+		IService						*const createService(std::string const& name) const;
+
+		//TemplateMap const& services() const
+		//{
+		//	return m_Services;
+		//}
+
+		//TemplateMap & services()
+		//{
+		//	return m_Services;
+		//}
 
 		ParameterMap const& setupParameters() const
 		{
 			return m_SetupParameters;
 		}
 
-		ParameterMap& setupParameters()
-		{
-			return m_SetupParameters;
-		}
-
-		//std::list< unsigned int > serviceIDs() const;
-		std::list< unsigned int > setupParameterIDs() const;
-
-		//ServiceTemplate *const getServiceTemplate(std::string const& name);
-		SetupParameter *const getSetupParameter(std::string const& name);
-
-		bool const& isInitialized() const;
-		SharedAny getParameterValue(std::string const& name);
-
-		IService *const createService(std::string const& name);
+		//ParameterMap & setupParameters()
+		//{
+		//	return m_SetupParameters;
+		//}
+		
+		//SharedAny getParameterValue(std::string const& name);
 
 	private:
 
-		typedef Poco::ClassLoader< IPluginActivator >				PluginLoader;
+		/**
+		*	plugin's setup parameters
+		*/
+		ParameterMap											m_SetupParameters;
 
-		ParameterMap												m_SetupParameters;
-		TemplateMap													m_Services;
+		/**
+		*	plugin's services
+		*/
+		TemplateMap												m_Services;
 
 		/**
 		*	dll filepath
 		*/
-		std::string													m_File;
+		std::string												m_File;
 
 		/**
 		*	plugin activator implemented by user plugin
 		*/
-		IPluginActivator											*m_Activator;
+		IPluginActivator										*m_Activator;
 
 		/**
 		*	metadata
 		*/
-		PluginMetadata												*const m_Metadata;
+		PluginMetadata											m_Metadata;
 
 		/**
 		*	poco classloader
 		*/
-		PluginLoader												m_PluginLoader;
+		PluginLoader											m_PluginLoader;
 
 		/**
 		*	true if plugin's setup has been called at least once
 		*/
-		bool														m_IsInitialized;
+		bool													m_IsInitialized;
+
+		/**
+		*	system which installed the plugin
+		*/
+		SystemGraph												const& m_System;
 
 	};
 

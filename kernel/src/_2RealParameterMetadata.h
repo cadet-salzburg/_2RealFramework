@@ -19,63 +19,41 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <sstream>
 
 namespace _2Real
 {
-
-	/**
-	*	metadata representation of a param
-	*/
 
 	class ParameterMetadata
 	{
 
 	public:
 
-		typedef std::map< std::string, std::string >		StringMap;
-
-		/**
-		*	yay, typedefs
-		*/
-		typedef std::pair< std::string, ParameterMetadata >		NamedParameter;
-
-		/**
-		*	typedefs, yay
-		*/
-		typedef std::map< std::string, ParameterMetadata >		ParameterMap;
-
-		/**
-		*	ctor will throw if either _name or _type is empty
-		*/
-		ParameterMetadata(std::string const& _name, std::string const& _type);
-
-		/**
-		*	get parameter name
-		*
-		*	@return:		parameter's name
-		*/
-		std::string getName() const;
-
-		/**
-		*	get parameter type
-		*
-		*	@return:		parameter's type as string
-		*/
-		std::string getType() const;
+		ParameterMetadata(std::string const& name, std::string const& type);
+		std::string const& getName() const;
+		std::string const& getType() const;
 
 	private:
 
-		/**
-		*	name of the param
-		*/
-		const std::string		m_Name;
-
-		/*
-		*	typename as string
-		*/
-		const std::string		m_Type;
+		const std::string	m_Name;
+		const std::string	m_Type;
 
 	};
+
+	inline ParameterMetadata::ParameterMetadata(std::string const& name, std::string const& type) :
+		m_Name(name),
+		m_Type(type)
+	{
+	}
+
+	inline std::string const& ParameterMetadata::getName() const
+	{
+		return m_Name;
+	}
+
+	inline std::string const& ParameterMetadata::getType() const
+	{
+		return m_Type;
+	}
 
 }

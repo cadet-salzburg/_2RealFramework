@@ -19,84 +19,53 @@
 
 #pragma once
 
-#include "_2RealEngine.h"
-#include "_2RealException.h"
-
 #include <map>
 #include <string>
 
 namespace _2Real
 {
 
+	class Engine;
 	class Identifier;
 	class SystemGraph;
-	class RunnableGraph;
-	class Runnable;
 
-	typedef std::pair< unsigned int, SystemGraph * >	NamedSystem;
-	typedef	std::map< unsigned int, SystemGraph * >		SystemTable;
+	typedef std::pair< Identifier, SystemGraph * >	NamedSystemGraph;
+	typedef	std::map< Identifier, SystemGraph * >	SystemGraphTable;
 
 	class ProductionGraphs
 	{
 
-	public:	
+	public:
 
 		ProductionGraphs(Engine &engine);
-		virtual ~ProductionGraphs();
+		~ProductionGraphs();
 
-		/**
-		*	create sequence; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
-		*/
-		const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
+		//const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
+		//const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
-		/**
-		*	create syncronization; top must be in system table, a & b must be two existing runnables in top -> result will be placed in top
-		*/
-		const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
-
-		/**
-		*	creates a new system
-		*/
 		const Identifier createSystemGraph(std::string const& name);
-
-
-		SystemGraph *const getSystemGraph(Identifier const& id);
-		SystemGraph const *const getSystemGraph(Identifier const& id) const;
-
-		/**
-		*	
-		*/
-		const bool isSystemGraph(Identifier const& id);
-
-		/**
-		*	destroys a system (and everything inside it)
-		*/
 		void destroySystemGraph(Identifier const& id);
 
-		/**
-		*	destroys a runnable & everything it may contain
-		*/
-		//does this really belong here?
-		void destroyRunnable(unsigned int const& id, unsigned int const& top);
+		SystemGraph & getSystemGraph(Identifier const& id);
+		SystemGraph const& getSystemGraph(Identifier const& id) const;
 
-		Runnable *const belongsToSystem(Identifier const& system, Identifier const& runnable) const;
+		const bool contains(Identifier const& id) const;
 
 	private:
 
 		/**
 		*	systems in existence
 		*/
-		SystemTable					m_Systems;
+		SystemGraphTable								m_Systems;
 
 		/**
-		*	the 2 real engine
+		*	the 2real engine
 		*/
-		Engine						&m_Engine;
+		Engine											&m_Engine;
 
 	};
 
-	class SystemGraphsException : public Exception
-	{
-	};
+
+
 
 }

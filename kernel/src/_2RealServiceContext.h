@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include "_2RealInputHandle.h"
-#include "_2RealOutputHandle.h"
 #include "_2RealSharedAny.h"
 
 #include <string>
@@ -33,6 +31,8 @@ namespace _2Real
 	*/
 
 	class Service;
+	class InputHandle;
+	class OutputHandle;
 
 	class ServiceContext
 	{
@@ -75,14 +75,13 @@ namespace _2Real
 
 		friend class Service;
 
-		ServiceContext(Service *const container);
+		ServiceContext(Service &container);
 		ServiceContext(ServiceContext const& src);
 		ServiceContext& operator=(ServiceContext const& src);
-		~ServiceContext();
 
 		SharedAny			getSetupParameter(std::string const& name);
 
-		Service				*const m_Service;
+		Service				&m_Service;
 
 	};
 

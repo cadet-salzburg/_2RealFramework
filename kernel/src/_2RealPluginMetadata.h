@@ -18,21 +18,23 @@
 
 #pragma once
 
-#include "_2RealParameterMetadata.h"
+#include "_2RealVersion.h"
 #include "_2RealServiceMetadata.h"
-#include "_2RealSharedAny.h"
 
-#include <map>
-#include <string>
+//#include <map>
+//#include <string>
+//#include <list>
+//#include <fstream>
+//#include <vector>
+#include <typeinfo.h>
 
 namespace _2Real
 {
 
-	/**
-	*
-	*/
-
 	class TypeTable;
+
+	typedef std::pair< std::string, ServiceMetadata >	NamedServiceData;
+	typedef std::map< std::string, ServiceMetadata >	ServiceDataMap;
 
 	class PluginMetadata
 	{
@@ -40,172 +42,153 @@ namespace _2Real
 	public:
 
 		/**
-		*	helper class for plugin version
-		*/
-		class Version
-		{
-
-		public:
-
-			Version(unsigned int const& _major, unsigned int const& _minor, unsigned int const& _revision);
-			Version(Version const& _src);
-			Version& operator=(Version const& _src);
-			~Version();
-
-			bool operator==(Version const& _rhs);
-			bool operator<(Version const& _rhs);
-
-			const std::string asString() const;
-			unsigned int const& major() const;
-			unsigned int const& minor() const;
-			unsigned int const& revision() const;
-
-		private:
-
-			unsigned int		m_Major;
-			unsigned int		m_Minor;
-			unsigned int		m_Revision;
-
-		};
-
-		/**
-		*	creates plugin metadata
-		*
-		*	@param _name:		plugin's classname
-		*/
-		PluginMetadata(std::string const& name, std::string const& file, std::string const& path, TypeTable const& types);
-
-		/**
 		*	sets plugin description
 		*
-		*	@param _dec:		plugin's description
+		*	@param description:		plugin's description
 		*/
-		void setDescription(std::string const& _desc);
+		void setDescription(std::string const& desc);
 
 		/**
 		*	sets plugin version
 		*
-		*	@param _version:	plugin's version
+		*	@param version:			plugin's version
 		*/
-		void setVersion(Version const& _version);
+		void setVersion(Version const& version);
 
 		/**
 		*	sets plugin author
 		*
-		*	@param _name:		plugin's author
+		*	@param name:			plugin's author
 		*/
-		void setAuthor(std::string const& _author);
+		void setAuthor(std::string const& author);
 
 		/**
 		*	sets plugin contact address
 		*
-		*	@param _contact:	plugin's contact address
+		*	@param contact:			plugin's contact address
 		*/
-		void setContact(std::string const& _contact);
+		void setContact(std::string const& contact);
 
 		/**
 		*	get plugin install directory
 		*
-		*	@return:			plugin's install directory
+		*	@return:				plugin's install directory
 		*/
 		std::string const& getInstallDirectory() const;
 
 		/**
 		*	get plugin description
 		*
-		*	@return:			plugin's description
+		*	@return:				plugin's description
 		*/
 		std::string const& getDescription() const;
 
 		/**
 		*	get plugin author
 		*
-		*	@return:			plugin's author
+		*	@return:				plugin's author
 		*/
 		std::string const& getAuthor() const;
 
 		/**
 		*	get plugin contact
 		*
-		*	@return:			plugin's contact
+		*	@return:				plugin's contact
 		*/
 		std::string const& getContact() const;
 
 		/**
 		*	get plugin classname
 		*
-		*	@return:			plugin's classname
+		*	@return:				plugin's classname
 		*/
 		std::string const& getClassname() const;
 
 		/**
 		*	get plugin filename
 		*
-		*	@return:			plugin's classname
+		*	@return:				plugin's dll filename
 		*/
 		std::string const& getFilename() const;
-
-
 
 		/**
 		*	get plugin version
 		*
-		*	@return:			plugin's version
+		*	@return:				plugin's version
 		*/
 		PluginMetadata::Version const& getVersion() const;
 
 		/**
-		*	get metadata of a particular service
-		*
-		*	@param _name:		name of service
-		*	@return:			service's metadata
-		*/
-
-
-		/**
-		*	add metadata to file
-		*
-		*	@param:				metadata to add
-		*/
-		void addServiceMetadata(ServiceMetadata const& _info);
-
-		/**
 		*	returns string with plugin information
 		*
-		*	@return:			info
+		*	@return:				info
 		*/
-		const std::string info();
+		const std::string info() const;
 
 		/**
-		*	adds setup parameter
+		*	add setup parameter
 		*
-		*	@param _name:		parameter's name
-		*	@param _type:		parameter's type as string
+		*	@param name:			parameter's name
+		*	@param type:			parameter's keyword
 		*/
-		void addSetupParameter(std::string const& _name, std::string const& _type);
+		void addSetupParameter(std::string const& name, std::string const& keyword);
 
-		ParameterMetadata::StringMap		getSetupParameters() const;
-		ServiceMetadata const&			getServiceMetadata(std::string const& name) const;
+		/**
+		*	add setup parameter without keyword
+		*
+		*	@param name:			parameter's name
+		*/
+		template< typename T >
+		void addSetupParameter(std::string const& name)
+		{
+			addSetupParameterByType(name, typeid(T).name());
+		}
+
+		/**
+		*	true if the metadata contains the parameter metadata for a setup parameter with name
+		*/
+		bool containsParameterMetadata(std::string const& name) const;
+
+		/**
+		*	returns service metadata
+		*/
+		ParameterMetadata const& getParameterMetadata(std::string const& name) const;
+
+		/**
+		*	add metadata
+		*
+		*	@param name:			service name
+		*	@return:				service metadata
+		*/
+		ServiceMetadata & addServiceMetadata(std::string const& name);
+
+		/**
+		*	true if the metadata contains the service metadata for a service with name
+		*/
+		bool containsServiceMetadata(std::string const& name) const;
+
+		/**
+		*	returns service metadata
+		*/
+		ServiceMetadata const& getServiceMetadata(std::string const& name) const;
 
 	private:
 
-		friend class MetadataReader;
+		friend class Plugin;
 
-		/**
-		*	get available keywords
-		*/
-		TypeTable const& getTypes() const;
+		PluginMetadata(std::string const& classname, std::string const& directory, StringMap const& types);
 
-		TypeTable						const& m_Types;
-		std::string						const m_Classname;
-		std::string						const m_Filename;
-		std::string						const m_InstallDirectory;
-		std::string						m_Description;
-		std::string						m_Author;
-		std::string						m_Contact;
-		PluginMetadata::Version			m_Version;
-		ServiceMetadata::ServiceMap		m_Services;
-		ParameterMetadata::ParameterMap			m_SetupParameters;
+		void addSetupParameterByType(std::string const& name, std::string const& type);
+
+		std::string				const m_Classname;
+		std::string				const m_InstallDirectory;
+		std::string				m_Description;
+		std::string				m_Author;
+		std::string				m_Contact;
+		Version					m_Version;
+		StringMap				const& m_AllowedTypes;
+		ServiceDataMap			m_Services;
+		ParameterDataMap		m_SetupParameters;
 
 	};
 

@@ -32,10 +32,6 @@ namespace _2Real
 
 	public:
 
-		virtual ~Data()
-		{
-		}
-
 		template< typename Datatype >
 		Datatype const& getData()
 		{

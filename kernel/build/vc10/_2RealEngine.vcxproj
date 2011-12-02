@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
@@ -34,7 +35,6 @@
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
@@ -58,6 +58,7 @@
     <ClInclude Include="..\..\src\_2RealEntity.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
+    <ClInclude Include="..\..\src\_2RealExceptionListener.h" />
     <ClInclude Include="..\..\src\_2RealGraph.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealImagebuffer.h" />
@@ -69,12 +70,13 @@
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealListenerService.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
+    <ClInclude Include="..\..\src\_2RealOutputListener.h" />
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\_2RealRunnable.h" />
     <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
     <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
-    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
@@ -94,6 +96,7 @@
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTypes.h" />
+    <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
@@ -145,13 +148,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>$(ProjectName)_debug_mt</TargetName>
+    <TargetName>$(ProjectName)_mtd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>$(ProjectName)_debug_mtd</TargetName>
+    <TargetName>$(ProjectName)_mdd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -163,7 +166,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>$(ProjectName)_mtd</TargetName>
+    <TargetName>$(ProjectName)_md</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -185,7 +188,9 @@
     <Lib>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <OutputFile>..\..\bin\_2RealEngine_debug_mt.lib</OutputFile>
+      <OutputFile>..\..\bin\_2RealEngine_mtd.lib</OutputFile>
+      <AdditionalDependencies>PocoFoundationmtd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'">
@@ -207,7 +212,9 @@
     <Lib>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <OutputFile>..\..\bin\_2RealEngine_debug_mtd.lib</OutputFile>
+      <OutputFile>..\..\bin\_2RealEngine_mdd.lib</OutputFile>
+      <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -233,6 +240,12 @@
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
       <OutputFile>..\..\bin\_2RealEngine_mt.lib</OutputFile>
+      <AdditionalDependencies>PocoFoundationmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
@@ -257,7 +270,9 @@
     </Link>
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
-      <OutputFile>..\..\bin\_2RealEngine_mtd.lib</OutputFile>
+      <OutputFile>..\..\bin\_2RealEngine_md.lib</OutputFile>
+      <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

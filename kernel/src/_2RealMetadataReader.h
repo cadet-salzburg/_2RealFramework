@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include "_2RealPluginMetadata.h"
-#include "_2RealException.h"
-
+#include <map>
 #include <string>
 
 namespace Poco
@@ -40,15 +38,7 @@ namespace _2Real
 	*	helper class for reading plugin metadata
 	*/
 
-	class MetadataFormatException : public Exception
-	{
-		friend class MetadataReader;
-
-		MetadataFormatException(std::string const& message) :
-			Exception(message)
-		{
-		}
-	};
+	class PluginMetadata;
 
 	class MetadataReader
 	{
@@ -62,22 +52,20 @@ namespace _2Real
 		*	attempts to build plugin metadata from information
 		*	contained in the file. if successful, returns metadata.
 		*
-		*	@param info:			metadata initialized with classname & classpath
+		*	@param info:			metadata initialized with classname & install directory
 		*	@throw:					MetadataFormatException
 		*/
-		MetadataReader(PluginMetadata &info);
-
+		MetadataReader(PluginMetadata &metadata);
 		void readMetadata();
 
 	private:
 
-		PluginMetadata					&m_Metadata;
+		PluginMetadata							&m_Metadata;
 
-		void							processPluginNode(PluginMetadata &info, Poco::XML::Node *const plugin);
-		void							processServiceNode(PluginMetadata &info, Poco::XML::Node *const service);
-		Poco::XML::Node *const			getChildNode(std::string const& name, Poco::XML::Node *const parent);
-		const std::string				getParameterType(Poco::XML::Node *const attrib);
-		const std::string				getNodeAttribute(std::string const& name, Poco::XML::Node *const node);
+		void									processPluginNode(Poco::XML::Node &plugin);
+		void									processServiceNode(Poco::XML::Node &ervice);
+		Poco::XML::Node &						getChildNode(std::string const& name, Poco::XML::Node &parent);
+		const std::string						getNodeAttribute(std::string const& name, Poco::XML::Node &node);
 
 	};
 

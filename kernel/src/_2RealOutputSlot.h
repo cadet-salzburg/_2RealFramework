@@ -23,7 +23,6 @@
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
-#include "Poco/Timestamp.h"
 
 namespace _2Real
 {
@@ -32,9 +31,9 @@ namespace _2Real
 	*	represents an output slot of a service
 	*/
 
-	class InputSlot;
+	class OutputListener;
 
-	typedef void (*DataCallback)(Data &_data);
+	typedef void (*DataCallback)(Data &data);
 
 	class OutputSlot : public IOSlot
 	{
@@ -46,38 +45,20 @@ namespace _2Real
 
 		void init(SharedAny const& initialValue);
 
-		//InputSlot *const linkedInput()
-		//{
-		//	return m_Input;
-		//}
-
-		//InputSlot const *const linkedInput() const
-		//{
-		//	return m_Input;
-		//}
-
-		//const bool isLinked() const
-		//{
-		//	return (m_Input != NULL);
-		//}
-
 		SharedAny data()
 		{
 			return m_WriteData;
 		}
 
 		void update();
-		//void reset();
-
 		void registerCallback(DataCallback callback);
 		void unregisterCallback(DataCallback callback);
-		void addListener(InputSlot *listener);
-		void removeListener(InputSlot *listener);
+		void addListener(OutputListener &receiver);
+		void removeListener(OutputListener &receiver);
 
 	private:
 
-		InputSlot								*m_Input;
-		Poco::FastMutex							m_Mutex;
+		mutable Poco::FastMutex					m_Mutex;
 		Data									m_CurrentData;
 		SharedAny								m_WriteData;
 		Poco::BasicEvent< Data >				m_Event;

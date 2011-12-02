@@ -19,42 +19,65 @@
 
 #include "_2RealServiceContext.h"
 #include "_2RealService.h"
+#include "_2RealInputHandle.h"
+#include "_2RealOutputHandle.h"
+#include "_2RealSetupParameter.h"
+#include "_2RealException.h"
+
+#include <sstream>
 
 namespace _2Real
 {
 
-	ServiceContext::ServiceContext(Service *const _service) :
-		m_Service(_service)
+	ServiceContext::ServiceContext(Service &service) :
+		m_Service(service)
 	{
 	}
 
-	ServiceContext::ServiceContext(ServiceContext const& _src) :
-		m_Service(_src.m_Service)
+	ServiceContext::ServiceContext(ServiceContext const& src) :
+		m_Service(src.m_Service)
 	{
 	}
 
-	ServiceContext& ServiceContext::operator=(ServiceContext const& _src)
+	ServiceContext& ServiceContext::operator=(ServiceContext const& src)
 	{
 		return *this;
 	}
 
-	ServiceContext::~ServiceContext()
+	SharedAny ServiceContext::getSetupParameter(std::string const& name)
 	{
+		if (m_Service.hasSetupParameter(name))
+		{
+			return m_Service.getSetupParameter(name).get();
+		}
+		else
+		{
+			throw InvalidParameterException("setup parameter", name);
+		}
 	}
 
-	SharedAny ServiceContext::getSetupParameter(std::string const& _name)
+	InputHandle ServiceContext::getInputHandle(std::string const& name)
 	{
-		return m_Service->getParameterValue(_name);
+		if (m_Service.hasInputSlot(name))
+		{
+			return m_Service.createInputHandle(name);
+		}
+		else
+		{
+			throw InvalidParameterException("input slot", name);
+		}
 	}
 
-	InputHandle ServiceContext::getInputHandle(std::string const& _name)
+	OutputHandle ServiceContext::getOutputHandle(std::string const& name)
 	{
-		return m_Service->createInputHandle(_name);
-	}
-
-	OutputHandle ServiceContext::getOutputHandle(std::string const& _name)
-	{
-		return m_Service->createOutputHandle(_name);
+		if (m_Service.hasOutputSlot(name))
+		{
+			return m_Service.createOutputHandle(name);
+		}
+		else
+		{
+			throw InvalidParameterException("output slot", name);
+		}
 	}
 
 }

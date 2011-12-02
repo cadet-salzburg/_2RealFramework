@@ -19,166 +19,167 @@
 
 #include "_2RealProductionGraphs.h"
 #include "_2RealSystemGraph.h"
-#include "_2RealRunnable.h"
-#include "_2RealRunnableGraph.h"
-//#include "_2RealServiceTemplate.h"
+#include "_2RealEngine.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
-	ProductionGraphs::ProductionGraphs(Engine &_engine) :
-		m_Systems(),
-		m_Engine(_engine)
+	ProductionGraphs::ProductionGraphs(Engine &engine) :
+		m_Engine(engine),
+		m_Systems()
 	{
 	}
 
 	ProductionGraphs::~ProductionGraphs()
 	{
-		for (SystemTable::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
+		for (SystemGraphTable::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
 		{
-			std::string name;
+			Identifier id;
 			try
 			{
-				name = it->second->name();
-				std::cout << "deleting system: " << name << std::endl;
+				id = it->first;
 				delete it->second;
 			}
-			catch (Exception &e)
+			catch (_2Real::Exception &e)
 			{
-				std::cout << e.what() << std::endl;
+				m_Engine.getLogStream() << "error on system graph destruction:" << std::endl << id << std::endl << e.what() << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "error on system destruction: " << name << std::endl;
+				m_Engine.getLogStream() << "error on system graph destruction:" << std::endl << id << std::endl;
 			}
 		}
 	}
 
-	const Identifier ProductionGraphs::createSystemGraph(std::string const& _name)
+	const Identifier ProductionGraphs::createSystemGraph(std::string const& name)
 	{
-		const Identifier id = Entity::createIdentifier(_name, "system");
-		SystemGraph *graph = new SystemGraph(id);
-		m_Systems.insert(NamedSystem(id.id(), graph));
+		const Identifier id = Entity::createIdentifier(name, "system");
+		SystemGraph *graph = new SystemGraph(id, m_Engine);
+		m_Systems.insert(NamedSystemGraph(id, graph));
 		return id;
 	}
 
-	void ProductionGraphs::destroySystemGraph(Identifier const& _id)
+	void ProductionGraphs::destroySystemGraph(Identifier const& id)
 	{
-		SystemTable::iterator it = m_Systems.find(_id.id());
+		SystemGraphTable::iterator it = m_Systems.find(id);
 
 		if (it == m_Systems.end())
 		{
-			throw Exception("internal error, attempted to destroy a system which does not exist");
+			std::ostringstream msg;
+			msg << "internal error: system " << id.name() << " not found in systems";
+			throw _2Real::Exception(msg.str());
 		}
 
 		SystemGraph *nirvana = it->second;
-		nirvana->stopAll();
 
-		//deletes all children
 		delete nirvana;
 		m_Systems.erase(it);
 	}
 
-	const bool ProductionGraphs::isSystemGraph(Identifier const& _id)
+	const bool ProductionGraphs::contains(Identifier const& id) const
 	{
-		SystemTable::const_iterator it = m_Systems.find(_id.id());
-		return it != m_Systems.end();
+		return m_Systems.find(id) != m_Systems.end();
 	}
 
-	SystemGraph *const ProductionGraphs::getSystemGraph(Identifier const& _id)
+	SystemGraph & ProductionGraphs::getSystemGraph(Identifier const& id)
 	{
-		SystemTable::iterator it = m_Systems.find(_id.id());
+		SystemGraphTable::iterator it = m_Systems.find(id);
 
 		if (it == m_Systems.end())
 		{
-			throw Exception("internal error, tried to access nonexistant system");
+			std::ostringstream msg;
+			msg << "internal error: system " << id.name() << " not found in systems";
+			throw _2Real::Exception(msg.str());
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 
-	SystemGraph const *const ProductionGraphs::getSystemGraph(Identifier const& _id) const
+	SystemGraph const& ProductionGraphs::getSystemGraph(Identifier const& id) const
 	{
-		SystemTable::const_iterator it = m_Systems.find(_id.id());
+		SystemGraphTable::const_iterator it = m_Systems.find(id);
 
 		if (it == m_Systems.end())
 		{
-			throw Exception("internal error, tried to access nonexistant system");
+			std::ostringstream msg;
+			msg << "internal error: system " << id.name() << " not found in systems";
+			throw _2Real::Exception(msg.str());
 		}
 
-		return it->second;
+		return *(it->second);
 	}
 
-	void ProductionGraphs::destroyRunnable(unsigned int const& _id, unsigned int const& _top)
-	{
-		//Container *nirvana = getSystem(_top);
-		//AbstractContainer *container = nirvana->get(_id);
-		//container->shutdown();
-		//m_Engine.entities().destroy(container);
-	}
+	//void ProductionGraphs::destroyRunnable(unsigned int const& _id, unsigned int const& _top)
+	//{
+	//	//Container *nirvana = getSystem(_top);
+	//	//AbstractContainer *container = nirvana->get(_id);
+	//	//container->shutdown();
+	//	//m_Engine.entities().destroy(container);
+	//}
 
-	const Identifier ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
-	{
-		//Container *nirvana = getSystem(_top);
-		//AbstractContainer *a = nirvana->get(_a);
-		//AbstractContainer *b = nirvana->get(_b);
+	//const Identifier ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	//{
+	//	//Container *nirvana = getSystem(_top);
+	//	//AbstractContainer *a = nirvana->get(_a);
+	//	//AbstractContainer *b = nirvana->get(_b);
 
-		//Container *seq = m_Engine.entities().createSequence(_name);
-		//	
-		////move sequence into nirvana
-		//nirvana->add(seq, 0);
+	//	//Container *seq = m_Engine.entities().createSequence(_name);
+	//	//	
+	//	////move sequence into nirvana
+	//	//nirvana->add(seq, 0);
 
-		////add containers to newly created sequence
-		//seq->add(b, 0);
-		//seq->add(a, 0);
+	//	////add containers to newly created sequence
+	//	//seq->add(b, 0);
+	//	//seq->add(a, 0);
 
-		//return seq->id();
-		return Entity::createIdentifier(_name, "sequence");
-	}
+	//	//return seq->id();
+	//	return Entity::createIdentifier(_name, "sequence");
+	//}
 
-	const Identifier ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
-	{
-		//Container *nirvana = getSystem(_top);
-		//AbstractContainer *a = nirvana->get(_a);
-		//AbstractContainer *b = nirvana->get(_b);
+	//const Identifier ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	//{
+	//	//Container *nirvana = getSystem(_top);
+	//	//AbstractContainer *a = nirvana->get(_a);
+	//	//AbstractContainer *b = nirvana->get(_b);
 
-		//Container *sync =m_Engine.entities().createSynchronization(_name);
+	//	//Container *sync =m_Engine.entities().createSynchronization(_name);
 
-		////move sync into nirvana
-		//nirvana->add(sync, 0);
+	//	////move sync into nirvana
+	//	//nirvana->add(sync, 0);
 
-		////add to containers to newly created synchronization
-		//sync->add(a, 0);
-		//sync->add(b, 1);
+	//	////add to containers to newly created synchronization
+	//	//sync->add(a, 0);
+	//	//sync->add(b, 1);
 
-		//return sync->id();
-		return Entity::createIdentifier(_name, "synchronization");
-	}
+	//	//return sync->id();
+	//	return Entity::createIdentifier(_name, "synchronization");
+	//}
 
-	Runnable *const ProductionGraphs::belongsToSystem(Identifier const& system, Identifier const& runnable) const
-	{
-		SystemGraph const* nirvana = getSystemGraph(system);
-		std::list< Runnable * > children = nirvana->children();
+	//Runnable *const ProductionGraphs::belongsToSystem(Identifier const& system, Identifier const& runnable) const
+	//{
+	//	SystemGraph const* nirvana = getSystemGraph(system);
+	//	std::list< Runnable * > children = nirvana->children();
 
-		for (std::list< Runnable * >::const_iterator it = children.begin(); it != children.end(); it++)
-		{
-			if ((*it)->id() == runnable.id())
-			{
-				return *it;
-			}
-			// ~~has parameters
-			else if (!((*it)->type() == "service"))
-			{
-				RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
-				Runnable *child = NULL;
-				if ((child = graph->findChild(runnable)))
-				{
-					return child;
-				}
-			}
-		}
+	//	for (std::list< Runnable * >::const_iterator it = children.begin(); it != children.end(); it++)
+	//	{
+	//		if ((*it)->id() == runnable.id())
+	//		{
+	//			return *it;
+	//		}
+	//		// ~~has parameters
+	//		else if (!((*it)->type() == "service"))
+	//		{
+	//			RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
+	//			Runnable *child = NULL;
+	//			if ((child = graph->findChild(runnable)))
+	//			{
+	//				return child;
+	//			}
+	//		}
+	//	}
 
-		return NULL;
-	}
+	//	return NULL;
+	//}
 }

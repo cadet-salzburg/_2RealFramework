@@ -26,8 +26,8 @@
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Identifier const& _id, Service *const _service, std::string const& _type, std::string const& _key, SharedAny init) :
-		IOSlot(_id, _service, _type, _key)
+	OutputSlot::OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, SharedAny init) :
+		IOSlot(id, service, type, key)
 	{
 		this->init(init);
 	}
@@ -54,21 +54,21 @@ namespace _2Real
 		m_WriteData.clone(m_WriteData);
 	}
 
-	void OutputSlot::addListener(InputSlot *listener)
+	void OutputSlot::addListener(OutputListener &receiver)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		m_Event += Poco::delegate(listener, &InputSlot::receiveData);
+		m_Event += Poco::delegate(&receiver, &OutputListener::receiveData);
 
 		//makes sure the newly added listener receives the current data
 		//because, if the service writing the output has a long update function
 		//while the service reading it has a short update function, well....
-		listener->receiveData(m_CurrentData);
+		receiver.receiveData(m_CurrentData);
 	}
 
-	void OutputSlot::removeListener(InputSlot *listener)
+	void OutputSlot::removeListener(OutputListener &receiver)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		m_Event -= Poco::delegate(listener, &InputSlot::receiveData);
+		m_Event -= Poco::delegate(&receiver, &OutputListener::receiveData);
 	}
 
 	void OutputSlot::registerCallback(DataCallback callback)

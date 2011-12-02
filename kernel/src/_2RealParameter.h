@@ -19,26 +19,9 @@
 #pragma once
 
 #include "_2RealEntity.h"
-#include "_2RealException.h"
 
 namespace _2Real
 {
-
-	class BadParameterException : public Exception
-	{
-
-	public:
-
-		BadParameterException(std::string const& name, std::string const& action) :
-			Exception(std::string("parameter : ").append(name).append(" is argh"))
-			{
-			}
-
-	};
-
-	/**
-	*	base parameter class for service-setup / service-input / service-output / plugin-setup
-	*/
 
 	class Parameter : public Entity
 	{

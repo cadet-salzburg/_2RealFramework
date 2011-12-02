@@ -35,6 +35,7 @@ namespace _2Real
 
 	public:
 
+		ThreadPool();
 		ThreadPool(unsigned int const& capacity, unsigned int const& max, unsigned int const& idleTime, unsigned int const& stackSize, std::string const& name);
 		~ThreadPool();
 

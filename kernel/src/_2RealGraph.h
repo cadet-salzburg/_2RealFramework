@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "_2RealException.h"
-
 #include <list>
 
 namespace _2Real
@@ -59,17 +57,13 @@ namespace _2Real
 			return m_Children;
 		}
 
+		bool const contains(Identifier const& id) const;
 		bool const isChild(Identifier const& id) const;
-		bool const isInGraph(Identifier const& id) const;
 
-		Runnable *const			getChild(Identifier const& id);
-		Runnable *const			findChild(Identifier const& id);
-		Runnable const*const	findChild(Identifier const& id) const;
+		Runnable & getChild(Identifier const& id);
+		Runnable const& getChild(Identifier const& id) const;
 
-		/**
-		*	those are different depending on the concrete type of graph
-		*/
-		virtual void insertChild(Runnable *const child, unsigned int const& index) = 0;
+		virtual void insertChild(Runnable &child, unsigned int const& index) = 0;
 		virtual void removeChild(Identifier const& id) = 0;
 
 	protected:
@@ -80,18 +74,6 @@ namespace _2Real
 		RunnableList::const_iterator		iteratorPosition(unsigned int const& pos) const;
 
 		RunnableList						m_Children;
-
-	};
-
-	class ChildNotFoundException : public Exception
-	{
-
-	public:
-
-		ChildNotFoundException(std::string const& child) :
-			Exception(std::string("runnable ").append(child).append(" not found"))
-		{
-		}
 
 	};
 

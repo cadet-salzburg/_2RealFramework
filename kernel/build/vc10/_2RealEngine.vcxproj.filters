@@ -1,75 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
-    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
-    <ClCompile Include="..\..\src\_2RealTypes.cpp" />
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameterMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
-    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
-    <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealGraph.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
-    <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
-    <ClCompile Include="..\..\src\_2RealSequence.cpp" />
-    <ClCompile Include="..\..\src\_2RealService.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
-    <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
-    <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealData.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp">
+      <Filter>Metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealInputSlot.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealIOSlot.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParameter.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp">
+      <Filter>Metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealGraph.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSequence.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
+      <Filter>Metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealInternalService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealListenerService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSynchronization.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemGraph.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTypes.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealInputSlot.h" />
-    <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
-    <ClInclude Include="..\..\src\_2RealParameter.h" />
-    <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
-    <ClInclude Include="..\..\src\_2RealIOSlot.h" />
     <ClInclude Include="..\..\src\_2RealSharedAny.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
-    <ClInclude Include="..\..\src\_2RealTypes.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealInputHandle.h" />
     <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
-    <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
-    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
-    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
-    <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
-    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
-    <ClInclude Include="..\..\src\_2RealGraph.h" />
-    <ClInclude Include="..\..\src\_2RealImagebuffer.h" />
-    <ClInclude Include="..\..\src\_2RealRunnable.h" />
-    <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
-    <ClInclude Include="..\..\src\_2RealSynchronization.h" />
-    <ClInclude Include="..\..\src\_2RealSequence.h" />
-    <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
-    <ClInclude Include="..\..\src\_2RealService.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealIService.h">
       <Filter>Interfaces</Filter>
@@ -77,13 +96,105 @@
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInternalService.h" />
-    <ClInclude Include="..\..\src\_2RealListenerService.h" />
-    <ClInclude Include="..\..\src\_2RealThreadPool.h" />
+    <ClInclude Include="..\..\src\_2RealExceptionListener.h" />
+    <ClInclude Include="..\..\src\_2RealOutputListener.h" />
+    <ClInclude Include="..\..\src\_2RealMetadataReader.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInputSlot.h">
+      <Filter>Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIOSlot.h">
+      <Filter>Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParameter.h">
+      <Filter>Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutputSlot.h">
+      <Filter>Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealGraph.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSequence.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealRunnableGraph.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealRunnable.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInternalService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealListenerService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemGraph.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSynchronization.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealImagebuffer.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPluginPool.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSetupParameter.h">
+      <Filter>Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealProductionGraphs.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealServiceFactory.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealThreadPool.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTypes.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealVersion.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">
       <UniqueIdentifier>{08879513-94b1-47e8-9d74-639e37f0d323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Metadata">
+      <UniqueIdentifier>{07269b16-3154-4ba4-8d6a-4f2dd539b277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parameters">
+      <UniqueIdentifier>{e221bffd-7b40-4653-9f0a-48f13ef4ffff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphs">
+      <UniqueIdentifier>{cb147103-b3c1-4382-bc72-825eadaf6109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{2a5dc043-7b3f-4e4e-9072-2dbbd4d9dc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Subsystems">
+      <UniqueIdentifier>{b913d9fd-3182-4fe1-89c4-4342ead1e5c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{8c2b71b6-68d3-4a79-9e64-8ef4e8aaa365}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

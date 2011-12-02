@@ -18,44 +18,57 @@
 
 #include "_2RealSystemGraph.h"
 #include "_2RealRunnable.h"
+#include "_2RealRunnableGraph.h"
 #include "_2RealExceptionHandler.h"
+#include "_2RealEngine.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Identifier const& id) :
-		Entity(id),
+	SystemGraph::SystemGraph(Identifier const& id, Engine &engine) :
 		Graph(),
+		Entity(id),
+		m_Engine(engine),
 		m_ExceptionHandler(id),
-		m_Threads(10, 20, 1000, 0, id.name())
+		m_Plugins(*this)
+		//m_Threads(10, 20, 1000, 0, id.name())
 	{
 	}
 
 	SystemGraph::~SystemGraph()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			(*it)->stop();
-		}
+		Engine::instance()->getLogStream() << "system graph: destructor called" << std::endl;
 
-		m_Threads.joinAll();
-		m_Threads.stopAll();
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	(*it)->stop();
+		//}
 
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			std::string name;
-			try
-			{
-				name = (*it)->name();
-				std::cout << "deleting runnable: " << name << std::endl;
-				delete *it;
-			}
-			catch (...)
-			{
-				std::cout << "error on runnable destruction: " << name << std::endl;
-			}
-		}
+		//Engine::instance()->getLogStream() << "system graph: joining threadpool" << std::endl;
+
+		//m_Threads.joinAll();
+
+		//Engine::instance()->getLogStream() << "system graph: deactivating threadpool" << std::endl;
+
+		//m_Threads.stopAll();
+
+		//Engine::instance()->getLogStream() << "system graph: deleting children: " << childCount() << std::endl;
+
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	try
+		//	{
+		//		delete *it;
+		//	}
+		//	catch (...)
+		//	{
+		//		Engine::instance()->getLogStream() << "system graph: error on runnable destruction" << std::endl;
+		//	}
+		//}
+
+		m_Children.clear();
 	}
 
 	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
@@ -68,10 +81,20 @@ namespace _2Real
 		m_ExceptionHandler.unregisterExceptionCallback(callback);
 	}
 
-	void SystemGraph::insertChild(Runnable *const child, unsigned int const& index)
+	void SystemGraph::registerExceptionListener(ExceptionListener &listener)
 	{
-		m_Children.push_back(child);
-		m_Threads.addCapacity(1);
+		m_ExceptionHandler.registerExceptionListener(listener);
+	}
+
+	void SystemGraph::unregisterExceptionListener(ExceptionListener &listener)
+	{
+		m_ExceptionHandler.unregisterExceptionListener(listener);
+	}
+
+	void SystemGraph::insertChild(Runnable &child, unsigned int const& index)
+	{
+		m_Children.push_back(&child);
+		//m_Threads.addCapacity(1);
 	}
 
 	void SystemGraph::removeChild(Identifier const& id)
@@ -79,7 +102,7 @@ namespace _2Real
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
 	
-		m_Threads.addCapacity(1);
+		//m_Threads.addCapacity(1);
 	}
 
 	void SystemGraph::startAll()
@@ -94,42 +117,43 @@ namespace _2Real
 
 	void SystemGraph::handleException(Runnable &child, Exception &exception)
 	{
-		m_ExceptionHandler.handleException(exception, child.identifier());
+		//m_ExceptionHandler.handleException(exception, child.identifier());
+
 		//Graph *subgraph = child->father();
 		//stopChild(subgraph->id());
 	}
 
 	void SystemGraph::startChild(Identifier const& id)
 	{
-		std::cout << "system graph: " << name() << ", starting child " << id.name() << std::endl;
+	//	RunnableList::iterator it = iteratorId(id);
 
-		RunnableList::iterator it = iteratorId(id);
+	//	if (it == m_Children.end())
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "internal error: child " << id.name() << " not found in graph";
+	//		throw _2Real::Exception(msg.str());
+	//	}
 
-		if (it == m_Children.end())
-		{
-			throw ChildNotFoundException(id.name());
-		}
+	//	Runnable *child = *it;
+	//	child->checkConfiguration();
+	//	child->start(false);
 
-		Runnable *child = *it;
-		child->checkConfiguration();
-		child->start(false);
-
-		m_Threads.start(*it);
+	//	m_Threads.start(*it);
 	}
 
 	void SystemGraph::stopChild(Identifier const& id)
 	{
-		std::cout << "system graph: " << name() << ", stopping child " << id.name() << std::endl;
+	//	RunnableList::iterator it = iteratorId(id);
+	//	
+	//	if (it == m_Children.end())
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "internal error: child " << id.name() << " not found in graph";
+	//		throw _2Real::Exception(msg.str());
+	//	}
 
-		RunnableList::iterator it = iteratorId(id);
-		
-		if (it == m_Children.end())
-		{
-			throw ChildNotFoundException(id.name());
-		}
-
-		(*it)->stop();
-		m_Threads.join(id);
+	//	(*it)->stop();
+	//	m_Threads.join(id);
 	}
 
 }

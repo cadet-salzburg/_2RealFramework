@@ -38,15 +38,16 @@ namespace _2Real
 
 	public:
 
+		Identifier();
+		Identifier(Identifier const& src);
+		Identifier& operator=(Identifier const& src);
+
 		/**
 		*	returns the entity's name
 		*
 		*	@return:		name as chosen by the application programmer
 		*/
-		std::string const& name() const
-		{
-			return m_Name;
-		}
+		std::string const& name() const;
 
 		/**
 		*	returns the entity's type, as string
@@ -54,38 +55,40 @@ namespace _2Real
 		*	@return:		type: plugin, system, sequence, synchronization,
 		*					service (= a concrete instance of a plugin-exported service)
 		*/
-		std::string const& type() const
-		{
-			return m_Type;
-		}
+		std::string const& type() const;
 
 		/**
 		*	returns the entity's id
 		*
 		*	@return:		the entity's unique id
 		*/
-		unsigned int const& id() const
-		{
-			return m_Id;
-		}
+		unsigned int const& id() const;
 
 		/**
 		*	true if the identifiers refer to the same entity within the framework
 		*/
-		bool operator==(Identifier const& rhs) const;
+		const bool operator==(Identifier const& rhs) const;
 
 		/**
 		*	true if the identifiers refer to different entities within the framework
 		*/
-		bool operator!=(Identifier const& rhs) const;
+		const bool operator!=(Identifier const& rhs) const;
 
 		/*
 		*	identifiers can be sorted in a strict monotonic order
 		*/
-		bool operator<(Identifier const& rhs) const;
-		bool operator<=(Identifier const& rhs) const;
-		bool operator>(Identifier const& rhs) const;
-		bool operator>=(Identifier const& rhs) const;
+		const bool operator<(Identifier const& rhs) const;
+		const bool operator<=(Identifier const& rhs) const;
+		const bool operator>(Identifier const& rhs) const;
+		const bool operator>=(Identifier const& rhs) const;
+
+		friend std::ostream& operator<<(std::ostream& out, Identifier const& id);
+
+		const bool isPlugin() const;
+		const bool isService() const;
+		const bool isSetupAble() const;
+		const bool isRunAble() const;
+		const bool isContainer() const;
 
 	private:
 
@@ -96,17 +99,17 @@ namespace _2Real
 		/**
 		*	name chosen by the application programmer
 		*/
-		const std::string			m_Name;
+		std::string			m_Name;
 
 		/**
 		*	type as string (plugin, service, sequence, synchronization, system)
 		*/
-		const std::string			m_Type;
+		std::string			m_Type;
 
 		/**
 		*	unique id
 		*/
-		const unsigned int			m_Id;
+		unsigned int		m_Id;
 
 	};
 

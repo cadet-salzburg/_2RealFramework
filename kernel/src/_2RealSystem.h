@@ -20,6 +20,7 @@
 #pragma once
 
 #include "_2RealSharedAny.h"
+#include "_2RealIdentifier.h"
 
 #include <string>
 
@@ -30,6 +31,8 @@ namespace _2Real
 	class Data;
 	class Identifier;
 	class RunnableException;
+	class OutputListener;
+	class ExceptionListener;
 
 	/**
 	*	callback for exceptions
@@ -53,223 +56,127 @@ namespace _2Real
 	public:
 
 		/**
-		*	constructor
-		*
-		*	creates the nirvana, a production graph where all created entities run threaded and
-		*	can be freely connected as the application programmer pleases, although cycles are
-		*	not allowed - or are they? every newly created entity (meaning service, sequence or
-		*	synchronization) is moved there, where it will live for all eternity in permanent
-		*	bliss - or until it is inserted somewhere else.
-		*	it is possible to create multiple systems. services, sequences and synchronizations
-		*	are created in relation a a particular system, and can never be moved elsewhere -
-		*	or linked with an entity of another system
-		*
-		*	@param name:			name of system
-		*
-		*	open questions:			buddhists might disapprove of calling a production graph 'nirvana'
-		*							also, this class has now been named: engine / context / framework,
-		*							and now finally system. where will it end?
+		*	creates a system
 		*/
 		System(std::string const& name);
 
 		/**
+		*	destroying a system will delete everything belonging to it
+		*/
+		~System();
+
+		/**
 		*	returns the system's own identifier
-		*
-		*	@return:				system identifier
 		*/
 		const Identifier getID();
 
 		/**
-		*	installs a plugin, causing all of its services to be exported
-		*
-		*	possible exceptions:	library not found
-		*							wrong class name
-		*							error during plugin's init() or getMetadata()
-		*
-		*	@param name:			name chosen by user, will be used to create identifier
-		*	@param directory:		absolute path to installation directory
-		*	@param file:			filename
-		*	@param class:			class name, must be identical to the name defined in the
-		*							plugin's metadata
-		*	@return:				the plugin's unique identifier
+		*	loads a dll
 		*/
-		const Identifier loadPlugin(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname);
+		const Identifier load(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname);
 
 		/**
-		*	calls setup of plugin
+		*	calls setup of either a plugin or a service = initialization
+		*	if the service is currently running, it will be stopped
+		*	warning: for the time being, do not attempt this with plugins more than once
 		*/
-		void startPlugin(Identifier const& pluginID);
+		void setup(Identifier const& id);
+
+		/**
+		*	checks whether or not a plugin / service, in its current state, could be set up, i.e.
+		*	if all the existing setup params were set & their datatypes correspond to those defined in the metadata
+		*/
+		//bool checkParameters(Identifier const& id);
+
+		/**
+		*	checks if a service, in it's current state, could be run, i.e.
+		*	if all input slots were either set directly or linked.
+		*	will also fail if the service was not set up correctly
+		*/
+		//void checkConfiguration(Identifier const& id);
 
 		/**
 		*	printf plugin metadata
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param pluginID:		identifier of an installed plugin
 		*/
-		void dumpPluginInfo(Identifier const& pluginID);
+		void dumpInfo(Identifier const& plugin);
 
 		/**
-		*	printf service metadata
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param pluginID:		identifier of an installed plugin
-		*	@param serviceName:		name of a service exported by the plugin
+		*	creates instance of service
 		*/
-		void dumpServiceInfo(Identifier const& pluginID, std::string const& serviceName);
+		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service);
 
 		/**
-		*	creates instance of user service
-		*
-		*	possible exceptions:	id does not belong to a valid plugin
-		*							plugin does not export the service in question
-		*							error during service creation
-		*
-		*	@param name:			name chosen by user, will be used to create identifier
-		*	@param pluginID:		identifier of an installed plugin
-		*	@param serviceName:		name of a service exported by the plugin
-		*	@return:				the service's unique identifier
+		*	sets a runnable's update rate
 		*/
-		const Identifier createService(std::string const& name, Identifier const& pluginID, std::string const& serviceName);
-
 		void setUpdateRate(Identifier const& id, float const& updatesPerSecond);
 
 		/**
-		*	initializes a service's or plugin's setup parameter
-		*
-		*	possible exceptions:	invalid id
-		*							types do not match
-		*
-		*	@param paramID:			identifier of a setup parameter
-		*	@param value:			the value
+		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
+		*	if the input slot has been linked to an output slot previously, this linkage will be reset
 		*/
 		template< typename T >
-		void setParameterValue(Identifier const& id, std::string const& name, T const& value)
+		void setValue(Identifier const& id, std::string const& name, T const& value)
 		{
 			SharedAny any(value);
-			setParameterValue(id, name, any, typeid(T));
+			setValueInternal(id, name, any, typeid(T));
 		}
 
-		//TODO
-
 		/**
-		*	creates a sequence of entities
-		*
-		*	two entities being in a sequence guarantees that the first one will be updated
-		*	exactly once and that the second will have received the output data before the
-		*	second entity is being updated. sequences can be built out of services, sequences
-		*	or synchronizations; example usage:
-		*	createSequence("S0", createSequence("S1", _idA, _idB), createSequence("S2", _idC, _idD));
-		*	creates sequence of: _idA -> _idB -> _idC -> _idD
-		*	newly created sequences will be placed in nirvana; elements used to build the sequence
-		*	will be removed from threi repsective superiors & their roots will be stopped
-		*	output slot configuration: building a sequence will delete all previously built IO
-		*	connections of the entities in question (while keeping their internal IO connections
-		*	intact)
-		*
-		*	possible exceptions:	invalid identifiers
-		*
-		*	@param name:			name chosen by user, will be used to create identifier
-		*	@param idA:				identifier of either: sequence, synchronization or service
-		*	@param idB:				identifier of either: sequence, synchronization or service
-		*	@return:				the sequence's unique identifier
-		*
-		*	open questions: is it really necessary for signatures to match perfectly here?
-		*	output slots could be discarded, IO slots might match, but be ordered differently
+		*	links output slot to input slot
 		*/
-		//const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
+		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
 		/**
-		*	creates a synchronization of entities
-		*
-		*	two entities being in synchronization guarantees causes both update functions to
-		*	be carried out parallel, combining the output data of both into one combined data
-		*	when both are finished. synchronizations can be built out of services, sequences
-		*	or synchronizations; example usage:
-		*	createSynchronization("S0", createSequence("S1", _idA, _idB), createSynchronization("S2", _idC, _idD));
-		*	causes sequence _idA -> _idB to run in parallel with both _idC and _idB
-		*	newly created synchronizations will be placed in nirvana; elments used to create the
-		*	synchronization will be removed from their respective superior & their roots will be stopped
-		*	output slot configuration: building a synchronization will delete all previously
-		*	built IO-configurations of the entities in question, while keeping the internal
-		*	ones intact. 
-		*
-		*	possible exceptions:	invalid identifiers
-		*
-		*	@param name:			name chosen by user, will be used to create identifier
-		*	@param idA:				identifier of either: sequence, synchronization or service
-		*	@param idB:				identifier of either: sequence, synchronization or service
-		*	@return:				the synchronization's unique identifier
-		*/
-		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
-
-		/**
-		*	links two entities
-		*
-		*	possible exceptions:	invalid ids
-		*							IO mismatch
-		*
-		*	@param in:				identifier of service / sequence / synchronization
-		*	@param out:				identifier of service / sequence / synchronization
-		*/
-		//void link(Identifier const& in, Identifier const& out);
-
-		/**
-		*	links an input slot with an output slot
-		*
-		*	possible exceptions:	invalid ids
-		*							type mismatch
-		*							slots belong to the same entity
-		*							linkage results in a cycle (cycle checking is TODO)
-		*/
-		void linkSlots(Identifier const& serviceOut, std::string const& outName, Identifier const& serviceIn, std::string const& inName);
-
-		/**
-		*	returns the ids of an entity's children
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param id:				identifier of either: sequence, synchronization
-		*	@return:				ids of output slots
-		*/
-		//Identifiers getChildren(Identifier const& id);
-
-		/**
-		*	starts an entity
-		*
-		*	does only work if the entity in question belongs to nirvana. causes a thread to be
-		*	started, where the entity is running until stop is called. calling start will perform
-		*	a check on the entity & all its children, making sure all IO slots are connected
-		*
-		*	possible exceptions:	invalid id
-		*							entity not in nirvana
-		*							IO misconfiguration
-		*
-		*	@param id:				identifier of either: sequence, synchronization or service
-		*
-		*	open questions: if the entity listens to another entity that is currently paused,
-		*	it might never receive any DataImpl, meaning it might never update at all
+		*	starts a runnable (service, synchronization, sequence)
 		*/
 		void start(Identifier const& id);
 
 		/**
-		*	starts all of nirvanas children at once
-		*
-		*	possible exceptions:	IO misconfiguration if a child
-		*/
-		//void startAll();
-
-		/**
-		*	stops an entity
-		*
-		*	stops an entity . entity must be in nirvana.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param id:				identifier of either: sequence, synchronization or service
+		*	stops a runnable (service, synchronization, sequence)
 		*/
 		void stop(Identifier const& id);
+
+		/**
+		*	registers exception callback for a system
+		*/
+		void registerToException(ExceptionCallback callback);
+
+		/**
+		*	unregisters exception callback for a system
+		*/
+		void unregisterFromException(ExceptionCallback callback);
+
+		/**
+		*	registers exception callback for a system
+		*/
+		void registerToException(ExceptionListener &listener);
+
+		/**
+		*	unregisters exception callback for a system
+		*/
+		void unregisterFromException(ExceptionListener &listener);
+
+		/**
+		*	registers callback for a service's output slot
+		*/
+		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
+
+		/**
+		*	unregisters callback for a service's output slot
+		*/
+		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
+
+		/**
+		*	registers callback for a service's output slot
+		*/
+		void registerToNewData(Identifier const& service, std::string const& name, OutputListener &receiver);
+
+		/**
+		*	unregisters callback for a service's output slot
+		*/
+		void unregisterFromNewData(Identifier const& service, std::string const& name, OutputListener &receiver);
+
+		//functions below are currently being refactored
 
 		/**
 		*	stops all of nirvanas children at once
@@ -277,114 +184,58 @@ namespace _2Real
 		//void stopAll();
 
 		/**
+		*	starts all of nirvanas children at once
+		*/
+		//void startAll();
+
+		/**
+		*	creates a sequence of entities
+		*/
+		//const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
+
+		/**
+		*	creates a synchronization of entities
+		*/
+		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
+
+		/**
+		*	links two entities
+		*/
+		//void link(Identifier const& in, Identifier const& out);
+
+		/**
+		*	returns the ids of an entity's children
+		*/
+		//Identifiers getChildren(Identifier const& id);
+
+		/**
 		*	destroys an entity
-		*
-		*	destroys entity, as well as all of it's children. will stop the superior, if the
-		*	entity is not in nirvana.
-		*
-		*	possible exceptions:	invalid id
-		*
-		*	@param _id:				identifier of either: sequence, synchronization or service
 		*/
 		//void destroy(Identifier const& id);
 
 		/**
 		*	inserts an entity into another
-		*
-		*	inserts a service, sequence or synchronization that is currently in nirvana into
-		*	other sequence or synchronization, at the specified index. causes all existing IO
-		*	connections to break.
-		*
-		*	possible exceptions:	invalid ids
-		*							_dst and _src are the same
-		*
-		*	@param _src:			production graph to be inserted
-		*	@param _dst:			the other one
-		*	@param _index:			0, 1, 2 - first, middle, last
-		*
-		*	open questions:			spaghetti monster, help me. rAmen.
 		*/
 		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src);
 
 		/**
 		*	like insert, with index being the last place in the children
-		*
-		*	possible exceptions:	invalid ids
-		*							_dst and _src are the same
-		*
-		*	@param _src:			production graph to be inserted
-		*	@param _dst:			the other one
 		*/
 		//void append(Identifier const& dst, Identifier const& id);
 
-		/**
-		*	registers exception callback for a system
-		*	
-		*	@param callback			function pointer
-		*/
-		void registerToException(ExceptionCallback callback);
+	private:
 
-		/**
-		*	unregisters exception callback for a system
-		*	
-		*	@param callback			function pointer
-		*/
-		void unregisterFromException(ExceptionCallback callback);
-
-		/**
-		*	registers callback for a service's output slot
-		*
-		*	possible exceptions:	to be defined
-		*	
-		*	@param service:			identifier of a service
-		*	@param name:			name of output slot belonging to the service
-		*	@param callback			the function pointer
-		*/
-		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
-
-		/**
-		*	unregisters callback for a service's output slot
-		*
-		*	possible exceptions:	to be defined
-		*	
-		*	@param service:			identifier of a service
-		*	@param name:			name of output slot belonging to the service
-		*	@param callback			the function pointer
-		*/
-		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
-
-		/**
-		*	returns current data of a service's input/output slot
-		*	output slot: returns newest
-		*	input slot: returns the one....
-		*
-		*	possible exceptions:	to be defined
-		*	
-		*	@param service:			identifier of a service
-		*	@param out:				name of an input / output param
-		*/
-		template< typename Datatype >
-		Datatype const& getData(Identifier const& service, std::string const& name);
-
-		~System();
 		System(System const& src);
 		System& operator=(System const& src);
-
-	private:
 
 		/**
 		*	internally used function for setting param values
 		*/
-		void setParameterValue(Identifier const& id, std::string const& name, SharedAny any, type_info const& info);
+		void setValueInternal(Identifier const& id, std::string const& name, SharedAny any, type_info const& info);
 
 		/**
-		*	the 2 real engine
+		*	system's identifier
 		*/
-		Engine					*m_Engine;
-
-		/**
-		*	identifier of the system
-		*/
-		Identifier				*m_ID;
+		Identifier		m_Id;
 	};
 }
