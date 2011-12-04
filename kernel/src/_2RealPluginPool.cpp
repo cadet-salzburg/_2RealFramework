@@ -20,7 +20,7 @@
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealIdentifier.h"
-#include "_2RealTypes.h"
+#include "_2RealTypetable.h"
 #include "_2RealSetupParameter.h"
 #include "_2RealSystemGraph.h"
 
@@ -31,7 +31,9 @@ namespace _2Real
 
 	PluginPool::PluginPool(SystemGraph const& system) :
 		m_Plugins(),
-		m_System(system)
+		m_System(system),
+		//initially, plugins are searched within the execution directory
+		m_PluginDirectory("")
 	{
 	}
 
@@ -42,55 +44,40 @@ namespace _2Real
 			try
 			{
 				Identifier id = it->first;
-				Engine::instance()->getLogStream() << "plugin pool: uninstalling " << id << "\n";
-			
 				it->second->uninstall();
 				delete it->second;
 			}
 			catch (_2Real::Exception &e)
 			{
-				Engine::instance()->getLogStream() << "plugin pool: error on plugin destruction " << e.what() << "\n";
+				std::cout << e.what() << std::endl;
 			}
 			catch (...)
 			{
-				Engine::instance()->getLogStream() << "plugin pool: error on plugin destruction\n";
 			}
 		}
 
 		m_Plugins.clear();
 	}
 
-	const Identifier PluginPool::install(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname)
+	const Identifier PluginPool::install(std::string const& name, std::string const& classname)
 	{
-		_2Real::Engine *engine = Engine::instance();
-		engine->getLogStream() << "plugin pool: installing\n";
-		engine->getLogStream() << name << " " << directory << " " << file << " " << classname << "\n";
-		engine->getLogStream() << "plugin pool: initial size: " << m_Plugins.size() << "\n";
-
 		const Identifier id = Entity::createIdentifier(name, "plugin");
-		Plugin *plugin = new Plugin(id, directory, file, classname, m_System);
-		engine->getLogStream() << "plugin pool: installing now\n";
+
+#ifdef _DEBUG
+		std::string file = classname + "_mdd.dll";
+#else
+		std::string file = classname + "_md.dll";
+#endif
+
+		std::cout << "installing: " << m_PluginDirectory << file << std::endl;
+
+		Plugin *plugin = new Plugin(id, m_PluginDirectory, file, classname, m_System);
+
+		std::cout << "installing now " << std::endl;
+
 		plugin->install();
-		engine->getLogStream() << "plugin pool: installed sucessfully, creating setup parameters\n";
-
-		ParameterMap const& setup = plugin->setupParameters();
-		for (ParameterMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
-		{
-			const Identifier id = Entity::createIdentifier(it->first, "plugin setup parameter");
-			std::string const& keyword = it->second->datatype();
-			std::string const& type = engine->types().getTypename(keyword);
-			engine->getLogStream() << "plugin pool: creating setup parameter " << it->first << " " << keyword << " " << type << "\n";
-			SetupParameter *param = new SetupParameter(id, type, keyword);
-			plugin->addSetupParameter(param);
-		}
-
-		//engine->getLogStream() << "plugin pool: installed succesfully, uninstalling now\n";
-		//plugin->uninstall();
-		//engine->getLogStream() << "plugin pool: uninstalled successfully\n";
-		//delete plugin;
-
 		m_Plugins.insert(NamedPlugin(id, plugin));
-		engine->getLogStream() << "plugin pool: new size: " << m_Plugins.size() << "\n";
+
 		return id;
 	}
 

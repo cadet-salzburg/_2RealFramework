@@ -28,58 +28,65 @@ namespace _2Real
 {
 
 	System::System(std::string const& name) :
-		m_Id(Engine::instance()->createSystem(name))
+		m_Engine(Engine::instance())
 	{
+		m_Id = m_Engine.createSystem(name);
 	}
 
 	System::System(System const& src) :
+		m_Engine(src.m_Engine),
 		m_Id(src.m_Id)
 	{
-	}
-	
-	System& System::operator=(System const& src)
-	{
-		return *this;
 	}
 
 	System::~System()
 	{
-		Engine::instance()->destroySystem(m_Id);
+		m_Engine.destroySystem(m_Id);
 	}
 
-	const Identifier System::getID()
+	void System::destroy()
 	{
-		return m_Id;
+		m_Engine.destroySystem(m_Id);
 	}
 
-	const Identifier System::load(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname)
+	void System::setLogfile(std::string const& file)
 	{
-		return Engine::instance()->load(name, directory, file, classname, m_Id);
+		m_Engine.setSystemLogfile(file, m_Id);
+	}
+
+	void System::setPluginDirectory(std::string const& directory)
+	{
+		m_Engine.setSystemDirectory(directory, m_Id);
+	}
+
+	const Identifier System::load(std::string const& name, std::string const& classname)
+	{
+		return m_Engine.load(name, classname, m_Id);
 	}
 
 	void System::setup(Identifier const& id)
 	{
-		return Engine::instance()->setup(id, m_Id);
+		m_Engine.setup(id, m_Id);
 	}
 
-	void System::dumpInfo(Identifier const& plugin)
+	const std::string System::getInfo(Identifier const& plugin)
 	{
-		Engine::instance()->dumpPluginInfo(plugin, m_Id);
+		return m_Engine.getInfo(plugin, m_Id);
 	}
 
 	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service)
 	{
-		return Engine::instance()->createService(name, plugin, service, m_Id);
+		return m_Engine.createService(name, plugin, service, m_Id);
 	}
 
 	void System::setUpdateRate(Identifier const& runnable, float const& updatesPerSecond)
 	{
-		Engine::instance()->setUpdateRate(runnable, updatesPerSecond, m_Id);
+		m_Engine.setUpdateRate(runnable, updatesPerSecond, m_Id);
 	}
 
-	void System::setValueInternal(Identifier const& id, std::string const& param, SharedAny value, type_info const& info)
+	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData value, type_info const& info)
 	{
-		Engine::instance()->setValue(id, param, value, info.name(), m_Id);
+		m_Engine.setValue(id, param, value, info.name(), m_Id);
 	}
 
 	//Identifiers System::getInputSlots(Identifier const& _id)
@@ -144,47 +151,47 @@ namespace _2Real
 
 	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
-		Engine::instance()->linkSlots(outService, outName, inService, inName, m_Id);
+		m_Engine.linkSlots(outService, outName, inService, inName, m_Id);
 	}
 
 	void System::registerToException(ExceptionCallback callback)
 	{
-		Engine::instance()->registerToException(callback, m_Id);
+		m_Engine.registerToException(callback, m_Id);
 	}
 
 	void System::unregisterFromException(ExceptionCallback callback)
 	{
-		Engine::instance()->unregisterFromException(callback, m_Id);
+		m_Engine.unregisterFromException(callback, m_Id);
 	}
 
 	void System::registerToException(ExceptionListener &listener)
 	{
-		Engine::instance()->registerToException(listener, m_Id);
+		m_Engine.registerToException(listener, m_Id);
 	}
 
 	void System::unregisterFromException(ExceptionListener &listener)
 	{
-		Engine::instance()->unregisterFromException(listener, m_Id);
+		m_Engine.unregisterFromException(listener, m_Id);
 	}
 
 	void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
 	{
-		Engine::instance()->registerToNewData(service, name, callback, m_Id);
+		m_Engine.registerToNewData(service, name, callback, m_Id);
 	}
 
 	void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
 	{
-		Engine::instance()->unregisterFromNewData(service, name, callback, m_Id);
+		m_Engine.unregisterFromNewData(service, name, callback, m_Id);
 	}
 
 	void System::registerToNewData(Identifier const& service, std::string const& name, OutputListener &listener)
 	{
-		Engine::instance()->registerToNewData(service, name, listener, m_Id);
+		m_Engine.registerToNewData(service, name, listener, m_Id);
 	}
 
 	void System::unregisterFromNewData(Identifier const& service, std::string const& name, OutputListener &listener)
 	{
-		Engine::instance()->unregisterFromNewData(service, name, listener, m_Id);
+		m_Engine.unregisterFromNewData(service, name, listener, m_Id);
 	}
 
 	//DataHandle System::getDataHandle(Identifier const& _service, std::string const& _out)
@@ -213,37 +220,23 @@ namespace _2Real
 
 	void System::start(Identifier const& id)
 	{
-		Engine::instance()->start(id, m_Id);
+		m_Engine.start(id, m_Id);
 	}
 
-	//void System::startAll()
-	//{
-	//	try
-	//	{
-	//		m_Engine->startAll(*m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::startAll()
+	{
+		m_Engine.startAll(m_Id);
+	}
 
 	void System::stop(Identifier const& id)
 	{
-		Engine::instance()->stop(id, m_Id);
+		m_Engine.stop(id, m_Id);
 	}
 
-	//void System::stopAll()
-	//{
-	//	try
-	//	{
-	//		m_Engine->stopAll(*m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::stopAll()
+	{
+		m_Engine.stopAll(m_Id);
+	}
 
 	//void System::destroy(Identifier const& _id)
 	//{

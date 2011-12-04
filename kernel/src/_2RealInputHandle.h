@@ -24,7 +24,7 @@ namespace _2Real
 {
 
 	class InputSlot;
-	class SharedAny;
+	class EngineData;
 
 	class InputHandle : public ParameterHandle
 	{
@@ -99,8 +99,8 @@ namespace _2Real
 
 		InputHandle(InputSlot *slot);
 
-		SharedAny		oldest();
-		SharedAny		newest();
+		EngineData		oldest();
+		EngineData		newest();
 
 		InputSlot		*m_Input;
 

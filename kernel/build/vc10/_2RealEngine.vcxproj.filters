@@ -70,12 +70,11 @@
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTypes.cpp">
+    <ClCompile Include="..\..\src\_2RealTypetable.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealSharedAny.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealInputHandle.h" />
@@ -164,14 +163,15 @@
     <ClInclude Include="..\..\src\_2RealThreadPool.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTypes.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealVersion.h">
       <Filter>Metadata</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h">
       <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealEngineData.h" />
+    <ClInclude Include="..\..\src\_2RealTypetable.h">
+      <Filter>Subsystems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -35,7 +35,7 @@ namespace _2Real
 
 	class OutputSlot;
 
-	typedef std::pair< Poco::Timestamp, SharedAny >		TimestampedData;
+	typedef std::pair< Poco::Timestamp, EngineData >		TimestampedData;
 
 	class InputSlot : public IOSlot, public OutputListener
 	{
@@ -69,7 +69,7 @@ namespace _2Real
 
 	private:
 
-		typedef std::map< Poco::Timestamp, SharedAny >		DataTable;
+		typedef std::map< Poco::Timestamp, EngineData >		DataTable;
 
 		mutable Poco::FastMutex		m_Mutex;
 		DataTable					m_ReceivedTable;

@@ -20,7 +20,7 @@
 
 #include "_2RealImagebuffer.h"
 
-#include "_2RealTypes.h"
+#include "_2RealTypetable.h"
 
 #include "_2RealPluginMetadata.h"
 #include "_2RealServiceMetadata.h"
@@ -46,110 +46,83 @@
 namespace _2Real
 {
 
-	Engine *const Engine::instance()
+	Engine & Engine::instance()
 	{
 		static SingletonHolder< Engine > holder;
 		return holder.instance();
 	}
 
 	Engine::Engine() :
-		m_Graphs(NULL),
-		m_Factory(NULL),
-		m_Types(NULL),
+		m_Graphs(*this),
+		m_Factory(*this),
+		m_Types(*this),
 		m_Timer()
 	{
-		std::string logpath = "engine.txt";
-		m_LogFile.open(logpath.c_str());
-	
-		if (!m_LogFile.is_open())
-		{
-			throw std::exception();
-		}
+		std::cout << "hello" << std::endl;
 
-		m_Types = new TypeTable(*this);
-		m_Types->registerType< char >("char");
-		m_Types->registerType< unsigned char >("unsigned char");
-		m_Types->registerType< short >("short");
-		m_Types->registerType< unsigned short >("unsigned short");
-		m_Types->registerType< int >("int");
-		m_Types->registerType< unsigned int >("unsigned int");
-		m_Types->registerType< long >("long");
-		m_Types->registerType< unsigned long >("unsigned long");
-		m_Types->registerType< float >("float");
-		m_Types->registerType< double >("double");
-		m_Types->registerType< bool >("bool");
-		m_Types->registerType< std::string >("string");
-		m_Types->registerType< Buffer2D_float >("buffer2D_float");
-		m_Types->registerType< Buffer2D_double >("buffer2D_double");
-		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
-		m_Types->registerType< Buffer2D_uchar >("buffer2D_uchar");
-
-		m_Factory = new ServiceFactory(*this);
-		m_Graphs = new ProductionGraphs(*this);
-		//m_Timer.update();
-
-		m_LogFile <<"engine: 2real engine started" << std::endl;
-	}
-
-	Engine::Engine(Engine const& _src)
-	{
-		throw _2Real::Exception("internal error: attempted to copy engine");
-	}
-
-	Engine& Engine::operator=(Engine const& _src)
-	{
-		throw _2Real::Exception("internal error: attempted to copy engine");
+		m_Types.registerType< char >("char");
+		m_Types.registerType< unsigned char >("unsigned char");
+		m_Types.registerType< short >("short");
+		m_Types.registerType< unsigned short >("unsigned short");
+		m_Types.registerType< int >("int");
+		m_Types.registerType< unsigned int >("unsigned int");
+		m_Types.registerType< long >("long");
+		m_Types.registerType< unsigned long >("unsigned long");
+		m_Types.registerType< float >("float");
+		m_Types.registerType< double >("double");
+		m_Types.registerType< bool >("bool");
+		m_Types.registerType< std::string >("string");
+		m_Types.registerType< Buffer2D_float >("buffer2D_float");
+		m_Types.registerType< Buffer2D_double >("buffer2D_double");
+		m_Types.registerType< Buffer2D_uint >("buffer2D_uint");
+		m_Types.registerType< Buffer2D_uchar >("buffer2D_uchar");
 	}
 
 	Engine::~Engine()
 	{
-		delete m_Graphs;
-		m_LogFile << "engine: killed all systems" << std::endl;
-		delete m_Factory;
-		m_LogFile << "engine: killed the factory" << std::endl;
-		delete m_Types;
-		m_LogFile << "engine: killed all types" << std::endl;
-		m_LogFile << "engine: goodbye" << std::endl;
-		m_LogFile.close();
+		m_Graphs.clearSystems();
+		//m_Types.clearTables();
 	}
 
 	const Identifier Engine::createSystem(std::string const& name)
 	{
-		m_LogFile << "engine: system creation requested" << std::endl;
-		const Identifier result = m_Graphs->createSystemGraph(name);
-		m_LogFile << "engine: system creation succeeded " << result << std::endl;
-
+		const Identifier result = m_Graphs.createSystemGraph(name);
 		return result;
+	}
+
+	void Engine::setSystemLogfile(std::string const& file, Identifier const& system)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+
+		nirvana.setLogfile(file);
+		if (!nirvana.isLoggingEnabled())
+		{
+			std::cout << "could not start logging into file: " << file << std::endl;
+			std::cout << "choose another logfile" << std::endl;
+		}
+	}
+
+	void Engine::setSystemDirectory(std::string const& directory, Identifier const& system)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+
+		nirvana.setPluginDirectory(directory);
 	}
 
 	void Engine::destroySystem(Identifier const& system)
 	{
-		if (m_Graphs->contains(system))
-		{
-			m_LogFile << "engine: system destruction requested " << system << std::endl;
-			m_Graphs->destroySystemGraph(system);
-			m_LogFile << "engine: system destruction succeeded " << system << std::endl;
-		}
-		else
-		{
-		}
+		m_Graphs.destroySystemGraph(system);
 	}
 
-	const Identifier Engine::load(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system)
+	const Identifier Engine::load(std::string const& name, std::string const& classname, Identifier const& system)
 	{
-		m_LogFile << "engine: plugin installation requested" << std::endl;
-
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
-		const Identifier result = nirvana.plugins().install(name, dir, file, classname);
-
-		m_LogFile << "engine: plugin installation succeeded " << result << std::endl;
-
-		return result;
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		return nirvana.installPlugin(name, classname);
 	}
 
 	void Engine::setup(Identifier const& id, Identifier const& system)
 	{
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (!id.isSetupAble())
 		{
@@ -158,15 +131,11 @@ namespace _2Real
 
 		if (nirvana.plugins().contains(id))
 		{
-			m_LogFile << "engine: plugin setup requested " << id << std::endl;
-
 			Plugin &plugin = nirvana.plugins().getPlugin(id);
 			plugin.setup();
 		}
 		else if (nirvana.contains(id))
 		{
-			m_LogFile << "engine: service setup requested " << id << std::endl;
-
 			Runnable &child = nirvana.getChild(id);
 			if (child.isService())
 			{
@@ -184,9 +153,9 @@ namespace _2Real
 		}
 	}
 
-	void Engine::dumpPluginInfo(Identifier const& id, Identifier const& system) const
+	const std::string Engine::getInfo(Identifier const& id, Identifier const& system) const
 	{
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph const& nirvana = m_Graphs.getSystemGraph(system);
 
 		if (!id.isPlugin())
 		{
@@ -195,8 +164,7 @@ namespace _2Real
 		if (nirvana.plugins().contains(id))
 		{
 			PluginMetadata const& data = nirvana.plugins().getPlugin(id).getMetadata();
-			std::string info = data.info();
-			//m_LogFile << info << std::endl;
+			return data.getInfoString();
 		}
 		else
 		{
@@ -205,7 +173,7 @@ namespace _2Real
 
 	const Identifier Engine::createService(std::string const& name, Identifier const& id, std::string const& service, Identifier const& system)
 	{
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.plugins().contains(id))
 		{
@@ -213,7 +181,7 @@ namespace _2Real
 			
 			if (plugin.exportsService(service))
 			{
-				return m_Factory->createService(name, plugin, service, nirvana);
+				return m_Factory.createService(name, plugin, service, nirvana);
 			}
 			else
 			{
@@ -226,9 +194,9 @@ namespace _2Real
 		return Entity::NoEntity();
 	}
 
-	void Engine::setValue(Identifier const& id, std::string const& name, SharedAny value, std::string const& type, Identifier const& system)
+	void Engine::setValue(Identifier const& id, std::string const& name, EngineData value, std::string const& type, Identifier const& system)
 	{
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.plugins().contains(id))
 		{
@@ -272,8 +240,7 @@ namespace _2Real
 							slot.reset();
 						}
 
-						m_Timer.update();
-						Data data(value, m_Timer.elapsed());
+						Data data(value, m_Timer.getTimestamp());
 						slot.set(data);
 					}
 					else
@@ -293,7 +260,7 @@ namespace _2Real
 	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(id))
 		{
@@ -315,7 +282,7 @@ namespace _2Real
 	void Engine::linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(idIn) && nirvana.contains(idOut))
 		{
@@ -350,7 +317,7 @@ namespace _2Real
 	void Engine::registerToException(ExceptionCallback callback, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.registerExceptionCallback(callback);
 	}
@@ -358,7 +325,7 @@ namespace _2Real
 	void Engine::unregisterFromException(ExceptionCallback callback, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.unregisterExceptionCallback(callback);
 	}
@@ -366,7 +333,7 @@ namespace _2Real
 	void Engine::registerToNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(id))
 		{
@@ -389,7 +356,7 @@ namespace _2Real
 	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(id))
 		{
@@ -412,7 +379,7 @@ namespace _2Real
 	void Engine::registerToNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(id))
 		{
@@ -435,7 +402,7 @@ namespace _2Real
 	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		if (nirvana.contains(id))
 		{
@@ -458,7 +425,7 @@ namespace _2Real
 	void Engine::registerToException(ExceptionListener &listener, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.registerExceptionListener(listener);
 	}
@@ -466,7 +433,7 @@ namespace _2Real
 	void Engine::unregisterFromException(ExceptionListener &listener, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.unregisterExceptionListener(listener);
 	}
@@ -474,7 +441,7 @@ namespace _2Real
 	void Engine::start(Identifier const& id, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.startChild(id);
 	}
@@ -482,7 +449,7 @@ namespace _2Real
 	void Engine::stop(Identifier const& id, Identifier const& system)
 	{
 		//crashes if system does not exist
-		SystemGraph &nirvana = m_Graphs->getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.stopChild(id);
 	}
@@ -543,39 +510,17 @@ namespace _2Real
 	//	}
 	//}
 
-	//void Engine::startAll(Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		IDs children = nirvana->childIDs();
-	//		for (IDIterator it = children.begin(); it != children.end(); it++)
-	//		{
-	//			nirvana->startChild(*it);
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void Engine::startAll(Identifier const& system)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		nirvana.startAll();
+	}
 
-	//void Engine::ssystemAll(Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		IDs children = nirvana->childIDs();
-	//		for (IDIterator it = children.begin(); it != children.end(); it++)
-	//		{
-	//			nirvana->ssystemChild(*it);
-	//		}
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void Engine::stopAll(Identifier const& system)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		nirvana.stopAll();
+	}
 
 	//void Engine::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system)
 	//{

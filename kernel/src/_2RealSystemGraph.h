@@ -31,22 +31,28 @@
 namespace _2Real
 {
 
-	class Engine;
+	typedef std::map< std::string, std::string >	StringMap;
+
 	class ExceptionListener;
+	class Engine;
 
 	class SystemGraph : public Graph, public Entity
 	{
 
 	public:
 
-		SystemGraph(Identifier const& id, Engine &engine);
+		SystemGraph(Identifier const& id, StringMap const& allowedTypes);
 		~SystemGraph();
+
+		void shutdown();
 
 		void stopAll();
 		void startAll();
 		void startChild(Identifier const& child);
 		void stopChild(Identifier const& child);
 		void updateChild(Identifier const& child, unsigned int const& count);
+
+		const Identifier installPlugin(std::string const& name, std::string const& classname);
 
 		void insertChild(Runnable &child, unsigned int const& index);
 		void removeChild(Identifier const& id);
@@ -60,17 +66,25 @@ namespace _2Real
 		PluginPool & plugins();
 		PluginPool const& plugins() const;
 
-		std::ofstream& getLogstream() const;
-		const std::map< std::string, std::string > getAllowedTypes() const;
+		const bool isLoggingEnabled() const;
+		void setPluginDirectory(std::string const& directory);
+		void setLogfile(std::string const& file);
+		std::ofstream & getLogstream() const;
+		StringMap const& getAllowedTypes() const;
+		void startLogging();
 
 		const bool contains(Identifier const& id) const;
 
 	private:
 
-		//ThreadPool		m_Threads;
-		PluginPool			m_Plugins;
-		ExceptionHandler	m_ExceptionHandler;
-		Engine				&m_Engine;
+		ThreadPool				m_Threads;
+		PluginPool				m_Plugins;
+		ExceptionHandler		m_ExceptionHandler;
+		StringMap				const& m_AllowedTypes;
+		std::string				m_Logfile;
+		mutable std::ofstream	m_Logstream;
+
+		Engine					&m_Engine;
 
 	};
 
@@ -82,6 +96,26 @@ namespace _2Real
 	inline PluginPool const& SystemGraph::plugins() const
 	{
 		return m_Plugins;
+	}
+
+	inline const bool SystemGraph::isLoggingEnabled() const
+	{
+		return m_Logstream.is_open();
+	}
+
+	inline std::ofstream & SystemGraph::getLogstream() const
+	{
+		return m_Logstream;
+	}
+
+	inline void SystemGraph::setPluginDirectory(std::string const& directory)
+	{
+		m_Plugins.setPluginDirectory(directory);
+	}
+
+	inline StringMap const& SystemGraph::getAllowedTypes() const
+	{
+		return m_AllowedTypes;
 	}
 
 }

@@ -35,27 +35,9 @@ namespace _2Real
 
 	public:
 
-		SingletonHolder() :
-			m_Held(NULL)
-		{
-		}
-
-		~SingletonHolder()
-		{
-			delete m_Held;
-		}
-
-		T* instance()
-		{
-			Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-			if (!m_Held)
-			{
-				m_Held = new T();
-			}
-
-			return m_Held;
-		}
+		SingletonHolder();
+		~SingletonHolder();
+		T& instance();
 
 	private:
 
@@ -63,5 +45,30 @@ namespace _2Real
 		Poco::FastMutex		m_Mutex;
 
 	};
+
+	template< typename T >
+	SingletonHolder< T >::SingletonHolder() :
+		m_Held(NULL)
+	{
+	}
+
+	template< typename T >
+	SingletonHolder< T >::~SingletonHolder()
+	{
+		delete m_Held;
+	}
+
+	template< typename T >
+	T& SingletonHolder< T >::instance()
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		if (!m_Held)
+		{
+			m_Held = new T();
+		}
+
+		return *m_Held;
+	}
 
 }

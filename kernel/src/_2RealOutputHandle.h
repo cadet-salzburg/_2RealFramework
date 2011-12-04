@@ -24,7 +24,7 @@ namespace _2Real
 {
 
 	class OutputSlot;
-	class SharedAny;
+	class EngineData;
 
 	class OutputHandle : public ParameterHandle
 	{
@@ -54,7 +54,7 @@ namespace _2Real
 
 		OutputHandle(OutputSlot *slot);
 
-		SharedAny			data();
+		EngineData			data();
 
 		OutputSlot			*m_Output;
 

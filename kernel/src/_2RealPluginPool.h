@@ -42,7 +42,8 @@ namespace _2Real
 
 		const unsigned int		size() const;
 		SystemGraph const&		system() const;
-		const Identifier		install(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname);
+		void					setPluginDirectory(std::string const& directory);
+		const Identifier		install(std::string const& name, std::string const& classname);
 		const bool				contains(Identifier const& id) const;
 		void					uninstall(Identifier const& id);
 		Plugin &				getPlugin(Identifier const& id);
@@ -50,8 +51,9 @@ namespace _2Real
 
 	private:
 
-		PluginMap			m_Plugins;
-		SystemGraph			const& m_System;
+		PluginMap				m_Plugins;
+		SystemGraph				const& m_System;
+		std::string				m_PluginDirectory;
 
 	};
 
@@ -63,6 +65,11 @@ namespace _2Real
 	inline SystemGraph const& PluginPool::system() const
 	{
 		return m_System;
+	}
+
+	inline void PluginPool::setPluginDirectory(std::string const& directory)
+	{
+		m_PluginDirectory = directory;
 	}
 
 }

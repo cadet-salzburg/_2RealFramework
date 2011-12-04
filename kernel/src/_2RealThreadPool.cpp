@@ -25,7 +25,6 @@
 #include "Poco/Event.h"
 #include "Poco/ThreadLocal.h"
 #include "Poco/ErrorHandler.h"
-#include "_2RealEngine.h"
 
 #include <ctime>
 #include <math.h>
@@ -195,7 +194,6 @@ namespace _2Real
 
 	ThreadPool::~ThreadPool()
 	{
-		Engine::instance()->getLogStream() << "THREADPOOL" << std::endl;
 		//stopAll();
 	}
 

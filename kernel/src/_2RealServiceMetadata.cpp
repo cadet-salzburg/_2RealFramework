@@ -16,86 +16,97 @@
 	limitations under the License.
 */
 
+#include "_2RealParameterMetadata.h"
 #include "_2RealServiceMetadata.h"
-#include "_2RealPluginMetadata.h"
+#include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
 
 #include <sstream>
-#include <iostream>
 
 namespace _2Real
 {
 
-	ServiceMetadata::ServiceMetadata(std::string const& name, StringMap const& types) :
+	ServiceMetadata::ServiceMetadata(std::string const& name, StringMap const& allowedTypes) :
 		m_ServiceName(name),
 		m_Description(""),
 		m_SetupParameters(),
-		m_InputParameters(),
-		m_OutputParameters(),
-		m_AllowedTypes(types)
+		m_InputSlots(),
+		m_OutputSlots(),
+		m_AllowedTypes(allowedTypes)
 	{
 	}
 
-	void ServiceMetadata::addSetupParameterByType(std::string const& name, std::string const& type)
+	ServiceMetadata::~ServiceMetadata()
 	{
+		for (ParameterDataMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
+		{
+			delete it->second;
+		}
+
+		for (ParameterDataMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+		{
+			delete it->second;
+		}
+
+		for (ParameterDataMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); ++it)
+		{
+			delete it->second;
+		}
+
+		m_SetupParameters.clear();
+		m_InputSlots.clear();
+		m_OutputSlots.clear();
 	}
 
-	void ServiceMetadata::addInputSlotByType(std::string const& name, std::string const& type)
+	void ServiceMetadata::addSetupParameter(std::string const& name, std::string const& type)
 	{
-	}
-
-	void ServiceMetadata::addOutputSlotByType(std::string const& name, std::string const& type)
-	{
-	}
-
-	void ServiceMetadata::setDescription(std::string const& description)
-	{
-		m_Description = description;
-	}
-
-	void ServiceMetadata::addSetupParameter(std::string const& _name, std::string const& _type)
-	{
-		ParameterDataMap::iterator it = m_SetupParameters.find(_name);
+		ParameterDataMap::iterator it = m_SetupParameters.find(name);
 
 		if (it != m_SetupParameters.end())
 		{
-			throw Exception("setup parameter " + _name + " already exists");
+			std::ostringstream msg;
+			msg << "metadata error: service setup parameter " << name << " already exists";
+			throw MetadataException(msg.str());
 		}
 
-		m_SetupParameters.insert(NamedParameterData(_name, ParameterMetadata(_name, _type)));
+		m_SetupParameters.insert(NamedParameterData(name, new ParameterMetadata(name, type)));
 	}
 
-	void ServiceMetadata::addInputSlot(std::string const& _name, std::string const& _type)
+	void ServiceMetadata::addInputSlot(std::string const& name, std::string const& type)
 	{
-		ParameterDataMap::iterator it = m_InputParameters.find(_name);
+		ParameterDataMap::iterator it = m_InputSlots.find(name);
 
-		if (it != m_InputParameters.end())
+		if (it != m_InputSlots.end())
 		{
-			throw Exception("input slot " + _name + " already exists");
+			std::ostringstream msg;
+			msg << "metadata error: service input slot " << name << " already exists";
+			throw MetadataException(msg.str());
 		}
 
-		m_InputParameters.insert(NamedParameterData(_name, ParameterMetadata(_name, _type)));
+		m_InputSlots.insert(NamedParameterData(name, new ParameterMetadata(name, type)));
 	}
 
-	void ServiceMetadata::addOutputSlot(std::string const& _name, std::string const& _type)
+	void ServiceMetadata::addOutputSlot(std::string const& name, std::string const& type)
 	{
-		ParameterDataMap::iterator it = m_OutputParameters.find(_name);
+		ParameterDataMap::iterator it = m_OutputSlots.find(name);
 
-		if (it != m_OutputParameters.end())
+		if (it != m_OutputSlots.end())
 		{
-			throw Exception("output slot " + _name + " already exists");
+			std::ostringstream msg;
+			msg << "metadata error: service output slot " << name << " already exists";
+			throw MetadataException(msg.str());
 		}
 
-		m_OutputParameters.insert(NamedParameterData(_name, ParameterMetadata(_name, _type)));
+		m_OutputSlots.insert(NamedParameterData(name, new ParameterMetadata(name, type)));
 	}
 
 	const StringMap ServiceMetadata::getInputParameters() const
 	{
 		StringMap result;
-		for (ParameterDataMap::const_iterator it = m_InputParameters.begin(); it !=m_InputParameters.end(); it++)
+		for (ParameterDataMap::const_iterator it = m_InputSlots.begin(); it !=m_InputSlots.end(); it++)
 		{
-			ParameterMetadata data = it->second;
-			result.insert(std::make_pair(data.getName(), data.getType()));
+			ParameterMetadata *data = it->second;
+			result.insert(std::make_pair(data->getName(), data->getType()));
 		}
 		return result;
 	}
@@ -103,10 +114,10 @@ namespace _2Real
 	const StringMap ServiceMetadata::getOutputParameters() const
 	{
 		StringMap result;
-		for (ParameterDataMap::const_iterator it = m_OutputParameters.begin(); it !=m_OutputParameters.end(); it++)
+		for (ParameterDataMap::const_iterator it = m_OutputSlots.begin(); it !=m_OutputSlots.end(); it++)
 		{
-			ParameterMetadata data = it->second;
-			result.insert(std::make_pair(data.getName(), data.getType()));
+			ParameterMetadata *data = it->second;
+			result.insert(std::make_pair(data->getName(), data->getType()));
 		}
 		return result;
 	}
@@ -116,59 +127,28 @@ namespace _2Real
 		StringMap result;
 		for (ParameterDataMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); it++)
 		{
-			ParameterMetadata data = it->second;
-			result.insert(std::make_pair(data.getName(), data.getType()));
+			ParameterMetadata *data = it->second;
+			result.insert(std::make_pair(data->getName(), data->getType()));
 		}
 		return result;
 	}
 
-	std::string const& ServiceMetadata::getName() const
+	const bool ServiceMetadata::containsSetupParameter(std::string const& name) const
 	{
-		return m_ServiceName;
+		return m_SetupParameters.find(name) != m_SetupParameters.end();
 	}
 
-	std::string const& ServiceMetadata::getDescription() const
+	const bool ServiceMetadata::containsInputParameter(std::string const& name) const
 	{
-		return m_Description;
+		return m_InputSlots.find(name) != m_InputSlots.end();
 	}
 
-	const bool ServiceMetadata::hasSetupParameter(std::string const& _name) const
+	const bool ServiceMetadata::containsOutputParameter(std::string const& name) const
 	{
-		ParameterDataMap::const_iterator it = m_SetupParameters.find(_name);
-
-		if (it != m_SetupParameters.end())
-		{
-			return false;
-		}
-
-		return true;
+		return m_OutputSlots.find(name) != m_OutputSlots.end();
 	}
 
-	const bool ServiceMetadata::hasInputParameter(std::string const& _name) const
-	{
-		ParameterDataMap::const_iterator it = m_InputParameters.find(_name);
-
-		if (it != m_InputParameters.end())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	const bool ServiceMetadata::hasOuputParameter(std::string const& _name) const
-	{
-		ParameterDataMap::const_iterator it = m_OutputParameters.find(_name);
-
-		if (it != m_OutputParameters.end())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	const std::string ServiceMetadata::info() const
+	const std::string ServiceMetadata::getInfoString() const
 	{
 		std::stringstream info;
 		info << std::endl;
@@ -180,25 +160,25 @@ namespace _2Real
 			info << "this service has setup parameters: " << std::endl;
 			for (ParameterDataMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
 			{
-				info << it->first << " " << it->second.getType() << std::endl;
+				info << it->first << " " << it->second->getType() << std::endl;
 			}
 		}
 
-		if (!m_InputParameters.empty())
+		if (!m_InputSlots.empty())
 		{
 			info << "this service has input parameters: " << std::endl;
-			for (ParameterDataMap::const_iterator it = m_InputParameters.begin(); it != m_InputParameters.end(); it++)
+			for (ParameterDataMap::const_iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 			{
-				info << it->first << " " << it->second.getType() << std::endl;
+				info << it->first << " " << it->second->getType() << std::endl;
 			}
 		}
 
-		if (!m_OutputParameters.empty())
+		if (!m_OutputSlots.empty())
 		{
 			info << "this service has output parameters: " << std::endl;
-			for (ParameterDataMap::const_iterator it = m_OutputParameters.begin(); it != m_OutputParameters.end(); it++)
+			for (ParameterDataMap::const_iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
 			{
-				info << it->first << " " << it->second.getType() << std::endl;
+				info << it->first << " " << it->second->getType() << std::endl;
 			}
 		}
 

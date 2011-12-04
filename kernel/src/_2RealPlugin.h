@@ -31,7 +31,7 @@ namespace _2Real
 	typedef IService *const (*ServiceCreator)(void);
 
 	class SetupParameter;
-	class SharedAny;
+	class EngineData;
 	class SystemGraph;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
@@ -45,7 +45,7 @@ namespace _2Real
 
 	public:
 
-		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const &system);
+		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const& system);
 		~Plugin();
 
 		void							install();
@@ -55,10 +55,10 @@ namespace _2Real
 		void							registerService(std::string const& name, ServiceCreator service);
 		void							addSetupParameter(SetupParameter *const param);
 
-		const bool						canExportService(std::string const& name) const;
-		const bool						exportsService(std::string const& name) const;
-		const bool						hasSetupParameter(std::string const& name) const;
-		bool const&						isInitialized() const;
+		bool							canExportService(std::string const& name) const;
+		bool							exportsService(std::string const& name) const;
+		bool							hasSetupParameter(std::string const& name) const;
+		bool 							isInitialized() const;
 
 		PluginMetadata const&			getMetadata() const;
 		ServiceMetadata const&			getMetadata(std::string const& name) const;
@@ -68,70 +68,46 @@ namespace _2Real
 
 		IService						*const createService(std::string const& name) const;
 
-		//TemplateMap const& services() const
-		//{
-		//	return m_Services;
-		//}
-
-		//TemplateMap & services()
-		//{
-		//	return m_Services;
-		//}
-
-		ParameterMap const& setupParameters() const
-		{
-			return m_SetupParameters;
-		}
-
-		//ParameterMap & setupParameters()
-		//{
-		//	return m_SetupParameters;
-		//}
-		
-		//SharedAny getParameterValue(std::string const& name);
+		TemplateMap const&				services() const;
+		TemplateMap &					services();
+		ParameterMap const&				setupParameters() const;
+		ParameterMap &					setupParameters();
 
 	private:
 
-		/**
-		*	plugin's setup parameters
-		*/
-		ParameterMap											m_SetupParameters;
+		ParameterMap			m_SetupParameters;
+		TemplateMap				m_Services;
+		
+		IPluginActivator		*m_Activator;
+		PluginLoader			m_PluginLoader;
 
-		/**
-		*	plugin's services
-		*/
-		TemplateMap												m_Services;
+		std::string				m_File;
+		bool					m_IsInitialized;
 
-		/**
-		*	dll filepath
-		*/
-		std::string												m_File;
+		PluginMetadata			m_Metadata;
 
-		/**
-		*	plugin activator implemented by user plugin
-		*/
-		IPluginActivator										*m_Activator;
-
-		/**
-		*	metadata
-		*/
-		PluginMetadata											m_Metadata;
-
-		/**
-		*	poco classloader
-		*/
-		PluginLoader											m_PluginLoader;
-
-		/**
-		*	true if plugin's setup has been called at least once
-		*/
-		bool													m_IsInitialized;
-
-		/**
-		*	system which installed the plugin
-		*/
-		SystemGraph												const& m_System;
+		SystemGraph				const& m_System;
 
 	};
+
+	inline TemplateMap const& Plugin::services() const
+	{
+		return m_Services;
+	}
+
+	inline TemplateMap & Plugin::services()
+	{
+		return m_Services;
+	}
+
+	inline ParameterMap const& Plugin::setupParameters() const
+	{
+		return m_SetupParameters;
+	}
+
+	inline ParameterMap & Plugin::setupParameters()
+	{
+		return m_SetupParameters;
+	}
 
 }

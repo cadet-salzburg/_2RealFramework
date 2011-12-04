@@ -21,12 +21,12 @@
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
 #include "_2RealSetupParameter.h"
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
 #include "_2RealIService.h"
 #include "_2RealSystemGraph.h"
-#include "_2RealEngine.h"
+//#include "_2RealEngine.h"
 
 #include <iostream>
 #include <sstream>
@@ -216,7 +216,7 @@ namespace _2Real
 		return result;
 	}
 
-	SharedAny Service::getParameterValue(std::string const& name) const
+	EngineData Service::getParameterValue(std::string const& name) const
 	{
 		ParameterMap::const_iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())

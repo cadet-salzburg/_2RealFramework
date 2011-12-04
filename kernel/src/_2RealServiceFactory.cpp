@@ -17,59 +17,64 @@
 */
 
 #include "_2RealServiceFactory.h"
+#include "_2RealEngine.h"
+#include "_2RealTypetable.h"
 #include "_2RealPlugin.h"
-#include "_2RealTypes.h"
 #include "_2RealSystemGraph.h"
 #include "_2RealService.h"
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
 #include "_2RealSetupParameter.h"
-
-//#include <sstream>
-//#include <iostream>
+#include "_2RealServiceMetadata.h"
 
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory(Engine &_engine) :
-		m_Engine(_engine)
+	ServiceFactory::ServiceFactory(Engine const& engine) :
+		m_Engine(engine)	//do not touch anywhere else in ctor
 	{
 	}
 
 	const Identifier ServiceFactory::createService(std::string const& name, Plugin const& plugin, std::string const& service, SystemGraph &system)
 	{
+		Typetable const& types = m_Engine.types();
+
 		IService *userService = plugin.createService(service);
 
 		const Identifier id = Entity::createIdentifier(name, "service");
 		Service *runnable = new Service(id, userService, system);
 
 		const ServiceMetadata data = plugin.getMetadata(service);
-
-		typedef std::map< std::string, std::string > StringMap;
 		StringMap const& setup = data.getSetupParameters();
 		StringMap const& input = data.getInputParameters();
 		StringMap const& output = data.getOutputParameters();
 
-		for (StringMap::const_iterator it = setup.begin(); it != setup.end(); it++)
+		for (StringMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
-			const Identifier id = Entity::createIdentifier(it->first, "setup parameter");
-			SetupParameter *setup = new SetupParameter(id, m_Engine.types().getTypename(it->second), it->second);
+			std::string name = it->first;
+			std::string key = it->second;
+			const Identifier id = Entity::createIdentifier(name, "service setup parameter");
+			SetupParameter *setup = new SetupParameter(id, types.getTypename(key), key);
 			runnable->addSetupParameter(*setup);
 		}
 
-		for (StringMap::const_iterator it = input.begin(); it != input.end(); it++)
+		for (StringMap::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
-			const Identifier id = Entity::createIdentifier(it->first, "input slot");
-			InputSlot *in = new InputSlot(id, runnable, m_Engine.types().getTypename(it->second), it->second);
+			std::string name = it->first;
+			std::string key = it->second;
+			const Identifier id = Entity::createIdentifier(name, "service input slot");
+			InputSlot *in = new InputSlot(id, runnable, types.getTypename(key), key);
 			runnable->addInputSlot(*in);
 		}
 
-		for (StringMap::const_iterator it = output.begin(); it != output.end(); it++)
+		for (StringMap::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
-			SharedAny init;
-			m_Engine.types().create(it->second, init);
-			const Identifier id = Entity::createIdentifier(it->first, "output slot");
-			OutputSlot *out = new OutputSlot(id, runnable, m_Engine.types().getTypename(it->second), it->second, init);
+			std::string name = it->first;
+			std::string key = it->second;
+			EngineData initialData;
+			types.createEngineData(key, initialData);
+			const Identifier id = Entity::createIdentifier(name, "service output slot");
+			OutputSlot *out = new OutputSlot(id, runnable, types.getTypename(key), key, initialData);
 			runnable->addOutputSlot(*out);
 		}
 

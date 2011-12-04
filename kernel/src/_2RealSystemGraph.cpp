@@ -21,54 +21,73 @@
 #include "_2RealRunnableGraph.h"
 #include "_2RealExceptionHandler.h"
 #include "_2RealEngine.h"
+#include "_2RealException.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Identifier const& id, Engine &engine) :
+	SystemGraph::SystemGraph(Identifier const& id, StringMap const& allowedTypes) :
 		Graph(),
 		Entity(id),
-		m_Engine(engine),
+		m_Engine(Engine::instance()),
+		m_Plugins(*this),
+		m_AllowedTypes(allowedTypes),
 		m_ExceptionHandler(id),
-		m_Plugins(*this)
-		//m_Threads(10, 20, 1000, 0, id.name())
+		m_Threads(10, 20, 1000, 0, id.name()),
+		m_Logfile("")
 	{
+	}
+
+	void SystemGraph::setLogfile(std::string const& file)
+	{
+		if (m_Logstream.is_open())
+		{
+			m_Logstream.close();
+		}
+
+		m_Logfile = file;
+		startLogging();
+	}
+
+	void SystemGraph::startLogging()
+	{
+		if (!m_Logfile.empty())
+		{
+			m_Logstream.open(m_Logfile);
+		}
+
+		if (m_Logstream.is_open())
+		{
+			m_Logstream << m_Engine.timer().getTimestamp() << identifier() << std::endl;
+		}
 	}
 
 	SystemGraph::~SystemGraph()
 	{
-		Engine::instance()->getLogStream() << "system graph: destructor called" << std::endl;
+		if (childCount() > 0)
+		{
+			shutdown();
+		}
+	}
 
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	(*it)->stop();
-		//}
+	void SystemGraph::shutdown()
+	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			(*it)->stop();
+		}
 
-		//Engine::instance()->getLogStream() << "system graph: joining threadpool" << std::endl;
+		m_Threads.joinAll();
+		m_Threads.stopAll();
 
-		//m_Threads.joinAll();
-
-		//Engine::instance()->getLogStream() << "system graph: deactivating threadpool" << std::endl;
-
-		//m_Threads.stopAll();
-
-		//Engine::instance()->getLogStream() << "system graph: deleting children: " << childCount() << std::endl;
-
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	try
-		//	{
-		//		delete *it;
-		//	}
-		//	catch (...)
-		//	{
-		//		Engine::instance()->getLogStream() << "system graph: error on runnable destruction" << std::endl;
-		//	}
-		//}
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			delete *it;
+		}
 
 		m_Children.clear();
+		//m_Threads.clear();
 	}
 
 	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
@@ -154,6 +173,16 @@ namespace _2Real
 
 	//	(*it)->stop();
 	//	m_Threads.join(id);
+	}
+
+	const Identifier SystemGraph::installPlugin(std::string const& name, std::string const& classname)
+	{
+		return m_Plugins.install(name, classname);
+	}
+
+	const bool SystemGraph::contains(Identifier const& id) const
+	{
+		return ((id.isPlugin() && m_Plugins.contains(id)) || Graph::contains(id));
 	}
 
 }

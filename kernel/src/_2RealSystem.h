@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 #include "_2RealIdentifier.h"
 
 #include <string>
@@ -34,20 +34,7 @@ namespace _2Real
 	class OutputListener;
 	class ExceptionListener;
 
-	/**
-	*	callback for exceptions
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToException
-	*/
 	typedef void (*ExceptionCallback)(RunnableException &exception);
-
-	/**
-	*	callback for new data
-	*
-	*	there are 3 entities which allow for a exception callback registration:
-	*	services, sequences & synchronizations - see @registerToNewData
-	*/
 	typedef void (*DataCallback)(Data &data);
 
 	class System
@@ -55,25 +42,27 @@ namespace _2Real
 
 	public:
 
-		/**
-		*	creates a system
-		*/
 		System(std::string const& name);
-
-		/**
-		*	destroying a system will delete everything belonging to it
-		*/
+		System(System const& src);
 		~System();
 
-		/**
-		*	returns the system's own identifier
-		*/
-		const Identifier getID();
+		void setPluginDirectory(std::string const& directory);
+		void setLogfile(std::string const& file);
+
+		//void setLoglevel();
 
 		/**
-		*	loads a dll
+		*	...
 		*/
-		const Identifier load(std::string const& name, std::string const& directory, std::string const& file, std::string const& classname);
+		void destroy();
+
+		/**
+		*	loads a dll - assumption: classname-> filename, e.g: MyPlugin -> MyPlugin.dll (release mode), MyPlugin_d.dll (debug mode)
+		*	the install directory will be taken from the config.txt
+		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
+		*	multiple loading of a plugin from within the same system accomplishes nothing
+		*/
+		const Identifier load(std::string const& name, std::string const& classname);
 
 		/**
 		*	calls setup of either a plugin or a service = initialization
@@ -98,7 +87,7 @@ namespace _2Real
 		/**
 		*	printf plugin metadata
 		*/
-		void dumpInfo(Identifier const& plugin);
+		const std::string getInfo(Identifier const& plugin);
 
 		/**
 		*	creates instance of service
@@ -117,7 +106,7 @@ namespace _2Real
 		template< typename T >
 		void setValue(Identifier const& id, std::string const& name, T const& value)
 		{
-			SharedAny any(value);
+			EngineData any(value);
 			setValueInternal(id, name, any, typeid(T));
 		}
 
@@ -181,12 +170,12 @@ namespace _2Real
 		/**
 		*	stops all of nirvanas children at once
 		*/
-		//void stopAll();
+		void stopAll();
 
 		/**
 		*	starts all of nirvanas children at once
 		*/
-		//void startAll();
+		void startAll();
 
 		/**
 		*	creates a sequence of entities
@@ -225,17 +214,19 @@ namespace _2Real
 
 	private:
 
-		System(System const& src);
-		System& operator=(System const& src);
-
 		/**
 		*	internally used function for setting param values
 		*/
-		void setValueInternal(Identifier const& id, std::string const& name, SharedAny any, type_info const& info);
+		void setValueInternal(Identifier const& id, std::string const& name, EngineData any, type_info const& info);
 
 		/**
 		*	system's identifier
 		*/
 		Identifier		m_Id;
+
+		/**
+		*	the 2real engine
+		*/
+		Engine			&m_Engine;
 	};
 }

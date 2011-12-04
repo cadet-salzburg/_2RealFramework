@@ -30,26 +30,26 @@ namespace _2Real
 	class SystemGraph;
 
 	typedef std::pair< Identifier, SystemGraph * >	NamedSystemGraph;
-	typedef	std::map< Identifier, SystemGraph * >	SystemGraphTable;
+	typedef std::map< Identifier, SystemGraph * >	SystemGraphTable;
+	typedef std::map< std::string, std::string >	StringMap;
 
 	class ProductionGraphs
 	{
 
 	public:
 
-		ProductionGraphs(Engine &engine);
+		ProductionGraphs(Engine const& engine);
 		~ProductionGraphs();
 
 		//const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 		//const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 
-		const Identifier createSystemGraph(std::string const& name);
-		void destroySystemGraph(Identifier const& id);
-
-		SystemGraph & getSystemGraph(Identifier const& id);
-		SystemGraph const& getSystemGraph(Identifier const& id) const;
-
-		const bool contains(Identifier const& id) const;
+		const Identifier		createSystemGraph(std::string const& name);
+		void					destroySystemGraph(Identifier const& id);
+		SystemGraph &			getSystemGraph(Identifier const& id);
+		SystemGraph const&		getSystemGraph(Identifier const& id) const;
+		bool					contains(Identifier const& id) const;
+		void					clearSystems();
 
 	private:
 
@@ -61,7 +61,7 @@ namespace _2Real
 		/**
 		*	the 2real engine
 		*/
-		Engine											&m_Engine;
+		Engine											const& m_Engine;
 
 	};
 

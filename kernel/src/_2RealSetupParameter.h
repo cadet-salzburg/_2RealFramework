@@ -19,7 +19,7 @@
 #pragma once
 
 #include "_2RealParameter.h"
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {
@@ -39,7 +39,7 @@ namespace _2Real
 		/**
 		*	sets parameter data
 		*/
-		void set(SharedAny const& data)
+		void set(EngineData const& data)
 		{
 			m_Data = data;
 			//m_IsInitialized = true;
@@ -48,14 +48,14 @@ namespace _2Real
 		/**
 		*	returns parameter data
 		*/
-		SharedAny const& get() const
+		EngineData const& get() const
 		{
 			return m_Data;
 		}
 
 	protected:
 
-		SharedAny				m_Data;
+		EngineData				m_Data;
 
 	};
 

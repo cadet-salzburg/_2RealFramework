@@ -19,27 +19,29 @@
 #pragma once
 
 #include "_2RealVersion.h"
-#include "_2RealServiceMetadata.h"
 
-//#include <map>
-//#include <string>
-//#include <list>
-//#include <fstream>
-//#include <vector>
+#include <map>
+#include <list>
 #include <typeinfo.h>
 
 namespace _2Real
 {
 
-	class TypeTable;
+	class ParameterMetadata;
+	class ServiceMetadata;
 
-	typedef std::pair< std::string, ServiceMetadata >	NamedServiceData;
-	typedef std::map< std::string, ServiceMetadata >	ServiceDataMap;
+	typedef std::pair< std::string, ServiceMetadata * >		NamedServiceData;
+	typedef std::map< std::string, ServiceMetadata * >		ServiceDataMap;
+	typedef std::pair< std::string, ParameterMetadata * >	NamedParameterData;
+	typedef std::map< std::string, ParameterMetadata * >	ParameterDataMap;
+	typedef std::map< std::string, std::string >			StringMap;
 
 	class PluginMetadata
 	{
 
 	public:
+
+		~PluginMetadata();
 
 		/**
 		*	sets plugin description
@@ -105,13 +107,6 @@ namespace _2Real
 		std::string const& getClassname() const;
 
 		/**
-		*	get plugin filename
-		*
-		*	@return:				plugin's dll filename
-		*/
-		std::string const& getFilename() const;
-
-		/**
 		*	get plugin version
 		*
 		*	@return:				plugin's version
@@ -119,22 +114,7 @@ namespace _2Real
 		PluginMetadata::Version const& getVersion() const;
 
 		/**
-		*	returns string with plugin information
-		*
-		*	@return:				info
-		*/
-		const std::string info() const;
-
-		/**
 		*	add setup parameter
-		*
-		*	@param name:			parameter's name
-		*	@param type:			parameter's keyword
-		*/
-		void addSetupParameter(std::string const& name, std::string const& keyword);
-
-		/**
-		*	add setup parameter without keyword
 		*
 		*	@param name:			parameter's name
 		*/
@@ -145,40 +125,74 @@ namespace _2Real
 		}
 
 		/**
-		*	true if the metadata contains the parameter metadata for a setup parameter with name
-		*/
-		bool containsParameterMetadata(std::string const& name) const;
-
-		/**
-		*	returns service metadata
-		*/
-		ParameterMetadata const& getParameterMetadata(std::string const& name) const;
-
-		/**
 		*	add metadata
 		*
 		*	@param name:			service name
 		*	@return:				service metadata
 		*/
-		ServiceMetadata & addServiceMetadata(std::string const& name);
+		void addServiceMetadata(std::string const& name);
 
 		/**
-		*	true if the metadata contains the service metadata for a service with name
+		*	set service description
 		*/
-		bool containsServiceMetadata(std::string const& name) const;
+		void setDescription(std::string const& service, std::string const& description);
 
 		/**
-		*	returns service metadata
+		*	add service setup parameter
 		*/
-		ServiceMetadata const& getServiceMetadata(std::string const& name) const;
+		template< typename T >
+		void addSetupParameter(std::string const& service, std::string const& name)
+		{
+			addSetupParameterByType(service, name, typeid(T).name());
+		}
+
+		/**
+		*	add service input slot
+		*/
+		template< typename T >
+		void addInputSlot(std::string const& service, std::string const& name)
+		{
+			addInputSlotByType(service, name, typeid(T).name());
+		}
+
+		/**
+		*	add service output slot
+		*/
+		template< typename T >
+		void addOutputSlot(std::string const& service, std::string const& name)
+		{
+			addOutputSlotByType(service, name, typeid(T).name());
+		}
+
+		const std::string getInfoString() const;
 
 	private:
 
 		friend class Plugin;
+		friend class MetadataReader;
 
-		PluginMetadata(std::string const& classname, std::string const& directory, StringMap const& types);
+		PluginMetadata(std::string const& classname, std::string const& directory, StringMap const& allowedTypes);
 
+		const std::string lookupKeyword(std::string const& type) const;
+
+		void addSetupParameterByKey(std::string const& name, std::string const& keyword);
+		void addSetupParameterByKey(std::string const& service, std::string const& name, std::string const& keyword);
+		void addInputSlotByKey(std::string const& service, std::string const& name, std::string const& keyword);
+		void addOutputSlotByKey(std::string const& service, std::string const& name, std::string const& keyword);
+		
 		void addSetupParameterByType(std::string const& name, std::string const& type);
+		void addSetupParameterByType(std::string const& service, std::string const& name, std::string const& type);
+		void addInputSlotByType(std::string const& service, std::string const& name, std::string const& type);
+		void addOutputSlotByType(std::string const& service, std::string const& name, std::string const& type);
+		
+		ServiceMetadata const& getServiceMetadata(std::string const& name) const;
+		ParameterMetadata const& getParameterMetadata(std::string const& name) const;
+		ServiceMetadata & getServiceMetadata(std::string const& name);
+		ParameterMetadata & getParameterMetadata(std::string const& name);
+		bool containsServiceMetadata(std::string const& name) const;
+		const std::list< std::string > getServices() const;
+		bool containsParameterMetadata(std::string const& name) const;
+		const std::list< std::string > getSetupParameters() const;
 
 		std::string				const m_Classname;
 		std::string				const m_InstallDirectory;
@@ -191,5 +205,55 @@ namespace _2Real
 		ParameterDataMap		m_SetupParameters;
 
 	};
+
+	inline void PluginMetadata::setDescription(std::string const& desc)
+	{
+		m_Description = desc;
+	}
+
+	inline void PluginMetadata::setVersion(Version const& version)
+	{
+		m_Version = version;
+	}
+
+	inline void PluginMetadata::setAuthor(std::string const& author)
+	{
+		m_Author = author;
+	}
+
+	inline void PluginMetadata::setContact(std::string const& contact)
+	{
+		m_Contact = contact;
+	}
+
+	inline std::string const& PluginMetadata::getClassname() const
+	{
+		return m_Classname;
+	}
+
+	inline std::string const& PluginMetadata::getInstallDirectory() const
+	{
+		return m_InstallDirectory;
+	}
+
+	inline std::string const& PluginMetadata::getDescription() const
+	{
+		return m_Description;
+	}
+
+	inline std::string const& PluginMetadata::getAuthor() const
+	{
+		return m_Author;
+	}
+
+	inline std::string const& PluginMetadata::getContact() const
+	{
+		return m_Contact;
+	}
+
+	inline Version const& PluginMetadata::getVersion() const
+	{
+		return m_Version;
+	}
 
 }

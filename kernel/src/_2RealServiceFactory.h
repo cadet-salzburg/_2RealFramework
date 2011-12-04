@@ -19,30 +19,28 @@
 
 #pragma once
 
-#include "_2RealEngine.h"
-
 #include <string>
 
 namespace _2Real
 {
 
-	class IService;
-	typedef IService *const (*ServiceCreator)(void);
+	class Identifier;
+	class Engine;
 	class Plugin;
 	class SystemGraph;
+	class Typetable;
 
 	class ServiceFactory
 	{
 
 	public:
 
-		ServiceFactory(Engine &engine);
-
+		ServiceFactory(Engine const& engine);
 		const Identifier createService(std::string const& name, Plugin const& plugin, std::string const& service, SystemGraph &system);
 
 	private:
 
-		Engine		&m_Engine;
+		Engine		const& m_Engine;
 
 	};
 

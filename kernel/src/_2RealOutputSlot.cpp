@@ -26,7 +26,7 @@
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, SharedAny init) :
+	OutputSlot::OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, EngineData init) :
 		IOSlot(id, service, type, key)
 	{
 		this->init(init);
@@ -36,7 +36,7 @@ namespace _2Real
 	{
 	}
 
-	void OutputSlot::init(SharedAny const& initialData)
+	void OutputSlot::init(EngineData const& initialData)
 	{
 		m_WriteData = initialData;
 		m_IsInitialized = true;

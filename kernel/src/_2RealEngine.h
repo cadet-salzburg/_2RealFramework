@@ -25,15 +25,40 @@
 */
 #pragma warning(disable:4503)
 
-#include "_2RealSharedAny.h"
-#include "_2RealData.h"
+//#include "_2RealEngineData.h"
+//#include "_2RealData.h"
+#include "_2RealTypetable.h"
+#include "_2RealServiceFactory.h"
+#include "_2RealProductionGraphs.h"
 
 #include "Poco/Timestamp.h"
 
-#include <fstream>
-
 namespace _2Real
 {
+
+	class Timer
+	{
+
+	public:
+
+		Timer();
+		long getTimestamp() const;
+
+	private:
+
+		Poco::Timestamp		m_Timer;
+
+	};
+
+	inline Timer::Timer()
+	{
+		m_Timer.update();
+	}
+
+	inline long Timer::getTimestamp() const
+	{
+		return (long)m_Timer.elapsed();
+	}
 
 	class Data;
 	class RunnableException;
@@ -41,10 +66,7 @@ namespace _2Real
 	typedef void (*ExceptionCallback)(RunnableException &exception);
 	typedef void (*DataCallback)(Data &data);
 
-	class ServiceFactory;
-	class ProductionGraphs;
 	class Identifier;
-	class TypeTable;
 	class OutputListener;
 	class ExceptionListener;
 	
@@ -53,51 +75,42 @@ namespace _2Real
 
 	public:
 
-		static Engine *const instance();
+		static Engine & instance();
 
-		TypeTable & types()
-		{
-			return *m_Types;
-		}
+		Typetable const&		types() const;
+		Timer const&			timer() const;
 
-		TypeTable const& types() const
-		{
-			return *m_Types;
-		}
+		const Identifier		createSystem(std::string const& name);
+		void					destroySystem(Identifier const& id);
+		void					setSystemLogfile(std::string const& file, Identifier const& system);
+		void					setSystemDirectory(std::string const& directory, Identifier const& system);
 
-		std::ofstream & getLogStream()
-		{
-			return m_LogFile;
-		}
-
-		const Identifier createSystem(std::string const& name);
-		void destroySystem(Identifier const& id);
+		//void destroy(Identifier const& _id, Identifier const& _system);
 		
-		const Identifier load(std::string const& name, std::string const& dir, std::string const& file, std::string const& classname, Identifier const& system);
+		const Identifier load(std::string const& name, std::string const& classname, Identifier const& system);
 		void setup(Identifier const& id, Identifier const& system);
 
-		void dumpPluginInfo(Identifier const& plugin, Identifier const& system) const;
+		const std::string getInfo(Identifier const& plugin, Identifier const& system) const;
 		
 		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
 		void setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system);
 
-		void setValue(Identifier const& entity, std::string const& name, SharedAny any, std::string const& type, Identifier const& system);
+		void setValue(Identifier const& entity, std::string const& name, EngineData any, std::string const& type, Identifier const& system);
 
-		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
-		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
-		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
-		//void append(Identifier const& _dst, Identifier const& _src, Identifier const& _system);
-		
-		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
 		void linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system);
 
-		void start(Identifier const& id, Identifier const& system);
-		//void startAll(Identifier const& _system);
-		void stop(Identifier const& id, Identifier const& system);
-		//void stopAll(Identifier const& _system);
-		
-		//void destroy(Identifier const& _id, Identifier const& _system);
+		/**
+		*	functions for running services etc
+		*/
+		void start(Identifier const& runnable, Identifier const& system);
+		void startAll(Identifier const& system);
+		void stop(Identifier const& runnable, Identifier const& system);
+		void stopAll(Identifier const& system);
+		//void update(Identifier const& runnable, unsigned int const& count, Identifier const& system);
 
+		/**
+		*	functions for registering exception & data callbacks
+		*/
 		void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
 		void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
 		void registerToException(ExceptionCallback callback, Identifier const& system);
@@ -107,23 +120,36 @@ namespace _2Real
 		void registerToException(ExceptionListener &listener, Identifier const& system);
 		void unregisterFromException(ExceptionListener &listener, Identifier const& system);
 
+		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
+		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
+		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
+		//void append(Identifier const& _dst, Identifier const& _src, Identifier const& _system);
+		
+		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
+
 	private:
 
 		template< typename T >
 		friend class SingletonHolder;
 
 		Engine();
-		Engine(const Engine &_src);
-		Engine& operator=(const Engine &_src);
 		~Engine();
 
-		ServiceFactory			*m_Factory;
-		ProductionGraphs		*m_Graphs;
-		TypeTable				*m_Types;
-		Poco::Timestamp			m_Timer;
-
-		std::ofstream			m_LogFile;
+		ServiceFactory			m_Factory;
+		ProductionGraphs		m_Graphs;
+		Typetable				m_Types;
+		Timer					m_Timer;
 
 	};
+
+	inline Typetable const& Engine::types() const
+	{
+		return m_Types;
+	}
+
+	inline Timer const& Engine::timer() const
+	{
+		return m_Timer;
+	}
 
 }

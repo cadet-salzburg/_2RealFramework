@@ -18,45 +18,72 @@
 */
 
 #include "_2RealProductionGraphs.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealEngine.h"
+#include "_2RealSystemGraph.h"
+#include "_2RealTypetable.h"
 
 #include <iostream>
 #include <sstream>
 
 namespace _2Real
 {
-	ProductionGraphs::ProductionGraphs(Engine &engine) :
-		m_Engine(engine),
+
+	ProductionGraphs::ProductionGraphs(Engine const& engine) :
+		m_Engine(engine),	//do not touch anywhere else in ctor
 		m_Systems()
 	{
 	}
 
 	ProductionGraphs::~ProductionGraphs()
 	{
-		for (SystemGraphTable::iterator it = m_Systems.begin(); it != m_Systems.end(); it++)
+		try
 		{
-			Identifier id;
+			if (m_Systems.size() > 0)
+			{
+				clearSystems();
+			}
+		}
+		catch(...)
+		{
+			std::cout << "error on production graphs destruction" << std::endl;
+		}
+	}
+
+	void ProductionGraphs::clearSystems()
+	{
+		std::ostringstream msg;
+		bool error = false;
+
+		for (SystemGraphTable::iterator it = m_Systems.begin(); it != m_Systems.end(); ++it)
+		{
+			Identifier id = it->first;
+
 			try
 			{
-				id = it->first;
-				delete it->second;
+				it->second->shutdown();
 			}
-			catch (_2Real::Exception &e)
+			catch (Exception &e)
 			{
-				m_Engine.getLogStream() << "error on system graph destruction:" << std::endl << id << std::endl << e.what() << std::endl;
+				error = true;
+				msg << "exception on production graph shutdown: " << id << " " << e.what() << std::endl;
 			}
-			catch (...)
-			{
-				m_Engine.getLogStream() << "error on system graph destruction:" << std::endl << id << std::endl;
-			}
+
+			delete it->second;
+		}
+
+		m_Systems.clear();
+
+		if (error)
+		{
+			throw Exception(msg.str());
 		}
 	}
 
 	const Identifier ProductionGraphs::createSystemGraph(std::string const& name)
 	{
 		const Identifier id = Entity::createIdentifier(name, "system");
-		SystemGraph *graph = new SystemGraph(id, m_Engine);
+		StringMap const& allowedTypes = m_Engine.types().getLookupTable();
+		SystemGraph *graph = new SystemGraph(id, allowedTypes);
 		m_Systems.insert(NamedSystemGraph(id, graph));
 		return id;
 	}
@@ -65,20 +92,16 @@ namespace _2Real
 	{
 		SystemGraphTable::iterator it = m_Systems.find(id);
 
-		if (it == m_Systems.end())
+		if (it != m_Systems.end())
 		{
-			std::ostringstream msg;
-			msg << "internal error: system " << id.name() << " not found in systems";
-			throw _2Real::Exception(msg.str());
+			SystemGraph *nirvana = it->second;
+			nirvana->shutdown();
+			delete nirvana;
+			m_Systems.erase(it);
 		}
-
-		SystemGraph *nirvana = it->second;
-
-		delete nirvana;
-		m_Systems.erase(it);
 	}
 
-	const bool ProductionGraphs::contains(Identifier const& id) const
+	bool ProductionGraphs::contains(Identifier const& id) const
 	{
 		return m_Systems.find(id) != m_Systems.end();
 	}

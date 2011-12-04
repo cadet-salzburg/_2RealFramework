@@ -18,7 +18,7 @@
 
 #include "_2RealInputHandle.h"
 #include "_2RealInputSlot.h"
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {
@@ -59,12 +59,12 @@ namespace _2Real
 		//input slot is deleted by framework
 	}
 
-	SharedAny InputHandle::newest()
+	EngineData InputHandle::newest()
 	{
 		return m_Input->getNewest().second;
 	}
 
-	SharedAny InputHandle::oldest()
+	EngineData InputHandle::oldest()
 	{
 		return m_Input->getOldest().second;
 	}

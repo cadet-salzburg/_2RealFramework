@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 #include <string>
 
@@ -79,7 +79,7 @@ namespace _2Real
 		ServiceContext(ServiceContext const& src);
 		ServiceContext& operator=(ServiceContext const& src);
 
-		SharedAny			getSetupParameter(std::string const& name);
+		EngineData			getSetupParameter(std::string const& name);
 
 		Service				&m_Service;
 

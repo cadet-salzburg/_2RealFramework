@@ -44,7 +44,7 @@ namespace _2Real
 		return *this;
 	}
 
-	SharedAny ServiceContext::getSetupParameter(std::string const& name)
+	EngineData ServiceContext::getSetupParameter(std::string const& name)
 	{
 		if (m_Service.hasSetupParameter(name))
 		{

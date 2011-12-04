@@ -20,7 +20,7 @@
 
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 #include "Poco/Timestamp.h"
 
@@ -39,7 +39,7 @@ namespace _2Real
 			return *ptr.get();
 		}
 
-		SharedAny const& data() const
+		EngineData const& data() const
 		{
 			return m_Data;
 		}
@@ -55,18 +55,18 @@ namespace _2Real
 		friend class Engine;
 
 		Data() :
-			m_Data(SharedAny()),
+			m_Data(EngineData()),
 			m_Timestamp(Poco::Timestamp())
 		{
 		}
 
-		Data(SharedAny const& data, Poco::Timestamp const& time) :
+		Data(EngineData const& data, Poco::Timestamp const& time) :
 			m_Data(data),
 			m_Timestamp(time)
 		{
 		}
 
-		SharedAny			m_Data;
+		EngineData			m_Data;
 		Poco::Timestamp		m_Timestamp;
 
 	};

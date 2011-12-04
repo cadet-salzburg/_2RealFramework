@@ -50,7 +50,7 @@ namespace _2Real
 		}
 	}
 
-	SharedAny PluginContext::getSetupParameter(std::string const& name)
+	EngineData PluginContext::getSetupParameter(std::string const& name)
 	{
 		if (m_Plugin.hasSetupParameter(name))
 		{

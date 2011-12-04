@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "Poco/Mutex.h"
-
 namespace _2Real
 {
 
@@ -35,62 +33,68 @@ namespace _2Real
 		Entity(Identifier const& id);
 		virtual ~Entity();
 
-		static const Identifier createIdentifier(std::string const& name, std::string const& type);
-		static const Identifier NoEntity();
+		static const Identifier	createIdentifier(std::string const& name, std::string const& type);
+		static const Identifier	NoEntity();
 
-		Identifier const& identifier() const
-		{
-			return m_Id;
-		}
-
-		unsigned int const& id() const
-		{
-			return m_Id.id();
-		}
-
-		std::string const& name() const
-		{
-			return m_Id.name();
-		}
-
-		std::string const& type() const
-		{
-			return m_Id.type();
-		}
-
-		const bool isPlugin() const
-		{
-			return (m_Id.type() == "plugin");
-		}
-
-		const bool isService() const
-		{
-			return (m_Id.type() == "service");
-		}
-
-		const bool isSetupAble() const
-		{
-			return (m_Id.type() == "plugin" || m_Id.type() == "service");
-		}
-
-		const bool isRunnable() const
-		{
-			return (m_Id.type() == "service" || m_Id.type() == "sequence" || m_Id.type() == "synchronization");
-		}
-
-		const bool isGraph() const
-		{
-			 return (m_Id.type() == "sequence"|| m_Id.type() == "synchronization" || m_Id.type() == "system");
-		}
-
+		Identifier const&		identifier() const;
+		unsigned int const&		id() const;
+		std::string const&		name() const;
+		std::string const&		type() const;
+		bool					isPlugin() const;
+		bool					isService() const;
+		bool					isSetupAble() const;
+		bool					isRunnable() const;
+		bool					isGraph() const;
 
 	private:
 
-		const Identifier			m_Id;
-
-		static unsigned int			m_CreationCount;
-		static Poco::FastMutex		m_Mutex;
+		const Identifier		m_Id;
 
 	};
+
+	inline Identifier const& Entity::identifier() const
+	{
+		return m_Id;
+	}
+
+	inline unsigned int const& Entity::id() const
+	{
+		return m_Id.id();
+	}
+
+	inline std::string const& Entity::name() const
+	{
+		return m_Id.name();
+	}
+
+	inline std::string const& Entity::type() const
+	{
+		return m_Id.type();
+	}
+
+	inline bool Entity::isPlugin() const
+	{
+		return (m_Id.type() == "plugin");
+	}
+
+	inline bool Entity::isService() const
+	{
+		return (m_Id.type() == "service");
+	}
+
+	inline bool Entity::isSetupAble() const
+	{
+		return (m_Id.type() == "plugin" || m_Id.type() == "service");
+	}
+
+	inline bool Entity::isRunnable() const
+	{
+		return (m_Id.type() == "service" || m_Id.type() == "sequence" || m_Id.type() == "synchronization");
+	}
+
+	inline bool Entity::isGraph() const
+	{
+		return (m_Id.type() == "sequence"|| m_Id.type() == "synchronization" || m_Id.type() == "system");
+	}
 
 }

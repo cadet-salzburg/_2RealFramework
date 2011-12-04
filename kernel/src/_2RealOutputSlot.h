@@ -40,12 +40,12 @@ namespace _2Real
 
 	public:
 
-		OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, SharedAny init);
+		OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, EngineData init);
 		virtual ~OutputSlot();
 
-		void init(SharedAny const& initialValue);
+		void init(EngineData const& initialValue);
 
-		SharedAny data()
+		EngineData data()
 		{
 			return m_WriteData;
 		}
@@ -60,7 +60,7 @@ namespace _2Real
 
 		mutable Poco::FastMutex					m_Mutex;
 		Data									m_CurrentData;
-		SharedAny								m_WriteData;
+		EngineData								m_WriteData;
 		Poco::BasicEvent< Data >				m_Event;
 
 	};

@@ -20,13 +20,12 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
-#include "_2RealRunnableException.h"
 #include "_2RealData.h"
 #include "_2RealImagebuffer.h"
 
-//#include "GL/glew.h"
-//#include "GL/wglew.h"
-//#include "SDL.h"
+#include "GL/glew.h"
+#include "GL/wglew.h"
+#include "SDL.h"
 
 #include <windows.h>
 #include <iostream>
@@ -38,15 +37,13 @@ using namespace _2Real;
 using namespace std;
 using namespace Poco;
 
-string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
-//string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+//string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 bool run;
 Buffer2D_float tmp;
 Buffer2D_float buffer;
-//GLuint tex;
+GLuint tex;
 FastMutex mutex;
-
-//glew32.lib;opengl32.lib;SDL.lib;SDLmain.lib;
 
 void imgDataAvailable(Data &data)
 {
@@ -152,18 +149,16 @@ int main(int argc, char *argv[])
 
 		cout << "main: SYSTEM CREATED" << endl;
 
-#ifdef _DEBUG
-		//Identifier kinectPlugin = testSystem.load("KINECT", path, "MultiKinectOpenNI_mdd.dll", "MultiKinect");
-		//Identifier imgPlugin = testSystem.load("IMG", path, "ImageProcessing_mdd.dll", "ImageProcessing");
-#else
-		//Identifier kinectPlugin = testSystem.load("kinect plugin", path, "MultiKinectOpenNI_md.dll", "MultiKinectOpenNI");
+		testSystem.setPluginDirectory("C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
+		testSystem.setLogfile("testsystem.txt");
 
+		/**
+		*	assumes that dll name = classname_md.dll for relase or classname_mdd.dll for debug
+		*/
+		//Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
 		//cout << "main: KINECT PLUGIN LOADED" << endl;
-
-		Identifier imgPlugin = testSystem.load("image processing plugin", path, "ImageProcessing_md.dll", "ImageProcessing");
-
+		Identifier imgPlugin = testSystem.load("image processing plugin", "ImageProcessing");
 		cout << "main: IMG PLUGIN LOADED" << endl;
-#endif
 
 		//testSystem.dumpInfo(kinectPlugin);
 		//testSystem.dumpInfo(imgPlugin);

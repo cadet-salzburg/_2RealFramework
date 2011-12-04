@@ -32,7 +32,7 @@ namespace _2Real
 	class SetupParameter;
 	class InputHandle;
 	class OutputHandle;
-	class SharedAny;
+	class EngineData;
 
 	class Service : public Runnable
 	{
@@ -42,7 +42,7 @@ namespace _2Real
 		Service(Identifier const& id, IService *const service, SystemGraph &system);
 		virtual ~Service();
 
-		SharedAny getParameterValue(std::string const& name) const;
+		EngineData getParameterValue(std::string const& name) const;
 		InputHandle createInputHandle(std::string const& name) const;
 		OutputHandle createOutputHandle(std::string const& name) const;
 

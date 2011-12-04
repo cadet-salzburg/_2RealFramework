@@ -18,7 +18,7 @@
 
 #include "_2RealOutputHandle.h"
 #include "_2RealOutputSlot.h"
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {
@@ -59,7 +59,7 @@ namespace _2Real
 		//output slot is deleted by framework
 	}
 
-	SharedAny OutputHandle::data()
+	EngineData OutputHandle::data()
 	{
 		return m_Output->data();
 	}

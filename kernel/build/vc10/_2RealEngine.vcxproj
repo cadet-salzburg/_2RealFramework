@@ -50,11 +50,12 @@
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealTypes.cpp" />
+    <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
+    <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
@@ -89,13 +90,12 @@
     <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
-    <ClInclude Include="..\..\src\_2RealSharedAny.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSynchronization.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
-    <ClInclude Include="..\..\src\_2RealTypes.h" />
+    <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

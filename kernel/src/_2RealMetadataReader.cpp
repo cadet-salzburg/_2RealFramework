@@ -20,6 +20,7 @@
 #include "_2RealMetaDataReader.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealPluginMetadata.h"
+#include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
 
 #include "Poco/SAX/InputSource.h"
@@ -41,14 +42,14 @@ namespace _2Real
 		NamedNodeMap *attributes = node.attributes();
 		if (!attributes)
 		{
-			throw MetadataFormatException("xml node \'" + node.nodeName() + "\' has no attributes");
+			throw XMLFormatException("xml node \'" + node.nodeName() + "\' has no attributes");
 		}
 
 		Node *attrib = attributes->getNamedItem(name);
 		if (!attrib)
 		{
 			attributes->release();
-			throw MetadataFormatException("xml node \'" + node.nodeName() + "\' has no attribute \'" + name + "\'");
+			throw XMLFormatException("xml node \'" + node.nodeName() + "\' has no attribute \'" + name + "\'");
 		}
 
 		return attrib->nodeValue();
@@ -60,7 +61,7 @@ namespace _2Real
 		
 		if (!children)
 		{
-			throw MetadataFormatException("xml node \'" + parent.localName() + "\' has no child nodes");
+			throw XMLFormatException("xml node \'" + parent.localName() + "\' has no child nodes");
 		}
 
 		for (unsigned long i=0; i<children->length(); i++)
@@ -73,7 +74,7 @@ namespace _2Real
 			}
 		}
 
-		throw MetadataFormatException("xml node \'" + parent.localName() + "\' has no child node named \'" + name + "\'");
+		throw XMLFormatException("xml node \'" + parent.localName() + "\' has no child node named \'" + name + "\'");
 	}
 
 	void MetadataReader::processPluginNode(Node &plugin)
@@ -81,7 +82,7 @@ namespace _2Real
 
 		if (m_Metadata.getClassname() != getNodeAttribute("name", plugin))
 		{
-			throw MetadataFormatException("attribute \'name\' of plugin does not match classname");
+			throw XMLFormatException("attribute \'name\' of plugin does not match classname");
 		}
 
 		m_Metadata.setAuthor(getNodeAttribute("author", plugin));
@@ -108,7 +109,7 @@ namespace _2Real
 				{
 					std::string name = getNodeAttribute("name", *param);
 					std::string type = getNodeAttribute("type", *param);
-					m_Metadata.addSetupParameter(name, type);
+					m_Metadata.addSetupParameterByKey(name, type);
 				}
 			}
 		}
@@ -116,8 +117,9 @@ namespace _2Real
 
 	void MetadataReader::processServiceNode(Node &service)
 	{
-		ServiceMetadata &meta = m_Metadata.addServiceMetadata(getNodeAttribute("name", service));
-		meta.setDescription(getNodeAttribute("description", service));
+		std::string serviceName = getNodeAttribute("name", service);
+		m_Metadata.addServiceMetadata(serviceName);
+		m_Metadata.setDescription(serviceName, getNodeAttribute("description", service));
 
 		Node &setup = getChildNode("setup", service);
 		if (setup.hasChildNodes())
@@ -130,7 +132,7 @@ namespace _2Real
 				{
 					std::string name = getNodeAttribute("name", *param);
 					std::string type = getNodeAttribute("type", *param);
-					meta.addSetupParameter(name, type);
+					m_Metadata.addSetupParameterByKey(serviceName, name, type);
 				}
 			}
 		}
@@ -146,7 +148,7 @@ namespace _2Real
 				{
 					std::string name = getNodeAttribute("name", *param);
 					std::string type = getNodeAttribute("type", *param);
-					meta.addInputSlot(name, type);
+					m_Metadata.addInputSlotByKey(serviceName, name, type);
 				}
 			}
 		}
@@ -162,7 +164,7 @@ namespace _2Real
 				{
 					std::string name = getNodeAttribute("name", *param);
 					std::string type = getNodeAttribute("type", *param);
-					meta.addOutputSlot(name, type);
+					m_Metadata.addOutputSlotByKey(serviceName, name, type);
 				}
 			}
 		}
@@ -183,11 +185,11 @@ namespace _2Real
 		NodeList *plugins = document->getElementsByTagName("plugin");
 		if (!plugins)
 		{
-			throw MetadataFormatException("xml element \'plugin\' not found");
+			throw XMLFormatException("xml element \'plugin\' not found");
 		}
 		else if (plugins->length() > 1)
 		{
-			throw MetadataFormatException("xml element \'plugin\' must be unique");
+			throw XMLFormatException("xml element \'plugin\' must be unique");
 		}
 
 		processPluginNode(*(plugins->item(0)));
@@ -195,7 +197,7 @@ namespace _2Real
 		NodeList *services = document->getElementsByTagName("service");
 		if (!services)
 		{
-			throw MetadataFormatException("xml element \'service\' not found");
+			throw XMLFormatException("xml element \'service\' not found - every plugin must export at least one service");
 		}
 
 		for (unsigned long i=0; i<services->length(); i++)

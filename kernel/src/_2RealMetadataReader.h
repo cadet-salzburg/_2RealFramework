@@ -36,6 +36,7 @@ namespace _2Real
 
 	/**
 	*	helper class for reading plugin metadata
+	*	currently, there's some memory leaks in here due to the shitty poco xml documentation
 	*/
 
 	class PluginMetadata;

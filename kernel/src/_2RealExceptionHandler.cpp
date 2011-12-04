@@ -20,7 +20,7 @@
 #include "_2RealData.h"
 #include "_2RealException.h"
 #include "_2RealExceptionListener.h"
-#include "_2RealEngine.h"
+//#include "_2RealEngine.h"
 
 #include "Poco/Delegate.h"
 
@@ -30,15 +30,6 @@ namespace _2Real
 	ExceptionHandler::ExceptionHandler(Identifier const& system) :
 		m_System(system)
 	{
-	}
-
-	ExceptionHandler::~ExceptionHandler()
-	{
-		Engine::instance()->getLogStream() << "exception handler: destructor called\n";
-
-		m_Event.clear();
-
-		Engine::instance()->getLogStream() << "exception handler: destruction complete\n";
 	}
 
 	void ExceptionHandler::registerExceptionCallback(ExceptionCallback callback)

@@ -21,6 +21,7 @@
 #include "_2RealPluginContext.h"
 #include "_2RealException.h"
 #include "_2RealServiceMetadata.h"
+#include "_2RealParameterMetadata.h"
 #include "_2RealSetupParameter.h"
 #include "_2RealSystemGraph.h"
 
@@ -33,7 +34,7 @@ namespace _2Real
 	Plugin::Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const& system) :
 		Entity(id),
 		m_System(system),
-		m_Metadata(classname, directory, m_System.getAllowedTypes()),
+		m_Metadata(classname, directory, system.getAllowedTypes()),
 		m_Activator(NULL),
 		m_IsInitialized(false),
 		m_Services(),
@@ -91,7 +92,6 @@ namespace _2Real
 		}
 
 		return it->second();
-		return NULL;
 	}
 
 	void Plugin::addSetupParameter(SetupParameter *const parameter)
@@ -107,17 +107,17 @@ namespace _2Real
 		m_SetupParameters.insert(NamedParameter(parameter->name(), parameter));
 	}
 
-	const bool Plugin::canExportService(std::string const& name) const
+	bool Plugin::canExportService(std::string const& name) const
 	{
 		return m_Metadata.containsServiceMetadata(name);
 	}
 
-	const bool Plugin::exportsService(std::string const& name) const
+	bool Plugin::exportsService(std::string const& name) const
 	{
 		return (m_Services.find(name) != m_Services.end());
 	}
 
-	const bool Plugin::hasSetupParameter(std::string const& name) const
+	bool Plugin::hasSetupParameter(std::string const& name) const
 	{
 		return (m_SetupParameters.find(name) != m_SetupParameters.end());
 	}
@@ -132,7 +132,7 @@ namespace _2Real
 		return m_Metadata.getServiceMetadata(name);
 	}
 
-	bool const& Plugin::isInitialized() const
+	bool Plugin::isInitialized() const
 	{
 		return m_IsInitialized;
 	}
@@ -163,24 +163,12 @@ namespace _2Real
 		return *(it->second);
 	}
 
-	//SharedAny Plugin::getParameterValue(std::string const& name)
-	//{
-	//	ParameterMap::iterator it = m_SetupParameters.find(name);
-	//	if (it == m_SetupParameters.end())
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "error: parameter" << name << "does not exist";
-	//		throw _2Real::Exception(msg.str());
-	//	}
-
-	//	SharedAny any = (it->second->get());
-	//	return any;
-	//}
-
 	void Plugin::install()
 	{
 		try
 		{
+			std::cout << "loading lib" << std::endl;
+
 			//1st, load dll
 			try
 			{
@@ -191,6 +179,8 @@ namespace _2Real
 				//a poco error occured
 				throw _2Real::Exception(e.what());
 			}
+
+			std::cout << "creating activator" << std::endl;
 
 			//2nd, create plugin activator instance
 			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
@@ -212,8 +202,24 @@ namespace _2Real
 				throw _2Real::Exception(msg.str());
 			}
 
+			std::cout << "read metadata" << std::endl;
+
 			//3rd, read the metadata
 			m_Activator->getMetadata(m_Metadata);
+
+			std::cout << "create setup params" << std::endl;
+
+			//4th, create setup parameters from the metadata
+			std::list< std::string > setupParameters = m_Metadata.getSetupParameters();
+			for (std::list< std::string >::iterator it = setupParameters.begin(); it != setupParameters.end(); it++)
+			{
+				std::string name = *it;
+				const Identifier id = Entity::createIdentifier(name, "plugin setup parameter");
+				std::string key = m_Metadata.getParameterMetadata(name).getType();
+				std::string type = m_System.getAllowedTypes().find(key)->second;
+				SetupParameter *parameter = new SetupParameter(id, type, key);
+				m_SetupParameters.insert(NamedParameter(name, parameter));
+			}
 		}
 		catch (_2Real::Exception &e)
 		{

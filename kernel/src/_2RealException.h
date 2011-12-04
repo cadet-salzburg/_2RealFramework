@@ -73,16 +73,16 @@ namespace _2Real
 	};
 
 	/**
-	*	thrown by any shared any on extraction
+	*
 	*/
 
-	class DatatypeMismatchException : public Exception
+	class BadCastException : public Exception
 	{
 
 	public:
 
-		DatatypeMismatchException(std::string const& t1, std::string const& t2, std::string const& name) :
-			Exception(std::string("datatype mismatch of parameter ").append(name).append(": ").append(t1).append(" vs ").append(t2))
+		BadCastException(std::string const& type1, std::string const& type2) :
+			Exception(std::string("type mismatch : parameter type ").append(type1).append(" vs. template parameter ").append(type2))
 		{
 		}
 
@@ -125,12 +125,24 @@ namespace _2Real
 	*	thrown by metadata reader
 	*/
 
-	class MetadataFormatException : public Exception
+	class XMLFormatException : public Exception
 	{
 
 	public:
 
-		MetadataFormatException(std::string const& message) :
+		XMLFormatException(std::string const& message) :
+			Exception(message)
+		{
+		}
+
+	};
+
+	class MetadataException : public Exception
+	{
+
+	public:
+
+		MetadataException(std::string const& message) :
 			Exception(message)
 		{
 		}

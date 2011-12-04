@@ -40,8 +40,6 @@ namespace _2Real
 
 		ExceptionHandler(Identifier const& system);
 
-		~ExceptionHandler();
-
 		void registerExceptionCallback(ExceptionCallback callback);
 
 		void unregisterExceptionCallback(ExceptionCallback callback);

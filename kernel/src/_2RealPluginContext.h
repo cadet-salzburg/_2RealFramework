@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealSharedAny.h"
+#include "_2RealEngineData.h"
 
 #include <map>
 #include <string>
@@ -76,7 +76,7 @@ namespace _2Real
 		PluginContext(PluginContext const& src);
 		PluginContext& operator=(PluginContext const& src);
 
-		SharedAny			getSetupParameter(std::string const& name);
+		EngineData			getSetupParameter(std::string const& name);
 
 		Plugin				&m_Plugin;
 
