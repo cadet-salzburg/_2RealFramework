@@ -18,9 +18,7 @@
 */
 
 #include "_2RealMetaDataReader.h"
-#include "_2RealServiceMetadata.h"
 #include "_2RealPluginMetadata.h"
-#include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
 
 #include "Poco/SAX/InputSource.h"
@@ -31,6 +29,8 @@
 #include "Poco/DOM/NodeList.h"
 #include "Poco/DOM/NamedNodeMap.h"
 #include "Poco/DOM/AutoPtr.h"
+
+#include <sstream>
 
 using namespace Poco::XML;
 
@@ -175,7 +175,7 @@ namespace _2Real
 	{
 	}
 
-	void MetadataReader::readMetadata()
+	void MetadataReader::processMetadata()
 	{
 		std::string path = m_Metadata.getInstallDirectory() + m_Metadata.getClassname() + ".xml";
 

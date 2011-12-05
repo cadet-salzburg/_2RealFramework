@@ -28,38 +28,14 @@ namespace _2Real
 	{
 	}
 
-	PluginContext::PluginContext(PluginContext const& src) :
-		m_Plugin(src.m_Plugin)
-	{
-	}
-
-	PluginContext& PluginContext::operator=(PluginContext const& src) 
-	{
-		return *this;
-	}
-
 	void PluginContext::registerService(std::string const& name, ServiceCreator creator)
 	{
-		if (m_Plugin.canExportService(name) && !m_Plugin.exportsService(name))
-		{
-			m_Plugin.registerService(name, creator);
-		}
-		else
-		{
-			throw InvalidServiceException(name);
-		}
+		m_Plugin.registerService(name, creator);
 	}
 
 	EngineData PluginContext::getSetupParameter(std::string const& name)
 	{
-		if (m_Plugin.hasSetupParameter(name))
-		{
-			return m_Plugin.getSetupParameter(name).get();
-		}
-		else
-		{
-			throw InvalidParameterException("setup parameter", name);
-		}
+		return m_Plugin.getSetupParameter(name).get();
 	}
 
 }

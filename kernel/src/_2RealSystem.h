@@ -30,11 +30,11 @@ namespace _2Real
 	class Engine;
 	class Data;
 	class Identifier;
-	class RunnableException;
+	class RunnableError;
 	class OutputListener;
 	class ExceptionListener;
 
-	typedef void (*ExceptionCallback)(RunnableException &exception);
+	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
 
 	class System

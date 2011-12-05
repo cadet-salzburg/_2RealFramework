@@ -16,7 +16,6 @@
 	limitations under the License.
 */
 
-#include "_2RealParameterMetadata.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
@@ -65,8 +64,8 @@ namespace _2Real
 		if (it != m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service setup parameter " << name << " already exists";
-			throw MetadataException(msg.str());
+			msg << "service setup parameter " << name << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		m_SetupParameters.insert(NamedParameterData(name, new ParameterMetadata(name, type)));
@@ -79,8 +78,8 @@ namespace _2Real
 		if (it != m_InputSlots.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service input slot " << name << " already exists";
-			throw MetadataException(msg.str());
+			msg << "service input slot " << name << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		m_InputSlots.insert(NamedParameterData(name, new ParameterMetadata(name, type)));
@@ -93,8 +92,8 @@ namespace _2Real
 		if (it != m_OutputSlots.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service output slot " << name << " already exists";
-			throw MetadataException(msg.str());
+			msg << "service output slot " << name << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		m_OutputSlots.insert(NamedParameterData(name, new ParameterMetadata(name, type)));

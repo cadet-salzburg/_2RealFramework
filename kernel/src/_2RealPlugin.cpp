@@ -19,14 +19,15 @@
 
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
-#include "_2RealException.h"
+#include "_2RealMetadata.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealSetupParameter.h"
 #include "_2RealSystemGraph.h"
+#include "_2RealException.h"
 
-#include <iostream>
-#include <sstream>
+//#include <iostream>
+//#include <sstream>
 
 namespace _2Real
 {
@@ -74,8 +75,8 @@ namespace _2Real
 		if (it != m_Services.end())
 		{
 			std::ostringstream msg;
-			msg << "error: service " << name << " was already exported";
-			throw _2Real::Exception(msg.str());
+			msg << "service " << name << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		m_Services.insert(NamedTemplate(name, service));
@@ -88,7 +89,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "internal error: plugin " << this->name() << " does not export service " << name;
-			throw _2Real::Exception(msg.str());
+			throw Exception(msg.str());
 		}
 
 		return it->second();
@@ -101,7 +102,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "internal error: parameter" << parameter->name() << " already exists";
-			throw _2Real::Exception(msg.str());
+			throw Exception(msg.str());
 		}
 
 		m_SetupParameters.insert(NamedParameter(parameter->name(), parameter));
@@ -143,8 +144,8 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "error: parameter" << name << "does not exist";
-			throw _2Real::Exception(msg.str());
+			msg << "plugin setup parameter" << name << "not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -156,8 +157,8 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "error: parameter" << name << "does not exist";
-			throw _2Real::Exception(msg.str());
+			msg << "plugin setup parameter" << name << "not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -167,8 +168,6 @@ namespace _2Real
 	{
 		try
 		{
-			std::cout << "loading lib" << std::endl;
-
 			//1st, load dll
 			try
 			{
@@ -179,8 +178,6 @@ namespace _2Real
 				//a poco error occured
 				throw _2Real::Exception(e.what());
 			}
-
-			std::cout << "creating activator" << std::endl;
 
 			//2nd, create plugin activator instance
 			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
@@ -199,15 +196,12 @@ namespace _2Real
 			{
 				std::ostringstream msg;
 				msg << "error: could not load dll";
-				throw _2Real::Exception(msg.str());
+				throw Exception(msg.str());
 			}
 
-			std::cout << "read metadata" << std::endl;
-
 			//3rd, read the metadata
-			m_Activator->getMetadata(m_Metadata);
-
-			std::cout << "create setup params" << std::endl;
+			Metadata metadata(m_Metadata);
+			m_Activator->getMetadata(metadata);
 
 			//4th, create setup parameters from the metadata
 			std::list< std::string > setupParameters = m_Metadata.getSetupParameters();
@@ -239,7 +233,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "internal error: setup failed";
-			throw _2Real::Exception(msg.str());
+			throw Exception(msg.str());
 		}
 
 		PluginContext context(*this);

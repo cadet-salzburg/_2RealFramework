@@ -50,6 +50,16 @@ namespace _2Real
 		m_SetupParameters.clear();
 	}
 
+	void PluginMetadata::checkKeyword(std::string const& keyword) const
+	{
+		if (m_AllowedTypes.find(keyword) == m_AllowedTypes.end())
+		{
+			std::ostringstream msg;
+			msg << "keyword: " << keyword << " is not among accepted parameter keywords";
+			throw XMLFormatException(msg.str());
+		}
+	}
+
 	const std::string PluginMetadata::lookupKeyword(std::string const& type) const
 	{
 		std::string keyword = "";
@@ -65,8 +75,8 @@ namespace _2Real
 		if (keyword == "")
 		{
 			std::ostringstream msg;
-			msg << "metadata error: " << type << " is not accepted as parameter type";
-			throw MetadataException(msg.str());
+			msg << "type " << type << " is not accepted as parameter type";
+			throw InvalidTypeException(msg.str());
 		}
 
 		return keyword;
@@ -79,8 +89,8 @@ namespace _2Real
 		if (it != m_Services.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service " << name << " already exists";
-			throw MetadataException(msg.str());
+			msg << "service " << name << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		ServiceMetadata *metadata = new ServiceMetadata(name, m_AllowedTypes);
@@ -99,8 +109,8 @@ namespace _2Real
 		if (it != m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: setup parameter " << setupName << " already exists";
-			throw MetadataException(msg.str());
+			msg << "plugin setup parameter " << setupName << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		m_SetupParameters.insert(NamedParameterData(setupName, new ParameterMetadata(setupName, keyword)));
@@ -182,8 +192,8 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: setup parameter " << name << " not found";
-			throw MetadataException(msg.str());
+			msg << "plugin setup parameter " << name << " not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -196,8 +206,8 @@ namespace _2Real
 		if (it == m_Services.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service " << name << " not found";
-			throw MetadataException(msg.str());
+			msg << "service " << name << " not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -210,8 +220,8 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: setup parameter " << name << " not found";
-			throw MetadataException(msg.str());
+			msg << "plugin setup parameter " << name << " not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -224,8 +234,8 @@ namespace _2Real
 		if (it == m_Services.end())
 		{
 			std::ostringstream msg;
-			msg << "metadata error: service " << name << " not found";
-			throw MetadataException(msg.str());
+			msg << "service " << name << " not found";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);

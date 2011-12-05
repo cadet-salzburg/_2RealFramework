@@ -23,18 +23,6 @@
 namespace _2Real
 {
 
-	class BadHandleException : public Exception
-	{
-
-	public:
-
-		BadHandleException(std::string const& name) :
-			Exception(std::string("handle : ").append(name).append(" is uninitialized"))
-			{
-			}
-
-	};
-
 	class ParameterHandle
 	{
 

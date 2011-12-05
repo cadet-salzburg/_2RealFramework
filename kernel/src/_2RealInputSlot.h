@@ -29,20 +29,17 @@
 namespace _2Real
 {
 
-	/**
-	*	represents an input slot of a service
-	*/
-
 	class OutputSlot;
 
-	typedef std::pair< Poco::Timestamp, EngineData >		TimestampedData;
+	typedef std::pair< long, EngineData >	TimestampedData;
+	typedef std::map< long, EngineData >	DataTable;
 
 	class InputSlot : public IOSlot, public OutputListener
 	{
 
 	public:
 
-		InputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key);
+		InputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword);
 		~InputSlot();
 
 		void reset();
@@ -68,8 +65,6 @@ namespace _2Real
 		const TimestampedData getData() const;
 
 	private:
-
-		typedef std::map< Poco::Timestamp, EngineData >		DataTable;
 
 		mutable Poco::FastMutex		m_Mutex;
 		DataTable					m_ReceivedTable;

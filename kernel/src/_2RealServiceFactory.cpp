@@ -63,7 +63,7 @@ namespace _2Real
 			std::string name = it->first;
 			std::string key = it->second;
 			const Identifier id = Entity::createIdentifier(name, "service input slot");
-			InputSlot *in = new InputSlot(id, runnable, types.getTypename(key), key);
+			InputSlot *in = new InputSlot(id, *runnable, types.getTypename(key), key);
 			runnable->addInputSlot(*in);
 		}
 
@@ -74,7 +74,7 @@ namespace _2Real
 			EngineData initialData;
 			types.createEngineData(key, initialData);
 			const Identifier id = Entity::createIdentifier(name, "service output slot");
-			OutputSlot *out = new OutputSlot(id, runnable, types.getTypename(key), key, initialData);
+			OutputSlot *out = new OutputSlot(id, *runnable, types.getTypename(key), key, initialData);
 			runnable->addOutputSlot(*out);
 		}
 

@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <map>
 #include <string>
 
 namespace Poco
@@ -34,11 +33,6 @@ namespace Poco
 namespace _2Real
 {
 
-	/**
-	*	helper class for reading plugin metadata
-	*	currently, there's some memory leaks in here due to the shitty poco xml documentation
-	*/
-
 	class PluginMetadata;
 
 	class MetadataReader
@@ -46,27 +40,17 @@ namespace _2Real
 
 	public:
 
-		/**
-		*	creates plugin metadata from xml file
-		*
-		*	reads xml file located in plugin directory with given name,
-		*	attempts to build plugin metadata from information
-		*	contained in the file. if successful, returns metadata.
-		*
-		*	@param info:			metadata initialized with classname & install directory
-		*	@throw:					MetadataFormatException
-		*/
 		MetadataReader(PluginMetadata &metadata);
-		void readMetadata();
+
+		void					processMetadata();
+		void					processPluginNode(Poco::XML::Node &plugin);
+		void					processServiceNode(Poco::XML::Node &ervice);
+		Poco::XML::Node &		getChildNode(std::string const& name, Poco::XML::Node &parent);
+		const std::string		getNodeAttribute(std::string const& name, Poco::XML::Node &node);
 
 	private:
 
-		PluginMetadata							&m_Metadata;
-
-		void									processPluginNode(Poco::XML::Node &plugin);
-		void									processServiceNode(Poco::XML::Node &ervice);
-		Poco::XML::Node &						getChildNode(std::string const& name, Poco::XML::Node &parent);
-		const std::string						getNodeAttribute(std::string const& name, Poco::XML::Node &node);
+		PluginMetadata			&m_Metadata;
 
 	};
 

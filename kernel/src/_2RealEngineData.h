@@ -3,7 +3,7 @@
 #include "_2RealException.h"
 
 #include <typeinfo>
-#include <iostream>
+#include <sstream>
 
 #include "Poco/SharedPtr.h"
 
@@ -158,7 +158,9 @@ namespace _2Real
 		}
 		else
 		{
-			throw BadCastException(any.type().name(), typeid(T).name());
+			std::ostringstream msg;
+			msg << "type of data " << any.type().name() << " does not match template parameter " << typeid(T).name() << std::endl;
+			throw TypeMismatchException(msg.str());
 		}
 	}
 

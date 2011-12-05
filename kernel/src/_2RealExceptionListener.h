@@ -21,7 +21,7 @@
 namespace _2Real
 {
 
-	class RunnableException;
+	class RunnableError;
 
 	class ExceptionListener
 	{
@@ -29,7 +29,7 @@ namespace _2Real
 	public:
 
 		virtual ~ExceptionListener() = 0;
-		virtual void receiveException(RunnableException &exception) = 0;
+		virtual void receiveException(RunnableError &exception) = 0;
 
 	};
 

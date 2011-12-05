@@ -34,6 +34,13 @@ namespace _2Real
 	class OutputHandle;
 	class EngineData;
 
+	typedef std::pair< std::string, InputSlot * >		NamedInput;
+	typedef std::map< std::string, InputSlot * >		InputMap;
+	typedef std::pair< std::string, OutputSlot * >		NamedOutput;
+	typedef std::map< std::string, OutputSlot * >		OutputMap;
+	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
+	typedef std::map< std::string, SetupParameter * >	ParameterMap;
+
 	class Service : public Runnable
 	{
 
@@ -74,13 +81,6 @@ namespace _2Real
 		void setUpdateRate(float const& updatesPerSecond);
 
 	private:
-
-		typedef std::pair< std::string, InputSlot * >		NamedInput;
-		typedef std::map< std::string, InputSlot * >		InputMap;
-		typedef std::pair< std::string, OutputSlot * >		NamedOutput;
-		typedef std::map< std::string, OutputSlot * >		OutputMap;
-		typedef std::pair< std::string, SetupParameter * >	NamedParameter;
-		typedef std::map< std::string, SetupParameter * >	ParameterMap;
 
 		InputMap				m_InputSlots;
 		OutputMap				m_OutputSlots;

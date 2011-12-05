@@ -9,7 +9,7 @@
 #include <vector>
 
 /**
-*
+*	this class in still experimental
 */
 
 namespace _2Real
@@ -17,11 +17,6 @@ namespace _2Real
 
 	class PixelbufferException;
 
-	/**
-	*	convenience class for storing images
-	*	this class can not be sent by framework, but can be copied into a pixelbuffer
-	*	which then takes ownership of the data
-	*/
 	template< typename T >
 	class Imagebuffer
 	{
@@ -185,8 +180,7 @@ namespace _2Real
 	class ImagebufferException : public Exception
 	{
 
-		template< typename T >
-		friend class Imagebuffer;
+	public:
 
 		ImagebufferException(std::string const& message) :
 			Exception(message)
@@ -417,8 +411,7 @@ namespace _2Real
 	class PixelbufferException : public Exception
 	{
 
-		template< typename T >
-		friend class Pixelbuffer;
+	public:
 
 		PixelbufferException(std::string const& message) :
 			Exception(message)

@@ -58,8 +58,6 @@ namespace _2Real
 		m_Types(*this),
 		m_Timer()
 	{
-		std::cout << "hello" << std::endl;
-
 		m_Types.registerType< char >("char");
 		m_Types.registerType< unsigned char >("unsigned char");
 		m_Types.registerType< short >("short");
@@ -81,31 +79,26 @@ namespace _2Real
 	Engine::~Engine()
 	{
 		m_Graphs.clearSystems();
-		//m_Types.clearTables();
 	}
 
 	const Identifier Engine::createSystem(std::string const& name)
 	{
-		const Identifier result = m_Graphs.createSystemGraph(name);
-		return result;
+		return m_Graphs.createSystemGraph(name);
 	}
 
 	void Engine::setSystemLogfile(std::string const& file, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-
 		nirvana.setLogfile(file);
 		if (!nirvana.isLoggingEnabled())
 		{
 			std::cout << "could not start logging into file: " << file << std::endl;
-			std::cout << "choose another logfile" << std::endl;
 		}
 	}
 
 	void Engine::setSystemDirectory(std::string const& directory, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-
 		nirvana.setPluginDirectory(directory);
 	}
 
@@ -126,30 +119,29 @@ namespace _2Real
 
 		if (!id.isSetupAble())
 		{
-			//throw InvalidIdentifierException();
+			std::ostringstream msg;
+			msg << "engine::setup " << id.name() << " is a " << id.type() << ", plugin or service expected" << std::endl;
+			throw InvalidIdentifierException(msg.str());
 		}
 
-		if (nirvana.plugins().contains(id))
+		if (nirvana.contains(id) && id.isPlugin())
 		{
+			//silently fails if called more than once
 			Plugin &plugin = nirvana.plugins().getPlugin(id);
 			plugin.setup();
 		}
-		else if (nirvana.contains(id))
+		else if (nirvana.contains(id) && id.isService())
 		{
+			//this actually can be called more than once
 			Runnable &child = nirvana.getChild(id);
-			if (child.isService())
-			{
-				Service &service = static_cast< Service & >(child);
-				service.checkConfiguration();
-			}
-			else
-			{
-				//internal exception
-			}
+			Service &service = static_cast< Service & >(child);
+			service.checkConfiguration();
 		}
 		else
 		{
-			//invalid system exception
+			std::ostringstream msg;
+			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 	}
 
@@ -159,15 +151,21 @@ namespace _2Real
 
 		if (!id.isPlugin())
 		{
+			std::ostringstream msg;
+			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", plugin expected" << std::endl;
+			throw InvalidIdentifierException(msg.str());
 		}
 
-		if (nirvana.plugins().contains(id))
+		if (nirvana.contains(id))
 		{
-			PluginMetadata const& data = nirvana.plugins().getPlugin(id).getMetadata();
-			return data.getInfoString();
+			//~~
+			return nirvana.plugins().getPlugin(id).getMetadata().getInfoString();
 		}
 		else
 		{
+			std::ostringstream msg;
+			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 	}
 
@@ -175,7 +173,14 @@ namespace _2Real
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.plugins().contains(id))
+		if (!id.isPlugin())
+		{
+			std::ostringstream msg;
+			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", plugin expected" << std::endl;
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		if (nirvana.contains(id))
 		{
 			Plugin &plugin = nirvana.plugins().getPlugin(id);
 			
@@ -185,10 +190,16 @@ namespace _2Real
 			}
 			else
 			{
+				std::ostringstream msg;
+				msg << id.type() << " " << id.name() << " does not export service " << service << std::endl;
+				throw NotFoundException(msg.str());
 			}
 		}
 		else
 		{
+			std::ostringstream msg;
+			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return Entity::NoEntity();

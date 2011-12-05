@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	InputSlot::InputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key) :
+	InputSlot::InputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& key) :
 		IOSlot(id, service, type, key),
 		m_Output(NULL)
 	{
@@ -56,7 +56,7 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_ReceivedTable.insert(TimestampedData(data.timestamp(), data.data()));
+		m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
 	}
 
 	const TimestampedData InputSlot::getData() const
@@ -112,7 +112,7 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
 		m_ReceivedTable.clear();
-		m_ReceivedTable.insert(TimestampedData(data.timestamp(), data.data()));
+		m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
 	}
 
 }

@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "_2RealException.h"
 #include "Poco/ClassLibrary.h"
 
 namespace _2Real
@@ -29,7 +28,7 @@ namespace _2Real
 	*	interfcae for plugins
 	*/
 
-	class PluginMetadata;
+	class Metadata;
 	class PluginContext;
 
 	class IPluginActivator
@@ -43,7 +42,7 @@ namespace _2Real
 		*	@param metadata:	PluginMetadata object which can be passed to MetadataReader
 		*	@throw:				MetadataFormatException
 		*/
-		virtual void getMetadata(PluginMetadata &metadata) = 0;
+		virtual void getMetadata(Metadata &metadata) = 0;
 
 		/**
 		*	setup should export services
@@ -58,22 +57,6 @@ namespace _2Real
 	};
 	
 	inline IPluginActivator::~IPluginActivator() {}
-
-	/**
-	*	if anything goes wrong during setup
-	*	a plugin exception should be thrown
-	*/
-	class PluginException : public Exception
-	{
-
-	public:
-
-		PluginException(std::string const& message) :
-			Exception(message)
-		{
-		}
-
-	};
 
 }
 

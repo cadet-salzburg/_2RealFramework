@@ -19,7 +19,6 @@
 #pragma once
 
 #include "_2RealParameter.h"
-#include "_2RealEngineData.h"
 
 namespace _2Real
 {
@@ -35,32 +34,26 @@ namespace _2Real
 
 	public:
 
-		IOSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key);
+		IOSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword);
 		virtual ~IOSlot();
 
-		/**
-		*	returns owning service
-		*/
-		Service *const service()
-		{
-			return m_Service;
-		}
-
-		/**
-		*	returns owning service - const version
-		*/
-		Service const *const service() const
-		{
-			return m_Service;
-		}
+		Service &			service();
+		Service const&		service() const;
 
 	protected:
 
-		/**
-		*	owning service
-		*/
-		Service					*const m_Service;
+		Service				&m_Service;
 
 	};
+
+	inline Service const& IOSlot::service() const
+	{
+		return m_Service;
+	}
+
+	inline Service & IOSlot::service()
+	{
+		return m_Service;
+	}
 
 }

@@ -152,8 +152,6 @@ void ImageAccumulationService< ImageData >::update()
 		}
 
 		outImage.copy(*m_Image);
-
-		//cout << "ImageAccumulationService: update finished " << endl;
 	}
 	catch (Exception &e)
 	{

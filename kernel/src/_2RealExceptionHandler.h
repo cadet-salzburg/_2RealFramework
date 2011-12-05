@@ -29,9 +29,9 @@ namespace _2Real
 {
 
 	class ExceptionListener;
-	class RunnableException;
+	class RunnableError;
 
-	typedef void (*ExceptionCallback)(RunnableException &exception);
+	typedef void (*ExceptionCallback)(RunnableError &exception);
 
 	class ExceptionHandler
 	{
@@ -52,9 +52,9 @@ namespace _2Real
 
 	private:
 
-		Poco::BasicEvent< RunnableException >	m_Event;
+		Poco::BasicEvent< RunnableError >	m_Event;
 
-		Identifier								const m_System;
+		Identifier							const m_System;
 
 	};
 }

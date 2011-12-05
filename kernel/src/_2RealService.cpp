@@ -221,7 +221,9 @@ namespace _2Real
 		ParameterMap::const_iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service setup parameter " << name << " not found" << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return it->second->get();
@@ -232,7 +234,9 @@ namespace _2Real
 		InputMap::const_iterator it = m_InputSlots.find(name);
 		if (it == m_InputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service input slot " << name << " not found" << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		InputHandle handle(it->second);
@@ -244,7 +248,9 @@ namespace _2Real
 		OutputMap::const_iterator it = m_OutputSlots.find(name);
 		if (it == m_OutputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found" << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		OutputHandle handle(it->second);

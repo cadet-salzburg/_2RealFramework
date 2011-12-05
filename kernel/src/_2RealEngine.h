@@ -30,40 +30,15 @@
 #include "_2RealTypetable.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealProductionGraphs.h"
-
-#include "Poco/Timestamp.h"
+#include "_2RealTimer.h"
 
 namespace _2Real
 {
 
-	class Timer
-	{
-
-	public:
-
-		Timer();
-		long getTimestamp() const;
-
-	private:
-
-		Poco::Timestamp		m_Timer;
-
-	};
-
-	inline Timer::Timer()
-	{
-		m_Timer.update();
-	}
-
-	inline long Timer::getTimestamp() const
-	{
-		return (long)m_Timer.elapsed();
-	}
-
 	class Data;
-	class RunnableException;
+	class RunnableError;
 
-	typedef void (*ExceptionCallback)(RunnableException &exception);
+	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
 
 	class Identifier;

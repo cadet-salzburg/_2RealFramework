@@ -119,7 +119,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>..\..\..\bin\</OutDir>
-    <TargetName>ImageProcessing_mdd</TargetName>
+    <TargetName>ImageProcessing_d</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -150,7 +150,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.dll</TargetExt>
-    <TargetName>ImageProcessing_md</TargetName>
+    <TargetName>ImageProcessing</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

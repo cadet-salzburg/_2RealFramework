@@ -83,11 +83,14 @@ namespace _2Real
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
+			(*it)->shutdown();
 			delete *it;
 		}
 
 		m_Children.clear();
 		//m_Threads.clear();
+
+		//m_Plugins.clearPlugins();
 	}
 
 	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
@@ -180,7 +183,7 @@ namespace _2Real
 		return m_Plugins.install(name, classname);
 	}
 
-	const bool SystemGraph::contains(Identifier const& id) const
+	bool SystemGraph::contains(Identifier const& id) const
 	{
 		return ((id.isPlugin() && m_Plugins.contains(id)) || Graph::contains(id));
 	}

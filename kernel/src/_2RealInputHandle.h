@@ -32,6 +32,7 @@ namespace _2Real
 	public:
 
 		InputHandle();
+		InputHandle(InputSlot *slot);
 		InputHandle(InputHandle const& src);
 		InputHandle& operator=(InputHandle const& src);
 		~InputHandle();
@@ -94,10 +95,6 @@ namespace _2Real
 		//}
 
 	private:
-
-		friend class Service;
-
-		InputHandle(InputSlot *slot);
 
 		EngineData		oldest();
 		EngineData		newest();

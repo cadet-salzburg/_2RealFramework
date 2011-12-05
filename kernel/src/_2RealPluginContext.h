@@ -21,7 +21,6 @@
 
 #include "_2RealEngineData.h"
 
-#include <map>
 #include <string>
 
 #include "Poco/SharedPtr.h"
@@ -34,10 +33,10 @@ namespace _2Real
 	*	allows export of services' factory functions
 	*	as well as querying of setup parameters
 	*/
-	
-	class IService;
-	class ServiceFactory;
 
+	class Plugin;
+
+	class IService;
 	typedef IService *const (*ServiceCreator)(void);
 
 	class PluginContext
@@ -45,12 +44,14 @@ namespace _2Real
 
 	public:
 
+		PluginContext(Plugin &plugin);
+
 		/**
 		*	registers a service in the framework
 		*	
 		*	@param name:		name of service
 		*	@param creator:		function used to create a service obj
-		*	@throw:				InvalidServiceException
+		*	@throw:				AlreadyExistsException
 		*/
 		void registerService(std::string const& name, ServiceCreator creator);
 
@@ -59,7 +60,7 @@ namespace _2Real
 		*	
 		*	@param name:		name of a setup parameter
 		*	@return:			constant reference to setup parameter
-		*	@throw:				InvalidParameterException, DatatypeMismatchException
+		*	@throw:				NotFoundException, DatatypeMismatchException
 		*/
 		template< typename Datatype >
 		Datatype const& getParameterValue(std::string const& name)
@@ -69,12 +70,6 @@ namespace _2Real
 		}
 
 	private:
-
-		friend class Plugin;
-
-		PluginContext(Plugin &plugin);
-		PluginContext(PluginContext const& src);
-		PluginContext& operator=(PluginContext const& src);
 
 		EngineData			getSetupParameter(std::string const& name);
 

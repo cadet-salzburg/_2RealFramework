@@ -75,18 +75,18 @@ namespace _2Real
 
 	private:
 
-		ParameterMap			m_SetupParameters;
-		TemplateMap				m_Services;
+		ParameterMap					m_SetupParameters;
+		TemplateMap						m_Services;
 		
-		IPluginActivator		*m_Activator;
-		PluginLoader			m_PluginLoader;
+		IPluginActivator				*m_Activator;
+		PluginLoader					m_PluginLoader;
 
-		std::string				m_File;
-		bool					m_IsInitialized;
+		std::string						m_File;
+		bool							m_IsInitialized;
 
-		PluginMetadata			m_Metadata;
+		PluginMetadata					m_Metadata;
 
-		SystemGraph				const& m_System;
+		SystemGraph						const& m_System;
 
 	};
 

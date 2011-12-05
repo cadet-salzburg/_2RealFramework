@@ -66,14 +66,14 @@ namespace _2Real
 		PluginPool & plugins();
 		PluginPool const& plugins() const;
 
-		const bool isLoggingEnabled() const;
+		bool isLoggingEnabled() const;
 		void setPluginDirectory(std::string const& directory);
 		void setLogfile(std::string const& file);
 		std::ofstream & getLogstream() const;
 		StringMap const& getAllowedTypes() const;
 		void startLogging();
 
-		const bool contains(Identifier const& id) const;
+		bool contains(Identifier const& id) const;
 
 	private:
 
@@ -98,7 +98,7 @@ namespace _2Real
 		return m_Plugins;
 	}
 
-	inline const bool SystemGraph::isLoggingEnabled() const
+	inline bool SystemGraph::isLoggingEnabled() const
 	{
 		return m_Logstream.is_open();
 	}

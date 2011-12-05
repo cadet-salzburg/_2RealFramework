@@ -24,16 +24,12 @@
 namespace _2Real
 {
 
-	/**
-	*	helper class for plugin version
-	*/
-
 	class Version
 	{
 
 	public:
 
-		Version(unsigned int const& major, unsigned int const& minor, unsigned int const& revision);
+		Version(unsigned int major, unsigned int minor, unsigned int revision);
 
 		bool operator==(Version const& rhs);
 		bool operator<(Version const& rhs);
@@ -42,9 +38,9 @@ namespace _2Real
 
 		std::string asString() const;
 
-		unsigned int const& major() const;
-		unsigned int const& minor() const;
-		unsigned int const& revision() const;
+		unsigned int major() const;
+		unsigned int minor() const;
+		unsigned int revision() const;
 
 	private:
 
@@ -54,7 +50,7 @@ namespace _2Real
 
 	};
 
-	inline Version::Version(unsigned int const& major, unsigned int const& minor, unsigned int const& revision) :
+	inline Version::Version(unsigned int major, unsigned int minor, unsigned int revision) :
 		m_Major(major),
 		m_Minor(minor),
 		m_Revision(revision)
@@ -78,17 +74,17 @@ namespace _2Real
 		return result.str();
 	}
 
-	inline unsigned int const& Version::major() const
+	inline unsigned int Version::major() const
 	{
 		return m_Major;
 	}
 
-	inline unsigned int const& Version::minor() const
+	inline unsigned int Version::minor() const
 	{
 		return m_Minor;
 	}
 
-	inline unsigned int const& Version::revision() const
+	inline unsigned int Version::revision() const
 	{
 		return m_Revision;
 	}

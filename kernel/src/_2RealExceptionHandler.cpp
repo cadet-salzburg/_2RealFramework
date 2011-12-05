@@ -19,8 +19,8 @@
 #include "_2RealExceptionHandler.h"
 #include "_2RealData.h"
 #include "_2RealException.h"
+#include "_2RealRunnableError.h"
 #include "_2RealExceptionListener.h"
-//#include "_2RealEngine.h"
 
 #include "Poco/Delegate.h"
 
@@ -54,7 +54,7 @@ namespace _2Real
 
 	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
 	{
-		RunnableException e(exception.what(), sender, m_System);
+		RunnableError e(exception, sender, m_System);
 		m_Event.notify(this, e);
 	}
 }

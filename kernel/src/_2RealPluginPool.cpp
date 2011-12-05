@@ -49,7 +49,7 @@ namespace _2Real
 			}
 			catch (_2Real::Exception &e)
 			{
-				std::cout << e.what() << std::endl;
+				//std::cout << e.what() << std::endl;
 			}
 			catch (...)
 			{
@@ -63,17 +63,20 @@ namespace _2Real
 	{
 		const Identifier id = Entity::createIdentifier(name, "plugin");
 
+/**
+*	currently, assumes that plugins end with _d in debug mode, otherwise classname = dll name
+*/
 #ifdef _DEBUG
-		std::string file = classname + "_mdd.dll";
+		std::string file = classname + "_d.dll";
 #else
-		std::string file = classname + "_md.dll";
+		std::string file = classname + ".dll";
 #endif
 
-		std::cout << "installing: " << m_PluginDirectory << file << std::endl;
+		//std::cout << "installing: " << m_PluginDirectory << file << std::endl;
 
 		Plugin *plugin = new Plugin(id, m_PluginDirectory, file, classname, m_System);
 
-		std::cout << "installing now " << std::endl;
+		//std::cout << "installing now " << file << std::endl;
 
 		plugin->install();
 		m_Plugins.insert(NamedPlugin(id, plugin));

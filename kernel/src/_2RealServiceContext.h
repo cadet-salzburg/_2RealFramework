@@ -26,10 +26,6 @@
 namespace _2Real
 {
 
-	/**
-	*	a service's means of communicating with the framework
-	*/
-
 	class Service;
 	class InputHandle;
 	class OutputHandle;
@@ -39,12 +35,14 @@ namespace _2Real
 
 	public:
 
+		ServiceContext(Service &container);
+
 		/**
 		*	creates an input handle for an input slot
 		*	
 		*	@param name:	name of slot
 		*	@return:		input handle
-		*	@throw:			InvalidParameterException
+		*	@throw:			NotFoundException
 		*/
 		InputHandle getInputHandle(std::string const& name);
 
@@ -53,16 +51,16 @@ namespace _2Real
 		*	
 		*	@param name:	name of slot
 		*	@return:		output handle
-		*	@throw:			InvalidParameterException
+		*	@throw:			NotFoundException
 		*/
 		OutputHandle getOutputHandle(std::string const& name);
 
 		/**
 		*	returns the value of a setup parameter
 		*	
-		*	@param name:		name of a setup parameter
-		*	@return:			constant reference to setup parameter
-		*	@throw:				InvalidParameterException, DatatypeMismatchException
+		*	@param name:	name of a setup parameter
+		*	@return:		constant reference to setup parameter
+		*	@throw:			NotFoundException, DatatypeMismatchException
 		*/
 		template< typename Datatype >
 		Datatype const& getParameterValue(std::string const& name)
@@ -72,12 +70,6 @@ namespace _2Real
 		}
 	
 	private:
-
-		friend class Service;
-
-		ServiceContext(Service &container);
-		ServiceContext(ServiceContext const& src);
-		ServiceContext& operator=(ServiceContext const& src);
 
 		EngineData			getSetupParameter(std::string const& name);
 

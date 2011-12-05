@@ -39,6 +39,7 @@ namespace _2Real
 
 	public:
 
+		ServiceMetadata(std::string const& name, StringMap const& allowedTypes);
 		ServiceMetadata::~ServiceMetadata();
 
 		/**
@@ -127,10 +128,6 @@ namespace _2Real
 		const std::string getInfoString() const;
 
 	private:
-
-		friend class PluginMetadata;
-
-		ServiceMetadata(std::string const& name, StringMap const& allowedTypes);
 
 		/**
 		*	name

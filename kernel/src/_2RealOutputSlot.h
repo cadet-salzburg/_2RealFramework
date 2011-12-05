@@ -32,6 +32,7 @@ namespace _2Real
 	*/
 
 	class OutputListener;
+	class Timer;
 
 	typedef void (*DataCallback)(Data &data);
 
@@ -40,29 +41,29 @@ namespace _2Real
 
 	public:
 
-		OutputSlot(Identifier const& id, Service *const service, std::string const& type, std::string const& key, EngineData init);
-		virtual ~OutputSlot();
+		OutputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword, EngineData initialValue);
 
-		void init(EngineData const& initialValue);
+		EngineData					data();
+		void						update();
 
-		EngineData data()
-		{
-			return m_WriteData;
-		}
-
-		void update();
-		void registerCallback(DataCallback callback);
-		void unregisterCallback(DataCallback callback);
-		void addListener(OutputListener &receiver);
-		void removeListener(OutputListener &receiver);
+		void						registerCallback(DataCallback callback);
+		void						unregisterCallback(DataCallback callback);
+		void						addListener(OutputListener &listener);
+		void						removeListener(OutputListener &listener);
 
 	private:
 
-		mutable Poco::FastMutex					m_Mutex;
-		Data									m_CurrentData;
-		EngineData								m_WriteData;
-		Poco::BasicEvent< Data >				m_Event;
+		Timer						const& m_Timer;
+		mutable Poco::FastMutex		m_Mutex;
+		Data						m_CurrentData;
+		EngineData					m_WriteData;
+		Poco::BasicEvent< Data >	m_Event;
 
 	};
+
+	inline EngineData OutputSlot::data()
+	{
+		return m_WriteData;
+	}
 
 }

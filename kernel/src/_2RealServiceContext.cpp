@@ -21,10 +21,6 @@
 #include "_2RealService.h"
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
-#include "_2RealSetupParameter.h"
-#include "_2RealException.h"
-
-#include <sstream>
 
 namespace _2Real
 {
@@ -34,50 +30,19 @@ namespace _2Real
 	{
 	}
 
-	ServiceContext::ServiceContext(ServiceContext const& src) :
-		m_Service(src.m_Service)
-	{
-	}
-
-	ServiceContext& ServiceContext::operator=(ServiceContext const& src)
-	{
-		return *this;
-	}
-
 	EngineData ServiceContext::getSetupParameter(std::string const& name)
 	{
-		if (m_Service.hasSetupParameter(name))
-		{
-			return m_Service.getSetupParameter(name).get();
-		}
-		else
-		{
-			throw InvalidParameterException("setup parameter", name);
-		}
+		return m_Service.getParameterValue(name);
 	}
 
 	InputHandle ServiceContext::getInputHandle(std::string const& name)
 	{
-		if (m_Service.hasInputSlot(name))
-		{
-			return m_Service.createInputHandle(name);
-		}
-		else
-		{
-			throw InvalidParameterException("input slot", name);
-		}
+		return m_Service.createInputHandle(name);
 	}
 
 	OutputHandle ServiceContext::getOutputHandle(std::string const& name)
 	{
-		if (m_Service.hasOutputSlot(name))
-		{
-			return m_Service.createOutputHandle(name);
-		}
-		else
-		{
-			throw InvalidParameterException("output slot", name);
-		}
+		return m_Service.createOutputHandle(name);
 	}
 
 }

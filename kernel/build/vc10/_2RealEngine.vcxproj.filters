@@ -11,7 +11,6 @@
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp">
       <Filter>Metadata</Filter>
     </ClCompile>
@@ -73,6 +72,10 @@
     <ClCompile Include="..\..\src\_2RealTypetable.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealMetadata.cpp">
+      <Filter>Metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -173,6 +176,11 @@
     <ClInclude Include="..\..\src\_2RealTypetable.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealMetadata.h">
+      <Filter>Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimer.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableError.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

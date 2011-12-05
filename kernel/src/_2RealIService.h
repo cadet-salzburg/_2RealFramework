@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "_2RealException.h"
-
 namespace _2Real
 {
 
@@ -57,21 +55,5 @@ namespace _2Real
 	};
 	
 	inline IService::~IService() {}
-
-	/**
-	*	if anything goes wrong during setup / update / shutdown,
-	*	a service exception should be thrown
-	*/
-	class ServiceException : public Exception
-	{
-
-	public:
-
-		ServiceException(std::string const& message) :
-			Exception(message)
-		{
-		}
-
-	};
 
 }

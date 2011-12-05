@@ -18,11 +18,9 @@
 
 #pragma once
 
-#include "_2RealException.h"
-#include "_2RealIdentifier.h"
+//#include "_2RealException.h"
+//#include "_2RealIdentifier.h"
 #include "_2RealEngineData.h"
-
-#include "Poco/Timestamp.h"
 
 namespace _2Real
 {
@@ -32,43 +30,50 @@ namespace _2Real
 
 	public:
 
+		Data();
+		Data(EngineData const& data, long timestamp);
+
 		template< typename Datatype >
-		Datatype const& getData()
-		{
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
-			return *ptr.get();
-		}
+		Datatype const& getData();
 
-		EngineData const& data() const
-		{
-			return m_Data;
-		}
+		long getTimestamp() const;
 
-		Poco::Timestamp const& timestamp() const
-		{
-			return m_Timestamp;
-		}
+		EngineData const& data() const;
 
 	private:
 
-		friend class OutputSlot;
-		friend class Engine;
-
-		Data() :
-			m_Data(EngineData()),
-			m_Timestamp(Poco::Timestamp())
-		{
-		}
-
-		Data(EngineData const& data, Poco::Timestamp const& time) :
-			m_Data(data),
-			m_Timestamp(time)
-		{
-		}
-
 		EngineData			m_Data;
-		Poco::Timestamp		m_Timestamp;
+		long				m_Timestamp;
 
 	};
+
+	template< typename Datatype >
+	Datatype const& Data::getData()
+	{
+		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
+		return *ptr.get();
+	}
+
+	inline long Data::getTimestamp() const
+	{
+		return m_Timestamp;
+	}
+
+	inline Data::Data(EngineData const& data, long timestamp) :
+		m_Data(data),
+		m_Timestamp(timestamp)
+	{
+	}
+
+	inline Data::Data() :
+		m_Data(),
+		m_Timestamp(0)
+	{
+	}
+
+	inline EngineData const& Data::data() const
+	{
+		return m_Data;
+	}
 
 }

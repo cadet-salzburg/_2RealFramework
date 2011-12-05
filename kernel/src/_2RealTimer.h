@@ -1,6 +1,7 @@
-/*
+ /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +17,35 @@
 	limitations under the License.
 */
 
-#include "_2RealData.h"
+#pragma once
+
+#include "Poco/Timestamp.h"
 
 namespace _2Real
 {
+
+	class Timer
+	{
+
+	public:
+
+		Timer();
+		long getTimestamp() const;
+
+	private:
+
+		Poco::Timestamp		m_Timer;
+
+	};
+
+	inline Timer::Timer()
+	{
+		m_Timer.update();
+	}
+
+	inline long Timer::getTimestamp() const
+	{
+		return (long)m_Timer.elapsed();
+	}
+
 }

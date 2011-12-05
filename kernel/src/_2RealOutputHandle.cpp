@@ -29,34 +29,33 @@ namespace _2Real
 	{
 	}
 
-	OutputHandle::OutputHandle(OutputSlot *_slot) :
-		ParameterHandle(_slot->name()),
-		m_Output(_slot)
+	OutputHandle::OutputHandle(OutputSlot *slot) :
+		ParameterHandle(slot->name()),
+		m_Output(slot)
 	{
 	}
 
-	OutputHandle::OutputHandle(OutputHandle const& _src) :
-		ParameterHandle(_src),
-		m_Output(_src.m_Output)
+	OutputHandle::OutputHandle(OutputHandle const& src) :
+		ParameterHandle(src),
+		m_Output(src.m_Output)
 	{
 	}
 
-	OutputHandle& OutputHandle::operator=(OutputHandle const& _src)
+	OutputHandle& OutputHandle::operator=(OutputHandle const& src)
 	{
-		if (this == &_src)
+		if (this == &src)
 		{
 			return *this;
 		}
 
-		ParameterHandle::operator=(_src);
-		m_Output = _src.m_Output;
+		ParameterHandle::operator=(src);
+		m_Output = src.m_Output;
 
 		return *this;
 	}
 
 	OutputHandle::~OutputHandle()
 	{
-		//output slot is deleted by framework
 	}
 
 	EngineData OutputHandle::data()

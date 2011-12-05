@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug_MTD|Win32">
-      <Configuration>Debug_MTD</Configuration>
+    <ProjectConfiguration Include="_2RealEngine_mdd|Win32">
+      <Configuration>_2RealEngine_mdd</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
+    <ProjectConfiguration Include="_2RealEngine_mtd|Win32">
+      <Configuration>_2RealEngine_mtd</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_MTD|Win32">
-      <Configuration>Release_MTD</Configuration>
+    <ProjectConfiguration Include="_2RealEngine_md|Win32">
+      <Configuration>_2RealEngine_md</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
+    <ProjectConfiguration Include="_2RealEngine_mt|Win32">
+      <Configuration>_2RealEngine_mt</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealData.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
+    <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
     <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealListenerService.h" />
+    <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
@@ -83,6 +85,7 @@
     <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
     <ClInclude Include="..\..\src\_2RealSequence.h" />
     <ClInclude Include="..\..\src\_2RealService.h" />
@@ -95,6 +98,7 @@
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
+    <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
@@ -104,71 +108,86 @@
     <RootNamespace>_2RealFramework</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mtd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mdd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mt|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_md|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mtd|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mdd|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mt|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_md|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mtd|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_mtd</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mdd|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_mdd</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mt|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_mt</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_md|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_md</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+    <TargetName>_2RealEngine_md</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mtd|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -193,7 +212,7 @@
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MTD|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mdd|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -217,7 +236,7 @@
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mt|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -248,7 +267,7 @@
       </IgnoreAllDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_md|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>

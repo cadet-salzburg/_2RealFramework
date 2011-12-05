@@ -32,6 +32,7 @@ namespace _2Real
 	public:
 
 		OutputHandle();
+		OutputHandle(OutputSlot *slot);
 		OutputHandle(OutputHandle const& src);
 		OutputHandle& operator=(OutputHandle const& src);
 		~OutputHandle();
@@ -50,12 +51,7 @@ namespace _2Real
 
 	private:
 
-		friend class Service;
-
-		OutputHandle(OutputSlot *slot);
-
 		EngineData			data();
-
 		OutputSlot			*m_Output;
 
 	};

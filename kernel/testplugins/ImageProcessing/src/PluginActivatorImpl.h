@@ -2,7 +2,6 @@
 
 #include "_2RealIPluginActivator.h"
 
-#include <string>
 #include <fstream>
 
 class ImageProcessing : public _2Real::IPluginActivator
@@ -10,12 +9,12 @@ class ImageProcessing : public _2Real::IPluginActivator
 
 public:
 
-	void getMetadata(_2Real::PluginMetadata &info);
+	void getMetadata(_2Real::Metadata &metadata);
 	void setup(_2Real::PluginContext &context);
-	virtual ~ImageProcessing();
+	~ImageProcessing();
 
 private:
 
-	//std::ofstream		m_Logfile;
+	std::ofstream		m_Logfile;
 
 };

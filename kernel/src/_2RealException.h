@@ -19,135 +19,106 @@
 #pragma once
 
 #include <stdexcept>
-#include "_2RealIdentifier.h"
+#include <typeinfo.h>
 
 namespace _2Real
 {
 
-	class Exception : public std::runtime_error
+	class Exception: public std::exception
 	{
-
 	public:
 
-		Exception(std::string const& message) :
-			std::runtime_error(message)
-		{
-		}
+		Exception(std::string const& message);
+		Exception(Exception const& src);
+		~Exception();
+		Exception& operator=(Exception const& src);
 
-		virtual ~Exception()
-		{
-		}
+		virtual const char* name() const;
+		virtual const char* className() const;
+		virtual const char* what() const;
 
-	};
+		std::string const& message() const;
 
-	/**
-	*	thrown by service or plugin context on parameter query
-	*/
+		virtual Exception* clone() const;
+		virtual void rethrow() const;
 
-	class InvalidParameterException : public Exception
-	{
+	protected:
 
-	public:
-
-		InvalidParameterException(std::string const& type, std::string const& name) :
-			Exception(std::string("invalid parameter: ").append(type).append(" - ").append(name).append(" does not exist"))
-		{
-		}
-
-	};
-
-	/**
-	*	thrown by service context on register service
-	*/
-
-	class InvalidServiceException : public Exception
-	{
-
-	public:
-
-		InvalidServiceException(std::string const& name) :
-			Exception(std::string("invalid service: ").append(name).append(" could not be registered"))
-		{
-		}
-
-	};
-
-	/**
-	*
-	*/
-
-	class BadCastException : public Exception
-	{
-
-	public:
-
-		BadCastException(std::string const& type1, std::string const& type2) :
-			Exception(std::string("type mismatch : parameter type ").append(type1).append(" vs. template parameter ").append(type2))
-		{
-		}
-
-	};
-
-	/**
-	*	thrown by system if runnable fails on run
-	*/
-
-	class RunnableException : public Exception
-	{
-
-	public:
-
-		RunnableException(std::string const& message, Identifier const& sender, Identifier const& system) :
-			Exception(message),
-			m_System(system),
-			m_Sender(sender)
-		{
-		}
-
-		Identifier const& system()
-		{
-			return m_System;
-		}
-
-		Identifier const& sender()
-		{
-			return m_Sender;
-		}
+		Exception();
+		void setMessage(const std::string& message);
 
 	private:
 
-		Identifier	m_System;
-		Identifier	m_Sender;
+		std::string		m_Message;
 
 	};
 
-	/**
-	*	thrown by metadata reader
-	*/
-
-	class XMLFormatException : public Exception
+	inline std::string const& Exception::message() const
 	{
+		return m_Message;
+	}
 
-	public:
 
-		XMLFormatException(std::string const& message) :
-			Exception(message)
-		{
-		}
-
-	};
-
-	class MetadataException : public Exception
+	inline void Exception::setMessage(std::string const& message)
 	{
+		m_Message = message;
+	}
 
-	public:
-
-		MetadataException(std::string const& message) :
-			Exception(message)
-		{
-		}
-
+#define DECLARE_EXCEPTION(CLS, BASE)				\
+	class CLS: public BASE							\
+	{												\
+	public:											\
+		CLS();										\
+		CLS(std::string const& msg);				\
+		CLS(CLS const& src);						\
+		~CLS();										\
+		CLS& operator=(CLS const& src);				\
+		const char* name() const;					\
+		const char* className() const;				\
+		Exception* clone() const;					\
+		void rethrow() const;						\
 	};
 
+#define IMPLEMENT_EXCEPTION(CLS, BASE, NAME)		\
+	CLS::CLS(): BASE()								\
+	{												\
+	}												\
+	CLS::CLS(std::string const& msg): BASE(msg)		\
+	{												\
+	}												\
+	CLS::CLS(CLS const& src): BASE(src)				\
+	{												\
+	}												\
+	CLS::~CLS()										\
+	{												\
+	}												\
+	CLS& CLS::operator=(CLS const& src)				\
+	{												\
+		BASE::operator=(src);						\
+		return *this;								\
+	}												\
+	const char* CLS::name() const					\
+	{												\
+		return NAME;								\
+	}												\
+	const char* CLS::className() const				\
+	{												\
+		return typeid(*this).name();				\
+	}												\
+	Exception* CLS::clone() const					\
+	{												\
+		return new CLS(*this);						\
+	}												\
+	void CLS::rethrow() const						\
+	{												\
+		throw *this;								\
+	}
+
+	DECLARE_EXCEPTION(XMLFormatException, Exception)
+	DECLARE_EXCEPTION(InvalidTypeException, Exception)
+	DECLARE_EXCEPTION(NotFoundException, Exception)
+	DECLARE_EXCEPTION(AlreadyExistsException, Exception)
+	DECLARE_EXCEPTION(InvalidIdentifierException, Exception)
+	DECLARE_EXCEPTION(TypeMismatchException, Exception)
 
 }

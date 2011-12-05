@@ -20,6 +20,7 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealRunnableError.h"
 #include "_2RealData.h"
 #include "_2RealImagebuffer.h"
 
@@ -38,7 +39,7 @@ using namespace std;
 using namespace Poco;
 
 //string path = "D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
-string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
+//string path = "C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\";
 bool run;
 Buffer2D_float tmp;
 Buffer2D_float buffer;
@@ -51,9 +52,9 @@ void imgDataAvailable(Data &data)
 	tmp = data.getData< Buffer2D_float >();
 }
 
-void systemException(RunnableException &e)
+void systemException(RunnableError &e)
 {
-	std::cout << "exception in " << e.system().name() << " by " << e.sender().name() << " : " << e.what() << std::endl;
+	std::cout << "exception in " << e.system().name() << " by " << e.sender().name() << std::endl;
 }
 
 //void init()
@@ -149,7 +150,7 @@ int main(int argc, char *argv[])
 
 		cout << "main: SYSTEM CREATED" << endl;
 
-		testSystem.setPluginDirectory("C:\\Users\\Gigabyte\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
+		testSystem.setPluginDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
 		testSystem.setLogfile("testsystem.txt");
 
 		/**
@@ -158,10 +159,11 @@ int main(int argc, char *argv[])
 		//Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
 		//cout << "main: KINECT PLUGIN LOADED" << endl;
 		Identifier imgPlugin = testSystem.load("image processing plugin", "ImageProcessing");
+		
 		cout << "main: IMG PLUGIN LOADED" << endl;
 
-		//testSystem.dumpInfo(kinectPlugin);
-		//testSystem.dumpInfo(imgPlugin);
+		std::string info = testSystem.getInfo(imgPlugin);
+		std::cout << info << std::endl;
 
 		//vector< string > genFlags;
 		//genFlags.push_back("color");
@@ -185,9 +187,11 @@ int main(int argc, char *argv[])
 
 		//cout << "main: KINECT PLUGIN STARTED" << endl;
 
-		//testSystem.setup(imgPlugin);
 
-		//cout << "main: IMG PLUGIN STARTED" << endl;
+
+		testSystem.setup(imgPlugin);
+
+		cout << "main: IMG PLUGIN STARTED" << endl;
 
 		//Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
 

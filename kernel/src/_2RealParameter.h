@@ -31,36 +31,31 @@ namespace _2Real
 		Parameter(Identifier const& id, std::string const& type, std::string const& key);
 		virtual ~Parameter();
 
-		/**
-		*	=?
-		*/
-		bool const& isInitialized() const
-		{
-			return m_IsInitialized;
-		}
-
-		/**
-		*	returns keyword as string
-		*/
-		std::string const& keyword() const
-		{
-			return m_Keyword;
-		}
-
-		/**
-		*	returns typename as string
-		*/
-		std::string const& datatype() const
-		{
-			return m_Datatype;
-		}
+		bool					isInitialized() const;
+		std::string const&		keyword() const;
+		std::string const&		datatype() const;
 
 	protected:
 
-		bool						m_IsInitialized;
-		const std::string			m_Datatype;
-		const std::string			m_Keyword;
+		bool					m_IsInitialized;
+		const std::string		m_Datatype;
+		const std::string		m_Keyword;
 
 	};
+
+	inline bool Parameter::isInitialized() const
+	{
+		return m_IsInitialized;
+	}
+
+	inline std::string const& Parameter::keyword() const
+	{
+		return m_Keyword;
+	}
+
+	inline std::string const& Parameter::datatype() const
+	{
+		return m_Datatype;
+	}
 
 }
