@@ -20,7 +20,6 @@
 
 #include "_2RealRunnable.h"
 
-#include <list>
 #include <map>
 
 namespace _2Real
@@ -40,47 +39,38 @@ namespace _2Real
 	typedef std::map< std::string, OutputSlot * >		OutputMap;
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
+	typedef std::map< std::string, std::string >		StringMap;
 
 	class Service : public Runnable
 	{
 
 	public:
 
-		Service(Identifier const& id, IService *const service, SystemGraph &system);
-		virtual ~Service();
+		Service(Identifier const& id, IService &service, SystemGraph &system, StringMap const& setup, StringMap const& input, StringMap const& output);
+		~Service();
 
-		EngineData getParameterValue(std::string const& name) const;
-		InputHandle createInputHandle(std::string const& name) const;
-		OutputHandle createOutputHandle(std::string const& name) const;
+		void					setParameterValue(std::string const& name, EngineData &data);
+		EngineData				getParameterValue(std::string const& name) const;
+		InputHandle				createInputHandle(std::string const& name) const;
+		OutputHandle			createOutputHandle(std::string const& name);
 
-		void addInputSlot(InputSlot &slot);
-		void addOutputSlot(OutputSlot &slot);
-		void addSetupParameter(SetupParameter &parameter);
+		void					checkConfiguration();
 
-		void checkConfiguration();
-		void run();
-		void update();
-		void shutdown();
-		
-		std::list< Identifier > setupParameterIDs() const;
-		std::list< Identifier > inputSlotIDs() const;
-		std::list< Identifier > outputSlotIDs() const;
+		void					setup();
+		void					run();
+		void					update();
+		void					shutdown();
 
-		const bool hasInputSlot(std::string const& name) const;
-		const bool hasOutputSlot(std::string const& name) const;
-		const bool hasSetupParameter(std::string const& name) const;
-
-		OutputSlot const& getOutputSlot(std::string const& name) const;
-		InputSlot const& getInputSlot(std::string const& name) const;
-		SetupParameter const& getSetupParameter(std::string const& name) const;
-
-		OutputSlot & getOutputSlot(std::string const& name);
-		InputSlot & getInputSlot(std::string const& name);
-		SetupParameter & getSetupParameter(std::string const& name);
-
-		void setUpdateRate(float const& updatesPerSecond);
+		void					setUpdateRate(float updatesPerSecond);
 
 	private:
+
+		OutputSlot const&		getOutputSlot(std::string const& name) const;
+		InputSlot const&		getInputSlot(std::string const& name) const;
+		SetupParameter const&	getSetupParameter(std::string const& name) const;
+		OutputSlot &			getOutputSlot(std::string const& name);
+		InputSlot &				getInputSlot(std::string const& name);
+		SetupParameter &		getSetupParameter(std::string const& name);
 
 		InputMap				m_InputSlots;
 		OutputMap				m_OutputSlots;

@@ -29,7 +29,6 @@
 #include <ctime>
 #include <math.h>
 #include <sstream>
-#include <iostream>
 
 namespace _2Real
 {

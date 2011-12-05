@@ -72,17 +72,21 @@ namespace _2Real
 		void						addSetupParameterByType(std::string const& service, std::string const& name, std::string const& type);
 		void						addInputSlotByType(std::string const& service, std::string const& name, std::string const& type);
 		void						addOutputSlotByType(std::string const& service, std::string const& name, std::string const& type);
-		
+
+		bool						containsServiceMetadata(std::string const& name) const;
+		bool						containsParameterMetadata(std::string const& name) const;
+
+		const StringMap				getSetupParameters() const;
+		const StringMap				getSetupParameters(std::string const& service) const;
+		const StringMap				getInputSlots(std::string const& service) const;
+		const StringMap				getOutputSlots(std::string const& service) const;
+
+	private:
+
 		ServiceMetadata const&		getServiceMetadata(std::string const& name) const;
 		ParameterMetadata const&	getParameterMetadata(std::string const& name) const;
 		ServiceMetadata &			getServiceMetadata(std::string const& name);
 		ParameterMetadata &			getParameterMetadata(std::string const& name);
-		bool						containsServiceMetadata(std::string const& name) const;
-		const						std::list< std::string > getServices() const;
-		bool						containsParameterMetadata(std::string const& name) const;
-		const						std::list< std::string > getSetupParameters() const;
-
-	private:
 
 		std::string					const m_Classname;
 		std::string					const m_InstallDirectory;

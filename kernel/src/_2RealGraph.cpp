@@ -16,11 +16,10 @@
 	limitations under the License.
 */
 
-#include "_2RealException.h"
 #include "_2RealGraph.h"
+#include "_2RealException.h"
 #include "_2RealRunnableGraph.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -32,17 +31,6 @@ namespace _2Real
 
 	Graph::~Graph()
 	{
-	}
-
-	std::list< Identifier > Graph::childIDs() const
-	{
-		std::list< Identifier > result;
-		for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			result.push_back((*it)->identifier());
-		}
-
-		return result;
 	}
 
 	RunnableList::iterator Graph::iteratorId(Identifier const& id)
@@ -109,7 +97,7 @@ namespace _2Real
 			RunnableList::const_iterator it;
 			for (it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				if ((*it)->type() != "service")
+				if (!(*it)->isService())
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
 					if (child->contains(id))
@@ -134,7 +122,7 @@ namespace _2Real
 		{
 			for (it = m_Children.begin(); it != m_Children.end(); it++)
 			{
-				if ((*it)->type() != "service")
+				if (!(*it)->isService())
 				{
 					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
 					if (child->contains(id))
@@ -146,8 +134,8 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "internal error: child " << id.name() << " not found in graph";
-		throw _2Real::Exception(msg.str());
+		msg << "child " << id.name() << " not found in graph";
+		throw NotFoundException(msg.str());
 	}
 
 	Runnable const& Graph::getChild(Identifier const& id) const
@@ -173,8 +161,8 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "internal error: child " << id.name() << " not found in graph";
-		throw _2Real::Exception(msg.str());
+		msg << "child " << id.name() << " not found in graph";
+		throw NotFoundException(msg.str());
 	}
 
 }

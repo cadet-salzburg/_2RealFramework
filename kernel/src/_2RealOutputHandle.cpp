@@ -25,13 +25,13 @@ namespace _2Real
 
 	OutputHandle::OutputHandle() :
 		ParameterHandle(""),
-		m_Output(0)
+		m_Output(NULL)
 	{
 	}
 
-	OutputHandle::OutputHandle(OutputSlot *slot) :
-		ParameterHandle(slot->name()),
-		m_Output(slot)
+	OutputHandle::OutputHandle(OutputSlot &slot) :
+		ParameterHandle(slot.name()),
+		m_Output(&slot)
 	{
 	}
 
@@ -43,19 +43,10 @@ namespace _2Real
 
 	OutputHandle& OutputHandle::operator=(OutputHandle const& src)
 	{
-		if (this == &src)
-		{
-			return *this;
-		}
-
 		ParameterHandle::operator=(src);
 		m_Output = src.m_Output;
 
 		return *this;
-	}
-
-	OutputHandle::~OutputHandle()
-	{
 	}
 
 	EngineData OutputHandle::data()

@@ -18,7 +18,6 @@
 
 #include "_2RealPluginContext.h"
 #include "_2RealPlugin.h"
-#include "_2RealSetupParameter.h"
 
 namespace _2Real
 {
@@ -35,7 +34,7 @@ namespace _2Real
 
 	EngineData PluginContext::getSetupParameter(std::string const& name)
 	{
-		return m_Plugin.getSetupParameter(name).get();
+		return m_Plugin.getParameterValue(name);
 	}
 
 }

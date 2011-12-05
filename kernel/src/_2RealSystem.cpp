@@ -22,8 +22,6 @@
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
 
-#include <iostream>
-
 namespace _2Real
 {
 
@@ -54,7 +52,7 @@ namespace _2Real
 		m_Engine.setSystemLogfile(file, m_Id);
 	}
 
-	void System::setPluginDirectory(std::string const& directory)
+	void System::setInstallDirectory(std::string const& directory)
 	{
 		m_Engine.setSystemDirectory(directory, m_Id);
 	}

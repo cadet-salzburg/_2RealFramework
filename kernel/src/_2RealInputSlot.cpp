@@ -19,13 +19,12 @@
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
 #include "_2RealException.h"
-#include "_2RealService.h"
 
 namespace _2Real
 {
 
-	InputSlot::InputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& key) :
-		IOSlot(id, service, type, key),
+	InputSlot::InputSlot(Service &service, std::string const& name, std::string const& type, std::string const& key) :
+		IOSlot(service, name, type, key),
 		m_Output(NULL)
 	{
 	}
@@ -72,7 +71,7 @@ namespace _2Real
 
 		if (m_CurrentTable.empty())
 		{
-			throw Exception("internal exception: input slot " + name() + " has no data.");
+			throw Exception("internal exception: input slot " + m_Name + " has no data.");
 		}
 
 		DataTable::const_iterator newest = m_CurrentTable.begin();

@@ -26,7 +26,7 @@ namespace _2Real
 {
 
 	Typetable::Typetable(Engine const& engine) :
-		m_Engine(engine),	//do not touch anywhere ele in ctor
+		m_Engine(engine),	//do not touch anywhere else in ctor
 		m_Types(),
 		m_LookupTable()
 	{

@@ -27,17 +27,21 @@
 
 namespace _2Real
 {
+
 	class IService;
 	typedef IService *const (*ServiceCreator)(void);
 
 	class SetupParameter;
 	class EngineData;
 	class SystemGraph;
+	class Service;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
 	typedef std::pair< std::string, ServiceCreator >	NamedTemplate;
 	typedef std::map< std::string, ServiceCreator >		TemplateMap;
+	typedef std::pair< Identifier, Service * >			NamedService;
+	typedef std::map< Identifier, Service * >			ServiceMap;
 	typedef Poco::ClassLoader< IPluginActivator >		PluginLoader;
 
 	class Plugin : public Entity
@@ -45,69 +49,48 @@ namespace _2Real
 
 	public:
 
-		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const& system);
+		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph &system);
 		~Plugin();
 
 		void							install();
 		void							uninstall();
 		void							setup();
-
-		void							registerService(std::string const& name, ServiceCreator service);
-		void							addSetupParameter(SetupParameter *const param);
-
-		bool							canExportService(std::string const& name) const;
-		bool							exportsService(std::string const& name) const;
-		bool							hasSetupParameter(std::string const& name) const;
 		bool 							isInitialized() const;
-
-		PluginMetadata const&			getMetadata() const;
-		ServiceMetadata const&			getMetadata(std::string const& name) const;
-
-		SetupParameter &				getSetupParameter(std::string const& name);
-		SetupParameter const&			getSetupParameter(std::string const& name) const;
-
-		IService						*const createService(std::string const& name) const;
-
-		TemplateMap const&				services() const;
-		TemplateMap &					services();
-		ParameterMap const&				setupParameters() const;
-		ParameterMap &					setupParameters();
+		const std::string				getInfoString() const;
+		void							registerService(std::string const& serviceName, ServiceCreator creator);
+		bool							canExportService(std::string const& serviceName) const;
+		EngineData						getParameterValue(std::string const& setupName) const;
+		void							setParameterValue(std::string const& setupName, EngineData &data);
+		const Identifier				createService(std::string const& idName, std::string const& serviceName);
 
 	private:
 
+		SetupParameter &				getSetupParameter(std::string const& setupName);
+		SetupParameter const&			getSetupParameter(std::string const& setupName) const;
+
+		IService &						createService(std::string const& serviceName) const;
+
 		ParameterMap					m_SetupParameters;
-		TemplateMap						m_Services;
-		
+		TemplateMap						m_ServiceTemplates;
+		ServiceMap						m_Services;
+
 		IPluginActivator				*m_Activator;
 		PluginLoader					m_PluginLoader;
-
 		std::string						m_File;
 		bool							m_IsInitialized;
-
 		PluginMetadata					m_Metadata;
-
-		SystemGraph						const& m_System;
+		SystemGraph						&m_System;
 
 	};
 
-	inline TemplateMap const& Plugin::services() const
+	inline const std::string Plugin::getInfoString() const
 	{
-		return m_Services;
+		return m_Metadata.getInfoString();
 	}
 
-	inline TemplateMap & Plugin::services()
+	bool Plugin::isInitialized() const
 	{
-		return m_Services;
-	}
-
-	inline ParameterMap const& Plugin::setupParameters() const
-	{
-		return m_SetupParameters;
-	}
-
-	inline ParameterMap & Plugin::setupParameters()
-	{
-		return m_SetupParameters;
+		return m_IsInitialized;
 	}
 
 }

@@ -22,17 +22,18 @@
 #include "_2RealExceptionHandler.h"
 #include "_2RealEngine.h"
 #include "_2RealException.h"
+#include "_2RealService.h"
 
 #include <sstream>
 
 namespace _2Real
 {
-	SystemGraph::SystemGraph(Identifier const& id, StringMap const& allowedTypes) :
+	SystemGraph::SystemGraph(Identifier const& id) :
 		Graph(),
 		Entity(id),
 		m_Engine(Engine::instance()),
 		m_Plugins(*this),
-		m_AllowedTypes(allowedTypes),
+		m_AllowedTypes(m_Engine.getAllowedTypes()),
 		m_ExceptionHandler(id),
 		m_Threads(10, 20, 1000, 0, id.name()),
 		m_Logfile("")
@@ -59,7 +60,7 @@ namespace _2Real
 
 		if (m_Logstream.is_open())
 		{
-			m_Logstream << m_Engine.timer().getTimestamp() << identifier() << std::endl;
+			m_Logstream << m_Engine.getTimestamp() << " " << identifier() << std::endl;
 		}
 	}
 
@@ -90,7 +91,7 @@ namespace _2Real
 		m_Children.clear();
 		//m_Threads.clear();
 
-		//m_Plugins.clearPlugins();
+		m_Plugins.clearPlugins();
 	}
 
 	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
@@ -116,6 +117,7 @@ namespace _2Real
 	void SystemGraph::insertChild(Runnable &child, unsigned int const& index)
 	{
 		m_Children.push_back(&child);
+
 		//m_Threads.addCapacity(1);
 	}
 
@@ -129,12 +131,10 @@ namespace _2Real
 
 	void SystemGraph::startAll()
 	{
-		//todo
 	}
 
 	void SystemGraph::stopAll()
 	{
-		//todo
 	}
 
 	void SystemGraph::handleException(Runnable &child, Exception &exception)
@@ -178,14 +178,32 @@ namespace _2Real
 	//	m_Threads.join(id);
 	}
 
-	const Identifier SystemGraph::installPlugin(std::string const& name, std::string const& classname)
+	const Identifier SystemGraph::install(std::string const& name, std::string const& classname)
 	{
 		return m_Plugins.install(name, classname);
 	}
 
 	bool SystemGraph::contains(Identifier const& id) const
 	{
-		return ((id.isPlugin() && m_Plugins.contains(id)) || Graph::contains(id));
+		return (m_Plugins.contains(id) || Graph::contains(id));
+	}
+
+	void SystemGraph::setup(Identifier const& id)
+	{
+		if (id.isPlugin())
+		{
+			m_Plugins.setup(id);
+		}
+		else if (id.isService())
+		{
+			Service &service = static_cast< Service & >(getChild(id));
+			service.setup();
+		}
+	}
+
+	const Identifier SystemGraph::createService(std::string const& name, Identifier const& id, std::string const& service)
+	{
+		return m_Plugins.createService(name, id, service);
 	}
 
 }

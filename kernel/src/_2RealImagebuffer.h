@@ -4,7 +4,6 @@
 
 #include "Poco/SharedPtr.h"
 
-#include <iostream>
 #include <sstream>
 #include <vector>
 

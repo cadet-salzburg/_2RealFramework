@@ -17,28 +17,11 @@
 */
 
 #include "_2RealEngine.h"
+#include "_2RealIdentifier.h"
+#include "_2RealSingletonHolder.h"
+#include "_2RealSystemGraph.h"
 
 #include "_2RealImagebuffer.h"
-
-#include "_2RealTypetable.h"
-
-#include "_2RealPluginMetadata.h"
-#include "_2RealServiceMetadata.h"
-#include "_2RealPluginPool.h"
-#include "_2RealServiceFactory.h"
-#include "_2RealProductionGraphs.h"
-#include "_2RealEntity.h"
-#include "_2RealIdentifier.h"
-#include "_2RealException.h"
-#include "_2RealPlugin.h"
-#include "_2RealInputSlot.h"
-#include "_2RealOutputSlot.h"
-#include "_2RealSetupParameter.h"
-#include "_2RealService.h"
-#include "_2RealSystemGraph.h"
-#include "_2RealSingletonHolder.h"
-#include "_2RealExceptionListener.h"
-#include "_2RealOutputListener.h"
 
 #include <sstream>
 #include <iostream>
@@ -78,256 +61,213 @@ namespace _2Real
 
 	Engine::~Engine()
 	{
-		m_Graphs.clearSystems();
+		try
+		{
+			m_Graphs.clearSystems();
+		}
+		catch (std::exception &e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 	}
 
-	const Identifier Engine::createSystem(std::string const& name)
+	const Identifier Engine::createSystem(std::string const& systemName)
 	{
-		return m_Graphs.createSystemGraph(name);
+		return m_Graphs.createSystemGraph(systemName);
 	}
 
-	void Engine::setSystemLogfile(std::string const& file, Identifier const& system)
+	void Engine::destroySystem(Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-		nirvana.setLogfile(file);
+		m_Graphs.destroySystemGraph(systemId);
+	}
+
+	void Engine::setSystemLogfile(std::string const& filepath, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.setLogfile(filepath);
 		if (!nirvana.isLoggingEnabled())
 		{
-			std::cout << "could not start logging into file: " << file << std::endl;
+			std::cout << "could not start logging into file: " << filepath << std::endl;
 		}
 	}
 
-	void Engine::setSystemDirectory(std::string const& directory, Identifier const& system)
+	void Engine::setSystemDirectory(std::string const& directory, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-		nirvana.setPluginDirectory(directory);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+		
+		nirvana.setInstallDirectory(directory);
 	}
 
-	void Engine::destroySystem(Identifier const& system)
+	const Identifier Engine::load(std::string const& name, std::string const& classname, Identifier const& systemId)
 	{
-		m_Graphs.destroySystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		return nirvana.install(name, classname);
 	}
 
-	const Identifier Engine::load(std::string const& name, std::string const& classname, Identifier const& system)
+	void Engine::setup(Identifier const& setupAble, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-		return nirvana.installPlugin(name, classname);
-	}
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-	void Engine::setup(Identifier const& id, Identifier const& system)
-	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-
-		if (!id.isSetupAble())
+		if (!setupAble.isSetupAble())
 		{
 			std::ostringstream msg;
-			msg << "engine::setup " << id.name() << " is a " << id.type() << ", plugin or service expected" << std::endl;
+			msg << "engine::setup " << setupAble.name() << " is a " << setupAble.type() << ", plugin or service expected";
 			throw InvalidIdentifierException(msg.str());
 		}
 
-		if (nirvana.contains(id) && id.isPlugin())
-		{
-			//silently fails if called more than once
-			Plugin &plugin = nirvana.plugins().getPlugin(id);
-			plugin.setup();
-		}
-		else if (nirvana.contains(id) && id.isService())
-		{
-			//this actually can be called more than once
-			Runnable &child = nirvana.getChild(id);
-			Service &service = static_cast< Service & >(child);
-			service.checkConfiguration();
-		}
-		else
-		{
-			std::ostringstream msg;
-			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
-			throw NotFoundException(msg.str());
-		}
+		nirvana.setup(setupAble);
 	}
 
-	const std::string Engine::getInfo(Identifier const& id, Identifier const& system) const
+	const std::string Engine::getInfo(Identifier const& pluginId, Identifier const& systemId) const
 	{
-		SystemGraph const& nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph const& nirvana = m_Graphs.getSystemGraph(systemId);
 
-		if (!id.isPlugin())
+		if (!pluginId.isPlugin())
 		{
 			std::ostringstream msg;
-			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", plugin expected" << std::endl;
+			msg << "engine::getInfo " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
 			throw InvalidIdentifierException(msg.str());
 		}
 
-		if (nirvana.contains(id))
-		{
-			//~~
-			return nirvana.plugins().getPlugin(id).getMetadata().getInfoString();
-		}
-		else
-		{
-			std::ostringstream msg;
-			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
-			throw NotFoundException(msg.str());
-		}
+		return nirvana.getInfoString(pluginId);
 	}
 
-	const Identifier Engine::createService(std::string const& name, Identifier const& id, std::string const& service, Identifier const& system)
+	const Identifier Engine::createService(std::string const& name, Identifier const& pluginId, std::string const& serviceName, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		if (!id.isPlugin())
+		if (!pluginId.isPlugin())
 		{
 			std::ostringstream msg;
-			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", plugin expected" << std::endl;
+			msg << "engine::getInfo " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected" << std::endl;
 			throw InvalidIdentifierException(msg.str());
 		}
 
-		if (nirvana.contains(id))
-		{
-			Plugin &plugin = nirvana.plugins().getPlugin(id);
-			
-			if (plugin.exportsService(service))
-			{
-				return m_Factory.createService(name, plugin, service, nirvana);
-			}
-			else
-			{
-				std::ostringstream msg;
-				msg << id.type() << " " << id.name() << " does not export service " << service << std::endl;
-				throw NotFoundException(msg.str());
-			}
-		}
-		else
-		{
-			std::ostringstream msg;
-			msg << id.type() << " " << id.name() << " not found in system " << system.name() << std::endl;
-			throw NotFoundException(msg.str());
-		}
-
-		return Entity::NoEntity();
+		return nirvana.createService(name, pluginId, serviceName);
 	}
 
 	void Engine::setValue(Identifier const& id, std::string const& name, EngineData value, std::string const& type, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.plugins().contains(id))
-		{
-			Plugin &plugin = nirvana.plugins().getPlugin(id);
-			SetupParameter &param = plugin.getSetupParameter(name);
-			if (param.datatype() != type)
-			{
-				//BadDatatypeException
-				throw Exception("datatype mismatch: " + param.datatype() + " " + type);
-			}
-			param.set(value);
-		}
-		else
-		{
-			if (nirvana.contains(id))
-			{
-				Runnable &child = nirvana.getChild(id);
-				if (child.type() == "service")
-				{
-					Service &service = static_cast< Service & >(child);
-					if (service.hasSetupParameter(name))
-					{
-						SetupParameter &param = service.getSetupParameter(name);
-						if (param.datatype() != type)
-						{
-							//BadDatatypeException
-							throw Exception("datatype mismatch: " + param.datatype() + " " + type);
-						}
-						param.set(value);
-					}
-					else if (service.hasInputSlot(name))
-					{
-						InputSlot &slot = service.getInputSlot(name);
-						if (slot.datatype() != type)
-						{
-							//BadDatatypeException
-							throw Exception("datatype mismatch: " + slot.datatype() + " " + type);
-						}
-						if (slot.isLinked())
-						{
-							slot.reset();
-						}
+		//if (nirvana.plugins().contains(id))
+		//{
+		//	Plugin &plugin = nirvana.plugins().getPlugin(id);
+		//	SetupParameter &param = plugin.getSetupParameter(name);
+		//	if (param.datatype() != type)
+		//	{
+		//		//BadDatatypeException
+		//		throw Exception("datatype mismatch: " + param.datatype() + " " + type);
+		//	}
+		//	param.set(value);
+		//}
+		//else
+		//{
+		//	if (nirvana.contains(id))
+		//	{
+		//		Runnable &child = nirvana.getChild(id);
+		//		if (child.type() == "service")
+		//		{
+		//			Service &service = static_cast< Service & >(child);
+		//			if (service.hasSetupParameter(name))
+		//			{
+		//				SetupParameter &param = service.getSetupParameter(name);
+		//				if (param.datatype() != type)
+		//				{
+		//					//BadDatatypeException
+		//					throw Exception("datatype mismatch: " + param.datatype() + " " + type);
+		//				}
+		//				param.set(value);
+		//			}
+		//			else if (service.hasInputSlot(name))
+		//			{
+		//				InputSlot &slot = service.getInputSlot(name);
+		//				if (slot.datatype() != type)
+		//				{
+		//					//BadDatatypeException
+		//					throw Exception("datatype mismatch: " + slot.datatype() + " " + type);
+		//				}
+		//				if (slot.isLinked())
+		//				{
+		//					slot.reset();
+		//				}
 
-						Data data(value, m_Timer.getTimestamp());
-						slot.set(data);
-					}
-					else
-					{
-					}
-				}
-				else
-				{
-				}
-			}
-			else
-			{
-			}
-		}
+		//				Data data(value, m_Timer.getTimestamp());
+		//				slot.set(data);
+		//			}
+		//			else
+		//			{
+		//			}
+		//		}
+		//		else
+		//		{
+		//		}
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
 	}
 
 	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(id))
-		{
-			Runnable &child = nirvana.getChild(id);
-			if (child.type() == "service")
-			{
-				Service &service = static_cast< Service & >(child);
-				service.setUpdateRate(updatesPerSecond);
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//if (nirvana.contains(id))
+		//{
+		//	Runnable &child = nirvana.getChild(id);
+		//	if (child.type() == "service")
+		//	{
+		//		Service &service = static_cast< Service & >(child);
+		//		service.setUpdateRate(updatesPerSecond);
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(idIn) && nirvana.contains(idOut))
-		{
-			Runnable &childIn = nirvana.getChild(idIn);
-			Runnable &childOut = nirvana.getChild(idOut);
-			if (childIn.type() == "service" && childOut.type() == "service")
-			{
-				Service &serviceIn = static_cast< Service & >(childIn);
-				Service &serviceOut = static_cast< Service & >(childOut);
+		//if (nirvana.contains(idIn) && nirvana.contains(idOut))
+		//{
+		//	Runnable &childIn = nirvana.getChild(idIn);
+		//	Runnable &childOut = nirvana.getChild(idOut);
+		//	if (childIn.type() == "service" && childOut.type() == "service")
+		//	{
+		//		Service &serviceIn = static_cast< Service & >(childIn);
+		//		Service &serviceOut = static_cast< Service & >(childOut);
 
-				if (serviceIn.hasInputSlot(nameIn) && serviceOut.hasOutputSlot(nameOut))
-				{
-					InputSlot &in = serviceIn.getInputSlot(nameIn);
-					OutputSlot &out = serviceOut.getOutputSlot(nameOut);
+		//		if (serviceIn.hasInputSlot(nameIn) && serviceOut.hasOutputSlot(nameOut))
+		//		{
+		//			InputSlot &in = serviceIn.getInputSlot(nameIn);
+		//			OutputSlot &out = serviceOut.getOutputSlot(nameOut);
 
-					out.addListener(in);
-					in.linkWith(out);
-				}
-				else
-				{
-				}
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//			out.addListener(in);
+		//			in.linkWith(out);
+		//		}
+		//		else
+		//		{
+		//		}
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::registerToException(ExceptionCallback callback, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.registerExceptionCallback(callback);
@@ -335,7 +275,6 @@ namespace _2Real
 
 	void Engine::unregisterFromException(ExceptionCallback callback, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.unregisterExceptionCallback(callback);
@@ -343,99 +282,94 @@ namespace _2Real
 
 	void Engine::registerToNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(id))
-		{
-			Runnable &child = nirvana.getChild(id);
-			if (child.type() == "service")
-			{
-				Service &service = static_cast< Service & >(child);
-				OutputSlot &out = service.getOutputSlot(name);
-				out.registerCallback(callback);
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//if (nirvana.contains(id))
+		//{
+		//	Runnable &child = nirvana.getChild(id);
+		//	if (child.type() == "service")
+		//	{
+		//		Service &service = static_cast< Service & >(child);
+		//		OutputSlot &out = service.getOutputSlot(name);
+		//		out.registerCallback(callback);
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(id))
-		{
-			Runnable &child = nirvana.getChild(id);
-			if (child.type() == "service")
-			{
-				Service &service = static_cast< Service & >(child);
-				OutputSlot &out = service.getOutputSlot(name);
-				out.unregisterCallback(callback);
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//if (nirvana.contains(id))
+		//{
+		//	Runnable &child = nirvana.getChild(id);
+		//	if (child.type() == "service")
+		//	{
+		//		Service &service = static_cast< Service & >(child);
+		//		OutputSlot &out = service.getOutputSlot(name);
+		//		out.unregisterCallback(callback);
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::registerToNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(id))
-		{
-			Runnable &child = nirvana.getChild(id);
-			if (child.type() == "service")
-			{
-				Service &service = static_cast< Service & >(child);
-				OutputSlot &out = service.getOutputSlot(name);
-				out.addListener(listener);
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//if (nirvana.contains(id))
+		//{
+		//	Runnable &child = nirvana.getChild(id);
+		//	if (child.type() == "service")
+		//	{
+		//		Service &service = static_cast< Service & >(child);
+		//		OutputSlot &out = service.getOutputSlot(name);
+		//		out.addListener(listener);
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (nirvana.contains(id))
-		{
-			Runnable &child = nirvana.getChild(id);
-			if (child.type() == "service")
-			{
-				Service &service = static_cast< Service & >(child);
-				OutputSlot &out = service.getOutputSlot(name);
-				out.removeListener(listener);
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}
+		//if (nirvana.contains(id))
+		//{
+		//	Runnable &child = nirvana.getChild(id);
+		//	if (child.type() == "service")
+		//	{
+		//		Service &service = static_cast< Service & >(child);
+		//		OutputSlot &out = service.getOutputSlot(name);
+		//		out.removeListener(listener);
+		//	}
+		//	else
+		//	{
+		//	}
+		//}
+		//else
+		//{
+		//}
 	}
 
 	void Engine::registerToException(ExceptionListener &listener, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.registerExceptionListener(listener);
@@ -443,7 +377,6 @@ namespace _2Real
 
 	void Engine::unregisterFromException(ExceptionListener &listener, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.unregisterExceptionListener(listener);
@@ -451,7 +384,6 @@ namespace _2Real
 
 	void Engine::start(Identifier const& id, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.startChild(id);
@@ -459,7 +391,6 @@ namespace _2Real
 
 	void Engine::stop(Identifier const& id, Identifier const& system)
 	{
-		//crashes if system does not exist
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
 		nirvana.stopChild(id);
@@ -524,12 +455,14 @@ namespace _2Real
 	void Engine::startAll(Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+
 		nirvana.startAll();
 	}
 
 	void Engine::stopAll(Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+
 		nirvana.stopAll();
 	}
 

@@ -24,6 +24,7 @@
 #include "_2RealThreadPool.h"
 #include "_2RealPluginPool.h"
 
+
 #include <map>
 #include <list>
 #include <fstream>
@@ -41,7 +42,7 @@ namespace _2Real
 
 	public:
 
-		SystemGraph(Identifier const& id, StringMap const& allowedTypes);
+		SystemGraph(Identifier const& id);
 		~SystemGraph();
 
 		void shutdown();
@@ -52,7 +53,10 @@ namespace _2Real
 		void stopChild(Identifier const& child);
 		void updateChild(Identifier const& child, unsigned int const& count);
 
-		const Identifier installPlugin(std::string const& name, std::string const& classname);
+		bool contains(Identifier const& id) const;
+		const Identifier install(std::string const& name, std::string const& classname);
+		void setup(Identifier const& id);
+		const Identifier createService(std::string const& name, Identifier const& id, std::string const& service);
 
 		void insertChild(Runnable &child, unsigned int const& index);
 		void removeChild(Identifier const& id);
@@ -63,17 +67,13 @@ namespace _2Real
 		void registerExceptionListener(ExceptionListener &listener);
 		void unregisterExceptionListener(ExceptionListener &listener);
 
-		PluginPool & plugins();
-		PluginPool const& plugins() const;
-
 		bool isLoggingEnabled() const;
-		void setPluginDirectory(std::string const& directory);
+		void setInstallDirectory(std::string const& directory);
 		void setLogfile(std::string const& file);
-		std::ofstream & getLogstream() const;
+		std::ofstream & getLogstream();
 		StringMap const& getAllowedTypes() const;
 		void startLogging();
-
-		bool contains(Identifier const& id) const;
+		const std::string getInfoString(Identifier const& id) const;
 
 	private:
 
@@ -82,40 +82,35 @@ namespace _2Real
 		ExceptionHandler		m_ExceptionHandler;
 		StringMap				const& m_AllowedTypes;
 		std::string				m_Logfile;
-		mutable std::ofstream	m_Logstream;
+		std::ofstream			m_Logstream;
 
 		Engine					&m_Engine;
 
 	};
-
-	inline PluginPool & SystemGraph::plugins()
-	{
-		return m_Plugins;
-	}
-
-	inline PluginPool const& SystemGraph::plugins() const
-	{
-		return m_Plugins;
-	}
 
 	inline bool SystemGraph::isLoggingEnabled() const
 	{
 		return m_Logstream.is_open();
 	}
 
-	inline std::ofstream & SystemGraph::getLogstream() const
+	inline std::ofstream & SystemGraph::getLogstream()
 	{
 		return m_Logstream;
 	}
 
-	inline void SystemGraph::setPluginDirectory(std::string const& directory)
+	inline void SystemGraph::setInstallDirectory(std::string const& directory)
 	{
-		m_Plugins.setPluginDirectory(directory);
+		m_Plugins.setInstallDirectory(directory);
 	}
 
 	inline StringMap const& SystemGraph::getAllowedTypes() const
 	{
 		return m_AllowedTypes;
+	}
+
+	inline const std::string SystemGraph::getInfoString(Identifier const& id) const
+	{
+		return m_Plugins.getInfoString(id);
 	}
 
 }

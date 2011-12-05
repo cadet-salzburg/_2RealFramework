@@ -32,10 +32,9 @@ namespace _2Real
 	public:
 
 		OutputHandle();
-		OutputHandle(OutputSlot *slot);
+		OutputHandle(OutputSlot &slot);
 		OutputHandle(OutputHandle const& src);
 		OutputHandle& operator=(OutputHandle const& src);
-		~OutputHandle();
 
 		template< typename Datatype >
 		Datatype & data()

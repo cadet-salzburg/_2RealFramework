@@ -39,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		InputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword);
+		InputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword);
 		~InputSlot();
 
 		void reset();

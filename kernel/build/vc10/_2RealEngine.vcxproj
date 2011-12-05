@@ -28,14 +28,11 @@
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
-    <ClCompile Include="..\..\src\_2RealIOSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
@@ -46,7 +43,6 @@
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />

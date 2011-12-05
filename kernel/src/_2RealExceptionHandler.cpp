@@ -17,8 +17,6 @@
 */
 
 #include "_2RealExceptionHandler.h"
-#include "_2RealData.h"
-#include "_2RealException.h"
 #include "_2RealRunnableError.h"
 #include "_2RealExceptionListener.h"
 

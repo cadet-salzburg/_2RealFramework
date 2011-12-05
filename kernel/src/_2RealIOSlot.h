@@ -34,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		IOSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword);
+		IOSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword);
 		virtual ~IOSlot();
 
 		Service &			service();
@@ -45,6 +45,16 @@ namespace _2Real
 		Service				&m_Service;
 
 	};
+
+	inline IOSlot::IOSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword) :
+		Parameter(name, type, keyword),
+		m_Service(service)
+	{
+	}
+
+	inline IOSlot::~IOSlot()
+	{
+	}
 
 	inline Service const& IOSlot::service() const
 	{

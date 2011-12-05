@@ -18,8 +18,6 @@
 
 #pragma once
 
-//#include "_2RealException.h"
-//#include "_2RealIdentifier.h"
 #include "_2RealEngineData.h"
 
 namespace _2Real
@@ -34,18 +32,28 @@ namespace _2Real
 		Data(EngineData const& data, long timestamp);
 
 		template< typename Datatype >
-		Datatype const& getData();
-
-		long getTimestamp() const;
-
-		EngineData const& data() const;
+		Datatype const&			getData();
+		long					getTimestamp() const;
+		EngineData const&		data() const;
 
 	private:
 
-		EngineData			m_Data;
-		long				m_Timestamp;
+		EngineData				m_Data;
+		long					m_Timestamp;
 
 	};
+
+	inline Data::Data() :
+		m_Data(),
+		m_Timestamp(0)
+	{
+	}
+
+	inline Data::Data(EngineData const& data, long timestamp) :
+		m_Data(data),
+		m_Timestamp(timestamp)
+	{
+	}
 
 	template< typename Datatype >
 	Datatype const& Data::getData()
@@ -57,18 +65,6 @@ namespace _2Real
 	inline long Data::getTimestamp() const
 	{
 		return m_Timestamp;
-	}
-
-	inline Data::Data(EngineData const& data, long timestamp) :
-		m_Data(data),
-		m_Timestamp(timestamp)
-	{
-	}
-
-	inline Data::Data() :
-		m_Data(),
-		m_Timestamp(0)
-	{
 	}
 
 	inline EngineData const& Data::data() const

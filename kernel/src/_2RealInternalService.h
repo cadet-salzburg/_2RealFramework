@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		InternalService(Identifier const& id, SystemGraph *const system);
+		InternalService(Identifier const& id, SystemGraph &system);
 		virtual ~InternalService();
 
 		//ServiceMetadata const& getMetadata();

@@ -33,30 +33,36 @@ namespace _2Real
 
 	public:
 
-		SetupParameter(Identifier const& id, std::string const& type, std::string const& key);
+		SetupParameter(std::string const& name, std::string const& type, std::string const& keyword);
 		virtual ~SetupParameter();
 
-		/**
-		*	sets parameter data
-		*/
-		void set(EngineData const& data)
-		{
-			m_Data = data;
-			//m_IsInitialized = true;
-		}
-
-		/**
-		*	returns parameter data
-		*/
-		EngineData const& get() const
-		{
-			return m_Data;
-		}
+		void setData(EngineData const& data);
+		EngineData const& getData() const;
 
 	protected:
 
 		EngineData				m_Data;
 
 	};
+
+	inline SetupParameter::SetupParameter(std::string const& name, std::string const& type, std::string const& keyword) :
+		Parameter(name, type, keyword)
+	{
+	}
+
+	inline SetupParameter::~SetupParameter()
+	{
+	}
+
+	inline void SetupParameter::setData(EngineData const& data)
+	{
+		m_Data = data;
+		m_IsInitialized = true;
+	}
+
+	inline EngineData const& SetupParameter::getData() const
+	{
+		return m_Data;
+	}
 
 }

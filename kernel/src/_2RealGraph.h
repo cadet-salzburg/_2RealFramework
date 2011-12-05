@@ -25,6 +25,7 @@ namespace _2Real
 
 	/**
 	*	system graphs, sequences and synchronizations are graphs
+	*	graph = pretty much something that can contain runnables
 	*/
 
 	class Runnable;
@@ -40,22 +41,7 @@ namespace _2Real
 		Graph();
 		virtual ~Graph();
 
-		const unsigned int childCount() const
-		{
-			return m_Children.size();
-		}
-
-		std::list< Identifier > childIDs() const;
-
-		std::list< Runnable * > & children()
-		{
-			return m_Children;
-		}
-
-		std::list< Runnable * > const& children() const
-		{
-			return m_Children;
-		}
+		unsigned int childCount() const;
 
 		bool const contains(Identifier const& id) const;
 		bool const isChild(Identifier const& id) const;
@@ -76,5 +62,10 @@ namespace _2Real
 		RunnableList						m_Children;
 
 	};
+
+	inline unsigned int Graph::childCount() const
+	{
+		return m_Children.size();
+	}
 
 }

@@ -20,8 +20,6 @@
 
 #include "_2RealRunnableGraph.h"
 
-#include "Poco/Threadpool.h"
-
 namespace _2Real
 {
 
@@ -32,24 +30,17 @@ namespace _2Real
 
 	public:
 
-		Sequence(Identifier const& id, SystemGraph *const system);
-		virtual ~Sequence();
+		Sequence(Identifier const& id, SystemGraph &system);
+		~Sequence();
 
-		virtual void run();
-		virtual void update();
-		virtual void shutdown();
-		virtual void checkConfiguration();
+		void setup();
+		void run();
+		void update();
+		void shutdown();
+		void checkConfiguration();
 
-		virtual void insertChild(Runnable *const child, unsigned int const& index);
-		virtual void removeChild(unsigned int const& id);
-
-		virtual Runnable *const getChild(unsigned int const& id);
-		virtual Runnable *const findChild(unsigned int const& id);
-		virtual Runnable const *const findChild(unsigned int const& id) const;
-
-	private:
-
-		Poco::ThreadPool							m_ThreadPool;
+		void insertChild(Runnable *const child, unsigned int const& index);
+		void removeChild(unsigned int const& id);
 
 	};
 

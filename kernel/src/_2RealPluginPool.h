@@ -37,39 +37,32 @@ namespace _2Real
 	
 	public:
 
-		PluginPool(SystemGraph const& system);
+		PluginPool(SystemGraph &system);
 		~PluginPool();
 
-		const unsigned int		size() const;
-		SystemGraph const&		system() const;
-		void					setPluginDirectory(std::string const& directory);
+		void					clearPlugins();
+		void					setInstallDirectory(std::string const& directory);
 		const Identifier		install(std::string const& name, std::string const& classname);
-		const bool				contains(Identifier const& id) const;
+		bool					contains(Identifier const& id) const;
 		void					uninstall(Identifier const& id);
-		Plugin &				getPlugin(Identifier const& id);
-		Plugin const&			getPlugin(Identifier const& id) const;
+		void					setup(Identifier const& id);
+		const std::string		getInfoString(Identifier const& id) const;
+		const Identifier		createService(std::string const& name, Identifier const& id, std::string const& service);
 
 	private:
 
+		Plugin &				getPlugin(Identifier const& id);
+		Plugin const&			getPlugin(Identifier const& id) const;
+
 		PluginMap				m_Plugins;
-		SystemGraph				const& m_System;
-		std::string				m_PluginDirectory;
+		SystemGraph				&m_System;
+		std::string				m_InstallDirectory;
 
 	};
 
-	inline const unsigned int PluginPool::size() const
+	inline void PluginPool::setInstallDirectory(std::string const& directory)
 	{
-		return m_Plugins.size();
-	}
-
-	inline SystemGraph const& PluginPool::system() const
-	{
-		return m_System;
-	}
-
-	inline void PluginPool::setPluginDirectory(std::string const& directory)
-	{
-		m_PluginDirectory = directory;
+		m_InstallDirectory = directory;
 	}
 
 }

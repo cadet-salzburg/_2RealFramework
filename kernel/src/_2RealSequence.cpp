@@ -16,13 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealException.h"
-#include "_2RealService.h"
-#include "_2RealInputSlot.h"
-#include "_2RealOutputSlot.h"
-#include "_2RealExceptionHandler.h"
-
-#include <iostream>
+#include "_2RealSequence.h"
 
 namespace _2Real
 {

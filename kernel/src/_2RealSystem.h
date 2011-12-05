@@ -46,7 +46,7 @@ namespace _2Real
 		System(System const& src);
 		~System();
 
-		void setPluginDirectory(std::string const& directory);
+		void setInstallDirectory(std::string const& directory);
 		void setLogfile(std::string const& file);
 
 		//void setLoglevel();

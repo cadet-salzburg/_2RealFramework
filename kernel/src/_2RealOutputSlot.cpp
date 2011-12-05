@@ -27,8 +27,8 @@
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword, EngineData initialData) :
-		IOSlot(id, service, type, keyword),
+	OutputSlot::OutputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword, EngineData initialData) :
+		IOSlot(service, name, type, keyword),
 		m_Timer(Engine::instance().timer()),
 		m_WriteData(initialData)
 	{
@@ -40,7 +40,6 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		//store data - in case a new listener is added somewhere in between
 		m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
 		m_Event.notifyAsync(this, m_CurrentData);
 		m_WriteData.clone(m_WriteData);
@@ -49,6 +48,7 @@ namespace _2Real
 	void OutputSlot::addListener(OutputListener &listener)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_Event += Poco::delegate(&listener, &OutputListener::receiveData);
 		listener.receiveData(m_CurrentData);
 	}
@@ -56,12 +56,14 @@ namespace _2Real
 	void OutputSlot::removeListener(OutputListener &listener)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_Event -= Poco::delegate(&listener, &OutputListener::receiveData);
 	}
 
 	void OutputSlot::registerCallback(DataCallback callback)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_Event += Poco::delegate(callback);
 		callback(m_CurrentData);
 	}
@@ -69,6 +71,7 @@ namespace _2Real
 	void OutputSlot::unregisterCallback(DataCallback callback)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
 		m_Event -= Poco::delegate(callback);
 	}
 }

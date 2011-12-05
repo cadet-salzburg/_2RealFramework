@@ -24,21 +24,29 @@
 namespace _2Real
 {
 
+	/**
+	*	sequences & synchronizations are runnable graphs,
+	*	i.e. graphs that have a run method
+	*/
+
 	class RunnableGraph : public Runnable, public Graph
 	{
 
 	public:
 
-		RunnableGraph(Identifier const& id, SystemGraph *const system);
+		RunnableGraph(Identifier const& id, SystemGraph &system);
 		virtual ~RunnableGraph();
 
-		const bool hasParameters() const
-		{
-			return false;
-		}
-
-	private:
-
 	};
+
+	inline RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
+		Runnable(id, system),
+		Graph()
+	{
+	}
+
+	inline RunnableGraph::~RunnableGraph()
+	{
+	}
 
 }

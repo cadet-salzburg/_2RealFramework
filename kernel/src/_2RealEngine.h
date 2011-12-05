@@ -25,8 +25,6 @@
 */
 #pragma warning(disable:4503)
 
-//#include "_2RealEngineData.h"
-//#include "_2RealData.h"
 #include "_2RealTypetable.h"
 #include "_2RealServiceFactory.h"
 #include "_2RealProductionGraphs.h"
@@ -54,6 +52,8 @@ namespace _2Real
 
 		Typetable const&		types() const;
 		Timer const&			timer() const;
+		StringMap const&		getAllowedTypes() const;
+		long					getTimestamp() const;
 
 		const Identifier		createSystem(std::string const& name);
 		void					destroySystem(Identifier const& id);
@@ -62,21 +62,15 @@ namespace _2Real
 
 		//void destroy(Identifier const& _id, Identifier const& _system);
 		
-		const Identifier load(std::string const& name, std::string const& classname, Identifier const& system);
-		void setup(Identifier const& id, Identifier const& system);
-
-		const std::string getInfo(Identifier const& plugin, Identifier const& system) const;
-		
-		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
-		void setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system);
-
-		void setValue(Identifier const& entity, std::string const& name, EngineData any, std::string const& type, Identifier const& system);
+		const Identifier		load(std::string const& name, std::string const& classname, Identifier const& system);
+		const std::string		getInfo(Identifier const& plugin, Identifier const& system) const;
+		const Identifier		createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
+		void					setup(Identifier const& setupAble, Identifier const& system);
+		void					setUpdateRate(Identifier const& runnable, float const& updatesPerSecond, Identifier const& system);
+		void					setValue(Identifier const& setupAble, std::string const& name, EngineData any, std::string const& type, Identifier const& system);
 
 		void linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system);
 
-		/**
-		*	functions for running services etc
-		*/
 		void start(Identifier const& runnable, Identifier const& system);
 		void startAll(Identifier const& system);
 		void stop(Identifier const& runnable, Identifier const& system);
@@ -99,7 +93,6 @@ namespace _2Real
 		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
 		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
 		//void append(Identifier const& _dst, Identifier const& _src, Identifier const& _system);
-		
 		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
 
 	private:
@@ -125,6 +118,16 @@ namespace _2Real
 	inline Timer const& Engine::timer() const
 	{
 		return m_Timer;
+	}
+
+	inline StringMap const& Engine::getAllowedTypes() const
+	{
+		return m_Types.getLookupTable();
+	}
+
+	inline long Engine::getTimestamp() const
+	{
+		return m_Timer.getTimestamp();
 	}
 
 }

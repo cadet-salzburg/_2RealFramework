@@ -22,7 +22,6 @@
 #include "_2RealSystemGraph.h"
 #include "_2RealTypetable.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -36,17 +35,6 @@ namespace _2Real
 
 	ProductionGraphs::~ProductionGraphs()
 	{
-		try
-		{
-			if (m_Systems.size() > 0)
-			{
-				clearSystems();
-			}
-		}
-		catch(...)
-		{
-			std::cout << "error on production graphs destruction" << std::endl;
-		}
 	}
 
 	void ProductionGraphs::clearSystems()
@@ -62,7 +50,7 @@ namespace _2Real
 			{
 				it->second->shutdown();
 			}
-			catch (Exception &e)
+			catch (std::exception &e)
 			{
 				error = true;
 				msg << "exception on production graph shutdown: " << id << " " << e.what() << std::endl;
@@ -82,8 +70,7 @@ namespace _2Real
 	const Identifier ProductionGraphs::createSystemGraph(std::string const& name)
 	{
 		const Identifier id = Entity::createIdentifier(name, "system");
-		StringMap const& allowedTypes = m_Engine.types().getLookupTable();
-		SystemGraph *graph = new SystemGraph(id, allowedTypes);
+		SystemGraph *graph = new SystemGraph(id);
 		m_Systems.insert(NamedSystemGraph(id, graph));
 		return id;
 	}

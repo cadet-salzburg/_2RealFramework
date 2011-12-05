@@ -155,24 +155,30 @@ namespace _2Real
 		getServiceMetadata(serviceName).addOutputSlot(outputName, keyword);
 	}
 
-	const std::list< std::string > PluginMetadata::getSetupParameters() const
+	const StringMap PluginMetadata::getSetupParameters() const
 	{
-		std::list< std::string > result;
-		for (ParameterDataMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); ++it)
+		StringMap result;
+		for (ParameterDataMap::const_iterator it = m_SetupParameters.begin(); it !=m_SetupParameters.end(); it++)
 		{
-			result.push_back(it->first);
+			ParameterMetadata *data = it->second;
+			result.insert(std::make_pair(data->getName(), data->getType()));
 		}
 		return result;
 	}
 
-	const std::list< std::string > PluginMetadata::getServices() const
+	const StringMap PluginMetadata::getSetupParameters(std::string const& serviceName) const
 	{
-		std::list< std::string > result;
-		for (ServiceDataMap::const_iterator it = m_Services.begin(); it !=m_Services.end(); ++it)
-		{
-			result.push_back(it->first);
-		}
-		return result;
+		return getServiceMetadata(serviceName).getSetupParameters();
+	}
+
+	const StringMap PluginMetadata::getOutputSlots(std::string const& serviceName) const
+	{
+		return getServiceMetadata(serviceName).getOutputParameters();
+	}
+
+	const StringMap PluginMetadata::getInputSlots(std::string const& serviceName) const
+	{
+		return getServiceMetadata(serviceName).getInputParameters();
 	}
 
 	bool PluginMetadata::containsParameterMetadata(std::string const& name) const

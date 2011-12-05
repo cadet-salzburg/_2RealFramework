@@ -19,16 +19,10 @@
 
 #pragma once
 
-#include <string>
-
 namespace _2Real
 {
 
-	class Identifier;
 	class Engine;
-	class Plugin;
-	class SystemGraph;
-	class Typetable;
 
 	class ServiceFactory
 	{
@@ -36,7 +30,6 @@ namespace _2Real
 	public:
 
 		ServiceFactory(Engine const& engine);
-		const Identifier createService(std::string const& name, Plugin const& plugin, std::string const& service, SystemGraph &system);
 
 	private:
 

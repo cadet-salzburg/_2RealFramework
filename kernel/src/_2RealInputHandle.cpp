@@ -18,7 +18,6 @@
 
 #include "_2RealInputHandle.h"
 #include "_2RealInputSlot.h"
-#include "_2RealEngineData.h"
 
 namespace _2Real
 {
@@ -29,34 +28,24 @@ namespace _2Real
 	{
 	}
 
-	InputHandle::InputHandle(InputSlot *_slot) :
-		ParameterHandle(_slot->name()),
-		m_Input(_slot)
+	InputHandle::InputHandle(InputSlot const& slot) :
+		ParameterHandle(slot.name()),
+		m_Input(&slot)
 	{
 	}
 
-	InputHandle::InputHandle(InputHandle const& _src) :
-		ParameterHandle(_src),
-		m_Input(_src.m_Input)
+	InputHandle::InputHandle(InputHandle const& src) :
+		ParameterHandle(src),
+		m_Input(src.m_Input)
 	{
 	}
 
-	InputHandle& InputHandle::operator=(InputHandle const& _src)
+	InputHandle& InputHandle::operator=(InputHandle const& src)
 	{
-		if (this == &_src)
-		{
-			return *this;
-		}
-
-		ParameterHandle::operator=(_src);
-		m_Input = _src.m_Input;
+		ParameterHandle::operator=(src);
+		m_Input = src.m_Input;
 
 		return *this;
-	}
-
-	InputHandle::~InputHandle()
-	{
-		//input slot is deleted by framework
 	}
 
 	EngineData InputHandle::newest()

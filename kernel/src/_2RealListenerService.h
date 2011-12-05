@@ -33,7 +33,7 @@ namespace _2Real
 
 	public:
 
-		ListenerService(Identifier const& _id, SystemGraph *const system);
+		ListenerService(Identifier const& _id, SystemGraph &system);
 		virtual ~ListenerService();
 
 		ServiceMetadata const& getMetadata();

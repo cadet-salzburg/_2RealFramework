@@ -41,7 +41,7 @@ namespace _2Real
 
 	public:
 
-		OutputSlot(Identifier const& id, Service &service, std::string const& type, std::string const& keyword, EngineData initialValue);
+		OutputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword, EngineData initialValue);
 
 		EngineData					data();
 		void						update();

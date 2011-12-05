@@ -28,19 +28,28 @@ namespace _2Real
 
 	public:
 
-		ParameterHandle();
 		ParameterHandle(std::string const& name);
 		virtual ~ParameterHandle();
-
-		std::string const& name() const
-		{
-			return m_Name;
-		}
+		std::string const& name() const;
 
 	protected:
 
 		std::string			m_Name;
 
 	};
+
+	inline ParameterHandle::ParameterHandle(std::string const& name) :
+		m_Name(name)
+	{
+	}
+
+	inline ParameterHandle::~ParameterHandle()
+	{
+	}
+
+	inline std::string const& ParameterHandle::name() const
+	{
+		return m_Name;
+	}
 
 }

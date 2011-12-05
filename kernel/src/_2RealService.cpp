@@ -26,20 +26,53 @@
 #include "_2RealOutputHandle.h"
 #include "_2RealIService.h"
 #include "_2RealSystemGraph.h"
-//#include "_2RealEngine.h"
+#include "_2RealEngine.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real
 {
 
-	Service::Service(Identifier const& id, IService *const service, SystemGraph &system) : 
+	Service::Service(Identifier const& id, IService &service, SystemGraph &system, StringMap const& setup, StringMap const& input, StringMap const& output) : 
 		Runnable(id, system),
-		m_Service(service),
+		m_Service(&service),
 		m_MaxDelay(long(1000.0f/30.0f)),
-		m_UpdatesPerSecond(30.0f)
+		m_UpdatesPerSecond(30.0f),
+		m_SetupParameters(),
+		m_InputSlots(),
+		m_OutputSlots()
 	{
+		StringMap const& allowedTypes = Engine::instance().getAllowedTypes();
+		Typetable const& lookupTable = Engine::instance().types();
+
+		for (StringMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
+		{
+			std::string name = it->first;
+			std::string keyword = it->second;
+			std::string type =  allowedTypes.find(keyword)->second;
+			SetupParameter *setup = new SetupParameter(name, type, keyword);
+			m_SetupParameters.insert(NamedParameter(name, setup));
+		}
+
+		for (StringMap::const_iterator it = input.begin(); it != input.end(); ++it)
+		{
+			std::string name = it->first;
+			std::string keyword = it->second;
+			std::string type =  allowedTypes.find(keyword)->second;
+			InputSlot *in = new InputSlot(*this, name, type, keyword);
+			m_InputSlots.insert(NamedInput(name, in));
+		}
+
+		for (StringMap::const_iterator it = output.begin(); it != output.end(); ++it)
+		{
+			std::string name = it->first;
+			std::string keyword = it->second;
+			std::string type =  allowedTypes.find(keyword)->second;
+			EngineData initialData;
+			lookupTable.createEngineData(keyword, initialData);
+			OutputSlot *out = new OutputSlot(*this, name, type, keyword, initialData);
+			m_OutputSlots.insert(NamedOutput(name, out));
+		}
 	}
 
 	Service::~Service()
@@ -62,40 +95,7 @@ namespace _2Real
 		}
 	}
 
-	void Service::addInputSlot(InputSlot &slot)
-	{
-		m_InputSlots.insert(NamedInput(slot.name(), &slot));
-	}
-
-	void Service::addOutputSlot(OutputSlot &slot)
-	{
-		m_OutputSlots.insert(NamedOutput(slot.name(), &slot));
-	}
-
-	void Service::addSetupParameter(SetupParameter &parameter)
-	{
-		m_SetupParameters.insert(NamedParameter(parameter.name(), &parameter));
-	}
-
-	const bool Service::hasInputSlot(std::string const& name) const
-	{
-		InputMap::const_iterator it = m_InputSlots.find(name);
-		return (it != m_InputSlots.end());
-	}
-
-	const bool Service::hasOutputSlot(std::string const& name) const
-	{
-		OutputMap::const_iterator it = m_OutputSlots.find(name);
-		return (it != m_OutputSlots.end());
-	}
-
-	const bool Service::hasSetupParameter(std::string const& name) const
-	{
-		ParameterMap::const_iterator it = m_SetupParameters.find(name);
-		return (it != m_SetupParameters.end());
-	}
-
-	void Service::setUpdateRate(float const& updatesPerSecond)
+	void Service::setUpdateRate(float updatesPerSecond)
 	{
 		m_MaxDelay = long(1000.0f/updatesPerSecond);
 		m_UpdatesPerSecond = updatesPerSecond;
@@ -103,10 +103,13 @@ namespace _2Real
 
 	void Service::checkConfiguration()
 	{
+		//TODO
+	}
+
+	void Service::setup()
+	{
 		ServiceContext context(*this);
 		m_Service->setup(context);
-
-		//TODO
 	}
 
 	void Service::run()
@@ -115,8 +118,6 @@ namespace _2Real
 		{
 			try
 			{
-				//Engine::instance()->
-				
 				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 				{
 					it->second->updateCurrent();
@@ -183,78 +184,24 @@ namespace _2Real
 		m_Service->shutdown();
 	}
 
-	std::list< Identifier > Service::inputSlotIDs() const
+	void Service::setParameterValue(std::string const& name, EngineData &data)
 	{
-		std::list< Identifier > result;
-		for (InputMap::const_iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
-		{
-			result.push_back(it->second->identifier());
-		}
-
-		return result;
-	}
-
-	std::list< Identifier > Service::outputSlotIDs() const
-	{
-		std::list< Identifier > result;
-		for (OutputMap::const_iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
-		{
-			result.push_back(it->second->identifier());
-		}
-
-		return result;
-	}
-
-	std::list< Identifier > Service::setupParameterIDs() const
-	{
-		std::list< Identifier > result;
-		for (ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); it++)
-		{
-			result.push_back(it->second->identifier());
-		}
-
-		return result;
+		getSetupParameter(name).setData(data);
 	}
 
 	EngineData Service::getParameterValue(std::string const& name) const
 	{
-		ParameterMap::const_iterator it = m_SetupParameters.find(name);
-		if (it == m_SetupParameters.end())
-		{
-			std::ostringstream msg;
-			msg << "service setup parameter " << name << " not found" << std::endl;
-			throw NotFoundException(msg.str());
-		}
-
-		return it->second->get();
+		return getSetupParameter(name).getData();
 	}
 
 	InputHandle Service::createInputHandle(std::string const& name) const
 	{
-		InputMap::const_iterator it = m_InputSlots.find(name);
-		if (it == m_InputSlots.end())
-		{
-			std::ostringstream msg;
-			msg << "service input slot " << name << " not found" << std::endl;
-			throw NotFoundException(msg.str());
-		}
-
-		InputHandle handle(it->second);
-		return handle;
+		return InputHandle(getInputSlot(name));
 	}
 
-	OutputHandle Service::createOutputHandle(std::string const& name) const
+	OutputHandle Service::createOutputHandle(std::string const& name)
 	{
-		OutputMap::const_iterator it = m_OutputSlots.find(name);
-		if (it == m_OutputSlots.end())
-		{
-			std::ostringstream msg;
-			msg << "service output slot " << name << " not found" << std::endl;
-			throw NotFoundException(msg.str());
-		}
-
-		OutputHandle handle(it->second);
-		return handle;
+		return OutputHandle(getOutputSlot(name));
 	}
 
 	OutputSlot & Service::getOutputSlot(std::string const& name)
@@ -262,7 +209,9 @@ namespace _2Real
 		OutputMap::iterator it = m_OutputSlots.find(name);
 		if (it == m_OutputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -273,7 +222,9 @@ namespace _2Real
 		InputMap::iterator it = m_InputSlots.find(name);
 		if (it == m_InputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -284,7 +235,9 @@ namespace _2Real
 		ParameterMap::iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -295,7 +248,9 @@ namespace _2Real
 		OutputMap::const_iterator it = m_OutputSlots.find(name);
 		if (it == m_OutputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -306,7 +261,9 @@ namespace _2Real
 		InputMap::const_iterator it = m_InputSlots.find(name);
 		if (it == m_InputSlots.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
@@ -317,7 +274,9 @@ namespace _2Real
 		ParameterMap::const_iterator it = m_SetupParameters.find(name);
 		if (it == m_SetupParameters.end())
 		{
-			throw Exception("attempted to query non-existant setup parameter");
+			std::ostringstream msg;
+			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);

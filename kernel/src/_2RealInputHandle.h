@@ -20,6 +20,8 @@
 
 #include "_2RealParameterHandle.h"
 
+#include <sstream>
+
 namespace _2Real
 {
 
@@ -32,10 +34,9 @@ namespace _2Real
 	public:
 
 		InputHandle();
-		InputHandle(InputSlot *slot);
+		InputHandle(InputSlot const& slot);
 		InputHandle(InputHandle const& src);
 		InputHandle& operator=(InputHandle const& src);
-		~InputHandle();
 
 		template< typename Datatype >
 		Datatype const& data()
@@ -56,50 +57,12 @@ namespace _2Real
 			}
 		}
 
-		//template< typename Datatype >
-		//Datatype const& getNewestData()
-		//{
-		//	if (!m_Input)
-		//	{
-		//		throw BadHandleException(m_Name);
-		//	}
-
-		//	try
-		//	{
-		//		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
-		//		return *ptr.get();
-		//	}
-		//	catch (Exception &e)
-		//	{
-		//		throw e;
-		//	}
-		//}
-
-		//template< typename Datatype >
-		//Datatype const& getOldestData()
-		//{
-		//	if (!m_Input)
-		//	{
-		//		throw BadHandleException(m_Name);
-		//	}
-
-		//	try
-		//	{
-		//		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(oldest());
-		//		return *ptr.get();
-		//	}
-		//	catch (Poco::Exception &e)
-		//	{
-		//		throw e;
-		//	}
-		//}
-
 	private:
 
 		EngineData		oldest();
 		EngineData		newest();
 
-		InputSlot		*m_Input;
+		InputSlot		const* m_Input;
 
 	};
 

@@ -21,13 +21,6 @@
 namespace _2Real
 {
 
-	SetupParameter::SetupParameter(Identifier const& _id, std::string const& _type, std::string const& _key) :
-		Parameter(_id, _type, _key)
-	{
-	}
 
-	SetupParameter::~SetupParameter()
-	{
-	}
 
 }

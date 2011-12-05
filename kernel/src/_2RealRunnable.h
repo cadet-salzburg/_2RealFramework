@@ -19,11 +19,8 @@
 #pragma once
 
 #include "_2RealEntity.h"
-#include "_2RealException.h"
 
 #include "Poco/Runnable.h"
-
-#include <iostream>
 
 namespace _2Real
 {
@@ -41,67 +38,29 @@ namespace _2Real
 
 	public:
 
-		Runnable(Identifier const& id, SystemGraph &system) :
-			Entity(id),
-			m_System(system)
-		{
-		}
+		Runnable(Identifier const& id, SystemGraph &system);
+		virtual ~Runnable();
 
-		virtual ~Runnable()
-		{
-		}
+		void start(bool const& runOnce);
+		void stop();
 
-		void start(bool const& runOnce)
-		{
-			m_RunOnce = runOnce;
-			m_Run = !runOnce;
-		}
-
-		void stop()
-		{
-			m_RunOnce = false;
-			m_Run = false;
-		}
-
+		virtual void setup() = 0;
 		virtual void run() = 0;
 		virtual void update() = 0;
 		virtual void shutdown() = 0;
+
 		virtual void checkConfiguration() = 0;
 
-		RunnableGraph *const root()
-		{
-			return m_Root;
-		}
+		void setRoot(RunnableGraph &root);
+		RunnableGraph & root();
+		RunnableGraph const&  root() const;
 
-		RunnableGraph const *const root() const
-		{
-			return m_Root;
-		}
+		void setFather(RunnableGraph &father);
+		RunnableGraph &father();
+		RunnableGraph const& father() const;
 
-		void setFather(RunnableGraph *const father)
-		{
-			m_Father = father;
-		}
-
-		RunnableGraph *const father()
-		{
-			return m_Father;
-		}
-
-		RunnableGraph const *const father() const
-		{
-			return m_Father;
-		}
-
-		SystemGraph &system()
-		{
-			return m_System;
-		}
-
-		SystemGraph const& system() const
-		{
-			return m_System;
-		}
+		SystemGraph &system();
+		SystemGraph const& system() const;
 
 	protected:
 
@@ -110,8 +69,70 @@ namespace _2Real
 
 		SystemGraph				&m_System;
 		RunnableGraph			*m_Root;
-		RunnableGraph			*m_Father;	//m_Father == this  ->->child of root
+		RunnableGraph			*m_Father;
 
 	};
+
+	inline Runnable::Runnable(Identifier const& id, SystemGraph &system) :
+		Entity(id),
+		m_System(system)
+	{
+	}
+
+	inline Runnable::~Runnable()
+	{
+	}
+
+	inline void Runnable::start(bool const& runOnce)
+	{
+		m_RunOnce = runOnce;
+		m_Run = !runOnce;
+	}
+
+	inline void Runnable::stop()
+	{
+		m_RunOnce = false;
+		m_Run = false;
+	}
+
+	inline void Runnable::setRoot(RunnableGraph &root)
+	{
+		m_Root = &root;
+	}
+
+	inline RunnableGraph & Runnable::root()
+	{
+		return *m_Root;
+	}
+
+	inline RunnableGraph const& Runnable::root() const
+	{
+		return *m_Root;
+	}
+
+	inline void Runnable::setFather(RunnableGraph &father)
+	{
+		m_Father = &father;
+	}
+
+	inline RunnableGraph & Runnable::father()
+	{
+		return *m_Father;
+	}
+
+	inline RunnableGraph const& Runnable::father() const
+	{
+		return *m_Father;
+	}
+
+	inline SystemGraph & Runnable::system()
+	{
+		return m_System;
+	}
+
+	inline SystemGraph const& Runnable::system() const
+	{
+		return m_System;
+	}
 
 }

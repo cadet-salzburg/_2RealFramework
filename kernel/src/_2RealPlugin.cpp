@@ -20,25 +20,23 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealMetadata.h"
-#include "_2RealServiceMetadata.h"
-#include "_2RealParameterMetadata.h"
-#include "_2RealSetupParameter.h"
 #include "_2RealSystemGraph.h"
 #include "_2RealException.h"
+#include "_2RealSetupParameter.h"
+#include "_2RealService.h"
 
-//#include <iostream>
-//#include <sstream>
+#include <sstream>
 
 namespace _2Real
 {
 
-	Plugin::Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph const& system) :
+	Plugin::Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph &system) :
 		Entity(id),
 		m_System(system),
 		m_Metadata(classname, directory, system.getAllowedTypes()),
 		m_Activator(NULL),
 		m_IsInitialized(false),
-		m_Services(),
+		m_ServiceTemplates(),
 		m_SetupParameters(),
 		m_File(directory+file),
 		m_PluginLoader()
@@ -54,9 +52,8 @@ namespace _2Real
 				uninstall();
 			}
 		}
-		catch (...)
+		catch (std::exception &e)
 		{
-			m_System.getLogstream() << "error on plugin uninstallation, " << name() << "\n";
 		}
 
 		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
@@ -65,47 +62,70 @@ namespace _2Real
 		}
 
 		m_SetupParameters.clear();
+		m_ServiceTemplates.clear();
 		m_Services.clear();
-		m_File.clear();
 	}
 
 	void Plugin::registerService(std::string const& name, ServiceCreator service)
 	{
-		TemplateMap::iterator it = m_Services.find(name);
-		if (it != m_Services.end())
+		if (canExportService(name))
+		{
+			TemplateMap::iterator it = m_ServiceTemplates.find(name);
+			if (it != m_ServiceTemplates.end())
+			{
+				std::ostringstream msg;
+				msg << "service " << name << " already exists";
+				throw AlreadyExistsException(msg.str());
+			}
+
+			m_ServiceTemplates.insert(NamedTemplate(name, service));
+		}
+		else
 		{
 			std::ostringstream msg;
-			msg << "service " << name << " already exists";
-			throw AlreadyExistsException(msg.str());
+			msg << "service " << name << " not found in plugin metadata";
+			throw NotFoundException(msg.str());
 		}
-
-		m_Services.insert(NamedTemplate(name, service));
 	}
 
-	IService *const Plugin::createService(std::string const& name) const
+	void Plugin::setParameterValue(std::string const& name, EngineData &data)
 	{
-		TemplateMap::const_iterator it = m_Services.find(name);
-		if (it == m_Services.end())
+		getSetupParameter(name).setData(data);
+	}
+
+	EngineData Plugin::getParameterValue(std::string const& name) const
+	{
+		return getSetupParameter(name).getData();
+	}
+
+	IService & Plugin::createService(std::string const& serviceName) const
+	{
+		TemplateMap::const_iterator it = m_ServiceTemplates.find(serviceName);
+		if (it == m_ServiceTemplates.end())
 		{
 			std::ostringstream msg;
-			msg << "internal error: plugin " << this->name() << " does not export service " << name;
+			msg << "internal error: plugin " << this->name() << " does not export service " << serviceName;
 			throw Exception(msg.str());
 		}
 
-		return it->second();
+		return *(it->second());
 	}
 
-	void Plugin::addSetupParameter(SetupParameter *const parameter)
+	const Identifier Plugin::createService(std::string const& idName, std::string const& serviceName)
 	{
-		ParameterMap::iterator it = m_SetupParameters.find(parameter->name());
-		if (it != m_SetupParameters.end())
-		{
-			std::ostringstream msg;
-			msg << "internal error: parameter" << parameter->name() << " already exists";
-			throw Exception(msg.str());
-		}
+		IService &service = createService(serviceName);
 
-		m_SetupParameters.insert(NamedParameter(parameter->name(), parameter));
+		const StringMap setup = m_Metadata.getSetupParameters(serviceName);
+		const StringMap input = m_Metadata.getInputSlots(serviceName);
+		const StringMap output = m_Metadata.getOutputSlots(serviceName);
+
+		const Identifier id = Entity::createIdentifier(idName, "service");
+		Service *runnable = new Service(id, service, m_System, setup, input, output);
+
+		unsigned int index = m_System.childCount();
+		m_System.insertChild(*runnable, index);
+
+		return id;
 	}
 
 	bool Plugin::canExportService(std::string const& name) const
@@ -113,29 +133,91 @@ namespace _2Real
 		return m_Metadata.containsServiceMetadata(name);
 	}
 
-	bool Plugin::exportsService(std::string const& name) const
+	void Plugin::install()
 	{
-		return (m_Services.find(name) != m_Services.end());
+		try
+		{
+			//1st, load dll
+			try
+			{
+				m_PluginLoader.loadLibrary(m_File);
+			}
+			catch (Poco::LibraryLoadException &e)
+			{
+				throw _2Real::Exception(e.what());
+			}
+
+			//2nd, create plugin activator instance
+			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
+			{
+				try
+				{
+					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
+				}
+				catch (Poco::NotFoundException &e)
+				{
+					throw Exception(e.what());
+				}
+			}
+			else
+			{
+				std::ostringstream msg;
+				msg << "invalid library: does not contain IPluginActivator";
+				throw Exception(msg.str());
+			}
+
+			//3rd, read the metadata
+			Metadata metadata(m_Metadata);
+			m_Activator->getMetadata(metadata);
+
+			//4th, create setup parameters from the metadata
+			StringMap setupParameters = m_Metadata.getSetupParameters();
+			for (StringMap::iterator it = setupParameters.begin(); it != setupParameters.end(); ++it)
+			{
+				std::string name = it->first;
+				std::string keyword = it->second;
+				std::string type = m_System.getAllowedTypes().find(keyword)->second;
+
+				SetupParameter *parameter = new SetupParameter(name, type, keyword);
+				m_SetupParameters.insert(NamedParameter(name, parameter));
+			}
+		}
+		catch (_2Real::Exception &e)
+		{
+			if (m_Activator)
+			{
+				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+				m_Activator = NULL;
+			}
+
+			if (m_PluginLoader.isLibraryLoaded(m_File))
+			{
+				m_PluginLoader.unloadLibrary(m_File);
+			}
+
+			e.rethrow();
+		}
 	}
 
-	bool Plugin::hasSetupParameter(std::string const& name) const
+	void Plugin::setup()
 	{
-		return (m_SetupParameters.find(name) != m_SetupParameters.end());
+		PluginContext context(*this);
+		m_Activator->setup(context);
+		m_IsInitialized = true;
 	}
 
-	PluginMetadata const& Plugin::getMetadata() const
+	void Plugin::uninstall()
 	{
-		return m_Metadata;
-	}
+		if (m_Activator)
+		{
+			delete m_Activator;
+			m_Activator = NULL;
+		}
 
-	ServiceMetadata const& Plugin::getMetadata(std::string const& name) const
-	{
-		return m_Metadata.getServiceMetadata(name);
-	}
-
-	bool Plugin::isInitialized() const
-	{
-		return m_IsInitialized;
+		if (m_PluginLoader.isLibraryLoaded(m_File))
+		{
+			m_PluginLoader.unloadLibrary(m_File);
+		}
 	}
 
 	SetupParameter & Plugin::getSetupParameter(std::string const& name)
@@ -162,98 +244,6 @@ namespace _2Real
 		}
 
 		return *(it->second);
-	}
-
-	void Plugin::install()
-	{
-		try
-		{
-			//1st, load dll
-			try
-			{
-				m_PluginLoader.loadLibrary(m_File);
-			}
-			catch (Poco::LibraryLoadException &e)
-			{
-				//a poco error occured
-				throw _2Real::Exception(e.what());
-			}
-
-			//2nd, create plugin activator instance
-			if (m_PluginLoader.canCreate(m_Metadata.getClassname()))
-			{
-				try
-				{
-					m_Activator = m_PluginLoader.create(m_Metadata.getClassname());
-				}
-				catch (Poco::NotFoundException &e)
-				{
-					//a poco error occured
-					throw Exception(e.what());
-				}
-			}
-			else
-			{
-				std::ostringstream msg;
-				msg << "error: could not load dll";
-				throw Exception(msg.str());
-			}
-
-			//3rd, read the metadata
-			Metadata metadata(m_Metadata);
-			m_Activator->getMetadata(metadata);
-
-			//4th, create setup parameters from the metadata
-			std::list< std::string > setupParameters = m_Metadata.getSetupParameters();
-			for (std::list< std::string >::iterator it = setupParameters.begin(); it != setupParameters.end(); it++)
-			{
-				std::string name = *it;
-				const Identifier id = Entity::createIdentifier(name, "plugin setup parameter");
-				std::string key = m_Metadata.getParameterMetadata(name).getType();
-				std::string type = m_System.getAllowedTypes().find(key)->second;
-				SetupParameter *parameter = new SetupParameter(id, type, key);
-				m_SetupParameters.insert(NamedParameter(name, parameter));
-			}
-		}
-		catch (_2Real::Exception &e)
-		{
-			if (m_Activator)
-			{
-				m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
-				m_Activator = NULL;
-			}
-
-			throw e;
-		}
-	}
-
-	void Plugin::setup()
-	{
-		if (!m_Activator)
-		{
-			std::ostringstream msg;
-			msg << "internal error: setup failed";
-			throw Exception(msg.str());
-		}
-
-		PluginContext context(*this);
-		m_Activator->setup(context);
-
-		m_IsInitialized = true;
-	}
-
-	void Plugin::uninstall()
-	{
-		if (m_Activator)
-		{
-			delete m_Activator;
-			m_Activator = NULL;
-		}
-
-		if (m_PluginLoader.isLibraryLoaded(m_File))
-		{
-			m_PluginLoader.unloadLibrary(m_File);
-		}
 	}
 
 }

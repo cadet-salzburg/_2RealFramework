@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
@@ -15,12 +14,6 @@
       <Filter>Metadata</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealIOSlot.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParameter.cpp">
       <Filter>Parameters</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp">
@@ -56,9 +49,6 @@
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
       <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
-      <Filter>Parameters</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp">
       <Filter>Subsystems</Filter>

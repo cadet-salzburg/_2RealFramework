@@ -18,34 +18,53 @@
 
 #pragma once
 
-#include "_2RealEntity.h"
+#include <string>
 
 namespace _2Real
 {
 
-	class Parameter : public Entity
+	class Parameter
 	{
 
 	public:
 
-		Parameter(Identifier const& id, std::string const& type, std::string const& key);
+		Parameter(std::string const& name, std::string const& type, std::string const& keyword);
 		virtual ~Parameter();
 
 		bool					isInitialized() const;
 		std::string const&		keyword() const;
 		std::string const&		datatype() const;
+		std::string const&		name() const;
 
 	protected:
 
 		bool					m_IsInitialized;
 		const std::string		m_Datatype;
 		const std::string		m_Keyword;
+		const std::string		m_Name;
 
 	};
+
+	inline Parameter::Parameter(std::string const& name, std::string const& type, std::string const& keyword) :
+		m_IsInitialized(false),
+		m_Name(name),
+		m_Datatype(type),
+		m_Keyword(keyword)
+	{
+	}
+
+	inline Parameter::~Parameter()
+	{
+	}
 
 	inline bool Parameter::isInitialized() const
 	{
 		return m_IsInitialized;
+	}
+
+	inline std::string const& Parameter::name() const
+	{
+		return m_Name;
 	}
 
 	inline std::string const& Parameter::keyword() const
