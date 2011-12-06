@@ -32,14 +32,15 @@ namespace _2Real
 
 	Plugin::Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph &system) :
 		Entity(id),
-		m_System(system),
-		m_Metadata(classname, directory, system.getAllowedTypes()),
-		m_Activator(NULL),
-		m_IsInitialized(false),
 		m_ServiceTemplates(),
 		m_SetupParameters(),
+		m_Services(),
+		m_Activator(NULL),
+		m_PluginLoader(),
 		m_File(directory+file),
-		m_PluginLoader()
+		m_IsInitialized(false),
+		m_System(system),
+		m_Metadata(classname, directory, m_System.getAllowedTypes())
 	{
 	}
 
@@ -88,14 +89,14 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::setParameterValue(std::string const& name, EngineData &data)
+	void Plugin::setParameterValue(std::string const& paramName, EngineData const& value)
 	{
-		getSetupParameter(name).setData(data);
+		getSetupParameter(paramName).setData(value);
 	}
 
-	EngineData Plugin::getParameterValue(std::string const& name) const
+	EngineData Plugin::getParameterValue(std::string const& paramName) const
 	{
-		return getSetupParameter(name).getData();
+		return getSetupParameter(paramName).getData();
 	}
 
 	IService & Plugin::createService(std::string const& serviceName) const
@@ -177,6 +178,8 @@ namespace _2Real
 				std::string name = it->first;
 				std::string keyword = it->second;
 				std::string type = m_System.getAllowedTypes().find(keyword)->second;
+
+				m_System.getLogstream() << name << " " << type << " " << keyword;
 
 				SetupParameter *parameter = new SetupParameter(name, type, keyword);
 				m_SetupParameters.insert(NamedParameter(name, parameter));

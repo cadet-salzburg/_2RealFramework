@@ -77,14 +77,14 @@ namespace _2Real
 		return m_Engine.createService(name, plugin, service, m_Id);
 	}
 
-	void System::setUpdateRate(Identifier const& runnable, float const& updatesPerSecond)
+	void System::setUpdateRate(Identifier const& runnable, float updatesPerSecond)
 	{
 		m_Engine.setUpdateRate(runnable, updatesPerSecond, m_Id);
 	}
 
-	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData value, type_info const& info)
+	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
 	{
-		m_Engine.setValue(id, param, value, info.name(), m_Id);
+		m_Engine.setValue(id, param, value, m_Id);
 	}
 
 	//Identifiers System::getInputSlots(Identifier const& _id)

@@ -63,7 +63,7 @@ namespace _2Real
 	const std::string PluginMetadata::lookupKeyword(std::string const& type) const
 	{
 		std::string keyword = "";
-		for (StringMap::const_iterator it = m_AllowedTypes.begin(); it != m_AllowedTypes.end(); ++it)
+		for (StringMap::const_iterator it = m_AllowedTypes.begin(); it != m_AllowedTypes.end(); it++)
 		{
 			if ((it->second) == type)
 			{

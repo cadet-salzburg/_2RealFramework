@@ -120,5 +120,8 @@ namespace _2Real
 	DECLARE_EXCEPTION(AlreadyExistsException, Exception)
 	DECLARE_EXCEPTION(InvalidIdentifierException, Exception)
 	DECLARE_EXCEPTION(TypeMismatchException, Exception)
+	DECLARE_EXCEPTION(UninitializedHandleException, Exception)
+	DECLARE_EXCEPTION(PluginException, Exception)
+	DECLARE_EXCEPTION(ServiceException, Exception)
 
 }

@@ -46,7 +46,6 @@
     <ClCompile Include="..\..\src\_2RealSystemGraph.cpp">
       <Filter>Graphs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
@@ -66,6 +65,7 @@
       <Filter>Metadata</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />

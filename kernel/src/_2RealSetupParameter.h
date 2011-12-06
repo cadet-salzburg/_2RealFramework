@@ -20,6 +20,10 @@
 
 #include "_2RealParameter.h"
 #include "_2RealEngineData.h"
+#include "_2RealException.h"
+
+#include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
@@ -56,6 +60,13 @@ namespace _2Real
 
 	inline void SetupParameter::setData(EngineData const& data)
 	{
+		if (data.type().name() != datatype())
+		{
+			std::ostringstream msg;
+			msg << "datatype mismatch: " << datatype() << " vs. template parameter type " << data.type().name();
+			throw TypeMismatchException(msg.str());
+		}
+
 		m_Data = data;
 		m_IsInitialized = true;
 	}

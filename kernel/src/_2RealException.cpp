@@ -73,9 +73,12 @@ namespace _2Real
 
 	IMPLEMENT_EXCEPTION(XMLFormatException, Exception, "xml format exception")
 	IMPLEMENT_EXCEPTION(InvalidTypeException, Exception, "invalid type exception")
-	IMPLEMENT_EXCEPTION(NotFoundException, Exception, "invalid type exception")
+	IMPLEMENT_EXCEPTION(NotFoundException, Exception, "not found exception")
 	IMPLEMENT_EXCEPTION(AlreadyExistsException, Exception, "already exists exception")
 	IMPLEMENT_EXCEPTION(InvalidIdentifierException, Exception, "invalid identifier exception")
-	IMPLEMENT_EXCEPTION(TypeMismatchException, Exception, "invalid identifier exception")
+	IMPLEMENT_EXCEPTION(TypeMismatchException, Exception, "type mismatch exception")
+	IMPLEMENT_EXCEPTION(UninitializedHandleException, Exception, "uninitialized handle exception")
+	IMPLEMENT_EXCEPTION(PluginException, Exception, "plugin exception")
+	IMPLEMENT_EXCEPTION(ServiceException, Exception, "service exception")
 
 }

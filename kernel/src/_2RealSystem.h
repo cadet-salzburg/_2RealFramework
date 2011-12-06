@@ -21,7 +21,9 @@
 
 #include "_2RealEngineData.h"
 #include "_2RealIdentifier.h"
+#include "_2RealException.h"
 
+#include <iostream>
 #include <string>
 
 namespace _2Real
@@ -97,7 +99,7 @@ namespace _2Real
 		/**
 		*	sets a runnable's update rate
 		*/
-		void setUpdateRate(Identifier const& id, float const& updatesPerSecond);
+		void setUpdateRate(Identifier const& id, float updatesPerSecond);
 
 		/**
 		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
@@ -107,7 +109,7 @@ namespace _2Real
 		void setValue(Identifier const& id, std::string const& name, T const& value)
 		{
 			EngineData any(value);
-			setValueInternal(id, name, any, typeid(T));
+			setValueInternal(id, name, any);
 		}
 
 		/**
@@ -217,7 +219,7 @@ namespace _2Real
 		/**
 		*	internally used function for setting param values
 		*/
-		void setValueInternal(Identifier const& id, std::string const& name, EngineData any, type_info const& info);
+		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
 
 		/**
 		*	system's identifier

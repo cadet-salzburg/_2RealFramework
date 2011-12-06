@@ -49,7 +49,7 @@ namespace _2Real
 		Service(Identifier const& id, IService &service, SystemGraph &system, StringMap const& setup, StringMap const& input, StringMap const& output);
 		~Service();
 
-		void					setParameterValue(std::string const& name, EngineData &data);
+		void					setParameterValue(std::string const& name, EngineData const& data);
 		EngineData				getParameterValue(std::string const& name) const;
 		InputHandle				createInputHandle(std::string const& name) const;
 		OutputHandle			createOutputHandle(std::string const& name);

@@ -22,6 +22,7 @@
 #include "_2RealIdentifier.h"
 #include "_2RealSystemGraph.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -61,9 +62,19 @@ namespace _2Real
 		std::string file = classname + ".dll";
 #endif
 
+		m_System.getLogstream() << "creating plugin" << std::endl;
+
 		Plugin *plugin = new Plugin(id, m_InstallDirectory, file, classname, m_System);
+
+		m_System.getLogstream() << "plugin created" << std::endl;
+
 		plugin->install();
+
+		m_System.getLogstream() << "plugin installed" << std::endl;
+
 		m_Plugins.insert(NamedPlugin(id, plugin));
+
+		m_System.getLogstream() << "plugin inserted" << std::endl;
 
 		return id;
 	}
@@ -110,6 +121,11 @@ namespace _2Real
 	const Identifier PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		return getPlugin(id).createService(name, service);
+	}
+
+	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	{
+		getPlugin(id).setParameterValue(paramName, value);
 	}
 
 	Plugin & PluginPool::getPlugin(Identifier const& id)

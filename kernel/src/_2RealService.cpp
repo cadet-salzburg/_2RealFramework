@@ -184,7 +184,7 @@ namespace _2Real
 		m_Service->shutdown();
 	}
 
-	void Service::setParameterValue(std::string const& name, EngineData &data)
+	void Service::setParameterValue(std::string const& name, EngineData const& data)
 	{
 		getSetupParameter(name).setData(data);
 	}

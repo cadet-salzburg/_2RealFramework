@@ -57,7 +57,6 @@ namespace _2Real
 	Entity::Entity(Identifier const& id) :
 		m_Id(id)
 	{
-		std::cout << "creating entity " << m_Id << std::endl;
 	}
 
 	Entity::~Entity()

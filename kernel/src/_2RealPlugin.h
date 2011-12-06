@@ -60,7 +60,7 @@ namespace _2Real
 		void							registerService(std::string const& serviceName, ServiceCreator creator);
 		bool							canExportService(std::string const& serviceName) const;
 		EngineData						getParameterValue(std::string const& setupName) const;
-		void							setParameterValue(std::string const& setupName, EngineData &data);
+		void							setParameterValue(std::string const& setupName, EngineData const& value);
 		const Identifier				createService(std::string const& idName, std::string const& serviceName);
 
 	private:
@@ -78,8 +78,8 @@ namespace _2Real
 		PluginLoader					m_PluginLoader;
 		std::string						m_File;
 		bool							m_IsInitialized;
-		PluginMetadata					m_Metadata;
 		SystemGraph						&m_System;
+		PluginMetadata					m_Metadata;
 
 	};
 
@@ -88,7 +88,7 @@ namespace _2Real
 		return m_Metadata.getInfoString();
 	}
 
-	bool Plugin::isInitialized() const
+	inline bool Plugin::isInitialized() const
 	{
 		return m_IsInitialized;
 	}

@@ -41,7 +41,7 @@ namespace _2Real
 		{
 			if (!m_Output)
 			{
-				throw BadHandleException(m_Name);
+				throw UninitializedHandleException(m_Name);
 			}
 
 			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());

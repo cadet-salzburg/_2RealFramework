@@ -148,88 +148,32 @@ namespace _2Real
 		return nirvana.createService(name, pluginId, serviceName);
 	}
 
-	void Engine::setValue(Identifier const& id, std::string const& name, EngineData value, std::string const& type, Identifier const& system)
+	void Engine::setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		//if (nirvana.plugins().contains(id))
-		//{
-		//	Plugin &plugin = nirvana.plugins().getPlugin(id);
-		//	SetupParameter &param = plugin.getSetupParameter(name);
-		//	if (param.datatype() != type)
-		//	{
-		//		//BadDatatypeException
-		//		throw Exception("datatype mismatch: " + param.datatype() + " " + type);
-		//	}
-		//	param.set(value);
-		//}
-		//else
-		//{
-		//	if (nirvana.contains(id))
-		//	{
-		//		Runnable &child = nirvana.getChild(id);
-		//		if (child.type() == "service")
-		//		{
-		//			Service &service = static_cast< Service & >(child);
-		//			if (service.hasSetupParameter(name))
-		//			{
-		//				SetupParameter &param = service.getSetupParameter(name);
-		//				if (param.datatype() != type)
-		//				{
-		//					//BadDatatypeException
-		//					throw Exception("datatype mismatch: " + param.datatype() + " " + type);
-		//				}
-		//				param.set(value);
-		//			}
-		//			else if (service.hasInputSlot(name))
-		//			{
-		//				InputSlot &slot = service.getInputSlot(name);
-		//				if (slot.datatype() != type)
-		//				{
-		//					//BadDatatypeException
-		//					throw Exception("datatype mismatch: " + slot.datatype() + " " + type);
-		//				}
-		//				if (slot.isLinked())
-		//				{
-		//					slot.reset();
-		//				}
+		if (!id.isSetupAble())
+		{
+			std::ostringstream msg;
+			msg << "engine::setValue " << id.name() << " is a " << id.type() << ", plugin or service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
 
-		//				Data data(value, m_Timer.getTimestamp());
-		//				slot.set(data);
-		//			}
-		//			else
-		//			{
-		//			}
-		//		}
-		//		else
-		//		{
-		//		}
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
+		nirvana.setValue(id, paramName, value);
 	}
 
-	void Engine::setUpdateRate(Identifier const& id, float const& updatesPerSecond, Identifier const& system)
+	void Engine::setUpdateRate(Identifier const& id, float updatesPerSecond, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		//if (nirvana.contains(id))
-		//{
-		//	Runnable &child = nirvana.getChild(id);
-		//	if (child.type() == "service")
-		//	{
-		//		Service &service = static_cast< Service & >(child);
-		//		service.setUpdateRate(updatesPerSecond);
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		if (!id.isService())
+		{
+			std::ostringstream msg;
+			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", service expected" << std::endl;
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.setUpdateRate(id, updatesPerSecond);
 	}
 
 	void Engine::linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system)

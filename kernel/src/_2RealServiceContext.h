@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		ServiceContext(Service &container);
+		ServiceContext(Service &service);
 
 		/**
 		*	creates an input handle for an input slot

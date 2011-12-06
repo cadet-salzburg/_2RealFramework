@@ -24,6 +24,7 @@
 #include "_2RealException.h"
 #include "_2RealService.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -32,11 +33,12 @@ namespace _2Real
 		Graph(),
 		Entity(id),
 		m_Engine(Engine::instance()),
-		m_Plugins(*this),
-		m_AllowedTypes(m_Engine.getAllowedTypes()),
-		m_ExceptionHandler(id),
 		m_Threads(10, 20, 1000, 0, id.name()),
-		m_Logfile("")
+		m_Plugins(*this),
+		m_ExceptionHandler(id),
+		m_AllowedTypes(m_Engine.getAllowedTypes()),
+		m_Logfile(""),
+		m_Logstream()
 	{
 	}
 
@@ -204,6 +206,25 @@ namespace _2Real
 	const Identifier SystemGraph::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		return m_Plugins.createService(name, id, service);
+	}
+
+	void SystemGraph::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	{
+		if (id.isPlugin())
+		{
+			m_Plugins.setParameterValue(id, paramName, value);
+		}
+		else if (id.isService())
+		{
+			Service &service = static_cast< Service & >(getChild(id));
+			service.setParameterValue(paramName, value);
+		}
+	}
+
+	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)
+	{
+		Service &service = static_cast< Service & >(getChild(id));
+		service.setUpdateRate(updatesPerSecond);
 	}
 
 }

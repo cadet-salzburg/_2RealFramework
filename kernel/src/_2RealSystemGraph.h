@@ -36,6 +36,7 @@ namespace _2Real
 
 	class ExceptionListener;
 	class Engine;
+	class EngineData;
 
 	class SystemGraph : public Graph, public Entity
 	{
@@ -57,6 +58,8 @@ namespace _2Real
 		const Identifier install(std::string const& name, std::string const& classname);
 		void setup(Identifier const& id);
 		const Identifier createService(std::string const& name, Identifier const& id, std::string const& service);
+		void setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
+		void setUpdateRate(Identifier const& id, float updatesPerSecond);
 
 		void insertChild(Runnable &child, unsigned int const& index);
 		void removeChild(Identifier const& id);
@@ -77,14 +80,14 @@ namespace _2Real
 
 	private:
 
+		//whatever you do, don't change the order of the engine and the type table
+		Engine					&m_Engine;
 		ThreadPool				m_Threads;
 		PluginPool				m_Plugins;
 		ExceptionHandler		m_ExceptionHandler;
 		StringMap				const& m_AllowedTypes;
 		std::string				m_Logfile;
 		std::ofstream			m_Logstream;
-
-		Engine					&m_Engine;
 
 	};
 

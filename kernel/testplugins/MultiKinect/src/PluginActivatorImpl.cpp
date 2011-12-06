@@ -1,7 +1,9 @@
+#include "PluginActivatorImpl.h"
+
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginContext.h"
-#include "_2RealPluginMetadata.h"
-#include "_2RealMetadataReader.h"
+#include "_2RealMetadata.h"
+#include "_2RealException.h"
 
 #include "Generators.h"
 
@@ -12,31 +14,6 @@
 using namespace _2Real;
 using namespace std;
 
-class MultiKinectOpenNI : public IPluginActivator
-{
-
-public:
-
-	~MultiKinectOpenNI();
-
-	void			getMetadata(PluginMetadata &info);
-	void			setup(PluginContext &context);
-	
-private:
-
-	_2RealKinect*	m_2RealKinect;
-	bool			m_AlignColorDepth;
-	unsigned int	m_GeneratorFlags;
-	unsigned int	m_ImageFlags;
-	_2RealLogLevel	m_LogLevel;
-	string			m_LogPath;
-	ofstream		m_LogStream;
-
-	void			getGeneratorFlags(PluginContext &context);
-	void			getImageFlags(PluginContext &context);
-	void			getLogSettings(PluginContext &context);
-};
-
 MultiKinectOpenNI::~MultiKinectOpenNI()
 {
 	if (m_2RealKinect)
@@ -45,10 +22,25 @@ MultiKinectOpenNI::~MultiKinectOpenNI()
 	}
 }
 
-void MultiKinectOpenNI::getMetadata(PluginMetadata &info)
+void MultiKinectOpenNI::getMetadata(Metadata &info)
 {
-	MetadataReader reader(info);
-	reader.readMetadata();
+	info.setAuthor("Azatoth, Chicken of Insanity");
+	info.setDescription("test plugin based on 2real kinect wrapper. it sucks.");
+	info.setContact("the other side of the moon");
+	info.setVersion(100, 1, 5000);
+
+	info.addSetupParameter< vector < string > >("generator flags");
+	info.addSetupParameter< bool >("align color depth");
+	info.addSetupParameter< vector < string > >("image flags");
+	info.addSetupParameter< string >("logfile");
+	info.addSetupParameter< string >("loglevel");
+
+	info.addService("Image Generator");
+	info.setDescription("Image Generator", "generic image generator - sends out a pixelbuffer of unsigned chars containing the current image");
+
+	info.addSetupParameter< unsigned int >("Image Generator", "device id");
+	info.addSetupParameter< string >("Image Generator", "image type");
+	info.addOutputSlot< Pixelbuffer < unsigned char > >("Image Generator", "output image");
 }
 
 void MultiKinectOpenNI::setup(PluginContext &context)
@@ -56,6 +48,8 @@ void MultiKinectOpenNI::setup(PluginContext &context)
 	getGeneratorFlags(context);
 	getImageFlags(context);
 	getLogSettings(context);
+
+	std::cout << "starting the kinect" << std::endl;
 
 	m_2RealKinect = _2RealKinect::getInstance();
 	
@@ -174,8 +168,8 @@ void MultiKinectOpenNI::getLogSettings(PluginContext &context)
 {
 	m_LogPath = string();
 
-	m_LogPath = context.getParameterValue< string >("log file");
-	string level = context.getParameterValue< string >("log level");
+	m_LogPath = context.getParameterValue< string >("logfile");
+	string level = context.getParameterValue< string >("loglevel");
 
 	if (level == "none")
 	{

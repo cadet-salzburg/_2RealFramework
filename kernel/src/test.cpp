@@ -150,52 +150,58 @@ int main(int argc, char *argv[])
 
 		cout << "main: SYSTEM CREATED" << endl;
 
-		testSystem.setPluginDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
+		testSystem.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
 		testSystem.setLogfile("testsystem.txt");
 
 		/**
-		*	assumes that dll name = classname_md.dll for relase or classname_mdd.dll for debug
+		*	assumes that dll name = classname.dll for relase or classname_d.dll for debug
 		*/
-		//Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
-		//cout << "main: KINECT PLUGIN LOADED" << endl;
+		Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
+		cout << "main: KINECT PLUGIN LOADED" << endl;
+
+		std::string kinectInfo = testSystem.getInfo(kinectPlugin);
+		std::cout << kinectInfo << std::endl;
+
 		Identifier imgPlugin = testSystem.load("image processing plugin", "ImageProcessing");
 		
 		cout << "main: IMG PLUGIN LOADED" << endl;
 
-		std::string info = testSystem.getInfo(imgPlugin);
-		std::cout << info << std::endl;
+		std::string imgInfo = testSystem.getInfo(imgPlugin);
+		std::cout << imgInfo << std::endl;
 
-		//vector< string > genFlags;
-		//genFlags.push_back("color");
-		//genFlags.push_back("depth");
-		//genFlags.push_back("user colored");
+		vector< string > genFlags;
+		genFlags.push_back("color");
+		genFlags.push_back("depth");
+		genFlags.push_back("user colored");
 
-		//vector< string > imgFlags;
-		//imgFlags.push_back("color640X480");
-		//imgFlags.push_back("depth640X480");
-		//imgFlags.push_back("mirrored");
+		vector< string > imgFlags;
+		imgFlags.push_back("color640X480");
+		imgFlags.push_back("depth640X480");
+		imgFlags.push_back("mirrored");
 
-		//testSystem.setValue< bool >(kinectPlugin, "align color depth", true);
-		//testSystem.setValue< vector < string > >(kinectPlugin, "generator flags", genFlags);
-		//testSystem.setValue< vector < string > >(kinectPlugin, "image flags", imgFlags);
-		//testSystem.setValue< string >(kinectPlugin, "log file", "kinectwrapper.txt");
-		//testSystem.setValue< string >(kinectPlugin, "log level", "info");
+		testSystem.setValue< bool >(kinectPlugin, "align color depth", true);
+		testSystem.setValue< vector < string > >(kinectPlugin, "generator flags", genFlags);
+		testSystem.setValue< vector < string > >(kinectPlugin, "image flags", imgFlags);
+		testSystem.setValue< string >(kinectPlugin, "logfile", "kinectwrapper.txt");
+		testSystem.setValue< string >(kinectPlugin, "loglevel", "info");
 
-		//cout << "main: KINECT PLUGIN SETUP PARAMS SET" << endl;
+		cout << "main: KINECT PLUGIN SETUP PARAMS SET" << endl;
 
-		//testSystem.setup(kinectPlugin);
+		testSystem.setup(kinectPlugin);
 
-		//cout << "main: KINECT PLUGIN STARTED" << endl;
+		cout << "main: KINECT PLUGIN STARTED" << endl;
 
-
+		testSystem.setValue(imgPlugin, "logfile", string("logfile.txt"));
+		
+		cout << "main: IMG PLUGIN SETUP PARAMS SET" << endl;
 
 		testSystem.setup(imgPlugin);
 
 		cout << "main: IMG PLUGIN STARTED" << endl;
 
-		//Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
+		Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
 
-		//cout << "main: DEPTH SERVICE CREATED" << endl;
+		cout << "main: DEPTH SERVICE CREATED" << endl;
 
 		//testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
 		//testSystem.setValue< string >(depth, "image type", "color");
@@ -257,16 +263,27 @@ int main(int argc, char *argv[])
 
 		//cout << "main: AVG SERVICE STOPPED" << endl << endl;
 
+		while(1)
+		{
+			string line;
+			char lineEnd = '\n';
+			getline(cin, line, lineEnd);
+			if (line == "del")
+			{
+				break;
+			}
+		}
+
 		//test system falls out of scope here
 		//->services are deleted
 	}
-	catch (_2Real::Exception &e)
+	catch (std::exception &e)
 	{
 		cout << e.what() << endl;
 	}
 	catch (...)
 	{
-		cout << "an unknown exception occurred" << endl;
+		cout << "an exception occurred" << endl;
 	}
 
 	//SDL_GL_DeleteContext(maincontext);
