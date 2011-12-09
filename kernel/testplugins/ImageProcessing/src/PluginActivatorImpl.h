@@ -11,6 +11,7 @@ public:
 
 	void getMetadata(_2Real::Metadata &metadata);
 	void setup(_2Real::PluginContext &context);
+	void shutdown();
 	~ImageProcessing();
 
 private:

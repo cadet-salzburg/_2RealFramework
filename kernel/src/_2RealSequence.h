@@ -33,14 +33,18 @@ namespace _2Real
 		Sequence(Identifier const& id, SystemGraph &system);
 		~Sequence();
 
+		bool checkForSetup();
+		bool checkForUpdate();
+
+		void start(bool runOnce);
+		void stop();
 		void setup();
 		void run();
 		void update();
 		void shutdown();
-		void checkConfiguration();
 
-		void insertChild(Runnable *const child, unsigned int const& index);
-		void removeChild(unsigned int const& id);
+		void insertChild(Runnable &child, unsigned int index);
+		void removeChild(Identifier const& id);
 
 	};
 

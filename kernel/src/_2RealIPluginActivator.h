@@ -51,6 +51,11 @@ namespace _2Real
 		*	@throw				InvalidParameterException, PluginException
 		*/
 		virtual void setup(PluginContext &context) = 0;
+
+		/**
+		*	shutdown routine, called before unloading
+		*/
+		virtual void shutdown() = 0;
 	
 		virtual ~IPluginActivator() = 0;
 

@@ -19,8 +19,8 @@
 #pragma once
 
 #include "_2RealIOSlot.h"
-#include "_2RealOutputListener.h"
-#include "_2RealData.h"
+#include "_2RealIOutputListener.h"
+#include "_2RealEngineData.h"
 
 #include "Poco/Mutex.h"
 
@@ -30,11 +30,12 @@ namespace _2Real
 {
 
 	class OutputSlot;
+	class Data;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
 	typedef std::map< long, EngineData >	DataTable;
 
-	class InputSlot : public IOSlot, public OutputListener
+	class InputSlot : public IOSlot, public IOutputListener
 	{
 
 	public:
@@ -43,18 +44,10 @@ namespace _2Real
 		~InputSlot();
 
 		void reset();
+		void linkWith(OutputSlot &output);
+		bool isLinked() const;
 
-		void linkWith(OutputSlot &output)
-		{
-			m_Output = &output;
-		}
-
-		const bool isLinked() const
-		{
-			return (m_Output != NULL);
-		}
-
-		void set(Data const& data);
+		//void set(Data const& data);
 
 		void updateCurrent();
 		void clearCurrent();
@@ -72,5 +65,10 @@ namespace _2Real
 		OutputSlot					*m_Output;
 
 	};
+
+	inline bool InputSlot::isLinked() const
+	{
+		return (m_Output != NULL);
+	}
 
 }

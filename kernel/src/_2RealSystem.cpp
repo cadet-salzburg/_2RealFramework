@@ -162,12 +162,12 @@ namespace _2Real
 		m_Engine.unregisterFromException(callback, m_Id);
 	}
 
-	void System::registerToException(ExceptionListener &listener)
+	void System::registerToException(IExceptionListener &listener)
 	{
 		m_Engine.registerToException(listener, m_Id);
 	}
 
-	void System::unregisterFromException(ExceptionListener &listener)
+	void System::unregisterFromException(IExceptionListener &listener)
 	{
 		m_Engine.unregisterFromException(listener, m_Id);
 	}
@@ -182,12 +182,12 @@ namespace _2Real
 		m_Engine.unregisterFromNewData(service, name, callback, m_Id);
 	}
 
-	void System::registerToNewData(Identifier const& service, std::string const& name, OutputListener &listener)
+	void System::registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
 	{
 		m_Engine.registerToNewData(service, name, listener, m_Id);
 	}
 
-	void System::unregisterFromNewData(Identifier const& service, std::string const& name, OutputListener &listener)
+	void System::unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
 	{
 		m_Engine.unregisterFromNewData(service, name, listener, m_Id);
 	}

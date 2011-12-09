@@ -41,23 +41,21 @@ namespace _2Real
 		Runnable(Identifier const& id, SystemGraph &system);
 		virtual ~Runnable();
 
-		void start(bool const& runOnce);
-		void stop();
-
+		virtual void start(bool runOnce);
+		virtual void stop();
 		virtual void setup() = 0;
 		virtual void run() = 0;
 		virtual void update() = 0;
 		virtual void shutdown() = 0;
+		virtual bool checkForSetup() = 0;
+		virtual bool checkForUpdate() = 0;
 
-		virtual void checkConfiguration() = 0;
+		Runnable & root();
+		Runnable const&  root() const;
 
-		void setRoot(RunnableGraph &root);
-		RunnableGraph & root();
-		RunnableGraph const&  root() const;
-
-		void setFather(RunnableGraph &father);
-		RunnableGraph &father();
-		RunnableGraph const& father() const;
+		void setFather(Graph &father);
+		Graph &father();
+		Graph const& father() const;
 
 		SystemGraph &system();
 		SystemGraph const& system() const;
@@ -68,59 +66,21 @@ namespace _2Real
 		bool					m_RunOnce;
 
 		SystemGraph				&m_System;
-		RunnableGraph			*m_Root;
-		RunnableGraph			*m_Father;
+		Graph					*m_Father;
 
 	};
 
-	inline Runnable::Runnable(Identifier const& id, SystemGraph &system) :
-		Entity(id),
-		m_System(system)
-	{
-	}
-
-	inline Runnable::~Runnable()
-	{
-	}
-
-	inline void Runnable::start(bool const& runOnce)
-	{
-		m_RunOnce = runOnce;
-		m_Run = !runOnce;
-	}
-
-	inline void Runnable::stop()
-	{
-		m_RunOnce = false;
-		m_Run = false;
-	}
-
-	inline void Runnable::setRoot(RunnableGraph &root)
-	{
-		m_Root = &root;
-	}
-
-	inline RunnableGraph & Runnable::root()
-	{
-		return *m_Root;
-	}
-
-	inline RunnableGraph const& Runnable::root() const
-	{
-		return *m_Root;
-	}
-
-	inline void Runnable::setFather(RunnableGraph &father)
+	inline void Runnable::setFather(Graph &father)
 	{
 		m_Father = &father;
 	}
 
-	inline RunnableGraph & Runnable::father()
+	inline Graph & Runnable::father()
 	{
 		return *m_Father;
 	}
 
-	inline RunnableGraph const& Runnable::father() const
+	inline Graph const& Runnable::father() const
 	{
 		return *m_Father;
 	}

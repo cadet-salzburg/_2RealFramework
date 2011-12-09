@@ -43,21 +43,23 @@ namespace _2Real
 
 		unsigned int childCount() const;
 
-		bool const contains(Identifier const& id) const;
-		bool const isChild(Identifier const& id) const;
+		bool isContained(Identifier const& runnableId) const;
+		bool isChild(Identifier const& runnableId) const;
 
-		Runnable & getChild(Identifier const& id);
-		Runnable const& getChild(Identifier const& id) const;
+		Runnable & getChild(Identifier const& childId);
+		Runnable const& getChild(Identifier const& childId) const;
+		Runnable & getContained(Identifier const& runnableId);
+		Runnable const& getContained(Identifier const& runnableId) const;
 
-		virtual void insertChild(Runnable &child, unsigned int const& index) = 0;
-		virtual void removeChild(Identifier const& id) = 0;
+		virtual void insertChild(Runnable &child, unsigned int position) = 0;
+		virtual void removeChild(Identifier const& childId) = 0;
 
 	protected:
 
-		RunnableList::iterator				iteratorId(Identifier const& id);
-		RunnableList::const_iterator		iteratorId(Identifier const& id) const;
-		RunnableList::iterator				iteratorPosition(unsigned int const& pos);
-		RunnableList::const_iterator		iteratorPosition(unsigned int const& pos) const;
+		RunnableList::iterator				iteratorId(Identifier const& childId);
+		RunnableList::const_iterator		iteratorId(Identifier const& childId) const;
+		RunnableList::iterator				iteratorPosition(unsigned int childPosition);
+		RunnableList::const_iterator		iteratorPosition(unsigned int childPosition) const;
 
 		RunnableList						m_Children;
 

@@ -32,9 +32,13 @@
 namespace _2Real
 {
 
+	class Data;
+	typedef void (*DataCallback)(Data &data);
+
 	typedef std::map< std::string, std::string >	StringMap;
 
-	class ExceptionListener;
+	class IExceptionListener;
+	class IOutputListener;
 	class Engine;
 	class EngineData;
 
@@ -46,29 +50,30 @@ namespace _2Real
 		SystemGraph(Identifier const& id);
 		~SystemGraph();
 
-		void shutdown();
-
-		void stopAll();
-		void startAll();
-		void startChild(Identifier const& child);
-		void stopChild(Identifier const& child);
-		void updateChild(Identifier const& child, unsigned int const& count);
-
-		bool contains(Identifier const& id) const;
-		const Identifier install(std::string const& name, std::string const& classname);
-		void setup(Identifier const& id);
-		const Identifier createService(std::string const& name, Identifier const& id, std::string const& service);
-		void setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
-		void setUpdateRate(Identifier const& id, float updatesPerSecond);
-
-		void insertChild(Runnable &child, unsigned int const& index);
-		void removeChild(Identifier const& id);
-
-		void handleException(Runnable &child, Exception &exception);
-		void registerExceptionCallback(ExceptionCallback callback);
-		void unregisterExceptionCallback(ExceptionCallback callback);
-		void registerExceptionListener(ExceptionListener &listener);
-		void unregisterExceptionListener(ExceptionListener &listener);
+		void				shutdown();
+		void				stopAll();
+		void				startAll();
+		void				startChild(Identifier const& runnableId);
+		void				stopChild(Identifier const& runnableId);
+		void				updateChild(Identifier const& runnableId, unsigned int count);
+		const Identifier	install(std::string const& idName, std::string const& classname);
+		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
+		bool				contains(Identifier const& id) const;
+		void				setup(Identifier const& setupAbleId);
+		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
+		void				setUpdateRate(Identifier const& id, float updatesPerSecond);
+		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);
+		void				insertChild(Runnable &runnable, unsigned int index);
+		void				removeChild(Identifier const& runnableId);
+		void				handleException(Runnable &runnable, Exception &exception);
+		void				registerExceptionCallback(ExceptionCallback callback);
+		void				unregisterExceptionCallback(ExceptionCallback callback);
+		void				registerExceptionListener(IExceptionListener &listener);
+		void				unregisterExceptionListener(IExceptionListener &listener);
+		void				registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
+		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
+		void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
+		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 
 		bool isLoggingEnabled() const;
 		void setInstallDirectory(std::string const& directory);

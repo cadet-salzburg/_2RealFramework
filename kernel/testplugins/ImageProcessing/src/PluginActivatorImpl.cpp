@@ -29,14 +29,24 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 		metadata.addSetupParameter< unsigned char >("ImageAccumulation", "buffer size");
 		metadata.addInputSlot< Pixelbuffer < float > >("ImageAccumulation", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation", "output image");
+
+		metadata.addService("ImageAccumulation_uchar");
+		metadata.setDescription("ImageAccumulation_uchar", "life is wonderful");
+		metadata.addSetupParameter< unsigned char >("ImageAccumulation_uchar", "buffer size");
+		metadata.addInputSlot< Pixelbuffer < unsigned char > >("ImageAccumulation_uchar", "input image");
+		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation_uchar", "output image");
 	}
 	catch (_2Real::Exception &e)
 	{
-		cout << e.message() << endl;
+		m_Logfile << e.message() << endl;
+		e.rethrow();
 	}
-	catch (...)
+	catch (std::exception &e)
 	{
-		cout << "unknwon exception" << endl;
+		m_Logfile << e.what() << endl;
+		std::ostringstream msg;
+		msg << "exception during setup: " << e.what();
+		throw PluginException(msg.str());
 	}
 }
 
@@ -44,42 +54,46 @@ void ImageProcessing::setup(PluginContext &context)
 {
 	try
 	{
-		std::cout << "setup called" << std::endl;
-
 		string logfile = context.getParameterValue< string >("logfile");
-
 		m_Logfile.open(logfile.c_str());
-
 		if (!m_Logfile.is_open())
 		{
-		//	throw PluginException("could not open logfile");
+			throw PluginException("could not open logfile");
 		}
 
-		m_Logfile << "image processing: setup called\n";
+		m_Logfile << "image processing: setup called" << endl;
 
-	////_context.registerService("ImageAccumulation_uchar", ::createImageAccumulation< unsigned char >);
-	////_context.registerService("ImageAccumulation", ::createImageAccumulation< float >);
-	////_context.registerService("ToFloat_uchar", ::createFloatConversion< unsigned char >);
+		context.registerService("ImageAccumulation_uchar", ::createImageAccumulation< unsigned char >);
+		context.registerService("ImageAccumulation", ::createImageAccumulation< float >);
+		//context.registerService("ToFloat_uchar", ::createFloatConversion< unsigned char >);
 
-	//m_Logfile << "image processing: setup completed\n";
+		m_Logfile << "image processing: setup completed" << endl;
 	}
 	catch (_2Real::Exception &e)
 	{
-		cout << e.message() << endl;
+		m_Logfile << e.message() << endl;
+		e.rethrow();
 	}
-	catch (...)
+	catch (std::exception &e)
 	{
-		cout << "unknwon exception" << endl;
+		m_Logfile << e.what() << endl;
+		std::ostringstream msg;
+		msg << "exception during setup: " << e.what();
+		throw PluginException(msg.str());
+	}
+}
+
+void ImageProcessing::shutdown()
+{
+	if (m_Logfile.is_open())
+	{
+		m_Logfile << "image processing: shutdown" << endl;
+		m_Logfile.close();
 	}
 }
 
 ImageProcessing::~ImageProcessing()
 {
-	//if (m_Logfile.is_open())
-	//{
-	//	m_Logfile << "image processing: destructor called\n";
-	//	m_Logfile.close();
-	//}
 }
 
 _2REAL_EXPORT_PLUGIN(ImageProcessing)

@@ -29,7 +29,7 @@
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
-    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />
     <ClCompile Include="..\..\src\_2RealService.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
@@ -38,6 +38,7 @@
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemPool.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
   </ItemGroup>
@@ -72,7 +73,6 @@
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
     <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
-    <ClInclude Include="..\..\src\_2RealProductionGraphs.h" />
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
     <ClInclude Include="..\..\src\_2RealSequence.h" />
@@ -85,6 +85,7 @@
     <ClInclude Include="..\..\src\_2RealSynchronization.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
+    <ClInclude Include="..\..\src\_2RealSystemPool.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />

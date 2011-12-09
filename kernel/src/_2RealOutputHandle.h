@@ -41,7 +41,9 @@ namespace _2Real
 		{
 			if (!m_Output)
 			{
-				throw UninitializedHandleException(m_Name);
+				std::ostringstream msg;
+				msg << "output handle was not initialized by framework";
+				throw UninitializedHandleException(msg.str());
 			}
 
 			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());

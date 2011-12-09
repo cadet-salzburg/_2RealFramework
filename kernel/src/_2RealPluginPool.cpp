@@ -22,7 +22,6 @@
 #include "_2RealIdentifier.h"
 #include "_2RealSystemGraph.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real

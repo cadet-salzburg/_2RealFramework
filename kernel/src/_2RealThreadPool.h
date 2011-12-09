@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <map>
+#include <list>
 
 #include "Poco/Mutex.h"
 
@@ -35,75 +35,36 @@ namespace _2Real
 
 	public:
 
-		ThreadPool();
-		ThreadPool(unsigned int const& capacity, unsigned int const& max, unsigned int const& idleTime, unsigned int const& stackSize, std::string const& name);
+		ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name);
 		~ThreadPool();
 
-		/**
-		*	starts a runnable
-		*/
-		void start(Runnable *const target);
-
-		/**
-		*	joins & deletes all threads
-		*/
+		void start(Runnable &target, bool runOnce);
 		void stopAll();
-
-		/**
-		*	joins all threads
-		*/
 		void joinAll();
 
-		/**
-		*	joins & deletes a thread
-		*/
-		void stop(Identifier const& id);
+		//stops the runnable & joins the thread
+		void stop(Identifier const& runnable);
 
-		/**
-		*	joins a thread
-		*/
-		void join(Identifier const& id);
+		bool isRunning(Identifier const& runnable);
+		PooledThread & find(Identifier const& runnable);
 
-		/**
-		*
-		*/
-		void collect();
-
-		/**
-		*	increases capacity
-		*/
-		void addCapacity(int const& n);
+		//shutdown function
+		void clearThreads();
 
 	private:
 
-		PooledThread *const getFreeThread();
-		PooledThread *const createThread();
-
+		PooledThread & getFreeThread();
 		void housekeep();
 
-		ThreadPool(ThreadPool const& pool);
-		ThreadPool& operator=(ThreadPool const& pool);
-
-		typedef std::pair< Identifier, PooledThread * >		NamedThread;
-		typedef std::multimap< Identifier, PooledThread * >	ThreadTable;
-
-		ThreadTable					m_Threads;
-
-		std::string					m_Name;
-
-		/**
-		*	nr of allocated threads
-		*/
-		unsigned int				m_Capacity;
-
-		/*
-		*	max nr of threads
-		*/
-		unsigned int				m_MaxCapacity;
-		unsigned int				m_IdleTime;
-		unsigned int				m_StackSize;
-		mutable Poco::FastMutex		m_Mutex;
-		unsigned int				m_Age;
+		typedef std::list< PooledThread * >	ThreadList;
+		ThreadList							m_Threads;
+		std::string							m_Name;
+		unsigned int						m_Capacity;
+		unsigned int						m_IdleTime;
+		unsigned int						m_StackSize;
+		mutable Poco::FastMutex				m_Mutex;
+		unsigned int						m_Age;
+		bool								m_IsUpdated;
 
 	};
 

@@ -24,7 +24,6 @@
 #include "_2RealException.h"
 #include "_2RealService.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -33,7 +32,7 @@ namespace _2Real
 		Graph(),
 		Entity(id),
 		m_Engine(Engine::instance()),
-		m_Threads(10, 20, 1000, 0, id.name()),
+		m_Threads(5, 1000, 0, id.name()),
 		m_Plugins(*this),
 		m_ExceptionHandler(id),
 		m_AllowedTypes(m_Engine.getAllowedTypes()),
@@ -78,22 +77,29 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
+			//for sequences & synchronizations, this calls stop on the children
 			(*it)->stop();
 		}
 
-		m_Threads.joinAll();
-		m_Threads.stopAll();
+		//kills all threads
+		m_Threads.clearThreads();
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
+			//performs shutdown recursively
 			(*it)->shutdown();
 			delete *it;
 		}
 
 		m_Children.clear();
-		//m_Threads.clear();
 
+		//uninstalls all plugins
 		m_Plugins.clearPlugins();
+
+		if (m_Logstream.is_open())
+		{
+			m_Logstream.close();
+		}
 	}
 
 	void SystemGraph::registerExceptionCallback(ExceptionCallback callback)
@@ -106,78 +112,97 @@ namespace _2Real
 		m_ExceptionHandler.unregisterExceptionCallback(callback);
 	}
 
-	void SystemGraph::registerExceptionListener(ExceptionListener &listener)
+	void SystemGraph::registerExceptionListener(IExceptionListener &listener)
 	{
 		m_ExceptionHandler.registerExceptionListener(listener);
 	}
 
-	void SystemGraph::unregisterExceptionListener(ExceptionListener &listener)
+	void SystemGraph::unregisterExceptionListener(IExceptionListener &listener)
 	{
 		m_ExceptionHandler.unregisterExceptionListener(listener);
 	}
 
-	void SystemGraph::insertChild(Runnable &child, unsigned int const& index)
+	void SystemGraph::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	{
+		Service &service = static_cast< Service & >(getContained(serviceId));
+		service.registerToNewData(outName, callback);
+	}
+
+	void SystemGraph::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	{
+		Service &service = static_cast< Service & >(getContained(serviceId));
+		service.unregisterFromNewData(outName, callback);
+	}
+
+	void SystemGraph::registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
+	{
+		Service &service = static_cast< Service & >(getContained(serviceId));
+		service.registerToNewData(outName, listener);
+	}
+
+	void SystemGraph::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
+	{
+		Service &service = static_cast< Service & >(getContained(serviceId));
+		service.unregisterFromNewData(outName, listener);
+	}
+
+	void SystemGraph::insertChild(Runnable &child, unsigned int index)
 	{
 		m_Children.push_back(&child);
-
-		//m_Threads.addCapacity(1);
+		child.setFather(*this);
 	}
 
 	void SystemGraph::removeChild(Identifier const& id)
 	{
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
-	
-		//m_Threads.addCapacity(1);
 	}
 
 	void SystemGraph::startAll()
 	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			m_Threads.start(**it, false);
+		}
 	}
 
 	void SystemGraph::stopAll()
 	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			m_Threads.stop((*it)->identifier());
+		}
 	}
 
-	void SystemGraph::handleException(Runnable &child, Exception &exception)
+	void SystemGraph::handleException(Runnable &runnable, Exception &exception)
 	{
-		//m_ExceptionHandler.handleException(exception, child.identifier());
-
-		//Graph *subgraph = child->father();
-		//stopChild(subgraph->id());
+		stopChild(runnable.root().identifier());
+		m_ExceptionHandler.handleException(exception, runnable.identifier());
 	}
 
-	void SystemGraph::startChild(Identifier const& id)
+	void SystemGraph::startChild(Identifier const& runnableId)
 	{
-	//	RunnableList::iterator it = iteratorId(id);
+		Runnable &child = getChild(runnableId);
 
-	//	if (it == m_Children.end())
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "internal error: child " << id.name() << " not found in graph";
-	//		throw _2Real::Exception(msg.str());
-	//	}
-
-	//	Runnable *child = *it;
-	//	child->checkConfiguration();
-	//	child->start(false);
-
-	//	m_Threads.start(*it);
+		//if (child.checkForUpdate())
+		//{
+			m_Threads.start(child, false);
+		//}
+		//else if (!child.isSetUp())
+		//{
+		//	child.setup();
+		//	startChild(runnableId);
+		//}
+		//else
+		//{
+		//	std::ostringstream msg;
+		//	msg << "runnable could not be started";
+		//}
 	}
 
-	void SystemGraph::stopChild(Identifier const& id)
+	void SystemGraph::stopChild(Identifier const& runnableId)
 	{
-	//	RunnableList::iterator it = iteratorId(id);
-	//	
-	//	if (it == m_Children.end())
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "internal error: child " << id.name() << " not found in graph";
-	//		throw _2Real::Exception(msg.str());
-	//	}
-
-	//	(*it)->stop();
-	//	m_Threads.join(id);
+		m_Threads.stop(runnableId);
 	}
 
 	const Identifier SystemGraph::install(std::string const& name, std::string const& classname)
@@ -187,7 +212,7 @@ namespace _2Real
 
 	bool SystemGraph::contains(Identifier const& id) const
 	{
-		return (m_Plugins.contains(id) || Graph::contains(id));
+		return (m_Plugins.contains(id) || Graph::isContained(id));
 	}
 
 	void SystemGraph::setup(Identifier const& id)
@@ -225,6 +250,14 @@ namespace _2Real
 	{
 		Service &service = static_cast< Service & >(getChild(id));
 		service.setUpdateRate(updatesPerSecond);
+	}
+
+	void SystemGraph::linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut)
+	{
+		Service &in = static_cast< Service & >(getChild(serviceIn));
+		Service &out = static_cast< Service & >(getChild(serviceOut));
+
+		in.linkWith(nameIn, out, nameOut);
 	}
 
 }

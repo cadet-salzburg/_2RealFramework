@@ -30,15 +30,20 @@ namespace _2Real
 
 	public:
 
-		Synchronization(Identifier const& id, SystemGraph *const system);
+		Synchronization(Identifier const& id, SystemGraph &system);
 		~Synchronization();
 
+		bool checkForSetup();
+		bool checkForUpdate();
+
+		void start(bool runOnce);
+		void stop();
+		void setup();
 		void run();
 		void update();
 		void shutdown();
-		void checkConfiguration();
 
-		void insertChild(Runnable *const child, unsigned int const& index);
+		void insertChild(Runnable &child, unsigned int index);
 		void removeChild(Identifier const& id);
 
 	};

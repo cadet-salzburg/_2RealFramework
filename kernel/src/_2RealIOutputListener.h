@@ -23,16 +23,16 @@ namespace _2Real
 
 	class Data;
 
-	class OutputListener
+	class IOutputListener
 	{
 
 	public:
 
-		virtual ~OutputListener() = 0;
+		virtual ~IOutputListener() = 0;
 		virtual void receiveData(Data &data) = 0;
 
 	};
 
-	inline OutputListener::~OutputListener() {}
+	inline IOutputListener::~IOutputListener() {}
 
 }

@@ -19,6 +19,7 @@
 #include "_2RealInputSlot.h"
 #include "_2RealOutputSlot.h"
 #include "_2RealException.h"
+#include "_2RealData.h"
 
 namespace _2Real
 {
@@ -106,12 +107,25 @@ namespace _2Real
 		m_Output = NULL;
 	}
 
-	void InputSlot::set(Data const& data)
+	void InputSlot::linkWith(OutputSlot &output)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		
+		if (isLinked())
+		{
+			m_Output->removeListener(*this);
+		}
 
-		m_ReceivedTable.clear();
-		m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
+		m_Output = &output;
+		m_Output->addListener(*this);
 	}
+
+	//void InputSlot::set(Data const& data)
+	//{
+	//	Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+	//	m_ReceivedTable.clear();
+	//	m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
+	//}
 
 }

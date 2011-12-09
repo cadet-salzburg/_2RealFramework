@@ -31,7 +31,7 @@ namespace _2Real
 	*	represents an output slot of a service
 	*/
 
-	class OutputListener;
+	class IOutputListener;
 	class Timer;
 
 	typedef void (*DataCallback)(Data &data);
@@ -48,8 +48,8 @@ namespace _2Real
 
 		void						registerCallback(DataCallback callback);
 		void						unregisterCallback(DataCallback callback);
-		void						addListener(OutputListener &listener);
-		void						removeListener(OutputListener &listener);
+		void						addListener(IOutputListener &listener);
+		void						removeListener(IOutputListener &listener);
 
 	private:
 

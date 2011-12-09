@@ -33,6 +33,10 @@ namespace _2Real
 	class OutputHandle;
 	class EngineData;
 
+	class IOutputListener;
+	class Data;
+	typedef void (*DataCallback)(Data &data);
+
 	typedef std::pair< std::string, InputSlot * >		NamedInput;
 	typedef std::map< std::string, InputSlot * >		InputMap;
 	typedef std::pair< std::string, OutputSlot * >		NamedOutput;
@@ -54,7 +58,8 @@ namespace _2Real
 		InputHandle				createInputHandle(std::string const& name) const;
 		OutputHandle			createOutputHandle(std::string const& name);
 
-		void					checkConfiguration();
+		bool					checkForSetup();
+		bool					checkForUpdate();
 
 		void					setup();
 		void					run();
@@ -62,6 +67,16 @@ namespace _2Real
 		void					shutdown();
 
 		void					setUpdateRate(float updatesPerSecond);
+
+		void					registerToNewData(std::string const& outName, DataCallback callback);
+		void					unregisterFromNewData(std::string const& outName, DataCallback callback);
+		void					registerToNewData(std::string const& outName, IOutputListener &listener);
+		void					unregisterFromNewData(std::string const& outName, IOutputListener &listener);
+
+		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
+		//void					linkWith(Service &serviceOut);
+
+		bool					isSetUp() const;
 
 	private:
 
@@ -80,7 +95,13 @@ namespace _2Real
 
 		long					m_MaxDelay;
 		float					m_UpdatesPerSecond;
+		bool					m_IsSetUp;
 
 	};
+
+	inline bool Service::isSetUp() const
+	{
+		return m_IsSetUp;
+	}
 
 }

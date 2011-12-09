@@ -123,9 +123,7 @@ namespace _2Real
 		const Identifier id = Entity::createIdentifier(idName, "service");
 		Service *runnable = new Service(id, service, m_System, setup, input, output);
 
-		unsigned int index = m_System.childCount();
-		m_System.insertChild(*runnable, index);
-
+		m_System.insertChild(*runnable, 0);
 		return id;
 	}
 
@@ -213,6 +211,7 @@ namespace _2Real
 	{
 		if (m_Activator)
 		{
+			m_Activator->shutdown();
 			delete m_Activator;
 			m_Activator = NULL;
 		}

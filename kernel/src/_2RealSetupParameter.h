@@ -22,7 +22,6 @@
 #include "_2RealEngineData.h"
 #include "_2RealException.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace _2Real

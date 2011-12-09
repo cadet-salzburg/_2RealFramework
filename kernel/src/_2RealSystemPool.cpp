@@ -17,7 +17,7 @@
 	limitations under the License.
 */
 
-#include "_2RealProductionGraphs.h"
+#include "_2RealSystemPool.h"
 #include "_2RealEngine.h"
 #include "_2RealSystemGraph.h"
 #include "_2RealTypetable.h"
@@ -27,17 +27,17 @@
 namespace _2Real
 {
 
-	ProductionGraphs::ProductionGraphs(Engine const& engine) :
+	SystemPool::SystemPool(Engine const& engine) :
 		m_Engine(engine),	//do not touch anywhere else in ctor
 		m_Systems()
 	{
 	}
 
-	ProductionGraphs::~ProductionGraphs()
+	SystemPool::~SystemPool()
 	{
 	}
 
-	void ProductionGraphs::clearSystems()
+	void SystemPool::clearSystems()
 	{
 		std::ostringstream msg;
 		bool error = false;
@@ -67,7 +67,7 @@ namespace _2Real
 		}
 	}
 
-	const Identifier ProductionGraphs::createSystemGraph(std::string const& name)
+	const Identifier SystemPool::createSystemGraph(std::string const& name)
 	{
 		const Identifier id = Entity::createIdentifier(name, "system");
 		SystemGraph *graph = new SystemGraph(id);
@@ -75,7 +75,7 @@ namespace _2Real
 		return id;
 	}
 
-	void ProductionGraphs::destroySystemGraph(Identifier const& id)
+	void SystemPool::destroySystemGraph(Identifier const& id)
 	{
 		SystemGraphTable::iterator it = m_Systems.find(id);
 
@@ -88,12 +88,12 @@ namespace _2Real
 		}
 	}
 
-	bool ProductionGraphs::contains(Identifier const& id) const
+	bool SystemPool::contains(Identifier const& id) const
 	{
 		return m_Systems.find(id) != m_Systems.end();
 	}
 
-	SystemGraph & ProductionGraphs::getSystemGraph(Identifier const& id)
+	SystemGraph & SystemPool::getSystemGraph(Identifier const& id)
 	{
 		SystemGraphTable::iterator it = m_Systems.find(id);
 
@@ -107,7 +107,7 @@ namespace _2Real
 		return *(it->second);
 	}
 
-	SystemGraph const& ProductionGraphs::getSystemGraph(Identifier const& id) const
+	SystemGraph const& SystemPool::getSystemGraph(Identifier const& id) const
 	{
 		SystemGraphTable::const_iterator it = m_Systems.find(id);
 
@@ -121,7 +121,7 @@ namespace _2Real
 		return *(it->second);
 	}
 
-	//void ProductionGraphs::destroyRunnable(unsigned int const& _id, unsigned int const& _top)
+	//void SystemPool::destroyRunnable(unsigned int const& _id, unsigned int const& _top)
 	//{
 	//	//Container *nirvana = getSystem(_top);
 	//	//AbstractContainer *container = nirvana->get(_id);
@@ -129,7 +129,7 @@ namespace _2Real
 	//	//m_Engine.entities().destroy(container);
 	//}
 
-	//const Identifier ProductionGraphs::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	//const Identifier SystemPool::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	//{
 	//	//Container *nirvana = getSystem(_top);
 	//	//AbstractContainer *a = nirvana->get(_a);
@@ -148,7 +148,7 @@ namespace _2Real
 	//	return Entity::createIdentifier(_name, "sequence");
 	//}
 
-	//const Identifier ProductionGraphs::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
+	//const Identifier SystemPool::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
 	//{
 	//	//Container *nirvana = getSystem(_top);
 	//	//AbstractContainer *a = nirvana->get(_a);
@@ -167,7 +167,7 @@ namespace _2Real
 	//	return Entity::createIdentifier(_name, "synchronization");
 	//}
 
-	//Runnable *const ProductionGraphs::belongsToSystem(Identifier const& system, Identifier const& runnable) const
+	//Runnable *const SystemPool::belongsToSystem(Identifier const& system, Identifier const& runnable) const
 	//{
 	//	SystemGraph const* nirvana = getSystemGraph(system);
 	//	std::list< Runnable * > children = nirvana->children();

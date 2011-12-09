@@ -45,19 +45,19 @@ namespace _2Real
 		m_WriteData.clone(m_WriteData);
 	}
 
-	void OutputSlot::addListener(OutputListener &listener)
+	void OutputSlot::addListener(IOutputListener &listener)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event += Poco::delegate(&listener, &OutputListener::receiveData);
+		m_Event += Poco::delegate(&listener, &IOutputListener::receiveData);
 		listener.receiveData(m_CurrentData);
 	}
 
-	void OutputSlot::removeListener(OutputListener &listener)
+	void OutputSlot::removeListener(IOutputListener &listener)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event -= Poco::delegate(&listener, &OutputListener::receiveData);
+		m_Event -= Poco::delegate(&listener, &IOutputListener::receiveData);
 	}
 
 	void OutputSlot::registerCallback(DataCallback callback)

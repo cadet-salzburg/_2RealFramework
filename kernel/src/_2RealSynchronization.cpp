@@ -17,142 +17,66 @@
 */
 
 #include "_2RealSynchronization.h"
+#include "_2RealSystemGraph.h"
 
 namespace _2Real
 {
 	
-	////Synchronization::Synchronization(Identifier const& id, SystemGraph &system) :
-	////	RunnableGraph(id, system)
-	////{
-	////}
+	Synchronization::Synchronization(Identifier const& id, SystemGraph &system) :
+		RunnableGraph(id, system)
+	{
+	}
 
-	////Synchronization::~Synchronization()
-	////{
-	////}
+	Synchronization::~Synchronization()
+	{
+	}
 
-	////IDs Synchronization::inputSlotIDs() const
-	////{
-	////	if (type() == Entity::SEQUENCE)
-	////	{
-	////		//sequence: input = first child's input
-	////		AbstractContainer *first = m_Children.front();
-	////		return first->inputSlotIDs();
-	////	}
-	////	else if (type() == Entity::SYNCHRONIZATION)
-	////	{
-	////		//sync: input = uninon of all children's input
-	////		IDs result;
-	////		for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
-	////		{
-	////			IDs childParameters = (*it)->inputSlotIDs();
-	////			result.insert(result.end(), childParameters.begin(), childParameters.end());
-	////		}
+	bool Synchronization::checkForSetup()
+	{
+		return true;
+	}
 
-	////		return result;
-	////	}
-	////	else
-	////	{
-	////		//nirvana has no output params
-	////		throw Exception("system has no output slots");
-	////	}
-	////}
+	bool Synchronization::checkForUpdate()
+	{
+		return true;
+	}
 
-	////IDs Synchronization::outputSlotIDs() const
-	////{
-	////	if (type() == Entity::SEQUENCE)
-	////	{
-	////		//sequence: output = last child's output
-	////		AbstractContainer *last = m_Children.back();
-	////		return last->outputSlotIDs();
-	////	}
-	////	else if (type() == Entity::SYNCHRONIZATION)
-	////	{
-	////		//sync: output = union of all children's output
-	////		IDs result;
-	////		for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
-	////		{
-	////			IDs childParameters = (*it)->outputSlotIDs();
-	////			result.insert(result.end(), childParameters.begin(), childParameters.end());
-	////		}
+	void Synchronization::setup()
+	{
+	}
 
-	////		return result;
-	////	}
-	////	else
-	////	{
-	////		//nirvana has no output params
-	////		throw Exception("system has no output slots");
-	////	}
-	////}
+	void Synchronization::run()
+	{
+	}
 
-	////std::list< InputSlot * > Synchronization::inputSlots()
-	////{
-	////	if (type() == Entity::SEQUENCE)
-	////	{
-	////		//sequence: output = last child's output
-	////		AbstractContainer *first = m_Children.front();
-	////		return first->inputSlots();
-	////	}
-	////	else if (type() == Entity::SYNCHRONIZATION)
-	////	{
-	////		//sync: output = union of all children's output
-	////		std::list< InputSlot * > result;
-	////		for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
-	////		{
-	////			std::list< InputSlot * > childParameters = (*it)->inputSlots();
-	////			result.splice(result.end(), childParameters);
-	////		}
+	void Synchronization::update()
+	{
+	}
 
-	////		return result;
-	////	}
-	////	else
-	////	{
-	////		//nirvana has no output params
-	////		throw Exception("system has no output slots");
-	////	}
-	////}
+	void Synchronization::shutdown()
+	{
+	}
 
-	////std::list< OutputSlot * > Synchronization::outputSlots()
-	////{
-	////	if (type() == Entity::SEQUENCE)
-	////	{
-	////		//sequence: output = last child's output
-	////		AbstractContainer *last = m_Children.back();
-	////		return last->outputSlots();
-	////	}
-	////	else if (type() == Entity::SYNCHRONIZATION)
-	////	{
-	////		//sync: output = union of all children's output
-	////		std::list< OutputSlot * > result;
-	////		for (AbstractContainer::ContainerList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
-	////		{
-	////			std::list< OutputSlot * > childParameters = (*it)->outputSlots();
-	////			result.splice(result.end(), childParameters);
-	////		}
+	void Synchronization::insertChild(Runnable &child, unsigned int index)
+	{
+	}
 
-	////		return result;
-	////	}
-	////	else
-	////	{
-	////		//nirvana has no output params
-	////		throw Exception("system has no output slots");
-	////	}
-	////}
+	void Synchronization::removeChild(Identifier const& id)
+	{
+		Runnable &root = getChild(id).root();
+		m_System.stopChild(root.identifier());
+	}
 
 	//void Synchronization::removeChild(Identifier const& id)
 	//{
+	//	Runnable &root = getChild(id).root();
 	//	RunnableList::iterator it = iteratorId(id);
-	//		
-	//	if (it == m_Children.end())
-	//	{
-	//		throw Exception("internal error: could not remove child from container - does not exist");
-	//	}
 
-	//	Runnable *child = *it;
-
-	//	m_System.stopChild(this->root()->identifier());
-	//	//this->resetIO();
-
+	//	m_System.stopChild(root.identifier());
+	////	//this->resetIO();
 	//	m_Children.erase(it);
+
+	//	Runnable::removeChild(id);
 	//}
 
 	//void Synchronization::insertChild(Runnable *const _child, unsigned int const& _index)

@@ -33,13 +33,13 @@ namespace _2Real
 	typedef std::map< Identifier, SystemGraph * >	SystemGraphTable;
 	typedef std::map< std::string, std::string >	StringMap;
 
-	class ProductionGraphs
+	class SystemPool
 	{
 
 	public:
 
-		ProductionGraphs(Engine const& engine);
-		~ProductionGraphs();
+		SystemPool(Engine const& engine);
+		~SystemPool();
 
 		//const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
 		//const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);

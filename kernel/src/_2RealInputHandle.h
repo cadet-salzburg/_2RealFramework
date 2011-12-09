@@ -43,7 +43,9 @@ namespace _2Real
 		{
 			if (!m_Input)
 			{
-				throw BadHandleException(m_Name);
+				std::ostringstream msg;
+				msg << "input handle was not initialized by framework";
+				throw UninitializedHandleException(msg.str());
 			}
 
 			try

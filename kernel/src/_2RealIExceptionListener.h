@@ -23,16 +23,16 @@ namespace _2Real
 
 	class RunnableError;
 
-	class ExceptionListener
+	class IExceptionListener
 	{
 
 	public:
 
-		virtual ~ExceptionListener() = 0;
+		virtual ~IExceptionListener() = 0;
 		virtual void receiveException(RunnableError &exception) = 0;
 
 	};
 
-	inline ExceptionListener::~ExceptionListener() {}
+	inline IExceptionListener::~IExceptionListener() {}
 
 }

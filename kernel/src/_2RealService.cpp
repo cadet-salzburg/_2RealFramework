@@ -40,7 +40,8 @@ namespace _2Real
 		m_UpdatesPerSecond(30.0f),
 		m_SetupParameters(),
 		m_InputSlots(),
-		m_OutputSlots()
+		m_OutputSlots(),
+		m_IsSetUp(false)
 	{
 		StringMap const& allowedTypes = Engine::instance().getAllowedTypes();
 		Typetable const& lookupTable = Engine::instance().types();
@@ -95,21 +96,61 @@ namespace _2Real
 		}
 	}
 
+	void Service::registerToNewData(std::string const& outName, DataCallback callback)
+	{
+		getOutputSlot(outName).registerCallback(callback);
+	}
+
+	void Service::unregisterFromNewData(std::string const& outName, DataCallback callback)
+	{
+		getOutputSlot(outName).unregisterCallback(callback);
+	}
+
+	void Service::registerToNewData(std::string const& outName, IOutputListener &listener)
+	{
+		getOutputSlot(outName).addListener(listener);
+	}
+
+	void Service::unregisterFromNewData(std::string const& outName, IOutputListener &listener)
+	{
+		getOutputSlot(outName).addListener(listener);
+	}
+
 	void Service::setUpdateRate(float updatesPerSecond)
 	{
 		m_MaxDelay = long(1000.0f/updatesPerSecond);
 		m_UpdatesPerSecond = updatesPerSecond;
 	}
 
-	void Service::checkConfiguration()
+	void Service::linkWith(std::string const& inName, Service &serviceOut, std::string const& outName)
 	{
-		//TODO
+		InputSlot &in = getInputSlot(inName);
+		OutputSlot &out = serviceOut.getOutputSlot(outName);
+
+		in.linkWith(out);
+	}
+
+	//void Service::linkWidth(Service &serviceOut)
+	//{
+	//	//TODO
+	//}
+
+	bool Service::checkForSetup()
+	{
+		return true;
+	}
+
+	bool Service::checkForUpdate()
+	{
+		return true;
 	}
 
 	void Service::setup()
 	{
 		ServiceContext context(*this);
 		m_Service->setup(context);
+
+		m_IsSetUp = true;
 	}
 
 	void Service::run()

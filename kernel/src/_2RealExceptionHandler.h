@@ -28,7 +28,7 @@
 namespace _2Real
 {
 
-	class ExceptionListener;
+	class IExceptionListener;
 	class RunnableError;
 
 	typedef void (*ExceptionCallback)(RunnableError &exception);
@@ -39,16 +39,11 @@ namespace _2Real
 	public:
 
 		ExceptionHandler(Identifier const& system);
-
 		void registerExceptionCallback(ExceptionCallback callback);
-
 		void unregisterExceptionCallback(ExceptionCallback callback);
-
-		void registerExceptionListener(ExceptionListener &listener);
-
-		void unregisterExceptionListener(ExceptionListener &listener);
-
-		void handleException(Exception const& _exception, Identifier const& _sender);
+		void registerExceptionListener(IExceptionListener &listener);
+		void unregisterExceptionListener(IExceptionListener &listener);
+		void handleException(Exception const& exception, Identifier const& sender);
 
 	private:
 

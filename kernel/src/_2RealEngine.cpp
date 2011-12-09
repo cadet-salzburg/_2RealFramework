@@ -169,243 +169,142 @@ namespace _2Real
 		if (!id.isService())
 		{
 			std::ostringstream msg;
-			msg << "engine::getInfo " << id.name() << " is a " << id.type() << ", service expected" << std::endl;
+			msg << "set update rate: " << id.name() << " is a " << id.type() << ", service expected" << std::endl;
 			throw InvalidIdentifierException(msg.str());
 		}
 
 		nirvana.setUpdateRate(id, updatesPerSecond);
 	}
 
-	void Engine::linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system)
+	void Engine::linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		//if (nirvana.contains(idIn) && nirvana.contains(idOut))
-		//{
-		//	Runnable &childIn = nirvana.getChild(idIn);
-		//	Runnable &childOut = nirvana.getChild(idOut);
-		//	if (childIn.type() == "service" && childOut.type() == "service")
-		//	{
-		//		Service &serviceIn = static_cast< Service & >(childIn);
-		//		Service &serviceOut = static_cast< Service & >(childOut);
-
-		//		if (serviceIn.hasInputSlot(nameIn) && serviceOut.hasOutputSlot(nameOut))
-		//		{
-		//			InputSlot &in = serviceIn.getInputSlot(nameIn);
-		//			OutputSlot &out = serviceOut.getOutputSlot(nameOut);
-
-		//			out.addListener(in);
-		//			in.linkWith(out);
-		//		}
-		//		else
-		//		{
-		//		}
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		nirvana.linkSlots(serviceIn, nameIn, serviceOut, nameOut);
 	}
 
-	void Engine::registerToException(ExceptionCallback callback, Identifier const& system)
+	void Engine::registerToException(ExceptionCallback callback, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
 		nirvana.registerExceptionCallback(callback);
 	}
 
-	void Engine::unregisterFromException(ExceptionCallback callback, Identifier const& system)
+	void Engine::unregisterFromException(ExceptionCallback callback, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
 		nirvana.unregisterExceptionCallback(callback);
 	}
 
-	void Engine::registerToNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
+	void Engine::registerToException(IExceptionListener &listener, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		//if (nirvana.contains(id))
-		//{
-		//	Runnable &child = nirvana.getChild(id);
-		//	if (child.type() == "service")
-		//	{
-		//		Service &service = static_cast< Service & >(child);
-		//		OutputSlot &out = service.getOutputSlot(name);
-		//		out.registerCallback(callback);
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		nirvana.registerExceptionListener(listener);
+	}
+
+	void Engine::unregisterFromException(IExceptionListener &listener, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.unregisterExceptionListener(listener);
+	}
+
+	void Engine::registerToNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		if (!id.isService())
+		{
+			std::ostringstream msg;
+			msg << "registerToNewData: " << id.name() << " is a " << id.type() << ", service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.registerToNewData(id, name, callback);
 	}
 
 	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, DataCallback callback, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		//if (nirvana.contains(id))
-		//{
-		//	Runnable &child = nirvana.getChild(id);
-		//	if (child.type() == "service")
-		//	{
-		//		Service &service = static_cast< Service & >(child);
-		//		OutputSlot &out = service.getOutputSlot(name);
-		//		out.unregisterCallback(callback);
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		if (!id.isService())
+		{
+			std::ostringstream msg;
+			msg << "unregisterFromNewData: " << id.name() << " is a " << id.type() << ", service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.unregisterFromNewData(id, name, callback);
 	}
 
-	void Engine::registerToNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
+	void Engine::registerToNewData(Identifier const& id, std::string const& name, IOutputListener &listener, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		//if (nirvana.contains(id))
-		//{
-		//	Runnable &child = nirvana.getChild(id);
-		//	if (child.type() == "service")
-		//	{
-		//		Service &service = static_cast< Service & >(child);
-		//		OutputSlot &out = service.getOutputSlot(name);
-		//		out.addListener(listener);
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		if (!id.isService())
+		{
+			std::ostringstream msg;
+			msg << "registerToNewData: " << id.name() << " is a " << id.type() << ", service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+		
+		nirvana.registerToNewData(id, name, listener);
 	}
 
-	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, OutputListener &listener, Identifier const& system)
+	void Engine::unregisterFromNewData(Identifier const& id, std::string const& name, IOutputListener &listener, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		//if (nirvana.contains(id))
-		//{
-		//	Runnable &child = nirvana.getChild(id);
-		//	if (child.type() == "service")
-		//	{
-		//		Service &service = static_cast< Service & >(child);
-		//		OutputSlot &out = service.getOutputSlot(name);
-		//		out.removeListener(listener);
-		//	}
-		//	else
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//}
+		if (!id.isService())
+		{
+			std::ostringstream msg;
+			msg << "unregisterFromNewData: " << id.name() << " is a " << id.type() << ", service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.unregisterFromNewData(id, name, listener);
 	}
 
-	void Engine::registerToException(ExceptionListener &listener, Identifier const& system)
+	void Engine::start(Identifier const& runnableId, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		nirvana.registerExceptionListener(listener);
+		if (!runnableId.isRunAble())
+		{
+			std::ostringstream msg;
+			msg << "start: " << runnableId.name() << " is a " << runnableId.type() << ", service /sequence / synchronization expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.startChild(runnableId);
 	}
 
-	void Engine::unregisterFromException(ExceptionListener &listener, Identifier const& system)
+	void Engine::stop(Identifier const& runnableId, Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
-		nirvana.unregisterExceptionListener(listener);
+		if (!runnableId.isRunAble())
+		{
+			std::ostringstream msg;
+			msg << "stop: " << runnableId.name() << " is a " << runnableId.type() << ", service / sequence / synchronization expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		nirvana.stopChild(runnableId);
 	}
 
-	void Engine::start(Identifier const& id, Identifier const& system)
+	void Engine::startAll(Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-
-		nirvana.startChild(id);
-	}
-
-	void Engine::stop(Identifier const& id, Identifier const& system)
-	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
-
-		nirvana.stopChild(id);
-	}
-
-	////DataHandle Engine::createDataHandle(Identifier const& _service, std::string const& _out, Identifier const& _system)
-	////{
-	////	try
-	////	{
-	////		Container *nirvana = m_Graphs->getSystem(_system.id());
-	////		AbstractContainer *child = nirvana->find(_service.id());
-	////		Service *service = static_cast< Service * >(child);
-	////		OutputSlot *out = service->getOutputSlotByName(_out);
-	////		
-	////		return out->createHandle();
-	////	}
-	////	catch (Exception &e)
-	////	{
-	////		throw e;
-	////	}
-	////}
-
-	//Identifiers Engine::getChildren(Identifier const& _id, Identifier const& _system)
-	//{
-	//	try
-	//	{
-	//		IDs ids;
-	//		Identifiers children;
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		if (_id == _system)
-	//		{
-	//			ids = nirvana->childIDs();
-	//		}
-	//		else
-	//		{
-	//			const AbstractContainer *container = nirvana->find(_id.id());
-	//			if (!container)
-	//			{
-	//				throw Exception("this system does not contain " + _id.name());
-	//			}
-	//			else if (container->type() == Entity::SERVICE)
-	//			{
-	//				throw Exception("services do not have children");
-	//			}
-
-	//			const Container *c = static_cast< const Container * >(container);
-	//			ids = c->childIDs();
-	//		}
-
-	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
-	//		{
-	//			children.push_back(m_Entities->getIdentifier(*it));
-	//		}
-	//		return children;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	void Engine::startAll(Identifier const& system)
-	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
 		nirvana.startAll();
 	}
 
-	void Engine::stopAll(Identifier const& system)
+	void Engine::stopAll(Identifier const& systemId)
 	{
-		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
 		nirvana.stopAll();
 	}
@@ -484,98 +383,6 @@ namespace _2Real
 	//		}
 	//		container->shutdown();
 	//		m_Entities->destroy(container);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-		//Identifiers Engine::getSetupParameters(Identifier const& _id, Identifier const& _system) const
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		const AbstractContainer *container = nirvana->find(_id.id());
-	//		const Plugin *plugin = m_Plugins->plugin(_id.id());
-	//		if (!container && !plugin)
-	//		{
-	//			throw Exception("this system does not contain " + _id.name());
-	//		}
-	//		else if (container && container->type() != Entity::SERVICE)
-	//		{
-	//			throw Exception("only setup params of a service can be queried");
-	//		}
-	//		Identifiers setup;
-	//		IDs ids;
-
-	//		if (container)
-	//		{
-	//			ids = container->setupParameterIDs();
-	//		}
-	//		else
-	//		{
-	//			ids = plugin->setupParameterIDs();
-	//		}
-	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
-	//		{
-	//			setup.push_back(m_Entities->getIdentifier(*it));
-	//		}
-	//		return setup;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//Identifiers Engine::getInputSlots(Identifier const& _id, Identifier const& _system) const
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		const AbstractContainer *container = nirvana->find(_id.id());
-
-	//		if (!container)
-	//		{
-	//			throw Exception("this system does not contain " + _id.name());
-	//		}
-
-	//		Identifiers input;
-	//		IDs ids = container->inputSlotIDs();
-	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
-	//		{
-	//			input.push_back(m_Entities->getIdentifier(*it));
-	//		}
-
-	//		return input;
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//Identifiers Engine::getOutputSlots(Identifier const& _id, Identifier const& _system) const
-	//{
-	//	try
-	//	{
-	//		Container *nirvana = m_Graphs->getSystem(_system.id());
-	//		const AbstractContainer *container = nirvana->find(_id.id());
-
-	//		if (!container)
-	//		{
-	//			throw Exception("this system does not contain " + _id.name());
-	//		}
-
-	//		Identifiers output;
-	//		IDs ids = container->outputSlotIDs();
-	//		for (IDIterator it = ids.begin(); it != ids.end(); it++)
-	//		{
-	//			output.push_back(m_Entities->getIdentifier(*it));
-	//		}
-
-	//		return output;
 	//	}
 	//	catch (Exception &e)
 	//	{

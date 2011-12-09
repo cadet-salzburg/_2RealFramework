@@ -49,9 +49,6 @@
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealProductionGraphs.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealServiceFactory.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
@@ -66,6 +63,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemPool.cpp">
+      <Filter>Subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealRunnable.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -88,8 +91,6 @@
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealExceptionListener.h" />
-    <ClInclude Include="..\..\src\_2RealOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h">
       <Filter>Metadata</Filter>
     </ClInclude>
@@ -120,9 +121,6 @@
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
       <Filter>Metadata</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealRunnable.h">
-      <Filter>Service</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealService.h">
       <Filter>Service</Filter>
     </ClInclude>
@@ -147,9 +145,6 @@
     <ClInclude Include="..\..\src\_2RealSetupParameter.h">
       <Filter>Parameters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealProductionGraphs.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealServiceFactory.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
@@ -171,6 +166,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
+    <ClInclude Include="..\..\src\_2RealExceptionListener.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutputListener.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemPool.h">
+      <Filter>Subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealRunnable.h">
+      <Filter>Service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

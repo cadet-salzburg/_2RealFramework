@@ -25,7 +25,8 @@
 namespace _2Real
 {
 
-	Graph::Graph()
+	Graph::Graph() :
+		m_Children()
 	{
 	}
 
@@ -33,74 +34,70 @@ namespace _2Real
 	{
 	}
 
-	RunnableList::iterator Graph::iteratorId(Identifier const& id)
+	RunnableList::iterator Graph::iteratorId(Identifier const& childId)
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->identifier() == id)
+			if ((*it)->identifier() == childId)
 			{
 				return it;
 			}
 		}
-
 		return m_Children.end();
 	}
 
-	RunnableList::const_iterator Graph::iteratorId(Identifier const& id) const
+	RunnableList::const_iterator Graph::iteratorId(Identifier const& childId) const
 	{
 		for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->identifier() == id)
+			if ((*it)->identifier() == childId)
 			{
 				return it;
 			}
 		}
-
 		return m_Children.end();
 	}
 
-	RunnableList::iterator Graph::iteratorPosition(unsigned int const& _pos)
+	RunnableList::iterator Graph::iteratorPosition(unsigned int position)
 	{
-		RunnableList::iterator position = m_Children.begin();
-		for (unsigned int count = 0; count < _pos; count++)
+		RunnableList::iterator result = m_Children.begin();
+		for (unsigned int count = 0; count < position; count++)
 		{
 			position++;
 		}
-
-		return position;
+		return result;
 	}
 
-	RunnableList::const_iterator Graph::iteratorPosition(unsigned int const& _pos) const
+	RunnableList::const_iterator Graph::iteratorPosition(unsigned int position) const
 	{
-		RunnableList::const_iterator position = m_Children.begin();
-		for (unsigned int count = 0; count < _pos; count++)
+		RunnableList::const_iterator result = m_Children.begin();
+		for (unsigned int count = 0; count < position; count++)
 		{
 			position++;
 		}
-
-		return position;
+		return result;
 	}
 
-	const bool Graph::isChild(Identifier const& id) const
+	bool Graph::isChild(Identifier const& childId) const
 	{
-		return (iteratorId(id) != m_Children.end());
+		return (iteratorId(childId) != m_Children.end());
 	}
 
-	const bool Graph::contains(Identifier const& id) const
+	bool Graph::isContained(Identifier const& runnableId) const
 	{
-		if (isChild(id))
+		if (isChild(runnableId))
 		{
 			return true;
 		}
 		else
 		{
-			RunnableList::const_iterator it;
-			for (it = m_Children.begin(); it != m_Children.end(); ++it)
+			for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				if (!(*it)->isService())
+				Runnable &runnable = **it;
+				if (!runnable.isService())
 				{
-					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					if (child->contains(id))
+					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);
+					if (graph.isContained(runnableId))
 					{
 						return true;
 					}
@@ -111,57 +108,83 @@ namespace _2Real
 		}
 	}
 
-	Runnable & Graph::getChild(Identifier const& id)
+	Runnable & Graph::getChild(Identifier const& childId)
 	{
-		RunnableList::iterator it = iteratorId(id);
+		RunnableList::iterator it = iteratorId(childId);
 		if (it != m_Children.end())
 		{
 			return **it;
 		}
-		else
-		{
-			for (it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				if (!(*it)->isService())
-				{
-					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					if (child->contains(id))
-					{
-						return child->getChild(id);
-					}
-				}
-			}
-		}
 
 		std::ostringstream msg;
-		msg << "child " << id.name() << " not found in graph";
+		msg << "child " << childId.name() << " not found";
 		throw NotFoundException(msg.str());
 	}
 
-	Runnable const& Graph::getChild(Identifier const& id) const
+	Runnable const& Graph::getChild(Identifier const& childId) const
 	{
-		RunnableList::const_iterator it = iteratorId(id);
+		RunnableList::const_iterator it = iteratorId(childId);
 		if (it != m_Children.end())
 		{
 			return **it;
 		}
+
+		std::ostringstream msg;
+		msg << "child " << childId.name() << " not found";
+		throw NotFoundException(msg.str());
+	}
+
+	Runnable & Graph::getContained(Identifier const& runnableId)
+	{
+		if (isChild(runnableId))
+		{
+			return getChild(runnableId);
+		}
 		else
 		{
-			for (it = m_Children.begin(); it != m_Children.end(); it++)
+			for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				if ((*it)->type() != "service")
+				Runnable &runnable = **it;
+				if (!runnable.isService())
 				{
-					RunnableGraph *child = static_cast< RunnableGraph * >(*it);
-					if (child->contains(id))
+					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);
+					if (graph.isContained(runnableId))
 					{
-						return child->getChild(id);
+						return graph.getContained(runnableId);
 					}
 				}
 			}
 		}
 
 		std::ostringstream msg;
-		msg << "child " << id.name() << " not found in graph";
+		msg << "runnable " << runnableId.name() << " not found in graph";
+		throw NotFoundException(msg.str());
+	}
+
+	Runnable const& Graph::getContained(Identifier const& runnableId) const
+	{
+		if (isChild(runnableId))
+		{
+			return getChild(runnableId);
+		}
+		else
+		{
+			for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); ++it)
+			{
+				Runnable &runnable = **it;
+				if (!runnable.isService())
+				{
+					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);
+					if (graph.isContained(runnableId))
+					{
+						return graph.getContained(runnableId);
+					}
+				}
+			}
+		}
+
+		std::ostringstream msg;
+		msg << "runnable " << runnableId.name() << " not found in graph";
 		throw NotFoundException(msg.str());
 	}
 

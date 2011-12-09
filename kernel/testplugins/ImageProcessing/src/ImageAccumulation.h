@@ -2,6 +2,8 @@
 
 #include "_2RealIService.h"
 #include "_2RealServiceContext.h"
+#include "_2RealInputHandle.h"
+#include "_2RealOutputHandle.h"
 
 #include "_2RealImagebuffer.h"
 

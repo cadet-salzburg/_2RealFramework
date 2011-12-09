@@ -16,6 +16,10 @@ using namespace std;
 
 MultiKinectOpenNI::~MultiKinectOpenNI()
 {
+}
+
+void MultiKinectOpenNI::shutdown()
+{
 	if (m_2RealKinect)
 	{
 		m_2RealKinect->shutdown();
@@ -48,8 +52,6 @@ void MultiKinectOpenNI::setup(PluginContext &context)
 	getGeneratorFlags(context);
 	getImageFlags(context);
 	getLogSettings(context);
-
-	std::cout << "starting the kinect" << std::endl;
 
 	m_2RealKinect = _2RealKinect::getInstance();
 	

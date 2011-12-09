@@ -20,8 +20,6 @@
 
 #include "Poco/Mutex.h"
 
-#include <iostream>
-
 namespace _2Real
 {
 

@@ -23,7 +23,6 @@
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 
-#include <iostream>
 #include <string>
 
 namespace _2Real
@@ -33,8 +32,8 @@ namespace _2Real
 	class Data;
 	class Identifier;
 	class RunnableError;
-	class OutputListener;
-	class ExceptionListener;
+	class IOutputListener;
+	class IExceptionListener;
 
 	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
@@ -50,8 +49,6 @@ namespace _2Real
 
 		void setInstallDirectory(std::string const& directory);
 		void setLogfile(std::string const& file);
-
-		//void setLoglevel();
 
 		/**
 		*	...
@@ -140,12 +137,12 @@ namespace _2Real
 		/**
 		*	registers exception callback for a system
 		*/
-		void registerToException(ExceptionListener &listener);
+		void registerToException(IExceptionListener &listener);
 
 		/**
 		*	unregisters exception callback for a system
 		*/
-		void unregisterFromException(ExceptionListener &listener);
+		void unregisterFromException(IExceptionListener &listener);
 
 		/**
 		*	registers callback for a service's output slot
@@ -160,14 +157,12 @@ namespace _2Real
 		/**
 		*	registers callback for a service's output slot
 		*/
-		void registerToNewData(Identifier const& service, std::string const& name, OutputListener &receiver);
+		void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
 		/**
 		*	unregisters callback for a service's output slot
 		*/
-		void unregisterFromNewData(Identifier const& service, std::string const& name, OutputListener &receiver);
-
-		//functions below are currently being refactored
+		void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
 		/**
 		*	stops all of nirvanas children at once
@@ -189,15 +184,19 @@ namespace _2Real
 		*/
 		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
 
+		//const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
+
+		/**
+		*	creates a synchronization of entities
+		*/
+		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
+
+		//const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
+
 		/**
 		*	links two entities
 		*/
 		//void link(Identifier const& in, Identifier const& out);
-
-		/**
-		*	returns the ids of an entity's children
-		*/
-		//Identifiers getChildren(Identifier const& id);
 
 		/**
 		*	destroys an entity

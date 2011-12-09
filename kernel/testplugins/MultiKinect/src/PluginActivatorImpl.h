@@ -15,6 +15,7 @@ public:
 	~MultiKinectOpenNI();
 	void					getMetadata(_2Real::Metadata &info);
 	void					setup(_2Real::PluginContext &context);
+	void					shutdown();
 	
 private:
 

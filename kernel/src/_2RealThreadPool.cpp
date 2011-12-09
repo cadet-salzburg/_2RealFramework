@@ -19,6 +19,7 @@
 
 #include "_2RealThreadPool.h"
 #include "_2RealRunnable.h"
+#include "_2RealException.h"
 
 #include "Poco/Runnable.h"
 #include "Poco/Thread.h"
@@ -38,37 +39,49 @@ namespace _2Real
 	
 	public:
 
-		PooledThread(std::string const& name, unsigned int const& stackSize = POCO_THREAD_STACK_SIZE);
+		PooledThread(unsigned int stackSize = POCO_THREAD_STACK_SIZE);
 
 		void start();
-		void start(Poco::Thread::Priority const& priority, _2Real::Runnable *const target);
+		void start(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
 
-		bool idle();
-		int idleTime();
-		void join();
+		bool isIdle() const;
+		int idleTime() const;
+
+		//stops target, waits for completion
+		void stopAndJoin();
+
+		//marks idle thread as non-idle
 		void activate();
-		void release();
+
+		//kilsl thread
+		void kill();
+
+		//runs the target
 		void run();
+
+		const Identifier identifier() const;
 
 	private:
 
-		volatile bool			m_IsIdle;
-		volatile std::time_t	m_IdleTime;
-		_2Real::Runnable		*m_Target;
-		Poco::Thread			m_Thread;
-		Poco::Event				m_TargetReady;
-		Poco::Event				m_TargetCompleted;
-		Poco::Event				m_Started;
-		Poco::FastMutex			m_Mutex;
+		volatile bool				m_IsIdle;
+		volatile std::time_t		m_IdleTime;
+		_2Real::Runnable			*m_Target;
+		Poco::Thread				m_Thread;
+		Poco::Event					m_TargetReady;
+		Poco::Event					m_TargetCompleted;
+		Poco::Event					m_Started;
+		mutable Poco::FastMutex		m_Mutex;
 
 	};
 
-	PooledThread::PooledThread(std::string const& name, unsigned int const& stackSize) :
+	PooledThread::PooledThread(unsigned int stackSize) :
 		m_IsIdle(true),
 		m_IdleTime(0),
 		m_Target(NULL),
-		m_Thread(name),
-		m_TargetCompleted(false)
+		m_Thread(""),
+		m_TargetReady(false),
+		m_TargetCompleted(false),
+		m_Started(false)
 	{
 		m_Thread.setStackSize(stackSize);
 		m_IdleTime = std::time(NULL);
@@ -80,37 +93,37 @@ namespace _2Real
 		m_Started.wait();
 	}
 
-	void PooledThread::start(Poco::Thread::Priority const& priority, _2Real::Runnable *const target)
+	void PooledThread::start(Poco::Thread::Priority const& priority, _2Real::Runnable &target)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Thread.setName(target->name());
+		m_Thread.setName(target.name());
 		m_Thread.setPriority(priority);
-	
-		//poco_assert (_pTarget == 0);
 
-		m_Target = target;
+		m_Target = &target;
 		m_TargetReady.set();
 	}
 
-	inline bool PooledThread::idle()
+	bool PooledThread::isIdle() const
 	{
 		return m_IsIdle;
 	}
 
-	int PooledThread::idleTime()
+	int PooledThread::idleTime() const
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 		return (int) (time(NULL) - m_IdleTime);
 	}
 
-	void PooledThread::join()
+	void PooledThread::stopAndJoin()
 	{
 		m_Mutex.lock();
 		_2Real::Runnable *target = m_Target;
 		m_Mutex.unlock();
+
 		if (target)
 		{
+			target->stop();
 			m_TargetCompleted.wait();
 		}
 	}
@@ -118,14 +131,11 @@ namespace _2Real
 	void PooledThread::activate()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-	
-		//poco_assert (_idle);
-	
 		m_IsIdle = false;
 		m_TargetCompleted.reset();
 	}
 
-	void PooledThread::release()
+	void PooledThread::kill()
 	{
 		const long timeout = 10000;
 	
@@ -137,6 +147,20 @@ namespace _2Real
 		if (m_Thread.tryJoin(timeout))
 		{
 			delete this;
+		}
+	}
+
+	const Identifier PooledThread::identifier() const
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		if (!m_Target)
+		{
+			return Entity::NoEntity();
+		}
+		else
+		{
+			return m_Target->identifier();
 		}
 	}
 
@@ -170,13 +194,8 @@ namespace _2Real
 		}
 	}
 
-	ThreadPool::ThreadPool()
-	{
-	}
-
-	ThreadPool::ThreadPool(unsigned int const& capacity, unsigned int const& max, unsigned int const& idleTime, unsigned int const& stackSize, std::string const& name) :  
+	ThreadPool::ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name) :
 		m_Capacity(capacity),
-		m_MaxCapacity(max), 
 		m_IdleTime(idleTime),
 		m_Age(0),
 		m_StackSize(stackSize),
@@ -184,127 +203,104 @@ namespace _2Real
 	{
 		for (unsigned int i=0; i<m_Capacity; ++i)
 		{
-			PooledThread *thread = createThread();
-			const Identifier id = Entity::NoEntity();
+			PooledThread *thread = new PooledThread(m_StackSize);
 			thread->start();
-			m_Threads.insert(NamedThread(id, thread));
+			m_Threads.push_back(thread);
 		}
 	}
 
 	ThreadPool::~ThreadPool()
 	{
-		//stopAll();
-	}
-
-	void ThreadPool::addCapacity(int const& n)
-	{
-		if (m_Capacity + n < 0)
+		if (m_Threads.size() > 0)
 		{
-		}
-		else if (m_Capacity + n > m_MaxCapacity)
-		{
-		}
-		else
-		{
-			m_Capacity += n;
+			clearThreads();
 		}
 	}
 
-	void ThreadPool::join(Identifier const& id)
+	void ThreadPool::clearThreads()
 	{
-		PooledThread *thread = NULL;
-		ThreadTable::iterator it = m_Threads.find(id);
+		joinAll();
+		stopAll();
+		m_Threads.clear();
+	}
 
-		if (it == m_Threads.end())
+	bool ThreadPool::isRunning(Identifier const& runnable)
+	{
+		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
-			return;
+			if ((*it)->identifier() == runnable)
+			{
+				return true;
+			}
 		}
-		else
+
+		return false;
+	}
+
+	PooledThread & ThreadPool::find(Identifier const& runnable)
+	{
+		for (ThreadList::iterator it=m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
-			it->second->join();
+			if ((*it)->identifier() == runnable)
+			{
+				return **it;
+			}
 		}
+
+		std::ostringstream msg;
+		msg << "threadpool " << m_Name << " error: runnable " << runnable << " not found";
+		throw ThreadpoolException(msg.str());
 	}
 
 	void ThreadPool::stop(Identifier const& id)
 	{
-		PooledThread *thread = NULL;
-		ThreadTable::iterator it = m_Threads.find(id);
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (it == m_Threads.end())
+		if (isRunning(id))
 		{
-			return;
-		}
-		else
-		{
-			it->second->join();
-			it->second->release();
+			PooledThread &thread = find(id);
+			thread.stopAndJoin();
 		}
 	}
 
-	void ThreadPool::start(Runnable *const target)
+	void ThreadPool::start(Runnable &target, bool runOnce)
 	{
-		PooledThread *thread = NULL;
-		ThreadTable::iterator it = m_Threads.find(target->identifier());
-		if (it != m_Threads.end())
-		{
-			if (it->second->idle())
-			{
-				thread = it->second;
-			}
-			else
-			{
-				return;
-			}
-		}
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (!thread)
+		if (!isRunning(target.identifier()))
 		{
-			thread = getFreeThread();
-			thread->start(Poco::Thread::PRIO_NORMAL, target);
-			m_Threads.insert(NamedThread(target->identifier(), thread));
-		}
-		else
-		{
-			thread->start(Poco::Thread::PRIO_NORMAL, target);
+			target.start(runOnce);
+			PooledThread &thread = getFreeThread();
+			thread.start(Poco::Thread::PRIO_NORMAL, target);
 		}
 	}
 
 	void ThreadPool::stopAll()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		for (ThreadTable::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
+		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
-			it->second->release();
+			(*it)->kill();
 		}
-		m_Threads.clear();
 	}
 
 	void ThreadPool::joinAll()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		for (ThreadTable::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
+		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
-			it->second->join();
+			(*it)->stopAndJoin();
 		}
-		
-		housekeep();
-	}
-
-	void ThreadPool::collect()
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		housekeep();
 	}
 
 	void ThreadPool::housekeep()
 	{
-		m_Age = 0;
+		//m_Age = 0;
 
-		if (m_Threads.empty())
-		{
-			return;
-		}
+		//if (m_Threads.empty())
+		//{
+		//	return;
+		//}
 
 		/*ThreadTable idleThreads;
 		ThreadTable expiredThreads;
@@ -353,50 +349,38 @@ namespace _2Real
 		//}
 	}
 
-	PooledThread *const ThreadPool::getFreeThread()
+	PooledThread & ThreadPool::getFreeThread()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (++m_Age == 32)
-		{
-			housekeep();
-		}
+		//huh?
+		//if (++m_Age == 32)
+		//{
+		//	housekeep();
+		//}
 
 		PooledThread *thread = NULL;
-		ThreadTable::iterator it;
-		for (it = m_Threads.begin(); it != m_Threads.end(); ++it)
+		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
-			if (it->second->idle())
+			if ((*it)->isIdle())
 			{
-				thread = it->second;
+				thread = *it;
 				break;
 			}
 		}
 
 		if (!thread)
 		{
-			if (m_Threads.size() < m_MaxCapacity)
-			{
-				thread = createThread();
-				thread->start();
-			}
-			else
-			{
-				//throw NoThreadAvailableException();
-			}
+			thread = new PooledThread(m_StackSize);
+			thread->start();
+			m_Threads.push_back(thread);
 		}
 		else
 		{
-			m_Threads.erase(it);
+			thread->activate();
 		}
-
-		thread->activate();
-		return thread;
-	}
-
-	PooledThread *const ThreadPool::createThread()
-	{
-		return new PooledThread(m_Name+"_thread", m_StackSize);
+	
+		return *thread;
 	}
 
 }

@@ -27,7 +27,7 @@
 
 #include "_2RealTypetable.h"
 #include "_2RealServiceFactory.h"
-#include "_2RealProductionGraphs.h"
+#include "_2RealSystemPool.h"
 #include "_2RealTimer.h"
 
 namespace _2Real
@@ -40,8 +40,8 @@ namespace _2Real
 	typedef void (*DataCallback)(Data &data);
 
 	class Identifier;
-	class OutputListener;
-	class ExceptionListener;
+	class IOutputListener;
+	class IExceptionListener;
 	
 	class Engine
 	{
@@ -56,44 +56,35 @@ namespace _2Real
 		long					getTimestamp() const;
 
 		const Identifier		createSystem(std::string const& name);
-		void					destroySystem(Identifier const& id);
-		void					setSystemLogfile(std::string const& file, Identifier const& system);
-		void					setSystemDirectory(std::string const& directory, Identifier const& system);
-
-		//void destroy(Identifier const& _id, Identifier const& _system);
-		
-		const Identifier		load(std::string const& name, std::string const& classname, Identifier const& system);
-		const std::string		getInfo(Identifier const& plugin, Identifier const& system) const;
-		const Identifier		createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& system);
-		void					setup(Identifier const& setupAble, Identifier const& system);
-		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& system);
-		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& system);
-
-		void linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& system);
-
-		void start(Identifier const& runnable, Identifier const& system);
-		void startAll(Identifier const& system);
-		void stop(Identifier const& runnable, Identifier const& system);
-		void stopAll(Identifier const& system);
-		//void update(Identifier const& runnable, unsigned int const& count, Identifier const& system);
-
-		/**
-		*	functions for registering exception & data callbacks
-		*/
-		void registerToNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
-		void unregisterFromNewData(Identifier const& service, std::string const& out, DataCallback callback, Identifier const& system);
-		void registerToException(ExceptionCallback callback, Identifier const& system);
-		void unregisterFromException(ExceptionCallback callback, Identifier const& system);
-		void registerToNewData(Identifier const& service, std::string const& out, OutputListener &listener, Identifier const& system);
-		void unregisterFromNewData(Identifier const& service, std::string const& out, OutputListener &listener, Identifier const& system);
-		void registerToException(ExceptionListener &listener, Identifier const& system);
-		void unregisterFromException(ExceptionListener &listener, Identifier const& system);
-
-		//const Identifier createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
-		//const Identifier createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB, Identifier const& _system);
-		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src, Identifier const& _system);
-		//void append(Identifier const& _dst, Identifier const& _src, Identifier const& _system);
-		//void link(Identifier const& _in, Identifier const& _out, Identifier const& _system);
+		void					destroySystem(Identifier const& systemId);
+		void					setSystemLogfile(std::string const& file, Identifier const& systemId);
+		void					setSystemDirectory(std::string const& directory, Identifier const& systemId);
+		//void					destroy(Identifier const& id, Identifier const& systemId);
+		const Identifier		load(std::string const& name, std::string const& classname, Identifier const& systemId);
+		const std::string		getInfo(Identifier const& plugin, Identifier const& systemId) const;
+		const Identifier		createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& systemId);
+		void					setup(Identifier const& setupAble, Identifier const& systemId);
+		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
+		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
+		void					linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);
+		void					start(Identifier const& runnable, Identifier const& systemId);
+		void					startAll(Identifier const& systemId);
+		void					stop(Identifier const& runnable, Identifier const& systemId);
+		void					stopAll(Identifier const& systemId);
+		//void					update(Identifier const& runnable, unsigned int count, Identifier const& systemId);
+		void					registerToNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
+		void					unregisterFromNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
+		void					registerToException(ExceptionCallback callback, Identifier const& systemId);
+		void					unregisterFromException(ExceptionCallback callback, Identifier const& systemId);
+		void					registerToNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
+		void					unregisterFromNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
+		void					registerToException(IExceptionListener &listener, Identifier const& systemId);
+		void					unregisterFromException(IExceptionListener &listener, Identifier const& systemId);
+		//const Identifier		createSequence(std::string const& name, Identifier const& runnableA, Identifier const& runnableB, Identifier const& systemId);
+		//const Identifier		createSynchronization(std::string const& name, Identifier const& runnableA, Identifier const& runnableB, Identifier const& systemId);
+		//void					insert(Identifier const& dst, unsigned int index, Identifier const& runnable, Identifier const& systemId);
+		//void					append(Identifier const& dst, Identifier const& runnable, Identifier const& systemId);
+		//void					link(Identifier const& in, Identifier const& out, Identifier const& systemId);
 
 	private:
 
@@ -104,7 +95,7 @@ namespace _2Real
 		~Engine();
 
 		ServiceFactory			m_Factory;
-		ProductionGraphs		m_Graphs;
+		SystemPool		m_Graphs;
 		Typetable				m_Types;
 		Timer					m_Timer;
 
