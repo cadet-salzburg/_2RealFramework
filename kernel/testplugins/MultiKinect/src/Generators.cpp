@@ -14,8 +14,8 @@ _2Real::IService *const createImageService()
 
 void ImageService::setup(ServiceContext &context)
 {
-	//try
-	//{
+	try
+	{
 		m_2RealKinect = _2RealKinect::getInstance();
 
 		string const& generator = context.getParameterValue< string >("image type");
@@ -42,7 +42,7 @@ void ImageService::setup(ServiceContext &context)
 		}
 		else
 		{
-			//throw ServiceException("generator type " + generator + " is invalid");
+			throw ServiceException("generator type " + generator + " is invalid");
 		}
 
 		m_DeviceId = context.getParameterValue< unsigned int >("device id");
@@ -60,37 +60,37 @@ void ImageService::setup(ServiceContext &context)
 
 		m_Bpp = m_Channels*sizeof(unsigned char);
 
-	//}
-	//catch (Exception &e)
-	//{
-	//	throw e;
-	//}
-	//catch (...)
-	//{
-	//	throw ServiceException("unexpected error in setup");
-	//}
+	}
+	catch (Exception &e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		throw ServiceException("unexpected error in setup");
+	}
 }
 
 void ImageService::update()
 {
-	//try
-	//{
+	try
+	{
 		m_Output.data< Buffer2D_uchar >().assign(	m_2RealKinect->getImageData(m_DeviceId, m_Generator),
 													m_2RealKinect->getImageHeight(m_DeviceId, m_Generator),
 													m_2RealKinect->getImageWidth(m_DeviceId, m_Generator),
 													m_Channels,
 													false);
-	//}
-	//catch (TypeMismatchException &e)
-	//{
-	//	throw e;
-	//}
-	//catch (PixelbufferException &e)
-	//{
-	//	throw e;
-	//}
-	//catch (...)
-	//{
-	//	throw ServiceException("ImageService: unexpected error in update");
-	//}
+	}
+	catch (TypeMismatchException &e)
+	{
+		throw e;
+	}
+	catch (PixelbufferException &e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		throw ServiceException("ImageService: unexpected error in update");
+	}
 }

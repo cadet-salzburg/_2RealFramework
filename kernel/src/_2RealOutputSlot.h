@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIOSlot.h"
+#include "_2RealParameter.h"
 #include "_2RealData.h"
 
 #include "Poco/Mutex.h"
@@ -27,23 +27,19 @@
 namespace _2Real
 {
 
-	/**
-	*	represents an output slot of a service
-	*/
-
 	class IOutputListener;
 	class Timer;
 
 	typedef void (*DataCallback)(Data &data);
 
-	class OutputSlot : public IOSlot
+	class OutputSlot : public Parameter
 	{
 
 	public:
 
-		OutputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword, EngineData initialValue);
+		OutputSlot(ParameterMetadata const& metadata);
 
-		EngineData					data();
+		EngineData					getData();
 		void						update();
 
 		void						registerCallback(DataCallback callback);
@@ -61,7 +57,7 @@ namespace _2Real
 
 	};
 
-	inline EngineData OutputSlot::data()
+	inline EngineData OutputSlot::getData()
 	{
 		return m_WriteData;
 	}

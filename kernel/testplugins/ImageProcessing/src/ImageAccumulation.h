@@ -35,7 +35,7 @@ private:
 	_2Real::InputHandle						m_Input;
 	_2Real::OutputHandle					m_Output;
 	_2Real::Image2D_float 					*m_Image;
-	unsigned char							m_BufferSize;
+	unsigned int							m_BufferSize;
 	float									m_Factor;
 	std::deque< _2Real::Image2D_float * >	m_Buffer;
 
@@ -62,20 +62,16 @@ void ImageAccumulationService< ImageData >::setup(_2Real::ServiceContext &contex
 {
 	try
 	{
-		//cout << "ImageAccumulationService: setup " << endl;
-
 		m_Input = context.getInputHandle("input image");
 		m_Output = context.getOutputHandle("output image");
 
-		m_BufferSize = context.getParameterValue< unsigned char >("buffer size");
+		m_BufferSize = context.getParameterValue< unsigned int >("buffer size");
 		if (m_BufferSize < 2)
 		{
 			throw ServiceException("setup parameter \'buffer size\' should at least be 2");
 		}
 
 		m_Factor = 1.0f/float(m_BufferSize);
-
-		//cout << "ImageAccumulationService: setup finished" << endl;
 	}
 	catch (Exception &e)
 	{
@@ -92,8 +88,6 @@ void ImageAccumulationService< ImageData >::update()
 {
 	try
 	{
-		//cout << "ImageAccumulationService: update " << endl;
-
 		Pixelbuffer< ImageData > const& newImage(m_Input.data< Pixelbuffer < ImageData > >());
 		Pixelbuffer< float > & outImage = m_Output.data< Pixelbuffer < float > >();
 
@@ -157,7 +151,7 @@ void ImageAccumulationService< ImageData >::update()
 	}
 	catch (Exception &e)
 	{
-		throw ServiceException(e.what());
+		throw e;
 	}
 	catch (...)
 	{

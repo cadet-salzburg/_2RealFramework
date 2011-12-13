@@ -85,7 +85,9 @@ namespace _2Real
 
 	inline const std::string Plugin::getInfoString() const
 	{
-		return m_Metadata.getInfoString();
+		std::ostringstream info;
+		info << m_Metadata;
+		return info.str();
 	}
 
 	inline bool Plugin::isInitialized() const

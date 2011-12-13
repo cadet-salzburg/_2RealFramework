@@ -26,53 +26,45 @@
 #include "_2RealOutputHandle.h"
 #include "_2RealIService.h"
 #include "_2RealSystemGraph.h"
-#include "_2RealEngine.h"
+#include "_2RealServiceMetadata.h"
+#include "_2RealParameterMetadata.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-	Service::Service(Identifier const& id, IService &service, SystemGraph &system, StringMap const& setup, StringMap const& input, StringMap const& output) : 
+	Service::Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata) :
 		Runnable(id, system),
 		m_Service(&service),
-		m_MaxDelay(long(1000.0f/30.0f)),
-		m_UpdatesPerSecond(30.0f),
 		m_SetupParameters(),
 		m_InputSlots(),
 		m_OutputSlots(),
 		m_IsSetUp(false)
 	{
-		StringMap const& allowedTypes = Engine::instance().getAllowedTypes();
-		Typetable const& lookupTable = Engine::instance().types();
+		ParameterDataMap const& setup = metadata.getSetupParameters();
+		ParameterDataMap const& input = metadata.getInputSlots();
+		ParameterDataMap const& output = metadata.getOutputSlots();
 
-		for (StringMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
+		for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
-			std::string name = it->first;
-			std::string keyword = it->second;
-			std::string type =  allowedTypes.find(keyword)->second;
-			SetupParameter *setup = new SetupParameter(name, type, keyword);
-			m_SetupParameters.insert(NamedParameter(name, setup));
+			ParameterMetadata const& meta = *it->second;
+			SetupParameter *setup = new SetupParameter(meta);
+			m_SetupParameters.insert(NamedParameter(meta.getName(), setup));
 		}
 
-		for (StringMap::const_iterator it = input.begin(); it != input.end(); ++it)
+		for (ParameterDataMap::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
-			std::string name = it->first;
-			std::string keyword = it->second;
-			std::string type =  allowedTypes.find(keyword)->second;
-			InputSlot *in = new InputSlot(*this, name, type, keyword);
-			m_InputSlots.insert(NamedInput(name, in));
+			ParameterMetadata const& meta = *it->second;
+			InputSlot *input = new InputSlot(meta);
+			m_InputSlots.insert(NamedInput(meta.getName(), input));
 		}
 
-		for (StringMap::const_iterator it = output.begin(); it != output.end(); ++it)
+		for (ParameterDataMap::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
-			std::string name = it->first;
-			std::string keyword = it->second;
-			std::string type =  allowedTypes.find(keyword)->second;
-			EngineData initialData;
-			lookupTable.createEngineData(keyword, initialData);
-			OutputSlot *out = new OutputSlot(*this, name, type, keyword, initialData);
-			m_OutputSlots.insert(NamedOutput(name, out));
+			ParameterMetadata const& meta = *it->second;
+			OutputSlot *output = new OutputSlot(meta);
+			m_OutputSlots.insert(NamedOutput(meta.getName(), output));
 		}
 	}
 
@@ -116,12 +108,6 @@ namespace _2Real
 		getOutputSlot(outName).addListener(listener);
 	}
 
-	void Service::setUpdateRate(float updatesPerSecond)
-	{
-		m_MaxDelay = long(1000.0f/updatesPerSecond);
-		m_UpdatesPerSecond = updatesPerSecond;
-	}
-
 	void Service::linkWith(std::string const& inName, Service &serviceOut, std::string const& outName)
 	{
 		InputSlot &in = getInputSlot(inName);
@@ -129,11 +115,6 @@ namespace _2Real
 
 		in.linkWith(out);
 	}
-
-	//void Service::linkWidth(Service &serviceOut)
-	//{
-	//	//TODO
-	//}
 
 	bool Service::checkForSetup()
 	{
@@ -159,16 +140,21 @@ namespace _2Real
 		{
 			try
 			{
+				Runnable::updateTimer();
+
+				bool ready = true;
 				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 				{
-					it->second->updateCurrent();
+					ready &= it->second->updateCurrent();
 				}
 
-				m_Service->update();
-				
-				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
+				if (ready)
 				{
-					it->second->update();
+					m_Service->update();
+					for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
+					{
+						it->second->update();
+					}
 				}
 
 				if (m_RunOnce)
@@ -177,12 +163,7 @@ namespace _2Real
 				}
 				else
 				{
-					long elapsed = 0;//m_Timer.elapsed()/1000;
-					long sleep = m_MaxDelay - elapsed;
-					if (sleep > 0)
-					{
-						Poco::Thread::sleep(sleep);
-					}
+					Runnable::suspend();
 				}
 			}
 			catch (_2Real::Exception &e)

@@ -26,7 +26,7 @@ namespace _2Real
 {
 
 	Typetable::Typetable(Engine const& engine) :
-		m_Engine(engine),	//do not touch anywhere else in ctor
+		m_Engine(engine),
 		m_Types(),
 		m_LookupTable()
 	{
@@ -38,51 +38,52 @@ namespace _2Real
 		m_LookupTable.clear();
 	}
 
-	void Typetable::createEngineData(std::string const& keyword, EngineData &any) const
+	const std::string Typetable::lookupType(std::string const& keyword) const
 	{
 		EngineDataTable::const_iterator it = m_Types.find(keyword);
 
 		if (it == m_Types.end())
 		{
 			std::ostringstream msg;
-			msg << "typetable error: createEngineData, keyword not contained in table: " << keyword << std::endl;
-			throw _2Real::Exception(msg.str());
+			msg << "no type with keyword " << keyword << " found";
+			throw InvalidTypeException(msg.str());
 		}
 
-		any.create(it->second);
+		return std::string(it->second.typeinfo().name());
 	}
 
-	EngineData Typetable::getEngineData(std::string const& keyword) const
+	const std::string Typetable::lookupKey(std::string const& type) const
 	{
-		EngineDataTable::const_iterator it = m_Types.find(keyword);
+		StringMap::const_iterator it = m_LookupTable.find(type);
 
-		if (it == m_Types.end())
+		if (it == m_LookupTable.end())
 		{
 			std::ostringstream msg;
-			msg << "typetable error: getEngineData, keyword not contained in table: " << keyword << std::endl;
-			throw _2Real::Exception(msg.str());
+			msg << "no type with typename " << type << " found";
+			throw InvalidTypeException(msg.str());
 		}
 
 		return it->second;
 	}
 
-	const std::string Typetable::getTypename(std::string const& keyword) const
+	EngineData Typetable::getInitialValueFromType(std::string const& type) const
+	{
+		std::string keyword = lookupKey(type);
+		return getInitialValueFromKey(keyword);
+	}
+
+	EngineData Typetable::getInitialValueFromKey(std::string const& keyword) const
 	{
 		EngineDataTable::const_iterator it = m_Types.find(keyword);
 
 		if (it == m_Types.end())
 		{
 			std::ostringstream msg;
-			msg << "typetable error: getTypename, keyword not contained in table: " << keyword << std::endl;
-			throw _2Real::Exception(msg.str());
+			msg << "no type with keyword " << keyword << " found";
+			throw InvalidTypeException(msg.str());
 		}
 
-		return std::string(it->second.type().name());
-	}
-
-	const bool Typetable::contains(std::string const& keyword) const
-	{
-		return m_Types.find(keyword) != m_Types.end();
+		return it->second;
 	}
 
 }

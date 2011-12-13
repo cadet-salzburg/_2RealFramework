@@ -22,6 +22,8 @@
 
 #include <map>
 #include <string>
+#include <typeinfo>
+#include <iostream>
 
 namespace _2Real
 {
@@ -39,51 +41,89 @@ namespace _2Real
 		Typetable(Engine const& engine);
 		~Typetable();
 
-		template< typename Datatype >
+		template< typename DataType >
+		void				registerType(std::string const& keyword, DataType const& defaultValue);
+
+		template< typename DataType >
 		void				registerType(std::string const& keyword);
-		void				createEngineData(std::string const& keyword, EngineData &any) const;
-		EngineData			getEngineData(std::string const& keyword) const;
-		const std::string	getTypename(std::string const& keyword) const;
-		const bool			contains(std::string const& keyword) const;
-		StringMap const&	getLookupTable() const;
+
+		const std::string	lookupKey(std::string const& type) const;
+		const std::string	lookupType(std::string const& keyword) const;
+		EngineData			getInitialValueFromType(std::string const& type) const;
+		EngineData			getInitialValueFromKey(std::string const& keyword) const;
+		bool				hasDefaultValue(std::string const& keyword) const;
 
 	private:
 
 		Engine				const& m_Engine;
+
 		EngineDataTable		m_Types;
 		StringMap			m_LookupTable;
 
 	};
 
-	template< typename Datatype >
-	void Typetable::registerType(std::string const& keyword)
+	template< typename DataType >
+	void Typetable::registerType(std::string const& keyword, DataType const& defaultValue)
 	{
-		EngineDataTable::iterator it = m_Types.find(keyword);
 
+		EngineDataTable::iterator it = m_Types.find(keyword);
 		if (it != m_Types.end())
 		{
-			throw Exception("keyword already exists");
+			std::ostringstream msg;
+			msg << "keyword " << keyword << " already exists";
+			throw AlreadyExistsException(msg.str());
 		}
 
 		std::string keyword1 = std::string("vector " + keyword);
 		std::string keyword2 = std::string("vector2D " + keyword);
 
-		EngineData data(new Datatype());
-		EngineData data1(new std::vector< Datatype >());
-		EngineData data2(new std::vector < std::vector< Datatype > >());
+		EngineData data(new DataType(defaultValue));
+		EngineData data1(new std::vector< DataType >());
+		EngineData data2(new std::vector < std::vector< DataType > >());
 
 		m_Types[keyword] = data;
 		m_Types[keyword1] = data1;
 		m_Types[keyword2] = data2;
 
-		m_LookupTable[keyword] = data.type().name();
-		m_LookupTable[keyword1] = data1.type().name();
-		m_LookupTable[keyword2] = data2.type().name();
+		std::string type = typeid(DataType).name();
+		std::string type1 = data1.typeinfo().name();
+		std::string type2 = data2.typeinfo().name();
+
+		m_LookupTable[type] = keyword;
+		m_LookupTable[type1] = keyword1;
+		m_LookupTable[type2] = keyword2;
 	}
 
-	inline StringMap const& Typetable::getLookupTable() const
+	template< typename DataType >
+	void Typetable::registerType(std::string const& keyword)
 	{
-		return m_LookupTable;
+
+		EngineDataTable::iterator it = m_Types.find(keyword);
+		if (it != m_Types.end())
+		{
+			std::ostringstream msg;
+			msg << "keyword " << keyword << " already exists";
+			throw AlreadyExistsException(msg.str());
+		}
+
+		std::string keyword1 = std::string("vector " + keyword);
+		std::string keyword2 = std::string("vector2D " + keyword);
+
+		EngineData data(new DataType());
+		EngineData data1(new std::vector< DataType >());
+		EngineData data2(new std::vector < std::vector< DataType > >());
+
+		m_Types[keyword] = data;
+		m_Types[keyword1] = data1;
+		m_Types[keyword2] = data2;
+
+		std::string type = typeid(DataType).name();
+		std::string type1 = data1.typeinfo().name();
+		std::string type2 = data2.typeinfo().name();
+
+		m_LookupTable[type] = keyword;
+		m_LookupTable[type1] = keyword1;
+		m_LookupTable[type2] = keyword2;
 	}
 
 }

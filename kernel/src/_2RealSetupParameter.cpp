@@ -17,10 +17,35 @@
 */
 
 #include "_2RealSetupParameter.h"
+#include "_2RealParameterMetadata.h"
+#include "_2RealException.h"
+
+#include <sstream>
 
 namespace _2Real
 {
 
+	SetupParameter::SetupParameter(ParameterMetadata const& metadata) :
+		Parameter(metadata),
+		m_Data()
+	{
+		if (metadata.hasDefaultValue())
+		{
+			m_Data = metadata.getDefaultValue();
+		}
+	}
 
+	void SetupParameter::setData(EngineData const& data)
+	{
+		if (data.typeinfo().name() != getDatatype())
+		{
+			std::ostringstream msg;
+			msg << "datatype mismatch: " <<  m_Datatype << " vs. template parameter type " << data.typeinfo().name();
+			throw TypeMismatchException(msg.str());
+		}
+
+		m_Data = data;
+		m_IsInitialized = true;
+	}
 
 }

@@ -1,11 +1,16 @@
 #pragma once
 
 #include "_2RealException.h"
+#include "_2RealHelpers.h"
+#include "_2RealTypeHolder.h"
 
+#include <vector>
 #include <typeinfo>
 #include <sstream>
 
 #include "Poco/SharedPtr.h"
+
+#include <iostream>
 
 namespace _2Real
 {
@@ -14,154 +19,139 @@ namespace _2Real
 	{
 
 	public:
+
+		template< typename DataType >
+		friend Poco::SharedPtr< DataType > Extract(EngineData &data);
+		//template< typename DataType >
+		//friend DataType* Extract(EngineData &data);
 	
-		EngineData() :
-			m_Content()
-		{
-		}
+		EngineData();
+		EngineData(EngineData const& src);
+		EngineData& operator=(EngineData const& src);
+		~EngineData();
 
-		template< typename T >
-		EngineData(T* value) :
-			m_Content(new TypeHolder< T >(value))
-		{
-		}
+		template< typename DataType >
+		EngineData(DataType *const value);
 
-		template< typename T >
-		EngineData(T value) :
-			m_Content(new TypeHolder< T >(new T(value)))
-		{
-		}
+		template< typename DataType >
+		EngineData(DataType const& value);
 
-		EngineData(EngineData const& src) :
-			m_Content(src.m_Content)
-		{
-		}
+		EngineData(AbstractDataHolder *holder);
 
-		~EngineData()
-		{
-			m_Content.assign(NULL);
-		}
+		bool isEmpty() const;
+		std::type_info const& typeinfo() const;
+		void clone(EngineData const& src);
+		void create(EngineData const& src);
+		const std::string toString() const;
 
-		bool empty() const
-		{
-			return m_Content.isNull();
-		}
+	private:
 
-		std::type_info const& type() const
-		{
-			if (m_Content.isNull())
-			{
-				return typeid(void);
-			}
-			else
-			{
-				return m_Content->type();
-			}
-		}
-
-		void clone(EngineData const& src)
-		{
-			m_Content.assign(src.m_Content->clone());
-		}
-
-		void create(EngineData const& src)
-		{
-			m_Content.assign(src.m_Content->create());
-		}
-
-		private:
-	
-			class DataHolder
-			{
-	
-			public:
-	
-				virtual ~DataHolder() {}
-				virtual const std::type_info& type() const = 0;
-				virtual DataHolder* clone() const = 0;
-				virtual DataHolder* create() const = 0;
-
-			};
-
-			template< typename T >
-			class TypeHolder : public DataHolder
-			{
-	
-			public:
-
-				TypeHolder() :
-					m_Shared(NULL)
-				{
-				}
-
-				TypeHolder(T *value) :
-					m_Shared(value)
-				{
-				}
-
-				TypeHolder(TypeHolder< T > const& src) :
-					m_Shared(src.m_Shared)
-				{
-				}
-
-				TypeHolder& operator=(TypeHolder< T > const& src)
-				{
-					if (this == &src)
-					{
-						return *this;
-					}
-
-					m_Shared = src.m_Shared;
-
-					return *this;
-				}
-
-				virtual ~TypeHolder()
-				{
-					m_Shared.assign(NULL);
-				}
-
-				virtual std::type_info const& type() const
-				{
-					return typeid(T);
-				}
-
-				virtual DataHolder* create() const
-				{
-					T *newContent = new T();
-					return new TypeHolder(newContent);
-				}
-
-				virtual DataHolder* clone() const
-				{
-					T *newContent = new T(*m_Shared.get());
-					return new TypeHolder(newContent);
-				}
-
-				Poco::SharedPtr< T >	m_Shared;
-			};
-
-		template< typename T >
-		friend Poco::SharedPtr< T > Extract(EngineData any);
-
-		Poco::SharedPtr< DataHolder >				m_Content;
+		Poco::SharedPtr< AbstractDataHolder >	m_Content;
 
 	};
 
-	template< typename T >
-	Poco::SharedPtr< T > Extract(EngineData any)
+	//template< typename DataType >
+	//DataType * Extract(EngineData &data)
+	template< typename DataType >
+	Poco::SharedPtr< DataType > Extract(EngineData &data)
 	{
-		if (any.type() == typeid(T))
+		if (data.typeinfo() == typeid(DataType))
 		{
-			EngineData::DataHolder *ptr = any.m_Content.get();
-			return static_cast< EngineData::TypeHolder< T > * >(ptr)->m_Shared;
+			AbstractDataHolder *ptr = data.m_Content.get();
+			return static_cast< DataHolder< DataType > * >(ptr)->m_Data;
 		}
 		else
 		{
 			std::ostringstream msg;
-			msg << "type of data " << any.type().name() << " does not match template parameter " << typeid(T).name() << std::endl;
+			msg << "type of data " << data.typeinfo().name() << " does not match template parameter " << typeid(DataType).name() << std::endl;
 			throw TypeMismatchException(msg.str());
 		}
+	}
+
+	inline EngineData::EngineData(AbstractDataHolder *holder)
+	{
+		m_Content.assign(holder);
+	}
+
+	template< typename DataType >
+	EngineData::EngineData(DataType *const value)
+	{
+		DataHolder< DataType > *holder = new DataHolder< DataType >(value);
+		m_Content.assign(holder);
+	}
+
+	template< typename DataType >
+	EngineData::EngineData(DataType const& value)
+	{
+		DataType *newData = new DataType(value);
+		DataHolder< DataType > *holder = new DataHolder< DataType >(newData);
+		m_Content.assign(holder);
+	}
+
+	inline EngineData::EngineData() :
+		m_Content()
+	{
+	}
+
+	inline EngineData::EngineData(EngineData const& src) :
+		m_Content(src.m_Content)
+	{
+	}
+
+	inline EngineData& EngineData::operator=(EngineData const& src)
+	{
+		if (this == &src)
+		{
+			return *this;
+		}
+
+		m_Content = src.m_Content;
+
+		return *this;
+	}
+
+	inline EngineData::~EngineData()
+	{
+		m_Content.assign(NULL);
+	}
+
+	inline bool EngineData::isEmpty() const
+	{
+		return m_Content.isNull();
+	}
+
+	inline const std::string EngineData::toString() const
+	{
+		if (!m_Content.isNull())
+		{
+			return m_Content->toString();
+		}
+		else
+		{
+			return std::string("void");
+		}
+	}
+
+	inline std::type_info const& EngineData::typeinfo() const
+	{
+		if (m_Content.isNull())
+		{
+			return typeid(void);
+		}
+		else
+		{
+			return m_Content->typeinfo();
+		}
+	}
+
+	inline void EngineData::clone(EngineData const& src)
+	{
+		m_Content.assign(src.m_Content->clone());
+	}
+
+	inline void EngineData::create(EngineData const& src)
+	{
+		m_Content.assign(src.m_Content->create());
 	}
 
 }

@@ -41,18 +41,18 @@ namespace _2Real
 		m_Types(*this),
 		m_Timer()
 	{
-		m_Types.registerType< char >("char");
-		m_Types.registerType< unsigned char >("unsigned char");
-		m_Types.registerType< short >("short");
-		m_Types.registerType< unsigned short >("unsigned short");
-		m_Types.registerType< int >("int");
-		m_Types.registerType< unsigned int >("unsigned int");
-		m_Types.registerType< long >("long");
-		m_Types.registerType< unsigned long >("unsigned long");
-		m_Types.registerType< float >("float");
-		m_Types.registerType< double >("double");
-		m_Types.registerType< bool >("bool");
-		m_Types.registerType< std::string >("string");
+		m_Types.registerType< char >("char", char(0));
+		m_Types.registerType< unsigned char >("unsigned char", unsigned char(0));
+		m_Types.registerType< short >("short", short(0));
+		m_Types.registerType< unsigned short >("unsigned short", unsigned short(0));
+		m_Types.registerType< int >("int", int(0));
+		m_Types.registerType< unsigned int >("unsigned int", unsigned int(0));
+		m_Types.registerType< long >("long", long(0));
+		m_Types.registerType< unsigned long >("unsigned long", unsigned long(0));
+		m_Types.registerType< float >("float", 0.0f);
+		m_Types.registerType< double >("double", 0.0);
+		m_Types.registerType< bool >("bool", false);
+		m_Types.registerType< std::string >("string", std::string(""));
 		m_Types.registerType< Buffer2D_float >("buffer2D_float");
 		m_Types.registerType< Buffer2D_double >("buffer2D_double");
 		m_Types.registerType< Buffer2D_uint >("buffer2D_uint");

@@ -20,29 +20,36 @@
 #include "_2RealOutputSlot.h"
 #include "_2RealException.h"
 #include "_2RealData.h"
+#include "_2RealParameterMetadata.h"
 
 namespace _2Real
 {
 
-	InputSlot::InputSlot(Service &service, std::string const& name, std::string const& type, std::string const& key) :
-		IOSlot(service, name, type, key),
+	InputSlot::InputSlot(ParameterMetadata const& metadata) :
+		Parameter(metadata),
 		m_Output(NULL)
 	{
+		if (metadata.hasDefaultValue())
+		{
+			m_ReceivedTable.insert(TimestampedData(0, metadata.getDefaultValue()));
+		}
 	}
 
-	InputSlot::~InputSlot()
-	{
-	}
-
-	void InputSlot::updateCurrent()
+	bool InputSlot::updateCurrent()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_CurrentTable = m_ReceivedTable;
-		DataTable::const_iterator it = m_CurrentTable.end();
-		it--;
-		m_ReceivedTable.clear();
-		m_ReceivedTable.insert(*it);
+		if (m_ReceivedTable.size() > 0)
+		{
+			m_CurrentTable = m_ReceivedTable;
+			DataTable::const_iterator it = m_CurrentTable.end();
+			it--;
+			m_ReceivedTable.clear();
+			m_ReceivedTable.insert(*it);
+			return true;
+		}
+
+		return false;
 	}
 
 	void InputSlot::clearCurrent()
@@ -86,7 +93,7 @@ namespace _2Real
 
 		if (m_CurrentTable.empty())
 		{
-			throw Exception("internal exception: input slot " + name() + " has no data.");
+			throw Exception("internal exception: input slot " + getName() + " has no data.");
 		}
 
 		DataTable::const_iterator oldest = m_CurrentTable.end();
@@ -119,13 +126,5 @@ namespace _2Real
 		m_Output = &output;
 		m_Output->addListener(*this);
 	}
-
-	//void InputSlot::set(Data const& data)
-	//{
-	//	Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-	//	m_ReceivedTable.clear();
-	//	m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
-	//}
 
 }

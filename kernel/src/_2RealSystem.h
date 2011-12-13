@@ -24,6 +24,7 @@
 #include "_2RealException.h"
 
 #include <string>
+#include <list>
 
 namespace _2Real
 {
@@ -71,19 +72,6 @@ namespace _2Real
 		void setup(Identifier const& id);
 
 		/**
-		*	checks whether or not a plugin / service, in its current state, could be set up, i.e.
-		*	if all the existing setup params were set & their datatypes correspond to those defined in the metadata
-		*/
-		//bool checkParameters(Identifier const& id);
-
-		/**
-		*	checks if a service, in it's current state, could be run, i.e.
-		*	if all input slots were either set directly or linked.
-		*	will also fail if the service was not set up correctly
-		*/
-		//void checkConfiguration(Identifier const& id);
-
-		/**
 		*	printf plugin metadata
 		*/
 		const std::string getInfo(Identifier const& plugin);
@@ -102,11 +90,11 @@ namespace _2Real
 		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
 		*	if the input slot has been linked to an output slot previously, this linkage will be reset
 		*/
-		template< typename T >
-		void setValue(Identifier const& id, std::string const& name, T const& value)
+		template< typename DataType >
+		void setValue(Identifier const& id, std::string const& name, DataType const& value)
 		{
-			EngineData any(value);
-			setValueInternal(id, name, any);
+			EngineData data(value);
+			setValueInternal(id, name, data);
 		}
 
 		/**
@@ -174,43 +162,14 @@ namespace _2Real
 		*/
 		void startAll();
 
-		/**
-		*	creates a sequence of entities
-		*/
-		//const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
+		const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
+		const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
+		const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
+		const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
 
-		/**
-		*	creates a synchronization of entities
-		*/
-		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
-
-		//const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
-
-		/**
-		*	creates a synchronization of entities
-		*/
-		//const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
-
-		//const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
-
-		/**
-		*	links two entities
-		*/
 		//void link(Identifier const& in, Identifier const& out);
-
-		/**
-		*	destroys an entity
-		*/
 		//void destroy(Identifier const& id);
-
-		/**
-		*	inserts an entity into another
-		*/
 		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src);
-
-		/**
-		*	like insert, with index being the last place in the children
-		*/
 		//void append(Identifier const& dst, Identifier const& id);
 
 	private:

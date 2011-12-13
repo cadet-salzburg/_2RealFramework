@@ -28,23 +28,40 @@ void MultiKinectOpenNI::shutdown()
 
 void MultiKinectOpenNI::getMetadata(Metadata &info)
 {
-	info.setAuthor("Azatoth, Chicken of Insanity");
-	info.setDescription("test plugin based on 2real kinect wrapper. it sucks.");
-	info.setContact("the other side of the moon");
-	info.setVersion(100, 1, 5000);
+	try
+	{
+		info.setAuthor("Azatoth, Chicken of Insanity");
+		info.setDescription("test plugin based on 2real kinect wrapper. it sucks.");
+		info.setContact("the other side of the moon");
+		info.setVersion(100, 1, 5000);
 
-	info.addSetupParameter< vector < string > >("generator flags");
-	info.addSetupParameter< bool >("align color depth");
-	info.addSetupParameter< vector < string > >("image flags");
-	info.addSetupParameter< string >("logfile");
-	info.addSetupParameter< string >("loglevel");
+		info.addSetupParameter< vector < string > >("generator flags");
+		info.addSetupParameter< bool >("align color depth", false);
+		info.addSetupParameter< vector < string > >("image flags");
+		info.addSetupParameter< string >("logfile");
+		info.addSetupParameter< string >("loglevel");
 
-	info.addService("Image Generator");
-	info.setDescription("Image Generator", "generic image generator - sends out a pixelbuffer of unsigned chars containing the current image");
+		info.addService("Image Generator");
+		info.setDescription("Image Generator", "generic image generator - sends out a pixelbuffer of unsigned chars containing the current image");
 
-	info.addSetupParameter< unsigned int >("Image Generator", "device id");
-	info.addSetupParameter< string >("Image Generator", "image type");
-	info.addOutputSlot< Pixelbuffer < unsigned char > >("Image Generator", "output image");
+		info.addSetupParameter< unsigned int >("Image Generator", "device id", 0);
+		info.addSetupParameter< string >("Image Generator", "image type", "color");
+		info.addOutputSlot< Pixelbuffer < unsigned char > >("Image Generator", "output image");
+	}
+	catch (XMLFormatException &e)
+	{
+		cout << e.what() << endl;
+		e.rethrow();
+	}
+	catch (InvalidTypeException &e)
+	{
+		cout << e.what() << endl;
+		e.rethrow();
+	}
+	catch (...)
+	{
+		throw PluginException("unexpected error in getMetadata()");
+	}
 }
 
 void MultiKinectOpenNI::setup(PluginContext &context)

@@ -23,7 +23,7 @@
 #include "_2RealExceptionHandler.h"
 #include "_2RealThreadPool.h"
 #include "_2RealPluginPool.h"
-
+#include "_2RealTimer.h"
 
 #include <map>
 #include <list>
@@ -35,12 +35,11 @@ namespace _2Real
 	class Data;
 	typedef void (*DataCallback)(Data &data);
 
-	typedef std::map< std::string, std::string >	StringMap;
-
 	class IExceptionListener;
 	class IOutputListener;
 	class Engine;
 	class EngineData;
+	class Typetable;
 
 	class SystemGraph : public Graph, public Entity
 	{
@@ -51,10 +50,14 @@ namespace _2Real
 		~SystemGraph();
 
 		void				shutdown();
+
 		void				stopAll();
 		void				startAll();
 		void				startChild(Identifier const& runnableId);
 		void				stopChild(Identifier const& runnableId);
+
+		void				runOnce(RunnableList const& runnables);
+
 		void				updateChild(Identifier const& runnableId, unsigned int count);
 		const Identifier	install(std::string const& idName, std::string const& classname);
 		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
@@ -75,24 +78,22 @@ namespace _2Real
 		void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 
-		bool isLoggingEnabled() const;
-		void setInstallDirectory(std::string const& directory);
-		void setLogfile(std::string const& file);
-		std::ofstream & getLogstream();
-		StringMap const& getAllowedTypes() const;
-		void startLogging();
-		const std::string getInfoString(Identifier const& id) const;
+		bool				isLoggingEnabled() const;
+		void				setInstallDirectory(std::string const& directory);
+		void				setLogfile(std::string const& file);
+		std::ofstream &		getLogstream();
+		const std::string	getInfoString(Identifier const& id) const;
 
 	private:
 
-		//whatever you do, don't change the order of the engine and the type table
-		Engine					&m_Engine;
-		ThreadPool				m_Threads;
-		PluginPool				m_Plugins;
-		ExceptionHandler		m_ExceptionHandler;
-		StringMap				const& m_AllowedTypes;
-		std::string				m_Logfile;
-		std::ofstream			m_Logstream;
+		void				startLogging();
+
+		Engine				&m_Engine;
+		ThreadPool			m_Threads;
+		PluginPool			m_Plugins;
+		ExceptionHandler	m_ExceptionHandler;
+		std::string			m_Logfile;
+		std::ofstream		m_Logstream;
 
 	};
 
@@ -109,11 +110,6 @@ namespace _2Real
 	inline void SystemGraph::setInstallDirectory(std::string const& directory)
 	{
 		m_Plugins.setInstallDirectory(directory);
-	}
-
-	inline StringMap const& SystemGraph::getAllowedTypes() const
-	{
-		return m_AllowedTypes;
 	}
 
 	inline const std::string SystemGraph::getInfoString(Identifier const& id) const

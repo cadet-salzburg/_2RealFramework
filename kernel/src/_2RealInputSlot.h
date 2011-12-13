@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealIOSlot.h"
+#include "_2RealParameter.h"
 #include "_2RealIOutputListener.h"
 #include "_2RealEngineData.h"
 
@@ -31,25 +31,23 @@ namespace _2Real
 
 	class OutputSlot;
 	class Data;
+	class ParameterMetadata;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
 	typedef std::map< long, EngineData >	DataTable;
 
-	class InputSlot : public IOSlot, public IOutputListener
+	class InputSlot : public Parameter, public IOutputListener
 	{
 
 	public:
 
-		InputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword);
-		~InputSlot();
+		InputSlot(ParameterMetadata const& metadata);
 
 		void reset();
 		void linkWith(OutputSlot &output);
 		bool isLinked() const;
 
-		//void set(Data const& data);
-
-		void updateCurrent();
+		bool updateCurrent();
 		void clearCurrent();
 		void receiveData(Data &data);
 

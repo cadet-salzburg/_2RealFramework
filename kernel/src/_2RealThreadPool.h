@@ -44,6 +44,8 @@ namespace _2Real
 
 		//stops the runnable & joins the thread
 		void stop(Identifier const& runnable);
+		//joins thread, without stopping first
+		void join(Identifier const& runnable);
 
 		bool isRunning(Identifier const& runnable);
 		PooledThread & find(Identifier const& runnable);

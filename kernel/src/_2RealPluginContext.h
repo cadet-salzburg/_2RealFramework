@@ -63,6 +63,8 @@ namespace _2Real
 		template< typename Datatype >
 		Datatype const& getParameterValue(std::string const& name)
 		{
+			//Datatype *ptr = Extract< Datatype >(getSetupParameter(name));
+			//return *ptr;
 			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(getSetupParameter(name));
 			return *ptr.get();
 		}

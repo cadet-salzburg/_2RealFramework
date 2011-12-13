@@ -20,20 +20,30 @@
 #include "_2RealInputSlot.h"
 #include "_2RealException.h"
 #include "_2RealService.h"
+#include "_2RealParameterMetadata.h"
 #include "_2RealEngine.h"
 
 #include "Poco/Delegate.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword, EngineData initialData) :
-		IOSlot(service, name, type, keyword),
-		m_Timer(Engine::instance().timer()),
-		m_WriteData(initialData)
+	OutputSlot::OutputSlot(ParameterMetadata const& metadata) :
+		Parameter(metadata),
+		m_Timer(Engine::instance().timer())
 	{
-		m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
-		m_WriteData.clone(m_WriteData);
+		if (metadata.hasDefaultValue())
+		{
+			m_WriteData = metadata.getDefaultValue();
+			m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
+			m_WriteData.clone(m_WriteData);
+		}
+		else
+		{
+			m_WriteData = Engine::instance().types().getInitialValueFromKey(metadata.getKeyword());
+		}
 	}
 
 	void OutputSlot::update()
@@ -43,6 +53,7 @@ namespace _2Real
 		m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
 		m_Event.notifyAsync(this, m_CurrentData);
 		m_WriteData.clone(m_WriteData);
+		m_IsInitialized = true;
 	}
 
 	void OutputSlot::addListener(IOutputListener &listener)
@@ -50,7 +61,11 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
 		m_Event += Poco::delegate(&listener, &IOutputListener::receiveData);
-		listener.receiveData(m_CurrentData);
+
+		if (isInitialized())
+		{
+			listener.receiveData(m_CurrentData);
+		}
 	}
 
 	void OutputSlot::removeListener(IOutputListener &listener)
@@ -65,7 +80,11 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
 		m_Event += Poco::delegate(callback);
-		callback(m_CurrentData);
+
+		if (isInitialized())
+		{
+			callback(m_CurrentData);
+		}
 	}
 
 	void OutputSlot::unregisterCallback(DataCallback callback)

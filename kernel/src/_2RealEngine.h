@@ -52,7 +52,7 @@ namespace _2Real
 
 		Typetable const&		types() const;
 		Timer const&			timer() const;
-		StringMap const&		getAllowedTypes() const;
+		//StringMap const&		getAllowedTypes() const;
 		long					getTimestamp() const;
 
 		const Identifier		createSystem(std::string const& name);
@@ -111,10 +111,10 @@ namespace _2Real
 		return m_Timer;
 	}
 
-	inline StringMap const& Engine::getAllowedTypes() const
-	{
-		return m_Types.getLookupTable();
-	}
+	//inline StringMap const& Engine::getAllowedTypes() const
+	//{
+	//	return m_Types.getLookupTable();
+	//}
 
 	inline long Engine::getTimestamp() const
 	{

@@ -92,6 +92,7 @@ namespace _2Real
 	inline std::ostream& operator<<(std::ostream &out, Version const& version)
 	{
 		out << version.major() << "." << version.minor() << "." << version.revision();
+		return out;
 	}
 
 }

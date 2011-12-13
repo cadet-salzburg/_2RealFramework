@@ -36,8 +36,6 @@ namespace _2Real
 		bool checkForSetup();
 		bool checkForUpdate();
 
-		void start(bool runOnce);
-		void stop();
 		void setup();
 		void run();
 		void update();

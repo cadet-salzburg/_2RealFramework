@@ -20,55 +20,25 @@
 
 #include "_2RealParameter.h"
 #include "_2RealEngineData.h"
-#include "_2RealException.h"
-
-#include <sstream>
 
 namespace _2Real
 {
-
-	/**
-	*	class for setup parameters: service-setup & plugin-setup
-	*/
 
 	class SetupParameter : public Parameter
 	{
 
 	public:
 
-		SetupParameter(std::string const& name, std::string const& type, std::string const& keyword);
-		virtual ~SetupParameter();
+		SetupParameter(ParameterMetadata const& metadata);
 
-		void setData(EngineData const& data);
-		EngineData const& getData() const;
+		void				setData(EngineData const& data);
+		EngineData const&	getData() const;
 
-	protected:
+	private:
 
-		EngineData				m_Data;
+		EngineData			m_Data;
 
 	};
-
-	inline SetupParameter::SetupParameter(std::string const& name, std::string const& type, std::string const& keyword) :
-		Parameter(name, type, keyword)
-	{
-	}
-
-	inline SetupParameter::~SetupParameter()
-	{
-	}
-
-	inline void SetupParameter::setData(EngineData const& data)
-	{
-		if (data.type().name() != datatype())
-		{
-			std::ostringstream msg;
-			msg << "datatype mismatch: " << datatype() << " vs. template parameter type " << data.type().name();
-			throw TypeMismatchException(msg.str());
-		}
-
-		m_Data = data;
-		m_IsInitialized = true;
-	}
 
 	inline EngineData const& SetupParameter::getData() const
 	{

@@ -22,6 +22,7 @@
 #include "_2RealIdentifier.h"
 #include "_2RealSystemGraph.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -85,7 +86,7 @@ namespace _2Real
 			try
 			{
 				Identifier id = it->first;
-				it->second->uninstall();
+				//it->second->uninstall();
 				delete it->second;
 			}
 			catch (std::exception &e)

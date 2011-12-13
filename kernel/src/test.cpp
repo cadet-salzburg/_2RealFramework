@@ -150,19 +150,15 @@ int main(int argc, char *argv[])
 		testSystem.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
 		testSystem.setLogfile("testsystem.txt");
 
-		/**
-		*	assumes that dll name = classname.dll for relase or classname_d.dll for debug
-		*/
-
 		Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
 
-		//std::string kinectInfo = testSystem.getInfo(kinectPlugin);
-		//std::cout << kinectInfo << std::endl;
+		std::string kinectInfo = testSystem.getInfo(kinectPlugin);
+		std::cout << kinectInfo << std::endl;
 
 		Identifier imgPlugin = testSystem.load("image processing plugin", "ImageProcessing");
 
-		//std::string imgInfo = testSystem.getInfo(imgPlugin);
-		//std::cout << imgInfo << std::endl;
+		std::string imgInfo = testSystem.getInfo(imgPlugin);
+		std::cout << imgInfo << std::endl;
 
 		vector< string > genFlags;
 		genFlags.push_back("color");
@@ -174,11 +170,14 @@ int main(int argc, char *argv[])
 		imgFlags.push_back("depth640X480");
 		imgFlags.push_back("mirrored");
 
-		testSystem.setValue< bool >(kinectPlugin, "align color depth", true);
+		//testSystem.setValue< bool >(kinectPlugin, "align color depth", true);
 		testSystem.setValue< vector < string > >(kinectPlugin, "generator flags", genFlags);
 		testSystem.setValue< vector < string > >(kinectPlugin, "image flags", imgFlags);
 		testSystem.setValue< string >(kinectPlugin, "logfile", "kinectwrapper.txt");
 		testSystem.setValue< string >(kinectPlugin, "loglevel", "info");
+
+		cout << "main: KINECT PLUGIN READY FOR SETUP" << endl;
+
 		testSystem.setup(kinectPlugin);
 
 		cout << "main: KINECT PLUGIN SET UP" << endl;
@@ -189,8 +188,11 @@ int main(int argc, char *argv[])
 		cout << "main: IMG PLUGIN SET UP" << endl;
 
 		Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
-		testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
-		testSystem.setValue< string >(depth, "image type", "color");
+
+		cout << "main: DEPTH SERVICE CREATED" << endl;
+
+		//testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
+		//testSystem.setValue< string >(depth, "image type", "color");
 		testSystem.setup(depth);
 
 		cout << "main: DEPTH SERVICE SET UP" << endl;
@@ -201,17 +203,21 @@ int main(int argc, char *argv[])
 		cout << "main: DEPTH SERVICE STARTED" << endl;
 
 		Identifier avg = testSystem.createService("image accumulation", imgPlugin, "ImageAccumulation_uchar");
-		testSystem.setValue< unsigned char >(avg, "buffer size", unsigned char(10));
+		//testSystem.setValue< unsigned int >(avg, "buffer size", unsigned int(10));
 		testSystem.setup(avg);
 
 		cout << "main: AVG SERVICE SET UP" << endl;
 
 		testSystem.linkSlots(avg, "input image", depth, "output image");
 
+		cout << "main: AVG DEPTH LINKED" << endl;
+
 		testSystem.start(avg);
-		testSystem.setUpdateRate(avg, 100.0f);
 
 		cout << "main: AVG STARTED" << endl;
+
+		testSystem.setUpdateRate(avg, 100.0f);
+
 
 		testSystem.registerToNewData(avg, "output image", ::imgDataAvailable);
 

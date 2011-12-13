@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "_2RealEngineData.h"
+
 #include <typeinfo.h>
 #include <string>
 
@@ -69,10 +71,23 @@ namespace _2Real
 		*	@param setupName:		parameter's name
 		*	@throw					AlreadyExistsException, InvalidTypeException
 		*/
-		template< typename Datatype >
+		template< typename DataType >
 		void addSetupParameter(std::string const& setupName)
 		{
-			addSetupParameterByType(setupName, typeid(Datatype).name());
+			addSetupParameterByType(setupName, typeid(DataType).name());
+		}
+
+		/**
+		*	add setup parameter
+		*
+		*	@param setupName:		parameter's name
+		*	@throw					AlreadyExistsException, InvalidTypeException
+		*/
+		template< typename DataType >
+		void addSetupParameter(std::string const& setupName, DataType defaultValue)
+		{
+			EngineData data(defaultValue);
+			addSetupParameterByData(setupName, data);
 		}
 
 		/**
@@ -99,10 +114,27 @@ namespace _2Real
 		*	@param setupName		parameter's name
 		*	@throw					NotFoundException(service), AlreadyExistsException(parameter), InvalidTypeException
 		*/
-		template< typename Datatype >
+		template< typename DataType >
 		void addSetupParameter(std::string const& serviceName, std::string const& setupName)
 		{
-			addSetupParameterByType(serviceName, setupName, typeid(Datatype).name());
+			addSetupParameterByType(serviceName, setupName, typeid(DataType).name());
+		}
+
+		void test(float f);
+
+		/**
+		*	add service setup parameter
+		*
+		*	@param serviceName		service's name
+		*	@param setupName		parameter's name
+		*	@param defaultValue
+		*	@throw					NotFoundException(service), AlreadyExistsException(parameter), InvalidTypeException
+		*/
+		template< typename DataType >
+		void addSetupParameter(std::string const& serviceName, std::string const& setupName, DataType defaultValue)
+		{
+			EngineData data(defaultValue);
+			addSetupParameterByData(serviceName, setupName, data);
 		}
 
 		/**
@@ -112,10 +144,25 @@ namespace _2Real
 		*	@param inputName		slot's name
 		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
 		*/
-		template< typename Datatype >
+		template< typename DataType >
 		void addInputSlot(std::string const& serviceName, std::string const& inputName)
 		{
-			addInputSlotByType(serviceName, inputName, typeid(Datatype).name());
+			addInputSlotByType(serviceName, inputName, typeid(DataType).name());
+		}
+
+		/**
+		*	add service input slot
+		*
+		*	@param serviceName		service's name
+		*	@param inputName		slot's name
+		*	@param defaultValue
+		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
+		*/
+		template< typename DataType >
+		void addInputSlot(std::string const& serviceName, std::string const& inputName, DataType defaultValue)
+		{
+			EngineData data(defaultValue);
+			addInputSlotByData(serviceName, inputName, data);
 		}
 
 		/**
@@ -125,10 +172,10 @@ namespace _2Real
 		*	@param outputName		slot's name
 		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
 		*/
-		template< typename Datatype >
+		template< typename DataType >
 		void addOutputSlot(std::string const& serviceName, std::string const& outputName)
 		{
-			addOutputSlotByType(serviceName, outputName, typeid(Datatype).name());
+			addOutputSlotByType(serviceName, outputName, typeid(DataType).name());
 		}
 
 	private:
@@ -136,6 +183,9 @@ namespace _2Real
 		void				addSetupParameterByType(std::string const& setupName, std::string const& type);
 		void				addSetupParameterByType(std::string const& serviceName, std::string const& setupName, std::string const& type);
 		void				addInputSlotByType(std::string const& serviceName, std::string const& inputName, std::string const& type);
+		void				addSetupParameterByData(std::string const& setupName, EngineData const& defaultValue);
+		void				addSetupParameterByData(std::string const& serviceName, std::string const& setupName, EngineData  const& defaultValue);
+		void				addInputSlotByData(std::string const& serviceName, std::string const& inputName, EngineData  const& defaultValue);
 		void				addOutputSlotByType(std::string const& serviceName, std::string const& outputName, std::string const& type);
 
 		PluginMetadata		&m_Impl;

@@ -33,6 +33,9 @@ namespace _2Real
 	class OutputHandle;
 	class EngineData;
 
+	class ServiceMetadata;
+	class ParameterMetadata;
+
 	class IOutputListener;
 	class Data;
 	typedef void (*DataCallback)(Data &data);
@@ -43,14 +46,13 @@ namespace _2Real
 	typedef std::map< std::string, OutputSlot * >		OutputMap;
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
-	typedef std::map< std::string, std::string >		StringMap;
 
 	class Service : public Runnable
 	{
 
 	public:
 
-		Service(Identifier const& id, IService &service, SystemGraph &system, StringMap const& setup, StringMap const& input, StringMap const& output);
+		Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata);
 		~Service();
 
 		void					setParameterValue(std::string const& name, EngineData const& data);
@@ -65,8 +67,6 @@ namespace _2Real
 		void					run();
 		void					update();
 		void					shutdown();
-
-		void					setUpdateRate(float updatesPerSecond);
 
 		void					registerToNewData(std::string const& outName, DataCallback callback);
 		void					unregisterFromNewData(std::string const& outName, DataCallback callback);
@@ -93,8 +93,6 @@ namespace _2Real
 
 		IService				*m_Service;
 
-		long					m_MaxDelay;
-		float					m_UpdatesPerSecond;
 		bool					m_IsSetUp;
 
 	};

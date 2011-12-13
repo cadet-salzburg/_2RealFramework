@@ -69,6 +69,12 @@
     <ClCompile Include="..\..\src\_2RealRunnable.cpp">
       <Filter>Service</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParameter.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
+      <Filter>Parameters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -95,9 +101,6 @@
       <Filter>Metadata</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInputSlot.h">
-      <Filter>Parameters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIOSlot.h">
       <Filter>Parameters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealParameter.h">
@@ -178,6 +181,8 @@
     <ClInclude Include="..\..\src\_2RealRunnable.h">
       <Filter>Service</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealHelpers.h" />
+    <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

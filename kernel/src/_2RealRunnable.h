@@ -21,6 +21,8 @@
 #include "_2RealEntity.h"
 
 #include "Poco/Runnable.h"
+#include "Poco/Timestamp.h"
+#include "Poco/Thread.h"
 
 namespace _2Real
 {
@@ -60,6 +62,10 @@ namespace _2Real
 		SystemGraph &system();
 		SystemGraph const& system() const;
 
+		void setUpdateRate(float updatesPerSecond);
+		void updateTimer();
+		void suspend();
+
 	protected:
 
 		bool					m_Run;
@@ -68,7 +74,28 @@ namespace _2Real
 		SystemGraph				&m_System;
 		Graph					*m_Father;
 
+	private:
+
+		Poco::Timestamp			m_Timer;
+		long					m_MaxDelay;
+		float					m_UpdatesPerSecond;
+
 	};
+
+	inline void Runnable::updateTimer()
+	{
+		m_Timer.update();
+	}
+
+	inline void Runnable::suspend()
+	{
+		long elapsed = (long)m_Timer.elapsed()/1000;
+		long sleep = m_MaxDelay - elapsed;
+		if (sleep > 0)
+		{
+			Poco::Thread::sleep(sleep);
+		}
+	}
 
 	inline void Runnable::setFather(Graph &father)
 	{
@@ -93,6 +120,12 @@ namespace _2Real
 	inline SystemGraph const& Runnable::system() const
 	{
 		return m_System;
+	}
+
+	inline void Runnable::setUpdateRate(float updatesPerSecond)
+	{
+		m_MaxDelay = long(1000.0f/updatesPerSecond);
+		m_UpdatesPerSecond = updatesPerSecond;
 	}
 
 }

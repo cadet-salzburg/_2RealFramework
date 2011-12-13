@@ -18,8 +18,11 @@
 
 #include "_2RealMetadata.h"
 #include "_2RealPluginMetadata.h"
+#include "_2RealTypeHolder.h"
 
 #include <sstream>
+
+#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
@@ -29,11 +32,13 @@ namespace _2Real
 	{
 	}
 
-	//void Metadata::readFromXML()
-	//{
-	//	MetadataReader reader(m_Impl);
-	//	reader.readMetadata();
-	//}
+	void Metadata::test(float f)
+	{
+		//float *x = new float(f);
+		//m_Impl.m_Test.assign(x);
+		AbstractDataHolder *holder = new DataHolder< float >(f);
+		m_Impl.m_Test.assign(holder);
+	}
 
 	void Metadata::setDescription(std::string const& description)
 	{
@@ -83,6 +88,21 @@ namespace _2Real
 	void Metadata::addOutputSlotByType(std::string const& serviceName, std::string const& outputName, std::string const& type)
 	{
 		m_Impl.addOutputSlotByType(serviceName, outputName, type);
+	}
+
+	void Metadata::addSetupParameterByData(std::string const& setupName, EngineData const& defaultValue)
+	{
+		m_Impl.addSetupParameterByData(setupName, defaultValue);
+	}
+
+	void Metadata::addSetupParameterByData(std::string const& serviceName, std::string const& setupName, EngineData const& defaultValue)
+	{
+		m_Impl.addSetupParameterByData(serviceName, setupName, defaultValue);
+	}
+
+	void Metadata::addInputSlotByData(std::string const& serviceName, std::string const& inputName, EngineData const& defaultValue)
+	{
+		m_Impl.addInputSlotByData(serviceName, inputName, defaultValue);
 	}
 
 }

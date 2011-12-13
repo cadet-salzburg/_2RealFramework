@@ -17,10 +17,28 @@
 */
 
 #include "_2RealParameter.h"
+#include "_2RealParameterMetadata.h"
 
 namespace _2Real
 {
 
+	Parameter::Parameter(ParameterMetadata const& metadata) :
+		m_Name(metadata.getName()),
+		m_Datatype(metadata.getType()),
+		m_Keyword(metadata.getKeyword())
+	{
+		if (metadata.hasDefaultValue())
+		{
+			m_IsInitialized = true;
+		}
+		else
+		{
+			m_IsInitialized = false;
+		}
+	}
 
+	inline Parameter::~Parameter()
+	{
+	}
 
 }

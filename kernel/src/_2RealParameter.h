@@ -23,18 +23,20 @@
 namespace _2Real
 {
 
+	class ParameterMetadata;
+
 	class Parameter
 	{
 
 	public:
 
-		Parameter(std::string const& name, std::string const& type, std::string const& keyword);
+		Parameter(ParameterMetadata const& metadata);
 		virtual ~Parameter();
 
 		bool					isInitialized() const;
-		std::string const&		keyword() const;
-		std::string const&		datatype() const;
-		std::string const&		name() const;
+		std::string const&		getKeyword() const;
+		std::string const&		getDatatype() const;
+		std::string const&		getName() const;
 
 	protected:
 
@@ -45,34 +47,22 @@ namespace _2Real
 
 	};
 
-	inline Parameter::Parameter(std::string const& name, std::string const& type, std::string const& keyword) :
-		m_IsInitialized(false),
-		m_Name(name),
-		m_Datatype(type),
-		m_Keyword(keyword)
-	{
-	}
-
-	inline Parameter::~Parameter()
-	{
-	}
-
 	inline bool Parameter::isInitialized() const
 	{
 		return m_IsInitialized;
 	}
 
-	inline std::string const& Parameter::name() const
+	inline std::string const& Parameter::getName() const
 	{
 		return m_Name;
 	}
 
-	inline std::string const& Parameter::keyword() const
+	inline std::string const& Parameter::getKeyword() const
 	{
 		return m_Keyword;
 	}
 
-	inline std::string const& Parameter::datatype() const
+	inline std::string const& Parameter::getDatatype() const
 	{
 		return m_Datatype;
 	}

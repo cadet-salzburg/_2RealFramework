@@ -30,7 +30,10 @@ namespace _2Real
 		m_System(system),
 		m_Father(&system),
 		m_Run(false),
-		m_RunOnce(false)
+		m_RunOnce(false),
+		m_MaxDelay(long(1000.0f/30.0f)),
+		m_UpdatesPerSecond(30.0f),
+		m_Timer()
 	{
 	}
 

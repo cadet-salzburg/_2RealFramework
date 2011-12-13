@@ -37,8 +37,8 @@ namespace _2Real
 		IOSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword);
 		virtual ~IOSlot();
 
-		Service &			service();
-		Service const&		service() const;
+		//Service &			service();
+		//Service const&		service() const;
 
 	protected:
 
@@ -56,14 +56,14 @@ namespace _2Real
 	{
 	}
 
-	inline Service const& IOSlot::service() const
-	{
-		return m_Service;
-	}
+	//inline Service const& IOSlot::service() const
+	//{
+	//	return m_Service;
+	//}
 
-	inline Service & IOSlot::service()
-	{
-		return m_Service;
-	}
+	//inline Service & IOSlot::service()
+	//{
+	//	return m_Service;
+	//}
 
 }

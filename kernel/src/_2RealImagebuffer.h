@@ -319,6 +319,12 @@ namespace _2Real
 			m_Data = NULL;
 		}
 
+		friend std::ostream& operator<<(std::ostream& out, Pixelbuffer< T > pb)
+		{
+			out << "yay";
+			return out;
+		}
+
 		unsigned int const& width() const
 		{
 			return m_Width;

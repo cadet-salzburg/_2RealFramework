@@ -55,10 +55,10 @@ namespace _2Real
 	{
 	}
 
-	template< typename Datatype >
-	Datatype const& Data::getData()
+	template< typename DataType >
+	DataType const& Data::getData()
 	{
-		Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
+		Poco::SharedPtr< DataType > ptr = Extract< DataType >(m_Data);
 		return *ptr.get();
 	}
 

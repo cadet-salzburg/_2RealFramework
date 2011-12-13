@@ -29,7 +29,7 @@ namespace _2Real
 	}
 
 	InputHandle::InputHandle(InputSlot const& slot) :
-		ParameterHandle(slot.name()),
+		ParameterHandle(slot.getName()),
 		m_Input(&slot)
 	{
 	}

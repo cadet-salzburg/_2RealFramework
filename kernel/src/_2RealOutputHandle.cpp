@@ -30,7 +30,7 @@ namespace _2Real
 	}
 
 	OutputHandle::OutputHandle(OutputSlot &slot) :
-		ParameterHandle(slot.name()),
+		ParameterHandle(slot.getName()),
 		m_Output(&slot)
 	{
 	}
@@ -51,7 +51,7 @@ namespace _2Real
 
 	EngineData OutputHandle::data()
 	{
-		return m_Output->data();
+		return m_Output->getData();
 	}
 
 }

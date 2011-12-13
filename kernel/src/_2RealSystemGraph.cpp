@@ -35,7 +35,6 @@ namespace _2Real
 		m_Threads(5, 1000, 0, id.name()),
 		m_Plugins(*this),
 		m_ExceptionHandler(id),
-		m_AllowedTypes(m_Engine.getAllowedTypes()),
 		m_Logfile(""),
 		m_Logstream()
 	{
@@ -92,7 +91,6 @@ namespace _2Real
 		}
 
 		m_Children.clear();
-
 		//uninstalls all plugins
 		m_Plugins.clearPlugins();
 
@@ -174,35 +172,35 @@ namespace _2Real
 		}
 	}
 
-	void SystemGraph::handleException(Runnable &runnable, Exception &exception)
-	{
-		stopChild(runnable.root().identifier());
-		m_ExceptionHandler.handleException(exception, runnable.identifier());
-	}
-
 	void SystemGraph::startChild(Identifier const& runnableId)
 	{
 		Runnable &child = getChild(runnableId);
-
-		//if (child.checkForUpdate())
-		//{
-			m_Threads.start(child, false);
-		//}
-		//else if (!child.isSetUp())
-		//{
-		//	child.setup();
-		//	startChild(runnableId);
-		//}
-		//else
-		//{
-		//	std::ostringstream msg;
-		//	msg << "runnable could not be started";
-		//}
+		m_Threads.start(child, false);
 	}
 
 	void SystemGraph::stopChild(Identifier const& runnableId)
 	{
+		Runnable &child = getChild(runnableId);
 		m_Threads.stop(runnableId);
+	}
+
+	void SystemGraph::runOnce(RunnableList const& runnables)
+	{
+		for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
+		{
+			m_Threads.start(**it, true);
+		}
+
+		for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
+		{
+			m_Threads.join((*it)->identifier());
+		}
+	}
+
+	void SystemGraph::handleException(Runnable &runnable, Exception &exception)
+	{
+		stopChild(runnable.root().identifier());
+		m_ExceptionHandler.handleException(exception, runnable.identifier());
 	}
 
 	const Identifier SystemGraph::install(std::string const& name, std::string const& classname)

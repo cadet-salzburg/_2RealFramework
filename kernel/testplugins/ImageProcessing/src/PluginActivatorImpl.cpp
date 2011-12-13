@@ -18,6 +18,8 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 {
 	try
 	{
+		metadata.test(5);
+
 		metadata.setDescription("This testplugin transcends time and space.");
 		metadata.setAuthor("The Jabberwocky");
 		metadata.setVersion(1, 1, 1);
@@ -26,13 +28,13 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 
 		metadata.addService("ImageAccumulation");
 		metadata.setDescription("ImageAccumulation", "life is wonderful");
-		metadata.addSetupParameter< unsigned char >("ImageAccumulation", "buffer size");
+		metadata.addSetupParameter< unsigned int >("ImageAccumulation", "buffer size", unsigned int(10));
 		metadata.addInputSlot< Pixelbuffer < float > >("ImageAccumulation", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation", "output image");
 
 		metadata.addService("ImageAccumulation_uchar");
 		metadata.setDescription("ImageAccumulation_uchar", "life is wonderful");
-		metadata.addSetupParameter< unsigned char >("ImageAccumulation_uchar", "buffer size");
+		metadata.addSetupParameter< unsigned int >("ImageAccumulation_uchar", "buffer size", unsigned int(10));
 		metadata.addInputSlot< Pixelbuffer < unsigned char > >("ImageAccumulation_uchar", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation_uchar", "output image");
 	}

@@ -30,6 +30,7 @@
 #include <ctime>
 #include <math.h>
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {
@@ -49,6 +50,10 @@ namespace _2Real
 
 		//stops target, waits for completion
 		void stopAndJoin();
+
+		void join();
+
+		void stop();
 
 		//marks idle thread as non-idle
 		void activate();
@@ -115,6 +120,18 @@ namespace _2Real
 		return (int) (time(NULL) - m_IdleTime);
 	}
 
+	void PooledThread::stop()
+	{
+		m_Mutex.lock();
+		_2Real::Runnable *target = m_Target;
+		m_Mutex.unlock();
+
+		if (target)
+		{
+			target->stop();
+		}
+	}
+
 	void PooledThread::stopAndJoin()
 	{
 		m_Mutex.lock();
@@ -124,6 +141,18 @@ namespace _2Real
 		if (target)
 		{
 			target->stop();
+			m_TargetCompleted.wait();
+		}
+	}
+
+	void PooledThread::join()
+	{
+		m_Mutex.lock();
+		_2Real::Runnable *target = m_Target;
+		m_Mutex.unlock();
+
+		if (target)
+		{
 			m_TargetCompleted.wait();
 		}
 	}
@@ -174,6 +203,7 @@ namespace _2Real
 			if (m_Target)
 			{
 				m_Mutex.unlock();
+
 				m_Target->run();
 				
 				Poco::FastMutex::ScopedLock lock(m_Mutex);
@@ -252,6 +282,17 @@ namespace _2Real
 		throw ThreadpoolException(msg.str());
 	}
 
+	void ThreadPool::join(Identifier const& id)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		if (isRunning(id))
+		{
+			PooledThread &thread = find(id);
+			thread.join();
+		}
+	}
+
 	void ThreadPool::stop(Identifier const& id)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
@@ -259,14 +300,14 @@ namespace _2Real
 		if (isRunning(id))
 		{
 			PooledThread &thread = find(id);
-			thread.stopAndJoin();
+			thread.stop();
 		}
+
 	}
 
 	void ThreadPool::start(Runnable &target, bool runOnce)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
 		if (!isRunning(target.identifier()))
 		{
 			target.start(runOnce);

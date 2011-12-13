@@ -24,6 +24,7 @@
 #include "_2RealException.h"
 #include "_2RealSetupParameter.h"
 #include "_2RealService.h"
+#include "_2RealParameterMetadata.h"
 
 #include <sstream>
 
@@ -40,12 +41,21 @@ namespace _2Real
 		m_File(directory+file),
 		m_IsInitialized(false),
 		m_System(system),
-		m_Metadata(classname, directory, m_System.getAllowedTypes())
+		m_Metadata(classname, directory)
 	{
 	}
 
 	Plugin::~Plugin()
 	{
+		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
+		{
+			delete it->second;
+		}
+
+		m_SetupParameters.clear();
+		m_ServiceTemplates.clear();
+		m_Services.clear();
+
 		try
 		{
 			if (m_Activator)
@@ -56,15 +66,6 @@ namespace _2Real
 		catch (std::exception &e)
 		{
 		}
-
-		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
-		{
-			delete it->second;
-		}
-
-		m_SetupParameters.clear();
-		m_ServiceTemplates.clear();
-		m_Services.clear();
 	}
 
 	void Plugin::registerService(std::string const& name, ServiceCreator service)
@@ -115,14 +116,8 @@ namespace _2Real
 	const Identifier Plugin::createService(std::string const& idName, std::string const& serviceName)
 	{
 		IService &service = createService(serviceName);
-
-		const StringMap setup = m_Metadata.getSetupParameters(serviceName);
-		const StringMap input = m_Metadata.getInputSlots(serviceName);
-		const StringMap output = m_Metadata.getOutputSlots(serviceName);
-
 		const Identifier id = Entity::createIdentifier(idName, "service");
-		Service *runnable = new Service(id, service, m_System, setup, input, output);
-
+		Service *runnable = new Service(id, service, m_System, m_Metadata.getServiceMetadata(serviceName));
 		m_System.insertChild(*runnable, 0);
 		return id;
 	}
@@ -169,18 +164,12 @@ namespace _2Real
 			Metadata metadata(m_Metadata);
 			m_Activator->getMetadata(metadata);
 
-			//4th, create setup parameters from the metadata
-			StringMap setupParameters = m_Metadata.getSetupParameters();
-			for (StringMap::iterator it = setupParameters.begin(); it != setupParameters.end(); ++it)
+			//build setup params
+			ParameterDataMap const& setup = m_Metadata.getSetupParameters();
+			for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 			{
-				std::string name = it->first;
-				std::string keyword = it->second;
-				std::string type = m_System.getAllowedTypes().find(keyword)->second;
-
-				m_System.getLogstream() << name << " " << type << " " << keyword;
-
-				SetupParameter *parameter = new SetupParameter(name, type, keyword);
-				m_SetupParameters.insert(NamedParameter(name, parameter));
+				SetupParameter *setup = new SetupParameter(*it->second);
+				m_SetupParameters.insert(NamedParameter(it->second->getName(), setup));
 			}
 		}
 		catch (_2Real::Exception &e)
@@ -209,6 +198,8 @@ namespace _2Real
 
 	void Plugin::uninstall()
 	{
+		m_Metadata.clear();
+
 		if (m_Activator)
 		{
 			m_Activator->shutdown();
@@ -231,7 +222,6 @@ namespace _2Real
 			msg << "plugin setup parameter" << name << "not found";
 			throw NotFoundException(msg.str());
 		}
-
 		return *(it->second);
 	}
 

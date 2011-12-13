@@ -19,39 +19,46 @@
 #pragma once
 
 #include "_2RealVersion.h"
+#include "_2RealEngine.h"
 
 #include <map>
 #include <list>
 #include <string>
+
+#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
 
 	class ParameterMetadata;
 	class ServiceMetadata;
+	class Typetable;
+	class EngineData;
 
-	typedef std::pair< std::string, ServiceMetadata * >		NamedServiceData;
-	typedef std::map< std::string, ServiceMetadata * >		ServiceDataMap;
-	typedef std::pair< std::string, ParameterMetadata * >	NamedParameterData;
-	typedef std::map< std::string, ParameterMetadata * >	ParameterDataMap;
-	typedef std::map< std::string, std::string >			StringMap;
+	typedef std::pair< std::string, ServiceMetadata * >			NamedServiceData;
+	typedef std::map< std::string, ServiceMetadata * >			ServiceDataMap;
+	typedef std::pair< std::string, ParameterMetadata * >		NamedParameterData;
+	typedef std::map< std::string, ParameterMetadata * >		ParameterDataMap;
 
 	class PluginMetadata
 	{
 
 	public:
 
-		PluginMetadata(std::string const& classname, std::string const& directory, StringMap const& allowedTypes);
+		PluginMetadata(std::string const& classname, std::string const& directory);
 		~PluginMetadata();
+
+		void clear();
+
+		friend std::ostream& operator<<(std::ostream &out, PluginMetadata const& metadata);
+
+		ParameterDataMap const&		getSetupParameters() const;
+		ServiceDataMap const&		getServices() const;
 
 		void						setDescription(std::string const& desc);
 		void						setVersion(Version const& version);
 		void						setAuthor(std::string const& author);
 		void						setContact(std::string const& contact);
-
-		const std::string			getInfoString() const;
-		const std::string			lookupKeyword(std::string const& type) const;
-		void						checkKeyword(std::string const& keyword) const;
 
 		std::string const&			getInstallDirectory() const;
 		std::string const&			getDescription() const;
@@ -73,32 +80,48 @@ namespace _2Real
 		void						addInputSlotByType(std::string const& service, std::string const& name, std::string const& type);
 		void						addOutputSlotByType(std::string const& service, std::string const& name, std::string const& type);
 
+		void						addSetupParameterByData(std::string const& name, EngineData const& defaultValue);
+		void						addSetupParameterByData(std::string const& service, std::string const& name, EngineData const& defaultValue);
+		void						addInputSlotByData(std::string const& service, std::string const& name, EngineData const& defaultValue);
+
 		bool						containsServiceMetadata(std::string const& name) const;
 		bool						containsParameterMetadata(std::string const& name) const;
 
-		const StringMap				getSetupParameters() const;
-		const StringMap				getSetupParameters(std::string const& service) const;
-		const StringMap				getInputSlots(std::string const& service) const;
-		const StringMap				getOutputSlots(std::string const& service) const;
+		ServiceMetadata	&			getServiceMetadata(std::string const& name);
+		ParameterMetadata const&	getParameterMetadata(std::string const& name) const;
+		ServiceMetadata const&		getServiceMetadata(std::string const& name) const;
+
+		Poco::SharedPtr< AbstractDataHolder >	m_Test;
 
 	private:
 
-		ServiceMetadata const&		getServiceMetadata(std::string const& name) const;
-		ParameterMetadata const&	getParameterMetadata(std::string const& name) const;
-		ServiceMetadata &			getServiceMetadata(std::string const& name);
-		ParameterMetadata &			getParameterMetadata(std::string const& name);
+		void						addSetupParameter(std::string const& name, ParameterMetadata *data);
+
+		ParameterMetadata *			createParameterFromKey(std::string const& name, std::string const& keyword);
+		ParameterMetadata *			createParameterFromType(std::string const& name, std::string const& type);
+		ParameterMetadata *			createParameterFromData(std::string const& name, EngineData defaultValue);
 
 		std::string					const m_Classname;
 		std::string					const m_InstallDirectory;
+		Typetable					const& m_Typetable;
 		std::string					m_Description;
 		std::string					m_Author;
 		std::string					m_Contact;
 		Version						m_Version;
-		StringMap					const& m_AllowedTypes;
 		ServiceDataMap				m_Services;
 		ParameterDataMap			m_SetupParameters;
 
 	};
+
+	inline ParameterDataMap const& PluginMetadata::getSetupParameters() const
+	{
+		return m_SetupParameters;
+	}
+
+	inline ServiceDataMap const& PluginMetadata::getServices() const
+	{
+		return m_Services;
+	}
 
 	inline void PluginMetadata::setDescription(std::string const& desc)
 	{
