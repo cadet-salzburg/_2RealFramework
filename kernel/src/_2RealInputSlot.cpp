@@ -52,6 +52,14 @@ namespace _2Real
 		return false;
 	}
 
+	void InputSlot::setData(TimestampedData const& data)
+	{
+		resetLink();
+
+		m_ReceivedTable.clear();
+		m_ReceivedTable.insert(TimestampedData(data.first, data.second));
+	}
+
 	void InputSlot::clearCurrent()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
@@ -102,7 +110,7 @@ namespace _2Real
 		return *oldest;
 	}
 
-	void InputSlot::reset()
+	void InputSlot::resetLink()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 		

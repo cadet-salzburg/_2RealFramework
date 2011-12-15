@@ -45,6 +45,8 @@ void ImageService::setup(ServiceContext &context)
 			throw ServiceException("generator type " + generator + " is invalid");
 		}
 
+		cout << "get device id" << endl;
+
 		m_DeviceId = context.getParameterValue< unsigned int >("device id");
 		
 		m_Output = context.getOutputHandle("output image");
@@ -63,10 +65,12 @@ void ImageService::setup(ServiceContext &context)
 	}
 	catch (Exception &e)
 	{
-		throw e;
+		cout << e.message() << endl;
+		e.rethrow();
 	}
 	catch (...)
 	{
+		cout << "exception" << endl;
 		throw ServiceException("unexpected error in setup");
 	}
 }

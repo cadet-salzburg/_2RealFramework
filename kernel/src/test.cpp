@@ -176,8 +176,6 @@ int main(int argc, char *argv[])
 		testSystem.setValue< string >(kinectPlugin, "logfile", "kinectwrapper.txt");
 		testSystem.setValue< string >(kinectPlugin, "loglevel", "info");
 
-		cout << "main: KINECT PLUGIN READY FOR SETUP" << endl;
-
 		testSystem.setup(kinectPlugin);
 
 		cout << "main: KINECT PLUGIN SET UP" << endl;
@@ -197,13 +195,8 @@ int main(int argc, char *argv[])
 
 		cout << "main: DEPTH SERVICE SET UP" << endl;
 
-		testSystem.start(depth);
-		testSystem.setUpdateRate(depth, 100.0f);
-
-		cout << "main: DEPTH SERVICE STARTED" << endl;
-
 		Identifier avg = testSystem.createService("image accumulation", imgPlugin, "ImageAccumulation_uchar");
-		//testSystem.setValue< unsigned int >(avg, "buffer size", unsigned int(10));
+		testSystem.setValue< string >(avg, "test input", "yay!");
 		testSystem.setup(avg);
 
 		cout << "main: AVG SERVICE SET UP" << endl;
@@ -212,14 +205,17 @@ int main(int argc, char *argv[])
 
 		cout << "main: AVG DEPTH LINKED" << endl;
 
+		testSystem.setUpdateRate(avg, 100.0f);
 		testSystem.start(avg);
 
 		cout << "main: AVG STARTED" << endl;
 
-		testSystem.setUpdateRate(avg, 100.0f);
-
-
 		testSystem.registerToNewData(avg, "output image", ::imgDataAvailable);
+
+		testSystem.setUpdateRate(depth, 100.0f);
+		testSystem.start(depth);
+
+		cout << "main: DEPTH SERVICE STARTED" << endl;
 
 		run = true;
 		SDL_Event ev;

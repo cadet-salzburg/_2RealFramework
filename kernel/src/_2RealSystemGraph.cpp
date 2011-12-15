@@ -23,6 +23,7 @@
 #include "_2RealEngine.h"
 #include "_2RealException.h"
 #include "_2RealService.h"
+#include "_2RealData.h"
 
 #include <sstream>
 
@@ -160,7 +161,16 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			m_Threads.start(**it, false);
+			Runnable &child = **it;
+			try
+			{
+				child.performStartCheck();
+				m_Threads.start(child, false);
+			}
+			catch (StartException &e)
+			{
+				m_Logstream << e.message() << std::endl;
+			}
 		}
 	}
 
@@ -175,6 +185,7 @@ namespace _2Real
 	void SystemGraph::startChild(Identifier const& runnableId)
 	{
 		Runnable &child = getChild(runnableId);
+		child.performStartCheck();
 		m_Threads.start(child, false);
 	}
 
@@ -233,14 +244,15 @@ namespace _2Real
 
 	void SystemGraph::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
 	{
+		Data data(value, m_Engine.getTimestamp());
 		if (id.isPlugin())
 		{
-			m_Plugins.setParameterValue(id, paramName, value);
+			m_Plugins.setParameterValue(id, paramName, data);
 		}
 		else if (id.isService())
 		{
 			Service &service = static_cast< Service & >(getChild(id));
-			service.setParameterValue(paramName, value);
+			service.setParameterValue(paramName, data);
 		}
 	}
 

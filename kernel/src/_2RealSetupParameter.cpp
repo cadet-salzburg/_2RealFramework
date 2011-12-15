@@ -20,6 +20,7 @@
 #include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -46,6 +47,11 @@ namespace _2Real
 
 		m_Data = data;
 		m_IsInitialized = true;
+	}
+
+	EngineData const& SetupParameter::getData() const
+	{
+		return m_Data;
 	}
 
 }

@@ -123,9 +123,9 @@ namespace _2Real
 		return getPlugin(id).createService(name, service);
 	}
 
-	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, Data const& data)
 	{
-		getPlugin(id).setParameterValue(paramName, value);
+		getPlugin(id).setParameterValue(paramName, data);
 	}
 
 	Plugin & PluginPool::getPlugin(Identifier const& id)

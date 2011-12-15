@@ -60,18 +60,17 @@ namespace _2Real
 		*	@return:			constant reference to setup parameter
 		*	@throw:				NotFoundException, DatatypeMismatchException
 		*/
-		template< typename Datatype >
-		Datatype const& getParameterValue(std::string const& name)
+		template< typename DataType >
+		DataType const& getParameterValue(std::string const& name) const
 		{
-			//Datatype *ptr = Extract< Datatype >(getSetupParameter(name));
-			//return *ptr;
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(getSetupParameter(name));
+			EngineData const& data = getData(name);
+			Poco::SharedPtr< DataType > const& ptr = Extract< DataType >(data);
 			return *ptr.get();
 		}
 
 	private:
 
-		EngineData			getSetupParameter(std::string const& name);
+		EngineData const&	getData(std::string const& name) const;
 
 		Plugin				&m_Plugin;
 

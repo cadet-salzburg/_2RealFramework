@@ -39,8 +39,7 @@ namespace _2Real
 		m_Service(&service),
 		m_SetupParameters(),
 		m_InputSlots(),
-		m_OutputSlots(),
-		m_IsSetUp(false)
+		m_OutputSlots()
 	{
 		ParameterDataMap const& setup = metadata.getSetupParameters();
 		ParameterDataMap const& input = metadata.getInputSlots();
@@ -116,22 +115,10 @@ namespace _2Real
 		in.linkWith(out);
 	}
 
-	bool Service::checkForSetup()
-	{
-		return true;
-	}
-
-	bool Service::checkForUpdate()
-	{
-		return true;
-	}
-
 	void Service::setup()
 	{
 		ServiceContext context(*this);
 		m_Service->setup(context);
-
-		m_IsSetUp = true;
 	}
 
 	void Service::run()
@@ -206,12 +193,54 @@ namespace _2Real
 		m_Service->shutdown();
 	}
 
-	void Service::setParameterValue(std::string const& name, EngineData const& data)
+	void Service::performStartCheck() const
 	{
-		getSetupParameter(name).setData(data);
+		bool success = true;
+		std::ostringstream msg;
+		for (ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
+		{
+			if (!it->second->isInitialized())
+			{
+				msg << "setup parameter " << it->second->getName() << " of service " << name() << " has not been set\n";
+				success = false;
+			}
+		}
+
+		//currently, i demand that all input slots of a service are either set to sth or linked before starting
+		for (InputMap::const_iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+		{
+			if (!it->second->isInitialized() && !it->second->isLinked())
+			{
+				msg << "input slot " << it->second->getName() << " of service " << name() << " has been neither set nor linked\n";
+				success = false;
+			}
+		}
+
+		if (!success)
+		{
+			throw StartException(msg.str());
+		}
 	}
 
-	EngineData Service::getParameterValue(std::string const& name) const
+	void Service::setParameterValue(std::string const& name, Data const& data)
+	{
+		if (hasSetupParameter(name))
+		{
+			getSetupParameter(name).setData(data.data());
+		}
+		else if (hasInputSlot(name))
+		{
+			getInputSlot(name).setData(TimestampedData(data.getTimestamp(), data.data()));
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "setup parameter / input slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
+		}
+	}
+
+	EngineData const& Service::getParameterValue(std::string const& name) const
 	{
 		return getSetupParameter(name).getData();
 	}

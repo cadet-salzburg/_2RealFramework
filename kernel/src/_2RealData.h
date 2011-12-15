@@ -31,9 +31,10 @@ namespace _2Real
 		Data();
 		Data(EngineData const& data, long timestamp);
 
-		template< typename Datatype >
-		Datatype const&			getData();
+		template< typename DataType >
+		DataType const&			getData() const;
 		long					getTimestamp() const;
+
 		EngineData const&		data() const;
 
 	private:
@@ -56,7 +57,7 @@ namespace _2Real
 	}
 
 	template< typename DataType >
-	DataType const& Data::getData()
+	DataType const& Data::getData() const
 	{
 		Poco::SharedPtr< DataType > ptr = Extract< DataType >(m_Data);
 		return *ptr.get();

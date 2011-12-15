@@ -81,5 +81,6 @@ namespace _2Real
 	IMPLEMENT_EXCEPTION(PluginException, Exception, "plugin exception")
 	IMPLEMENT_EXCEPTION(ServiceException, Exception, "service exception")
 	IMPLEMENT_EXCEPTION(ThreadpoolException, Exception, "thread pool exception")
+	IMPLEMENT_EXCEPTION(StartException, Exception, "start exception")
 
 }

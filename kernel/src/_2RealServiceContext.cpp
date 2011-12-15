@@ -30,7 +30,7 @@ namespace _2Real
 	{
 	}
 
-	EngineData ServiceContext::getSetupParameter(std::string const& name)
+	EngineData const& ServiceContext::getData(std::string const& name) const
 	{
 		return m_Service.getParameterValue(name);
 	}

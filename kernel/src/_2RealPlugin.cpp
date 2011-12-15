@@ -25,6 +25,7 @@
 #include "_2RealSetupParameter.h"
 #include "_2RealService.h"
 #include "_2RealParameterMetadata.h"
+#include "_2RealData.h"
 
 #include <sstream>
 
@@ -90,12 +91,12 @@ namespace _2Real
 		}
 	}
 
-	void Plugin::setParameterValue(std::string const& paramName, EngineData const& value)
+	void Plugin::setParameterValue(std::string const& paramName, Data const& data)
 	{
-		getSetupParameter(paramName).setData(value);
+		getSetupParameter(paramName).setData(data.data());
 	}
 
-	EngineData Plugin::getParameterValue(std::string const& paramName) const
+	EngineData const& Plugin::getParameterValue(std::string const& paramName) const
 	{
 		return getSetupParameter(paramName).getData();
 	}

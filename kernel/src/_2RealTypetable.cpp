@@ -27,22 +27,22 @@ namespace _2Real
 
 	Typetable::Typetable(Engine const& engine) :
 		m_Engine(engine),
-		m_Types(),
+		m_Typetable(),
 		m_LookupTable()
 	{
 	}
 
 	Typetable::~Typetable()
 	{
-		m_Types.clear();
+		m_Typetable.clear();
 		m_LookupTable.clear();
 	}
 
 	const std::string Typetable::lookupType(std::string const& keyword) const
 	{
-		EngineDataTable::const_iterator it = m_Types.find(keyword);
+		EngineDataTable::const_iterator it = m_Typetable.find(keyword);
 
-		if (it == m_Types.end())
+		if (it == m_Typetable.end())
 		{
 			std::ostringstream msg;
 			msg << "no type with keyword " << keyword << " found";
@@ -74,9 +74,9 @@ namespace _2Real
 
 	EngineData Typetable::getInitialValueFromKey(std::string const& keyword) const
 	{
-		EngineDataTable::const_iterator it = m_Types.find(keyword);
+		EngineDataTable::const_iterator it = m_Typetable.find(keyword);
 
-		if (it == m_Types.end())
+		if (it == m_Typetable.end())
 		{
 			std::ostringstream msg;
 			msg << "no type with keyword " << keyword << " found";

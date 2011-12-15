@@ -40,9 +40,4 @@ namespace _2Real
 
 	};
 
-	inline EngineData const& SetupParameter::getData() const
-	{
-		return m_Data;
-	}
-
 }

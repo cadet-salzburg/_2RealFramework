@@ -43,7 +43,9 @@ namespace _2Real
 
 		InputSlot(ParameterMetadata const& metadata);
 
-		void reset();
+		void setData(TimestampedData const& data);
+
+		void resetLink();
 		void linkWith(OutputSlot &output);
 		bool isLinked() const;
 

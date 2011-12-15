@@ -35,6 +35,7 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 		metadata.addService("ImageAccumulation_uchar");
 		metadata.setDescription("ImageAccumulation_uchar", "life is wonderful");
 		metadata.addSetupParameter< unsigned int >("ImageAccumulation_uchar", "buffer size", unsigned int(10));
+		metadata.addInputSlot< string >("ImageAccumulation_uchar", "test input", "test string");
 		metadata.addInputSlot< Pixelbuffer < unsigned char > >("ImageAccumulation_uchar", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation_uchar", "output image");
 	}

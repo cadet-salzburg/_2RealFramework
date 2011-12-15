@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />
     <ClCompile Include="..\..\src\_2RealService.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealRunnable.h" />
     <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
     <ClInclude Include="..\..\src\_2RealOutputSlot.h" />

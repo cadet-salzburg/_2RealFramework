@@ -81,7 +81,6 @@ namespace _2Real
 	DataHolder< DataType >::DataHolder(DataHolder< DataType > const& src) :
 		m_Data(src.m_Data)
 	{
-		std::cout << "data holder: copy ctor called" << std::endl;
 	}
 
 	template< typename DataType >
@@ -92,7 +91,6 @@ namespace _2Real
 			return *this;
 		}
 
-		std::cout << "data holder: assignment called" << std::endl;
 		m_Data = src.m_Data;
 
 		return *this;

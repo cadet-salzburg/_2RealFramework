@@ -124,5 +124,6 @@ namespace _2Real
 	DECLARE_EXCEPTION(PluginException, Exception)
 	DECLARE_EXCEPTION(ServiceException, Exception)
 	DECLARE_EXCEPTION(ThreadpoolException, Exception)
+	DECLARE_EXCEPTION(StartException, Exception)
 
 }

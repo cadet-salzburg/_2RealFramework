@@ -25,16 +25,9 @@ namespace _2Real
 	Parameter::Parameter(ParameterMetadata const& metadata) :
 		m_Name(metadata.getName()),
 		m_Datatype(metadata.getType()),
-		m_Keyword(metadata.getKeyword())
+		m_Keyword(metadata.getKeyword()),
+		m_IsInitialized(metadata.hasDefaultValue())
 	{
-		if (metadata.hasDefaultValue())
-		{
-			m_IsInitialized = true;
-		}
-		else
-		{
-			m_IsInitialized = false;
-		}
 	}
 
 	inline Parameter::~Parameter()

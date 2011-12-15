@@ -28,7 +28,7 @@ namespace _2Real
 	class Plugin;
 	class Identifier;
 	class SystemGraph;
-	class EngineData;
+	class Data;
 
 	typedef std::pair< Identifier, Plugin * >	NamedPlugin;
 	typedef std::map< Identifier, Plugin * >	PluginMap;
@@ -49,7 +49,7 @@ namespace _2Real
 		void					setup(Identifier const& id);
 		const std::string		getInfoString(Identifier const& id) const;
 		const Identifier		createService(std::string const& name, Identifier const& id, std::string const& service);
-		void					setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& value);
+		void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
 
 	private:
 

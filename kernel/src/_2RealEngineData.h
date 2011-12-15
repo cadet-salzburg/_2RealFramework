@@ -21,9 +21,7 @@ namespace _2Real
 	public:
 
 		template< typename DataType >
-		friend Poco::SharedPtr< DataType > Extract(EngineData &data);
-		//template< typename DataType >
-		//friend DataType* Extract(EngineData &data);
+		friend Poco::SharedPtr< DataType > const& Extract(EngineData const& data);
 	
 		EngineData();
 		EngineData(EngineData const& src);
@@ -50,15 +48,13 @@ namespace _2Real
 
 	};
 
-	//template< typename DataType >
-	//DataType * Extract(EngineData &data)
 	template< typename DataType >
-	Poco::SharedPtr< DataType > Extract(EngineData &data)
+	Poco::SharedPtr< DataType > const& Extract(EngineData const& data)
 	{
 		if (data.typeinfo() == typeid(DataType))
 		{
-			AbstractDataHolder *ptr = data.m_Content.get();
-			return static_cast< DataHolder< DataType > * >(ptr)->m_Data;
+			AbstractDataHolder const* ptr = data.m_Content.get();
+			return static_cast< DataHolder< DataType > const* >(ptr)->m_Data;
 		}
 		else
 		{

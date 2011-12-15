@@ -32,7 +32,7 @@ namespace _2Real
 		m_Plugin.registerService(name, creator);
 	}
 
-	EngineData PluginContext::getSetupParameter(std::string const& name)
+	EngineData const& PluginContext::getData(std::string const& name) const
 	{
 		return m_Plugin.getParameterValue(name);
 	}

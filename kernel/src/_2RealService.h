@@ -55,31 +55,36 @@ namespace _2Real
 		Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata);
 		~Service();
 
-		void					setParameterValue(std::string const& name, EngineData const& data);
-		EngineData				getParameterValue(std::string const& name) const;
+		/**
+		*	functions that may be called by the service context
+		*/
+		EngineData const&		getParameterValue(std::string const& name) const;
 		InputHandle				createInputHandle(std::string const& name) const;
 		OutputHandle			createOutputHandle(std::string const& name);
-
-		bool					checkForSetup();
-		bool					checkForUpdate();
 
 		void					setup();
 		void					run();
 		void					update();
 		void					shutdown();
+		void					performStartCheck() const;
+		void					performSetupCheck() const;
 
+		void					setParameterValue(std::string const& name, Data const& data);
+		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
+
+		/**
+		*	callback functions for output params
+		*/
 		void					registerToNewData(std::string const& outName, DataCallback callback);
 		void					unregisterFromNewData(std::string const& outName, DataCallback callback);
 		void					registerToNewData(std::string const& outName, IOutputListener &listener);
 		void					unregisterFromNewData(std::string const& outName, IOutputListener &listener);
 
-		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
-		//void					linkWith(Service &serviceOut);
-
-		bool					isSetUp() const;
-
 	private:
 
+		bool					hasSetupParameter(std::string const& name) const;
+		bool					hasInputSlot(std::string const& name) const;
+		bool					hasOutputSlot(std::string const& name) const;
 		OutputSlot const&		getOutputSlot(std::string const& name) const;
 		InputSlot const&		getInputSlot(std::string const& name) const;
 		SetupParameter const&	getSetupParameter(std::string const& name) const;
@@ -87,19 +92,41 @@ namespace _2Real
 		InputSlot &				getInputSlot(std::string const& name);
 		SetupParameter &		getSetupParameter(std::string const& name);
 
-		InputMap				m_InputSlots;
-		OutputMap				m_OutputSlots;
-		ParameterMap			m_SetupParameters;
-
+		/**
+		*	instance of a service exported by a plugin
+		*/
 		IService				*m_Service;
 
-		bool					m_IsSetUp;
+		/**
+		*	input slots
+		*/
+		InputMap				m_InputSlots;
+
+		/**
+		*	output slots
+		*/
+		OutputMap				m_OutputSlots;
+
+		/**
+		*	setup params
+		*/
+		ParameterMap			m_SetupParameters;
 
 	};
 
-	inline bool Service::isSetUp() const
+	inline bool Service::hasSetupParameter(std::string const& name) const
 	{
-		return m_IsSetUp;
+		return m_SetupParameters.find(name) != m_SetupParameters.end();
+	}
+
+	inline bool Service::hasInputSlot(std::string const& name) const
+	{
+		return m_InputSlots.find(name) != m_InputSlots.end();
+	}
+
+	inline bool Service::hasOutputSlot(std::string const& name) const
+	{
+		return m_OutputSlots.find(name) != m_OutputSlots.end();
 	}
 
 }

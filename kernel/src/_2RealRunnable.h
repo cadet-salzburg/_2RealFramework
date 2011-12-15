@@ -49,8 +49,7 @@ namespace _2Real
 		virtual void run() = 0;
 		virtual void update() = 0;
 		virtual void shutdown() = 0;
-		virtual bool checkForSetup() = 0;
-		virtual bool checkForUpdate() = 0;
+		virtual void performStartCheck() const = 0;
 
 		Runnable & root();
 		Runnable const&  root() const;

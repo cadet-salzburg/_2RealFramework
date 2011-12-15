@@ -23,7 +23,6 @@
 #include <map>
 #include <string>
 #include <typeinfo>
-#include <iostream>
 
 namespace _2Real
 {
@@ -42,9 +41,6 @@ namespace _2Real
 		~Typetable();
 
 		template< typename DataType >
-		void				registerType(std::string const& keyword, DataType const& defaultValue);
-
-		template< typename DataType >
 		void				registerType(std::string const& keyword);
 
 		const std::string	lookupKey(std::string const& type) const;
@@ -56,50 +52,16 @@ namespace _2Real
 	private:
 
 		Engine				const& m_Engine;
-
-		EngineDataTable		m_Types;
+		EngineDataTable		m_Typetable;
 		StringMap			m_LookupTable;
 
 	};
 
 	template< typename DataType >
-	void Typetable::registerType(std::string const& keyword, DataType const& defaultValue)
-	{
-
-		EngineDataTable::iterator it = m_Types.find(keyword);
-		if (it != m_Types.end())
-		{
-			std::ostringstream msg;
-			msg << "keyword " << keyword << " already exists";
-			throw AlreadyExistsException(msg.str());
-		}
-
-		std::string keyword1 = std::string("vector " + keyword);
-		std::string keyword2 = std::string("vector2D " + keyword);
-
-		EngineData data(new DataType(defaultValue));
-		EngineData data1(new std::vector< DataType >());
-		EngineData data2(new std::vector < std::vector< DataType > >());
-
-		m_Types[keyword] = data;
-		m_Types[keyword1] = data1;
-		m_Types[keyword2] = data2;
-
-		std::string type = typeid(DataType).name();
-		std::string type1 = data1.typeinfo().name();
-		std::string type2 = data2.typeinfo().name();
-
-		m_LookupTable[type] = keyword;
-		m_LookupTable[type1] = keyword1;
-		m_LookupTable[type2] = keyword2;
-	}
-
-	template< typename DataType >
 	void Typetable::registerType(std::string const& keyword)
 	{
-
-		EngineDataTable::iterator it = m_Types.find(keyword);
-		if (it != m_Types.end())
+		EngineDataTable::iterator it = m_Typetable.find(keyword);
+		if (it != m_Typetable.end())
 		{
 			std::ostringstream msg;
 			msg << "keyword " << keyword << " already exists";
@@ -113,9 +75,9 @@ namespace _2Real
 		EngineData data1(new std::vector< DataType >());
 		EngineData data2(new std::vector < std::vector< DataType > >());
 
-		m_Types[keyword] = data;
-		m_Types[keyword1] = data1;
-		m_Types[keyword2] = data2;
+		m_Typetable[keyword] = data;
+		m_Typetable[keyword1] = data1;
+		m_Typetable[keyword2] = data2;
 
 		std::string type = typeid(DataType).name();
 		std::string type1 = data1.typeinfo().name();
