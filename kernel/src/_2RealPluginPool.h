@@ -29,6 +29,7 @@ namespace _2Real
 	class Identifier;
 	class SystemGraph;
 	class Data;
+	class Runnable;
 
 	typedef std::pair< Identifier, Plugin * >	NamedPlugin;
 	typedef std::map< Identifier, Plugin * >	PluginMap;
@@ -48,7 +49,7 @@ namespace _2Real
 		void					uninstall(Identifier const& id);
 		void					setup(Identifier const& id);
 		const std::string		getInfoString(Identifier const& id) const;
-		const Identifier		createService(std::string const& name, Identifier const& id, std::string const& service);
+		Runnable &				createService(std::string const& name, Identifier const& id, std::string const& service);
 		void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
 
 	private:

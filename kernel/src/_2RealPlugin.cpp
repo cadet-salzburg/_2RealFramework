@@ -114,13 +114,12 @@ namespace _2Real
 		return *(it->second());
 	}
 
-	const Identifier Plugin::createService(std::string const& idName, std::string const& serviceName)
+	Runnable & Plugin::createService(std::string const& idName, std::string const& serviceName)
 	{
 		IService &service = createService(serviceName);
 		const Identifier id = Entity::createIdentifier(idName, "service");
 		Service *runnable = new Service(id, service, m_System, m_Metadata.getServiceMetadata(serviceName));
-		m_System.insertChild(*runnable, 0);
-		return id;
+		return *runnable;
 	}
 
 	bool Plugin::canExportService(std::string const& name) const

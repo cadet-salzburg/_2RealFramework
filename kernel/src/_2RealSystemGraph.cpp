@@ -24,6 +24,7 @@
 #include "_2RealException.h"
 #include "_2RealService.h"
 #include "_2RealData.h"
+#include "_2RealRunnableManager.h"
 
 #include <sstream>
 
@@ -123,35 +124,39 @@ namespace _2Real
 
 	void SystemGraph::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
 	{
-		Service &service = static_cast< Service & >(getContained(serviceId));
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
 		service.registerToNewData(outName, callback);
 	}
 
 	void SystemGraph::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
 	{
-		Service &service = static_cast< Service & >(getContained(serviceId));
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
 		service.unregisterFromNewData(outName, callback);
 	}
 
 	void SystemGraph::registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
 	{
-		Service &service = static_cast< Service & >(getContained(serviceId));
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
 		service.registerToNewData(outName, listener);
 	}
 
 	void SystemGraph::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
 	{
-		Service &service = static_cast< Service & >(getContained(serviceId));
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
 		service.unregisterFromNewData(outName, listener);
 	}
 
-	void SystemGraph::insertChild(Runnable &child, unsigned int index)
+	void SystemGraph::insert(RunnableManager &child, unsigned int index)
 	{
-		m_Children.push_back(&child);
-		child.setFather(*this);
+		//m_Children.push_back(&child);
+		//child.setFather(*this);	//runnable function so pass it to the manager
 	}
 
-	void SystemGraph::removeChild(Identifier const& id)
+	void SystemGraph::remove(Identifier const& id)
 	{
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
@@ -159,53 +164,53 @@ namespace _2Real
 
 	void SystemGraph::startAll()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			Runnable &child = **it;
-			try
-			{
-				child.performStartCheck();
-				m_Threads.start(child, false);
-			}
-			catch (StartException &e)
-			{
-				m_Logstream << e.message() << std::endl;
-			}
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	Runnable &child = **it;
+		//	try
+		//	{
+		//		child.performStartCheck();
+		//		m_Threads.start(child, false);
+		//	}
+		//	catch (StartException &e)
+		//	{
+		//		m_Logstream << e.message() << std::endl;
+		//	}
+		//}
 	}
 
 	void SystemGraph::stopAll()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			m_Threads.stop((*it)->identifier());
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	m_Threads.stop((*it)->getManagedId());
+		//}
 	}
 
 	void SystemGraph::startChild(Identifier const& runnableId)
 	{
-		Runnable &child = getChild(runnableId);
-		child.performStartCheck();
-		m_Threads.start(child, false);
+		//Runnable &child = getChild(runnableId);
+		//child.performStartCheck();
+		//m_Threads.start(child, false);
 	}
 
 	void SystemGraph::stopChild(Identifier const& runnableId)
 	{
-		Runnable &child = getChild(runnableId);
-		m_Threads.stop(runnableId);
+		//Runnable &child = getChild(runnableId);
+		//m_Threads.stop(runnableId);
 	}
 
 	void SystemGraph::runOnce(RunnableList const& runnables)
 	{
-		for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
-		{
-			m_Threads.start(**it, true);
-		}
+		//for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
+		//{
+		//	m_Threads.start(**it, true);
+		//}
 
-		for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
-		{
-			m_Threads.join((*it)->identifier());
-		}
+		//for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
+		//{
+		//	m_Threads.join((*it)->identifier());
+		//}
 	}
 
 	void SystemGraph::handleException(Runnable &runnable, Exception &exception)
@@ -232,14 +237,20 @@ namespace _2Real
 		}
 		else if (id.isService())
 		{
-			Service &service = static_cast< Service & >(getChild(id));
+			Runnable &runnable = getContained(id).getManagedRunnable();
+			Service &service = static_cast< Service & >(runnable);
 			service.setup();
 		}
 	}
 
 	const Identifier SystemGraph::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
-		return m_Plugins.createService(name, id, service);
+		Runnable &runnable = m_Plugins.createService(name, id, service);
+		RunnableManager *manager = new RunnableManager(runnable);
+
+		m_Children.push_back(manager);
+
+		return runnable.identifier();
 	}
 
 	void SystemGraph::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
@@ -251,21 +262,25 @@ namespace _2Real
 		}
 		else if (id.isService())
 		{
-			Service &service = static_cast< Service & >(getChild(id));
+			Runnable &runnable = getContained(id).getManagedRunnable();
+			Service &service = static_cast< Service & >(runnable);
 			service.setParameterValue(paramName, data);
 		}
 	}
 
 	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)
 	{
-		Service &service = static_cast< Service & >(getChild(id));
-		service.setUpdateRate(updatesPerSecond);
+		Runnable &runnable = getContained(id).getManagedRunnable();
+		runnable.setUpdateRate(updatesPerSecond);
 	}
 
 	void SystemGraph::linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut)
 	{
-		Service &in = static_cast< Service & >(getChild(serviceIn));
-		Service &out = static_cast< Service & >(getChild(serviceOut));
+		Runnable &runnableIn = getContained(serviceIn).getManagedRunnable();
+		Service &in = static_cast< Service & >(runnableIn);
+
+		Runnable &runnableOut = getContained(serviceOut).getManagedRunnable();
+		Service &out = static_cast< Service & >(runnableOut);
 
 		in.linkWith(nameIn, out, nameOut);
 	}

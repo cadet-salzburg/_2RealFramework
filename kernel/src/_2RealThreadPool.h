@@ -48,7 +48,7 @@ namespace _2Real
 		void join(Identifier const& runnable);
 
 		bool isRunning(Identifier const& runnable);
-		PooledThread & find(Identifier const& runnable);
+		PooledThread* find(Identifier const& runnable);
 
 		//shutdown function
 		void clearThreads();

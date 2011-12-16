@@ -48,17 +48,17 @@ namespace _2Real
 			m_RunOnce = runOnce;
 			m_Run = !runOnce;
 		}
-		else
-		{
-			//TODO
-			//what is the desired effect here?
-		}
 	}
 
 	void Runnable::stop()
 	{
 		m_RunOnce = false;
 		m_Run = false;
+	}
+
+	void Runnable::handleException()
+	{
+		stop();
 	}
 
 	Runnable & Runnable::root()

@@ -33,16 +33,13 @@ namespace _2Real
 		Synchronization(Identifier const& id, SystemGraph &system);
 		~Synchronization();
 
-		bool checkForSetup();
-		bool checkForUpdate();
-
 		void setup();
 		void run();
 		void update();
 		void shutdown();
 
-		void insertChild(Runnable &child, unsigned int index);
-		void removeChild(Identifier const& id);
+		void insert(RunnableManager &child, unsigned int index);
+		void remove(Identifier const& id);
 
 	};
 

@@ -19,6 +19,7 @@
 #include "_2RealGraph.h"
 #include "_2RealException.h"
 #include "_2RealRunnableGraph.h"
+#include "_2RealRunnableManager.h"
 
 #include <sstream>
 
@@ -38,7 +39,7 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->identifier() == childId)
+			if ((*it)->getManagedId() == childId)
 			{
 				return it;
 			}
@@ -50,7 +51,7 @@ namespace _2Real
 	{
 		for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			if ((*it)->identifier() == childId)
+			if ((*it)->getManagedId() == childId)
 			{
 				return it;
 			}
@@ -93,7 +94,7 @@ namespace _2Real
 		{
 			for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				Runnable &runnable = **it;
+				Runnable &runnable = (*it)->getManagedRunnable();
 				if (!runnable.isService())
 				{
 					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);
@@ -108,7 +109,7 @@ namespace _2Real
 		}
 	}
 
-	Runnable & Graph::getChild(Identifier const& childId)
+	RunnableManager & Graph::getChild(Identifier const& childId)
 	{
 		RunnableList::iterator it = iteratorId(childId);
 		if (it != m_Children.end())
@@ -117,11 +118,11 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "child " << childId.name() << " not found";
+		msg << "child " << childId.name() << " not found in graph";
 		throw NotFoundException(msg.str());
 	}
 
-	Runnable const& Graph::getChild(Identifier const& childId) const
+	RunnableManager const& Graph::getChild(Identifier const& childId) const
 	{
 		RunnableList::const_iterator it = iteratorId(childId);
 		if (it != m_Children.end())
@@ -130,11 +131,11 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "child " << childId.name() << " not found";
+		msg << "child " << childId.name() << " not found in graph";
 		throw NotFoundException(msg.str());
 	}
 
-	Runnable & Graph::getContained(Identifier const& runnableId)
+	RunnableManager & Graph::getContained(Identifier const& runnableId)
 	{
 		if (isChild(runnableId))
 		{
@@ -144,7 +145,7 @@ namespace _2Real
 		{
 			for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				Runnable &runnable = **it;
+				Runnable &runnable = (*it)->getManagedRunnable();
 				if (!runnable.isService())
 				{
 					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);
@@ -161,7 +162,7 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	Runnable const& Graph::getContained(Identifier const& runnableId) const
+	RunnableManager const& Graph::getContained(Identifier const& runnableId) const
 	{
 		if (isChild(runnableId))
 		{
@@ -171,7 +172,7 @@ namespace _2Real
 		{
 			for (RunnableList::const_iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 			{
-				Runnable &runnable = **it;
+				Runnable &runnable = (*it)->getManagedRunnable();
 				if (!runnable.isService())
 				{
 					RunnableGraph &graph = static_cast< RunnableGraph & >(runnable);

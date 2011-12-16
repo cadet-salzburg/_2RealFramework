@@ -70,42 +70,37 @@ namespace _2Real
 		return false;
 	}
 
-	PooledThread & ThreadPool::find(Identifier const& runnable)
+	PooledThread * ThreadPool::find(Identifier const& runnable)
 	{
 		for (ThreadList::iterator it=m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
 			if ((*it)->identifier() == runnable)
 			{
-				return **it;
+				return *it;
 			}
 		}
 
-		std::ostringstream msg;
-		msg << "threadpool " << m_Name << " error: runnable " << runnable << " not found";
-		throw ThreadpoolException(msg.str());
+		return NULL;
 	}
 
 	void ThreadPool::join(Identifier const& id)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		if (isRunning(id))
+		PooledThread *thread = find(id);
+		if (thread)
 		{
-			PooledThread &thread = find(id);
-			thread.join();
+			thread->join();
 		}
 	}
 
 	void ThreadPool::stop(Identifier const& id)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		if (isRunning(id))
+		PooledThread *thread = find(id);
+		if (thread)
 		{
-			PooledThread &thread = find(id);
-			thread.stop();
+			thread->stop();
 		}
-
 	}
 
 	void ThreadPool::start(Runnable &target, bool runOnce)

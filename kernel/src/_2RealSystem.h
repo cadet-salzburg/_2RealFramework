@@ -164,8 +164,8 @@ namespace _2Real
 
 		const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
 		const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
-		const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
-		const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
+		//const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
+		//const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
 
 		//void link(Identifier const& in, Identifier const& out);
 		//void destroy(Identifier const& id);

@@ -14,8 +14,10 @@ _2Real::IService *const createImageService()
 
 void ImageService::setup(ServiceContext &context)
 {
+
 	try
 	{
+
 		m_2RealKinect = _2RealKinect::getInstance();
 
 		string const& generator = context.getParameterValue< string >("image type");
@@ -42,13 +44,10 @@ void ImageService::setup(ServiceContext &context)
 		}
 		else
 		{
-			throw ServiceException("generator type " + generator + " is invalid");
+			throw InvalidParameterException("generator type " + generator + " is invalid");
 		}
 
-		cout << "get device id" << endl;
-
 		m_DeviceId = context.getParameterValue< unsigned int >("device id");
-		
 		m_Output = context.getOutputHandle("output image");
 
 		if (m_Generator == DEPTHIMAGE)
@@ -63,15 +62,23 @@ void ImageService::setup(ServiceContext &context)
 		m_Bpp = m_Channels*sizeof(unsigned char);
 
 	}
-	catch (Exception &e)
+	catch (NotFoundException &e)
 	{
-		cout << e.message() << endl;
+		std::cout << e.message() << std::endl;
+		throw ServiceSetupException(e.message());
+	}
+	catch (TypeMismatchException &e)
+	{
+		std::cout << e.message() << std::endl;
+		throw ServiceSetupException(e.message());
+	}
+	catch (InvalidParameterException &e)
+	{
 		e.rethrow();
 	}
 	catch (...)
 	{
-		cout << "exception" << endl;
-		throw ServiceException("unexpected error in setup");
+		throw ServiceSetupException("an unknown exception occured during service setup");
 	}
 }
 

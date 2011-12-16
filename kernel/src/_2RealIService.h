@@ -33,9 +33,18 @@ namespace _2Real
 	public:
 
 		/**
-		*	setup function
+		*	the setup function, which will be executed at least once before the service can run, but might be executed multiple times
+		*
+		*	the service can use the service context to initialized its handles & query its setup parameters
+		*	during setup, a ServiceSetupException should be thrown if something occurs from which you can not recover in any way
+		*	while an InvalidParameterException can be thrown otherwise
+		*	
+		*	@param context		the service context, used for registering handles & querying setup parameters
+		*	@throw				ServiceException: something is horribly wrong and the service will never ever run -> signals
+		*						to the framework that this service is kaputt
+		*	@throw				SetupFailedException: something went wrong but setup could succeed later (typical: some setup param was not set)
 		*/
-		virtual void setup(ServiceContext &context) = 0;
+		virtual bool setup(ServiceContext &context) = 0;
 
 		/**
 		*	update function

@@ -76,6 +76,8 @@
       <Filter>Parameters</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -185,6 +187,8 @@
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableManager.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

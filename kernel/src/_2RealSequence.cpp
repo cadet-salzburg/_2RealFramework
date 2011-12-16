@@ -17,7 +17,8 @@
 */
 
 #include "_2RealSequence.h"
-#include "_2RealSystemGraph.h"
+//#include "_2RealSystemGraph.h" -> include just because of the exception handler?
+#include "_2RealRunnableManager.h"
 
 namespace _2Real
 {
@@ -31,83 +32,73 @@ namespace _2Real
 	{
 	}
 
-	bool Sequence::checkForSetup()
-	{
-		return true;
-	}
-
-	bool Sequence::checkForUpdate()
-	{
-		return true;
-	}
-
 	void Sequence::setup()
 	{
 	}
 
 	void Sequence::run()
 	{
-		while (m_Run || m_RunOnce)
-		{
-			try
-			{
-				Runnable::updateTimer();
+		//while (m_Run || m_RunOnce)
+		//{
+		//	try
+		//	{
+		//		Runnable::updateTimer();
 
-				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					(*it)->update();
-				}
+		//		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//		{
+		//			(*it)->update();
+		//		}
 
-				if (m_RunOnce)
-				{
-					m_RunOnce = false;
-				}
-				else
-				{
-					Runnable::suspend();
-				}
-			}
-			catch (_2Real::Exception &e)
-			{
-				m_Run = false;
-				m_RunOnce = false;
+		//		if (m_RunOnce)
+		//		{
+		//			m_RunOnce = false;
+		//		}
+		//		else
+		//		{
+		//			Runnable::suspend();
+		//		}
+		//	}
+		//	catch (_2Real::Exception &e)
+		//	{
+		//		m_Run = false;
+		//		m_RunOnce = false;
 
-				m_System.handleException(*this, e);
-			}
-		}
+		//		m_System.handleException(*this, e);
+		//	}
+		//}
 	}
 
 	void Sequence::update()
 	{
-		try
-		{
-			for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-			{
-				(*it)->update();
-			}
-		}
-		catch (_2Real::Exception &e)
-		{
-			m_Run = false;
-			m_RunOnce = false;
+		//try
+		//{
+		//	for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//	{
+		//		(*it)->update();
+		//	}
+		//}
+		//catch (_2Real::Exception &e)
+		//{
+		//	m_Run = false;
+		//	m_RunOnce = false;
 
-			m_System.handleException(*this, e);
-		}
+		//	m_System.handleException(*this, e);
+		//}
 	}
 
 	void Sequence::shutdown()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			(*it)->shutdown();
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	(*it)->shutdown();
+		//}
 	}
 
-	void Sequence::removeChild(Identifier const& childId)
+	void Sequence::remove(Identifier const& childId)
 	{
 	}
 
-	void Sequence::insertChild(Runnable &child, unsigned int index)
+	void Sequence::insert(RunnableManager &child, unsigned int index)
 	{
 	}
 

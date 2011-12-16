@@ -31,10 +31,7 @@ namespace _2Real
 	public:
 
 		Sequence(Identifier const& id, SystemGraph &system);
-		~Sequence();
-
-		bool checkForSetup();
-		bool checkForUpdate();
+		~Sequence();;
 
 		void start(bool runOnce);
 		void stop();
@@ -43,8 +40,8 @@ namespace _2Real
 		void update();
 		void shutdown();
 
-		void insertChild(Runnable &child, unsigned int index);
-		void removeChild(Identifier const& id);
+		void insert(RunnableManager &child, unsigned int index);
+		void remove(Identifier const& id);
 
 	};
 

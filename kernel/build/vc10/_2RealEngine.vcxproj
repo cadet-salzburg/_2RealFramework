@@ -32,6 +32,8 @@
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />
     <ClCompile Include="..\..\src\_2RealService.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
@@ -79,6 +81,8 @@
     <ClInclude Include="..\..\src\_2RealPluginPool.h" />
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableManager.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
     <ClInclude Include="..\..\src\_2RealSequence.h" />
     <ClInclude Include="..\..\src\_2RealService.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />

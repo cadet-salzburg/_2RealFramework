@@ -34,6 +34,7 @@ namespace _2Real
 	class SetupParameter;
 	class EngineData;
 	class SystemGraph;
+	class Runnable;
 	class Service;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
@@ -61,7 +62,7 @@ namespace _2Real
 		bool							canExportService(std::string const& serviceName) const;
 		EngineData const&				getParameterValue(std::string const& setupName) const;
 		void							setParameterValue(std::string const& setupName, Data const& data);
-		const Identifier				createService(std::string const& idName, std::string const& serviceName);
+		Runnable &						createService(std::string const& idName, std::string const& serviceName);
 
 	private:
 

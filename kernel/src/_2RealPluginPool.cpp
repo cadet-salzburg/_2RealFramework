@@ -118,7 +118,7 @@ namespace _2Real
 		return getPlugin(id).getInfoString();
 	}
 
-	const Identifier PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
+	Runnable & PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		return getPlugin(id).createService(name, service);
 	}

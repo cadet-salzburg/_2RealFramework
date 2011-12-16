@@ -66,8 +66,8 @@ namespace _2Real
 		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
 		void				setUpdateRate(Identifier const& id, float updatesPerSecond);
 		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);
-		void				insertChild(Runnable &runnable, unsigned int index);
-		void				removeChild(Identifier const& runnableId);
+		void				insert(RunnableManager &runnable, unsigned int index);
+		void				remove(Identifier const& runnableId);
 		void				handleException(Runnable &runnable, Exception &exception);
 		void				registerExceptionCallback(ExceptionCallback callback);
 		void				unregisterExceptionCallback(ExceptionCallback callback);

@@ -17,7 +17,8 @@
 */
 
 #include "_2RealSynchronization.h"
-#include "_2RealSystemGraph.h"
+//#include "_2RealSystemGraph.h" -> include just because of the exception handler?
+#include "_2RealRunnableManager.h"
 
 namespace _2Real
 {
@@ -31,75 +32,64 @@ namespace _2Real
 	{
 	}
 
-	bool Synchronization::checkForSetup()
-	{
-		return true;
-	}
-
-	bool Synchronization::checkForUpdate()
-	{
-		return true;
-	}
-
 	void Synchronization::setup()
 	{
-		//?
 	}
 
 	void Synchronization::run()
 	{
-		while (m_Run || m_RunOnce)
-		{
-			try
-			{
-				Runnable::updateTimer();
+		//while (m_Run || m_RunOnce)
+		//{
+		//	try
+		//	{
+		//		Runnable::updateTimer();
 
-				m_System.runOnce(m_Children);
+		//		m_System.runOnce(m_Children);
 
-				if (m_RunOnce)
-				{
-					m_RunOnce = false;
-				}
-				else
-				{
-					Runnable::suspend();
-				}
+		//		if (m_RunOnce)
+		//		{
+		//			m_RunOnce = false;
+		//		}
+		//		else
+		//		{
+		//			Runnable::suspend();
+		//		}
 
-			}
-			catch (_2Real::Exception &e)
-			{
-				m_Run = false;
-				m_RunOnce = false;
+		//	}
+		//	catch (_2Real::Exception &e)
+		//	{
+		//		m_Run = false;
+		//		m_RunOnce = false;
 
-				m_System.handleException(*this, e);
-			}
-		}
+		//		m_System.handleException(*this, e);
+		//	}
+		//}
 	}
 
 	void Synchronization::update()
 	{
-		try
-		{
-			m_System.runOnce(m_Children);
-		}
-		catch (_2Real::Exception &e)
-		{
-			m_Run = false;
-			m_RunOnce = false;
+		//try
+		//{
+		//	m_System.runOnce(m_Children);
+		//}
+		//catch (_2Real::Exception &e)
+		//{
+		//	m_Run = false;
+		//	m_RunOnce = false;
 
-			m_System.handleException(*this, e);
-		}
+		//	m_System.handleException(*this, e);
+		//}
 	}
 
 	void Synchronization::shutdown()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			(*it)->shutdown();
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	(*it)->shutdown();
+		//}
 	}
 
-	void Synchronization::removeChild(Identifier const& childId)
+	void Synchronization::remove(Identifier const& childId)
 	{
 		//Runnable &child = getChild(childId);
 		//Runnable &root = child.root();
@@ -111,7 +101,7 @@ namespace _2Real
 		//m_System.insertChild(child, 0);
 	}
 
-	void Synchronization::insertChild(Runnable &child, unsigned int index)
+	void Synchronization::insert(RunnableManager &child, unsigned int index)
 	{
 	}
 

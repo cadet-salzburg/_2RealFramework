@@ -28,8 +28,9 @@ namespace _2Real
 	*	graph = pretty much something that can contain runnables
 	*/
 
-	class Runnable;
-	typedef std::list< Runnable * >	RunnableList;
+	class RunnableManager;
+
+	typedef std::list< RunnableManager * >	RunnableList;
 
 	class Identifier;
 
@@ -46,13 +47,13 @@ namespace _2Real
 		bool isContained(Identifier const& runnableId) const;
 		bool isChild(Identifier const& runnableId) const;
 
-		Runnable & getChild(Identifier const& childId);
-		Runnable const& getChild(Identifier const& childId) const;
-		Runnable & getContained(Identifier const& runnableId);
-		Runnable const& getContained(Identifier const& runnableId) const;
+		RunnableManager & getChild(Identifier const& childId);
+		RunnableManager const& getChild(Identifier const& childId) const;
+		RunnableManager & getContained(Identifier const& runnableId);
+		RunnableManager const& getContained(Identifier const& runnableId) const;
 
-		virtual void insertChild(Runnable &child, unsigned int position) = 0;
-		virtual void removeChild(Identifier const& childId) = 0;
+		virtual void insert(RunnableManager &child, unsigned int position) = 0;
+		virtual void remove(Identifier const& childId) = 0;
 
 	protected:
 
