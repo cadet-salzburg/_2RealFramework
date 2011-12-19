@@ -27,13 +27,17 @@ namespace _2Real
 {
 
 	RunnableManager::RunnableManager(Runnable &runnable) :
-		m_Runnable(runnable)
+		m_Runnable(&runnable),
+		m_CurrentState(NULL),
+		m_Thread(NULL),
+		m_RunnableStates()
 	{
 		m_CurrentState = new RunnableStateCreated(*this);
 
 		m_RunnableStates[STATE_CREATED] = m_CurrentState;
 		m_RunnableStates[STATE_SETUP] = new RunnableStateSetUp(*this);
-		m_RunnableStates[STATE_STARTED] = new RunnableStateStarted(*this);
+		m_RunnableStates[STATE_RUNNING] = new RunnableStateRunning(*this);
+		m_RunnableStates[STATE_UPDATING] = new RunnableStateUpdating(*this);
 		m_RunnableStates[STATE_SHUTDOWN] = new RunnableStateShutDown(*this);
 		m_RunnableStates[STATE_ERROR] = new RunnableStateHalted(*this);
 	}
@@ -44,52 +48,77 @@ namespace _2Real
 		{
 			delete it->second;
 		}
+
+		delete m_Runnable;
+	}
+
+	bool RunnableManager::isRunning() const
+	{
+		return m_CurrentState == &getState(STATE_RUNNING);
+	}
+
+	bool RunnableManager::isUpdating() const
+	{
+		return m_CurrentState == &getState(STATE_UPDATING);
+	}
+
+	bool RunnableManager::isSetUp() const
+	{
+		return m_CurrentState == &getState(STATE_SETUP);
 	}
 
 	RunnableState & RunnableManager::getState(std::string const& stateName) const
 	{
 		StateTable::const_iterator it = m_RunnableStates.find(stateName);
-
-		if (it == m_RunnableStates.end())
-		{
-		}
-
 		return *it->second;
 	}
 
 	Identifier const& RunnableManager::getManagedId() const
 	{
-		return m_Runnable.identifier();
-	}
-
-	void RunnableManager::start(PooledThread &thread, bool runOnce)
-	{
-		m_CurrentState->start(m_Runnable, thread, runOnce);
-	}
-
-	void RunnableManager::stop()
-	{
-		m_CurrentState->stop(m_Runnable);
+		return m_Runnable->identifier();
 	}
 
 	void RunnableManager::setup()
 	{
-		m_CurrentState->setup(m_Runnable);
+		m_CurrentState = &m_CurrentState->setup(*m_Runnable);
+	}
+
+	void RunnableManager::start(PooledThread &thread)
+	{
+		m_CurrentState = &m_CurrentState->start(*m_Runnable, thread);
+		m_Thread = &thread;
+	}
+
+	void RunnableManager::update(PooledThread &thread)
+	{
+		m_CurrentState = &m_CurrentState->update(*m_Runnable, thread);
+		m_Thread = &thread;
+	}
+
+	void RunnableManager::stop()
+	{
+		if (m_Thread)
+		{
+			m_CurrentState = &m_CurrentState->stop(*m_Runnable, *m_Thread);
+		}
+	}
+
+	void RunnableManager::wait()
+	{
+		if (m_Thread)
+		{
+			m_CurrentState = &m_CurrentState->wait(*m_Runnable, *m_Thread);
+		}
 	}
 
 	void RunnableManager::shutdown()
 	{
-		m_CurrentState->shutdown(m_Runnable);
-	}
-
-	void RunnableManager::update()
-	{
-		m_CurrentState->update(m_Runnable);
+		m_CurrentState = &m_CurrentState->shutdown(*m_Runnable);
 	}
 
 	void RunnableManager::handleException()
 	{
-		m_CurrentState->handleException(m_Runnable);
+		m_CurrentState = &m_CurrentState->handleException(*m_Runnable);
 	}
 
 }

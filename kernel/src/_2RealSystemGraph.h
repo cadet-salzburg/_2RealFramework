@@ -51,24 +51,24 @@ namespace _2Real
 
 		void				shutdown();
 
+		const Identifier	loadPlugin(std::string const& idName, std::string const& classname);
+		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
+		const Identifier	createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		const Identifier	createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+
 		void				stopAll();
 		void				startAll();
 		void				startChild(Identifier const& runnableId);
 		void				stopChild(Identifier const& runnableId);
 
-		void				runOnce(RunnableList const& runnables);
-
-		void				updateChild(Identifier const& runnableId, unsigned int count);
-		const Identifier	install(std::string const& idName, std::string const& classname);
-		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
-		bool				contains(Identifier const& id) const;
-		void				setup(Identifier const& setupAbleId);
+		void				setUp(Identifier const& setupAbleId);
 		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
 		void				setUpdateRate(Identifier const& id, float updatesPerSecond);
 		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);
-		void				insert(RunnableManager &runnable, unsigned int index);
-		void				remove(Identifier const& runnableId);
-		void				handleException(Runnable &runnable, Exception &exception);
+
+		void				add(Identifier const& runnable, Identifier const& parent, unsigned int index);
+		void				append(Identifier const& runnable, Identifier const& parent);
+
 		void				registerExceptionCallback(ExceptionCallback callback);
 		void				unregisterExceptionCallback(ExceptionCallback callback);
 		void				registerExceptionListener(IExceptionListener &listener);
@@ -78,11 +78,17 @@ namespace _2Real
 		void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 
+		PooledThread&		getFreeThread();
+		void				handleException(Runnable &runnable, Exception &exception);
+
 		bool				isLoggingEnabled() const;
 		void				setInstallDirectory(std::string const& directory);
 		void				setLogfile(std::string const& file);
 		std::ofstream &		getLogstream();
 		const std::string	getInfoString(Identifier const& id) const;
+
+		void				insertChild(RunnableManager &child, unsigned int position);
+		void				removeChild(Identifier const& childId);
 
 	private:
 
@@ -96,6 +102,11 @@ namespace _2Real
 		std::ofstream		m_Logstream;
 
 	};
+
+	inline PooledThread& SystemGraph::getFreeThread()
+	{
+		return m_Threads.getFreeThread();
+	}
 
 	inline bool SystemGraph::isLoggingEnabled() const
 	{

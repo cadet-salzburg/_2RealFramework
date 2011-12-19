@@ -35,9 +35,10 @@ namespace _2Real
 		RunnableState(RunnableManager const& manager, std::string const& description);
 		std::string const& getDescription();
 		virtual ~RunnableState();
-		virtual RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce) = 0;
-		virtual RunnableState & update(Runnable &runnable) = 0;
-		virtual RunnableState & stop(Runnable &runnable) = 0;
+		virtual RunnableState & start(Runnable &runnable, PooledThread &thread) = 0;
+		virtual RunnableState & update(Runnable &runnable, PooledThread &thread) = 0;
+		virtual RunnableState & stop(Runnable &runnable, PooledThread &thread) = 0;
+		virtual RunnableState & wait(Runnable &runnable, PooledThread &thread) = 0;
 		virtual RunnableState & setup(Runnable &runnable) = 0;
 		virtual RunnableState & shutdown(Runnable &runnable) = 0;
 		virtual RunnableState & handleException(Runnable &runnable) = 0;
@@ -60,9 +61,10 @@ namespace _2Real
 	public:
 
 		RunnableStateCreated(RunnableManager const& manager);
-		RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce);
-		RunnableState & update(Runnable &runnable);
-		RunnableState & stop(Runnable &runnable);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
 		RunnableState & setup(Runnable &runnable);
 		RunnableState & shutdown(Runnable &runnable);
 		RunnableState & handleException(Runnable &runnable);
@@ -75,39 +77,42 @@ namespace _2Real
 	public:
 
 		RunnableStateSetUp(RunnableManager const& manager);
-		RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce);
-		RunnableState & update(Runnable &runnable);
-		RunnableState & stop(Runnable &runnable);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
 		RunnableState & setup(Runnable &runnable);
 		RunnableState & shutdown(Runnable &runnable);
 		RunnableState & handleException(Runnable &runnable);
 
 	};
 
-	class RunnableStateStarted : public RunnableState
+	class RunnableStateRunning : public RunnableState
 	{
 
 	public:
 
-		RunnableStateStarted(RunnableManager const& manager);
-		RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce);
-		RunnableState & update(Runnable &runnable);
-		RunnableState & stop(Runnable &runnable);
+		RunnableStateRunning(RunnableManager const& manager);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
 		RunnableState & setup(Runnable &runnable);
 		RunnableState & shutdown(Runnable &runnable);
 		RunnableState & handleException(Runnable &runnable);
 
 	};
 
-	class RunnableStateHalted : public RunnableState
+	class RunnableStateUpdating : public RunnableState
 	{
 
 	public:
 
-		RunnableStateHalted(RunnableManager const& manager);
-		RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce);
-		RunnableState & update(Runnable &runnable);
-		RunnableState & stop(Runnable &runnable);
+		RunnableStateUpdating(RunnableManager const& manager);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
 		RunnableState & setup(Runnable &runnable);
 		RunnableState & shutdown(Runnable &runnable);
 		RunnableState & handleException(Runnable &runnable);
@@ -120,9 +125,26 @@ namespace _2Real
 	public:
 
 		RunnableStateShutDown(RunnableManager const& manager);
-		RunnableState & start(Runnable &runnable, PooledThread &thread, bool runOnce);
-		RunnableState & update(Runnable &runnable);
-		RunnableState & stop(Runnable &runnable);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
+		RunnableState & setup(Runnable &runnable);
+		RunnableState & shutdown(Runnable &runnable);
+		RunnableState & handleException(Runnable &runnable);
+
+	};
+
+	class RunnableStateHalted : public RunnableState
+	{
+
+	public:
+
+		RunnableStateHalted(RunnableManager const& manager);
+		RunnableState & start(Runnable &runnable, PooledThread &thread);
+		RunnableState & update(Runnable &runnable, PooledThread &thread);
+		RunnableState & stop(Runnable &runnable, PooledThread &thread);
+		RunnableState & wait(Runnable &runnable, PooledThread &thread);
 		RunnableState & setup(Runnable &runnable);
 		RunnableState & shutdown(Runnable &runnable);
 		RunnableState & handleException(Runnable &runnable);

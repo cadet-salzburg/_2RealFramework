@@ -21,14 +21,11 @@
 
 #include <list>
 
-#include "Poco/Mutex.h"
-
 namespace _2Real
 {
 
-	class Runnable;
 	class PooledThread;
-	class Identifier;
+	typedef std::list< PooledThread * >		ThreadList;
 
 	class ThreadPool
 	{
@@ -38,35 +35,19 @@ namespace _2Real
 		ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name);
 		~ThreadPool();
 
-		void start(Runnable &target, bool runOnce);
-		void stopAll();
 		void joinAll();
-
-		//stops the runnable & joins the thread
-		void stop(Identifier const& runnable);
-		//joins thread, without stopping first
-		void join(Identifier const& runnable);
-
-		bool isRunning(Identifier const& runnable);
-		PooledThread* find(Identifier const& runnable);
-
-		//shutdown function
 		void clearThreads();
+
+		PooledThread & getFreeThread();
 
 	private:
 
-		PooledThread & getFreeThread();
-		void housekeep();
-
-		typedef std::list< PooledThread * >	ThreadList;
-		ThreadList							m_Threads;
 		std::string							m_Name;
+		ThreadList							m_Threads;
 		unsigned int						m_Capacity;
 		unsigned int						m_IdleTime;
 		unsigned int						m_StackSize;
-		mutable Poco::FastMutex				m_Mutex;
 		unsigned int						m_Age;
-		bool								m_IsUpdated;
 
 	};
 

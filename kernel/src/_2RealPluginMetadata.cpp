@@ -37,7 +37,7 @@ namespace _2Real
 		m_Version(0, 0, 0),
 		m_Services(),
 		m_SetupParameters(),
-		m_Typetable(Engine::instance().types())
+		m_Typetable(Engine::instance().getTypes())
 	{
 	}
 

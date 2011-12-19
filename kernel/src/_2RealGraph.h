@@ -52,8 +52,8 @@ namespace _2Real
 		RunnableManager & getContained(Identifier const& runnableId);
 		RunnableManager const& getContained(Identifier const& runnableId) const;
 
-		virtual void insert(RunnableManager &child, unsigned int position) = 0;
-		virtual void remove(Identifier const& childId) = 0;
+		virtual void insertChild(RunnableManager &child, unsigned int position) = 0;
+		virtual void removeChild(Identifier const& childId) = 0;
 
 	protected:
 

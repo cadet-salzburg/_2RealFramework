@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,26 +17,45 @@
 	limitations under the License.
 */
 
-#pragma once
-
 #include "_2RealRunnableGraph.h"
+#include "_2RealRunnableManager.h"
 
 namespace _2Real
 {
-
-	class SystemGraph;
-
-	class Sequence : public RunnableGraph
+	RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
+		Runnable(id, system),
+		Graph()
 	{
+	}
 
-	public:
+	RunnableGraph::~RunnableGraph()
+	{
+		if (childCount() > 0)
+		{
+			shutdown();
+		}
+	}
 
-		Sequence(Identifier const& id, SystemGraph &system);
+	void RunnableGraph::setup()
+	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			(*it)->setup();
+		}
+	}
 
-		void run();
-		void insertChild(RunnableManager &child, unsigned int index);
-		void removeChild(Identifier const& id);
+	void RunnableGraph::shutdown()
+	{
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			(*it)->shutdown();
+		}
 
-	};
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			delete *it;
+		}
 
+		m_Children.clear();
+	}
 }

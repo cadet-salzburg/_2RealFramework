@@ -23,7 +23,8 @@
 
 #define STATE_CREATED	"created"
 #define STATE_SETUP		"set up"
-#define STATE_STARTED	"started"
+#define STATE_RUNNING	"running"
+#define STATE_UPDATING	"updating"
 #define STATE_SHUTDOWN	"shut down"
 #define STATE_ERROR		"halted"
 
@@ -49,24 +50,30 @@ namespace _2Real
 		Runnable & getManagedRunnable() const;
 		Identifier const& getManagedId() const;
 		
-		void stop();
-		void start(PooledThread &thread, bool runOnce);
 		void setup();
+		void start(PooledThread &thread);
+		void update(PooledThread &thread);
+		void stop();
+		void wait();
 		void shutdown();
 		void handleException();
-		void update();
+
+		bool isUpdating() const;
+		bool isRunning() const;
+		bool isSetUp() const;
 
 	private:
 
-		Runnable									&m_Runnable;
+		Runnable									*m_Runnable;
 		StateTable									m_RunnableStates;
 		RunnableState								*m_CurrentState;
+		PooledThread								*m_Thread;
 
 	};
 
 	inline Runnable& RunnableManager::getManagedRunnable() const
 	{
-		return m_Runnable;
+		return *m_Runnable;
 	}
 
 }

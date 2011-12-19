@@ -31,15 +31,10 @@ namespace _2Real
 	public:
 
 		Synchronization(Identifier const& id, SystemGraph &system);
-		~Synchronization();
 
-		void setup();
 		void run();
-		void update();
-		void shutdown();
-
-		void insert(RunnableManager &child, unsigned int index);
-		void remove(Identifier const& id);
+		void insertChild(RunnableManager &child, unsigned int index);
+		void removeChild(Identifier const& id);
 
 	};
 

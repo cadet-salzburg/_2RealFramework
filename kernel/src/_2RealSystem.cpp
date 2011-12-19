@@ -42,7 +42,7 @@ namespace _2Real
 		m_Engine.destroySystem(m_Id);
 	}
 
-	void System::destroy()
+	void System::shutdown()
 	{
 		m_Engine.destroySystem(m_Id);
 	}
@@ -57,9 +57,9 @@ namespace _2Real
 		m_Engine.setSystemDirectory(directory, m_Id);
 	}
 
-	const Identifier System::load(std::string const& name, std::string const& classname)
+	const Identifier System::loadPlugin(std::string const& name, std::string const& classname)
 	{
-		return m_Engine.load(name, classname, m_Id);
+		return m_Engine.loadPlugin(name, classname, m_Id);
 	}
 
 	void System::setup(Identifier const& id)
@@ -87,65 +87,15 @@ namespace _2Real
 		m_Engine.setValue(id, param, value, m_Id);
 	}
 
-	//Identifiers System::getInputSlots(Identifier const& _id)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->getInputSlots(_id, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
+	{
+		return m_Engine.createSequence(name, idA, idB, m_Id);
+	}
 
-	//Identifiers System::getOutputSlots(Identifier const& _id)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->getOutputSlots(_id, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//const Identifier System::createSequence(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->createSequence(_name, _idA, _idB, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//const Identifier System::createSynchronization(std::string const& _name, Identifier const& _idA, Identifier const& _idB)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->createSynchronization(_name, _idA, _idB, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//void System::link(Identifier const& _in, Identifier const& _out)
-	//{
-	//	try
-	//	{
-	//		m_Engine->link(_in, _out, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
+	{
+		return m_Engine.createSynchronization(name, idA, idB, m_Id);
+	}
 
 	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
@@ -192,30 +142,6 @@ namespace _2Real
 		m_Engine.unregisterFromNewData(service, name, listener, m_Id);
 	}
 
-	//DataHandle System::getDataHandle(Identifier const& _service, std::string const& _out)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->createDataHandle(_service, _out, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
-	//Identifiers System::getChildren(Identifier const& _id)
-	//{
-	//	try
-	//	{
-	//		return m_Engine->getChildren(_id, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
-
 	void System::start(Identifier const& id)
 	{
 		m_Engine.start(id, m_Id);
@@ -236,39 +162,18 @@ namespace _2Real
 		m_Engine.stopAll(m_Id);
 	}
 
-	//void System::destroy(Identifier const& _id)
-	//{
-	//	try
-	//	{
-	//		m_Engine->destroy(_id, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
+	{
+		m_Engine.add(runnable, parent, index, m_Id);
+	}
 
-	//void System::insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src)
-	//{
-	//	try
-	//	{
-	//		m_Engine->insert(_dst, _index, _src, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::append(Identifier const& runnable, Identifier const& parent)
+	{
+		m_Engine.append(runnable, parent, m_Id);
+	}
 
-	//void System::append(Identifier const& _dst, Identifier const& _src)
-	//{
-	//	try
-	//	{
-	//		m_Engine->append(_dst, _src, *m_Id);
-	//	}
-	//	catch (Exception &e)
-	//	{
-	//		throw e;
-	//	}
-	//}
+	void System::destroy(Identifier const& _id)
+	{
+		//m_Engine->destroy(_id, *m_Id);
+	}
 }

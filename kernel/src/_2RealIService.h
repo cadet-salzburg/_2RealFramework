@@ -44,7 +44,7 @@ namespace _2Real
 		*						to the framework that this service is kaputt
 		*	@throw				SetupFailedException: something went wrong but setup could succeed later (typical: some setup param was not set)
 		*/
-		virtual bool setup(ServiceContext &context) = 0;
+		virtual void setup(ServiceContext &context) = 0;
 
 		/**
 		*	update function

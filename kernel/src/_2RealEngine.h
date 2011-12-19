@@ -50,19 +50,24 @@ namespace _2Real
 
 		static Engine & instance();
 
-		Typetable const&		types() const;
-		Timer const&			timer() const;
-		//StringMap const&		getAllowedTypes() const;
+		Typetable const&		getTypes() const;
+		Timer const&			getTimer() const;
 		long					getTimestamp() const;
 
-		const Identifier		createSystem(std::string const& name);
-		void					destroySystem(Identifier const& systemId);
+		const Identifier		createSystem(std::string const& idName);
+		const Identifier		loadPlugin(std::string const& idName, std::string const& className, Identifier const& system);
+		const Identifier		createService(std::string const& idName, Identifier const& plugin, std::string const& serviceName, Identifier const& system);
+		const Identifier		createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
+		const Identifier		createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
+		
+		//void					destroy(Identifier const& id, Identifier const& systemId);
+		void					destroySystem(Identifier const& system);
+
 		void					setSystemLogfile(std::string const& file, Identifier const& systemId);
 		void					setSystemDirectory(std::string const& directory, Identifier const& systemId);
-		//void					destroy(Identifier const& id, Identifier const& systemId);
-		const Identifier		load(std::string const& name, std::string const& classname, Identifier const& systemId);
+
 		const std::string		getInfo(Identifier const& plugin, Identifier const& systemId) const;
-		const Identifier		createService(std::string const& name, Identifier const& plugin, std::string const& service, Identifier const& systemId);
+		
 		void					setup(Identifier const& setupAble, Identifier const& systemId);
 		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
 		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
@@ -71,7 +76,6 @@ namespace _2Real
 		void					startAll(Identifier const& systemId);
 		void					stop(Identifier const& runnable, Identifier const& systemId);
 		void					stopAll(Identifier const& systemId);
-		//void					update(Identifier const& runnable, unsigned int count, Identifier const& systemId);
 		void					registerToNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
 		void					unregisterFromNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
 		void					registerToException(ExceptionCallback callback, Identifier const& systemId);
@@ -80,11 +84,9 @@ namespace _2Real
 		void					unregisterFromNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
 		void					registerToException(IExceptionListener &listener, Identifier const& systemId);
 		void					unregisterFromException(IExceptionListener &listener, Identifier const& systemId);
-		//const Identifier		createSequence(std::string const& name, Identifier const& runnableA, Identifier const& runnableB, Identifier const& systemId);
-		//const Identifier		createSynchronization(std::string const& name, Identifier const& runnableA, Identifier const& runnableB, Identifier const& systemId);
-		//void					insert(Identifier const& dst, unsigned int index, Identifier const& runnable, Identifier const& systemId);
-		//void					append(Identifier const& dst, Identifier const& runnable, Identifier const& systemId);
-		//void					link(Identifier const& in, Identifier const& out, Identifier const& systemId);
+
+		void					add(Identifier const& runnable, Identifier const& parent, unsigned int index, Identifier const& system);
+		void					append(Identifier const& runnable, Identifier const& parent, Identifier const& system);
 
 	private:
 
@@ -101,20 +103,15 @@ namespace _2Real
 
 	};
 
-	inline Typetable const& Engine::types() const
+	inline Typetable const& Engine::getTypes() const
 	{
 		return m_Types;
 	}
 
-	inline Timer const& Engine::timer() const
+	inline Timer const& Engine::getTimer() const
 	{
 		return m_Timer;
 	}
-
-	//inline StringMap const& Engine::getAllowedTypes() const
-	//{
-	//	return m_Types.getLookupTable();
-	//}
 
 	inline long Engine::getTimestamp() const
 	{

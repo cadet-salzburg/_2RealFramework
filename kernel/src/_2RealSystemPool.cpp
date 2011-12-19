@@ -18,18 +18,15 @@
 */
 
 #include "_2RealSystemPool.h"
-#include "_2RealEngine.h"
 #include "_2RealSystemGraph.h"
-#include "_2RealTypetable.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-	SystemPool::SystemPool(Engine const& engine) :
-		m_Engine(engine),	//do not touch anywhere else in ctor
-		m_Systems()
+	SystemPool::SystemPool() :
+		m_SystemGraphs()
 	{
 	}
 
@@ -37,159 +34,87 @@ namespace _2Real
 	{
 	}
 
-	void SystemPool::clearSystems()
+	void SystemPool::clearSystemGraphs()
 	{
 		std::ostringstream msg;
 		bool error = false;
-
-		for (SystemGraphTable::iterator it = m_Systems.begin(); it != m_Systems.end(); ++it)
+		for (SystemGraphTable::iterator it = m_SystemGraphs.begin(); it != m_SystemGraphs.end(); ++it)
 		{
 			Identifier id = it->first;
-
 			try
 			{
 				it->second->shutdown();
 			}
+			catch (_2Real::Exception &e)
+			{
+				error = true;
+				msg << "exception on production graph shutdown: " << id.name() << " " << e.message() << std::endl;
+			}
 			catch (std::exception &e)
 			{
 				error = true;
-				msg << "exception on production graph shutdown: " << id << " " << e.what() << std::endl;
+				msg << "exception on production graph shutdown: " << id.name() << " " << e.what() << std::endl;
 			}
-
 			delete it->second;
 		}
-
-		m_Systems.clear();
-
+		m_SystemGraphs.clear();
 		if (error)
 		{
 			throw Exception(msg.str());
 		}
 	}
 
-	const Identifier SystemPool::createSystemGraph(std::string const& name)
+	const Identifier SystemPool::createSystemGraph(std::string const& idName)
 	{
-		const Identifier id = Entity::createIdentifier(name, "system");
+		const Identifier id = Entity::createIdentifier(idName, "system");
 		SystemGraph *graph = new SystemGraph(id);
-		m_Systems.insert(NamedSystemGraph(id, graph));
+		m_SystemGraphs.insert(NamedSystemGraph(id, graph));
 		return id;
 	}
 
-	void SystemPool::destroySystemGraph(Identifier const& id)
+	void SystemPool::destroySystemGraph(Identifier const& system)
 	{
-		SystemGraphTable::iterator it = m_Systems.find(id);
+		SystemGraphTable::iterator it = m_SystemGraphs.find(system);
 
-		if (it != m_Systems.end())
-		{
-			SystemGraph *nirvana = it->second;
-			nirvana->shutdown();
-			delete nirvana;
-			m_Systems.erase(it);
-		}
-	}
-
-	bool SystemPool::contains(Identifier const& id) const
-	{
-		return m_Systems.find(id) != m_Systems.end();
-	}
-
-	SystemGraph & SystemPool::getSystemGraph(Identifier const& id)
-	{
-		SystemGraphTable::iterator it = m_Systems.find(id);
-
-		if (it == m_Systems.end())
+		if (it == m_SystemGraphs.end())
 		{
 			std::ostringstream msg;
-			msg << "internal error: system " << id.name() << " not found in systems";
-			throw _2Real::Exception(msg.str());
+			msg << "system: " << system.name() << "does not exist";
+			throw NotFoundException(msg.str());
+		}
+
+		SystemGraph *nirvana = it->second;
+		nirvana->shutdown();
+		delete nirvana;
+		m_SystemGraphs.erase(it);
+	}
+
+	SystemGraph & SystemPool::getSystemGraph(Identifier const& system)
+	{
+		SystemGraphTable::iterator it = m_SystemGraphs.find(system);
+
+		if (it == m_SystemGraphs.end())
+		{
+			std::ostringstream msg;
+			msg << "system: " << system.name() << "does not exist";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
 	}
 
-	SystemGraph const& SystemPool::getSystemGraph(Identifier const& id) const
+	SystemGraph const& SystemPool::getSystemGraph(Identifier const& system) const
 	{
-		SystemGraphTable::const_iterator it = m_Systems.find(id);
+		SystemGraphTable::const_iterator it = m_SystemGraphs.find(system);
 
-		if (it == m_Systems.end())
+		if (it == m_SystemGraphs.end())
 		{
 			std::ostringstream msg;
-			msg << "internal error: system " << id.name() << " not found in systems";
-			throw _2Real::Exception(msg.str());
+			msg << "system: " << system.name() << "does not exist";
+			throw NotFoundException(msg.str());
 		}
 
 		return *(it->second);
 	}
 
-	//void SystemPool::destroyRunnable(unsigned int const& _id, unsigned int const& _top)
-	//{
-	//	//Container *nirvana = getSystem(_top);
-	//	//AbstractContainer *container = nirvana->get(_id);
-	//	//container->shutdown();
-	//	//m_Engine.entities().destroy(container);
-	//}
-
-	//const Identifier SystemPool::createSequence(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
-	//{
-	//	//Container *nirvana = getSystem(_top);
-	//	//AbstractContainer *a = nirvana->get(_a);
-	//	//AbstractContainer *b = nirvana->get(_b);
-
-	//	//Container *seq = m_Engine.entities().createSequence(_name);
-	//	//	
-	//	////move sequence into nirvana
-	//	//nirvana->add(seq, 0);
-
-	//	////add containers to newly created sequence
-	//	//seq->add(b, 0);
-	//	//seq->add(a, 0);
-
-	//	//return seq->id();
-	//	return Entity::createIdentifier(_name, "sequence");
-	//}
-
-	//const Identifier SystemPool::createSynchronization(std::string const& _name, unsigned int const& _a, unsigned int const& _b, unsigned int const& _top)
-	//{
-	//	//Container *nirvana = getSystem(_top);
-	//	//AbstractContainer *a = nirvana->get(_a);
-	//	//AbstractContainer *b = nirvana->get(_b);
-
-	//	//Container *sync =m_Engine.entities().createSynchronization(_name);
-
-	//	////move sync into nirvana
-	//	//nirvana->add(sync, 0);
-
-	//	////add to containers to newly created synchronization
-	//	//sync->add(a, 0);
-	//	//sync->add(b, 1);
-
-	//	//return sync->id();
-	//	return Entity::createIdentifier(_name, "synchronization");
-	//}
-
-	//Runnable *const SystemPool::belongsToSystem(Identifier const& system, Identifier const& runnable) const
-	//{
-	//	SystemGraph const* nirvana = getSystemGraph(system);
-	//	std::list< Runnable * > children = nirvana->children();
-
-	//	for (std::list< Runnable * >::const_iterator it = children.begin(); it != children.end(); it++)
-	//	{
-	//		if ((*it)->id() == runnable.id())
-	//		{
-	//			return *it;
-	//		}
-	//		// ~~has parameters
-	//		else if (!((*it)->type() == "service"))
-	//		{
-	//			RunnableGraph *graph = static_cast< RunnableGraph * >(*it);
-	//			Runnable *child = NULL;
-	//			if ((child = graph->findChild(runnable)))
-	//			{
-	//				return child;
-	//			}
-	//		}
-	//	}
-
-	//	return NULL;
-	//}
 }

@@ -52,13 +52,19 @@ namespace _2Real
 
 	void Runnable::stop()
 	{
-		m_RunOnce = false;
-		m_Run = false;
+		if (m_Father == &m_System)
+		{
+			m_RunOnce = false;
+			m_Run = false;
+		}
 	}
 
 	void Runnable::handleException()
 	{
-		stop();
+		if (m_Father == &m_System)
+		{
+			stop();
+		}
 	}
 
 	Runnable & Runnable::root()

@@ -25,6 +25,8 @@
 #include "_2RealService.h"
 #include "_2RealData.h"
 #include "_2RealRunnableManager.h"
+#include "_2RealSequence.h"
+#include "_2RealSynchronization.h"
 
 #include <sstream>
 
@@ -78,7 +80,6 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			//for sequences & synchronizations, this calls stop on the children
 			(*it)->stop();
 		}
 
@@ -87,12 +88,16 @@ namespace _2Real
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			//performs shutdown recursively
 			(*it)->shutdown();
+		}
+
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
 			delete *it;
 		}
 
 		m_Children.clear();
+
 		//uninstalls all plugins
 		m_Plugins.clearPlugins();
 
@@ -150,67 +155,95 @@ namespace _2Real
 		service.unregisterFromNewData(outName, listener);
 	}
 
-	void SystemGraph::insert(RunnableManager &child, unsigned int index)
+	void SystemGraph::insertChild(RunnableManager &child, unsigned int index)
 	{
-		//m_Children.push_back(&child);
-		//child.setFather(*this);	//runnable function so pass it to the manager
+		RunnableList::iterator it = iteratorPosition(index);
+		m_Children.insert(it, &child);
+		child.getManagedRunnable().setFather(*this);
 	}
 
-	void SystemGraph::remove(Identifier const& id)
+	void SystemGraph::removeChild(Identifier const& id)
 	{
 		RunnableList::iterator it = iteratorId(id);
 		m_Children.erase(it);
 	}
 
+	void SystemGraph::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
+	{
+		if (parent == identifier())
+		{
+			RunnableManager &runnableMgr = getContained(runnable);
+			Graph &oldParent = runnableMgr.getManagedRunnable().father();
+			oldParent.removeChild(runnable);
+			insertChild(runnableMgr, index);
+		}
+		else
+		{
+			RunnableManager &runnableMgr = getContained(runnable);
+			RunnableGraph &newParent = static_cast< RunnableGraph & >(getContained(parent).getManagedRunnable());
+			Graph &oldParent = getContained(runnable).getManagedRunnable().father();
+			oldParent.removeChild(runnable);
+			newParent.insertChild(runnableMgr, index);
+		}
+	}
+
+	void SystemGraph::append(Identifier const& runnable, Identifier const& parent)
+	{
+		if (parent == identifier())
+		{
+			RunnableManager &runnableMgr = getContained(runnable);
+			Graph &oldParent = runnableMgr.getManagedRunnable().father();
+			oldParent.removeChild(runnable);
+			insertChild(runnableMgr, childCount());
+		}
+		else
+		{
+			RunnableManager &runnableMgr = getContained(runnable);
+			RunnableGraph &newParent = static_cast< RunnableGraph & >(getContained(parent).getManagedRunnable());
+			Graph &oldParent = getContained(runnable).getManagedRunnable().father();
+			oldParent.removeChild(runnable);
+			newParent.insertChild(runnableMgr, newParent.childCount());
+		}
+	}
+
 	void SystemGraph::startAll()
 	{
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	Runnable &child = **it;
-		//	try
-		//	{
-		//		child.performStartCheck();
-		//		m_Threads.start(child, false);
-		//	}
-		//	catch (StartException &e)
-		//	{
-		//		m_Logstream << e.message() << std::endl;
-		//	}
-		//}
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			if (!(*it)->isRunning())
+			{
+				(*it)->start(m_Threads.getFreeThread());
+			}
+		}
 	}
 
 	void SystemGraph::stopAll()
 	{
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	m_Threads.stop((*it)->getManagedId());
-		//}
+		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		{
+			if ((*it)->isRunning())
+			{
+				(*it)->stop();
+			}
+		}
 	}
 
 	void SystemGraph::startChild(Identifier const& runnableId)
 	{
-		//Runnable &child = getChild(runnableId);
-		//child.performStartCheck();
-		//m_Threads.start(child, false);
+		RunnableManager &manager = getChild(runnableId);
+		if (!manager.isRunning())
+		{
+			manager.start(m_Threads.getFreeThread());
+		}
 	}
 
 	void SystemGraph::stopChild(Identifier const& runnableId)
 	{
-		//Runnable &child = getChild(runnableId);
-		//m_Threads.stop(runnableId);
-	}
-
-	void SystemGraph::runOnce(RunnableList const& runnables)
-	{
-		//for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
-		//{
-		//	m_Threads.start(**it, true);
-		//}
-
-		//for (RunnableList::const_iterator it = runnables.begin(); it != runnables.end(); ++it)
-		//{
-		//	m_Threads.join((*it)->identifier());
-		//}
+		RunnableManager &manager = getChild(runnableId);
+		if (manager.isRunning())
+		{
+			manager.stop();
+		}
 	}
 
 	void SystemGraph::handleException(Runnable &runnable, Exception &exception)
@@ -219,17 +252,12 @@ namespace _2Real
 		m_ExceptionHandler.handleException(exception, runnable.identifier());
 	}
 
-	const Identifier SystemGraph::install(std::string const& name, std::string const& classname)
+	const Identifier SystemGraph::loadPlugin(std::string const& name, std::string const& classname)
 	{
 		return m_Plugins.install(name, classname);
 	}
 
-	bool SystemGraph::contains(Identifier const& id) const
-	{
-		return (m_Plugins.contains(id) || Graph::isContained(id));
-	}
-
-	void SystemGraph::setup(Identifier const& id)
+	void SystemGraph::setUp(Identifier const& id)
 	{
 		if (id.isPlugin())
 		{
@@ -247,10 +275,26 @@ namespace _2Real
 	{
 		Runnable &runnable = m_Plugins.createService(name, id, service);
 		RunnableManager *manager = new RunnableManager(runnable);
-
 		m_Children.push_back(manager);
-
 		return runnable.identifier();
+	}
+
+	const Identifier SystemGraph::createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
+	{
+		const Identifier id = Entity::createIdentifier(idName, "sequence");
+		Sequence *seq = new Sequence(id, *this);
+		RunnableManager *manager = new RunnableManager(*seq);
+		m_Children.push_back(manager);
+		return id;
+	}
+
+	const Identifier SystemGraph::createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
+	{
+		const Identifier id = Entity::createIdentifier(idName, "synchronization");
+		Synchronization *sync = new Synchronization(id, *this);
+		RunnableManager *manager = new RunnableManager(*sync);
+		m_Children.push_back(manager);
+		return id;
 	}
 
 	void SystemGraph::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)

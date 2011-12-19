@@ -32,7 +32,7 @@ namespace _2Real
 
 	OutputSlot::OutputSlot(ParameterMetadata const& metadata) :
 		Parameter(metadata),
-		m_Timer(Engine::instance().timer())
+		m_Timer(Engine::instance().getTimer())
 	{
 		if (metadata.hasDefaultValue())
 		{
@@ -42,7 +42,7 @@ namespace _2Real
 		}
 		else
 		{
-			m_WriteData = Engine::instance().types().getInitialValueFromKey(metadata.getKeyword());
+			m_WriteData = Engine::instance().getTypes().getInitialValueFromKey(metadata.getKeyword());
 		}
 	}
 

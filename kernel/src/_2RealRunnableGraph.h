@@ -36,17 +36,9 @@ namespace _2Real
 
 		RunnableGraph(Identifier const& id, SystemGraph &system);
 		virtual ~RunnableGraph();
+		void setup();
+		void shutdown();
 
 	};
-
-	inline RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
-		Runnable(id, system),
-		Graph()
-	{
-	}
-
-	inline RunnableGraph::~RunnableGraph()
-	{
-	}
 
 }

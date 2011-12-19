@@ -18,21 +18,15 @@
 */
 
 #include "_2RealPooledThread.h"
-//#include "_2RealRunnable.h"
-//#include "_2RealException.h"
-//
+#include "_2RealRunnable.h"
+
 #include "Poco/ThreadLocal.h"
-//
-//#include <math.h>
-//#include <sstream>
-//#include <iostream>
 
 namespace _2Real
 {
 
 	PooledThread::PooledThread(unsigned int stackSize) :
 		m_IsIdle(true),
-		m_IdleTime(0),
 		m_Target(NULL),
 		m_Thread(""),
 		m_TargetReady(false),
@@ -40,7 +34,6 @@ namespace _2Real
 		m_Started(false)
 	{
 		m_Thread.setStackSize(stackSize);
-		m_IdleTime = std::time(NULL);
 	}
 
 	void PooledThread::start()
@@ -57,6 +50,19 @@ namespace _2Real
 		m_Thread.setPriority(priority);
 
 		m_Target = &target;
+		m_Target->start(false);
+		m_TargetReady.set();
+	}
+
+	void PooledThread::update(Poco::Thread::Priority const& priority, _2Real::Runnable &target)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Thread.setName(target.name());
+		m_Thread.setPriority(priority);
+
+		m_Target = &target;
+		m_Target->start(true);
 		m_TargetReady.set();
 	}
 
@@ -65,38 +71,7 @@ namespace _2Real
 		return m_IsIdle;
 	}
 
-	int PooledThread::idleTime() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		return (int) (time(NULL) - m_IdleTime);
-	}
-
-	void PooledThread::stop()
-	{
-		m_Mutex.lock();
-		_2Real::Runnable *target = m_Target;
-		m_Mutex.unlock();
-
-		if (target)
-		{
-			target->stop();
-		}
-	}
-
-	void PooledThread::stopAndJoin()
-	{
-		m_Mutex.lock();
-		_2Real::Runnable *target = m_Target;
-		m_Mutex.unlock();
-
-		if (target)
-		{
-			target->stop();
-			m_TargetCompleted.wait();
-		}
-	}
-
-	void PooledThread::join()
+	void PooledThread::wait()
 	{
 		m_Mutex.lock();
 		_2Real::Runnable *target = m_Target;
@@ -130,20 +105,6 @@ namespace _2Real
 		}
 	}
 
-	const Identifier PooledThread::identifier() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		if (!m_Target)
-		{
-			return Entity::NoEntity();
-		}
-		else
-		{
-			return m_Target->identifier();
-		}
-	}
-
 	void PooledThread::run()
 	{
 		m_Started.set();
@@ -159,7 +120,6 @@ namespace _2Real
 				
 				Poco::FastMutex::ScopedLock lock(m_Mutex);
 				m_Target = NULL;
-				m_IdleTime = time(NULL);
 				m_IsIdle = true;
 				
 				m_TargetCompleted.set();

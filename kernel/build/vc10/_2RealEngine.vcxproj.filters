@@ -66,9 +66,6 @@
     <ClCompile Include="..\..\src\_2RealSystemPool.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealRunnable.cpp">
-      <Filter>Service</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealParameter.cpp">
       <Filter>Parameters</Filter>
     </ClCompile>
@@ -78,6 +75,12 @@
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableGraph.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealRunnable.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -181,14 +184,14 @@
     <ClInclude Include="..\..\src\_2RealSystemPool.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealRunnable.h">
-      <Filter>Service</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealRunnableManager.h" />
     <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
+    <ClInclude Include="..\..\src\_2RealRunnable.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

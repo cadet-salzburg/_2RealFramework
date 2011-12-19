@@ -17,8 +17,9 @@
 */
 
 #include "_2RealSequence.h"
-//#include "_2RealSystemGraph.h" -> include just because of the exception handler?
 #include "_2RealRunnableManager.h"
+#include "_2RealSystemGraph.h"
+#include "_2RealPooledThread.h"
 
 namespace _2Real
 {
@@ -28,148 +29,47 @@ namespace _2Real
 	{
 	}
 
-	Sequence::~Sequence()
-	{
-	}
-
-	void Sequence::setup()
-	{
-	}
-
 	void Sequence::run()
 	{
-		//while (m_Run || m_RunOnce)
-		//{
-		//	try
-		//	{
-		//		Runnable::updateTimer();
+		while (m_Run || m_RunOnce)
+		{
+			try
+			{
+				Runnable::updateTimer();
 
-		//		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//		{
-		//			(*it)->update();
-		//		}
+				PooledThread &thread = m_System.getFreeThread();
+				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					(*it)->update(thread);
+					(*it)->wait();
+				}
 
-		//		if (m_RunOnce)
-		//		{
-		//			m_RunOnce = false;
-		//		}
-		//		else
-		//		{
-		//			Runnable::suspend();
-		//		}
-		//	}
-		//	catch (_2Real::Exception &e)
-		//	{
-		//		m_Run = false;
-		//		m_RunOnce = false;
+				if (m_RunOnce)
+				{
+					break;
+				}
 
-		//		m_System.handleException(*this, e);
-		//	}
-		//}
+				Runnable::suspend();
+			}
+			catch (Exception &e)
+			{
+				Runnable::stop();
+				m_System.handleException(*this, e);
+			}
+		}
 	}
 
-	void Sequence::update()
+	void Sequence::removeChild(Identifier const& childId)
 	{
-		//try
-		//{
-		//	for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//	{
-		//		(*it)->update();
-		//	}
-		//}
-		//catch (_2Real::Exception &e)
-		//{
-		//	m_Run = false;
-		//	m_RunOnce = false;
-
-		//	m_System.handleException(*this, e);
-		//}
+		RunnableList::iterator it = iteratorId(childId);
+		m_Children.erase(it);
 	}
 
-	void Sequence::shutdown()
+	void Sequence::insertChild(RunnableManager &child, unsigned int index)
 	{
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	(*it)->shutdown();
-		//}
+		RunnableList::iterator it = iteratorPosition(index);
+		m_Children.insert(it, &child);
+		child.getManagedRunnable().setFather(*this);
 	}
-
-	void Sequence::remove(Identifier const& childId)
-	{
-	}
-
-	void Sequence::insert(RunnableManager &child, unsigned int index)
-	{
-	}
-
-	//void Container::remove(unsigned int const& _id)
-	//{
-	//	AbstractContainer *root = this->root();
-	//	Container *nirvana = static_cast< Container * >(root->father());
-	//	nirvana->stopChild(root->id());
-	//	child->resetIO();
-	//	m_Children.erase(it);
-	//}
-
-	//void Container::add(AbstractContainer *const _child, unsigned int const& _index)
-	//{
-	//		AbstractContainer::ContainerList::iterator it = child(_child->id());
-	//		if (it != m_Children.end())
-	//		{
-	//			throw Exception("internal error: could not add child to container - already exists");
-	//		}
-	//		if (_index > m_Children.size())
-	//		{
-	//			throw Exception("internal error: could not add child to container - index > childcount");
-	//		}
-	//		if (type() == Entity::SYNCHRONIZATION || type() == Entity::SEQUENCE)
-	//		{
-	//			AbstractContainer *root = this->root();
-	//			Container *nirvana = static_cast< Container * >(root->father());
-	//			nirvana->stopChild(root->id());
-	//		}
-	//		if (_index == m_Children.size())
-	//		{
-	//			if (type() == Entity::SEQUENCE && m_Children.size() >= 1)
-	//			{
-	//				AbstractContainer *old = m_Children.back();
-	//				if (old)
-	//				{
-	//					old->resetIO();
-	//				}
-	//			}
-	//			if (type() == Entity::SYNCHRONIZATION)
-	//			{
-	//				this->resetIO();
-	//			}
-	//			m_Children.push_back(_child);
-	//		}
-	//		else if (_index == 0)
-	//		{
-	//			if (type() == Entity::SEQUENCE && m_Children.size() >= 1)
-	//			{
-	//				AbstractContainer *old = m_Children.front();
-	//				if (old)
-	//				{
-	//					old->resetIO();
-	//				}
-	//			}
-	//			if (type() == Entity::SYNCHRONIZATION)
-	//			{
-	//				this->resetIO();
-	//			}
-	//			m_Children.push_front(_child);
-	//		}
-	//		else
-	//		{
-	//			if (type() == Entity::SYNCHRONIZATION)
-	//			{
-	//				this->resetIO();
-	//			}
-	//			AbstractContainer::ContainerList::iterator pos = position(_index);
-	//			m_Children.insert(pos, _child);
-	//		}
-	//		_child->setFather(this);
-	//}
 
 }

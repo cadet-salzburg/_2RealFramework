@@ -50,38 +50,45 @@ void MultiKinectOpenNI::getMetadata(Metadata &info)
 	}
 	catch (XMLFormatException &e)
 	{
-		cout << e.what() << endl;
-		e.rethrow();
+		cout << e.message() << endl;
+		throw PluginException(e.message());
 	}
 	catch (InvalidTypeException &e)
 	{
-		cout << e.what() << endl;
-		e.rethrow();
+		cout << e.message() << endl;
+		throw PluginException(e.message());
 	}
 	catch (...)
 	{
-		throw PluginException("unexpected error in getMetadata()");
+		throw PluginException("unexpected error in getMetadata");
 	}
 }
 
 void MultiKinectOpenNI::setup(PluginContext &context)
 {
-	getGeneratorFlags(context);
-	getImageFlags(context);
-	getLogSettings(context);
-
-	m_2RealKinect = _2RealKinect::getInstance();
-	
-	m_2RealKinect->setLogLevel(m_LogLevel);
-	if (!m_LogPath.empty())
+	try
 	{
-		m_LogStream.open(m_LogPath);
-		m_2RealKinect->setLogOutputStream(&m_LogStream);
+		getGeneratorFlags(context);
+		getImageFlags(context);
+		getLogSettings(context);
+
+		m_2RealKinect = _2RealKinect::getInstance();
+	
+		m_2RealKinect->setLogLevel(m_LogLevel);
+		if (!m_LogPath.empty())
+		{
+			m_LogStream.open(m_LogPath);
+			m_2RealKinect->setLogOutputStream(&m_LogStream);
+		}
+
+		context.registerService("Image Generator", ::createImageService);
+
+		m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
 	}
-
-	context.registerService("Image Generator", ::createImageService);
-
-	m_2RealKinect->start(m_GeneratorFlags, m_ImageFlags);
+	catch (...)
+	{
+		throw PluginException("unexpected error in setup");
+	}
 }
 
 void MultiKinectOpenNI::getGeneratorFlags(PluginContext &context)

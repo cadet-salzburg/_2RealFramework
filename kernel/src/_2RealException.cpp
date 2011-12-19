@@ -80,5 +80,7 @@ namespace _2Real
 	IMPLEMENT_EXCEPTION(UninitializedHandleException, Exception, "uninitialized handle exception")
 	IMPLEMENT_EXCEPTION(PluginException, Exception, "plugin exception")
 	IMPLEMENT_EXCEPTION(ServiceException, Exception, "service exception")
+	IMPLEMENT_EXCEPTION(SetupException, Exception, "service exception")
+	IMPLEMENT_EXCEPTION(StartException, Exception, "service exception")
 
 }

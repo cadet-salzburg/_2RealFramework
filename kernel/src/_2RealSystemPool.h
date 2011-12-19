@@ -25,47 +25,33 @@
 namespace _2Real
 {
 
-	class Engine;
 	class Identifier;
 	class SystemGraph;
 
 	typedef std::pair< Identifier, SystemGraph * >	NamedSystemGraph;
 	typedef std::map< Identifier, SystemGraph * >	SystemGraphTable;
-	typedef std::map< std::string, std::string >	StringMap;
 
 	class SystemPool
 	{
 
 	public:
 
-		SystemPool(Engine const& engine);
+		SystemPool();
 		~SystemPool();
 
-		//const Identifier createSequence(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
-		//const Identifier createSynchronization(std::string const& name, unsigned int const& a, unsigned int const& b, unsigned int const& top);
-
+		void					clearSystemGraphs();
 		const Identifier		createSystemGraph(std::string const& name);
-		void					destroySystemGraph(Identifier const& id);
-		SystemGraph &			getSystemGraph(Identifier const& id);
-		SystemGraph const&		getSystemGraph(Identifier const& id) const;
-		bool					contains(Identifier const& id) const;
-		void					clearSystems();
+		void					destroySystemGraph(Identifier const& system);
+		SystemGraph &			getSystemGraph(Identifier const& system);
+		SystemGraph const&		getSystemGraph(Identifier const& system) const;
 
 	private:
 
-		/**
-		*	systems in existence
-		*/
-		SystemGraphTable								m_Systems;
+		SystemGraphTable::iterator			iteratorId(Identifier const& system);
+		SystemGraphTable::const_iterator	iteratorId(Identifier const& system) const;
 
-		/**
-		*	the 2real engine
-		*/
-		Engine											const& m_Engine;
+		SystemGraphTable		m_SystemGraphs;
 
 	};
-
-
-
 
 }

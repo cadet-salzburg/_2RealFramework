@@ -17,8 +17,9 @@
 */
 
 #include "_2RealSynchronization.h"
-//#include "_2RealSystemGraph.h" -> include just because of the exception handler?
 #include "_2RealRunnableManager.h"
+#include "_2RealSystemGraph.h"
+#include "_2RealPooledThread.h"
 
 namespace _2Real
 {
@@ -28,81 +29,51 @@ namespace _2Real
 	{
 	}
 
-	Synchronization::~Synchronization()
-	{
-	}
-
-	void Synchronization::setup()
-	{
-	}
-
 	void Synchronization::run()
 	{
-		//while (m_Run || m_RunOnce)
-		//{
-		//	try
-		//	{
-		//		Runnable::updateTimer();
+		while (m_Run || m_RunOnce)
+		{
+			try
+			{
+				Runnable::updateTimer();
 
-		//		m_System.runOnce(m_Children);
+				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					PooledThread &thread = m_System.getFreeThread();
+					(*it)->update(thread);
+				}
 
-		//		if (m_RunOnce)
-		//		{
-		//			m_RunOnce = false;
-		//		}
-		//		else
-		//		{
-		//			Runnable::suspend();
-		//		}
+				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					(*it)->wait();
+				}
 
-		//	}
-		//	catch (_2Real::Exception &e)
-		//	{
-		//		m_Run = false;
-		//		m_RunOnce = false;
+				if (m_RunOnce)
+				{
+					break;
+				}
 
-		//		m_System.handleException(*this, e);
-		//	}
-		//}
+				Runnable::suspend();
+			}
+			catch (_2Real::Exception &e)
+			{
+				Runnable::stop();
+				m_System.handleException(*this, e);
+			}
+		}
 	}
 
-	void Synchronization::update()
+	void Synchronization::removeChild(Identifier const& child)
 	{
-		//try
-		//{
-		//	m_System.runOnce(m_Children);
-		//}
-		//catch (_2Real::Exception &e)
-		//{
-		//	m_Run = false;
-		//	m_RunOnce = false;
-
-		//	m_System.handleException(*this, e);
-		//}
+		RunnableList::iterator it = iteratorId(child);
+		m_Children.erase(it);
 	}
 
-	void Synchronization::shutdown()
+	void Synchronization::insertChild(RunnableManager &child, unsigned int index)
 	{
-		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		//{
-		//	(*it)->shutdown();
-		//}
-	}
-
-	void Synchronization::remove(Identifier const& childId)
-	{
-		//Runnable &child = getChild(childId);
-		//Runnable &root = child.root();
-		//m_System.stopChild(root.identifier());
-
-		//RunnableList::iterator it = iteratorId(childId);
-		//m_Children.erase(it);
-		
-		//m_System.insertChild(child, 0);
-	}
-
-	void Synchronization::insert(RunnableManager &child, unsigned int index)
-	{
+		RunnableList::iterator it = iteratorPosition(index);
+		m_Children.insert(it, &child);
+		child.getManagedRunnable().setFather(*this);
 	}
 
 }

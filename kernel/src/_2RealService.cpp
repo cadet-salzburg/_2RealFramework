@@ -163,30 +163,30 @@ namespace _2Real
 		}
 	}
 
-	void Service::update()
-	{
-		try
-		{
-			for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
-			{
-				it->second->updateCurrent();
-			}
+	//void Service::update()
+	//{
+	//	try
+	//	{
+	//		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
+	//		{
+	//			it->second->updateCurrent();
+	//		}
 
-			m_Service->update();
+	//		m_Service->update();
 
-			for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
-			{
-				it->second->update();
-			}
-		}
-		catch (_2Real::Exception &e)
-		{
-			m_Run = false;
-			m_RunOnce = false;
+	//		for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
+	//		{
+	//			it->second->update();
+	//		}
+	//	}
+	//	catch (_2Real::Exception &e)
+	//	{
+	//		m_Run = false;
+	//		m_RunOnce = false;
 
-			m_System.handleException(*this, e);
-		}
-	}
+	//		m_System.handleException(*this, e);
+	//	}
+	//}
 
 	void Service::shutdown()
 	{

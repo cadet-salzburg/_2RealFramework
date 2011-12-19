@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />

@@ -36,29 +36,11 @@ namespace _2Real
 	{
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////
+
 	RunnableStateCreated::RunnableStateCreated(RunnableManager const& manager) :
 		RunnableState(manager, "this runnable was just created and should be set up now")
 	{
-	}
-
-	RunnableState & RunnableStateCreated::start(Runnable &runnable, PooledThread &thread, bool runOnce)
-	{
-		std::ostringstream msg;
-		msg << "runnable " << runnable.name() << " can't be started, needs to be set up first";
-		throw StartException(msg.str());
-	}
-
-	RunnableState & RunnableStateCreated::update(Runnable &runnable)
-	{
-		std::ostringstream msg;
-		msg << "runnable " << runnable.name() << " can't be updated, needs to be set up first";
-		throw StartException(msg.str());
-	}
-
-	RunnableState & RunnableStateCreated::stop(Runnable &runnable)
-	{
-		//does not have any effect here, stop() has the runnable go back to 'set up' anyway
-		return *this;
 	}
 
 	RunnableState & RunnableStateCreated::setup(Runnable &runnable)
@@ -67,7 +49,7 @@ namespace _2Real
 		{
 			runnable.setup();
 		}
-		catch (SetupFailedException &e)
+		catch (SetupException &e)
 		{
 			return *this;
 		}
@@ -79,6 +61,34 @@ namespace _2Real
 		{
 			return m_Manager.getState("halted");
 		}
+
+		return m_Manager.getState("set up");
+	}
+
+	RunnableState & RunnableStateCreated::start(Runnable &runnable, PooledThread &thread)
+	{
+		std::ostringstream msg;
+		msg << "runnable " << runnable.name() << " can't be started, needs to be set up first";
+		throw StartException(msg.str());
+	}
+
+	RunnableState & RunnableStateCreated::update(Runnable &runnable, PooledThread &thread)
+	{
+		std::ostringstream msg;
+		msg << "runnable " << runnable.name() << " can't be updated, needs to be set up first";
+		throw StartException(msg.str());
+	}
+
+	RunnableState & RunnableStateCreated::stop(Runnable &runnable, PooledThread &thread)
+	{
+		//does not have any effect here, stop() has the runnable go back to 'set up' anyway
+		return *this;
+	}
+
+	RunnableState & RunnableStateCreated::wait(Runnable &runnable, PooledThread &thread)
+	{
+		//does not have any effect here, stop() has the runnable go back to 'set up' anyway
+		return *this;
 	}
 
 	RunnableState & RunnableStateCreated::shutdown(Runnable &runnable)
@@ -99,36 +109,40 @@ namespace _2Real
 	{
 		return m_Manager.getState("halted");
 	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateSetUp::RunnableStateSetUp(RunnableManager const& manager) :
 		RunnableState(manager, "this runnable is set up and ready to run")
 	{
 	}
 
-	RunnableState & RunnableStateSetUp::start(Runnable &runnable, PooledThread &thread, bool runOnce)
-	{
-		//runnable.start(runOnce);
-		//thread.start(Poco::Thread::PRIO_NORMAL, runnable);
-		return m_Manager.getState("started");
-	}
-
-	RunnableState & RunnableStateSetUp::update(Runnable &runnable)
-	{
-		//update is blocking
-		runnable.update();
-		return *this;
-	}
-
-	RunnableState & RunnableStateSetUp::stop(Runnable &runnable)
-	{
-		//does not have any effect here
-		return *this;
-	}
-
 	RunnableState & RunnableStateSetUp::setup(Runnable &runnable)
 	{
 		//just call setup again
 		runnable.setup();
+		return *this;
+	}
+
+	RunnableState & RunnableStateSetUp::start(Runnable &runnable, PooledThread &thread)
+	{
+		thread.start(Poco::Thread::PRIO_NORMAL, runnable);
+		return m_Manager.getState("running");
+	}
+
+	RunnableState & RunnableStateSetUp::update(Runnable &runnable, PooledThread &thread)
+	{
+		thread.update(Poco::Thread::PRIO_NORMAL, runnable);
+		return m_Manager.getState("updating");
+	}
+
+	RunnableState & RunnableStateSetUp::stop(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateSetUp::wait(Runnable &runnable, PooledThread &thread)
+	{
 		return *this;
 	}
 
@@ -140,71 +154,177 @@ namespace _2Real
 
 	RunnableState & RunnableStateSetUp::handleException(Runnable &runnable)
 	{
-		//is there anything else to do?
+		runnable.handleException();
 		return m_Manager.getState("halted");
 	}
 
-	RunnableStateStarted::RunnableStateStarted(RunnableManager const& manager) :
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	RunnableStateRunning::RunnableStateRunning(RunnableManager const& manager) :
 		RunnableState(manager, "this runnable is running currently")
 	{
 	}
 
-	RunnableState & RunnableStateStarted::start(Runnable &runnable, PooledThread &thread, bool runOnce)
+	RunnableState & RunnableStateRunning::setup(Runnable &runnable)
+	{
+		//runnable.stop();
+		//runnable.setup();
+		return *this;
+	}
+
+	RunnableState & RunnableStateRunning::start(Runnable &runnable, PooledThread &thread)
 	{
 		return *this;
 	}
 
-	RunnableState & RunnableStateStarted::update(Runnable &runnable)
+	RunnableState & RunnableStateRunning::update(Runnable &runnable, PooledThread &thread)
 	{
 		return *this;
 	}
 
-	RunnableState & RunnableStateStarted::stop(Runnable &runnable)
+	RunnableState & RunnableStateRunning::stop(Runnable &runnable, PooledThread &thread)
 	{
 		runnable.stop();
+		thread.wait();
 		return m_Manager.getState("set up");
 	}
 
-	RunnableState & RunnableStateStarted::setup(Runnable &runnable)
+	RunnableState & RunnableStateRunning::wait(Runnable &runnable, PooledThread &thread)
 	{
-		//this is ignored, runnable would need to be stopped first
 		return *this;
 	}
 
-	RunnableState & RunnableStateStarted::shutdown(Runnable &runnable)
+	RunnableState & RunnableStateRunning::shutdown(Runnable &runnable)
 	{
 		runnable.stop();
 		runnable.shutdown();
 		return m_Manager.getState("shut down");
 	}
 
-	RunnableState & RunnableStateStarted::handleException(Runnable &runnable)
+	RunnableState & RunnableStateRunning::handleException(Runnable &runnable)
 	{
-		//is there anything else to do?
+		runnable.handleException();
 		return m_Manager.getState("halted");
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	RunnableStateUpdating::RunnableStateUpdating(RunnableManager const& manager) :
+		RunnableState(manager, "this runnable is being updated currently")
+	{
+	}
+
+	RunnableState & RunnableStateUpdating::setup(Runnable &runnable)
+	{
+		//runnable.stop();
+		//runnable.setup();
+		return *this;
+	}
+
+	RunnableState & RunnableStateUpdating::start(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateUpdating::update(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateUpdating::stop(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
+	{
+		thread.wait();
+		return m_Manager.getState("set up");
+	}
+
+	RunnableState & RunnableStateUpdating::shutdown(Runnable &runnable)
+	{
+		runnable.stop();
+		runnable.shutdown();
+		return m_Manager.getState("shut down");
+	}
+
+	RunnableState & RunnableStateUpdating::handleException(Runnable &runnable)
+	{
+		runnable.handleException();
+		return m_Manager.getState("halted");
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	RunnableStateShutDown::RunnableStateShutDown(RunnableManager const& manager) :
+		RunnableState(manager, "this runnable was shut down and will be destroyed soon")
+	{
+	}
+
+	RunnableState & RunnableStateShutDown::setup(Runnable &runnable)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::start(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::update(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::stop(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::wait(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::shutdown(Runnable &runnable)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateShutDown::handleException(Runnable &runnable)
+	{
+		return *this;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateHalted::RunnableStateHalted(RunnableManager const& manager) :
 		RunnableState(manager, "an exception occured in the runnable; is is currently halted")
 	{
 	}
 
-	RunnableState & RunnableStateHalted::start(Runnable &runnable, PooledThread &thread, bool runOnce)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateHalted::update(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateHalted::stop(Runnable &runnable)
-	{
-		return *this;
-	}
-
 	RunnableState & RunnableStateHalted::setup(Runnable &runnable)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateHalted::start(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateHalted::update(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateHalted::stop(Runnable &runnable, PooledThread &thread)
+	{
+		return *this;
+	}
+
+	RunnableState & RunnableStateHalted::wait(Runnable &runnable, PooledThread &thread)
 	{
 		return *this;
 	}
@@ -216,41 +336,6 @@ namespace _2Real
 	}
 
 	RunnableState & RunnableStateHalted::handleException(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableStateShutDown::RunnableStateShutDown(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable was shut down and will be destroyed soon")
-	{
-	}
-
-	RunnableState & RunnableStateShutDown::start(Runnable &runnable, PooledThread &thread, bool runOnce)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateShutDown::update(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateShutDown::stop(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateShutDown::setup(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateShutDown::shutdown(Runnable &runnable)
-	{
-		return *this;
-	}
-
-	RunnableState & RunnableStateShutDown::handleException(Runnable &runnable)
 	{
 		return *this;
 	}

@@ -44,7 +44,7 @@ void ImageService::setup(ServiceContext &context)
 		}
 		else
 		{
-			throw InvalidParameterException("generator type " + generator + " is invalid");
+			throw SetupException("generator type " + generator + " is invalid");
 		}
 
 		m_DeviceId = context.getParameterValue< unsigned int >("device id");
@@ -65,20 +65,22 @@ void ImageService::setup(ServiceContext &context)
 	catch (NotFoundException &e)
 	{
 		std::cout << e.message() << std::endl;
-		throw ServiceSetupException(e.message());
+		throw ServiceException(e.message());
 	}
 	catch (TypeMismatchException &e)
 	{
 		std::cout << e.message() << std::endl;
-		throw ServiceSetupException(e.message());
+		throw ServiceException(e.message());
 	}
-	catch (InvalidParameterException &e)
+	catch (SetupException &e)
 	{
+		std::cout << e.message() << std::endl;
 		e.rethrow();
 	}
 	catch (...)
 	{
-		throw ServiceSetupException("an unknown exception occured during service setup");
+		std::cout << "unexpected error in setup" << std::endl;
+		throw ServiceException("ImageService: unexpected error in setup");
 	}
 }
 
@@ -94,14 +96,17 @@ void ImageService::update()
 	}
 	catch (TypeMismatchException &e)
 	{
+		std::cout << e.message() << std::endl;
 		throw e;
 	}
 	catch (PixelbufferException &e)
 	{
+		std::cout << e.message() << std::endl;
 		throw e;
 	}
 	catch (...)
 	{
+		std::cout << "unexpected error in update" << std::endl;
 		throw ServiceException("ImageService: unexpected error in update");
 	}
 }

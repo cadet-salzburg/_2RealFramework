@@ -56,6 +56,7 @@ namespace _2Real
 		const Identifier id = Entity::createIdentifier(name, "plugin");
 
 //TODO: dlls for other OS
+
 #ifdef _DEBUG
 		std::string file = classname + "_d.dll";
 #else

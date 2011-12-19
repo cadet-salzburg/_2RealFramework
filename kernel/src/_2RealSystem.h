@@ -54,7 +54,7 @@ namespace _2Real
 		/**
 		*	...
 		*/
-		void destroy();
+		void shutdown();
 
 		/**
 		*	loads a dll - assumption: classname-> filename, e.g: MyPlugin -> MyPlugin.dll (release mode), MyPlugin_d.dll (debug mode)
@@ -62,7 +62,7 @@ namespace _2Real
 		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
 		*	multiple loading of a plugin from within the same system accomplishes nothing
 		*/
-		const Identifier load(std::string const& name, std::string const& classname);
+		const Identifier loadPlugin(std::string const& name, std::string const& className);
 
 		/**
 		*	calls setup of either a plugin or a service = initialization
@@ -162,15 +162,12 @@ namespace _2Real
 		*/
 		void startAll();
 
-		const Identifier createSequence(std::string const& name, Identifier const& idA, Identifier const& idB);
-		const Identifier createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB);
-		//const Identifier createSequence(std::string const& name, std::list< Identifier > const& ids);
-		//const Identifier createSynchronization(std::string const& name, std::list< Identifier > const& ids);
+		const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 
-		//void link(Identifier const& in, Identifier const& out);
-		//void destroy(Identifier const& id);
-		//void insert(Identifier const& _dst, unsigned int const& _index, Identifier const& _src);
-		//void append(Identifier const& dst, Identifier const& id);
+		void destroy(Identifier const& id);
+		void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
+		void append(Identifier const& runnable, Identifier const& parent);
 
 	private:
 

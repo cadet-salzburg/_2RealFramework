@@ -49,10 +49,8 @@ namespace _2Real
 		virtual void start(bool runOnce);
 		virtual void handleException();
 		virtual void stop();
-
 		virtual void setup() = 0;
 		virtual void run() = 0;
-		virtual void update() = 0;
 		virtual void shutdown() = 0;
 
 		Runnable & root();

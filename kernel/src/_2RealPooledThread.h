@@ -39,26 +39,19 @@ namespace _2Real
 		PooledThread(unsigned int stackSize = POCO_THREAD_STACK_SIZE);
 
 		void start();
+
 		void start(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
+		void update(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
 
 		bool isIdle() const;
-		int idleTime() const;
-
-		void stopAndJoin();
-		void join();
-		void stop();
-
-		void activate();
+		void wait();
 		void kill();
-
+		void activate();
 		void run();
-
-		const Identifier identifier() const;
 
 	private:
 
 		volatile bool				m_IsIdle;
-		volatile std::time_t		m_IdleTime;
 		_2Real::Runnable			*m_Target;
 		Poco::Thread				m_Thread;
 		Poco::Event					m_TargetReady;

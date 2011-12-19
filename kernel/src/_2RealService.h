@@ -64,7 +64,7 @@ namespace _2Real
 
 		void					setup();
 		void					run();
-		void					update();
+		//void					update();
 		void					shutdown();
 		void					performStartCheck() const;
 		void					performSetupCheck() const;

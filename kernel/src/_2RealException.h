@@ -153,4 +153,8 @@ namespace _2Real
 	//that the plugin in question is only good for putting it out of its misery. MOAR YAY!
 	DECLARE_EXCEPTION(PluginException, Exception)
 
+	DECLARE_EXCEPTION(SetupException, Exception);
+
+	DECLARE_EXCEPTION(StartException, Exception);
+
 }
