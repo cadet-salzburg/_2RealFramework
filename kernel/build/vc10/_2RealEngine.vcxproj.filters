@@ -178,9 +178,6 @@
     <ClInclude Include="..\..\src\_2RealExceptionListener.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutputListener.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealSystemPool.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
@@ -191,6 +188,9 @@
     <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
     <ClInclude Include="..\..\src\_2RealRunnable.h">
       <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutputListener.h">
+      <Filter>Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

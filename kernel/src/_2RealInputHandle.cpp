@@ -48,14 +48,16 @@ namespace _2Real
 		return *this;
 	}
 
-	EngineData InputHandle::newest()
+	const EngineData InputHandle::newest() const
 	{
-		return m_Input->getNewest().second;
+		//rofl
+		return m_Input->getOldest().second;
 	}
 
-	EngineData InputHandle::oldest()
+	const EngineData InputHandle::oldest() const
 	{
-		return m_Input->getOldest().second;
+		//lfor
+		return m_Input->getNewest().second;
 	}
 
 }

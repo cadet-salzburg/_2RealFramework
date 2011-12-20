@@ -176,4 +176,9 @@ namespace _2Real
 	{
 		//m_Engine->destroy(_id, *m_Id);
 	}
+
+	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
+	{
+		return m_Engine.getValue(id, name, m_Id);
+	}
 }

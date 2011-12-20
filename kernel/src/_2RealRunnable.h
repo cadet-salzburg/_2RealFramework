@@ -96,6 +96,10 @@ namespace _2Real
 		{
 			Poco::Thread::sleep(sleep);
 		}
+		else
+		{
+			//?
+		}
 	}
 
 	inline void Runnable::setFather(Graph &father)

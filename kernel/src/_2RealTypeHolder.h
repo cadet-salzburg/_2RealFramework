@@ -58,7 +58,6 @@ namespace _2Real
 		AbstractDataHolder* clone() const;
 		const std::string toString() const;
 
-		//DataType					*m_Data;
 		Poco::SharedPtr< DataType >		m_Data;
 
 	};
@@ -67,13 +66,11 @@ namespace _2Real
 	DataHolder< DataType >::DataHolder(DataType const& value)
 	{
 		m_Data.assign(new DataType(value));
-		//m_Data = new DataType(value);
 	}
 
 	template< typename DataType >
 	DataHolder< DataType >::DataHolder(DataType *value)
 	{
-		//m_Data = value;
 		m_Data.assign(value);
 	}
 
@@ -99,7 +96,6 @@ namespace _2Real
 	template< typename DataType >
 	DataHolder< DataType >::~DataHolder()
 	{
-		//delete m_Data;
 		m_Data.assign(NULL);
 	}
 
@@ -114,13 +110,12 @@ namespace _2Real
 	{
 		std::ostringstream msg;
 		msg << *m_Data.get();
-		//msg << *m_Data;
 		return msg.str();
 	}
 
 	template< typename DataType >
 	AbstractDataHolder * DataHolder< DataType >::create() const
-	{
+	{ 
 		DataType *newContent = new DataType();
 		return new DataHolder(newContent);
 	}
@@ -129,7 +124,6 @@ namespace _2Real
 	AbstractDataHolder * DataHolder< DataType >::clone() const
 	{
 		DataType *newContent = new DataType(*m_Data.get());
-		//DataType *newContent = new DataType(*m_Data);
 		return new DataHolder(newContent);
 	}
 

@@ -42,7 +42,7 @@ namespace _2Real
 		}
 		else
 		{
-			m_WriteData = Engine::instance().getTypes().getInitialValueFromKey(metadata.getKeyword());
+			m_WriteData.create(Engine::instance().getTypes().getInitialValueFromKey(metadata.getKeyword()));
 		}
 	}
 

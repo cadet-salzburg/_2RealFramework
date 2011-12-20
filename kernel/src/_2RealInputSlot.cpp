@@ -22,6 +22,8 @@
 #include "_2RealData.h"
 #include "_2RealParameterMetadata.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -70,7 +72,6 @@ namespace _2Real
 	void InputSlot::receiveData(Data &data)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
 		m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
 	}
 

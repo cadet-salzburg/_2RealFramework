@@ -29,6 +29,7 @@
 #include "_2RealServiceMetadata.h"
 #include "_2RealParameterMetadata.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace _2Real
@@ -163,31 +164,6 @@ namespace _2Real
 		}
 	}
 
-	//void Service::update()
-	//{
-	//	try
-	//	{
-	//		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
-	//		{
-	//			it->second->updateCurrent();
-	//		}
-
-	//		m_Service->update();
-
-	//		for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
-	//		{
-	//			it->second->update();
-	//		}
-	//	}
-	//	catch (_2Real::Exception &e)
-	//	{
-	//		m_Run = false;
-	//		m_RunOnce = false;
-
-	//		m_System.handleException(*this, e);
-	//	}
-	//}
-
 	void Service::shutdown()
 	{
 		m_Service->shutdown();
@@ -240,9 +216,22 @@ namespace _2Real
 		}
 	}
 
-	EngineData const& Service::getParameterValue(std::string const& name) const
+	const EngineData Service::getParameterValue(std::string const& name) const
 	{
-		return getSetupParameter(name).getData();
+		if (hasSetupParameter(name))
+		{
+			return getSetupParameter(name).getData();
+		}
+		else if (hasInputSlot(name))
+		{
+			return getInputSlot(name).getOldest().second;
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "setup parameter / input slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
+		}
 	}
 
 	InputHandle Service::createInputHandle(std::string const& name) const
@@ -274,7 +263,7 @@ namespace _2Real
 		if (it == m_InputSlots.end())
 		{
 			std::ostringstream msg;
-			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			msg << "service input slot " << name << " not found in " << this->name() << std::endl;
 			throw NotFoundException(msg.str());
 		}
 
@@ -287,7 +276,7 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			msg << "service setup parameter " << name << " not found in " << this->name() << std::endl;
 			throw NotFoundException(msg.str());
 		}
 
@@ -313,7 +302,7 @@ namespace _2Real
 		if (it == m_InputSlots.end())
 		{
 			std::ostringstream msg;
-			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			msg << "service input slot " << name << " not found in " << this->name() << std::endl;
 			throw NotFoundException(msg.str());
 		}
 
@@ -326,7 +315,7 @@ namespace _2Real
 		if (it == m_SetupParameters.end())
 		{
 			std::ostringstream msg;
-			msg << "service output slot " << name << " not found in " << this->name() << std::endl;
+			msg << "service setup parameter " << name << " not found in " << this->name() << std::endl;
 			throw NotFoundException(msg.str());
 		}
 

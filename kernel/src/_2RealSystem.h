@@ -98,6 +98,16 @@ namespace _2Real
 		}
 
 		/**
+		*	
+		*/
+		template< typename DataType >
+		DataType const& getValue(Identifier const& id, std::string const& name) const
+		{
+			Poco::SharedPtr< DataType > ptr = Extract< DataType >(getValueInternal(id, name));
+			return *ptr.get();
+		}
+
+		/**
 		*	links output slot to input slot
 		*/
 		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
@@ -175,6 +185,11 @@ namespace _2Real
 		*	internally used function for setting param values
 		*/
 		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+
+		/**
+		*	internally used function for setting param values
+		*/
+		const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
 
 		/**
 		*	system's identifier

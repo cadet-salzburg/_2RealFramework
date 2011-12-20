@@ -265,9 +265,8 @@ namespace _2Real
 		}
 		else if (id.isService())
 		{
-			Runnable &runnable = getContained(id).getManagedRunnable();
-			Service &service = static_cast< Service & >(runnable);
-			service.setup();
+			RunnableManager &mgr = getContained(id);
+			mgr.setup();
 		}
 	}
 
@@ -309,6 +308,20 @@ namespace _2Real
 			Runnable &runnable = getContained(id).getManagedRunnable();
 			Service &service = static_cast< Service & >(runnable);
 			service.setParameterValue(paramName, data);
+		}
+	}
+
+	const EngineData SystemGraph::getValue(Identifier const& id, std::string const& paramName) const
+	{
+		if (id.isPlugin())
+		{
+			return m_Plugins.getParameterValue(id, paramName);
+		}
+		else
+		{
+			Runnable &runnable = getContained(id).getManagedRunnable();
+			Service &service = static_cast< Service & >(runnable);
+			return service.getParameterValue(paramName);
 		}
 	}
 

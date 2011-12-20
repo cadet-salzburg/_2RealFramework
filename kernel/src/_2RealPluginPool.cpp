@@ -129,6 +129,11 @@ namespace _2Real
 		getPlugin(id).setParameterValue(paramName, data);
 	}
 
+	EngineData const& PluginPool::getParameterValue(Identifier const& id, std::string const& paramName) const
+	{
+		return getPlugin(id).getParameterValue(paramName);
+	}
+
 	Plugin & PluginPool::getPlugin(Identifier const& id)
 	{
 		PluginMap::iterator it = m_Plugins.find(id);

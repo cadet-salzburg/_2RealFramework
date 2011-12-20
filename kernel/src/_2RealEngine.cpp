@@ -162,6 +162,20 @@ namespace _2Real
 		nirvana.setValue(id, paramName, value);
 	}
 
+	const EngineData Engine::getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const
+	{
+		SystemGraph const& nirvana = m_Graphs.getSystemGraph(systemId);
+
+		if (!id.isSetupAble())
+		{
+			std::ostringstream msg;
+			msg << "engine::setValue " << id.name() << " is a " << id.type() << ", plugin or service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		return nirvana.getValue(id, name);
+	}
+
 	void Engine::setUpdateRate(Identifier const& id, float updatesPerSecond, Identifier const& system)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);

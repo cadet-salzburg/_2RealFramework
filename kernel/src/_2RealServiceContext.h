@@ -72,7 +72,7 @@ namespace _2Real
 	
 	private:
 
-		EngineData const&	getData(std::string const& name) const;
+		const EngineData	getData(std::string const& name) const;
 
 		Service				&m_Service;
 

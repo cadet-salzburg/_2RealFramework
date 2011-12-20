@@ -48,23 +48,16 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			try
-			{
-				Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
-				return *ptr.get();
-			}
-			catch (Exception &e)
-			{
-				throw e;
-			}
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
+			return *ptr.get();
 		}
 
 	private:
 
-		EngineData		oldest();
-		EngineData		newest();
+		const EngineData	oldest() const;
+		const EngineData	newest() const;
 
-		InputSlot		const* m_Input;
+		InputSlot			const* m_Input;
 
 	};
 

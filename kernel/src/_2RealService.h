@@ -58,13 +58,12 @@ namespace _2Real
 		/**
 		*	functions that may be called by the service context
 		*/
-		EngineData const&		getParameterValue(std::string const& name) const;
+		const EngineData		getParameterValue(std::string const& name) const;
 		InputHandle				createInputHandle(std::string const& name) const;
 		OutputHandle			createOutputHandle(std::string const& name);
 
 		void					setup();
 		void					run();
-		//void					update();
 		void					shutdown();
 		void					performStartCheck() const;
 		void					performSetupCheck() const;

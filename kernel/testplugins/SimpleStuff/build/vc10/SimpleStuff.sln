@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleStuff", "SimpleStuff.vcxproj", "{EC0F25A3-6FC5-ACFC-516E-7B82F6930384}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		SimpleStuff_md|Win32 = SimpleStuff_md|Win32
+		SimpleStuff_mdd|Win32 = SimpleStuff_mdd|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC0F25A3-6FC5-ACFC-516E-7B82F6930384}.SimpleStuff_md|Win32.ActiveCfg = SimpleStuff_md|Win32
+		{EC0F25A3-6FC5-ACFC-516E-7B82F6930384}.SimpleStuff_md|Win32.Build.0 = SimpleStuff_md|Win32
+		{EC0F25A3-6FC5-ACFC-516E-7B82F6930384}.SimpleStuff_mdd|Win32.ActiveCfg = SimpleStuff_mdd|Win32
+		{EC0F25A3-6FC5-ACFC-516E-7B82F6930384}.SimpleStuff_mdd|Win32.Build.0 = SimpleStuff_mdd|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

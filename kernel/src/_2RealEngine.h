@@ -71,6 +71,8 @@ namespace _2Real
 		void					setup(Identifier const& setupAble, Identifier const& systemId);
 		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
 		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
+		const EngineData		getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const;
+
 		void					linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);
 		void					start(Identifier const& runnable, Identifier const& systemId);
 		void					startAll(Identifier const& systemId);
