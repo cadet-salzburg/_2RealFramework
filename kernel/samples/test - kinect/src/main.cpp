@@ -150,12 +150,12 @@ int main(int argc, char *argv[])
 		testSystem.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
 		testSystem.setLogfile("testsystem.txt");
 
-		Identifier kinectPlugin = testSystem.load("kinect plugin", "MultiKinectOpenNI");
+		Identifier kinectPlugin = testSystem.loadPlugin("kinect plugin", "MultiKinectOpenNI");
 
 		std::string kinectInfo = testSystem.getInfo(kinectPlugin);
 		std::cout << kinectInfo << std::endl;
 
-		Identifier imgPlugin = testSystem.load("image processing plugin", "ImageProcessing");
+		Identifier imgPlugin = testSystem.loadPlugin("image processing plugin", "ImageProcessing");
 
 		std::string imgInfo = testSystem.getInfo(imgPlugin);
 		std::cout << imgInfo << std::endl;
