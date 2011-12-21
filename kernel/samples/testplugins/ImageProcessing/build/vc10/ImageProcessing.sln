@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProcessing", "ImageProcessing.vcxproj", "{D45D7A51-B42B-8596-E7C5-E6B10296AC61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		ImageProcessing_md|Win32 = ImageProcessing_md|Win32
+		ImageProcessing_md|x64 = ImageProcessing_md|x64
+		ImageProcessing_mdd|Win32 = ImageProcessing_mdd|Win32
+		ImageProcessing_mdd|x64 = ImageProcessing_mdd|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_md|Win32.ActiveCfg = Imageprocessing_md|Win32
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_md|Win32.Build.0 = Imageprocessing_md|Win32
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_md|x64.ActiveCfg = Imageprocessing_md|Win32
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_mdd|Win32.ActiveCfg = ImageProcessing_mdd|Win32
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_mdd|Win32.Build.0 = ImageProcessing_mdd|Win32
+		{D45D7A51-B42B-8596-E7C5-E6B10296AC61}.ImageProcessing_mdd|x64.ActiveCfg = ImageProcessing_mdd|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
