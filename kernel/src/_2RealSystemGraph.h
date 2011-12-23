@@ -88,9 +88,6 @@ namespace _2Real
 		std::ofstream &		getLogstream();
 		const std::string	getInfoString(Identifier const& id) const;
 
-		void				insertChild(RunnableManager &child, unsigned int position);
-		void				removeChild(Identifier const& childId);
-
 	private:
 
 		void				startLogging();

@@ -29,11 +29,8 @@ namespace _2Real
 		Entity(id),
 		m_System(system),
 		m_Father(&system),
-		m_Run(false),
-		m_RunOnce(false),
 		m_MaxDelay(long(1000.0f/30.0f)),
-		m_UpdatesPerSecond(30.0f),
-		m_Timer()
+		m_UpdatesPerSecond(30.0f)
 	{
 	}
 
@@ -41,29 +38,10 @@ namespace _2Real
 	{
 	}
 
-	void Runnable::start(bool runOnce)
-	{
-		if (m_Father == &m_System)
-		{
-			m_RunOnce = runOnce;
-			m_Run = !runOnce;
-		}
-	}
-
-	void Runnable::stop()
-	{
-		if (m_Father == &m_System)
-		{
-			m_RunOnce = false;
-			m_Run = false;
-		}
-	}
-
 	void Runnable::handleException()
 	{
 		if (m_Father == &m_System)
 		{
-			stop();
 		}
 	}
 

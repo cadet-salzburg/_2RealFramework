@@ -155,34 +155,36 @@ namespace _2Real
 		service.unregisterFromNewData(outName, listener);
 	}
 
-	void SystemGraph::insertChild(RunnableManager &child, unsigned int index)
-	{
-		RunnableList::iterator it = iteratorPosition(index);
-		m_Children.insert(it, &child);
-		child.getManagedRunnable().setFather(*this);
-	}
-
-	void SystemGraph::removeChild(Identifier const& id)
-	{
-		RunnableList::iterator it = iteratorId(id);
-		m_Children.erase(it);
-	}
-
 	void SystemGraph::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
 	{
 		if (parent == identifier())
 		{
-			RunnableManager &runnableMgr = getContained(runnable);
-			Graph &oldParent = runnableMgr.getManagedRunnable().father();
-			oldParent.removeChild(runnable);
-			insertChild(runnableMgr, index);
+			//system does not care about ordering anyway
+			append(runnable, parent);
 		}
 		else
 		{
 			RunnableManager &runnableMgr = getContained(runnable);
 			RunnableGraph &newParent = static_cast< RunnableGraph & >(getContained(parent).getManagedRunnable());
+			
 			Graph &oldParent = getContained(runnable).getManagedRunnable().father();
-			oldParent.removeChild(runnable);
+
+			if (&oldParent == this)
+			{
+				//if the old parent is the system, the child might run
+				if (runnableMgr.isRunning())
+				{
+					runnableMgr.stop();
+				}
+
+				RunnableList::iterator it = iteratorId(runnable);
+				m_Children.erase(it);
+			}
+			else
+			{
+				static_cast< RunnableGraph & >(oldParent).removeChild(runnable);
+			}
+
 			newParent.insertChild(runnableMgr, index);
 		}
 	}
@@ -191,17 +193,40 @@ namespace _2Real
 	{
 		if (parent == identifier())
 		{
+			if (isChild(runnable))
+			{
+				return;
+			}
+
 			RunnableManager &runnableMgr = getContained(runnable);
 			Graph &oldParent = runnableMgr.getManagedRunnable().father();
-			oldParent.removeChild(runnable);
-			insertChild(runnableMgr, childCount());
+			//i can safely do this as the old parent is not the system itself
+			static_cast< RunnableGraph & >(oldParent).removeChild(runnable);
+			m_Children.push_back(&runnableMgr);
 		}
 		else
 		{
 			RunnableManager &runnableMgr = getContained(runnable);
 			RunnableGraph &newParent = static_cast< RunnableGraph & >(getContained(parent).getManagedRunnable());
+			
 			Graph &oldParent = getContained(runnable).getManagedRunnable().father();
-			oldParent.removeChild(runnable);
+
+			if (&oldParent == this)
+			{
+				//if the old parent is the system, the child might run
+				if (runnableMgr.isRunning())
+				{
+					runnableMgr.stop();
+				}
+
+				RunnableList::iterator it = iteratorId(runnable);
+				m_Children.erase(it);
+			}
+			else
+			{
+				static_cast< RunnableGraph & >(oldParent).removeChild(runnable);
+			}
+
 			newParent.insertChild(runnableMgr, newParent.childCount());
 		}
 	}
@@ -282,8 +307,49 @@ namespace _2Real
 	{
 		const Identifier id = Entity::createIdentifier(idName, "sequence");
 		Sequence *seq = new Sequence(id, *this);
+
+		RunnableManager &mgrA = getContained(runnableA);
+		RunnableManager &mgrB = getContained(runnableB);
+
+		Graph &parentA = mgrA.getManagedRunnable().father();
+		if (this == &parentA)
+		{
+			if (mgrA.isRunning())
+			{
+				mgrA.stop();
+			}
+
+			RunnableList::iterator it = iteratorId(runnableA);
+			m_Children.erase(it);
+		}
+		else
+		{
+			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
+		}
+
+		Graph &parentB = mgrB.getManagedRunnable().father();
+		if (this == &parentB)
+		{
+			if (mgrB.isRunning())
+			{
+				mgrB.stop();
+			}
+
+			RunnableList::iterator it = iteratorId(runnableB);
+			m_Children.erase(it);
+		}
+		else
+		{
+			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
+		}
+
+		seq->insertChild(mgrB, 0);
+		seq->insertChild(mgrA, 1);
+
 		RunnableManager *manager = new RunnableManager(*seq);
 		m_Children.push_back(manager);
+		manager->setup();
+
 		return id;
 	}
 

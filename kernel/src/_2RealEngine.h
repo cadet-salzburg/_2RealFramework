@@ -30,6 +30,8 @@
 #include "_2RealSystemPool.h"
 #include "_2RealTimer.h"
 
+#include <vld.h>
+
 namespace _2Real
 {
 

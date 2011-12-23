@@ -21,6 +21,8 @@
 #include "_2RealSystemGraph.h"
 #include "_2RealPooledThread.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -31,45 +33,20 @@ namespace _2Real
 
 	void Sequence::run()
 	{
-		while (m_Run || m_RunOnce)
+		try
 		{
-			try
+			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
-				Runnable::updateTimer();
-
 				PooledThread &thread = m_System.getFreeThread();
-				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					(*it)->update(thread);
-					(*it)->wait();
-				}
-
-				if (m_RunOnce)
-				{
-					break;
-				}
-
-				Runnable::suspend();
-			}
-			catch (Exception &e)
-			{
-				Runnable::stop();
-				m_System.handleException(*this, e);
+				std::cout << child->getManagedId() << std::endl;
+				child->update(thread);
+				child->wait();
 			}
 		}
-	}
-
-	void Sequence::removeChild(Identifier const& childId)
-	{
-		RunnableList::iterator it = iteratorId(childId);
-		m_Children.erase(it);
-	}
-
-	void Sequence::insertChild(RunnableManager &child, unsigned int index)
-	{
-		RunnableList::iterator it = iteratorPosition(index);
-		m_Children.insert(it, &child);
-		child.getManagedRunnable().setFather(*this);
+		catch (Exception &e)
+		{
+			m_System.handleException(*this, e);
+		}
 	}
 
 }

@@ -20,8 +20,6 @@
 #include "_2RealEntity.h"
 
 #include "Poco/Runnable.h"
-#include "Poco/Timestamp.h"
-#include "Poco/Thread.h"
 
 #include <sstream>
 #include <map>
@@ -32,6 +30,7 @@ namespace _2Real
 	/**
 	*	services, sequences and synchronizations are runnable
 	*/
+
 
 	class Graph;
 	class SystemGraph;
@@ -46,9 +45,7 @@ namespace _2Real
 		Runnable(Identifier const& id, SystemGraph &system);
 		virtual ~Runnable();
 
-		virtual void start(bool runOnce);
 		virtual void handleException();
-		virtual void stop();
 		virtual void setup() = 0;
 		virtual void run() = 0;
 		virtual void shutdown() = 0;
@@ -64,42 +61,42 @@ namespace _2Real
 		SystemGraph const& system() const;
 
 		void setUpdateRate(float updatesPerSecond);
-		void updateTimer();
-		void suspend();
+		long getMaxDelay();
 
 	protected:
-
-		bool					m_Run;
-		bool					m_RunOnce;
 
 		SystemGraph				&m_System;
 		Graph					*m_Father;
 
 	private:
 
-		Poco::Timestamp			m_Timer;
 		long					m_MaxDelay;
 		float					m_UpdatesPerSecond;
 
 	};
 
-	inline void Runnable::updateTimer()
-	{
-		m_Timer.update();
-	}
+	//inline void Runnable::updateTimer()
+	//{
+	//	m_Timer.update();
+	//}
 
-	inline void Runnable::suspend()
+	//inline void Runnable::suspend()
+	//{
+	//	long elapsed = (long)m_Timer.elapsed()/1000;
+	//	long sleep = m_MaxDelay - elapsed;
+	//	if (sleep > 0)
+	//	{
+	//		Poco::Thread::sleep(sleep);
+	//	}
+	//	else
+	//	{
+	//		//?
+	//	}
+	//}
+
+	inline long Runnable::getMaxDelay()
 	{
-		long elapsed = (long)m_Timer.elapsed()/1000;
-		long sleep = m_MaxDelay - elapsed;
-		if (sleep > 0)
-		{
-			Poco::Thread::sleep(sleep);
-		}
-		else
-		{
-			//?
-		}
+		return m_MaxDelay;
 	}
 
 	inline void Runnable::setFather(Graph &father)

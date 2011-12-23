@@ -31,49 +31,26 @@ namespace _2Real
 
 	void Synchronization::run()
 	{
-		while (m_Run || m_RunOnce)
+		try
 		{
-			try
+			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
-				Runnable::updateTimer();
-
-				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					PooledThread &thread = m_System.getFreeThread();
-					(*it)->update(thread);
-				}
-
-				for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					(*it)->wait();
-				}
-
-				if (m_RunOnce)
-				{
-					break;
-				}
-
-				Runnable::suspend();
+				PooledThread &thread = m_System.getFreeThread();
+				child->update(thread);
 			}
-			catch (_2Real::Exception &e)
+
+			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
-				Runnable::stop();
-				m_System.handleException(*this, e);
+				//if a child was removed in the meantime, it's not the sync's job to wait for it any more
+				//in the rare case that an updating runnable was added, it will be waited for here
+				child->wait();
 			}
+
 		}
-	}
-
-	void Synchronization::removeChild(Identifier const& child)
-	{
-		RunnableList::iterator it = iteratorId(child);
-		m_Children.erase(it);
-	}
-
-	void Synchronization::insertChild(RunnableManager &child, unsigned int index)
-	{
-		RunnableList::iterator it = iteratorPosition(index);
-		m_Children.insert(it, &child);
-		child.getManagedRunnable().setFather(*this);
+		catch (_2Real::Exception &e)
+		{
+			m_System.handleException(*this, e);
+		}
 	}
 
 }

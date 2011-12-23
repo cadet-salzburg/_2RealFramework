@@ -20,6 +20,8 @@
 #include "_2RealThreadPool.h"
 #include "_2RealPooledThread.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -33,7 +35,7 @@ namespace _2Real
 		for (unsigned int i=0; i<m_Capacity; ++i)
 		{
 			PooledThread *thread = new PooledThread(m_StackSize);
-			thread->start();
+			//thread->start();
 			m_Threads.push_back(thread);
 		}
 	}
@@ -62,7 +64,7 @@ namespace _2Real
 	{
 		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
-			(*it)->wait();
+			(*it)->stop();
 		}
 	}
 
@@ -81,12 +83,11 @@ namespace _2Real
 		if (!thread)
 		{
 			thread = new PooledThread(m_StackSize);
-			thread->start();
 			m_Threads.push_back(thread);
 		}
 		else
 		{
-			thread->activate();
+			thread->reactivate();
 		}
 	
 		return *thread;

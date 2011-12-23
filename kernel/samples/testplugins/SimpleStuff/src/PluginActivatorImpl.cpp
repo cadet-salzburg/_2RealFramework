@@ -6,6 +6,8 @@
 
 #include "ServiceImpl.h"
 
+#include <vld.h>
+
 using namespace _2Real;
 using namespace std;
 

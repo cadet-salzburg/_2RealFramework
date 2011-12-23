@@ -62,16 +62,19 @@ namespace _2Real
 	RunnableList::iterator Graph::iteratorPosition(unsigned int position)
 	{
 		RunnableList::iterator result = m_Children.begin();
+		position++;
 		for (unsigned int count = 0; count < position; count++)
 		{
 			position++;
 		}
+
 		return result;
 	}
 
 	RunnableList::const_iterator Graph::iteratorPosition(unsigned int position) const
 	{
 		RunnableList::const_iterator result = m_Children.begin();
+		position++;
 		for (unsigned int count = 0; count < position; count++)
 		{
 			position++;

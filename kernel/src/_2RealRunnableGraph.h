@@ -21,12 +21,15 @@
 #include "_2RealRunnable.h"
 #include "_2RealGraph.h"
 
+#include "Poco/Mutex.h"
+
 namespace _2Real
 {
 
 	/**
 	*	sequences & synchronizations are runnable graphs,
 	*	i.e. graphs that have a run method
+	*	this means that insert / remove operations might happen while the graph is running
 	*/
 
 	class RunnableGraph : public Runnable, public Graph
@@ -36,8 +39,32 @@ namespace _2Real
 
 		RunnableGraph(Identifier const& id, SystemGraph &system);
 		virtual ~RunnableGraph();
+
+		/**
+		*	recursive. not sure whether that's good
+		*/
 		void setup();
 		void shutdown();
+
+		void insertChild(RunnableManager &child, unsigned int position);
+		void removeChild(Identifier const& childId);
+
+	protected:
+
+		/**
+		*	these are needed for thread safe iteration
+		*/
+		RunnableManager * getFirstChild();
+		RunnableManager * getNextChild();
+
+	private:
+
+		/**
+		*	these are needed for concurrent access (remove operations while graph is being run)
+		*/
+		Poco::FastMutex				m_Mutex;
+		RunnableList::iterator		m_ListIterator;
+
 
 	};
 

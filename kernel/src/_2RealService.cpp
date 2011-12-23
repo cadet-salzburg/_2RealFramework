@@ -124,43 +124,26 @@ namespace _2Real
 
 	void Service::run()
 	{
-		while (m_Run || m_RunOnce)
+		try
 		{
-			try
+			bool ready = true;
+			for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 			{
-				Runnable::updateTimer();
+				ready &= it->second->updateCurrent();
+			}
 
-				bool ready = true;
-				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
+			if (ready)
+			{
+				m_Service->update();
+				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
 				{
-					ready &= it->second->updateCurrent();
-				}
-
-				if (ready)
-				{
-					m_Service->update();
-					for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
-					{
-						it->second->update();
-					}
-				}
-
-				if (m_RunOnce)
-				{
-					m_RunOnce = false;
-				}
-				else
-				{
-					Runnable::suspend();
+					it->second->update();
 				}
 			}
-			catch (_2Real::Exception &e)
-			{
-				m_Run = false;
-				m_RunOnce = false;
-
-				m_System.handleException(*this, e);
-			}
+		}
+		catch (_2Real::Exception &e)
+		{
+			m_System.handleException(*this, e);
 		}
 	}
 

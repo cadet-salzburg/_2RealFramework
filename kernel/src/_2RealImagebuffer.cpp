@@ -16,23 +16,9 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealRunnableGraph.h"
+#include "_2RealImagebuffer.h"
 
 namespace _2Real
 {
-
-	class SystemGraph;
-
-	class Synchronization : public RunnableGraph
-	{
-
-	public:
-
-		Synchronization(Identifier const& id, SystemGraph &system);
-		void run();
-	
-	};
-
+	IMPLEMENT_EXCEPTION(PixelbufferException, Exception, "pixelbuffer exception")
 }

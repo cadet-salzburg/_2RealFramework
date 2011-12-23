@@ -139,7 +139,7 @@ namespace _2Real
 
 	RunnableState & RunnableStateSetUp::update(Runnable &runnable, PooledThread &thread)
 	{
-		thread.update(Poco::Thread::PRIO_NORMAL, runnable);
+		thread.start(Poco::Thread::PRIO_NORMAL, runnable, true);
 		std::cout << runnable.name() << " - state = updating" << std::endl;
 		return m_Manager.getState("updating");
 	}
@@ -177,8 +177,6 @@ namespace _2Real
 
 	RunnableState & RunnableStateRunning::setup(Runnable &runnable)
 	{
-		//runnable.stop();
-		//runnable.setup();
 		return *this;
 	}
 
@@ -194,9 +192,8 @@ namespace _2Real
 
 	RunnableState & RunnableStateRunning::stop(Runnable &runnable, PooledThread &thread)
 	{
-		runnable.stop();
-		thread.wait();
-		std::cout << runnable.name() << " - state =set up" << std::endl;
+		thread.stop();
+		std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
 	}
 
@@ -207,10 +204,7 @@ namespace _2Real
 
 	RunnableState & RunnableStateRunning::shutdown(Runnable &runnable)
 	{
-		runnable.stop();
-		runnable.shutdown();
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
-		return m_Manager.getState("shut down");
+		return *this;
 	}
 
 	RunnableState & RunnableStateRunning::handleException(Runnable &runnable)
@@ -229,8 +223,6 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::setup(Runnable &runnable)
 	{
-		//runnable.stop();
-		//runnable.setup();
 		return *this;
 	}
 
@@ -251,6 +243,7 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
 	{
+		std::cout << runnable.name() << " - WAITING" << std::endl;
 		thread.wait();
 		std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
@@ -258,10 +251,7 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::shutdown(Runnable &runnable)
 	{
-		runnable.stop();
-		runnable.shutdown();
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
-		return m_Manager.getState("shut down");
+		return *this;
 	}
 
 	RunnableState & RunnableStateUpdating::handleException(Runnable &runnable)

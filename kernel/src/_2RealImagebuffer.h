@@ -5,405 +5,53 @@
 #include "Poco/SharedPtr.h"
 
 #include <sstream>
-#include <vector>
 
 /**
-*	this class in still experimental
+*	this class is still experimental, but i can be used to safely transfer an image out of the kinect test plugin
+*	note that this class really just wraps an array - because you can't send pointers through the framework
+*	use it like this: for an input slot, if you wish to iterate over the elemets, use the rawData() function
+*	for an output slot, if you wish to write an image, create an array of the desired datatype and use assign()
 */
 
 namespace _2Real
 {
 
-	class PixelbufferException;
+	DECLARE_EXCEPTION(PixelbufferException, Exception);
 
-	template< typename T >
-	class Imagebuffer
-	{
-
-	public:
-
-		Imagebuffer(unsigned int const& width, unsigned int const& height, unsigned int const& channels) :
-			m_Width(width),
-			m_Height(height),
-			m_Channels(channels),
-			m_BytesPerPixel(sizeof(T)*channels),
-			m_Size(width*height*channels),
-			m_ByteSize(m_Size*sizeof(T))
-		{
-			//m_Data = Poco::SharedPtr< T >(new T[m_Size]);
-			m_Data.resize(m_Size);
-		}
-
-		~Imagebuffer()
-		{
-		}
-
-		void set(T const& val)
-		{
-			std::fill(&m_Data[0], &m_Data[m_Size], val);
-		}
-
-		unsigned int const& width() const
-		{
-			return m_Width;
-		}
-
-		unsigned int const& height() const
-		{
-			return m_Height;
-		}
-
-		unsigned int const& bytesPerPixel() const
-		{
-			return m_BytesPerPixel;
-		}
-
-		unsigned int const& channels() const
-		{
-			return m_Channels;
-		}
-
-		unsigned int const& size() const
-		{
-			return m_Size;
-		}
-
-		unsigned int const& byteSize() const
-		{
-			return m_ByteSize;
-		}
-
-		T const& operator() (unsigned int const& row, unsigned int const& col, unsigned int const& channel) const
-		{
-			if (row >= m_Height)
-			{
-				std::stringstream txt;
-				txt << "row index " << row << " too high (imagebuffer height: " << m_Height << ")";
-				throw ImagebufferException(txt.str());
-			}
-			else if (col >= m_Width)
-			{
-				std::stringstream txt;
-				txt << "col index " << col << " too high (imagebuffer width: " << m_Width << ")";
-				throw ImagebufferException(txt.str());
-			}
-			else if (channel >= m_Channels)
-			{
-				std::stringstream txt;
-				txt << "channel index " << channel << " too high (imagebuffer has " << m_Height << " channels)";
-				throw ImagebufferException(txt.str());
-			}
-
-			unsigned int index = row * m_Width * m_Channels + col * m_Channels + channel;
-			//return m_Data.get()[index];
-			return m_Data[index];
-		}
-
-		T& operator() (unsigned int const& row, unsigned int const& col, unsigned int const& channel)
-		{
-			if (row >= m_Height)
-			{
-				std::stringstream txt;
-				txt << "row index " << row << " too high (imagebuffer height: " << m_Height << ")";
-				throw ImagebufferException(txt.str());
-			}
-			else if (col >= m_Width)
-			{
-				std::stringstream txt;
-				txt << "col index " << col << " too high (imagebuffer width: " << m_Width << ")";
-				throw ImagebufferException(txt.str());
-			}
-			else if (channel >= m_Channels)
-			{
-				std::stringstream txt;
-				txt << "channel index " << channel << " too high (imagebuffer has " << m_Height << " channels)";
-				throw ImagebufferException(txt.str());
-			}
-
-			unsigned int index = row * m_Width * m_Channels + col * m_Channels + channel;
-			//return m_Data.get()[index];
-			return m_Data[index];
-		}
-
-		//Imagebuffer< DataType >::iterator
-
-	private:
-
-		template< typename T >
-		friend class Pixelbuffer;
-
-		template< typename T >
-		friend class Iterator;
-
-		//Poco::SharedPtr< T > data() const
-		//{
-		//	return m_Data[0];
-		//}
-
-		T const* const rawData() const
-		{
-			return &m_Data[0];
-		}
-
-		//class Iterator
-		//{
-
-		//public:
-
-		//	Iterator(Imagebuffer< T > *buffer) :
-		//		m_Buffer(buffer),
-		//		m_Ptr(buffer->rawData())
-		//	{
-		//	}
-
-		//	operator++
-
-		//private:
-
-		//	T							*m_Ptr;
-		//	Imagebuffer< T >			m_Buffer;
-
-		//};
-
-		unsigned int					m_Width;
-		unsigned int					m_Height;
-		unsigned int					m_Channels;
-		unsigned int					m_Size;
-		unsigned int					m_ByteSize;
-		unsigned int					m_BytesPerPixel;
-		//Poco::SharedPtr< T >			m_Data;
-		std::vector< T >				m_Data;
-
-	};
-
-	class ImagebufferException : public Exception
-	{
-
-	public:
-
-		ImagebufferException(std::string const& message) :
-			Exception(message)
-		{
-		}
-
-	};
-
-	typedef Imagebuffer< float >			Image2D_float;
-	typedef Imagebuffer< double >			Image2D_double;
-	typedef Imagebuffer< unsigned char >	Image2D_uchar;
-	typedef Imagebuffer< unsigned int >		Image2D_uint;
-
-	template< typename T >
+	template< typename DataType >
 	class Pixelbuffer
 	{
 
 	public:
 
-		Pixelbuffer() :
-			m_Width(0),
-			m_Height(0),
-			m_Channels(0),
-			m_BytesPerPixel(0),
-			m_Size(0),
-			m_ByteSize(0),
-			m_Data(NULL),
-			m_OwnedData(NULL),
-			m_IsSharedData(true)
-		{
-		}
+		Pixelbuffer();
+		Pixelbuffer(Pixelbuffer const& src);
+		Pixelbuffer& operator=(Pixelbuffer const& src);
 
-		Pixelbuffer(Pixelbuffer const& src) :
-			m_Width(src.m_Width),
-			m_Height(src.m_Height),
-			m_Channels(src.m_Channels),
-			m_BytesPerPixel(src.m_BytesPerPixel),
-			m_Size(src.m_Size),
-			m_ByteSize(src.m_ByteSize),
-			m_Data(src.m_Data),
-			m_OwnedData(src.m_OwnedData),
-			m_IsSharedData(src.m_IsSharedData)
-		{
-		}
+		void assign(DataType* data, unsigned int width, unsigned int height, unsigned int channels, bool owns);
+		void assign(Poco::SharedPtr< DataType > data, unsigned int width, unsigned int height, unsigned int channels);
 
-		Pixelbuffer(T *data, unsigned int const& width, unsigned int const& height, unsigned int const& channels, bool const& owns) :
-			m_Width(with),
-			m_Height(height),
-			m_Channels(channels),
-			m_BytesPerPixel(sizeof(T)*channels),
-			m_Size(width*height*channels),
-			m_ByteSize(sizeof(T)*m_Size),
-			m_IsSharedData(owns)
-		{
-			if (owns)
-			{
-				m_OwnedData.assign(data);
-				m_Data = NULL;
-			}
-			else
-			{
-				m_OwnedData.assign(NULL);
-				m_Data = data;
-			}
-		}
+		template< typename T >
+		friend std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& pb);
 
-		Pixelbuffer& operator=(Pixelbuffer const& src)
-		{
-			m_Width = src.m_Width;
-			m_Height = src.m_Height;
-			m_Channels = src.m_Channels;
-			m_BytesPerPixel = src.m_BytesPerPixel;
-			m_Size = src.m_Size;
-			m_ByteSize = src.m_ByteSize;
-			m_Data = src.m_Data;
-			m_IsSharedData = src.m_IsSharedData;
-			m_OwnedData = src.m_OwnedData;
+		template< typename T >
+		friend std::istream& operator>>(std::istream& in, Pixelbuffer< T > &pb);
 
-			return *this;
-		}
+		const unsigned int width() const;
+		const unsigned int height() const;
+		const unsigned int bytesPerPixel() const;
+		const unsigned int channels() const;
+		const unsigned int size() const;
+		const unsigned int byteSize() const;
 
-		/*
-		*	copies the imagebuffer's contents into the pixelbuffer
-		*/
-		void copy(Imagebuffer< T > const& src)
-		{
-			m_Width = src.width();
-			m_Height = src.height();
-			m_Size = src.size();
-			m_BytesPerPixel = src.bytesPerPixel();
-			m_ByteSize = src.byteSize();
-			m_Channels = src.channels();
-			m_IsSharedData = true;
-			m_Data = NULL;
-			m_OwnedData.assign(NULL);
-
-			T* tmp = new T[m_Size];
-			memcpy(tmp, src.rawData(), m_ByteSize);
-			m_OwnedData.assign(tmp);
-		}
-
-		~Pixelbuffer()
-		{
-		}
-
-		void assign(T* data, unsigned int const& width, unsigned int const& height, unsigned int const& channels, bool const& owns)
-		{
-			m_Width = width;
-			m_Height = height;
-			m_Channels = channels;
-			m_BytesPerPixel = sizeof(T)*channels;
-			m_Size = width*height*channels;
-			m_ByteSize = m_BytesPerPixel*width*height;
-			m_IsSharedData = owns;
-			if (owns)
-			{
-				m_OwnedData.assign(data);
-				m_Data = NULL;
-			}
-			else
-			{
-				m_OwnedData.assign(NULL);
-				m_Data = data;
-			}
-		}
-
-		void assign(Poco::SharedPtr< T > data, unsigned int const& width, unsigned int const& height, unsigned int const& channels)
-		{
-			m_Width = width;
-			m_Height = height;
-			m_Channels = channels;
-			m_BytesPerPixel = sizeof(T)*channels;
-			m_Size = width*height*channels;
-			m_ByteSize = m_BytesPerPixel*width*height;
-			m_IsSharedData = true;
-			m_OwnedData.assign(data);
-			m_Data = NULL;
-		}
-
-		friend std::ostream& operator<<(std::ostream& out, Pixelbuffer< T > pb)
-		{
-			out << "yay";
-			return out;
-		}
-
-		unsigned int const& width() const
-		{
-			return m_Width;
-		}
-
-		unsigned int const& height() const
-		{
-			return m_Height;
-		}
-
-		unsigned int const& bytesPerPixel() const
-		{
-			return m_BytesPerPixel;
-		}
-
-		unsigned int const& channels() const
-		{
-			return m_Channels;
-		}
-
-		unsigned int const& size() const
-		{
-			return m_Size;
-		}
-
-		unsigned int const& byteSize() const
-		{
-			return m_ByteSize;
-		}
-
-		T const *const rawData() const
-		{
-			if (m_IsSharedData)
-			{
-				return m_OwnedData.get();
-			}
-			else
-			{
-				return m_Data;
-			}
-		}
-
-		T const& operator() (unsigned int const& row, unsigned int const& col, unsigned int const& channel) const
-		{
-			if (row >= m_Height)
-			{
-				std::stringstream txt;
-				txt << "row index " << row << " too high (pixelbuffer height: " << m_Height << ")";
-				throw PixelbufferException(txt.str());
-			}
-			else if (col >= m_Width)
-			{
-				std::stringstream txt;
-				txt << "col index " << col << " too high (pixelbuffer width: " << m_Width << ")";
-				throw PixelbufferException(txt.str());
-			}
-			else if (channel >= m_Channels)
-			{
-				std::stringstream txt;
-				txt << "channel index " << channel << " too high (pixelbuffer has " << m_Height << " channels)";
-				throw PixelbufferException(txt.str());
-			}
-
-			unsigned int index = row * m_Width * m_Channels + col * m_Channels + channel;
-			if (m_IsSharedData)
-			{
-				return m_OwnedData.get()[index];
-			}
-			else
-			{
-				return m_Data[index];
-			}
-		}
+		DataType const *const rawData() const;
+		const DataType operator()(unsigned int const& row, unsigned int const& col, unsigned int const& channel) const;
 
 	private:
 
-		bool							m_IsSharedData;
-		Poco::SharedPtr<  T >			m_OwnedData;
-		T								const* m_Data;
+		bool							m_IsOwnedData;
+		Poco::SharedPtr< DataType >		m_OwnedData;
+		DataType						const* m_Data;
 		unsigned int					m_Width;
 		unsigned int					m_Height;
 		unsigned int					m_Channels;
@@ -413,17 +61,189 @@ namespace _2Real
 
 	};
 
-	class PixelbufferException : public Exception
+	template< typename DataType >
+	Pixelbuffer< DataType >::Pixelbuffer() :
+		m_Width(0),
+		m_Height(0),
+		m_Channels(0),
+		m_BytesPerPixel(0),
+		m_Size(0),
+		m_ByteSize(0),
+		m_Data(NULL),
+		m_OwnedData(NULL),
+		m_IsOwnedData(true)
 	{
+	}
 
-	public:
+	template< typename DataType >
+	Pixelbuffer< DataType >::Pixelbuffer(Pixelbuffer< DataType > const& src) :
+		m_Width(src.m_Width),
+		m_Height(src.m_Height),
+		m_Channels(src.m_Channels),
+		m_BytesPerPixel(src.m_BytesPerPixel),
+		m_Size(src.m_Size),
+		m_ByteSize(src.m_ByteSize),
+		m_Data(src.m_Data),
+		m_OwnedData(src.m_OwnedData),
+		m_IsOwnedData(src.m_IsOwnedData)
+	{
+	}
 
-		PixelbufferException(std::string const& message) :
-			Exception(message)
+	template< typename DataType >
+	Pixelbuffer< DataType >& Pixelbuffer< DataType >::operator=(Pixelbuffer< DataType > const& src)
+	{
+		if (this == &src)
 		{
+			return *this;
 		}
 
-	};
+		m_Width = src.m_Width;
+		m_Height = src.m_Height;
+		m_Channels = src.m_Channels;
+		m_BytesPerPixel = src.m_BytesPerPixel;
+		m_Size = src.m_Size;
+		m_ByteSize = src.m_ByteSize;
+		m_Data = src.m_Data;
+		m_OwnedData = src.m_OwnedData;
+		m_IsOwnedData = src.m_IsOwnedData;
+
+		return *this;
+	}
+
+	template< typename DataType >
+	void Pixelbuffer< DataType >::assign(DataType *data, unsigned int width, unsigned int height, unsigned int channels, bool owns)
+	{
+		m_Width = width;
+		m_Height = height;
+		m_Channels = channels;
+		m_BytesPerPixel = sizeof(DataType)*channels;
+		m_Size = width*height*channels;
+		m_ByteSize = m_BytesPerPixel*width*height;
+		m_IsOwnedData = owns;
+
+		if (owns)
+		{
+			m_OwnedData.assign(data);
+			m_Data = NULL;
+		}
+		else
+		{
+			m_OwnedData.assign(NULL);
+			m_Data = data;
+		}
+	}
+
+	template< typename DataType >
+	void Pixelbuffer< DataType >::assign(Poco::SharedPtr< DataType > data, unsigned int width, unsigned int height, unsigned int channels)
+	{
+		m_Width = width;
+		m_Height = height;
+		m_Channels = channels;
+		m_BytesPerPixel = sizeof(DataType)*channels;
+		m_Size = width*height*channels;
+		m_ByteSize = m_BytesPerPixel*width*height;
+		m_IsOwnedData = true;
+		m_OwnedData.assign(data);
+		m_Data = NULL;
+	}
+
+	template< typename T >
+	std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& pb)
+	{
+		out << pb.m_Width << " " << pb.m_Height << " " << pb.m_Channels << std::endl;
+		return out;
+	}
+
+	template< typename T >
+	std::istream& operator>>(std::istream& in, typename Pixelbuffer< T > &pb)
+	{
+		char ws;
+		in >> pb.m_Width >> ws >> pb.m_Height >> ws >> pb.m_Channels;
+		return in;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::width() const
+	{
+		return m_Width;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::height() const
+	{
+		return m_Height;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::bytesPerPixel() const
+	{
+		return m_BytesPerPixel;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::channels() const
+	{
+		return m_Channels;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::size() const
+	{
+		return m_Size;
+	}
+
+	template< typename DataType >
+	const unsigned int Pixelbuffer< DataType >::byteSize() const
+	{
+		return m_ByteSize;
+	}
+
+	template< typename DataType >
+	DataType const *const Pixelbuffer< DataType >::rawData() const
+	{
+		if (m_IsOwnedData)
+		{
+			return m_OwnedData.get();
+		}
+		else
+		{
+			return m_Data;
+		}
+	}
+
+	template< typename DataType >
+	const DataType Pixelbuffer< DataType >::operator() (unsigned int const& row, unsigned int const& col, unsigned int const& channel) const
+	{
+		if (row >= m_Height)
+		{
+			std::stringstream txt;
+			txt << "row index " << row << " too high (pixelbuffer height: " << m_Height << ")";
+			throw PixelbufferException(txt.str());
+		}
+		else if (col >= m_Width)
+		{
+			std::stringstream txt;
+			txt << "col index " << col << " too high (pixelbuffer width: " << m_Width << ")";
+			throw PixelbufferException(txt.str());
+		}
+		else if (channel >= m_Channels)
+		{
+			std::stringstream txt;
+			txt << "channel index " << channel << " too high (pixelbuffer has " << m_Height << " channels)";
+			throw PixelbufferException(txt.str());
+		}
+
+		unsigned int index = row * m_Width * m_Channels + col * m_Channels + channel;
+
+		if (m_IsOwnedData)
+		{
+			return m_OwnedData.get()[index];
+		}
+		else
+		{
+			return m_Data[index];
+		}
+	}
 
 	typedef Pixelbuffer< float >			Buffer2D_float;
 	typedef Pixelbuffer< double >			Buffer2D_double;

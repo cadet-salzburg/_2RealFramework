@@ -38,10 +38,10 @@ namespace _2Real
 
 	void RunnableGraph::setup()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			(*it)->setup();
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	(*it)->setup();
+		//}
 	}
 
 	void RunnableGraph::shutdown()
@@ -57,5 +57,67 @@ namespace _2Real
 		}
 
 		m_Children.clear();
+	}
+
+	void RunnableGraph::removeChild(Identifier const& childId)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		RunnableList::iterator it = iteratorId(childId);
+
+		if (it == m_ListIterator)
+		{
+			//increase the stored iterator so that the child can safely be erased from the list
+			m_ListIterator++;
+		}
+
+		m_Children.erase(it);
+	}
+
+	void RunnableGraph::insertChild(RunnableManager &child, unsigned int index)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		RunnableList::iterator it = iteratorPosition(index);
+		m_Children.insert(it, &child);
+		child.getManagedRunnable().setFather(*this);
+		
+		if (it == m_ListIterator)
+		{
+			//the new child will be updated next
+			m_ListIterator--;
+		}
+	}
+
+	RunnableManager * RunnableGraph::getFirstChild()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		if (m_Children.empty())
+		{
+			return NULL;
+		}
+
+		RunnableManager *first = *(m_Children.begin());
+
+		m_ListIterator = m_Children.begin();
+		m_ListIterator++;
+
+		return first;
+	}
+
+	RunnableManager * RunnableGraph::getNextChild()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		if (m_ListIterator == m_Children.end())
+		{
+			return NULL;
+		}
+
+		RunnableManager *child = *m_ListIterator;
+		m_ListIterator++;
+
+		return child;
 	}
 }

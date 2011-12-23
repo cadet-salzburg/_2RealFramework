@@ -27,6 +27,8 @@
 #include <iostream>
 #include <string>
 
+#include <vld.h>
+
 #include "Poco\Mutex.h"
 
 using namespace _2Real;
@@ -118,7 +120,7 @@ int main(int argc, char *argv[])
 		System sys("sys");
 
 		sys.registerToException(::systemException);
-		sys.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
+		sys.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
 		sys.setLogfile("simplesystem.txt");
 
 		Identifier plugin = sys.loadPlugin("plugin", "SimpleStuff");
@@ -162,21 +164,24 @@ int main(int argc, char *argv[])
 		sys.setUpdateRate(vec2, 20.0f);
 		sys.setUpdateRate(vec3, 20.0f);
 		sys.setUpdateRate(add, 20.0f);
-		sys.setUpdateRate(sub, 0.1f);
-
-		sys.start(vec1);
-		sys.start(vec2);
-		sys.start(vec3);
-		sys.start(add);
-		sys.start(sub);
-
-		cout << "main: SERVICES STARTED" << endl;
+		sys.setUpdateRate(sub, 20.0f);
 
 		sys.registerToNewData(sub, "sub out", ::subDataAvailable);
 		sys.registerToNewData(add, "add out", ::addDataAvailable);
 		sys.registerToNewData(vec1, "init out", ::vec1DataAvailable);
 		sys.registerToNewData(vec2, "init out", ::vec2DataAvailable);
 		sys.registerToNewData(vec3, "init out", ::vec3DataAvailable);
+
+		sys.start(vec1);
+		sys.start(vec2);
+		sys.start(vec3);
+		//sys.start(add);
+		//sys.start(sub);
+
+		cout << "main: SERVICES STARTED" << endl;
+
+		Identifier seq = sys.createSequence("test sequence", add, sub);
+		sys.start(seq);
 
 		run = true;
 		while(run)
@@ -284,16 +289,8 @@ int main(int argc, char *argv[])
 		}
 
 		sys.stopAll();
-		//sys.stop(vec1);
-		//sys.stop(vec2);
-		//sys.stop(vec3);
-		//sys.stop(add);
-		//sys.stop(sub);
 
 		cout << "main: SERVICES STOPPED" << endl;
-
-		//test system falls out of scope here
-		//->services are deleted, plugins uninstalled
 	}
 	catch (_2Real::Exception &e)
 	{
@@ -303,6 +300,8 @@ int main(int argc, char *argv[])
 	{
 		cout << e.what() << endl;
 	}
+
+	cout << "main: quit" << endl;
 
 	while(1)
 	{
@@ -316,6 +315,4 @@ int main(int argc, char *argv[])
 	}
 
 	return 0;
-
-	//engine is destroyed here
 }

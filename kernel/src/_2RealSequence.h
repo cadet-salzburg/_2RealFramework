@@ -31,10 +31,7 @@ namespace _2Real
 	public:
 
 		Sequence(Identifier const& id, SystemGraph &system);
-
 		void run();
-		void insertChild(RunnableManager &child, unsigned int index);
-		void removeChild(Identifier const& id);
 
 	};
 

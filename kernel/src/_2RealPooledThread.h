@@ -25,6 +25,7 @@
 #include "Poco/Runnable.h"
 #include "Poco/Thread.h"
 #include "Poco/Event.h"
+#include "Poco/Timestamp.h"
 
 #include <ctime>
 
@@ -38,26 +39,32 @@ namespace _2Real
 
 		PooledThread(unsigned int stackSize = POCO_THREAD_STACK_SIZE);
 
-		void start();
-
-		void start(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
-		void update(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
+		void start(Poco::Thread::Priority const& priority, _2Real::Runnable &target, bool runOnce = false);
+		void stop();
+		void wait();
 
 		bool isIdle() const;
-		void wait();
+		bool keepRunning() const;
+		void stopRunning();
+
 		void kill();
-		void activate();
+		void reactivate();
+
 		void run();
 
 	private:
+
+		bool						m_Run;
+		bool						m_RunOnce;
 
 		volatile bool				m_IsIdle;
 		_2Real::Runnable			*m_Target;
 		Poco::Thread				m_Thread;
 		Poco::Event					m_TargetReady;
 		Poco::Event					m_TargetCompleted;
-		Poco::Event					m_Started;
-		mutable Poco::FastMutex		m_Mutex;
+		Poco::Event					m_ThreadStarted;
+		mutable Poco::Mutex			m_Mutex;
+		Poco::Timestamp				m_Timer;
 
 	};
 

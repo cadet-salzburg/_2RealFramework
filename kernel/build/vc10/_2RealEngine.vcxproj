@@ -17,6 +17,7 @@
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealImagebuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />

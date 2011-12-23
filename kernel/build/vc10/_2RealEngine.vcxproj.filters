@@ -81,6 +81,9 @@
     <ClCompile Include="..\..\src\_2RealRunnable.cpp">
       <Filter>Graphs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealImagebuffer.cpp">
+      <Filter>Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />

@@ -95,7 +95,7 @@ namespace _2Real
 	void Engine::setSystemDirectory(std::string const& directory, Identifier const& systemId)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
-		
+
 		nirvana.setInstallDirectory(directory);
 	}
 
