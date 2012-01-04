@@ -82,6 +82,7 @@ namespace _2Real
 
 		if (!thread)
 		{
+			std::cout << "threadpool: needed new thread" << std::endl;
 			thread = new PooledThread(m_StackSize);
 			m_Threads.push_back(thread);
 		}

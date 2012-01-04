@@ -20,11 +20,14 @@
 #include "_2RealRunnableGraph.h"
 #include "_2RealRunnableManager.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 	RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
 		Runnable(id, system),
-		Graph()
+		Graph(),
+		m_ListIterator(m_Children.begin())
 	{
 	}
 
@@ -78,15 +81,29 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
+		std::cout << "locked mutex" << std::endl;
+
 		RunnableList::iterator it = iteratorPosition(index);
+
+		std::cout << "got position" << std::endl;
+
 		m_Children.insert(it, &child);
+
+		std::cout << "inserted" << std::endl;
+
 		child.getManagedRunnable().setFather(*this);
 		
+		std::cout << "set father" << std::endl;
+
 		if (it == m_ListIterator)
 		{
 			//the new child will be updated next
+			std::cout << "increasing before current" << std::endl;
 			m_ListIterator--;
+			std::cout << "decreased current" << std::endl;
 		}
+
+		std::cout << "done insertion" << std::endl;
 	}
 
 	RunnableManager * RunnableGraph::getFirstChild()

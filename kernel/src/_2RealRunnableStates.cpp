@@ -243,7 +243,7 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
 	{
-		std::cout << runnable.name() << " - WAITING" << std::endl;
+		//std::cout << runnable.name() << " - i'm waiting" << std::endl;
 		thread.wait();
 		std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
