@@ -63,7 +63,12 @@ namespace _2Real
 	{
 		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
-			(*it)->stop();
+			(*it)->stopRunning();
+		}
+
+		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
+		{
+			(*it)->joinThread();
 		}
 	}
 

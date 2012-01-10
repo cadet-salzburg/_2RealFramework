@@ -21,6 +21,8 @@
 #include "_2RealSystemGraph.h"
 #include "_2RealPooledThread.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 
@@ -33,6 +35,8 @@ namespace _2Real
 	{
 		try
 		{
+			//std::cout << "sync updating: " << name() << std::endl;
+
 			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
 				PooledThread &thread = m_System.getFreeThread();
@@ -41,8 +45,8 @@ namespace _2Real
 
 			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
-				//if a child was removed in the meantime, it's not the sync's job to wait for it any more
-				//in the rare case that an updating runnable was added, it will be waited for here
+			//	//if a child was removed in the meantime, it's not the sync's job to wait for it any more
+			//	//in the rare case that an updating runnable was added, it will be waited for here
 				child->wait();
 			}
 

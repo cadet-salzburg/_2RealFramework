@@ -180,7 +180,7 @@ namespace _2Real
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(system);
 
-		if (!id.isService())
+		if (!id.isRunAble())
 		{
 			std::ostringstream msg;
 			msg << "set update rate: " << id.name() << " is a " << id.type() << ", service expected" << std::endl;

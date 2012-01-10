@@ -80,6 +80,7 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
+			std::cout << "nirvana: stopping child " << (*it)->getManagedId() << std::endl;
 			(*it)->stop();
 		}
 
@@ -248,7 +249,10 @@ namespace _2Real
 		{
 			if ((*it)->isRunning())
 			{
+				std::cout << "stopping: " << (*it)->getManagedId().name() << std::endl;
 				(*it)->stop();
+				//(*it)->wait();
+				std::cout << "stopped: " << (*it)->getManagedId().name() << std::endl;
 			}
 		}
 	}
@@ -305,17 +309,23 @@ namespace _2Real
 
 	const Identifier SystemGraph::createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
 	{
+		std::cout << "sequence creation" << std::endl;
+
 		const Identifier id = Entity::createIdentifier(idName, "sequence");
 		Sequence *seq = new Sequence(id, *this);
-
 		RunnableManager &mgrA = getContained(runnableA);
 		RunnableManager &mgrB = getContained(runnableB);
+
+		std::cout << "got contained runnables" << std::endl;
 
 		Graph &parentA = mgrA.getManagedRunnable().father();
 		if (this == &parentA)
 		{
+			std::cout << "removing from: nirvana" << std::endl;
+
 			if (mgrA.isRunning())
 			{
+				std::cout << "stopping" << std::endl;
 				mgrA.stop();
 			}
 
@@ -324,16 +334,20 @@ namespace _2Real
 		}
 		else
 		{
+			std::cout << "removing from: other" << std::endl;
 			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
 		}
 
-		//std::cout << "removed first" << std::endl;
+		std::cout << "removed first" << std::endl;
 
 		Graph &parentB = mgrB.getManagedRunnable().father();
 		if (this == &parentB)
 		{
+			std::cout << "removing from: nirvana" << std::endl;
+
 			if (mgrB.isRunning())
 			{
+				std::cout << "stopping" << std::endl;
 				mgrB.stop();
 			}
 
@@ -342,29 +356,91 @@ namespace _2Real
 		}
 		else
 		{
+			std::cout << "removing from: other" << std::endl;
 			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
 		}
 
-		//std::cout << "removed second" << std::endl;
+		std::cout << "removed second" << std::endl;
 
 		seq->insertChild(mgrB, 0);
 		seq->insertChild(mgrA, 1);
 
-		//std::cout << "inserted" << std::endl;
+		std::cout << "inserted both" << std::endl;
 
 		RunnableManager *manager = new RunnableManager(*seq);
 		m_Children.push_back(manager);
 		manager->setup();
-		//std::cout << "seq created" << std::endl;
+
+		std::cout << "seq created & set up" << std::endl;
+
 		return id;
 	}
 
 	const Identifier SystemGraph::createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
 	{
+		std::cout << "synchronization creation" << std::endl;
+
 		const Identifier id = Entity::createIdentifier(idName, "synchronization");
 		Synchronization *sync = new Synchronization(id, *this);
+		RunnableManager &mgrA = getContained(runnableA);
+		RunnableManager &mgrB = getContained(runnableB);
+
+		std::cout << "got contained runnables" << std::endl;
+
+		Graph &parentA = mgrA.getManagedRunnable().father();
+		if (this == &parentA)
+		{
+			std::cout << "removing from: nirvana" << std::endl;
+			if (mgrA.isRunning())
+			{
+				std::cout << "stopping" << std::endl;
+				mgrA.stop();
+			}
+
+			RunnableList::iterator it = iteratorId(runnableA);
+			m_Children.erase(it);
+		}
+		else
+		{
+			std::cout << "removing from: other" << std::endl;
+			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
+		}
+
+		std::cout << "removed first" << std::endl;
+
+		Graph &parentB = mgrB.getManagedRunnable().father();
+		if (this == &parentB)
+		{
+			std::cout << "removing from: nirvana" << std::endl;
+
+			if (mgrB.isRunning())
+			{
+				std::cout << "stopping" << std::endl;
+				mgrB.stop();
+			}
+
+			RunnableList::iterator it = iteratorId(runnableB);
+			m_Children.erase(it);
+		}
+		else
+		{
+			std::cout << "removing from: other" << std::endl;
+			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
+		}
+
+		std::cout << "removed second" << std::endl;
+
+		sync->insertChild(mgrB, 0);
+		sync->insertChild(mgrA, 1);
+
+		std::cout << "inserted both" << std::endl;
+
 		RunnableManager *manager = new RunnableManager(*sync);
 		m_Children.push_back(manager);
+		manager->setup();
+
+		std::cout << "sync created & set up" << std::endl;
+
 		return id;
 	}
 
@@ -399,6 +475,7 @@ namespace _2Real
 
 	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)
 	{
+		std::cout << "setting update rate of " << id << std::endl;
 		Runnable &runnable = getContained(id).getManagedRunnable();
 		runnable.setUpdateRate(updatesPerSecond);
 	}

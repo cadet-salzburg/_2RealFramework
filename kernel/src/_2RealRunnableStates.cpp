@@ -133,7 +133,7 @@ namespace _2Real
 	RunnableState & RunnableStateSetUp::start(Runnable &runnable, PooledThread &thread)
 	{
 		thread.start(Poco::Thread::PRIO_NORMAL, runnable);
-		//std::cout << runnable.name() << " - state = running" << std::endl;
+		std::cout << runnable.name() << " - state = running" << std::endl;
 		return m_Manager.getState("running");
 	}
 
@@ -192,7 +192,9 @@ namespace _2Real
 
 	RunnableState & RunnableStateRunning::stop(Runnable &runnable, PooledThread &thread)
 	{
-		thread.stop();
+		std::cout << runnable.name() << " stopping the thread" << std::endl;
+		thread.stopTargetRunning();
+		thread.waitForTarget();
 		std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
 	}
@@ -244,7 +246,7 @@ namespace _2Real
 	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
 	{
 		//std::cout << runnable.name() << " - i'm waiting" << std::endl;
-		thread.wait();
+		thread.waitForTarget();
 		//std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
 	}

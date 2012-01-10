@@ -161,11 +161,12 @@ int main(int argc, char *argv[])
 
 		cout << "main: SERVICES SET UP" << endl;
 
-		sys.setUpdateRate(vec1, 20.0f);
-		sys.setUpdateRate(vec2, 20.0f);
-		sys.setUpdateRate(vec3, 20.0f);
-		sys.setUpdateRate(add, 20.0f);
-		sys.setUpdateRate(sub, 20.0f);
+		sys.setUpdateRate(vec1, 10.0f);
+		sys.setUpdateRate(vec2, 10.0f);
+		sys.setUpdateRate(vec3, 10.0f);
+		sys.setUpdateRate(add, 10.0f);
+		sys.setUpdateRate(sub, 10.0f);
+
 
 		sys.registerToNewData(sub, "sub out", ::subDataAvailable);
 		sys.registerToNewData(add, "add out", ::addDataAvailable);
@@ -173,18 +174,50 @@ int main(int argc, char *argv[])
 		sys.registerToNewData(vec2, "init out", ::vec2DataAvailable);
 		sys.registerToNewData(vec3, "init out", ::vec3DataAvailable);
 
-		sys.start(vec1);
-		sys.start(vec2);
-		sys.start(vec3);
+		//in theory, they all should be able to run async as well as sync
+		//sys.start(vec1);
+		//sys.start(vec2);
+		//sys.start(vec3);
 		//sys.start(add);
 		//sys.start(sub);
 
-		cout << "main: SERVICES STARTED" << endl;
+		cout << "main: LET THE FUN BEGIN" << endl;
 
-		Identifier seq = sys.createSequence("test sequence", add, sub);
+		Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
+
+		//cout << "main: SYNC 0 CREATED" << endl;
+
+		sys.setUpdateRate(sync0, 1.f);
+
+		//cout << "main: SYNC 0 RATE SET" << endl;
+
+		sys.start(sync0);
+
+		//cout << "main: SYNC 0 STARTED" << endl;
+
+		Identifier sync1 = sys.createSynchronization("s 1", add, vec3);
+
+		//cout << "main: SYNC 1 CREATED" << endl;
+
+		sys.setUpdateRate(sync1, 1.f);
+
+		//cout << "main: SYNC 1 RATE SET" << endl;
+
+		sys.start(sync1);
+
+		//cout << "main: SYNC 1 STARTED" << endl;
+
+		Identifier seq = sys.createSequence("test sequence", sync1, sub);
+
+		//cout << "main: SEQ CREATED" << endl;
+
+		sys.setUpdateRate(seq, 1.f);
+
+		//cout << "main: SEQ RATE SET" << endl;
+
 		sys.start(seq);
 
-		cout << "main: SERQUENCE CREATED" << endl;
+		//cout << "main: SEQ STARTED" << endl;
 
 		while(1)
 		{

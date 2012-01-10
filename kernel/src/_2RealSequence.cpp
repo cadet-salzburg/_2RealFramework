@@ -35,13 +35,12 @@ namespace _2Real
 	{
 		try
 		{
-			//std::cout << "sequence: update" << std::endl;
+			//std::cout << "updating " << name() << std::endl;
+
 			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
 				PooledThread &thread = m_System.getFreeThread();
-				//std::cout << child->getManagedId() << std::endl;
 				child->update(thread);
-				//std::cout << child->getManagedId() << " going to wait now" << std::endl;
 				child->wait();
 			}
 		}
