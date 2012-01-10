@@ -35,7 +35,6 @@ namespace _2Real
 		for (unsigned int i=0; i<m_Capacity; ++i)
 		{
 			PooledThread *thread = new PooledThread(m_StackSize);
-			//thread->start();
 			m_Threads.push_back(thread);
 		}
 	}
@@ -70,6 +69,8 @@ namespace _2Real
 
 	PooledThread & ThreadPool::getFreeThread()
 	{
+		//std::cout << "threadpool: get free thread " << m_Threads.size() << std::endl;
+
 		PooledThread *thread = NULL;
 		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
@@ -83,6 +84,7 @@ namespace _2Real
 		if (!thread)
 		{
 			std::cout << "threadpool: needed new thread" << std::endl;
+
 			thread = new PooledThread(m_StackSize);
 			m_Threads.push_back(thread);
 		}

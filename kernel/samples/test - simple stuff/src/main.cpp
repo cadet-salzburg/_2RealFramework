@@ -120,8 +120,8 @@ int main(int argc, char *argv[])
 		System sys("sys");
 
 		sys.registerToException(::systemException);
-		//sys.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
-		sys.setInstallDirectory("C:\\users\\Cthulhu\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
+		sys.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
+		//sys.setInstallDirectory("C:\\users\\Cthulhu\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
 		sys.setLogfile("simplesystem.txt");
 
 		Identifier plugin = sys.loadPlugin("plugin", "SimpleStuff");

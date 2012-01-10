@@ -31,8 +31,9 @@ namespace _2Real
 		m_IsIdle(true),
 		m_Target(NULL),
 		m_Thread(""),
-		m_Run(false),
-		m_RunOnce(false),
+		m_Run(true),
+		m_RunTarget(false),
+		m_RunTargetOnce(false),
 		m_TargetReady(false),
 		m_TargetCompleted(false),
 		m_ThreadStarted(false),
@@ -61,6 +62,18 @@ namespace _2Real
 		m_Run = false;
 	}
 
+	bool PooledThread::keepTargetRunning() const
+	{
+		Poco::Mutex::ScopedLock lock(m_Mutex);
+		return m_RunTarget;
+	}
+
+	void PooledThread::stopTargetRunning()
+	{
+		Poco::Mutex::ScopedLock lock(m_Mutex);
+		m_RunTarget = false;
+	}
+
 	void PooledThread::start(Poco::Thread::Priority const& priority, _2Real::Runnable &target, bool runOnce)
 	{
 		Poco::Mutex::ScopedLock lock(m_Mutex);
@@ -69,11 +82,10 @@ namespace _2Real
 		m_Thread.setPriority(priority);
 
 		m_Target = &target;
-		m_Run = true;
+		m_RunTarget = true;
 		if (runOnce)
 		{
-			//std::cout << m_Thread.getName() << " starting once" << std::endl;
-			m_RunOnce = true;
+			m_RunTargetOnce = true;
 		}
 		m_TargetReady.set();
 	}
@@ -84,7 +96,7 @@ namespace _2Real
 
 		if (m_Run)
 		{
-			stopRunning();
+			stopTargetRunning();
 			m_Mutex.unlock();
 			m_TargetCompleted.wait();
 		}
@@ -101,7 +113,6 @@ namespace _2Real
 		if (m_Run)
 		{
 			m_Mutex.unlock();
-			//std::cout << m_Thread.getName() << " waiting for target completion" << std::endl;
 			m_TargetCompleted.wait();
 		}
 		else
@@ -139,7 +150,7 @@ namespace _2Real
 	{
 		m_ThreadStarted.set();
 
-		while (1)
+		while (keepRunning())
 		{
 			//if (m_Thread.getName() == "subtraction" || m_Thread.getName() == "addition")
 			//{
@@ -154,7 +165,7 @@ namespace _2Real
 			//	std::cout << m_Thread.getName() << " acquired target" << std::endl;
 			//}
 
-			while (keepRunning())
+			while (keepTargetRunning())
 			{
 
 				//if (m_Thread.getName() == "subtraction" || m_Thread.getName() == "addition")
@@ -171,14 +182,13 @@ namespace _2Real
 				//	std::cout << m_Thread.getName() << " after run" << std::endl;
 				//}
 
-				if (m_RunOnce || !keepRunning())
+				if (m_RunTargetOnce || !keepRunning())
 				{
 					//std::cout << m_Thread.getName() << "has run once" << std::endl;
 					break;
 				}
 				else
 				{
-					//std::cout << m_Thread.getName() << " going to sleep now" << std::endl;
 					long delay = m_Target->getMaxDelay();
 					long elapsed = (long)m_Timer.elapsed()/1000;
 					long sleep = delay - elapsed;
@@ -190,20 +200,22 @@ namespace _2Real
 			}
 
 			//std::cout << m_Thread.getName() << " run finished" << std::endl;
-			//
+			
 			Poco::Mutex::ScopedLock lock(m_Mutex);
 			m_TargetCompleted.set();
 			
 			//std::cout << m_Thread.getName() << " set completion" << std::endl;
-			//
-			m_Run = false;
+			
+			m_RunTarget = false;
 			m_Target = NULL;
+
+			//std::cout << m_Thread.getName() << " set to idle" << std::endl;
+
 			m_IsIdle = true;
-			m_RunOnce = false;
+			m_RunTargetOnce = false;
 			Poco::ThreadLocalStorage::clear();
 			m_Thread.setName("");
 			m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
-			//break;
 		}
 	}
 

@@ -45,7 +45,9 @@ namespace _2Real
 
 		bool isIdle() const;
 		bool keepRunning() const;
+		bool keepTargetRunning() const;
 		void stopRunning();
+		void stopTargetRunning();
 
 		void kill();
 		void reactivate();
@@ -55,7 +57,8 @@ namespace _2Real
 	private:
 
 		bool						m_Run;
-		bool						m_RunOnce;
+		bool						m_RunTarget;
+		bool						m_RunTargetOnce;
 
 		volatile bool				m_IsIdle;
 		_2Real::Runnable			*m_Target;
