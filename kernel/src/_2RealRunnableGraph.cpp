@@ -79,9 +79,11 @@ namespace _2Real
 
 	void RunnableGraph::insertChild(RunnableManager &child, unsigned int index)
 	{
+		std::cout << "WATING FOR mutex" << std::endl;
+
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-		//std::cout << "locked mutex" << std::endl;
+		std::cout << "LOCKED mutex" << std::endl;
 
 		RunnableList::iterator it = iteratorPosition(index);
 

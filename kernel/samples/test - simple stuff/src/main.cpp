@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 
 		Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
 
-		//cout << "main: SYNC 0 CREATED" << endl;
+		cout << "main: SYNC 0 CREATED" << endl;
 
 		sys.setUpdateRate(sync0, 1.f);
 
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 
 		Identifier sync1 = sys.createSynchronization("s 1", add, vec3);
 
-		//cout << "main: SYNC 1 CREATED" << endl;
+		cout << "main: SYNC 1 CREATED" << endl;
 
 		sys.setUpdateRate(sync1, 1.f);
 
@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
 
 		Identifier seq = sys.createSequence("test sequence", sync1, sub);
 
-		//cout << "main: SEQ CREATED" << endl;
+		cout << "main: SEQ CREATED" << endl;
 
 		sys.setUpdateRate(seq, 1.f);
 
