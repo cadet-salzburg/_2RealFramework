@@ -85,14 +85,14 @@ void vec3DataAvailable(Data &data)
 
 void subDataAvailable(Data &data)
 {
-	ScopedLock< FastMutex > lock(mutex4);
-	subData = data.getData< vector < int > >();
-	cout << "sub data: " << subData.size() << endl;
-	for (unsigned int i=0; i<subData.size(); ++i)
-	{
-		cout << subData.at(i) << " ";
-	}
-	cout << endl;
+	//ScopedLock< FastMutex > lock(mutex4);
+	//subData = data.getData< vector < int > >();
+	//cout << "sub data: " << subData.size() << endl;
+	//for (unsigned int i=0; i<subData.size(); ++i)
+	//{
+	//	cout << subData.at(i) << " ";
+	//}
+	//cout << endl;
 }
 
 void addDataAvailable(Data &data)
@@ -130,8 +130,6 @@ int main(int argc, char *argv[])
 
 		sys.setup(plugin);
 
-		cout << "main: PLUGIN SET UP" << endl;
-
 		Identifier vec1 = sys.createService("vector 1", plugin, "VecInit");
 		Identifier vec2 = sys.createService("vector 2", plugin, "VecInit");
 		Identifier vec3 = sys.createService("vector 3", plugin, "VecInit");
@@ -159,14 +157,11 @@ int main(int argc, char *argv[])
 		sys.setup(add);
 		sys.setup(sub);
 
-		cout << "main: SERVICES SET UP" << endl;
-
-		sys.setUpdateRate(vec1, 10.0f);
-		sys.setUpdateRate(vec2, 10.0f);
-		sys.setUpdateRate(vec3, 10.0f);
-		sys.setUpdateRate(add, 10.0f);
-		sys.setUpdateRate(sub, 10.0f);
-
+		//sys.setUpdateRate(vec1, 30.0f);
+		//sys.setUpdateRate(vec2, 30.0f);
+		//sys.setUpdateRate(vec3, 30.0f);
+		//sys.setUpdateRate(add, 30.0f);
+		//sys.setUpdateRate(sub, 30.0f);
 
 		sys.registerToNewData(sub, "sub out", ::subDataAvailable);
 		sys.registerToNewData(add, "add out", ::addDataAvailable);
@@ -174,50 +169,34 @@ int main(int argc, char *argv[])
 		sys.registerToNewData(vec2, "init out", ::vec2DataAvailable);
 		sys.registerToNewData(vec3, "init out", ::vec3DataAvailable);
 
-		//in theory, they all should be able to run async as well as sync
 		//sys.start(vec1);
 		//sys.start(vec2);
 		//sys.start(vec3);
 		//sys.start(add);
 		//sys.start(sub);
 
-		cout << "main: LET THE FUN BEGIN" << endl;
-
 		Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
 
-		cout << "main: SYNC 0 CREATED" << endl;
+		//cout << "main: SYNC 0 CREATED" << endl;
 
-		sys.setUpdateRate(sync0, 1.f);
-
-		//cout << "main: SYNC 0 RATE SET" << endl;
-
+		sys.setUpdateRate(sync0, 100.0f);
 		sys.start(sync0);
-
-		//cout << "main: SYNC 0 STARTED" << endl;
 
 		Identifier sync1 = sys.createSynchronization("s 1", add, vec3);
 
-		cout << "main: SYNC 1 CREATED" << endl;
+		//cout << "main: SYNC 1 CREATED" << endl;
 
-		sys.setUpdateRate(sync1, 1.f);
-
-		//cout << "main: SYNC 1 RATE SET" << endl;
-
+		sys.setUpdateRate(sync1, 100.0f);
 		sys.start(sync1);
-
-		//cout << "main: SYNC 1 STARTED" << endl;
 
 		Identifier seq = sys.createSequence("test sequence", sync1, sub);
 
-		cout << "main: SEQ CREATED" << endl;
+		//cout << "main: SEQ CREATED" << endl;
 
-		sys.setUpdateRate(seq, 1.f);
-
-		//cout << "main: SEQ RATE SET" << endl;
-
+		sys.setUpdateRate(seq, 100.0f);
 		sys.start(seq);
 
-		//cout << "main: SEQ STARTED" << endl;
+		cout << "main: ALL STARTED" << endl;
 
 		while(1)
 		{
@@ -325,7 +304,7 @@ int main(int argc, char *argv[])
 
 		sys.stopAll();
 
-		cout << "main: SERVICES STOPPED" << endl;
+		cout << "XXXXXXXXXXXXXXXXXXXXXXXXX END XXXXXXXXXXXXXXXXXXXXXXXXX" << endl;
 	}
 	catch (_2Real::Exception &e)
 	{
@@ -335,8 +314,6 @@ int main(int argc, char *argv[])
 	{
 		cout << e.what() << endl;
 	}
-
-	cout << "main: quit" << endl;
 
 	while(1)
 	{

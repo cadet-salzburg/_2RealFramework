@@ -35,8 +35,6 @@ namespace _2Real
 	{
 		try
 		{
-			//std::cout << "updating " << name() << std::endl;
-
 			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
 			{
 				PooledThread &thread = m_System.getFreeThread();

@@ -80,7 +80,6 @@ namespace _2Real
 	{
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
-			std::cout << "nirvana: stopping child " << (*it)->getManagedId() << std::endl;
 			(*it)->stop();
 		}
 
@@ -249,10 +248,10 @@ namespace _2Real
 		{
 			if ((*it)->isRunning())
 			{
-				std::cout << "stopping: " << (*it)->getManagedId().name() << std::endl;
+				//std::cout << "stopping: " << (*it)->getManagedId().name() << std::endl;
 				(*it)->stop();
 				//(*it)->wait();
-				std::cout << "stopped: " << (*it)->getManagedId().name() << std::endl;
+				//std::cout << "stopped: " << (*it)->getManagedId().name() << std::endl;
 			}
 		}
 	}
@@ -309,7 +308,7 @@ namespace _2Real
 
 	const Identifier SystemGraph::createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
 	{
-		std::cout << "sequence creation" << std::endl;
+		//std::cout << "sequence creation" << std::endl;
 
 		const Identifier id = Entity::createIdentifier(idName, "sequence");
 		Sequence *seq = new Sequence(id, *this);
@@ -475,7 +474,6 @@ namespace _2Real
 
 	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)
 	{
-		std::cout << "setting update rate of " << id << std::endl;
 		Runnable &runnable = getContained(id).getManagedRunnable();
 		runnable.setUpdateRate(updatesPerSecond);
 	}

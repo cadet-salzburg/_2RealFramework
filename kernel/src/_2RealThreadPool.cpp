@@ -49,18 +49,6 @@ namespace _2Real
 
 	void ThreadPool::clearThreads()
 	{
-		joinAll();
-
-		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
-		{
-			(*it)->kill();
-		}
-
-		m_Threads.clear();
-	}
-
-	void ThreadPool::joinAll()
-	{
 		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
 			(*it)->stopRunning();
@@ -68,14 +56,17 @@ namespace _2Real
 
 		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
 		{
-			(*it)->joinThread();
+			if ((*it)->join())
+			{
+				delete *it;
+			}
 		}
+
+		m_Threads.clear();
 	}
 
 	PooledThread & ThreadPool::getFreeThread()
 	{
-		//std::cout << "threadpool: get free thread " << m_Threads.size() << std::endl;
-
 		PooledThread *thread = NULL;
 		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
@@ -88,7 +79,7 @@ namespace _2Real
 
 		if (!thread)
 		{
-			std::cout << "threadpool: needed new thread" << std::endl;
+			std::cout << "threadpool: CREATED NEW THREAD " << m_Threads.size() << std::endl;
 
 			thread = new PooledThread(m_StackSize);
 			m_Threads.push_back(thread);

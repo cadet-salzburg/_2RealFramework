@@ -27,7 +27,8 @@ namespace _2Real
 	RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
 		Runnable(id, system),
 		Graph(),
-		m_ListIterator(m_Children.begin())
+		m_ListIterator(m_Children.begin()),
+		m_ChildrenInUpdate(0)
 	{
 	}
 
@@ -74,47 +75,68 @@ namespace _2Real
 			m_ListIterator++;
 		}
 
+		if ((*it)->isUpdating())
+		{
+			//that's one less to wait for
+			m_ChildrenInUpdate--;
+			//in theory, this one could be the last one that is being waited for
+			if (m_ChildrenInUpdate == 0)
+			{
+				m_ChildrenFinished.set();
+			}
+		}
+
 		m_Children.erase(it);
 	}
 
 	void RunnableGraph::insertChild(RunnableManager &child, unsigned int index)
 	{
-		std::cout << "WATING FOR mutex" << std::endl;
-
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-
-		std::cout << "LOCKED mutex" << std::endl;
 
 		RunnableList::iterator it = iteratorPosition(index);
 
-		//std::cout << "got position" << std::endl;
-
 		m_Children.insert(it, &child);
 
-		//std::cout << "inserted" << std::endl;
-
 		child.getManagedRunnable().setFather(*this);
-		
-		//std::cout << "set father" << std::endl;
 
 		if (it == m_ListIterator)
 		{
 			//the new child will be updated next
-			//std::cout << "increasing before current" << std::endl;
 			m_ListIterator--;
-			//std::cout << "decreased current" << std::endl;
 		}
 
-		//std::cout << "done insertion" << std::endl;
+		if ((*it)->isUpdating())
+		{
+			//that's one more to wait for
+			m_ChildrenInUpdate++;
+
+			//i need to handle this at some point...
+		}
 	}
 
-	RunnableManager * RunnableGraph::getFirstChild()
+	//keep in mind, this can happen at any time, not just after an update
+	void RunnableGraph::childFinished(Identifier const& childId)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		//get the child in question out of its updating state
+		RunnableManager *child = *iteratorId(childId);
+		child->updateComplete();
+
+		m_ChildrenInUpdate--;
+		if (m_ChildrenInUpdate == 0)
+		{
+			m_ChildrenFinished.set();
+		}
+	}
+
+	bool RunnableGraph::updateFirstChild(PooledThread &thread)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
 		if (m_Children.empty())
 		{
-			return NULL;
+			return false;
 		}
 
 		RunnableManager *first = *(m_Children.begin());
@@ -122,21 +144,27 @@ namespace _2Real
 		m_ListIterator = m_Children.begin();
 		m_ListIterator++;
 
-		return first;
+		first->update(thread);
+		m_ChildrenInUpdate++;
+
+		return true;
 	}
 
-	RunnableManager * RunnableGraph::getNextChild()
+	bool RunnableGraph::updateNextChild(PooledThread &thread)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
 		if (m_ListIterator == m_Children.end())
 		{
-			return NULL;
+			return false;
 		}
 
 		RunnableManager *child = *m_ListIterator;
 		m_ListIterator++;
 
-		return child;
+		child->update(thread);
+		m_ChildrenInUpdate++;
+
+		return true;
 	}
 }

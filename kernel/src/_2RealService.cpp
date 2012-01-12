@@ -143,6 +143,7 @@ namespace _2Real
 		}
 		catch (_2Real::Exception &e)
 		{
+			std::cout << "EXCEPTION" << std::endl;
 			m_System.handleException(*this, e);
 		}
 	}

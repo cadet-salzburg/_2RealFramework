@@ -22,15 +22,42 @@
 #include "_2RealGraph.h"
 
 #include "Poco/Mutex.h"
+#include "Poco/Event.h"
 
 namespace _2Real
 {
-
 	/**
 	*	sequences & synchronizations are runnable graphs,
 	*	i.e. graphs that have a run method
 	*	this means that insert / remove operations might happen while the graph is running
 	*/
+
+	class Operation
+	{
+
+		void performOperation(std::list< RunnableManager * > &children);
+
+	};
+
+	class Insertion : public Operation
+	{
+	public:
+
+		Insertion(RunnableManager *child, unsigned int index);
+
+		RunnableManager * getChild();
+		unsigned int getPosition();
+
+	private:
+
+		RunnableManager *	m_Runnable;
+		unsigned int		m_Position;
+
+	};
+
+	class Removal : public Operation
+	{
+	};
 
 	class RunnableGraph : public Runnable, public Graph
 	{
@@ -49,13 +76,20 @@ namespace _2Real
 		void insertChild(RunnableManager &child, unsigned int position);
 		void removeChild(Identifier const& childId);
 
+		void childFinished(Identifier const& childId);
+
 	protected:
 
 		/**
 		*	these are needed for thread safe iteration
 		*/
-		RunnableManager * getFirstChild();
-		RunnableManager * getNextChild();
+		bool updateFirstChild(PooledThread &thread);
+		bool updateNextChild(PooledThread &thread);
+
+		Poco::Event				m_ChildrenFinished;
+
+		//runnable graphs can have a list of objects that are to remove or inserted
+		std::list< Operation > m_Operations;
 
 	private:
 
@@ -64,6 +98,8 @@ namespace _2Real
 		*/
 		Poco::FastMutex				m_Mutex;
 		RunnableList::iterator		m_ListIterator;
+
+		unsigned int				m_ChildrenInUpdate;
 
 
 	};

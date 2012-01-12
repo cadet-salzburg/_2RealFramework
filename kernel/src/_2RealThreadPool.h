@@ -35,7 +35,6 @@ namespace _2Real
 		ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name);
 		~ThreadPool();
 
-		void joinAll();
 		void clearThreads();
 
 		PooledThread & getFreeThread();

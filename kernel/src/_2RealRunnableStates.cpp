@@ -133,13 +133,13 @@ namespace _2Real
 	RunnableState & RunnableStateSetUp::start(Runnable &runnable, PooledThread &thread)
 	{
 		thread.start(Poco::Thread::PRIO_NORMAL, runnable);
-		std::cout << runnable.name() << " - state = running" << std::endl;
+		//std::cout << runnable.name() << " - state = running" << std::endl;
 		return m_Manager.getState("running");
 	}
 
 	RunnableState & RunnableStateSetUp::update(Runnable &runnable, PooledThread &thread)
 	{
-		thread.start(Poco::Thread::PRIO_NORMAL, runnable, true);
+		thread.update(Poco::Thread::PRIO_NORMAL, runnable);
 		//std::cout << runnable.name() << " - state = updating" << std::endl;
 		return m_Manager.getState("updating");
 	}
@@ -192,10 +192,10 @@ namespace _2Real
 
 	RunnableState & RunnableStateRunning::stop(Runnable &runnable, PooledThread &thread)
 	{
-		std::cout << runnable.name() << " stopping the thread" << std::endl;
+		std::cout << runnable.name() << " - stopping the thread" << std::endl;
 		thread.stopTargetRunning();
 		thread.waitForTarget();
-		std::cout << runnable.name() << " - state = set up" << std::endl;
+		//std::cout << runnable.name() << " - state = set up" << std::endl;
 		return m_Manager.getState("set up");
 	}
 
@@ -212,7 +212,7 @@ namespace _2Real
 	RunnableState & RunnableStateRunning::handleException(Runnable &runnable)
 	{
 		runnable.handleException();
-		std::cout << runnable.name() << " - state = error" << std::endl;
+		//std::cout << runnable.name() << " - state = error" << std::endl;
 		return m_Manager.getState("halted");
 	}
 
@@ -245,9 +245,8 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
 	{
-		//std::cout << runnable.name() << " - i'm waiting" << std::endl;
 		thread.waitForTarget();
-		//std::cout << runnable.name() << " - state = set up" << std::endl;
+		//std::cout << runnable.name() << " - waited" << std::endl;
 		return m_Manager.getState("set up");
 	}
 
@@ -259,7 +258,7 @@ namespace _2Real
 	RunnableState & RunnableStateUpdating::handleException(Runnable &runnable)
 	{
 		runnable.handleException();
-		std::cout << runnable.name() << " - state = error" << std::endl;
+		//std::cout << runnable.name() << " - state = error" << std::endl;
 		return m_Manager.getState("halted");
 	}
 
@@ -340,7 +339,7 @@ namespace _2Real
 	RunnableState & RunnableStateHalted::shutdown(Runnable &runnable)
 	{
 		runnable.shutdown();
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
+		//std::cout << runnable.name() << " - state = shut down" << std::endl;
 		return m_Manager.getState("shut down");
 	}
 

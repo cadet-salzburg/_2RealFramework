@@ -101,12 +101,12 @@ namespace _2Real
 	{
 		if (m_Thread)
 		{
-			std::cout << "manager: stopping: " << m_Runnable->id() << std::endl;
+			//std::cout << "manager: stopping: " << m_Runnable->id() << std::endl;
 			m_CurrentState = &m_CurrentState->stop(*m_Runnable, *m_Thread);
 		}
 		else
 		{
-			std::cout << "manager: stopping NOTHREAD " << m_Runnable->id() << std::endl;
+			//std::cout << "manager: stopping NOTHREAD " << m_Runnable->id() << std::endl;
 		}
 	}
 
