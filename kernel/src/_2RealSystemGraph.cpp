@@ -308,137 +308,90 @@ namespace _2Real
 
 	const Identifier SystemGraph::createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
 	{
-		//std::cout << "sequence creation" << std::endl;
-
 		const Identifier id = Entity::createIdentifier(idName, "sequence");
 		Sequence *seq = new Sequence(id, *this);
 		RunnableManager &mgrA = getContained(runnableA);
 		RunnableManager &mgrB = getContained(runnableB);
 
-		//std::cout << "got contained runnables" << std::endl;
-
 		Graph &parentA = mgrA.getManagedRunnable().father();
 		if (this == &parentA)
 		{
-			//std::cout << "removing from: nirvana" << std::endl;
-
+			//a runnable can only ever be 'running' if its father is nirvana
 			if (mgrA.isRunning())
 			{
-				//std::cout << "stopping" << std::endl;
+				//signal to the service that it should stop running, but do not wait
+				//the actual waiting should be performed by the new father
 				mgrA.stop();
 			}
-
-			RunnableList::iterator it = iteratorId(runnableA);
-			m_Children.erase(it);
 		}
 		else
 		{
-			//std::cout << "removing from: other" << std::endl;
-			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
+			//otherwise, it's in update state, and the op will be queued
+			static_cast< RunnableGraph & >(parentA).queueOperation(runnableA);
 		}
-
-		//std::cout << "removed first" << std::endl;
 
 		Graph &parentB = mgrB.getManagedRunnable().father();
 		if (this == &parentB)
 		{
-			//std::cout << "removing from: nirvana" << std::endl;
-
 			if (mgrB.isRunning())
 			{
-				//std::cout << "stopping" << std::endl;
 				mgrB.stop();
 			}
-
-			RunnableList::iterator it = iteratorId(runnableB);
-			m_Children.erase(it);
 		}
 		else
 		{
-			//std::cout << "removing from: other" << std::endl;
-			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
+			static_cast< RunnableGraph & >(parentB).queueOperation(runnableB);
 		}
 
-		//std::cout << "removed second" << std::endl;
-
-		seq->insertChild(mgrB, 0);
-		seq->insertChild(mgrA, 1);
-
-		//std::cout << "inserted both" << std::endl;
+		seq->queueOperation(mgrB, 0);
+		seq->queueOperation(mgrA, 1);
 
 		RunnableManager *manager = new RunnableManager(*seq);
 		m_Children.push_back(manager);
 		manager->setup();
-
-		//std::cout << "seq created & set up" << std::endl;
 
 		return id;
 	}
 
 	const Identifier SystemGraph::createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
 	{
-		//std::cout << "synchronization creation" << std::endl;
-
 		const Identifier id = Entity::createIdentifier(idName, "synchronization");
 		Synchronization *sync = new Synchronization(id, *this);
 		RunnableManager &mgrA = getContained(runnableA);
 		RunnableManager &mgrB = getContained(runnableB);
 
-		//std::cout << "got contained runnables" << std::endl;
-
 		Graph &parentA = mgrA.getManagedRunnable().father();
 		if (this == &parentA)
 		{
-			//std::cout << "removing from: nirvana" << std::endl;
 			if (mgrA.isRunning())
 			{
-				//std::cout << "stopping" << std::endl;
 				mgrA.stop();
 			}
-
-			RunnableList::iterator it = iteratorId(runnableA);
-			m_Children.erase(it);
 		}
 		else
 		{
-			//std::cout << "removing from: other" << std::endl;
-			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
+			static_cast< RunnableGraph & >(parentA).queueOperation(runnableA);
 		}
-
-		//std::cout << "removed first" << std::endl;
 
 		Graph &parentB = mgrB.getManagedRunnable().father();
 		if (this == &parentB)
 		{
-			//std::cout << "removing from: nirvana" << std::endl;
-
 			if (mgrB.isRunning())
 			{
-				//std::cout << "stopping" << std::endl;
 				mgrB.stop();
 			}
-
-			RunnableList::iterator it = iteratorId(runnableB);
-			m_Children.erase(it);
 		}
 		else
 		{
-			//std::cout << "removing from: other" << std::endl;
-			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
+			static_cast< RunnableGraph & >(parentB).queueOperation(runnableB);
 		}
 
-		//std::cout << "removed second" << std::endl;
-
-		sync->insertChild(mgrB, 0);
-		sync->insertChild(mgrA, 1);
-
-		//std::cout << "inserted both" << std::endl;
+		sync->queueOperation(mgrB, 0);
+		sync->queueOperation(mgrA, 1);
 
 		RunnableManager *manager = new RunnableManager(*sync);
 		m_Children.push_back(manager);
 		manager->setup();
-
-		//std::cout << "sync created & set up" << std::endl;
 
 		return id;
 	}

@@ -54,7 +54,7 @@ namespace _2Real
 		void start(PooledThread &thread);
 		void update(PooledThread &thread);
 		void stop();
-		void wait();
+		void updateComplete();
 		void shutdown();
 		void handleException();
 

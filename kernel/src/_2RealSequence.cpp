@@ -35,11 +35,16 @@ namespace _2Real
 	{
 		try
 		{
-			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
+			//carries out all accumulated insertions & removals, in the order they arrived
+			if (updateChildList())
 			{
-				PooledThread &thread = m_System.getFreeThread();
-				child->update(thread);
-				child->wait();
+				for (std::list< RunnableManager * >::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+				{
+					PooledThread &thread = m_System.getFreeThread();
+					flagChildren(1);
+					(*it)->update(thread);
+					m_ChildrenFinished.wait();
+				}
 			}
 		}
 		catch (Exception &e)

@@ -110,7 +110,7 @@ namespace _2Real
 		}
 	}
 
-	void RunnableManager::wait()
+	void RunnableManager::updateComplete()
 	{
 		if (m_Thread)
 		{

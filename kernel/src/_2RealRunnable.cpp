@@ -69,4 +69,9 @@ namespace _2Real
 		}
 	}
 
+	bool Runnable::isRoot() const
+	{
+		return (m_Father == &m_System);
+	}
+
 }

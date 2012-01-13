@@ -20,6 +20,8 @@
 
 #include <list>
 
+#include "Poco/Mutex.h"
+
 namespace _2Real
 {
 
@@ -29,6 +31,7 @@ namespace _2Real
 	*/
 
 	class RunnableManager;
+	class GraphOperation;
 
 	typedef std::list< RunnableManager * >	RunnableList;
 
@@ -52,7 +55,18 @@ namespace _2Real
 		RunnableManager & getContained(Identifier const& runnableId);
 		RunnableManager const& getContained(Identifier const& runnableId) const;
 
+		void queueOperation(RunnableManager &child, unsigned int position);
+		void queueOperation(Identifier const& childId);
+
 	protected:
+
+		/**
+		*	causes all desired operations to be carried out
+		*/
+		bool executeOperations();
+
+		void insertChild(RunnableManager &child, unsigned int position);
+		void removeChild(Identifier const& childId);
 
 		RunnableList::iterator				iteratorId(Identifier const& childId);
 		RunnableList::const_iterator		iteratorId(Identifier const& childId) const;
@@ -61,11 +75,24 @@ namespace _2Real
 
 		RunnableList						m_Children;
 
-	};
+	private:
 
-	inline unsigned int Graph::childCount() const
-	{
-		return m_Children.size();
-	}
+		/**
+		*	graphs can have a list of objects that are to remove or inserted;
+		*	these operations are queued up
+		*/
+		std::list< GraphOperation * >	m_Operations;
+
+		/**
+		*	mutex to guarantee save access to children
+		*/
+		Poco::FastMutex					m_OperationsMutex;
+
+		/**
+		*	mutex used for synchronizing access to children
+		*/
+		Poco::FastMutex					m_GraphMutex;
+
+	};
 
 }

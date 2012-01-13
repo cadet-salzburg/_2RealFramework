@@ -63,6 +63,8 @@ namespace _2Real
 		void setUpdateRate(float updatesPerSecond);
 		long getMaxDelay();
 
+		bool isRoot() const;
+
 	protected:
 
 		SystemGraph				&m_System;

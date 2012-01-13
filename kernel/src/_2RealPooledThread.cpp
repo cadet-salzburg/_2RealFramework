@@ -108,11 +108,6 @@ namespace _2Real
 		m_TargetReady.set();
 	}
 
-	void PooledThread::waitForTarget()
-	{
-		m_TargetCompleted.wait();
-	}
-
 	void PooledThread::reactivate()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
@@ -121,6 +116,7 @@ namespace _2Real
 		m_TargetCompleted.reset();
 	}
 
+	//!!!!!!
 	bool PooledThread::join()
 	{
 		m_TargetCompleted.wait();
@@ -139,7 +135,7 @@ namespace _2Real
 		Poco::ThreadLocalStorage::clear();
 		//m_Thread.setName("");
 		m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
-		m_TargetCompleted.set();
+		m_TargetCompleted.set();	
 	}
 
 	void PooledThread::run()
@@ -154,6 +150,8 @@ namespace _2Real
 			if (updateTarget())
 			{
 				m_Target->run();
+				RunnableGraph &father = static_cast< RunnableGraph & >(m_Target->father());
+				father.childFinished(m_Target->identifier());
 				cleanUp();
 			}
 			else
