@@ -22,8 +22,11 @@
 #include "_2RealRunnableStates.h"
 #include "_2RealException.h"
 #include "_2RealPooledThread.h"
+#include "_2RealIStateListener.h"
 
 #include <iostream>
+
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
@@ -54,21 +57,6 @@ namespace _2Real
 		delete m_Runnable;
 	}
 
-	bool RunnableManager::isRunning() const
-	{
-		return m_CurrentState == &getState(STATE_RUNNING);
-	}
-
-	bool RunnableManager::isUpdating() const
-	{
-		return m_CurrentState == &getState(STATE_UPDATING);
-	}
-
-	bool RunnableManager::isSetUp() const
-	{
-		return m_CurrentState == &getState(STATE_SETUP);
-	}
-
 	RunnableState & RunnableManager::getState(std::string const& stateName) const
 	{
 		StateTable::const_iterator it = m_RunnableStates.find(stateName);
@@ -85,32 +73,30 @@ namespace _2Real
 		m_CurrentState = &m_CurrentState->setup(*m_Runnable);
 	}
 
-	void RunnableManager::start(PooledThread &thread)
+	void RunnableManager::startRunning(PooledThread &thread)
 	{
 		m_CurrentState = &m_CurrentState->start(*m_Runnable, thread);
 		m_Thread = &thread;
 	}
 
-	void RunnableManager::update(PooledThread &thread)
+	void RunnableManager::beginUpdate(PooledThread &thread)
 	{
 		m_CurrentState = &m_CurrentState->update(*m_Runnable, thread);
 		m_Thread = &thread;
 	}
 
-	void RunnableManager::stop()
+	void RunnableManager::stopRunning()
 	{
 		if (m_Thread)
 		{
-			//std::cout << "manager: stopping: " << m_Runnable->id() << std::endl;
 			m_CurrentState = &m_CurrentState->stop(*m_Runnable, *m_Thread);
 		}
 		else
 		{
-			//std::cout << "manager: stopping NOTHREAD " << m_Runnable->id() << std::endl;
 		}
 	}
 
-	void RunnableManager::updateComplete()
+	void RunnableManager::endUpdate()
 	{
 		if (m_Thread)
 		{
@@ -120,12 +106,37 @@ namespace _2Real
 
 	void RunnableManager::shutdown()
 	{
+		RunnableState *old = m_CurrentState;
 		m_CurrentState = &m_CurrentState->shutdown(*m_Runnable);
+		//if (old != m_CurrentState)
+		//{
+		//	m_StateChangeEvent.notify(this, m_CurrentState.
+		//}
 	}
 
 	void RunnableManager::handleException()
 	{
 		m_CurrentState = &m_CurrentState->handleException(*m_Runnable);
+	}
+
+	void RunnableManager::registerStateChangeCallback(StateChangeCallback callback)
+	{
+		m_StateChangeEvent += Poco::delegate(callback);
+	}
+
+	void RunnableManager::unregisterStateChangeCallback(StateChangeCallback callback)
+	{
+		m_StateChangeEvent -= Poco::delegate(callback);
+	}
+
+	void RunnableManager::registerStateChangeListener(IStateChangeListener &listener)
+	{
+		m_StateChangeEvent += Poco::delegate(&listener, &IStateChangeListener::receiveStateChange);
+	}
+
+	void RunnableManager::unregisterStateChangeListener(IStateChangeListener &listener)
+	{
+		m_StateChangeEvent-= Poco::delegate(&listener, &IStateChangeListener::receiveStateChange);
 	}
 
 }

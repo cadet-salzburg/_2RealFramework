@@ -32,10 +32,10 @@ namespace _2Real
 
 	class RunnableManager;
 	class GraphOperation;
+	class Identifier;
 
 	typedef std::list< RunnableManager * >	RunnableList;
-
-	class Identifier;
+	typedef std::list< GraphOperation * >	OperationsList;
 
 	class Graph
 	{
@@ -68,12 +68,13 @@ namespace _2Real
 		void insertChild(RunnableManager &child, unsigned int position);
 		void removeChild(Identifier const& childId);
 
+		/**
+		*	these are all related to the iterators
+		*/
 		RunnableList::iterator				iteratorId(Identifier const& childId);
 		RunnableList::const_iterator		iteratorId(Identifier const& childId) const;
 		RunnableList::iterator				iteratorPosition(unsigned int childPosition);
 		RunnableList::const_iterator		iteratorPosition(unsigned int childPosition) const;
-
-		RunnableList						m_Children;
 
 	private:
 
@@ -81,17 +82,19 @@ namespace _2Real
 		*	graphs can have a list of objects that are to remove or inserted;
 		*	these operations are queued up
 		*/
-		std::list< GraphOperation * >	m_Operations;
+		OperationsList					m_Operations;
+
+		RunnableList					m_Children;
 
 		/**
 		*	mutex to guarantee save access to children
 		*/
-		Poco::FastMutex					m_OperationsMutex;
+		mutable Poco::FastMutex			m_OperationsMutex;
 
 		/**
 		*	mutex used for synchronizing access to children
 		*/
-		Poco::FastMutex					m_GraphMutex;
+		mutable Poco::FastMutex			m_ChildListMutex;
 
 	};
 

@@ -20,6 +20,7 @@
 #include "_2RealEntity.h"
 
 #include "Poco/Runnable.h"
+#include "Poco/Mutex.h"
 
 #include <sstream>
 #include <map>
@@ -30,7 +31,6 @@ namespace _2Real
 	/**
 	*	services, sequences and synchronizations are runnable
 	*/
-
 
 	class Graph;
 	class SystemGraph;
@@ -45,15 +45,39 @@ namespace _2Real
 		Runnable(Identifier const& id, SystemGraph &system);
 		virtual ~Runnable();
 
+		/**
+		*	placeholder for now
+		*/
 		virtual void handleException();
+
+		/**
+		*	initialized everything
+		*/
 		virtual void setup() = 0;
+
+		/**
+		*	service update for services / child list update for runnable graphs
+		*/
 		virtual void run() = 0;
+
+		/**
+		*	guess what
+		*/
 		virtual void shutdown() = 0;
+
+		/**
+		*	must be called upon insertion
+		*/
+		void setFather(Graph &father);
+
+		/**
+		*	true if system == father
+		*/
+		bool isRoot() const;
 
 		Runnable & root();
 		Runnable const&  root() const;
 
-		void setFather(Graph &father);
 		Graph &father();
 		Graph const& father() const;
 
@@ -61,75 +85,27 @@ namespace _2Real
 		SystemGraph const& system() const;
 
 		void setUpdateRate(float updatesPerSecond);
-		long getMaxDelay();
-
-		bool isRoot() const;
-
-	protected:
-
-		SystemGraph				&m_System;
-		Graph					*m_Father;
+		long getMaxDelay() const;
 
 	private:
 
-		long					m_MaxDelay;
-		float					m_UpdatesPerSecond;
+		SystemGraph					&m_System;
+
+		/**
+		*	necessary for delay / father / root access
+		*/
+		mutable Poco::FastMutex		m_Mutex;
+
+		/**
+		*	may be identical to the system
+		*/
+		Graph						*m_Father;
+
+		/**
+		*	max amount that threads will be suspended when running this runnable
+		*/
+		long						m_MaxDelay;
 
 	};
-
-	//inline void Runnable::updateTimer()
-	//{
-	//	m_Timer.update();
-	//}
-
-	//inline void Runnable::suspend()
-	//{
-	//	long elapsed = (long)m_Timer.elapsed()/1000;
-	//	long sleep = m_MaxDelay - elapsed;
-	//	if (sleep > 0)
-	//	{
-	//		Poco::Thread::sleep(sleep);
-	//	}
-	//	else
-	//	{
-	//		//?
-	//	}
-	//}
-
-	inline long Runnable::getMaxDelay()
-	{
-		return m_MaxDelay;
-	}
-
-	inline void Runnable::setFather(Graph &father)
-	{
-		m_Father = &father;
-	}
-
-	inline Graph & Runnable::father()
-	{
-		return *m_Father;
-	}
-
-	inline Graph const& Runnable::father() const
-	{
-		return *m_Father;
-	}
-
-	inline SystemGraph & Runnable::system()
-	{
-		return m_System;
-	}
-
-	inline SystemGraph const& Runnable::system() const
-	{
-		return m_System;
-	}
-
-	inline void Runnable::setUpdateRate(float updatesPerSecond)
-	{
-		m_MaxDelay = long(1000.0f/updatesPerSecond);
-		m_UpdatesPerSecond = updatesPerSecond;
-	}
 
 }

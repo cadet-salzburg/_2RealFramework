@@ -30,7 +30,7 @@ namespace _2Real
 		m_System(system),
 		m_Father(&system),
 		m_MaxDelay(long(1000.0f/30.0f)),
-		m_UpdatesPerSecond(30.0f)
+		m_Mutex()
 	{
 	}
 
@@ -40,13 +40,13 @@ namespace _2Real
 
 	void Runnable::handleException()
 	{
-		if (m_Father == &m_System)
-		{
-		}
+		//empty for now
 	}
 
 	Runnable & Runnable::root()
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
 		if (m_Father == &m_System)
 		{
 			return *this;
@@ -59,6 +59,8 @@ namespace _2Real
 
 	Runnable const& Runnable::root() const
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
 		if (m_Father == &m_System)
 		{
 			return *this;
@@ -71,7 +73,54 @@ namespace _2Real
 
 	bool Runnable::isRoot() const
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
 		return (m_Father == &m_System);
+	}
+
+	long Runnable::getMaxDelay() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		return m_MaxDelay;
+	}
+
+	void Runnable::setFather(Graph &father)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		m_Father = &father;
+	}
+
+	Graph & Runnable::father()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		return *m_Father;
+	}
+
+	Graph const& Runnable::father() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		return *m_Father;
+	}
+
+	SystemGraph & Runnable::system()
+	{
+		return m_System;
+	}
+
+	SystemGraph const& Runnable::system() const
+	{
+		return m_System;
+	}
+
+	void Runnable::setUpdateRate(float updatesPerSecond)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+		m_MaxDelay = long(1000.0f/updatesPerSecond);
 	}
 
 }

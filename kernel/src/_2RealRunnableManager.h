@@ -21,6 +21,8 @@
 #include <string>
 #include <map>
 
+#include "Poco/BasicEvent.h"
+
 #define STATE_CREATED	"created"
 #define STATE_SETUP		"set up"
 #define STATE_RUNNING	"running"
@@ -38,6 +40,9 @@ namespace _2Real
 
 	typedef std::map< std::string, RunnableState * >	StateTable;
 
+	class IStateChangeListener;
+	typedef void (*StateChangeCallback)(std::string &state);
+
 	class RunnableManager
 	{
 
@@ -51,16 +56,20 @@ namespace _2Real
 		Identifier const& getManagedId() const;
 		
 		void setup();
-		void start(PooledThread &thread);
-		void update(PooledThread &thread);
-		void stop();
-		void updateComplete();
 		void shutdown();
+		void startRunning(PooledThread &thread);
+		void stopRunning();
+		void beginUpdate(PooledThread &thread);
+		void endUpdate();
 		void handleException();
 
-		bool isUpdating() const;
-		bool isRunning() const;
-		bool isSetUp() const;
+		/**
+		*	this functions are for regsitering state change callbacks
+		*/
+		void registerStateChangeCallback(StateChangeCallback callback);
+		void unregisterStateChangeCallback(StateChangeCallback callback);
+		void registerStateChangeListener(IStateChangeListener &listener);
+		void unregisterStateChangeListener(IStateChangeListener &listener);
 
 	private:
 
@@ -68,6 +77,7 @@ namespace _2Real
 		StateTable									m_RunnableStates;
 		RunnableState								*m_CurrentState;
 		PooledThread								*m_Thread;
+		Poco::BasicEvent< std::string >				m_StateChangeEvent;
 
 	};
 

@@ -35,17 +35,17 @@ namespace _2Real
 	{
 		try
 		{
-			//carries out all accumulated insertions & removals, in the order they arrived
-			if (updateChildList())
-			{
-				for (std::list< RunnableManager * >::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-				{
-					PooledThread &thread = m_System.getFreeThread();
-					flagChildren(1);
-					(*it)->update(thread);
-					m_ChildrenFinished.wait();
-				}
-			}
+			////carries out all accumulated insertions & removals, in the order they arrived
+			//if (updateChildList())
+			//{
+			//	for (std::list< RunnableManager * >::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			//	{
+			//		PooledThread &thread = m_System.getFreeThread();
+			//		flagChildren(1);
+			//		(*it)->update(thread);
+			//		m_ChildrenFinished.wait();
+			//	}
+			//}
 		}
 		catch (Exception &e)
 		{

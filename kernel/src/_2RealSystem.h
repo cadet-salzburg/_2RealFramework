@@ -35,9 +35,11 @@ namespace _2Real
 	class RunnableError;
 	class IOutputListener;
 	class IExceptionListener;
+	class IStateChangeListener;
 
 	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
+	typedef void (*StateChangeCallback)(std::string &state);
 
 	class System
 	{
@@ -66,7 +68,7 @@ namespace _2Real
 
 		/**
 		*	calls setup of either a plugin or a service = initialization
-		*	if the service is currently running, it will be stopped
+		*	if the service is running, this will be ignored!
 		*	warning: for the time being, do not attempt this with plugins more than once
 		*/
 		void setup(Identifier const& id);
@@ -78,17 +80,20 @@ namespace _2Real
 
 		/**
 		*	creates instance of service
+		*	the newly created service will be inserted directly into the system
 		*/
 		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service);
 
 		/**
 		*	sets a runnable's update rate
+		*	can be called any time, also while running
 		*/
 		void setUpdateRate(Identifier const& id, float updatesPerSecond);
 
 		/**
 		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
-		*	if the input slot has been linked to an output slot previously, this linkage will be reset
+		*	if the input slot has been linked to an output slot previously, this link will be reset
+		*	if the oparam belong to a service, service does not require a particular state 
 		*/
 		template< typename DataType >
 		void setValue(Identifier const& id, std::string const& name, DataType const& value)
@@ -98,7 +103,7 @@ namespace _2Real
 		}
 
 		/**
-		*	
+		*	returns value of setup param or input slot
 		*/
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
@@ -109,18 +114,43 @@ namespace _2Real
 
 		/**
 		*	links output slot to input slot
+		*	can be done regardless of state
 		*/
 		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
 		/**
 		*	starts a runnable (service, synchronization, sequence)
+		*	only the system's children can run
+		*	if already running, will be ignored
 		*/
 		void start(Identifier const& id);
 
 		/**
 		*	stops a runnable (service, synchronization, sequence)
+		*	only the system's children can be stopped
+		*	if not running, will be ignored
 		*/
 		void stop(Identifier const& id);
+
+		/**
+		*	registers a callback for state changes
+		*/
+		void unregisterFromStateChange(Identifier const& runnable, IStateChangeListener &listener);
+
+		/**
+		*	registers a callback for state changes
+		*/
+		void registerToStateChange(Identifier const& runnable, IStateChangeListener &listener);
+
+		/**
+		*	registers a callback for state changes
+		*/
+		void unregisterFromStateChange(Identifier const& runnable, StateChangeCallback callback);
+
+		/**
+		*	registers a callback for state changes
+		*/
+		void registerToStateChange(Identifier const& runnable, StateChangeCallback callback);
 
 		/**
 		*	registers exception callback for a system
@@ -163,7 +193,8 @@ namespace _2Real
 		void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
 		/**
-		*	stops all of nirvanas children at once
+		*	stops all of nirvanas children at once.
+		*	nonblocking, if you need the exact time of stopping you'll need to use state change listeners
 		*/
 		void stopAll();
 
@@ -175,6 +206,12 @@ namespace _2Real
 		const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 
+		//const Identifier createSequence(std::string const& idName, std::list< Identifier > runnableIds);
+		//const Identifier createSynchronization(std::string const& idName, std::list< Identifier > runnableIds);
+
+		/**
+		*	note that all involved runnables need to stopped - otherwise this command will just be ignored
+		*/
 		void destroy(Identifier const& id);
 		void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
 		void append(Identifier const& runnable, Identifier const& parent);
