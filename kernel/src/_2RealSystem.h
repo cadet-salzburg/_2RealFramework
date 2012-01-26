@@ -44,9 +44,45 @@ namespace _2Real
 
 	public:
 
-		System(std::string const& name);
-		System(System const& src);
+		/**
+		*	destroys the system & everything within
+		*/
 		~System();
+
+		/**
+		*	creates an empty system w. the desired name
+		*/
+		System(std::string const& name);
+
+		/*******************************************************************************
+		*	functions related to xml - are currently being implemented
+		*/
+
+		/**
+		*	creates a system from an xml file - configName must be equal to the one defined in the xml file
+		*/
+		//System(std::string const& name, std::string const& configFile, std::string const& configName);
+
+		/**
+		*	returns the identifier of a plugin, service, sequence or graph -> can be used to get id of an entity defined in the xml
+		*	can also return the system's own identifier
+		*/
+		//const Identifier getId(std::string const& name);
+
+		//some more identifier helper functions
+		//std::list< Identifier > getIds();
+		//std::list< Identifier > getPluginIds();
+		//std::list< Identifier > getRunnableIds();
+		//std::list< Identifier > getGraphIds();
+		//std::list< Identifier > getServiceIds();
+
+		//some more helpers, this time for names
+		//std::list< std::string > getInputSlots(Identifier const& serviceId);
+		//std::list< std::string > getOutputSlots(Identifier const& serviceId);
+		//std::list< std::string > getSetupParameters(Identifier const& setupAbleId);
+		//std::list< std::string > getExportedServices(Identifier const& pluginId);
+
+		/********************************************************************************************/
 
 		/**
 		*	sets the system's plugin directory - i.e. where plugins will be searched
@@ -59,28 +95,27 @@ namespace _2Real
 		void setLogfile(std::string const& file);
 
 		/**
-		*	destroys everything in the system
+		*	destroys everything in the system.
 		*/
 		void shutdown();
 
 		/**
-		*	loads a dll - assumption: classname-> filename, e.g: MyPlugin -> MyPlugin.dll (release mode), MyPlugin_d.dll (debug mode)
-		*	the install directory will be taken from the config.txt
+		*	loads a dll - assumption: classname->filename, e.g: MyPlugin -> MyPlugin.dll / MyPlugin.so / MyPlugin.dylib (release mode), MyPlugin_d.dll etc. (debug mode)
 		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
-		*	multiple loading of a plugin from within the same system accomplishes nothing
+		*	multiple loading of a plugin from within the same system will cause an exception
 		*/
 		const Identifier loadPlugin(std::string const& name, std::string const& className);
 
 		/**
 		*	calls setup of either a plugin or a service = initialization
-		*	if the service is currently running, it will be stopped
-		*	warning: plugins can be set up only once for reasons of safety
-		*	(in theory, it could be that a plugin does not export a certain service any more after being set up once again etc)
+		*	a service that is running must be stopped before it can be set up again
+		*	plugins can be set up only once for reasons of safety
+		*	(otherwise, services might become invalid etc.)
 		*/
 		void setup(Identifier const& id);
 
 		/**
-		*	returns plugin metadata
+		*	returns plugin metadata as string
 		*/
 		const std::string getInfo(Identifier const& plugin);
 
@@ -106,7 +141,9 @@ namespace _2Real
 		}
 
 		/**
-		*	returns value of an input slot or setup parameter
+		*	returns value of an input slot or setup parameter. if it is an input slot, the value returned will
+		*	be the one that is used for the current update cycle! (so setting a value & querying it immediately afterwards
+		*	might not yield the same value)
 		*/
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
@@ -116,19 +153,9 @@ namespace _2Real
 		}
 
 		/**
-		*	links output slot to input slot
+		*	links output slot to input slot. the input slot's previous link will be broken.
 		*/
 		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-
-		/**
-		*	starts a runnable (service, synchronization, sequence)
-		*/
-		void start(Identifier const& id);
-
-		/**
-		*	stops a runnable (service, synchronization, sequence)
-		*/
-		void stop(Identifier const& id);
 
 		/**
 		*	registers exception callback for a system
@@ -171,24 +198,47 @@ namespace _2Real
 		void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
 		/**
-		*	stops all of nirvanas children at once
+		*	runnable state changes
+		*/
+		//void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		//void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		//void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		//void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+
+		/**
+		*	starts a runnable (service, synchronization, sequence)
+		*/
+		void start(Identifier const& runnableId);
+
+		/**
+		*	stops a runnable (service, synchronization, sequence)
+		*/
+		void stop(Identifier const& runnableId);
+
+		/**
+		*	stops all running (root) runnables at once
 		*/
 		void stopAll();
 
 		/**
-		*	starts all of nirvanas children at once
+		*	starts all (root) runnables at once
 		*/
 		void startAll();
 
 		/*
-		*	currently not functional until the whole insert / remove thing is resolved
+		*	currently not functional until the whole insert / remove thing is resolved properly
 		*/
 		//const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		//const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		//const Identifier createSequence(std::string const& idName, std::list< Identifier > const& runnableIds);
+		//const Identifier createSynchronization(std::string const& idName, std::list< Identifier > const& runnableIds);
 		//void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
 		//void append(Identifier const& runnable, Identifier const& parent);
 
 	private:
+
+		//shallow copy
+		System(System const& src);
 
 		/**
 		*	internally used function for setting param values
