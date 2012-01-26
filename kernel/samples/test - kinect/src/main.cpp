@@ -34,6 +34,8 @@
 
 #include "Poco\Mutex.h"
 
+#include <vld.h>
+
 using namespace _2Real;
 using namespace std;
 using namespace Poco;

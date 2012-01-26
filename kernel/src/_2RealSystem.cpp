@@ -87,15 +87,15 @@ namespace _2Real
 		m_Engine.setValue(id, param, value, m_Id);
 	}
 
-	const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
-	{
-		return m_Engine.createSequence(name, idA, idB, m_Id);
-	}
+	//const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//{
+	//	return m_Engine.createSequence(name, idA, idB, m_Id);
+	//}
 
-	const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
-	{
-		return m_Engine.createSynchronization(name, idA, idB, m_Id);
-	}
+	//const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//{
+	//	return m_Engine.createSynchronization(name, idA, idB, m_Id);
+	//}
 
 	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
@@ -162,15 +162,15 @@ namespace _2Real
 		m_Engine.stopAll(m_Id);
 	}
 
-	void System::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
-	{
-		m_Engine.add(runnable, parent, index, m_Id);
-	}
+	//void System::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
+	//{
+	//	m_Engine.add(runnable, parent, index, m_Id);
+	//}
 
-	void System::append(Identifier const& runnable, Identifier const& parent)
-	{
-		m_Engine.append(runnable, parent, m_Id);
-	}
+	//void System::append(Identifier const& runnable, Identifier const& parent)
+	//{
+	//	m_Engine.append(runnable, parent, m_Id);
+	//}
 
 	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
 	{

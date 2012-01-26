@@ -91,6 +91,11 @@ namespace _2Real
 		}
 	}
 
+	const std::string Plugin::getClassname() const
+	{
+		return m_Metadata.getClassname();
+	}
+
 	void Plugin::setParameterValue(std::string const& paramName, Data const& data)
 	{
 		getSetupParameter(paramName).setData(data.data());

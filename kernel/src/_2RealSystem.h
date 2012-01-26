@@ -48,11 +48,18 @@ namespace _2Real
 		System(System const& src);
 		~System();
 
+		/**
+		*	sets the system's plugin directory - i.e. where plugins will be searched
+		*/
 		void setInstallDirectory(std::string const& directory);
+
+		/**
+		*	sets the system's logfile (logging = incomplete right now)
+		*/
 		void setLogfile(std::string const& file);
 
 		/**
-		*	...
+		*	destroys everything in the system
 		*/
 		void shutdown();
 
@@ -67,12 +74,13 @@ namespace _2Real
 		/**
 		*	calls setup of either a plugin or a service = initialization
 		*	if the service is currently running, it will be stopped
-		*	warning: for the time being, do not attempt this with plugins more than once
+		*	warning: plugins can be set up only once for reasons of safety
+		*	(in theory, it could be that a plugin does not export a certain service any more after being set up once again etc)
 		*/
 		void setup(Identifier const& id);
 
 		/**
-		*	printf plugin metadata
+		*	returns plugin metadata
 		*/
 		const std::string getInfo(Identifier const& plugin);
 
@@ -82,13 +90,13 @@ namespace _2Real
 		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service);
 
 		/**
-		*	sets a runnable's update rate
+		*	sets a runnable's desired update rate
 		*/
 		void setUpdateRate(Identifier const& id, float updatesPerSecond);
 
 		/**
 		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
-		*	if the input slot has been linked to an output slot previously, this linkage will be reset
+		*	if the input slot has been linked to an output slot previously, this link will be broken
 		*/
 		template< typename DataType >
 		void setValue(Identifier const& id, std::string const& name, DataType const& value)
@@ -98,7 +106,7 @@ namespace _2Real
 		}
 
 		/**
-		*	
+		*	returns value of an input slot or setup parameter
 		*/
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
@@ -174,12 +182,11 @@ namespace _2Real
 
 		/*
 		*	currently not functional until the whole insert / remove thing is resolved
-		*	do not use
 		*/
-		const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
-		const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
-		void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
-		void append(Identifier const& runnable, Identifier const& parent);
+		//const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		//const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		//void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
+		//void append(Identifier const& runnable, Identifier const& parent);
 
 	private:
 

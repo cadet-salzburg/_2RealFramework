@@ -58,6 +58,7 @@ namespace _2Real
 		void							setup();
 		bool 							isInitialized() const;
 		const std::string				getInfoString() const;
+		const std::string				getClassname() const;
 		void							registerService(std::string const& serviceName, ServiceCreator creator);
 		bool							canExportService(std::string const& serviceName) const;
 		EngineData const&				getParameterValue(std::string const& setupName) const;

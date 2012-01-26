@@ -81,29 +81,18 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-		std::cout << "locked mutex" << std::endl;
-
 		RunnableList::iterator it = iteratorPosition(index);
-
-		std::cout << "got position" << std::endl;
 
 		m_Children.insert(it, &child);
 
-		std::cout << "inserted" << std::endl;
-
 		child.getManagedRunnable().setFather(*this);
 		
-		std::cout << "set father" << std::endl;
-
 		if (it == m_ListIterator)
 		{
 			//the new child will be updated next
-			std::cout << "increasing before current" << std::endl;
 			m_ListIterator--;
-			std::cout << "decreased current" << std::endl;
 		}
 
-		std::cout << "done insertion" << std::endl;
 	}
 
 	RunnableManager * RunnableGraph::getFirstChild()

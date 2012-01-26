@@ -176,12 +176,10 @@ namespace _2Real
 						}
 						else
 						{
-							std::cout << m_Thread.name() << " UPDATE TOO SHORT" << std::endl;
 						}
 					}
 				}
 
-				std::cout << m_Thread.name() << " THREAD TARGET FINISHED" << std::endl;
 				cleanUp();
 			}
 

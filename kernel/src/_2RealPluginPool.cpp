@@ -25,6 +25,26 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef _2REAL_WINDOWS
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dll"
+	#else
+		#define shared_library_suffix "_d.dll"
+	#endif
+#elif _2REAL_UNIX
+	#ifndef _DEBUG
+		#define shared_library_suffix ".so"
+	#else
+		#define shared_library_suffix "_d.so"
+	#endif
+#elif _2REAL_MAC
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dylib"
+	#else
+		#define shared_library_suffix "_d.dylib"
+	#endif
+#endif
+
 namespace _2Real
 {
 
@@ -43,25 +63,19 @@ namespace _2Real
 	const Identifier PluginPool::install(std::string const& name, std::string const& classname)
 	{
 
-		//for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
-		//{
-		//	if (it->second->getClassname() == classname)
-		//	{
-		//		std::ostringstream msg;
-		//		msg << "plugin " << " " << classname << " is already loaded in system " << m_System.name() << std::endl;
-		//		throw AlreadyExistsException(msg.str());
-		//	}
-		//}
+		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
+		{
+			if (it->second->getClassname() == classname)
+			{
+				std::ostringstream msg;
+				msg << "plugin " << " " << classname << " is already loaded in system " << m_System.name() << std::endl;
+				throw AlreadyExistsException(msg.str());
+			}
+		}
 
 		const Identifier id = Entity::createIdentifier(name, "plugin");
 
-//TODO: dlls for other OS
-
-#ifdef _DEBUG
-		std::string file = classname + "_d.dll";
-#else
-		std::string file = classname + ".dll";
-#endif
+		std::string file = classname + shared_library_suffix;
 
 		m_System.getLogstream() << "creating plugin" << std::endl;
 

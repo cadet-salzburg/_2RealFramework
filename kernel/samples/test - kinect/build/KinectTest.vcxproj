@@ -67,7 +67,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\bin;..\..\..\..\..\..\externalLibs\glew\lib;..\..\..\..\..\..\externalLibs\sdl\lib;..\..\..\..\..\..\externalLibs\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32d.lib;opengl32.lib;SDL.lib;SDLmain.lib;_2RealEngine_mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL.lib;SDLmain.lib;_2RealEngine_mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>

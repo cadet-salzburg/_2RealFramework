@@ -79,8 +79,6 @@ namespace _2Real
 
 		if (!thread)
 		{
-			std::cout << "threadpool: CREATED NEW THREAD " << m_Threads.size() << std::endl;
-
 			thread = new PooledThread(m_StackSize);
 			m_Threads.push_back(thread);
 		}

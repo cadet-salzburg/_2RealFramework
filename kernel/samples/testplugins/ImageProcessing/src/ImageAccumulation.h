@@ -104,7 +104,6 @@ void ImageAccumulationService< ImageData >::update()
 		{
 			unsigned int size = width * height * channels;
 			m_Image = new float[size];
-			float *ie = new float[size];
 
 			for (unsigned int i=0; i<size; i++)
 			{

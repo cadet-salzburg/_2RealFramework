@@ -327,8 +327,6 @@ namespace _2Real
 			static_cast< RunnableGraph & >(parentA).removeChild(runnableA);
 		}
 
-		std::cout << "removed first" << std::endl;
-
 		Graph &parentB = mgrB.getManagedRunnable().father();
 		if (this == &parentB)
 		{
@@ -345,17 +343,12 @@ namespace _2Real
 			static_cast< RunnableGraph & >(parentB).removeChild(runnableB);
 		}
 
-		std::cout << "removed second" << std::endl;
-
 		seq->insertChild(mgrB, 0);
 		seq->insertChild(mgrA, 1);
-
-		std::cout << "inserted" << std::endl;
 
 		RunnableManager *manager = new RunnableManager(*seq);
 		m_Children.push_back(manager);
 		manager->setup();
-		std::cout << "seq created" << std::endl;
 		return id;
 	}
 

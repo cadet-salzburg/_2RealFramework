@@ -4,6 +4,8 @@
 
 #include "_2RealKinect.h"
 
+#include <vld.h>
+
 #include <string>
 #include <fstream>
 

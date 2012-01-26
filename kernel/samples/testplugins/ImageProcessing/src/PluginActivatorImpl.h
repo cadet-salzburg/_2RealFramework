@@ -2,6 +2,8 @@
 
 #include "_2RealIPluginActivator.h"
 
+#include <vld.h>
+
 #include <fstream>
 
 class ImageProcessing : public _2Real::IPluginActivator
