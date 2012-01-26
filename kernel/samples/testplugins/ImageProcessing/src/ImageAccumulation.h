@@ -34,10 +34,10 @@ private:
 
 	_2Real::InputHandle						m_Input;
 	_2Real::OutputHandle					m_Output;
-	_2Real::Image2D_float 					*m_Image;
+	float				 					*m_Image;
 	unsigned int							m_BufferSize;
 	float									m_Factor;
-	std::deque< _2Real::Image2D_float * >	m_Buffer;
+	std::deque< float * >					m_Buffer;
 
 	_2Real::InputHandle						m_Test;
 
@@ -46,11 +46,13 @@ private:
 template< typename ImageData >
 ImageAccumulationService< ImageData >::~ImageAccumulationService()
 {
-	std::deque< _2Real::Image2D_float * >::iterator it;
+	std::deque< float * >::iterator it;
 	for (it = m_Buffer.begin(); it != m_Buffer.end(); it++)
 	{
-		delete *it;
+		delete [] *it;
 	}
+
+	delete [] m_Image;
 }
 
 template< typename ImageData >
@@ -73,9 +75,6 @@ void ImageAccumulationService< ImageData >::setup(_2Real::ServiceContext &contex
 		{
 			throw ServiceException("setup parameter \'buffer size\' should at least be 2");
 		}
-
-
-
 		m_Factor = 1.0f/float(m_BufferSize);
 	}
 	catch (Exception &e)
@@ -93,69 +92,63 @@ void ImageAccumulationService< ImageData >::update()
 {
 	try
 	{
-		Pixelbuffer< ImageData > const& newImage(m_Input.data< Pixelbuffer < ImageData > >());
+		Pixelbuffer< ImageData > const& newImage = m_Input.data< Pixelbuffer < ImageData > >();
+		//the output is always in floating point format
 		Pixelbuffer< float > & outImage = m_Output.data< Pixelbuffer < float > >();
 
 		unsigned int width = newImage.width();
 		unsigned int height = newImage.height();
 		unsigned int channels = newImage.channels();
-		unsigned int size = newImage.size();
 
 		if (!m_Image)
 		{
-			m_Image = new Imagebuffer< float >(width, height, channels);
-			m_Image->set(0.0f);
+			unsigned int size = width * height * channels;
+			m_Image = new float[size];
+			float *ie = new float[size];
 
-			std::string test = m_Test.data< std::string >();
-			std::cout << test << std::endl;
+			for (unsigned int i=0; i<size; i++)
+			{
+				m_Image[i] = 0.0f;
+			}
 		}
 		else
 		{
-			Imagebuffer< float > *first = new Imagebuffer< float >(width, height, channels);
+			unsigned int size = width * height * channels;
+			float *first = new float[width * height * channels];
 			m_Buffer.push_front(first);
+			float *last = NULL;
 
-			Imagebuffer< float > *last = NULL;
 			if (m_Buffer.size() < m_BufferSize)
 			{
-				for (unsigned int i=0; i<width; i++)
+				for (unsigned int i=0; i<size; i++)
 				{
-					for (unsigned int j=0; j<height; j++)
-					{
-						for (unsigned int k=0; k<channels; k++)
-						{
-							float value1 = m_Image->operator()(j, i, k);
-							float value2 = m_Factor*(float(newImage(j, i, k))/255.0f);
-							first->operator()(j, i, k) = value2;
-							float result = value1 + value2;
-							m_Image->operator()(j, i, k) = result;
-						}
-					}
+					float value1 = m_Image[i];
+					float value2 = m_Factor*(float(newImage[i])/255.0f);
+					first[i] = value2;
+					float result = value1 + value2;
+					m_Image[i] = result;
 				}
 			}
 			else
 			{
 				last = m_Buffer.back();
-				for (unsigned int i=0; i<width; i++)
+
+				for (unsigned int i=0; i<size; i++)
 				{
-					for (unsigned int j=0; j<height; j++)
-					{
-						for (unsigned int k=0; k<channels; k++)
-						{
-							float value1 = m_Image->operator()(j, i, k);
-							float value2 = m_Factor*(float(newImage(j, i, k))/255.0f);
-							first->operator()(j, i, k) = value2;
-							float value3 = last->operator()(j, i, k);
-							float result = value1 + value2 - value3;
-							m_Image->operator()(j, i, k) = result;
-						}
-					}
+					float value1 = m_Image[i];
+					float value2 = m_Factor*(float(newImage[i])/255.0f);
+					float value3 = last[i];
+					first[i] = value2;
+					float result = value1 + value2 - value3;
+					m_Image[i] = result;
 				}
+
 				delete last;
 				m_Buffer.pop_back();
 			}
 		}
 
-		outImage.copy(*m_Image);
+		outImage.assign(m_Image, width, height, channels, false);
 	}
 	catch (Exception &e)
 	{

@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 		System testSystem("test system");
 
 		testSystem.registerToException(::systemException);
-		testSystem.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\testplugins\\bin\\");
+		testSystem.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
 		testSystem.setLogfile("testsystem.txt");
 
 		Identifier kinectPlugin = testSystem.loadPlugin("kinect plugin", "MultiKinectOpenNI");
