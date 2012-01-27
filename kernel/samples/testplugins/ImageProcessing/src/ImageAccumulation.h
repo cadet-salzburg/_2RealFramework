@@ -37,6 +37,7 @@ private:
 	float				 					*m_Image;
 	unsigned int							m_BufferSize;
 	float									m_Factor;
+	float									m_Normalize;
 	std::deque< float * >					m_Buffer;
 
 	_2Real::InputHandle						m_Test;
@@ -67,7 +68,6 @@ void ImageAccumulationService< ImageData >::setup(_2Real::ServiceContext &contex
 	try
 	{
 		m_Input = context.getInputHandle("input image");
-		m_Test = context.getInputHandle("test input");
 		m_Output = context.getOutputHandle("output image");
 
 		m_BufferSize = context.getParameterValue< unsigned int >("buffer size");
@@ -76,6 +76,7 @@ void ImageAccumulationService< ImageData >::setup(_2Real::ServiceContext &contex
 			throw ServiceException("setup parameter \'buffer size\' should at least be 2");
 		}
 		m_Factor = 1.0f/float(m_BufferSize);
+		m_Normalize = context.getParameterValue< float >("normalization factor");
 	}
 	catch (Exception &e)
 	{
@@ -122,7 +123,7 @@ void ImageAccumulationService< ImageData >::update()
 				for (unsigned int i=0; i<size; i++)
 				{
 					float value1 = m_Image[i];
-					float value2 = m_Factor*(float(newImage[i])/255.0f);
+					float value2 = m_Factor*(float(newImage[i])/m_Normalize);
 					first[i] = value2;
 					float result = value1 + value2;
 					m_Image[i] = result;
@@ -135,7 +136,7 @@ void ImageAccumulationService< ImageData >::update()
 				for (unsigned int i=0; i<size; i++)
 				{
 					float value1 = m_Image[i];
-					float value2 = m_Factor*(float(newImage[i])/255.0f);
+					float value2 = m_Factor*(float(newImage[i])/m_Normalize);
 					float value3 = last[i];
 					first[i] = value2;
 					float result = value1 + value2 - value3;

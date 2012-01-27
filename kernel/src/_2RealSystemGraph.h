@@ -34,7 +34,9 @@ namespace _2Real
 
 	class Data;
 	typedef void (*DataCallback)(Data &data);
+	typedef void (*StateChangeCallback)(std::string &stateName);
 
+	class IStateChangeListener;
 	class IExceptionListener;
 	class IOutputListener;
 	class Engine;
@@ -78,6 +80,10 @@ namespace _2Real
 		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
 		void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
+		void				registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		void				unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		void				registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		void				unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
 
 		PooledThread&		getFreeThread();
 		void				handleException(Runnable &runnable, Exception &exception);

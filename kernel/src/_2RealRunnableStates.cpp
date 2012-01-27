@@ -28,8 +28,9 @@
 namespace _2Real
 {
 
-	RunnableState::RunnableState(RunnableManager const& manager, std::string const& description) :
+	RunnableState::RunnableState(RunnableManager const& manager, std::string const& name, std::string const& description) :
 		m_Description(description),
+		m_Name(name),
 		m_Manager(manager)
 	{
 	}
@@ -41,7 +42,7 @@ namespace _2Real
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateCreated::RunnableStateCreated(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable was just created and should be set up now")
+		RunnableState(manager, "created", "this runnable was just created and should be set up now")
 	{
 	}
 
@@ -57,15 +58,14 @@ namespace _2Real
 		}
 		catch (ServiceException &e)
 		{
-			return m_Manager.getState("halted");
+			return m_Manager.changeState("halted");
 		}
 		catch (...)
 		{
-			return m_Manager.getState("halted");
+			return m_Manager.changeState("halted");
 		}
 
-		std::cout << runnable.name() << " - state = set up" << std::endl;
-		return m_Manager.getState("set up");
+		return m_Manager.changeState("set up");
 	}
 
 	RunnableState & RunnableStateCreated::start(Runnable &runnable, PooledThread &thread)
@@ -84,13 +84,11 @@ namespace _2Real
 
 	RunnableState & RunnableStateCreated::stop(Runnable &runnable, PooledThread &thread)
 	{
-		//does not have any effect here, stop() has the runnable go back to 'set up' anyway
 		return *this;
 	}
 
 	RunnableState & RunnableStateCreated::wait(Runnable &runnable, PooledThread &thread)
 	{
-		//does not have any effect here, stop() has the runnable go back to 'set up' anyway
 		return *this;
 	}
 
@@ -102,24 +100,22 @@ namespace _2Real
 		}
 		catch (...)
 		{
-			return m_Manager.getState("halted");
+			return m_Manager.changeState("halted");
 		}
 
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
-		return m_Manager.getState("shut down");
+		return m_Manager.changeState("shut down");
 	}
 
 	RunnableState & RunnableStateCreated::handleException(Runnable &runnable)
 	{
-		std::cout << runnable.name() << " - state = error" << std::endl;
 		runnable.handleException();
-		return m_Manager.getState("halted");
+		return m_Manager.changeState("halted");
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateSetUp::RunnableStateSetUp(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable is set up and ready to run")
+		RunnableState(manager, "set up", "this runnable is set up and ready to run")
 	{
 	}
 
@@ -133,15 +129,13 @@ namespace _2Real
 	RunnableState & RunnableStateSetUp::start(Runnable &runnable, PooledThread &thread)
 	{
 		thread.start(Poco::Thread::PRIO_NORMAL, runnable);
-		std::cout << runnable.name() << " - state = running" << std::endl;
-		return m_Manager.getState("running");
+		return m_Manager.changeState("running");
 	}
 
 	RunnableState & RunnableStateSetUp::update(Runnable &runnable, PooledThread &thread)
 	{
 		thread.update(Poco::Thread::PRIO_NORMAL, runnable);
-		std::cout << runnable.name() << " - state = updating" << std::endl;
-		return m_Manager.getState("updating");
+		return m_Manager.changeState("updating");
 	}
 
 	RunnableState & RunnableStateSetUp::stop(Runnable &runnable, PooledThread &thread)
@@ -157,21 +151,19 @@ namespace _2Real
 	RunnableState & RunnableStateSetUp::shutdown(Runnable &runnable)
 	{
 		runnable.shutdown();
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
-		return m_Manager.getState("shut down");
+		return m_Manager.changeState("shut down");
 	}
 
 	RunnableState & RunnableStateSetUp::handleException(Runnable &runnable)
 	{
 		runnable.handleException();
-		std::cout << runnable.name() << " - state = error" << std::endl;
-		return m_Manager.getState("halted");
+		return m_Manager.changeState("halted");
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateRunning::RunnableStateRunning(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable is running currently")
+		RunnableState(manager, "running", "this runnable is running currently")
 	{
 	}
 
@@ -193,8 +185,7 @@ namespace _2Real
 	RunnableState & RunnableStateRunning::stop(Runnable &runnable, PooledThread &thread)
 	{
 		thread.stopTargetRunning();
-		std::cout << runnable.name() << " - state = set up" << std::endl;
-		return m_Manager.getState("set up");
+		return m_Manager.changeState("set up");
 	}
 
 	RunnableState & RunnableStateRunning::wait(Runnable &runnable, PooledThread &thread)
@@ -210,14 +201,13 @@ namespace _2Real
 	RunnableState & RunnableStateRunning::handleException(Runnable &runnable)
 	{
 		runnable.handleException();
-		std::cout << runnable.name() << " - state = error" << std::endl;
-		return m_Manager.getState("halted");
+		return m_Manager.changeState("halted");
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateUpdating::RunnableStateUpdating(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable is being updated currently")
+		RunnableState(manager, "updating", "this runnable is being updated currently")
 	{
 	}
 
@@ -243,11 +233,8 @@ namespace _2Real
 
 	RunnableState & RunnableStateUpdating::wait(Runnable &runnable, PooledThread &thread)
 	{
-		//ladida
-
-		std::cout << runnable.name() << " - state = set up" << std::endl;
-
-		return m_Manager.getState("set up");
+		//nothing to do...
+		return m_Manager.changeState("set up");
 	}
 
 	RunnableState & RunnableStateUpdating::shutdown(Runnable &runnable)
@@ -258,16 +245,13 @@ namespace _2Real
 	RunnableState & RunnableStateUpdating::handleException(Runnable &runnable)
 	{
 		runnable.handleException();
-
-		std::cout << runnable.name() << " - state = error" << std::endl;
-
-		return m_Manager.getState("halted");
+		return m_Manager.changeState("halted");
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateShutDown::RunnableStateShutDown(RunnableManager const& manager) :
-		RunnableState(manager, "this runnable was shut down and will be destroyed soon")
+		RunnableState(manager, "shut down", "this runnable was shut down and will be destroyed soon")
 	{
 	}
 
@@ -309,7 +293,7 @@ namespace _2Real
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	RunnableStateHalted::RunnableStateHalted(RunnableManager const& manager) :
-		RunnableState(manager, "an exception occured in the runnable; is is currently halted")
+		RunnableState(manager, "halted", "an exception occured in the runnable; is is currently halted")
 	{
 	}
 
@@ -341,10 +325,7 @@ namespace _2Real
 	RunnableState & RunnableStateHalted::shutdown(Runnable &runnable)
 	{
 		runnable.shutdown();
-
-		std::cout << runnable.name() << " - state = shut down" << std::endl;
-
-		return m_Manager.getState("shut down");
+		return m_Manager.changeState("shut down");
 	}
 
 	RunnableState & RunnableStateHalted::handleException(Runnable &runnable)

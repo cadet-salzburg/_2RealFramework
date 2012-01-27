@@ -18,8 +18,6 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 {
 	try
 	{
-		metadata.test(5);
-
 		metadata.setDescription("This testplugin transcends time and space.");
 		metadata.setAuthor("The Jabberwocky");
 		metadata.setVersion(1, 1, 1);
@@ -29,13 +27,14 @@ void ImageProcessing::getMetadata(Metadata &metadata)
 		metadata.addService("ImageAccumulation");
 		metadata.setDescription("ImageAccumulation", "life is wonderful");
 		metadata.addSetupParameter< unsigned int >("ImageAccumulation", "buffer size", unsigned int(10));
+		metadata.addSetupParameter< float >("ImageAccumulation", "normalization factor", 1.0f);
 		metadata.addInputSlot< Pixelbuffer < float > >("ImageAccumulation", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation", "output image");
 
 		metadata.addService("ImageAccumulation_uchar");
 		metadata.setDescription("ImageAccumulation_uchar", "life is wonderful");
 		metadata.addSetupParameter< unsigned int >("ImageAccumulation_uchar", "buffer size", unsigned int(10));
-		metadata.addInputSlot< string >("ImageAccumulation_uchar", "test input", "test string");
+		metadata.addSetupParameter< float >("ImageAccumulation_uchar", "normalization factor", 255.0f);
 		metadata.addInputSlot< Pixelbuffer < unsigned char > >("ImageAccumulation_uchar", "input image");
 		metadata.addOutputSlot< Pixelbuffer < float > >("ImageAccumulation_uchar", "output image");
 	}

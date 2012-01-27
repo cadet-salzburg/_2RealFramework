@@ -122,6 +122,26 @@ namespace _2Real
 		m_Engine.unregisterFromException(listener, m_Id);
 	}
 
+	void System::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	{
+		m_Engine.registerToStateChange(runnableId, callback, m_Id);
+	}
+
+	void System::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	{
+		m_Engine.unregisterFromStateChange(runnableId, callback, m_Id);
+	}
+
+	void System::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	{
+		m_Engine.registerToStateChange(runnableId, listener, m_Id);
+	}
+
+	void System::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	{
+		m_Engine.unregisterFromStateChange(runnableId, listener, m_Id);
+	}
+
 	void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
 	{
 		m_Engine.registerToNewData(service, name, callback, m_Id);

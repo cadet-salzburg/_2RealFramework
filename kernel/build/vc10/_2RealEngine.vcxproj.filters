@@ -198,6 +198,9 @@
     <ClInclude Include="..\..\src\_2RealIExceptionListener.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIStateChangeListener.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

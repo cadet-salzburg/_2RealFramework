@@ -46,15 +46,29 @@ Buffer2D_float buffer;
 GLuint tex;
 FastMutex mutex;
 
+/**
+*	tracks updated image data
+*/
 void imgDataAvailable(Data &data)
 {
 	FastMutex::ScopedLock lock(mutex);
 	tmp = data.getData< Buffer2D_float >();
 }
 
+/**
+*	tracks exceptions in the system
+*/
 void systemException(RunnableError &e)
 {
 	std::cout << "exception in " << e.system().name() << " by " << e.sender().name() << std::endl;
+}
+
+/**
+*	for testing purposes, tracks the state changes of the color image service
+*/
+void stateChanged(std::string &newState)
+{
+	std::cout << "image generator state changed to : " << newState << std::endl;
 }
 
 void init()
@@ -177,47 +191,73 @@ int main(int argc, char *argv[])
 		testSystem.setValue< vector < string > >(kinectPlugin, "image flags", imgFlags);
 		testSystem.setValue< string >(kinectPlugin, "logfile", "kinectwrapper.txt");
 		testSystem.setValue< string >(kinectPlugin, "loglevel", "info");
-
 		testSystem.setup(kinectPlugin);
-
-		cout << "main: KINECT PLUGIN SET UP" << endl;
 
 		testSystem.setValue< string >(imgPlugin, "logfile", "logfile.txt");
 		testSystem.setup(imgPlugin);
 
-		cout << "main: IMG PLUGIN SET UP" << endl;
+		Identifier img = testSystem.createService("img generator", kinectPlugin, "Image Generator");
 
-		Identifier depth = testSystem.createService("depth generator", kinectPlugin, "Image Generator");
-
-		cout << "main: DEPTH SERVICE CREATED" << endl;
+		testSystem.registerToStateChange(img, ::stateChanged);
 
 		//testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
 		//testSystem.setValue< string >(depth, "image type", "color");
-		testSystem.setup(depth);
+		testSystem.setup(img);
 
-		cout << "main: DEPTH SERVICE SET UP" << endl;
+		Identifier avg0 = testSystem.createService("image accum 0", imgPlugin, "ImageAccumulation_uchar");
+		testSystem.setup(avg0);
 
-		Identifier avg = testSystem.createService("image accumulation", imgPlugin, "ImageAccumulation_uchar");
-		testSystem.setValue< string >(avg, "test input", "yay!");
-		testSystem.setup(avg);
+		Identifier avg1 = testSystem.createService("image accum 1", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg1);
 
-		cout << "main: AVG SERVICE SET UP" << endl;
+		Identifier avg2 = testSystem.createService("image accum 2", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg2);
 
-		testSystem.linkSlots(avg, "input image", depth, "output image");
+		Identifier avg3 = testSystem.createService("image accum 3", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg3);
 
-		cout << "main: AVG DEPTH LINKED" << endl;
+		Identifier avg4 = testSystem.createService("image accum 4", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg4);
 
-		testSystem.setUpdateRate(avg, 100.0f);
-		testSystem.start(avg);
+		Identifier avg5 = testSystem.createService("image accum 5", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg5);
 
-		cout << "main: AVG STARTED" << endl;
+		Identifier avg6 = testSystem.createService("image accum 6", imgPlugin, "ImageAccumulation");
+		testSystem.setup(avg6);
 
-		testSystem.registerToNewData(avg, "output image", ::imgDataAvailable);
+		testSystem.linkSlots(avg0, "input image", img, "output image");
+		testSystem.linkSlots(avg1, "input image", avg0, "output image");
+		testSystem.linkSlots(avg2, "input image", avg1, "output image");
+		testSystem.linkSlots(avg3, "input image", avg2, "output image");
+		testSystem.linkSlots(avg4, "input image", avg3, "output image");
+		testSystem.linkSlots(avg5, "input image", avg4, "output image");
+		testSystem.linkSlots(avg6, "input image", avg5, "output image");
 
-		testSystem.setUpdateRate(depth, 100.0f);
-		testSystem.start(depth);
+		testSystem.setUpdateRate(avg0, 100.0f);
+		testSystem.start(avg0);
 
-		cout << "main: DEPTH SERVICE STARTED" << endl;
+		testSystem.setUpdateRate(avg1, 100.0f);
+		testSystem.start(avg1);
+
+		testSystem.setUpdateRate(avg2, 100.0f);
+		testSystem.start(avg2);
+
+		testSystem.setUpdateRate(avg3, 100.0f);
+		testSystem.start(avg3);
+
+		testSystem.setUpdateRate(avg4, 100.0f);
+		testSystem.start(avg4);
+
+		testSystem.setUpdateRate(avg5, 100.0f);
+		testSystem.start(avg5);
+
+		testSystem.setUpdateRate(avg6, 100.0f);
+		testSystem.start(avg6);
+
+		testSystem.setUpdateRate(img, 100.0f);
+		testSystem.start(img);
+
+		testSystem.registerToNewData(avg6, "output image", ::imgDataAvailable);
 
 		run = true;
 		SDL_Event ev;
@@ -234,13 +274,13 @@ int main(int argc, char *argv[])
 			SDL_GL_SwapWindow(mainwindow);
 		}
 
-		testSystem.stop(depth);
-
-		cout << "main: DEPTH SERVICE STOPPED" << endl;
-
-		testSystem.stop(avg);
-
-		cout << "main: AVG SERVICE STOPPED" << endl << endl;
+		testSystem.stop(img);
+		testSystem.stop(avg0);
+		testSystem.stop(avg1);
+		testSystem.stop(avg2);
+		testSystem.stop(avg3);
+		testSystem.stop(avg4);
+		testSystem.stop(avg5);
 
 		//test system falls out of scope here
 		//->services are deleted, plugins uninstalled

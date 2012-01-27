@@ -33,11 +33,14 @@ namespace _2Real
 	class Data;
 	class Identifier;
 	class RunnableError;
+
 	class IOutputListener;
 	class IExceptionListener;
+	class IStateChangeListener;
 
 	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
+	typedef void (*StateChangeCallback)(std::string &newState);
 
 	class System
 	{
@@ -200,10 +203,10 @@ namespace _2Real
 		/**
 		*	runnable state changes
 		*/
-		//void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-		//void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
 
 		/**
 		*	starts a runnable (service, synchronization, sequence)

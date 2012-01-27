@@ -32,7 +32,8 @@ namespace _2Real
 
 	public:
 
-		RunnableState(RunnableManager const& manager, std::string const& description);
+		RunnableState(RunnableManager const& manager, std::string const& name, std::string const& description);
+		std::string const& getName();
 		std::string const& getDescription();
 		virtual ~RunnableState();
 		virtual RunnableState & start(Runnable &runnable, PooledThread &thread) = 0;
@@ -45,6 +46,7 @@ namespace _2Real
 
 	protected:
 
+		std::string			const m_Name;
 		std::string			const m_Description;
 		RunnableManager		const& m_Manager;
 
@@ -53,6 +55,11 @@ namespace _2Real
 	inline std::string const& RunnableState::getDescription()
 	{
 		return m_Description;
+	}
+
+	inline std::string const& RunnableState::getName()
+	{
+		return m_Name;
 	}
 
 	class RunnableStateCreated : public RunnableState

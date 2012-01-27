@@ -67,7 +67,7 @@
     <ClInclude Include="..\..\src\_2RealIOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
-    <ClInclude Include="..\..\src\_2RealIStateListener.h" />
+    <ClInclude Include="..\..\src\_2RealIStateChangeListener.h" />
     <ClInclude Include="..\..\src\_2RealListenerService.h" />
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />

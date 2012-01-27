@@ -22,6 +22,9 @@
 #include "_2RealRunnableStates.h"
 #include "_2RealException.h"
 #include "_2RealPooledThread.h"
+#include "_2RealIStateChangeListener.h"
+
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
@@ -42,6 +45,26 @@ namespace _2Real
 		m_RunnableStates[STATE_ERROR] = new RunnableStateHalted(*this);
 	}
 
+	void RunnableManager::registerToStateChange(StateChangeCallback callback)
+	{
+		m_StateChangeEvent += Poco::delegate(callback);
+	}
+
+	void RunnableManager::unregisterFromStateChange(StateChangeCallback callback)
+	{
+		m_StateChangeEvent -= Poco::delegate(callback);
+	}
+
+	void RunnableManager::registerToStateChange(IStateChangeListener &listener)
+	{
+		m_StateChangeEvent += Poco::delegate(&listener, &IStateChangeListener::receiveStateChange);
+	}
+
+	void RunnableManager::unregisterFromStateChange(IStateChangeListener &listener)
+	{
+		m_StateChangeEvent -= Poco::delegate(&listener, &IStateChangeListener::receiveStateChange);
+	}
+
 	RunnableManager::~RunnableManager()
 	{
 		for (std::map< std::string, RunnableState * >::iterator it = m_RunnableStates.begin(); it != m_RunnableStates.end(); ++it)
@@ -54,22 +77,27 @@ namespace _2Real
 
 	bool RunnableManager::isRunning() const
 	{
-		return m_CurrentState == &getState(STATE_RUNNING);
+		StateTable::const_iterator it = m_RunnableStates.find(STATE_RUNNING);
+		return (m_CurrentState == it->second);
 	}
 
 	bool RunnableManager::isUpdating() const
 	{
-		return m_CurrentState == &getState(STATE_UPDATING);
+		StateTable::const_iterator it = m_RunnableStates.find(STATE_UPDATING);
+		return (m_CurrentState == it->second);
 	}
 
 	bool RunnableManager::isSetUp() const
 	{
-		return m_CurrentState == &getState(STATE_SETUP);
+		StateTable::const_iterator it = m_RunnableStates.find(STATE_SETUP);
+		return (m_CurrentState == it->second);
 	}
 
-	RunnableState & RunnableManager::getState(std::string const& stateName) const
+	RunnableState & RunnableManager::changeState(std::string const& newState) const
 	{
-		StateTable::const_iterator it = m_RunnableStates.find(stateName);
+		StateTable::const_iterator it = m_RunnableStates.find(newState);
+		std::string stateDesc = it->second->getName() + " - " + it->second->getDescription();
+		m_StateChangeEvent.notify(this, stateDesc);
 		return *it->second;
 	}
 

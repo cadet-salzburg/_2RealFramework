@@ -127,6 +127,26 @@ namespace _2Real
 		m_ExceptionHandler.unregisterExceptionListener(listener);
 	}
 
+	void SystemGraph::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	{
+		getContained(runnableId).registerToStateChange(callback);
+	}
+
+	void SystemGraph::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	{
+		getContained(runnableId).unregisterFromStateChange(callback);
+	}
+
+	void SystemGraph::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	{
+		getContained(runnableId).registerToStateChange(listener);
+	}
+
+	void SystemGraph::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	{
+		getContained(runnableId).unregisterFromStateChange(listener);
+	}
+
 	void SystemGraph::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
 	{
 		Runnable &runnable = getContained(serviceId).getManagedRunnable();

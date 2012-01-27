@@ -197,6 +197,34 @@ namespace _2Real
 		nirvana.linkSlots(serviceIn, nameIn, serviceOut, nameOut);
 	}
 
+	void Engine::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.registerToStateChange(runnableId, callback);
+	}
+
+	void Engine::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.unregisterFromStateChange(runnableId, callback);
+	}
+
+	void Engine::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.registerToStateChange(runnableId, listener);
+	}
+
+	void Engine::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		nirvana.unregisterFromStateChange(runnableId, listener);
+	}
+
 	void Engine::registerToException(ExceptionCallback callback, Identifier const& systemId)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);

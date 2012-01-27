@@ -80,6 +80,7 @@ namespace _2Real
 		if (!thread)
 		{
 			thread = new PooledThread(m_StackSize);
+			thread->reactivate();
 			m_Threads.push_back(thread);
 		}
 		else

@@ -40,10 +40,12 @@ namespace _2Real
 
 	typedef void (*ExceptionCallback)(RunnableError &exception);
 	typedef void (*DataCallback)(Data &data);
+	typedef void (*StateChangeCallback)(std::string &stateName);
 
 	class Identifier;
 	class IOutputListener;
 	class IExceptionListener;
+	class IStateChangeListener;
 	
 	class Engine
 	{
@@ -88,6 +90,10 @@ namespace _2Real
 		void					unregisterFromNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
 		void					registerToException(IExceptionListener &listener, Identifier const& systemId);
 		void					unregisterFromException(IExceptionListener &listener, Identifier const& systemId);
+		void					registerToStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId);
+		void					unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId);
+		void					registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId);
+		void					unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId);
 
 		void					add(Identifier const& runnable, Identifier const& parent, unsigned int index, Identifier const& system);
 		void					append(Identifier const& runnable, Identifier const& parent, Identifier const& system);
