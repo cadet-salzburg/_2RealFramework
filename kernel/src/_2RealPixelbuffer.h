@@ -32,10 +32,10 @@ namespace _2Real
 		void assign(Poco::SharedPtr< DataType > data, unsigned int width, unsigned int height, unsigned int channels);
 
 		template< typename T >
-		friend std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& pb);
+		friend std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& blob);
 
 		template< typename T >
-		friend std::istream& operator>>(std::istream& in, Pixelbuffer< T > &pb);
+		friend std::istream& operator>>(std::istream& in, Pixelbuffer< T > &blob);
 
 		const unsigned int width() const;
 		const unsigned int height() const;
@@ -149,17 +149,17 @@ namespace _2Real
 	}
 
 	template< typename T >
-	std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& pb)
+	std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& blob)
 	{
-		out << pb.m_Width << " " << pb.m_Height << " " << pb.m_Channels << std::endl;
+		out << blob.m_Width << " " << blob.m_Height << " " << blob.m_Channels << std::endl;
 		return out;
 	}
 
 	template< typename T >
-	std::istream& operator>>(std::istream& in, typename Pixelbuffer< T > &pb)
+	std::istream& operator>>(std::istream& in, typename Pixelbuffer< T > &blob)
 	{
 		char ws;
-		in >> pb.m_Width >> ws >> pb.m_Height >> ws >> pb.m_Channels;
+		in >> blob.m_Width >> ws >> blob.m_Height >> ws >> blob.m_Channels;
 		return in;
 	}
 
@@ -218,19 +218,19 @@ namespace _2Real
 		if (row >= m_Height)
 		{
 			std::stringstream txt;
-			txt << "row index " << row << " too high (pixelbuffer height: " << m_Height << ")";
+			txt << "row index " << row << " too high (Pixelbuffer height: " << m_Height << ")";
 			throw PixelbufferException(txt.str());
 		}
 		else if (col >= m_Width)
 		{
 			std::stringstream txt;
-			txt << "col index " << col << " too high (pixelbuffer width: " << m_Width << ")";
+			txt << "col index " << col << " too high (Pixelbuffer width: " << m_Width << ")";
 			throw PixelbufferException(txt.str());
 		}
 		else if (channel >= m_Channels)
 		{
 			std::stringstream txt;
-			txt << "channel index " << channel << " too high (pixelbuffer has " << m_Height << " channels)";
+			txt << "channel index " << channel << " too high (Pixelbuffer has " << m_Height << " channels)";
 			throw PixelbufferException(txt.str());
 		}
 
@@ -252,7 +252,7 @@ namespace _2Real
 		if (index >= m_Size)
 		{
 			std::stringstream txt;
-			txt << "index " << index << " too high (pixelbuffer size: " << m_Size << ")";
+			txt << "index " << index << " too high (Pixelbuffer size: " << m_Size << ")";
 			throw PixelbufferException(txt.str());
 		}
 

@@ -21,7 +21,8 @@
 #include "_2RealSingletonHolder.h"
 #include "_2RealSystemGraph.h"
 
-#include "_2RealImagebuffer.h"
+#include "_2RealPixelbuffer.h"
+#include "_2RealBlob.h"
 
 #include <sstream>
 #include <iostream>

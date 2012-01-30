@@ -16,9 +16,9 @@
 	limitations under the License.
 */
 
-#include "_2RealImagebuffer.h"
+#include "_2RealBlob.h"
 
 namespace _2Real
 {
-	IMPLEMENT_EXCEPTION(PixelbufferException, Exception, "pixelbuffer exception")
+	IMPLEMENT_EXCEPTION(BlobException, Exception, "Blob exception")
 }

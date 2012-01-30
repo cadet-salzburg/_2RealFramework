@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\_2RealBlob.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
-    <ClCompile Include="..\..\src\_2RealImagebuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealInputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealPixelbuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
@@ -60,7 +62,6 @@
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealIExceptionListener.h" />
-    <ClInclude Include="..\..\src\_2RealImagebuffer.h" />
     <ClInclude Include="..\..\src\_2RealInputHandle.h" />
     <ClInclude Include="..\..\src\_2RealInputSlot.h" />
     <ClInclude Include="..\..\src\_2RealInternalService.h" />
@@ -72,6 +73,7 @@
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
     <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPixelbuffer.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealRunnable.h" />
     <ClInclude Include="..\..\src\_2RealOutputHandle.h" />

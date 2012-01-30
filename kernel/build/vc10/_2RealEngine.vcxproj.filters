@@ -81,7 +81,10 @@
     <ClCompile Include="..\..\src\_2RealRunnable.cpp">
       <Filter>Graphs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealImagebuffer.cpp">
+    <ClCompile Include="..\..\src\_2RealPixelbuffer.cpp">
+      <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlob.cpp">
       <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
@@ -148,9 +151,6 @@
     <ClInclude Include="..\..\src\_2RealSynchronization.h">
       <Filter>Graphs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealImagebuffer.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealPluginPool.h">
       <Filter>Subsystems</Filter>
     </ClInclude>
@@ -189,9 +189,6 @@
     <ClInclude Include="..\..\src\_2RealRunnable.h">
       <Filter>Graphs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIStateListener.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealIOutputListener.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -200,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealIStateChangeListener.h">
       <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPixelbuffer.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlob.h">
+      <Filter>Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
