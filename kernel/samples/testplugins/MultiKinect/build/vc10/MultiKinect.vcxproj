@@ -75,14 +75,14 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\include;..\..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\include;..\..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\src;..\..\..\..\..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>_2RealEngine_mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;..\..\..\..\..\..\..\..\externalLibs\openni\lib;..\..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\_2RealFramework\kernel\lib;..\..\..\..\..\..\..\..\externalLibs\vld\lib\Win32;..\..\..\..\..\modules\_2RealOpenNI\_2RealOpenNIWrapper\_2RealOpenNILib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MultiKinectOpenNI_md|Win32'">
@@ -91,7 +91,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\include;..\..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\include;..\..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\src;..\..\..\..\..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -100,7 +100,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>_2RealEngine_md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;$(OPEN_NI_LIB);..\..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\..\_2RealFramework\kernel\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\projects\_2RealKinectWrapper\externalLibs\boost\lib;..\..\..\..\..\..\..\..\externalLibs\openni\lib;..\..\..\..\..\..\..\..\externalLibs\poco\lib;..\..\..\..\..\..\..\projects\_2RealKinectWrapper\lib;..\..\..\..\..\..\..\_2RealFramework\kernel\lib;..\..\..\..\..\..\..\..\externalLibs\vld\lib\Win32;..\..\..\..\..\modules\_2RealOpenNI\_2RealOpenNIWrapper\_2RealOpenNILib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>

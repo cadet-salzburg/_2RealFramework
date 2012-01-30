@@ -138,13 +138,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_mdd|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\bin\</OutDir>
+    <OutDir>\debug</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_mdd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='_2RealEngine_md|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\bin\</OutDir>
+    <OutDir>\release</OutDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>$(ProjectName)_md</TargetName>
   </PropertyGroup>
@@ -169,7 +169,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\visual leak detector\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ProgramDataBaseFileName>..\..\bin\_2RealFramework_debug.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\_2RealFramework_debug.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -179,7 +179,7 @@
     <Lib>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <OutputFile>..\..\bin\_2RealEngine_mdd.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealEngine_mdd.lib</OutputFile>
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
@@ -206,7 +206,7 @@
     </Link>
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
-      <OutputFile>..\..\bin\_2RealEngine_md.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealEngine_md.lib</OutputFile>
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>

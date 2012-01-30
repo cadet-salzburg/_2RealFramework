@@ -27,7 +27,7 @@
 #include <iostream>
 #include <string>
 
-#include <vld.h>
+#include "vld.h"
 
 #include "Poco\Mutex.h"
 

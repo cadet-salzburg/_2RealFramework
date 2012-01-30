@@ -2,7 +2,7 @@
 
 #include "_2RealIPluginActivator.h"
 
-#include <vld.h>
+#include "vld.h"
 
 #include <fstream>
 
