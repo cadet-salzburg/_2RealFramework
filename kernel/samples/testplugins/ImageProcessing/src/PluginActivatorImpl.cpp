@@ -7,7 +7,7 @@
 #include "ImageAccumulation.h"
 #include "ImageConversion.h"
 
-#include "_2RealImagebuffer.h"
+#include "_2RealPixelbuffer.h"
 
 #include <fstream>
 

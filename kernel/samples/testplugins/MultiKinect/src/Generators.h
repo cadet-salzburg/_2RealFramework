@@ -7,7 +7,7 @@
 
 #include "_2RealKinect.h"
 
-#include "_2RealImagebuffer.h"
+#include "_2RealPixelbuffer.h"
 
 _2Real::IService *const createImageService();
 

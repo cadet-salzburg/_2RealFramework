@@ -22,7 +22,7 @@
 #include "_2RealException.h"
 #include "_2RealRunnableError.h"
 #include "_2RealData.h"
-#include "_2RealImagebuffer.h"
+#include "_2RealPixelbuffer.h"
 
 #include "GL/glew.h"
 #include "GL/wglew.h"

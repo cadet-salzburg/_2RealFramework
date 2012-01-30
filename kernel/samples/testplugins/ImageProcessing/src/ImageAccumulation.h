@@ -5,7 +5,7 @@
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
 
-#include "_2RealImagebuffer.h"
+#include "_2RealPixelbuffer.h"
 
 #include <iostream>
 #include <vector>
