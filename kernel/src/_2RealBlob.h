@@ -34,12 +34,9 @@ namespace _2Real
 
 	private:
 
-		void copydata(DataType *data, unsigned int size);
+		void copydata(DataType const*data, unsigned int size);
 
-		/**
-		*	used to be const* m_Data
-		*/
-		DataType						*m_Data;
+		DataType						const* m_Data;
 		unsigned int					m_Size;
 	};
 
@@ -117,23 +114,4 @@ namespace _2Real
 		return m_Data[index];
 	}
 
-	template< typename DataType >
-	void Blob< DataType >::copydata(DataType *data, unsigned int size)
-	{
-		m_Size = size;
-		delete[] m_Data;
-		m_Data = NULL;
-		if (m_Size > 0)
-		{
-			m_Data = new DataType[m_Size];
-			if (m_Data == NULL)
-			{
-				std::stringstream txt;
-				txt << "memory allocation for " << m_Size << " bytes failed!";
-				m_Size = 0;
-				throw BlobException(txt.str());
-			}
-			memcpy(m_Data, data, m_Size);
-		}
-	}
 }
