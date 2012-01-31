@@ -85,14 +85,14 @@ void vec3DataAvailable(Data &data)
 
 void subDataAvailable(Data &data)
 {
-	//ScopedLock< FastMutex > lock(mutex4);
-	//subData = data.getData< vector < int > >();
-	//cout << "sub data: " << subData.size() << endl;
-	//for (unsigned int i=0; i<subData.size(); ++i)
-	//{
-	//	cout << subData.at(i) << " ";
-	//}
-	//cout << endl;
+	ScopedLock< FastMutex > lock(mutex4);
+	subData = data.getData< vector < int > >();
+	cout << "sub data: " << subData.size() << endl;
+	for (unsigned int i=0; i<subData.size(); ++i)
+	{
+		cout << subData.at(i) << " ";
+	}
+	cout << endl;
 }
 
 void addDataAvailable(Data &data)
@@ -157,11 +157,11 @@ int main(int argc, char *argv[])
 		sys.setup(add);
 		sys.setup(sub);
 
-		//sys.setUpdateRate(vec1, 30.0f);
-		//sys.setUpdateRate(vec2, 30.0f);
-		//sys.setUpdateRate(vec3, 30.0f);
-		//sys.setUpdateRate(add, 30.0f);
-		//sys.setUpdateRate(sub, 30.0f);
+		sys.setUpdateRate(vec1, 30.0f);
+		sys.setUpdateRate(vec2, 30.0f);
+		sys.setUpdateRate(vec3, 30.0f);
+		sys.setUpdateRate(add, 30.0f);
+		sys.setUpdateRate(sub, 30.0f);
 
 		sys.registerToNewData(sub, "sub out", ::subDataAvailable);
 		sys.registerToNewData(add, "add out", ::addDataAvailable);
@@ -169,34 +169,32 @@ int main(int argc, char *argv[])
 		sys.registerToNewData(vec2, "init out", ::vec2DataAvailable);
 		sys.registerToNewData(vec3, "init out", ::vec3DataAvailable);
 
-		//sys.start(vec1);
-		//sys.start(vec2);
-		//sys.start(vec3);
-		//sys.start(add);
-		//sys.start(sub);
+		sys.start(vec1);
+		sys.start(vec2);
+		sys.start(vec3);
+		sys.start(add);
+		sys.start(sub);
 
-		Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
+		////Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
 
 		//cout << "main: SYNC 0 CREATED" << endl;
 
-		sys.setUpdateRate(sync0, 100.0f);
-		sys.start(sync0);
+		//sys.setUpdateRate(sync0, 100.0f);
+		//sys.start(sync0);
 
-		Identifier sync1 = sys.createSynchronization("s 1", add, vec3);
+		//Identifier sync1 = sys.createSynchronization("s 1", add, vec3);
 
 		//cout << "main: SYNC 1 CREATED" << endl;
 
-		sys.setUpdateRate(sync1, 100.0f);
-		sys.start(sync1);
+		//sys.setUpdateRate(sync1, 100.0f);
+		//sys.start(sync1);
 
-		Identifier seq = sys.createSequence("test sequence", sync1, sub);
+		//Identifier seq = sys.createSequence("test sequence", sync1, sub);
 
 		//cout << "main: SEQ CREATED" << endl;
 
-		sys.setUpdateRate(seq, 100.0f);
-		sys.start(seq);
-
-		cout << "main: ALL STARTED" << endl;
+		//sys.setUpdateRate(seq, 100.0f);
+		//sys.start(seq);
 
 		while(1)
 		{
@@ -303,8 +301,6 @@ int main(int argc, char *argv[])
 		}
 
 		sys.stopAll();
-
-		cout << "XXXXXXXXXXXXXXXXXXXXXXXXX END XXXXXXXXXXXXXXXXXXXXXXXXX" << endl;
 	}
 	catch (_2Real::Exception &e)
 	{
