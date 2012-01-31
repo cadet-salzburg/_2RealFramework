@@ -36,7 +36,10 @@ namespace _2Real
 
 		void copydata(DataType *data, unsigned int size);
 
-		DataType						const* m_Data;
+		/**
+		*	used to be const* m_Data
+		*/
+		DataType						*m_Data;
 		unsigned int					m_Size;
 	};
 

@@ -54,10 +54,26 @@ namespace _2Real
 		m_Types.registerType< double >("double");
 		m_Types.registerType< bool >("bool");
 		m_Types.registerType< std::string >("string");
+
 		m_Types.registerType< Buffer2D_float >("buffer2D_float");
 		m_Types.registerType< Buffer2D_double >("buffer2D_double");
 		m_Types.registerType< Buffer2D_uint >("buffer2D_uint");
 		m_Types.registerType< Buffer2D_uchar >("buffer2D_uchar");
+
+		/**
+		*	blobs for all primitive datatypes. feel free to add / delete
+		*/
+		m_Types.registerType< Blob < char > >("blob_char");
+		m_Types.registerType< Blob < unsigned char > >("blob_uchar");
+		m_Types.registerType< Blob < short > >("blob_short");
+		m_Types.registerType< Blob < unsigned short > >("blob_ushort");
+		m_Types.registerType< Blob < int > >("blob_int");
+		m_Types.registerType< Blob < unsigned int > >("blob_uint");
+		m_Types.registerType< Blob < long > >("blob_long");
+		m_Types.registerType< Blob < unsigned long > >("blob_ulong");
+		m_Types.registerType< Blob < float > >("blob_float");
+		m_Types.registerType< Blob < double > >("blob_double");
+		m_Types.registerType< Blob < bool > >("blob_bool");
 	}
 
 	Engine::~Engine()
