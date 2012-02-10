@@ -20,6 +20,8 @@
 
 #include "_2RealEngineData.h"
 
+#include <list>
+#include <vector>
 #include <map>
 #include <string>
 #include <typeinfo>
@@ -68,12 +70,13 @@ namespace _2Real
 			throw AlreadyExistsException(msg.str());
 		}
 
+		//automatically also registers vector & list
 		std::string keyword1 = std::string("vector " + keyword);
-		std::string keyword2 = std::string("vector2D " + keyword);
+		std::string keyword2 = std::string("list " + keyword);
 
 		EngineData data(new DataType());
 		EngineData data1(new std::vector< DataType >());
-		EngineData data2(new std::vector < std::vector< DataType > >());
+		EngineData data2(new std::list< DataType >());
 
 		m_Typetable[keyword] = data;
 		m_Typetable[keyword1] = data1;

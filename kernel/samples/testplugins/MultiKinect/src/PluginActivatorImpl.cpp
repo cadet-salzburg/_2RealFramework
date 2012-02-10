@@ -14,6 +14,11 @@
 using namespace _2Real;
 using namespace std;
 
+MultiKinectOpenNI::MultiKinectOpenNI() :
+	m_2RealKinect(NULL)
+{
+}
+
 MultiKinectOpenNI::~MultiKinectOpenNI()
 {
 }

@@ -30,7 +30,7 @@
 #include "_2RealSystemPool.h"
 #include "_2RealTimer.h"
 
-//#include <vld.h>
+#include "vld.h"
 
 namespace _2Real
 {
@@ -75,6 +75,7 @@ namespace _2Real
 		void					setup(Identifier const& setupAble, Identifier const& systemId);
 		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
 		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
+		void					setValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId);
 		const EngineData		getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const;
 
 		void					linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);

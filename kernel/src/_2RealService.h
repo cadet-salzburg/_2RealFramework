@@ -55,6 +55,8 @@ namespace _2Real
 		Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata);
 		~Service();
 
+		std::string const&		getParameterKey(std::string const& name) const;
+
 		/**
 		*	functions that may be called by the service context
 		*/

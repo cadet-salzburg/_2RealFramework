@@ -33,7 +33,9 @@ namespace _2Real
 		virtual std::type_info const& typeinfo() const = 0;
 		virtual AbstractDataHolder* clone() const = 0;
 		virtual AbstractDataHolder* create() const = 0;
-		virtual const std::string toString() const = 0;
+		//virtual const std::string toString() const = 0;
+		virtual void writeTo(std::ostream &out) const = 0;
+		virtual void readFrom(std::istream &in) = 0;
 
 	};
 
@@ -56,9 +58,12 @@ namespace _2Real
 		std::type_info const& typeinfo() const;
 		AbstractDataHolder* create() const;
 		AbstractDataHolder* clone() const;
-		const std::string toString() const;
+		//const std::string toString() const;
 
 		Poco::SharedPtr< DataType >		m_Data;
+
+		void writeTo(std::ostream &out) const;
+		void readFrom(std::istream &in);
 
 	};
 
@@ -106,12 +111,24 @@ namespace _2Real
 	}
 
 	template< typename DataType >
-	const std::string DataHolder< DataType >::toString() const
+	void DataHolder< DataType >::writeTo(std::ostream &out) const
 	{
-		std::ostringstream msg;
-		msg << *m_Data.get();
-		return msg.str();
+		out << *m_Data.get();
 	}
+
+	template< typename DataType >
+	void DataHolder< DataType >::readFrom(std::istream &in)
+	{
+		in >> *m_Data.get();
+	}
+
+	//template< typename DataType >
+	//const std::string DataHolder< DataType >::toString() const
+	//{
+	//	std::ostringstream msg;
+	//	msg << *m_Data.get();
+	//	return msg.str();
+	//}
 
 	template< typename DataType >
 	AbstractDataHolder * DataHolder< DataType >::create() const

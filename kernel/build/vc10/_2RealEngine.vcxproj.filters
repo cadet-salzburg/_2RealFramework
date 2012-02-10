@@ -87,6 +87,8 @@
     <ClCompile Include="..\..\src\_2RealBlob.cpp">
       <Filter>Types</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemData.cpp" />
+    <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -204,6 +206,8 @@
     <ClInclude Include="..\..\src\_2RealBlob.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealXMLReader.h" />
+    <ClInclude Include="..\..\src\_2RealSystemData.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">

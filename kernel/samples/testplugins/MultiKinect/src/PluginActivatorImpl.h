@@ -14,6 +14,7 @@ class MultiKinectOpenNI : public _2Real::IPluginActivator
 
 public:
 
+	MultiKinectOpenNI();
 	~MultiKinectOpenNI();
 	void					getMetadata(_2Real::Metadata &info);
 	void					setup(_2Real::PluginContext &context);

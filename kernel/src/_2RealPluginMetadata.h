@@ -91,8 +91,6 @@ namespace _2Real
 		ParameterMetadata const&	getParameterMetadata(std::string const& name) const;
 		ServiceMetadata const&		getServiceMetadata(std::string const& name) const;
 
-		Poco::SharedPtr< AbstractDataHolder >	m_Test;
-
 	private:
 
 		void						addSetupParameter(std::string const& name, ParameterMetadata *data);

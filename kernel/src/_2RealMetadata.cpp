@@ -32,14 +32,6 @@ namespace _2Real
 	{
 	}
 
-	void Metadata::test(float f)
-	{
-		//float *x = new float(f);
-		//m_Impl.m_Test.assign(x);
-		AbstractDataHolder *holder = new DataHolder< float >(f);
-		m_Impl.m_Test.assign(holder);
-	}
-
 	void Metadata::setDescription(std::string const& description)
 	{
 		m_Impl.setDescription(description);

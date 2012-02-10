@@ -410,6 +410,20 @@ namespace _2Real
 		}
 	}
 
+	std::string const& SystemGraph::getParameterKey(Identifier const& id, std::string const& paramName) const
+	{
+		if (id.isPlugin())
+		{
+			return m_Plugins.getParameterKey(id, paramName);
+		}
+		else
+		{
+			Runnable &runnable = getContained(id).getManagedRunnable();
+			Service &service = static_cast< Service & >(runnable);
+			return service.getParameterKey(paramName);
+		}
+	}
+
 	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)
 	{
 		Runnable &runnable = getContained(id).getManagedRunnable();

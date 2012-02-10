@@ -65,6 +65,7 @@ namespace _2Real
 
 		void				setUp(Identifier const& setupAbleId);
 		const EngineData	getValue(Identifier const& id, std::string const& paramName) const;
+		std::string const&	getParameterKey(Identifier const& id, std::string const& paramName) const;
 		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
 		void				setUpdateRate(Identifier const& id, float updatesPerSecond);
 		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);

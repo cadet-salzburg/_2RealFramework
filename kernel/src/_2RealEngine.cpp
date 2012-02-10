@@ -179,6 +179,28 @@ namespace _2Real
 		nirvana.setValue(id, paramName, value);
 	}
 
+	void Engine::setValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		if (!id.isSetupAble())
+		{
+			std::ostringstream msg;
+			msg << "engine::setValueToString " << id.name() << " is a " << id.type() << ", plugin or service expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		EngineData val;
+		std::string key = nirvana.getParameterKey(id, paramName);
+		std::cout << "SET VALUE " << value << " " << key << std::endl;
+		val.create(m_Types.getInitialValueFromKey(key));
+
+		std::stringstream stream;
+		stream << value;
+		stream >> val;
+		nirvana.setValue(id, paramName, val);
+	}
+
 	const EngineData Engine::getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const
 	{
 		SystemGraph const& nirvana = m_Graphs.getSystemGraph(systemId);

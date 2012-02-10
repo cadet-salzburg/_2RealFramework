@@ -45,10 +45,12 @@
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemData.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemPool.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
+    <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealBlob.h" />
@@ -97,6 +99,7 @@
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSynchronization.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
+    <ClInclude Include="..\..\src\_2RealSystemData.h" />
     <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
     <ClInclude Include="..\..\src\_2RealSystemPool.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
@@ -104,6 +107,7 @@
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
+    <ClInclude Include="..\..\src\_2RealXMLReader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

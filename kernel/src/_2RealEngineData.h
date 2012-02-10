@@ -23,6 +23,18 @@ namespace _2Real
 		template< typename DataType >
 		friend Poco::SharedPtr< DataType > const& Extract(EngineData const& data);
 	
+		friend std::ostream& operator<<(std::ostream& out, EngineData const& data)
+		{
+			data.writeTo(out);
+			return out;
+		}
+
+		friend std::istream& operator>>(std::istream& in, EngineData &data)
+		{
+			data.readFrom(in);
+			return in;
+		}
+
 		EngineData();
 		EngineData(EngineData const& src);
 		EngineData& operator=(EngineData const& src);
@@ -40,11 +52,14 @@ namespace _2Real
 		std::type_info const& typeinfo() const;
 		void clone(EngineData const& src);
 		void create(EngineData const& src);
-		const std::string toString() const;
+		//const std::string toString() const;
 
 	private:
 
 		Poco::SharedPtr< AbstractDataHolder >	m_Content;
+
+		void writeTo(std::ostream &out) const;
+		void readFrom(std::istream &in);
 
 	};
 
@@ -116,17 +131,39 @@ namespace _2Real
 		return m_Content.isNull();
 	}
 
-	inline const std::string EngineData::toString() const
+	inline void EngineData::writeTo(std::ostream &out) const
 	{
 		if (!m_Content.isNull())
 		{
-			return m_Content->toString();
+			m_Content->writeTo(out);
 		}
 		else
 		{
-			return std::string("void");
 		}
 	}
+
+	inline void EngineData::readFrom(std::istream &in)
+	{
+		if (!m_Content.isNull())
+		{
+			m_Content->readFrom(in);
+		}
+		else
+		{
+		}
+	}
+
+	//inline const std::string EngineData::toString() const
+	//{
+	//	if (!m_Content.isNull())
+	//	{
+	//		return m_Content->toString();
+	//	}
+	//	else
+	//	{
+	//		return std::string("void");
+	//	}
+	//}
 
 	inline std::type_info const& EngineData::typeinfo() const
 	{

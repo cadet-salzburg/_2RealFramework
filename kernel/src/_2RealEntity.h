@@ -37,7 +37,7 @@ namespace _2Real
 		static const Identifier	NoEntity();
 
 		Identifier const&		identifier() const;
-		unsigned int const&		id() const;
+		unsigned int			id() const;
 		std::string const&		name() const;
 		std::string const&		type() const;
 		bool					isPlugin() const;
@@ -57,7 +57,7 @@ namespace _2Real
 		return m_Id;
 	}
 
-	inline unsigned int const& Entity::id() const
+	inline unsigned int Entity::id() const
 	{
 		return m_Id.id();
 	}

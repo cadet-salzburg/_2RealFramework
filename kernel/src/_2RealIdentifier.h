@@ -42,6 +42,8 @@ namespace _2Real
 		Identifier(Identifier const& src);
 		Identifier& operator=(Identifier const& src);
 
+		const bool isValid() const;
+
 		/**
 		*	returns the entity's name
 		*
@@ -62,7 +64,7 @@ namespace _2Real
 		*
 		*	@return:		the entity's unique id
 		*/
-		unsigned int const& id() const;
+		unsigned int id() const;
 
 		/**
 		*	true if the identifiers refer to the same entity within the framework

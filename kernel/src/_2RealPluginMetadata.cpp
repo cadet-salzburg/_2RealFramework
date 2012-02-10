@@ -57,8 +57,6 @@ namespace _2Real
 		}
 		m_Services.clear();
 		m_SetupParameters.clear();
-
-		m_Test.assign(NULL);
 	}
 
 	void PluginMetadata::addServiceMetadata(std::string const& name)

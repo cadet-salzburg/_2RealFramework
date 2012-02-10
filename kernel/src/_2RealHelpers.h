@@ -22,17 +22,97 @@
 
 #include <vector>
 #include <map>
+#include <list>
+#include <string>
 #include <sstream>
+#include <iostream>
 
 namespace _2Real
 {
+	/**
+	*	to lowercasw
+	*/
+	inline std::string toLower(std::string const& s)
+	{
+		std::string result;
+		result.clear();
+		for (unsigned int i=0; i<s.length(); i++)
+		{
+			result.push_back(tolower(s[i]));
+		}
+		return result;
+	}
+
+	/**
+	*	remove leading & ending whitespace or tab from a string
+	*/
+	inline std::string trim(std::string const&s , std::string const& whitespace = " \t")
+	{
+		const size_t beginStr = s.find_first_not_of(whitespace);
+
+		if (beginStr == std::string::npos)
+		{
+			return "";
+		}
+
+		const size_t endStr = s.find_last_not_of(whitespace);
+		const size_t range = endStr - beginStr + 1;
+
+		std::string result = s.substr(beginStr, range);
+		return result;
+	}
+
+
+	/**
+	*	trims, converts to lower case, checks for bad characters
+	*/
+	inline const std::string validateName(std::string const& s)
+	{
+		std::string result = toLower(trim(s));
+
+		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz _:0123456789");
+		if (pos != std::string::npos)
+		{
+			std::stringstream msg;
+			msg << "invalid name " << result << "; contains forbidden character " << result[pos];
+			throw InvalidNameException(msg.str());
+		}
+
+		return result;
+	}
+
+	/**
+	*	input operator for std::vector
+	*	the comma, followed by a blank space (', ') shall be used as delimiter
+	*/
+	template< typename DataType >
+	std::istream& operator>>(std::istream &in, typename std::vector< DataType > &v)
+	{
+		std::string element;
+		char delim = ',';
+
+		while (getline(in, element, delim))
+		{
+			trim(element);
+			DataType tmp;
+			std::stringstream stream;
+			stream << element;
+			stream >> tmp;
+			v.push_back(tmp);
+		}
+
+		return in;
+	}
 
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType > &v)
 	{
-		for (typename std::vector< DataType >::const_iterator it = v.begin(); it != v.end(); ++it)
+		typename std::vector< DataType >::const_iterator it = v.begin();
+		out << *it;
+		++it;
+		for (; it != v.end(); ++it)
 		{
-			out << " " << *it;
+			out << ", " << *it;
 		}
 		return out;
 	}
@@ -40,9 +120,61 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType * > &v)
 	{
-		for (typename std::vector< DataType * >::const_iterator it = v.begin(); it != v.end(); ++it)
+		typename std::vector< DataType >::const_iterator it = v.begin();
+		out << *it;
+		++it;
+		for (; it != v.end(); ++it)
 		{
-			out << " " << *it;
+			out << ", " << *it;
+		}
+		return out;
+	}
+
+	/**
+	*	input operator for std::list
+	*	the comma, followed by a blank space (', ') shall be used as delimiter
+	*/
+	template< typename DataType >
+	std::istream& operator>>(std::istream &in, typename std::list< DataType > &l)
+	{
+		std::string element;
+		char delim = ',';
+
+		while (getline(in, element, delim))
+		{
+			trim(element);
+			DataType tmp;
+			std::stringstream stream;
+			stream << element;
+			stream >> tmp;
+			l.push_back(tmp);
+		}
+
+		return in;
+	}
+
+	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType > &l)
+	{
+		typename std::list< DataType >::const_iterator it = l.begin();
+		out << *it;
+		++it;
+		for (; it != l.end(); ++it)
+		{
+			out << ", " << *it;
+		}
+		return out;
+	}
+
+	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType * > &l)
+	{
+		typename std::list< DataType >::const_iterator it = l.begin();
+		out << *it;
+		++it;
+		for (; it != l.end(); ++it)
+		{
+			out << ", " << *it;
 		}
 		return out;
 	}
@@ -52,7 +184,7 @@ namespace _2Real
 	{
 		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
-			out << it->second << std::endl;
+			out << it->second << "\n";
 		}
 		return out;
 	}
@@ -62,7 +194,7 @@ namespace _2Real
 	{
 		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
-			out << it->second << std::endl;
+			out << it->second << "\n";
 		}
 		return out;
 	}
@@ -72,7 +204,7 @@ namespace _2Real
 	{
 		for (typename std::map< std::string, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
-			out << *it->second << std::endl;
+			out << *(it->second) << "\n";
 		}
 		return out;
 	}
@@ -82,10 +214,9 @@ namespace _2Real
 	{
 		for (typename std::map< Identifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
-			out << *it->second << std::endl;
+			out << *it->second << "\n";
 		}
 		return out;
 	}
-
 
 }

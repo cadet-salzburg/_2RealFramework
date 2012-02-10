@@ -17,6 +17,7 @@
 */
 
 #include "_2RealIdentifier.h"
+#include "_2RealEntity.h"
 
 namespace _2Real
 {
@@ -51,7 +52,12 @@ namespace _2Real
 		return *this;
 	}
 
-	unsigned int const& Identifier::id() const
+	const bool Identifier::isValid() const
+	{
+		return *this == Entity::NoEntity();
+	}
+
+	unsigned int Identifier::id() const
 	{
 		return m_Id;
 	}

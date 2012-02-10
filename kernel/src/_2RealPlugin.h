@@ -62,6 +62,7 @@ namespace _2Real
 		void							registerService(std::string const& serviceName, ServiceCreator creator);
 		bool							canExportService(std::string const& serviceName) const;
 		EngineData const&				getParameterValue(std::string const& setupName) const;
+		std::string const&				getParameterKey(std::string const& setupName) const;
 		void							setParameterValue(std::string const& setupName, Data const& data);
 		Runnable &						createService(std::string const& idName, std::string const& serviceName);
 

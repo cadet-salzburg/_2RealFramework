@@ -61,10 +61,7 @@ namespace _2Real
 		*	functions related to xml - are currently being implemented
 		*/
 
-		/**
-		*	creates a system from an xml file - configName must be equal to the one defined in the xml file
-		*/
-		//System(std::string const& name, std::string const& configFile, std::string const& configName);
+		void initFromXML(std::string const& configFile);
 
 		/**
 		*	returns the identifier of a plugin, service, sequence or graph -> can be used to get id of an entity defined in the xml
@@ -107,7 +104,7 @@ namespace _2Real
 		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
 		*	multiple loading of a plugin from within the same system will cause an exception
 		*/
-		const Identifier loadPlugin(std::string const& name, std::string const& className);
+		const Identifier loadPlugin(std::string const& name, std::string const& className, std::string const& path = "");
 
 		/**
 		*	calls setup of either a plugin or a service = initialization
@@ -158,7 +155,7 @@ namespace _2Real
 		/**
 		*	links output slot to input slot. the input slot's previous link will be broken.
 		*/
-		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
+		void linkSlots(Identifier const& inService, std::string const& inName, Identifier const& outService, std::string const& outName);
 
 		/**
 		*	registers exception callback for a system
@@ -228,6 +225,12 @@ namespace _2Real
 		*/
 		void startAll();
 
+		/**
+		*
+		*/
+		//const Identifier createSequenceFromXML();
+		//const Identifier createSynchronizationFromXML();
+
 		/*
 		*	currently not functional until the whole insert / remove thing is resolved properly
 		*/
@@ -240,7 +243,9 @@ namespace _2Real
 
 	private:
 
-		//shallow copy
+		/**
+		*	shallow copy - this does not actually create new services
+		*/
 		System(System const& src);
 
 		/**
@@ -256,11 +261,18 @@ namespace _2Real
 		/**
 		*	system's identifier
 		*/
-		Identifier		m_Id;
+		Identifier								m_Id;
 
 		/**
 		*	the 2real engine
 		*/
-		Engine			&m_Engine;
+		Engine									&m_Engine;
+
+		/**
+		*	helper lookup table
+		*/
+		std::map< std::string, Identifier >		m_Lookup;
+		void unique(std::string const& s) const;
+
 	};
 }

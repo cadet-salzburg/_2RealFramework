@@ -21,6 +21,10 @@
 #include "_2RealSystem.h"
 #include "_2RealException.h"
 #include "_2RealIdentifier.h"
+#include "_2RealHelpers.h"
+#include "_2RealSystemData.h"
+
+#include <sstream>
 
 namespace _2Real
 {
@@ -31,18 +35,175 @@ namespace _2Real
 		m_Id = m_Engine.createSystem(name);
 	}
 
+	void System::initFromXML(std::string const& configFile)
+	{
+		try
+		{
+			SystemData data(configFile);
+
+			//setInstallDirectory(reader.getDefaultDirectory());
+			//setLogfile(reader.getLogfile());
+
+			//std::list< ServiceData > &services = reader.getServices();
+			//std::list< IOLink > &links = reader.getIOLinks();
+			//std::list< PluginData > &plugins = reader.getPlugins();
+			//std::list< GraphData > &graphs = reader.getGraphs();
+
+			//for 
+
+			//for (std::list< PluginData >::iterator pIt = plugins.begin(); pIt != plugins.end(); ++pIt)
+			//{
+			//	Identifier pluginId = loadPlugin(pIt->getName(), pIt->getClassname());
+
+			//	pIt->setId(pluginId);
+
+			//	//initialize plugin params
+			//	std::list< ParamValue > const& init = pIt->getSetupInfo();
+			//	for (std::list< ParamValue >::const_iterator it = init.begin(); it != init.end(); ++it)
+			//	{
+			//		m_Engine.setValueToString(pluginId, it->getName(), it->getValue(), m_Id);
+			//	}
+
+			//	//finally, set up the plugin
+			//	if (pIt->getState() == 1)
+			//	{
+			//		this->setup(pluginId);
+
+			//		//now that the plugin is created & set up, resolve all services with respect to their plugin ids
+			//		//(without a setup, there is no way of creating services...);
+			//		for (std::list< ServiceData >::iterator sIt = services.begin(); sIt != services.end(); ++sIt)
+			//		{
+			//			if (sIt->getPlugin() == pIt->getName())
+			//			{
+			//				sIt->resolvePlugin(pluginId);
+			//			}
+			//		}
+			//	}
+			//}
+
+			//for (std::list< ServiceData >::iterator sIt = services.begin(); sIt != services.end(); ++sIt)
+			//{
+			//	if (!sIt->isResolved())
+			//	{
+			//	}
+
+			//	const Identifier serviceId = this->createService(sIt->getName(), sIt->getPluginId(), sIt->getService());
+
+			//	//store id for later use
+			//	sIt->setId(serviceId);
+
+			//	//initialize service params
+			//	std::list< ParamValue > const& init = sIt->getSetupInfo();
+			//	for (std::list< ParamValue >::const_iterator it = init.begin(); it != init.end(); ++it)
+			//	{
+			//		m_Engine.setValueToString(serviceId, it->getName(), it->getValue(), m_Id);
+			//	}
+
+			//	for (std::list< GraphData >::iterator gIt = graphs.begin(); gIt != graphs.end(); ++gIt)
+			//	{
+			//		std::list< BasicSymbol >& children = gIt->getChildren();
+			//		for (std::list< BasicSymbol >::iterator it = children.begin(); it != children.end(); ++it)
+			//		{
+			//			if (it->getSymbolName() == sIt->getName())
+			//			{
+			//				it->resolveTo(serviceId);
+			//				sIt->markAsChild();
+			//			}
+			//		}
+			//	}
+
+			//	for (std::list< IOLink >::iterator lIt = links.begin(); lIt != links.end(); ++lIt)
+			//	{
+			//		if (lIt->getInputService() == sIt->getName())
+			//		{
+			//			lIt->resolveInputService(serviceId);
+			//		}
+			//		if (lIt->getOutputService() == sIt->getName())
+			//		{
+			//			lIt->resolveOutputService(serviceId);
+			//		}
+			//	}
+			//}
+
+			//for (std::list< IOLink >::iterator lIt = links.begin(); lIt != links.end(); ++lIt)
+			//{
+			//	if (!lIt->isResolved())
+			//	{
+			//		//argh
+			//	}
+
+			//	this->linkSlots(lIt->getInputId(), lIt->getInputSlot(), lIt->getOutputId(), lIt->getOutputSlot());
+			//}
+
+			////graphs.. ugh
+			//for (std::list< GraphData >::iterator gIt = graphs.begin(); gIt != graphs.end(); ++gIt)
+			//{
+
+			//}
+
+			//for (std::list< ServiceData >::iterator sIt = services.begin(); sIt != services.end(); ++sIt)
+			//{
+			//	if (sIt->getState() > 1)
+			//	{
+			//		this->setup(sIt->getId());
+			//	}
+			//	
+			//	if (sIt->getState() == 2)
+			//	{
+			//		if (sIt->isChild())
+			//		{
+			//			//argh
+			//		}
+
+			//		this->start(sIt->getId());
+			//	}
+			//}
+
+		}
+		catch (XMLFormatException &e)
+		{
+			shutdown();
+			e.rethrow();
+		}
+		catch (Poco::XML::SAXParseException &e)
+		{
+			shutdown();
+			std::ostringstream msg;
+			msg << e.message();
+			throw XMLFormatException(msg.str());
+		}
+		catch (std::exception &e)
+		{
+			shutdown();
+			throw XMLFormatException(e.what());
+		}
+	}
+
+	typedef std::pair< std::string, Identifier > NamedId;
+
 	System::System(System const& src) :
 		m_Engine(src.m_Engine),
-		m_Id(src.m_Id)
+		m_Id(src.m_Id),
+		m_Lookup()
 	{
 	}
 
-	System::~System()
+	void System::unique(std::string const& s) const
 	{
-		m_Engine.destroySystem(m_Id);
+		if (m_Lookup.find(s) != m_Lookup.end())
+		{
+			std::ostringstream msg;
+			msg << "name " << s << " already exists!";
+			throw AlreadyExistsException(msg.str());
+		}
 	}
 
 	void System::shutdown()
+	{
+		//m_Engine.shutdownSystem(m_Id);
+	}
+
+	System::~System()
 	{
 		m_Engine.destroySystem(m_Id);
 	}
@@ -57,9 +218,14 @@ namespace _2Real
 		m_Engine.setSystemDirectory(directory, m_Id);
 	}
 
-	const Identifier System::loadPlugin(std::string const& name, std::string const& classname)
+	const Identifier System::loadPlugin(std::string const& name, std::string const& classname, std::string const& path)
 	{
-		return m_Engine.loadPlugin(name, classname, m_Id);
+		std::string idName = validateName(name);
+		unique(idName);
+
+		const Identifier id = m_Engine.loadPlugin(name, classname, m_Id);
+		m_Lookup.insert(NamedId(idName, id));
+		return id;
 	}
 
 	void System::setup(Identifier const& id)
@@ -74,7 +240,12 @@ namespace _2Real
 
 	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service)
 	{
-		return m_Engine.createService(name, plugin, service, m_Id);
+		std::string idName = validateName(name);
+		unique(idName);
+
+		const Identifier id = m_Engine.createService(name, plugin, service, m_Id);
+		m_Lookup.insert(NamedId(idName, id));
+		return id;
 	}
 
 	void System::setUpdateRate(Identifier const& runnable, float updatesPerSecond)
@@ -97,9 +268,9 @@ namespace _2Real
 	//	return m_Engine.createSynchronization(name, idA, idB, m_Id);
 	//}
 
-	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
+	void System::linkSlots(Identifier const& inService, std::string const& inName, Identifier const& outService, std::string const& outName)
 	{
-		m_Engine.linkSlots(outService, outName, inService, inName, m_Id);
+		m_Engine.linkSlots(inService, inName, outService, outName, m_Id);
 	}
 
 	void System::registerToException(ExceptionCallback callback)

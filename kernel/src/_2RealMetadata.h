@@ -120,8 +120,6 @@ namespace _2Real
 			addSetupParameterByType(serviceName, setupName, typeid(DataType).name());
 		}
 
-		void test(float f);
-
 		/**
 		*	add service setup parameter
 		*

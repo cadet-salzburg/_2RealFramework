@@ -157,4 +157,6 @@ namespace _2Real
 
 	DECLARE_EXCEPTION(StartException, Exception);
 
+	DECLARE_EXCEPTION(InvalidNameException, Exception);
+
 }

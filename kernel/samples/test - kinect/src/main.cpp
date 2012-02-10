@@ -89,37 +89,37 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
+	//glBegin(GL_QUADS);
+	//	glTexCoord2f(0.0f, 0.0f);
+	//	glVertex3f(0.0f, 0.0f, 0.0f);
 
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f(2.0f, 0.0f, 0.0f);
+	//	glTexCoord2f(1.0f, 0.0f);
+	//	glVertex3f(2.0f, 0.0f, 0.0f);
 
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(2.0f, 2.0f, 0.0f);
+	//	glTexCoord2f(1.0f, 1.0f);
+	//	glVertex3f(2.0f, 2.0f, 0.0f);
 
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(0.0f, 2.0f, 0.0f);
-	glEnd();
+	//	glTexCoord2f(0.0f, 1.0f);
+	//	glVertex3f(0.0f, 2.0f, 0.0f);
+	//glEnd();
 }
 
 void loop()
 {
-	{
-		FastMutex::ScopedLock lock(mutex);
-		buffer = tmp;
-	}
+	//{
+	//	FastMutex::ScopedLock lock(mutex);
+	//	buffer = tmp;
+	//}
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glScalef(1.0f, -1.0f, 1.0f);
-	glTranslatef(-1.0f, -1.0f, 0.0f);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	//glScalef(1.0f, -1.0f, 1.0f);
+	//glTranslatef(-1.0f, -1.0f, 0.0f);
 
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 640, 480, 0, GL_RGB, GL_FLOAT, (const GLvoid *)buffer.rawData());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glBindTexture(GL_TEXTURE_2D, tex);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 640, 480, 0, GL_RGB, GL_FLOAT, (const GLvoid *)buffer.rawData());
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void processEvent(SDL_Event *e)
@@ -186,7 +186,6 @@ int main(int argc, char *argv[])
 		imgFlags.push_back("depth640X480");
 		imgFlags.push_back("mirrored");
 
-		//testSystem.setValue< bool >(kinectPlugin, "align color depth", true);
 		testSystem.setValue< vector < string > >(kinectPlugin, "generator flags", genFlags);
 		testSystem.setValue< vector < string > >(kinectPlugin, "image flags", imgFlags);
 		testSystem.setValue< string >(kinectPlugin, "logfile", "kinectwrapper.txt");
@@ -196,68 +195,68 @@ int main(int argc, char *argv[])
 		testSystem.setValue< string >(imgPlugin, "logfile", "logfile.txt");
 		testSystem.setup(imgPlugin);
 
-		Identifier img = testSystem.createService("img generator", kinectPlugin, "Image Generator");
+		//Identifier img = testSystem.createService("img generator", kinectPlugin, "Image Generator");
 
-		testSystem.registerToStateChange(img, ::stateChanged);
+		//testSystem.registerToStateChange(img, ::stateChanged);
 
-		//testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
-		//testSystem.setValue< string >(depth, "image type", "color");
-		testSystem.setup(img);
+		////testSystem.setValue< unsigned int >(depth, "device id", (unsigned int)0);
+		////testSystem.setValue< string >(depth, "image type", "color");
+		//testSystem.setup(img);
 
-		Identifier avg0 = testSystem.createService("image accum 0", imgPlugin, "ImageAccumulation_uchar");
-		testSystem.setup(avg0);
+		//Identifier avg0 = testSystem.createService("image accum 0", imgPlugin, "ImageAccumulation_uchar");
+		//testSystem.setup(avg0);
 
-		Identifier avg1 = testSystem.createService("image accum 1", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg1);
+		//Identifier avg1 = testSystem.createService("image accum 1", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg1);
 
-		Identifier avg2 = testSystem.createService("image accum 2", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg2);
+		//Identifier avg2 = testSystem.createService("image accum 2", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg2);
 
-		Identifier avg3 = testSystem.createService("image accum 3", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg3);
+		//Identifier avg3 = testSystem.createService("image accum 3", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg3);
 
-		Identifier avg4 = testSystem.createService("image accum 4", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg4);
+		//Identifier avg4 = testSystem.createService("image accum 4", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg4);
 
-		Identifier avg5 = testSystem.createService("image accum 5", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg5);
+		//Identifier avg5 = testSystem.createService("image accum 5", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg5);
 
-		Identifier avg6 = testSystem.createService("image accum 6", imgPlugin, "ImageAccumulation");
-		testSystem.setup(avg6);
+		//Identifier avg6 = testSystem.createService("image accum 6", imgPlugin, "ImageAccumulation");
+		//testSystem.setup(avg6);
 
-		testSystem.linkSlots(avg0, "input image", img, "output image");
-		testSystem.linkSlots(avg1, "input image", avg0, "output image");
-		testSystem.linkSlots(avg2, "input image", avg1, "output image");
-		testSystem.linkSlots(avg3, "input image", avg2, "output image");
-		testSystem.linkSlots(avg4, "input image", avg3, "output image");
-		testSystem.linkSlots(avg5, "input image", avg4, "output image");
-		testSystem.linkSlots(avg6, "input image", avg5, "output image");
+		//testSystem.linkSlots(avg0, "input image", img, "output image");
+		//testSystem.linkSlots(avg1, "input image", avg0, "output image");
+		//testSystem.linkSlots(avg2, "input image", avg1, "output image");
+		//testSystem.linkSlots(avg3, "input image", avg2, "output image");
+		//testSystem.linkSlots(avg4, "input image", avg3, "output image");
+		//testSystem.linkSlots(avg5, "input image", avg4, "output image");
+		//testSystem.linkSlots(avg6, "input image", avg5, "output image");
 
-		testSystem.setUpdateRate(avg0, 100.0f);
-		testSystem.start(avg0);
+		//testSystem.setUpdateRate(avg0, 100.0f);
+		//testSystem.start(avg0);
 
-		testSystem.setUpdateRate(avg1, 100.0f);
-		testSystem.start(avg1);
+		//testSystem.setUpdateRate(avg1, 100.0f);
+		//testSystem.start(avg1);
 
-		testSystem.setUpdateRate(avg2, 100.0f);
-		testSystem.start(avg2);
+		//testSystem.setUpdateRate(avg2, 100.0f);
+		//testSystem.start(avg2);
 
-		testSystem.setUpdateRate(avg3, 100.0f);
-		testSystem.start(avg3);
+		//testSystem.setUpdateRate(avg3, 100.0f);
+		//testSystem.start(avg3);
 
-		testSystem.setUpdateRate(avg4, 100.0f);
-		testSystem.start(avg4);
+		//testSystem.setUpdateRate(avg4, 100.0f);
+		//testSystem.start(avg4);
 
-		testSystem.setUpdateRate(avg5, 100.0f);
-		testSystem.start(avg5);
+		//testSystem.setUpdateRate(avg5, 100.0f);
+		//testSystem.start(avg5);
 
-		testSystem.setUpdateRate(avg6, 100.0f);
-		testSystem.start(avg6);
+		//testSystem.setUpdateRate(avg6, 100.0f);
+		//testSystem.start(avg6);
 
-		testSystem.setUpdateRate(img, 100.0f);
-		testSystem.start(img);
+		//testSystem.setUpdateRate(img, 100.0f);
+		//testSystem.start(img);
 
-		testSystem.registerToNewData(avg6, "output image", ::imgDataAvailable);
+		//testSystem.registerToNewData(avg6, "output image", ::imgDataAvailable);
 
 		run = true;
 		SDL_Event ev;
@@ -274,13 +273,13 @@ int main(int argc, char *argv[])
 			SDL_GL_SwapWindow(mainwindow);
 		}
 
-		testSystem.stop(img);
-		testSystem.stop(avg0);
-		testSystem.stop(avg1);
-		testSystem.stop(avg2);
-		testSystem.stop(avg3);
-		testSystem.stop(avg4);
-		testSystem.stop(avg5);
+		//testSystem.stop(img);
+		//testSystem.stop(avg0);
+		//testSystem.stop(avg1);
+		//testSystem.stop(avg2);
+		//testSystem.stop(avg3);
+		//testSystem.stop(avg4);
+		//testSystem.stop(avg5);
 
 		//test system falls out of scope here
 		//->services are deleted, plugins uninstalled

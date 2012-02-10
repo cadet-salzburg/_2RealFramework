@@ -121,7 +121,7 @@ namespace _2Real
 		out << metadata.getName() << "\t" << metadata.getKeyword();
 		if (metadata.hasDefaultValue())
 		{
-			out << ", default value: " << metadata.getDefaultValue().toString();
+			out << ", default value: " << metadata.getDefaultValue();
 		}
 		else
 		{

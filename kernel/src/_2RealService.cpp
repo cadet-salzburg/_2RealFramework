@@ -217,6 +217,24 @@ namespace _2Real
 		}
 	}
 
+	std::string const& Service::getParameterKey(std::string const& name) const
+	{
+		if (hasSetupParameter(name))
+		{
+			return getSetupParameter(name).getKeyword();
+		}
+		else if (hasInputSlot(name))
+		{
+			return getInputSlot(name).getKeyword();
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "setup parameter / input slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
+		}
+	}
+
 	InputHandle Service::createInputHandle(std::string const& name) const
 	{
 		return InputHandle(getInputSlot(name));
