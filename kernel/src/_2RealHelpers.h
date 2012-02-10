@@ -38,7 +38,14 @@ namespace _2Real
 		result.clear();
 		for (unsigned int i=0; i<s.length(); i++)
 		{
-			result.push_back(tolower(s[i]));
+			if (s[i] == ' ')
+			{
+				result.push_back('_');
+			}
+			else
+			{
+				result.push_back(tolower(s[i]));
+			}
 		}
 		return result;
 	}
@@ -70,7 +77,7 @@ namespace _2Real
 	{
 		std::string result = toLower(trim(s));
 
-		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz _:0123456789");
+		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz_:0123456789");
 		if (pos != std::string::npos)
 		{
 			std::stringstream msg;

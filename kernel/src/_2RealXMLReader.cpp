@@ -72,7 +72,6 @@ namespace _2Real
 
 		const std::string result = attrib->nodeValue();
 		attributes->release();
-		std::cout << "result " << result << std::endl;
 		return result;
 	}
 
@@ -107,7 +106,7 @@ namespace _2Real
 		return result;
 	}
 
-	Poco::XML::Node const& XMLReader::getChildNode(std::string const& name, Poco::XML::Node &node)
+	Poco::XML::Node & XMLReader::getChildNode(std::string const& name, Poco::XML::Node &node)
 	{
 		Poco::XML::NodeList *children = node.childNodes();
 		Poco::XML::Node *child = NULL;
@@ -131,30 +130,6 @@ namespace _2Real
 		{
 			children->release();
 			throw XMLFormatException("xml node \'" + node.nodeName() + "\' has no child named \'" + name + "\'");
-		}
-
-		children->release();
-		return *child;
-	}
-
-	Poco::XML::Node const& XMLReader::getOptionalChildNode(std::string const& name, Poco::XML::Node &node)
-	{
-		Poco::XML::NodeList *children = node.childNodes();
-		Poco::XML::Node *child = NULL;
-		for (unsigned int i=0; i<children->length(); ++i)
-		{
-			Poco::XML::Node *n = children->item(i);
-			if (n->nodeType() == Poco::XML::Node::ELEMENT_NODE && n->localName() == name)
-			{
-
-				if (child != NULL)
-				{
-					children->release();
-					throw XMLFormatException("xml node \'" + node.nodeName() + "\' has multiple children named \'" + name + "\'");
-				}
-
-				child = n;
-			}
 		}
 
 		children->release();

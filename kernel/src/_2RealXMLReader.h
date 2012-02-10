@@ -49,8 +49,7 @@ namespace _2Real
 
 		static const std::string getNodeAttribute(std::string const& name, Poco::XML::Node &node);
 		static const std::string getChildText(std::string const& name, Poco::XML::Node &node);
-		static Poco::XML::Node const& XMLReader::getChildNode(std::string const& name, Poco::XML::Node &node);
-		static Poco::XML::Node const& XMLReader::getOptionalChildNode(std::string const& name, Poco::XML::Node &node);
+		static Poco::XML::Node & XMLReader::getChildNode(std::string const& name, Poco::XML::Node &node);
 
 	protected:
 

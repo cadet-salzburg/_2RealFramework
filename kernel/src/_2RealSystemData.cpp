@@ -286,36 +286,13 @@ namespace _2Real
 		m_DefaultDir = trim(m_Reader.getChildText("default_directory", system));
 		m_Logfile = trim(m_Reader.getChildText("logfile", system));
 
-		TreeWalker walker(&system, NodeFilter::SHOW_ELEMENT);
-		Node *current = walker.currentNode();
-
-		if ((current = walker.firstChild()) == NULL)
-		{
-			throw XMLFormatException("xml system configuration is empty");
-		}
-
-		while (current != NULL)
-		{
-			if (current->localName() == "plugin_list")
-			{
-				processPluginList(*current, m_Plugins, "");
-			}
-			else if (current->localName() == "graph_list")
-			{
-				processGraphList(*current, m_Graphs, "");
-			}
-			else if (current->localName() == "link_list")
-			{
-				processIOLinkList(*current, m_IOLinks, "");
-			}
-			current = walker.nextSibling();
-		}
+		processPluginList(m_Reader.getChildNode("plugin_list", system), m_Plugins, "");
+		processGraphList(m_Reader.getChildNode("graph_list", system), m_Graphs, "");
+		processIOLinkList(m_Reader.getChildNode("link_list", system), m_IOLinks, "");
 	}
 
 	void SystemData::processPluginList(Node const& plugins, std::list< PluginData > &pluginList, std::string const& prefix)
 	{
-		std::cout << "processing list of plugins" << std::endl;
-
 		NodeList *children = plugins.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
 		{
@@ -328,9 +305,9 @@ namespace _2Real
 				std::string classname = trim(m_Reader.getChildText("classname", *plugin));
 				std::cout << "classname " << classname << std::endl;
 
-				PluginData pluginData(name, classname);
+				PluginData pluginData(prefix + name, classname);
 				Node const& params = m_Reader.getChildNode("parameter_list", *plugin);
-				processParameterList(params, pluginData.getSetupInfo(), "");
+				processParameterList(params, pluginData.getSetupInfo(), prefix + name + ":");
 
 				pluginList.push_back(pluginData);
 			}
@@ -341,13 +318,10 @@ namespace _2Real
 
 	void SystemData::processParameterList(Node const& params, std::list< ParamValue > &paramList, std::string const& prefix)
 	{
-		std::cout << "processing list of params" << std::endl;
-
 		NodeList *children = params.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
 		{
 			Node *param = children->item(i);
-			std::cout << "URI " << param->namespaceURI() << std::endl;
 			if (param->nodeType() == Node::ELEMENT_NODE && param->localName() == "parameter")
 			{
 				std::string name = toLower(trim(m_Reader.getChildText("name", *param)));
@@ -356,7 +330,7 @@ namespace _2Real
 				std::string value = trim(m_Reader.getChildText("value", *param));
 				std::cout << "value " << value << std::endl;
 
-				ParamValue p(name, value);
+				ParamValue p(prefix+name, value);
 				paramList.push_back(p);
 			}
 		}
@@ -366,8 +340,6 @@ namespace _2Real
 
 	void SystemData::processGraphList(Node const& graphs, std::list< GraphData * > &graphList, std::string const& prefix)
 	{
-		std::cout << "processing list of graphs" << std::endl;
-
 		NodeList *children = graphs.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
 		{
@@ -377,7 +349,7 @@ namespace _2Real
 				std::string type = toLower(trim(m_Reader.getNodeAttribute("type", *graph)));
 				std::cout << "type " << type << std::endl;
 
-				std::string name = prefix + validateName(m_Reader.getChildText("name", *graph));
+				std::string name = validateName(m_Reader.getChildText("name", *graph));
 				std::cout << "name " << name << std::endl;
 
 				std::string fpsStr = trim(m_Reader.getChildText("fps", *graph));
@@ -392,19 +364,19 @@ namespace _2Real
 					std::string service = toLower(trim(m_Reader.getChildText("service", *graph)));
 					std::cout << "service " << service << std::endl;
 
-					ServiceData *data = new ServiceData(name, fps, service, plugin);
+					ServiceData *data = new ServiceData(prefix + name, fps, service, plugin);
 
 					Node const& params = m_Reader.getChildNode("parameter_list", *graph);
-					processParameterList(params, data->getSetupInfo(), "");
+					processParameterList(params, data->getSetupInfo(), name + ":");
 
 					graphList.push_back(data);
 				}
 				else if (type == "sequence" || type == "synchronization")
 				{
-					GraphData *data = new GraphData(name, fps, type);
+					GraphData *data = new GraphData(prefix + name, fps, type);
 
 					Node const& childGraphs = m_Reader.getChildNode("graph_list", *graph);
-					processGraphList(childGraphs, data->getChildren(), prefix);
+					processGraphList(childGraphs, data->getChildren(), prefix + name + ":");
 
 					graphList.push_back(data);
 				}
@@ -413,7 +385,7 @@ namespace _2Real
 					std::string source = trim(m_Reader.getChildText("source", *graph));
 					std::cout << "source " << source << std::endl;
 
-					GraphData *data = processExternalGraph(name, fps, source, prefix);
+					GraphData *data = processExternalGraph(prefix + name, fps, source, prefix + name + ":");
 
 					graphList.push_back(data);
 				}
@@ -429,27 +401,29 @@ namespace _2Real
 
 	void SystemData::processIOLinkList(Node const& links, std::list< IOLink > &linkList, std::string const& prefix)
 	{
-		std::cout << "processing list of links" << std::endl;
-
 		NodeList *children = links.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
 		{
 			Node *link = children->item(i);
 			if (link->nodeType() == Node::ELEMENT_NODE && link->localName() == "link")
 			{
-				std::string in_graph = toLower(trim(m_Reader.getChildText("in_graph", *link)));
+
+				Node &in = m_Reader.getChildNode("in", *link);
+				Node &out = m_Reader.getChildNode("out", *link);
+
+				std::string in_graph = toLower(trim(m_Reader.getChildText("graph", in)));
 				std::cout << "in_graph" << in_graph << std::endl;
 
-				std::string in_slot = toLower(trim(m_Reader.getChildText("in_slot", *link)));
+				std::string in_slot = toLower(trim(m_Reader.getChildText("slot", in)));
 				std::cout << "in_slot " << in_slot << std::endl;
 
-				std::string out_graph = toLower(trim(m_Reader.getChildText("out_graph", *link)));
+				std::string out_graph = toLower(trim(m_Reader.getChildText("graph", out)));
 				std::cout << "out_graph" << out_graph << std::endl;
 
-				std::string out_slot = toLower(trim(m_Reader.getChildText("out_slot", *link)));
+				std::string out_slot = toLower(trim(m_Reader.getChildText("slot", out)));
 				std::cout << "out_slot " << out_slot << std::endl;
 
-				IOLink linkData(in_graph, in_slot, out_graph, out_slot);
+				IOLink linkData(prefix + in_graph, prefix + in_graph + ":" + in_slot, prefix + out_graph, prefix + out_graph + ":" + out_slot);
 				linkList.push_back(linkData);
 			}
 		}
@@ -468,13 +442,11 @@ namespace _2Real
 		{
 			GraphData *data = new GraphData(name, fps, type);
 
-			//process the plugins....
-			Node const& plugins = m_Reader.getChildNode("plugin_list", graph);
-
-			processPluginList(plugins, m_Plugins, prefix+name+" : ");
-
-			Node const& childGraphs = m_Reader.getChildNode("graph_list", graph);
-			processGraphList(childGraphs, data->getChildren(), prefix+name+" : ");
+			processPluginList(m_Reader.getChildNode("plugin_list", graph), m_Plugins, prefix);
+			//TODO: what to do if a plugin is loaded more than once
+			processIOLinkList(m_Reader.getChildNode("link_list", graph), m_IOLinks, prefix);
+			processGraphList(m_Reader.getChildNode("graph_list", graph), data->getChildren(), prefix);
+			
 			return data;
 		}
 		
