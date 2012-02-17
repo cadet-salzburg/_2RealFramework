@@ -37,17 +37,17 @@ using namespace Poco::XML;
 namespace _2Real
 {
 
-	XMLReader::XMLReader(std::string const& xmlPath) :
-		m_Filepath(xmlPath),
+	XMLReader::XMLReader(Poco::Path const& path) :
+		m_Filepath(path),
 		m_Document()
 	{
 		Poco::XML::DOMParser p;
-		m_Document = p.parse(m_Filepath);
+		m_Document = p.parse(m_Filepath.toString());
 	}
 
 	std::string const& XMLReader::getFilepath() const
 	{
-		return m_Filepath;
+		return m_Filepath.toString();
 	}
 
 	Poco::XML::Node& XMLReader::getRoot()

@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <set>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -77,7 +78,7 @@ namespace _2Real
 	{
 		std::string result = toLower(trim(s));
 
-		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz_:0123456789");
+		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz_ .0123456789");
 		if (pos != std::string::npos)
 		{
 			std::stringstream msg;
@@ -112,8 +113,49 @@ namespace _2Real
 	}
 
 	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::set< DataType > &s)
+	{
+		if (s.empty())
+		{
+			return out;
+		}
+
+		typename std::set< DataType >::const_iterator it = s.begin();
+		out << *it;
+		++it;
+		for (; it != s.end(); ++it)
+		{
+			out << "\n" << *it;
+		}
+		return out;
+	}
+
+	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::set< DataType * > &s)
+	{
+		if (s.empty())
+		{
+			return out;
+		}
+
+		typename std::set< DataType >::const_iterator it = s.begin();
+		out << **it;
+		++it;
+		for (; it != s.end(); ++it)
+		{
+			out << "\n" << **it;
+		}
+		return out;
+	}
+
+	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType > &v)
 	{
+		if (v.empty())
+		{
+			return out;
+		}
+
 		typename std::vector< DataType >::const_iterator it = v.begin();
 		out << *it;
 		++it;
@@ -127,12 +169,17 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType * > &v)
 	{
+		if (v.empty())
+		{
+			return out;
+		}
+
 		typename std::vector< DataType >::const_iterator it = v.begin();
-		out << *it;
+		out << **it;
 		++it;
 		for (; it != v.end(); ++it)
 		{
-			out << ", " << *it;
+			out << ", " << **it;
 		}
 		return out;
 	}
@@ -163,6 +210,11 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType > &l)
 	{
+		if (l.empty())
+		{
+			return out;
+		}
+
 		typename std::list< DataType >::const_iterator it = l.begin();
 		out << *it;
 		++it;
@@ -176,12 +228,17 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType * > &l)
 	{
+		if (l.empty())
+		{
+			return out;
+		}
+
 		typename std::list< DataType >::const_iterator it = l.begin();
-		out << *it;
+		out << **it;
 		++it;
 		for (; it != l.end(); ++it)
 		{
-			out << ", " << *it;
+			out << ", " << **it;
 		}
 		return out;
 	}
@@ -189,6 +246,11 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, DataType > &m)
 	{
+		if (m.empty())
+		{
+			return out;
+		}
+
 		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
@@ -199,6 +261,11 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::map< Identifier, DataType > &m)
 	{
+		if (m.empty())
+		{
+			return out;
+		}
+
 		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
@@ -209,6 +276,11 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, DataType * > &m)
 	{
+		if (m.empty())
+		{
+			return out;
+		}
+
 		for (typename std::map< std::string, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << *(it->second) << "\n";
@@ -219,6 +291,11 @@ namespace _2Real
 	template< typename DataType >
 	std::ostream& operator<<(std::ostream &out, typename const std::map< Identifier, DataType * > &m)
 	{
+		if (m.empty())
+		{
+			return out;
+		}
+
 		for (typename std::map< Identifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << *it->second << "\n";

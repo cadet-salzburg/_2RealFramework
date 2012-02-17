@@ -19,8 +19,13 @@
 
 #pragma once
 
+#include "_2RealIPluginActivator.h"
+
 #include <map>
 #include <string>
+
+#include "Poco/Path.h"
+#include "Poco/ClassLoader.h"
 
 namespace _2Real
 {
@@ -32,8 +37,13 @@ namespace _2Real
 	class Runnable;
 	class EngineData;
 
-	typedef std::pair< Identifier, Plugin * >	NamedPlugin;
-	typedef std::map< Identifier, Plugin * >	PluginMap;
+	typedef Poco::ClassLoader< IPluginActivator >								PluginLoader;
+	typedef std::pair< std::string, Poco::ClassLoader< IPluginActivator > * >	NamedLibrary;
+	typedef std::map< std::string, Poco::ClassLoader< IPluginActivator > * >	LibraryMap;
+	typedef std::pair< Identifier, Plugin * >									NamedPlugin;
+	typedef std::map< Identifier, Plugin * >									PluginMap;
+	typedef std::pair< std::string, Metadata * >								NamedMetadata;
+	typedef std::map< std::string, Metadata * >									MetadataMap;
 
 	class PluginPool
 	{
@@ -57,18 +67,20 @@ namespace _2Real
 
 	private:
 
+		bool					isLibraryLoaded(std::string const& classname) const;
+		Metadata const* const	getMetadata(std::string const& classname) const;
+		void					loadLibrary(Poco::Path const& filepath);
+
 		Plugin &				getPlugin(Identifier const& id);
 		Plugin const&			getPlugin(Identifier const& id) const;
 
-		PluginMap				m_Plugins;
+		LibraryMap				m_LoadedLibs;
+		PluginMap				m_PluginInstances;
+		MetadataMap				m_Metadata;
+
 		SystemGraph				&m_System;
 		std::string				m_InstallDirectory;
 
 	};
-
-	inline void PluginPool::setInstallDirectory(std::string const& directory)
-	{
-		m_InstallDirectory = directory;
-	}
 
 }

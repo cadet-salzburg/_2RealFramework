@@ -22,24 +22,47 @@
 #include "_2RealXMLReader.h"
 #include "_2RealSystem.h"
 
+#include "Poco/Path.h"
+
 #include <string>
 #include <list>
 
 namespace _2Real
 {
 
+	class SymbolName : public std::list< std::string >
+	{
+
+	public:
+
+		SymbolName(std::string const& name);
+		SymbolName(std::list< std::string > const& symbols);
+		SymbolName();
+
+		const std::string toString() const;
+
+		const SymbolName getPrefixes() const;
+		const std::string getLastSymbol() const;
+		void addPrefixes(SymbolName symbols);
+
+		void pushSymbol(std::string const& symbol);
+		void popSymbol();
+		void popPrefix();
+
+	};
+
 	class Symbol
 	{
 
 	public:
 
-		Symbol(std::string const& name);
+		Symbol(SymbolName const& name);
 		virtual ~Symbol();
 
 		/**
 		*	returns the name
 		*/
-		std::string const& getName() const;
+		SymbolName const& getName() const;
 
 		/**
 		*	essentially, sets the id
@@ -56,9 +79,9 @@ namespace _2Real
 		*/
 		const bool isResolved() const;
 
-	private:
+	protected:
 
-		std::string			const m_Name;
+		SymbolName			const m_Name;
 		Identifier			m_Id;
 
 	};
@@ -68,12 +91,9 @@ namespace _2Real
 
 	public:
 
-		ExtendedSymbol(std::string const& extendedName, std::string const& symbolName);
-		std::string const& getExtendedName() const;
-
-	private:
-
-		std::string			const m_ExtendedName;
+		ExtendedSymbol(SymbolName const& name);
+		const std::string getExtendedName() const;
+		const SymbolName getSymbolName() const;
 
 	};
 
@@ -82,13 +102,13 @@ namespace _2Real
 
 	public:
 
-		ParamValue(std::string const& name, std::string const& value);
-		std::string const& getName() const;
+		ParamValue(SymbolName const& name, std::string const& value);
+		SymbolName const& getName() const;
 		std::string const& getValue() const;
 		
 	private:
 
-		std::string		const m_Name;
+		SymbolName		const m_Name;
 		std::string		const m_Value;
 
 	};
@@ -98,12 +118,12 @@ namespace _2Real
 
 	public:
 
-		IOLink(std::string const& serviceIn, std::string const& input, std::string const& serviceOut, std::string const& output);
+		IOLink(SymbolName const& in, SymbolName const& out);
 
-		std::string const& getInServiceName() const;
-		std::string const& getInSlotName() const;
-		std::string const& getOutServiceName() const;
-		std::string const& getOutSlotName() const;
+		const SymbolName getInServiceName() const;
+		const std::string getInSlotName() const;
+		const SymbolName getOutServiceName() const;
+		const std::string getOutSlotName() const;
 		Identifier const& getInputId() const;
 		Identifier const& getOutputId() const;
 
@@ -124,7 +144,7 @@ namespace _2Real
 
 	public:
 
-		GraphData(std::string const& name, float fps, std::string const& type);
+		GraphData(SymbolName const& name, float fps, std::string const& type);
 		virtual ~GraphData();
 
 		const float getFps() const;
@@ -144,17 +164,25 @@ namespace _2Real
 
 	};
 
+	/**
+	*	this renames an existing parameter (or slot) to another name
+	*/
+	class ParameterRedefinition : public ExtendedSymbol
+	{
+
+	};
+
 	class ServiceData : public GraphData
 	{
 
 	public:
 
-		ServiceData(std::string const& name, float fps, std::string const& service, std::string const& plugin);
+		ServiceData(SymbolName const& name, float fps, SymbolName const& service);
 
 		std::list< ParamValue > & getSetupInfo();
 
-		std::string const& getServiceName() const;
-		std::string const& getPluginName() const;
+		const std::string getServiceName() const;
+		const SymbolName getPluginName() const;
 		void resolvePlugin(Identifier const& id);
 		Identifier const& getPluginId() const;
 
@@ -173,53 +201,82 @@ namespace _2Real
 
 	public:
 
-		PluginData(std::string const& name, std::string const& classname);
+		PluginData(SymbolName const& name, std::string const& classname, Poco::Path const& path);
 
+		Poco::Path const& getPluginPath() const;
 		std::string const& getClassname() const;
 		std::list< ParamValue > & getSetupInfo();
 
 	private:
 
 		std::string					const m_Classname;
+		Poco::Path					const m_Path;
 		std::list< ParamValue >		m_SetupInfo;
 
 	};
 
-	class SystemData
+	class XMLData
 	{
 
 	public:
 
-		SystemData(std::string const& xmlPath);
-		~SystemData();
-
-		const std::string getDefaultDirectory() const;
-		const std::string getLogfile() const;
+		XMLData(Poco::Path const& path, SymbolName const& name);
+		virtual ~XMLData();
 
 		std::list< PluginData > & getPlugins();
 		std::list< GraphData * > & getGraphs();
 		std::list< IOLink > & getIOLinks();
 
-	private:
+		std::set< SymbolName > & getNames();
 
-		void processSystem();
-		void processPluginList(Poco::XML::Node const& plugins, std::list< PluginData > &pluginList, std::string const& prefix);
-		void processParameterList(Poco::XML::Node const& params, std::list< ParamValue > &paramList, std::string const& prefix);
-		void processGraphList(Poco::XML::Node const& graphs, std::list< GraphData * > &graphList, std::string const& prefix);
-		void processIOLinkList(Poco::XML::Node const& links, std::list< IOLink > &linkList, std::string const& prefix);
-		GraphData *processExternalGraph(std::string const& name, float fps, std::string const& source, std::string const& prefix);
+	protected:
 
-		std::string					m_SystemName;
-		std::string					m_DefaultDir;
-		std::string					m_Logfile;
+		void processPluginList(Poco::XML::Node const& plugins, std::list< PluginData > &pluginList, SymbolName &prefix);
+		void processParameterList(Poco::XML::Node const& params, std::list< ParamValue > &paramList, SymbolName &prefix);
+		void processGraphList(Poco::XML::Node const& graphs, std::list< GraphData * > &graphList, SymbolName &prefix, bool replace = false);
+		void processIOLinkList(Poco::XML::Node const& links, std::list< IOLink > &linkList, SymbolName &prefix, bool replace = false);
+
+		SymbolName					const m_NamePrefix;
 
 		std::list< PluginData >		m_Plugins;
 		std::list< GraphData * >	m_Graphs;
 		std::list< IOLink >			m_IOLinks;
 
-		std::set< std::string >		m_Names;
+		std::set< SymbolName >		m_Names;
 
 		XMLReader					m_Reader;
+
+	};
+
+	class SystemData : public XMLData
+	{
+
+	public:
+
+		SystemData(Poco::Path const& path);
+
+		const Poco::Path getDefaultDirectory() const;
+		const std::string getLogfile() const;
+
+	private:
+
+		void processSystem();
+
+		Poco::Path					m_DefaultDir;
+		std::string					m_Logfile;
+
+	};
+
+	class BlockData : public XMLData
+	{
+
+	public:
+
+		BlockData(Poco::Path const& path, SymbolName const& name);
+
+	private:
+
+		void processBlock();
 
 	};
 

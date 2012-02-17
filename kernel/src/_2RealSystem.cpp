@@ -26,6 +26,26 @@
 
 #include <sstream>
 
+#ifdef _2REAL_WINDOWS
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dll"
+	#else
+		#define shared_library_suffix "_d.dll"
+	#endif
+#elif _2REAL_UNIX
+	#ifndef _DEBUG
+		#define shared_library_suffix ".so"
+	#else
+		#define shared_library_suffix "_d.so"
+	#endif
+#elif _2REAL_MAC
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dylib"
+	#else
+		#define shared_library_suffix "_d.dylib"
+	#endif
+#endif
+
 namespace _2Real
 {
 
@@ -41,10 +61,25 @@ namespace _2Real
 		{
 			SystemData data(configFile);
 
-			setInstallDirectory(data.getDefaultDirectory());
-			setLogfile(data.getLogfile());
+			Poco::Path pluginPath = data.getDefaultDirectory();
+			Poco::Path logPath = data.getLogfile();
 
+			std::list< PluginData > plugins = data.getPlugins();
 
+			for (std::list< PluginData >::iterator it = plugins.begin(); it != plugins.end(); ++it)
+			{
+				std::string name = it->getName().toString();
+				std::string classname = it->getClassname();
+				Poco::Path file = pluginPath;
+				file.append(it->getPluginPath());
+				file.append(classname+shared_library_suffix);
+
+				std::cout << file.toString() << std::endl;
+
+				//m_Engine.loadPlugin(name, file, m_Id);
+
+				//so, now i have a lot of plugins all referring to the same whatever
+			}
 
 		}
 		catch (XMLFormatException &e)

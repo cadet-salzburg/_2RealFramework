@@ -49,7 +49,7 @@ namespace _2Real
 {
 
 	PluginPool::PluginPool(SystemGraph &system) :
-		m_Plugins(),
+		m_PluginInstances(),
 		m_System(system),
 		m_InstallDirectory("")
 	{
@@ -57,19 +57,123 @@ namespace _2Real
 
 	PluginPool::~PluginPool()
 	{
-		m_Plugins.clear();
+		m_PluginInstances.clear();
+	}
+
+	void PluginPool::setInstallDirectory(std::string const& directory)
+	{
+		m_InstallDirectory = directory;
+	}
+
+	bool PluginPool::isLibraryLoaded(std::string const& classname) const
+	{
+		return (m_LoadedLibs.find(classname) != m_LoadedLibs.end());
 	}
 
 	const Identifier PluginPool::install(std::string const& name, std::string const& classname)
 	{
-
-		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); it++)
+		if (!isLibraryLoaded(classname))
 		{
-			if (it->second->getClassname() == classname)
+			loadLibrary
+		}
+
+
+		LibraryMap::iterator iter = m_LoadedLibs.find(classname);
+		if (iter == m_LoadedLibs.end())
+		{
+			PluginLoader *loader = new PluginLoader();
+			try
 			{
-				std::ostringstream msg;
-				msg << "plugin " << " " << classname << " is already loaded in system " << m_System.name() << std::endl;
-				throw AlreadyExistsException(msg.str());
+				loader->loadLibrary(CLASSPATH);
+			}
+			catch (Poco::LibraryLoadException &e)
+			{
+				throw _2Real::Exception(e.what());
+			}
+
+			if (loader.canCreate(classname))
+			{
+				try
+				{
+					IPluginActivator *dummy = loader.create(classname);
+				}
+				catch (Poco::NotFoundException &e)
+				{
+					m_PluginLoader.unloadLibrary(CLASSPATH);
+					throw Exception(e.what());
+				}
+			}
+			else
+			{
+				try
+				{
+					IPluginActivator &instance = loader.instance(classname);
+				}
+				catch(Poco::InvalidAccessException &e)
+				{
+					m_PluginLoader.unloadLibrary(CLASSPATH);
+					throw Exception(e.what());
+				}
+			}
+
+			m_LoadedLibs.insert(NamedLibrary(classname, loader));
+		}
+		else
+		{
+			const Identifier id = Entity::createIdentifier(name, "plugin");
+
+			PluginLoader *loader = iter->second;
+
+			if (loader.canCreate(classname))
+			{
+				try
+				{
+					IPluginActivator *dummy = loader.create(classname);
+					Plugin *plugin = newPlugin(
+				}
+				catch (Poco::NotFoundException &e)
+				{
+					throw Exception(e.what());
+				}
+			}
+			else
+			{
+				try
+				{
+					IPluginActivator &instance = loader.instance(classname);
+				}
+				catch(Poco::InvalidAccessException &e)
+				{
+					throw Exception(e.what());
+				}
+			}
+		}
+				//3rd, read the metadata
+				Metadata metadata(m_Metadata);
+				m_Activator->getMetadata(metadata);
+
+				//build setup params
+				ParameterDataMap const& setup = m_Metadata.getSetupParameters();
+				for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
+				{
+					SetupParameter *setup = new SetupParameter(*it->second);
+					m_SetupParameters.insert(NamedParameter(it->second->getName(), setup));
+				}
+			}
+			catch (_2Real::Exception &e)
+			{
+				if (m_Activator)
+				{
+					m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
+					m_Activator = NULL;
+				}
+
+				if (m_PluginLoader.isLibraryLoaded(m_File))
+				{
+					m_PluginLoader.unloadLibrary(m_File);
+				}
+
+				e.rethrow();
 			}
 		}
 

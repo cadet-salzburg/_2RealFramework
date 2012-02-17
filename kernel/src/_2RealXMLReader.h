@@ -31,6 +31,8 @@
 #include "Poco/DOM/AutoPtr.h"
 #include "Poco/SAX/SAXException.h"
 
+#include "Poco/Path.h"
+
 #include <string>
 #include <iostream>
 
@@ -42,7 +44,7 @@ namespace _2Real
 
 	public:
 
-		XMLReader(std::string const& xmlPath);
+		XMLReader(Poco::Path const& path);
 
 		std::string const& getFilepath() const;
 		Poco::XML::Node& getRoot();
@@ -51,10 +53,14 @@ namespace _2Real
 		static const std::string getChildText(std::string const& name, Poco::XML::Node &node);
 		static Poco::XML::Node & XMLReader::getChildNode(std::string const& name, Poco::XML::Node &node);
 
+		static std::list< std::string > getName();
+
 	protected:
 
-		Poco::XML::XMLString					const m_Filepath;
+		Poco::Path								const m_Filepath;
 		Poco::AutoPtr< Poco::XML::Document >	m_Document;
+
+
 
 	};
 

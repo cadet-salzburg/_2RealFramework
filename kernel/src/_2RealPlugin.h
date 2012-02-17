@@ -23,7 +23,7 @@
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
 
-#include "Poco/ClassLoader.h"
+#include "Poco/Path.h"
 
 namespace _2Real
 {
@@ -43,24 +43,44 @@ namespace _2Real
 	typedef std::map< std::string, ServiceCreator >		TemplateMap;
 	typedef std::pair< Identifier, Service * >			NamedService;
 	typedef std::map< Identifier, Service * >			ServiceMap;
-	typedef Poco::ClassLoader< IPluginActivator >		PluginLoader;
 
 	class Plugin : public Entity
 	{
 
 	public:
 
-		Plugin(Identifier const& id, std::string const& directory, std::string const& file, std::string const& classname, SystemGraph &system);
+		Plugin(Identifier const& id, std::string const& classname, Poco::Path const& dir, SystemGraph &system, IPluginActivator *activator);
 		~Plugin();
 
 		void							install();
 		void							uninstall();
 		void							setup();
-		bool 							isInitialized() const;
+
+		/**
+		*	true if setup has already been called
+		*/
+		bool 							isSetUp() const;
+
+		/**
+		*	returns a string contains all the metadata information
+		*/
 		const std::string				getInfoString() const;
+
+		/**
+		*	returns the plugin activator's classname
+		*/
 		const std::string				getClassname() const;
+
+		/**
+		*	called by PluginContext
+		*/
 		void							registerService(std::string const& serviceName, ServiceCreator creator);
+
+		/**
+		*	called by PluginContext (true if service is contained in the metadata)
+		*/
 		bool							canExportService(std::string const& serviceName) const;
+
 		EngineData const&				getParameterValue(std::string const& setupName) const;
 		std::string const&				getParameterKey(std::string const& setupName) const;
 		void							setParameterValue(std::string const& setupName, Data const& data);
@@ -77,25 +97,12 @@ namespace _2Real
 		TemplateMap						m_ServiceTemplates;
 		ServiceMap						m_Services;
 
-		IPluginActivator				*m_Activator;
-		PluginLoader					m_PluginLoader;
-		std::string						m_File;
-		bool							m_IsInitialized;
 		SystemGraph						&m_System;
 		PluginMetadata					m_Metadata;
+		std::string						m_Classname;
+		IPluginActivator				*m_Activator;
+		bool							m_IsSetUp;
 
 	};
-
-	inline const std::string Plugin::getInfoString() const
-	{
-		std::ostringstream info;
-		info << m_Metadata;
-		return info.str();
-	}
-
-	inline bool Plugin::isInitialized() const
-	{
-		return m_IsInitialized;
-	}
 
 }

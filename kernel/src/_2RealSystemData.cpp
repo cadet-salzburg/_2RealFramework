@@ -37,7 +37,96 @@ using namespace Poco::XML;
 namespace _2Real
 {
 
-	Symbol::Symbol(std::string const& name) :
+
+	SymbolName::SymbolName(std::string const &name)
+	{
+		char delim = ':';
+		std::istringstream iss(name);
+		std::string token;
+		while (getline(iss, token, delim))
+		{
+			push_back(token);
+		}
+	}
+
+	SymbolName::SymbolName()
+	{
+	}
+
+	const std::string SymbolName::toString() const
+	{
+		std::ostringstream str;
+
+		if (empty())
+		{
+			return "";
+		}
+
+		std::list< std::string >::const_iterator it = this->begin();
+		str << *it;
+
+		for (std::list< std::string >::const_iterator it = this->begin(); it != this->end(); ++it)
+		{
+			str << "_" << *it;
+		}
+
+		return str.str();
+	}
+
+	SymbolName::SymbolName(std::list< std::string > const& symbols) :
+		std::list< std::string >((symbols))
+	{
+	}
+
+	const SymbolName SymbolName::getPrefixes() const
+	{
+		if (size() < 2)
+		{
+			return SymbolName();
+		}
+		else
+		{
+			std::list< std::string >::const_iterator begin = this->begin();
+			std::list< std::string >::const_iterator end = this->end();
+			end--;
+			std::list< std::string > result(begin, end);
+			return SymbolName(result);
+		}
+	}
+
+	void SymbolName::addPrefixes(SymbolName symbols)
+	{
+		this->splice(this->begin(), symbols);
+	}
+
+	const std::string SymbolName::getLastSymbol() const
+	{
+		if (empty())
+		{
+			return "";
+		}
+		else
+		{
+			return back();
+		}
+	}
+
+	void SymbolName::pushSymbol(std::string const& symbol)
+	{
+		push_back(symbol);
+	}
+
+	void SymbolName::popSymbol()
+	{
+		pop_back();
+	}
+
+	void SymbolName::popPrefix()
+	{
+		pop_front();
+	}
+
+	Symbol::Symbol(SymbolName const& name) :
 		m_Name(name),
 		m_Id()
 	{
@@ -52,7 +141,7 @@ namespace _2Real
 		return m_Id.isValid();
 	}
 
-	std::string const& Symbol::getName() const
+	SymbolName const& Symbol::getName() const
 	{
 		return m_Name;
 	}
@@ -67,39 +156,43 @@ namespace _2Real
 		m_Id = id;
 	}
 
-	ExtendedSymbol::ExtendedSymbol(std::string const& name, std::string const& symbolName) :
-		Symbol(symbolName),
-		m_ExtendedName(name)
+	ExtendedSymbol::ExtendedSymbol(SymbolName const& name) :
+		Symbol(name)
 	{
 	}
 
-	std::string const& ExtendedSymbol::getExtendedName() const
+	const std::string ExtendedSymbol::getExtendedName() const
 	{
-		return m_ExtendedName;
+		return m_Name.getLastSymbol();
 	}
 
-	IOLink::IOLink(std::string const& serviceIn, std::string const& input, std::string const& serviceOut, std::string const& output) :
-		m_In(input, serviceIn),
-		m_Out(output, serviceOut)
+	const SymbolName ExtendedSymbol::getSymbolName() const
+	{
+		return m_Name.getPrefixes();
+	}
+
+	IOLink::IOLink(SymbolName const& in, SymbolName const& out) :
+		m_In(in),
+		m_Out(out)
 	{
 	}
 
-	std::string const& IOLink::getInServiceName() const
+	const SymbolName IOLink::getInServiceName() const
 	{
-		return m_In.getName();
+		return m_In.getSymbolName();
 	}
 
-	std::string const& IOLink::getInSlotName() const
+	const std::string IOLink::getInSlotName() const
 	{
 		return m_In.getExtendedName();
 	}
 
-	std::string const& IOLink::getOutServiceName() const
+	const SymbolName IOLink::getOutServiceName() const
 	{
-		return m_Out.getName();
+		return m_Out.getSymbolName();
 	}
 
-	std::string const& IOLink::getOutSlotName() const
+	const std::string IOLink::getOutSlotName() const
 	{
 		return m_Out.getExtendedName();
 	}
@@ -129,8 +222,9 @@ namespace _2Real
 		return m_In.isResolved() && m_Out.isResolved();
 	}
 
-	PluginData::PluginData(std::string const& name, std::string const& classname) :
+	PluginData::PluginData(SymbolName const& name, std::string const& classname, Poco::Path const& path) :
 		Symbol(name),
+		m_Path(path),
 		m_Classname(classname)
 	{
 	}
@@ -140,14 +234,19 @@ namespace _2Real
 		return m_Classname;
 	}
 
+	Poco::Path const& PluginData::getPluginPath() const
+	{
+		return m_Path;
+	}
+
 	std::list< ParamValue > & PluginData::getSetupInfo()
 	{
 		return m_SetupInfo;
 	}
 
-	ServiceData::ServiceData(std::string const& name, float fps, std::string const& service, std::string const& plugin) :
+	ServiceData::ServiceData(SymbolName const& name, float fps, SymbolName const& service) :
 		GraphData(name, fps, "service"),
-		m_Service(service, plugin),
+		m_Service(service),
 		m_SetupInfo()
 	{
 	}
@@ -167,14 +266,14 @@ namespace _2Real
 		m_Service.resolveTo(pluginId);
 	}
 
-	std::string const& ServiceData::getServiceName() const
+	const std::string ServiceData::getServiceName() const
 	{
 		return m_Service.getExtendedName();
 	}
 
-	std::string const& ServiceData::getPluginName() const
+	const SymbolName ServiceData::getPluginName() const
 	{
-		return m_Service.getName();
+		return m_Service.getSymbolName();
 	}
 
 	Identifier const& ServiceData::getPluginId() const
@@ -182,7 +281,7 @@ namespace _2Real
 		return m_Service.getId();
 	}
 
-	GraphData::GraphData(std::string const& name, float fps, std::string const& type) :
+	GraphData::GraphData(SymbolName const& name, float fps, std::string const& type) :
 		Symbol(name),
 		m_Fps(fps),
 		m_Type(type),
@@ -219,13 +318,13 @@ namespace _2Real
 		return m_Type;
 	}
 
-	ParamValue::ParamValue(std::string const& name, std::string const& value) :
+	ParamValue::ParamValue(SymbolName const& name, std::string const& value) :
 		m_Name(name),
 		m_Value(value)
 	{
 	}
 
-	std::string const& ParamValue::getName() const
+	SymbolName const& ParamValue::getName() const
 	{
 		return m_Name;
 	}
@@ -235,13 +334,15 @@ namespace _2Real
 		return m_Value;
 	}
 
-	SystemData::SystemData(std::string const& xmlPath) :
-		m_Reader(xmlPath)
+	////////////////////////////////////////////////////////////////////////////////
+
+	XMLData::XMLData(Poco::Path const& path, SymbolName const& name) :
+		m_Reader(path),
+		m_NamePrefix(name)
 	{
-		processSystem();
 	}
 
-	SystemData::~SystemData()
+	XMLData::~XMLData()
 	{
 		for (std::list< GraphData * >::iterator it = m_Graphs.begin(); it != m_Graphs.end();)
 		{
@@ -250,7 +351,36 @@ namespace _2Real
 		}
 	}
 
-	const std::string SystemData::getDefaultDirectory() const
+	std::list< PluginData >& XMLData::getPlugins()
+	{
+		return m_Plugins;
+	}
+
+	std::list< GraphData * >& XMLData::getGraphs()
+	{
+		return m_Graphs;
+	}
+
+	std::list< IOLink >& XMLData::getIOLinks()
+	{
+		return m_IOLinks;
+	}
+
+	std::set< SymbolName >& XMLData::getNames()
+	{
+		return m_Names;
+	}
+
+	SystemData::SystemData(Poco::Path const& path) :
+		XMLData(path, SymbolName())
+	{
+		processSystem();
+
+		std::cout << m_Names << std::endl;
+
+	}
+
+	const Poco::Path SystemData::getDefaultDirectory() const
 	{
 		return m_DefaultDir;
 	}
@@ -258,21 +388,6 @@ namespace _2Real
 	const std::string SystemData::getLogfile() const
 	{
 		return m_Logfile;
-	}
-
-	std::list< PluginData >& SystemData::getPlugins()
-	{
-		return m_Plugins;
-	}
-
-	std::list< GraphData * >& SystemData::getGraphs()
-	{
-		return m_Graphs;
-	}
-
-	std::list< IOLink >& SystemData::getIOLinks()
-	{
-		return m_IOLinks;
 	}
 
 	void SystemData::processSystem()
@@ -283,15 +398,17 @@ namespace _2Real
 			throw XMLFormatException("xml element \'system\' missing");
 		}
 
-		m_DefaultDir = trim(m_Reader.getChildText("default_directory", system));
+		m_DefaultDir = Poco::Path(trim(m_Reader.getChildText("default_directory", system)));
 		m_Logfile = trim(m_Reader.getChildText("logfile", system));
 
-		processPluginList(m_Reader.getChildNode("plugin_list", system), m_Plugins, "");
-		processGraphList(m_Reader.getChildNode("graph_list", system), m_Graphs, "");
-		processIOLinkList(m_Reader.getChildNode("link_list", system), m_IOLinks, "");
+		SymbolName currentPrefix = m_NamePrefix;
+
+		processPluginList(m_Reader.getChildNode("plugin_list", system), m_Plugins, currentPrefix);
+		processGraphList(m_Reader.getChildNode("graph_list", system), m_Graphs, currentPrefix);
+		processIOLinkList(m_Reader.getChildNode("link_list", system), m_IOLinks, currentPrefix);
 	}
 
-	void SystemData::processPluginList(Node const& plugins, std::list< PluginData > &pluginList, std::string const& prefix)
+	void XMLData::processPluginList(Node const& plugins, std::list< PluginData > &pluginList, SymbolName &prefix)
 	{
 		NodeList *children = plugins.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
@@ -300,23 +417,35 @@ namespace _2Real
 			if (plugin->nodeType() == Node::ELEMENT_NODE && plugin->localName() == "plugin")
 			{
 				std::string name = validateName(m_Reader.getChildText("name", *plugin));
-				std::cout << "name " << name << std::endl;
 
 				std::string classname = trim(m_Reader.getChildText("classname", *plugin));
-				std::cout << "classname " << classname << std::endl;
 
-				PluginData pluginData(prefix + name, classname);
+				Poco::Path dir = trim(m_Reader.getChildText("directory", *plugin));
+
+				prefix.pushSymbol(name);
+				if (m_Names.find(prefix) != m_Names.end())
+				{
+					std::ostringstream msg;
+					msg << "naming conflict: " << prefix << " is already defined";
+					throw XMLFormatException(msg.str());
+				}
+
+				PluginData pluginData(prefix, classname, dir);
+
 				Node const& params = m_Reader.getChildNode("parameter_list", *plugin);
-				processParameterList(params, pluginData.getSetupInfo(), prefix + name + ":");
 
+				processParameterList(params, pluginData.getSetupInfo(), prefix);
+
+				m_Names.insert(prefix);
 				pluginList.push_back(pluginData);
+				prefix.popSymbol();
 			}
 		}
 
 		children->release();
 	}
 
-	void SystemData::processParameterList(Node const& params, std::list< ParamValue > &paramList, std::string const& prefix)
+	void XMLData::processParameterList(Node const& params, std::list< ParamValue > &paramList, SymbolName &prefix)
 	{
 		NodeList *children = params.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
@@ -325,12 +454,13 @@ namespace _2Real
 			if (param->nodeType() == Node::ELEMENT_NODE && param->localName() == "parameter")
 			{
 				std::string name = toLower(trim(m_Reader.getChildText("name", *param)));
-				std::cout << "name " << name << std::endl;
 
 				std::string value = trim(m_Reader.getChildText("value", *param));
-				std::cout << "value " << value << std::endl;
 
-				ParamValue p(prefix+name, value);
+				prefix.pushSymbol(name);
+				ParamValue p(prefix, value);
+				prefix.popSymbol();
+
 				paramList.push_back(p);
 			}
 		}
@@ -338,68 +468,118 @@ namespace _2Real
 		children->release();
 	}
 
-	void SystemData::processGraphList(Node const& graphs, std::list< GraphData * > &graphList, std::string const& prefix)
+	void XMLData::processGraphList(Node const& graphs, std::list< GraphData * > &graphList, SymbolName &prefix, bool replace)
 	{
 		NodeList *children = graphs.childNodes();
+
 		for (unsigned int i=0; i<children->length(); ++i)
 		{
 			Node *graph = children->item(i);
 			if (graph->nodeType() == Node::ELEMENT_NODE && graph->localName() == "graph")
 			{
 				std::string type = toLower(trim(m_Reader.getNodeAttribute("type", *graph)));
-				std::cout << "type " << type << std::endl;
 
 				std::string name = validateName(m_Reader.getChildText("name", *graph));
-				std::cout << "name " << name << std::endl;
 
 				std::string fpsStr = trim(m_Reader.getChildText("fps", *graph));
 				float fps = (float)::atof(fpsStr.c_str());
-				std::cout << "fps " << fps << std::endl;
+
+				if (!replace)
+				{
+					prefix.pushSymbol(name);
+				}
+				if (m_Names.find(prefix) != m_Names.end())
+				{
+					std::ostringstream msg;
+					msg << "naming conflict: " << prefix << " is already defined";
+					throw XMLFormatException(msg.str());
+				}
 
 				if (type == "service")
 				{
-					std::string plugin = toLower(trim(m_Reader.getChildText("plugin", *graph)));
-					std::cout << "plugin " << plugin << std::endl;
-
 					std::string service = toLower(trim(m_Reader.getChildText("service", *graph)));
-					std::cout << "service " << service << std::endl;
 
-					ServiceData *data = new ServiceData(prefix + name, fps, service, plugin);
+					SymbolName serviceName(service);
+					serviceName.addPrefixes(m_NamePrefix);
+
+					//don't know if this service exists yet
+					ServiceData *data = new ServiceData(prefix, fps, serviceName);
+					//but can check the plugin
+					if (m_Names.find(data->getPluginName()) == m_Names.end())
+					{
+						std::ostringstream msg;
+						msg << "undefined plugin symbol found: " << data->getPluginName();
+						throw XMLFormatException(msg.str());
+					}
 
 					Node const& params = m_Reader.getChildNode("parameter_list", *graph);
-					processParameterList(params, data->getSetupInfo(), name + ":");
+					processParameterList(params, data->getSetupInfo(), prefix);
 
 					graphList.push_back(data);
 				}
 				else if (type == "sequence" || type == "synchronization")
 				{
-					GraphData *data = new GraphData(prefix + name, fps, type);
+					GraphData *data = new GraphData(prefix, fps, type);
 
 					Node const& childGraphs = m_Reader.getChildNode("graph_list", *graph);
-					processGraphList(childGraphs, data->getChildren(), prefix + name + ":");
+					processGraphList(childGraphs, data->getChildren(), prefix);
 
 					graphList.push_back(data);
 				}
-				else if (type == "external")
+				else if (type == "external_block")
 				{
 					std::string source = trim(m_Reader.getChildText("source", *graph));
-					std::cout << "source " << source << std::endl;
 
-					GraphData *data = processExternalGraph(prefix + name, fps, source, prefix + name + ":");
+					Poco::Path path(source);
+					//TODO: path
+					path.absolute();
 
-					graphList.push_back(data);
+					BlockData block(source, prefix);
+
+					std::list< PluginData > &plugins = block.getPlugins();
+					std::list< GraphData * > &graphs = block.getGraphs();
+					std::list< IOLink > &links = block.getIOLinks();
+					std::set< SymbolName > names = block.getNames();
+
+					graphList.splice(graphList.begin(), graphs);
+					m_Plugins.splice(m_Plugins.begin(), plugins);
+					m_IOLinks.splice(m_IOLinks.begin(), links);
+
+					for (std::set< SymbolName >::iterator it = names.begin(); it != names.end(); ++it)
+					{
+						if (!m_Names.insert(*it).second)
+						{
+							std::ostringstream msg;
+							msg << "naming conflict when reading external block: " << *it << " is already defined";
+							throw XMLFormatException(msg.str());
+						}
+					}
+
+					//const unsigned int sz1 = m_Names.size();
+					//const unsigned int sz2 = names.size();
+
+					//m_Names.insert(names.begin(), names.end());
+					//if (m_Names.size() != (sz1+sz2))
+					//{
+					//	std::ostringstream msg;
+					//	msg << "naming conflict when reading external block " << source;
+					//	throw XMLFormatException(msg.str());
+					//}
 				}
 				else
 				{
 					throw XMLFormatException("invalid graph type " + type);
 				}
+
+				m_Names.insert(prefix);
+				prefix.popSymbol();
 			}
 		}
 
 		children->release();
 	}
 
-	void SystemData::processIOLinkList(Node const& links, std::list< IOLink > &linkList, std::string const& prefix)
+	void XMLData::processIOLinkList(Node const& links, std::list< IOLink > &linkList, SymbolName &prefix, bool replace)
 	{
 		NodeList *children = links.childNodes();
 		for (unsigned int i=0; i<children->length(); ++i)
@@ -407,23 +587,42 @@ namespace _2Real
 			Node *link = children->item(i);
 			if (link->nodeType() == Node::ELEMENT_NODE && link->localName() == "link")
 			{
+				std::string in = toLower(trim(m_Reader.getChildText("in", *link)));
+				std::string out = toLower(trim(m_Reader.getChildText("out", *link)));
 
-				Node &in = m_Reader.getChildNode("in", *link);
-				Node &out = m_Reader.getChildNode("out", *link);
+				SymbolName linkIn(in);
 
-				std::string in_graph = toLower(trim(m_Reader.getChildText("graph", in)));
-				std::cout << "in_graph" << in_graph << std::endl;
+				if (replace)
+				{
+					linkIn.popPrefix();
+				}
 
-				std::string in_slot = toLower(trim(m_Reader.getChildText("slot", in)));
-				std::cout << "in_slot " << in_slot << std::endl;
+				linkIn.addPrefixes(m_NamePrefix);
+				SymbolName linkOut(out);
+				
+				if (replace)
+				{
+					linkOut.popPrefix();
+				}
 
-				std::string out_graph = toLower(trim(m_Reader.getChildText("graph", out)));
-				std::cout << "out_graph" << out_graph << std::endl;
+				linkOut.addPrefixes(m_NamePrefix);
 
-				std::string out_slot = toLower(trim(m_Reader.getChildText("slot", out)));
-				std::cout << "out_slot " << out_slot << std::endl;
+				IOLink linkData(linkIn, linkOut);
 
-				IOLink linkData(prefix + in_graph, prefix + in_graph + ":" + in_slot, prefix + out_graph, prefix + out_graph + ":" + out_slot);
+				if (m_Names.find(linkData.getInServiceName()) == m_Names.end())
+				{
+					std::ostringstream msg;
+					msg << "undefined symbol in IO Link found: " << linkData.getInServiceName();
+					throw XMLFormatException(msg.str());
+				}
+				if (m_Names.find(linkData.getOutServiceName()) == m_Names.end())
+				{
+					std::ostringstream msg;
+					msg << "undefined symbol in IO Link found: " << linkData.getOutServiceName();
+					throw XMLFormatException(msg.str());
+				}
+
+
 				linkList.push_back(linkData);
 			}
 		}
@@ -431,26 +630,25 @@ namespace _2Real
 		children->release();
 	}
 
-	GraphData * SystemData::processExternalGraph(std::string const& name, float fps, std::string const& source, std::string const& prefix)
+	BlockData::BlockData(Poco::Path const& path, SymbolName const& name) :
+		XMLData(path, name)
 	{
-		XMLReader graphReader(source);
-		Node &graph = graphReader.getRoot();
+		processBlock();
+	}
 
-		std::string type = m_Reader.getNodeAttribute("type", graph);
-
-		if (type == "sequence" || type == "synchronization")
+	void BlockData::processBlock()
+	{
+		Node& system = m_Reader.getRoot();
+		if (system.localName() != "block")
 		{
-			GraphData *data = new GraphData(name, fps, type);
-
-			processPluginList(m_Reader.getChildNode("plugin_list", graph), m_Plugins, prefix);
-			//TODO: what to do if a plugin is loaded more than once
-			processIOLinkList(m_Reader.getChildNode("link_list", graph), m_IOLinks, prefix);
-			processGraphList(m_Reader.getChildNode("graph_list", graph), data->getChildren(), prefix);
-			
-			return data;
+			throw XMLFormatException("xml element \'block\' missing");
 		}
-		
-		return NULL;
+
+		SymbolName currentPrefix = m_NamePrefix;
+
+		processPluginList(m_Reader.getChildNode("plugin_list", system), m_Plugins, currentPrefix);
+		processGraphList(m_Reader.getChildNode("graph_list", system), m_Graphs, currentPrefix, true);
+		processIOLinkList(m_Reader.getChildNode("link_list", system), m_IOLinks, currentPrefix, true);
 	}
 
 }
