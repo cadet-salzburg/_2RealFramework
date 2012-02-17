@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['data',['Data',['../class__2_real_1_1_data.html',1,'_2Real']]],
+  ['data',['Data',['../class__2_real_1_1_data.html#a7a947cfc3faa023dd2fda21caf9b6185',1,'_2Real::Data::Data()'],['../class__2_real_1_1_data.html#a23fe34641d8ab3fc62aa0f78ca2d4609',1,'_2Real::Data::Data(EngineData const &amp;data, long timestamp)'],['../class__2_real_1_1_blob.html#ab1a312c39ab60890bb0adcf41ba7f9dd',1,'_2Real::Blob::data()'],['../class__2_real_1_1_data.html#a35ce21cee0e236312c7f8f1461194a74',1,'_2Real::Data::data()'],['../class__2_real_1_1_input_handle.html#a072567d02eaf6a2079c4dd8617842a80',1,'_2Real::InputHandle::data()'],['../class__2_real_1_1_output_handle.html#affe15118885b210d80159df8c5b74d88',1,'_2Real::OutputHandle::data()']]],
+  ['datacallback',['DataCallback',['../namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921',1,'_2Real']]],
+  ['dataholder',['DataHolder',['../class__2_real_1_1_data_holder.html',1,'_2Real']]],
+  ['dataholder',['DataHolder',['../class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13',1,'_2Real::DataHolder::DataHolder(DataType *value)'],['../class__2_real_1_1_data_holder.html#a6704f97aac944dad7d2dea7c1df97417',1,'_2Real::DataHolder::DataHolder(DataType const &amp;value)'],['../class__2_real_1_1_data_holder.html#ac0ec4b3d9f7efa19aa2296005665146f',1,'_2Real::DataHolder::DataHolder(DataHolder&lt; DataType &gt; const &amp;src)']]],
+  ['datatable',['DataTable',['../namespace__2_real.html#ac7cc442fb7509ae5b7799d0068078acf',1,'_2Real']]],
+  ['declare_5fexception',['DECLARE_EXCEPTION',['../__2_real_exception_8h.html#a15f80f7be1eba0f44929d638d49d8c26',1,'DECLARE_EXCEPTION():&#160;_2RealException.h'],['../namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d',1,'_2Real::DECLARE_EXCEPTION(BlobException, Exception)'],['../namespace__2_real.html#ab1eeade58268db1dbe787b6366aa395f',1,'_2Real::DECLARE_EXCEPTION(SetupException, Exception)'],['../namespace__2_real.html#ae3c94e24cf612c5f429e9c698ae981c9',1,'_2Real::DECLARE_EXCEPTION(StartException, Exception)'],['../namespace__2_real.html#af7dff02dd4526164c5f6be064a2ec5e3',1,'_2Real::DECLARE_EXCEPTION(InvalidNameException, Exception)'],['../namespace__2_real.html#a25ed9298c4db3fc5f1f6158adaa1c1ae',1,'_2Real::DECLARE_EXCEPTION(PixelbufferException, Exception)']]],
+  ['destroysystem',['destroySystem',['../class__2_real_1_1_engine.html#ad62afb594e7a2d83b59f441b8b777da5',1,'_2Real::Engine']]],
+  ['destroysystemgraph',['destroySystemGraph',['../class__2_real_1_1_system_pool.html#a87a95fb59d89ad2a35fd707353f3f18b',1,'_2Real::SystemPool']]]
+];
