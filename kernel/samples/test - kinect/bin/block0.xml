@@ -1,0 +1,32 @@
+<block>
+
+	<plugin_list>
+	</plugin_list>
+	
+	<graph_list>
+		<graph type="sequence">
+			<name>sequence</name>
+			<fps>30.0f</fps>
+			<graph_list>
+				<graph type="external_block">
+					<name>child a</name>
+					<fps>30.0f</fps>
+					<source>block1.xml</source>
+				</graph>
+				<graph type="external_block">
+					<name>child b</name>
+					<fps>30.0f</fps>
+					<source>block2.xml</source>
+				</graph>
+			</graph_list>
+		</graph>
+	</graph_list>
+
+	<link_list>
+		<link>
+			<in>sequence:child b:in</in>
+			<out>sequence:child a:out</out>
+		</link>
+	</link_list>
+
+</block>		

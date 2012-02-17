@@ -1,0 +1,62 @@
+<block>
+
+	<plugin_list>
+		<plugin>
+			<name>plugin a</name>
+			<classname>PluginA</classname>
+			<directory></directory>
+			<parameter_list>
+				<parameter>
+					<name>param</name>
+					<value>dummy</value>
+				</parameter>
+			</parameter_list>
+		</plugin>
+		<plugin>
+			<name>plugin b</name>
+			<classname>PluginB</classname>
+			<directory></directory>
+			<parameter_list>
+			</parameter_list>
+		</plugin>
+	</plugin_list>
+	
+	<graph_list>
+		<graph type="sequence">
+			<name>sequence</name>
+			<fps>30.0f</fps>
+			<graph_list>
+				<graph type="service">
+					<name>child a</name>
+					<fps>30.0f</fps>
+					<service>plugin a:Service</service>
+					<parameter_list>
+						<parameter>
+							<name>param</name>
+							<value>dummy</value>
+						</parameter>
+					</parameter_list>
+				</graph>
+				<graph type="service">
+					<name>child b</name>
+					<fps>30.0f</fps>
+					<service>plugin b:Service</service>
+					<parameter_list>
+						<parameter>
+							<name>param</name>
+							<value>dummy</value>
+						</parameter>
+					</parameter_list>
+				</graph>
+			</graph_list>
+		</graph>
+	</graph_list>
+
+	<link_list>
+		<link>
+			<in>sequence:child b:in</in>
+			<out>sequence:child a:out</out>
+		</link>
+	</link_list>
+
+</block>

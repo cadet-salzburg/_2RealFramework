@@ -1,0 +1,46 @@
+<!-- directory: where the plugins are searched, logfile: system logfile, 
+	id: this must match the parameter "xmlName" when creating a system from an xml file 
+-->
+<system id="XMLTest" directory="D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\" logfile="XMLTest.txt">
+
+	<!-- id: name given to the identifier, classname: this must match the plugins' classname as well as the name of the dll 
+	-->
+		<plugin id="kinect plugin" classname="MultiKinectOpenNI" state="1">
+	
+			<!-- for std::containers (curr: std::vector, std::list), ', ' is used to separate elements -->
+			<init 	param="generator flags" 	value="color, depth, user colored" />
+			<init 	param="image flags" 		value="color640X480, color640X480, mirrored" />
+			<init 	param="logfile" 			value="kinectwrapper.txt" />
+			<init 	param="loglevel" 			value="info" />
+		
+			<!-- services which are to be created go here. note that no services can be created if the plugin is not in state: set up -->
+			<service id="color image" template="Image Generator" fps="30.0f" state="2">
+		
+				<init 	param="device id" 	value="0" />
+				<init 	param="image type" 	value="color" />
+			
+			</service>
+		
+		</plugin>
+
+		<plugin id="image processing plugin" classname="ImageProcessing" state="1">
+		
+			<init 	param="logfile" 			value="imgprocessing.txt" />
+				
+			<service id="accum" template="ImageAccumulation_uchar" fps="30.0f" state="2" > 
+		
+				<init param="buffer size" 		value="100" />
+				<link param="input image" 	out_service="color image" 	out_slot="output image" /> 			
+			
+			</service>
+		
+		</plugin>
+	
+		<!-- sequences / synchronizations would go here -->
+		<!-- 
+		<sequence id="test sequence" fps="30.0f" children="color image, accum">
+			<state value="running" />
+		</sequence> 
+		-->
+
+</system>
