@@ -32,7 +32,6 @@ _2Real plugins have to implement the PluginActivator Interface (_2Real::IPluginA
 * getMetadata(Metadata &metadata)
 This function describes properties of the plugin and all the services, including their input and output names (needed for the inputHandle and outputHandle) and optionally their datatypes. This is particularly useful when you want to give the input or output a default value. During this function call the input and output slots are created in the framework.
 
-
 * setup(PluginContext &context)
 This function allows you to initialize and export (=register) your services. It can also be used to query setup parameters.
 
@@ -102,3 +101,5 @@ tutorialSystem.setUpdateRate(service1, 30.0f);
 
 finally, link your slots:
 tutorialSystem.linkSlots(service2, "input number", service1, "counter outlet");
+
+To run your application you will also have to provide PocoFoundation and PocoXML libraries (copy them next to your TutorialPlugin.exe).
