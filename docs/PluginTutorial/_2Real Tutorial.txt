@@ -1,0 +1,104 @@
+﻿Step by Step Tutorial: How to write a plugin for the _2Real Framework
+
+Download _2Real Framework from svn (...)
+
+1. Get your environment prepared
+================================
+compile the Framework (_2RealEngine):
+Open _2RealFramework\kernel\build\_2RealEngine.vcxproj and batch build the two win32 libraries (one release, one debug)
+
+
+2. Introduction into the _2Real Framework
+=========================================
+The _2Real framework allows to create real time interactive applications in the area of image and live video processing, sensor input, 2d and 3d camera tracking...
+It has a lightweight kernel structure which is expanded by plugin libraries that can be loaded during runtime. Every plugin offers a set of services that can be linked to each other via inputs and outputs. Different datatypes are supported.
+
+When writing an application the user builds sequences and synchronisations of services by instantiating services and connecting input and output handles.
+
+Such a combination and connection of Services within an application is called a "production graph".
+
+A Doxygen/html documentation is available in the docs/html folder.
+
+
+3. Write a Plugin
+===================
+There is a "TutorialPlugin" in the plugins folder (vc10 project file) which I will describe here.
+The plugin will be used in a sample application to printout the numbers of a counter and also feed the counter values through a "doubler" and then again print them out.
+
+Plugins provide one or more services to the _2Real framework. After plugins are loaded by the _2Real framework their services can be accessed via input and output handles.
+
+_2Real plugins have to implement the PluginActivator Interface (_2Real::IPluginActivator), which has four methods:
+
+* getMetadata(Metadata &metadata)
+This function describes properties of the plugin and all the services, including their input and output names (needed for the inputHandle and outputHandle) and optionally their datatypes. This is particularly useful when you want to give the input or output a default value. During this function call the input and output slots are created in the framework.
+
+
+* setup(PluginContext &context)
+This function allows you to initialize and export (=register) your services. It can also be used to query setup parameters.
+
+* shutdown()
+Is called before unloading the plugin.
+
+* the deconstructor
+...
+
+
+During the setup() of the plugin you call the factory method of the services. In the case of the TutorialPlugin this is done in the ServiceImpl.cpp file:
+
+_2Real::IService *const createCounter(void)
+{
+	_2Real::IService *service = new Counter();
+	return service;
+}
+
+After that the service interface (_2Real::IService) has to be implemented for every service.
+
+I has two predefined methods:
+
+* setup(_2Real::ServiceContext &context)
+Here you can set the Input and OutputHandles for your inputs and outputs
+m_CounterValue = context.getOutputHandle("counter outlet");
+m_CounterValue is a _2Real::OutputHandle that is used to share data between slots. The name ("counter outlet") will identify the inlet or outlet.
+
+* update()
+You can access input and output data via the Input and OutputHandles´s "data< TYPE >()" member function: 
+m_CounterValue.data< int >().
+
+You want to implement these methods for all services of the plugin.
+
+As a general rule: names are *not* case sensitive, all letters are allowed, space, numbers, underscore, and colon.
+
+
+
+4. Write an Application
+===========================
+
+The TutorialApp can be found in the samples folder.
+
+To create an app start by creating a new instance of the the framework.
+
+System tutorialSystem("Tutorial System");
+
+As a next step you may want to load plugins. 
+
+const Identifier tutPlugin = tutorialSystem.loadPlugin("TutorialPlugin", "TutorialPlugin");
+
+The plugin name has to match the library (dll) name.
+
+In order for the app to find the library you want to set the plugin dir:
+tutorialSystem.setInstallDirectory(PluginDir);
+		
+after the plugin is loaded the setup is called:
+tutorialSystem.setup(tutPlugin);
+
+Then you create, setup and start your services:
+
+Identifier service1 = tutorialSystem.createService("s1", tutPlugin, "Counter");
+tutorialSystem.setup(service1);
+tutorialSystem.start(service1);
+		
+optionally you can set the update rate of the service:
+tutorialSystem.setUpdateRate(service1, 30.0f);
+
+finally, link your slots:
+tutorialSystem.linkSlots(service2, "input number", service1, "counter outlet");
