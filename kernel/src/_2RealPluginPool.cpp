@@ -68,12 +68,12 @@ namespace _2Real
 		m_BaseDirectory = path;
 	}
 	
-	bool PluginPool::isLibraryLoaded(Poco::Path const& path) const
+	const bool PluginPool::isLibraryLoaded(Poco::Path const& path) const
 	{
-		return false;
+		return m_PluginLoader.isLibraryLoaded(path.toString());
 	}
 
-	const std::string PluginPool::getInfoString(std::string const& className, std::string) const
+	const std::string PluginPool::getInfoString(std::string const& className, Poco::Path const& path) const
 	{
 		return std::string();
 	}
@@ -108,11 +108,13 @@ namespace _2Real
 			std::string name = it->name();
 			result.push_back(name);
 		}
+
+		return result;
 	}
 
-	const Identifier createPlugin(std::string const& idName, std::string const& className, Poco::Path const& path)
-	{
-	}
+	//const Identifier createPlugin(std::string const& idName, std::string const& className, Poco::Path const& path)
+	//{
+	//}
 
 	////const bool PluginPool::isSingleton(std::string const& classname) const
 	////{

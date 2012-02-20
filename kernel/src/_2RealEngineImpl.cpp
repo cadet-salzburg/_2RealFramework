@@ -171,7 +171,7 @@ namespace _2Real
 			throw InvalidIdentifierException(msg.str());
 		}
 
-		return m_Plugins.getInfoString(std::string());
+		return m_Plugins.getInfoString(std::string(), Poco::Path());
 	}
 
 	const Identifier EngineImpl::createService(std::string const& name, Identifier const& pluginId, std::string const& serviceName, Identifier const& systemId)

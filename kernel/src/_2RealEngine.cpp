@@ -66,6 +66,11 @@ namespace _2Real
 		return m_Engine.loadLibrary(Poco::Path(path));
 	}
 
+	const bool Engine::isLoaded(std::string const& libraryPath) const
+	{
+		return false; //m_Engine.isLoaded(Poco::Path(libraryPath));
+	}
+
 	//const Identifier Engine::createInstance(std::string const& idName, std::string const& className)
 	//{
 	//}

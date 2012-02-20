@@ -57,11 +57,13 @@ namespace _2Real
 		void							clear();
 		void							setBaseDirectory(Poco::Path const& path);
 		const std::list< std::string >	loadLibrary(Poco::Path const& path);
+		const bool						isLibraryLoaded(Poco::Path const& path) const;
+
 		//const Identifier		install(std::string const& idName, std::string const& className, Poco::Path const& path = Poco::Path());
 		//bool					contains(Identifier const& id) const;
 		//void					uninstall(Identifier const& id);
 		//void					setup(Identifier const& id);
-		const std::string				getInfoString(std::string const& className) const;
+		const std::string				getInfoString(std::string const& className, Poco::Path const& path) const;
 		Runnable &						createService(std::string const& name, Identifier const& id, std::string const& service);
 		//void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
 		//EngineData const&		getParameterValue(Identifier const& id, std::string const& paramName) const;
