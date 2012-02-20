@@ -61,8 +61,21 @@ namespace _2Real
 		PluginPool &			getPluginPool();
 		PluginPool const&		getPluginPool() const;
 
+		std::list< std::string >	loadLibrary(Poco::Path const& path);
+		const bool					isLibraryLoaded(Poco::Path const& path) const;
+		const std::string			getInfoString(std::string const& className, Poco::Path const& libraryPath) const;
+		const bool					canCreate(std::string const& className, Poco::Path const& libraryPath) const;
+		const bool					isSingleton(std::string const& className, Poco::Path const& libraryPath) const;
+		const bool					isSetUp(Identifier const& pluginId) const;
+		const Identifier			createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
+		const Identifier			pluginInstance(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
+		void						setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value);
+		//void						setPluginValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId);
+		const EngineData			getPluginValue(Identifier const& pluginId, std::string const& paramName) const;
+		void						setupPlugin(Identifier const& pluginId);
+
+
 		const Identifier		createSystem(std::string const& idName);
-		std::list< std::string >loadLibrary(Poco::Path const& path);
 		const Identifier		createService(std::string const& idName, Identifier const& plugin, std::string const& serviceName, Identifier const& system);
 		const Identifier		createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
 		const Identifier		createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
@@ -73,7 +86,6 @@ namespace _2Real
 		void					setSystemLogfile(std::string const& file, Identifier const& systemId);
 		void					setBaseDirectory(Poco::Path const& directory);
 
-		const std::string		getInfo(Identifier const& plugin, Identifier const& systemId) const;
 		
 		void					setup(Identifier const& setupAble, Identifier const& systemId);
 		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);

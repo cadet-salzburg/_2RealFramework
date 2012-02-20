@@ -20,6 +20,7 @@
 #include "_2RealEngineImpl.h"
 #include "_2RealIdentifier.h"
 #include "_2RealSingletonHolder.h"
+#include "_2RealHelpers.h"
 
 #include "Poco/Path.h"
 
@@ -33,7 +34,8 @@ namespace _2Real
 	}
 
 	Engine::Engine() :
-		m_Engine(EngineImpl::instance())
+		m_EngineImpl(EngineImpl::instance()),
+		m_Names()
 	{
 	}
 
@@ -43,51 +45,92 @@ namespace _2Real
 
 	void Engine::setBaseDirectory(std::string const& directory)
 	{
-		m_Engine.setBaseDirectory(Poco::Path(directory));
+		m_EngineImpl.setBaseDirectory(Poco::Path(directory));
 	}
-
-	//const bool Engine::isLoaded(std::string const& className) const
-	//{
-	//	return m_Engine.isLibraryLoaded(className);
-	//}
-	//
-	//const bool Engine::isSingleton(std::string const& className) const
-	//{
-	//	return m_Engine.isSingleton(className);
-	//}
-
-	//const bool Engine::isSingleton(Identifier const& id) const
-	//{
-	//	return m_Engine.isSingleton(id);
-	//}
 
 	const std::list< std::string > Engine::load(std::string const& path)
 	{
-		return m_Engine.loadLibrary(Poco::Path(path));
+		return m_EngineImpl.loadLibrary(Poco::Path(path));
 	}
 
 	const bool Engine::isLoaded(std::string const& libraryPath) const
 	{
-		return false; //m_Engine.isLoaded(Poco::Path(libraryPath));
+		return m_EngineImpl.isLibraryLoaded(Poco::Path(libraryPath));
 	}
 
-	//const Identifier Engine::createInstance(std::string const& idName, std::string const& className)
-	//{
-	//}
+	const std::string Engine::getInfoString(std::string const& className, std::string const& libraryPath)
+	{
+		return m_EngineImpl.getInfoString(className, Poco::Path(libraryPath));
+	}
 
-	//const std::string Engine::getPluginInfo(Identifier const& pluginId)
-	//{
-	//	return m_Engine.getInfo(pluginId);
-	//}
+	const bool Engine::canCreate(std::string const& className, std::string const& libraryPath) const
+	{
+		return m_EngineImpl.canCreate(className, Poco::Path(libraryPath));
+	}
 
-	//const Identifier System::loadPlugin(std::string const& name, std::string const& classname, std::string const& path)
-	//{
-	//	std::string idName = validateName(name);
-	//	unique(idName);
+	const bool Engine::isSingleton(std::string const& className, std::string const& libraryPath) const
+	{
+		return m_EngineImpl.isSingleton(className, Poco::Path(libraryPath));
+	}
 
-	//	const Identifier id = m_EngineImpl.loadPlugin(name, classname, m_Id);
-	//	m_Lookup.insert(NamedId(idName, id));
-	//	return id;
-	//}
+	const Identifier Engine::createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath)
+	{
+		std::string name = validateName(name);
+		if (!isUnique(name))
+		{
+			//TODO EXCEPTION
+		}
+
+		return m_EngineImpl.createPlugin(name, className, Poco::Path(libraryPath));
+	}
+
+	const Identifier Engine::getInstance(std::string const& idName, std::string const& className, std::string const& libraryPath)
+	{
+		std::string name = validateName(idName);
+		if (!isUnique(name))
+		{
+			//TODO EXCEPTION
+		}
+
+		return m_EngineImpl.pluginInstance(name, className, Poco::Path(libraryPath));
+	}
+
+	const bool Engine::isSetUp(Identifier const& pluginId) const
+	{
+		return m_EngineImpl.isSetUp(pluginId);
+	}
+
+	const EngineData Engine::getValueInternal(Identifier const& pluginId, std::string const& paramName) const
+	{
+		return m_EngineImpl.getPluginValue(pluginId, paramName);
+	}
+
+	void Engine::setValueInternal(Identifier const& pluginId, std::string const& paramName, EngineData const& value)
+	{
+		m_EngineImpl.setPluginValue(pluginId, paramName, value);
+	}
+
+	const Identifier Engine::getIdentifier(std::string const& idName) const
+	{
+		std::map< std::string, Identifier >::const_iterator it = m_Names.find(idName);
+		if (it == m_Names.end())
+		{
+			return Identifier();
+		}
+		else
+		{
+			return it->second;
+		}
+	}
+
+	const bool Engine::isUnique(std::string const& idName) const
+	{
+		return (m_Names.find(idName) == m_Names.end());
+	}
+
+	void Engine::setup(Identifier const& pluginId)
+	{
+		m_EngineImpl.setupPlugin(pluginId);
+	}
 
 }

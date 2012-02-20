@@ -146,6 +146,70 @@ namespace _2Real
 		return m_Plugins.loadLibrary(path);
 	}
 
+	const bool EngineImpl::isLibraryLoaded(Poco::Path const& path) const
+	{
+		return m_Plugins.isLibraryLoaded(path);
+	}
+
+	const std::string EngineImpl::getInfoString(std::string const& className, Poco::Path const& libraryPath) const
+	{
+		return m_Plugins.getInfoString(className, libraryPath);
+	}
+
+	const bool EngineImpl::canCreate(std::string const& className, Poco::Path const& libraryPath) const
+	{
+		return m_Plugins.canCreate(className, libraryPath);
+	}
+
+	const bool EngineImpl::isSingleton(std::string const& className, Poco::Path const& libraryPath) const
+	{
+		return m_Plugins.isSingleton(className, libraryPath);
+	}
+
+	const bool EngineImpl::isSetUp(Identifier const& pluginId) const
+	{
+		return m_Plugins.isSetUp(pluginId);
+	}
+
+	const Identifier EngineImpl::createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath)
+	{
+		return m_Plugins.createInstance(idName, className, libraryPath);
+	}
+
+	const Identifier EngineImpl::pluginInstance(std::string const& idName, std::string const& className, Poco::Path const& libraryPath)
+	{
+		return m_Plugins.getInstance(idName, className, libraryPath);
+	}
+
+	void EngineImpl::setupPlugin(Identifier const& id)
+	{
+		m_Plugins.setup(id);
+	}
+
+	void EngineImpl::setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value)
+	{
+		if (!pluginId.isPlugin())
+		{
+			std::ostringstream msg;
+			msg << "EngineImpl::setPluginValue " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		return m_Plugins.setParameterValue(pluginId, paramName, value);
+	}
+
+	const EngineData EngineImpl::getPluginValue(Identifier const& pluginId, std::string const& paramName) const
+	{
+		if (!pluginId.isPlugin())
+		{
+			std::ostringstream msg;
+			msg << "EngineImpl::setPluginValue " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		return m_Plugins.getParameterValue(pluginId, paramName);
+	}
+
 	void EngineImpl::setup(Identifier const& setupAble, Identifier const& systemId)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
@@ -158,20 +222,6 @@ namespace _2Real
 		}
 
 		nirvana.setUp(setupAble);
-	}
-
-	const std::string EngineImpl::getInfo(Identifier const& pluginId, Identifier const& systemId) const
-	{
-		SystemGraph const& nirvana = m_Graphs.getSystemGraph(systemId);
-
-		if (!pluginId.isPlugin())
-		{
-			std::ostringstream msg;
-			msg << "EngineImpl::getInfo " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
-			throw InvalidIdentifierException(msg.str());
-		}
-
-		return m_Plugins.getInfoString(std::string(), Poco::Path());
 	}
 
 	const Identifier EngineImpl::createService(std::string const& name, Identifier const& pluginId, std::string const& serviceName, Identifier const& systemId)

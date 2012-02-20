@@ -72,15 +72,17 @@ namespace _2Real
 		/**
 		*	creates instance of a plugin
 		*/
-		const Identifier create(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
+		const Identifier createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
 
 		/*
 		*	returns instance of singleton plugin
 		*	idName is used only at the first call, after that the existing identifier is returned
 		*/
-		const Identifier instance(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
+		const Identifier getInstance(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
 
 		const bool isSetUp(Identifier const& pluginId) const;
+
+		void setup(Identifier const& pluginId);
 
 		/**
 		*	sets the value of a plugin's setup parameter
@@ -100,6 +102,8 @@ namespace _2Real
 			return *ptr.get();
 		}
 
+		const Identifier getIdentifier(std::string const& idName) const;
+
 	private:
 
 		template< typename T >
@@ -112,18 +116,18 @@ namespace _2Real
 		/**
 		*	internally used function for setting param values
 		*/
-		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+		void setValueInternal(Identifier const& pluginId, std::string const& paramName, EngineData const& value);
 
 		/**
 		*	internally used function for setting param values
 		*/
-		const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
+		const EngineData getValueInternal(Identifier const& pluginId, std::string const& paramName) const;
 
-		//const bool isUnique(std::string const& name) const;
+		const bool isUnique(std::string const& name) const;
 
-		//std::map< std::string, Identifier >		m_Names;
+		EngineImpl								&m_EngineImpl;
 
-		EngineImpl								&m_Engine;
+		std::map< std::string, Identifier >		m_Names;
 
 	};
 

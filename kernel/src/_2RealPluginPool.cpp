@@ -60,11 +60,6 @@ namespace _2Real
 
 	void PluginPool::setBaseDirectory(Poco::Path const& path)
 	{
-		if (path.isFile())
-		{
-			//TODO exc
-		}
-
 		m_BaseDirectory = path;
 	}
 	
@@ -75,6 +70,7 @@ namespace _2Real
 
 	const std::string PluginPool::getInfoString(std::string const& className, Poco::Path const& path) const
 	{
+		//
 		return std::string();
 	}
 
@@ -112,77 +108,68 @@ namespace _2Real
 		return result;
 	}
 
-	//const Identifier createPlugin(std::string const& idName, std::string const& className, Poco::Path const& path)
-	//{
-	//}
+	const Identifier PluginPool::createInstance(std::string const& idName, std::string const& className, Poco::Path const& path)
+	{
+		Poco::Path tmp;
 
-	////const bool PluginPool::isSingleton(std::string const& classname) const
-	////{
-	////}
+		std::cout << "XXX " << path.depth() << std::endl;
 
-	////const Identifier PluginPool::install(std::string const& name, std::string const& classname)
-	////{
-	//////	
-	////}
+		return Identifier();
+	}
+
+	const Identifier PluginPool::getInstance(std::string const& idName, std::string const& className, Poco::Path const& path)
+	{
+		return Identifier();
+	}
+
+	const bool PluginPool::isSingleton(std::string const& className, Poco::Path const& path) const
+	{
+		return false;
+	}
+
+	const bool PluginPool::canCreate(std::string const& className, Poco::Path const& path) const
+	{
+		return false;
+	}
 
 	void PluginPool::clear()
 	{
-		//for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
-		//{
-		//	try
-		//	{
-		//		Identifier id = it->first;
-		//		//it->second->uninstall();
-		//		delete it->second;
-		//	}
-		//	catch (std::exception &e)
-		//	{
-		//		m_System.getLogstream() << "error on plugin uninstall: " << e.what();
-		//	}
-		//}
-
-	//	m_Plugins.clear();
 	}
 
-	////bool PluginPool::contains(Identifier const& id) const
-	////{
-	////	return m_Plugins.find(id) != m_Plugins.end();
-	////}
+	bool PluginPool::contains(Identifier const& id) const
+	{
+		return m_Plugins.find(id) != m_Plugins.end();
+	}
 
-	////void PluginPool::uninstall(Identifier const& id)
-	////{
-	////	getPlugin(id).uninstall();
-	////}
+	void PluginPool::setup(Identifier const& id)
+	{
+		getPlugin(id).setup();
+	}
 
-	////void PluginPool::setup(Identifier const& id)
-	////{
-	////	getPlugin(id).setup();
-	////}
-
-	//const std::string PluginPool::getInfoString(std::string const& classname) const
-	//{
-	//	return std::string(); //getPlugin(id).getInfoString();
-	//}
+	const bool PluginPool::isSetUp(Identifier const& id) const
+	{
+		return false;
+	}
 
 	Runnable & PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		return getPlugin(id).createService(name, service);
 	}
 
-	////void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, Data const& data)
-	////{
-	////	getPlugin(id).setParameterValue(paramName, data);
-	////}
+	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data)
+	{
+		getPlugin(id).setParameterValue(paramName, data);
+	}
 
-	////EngineData const& PluginPool::getParameterValue(Identifier const& id, std::string const& paramName) const
-	////{
-	////	return getPlugin(id).getParameterValue(paramName);
-	////}
+	EngineData const& PluginPool::getParameterValue(Identifier const& id, std::string const& paramName) const
+	{
+		return getPlugin(id).getParameterValue(paramName);
+	}
 
-	////std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
-	////{
-	////	return getPlugin(id).getParameterKey(paramName);
-	////}
+	//std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
+	//{
+	//	return getPlugin(id).getParameterKey(paramName);
+	//}
 
 	Plugin & PluginPool::getPlugin(Identifier const& id)
 	{

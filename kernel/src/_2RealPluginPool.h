@@ -34,7 +34,6 @@ namespace _2Real
 	class Plugin;
 	class Identifier;
 	class SystemGraph;
-	class Data;
 	class Runnable;
 	class EngineData;
 
@@ -54,26 +53,32 @@ namespace _2Real
 		PluginPool();
 		~PluginPool();
 
+		/**
+		*	clears all
+		*/
 		void							clear();
 		void							setBaseDirectory(Poco::Path const& path);
 		const std::list< std::string >	loadLibrary(Poco::Path const& path);
 		const bool						isLibraryLoaded(Poco::Path const& path) const;
-
-		//const Identifier		install(std::string const& idName, std::string const& className, Poco::Path const& path = Poco::Path());
-		//bool					contains(Identifier const& id) const;
-		//void					uninstall(Identifier const& id);
-		//void					setup(Identifier const& id);
+		const bool						canCreate(std::string const& className, Poco::Path const& path) const;
+		const bool						isSingleton(std::string const& className, Poco::Path const& path) const;
+		const bool						isSetUp(Identifier const& pluginId) const;
 		const std::string				getInfoString(std::string const& className, Poco::Path const& path) const;
 		Runnable &						createService(std::string const& name, Identifier const& id, std::string const& service);
-		//void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
-		//EngineData const&		getParameterValue(Identifier const& id, std::string const& paramName) const;
+		const Identifier				createInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
+		const Identifier				getInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
+		void							setup(Identifier const& pluginId);
+
+		//const Identifier		install(std::string const& idName, std::string const& className, Poco::Path const& path = Poco::Path());
+		bool							contains(Identifier const& id) const;
+		//void					uninstall(Identifier const& id);
+		void							setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data);
+		EngineData const&				getParameterValue(Identifier const& id, std::string const& paramName) const;
 		//std::string const&		getParameterKey(Identifier const& id, std::string const& paramName) const;
 
 	private:
 
-		//bool					isLibraryLoaded(std::string const& classname) const;
 		//Metadata const* const	getMetadata(std::string const& classname) const;
-		//void					loadLibrary(std::string const& classname, Poco::Path const& filepath);
 
 		Plugin &				getPlugin(Identifier const& id);
 		Plugin const&			getPlugin(Identifier const& id) const;

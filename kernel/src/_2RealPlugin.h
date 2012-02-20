@@ -83,7 +83,7 @@ namespace _2Real
 
 		EngineData const&				getParameterValue(std::string const& setupName) const;
 		std::string const&				getParameterKey(std::string const& setupName) const;
-		void							setParameterValue(std::string const& setupName, Data const& data);
+		void							setParameterValue(std::string const& setupName, EngineData const& data);
 		Runnable &						createService(std::string const& idName, std::string const& serviceName);
 
 	private:
