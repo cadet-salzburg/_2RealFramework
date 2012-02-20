@@ -22,18 +22,18 @@
 namespace _2Real
 {
 
-	class Engine;
+	class EngineImpl;
 
 	class ServiceFactory
 	{
 
 	public:
 
-		ServiceFactory(Engine const& engine);
+		ServiceFactory(EngineImpl const& EngineImpl);
 
 	private:
 
-		Engine		const& m_Engine;
+		EngineImpl		const& m_EngineImpl;
 
 	};
 

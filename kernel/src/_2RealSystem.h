@@ -29,7 +29,7 @@
 namespace _2Real
 {
 
-	class Engine;
+	class EngineImpl;
 	class Data;
 	class Identifier;
 	class RunnableError;
@@ -87,7 +87,7 @@ namespace _2Real
 		/**
 		*	sets the system's plugin directory - i.e. where plugins will be searched
 		*/
-		void setInstallDirectory(std::string const& directory);
+		//void setInstallDirectory(std::string const& directory);
 
 		/**
 		*	sets the system's logfile (logging = incomplete right now)
@@ -97,27 +97,20 @@ namespace _2Real
 		/**
 		*	destroys everything in the system.
 		*/
-		void shutdown();
+		void clear();
 
 		/**
 		*	loads a dll - assumption: classname->filename, e.g: MyPlugin -> MyPlugin.dll / MyPlugin.so / MyPlugin.dylib (release mode), MyPlugin_d.dll etc. (debug mode)
 		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
 		*	multiple loading of a plugin from within the same system will cause an exception
 		*/
-		const Identifier loadPlugin(std::string const& name, std::string const& className, std::string const& path = "");
+		//const Identifier loadPlugin(std::string const& name, std::string const& className, std::string const& path = "");
 
 		/**
-		*	calls setup of either a plugin or a service = initialization
-		*	a service that is running must be stopped before it can be set up again
-		*	plugins can be set up only once for reasons of safety
-		*	(otherwise, services might become invalid etc.)
+		*	calls setup of a service/sequence/syncronization = initialization
+		*	if the runnbale is currently running, it needs to be stopped
 		*/
 		void setup(Identifier const& id);
-
-		/**
-		*	returns plugin metadata as string
-		*/
-		const std::string getInfo(Identifier const& plugin);
 
 		/**
 		*	creates instance of service
@@ -264,9 +257,9 @@ namespace _2Real
 		Identifier								m_Id;
 
 		/**
-		*	the 2real engine
+		*	the 2real EngineImpl
 		*/
-		Engine									&m_Engine;
+		EngineImpl								&m_EngineImpl;
 
 		/**
 		*	helper lookup table

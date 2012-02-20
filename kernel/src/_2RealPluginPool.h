@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <list>
 
 #include "Poco/Path.h"
 #include "Poco/ClassLoader.h"
@@ -50,36 +51,42 @@ namespace _2Real
 	
 	public:
 
-		PluginPool(SystemGraph &system);
+		PluginPool();
 		~PluginPool();
 
-		void					clearPlugins();
-		void					setInstallDirectory(std::string const& directory);
-		const Identifier		install(std::string const& name, std::string const& classname);
-		bool					contains(Identifier const& id) const;
-		void					uninstall(Identifier const& id);
-		void					setup(Identifier const& id);
-		const std::string		getInfoString(Identifier const& id) const;
-		Runnable &				createService(std::string const& name, Identifier const& id, std::string const& service);
-		void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
-		EngineData const&		getParameterValue(Identifier const& id, std::string const& paramName) const;
-		std::string const&		getParameterKey(Identifier const& id, std::string const& paramName) const;
+		void							clear();
+		void							setBaseDirectory(Poco::Path const& path);
+		const std::list< std::string >	loadLibrary(Poco::Path const& path);
+		//const Identifier		install(std::string const& idName, std::string const& className, Poco::Path const& path = Poco::Path());
+		//bool					contains(Identifier const& id) const;
+		//void					uninstall(Identifier const& id);
+		//void					setup(Identifier const& id);
+		const std::string				getInfoString(std::string const& className) const;
+		Runnable &						createService(std::string const& name, Identifier const& id, std::string const& service);
+		//void					setParameterValue(Identifier const& id, std::string const& paramName, Data const& data);
+		//EngineData const&		getParameterValue(Identifier const& id, std::string const& paramName) const;
+		//std::string const&		getParameterKey(Identifier const& id, std::string const& paramName) const;
 
 	private:
 
-		bool					isLibraryLoaded(std::string const& classname) const;
-		Metadata const* const	getMetadata(std::string const& classname) const;
-		void					loadLibrary(Poco::Path const& filepath);
+		//bool					isLibraryLoaded(std::string const& classname) const;
+		//Metadata const* const	getMetadata(std::string const& classname) const;
+		//void					loadLibrary(std::string const& classname, Poco::Path const& filepath);
 
 		Plugin &				getPlugin(Identifier const& id);
 		Plugin const&			getPlugin(Identifier const& id) const;
 
-		LibraryMap				m_LoadedLibs;
-		PluginMap				m_PluginInstances;
-		MetadataMap				m_Metadata;
+		/**
+		*	the poco classloader
+		*/
+		PluginLoader			m_PluginLoader;
 
-		SystemGraph				&m_System;
-		std::string				m_InstallDirectory;
+		/*
+		*	concrete instances of plugins
+		*/
+		PluginMap				m_Plugins;
+
+		Poco::Path				m_BaseDirectory;
 
 	};
 

@@ -18,6 +18,7 @@
 */
 
 #include "_2RealSystem.h"
+#include "_2RealEngine.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealRunnableError.h"
@@ -27,7 +28,7 @@
 #include <iostream>
 #include <string>
 
-#include "vld.h"
+//#include "vld.h"
 
 #include "Poco\Mutex.h"
 
@@ -117,14 +118,18 @@ int main(int argc, char *argv[])
 {
 	try
 	{
+		Engine &engine = Engine::instance();
+		engine.setBaseDirectory("C:\\Users\\Cthulhu\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
+		engine.load("SimpleStuff_d.dll");
+		engine.load("SimpleStuff1_d.dll");
+
 		System sys("sys");
 
 		sys.registerToException(::systemException);
-		sys.setInstallDirectory("D:\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
 		//sys.setInstallDirectory("C:\\users\\Cthulhu\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
 		sys.setLogfile("simplesystem.txt");
 
-		Identifier plugin = sys.loadPlugin("plugin", "SimpleStuff");
+		/*Identifier plugin = sys.loadPlugin("plugin", "SimpleStuff");
 		std::string info = sys.getInfo(plugin);
 		std::cout << info << std::endl;
 
@@ -173,7 +178,7 @@ int main(int argc, char *argv[])
 		sys.start(vec2);
 		sys.start(vec3);
 		sys.start(add);
-		sys.start(sub);
+		sys.start(sub);*/
 
 		////Identifier sync0 = sys.createSynchronization("s 0", vec1, vec2);
 
@@ -205,7 +210,7 @@ int main(int argc, char *argv[])
 			char lineEnd = '\n';
 			getline(cin, line, lineEnd);
 
-			if (line == "")
+			/*if (line == "")
 			{
 			}
 			else if (line == "size 1")
@@ -294,13 +299,13 @@ int main(int argc, char *argv[])
 					cout << current.at(i) << endl;
 				}
 			}
-			else if (line == "quit")
+			else */if (line == "quit")
 			{
 				break;
 			}
 		}
 
-		sys.stopAll();
+		//sys.stopAll();
 	}
 	catch (_2Real::Exception &e)
 	{

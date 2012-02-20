@@ -18,15 +18,15 @@
 
 #include "_2RealTypetable.h"
 #include "_2RealException.h"
-#include "_2RealEngine.h"
+#include "_2RealEngineImpl.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-	Typetable::Typetable(Engine const& engine) :
-		m_Engine(engine),
+	Typetable::Typetable(EngineImpl const& EngineImpl) :
+		m_EngineImpl(EngineImpl),
 		m_Typetable(),
 		m_LookupTable()
 	{

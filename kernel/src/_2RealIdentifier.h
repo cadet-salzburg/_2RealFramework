@@ -24,7 +24,7 @@ namespace _2Real
 {
 
 	/**
-	*	identifiers refer to entities in the 2 real engine;
+	*	identifiers refer to entities in the 2 real EngineImpl;
 	*	specifically, to entities created at the application programmer's request
 	*	- plugins
 	*	- concrete instances of the services exported by a plugin

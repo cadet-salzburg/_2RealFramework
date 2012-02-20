@@ -21,8 +21,8 @@
 namespace _2Real
 {
 
-	ServiceFactory::ServiceFactory(Engine const& engine) :
-		m_Engine(engine)	//do not touch anywhere else in ctor
+	ServiceFactory::ServiceFactory(EngineImpl const& EngineImpl) :
+		m_EngineImpl(EngineImpl)	//do not touch anywhere else in ctor
 	{
 	}
 

@@ -19,85 +19,47 @@
 
 #pragma once
 
-/**
-*	annoying & ultimately harmless warning about
-*	template expressions that are longer than 255 bytes
-*/
-#pragma warning(disable:4503)
+#include "_2RealEngineData.h"
 
-#include "_2RealTypetable.h"
-#include "_2RealServiceFactory.h"
-#include "_2RealSystemPool.h"
-#include "_2RealTimer.h"
-
-#include "vld.h"
+#include <string>
 
 namespace _2Real
 {
 
-	class Data;
-	class RunnableError;
-
-	typedef void (*ExceptionCallback)(RunnableError &exception);
-	typedef void (*DataCallback)(Data &data);
-	typedef void (*StateChangeCallback)(std::string &stateName);
-
 	class Identifier;
-	class IOutputListener;
-	class IExceptionListener;
-	class IStateChangeListener;
-	
+	class EngineImpl;
+
 	class Engine
 	{
 
 	public:
 
-		static Engine & instance();
+		static Engine& instance();
 
-		Typetable const&		getTypes() const;
-		Timer const&			getTimer() const;
-		long					getTimestamp() const;
+		void setBaseDirectory(std::string const& directory);
 
-		const Identifier		createSystem(std::string const& idName);
-		const Identifier		loadPlugin(std::string const& idName, std::string const& className, Identifier const& system);
-		const Identifier		createService(std::string const& idName, Identifier const& plugin, std::string const& serviceName, Identifier const& system);
-		const Identifier		createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
-		const Identifier		createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
-		
-		//void					destroy(Identifier const& id, Identifier const& systemId);
-		void					destroySystem(Identifier const& system);
+		const std::list< std::string > load(std::string const& path);
 
-		void					setSystemLogfile(std::string const& file, Identifier const& systemId);
-		void					setSystemDirectory(std::string const& directory, Identifier const& systemId);
+		/**
+		*	returns plugin metadata as string
+		*/
+		//const std::string getPluginInfo(Identifier const& plugin);
 
-		const std::string		getInfo(Identifier const& plugin, Identifier const& systemId) const;
-		
-		void					setup(Identifier const& setupAble, Identifier const& systemId);
-		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
-		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
-		void					setValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId);
-		const EngineData		getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const;
+		//const Identifier loadPlugin();
 
-		void					linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);
-		void					start(Identifier const& runnable, Identifier const& systemId);
-		void					startAll(Identifier const& systemId);
-		void					stop(Identifier const& runnable, Identifier const& systemId);
-		void					stopAll(Identifier const& systemId);
-		void					registerToNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
-		void					unregisterFromNewData(Identifier const& service, std::string const& outName, DataCallback callback, Identifier const& systemId);
-		void					registerToException(ExceptionCallback callback, Identifier const& systemId);
-		void					unregisterFromException(ExceptionCallback callback, Identifier const& systemId);
-		void					registerToNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
-		void					unregisterFromNewData(Identifier const& service, std::string const& outName, IOutputListener &listener, Identifier const& systemId);
-		void					registerToException(IExceptionListener &listener, Identifier const& systemId);
-		void					unregisterFromException(IExceptionListener &listener, Identifier const& systemId);
-		void					registerToStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId);
-		void					unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId);
-		void					registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId);
-		void					unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener, Identifier const& systemId);
+		//template< typename DataType >
+		//void setValue(Identifier const& id, std::string const& name, DataType const& value)
+		//{
+		//	EngineData data(value);
+		//	setValueInternal(id, name, data);
+		//}
 
-		void					add(Identifier const& runnable, Identifier const& parent, unsigned int index, Identifier const& system);
-		void					append(Identifier const& runnable, Identifier const& parent, Identifier const& system);
+		//template< typename DataType >
+		//DataType const& getValue(Identifier const& id, std::string const& name) const
+		//{
+		//	Poco::SharedPtr< DataType > ptr = Extract< DataType >(getValueInternal(id, name));
+		//	return *ptr.get();
+		//}
 
 	private:
 
@@ -105,28 +67,25 @@ namespace _2Real
 		friend class SingletonHolder;
 
 		Engine();
+		Engine(Engine const& src);
 		~Engine();
 
-		ServiceFactory			m_Factory;
-		SystemPool		m_Graphs;
-		Typetable				m_Types;
-		Timer					m_Timer;
+		/**
+		*	internally used function for setting param values
+		*/
+		//void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+
+		/**
+		*	internally used function for setting param values
+		*/
+		//const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
+
+		//const bool isUnique(std::string const& name) const;
+
+		//std::map< std::string, Identifier >		m_Names;
+
+		EngineImpl								&m_Engine;
 
 	};
-
-	inline Typetable const& Engine::getTypes() const
-	{
-		return m_Types;
-	}
-
-	inline Timer const& Engine::getTimer() const
-	{
-		return m_Timer;
-	}
-
-	inline long Engine::getTimestamp() const
-	{
-		return m_Timer.getTimestamp();
-	}
 
 }

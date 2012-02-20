@@ -48,214 +48,139 @@
 namespace _2Real
 {
 
-	PluginPool::PluginPool(SystemGraph &system) :
-		m_PluginInstances(),
-		m_System(system),
-		m_InstallDirectory("")
+	PluginPool::PluginPool() :
+		m_Plugins(),
+		m_BaseDirectory(Poco::Path(""))
 	{
 	}
 
 	PluginPool::~PluginPool()
 	{
-		m_PluginInstances.clear();
 	}
 
-	void PluginPool::setInstallDirectory(std::string const& directory)
+	void PluginPool::setBaseDirectory(Poco::Path const& path)
 	{
-		m_InstallDirectory = directory;
-	}
-
-	bool PluginPool::isLibraryLoaded(std::string const& classname) const
-	{
-		return (m_LoadedLibs.find(classname) != m_LoadedLibs.end());
-	}
-
-	const Identifier PluginPool::install(std::string const& name, std::string const& classname)
-	{
-		if (!isLibraryLoaded(classname))
+		if (path.isFile())
 		{
-			loadLibrary
+			//TODO exc
 		}
 
+		m_BaseDirectory = path;
+	}
+	
+	bool PluginPool::isLibraryLoaded(Poco::Path const& path) const
+	{
+		return false;
+	}
 
-		LibraryMap::iterator iter = m_LoadedLibs.find(classname);
-		if (iter == m_LoadedLibs.end())
+	const std::string PluginPool::getInfoString(std::string const& className, std::string) const
+	{
+		return std::string();
+	}
+
+	const std::list< std::string > PluginPool::loadLibrary(Poco::Path const& path)
+	{
+		if (!path.isFile())
 		{
-			PluginLoader *loader = new PluginLoader();
-			try
-			{
-				loader->loadLibrary(CLASSPATH);
-			}
-			catch (Poco::LibraryLoadException &e)
-			{
-				throw _2Real::Exception(e.what());
-			}
+			//ARGH
+		}
 
-			if (loader.canCreate(classname))
-			{
-				try
-				{
-					IPluginActivator *dummy = loader.create(classname);
-				}
-				catch (Poco::NotFoundException &e)
-				{
-					m_PluginLoader.unloadLibrary(CLASSPATH);
-					throw Exception(e.what());
-				}
-			}
-			else
-			{
-				try
-				{
-					IPluginActivator &instance = loader.instance(classname);
-				}
-				catch(Poco::InvalidAccessException &e)
-				{
-					m_PluginLoader.unloadLibrary(CLASSPATH);
-					throw Exception(e.what());
-				}
-			}
+		std::list< std::string > result;
 
-			m_LoadedLibs.insert(NamedLibrary(classname, loader));
+		Poco::Path tmp;
+
+		if (path.isAbsolute())
+		{
+			tmp = path;
 		}
 		else
 		{
-			const Identifier id = Entity::createIdentifier(name, "plugin");
-
-			PluginLoader *loader = iter->second;
-
-			if (loader.canCreate(classname))
-			{
-				try
-				{
-					IPluginActivator *dummy = loader.create(classname);
-					Plugin *plugin = newPlugin(
-				}
-				catch (Poco::NotFoundException &e)
-				{
-					throw Exception(e.what());
-				}
-			}
-			else
-			{
-				try
-				{
-					IPluginActivator &instance = loader.instance(classname);
-				}
-				catch(Poco::InvalidAccessException &e)
-				{
-					throw Exception(e.what());
-				}
-			}
+			tmp = m_BaseDirectory;
+			tmp.append(path);
 		}
-				//3rd, read the metadata
-				Metadata metadata(m_Metadata);
-				m_Activator->getMetadata(metadata);
+		
+		std::cout << tmp.toString() << std::endl;
+		m_PluginLoader.loadLibrary(tmp.toString());
+		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
 
-				//build setup params
-				ParameterDataMap const& setup = m_Metadata.getSetupParameters();
-				for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
-				{
-					SetupParameter *setup = new SetupParameter(*it->second);
-					m_SetupParameters.insert(NamedParameter(it->second->getName(), setup));
-				}
-			}
-			catch (_2Real::Exception &e)
-			{
-				if (m_Activator)
-				{
-					m_PluginLoader.destroy(m_Metadata.getClassname(), m_Activator);
-					m_Activator = NULL;
-				}
-
-				if (m_PluginLoader.isLibraryLoaded(m_File))
-				{
-					m_PluginLoader.unloadLibrary(m_File);
-				}
-
-				e.rethrow();
-			}
-		}
-
-		const Identifier id = Entity::createIdentifier(name, "plugin");
-
-		std::string file = classname + shared_library_suffix;
-
-		m_System.getLogstream() << "creating plugin" << std::endl;
-
-		Plugin *plugin = new Plugin(id, m_InstallDirectory, file, classname, m_System);
-
-		m_System.getLogstream() << "plugin created" << std::endl;
-
-		plugin->install();
-
-		m_System.getLogstream() << "plugin installed" << std::endl;
-
-		m_Plugins.insert(NamedPlugin(id, plugin));
-
-		m_System.getLogstream() << "plugin inserted" << std::endl;
-
-		return id;
-	}
-
-	void PluginPool::clearPlugins()
-	{
-		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
+		for (PluginLoader::Manif::Iterator it = manifest->begin(); it != manifest->end(); ++it)
 		{
-			try
-			{
-				Identifier id = it->first;
-				//it->second->uninstall();
-				delete it->second;
-			}
-			catch (std::exception &e)
-			{
-				m_System.getLogstream() << "error on plugin uninstall: " << e.what();
-			}
+			std::string name = it->name();
+			result.push_back(name);
 		}
-
-		m_Plugins.clear();
 	}
 
-	bool PluginPool::contains(Identifier const& id) const
+	const Identifier createPlugin(std::string const& idName, std::string const& className, Poco::Path const& path)
 	{
-		return m_Plugins.find(id) != m_Plugins.end();
 	}
 
-	void PluginPool::uninstall(Identifier const& id)
+	////const bool PluginPool::isSingleton(std::string const& classname) const
+	////{
+	////}
+
+	////const Identifier PluginPool::install(std::string const& name, std::string const& classname)
+	////{
+	//////	
+	////}
+
+	void PluginPool::clear()
 	{
-		getPlugin(id).uninstall();
+		//for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
+		//{
+		//	try
+		//	{
+		//		Identifier id = it->first;
+		//		//it->second->uninstall();
+		//		delete it->second;
+		//	}
+		//	catch (std::exception &e)
+		//	{
+		//		m_System.getLogstream() << "error on plugin uninstall: " << e.what();
+		//	}
+		//}
+
+	//	m_Plugins.clear();
 	}
 
-	void PluginPool::setup(Identifier const& id)
-	{
-		getPlugin(id).setup();
-	}
+	////bool PluginPool::contains(Identifier const& id) const
+	////{
+	////	return m_Plugins.find(id) != m_Plugins.end();
+	////}
 
-	const std::string PluginPool::getInfoString(Identifier const& id) const
-	{
-		return getPlugin(id).getInfoString();
-	}
+	////void PluginPool::uninstall(Identifier const& id)
+	////{
+	////	getPlugin(id).uninstall();
+	////}
+
+	////void PluginPool::setup(Identifier const& id)
+	////{
+	////	getPlugin(id).setup();
+	////}
+
+	//const std::string PluginPool::getInfoString(std::string const& classname) const
+	//{
+	//	return std::string(); //getPlugin(id).getInfoString();
+	//}
 
 	Runnable & PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		return getPlugin(id).createService(name, service);
 	}
 
-	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, Data const& data)
-	{
-		getPlugin(id).setParameterValue(paramName, data);
-	}
+	////void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, Data const& data)
+	////{
+	////	getPlugin(id).setParameterValue(paramName, data);
+	////}
 
-	EngineData const& PluginPool::getParameterValue(Identifier const& id, std::string const& paramName) const
-	{
-		return getPlugin(id).getParameterValue(paramName);
-	}
+	////EngineData const& PluginPool::getParameterValue(Identifier const& id, std::string const& paramName) const
+	////{
+	////	return getPlugin(id).getParameterValue(paramName);
+	////}
 
-	std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
-	{
-		return getPlugin(id).getParameterKey(paramName);
-	}
+	////std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
+	////{
+	////	return getPlugin(id).getParameterKey(paramName);
+	////}
 
 	Plugin & PluginPool::getPlugin(Identifier const& id)
 	{

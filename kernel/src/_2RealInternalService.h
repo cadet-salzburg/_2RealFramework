@@ -27,7 +27,7 @@ namespace _2Real
 	class ServiceMetadata;
 
 	/**
-	*	services provided by the 2 real engine
+	*	services provided by the 2 real EngineImpl
 	*/
 
 	class InternalService : public Runnable, public IService

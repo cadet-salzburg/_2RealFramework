@@ -29,7 +29,7 @@
 namespace _2Real
 {
 
-	class Engine;
+	class EngineImpl;
 
 	typedef std::map< std::string, EngineData >		EngineDataTable;
 	typedef std::map< std::string, std::string >	StringMap;
@@ -39,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		Typetable(Engine const& engine);
+		Typetable(EngineImpl const& EngineImpl);
 		~Typetable();
 
 		template< typename DataType >
@@ -53,7 +53,7 @@ namespace _2Real
 
 	private:
 
-		Engine				const& m_Engine;
+		EngineImpl				const& m_EngineImpl;
 		EngineDataTable		m_Typetable;
 		StringMap			m_LookupTable;
 

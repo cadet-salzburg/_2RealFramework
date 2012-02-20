@@ -21,7 +21,7 @@
 #include "_2RealException.h"
 #include "_2RealService.h"
 #include "_2RealParameterMetadata.h"
-#include "_2RealEngine.h"
+#include "_2RealEngineImpl.h"
 
 #include "Poco/Delegate.h"
 
@@ -32,7 +32,7 @@ namespace _2Real
 
 	OutputSlot::OutputSlot(ParameterMetadata const& metadata) :
 		Parameter(metadata),
-		m_Timer(Engine::instance().getTimer())
+		m_Timer(EngineImpl::instance().getTimer())
 	{
 		if (metadata.hasDefaultValue())
 		{
@@ -42,7 +42,7 @@ namespace _2Real
 		}
 		else
 		{
-			m_WriteData.create(Engine::instance().getTypes().getInitialValueFromKey(metadata.getKeyword()));
+			m_WriteData.create(EngineImpl::instance().getTypes().getInitialValueFromKey(metadata.getKeyword()));
 		}
 	}
 

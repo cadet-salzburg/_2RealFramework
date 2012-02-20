@@ -20,7 +20,7 @@
 #include "_2RealRunnable.h"
 #include "_2RealRunnableGraph.h"
 #include "_2RealExceptionHandler.h"
-#include "_2RealEngine.h"
+#include "_2RealEngineImpl.h"
 #include "_2RealException.h"
 #include "_2RealService.h"
 #include "_2RealData.h"
@@ -35,36 +35,36 @@ namespace _2Real
 	SystemGraph::SystemGraph(Identifier const& id) :
 		Graph(),
 		Entity(id),
-		m_Engine(Engine::instance()),
+		m_EngineImpl(EngineImpl::instance()),
 		m_Threads(5, 1000, 0, id.name()),
-		m_Plugins(*this),
+		m_Plugins(m_EngineImpl.getPluginPool()),
 		m_ExceptionHandler(id),
 		m_Logfile(""),
 		m_Logstream()
 	{
 	}
 
-	void SystemGraph::setLogfile(std::string const& file)
+	void SystemGraph::setLogfile(Poco::Path const& path)
 	{
 		if (m_Logstream.is_open())
 		{
 			m_Logstream.close();
 		}
 
-		m_Logfile = file;
+		m_Logfile = path;
 		startLogging();
 	}
 
 	void SystemGraph::startLogging()
 	{
-		if (!m_Logfile.empty())
+		if (m_Logfile.isFile())
 		{
-			m_Logstream.open(m_Logfile);
+			m_Logstream.open(m_Logfile.toString());
 		}
 
 		if (m_Logstream.is_open())
 		{
-			m_Logstream << m_Engine.getTimestamp() << " " << identifier() << std::endl;
+			m_Logstream << m_EngineImpl.getTimestamp() << " " << identifier() << std::endl;
 		}
 	}
 
@@ -97,9 +97,6 @@ namespace _2Real
 		}
 
 		m_Children.clear();
-
-		//uninstalls all plugins
-		m_Plugins.clearPlugins();
 
 		if (m_Logstream.is_open())
 		{
@@ -297,18 +294,9 @@ namespace _2Real
 		m_ExceptionHandler.handleException(exception, runnable.identifier());
 	}
 
-	const Identifier SystemGraph::loadPlugin(std::string const& name, std::string const& classname)
-	{
-		return m_Plugins.install(name, classname);
-	}
-
 	void SystemGraph::setUp(Identifier const& id)
 	{
-		if (id.isPlugin())
-		{
-			m_Plugins.setup(id);
-		}
-		else if (id.isService())
+		if (id.isService())
 		{
 			RunnableManager &mgr = getContained(id);
 			mgr.setup();
@@ -383,12 +371,12 @@ namespace _2Real
 
 	void SystemGraph::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
 	{
-		Data data(value, m_Engine.getTimestamp());
-		if (id.isPlugin())
-		{
-			m_Plugins.setParameterValue(id, paramName, data);
-		}
-		else if (id.isService())
+		Data data(value, m_EngineImpl.getTimestamp());
+		//if (id.isPlugin())
+		//{
+		//	m_Plugins.setParameterValue(id, paramName, data);
+		//}
+		if (id.isService())
 		{
 			Runnable &runnable = getContained(id).getManagedRunnable();
 			Service &service = static_cast< Service & >(runnable);
@@ -398,30 +386,30 @@ namespace _2Real
 
 	const EngineData SystemGraph::getValue(Identifier const& id, std::string const& paramName) const
 	{
-		if (id.isPlugin())
-		{
-			return m_Plugins.getParameterValue(id, paramName);
-		}
-		else
-		{
+		//if (id.isPlugin())
+		//{
+		//	return m_Plugins.getParameterValue(id, paramName);
+		//}
+		//else
+		//{
 			Runnable &runnable = getContained(id).getManagedRunnable();
 			Service &service = static_cast< Service & >(runnable);
 			return service.getParameterValue(paramName);
-		}
+		//}
 	}
 
 	std::string const& SystemGraph::getParameterKey(Identifier const& id, std::string const& paramName) const
 	{
-		if (id.isPlugin())
-		{
-			return m_Plugins.getParameterKey(id, paramName);
-		}
-		else
-		{
+		//if (id.isPlugin())
+		//{
+		//	return m_Plugins.getParameterKey(id, paramName);
+		//}
+		//else
+		//{
 			Runnable &runnable = getContained(id).getManagedRunnable();
 			Service &service = static_cast< Service & >(runnable);
 			return service.getParameterKey(paramName);
-		}
+		//}
 	}
 
 	void SystemGraph::setUpdateRate(Identifier const& id, float updatesPerSecond)

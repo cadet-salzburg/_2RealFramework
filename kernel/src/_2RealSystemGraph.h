@@ -29,6 +29,8 @@
 #include <list>
 #include <fstream>
 
+#include "Poco/Path.h"
+
 namespace _2Real
 {
 
@@ -39,7 +41,7 @@ namespace _2Real
 	class IStateChangeListener;
 	class IExceptionListener;
 	class IOutputListener;
-	class Engine;
+	class EngineImpl;
 	class EngineData;
 	class Typetable;
 
@@ -53,7 +55,7 @@ namespace _2Real
 
 		void				shutdown();
 
-		const Identifier	loadPlugin(std::string const& idName, std::string const& classname);
+		//const Identifier	loadPlugin(std::string const& idName, std::string const& classname);
 		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
 		const Identifier	createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		const Identifier	createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
@@ -90,20 +92,20 @@ namespace _2Real
 		void				handleException(Runnable &runnable, Exception &exception);
 
 		bool				isLoggingEnabled() const;
-		void				setInstallDirectory(std::string const& directory);
-		void				setLogfile(std::string const& file);
+		void				setBaseDirectory(Poco::Path const& path);
+		void				setLogfile(Poco::Path const& filepath);
 		std::ofstream &		getLogstream();
-		const std::string	getInfoString(Identifier const& id) const;
+		//const std::string	getInfoString(Identifier const& id) const;
 
 	private:
 
 		void				startLogging();
 
-		Engine				&m_Engine;
+		EngineImpl				&m_EngineImpl;
 		ThreadPool			m_Threads;
-		PluginPool			m_Plugins;
+		PluginPool			&m_Plugins;
 		ExceptionHandler	m_ExceptionHandler;
-		std::string			m_Logfile;
+		Poco::Path			m_Logfile;
 		std::ofstream		m_Logstream;
 
 	};
@@ -123,7 +125,7 @@ namespace _2Real
 		return m_Logstream;
 	}
 
-	inline void SystemGraph::setInstallDirectory(std::string const& directory)
+	/*inline void SystemGraph::setInstallDirectory(std::string const& directory)
 	{
 		m_Plugins.setInstallDirectory(directory);
 	}
@@ -131,6 +133,6 @@ namespace _2Real
 	inline const std::string SystemGraph::getInfoString(Identifier const& id) const
 	{
 		return m_Plugins.getInfoString(id);
-	}
+	}*/
 
 }

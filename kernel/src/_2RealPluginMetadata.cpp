@@ -20,7 +20,7 @@
 #include "_2RealServiceMetadata.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealException.h"
-#include "_2RealEngine.h"
+#include "_2RealEngineImpl.h"
 #include "_2RealEngineData.h"
 
 #include <sstream>
@@ -37,7 +37,7 @@ namespace _2Real
 		m_Version(0, 0, 0),
 		m_Services(),
 		m_SetupParameters(),
-		m_Typetable(Engine::instance().getTypes())
+		m_Typetable(EngineImpl::instance().getTypes())
 	{
 	}
 

@@ -62,7 +62,6 @@
       <Filter>Metadata</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemPool.cpp">
       <Filter>Subsystems</Filter>
     </ClCompile>
@@ -89,6 +88,8 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealSystemData.cpp" />
     <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -100,7 +101,6 @@
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
-    <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
@@ -208,6 +208,8 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealXMLReader.h" />
     <ClInclude Include="..\..\src\_2RealSystemData.h" />
+    <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
+    <ClInclude Include="..\..\src\_2RealEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interfaces">
