@@ -120,8 +120,10 @@ int main(int argc, char *argv[])
 	{
 		Engine &engine = Engine::instance();
 		engine.setBaseDirectory("C:\\Users\\Cthulhu\\Desktop\\cadet\\trunk\\_2RealFramework\\kernel\\samples\\testplugins\\bin\\");
-		engine.load("SimpleStuff_d.dll");
-		engine.load("SimpleStuff1_d.dll");
+		//engine.load("SimpleStuff_d.dll");
+		//engine.load("SimpleStuff1_d.dll");
+
+		engine.createInstance("bla", "bla", "");
 
 		System sys("sys");
 
