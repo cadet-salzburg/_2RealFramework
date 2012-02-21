@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
