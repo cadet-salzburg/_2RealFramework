@@ -28,71 +28,30 @@
 #include <sstream>
 #include <iostream>
 
+#include "Poco/Path.h"
+
 namespace _2Real
 {
 	/**
 	*	to lowercasw
 	*/
-	inline std::string toLower(std::string const& s)
-	{
-		std::string result;
-		result.clear();
-		for (unsigned int i=0; i<s.length(); i++)
-		{
-			if (s[i] == ' ')
-			{
-				result.push_back('_');
-			}
-			else
-			{
-				result.push_back(tolower(s[i]));
-			}
-		}
-		return result;
-	}
+	const std::string toLower(std::string const& s);
 
 	/**
-	*	remove leading & ending whitespace or tab from a string
+	*	remove leading & ending whitespaces from a string
 	*/
-	inline std::string trim(std::string const&s , std::string const& whitespace = " \t")
-	{
-		const size_t beginStr = s.find_first_not_of(whitespace);
-
-		if (beginStr == std::string::npos)
-		{
-			return "";
-		}
-
-		const size_t endStr = s.find_last_not_of(whitespace);
-		const size_t range = endStr - beginStr + 1;
-
-		std::string result = s.substr(beginStr, range);
-		return result;
-	}
-
+	const std::string trim(std::string const&s , std::string const& whitespace = " \t");
 
 	/**
 	*	trims, converts to lower case, checks for bad characters
 	*/
-	inline const std::string validateName(std::string const& s)
-	{
-		std::string result = toLower(trim(s));
-
-		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz_ .0123456789");
-		if (pos != std::string::npos)
-		{
-			std::stringstream msg;
-			msg << "invalid name " << result << "; contains forbidden character " << result[pos];
-			throw InvalidNameException(msg.str());
-		}
-
-		return result;
-	}
+	const std::string validateName(std::string const& s);
 
 	/**
-	*	input operator for std::vector
-	*	the comma, followed by a blank space (', ') shall be used as delimiter
+	*	converts a poco path to a name that may be used in the system
 	*/
+	const std::string pathToName(Poco::Path const& path);
+
 	template< typename DataType >
 	std::istream& operator>>(std::istream &in, typename std::vector< DataType > &v)
 	{
@@ -184,10 +143,6 @@ namespace _2Real
 		return out;
 	}
 
-	/**
-	*	input operator for std::list
-	*	the comma, followed by a blank space (', ') shall be used as delimiter
-	*/
 	template< typename DataType >
 	std::istream& operator>>(std::istream &in, typename std::list< DataType > &l)
 	{

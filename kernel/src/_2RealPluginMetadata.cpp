@@ -43,6 +43,7 @@ namespace _2Real
 
 	PluginMetadata::~PluginMetadata()
 	{
+		clear();
 	}
 
 	void PluginMetadata::clear()

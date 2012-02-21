@@ -136,24 +136,46 @@ namespace _2Real
 		}
 	}
 
+	//
 	void EngineImpl::setBaseDirectory(Poco::Path const& directory)
 	{
 		m_Plugins.setBaseDirectory(directory);
 	}
 
+	//
 	std::list< std::string > EngineImpl::loadLibrary(Poco::Path const& path)
 	{
 		return m_Plugins.loadLibrary(path);
 	}
 
+	//
 	const bool EngineImpl::isLibraryLoaded(Poco::Path const& path) const
 	{
 		return m_Plugins.isLibraryLoaded(path);
 	}
 
+	//
 	const std::string EngineImpl::getInfoString(std::string const& className, Poco::Path const& libraryPath) const
 	{
 		return m_Plugins.getInfoString(className, libraryPath);
+	}
+
+	//
+	const std::string EngineImpl::getInfoString(Identifier const& pluginId) const
+	{
+		if (!pluginId.isPlugin())
+		{
+			std::ostringstream msg;
+			msg << "EngineImpl::getInfoString " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		return m_Plugins.getInfoString(pluginId);
+	}
+
+	const Identifier EngineImpl::getPluginIdentifier(std::string const& idName) const
+	{
+		return m_Plugins.getIdentifier(idName);
 	}
 
 	const bool EngineImpl::canCreate(std::string const& className, Poco::Path const& libraryPath) const
@@ -176,9 +198,9 @@ namespace _2Real
 		return m_Plugins.createInstance(idName, className, libraryPath);
 	}
 
-	const Identifier EngineImpl::pluginInstance(std::string const& idName, std::string const& className, Poco::Path const& libraryPath)
+	const Identifier EngineImpl::pluginInstance(std::string const& className, Poco::Path const& libraryPath)
 	{
-		return m_Plugins.getInstance(idName, className, libraryPath);
+		return m_Plugins.getInstance(className, libraryPath);
 	}
 
 	void EngineImpl::setupPlugin(Identifier const& id)

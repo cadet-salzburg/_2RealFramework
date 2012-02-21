@@ -34,8 +34,12 @@ namespace _2Real
 	}
 
 	Engine::Engine() :
-		m_EngineImpl(EngineImpl::instance()),
-		m_Names()
+		m_EngineImpl(EngineImpl::instance())
+	{
+	}
+
+	Engine::Engine(Engine const& src) :
+		m_EngineImpl(EngineImpl::instance())
 	{
 	}
 
@@ -75,24 +79,12 @@ namespace _2Real
 
 	const Identifier Engine::createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath)
 	{
-		std::string name = validateName(name);
-		if (!isUnique(name))
-		{
-			//TODO EXCEPTION
-		}
-
-		return m_EngineImpl.createPlugin(name, className, Poco::Path(libraryPath));
+		return m_EngineImpl.createPlugin(idName, className, Poco::Path(libraryPath));
 	}
 
-	const Identifier Engine::getInstance(std::string const& idName, std::string const& className, std::string const& libraryPath)
+	const Identifier Engine::getInstance(std::string const& className, std::string const& libraryPath)
 	{
-		std::string name = validateName(idName);
-		if (!isUnique(name))
-		{
-			//TODO EXCEPTION
-		}
-
-		return m_EngineImpl.pluginInstance(name, className, Poco::Path(libraryPath));
+		return m_EngineImpl.pluginInstance(className, Poco::Path(libraryPath));
 	}
 
 	const bool Engine::isSetUp(Identifier const& pluginId) const
@@ -112,20 +104,7 @@ namespace _2Real
 
 	const Identifier Engine::getIdentifier(std::string const& idName) const
 	{
-		std::map< std::string, Identifier >::const_iterator it = m_Names.find(idName);
-		if (it == m_Names.end())
-		{
-			return Identifier();
-		}
-		else
-		{
-			return it->second;
-		}
-	}
-
-	const bool Engine::isUnique(std::string const& idName) const
-	{
-		return (m_Names.find(idName) == m_Names.end());
+		return m_EngineImpl.getPluginIdentifier(idName);
 	}
 
 	void Engine::setup(Identifier const& pluginId)

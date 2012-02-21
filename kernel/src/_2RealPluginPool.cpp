@@ -21,6 +21,7 @@
 #include "_2RealPlugin.h"
 #include "_2RealIdentifier.h"
 #include "_2RealSystemGraph.h"
+#include "_2RealMetadata.h"
 
 #include <iostream>
 #include <sstream>
@@ -50,12 +51,16 @@ namespace _2Real
 
 	PluginPool::PluginPool() :
 		m_Plugins(),
-		m_BaseDirectory(Poco::Path(""))
+		m_Metadata(),
+		m_PluginLoader(),
+		m_Names(),
+		m_BaseDirectory(Poco::Path())
 	{
 	}
 
 	PluginPool::~PluginPool()
 	{
+		clear();
 	}
 
 	void PluginPool::setBaseDirectory(Poco::Path const& path)
@@ -65,44 +70,81 @@ namespace _2Real
 	
 	const bool PluginPool::isLibraryLoaded(Poco::Path const& path) const
 	{
-		return m_PluginLoader.isLibraryLoaded(path.toString());
+		Poco::Path tmp = makeAbsolutePath(path);
+		return m_PluginLoader.isLibraryLoaded(tmp.toString());
 	}
 
 	const std::string PluginPool::getInfoString(std::string const& className, Poco::Path const& path) const
 	{
-		//
-		return std::string();
+		Poco::Path tmp = makeAbsolutePath(path);
+		std::string metaKey = pathToName(tmp) + "." + toLower(className);
+
+		if (!isLibraryLoaded(path))
+		{
+			throw NotFoundException("library " + path.toString() + " is not loaded");
+		}
+
+		MetadataMap::const_iterator it = m_Metadata.find(metaKey);
+		if (it == m_Metadata.end())
+		{
+			throw NotFoundException("library " + path.toString() + " exports no class called " + className);
+		}
+
+		std::ostringstream s;
+		s << *it->second;
+		return s.str();
+	}
+
+	const std::string PluginPool::getInfoString(Identifier const& pluginId) const
+	{
+		Plugin const& plugin = getPlugin(pluginId);
+		return plugin.getInfoString();
 	}
 
 	const std::list< std::string > PluginPool::loadLibrary(Poco::Path const& path)
 	{
-		if (!path.isFile())
-		{
-			//ARGH
-		}
-
 		std::list< std::string > result;
 
-		Poco::Path tmp;
+		Poco::Path tmp = this->makeAbsolutePath(path);
 
-		if (path.isAbsolute())
-		{
-			tmp = path;
-		}
-		else
-		{
-			tmp = m_BaseDirectory;
-			tmp.append(path);
-		}
-		
-		std::cout << tmp.toString() << std::endl;
+		std::cout << "loading library: " << tmp.toString() << std::endl;
+
 		m_PluginLoader.loadLibrary(tmp.toString());
-		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
 
+		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
 		for (PluginLoader::Manif::Iterator it = manifest->begin(); it != manifest->end(); ++it)
 		{
-			std::string name = it->name();
-			result.push_back(name);
+			std::string className = it->name();
+
+			PluginMetadata *pluginMeta = new PluginMetadata(className, tmp.toString());
+			Metadata meta(*pluginMeta);
+
+			if (it->canCreate())
+			//create a temporary plugin activator & get the metadata
+			{
+				IPluginActivator *dummy = it->create();
+				dummy->getMetadata(meta);
+				it->destroy(dummy);
+				delete dummy;
+			}
+			else
+			//it's a singleton -> create an identifier & store the plugin
+			{
+				IPluginActivator &instance = it->instance();
+				instance.getMetadata(meta);
+
+				std::string idName = pathToName(tmp) + "." + toLower(className);
+				const Identifier id = Entity::createIdentifier(idName, "plugin");
+				Plugin *plugin = new Plugin(id, instance, *pluginMeta);
+				m_Plugins.insert(NamedPlugin(id, plugin));
+			}
+
+			//delete pluginMeta;
+
+			std::string metaKey = pathToName(tmp) + "." + toLower(className);
+			m_Metadata.insert(NamedMetadata(metaKey, pluginMeta));
+			
+			result.push_back(className);
 		}
 
 		return result;
@@ -110,30 +152,154 @@ namespace _2Real
 
 	const Identifier PluginPool::createInstance(std::string const& idName, std::string const& className, Poco::Path const& path)
 	{
-		Poco::Path tmp;
+		Poco::Path tmp = makeAbsolutePath(path);
 
-		std::cout << "XXX " << path.depth() << std::endl;
+		std::string name = validateName(idName);
+		if (!isUnique(name))
+		{
+			throw InvalidNameException("plugin name " + name + " must be unique");
+		}
 
-		return Identifier();
+		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
+		if (!manifest)
+		{
+			throw NotFoundException("the library " + tmp.toString() + " is either not loaded or exports no manifest");
+		}
+
+		std::string metaKey = pathToName(tmp) + "." + toLower(className);
+		MetadataMap::iterator meta = m_Metadata.find(metaKey);
+		if (meta == m_Metadata.end())
+		{
+			throw NotFoundException("no class called " + className + " is exported by " + tmp.toString());
+		}
+
+		PluginLoader::Manif::Iterator it = manifest->find(className);
+		if (it == manifest->end())
+		{
+			throw NotFoundException("no class called " + className + " is exported by " + tmp.toString());
+		}
+
+		if (it->canCreate())
+		{
+			IPluginActivator *activator = it->create();
+			const Identifier id = Entity::createIdentifier(name, "plugin");
+			Plugin *plugin = new Plugin(id, *activator, *meta->second);
+			m_Plugins.insert(NamedPlugin(id, plugin));
+
+			return id;
+		}
+		else
+		{
+			throw InvalidAccessException("plugin class " + className + " is a singleton");
+		}
 	}
 
-	const Identifier PluginPool::getInstance(std::string const& idName, std::string const& className, Poco::Path const& path)
+	const Identifier PluginPool::getInstance(std::string const& className, Poco::Path const& path)
 	{
-		return Identifier();
+		if (!isSingleton(className, path))
+		{
+			throw InvalidAccessException("plugin class " + className + " is no singleton");
+		}
+
+		Poco::Path tmp = makeAbsolutePath(path);
+		std::string singletonName = pathToName(tmp) + "." + toLower(className);
+
+		std::map< std::string, Identifier >::iterator it = m_Names.find(singletonName);
+		return it->second;
 	}
 
 	const bool PluginPool::isSingleton(std::string const& className, Poco::Path const& path) const
 	{
-		return false;
+		Poco::Path tmp = makeAbsolutePath(path);
+
+		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
+		if (!manifest)
+		{
+			throw NotFoundException("the library " + tmp.toString() + " is either not loaded or exports no manifest");
+		}
+
+		PluginLoader::Manif::Iterator it = manifest->find(className);
+		if (it == manifest->end())
+		{
+			throw NotFoundException("no class called " + className + " is exported by " + tmp.toString());
+		}
+
+		if (it->canCreate())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	const bool PluginPool::canCreate(std::string const& className, Poco::Path const& path) const
 	{
-		return false;
+		return !isSingleton(className, path);
 	}
 
 	void PluginPool::clear()
 	{
+		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
+		{
+			Plugin *p = it->second;
+			std::string libPath = p->getLibraryPath();
+			std::string className = p->getClassName();
+
+			std::cout << "deleting plugin: " << libPath << " " << className << std::endl;
+
+			if (!isSingleton(className, Poco::Path(libPath)))
+			{
+				IPluginActivator *activator = &(p->getActivator());
+				const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(libPath);
+				PluginLoader::Manif::Iterator mIt = manifest->find(className);
+				mIt->destroy(activator);
+			}
+
+			delete p;
+		}
+
+		std::cout << "deleted all plugins" << std::endl;
+		m_Plugins.clear();
+
+		for (MetadataMap::iterator it = m_Metadata.begin(); it != m_Metadata.end(); ++it)
+		{
+			PluginMetadata *m = it->second;
+			std::cout << "deleting metadata: " << m->getClassname() << std::endl;
+			delete m;
+		}
+
+		std::cout << "deleted all metadata" << std::endl;
+		m_Metadata.clear();
+
+		//WTF?
+		std::list< std::string > tmp;
+		for (PluginLoader::Iterator it = m_PluginLoader.begin(); it!=m_PluginLoader.end(); ++it)
+		{
+			std::string libPath = it->first;
+			tmp.push_back(libPath);
+		}
+
+		for (std::list< std::string >::iterator it = tmp.begin(); it != tmp.end(); ++it)
+		{
+			std::cout << "unloading " << *it << std::endl;
+
+			try
+			{
+				m_PluginLoader.unloadLibrary(*it);
+			}
+			catch (Poco::NotFoundException &e)
+			{
+				std::cout << "notfound" << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "ERROR" << std::endl;
+			}
+		}
+
+		tmp.clear();
 	}
 
 	bool PluginPool::contains(Identifier const& id) const
@@ -148,12 +314,12 @@ namespace _2Real
 
 	const bool PluginPool::isSetUp(Identifier const& id) const
 	{
-		return false;
+		return getPlugin(id).isSetUp();
 	}
 
-	Runnable & PluginPool::createService(std::string const& name, Identifier const& id, std::string const& service)
+	Runnable & PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph)
 	{
-		return getPlugin(id).createService(name, service);
+		return getPlugin(pluginId).createService(idName, serviceName, graph);
 	}
 
 	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data)
@@ -166,10 +332,21 @@ namespace _2Real
 		return getPlugin(id).getParameterValue(paramName);
 	}
 
-	//std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
-	//{
-	//	return getPlugin(id).getParameterKey(paramName);
-	//}
+	std::string const& PluginPool::getParameterKey(Identifier const& id, std::string const& paramName) const
+	{
+		return getPlugin(id).getParameterKey(paramName);
+	}
+
+	const Identifier PluginPool::getIdentifier(std::string const& idName) const
+	{
+		std::map< std::string, Identifier >::const_iterator it = m_Names.find(idName);
+		if (it == m_Names.end())
+		{
+			throw NotFoundException("identifier named " + idName + " not found in plugin pool");
+		}
+
+		return it->second;
+	}
 
 	Plugin & PluginPool::getPlugin(Identifier const& id)
 	{
@@ -197,5 +374,24 @@ namespace _2Real
 		}
 
 		return *(it->second);
+	}
+
+	const bool PluginPool::isUnique(std::string const& idName) const
+	{
+		return (m_Names.find(idName) == m_Names.end());
+	}
+
+	const Poco::Path PluginPool::makeAbsolutePath(Poco::Path const& path) const
+	{
+		if (path.isAbsolute())
+		{
+			return path;
+		}
+		else
+		{
+			Poco::Path tmp = m_BaseDirectory;
+			tmp.append(path);
+			return tmp;
+		}
 	}
 }

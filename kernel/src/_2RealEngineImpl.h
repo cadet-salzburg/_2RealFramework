@@ -31,7 +31,7 @@
 #include "_2RealPluginPool.h"
 #include "_2RealTimer.h"
 
-//#include "vld.h"
+#include "vld.h"
 
 namespace _2Real
 {
@@ -55,25 +55,26 @@ namespace _2Real
 
 		static EngineImpl & instance();
 
-		Typetable const&		getTypes() const;
-		Timer const&			getTimer() const;
-		long					getTimestamp() const;
-		PluginPool &			getPluginPool();
-		PluginPool const&		getPluginPool() const;
+		Typetable const&			getTypes() const;
+		Timer const&				getTimer() const;
+		long						getTimestamp() const;
+		PluginPool &				getPluginPool();
+		PluginPool const&			getPluginPool() const;
 
 		std::list< std::string >	loadLibrary(Poco::Path const& path);
 		const bool					isLibraryLoaded(Poco::Path const& path) const;
 		const std::string			getInfoString(std::string const& className, Poco::Path const& libraryPath) const;
+		const std::string			getInfoString(Identifier const& pluginId) const;
 		const bool					canCreate(std::string const& className, Poco::Path const& libraryPath) const;
 		const bool					isSingleton(std::string const& className, Poco::Path const& libraryPath) const;
 		const bool					isSetUp(Identifier const& pluginId) const;
 		const Identifier			createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
-		const Identifier			pluginInstance(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
+		const Identifier			pluginInstance(std::string const& className, Poco::Path const& libraryPath);
 		void						setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value);
 		//void						setPluginValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId);
 		const EngineData			getPluginValue(Identifier const& pluginId, std::string const& paramName) const;
 		void						setupPlugin(Identifier const& pluginId);
-
+		const Identifier			getPluginIdentifier(std::string const& idName) const;
 
 		const Identifier		createSystem(std::string const& idName);
 		const Identifier		createService(std::string const& idName, Identifier const& plugin, std::string const& serviceName, Identifier const& system);

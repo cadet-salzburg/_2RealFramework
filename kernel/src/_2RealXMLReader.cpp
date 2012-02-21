@@ -45,7 +45,7 @@ namespace _2Real
 		m_Document = p.parse(m_Filepath.toString());
 	}
 
-	std::string const& XMLReader::getFilepath() const
+	const std::string XMLReader::getFilepath() const
 	{
 		return m_Filepath.toString();
 	}

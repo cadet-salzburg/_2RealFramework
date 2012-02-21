@@ -36,14 +36,15 @@ namespace _2Real
 	class SystemGraph;
 	class Runnable;
 	class EngineData;
+	class PluginMetadata;
 
 	typedef Poco::ClassLoader< IPluginActivator >								PluginLoader;
 	typedef std::pair< std::string, Poco::ClassLoader< IPluginActivator > * >	NamedLibrary;
 	typedef std::map< std::string, Poco::ClassLoader< IPluginActivator > * >	LibraryMap;
 	typedef std::pair< Identifier, Plugin * >									NamedPlugin;
 	typedef std::map< Identifier, Plugin * >									PluginMap;
-	typedef std::pair< std::string, Metadata * >								NamedMetadata;
-	typedef std::map< std::string, Metadata * >									MetadataMap;
+	typedef std::pair< std::string, PluginMetadata * >							NamedMetadata;
+	typedef std::map< std::string, PluginMetadata * >							MetadataMap;
 
 	class PluginPool
 	{
@@ -53,47 +54,58 @@ namespace _2Real
 		PluginPool();
 		~PluginPool();
 
-		/**
-		*	clears all
-		*/
-		void							clear();
-		void							setBaseDirectory(Poco::Path const& path);
-		const std::list< std::string >	loadLibrary(Poco::Path const& path);
-		const bool						isLibraryLoaded(Poco::Path const& path) const;
-		const bool						canCreate(std::string const& className, Poco::Path const& path) const;
-		const bool						isSingleton(std::string const& className, Poco::Path const& path) const;
-		const bool						isSetUp(Identifier const& pluginId) const;
-		const std::string				getInfoString(std::string const& className, Poco::Path const& path) const;
-		Runnable &						createService(std::string const& name, Identifier const& id, std::string const& service);
-		const Identifier				createInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
-		const Identifier				getInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
-		void							setup(Identifier const& pluginId);
-
-		//const Identifier		install(std::string const& idName, std::string const& className, Poco::Path const& path = Poco::Path());
-		bool							contains(Identifier const& id) const;
-		//void					uninstall(Identifier const& id);
-		void							setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data);
-		EngineData const&				getParameterValue(Identifier const& id, std::string const& paramName) const;
-		//std::string const&		getParameterKey(Identifier const& id, std::string const& paramName) const;
+		void								clear();
+		void								setBaseDirectory(Poco::Path const& path);
+		const std::list< std::string >		loadLibrary(Poco::Path const& path);
+		const bool							isLibraryLoaded(Poco::Path const& path) const;
+		const bool							canCreate(std::string const& className, Poco::Path const& path) const;
+		const bool							isSingleton(std::string const& className, Poco::Path const& path) const;
+		const bool							isSetUp(Identifier const& pluginId) const;
+		const std::string					getInfoString(std::string const& className, Poco::Path const& path) const;
+		const std::string					getInfoString(Identifier const& pluginId) const;
+		Runnable &							createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph);
+		const Identifier					createInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
+		const Identifier					getInstance(std::string const& className, Poco::Path const& path);
+		void								setup(Identifier const& pluginId);
+		const Identifier					getIdentifier(std::string const& idName) const;
+		bool								contains(Identifier const& id) const;
+		void								setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data);
+		EngineData const&					getParameterValue(Identifier const& id, std::string const& paramName) const;
+		std::string const&					getParameterKey(Identifier const& id, std::string const& paramName) const;
 
 	private:
 
-		//Metadata const* const	getMetadata(std::string const& classname) const;
+		const Poco::Path		makeAbsolutePath(Poco::Path const& path) const;
 
 		Plugin &				getPlugin(Identifier const& id);
 		Plugin const&			getPlugin(Identifier const& id) const;
 
+		const bool				isUnique(std::string const& name) const;
+
 		/**
 		*	the poco classloader
 		*/
-		PluginLoader			m_PluginLoader;
+		PluginLoader							m_PluginLoader;
 
 		/*
 		*	concrete instances of plugins
 		*/
-		PluginMap				m_Plugins;
+		PluginMap								m_Plugins;
 
-		Poco::Path				m_BaseDirectory;
+		/**
+		*	each exported plugin's metadata will be stored here
+		*/
+		MetadataMap								m_Metadata;
+
+		/**
+		*	the base directory for relative paths
+		*/
+		Poco::Path								m_BaseDirectory;
+
+		/**
+		*	a lookup table for all plugin names
+		*/
+		std::map< std::string, Identifier >		m_Names;
 
 	};
 

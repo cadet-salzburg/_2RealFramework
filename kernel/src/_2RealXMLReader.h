@@ -46,7 +46,7 @@ namespace _2Real
 
 		XMLReader(Poco::Path const& path);
 
-		std::string const& getFilepath() const;
+		const std::string getFilepath() const;
 		Poco::XML::Node& getRoot();
 
 		static const std::string getNodeAttribute(std::string const& name, Poco::XML::Node &node);

@@ -83,5 +83,6 @@ namespace _2Real
 	IMPLEMENT_EXCEPTION(SetupException, Exception, "service exception")
 	IMPLEMENT_EXCEPTION(StartException, Exception, "service exception")
 	IMPLEMENT_EXCEPTION(InvalidNameException, Exception, "invalid name exception")
+	IMPLEMENT_EXCEPTION(InvalidAccessException, Exception, "invalid access exception")
 
 }

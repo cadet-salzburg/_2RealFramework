@@ -36,57 +36,78 @@ namespace _2Real
 
 		static Engine& instance();
 
+		/*
+		*	sets the base directory, from where all plugins will be searched
+		*/
 		void setBaseDirectory(std::string const& directory);
 
 		/*
-		*	loads the dynamic from the given path, returns a list of strings with all the exported classes
+		*	loads the dynamic from the given path
+		*	returns a list of strings with all the exported classes that are derived off IPluginActivator
 		*	if path is relative, it will be interpreted with respect to the base directory
-		*	TODO:
-		*	if path points to a directory, all dynamic libs inside that directory will be loaded
-		*	exceptions: invalid path, lib not found
+		*	TODO: if path points to a directory, all dynamic libs inside that directory will be loaded
 		*/
 		const std::list< std::string > load(std::string const& path);
 
 		/**
 		*	returns true if the library in question is already loaded
+		*	if path is relative, it will be interpreted with respect to the base directory
 		*/
 		const bool isLoaded(std::string const& libraryPath) const;
 
 		/**
-		*	returns plugin metadata as string
+		*	returns absolute paths to all libraries which export a class (derived off IPluginActivator) named className
 		*/
-		const std::string getInfoString(std::string const& classname, std::string const& libraryPath = "");
+		const std::list< std::string > isExportedBy(std::string const& className);
+
+		/**
+		*	returns plugin's metadata as string
+		*	if libraryPath is relative, it will be interpreted with respect to the base directory
+		*/
+		const std::string getInfoString(std::string const& className, std::string const& libraryPath);
+
+		/**
+		*	returns plugin's metadata as string
+		*/
+		const std::string getInfoString(Identifier const& id);
 
 		/**
 		*	returns true if instances of the class can be created
 		*	(false if no class has been loaded OR it's a singleton)
-		*	path is used to optionally define the library
+		*	if libraryPath is relative, it will be interpreted with respect to the base directory
 		*/
-		const bool canCreate(std::string const& className, std::string const& libraryPath = "") const;
+		const bool canCreate(std::string const& className, std::string const& libraryPath) const;
 
 		/**
 		*	returns true if className has been loaded & it's a singleton
+		*	if libraryPath is relative, it will be interpreted with respect to the base directory
 		*/
-		const bool isSingleton(std::string const& className, std::string const& libraryPath = "") const;
+		const bool isSingleton(std::string const& className, std::string const& libraryPath) const;
 
 		/**
 		*	creates instance of a plugin
+		*	if libraryPath is relative, it will be interpreted with respect to the base directory
 		*/
-		const Identifier createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
+		const Identifier createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath);
 
 		/*
 		*	returns instance of singleton plugin
-		*	idName is used only at the first call, after that the existing identifier is returned
 		*/
-		const Identifier getInstance(std::string const& idName, std::string const& className, std::string const& libraryPath = "");
+		const Identifier getInstance(std::string const& className, std::string const& libraryPath);
 
+		/**
+		*	true is plugin in question is set up
+		*/
 		const bool isSetUp(Identifier const& pluginId) const;
 
+		/*
+		*	sets up the plugin
+		*/
 		void setup(Identifier const& pluginId);
 
 		/**
 		*	sets the value of a plugin's setup parameter
-		*	does nothing if the plugin in question is already set up!
+		*	does nothing if the plugin in question is already set up
 		*/
 		template< typename DataType >
 		void setValue(Identifier const& pluginId, std::string const& paramName, DataType const& value)
@@ -95,6 +116,9 @@ namespace _2Real
 			setValueInternal(pluginId, paramName, data);
 		}
 
+		/**
+		*	returns the value of a plugin's setup parameter
+		*/
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
 		{
@@ -102,6 +126,11 @@ namespace _2Real
 			return *ptr.get();
 		}
 
+		/*
+		*	returns the identifier for a plugin instance
+		*	(useful mainly if a plugin instance was created by loading an xml file)
+		*	if no such identifier exists, an invalid indetifier will be returned
+		*/
 		const Identifier getIdentifier(std::string const& idName) const;
 
 	private:
@@ -123,11 +152,7 @@ namespace _2Real
 		*/
 		const EngineData getValueInternal(Identifier const& pluginId, std::string const& paramName) const;
 
-		const bool isUnique(std::string const& name) const;
-
 		EngineImpl								&m_EngineImpl;
-
-		std::map< std::string, Identifier >		m_Names;
 
 	};
 
