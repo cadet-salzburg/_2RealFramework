@@ -13,19 +13,17 @@ Open _2RealFramework\kernel\build\_2RealEngine.vcxproj and batch build the two w
 The _2Real framework allows to create real time interactive applications in the area of image and live video processing, sensor input, 2d and 3d camera tracking...
 It has a lightweight kernel structure which is expanded by plugin libraries that can be loaded during runtime. Every plugin offers a set of services that can be linked to each other via inputs and outputs. Different datatypes are supported.
 
-When writing an application the user builds sequences and synchronisations of services by instantiating services and connecting input and output handles.
+An application will start the _2RealEngine. The *engine* is loading *plugins* and optionally initiating them with setup parameters. Within the engine there are *systems* which contain a set of asynchrounously (default), synchronously or sequentially running *services*.
 
-Such a combination and connection of Services within an application is called a "production graph".
-
-A Doxygen/html documentation is available in the docs/html folder.
+Please refer to the Doxygen/HTML documentation in the docs/html folder.
 
 
 3. Write a Plugin
 ===================
-There is a "TutorialPlugin" in the plugins folder (vc10 project file) which I will describe here.
-The plugin will be used in a sample application to printout the numbers of a counter and also feed the counter values through a "doubler" and then again print them out.
+There is a "TutorialPlugin" in the plugins folder (vc10 project file) which is described here.
+The plugin will be used in a sample application to printout numbers of a counter and also feed the counter values through a "doubler" and then again print them out.
 
-Plugins provide one or more services to the _2Real framework. After plugins are loaded by the _2Real framework their services can be accessed via input and output handles.
+Plugins provide one or more services to the _2Real framework. After plugins are loaded by the _2Real engine their services can be accessed via input and output handles.
 
 _2Real plugins have to implement the PluginActivator Interface (_2Real::IPluginActivator), which has four methods:
 
@@ -42,7 +40,7 @@ Is called before unloading the plugin.
 ...
 
 
-During the setup() of the plugin you call the factory method of the services. In the case of the TutorialPlugin this is done in the ServiceImpl.cpp file:
+During the setup() of the plugin you call the factory methods of the services. In the case of the TutorialPlugin this is done in the ServiceImpl.cpp file:
 
 _2Real::IService *const createCounter(void)
 {
@@ -52,7 +50,7 @@ _2Real::IService *const createCounter(void)
 
 After that the service interface (_2Real::IService) has to be implemented for every service.
 
-I has two predefined methods:
+It has two methods:
 
 * setup(_2Real::ServiceContext &context)
 Here you can set the Input and OutputHandles for your inputs and outputs
@@ -74,21 +72,28 @@ As a general rule: names are *not* case sensitive, all letters are allowed, spac
 
 The TutorialApp can be found in the samples folder.
 
-To create an app start by creating a new instance of the the framework.
+The source code uses an include guard (#ifndef) to distinguish between the release version and the debug version of the plugin. It is also making use of SystemExceptions and StateChanges callbacks which I will not describe in detail.
+
+To create an app, start by creating a new instance of the the engine and a system.
+
+Engine &TutorialEngine = Engine::instance();
 
 System tutorialSystem("Tutorial System");
 
-As a next step you may want to load plugins. 
+As a next step you may want to load plugins. Plugins are loaded into the engine. For this to work you need to provide the path to the library file (.dll) and the name of the library. The path is set by
 
-const Identifier tutPlugin = tutorialSystem.loadPlugin("TutorialPlugin", "TutorialPlugin");
+TutorialEngine.setBaseDirectory(PluginDir);
 
-The plugin name has to match the library (dll) name.
+In the tutorial, the name of the library is concatenated from the name and an extension (.dll or _d.dll) 
 
-In order for the app to find the library you want to set the plugin dir:
-tutorialSystem.setInstallDirectory(PluginDir);
-		
+The return value for the load method is a list of classnames. A plugin can contain more than one class.
+list<string> pluginClassNames = TutorialEngine.load("TutorialPlugin.dll");
+
+As a next step create an instance of the plugin. NOTE: these two functions will change in future releases!
+const Identifier tutPlugin = TutorialEngine.createInstance("tut plugin", "TutorialPlugin", pn);
+
 after the plugin is loaded the setup is called:
-tutorialSystem.setup(tutPlugin);
+TutorialEngine.setup(tutPlugin);;
 
 Then you create, setup and start your services:
 
