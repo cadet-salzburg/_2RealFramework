@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealPluginMetadata.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealPluginMetadata.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealPluginMetadata.h</div>  </div>
+<div class="title">kernel/src/_2RealPluginMetadata.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_plugin_metadata_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -118,8 +117,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="preprocessor">#pragma once</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_version_8h.html">_2RealVersion.h</a>&quot;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_engine_8h.html">_2RealEngine.h</a>&quot;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;_2RealVersion.h&quot;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;_2RealEngineImpl.h&quot;</span>
 <a name="l00023"></a>00023 
 <a name="l00024"></a>00024 <span class="preprocessor">#include &lt;map&gt;</span>
 <a name="l00025"></a>00025 <span class="preprocessor">#include &lt;list&gt;</span>
@@ -133,63 +132,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00033"></a>00033         <span class="keyword">class </span>ParameterMetadata;
 <a name="l00034"></a>00034         <span class="keyword">class </span>ServiceMetadata;
 <a name="l00035"></a>00035         <span class="keyword">class </span>Typetable;
-<a name="l00036"></a><a class="code" href="namespace__2_real.html#a0f07e594b7bea3312600a7ce10e7647d">00036</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a>;
+<a name="l00036"></a>00036         <span class="keyword">class </span>EngineData;
 <a name="l00037"></a>00037 
-<a name="l00038"></a>00038         <span class="keyword">typedef</span> std::pair&lt; std::string, ServiceMetadata * &gt;                     <a class="code" href="namespace__2_real.html#a0f07e594b7bea3312600a7ce10e7647d">NamedServiceData</a>;
-<a name="l00039"></a><a class="code" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">00039</a>         <span class="keyword">typedef</span> std::map&lt; std::string, ServiceMetadata * &gt;                      <a class="code" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a>;
-<a name="l00040"></a><a class="code" href="namespace__2_real.html#aa116595b366c549893d528940fcf3512">00040</a>         <span class="keyword">typedef</span> std::pair&lt; std::string, ParameterMetadata * &gt;           <a class="code" href="namespace__2_real.html#aa116595b366c549893d528940fcf3512">NamedParameterData</a>;
-<a name="l00041"></a><a class="code" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">00041</a>         <span class="keyword">typedef</span> std::map&lt; std::string, ParameterMetadata * &gt;            <a class="code" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a>;
+<a name="l00038"></a>00038         <span class="keyword">typedef</span> std::pair&lt; std::string, ServiceMetadata * &gt;                     NamedServiceData;
+<a name="l00039"></a>00039         <span class="keyword">typedef</span> std::map&lt; std::string, ServiceMetadata * &gt;                      ServiceDataMap;
+<a name="l00040"></a>00040         <span class="keyword">typedef</span> std::pair&lt; std::string, ParameterMetadata * &gt;           NamedParameterData;
+<a name="l00041"></a>00041         <span class="keyword">typedef</span> std::map&lt; std::string, ParameterMetadata * &gt;            ParameterDataMap;
 <a name="l00042"></a>00042 
 <a name="l00043"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html">00043</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a>
 <a name="l00044"></a>00044         {
 <a name="l00045"></a>00045 
 <a name="l00046"></a>00046         <span class="keyword">public</span>:
 <a name="l00047"></a>00047 
-<a name="l00048"></a>00048                 <a class="code" href="class__2_real_1_1_plugin_metadata.html#a005709dda61cc1894b78a5a2c7188e8b">PluginMetadata</a>(std::string <span class="keyword">const</span>&amp; classname, std::string <span class="keyword">const</span>&amp; directory);
-<a name="l00049"></a>00049                 <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5f00dfa585e2ac4e5ac93824ecc3eec1">~PluginMetadata</a>();
+<a name="l00048"></a>00048                 <a class="code" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a>(std::string <span class="keyword">const</span>&amp; classname, std::string <span class="keyword">const</span>&amp; directory);
+<a name="l00049"></a>00049                 ~<a class="code" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a>();
 <a name="l00050"></a>00050 
-<a name="l00051"></a>00051                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_plugin_metadata.html#a0501335cb24c83985002dbf4ab72c4d1">clear</a>();
+<a name="l00051"></a>00051                 <span class="keywordtype">void</span> clear();
 <a name="l00052"></a>00052 
-<a name="l00053"></a>00053                 <span class="keyword">friend</span> std::ostream&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a706864d91c5befec1d590833004ceaa1">operator&lt;&lt;</a>(std::ostream &amp;out, <a class="code" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> <span class="keyword">const</span>&amp; metadata);
+<a name="l00053"></a>00053                 <span class="keyword">friend</span> std::ostream&amp; operator&lt;&lt;(std::ostream &amp;out, <a class="code" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> <span class="keyword">const</span>&amp; metadata);
 <a name="l00054"></a>00054 
-<a name="l00055"></a>00055                 <a class="code" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a> <span class="keyword">const</span>&amp;         <a class="code" href="class__2_real_1_1_plugin_metadata.html#a35ef501cbe35d81ae9000e35e6674fff">getSetupParameters</a>() <span class="keyword">const</span>;
-<a name="l00056"></a>00056                 <a class="code" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a> <span class="keyword">const</span>&amp;           <a class="code" href="class__2_real_1_1_plugin_metadata.html#a44cb77e5ff47ec4b32119f144bd6768a">getServices</a>() <span class="keyword">const</span>;
+<a name="l00055"></a>00055                 ParameterDataMap <span class="keyword">const</span>&amp;         getSetupParameters() <span class="keyword">const</span>;
+<a name="l00056"></a>00056                 ServiceDataMap <span class="keyword">const</span>&amp;           getServices() <span class="keyword">const</span>;
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">setDescription</a>(std::string <span class="keyword">const</span>&amp; desc);
-<a name="l00059"></a>00059                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#af17cdc4565e9798484c63daf4d84c787">setVersion</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version);
-<a name="l00060"></a>00060                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5b1081be47996cbc06e85b69ad052df5">setAuthor</a>(std::string <span class="keyword">const</span>&amp; author);
-<a name="l00061"></a>00061                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a1e7dc3d778d2c777b33ebe6a4a935e65">setContact</a>(std::string <span class="keyword">const</span>&amp; contact);
+<a name="l00058"></a>00058                 <span class="keywordtype">void</span>                                            setDescription(std::string <span class="keyword">const</span>&amp; desc);
+<a name="l00059"></a>00059                 <span class="keywordtype">void</span>                                            setVersion(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version);
+<a name="l00060"></a>00060                 <span class="keywordtype">void</span>                                            setAuthor(std::string <span class="keyword">const</span>&amp; author);
+<a name="l00061"></a>00061                 <span class="keywordtype">void</span>                                            setContact(std::string <span class="keyword">const</span>&amp; contact);
 <a name="l00062"></a>00062 
-<a name="l00063"></a>00063                 std::string <span class="keyword">const</span>&amp;                      <a class="code" href="class__2_real_1_1_plugin_metadata.html#aae4445da391e9300374950f67055d214">getInstallDirectory</a>() <span class="keyword">const</span>;
-<a name="l00064"></a>00064                 std::string <span class="keyword">const</span>&amp;                      <a class="code" href="class__2_real_1_1_plugin_metadata.html#a6a01e99f07ea66eac30fcb8226591fdb">getDescription</a>() <span class="keyword">const</span>;
-<a name="l00065"></a>00065                 std::string <span class="keyword">const</span>&amp;                      <a class="code" href="class__2_real_1_1_plugin_metadata.html#acb64ba97b57bdb437ef55eeff8c18a20">getAuthor</a>() <span class="keyword">const</span>;
-<a name="l00066"></a>00066                 std::string <span class="keyword">const</span>&amp;                      <a class="code" href="class__2_real_1_1_plugin_metadata.html#a1214c2c4d0378f6debe8d62ca97ecf8f">getContact</a>() <span class="keyword">const</span>;
-<a name="l00067"></a>00067                 std::string <span class="keyword">const</span>&amp;                      <a class="code" href="class__2_real_1_1_plugin_metadata.html#aaf8a07927e5a2390b3bc2b5839a5340f">getClassname</a>() <span class="keyword">const</span>;
-<a name="l00068"></a>00068                 <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp;                          <a class="code" href="class__2_real_1_1_plugin_metadata.html#a0525a87fb99b86627ff2c716dcc2e5b8">getVersion</a>() <span class="keyword">const</span>;
+<a name="l00063"></a>00063                 std::string <span class="keyword">const</span>&amp;                      getInstallDirectory() <span class="keyword">const</span>;
+<a name="l00064"></a>00064                 std::string <span class="keyword">const</span>&amp;                      getDescription() <span class="keyword">const</span>;
+<a name="l00065"></a>00065                 std::string <span class="keyword">const</span>&amp;                      getAuthor() <span class="keyword">const</span>;
+<a name="l00066"></a>00066                 std::string <span class="keyword">const</span>&amp;                      getContact() <span class="keyword">const</span>;
+<a name="l00067"></a>00067                 std::string <span class="keyword">const</span>&amp;                      getClassname() <span class="keyword">const</span>;
+<a name="l00068"></a>00068                 <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp;                          getVersion() <span class="keyword">const</span>;
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#ac04bd486b6698332a67dba6c8ef8496f">addServiceMetadata</a>(std::string <span class="keyword">const</span>&amp; name);
-<a name="l00071"></a>00071                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">setDescription</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; description);
+<a name="l00070"></a>00070                 <span class="keywordtype">void</span>                                            addServiceMetadata(std::string <span class="keyword">const</span>&amp; name);
+<a name="l00071"></a>00071                 <span class="keywordtype">void</span>                                            setDescription(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; description);
 <a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a7d7aafc9e552f19d5316dcff39db51c4">addSetupParameterByKey</a>(std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
-<a name="l00074"></a>00074                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a7d7aafc9e552f19d5316dcff39db51c4">addSetupParameterByKey</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
-<a name="l00075"></a>00075                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#ae3823ea2850f6519505ad30a06106061">addInputSlotByKey</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
-<a name="l00076"></a>00076                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a12477e383ee80e1b21cbfbd7cef1cec5">addOutputSlotByKey</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
+<a name="l00073"></a>00073                 <span class="keywordtype">void</span>                                            addSetupParameterByKey(std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
+<a name="l00074"></a>00074                 <span class="keywordtype">void</span>                                            addSetupParameterByKey(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
+<a name="l00075"></a>00075                 <span class="keywordtype">void</span>                                            addInputSlotByKey(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
+<a name="l00076"></a>00076                 <span class="keywordtype">void</span>                                            addOutputSlotByKey(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; keyword);
 <a name="l00077"></a>00077                 
-<a name="l00078"></a>00078                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#ae3bc601aa4ad50afac7ce671331aa622">addSetupParameterByType</a>(std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
-<a name="l00079"></a>00079                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#ae3bc601aa4ad50afac7ce671331aa622">addSetupParameterByType</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
-<a name="l00080"></a>00080                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#ad7ff7c77f31acfa78a059d0dbe62496f">addInputSlotByType</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
-<a name="l00081"></a>00081                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a7015f8c5a2a3a0c0702093960b067eec">addOutputSlotByType</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
+<a name="l00078"></a>00078                 <span class="keywordtype">void</span>                                            addSetupParameterByType(std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
+<a name="l00079"></a>00079                 <span class="keywordtype">void</span>                                            addSetupParameterByType(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
+<a name="l00080"></a>00080                 <span class="keywordtype">void</span>                                            addInputSlotByType(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
+<a name="l00081"></a>00081                 <span class="keywordtype">void</span>                                            addOutputSlotByType(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, std::string <span class="keyword">const</span>&amp; type);
 <a name="l00082"></a>00082 
-<a name="l00083"></a>00083                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a40994166682704d43c2848d842b45646">addSetupParameterByData</a>(std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
-<a name="l00084"></a>00084                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a40994166682704d43c2848d842b45646">addSetupParameterByData</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
-<a name="l00085"></a>00085                 <span class="keywordtype">void</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a8916030cdea8d4ae163926c6711f822a">addInputSlotByData</a>(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
+<a name="l00083"></a>00083                 <span class="keywordtype">void</span>                                            addSetupParameterByData(std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
+<a name="l00084"></a>00084                 <span class="keywordtype">void</span>                                            addSetupParameterByData(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
+<a name="l00085"></a>00085                 <span class="keywordtype">void</span>                                            addInputSlotByData(std::string <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; defaultValue);
 <a name="l00086"></a>00086 
-<a name="l00087"></a>00087                 <span class="keywordtype">bool</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a54b5247de13d13d045e79b528fdba8bf">containsServiceMetadata</a>(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
-<a name="l00088"></a>00088                 <span class="keywordtype">bool</span>                                            <a class="code" href="class__2_real_1_1_plugin_metadata.html#a99d402510e177a82d678f347a2683e61">containsParameterMetadata</a>(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
+<a name="l00087"></a>00087                 <span class="keywordtype">bool</span>                                            containsServiceMetadata(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
+<a name="l00088"></a>00088                 <span class="keywordtype">bool</span>                                            containsParameterMetadata(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
 <a name="l00089"></a>00089 
-<a name="l00090"></a>00090                 <a class="code" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> &amp;                       <a class="code" href="class__2_real_1_1_plugin_metadata.html#a0f94857aabdaebbfb4f82d34f05b5915">getServiceMetadata</a>(std::string <span class="keyword">const</span>&amp; name);
-<a name="l00091"></a>00091                 <a class="code" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> <span class="keyword">const</span>&amp;        <a class="code" href="class__2_real_1_1_plugin_metadata.html#a6ffbf63607dc1ea94bbc10e0aecbc480">getParameterMetadata</a>(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
-<a name="l00092"></a>00092                 <a class="code" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> <span class="keyword">const</span>&amp;          <a class="code" href="class__2_real_1_1_plugin_metadata.html#a0f94857aabdaebbfb4f82d34f05b5915">getServiceMetadata</a>(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
+<a name="l00090"></a>00090                 <a class="code" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> &amp;                       getServiceMetadata(std::string <span class="keyword">const</span>&amp; name);
+<a name="l00091"></a>00091                 <a class="code" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> <span class="keyword">const</span>&amp;        getParameterMetadata(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
+<a name="l00092"></a>00092                 <a class="code" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> <span class="keyword">const</span>&amp;          getServiceMetadata(std::string <span class="keyword">const</span>&amp; name) <span class="keyword">const</span>;
 <a name="l00093"></a>00093 
 <a name="l00094"></a>00094         <span class="keyword">private</span>:
 <a name="l00095"></a>00095 
@@ -206,67 +205,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00106"></a>00106                 std::string                                     m_Author;
 <a name="l00107"></a>00107                 std::string                                     m_Contact;
 <a name="l00108"></a>00108                 <a class="code" href="class__2_real_1_1_version.html">Version</a>                                         m_Version;
-<a name="l00109"></a>00109                 <a class="code" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a>                          m_Services;
-<a name="l00110"></a>00110                 <a class="code" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a>                        m_SetupParameters;
+<a name="l00109"></a>00109                 ServiceDataMap                          m_Services;
+<a name="l00110"></a>00110                 ParameterDataMap                        m_SetupParameters;
 <a name="l00111"></a>00111 
 <a name="l00112"></a>00112         };
 <a name="l00113"></a>00113 
-<a name="l00114"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a35ef501cbe35d81ae9000e35e6674fff">00114</a>         <span class="keyword">inline</span> <a class="code" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a35ef501cbe35d81ae9000e35e6674fff">PluginMetadata::getSetupParameters</a>()<span class="keyword"> const</span>
+<a name="l00114"></a>00114         <span class="keyword">inline</span> ParameterDataMap <span class="keyword">const</span>&amp; PluginMetadata::getSetupParameters()<span class="keyword"> const</span>
 <a name="l00115"></a>00115 <span class="keyword">        </span>{
 <a name="l00116"></a>00116                 <span class="keywordflow">return</span> m_SetupParameters;
 <a name="l00117"></a>00117         }
 <a name="l00118"></a>00118 
-<a name="l00119"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a44cb77e5ff47ec4b32119f144bd6768a">00119</a>         <span class="keyword">inline</span> <a class="code" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a44cb77e5ff47ec4b32119f144bd6768a">PluginMetadata::getServices</a>()<span class="keyword"> const</span>
+<a name="l00119"></a>00119         <span class="keyword">inline</span> ServiceDataMap <span class="keyword">const</span>&amp; PluginMetadata::getServices()<span class="keyword"> const</span>
 <a name="l00120"></a>00120 <span class="keyword">        </span>{
 <a name="l00121"></a>00121                 <span class="keywordflow">return</span> m_Services;
 <a name="l00122"></a>00122         }
 <a name="l00123"></a>00123 
-<a name="l00124"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">00124</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">PluginMetadata::setDescription</a>(std::string <span class="keyword">const</span>&amp; desc)
+<a name="l00124"></a>00124         <span class="keyword">inline</span> <span class="keywordtype">void</span> PluginMetadata::setDescription(std::string <span class="keyword">const</span>&amp; desc)
 <a name="l00125"></a>00125         {
 <a name="l00126"></a>00126                 m_Description = desc;
 <a name="l00127"></a>00127         }
 <a name="l00128"></a>00128 
-<a name="l00129"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#af17cdc4565e9798484c63daf4d84c787">00129</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_plugin_metadata.html#af17cdc4565e9798484c63daf4d84c787">PluginMetadata::setVersion</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version)
+<a name="l00129"></a>00129         <span class="keyword">inline</span> <span class="keywordtype">void</span> PluginMetadata::setVersion(Version <span class="keyword">const</span>&amp; version)
 <a name="l00130"></a>00130         {
 <a name="l00131"></a>00131                 m_Version = version;
 <a name="l00132"></a>00132         }
 <a name="l00133"></a>00133 
-<a name="l00134"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a5b1081be47996cbc06e85b69ad052df5">00134</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_plugin_metadata.html#a5b1081be47996cbc06e85b69ad052df5">PluginMetadata::setAuthor</a>(std::string <span class="keyword">const</span>&amp; author)
+<a name="l00134"></a>00134         <span class="keyword">inline</span> <span class="keywordtype">void</span> PluginMetadata::setAuthor(std::string <span class="keyword">const</span>&amp; author)
 <a name="l00135"></a>00135         {
 <a name="l00136"></a>00136                 m_Author = author;
 <a name="l00137"></a>00137         }
 <a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a1e7dc3d778d2c777b33ebe6a4a935e65">00139</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_plugin_metadata.html#a1e7dc3d778d2c777b33ebe6a4a935e65">PluginMetadata::setContact</a>(std::string <span class="keyword">const</span>&amp; contact)
+<a name="l00139"></a>00139         <span class="keyword">inline</span> <span class="keywordtype">void</span> PluginMetadata::setContact(std::string <span class="keyword">const</span>&amp; contact)
 <a name="l00140"></a>00140         {
 <a name="l00141"></a>00141                 m_Contact = contact;
 <a name="l00142"></a>00142         }
 <a name="l00143"></a>00143 
-<a name="l00144"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#aaf8a07927e5a2390b3bc2b5839a5340f">00144</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#aaf8a07927e5a2390b3bc2b5839a5340f">PluginMetadata::getClassname</a>()<span class="keyword"> const</span>
+<a name="l00144"></a>00144         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; PluginMetadata::getClassname()<span class="keyword"> const</span>
 <a name="l00145"></a>00145 <span class="keyword">        </span>{
 <a name="l00146"></a>00146                 <span class="keywordflow">return</span> m_Classname;
 <a name="l00147"></a>00147         }
 <a name="l00148"></a>00148 
-<a name="l00149"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#aae4445da391e9300374950f67055d214">00149</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#aae4445da391e9300374950f67055d214">PluginMetadata::getInstallDirectory</a>()<span class="keyword"> const</span>
+<a name="l00149"></a>00149         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; PluginMetadata::getInstallDirectory()<span class="keyword"> const</span>
 <a name="l00150"></a>00150 <span class="keyword">        </span>{
 <a name="l00151"></a>00151                 <span class="keywordflow">return</span> m_InstallDirectory;
 <a name="l00152"></a>00152         }
 <a name="l00153"></a>00153 
-<a name="l00154"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a6a01e99f07ea66eac30fcb8226591fdb">00154</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a6a01e99f07ea66eac30fcb8226591fdb">PluginMetadata::getDescription</a>()<span class="keyword"> const</span>
+<a name="l00154"></a>00154         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; PluginMetadata::getDescription()<span class="keyword"> const</span>
 <a name="l00155"></a>00155 <span class="keyword">        </span>{
 <a name="l00156"></a>00156                 <span class="keywordflow">return</span> m_Description;
 <a name="l00157"></a>00157         }
 <a name="l00158"></a>00158 
-<a name="l00159"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#acb64ba97b57bdb437ef55eeff8c18a20">00159</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#acb64ba97b57bdb437ef55eeff8c18a20">PluginMetadata::getAuthor</a>()<span class="keyword"> const</span>
+<a name="l00159"></a>00159         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; PluginMetadata::getAuthor()<span class="keyword"> const</span>
 <a name="l00160"></a>00160 <span class="keyword">        </span>{
 <a name="l00161"></a>00161                 <span class="keywordflow">return</span> m_Author;
 <a name="l00162"></a>00162         }
 <a name="l00163"></a>00163 
-<a name="l00164"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a1214c2c4d0378f6debe8d62ca97ecf8f">00164</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a1214c2c4d0378f6debe8d62ca97ecf8f">PluginMetadata::getContact</a>()<span class="keyword"> const</span>
+<a name="l00164"></a>00164         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; PluginMetadata::getContact()<span class="keyword"> const</span>
 <a name="l00165"></a>00165 <span class="keyword">        </span>{
 <a name="l00166"></a>00166                 <span class="keywordflow">return</span> m_Contact;
 <a name="l00167"></a>00167         }
 <a name="l00168"></a>00168 
-<a name="l00169"></a><a class="code" href="class__2_real_1_1_plugin_metadata.html#a0525a87fb99b86627ff2c716dcc2e5b8">00169</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_plugin_metadata.html#a0525a87fb99b86627ff2c716dcc2e5b8">PluginMetadata::getVersion</a>()<span class="keyword"> const</span>
+<a name="l00169"></a>00169         <span class="keyword">inline</span> Version <span class="keyword">const</span>&amp; PluginMetadata::getVersion()<span class="keyword"> const</span>
 <a name="l00170"></a>00170 <span class="keyword">        </span>{
 <a name="l00171"></a>00171                 <span class="keywordflow">return</span> m_Version;
 <a name="l00172"></a>00172         }
@@ -279,7 +278,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -290,9 +289,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_plugin_metadata_8h.html">_2RealPluginMetadata.h</a>      </li>
+      <li class="navelem"><b>_2RealPluginMetadata.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

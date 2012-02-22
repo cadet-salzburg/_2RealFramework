@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealVersion.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealVersion.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealVersion.h</div>  </div>
+<div class="title">kernel/src/_2RealVersion.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_version_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -129,18 +128,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00029"></a>00029 
 <a name="l00030"></a>00030         <span class="keyword">public</span>:
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032                 <a class="code" href="class__2_real_1_1_version.html#a2f5caf1d8964e4a7f8f0ab151935c72d">Version</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3de2148db836785134386d057da0b213">major</a>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3a010b1d3c3bb8cde25d2be0e82c7cef">minor</a>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3474fc473edb6312c94c8184178d04d6">revision</a>);
+<a name="l00032"></a>00032                 <a class="code" href="class__2_real_1_1_version.html">Version</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> major, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> minor, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> revision);
 <a name="l00033"></a>00033 
-<a name="l00034"></a>00034                 <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_version.html#ac41fec1602b82d23378c4c3df06cd13b">operator==</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs);
-<a name="l00035"></a>00035                 <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_version.html#a715504955cd3286ce9367909b06c3415">operator&lt;</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs);
+<a name="l00034"></a>00034                 <span class="keywordtype">bool</span> operator==(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs);
+<a name="l00035"></a>00035                 <span class="keywordtype">bool</span> operator&lt;(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs);
 <a name="l00036"></a>00036 
-<a name="l00037"></a>00037                 <span class="keyword">friend</span> std::ostream&amp; <a class="code" href="class__2_real_1_1_version.html#a899d0800239bcedbf53871a4e90a5117">operator&lt;&lt;</a>(std::ostream &amp;out, <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version);
+<a name="l00037"></a>00037                 <span class="keyword">friend</span> std::ostream&amp; operator&lt;&lt;(std::ostream &amp;out, <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version);
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039                 std::string <a class="code" href="class__2_real_1_1_version.html#afbd0fbb48bd3dfcc1a4a98cd9dc72c9e">asString</a>() <span class="keyword">const</span>;
+<a name="l00039"></a>00039                 std::string asString() <span class="keyword">const</span>;
 <a name="l00040"></a>00040 
-<a name="l00041"></a>00041                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3de2148db836785134386d057da0b213">major</a>() <span class="keyword">const</span>;
-<a name="l00042"></a>00042                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3a010b1d3c3bb8cde25d2be0e82c7cef">minor</a>() <span class="keyword">const</span>;
-<a name="l00043"></a>00043                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3474fc473edb6312c94c8184178d04d6">revision</a>() <span class="keyword">const</span>;
+<a name="l00041"></a>00041                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> major() <span class="keyword">const</span>;
+<a name="l00042"></a>00042                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> minor() <span class="keyword">const</span>;
+<a name="l00043"></a>00043                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> revision() <span class="keyword">const</span>;
 <a name="l00044"></a>00044 
 <a name="l00045"></a>00045         <span class="keyword">private</span>:
 <a name="l00046"></a>00046 
@@ -150,48 +149,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00050"></a>00050 
 <a name="l00051"></a>00051         };
 <a name="l00052"></a>00052 
-<a name="l00053"></a><a class="code" href="class__2_real_1_1_version.html#a2f5caf1d8964e4a7f8f0ab151935c72d">00053</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_version.html#a2f5caf1d8964e4a7f8f0ab151935c72d">Version::Version</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> major, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> minor, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> revision) :
+<a name="l00053"></a>00053         <span class="keyword">inline</span> Version::Version(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> major, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> minor, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> revision) :
 <a name="l00054"></a>00054                 m_Major(major),
 <a name="l00055"></a>00055                 m_Minor(minor),
 <a name="l00056"></a>00056                 m_Revision(revision)
 <a name="l00057"></a>00057         {
 <a name="l00058"></a>00058         }
 <a name="l00059"></a>00059 
-<a name="l00060"></a><a class="code" href="class__2_real_1_1_version.html#ac41fec1602b82d23378c4c3df06cd13b">00060</a>         <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_version.html#ac41fec1602b82d23378c4c3df06cd13b">Version::operator==</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs)
+<a name="l00060"></a>00060         <span class="keyword">inline</span> <span class="keywordtype">bool</span> Version::operator==(Version <span class="keyword">const</span>&amp; rhs)
 <a name="l00061"></a>00061         {
 <a name="l00062"></a>00062                 <span class="keywordflow">return</span> (m_Major == rhs.m_Major &amp;&amp; m_Minor == rhs.m_Minor &amp;&amp; m_Revision == rhs.m_Revision);
 <a name="l00063"></a>00063         }
 <a name="l00064"></a>00064 
-<a name="l00065"></a><a class="code" href="class__2_real_1_1_version.html#a715504955cd3286ce9367909b06c3415">00065</a>         <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_version.html#a715504955cd3286ce9367909b06c3415">Version::operator&lt;</a>(<a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; rhs)
+<a name="l00065"></a>00065         <span class="keyword">inline</span> <span class="keywordtype">bool</span> Version::operator&lt;(Version <span class="keyword">const</span>&amp; rhs)
 <a name="l00066"></a>00066         {
 <a name="l00067"></a>00067                 <span class="keywordflow">return</span> (m_Major &lt; rhs.m_Major &amp;&amp; m_Minor &lt; rhs.m_Minor &amp;&amp; m_Revision &lt; rhs.m_Revision);
 <a name="l00068"></a>00068         }
 <a name="l00069"></a>00069 
-<a name="l00070"></a><a class="code" href="class__2_real_1_1_version.html#afbd0fbb48bd3dfcc1a4a98cd9dc72c9e">00070</a>         <span class="keyword">inline</span> std::string <a class="code" href="class__2_real_1_1_version.html#afbd0fbb48bd3dfcc1a4a98cd9dc72c9e">Version::asString</a>()<span class="keyword"> const</span>
+<a name="l00070"></a>00070         <span class="keyword">inline</span> std::string Version::asString()<span class="keyword"> const</span>
 <a name="l00071"></a>00071 <span class="keyword">        </span>{
 <a name="l00072"></a>00072                 std::ostringstream result;
 <a name="l00073"></a>00073                 result &lt;&lt; m_Major &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; m_Minor &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; m_Revision;
 <a name="l00074"></a>00074                 <span class="keywordflow">return</span> result.str();
 <a name="l00075"></a>00075         }
 <a name="l00076"></a>00076 
-<a name="l00077"></a><a class="code" href="class__2_real_1_1_version.html#a3de2148db836785134386d057da0b213">00077</a>         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3de2148db836785134386d057da0b213">Version::major</a>()<span class="keyword"> const</span>
+<a name="l00077"></a>00077         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Version::major()<span class="keyword"> const</span>
 <a name="l00078"></a>00078 <span class="keyword">        </span>{
 <a name="l00079"></a>00079                 <span class="keywordflow">return</span> m_Major;
 <a name="l00080"></a>00080         }
 <a name="l00081"></a>00081 
-<a name="l00082"></a><a class="code" href="class__2_real_1_1_version.html#a3a010b1d3c3bb8cde25d2be0e82c7cef">00082</a>         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3a010b1d3c3bb8cde25d2be0e82c7cef">Version::minor</a>()<span class="keyword"> const</span>
+<a name="l00082"></a>00082         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Version::minor()<span class="keyword"> const</span>
 <a name="l00083"></a>00083 <span class="keyword">        </span>{
 <a name="l00084"></a>00084                 <span class="keywordflow">return</span> m_Minor;
 <a name="l00085"></a>00085         }
 <a name="l00086"></a>00086 
-<a name="l00087"></a><a class="code" href="class__2_real_1_1_version.html#a3474fc473edb6312c94c8184178d04d6">00087</a>         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class__2_real_1_1_version.html#a3474fc473edb6312c94c8184178d04d6">Version::revision</a>()<span class="keyword"> const</span>
+<a name="l00087"></a>00087         <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Version::revision()<span class="keyword"> const</span>
 <a name="l00088"></a>00088 <span class="keyword">        </span>{
 <a name="l00089"></a>00089                 <span class="keywordflow">return</span> m_Revision;
 <a name="l00090"></a>00090         }
 <a name="l00091"></a>00091 
-<a name="l00092"></a><a class="code" href="namespace__2_real.html#af2cadb39f9f579ea5fccfe15d018bb06">00092</a>         <span class="keyword">inline</span> std::ostream&amp; <a class="code" href="namespace__2_real.html#acc98c36596181b5eb8bbb2b0e22ae78c">operator&lt;&lt;</a>(std::ostream &amp;out, <a class="code" href="class__2_real_1_1_version.html">Version</a> <span class="keyword">const</span>&amp; version)
+<a name="l00092"></a>00092         <span class="keyword">inline</span> std::ostream&amp; operator&lt;&lt;(std::ostream &amp;out, Version <span class="keyword">const</span>&amp; version)
 <a name="l00093"></a>00093         {
-<a name="l00094"></a>00094                 out &lt;&lt; version.<a class="code" href="class__2_real_1_1_version.html#a3de2148db836785134386d057da0b213">major</a>() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; version.<a class="code" href="class__2_real_1_1_version.html#a3a010b1d3c3bb8cde25d2be0e82c7cef">minor</a>() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; version.<a class="code" href="class__2_real_1_1_version.html#a3474fc473edb6312c94c8184178d04d6">revision</a>();
+<a name="l00094"></a>00094                 out &lt;&lt; version.major() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; version.minor() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; version.revision();
 <a name="l00095"></a>00095                 <span class="keywordflow">return</span> out;
 <a name="l00096"></a>00096         }
 <a name="l00097"></a>00097 
@@ -203,7 +202,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -214,9 +213,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_version_8h.html">_2RealVersion.h</a>      </li>
+      <li class="navelem"><b>_2RealVersion.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealException.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealException.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealException.h</div>  </div>
+<div class="title">kernel/src/_2RealException.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_exception_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -128,24 +127,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00028"></a>00028         {
 <a name="l00029"></a>00029         <span class="keyword">public</span>:
 <a name="l00030"></a>00030 
-<a name="l00031"></a>00031                 <a class="code" href="class__2_real_1_1_exception.html#afa951cc43306faedd6c69000b5ceb849">Exception</a>(std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_exception.html#a7bb4d97660103deb73b484b8d98bad67">message</a>);
-<a name="l00032"></a>00032                 <a class="code" href="class__2_real_1_1_exception.html#afa951cc43306faedd6c69000b5ceb849">Exception</a>(<a class="code" href="class__2_real_1_1_exception.html">Exception</a> <span class="keyword">const</span>&amp; src);
-<a name="l00033"></a>00033                 <a class="code" href="class__2_real_1_1_exception.html#a2482abacd47e679e5e30e634ae929b7d">~Exception</a>();
-<a name="l00034"></a>00034                 <a class="code" href="class__2_real_1_1_exception.html">Exception</a>&amp; <a class="code" href="class__2_real_1_1_exception.html#a4e0ca8a366ad09b2210d5a5f305923c9">operator=</a>(<a class="code" href="class__2_real_1_1_exception.html">Exception</a> <span class="keyword">const</span>&amp; src);
+<a name="l00031"></a>00031                 <a class="code" href="class__2_real_1_1_exception.html">Exception</a>(std::string <span class="keyword">const</span>&amp; message);
+<a name="l00032"></a>00032                 <a class="code" href="class__2_real_1_1_exception.html">Exception</a>(<a class="code" href="class__2_real_1_1_exception.html">Exception</a> <span class="keyword">const</span>&amp; src);
+<a name="l00033"></a>00033                 ~<a class="code" href="class__2_real_1_1_exception.html">Exception</a>();
+<a name="l00034"></a>00034                 <a class="code" href="class__2_real_1_1_exception.html">Exception</a>&amp; operator=(<a class="code" href="class__2_real_1_1_exception.html">Exception</a> <span class="keyword">const</span>&amp; src);
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="class__2_real_1_1_exception.html#a5bbc8827ab3fb8d27334eae5b8a179e8">name</a>() <span class="keyword">const</span>;
-<a name="l00037"></a>00037                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="class__2_real_1_1_exception.html#a8717f14caaed5b2a6d37ecda7d6835c0">className</a>() <span class="keyword">const</span>;
-<a name="l00038"></a>00038                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="class__2_real_1_1_exception.html#a7a140c0120dea059042624df1f77de7c">what</a>() <span class="keyword">const</span>;
+<a name="l00036"></a>00036                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* name() <span class="keyword">const</span>;
+<a name="l00037"></a>00037                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* className() <span class="keyword">const</span>;
+<a name="l00038"></a>00038                 <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* what() <span class="keyword">const</span>;
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040                 std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_exception.html#a7bb4d97660103deb73b484b8d98bad67">message</a>() <span class="keyword">const</span>;
+<a name="l00040"></a>00040                 std::string <span class="keyword">const</span>&amp; message() <span class="keyword">const</span>;
 <a name="l00041"></a>00041 
-<a name="l00042"></a>00042                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_exception.html">Exception</a>* <a class="code" href="class__2_real_1_1_exception.html#aec6e05178e72522af1bb9d7092b9af32">clone</a>() <span class="keyword">const</span>;
-<a name="l00043"></a>00043                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_exception.html#ac0bf0a14272a791be3739121fceebe3d">rethrow</a>() <span class="keyword">const</span>;
+<a name="l00042"></a>00042                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_exception.html">Exception</a>* clone() <span class="keyword">const</span>;
+<a name="l00043"></a>00043                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> rethrow() <span class="keyword">const</span>;
 <a name="l00044"></a>00044 
 <a name="l00045"></a>00045         <span class="keyword">protected</span>:
 <a name="l00046"></a>00046 
-<a name="l00047"></a>00047                 <a class="code" href="class__2_real_1_1_exception.html#afa951cc43306faedd6c69000b5ceb849">Exception</a>();
-<a name="l00048"></a>00048                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_exception.html#a21d0a2ad3b2ed19966251f56515bf530">setMessage</a>(<span class="keyword">const</span> std::string&amp; message);
+<a name="l00047"></a>00047                 <a class="code" href="class__2_real_1_1_exception.html">Exception</a>();
+<a name="l00048"></a>00048                 <span class="keywordtype">void</span> setMessage(<span class="keyword">const</span> std::string&amp; message);
 <a name="l00049"></a>00049 
 <a name="l00050"></a>00050         <span class="keyword">private</span>:
 <a name="l00051"></a>00051 
@@ -153,18 +152,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00053"></a>00053 
 <a name="l00054"></a>00054         };
 <a name="l00055"></a>00055 
-<a name="l00056"></a><a class="code" href="class__2_real_1_1_exception.html#a7bb4d97660103deb73b484b8d98bad67">00056</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_exception.html#a7bb4d97660103deb73b484b8d98bad67">Exception::message</a>()<span class="keyword"> const</span>
+<a name="l00056"></a>00056         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; Exception::message()<span class="keyword"> const</span>
 <a name="l00057"></a>00057 <span class="keyword">        </span>{
 <a name="l00058"></a>00058                 <span class="keywordflow">return</span> m_Message;
 <a name="l00059"></a>00059         }
 <a name="l00060"></a>00060 
 <a name="l00061"></a>00061 
-<a name="l00062"></a><a class="code" href="class__2_real_1_1_exception.html#a21d0a2ad3b2ed19966251f56515bf530">00062</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_exception.html#a21d0a2ad3b2ed19966251f56515bf530">Exception::setMessage</a>(std::string <span class="keyword">const</span>&amp; message)
+<a name="l00062"></a>00062         <span class="keyword">inline</span> <span class="keywordtype">void</span> Exception::setMessage(std::string <span class="keyword">const</span>&amp; message)
 <a name="l00063"></a>00063         {
-<a name="l00064"></a>00064                 m_Message = <a class="code" href="class__2_real_1_1_exception.html#a7bb4d97660103deb73b484b8d98bad67">message</a>;
+<a name="l00064"></a>00064                 m_Message = message;
 <a name="l00065"></a>00065         }
 <a name="l00066"></a>00066 
-<a name="l00067"></a><a class="code" href="__2_real_exception_8h.html#a15f80f7be1eba0f44929d638d49d8c26">00067</a> <span class="preprocessor">#define DECLARE_EXCEPTION(CLS, BASE)                            \</span>
+<a name="l00067"></a>00067 <span class="preprocessor">#define DECLARE_EXCEPTION(CLS, BASE)                            \</span>
 <a name="l00068"></a>00068 <span class="preprocessor">        class CLS: public BASE                                                  \</span>
 <a name="l00069"></a>00069 <span class="preprocessor">        {                                                                                               \</span>
 <a name="l00070"></a>00070 <span class="preprocessor">        public:                                                                                 \</span>
@@ -179,7 +178,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00079"></a>00079 <span class="preprocessor">                void rethrow() const;                                           \</span>
 <a name="l00080"></a>00080 <span class="preprocessor">        };</span>
 <a name="l00081"></a>00081 <span class="preprocessor"></span>
-<a name="l00082"></a><a class="code" href="__2_real_exception_8h.html#a13649f853c4657d1697b4d51ac1469ef">00082</a> <span class="preprocessor">#define IMPLEMENT_EXCEPTION(CLS, BASE, NAME)            \</span>
+<a name="l00082"></a>00082 <span class="preprocessor">#define IMPLEMENT_EXCEPTION(CLS, BASE, NAME)            \</span>
 <a name="l00083"></a>00083 <span class="preprocessor">        CLS::CLS(): BASE()                                                              \</span>
 <a name="l00084"></a>00084 <span class="preprocessor">        {                                                                                               \</span>
 <a name="l00085"></a>00085 <span class="preprocessor">        }                                                                                               \</span>
@@ -216,50 +215,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00116"></a>00116 <span class="preprocessor"></span>
 <a name="l00117"></a>00117         <span class="comment">//exception in xml file</span>
 <a name="l00118"></a>00118         <span class="comment">//e.g.: unknown key, plugin name != classname etc</span>
-<a name="l00119"></a>00119         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(XMLFormatException, Exception)
+<a name="l00119"></a>00119         DECLARE_EXCEPTION(XMLFormatException, Exception)
 <a name="l00120"></a>00120 
 <a name="l00121"></a>00121         <span class="comment">//occurs only during the plugin&#39;s getMetatdata function</span>
 <a name="l00122"></a>00122         <span class="comment">//if any type of parameter (setup, input, output) is declared with</span>
 <a name="l00123"></a>00123         <span class="comment">//a type not allowed in the framework</span>
-<a name="l00124"></a>00124         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(InvalidTypeException, Exception)
+<a name="l00124"></a>00124         DECLARE_EXCEPTION(InvalidTypeException, Exception)
 <a name="l00125"></a>00125 
 <a name="l00126"></a>00126         <span class="comment">//occurs anytime sth is not found:</span>
 <a name="l00127"></a>00127         <span class="comment">//in a plugin/service, when trying to access a non-existant parameter</span>
 <a name="l00128"></a>00128         <span class="comment">//in the application, when trying to create a non-existant service or set a non-existant parameter</span>
 <a name="l00129"></a>00129         <span class="comment">//etc</span>
-<a name="l00130"></a>00130         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(NotFoundException, Exception)
+<a name="l00130"></a>00130         DECLARE_EXCEPTION(NotFoundException, Exception)
 <a name="l00131"></a>00131 
 <a name="l00132"></a>00132         <span class="comment">//occurs in the plugin anytime something is doubly defined, e.g. a plugin registering a service twice</span>
 <a name="l00133"></a>00133         <span class="comment">//or metadata declaring a parameter twice</span>
-<a name="l00134"></a>00134         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(AlreadyExistsException, Exception)
+<a name="l00134"></a>00134         DECLARE_EXCEPTION(AlreadyExistsException, Exception)
 <a name="l00135"></a>00135 
 <a name="l00136"></a>00136         <span class="comment">//occurs only in calls from the application, if the identifier does not belong to the right kind</span>
 <a name="l00137"></a>00137         <span class="comment">//of entity, e.g. calling linkSlots() on a plugin</span>
 <a name="l00138"></a>00138         <span class="comment">//this might actually not be necessary and could be replaced by a boolean return value indicating success / failure</span>
-<a name="l00139"></a>00139         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(InvalidIdentifierException, Exception)
+<a name="l00139"></a>00139         DECLARE_EXCEPTION(InvalidIdentifierException, Exception)
 <a name="l00140"></a>00140 
 <a name="l00141"></a>00141         <span class="comment">//occurs when there is a mismatch between the declared type of any parameter (according to the metadata)</span>
 <a name="l00142"></a>00142         <span class="comment">//and the template parameter used (note that all functions involving parameters are function templates)</span>
-<a name="l00143"></a>00143         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(TypeMismatchException, Exception)
+<a name="l00143"></a>00143         DECLARE_EXCEPTION(TypeMismatchException, Exception)
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145         <span class="comment">//occurs only in the service, when accessing a handle that is not initialized to an actual i/o slot</span>
-<a name="l00146"></a>00146         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(UninitializedHandleException, Exception)
+<a name="l00146"></a>00146         DECLARE_EXCEPTION(UninitializedHandleException, Exception)
 <a name="l00147"></a>00147 
 <a name="l00148"></a>00148         <span class="comment">//something went so very wrong while calling any of an IService&#39;s functions</span>
 <a name="l00149"></a>00149         <span class="comment">//that the service in question is only good for putting it out of its misery. YAY!</span>
-<a name="l00150"></a>00150         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(ServiceException, Exception)
+<a name="l00150"></a>00150         DECLARE_EXCEPTION(ServiceException, Exception)
 <a name="l00151"></a>00151 
 <a name="l00152"></a>00152         <span class="comment">//something went so very wrong while calling any of an IPluginActivator&#39;s functions</span>
 <a name="l00153"></a>00153         <span class="comment">//that the plugin in question is only good for putting it out of its misery. MOAR YAY!</span>
-<a name="l00154"></a>00154         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(PluginException, Exception)
+<a name="l00154"></a>00154         DECLARE_EXCEPTION(PluginException, Exception)
 <a name="l00155"></a>00155 
-<a name="l00156"></a>00156         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(SetupException, Exception);
+<a name="l00156"></a>00156         DECLARE_EXCEPTION(SetupException, Exception);
 <a name="l00157"></a>00157 
-<a name="l00158"></a>00158         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(StartException, Exception);
+<a name="l00158"></a>00158         DECLARE_EXCEPTION(StartException, Exception);
 <a name="l00159"></a>00159 
-<a name="l00160"></a>00160         <a class="code" href="namespace__2_real.html#a7502343b904b8b2a972c7fa97ad8be6d">DECLARE_EXCEPTION</a>(InvalidNameException, Exception);
+<a name="l00160"></a>00160         DECLARE_EXCEPTION(InvalidNameException, Exception);
 <a name="l00161"></a>00161 
-<a name="l00162"></a>00162 }
+<a name="l00162"></a>00162         DECLARE_EXCEPTION(InvalidAccessException, Exception);
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164 }
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -267,7 +268,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -278,9 +279,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_exception_8h.html">_2RealException.h</a>      </li>
+      <li class="navelem"><b>_2RealException.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

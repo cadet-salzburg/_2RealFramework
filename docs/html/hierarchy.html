@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: Class Hierarchy</title>
+<title>_2RealFramework: Class Hierarchy</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -109,6 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a class="el" href="class__2_real_1_1_data.html">_2Real::Data</a></li>
 <li><a class="el" href="class__2_real_1_1_engine.html">_2Real::Engine</a></li>
 <li><a class="el" href="class__2_real_1_1_engine_data.html">_2Real::EngineData</a></li>
+<li><a class="el" href="class__2_real_1_1_engine_impl.html">_2Real::EngineImpl</a></li>
 <li><a class="el" href="class__2_real_1_1_entity.html">_2Real::Entity</a><ul>
 <li><a class="el" href="class__2_real_1_1_plugin.html">_2Real::Plugin</a></li>
 <li><a class="el" href="class__2_real_1_1_runnable.html">_2Real::Runnable</a><ul>
@@ -185,7 +186,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a class="el" href="class__2_real_1_1_service_metadata.html">_2Real::ServiceMetadata</a></li>
 <li><a class="el" href="class__2_real_1_1_singleton_holder.html">_2Real::SingletonHolder&lt; T &gt;</a></li>
 <li><a class="el" href="class__2_real_1_1_symbol.html">_2Real::Symbol</a><ul>
-<li><a class="el" href="class__2_real_1_1_extended_symbol.html">_2Real::ExtendedSymbol</a></li>
+<li><a class="el" href="class__2_real_1_1_extended_symbol.html">_2Real::ExtendedSymbol</a><ul>
+<li><a class="el" href="class__2_real_1_1_parameter_redefinition.html">_2Real::ParameterRedefinition</a></li>
+</ul>
+</li>
 <li><a class="el" href="class__2_real_1_1_graph_data.html">_2Real::GraphData</a><ul>
 <li><a class="el" href="class__2_real_1_1_service_data.html">_2Real::ServiceData</a></li>
 </ul>
@@ -193,13 +197,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a class="el" href="class__2_real_1_1_plugin_data.html">_2Real::PluginData</a></li>
 </ul>
 </li>
+<li><a class="el" href="class__2_real_1_1_symbol_name.html">_2Real::SymbolName</a></li>
 <li><a class="el" href="class__2_real_1_1_system.html">_2Real::System</a></li>
-<li><a class="el" href="class__2_real_1_1_system_data.html">_2Real::SystemData</a></li>
 <li><a class="el" href="class__2_real_1_1_system_pool.html">_2Real::SystemPool</a></li>
 <li><a class="el" href="class__2_real_1_1_thread_pool.html">_2Real::ThreadPool</a></li>
 <li><a class="el" href="class__2_real_1_1_timer.html">_2Real::Timer</a></li>
 <li><a class="el" href="class__2_real_1_1_typetable.html">_2Real::Typetable</a></li>
 <li><a class="el" href="class__2_real_1_1_version.html">_2Real::Version</a></li>
+<li><a class="el" href="class__2_real_1_1_x_m_l_data.html">_2Real::XMLData</a><ul>
+<li><a class="el" href="class__2_real_1_1_block_data.html">_2Real::BlockData</a></li>
+<li><a class="el" href="class__2_real_1_1_system_data.html">_2Real::SystemData</a></li>
+</ul>
+</li>
 <li><a class="el" href="class__2_real_1_1_x_m_l_reader.html">_2Real::XMLReader</a></li>
 </ul>
 </div><!-- contents -->
@@ -208,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -221,7 +230,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="nav-path" class="navpath">
     <ul>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:31 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

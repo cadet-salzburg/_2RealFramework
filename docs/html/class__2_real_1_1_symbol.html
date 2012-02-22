@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::Symbol Class Reference</title>
+<title>_2RealFramework: _2Real::Symbol Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -97,23 +97,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">_2Real::Symbol Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="_2Real::Symbol" -->
-<p><code>#include &lt;<a class="el" href="__2_real_system_data_8h_source.html">_2RealSystemData.h</a>&gt;</code></p>
-<div class="dynheader">
+<!-- doxytag: class="_2Real::Symbol" --><div class="dynheader">
 Inheritance diagram for _2Real::Symbol:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="class__2_real_1_1_symbol.png" usemap="#_2Real::Symbol_map" alt=""/>
   <map id="_2Real::Symbol_map" name="_2Real::Symbol_map">
-<area href="class__2_real_1_1_extended_symbol.html" alt="_2Real::ExtendedSymbol" shape="rect" coords="0,56,150,80"/>
-<area href="class__2_real_1_1_graph_data.html" alt="_2Real::GraphData" shape="rect" coords="160,56,310,80"/>
-<area href="class__2_real_1_1_plugin_data.html" alt="_2Real::PluginData" shape="rect" coords="320,56,470,80"/>
-<area href="class__2_real_1_1_service_data.html" alt="_2Real::ServiceData" shape="rect" coords="160,112,310,136"/>
+<area href="class__2_real_1_1_extended_symbol.html" alt="_2Real::ExtendedSymbol" shape="rect" coords="0,56,181,80"/>
+<area href="class__2_real_1_1_graph_data.html" alt="_2Real::GraphData" shape="rect" coords="191,56,372,80"/>
+<area href="class__2_real_1_1_plugin_data.html" alt="_2Real::PluginData" shape="rect" coords="382,56,563,80"/>
+<area href="class__2_real_1_1_parameter_redefinition.html" alt="_2Real::ParameterRedefinition" shape="rect" coords="0,112,181,136"/>
+<area href="class__2_real_1_1_service_data.html" alt="_2Real::ServiceData" shape="rect" coords="191,112,372,136"/>
 </map>
  </div></div>
 
@@ -121,54 +121,19 @@ Inheritance diagram for _2Real::Symbol:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#a8fd5975aca2d1be147aa0794a19a475d">Symbol</a> (std::string const &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#a06707c50c400f11223626737d9222769">~Symbol</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#afca97534c3afea703acef818a49c2eb0">getName</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7b58bcd60494aee203b58b32ee38a815"></a><!-- doxytag: member="_2Real::Symbol::Symbol" ref="a7b58bcd60494aee203b58b32ee38a815" args="(SymbolName const &amp;name)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Symbol</b> (<a class="el" href="class__2_real_1_1_symbol_name.html">SymbolName</a> const &amp;name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_symbol_name.html">SymbolName</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#a735e230b57d84d41294b392533e70fe4">getName</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#a9f839262619ca91a3ed736709ee7e62f">resolveTo</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#abad77eed7bb1b9eecac21147dab15f9b">getId</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_symbol.html#a8ba8bede3a8635b2b8fca3f561e5fe16">isResolved</a> () const </td></tr>
+<tr><td colspan="2"><h2><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae39066eaf70f72977c28bfbd595a1fad"></a><!-- doxytag: member="_2Real::Symbol::m_Name" ref="ae39066eaf70f72977c28bfbd595a1fad" args="" -->
+<a class="el" href="class__2_real_1_1_symbol_name.html">SymbolName</a> const&#160;</td><td class="memItemRight" valign="bottom"><b>m_Name</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a444a2dc362e1b20156250f3dea152bf8"></a><!-- doxytag: member="_2Real::Symbol::m_Id" ref="a444a2dc362e1b20156250f3dea152bf8" args="" -->
+<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_Id</b></td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_system_data_8h_source.html#l00031">31</a> of file <a class="el" href="__2_real_system_data_8h_source.html">_2RealSystemData.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a8fd5975aca2d1be147aa0794a19a475d"></a><!-- doxytag: member="_2Real::Symbol::Symbol" ref="a8fd5975aca2d1be147aa0794a19a475d" args="(std::string const &amp;name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_symbol.html#a8fd5975aca2d1be147aa0794a19a475d">_2Real::Symbol::Symbol</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00040">40</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a06707c50c400f11223626737d9222769"></a><!-- doxytag: member="_2Real::Symbol::~Symbol" ref="a06707c50c400f11223626737d9222769" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_symbol.html#a06707c50c400f11223626737d9222769">_2Real::Symbol::~Symbol</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00046">46</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
-
-</div>
-</div>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="abad77eed7bb1b9eecac21147dab15f9b"></a><!-- doxytag: member="_2Real::Symbol::getId" ref="abad77eed7bb1b9eecac21147dab15f9b" args="() const " -->
 <div class="memitem">
@@ -185,16 +150,14 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>returns the id </p>
 
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00060">60</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="afca97534c3afea703acef818a49c2eb0"></a><!-- doxytag: member="_2Real::Symbol::getName" ref="afca97534c3afea703acef818a49c2eb0" args="() const " -->
+<a class="anchor" id="a735e230b57d84d41294b392533e70fe4"></a><!-- doxytag: member="_2Real::Symbol::getName" ref="a735e230b57d84d41294b392533e70fe4" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_symbol.html#afca97534c3afea703acef818a49c2eb0">_2Real::Symbol::getName</a> </td>
+          <td class="memname"><a class="el" href="class__2_real_1_1_symbol_name.html">SymbolName</a> const &amp; <a class="el" href="class__2_real_1_1_symbol.html#a735e230b57d84d41294b392533e70fe4">_2Real::Symbol::getName</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -203,8 +166,6 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>returns the name </p>
-
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00055">55</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
 
 </div>
 </div>
@@ -222,8 +183,6 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>true if id is valid </p>
-
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00050">50</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
 
 </div>
 </div>
@@ -243,13 +202,11 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>essentially, sets the id </p>
 
-<p>Definition at line <a class="el" href="__2_real_system_data_8cpp_source.html#l00065">65</a> of file <a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_system_data_8h_source.html">_2RealSystemData.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_system_data_8cpp_source.html">_2RealSystemData.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_system_data_8h_source.html">_2RealSystemData.h</a></li>
+<li>kernel/src/_2RealSystemData.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -258,7 +215,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -272,7 +229,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_symbol.html">Symbol</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

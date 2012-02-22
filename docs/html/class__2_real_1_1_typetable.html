@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::Typetable Class Reference</title>
+<title>_2RealFramework: _2Real::Typetable Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -103,181 +103,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::Typetable" -->
-<p><code>#include &lt;<a class="el" href="__2_real_typetable_8h_source.html">_2RealTypetable.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_typetable-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#ad9cf322a26a50bdb7b05cd0c769449fc">Typetable</a> (<a class="el" href="class__2_real_1_1_engine.html">Engine</a> const &amp;engine)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#a9cca42730236daf313f75d33d8967a27">~Typetable</a> ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename DataType &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#ac93f9e4a0e54f36b29bef515be9bff5c">registerType</a> (std::string const &amp;keyword)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#ae25434b68a8e9bd11fa30e0befb48723">lookupKey</a> (std::string const &amp;type) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#a221e19b5de33720f6aec6eff9b994330">lookupType</a> (std::string const &amp;keyword) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#aaf57c336807c9ffc4c4d9895341b7976">getInitialValueFromType</a> (std::string const &amp;type) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#afdcaa7ee2fdd0690b10049121a894a46">getInitialValueFromKey</a> (std::string const &amp;keyword) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_typetable.html#a5f8630c6fe9e56de0e5dc00aff156388">hasDefaultValue</a> (std::string const &amp;keyword) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61169efbd598111a20468d372b35b7dc"></a><!-- doxytag: member="_2Real::Typetable::Typetable" ref="a61169efbd598111a20468d372b35b7dc" args="(EngineImpl const &amp;EngineImpl)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Typetable</b> (<a class="el" href="class__2_real_1_1_engine_impl.html">EngineImpl</a> const &amp;<a class="el" href="class__2_real_1_1_engine_impl.html">EngineImpl</a>)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="ac93f9e4a0e54f36b29bef515be9bff5c"></a><!-- doxytag: member="_2Real::Typetable::registerType" ref="ac93f9e4a0e54f36b29bef515be9bff5c" args="(std::string const &amp;keyword)" -->
+template&lt;typename DataType &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>registerType</b> (std::string const &amp;keyword)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae25434b68a8e9bd11fa30e0befb48723"></a><!-- doxytag: member="_2Real::Typetable::lookupKey" ref="ae25434b68a8e9bd11fa30e0befb48723" args="(std::string const &amp;type) const " -->
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>lookupKey</b> (std::string const &amp;type) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a221e19b5de33720f6aec6eff9b994330"></a><!-- doxytag: member="_2Real::Typetable::lookupType" ref="a221e19b5de33720f6aec6eff9b994330" args="(std::string const &amp;keyword) const " -->
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>lookupType</b> (std::string const &amp;keyword) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf57c336807c9ffc4c4d9895341b7976"></a><!-- doxytag: member="_2Real::Typetable::getInitialValueFromType" ref="aaf57c336807c9ffc4c4d9895341b7976" args="(std::string const &amp;type) const " -->
+<a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getInitialValueFromType</b> (std::string const &amp;type) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afdcaa7ee2fdd0690b10049121a894a46"></a><!-- doxytag: member="_2Real::Typetable::getInitialValueFromKey" ref="afdcaa7ee2fdd0690b10049121a894a46" args="(std::string const &amp;keyword) const " -->
+<a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getInitialValueFromKey</b> (std::string const &amp;keyword) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5f8630c6fe9e56de0e5dc00aff156388"></a><!-- doxytag: member="_2Real::Typetable::hasDefaultValue" ref="a5f8630c6fe9e56de0e5dc00aff156388" args="(std::string const &amp;keyword) const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasDefaultValue</b> (std::string const &amp;keyword) const </td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_typetable_8h_source.html#l00037">37</a> of file <a class="el" href="__2_real_typetable_8h_source.html">_2RealTypetable.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ad9cf322a26a50bdb7b05cd0c769449fc"></a><!-- doxytag: member="_2Real::Typetable::Typetable" ref="ad9cf322a26a50bdb7b05cd0c769449fc" args="(Engine const &amp;engine)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_typetable.html#ad9cf322a26a50bdb7b05cd0c769449fc">_2Real::Typetable::Typetable</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_engine.html">Engine</a> const &amp;&#160;</td>
-          <td class="paramname"><em>engine</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00028">28</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9cca42730236daf313f75d33d8967a27"></a><!-- doxytag: member="_2Real::Typetable::~Typetable" ref="a9cca42730236daf313f75d33d8967a27" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_typetable.html#a9cca42730236daf313f75d33d8967a27">_2Real::Typetable::~Typetable</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00035">35</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="afdcaa7ee2fdd0690b10049121a894a46"></a><!-- doxytag: member="_2Real::Typetable::getInitialValueFromKey" ref="afdcaa7ee2fdd0690b10049121a894a46" args="(std::string const &amp;keyword) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> <a class="el" href="class__2_real_1_1_typetable.html#afdcaa7ee2fdd0690b10049121a894a46">_2Real::Typetable::getInitialValueFromKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00075">75</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aaf57c336807c9ffc4c4d9895341b7976"></a><!-- doxytag: member="_2Real::Typetable::getInitialValueFromType" ref="aaf57c336807c9ffc4c4d9895341b7976" args="(std::string const &amp;type) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> <a class="el" href="class__2_real_1_1_typetable.html#aaf57c336807c9ffc4c4d9895341b7976">_2Real::Typetable::getInitialValueFromType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00069">69</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5f8630c6fe9e56de0e5dc00aff156388"></a><!-- doxytag: member="_2Real::Typetable::hasDefaultValue" ref="a5f8630c6fe9e56de0e5dc00aff156388" args="(std::string const &amp;keyword) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_typetable.html#a5f8630c6fe9e56de0e5dc00aff156388">_2Real::Typetable::hasDefaultValue</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae25434b68a8e9bd11fa30e0befb48723"></a><!-- doxytag: member="_2Real::Typetable::lookupKey" ref="ae25434b68a8e9bd11fa30e0befb48723" args="(std::string const &amp;type) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_typetable.html#ae25434b68a8e9bd11fa30e0befb48723">_2Real::Typetable::lookupKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00055">55</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a221e19b5de33720f6aec6eff9b994330"></a><!-- doxytag: member="_2Real::Typetable::lookupType" ref="a221e19b5de33720f6aec6eff9b994330" args="(std::string const &amp;keyword) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_typetable.html#a221e19b5de33720f6aec6eff9b994330">_2Real::Typetable::lookupType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8cpp_source.html#l00041">41</a> of file <a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac93f9e4a0e54f36b29bef515be9bff5c"></a><!-- doxytag: member="_2Real::Typetable::registerType" ref="ac93f9e4a0e54f36b29bef515be9bff5c" args="(std::string const &amp;keyword)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DataType &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_typetable.html#ac93f9e4a0e54f36b29bef515be9bff5c">_2Real::Typetable::registerType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_typetable_8h_source.html#l00063">63</a> of file <a class="el" href="__2_real_typetable_8h_source.html">_2RealTypetable.h</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_typetable_8h_source.html">_2RealTypetable.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_typetable_8cpp_source.html">_2RealTypetable.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_typetable_8h_source.html">_2RealTypetable.h</a></li>
+<li>kernel/src/_2RealTypetable.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -286,7 +134,7 @@ template&lt;typename DataType &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -300,7 +148,7 @@ template&lt;typename DataType &gt; </div>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_typetable.html">Typetable</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

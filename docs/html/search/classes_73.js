@@ -9,6 +9,7 @@ var searchData=
   ['setupparameter',['SetupParameter',['../class__2_real_1_1_setup_parameter.html',1,'_2Real']]],
   ['singletonholder',['SingletonHolder',['../class__2_real_1_1_singleton_holder.html',1,'_2Real']]],
   ['symbol',['Symbol',['../class__2_real_1_1_symbol.html',1,'_2Real']]],
+  ['symbolname',['SymbolName',['../class__2_real_1_1_symbol_name.html',1,'_2Real']]],
   ['synchronization',['Synchronization',['../class__2_real_1_1_synchronization.html',1,'_2Real']]],
   ['system',['System',['../class__2_real_1_1_system.html',1,'_2Real']]],
   ['systemdata',['SystemData',['../class__2_real_1_1_system_data.html',1,'_2Real']]],

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::RunnableState Class Reference</title>
+<title>_2RealFramework: _2Real::RunnableState Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -103,9 +103,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">_2Real::RunnableState Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="_2Real::RunnableState" -->
-<p><code>#include &lt;<a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>&gt;</code></p>
-<div class="dynheader">
+<!-- doxytag: class="_2Real::RunnableState" --><div class="dynheader">
 Inheritance diagram for _2Real::RunnableState:</div>
 <div class="dyncontent">
  <div class="center">
@@ -124,339 +122,38 @@ Inheritance diagram for _2Real::RunnableState:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a8ff04bc486e2a346fdf099838dd34cae">RunnableState</a> (<a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const &amp;manager, std::string const &amp;name, std::string const &amp;description)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a5d6807c2721d64e560b00eff98f5e949">getName</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a95d7839115961ef210203b040b500751">getDescription</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a9c1b65b57f8d9fac64b7d051567c4221">~RunnableState</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a067a102bfa3b998e068fb63864848c6b">start</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a17fd442c622537902f4cb817013c1482">update</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#aba0778982c71aa597fbbcb026826d3d5">stop</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#aed03580e7fcdbe7177a90b9fd21a3538">wait</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#ac7304586ef04eb81e1956eb5d864153c">setup</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#ad525d24062d03c287a59480fad6e6e5d">shutdown</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#ae6051a800eed697ebb60db34f6ec6b3d">handleException</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ff04bc486e2a346fdf099838dd34cae"></a><!-- doxytag: member="_2Real::RunnableState::RunnableState" ref="a8ff04bc486e2a346fdf099838dd34cae" args="(RunnableManager const &amp;manager, std::string const &amp;name, std::string const &amp;description)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>RunnableState</b> (<a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const &amp;manager, std::string const &amp;name, std::string const &amp;description)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d6807c2721d64e560b00eff98f5e949"></a><!-- doxytag: member="_2Real::RunnableState::getName" ref="a5d6807c2721d64e560b00eff98f5e949" args="()" -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95d7839115961ef210203b040b500751"></a><!-- doxytag: member="_2Real::RunnableState::getDescription" ref="a95d7839115961ef210203b040b500751" args="()" -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getDescription</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a067a102bfa3b998e068fb63864848c6b"></a><!-- doxytag: member="_2Real::RunnableState::start" ref="a067a102bfa3b998e068fb63864848c6b" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a17fd442c622537902f4cb817013c1482"></a><!-- doxytag: member="_2Real::RunnableState::update" ref="a17fd442c622537902f4cb817013c1482" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aba0778982c71aa597fbbcb026826d3d5"></a><!-- doxytag: member="_2Real::RunnableState::stop" ref="aba0778982c71aa597fbbcb026826d3d5" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed03580e7fcdbe7177a90b9fd21a3538"></a><!-- doxytag: member="_2Real::RunnableState::wait" ref="aed03580e7fcdbe7177a90b9fd21a3538" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>wait</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7304586ef04eb81e1956eb5d864153c"></a><!-- doxytag: member="_2Real::RunnableState::setup" ref="ac7304586ef04eb81e1956eb5d864153c" args="(Runnable &amp;runnable)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad525d24062d03c287a59480fad6e6e5d"></a><!-- doxytag: member="_2Real::RunnableState::shutdown" ref="ad525d24062d03c287a59480fad6e6e5d" args="(Runnable &amp;runnable)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>shutdown</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6051a800eed697ebb60db34f6ec6b3d"></a><!-- doxytag: member="_2Real::RunnableState::handleException" ref="ae6051a800eed697ebb60db34f6ec6b3d" args="(Runnable &amp;runnable)=0" -->
+virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>handleException</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)=0</td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a06c7c2a05db070bf1e97bf4affb4d910">m_Name</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a081356cc00355058a5fa759bbd8393e0">m_Description</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_state.html#a13c08aa9014243a9ea7fb9f5392b3123">m_Manager</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06c7c2a05db070bf1e97bf4affb4d910"></a><!-- doxytag: member="_2Real::RunnableState::m_Name" ref="a06c7c2a05db070bf1e97bf4affb4d910" args="" -->
+std::string const&#160;</td><td class="memItemRight" valign="bottom"><b>m_Name</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a081356cc00355058a5fa759bbd8393e0"></a><!-- doxytag: member="_2Real::RunnableState::m_Description" ref="a081356cc00355058a5fa759bbd8393e0" args="" -->
+std::string const&#160;</td><td class="memItemRight" valign="bottom"><b>m_Description</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a13c08aa9014243a9ea7fb9f5392b3123"></a><!-- doxytag: member="_2Real::RunnableState::m_Manager" ref="a13c08aa9014243a9ea7fb9f5392b3123" args="" -->
+<a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>m_Manager</b></td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00030">30</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a8ff04bc486e2a346fdf099838dd34cae"></a><!-- doxytag: member="_2Real::RunnableState::RunnableState" ref="a8ff04bc486e2a346fdf099838dd34cae" args="(RunnableManager const &amp;manager, std::string const &amp;name, std::string const &amp;description)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_state.html#a8ff04bc486e2a346fdf099838dd34cae">_2Real::RunnableState::RunnableState</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const &amp;&#160;</td>
-          <td class="paramname"><em>manager</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>description</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8cpp_source.html#l00031">31</a> of file <a class="el" href="__2_real_runnable_states_8cpp_source.html">_2RealRunnableStates.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9c1b65b57f8d9fac64b7d051567c4221"></a><!-- doxytag: member="_2Real::RunnableState::~RunnableState" ref="a9c1b65b57f8d9fac64b7d051567c4221" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_state.html#a9c1b65b57f8d9fac64b7d051567c4221">_2Real::RunnableState::~RunnableState</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8cpp_source.html#l00038">38</a> of file <a class="el" href="__2_real_runnable_states_8cpp_source.html">_2RealRunnableStates.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a95d7839115961ef210203b040b500751"></a><!-- doxytag: member="_2Real::RunnableState::getDescription" ref="a95d7839115961ef210203b040b500751" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_runnable_state.html#a95d7839115961ef210203b040b500751">_2Real::RunnableState::getDescription</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00055">55</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5d6807c2721d64e560b00eff98f5e949"></a><!-- doxytag: member="_2Real::RunnableState::getName" ref="a5d6807c2721d64e560b00eff98f5e949" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_runnable_state.html#a5d6807c2721d64e560b00eff98f5e949">_2Real::RunnableState::getName</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00060">60</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae6051a800eed697ebb60db34f6ec6b3d"></a><!-- doxytag: member="_2Real::RunnableState::handleException" ref="ae6051a800eed697ebb60db34f6ec6b3d" args="(Runnable &amp;runnable)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#ae6051a800eed697ebb60db34f6ec6b3d">_2Real::RunnableState::handleException</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em></td><td>)</td>
-          <td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#aca9d102f66dd4b7e62b2a6c71f3181a0">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#ac6dad16d68323b533c58f9a5a292aeca">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#a0cf40ef05b92e5e65870ab79d9db60c5">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#ad543b47674ff5f5ddbb5b3fa11365728">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#ada8219517ababf53215b241a75141b82">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#a6a8345ab4d216852854a363828f0c81a">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac7304586ef04eb81e1956eb5d864153c"></a><!-- doxytag: member="_2Real::RunnableState::setup" ref="ac7304586ef04eb81e1956eb5d864153c" args="(Runnable &amp;runnable)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#ac7304586ef04eb81e1956eb5d864153c">_2Real::RunnableState::setup</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em></td><td>)</td>
-          <td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#a59d4a61f96d5841bc4cede37b4032e70">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#ae5559bdde3b30b8513a511def47f0d3b">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#a848bfbea024d22619d4781168e066b26">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#a7bb0f70d8c23478c2b3aa6fb41ad62de">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#adcebc0005d095f4845c1e1ddc88507aa">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#a830015c9e91a02db049baa14f3a09690">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad525d24062d03c287a59480fad6e6e5d"></a><!-- doxytag: member="_2Real::RunnableState::shutdown" ref="ad525d24062d03c287a59480fad6e6e5d" args="(Runnable &amp;runnable)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#ad525d24062d03c287a59480fad6e6e5d">_2Real::RunnableState::shutdown</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em></td><td>)</td>
-          <td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#a51032c5d36057557c50d2394024cf107">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#ae3e53d21b1551421d8b201777fc821db">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#ab91ed8a632f8f03eee4e1bf1920c000a">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#a7267fe58587b6f759e4631d5784ebb66">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#af962df1e0436d16baadd409fa62c20b1">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#af6e7766c2cae36fddb6fccf5af8ead88">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a067a102bfa3b998e068fb63864848c6b"></a><!-- doxytag: member="_2Real::RunnableState::start" ref="a067a102bfa3b998e068fb63864848c6b" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#a067a102bfa3b998e068fb63864848c6b">_2Real::RunnableState::start</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#ab6f4c0f5e69675f38c10d1a2fe1d3a35">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#a9fc8eb84d06e4239e0a6c2d88296d164">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#a444d9089e5fd5271ed6a4c8a115a8bb7">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#a0f999bfa8d33315cc35d4b352f333b9f">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#a92dc2c15bd111403d29abcb33d4ba290">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#a956cdb91379a516de02c84bd5acf85ae">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aba0778982c71aa597fbbcb026826d3d5"></a><!-- doxytag: member="_2Real::RunnableState::stop" ref="aba0778982c71aa597fbbcb026826d3d5" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#aba0778982c71aa597fbbcb026826d3d5">_2Real::RunnableState::stop</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#a5451f2c174c8af6f316d5ca9198b2dcd">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#a2bb8907a2ff9584c53811b1b97d677fc">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#af274fff567d538ebd10296c4a975c029">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#aed3c3838e5e26bb85449107915e9bc01">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#a6e2f6bb1b38e3f3c389f9d9e4e861715">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#ad5d54625bb2cc1706247f00174f11681">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a17fd442c622537902f4cb817013c1482"></a><!-- doxytag: member="_2Real::RunnableState::update" ref="a17fd442c622537902f4cb817013c1482" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#a17fd442c622537902f4cb817013c1482">_2Real::RunnableState::update</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#a26787332d4c98e2cee69846dd85806f6">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#a625f0c9ddd3d8563c4e9aae7b3afc36b">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#a002d751082fe36e552e94ebb28fd4e76">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#a4ff955067909ef62f701c87535853db9">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#a5a499dc9f08aa6d5b3ccd360ade29d5d">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#a548d8bdc49edbd0124d07c8762fd58c0">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aed03580e7fcdbe7177a90b9fd21a3538"></a><!-- doxytag: member="_2Real::RunnableState::wait" ref="aed03580e7fcdbe7177a90b9fd21a3538" args="(Runnable &amp;runnable, PooledThread &amp;thread)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#aed03580e7fcdbe7177a90b9fd21a3538">_2Real::RunnableState::wait</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implemented in <a class="el" href="class__2_real_1_1_runnable_state_halted.html#aeb5c81a47b58e279d7a66f9bc4e75fe4">_2Real::RunnableStateHalted</a>, <a class="el" href="class__2_real_1_1_runnable_state_shut_down.html#af787e66ff118cfc78f5e40f23d07a82a">_2Real::RunnableStateShutDown</a>, <a class="el" href="class__2_real_1_1_runnable_state_updating.html#aaa7e698949ec60b2981422a6f90a6720">_2Real::RunnableStateUpdating</a>, <a class="el" href="class__2_real_1_1_runnable_state_running.html#a7817cc835654d0769a8069f84bebcc2b">_2Real::RunnableStateRunning</a>, <a class="el" href="class__2_real_1_1_runnable_state_set_up.html#a28a62e39c8603296bfa8180a288e3944">_2Real::RunnableStateSetUp</a>, and <a class="el" href="class__2_real_1_1_runnable_state_created.html#a3c4e4fe2da050660dc3c97caeb7a793d">_2Real::RunnableStateCreated</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a081356cc00355058a5fa759bbd8393e0"></a><!-- doxytag: member="_2Real::RunnableState::m_Description" ref="a081356cc00355058a5fa759bbd8393e0" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const <a class="el" href="class__2_real_1_1_runnable_state.html#a081356cc00355058a5fa759bbd8393e0">_2Real::RunnableState::m_Description</a><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00050">50</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a13c08aa9014243a9ea7fb9f5392b3123"></a><!-- doxytag: member="_2Real::RunnableState::m_Manager" ref="a13c08aa9014243a9ea7fb9f5392b3123" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a> const&amp; <a class="el" href="class__2_real_1_1_runnable_state.html#a13c08aa9014243a9ea7fb9f5392b3123">_2Real::RunnableState::m_Manager</a><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00051">51</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a06c7c2a05db070bf1e97bf4affb4d910"></a><!-- doxytag: member="_2Real::RunnableState::m_Name" ref="a06c7c2a05db070bf1e97bf4affb4d910" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const <a class="el" href="class__2_real_1_1_runnable_state.html#a06c7c2a05db070bf1e97bf4affb4d910">_2Real::RunnableState::m_Name</a><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_states_8h_source.html#l00049">49</a> of file <a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_runnable_states_8cpp_source.html">_2RealRunnableStates.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_runnable_states_8h_source.html">_2RealRunnableStates.h</a></li>
+<li>kernel/src/_2RealRunnableStates.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -465,7 +162,7 @@ Protected Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -479,7 +176,7 @@ Protected Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

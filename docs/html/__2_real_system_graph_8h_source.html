@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealSystemGraph.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealSystemGraph.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealSystemGraph.h</div>  </div>
+<div class="title">kernel/src/_2RealSystemGraph.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_system_graph_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -118,122 +117,124 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="preprocessor">#pragma once</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_entity_8h.html">_2RealEntity.h</a>&quot;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_graph_8h.html">_2RealGraph.h</a>&quot;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_exception_handler_8h.html">_2RealExceptionHandler.h</a>&quot;</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_thread_pool_8h.html">_2RealThreadPool.h</a>&quot;</span>
-<a name="l00025"></a>00025 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_plugin_pool_8h.html">_2RealPluginPool.h</a>&quot;</span>
-<a name="l00026"></a>00026 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_timer_8h.html">_2RealTimer.h</a>&quot;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;_2RealEntity.h&quot;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;_2RealGraph.h&quot;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &quot;_2RealExceptionHandler.h&quot;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &quot;_2RealThreadPool.h&quot;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &quot;_2RealPluginPool.h&quot;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include &quot;_2RealTimer.h&quot;</span>
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 <span class="preprocessor">#include &lt;map&gt;</span>
 <a name="l00029"></a>00029 <span class="preprocessor">#include &lt;list&gt;</span>
 <a name="l00030"></a>00030 <span class="preprocessor">#include &lt;fstream&gt;</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="keyword">namespace </span>_2Real
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035         <span class="keyword">class </span>Data;
-<a name="l00036"></a>00036         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a>)(Data &amp;data);
-<a name="l00037"></a>00037         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>)(std::string &amp;stateName);
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <span class="keyword">class </span>IStateChangeListener;
-<a name="l00040"></a>00040         <span class="keyword">class </span>IExceptionListener;
-<a name="l00041"></a>00041         <span class="keyword">class </span>IOutputListener;
-<a name="l00042"></a>00042         <span class="keyword">class </span>Engine;
-<a name="l00043"></a>00043         <span class="keyword">class </span>EngineData;
-<a name="l00044"></a>00044         <span class="keyword">class </span>Typetable;
-<a name="l00045"></a>00045 
-<a name="l00046"></a><a class="code" href="class__2_real_1_1_system_graph.html">00046</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_system_graph.html">SystemGraph</a> : <span class="keyword">public</span> <a class="code" href="class__2_real_1_1_graph.html">Graph</a>, <span class="keyword">public</span> <a class="code" href="class__2_real_1_1_entity.html">Entity</a>
-<a name="l00047"></a>00047         {
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049         <span class="keyword">public</span>:
+<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;Poco/Path.h&quot;</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="keyword">namespace </span>_2Real
+<a name="l00035"></a>00035 {
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037         <span class="keyword">class </span>Data;
+<a name="l00038"></a>00038         <span class="keyword">typedef</span> void (*DataCallback)(Data &amp;data);
+<a name="l00039"></a>00039         <span class="keyword">typedef</span> void (*StateChangeCallback)(std::string &amp;stateName);
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041         <span class="keyword">class </span>IStateChangeListener;
+<a name="l00042"></a>00042         <span class="keyword">class </span>IExceptionListener;
+<a name="l00043"></a>00043         <span class="keyword">class </span>IOutputListener;
+<a name="l00044"></a>00044         <span class="keyword">class </span>EngineImpl;
+<a name="l00045"></a>00045         <span class="keyword">class </span>EngineData;
+<a name="l00046"></a>00046         <span class="keyword">class </span>Typetable;
+<a name="l00047"></a>00047 
+<a name="l00048"></a><a class="code" href="class__2_real_1_1_system_graph.html">00048</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_system_graph.html">SystemGraph</a> : <span class="keyword">public</span> <a class="code" href="class__2_real_1_1_graph.html">Graph</a>, <span class="keyword">public</span> <a class="code" href="class__2_real_1_1_entity.html">Entity</a>
+<a name="l00049"></a>00049         {
 <a name="l00050"></a>00050 
-<a name="l00051"></a>00051                 <a class="code" href="class__2_real_1_1_system_graph.html#a0bc8e52a7618a19d2bc8e69827d0af64">SystemGraph</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>);
-<a name="l00052"></a>00052                 <a class="code" href="class__2_real_1_1_system_graph.html#aa3bf297a5b9ae4160a4a6817bb364092">~SystemGraph</a>();
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#abc5f7bfb6ae826202a14fda3a836d5b1">shutdown</a>();
+<a name="l00051"></a>00051         <span class="keyword">public</span>:
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053                 <a class="code" href="class__2_real_1_1_system_graph.html">SystemGraph</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>);
+<a name="l00054"></a>00054                 ~<a class="code" href="class__2_real_1_1_system_graph.html">SystemGraph</a>();
 <a name="l00055"></a>00055 
-<a name="l00056"></a>00056                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        <a class="code" href="class__2_real_1_1_system_graph.html#ac6c6b1516759733ac76cd9022d214dbb">loadPlugin</a>(std::string <span class="keyword">const</span>&amp; idName, std::string <span class="keyword">const</span>&amp; classname);
-<a name="l00057"></a>00057                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        <a class="code" href="class__2_real_1_1_system_graph.html#a03cc8d44159bd3201029d08cada3af26">createService</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId, std::string <span class="keyword">const</span>&amp; serviceName);
-<a name="l00058"></a>00058                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        <a class="code" href="class__2_real_1_1_system_graph.html#a103103288d8bcf2b63b63ad5f59c735f">createSequence</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB);
-<a name="l00059"></a>00059                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        <a class="code" href="class__2_real_1_1_system_graph.html#a19c170dfedc0981e4b16081b59315584">createSynchronization</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB);
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#ac4d4325cb5d715802709ca7eeba94ca1">stopAll</a>();
-<a name="l00062"></a>00062                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a607b41c3e79bdbc5d38a328c00bd275d">startAll</a>();
-<a name="l00063"></a>00063                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a26bfff248022dc18fafb79832c0d9f69">startChild</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId);
-<a name="l00064"></a>00064                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a2b73f3a59fd5cf5d71fa2aff50a1a6c0">stopChild</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId);
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a7d065ad276cc5efd5854347a6b4c216a">setUp</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; setupAbleId);
-<a name="l00067"></a>00067                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a>        <a class="code" href="class__2_real_1_1_system_graph.html#a2b4bc10c30e3a32e26bc33734171293c">getValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName) <span class="keyword">const</span>;
-<a name="l00068"></a>00068                 std::string <span class="keyword">const</span>&amp;      <a class="code" href="class__2_real_1_1_system_graph.html#aba02f7db07d65d618e06f0af63241168">getParameterKey</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName) <span class="keyword">const</span>;
-<a name="l00069"></a>00069                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a74db3254e66e4cc04632c468ea7a472d">setValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; value);
-<a name="l00070"></a>00070                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#ae35ec20ff6b2dbb7f44e8ff155c4087d">setUpdateRate</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, <span class="keywordtype">float</span> updatesPerSecond);
-<a name="l00071"></a>00071                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a57829eae174730ea45aa0ed7b9a05158">linkSlots</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceIn, std::string <span class="keyword">const</span>&amp; nameIn, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceOut, std::string <span class="keyword">const</span>&amp; nameOut);
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a780305a85eb32ee22b4e0d89f80c5312">add</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index);
-<a name="l00074"></a>00074                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#aa3924a0aa73c8d53aafffca52a4bb187">append</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent);
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a505946441f517276d21fcf0a3132d726">registerExceptionCallback</a>(<a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback);
-<a name="l00077"></a>00077                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a1b16dc58315f2a4a862b5428ec6d27e3">unregisterExceptionCallback</a>(<a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback);
-<a name="l00078"></a>00078                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a0d9d48f6a4724979bb8f04db06769b4d">registerExceptionListener</a>(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener);
-<a name="l00079"></a>00079                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#ad76104333009c87776470dcd659d1b9b">unregisterExceptionListener</a>(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener);
-<a name="l00080"></a>00080                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a12fb445aca80fe811fb03a31ea6d7c51">registerToNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback);
-<a name="l00081"></a>00081                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a578aaa59285cccb883461cd38225f792">unregisterFromNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback);
-<a name="l00082"></a>00082                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a12fb445aca80fe811fb03a31ea6d7c51">registerToNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener);
-<a name="l00083"></a>00083                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a578aaa59285cccb883461cd38225f792">unregisterFromNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener);
-<a name="l00084"></a>00084                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#aed02cf67e7096d99dfe2d780571c9728">registerToStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback);
-<a name="l00085"></a>00085                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a1b1989ce5326a27b13c75426ae31a70c">unregisterFromStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback);
-<a name="l00086"></a>00086                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#aed02cf67e7096d99dfe2d780571c9728">registerToStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
-<a name="l00087"></a>00087                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a1b1989ce5326a27b13c75426ae31a70c">unregisterFromStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089                 <a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>&amp;           <a class="code" href="class__2_real_1_1_system_graph.html#a172ccfc4b29ca0ad4beef5393f2eb5ad">getFreeThread</a>();
-<a name="l00090"></a>00090                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a4d9674ddeb42f3d7698b4814dc6c56a5">handleException</a>(<a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="code" href="class__2_real_1_1_exception.html">Exception</a> &amp;exception);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092                 <span class="keywordtype">bool</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#ace3a8f8db1fabbfbe100846c84891028">isLoggingEnabled</a>() <span class="keyword">const</span>;
-<a name="l00093"></a>00093                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#ad190c2da010b1fe8c6f466f1822402c5">setInstallDirectory</a>(std::string <span class="keyword">const</span>&amp; directory);
-<a name="l00094"></a>00094                 <span class="keywordtype">void</span>                            <a class="code" href="class__2_real_1_1_system_graph.html#a285410cbdf220a246ad0e213dfd9c1d3">setLogfile</a>(std::string <span class="keyword">const</span>&amp; file);
-<a name="l00095"></a>00095                 std::ofstream &amp;         <a class="code" href="class__2_real_1_1_system_graph.html#ab309ecaeecf7b66dc5278a66f81f4552">getLogstream</a>();
-<a name="l00096"></a>00096                 <span class="keyword">const</span> std::string       <a class="code" href="class__2_real_1_1_system_graph.html#ae550af3763e16f29288ec0cbe5f9ec39">getInfoString</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>) <span class="keyword">const</span>;
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098         <span class="keyword">private</span>:
+<a name="l00056"></a>00056                 <span class="keywordtype">void</span>                            shutdown();
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058                 <span class="comment">//const Identifier      loadPlugin(std::string const&amp; idName, std::string const&amp; classname);</span>
+<a name="l00059"></a>00059                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        createService(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId, std::string <span class="keyword">const</span>&amp; serviceName);
+<a name="l00060"></a>00060                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        createSequence(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB);
+<a name="l00061"></a>00061                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>        createSynchronization(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB);
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063                 <span class="keywordtype">void</span>                            stopAll();
+<a name="l00064"></a>00064                 <span class="keywordtype">void</span>                            startAll();
+<a name="l00065"></a>00065                 <span class="keywordtype">void</span>                            startChild(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId);
+<a name="l00066"></a>00066                 <span class="keywordtype">void</span>                            stopChild(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId);
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068                 <span class="keywordtype">void</span>                            setUp(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; setupAbleId);
+<a name="l00069"></a>00069                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a>        getValue(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName) <span class="keyword">const</span>;
+<a name="l00070"></a>00070                 std::string <span class="keyword">const</span>&amp;      getParameterKey(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName) <span class="keyword">const</span>;
+<a name="l00071"></a>00071                 <span class="keywordtype">void</span>                            setValue(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; value);
+<a name="l00072"></a>00072                 <span class="keywordtype">void</span>                            setUpdateRate(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, <span class="keywordtype">float</span> updatesPerSecond);
+<a name="l00073"></a>00073                 <span class="keywordtype">void</span>                            linkSlots(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceIn, std::string <span class="keyword">const</span>&amp; nameIn, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceOut, std::string <span class="keyword">const</span>&amp; nameOut);
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075                 <span class="keywordtype">void</span>                            add(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index);
+<a name="l00076"></a>00076                 <span class="keywordtype">void</span>                            append(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent);
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078                 <span class="keywordtype">void</span>                            registerExceptionCallback(ExceptionCallback callback);
+<a name="l00079"></a>00079                 <span class="keywordtype">void</span>                            unregisterExceptionCallback(ExceptionCallback callback);
+<a name="l00080"></a>00080                 <span class="keywordtype">void</span>                            registerExceptionListener(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener);
+<a name="l00081"></a>00081                 <span class="keywordtype">void</span>                            unregisterExceptionListener(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener);
+<a name="l00082"></a>00082                 <span class="keywordtype">void</span>                            registerToNewData(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, DataCallback callback);
+<a name="l00083"></a>00083                 <span class="keywordtype">void</span>                            unregisterFromNewData(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, DataCallback callback);
+<a name="l00084"></a>00084                 <span class="keywordtype">void</span>                            registerToNewData(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener);
+<a name="l00085"></a>00085                 <span class="keywordtype">void</span>                            unregisterFromNewData(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; serviceId, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener);
+<a name="l00086"></a>00086                 <span class="keywordtype">void</span>                            registerToStateChange(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, StateChangeCallback callback);
+<a name="l00087"></a>00087                 <span class="keywordtype">void</span>                            unregisterFromStateChange(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, StateChangeCallback callback);
+<a name="l00088"></a>00088                 <span class="keywordtype">void</span>                            registerToStateChange(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
+<a name="l00089"></a>00089                 <span class="keywordtype">void</span>                            unregisterFromStateChange(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091                 <a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>&amp;           getFreeThread();
+<a name="l00092"></a>00092                 <span class="keywordtype">void</span>                            handleException(<a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable, <a class="code" href="class__2_real_1_1_exception.html">Exception</a> &amp;exception);
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094                 <span class="keywordtype">bool</span>                            isLoggingEnabled() <span class="keyword">const</span>;
+<a name="l00095"></a>00095                 <span class="keywordtype">void</span>                            setBaseDirectory(Poco::Path <span class="keyword">const</span>&amp; path);
+<a name="l00096"></a>00096                 <span class="keywordtype">void</span>                            setLogfile(Poco::Path <span class="keyword">const</span>&amp; filepath);
+<a name="l00097"></a>00097                 std::ofstream &amp;         getLogstream();
+<a name="l00098"></a>00098                 <span class="comment">//const std::string     getInfoString(Identifier const&amp; id) const;</span>
 <a name="l00099"></a>00099 
-<a name="l00100"></a>00100                 <span class="keywordtype">void</span>                            startLogging();
+<a name="l00100"></a>00100         <span class="keyword">private</span>:
 <a name="l00101"></a>00101 
-<a name="l00102"></a>00102                 <a class="code" href="class__2_real_1_1_engine.html">Engine</a>                          &amp;m_Engine;
-<a name="l00103"></a>00103                 <a class="code" href="class__2_real_1_1_thread_pool.html">ThreadPool</a>                      m_Threads;
-<a name="l00104"></a>00104                 <a class="code" href="class__2_real_1_1_plugin_pool.html">PluginPool</a>                      m_Plugins;
-<a name="l00105"></a>00105                 <a class="code" href="class__2_real_1_1_exception_handler.html">ExceptionHandler</a>        m_ExceptionHandler;
-<a name="l00106"></a>00106                 std::string                     m_Logfile;
-<a name="l00107"></a>00107                 std::ofstream           m_Logstream;
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109         };
+<a name="l00102"></a>00102                 <span class="keywordtype">void</span>                            startLogging();
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104                 <a class="code" href="class__2_real_1_1_engine_impl.html">EngineImpl</a>                              &amp;m_EngineImpl;
+<a name="l00105"></a>00105                 <a class="code" href="class__2_real_1_1_thread_pool.html">ThreadPool</a>                      m_Threads;
+<a name="l00106"></a>00106                 <a class="code" href="class__2_real_1_1_plugin_pool.html">PluginPool</a>                      &amp;m_Plugins;
+<a name="l00107"></a>00107                 <a class="code" href="class__2_real_1_1_exception_handler.html">ExceptionHandler</a>        m_ExceptionHandler;
+<a name="l00108"></a>00108                 Poco::Path                      m_Logfile;
+<a name="l00109"></a>00109                 std::ofstream           m_Logstream;
 <a name="l00110"></a>00110 
-<a name="l00111"></a><a class="code" href="class__2_real_1_1_system_graph.html#a172ccfc4b29ca0ad4beef5393f2eb5ad">00111</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>&amp; <a class="code" href="class__2_real_1_1_system_graph.html#a172ccfc4b29ca0ad4beef5393f2eb5ad">SystemGraph::getFreeThread</a>()
-<a name="l00112"></a>00112         {
-<a name="l00113"></a>00113                 <span class="keywordflow">return</span> m_Threads.<a class="code" href="class__2_real_1_1_thread_pool.html#ad3bcb0b8b0e8f09e514f5f9a6802f553">getFreeThread</a>();
-<a name="l00114"></a>00114         }
-<a name="l00115"></a>00115 
-<a name="l00116"></a><a class="code" href="class__2_real_1_1_system_graph.html#ace3a8f8db1fabbfbe100846c84891028">00116</a>         <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_system_graph.html#ace3a8f8db1fabbfbe100846c84891028">SystemGraph::isLoggingEnabled</a>()<span class="keyword"> const</span>
-<a name="l00117"></a>00117 <span class="keyword">        </span>{
-<a name="l00118"></a>00118                 <span class="keywordflow">return</span> m_Logstream.is_open();
-<a name="l00119"></a>00119         }
-<a name="l00120"></a>00120 
-<a name="l00121"></a><a class="code" href="class__2_real_1_1_system_graph.html#ab309ecaeecf7b66dc5278a66f81f4552">00121</a>         <span class="keyword">inline</span> std::ofstream &amp; <a class="code" href="class__2_real_1_1_system_graph.html#ab309ecaeecf7b66dc5278a66f81f4552">SystemGraph::getLogstream</a>()
-<a name="l00122"></a>00122         {
-<a name="l00123"></a>00123                 <span class="keywordflow">return</span> m_Logstream;
-<a name="l00124"></a>00124         }
-<a name="l00125"></a>00125 
-<a name="l00126"></a><a class="code" href="class__2_real_1_1_system_graph.html#ad190c2da010b1fe8c6f466f1822402c5">00126</a>         <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_system_graph.html#ad190c2da010b1fe8c6f466f1822402c5">SystemGraph::setInstallDirectory</a>(std::string <span class="keyword">const</span>&amp; directory)
-<a name="l00127"></a>00127         {
-<a name="l00128"></a>00128                 m_Plugins.<a class="code" href="class__2_real_1_1_plugin_pool.html#a4f0b4284587244cc6454ab4c221eee00">setInstallDirectory</a>(directory);
-<a name="l00129"></a>00129         }
-<a name="l00130"></a>00130 
-<a name="l00131"></a><a class="code" href="class__2_real_1_1_system_graph.html#ae550af3763e16f29288ec0cbe5f9ec39">00131</a>         <span class="keyword">inline</span> <span class="keyword">const</span> std::string <a class="code" href="class__2_real_1_1_system_graph.html#ae550af3763e16f29288ec0cbe5f9ec39">SystemGraph::getInfoString</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>)<span class="keyword"> const</span>
-<a name="l00132"></a>00132 <span class="keyword">        </span>{
-<a name="l00133"></a>00133                 <span class="keywordflow">return</span> m_Plugins.<a class="code" href="class__2_real_1_1_plugin_pool.html#a8be328eeb862d75f7d6299b8c63f3346">getInfoString</a>(<span class="keywordtype">id</span>);
-<a name="l00134"></a>00134         }
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136 }
+<a name="l00111"></a>00111         };
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>&amp; SystemGraph::getFreeThread()
+<a name="l00114"></a>00114         {
+<a name="l00115"></a>00115                 <span class="keywordflow">return</span> m_Threads.getFreeThread();
+<a name="l00116"></a>00116         }
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118         <span class="keyword">inline</span> <span class="keywordtype">bool</span> SystemGraph::isLoggingEnabled()<span class="keyword"> const</span>
+<a name="l00119"></a>00119 <span class="keyword">        </span>{
+<a name="l00120"></a>00120                 <span class="keywordflow">return</span> m_Logstream.is_open();
+<a name="l00121"></a>00121         }
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123         <span class="keyword">inline</span> std::ofstream &amp; SystemGraph::getLogstream()
+<a name="l00124"></a>00124         {
+<a name="l00125"></a>00125                 <span class="keywordflow">return</span> m_Logstream;
+<a name="l00126"></a>00126         }
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128         <span class="comment">/*inline void SystemGraph::setInstallDirectory(std::string const&amp; directory)</span>
+<a name="l00129"></a>00129 <span class="comment">        {</span>
+<a name="l00130"></a>00130 <span class="comment">                m_Plugins.setInstallDirectory(directory);</span>
+<a name="l00131"></a>00131 <span class="comment">        }</span>
+<a name="l00132"></a>00132 <span class="comment"></span>
+<a name="l00133"></a>00133 <span class="comment">        inline const std::string SystemGraph::getInfoString(Identifier const&amp; id) const</span>
+<a name="l00134"></a>00134 <span class="comment">        {</span>
+<a name="l00135"></a>00135 <span class="comment">                return m_Plugins.getInfoString(id);</span>
+<a name="l00136"></a>00136 <span class="comment">        }*/</span>
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 }
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -241,7 +242,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -252,9 +253,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_system_graph_8h.html">_2RealSystemGraph.h</a>      </li>
+      <li class="navelem"><b>_2RealSystemGraph.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

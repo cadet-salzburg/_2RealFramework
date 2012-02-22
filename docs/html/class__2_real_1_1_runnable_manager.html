@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::RunnableManager Class Reference</title>
+<title>_2RealFramework: _2Real::RunnableManager Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -103,390 +103,50 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::RunnableManager" -->
-<p><code>#include &lt;<a class="el" href="__2_real_runnable_manager_8h_source.html">_2RealRunnableManager.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_runnable_manager-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#add95bf1cc91f1d03e9cf1c7a6b68f007">RunnableManager</a> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a4e42afb581a00dc6cd6717123f006b4b">~RunnableManager</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a4551811847c610019dd219f9d060c36b">changeState</a> (std::string const &amp;newState) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a87921ca9946461be24092fe60eeeef5a">getManagedRunnable</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a9ab4e79d01fbea27e9c5c642f966f865">getManagedId</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#aabd62b2211ff133050e1851a0cfa614e">setup</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#ad947a49f0a311d0e763b5cdf6f154dd1">start</a> (<a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a9d950e879a3c5a08f2b4fb5c0ca6ef24">update</a> (<a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#aacc845cb5d46a0be3245ffa21240538c">stop</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a56c7376f97c17ce62eff3414621de9c1">wait</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a39a48400b1586d80b7df360f105a5074">shutdown</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a18139dd5f9b3f2fb9a246a27ed9579bd">handleException</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a83fa2efa6ed9858291f11fe924760331">isUpdating</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a8fd76a8567d494ef5d3a02c3b113ae05">isRunning</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a404a28aa3183de65477d1e71fd7ca26c">isSetUp</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#aafe9e13b53db2f6afeeb70f9b49b9435">registerToStateChange</a> (<a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a4eb1be8063cb6220e661e139f678e11e">unregisterFromStateChange</a> (<a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a81da4fd16613a4a50c62e4e831c7075d">registerToStateChange</a> (<a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_runnable_manager.html#a4d79dc26aae4250eb1dc3bb38758c319">unregisterFromStateChange</a> (<a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add95bf1cc91f1d03e9cf1c7a6b68f007"></a><!-- doxytag: member="_2Real::RunnableManager::RunnableManager" ref="add95bf1cc91f1d03e9cf1c7a6b68f007" args="(Runnable &amp;runnable)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>RunnableManager</b> (<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4551811847c610019dd219f9d060c36b"></a><!-- doxytag: member="_2Real::RunnableManager::changeState" ref="a4551811847c610019dd219f9d060c36b" args="(std::string const &amp;newState) const " -->
+<a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>changeState</b> (std::string const &amp;newState) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87921ca9946461be24092fe60eeeef5a"></a><!-- doxytag: member="_2Real::RunnableManager::getManagedRunnable" ref="a87921ca9946461be24092fe60eeeef5a" args="() const " -->
+<a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getManagedRunnable</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ab4e79d01fbea27e9c5c642f966f865"></a><!-- doxytag: member="_2Real::RunnableManager::getManagedId" ref="a9ab4e79d01fbea27e9c5c642f966f865" args="() const " -->
+<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getManagedId</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aabd62b2211ff133050e1851a0cfa614e"></a><!-- doxytag: member="_2Real::RunnableManager::setup" ref="aabd62b2211ff133050e1851a0cfa614e" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad947a49f0a311d0e763b5cdf6f154dd1"></a><!-- doxytag: member="_2Real::RunnableManager::start" ref="ad947a49f0a311d0e763b5cdf6f154dd1" args="(PooledThread &amp;thread)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> (<a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9d950e879a3c5a08f2b4fb5c0ca6ef24"></a><!-- doxytag: member="_2Real::RunnableManager::update" ref="a9d950e879a3c5a08f2b4fb5c0ca6ef24" args="(PooledThread &amp;thread)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (<a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacc845cb5d46a0be3245ffa21240538c"></a><!-- doxytag: member="_2Real::RunnableManager::stop" ref="aacc845cb5d46a0be3245ffa21240538c" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a56c7376f97c17ce62eff3414621de9c1"></a><!-- doxytag: member="_2Real::RunnableManager::wait" ref="a56c7376f97c17ce62eff3414621de9c1" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>wait</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a39a48400b1586d80b7df360f105a5074"></a><!-- doxytag: member="_2Real::RunnableManager::shutdown" ref="a39a48400b1586d80b7df360f105a5074" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>shutdown</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a18139dd5f9b3f2fb9a246a27ed9579bd"></a><!-- doxytag: member="_2Real::RunnableManager::handleException" ref="a18139dd5f9b3f2fb9a246a27ed9579bd" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>handleException</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83fa2efa6ed9858291f11fe924760331"></a><!-- doxytag: member="_2Real::RunnableManager::isUpdating" ref="a83fa2efa6ed9858291f11fe924760331" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isUpdating</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fd76a8567d494ef5d3a02c3b113ae05"></a><!-- doxytag: member="_2Real::RunnableManager::isRunning" ref="a8fd76a8567d494ef5d3a02c3b113ae05" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isRunning</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a404a28aa3183de65477d1e71fd7ca26c"></a><!-- doxytag: member="_2Real::RunnableManager::isSetUp" ref="a404a28aa3183de65477d1e71fd7ca26c" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isSetUp</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aafe9e13b53db2f6afeeb70f9b49b9435"></a><!-- doxytag: member="_2Real::RunnableManager::registerToStateChange" ref="aafe9e13b53db2f6afeeb70f9b49b9435" args="(StateChangeCallback callback)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerToStateChange</b> (StateChangeCallback callback)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4eb1be8063cb6220e661e139f678e11e"></a><!-- doxytag: member="_2Real::RunnableManager::unregisterFromStateChange" ref="a4eb1be8063cb6220e661e139f678e11e" args="(StateChangeCallback callback)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unregisterFromStateChange</b> (StateChangeCallback callback)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81da4fd16613a4a50c62e4e831c7075d"></a><!-- doxytag: member="_2Real::RunnableManager::registerToStateChange" ref="a81da4fd16613a4a50c62e4e831c7075d" args="(IStateChangeListener &amp;listener)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerToStateChange</b> (<a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d79dc26aae4250eb1dc3bb38758c319"></a><!-- doxytag: member="_2Real::RunnableManager::unregisterFromStateChange" ref="a4d79dc26aae4250eb1dc3bb38758c319" args="(IStateChangeListener &amp;listener)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unregisterFromStateChange</b> (<a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener)</td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8h_source.html#l00046">46</a> of file <a class="el" href="__2_real_runnable_manager_8h_source.html">_2RealRunnableManager.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="add95bf1cc91f1d03e9cf1c7a6b68f007"></a><!-- doxytag: member="_2Real::RunnableManager::RunnableManager" ref="add95bf1cc91f1d03e9cf1c7a6b68f007" args="(Runnable &amp;runnable)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_manager.html#add95bf1cc91f1d03e9cf1c7a6b68f007">_2Real::RunnableManager::RunnableManager</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00032">32</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4e42afb581a00dc6cd6717123f006b4b"></a><!-- doxytag: member="_2Real::RunnableManager::~RunnableManager" ref="a4e42afb581a00dc6cd6717123f006b4b" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_manager.html#a4e42afb581a00dc6cd6717123f006b4b">_2Real::RunnableManager::~RunnableManager</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00068">68</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a4551811847c610019dd219f9d060c36b"></a><!-- doxytag: member="_2Real::RunnableManager::changeState" ref="a4551811847c610019dd219f9d060c36b" args="(std::string const &amp;newState) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp; <a class="el" href="class__2_real_1_1_runnable_manager.html#a4551811847c610019dd219f9d060c36b">_2Real::RunnableManager::changeState</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>newState</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00096">96</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9ab4e79d01fbea27e9c5c642f966f865"></a><!-- doxytag: member="_2Real::RunnableManager::getManagedId" ref="a9ab4e79d01fbea27e9c5c642f966f865" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp; <a class="el" href="class__2_real_1_1_runnable_manager.html#a9ab4e79d01fbea27e9c5c642f966f865">_2Real::RunnableManager::getManagedId</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00104">104</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a87921ca9946461be24092fe60eeeef5a"></a><!-- doxytag: member="_2Real::RunnableManager::getManagedRunnable" ref="a87921ca9946461be24092fe60eeeef5a" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp; <a class="el" href="class__2_real_1_1_runnable_manager.html#a87921ca9946461be24092fe60eeeef5a">_2Real::RunnableManager::getManagedRunnable</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8h_source.html#l00086">86</a> of file <a class="el" href="__2_real_runnable_manager_8h_source.html">_2RealRunnableManager.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a18139dd5f9b3f2fb9a246a27ed9579bd"></a><!-- doxytag: member="_2Real::RunnableManager::handleException" ref="a18139dd5f9b3f2fb9a246a27ed9579bd" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a18139dd5f9b3f2fb9a246a27ed9579bd">_2Real::RunnableManager::handleException</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00147">147</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8fd76a8567d494ef5d3a02c3b113ae05"></a><!-- doxytag: member="_2Real::RunnableManager::isRunning" ref="a8fd76a8567d494ef5d3a02c3b113ae05" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_runnable_manager.html#a8fd76a8567d494ef5d3a02c3b113ae05">_2Real::RunnableManager::isRunning</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00078">78</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a404a28aa3183de65477d1e71fd7ca26c"></a><!-- doxytag: member="_2Real::RunnableManager::isSetUp" ref="a404a28aa3183de65477d1e71fd7ca26c" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_runnable_manager.html#a404a28aa3183de65477d1e71fd7ca26c">_2Real::RunnableManager::isSetUp</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00090">90</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a83fa2efa6ed9858291f11fe924760331"></a><!-- doxytag: member="_2Real::RunnableManager::isUpdating" ref="a83fa2efa6ed9858291f11fe924760331" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_runnable_manager.html#a83fa2efa6ed9858291f11fe924760331">_2Real::RunnableManager::isUpdating</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00084">84</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aafe9e13b53db2f6afeeb70f9b49b9435"></a><!-- doxytag: member="_2Real::RunnableManager::registerToStateChange" ref="aafe9e13b53db2f6afeeb70f9b49b9435" args="(StateChangeCallback callback)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#aafe9e13b53db2f6afeeb70f9b49b9435">_2Real::RunnableManager::registerToStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00048">48</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a81da4fd16613a4a50c62e4e831c7075d"></a><!-- doxytag: member="_2Real::RunnableManager::registerToStateChange" ref="a81da4fd16613a4a50c62e4e831c7075d" args="(IStateChangeListener &amp;listener)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#aafe9e13b53db2f6afeeb70f9b49b9435">_2Real::RunnableManager::registerToStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00058">58</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aabd62b2211ff133050e1851a0cfa614e"></a><!-- doxytag: member="_2Real::RunnableManager::setup" ref="aabd62b2211ff133050e1851a0cfa614e" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#aabd62b2211ff133050e1851a0cfa614e">_2Real::RunnableManager::setup</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00109">109</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a39a48400b1586d80b7df360f105a5074"></a><!-- doxytag: member="_2Real::RunnableManager::shutdown" ref="a39a48400b1586d80b7df360f105a5074" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a39a48400b1586d80b7df360f105a5074">_2Real::RunnableManager::shutdown</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00142">142</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad947a49f0a311d0e763b5cdf6f154dd1"></a><!-- doxytag: member="_2Real::RunnableManager::start" ref="ad947a49f0a311d0e763b5cdf6f154dd1" args="(PooledThread &amp;thread)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#ad947a49f0a311d0e763b5cdf6f154dd1">_2Real::RunnableManager::start</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00114">114</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aacc845cb5d46a0be3245ffa21240538c"></a><!-- doxytag: member="_2Real::RunnableManager::stop" ref="aacc845cb5d46a0be3245ffa21240538c" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#aacc845cb5d46a0be3245ffa21240538c">_2Real::RunnableManager::stop</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00126">126</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4eb1be8063cb6220e661e139f678e11e"></a><!-- doxytag: member="_2Real::RunnableManager::unregisterFromStateChange" ref="a4eb1be8063cb6220e661e139f678e11e" args="(StateChangeCallback callback)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a4eb1be8063cb6220e661e139f678e11e">_2Real::RunnableManager::unregisterFromStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00053">53</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4d79dc26aae4250eb1dc3bb38758c319"></a><!-- doxytag: member="_2Real::RunnableManager::unregisterFromStateChange" ref="a4d79dc26aae4250eb1dc3bb38758c319" args="(IStateChangeListener &amp;listener)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a4eb1be8063cb6220e661e139f678e11e">_2Real::RunnableManager::unregisterFromStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00063">63</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9d950e879a3c5a08f2b4fb5c0ca6ef24"></a><!-- doxytag: member="_2Real::RunnableManager::update" ref="a9d950e879a3c5a08f2b4fb5c0ca6ef24" args="(PooledThread &amp;thread)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a9d950e879a3c5a08f2b4fb5c0ca6ef24">_2Real::RunnableManager::update</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td>
-          <td class="paramname"><em>thread</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00120">120</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a56c7376f97c17ce62eff3414621de9c1"></a><!-- doxytag: member="_2Real::RunnableManager::wait" ref="a56c7376f97c17ce62eff3414621de9c1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_runnable_manager.html#a56c7376f97c17ce62eff3414621de9c1">_2Real::RunnableManager::wait</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_runnable_manager_8cpp_source.html#l00134">134</a> of file <a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_runnable_manager_8h_source.html">_2RealRunnableManager.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_runnable_manager_8cpp_source.html">_2RealRunnableManager.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_runnable_manager_8h_source.html">_2RealRunnableManager.h</a></li>
+<li>kernel/src/_2RealRunnableManager.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -495,7 +155,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -509,7 +169,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

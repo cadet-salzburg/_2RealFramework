@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::XMLReader Class Reference</title>
+<title>_2RealFramework: _2Real::XMLReader Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -105,205 +105,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::XMLReader" -->
-<p><code>#include &lt;<a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_x_m_l_reader-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#acd452b57bb64a845e262323184aafe54">XMLReader</a> (std::string const &amp;xmlPath)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a699ba1a1950b4294e7e09c3805f5b282">getFilepath</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Poco::XML::Node &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a8740c0d13c1805765f1f4759f2cc2f1a">getRoot</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09b2b2b084a93a21911857d399531c5d"></a><!-- doxytag: member="_2Real::XMLReader::XMLReader" ref="a09b2b2b084a93a21911857d399531c5d" args="(Poco::Path const &amp;path)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>XMLReader</b> (Poco::Path const &amp;path)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a29263f668ae2738bc24479de4055c837"></a><!-- doxytag: member="_2Real::XMLReader::getFilepath" ref="a29263f668ae2738bc24479de4055c837" args="() const " -->
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getFilepath</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8740c0d13c1805765f1f4759f2cc2f1a"></a><!-- doxytag: member="_2Real::XMLReader::getRoot" ref="a8740c0d13c1805765f1f4759f2cc2f1a" args="()" -->
+Poco::XML::Node &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getRoot</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a5869e6872880bce22bb3ce691b1d48c5">getNodeAttribute</a> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a83154d2a13a02d43040a268137d079a9">getChildText</a> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static Poco::XML::Node &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a3e0131bb254708d5bead8e21cfda7929">XMLReader::getChildNode</a> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5869e6872880bce22bb3ce691b1d48c5"></a><!-- doxytag: member="_2Real::XMLReader::getNodeAttribute" ref="a5869e6872880bce22bb3ce691b1d48c5" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
+static const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getNodeAttribute</b> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83154d2a13a02d43040a268137d079a9"></a><!-- doxytag: member="_2Real::XMLReader::getChildText" ref="a83154d2a13a02d43040a268137d079a9" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
+static const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getChildText</b> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e0131bb254708d5bead8e21cfda7929"></a><!-- doxytag: member="_2Real::XMLReader::XMLReader::getChildNode" ref="a3e0131bb254708d5bead8e21cfda7929" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
+static Poco::XML::Node &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>XMLReader::getChildNode</b> (std::string const &amp;name, Poco::XML::Node &amp;node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38ae8f559a7811794531183a2efa113f"></a><!-- doxytag: member="_2Real::XMLReader::getName" ref="a38ae8f559a7811794531183a2efa113f" args="()" -->
+static std::list&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Poco::XML::XMLString const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a864a760dc0d2da0bdf43612d3ff20a21">m_Filepath</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Poco::AutoPtr<br class="typebreak"/>
-&lt; Poco::XML::Document &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#a79b194c8235e8de77daeb6e1edc530f9">m_Document</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a423e4cd93c551fdffdf86c8c06ca88af"></a><!-- doxytag: member="_2Real::XMLReader::m_Filepath" ref="a423e4cd93c551fdffdf86c8c06ca88af" args="" -->
+Poco::Path const&#160;</td><td class="memItemRight" valign="bottom"><b>m_Filepath</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79b194c8235e8de77daeb6e1edc530f9"></a><!-- doxytag: member="_2Real::XMLReader::m_Document" ref="a79b194c8235e8de77daeb6e1edc530f9" args="" -->
+Poco::AutoPtr<br class="typebreak"/>
+&lt; Poco::XML::Document &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_Document</b></td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8h_source.html#l00040">40</a> of file <a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="acd452b57bb64a845e262323184aafe54"></a><!-- doxytag: member="_2Real::XMLReader::XMLReader" ref="acd452b57bb64a845e262323184aafe54" args="(std::string const &amp;xmlPath)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_x_m_l_reader.html#acd452b57bb64a845e262323184aafe54">_2Real::XMLReader::XMLReader</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>xmlPath</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html#l00040">40</a> of file <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a83154d2a13a02d43040a268137d079a9"></a><!-- doxytag: member="_2Real::XMLReader::getChildText" ref="a83154d2a13a02d43040a268137d079a9" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a83154d2a13a02d43040a268137d079a9">_2Real::XMLReader::getChildText</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Poco::XML::Node &amp;&#160;</td>
-          <td class="paramname"><em>node</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html#l00078">78</a> of file <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a699ba1a1950b4294e7e09c3805f5b282"></a><!-- doxytag: member="_2Real::XMLReader::getFilepath" ref="a699ba1a1950b4294e7e09c3805f5b282" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a699ba1a1950b4294e7e09c3805f5b282">_2Real::XMLReader::getFilepath</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html#l00048">48</a> of file <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5869e6872880bce22bb3ce691b1d48c5"></a><!-- doxytag: member="_2Real::XMLReader::getNodeAttribute" ref="a5869e6872880bce22bb3ce691b1d48c5" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a5869e6872880bce22bb3ce691b1d48c5">_2Real::XMLReader::getNodeAttribute</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Poco::XML::Node &amp;&#160;</td>
-          <td class="paramname"><em>node</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html#l00058">58</a> of file <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8740c0d13c1805765f1f4759f2cc2f1a"></a><!-- doxytag: member="_2Real::XMLReader::getRoot" ref="a8740c0d13c1805765f1f4759f2cc2f1a" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Poco::XML::Node &amp; <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a8740c0d13c1805765f1f4759f2cc2f1a">_2Real::XMLReader::getRoot</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html#l00053">53</a> of file <a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a3e0131bb254708d5bead8e21cfda7929"></a><!-- doxytag: member="_2Real::XMLReader::XMLReader::getChildNode" ref="a3e0131bb254708d5bead8e21cfda7929" args="(std::string const &amp;name, Poco::XML::Node &amp;node)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static Poco::XML::Node&amp; _2Real::XMLReader::XMLReader::getChildNode </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Poco::XML::Node &amp;&#160;</td>
-          <td class="paramname"><em>node</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a79b194c8235e8de77daeb6e1edc530f9"></a><!-- doxytag: member="_2Real::XMLReader::m_Document" ref="a79b194c8235e8de77daeb6e1edc530f9" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Poco::AutoPtr&lt; Poco::XML::Document &gt; <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a79b194c8235e8de77daeb6e1edc530f9">_2Real::XMLReader::m_Document</a><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8h_source.html#l00057">57</a> of file <a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a864a760dc0d2da0bdf43612d3ff20a21"></a><!-- doxytag: member="_2Real::XMLReader::m_Filepath" ref="a864a760dc0d2da0bdf43612d3ff20a21" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Poco::XML::XMLString const <a class="el" href="class__2_real_1_1_x_m_l_reader.html#a864a760dc0d2da0bdf43612d3ff20a21">_2Real::XMLReader::m_Filepath</a><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_x_m_l_reader_8h_source.html#l00056">56</a> of file <a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_x_m_l_reader_8cpp_source.html">_2RealXMLReader.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_x_m_l_reader_8h_source.html">_2RealXMLReader.h</a></li>
+<li>kernel/src/_2RealXMLReader.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -312,7 +144,7 @@ Protected Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -326,7 +158,7 @@ Protected Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_x_m_l_reader.html">XMLReader</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

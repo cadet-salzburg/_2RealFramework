@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealEngine.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealEngine.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealEngine.h</div>  </div>
+<div class="title">kernel/src/_2RealEngine.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_engine_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001  <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001  <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment"></span>
@@ -119,113 +118,101 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00019"></a>00019 
 <a name="l00020"></a>00020 <span class="preprocessor">#pragma once</span>
 <a name="l00021"></a>00021 <span class="preprocessor"></span>
-<a name="l00026"></a>00026 <span class="preprocessor">#pragma warning(disable:4503)</span>
-<a name="l00027"></a>00027 <span class="preprocessor"></span>
-<a name="l00028"></a>00028 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_typetable_8h.html">_2RealTypetable.h</a>&quot;</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_service_factory_8h.html">_2RealServiceFactory.h</a>&quot;</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_system_pool_8h.html">_2RealSystemPool.h</a>&quot;</span>
-<a name="l00031"></a>00031 <span class="preprocessor">#include &quot;<a class="code" href="__2_real_timer_8h.html">_2RealTimer.h</a>&quot;</span>
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="comment">//#include &quot;vld.h&quot;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;_2RealEngineData.h&quot;</span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;string&gt;</span>
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>_2Real
+<a name="l00027"></a>00027 {
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029         <span class="keyword">class </span>Identifier;
+<a name="l00030"></a>00030         <span class="keyword">class </span>EngineImpl;
+<a name="l00031"></a>00031 
+<a name="l00032"></a><a class="code" href="class__2_real_1_1_engine.html">00032</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_engine.html">Engine</a>
+<a name="l00033"></a>00033         {
 <a name="l00034"></a>00034 
-<a name="l00035"></a>00035 <span class="keyword">namespace </span>_2Real
-<a name="l00036"></a>00036 {
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038         <span class="keyword">class </span>Data;
-<a name="l00039"></a>00039         <span class="keyword">class </span>RunnableError;
-<a name="l00040"></a>00040 
-<a name="l00041"></a><a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">00041</a>         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a>)(<a class="code" href="class__2_real_1_1_runnable_error.html">RunnableError</a> &amp;exception);
-<a name="l00042"></a><a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">00042</a>         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a>)(<a class="code" href="class__2_real_1_1_data.html">Data</a> &amp;data);
-<a name="l00043"></a><a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">00043</a>         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>)(std::string &amp;stateName);
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>;
-<a name="l00046"></a>00046         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a>;
-<a name="l00047"></a>00047         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a>;
-<a name="l00048"></a>00048         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a>;
-<a name="l00049"></a>00049         
-<a name="l00050"></a><a class="code" href="class__2_real_1_1_engine.html">00050</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_engine.html">Engine</a>
-<a name="l00051"></a>00051         {
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keyword">public</span>:
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055                 <span class="keyword">static</span> <a class="code" href="class__2_real_1_1_engine.html">Engine</a> &amp; <a class="code" href="class__2_real_1_1_engine.html#a156750f48e54a2dfa8c17d60f64ff4b8">instance</a>();
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057                 <a class="code" href="class__2_real_1_1_typetable.html">Typetable</a> <span class="keyword">const</span>&amp;                <a class="code" href="class__2_real_1_1_engine.html#a569865d2891958abf0bd9313255d119e">getTypes</a>() <span class="keyword">const</span>;
-<a name="l00058"></a>00058                 <a class="code" href="class__2_real_1_1_timer.html">Timer</a> <span class="keyword">const</span>&amp;                    <a class="code" href="class__2_real_1_1_engine.html#a4ac819e7aa1fe6ed09d85746cb5a4f86">getTimer</a>() <span class="keyword">const</span>;
-<a name="l00059"></a>00059                 <span class="keywordtype">long</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a53277b639ff3771680174668c778cd6e">getTimestamp</a>() <span class="keyword">const</span>;
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>                <a class="code" href="class__2_real_1_1_engine.html#a3d1118729a2f874abaccec6cf5be86ea">createSystem</a>(std::string <span class="keyword">const</span>&amp; idName);
-<a name="l00062"></a>00062                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>                <a class="code" href="class__2_real_1_1_engine.html#aa0bc553430529de253b14269f8d712ce">loadPlugin</a>(std::string <span class="keyword">const</span>&amp; idName, std::string <span class="keyword">const</span>&amp; className, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00063"></a>00063                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>                <a class="code" href="class__2_real_1_1_engine.html#acb9f7e319248a5bc4a0fecde6e5f23dc">createService</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; plugin, std::string <span class="keyword">const</span>&amp; serviceName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00064"></a>00064                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>                <a class="code" href="class__2_real_1_1_engine.html#a7742c9196e659d43acd6410d88c95dce">createSequence</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00065"></a>00065                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a>                <a class="code" href="class__2_real_1_1_engine.html#a340c7135a65df67448bc6bd12eaa4150">createSynchronization</a>(std::string <span class="keyword">const</span>&amp; idName, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableA, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableB, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00066"></a>00066                 
-<a name="l00067"></a>00067                 <span class="comment">//void                                  destroy(Identifier const&amp; id, Identifier const&amp; systemId);</span>
-<a name="l00068"></a>00068                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ad62afb594e7a2d83b59f441b8b777da5">destroySystem</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a8d53825ecf16eb80fadda81bf84a337a">setSystemLogfile</a>(std::string <span class="keyword">const</span>&amp; file, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00071"></a>00071                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a4ba2ed1d12d1ff5f842a0be9e4138fea">setSystemDirectory</a>(std::string <span class="keyword">const</span>&amp; directory, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 <span class="keyword">const</span> std::string               <a class="code" href="class__2_real_1_1_engine.html#a200da3d57c1b9f522f9d21d045dd725c">getInfo</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; plugin, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId) <span class="keyword">const</span>;
-<a name="l00074"></a>00074                 
-<a name="l00075"></a>00075                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a088db8f42b346bf4d33f8f2ae903dc88">setup</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; setupAble, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00076"></a>00076                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ae564dc087e215cc02471d55aace464a4">setUpdateRate</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <span class="keywordtype">float</span> updatesPerSecond, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00077"></a>00077                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a90c1ea97a503331a6790ca68016a752c">setValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; value, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00078"></a>00078                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#aa3bc5cab4e482c90bb3cf8b10e4ad097">setValueToString</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; paramName, std::string <span class="keyword">const</span>&amp; value, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00079"></a>00079                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a>                <a class="code" href="class__2_real_1_1_engine.html#a4821d61500dbec5e82f52dfd2809d585">getValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; name, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId) <span class="keyword">const</span>;
+<a name="l00035"></a>00035         <span class="keyword">public</span>:
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037                 <span class="keyword">static</span> <a class="code" href="class__2_real_1_1_engine.html">Engine</a>&amp; instance();
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039                 <span class="comment">/*</span>
+<a name="l00040"></a>00040 <span class="comment">                *       sets the base directory, from where all plugins will be searched</span>
+<a name="l00041"></a>00041 <span class="comment">                */</span>
+<a name="l00042"></a>00042                 <span class="keywordtype">void</span> setBaseDirectory(std::string <span class="keyword">const</span>&amp; directory);
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044                 <span class="comment">/*</span>
+<a name="l00045"></a>00045 <span class="comment">                *       loads the dynamic from the given path</span>
+<a name="l00046"></a>00046 <span class="comment">                *       returns a list of strings with all the exported classes that are derived off IPluginActivator</span>
+<a name="l00047"></a>00047 <span class="comment">                *       if path is relative, it will be interpreted with respect to the base directory</span>
+<a name="l00048"></a>00048 <span class="comment">                *       TODO: if path points to a directory, all dynamic libs inside that directory will be loaded</span>
+<a name="l00049"></a>00049 <span class="comment">                */</span>
+<a name="l00050"></a>00050                 <span class="keyword">const</span> std::list&lt; std::string &gt; load(std::string <span class="keyword">const</span>&amp; path);
+<a name="l00051"></a>00051 
+<a name="l00056"></a>00056                 <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_engine.html#a6571c1b5159c532d4f3572863b9ccc9e">isLoaded</a>(std::string <span class="keyword">const</span>&amp; libraryPath) <span class="keyword">const</span>;
+<a name="l00057"></a>00057 
+<a name="l00061"></a>00061                 <span class="keyword">const</span> std::list&lt; std::string &gt; <a class="code" href="class__2_real_1_1_engine.html#a2aaaea731fe3ca67064c675ec9f754ad">isExportedBy</a>(std::string <span class="keyword">const</span>&amp; className);
+<a name="l00062"></a>00062 
+<a name="l00067"></a>00067                 <span class="keyword">const</span> std::string <a class="code" href="class__2_real_1_1_engine.html#a395c1b7872ecf6679973e51c9c0d82f0">getInfoString</a>(std::string <span class="keyword">const</span>&amp; className, std::string <span class="keyword">const</span>&amp; libraryPath);
+<a name="l00068"></a>00068 
+<a name="l00072"></a>00072                 <span class="keyword">const</span> std::string <a class="code" href="class__2_real_1_1_engine.html#a395c1b7872ecf6679973e51c9c0d82f0">getInfoString</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>);
+<a name="l00073"></a>00073 
+<a name="l00079"></a>00079                 <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_engine.html#ab72447cfaff7d67419465426021bdbbe">canCreate</a>(std::string <span class="keyword">const</span>&amp; className, std::string <span class="keyword">const</span>&amp; libraryPath) <span class="keyword">const</span>;
 <a name="l00080"></a>00080 
-<a name="l00081"></a>00081                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#af2f0135cbf561d403e32dc9bad91d44b">linkSlots</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; idIn, std::string <span class="keyword">const</span>&amp; nameIn, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; idOut, std::string <span class="keyword">const</span>&amp; nameOut, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00082"></a>00082                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a2f7b6f4ae7f19b17c31483369d6333ff">start</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00083"></a>00083                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a24a6714089d736db5411103b60c58fd6">startAll</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00084"></a>00084                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a7de360794bb5813e7062145f497d1b44">stop</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00085"></a>00085                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a16ddecce4fa4717ba2ed78b0d945054e">stopAll</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00086"></a>00086                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ab13181225cae9ba951f1389a8c67a29e">registerToNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00087"></a>00087                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ac302a3a02630cafd0686800e6e84822f">unregisterFromNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00088"></a>00088                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ae9e9a39a5bd98a27cb081ccc6b0bcec9">registerToException</a>(<a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00089"></a>00089                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a1227c2d14159f76bf140f1a436acea94">unregisterFromException</a>(<a class="code" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00090"></a>00090                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ab13181225cae9ba951f1389a8c67a29e">registerToNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00091"></a>00091                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ac302a3a02630cafd0686800e6e84822f">unregisterFromNewData</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; service, std::string <span class="keyword">const</span>&amp; outName, <a class="code" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00092"></a>00092                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#ae9e9a39a5bd98a27cb081ccc6b0bcec9">registerToException</a>(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00093"></a>00093                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a1227c2d14159f76bf140f1a436acea94">unregisterFromException</a>(<a class="code" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00094"></a>00094                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a7564297d05b512541c3e007563b4fa8c">registerToStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00095"></a>00095                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a34f97d13d3efbe0dad085082c0a91968">unregisterFromStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00096"></a>00096                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a7564297d05b512541c3e007563b4fa8c">registerToStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00097"></a>00097                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#a34f97d13d3efbe0dad085082c0a91968">unregisterFromStateChange</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnableId, <a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; systemId);
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#aa769c4753c2ba084d8a1f5863cd6d58b">add</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00100"></a>00100                 <span class="keywordtype">void</span>                                    <a class="code" href="class__2_real_1_1_engine.html#aab2190aebf2af7287d0a474bec15bd96">append</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; runnable, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; parent, <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; system);
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102         <span class="keyword">private</span>:
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104                 <span class="keyword">template</span>&lt; <span class="keyword">typename</span> T &gt;
-<a name="l00105"></a><a class="code" href="class__2_real_1_1_engine.html#accc0df9ed97bc261a12d7fc8f508e1dd">00105</a>                 <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class__2_real_1_1_singleton_holder.html">SingletonHolder</a>;
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107                 <a class="code" href="class__2_real_1_1_engine.html">Engine</a>();
-<a name="l00108"></a>00108                 ~<a class="code" href="class__2_real_1_1_engine.html">Engine</a>();
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110                 <a class="code" href="class__2_real_1_1_service_factory.html">ServiceFactory</a>                  m_Factory;
-<a name="l00111"></a>00111                 <a class="code" href="class__2_real_1_1_system_pool.html">SystemPool</a>              m_Graphs;
-<a name="l00112"></a>00112                 <a class="code" href="class__2_real_1_1_typetable.html">Typetable</a>                               m_Types;
-<a name="l00113"></a>00113                 <a class="code" href="class__2_real_1_1_timer.html">Timer</a>                                   m_Timer;
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115         };
-<a name="l00116"></a>00116 
-<a name="l00117"></a><a class="code" href="class__2_real_1_1_engine.html#a569865d2891958abf0bd9313255d119e">00117</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_typetable.html">Typetable</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_engine.html#a569865d2891958abf0bd9313255d119e">Engine::getTypes</a>()<span class="keyword"> const</span>
-<a name="l00118"></a>00118 <span class="keyword">        </span>{
-<a name="l00119"></a>00119                 <span class="keywordflow">return</span> m_Types;
-<a name="l00120"></a>00120         }
-<a name="l00121"></a>00121 
-<a name="l00122"></a><a class="code" href="class__2_real_1_1_engine.html#a4ac819e7aa1fe6ed09d85746cb5a4f86">00122</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_timer.html">Timer</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_engine.html#a4ac819e7aa1fe6ed09d85746cb5a4f86">Engine::getTimer</a>()<span class="keyword"> const</span>
-<a name="l00123"></a>00123 <span class="keyword">        </span>{
-<a name="l00124"></a>00124                 <span class="keywordflow">return</span> m_Timer;
-<a name="l00125"></a>00125         }
-<a name="l00126"></a>00126 
-<a name="l00127"></a><a class="code" href="class__2_real_1_1_engine.html#a53277b639ff3771680174668c778cd6e">00127</a>         <span class="keyword">inline</span> <span class="keywordtype">long</span> <a class="code" href="class__2_real_1_1_engine.html#a53277b639ff3771680174668c778cd6e">Engine::getTimestamp</a>()<span class="keyword"> const</span>
-<a name="l00128"></a>00128 <span class="keyword">        </span>{
-<a name="l00129"></a>00129                 <span class="keywordflow">return</span> m_Timer.<a class="code" href="class__2_real_1_1_timer.html#a4cb64117041cc7a4b13c6dbf119b2319">getTimestamp</a>();
-<a name="l00130"></a>00130         }
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 }
+<a name="l00085"></a>00085                 <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_engine.html#ad1053f22efc18cb2a094d7b4dbf84b87">isSingleton</a>(std::string <span class="keyword">const</span>&amp; className, std::string <span class="keyword">const</span>&amp; libraryPath) <span class="keyword">const</span>;
+<a name="l00086"></a>00086 
+<a name="l00091"></a>00091                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="code" href="class__2_real_1_1_engine.html#a787107ce9d961aa37b838d9f9717aef8">createInstance</a>(std::string <span class="keyword">const</span>&amp; idName, std::string <span class="keyword">const</span>&amp; className, std::string <span class="keyword">const</span>&amp; libraryPath);
+<a name="l00092"></a>00092 
+<a name="l00093"></a>00093                 <span class="comment">/*</span>
+<a name="l00094"></a>00094 <span class="comment">                *       returns instance of singleton plugin</span>
+<a name="l00095"></a>00095 <span class="comment">                */</span>
+<a name="l00096"></a>00096                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> getInstance(std::string <span class="keyword">const</span>&amp; className, std::string <span class="keyword">const</span>&amp; libraryPath);
+<a name="l00097"></a>00097 
+<a name="l00101"></a>00101                 <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_engine.html#a7ef97272b3fa1ed1b20446e5d9791d91">isSetUp</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId) <span class="keyword">const</span>;
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103                 <span class="comment">/*</span>
+<a name="l00104"></a>00104 <span class="comment">                *       sets up the plugin</span>
+<a name="l00105"></a>00105 <span class="comment">                */</span>
+<a name="l00106"></a>00106                 <span class="keywordtype">void</span> setup(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId);
+<a name="l00107"></a>00107 
+<a name="l00112"></a>00112                 <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
+<a name="l00113"></a><a class="code" href="class__2_real_1_1_engine.html#a9a99542ded351764610955b1a3ac868f">00113</a>                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_engine.html#a9a99542ded351764610955b1a3ac868f">setValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId, std::string <span class="keyword">const</span>&amp; paramName, DataType <span class="keyword">const</span>&amp; value)
+<a name="l00114"></a>00114                 {
+<a name="l00115"></a>00115                         <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> data(value);
+<a name="l00116"></a>00116                         setValueInternal(pluginId, paramName, data);
+<a name="l00117"></a>00117                 }
+<a name="l00118"></a>00118 
+<a name="l00122"></a>00122                 <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
+<a name="l00123"></a><a class="code" href="class__2_real_1_1_engine.html#a7759fcbd5b4a2a9520f085af2f3d4273">00123</a>                 DataType <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_engine.html#a7759fcbd5b4a2a9520f085af2f3d4273">getValue</a>(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <span class="keywordtype">id</span>, std::string <span class="keyword">const</span>&amp; name)<span class="keyword"> const</span>
+<a name="l00124"></a>00124 <span class="keyword">                </span>{
+<a name="l00125"></a>00125                         Poco::SharedPtr&lt; DataType &gt; ptr = Extract&lt; DataType &gt;(getValueInternal(<span class="keywordtype">id</span>, name));
+<a name="l00126"></a>00126                         <span class="keywordflow">return</span> *ptr.get();
+<a name="l00127"></a>00127                 }
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129                 <span class="comment">/*</span>
+<a name="l00130"></a>00130 <span class="comment">                *       returns the identifier for a plugin instance</span>
+<a name="l00131"></a>00131 <span class="comment">                *       (useful mainly if a plugin instance was created by loading an xml file)</span>
+<a name="l00132"></a>00132 <span class="comment">                *       if no such identifier exists, an invalid indetifier will be returned</span>
+<a name="l00133"></a>00133 <span class="comment">                */</span>
+<a name="l00134"></a>00134                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> getIdentifier(std::string <span class="keyword">const</span>&amp; idName) <span class="keyword">const</span>;
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136         <span class="keyword">private</span>:
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138                 <span class="keyword">template</span>&lt; <span class="keyword">typename</span> T &gt;
+<a name="l00139"></a>00139                 <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class__2_real_1_1_singleton_holder.html">SingletonHolder</a>;
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141                 <a class="code" href="class__2_real_1_1_engine.html">Engine</a>();
+<a name="l00142"></a>00142                 <a class="code" href="class__2_real_1_1_engine.html">Engine</a>(<a class="code" href="class__2_real_1_1_engine.html">Engine</a> <span class="keyword">const</span>&amp; src);
+<a name="l00143"></a>00143                 ~<a class="code" href="class__2_real_1_1_engine.html">Engine</a>();
+<a name="l00144"></a>00144 
+<a name="l00148"></a>00148                 <span class="keywordtype">void</span> setValueInternal(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId, std::string <span class="keyword">const</span>&amp; paramName, <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> <span class="keyword">const</span>&amp; value);
+<a name="l00149"></a>00149 
+<a name="l00153"></a>00153                 <span class="keyword">const</span> <a class="code" href="class__2_real_1_1_engine_data.html">EngineData</a> getValueInternal(<a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; pluginId, std::string <span class="keyword">const</span>&amp; paramName) <span class="keyword">const</span>;
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155                 <a class="code" href="class__2_real_1_1_engine_impl.html">EngineImpl</a>                                                              &amp;m_EngineImpl;
+<a name="l00156"></a>00156 
+<a name="l00157"></a>00157         };
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159 }
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -233,7 +220,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -244,9 +231,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_engine_8h.html">_2RealEngine.h</a>      </li>
+      <li class="navelem"><b>_2RealEngine.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:20 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

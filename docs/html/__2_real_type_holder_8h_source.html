@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealTypeHolder.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealTypeHolder.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealTypeHolder.h</div>  </div>
+<div class="title">kernel/src/_2RealTypeHolder.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_type_holder_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -129,17 +128,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00029"></a>00029         
 <a name="l00030"></a>00030         <span class="keyword">public</span>:
 <a name="l00031"></a>00031         
-<a name="l00032"></a>00032                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html#a8f669c88626c28073803329e8200f9ef">~AbstractDataHolder</a>();
-<a name="l00033"></a>00033                 <span class="keyword">virtual</span> std::type_info <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_abstract_data_holder.html#ac717da5cb6c9cd51ff808be4c78a03d8">typeinfo</a>() <span class="keyword">const</span> = 0;
-<a name="l00034"></a>00034                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* <a class="code" href="class__2_real_1_1_abstract_data_holder.html#a4c958424be2cbd7d2119a72ec3110b98">clone</a>() <span class="keyword">const</span> = 0;
-<a name="l00035"></a>00035                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* <a class="code" href="class__2_real_1_1_abstract_data_holder.html#a7cd0cd6e79d73c75c6348e0837868b99">create</a>() <span class="keyword">const</span> = 0;
+<a name="l00032"></a>00032                 <span class="keyword">virtual</span> ~<a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>();
+<a name="l00033"></a>00033                 <span class="keyword">virtual</span> std::type_info <span class="keyword">const</span>&amp; typeinfo() <span class="keyword">const</span> = 0;
+<a name="l00034"></a>00034                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* clone() <span class="keyword">const</span> = 0;
+<a name="l00035"></a>00035                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* create() <span class="keyword">const</span> = 0;
 <a name="l00036"></a>00036                 <span class="comment">//virtual const std::string toString() const = 0;</span>
-<a name="l00037"></a>00037                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html#ae691f77a3f41163b2465a2772d241cb8">writeTo</a>(std::ostream &amp;out) <span class="keyword">const</span> = 0;
-<a name="l00038"></a>00038                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html#a171a5c11e8192bd288590f3d8c0b43c7">readFrom</a>(std::istream &amp;in) = 0;
+<a name="l00037"></a>00037                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> writeTo(std::ostream &amp;out) <span class="keyword">const</span> = 0;
+<a name="l00038"></a>00038                 <span class="keyword">virtual</span> <span class="keywordtype">void</span> readFrom(std::istream &amp;in) = 0;
 <a name="l00039"></a>00039 
 <a name="l00040"></a>00040         };
 <a name="l00041"></a>00041 
-<a name="l00042"></a><a class="code" href="class__2_real_1_1_abstract_data_holder.html#a8f669c88626c28073803329e8200f9ef">00042</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_abstract_data_holder.html#a8f669c88626c28073803329e8200f9ef">AbstractDataHolder::~AbstractDataHolder</a>()
+<a name="l00042"></a>00042         <span class="keyword">inline</span> AbstractDataHolder::~AbstractDataHolder()
 <a name="l00043"></a>00043         {
 <a name="l00044"></a>00044         }
 <a name="l00045"></a>00045 
@@ -149,75 +148,75 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00049"></a>00049         
 <a name="l00050"></a>00050         <span class="keyword">public</span>:
 <a name="l00051"></a>00051 
-<a name="l00052"></a>00052                 <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder</a>(DataType *value);
-<a name="l00053"></a>00053                 <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder</a>(DataType <span class="keyword">const</span>&amp; value);
-<a name="l00054"></a>00054                 <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder</a>(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src);
-<a name="l00055"></a>00055                 <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>&amp; <a class="code" href="class__2_real_1_1_data_holder.html#a129b819ab37303c0a59426c0ffb9571a">operator=</a>(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src);
-<a name="l00056"></a>00056                 <a class="code" href="class__2_real_1_1_data_holder.html#a8f69918466bdaa85814eea0f0d0b9bd0">~DataHolder</a>();
+<a name="l00052"></a>00052                 <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>(DataType *value);
+<a name="l00053"></a>00053                 <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>(DataType <span class="keyword">const</span>&amp; value);
+<a name="l00054"></a>00054                 <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src);
+<a name="l00055"></a>00055                 <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>&amp; operator=(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src);
+<a name="l00056"></a>00056                 ~<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>();
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058                 std::type_info <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_data_holder.html#af072b5faea960b323ec4755c089e56d7">typeinfo</a>() <span class="keyword">const</span>;
-<a name="l00059"></a>00059                 <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* <a class="code" href="class__2_real_1_1_data_holder.html#a901a6114414d6c82e5fdcb25edb5213d">create</a>() <span class="keyword">const</span>;
-<a name="l00060"></a>00060                 <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* <a class="code" href="class__2_real_1_1_data_holder.html#a7522dd1b3877948f605e14034103afa4">clone</a>() <span class="keyword">const</span>;
+<a name="l00058"></a>00058                 std::type_info <span class="keyword">const</span>&amp; typeinfo() <span class="keyword">const</span>;
+<a name="l00059"></a>00059                 <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* create() <span class="keyword">const</span>;
+<a name="l00060"></a>00060                 <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a>* clone() <span class="keyword">const</span>;
 <a name="l00061"></a>00061                 <span class="comment">//const std::string toString() const;</span>
 <a name="l00062"></a>00062 
-<a name="l00063"></a><a class="code" href="class__2_real_1_1_data_holder.html#aac98e2293f6408c4d20a7640bfb34485">00063</a>                 Poco::SharedPtr&lt; DataType &gt;             <a class="code" href="class__2_real_1_1_data_holder.html#aac98e2293f6408c4d20a7640bfb34485">m_Data</a>;
+<a name="l00063"></a>00063                 Poco::SharedPtr&lt; DataType &gt;             m_Data;
 <a name="l00064"></a>00064 
-<a name="l00065"></a>00065                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_data_holder.html#aeabf443305ccb481feb07d039bdb654e">writeTo</a>(std::ostream &amp;out) <span class="keyword">const</span>;
-<a name="l00066"></a>00066                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_data_holder.html#aec21b3ae41eb4c1d1f10e6bfaaad5dcb">readFrom</a>(std::istream &amp;in);
+<a name="l00065"></a>00065                 <span class="keywordtype">void</span> writeTo(std::ostream &amp;out) <span class="keyword">const</span>;
+<a name="l00066"></a>00066                 <span class="keywordtype">void</span> readFrom(std::istream &amp;in);
 <a name="l00067"></a>00067 
 <a name="l00068"></a>00068         };
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00071"></a><a class="code" href="class__2_real_1_1_data_holder.html#a6704f97aac944dad7d2dea7c1df97417">00071</a>         <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder&lt; DataType &gt;::DataHolder</a>(DataType <span class="keyword">const</span>&amp; value)
+<a name="l00071"></a>00071         <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;::DataHolder</a>(DataType <span class="keyword">const</span>&amp; value)
 <a name="l00072"></a>00072         {
 <a name="l00073"></a>00073                 m_Data.assign(<span class="keyword">new</span> DataType(value));
 <a name="l00074"></a>00074         }
 <a name="l00075"></a>00075 
 <a name="l00076"></a>00076         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00077"></a><a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">00077</a>         <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder&lt; DataType &gt;::DataHolder</a>(DataType *value)
+<a name="l00077"></a>00077         DataHolder&lt; DataType &gt;::DataHolder(DataType *value)
 <a name="l00078"></a>00078         {
 <a name="l00079"></a>00079                 m_Data.assign(value);
 <a name="l00080"></a>00080         }
 <a name="l00081"></a>00081 
 <a name="l00082"></a>00082         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00083"></a><a class="code" href="class__2_real_1_1_data_holder.html#ac0ec4b3d9f7efa19aa2296005665146f">00083</a>         <a class="code" href="class__2_real_1_1_data_holder.html#a38c391bcfa3fd0a2dfde4572bddefd13">DataHolder&lt; DataType &gt;::DataHolder</a>(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src) :
+<a name="l00083"></a>00083         DataHolder&lt; DataType &gt;::DataHolder(DataHolder&lt; DataType &gt; <span class="keyword">const</span>&amp; src) :
 <a name="l00084"></a>00084                 m_Data(src.m_Data)
 <a name="l00085"></a>00085         {
 <a name="l00086"></a>00086         }
 <a name="l00087"></a>00087 
 <a name="l00088"></a>00088         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00089"></a><a class="code" href="class__2_real_1_1_data_holder.html#a129b819ab37303c0a59426c0ffb9571a">00089</a>         <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a>&amp; <a class="code" href="class__2_real_1_1_data_holder.html#a129b819ab37303c0a59426c0ffb9571a">DataHolder&lt; DataType &gt;::operator=</a>(<a class="code" href="class__2_real_1_1_data_holder.html">DataHolder&lt; DataType &gt;</a> <span class="keyword">const</span>&amp; src)
+<a name="l00089"></a>00089         DataHolder&lt; DataType &gt;&amp; DataHolder&lt; DataType &gt;::operator=(DataHolder&lt; DataType &gt; <span class="keyword">const</span>&amp; src)
 <a name="l00090"></a>00090         {
 <a name="l00091"></a>00091                 <span class="keywordflow">if</span> (<span class="keyword">this</span> == &amp;src)
 <a name="l00092"></a>00092                 {
 <a name="l00093"></a>00093                         <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00094"></a>00094                 }
 <a name="l00095"></a>00095 
-<a name="l00096"></a>00096                 m_Data = src.<a class="code" href="class__2_real_1_1_data_holder.html#aac98e2293f6408c4d20a7640bfb34485">m_Data</a>;
+<a name="l00096"></a>00096                 m_Data = src.m_Data;
 <a name="l00097"></a>00097 
 <a name="l00098"></a>00098                 <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00099"></a>00099         }
 <a name="l00100"></a>00100 
 <a name="l00101"></a>00101         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00102"></a><a class="code" href="class__2_real_1_1_data_holder.html#a8f69918466bdaa85814eea0f0d0b9bd0">00102</a>         <a class="code" href="class__2_real_1_1_data_holder.html#a8f69918466bdaa85814eea0f0d0b9bd0">DataHolder&lt; DataType &gt;::~DataHolder</a>()
+<a name="l00102"></a>00102         DataHolder&lt; DataType &gt;::~DataHolder()
 <a name="l00103"></a>00103         {
 <a name="l00104"></a>00104                 m_Data.assign(NULL);
 <a name="l00105"></a>00105         }
 <a name="l00106"></a>00106 
 <a name="l00107"></a>00107         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00108"></a><a class="code" href="class__2_real_1_1_data_holder.html#af072b5faea960b323ec4755c089e56d7">00108</a>         std::type_info <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_data_holder.html#af072b5faea960b323ec4755c089e56d7">DataHolder&lt; DataType &gt;::typeinfo</a>()<span class="keyword"> const</span>
+<a name="l00108"></a>00108         std::type_info <span class="keyword">const</span>&amp; DataHolder&lt; DataType &gt;::typeinfo()<span class="keyword"> const</span>
 <a name="l00109"></a>00109 <span class="keyword">        </span>{
 <a name="l00110"></a>00110                 <span class="keywordflow">return</span> <span class="keyword">typeid</span>(DataType);
 <a name="l00111"></a>00111         }
 <a name="l00112"></a>00112 
 <a name="l00113"></a>00113         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00114"></a><a class="code" href="class__2_real_1_1_data_holder.html#aeabf443305ccb481feb07d039bdb654e">00114</a>         <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_data_holder.html#aeabf443305ccb481feb07d039bdb654e">DataHolder&lt; DataType &gt;::writeTo</a>(std::ostream &amp;out)<span class="keyword"> const</span>
+<a name="l00114"></a>00114         <span class="keywordtype">void</span> DataHolder&lt; DataType &gt;::writeTo(std::ostream &amp;out)<span class="keyword"> const</span>
 <a name="l00115"></a>00115 <span class="keyword">        </span>{
 <a name="l00116"></a>00116                 out &lt;&lt; *m_Data.get();
 <a name="l00117"></a>00117         }
 <a name="l00118"></a>00118 
 <a name="l00119"></a>00119         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00120"></a><a class="code" href="class__2_real_1_1_data_holder.html#aec21b3ae41eb4c1d1f10e6bfaaad5dcb">00120</a>         <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_data_holder.html#aec21b3ae41eb4c1d1f10e6bfaaad5dcb">DataHolder&lt; DataType &gt;::readFrom</a>(std::istream &amp;in)
+<a name="l00120"></a>00120         <span class="keywordtype">void</span> DataHolder&lt; DataType &gt;::readFrom(std::istream &amp;in)
 <a name="l00121"></a>00121         {
 <a name="l00122"></a>00122                 in &gt;&gt; *m_Data.get();
 <a name="l00123"></a>00123         }
@@ -231,17 +230,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00131"></a>00131         <span class="comment">//}</span>
 <a name="l00132"></a>00132 
 <a name="l00133"></a>00133         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00134"></a><a class="code" href="class__2_real_1_1_data_holder.html#a901a6114414d6c82e5fdcb25edb5213d">00134</a>         <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a> * <a class="code" href="class__2_real_1_1_data_holder.html#a901a6114414d6c82e5fdcb25edb5213d">DataHolder&lt; DataType &gt;::create</a>()<span class="keyword"> const</span>
+<a name="l00134"></a>00134         AbstractDataHolder * DataHolder&lt; DataType &gt;::create()<span class="keyword"> const</span>
 <a name="l00135"></a>00135 <span class="keyword">        </span>{ 
 <a name="l00136"></a>00136                 DataType *newContent = <span class="keyword">new</span> DataType();
-<a name="l00137"></a>00137                 <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>(newContent);
+<a name="l00137"></a>00137                 <span class="keywordflow">return</span> <span class="keyword">new</span> DataHolder(newContent);
 <a name="l00138"></a>00138         }
 <a name="l00139"></a>00139 
 <a name="l00140"></a>00140         <span class="keyword">template</span>&lt; <span class="keyword">typename</span> DataType &gt;
-<a name="l00141"></a><a class="code" href="class__2_real_1_1_data_holder.html#a7522dd1b3877948f605e14034103afa4">00141</a>         <a class="code" href="class__2_real_1_1_abstract_data_holder.html">AbstractDataHolder</a> * <a class="code" href="class__2_real_1_1_data_holder.html#a7522dd1b3877948f605e14034103afa4">DataHolder&lt; DataType &gt;::clone</a>()<span class="keyword"> const</span>
+<a name="l00141"></a>00141         AbstractDataHolder * DataHolder&lt; DataType &gt;::clone()<span class="keyword"> const</span>
 <a name="l00142"></a>00142 <span class="keyword">        </span>{
 <a name="l00143"></a>00143                 DataType *newContent = <span class="keyword">new</span> DataType(*m_Data.get());
-<a name="l00144"></a>00144                 <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="class__2_real_1_1_data_holder.html">DataHolder</a>(newContent);
+<a name="l00144"></a>00144                 <span class="keywordflow">return</span> <span class="keyword">new</span> DataHolder(newContent);
 <a name="l00145"></a>00145         }
 <a name="l00146"></a>00146 
 <a name="l00147"></a>00147 }
@@ -252,7 +251,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -263,9 +262,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_type_holder_8h.html">_2RealTypeHolder.h</a>      </li>
+      <li class="navelem"><b>_2RealTypeHolder.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

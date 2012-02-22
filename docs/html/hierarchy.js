@@ -7,6 +7,7 @@ var hierarchy =
     [ "_2Real::Data", "class__2_real_1_1_data.html", null ],
     [ "_2Real::Engine", "class__2_real_1_1_engine.html", null ],
     [ "_2Real::EngineData", "class__2_real_1_1_engine_data.html", null ],
+    [ "_2Real::EngineImpl", "class__2_real_1_1_engine_impl.html", null ],
     [ "_2Real::Entity", "class__2_real_1_1_entity.html", [
       [ "_2Real::Plugin", "class__2_real_1_1_plugin.html", null ],
       [ "_2Real::Runnable", "class__2_real_1_1_runnable.html", [
@@ -73,18 +74,24 @@ var hierarchy =
     [ "_2Real::ServiceMetadata", "class__2_real_1_1_service_metadata.html", null ],
     [ "_2Real::SingletonHolder< T >", "class__2_real_1_1_singleton_holder.html", null ],
     [ "_2Real::Symbol", "class__2_real_1_1_symbol.html", [
-      [ "_2Real::ExtendedSymbol", "class__2_real_1_1_extended_symbol.html", null ],
+      [ "_2Real::ExtendedSymbol", "class__2_real_1_1_extended_symbol.html", [
+        [ "_2Real::ParameterRedefinition", "class__2_real_1_1_parameter_redefinition.html", null ]
+      ] ],
       [ "_2Real::GraphData", "class__2_real_1_1_graph_data.html", [
         [ "_2Real::ServiceData", "class__2_real_1_1_service_data.html", null ]
       ] ],
       [ "_2Real::PluginData", "class__2_real_1_1_plugin_data.html", null ]
     ] ],
+    [ "_2Real::SymbolName", "class__2_real_1_1_symbol_name.html", null ],
     [ "_2Real::System", "class__2_real_1_1_system.html", null ],
-    [ "_2Real::SystemData", "class__2_real_1_1_system_data.html", null ],
     [ "_2Real::SystemPool", "class__2_real_1_1_system_pool.html", null ],
     [ "_2Real::ThreadPool", "class__2_real_1_1_thread_pool.html", null ],
     [ "_2Real::Timer", "class__2_real_1_1_timer.html", null ],
     [ "_2Real::Typetable", "class__2_real_1_1_typetable.html", null ],
     [ "_2Real::Version", "class__2_real_1_1_version.html", null ],
+    [ "_2Real::XMLData", "class__2_real_1_1_x_m_l_data.html", [
+      [ "_2Real::BlockData", "class__2_real_1_1_block_data.html", null ],
+      [ "_2Real::SystemData", "class__2_real_1_1_system_data.html", null ]
+    ] ],
     [ "_2Real::XMLReader", "class__2_real_1_1_x_m_l_reader.html", null ]
 ];

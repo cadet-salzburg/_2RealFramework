@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::InputSlot Class Reference</title>
+<title>_2RealFramework: _2Real::InputSlot Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -102,9 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">_2Real::InputSlot Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="_2Real::InputSlot" --><!-- doxytag: inherits="_2Real::Parameter,_2Real::IOutputListener" -->
-<p><code>#include &lt;<a class="el" href="__2_real_input_slot_8h_source.html">_2RealInputSlot.h</a>&gt;</code></p>
-<div class="dynheader">
+<!-- doxytag: class="_2Real::InputSlot" --><!-- doxytag: inherits="_2Real::Parameter,_2Real::IOutputListener" --><div class="dynheader">
 Inheritance diagram for _2Real::InputSlot:</div>
 <div class="dyncontent">
  <div class="center">
@@ -119,230 +117,32 @@ Inheritance diagram for _2Real::InputSlot:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a940107f71f315495468f73e8f5a32c25">InputSlot</a> (<a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp;metadata)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a8f4a1b1c013b3bd434e823453ab742a5">setData</a> (<a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a> const &amp;data)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#aeb5249ef4a5d67d2a03ad38db8f85e39">resetLink</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a8e29930c707cd733d61a9f6c025ed2cd">linkWith</a> (<a class="el" href="class__2_real_1_1_output_slot.html">OutputSlot</a> &amp;output)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a9dc48b8491f8650d830dbf74aab6f44f">isLinked</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a67811e6ab462f450b99cedaf178fd109">updateCurrent</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a23c4bcff1926da585c21c9a0a92770c5">clearCurrent</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a71602ef43f01aea3708635071336114b">receiveData</a> (<a class="el" href="class__2_real_1_1_data.html">Data</a> &amp;data)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a8728e17e7669cd01078360e454c4c54f">getNewest</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#a8f6f545a47d1175ff50dfca109de0ae2">getOldest</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_input_slot.html#abf32718fea2d61da26df629f6b7a1dc5">getData</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a940107f71f315495468f73e8f5a32c25"></a><!-- doxytag: member="_2Real::InputSlot::InputSlot" ref="a940107f71f315495468f73e8f5a32c25" args="(ParameterMetadata const &amp;metadata)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>InputSlot</b> (<a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp;metadata)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f4a1b1c013b3bd434e823453ab742a5"></a><!-- doxytag: member="_2Real::InputSlot::setData" ref="a8f4a1b1c013b3bd434e823453ab742a5" args="(TimestampedData const &amp;data)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (TimestampedData const &amp;data)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb5249ef4a5d67d2a03ad38db8f85e39"></a><!-- doxytag: member="_2Real::InputSlot::resetLink" ref="aeb5249ef4a5d67d2a03ad38db8f85e39" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resetLink</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e29930c707cd733d61a9f6c025ed2cd"></a><!-- doxytag: member="_2Real::InputSlot::linkWith" ref="a8e29930c707cd733d61a9f6c025ed2cd" args="(OutputSlot &amp;output)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>linkWith</b> (<a class="el" href="class__2_real_1_1_output_slot.html">OutputSlot</a> &amp;output)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dc48b8491f8650d830dbf74aab6f44f"></a><!-- doxytag: member="_2Real::InputSlot::isLinked" ref="a9dc48b8491f8650d830dbf74aab6f44f" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLinked</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67811e6ab462f450b99cedaf178fd109"></a><!-- doxytag: member="_2Real::InputSlot::updateCurrent" ref="a67811e6ab462f450b99cedaf178fd109" args="()" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>updateCurrent</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23c4bcff1926da585c21c9a0a92770c5"></a><!-- doxytag: member="_2Real::InputSlot::clearCurrent" ref="a23c4bcff1926da585c21c9a0a92770c5" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clearCurrent</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a71602ef43f01aea3708635071336114b"></a><!-- doxytag: member="_2Real::InputSlot::receiveData" ref="a71602ef43f01aea3708635071336114b" args="(Data &amp;data)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>receiveData</b> (<a class="el" href="class__2_real_1_1_data.html">Data</a> &amp;data)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8728e17e7669cd01078360e454c4c54f"></a><!-- doxytag: member="_2Real::InputSlot::getNewest" ref="a8728e17e7669cd01078360e454c4c54f" args="() const " -->
+const TimestampedData&#160;</td><td class="memItemRight" valign="bottom"><b>getNewest</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f6f545a47d1175ff50dfca109de0ae2"></a><!-- doxytag: member="_2Real::InputSlot::getOldest" ref="a8f6f545a47d1175ff50dfca109de0ae2" args="() const " -->
+const TimestampedData&#160;</td><td class="memItemRight" valign="bottom"><b>getOldest</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf32718fea2d61da26df629f6b7a1dc5"></a><!-- doxytag: member="_2Real::InputSlot::getData" ref="abf32718fea2d61da26df629f6b7a1dc5" args="() const " -->
+const TimestampedData&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> () const </td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_input_slot_8h_source.html#l00039">39</a> of file <a class="el" href="__2_real_input_slot_8h_source.html">_2RealInputSlot.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a940107f71f315495468f73e8f5a32c25"></a><!-- doxytag: member="_2Real::InputSlot::InputSlot" ref="a940107f71f315495468f73e8f5a32c25" args="(ParameterMetadata const &amp;metadata)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_input_slot.html#a940107f71f315495468f73e8f5a32c25">_2Real::InputSlot::InputSlot</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp;&#160;</td>
-          <td class="paramname"><em>metadata</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00030">30</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a23c4bcff1926da585c21c9a0a92770c5"></a><!-- doxytag: member="_2Real::InputSlot::clearCurrent" ref="a23c4bcff1926da585c21c9a0a92770c5" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_input_slot.html#a23c4bcff1926da585c21c9a0a92770c5">_2Real::InputSlot::clearCurrent</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00065">65</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abf32718fea2d61da26df629f6b7a1dc5"></a><!-- doxytag: member="_2Real::InputSlot::getData" ref="abf32718fea2d61da26df629f6b7a1dc5" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a> <a class="el" href="class__2_real_1_1_input_slot.html#abf32718fea2d61da26df629f6b7a1dc5">_2Real::InputSlot::getData</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00078">78</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8728e17e7669cd01078360e454c4c54f"></a><!-- doxytag: member="_2Real::InputSlot::getNewest" ref="a8728e17e7669cd01078360e454c4c54f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a> <a class="el" href="class__2_real_1_1_input_slot.html#a8728e17e7669cd01078360e454c4c54f">_2Real::InputSlot::getNewest</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00085">85</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8f6f545a47d1175ff50dfca109de0ae2"></a><!-- doxytag: member="_2Real::InputSlot::getOldest" ref="a8f6f545a47d1175ff50dfca109de0ae2" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a> <a class="el" href="class__2_real_1_1_input_slot.html#a8f6f545a47d1175ff50dfca109de0ae2">_2Real::InputSlot::getOldest</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00099">99</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9dc48b8491f8650d830dbf74aab6f44f"></a><!-- doxytag: member="_2Real::InputSlot::isLinked" ref="a9dc48b8491f8650d830dbf74aab6f44f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_input_slot.html#a9dc48b8491f8650d830dbf74aab6f44f">_2Real::InputSlot::isLinked</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8h_source.html#l00069">69</a> of file <a class="el" href="__2_real_input_slot_8h_source.html">_2RealInputSlot.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8e29930c707cd733d61a9f6c025ed2cd"></a><!-- doxytag: member="_2Real::InputSlot::linkWith" ref="a8e29930c707cd733d61a9f6c025ed2cd" args="(OutputSlot &amp;output)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_input_slot.html#a8e29930c707cd733d61a9f6c025ed2cd">_2Real::InputSlot::linkWith</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_output_slot.html">OutputSlot</a> &amp;&#160;</td>
-          <td class="paramname"><em>output</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00126">126</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a71602ef43f01aea3708635071336114b"></a><!-- doxytag: member="_2Real::InputSlot::receiveData" ref="a71602ef43f01aea3708635071336114b" args="(Data &amp;data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_input_slot.html#a71602ef43f01aea3708635071336114b">_2Real::InputSlot::receiveData</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_data.html">Data</a> &amp;&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Implements <a class="el" href="class__2_real_1_1_i_output_listener.html#aa6dbe2722eacb6a64871bcef15944518">_2Real::IOutputListener</a>.</p>
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00072">72</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aeb5249ef4a5d67d2a03ad38db8f85e39"></a><!-- doxytag: member="_2Real::InputSlot::resetLink" ref="aeb5249ef4a5d67d2a03ad38db8f85e39" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_input_slot.html#aeb5249ef4a5d67d2a03ad38db8f85e39">_2Real::InputSlot::resetLink</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00114">114</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8f4a1b1c013b3bd434e823453ab742a5"></a><!-- doxytag: member="_2Real::InputSlot::setData" ref="a8f4a1b1c013b3bd434e823453ab742a5" args="(TimestampedData const &amp;data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_input_slot.html#a8f4a1b1c013b3bd434e823453ab742a5">_2Real::InputSlot::setData</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#aa70336006d94127488aa7ce40349ce5b">TimestampedData</a> const &amp;&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00057">57</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a67811e6ab462f450b99cedaf178fd109"></a><!-- doxytag: member="_2Real::InputSlot::updateCurrent" ref="a67811e6ab462f450b99cedaf178fd109" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_input_slot.html#a67811e6ab462f450b99cedaf178fd109">_2Real::InputSlot::updateCurrent</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_input_slot_8cpp_source.html#l00040">40</a> of file <a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_input_slot_8h_source.html">_2RealInputSlot.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_input_slot_8cpp_source.html">_2RealInputSlot.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_input_slot_8h_source.html">_2RealInputSlot.h</a></li>
+<li>kernel/src/_2RealInputSlot.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -351,7 +151,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -365,7 +165,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_input_slot.html">InputSlot</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

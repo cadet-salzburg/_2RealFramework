@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::Engine Class Reference</title>
+<title>_2RealFramework: _2Real::Engine Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -105,311 +105,57 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::Engine" -->
-<p><code>#include &lt;<a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_engine-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_typetable.html">Typetable</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a569865d2891958abf0bd9313255d119e">getTypes</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_timer.html">Timer</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a4ac819e7aa1fe6ed09d85746cb5a4f86">getTimer</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a53277b639ff3771680174668c778cd6e">getTimestamp</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a3d1118729a2f874abaccec6cf5be86ea">createSystem</a> (std::string const &amp;idName)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#aa0bc553430529de253b14269f8d712ce">loadPlugin</a> (std::string const &amp;idName, std::string const &amp;className, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#acb9f7e319248a5bc4a0fecde6e5f23dc">createService</a> (std::string const &amp;idName, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;plugin, std::string const &amp;serviceName, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a7742c9196e659d43acd6410d88c95dce">createSequence</a> (std::string const &amp;idName, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableA, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableB, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a340c7135a65df67448bc6bd12eaa4150">createSynchronization</a> (std::string const &amp;idName, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableA, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableB, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ad62afb594e7a2d83b59f441b8b777da5">destroySystem</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a8d53825ecf16eb80fadda81bf84a337a">setSystemLogfile</a> (std::string const &amp;file, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a4ba2ed1d12d1ff5f842a0be9e4138fea">setSystemDirectory</a> (std::string const &amp;directory, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a200da3d57c1b9f522f9d21d045dd725c">getInfo</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;plugin, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a088db8f42b346bf4d33f8f2ae903dc88">setup</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;setupAble, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ae564dc087e215cc02471d55aace464a4">setUpdateRate</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnable, float updatesPerSecond, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a90c1ea97a503331a6790ca68016a752c">setValue</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id, std::string const &amp;paramName, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;value, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#aa3bc5cab4e482c90bb3cf8b10e4ad097">setValueToString</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id, std::string const &amp;paramName, std::string const &amp;value, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a4821d61500dbec5e82f52dfd2809d585">getValue</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id, std::string const &amp;name, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#af2f0135cbf561d403e32dc9bad91d44b">linkSlots</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;idIn, std::string const &amp;nameIn, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;idOut, std::string const &amp;nameOut, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a2f7b6f4ae7f19b17c31483369d6333ff">start</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnable, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a24a6714089d736db5411103b60c58fd6">startAll</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a7de360794bb5813e7062145f497d1b44">stop</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnable, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a16ddecce4fa4717ba2ed78b0d945054e">stopAll</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ab13181225cae9ba951f1389a8c67a29e">registerToNewData</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;service, std::string const &amp;outName, <a class="el" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ac302a3a02630cafd0686800e6e84822f">unregisterFromNewData</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;service, std::string const &amp;outName, <a class="el" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ae9e9a39a5bd98a27cb081ccc6b0bcec9">registerToException</a> (<a class="el" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a1227c2d14159f76bf140f1a436acea94">unregisterFromException</a> (<a class="el" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#afba71128524554384cd555dbe10fb0e1">registerToNewData</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;service, std::string const &amp;outName, <a class="el" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#aec4b4aaefb1147442125a110e05d27b6">unregisterFromNewData</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;service, std::string const &amp;outName, <a class="el" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a95c286152883d3efa569c70c5c7c923f">registerToException</a> (<a class="el" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a2fae560f502b607d1634c7f4dfc40075">unregisterFromException</a> (<a class="el" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a7564297d05b512541c3e007563b4fa8c">registerToStateChange</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableId, <a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a34f97d13d3efbe0dad085082c0a91968">unregisterFromStateChange</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableId, <a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#acc84d22b656815f5980ff1dbd9cc9ea2">registerToStateChange</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableId, <a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a99b483797a014c11dd6f40d91fc05e30">unregisterFromStateChange</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnableId, <a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;systemId)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#aa769c4753c2ba084d8a1f5863cd6d58b">add</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnable, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;parent, unsigned int index, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#aab2190aebf2af7287d0a474bec15bd96">append</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;runnable, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;parent, <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;system)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6cefa247640a3633c473b1de17fe10de"></a><!-- doxytag: member="_2Real::Engine::setBaseDirectory" ref="a6cefa247640a3633c473b1de17fe10de" args="(std::string const &amp;directory)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBaseDirectory</b> (std::string const &amp;directory)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a021a47f5bb2e0fba151a8166e8ef5940"></a><!-- doxytag: member="_2Real::Engine::load" ref="a021a47f5bb2e0fba151a8166e8ef5940" args="(std::string const &amp;path)" -->
+const std::list&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>load</b> (std::string const &amp;path)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a6571c1b5159c532d4f3572863b9ccc9e">isLoaded</a> (std::string const &amp;libraryPath) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::list&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a2aaaea731fe3ca67064c675ec9f754ad">isExportedBy</a> (std::string const &amp;className)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a395c1b7872ecf6679973e51c9c0d82f0">getInfoString</a> (std::string const &amp;className, std::string const &amp;libraryPath)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#af9528ef1fd6371a92f902f36e6c4eaeb">getInfoString</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ab72447cfaff7d67419465426021bdbbe">canCreate</a> (std::string const &amp;className, std::string const &amp;libraryPath) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#ad1053f22efc18cb2a094d7b4dbf84b87">isSingleton</a> (std::string const &amp;className, std::string const &amp;libraryPath) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a787107ce9d961aa37b838d9f9717aef8">createInstance</a> (std::string const &amp;idName, std::string const &amp;className, std::string const &amp;libraryPath)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae8c020edd71ab8685fac318245804173"></a><!-- doxytag: member="_2Real::Engine::getInstance" ref="ae8c020edd71ab8685fac318245804173" args="(std::string const &amp;className, std::string const &amp;libraryPath)" -->
+const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getInstance</b> (std::string const &amp;className, std::string const &amp;libraryPath)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a7ef97272b3fa1ed1b20446e5d9791d91">isSetUp</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;pluginId) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44ada0373e87464a39863be5e5323578"></a><!-- doxytag: member="_2Real::Engine::setup" ref="a44ada0373e87464a39863be5e5323578" args="(Identifier const &amp;pluginId)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;pluginId)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename DataType &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a9a99542ded351764610955b1a3ac868f">setValue</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;pluginId, std::string const &amp;paramName, DataType const &amp;value)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename DataType &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">DataType const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a7759fcbd5b4a2a9520f085af2f3d4273">getValue</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id, std::string const &amp;name) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab528873cf76d8ce314ce0536bdca1f3a"></a><!-- doxytag: member="_2Real::Engine::getIdentifier" ref="ab528873cf76d8ce314ce0536bdca1f3a" args="(std::string const &amp;idName) const " -->
+const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getIdentifier</b> (std::string const &amp;idName) const </td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class__2_real_1_1_engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#a156750f48e54a2dfa8c17d60f64ff4b8">instance</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a156750f48e54a2dfa8c17d60f64ff4b8"></a><!-- doxytag: member="_2Real::Engine::instance" ref="a156750f48e54a2dfa8c17d60f64ff4b8" args="()" -->
+static <a class="el" href="class__2_real_1_1_engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>instance</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_engine.html#accc0df9ed97bc261a12d7fc8f508e1dd">SingletonHolder</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="accc0df9ed97bc261a12d7fc8f508e1dd"></a><!-- doxytag: member="_2Real::Engine::SingletonHolder" ref="accc0df9ed97bc261a12d7fc8f508e1dd" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>SingletonHolder</b></td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_engine_8h_source.html#l00050">50</a> of file <a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>.</p>
-</div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aa769c4753c2ba084d8a1f5863cd6d58b"></a><!-- doxytag: member="_2Real::Engine::add" ref="aa769c4753c2ba084d8a1f5863cd6d58b" args="(Identifier const &amp;runnable, Identifier const &amp;parent, unsigned int index, Identifier const &amp;system)" -->
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ab72447cfaff7d67419465426021bdbbe"></a><!-- doxytag: member="_2Real::Engine::canCreate" ref="ab72447cfaff7d67419465426021bdbbe" args="(std::string const &amp;className, std::string const &amp;libraryPath) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#aa769c4753c2ba084d8a1f5863cd6d58b">_2Real::Engine::add</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>parent</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00431">431</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aab2190aebf2af7287d0a474bec15bd96"></a><!-- doxytag: member="_2Real::Engine::append" ref="aab2190aebf2af7287d0a474bec15bd96" args="(Identifier const &amp;runnable, Identifier const &amp;parent, Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#aab2190aebf2af7287d0a474bec15bd96">_2Real::Engine::append</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>parent</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00451">451</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7742c9196e659d43acd6410d88c95dce"></a><!-- doxytag: member="_2Real::Engine::createSequence" ref="a7742c9196e659d43acd6410d88c95dce" args="(std::string const &amp;idName, Identifier const &amp;runnableA, Identifier const &amp;runnableB, Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#a7742c9196e659d43acd6410d88c95dce">_2Real::Engine::createSequence</a> </td>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_engine.html#ab72447cfaff7d67419465426021bdbbe">_2Real::Engine::canCreate</a> </td>
           <td>(</td>
           <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>idName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableA</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableB</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00391">391</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acb9f7e319248a5bc4a0fecde6e5f23dc"></a><!-- doxytag: member="_2Real::Engine::createService" ref="acb9f7e319248a5bc4a0fecde6e5f23dc" args="(std::string const &amp;idName, Identifier const &amp;plugin, std::string const &amp;serviceName, Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#acb9f7e319248a5bc4a0fecde6e5f23dc">_2Real::Engine::createService</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>idName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>plugin</em>, </td>
+          <td class="paramname"><em>className</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>serviceName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00154">154</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a340c7135a65df67448bc6bd12eaa4150"></a><!-- doxytag: member="_2Real::Engine::createSynchronization" ref="a340c7135a65df67448bc6bd12eaa4150" args="(std::string const &amp;idName, Identifier const &amp;runnableA, Identifier const &amp;runnableB, Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#a340c7135a65df67448bc6bd12eaa4150">_2Real::Engine::createSynchronization</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>idName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableA</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableB</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00411">411</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a3d1118729a2f874abaccec6cf5be86ea"></a><!-- doxytag: member="_2Real::Engine::createSystem" ref="a3d1118729a2f874abaccec6cf5be86ea" args="(std::string const &amp;idName)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#a3d1118729a2f874abaccec6cf5be86ea">_2Real::Engine::createSystem</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>idName</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00091">91</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad62afb594e7a2d83b59f441b8b777da5"></a><!-- doxytag: member="_2Real::Engine::destroySystem" ref="ad62afb594e7a2d83b59f441b8b777da5" args="(Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ad62afb594e7a2d83b59f441b8b777da5">_2Real::Engine::destroySystem</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00096">96</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a200da3d57c1b9f522f9d21d045dd725c"></a><!-- doxytag: member="_2Real::Engine::getInfo" ref="a200da3d57c1b9f522f9d21d045dd725c" args="(Identifier const &amp;plugin, Identifier const &amp;systemId) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_engine.html#a200da3d57c1b9f522f9d21d045dd725c">_2Real::Engine::getInfo</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>plugin</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
+          <td class="paramname"><em>libraryPath</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -419,171 +165,16 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00140">140</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
+<p>returns true if instances of the class can be created (false if no class has been loaded OR it's a singleton) if libraryPath is relative, it will be interpreted with respect to the base directory </p>
 
 </div>
 </div>
-<a class="anchor" id="a4ac819e7aa1fe6ed09d85746cb5a4f86"></a><!-- doxytag: member="_2Real::Engine::getTimer" ref="a4ac819e7aa1fe6ed09d85746cb5a4f86" args="() const " -->
+<a class="anchor" id="a787107ce9d961aa37b838d9f9717aef8"></a><!-- doxytag: member="_2Real::Engine::createInstance" ref="a787107ce9d961aa37b838d9f9717aef8" args="(std::string const &amp;idName, std::string const &amp;className, std::string const &amp;libraryPath)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_timer.html">Timer</a> const &amp; <a class="el" href="class__2_real_1_1_engine.html#a4ac819e7aa1fe6ed09d85746cb5a4f86">_2Real::Engine::getTimer</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8h_source.html#l00122">122</a> of file <a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a53277b639ff3771680174668c778cd6e"></a><!-- doxytag: member="_2Real::Engine::getTimestamp" ref="a53277b639ff3771680174668c778cd6e" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long <a class="el" href="class__2_real_1_1_engine.html#a53277b639ff3771680174668c778cd6e">_2Real::Engine::getTimestamp</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8h_source.html#l00127">127</a> of file <a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a569865d2891958abf0bd9313255d119e"></a><!-- doxytag: member="_2Real::Engine::getTypes" ref="a569865d2891958abf0bd9313255d119e" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_typetable.html">Typetable</a> const &amp; <a class="el" href="class__2_real_1_1_engine.html#a569865d2891958abf0bd9313255d119e">_2Real::Engine::getTypes</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8h_source.html#l00117">117</a> of file <a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4821d61500dbec5e82f52dfd2809d585"></a><!-- doxytag: member="_2Real::Engine::getValue" ref="a4821d61500dbec5e82f52dfd2809d585" args="(Identifier const &amp;id, std::string const &amp;name, Identifier const &amp;systemId) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> <a class="el" href="class__2_real_1_1_engine.html#a4821d61500dbec5e82f52dfd2809d585">_2Real::Engine::getValue</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00204">204</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a156750f48e54a2dfa8c17d60f64ff4b8"></a><!-- doxytag: member="_2Real::Engine::instance" ref="a156750f48e54a2dfa8c17d60f64ff4b8" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_engine.html">Engine</a> &amp; <a class="el" href="class__2_real_1_1_engine.html#a156750f48e54a2dfa8c17d60f64ff4b8">_2Real::Engine::instance</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00033">33</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af2f0135cbf561d403e32dc9bad91d44b"></a><!-- doxytag: member="_2Real::Engine::linkSlots" ref="af2f0135cbf561d403e32dc9bad91d44b" args="(Identifier const &amp;idIn, std::string const &amp;nameIn, Identifier const &amp;idOut, std::string const &amp;nameOut, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#af2f0135cbf561d403e32dc9bad91d44b">_2Real::Engine::linkSlots</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>idIn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>nameIn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>idOut</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>nameOut</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00232">232</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa0bc553430529de253b14269f8d712ce"></a><!-- doxytag: member="_2Real::Engine::loadPlugin" ref="aa0bc553430529de253b14269f8d712ce" args="(std::string const &amp;idName, std::string const &amp;className, Identifier const &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#aa0bc553430529de253b14269f8d712ce">_2Real::Engine::loadPlugin</a> </td>
+          <td class="memname">const <a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> <a class="el" href="class__2_real_1_1_engine.html#a787107ce9d961aa37b838d9f9717aef8">_2Real::Engine::createInstance</a> </td>
           <td>(</td>
           <td class="paramtype">std::string const &amp;&#160;</td>
           <td class="paramname"><em>idName</em>, </td>
@@ -597,8 +188,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>libraryPath</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -608,96 +199,25 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00119">119</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
+<p>creates instance of a plugin if libraryPath is relative, it will be interpreted with respect to the base directory </p>
 
 </div>
 </div>
-<a class="anchor" id="ae9e9a39a5bd98a27cb081ccc6b0bcec9"></a><!-- doxytag: member="_2Real::Engine::registerToException" ref="ae9e9a39a5bd98a27cb081ccc6b0bcec9" args="(ExceptionCallback callback, Identifier const &amp;systemId)" -->
+<a class="anchor" id="a395c1b7872ecf6679973e51c9c0d82f0"></a><!-- doxytag: member="_2Real::Engine::getInfoString" ref="a395c1b7872ecf6679973e51c9c0d82f0" args="(std::string const &amp;className, std::string const &amp;libraryPath)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ae9e9a39a5bd98a27cb081ccc6b0bcec9">_2Real::Engine::registerToException</a> </td>
+          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_engine.html#a395c1b7872ecf6679973e51c9c0d82f0">_2Real::Engine::getInfoString</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00267">267</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a95c286152883d3efa569c70c5c7c923f"></a><!-- doxytag: member="_2Real::Engine::registerToException" ref="a95c286152883d3efa569c70c5c7c923f" args="(IExceptionListener &amp;listener, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ae9e9a39a5bd98a27cb081ccc6b0bcec9">_2Real::Engine::registerToException</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00281">281</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab13181225cae9ba951f1389a8c67a29e"></a><!-- doxytag: member="_2Real::Engine::registerToNewData" ref="ab13181225cae9ba951f1389a8c67a29e" args="(Identifier const &amp;service, std::string const &amp;outName, DataCallback callback, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ab13181225cae9ba951f1389a8c67a29e">_2Real::Engine::registerToNewData</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>className</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>outName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
+          <td class="paramname"><em>libraryPath</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -707,253 +227,151 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00295">295</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
+<p>returns plugin's metadata as string if libraryPath is relative, it will be interpreted with respect to the base directory </p>
 
 </div>
 </div>
-<a class="anchor" id="afba71128524554384cd555dbe10fb0e1"></a><!-- doxytag: member="_2Real::Engine::registerToNewData" ref="afba71128524554384cd555dbe10fb0e1" args="(Identifier const &amp;service, std::string const &amp;outName, IOutputListener &amp;listener, Identifier const &amp;systemId)" -->
+<a class="anchor" id="af9528ef1fd6371a92f902f36e6c4eaeb"></a><!-- doxytag: member="_2Real::Engine::getInfoString" ref="af9528ef1fd6371a92f902f36e6c4eaeb" args="(Identifier const &amp;id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ab13181225cae9ba951f1389a8c67a29e">_2Real::Engine::registerToNewData</a> </td>
+          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_engine.html#a395c1b7872ecf6679973e51c9c0d82f0">_2Real::Engine::getInfoString</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>outName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00323">323</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
+<p>returns plugin's metadata as string </p>
 
 </div>
 </div>
-<a class="anchor" id="a7564297d05b512541c3e007563b4fa8c"></a><!-- doxytag: member="_2Real::Engine::registerToStateChange" ref="a7564297d05b512541c3e007563b4fa8c" args="(Identifier const &amp;runnableId, StateChangeCallback callback, Identifier const &amp;systemId)" -->
+<a class="anchor" id="a7759fcbd5b4a2a9520f085af2f3d4273"></a><!-- doxytag: member="_2Real::Engine::getValue" ref="a7759fcbd5b4a2a9520f085af2f3d4273" args="(Identifier const &amp;id, std::string const &amp;name) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DataType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a7564297d05b512541c3e007563b4fa8c">_2Real::Engine::registerToStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00239">239</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acc84d22b656815f5980ff1dbd9cc9ea2"></a><!-- doxytag: member="_2Real::Engine::registerToStateChange" ref="acc84d22b656815f5980ff1dbd9cc9ea2" args="(Identifier const &amp;runnableId, IStateChangeListener &amp;listener, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a7564297d05b512541c3e007563b4fa8c">_2Real::Engine::registerToStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00253">253</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4ba2ed1d12d1ff5f842a0be9e4138fea"></a><!-- doxytag: member="_2Real::Engine::setSystemDirectory" ref="a4ba2ed1d12d1ff5f842a0be9e4138fea" args="(std::string const &amp;directory, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a4ba2ed1d12d1ff5f842a0be9e4138fea">_2Real::Engine::setSystemDirectory</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>directory</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00112">112</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8d53825ecf16eb80fadda81bf84a337a"></a><!-- doxytag: member="_2Real::Engine::setSystemLogfile" ref="a8d53825ecf16eb80fadda81bf84a337a" args="(std::string const &amp;file, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a8d53825ecf16eb80fadda81bf84a337a">_2Real::Engine::setSystemLogfile</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00101">101</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a088db8f42b346bf4d33f8f2ae903dc88"></a><!-- doxytag: member="_2Real::Engine::setup" ref="a088db8f42b346bf4d33f8f2ae903dc88" args="(Identifier const &amp;setupAble, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a088db8f42b346bf4d33f8f2ae903dc88">_2Real::Engine::setup</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>setupAble</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00126">126</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae564dc087e215cc02471d55aace464a4"></a><!-- doxytag: member="_2Real::Engine::setUpdateRate" ref="ae564dc087e215cc02471d55aace464a4" args="(Identifier const &amp;runnable, float updatesPerSecond, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ae564dc087e215cc02471d55aace464a4">_2Real::Engine::setUpdateRate</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>updatesPerSecond</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00218">218</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a90c1ea97a503331a6790ca68016a752c"></a><!-- doxytag: member="_2Real::Engine::setValue" ref="a90c1ea97a503331a6790ca68016a752c" args="(Identifier const &amp;id, std::string const &amp;paramName, EngineData const &amp;value, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a90c1ea97a503331a6790ca68016a752c">_2Real::Engine::setValue</a> </td>
+          <td class="memname">DataType const&amp; <a class="el" href="class__2_real_1_1_engine.html#a7759fcbd5b4a2a9520f085af2f3d4273">_2Real::Engine::getValue</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
           <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns the value of a plugin's setup parameter </p>
+
+</div>
+</div>
+<a class="anchor" id="a2aaaea731fe3ca67064c675ec9f754ad"></a><!-- doxytag: member="_2Real::Engine::isExportedBy" ref="a2aaaea731fe3ca67064c675ec9f754ad" args="(std::string const &amp;className)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::list&lt; std::string &gt; <a class="el" href="class__2_real_1_1_engine.html#a2aaaea731fe3ca67064c675ec9f754ad">_2Real::Engine::isExportedBy</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>className</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns absolute paths to all libraries which export a class (derived off <a class="el" href="class__2_real_1_1_i_plugin_activator.html">IPluginActivator</a>) named className </p>
+
+</div>
+</div>
+<a class="anchor" id="a6571c1b5159c532d4f3572863b9ccc9e"></a><!-- doxytag: member="_2Real::Engine::isLoaded" ref="a6571c1b5159c532d4f3572863b9ccc9e" args="(std::string const &amp;libraryPath) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_engine.html#a6571c1b5159c532d4f3572863b9ccc9e">_2Real::Engine::isLoaded</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>libraryPath</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns true if the library in question is already loaded if path is relative, it will be interpreted with respect to the base directory </p>
+
+</div>
+</div>
+<a class="anchor" id="a7ef97272b3fa1ed1b20446e5d9791d91"></a><!-- doxytag: member="_2Real::Engine::isSetUp" ref="a7ef97272b3fa1ed1b20446e5d9791d91" args="(Identifier const &amp;pluginId) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_engine.html#a7ef97272b3fa1ed1b20446e5d9791d91">_2Real::Engine::isSetUp</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
+          <td class="paramname"><em>pluginId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>true is plugin in question is set up </p>
+
+</div>
+</div>
+<a class="anchor" id="ad1053f22efc18cb2a094d7b4dbf84b87"></a><!-- doxytag: member="_2Real::Engine::isSingleton" ref="ad1053f22efc18cb2a094d7b4dbf84b87" args="(std::string const &amp;className, std::string const &amp;libraryPath) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_engine.html#ad1053f22efc18cb2a094d7b4dbf84b87">_2Real::Engine::isSingleton</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>className</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>libraryPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns true if className has been loaded &amp; it's a singleton if libraryPath is relative, it will be interpreted with respect to the base directory </p>
+
+</div>
+</div>
+<a class="anchor" id="a9a99542ded351764610955b1a3ac868f"></a><!-- doxytag: member="_2Real::Engine::setValue" ref="a9a99542ded351764610955b1a3ac868f" args="(Identifier const &amp;pluginId, std::string const &amp;paramName, DataType const &amp;value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DataType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a9a99542ded351764610955b1a3ac868f">_2Real::Engine::setValue</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
+          <td class="paramname"><em>pluginId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -964,394 +382,24 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
+          <td class="paramtype">DataType const &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00168">168</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa3bc5cab4e482c90bb3cf8b10e4ad097"></a><!-- doxytag: member="_2Real::Engine::setValueToString" ref="aa3bc5cab4e482c90bb3cf8b10e4ad097" args="(Identifier const &amp;id, std::string const &amp;paramName, std::string const &amp;value, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#aa3bc5cab4e482c90bb3cf8b10e4ad097">_2Real::Engine::setValueToString</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>paramName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00182">182</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2f7b6f4ae7f19b17c31483369d6333ff"></a><!-- doxytag: member="_2Real::Engine::start" ref="a2f7b6f4ae7f19b17c31483369d6333ff" args="(Identifier const &amp;runnable, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a2f7b6f4ae7f19b17c31483369d6333ff">_2Real::Engine::start</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00351">351</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a24a6714089d736db5411103b60c58fd6"></a><!-- doxytag: member="_2Real::Engine::startAll" ref="a24a6714089d736db5411103b60c58fd6" args="(Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a24a6714089d736db5411103b60c58fd6">_2Real::Engine::startAll</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00379">379</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7de360794bb5813e7062145f497d1b44"></a><!-- doxytag: member="_2Real::Engine::stop" ref="a7de360794bb5813e7062145f497d1b44" args="(Identifier const &amp;runnable, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a7de360794bb5813e7062145f497d1b44">_2Real::Engine::stop</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00365">365</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a16ddecce4fa4717ba2ed78b0d945054e"></a><!-- doxytag: member="_2Real::Engine::stopAll" ref="a16ddecce4fa4717ba2ed78b0d945054e" args="(Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a16ddecce4fa4717ba2ed78b0d945054e">_2Real::Engine::stopAll</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00385">385</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1227c2d14159f76bf140f1a436acea94"></a><!-- doxytag: member="_2Real::Engine::unregisterFromException" ref="a1227c2d14159f76bf140f1a436acea94" args="(ExceptionCallback callback, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a1227c2d14159f76bf140f1a436acea94">_2Real::Engine::unregisterFromException</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#a8fcac2030e7fc5e935d99ed85e173f35">ExceptionCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00274">274</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2fae560f502b607d1634c7f4dfc40075"></a><!-- doxytag: member="_2Real::Engine::unregisterFromException" ref="a2fae560f502b607d1634c7f4dfc40075" args="(IExceptionListener &amp;listener, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a1227c2d14159f76bf140f1a436acea94">_2Real::Engine::unregisterFromException</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_exception_listener.html">IExceptionListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00288">288</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac302a3a02630cafd0686800e6e84822f"></a><!-- doxytag: member="_2Real::Engine::unregisterFromNewData" ref="ac302a3a02630cafd0686800e6e84822f" args="(Identifier const &amp;service, std::string const &amp;outName, DataCallback callback, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ac302a3a02630cafd0686800e6e84822f">_2Real::Engine::unregisterFromNewData</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>outName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#ad6a6079b0c473d323758dc9ef1d0f921">DataCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00309">309</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aec4b4aaefb1147442125a110e05d27b6"></a><!-- doxytag: member="_2Real::Engine::unregisterFromNewData" ref="aec4b4aaefb1147442125a110e05d27b6" args="(Identifier const &amp;service, std::string const &amp;outName, IOutputListener &amp;listener, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#ac302a3a02630cafd0686800e6e84822f">_2Real::Engine::unregisterFromNewData</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>outName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_output_listener.html">IOutputListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00337">337</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a34f97d13d3efbe0dad085082c0a91968"></a><!-- doxytag: member="_2Real::Engine::unregisterFromStateChange" ref="a34f97d13d3efbe0dad085082c0a91968" args="(Identifier const &amp;runnableId, StateChangeCallback callback, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a34f97d13d3efbe0dad085082c0a91968">_2Real::Engine::unregisterFromStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00246">246</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a99b483797a014c11dd6f40d91fc05e30"></a><!-- doxytag: member="_2Real::Engine::unregisterFromStateChange" ref="a99b483797a014c11dd6f40d91fc05e30" args="(Identifier const &amp;runnableId, IStateChangeListener &amp;listener, Identifier const &amp;systemId)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_engine.html#a34f97d13d3efbe0dad085082c0a91968">_2Real::Engine::unregisterFromStateChange</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>runnableId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;&#160;</td>
-          <td class="paramname"><em>listener</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>systemId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8cpp_source.html#l00260">260</a> of file <a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="accc0df9ed97bc261a12d7fc8f508e1dd"></a><!-- doxytag: member="_2Real::Engine::SingletonHolder" ref="accc0df9ed97bc261a12d7fc8f508e1dd" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class <a class="el" href="class__2_real_1_1_singleton_holder.html">SingletonHolder</a><code> [friend]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_engine_8h_source.html#l00105">105</a> of file <a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a>.</p>
+<p>sets the value of a plugin's setup parameter does nothing if the plugin in question is already set up </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_engine_8cpp_source.html">_2RealEngine.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_engine_8h_source.html">_2RealEngine.h</a></li>
+<li>kernel/src/_2RealEngine.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -1360,7 +408,7 @@ Friends</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -1374,7 +422,7 @@ Friends</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_engine.html">Engine</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

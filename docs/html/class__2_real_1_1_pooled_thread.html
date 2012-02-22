@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::PooledThread Class Reference</title>
+<title>_2RealFramework: _2Real::PooledThread Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -103,13 +103,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::PooledThread" -->
-<p><code>#include &lt;<a class="el" href="__2_real_pooled_thread_8h_source.html">_2RealPooledThread.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_pooled_thread-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#ac8608d354212b1ef14bd51045f4a89b4">PooledThread</a> (unsigned int stackSize=POCO_THREAD_STACK_SIZE)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8608d354212b1ef14bd51045f4a89b4"></a><!-- doxytag: member="_2Real::PooledThread::PooledThread" ref="ac8608d354212b1ef14bd51045f4a89b4" args="(unsigned int stackSize=POCO_THREAD_STACK_SIZE)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>PooledThread</b> (unsigned int stackSize=POCO_THREAD_STACK_SIZE)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#a99a54eced2feff52004c9614c6dbe8f4">start</a> (Poco::Thread::Priority const &amp;priority, <a class="el" href="class__2_real_1_1_runnable.html">_2Real::Runnable</a> &amp;target)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#a1b3a4a1f1160779d79f5fcc256802674">update</a> (Poco::Thread::Priority const &amp;priority, <a class="el" href="class__2_real_1_1_runnable.html">_2Real::Runnable</a> &amp;target)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#afb33e6042dd45d4940a1da0e8e167712">waitForTarget</a> ()</td></tr>
@@ -121,29 +120,6 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#a28f078f0a6bd6eb843d5997d49832a5f">reactivate</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_pooled_thread.html#a98bae97a3b0b4add6da477ef15098e3f">run</a> ()</td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8h_source.html#l00035">35</a> of file <a class="el" href="__2_real_pooled_thread_8h_source.html">_2RealPooledThread.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ac8608d354212b1ef14bd51045f4a89b4"></a><!-- doxytag: member="_2Real::PooledThread::PooledThread" ref="ac8608d354212b1ef14bd51045f4a89b4" args="(unsigned int stackSize=POCO_THREAD_STACK_SIZE)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_pooled_thread.html#ac8608d354212b1ef14bd51045f4a89b4">_2Real::PooledThread::PooledThread</a> </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>stackSize</em> = <code>POCO_THREAD_STACK_SIZE</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00031">31</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
-</div>
-</div>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ab5a395a2cfefd0d5d94bb60d364b09b5"></a><!-- doxytag: member="_2Real::PooledThread::isIdle" ref="ab5a395a2cfefd0d5d94bb60d364b09b5" args="()" -->
 <div class="memitem">
@@ -159,8 +135,6 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>returns true if the thread is still running, but currently has no target </p>
-
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00049">49</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -181,8 +155,6 @@ Public Member Functions</h2></td></tr>
 <p>!!!!! </p>
 <p>kills the thread </p>
 
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00120">120</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a28f078f0a6bd6eb843d5997d49832a5f"></a><!-- doxytag: member="_2Real::PooledThread::reactivate" ref="a28f078f0a6bd6eb843d5997d49832a5f" args="()" -->
@@ -200,8 +172,6 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>used to reactivate a thread after its target has finished </p>
 
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00111">111</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a98bae97a3b0b4add6da477ef15098e3f"></a><!-- doxytag: member="_2Real::PooledThread::run" ref="a98bae97a3b0b4add6da477ef15098e3f" args="()" -->
@@ -218,8 +188,6 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>the thread's run function </p>
-
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00141">141</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -249,8 +217,6 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>starts a new target </p>
 
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00087">87</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a1b5a66c4019484be2db4a9c81db08ead"></a><!-- doxytag: member="_2Real::PooledThread::stopRunning" ref="a1b5a66c4019484be2db4a9c81db08ead" args="()" -->
@@ -268,8 +234,6 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>signals to the thread that it should exit from its run function </p>
 
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00073">73</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a90fdb145a2aa5f8cefa4d9bd4d3fa40d"></a><!-- doxytag: member="_2Real::PooledThread::stopTargetRunning" ref="a90fdb145a2aa5f8cefa4d9bd4d3fa40d" args="()" -->
@@ -286,8 +250,6 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>signals to the thread that it should no longer keep updating its target --&gt; after the next update, it will cleanup &amp; wait for a new target </p>
-
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00081">81</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -317,8 +279,6 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>starts a new target, notifies runnables father when done </p>
 
-<p>Definition at line <a class="el" href="__2_real_pooled_thread_8cpp_source.html#l00099">99</a> of file <a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="afb33e6042dd45d4940a1da0e8e167712"></a><!-- doxytag: member="_2Real::PooledThread::waitForTarget" ref="afb33e6042dd45d4940a1da0e8e167712" args="()" -->
@@ -339,8 +299,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_pooled_thread_8h_source.html">_2RealPooledThread.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_pooled_thread_8cpp_source.html">_2RealPooledThread.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_pooled_thread_8h_source.html">_2RealPooledThread.h</a></li>
+<li>kernel/src/_2RealPooledThread.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -349,7 +309,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -363,7 +323,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

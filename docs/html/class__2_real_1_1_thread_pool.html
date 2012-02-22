@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::ThreadPool Class Reference</title>
+<title>_2RealFramework: _2Real::ThreadPool Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -103,120 +103,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::ThreadPool" -->
-<p><code>#include &lt;<a class="el" href="__2_real_thread_pool_8h_source.html">_2RealThreadPool.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_thread_pool-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_thread_pool.html#aaff09167daf9751c48d9c6c76197f839">ThreadPool</a> (unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_thread_pool.html#a5bd0b58f8373971e5564191627f9c1e2">~ThreadPool</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_thread_pool.html#a6e36425c35d23f79c750ccef667a9eb0">clearThreads</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_thread_pool.html#ad3bcb0b8b0e8f09e514f5f9a6802f553">getFreeThread</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaff09167daf9751c48d9c6c76197f839"></a><!-- doxytag: member="_2Real::ThreadPool::ThreadPool" ref="aaff09167daf9751c48d9c6c76197f839" args="(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const &amp;name)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>ThreadPool</b> (unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const &amp;name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e36425c35d23f79c750ccef667a9eb0"></a><!-- doxytag: member="_2Real::ThreadPool::clearThreads" ref="a6e36425c35d23f79c750ccef667a9eb0" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clearThreads</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad3bcb0b8b0e8f09e514f5f9a6802f553"></a><!-- doxytag: member="_2Real::ThreadPool::getFreeThread" ref="ad3bcb0b8b0e8f09e514f5f9a6802f553" args="()" -->
+<a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getFreeThread</b> ()</td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_thread_pool_8h_source.html#l00030">30</a> of file <a class="el" href="__2_real_thread_pool_8h_source.html">_2RealThreadPool.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aaff09167daf9751c48d9c6c76197f839"></a><!-- doxytag: member="_2Real::ThreadPool::ThreadPool" ref="aaff09167daf9751c48d9c6c76197f839" args="(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const &amp;name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_thread_pool.html#aaff09167daf9751c48d9c6c76197f839">_2Real::ThreadPool::ThreadPool</a> </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>capacity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>idleTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>stackSize</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_thread_pool_8cpp_source.html#l00028">28</a> of file <a class="el" href="__2_real_thread_pool_8cpp_source.html">_2RealThreadPool.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5bd0b58f8373971e5564191627f9c1e2"></a><!-- doxytag: member="_2Real::ThreadPool::~ThreadPool" ref="a5bd0b58f8373971e5564191627f9c1e2" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_thread_pool.html#a5bd0b58f8373971e5564191627f9c1e2">_2Real::ThreadPool::~ThreadPool</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_thread_pool_8cpp_source.html#l00042">42</a> of file <a class="el" href="__2_real_thread_pool_8cpp_source.html">_2RealThreadPool.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a6e36425c35d23f79c750ccef667a9eb0"></a><!-- doxytag: member="_2Real::ThreadPool::clearThreads" ref="a6e36425c35d23f79c750ccef667a9eb0" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_thread_pool.html#a6e36425c35d23f79c750ccef667a9eb0">_2Real::ThreadPool::clearThreads</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_thread_pool_8cpp_source.html#l00050">50</a> of file <a class="el" href="__2_real_thread_pool_8cpp_source.html">_2RealThreadPool.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad3bcb0b8b0e8f09e514f5f9a6802f553"></a><!-- doxytag: member="_2Real::ThreadPool::getFreeThread" ref="ad3bcb0b8b0e8f09e514f5f9a6802f553" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp; <a class="el" href="class__2_real_1_1_thread_pool.html#ad3bcb0b8b0e8f09e514f5f9a6802f553">_2Real::ThreadPool::getFreeThread</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_thread_pool_8cpp_source.html#l00068">68</a> of file <a class="el" href="__2_real_thread_pool_8cpp_source.html">_2RealThreadPool.cpp</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_thread_pool_8h_source.html">_2RealThreadPool.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_thread_pool_8cpp_source.html">_2RealThreadPool.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_thread_pool_8h_source.html">_2RealThreadPool.h</a></li>
+<li>kernel/src/_2RealThreadPool.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -225,7 +125,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -239,7 +139,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_thread_pool.html">ThreadPool</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:22 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

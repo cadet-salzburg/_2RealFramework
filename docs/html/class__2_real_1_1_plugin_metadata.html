@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::PluginMetadata Class Reference</title>
+<title>_2RealFramework: _2Real::PluginMetadata Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -104,882 +104,82 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="_2Real::PluginMetadata" -->
-<p><code>#include &lt;<a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>&gt;</code></p>
-
 <p><a href="class__2_real_1_1_plugin_metadata-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a005709dda61cc1894b78a5a2c7188e8b">PluginMetadata</a> (std::string const &amp;classname, std::string const &amp;directory)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a5f00dfa585e2ac4e5ac93824ecc3eec1">~PluginMetadata</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a0501335cb24c83985002dbf4ab72c4d1">clear</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a35ef501cbe35d81ae9000e35e6674fff">getSetupParameters</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a44cb77e5ff47ec4b32119f144bd6768a">getServices</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">setDescription</a> (std::string const &amp;desc)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#af17cdc4565e9798484c63daf4d84c787">setVersion</a> (<a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp;version)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a5b1081be47996cbc06e85b69ad052df5">setAuthor</a> (std::string const &amp;author)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a1e7dc3d778d2c777b33ebe6a4a935e65">setContact</a> (std::string const &amp;contact)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#aae4445da391e9300374950f67055d214">getInstallDirectory</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a6a01e99f07ea66eac30fcb8226591fdb">getDescription</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#acb64ba97b57bdb437ef55eeff8c18a20">getAuthor</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a1214c2c4d0378f6debe8d62ca97ecf8f">getContact</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#aaf8a07927e5a2390b3bc2b5839a5340f">getClassname</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a0525a87fb99b86627ff2c716dcc2e5b8">getVersion</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#ac04bd486b6698332a67dba6c8ef8496f">addServiceMetadata</a> (std::string const &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#ac8f236304e72c665280e9c66e63fa96b">setDescription</a> (std::string const &amp;service, std::string const &amp;description)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a7d7aafc9e552f19d5316dcff39db51c4">addSetupParameterByKey</a> (std::string const &amp;name, std::string const &amp;keyword)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#afea486ed09a902a2fabadbc791a76d59">addSetupParameterByKey</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#ae3823ea2850f6519505ad30a06106061">addInputSlotByKey</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a12477e383ee80e1b21cbfbd7cef1cec5">addOutputSlotByKey</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#ae3bc601aa4ad50afac7ce671331aa622">addSetupParameterByType</a> (std::string const &amp;name, std::string const &amp;type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#aa6260c35c328d4e18735ee6a13b3e010">addSetupParameterByType</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#ad7ff7c77f31acfa78a059d0dbe62496f">addInputSlotByType</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a7015f8c5a2a3a0c0702093960b067eec">addOutputSlotByType</a> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a40994166682704d43c2848d842b45646">addSetupParameterByData</a> (std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a7486403efcfbea63064b201c287d5754">addSetupParameterByData</a> (std::string const &amp;service, std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a8916030cdea8d4ae163926c6711f822a">addInputSlotByData</a> (std::string const &amp;service, std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a54b5247de13d13d045e79b528fdba8bf">containsServiceMetadata</a> (std::string const &amp;name) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a99d402510e177a82d678f347a2683e61">containsParameterMetadata</a> (std::string const &amp;name) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a0f94857aabdaebbfb4f82d34f05b5915">getServiceMetadata</a> (std::string const &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a6ffbf63607dc1ea94bbc10e0aecbc480">getParameterMetadata</a> (std::string const &amp;name) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#acf8ee0177eb7436efb510c300158ae02">getServiceMetadata</a> (std::string const &amp;name) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a005709dda61cc1894b78a5a2c7188e8b"></a><!-- doxytag: member="_2Real::PluginMetadata::PluginMetadata" ref="a005709dda61cc1894b78a5a2c7188e8b" args="(std::string const &amp;classname, std::string const &amp;directory)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>PluginMetadata</b> (std::string const &amp;classname, std::string const &amp;directory)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0501335cb24c83985002dbf4ab72c4d1"></a><!-- doxytag: member="_2Real::PluginMetadata::clear" ref="a0501335cb24c83985002dbf4ab72c4d1" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35ef501cbe35d81ae9000e35e6674fff"></a><!-- doxytag: member="_2Real::PluginMetadata::getSetupParameters" ref="a35ef501cbe35d81ae9000e35e6674fff" args="() const " -->
+ParameterDataMap const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getSetupParameters</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44cb77e5ff47ec4b32119f144bd6768a"></a><!-- doxytag: member="_2Real::PluginMetadata::getServices" ref="a44cb77e5ff47ec4b32119f144bd6768a" args="() const " -->
+ServiceDataMap const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getServices</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5076db4c59f1f7e3ba72301ecacefc92"></a><!-- doxytag: member="_2Real::PluginMetadata::setDescription" ref="a5076db4c59f1f7e3ba72301ecacefc92" args="(std::string const &amp;desc)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDescription</b> (std::string const &amp;desc)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af17cdc4565e9798484c63daf4d84c787"></a><!-- doxytag: member="_2Real::PluginMetadata::setVersion" ref="af17cdc4565e9798484c63daf4d84c787" args="(Version const &amp;version)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setVersion</b> (<a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp;version)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b1081be47996cbc06e85b69ad052df5"></a><!-- doxytag: member="_2Real::PluginMetadata::setAuthor" ref="a5b1081be47996cbc06e85b69ad052df5" args="(std::string const &amp;author)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setAuthor</b> (std::string const &amp;author)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e7dc3d778d2c777b33ebe6a4a935e65"></a><!-- doxytag: member="_2Real::PluginMetadata::setContact" ref="a1e7dc3d778d2c777b33ebe6a4a935e65" args="(std::string const &amp;contact)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setContact</b> (std::string const &amp;contact)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae4445da391e9300374950f67055d214"></a><!-- doxytag: member="_2Real::PluginMetadata::getInstallDirectory" ref="aae4445da391e9300374950f67055d214" args="() const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getInstallDirectory</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a01e99f07ea66eac30fcb8226591fdb"></a><!-- doxytag: member="_2Real::PluginMetadata::getDescription" ref="a6a01e99f07ea66eac30fcb8226591fdb" args="() const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getDescription</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb64ba97b57bdb437ef55eeff8c18a20"></a><!-- doxytag: member="_2Real::PluginMetadata::getAuthor" ref="acb64ba97b57bdb437ef55eeff8c18a20" args="() const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getAuthor</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1214c2c4d0378f6debe8d62ca97ecf8f"></a><!-- doxytag: member="_2Real::PluginMetadata::getContact" ref="a1214c2c4d0378f6debe8d62ca97ecf8f" args="() const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getContact</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf8a07927e5a2390b3bc2b5839a5340f"></a><!-- doxytag: member="_2Real::PluginMetadata::getClassname" ref="aaf8a07927e5a2390b3bc2b5839a5340f" args="() const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getClassname</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0525a87fb99b86627ff2c716dcc2e5b8"></a><!-- doxytag: member="_2Real::PluginMetadata::getVersion" ref="a0525a87fb99b86627ff2c716dcc2e5b8" args="() const " -->
+<a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVersion</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac04bd486b6698332a67dba6c8ef8496f"></a><!-- doxytag: member="_2Real::PluginMetadata::addServiceMetadata" ref="ac04bd486b6698332a67dba6c8ef8496f" args="(std::string const &amp;name)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addServiceMetadata</b> (std::string const &amp;name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8f236304e72c665280e9c66e63fa96b"></a><!-- doxytag: member="_2Real::PluginMetadata::setDescription" ref="ac8f236304e72c665280e9c66e63fa96b" args="(std::string const &amp;service, std::string const &amp;description)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDescription</b> (std::string const &amp;service, std::string const &amp;description)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d7aafc9e552f19d5316dcff39db51c4"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByKey" ref="a7d7aafc9e552f19d5316dcff39db51c4" args="(std::string const &amp;name, std::string const &amp;keyword)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByKey</b> (std::string const &amp;name, std::string const &amp;keyword)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afea486ed09a902a2fabadbc791a76d59"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByKey" ref="afea486ed09a902a2fabadbc791a76d59" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByKey</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3823ea2850f6519505ad30a06106061"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByKey" ref="ae3823ea2850f6519505ad30a06106061" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addInputSlotByKey</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a12477e383ee80e1b21cbfbd7cef1cec5"></a><!-- doxytag: member="_2Real::PluginMetadata::addOutputSlotByKey" ref="a12477e383ee80e1b21cbfbd7cef1cec5" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addOutputSlotByKey</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3bc601aa4ad50afac7ce671331aa622"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByType" ref="ae3bc601aa4ad50afac7ce671331aa622" args="(std::string const &amp;name, std::string const &amp;type)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByType</b> (std::string const &amp;name, std::string const &amp;type)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6260c35c328d4e18735ee6a13b3e010"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByType" ref="aa6260c35c328d4e18735ee6a13b3e010" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByType</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7ff7c77f31acfa78a059d0dbe62496f"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByType" ref="ad7ff7c77f31acfa78a059d0dbe62496f" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addInputSlotByType</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7015f8c5a2a3a0c0702093960b067eec"></a><!-- doxytag: member="_2Real::PluginMetadata::addOutputSlotByType" ref="a7015f8c5a2a3a0c0702093960b067eec" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addOutputSlotByType</b> (std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40994166682704d43c2848d842b45646"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByData" ref="a40994166682704d43c2848d842b45646" args="(std::string const &amp;name, EngineData const &amp;defaultValue)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByData</b> (std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7486403efcfbea63064b201c287d5754"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByData" ref="a7486403efcfbea63064b201c287d5754" args="(std::string const &amp;service, std::string const &amp;name, EngineData const &amp;defaultValue)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSetupParameterByData</b> (std::string const &amp;service, std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8916030cdea8d4ae163926c6711f822a"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByData" ref="a8916030cdea8d4ae163926c6711f822a" args="(std::string const &amp;service, std::string const &amp;name, EngineData const &amp;defaultValue)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addInputSlotByData</b> (std::string const &amp;service, std::string const &amp;name, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;defaultValue)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54b5247de13d13d045e79b528fdba8bf"></a><!-- doxytag: member="_2Real::PluginMetadata::containsServiceMetadata" ref="a54b5247de13d13d045e79b528fdba8bf" args="(std::string const &amp;name) const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>containsServiceMetadata</b> (std::string const &amp;name) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a99d402510e177a82d678f347a2683e61"></a><!-- doxytag: member="_2Real::PluginMetadata::containsParameterMetadata" ref="a99d402510e177a82d678f347a2683e61" args="(std::string const &amp;name) const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>containsParameterMetadata</b> (std::string const &amp;name) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f94857aabdaebbfb4f82d34f05b5915"></a><!-- doxytag: member="_2Real::PluginMetadata::getServiceMetadata" ref="a0f94857aabdaebbfb4f82d34f05b5915" args="(std::string const &amp;name)" -->
+<a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getServiceMetadata</b> (std::string const &amp;name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ffbf63607dc1ea94bbc10e0aecbc480"></a><!-- doxytag: member="_2Real::PluginMetadata::getParameterMetadata" ref="a6ffbf63607dc1ea94bbc10e0aecbc480" args="(std::string const &amp;name) const " -->
+<a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getParameterMetadata</b> (std::string const &amp;name) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf8ee0177eb7436efb510c300158ae02"></a><!-- doxytag: member="_2Real::PluginMetadata::getServiceMetadata" ref="acf8ee0177eb7436efb510c300158ae02" args="(std::string const &amp;name) const " -->
+<a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getServiceMetadata</b> (std::string const &amp;name) const </td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a706864d91c5befec1d590833004ceaa1">operator&lt;&lt;</a> (std::ostream &amp;out, <a class="el" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> const &amp;metadata)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a706864d91c5befec1d590833004ceaa1"></a><!-- doxytag: member="_2Real::PluginMetadata::operator&lt;&lt;" ref="a706864d91c5befec1d590833004ceaa1" args="(std::ostream &amp;out, PluginMetadata const &amp;metadata)" -->
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;out, <a class="el" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> const &amp;metadata)</td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00043">43</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a005709dda61cc1894b78a5a2c7188e8b"></a><!-- doxytag: member="_2Real::PluginMetadata::PluginMetadata" ref="a005709dda61cc1894b78a5a2c7188e8b" args="(std::string const &amp;classname, std::string const &amp;directory)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a005709dda61cc1894b78a5a2c7188e8b">_2Real::PluginMetadata::PluginMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>classname</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>directory</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00031">31</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5f00dfa585e2ac4e5ac93824ecc3eec1"></a><!-- doxytag: member="_2Real::PluginMetadata::~PluginMetadata" ref="a5f00dfa585e2ac4e5ac93824ecc3eec1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_plugin_metadata.html#a5f00dfa585e2ac4e5ac93824ecc3eec1">_2Real::PluginMetadata::~PluginMetadata</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00044">44</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a8916030cdea8d4ae163926c6711f822a"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByData" ref="a8916030cdea8d4ae163926c6711f822a" args="(std::string const &amp;service, std::string const &amp;name, EngineData const &amp;defaultValue)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a8916030cdea8d4ae163926c6711f822a">_2Real::PluginMetadata::addInputSlotByData</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;&#160;</td>
-          <td class="paramname"><em>defaultValue</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00179">179</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae3823ea2850f6519505ad30a06106061"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByKey" ref="ae3823ea2850f6519505ad30a06106061" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#ae3823ea2850f6519505ad30a06106061">_2Real::PluginMetadata::addInputSlotByKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00131">131</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad7ff7c77f31acfa78a059d0dbe62496f"></a><!-- doxytag: member="_2Real::PluginMetadata::addInputSlotByType" ref="ad7ff7c77f31acfa78a059d0dbe62496f" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#ad7ff7c77f31acfa78a059d0dbe62496f">_2Real::PluginMetadata::addInputSlotByType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00155">155</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a12477e383ee80e1b21cbfbd7cef1cec5"></a><!-- doxytag: member="_2Real::PluginMetadata::addOutputSlotByKey" ref="a12477e383ee80e1b21cbfbd7cef1cec5" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a12477e383ee80e1b21cbfbd7cef1cec5">_2Real::PluginMetadata::addOutputSlotByKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00137">137</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7015f8c5a2a3a0c0702093960b067eec"></a><!-- doxytag: member="_2Real::PluginMetadata::addOutputSlotByType" ref="a7015f8c5a2a3a0c0702093960b067eec" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a7015f8c5a2a3a0c0702093960b067eec">_2Real::PluginMetadata::addOutputSlotByType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00161">161</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac04bd486b6698332a67dba6c8ef8496f"></a><!-- doxytag: member="_2Real::PluginMetadata::addServiceMetadata" ref="ac04bd486b6698332a67dba6c8ef8496f" args="(std::string const &amp;name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#ac04bd486b6698332a67dba6c8ef8496f">_2Real::PluginMetadata::addServiceMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00062">62</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a40994166682704d43c2848d842b45646"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByData" ref="a40994166682704d43c2848d842b45646" args="(std::string const &amp;name, EngineData const &amp;defaultValue)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a40994166682704d43c2848d842b45646">_2Real::PluginMetadata::addSetupParameterByData</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;&#160;</td>
-          <td class="paramname"><em>defaultValue</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00167">167</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7486403efcfbea63064b201c287d5754"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByData" ref="a7486403efcfbea63064b201c287d5754" args="(std::string const &amp;service, std::string const &amp;name, EngineData const &amp;defaultValue)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a40994166682704d43c2848d842b45646">_2Real::PluginMetadata::addSetupParameterByData</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;&#160;</td>
-          <td class="paramname"><em>defaultValue</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00173">173</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7d7aafc9e552f19d5316dcff39db51c4"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByKey" ref="a7d7aafc9e552f19d5316dcff39db51c4" args="(std::string const &amp;name, std::string const &amp;keyword)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a7d7aafc9e552f19d5316dcff39db51c4">_2Real::PluginMetadata::addSetupParameterByKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00119">119</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="afea486ed09a902a2fabadbc791a76d59"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByKey" ref="afea486ed09a902a2fabadbc791a76d59" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;keyword)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a7d7aafc9e552f19d5316dcff39db51c4">_2Real::PluginMetadata::addSetupParameterByKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>keyword</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00125">125</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae3bc601aa4ad50afac7ce671331aa622"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByType" ref="ae3bc601aa4ad50afac7ce671331aa622" args="(std::string const &amp;name, std::string const &amp;type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#ae3bc601aa4ad50afac7ce671331aa622">_2Real::PluginMetadata::addSetupParameterByType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00143">143</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa6260c35c328d4e18735ee6a13b3e010"></a><!-- doxytag: member="_2Real::PluginMetadata::addSetupParameterByType" ref="aa6260c35c328d4e18735ee6a13b3e010" args="(std::string const &amp;service, std::string const &amp;name, std::string const &amp;type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#ae3bc601aa4ad50afac7ce671331aa622">_2Real::PluginMetadata::addSetupParameterByType</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00149">149</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0501335cb24c83985002dbf4ab72c4d1"></a><!-- doxytag: member="_2Real::PluginMetadata::clear" ref="a0501335cb24c83985002dbf4ab72c4d1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a0501335cb24c83985002dbf4ab72c4d1">_2Real::PluginMetadata::clear</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00048">48</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a99d402510e177a82d678f347a2683e61"></a><!-- doxytag: member="_2Real::PluginMetadata::containsParameterMetadata" ref="a99d402510e177a82d678f347a2683e61" args="(std::string const &amp;name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_plugin_metadata.html#a99d402510e177a82d678f347a2683e61">_2Real::PluginMetadata::containsParameterMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00185">185</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a54b5247de13d13d045e79b528fdba8bf"></a><!-- doxytag: member="_2Real::PluginMetadata::containsServiceMetadata" ref="a54b5247de13d13d045e79b528fdba8bf" args="(std::string const &amp;name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_plugin_metadata.html#a54b5247de13d13d045e79b528fdba8bf">_2Real::PluginMetadata::containsServiceMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00190">190</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acb64ba97b57bdb437ef55eeff8c18a20"></a><!-- doxytag: member="_2Real::PluginMetadata::getAuthor" ref="acb64ba97b57bdb437ef55eeff8c18a20" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#acb64ba97b57bdb437ef55eeff8c18a20">_2Real::PluginMetadata::getAuthor</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00159">159</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aaf8a07927e5a2390b3bc2b5839a5340f"></a><!-- doxytag: member="_2Real::PluginMetadata::getClassname" ref="aaf8a07927e5a2390b3bc2b5839a5340f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#aaf8a07927e5a2390b3bc2b5839a5340f">_2Real::PluginMetadata::getClassname</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00144">144</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1214c2c4d0378f6debe8d62ca97ecf8f"></a><!-- doxytag: member="_2Real::PluginMetadata::getContact" ref="a1214c2c4d0378f6debe8d62ca97ecf8f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a1214c2c4d0378f6debe8d62ca97ecf8f">_2Real::PluginMetadata::getContact</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00164">164</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6a01e99f07ea66eac30fcb8226591fdb"></a><!-- doxytag: member="_2Real::PluginMetadata::getDescription" ref="a6a01e99f07ea66eac30fcb8226591fdb" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a6a01e99f07ea66eac30fcb8226591fdb">_2Real::PluginMetadata::getDescription</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00154">154</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aae4445da391e9300374950f67055d214"></a><!-- doxytag: member="_2Real::PluginMetadata::getInstallDirectory" ref="aae4445da391e9300374950f67055d214" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#aae4445da391e9300374950f67055d214">_2Real::PluginMetadata::getInstallDirectory</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00149">149</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6ffbf63607dc1ea94bbc10e0aecbc480"></a><!-- doxytag: member="_2Real::PluginMetadata::getParameterMetadata" ref="a6ffbf63607dc1ea94bbc10e0aecbc480" args="(std::string const &amp;name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a6ffbf63607dc1ea94bbc10e0aecbc480">_2Real::PluginMetadata::getParameterMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00195">195</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0f94857aabdaebbfb4f82d34f05b5915"></a><!-- doxytag: member="_2Real::PluginMetadata::getServiceMetadata" ref="a0f94857aabdaebbfb4f82d34f05b5915" args="(std::string const &amp;name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a0f94857aabdaebbfb4f82d34f05b5915">_2Real::PluginMetadata::getServiceMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00223">223</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acf8ee0177eb7436efb510c300158ae02"></a><!-- doxytag: member="_2Real::PluginMetadata::getServiceMetadata" ref="acf8ee0177eb7436efb510c300158ae02" args="(std::string const &amp;name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_service_metadata.html">ServiceMetadata</a> const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a0f94857aabdaebbfb4f82d34f05b5915">_2Real::PluginMetadata::getServiceMetadata</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00209">209</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a44cb77e5ff47ec4b32119f144bd6768a"></a><!-- doxytag: member="_2Real::PluginMetadata::getServices" ref="a44cb77e5ff47ec4b32119f144bd6768a" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespace__2_real.html#a6bf0a1c7ce1b25036cf2f769f910b9b6">ServiceDataMap</a> const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a44cb77e5ff47ec4b32119f144bd6768a">_2Real::PluginMetadata::getServices</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00119">119</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a35ef501cbe35d81ae9000e35e6674fff"></a><!-- doxytag: member="_2Real::PluginMetadata::getSetupParameters" ref="a35ef501cbe35d81ae9000e35e6674fff" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespace__2_real.html#a9ce617be8e259b9e75da387031a49a2e">ParameterDataMap</a> const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a35ef501cbe35d81ae9000e35e6674fff">_2Real::PluginMetadata::getSetupParameters</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00114">114</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0525a87fb99b86627ff2c716dcc2e5b8"></a><!-- doxytag: member="_2Real::PluginMetadata::getVersion" ref="a0525a87fb99b86627ff2c716dcc2e5b8" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp; <a class="el" href="class__2_real_1_1_plugin_metadata.html#a0525a87fb99b86627ff2c716dcc2e5b8">_2Real::PluginMetadata::getVersion</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00169">169</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5b1081be47996cbc06e85b69ad052df5"></a><!-- doxytag: member="_2Real::PluginMetadata::setAuthor" ref="a5b1081be47996cbc06e85b69ad052df5" args="(std::string const &amp;author)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a5b1081be47996cbc06e85b69ad052df5">_2Real::PluginMetadata::setAuthor</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>author</em></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00134">134</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1e7dc3d778d2c777b33ebe6a4a935e65"></a><!-- doxytag: member="_2Real::PluginMetadata::setContact" ref="a1e7dc3d778d2c777b33ebe6a4a935e65" args="(std::string const &amp;contact)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a1e7dc3d778d2c777b33ebe6a4a935e65">_2Real::PluginMetadata::setContact</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>contact</em></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00139">139</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5076db4c59f1f7e3ba72301ecacefc92"></a><!-- doxytag: member="_2Real::PluginMetadata::setDescription" ref="a5076db4c59f1f7e3ba72301ecacefc92" args="(std::string const &amp;desc)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">_2Real::PluginMetadata::setDescription</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>desc</em></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00124">124</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac8f236304e72c665280e9c66e63fa96b"></a><!-- doxytag: member="_2Real::PluginMetadata::setDescription" ref="ac8f236304e72c665280e9c66e63fa96b" args="(std::string const &amp;service, std::string const &amp;description)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#a5076db4c59f1f7e3ba72301ecacefc92">_2Real::PluginMetadata::setDescription</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>service</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>description</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00077">77</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af17cdc4565e9798484c63daf4d84c787"></a><!-- doxytag: member="_2Real::PluginMetadata::setVersion" ref="af17cdc4565e9798484c63daf4d84c787" args="(Version const &amp;version)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin_metadata.html#af17cdc4565e9798484c63daf4d84c787">_2Real::PluginMetadata::setVersion</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_version.html">Version</a> const &amp;&#160;</td>
-          <td class="paramname"><em>version</em></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8h_source.html#l00129">129</a> of file <a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a706864d91c5befec1d590833004ceaa1"></a><!-- doxytag: member="_2Real::PluginMetadata::operator&lt;&lt;" ref="a706864d91c5befec1d590833004ceaa1" args="(std::ostream &amp;out, PluginMetadata const &amp;metadata)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> const &amp;&#160;</td>
-          <td class="paramname"><em>metadata</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [friend]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_metadata_8cpp_source.html#l00237">237</a> of file <a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_plugin_metadata_8cpp_source.html">_2RealPluginMetadata.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_plugin_metadata_8h_source.html">_2RealPluginMetadata.h</a></li>
+<li>kernel/src/_2RealPluginMetadata.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -988,7 +188,7 @@ Friends</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -1002,7 +202,7 @@ Friends</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

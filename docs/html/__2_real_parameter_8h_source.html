@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealParameter.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealParameter.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealParameter.h</div>  </div>
+<div class="title">kernel/src/_2RealParameter.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_parameter_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -130,41 +129,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00030"></a>00030 
 <a name="l00031"></a>00031         <span class="keyword">public</span>:
 <a name="l00032"></a>00032 
-<a name="l00033"></a>00033                 <a class="code" href="class__2_real_1_1_parameter.html#ae15e4292dcf9b43e6b0953e64fed8b9d">Parameter</a>(<a class="code" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> <span class="keyword">const</span>&amp; metadata);
-<a name="l00034"></a>00034                 <span class="keyword">virtual</span> <a class="code" href="class__2_real_1_1_parameter.html#a74bc543cd6673ed61e6285a7d0bcbfd4">~Parameter</a>();
+<a name="l00033"></a>00033                 <a class="code" href="class__2_real_1_1_parameter.html">Parameter</a>(<a class="code" href="class__2_real_1_1_parameter_metadata.html">ParameterMetadata</a> <span class="keyword">const</span>&amp; metadata);
+<a name="l00034"></a>00034                 <span class="keyword">virtual</span> ~<a class="code" href="class__2_real_1_1_parameter.html">Parameter</a>();
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036                 <span class="keywordtype">bool</span>                                    <a class="code" href="class__2_real_1_1_parameter.html#a8acca9331a91c16c44f27a23addd67c2">isInitialized</a>() <span class="keyword">const</span>;
-<a name="l00037"></a>00037                 std::string <span class="keyword">const</span>&amp;              <a class="code" href="class__2_real_1_1_parameter.html#a4b2a03ee1227fff949facd55f149dc5d">getKeyword</a>() <span class="keyword">const</span>;
-<a name="l00038"></a>00038                 std::string <span class="keyword">const</span>&amp;              <a class="code" href="class__2_real_1_1_parameter.html#a00de6443cc841ca1725335d4e6bfad36">getDatatype</a>() <span class="keyword">const</span>;
-<a name="l00039"></a>00039                 std::string <span class="keyword">const</span>&amp;              <a class="code" href="class__2_real_1_1_parameter.html#aa2227ce38fcd34a52dd5cbb34a20fcd3">getName</a>() <span class="keyword">const</span>;
+<a name="l00036"></a>00036                 <span class="keywordtype">bool</span>                                    isInitialized() <span class="keyword">const</span>;
+<a name="l00037"></a>00037                 std::string <span class="keyword">const</span>&amp;              getKeyword() <span class="keyword">const</span>;
+<a name="l00038"></a>00038                 std::string <span class="keyword">const</span>&amp;              getDatatype() <span class="keyword">const</span>;
+<a name="l00039"></a>00039                 std::string <span class="keyword">const</span>&amp;              getName() <span class="keyword">const</span>;
 <a name="l00040"></a>00040 
 <a name="l00041"></a>00041         <span class="keyword">protected</span>:
 <a name="l00042"></a>00042 
-<a name="l00043"></a><a class="code" href="class__2_real_1_1_parameter.html#a5f66e3e104058db34ab0dca71c0fe25d">00043</a>                 <span class="keywordtype">bool</span>                                    <a class="code" href="class__2_real_1_1_parameter.html#a5f66e3e104058db34ab0dca71c0fe25d">m_IsInitialized</a>;
-<a name="l00044"></a><a class="code" href="class__2_real_1_1_parameter.html#aec255b1ff5f401def972311ae266c0da">00044</a>                 <span class="keyword">const</span> std::string               <a class="code" href="class__2_real_1_1_parameter.html#aec255b1ff5f401def972311ae266c0da">m_Datatype</a>;
-<a name="l00045"></a><a class="code" href="class__2_real_1_1_parameter.html#a08f4f1fefbb373d8505398bc8cf9cc65">00045</a>                 <span class="keyword">const</span> std::string               <a class="code" href="class__2_real_1_1_parameter.html#a08f4f1fefbb373d8505398bc8cf9cc65">m_Keyword</a>;
-<a name="l00046"></a><a class="code" href="class__2_real_1_1_parameter.html#a8dd076834d21002d8ef52dd7085113a1">00046</a>                 <span class="keyword">const</span> std::string               <a class="code" href="class__2_real_1_1_parameter.html#a8dd076834d21002d8ef52dd7085113a1">m_Name</a>;
+<a name="l00043"></a>00043                 <span class="keywordtype">bool</span>                                    m_IsInitialized;
+<a name="l00044"></a>00044                 <span class="keyword">const</span> std::string               m_Datatype;
+<a name="l00045"></a>00045                 <span class="keyword">const</span> std::string               m_Keyword;
+<a name="l00046"></a>00046                 <span class="keyword">const</span> std::string               m_Name;
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048         };
 <a name="l00049"></a>00049 
-<a name="l00050"></a><a class="code" href="class__2_real_1_1_parameter.html#a8acca9331a91c16c44f27a23addd67c2">00050</a>         <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_parameter.html#a8acca9331a91c16c44f27a23addd67c2">Parameter::isInitialized</a>()<span class="keyword"> const</span>
+<a name="l00050"></a>00050         <span class="keyword">inline</span> <span class="keywordtype">bool</span> Parameter::isInitialized()<span class="keyword"> const</span>
 <a name="l00051"></a>00051 <span class="keyword">        </span>{
-<a name="l00052"></a>00052                 <span class="keywordflow">return</span> <a class="code" href="class__2_real_1_1_parameter.html#a5f66e3e104058db34ab0dca71c0fe25d">m_IsInitialized</a>;
+<a name="l00052"></a>00052                 <span class="keywordflow">return</span> m_IsInitialized;
 <a name="l00053"></a>00053         }
 <a name="l00054"></a>00054 
-<a name="l00055"></a><a class="code" href="class__2_real_1_1_parameter.html#aa2227ce38fcd34a52dd5cbb34a20fcd3">00055</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_parameter.html#aa2227ce38fcd34a52dd5cbb34a20fcd3">Parameter::getName</a>()<span class="keyword"> const</span>
+<a name="l00055"></a>00055         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; Parameter::getName()<span class="keyword"> const</span>
 <a name="l00056"></a>00056 <span class="keyword">        </span>{
-<a name="l00057"></a>00057                 <span class="keywordflow">return</span> <a class="code" href="class__2_real_1_1_parameter.html#a8dd076834d21002d8ef52dd7085113a1">m_Name</a>;
+<a name="l00057"></a>00057                 <span class="keywordflow">return</span> m_Name;
 <a name="l00058"></a>00058         }
 <a name="l00059"></a>00059 
-<a name="l00060"></a><a class="code" href="class__2_real_1_1_parameter.html#a4b2a03ee1227fff949facd55f149dc5d">00060</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_parameter.html#a4b2a03ee1227fff949facd55f149dc5d">Parameter::getKeyword</a>()<span class="keyword"> const</span>
+<a name="l00060"></a>00060         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; Parameter::getKeyword()<span class="keyword"> const</span>
 <a name="l00061"></a>00061 <span class="keyword">        </span>{
-<a name="l00062"></a>00062                 <span class="keywordflow">return</span> <a class="code" href="class__2_real_1_1_parameter.html#a08f4f1fefbb373d8505398bc8cf9cc65">m_Keyword</a>;
+<a name="l00062"></a>00062                 <span class="keywordflow">return</span> m_Keyword;
 <a name="l00063"></a>00063         }
 <a name="l00064"></a>00064 
-<a name="l00065"></a><a class="code" href="class__2_real_1_1_parameter.html#a00de6443cc841ca1725335d4e6bfad36">00065</a>         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_parameter.html#a00de6443cc841ca1725335d4e6bfad36">Parameter::getDatatype</a>()<span class="keyword"> const</span>
+<a name="l00065"></a>00065         <span class="keyword">inline</span> std::string <span class="keyword">const</span>&amp; Parameter::getDatatype()<span class="keyword"> const</span>
 <a name="l00066"></a>00066 <span class="keyword">        </span>{
-<a name="l00067"></a>00067                 <span class="keywordflow">return</span> <a class="code" href="class__2_real_1_1_parameter.html#aec255b1ff5f401def972311ae266c0da">m_Datatype</a>;
+<a name="l00067"></a>00067                 <span class="keywordflow">return</span> m_Datatype;
 <a name="l00068"></a>00068         }
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070 }
@@ -175,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -186,9 +185,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_parameter_8h.html">_2RealParameter.h</a>      </li>
+      <li class="navelem"><b>_2RealParameter.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

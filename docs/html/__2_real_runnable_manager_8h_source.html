@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: D:/cadet/trunk/_2RealFramework/kernel/src/_2RealRunnableManager.h Source File</title>
+<title>_2RealFramework: kernel/src/_2RealRunnableManager.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -95,10 +94,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">D:/cadet/trunk/_2RealFramework/kernel/src/_2RealRunnableManager.h</div>  </div>
+<div class="title">kernel/src/_2RealRunnableManager.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="__2_real_runnable_manager_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">        CADET - Center for Advances in Digital Entertainment Technologies</span>
 <a name="l00003"></a>00003 <span class="comment">        Copyright 2011 Fachhochschule Salzburg GmbH</span>
 <a name="l00004"></a>00004 <span class="comment">                http://www.cadet.at</span>
@@ -123,12 +122,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00023"></a>00023 
 <a name="l00024"></a>00024 <span class="preprocessor">#include &quot;Poco/BasicEvent.h&quot;</span>
 <a name="l00025"></a>00025 
-<a name="l00026"></a><a class="code" href="__2_real_runnable_manager_8h.html#a3c0cc842f5afac471d0d8450c761232c">00026</a> <span class="preprocessor">#define STATE_CREATED   &quot;created&quot;</span>
-<a name="l00027"></a><a class="code" href="__2_real_runnable_manager_8h.html#afc70566b68beb2fc8d9b37239c99777a">00027</a> <span class="preprocessor"></span><span class="preprocessor">#define STATE_SETUP             &quot;set up&quot;</span>
-<a name="l00028"></a><a class="code" href="__2_real_runnable_manager_8h.html#ac4c0304c569818c811515e24523c3150">00028</a> <span class="preprocessor"></span><span class="preprocessor">#define STATE_RUNNING   &quot;running&quot;</span>
-<a name="l00029"></a><a class="code" href="__2_real_runnable_manager_8h.html#aac1dab8d1ac28bf13faeee39d1df47c5">00029</a> <span class="preprocessor"></span><span class="preprocessor">#define STATE_UPDATING  &quot;updating&quot;</span>
-<a name="l00030"></a><a class="code" href="__2_real_runnable_manager_8h.html#a9efb651717996165bc173bf0c02d1ee5">00030</a> <span class="preprocessor"></span><span class="preprocessor">#define STATE_SHUTDOWN  &quot;shut down&quot;</span>
-<a name="l00031"></a><a class="code" href="__2_real_runnable_manager_8h.html#a7bf0c086c7c41c12cc63324327932d91">00031</a> <span class="preprocessor"></span><span class="preprocessor">#define STATE_ERROR             &quot;halted&quot;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#define STATE_CREATED   &quot;created&quot;</span>
+<a name="l00027"></a>00027 <span class="preprocessor"></span><span class="preprocessor">#define STATE_SETUP             &quot;set up&quot;</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#define STATE_RUNNING   &quot;running&quot;</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#define STATE_UPDATING  &quot;updating&quot;</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">#define STATE_SHUTDOWN  &quot;shut down&quot;</span>
+<a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define STATE_ERROR             &quot;halted&quot;</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
 <a name="l00033"></a>00033 <span class="keyword">namespace </span>_2Real
 <a name="l00034"></a>00034 {
@@ -139,43 +138,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00039"></a>00039         <span class="keyword">class </span>PooledThread;
 <a name="l00040"></a>00040         <span class="keyword">class </span>IStateChangeListener;
 <a name="l00041"></a>00041 
-<a name="l00042"></a>00042         <span class="keyword">typedef</span> void (*<a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a>)(std::string &amp;stateName);
+<a name="l00042"></a>00042         <span class="keyword">typedef</span> void (*StateChangeCallback)(std::string &amp;stateName);
 <a name="l00043"></a>00043 
-<a name="l00044"></a><a class="code" href="namespace__2_real.html#aae79baf7bcb5f05dbbc16d13fb0ae299">00044</a>         <span class="keyword">typedef</span> std::map&lt; std::string, RunnableState * &gt;        <a class="code" href="namespace__2_real.html#aae79baf7bcb5f05dbbc16d13fb0ae299">StateTable</a>;
+<a name="l00044"></a>00044         <span class="keyword">typedef</span> std::map&lt; std::string, RunnableState * &gt;        StateTable;
 <a name="l00045"></a>00045 
 <a name="l00046"></a><a class="code" href="class__2_real_1_1_runnable_manager.html">00046</a>         <span class="keyword">class </span><a class="code" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a>
 <a name="l00047"></a>00047         {
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049         <span class="keyword">public</span>:
 <a name="l00050"></a>00050 
-<a name="l00051"></a>00051                 <a class="code" href="class__2_real_1_1_runnable_manager.html#add95bf1cc91f1d03e9cf1c7a6b68f007">RunnableManager</a>(<a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable);
-<a name="l00052"></a>00052                 <a class="code" href="class__2_real_1_1_runnable_manager.html#a4e42afb581a00dc6cd6717123f006b4b">~RunnableManager</a>();
+<a name="l00051"></a>00051                 <a class="code" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a>(<a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;runnable);
+<a name="l00052"></a>00052                 ~<a class="code" href="class__2_real_1_1_runnable_manager.html">RunnableManager</a>();
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054                 <a class="code" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp; <a class="code" href="class__2_real_1_1_runnable_manager.html#a4551811847c610019dd219f9d060c36b">changeState</a>(std::string <span class="keyword">const</span>&amp; newState) <span class="keyword">const</span>;
-<a name="l00055"></a>00055                 <a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp; <a class="code" href="class__2_real_1_1_runnable_manager.html#a87921ca9946461be24092fe60eeeef5a">getManagedRunnable</a>() <span class="keyword">const</span>;
-<a name="l00056"></a>00056                 <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; <a class="code" href="class__2_real_1_1_runnable_manager.html#a9ab4e79d01fbea27e9c5c642f966f865">getManagedId</a>() <span class="keyword">const</span>;
+<a name="l00054"></a>00054                 <a class="code" href="class__2_real_1_1_runnable_state.html">RunnableState</a> &amp; changeState(std::string <span class="keyword">const</span>&amp; newState) <span class="keyword">const</span>;
+<a name="l00055"></a>00055                 <a class="code" href="class__2_real_1_1_runnable.html">Runnable</a> &amp; getManagedRunnable() <span class="keyword">const</span>;
+<a name="l00056"></a>00056                 <a class="code" href="class__2_real_1_1_identifier.html">Identifier</a> <span class="keyword">const</span>&amp; getManagedId() <span class="keyword">const</span>;
 <a name="l00057"></a>00057                 
-<a name="l00058"></a>00058                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#aabd62b2211ff133050e1851a0cfa614e">setup</a>();
-<a name="l00059"></a>00059                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#ad947a49f0a311d0e763b5cdf6f154dd1">start</a>(<a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread);
-<a name="l00060"></a>00060                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a9d950e879a3c5a08f2b4fb5c0ca6ef24">update</a>(<a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread);
-<a name="l00061"></a>00061                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#aacc845cb5d46a0be3245ffa21240538c">stop</a>();
-<a name="l00062"></a>00062                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a56c7376f97c17ce62eff3414621de9c1">wait</a>();
-<a name="l00063"></a>00063                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a39a48400b1586d80b7df360f105a5074">shutdown</a>();
-<a name="l00064"></a>00064                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a18139dd5f9b3f2fb9a246a27ed9579bd">handleException</a>();
+<a name="l00058"></a>00058                 <span class="keywordtype">void</span> setup();
+<a name="l00059"></a>00059                 <span class="keywordtype">void</span> start(<a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread);
+<a name="l00060"></a>00060                 <span class="keywordtype">void</span> update(<a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a> &amp;thread);
+<a name="l00061"></a>00061                 <span class="keywordtype">void</span> stop();
+<a name="l00062"></a>00062                 <span class="keywordtype">void</span> wait();
+<a name="l00063"></a>00063                 <span class="keywordtype">void</span> shutdown();
+<a name="l00064"></a>00064                 <span class="keywordtype">void</span> handleException();
 <a name="l00065"></a>00065 
-<a name="l00066"></a>00066                 <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a83fa2efa6ed9858291f11fe924760331">isUpdating</a>() <span class="keyword">const</span>;
-<a name="l00067"></a>00067                 <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a8fd76a8567d494ef5d3a02c3b113ae05">isRunning</a>() <span class="keyword">const</span>;
-<a name="l00068"></a>00068                 <span class="keywordtype">bool</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a404a28aa3183de65477d1e71fd7ca26c">isSetUp</a>() <span class="keyword">const</span>;
+<a name="l00066"></a>00066                 <span class="keywordtype">bool</span> isUpdating() <span class="keyword">const</span>;
+<a name="l00067"></a>00067                 <span class="keywordtype">bool</span> isRunning() <span class="keyword">const</span>;
+<a name="l00068"></a>00068                 <span class="keywordtype">bool</span> isSetUp() <span class="keyword">const</span>;
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#aafe9e13b53db2f6afeeb70f9b49b9435">registerToStateChange</a>(<a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback);
-<a name="l00071"></a>00071                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a4eb1be8063cb6220e661e139f678e11e">unregisterFromStateChange</a>(<a class="code" href="namespace__2_real.html#aa55061ca1438358c5f981e7bd78d0b0b">StateChangeCallback</a> callback);
-<a name="l00072"></a>00072                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#aafe9e13b53db2f6afeeb70f9b49b9435">registerToStateChange</a>(<a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
-<a name="l00073"></a>00073                 <span class="keywordtype">void</span> <a class="code" href="class__2_real_1_1_runnable_manager.html#a4eb1be8063cb6220e661e139f678e11e">unregisterFromStateChange</a>(<a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
+<a name="l00070"></a>00070                 <span class="keywordtype">void</span> registerToStateChange(StateChangeCallback callback);
+<a name="l00071"></a>00071                 <span class="keywordtype">void</span> unregisterFromStateChange(StateChangeCallback callback);
+<a name="l00072"></a>00072                 <span class="keywordtype">void</span> registerToStateChange(<a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
+<a name="l00073"></a>00073                 <span class="keywordtype">void</span> unregisterFromStateChange(<a class="code" href="class__2_real_1_1_i_state_change_listener.html">IStateChangeListener</a> &amp;listener);
 <a name="l00074"></a>00074 
 <a name="l00075"></a>00075         <span class="keyword">private</span>:
 <a name="l00076"></a>00076 
 <a name="l00077"></a>00077                 <a class="code" href="class__2_real_1_1_runnable.html">Runnable</a>                                                                        *m_Runnable;
-<a name="l00078"></a>00078                 <a class="code" href="namespace__2_real.html#aae79baf7bcb5f05dbbc16d13fb0ae299">StateTable</a>                                                                      m_RunnableStates;
+<a name="l00078"></a>00078                 StateTable                                                                      m_RunnableStates;
 <a name="l00079"></a>00079                 <a class="code" href="class__2_real_1_1_runnable_state.html">RunnableState</a>                                                           *m_CurrentState;
 <a name="l00080"></a>00080                 <a class="code" href="class__2_real_1_1_pooled_thread.html">PooledThread</a>                                                            *m_Thread;
 <a name="l00081"></a>00081 
@@ -183,7 +182,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084         };
 <a name="l00085"></a>00085 
-<a name="l00086"></a><a class="code" href="class__2_real_1_1_runnable_manager.html#a87921ca9946461be24092fe60eeeef5a">00086</a>         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_runnable.html">Runnable</a>&amp; <a class="code" href="class__2_real_1_1_runnable_manager.html#a87921ca9946461be24092fe60eeeef5a">RunnableManager::getManagedRunnable</a>()<span class="keyword"> const</span>
+<a name="l00086"></a>00086         <span class="keyword">inline</span> <a class="code" href="class__2_real_1_1_runnable.html">Runnable</a>&amp; RunnableManager::getManagedRunnable()<span class="keyword"> const</span>
 <a name="l00087"></a>00087 <span class="keyword">        </span>{
 <a name="l00088"></a>00088                 <span class="keywordflow">return</span> *m_Runnable;
 <a name="l00089"></a>00089         }
@@ -196,7 +195,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -207,9 +206,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="__2_real_runnable_manager_8h.html">_2RealRunnableManager.h</a>      </li>
+      <li class="navelem"><b>_2RealRunnableManager.h</b>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:29 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>2Real Kernel Documentation: _2Real::Plugin Class Reference</title>
+<title>_2RealFramework: _2Real::Plugin Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -32,10 +32,10 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">2Real Kernel Documentation
+   <div id="projectname">_2RealFramework
    
    </div>
-   <div id="projectbrief">2Real Kernel Documentation</div>
+   
   </td>
   
   
@@ -102,9 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">_2Real::Plugin Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="_2Real::Plugin" --><!-- doxytag: inherits="_2Real::Entity" -->
-<p><code>#include &lt;<a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a>&gt;</code></p>
-<div class="dynheader">
+<!-- doxytag: class="_2Real::Plugin" --><!-- doxytag: inherits="_2Real::Entity" --><div class="dynheader">
 Inheritance diagram for _2Real::Plugin:</div>
 <div class="dyncontent">
  <div class="center">
@@ -118,116 +116,31 @@ Inheritance diagram for _2Real::Plugin:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a8664bd477b7c24396d418dc1b3b4fa74">Plugin</a> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;<a class="el" href="class__2_real_1_1_entity.html#a5a6e364de1c9c60a0363be0a7cf1dc95">id</a>, std::string const &amp;directory, std::string const &amp;file, std::string const &amp;classname, <a class="el" href="class__2_real_1_1_system_graph.html">SystemGraph</a> &amp;system)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#ae54b08fe1765ed77b4476bee9b25cac5">~Plugin</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#ab9c5bce17c1f96b4547de84651adc573">install</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a0dec4397d46d9d3e539d7b8014ac415b">uninstall</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aeccba76bf14a4b06bf1c9b49ef708b13">setup</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aae775de9cb0f500c350b4e5a276b630d">isInitialized</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adceb939d5aca64816b238688b15000b3"></a><!-- doxytag: member="_2Real::Plugin::Plugin" ref="adceb939d5aca64816b238688b15000b3" args="(Identifier const &amp;id, IPluginActivator &amp;activator, PluginMetadata &amp;metadata)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Plugin</b> (<a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;id, <a class="el" href="class__2_real_1_1_i_plugin_activator.html">IPluginActivator</a> &amp;activator, <a class="el" href="class__2_real_1_1_plugin_metadata.html">PluginMetadata</a> &amp;metadata)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a32c4c9b1fcd2c6730a173afa936e8a7e">getClassName</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a1fab4460fdb36c4edbbc9d611c076ad3">getLibraryPath</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a28a51702ac7debef6e3f379903ec54a5">getInfoString</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#ab3d19b9302b8da4ffcf24a994a37eb0c">getClassname</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aff24503fe328b6911a0b554584ad2200">registerService</a> (std::string const &amp;serviceName, <a class="el" href="namespace__2_real.html#a087f0149edc679005c4f41843145d805">ServiceCreator</a> creator)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#abe4f5a40f9a94aada099559ea2aec280">canExportService</a> (std::string const &amp;serviceName) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aeccba76bf14a4b06bf1c9b49ef708b13">setup</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a9eddc1492ce3d4450a926ff8376e0540">isSetUp</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aff24503fe328b6911a0b554584ad2200">registerService</a> (std::string const &amp;serviceName, ServiceCreator creator)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a11449483955d3c4a08306a7288861080">definesService</a> (std::string const &amp;serviceName) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a26d585585dd5a7f3a5ef3d693d146e28">exportsService</a> (std::string const &amp;serviceName) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aaa944c0a41298e459fdeb14c683bc38a">getParameterValue</a> (std::string const &amp;setupName) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#aee61c840c8aaec5f578c61f33adf4a2e">getParameterKey</a> (std::string const &amp;setupName) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a3615ed7908687ac4503be695b00c4ff9">setParameterValue</a> (std::string const &amp;setupName, <a class="el" href="class__2_real_1_1_data.html">Data</a> const &amp;data)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a40b23577c8d15fa2f3d6ab2e568c01d0">createService</a> (std::string const &amp;idName, std::string const &amp;serviceName)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee61c840c8aaec5f578c61f33adf4a2e"></a><!-- doxytag: member="_2Real::Plugin::getParameterKey" ref="aee61c840c8aaec5f578c61f33adf4a2e" args="(std::string const &amp;setupName) const " -->
+std::string const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getParameterKey</b> (std::string const &amp;setupName) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5301b5e137083250dc5ccb346a5c0165"></a><!-- doxytag: member="_2Real::Plugin::setParameterValue" ref="a5301b5e137083250dc5ccb346a5c0165" args="(std::string const &amp;setupName, EngineData const &amp;data)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameterValue</b> (std::string const &amp;setupName, <a class="el" href="class__2_real_1_1_engine_data.html">EngineData</a> const &amp;data)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a8adc0967a85958d30c15365c487e8bf4">createService</a> (std::string const &amp;idName, std::string const &amp;serviceName, <a class="el" href="class__2_real_1_1_system_graph.html">SystemGraph</a> &amp;graph)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__2_real_1_1_i_plugin_activator.html">IPluginActivator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class__2_real_1_1_plugin.html#a0e999f969163bd51f75c99942cc836b9">getActivator</a> ()</td></tr>
 </table>
-<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="__2_real_plugin_8h_source.html#l00048">48</a> of file <a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a>.</p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a8664bd477b7c24396d418dc1b3b4fa74"></a><!-- doxytag: member="_2Real::Plugin::Plugin" ref="a8664bd477b7c24396d418dc1b3b4fa74" args="(Identifier const &amp;id, std::string const &amp;directory, std::string const &amp;file, std::string const &amp;classname, SystemGraph &amp;system)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_plugin.html#a8664bd477b7c24396d418dc1b3b4fa74">_2Real::Plugin::Plugin</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_identifier.html">Identifier</a> const &amp;&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>directory</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>classname</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_system_graph.html">SystemGraph</a> &amp;&#160;</td>
-          <td class="paramname"><em>system</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00035">35</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae54b08fe1765ed77b4476bee9b25cac5"></a><!-- doxytag: member="_2Real::Plugin::~Plugin" ref="ae54b08fe1765ed77b4476bee9b25cac5" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_plugin.html#ae54b08fe1765ed77b4476bee9b25cac5">_2Real::Plugin::~Plugin</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00049">49</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="abe4f5a40f9a94aada099559ea2aec280"></a><!-- doxytag: member="_2Real::Plugin::canExportService" ref="abe4f5a40f9a94aada099559ea2aec280" args="(std::string const &amp;serviceName) const " -->
+<a class="anchor" id="a8adc0967a85958d30c15365c487e8bf4"></a><!-- doxytag: member="_2Real::Plugin::createService" ref="a8adc0967a85958d30c15365c487e8bf4" args="(std::string const &amp;idName, std::string const &amp;serviceName, SystemGraph &amp;graph)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_plugin.html#abe4f5a40f9a94aada099559ea2aec280">_2Real::Plugin::canExportService</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>serviceName</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00135">135</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a40b23577c8d15fa2f3d6ab2e568c01d0"></a><!-- doxytag: member="_2Real::Plugin::createService" ref="a40b23577c8d15fa2f3d6ab2e568c01d0" args="(std::string const &amp;idName, std::string const &amp;serviceName)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp; <a class="el" href="class__2_real_1_1_plugin.html#a40b23577c8d15fa2f3d6ab2e568c01d0">_2Real::Plugin::createService</a> </td>
+          <td class="memname"><a class="el" href="class__2_real_1_1_runnable.html">Runnable</a> &amp; <a class="el" href="class__2_real_1_1_plugin.html#a8adc0967a85958d30c15365c487e8bf4">_2Real::Plugin::createService</a> </td>
           <td>(</td>
           <td class="paramtype">std::string const &amp;&#160;</td>
           <td class="paramname"><em>idName</em>, </td>
@@ -236,7 +149,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>serviceName</em>&#160;</td>
+          <td class="paramname"><em>serviceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class__2_real_1_1_system_graph.html">SystemGraph</a> &amp;&#160;</td>
+          <td class="paramname"><em>graph</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -246,17 +165,69 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00127">127</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+<p>creates a service instance </p>
 
 </div>
 </div>
-<a class="anchor" id="ab3d19b9302b8da4ffcf24a994a37eb0c"></a><!-- doxytag: member="_2Real::Plugin::getClassname" ref="ab3d19b9302b8da4ffcf24a994a37eb0c" args="() const " -->
+<a class="anchor" id="a11449483955d3c4a08306a7288861080"></a><!-- doxytag: member="_2Real::Plugin::definesService" ref="a11449483955d3c4a08306a7288861080" args="(std::string const &amp;serviceName) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string <a class="el" href="class__2_real_1_1_plugin.html#ab3d19b9302b8da4ffcf24a994a37eb0c">_2Real::Plugin::getClassname</a> </td>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_plugin.html#a11449483955d3c4a08306a7288861080">_2Real::Plugin::definesService</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>serviceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>called by <a class="el" href="class__2_real_1_1_plugin_context.html">PluginContext</a> (true if service is contained in the metadata) </p>
+
+</div>
+</div>
+<a class="anchor" id="a26d585585dd5a7f3a5ef3d693d146e28"></a><!-- doxytag: member="_2Real::Plugin::exportsService" ref="a26d585585dd5a7f3a5ef3d693d146e28" args="(std::string const &amp;serviceName) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="class__2_real_1_1_plugin.html#a26d585585dd5a7f3a5ef3d693d146e28">_2Real::Plugin::exportsService</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>serviceName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>true if a service was exported during setup </p>
+
+</div>
+</div>
+<a class="anchor" id="a0e999f969163bd51f75c99942cc836b9"></a><!-- doxytag: member="_2Real::Plugin::getActivator" ref="a0e999f969163bd51f75c99942cc836b9" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__2_real_1_1_i_plugin_activator.html">IPluginActivator</a> &amp; <a class="el" href="class__2_real_1_1_plugin.html#a0e999f969163bd51f75c99942cc836b9">_2Real::Plugin::getActivator</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns the activator (called on pluginpool::clear) </p>
+
+</div>
+</div>
+<a class="anchor" id="a32c4c9b1fcd2c6730a173afa936e8a7e"></a><!-- doxytag: member="_2Real::Plugin::getClassName" ref="a32c4c9b1fcd2c6730a173afa936e8a7e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin.html#a32c4c9b1fcd2c6730a173afa936e8a7e">_2Real::Plugin::getClassName</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -264,8 +235,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00094">94</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+<p>returns classname </p>
 
 </div>
 </div>
@@ -277,32 +247,29 @@ Public Member Functions</h2></td></tr>
           <td class="memname">const std::string <a class="el" href="class__2_real_1_1_plugin.html#a28a51702ac7debef6e3f379903ec54a5">_2Real::Plugin::getInfoString</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8h_source.html#l00089">89</a> of file <a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aee61c840c8aaec5f578c61f33adf4a2e"></a><!-- doxytag: member="_2Real::Plugin::getParameterKey" ref="aee61c840c8aaec5f578c61f33adf4a2e" args="(std::string const &amp;setupName) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin.html#aee61c840c8aaec5f578c61f33adf4a2e">_2Real::Plugin::getParameterKey</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>setupName</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+<p>returns metadata info string </p>
 
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00104">104</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a1fab4460fdb36c4edbbc9d611c076ad3"></a><!-- doxytag: member="_2Real::Plugin::getLibraryPath" ref="a1fab4460fdb36c4edbbc9d611c076ad3" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const &amp; <a class="el" href="class__2_real_1_1_plugin.html#a1fab4460fdb36c4edbbc9d611c076ad3">_2Real::Plugin::getLibraryPath</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>returns lib path (as string) </p>
 
 </div>
 </div>
@@ -320,44 +287,24 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00109">109</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+<p>param stuff </p>
 
 </div>
 </div>
-<a class="anchor" id="ab9c5bce17c1f96b4547de84651adc573"></a><!-- doxytag: member="_2Real::Plugin::install" ref="ab9c5bce17c1f96b4547de84651adc573" args="()" -->
+<a class="anchor" id="a9eddc1492ce3d4450a926ff8376e0540"></a><!-- doxytag: member="_2Real::Plugin::isSetUp" ref="a9eddc1492ce3d4450a926ff8376e0540" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin.html#ab9c5bce17c1f96b4547de84651adc573">_2Real::Plugin::install</a> </td>
+          <td class="memname">bool <a class="el" href="class__2_real_1_1_plugin.html#a9eddc1492ce3d4450a926ff8376e0540">_2Real::Plugin::isSetUp</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00140">140</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aae775de9cb0f500c350b4e5a276b630d"></a><!-- doxytag: member="_2Real::Plugin::isInitialized" ref="aae775de9cb0f500c350b4e5a276b630d" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class__2_real_1_1_plugin.html#aae775de9cb0f500c350b4e5a276b630d">_2Real::Plugin::isInitialized</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8h_source.html#l00096">96</a> of file <a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a>.</p>
+<p>true if setup has already been called </p>
 
 </div>
 </div>
@@ -374,7 +321,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace__2_real.html#a087f0149edc679005c4f41843145d805">ServiceCreator</a>&#160;</td>
+          <td class="paramtype">ServiceCreator&#160;</td>
           <td class="paramname"><em>creator</em>&#160;</td>
         </tr>
         <tr>
@@ -385,37 +332,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00072">72</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a3615ed7908687ac4503be695b00c4ff9"></a><!-- doxytag: member="_2Real::Plugin::setParameterValue" ref="a3615ed7908687ac4503be695b00c4ff9" args="(std::string const &amp;setupName, Data const &amp;data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin.html#a3615ed7908687ac4503be695b00c4ff9">_2Real::Plugin::setParameterValue</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>setupName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class__2_real_1_1_data.html">Data</a> const &amp;&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00099">99</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+<p>called by <a class="el" href="class__2_real_1_1_plugin_context.html">PluginContext</a> </p>
 
 </div>
 </div>
@@ -432,32 +349,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00202">202</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0dec4397d46d9d3e539d7b8014ac415b"></a><!-- doxytag: member="_2Real::Plugin::uninstall" ref="a0dec4397d46d9d3e539d7b8014ac415b" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class__2_real_1_1_plugin.html#a0dec4397d46d9d3e539d7b8014ac415b">_2Real::Plugin::uninstall</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="__2_real_plugin_8cpp_source.html#l00209">209</a> of file <a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a>.</p>
+<p>sets up the plugin </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a></li>
-<li>D:/cadet/trunk/_2RealFramework/kernel/src/<a class="el" href="__2_real_plugin_8cpp_source.html">_2RealPlugin.cpp</a></li>
+<li>kernel/src/<a class="el" href="__2_real_plugin_8h_source.html">_2RealPlugin.h</a></li>
+<li>kernel/src/_2RealPlugin.cpp</li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -466,7 +364,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -480,7 +378,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespace__2_real.html">_2Real</a>      </li>
       <li class="navelem"><a class="el" href="class__2_real_1_1_plugin.html">Plugin</a>      </li>
 
-    <li class="footer">Generated on Tue Feb 14 2012 13:31:30 for 2Real Kernel Documentation by
+    <li class="footer">Generated on Wed Feb 22 2012 11:43:21 for _2RealFramework by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>
