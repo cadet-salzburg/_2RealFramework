@@ -26,26 +26,6 @@
 
 #include <sstream>
 
-#ifdef _2REAL_WINDOWS
-	#ifndef _DEBUG
-		#define shared_library_suffix ".dll"
-	#else
-		#define shared_library_suffix "_d.dll"
-	#endif
-#elif _2REAL_UNIX
-	#ifndef _DEBUG
-		#define shared_library_suffix ".so"
-	#else
-		#define shared_library_suffix "_d.so"
-	#endif
-#elif _2REAL_MAC
-	#ifndef _DEBUG
-		#define shared_library_suffix ".dylib"
-	#else
-		#define shared_library_suffix "_d.dylib"
-	#endif
-#endif
-
 namespace _2Real
 {
 
@@ -170,7 +150,7 @@ namespace _2Real
 	//	return m_EngineImpl.createSynchronization(name, idA, idB, m_Id);
 	//}
 
-	void System::linkSlots(Identifier const& inService, std::string const& inName, Identifier const& outService, std::string const& outName)
+	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
 		m_EngineImpl.linkSlots(inService, inName, outService, outName, m_Id);
 	}

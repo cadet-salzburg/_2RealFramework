@@ -42,28 +42,36 @@ namespace _2Real
 		m_InputSlots(),
 		m_OutputSlots()
 	{
+		std::cout << "creating service " << id.name() << std::endl;
+
 		ParameterDataMap const& setup = metadata.getSetupParameters();
 		ParameterDataMap const& input = metadata.getInputSlots();
 		ParameterDataMap const& output = metadata.getOutputSlots();
 
+		std::cout << "creating setup" << std::endl;
 		for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
 			SetupParameter *setup = new SetupParameter(meta);
+			std::cout << meta.getName() << std::endl;
 			m_SetupParameters.insert(NamedParameter(meta.getName(), setup));
 		}
 
+		std::cout << "creating inputd" << std::endl;
 		for (ParameterDataMap::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
 			InputSlot *input = new InputSlot(meta);
+			std::cout << meta.getName() << std::endl;
 			m_InputSlots.insert(NamedInput(meta.getName(), input));
 		}
 
+		std::cout << "creating outputs" << std::endl;
 		for (ParameterDataMap::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
 			OutputSlot *output = new OutputSlot(meta);
+			std::cout << meta.getName() << std::endl;
 			m_OutputSlots.insert(NamedOutput(meta.getName(), output));
 		}
 	}

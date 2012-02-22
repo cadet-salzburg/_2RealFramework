@@ -31,7 +31,26 @@
 #include "_2RealPluginPool.h"
 #include "_2RealTimer.h"
 
-#include "vld.h"
+#ifdef _2REAL_WINDOWS
+	#include "vld.h"
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dll"
+	#else
+		#define shared_library_suffix "_d.dll"
+	#endif
+#elif _2REAL_UNIX
+	#ifndef _DEBUG
+		#define shared_library_suffix ".so"
+	#else
+		#define shared_library_suffix "_d.so"
+	#endif
+#elif _2REAL_MAC
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dylib"
+	#else
+		#define shared_library_suffix "_d.dylib"
+	#endif
+#endif
 
 namespace _2Real
 {

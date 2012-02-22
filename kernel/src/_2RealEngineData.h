@@ -19,9 +19,6 @@ namespace _2Real
 	{
 
 	public:
-
-		template< typename DataType >
-		friend Poco::SharedPtr< DataType > const& Extract(EngineData const& data);
 	
 		friend std::ostream& operator<<(std::ostream& out, EngineData const& data)
 		{
@@ -55,6 +52,9 @@ namespace _2Real
 		//const std::string toString() const;
 
 	private:
+
+		template< typename DataType >
+		friend Poco::SharedPtr< DataType > const& Extract(EngineData const& data);
 
 		Poco::SharedPtr< AbstractDataHolder >	m_Content;
 

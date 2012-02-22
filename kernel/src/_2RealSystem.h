@@ -114,8 +114,14 @@ namespace _2Real
 
 		/**
 		*	creates instance of service
+		*	the name of the returned identifier will be auto-generated
 		*/
-		const Identifier createService(std::string const& name, Identifier const& plugin, std::string const& service);
+		const Identifier createService(Identifier const& pluginId, std::string const& serviceName);
+
+		/**
+		*	creates instance of service
+		*/
+		const Identifier createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
 
 		/**
 		*	sets a runnable's desired update rate
@@ -148,7 +154,7 @@ namespace _2Real
 		/**
 		*	links output slot to input slot. the input slot's previous link will be broken.
 		*/
-		void linkSlots(Identifier const& inService, std::string const& inName, Identifier const& outService, std::string const& outName);
+		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
 		/**
 		*	registers exception callback for a system
