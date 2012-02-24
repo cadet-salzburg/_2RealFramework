@@ -28,6 +28,7 @@ namespace _2Real
 {
 
 	class IOutputListener;
+	class InputSlot;
 	class Timer;
 
 	typedef void (*DataCallback)(Data &data);
@@ -46,6 +47,8 @@ namespace _2Real
 		void						unregisterCallback(DataCallback callback);
 		void						addListener(IOutputListener &listener);
 		void						removeListener(IOutputListener &listener);
+		void						addListener(InputSlot &slot);
+		void						removeListener(InputSlot &slot);
 
 	private:
 
@@ -54,6 +57,7 @@ namespace _2Real
 		Data						m_CurrentData;
 		EngineData					m_WriteData;
 		Poco::BasicEvent< Data >	m_Event;
+		std::list< InputSlot * >	m_Inputs;
 
 	};
 

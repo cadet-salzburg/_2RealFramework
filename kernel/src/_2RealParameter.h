@@ -23,6 +23,7 @@
 namespace _2Real
 {
 
+	class Runnable;
 	class ParameterMetadata;
 
 	class Parameter

@@ -57,40 +57,13 @@ namespace _2Real
 		*/
 		System(std::string const& name);
 
-		/*******************************************************************************
-		*	functions related to xml - are currently being implemented
+		/**
+		*	creates empty system w. given name & loads the xml
 		*/
-
-		void initFromXML(std::string const& configFile);
+		System(std::string const& name, std::string const& xmlFile);
 
 		/**
-		*	returns the identifier of a plugin, service, sequence or graph -> can be used to get id of an entity defined in the xml
-		*	can also return the system's own identifier
-		*/
-		//const Identifier getId(std::string const& name);
-
-		//some more identifier helper functions
-		//std::list< Identifier > getIds();
-		//std::list< Identifier > getPluginIds();
-		//std::list< Identifier > getRunnableIds();
-		//std::list< Identifier > getGraphIds();
-		//std::list< Identifier > getServiceIds();
-
-		//some more helpers, this time for names
-		//std::list< std::string > getInputSlots(Identifier const& serviceId);
-		//std::list< std::string > getOutputSlots(Identifier const& serviceId);
-		//std::list< std::string > getSetupParameters(Identifier const& setupAbleId);
-		//std::list< std::string > getExportedServices(Identifier const& pluginId);
-
-		/********************************************************************************************/
-
-		/**
-		*	sets the system's plugin directory - i.e. where plugins will be searched
-		*/
-		//void setInstallDirectory(std::string const& directory);
-
-		/**
-		*	sets the system's logfile (logging = incomplete right now)
+		*	sets the system's logfile
 		*/
 		void setLogfile(std::string const& file);
 
@@ -100,14 +73,7 @@ namespace _2Real
 		void clear();
 
 		/**
-		*	loads a dll - assumption: classname->filename, e.g: MyPlugin -> MyPlugin.dll / MyPlugin.so / MyPlugin.dylib (release mode), MyPlugin_d.dll etc. (debug mode)
-		*	plugins belong to systems that loaded them: this means different systems can have the same plugin loaded, with different setup params
-		*	multiple loading of a plugin from within the same system will cause an exception
-		*/
-		//const Identifier loadPlugin(std::string const& name, std::string const& className, std::string const& path = "");
-
-		/**
-		*	calls setup of a service/sequence/syncronization = initialization
+		*	calls setup of a runnable
 		*	if the runnbale is currently running, it needs to be stopped
 		*/
 		void setup(Identifier const& id);
@@ -152,48 +118,39 @@ namespace _2Real
 		}
 
 		/**
-		*	links output slot to input slot. the input slot's previous link will be broken.
+		*	links out with in
 		*/
 		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
 		/**
-		*	registers exception callback for a system
+		*	removes the link between out and in (does nothing if they are not actually linked)
+		*/
+		void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
+
+		/**
+		*	removes all listening input slots from an output slot, and optionally all registered callbacks too
+		*/
+		void clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks = false);
+
+		/**
+		*	removes all output slots from an input slot
+		*/
+		void clearInputProviders(Identifier const& inService, std::string const& inName);
+
+		/**
+		*	exception listener callbacks
 		*/
 		void registerToException(ExceptionCallback callback);
-
-		/**
-		*	unregisters exception callback for a system
-		*/
 		void unregisterFromException(ExceptionCallback callback);
-
-		/**
-		*	registers exception callback for a system
-		*/
 		void registerToException(IExceptionListener &listener);
-
-		/**
-		*	unregisters exception callback for a system
-		*/
 		void unregisterFromException(IExceptionListener &listener);
 
 		/**
-		*	registers callback for a service's output slot
+		*	output slot callbacks
 		*/
 		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
-
-		/**
-		*	unregisters callback for a service's output slot
-		*/
 		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
-
-		/**
-		*	registers callback for a service's output slot
-		*/
 		void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
-
-		/**
-		*	unregisters callback for a service's output slot
-		*/
 		void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
 		/**
@@ -205,24 +162,28 @@ namespace _2Real
 		void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
 
 		/**
-		*	starts a runnable (service, synchronization, sequence)
+		*	starts a runnable
 		*/
 		void start(Identifier const& runnableId);
 
 		/**
-		*	stops a runnable (service, synchronization, sequence)
+		*	stops a runnable
 		*/
 		void stop(Identifier const& runnableId);
 
 		/**
-		*	stops all running (root) runnables at once
+		*	stops all running runnables at once
 		*/
 		void stopAll();
 
 		/**
-		*	starts all (root) runnables at once
+		*	starts all runnables at once
 		*/
 		void startAll();
+
+		/*
+		*	currently not functional until the whole insert / remove thing is resolved properly
+		*/
 
 		/**
 		*
@@ -230,15 +191,37 @@ namespace _2Real
 		//const Identifier createSequenceFromXML();
 		//const Identifier createSynchronizationFromXML();
 
-		/*
-		*	currently not functional until the whole insert / remove thing is resolved properly
-		*/
 		//const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		//const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		//const Identifier createSequence(std::string const& idName, std::list< Identifier > const& runnableIds);
 		//const Identifier createSynchronization(std::string const& idName, std::list< Identifier > const& runnableIds);
 		//void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
 		//void append(Identifier const& runnable, Identifier const& parent);
+
+		/*******************************************************************************
+		*	functions related to xml - are currently being implemented
+		*/
+
+		/**
+		*	returns the identifier of a plugin, service, sequence or graph -> can be used to get id of an entity defined in the xml
+		*	can also return the system's own identifier
+		*/
+		//const Identifier getId(std::string const& name);
+
+		//some more identifier helper functions
+		//std::list< Identifier > getIds();
+		//std::list< Identifier > getPluginIds();
+		//std::list< Identifier > getRunnableIds();
+		//std::list< Identifier > getGraphIds();
+		//std::list< Identifier > getServiceIds();
+
+		//some more helpers, this time for names
+		//std::list< std::string > getInputSlots(Identifier const& serviceId);
+		//std::list< std::string > getOutputSlots(Identifier const& serviceId);
+		//std::list< std::string > getSetupParameters(Identifier const& setupAbleId);
+		//std::list< std::string > getExportedServices(Identifier const& pluginId);
+
+		/********************************************************************************************/
 
 	private:
 

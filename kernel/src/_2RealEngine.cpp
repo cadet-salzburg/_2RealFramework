@@ -52,6 +52,12 @@ namespace _2Real
 		m_EngineImpl.setBaseDirectory(Poco::Path(directory));
 	}
 
+	const Identifier Engine::loadAndGetInstance(std::string const& className, std::string const& libraryPath)
+	{
+		//TODO
+		//return Identifier();
+	}
+
 	const std::list< std::string > Engine::load(std::string const& path)
 	{
 		return m_EngineImpl.loadLibrary(Poco::Path(path));
@@ -62,9 +68,19 @@ namespace _2Real
 		return m_EngineImpl.isLibraryLoaded(Poco::Path(libraryPath));
 	}
 
+	const std::list< std::string > Engine::getExportingLibs(std::string const& className)
+	{
+		return m_EngineImpl.getExportingLibs(className);
+	}
+
 	const std::string Engine::getInfoString(std::string const& className, std::string const& libraryPath)
 	{
 		return m_EngineImpl.getInfoString(className, Poco::Path(libraryPath));
+	}
+
+	const std::string Engine::getInfoString(Identifier const& pluginId)
+	{
+		return m_EngineImpl.getInfoString(pluginId);
 	}
 
 	const bool Engine::canCreate(std::string const& className, std::string const& libraryPath) const
@@ -75,6 +91,11 @@ namespace _2Real
 	const bool Engine::isSingleton(std::string const& className, std::string const& libraryPath) const
 	{
 		return m_EngineImpl.isSingleton(className, Poco::Path(libraryPath));
+	}
+
+	const Identifier Engine::createInstance(std::string const& className, std::string const& libraryPath)
+	{
+		return m_EngineImpl.createPlugin(className, Poco::Path(libraryPath));
 	}
 
 	const Identifier Engine::createInstance(std::string const& idName, std::string const& className, std::string const& libraryPath)
@@ -92,6 +113,16 @@ namespace _2Real
 		return m_EngineImpl.isSetUp(pluginId);
 	}
 
+	void Engine::setup(Identifier const& pluginId)
+	{
+		m_EngineImpl.setupPlugin(pluginId);
+	}
+
+	const Identifier Engine::getIdentifier(std::string const& idName) const
+	{
+		return m_EngineImpl.getPluginIdentifier(idName);
+	}
+
 	const EngineData Engine::getValueInternal(Identifier const& pluginId, std::string const& paramName) const
 	{
 		return m_EngineImpl.getPluginValue(pluginId, paramName);
@@ -100,16 +131,6 @@ namespace _2Real
 	void Engine::setValueInternal(Identifier const& pluginId, std::string const& paramName, EngineData const& value)
 	{
 		m_EngineImpl.setPluginValue(pluginId, paramName, value);
-	}
-
-	const Identifier Engine::getIdentifier(std::string const& idName) const
-	{
-		return m_EngineImpl.getPluginIdentifier(idName);
-	}
-
-	void Engine::setup(Identifier const& pluginId)
-	{
-		m_EngineImpl.setupPlugin(pluginId);
 	}
 
 }

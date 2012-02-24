@@ -102,6 +102,11 @@ namespace _2Real
 		/**
 		*	creates a service instance
 		*/
+		Runnable &						createService(std::string const& serviceName, SystemGraph &graph);
+
+		/**
+		*	creates a service instance
+		*/
 		Runnable &						createService(std::string const& idName, std::string const& serviceName, SystemGraph &graph);
 
 		/**

@@ -36,11 +36,6 @@ namespace _2Real
 		Metadata(PluginMetadata &metadata);
 
 		/**
-		*	when this function is called, there will only be one instance of the plugin available
-		*/
-		//void disableMultipleInstances();
-
-		/**
 		*	sets plugin description
 		*
 		*	@param description:		plugin's description

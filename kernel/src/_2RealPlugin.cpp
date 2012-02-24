@@ -139,11 +139,32 @@ namespace _2Real
 		return *(it->second());
 	}
 
+	Runnable & Plugin::createService(std::string const& serviceName, SystemGraph &graph)
+	{
+		unsigned int counter = 0;
+		//this could be done more efficiently, currently i just count the instances of a particular plugin
+		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); ++it)
+		{
+			Service *s = it->second;
+			if (s->getServiceName() == serviceName)
+			{
+				counter++;
+			}
+		}
+
+		std::ostringstream s;
+		s << counter;
+
+		std::string idName = this->name() + "." + toLower(serviceName) + " nr. " + s.str();
+		return createService(idName, serviceName, graph);
+	}
+
 	Runnable & Plugin::createService(std::string const& idName, std::string const& serviceName, SystemGraph &graph)
 	{
 		IService &service = createService(serviceName);
 		const Identifier id = Entity::createIdentifier(idName, "service");
 		Service *runnable = new Service(id, service, graph, m_Metadata.getServiceMetadata(serviceName));
+		m_Services.insert(NamedService(id, runnable));
 		return *runnable;
 	}
 

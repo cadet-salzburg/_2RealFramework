@@ -193,6 +193,11 @@ namespace _2Real
 		return m_Plugins.isSetUp(pluginId);
 	}
 
+	const Identifier EngineImpl::createPlugin(std::string const& className, Poco::Path const& libraryPath)
+	{
+		return m_Plugins.createInstance(className, libraryPath);
+	}
+
 	const Identifier EngineImpl::createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath)
 	{
 		return m_Plugins.createInstance(idName, className, libraryPath);
@@ -246,6 +251,20 @@ namespace _2Real
 		nirvana.setUp(setupAble);
 	}
 
+	const Identifier EngineImpl::createService(Identifier const& pluginId, std::string const& serviceName, Identifier const& systemId)
+	{
+		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
+
+		if (!pluginId.isPlugin())
+		{
+			std::ostringstream msg;
+			msg << "EngineImpl::getInfo " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected" << std::endl;
+			throw InvalidIdentifierException(msg.str());
+		}
+
+		return nirvana.createService(pluginId, serviceName);
+	}
+
 	const Identifier EngineImpl::createService(std::string const& name, Identifier const& pluginId, std::string const& serviceName, Identifier const& systemId)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
@@ -287,7 +306,6 @@ namespace _2Real
 
 		EngineData val;
 		std::string key = nirvana.getParameterKey(id, paramName);
-		std::cout << "SET VALUE " << value << " " << key << std::endl;
 		val.create(m_Types.getInitialValueFromKey(key));
 
 		std::stringstream stream;

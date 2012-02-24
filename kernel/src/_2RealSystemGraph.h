@@ -55,7 +55,7 @@ namespace _2Real
 
 		void				shutdown();
 
-		//const Identifier	loadPlugin(std::string const& idName, std::string const& classname);
+		const Identifier	createService(Identifier const& pluginId, std::string const& serviceName);
 		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
 		const Identifier	createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
 		const Identifier	createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);

@@ -119,8 +119,6 @@ namespace _2Real
 				m_Plugins.insert(NamedPlugin(id, plugin));
 			}
 
-			//delete pluginMeta;
-
 			std::string metaKey = pathToName(tmp) + "." + toLower(className);
 			m_Metadata.insert(NamedMetadata(metaKey, pluginMeta));
 			
@@ -128,6 +126,28 @@ namespace _2Real
 		}
 
 		return result;
+	}
+
+	const Identifier PluginPool::createInstance(std::string const& className, Poco::Path const& path)
+	{
+		unsigned int counter = 0;
+		//this could be done more efficiently, currently i just count the instances of a particular plugin
+		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
+		{
+			Plugin *p = it->second;
+			if (p->getClassName() == className && p->getLibraryPath() == path.toString())
+			{
+				counter++;
+			}
+		}
+
+		std::ostringstream s;
+		s << counter;
+
+		Poco::Path tmp = makeAbsolutePath(path);
+		std::string idName = pathToName(tmp) + "." + toLower(className) + " nr. " + s.str();
+
+		return createInstance(idName, className, path);
 	}
 
 	const Identifier PluginPool::createInstance(std::string const& idName, std::string const& className, Poco::Path const& path)
@@ -295,6 +315,11 @@ namespace _2Real
 	const bool PluginPool::isSetUp(Identifier const& id) const
 	{
 		return getPlugin(id).isSetUp();
+	}
+
+	Runnable & PluginPool::createService(Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph)
+	{
+		return getPlugin(pluginId).createService(serviceName, graph);
 	}
 
 	Runnable & PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph)

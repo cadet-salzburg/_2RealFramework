@@ -66,7 +66,7 @@ namespace _2Real
 		/**
 		*	returns absolute paths to all libraries which export a class (derived off IPluginActivator) named className
 		*/
-		const std::list< std::string > isExportedBy(std::string const& className);
+		const std::list< std::string > getExportingLibs(std::string const& className);
 
 		/**
 		*	returns plugin's metadata as string

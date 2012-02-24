@@ -84,7 +84,7 @@ namespace _2Real
 		const bool operator>(Identifier const& rhs) const;
 		const bool operator>=(Identifier const& rhs) const;
 
-		friend std::ostream& operator<<(std::ostream& out, Identifier const& id);
+		friend std::ostream& operator<<(std::ostream &out, Identifier const& id);
 
 		const bool isPlugin() const;
 		const bool isService() const;

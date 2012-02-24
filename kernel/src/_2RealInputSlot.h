@@ -34,25 +34,136 @@ namespace _2Real
 	class ParameterMetadata;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
-	typedef std::map< long, EngineData >	DataTable;
+
+	class DataBuffer : public std::map< long, EngineData >
+	{
+
+	public:
+
+		DataBuffer(const unsigned int maxSize);
+
+		const unsigned int getMaxSize() const;
+		const bool isFull() const;
+
+	private:
+
+		unsigned int	const m_MaxSize;
+
+	};
+
+	DataBuffer::DataBuffer(const unsigned int maxSize) :
+		m_MaxSize(maxSize)
+	{
+	}
+
+	const unsigned int DataBuffer::getMaxSize() const
+	{
+		return m_MaxSize;
+	}
+
+	const bool DataBuffer::isFull() const
+	{
+		return (this->size() >= m_MaxSize);
+	}
+
+	class BufferPolicy
+	{
+
+	public:
+
+		virtual ~BufferPolicy();
+		virtual const bool insertData(TimestampedData const& data, DataBuffer &buffer) = 0;
+
+	};
+
+	BufferPolicy::~BufferPolicy()
+	{
+	}
+
+	//yeah, even i know that's a stupid name for a policy
+	class NoInsertOnMaxSize : public BufferPolicy
+	{
+
+	public:
+
+		virtual const bool insertData(TimestampedData const& data, DataBuffer &buffer)
+		{
+			if (buffer.size() < buffer.getMaxSize())
+			{
+				buffer.insert(data);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+	};
 
 	class InputSlot : public Parameter, public IOutputListener
 	{
 
 	public:
 
-		InputSlot(ParameterMetadata const& metadata);
+		/**
+		*
+		*/
+		InputSlot(ParameterMetadata const& metadata, BufferPolicy &policy, const unsigned int bufferSize);
 
+		/**
+		*
+		*/
+		~InputSlot();
+
+		/*
+		*	sets the data to a fixed value, clears all links
+		*/
 		void setData(TimestampedData const& data);
 
-		void resetLink();
-		void linkWith(OutputSlot &output);
-		bool isLinked() const;
+		/*
+		*	just inserts the value into tho data
+		*/
+		void insertData(TimestampedData const& data);
 
-		bool updateCurrent();
+		/**
+		*	deletes all links
+		*/
+		void resetLinks();
+
+		/**
+		*	links this slot w. an output slot
+		*/
+		void linkWith(OutputSlot &output);
+
+		/**
+		*	breaks link w. output, does nothing if no such link exists
+		*/
+		void breakLink(OutputSlot &output);
+
+		/*
+		*	true if there is any link w. an output slot
+		*/
+		const bool isLinked() const;
+
+		/**
+		*	swaps current & received data
+		*/
+		const bool updateCurrent();
+
+		/**
+		*	kills current data
+		*/
 		void clearCurrent();
+
+		/**
+		*	inserts new data into received
+		*/
 		void receiveData(Data &data);
 
+		/*
+		*	lots of functions... currently only getData is used, and it returns the newest
+		*/
 		const TimestampedData getNewest() const;
 		const TimestampedData getOldest() const;
 		const TimestampedData getData() const;
@@ -60,15 +171,13 @@ namespace _2Real
 	private:
 
 		mutable Poco::FastMutex		m_Mutex;
-		DataTable					m_ReceivedTable;
-		DataTable					m_CurrentTable;
-		OutputSlot					*m_Output;
+		DataBuffer					*m_ReceivedTable;
+		DataBuffer					*m_CurrentTable;
+		std::list< OutputSlot * >	m_Outputs;
+		BufferPolicy				&m_Policy;
+		TimestampedData				m_FixedValue;
+		long						m_LastTimestamp;
 
 	};
-
-	inline bool InputSlot::isLinked() const
-	{
-		return (m_Output != NULL);
-	}
 
 }

@@ -87,6 +87,7 @@ namespace _2Real
 		const bool					canCreate(std::string const& className, Poco::Path const& libraryPath) const;
 		const bool					isSingleton(std::string const& className, Poco::Path const& libraryPath) const;
 		const bool					isSetUp(Identifier const& pluginId) const;
+		const Identifier			createPlugin(std::string const& className, Poco::Path const& libraryPath);
 		const Identifier			createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
 		const Identifier			pluginInstance(std::string const& className, Poco::Path const& libraryPath);
 		void						setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value);
@@ -96,6 +97,7 @@ namespace _2Real
 		const Identifier			getPluginIdentifier(std::string const& idName) const;
 
 		const Identifier		createSystem(std::string const& idName);
+		const Identifier		createService(Identifier const& plugin, std::string const& serviceName, Identifier const& system);
 		const Identifier		createService(std::string const& idName, Identifier const& plugin, std::string const& serviceName, Identifier const& system);
 		const Identifier		createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);
 		const Identifier		createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB, Identifier const& system);

@@ -32,6 +32,8 @@ namespace _2Real
 	class InputHandle;
 	class OutputHandle;
 	class EngineData;
+	class BufferPolicy;
+	class UpdatePolicy;
 
 	class ServiceMetadata;
 	class ParameterMetadata;
@@ -46,6 +48,23 @@ namespace _2Real
 	typedef std::map< std::string, OutputSlot * >		OutputMap;
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
+
+	class UpdatePolicy
+	{
+
+	public:
+
+
+
+	private:
+
+	};
+
+	class AlwaysUpdateNoReuse : public UpdatePolicy
+	{
+	};
+
+
 
 	class Service : public Runnable
 	{
@@ -67,11 +86,11 @@ namespace _2Real
 		void					setup();
 		void					run();
 		void					shutdown();
-		void					performStartCheck() const;
-		void					performSetupCheck() const;
 
 		void					setParameterValue(std::string const& name, Data const& data);
 		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
+
+		std::string const&		getServiceName() const;
 
 		/**
 		*	callback functions for output params
@@ -112,6 +131,21 @@ namespace _2Real
 		*	setup params
 		*/
 		ParameterMap			m_SetupParameters;
+
+		/**
+		*	name of the service template
+		*/
+		std::string				const m_ServiceName;
+
+		/**
+		*	policy for input params
+		*/
+		BufferPolicy			*m_BufferPolicy;
+
+		/**
+		*	the update policy
+		*/
+		UpdatePolicy			*m_UpdatePolicy;
 
 	};
 

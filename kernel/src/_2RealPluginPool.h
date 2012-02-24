@@ -63,7 +63,9 @@ namespace _2Real
 		const bool							isSetUp(Identifier const& pluginId) const;
 		const std::string					getInfoString(std::string const& className, Poco::Path const& path) const;
 		const std::string					getInfoString(Identifier const& pluginId) const;
+		Runnable &							createService(Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph);
 		Runnable &							createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph);
+		const Identifier					createInstance(std::string const& className, Poco::Path const& path);
 		const Identifier					createInstance(std::string const& idName, std::string const& className, Poco::Path const& path);
 		const Identifier					getInstance(std::string const& className, Poco::Path const& path);
 		void								setup(Identifier const& pluginId);

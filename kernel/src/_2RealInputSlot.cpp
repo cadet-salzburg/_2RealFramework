@@ -27,71 +27,118 @@
 namespace _2Real
 {
 
-	InputSlot::InputSlot(ParameterMetadata const& metadata) :
+	InputSlot::InputSlot(ParameterMetadata const& metadata, BufferPolicy &policy, const unsigned int bufferSize) :
 		Parameter(metadata),
-		m_Output(NULL)
+		m_Outputs(),
+		m_Policy(policy),
+		m_FixedValue()
 	{
+		m_ReceivedTable = new DataBuffer(bufferSize);
+		m_CurrentTable = new DataBuffer(bufferSize);
+
 		if (metadata.hasDefaultValue())
 		{
-			m_ReceivedTable.insert(TimestampedData(0, metadata.getDefaultValue()));
+			m_ReceivedTable->insert(TimestampedData(0, metadata.getDefaultValue()));
 		}
 	}
 
-	bool InputSlot::updateCurrent()
+	InputSlot::~InputSlot()
+	{
+		m_ReceivedTable->clear();
+		m_CurrentTable->clear(),
+		delete m_ReceivedTable;
+		delete m_CurrentTable;
+	}
+
+	const bool InputSlot::updateCurrent()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (m_ReceivedTable.size() > 0)
+		DataBuffer *tmp;
+		tmp = m_CurrentTable;
+
+		m_CurrentTable = m_ReceivedTable;
+
+		tmp->clear();
+
+		m_ReceivedTable = m_CurrentTable;
+
+		/* old behaviour
+		if (m_ReceivedTable->size() > 0)
 		{
 			m_CurrentTable = m_ReceivedTable;
-			DataTable::const_iterator it = m_CurrentTable.end();
+			DataBuffer::const_iterator it = m_CurrentTable->end();
 			it--;
-			m_ReceivedTable.clear();
-			m_ReceivedTable.insert(*it);
+			m_ReceivedTable->clear();
+			m_ReceivedTable->insert(*it);
 			return true;
 		}
+		*/
 
 		return false;
 	}
 
 	void InputSlot::setData(TimestampedData const& data)
 	{
-		resetLink();
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_ReceivedTable.clear();
-		m_ReceivedTable.insert(TimestampedData(data.first, data.second));
+		//OPEN Q: really good idea to clear all links?
+		//we'll see
+		resetLinks();
+
+		m_FixedValue = data;
+
+		//this will stay in the queue until a new value is set OR a link comes
+		m_ReceivedTable->clear();
+		m_ReceivedTable->insert(data);
+	}
+
+	void InputSlot::insertData(TimestampedData const& data)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_ReceivedTable->insert(data);
 	}
 
 	void InputSlot::clearCurrent()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_CurrentTable.clear();
+		m_CurrentTable->clear();
 	}
 
 	void InputSlot::receiveData(Data &data)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		m_ReceivedTable.insert(TimestampedData(data.getTimestamp(), data.data()));
+
+		m_ReceivedTable->insert(TimestampedData(data.getTimestamp(), data.data()));
 	}
 
+	//no update should happen if there is no data at all
 	const TimestampedData InputSlot::getData() const
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		return getNewest();
+		if (m_CurrentTable->empty())
+		{
+			throw Exception("internal exception: input slot " + m_Name + " has no data.");
+		}
+
+		DataBuffer::const_iterator newest = m_CurrentTable->begin();
+
+		return *newest;
 	}
 
 	const TimestampedData InputSlot::getNewest() const
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (m_CurrentTable.empty())
+		if (m_CurrentTable->empty())
 		{
 			throw Exception("internal exception: input slot " + m_Name + " has no data.");
 		}
 
-		DataTable::const_iterator newest = m_CurrentTable.begin();
+		DataBuffer::const_iterator newest = m_CurrentTable->begin();
 
 		return *newest;
 	}
@@ -100,40 +147,52 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		if (m_CurrentTable.empty())
+		if (m_CurrentTable->empty())
 		{
 			throw Exception("internal exception: input slot " + getName() + " has no data.");
 		}
 
-		DataTable::const_iterator oldest = m_CurrentTable.end();
+		DataBuffer::const_iterator oldest = m_CurrentTable->end();
 		oldest--;
 
 		return *oldest;
 	}
 
-	void InputSlot::resetLink()
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		
-		if (isLinked())
-		{
-			m_Output->removeListener(*this);
-		}
-
-		m_Output = NULL;
-	}
-
 	void InputSlot::linkWith(OutputSlot &output)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		
-		if (isLinked())
+		m_Outputs.push_back(&output);
+		output.addListener(*this);
+	}
+
+	void InputSlot::breakLink(OutputSlot &output)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		for (std::list< OutputSlot * >::iterator it = m_Outputs.begin(); it != m_Outputs.end(); ++it)
 		{
-			m_Output->removeListener(*this);
+			if (*it == &output)
+			{
+				output.removeListener(*this);
+				m_Outputs.erase(it);
+				break;
+			}
+		}
+	}
+
+	void InputSlot::resetLinks()
+	{
+		for (std::list< OutputSlot * >::iterator it = m_Outputs.begin(); it != m_Outputs.end(); ++it)
+		{
+			(*it)->removeListener(*this);
 		}
 
-		m_Output = &output;
-		m_Output->addListener(*this);
+		m_Outputs.clear();
+	}
+
+	const bool InputSlot::isLinked() const
+	{
+		return (m_Outputs.size() > 0);
 	}
 
 }

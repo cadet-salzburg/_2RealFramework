@@ -28,6 +28,7 @@
 
 namespace _2Real
 {
+	typedef std::pair< std::string, Identifier > NamedId;
 
 	System::System(std::string const& name) :
 		m_EngineImpl(EngineImpl::instance())
@@ -35,31 +36,34 @@ namespace _2Real
 		m_Id = m_EngineImpl.createSystem(name);
 	}
 
-	void System::initFromXML(std::string const& configFile)
+	System::System(std::string const& name, std::string const& xmlFile) :
+		m_EngineImpl(EngineImpl::instance())
 	{
 		try
 		{
-			SystemData data(configFile);
+			m_Id = m_EngineImpl.createSystem(name);
 
-			Poco::Path pluginPath = data.getDefaultDirectory();
-			Poco::Path logPath = data.getLogfile();
+			SystemData data(xmlFile);
 
-			std::list< PluginData > plugins = data.getPlugins();
+	//		Poco::Path pluginPath = data.getDefaultDirectory();
+	//		Poco::Path logPath = data.getLogfile();
 
-			for (std::list< PluginData >::iterator it = plugins.begin(); it != plugins.end(); ++it)
-			{
-				std::string name = it->getName().toString();
-				std::string classname = it->getClassname();
-				Poco::Path file = pluginPath;
-				file.append(it->getPluginPath());
-				file.append(classname+shared_library_suffix);
+	//		std::list< PluginData > plugins = data.getPlugins();
 
-				std::cout << file.toString() << std::endl;
+	//		for (std::list< PluginData >::iterator it = plugins.begin(); it != plugins.end(); ++it)
+	//		{
+	//			std::string name = it->getName().toString();
+	//			std::string classname = it->getClassname();
+	//			Poco::Path file = pluginPath;
+	//			file.append(it->getPluginPath());
+	//			file.append(classname+shared_library_suffix);
 
-				//m_EngineImpl.loadPlugin(name, file, m_Id);
+	//			std::cout << file.toString() << std::endl;
 
-				//so, now i have a lot of plugins all referring to the same whatever
-			}
+	//			//m_EngineImpl.loadPlugin(name, file, m_Id);
+
+	//			//so, now i have a lot of plugins all referring to the same whatever
+	//		}
 
 		}
 		catch (XMLFormatException &e)
@@ -81,8 +85,6 @@ namespace _2Real
 		}
 	}
 
-	typedef std::pair< std::string, Identifier > NamedId;
-
 	System::System(System const& src) :
 		m_EngineImpl(src.m_EngineImpl),
 		m_Id(src.m_Id),
@@ -90,24 +92,14 @@ namespace _2Real
 	{
 	}
 
-	void System::unique(std::string const& s) const
+	System::~System()
 	{
-		if (m_Lookup.find(s) != m_Lookup.end())
-		{
-			std::ostringstream msg;
-			msg << "name " << s << " already exists!";
-			throw AlreadyExistsException(msg.str());
-		}
+		m_EngineImpl.destroySystem(m_Id);
 	}
 
 	void System::clear()
 	{
-		//m_EngineImpl.shutdownSystem(m_Id);
-	}
-
-	System::~System()
-	{
-		m_EngineImpl.destroySystem(m_Id);
+		m_EngineImpl.clearSystem(m_Id);
 	}
 
 	void System::setLogfile(std::string const& file)
@@ -130,6 +122,13 @@ namespace _2Real
 		return id;
 	}
 
+	const Identifier System::createService(Identifier const& plugin, std::string const& service)
+	{
+		const Identifier id = m_EngineImpl.createService(plugin, service, m_Id);
+		m_Lookup.insert(NamedId(id.name(), id));
+		return id;
+	}
+
 	void System::setUpdateRate(Identifier const& runnable, float updatesPerSecond)
 	{
 		m_EngineImpl.setUpdateRate(runnable, updatesPerSecond, m_Id);
@@ -140,19 +139,29 @@ namespace _2Real
 		m_EngineImpl.setValue(id, param, value, m_Id);
 	}
 
-	//const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
-	//{
-	//	return m_EngineImpl.createSequence(name, idA, idB, m_Id);
-	//}
-
-	//const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
-	//{
-	//	return m_EngineImpl.createSynchronization(name, idA, idB, m_Id);
-	//}
+	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
+	{
+		return m_EngineImpl.getValue(id, name, m_Id);
+	}
 
 	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
 		m_EngineImpl.linkSlots(inService, inName, outService, outName, m_Id);
+	}
+
+	void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
+	{
+		m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
+	}
+
+	void System::clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks)
+	{
+		m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
+	}
+
+	void System::clearInputProviders(Identifier const& inService, std::string const& inName)
+	{
+		m_EngineImpl.clearInputListeners(inService, inName, m_Id);
 	}
 
 	void System::registerToException(ExceptionCallback callback)
@@ -245,8 +254,23 @@ namespace _2Real
 	//	m_EngineImpl.append(runnable, parent, m_Id);
 	//}
 
-	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
+	//const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//{
+	//	return m_EngineImpl.createSequence(name, idA, idB, m_Id);
+	//}
+
+	//const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//{
+	//	return m_EngineImpl.createSynchronization(name, idA, idB, m_Id);
+	//}
+
+	void System::unique(std::string const& s) const
 	{
-		return m_EngineImpl.getValue(id, name, m_Id);
+		if (m_Lookup.find(s) != m_Lookup.end())
+		{
+			std::ostringstream msg;
+			msg << "name " << s << " already exists!";
+			throw AlreadyExistsException(msg.str());
+		}
 	}
 }

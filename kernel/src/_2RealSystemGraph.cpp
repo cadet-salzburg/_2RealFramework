@@ -303,6 +303,14 @@ namespace _2Real
 		}
 	}
 
+	const Identifier SystemGraph::createService(Identifier const& id, std::string const& service)
+	{
+		Runnable &runnable = m_Plugins.createService(id, service, *this);
+		RunnableManager *manager = new RunnableManager(runnable);
+		m_Children.push_back(manager);
+		return runnable.identifier();
+	}
+
 	const Identifier SystemGraph::createService(std::string const& name, Identifier const& id, std::string const& service)
 	{
 		Runnable &runnable = m_Plugins.createService(name, id, service, *this);

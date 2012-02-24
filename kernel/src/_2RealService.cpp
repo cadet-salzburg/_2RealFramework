@@ -40,38 +40,35 @@ namespace _2Real
 		m_Service(&service),
 		m_SetupParameters(),
 		m_InputSlots(),
-		m_OutputSlots()
+		m_OutputSlots(),
+		m_ServiceName(metadata.getName()),
+		//TODO:: the buffer policy needs to come from somewhere
+		//right now the same is used for all inputs of the service
+		m_BufferPolicy(new NoInsertOnMaxSize())
+		//m_UpdatePolicy(new SkipIfEmpty())
 	{
-		std::cout << "creating service " << id.name() << std::endl;
-
 		ParameterDataMap const& setup = metadata.getSetupParameters();
 		ParameterDataMap const& input = metadata.getInputSlots();
 		ParameterDataMap const& output = metadata.getOutputSlots();
 
-		std::cout << "creating setup" << std::endl;
 		for (ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
 			SetupParameter *setup = new SetupParameter(meta);
-			std::cout << meta.getName() << std::endl;
 			m_SetupParameters.insert(NamedParameter(meta.getName(), setup));
 		}
 
-		std::cout << "creating inputd" << std::endl;
 		for (ParameterDataMap::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
-			InputSlot *input = new InputSlot(meta);
-			std::cout << meta.getName() << std::endl;
+			InputSlot *input = new InputSlot(meta, *m_BufferPolicy, 50);
 			m_InputSlots.insert(NamedInput(meta.getName(), input));
 		}
 
-		std::cout << "creating outputs" << std::endl;
 		for (ParameterDataMap::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
 			OutputSlot *output = new OutputSlot(meta);
-			std::cout << meta.getName() << std::endl;
 			m_OutputSlots.insert(NamedOutput(meta.getName(), output));
 		}
 	}
@@ -79,6 +76,8 @@ namespace _2Real
 	Service::~Service()
 	{
 		delete m_Service;
+		delete m_BufferPolicy;
+		delete m_UpdatePolicy;
 
 		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 		{
@@ -160,33 +159,9 @@ namespace _2Real
 		m_Service->shutdown();
 	}
 
-	void Service::performStartCheck() const
+	std::string const& Service::getServiceName() const
 	{
-		bool success = true;
-		std::ostringstream msg;
-		for (ParameterMap::const_iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
-		{
-			if (!it->second->isInitialized())
-			{
-				msg << "setup parameter " << it->second->getName() << " of service " << name() << " has not been set\n";
-				success = false;
-			}
-		}
-
-		//currently, i demand that all input slots of a service are either set to sth or linked before starting
-		for (InputMap::const_iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
-		{
-			if (!it->second->isInitialized() && !it->second->isLinked())
-			{
-				msg << "input slot " << it->second->getName() << " of service " << name() << " has been neither set nor linked\n";
-				success = false;
-			}
-		}
-
-		if (!success)
-		{
-			throw StartException(msg.str());
-		}
+		return m_ServiceName;
 	}
 
 	void Service::setParameterValue(std::string const& name, Data const& data)
