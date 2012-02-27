@@ -161,7 +161,7 @@ namespace _2Real
 
 	void System::clearInputProviders(Identifier const& inService, std::string const& inName)
 	{
-		m_EngineImpl.clearInputListeners(inService, inName, m_Id);
+		m_EngineImpl.clearInputProviders(inService, inName, m_Id);
 	}
 
 	void System::registerToException(ExceptionCallback callback)

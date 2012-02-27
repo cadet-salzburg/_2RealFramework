@@ -37,15 +37,15 @@ namespace _2Real
 	public:
 
 		/**
-		*	called before setup
+		*	called when a plugin is first loaded by the engine
 		*
-		*	@param metadata:	PluginMetadata object which can be passed to MetadataReader
+		*	@param metadata:	metadata, should be filled with information regarding the plugin & exported services
 		*	@throw:				MetadataFormatException
 		*/
 		virtual void getMetadata(Metadata &metadata) = 0;
 
 		/**
-		*	setup should export services
+		*	called once per plugin instance
 		*
 		*	@param context:		can be used to query setup parameters, as well as export services
 		*	@throw				InvalidParameterException, PluginException
@@ -53,7 +53,7 @@ namespace _2Real
 		virtual void setup(PluginContext &context) = 0;
 
 		/**
-		*	shutdown routine, called before unloading
+		*	called before a plugin instance is destroyed
 		*/
 		virtual void shutdown() = 0;
 	

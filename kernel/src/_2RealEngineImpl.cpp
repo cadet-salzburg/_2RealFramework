@@ -82,6 +82,7 @@ namespace _2Real
 		try
 		{
 			m_Graphs.clearSystemGraphs();
+			m_Plugins.clear();
 		}
 		catch (std::exception &e)
 		{
@@ -118,6 +119,10 @@ namespace _2Real
 	const Identifier EngineImpl::createSystem(std::string const& systemName)
 	{
 		return m_Graphs.createSystemGraph(systemName);
+	}
+
+	void EngineImpl::clearSystem(Identifier const& systemId)
+	{
 	}
 
 	void EngineImpl::destroySystem(Identifier const& systemId)
@@ -237,6 +242,11 @@ namespace _2Real
 		return m_Plugins.getParameterValue(pluginId, paramName);
 	}
 
+	const std::list< std::string > EngineImpl::getExportingLibs(std::string const& className)
+	{
+		return std::list< std::string >();
+	}
+
 	void EngineImpl::setup(Identifier const& setupAble, Identifier const& systemId)
 	{
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
@@ -347,6 +357,18 @@ namespace _2Real
 		SystemGraph &nirvana = m_Graphs.getSystemGraph(systemId);
 
 		nirvana.linkSlots(serviceIn, nameIn, serviceOut, nameOut);
+	}
+
+	void EngineImpl::unlinkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId)
+	{
+	}
+
+	void EngineImpl::clearOutputListeners(Identifier const& idOut, std::string const& nameOut, const bool clearCallbacks, Identifier const& systemId)
+	{
+	}
+
+	void EngineImpl::clearInputProviders(Identifier const& idIn, std::string const& nameIn, Identifier const& systemId)
+	{
 	}
 
 	void EngineImpl::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback, Identifier const& systemId)

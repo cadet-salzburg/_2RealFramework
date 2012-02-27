@@ -95,6 +95,7 @@ namespace _2Real
 		const EngineData			getPluginValue(Identifier const& pluginId, std::string const& paramName) const;
 		void						setupPlugin(Identifier const& pluginId);
 		const Identifier			getPluginIdentifier(std::string const& idName) const;
+		const std::list< std::string >	getExportingLibs(std::string const& className);
 
 		const Identifier		createSystem(std::string const& idName);
 		const Identifier		createService(Identifier const& plugin, std::string const& serviceName, Identifier const& system);
@@ -104,18 +105,22 @@ namespace _2Real
 		
 		//void					destroy(Identifier const& id, Identifier const& systemId);
 		void					destroySystem(Identifier const& system);
+		void					clearSystem(Identifier const& system);
 
 		void					setSystemLogfile(std::string const& file, Identifier const& systemId);
 		void					setBaseDirectory(Poco::Path const& directory);
 
-		
 		void					setup(Identifier const& setupAble, Identifier const& systemId);
 		void					setUpdateRate(Identifier const& runnable, float updatesPerSecond, Identifier const& systemId);
 		void					setValue(Identifier const& id, std::string const& paramName, EngineData const& value, Identifier const& systemId);
 		void					setValueToString(Identifier const& id, std::string const& paramName, std::string const& value, Identifier const& systemId);
 		const EngineData		getValue(Identifier const& id, std::string const& name, Identifier const& systemId) const;
 
+		void					unlinkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);
 		void					linkSlots(Identifier const& idIn, std::string const& nameIn, Identifier const& idOut, std::string const& nameOut, Identifier const& systemId);
+		void					clearOutputListeners(Identifier const& idOut, std::string const& nameOut, const bool clearCallbacks, Identifier const& systemId);
+		void					clearInputProviders(Identifier const& idIn, std::string const& nameIn, Identifier const& systemId);
+
 		void					start(Identifier const& runnable, Identifier const& systemId);
 		void					startAll(Identifier const& systemId);
 		void					stop(Identifier const& runnable, Identifier const& systemId);

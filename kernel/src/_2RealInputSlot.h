@@ -51,17 +51,17 @@ namespace _2Real
 
 	};
 
-	DataBuffer::DataBuffer(const unsigned int maxSize) :
+	inline DataBuffer::DataBuffer(const unsigned int maxSize) :
 		m_MaxSize(maxSize)
 	{
 	}
 
-	const unsigned int DataBuffer::getMaxSize() const
+	inline const unsigned int DataBuffer::getMaxSize() const
 	{
 		return m_MaxSize;
 	}
 
-	const bool DataBuffer::isFull() const
+	inline const bool DataBuffer::isFull() const
 	{
 		return (this->size() >= m_MaxSize);
 	}
@@ -76,7 +76,7 @@ namespace _2Real
 
 	};
 
-	BufferPolicy::~BufferPolicy()
+	inline BufferPolicy::~BufferPolicy()
 	{
 	}
 
@@ -106,23 +106,16 @@ namespace _2Real
 
 	public:
 
-		/**
-		*
-		*/
 		InputSlot(ParameterMetadata const& metadata, BufferPolicy &policy, const unsigned int bufferSize);
-
-		/**
-		*
-		*/
 		~InputSlot();
 
 		/*
-		*	sets the data to a fixed value, clears all links
+		*	inserts the value into the data
 		*/
 		void setData(TimestampedData const& data);
 
 		/*
-		*	just inserts the value into tho data
+		*	inserts the value into the data
 		*/
 		void insertData(TimestampedData const& data);
 
@@ -157,6 +150,11 @@ namespace _2Real
 		void clearCurrent();
 
 		/**
+		*	kills received data
+		*/
+		void clearReceived();
+
+		/**
 		*	inserts new data into received
 		*/
 		void receiveData(Data &data);
@@ -175,8 +173,6 @@ namespace _2Real
 		DataBuffer					*m_CurrentTable;
 		std::list< OutputSlot * >	m_Outputs;
 		BufferPolicy				&m_Policy;
-		TimestampedData				m_FixedValue;
-		long						m_LastTimestamp;
 
 	};
 

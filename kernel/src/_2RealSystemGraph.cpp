@@ -84,6 +84,9 @@ namespace _2Real
 		}
 
 		//kills all threads
+
+		std::cout << "killed all threads" << std::endl;
+
 		m_Threads.clearThreads();
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
@@ -91,10 +94,14 @@ namespace _2Real
 			(*it)->shutdown();
 		}
 
+		std::cout << "shut down all children" << std::endl;
+
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
 		{
 			delete *it;
 		}
+
+		std::cout << "killed all children" << std::endl;
 
 		m_Children.clear();
 

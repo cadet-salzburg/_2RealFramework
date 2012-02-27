@@ -77,7 +77,7 @@ namespace _2Real
 	{
 		delete m_Service;
 		delete m_BufferPolicy;
-		delete m_UpdatePolicy;
+		//delete m_UpdatePolicy;
 
 		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 		{
@@ -146,6 +146,10 @@ namespace _2Real
 				{
 					it->second->update();
 				}
+			}
+			else
+			{
+				std::cout << "skipped update" << std::endl;
 			}
 		}
 		catch (_2Real::Exception &e)

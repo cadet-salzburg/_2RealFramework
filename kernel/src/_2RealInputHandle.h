@@ -54,8 +54,8 @@ namespace _2Real
 
 	private:
 
-		//const EngineData	oldest() const;
-		//const EngineData	newest() const;
+		const EngineData	oldest() const;
+		const EngineData	newest() const;
 
 		InputSlot			const* m_Input;
 

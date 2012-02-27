@@ -182,6 +182,7 @@ namespace _2Real
 		if (it->canCreate())
 		{
 			IPluginActivator *activator = it->create();
+			it->autoDelete(activator);
 			const Identifier id = Entity::createIdentifier(name, "plugin");
 			Plugin *plugin = new Plugin(id, *activator, *meta->second);
 			m_Plugins.insert(NamedPlugin(id, plugin));
@@ -251,6 +252,7 @@ namespace _2Real
 
 			if (!isSingleton(className, Poco::Path(libPath)))
 			{
+				std::cout << "no singleton: " << libPath << " " << className << std::endl;
 				IPluginActivator *activator = &(p->getActivator());
 				const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(libPath);
 				PluginLoader::Manif::Iterator mIt = manifest->find(className);

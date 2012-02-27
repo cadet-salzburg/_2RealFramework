@@ -30,8 +30,7 @@ namespace _2Real
 	InputSlot::InputSlot(ParameterMetadata const& metadata, BufferPolicy &policy, const unsigned int bufferSize) :
 		Parameter(metadata),
 		m_Outputs(),
-		m_Policy(policy),
-		m_FixedValue()
+		m_Policy(policy)
 	{
 		m_ReceivedTable = new DataBuffer(bufferSize);
 		m_CurrentTable = new DataBuffer(bufferSize);
@@ -56,12 +55,14 @@ namespace _2Real
 
 		DataBuffer *tmp;
 		tmp = m_CurrentTable;
-
 		m_CurrentTable = m_ReceivedTable;
+		m_ReceivedTable = tmp;
+		m_ReceivedTable->clear();
 
-		tmp->clear();
-
-		m_ReceivedTable = m_CurrentTable;
+		if (!m_CurrentTable->empty())
+		{
+			return true;
+		}
 
 		/* old behaviour
 		if (m_ReceivedTable->size() > 0)
@@ -86,8 +87,6 @@ namespace _2Real
 		//we'll see
 		resetLinks();
 
-		m_FixedValue = data;
-
 		//this will stay in the queue until a new value is set OR a link comes
 		m_ReceivedTable->clear();
 		m_ReceivedTable->insert(data);
@@ -105,6 +104,13 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
 		m_CurrentTable->clear();
+	}
+
+	void InputSlot::clearReceived()
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_ReceivedTable->clear();
 	}
 
 	void InputSlot::receiveData(Data &data)

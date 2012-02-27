@@ -75,6 +75,25 @@ namespace _2Real
 		m_Event -= Poco::delegate(&listener, &IOutputListener::receiveData);
 	}
 
+	void OutputSlot::addListener(InputSlot &slot)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Event += Poco::delegate(&slot, &InputSlot::receiveData);
+
+		if (isInitialized())
+		{
+			slot.receiveData(m_CurrentData);
+		}
+	}
+
+	void OutputSlot::removeListener(InputSlot &slot)
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Event -= Poco::delegate(&slot, &InputSlot::receiveData);
+	}
+
 	void OutputSlot::registerCallback(DataCallback callback)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);

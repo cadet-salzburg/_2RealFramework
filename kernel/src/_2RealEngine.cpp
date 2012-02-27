@@ -52,11 +52,11 @@ namespace _2Real
 		m_EngineImpl.setBaseDirectory(Poco::Path(directory));
 	}
 
-	const Identifier Engine::loadAndGetInstance(std::string const& className, std::string const& libraryPath)
-	{
-		//TODO
-		//return Identifier();
-	}
+	//const Identifier Engine::loadAndGetInstance(std::string const& className, std::string const& libraryPath)
+	//{
+	//	//TODO
+	//	return Identifier();
+	//}
 
 	const std::list< std::string > Engine::load(std::string const& path)
 	{

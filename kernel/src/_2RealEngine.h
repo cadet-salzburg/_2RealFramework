@@ -47,7 +47,7 @@ namespace _2Real
 		*	the identifier's name is auto-generated (if it's a singleton, this would be the case anyway)
 		*	if the lib was not loaded before, it will be loaded, thus all exceptions that might occur during load may occur here as well
 		*/
-		const Identifier loadAndGetInstance(std::string const& className, std::string const& libraryPath);
+		//const Identifier loadAndGetInstance(std::string const& className, std::string const& libraryPath);
 
 		/*
 		*	loads the dynamic from the given path
