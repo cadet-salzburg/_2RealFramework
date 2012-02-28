@@ -182,17 +182,7 @@ void MultiKinectOpenNI::getImageFlags(PluginContext &context)
 		}
 	}
 
-	unsigned int mirrored = 0;
-	for (vector< string >::iterator it = flags.begin(); it != flags.end(); it++)
-	{
-		if (*it == "mirrored")
-		{
-			depth = ::IMAGE_MIRRORING;
-			break;
-		}
-	}
-
-	m_ImageFlags = depth | color | mirrored;
+	m_ImageFlags = depth | color;
 }
 
 void MultiKinectOpenNI::getLogSettings(PluginContext &context)
