@@ -9,4 +9,5 @@ Some things you have to do:
 	_2Real Plugin.ico
 	to C:\Users\USERAME\Documents\Visual Studio 2010\Wizards.
 
-* Then open Visual Studio 2010 and you will be able to select _2Real Plugin from the "Wizard" menu.
+* Then open Visual Studio 2010 and
+* Chose New -> Project. Select the "Wizard" tab and then "_2Real Plugin".

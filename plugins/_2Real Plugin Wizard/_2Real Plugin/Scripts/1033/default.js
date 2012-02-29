@@ -107,20 +107,32 @@ function AddConfig(proj, strProjectName)
 
 		var CLTool = config.Tools('VCCLCompilerTool');
 		// TODO: Add compiler settings
-
-		
+		var includeDirs = '';
+		includeDirs = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\XML\\include;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\Foundation\\include;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\kernel\\src;%(AdditionalLibraryDirectories)';
+		CLTool.AdditionalIncludeDirectories = includeDirs;
+		//..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\kernel\src
 
 		var LinkTool = config.Tools('VCLinkerTool');
 		// TODO: Add linker settings
-    
+		var libDirs = '';
+		libDirs = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\lib;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\kernel\\lib;%(AdditionalLibraryDirectories)';
+		LinkTool.AdditionalLibraryDirectories = libDirs;
+		LinkTool.OutputFile = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\bin\\' + wizard.FindSymbol('SAFE_PROJECT_NAME') + '_d.dll';
+
 
 		config = proj.Object.Configurations('Release');
 
 		var CLTool = config.Tools('VCCLCompilerTool');
 		// TODO: Add compiler settings
+		includeDirs = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\XML\\include;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\Foundation\\include;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\kernel\\src;%(AdditionalLibraryDirectories)';
+		CLTool.AdditionalIncludeDirectories = includeDirs;
 
 		var LinkTool = config.Tools('VCLinkerTool');
 		// TODO: Add linker settings
+		libDirs = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\..\\..\\externalLibs\\poco\\lib;' + wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\..\\kernel\\lib;%(AdditionalLibraryDirectories)';
+		LinkTool.AdditionalLibraryDirectories = libDirs;
+		LinkTool.OutputFile = wizard.FindSymbol('ABSOLUTE_PATH') + '\\..\\..\\bin\\' + wizard.FindSymbol('SAFE_PROJECT_NAME') + '.dll';
+
 	}
 	catch(e)
 	{
@@ -184,9 +196,6 @@ function GetTargetName(strName, strProjectName)
 
 		if (strName == 'readme.txt')
 			strTarget = 'ReadMe.txt';
-
-		if (strName == 'sample.txt')
-		    strTarget = '..\\..\\Sample.txt';
 
 		if (strName == '/src/Plugin.cpp')
 		    strTarget = '..\\..\\src\\Plugin.cpp';
