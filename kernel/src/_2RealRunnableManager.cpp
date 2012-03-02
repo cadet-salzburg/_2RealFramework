@@ -97,7 +97,7 @@ namespace _2Real
 	{
 		StateTable::const_iterator it = m_RunnableStates.find(newState);
 		std::string stateDesc = it->second->getName() + " - " + it->second->getDescription();
-		m_StateChangeEvent.notify(this, stateDesc);
+		m_StateChangeEvent.notifyAsync(this, stateDesc);
 		return *it->second;
 	}
 

@@ -30,6 +30,7 @@
 #include <fstream>
 
 #include "Poco/Path.h"
+#include "Poco/Timer.h"
 
 namespace _2Real
 {
@@ -44,6 +45,15 @@ namespace _2Real
 	class EngineImpl;
 	class EngineData;
 	class Typetable;
+
+	class Testy
+	{
+
+	public:
+
+		void invoke(Poco::Timer &t);
+
+	};
 
 	class SystemGraph : public Graph, public Entity
 	{
@@ -94,19 +104,23 @@ namespace _2Real
 		bool				isLoggingEnabled() const;
 		void				setBaseDirectory(Poco::Path const& path);
 		void				setLogfile(Poco::Path const& filepath);
-		std::ofstream &		getLogstream();
+		std::ofstream&		getLogstream();
 		//const std::string	getInfoString(Identifier const& id) const;
 
 	private:
 
 		void				startLogging();
 
-		EngineImpl				&m_EngineImpl;
-		ThreadPool			m_Threads;
+		EngineImpl			&m_EngineImpl;
 		PluginPool			&m_Plugins;
+		ThreadPool			m_Threads;
 		ExceptionHandler	m_ExceptionHandler;
 		Poco::Path			m_Logfile;
 		std::ofstream		m_Logstream;
+
+		Poco::Timer			m_Timer;
+		Testy				m_Test;
+
 
 	};
 

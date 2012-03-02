@@ -34,7 +34,7 @@ namespace _2Real
 	public:
 
 		InputHandle();
-		InputHandle(InputSlot const& slot);
+		InputHandle(InputSlot &slot);
 		InputHandle(InputHandle const& src);
 		InputHandle& operator=(InputHandle const& src);
 
@@ -54,10 +54,8 @@ namespace _2Real
 
 	private:
 
-		const EngineData	oldest() const;
-		const EngineData	newest() const;
-
-		InputSlot			const* m_Input;
+		const EngineData				newest();
+		InputSlot						*m_Input;
 
 	};
 

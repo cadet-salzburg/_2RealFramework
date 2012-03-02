@@ -133,23 +133,29 @@ namespace _2Real
 	{
 		try
 		{
+			//this check will soon be obsolte
 			bool ready = true;
 			for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 			{
-				ready &= it->second->updateCurrent();
+				ready &= it->second->syncBuffers();
 			}
 
 			if (ready)
 			{
+				//std::cout << this->name() << " ready, calling update" << std::endl;
 				m_Service->update();
-				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); it++)
+				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); ++it)
 				{
 					it->second->update();
+				}
+				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+				{
+					it->second->removeConsumedItems();
 				}
 			}
 			else
 			{
-				std::cout << "skipped update" << std::endl;
+				//std::cout << this->name() << " not ready, skipping update" << std::endl;
 			}
 		}
 		catch (_2Real::Exception &e)
@@ -194,7 +200,7 @@ namespace _2Real
 		}
 		else if (hasInputSlot(name))
 		{
-			return getInputSlot(name).getOldest().second;
+			return getInputSlot(name).getNewest();
 		}
 		else
 		{
@@ -222,7 +228,7 @@ namespace _2Real
 		}
 	}
 
-	InputHandle Service::createInputHandle(std::string const& name) const
+	InputHandle Service::createInputHandle(std::string const& name)
 	{
 		return InputHandle(getInputSlot(name));
 	}

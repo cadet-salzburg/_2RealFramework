@@ -48,8 +48,6 @@ namespace _2Real
 		PluginMetadata(std::string const& classname, std::string const& directory);
 		~PluginMetadata();
 
-		void clear();
-
 		friend std::ostream& operator<<(std::ostream &out, PluginMetadata const& metadata);
 
 		ParameterDataMap const&		getSetupParameters() const;
@@ -92,6 +90,8 @@ namespace _2Real
 		ServiceMetadata const&		getServiceMetadata(std::string const& name) const;
 
 	private:
+
+		void clear();
 
 		void						addSetupParameter(std::string const& name, ParameterMetadata *data);
 

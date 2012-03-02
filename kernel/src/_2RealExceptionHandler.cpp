@@ -53,6 +53,6 @@ namespace _2Real
 	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
 	{
 		RunnableError e(exception, sender, m_System);
-		m_Event.notify(this, e);
+		m_Event.notifyAsync(this, e);
 	}
 }

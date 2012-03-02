@@ -35,7 +35,7 @@ namespace _2Real
 
 	typedef std::pair< long, EngineData >	TimestampedData;
 
-	class DataBuffer : public std::map< long, EngineData >
+	class DataBuffer : public std::map< long, EngineData, std::greater< long > >
 	{
 
 	public:
@@ -44,10 +44,11 @@ namespace _2Real
 
 		const unsigned int getMaxSize() const;
 		const bool isFull() const;
+		void setNewMax(const unsigned int max);
 
 	private:
 
-		unsigned int	const m_MaxSize;
+		unsigned int	m_MaxSize;
 
 	};
 
@@ -66,6 +67,11 @@ namespace _2Real
 		return (this->size() >= m_MaxSize);
 	}
 
+	inline void DataBuffer::setNewMax(const unsigned int max)
+	{
+		m_MaxSize = max;
+	}
+
 	class BufferPolicy
 	{
 
@@ -73,6 +79,7 @@ namespace _2Real
 
 		virtual ~BufferPolicy();
 		virtual const bool insertData(TimestampedData const& data, DataBuffer &buffer) = 0;
+		virtual const bool copyData(DataBuffer &dst, DataBuffer &src) = 0;
 
 	};
 
@@ -86,7 +93,7 @@ namespace _2Real
 
 	public:
 
-		virtual const bool insertData(TimestampedData const& data, DataBuffer &buffer)
+		const bool insertData(TimestampedData const& data, DataBuffer &buffer)
 		{
 			if (buffer.size() < buffer.getMaxSize())
 			{
@@ -99,8 +106,27 @@ namespace _2Real
 			}
 		}
 
+		const bool copyData(DataBuffer &dst, DataBuffer &src)
+		{
+			for (DataBuffer::iterator it = src.begin(); it != src.end(); )
+			{
+				if (dst.size() < dst.getMaxSize())
+				{
+					dst.insert(*it);
+					it = src.erase(it);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 	};
 
+	//ugh, this class keeps getting bigger & bigger
 	class InputSlot : public Parameter, public IOutputListener
 	{
 
@@ -113,11 +139,6 @@ namespace _2Real
 		*	inserts the value into the data
 		*/
 		void setData(TimestampedData const& data);
-
-		/*
-		*	inserts the value into the data
-		*/
-		void insertData(TimestampedData const& data);
 
 		/**
 		*	deletes all links
@@ -140,39 +161,97 @@ namespace _2Real
 		const bool isLinked() const;
 
 		/**
-		*	swaps current & received data
+		*	copy received data into access buffer
 		*/
-		const bool updateCurrent();
-
-		/**
-		*	kills current data
-		*/
-		void clearCurrent();
-
-		/**
-		*	kills received data
-		*/
-		void clearReceived();
+		const bool syncBuffers();
 
 		/**
 		*	inserts new data into received
 		*/
 		void receiveData(Data &data);
 
-		/*
-		*	lots of functions... currently only getData is used, and it returns the newest
+		const EngineData getNewest() const;
+		
+		/**
+		*	starting with the newest data item & going backwards, returns the next entry from current table & marks it as consumed
+		*	currently, this function is called at most once per update of a service
+		*	also, it should only ever be called by an input handle, never by the framework itself! (no synchronization in place)
 		*/
-		const TimestampedData getNewest() const;
-		const TimestampedData getOldest() const;
-		const TimestampedData getData() const;
+		EngineData consumeDataItem();
+
+		/**
+		*	deletes the consumed data items
+		*/
+		void removeConsumedItems();
+
+		/**
+		*	true if this inlet has a default value
+		*/
+		const bool hasDefault() const;
 
 	private:
 
-		mutable Poco::FastMutex		m_Mutex;
-		DataBuffer					*m_ReceivedTable;
-		DataBuffer					*m_CurrentTable;
-		std::list< OutputSlot * >	m_Outputs;
-		BufferPolicy				&m_Policy;
+		/**
+		*	mutex for data update
+		*/
+		mutable Poco::FastMutex		m_DataMutex;
+
+		/**
+		*	mutex for callback registration
+		*/
+		mutable Poco::FastMutex		m_CallbackMutex;
+
+		/**
+		*	mutex for linking
+		*/
+		mutable Poco::FastMutex		m_OutletsMutex;
+
+		/*
+		*	todo: callback
+		*/
+		bool						m_UseCallback;
+		//
+
+		/**
+		*	there's 2 buffers: one for accessing data, one for receiving data
+		*	the received data is inserted into the access buffer just once before each update
+		*	otherwise, i'd have to protect everything from concurrent accesses
+		*/
+		DataBuffer					m_ReceivedTable;
+		DataBuffer					m_CurrentTable;
+
+		/**
+		*	all outlets from which this inlet receives data
+		*/
+		std::list< OutputSlot * >	m_LinkedOutlets;
+
+		/**
+		*	this deals with overflow handling inside the buffers
+		*/
+		BufferPolicy				&m_OverflowPolicy;
+
+		/**
+		*	default value - this will be used whenever there's no data available
+		*	if an inlet has a default value, the 'data available' condition will always be fulfilled;
+		*/
+		bool						m_HasDefault;
+		TimestampedData				m_DefaultValue;
+
+		/**
+		*	nr of data items consumed during the last update
+		*/
+		unsigned int				m_NrOfConsumed;
+
+		/**
+		*	the timestamp of the newest data during the last update
+		*/
+		long						m_LastTimestamp;
+
+		/**
+		*	might also be set to a value
+		*/
+		bool						m_IsSet;
+		TimestampedData				m_SetValue;
 
 	};
 

@@ -29,158 +29,169 @@ namespace _2Real
 
 	InputSlot::InputSlot(ParameterMetadata const& metadata, BufferPolicy &policy, const unsigned int bufferSize) :
 		Parameter(metadata),
-		m_Outputs(),
-		m_Policy(policy)
+		m_DataMutex(),
+		m_CallbackMutex(),
+		m_OutletsMutex(),
+		m_UseCallback(false),
+		m_ReceivedTable(bufferSize),
+		m_CurrentTable(bufferSize),
+		m_LinkedOutlets(),
+		m_OverflowPolicy(policy),
+		m_HasDefault(false),
+		m_DefaultValue(),
+		m_NrOfConsumed(0),
+		m_LastTimestamp(0),
+		m_IsSet(false),
+		m_SetValue()
 	{
-		m_ReceivedTable = new DataBuffer(bufferSize);
-		m_CurrentTable = new DataBuffer(bufferSize);
-
 		if (metadata.hasDefaultValue())
 		{
-			m_ReceivedTable->insert(TimestampedData(0, metadata.getDefaultValue()));
+			m_HasDefault = true;
+			//default value has a timestamp of 0
+			//meaning it will always fullfill the data-available requirement
+			//but never the data-new requirement
+			m_DefaultValue = TimestampedData(0, metadata.getDefaultValue());
+			m_OverflowPolicy.insertData(m_DefaultValue, m_ReceivedTable);
 		}
 	}
 
 	InputSlot::~InputSlot()
 	{
-		m_ReceivedTable->clear();
-		m_CurrentTable->clear(),
-		delete m_ReceivedTable;
-		delete m_CurrentTable;
 	}
 
-	const bool InputSlot::updateCurrent()
+	const bool InputSlot::hasDefault() const
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		return m_HasDefault;
+	}
 
-		DataBuffer *tmp;
-		tmp = m_CurrentTable;
-		m_CurrentTable = m_ReceivedTable;
-		m_ReceivedTable = tmp;
-		m_ReceivedTable->clear();
+	void InputSlot::removeConsumedItems()
+	{
+		//no sync, as this is only called after the update function is finished
 
-		if (!m_CurrentTable->empty())
+		for (unsigned int i=0; i<m_NrOfConsumed; ++i)
 		{
-			return true;
+			m_CurrentTable.erase(m_CurrentTable.begin());
 		}
 
-		/* old behaviour
-		if (m_ReceivedTable->size() > 0)
+		m_NrOfConsumed = 0;
+	}
+
+	const bool InputSlot::syncBuffers()
+	{
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
+
+		m_OverflowPolicy.copyData(m_CurrentTable, m_ReceivedTable);
+		m_ReceivedTable.setNewMax(m_CurrentTable.getMaxSize() - m_CurrentTable.size());
+
+		m_ReceivedTable.clear();
+		if (m_IsSet)
 		{
-			m_CurrentTable = m_ReceivedTable;
-			DataBuffer::const_iterator it = m_CurrentTable->end();
-			it--;
-			m_ReceivedTable->clear();
-			m_ReceivedTable->insert(*it);
+			m_ReceivedTable.insert(m_SetValue);
+			
+			//m_Condition.updateInlet(m_Name, data.first, false);
+		}
+		else if (m_HasDefault)
+		{
+			m_ReceivedTable.insert(m_DefaultValue);
+			
+			//m_Condition.updateInlet(m_Name, data.first, false);
+		}
+
+		if (m_CurrentTable.empty())
+		{
+			return false;
+		}
+		else
+		{
+			long time = m_CurrentTable.begin()->first;
+			if (m_LastTimestamp > time)
+			{
+				m_LastTimestamp = time;
+			}
+
 			return true;
 		}
-		*/
-
-		return false;
 	}
 
 	void InputSlot::setData(TimestampedData const& data)
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
 
-		//OPEN Q: really good idea to clear all links?
-		//we'll see
 		resetLinks();
 
-		//this will stay in the queue until a new value is set OR a link comes
-		m_ReceivedTable->clear();
-		m_ReceivedTable->insert(data);
-	}
+		m_IsSet = true;
+		m_SetValue = data;
 
-	void InputSlot::insertData(TimestampedData const& data)
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		m_ReceivedTable.clear();
+		m_ReceivedTable.insert(data);
 
-		m_ReceivedTable->insert(data);
-	}
-
-	void InputSlot::clearCurrent()
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_CurrentTable->clear();
-	}
-
-	void InputSlot::clearReceived()
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_ReceivedTable->clear();
+		//set value receives a timestamp from the fw, which might by some weird accident
+		//be older than the last timestamp -> timestamp is reset in the condition
+		//m_Condition.updateInlet(m_Name, data.first, true);
 	}
 
 	void InputSlot::receiveData(Data &data)
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
 
-		m_ReceivedTable->insert(TimestampedData(data.getTimestamp(), data.data()));
-	}
+		long timestamp = data.getTimestamp();
 
-	//no update should happen if there is no data at all
-	const TimestampedData InputSlot::getData() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		if (m_CurrentTable->empty())
+		if (m_OverflowPolicy.insertData(TimestampedData(timestamp, data.data()), m_ReceivedTable))
 		{
-			throw Exception("internal exception: input slot " + m_Name + " has no data.");
+			//m_Condition.updateInlet(m_Name, data.first, false);
 		}
-
-		DataBuffer::const_iterator newest = m_CurrentTable->begin();
-
-		return *newest;
 	}
 
-	const TimestampedData InputSlot::getNewest() const
+	EngineData InputSlot::consumeDataItem()
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		//no sync necessary, this is only called from within a service's update function
 
-		if (m_CurrentTable->empty())
-		{
-			throw Exception("internal exception: input slot " + m_Name + " has no data.");
-		}
-
-		DataBuffer::const_iterator newest = m_CurrentTable->begin();
-
-		return *newest;
-	}
-
-	const TimestampedData InputSlot::getOldest() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		if (m_CurrentTable->empty())
+		if (m_CurrentTable.empty())
 		{
 			throw Exception("internal exception: input slot " + getName() + " has no data.");
 		}
 
-		DataBuffer::const_iterator oldest = m_CurrentTable->end();
-		oldest--;
+		DataBuffer::iterator result = m_CurrentTable.begin();
+		for (unsigned int i=0; i<m_NrOfConsumed; ++i)
+		{
+			++result;
+		}
+		m_NrOfConsumed++;
 
-		return *oldest;
+		return result->second;
+	}
+
+	const EngineData InputSlot::getNewest() const
+	{
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
+
+		if (m_CurrentTable.empty())
+		{
+			throw Exception("internal exception: input slot " + getName() + " has no data.");
+		}
+
+		DataBuffer::const_iterator result = m_CurrentTable.begin();
+		return result->second;
 	}
 
 	void InputSlot::linkWith(OutputSlot &output)
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-		m_Outputs.push_back(&output);
+		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
+
+		m_LinkedOutlets.push_back(&output);
 		output.addListener(*this);
 	}
 
 	void InputSlot::breakLink(OutputSlot &output)
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
 
-		for (std::list< OutputSlot * >::iterator it = m_Outputs.begin(); it != m_Outputs.end(); ++it)
+		for (std::list< OutputSlot * >::iterator it = m_LinkedOutlets.begin(); it != m_LinkedOutlets.end(); ++it)
 		{
 			if (*it == &output)
 			{
 				output.removeListener(*this);
-				m_Outputs.erase(it);
+				m_LinkedOutlets.erase(it);
 				break;
 			}
 		}
@@ -188,17 +199,21 @@ namespace _2Real
 
 	void InputSlot::resetLinks()
 	{
-		for (std::list< OutputSlot * >::iterator it = m_Outputs.begin(); it != m_Outputs.end(); ++it)
+		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
+
+		for (std::list< OutputSlot * >::iterator it = m_LinkedOutlets.begin(); it != m_LinkedOutlets.end(); ++it)
 		{
 			(*it)->removeListener(*this);
 		}
 
-		m_Outputs.clear();
+		m_LinkedOutlets.clear();
 	}
 
 	const bool InputSlot::isLinked() const
 	{
-		return (m_Outputs.size() > 0);
+		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
+
+		return (m_LinkedOutlets.size() > 0);
 	}
 
 }

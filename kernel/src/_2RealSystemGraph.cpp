@@ -32,6 +32,12 @@
 
 namespace _2Real
 {
+
+	void Testy::invoke(Poco::Timer &t)
+	{
+		//std::cout << "invoked! " << t.skipped() << std::endl;
+	}
+
 	SystemGraph::SystemGraph(Identifier const& id) :
 		Graph(),
 		Entity(id),
@@ -40,8 +46,11 @@ namespace _2Real
 		m_Plugins(m_EngineImpl.getPluginPool()),
 		m_ExceptionHandler(id),
 		m_Logfile(""),
-		m_Logstream()
+		m_Logstream(),
+		m_Timer(0, 5)
 	{
+		Poco::TimerCallback< Testy > callback(m_Test, &Testy::invoke);
+		m_Timer.start(callback);
 	}
 
 	void SystemGraph::setLogfile(Poco::Path const& path)

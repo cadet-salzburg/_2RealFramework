@@ -257,4 +257,5 @@ namespace _2Real
 		void unique(std::string const& s) const;
 
 	};
+
 }

@@ -28,7 +28,7 @@ namespace _2Real
 	{
 	}
 
-	InputHandle::InputHandle(InputSlot const& slot) :
+	InputHandle::InputHandle(InputSlot &slot) :
 		ParameterHandle(slot.getName()),
 		m_Input(&slot)
 	{
@@ -48,16 +48,10 @@ namespace _2Real
 		return *this;
 	}
 
-	const EngineData InputHandle::newest() const
+	//misnamed
+	const EngineData InputHandle::newest()
 	{
-		//rofl
-		return m_Input->getOldest().second;
-	}
-
-	const EngineData InputHandle::oldest() const
-	{
-		//lfor
-		return m_Input->getNewest().second;
+		return m_Input->consumeDataItem();
 	}
 
 }

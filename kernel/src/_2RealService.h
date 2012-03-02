@@ -80,7 +80,7 @@ namespace _2Real
 		*	functions that may be called by the service context
 		*/
 		const EngineData		getParameterValue(std::string const& name) const;
-		InputHandle				createInputHandle(std::string const& name) const;
+		InputHandle				createInputHandle(std::string const& name);
 		OutputHandle			createOutputHandle(std::string const& name);
 
 		void					setup();
