@@ -29,39 +29,30 @@ namespace _2Real
 
 	public:
 
-		RunnableError(Exception const& exception, Identifier const& sender, Identifier const& system);
+		RunnableError(Exception const& exception, Identifier const& runnableId);
 
-		Identifier const& system() const;
-		Identifier const& sender() const;
-		Exception const& exception() const;
-
+		Identifier const& getRunnableId() const;
+		Exception const& getException() const;
 
 	private:
 
 		Exception	m_Exception;
-		Identifier	m_System;
-		Identifier	m_Sender;
+		Identifier	m_Runnable;
 
 	};
 
-	inline RunnableError::RunnableError(Exception const& exception, Identifier const& sender, Identifier const& system) :
+	inline RunnableError::RunnableError(Exception const& exception, Identifier const& runnableId) :
 		m_Exception(exception),
-		m_System(system),
-		m_Sender(sender)
+		m_Runnable(runnableId)
 	{
 	}
 
-	inline Identifier const& RunnableError::system() const
+	inline Identifier const& RunnableError::getRunnableId() const
 	{
-		return m_System;
+		return m_Runnable;
 	}
 
-	inline Identifier const& RunnableError::sender() const
-	{
-		return m_Sender;
-	}
-
-	inline Exception const& RunnableError::exception() const
+	inline Exception const& RunnableError::getException() const
 	{
 		return m_Exception;
 	}

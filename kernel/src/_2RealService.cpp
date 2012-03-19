@@ -25,9 +25,9 @@
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
 #include "_2RealIService.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealServiceMetadata.h"
 #include "_2RealParameterMetadata.h"
+#include "_2RealSystemImpl.h"
 
 #include <iostream>
 #include <sstream>
@@ -35,17 +35,15 @@
 namespace _2Real
 {
 
-	Service::Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata) :
+	Service::Service(Identifier const& id, Poco::SharedPtr< IService > service, SystemImpl &system, ServiceMetadata const& metadata) :
 		Runnable(id, system),
-		m_Service(&service),
+		m_Service(service),
 		m_SetupParameters(),
 		m_InputSlots(),
 		m_OutputSlots(),
 		m_ServiceName(metadata.getName()),
-		//TODO:: the buffer policy needs to come from somewhere
-		//right now the same is used for all inputs of the service
-		m_BufferPolicy(new NoInsertOnMaxSize())
-		//m_UpdatePolicy(new SkipIfEmpty())
+		m_BufferPolicy(new NoInsertOnMaxSize()),
+		m_ReceivedAbort(false)
 	{
 		ParameterDataMap const& setup = metadata.getSetupParameters();
 		ParameterDataMap const& input = metadata.getInputSlots();
@@ -68,16 +66,14 @@ namespace _2Real
 		for (ParameterDataMap::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
 			ParameterMetadata const& meta = *it->second;
-			OutputSlot *output = new OutputSlot(meta);
+			OutputSlot *output = new OutputSlot(meta, system.getTimestamp());
 			m_OutputSlots.insert(NamedOutput(meta.getName(), output));
 		}
 	}
 
 	Service::~Service()
 	{
-		delete m_Service;
 		delete m_BufferPolicy;
-		//delete m_UpdatePolicy;
 
 		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 		{
@@ -93,6 +89,40 @@ namespace _2Real
 		{
 			delete it->second;
 		}
+	}
+
+	void Service::prepareForAbort()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_AbortMutex);
+
+		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+		{
+			it->second->resetLinks();
+			it->second->clearReceived();
+		}
+
+		for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); ++it)
+		{
+			it->second->resetLinks();
+		}
+
+		m_ReceivedAbort = true;
+
+		//this should never be needed again, so it gets erased
+		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); /**/)
+		{
+			it = m_SetupParameters.erase(it); 
+		}
+	}
+
+	RunnableList const& Service::getChildren() const
+	{
+		return RunnableList();
+	}
+
+	InputMap const& Service::getInlets() const
+	{
+		return m_InputSlots;
 	}
 
 	void Service::registerToNewData(std::string const& outName, DataCallback callback)
@@ -129,33 +159,48 @@ namespace _2Real
 		m_Service->setup(context);
 	}
 
+	const bool Service::wasAborted() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_AbortMutex);
+
+		return m_ReceivedAbort;
+	}
+
 	void Service::run()
 	{
 		try
 		{
-			//this check will soon be obsolte
-			bool ready = true;
+			//copies received data into the inlets read buffer
 			for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); it++)
 			{
-				ready &= it->second->syncBuffers();
+				it->second->syncBuffers();
+			}
+			if (wasAborted())
+			{
+				std::cout << "ABORTED" << std::endl;
+				return;
 			}
 
-			if (ready)
+			//actually updates the service
+			m_Service->update();
+
+			if (wasAborted())
 			{
-				//std::cout << this->name() << " ready, calling update" << std::endl;
-				m_Service->update();
-				for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); ++it)
-				{
-					it->second->update();
-				}
-				for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
-				{
-					it->second->removeConsumedItems();
-				}
+				std::cout << "ABORTED" << std::endl;
+				return;
 			}
-			else
+
+			//sends all data contained inthe outlet
+			for (OutputMap::iterator it = m_OutputSlots.begin(); it != m_OutputSlots.end(); ++it)
 			{
-				//std::cout << this->name() << " not ready, skipping update" << std::endl;
+				it->second->update();
+			}
+
+			//removes consumed data item from inlet
+			//i guess triggering should happen here
+			for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+			{
+				it->second->removeConsumedItems();
 			}
 		}
 		catch (_2Real::Exception &e)

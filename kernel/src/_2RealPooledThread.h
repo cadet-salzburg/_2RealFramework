@@ -20,103 +20,65 @@
 #pragma once
 
 #include "_2RealRunnable.h"
+#include "_2RealRunnableManager.h"
 #include "_2RealException.h"
 
 #include "Poco/Runnable.h"
 #include "Poco/Thread.h"
 #include "Poco/Event.h"
-#include "Poco/Timestamp.h"
-
-#include <ctime>
 
 namespace _2Real
 {
+
+	class ThreadPoolCallback;
 
 	class PooledThread : public Poco::Runnable
 	{
 	
 	public:
 
-		PooledThread(unsigned int stackSize = POCO_THREAD_STACK_SIZE);
+		PooledThread(ThreadPoolCallback &callback, unsigned int stackSize = POCO_THREAD_STACK_SIZE);
+		~PooledThread();
 
-		/**
-		*	starts a new target
-		*/
-		void start(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
+		const bool isIdle() const;
+		const bool join();
 
-		/**
-		*	starts a new target, notifies runnables father when done
-		*/
-		void update(Poco::Thread::Priority const& priority, _2Real::Runnable &target);
-
-		/**
-		*	blocks until the thread has finished its target's current update
-		*/
-		void waitForTarget();
-
-		/**
-		*	returns true if the thread is still running, but currently has no target
-		*/
-		bool isIdle();
-
-		/**
-		*	signals to the thread that it should exit from its run function
-		*/
-		void stopRunning();
-
-		/**
-		*	signals to the thread that it should no longer keep updating its target
-		*	--> after the next update, it will cleanup & wait for a new target
-		*/
-		void stopTargetRunning();
-
-		/**
-		*	kills the thread
-		*/
-		bool join();
-
-		/**
-		*	used to reactivate a thread after its target has finished
-		*/
+		void run();
+		void run(Poco::Thread::Priority const& priority, _2Real::RunnableManager &target);
 		void reactivate();
 
-		/**
-		*	the thread's run function
-		*/
-		void run();
+		const bool operator<(PooledThread const& rhs) const;
 
 	private:
 
-		bool updateTarget();
+		/**
+		*	the runnable that is to be executed
+		*/
+		_2Real::RunnableManager		*m_Target;
 
 		/**
-		*	queries if the thread should continue running
+		*	true if this thread has no target to execute
 		*/
-		bool keepRunning();
+		volatile bool				m_IsIdle;
 
 		/**
-		*	queries if the thread should contiue updating the target
+		*	the underlying thread
 		*/
-		bool keepTargetRunning();
-
-		/**
-		*	cleanup function after the thread has its target reset
-		*/
-		void cleanUp();
-
-		bool				m_RunThread;
-		bool				m_RunTarget;
-		bool				m_UpdateTarget;
-		volatile bool		m_IsIdle;
-
-		_2Real::Runnable			*m_Target;
 		Poco::Thread				m_Thread;
+
+		/**
+		*	callback to the threadpool
+		*/
+		ThreadPoolCallback			*m_Callback;
+
+		/*
+		*	sync stuff - mainly a lot of events!
+		*/
 		Poco::Event					m_TargetReady;
 		Poco::Event					m_TargetCompleted;
 		Poco::Event					m_ThreadStarted;
 		Poco::Event					m_ThreadStopped;
-		Poco::FastMutex				m_Mutex;
-		Poco::Timestamp				m_Timer;
+		mutable Poco::FastMutex		m_Mutex;
 
 	};
 

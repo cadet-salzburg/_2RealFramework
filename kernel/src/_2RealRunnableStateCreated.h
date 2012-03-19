@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +17,25 @@
 	limitations under the License.
 */
 
-#include "_2RealIOSlot.h"
+#pragma once
+
+#include "_2RealRunnableState.h"
 
 namespace _2Real
 {
+
+	class RunnableStateCreated : public AbstractRunnableState
+	{
+
+	public:
+
+		RunnableStateCreated();
+		void setUp(Runnable &runnable) const;
+		const bool tryGetReady() const;
+		const bool tryBeginUpdate() const;
+		const bool tryFinishUpdate() const;
+		const bool shutDown(Runnable &runnable) const;
+
+	};
 
 }

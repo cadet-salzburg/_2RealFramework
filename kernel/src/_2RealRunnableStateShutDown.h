@@ -19,38 +19,22 @@
 
 #pragma once
 
-#include <map>
-#include <string>
+#include "_2RealRunnableState.h"
 
 namespace _2Real
 {
 
-	class Identifier;
-	class SystemGraph;
-
-	typedef std::pair< Identifier, SystemGraph * >	NamedSystemGraph;
-	typedef std::map< Identifier, SystemGraph * >	SystemGraphTable;
-
-	class SystemPool
+	class RunnableStateShutDown : public AbstractRunnableState
 	{
 
 	public:
 
-		SystemPool();
-		~SystemPool();
-
-		void					clearSystemGraphs();
-		const Identifier		createSystemGraph(std::string const& name);
-		void					destroySystemGraph(Identifier const& system);
-		SystemGraph &			getSystemGraph(Identifier const& system);
-		SystemGraph const&		getSystemGraph(Identifier const& system) const;
-
-	private:
-
-		SystemGraphTable::iterator			iteratorId(Identifier const& system);
-		SystemGraphTable::const_iterator	iteratorId(Identifier const& system) const;
-
-		SystemGraphTable		m_SystemGraphs;
+		RunnableStateShutDown();
+		void setUp(Runnable &runnable) const;
+		const bool tryGetReady() const;
+		const bool tryBeginUpdate() const;
+		const bool tryFinishUpdate() const;
+		const bool shutDown(Runnable &runnable) const;
 
 	};
 

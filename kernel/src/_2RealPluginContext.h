@@ -35,7 +35,32 @@ namespace _2Real
 	class Plugin;
 
 	class IService;
-	typedef IService *const (*ServiceCreator)(void);
+	typedef Poco::SharedPtr< IService > (*ServiceCreator)(void);
+
+//#define _2REAL_REGISTER_SERVICE(context, name, classname)
+
+	class AbstractServiceObject
+	{
+
+	public:
+
+		virtual IService * create() = 0;
+		virtual ~AbstractServiceObject() {};
+
+	};
+
+	template< typename T >
+	class ServiceObject : public AbstractServiceObject
+	{
+
+	private:
+
+		IService *create()
+		{
+			return new T();
+		}
+
+	};
 
 	class PluginContext
 	{
@@ -46,19 +71,15 @@ namespace _2Real
 
 		/**
 		*	registers a service in the framework
-		*	
-		*	@param name:		name of service
-		*	@param creator:		function used to create a service obj
-		*	@throw:				AlreadyExistsException
 		*/
-		void registerService(std::string const& name, ServiceCreator creator);
+		template< typename T >
+		void registerService(std::string const& serviceName)
+		{
+			registerServiceInternal(serviceName, new ServiceObject< T >());
+		}
 
 		/**
 		*	returns the value of a setup parameter
-		*	
-		*	@param name:		name of a setup parameter
-		*	@return:			constant reference to setup parameter
-		*	@throw:				NotFoundException, DatatypeMismatchException
 		*/
 		template< typename DataType >
 		DataType const& getParameterValue(std::string const& name) const
@@ -69,6 +90,8 @@ namespace _2Real
 		}
 
 	private:
+
+		void registerServiceInternal(std::string const& serviceName, AbstractServiceObject *obj);
 
 		EngineData const&	getData(std::string const& name) const;
 

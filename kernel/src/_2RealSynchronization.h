@@ -23,14 +23,14 @@
 namespace _2Real
 {
 
-	class SystemGraph;
+	class SystemImpl;
 
 	class Synchronization : public RunnableGraph
 	{
 
 	public:
 
-		Synchronization(Identifier const& id, SystemGraph &system);
+		Synchronization(Identifier const& id, SystemImpl &system);
 		void run();
 	
 	};

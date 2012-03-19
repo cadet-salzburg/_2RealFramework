@@ -20,12 +20,12 @@
 #include "_2RealRunnable.h"
 #include "_2RealGraph.h"
 #include "_2RealRunnableGraph.h"
-#include "_2RealSystemGraph.h"
+#include "_2RealSystemImpl.h"
 
 namespace _2Real
 {
 
-	Runnable::Runnable(Identifier const& id, SystemGraph &system) :
+	Runnable::Runnable(Identifier const& id, SystemImpl &system) :
 		Entity(id),
 		m_System(system),
 		m_Father(&system),

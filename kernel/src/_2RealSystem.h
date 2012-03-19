@@ -19,85 +19,36 @@
 
 #pragma once
 
-#include "_2RealEngineData.h"
 #include "_2RealIdentifier.h"
-#include "_2RealException.h"
+#include "_2RealUpdateTriggers.h"
+#include "_2RealEngineData.h"
+#include "_2RealCallbacks.h"
 
 #include <string>
-#include <list>
 
 namespace _2Real
 {
 
-	class EngineImpl;
-	class Data;
-	class Identifier;
-	class RunnableError;
-
-	class IOutputListener;
-	class IExceptionListener;
-	class IStateChangeListener;
-
-	typedef void (*ExceptionCallback)(RunnableError &exception);
-	typedef void (*DataCallback)(Data &data);
-	typedef void (*StateChangeCallback)(std::string &newState);
+	class SystemImpl;
 
 	class System
 	{
 
 	public:
 
-		/**
-		*	destroys the system & everything within
-		*/
 		~System();
-
-		/**
-		*	creates an empty system w. the desired name
-		*/
 		System(std::string const& name);
 
 		/**
-		*	creates empty system w. given name & loads the xml
-		*/
-		System(std::string const& name, std::string const& xmlFile);
-
-		/**
-		*	sets the system's logfile
-		*/
-		void setLogfile(std::string const& file);
-
-		/**
-		*	destroys everything in the system.
+		*	kills all runnables in the system
 		*/
 		void clear();
 
-		/**
-		*	calls setup of a runnable
-		*	if the runnbale is currently running, it needs to be stopped
-		*/
-		void setup(Identifier const& id);
+		const Identifier createService(Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& updateTriggers = UpdateTriggers::ServiceDefault());
+		const Identifier createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& updateTriggers = UpdateTriggers::ServiceDefault());
 
-		/**
-		*	creates instance of service
-		*	the name of the returned identifier will be auto-generated
-		*/
-		const Identifier createService(Identifier const& pluginId, std::string const& serviceName);
+		void setup(Identifier const& runnableId);
 
-		/**
-		*	creates instance of service
-		*/
-		const Identifier createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName);
-
-		/**
-		*	sets a runnable's desired update rate
-		*/
-		void setUpdateRate(Identifier const& id, float updatesPerSecond);
-
-		/**
-		*	initializes a service's or plugin's setup parameter, or directly sets the value of an input slot
-		*	if the input slot has been linked to an output slot previously, this link will be broken
-		*/
 		template< typename DataType >
 		void setValue(Identifier const& id, std::string const& name, DataType const& value)
 		{
@@ -105,11 +56,6 @@ namespace _2Real
 			setValueInternal(id, name, data);
 		}
 
-		/**
-		*	returns value of an input slot or setup parameter. if it is an input slot, the value returned will
-		*	be the one that is used for the current update cycle! (so setting a value & querying it immediately afterwards
-		*	might not yield the same value)
-		*/
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
 		{
@@ -117,138 +63,43 @@ namespace _2Real
 			return *ptr.get();
 		}
 
-		/**
-		*	links out with in
-		*/
 		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-
-		/**
-		*	removes the link between out and in (does nothing if they are not actually linked)
-		*/
 		void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-
-		/**
-		*	removes all listening input slots from an output slot, and optionally all registered callbacks too
-		*/
 		void clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks = false);
-
-		/**
-		*	removes all output slots from an input slot
-		*/
 		void clearInputProviders(Identifier const& inService, std::string const& inName);
 
-		/**
-		*	exception listener callbacks
-		*/
-		void registerToException(ExceptionCallback callback);
-		void unregisterFromException(ExceptionCallback callback);
-		void registerToException(IExceptionListener &listener);
-		void unregisterFromException(IExceptionListener &listener);
+		///**
+		//*	exception listener callbacks
+		//*/
+		//void registerToException(ExceptionCallback callback);
+		//void unregisterFromException(ExceptionCallback callback);
+		//void registerToException(IExceptionListener &listener);
+		//void unregisterFromException(IExceptionListener &listener);
 
-		/**
-		*	output slot callbacks
-		*/
-		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
-		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
-		void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
-		void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
+		///**
+		//*	output slot callbacks
+		//*/
+		//void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
+		//void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
+		//void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
+		//void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
-		/**
-		*	runnable state changes
-		*/
-		void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-		void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-
-		/**
-		*	starts a runnable
-		*/
-		void start(Identifier const& runnableId);
-
-		/**
-		*	stops a runnable
-		*/
-		void stop(Identifier const& runnableId);
-
-		/**
-		*	stops all running runnables at once
-		*/
-		void stopAll();
-
-		/**
-		*	starts all runnables at once
-		*/
-		void startAll();
-
-		/*
-		*	currently not functional until the whole insert / remove thing is resolved properly
-		*/
-
-		/**
-		*
-		*/
-		//const Identifier createSequenceFromXML();
-		//const Identifier createSynchronizationFromXML();
-
-		//const Identifier createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
-		//const Identifier createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
-		//const Identifier createSequence(std::string const& idName, std::list< Identifier > const& runnableIds);
-		//const Identifier createSynchronization(std::string const& idName, std::list< Identifier > const& runnableIds);
-		//void add(Identifier const& runnable, Identifier const& parent, unsigned int index);
-		//void append(Identifier const& runnable, Identifier const& parent);
-
-		/*******************************************************************************
-		*	functions related to xml - are currently being implemented
-		*/
-
-		/**
-		*	returns the identifier of a plugin, service, sequence or graph -> can be used to get id of an entity defined in the xml
-		*	can also return the system's own identifier
-		*/
-		//const Identifier getId(std::string const& name);
-
-		//some more identifier helper functions
-		//std::list< Identifier > getIds();
-		//std::list< Identifier > getPluginIds();
-		//std::list< Identifier > getRunnableIds();
-		//std::list< Identifier > getGraphIds();
-		//std::list< Identifier > getServiceIds();
-
-		//some more helpers, this time for names
-		//std::list< std::string > getInputSlots(Identifier const& serviceId);
-		//std::list< std::string > getOutputSlots(Identifier const& serviceId);
-		//std::list< std::string > getSetupParameters(Identifier const& setupAbleId);
-		//std::list< std::string > getExportedServices(Identifier const& pluginId);
-
-		/********************************************************************************************/
+		///**
+		//*	runnable state changes
+		//*/
+		//void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		//void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
+		//void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		//void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
 
 	private:
 
-		/**
-		*	shallow copy - this does not actually create new services
-		*/
 		System(System const& src);
 
-		/**
-		*	internally used function for setting param values
-		*/
 		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
-
-		/**
-		*	internally used function for setting param values
-		*/
 		const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
 
-		/**
-		*	system's identifier
-		*/
-		Identifier								m_Id;
-
-		/**
-		*	the 2real EngineImpl
-		*/
-		EngineImpl								&m_EngineImpl;
+		SystemImpl				*m_Impl;
 
 		/**
 		*	helper lookup table

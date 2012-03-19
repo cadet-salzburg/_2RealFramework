@@ -27,14 +27,16 @@ namespace _2Real
 	{
 	}
 
-	void PluginContext::registerService(std::string const& name, ServiceCreator creator)
+	void PluginContext::registerServiceInternal(std::string const& name, AbstractServiceObject *obj)
 	{
-		m_Plugin.registerService(name, creator);
+		m_Plugin.registerService(name, obj);
 	}
 
 	EngineData const& PluginContext::getData(std::string const& name) const
 	{
 		return m_Plugin.getParameterValue(name);
 	}
+
+
 
 }

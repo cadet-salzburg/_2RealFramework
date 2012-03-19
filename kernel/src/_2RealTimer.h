@@ -19,7 +19,16 @@
 
 #pragma once
 
+#include "_2RealRunnableTriggers.h"
+#include "_2RealThreadPool.h"
+
+#include "Poco/Timer.h"
 #include "Poco/Timestamp.h"
+#include "Poco/BasicEvent.h"
+#include "Poco/Delegate.h"
+#include "Poco/Mutex.h"
+
+#include <iostream>
 
 namespace _2Real
 {
@@ -30,22 +39,100 @@ namespace _2Real
 	public:
 
 		Timer();
-		long getTimestamp() const;
+		~Timer();
+
+		void receiveTimerSignal(Poco::Timer &t);
+		void registerToTimerSignal(RunnableTriggers &triggers) const;
+		void unregisterFromTimerSignal(RunnableTriggers &triggers) const;
+		void registerToTimerSignal(ThreadPool &pool) const;
+		void unregisterFromTimerSignal(ThreadPool &pool) const;
 
 	private:
 
-		Poco::Timestamp		m_Timer;
+		Poco::AbstractTimerCallback			*m_Callback;
+		Poco::Timer							m_Timer;
+		Poco::Timestamp						m_Timestamp;
+		mutable Poco::BasicEvent< long >	m_TimerSignal;
+
+		mutable Poco::FastMutex				m_TestMutex;
+
+#ifdef _2REAL_DEBUG
+		long								m_UpdateCount;
+		long								m_SkippedCount;
+		Poco::Timestamp						m_DebugTime;
+#endif
 
 	};
 
-	inline Timer::Timer()
+	inline Timer::Timer() :
+		m_Callback(NULL),
+		m_Timer(0, 1),	//attempt to get the best resolution possible, even if this won't work in practice
+		m_Timestamp(),
+		m_TimerSignal()
+#ifdef _2REAL_DEBUG
+		, m_UpdateCount(0)
+		, m_SkippedCount(0)
+		, m_DebugTime()
+#endif
 	{
-		m_Timer.update();
+		m_Callback = new Poco::TimerCallback< Timer >(*this, &Timer::receiveTimerSignal);
+		m_Timer.start(*m_Callback, Poco::Thread::PRIO_HIGHEST);
 	}
 
-	inline long Timer::getTimestamp() const
+	inline Timer::~Timer()
 	{
-		return (long)m_Timer.elapsed();
+		m_Timer.stop();
+		delete m_Callback;
+	}
+
+	inline void Timer::receiveTimerSignal(Poco::Timer &t)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
+
+		long elapsed = (long)m_Timestamp.elapsed();
+		m_TimerSignal.notify(this, elapsed);
+		m_Timestamp.update();
+
+#ifdef _2REAL_DEBUG
+		m_UpdateCount++;
+		m_SkippedCount += t.skipped();
+		if ((m_UpdateCount + m_SkippedCount) >= 20000)
+		{
+			std::cout << "updated " << m_UpdateCount << " times, skipped " << m_SkippedCount << " times, elapsed: " << m_DebugTime.elapsed() << std::endl;
+			m_UpdateCount = 0;
+			m_SkippedCount = 0;
+			m_DebugTime.update();
+		}
+#endif
+
+	}
+
+	inline void Timer::registerToTimerSignal(RunnableTriggers &triggers) const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
+
+		m_TimerSignal += Poco::delegate(&triggers, &RunnableTriggers::tryTriggerTime);
+	}
+
+	inline void Timer::unregisterFromTimerSignal(RunnableTriggers &triggers) const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
+
+		m_TimerSignal -= Poco::delegate(&triggers, &RunnableTriggers::tryTriggerTime);
+	}
+
+	inline void Timer::registerToTimerSignal(ThreadPool &pool) const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
+
+		m_TimerSignal += Poco::delegate(&pool, &ThreadPool::update);
+	}
+
+	inline void Timer::unregisterFromTimerSignal(ThreadPool &pool) const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
+
+		m_TimerSignal -= Poco::delegate(&pool, &ThreadPool::update);
 	}
 
 }

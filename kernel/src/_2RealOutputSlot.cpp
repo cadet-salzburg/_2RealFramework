@@ -22,6 +22,7 @@
 #include "_2RealService.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealEngineImpl.h"
+#include "_2RealTypetable.h"
 
 #include "Poco/Delegate.h"
 
@@ -30,19 +31,19 @@
 namespace _2Real
 {
 
-	OutputSlot::OutputSlot(ParameterMetadata const& metadata) :
+	OutputSlot::OutputSlot(ParameterMetadata const& metadata, Poco::Timestamp const& timestamp) :
 		Parameter(metadata),
-		m_Timer(EngineImpl::instance().getTimer())
+		m_SystemTime(timestamp)
 	{
 		if (metadata.hasDefaultValue())
 		{
 			m_WriteData = metadata.getDefaultValue();
-			m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
+			m_CurrentData = Data(m_WriteData, (long)m_SystemTime.elapsed());
 			m_WriteData.clone(m_WriteData);
 		}
 		else
 		{
-			m_WriteData.create(EngineImpl::instance().getTypes().getInitialValueFromKey(metadata.getKeyword()));
+			m_WriteData.create(EngineImpl::instance().getTypetable().getInitialValueFromKey(metadata.getKeyword()));
 		}
 	}
 
@@ -50,10 +51,15 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_CurrentData = Data(m_WriteData, m_Timer.getTimestamp());
-		m_Event.notifyAsync(this, m_CurrentData);
+		m_CurrentData = Data(m_WriteData, (long)m_SystemTime.elapsed());
+		m_Event.notify(this, m_CurrentData);
 		m_WriteData.clone(m_WriteData);
 		m_IsInitialized = true;
+	}
+
+	EngineData OutputSlot::getData()
+	{
+		return m_WriteData;
 	}
 
 	void OutputSlot::addListener(IOutputListener &listener)
@@ -75,23 +81,33 @@ namespace _2Real
 		m_Event -= Poco::delegate(&listener, &IOutputListener::receiveData);
 	}
 
-	void OutputSlot::addListener(InputSlot &slot)
+	void OutputSlot::addListener(InputSlot &inlet)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event += Poco::delegate(&slot, &InputSlot::receiveData);
-
-		if (isInitialized())
+		std::list< InputSlot * >::iterator it = std::find< std::list< InputSlot * >::iterator, InputSlot * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
+		if (it == m_LinkedInlets.end())
 		{
-			slot.receiveData(m_CurrentData);
+			m_Event += Poco::delegate(&inlet, &InputSlot::receiveData);
+
+			if (isInitialized())
+			{
+				inlet.receiveData(m_CurrentData);
+			}
 		}
 	}
 
-	void OutputSlot::removeListener(InputSlot &slot)
+	void OutputSlot::removeListener(InputSlot &inlet)
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event -= Poco::delegate(&slot, &InputSlot::receiveData);
+		std::list< InputSlot * >::iterator it = std::find< std::list< InputSlot * >::iterator, InputSlot * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
+		if (it != m_LinkedInlets.end())
+		{
+			m_Event -= Poco::delegate(&inlet, &InputSlot::receiveData);
+
+			//(*it)->unlink(*this);
+		}
 	}
 
 	void OutputSlot::registerCallback(DataCallback callback)
@@ -112,4 +128,19 @@ namespace _2Real
 
 		m_Event -= Poco::delegate(callback);
 	}
+
+	void OutputSlot::resetLinks()
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Event.clear();
+
+		for(std::list< InputSlot * >::iterator it = m_LinkedInlets.begin(); it != m_LinkedInlets.end(); /**/)
+		{
+			(*it)->unlink(*this);
+			it = m_LinkedInlets.erase(it);
+			break;
+		}
+	}
+
 }

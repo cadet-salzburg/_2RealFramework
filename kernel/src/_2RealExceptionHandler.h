@@ -38,7 +38,7 @@ namespace _2Real
 
 	public:
 
-		ExceptionHandler(Identifier const& system);
+		ExceptionHandler();
 		void registerExceptionCallback(ExceptionCallback callback);
 		void unregisterExceptionCallback(ExceptionCallback callback);
 		void registerExceptionListener(IExceptionListener &listener);
@@ -48,8 +48,6 @@ namespace _2Real
 	private:
 
 		Poco::BasicEvent< RunnableError >	m_Event;
-
-		Identifier							const m_System;
 
 	};
 }

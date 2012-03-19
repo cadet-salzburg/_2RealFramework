@@ -19,76 +19,282 @@
 
 #include "_2RealThreadPool.h"
 #include "_2RealPooledThread.h"
+#include "_2RealRunnableManager.h"
+#include "_2RealEngineImpl.h"
+#include "_2RealTimer.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	ThreadPool::ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name) :
-		m_Capacity(capacity),
-		m_IdleTime(idleTime),
-		m_Age(0),
+	ThreadPool::ThreadPool(const unsigned int capacity, const unsigned int stackSize, std::string const& name) :
 		m_StackSize(stackSize),
-		m_Name(name)
+		m_Name(name),
+		m_Threads(),
+		m_ReadyRunnables(),
+		m_ExecutingRunnables(),
+		m_AbortedRunnables()
+#ifdef _2REAL_DEBUG
+		, m_Elapsed(0)
+#endif
 	{
-		for (unsigned int i=0; i<m_Capacity; ++i)
+		for (unsigned int i=0; i<capacity; ++i)
 		{
-			PooledThread *thread = new PooledThread(m_StackSize);
+			ThreadPoolCallback *callback = new ThreadPoolCallback(*this);
+			PooledThread *thread = new PooledThread(*callback, m_StackSize);
 			m_Threads.push_back(thread);
 		}
 	}
 
 	ThreadPool::~ThreadPool()
 	{
-		if (m_Threads.size() > 0)
-		{
-			clearThreads();
-		}
+		clear();
 	}
 
-	void ThreadPool::clearThreads()
+	void ThreadPool::clear()
 	{
-		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
-		{
-			(*it)->stopRunning();
-		}
+		m_ReadyAccess.lock();
+		m_ReadyRunnables.clear();
+		m_ReadyAccess.unlock();
 
-		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); ++it)
+		m_ExecutingAccess.lock();
+		m_ExecutingRunnables.clear();
+		m_ExecutingAccess.unlock();
+
+		m_AbortedAccess.lock();
+		m_AbortedRunnables.clear();
+		m_AbortedAccess.unlock();
+
+		m_FinishedAccess.lock();
+		m_FinishedRunnables.clear();
+		m_ReceivedRunnables.clear();
+		m_FinishedAccess.unlock();
+
+		m_ThreadAccess.lock();
+		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); /**/)
 		{
 			if ((*it)->join())
 			{
 				delete *it;
 			}
-		}
 
-		m_Threads.clear();
+			it = m_Threads.erase(it);
+		}
+		m_ThreadAccess.unlock();
 	}
 
-	PooledThread & ThreadPool::getFreeThread()
+	void ThreadPool::registerTimeListener(_2Real::Timer &timer)
 	{
+		timer.registerToTimerSignal(*this);
+	}
+
+	void ThreadPool::unregisterTimeListener(_2Real::Timer &timer)
+	{
+		timer.unregisterFromTimerSignal(*this);
+	}
+
+	void ThreadPool::update(long &time)
+	{
+#ifdef _2REAL_DEBUG
+		m_Elapsed += time;
+		if (m_Elapsed >= 10000000)
+		{
+			m_FinishedAccess.lock();
+			unsigned int finished = m_FinishedRunnables.size();
+			unsigned int received = m_ReceivedRunnables.size();
+			m_FinishedAccess.unlock();
+
+			m_ReadyAccess.lock();
+			unsigned int ready = m_ReadyRunnables.size();
+			m_ReadyAccess.unlock();
+
+			m_ExecutingAccess.lock();
+			unsigned int executing = m_ExecutingRunnables.size();
+			m_ExecutingAccess.unlock();
+
+			m_AbortedAccess.lock();
+			unsigned int aborted = m_AbortedRunnables.size();
+			m_AbortedAccess.unlock();
+
+			unsigned int reallyRunning = executing - received - finished;
+
+			std::cout << "ready: " << ready << std::endl;
+			std::cout << "executing: " << reallyRunning << std::endl;
+			std::cout << "aborted: " << aborted << std::endl;
+			m_Elapsed = 0;
+		}
+#endif
+		executeCleanUp();
+	}
+
+	void ThreadPool::executeCleanUp()
+	{
+		m_FinishedAccess.lock();
+		m_FinishedRunnables.splice(m_FinishedRunnables.begin(), m_ReceivedRunnables, m_ReceivedRunnables.begin(), m_ReceivedRunnables.end());
+		m_FinishedAccess.unlock();
+
+		for (std::list< unsigned int >::iterator it = m_FinishedRunnables.begin(); it != m_FinishedRunnables.end(); /**/)
+		{
+			m_ExecutingAccess.lock();
+			RunnableMap::iterator r = m_ExecutingRunnables.find(*it);
+			if (r != m_ExecutingRunnables.end())
+			{
+				RunnableManager *runnable = r->second;
+				m_ExecutingRunnables.erase(r);
+				m_ExecutingAccess.unlock();
+
+				runnable->finishUpdate();
+			}
+			else
+			{
+				m_ExecutingAccess.unlock();
+				
+				m_AbortedAccess.lock();
+				RunnableMap::iterator r = m_AbortedRunnables.find(*it);
+				if (r != m_AbortedRunnables.end())
+				{
+					RunnableManager *runnable = r->second;
+					m_AbortedRunnables.erase(r);
+					m_AbortedAccess.unlock();
+
+					std::cout << "threadpool: received finish for aborted runnable " << runnable->getManagedName() << std::endl;
+					runnable->finishUpdate();
+					runnable->shutDown();
+					delete runnable;
+				}
+				else
+				{
+					m_AbortedAccess.unlock();
+				}
+			}
+
+			it = m_FinishedRunnables.erase(it);
+		}
+
 		PooledThread *thread = NULL;
+		m_ThreadAccess.lock();
+		while ((thread = tryGetFreeThread()) != NULL)
+		{
+			m_ReadyAccess.lock();
+			while (!m_ReadyRunnables.empty() && m_ReadyRunnables.front() == NULL)
+			{
+				m_ReadyRunnables.pop_front();
+			}
+
+			if (m_ReadyRunnables.empty())
+			{
+				m_ReadyAccess.unlock();
+				break; //thread acc. is unlocked outside of while loop
+			}
+			else
+			{
+				RunnableManager *runnable = m_ReadyRunnables.front();
+				if (runnable->beginUpdate())
+				{
+					m_ReadyRunnables.pop_front();
+					m_ReadyAccess.unlock();
+
+					thread->reactivate();
+					m_ThreadAccess.unlock();
+
+					m_ExecutingAccess.lock();
+					m_ExecutingRunnables.insert(NamedRunnable(runnable->getManagedId().id(), runnable));
+					m_ExecutingAccess.unlock();
+				
+					thread->run(Poco::Thread::PRIO_NORMAL, *runnable);
+				}
+				else
+				{
+					m_ReadyAccess.unlock();
+					m_ThreadAccess.unlock();
+				}
+			}
+
+			m_ThreadAccess.lock();
+		}
+		m_ThreadAccess.unlock();
+	}
+
+	void ThreadPool::runnableIsFinished(RunnableManager &runnable)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_FinishedAccess);
+		m_ReceivedRunnables.push_back(runnable.getManagedId().id());
+	}
+
+	void ThreadPool::abortRunnable(RunnableManager &mgr, _2Real::Exception &e)
+	{
+		m_ExecutingAccess.lock();
+		RunnableMap::iterator it = m_ExecutingRunnables.find(mgr.getManagedId().id());
+		if (it != m_ExecutingRunnables.end())
+		{
+			m_ExecutingRunnables.erase(it);
+			m_ExecutingAccess.unlock();
+
+			Poco::ScopedLock< Poco::FastMutex > lock(m_AbortedAccess);
+			std::cout << "threadpool: received command to abort runnable: " << e.message() << std::endl;
+			m_AbortedRunnables.insert(NamedRunnable(mgr.getManagedId().id(), &mgr));
+		}
+		else
+		{
+			m_ExecutingAccess.unlock();
+		}
+	}
+
+	void ThreadPool::scheduleRunnable(RunnableManager &runnable)
+	{
+		m_ThreadAccess.lock();
+		PooledThread *thread = tryGetFreeThread();
+		if (thread != NULL)
+		{
+			if (runnable.beginUpdate())
+			{
+				thread->reactivate();
+				m_ThreadAccess.unlock();
+
+				m_ExecutingAccess.lock();
+				m_ExecutingRunnables.insert(NamedRunnable(runnable.getManagedId().id(), &runnable));
+				m_ExecutingAccess.unlock();
+
+				thread->run(Poco::Thread::PRIO_NORMAL, runnable);
+			}
+			else
+			{
+				m_ThreadAccess.unlock();
+			}
+		}
+		else
+		{
+			m_ThreadAccess.unlock();
+			Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
+			m_ReadyRunnables.push_back(&runnable);
+		}
+	}
+
+	const bool ThreadPool::unscheduleRunnable(RunnableManager &runnable)
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
+		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, RunnableManager * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &runnable);
+		if (it != m_ReadyRunnables.end())
+		{
+			*it = NULL;
+			return true;
+		}
+
+		return false;
+	}
+
+	PooledThread * ThreadPool::tryGetFreeThread()
+	{
 		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
 		{
 			if ((*it)->isIdle())
 			{
-				thread = *it;
-				break;
+				return *it;
 			}
 		}
 
-		if (!thread)
-		{
-			thread = new PooledThread(m_StackSize);
-			thread->reactivate();
-			m_Threads.push_back(thread);
-		}
-		else
-		{
-			thread->reactivate();
-		}
-	
-		return *thread;
+		return NULL;
 	}
 
 }

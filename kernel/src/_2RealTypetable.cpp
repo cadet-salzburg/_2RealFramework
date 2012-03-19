@@ -18,7 +18,6 @@
 
 #include "_2RealTypetable.h"
 #include "_2RealException.h"
-#include "_2RealEngineImpl.h"
 
 #include <sstream>
 

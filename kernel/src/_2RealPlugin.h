@@ -22,6 +22,7 @@
 #include "_2RealEntity.h"
 #include "_2RealIPluginActivator.h"
 #include "_2RealPluginMetadata.h"
+#include "_2RealIService.h"
 
 #include "Poco/Path.h"
 
@@ -29,18 +30,19 @@ namespace _2Real
 {
 
 	class IService;
-	typedef IService *const (*ServiceCreator)(void);
+	typedef Poco::SharedPtr< IService > (*ServiceCreator)(void);
 
 	class SetupParameter;
 	class EngineData;
-	class SystemGraph;
+	class SystemImpl;
 	class Runnable;
 	class Service;
+	class AbstractServiceObject;
 
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
-	typedef std::pair< std::string, ServiceCreator >	NamedTemplate;
-	typedef std::map< std::string, ServiceCreator >		TemplateMap;
+	typedef std::pair< std::string, AbstractServiceObject * >	NamedTemplate;
+	typedef std::map< std::string, AbstractServiceObject * >		TemplateMap;
 	typedef std::pair< Identifier, Service * >			NamedService;
 	typedef std::map< Identifier, Service * >			ServiceMap;
 
@@ -80,7 +82,7 @@ namespace _2Real
 		/**
 		*	called by PluginContext
 		*/
-		void							registerService(std::string const& serviceName, ServiceCreator creator);
+		void							registerService(std::string const& serviceName, AbstractServiceObject *obj);
 
 		/**
 		*	called by PluginContext (true if service is contained in the metadata)
@@ -102,12 +104,12 @@ namespace _2Real
 		/**
 		*	creates a service instance
 		*/
-		Runnable &						createService(std::string const& serviceName, SystemGraph &graph);
+		Runnable &						createService(std::string const& serviceName, SystemImpl &graph);
 
 		/**
 		*	creates a service instance
 		*/
-		Runnable &						createService(std::string const& idName, std::string const& serviceName, SystemGraph &graph);
+		Runnable &						createService(std::string const& idName, std::string const& serviceName, SystemImpl &graph);
 
 		/**
 		*	returns the activator (called on pluginpool::clear)
@@ -119,7 +121,7 @@ namespace _2Real
 		SetupParameter &				getSetupParameter(std::string const& setupName);
 		SetupParameter const&			getSetupParameter(std::string const& setupName) const;
 
-		IService &						createService(std::string const& serviceName) const;
+		Poco::SharedPtr< IService >		createService(std::string const& serviceName) const;
 
 		ParameterMap					m_SetupParameters;
 		TemplateMap						m_ServiceTemplates;

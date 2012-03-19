@@ -20,6 +20,8 @@
 
 #include "_2RealParameterHandle.h"
 
+#include "Poco/SharedPtr.h"
+
 #include <sstream>
 
 namespace _2Real
@@ -50,6 +52,43 @@ namespace _2Real
 
 			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
 			return *ptr.get();
+		}
+
+		/**
+		*	maybe the naming of this is clearer:
+		*	returns a const ref to the actual input data; no copying necessary.
+		*	of course, one can only read this.
+		*/
+		template< typename DataType >
+		DataType const& getReadableRef()
+		{
+			if (!m_Input)
+			{
+				std::ostringstream msg;
+				msg << "input handle was not initialized by framework";
+				throw UninitializedHandleException(msg.str());
+			}
+
+			Poco::SharedPtr< DataType > ptr = Extract< DataType >(newest());
+			return *ptr.get();
+		}
+
+		/**
+		*	returns a shared pointer to a copy of the data. this can be written
+		*	as well as read, but it makes a copy a copy
+		*/
+		template< typename DataType >
+		Poco::SharedPtr< DataType > getWriteableCopy()
+		{
+			if (!m_Input)
+			{
+				std::ostringstream msg;
+				msg << "input handle was not initialized by framework";
+				throw UninitializedHandleException(msg.str());
+			}
+
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
+			return Poco::SharedPtr< DataType >(new DataType(*ptr.get()));
 		}
 
 	private:

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +17,29 @@
 	limitations under the License.
 */
 
-#pragma once
-
-
-#include "_2RealInternalService.h"
+#include "_2RealRunnableState.h"
 
 namespace _2Real
 {
 
-	/**
-	*	internal service; listens to all input vars within a system
-	*/
-
-	class ListenerService : public InternalService
+	AbstractRunnableState::AbstractRunnableState(const unsigned int stateId, std::string const& description) :
+		m_Description(description),
+		m_StateId(stateId)
 	{
+	}
 
-	public:
+	AbstractRunnableState::~AbstractRunnableState()
+	{
+	}
 
-		ListenerService(Identifier const& _id, SystemImpl &system);
-		virtual ~ListenerService();
+	unsigned int const& AbstractRunnableState::getStateId()
+	{
+		return m_StateId;
+	}
 
-		ServiceMetadata const& getMetadata();
-
-	};
+	inline std::string const& AbstractRunnableState::getDescription()
+	{
+		return m_Description;
+	}
 
 }

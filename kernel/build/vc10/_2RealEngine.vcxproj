@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\src\_2RealOutputHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealPixelbuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealPlugin.cpp" />
     <ClCompile Include="..\..\src\_2RealPluginContext.cpp" />
@@ -38,7 +39,14 @@
     <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableGraph.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableState.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateCreated.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateError.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateReady.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateSetUp.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateShutDown.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateUpdating.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableTriggers.cpp" />
     <ClCompile Include="..\..\src\_2RealSequence.cpp" />
     <ClCompile Include="..\..\src\_2RealService.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
@@ -48,14 +56,16 @@
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemData.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemGraph.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdateTriggers.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdateTriggersImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealBlob.h" />
+    <ClInclude Include="..\..\src\_2RealCallbacks.h" />
     <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
@@ -77,22 +87,29 @@
     <ClInclude Include="..\..\src\_2RealListenerService.h" />
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
-    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealPixelbuffer.h" />
-    <ClInclude Include="..\..\src\_2RealPooledThread.h" />
-    <ClInclude Include="..\..\src\_2RealRunnable.h" />
-    <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
     <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPixelbuffer.h" />
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealPooledThread.h" />
+    <ClInclude Include="..\..\src\_2RealOutputHandle.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealPlugin.h" />
     <ClInclude Include="..\..\src\_2RealPluginContext.h" />
-    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
-    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealRunnable.h" />
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
     <ClInclude Include="..\..\src\_2RealRunnableManager.h" />
-    <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableState.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateCreated.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateError.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateReady.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateSetUp.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateShutDown.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateUpdating.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableTriggers.h" />
     <ClInclude Include="..\..\src\_2RealSequence.h" />
     <ClInclude Include="..\..\src\_2RealService.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
@@ -103,12 +120,13 @@
     <ClInclude Include="..\..\src\_2RealSynchronization.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemData.h" />
-    <ClInclude Include="..\..\src\_2RealSystemGraph.h" />
-    <ClInclude Include="..\..\src\_2RealSystemPool.h" />
+    <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
+    <ClInclude Include="..\..\src\_2RealUpdateTriggers.h" />
+    <ClInclude Include="..\..\src\_2RealUpdateTriggersImpl.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
     <ClInclude Include="..\..\src\_2RealXMLReader.h" />
   </ItemGroup>
@@ -172,7 +190,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_2REAL_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -198,7 +216,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -23,6 +23,7 @@
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
+#include "Poco/Timestamp.h"
 
 namespace _2Real
 {
@@ -38,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		OutputSlot(ParameterMetadata const& metadata);
+		OutputSlot(ParameterMetadata const& metadata, Poco::Timestamp const& timer);
 
 		EngineData					getData();
 		void						update();
@@ -50,20 +51,19 @@ namespace _2Real
 		void						addListener(InputSlot &slot);
 		void						removeListener(InputSlot &slot);
 
+		void						resetLinks();
+
 	private:
 
-		Timer						const& m_Timer;
+		const bool					isLinkedWith(InputSlot &inlet) const;
+
+		Poco::Timestamp				const& m_SystemTime;
 		mutable Poco::FastMutex		m_Mutex;
 		Data						m_CurrentData;
 		EngineData					m_WriteData;
 		Poco::BasicEvent< Data >	m_Event;
-		std::list< InputSlot * >	m_Inputs;
+		std::list< InputSlot * >	m_LinkedInlets;
 
 	};
-
-	inline EngineData OutputSlot::getData()
-	{
-		return m_WriteData;
-	}
 
 }

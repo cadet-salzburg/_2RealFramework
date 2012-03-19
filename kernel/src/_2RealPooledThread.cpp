@@ -19,7 +19,7 @@
 
 #include "_2RealPooledThread.h"
 #include "_2RealRunnable.h"
-#include "_2RealRunnableGraph.h"
+#include "_2RealThreadPool.h"
 
 #include "Poco/ThreadLocal.h"
 
@@ -28,83 +28,65 @@
 namespace _2Real
 {
 
-	PooledThread::PooledThread(unsigned int stackSize) :
-		m_IsIdle(true),
+	PooledThread::PooledThread(ThreadPoolCallback &callback, unsigned int stackSize) :
 		m_Target(NULL),
-		m_Thread("unused thread"),
-		m_RunThread(true),
-		m_RunTarget(false),
-		m_UpdateTarget(false),
+		m_IsIdle(true),
+		m_Thread("idle thread"),
+		m_Callback(&callback),
 		m_TargetReady(true),
 		m_TargetCompleted(true),
 		m_ThreadStarted(true),
 		m_ThreadStopped(true),
-		m_Timer()
+		m_Mutex()
 	{
 		m_Thread.setStackSize(stackSize);
 		m_Thread.start(*this);
 		m_ThreadStarted.wait();
 	}
 
-	bool PooledThread::isIdle()
+	PooledThread::~PooledThread()
+	{
+		delete m_Callback;
+	}
+
+	const bool PooledThread::operator<(PooledThread const& rhs) const
+	{
+		return m_Thread.id() < rhs.m_Thread.id();
+	}
+
+	const bool PooledThread::isIdle() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 		return m_IsIdle;
 	}
 
-	bool PooledThread::keepRunning()
+	const bool PooledThread::join()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		return m_RunThread;
+		m_Mutex.lock();
+		if (m_IsIdle)
+		{
+			m_Target = NULL;
+			m_IsIdle = false;
+			m_TargetCompleted.reset();
+			m_TargetReady.set();
+			m_Mutex.unlock();
+			return m_ThreadStopped.tryWait(500);
+		}
+		else
+		{
+			m_Mutex.unlock();
+			return false;
+		}
 	}
 
-	bool PooledThread::keepTargetRunning()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		return m_RunThread && m_RunTarget;
-	}
-
-	bool PooledThread::updateTarget()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		return m_RunThread && m_UpdateTarget;
-	}
-
-	void PooledThread::stopRunning()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		m_RunThread = false;
-		m_RunTarget = false;
-		m_TargetReady.set();
-	}
-
-	void PooledThread::stopTargetRunning()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		m_RunTarget = false;
-	}
-
-	void PooledThread::start(Poco::Thread::Priority const& priority, _2Real::Runnable &target)
+	void PooledThread::run(Poco::Thread::Priority const& priority, _2Real::RunnableManager &target)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-		m_Thread.setName(target.name());
+		m_Thread.setName(target.getManagedName());
 		m_Thread.setPriority(priority);
 		m_Target = &target;
-		m_RunTarget = true;
-		m_UpdateTarget = false;
-		m_TargetReady.set();
-	}
 
-	void PooledThread::update(Poco::Thread::Priority const& priority, _2Real::Runnable &target)
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-
-		m_Thread.setName(target.name());
-		m_Thread.setPriority(priority);
-		m_Target = &target;
-		m_RunTarget = false;
-		m_UpdateTarget = true;
 		m_TargetReady.set();
 	}
 
@@ -116,76 +98,45 @@ namespace _2Real
 		m_TargetCompleted.reset();
 	}
 
-	//!!!!!!
-	bool PooledThread::join()
-	{
-		m_TargetCompleted.wait();
-
-		const long timeout = 10000;
-		return m_Thread.tryJoin(timeout);
-	}
-
-	void PooledThread::cleanUp()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
-		
-		m_IsIdle = true;
-		m_Target = NULL;
-		m_TargetReady.reset();
-		Poco::ThreadLocalStorage::clear();
-		//m_Thread.setName("");
-		m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
-		m_TargetCompleted.set();	
-	}
-
 	void PooledThread::run()
 	{
 		m_ThreadStarted.set();
 
-		while (keepRunning())
+		while (true)
 		{
-
 			m_TargetReady.wait();
 
-			if (updateTarget())
+			m_Mutex.lock();
+			if (m_Target)
+			//if the runnable is ever null & targetReady is signalled, the thread will kill itself (happens in join)
 			{
-				m_Target->run();
-				RunnableGraph &father = static_cast< RunnableGraph & >(m_Target->father());
-				father.childFinished(m_Target->identifier());
-				cleanUp();
+				m_Mutex.unlock();
+
+				//if an exception occurs here, it is handled by the runnable itself
+				m_Target->getManagedRunnable().run();
+
+				Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+
+				RunnableManager *tmp = m_Target;
+
+				m_Target = NULL;
+				m_IsIdle = true;
+
+				m_TargetCompleted.set();
+				Poco::ThreadLocalStorage::clear();
+				m_Thread.setName("unused thread");
+				m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
+
+				//std::cout << "CALLBACK " << tmp << std::endl;
+				m_Callback->invoke(*tmp);
 			}
 			else
 			{
-				while (keepTargetRunning())
-				{
-					m_Timer.update();
-					m_Target->run();
-
-					if (!keepTargetRunning())
-					{
-						break;
-					}
-					else
-					{
-						long delay = m_Target->getMaxDelay();
-						long elapsed = (long)m_Timer.elapsed()/1000;
-						long sleep = delay - elapsed;
-						if (sleep > 0)
-						{
-							Poco::Thread::sleep(sleep);
-						}
-						else
-						{
-						}
-					}
-				}
-
-				cleanUp();
+				m_Mutex.unlock();
+				break;
 			}
-
 		}
 
-		std::cout << m_Thread.name() << " THREAD RUN FINISHED" << std::endl;
 		m_ThreadStopped.set();
 	}
 

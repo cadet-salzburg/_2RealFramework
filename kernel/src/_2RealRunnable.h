@@ -23,6 +23,7 @@
 
 #include <sstream>
 #include <map>
+#include <list>
 
 namespace _2Real
 {
@@ -33,16 +34,21 @@ namespace _2Real
 
 
 	class Graph;
-	class SystemGraph;
+	class SystemImpl;
 	class RunnableGraph;
 	class PooledThread;
+	class RunnableManager;
+	class InputSlot;
+
+	typedef std::list< RunnableManager * >				RunnableList;
+	typedef std::map< std::string, InputSlot * >		InputMap;
 
 	class Runnable : public Poco::Runnable, public Entity
 	{
 
 	public:
 
-		Runnable(Identifier const& id, SystemGraph &system);
+		Runnable(Identifier const& id, SystemImpl &system);
 		virtual ~Runnable();
 
 		virtual void handleException();
@@ -57,15 +63,20 @@ namespace _2Real
 		Graph &father();
 		Graph const& father() const;
 
-		SystemGraph &system();
-		SystemGraph const& system() const;
+		SystemImpl &system();
+		SystemImpl const& system() const;
 
 		void setUpdateRate(float updatesPerSecond);
 		long getMaxDelay();
 
+		virtual RunnableList const&	getChildren() const = 0;
+		virtual InputMap const&		getInlets() const = 0;
+
+		virtual void prepareForAbort() = 0;
+
 	protected:
 
-		SystemGraph				&m_System;
+		SystemImpl				&m_System;
 		Graph					*m_Father;
 
 	private:
@@ -74,25 +85,6 @@ namespace _2Real
 		float					m_UpdatesPerSecond;
 
 	};
-
-	//inline void Runnable::updateTimer()
-	//{
-	//	m_Timer.update();
-	//}
-
-	//inline void Runnable::suspend()
-	//{
-	//	long elapsed = (long)m_Timer.elapsed()/1000;
-	//	long sleep = m_MaxDelay - elapsed;
-	//	if (sleep > 0)
-	//	{
-	//		Poco::Thread::sleep(sleep);
-	//	}
-	//	else
-	//	{
-	//		//?
-	//	}
-	//}
 
 	inline long Runnable::getMaxDelay()
 	{
@@ -114,12 +106,12 @@ namespace _2Real
 		return *m_Father;
 	}
 
-	inline SystemGraph & Runnable::system()
+	inline SystemImpl & Runnable::system()
 	{
 		return m_System;
 	}
 
-	inline SystemGraph const& Runnable::system() const
+	inline SystemImpl const& Runnable::system() const
 	{
 		return m_System;
 	}

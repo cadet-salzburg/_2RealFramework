@@ -18,52 +18,38 @@
 
 #pragma once
 
-#include "_2RealParameter.h"
+#include <string>
+#include <iostream>
 
 namespace _2Real
 {
 
-	/**
-	*	represents an input or output slot of a service
-	*/
+	class Runnable;
+	class RunnableManager;
+	class PooledThread;
 
-	class Service;
-
-	class IOSlot : public Parameter
+	class AbstractRunnableState
 	{
 
 	public:
 
-		IOSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword);
-		virtual ~IOSlot();
+		AbstractRunnableState(const unsigned int stateId, std::string const& description);
+		unsigned int const& getStateId();
+		std::string const& getDescription();
 
-		//Service &			service();
-		//Service const&		service() const;
+		virtual ~AbstractRunnableState();
+
+		virtual void setUp(Runnable &runnable) const = 0;
+		virtual const bool tryGetReady() const = 0;
+		virtual const bool tryBeginUpdate() const = 0;
+		virtual const bool tryFinishUpdate() const = 0;
+		virtual const bool shutDown(Runnable &runnable) const = 0;
 
 	protected:
 
-		Service				&m_Service;
+		unsigned int		const m_StateId;
+		std::string			const m_Description;
 
 	};
-
-	inline IOSlot::IOSlot(Service &service, std::string const& name, std::string const& type, std::string const& keyword) :
-		Parameter(name, type, keyword),
-		m_Service(service)
-	{
-	}
-
-	inline IOSlot::~IOSlot()
-	{
-	}
-
-	//inline Service const& IOSlot::service() const
-	//{
-	//	return m_Service;
-	//}
-
-	//inline Service & IOSlot::service()
-	//{
-	//	return m_Service;
-	//}
 
 }

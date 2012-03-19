@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	RunnableGraph::RunnableGraph(Identifier const& id, SystemGraph &system) :
+	RunnableGraph::RunnableGraph(Identifier const& id, SystemImpl &system) :
 		Runnable(id, system),
 		Graph(),
 		m_ListIterator(m_Children.begin())
@@ -49,15 +49,15 @@ namespace _2Real
 
 	void RunnableGraph::shutdown()
 	{
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			(*it)->shutdown();
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	(*it)->shutDown();
+		//}
 
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-		{
-			delete *it;
-		}
+		//for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+		//{
+		//	delete *it;
+		//}
 
 		m_Children.clear();
 	}
@@ -141,7 +141,7 @@ namespace _2Real
 
 		RunnableManager *child = *iteratorId(childId);
 
-		child->wait();
+		/*child->wait();*/
 
 		//if all children are finished, signal that the update is complete
 		m_ChildrenInUpdate--;

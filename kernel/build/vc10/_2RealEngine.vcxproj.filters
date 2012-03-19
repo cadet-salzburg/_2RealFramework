@@ -10,87 +10,48 @@
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp">
-      <Filter>Metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealInputSlot.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp">
-      <Filter>Metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealGraph.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSequence.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp">
-      <Filter>Metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealService.cpp">
-      <Filter>Service</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealInternalService.cpp">
-      <Filter>Service</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealListenerService.cpp">
-      <Filter>Service</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSynchronization.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemGraph.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPluginPool.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTypetable.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealMetadata.cpp">
-      <Filter>Metadata</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemPool.cpp">
-      <Filter>Subsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParameter.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
-      <Filter>Parameters</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealRunnableManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealRunnableStates.cpp" />
-    <ClCompile Include="..\..\src\_2RealRunnableGraph.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealRunnable.cpp">
-      <Filter>Graphs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPixelbuffer.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlob.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealSystemData.cpp" />
     <ClCompile Include="..\..\src\_2RealXMLReader.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableState.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateCreated.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateError.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateReady.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateSetUp.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateShutDown.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableStateUpdating.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdateTriggers.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdateTriggersImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableTriggers.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealBlob.cpp" />
+    <ClCompile Include="..\..\src\_2RealGraph.cpp" />
+    <ClCompile Include="..\..\src\_2RealInputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealInternalService.cpp" />
+    <ClCompile Include="..\..\src\_2RealListenerService.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealMetadataReader.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputSlot.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealPixelbuffer.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnable.cpp" />
+    <ClCompile Include="..\..\src\_2RealRunnableGraph.cpp" />
+    <ClCompile Include="..\..\src\_2RealSequence.cpp" />
+    <ClCompile Include="..\..\src\_2RealService.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
+    <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
+    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
+    <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -106,133 +67,57 @@
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
-    <ClInclude Include="..\..\src\_2RealIService.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIPluginActivator.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealMetadataReader.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInputSlot.h">
-      <Filter>Parameters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParameter.h">
-      <Filter>Parameters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutputSlot.h">
-      <Filter>Parameters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginMetadata.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealGraph.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSequence.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealRunnableGraph.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceMetadata.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealService.h">
-      <Filter>Service</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInternalService.h">
-      <Filter>Service</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealListenerService.h">
-      <Filter>Service</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemGraph.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSynchronization.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPluginPool.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSetupParameter.h">
-      <Filter>Parameters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceFactory.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealThreadPool.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealVersion.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParameterMetadata.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
-    <ClInclude Include="..\..\src\_2RealTypetable.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealMetadata.h">
-      <Filter>Metadata</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
-    <ClInclude Include="..\..\src\_2RealSystemPool.h">
-      <Filter>Subsystems</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealRunnableManager.h" />
-    <ClInclude Include="..\..\src\_2RealRunnableStates.h" />
-    <ClInclude Include="..\..\src\_2RealRunnable.h">
-      <Filter>Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIOutputListener.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIExceptionListener.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIStateChangeListener.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPixelbuffer.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlob.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealXMLReader.h" />
     <ClInclude Include="..\..\src\_2RealSystemData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Interfaces">
-      <UniqueIdentifier>{08879513-94b1-47e8-9d74-639e37f0d323}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Metadata">
-      <UniqueIdentifier>{07269b16-3154-4ba4-8d6a-4f2dd539b277}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Parameters">
-      <UniqueIdentifier>{e221bffd-7b40-4653-9f0a-48f13ef4ffff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphs">
-      <UniqueIdentifier>{cb147103-b3c1-4382-bc72-825eadaf6109}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service">
-      <UniqueIdentifier>{2a5dc043-7b3f-4e4e-9072-2dbbd4d9dc1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Subsystems">
-      <UniqueIdentifier>{b913d9fd-3182-4fe1-89c4-4342ead1e5c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Types">
-      <UniqueIdentifier>{8c2b71b6-68d3-4a79-9e64-8ef4e8aaa365}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="..\..\src\_2RealRunnableState.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateCreated.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateError.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateReady.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateSetUp.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateShutDown.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableStateUpdating.h" />
+    <ClInclude Include="..\..\src\_2RealUpdateTriggers.h" />
+    <ClInclude Include="..\..\src\_2RealUpdateTriggersImpl.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableTriggers.h" />
+    <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
+    <ClInclude Include="..\..\src\_2RealCallbacks.h" />
+    <ClInclude Include="..\..\src\_2RealBlob.h" />
+    <ClInclude Include="..\..\src\_2RealGraph.h" />
+    <ClInclude Include="..\..\src\_2RealIExceptionListener.h" />
+    <ClInclude Include="..\..\src\_2RealInputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealInternalService.h" />
+    <ClInclude Include="..\..\src\_2RealIOutputListener.h" />
+    <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
+    <ClInclude Include="..\..\src\_2RealIService.h" />
+    <ClInclude Include="..\..\src\_2RealIStateChangeListener.h" />
+    <ClInclude Include="..\..\src\_2RealListenerService.h" />
+    <ClInclude Include="..\..\src\_2RealMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealMetadataReader.h" />
+    <ClInclude Include="..\..\src\_2RealOutputSlot.h" />
+    <ClInclude Include="..\..\src\_2RealParameter.h" />
+    <ClInclude Include="..\..\src\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPixelbuffer.h" />
+    <ClInclude Include="..\..\src\_2RealPluginMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealPluginPool.h" />
+    <ClInclude Include="..\..\src\_2RealRunnable.h" />
+    <ClInclude Include="..\..\src\_2RealRunnableGraph.h" />
+    <ClInclude Include="..\..\src\_2RealSequence.h" />
+    <ClInclude Include="..\..\src\_2RealService.h" />
+    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
+    <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
+    <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
+    <ClInclude Include="..\..\src\_2RealSynchronization.h" />
+    <ClInclude Include="..\..\src\_2RealThreadPool.h" />
+    <ClInclude Include="..\..\src\_2RealTypetable.h" />
+    <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
 </Project>

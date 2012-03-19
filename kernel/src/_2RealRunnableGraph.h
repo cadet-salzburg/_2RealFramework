@@ -38,7 +38,7 @@ namespace _2Real
 
 	public:
 
-		RunnableGraph(Identifier const& id, SystemGraph &system);
+		RunnableGraph(Identifier const& id, SystemImpl &system);
 		virtual ~RunnableGraph();
 
 		void setup();
@@ -50,6 +50,11 @@ namespace _2Real
 		*	called by a thread once a child has finished its update
 		*/
 		void childFinished(Identifier const& childId);
+
+		RunnableList const&	getChildren() const { return RunnableList(); }
+		InputMap const&		getInlets() const { return InputMap(); }
+
+		void prepareForAbort();
 
 	protected:
 

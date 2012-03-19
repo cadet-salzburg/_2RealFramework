@@ -25,8 +25,7 @@
 namespace _2Real
 {
 
-	ExceptionHandler::ExceptionHandler(Identifier const& system) :
-		m_System(system)
+	ExceptionHandler::ExceptionHandler()
 	{
 	}
 
@@ -52,7 +51,7 @@ namespace _2Real
 
 	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
 	{
-		RunnableError e(exception, sender, m_System);
-		m_Event.notifyAsync(this, e);
+		RunnableError e(exception, sender);
+		m_Event.notify(this, e);
 	}
 }

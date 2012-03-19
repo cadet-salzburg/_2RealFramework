@@ -22,6 +22,9 @@
 
 #include <map>
 
+#include "Poco/Mutex.h"
+#include "Poco/SharedPtr.h"
+
 namespace _2Real
 {
 
@@ -49,29 +52,12 @@ namespace _2Real
 	typedef std::pair< std::string, SetupParameter * >	NamedParameter;
 	typedef std::map< std::string, SetupParameter * >	ParameterMap;
 
-	class UpdatePolicy
-	{
-
-	public:
-
-
-
-	private:
-
-	};
-
-	class AlwaysUpdateNoReuse : public UpdatePolicy
-	{
-	};
-
-
-
 	class Service : public Runnable
 	{
 
 	public:
 
-		Service(Identifier const& id, IService &service, SystemGraph &system, ServiceMetadata const& metadata);
+		Service(Identifier const& id, Poco::SharedPtr< IService > service, SystemImpl &system, ServiceMetadata const& metadata);
 		~Service();
 
 		std::string const&		getParameterKey(std::string const& name) const;
@@ -86,6 +72,7 @@ namespace _2Real
 		void					setup();
 		void					run();
 		void					shutdown();
+		void					prepareForAbort();
 
 		void					setParameterValue(std::string const& name, Data const& data);
 		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
@@ -100,7 +87,12 @@ namespace _2Real
 		void					registerToNewData(std::string const& outName, IOutputListener &listener);
 		void					unregisterFromNewData(std::string const& outName, IOutputListener &listener);
 
+		RunnableList const&	getChildren() const;
+		InputMap const&		getInlets() const;
+
 	private:
+
+		const bool wasAborted() const;
 
 		bool					hasSetupParameter(std::string const& name) const;
 		bool					hasInputSlot(std::string const& name) const;
@@ -115,7 +107,7 @@ namespace _2Real
 		/**
 		*	instance of a service exported by a plugin
 		*/
-		IService				*m_Service;
+		Poco::SharedPtr< IService >		m_Service;
 
 		/**
 		*	input slots
@@ -142,10 +134,9 @@ namespace _2Real
 		*/
 		BufferPolicy			*m_BufferPolicy;
 
-		/**
-		*	the update policy
-		*/
-		UpdatePolicy			*m_UpdatePolicy;
+		mutable Poco::FastMutex		m_AbortMutex;
+
+		bool						m_ReceivedAbort;
 
 	};
 

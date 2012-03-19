@@ -19,34 +19,170 @@
 
 #pragma once
 
+#include "_2RealException.h"
+
+#include <deque>
 #include <list>
+#include <map>
+#include <iostream>
+#include <string>
+
+#include "Poco/Mutex.h"
+#include "Poco/BasicEvent.h"
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
 
+	/**
+	*	within the framework, the threadpool is the first subsystem to be created, and the last to be deleted!
+	*/
+
 	class PooledThread;
-	typedef std::list< PooledThread * >		ThreadList;
+	class RunnableManager;
+	class Timer;
+
+	typedef std::list< PooledThread * >						ThreadList;
+	typedef std::deque< RunnableManager * >					RunnableDeque;
+	typedef std::map< unsigned int, RunnableManager * >		RunnableMap;
+	typedef std::pair< unsigned int, RunnableManager * >	NamedRunnable;
 
 	class ThreadPool
 	{
 
 	public:
 
-		ThreadPool(unsigned int capacity, unsigned int idleTime, unsigned int stackSize, std::string const& name);
+		ThreadPool(const unsigned int capacity, const unsigned int stackSize, std::string const& name);
 		~ThreadPool();
 
-		void clearThreads();
+		/**
+		*	kills all threads
+		*/
+		void clear();
 
-		PooledThread & getFreeThread();
+		/**
+		*	the threadpool regularly receives a timer signal
+		*/
+		void update(long &time);
+
+		/**
+		*	tries to execute a runnable
+		*/
+		void scheduleRunnable(RunnableManager &runnable);
+
+		/**
+		*	unschedules scheduled runnable
+		*/
+		const bool unscheduleRunnable(RunnableManager &runnable);
+
+		/**
+		*	signals that a runnable is finished
+		*/
+		void runnableIsFinished(RunnableManager &runnable);
+
+		/**
+		*	kill a runnable
+		*/
+		void abortRunnable(RunnableManager &runnable, _2Real::Exception &e);
+
+		/**
+		*	yay
+		*/
+		void executeCleanUp();
+
+		void registerTimeListener(_2Real::Timer &timer);
+		void unregisterTimeListener(_2Real::Timer &timer);
 
 	private:
 
+		PooledThread * tryGetFreeThread();
+
+		/**
+		*	name (for debugging)
+		*/
 		std::string							m_Name;
-		ThreadList							m_Threads;
-		unsigned int						m_Capacity;
-		unsigned int						m_IdleTime;
+
+		/*
+		*	default stack size for the threads
+		*/
 		unsigned int						m_StackSize;
-		unsigned int						m_Age;
+
+		/**
+		*	the pooled threads
+		*/
+		ThreadList							m_Threads;
+
+		/**
+		*	runnables waiting for a thread
+		*/
+		RunnableDeque						m_ReadyRunnables;
+
+		std::list< unsigned int >			m_ReceivedRunnables;
+		std::list< unsigned int >			m_FinishedRunnables;
+
+		/**
+		*	runnables in execution
+		*/
+		RunnableMap							m_ExecutingRunnables;
+
+		/**
+		*	runnables that were aborted
+		*/
+		RunnableMap							m_AbortedRunnables;
+
+		/**
+		*	sync stuff
+		*/
+
+		/**
+		*	access to the pooled threads
+		*/
+		mutable Poco::FastMutex				m_ThreadAccess;
+
+		/**
+		*	access to executing runnables
+		*/
+		mutable Poco::FastMutex				m_ExecutingAccess;
+
+		/**
+		*	access to aborted runnables
+		*/
+		mutable Poco::FastMutex				m_AbortedAccess;
+
+		/**
+		*	access to ready runnables
+		*/
+		mutable Poco::FastMutex				m_ReadyAccess;
+
+		/**
+		*	access to finished runnables
+		*/
+		mutable Poco::FastMutex				m_FinishedAccess;
+
+#ifdef _2REAL_DEBUG
+		long								m_Elapsed;
+#endif
+
+	};
+
+	/**
+	*	maybe I'll just give the pooled threads references to their pool, instead of this
+	*/
+	class ThreadPoolCallback
+	{
+
+	public:
+
+		ThreadPoolCallback(ThreadPool &pool) : m_ThreadPool(pool) {}
+
+		void invoke(RunnableManager &runnable)
+		{
+			m_ThreadPool.runnableIsFinished(runnable);
+		}
+
+	private:
+
+		ThreadPool		&m_ThreadPool;
 
 	};
 

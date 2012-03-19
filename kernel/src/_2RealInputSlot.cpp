@@ -21,8 +21,11 @@
 #include "_2RealException.h"
 #include "_2RealData.h"
 #include "_2RealParameterMetadata.h"
+#include "_2RealRunnableTriggers.h"
 
 #include <iostream>
+
+#include "Poco/Delegate.h"
 
 namespace _2Real
 {
@@ -32,7 +35,6 @@ namespace _2Real
 		m_DataMutex(),
 		m_CallbackMutex(),
 		m_OutletsMutex(),
-		m_UseCallback(false),
 		m_ReceivedTable(bufferSize),
 		m_CurrentTable(bufferSize),
 		m_LinkedOutlets(),
@@ -76,7 +78,9 @@ namespace _2Real
 		m_NrOfConsumed = 0;
 	}
 
-	const bool InputSlot::syncBuffers()
+	//set val comes w time of set
+	//default comes w time of 0
+	void InputSlot::syncBuffers()
 	{
 		Poco::FastMutex::ScopedLock lock(m_DataMutex);
 
@@ -87,29 +91,22 @@ namespace _2Real
 		if (m_IsSet)
 		{
 			m_ReceivedTable.insert(m_SetValue);
-			
-			//m_Condition.updateInlet(m_Name, data.first, false);
+
+			//std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_SetValue.first);
+			//m_DataReceived.notify(this, times);
 		}
 		else if (m_HasDefault)
 		{
 			m_ReceivedTable.insert(m_DefaultValue);
-			
-			//m_Condition.updateInlet(m_Name, data.first, false);
+
+			//std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_DefaultValue.first);
+			//m_DataReceived.notify(this, times);
 		}
 
-		if (m_CurrentTable.empty())
+		//now holds time of oldest item in buffer
+		if (!m_CurrentTable.empty())
 		{
-			return false;
-		}
-		else
-		{
-			long time = m_CurrentTable.begin()->first;
-			if (m_LastTimestamp > time)
-			{
-				m_LastTimestamp = time;
-			}
-
-			return true;
+			m_LastTimestamp = m_CurrentTable.begin()->first;
 		}
 	}
 
@@ -125,9 +122,9 @@ namespace _2Real
 		m_ReceivedTable.clear();
 		m_ReceivedTable.insert(data);
 
-		//set value receives a timestamp from the fw, which might by some weird accident
-		//be older than the last timestamp -> timestamp is reset in the condition
-		//m_Condition.updateInlet(m_Name, data.first, true);
+		m_LastTimestamp = m_SetValue.first;
+		//std::pair< long, long > times = std::make_pair< long, long >(0, m_LastTimestamp);
+		//m_DataReceived.notify(this, times);
 	}
 
 	void InputSlot::receiveData(Data &data)
@@ -138,7 +135,8 @@ namespace _2Real
 
 		if (m_OverflowPolicy.insertData(TimestampedData(timestamp, data.data()), m_ReceivedTable))
 		{
-			//m_Condition.updateInlet(m_Name, data.first, false);
+			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, timestamp);
+			m_DataReceived.notify(this, times);
 		}
 	}
 
@@ -174,26 +172,38 @@ namespace _2Real
 		return result->second;
 	}
 
-	void InputSlot::linkWith(OutputSlot &output)
+	void InputSlot::linkWith(OutputSlot &outlet)
 	{
 		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
 
-		m_LinkedOutlets.push_back(&output);
-		output.addListener(*this);
+		std::list< OutputSlot * >::iterator it = std::find< std::list< OutputSlot * >::iterator, OutputSlot * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
+		if (it == m_LinkedOutlets.end())
+		{
+			m_LinkedOutlets.push_back(&outlet);
+			outlet.addListener(*this);
+		}
 	}
 
-	void InputSlot::breakLink(OutputSlot &output)
+	void InputSlot::breakLink(OutputSlot &outlet)
 	{
 		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
 
-		for (std::list< OutputSlot * >::iterator it = m_LinkedOutlets.begin(); it != m_LinkedOutlets.end(); ++it)
+		std::list< OutputSlot * >::iterator it = std::find< std::list< OutputSlot * >::iterator, OutputSlot * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
+		if (it != m_LinkedOutlets.end())
 		{
-			if (*it == &output)
-			{
-				output.removeListener(*this);
-				m_LinkedOutlets.erase(it);
-				break;
-			}
+			m_LinkedOutlets.erase(it);
+			outlet.removeListener(*this);
+		}
+	}
+
+	void InputSlot::unlink(OutputSlot &outlet)
+	{
+		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
+
+		std::list< OutputSlot * >::iterator it = std::find< std::list< OutputSlot * >::iterator, OutputSlot * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
+		if (it != m_LinkedOutlets.end())
+		{
+			m_LinkedOutlets.erase(it);
 		}
 	}
 
@@ -209,11 +219,28 @@ namespace _2Real
 		m_LinkedOutlets.clear();
 	}
 
+	void InputSlot::clearReceived()
+	{
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
+
+		m_ReceivedTable.clear();
+	}
+
 	const bool InputSlot::isLinked() const
 	{
 		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
 
 		return (m_LinkedOutlets.size() > 0);
+	}
+
+	void InputSlot::registerToDataReceived(RunnableTriggers &triggers)
+	{
+		m_DataReceived += Poco::delegate(&triggers, &RunnableTriggers::tryTriggerInlet);
+	}
+
+	void InputSlot::unregisterFromDataReceived(RunnableTriggers &triggers)
+	{
+		m_DataReceived -= Poco::delegate(&triggers, &RunnableTriggers::tryTriggerInlet);
 	}
 
 }

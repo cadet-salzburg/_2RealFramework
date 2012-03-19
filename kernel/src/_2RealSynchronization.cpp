@@ -18,13 +18,12 @@
 
 #include "_2RealSynchronization.h"
 #include "_2RealRunnableManager.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealPooledThread.h"
 
 namespace _2Real
 {
 
-	Synchronization::Synchronization(Identifier const& id, SystemGraph &system) :
+	Synchronization::Synchronization(Identifier const& id, SystemImpl &system) :
 		RunnableGraph(id, system)
 	{
 	}
@@ -33,24 +32,24 @@ namespace _2Real
 	{
 		try
 		{
-			//carries out all accumulated insertions & removals, in the order they arrived
-			//only if all ops were carried out, the whole thing continues
-			//if (updateChildList())
-			//{
-					//flags all children as updating
-					flagChildren(m_Children.size());
-					for (std::list< RunnableManager * >::iterator it = m_Children.begin(); it != m_Children.end(); it++)
-					{
-							PooledThread &thread = m_System.getFreeThread();
-							(*it)->update(thread);
-					}
-					//this event becomes signalled only after all children have finished their updates
-					m_ChildrenFinished.wait();
-			//}
+			////carries out all accumulated insertions & removals, in the order they arrived
+			////only if all ops were carried out, the whole thing continues
+			////if (updateChildList())
+			////{
+			//		//flags all children as updating
+			//		flagChildren(m_Children.size());
+			//		for (std::list< RunnableManager * >::iterator it = m_Children.begin(); it != m_Children.end(); it++)
+			//		{
+			//				PooledThread &thread = m_System.getFreeThread();
+			//				(*it)->update(thread);
+			//		}
+			//		//this event becomes signalled only after all children have finished their updates
+			//		m_ChildrenFinished.wait();
+			////}
 		}
 		catch (_2Real::Exception &e)
 		{
-			m_System.handleException(*this, e);
+			//m_System.handleException(*this, e);
 		}
 	}
 

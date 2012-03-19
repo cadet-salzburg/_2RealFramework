@@ -18,7 +18,6 @@
 
 #include "_2RealSequence.h"
 #include "_2RealRunnableManager.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealPooledThread.h"
 
 #include <iostream>
@@ -26,7 +25,7 @@
 namespace _2Real
 {
 
-	Sequence::Sequence(Identifier const& id, SystemGraph &system) :
+	Sequence::Sequence(Identifier const& id, SystemImpl &system) :
 		RunnableGraph(id, system)
 	{
 	}
@@ -35,16 +34,16 @@ namespace _2Real
 	{
 		try
 		{
-			for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
-			{
-				PooledThread &thread = m_System.getFreeThread();
-				child->update(thread);
-				child->wait();
-			}
+			//for (RunnableManager *child = getFirstChild(); child != NULL; child = getNextChild())
+			//{
+			//	PooledThread &thread = m_System.getFreeThread();
+			//	child->update(thread);
+			//	child->wait();
+			//}
 		}
 		catch (Exception &e)
 		{
-			m_System.handleException(*this, e);
+			//m_System.handleException(*this, e);
 		}
 	}
 

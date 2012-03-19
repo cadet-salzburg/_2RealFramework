@@ -33,7 +33,7 @@ namespace _2Real
 	public:
 
 		virtual ~IStateChangeListener() = 0;
-		virtual void receiveStateChange(std::string &state) = 0;
+		virtual void receiveStateChange(unsigned int &state) = 0;
 
 	};
 

@@ -161,4 +161,6 @@ namespace _2Real
 
 	DECLARE_EXCEPTION(InvalidAccessException, Exception);
 
+	DECLARE_EXCEPTION(TimeOutException, Exception);
+
 }

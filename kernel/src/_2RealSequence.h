@@ -23,14 +23,14 @@
 namespace _2Real
 {
 
-	class SystemGraph;
+	class SystemImpl;
 
 	class Sequence : public RunnableGraph
 	{
 
 	public:
 
-		Sequence(Identifier const& id, SystemGraph &system);
+		Sequence(Identifier const& id, SystemImpl &system);
 		void run();
 
 	};

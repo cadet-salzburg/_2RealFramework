@@ -20,7 +20,6 @@
 #include "_2RealPluginPool.h"
 #include "_2RealPlugin.h"
 #include "_2RealIdentifier.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealMetadata.h"
 
 #include <iostream>
@@ -248,11 +247,11 @@ namespace _2Real
 			std::string libPath = p->getLibraryPath();
 			std::string className = p->getClassName();
 
-			std::cout << "deleting plugin: " << libPath << " " << className << std::endl;
+			//std::cout << "deleting plugin: " << libPath << " " << className << std::endl;
 
 			if (!isSingleton(className, Poco::Path(libPath)))
 			{
-				std::cout << "no singleton: " << libPath << " " << className << std::endl;
+				//std::cout << "no singleton: " << libPath << " " << className << std::endl;
 				IPluginActivator *activator = &(p->getActivator());
 				const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(libPath);
 				PluginLoader::Manif::Iterator mIt = manifest->find(className);
@@ -262,17 +261,17 @@ namespace _2Real
 			delete p;
 		}
 
-		std::cout << "deleted all plugins" << std::endl;
+		//std::cout << "deleted all plugins" << std::endl;
 		m_Plugins.clear();
 
 		for (MetadataMap::iterator it = m_Metadata.begin(); it != m_Metadata.end(); ++it)
 		{
 			PluginMetadata *m = it->second;
-			std::cout << "deleting metadata: " << m->getClassname() << std::endl;
+			//std::cout << "deleting metadata: " << m->getClassname() << std::endl;
 			delete m;
 		}
 
-		std::cout << "deleted all metadata" << std::endl;
+		//std::cout << "deleted all metadata" << std::endl;
 		m_Metadata.clear();
 
 		//WTF?
@@ -285,7 +284,7 @@ namespace _2Real
 
 		for (std::list< std::string >::iterator it = tmp.begin(); it != tmp.end(); ++it)
 		{
-			std::cout << "unloading " << *it << std::endl;
+			//std::cout << "unloading " << *it << std::endl;
 
 			try
 			{
@@ -293,11 +292,11 @@ namespace _2Real
 			}
 			catch (Poco::NotFoundException &e)
 			{
-				std::cout << "notfound" << std::endl;
+				//&std::cout << "notfound" << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "ERROR" << std::endl;
+				//std::cout << "ERROR" << std::endl;
 			}
 		}
 
@@ -319,12 +318,12 @@ namespace _2Real
 		return getPlugin(id).isSetUp();
 	}
 
-	Runnable & PluginPool::createService(Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph)
+	Runnable & PluginPool::createService(Identifier const& pluginId, std::string const& serviceName, SystemImpl &graph)
 	{
 		return getPlugin(pluginId).createService(serviceName, graph);
 	}
 
-	Runnable & PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemGraph &graph)
+	Runnable & PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemImpl &graph)
 	{
 		return getPlugin(pluginId).createService(idName, serviceName, graph);
 	}

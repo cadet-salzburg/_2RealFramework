@@ -17,251 +17,132 @@
 	limitations under the License.
 */
 
-#include "_2RealEngineImpl.h"
 #include "_2RealSystem.h"
-#include "_2RealException.h"
-#include "_2RealIdentifier.h"
-#include "_2RealHelpers.h"
-#include "_2RealSystemData.h"
-
-#include <sstream>
+#include "_2RealSystemImpl.h"
 
 namespace _2Real
 {
-	typedef std::pair< std::string, Identifier > NamedId;
-
 	System::System(std::string const& name) :
-		m_EngineImpl(EngineImpl::instance())
+		m_Impl(new SystemImpl())
 	{
-		m_Id = m_EngineImpl.createSystem(name);
 	}
 
-	System::System(std::string const& name, std::string const& xmlFile) :
-		m_EngineImpl(EngineImpl::instance())
-	{
-		try
-		{
-			m_Id = m_EngineImpl.createSystem(name);
-
-			SystemData data(xmlFile);
-
-	//		Poco::Path pluginPath = data.getDefaultDirectory();
-	//		Poco::Path logPath = data.getLogfile();
-
-	//		std::list< PluginData > plugins = data.getPlugins();
-
-	//		for (std::list< PluginData >::iterator it = plugins.begin(); it != plugins.end(); ++it)
-	//		{
-	//			std::string name = it->getName().toString();
-	//			std::string classname = it->getClassname();
-	//			Poco::Path file = pluginPath;
-	//			file.append(it->getPluginPath());
-	//			file.append(classname+shared_library_suffix);
-
-	//			std::cout << file.toString() << std::endl;
-
-	//			//m_EngineImpl.loadPlugin(name, file, m_Id);
-
-	//			//so, now i have a lot of plugins all referring to the same whatever
-	//		}
-
-		}
-		catch (XMLFormatException &e)
-		{
-			clear();
-			e.rethrow();
-		}
-		catch (Poco::XML::SAXParseException &e)
-		{
-			clear();
-			std::ostringstream msg;
-			msg << e.message();
-			throw XMLFormatException(msg.str());
-		}
-		catch (std::exception &e)
-		{
-			clear();
-			throw XMLFormatException(e.what());
-		}
-	}
+	//System::System(std::string const& name, std::string const& xmlFile) :
+	//	m_EngineImpl(EngineImpl::instance())
+	//{
+	//}
 
 	System::System(System const& src) :
-		m_EngineImpl(src.m_EngineImpl),
-		m_Id(src.m_Id),
-		m_Lookup()
+		m_Impl(src.m_Impl)
 	{
 	}
 
 	System::~System()
 	{
-		m_EngineImpl.destroySystem(m_Id);
+		delete m_Impl;
 	}
 
 	void System::clear()
 	{
-		m_EngineImpl.clearSystem(m_Id);
+		m_Impl->clear();
 	}
 
-	void System::setLogfile(std::string const& file)
+	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service, UpdateTriggers const& triggers)
 	{
-		m_EngineImpl.setSystemLogfile(file, m_Id);
+		//std::string idName = validateName(name);
+		//unique(idName);
+
+		return m_Impl->createService(name, plugin, service, triggers);
+		//m_Lookup.insert(NamedId(idName, id));
 	}
 
-	void System::setup(Identifier const& id)
+	const Identifier System::createService(Identifier const& plugin, std::string const& service, UpdateTriggers const& triggers)
 	{
-		m_EngineImpl.setup(id, m_Id);
+		return m_Impl->createService(plugin, service, triggers);
+		//m_Lookup.insert(NamedId(id.name(), id));
 	}
 
-	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service)
+	void System::setup(Identifier const& runnableId)
 	{
-		std::string idName = validateName(name);
-		unique(idName);
-
-		const Identifier id = m_EngineImpl.createService(name, plugin, service, m_Id);
-		m_Lookup.insert(NamedId(idName, id));
-		return id;
-	}
-
-	const Identifier System::createService(Identifier const& plugin, std::string const& service)
-	{
-		const Identifier id = m_EngineImpl.createService(plugin, service, m_Id);
-		m_Lookup.insert(NamedId(id.name(), id));
-		return id;
-	}
-
-	void System::setUpdateRate(Identifier const& runnable, float updatesPerSecond)
-	{
-		m_EngineImpl.setUpdateRate(runnable, updatesPerSecond, m_Id);
+		m_Impl->setUp(runnableId);
 	}
 
 	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
 	{
-		m_EngineImpl.setValue(id, param, value, m_Id);
+		m_Impl->setValue(id, param, value);
 	}
 
 	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
 	{
-		return m_EngineImpl.getValue(id, name, m_Id);
+		return m_Impl->getValue(id, name);
 	}
 
 	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
-		m_EngineImpl.linkSlots(inService, inName, outService, outName, m_Id);
+		m_Impl->linkSlots(inService, inName, outService, outName);
 	}
 
 	void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
-		m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
+		//m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
 	}
 
 	void System::clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks)
 	{
-		m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
+		//m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
 	}
 
 	void System::clearInputProviders(Identifier const& inService, std::string const& inName)
 	{
-		m_EngineImpl.clearInputProviders(inService, inName, m_Id);
+		//m_EngineImpl.clearInputProviders(inService, inName, m_Id);
 	}
 
-	void System::registerToException(ExceptionCallback callback)
-	{
-		m_EngineImpl.registerToException(callback, m_Id);
-	}
-
-	void System::unregisterFromException(ExceptionCallback callback)
-	{
-		m_EngineImpl.unregisterFromException(callback, m_Id);
-	}
-
-	void System::registerToException(IExceptionListener &listener)
-	{
-		m_EngineImpl.registerToException(listener, m_Id);
-	}
-
-	void System::unregisterFromException(IExceptionListener &listener)
-	{
-		m_EngineImpl.unregisterFromException(listener, m_Id);
-	}
-
-	void System::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback)
-	{
-		m_EngineImpl.registerToStateChange(runnableId, callback, m_Id);
-	}
-
-	void System::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback)
-	{
-		m_EngineImpl.unregisterFromStateChange(runnableId, callback, m_Id);
-	}
-
-	void System::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener)
-	{
-		m_EngineImpl.registerToStateChange(runnableId, listener, m_Id);
-	}
-
-	void System::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener)
-	{
-		m_EngineImpl.unregisterFromStateChange(runnableId, listener, m_Id);
-	}
-
-	void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
-	{
-		m_EngineImpl.registerToNewData(service, name, callback, m_Id);
-	}
-
-	void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
-	{
-		m_EngineImpl.unregisterFromNewData(service, name, callback, m_Id);
-	}
-
-	void System::registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
-	{
-		m_EngineImpl.registerToNewData(service, name, listener, m_Id);
-	}
-
-	void System::unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
-	{
-		m_EngineImpl.unregisterFromNewData(service, name, listener, m_Id);
-	}
-
-	void System::start(Identifier const& id)
-	{
-		m_EngineImpl.start(id, m_Id);
-	}
-
-	void System::startAll()
-	{
-		m_EngineImpl.startAll(m_Id);
-	}
-
-	void System::stop(Identifier const& id)
-	{
-		m_EngineImpl.stop(id, m_Id);
-	}
-
-	void System::stopAll()
-	{
-		m_EngineImpl.stopAll(m_Id);
-	}
-
-	//void System::add(Identifier const& runnable, Identifier const& parent, unsigned int index)
+	//void System::registerToException(ExceptionCallback callback)
 	//{
-	//	m_EngineImpl.add(runnable, parent, index, m_Id);
 	//}
 
-	//void System::append(Identifier const& runnable, Identifier const& parent)
+	//void System::unregisterFromException(ExceptionCallback callback)
 	//{
-	//	m_EngineImpl.append(runnable, parent, m_Id);
 	//}
 
-	//const Identifier System::createSequence(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//void System::registerToException(IExceptionListener &listener)
 	//{
-	//	return m_EngineImpl.createSequence(name, idA, idB, m_Id);
 	//}
 
-	//const Identifier System::createSynchronization(std::string const& name, Identifier const& idA, Identifier const& idB)
+	//void System::unregisterFromException(IExceptionListener &listener)
 	//{
-	//	return m_EngineImpl.createSynchronization(name, idA, idB, m_Id);
+	//}
+
+	//void System::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	//{
+	//}
+
+	//void System::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback)
+	//{
+	//}
+
+	//void System::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	//{
+	//}
+
+	//void System::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener)
+	//{
+	//}
+
+	//void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	//{
+	//}
+
+	//void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	//{
+	//}
+
+	//void System::registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
+	//{
+	//}
+
+	//void System::unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
+	//{
 	//}
 
 	void System::unique(std::string const& s) const

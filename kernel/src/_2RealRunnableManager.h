@@ -21,71 +21,107 @@
 #include <string>
 #include <map>
 
-#include "Poco/BasicEvent.h"
+#include "_2RealRunnableTriggers.h"
+#include "_2RealCallbacks.h"
 
-#define STATE_CREATED	"created"
-#define STATE_SETUP		"set up"
-#define STATE_RUNNING	"running"
-#define STATE_UPDATING	"updating"
-#define STATE_SHUTDOWN	"shut down"
-#define STATE_ERROR		"halted"
+#include "Poco/BasicEvent.h"
+#include "Poco/Mutex.h"
 
 namespace _2Real
 {
 
+	enum RunnableStateName
+	{
+		RUNNABLE_CREATED,		//right after the ctor was called
+		RUNNABLE_SETUP,			//setup was called
+		RUNNABLE_READY,			//triggered -> waiting for thread
+		RUNNABLE_UPDATING,		//calling update
+		RUNNABLE_SHUTDOWN,		//shut down
+		RUNNABLE_ERROR			//in error state
+	};
+
 	class Runnable;
-	class RunnableState;
+	class Exception;
+	class AbstractRunnableState;
 	class Identifier;
 	class PooledThread;
+	class ThreadPool;
 	class IStateChangeListener;
-
-	typedef void (*StateChangeCallback)(std::string &stateName);
-
-	typedef std::map< std::string, RunnableState * >	StateTable;
+	class SystemImpl;
+	class UpdateTriggersImpl;
+	class AbstractThreadCallback;
 
 	class RunnableManager
 	{
 
 	public:
 
-		RunnableManager(Runnable &runnable);
+		RunnableManager(Runnable &runnable, UpdateTriggersImpl &triggers);
 		~RunnableManager();
 
-		RunnableState & changeState(std::string const& newState) const;
 		Runnable & getManagedRunnable() const;
 		Identifier const& getManagedId() const;
-		
-		void setup();
-		void start(PooledThread &thread);
-		void update(PooledThread &thread);
-		void stop();
-		void wait();
-		void shutdown();
-		void handleException();
+		std::string const& getManagedName() const;
 
-		bool isUpdating() const;
-		bool isRunning() const;
+		void setUp();
+		void getReady();
+		const bool beginUpdate();
+		void finishUpdate();
 		bool isSetUp() const;
+		void abort(_2Real::Exception &e);
+
+		/**
+		*	disables all triggers
+		*/
+		void prepareForShutDown();
+
+		/**
+		*	unlinks everything
+		*/
+		void prepareForAbort();
+
+		/**
+		*	performs the shut down, flags the event once done
+		*/
+		const bool shutDown();
+
+		unsigned int getState();
 
 		void registerToStateChange(StateChangeCallback callback);
 		void unregisterFromStateChange(StateChangeCallback callback);
 		void registerToStateChange(IStateChangeListener &listener);
 		void unregisterFromStateChange(IStateChangeListener &listener);
+		void registerToStateChange(RunnableTriggers &triggers);
+		void unregisterFromStateChange(RunnableTriggers &triggers);
+
+		void debug();
 
 	private:
 
-		Runnable									*m_Runnable;
-		StateTable									m_RunnableStates;
-		RunnableState								*m_CurrentState;
-		PooledThread								*m_Thread;
+		void handleStateChangeException(_2Real::Exception &e);
 
-		mutable Poco::BasicEvent< std::string >		m_StateChangeEvent;
+		mutable Poco::FastMutex						m_Mutex;
+		Runnable									*m_Runnable;
+		AbstractRunnableState						*m_CurrentState;
+		Poco::BasicEvent< unsigned int >			m_StateChangeEvent;
+		RunnableTriggers							m_Triggers;
+
+		//todo: make clear func for triggers
+		bool										m_Waiting;
+		bool										m_StopRunning;
+		Poco::Event									m_StopEvent;
+
+		/**
+		*	ref to the engine's thread pool
+		*/
+		ThreadPool									&m_Threads;
+		SystemImpl									&m_System;
+
+		long										m_LastUpdateInitialized;
+		long										m_LastUpdateFinalized;
+		long										m_LastTriggersReady;
+		long										m_ShutDownReceived;
 
 	};
-
-	inline Runnable& RunnableManager::getManagedRunnable() const
-	{
-		return *m_Runnable;
-	}
 
 }

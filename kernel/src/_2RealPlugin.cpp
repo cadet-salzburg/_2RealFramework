@@ -20,7 +20,6 @@
 #include "_2RealPlugin.h"
 #include "_2RealPluginContext.h"
 #include "_2RealMetadata.h"
-#include "_2RealSystemGraph.h"
 #include "_2RealException.h"
 #include "_2RealSetupParameter.h"
 #include "_2RealService.h"
@@ -52,13 +51,18 @@ namespace _2Real
 
 	Plugin::~Plugin()
 	{
-		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); ++it)
+		for (ParameterMap::iterator it = m_SetupParameters.begin(); it != m_SetupParameters.end(); /**/)
 		{
 			delete it->second;
+			it = m_SetupParameters.erase(it);
 		}
 
-		m_SetupParameters.clear();
-		m_ServiceTemplates.clear();
+		for (TemplateMap::iterator it = m_ServiceTemplates.begin(); it != m_ServiceTemplates.end(); /**/)
+		{
+			delete it->second;
+			it = m_ServiceTemplates.erase(it);
+		}
+
 		m_Services.clear();
 	}
 
@@ -82,7 +86,7 @@ namespace _2Real
 		return m_IsSetUp;
 	}
 
-	void Plugin::registerService(std::string const& name, ServiceCreator service)
+	void Plugin::registerService(std::string const& name, AbstractServiceObject *obj)
 	{
 		if (definesService(name))
 		{
@@ -94,7 +98,7 @@ namespace _2Real
 				throw AlreadyExistsException(msg.str());
 			}
 
-			m_ServiceTemplates.insert(NamedTemplate(name, service));
+			m_ServiceTemplates.insert(NamedTemplate(name, obj));
 		}
 		else
 		{
@@ -126,7 +130,7 @@ namespace _2Real
 		return s.str();
 	}
 
-	IService & Plugin::createService(std::string const& serviceName) const
+	Poco::SharedPtr< IService > Plugin::createService(std::string const& serviceName) const
 	{
 		TemplateMap::const_iterator it = m_ServiceTemplates.find(serviceName);
 		if (it == m_ServiceTemplates.end())
@@ -136,10 +140,10 @@ namespace _2Real
 			throw Exception(msg.str());
 		}
 
-		return *(it->second());
+		return Poco::SharedPtr< IService >(it->second->create());
 	}
 
-	Runnable & Plugin::createService(std::string const& serviceName, SystemGraph &graph)
+	Runnable & Plugin::createService(std::string const& serviceName, SystemImpl &graph)
 	{
 		unsigned int counter = 0;
 		//this could be done more efficiently, currently i just count the instances of a particular plugin
@@ -159,9 +163,9 @@ namespace _2Real
 		return createService(idName, serviceName, graph);
 	}
 
-	Runnable & Plugin::createService(std::string const& idName, std::string const& serviceName, SystemGraph &graph)
+	Runnable & Plugin::createService(std::string const& idName, std::string const& serviceName, SystemImpl &graph)
 	{
-		IService &service = createService(serviceName);
+		Poco::SharedPtr< IService > service = createService(serviceName);
 		const Identifier id = Entity::createIdentifier(idName, "service");
 		Service *runnable = new Service(id, service, graph, m_Metadata.getServiceMetadata(serviceName));
 		m_Services.insert(NamedService(id, runnable));

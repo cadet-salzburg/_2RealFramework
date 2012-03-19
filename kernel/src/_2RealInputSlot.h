@@ -23,6 +23,7 @@
 #include "_2RealEngineData.h"
 
 #include "Poco/Mutex.h"
+#include "Poco/BasicEvent.h"
 
 #include <map>
 
@@ -32,6 +33,7 @@ namespace _2Real
 	class OutputSlot;
 	class Data;
 	class ParameterMetadata;
+	class RunnableTriggers;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
 
@@ -146,6 +148,11 @@ namespace _2Real
 		void resetLinks();
 
 		/**
+		*	clears all received data
+		*/
+		void clearReceived();
+
+		/**
 		*	links this slot w. an output slot
 		*/
 		void linkWith(OutputSlot &output);
@@ -155,6 +162,11 @@ namespace _2Real
 		*/
 		void breakLink(OutputSlot &output);
 
+		/**
+		*	breaks link w. output, does nothing if no such link exists
+		*/
+		void unlink(OutputSlot &output);
+
 		/*
 		*	true if there is any link w. an output slot
 		*/
@@ -163,7 +175,7 @@ namespace _2Real
 		/**
 		*	copy received data into access buffer
 		*/
-		const bool syncBuffers();
+		void syncBuffers();
 
 		/**
 		*	inserts new data into received
@@ -188,6 +200,12 @@ namespace _2Real
 		*	true if this inlet has a default value
 		*/
 		const bool hasDefault() const;
+
+		/**
+		*	argh
+		*/
+		void registerToDataReceived(RunnableTriggers &triggers);
+		void unregisterFromDataReceived(RunnableTriggers &triggers);
 
 	private:
 
@@ -252,6 +270,11 @@ namespace _2Real
 		*/
 		bool						m_IsSet;
 		TimestampedData				m_SetValue;
+
+		/**
+		*	fired when ready
+		*/
+		Poco::BasicEvent< std::pair< long, long > >		m_DataReceived;
 
 	};
 
