@@ -7,10 +7,6 @@
 
 #include <iostream>
 
-_2Real::IService *const createCounter();
-_2Real::IService *const createDoubler();
-_2Real::IService *const createPrintOut();
-
 class Counter : public _2Real::IService
 {
 

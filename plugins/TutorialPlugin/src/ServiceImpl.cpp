@@ -4,24 +4,6 @@
 using namespace _2Real;
 using namespace std;
 
-_2Real::IService *const createCounter(void)
-{
-	_2Real::IService *service = new Counter();
-	return service;
-}
-
-_2Real::IService *const createDoubler(void)
-{
-	_2Real::IService *service = new Doubler();
-	return service;
-}
-
-_2Real::IService *const createPrintOut(void)
-{
-	_2Real::IService *service = new PrintOut();
-	return service;
-}
-
 // Implement the Interface of the first Service ("Counter")
 void Counter::setup(_2Real::ServiceContext &context)
 {

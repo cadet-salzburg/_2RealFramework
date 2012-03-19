@@ -50,9 +50,9 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 
 void TutorialPlugin::setup(PluginContext &context)
 {
-	context.registerService("Counter", &::createCounter);
-	context.registerService("Doubler", &::createDoubler);
-	context.registerService("PrintOut", &::createPrintOut);
+	context.registerService< Counter >("Counter");
+	context.registerService< Doubler >("Doubler");
+	context.registerService< PrintOut >("PrintOut");
 }
 
 void TutorialPlugin::shutdown()
