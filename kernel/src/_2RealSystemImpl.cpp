@@ -160,19 +160,19 @@ namespace _2Real
 	//	getContained(runnableId).unregisterFromStateChange(listener);
 	//}
 
-	//void SystemImpl::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
-	//{
-	//	Runnable &runnable = getContained(serviceId).getManagedRunnable();
-	//	Service &service = static_cast< Service & >(runnable);
-	//	service.registerToNewData(outName, callback);
-	//}
+	void SystemImpl::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	{
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
+		service.registerToNewData(outName, callback);
+	}
 
-	//void SystemImpl::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
-	//{
-	//	Runnable &runnable = getContained(serviceId).getManagedRunnable();
-	//	Service &service = static_cast< Service & >(runnable);
-	//	service.unregisterFromNewData(outName, callback);
-	//}
+	void SystemImpl::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	{
+		Runnable &runnable = getContained(serviceId).getManagedRunnable();
+		Service &service = static_cast< Service & >(runnable);
+		service.unregisterFromNewData(outName, callback);
+	}
 
 	//void SystemImpl::registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
 	//{

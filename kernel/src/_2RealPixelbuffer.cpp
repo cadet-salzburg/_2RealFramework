@@ -20,5 +20,7 @@
 
 namespace _2Real
 {
+
 	IMPLEMENT_EXCEPTION(PixelbufferException, Exception, "Pixelbuffer exception")
+
 }

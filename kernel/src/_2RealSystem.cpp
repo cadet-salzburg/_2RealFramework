@@ -129,13 +129,15 @@ namespace _2Real
 	//{
 	//}
 
-	//void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
-	//{
-	//}
+	void System::registerToNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	{
+		m_Impl->registerToNewData(service, name, callback);
+	}
 
-	//void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
-	//{
-	//}
+	void System::unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback)
+	{
+		m_Impl->unregisterFromNewData(service, name, callback);
+	}
 
 	//void System::registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
 	//{

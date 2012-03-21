@@ -33,7 +33,9 @@ namespace _2Real
 
 	OutputSlot::OutputSlot(ParameterMetadata const& metadata, Poco::Timestamp const& timestamp) :
 		Parameter(metadata),
-		m_SystemTime(timestamp)
+		m_SystemTime(timestamp),
+		m_DataItems(),
+		m_DiscardLast(true)
 	{
 		if (metadata.hasDefaultValue())
 		{
@@ -51,14 +53,28 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_CurrentData = Data(m_WriteData, (long)m_SystemTime.elapsed());
-		m_Event.notify(this, m_CurrentData);
+		if (!m_DiscardLast)
+		{
+			m_DataItems.insert(std::make_pair(static_cast< long >(m_SystemTime.elapsed()), m_WriteData));
+		}
+
+		m_IsInitialized = m_DataItems.empty();
+
+		for (std::map< long, EngineData >::iterator it = m_DataItems.begin(); it != m_DataItems.end(); /**/)
+		{
+			m_CurrentData = Data(it->second, it->first);
+			m_Event.notify(this, m_CurrentData);
+
+			it = m_DataItems.erase(it);
+		}
+
+		m_DiscardLast = true;
 		m_WriteData.clone(m_WriteData);
-		m_IsInitialized = true;
 	}
 
 	EngineData OutputSlot::getData()
 	{
+		m_DiscardLast = false;
 		return m_WriteData;
 	}
 
@@ -141,6 +157,13 @@ namespace _2Real
 			it = m_LinkedInlets.erase(it);
 			break;
 		}
+	}
+
+	void OutputSlot::createNewDataItem()
+	{
+		m_DataItems.insert(std::make_pair(static_cast< long >(m_SystemTime.elapsed()), m_WriteData));
+		m_WriteData.clone(m_WriteData);
+		m_DiscardLast = true;
 	}
 
 }

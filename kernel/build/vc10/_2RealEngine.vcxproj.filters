@@ -52,6 +52,7 @@
     <ClCompile Include="..\..\src\_2RealSynchronization.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
+    <ClCompile Include="..\..\src\_2RealImageT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
@@ -119,5 +120,6 @@
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
+    <ClInclude Include="..\..\src\_2RealImageT.h" />
   </ItemGroup>
 </Project>

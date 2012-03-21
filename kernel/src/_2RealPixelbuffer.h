@@ -32,10 +32,10 @@ namespace _2Real
 		void assign(Poco::SharedPtr< DataType > data, unsigned int width, unsigned int height, unsigned int channels);
 
 		template< typename T >
-		friend std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& blob);
+		friend std::ostream& operator<<(std::ostream& out, typename Pixelbuffer< T > const& pb);
 
 		template< typename T >
-		friend std::istream& operator>>(std::istream& in, Pixelbuffer< T > &blob);
+		friend std::istream& operator>>(std::istream& in, Pixelbuffer< T > &pb);
 
 		const unsigned int width() const;
 		const unsigned int height() const;

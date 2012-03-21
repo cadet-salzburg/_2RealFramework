@@ -80,8 +80,8 @@ namespace _2Real
 		//void				unregisterExceptionCallback(ExceptionCallback callback);
 		//void				registerExceptionListener(IExceptionListener &listener);
 		//void				unregisterExceptionListener(IExceptionListener &listener);
-		//void				registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
-		//void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
+		void				registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
+		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
 		//void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 		//void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
 		//void				registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);

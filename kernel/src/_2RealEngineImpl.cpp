@@ -27,6 +27,7 @@
 
 #include "_2RealPixelbuffer.h"
 #include "_2RealBlob.h"
+#include "_2RealImageT.h"
 
 #include <sstream>
 #include <iostream>
@@ -79,6 +80,10 @@ namespace _2Real
 		m_Types->registerType< Blob < float > >("blob_float");
 		m_Types->registerType< Blob < double > >("blob_double");
 		m_Types->registerType< Blob < bool > >("blob_bool");
+
+		m_Types->registerType< ImageT < char > >("img_char");
+		m_Types->registerType< ImageT < unsigned int > >("img_uint");
+		m_Types->registerType< ImageT < float > >("img_float");
 
 		m_Threads->registerTimeListener(*m_Timer);
 	}
@@ -177,6 +182,7 @@ namespace _2Real
 	//
 	std::list< std::string > EngineImpl::loadLibrary(Poco::Path const& path)
 	{
+		std::cout << "engine impl: loading" << std::endl;
 		return m_Plugins->loadLibrary(path);
 	}
 

@@ -36,6 +36,9 @@ namespace _2Real
 		OutputHandle(OutputHandle const& src);
 		OutputHandle& operator=(OutputHandle const& src);
 
+		/**
+		*
+		*/
 		template< typename Datatype >
 		Datatype & data()
 		{

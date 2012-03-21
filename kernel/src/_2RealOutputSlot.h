@@ -43,6 +43,7 @@ namespace _2Real
 
 		EngineData					getData();
 		void						update();
+		void						createNewDataItem();
 
 		void						registerCallback(DataCallback callback);
 		void						unregisterCallback(DataCallback callback);
@@ -55,14 +56,16 @@ namespace _2Real
 
 	private:
 
-		const bool					isLinkedWith(InputSlot &inlet) const;
+		const bool						isLinkedWith(InputSlot &inlet) const;
 
-		Poco::Timestamp				const& m_SystemTime;
-		mutable Poco::FastMutex		m_Mutex;
-		Data						m_CurrentData;
-		EngineData					m_WriteData;
-		Poco::BasicEvent< Data >	m_Event;
-		std::list< InputSlot * >	m_LinkedInlets;
+		Poco::Timestamp					const& m_SystemTime;
+		mutable Poco::FastMutex			m_Mutex;
+		Data							m_CurrentData;
+		EngineData						m_WriteData;
+		Poco::BasicEvent< Data >		m_Event;
+		std::list< InputSlot * >		m_LinkedInlets;
+		std::map< long, EngineData >	m_DataItems;
+		bool							m_DiscardLast;
 
 	};
 

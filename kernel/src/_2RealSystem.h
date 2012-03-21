@@ -79,8 +79,8 @@ namespace _2Real
 		///**
 		//*	output slot callbacks
 		//*/
-		//void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
-		//void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
+		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
+		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
 		//void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 		//void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 

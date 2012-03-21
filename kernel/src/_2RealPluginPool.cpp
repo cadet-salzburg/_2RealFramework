@@ -90,10 +90,13 @@ namespace _2Real
 
 		m_PluginLoader.loadLibrary(tmp.toString());
 
+		std::cout << "loaded library: " << tmp.toString() << std::endl;
+
 		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
 		for (PluginLoader::Manif::Iterator it = manifest->begin(); it != manifest->end(); ++it)
 		{
 			std::string className = it->name();
+			std::cout << "found manifest " << className << std::endl;
 
 			PluginMetadata *pluginMeta = new PluginMetadata(className, tmp.toString());
 			Metadata meta(*pluginMeta);
@@ -101,14 +104,19 @@ namespace _2Real
 			if (it->canCreate())
 			//create a temporary plugin activator & get the metadata
 			{
+				std::cout << "found a normal plugin " << className << std::endl;
 				IPluginActivator *dummy = it->create();
+				std::cout << "created an instance " << className << std::endl;
 				dummy->getMetadata(meta);
 				it->destroy(dummy);
+				std::cout << "destroyed dummy instance " << className << std::endl;
 				delete dummy;
+				std::cout << "deleted dummy instance " << className << std::endl;
 			}
 			else
 			//it's a singleton -> create an identifier & store the plugin
 			{
+				std::cout << "found a singleton plugin " << className << std::endl;
 				IPluginActivator &instance = it->instance();
 				instance.getMetadata(meta);
 
@@ -116,11 +124,14 @@ namespace _2Real
 				const Identifier id = Entity::createIdentifier(idName, "plugin");
 				Plugin *plugin = new Plugin(id, instance, *pluginMeta);
 				m_Plugins.insert(NamedPlugin(id, plugin));
+				m_Names.insert(make_pair(idName, id));
+				std::cout << "saved singleton instance " << id << std::endl;
 			}
 
 			std::string metaKey = pathToName(tmp) + "." + toLower(className);
 			m_Metadata.insert(NamedMetadata(metaKey, pluginMeta));
 			
+			std::cout << "loaded class: " << className << std::endl;
 			result.push_back(className);
 		}
 
@@ -203,8 +214,18 @@ namespace _2Real
 
 		Poco::Path tmp = makeAbsolutePath(path);
 		std::string singletonName = pathToName(tmp) + "." + toLower(className);
+		std::cout << singletonName << std::endl;
 
 		std::map< std::string, Identifier >::iterator it = m_Names.find(singletonName);
+		if (it == m_Names.end())
+		{
+			for (std::map< std::string, Identifier >::iterator f = m_Names.begin(); f != m_Names.end(); ++f)
+			{
+				std::cout << f->first << std::endl;
+			}
+			throw NotFoundException("singleton not found");
+		}
+
 		return it->second;
 	}
 

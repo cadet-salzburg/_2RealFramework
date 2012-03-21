@@ -74,13 +74,13 @@ namespace _2Real
 		{
 			std::string dir = toLower(path.directory(i));
 			result.append(dir);
-			result.append(".");
+			if (i < (path.depth() - 1)) result.append(".");
 		}
 
-		if (path.isFile())
-		{
-			result.append(toLower(path.getFileName()));
-		}
+		//if (path.isFile())
+		//{
+		//	result.append(toLower(path.getFileName()));
+		//}
 
 		return result;
 	}
