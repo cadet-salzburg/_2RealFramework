@@ -282,7 +282,6 @@ namespace _2Real
 			delete p;
 		}
 
-		//std::cout << "deleted all plugins" << std::endl;
 		m_Plugins.clear();
 
 		for (MetadataMap::iterator it = m_Metadata.begin(); it != m_Metadata.end(); ++it)
@@ -305,7 +304,7 @@ namespace _2Real
 
 		for (std::list< std::string >::iterator it = tmp.begin(); it != tmp.end(); ++it)
 		{
-			//std::cout << "unloading " << *it << std::endl;
+			std::cout << "unloading " << *it << std::endl;
 
 			try
 			{
@@ -313,12 +312,14 @@ namespace _2Real
 			}
 			catch (Poco::NotFoundException &e)
 			{
-				//&std::cout << "notfound" << std::endl;
+				std::cout << "notfound" << std::endl;
 			}
 			catch (...)
 			{
-				//std::cout << "ERROR" << std::endl;
+				std::cout << "ERROR" << std::endl;
 			}
+
+			std::cout << "unloaded!" << std::endl;
 		}
 
 		tmp.clear();

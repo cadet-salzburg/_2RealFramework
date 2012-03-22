@@ -61,13 +61,21 @@ namespace _2Real
 			m_Triggers.addTimeBasedTrigger(*t);
 		}
 
-		InputMap const& inlets = m_Runnable->getInlets();
+		//InputMap const& inlets = m_Runnable->getInlets();
 
-		for (InputMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it)
-		{
-			it->second->registerToDataReceived(m_Triggers);
-			m_Triggers.addInletBasedTrigger(*triggers.getInletBasedTrigger(it->second->getName()));
-		}
+		//for (InputMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it)
+		//{
+		//	if (triggers.getInletBasedTrigger(it->second->getName()) != NULL)
+		//	{
+		//		std::cout << "NULL TRIGGER for inlet " << it->second->getName() << std::endl;
+		//	}
+		//	else
+		//	{
+		//		std::cout << "VALID TRIGGER for inlet " << it->second->getName() << std::endl;
+		//	}
+		//	it->second->registerToDataReceived(m_Triggers);
+		//	m_Triggers.addInletBasedTrigger(*triggers.getInletBasedTrigger(it->second->getName()));
+		//}
 	}
 
 	void RunnableManager::debug()

@@ -92,15 +92,15 @@ namespace _2Real
 		{
 			m_ReceivedTable.insert(m_SetValue);
 
-			//std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_SetValue.first);
-			//m_DataReceived.notify(this, times);
+			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_SetValue.first);
+			m_DataReceived.notify(this, times);
 		}
 		else if (m_HasDefault)
 		{
 			m_ReceivedTable.insert(m_DefaultValue);
 
-			//std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_DefaultValue.first);
-			//m_DataReceived.notify(this, times);
+			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_DefaultValue.first);
+			m_DataReceived.notify(this, times);
 		}
 
 		//now holds time of oldest item in buffer
@@ -123,8 +123,8 @@ namespace _2Real
 		m_ReceivedTable.insert(data);
 
 		m_LastTimestamp = m_SetValue.first;
-		//std::pair< long, long > times = std::make_pair< long, long >(0, m_LastTimestamp);
-		//m_DataReceived.notify(this, times);
+		std::pair< long, long > times = std::make_pair< long, long >(0, m_LastTimestamp);
+		m_DataReceived.notify(this, times);
 	}
 
 	void InputSlot::receiveData(Data &data)

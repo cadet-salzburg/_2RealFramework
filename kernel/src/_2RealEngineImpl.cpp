@@ -92,7 +92,12 @@ namespace _2Real
 	{
 		try
 		{
+			std::cout << "CLEARING PLUGINS" << std::endl;
+
 			m_Plugins->clear();
+
+			std::cout << "PLUGINS CLEARED" << std::endl;
+
 			m_Threads->unregisterTimeListener(*m_Timer);
 			m_Threads->clear();
 
