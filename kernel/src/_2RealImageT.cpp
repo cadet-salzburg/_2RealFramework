@@ -56,6 +56,18 @@ namespace _2Real
 			case BGR:
 				set(2, 1, 0, INVALID, 3);
 			break;
+			case R:
+				set(0, INVALID, INVALID, INVALID, 1);
+			break;
+			case G:
+				set(INVALID, 0, INVALID, INVALID, 1);
+			break;
+			case B:
+				set(INVALID, INVALID, 0, INVALID, 1);
+			break;
+			case A:
+				set(INVALID, INVALID, INVALID, 0, 1);
+			break;
 		}
 	}
 

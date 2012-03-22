@@ -34,7 +34,7 @@ namespace _2Real
 	public:
 
 		enum { RED = 0, GREEN = 1, BLUE = 2, ALPHA = 3, INVALID = 255 };
-		enum CHANNEL_CODE { RGBA, BGRA, ARGB, ABGR, RGBX, BGRX, XRGB, XBGR, RGB, BGR };
+		enum CHANNEL_CODE { RGBA, BGRA, ARGB, ABGR, RGBX, BGRX, XRGB, XBGR, RGB, BGR, R, G, B, A };
 
 		ImageChannelOrder(const CHANNEL_CODE channelCode);
 		ImageChannelOrder(ImageChannelOrder const& src);
