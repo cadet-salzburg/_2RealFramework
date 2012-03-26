@@ -42,7 +42,6 @@ namespace _2Real
 
 	const bool RunnableStateReady::tryGetReady() const
 	{
-		std::cout << "state is ready" << std::endl;
 		return false;
 	}
 
@@ -53,7 +52,6 @@ namespace _2Real
 
 	const bool RunnableStateReady::tryFinishUpdate() const
 	{
-		std::cout << "state is ready" << std::endl;
 		return false;
 	}
 

@@ -42,13 +42,11 @@ namespace _2Real
 
 	const bool RunnableStateUpdating::tryGetReady() const
 	{
-		std::cout << "state is updating" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateUpdating::tryBeginUpdate() const
 	{
-		std::cout << "state is updating" << std::endl;
 		return false;
 	}
 
@@ -59,7 +57,6 @@ namespace _2Real
 
 	const bool RunnableStateUpdating::shutDown(Runnable &runnable) const
 	{
-		std::cout << "state is updating" << std::endl;
 		return false;
 	}
 

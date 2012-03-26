@@ -73,7 +73,6 @@ namespace _2Real
 		//however, the maximum timer update rate obtainable is ~ 2 milliseconds,
 		//and that's with a totally empty system -> silly update rates greater than 60 hertz won't be met, probably
 		double micros = 1000000/updatesPerSecond;
-		//std::cout << "TIME: " << micros << std::endl;
 		m_Impl->addTimeBasedTrigger(static_cast< long >(micros));
 	}
 

@@ -40,19 +40,16 @@ namespace _2Real
 
 	const bool RunnableStateError::tryGetReady() const
 	{
-		std::cout << "state is error" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateError::tryBeginUpdate() const
 	{
-		std::cout << "state is error" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateError::tryFinishUpdate() const
 	{
-		std::cout << "state is error" << std::endl;
 		return false;
 	}
 

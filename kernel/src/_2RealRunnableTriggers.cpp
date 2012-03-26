@@ -181,8 +181,6 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_TriggerMutex);
 
-		std::cout << "trying to trigger inlet" << std::endl;
-
 		InputSlot const* in = static_cast< InputSlot const* >(inlet);
 		std::map< std::string, AbstractInletBasedTrigger * >::iterator it = m_ActiveTriggers.inlets.find(in->getName());
 		if (enabled() && it != m_ActiveTriggers.inlets.end())
@@ -191,10 +189,6 @@ namespace _2Real
 			{
 				evaluateTriggers();
 			}
-			//else
-			//{
-			//	//std::cout << "trigger failed" << std::endl;
-			//}
 		}
 	}
 

@@ -124,9 +124,7 @@ namespace _2Real
 
 		if (owns)
 		{
-			std::cout << "owns!" << std::endl;
 			m_OwnedData.assign(data);
-			std::cout << "done" << std::endl;
 			m_Data = NULL;
 		}
 		else

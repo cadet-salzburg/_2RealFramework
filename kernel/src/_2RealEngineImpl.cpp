@@ -82,6 +82,7 @@ namespace _2Real
 		m_Types->registerType< Blob < bool > >("blob_bool");
 
 		m_Types->registerType< ImageT < char > >("img_char");
+		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
 		m_Types->registerType< ImageT < unsigned int > >("img_uint");
 		m_Types->registerType< ImageT < float > >("img_float");
 
@@ -92,12 +93,7 @@ namespace _2Real
 	{
 		try
 		{
-			std::cout << "CLEARING PLUGINS" << std::endl;
-
 			m_Plugins->clear();
-
-			std::cout << "PLUGINS CLEARED" << std::endl;
-
 			m_Threads->unregisterTimeListener(*m_Timer);
 			m_Threads->clear();
 
@@ -174,7 +170,6 @@ namespace _2Real
 	//	nirvana.setLogfile(filepath);
 	//	if (!nirvana.isLoggingEnabled())
 	//	{
-	//		std::cout << "could not start logging into file: " << filepath << std::endl;
 	//	}
 	//}
 
@@ -187,7 +182,6 @@ namespace _2Real
 	//
 	std::list< std::string > EngineImpl::loadLibrary(Poco::Path const& path)
 	{
-		std::cout << "engine impl: loading" << std::endl;
 		return m_Plugins->loadLibrary(path);
 	}
 

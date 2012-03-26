@@ -40,19 +40,16 @@ namespace _2Real
 
 	const bool RunnableStateShutDown::tryGetReady() const
 	{
-		std::cout << "state is shut down" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateShutDown::tryBeginUpdate() const
 	{
-		std::cout << "state is shut down" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateShutDown::tryFinishUpdate() const
 	{
-		std::cout << "state is shut down" << std::endl;
 		return false;
 	}
 

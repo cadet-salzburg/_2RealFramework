@@ -30,7 +30,12 @@
 namespace _2Real
 {
 
-	class SymbolName : public std::list< std::string >
+	struct less
+	{
+
+	};
+
+	class SymbolName
 	{
 
 	public:
@@ -49,7 +54,41 @@ namespace _2Real
 		void popSymbol();
 		void popPrefix();
 
+		friend std::ostream& operator<<(std::ostream& out, SymbolName const& symbol);
+		friend std::istream& operator>>(std::istream& in, SymbolName &symbol);
+
+		void writeTo(std::ostream& out) const
+		{
+			out << m_Names;
+		}
+
+		void readFrom(std::istream& in)
+		{
+			in >> m_Names;
+		}
+
+		const bool operator<(SymbolName const& rhs) const
+		{
+			return m_Names < rhs.m_Names;
+		}
+
+	private:
+
+		std::list< std::string >		m_Names;
+
 	};
+
+	std::ostream& operator<<(std::ostream& out, SymbolName const& symbol)
+	{
+		symbol.writeTo(out);
+		return out;
+	}
+
+	std::istream& operator>>(std::istream& in, SymbolName &symbol)
+	{
+		symbol.readFrom(in);
+		return in;
+	}
 
 	class Symbol
 	{

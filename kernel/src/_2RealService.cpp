@@ -166,6 +166,15 @@ namespace _2Real
 		return m_ReceivedAbort;
 	}
 
+	void Service::resetData()
+	{
+		//!
+		for (InputMap::iterator it = m_InputSlots.begin(); it != m_InputSlots.end(); ++it)
+		{
+			it->second->resetData();
+		}
+	}
+
 	void Service::run()
 	{
 		try
@@ -177,7 +186,6 @@ namespace _2Real
 			}
 			if (wasAborted())
 			{
-				std::cout << "ABORTED" << std::endl;
 				return;
 			}
 
@@ -186,7 +194,6 @@ namespace _2Real
 
 			if (wasAborted())
 			{
-				std::cout << "ABORTED" << std::endl;
 				return;
 			}
 

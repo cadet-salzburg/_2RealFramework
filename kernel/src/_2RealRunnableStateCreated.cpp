@@ -41,19 +41,16 @@ namespace _2Real
 
 	const bool RunnableStateCreated::tryGetReady() const
 	{
-		std::cout << "state is created" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateCreated::tryBeginUpdate() const
 	{
-		std::cout << "state is created" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateCreated::tryFinishUpdate() const
 	{
-		std::cout << "state is created" << std::endl;
 		return false;
 	}
 

@@ -36,9 +36,15 @@ namespace _2Real
 	class RunnableTriggers;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
+	typedef std::map< long, EngineData, std::greater< long > > DataMap;
 
-	class DataBuffer : public std::map< long, EngineData, std::greater< long > >
+	class DataBuffer : private std::map< long, EngineData, std::greater< long > >
 	{
+
+	public:
+
+		typedef DataMap::iterator		iterator;
+		typedef DataMap::const_iterator	const_iterator;
 
 	public:
 
@@ -47,6 +53,15 @@ namespace _2Real
 		const unsigned int getMaxSize() const;
 		const bool isFull() const;
 		void setNewMax(const unsigned int max);
+
+		const unsigned int size() const { return DataMap::size(); }
+		void insert(TimestampedData const& data) { DataMap::insert(data); }
+		DataBuffer::iterator erase(DataMap::iterator it) { return DataMap::erase(it); }
+		void clear() { DataMap::clear(); }
+		const bool empty() const { return DataMap::empty(); }
+		DataBuffer::iterator end() { return DataMap::end(); }
+		DataBuffer::iterator begin() { return DataMap::begin(); }
+		DataBuffer::const_iterator begin() const { return DataMap::begin(); }
 
 	private:
 
@@ -181,6 +196,8 @@ namespace _2Real
 		*	inserts new data into received
 		*/
 		void receiveData(Data &data);
+
+		void resetData();
 
 		const EngineData getNewest() const;
 		

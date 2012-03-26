@@ -81,6 +81,11 @@ namespace _2Real
 		return m_Activator;
 	}
 
+	void Plugin::shutDown()
+	{
+		m_Activator.shutdown();
+	}
+
 	bool Plugin::isSetUp() const
 	{
 		return m_IsSetUp;

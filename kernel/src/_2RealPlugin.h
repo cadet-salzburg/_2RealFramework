@@ -80,6 +80,11 @@ namespace _2Real
 		bool 							isSetUp() const;
 
 		/**
+		*	shutdown
+		*/
+		void							shutDown();
+
+		/**
 		*	called by PluginContext
 		*/
 		void							registerService(std::string const& serviceName, AbstractServiceObject *obj);

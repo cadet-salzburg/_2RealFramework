@@ -61,21 +61,13 @@ namespace _2Real
 			m_Triggers.addTimeBasedTrigger(*t);
 		}
 
-		//InputMap const& inlets = m_Runnable->getInlets();
+		InputMap const& inlets = m_Runnable->getInlets();
 
-		//for (InputMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it)
-		//{
-		//	if (triggers.getInletBasedTrigger(it->second->getName()) != NULL)
-		//	{
-		//		std::cout << "NULL TRIGGER for inlet " << it->second->getName() << std::endl;
-		//	}
-		//	else
-		//	{
-		//		std::cout << "VALID TRIGGER for inlet " << it->second->getName() << std::endl;
-		//	}
-		//	it->second->registerToDataReceived(m_Triggers);
-		//	m_Triggers.addInletBasedTrigger(*triggers.getInletBasedTrigger(it->second->getName()));
-		//}
+		for (InputMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it)
+		{
+			it->second->registerToDataReceived(m_Triggers);
+			m_Triggers.addInletBasedTrigger(*triggers.getInletBasedTrigger(it->second->getName()));
+		}
 	}
 
 	void RunnableManager::debug()
@@ -154,7 +146,6 @@ namespace _2Real
 
 	void RunnableManager::handleStateChangeException(_2Real::Exception &e)
 	{
-		std::cout << m_Runnable->name() << " IS NOW IN ERROR STATE" << std::endl;
 
 		//welcome to error state, enjoy your stay
 		delete m_CurrentState;
@@ -174,7 +165,6 @@ namespace _2Real
 		}
 		catch (_2Real::Exception &e)
 		{
-			std::cout << "exception on setup" << std::endl;
 			handleStateChangeException(e);
 		}
 
@@ -206,7 +196,6 @@ namespace _2Real
 		}
 		catch (_2Real::Exception &e)
 		{
-			std::cout << "exception on ready" << std::endl;
 			handleStateChangeException(e);
 		}
 	}
@@ -233,7 +222,6 @@ namespace _2Real
 		}
 		catch (_2Real::Exception &e)
 		{
-			std::cout << "exception on begin update" << std::endl;
 			handleStateChangeException(e);
 			return false;
 		}
@@ -257,17 +245,16 @@ namespace _2Real
 				if (m_Waiting)
 				{
 					m_StopEvent.set();
-					std::cout << m_Runnable->name() << " received delayed finish" << std::endl;
 				}
 				if (!m_StopRunning)
 				{
 					m_Triggers.startTriggers();
+					m_Runnable->resetData();
 				}
 			}
 		}
 		catch (_2Real::Exception &e)
 		{
-			std::cout << "exception on finish" << std::endl;
 			handleStateChangeException(e);
 		}
 	}
@@ -345,7 +332,6 @@ namespace _2Real
 		}
 		catch (_2Real::Exception &e)
 		{
-			std::cout << "exception on shutdown" << std::endl;
 			m_Mutex.unlock();
 			handleStateChangeException(e);
 			return false;

@@ -45,7 +45,7 @@ namespace _2Real
 		std::string token;
 		while (getline(iss, token, delim))
 		{
-			push_back(token);
+			m_Names.push_back(token);
 		}
 	}
 
@@ -57,15 +57,15 @@ namespace _2Real
 	{
 		std::ostringstream str;
 
-		if (empty())
+		if (m_Names.empty())
 		{
 			return "";
 		}
 
-		std::list< std::string >::const_iterator it = this->begin();
+		std::list< std::string >::const_iterator it = m_Names.begin();
 		str << *it;
 
-		for (std::list< std::string >::const_iterator it = this->begin(); it != this->end(); ++it)
+		for (std::list< std::string >::const_iterator it = m_Names.begin(); it != m_Names.end(); ++it)
 		{
 			str << "_" << *it;
 		}
@@ -74,20 +74,20 @@ namespace _2Real
 	}
 
 	SymbolName::SymbolName(std::list< std::string > const& symbols) :
-		std::list< std::string >((symbols))
+		m_Names(symbols)
 	{
 	}
 
 	const SymbolName SymbolName::getPrefixes() const
 	{
-		if (size() < 2)
+		if (m_Names.size() < 2)
 		{
 			return SymbolName();
 		}
 		else
 		{
-			std::list< std::string >::const_iterator begin = this->begin();
-			std::list< std::string >::const_iterator end = this->end();
+			std::list< std::string >::const_iterator begin = m_Names.begin();
+			std::list< std::string >::const_iterator end = m_Names.end();
 			end--;
 			std::list< std::string > result(begin, end);
 			return SymbolName(result);
@@ -96,34 +96,34 @@ namespace _2Real
 
 	void SymbolName::addPrefixes(SymbolName symbols)
 	{
-		this->splice(this->begin(), symbols);
+		m_Names.splice(m_Names.begin(), symbols.m_Names);
 	}
 
 	const std::string SymbolName::getLastSymbol() const
 	{
-		if (empty())
+		if (m_Names.empty())
 		{
 			return "";
 		}
 		else
 		{
-			return back();
+			return m_Names.back();
 		}
 	}
 
 	void SymbolName::pushSymbol(std::string const& symbol)
 	{
-		push_back(symbol);
+		m_Names.push_back(symbol);
 	}
 
 	void SymbolName::popSymbol()
 	{
-		pop_back();
+		m_Names.pop_back();
 	}
 
 	void SymbolName::popPrefix()
 	{
-		pop_front();
+		m_Names.pop_front();
 	}
 
 	Symbol::Symbol(SymbolName const& name) :
@@ -375,9 +375,6 @@ namespace _2Real
 		XMLData(path, SymbolName())
 	{
 		processSystem();
-
-		std::cout << m_Names << std::endl;
-
 	}
 
 	const Poco::Path SystemData::getDefaultDirectory() const

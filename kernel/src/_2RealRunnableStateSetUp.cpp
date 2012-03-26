@@ -47,13 +47,11 @@ namespace _2Real
 
 	const bool RunnableStateSetUp::tryBeginUpdate() const
 	{
-		std::cout << "state is set up" << std::endl;
 		return false;
 	}
 
 	const bool RunnableStateSetUp::tryFinishUpdate() const
 	{
-		std::cout << "state is set up" << std::endl;
 		return false;
 	}
 

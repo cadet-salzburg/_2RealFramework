@@ -45,6 +45,7 @@ namespace _2Real
 		void shutdown();
 		void insertChild(RunnableManager &child, unsigned int position);
 		void removeChild(Identifier const& childId);
+		void resetData();
 
 		/**
 		*	called by a thread once a child has finished its update

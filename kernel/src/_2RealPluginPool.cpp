@@ -86,37 +86,26 @@ namespace _2Real
 
 		Poco::Path tmp = this->makeAbsolutePath(path);
 
-		std::cout << "loading library: " << tmp.toString() << std::endl;
-
 		m_PluginLoader.loadLibrary(tmp.toString());
-
-		std::cout << "loaded library: " << tmp.toString() << std::endl;
 
 		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
 		for (PluginLoader::Manif::Iterator it = manifest->begin(); it != manifest->end(); ++it)
 		{
 			std::string className = it->name();
-			std::cout << "found manifest " << className << std::endl;
-
 			PluginMetadata *pluginMeta = new PluginMetadata(className, tmp.toString());
 			Metadata meta(*pluginMeta);
 
 			if (it->canCreate())
 			//create a temporary plugin activator & get the metadata
 			{
-				std::cout << "found a normal plugin " << className << std::endl;
 				IPluginActivator *dummy = it->create();
-				std::cout << "created an instance " << className << std::endl;
 				dummy->getMetadata(meta);
 				it->destroy(dummy);
-				std::cout << "destroyed dummy instance " << className << std::endl;
 				delete dummy;
-				std::cout << "deleted dummy instance " << className << std::endl;
 			}
 			else
 			//it's a singleton -> create an identifier & store the plugin
 			{
-				std::cout << "found a singleton plugin " << className << std::endl;
 				IPluginActivator &instance = it->instance();
 				instance.getMetadata(meta);
 
@@ -125,13 +114,11 @@ namespace _2Real
 				Plugin *plugin = new Plugin(id, instance, *pluginMeta);
 				m_Plugins.insert(NamedPlugin(id, plugin));
 				m_Names.insert(make_pair(idName, id));
-				std::cout << "saved singleton instance " << id << std::endl;
 			}
 
 			std::string metaKey = pathToName(tmp) + "." + toLower(className);
 			m_Metadata.insert(NamedMetadata(metaKey, pluginMeta));
 			
-			std::cout << "loaded class: " << className << std::endl;
 			result.push_back(className);
 		}
 
@@ -214,15 +201,10 @@ namespace _2Real
 
 		Poco::Path tmp = makeAbsolutePath(path);
 		std::string singletonName = pathToName(tmp) + "." + toLower(className);
-		std::cout << singletonName << std::endl;
 
 		std::map< std::string, Identifier >::iterator it = m_Names.find(singletonName);
 		if (it == m_Names.end())
 		{
-			for (std::map< std::string, Identifier >::iterator f = m_Names.begin(); f != m_Names.end(); ++f)
-			{
-				std::cout << f->first << std::endl;
-			}
 			throw NotFoundException("singleton not found");
 		}
 
@@ -262,17 +244,18 @@ namespace _2Real
 
 	void PluginPool::clear()
 	{
+		m_Names.clear();
+
 		for (PluginMap::iterator it = m_Plugins.begin(); it != m_Plugins.end(); ++it)
 		{
 			Plugin *p = it->second;
 			std::string libPath = p->getLibraryPath();
 			std::string className = p->getClassName();
 
-			//std::cout << "deleting plugin: " << libPath << " " << className << std::endl;
+			p->shutDown();
 
 			if (!isSingleton(className, Poco::Path(libPath)))
 			{
-				//std::cout << "no singleton: " << libPath << " " << className << std::endl;
 				IPluginActivator *activator = &(p->getActivator());
 				const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(libPath);
 				PluginLoader::Manif::Iterator mIt = manifest->find(className);
@@ -287,11 +270,9 @@ namespace _2Real
 		for (MetadataMap::iterator it = m_Metadata.begin(); it != m_Metadata.end(); ++it)
 		{
 			PluginMetadata *m = it->second;
-			//std::cout << "deleting metadata: " << m->getClassname() << std::endl;
 			delete m;
 		}
 
-		//std::cout << "deleted all metadata" << std::endl;
 		m_Metadata.clear();
 
 		//WTF?
@@ -304,22 +285,16 @@ namespace _2Real
 
 		for (std::list< std::string >::iterator it = tmp.begin(); it != tmp.end(); ++it)
 		{
-			std::cout << "unloading " << *it << std::endl;
-
 			try
 			{
 				m_PluginLoader.unloadLibrary(*it);
 			}
 			catch (Poco::NotFoundException &e)
 			{
-				std::cout << "notfound" << std::endl;
 			}
 			catch (...)
 			{
-				std::cout << "ERROR" << std::endl;
 			}
-
-			std::cout << "unloaded!" << std::endl;
 		}
 
 		tmp.clear();

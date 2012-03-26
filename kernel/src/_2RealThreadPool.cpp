@@ -158,7 +158,6 @@ namespace _2Real
 					m_AbortedRunnables.erase(r);
 					m_AbortedAccess.unlock();
 
-					std::cout << "threadpool: received finish for aborted runnable " << runnable->getManagedName() << std::endl;
 					runnable->finishUpdate();
 					runnable->shutDown();
 					delete runnable;
@@ -232,7 +231,6 @@ namespace _2Real
 			m_ExecutingAccess.unlock();
 
 			Poco::ScopedLock< Poco::FastMutex > lock(m_AbortedAccess);
-			std::cout << "threadpool: received command to abort runnable: " << e.message() << std::endl;
 			m_AbortedRunnables.insert(NamedRunnable(mgr.getManagedId().id(), &mgr));
 		}
 		else

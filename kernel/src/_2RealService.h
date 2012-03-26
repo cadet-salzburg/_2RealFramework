@@ -79,6 +79,8 @@ namespace _2Real
 
 		std::string const&		getServiceName() const;
 
+		void resetData();
+
 		/**
 		*	callback functions for output params
 		*/

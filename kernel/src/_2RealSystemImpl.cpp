@@ -71,14 +71,10 @@ namespace _2Real
 		RunnableList readyForDelete;
 		RunnableList errorOnDelete;
 
-		std::cout << "preparing all runnabled for shutdown" << std::endl;
-
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); ++it)
 		{
 			(*it)->prepareForShutDown();
 		}
-
-		std::cout << "prepared all runnabled for shutdown" << std::endl;
 
 		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); /**/)
 		{
@@ -86,13 +82,11 @@ namespace _2Real
 			{
 				readyForDelete.push_back(*it);
 				(*it)->debug();
-				std::cout << "--- received event ---" << std::endl;
 			}
 			else
 			{
 				errorOnDelete.push_back(*it);
 				(*it)->debug();
-				std::cout << "--- received no event ---" << std::endl;
 			}
 
 			it = m_Children.erase(it);
@@ -116,8 +110,6 @@ namespace _2Real
 			delete *it;
 			it = readyForDelete.erase(it);
 		}
-
-		std::cout << "SYSTEM CLEARED" << std::endl;
 	}
 
 	//void SystemImpl::registerExceptionCallback(ExceptionCallback callback)

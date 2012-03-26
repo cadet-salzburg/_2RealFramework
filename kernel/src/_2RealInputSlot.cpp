@@ -78,8 +78,6 @@ namespace _2Real
 		m_NrOfConsumed = 0;
 	}
 
-	//set val comes w time of set
-	//default comes w time of 0
 	void InputSlot::syncBuffers()
 	{
 		Poco::FastMutex::ScopedLock lock(m_DataMutex);
@@ -88,6 +86,16 @@ namespace _2Real
 		m_ReceivedTable.setNewMax(m_CurrentTable.getMaxSize() - m_CurrentTable.size());
 
 		m_ReceivedTable.clear();
+
+		//now holds time of oldest item in buffer
+		if (!m_CurrentTable.empty())
+		{
+			m_LastTimestamp = m_CurrentTable.begin()->first;
+		}
+	}
+
+	void InputSlot::resetData()
+	{
 		if (m_IsSet)
 		{
 			m_ReceivedTable.insert(m_SetValue);
@@ -102,12 +110,6 @@ namespace _2Real
 			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_DefaultValue.first);
 			m_DataReceived.notify(this, times);
 		}
-
-		//now holds time of oldest item in buffer
-		if (!m_CurrentTable.empty())
-		{
-			m_LastTimestamp = m_CurrentTable.begin()->first;
-		}
 	}
 
 	void InputSlot::setData(TimestampedData const& data)
@@ -119,6 +121,7 @@ namespace _2Real
 		m_IsSet = true;
 		m_SetValue = data;
 
+		//kills everything inside of received
 		m_ReceivedTable.clear();
 		m_ReceivedTable.insert(data);
 

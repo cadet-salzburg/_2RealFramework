@@ -127,7 +127,6 @@ namespace _2Real
 				m_Thread.setName("unused thread");
 				m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
 
-				//std::cout << "CALLBACK " << tmp << std::endl;
 				m_Callback->invoke(*tmp);
 			}
 			else

@@ -181,8 +181,6 @@ namespace _2Real
 				return true;
 			}
 
-			//std::cout << "trigger failed" << lastUpdate << " " << newData << std::endl;
-
 			return false;
 		}
 
