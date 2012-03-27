@@ -236,6 +236,17 @@ namespace _2Real
 		}
 	}
 
+	void SystemImpl::sendValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	{
+		Data data(value, (long)m_Timestamp.elapsed());
+		if (id.isService())
+		{
+			Runnable &runnable = getContained(id).getManagedRunnable();
+			Service &service = static_cast< Service & >(runnable);
+			service.insertParameterValue(paramName, data);
+		}
+	}
+
 	const EngineData SystemImpl::getValue(Identifier const& id, std::string const& paramName) const
 	{
 		Runnable &runnable = getContained(id).getManagedRunnable();

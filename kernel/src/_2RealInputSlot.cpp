@@ -49,11 +49,13 @@ namespace _2Real
 		if (metadata.hasDefaultValue())
 		{
 			m_HasDefault = true;
+
 			//default value has a timestamp of 0
 			//meaning it will always fullfill the data-available requirement
 			//but never the data-new requirement
 			m_DefaultValue = TimestampedData(0, metadata.getDefaultValue());
-			m_OverflowPolicy.insertData(m_DefaultValue, m_ReceivedTable);
+			//m_ReceivedTable.insert(m_DefaultValue);
+			m_CurrentTable.insert(m_DefaultValue);
 		}
 	}
 
@@ -69,7 +71,6 @@ namespace _2Real
 	void InputSlot::removeConsumedItems()
 	{
 		//no sync, as this is only called after the update function is finished
-
 		for (unsigned int i=0; i<m_NrOfConsumed; ++i)
 		{
 			m_CurrentTable.erase(m_CurrentTable.begin());
@@ -128,6 +129,17 @@ namespace _2Real
 		m_LastTimestamp = m_SetValue.first;
 		std::pair< long, long > times = std::make_pair< long, long >(0, m_LastTimestamp);
 		m_DataReceived.notify(this, times);
+	}
+
+	void InputSlot::insertData(TimestampedData const& data)
+	{
+		Poco::FastMutex::ScopedLock lock(m_DataMutex);
+
+		if (m_OverflowPolicy.insertData(data, m_ReceivedTable))
+		{
+			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, data.first);
+			m_DataReceived.notify(this, times);
+		}
 	}
 
 	void InputSlot::receiveData(Data &data)

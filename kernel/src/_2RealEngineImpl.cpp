@@ -28,6 +28,7 @@
 #include "_2RealPixelbuffer.h"
 #include "_2RealBlob.h"
 #include "_2RealImageT.h"
+#include "_2RealEnum.h"
 
 #include <sstream>
 #include <iostream>
@@ -61,6 +62,28 @@ namespace _2Real
 		m_Types->registerType< bool >("bool");
 		m_Types->registerType< std::string >("string");
 
+		/**
+		*	our enumeration datatype
+		*/
+		m_Types->registerType< Enumeration >("enum");
+
+		/**
+		*	our image datatype
+		*/
+		m_Types->registerType< ImageT < char > >("img_char");
+		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
+		m_Types->registerType< ImageT < short > >("img_short");
+		m_Types->registerType< ImageT < unsigned short > >("img_ushort");
+		m_Types->registerType< ImageT < int > >("img_int");
+		m_Types->registerType< ImageT < unsigned int > >("img_uint");
+		m_Types->registerType< ImageT < long > >("img_long");
+		m_Types->registerType< ImageT < unsigned long > >("img_ulong");
+		m_Types->registerType< ImageT < float > >("img_float");
+		m_Types->registerType< ImageT < double > >("img_double");
+
+		/**
+		*	this is going to be deleted
+		*/
 		m_Types->registerType< Buffer2D_float >("buffer2D_float");
 		m_Types->registerType< Buffer2D_double >("buffer2D_double");
 		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
@@ -83,8 +106,14 @@ namespace _2Real
 
 		m_Types->registerType< ImageT < char > >("img_char");
 		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
+		m_Types->registerType< ImageT < short > >("img_short");
+		m_Types->registerType< ImageT < unsigned short > >("img_ushort");
+		m_Types->registerType< ImageT < int > >("img_int");
 		m_Types->registerType< ImageT < unsigned int > >("img_uint");
+		m_Types->registerType< ImageT < long > >("img_long");
+		m_Types->registerType< ImageT < unsigned long > >("img_ulong");
 		m_Types->registerType< ImageT < float > >("img_float");
+		m_Types->registerType< ImageT < double > >("img_double");
 
 		m_Threads->registerTimeListener(*m_Timer);
 	}

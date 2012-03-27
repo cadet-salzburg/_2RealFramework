@@ -161,7 +161,6 @@ namespace _2Real
 		try
 		{
 			m_CurrentState->setUp(*m_Runnable);
-			m_Triggers.startTriggers();
 		}
 		catch (_2Real::Exception &e)
 		{
@@ -172,6 +171,9 @@ namespace _2Real
 		m_CurrentState = new RunnableStateSetUp();
 		unsigned int state = m_CurrentState->getStateId();
 		m_StateChangeEvent.notify(this, state);
+
+		m_Triggers.startTriggers();
+		m_Runnable->resetData();
 	}
 
 	void RunnableManager::getReady()
@@ -192,6 +194,10 @@ namespace _2Real
 				m_StateChangeEvent.notify(this, state);
 
 				m_Threads.scheduleRunnable(*this);
+			}
+			else
+			{
+				std::cout << "could not get ready" << std::endl;
 			}
 		}
 		catch (_2Real::Exception &e)

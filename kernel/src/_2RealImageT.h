@@ -29,28 +29,6 @@
 namespace _2Real
 {
 
-	typedef std::map< std::string, std::string > StringMap;
-
-	class Enumeration : private StringMap
-	{
-
-	public:
-
-		Enumeration() {}
-
-		std::string& operator[](std::string const& key) { return StringMap::operator[](key); }
-		std::string valueFor(std::string const& key) const
-		{
-			if (StringMap::find(key) != StringMap::end())
-			{
-				return StringMap::at(key);
-			}
-
-			else return "";
-		}
-
-	};
-
 	class ImageChannelOrder
 	{
 

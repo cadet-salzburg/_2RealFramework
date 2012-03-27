@@ -57,6 +57,13 @@ namespace _2Real
 		}
 
 		template< typename DataType >
+		void sendValue(Identifier const& id, std::string const& name, DataType const& value)
+		{
+			EngineData data(value);
+			sendValueInternal(id, name, data);
+		}
+
+		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
 		{
 			Poco::SharedPtr< DataType > ptr = Extract< DataType >(getValueInternal(id, name));
@@ -97,6 +104,7 @@ namespace _2Real
 		System(System const& src);
 
 		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+		void sendValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
 		const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
 
 		SystemImpl				*m_Impl;

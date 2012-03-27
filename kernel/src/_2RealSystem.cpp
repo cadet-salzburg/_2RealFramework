@@ -72,6 +72,11 @@ namespace _2Real
 		m_Impl->setValue(id, param, value);
 	}
 
+	void System::sendValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
+	{
+		m_Impl->sendValue(id, param, value);
+	}
+
 	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
 	{
 		return m_Impl->getValue(id, name);

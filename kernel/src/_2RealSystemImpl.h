@@ -71,6 +71,7 @@ namespace _2Real
 		const EngineData	getValue(Identifier const& id, std::string const& paramName) const;
 		std::string const&	getParameterKey(Identifier const& id, std::string const& paramName) const;
 		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
+		void				sendValue(Identifier const& id, std::string const& paramName, EngineData const& value);
 		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);
 
 		//void				add(Identifier const& runnable, Identifier const& parent, unsigned int index);

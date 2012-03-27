@@ -75,6 +75,7 @@ namespace _2Real
 		void					prepareForAbort();
 
 		void					setParameterValue(std::string const& name, Data const& data);
+		void					insertParameterValue(std::string const& name, Data const& data);
 		void					linkWith(std::string const& inName, Service &serviceOut, std::string const& outName);
 
 		std::string const&		getServiceName() const;

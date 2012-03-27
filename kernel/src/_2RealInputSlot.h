@@ -157,6 +157,11 @@ namespace _2Real
 		*/
 		void setData(TimestampedData const& data);
 
+		/*
+		*	inserts the value into the data
+		*/
+		void insertData(TimestampedData const& data);
+
 		/**
 		*	deletes all links
 		*/

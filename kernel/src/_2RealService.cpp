@@ -244,6 +244,20 @@ namespace _2Real
 		}
 	}
 
+	void Service::insertParameterValue(std::string const& name, Data const& data)
+	{
+		if (hasInputSlot(name))
+		{
+			getInputSlot(name).insertData(TimestampedData(data.getTimestamp(), data.data()));
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "setup parameter / input slot " << name << " not found in " << this->name() << std::endl;
+			throw NotFoundException(msg.str());
+		}
+	}
+
 	const EngineData Service::getParameterValue(std::string const& name) const
 	{
 		if (hasSetupParameter(name))

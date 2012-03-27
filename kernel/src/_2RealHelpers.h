@@ -206,7 +206,7 @@ namespace _2Real
 			return out;
 		}
 
-		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< std::string, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
 		}
@@ -221,7 +221,7 @@ namespace _2Real
 			return out;
 		}
 
-		for (typename std::map< DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< Identifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
 		}

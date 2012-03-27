@@ -15,6 +15,7 @@
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
+    <ClCompile Include="..\..\src\_2RealEnum.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealGraph.cpp" />
@@ -72,6 +73,7 @@
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealEntity.h" />
+    <ClInclude Include="..\..\src\_2RealEnum.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealGraph.h" />
