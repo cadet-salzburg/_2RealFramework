@@ -104,16 +104,6 @@ namespace _2Real
 		m_Types->registerType< Blob < double > >("blob_double");
 		m_Types->registerType< Blob < bool > >("blob_bool");
 
-		m_Types->registerType< ImageT < char > >("img_char");
-		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
-		m_Types->registerType< ImageT < short > >("img_short");
-		m_Types->registerType< ImageT < unsigned short > >("img_ushort");
-		m_Types->registerType< ImageT < int > >("img_int");
-		m_Types->registerType< ImageT < unsigned int > >("img_uint");
-		m_Types->registerType< ImageT < long > >("img_long");
-		m_Types->registerType< ImageT < unsigned long > >("img_ulong");
-		m_Types->registerType< ImageT < float > >("img_float");
-		m_Types->registerType< ImageT < double > >("img_double");
 
 		m_Threads->registerTimeListener(*m_Timer);
 	}
