@@ -26,17 +26,15 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
 
 	for ( unsigned int i=0; i<nBytes; i++ )
 	{
-		std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-	  //	Bytes_Read = (int)message->at(i);
-		self->m_ReadBytes.data<unsigned int>() = (int)message->at(i);
-		  
-	
+		//std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
+	 	self->m_ReadBytes.data<unsigned int>() = (int)message->at(i);
+		 std::cout << "Byte " << i << " = " << self->m_ReadBytes.data<unsigned int>() << ", ";
 	}
 
 	if ( nBytes > 0 )
-		std::cout << "stamp = " << deltatime << std::endl;
+ 
 	    self->m_TimeStamp.data<unsigned int>()= deltatime;
-	      
+	    std::cout << "stamp = " <<  self->m_TimeStamp.data<unsigned int>() << std::endl;   
 }
 
 bool chooseMidiPort( RtMidiIn *rtmidi )
