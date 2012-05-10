@@ -66,7 +66,6 @@ bool chooseMidiPort( RtMidiIn *rtmidi )
 
 	//std::getline( std::cin, keyHit );  // used to clear out stdin
 	rtmidi->openPort( i );
-	//rtmidi->openPort( 0 );
 
 	return true;
 }
@@ -132,7 +131,15 @@ void Service1::update()
 	try
 	{
 		//do something
- 
+
+		if(Bytes_Read && time_Stamp >0)
+		{
+
+			std::cout << "Byte " <<" = " <<Bytes_Read<<std::endl;
+			std::cout << "stamp = "<<time_Stamp<<std::endl;
+
+
+		}
 	}
 	catch (_2Real::Exception &e)
 	{
