@@ -20,10 +20,12 @@ public:
 	void setup(_2Real::ServiceContext &context);
 	~Service1() {}
 
-private:
+public:
 
 	_2Real::InputHandle				m_InValue;
 	_2Real::OutputHandle			m_ReadBytes;
 	_2Real::OutputHandle			m_TimeStamp;
+
+
 
 };

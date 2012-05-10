@@ -5,9 +5,11 @@
 
 using namespace _2Real;
 using namespace std;
+ 
 
-unsigned int Bytes_Read; 
-unsigned int time_Stamp; 
+
+unsigned int ReadBytes;
+unsigned int TimeStamp;
 
 void usage( void ) {
 	// Error function in case of incorrect command-line
@@ -20,15 +22,21 @@ void usage( void ) {
 void mycallback( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
 	unsigned int nBytes = message->size();
+	Service1 *self = static_cast<Service1*>(userData); 
+
 	for ( unsigned int i=0; i<nBytes; i++ )
 	{
 		std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-		Bytes_Read = (int)message->at(i);
+	  //	Bytes_Read = (int)message->at(i);
+		self->m_ReadBytes.data<unsigned int>() = (int)message->at(i);
+		  
+	
 	}
 
 	if ( nBytes > 0 )
 		std::cout << "stamp = " << deltatime << std::endl;
-	    time_Stamp = deltatime;			
+	    self->m_TimeStamp.data<unsigned int>()= deltatime;
+	      
 }
 
 bool chooseMidiPort( RtMidiIn *rtmidi )
@@ -95,7 +103,7 @@ void Service1::setup(_2Real::ServiceContext &context)
 		// Set our callback function.  This should be done immediately after
 		// opening the port to avoid having incoming messages written to the
 		// queue instead of sent to the callback function.
-		midiInput->setCallback( &mycallback );
+		midiInput->setCallback( &mycallback, (void*)this );
 
 		// Don't ignore sysex, timing, or active sensing messages.
 		midiInput->ignoreTypes( false, false, false );
@@ -131,15 +139,9 @@ void Service1::update()
 	try
 	{
 		//do something
-
-		if(Bytes_Read && time_Stamp >0)
-		{
-
-			std::cout << "Byte " <<" = " <<Bytes_Read<<std::endl;
-			std::cout << "stamp = "<<time_Stamp<<std::endl;
-
-
-		}
+		
+		std::cout<<" Bytes Read"<<m_ReadBytes.data<unsigned int>()<<std::endl;
+		std::cout<<" Time Stamp"<<m_TimeStamp.data<unsigned int>()<<std::endl;
 	}
 	catch (_2Real::Exception &e)
 	{
