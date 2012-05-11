@@ -21,7 +21,6 @@
 #include "_2RealSingletonHolder.h"
 #include "_2RealTimer.h"
 #include "_2RealTypetable.h"
-#include "_2RealServiceFactory.h"
 #include "_2RealPluginPool.h"
 #include "_2RealThreadPool.h"
 #include "_2RealLogger.h"
