@@ -22,8 +22,8 @@ void  MidiPlugin::getMetadata(Metadata &metadata)
 		metadata.setDescription("Service 1", "description");
 		// define the data type of the slot, the service name and the output name
 	 
-		metadata.addOutputSlot< unsigned int >("Service 1", "m_ReadBytes");
-		metadata.addOutputSlot< unsigned int >("Service 1", "m_TimeStamp");
+		metadata.addOutputSlot< vector<unsigned char> >("Service 1", "m_ReadBytes");
+		metadata.addOutputSlot< double >("Service 1", "m_TimeStamp");
 
 	}
 	catch (_2Real::Exception &e)

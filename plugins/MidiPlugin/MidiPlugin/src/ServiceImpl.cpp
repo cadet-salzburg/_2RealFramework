@@ -90,11 +90,15 @@ void Service1::update()
 		stamp  = m_midiInput->getMessage(&message);
 		nBytes = message.size();
 	
-		for (int i=0; i<nBytes; i++ )
-			std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
+		if(nBytes>0){
+		for (int i=0; i<nBytes; i++ ){
+		//	std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
+		//	m_ReadBytes.data< vector<unsigned char> >() = message;
+		}
 		if ( nBytes > 0 )
-			std::cout << "stamp = " << stamp << std::endl;
-
+		//	std::cout << "stamp = " << stamp << std::endl;
+			m_TimeStamp.data<double>() = stamp;
+		}
 		
 	}
 	catch (_2Real::Exception &e)
