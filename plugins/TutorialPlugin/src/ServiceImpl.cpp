@@ -98,10 +98,10 @@ void PrintOut::setup(_2Real::ServiceContext &context)
 	{
 		m_InputValue = context.getInputHandle("input number");
 
-		//Enumeration e = context.getParameterValue< Enumeration >("test enum");
-		//std::cout << e.valueFor("option 1") << std::endl;
-		//std::cout << e.valueFor("option 2") << std::endl;
-		//std::cout << e.valueFor("option 3") << std::endl;
+		Enumeration e = context.getParameterValue< Enumeration >("test enum");
+		std::cout << e.valueFor("option 1") << std::endl;
+		std::cout << e.valueFor("option 2") << std::endl;
+		std::cout << e.valueFor("option 3") << std::endl;
 		//std::cout << e.valueFor("not there") << std::endl;
 
 		//e["thingie"] = "eeeeeeeeeee";
