@@ -32,7 +32,6 @@
     <ClCompile Include="..\..\src\_2RealPluginPool.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceStateCreated.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceStateError.cpp" />
@@ -107,7 +106,6 @@
     <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceData.h" />
-    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceStateCreated.h" />
     <ClInclude Include="..\..\src\_2RealServiceStateError.h" />

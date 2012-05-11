@@ -48,7 +48,6 @@
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceFactory.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceIO.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceStateCreated.cpp" />
@@ -125,7 +124,6 @@
     <ClInclude Include="..\..\src\_2RealServiceBlock.h" />
     <ClInclude Include="..\..\src\_2RealServiceContext.h" />
     <ClInclude Include="..\..\src\_2RealServiceData.h" />
-    <ClInclude Include="..\..\src\_2RealServiceFactory.h" />
     <ClInclude Include="..\..\src\_2RealServiceIO.h" />
     <ClInclude Include="..\..\src\_2RealServiceMetadata.h" />
     <ClInclude Include="..\..\src\_2RealServiceStateCreated.h" />
