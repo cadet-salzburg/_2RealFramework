@@ -89,11 +89,17 @@ void Service1::update()
 		//do something
 		stamp  = m_midiInput->getMessage(&message);
 		nBytes = message.size();
-	
+
 		if(nBytes>0){
-		for (int i=0; i<nBytes; i++ ){
-		//	std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
-		//	m_ReadBytes.data< vector<unsigned char> >() = message;
+		for (int i=0; i<nBytes; i++ )
+		{
+			std::vector< unsigned char > test;
+			test.resize( 3 );
+			test[0] = 0;
+			test[1] = 1;
+			test[2] = 2;
+			//std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
+			m_ReadBytes.data< std::vector < unsigned char > >() = test;
 		}
 		if ( nBytes > 0 )
 		//	std::cout << "stamp = " << stamp << std::endl;
