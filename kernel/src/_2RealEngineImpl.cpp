@@ -47,7 +47,6 @@ namespace _2Real
 		m_Timer(new Timer()),
 		m_Threads(new ThreadPool(15, 0, "2real engine threadpool")),
 		m_Plugins(new PluginPool()),
-		m_Factory(new ServiceFactory(*this)),
 		m_Types(new Typetable(*this)),
 		m_Logger( new Logger( "Logfile.txt" ) )
 	{
@@ -118,7 +117,6 @@ namespace _2Real
 			m_Threads->clear();
 
 			delete m_Plugins;
-			delete m_Factory;
 			delete m_Types;
 			delete m_Threads;
 			delete m_Timer;

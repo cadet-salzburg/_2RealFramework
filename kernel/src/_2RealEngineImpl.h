@@ -108,12 +108,11 @@ namespace _2Real
 		EngineImpl();
 		~EngineImpl();
 
+		Logger					*m_Logger;
 		Timer					*m_Timer;
 		ThreadPool				*m_Threads;
-		ServiceFactory			*m_Factory;
 		PluginPool				*m_Plugins;
 		Typetable				*m_Types;
-		Logger					*m_Logger;
 
 	};
 
