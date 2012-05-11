@@ -32,7 +32,7 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 		metadata.addService("PrintOut");
 		metadata.setDescription("PrintOut", "print out a number to the console");
 		metadata.addInputSlot< int >("PrintOut", "input number", int(0));
-		metadata.addSetupParameter< Enumeration >("PrintOut", "test enum", Enumeration(Enums("option 1", "you suck")("option 2", "fuck off")("option 3", "die!"), "NO VALUE AVAILABLE"));
+		metadata.addSetupParameter< Enumeration >("PrintOut", "test enum", Enumeration(Enums("option 1", "hello")("option 2", "have a nice day")("option 3", "goodbye"), "NO VALUE AVAILABLE"));
 	}
 	catch (_2Real::Exception &e)
 	{
