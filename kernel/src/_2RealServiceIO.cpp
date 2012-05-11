@@ -127,6 +127,13 @@ namespace _2Real
 
 	void ServiceIO::registerToNewData(std::string const& outName, DataCallback callback)
 	{
+		std::cout << "registering to" << outName << std::endl;
+		OutletMap::const_iterator outletIt = m_Outlets.find(outName);
+		if (outletIt != m_Outlets.end())
+		{
+			outletIt->second->registerCallback( callback );
+			std::cout << "callback registered" << outName << std::endl;
+		}
 	}
 
 	void ServiceIO::unregisterFromNewData(std::string const& outName, DataCallback callback)

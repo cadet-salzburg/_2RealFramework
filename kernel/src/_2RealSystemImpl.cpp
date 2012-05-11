@@ -80,6 +80,7 @@ namespace _2Real
 		else
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			std::cout << "registering" << std::endl;
 			obj.registerToNewData(outlet, callback);
 		}
 	}

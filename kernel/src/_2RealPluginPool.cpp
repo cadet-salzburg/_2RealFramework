@@ -86,6 +86,8 @@ namespace _2Real
 
 		Poco::Path tmp = this->makeAbsolutePath(path);
 
+		std::cout << path.toString() << " " << tmp.toString() << std::endl;
+
 		m_PluginLoader.loadLibrary(tmp.toString());
 
 		const PluginLoader::Manif *manifest = m_PluginLoader.findManifest(tmp.toString());
