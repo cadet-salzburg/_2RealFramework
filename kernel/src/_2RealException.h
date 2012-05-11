@@ -118,6 +118,8 @@ namespace _2Real
 	//e.g.: unknown key, plugin name != classname etc
 	DECLARE_EXCEPTION(XMLFormatException, Exception)
 
+	DECLARE_EXCEPTION(InvalidStateChangeException, Exception)
+
 	//occurs only during the plugin's getMetatdata function
 	//if any type of parameter (setup, input, output) is declared with
 	//a type not allowed in the framework
@@ -133,11 +135,6 @@ namespace _2Real
 	//or metadata declaring a parameter twice
 	DECLARE_EXCEPTION(AlreadyExistsException, Exception)
 
-	//occurs only in calls from the application, if the identifier does not belong to the right kind
-	//of entity, e.g. calling linkSlots() on a plugin
-	//this might actually not be necessary and could be replaced by a boolean return value indicating success / failure
-	DECLARE_EXCEPTION(InvalidIdentifierException, Exception)
-
 	//occurs when there is a mismatch between the declared type of any parameter (according to the metadata)
 	//and the template parameter used (note that all functions involving parameters are function templates)
 	DECLARE_EXCEPTION(TypeMismatchException, Exception)
@@ -152,10 +149,6 @@ namespace _2Real
 	//something went so very wrong while calling any of an IPluginActivator's functions
 	//that the plugin in question is only good for putting it out of its misery. MOAR YAY!
 	DECLARE_EXCEPTION(PluginException, Exception)
-
-	DECLARE_EXCEPTION(SetupException, Exception);
-
-	DECLARE_EXCEPTION(StartException, Exception);
 
 	DECLARE_EXCEPTION(InvalidNameException, Exception);
 

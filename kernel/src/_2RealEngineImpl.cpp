@@ -24,6 +24,7 @@
 #include "_2RealServiceFactory.h"
 #include "_2RealPluginPool.h"
 #include "_2RealThreadPool.h"
+#include "_2RealLogger.h"
 
 #include "_2RealPixelbuffer.h"
 #include "_2RealBlob.h"
@@ -47,7 +48,8 @@ namespace _2Real
 		m_Threads(new ThreadPool(15, 0, "2real engine threadpool")),
 		m_Plugins(new PluginPool()),
 		m_Factory(new ServiceFactory(*this)),
-		m_Types(new Typetable(*this))
+		m_Types(new Typetable(*this)),
+		m_Logger( new Logger( "Logfile.txt" ) )
 	{
 		m_Types->registerType< char >("char");
 		m_Types->registerType< unsigned char >("unsigned char");
@@ -104,7 +106,6 @@ namespace _2Real
 		m_Types->registerType< Blob < double > >("blob_double");
 		m_Types->registerType< Blob < bool > >("blob_bool");
 
-
 		m_Threads->registerTimeListener(*m_Timer);
 	}
 
@@ -121,11 +122,20 @@ namespace _2Real
 			delete m_Types;
 			delete m_Threads;
 			delete m_Timer;
+
+			m_Logger->stop();
+			delete m_Logger;
 		}
 		catch (std::exception &e)
 		{
+			//since the logger is no longer there, i'll just write to std::out
 			std::cout << e.what() << std::endl;
 		}
+	}
+
+	Logger& EngineImpl::getLogger()
+	{
+		return *m_Logger;
 	}
 
 	Timer & EngineImpl::getTimer()
@@ -219,13 +229,6 @@ namespace _2Real
 	//
 	const std::string EngineImpl::getInfoString(Identifier const& pluginId) const
 	{
-		if (!pluginId.isPlugin())
-		{
-			std::ostringstream msg;
-			msg << "EngineImpl::getInfoString " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
-			throw InvalidIdentifierException(msg.str());
-		}
-
 		return m_Plugins->getInfoString(pluginId);
 	}
 
@@ -271,25 +274,11 @@ namespace _2Real
 
 	void EngineImpl::setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value)
 	{
-		if (!pluginId.isPlugin())
-		{
-			std::ostringstream msg;
-			msg << "EngineImpl::setPluginValue " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
-			throw InvalidIdentifierException(msg.str());
-		}
-
 		return m_Plugins->setParameterValue(pluginId, paramName, value);
 	}
 
 	const EngineData EngineImpl::getPluginValue(Identifier const& pluginId, std::string const& paramName) const
 	{
-		if (!pluginId.isPlugin())
-		{
-			std::ostringstream msg;
-			msg << "EngineImpl::setPluginValue " << pluginId.name() << " is a " << pluginId.type() << ", plugin expected";
-			throw InvalidIdentifierException(msg.str());
-		}
-
 		return m_Plugins->getParameterValue(pluginId, paramName);
 	}
 

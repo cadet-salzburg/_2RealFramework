@@ -19,7 +19,7 @@
 #include "_2RealOutputSlot.h"
 #include "_2RealInputSlot.h"
 #include "_2RealException.h"
-#include "_2RealService.h"
+#include "_2RealServiceBlock.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealTypetable.h"

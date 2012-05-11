@@ -26,7 +26,7 @@
 namespace _2Real
 {
 
-	class Service;
+	class ServiceBlock;
 	class InputHandle;
 	class OutputHandle;
 
@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		ServiceContext(Service &service);
+		ServiceContext(ServiceBlock &service);
 
 		/**
 		*	creates an input handle for an input slot
@@ -74,7 +74,7 @@ namespace _2Real
 
 		const EngineData	getData(std::string const& name) const;
 
-		Service				&m_Service;
+		ServiceBlock		&m_Service;
 
 	};
 

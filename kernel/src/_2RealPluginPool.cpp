@@ -110,10 +110,9 @@ namespace _2Real
 				instance.getMetadata(meta);
 
 				std::string idName = pathToName(tmp) + "." + toLower(className);
-				const Identifier id = Entity::createIdentifier(idName, "plugin");
-				Plugin *plugin = new Plugin(id, instance, *pluginMeta);
-				m_Plugins.insert(NamedPlugin(id, plugin));
-				m_Names.insert(make_pair(idName, id));
+				Plugin *plugin = new Plugin(idName, instance, *pluginMeta);
+				m_Plugins.insert(NamedPlugin(plugin->getIdentifier(), plugin));
+				m_Names.insert(make_pair(idName, plugin->getIdentifier()));
 			}
 
 			std::string metaKey = pathToName(tmp) + "." + toLower(className);
@@ -180,11 +179,10 @@ namespace _2Real
 		{
 			IPluginActivator *activator = it->create();
 			it->autoDelete(activator);
-			const Identifier id = Entity::createIdentifier(name, "plugin");
-			Plugin *plugin = new Plugin(id, *activator, *meta->second);
-			m_Plugins.insert(NamedPlugin(id, plugin));
+			Plugin *plugin = new Plugin(name, *activator, *meta->second);
+			m_Plugins.insert(NamedPlugin(plugin->getIdentifier(), plugin));
 
-			return id;
+			return plugin->getIdentifier();
 		}
 		else
 		{
@@ -291,6 +289,7 @@ namespace _2Real
 			}
 			catch (Poco::NotFoundException &e)
 			{
+				(void) e;
 			}
 			catch (...)
 			{
@@ -315,14 +314,14 @@ namespace _2Real
 		return getPlugin(id).isSetUp();
 	}
 
-	Runnable & PluginPool::createService(Identifier const& pluginId, std::string const& serviceName, SystemImpl &graph)
+	ServiceData PluginPool::createService(Identifier const& pluginId, std::string const& serviceName)
 	{
-		return getPlugin(pluginId).createService(serviceName, graph);
+		return getPlugin(pluginId).createService(serviceName);
 	}
 
-	Runnable & PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, SystemImpl &graph)
+	ServiceData PluginPool::createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName)
 	{
-		return getPlugin(pluginId).createService(idName, serviceName, graph);
+		return getPlugin(pluginId).createService(serviceName);
 	}
 
 	void PluginPool::setParameterValue(Identifier const& id, std::string const& paramName, EngineData const& data)

@@ -33,7 +33,7 @@
 #include "Poco/Path.h"
 
 #ifdef _2REAL_WINDOWS
-	/*#include "vld.h"*/
+	#include "vld.h"
 	#ifndef _DEBUG
 		#define shared_library_suffix ".dll"
 	#else
@@ -62,6 +62,8 @@ namespace _2Real
 	class ServiceFactory;
 	class Typetable;
 	class Timer;
+	class Logger;
+	class LoggerAccess;
 	
 	class EngineImpl
 	{
@@ -69,6 +71,8 @@ namespace _2Real
 	public:
 
 		static EngineImpl & instance();
+
+		Logger&							getLogger();
 
 		Timer &							getTimer();
 		Timer const&					getTimer() const;
@@ -109,6 +113,7 @@ namespace _2Real
 		ServiceFactory			*m_Factory;
 		PluginPool				*m_Plugins;
 		Typetable				*m_Types;
+		Logger					*m_Logger;
 
 	};
 

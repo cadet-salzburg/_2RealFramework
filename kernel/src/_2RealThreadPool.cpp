@@ -19,7 +19,7 @@
 
 #include "_2RealThreadPool.h"
 #include "_2RealPooledThread.h"
-#include "_2RealRunnableManager.h"
+#include "_2RealServiceBlock.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealTimer.h"
 
@@ -140,11 +140,11 @@ namespace _2Real
 			RunnableMap::iterator r = m_ExecutingRunnables.find(*it);
 			if (r != m_ExecutingRunnables.end())
 			{
-				RunnableManager *runnable = r->second;
+				ServiceStates *service = r->second;
 				m_ExecutingRunnables.erase(r);
 				m_ExecutingAccess.unlock();
 
-				runnable->finishUpdate();
+				service->finishExecution();
 			}
 			else
 			{
@@ -154,13 +154,15 @@ namespace _2Real
 				RunnableMap::iterator r = m_AbortedRunnables.find(*it);
 				if (r != m_AbortedRunnables.end())
 				{
-					RunnableManager *runnable = r->second;
+					ServiceStates *service = r->second;
 					m_AbortedRunnables.erase(r);
 					m_AbortedAccess.unlock();
 
-					runnable->finishUpdate();
-					runnable->shutDown();
-					delete runnable;
+					std::cout << "threadpool finishing aborted service" << std::endl;
+					service->finishExecution();
+					//service is in set up now & shut doen should return immediately
+					service->shutDown();
+					delete service;
 				}
 				else
 				{
@@ -188,26 +190,20 @@ namespace _2Real
 			}
 			else
 			{
-				RunnableManager *runnable = m_ReadyRunnables.front();
-				if (runnable->beginUpdate())
-				{
-					m_ReadyRunnables.pop_front();
-					m_ReadyAccess.unlock();
-
-					thread->reactivate();
-					m_ThreadAccess.unlock();
-
-					m_ExecutingAccess.lock();
-					m_ExecutingRunnables.insert(NamedRunnable(runnable->getManagedId().id(), runnable));
-					m_ExecutingAccess.unlock();
+				ServiceStates *service = m_ReadyRunnables.front();
+				service->beginExecution();
 				
-					thread->run(Poco::Thread::PRIO_NORMAL, *runnable);
-				}
-				else
-				{
-					m_ReadyAccess.unlock();
-					m_ThreadAccess.unlock();
-				}
+				m_ReadyRunnables.pop_front();
+				m_ReadyAccess.unlock();
+
+				thread->reactivate();
+				m_ThreadAccess.unlock();
+
+				m_ExecutingAccess.lock();
+				m_ExecutingRunnables.insert(NamedRunnable(service->getId(), service));
+				m_ExecutingAccess.unlock();
+				
+				thread->run(Poco::Thread::PRIO_NORMAL, *service);
 			}
 
 			m_ThreadAccess.lock();
@@ -215,23 +211,23 @@ namespace _2Real
 		m_ThreadAccess.unlock();
 	}
 
-	void ThreadPool::runnableIsFinished(RunnableManager &runnable)
+	void ThreadPool::serviceIsFinished(ServiceStates &s)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_FinishedAccess);
-		m_ReceivedRunnables.push_back(runnable.getManagedId().id());
+		m_ReceivedRunnables.push_back(s.getId());
 	}
 
-	void ThreadPool::abortRunnable(RunnableManager &mgr, _2Real::Exception &e)
+	void ThreadPool::abortService(ServiceStates &s)
 	{
 		m_ExecutingAccess.lock();
-		RunnableMap::iterator it = m_ExecutingRunnables.find(mgr.getManagedId().id());
+		RunnableMap::iterator it = m_ExecutingRunnables.find(s.getId());
 		if (it != m_ExecutingRunnables.end())
 		{
 			m_ExecutingRunnables.erase(it);
 			m_ExecutingAccess.unlock();
 
 			Poco::ScopedLock< Poco::FastMutex > lock(m_AbortedAccess);
-			m_AbortedRunnables.insert(NamedRunnable(mgr.getManagedId().id(), &mgr));
+			m_AbortedRunnables.insert(NamedRunnable(s.getId(), &s));
 		}
 		else
 		{
@@ -239,40 +235,35 @@ namespace _2Real
 		}
 	}
 
-	void ThreadPool::scheduleRunnable(RunnableManager &runnable)
+	void ThreadPool::scheduleService(ServiceStates &s)
 	{
-		m_ThreadAccess.lock();
-		PooledThread *thread = tryGetFreeThread();
-		if (thread != NULL)
-		{
-			if (runnable.beginUpdate())
-			{
-				thread->reactivate();
-				m_ThreadAccess.unlock();
+		//m_ThreadAccess.lock();
+		//PooledThread *thread = tryGetFreeThread();
+		//if (thread != NULL)
+		//{
+		//	s.beginExecution();
 
-				m_ExecutingAccess.lock();
-				m_ExecutingRunnables.insert(NamedRunnable(runnable.getManagedId().id(), &runnable));
-				m_ExecutingAccess.unlock();
+		//	thread->reactivate();
+		//	m_ThreadAccess.unlock();
 
-				thread->run(Poco::Thread::PRIO_NORMAL, runnable);
-			}
-			else
-			{
-				m_ThreadAccess.unlock();
-			}
-		}
-		else
-		{
-			m_ThreadAccess.unlock();
+		//	m_ExecutingAccess.lock();
+		//	m_ExecutingRunnables.insert(NamedRunnable(s.getId(), &s));
+		//	m_ExecutingAccess.unlock();
+
+		//	thread->run(Poco::Thread::PRIO_NORMAL, s);
+		//}
+		//else
+		//{
+			//m_ThreadAccess.unlock();
 			Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
-			m_ReadyRunnables.push_back(&runnable);
-		}
+			m_ReadyRunnables.push_back(&s);
+		//}
 	}
 
-	const bool ThreadPool::unscheduleRunnable(RunnableManager &runnable)
+	const bool ThreadPool::unscheduleService(ServiceStates &s)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
-		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, RunnableManager * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &runnable);
+		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, ServiceStates * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &s);
 		if (it != m_ReadyRunnables.end())
 		{
 			*it = NULL;

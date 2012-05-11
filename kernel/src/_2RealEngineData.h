@@ -10,8 +10,6 @@
 
 #include "Poco/SharedPtr.h"
 
-#include <iostream>
-
 namespace _2Real
 {
 

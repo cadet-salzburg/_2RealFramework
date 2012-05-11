@@ -20,81 +20,58 @@
 
 #include "_2RealIdentifier.h"
 
+#include "Poco/Mutex.h"
+
 #include <string>
 
 namespace _2Real
 {
+
+	class IdCounter
+	{
+
+	public:
+
+		IdCounter() :
+			m_CounterValue(0)
+		{
+		}
+
+		unsigned int getId()
+		{
+			Poco::FastMutex::ScopedLock lock(m_CounterAccess);
+			return ++m_CounterValue;
+		}
+
+	private:
+
+		Poco::FastMutex			m_CounterAccess;
+		unsigned int			m_CounterValue;
+
+	};
 
 	class Entity
 	{
 
 	public:
 
-		Entity(Identifier const& id);
+		Entity(std::string const& name);
 		virtual ~Entity();
 
-		static const Identifier	createIdentifier(std::string const& name, std::string const& type);
-		static const Identifier	NoEntity();
+		static const Identifier		InvalidId();
 
-		Identifier const&		identifier() const;
-		unsigned int			id() const;
-		std::string const&		name() const;
-		std::string const&		type() const;
-		bool					isPlugin() const;
-		bool					isService() const;
-		bool					isSetupAble() const;
-		bool					isRunnable() const;
-		bool					isGraph() const;
+		Identifier					getIdentifier() const;
+		std::string const&			getName() const;
+
+	protected:
+
+		unsigned int				const m_Id;
+		std::string					const m_Name;
 
 	private:
 
-		const Identifier		m_Id;
+		static IdCounter			m_Counter;
 
 	};
-
-	inline Identifier const& Entity::identifier() const
-	{
-		return m_Id;
-	}
-
-	inline unsigned int Entity::id() const
-	{
-		return m_Id.id();
-	}
-
-	inline std::string const& Entity::name() const
-	{
-		return m_Id.name();
-	}
-
-	inline std::string const& Entity::type() const
-	{
-		return m_Id.type();
-	}
-
-	inline bool Entity::isPlugin() const
-	{
-		return (m_Id.type() == "plugin");
-	}
-
-	inline bool Entity::isService() const
-	{
-		return (m_Id.type() == "service");
-	}
-
-	inline bool Entity::isSetupAble() const
-	{
-		return (m_Id.type() == "plugin" || m_Id.type() == "service");
-	}
-
-	inline bool Entity::isRunnable() const
-	{
-		return (m_Id.type() == "service" || m_Id.type() == "sequence" || m_Id.type() == "synchronization");
-	}
-
-	inline bool Entity::isGraph() const
-	{
-		return (m_Id.type() == "sequence"|| m_Id.type() == "synchronization" || m_Id.type() == "system");
-	}
 
 }

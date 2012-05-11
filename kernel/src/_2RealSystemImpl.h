@@ -19,16 +19,12 @@
 
 #pragma once
 
-#include "_2RealGraph.h"
+#include "_2RealBlock.h"
+#include "_2RealDisabledBlocks.h"
+#include "_2RealOwnedBlocks.h"
+#include "_2RealDisabledIO.h"
+#include "_2RealDisabledStates.h"
 #include "_2RealExceptionHandler.h"
-#include "_2RealThreadPool.h"
-#include "_2RealCallbacks.h"
-//#include "_2RealPluginPool.h"
-//#include "_2RealTimer.h"
-//
-//#include <map>
-//#include <list>
-//#include <fstream>
 
 #include "Poco/Path.h"
 #include "Poco/Timer.h"
@@ -37,83 +33,48 @@ namespace _2Real
 {
 
 	class EngineImpl;
-	class EngineData;
 	class PluginPool;
-	class Runnable;
-	class UpdateTriggers;
+	class EngineData;
+	class UpdatePolicy;
+	class IOutputListener;
 
-	class SystemImpl : public Graph
+	class SystemImpl : public Block< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */ >
 	{
 
 	public:
 
-		SystemImpl();
+		SystemImpl(std::string const& name);
 		~SystemImpl();
 
-		/**
-		*	kills all runnables
-		*/
-		void				clear();
+		void						clear();
 
-		/**
-		*	returns time (in microseconds) since the system's creation
-		*/
-		const long				getElapsedTime() const;
+		const long					getElapsedTime() const;
+		Poco::Timestamp	const&		getTimestamp() const;
 
-		Poco::Timestamp	const&	getTimestamp() const;
+		const Identifier			createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
+		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
+		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
 
-		const Identifier	createService(Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& triggers);
-		const Identifier	createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& triggers);
-		//const Identifier	createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
-		//const Identifier	createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB);
+		void						handleException(AbstractBlock &subBlock, Exception &exception);
+		void						registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback);
+		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback);
+		void						registerToNewData(Identifier const& id, std::string const& outlet, IOutputListener &listener);
+		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, IOutputListener &listener);
 
-		void				setUp(Identifier const& runnableId);
-		const EngineData	getValue(Identifier const& id, std::string const& paramName) const;
-		std::string const&	getParameterKey(Identifier const& id, std::string const& paramName) const;
-		void				setValue(Identifier const& id, std::string const& paramName, EngineData const& value);
-		void				sendValue(Identifier const& id, std::string const& paramName, EngineData const& value);
-		void				linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut);
+		void						setUp(Identifier const& blockId);
 
-		//void				add(Identifier const& runnable, Identifier const& parent, unsigned int index);
-		//void				append(Identifier const& runnable, Identifier const& parent);
-
-		//void				registerExceptionCallback(ExceptionCallback callback);
-		//void				unregisterExceptionCallback(ExceptionCallback callback);
-		//void				registerExceptionListener(IExceptionListener &listener);
-		//void				unregisterExceptionListener(IExceptionListener &listener);
-		void				registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
-		void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback);
-		//void				registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
-		//void				unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener);
-		//void				registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void				unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void				registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-		//void				unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-
-		void				handleException(Runnable &runnable, Exception &exception);
-
-		//bool				isLoggingEnabled() const;
-		//void				setLogfile(Poco::Path const& filepath);
-		//std::ofstream&	getLogstream();
-		//void				startLogging();
+		const EngineData			getValue(Identifier const& ownerId, std::string const& paramName) const;
+		std::string const&			getKey(Identifier const& ownerId, std::string const& paramName) const;
+		void						setValue(Identifier const& ownerId, std::string const& paramName, EngineData const& value);
+		void						insertValue(Identifier const& ownerId, std::string const& paramName, EngineData const& value);
+		void						link(Identifier const& ownerIn, std::string const& in, Identifier const& ownerOut, std::string const& out);
 
 	private:
 
-		/**
-		*	a ref to the engine
-		*/
-		EngineImpl			&m_Engine;
-
-		/**
-		*	ref to system's plugin pool
-		*/
-		PluginPool			&m_PluginPool;
-
-		Poco::Timestamp		m_Timestamp;
-		ExceptionHandler	m_ExceptionHandler;
-		
-		//Poco::Path		m_Logfile;
-		//std::ofstream		m_Logstream;
+		EngineImpl					&m_Engine;
+		PluginPool					&m_PluginPool;
+		Poco::Timestamp				m_Timestamp;
+		ExceptionHandler			m_ExceptionHandler;
 
 	};
 

@@ -22,7 +22,7 @@
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
 #include "_2RealSetupParameter.h"
-#include "_2RealService.h"
+#include "_2RealServiceBlock.h"
 #include "_2RealParameterMetadata.h"
 #include "_2RealData.h"
 
@@ -31,8 +31,8 @@
 namespace _2Real
 {
 
-	Plugin::Plugin(Identifier const& id, IPluginActivator &activator, PluginMetadata &metadata) :
-		Entity(id),
+	Plugin::Plugin(std::string const& name, IPluginActivator &activator, PluginMetadata &metadata) :
+		Entity(name),
 		m_ServiceTemplates(),
 		m_SetupParameters(),
 		m_Services(),
@@ -135,46 +135,37 @@ namespace _2Real
 		return s.str();
 	}
 
-	Poco::SharedPtr< IService > Plugin::createService(std::string const& serviceName) const
+	ServiceData Plugin::createService(std::string const& serviceName)
 	{
-		TemplateMap::const_iterator it = m_ServiceTemplates.find(serviceName);
+		TemplateMap::iterator it = m_ServiceTemplates.find(serviceName);
 		if (it == m_ServiceTemplates.end())
 		{
 			std::ostringstream msg;
-			msg << "internal error: plugin " << this->name() << " does not export service " << serviceName;
+			msg << "internal error: plugin " << this->getName() << " does not export service " << serviceName;
 			throw Exception(msg.str());
 		}
+		IService *service = it->second->create();
 
-		return Poco::SharedPtr< IService >(it->second->create());
-	}
-
-	Runnable & Plugin::createService(std::string const& serviceName, SystemImpl &graph)
-	{
 		unsigned int counter = 0;
-		//this could be done more efficiently, currently i just count the instances of a particular plugin
-		for (ServiceMap::iterator it = m_Services.begin(); it != m_Services.end(); ++it)
+		std::pair< ServiceMap::iterator, ServiceMap::iterator > range = m_Services.equal_range(serviceName);
+		for (ServiceMap::iterator it = range.first; it != range.second; ++it)
 		{
-			Service *s = it->second;
-			if (s->getServiceName() == serviceName)
-			{
-				counter++;
-			}
+			++counter;
 		}
 
 		std::ostringstream s;
 		s << counter;
+		std::string idName = this->getName() + "." + toLower(serviceName) + " nr. " + s.str();
 
-		std::string idName = this->name() + "." + toLower(serviceName) + " nr. " + s.str();
-		return createService(idName, serviceName, graph);
-	}
+		m_Services.insert(make_pair(serviceName, service));
 
-	Runnable & Plugin::createService(std::string const& idName, std::string const& serviceName, SystemImpl &graph)
-	{
-		Poco::SharedPtr< IService > service = createService(serviceName);
-		const Identifier id = Entity::createIdentifier(idName, "service");
-		Service *runnable = new Service(id, service, graph, m_Metadata.getServiceMetadata(serviceName));
-		m_Services.insert(NamedService(id, runnable));
-		return *runnable;
+		ServiceMetadata &meta = m_Metadata.getServiceMetadata(serviceName);
+
+		ServiceData result;
+		result.name = idName;
+		result.service = service;
+		result.metainfo = &meta;
+		return result;
 	}
 
 	const bool Plugin::definesService(std::string const& serviceName) const

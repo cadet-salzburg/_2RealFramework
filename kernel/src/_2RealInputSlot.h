@@ -33,7 +33,7 @@ namespace _2Real
 	class OutputSlot;
 	class Data;
 	class ParameterMetadata;
-	class RunnableTriggers;
+	class AbstractStateManager;
 
 	typedef std::pair< long, EngineData >	TimestampedData;
 	typedef std::map< long, EngineData, std::greater< long > > DataMap;
@@ -58,6 +58,7 @@ namespace _2Real
 		void insert(TimestampedData const& data) { DataMap::insert(data); }
 		DataBuffer::iterator erase(DataMap::iterator it) { return DataMap::erase(it); }
 		void clear() { DataMap::clear(); }
+		void popOldest() { if (!this->empty()) { DataMap::iterator it = DataMap::end(); it--; this->erase(it); } }
 		const bool empty() const { return DataMap::empty(); }
 		DataBuffer::iterator end() { return DataMap::end(); }
 		DataBuffer::iterator begin() { return DataMap::begin(); }
@@ -135,6 +136,48 @@ namespace _2Real
 				else
 				{
 					return false;
+				}
+			}
+
+			return true;
+		}
+
+	};
+
+	//yeah, even i know that's a stupid name for a policy
+	class AlwaysInsertRemoveOldest : public BufferPolicy
+	{
+
+	public:
+
+		const bool insertData(TimestampedData const& data, DataBuffer &buffer)
+		{
+			if (buffer.size() < buffer.getMaxSize())
+			{
+				buffer.insert(data);
+				return true;
+			}
+			else
+			{
+				buffer.popOldest();
+				return true;
+			}
+		}
+
+		const bool copyData(DataBuffer &dst, DataBuffer &src)
+		{
+			for (DataBuffer::iterator it = src.begin(); it != src.end(); )
+			{
+				if (dst.size() < dst.getMaxSize())
+				{
+					dst.insert(*it);
+					it = src.erase(it);
+				}
+				else
+				{
+					dst.popOldest();
+					dst.insert(*it);
+					it = src.erase(it);
 				}
 			}
 
@@ -226,8 +269,8 @@ namespace _2Real
 		/**
 		*	argh
 		*/
-		void registerToDataReceived(RunnableTriggers &triggers);
-		void unregisterFromDataReceived(RunnableTriggers &triggers);
+		void registerToDataReceived(AbstractStateManager &triggers);
+		void unregisterFromDataReceived(AbstractStateManager &triggers);
 
 	private:
 

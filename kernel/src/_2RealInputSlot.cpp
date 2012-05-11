@@ -21,7 +21,7 @@
 #include "_2RealException.h"
 #include "_2RealData.h"
 #include "_2RealParameterMetadata.h"
-#include "_2RealRunnableTriggers.h"
+#include "_2RealAbstractStateManager.h"
 
 #include <iostream>
 
@@ -248,14 +248,14 @@ namespace _2Real
 		return (m_LinkedOutlets.size() > 0);
 	}
 
-	void InputSlot::registerToDataReceived(RunnableTriggers &triggers)
+	void InputSlot::registerToDataReceived(AbstractStateManager &triggers)
 	{
-		m_DataReceived += Poco::delegate(&triggers, &RunnableTriggers::tryTriggerInlet);
+		m_DataReceived += Poco::delegate(&triggers, &AbstractStateManager::tryTriggerInlet);
 	}
 
-	void InputSlot::unregisterFromDataReceived(RunnableTriggers &triggers)
+	void InputSlot::unregisterFromDataReceived(AbstractStateManager &triggers)
 	{
-		m_DataReceived -= Poco::delegate(&triggers, &RunnableTriggers::tryTriggerInlet);
+		m_DataReceived -= Poco::delegate(&triggers, &AbstractStateManager::tryTriggerInlet);
 	}
 
 }

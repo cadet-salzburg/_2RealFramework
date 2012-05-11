@@ -47,22 +47,14 @@ namespace _2Real
 		/**
 		*	returns the entity's name
 		*
-		*	@return:		name as chosen by the application programmer
+		*	@return:		name
 		*/
 		std::string const& name() const;
 
 		/**
-		*	returns the entity's type, as string
-		*
-		*	@return:		type: plugin, system, sequence, synchronization,
-		*					service (= a concrete instance of a plugin-exported service)
-		*/
-		std::string const& type() const;
-
-		/**
 		*	returns the entity's id
 		*
-		*	@return:		the entity's unique id
+		*	@return:		id
 		*/
 		unsigned int id() const;
 
@@ -86,31 +78,13 @@ namespace _2Real
 
 		friend std::ostream& operator<<(std::ostream &out, Identifier const& id);
 
-		const bool isPlugin() const;
-		const bool isService() const;
-		const bool isSetupAble() const;
-		const bool isRunAble() const;
-		const bool isContainer() const;
-
 	private:
 
 		friend class Entity;
 
-		Identifier(std::string const& name, std::string const& type, unsigned int const& id);
+		Identifier(std::string const& name, unsigned int const& id);
 
-		/**
-		*	name chosen by the application programmer
-		*/
 		std::string			m_Name;
-
-		/**
-		*	type as string (plugin, service, sequence, synchronization, system)
-		*/
-		std::string			m_Type;
-
-		/**
-		*	unique id
-		*/
 		unsigned int		m_Id;
 
 	};

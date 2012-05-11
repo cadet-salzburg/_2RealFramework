@@ -20,7 +20,7 @@
 #pragma once
 
 #include "_2RealIdentifier.h"
-#include "_2RealUpdateTriggers.h"
+#include "_2RealUpdatePolicy.h"
 #include "_2RealEngineData.h"
 #include "_2RealCallbacks.h"
 
@@ -36,18 +36,23 @@ namespace _2Real
 
 	public:
 
-		~System();
 		System(std::string const& name);
+		~System();
 
-		/**
-		*	kills all runnables in the system
-		*/
 		void clear();
 
-		const Identifier createService(Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& updateTriggers = UpdateTriggers::ServiceDefault());
-		const Identifier createService(std::string const& idName, Identifier const& pluginId, std::string const& serviceName, UpdateTriggers const& updateTriggers = UpdateTriggers::ServiceDefault());
+		const Identifier
+		createService(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers = UpdatePolicy());
 
-		void setup(Identifier const& runnableId);
+		const Identifier
+		createSynchronization(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
+
+		const Identifier
+		createSynchronization(std::list< Identifier > const& blockIds);
+
+		void setup(Identifier const& serviceId);
+
+		void link(Identifier const& outService, std::string const& outlet, Identifier const& inService, std::string const& inlet);
 
 		template< typename DataType >
 		void setValue(Identifier const& id, std::string const& name, DataType const& value)
@@ -57,10 +62,10 @@ namespace _2Real
 		}
 
 		template< typename DataType >
-		void sendValue(Identifier const& id, std::string const& name, DataType const& value)
+		void insertValue(Identifier const& id, std::string const& name, DataType const& value)
 		{
 			EngineData data(value);
-			sendValueInternal(id, name, data);
+			insertValueInternal(id, name, data);
 		}
 
 		template< typename DataType >
@@ -70,30 +75,20 @@ namespace _2Real
 			return *ptr.get();
 		}
 
-		void linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-		void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-		void clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks = false);
-		void clearInputProviders(Identifier const& inService, std::string const& inName);
+		//void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
+		//void clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks = false);
+		//void clearInputProviders(Identifier const& inService, std::string const& inName);
 
-		///**
-		//*	exception listener callbacks
-		//*/
 		//void registerToException(ExceptionCallback callback);
 		//void unregisterFromException(ExceptionCallback callback);
 		//void registerToException(IExceptionListener &listener);
 		//void unregisterFromException(IExceptionListener &listener);
 
-		///**
-		//*	output slot callbacks
-		//*/
 		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
 		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
 		//void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 		//void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
 
-		///**
-		//*	runnable state changes
-		//*/
 		//void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
 		//void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
 		//void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
@@ -102,18 +97,13 @@ namespace _2Real
 	private:
 
 		System(System const& src);
+		System& operator=(System const& src);
 
-		void setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
-		void sendValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
-		const EngineData getValueInternal(Identifier const& id, std::string const& name) const;
+		void				setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+		void				insertValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
+		const EngineData	getValueInternal(Identifier const& id, std::string const& name) const;
 
-		SystemImpl				*m_Impl;
-
-		/**
-		*	helper lookup table
-		*/
-		std::map< std::string, Identifier >		m_Lookup;
-		void unique(std::string const& s) const;
+		SystemImpl			*m_Impl;
 
 	};
 

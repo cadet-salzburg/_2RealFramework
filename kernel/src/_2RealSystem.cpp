@@ -23,7 +23,7 @@
 namespace _2Real
 {
 	System::System(std::string const& name) :
-		m_Impl(new SystemImpl())
+		m_Impl(new SystemImpl(name))
 	{
 	}
 
@@ -47,24 +47,31 @@ namespace _2Real
 		m_Impl->clear();
 	}
 
-	const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service, UpdateTriggers const& triggers)
-	{
-		//std::string idName = validateName(name);
-		//unique(idName);
+	//const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service, UpdatePolicy const& triggers)
+	//{
+	//	//std::string idName = validateName(name);
+	//	//unique(idName);
+	//	return m_Impl->createService(name, plugin, service, triggers);
+	//}
 
-		return m_Impl->createService(name, plugin, service, triggers);
-		//m_Lookup.insert(NamedId(idName, id));
+	const Identifier System::createService(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers)
+	{
+		return m_Impl->createServiceBlock(pluginId, serviceName, triggers);
 	}
 
-	const Identifier System::createService(Identifier const& plugin, std::string const& service, UpdateTriggers const& triggers)
+	const Identifier System::createSynchronization(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds)
 	{
-		return m_Impl->createService(plugin, service, triggers);
-		//m_Lookup.insert(NamedId(id.name(), id));
+		return m_Impl->createSyncBlock(blockIds, readyIds, finishedIds);
 	}
 
-	void System::setup(Identifier const& runnableId)
+	const Identifier System::createSynchronization(std::list< Identifier > const& blockIds)
 	{
-		m_Impl->setUp(runnableId);
+		return m_Impl->createSyncBlock(blockIds);
+	}
+
+	void System::setup(Identifier const& serviceId)
+	{
+		m_Impl->setUp(serviceId);
 	}
 
 	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
@@ -72,9 +79,9 @@ namespace _2Real
 		m_Impl->setValue(id, param, value);
 	}
 
-	void System::sendValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
+	void System::insertValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
 	{
-		m_Impl->sendValue(id, param, value);
+		m_Impl->insertValue(id, param, value);
 	}
 
 	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
@@ -82,25 +89,25 @@ namespace _2Real
 		return m_Impl->getValue(id, name);
 	}
 
-	void System::linkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
+	void System::link(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
 	{
-		m_Impl->linkSlots(inService, inName, outService, outName);
+		m_Impl->link(inService, inName, outService, outName);
 	}
 
-	void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
-	{
-		//m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
-	}
+	//void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
+	//{
+	//	//m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
+	//}
 
-	void System::clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks)
-	{
-		//m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
-	}
+	//void System::clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks)
+	//{
+	//	m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
+	//}
 
-	void System::clearInputProviders(Identifier const& inService, std::string const& inName)
-	{
-		//m_EngineImpl.clearInputProviders(inService, inName, m_Id);
-	}
+	//void System::clearInputProviders(Identifier const& inService, std::string const& inName)
+	//{
+	//	m_EngineImpl.clearInputProviders(inService, inName, m_Id);
+	//}
 
 	//void System::registerToException(ExceptionCallback callback)
 	//{
@@ -151,14 +158,4 @@ namespace _2Real
 	//void System::unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener)
 	//{
 	//}
-
-	void System::unique(std::string const& s) const
-	{
-		if (m_Lookup.find(s) != m_Lookup.end())
-		{
-			std::ostringstream msg;
-			msg << "name " << s << " already exists!";
-			throw AlreadyExistsException(msg.str());
-		}
-	}
 }

@@ -39,13 +39,13 @@ namespace _2Real
 	*/
 
 	class PooledThread;
-	class RunnableManager;
+	class ServiceStates;
 	class Timer;
 
-	typedef std::list< PooledThread * >						ThreadList;
-	typedef std::deque< RunnableManager * >					RunnableDeque;
-	typedef std::map< unsigned int, RunnableManager * >		RunnableMap;
-	typedef std::pair< unsigned int, RunnableManager * >	NamedRunnable;
+	typedef std::list< PooledThread * >							ThreadList;
+	typedef std::deque< ServiceStates * >					RunnableDeque;
+	typedef std::map< unsigned int, ServiceStates * >		RunnableMap;
+	typedef std::pair< unsigned int, ServiceStates * >	NamedRunnable;
 
 	class ThreadPool
 	{
@@ -66,24 +66,24 @@ namespace _2Real
 		void update(long &time);
 
 		/**
-		*	tries to execute a runnable
+		*	tries to 
 		*/
-		void scheduleRunnable(RunnableManager &runnable);
+		void scheduleService(ServiceStates &s);
 
 		/**
 		*	unschedules scheduled runnable
 		*/
-		const bool unscheduleRunnable(RunnableManager &runnable);
+		const bool unscheduleService(ServiceStates &s);
 
 		/**
 		*	signals that a runnable is finished
 		*/
-		void runnableIsFinished(RunnableManager &runnable);
+		void serviceIsFinished(ServiceStates &s);
 
 		/**
 		*	kill a runnable
 		*/
-		void abortRunnable(RunnableManager &runnable, _2Real::Exception &e);
+		void abortService(ServiceStates &s);
 
 		/**
 		*	yay
@@ -175,9 +175,9 @@ namespace _2Real
 
 		ThreadPoolCallback(ThreadPool &pool) : m_ThreadPool(pool) {}
 
-		void invoke(RunnableManager &runnable)
+		void invoke(ServiceStates &s)
 		{
-			m_ThreadPool.runnableIsFinished(runnable);
+			m_ThreadPool.serviceIsFinished(s);
 		}
 
 	private:

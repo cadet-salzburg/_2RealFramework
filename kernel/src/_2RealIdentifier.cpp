@@ -24,21 +24,18 @@ namespace _2Real
 
 	Identifier::Identifier() :
 		m_Name(""),
-		m_Type(""),
 		m_Id(0)
 	{
 	}
 
-	Identifier::Identifier(std::string const& name, std::string const& type, unsigned int const& id) :
+	Identifier::Identifier(std::string const& name, unsigned int const& id) :
 		m_Name(name),
-		m_Type(type),
 		m_Id(id)
 	{
 	}
 
 	Identifier::Identifier(Identifier const& src) :
 		m_Name(src.m_Name),
-		m_Type(src.m_Type),
 		m_Id(src.m_Id)
 	{
 	}
@@ -46,7 +43,6 @@ namespace _2Real
 	Identifier& Identifier::operator=(Identifier const& src)
 	{
 		m_Name = src.m_Name;
-		m_Type = src.m_Type;
 		m_Id = src.m_Id;
 
 		return *this;
@@ -54,7 +50,7 @@ namespace _2Real
 
 	const bool Identifier::isValid() const
 	{
-		return *this == Entity::NoEntity();
+		return *this == Entity::InvalidId();
 	}
 
 	unsigned int Identifier::id() const
@@ -65,11 +61,6 @@ namespace _2Real
 	std::string const& Identifier::name() const
 	{
 		return m_Name;
-	}
-
-	std::string const& Identifier::type() const
-	{
-		return m_Type;
 	}
 
 	const bool Identifier::operator==(Identifier const& rhs) const
@@ -102,34 +93,9 @@ namespace _2Real
 		return (m_Id  >= rhs.m_Id );
 	}
 
-	const bool Identifier::isPlugin() const
-	{
-		return (m_Type == "plugin");
-	}
-
-	const bool Identifier::isService() const
-	{
-		return (m_Type == "service");
-	}
-
-	const bool Identifier::isSetupAble() const
-	{
-		return (m_Type == "plugin" || m_Type == "service");
-	}
-
-	const bool Identifier::isRunAble() const
-	{
-		return (m_Type == "service" || m_Type == "sequence" || m_Type == "synchronization");
-	}
-
-	const bool Identifier::isContainer() const
-	{
-		return (m_Type == "system" || m_Type == "sequence" || m_Type == "synchronization");
-	}
-
 	std::ostream& operator<<(std::ostream& out, Identifier const& id)
 	{
-		out << id.name() << " " << id.type() << " " << id.id();
+		out << id.name() << " " << id.id();
 		return out;
 	}
 

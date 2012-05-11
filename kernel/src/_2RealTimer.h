@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealRunnableTriggers.h"
+#include "_2RealAbstractStateManager.h"
 #include "_2RealThreadPool.h"
 
 #include "Poco/Timer.h"
@@ -42,8 +42,8 @@ namespace _2Real
 		~Timer();
 
 		void receiveTimerSignal(Poco::Timer &t);
-		void registerToTimerSignal(RunnableTriggers &triggers) const;
-		void unregisterFromTimerSignal(RunnableTriggers &triggers) const;
+		void registerToTimerSignal(AbstractStateManager &triggers) const;
+		void unregisterFromTimerSignal(AbstractStateManager &triggers) const;
 		void registerToTimerSignal(ThreadPool &pool) const;
 		void unregisterFromTimerSignal(ThreadPool &pool) const;
 
@@ -107,18 +107,18 @@ namespace _2Real
 
 	}
 
-	inline void Timer::registerToTimerSignal(RunnableTriggers &triggers) const
+	inline void Timer::registerToTimerSignal(AbstractStateManager &triggers) const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
 
-		m_TimerSignal += Poco::delegate(&triggers, &RunnableTriggers::tryTriggerTime);
+		m_TimerSignal += Poco::delegate(&triggers, &AbstractStateManager::tryTriggerTime);
 	}
 
-	inline void Timer::unregisterFromTimerSignal(RunnableTriggers &triggers) const
+	inline void Timer::unregisterFromTimerSignal(AbstractStateManager &triggers) const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
 
-		m_TimerSignal -= Poco::delegate(&triggers, &RunnableTriggers::tryTriggerTime);
+		m_TimerSignal -= Poco::delegate(&triggers, &AbstractStateManager::tryTriggerTime);
 	}
 
 	inline void Timer::registerToTimerSignal(ThreadPool &pool) const

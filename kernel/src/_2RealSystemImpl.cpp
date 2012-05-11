@@ -20,40 +20,33 @@
 #include "_2RealEngineImpl.h"
 #include "_2RealPluginPool.h"
 #include "_2RealThreadPool.h"
-#include "_2RealRunnable.h"
-#include "_2RealRunnableGraph.h"
 #include "_2RealExceptionHandler.h"
 #include "_2RealException.h"
-#include "_2RealService.h"
+#include "_2RealServiceBlock.h"
 #include "_2RealData.h"
-#include "_2RealRunnableManager.h"
-#include "_2RealUpdateTriggers.h"
+#include "_2RealUpdatePolicy.h"
+#include "_2RealSyncBlock.h"
+#include "_2RealTriggerTypes.h"
+#include "_2RealUpdatePolicyImpl.h"
 
 #include <sstream>
 
 namespace _2Real
 {
 
-	SystemImpl::SystemImpl() :
-		Graph(),
+	SystemImpl::SystemImpl(std::string const& name) :
+		Block< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, NULL),
+		m_Engine(EngineImpl::instance()),
 		m_PluginPool(EngineImpl::instance().getPluginPool()),
-		m_ExceptionHandler(),
 		m_Timestamp(),
-		m_Engine(EngineImpl::instance())
+		m_ExceptionHandler()
 	{
 		m_Timestamp.update();
 	}
 
 	SystemImpl::~SystemImpl()
 	{
-		try
-		{
-			clear();
-		}
-		catch (TimeOutException &e)
-		{
-			std::cout << e.message() << std::endl;
-		}
+		clear();
 	}
 
 	const long SystemImpl::getElapsedTime() const
@@ -68,208 +61,172 @@ namespace _2Real
 
 	void SystemImpl::clear()
 	{
-		RunnableList readyForDelete;
-		RunnableList errorOnDelete;
-
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); ++it)
+		try
 		{
-			(*it)->prepareForShutDown();
+			m_SubBlockManager->clear();
 		}
-
-		for (RunnableList::iterator it = m_Children.begin(); it != m_Children.end(); /**/)
+		catch (TimeOutException &e)
 		{
-			if ((*it)->shutDown())
-			{
-				readyForDelete.push_back(*it);
-				(*it)->debug();
-			}
-			else
-			{
-				errorOnDelete.push_back(*it);
-				(*it)->debug();
-			}
-
-			it = m_Children.erase(it);
-		}
-
-		for (RunnableList::iterator it = errorOnDelete.begin(); it != errorOnDelete.end(); /**/)
-		{
-			(*it)->prepareForAbort();
-			
-			std::ostringstream msg;
-			msg << (*it)->getManagedName() << " shut down failed" << std::endl;
-			TimeOutException e(msg.str());
-			
-			(*it)->abort(e);
-
-			it = errorOnDelete.erase(it);
-		}
-
-		for (RunnableList::iterator it = readyForDelete.begin(); it != readyForDelete.end(); /**/)
-		{
-			delete *it;
-			it = readyForDelete.erase(it);
+			std::cout << e.message() << std::endl;
 		}
 	}
 
-	//void SystemImpl::registerExceptionCallback(ExceptionCallback callback)
-	//{
-	//	m_ExceptionHandler.registerExceptionCallback(callback);
-	//}
-
-	//void SystemImpl::unregisterExceptionCallback(ExceptionCallback callback)
-	//{
-	//	m_ExceptionHandler.unregisterExceptionCallback(callback);
-	//}
-
-	//void SystemImpl::registerExceptionListener(IExceptionListener &listener)
-	//{
-	//	m_ExceptionHandler.registerExceptionListener(listener);
-	//}
-
-	//void SystemImpl::unregisterExceptionListener(IExceptionListener &listener)
-	//{
-	//	m_ExceptionHandler.unregisterExceptionListener(listener);
-	//}
-
-	//void SystemImpl::registerToStateChange(Identifier const& runnableId, StateChangeCallback callback)
-	//{
-	//	getContained(runnableId).registerToStateChange(callback);
-	//}
-
-	//void SystemImpl::unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback)
-	//{
-	//	getContained(runnableId).unregisterFromStateChange(callback);
-	//}
-
-	//void SystemImpl::registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener)
-	//{
-	//	getContained(runnableId).registerToStateChange(listener);
-	//}
-
-	//void SystemImpl::unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener)
-	//{
-	//	getContained(runnableId).unregisterFromStateChange(listener);
-	//}
-
-	void SystemImpl::registerToNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	void SystemImpl::registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback)
 	{
-		Runnable &runnable = getContained(serviceId).getManagedRunnable();
-		Service &service = static_cast< Service & >(runnable);
-		service.registerToNewData(outName, callback);
+		if (id == Entity::getIdentifier())
+		{
+			m_IOManager->registerToNewData(outlet, callback);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.registerToNewData(outlet, callback);
+		}
 	}
 
-	void SystemImpl::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, DataCallback callback)
+	void SystemImpl::unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback)
 	{
-		Runnable &runnable = getContained(serviceId).getManagedRunnable();
-		Service &service = static_cast< Service & >(runnable);
-		service.unregisterFromNewData(outName, callback);
-	}
-
-	//void SystemImpl::registerToNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
-	//{
-	//	Runnable &runnable = getContained(serviceId).getManagedRunnable();
-	//	Service &service = static_cast< Service & >(runnable);
-	//	service.registerToNewData(outName, listener);
-	//}
-
-	//void SystemImpl::unregisterFromNewData(Identifier const& serviceId, std::string const& outName, IOutputListener &listener)
-	//{
-	//	Runnable &runnable = getContained(serviceId).getManagedRunnable();
-	//	Service &service = static_cast< Service & >(runnable);
-	//	service.unregisterFromNewData(outName, listener);
-	//}
-
-	void SystemImpl::handleException(Runnable &runnable, Exception &exception)
-	{
-		//stopChild(runnable.root().identifier());
-		//m_ExceptionHandler.handleException(exception, runnable.identifier());
+		if (id == Entity::getIdentifier())
+		{
+			m_IOManager->unregisterFromNewData(outlet, callback);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.unregisterFromNewData(outlet, callback);
+		}
 	}
 
 	void SystemImpl::setUp(Identifier const& id)
 	{
-		if (id.isService())
+		if (id == Entity::getIdentifier())
 		{
-			RunnableManager &mgr = getContained(id);
-			mgr.setUp();
+			m_StateManager->setUp();
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.setUp();
 		}
 	}
-
-	const Identifier SystemImpl::createService(Identifier const& id, std::string const& service, UpdateTriggers const& triggers)
-	{
-		Runnable &runnable = m_PluginPool.createService(id, service, *this);
-		RunnableManager *manager = new RunnableManager(runnable, *(triggers.m_Impl));
-		m_Children.push_back(manager);
-		return runnable.identifier();
-	}
-
-	const Identifier SystemImpl::createService(std::string const& name, Identifier const& id, std::string const& service, UpdateTriggers const& triggers)
-	{
-		Runnable &runnable = m_PluginPool.createService(name, id, service, *this);
-		RunnableManager *manager = new RunnableManager(runnable, *(triggers.m_Impl));
-		m_Children.push_back(manager);
-		return runnable.identifier();
-	}
-
-	//const Identifier SystemImpl::createSequence(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
-	//{
-	//	const Identifier id = Entity::createIdentifier(idName, "sequence");
-	//	/*MISSING*/
-	//	return id;
-	//}
-
-	//const Identifier SystemImpl::createSynchronization(std::string const& idName, Identifier const& runnableA, Identifier const& runnableB)
-	//{
-	//	const Identifier id = Entity::createIdentifier(idName, "synchronization");
-	//	/*MISSING*/
-	//	return id;
-	//}
 
 	void SystemImpl::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
 	{
 		Data data(value, (long)m_Timestamp.elapsed());
-		if (id.isService())
+
+		if (id == Entity::getIdentifier())
 		{
-			Runnable &runnable = getContained(id).getManagedRunnable();
-			Service &service = static_cast< Service & >(runnable);
-			service.setParameterValue(paramName, data);
+			m_IOManager->setValue(paramName, data);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.setValue(paramName, data);
 		}
 	}
 
-	void SystemImpl::sendValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	void SystemImpl::insertValue(Identifier const& id, std::string const& paramName, EngineData const& value)
 	{
 		Data data(value, (long)m_Timestamp.elapsed());
-		if (id.isService())
+
+		if (id == Entity::getIdentifier())
 		{
-			Runnable &runnable = getContained(id).getManagedRunnable();
-			Service &service = static_cast< Service & >(runnable);
-			service.insertParameterValue(paramName, data);
+			m_IOManager->insertValue(paramName, data);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.insertValue(paramName, data);
 		}
 	}
 
 	const EngineData SystemImpl::getValue(Identifier const& id, std::string const& paramName) const
 	{
-		Runnable &runnable = getContained(id).getManagedRunnable();
-		Service &service = static_cast< Service & >(runnable);
-		return service.getParameterValue(paramName);
+		if (id == Entity::getIdentifier())
+		{
+			return m_IOManager->getValue(paramName);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			return obj.getValue(paramName);
+		}
 	}
 
-	std::string const& SystemImpl::getParameterKey(Identifier const& id, std::string const& paramName) const
+	std::string const& SystemImpl::getKey(Identifier const& id, std::string const& paramName) const
 	{
-		Runnable &runnable = getContained(id).getManagedRunnable();
-		Service &service = static_cast< Service & >(runnable);
-		return service.getParameterKey(paramName);
+		if (id == Entity::getIdentifier())
+		{
+			return m_IOManager->getKey(paramName);
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			return obj.getKey(paramName);
+		}
 	}
 
-	void SystemImpl::linkSlots(Identifier const& serviceIn, std::string const& nameIn, Identifier const& serviceOut, std::string const& nameOut)
+	void SystemImpl::link(Identifier const& in, std::string const& nameIn, Identifier const& out, std::string const& nameOut)
 	{
-		Runnable &runnableIn = getContained(serviceIn).getManagedRunnable();
-		Service &in = static_cast< Service & >(runnableIn);
+		/**
+		*	TODO
+		*/
+		AbstractBlock &objIn = m_SubBlockManager->getBlock(in);
+		AbstractBlock &objOut = m_SubBlockManager->getBlock(out);
+		objIn.linkWith(nameIn, objOut, nameOut);
+	}
 
-		Runnable &runnableOut = getContained(serviceOut).getManagedRunnable();
-		Service &out = static_cast< Service & >(runnableOut);
+	const Identifier SystemImpl::createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers)
+	{
+		ServiceData serviceData = m_PluginPool.createService(pluginId, serviceName);
+		ServiceBlock *service = new ServiceBlock(serviceData, *this, *(triggers.m_Impl));
+		this->addSubBlock(*service);
+		return service->getIdentifier();
+	}
 
-		in.linkWith(nameIn, out, nameOut);
+	const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds)
+	{
+		BlockList syncSet, readySet, finishedSet;
+		for (std::list< Identifier >::const_iterator it = blockIds.begin(); it != blockIds.end(); ++it)
+		{
+			AbstractBlock *block = &m_SubBlockManager->getBlock(*it);
+			syncSet.push_back(block);
+		}
+
+		SyncBlock *syncBlock = new SyncBlock("sync block", *this);
+		this->addSubBlock(*syncBlock);
+
+		AbstractStateManager &triggerMgr = syncBlock->getStateManager();
+		AbstractBlockManager &blockMgr = syncBlock->getSubBlockManager();
+		for (BlockList::iterator it = syncSet.begin(); it != syncSet.end(); ++it)
+		{
+			AbstractBlock &b = **it;
+			AbstractStateManager &tMgr = b.getStateManager();
+			AbstractBlockManager &bMgr = b.getUberBlockManager();
+
+			AbstractBlockBasedTrigger *readyTrigger = new BlockBasedTrigger< BLOCK_READY >(b.getName());
+			AbstractBlockBasedTrigger *finishedTrigger = new BlockBasedTrigger< BLOCK_FINISHED >(b.getName());
+			AbstractBlockBasedTrigger *uberTrigger = new BlockBasedTrigger< BLOCK_OK >("sync block");
+			blockMgr.addBlock(b);
+			bMgr.addBlock(*syncBlock);
+			triggerMgr.subBlockAdded(b, *readyTrigger, BLOCK_READY);
+			triggerMgr.subBlockAdded(b, *finishedTrigger, BLOCK_FINISHED);
+			tMgr.uberBlockAdded(*syncBlock, *uberTrigger, BLOCK_OK);
+		}
+
+		//causes the sync block to start waiting for ready messages
+		syncBlock->setUp();
+
+		return syncBlock->getIdentifier();
+
+	}
+
+	const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds)
+	{
+		SyncBlock *syncBlock = new SyncBlock("sync block", *this);
+
+		return syncBlock->getIdentifier();
+
 	}
 
 }

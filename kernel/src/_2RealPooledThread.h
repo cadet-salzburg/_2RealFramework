@@ -19,17 +19,13 @@
 
 #pragma once
 
-#include "_2RealRunnable.h"
-#include "_2RealRunnableManager.h"
-#include "_2RealException.h"
-
-#include "Poco/Runnable.h"
 #include "Poco/Thread.h"
 #include "Poco/Event.h"
 
 namespace _2Real
 {
 
+	class ServiceStates;
 	class ThreadPoolCallback;
 
 	class PooledThread : public Poco::Runnable
@@ -44,7 +40,7 @@ namespace _2Real
 		const bool join();
 
 		void run();
-		void run(Poco::Thread::Priority const& priority, _2Real::RunnableManager &target);
+		void run(Poco::Thread::Priority const& priority, ServiceStates &target);
 		void reactivate();
 
 		const bool operator<(PooledThread const& rhs) const;
@@ -52,9 +48,9 @@ namespace _2Real
 	private:
 
 		/**
-		*	the runnable that is to be executed
+		*	the service that we want to execute
 		*/
-		_2Real::RunnableManager		*m_Target;
+		ServiceStates			*m_Target;
 
 		/**
 		*	true if this thread has no target to execute

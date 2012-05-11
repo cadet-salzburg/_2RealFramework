@@ -18,42 +18,14 @@
 
 #include "_2RealEntity.h"
 
-#include "Poco/Mutex.h"
-
 namespace _2Real
 {
 
-	class IdCounter
-	{
+	IdCounter Entity::m_Counter = IdCounter();
 
-	public:
-
-		IdCounter() :
-			m_Counter(0)
-		{
-		}
-
-		unsigned int getId()
-		{
-			Poco::FastMutex::ScopedLock lock(m_Mutex);
-			return ++m_Counter;
-		}
-
-	private:
-
-		Poco::FastMutex	m_Mutex;
-		unsigned int	m_Counter;
-
-	};
-
-	const Identifier Entity::createIdentifier(std::string const& name, std::string const& type)
-	{
-		static IdCounter counter;
-		return Identifier(name, type, counter.getId());
-	}
-
-	Entity::Entity(Identifier const& id) :
-		m_Id(id)
+	Entity::Entity(std::string const& name) :
+		m_Id(m_Counter.getId()),
+		m_Name(name)
 	{
 	}
 
@@ -61,9 +33,19 @@ namespace _2Real
 	{
 	}
 
-	const Identifier Entity::NoEntity()
+	Identifier Entity::getIdentifier() const
 	{
-		return Identifier("", "", 0);
+		return Identifier(m_Name, m_Id);
+	}
+
+	const Identifier Entity::InvalidId()
+	{
+		return Identifier("invalid", 0);
+	}
+
+	std::string const& Entity::getName() const
+	{
+		return m_Name;
 	}
 
 }

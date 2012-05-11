@@ -28,16 +28,16 @@ namespace _2Real
 	*	internal service; listens to all input vars within a system
 	*/
 
-	class ListenerService : public InternalService
-	{
+	//class ListenerService : public InternalService
+	//{
 
-	public:
+	//public:
 
-		ListenerService(Identifier const& _id, SystemImpl &system);
-		virtual ~ListenerService();
+	//	ListenerService(Identifier const& _id, SystemImpl &system);
+	//	virtual ~ListenerService();
 
-		ServiceMetadata const& getMetadata();
+	//	ServiceMetadata const& getMetadata();
 
-	};
+	//};
 
 }

@@ -18,28 +18,6 @@
 
 #pragma once
 
-#include "_2RealRunnable.h"
-#include "_2RealIService.h"
-
 namespace _2Real
 {
-
-	class ServiceMetadata;
-
-	/**
-	*	services provided by the 2 real EngineImpl
-	*/
-
-	class InternalService : public Runnable, public IService
-	{
-
-	public:
-
-		InternalService(Identifier const& id, SystemImpl &system);
-		virtual ~InternalService();
-
-		//ServiceMetadata const& getMetadata();
-
-	};
-
 }

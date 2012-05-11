@@ -18,7 +18,7 @@
 */
 
 #include "_2RealPooledThread.h"
-#include "_2RealRunnable.h"
+#include "_2RealServiceBlock.h"	//service states
 #include "_2RealThreadPool.h"
 
 #include "Poco/ThreadLocal.h"
@@ -79,11 +79,11 @@ namespace _2Real
 		}
 	}
 
-	void PooledThread::run(Poco::Thread::Priority const& priority, _2Real::RunnableManager &target)
+	void PooledThread::run(Poco::Thread::Priority const& priority, ServiceStates &target)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-		m_Thread.setName(target.getManagedName());
+		m_Thread.setName(target.getName());
 		m_Thread.setPriority(priority);
 		m_Target = &target;
 
@@ -112,12 +112,11 @@ namespace _2Real
 			{
 				m_Mutex.unlock();
 
-				//if an exception occurs here, it is handled by the runnable itself
-				m_Target->getManagedRunnable().run();
+				m_Target->executeService();
 
 				Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-				RunnableManager *tmp = m_Target;
+				ServiceStates *tmp = m_Target;
 
 				m_Target = NULL;
 				m_IsIdle = true;

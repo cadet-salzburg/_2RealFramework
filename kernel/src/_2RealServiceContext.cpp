@@ -18,21 +18,21 @@
 */
 
 #include "_2RealServiceContext.h"
-#include "_2RealService.h"
+#include "_2RealServiceBlock.h"
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
 
 namespace _2Real
 {
 
-	ServiceContext::ServiceContext(Service &service) :
+	ServiceContext::ServiceContext(ServiceBlock &service) :
 		m_Service(service)
 	{
 	}
 
 	const EngineData ServiceContext::getData(std::string const& name) const
 	{
-		return m_Service.getParameterValue(name);
+		return m_Service.getValue(name);
 	}
 
 	InputHandle ServiceContext::getInputHandle(std::string const& name)
