@@ -3,6 +3,7 @@
 #include "_2RealPluginContext.h"
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
+#include "_2RealEnum.h"
 
 #include "ServiceImpl.h"
 
@@ -20,8 +21,8 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 
 		metadata.addService("Counter");
 		metadata.setDescription("Counter", "count up starting with 1");
-		// define the data type of the slot, the service name and the output name
 		metadata.addOutputSlot< int >("Counter", "counter outlet");
+		metadata.addOutputSlot< std::vector< int > >("Counter", "test");
 
 		metadata.addService("Doubler");
 		metadata.setDescription("Doubler", "multiply number by 2");
@@ -30,11 +31,8 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 
 		metadata.addService("PrintOut");
 		metadata.setDescription("PrintOut", "print out a number to the console");
-		 
-		// the default value is optional, but if there is no default value and no 
-		// input value, the update() function will not be executed. 
-		// metadata.addInputSlot< int >("PrintOut", "input number");
 		metadata.addInputSlot< int >("PrintOut", "input number", int(0));
+		metadata.addSetupParameter< Enumeration >("PrintOut", "test enum", Enumeration(Enums("option 1", "you suck")("option 2", "fuck off")("option 3", "die!"), "NO VALUE AVAILABLE"));
 	}
 	catch (_2Real::Exception &e)
 	{
