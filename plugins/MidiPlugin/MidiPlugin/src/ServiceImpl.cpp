@@ -86,7 +86,7 @@ void Service1::update()
 	int nBytes;
 	try
 	{
-		//do something
+		////do something
 		stamp  = m_midiInput->getMessage(&message);
 		nBytes = message.size();
 
@@ -98,8 +98,9 @@ void Service1::update()
 			test[0] = 0;
 			test[1] = 1;
 			test[2] = 2;
+			
 			//std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
-			m_ReadBytes.data< std::vector < unsigned char > >() = test;
+			 m_ReadBytes.data< unsigned char > () = (int)message[i];
 		}
 		if ( nBytes > 0 )
 		//	std::cout << "stamp = " << stamp << std::endl;
