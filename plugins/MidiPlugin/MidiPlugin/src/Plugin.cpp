@@ -21,7 +21,7 @@ void  MidiPlugin::getMetadata(Metadata &metadata)
 		metadata.addService("Service 1");
 		metadata.setDescription("Service 1", "description");
 		// define the data type of the slot, the service name and the output name
-		metadata.addInputSlot< int >("Service 1", "s1 inlet");
+	 
 		metadata.addOutputSlot< unsigned int >("Service 1", "m_ReadBytes");
 		metadata.addOutputSlot< unsigned int >("Service 1", "m_TimeStamp");
 

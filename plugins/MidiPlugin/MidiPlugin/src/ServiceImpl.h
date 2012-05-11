@@ -6,6 +6,7 @@
 #include "_2RealOutputHandle.h"
 
 #include <iostream>
+#include "RtMidi.h"
 
 _2Real::IService *const createService1();
 
@@ -25,7 +26,7 @@ public:
 	_2Real::InputHandle				m_InValue;
 	_2Real::OutputHandle			m_ReadBytes;
 	_2Real::OutputHandle			m_TimeStamp;
-
+	RtMidiIn					    *m_midiInput ;
 
 
 };
