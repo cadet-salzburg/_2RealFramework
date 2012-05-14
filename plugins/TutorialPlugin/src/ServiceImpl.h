@@ -23,6 +23,7 @@ private:
 	int								m_CurrentCount;
 	_2Real::OutputHandle			m_CounterValue;
 	_2Real::OutputHandle			m_Test;
+	_2Real::OutputHandle			m_Options;
 
 };
 

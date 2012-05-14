@@ -10,8 +10,9 @@ void Counter::setup(_2Real::ServiceContext &context)
 	try
 	{
 		m_CurrentCount = 1;
-		m_CounterValue = context.getOutputHandle("counter outlet");
-		m_Test = context.getOutputHandle("test");
+		m_CounterValue = context.getOutputHandle( "counter outlet" );
+		m_Test = context.getOutputHandle( "test" );
+		m_Options = context.getOutputHandle( "options" );
 	}
 	catch (_2Real::Exception &e)
 	{
@@ -32,16 +33,19 @@ void Counter::update()
 		m_CounterValue.data<int>() = m_CurrentCount;
 		m_CurrentCount+=1;
 
-		std::vector< int > test;
-		//test.push_back(1);
-		//test.push_back(2);
-		//test.push_back(3);
-		m_Test.data< std::vector < int > >() = test;
-
-		//this is actually faster than pushing back first and then assigning
+		m_Test.data< std::vector < int > >() = std::vector< int >();
 		m_Test.data< std::vector < int > >().push_back( 0 );
 		m_Test.data< std::vector < int > >().push_back( 1 );
 		m_Test.data< std::vector < int > >().push_back( 2 );
+		m_Test.data< std::vector < int > >().push_back( 3 );
+		m_Test.data< std::vector < int > >().push_back( 4 );
+		m_Test.data< std::vector < int > >().push_back( 5 );
+
+		std::list< std::string > enums, values;
+		enums.push_back( "option 1" );
+		values.push_back( "hi there" );
+		m_Options.data< Enumeration >().setEnums( enums );
+		m_Options.data< Enumeration >().setValues( values );
 	}
 	catch (_2Real::Exception &e)
 	{

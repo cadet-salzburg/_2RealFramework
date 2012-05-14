@@ -23,6 +23,7 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 		metadata.setDescription("Counter", "count up starting with 1");
 		metadata.addOutputSlot< int >("Counter", "counter outlet");
 		metadata.addOutputSlot< std::vector< int > >("Counter", "test");
+		metadata.addOutputSlot< Enumeration >( "Counter", "options" );
 
 		metadata.addService("Doubler");
 		metadata.setDescription("Doubler", "multiply number by 2");
