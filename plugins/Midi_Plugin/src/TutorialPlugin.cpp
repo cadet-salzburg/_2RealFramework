@@ -20,9 +20,16 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 		metadata.setContact("help@cadet.at");
 
 		metadata.addService("Service1");
-		metadata.setDescription("Service1", "count up starting with 1");
+		metadata.setDescription("Service1", "midi input");
+		
+		metadata.addService("Service2");
+		metadata.setDescription("Service2", "midi output");
+
+
+
 		metadata.addOutputSlot< int >("Service1", "counter outlet");
 		metadata.addOutputSlot< std::vector< unsigned char > >("Service1", "test");
+		metadata.addOutputSlot< std::vector< unsigned char > >("Service2", "outputmidi");
 
 	
 	}
@@ -41,7 +48,7 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 void TutorialPlugin::setup(PluginContext &context)
 {
 	context.registerService< Service1 >("Service1");
-	 
+	context.registerService< Service2 >("Service2");
 }
 
 void TutorialPlugin::shutdown()

@@ -72,8 +72,6 @@ void Service1::update()
 
 		}
 
- 
-
 	}
 	catch (_2Real::Exception &e)
 	{
@@ -86,4 +84,60 @@ void Service1::update()
 		throw _2Real::ServiceException(msg.str());
 	}
 };
+
+void Service1::shutdown()
+{
+	delete m_midiInput;
+}
+
+void Service2::setup( _2Real::ServiceContext &context )
+{
+
+	m_midiOutput = new RtMidiOut();
+	m_OutputMidi = context.getOutputHandle("outputmidi");
+
+	// Check available ports
+	unsigned int port = 0;
+	unsigned int nPorts = m_midiOutput->getPortCount();
+	if ( port >= nPorts ) {
+		delete m_midiOutput;
+		std::cout << "Invalid port specifier!\n";
+
+	}
+
+	try {
+		m_midiOutput->openPort( port );
+	}
+	catch ( RtError &error ) {
+		error.printMessage();
+
+	}
+	 
+
  
+
+}
+
+void Service2::update()
+{
+	try
+	{
+	std::vector<unsigned char> message;
+	message.push_back( 192 );
+	message.push_back( 5 );
+	m_midiOutput->sendMessage( &message );
+	m_OutputMidi.data< vector<unsigned char> >() = message;
+	}
+
+	catch (_2Real::Exception &e)
+	{
+		e.rethrow();
+	}
+	catch (std::exception &e)
+	{
+		std::ostringstream msg;
+		msg << "exception during service update: " << e.what();
+		throw _2Real::ServiceException(msg.str());
+	}
+
+}
