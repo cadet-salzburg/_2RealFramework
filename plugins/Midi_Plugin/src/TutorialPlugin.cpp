@@ -19,17 +19,17 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 		metadata.setVersion(0, 0, 0);
 		metadata.setContact("help@cadet.at");
 
-		metadata.addService("Service1");
-		metadata.setDescription("Service1", "midi input");
+		metadata.addService("MidiInputService");
+		metadata.setDescription("MidiInputService", "midi input");
 		
-		metadata.addService("Service2");
-		metadata.setDescription("Service2", "midi output");
+		metadata.addService("MidiOutputService");
+		metadata.setDescription("MidiOutputService", "midi output");
 
 
 
-		metadata.addOutputSlot< int >("Service1", "counter outlet");
-		metadata.addOutputSlot< std::vector< unsigned char > >("Service1", "test");
-		metadata.addOutputSlot< std::vector< unsigned char > >("Service2", "outputmidi");
+		metadata.addOutputSlot< int >("MidiInputService", "counter outlet");
+		metadata.addOutputSlot< std::vector< unsigned char > >("MidiInputService", "test");
+		metadata.addOutputSlot< std::vector< unsigned char > >("MidiOutputService", "outputmidi");
 
 	
 	}
@@ -47,8 +47,8 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 
 void TutorialPlugin::setup(PluginContext &context)
 {
-	context.registerService< Service1 >("Service1");
-	context.registerService< Service2 >("Service2");
+	context.registerService< MidiInputService >("MidiInputService");
+	context.registerService< MidiOutputService >("MidiOutputService");
 }
 
 void TutorialPlugin::shutdown()

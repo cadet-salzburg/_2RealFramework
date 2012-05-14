@@ -8,16 +8,16 @@
 #include <iostream>
 #include "RtMidi.h"
 
-class Service1 : public _2Real::IService
+class MidiInputService : public _2Real::IService
 {
 
 public:
 
-	Service1() {}
+	MidiInputService() {}
 	void shutdown();
 	void update();
 	void setup(_2Real::ServiceContext &context);
-	~Service1() {}
+	~MidiInputService() {}
 
 private:
 
@@ -29,16 +29,16 @@ private:
 
 
 
-class Service2 : public _2Real::IService
+class MidiOutputService : public _2Real::IService
 {
 
 public:
 
-	Service2() {}
+	MidiOutputService() {}
 	void shutdown() {}
 	void update();
 	void setup(_2Real::ServiceContext &context);
-	~Service2() {}
+	~MidiOutputService() {}
 
 private:
 		 

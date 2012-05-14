@@ -6,7 +6,7 @@
 using namespace _2Real;
 using namespace std;
 
-void Service1::setup(_2Real::ServiceContext &context)
+void MidiInputService::setup(_2Real::ServiceContext &context)
 {
 	try
 	{
@@ -51,7 +51,7 @@ void Service1::setup(_2Real::ServiceContext &context)
 	}
 };
 
-void Service1::update()
+void MidiInputService::update()
 {
 	try
 	{
@@ -85,12 +85,12 @@ void Service1::update()
 	}
 };
 
-void Service1::shutdown()
+void MidiInputService::shutdown()
 {
 	delete m_midiInput;
 }
 
-void Service2::setup( _2Real::ServiceContext &context )
+void MidiOutputService::setup( _2Real::ServiceContext &context )
 {
 
 	m_midiOutput = new RtMidiOut();
@@ -118,7 +118,7 @@ void Service2::setup( _2Real::ServiceContext &context )
 
 }
 
-void Service2::update()
+void MidiOutputService::update()
 {
 	try
 	{
