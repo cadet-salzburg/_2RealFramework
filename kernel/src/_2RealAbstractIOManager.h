@@ -18,15 +18,15 @@
 
 #pragma once
 
+#include "_2RealCallbacks.h"
+
 #include <map>
 #include <string>
 
 namespace _2Real
 {
 
-	class IOutputListener;
 	class EngineData;
-	class Data;
 	class InputHandle;
 	class OutputHandle;
 	class AbstractBlock;
@@ -37,8 +37,6 @@ namespace _2Real
 	typedef std::map< std::string, InputSlot * >		InletMap;
 	typedef std::map< std::string, OutputSlot * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
-
-	typedef void (*DataCallback)(Data &data);
 
 	class AbstractIOManager
 	{
@@ -55,10 +53,10 @@ namespace _2Real
 		//virtual void					addParam(ParameterMetadata const& meta) = 0;
 		//virtual void					addInlet(ParameterMetadata const& meta) = 0;
 		//virtual void					addOutlet(ParameterMetadata const& meta, Poco::Timestamp const& timestamp) = 0;
-		virtual void					registerToNewData(std::string const& outName, DataCallback callback) = 0;
-		virtual void					unregisterFromNewData(std::string const& outName, DataCallback callback) = 0;
-		virtual void					registerToNewData(std::string const& outName, IOutputListener &listener) = 0;
-		virtual void					unregisterFromNewData(std::string const& outName, IOutputListener &listener) = 0;
+		virtual void					registerToNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
+		virtual void					unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
 
 		virtual const EngineData		getValue(std::string const& paramName) const = 0;
 		virtual std::string const&		getKey(std::string const& paramName) const = 0;

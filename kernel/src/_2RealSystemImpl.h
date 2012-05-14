@@ -53,13 +53,13 @@ namespace _2Real
 
 		const Identifier			createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
 		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
-		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
+		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
 
 		void						handleException(AbstractBlock &subBlock, Exception &exception);
-		void						registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback);
-		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback);
-		void						registerToNewData(Identifier const& id, std::string const& outlet, IOutputListener &listener);
-		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, IOutputListener &listener);
+		void						registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback, void *userData);
+		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback, void *userData);
+		void						registerToNewData(Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
+		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
 
 		void						setUp(Identifier const& blockId);
 
@@ -75,6 +75,7 @@ namespace _2Real
 		PluginPool					&m_PluginPool;
 		Poco::Timestamp				m_Timestamp;
 		ExceptionHandler			m_ExceptionHandler;
+		ExceptionFunctionCallbacks	m_ExceptionCallbacks;
 
 	};
 

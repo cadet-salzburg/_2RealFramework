@@ -22,6 +22,7 @@
 #include "_2RealInputHandle.h"
 #include "_2RealOutputHandle.h"
 #include "_2RealEngineData.h"
+#include "_2RealCallbacks.h"
 
 #include "Poco/Mutex.h"
 
@@ -30,7 +31,6 @@
 namespace _2Real
 {
 
-	class Data;
 	class AbstractUpdateManager;
 	class AbstractStateManager;
 	class AbstractBlockManager;
@@ -43,8 +43,6 @@ namespace _2Real
 	typedef std::map< std::string, InputSlot * >		InletMap;
 	typedef std::map< std::string, OutputSlot * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
-
-	typedef void (*DataCallback)(Data &data);
 
 	class AbstractBlock : public Entity
 	{
@@ -67,8 +65,10 @@ namespace _2Real
 		//virtual std::list< Identifier >			getCurrentSubBlocks() const = 0;
 		//virtual std::list< Identifier >			getCurrentUberBlocks() const = 0;
 
-		virtual void							registerToNewData(std::string const& outlet, DataCallback callback) = 0;
-		virtual void							unregisterFromNewData(std::string const& outlet, DataCallback callback) = 0;
+		virtual void							registerToNewData(std::string const& outlet, DataCallback callback, void *userData) = 0;
+		virtual void							unregisterFromNewData(std::string const& outlet, DataCallback callback, void *userData) = 0;
+		virtual void							registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
+		virtual void							unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
 		virtual const EngineData				getValue(std::string const& paramName) const = 0;
 		virtual std::string const&				getKey(std::string const& paramName) const = 0;
 		virtual void							setValue(std::string const& paramName, Data const& value) = 0;

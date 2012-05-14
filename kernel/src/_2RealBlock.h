@@ -69,14 +69,24 @@ namespace _2Real
 			m_SubBlockManager->removeBlock(subBlock);
 		}
 
-		void registerToNewData(std::string const& outlet, DataCallback callback)
+		void registerToNewData(std::string const& outlet, DataCallback callback, void *userData)
 		{
-			m_IOManager->registerToNewData(outlet, callback);
+			m_IOManager->registerToNewData(outlet, callback, userData);
 		}
 
-		void unregisterFromNewData(std::string const& outlet, DataCallback callback)
+		void unregisterFromNewData(std::string const& outlet, DataCallback callback, void *userData)
 		{
-			m_IOManager->unregisterFromNewData(outlet, callback);
+			m_IOManager->unregisterFromNewData(outlet, callback, userData);
+		}
+
+		void registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler)
+		{
+			m_IOManager->registerToNewData(outlet, handler);
+		}
+
+		void unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler)
+		{
+			m_IOManager->unregisterFromNewData(outlet, handler);
 		}
 
 		const EngineData getValue(std::string const& paramName) const
@@ -124,11 +134,6 @@ namespace _2Real
 			return *m_StateManager;
 		}
 
-		//AbstractUpdateManager& getTriggerManager()
-		//{
-		//	return *m_TriggerManager;
-		//}
-
 		AbstractBlockManager& getSubBlockManager()
 		{
 			return *m_SubBlockManager;
@@ -148,11 +153,6 @@ namespace _2Real
 		{
 			return *m_StateManager;
 		}
-
-		//AbstractUpdateManager const& getTriggerManager() const
-		//{
-		//	return *m_TriggerManager;
-		//}
 
 		AbstractBlockManager const& getSubBlockManager() const
 		{
@@ -175,7 +175,6 @@ namespace _2Real
 		AbstractBlockManager			*m_SubBlockManager;
 		AbstractBlockManager			*m_UberBlockManager;
 		AbstractStateManager			*m_StateManager;
-		//AbstractUpdateManager			*m_TriggerManager;
 
 	};
 

@@ -78,26 +78,7 @@ namespace _2Real
 		return m_WriteData;
 	}
 
-	void OutputSlot::addListener(IOutputListener &listener)
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_Event += Poco::delegate(&listener, &IOutputListener::receiveData);
-
-		if (isInitialized())
-		{
-			listener.receiveData(m_CurrentData);
-		}
-	}
-
-	void OutputSlot::removeListener(IOutputListener &listener)
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_Event -= Poco::delegate(&listener, &IOutputListener::receiveData);
-	}
-
-	void OutputSlot::addListener(InputSlot &inlet)
+	void OutputSlot::addListener( InputSlot &inlet )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
@@ -113,7 +94,7 @@ namespace _2Real
 		}
 	}
 
-	void OutputSlot::removeListener(InputSlot &inlet)
+	void OutputSlot::removeListener( InputSlot &inlet )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
@@ -126,23 +107,42 @@ namespace _2Real
 		}
 	}
 
-	void OutputSlot::registerCallback(DataCallback callback)
+	void OutputSlot::registerCallback( DataFunctionCallback &callback )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event += Poco::delegate(callback);
+		m_Event += Poco::delegate(&callback, &DataFunctionCallback::invoke);
 
 		if (isInitialized())
 		{
-			callback(m_CurrentData);
+			callback.invoke( m_CurrentData );
 		}
 	}
 
-	void OutputSlot::unregisterCallback(DataCallback callback)
+	void OutputSlot::unregisterCallback( DataFunctionCallback &callback )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event -= Poco::delegate(callback);
+		m_Event -= Poco::delegate(&callback, &DataFunctionCallback::invoke);
+	}
+
+	void OutputSlot::registerCallback( AbstractDataCallbackHandler &handler )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Event += Poco::delegate(&handler, &AbstractDataCallbackHandler::invoke);
+
+		if (isInitialized())
+		{
+			handler.invoke( m_CurrentData );
+		}
+	}
+
+	void OutputSlot::unregisterCallback( AbstractDataCallbackHandler &handler )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_Event -= Poco::delegate(&handler, &AbstractDataCallbackHandler::invoke);
 	}
 
 	void OutputSlot::resetLinks()

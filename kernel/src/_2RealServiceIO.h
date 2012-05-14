@@ -31,7 +31,6 @@ namespace _2Real
 
 	class ServiceMetadata;
 	class ParameterMetadata;
-	class IOutputListener;
 	class EngineData;
 	class Data;
 	class InputHandle;
@@ -45,8 +44,6 @@ namespace _2Real
 	typedef std::map< std::string, InputSlot * >		InletMap;
 	typedef std::map< std::string, OutputSlot * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
-
-	typedef void (*DataCallback)(Data &data);
 
 	class ServiceIO : public AbstractIOManager
 	{
@@ -62,10 +59,10 @@ namespace _2Real
 		//void						addParam(ParameterMetadata const& meta);
 		//void						addInlet(ParameterMetadata const& meta);
 		//void						addOutlet(ParameterMetadata const& meta, Poco::Timestamp const& timestamp);
-		void						registerToNewData(std::string const& outName, DataCallback callback);
-		void						unregisterFromNewData(std::string const& outName, DataCallback callback);
-		void						registerToNewData(std::string const& outName, IOutputListener &listener);
-		void						unregisterFromNewData(std::string const& outName, IOutputListener &listener);
+		void						registerToNewData(std::string const& outName, DataCallback callback, void *userData );
+		void						unregisterFromNewData(std::string const& outName, DataCallback callback, void *userData );
+		void						registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler);
+		void						unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler);
 		const EngineData			getValue(std::string const& paramName) const;
 		std::string const&			getKey(std::string const& paramName) const;
 		void						setValue(std::string const& paramName, Data const& value);
@@ -99,6 +96,9 @@ namespace _2Real
 		ParamMap					m_Params;
 
 		BufferPolicy				*m_Policy;
+
+		DataFunctionCallbacks		m_DataFunctionCallbacks;
+		DataCallbackHandlers		m_DataCallbackHandlers;
 
 	};
 

@@ -20,6 +20,7 @@
 
 #include "_2RealParameter.h"
 #include "_2RealData.h"
+#include "_2RealCallbacks.h"
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
@@ -28,11 +29,8 @@
 namespace _2Real
 {
 
-	class IOutputListener;
 	class InputSlot;
 	class Timer;
-
-	typedef void (*DataCallback)(Data &data);
 
 	class OutputSlot : public Parameter
 	{
@@ -45,12 +43,12 @@ namespace _2Real
 		void						update();
 		void						createNewDataItem();
 
-		void						registerCallback(DataCallback callback);
-		void						unregisterCallback(DataCallback callback);
-		void						addListener(IOutputListener &listener);
-		void						removeListener(IOutputListener &listener);
-		void						addListener(InputSlot &slot);
-		void						removeListener(InputSlot &slot);
+		void						registerCallback( DataFunctionCallback &callback );
+		void						unregisterCallback( DataFunctionCallback &callback );
+		void						registerCallback(AbstractDataCallbackHandler &callback);
+		void						unregisterCallback(AbstractDataCallbackHandler &callback);
+		void						addListener( InputSlot &slot );
+		void						removeListener( InputSlot &slot );
 
 		void						resetLinks();
 

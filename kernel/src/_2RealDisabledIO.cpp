@@ -60,28 +60,28 @@ namespace _2Real
 	//	throw _2Real::Exception(msg.str());
 	//}
 
-	void DisabledIO::registerToNewData(std::string const& outName, DataCallback callback)
+	void DisabledIO::registerToNewData(std::string const& outName, DataCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, DataCallback callback)
+	void DisabledIO::unregisterFromNewData(std::string const& outName, DataCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::registerToNewData(std::string const& outName, IOutputListener &listener)
+	void DisabledIO::registerToNewData(std::string const& outName, AbstractDataCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, IOutputListener &listener)
+	void DisabledIO::unregisterFromNewData(std::string const& outName, AbstractDataCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";

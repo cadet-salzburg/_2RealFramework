@@ -18,21 +18,117 @@
 
 #pragma once
 
+#include <set>
+
 namespace _2Real
 {
 
 	class RunnableError;
 	class Data;
 
-	typedef void (*ExceptionCallback)(RunnableError &error);
-	typedef void (*DataCallback)(Data &data);
-	typedef void (*StateChangeCallback)(unsigned int &state);
+	typedef void ( *ExceptionCallback )( void *userData, RunnableError &error );
+	typedef void ( *DataCallback )( void *userData, Data &data );
+
+	class DataFunctionCallback
+	{
+
+	public:
+
+		DataFunctionCallback( DataCallback cb, void *userData ) :
+			m_Callback( cb ),
+			m_UserData( userData )
+		{
+		}
+
+		bool operator<( DataFunctionCallback const& src ) const
+		{
+			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
+		}
+
+		void invoke( Data &data )
+		{
+			m_Callback( m_UserData, data );
+		}
+
+	private:
+
+		DataCallback		m_Callback;
+		void				*m_UserData;
+
+	};
+
+	// what a nice name!
+	struct DataCbCmp
+	{
+		bool operator()( DataFunctionCallback *rhs, DataFunctionCallback *lhs )
+		{
+			return (*rhs < *lhs);
+		}
+	};
+
+	class ExceptionFunctionCallback
+	{
+
+	public:
+
+		ExceptionFunctionCallback( ExceptionCallback cb, void *userData ) :
+			m_Callback( cb ),
+			m_UserData( userData )
+		{
+		}
+
+		bool operator<( ExceptionFunctionCallback const& src ) const
+		{
+			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
+		}
+
+		void invoke( RunnableError &error )
+		{
+			m_Callback( m_UserData, error );
+		}
+
+	private:
+
+		ExceptionCallback	m_Callback;
+		void				*m_UserData;
+
+	};
+
+	// basically, i suck at naming stuff.
+	struct ExcCbCmp
+	{
+		bool operator()( ExceptionFunctionCallback *rhs, ExceptionFunctionCallback *lhs )
+		{
+			return (*rhs < *lhs);
+		}
+	};
+
+	typedef std::set< DataFunctionCallback *, DataCbCmp >		DataFunctionCallbacks;
+	typedef std::set< ExceptionFunctionCallback *, ExcCbCmp >	ExceptionFunctionCallbacks;
 
 	class AbstractExceptionCallbackHandler
 	{
-		AbstractExceptionCallbackHandler() {};
-		virtual ~AbstractExceptionCallbackHandler() {} ;
-		virtual void invoke(RunnableError &error) const = 0;
+
+	public:
+
+		AbstractExceptionCallbackHandler( void *object ) : m_Object(object) {};
+		virtual ~AbstractExceptionCallbackHandler() {};
+		virtual void invoke( RunnableError &error ) = 0;
+		bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
+
+	private:
+
+		void	*m_Object;
+
+	};
+
+	// .....
+	struct AExcCbCmp
+	{
+		bool operator()( AbstractExceptionCallbackHandler *rhs, AbstractExceptionCallbackHandler *lhs )
+		{
+			return (*rhs < *lhs);
+		}
 	};
 
 	template< typename Callable >
@@ -44,14 +140,13 @@ namespace _2Real
 		typedef void (Callable::*Callback)(RunnableError&);
 
 		ExceptionCallbackHandler(Callable &callable, Callback method) :
+			AbstractExceptionCallbackHandler(&callable),
 			m_Callable(callable),
 			m_Method(method)
 		{
 		}
 
-		~ExceptionCallbackHandler() {}
-
-		void invoke(RunnableError &error) const
+		void invoke(RunnableError &error)
 		{
 			(m_Callable.*m_Method)(error);
 		}
@@ -65,9 +160,27 @@ namespace _2Real
 
 	class AbstractDataCallbackHandler
 	{
-		AbstractDataCallbackHandler() {};
+
+	public:
+
+		AbstractDataCallbackHandler( void *object ) : m_Object(object) {};
 		virtual ~AbstractDataCallbackHandler() {} ;
-		virtual void invoke(Data &data) const = 0;
+		virtual void invoke(Data &data) = 0;
+		bool operator<( AbstractDataCallbackHandler const& other ) { return m_Object < other.m_Object; }
+
+	private:
+
+		void	*m_Object;
+
+	};
+
+	// at some point, i might redo this :/
+	struct ADataCbCmp
+	{
+		bool operator()( AbstractDataCallbackHandler *rhs, AbstractDataCallbackHandler *lhs )
+		{
+			return (*rhs < *lhs);
+		}
 	};
 
 	template< typename Callable >
@@ -79,14 +192,13 @@ namespace _2Real
 		typedef void (Callable::*Callback)(Data&);
 
 		DataCallbackHandler(Callable &callable, Callback method) :
+			AbstractDataCallbackHandler(&callable),
 			m_Callable(callable),
 			m_Method(method)
 		{
 		}
 
-		~DataCallbackHandler() {}
-
-		void invoke(Data &data) const
+		void invoke(Data &data)
 		{
 			(m_Callable.*m_Method)(data);
 		}
@@ -98,39 +210,7 @@ namespace _2Real
 
 	};
 
-	class AbstractStateChangeCallbackHandler
-	{
-		AbstractStateChangeCallbackHandler() {};
-		virtual ~AbstractStateChangeCallbackHandler() {} ;
-		virtual void invoke(unsigned int &state) const = 0;
-	};
-
-	template< typename Callable >
-	class StateChangeCallbackHandler : public AbstractSateChangeCallbackHandler
-	{
-
-	public:
-
-		typedef void (Callable::*Callback)(unsigned int&);
-
-		StateChangeCallbackHandler(Callable &callable, Callback method) :
-			m_Callable(callable),
-			m_Method(method)
-		{
-		}
-
-		~StateChangeCallbackHandler() {}
-
-		void invoke(unsigned int &state) const
-		{
-			(m_Callable.*m_Method)(state);
-		}
-
-	private:
-
-		Callable			&m_Callable;
-		Callback			m_Method;
-
-	};
+	typedef std::set< AbstractDataCallbackHandler *, ADataCbCmp >		DataCallbackHandlers;
+	typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
 
 }

@@ -19,7 +19,6 @@
 #pragma once
 
 #include "_2RealParameter.h"
-#include "_2RealIOutputListener.h"
 #include "_2RealEngineData.h"
 
 #include "Poco/Mutex.h"
@@ -187,7 +186,7 @@ namespace _2Real
 	};
 
 	//ugh, this class keeps getting bigger & bigger
-	class InputSlot : public Parameter, public IOutputListener
+	class InputSlot : public Parameter
 	{
 
 	public:

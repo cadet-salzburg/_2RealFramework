@@ -20,6 +20,7 @@
 
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealCallbacks.h"
 
 #include <list>
 
@@ -28,10 +29,7 @@
 namespace _2Real
 {
 
-	class IExceptionListener;
 	class RunnableError;
-
-	typedef void (*ExceptionCallback)(RunnableError &exception);
 
 	class ExceptionHandler
 	{
@@ -41,8 +39,8 @@ namespace _2Real
 		ExceptionHandler();
 		void registerExceptionCallback(ExceptionCallback callback);
 		void unregisterExceptionCallback(ExceptionCallback callback);
-		void registerExceptionListener(IExceptionListener &listener);
-		void unregisterExceptionListener(IExceptionListener &listener);
+		//void registerExceptionListener(IExceptionListener &listener);
+		//void unregisterExceptionListener(IExceptionListener &listener);
 		void handleException(Exception const& exception, Identifier const& sender);
 
 	private:

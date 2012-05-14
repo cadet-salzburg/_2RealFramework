@@ -95,12 +95,10 @@
     <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
-    <ClInclude Include="..\..\src\_2RealIExceptionListener.h" />
     <ClInclude Include="..\..\src\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealInputHandle.h" />
     <ClInclude Include="..\..\src\_2RealInputSlot.h" />
     <ClInclude Include="..\..\src\_2RealInternalService.h" />
-    <ClInclude Include="..\..\src\_2RealIOutputListener.h" />
     <ClInclude Include="..\..\src\_2RealIPluginActivator.h" />
     <ClInclude Include="..\..\src\_2RealIService.h" />
     <ClInclude Include="..\..\src\_2RealIStateChangeListener.h" />

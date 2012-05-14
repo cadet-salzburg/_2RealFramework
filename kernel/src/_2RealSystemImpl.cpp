@@ -71,30 +71,55 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback)
+	void SystemImpl::registerToNewData( Identifier const& id, std::string const& outlet, DataCallback callback, void *userData )
 	{
 		if (id == Entity::getIdentifier())
 		{
-			m_IOManager->registerToNewData(outlet, callback);
+			m_IOManager->registerToNewData( outlet, callback, userData );
 		}
 		else
 		{
-			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
-			std::cout << "registering" << std::endl;
-			obj.registerToNewData(outlet, callback);
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			obj.registerToNewData( outlet, callback, userData );
 		}
 	}
 
-	void SystemImpl::unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback)
+	void SystemImpl::unregisterFromNewData( Identifier const& id, std::string const& outlet, DataCallback callback, void *userData )
 	{
 		if (id == Entity::getIdentifier())
 		{
-			m_IOManager->unregisterFromNewData(outlet, callback);
+			m_IOManager->unregisterFromNewData( outlet, callback, userData );
 		}
 		else
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.unregisterFromNewData(outlet, callback);
+			obj.unregisterFromNewData( outlet, callback, userData );
+		}
+	}
+
+	void SystemImpl::registerToNewData( Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	{
+		if (id == Entity::getIdentifier())
+		{
+			m_IOManager->registerToNewData( outlet, handler );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			obj.registerToNewData( outlet, handler );
+		}
+	}
+
+	void SystemImpl::unregisterFromNewData( Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	{
+		if (id == Entity::getIdentifier())
+		{
+			m_IOManager->unregisterFromNewData( outlet, handler );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.unregisterFromNewData( outlet, handler );
 		}
 	}
 
@@ -222,12 +247,12 @@ namespace _2Real
 
 	}
 
-	const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds)
-	{
-		SyncBlock *syncBlock = new SyncBlock("sync block", *this);
+	//const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds)
+	//{
+	//	SyncBlock *syncBlock = new SyncBlock("sync block", *this);
 
-		return syncBlock->getIdentifier();
+	//	return syncBlock->getIdentifier();
 
-	}
+	//}
 
 }

@@ -45,9 +45,6 @@ namespace _2Real
 		createService(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers = UpdatePolicy());
 
 		const Identifier
-		createSynchronization(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
-
-		const Identifier
 		createSynchronization(std::list< Identifier > const& blockIds);
 
 		void setup(Identifier const& serviceId);
@@ -71,37 +68,44 @@ namespace _2Real
 		template< typename DataType >
 		DataType const& getValue(Identifier const& id, std::string const& name) const
 		{
-			Poco::SharedPtr< DataType > ptr = Extract< DataType >(getValueInternal(id, name));
+			Poco::SharedPtr< DataType > ptr = Extract< DataType >( getValueInternal(id, name) );
 			return *ptr.get();
 		}
 
 		//void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-		//void clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks = false);
-		//void clearInputProviders(Identifier const& inService, std::string const& inName);
 
 		//void registerToException(ExceptionCallback callback);
 		//void unregisterFromException(ExceptionCallback callback);
 		//void registerToException(IExceptionListener &listener);
 		//void unregisterFromException(IExceptionListener &listener);
 
-		void registerToNewData(Identifier const& service, std::string const& name, DataCallback callback);
-		void unregisterFromNewData(Identifier const& service, std::string const& name, DataCallback callback);
-		//void registerToNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
-		//void unregisterFromNewData(Identifier const& service, std::string const& name, IOutputListener &listener);
+		void registerToNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
+		void unregisterFromNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
 
-		//void registerToStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void unregisterFromStateChange(Identifier const& runnableId, StateChangeCallback callback);
-		//void registerToStateChange(Identifier const& runnableId, IStateChangeListener &listener);
-		//void unregisterFromStateChange(Identifier const& runnableId, IStateChangeListener &listener);
+		template< typename Callable >
+		void registerToNewData( Identifier const& service, std::string const& outletName, Callable &callable, void ( Callable::*callback )( Data& ) )
+		{
+			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
+			registerToNewDataInternal( service, outletName, *handler );
+		}
+
+		template< typename Callable >
+		void unregisterFromNewData( Identifier const& service, std::string const& outletName, Callable &callable, void ( Callable::*callback )( Data& ) )
+		{
+			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
+			unregisterFromNewDataInternal( service, outletName, *handler );
+		}
 
 	private:
 
 		System(System const& src);
 		System& operator=(System const& src);
 
-		void				setValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
-		void				insertValueInternal(Identifier const& id, std::string const& name, EngineData const& value);
-		const EngineData	getValueInternal(Identifier const& id, std::string const& name) const;
+		void				setValueInternal( Identifier const& id, std::string const& name, EngineData const& value );
+		void				insertValueInternal( Identifier const& id, std::string const& name, EngineData const& value );
+		const EngineData	getValueInternal( Identifier const& id, std::string const& name ) const;
+		void				registerToNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
+		void				unregisterFromNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
 
 		SystemImpl			*m_Impl;
 

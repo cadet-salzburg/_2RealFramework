@@ -40,6 +40,16 @@ namespace _2Real
 	ServiceIO::~ServiceIO()
 	{
 		clear();
+
+		for ( DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.begin(); it != m_DataFunctionCallbacks.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( DataCallbackHandlers::iterator it = m_DataCallbackHandlers.begin(); it != m_DataCallbackHandlers.end(); ++it )
+		{
+			delete *it;
+		}
 	}
 
 	void ServiceIO::initFrom(ServiceMetadata &meta, Poco::Timestamp const& time)
@@ -125,27 +135,82 @@ namespace _2Real
 	//	m_Outlets.insert(std::make_pair(outlet->getName(), outlet));
 	//}
 
-	void ServiceIO::registerToNewData(std::string const& outName, DataCallback callback)
+	void ServiceIO::registerToNewData( std::string const& outName, DataCallback callback, void *userData )
 	{
-		std::cout << "registering to" << outName << std::endl;
-		OutletMap::const_iterator outletIt = m_Outlets.find(outName);
-		if (outletIt != m_Outlets.end())
+		DataFunctionCallback *cb = new DataFunctionCallback( callback, userData );
+		
+		DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.find( cb );
+		if ( it == m_DataFunctionCallbacks.end() )
 		{
-			outletIt->second->registerCallback( callback );
-			std::cout << "callback registered" << outName << std::endl;
+			m_DataFunctionCallbacks.insert( cb );
+			
+			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
+			if (outletIt != m_Outlets.end())
+			{
+				outletIt->second->registerCallback( *cb );
+			}
+		}
+		else
+		{
+			delete cb;
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData(std::string const& outName, DataCallback callback)
+	void ServiceIO::unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData )
 	{
+		DataFunctionCallback *cb = new DataFunctionCallback( callback, userData );
+
+		DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.find( cb );
+		if ( it != m_DataFunctionCallbacks.end() )
+		{
+			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
+			if (outletIt != m_Outlets.end())
+			{
+				outletIt->second->unregisterCallback( **it );
+			}
+
+			delete *it;
+			m_DataFunctionCallbacks.erase(it);
+		}
+
+		delete cb;
 	}
 
-	void ServiceIO::registerToNewData(std::string const& outName, IOutputListener &listener)
+	void ServiceIO::registerToNewData( std::string const& outName, AbstractDataCallbackHandler &handler )
 	{
+		DataCallbackHandlers::iterator it = m_DataCallbackHandlers.find( &handler );
+		if ( it == m_DataCallbackHandlers.end() )
+		{
+			m_DataCallbackHandlers.insert( &handler );
+
+			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
+			if (outletIt != m_Outlets.end())
+			{
+				outletIt->second->registerCallback( handler );
+			}
+		}
+		else
+		{
+			delete &handler;
+		}
 	}
 
-	void ServiceIO::unregisterFromNewData(std::string const& outName, IOutputListener &listener)
+	void ServiceIO::unregisterFromNewData( std::string const& outName, AbstractDataCallbackHandler &handler )
 	{
+		DataCallbackHandlers::iterator it = m_DataCallbackHandlers.find( &handler );
+		if ( it != m_DataCallbackHandlers.end() )
+		{
+			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
+			if (outletIt != m_Outlets.end())
+			{
+				outletIt->second->unregisterCallback( **it );
+			}
+
+			delete *it;
+			m_DataCallbackHandlers.erase(it);
+		}
+
+		delete &handler;
 	}
 
 	const EngineData ServiceIO::getValue(std::string const& name) const

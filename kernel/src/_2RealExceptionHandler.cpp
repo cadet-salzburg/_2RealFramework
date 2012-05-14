@@ -18,7 +18,6 @@
 
 #include "_2RealExceptionHandler.h"
 #include "_2RealRunnableError.h"
-#include "_2RealIExceptionListener.h"
 
 #include "Poco/Delegate.h"
 
@@ -39,15 +38,15 @@ namespace _2Real
 		m_Event -= Poco::delegate(callback);
 	}
 
-	void ExceptionHandler::registerExceptionListener(IExceptionListener &listener)
-	{
-		m_Event += Poco::delegate(&listener, &IExceptionListener::receiveException);
-	}
+	//void ExceptionHandler::registerExceptionListener(IExceptionListener &listener)
+	//{
+	//	m_Event += Poco::delegate(&listener, &IExceptionListener::receiveException);
+	//}
 
-	void ExceptionHandler::unregisterExceptionListener(IExceptionListener &listener)
-	{
-		m_Event -= Poco::delegate(&listener, &IExceptionListener::receiveException);
-	}
+	//void ExceptionHandler::unregisterExceptionListener(IExceptionListener &listener)
+	//{
+	//	m_Event -= Poco::delegate(&listener, &IExceptionListener::receiveException);
+	//}
 
 	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
 	{
