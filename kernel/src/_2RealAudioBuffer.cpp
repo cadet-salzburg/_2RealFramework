@@ -23,6 +23,7 @@ namespace _2Real
 
 	AudioBuffer::AudioBuffer()
 	{
+		m_Data = NULL;
 	}
 
 	AudioBuffer::AudioBuffer( AudioBuffer const& src ):m_SampleRate(src.m_SampleRate),
@@ -69,6 +70,36 @@ namespace _2Real
 
 	AudioBuffer::~AudioBuffer()
 	{
+	}
+
+	int AudioBuffer::getSampleRate()
+	{
+		return m_SampleRate;
+	}
+
+	int AudioBuffer::getChannels()
+	{
+		return m_Channels;
+	}
+
+	int AudioBuffer::getSize()
+	{
+		return m_SizeInBytes;
+	}
+
+	int AudioBuffer::getResoultion()
+	{
+		return m_BitResolution;
+	}
+
+	unsigned char * AudioBuffer::getData()
+	{
+		return m_Data;
+	}
+
+	double AudioBuffer::getPTS()
+	{
+		return m_Pts;
 	}
 
 }

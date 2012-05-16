@@ -46,7 +46,15 @@ namespace _2Real
 		int getChannels(); 
 		int getSize();
 		int getResoultion();
+		double getPTS();
 		unsigned char * getData();
+
+		void SetSampleRate(int sampleRate) {m_SampleRate = sampleRate;} 
+		void SetChannels(int Channels) {m_Channels = Channels;} 
+		void SetSize(int Size) { m_SizeInBytes = Size;}
+		void SetBitResoultion(int BitResoultion){ m_BitResolution = BitResoultion;} 
+		void SetPTS(int PTS) {m_Pts = PTS;}
+		void setData(unsigned char *Data) { if (Data!=NULL) m_Data = Data;}
 		/* these are going to be needed by the framework in the future, but they don't need to be implemented right now */
 		friend std::ostream& operator<<( std::ostream& out, AudioBuffer const& buffer );
 		friend std::istream& operator>>( std::istream& in, AudioBuffer &buffer );
