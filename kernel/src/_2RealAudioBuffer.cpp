@@ -25,12 +25,45 @@ namespace _2Real
 	{
 	}
 
-	AudioBuffer::AudioBuffer( AudioBuffer const& src )
+	AudioBuffer::AudioBuffer( AudioBuffer const& src ):m_SampleRate(src.m_SampleRate),
+		m_Channels(src.m_Channels),
+		m_SamplesCount(src.m_SamplesCount),
+		m_Pts(src.m_Pts),
+		m_SizeInBytes(src.m_SizeInBytes),
+		m_BitResolution(src.m_BitResolution)
 	{
+		delete[] m_Data;
+		if(src.m_Data)
+		{
+		m_Data = new unsigned char [m_SizeInBytes];
+		memcpy(m_Data,src.m_Data,m_SizeInBytes);
+		}
+		else m_Data = NULL;
+		
 	}
 
 	AudioBuffer& AudioBuffer::operator=( AudioBuffer const& src )
 	{
+		if(this == &src)
+		return *this;
+		
+		m_SampleRate    = src.m_SampleRate;
+		m_Channels      = src.m_Channels;
+		m_SamplesCount  = src.m_SamplesCount;
+		m_SizeInBytes   = src.m_SizeInBytes;
+		m_BitResolution = src.m_BitResolution;
+		m_Pts			= src.m_Pts;
+
+		delete[] m_Data;
+		
+		if(src.m_Data)
+		{
+			m_Data = new unsigned char [m_SizeInBytes];
+			memcpy(m_Data,src.m_Data,m_SizeInBytes);
+		}
+		else m_Data = NULL;
+
+
 		return *this;
 	}
 

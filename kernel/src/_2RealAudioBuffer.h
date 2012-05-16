@@ -42,7 +42,11 @@ namespace _2Real
 		~AudioBuffer(); /* be careful of who owns the data when deleting */
 
 		/* in addition, add anything else you need, i.e. getter and setter functions */
-
+		int getSampleRate(); 
+		int getChannels(); 
+		int getSize();
+		int getResoultion();
+		unsigned char * getData();
 		/* these are going to be needed by the framework in the future, but they don't need to be implemented right now */
 		friend std::ostream& operator<<( std::ostream& out, AudioBuffer const& buffer );
 		friend std::istream& operator>>( std::istream& in, AudioBuffer &buffer );
