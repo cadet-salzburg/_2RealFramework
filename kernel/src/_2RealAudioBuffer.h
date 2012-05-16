@@ -71,14 +71,14 @@ namespace _2Real
 
 	};
 
-	std::ostream& operator<<( std::ostream& out, AudioBuffer const& buffer )
+	 inline std::ostream& operator<<( std::ostream& out, AudioBuffer const& buffer )
 	{
 		/* TODO */
 		out << " TODO ";
 		return out;
 	}
 
-	std::istream& operator>>( std::istream& in, AudioBuffer &buffer )
+	inline std::istream& operator>>( std::istream& in, AudioBuffer &buffer )
 	{
 		/* TODO */
 		return in;

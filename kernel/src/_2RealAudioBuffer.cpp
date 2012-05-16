@@ -70,6 +70,7 @@ namespace _2Real
 
 	AudioBuffer::~AudioBuffer()
 	{
+		delete[] m_Data;
 	}
 
 	int AudioBuffer::getSampleRate()
