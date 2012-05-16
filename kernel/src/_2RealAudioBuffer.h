@@ -59,7 +59,6 @@ namespace _2Real
 
 	};
 
-	template< typename T >
 	std::ostream& operator<<( std::ostream& out, AudioBuffer const& buffer )
 	{
 		/* TODO */
@@ -67,7 +66,6 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename T >
 	std::istream& operator>>( std::istream& in, AudioBuffer &buffer )
 	{
 		/* TODO */
