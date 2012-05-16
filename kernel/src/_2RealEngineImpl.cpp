@@ -25,10 +25,10 @@
 #include "_2RealThreadPool.h"
 #include "_2RealLogger.h"
 
-#include "_2RealPixelbuffer.h"
 #include "_2RealBlob.h"
 #include "_2RealImageT.h"
 #include "_2RealEnum.h"
+#include "_2RealAudioBuffer.h"
 
 #include <sstream>
 #include <iostream>
@@ -65,7 +65,12 @@ namespace _2Real
 		/**
 		*	our enumeration datatype
 		*/
-		m_Types->registerType< Enumeration >("enum");
+		m_Types->registerType< Enumeration >( "enum" );
+
+		/**
+		*	audio buffer dadatype
+		*/
+		m_Types->registerType< AudioBuffer >( "audio" );
 
 		/**
 		*	our image datatype
@@ -80,14 +85,6 @@ namespace _2Real
 		m_Types->registerType< ImageT < unsigned long > >("img_ulong");
 		m_Types->registerType< ImageT < float > >("img_float");
 		m_Types->registerType< ImageT < double > >("img_double");
-
-		/**
-		*	this is going to be deleted
-		*/
-		m_Types->registerType< Buffer2D_float >("buffer2D_float");
-		m_Types->registerType< Buffer2D_double >("buffer2D_double");
-		m_Types->registerType< Buffer2D_uint >("buffer2D_uint");
-		m_Types->registerType< Buffer2D_uchar >("buffer2D_uchar");
 
 		/**
 		*	blobs for all primitive datatypes-> feel free to add / delete

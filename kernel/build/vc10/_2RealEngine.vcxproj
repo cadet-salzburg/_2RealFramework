@@ -15,6 +15,7 @@
     <ClCompile Include="..\..\src\_2RealAbstractBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealAudioBuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealBlob.cpp" />
     <ClCompile Include="..\..\src\_2RealBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="..\..\src\_2RealAbstractServiceState.h" />
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractSyncState.h" />
+    <ClInclude Include="..\..\src\_2RealAudioBuffer.h" />
     <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />

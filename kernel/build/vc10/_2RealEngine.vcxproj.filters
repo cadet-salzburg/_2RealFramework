@@ -61,6 +61,7 @@
     <ClCompile Include="..\..\src\_2RealDisabledStates.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealAudioBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractBlock.h" />
@@ -139,5 +140,6 @@
     <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
     <ClInclude Include="..\..\src\_2RealAbstractSyncState.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
+    <ClInclude Include="..\..\src\_2RealAudioBuffer.h" />
   </ItemGroup>
 </Project>
