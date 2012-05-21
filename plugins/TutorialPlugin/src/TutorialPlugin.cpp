@@ -1,65 +1,92 @@
 #include "TutorialPlugin.h"
+#include "ServiceImpl.h"
 
-#include "_2RealPluginContext.h"
+#include "_2RealFrameworkContext.h"
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
 
-#include "ServiceImpl.h"
+#include <iostream>
 
-using namespace _2Real;
-using namespace std;
+using _2Real::BundleMetainfo;
+using _2Real::BlockMetainfo;
+using _2Real::FrameworkContext;
+using _2Real::Enumeration;
+using _2Real::Enums;
+using _2Real::Exception;
 
-void TutorialPlugin::getMetadata(Metadata &metadata)
+using std::vector;
+using std::string;
+using std::cout;
+using std::endl;
+
+void getBundleMetainfo( BundleMetainfo info )
 {
 	try
 	{
-		metadata.setDescription("Plugin 1");
-		metadata.setAuthor("help@cadet.at");
-		metadata.setVersion(0, 0, 0);
-		metadata.setContact("help@cadet.at");
+		info.setDescription( "bla bla bla" );
+		info.setAuthor( "help@cadet.at" );
+		info.setCategory( "testing" );
+		info.setContact( "help@cadet.at" );
+		info.setVersion( 0, 0, 0 );
 
-		metadata.addService("Counter");
-		metadata.setDescription("Counter", "count up starting with 1");
-		metadata.addOutputSlot< int >("Counter", "counter outlet");
-		metadata.addOutputSlot< std::vector< int > >("Counter", "test");
-		metadata.addOutputSlot< Enumeration >( "Counter", "options" );
+		info.exportBundleContext< BlockManager >();
 
-		metadata.addService("Doubler");
-		metadata.setDescription("Doubler", "multiply number by 2");
-		metadata.addInputSlot< int >("Doubler", "number inlet");
-		metadata.addOutputSlot< int >("Doubler", "doubler outlet");
+		vector< string > config;
+		config.push_back( "hello" );
+		config.push_back( "testing config params" );
+		info.addContextParameter< vector< string > >( "config text", config );
+		info.addContextParameter< Enumeration >( "bundle enum", Enumeration( Enums( "enum 1", "argh" )("enum 2", "narf"), "undefined" ) );
 
-		metadata.addService("PrintOut");
-		metadata.setDescription("PrintOut", "print out a number to the console");
-		metadata.addInputSlot< int >("PrintOut", "input number", int(0));
-		metadata.addSetupParameter< Enumeration >("PrintOut", "test enum", Enumeration(Enums("option 1", "hello")("option 2", "have a nice day")("option 3", "goodbye"), "NO VALUE AVAILABLE"));
+		BlockMetainfo counter = info.exportBlock< Counter >( "counter" );
+		counter.setDescription( "count from up from 0" );
+		counter.addOutlet< unsigned int >( "counter outlet", (unsigned int)0 );
+
+		BlockMetainfo doubler = info.exportBlock< Doubler >( "doubler" );
+		doubler.setDescription( "double the inlets' value" );
+		doubler.addInlet< unsigned int >( "doubler inlet", (unsigned int)0 );
+		doubler.addOutlet< unsigned int >( "doubler outlet", (unsigned int)0 );
+
+		BlockMetainfo printOut = info.exportBlock< PrintOut >( "print out" );
+		printOut.setDescription( "write the received value to std::out" );
+		printOut.addInlet< unsigned int >( "printout inlet", (unsigned int)0 );
 	}
-	catch (_2Real::Exception &e)
+	catch ( Exception &e )
 	{
+		cout << e.message() << endl;
 		e.rethrow();
 	}
-	catch (std::exception &e)
+}
+
+void BlockManager::setup( FrameworkContext &context )
+{
+	try
 	{
-		std::ostringstream msg;
-		msg << "exception during setup: " << e.what();
-		throw PluginException(msg.str());
+		m_BundleEnum = context.getOutletHandle( "bundle enum" );
+		m_BundleVec = context.getOutletHandle( "config text" );
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
 	}
 }
 
-void TutorialPlugin::setup(PluginContext &context)
+void BlockManager::update()
 {
-	context.registerService< Counter >("Counter");
-	context.registerService< Doubler >("Doubler");
-	context.registerService< PrintOut >("PrintOut");
+	try
+	{
+		m_BundleVec.data< vector< string > >().push_back( "yay" );
+		m_BundleVec.data< vector< string > >().push_back( "updated" );
+		m_BundleVec.data< vector< string > >().push_back( "again" );
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
 }
 
-void TutorialPlugin::shutdown()
+void BlockManager::shutdown()
 {
 }
-
-TutorialPlugin::~TutorialPlugin()
-{
-}
-
-_2REAL_EXPORT_PLUGIN(TutorialPlugin)

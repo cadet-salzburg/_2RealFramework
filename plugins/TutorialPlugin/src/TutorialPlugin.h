@@ -1,15 +1,27 @@
 #pragma once
 
-#include "_2RealIPluginActivator.h"
+#include "_2RealBlock.h"
+#include "_2RealOutletHandle.h"
 
-class TutorialPlugin : public _2Real::IPluginActivator
+namespace _2Real
+{
+	class FrameworkContext;
+}
+
+class BlockManager : public _2Real::Block
 {
 
 public:
 
-	void getMetadata(_2Real::Metadata &metadata);
-	void setup(_2Real::PluginContext &context);
+	BlockManager() : Block() {}
+	~BlockManager() {}
+	void update();
+	void setup( _2Real::FrameworkContext &context );
 	void shutdown();
-	~TutorialPlugin();
+
+private:
+
+	_2Real::OutletHandle	m_BundleEnum;
+	_2Real::OutletHandle	m_BundleVec;
 
 };
