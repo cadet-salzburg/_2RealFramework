@@ -26,14 +26,6 @@ void getBundleMetainfo( BundleMetainfo info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		info.exportBundleContext< BlockManager >();
-
-		vector< string > config;
-		config.push_back( "hello" );
-		config.push_back( "testing config params" );
-		info.addContextParameter< vector< string > >( "config text", config );
-		info.addContextParameter< Enumeration >( "bundle enum", Enumeration( Enums( "enum 1", "argh" )("enum 2", "narf"), "undefined" ) );
-
 		BlockMetainfo counter = info.exportBlock< Counter >( "counter" );
 		counter.setDescription( "count from up from 0" );
 		counter.addOutlet< unsigned int >( "counter outlet", (unsigned int)0 );

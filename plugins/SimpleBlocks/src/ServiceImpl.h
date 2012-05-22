@@ -4,24 +4,6 @@
 #include "_2RealInletHandle.h"
 #include "_2RealOutletHandle.h"
 
-class BlockManager : public _2Real::Block
-{
-
-public:
-
-	BlockManager() : Block() {}
-	~BlockManager() {}
-	void update();
-	void setup( _2Real::FrameworkContext &context );
-	void shutdown() {}
-
-private:
-
-	_2Real::OutletHandle			m_BundleEnum;
-	_2Real::OutletHandle			m_BundleVec;
-
-};
-
 class Counter : public _2Real::Block
 {
 
@@ -37,8 +19,6 @@ private:
 
 	int								m_CurrentCount;
 	_2Real::OutletHandle			m_CounterValue;
-	_2Real::InletHandle				m_TestEnum;
-	_2Real::InletHandle				m_TestVec;
 
 };
 
@@ -57,8 +37,6 @@ private:
 
 	_2Real::InletHandle				m_InputValue;
 	_2Real::OutletHandle			m_OutputValue;
-	_2Real::InletHandle				m_TestEnum;
-	_2Real::InletHandle				m_TestVec;
 
 };
 
@@ -76,7 +54,5 @@ public:
 private:
 
 	_2Real::InletHandle				m_InputValue;
-	_2Real::InletHandle				m_TestEnum;
-	_2Real::InletHandle				m_TestVec;
 
 };

@@ -28,7 +28,7 @@
 #include <string>
 
 #ifdef _2REAL_WINDOWS
-	#include "vld.h"
+	//#include "vld.h"
 	#ifndef _DEBUG
 		#define shared_library_suffix ".dll"
 	#else

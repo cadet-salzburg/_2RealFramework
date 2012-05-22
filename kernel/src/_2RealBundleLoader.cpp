@@ -87,8 +87,17 @@ namespace _2Real
 
 		typedef void ( *MetainfoFunc )( BundleMetainfo info );
 
+		SharedLibrary *lib;
+		try
+		{
+			lib = new SharedLibrary( path );
+		}
+		catch ( Poco::Exception &e )
+		{
+			throw NotFoundException( e.message() );
+		}
+
 		BundleData *result = new BundleData();
-		SharedLibrary *lib = new SharedLibrary( path );
 		Metainfo *info = new Metainfo( *result );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
