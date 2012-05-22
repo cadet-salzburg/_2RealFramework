@@ -288,9 +288,6 @@ namespace _2Real
 			m_ContextInfo.ctor = NULL;
 			m_ContextInfo.data = NULL;
 		}
-
-		std::cout << *m_BundleData << std::endl;
-
 	}
 
 }
