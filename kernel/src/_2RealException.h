@@ -142,11 +142,11 @@ namespace _2Real
 	//occurs only in the service, when accessing a handle that is not initialized to an actual i/o slot
 	DECLARE_EXCEPTION(UninitializedHandleException, Exception)
 
-	//something went so very wrong while calling any of an IService's functions
+	//something went so very wrong while calling any of an Block's functions
 	//that the service in question is only good for putting it out of its misery. YAY!
 	DECLARE_EXCEPTION(ServiceException, Exception)
 
-	//something went so very wrong while calling any of an IPluginActivator's functions
+	//something went so very wrong while calling any of an Bundle's functions
 	//that the plugin in question is only good for putting it out of its misery. MOAR YAY!
 	DECLARE_EXCEPTION(PluginException, Exception)
 

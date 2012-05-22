@@ -18,7 +18,7 @@
 
 #include "_2RealUnOwnedBlocks.h"
 #include "_2RealException.h"
-#include "_2RealAbstractBlock.h"
+#include "_2RealAbstractUberBlock.h"
 
 #include <sstream>
 

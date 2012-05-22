@@ -24,14 +24,14 @@ namespace _2Real
 {
 
 	class Runnable;
-	class ParameterMetadata;
+	class ParameterData;
 
 	class Parameter
 	{
 
 	public:
 
-		Parameter(ParameterMetadata const& metadata);
+		Parameter(ParameterData const& metadata);
 		virtual ~Parameter();
 
 		bool					isInitialized() const;

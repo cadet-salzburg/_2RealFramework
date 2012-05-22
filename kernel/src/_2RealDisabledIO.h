@@ -32,9 +32,9 @@ namespace _2Real
 		~DisabledIO();
 
 		void						clear();
-		//void						addParam(ParameterMetadata const& meta);
-		//void						addInlet(ParameterMetadata const& meta);
-		//void						addOutlet(ParameterMetadata const& meta, Poco::Timestamp const& timestamp);
+		//void						addParam(ParameterData const& meta);
+		//void						addInlet(ParameterData const& meta);
+		//void						addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp);
 		void						registerToNewData( std::string const& outName, DataCallback callback, void *userData );
 		void						unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData );
 		void						registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler);

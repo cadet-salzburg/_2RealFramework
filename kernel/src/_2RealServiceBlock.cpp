@@ -18,60 +18,55 @@
 
 #include "_2RealException.h"
 #include "_2RealServiceBlock.h"
-#include "_2RealIService.h"
-#include "_2RealServiceMetadata.h"
-#include "_2RealServiceContext.h"
+#include "_2RealBlock.h"
+#include "_2RealBlockData.h"
+#include "_2RealFrameworkContext.h"
 #include "_2RealSystemImpl.h"
 
 namespace _2Real
 {
 
-	ServiceBlock::ServiceBlock(ServiceData const& data, SystemImpl &owner, UpdatePolicyImpl const& updateTriggers) :
-		Block< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates/*, ServiceUpdates */>(data.name, &owner),
-		m_Service(data.service)
+	ServiceBlock::ServiceBlock( BlockData const& data, Block &block, SystemImpl &owner, UpdatePolicyImpl const& updateTriggers ) :
+		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates>( data.getName(), &owner ),
+		m_Block( block )
 	{
 		ServiceIO *io = dynamic_cast< ServiceIO * >(m_IOManager);
-		//ServiceUpdates *triggers = dynamic_cast< ServiceUpdates * >(m_TriggerManager);
 		ServiceStates *states = dynamic_cast< ServiceStates * >(m_StateManager);
-
-		//triggers->m_States = states;
-		//triggers->m_IO = io;
-		//states->m_Triggers = triggers;
 		states->m_IO = io;
 
-		io->initFrom(*data.metainfo, owner.getTimestamp());
-		states->initFrom(updateTriggers);
+		io->initFrom( data, owner.getTimestamp() );
+		states->initFrom( updateTriggers );
 	}
 
 	ServiceBlock::~ServiceBlock()
 	{
-		delete m_Service;
+		//delete &m_Block;
 	}
 
 	void ServiceBlock::setUpService()
 	{
-		ServiceContext context(*this);
-		m_Service->setup(context);	//might throw
+		FrameworkContext context(*this);
+		m_Block.setup( context );	//might throw
 	}
 
 	void ServiceBlock::executeService()
 	{
-		m_Service->update();		//might throw
+		m_Block.update();		//might throw
 	}
 
 	void ServiceBlock::shutDownService()
 	{
-		m_Service->shutdown();		//might throw
+		m_Block.shutdown();		//might throw
 	}
 
-	InputHandle ServiceBlock::createInputHandle(std::string const& name)
+	InletHandle ServiceBlock::createInletHandle(std::string const& name)
 	{
-		return dynamic_cast< ServiceIO * >(m_IOManager)->createInputHandle(name);
+		return dynamic_cast< ServiceIO * >(m_IOManager)->createInletHandle(name);
 	}
 
-	OutputHandle ServiceBlock::createOutputHandle(std::string const& name)
+	OutletHandle ServiceBlock::createOutletHandle(std::string const& name)
 	{
-		return dynamic_cast< ServiceIO * >(m_IOManager)->createOutputHandle(name);
+		return dynamic_cast< ServiceIO * >(m_IOManager)->createOutletHandle(name);
 	}
 
 }

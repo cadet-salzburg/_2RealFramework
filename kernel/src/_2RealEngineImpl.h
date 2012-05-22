@@ -25,15 +25,10 @@
 */
 #pragma warning(disable:4503)
 
-#include "_2RealEngineData.h"
-
 #include <string>
-#include <list>
-
-#include "Poco/Path.h"
 
 #ifdef _2REAL_WINDOWS
-	//#include "vld.h"
+	#include "vld.h"
 	#ifndef _DEBUG
 		#define shared_library_suffix ".dll"
 	#else
@@ -53,17 +48,20 @@
 	#endif
 #endif
 
+namespace Poco
+{
+	class Path;
+}
+
 namespace _2Real
 {
 
 	class Identifier;
 	class ThreadPool;
-	class PluginPool;
-	class ServiceFactory;
+	class BundleManager;
 	class Typetable;
 	class Timer;
 	class Logger;
-	class LoggerAccess;
 	
 	class EngineImpl
 	{
@@ -73,32 +71,19 @@ namespace _2Real
 		static EngineImpl & instance();
 
 		Logger&							getLogger();
-
 		Timer &							getTimer();
 		Timer const&					getTimer() const;
 		Typetable &						getTypetable();
 		Typetable const&				getTypetable() const;
-		PluginPool &					getPluginPool();
-		PluginPool const&				getPluginPool() const;
+		BundleManager &					getPluginPool();
+		BundleManager const&			getPluginPool() const;
 		ThreadPool &					getThreadPool();
 		ThreadPool const&				getThreadPool() const;
 
-		void							setBaseDirectory(Poco::Path const& path);
-		std::list< std::string >		loadLibrary(Poco::Path const& path);
-		const bool						isLibraryLoaded(Poco::Path const& path) const;
-		const std::string				getInfoString(std::string const& className, Poco::Path const& libraryPath) const;
-		const std::string				getInfoString(Identifier const& pluginId) const;
-		const bool						canCreate(std::string const& className, Poco::Path const& libraryPath) const;
-		const bool						isSingleton(std::string const& className, Poco::Path const& libraryPath) const;
-		const bool						isSetUp(Identifier const& pluginId) const;
-		const Identifier				createPlugin(std::string const& className, Poco::Path const& libraryPath);
-		const Identifier				createPlugin(std::string const& idName, std::string const& className, Poco::Path const& libraryPath);
-		const Identifier				pluginInstance(std::string const& className, Poco::Path const& libraryPath);
-		void							setPluginValue(Identifier const& pluginId, std::string const& paramName, EngineData const& value);
-		const EngineData				getPluginValue(Identifier const& pluginId, std::string const& paramName) const;
-		void							setupPlugin(Identifier const& pluginId);
-		const Identifier				getPluginIdentifier(std::string const& idName) const;
-		const std::list< std::string >	getExportingLibs(std::string const& className);
+		void							setBaseDirectory( Poco::Path const& path );
+		const Identifier				loadLibrary( Poco::Path const& path );
+		const bool						isLibraryLoaded( Poco::Path const& path ) const;
+		const std::string				getInfoString( Identifier const& pluginId ) const;
 
 	private:
 
@@ -110,9 +95,9 @@ namespace _2Real
 
 		Logger					*m_Logger;
 		Timer					*m_Timer;
-		ThreadPool				*m_Threads;
-		PluginPool				*m_Plugins;
 		Typetable				*m_Types;
+		ThreadPool				*m_Threads;
+		BundleManager			*m_Plugins;
 
 	};
 

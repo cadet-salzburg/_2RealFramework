@@ -21,6 +21,8 @@
 #include "_2RealServiceBlock.h"
 #include "_2RealServiceStateCreated.h"
 
+#include <iostream>
+
 namespace _2Real
 {
 

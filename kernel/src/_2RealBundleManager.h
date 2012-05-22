@@ -1,0 +1,73 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
+#pragma once
+
+#include "_2RealBundleLoader.h"
+
+#include <map>
+#include <string>
+
+#include "Poco/Path.h"
+
+namespace _2Real
+{
+
+	class BundleInternal;
+	class Identifier;
+	class SystemImpl;
+	class ServiceBlock;
+	class UpdatePolicyImpl;
+
+	class BundleManager
+	{
+	
+	public:
+
+		BundleManager();
+		~BundleManager();
+
+		void							setBaseDirectory( Poco::Path const& path );
+		const Identifier				loadLibrary( Poco::Path const& path );
+		bool							isLibraryLoaded( Poco::Path const& path ) const;
+		const std::string				getInfoString( Identifier const& pluginId ) const;
+		ServiceBlock &					createServiceBlock( Identifier const& pluginId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers );
+		
+	private:
+		 
+		BundleManager( BundleManager const& src );
+		BundleManager& operator=( BundleManager const& src );
+
+		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
+		BundleInternal &				getBundle( Identifier const& id );
+		BundleInternal const&			getBundle( Identifier const& id ) const;
+		const Identifier				getIdentifier( std::string const& path ) const;
+	
+		typedef std::map< Identifier, BundleInternal * >	BundleMap;
+		typedef std::map< std::string, Identifier >			LookupTable;
+
+		BundleLoader					m_BundleLoader;
+		BundleMap						m_BundleInstances;
+		Poco::Path						m_BaseDirectory;
+		LookupTable						m_BundleNames;
+		SystemImpl						*m_BundleContexts;
+
+	};
+
+}

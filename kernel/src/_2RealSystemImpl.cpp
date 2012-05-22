@@ -18,7 +18,7 @@
 
 #include "_2RealSystemImpl.h"
 #include "_2RealEngineImpl.h"
-#include "_2RealPluginPool.h"
+#include "_2RealBundleManager.h"
 #include "_2RealThreadPool.h"
 #include "_2RealExceptionHandler.h"
 #include "_2RealException.h"
@@ -28,6 +28,7 @@
 #include "_2RealSyncBlock.h"
 #include "_2RealTriggerTypes.h"
 #include "_2RealUpdatePolicyImpl.h"
+#include "_2RealMetadata.h"
 
 #include <sstream>
 
@@ -35,7 +36,7 @@ namespace _2Real
 {
 
 	SystemImpl::SystemImpl(std::string const& name) :
-		Block< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, NULL),
+		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, NULL),
 		m_Engine(EngineImpl::instance()),
 		m_PluginPool(EngineImpl::instance().getPluginPool()),
 		m_Timestamp(),
@@ -202,57 +203,47 @@ namespace _2Real
 		objIn.linkWith(nameIn, objOut, nameOut);
 	}
 
-	const Identifier SystemImpl::createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers)
+	const Identifier SystemImpl::createServiceBlock( Identifier const& pluginId, std::string const& blockName, UpdatePolicy const& triggers )
 	{
-		ServiceData serviceData = m_PluginPool.createService(pluginId, serviceName);
-		ServiceBlock *service = new ServiceBlock(serviceData, *this, *(triggers.m_Impl));
-		this->addSubBlock(*service);
-		return service->getIdentifier();
+		ServiceBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this, *triggers.m_Impl );
+		addSubBlock( block );
+		return block.getIdentifier();
 	}
 
 	const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds)
 	{
-		BlockList syncSet, readySet, finishedSet;
-		for (std::list< Identifier >::const_iterator it = blockIds.begin(); it != blockIds.end(); ++it)
-		{
-			AbstractBlock *block = &m_SubBlockManager->getBlock(*it);
-			syncSet.push_back(block);
-		}
+		//BlockList syncSet, readySet, finishedSet;
+		//for (std::list< Identifier >::const_iterator it = blockIds.begin(); it != blockIds.end(); ++it)
+		//{
+		//	AbstractBlock *block = &m_SubBlockManager->getBlock(*it);
+		//	syncSet.push_back(block);
+		//}
 
 		SyncBlock *syncBlock = new SyncBlock("sync block", *this);
-		this->addSubBlock(*syncBlock);
+		//this->addSubBlock(*syncBlock);
 
-		AbstractStateManager &triggerMgr = syncBlock->getStateManager();
-		AbstractBlockManager &blockMgr = syncBlock->getSubBlockManager();
-		for (BlockList::iterator it = syncSet.begin(); it != syncSet.end(); ++it)
-		{
-			AbstractBlock &b = **it;
-			AbstractStateManager &tMgr = b.getStateManager();
-			AbstractBlockManager &bMgr = b.getUberBlockManager();
+		//AbstractStateManager &triggerMgr = syncBlock->getStateManager();
+		//AbstractBlockManager &blockMgr = syncBlock->getSubBlockManager();
+		//for (BlockList::iterator it = syncSet.begin(); it != syncSet.end(); ++it)
+		//{
+		//	AbstractBlock &b = **it;
+		//	AbstractStateManager &tMgr = b.getStateManager();
+		//	AbstractBlockManager &bMgr = b.getUberBlockManager();
 
-			AbstractBlockBasedTrigger *readyTrigger = new BlockBasedTrigger< BLOCK_READY >(b.getName());
-			AbstractBlockBasedTrigger *finishedTrigger = new BlockBasedTrigger< BLOCK_FINISHED >(b.getName());
-			AbstractBlockBasedTrigger *uberTrigger = new BlockBasedTrigger< BLOCK_OK >("sync block");
-			blockMgr.addBlock(b);
-			bMgr.addBlock(*syncBlock);
-			triggerMgr.subBlockAdded(b, *readyTrigger, BLOCK_READY);
-			triggerMgr.subBlockAdded(b, *finishedTrigger, BLOCK_FINISHED);
-			tMgr.uberBlockAdded(*syncBlock, *uberTrigger, BLOCK_OK);
-		}
+		//	AbstractBlockBasedTrigger *readyTrigger = new BlockBasedTrigger< BLOCK_READY >(b.getName());
+		//	AbstractBlockBasedTrigger *finishedTrigger = new BlockBasedTrigger< BLOCK_FINISHED >(b.getName());
+		//	AbstractBlockBasedTrigger *uberTrigger = new BlockBasedTrigger< BLOCK_OK >("sync block");
+		//	blockMgr.addBlock(b);
+		//	bMgr.addBlock(*syncBlock);
+		//	triggerMgr.subBlockAdded(b, *readyTrigger, BLOCK_READY);
+		//	triggerMgr.subBlockAdded(b, *finishedTrigger, BLOCK_FINISHED);
+		//	tMgr.uberBlockAdded(*syncBlock, *uberTrigger, BLOCK_OK);
+		//}
 
-		//causes the sync block to start waiting for ready messages
-		syncBlock->setUp();
+		////causes the sync block to start waiting for ready messages
+		//syncBlock->setUp();
 
 		return syncBlock->getIdentifier();
-
 	}
-
-	//const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds)
-	//{
-	//	SyncBlock *syncBlock = new SyncBlock("sync block", *this);
-
-	//	return syncBlock->getIdentifier();
-
-	//}
 
 }

@@ -29,7 +29,7 @@ namespace _2Real
 
 	public:
 
-		SetupParameter(ParameterMetadata const& metadata);
+		SetupParameter(ParameterData const& metadata);
 
 		void				setData(EngineData const& data);
 		EngineData const&	getData() const;

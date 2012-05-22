@@ -18,7 +18,7 @@
 
 #include "_2RealDisabledIO.h"
 #include "_2RealException.h"
-#include "_2RealAbstractBlock.h"
+#include "_2RealAbstractUberBlock.h"
 
 #include <sstream>
 
@@ -39,21 +39,21 @@ namespace _2Real
 	{
 	}
 
-	//void DisabledIO::addParam(ParameterMetadata const& meta)
+	//void DisabledIO::addParam(ParameterData const& meta)
 	//{
 	//	std::ostringstream msg;
 	//	msg << "this entity does not allow io";
 	//	throw _2Real::Exception(msg.str());
 	//}
 
-	//void DisabledIO::addInlet(ParameterMetadata const& meta)
+	//void DisabledIO::addInlet(ParameterData const& meta)
 	//{
 	//	std::ostringstream msg;
 	//	msg << "this entity does not allow io";
 	//	throw _2Real::Exception(msg.str());
 	//}
 
-	//void DisabledIO::addOutlet(ParameterMetadata const& meta, Poco::Timestamp const& timestamp)
+	//void DisabledIO::addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp)
 	//{
 	//	std::ostringstream msg;
 	//	msg << "this entity does not allow io";

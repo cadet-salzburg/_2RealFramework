@@ -45,8 +45,8 @@ namespace _2Real
 		void subBlockRemoved(AbstractBlock &subBlock);
 		void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
 		void uberBlockRemoved(AbstractBlock &uberBlock);
-		void inletAdded(InputSlot &slot, AbstractInletBasedTrigger &trigger);
-		void inletRemoved(InputSlot &slot);
+		void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger);
+		void inletRemoved(Inlet &slot);
 
 	};
 

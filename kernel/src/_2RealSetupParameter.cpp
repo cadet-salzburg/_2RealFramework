@@ -17,7 +17,7 @@
 */
 
 #include "_2RealSetupParameter.h"
-#include "_2RealParameterMetadata.h"
+#include "_2RealParameterData.h"
 #include "_2RealException.h"
 
 #include <iostream>
@@ -26,14 +26,14 @@
 namespace _2Real
 {
 
-	SetupParameter::SetupParameter(ParameterMetadata const& metadata) :
+	SetupParameter::SetupParameter(ParameterData const& metadata) :
 		Parameter(metadata),
 		m_Data()
 	{
-		if (metadata.hasDefaultValue())
-		{
+		//if (metadata.hasDefaultValue())
+		//{
 			m_Data = metadata.getDefaultValue();
-		}
+		//}
 	}
 
 	void SetupParameter::setData(EngineData const& data)

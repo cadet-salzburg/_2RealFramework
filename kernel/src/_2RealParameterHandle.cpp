@@ -20,4 +20,19 @@
 
 namespace _2Real
 {
+
+	ParameterHandle::ParameterHandle(std::string const& name) :
+		m_Name(name)
+	{
+	}
+
+	ParameterHandle::~ParameterHandle()
+	{
+	}
+
+	std::string const& ParameterHandle::name() const
+	{
+		return m_Name;
+	}
+
 }

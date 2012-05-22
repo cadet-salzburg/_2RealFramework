@@ -20,14 +20,22 @@
 
 #include <set>
 
+#if defined(_WIN32)
+	#define _2REAL_CALLBACK __cdecl //poco forces me to to this ...
+	#define _2REAL_MEMBER_CALLBACK __thiscall
+#else
+	#define _2REAL_CALLBACK
+	#define _2REAL_MEMBER_CALLBACK
+#endif
+
 namespace _2Real
 {
 
 	class RunnableError;
 	class Data;
 
-	typedef void ( *ExceptionCallback )( void *userData, RunnableError &error );
-	typedef void ( *DataCallback )( void *userData, Data &data );
+	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, RunnableError &error );
+	typedef void ( _2REAL_CALLBACK *DataCallback )( void *userData, Data &data );
 
 	class DataFunctionCallback
 	{
@@ -137,7 +145,7 @@ namespace _2Real
 
 	public:
 
-		typedef void (Callable::*Callback)(RunnableError&);
+		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( RunnableError& );
 
 		ExceptionCallbackHandler(Callable &callable, Callback method) :
 			AbstractExceptionCallbackHandler(&callable),
@@ -189,7 +197,7 @@ namespace _2Real
 
 	public:
 
-		typedef void (Callable::*Callback)(Data&);
+		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( Data& );
 
 		DataCallbackHandler(Callable &callable, Callback method) :
 			AbstractDataCallbackHandler(&callable),

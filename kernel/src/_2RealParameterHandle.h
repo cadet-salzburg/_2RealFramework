@@ -38,18 +38,4 @@ namespace _2Real
 
 	};
 
-	inline ParameterHandle::ParameterHandle(std::string const& name) :
-		m_Name(name)
-	{
-	}
-
-	inline ParameterHandle::~ParameterHandle()
-	{
-	}
-
-	inline std::string const& ParameterHandle::name() const
-	{
-		return m_Name;
-	}
-
 }

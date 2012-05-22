@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealBlock.h"
+#include "_2RealUberBlock.h"
 #include "_2RealDisabledBlocks.h"
 #include "_2RealOwnedBlocks.h"
 #include "_2RealDisabledIO.h"
@@ -33,12 +33,14 @@ namespace _2Real
 {
 
 	class EngineImpl;
-	class PluginPool;
+	class BundleManager;
 	class EngineData;
 	class UpdatePolicy;
 	class IOutputListener;
+	class ServiceBlock;
+	class BlockData;
 
-	class SystemImpl : public Block< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */ >
+	class SystemImpl : public UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */ >
 	{
 
 	public:
@@ -52,6 +54,7 @@ namespace _2Real
 		Poco::Timestamp	const&		getTimestamp() const;
 
 		const Identifier			createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
+		//ServiceBlock &				createServiceBlock( BlockData const& meta, UpdatePolicy const& triggers );
 		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
 		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
 
@@ -72,7 +75,7 @@ namespace _2Real
 	private:
 
 		EngineImpl					&m_Engine;
-		PluginPool					&m_PluginPool;
+		BundleManager					&m_PluginPool;
 		Poco::Timestamp				m_Timestamp;
 		ExceptionHandler			m_ExceptionHandler;
 		ExceptionFunctionCallbacks	m_ExceptionCallbacks;

@@ -41,6 +41,7 @@ namespace _2Real
 
 	private:
 
+		friend class BundleManager;
 		friend class SystemImpl;
 
 		UpdatePolicy(UpdatePolicy const& src);

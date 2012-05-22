@@ -18,7 +18,7 @@
 
 #include "_2RealOwnedBlocks.h"
 #include "_2RealException.h"
-#include "_2RealAbstractBlock.h"
+#include "_2RealAbstractUberBlock.h"
 
 #include <sstream>
 
@@ -55,8 +55,6 @@ namespace _2Real
 
 		for (BlockList::iterator it = ready.begin(); it != ready.end(); /**/)
 		{
-			//AbstractBlockManager &mgr = (*it)->getSubBlockManager();
-			//mgr.clear();
 			delete *it;
 			it = ready.erase(it);
 		}

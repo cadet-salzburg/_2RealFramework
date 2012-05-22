@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "_2RealBlock.h"
+#include "_2RealUberBlock.h"
 #include "_2RealDisabledBlocks.h"
-#include "_2RealServiceIO.h"
-#include "_2RealServiceStates.h"
-#include "_2RealServiceData.h"
+#include "_2RealServiceBlockIO.h"
+#include "_2RealServiceBlockStates.h"
+#include "_2RealServiceBlockData.h"
 
 namespace _2Real
 {
@@ -30,23 +30,28 @@ namespace _2Real
 	class SystemImpl;
 	class UpdatePolicyImpl;
 
-	class ServiceBlock : public Block< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates/*, ServiceUpdates */ >
+	class ServiceBlock : public UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates >
 	{
 
 	public:
 
-		ServiceBlock(ServiceData const& data, SystemImpl &owner, UpdatePolicyImpl const& triggers);
+		ServiceBlock( BlockData const& data, Block& block, SystemImpl &owner, UpdatePolicyImpl const& triggers );
 		~ServiceBlock();
 
 		void			setUpService();
 		void			executeService();
 		void			shutDownService();
-		InputHandle		createInputHandle(std::string const& inletName);
-		OutputHandle	createOutputHandle(std::string const& outletName);
+		InletHandle		createInletHandle(std::string const& inletName);
+		OutletHandle	createOutletHandle(std::string const& outletName);
+
+		Block * getBlock()
+		{
+			return &m_Block;
+		}
 
 	private:
 
-		IService	*m_Service;
+		Block			&m_Block;
 
 	};
 

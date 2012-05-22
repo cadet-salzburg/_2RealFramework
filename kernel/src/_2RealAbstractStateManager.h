@@ -26,7 +26,7 @@ namespace _2Real
 {
 
 	class AbstractBlock;
-	class InputSlot;
+	class Inlet;
 	class UpdatePolicyImpl;
 
 	class AbstractStateManager
@@ -65,8 +65,8 @@ namespace _2Real
 		virtual void uberBlockAdded(AbstractBlock &uber, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg) = 0;
 		virtual void uberBlockRemoved(AbstractBlock &uber) = 0;
 		//relevant for blocks which can add inlets
-		//virtual void inletAdded(InputSlot &slot, AbstractInletBasedTrigger &trigger) = 0;
-		//virtual void inletRemoved(InputSlot &slot) = 0;
+		//virtual void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger) = 0;
+		//virtual void inletRemoved(Inlet &slot) = 0;
 
 	protected:
 

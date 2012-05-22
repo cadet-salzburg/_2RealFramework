@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealAbstractServiceState.h"
+#include "_2RealAbstractServiceBlockState.h"
 
 namespace _2Real
 {

@@ -80,11 +80,11 @@ namespace _2Real
 	{
 	}
 
-	void DisabledStates::inletAdded(InputSlot &slot, AbstractInletBasedTrigger &trigger)
+	void DisabledStates::inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger)
 	{
 	}
 
-	void DisabledStates::inletRemoved(InputSlot &slot)
+	void DisabledStates::inletRemoved(Inlet &slot)
 	{
 	}
 

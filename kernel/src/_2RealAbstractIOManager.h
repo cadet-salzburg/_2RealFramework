@@ -27,15 +27,15 @@ namespace _2Real
 {
 
 	class EngineData;
-	class InputHandle;
-	class OutputHandle;
+	class InletHandle;
+	class OutletHandle;
 	class AbstractBlock;
-	class InputSlot;
-	class OutputSlot;
+	class Inlet;
+	class Outlet;
 	class SetupParameter;
 
-	typedef std::map< std::string, InputSlot * >		InletMap;
-	typedef std::map< std::string, OutputSlot * >		OutletMap;
+	typedef std::map< std::string, Inlet * >		InletMap;
+	typedef std::map< std::string, Outlet * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
 
 	class AbstractIOManager
@@ -50,9 +50,9 @@ namespace _2Real
 		const unsigned int getId() const;
 
 		virtual void					clear() = 0;
-		//virtual void					addParam(ParameterMetadata const& meta) = 0;
-		//virtual void					addInlet(ParameterMetadata const& meta) = 0;
-		//virtual void					addOutlet(ParameterMetadata const& meta, Poco::Timestamp const& timestamp) = 0;
+		//virtual void					addParam(ParameterData const& meta) = 0;
+		//virtual void					addInlet(ParameterData const& meta) = 0;
+		//virtual void					addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp) = 0;
 		virtual void					registerToNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
 		virtual void					unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
 		virtual void					registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;

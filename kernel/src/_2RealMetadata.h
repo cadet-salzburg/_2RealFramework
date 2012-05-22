@@ -19,174 +19,247 @@
 #pragma once
 
 #include "_2RealEngineData.h"
+#include "_2RealSingletonHolder.h"
+#include "_2RealBundleData.h"
+#include "_2RealBlockData.h"
+#include "_2RealBlock.h"
 
 #include <typeinfo.h>
 #include <string>
+#include <iostream>
 
 namespace _2Real
 {
 
-	class PluginMetadata;
+	class Bundle;
+	class BundleContext;
+	class Block;
+	class FrameworkContext;
+	class Typetable;
 
-	class Metadata
+	class AbstractBlockCreator
 	{
 
 	public:
 
-		Metadata(PluginMetadata &metadata);
-
-		/**
-		*	sets plugin description
-		*
-		*	@param description:		plugin's description
-		*/
-		void setDescription(std::string const& description);
-
-		/**
-		*	sets plugin version
-		*
-		*	@param major			
-		*	@param minor			
-		*	@param revision			
-		*/
-		void setVersion(unsigned int major, unsigned int minor, unsigned int revision);
-
-		/**
-		*	sets plugin author
-		*
-		*	@param name:			plugin's author
-		*/
-		void setAuthor(std::string const& author);
-
-		/**
-		*	sets plugin contact address
-		*
-		*	@param contact:			plugin's contact address
-		*/
-		void setContact(std::string const& contact);
-
-		/**
-		*	add setup parameter
-		*
-		*	@param setupName:		parameter's name
-		*	@throw					AlreadyExistsException, InvalidTypeException
-		*/
-		template< typename DataType >
-		void addSetupParameter(std::string const& setupName)
+		virtual ~AbstractBlockCreator()
 		{
-			addSetupParameterByType(setupName, typeid(DataType).name());
 		}
 
-		/**
-		*	add setup parameter
-		*
-		*	@param setupName:		parameter's name
-		*	@throw					AlreadyExistsException, InvalidTypeException
-		*/
-		template< typename DataType >
-		void addSetupParameter(std::string const& setupName, DataType defaultValue)
+		virtual Block & create() const = 0;
+
+	};
+
+	template< typename BlockDerived >
+	class CreationPolicy
+	{
+
+	public:
+
+		virtual ~CreationPolicy()
 		{
-			EngineData data(defaultValue);
-			addSetupParameterByData(setupName, data);
 		}
 
-		/**
-		*	add a service
-		*
-		*	@param serviceName:		service's name
-		*	@throw					AlreadyExistsException
-		*/
-		void addService(std::string const& serviceName);
+		virtual Block & create() const = 0;
 
-		/**
-		*	set service description
-		*
-		*	@param serviceName		service's name
-		*	@param description		service's description
-		*	@throw					NotFoundException
-		*/
-		void setDescription(std::string const& serviceName, std::string const& description);
+	};
 
-		/**
-		*	add service setup parameter
-		*
-		*	@param serviceName		service's name
-		*	@param setupName		parameter's name
-		*	@throw					NotFoundException(service), AlreadyExistsException(parameter), InvalidTypeException
-		*/
-		template< typename DataType >
-		void addSetupParameter(std::string const& serviceName, std::string const& setupName)
+	template< typename BlockDerived >
+	class NoSingleton : public CreationPolicy< BlockDerived >
+	{
+
+	public:
+
+		~NoSingleton()
 		{
-			addSetupParameterByType(serviceName, setupName, typeid(DataType).name());
 		}
 
-		/**
-		*	add service setup parameter
-		*
-		*	@param serviceName		service's name
-		*	@param setupName		parameter's name
-		*	@param defaultValue
-		*	@throw					NotFoundException(service), AlreadyExistsException(parameter), InvalidTypeException
-		*/
-		template< typename DataType >
-		void addSetupParameter(std::string const& serviceName, std::string const& setupName, DataType defaultValue)
+		Block & create() const
 		{
-			EngineData data(defaultValue);
-			addSetupParameterByData(serviceName, setupName, data);
+			return *( new BlockDerived() );
 		}
 
-		/**
-		*	add service input slot
-		*
-		*	@param serviceName		service's name
-		*	@param inputName		slot's name
-		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
-		*/
-		template< typename DataType >
-		void addInputSlot(std::string const& serviceName, std::string const& inputName)
+	};
+
+	template< typename BlockDerived >
+	class Singleton : public CreationPolicy< BlockDerived >
+	{
+
+	public:
+
+		~Singleton()
 		{
-			addInputSlotByType(serviceName, inputName, typeid(DataType).name());
 		}
 
-		/**
-		*	add service input slot
-		*
-		*	@param serviceName		service's name
-		*	@param inputName		slot's name
-		*	@param defaultValue
-		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
-		*/
-		template< typename DataType >
-		void addInputSlot(std::string const& serviceName, std::string const& inputName, DataType defaultValue)
+		Block & create() const
 		{
-			EngineData data(defaultValue);
-			addInputSlotByData(serviceName, inputName, data);
-		}
-
-		/**
-		*	add service output slot
-		*
-		*	@param serviceName		service's name
-		*	@param outputName		slot's name
-		*	@throw					NotFoundException(service), AlreadyExistsException(slot), InvalidTypeException
-		*/
-		template< typename DataType >
-		void addOutputSlot(std::string const& serviceName, std::string const& outputName)
-		{
-			addOutputSlotByType(serviceName, outputName, typeid(DataType).name());
+			return m_Holder.instance();
 		}
 
 	private:
 
-		void				addSetupParameterByType(std::string const& setupName, std::string const& type);
-		void				addSetupParameterByType(std::string const& serviceName, std::string const& setupName, std::string const& type);
-		void				addInputSlotByType(std::string const& serviceName, std::string const& inputName, std::string const& type);
-		void				addSetupParameterByData(std::string const& setupName, EngineData const& defaultValue);
-		void				addSetupParameterByData(std::string const& serviceName, std::string const& setupName, EngineData  const& defaultValue);
-		void				addInputSlotByData(std::string const& serviceName, std::string const& inputName, EngineData  const& defaultValue);
-		void				addOutputSlotByType(std::string const& serviceName, std::string const& outputName, std::string const& type);
+		mutable SingletonHolder< BlockDerived >	m_Holder;
 
-		PluginMetadata		&m_Impl;
+	};
+
+	template< typename BlockDerived, template < typename BlockDerived > class CreationPolicy >
+	class BlockCreator : public AbstractBlockCreator
+	{
+
+	public:
+
+		~BlockCreator()
+		{
+		}
+
+		Block & create() const
+		{
+			return m_Policy.create();
+		}
+
+	private:
+
+		CreationPolicy< BlockDerived >	m_Policy;
+
+	};
+
+	class Metainfo;
+	class BundleData;
+	class BundleMetainfo;
+	class BlockMetainfo;
+
+	class BlockMetainfo
+	{
+
+	public:
+
+		BlockMetainfo( BlockData &data, Typetable const& typetable );
+		BlockMetainfo( BlockMetainfo const& src );
+		~BlockMetainfo();
+
+		template< typename DataType >
+		void addParameter( std::string const& paramName, DataType defaultValue )
+		{
+			EngineData data( defaultValue );
+			addParameterInternal( setupName, data );
+		}
+
+		template< typename DataType >
+		void addInlet( std::string const& inletName, DataType defaultValue )
+		{
+			EngineData data( defaultValue );
+			addInletInternal( inletName, data );
+		}
+
+		template< typename DataType >
+		void addOutlet( std::string const& outletName, DataType defaultValue )
+		{
+			EngineData data( defaultValue );
+			addOutletInternal( outletName, defaultValue );
+		}
+
+		void setDescription( std::string const& description );
+
+	private:
+
+		void	addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
+		void	addInletInternal( std::string const& inletName, EngineData const& defaultValue );
+		void	addOutletInternal( std::string const& outletName, EngineData const& defaultValue );
+
+		Typetable		const& m_Typetable;
+		BlockData		&m_Impl;
+
+	};
+
+	class BundleMetainfo
+	{
+
+	public:
+
+		BundleMetainfo( Metainfo &info, Typetable const& typetable );
+		BundleMetainfo( BundleMetainfo const& src );
+		~BundleMetainfo();
+
+		template< typename BlockDerived >
+		void exportBundleContext()
+		{
+			AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Singleton >();
+			setBundleContextInternal( *obj );
+		}
+
+		template< typename DataType >
+		void addContextParameter( std::string const& paramName, DataType defaultValue )
+		{
+			EngineData data(defaultValue);
+			addContextParameterInternal( paramName, data );
+		}
+
+		void setDescription(std::string const& description);
+		void setVersion(unsigned int major, unsigned int minor, unsigned int revision);
+		void setAuthor(std::string const& author);
+		void setContact(std::string const& contact);
+		void setCategory(std::string const& category);
+
+		template< typename BlockDerived >
+		BlockMetainfo exportBlock( std::string const& blockName )
+		{
+			AbstractBlockCreator *obj = new BlockCreator< BlockDerived, NoSingleton >();
+			return addExportedBlockInternal( *obj, blockName ); 
+		}
+
+	private:
+
+		void			setBundleContextInternal( AbstractBlockCreator &obj );
+		BlockMetainfo	addExportedBlockInternal( AbstractBlockCreator &obj, std::string const& blockName );
+		void			addContextParameterInternal( std::string const& paramName, EngineData const& defaultValue );
+
+		Typetable		const& m_Typetable;
+		Metainfo		&m_Impl;
+
+	};
+
+	class Metainfo
+	{
+
+	public:
+
+		Metainfo( BundleData &data );
+		~Metainfo();
+
+		void setAuthor( std::string const& author );
+		void setDescription( std::string const& description );
+		void setCategory( std::string const& category );
+		void setVersion( Version const& version );
+		void setContact( std::string const& contact );
+		void setInstallDirectory( std::string const& path );
+		void setName( std::string const& name );
+
+		void setContextCreator( AbstractBlockCreator &obj );
+		void addContextParameter( ParameterData &data );
+		BlockData & addExportedBlock( AbstractBlockCreator &obj, std::string const& blockName );
+
+		bool hasContext() const;
+		Block & createBlock( std::string const& blockName ) const;
+		//Block & createBundleContext() const;
+
+		void postProcess();
+
+	private:
+
+		struct BlockInfo
+		{
+			BlockInfo() : ctor( NULL ), data( NULL ) {}
+			BlockInfo( BlockInfo const& src ) : ctor( src.ctor ), data( src.data ) {}
+			AbstractBlockCreator	*ctor;
+			BlockData				*data;
+		};
+
+		typedef std::map< std::string, BlockInfo >	BlockInfoMap;
+
+		bool					m_HasContext;
+		BlockInfoMap			m_ExportedBlocks;
+		BlockInfo				m_ContextInfo;
+		BundleData				*m_BundleData;
 
 	};
 
