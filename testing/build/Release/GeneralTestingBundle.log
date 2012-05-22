@@ -1,0 +1,26 @@
+﻿Der Buildvorgang wurde am 22.05.2012 13:58:23 gestartet.
+     1>Projekt "D:\cadet repo 1.4.8\trunk\_2RealFramework\testing\build\GeneralTestingBundle.vcxproj" auf Knoten "2", build Ziel(e).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(299,5): warning MSB8004: Das Output-Verzeichnis endet nicht mit einem nachstehenden Schrägstrich. Der Schrägstrich wird in dieser Buildinstanz hinzugefügt, da er für die ordnungsgemäße Auswertung des Output-Verzeichnisses erforderlich ist.
+     1>InitializeBuildStatus:
+         "Release\GeneralTestingBundle.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\..\..\externalLibs\poco\XML\include /I..\..\..\..\externalLibs\poco\Foundation\include /I..\..\kernel\src /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\GeneralTestingBundle\ServiceImpl.cpp ..\src\GeneralTestingBundle\TutorialPlugin.cpp
+         ServiceImpl.cpp
+         TutorialPlugin.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\bin\GeneralTesting.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\..\..\..\externalLibs\poco\lib /LIBPATH:..\..\kernel\lib _2RealEngine_md.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\GeneralTesting.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\cadet repo 1.4.8\trunk\_2RealFramework\testing\bin\GeneralTesting.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\bin\GeneralTesting.lib" /MACHINE:X86 /DLL Release\ServiceImpl.obj
+         Release\TutorialPlugin.obj
+            Bibliothek "..\bin\GeneralTesting.lib" und Objekt "..\bin\GeneralTesting.exp" werden erstellt.
+         Code wird generiert.
+         Codegenerierung ist abgeschlossen.
+         GeneralTestingBundle.vcxproj -> D:\cadet repo 1.4.8\trunk\_2RealFramework\testing\build\..\bin\GeneralTesting.dll
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\bin\GeneralTesting.dll;#2" /manifest Release\GeneralTesting.dll.intermediate.manifest
+       FinalizeBuildStatus:
+         Die Datei "Release\GeneralTestingBundle.unsuccessfulbuild" wird gelöscht.
+         Aktualisieren des Timestamps von "Release\GeneralTestingBundle.lastbuildstate".
+     1>Die Erstellung des Projekts "D:\cadet repo 1.4.8\trunk\_2RealFramework\testing\build\GeneralTestingBundle.vcxproj" ist abgeschlossen, build Ziel(e).
+
+Das Erstellen war erfolgreich.
+
+Verstrichene Zeit 00:00:01.96
