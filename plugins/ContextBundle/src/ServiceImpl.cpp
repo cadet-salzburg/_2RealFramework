@@ -31,7 +31,7 @@ void Context::update()
 {
 	try
 	{
-
+		m_ContextNumber.data< unsigned int >() = rand();
 	}
 	catch ( Exception &e )
 	{
