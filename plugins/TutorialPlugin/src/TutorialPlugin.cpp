@@ -1,16 +1,12 @@
-#include "TutorialPlugin.h"
 #include "ServiceImpl.h"
 
-#include "_2RealFrameworkContext.h"
+#include "_2RealBundle.h"
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
 
-#include <iostream>
-
 using _2Real::BundleMetainfo;
 using _2Real::BlockMetainfo;
-using _2Real::FrameworkContext;
 using _2Real::Enumeration;
 using _2Real::Enums;
 using _2Real::Exception;
@@ -56,37 +52,4 @@ void getBundleMetainfo( BundleMetainfo info )
 		cout << e.message() << endl;
 		e.rethrow();
 	}
-}
-
-void BlockManager::setup( FrameworkContext &context )
-{
-	try
-	{
-		m_BundleEnum = context.getOutletHandle( "bundle enum" );
-		m_BundleVec = context.getOutletHandle( "config text" );
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-}
-
-void BlockManager::update()
-{
-	try
-	{
-		m_BundleVec.data< vector< string > >().push_back( "yay" );
-		m_BundleVec.data< vector< string > >().push_back( "updated" );
-		m_BundleVec.data< vector< string > >().push_back( "again" );
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-}
-
-void BlockManager::shutdown()
-{
 }

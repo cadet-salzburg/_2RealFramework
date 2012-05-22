@@ -20,6 +20,7 @@
     <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
+    <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
     <ClInclude Include="..\..\src\_2RealBundleLoader.h" />

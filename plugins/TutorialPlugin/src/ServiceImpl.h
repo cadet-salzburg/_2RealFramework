@@ -4,12 +4,30 @@
 #include "_2RealInletHandle.h"
 #include "_2RealOutletHandle.h"
 
+class BlockManager : public _2Real::Block
+{
+
+public:
+
+	BlockManager() : Block() {}
+	~BlockManager() {}
+	void update();
+	void setup( _2Real::FrameworkContext &context );
+	void shutdown() {}
+
+private:
+
+	_2Real::OutletHandle			m_BundleEnum;
+	_2Real::OutletHandle			m_BundleVec;
+
+};
+
 class Counter : public _2Real::Block
 {
 
 public:
 
-	Counter() {}
+	Counter() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
@@ -29,7 +47,7 @@ class Doubler : public _2Real::Block
 
 public:
 
-	Doubler() {}
+	Doubler() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
@@ -39,6 +57,8 @@ private:
 
 	_2Real::InletHandle				m_InputValue;
 	_2Real::OutletHandle			m_OutputValue;
+	_2Real::InletHandle				m_TestEnum;
+	_2Real::InletHandle				m_TestVec;
 
 };
 
@@ -47,7 +67,7 @@ class PrintOut : public _2Real::Block
 
 public:
 
-	PrintOut() {}
+	PrintOut() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
@@ -56,5 +76,7 @@ public:
 private:
 
 	_2Real::InletHandle				m_InputValue;
+	_2Real::InletHandle				m_TestEnum;
+	_2Real::InletHandle				m_TestVec;
 
 };

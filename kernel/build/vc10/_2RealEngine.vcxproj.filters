@@ -68,6 +68,7 @@
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
+    <ClInclude Include="..\..\src\_2RealBundle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />

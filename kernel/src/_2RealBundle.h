@@ -18,25 +18,20 @@
 
 #pragma once
 
+#include "Poco/ClassLibrary.h"
+
+#if defined(_WIN32)
+	#define _2REAL_LIBRARY_API __declspec(dllexport)
+#else
+	#define _2REAL_LIBRARY_API
+#endif
+
 namespace _2Real
 {
+	class BundleMetainfo;
+}
 
-	class FrameworkContext;
-
-	class Block
-	{
-
-	public:
-
-		virtual void setup( FrameworkContext &context ) = 0;
-		virtual void update() = 0;
-		virtual void shutdown() = 0;
-		virtual ~Block() = 0;
-
-	protected:
-
-	};
-	
-	inline Block::~Block() {}
-
+extern "C"
+{
+	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::BundleMetainfo info );
 }
