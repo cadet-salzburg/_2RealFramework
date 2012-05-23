@@ -270,12 +270,14 @@ namespace _2Real
 		if (paramIt != m_Params.end())
 		{
 			paramIt->second->setData(value.data());
+			return;
 		}
 
-		InletMap::iterator inletIt = m_Inlets.find(name);
+		InletMap::iterator inletIt = m_Inlets.find( name );
 		if (inletIt != m_Inlets.end())
 		{
 			inletIt->second->setData(TimestampedData(value.getTimestamp(), value.data()));
+			return;
 		}
 
 		std::ostringstream msg;
