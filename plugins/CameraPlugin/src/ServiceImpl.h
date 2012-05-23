@@ -22,7 +22,7 @@ private:
 
 	 
 	_2Real::OutletHandle			m_CameraData;
-	VideoCapture					*m_Capture; 
+	//VideoCapture					*m_Capture; 
 
 };
  

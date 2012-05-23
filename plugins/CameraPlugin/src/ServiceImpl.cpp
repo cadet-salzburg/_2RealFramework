@@ -9,10 +9,6 @@
 #include <vector>
 #include <string>
 
-
-
-
-
 using _2Real::FrameworkContext;
 using _2Real::Exception;
 using _2Real::ImageT;
@@ -28,12 +24,10 @@ void CameraService::setup( FrameworkContext &context )
 {
 	try
 	{
-		 
 		m_CameraData = context.getOutletHandle( "s1 outlet" );
-		m_Capture = new VideoCapture(0); // open the default camera
-		if(!m_Capture->isOpened())  // check if we succeeded
-			cout<<" Camera is not opened"<<endl;
-
+		//m_Capture = new VideoCapture(0); // open the default camera
+		//if(!m_Capture->isOpened())  // check if we succeeded
+		//	cout<<" Camera is not opened"<<endl;
 	}
 	catch ( _2Real::Exception &e )
 	{
@@ -44,21 +38,33 @@ void CameraService::setup( FrameworkContext &context )
 
 void CameraService::update()
 {
-	try  
+	try
 	{
-		Mat frame;
-		*m_Capture>>frame; // get a new frame from camera
-	//	 imshow("frame", frame);
+		//Mat frame;
+		//*m_Capture>>frame; // get a new frame from camera
+		////imshow("frame", frame);
 
-		unsigned char * cam_data = frame.data;
+		//unsigned char * cam_data = frame.data;
 
 		//cout<<" camera data"<< cam_data[1]<<endl;
-		unsigned char *copy = new unsigned char[640 * 480];
-		memcpy(copy, cam_data, 640*480*sizeof(unsigned char));
-	//	cout<<" copy data= "<< copy[0]<<endl;
-		m_CameraData.data< ImageT<unsigned char> >() =ImageT< unsigned char >(copy, true, 640, 480, _2Real::ImageChannelOrder::RGB);
-			
-	 
+		//unsigned char *copy = new unsigned char[640 * 480];
+		//memcpy(copy, cam_data, 640*480*sizeof(unsigned char));
+		//cout<<" copy data= "<< copy[0]<<endl;
+
+		ImageT< unsigned char > img( 640, 480, _2Real::ImageChannelOrder::RGB );
+
+		ImageT< unsigned char >::iterator it = img.iter();
+		while ( it.nextLine() )
+		{
+			while ( it.nextPixel() )
+			{
+				it.r() = 100;
+				it.g() = 100;
+				it.b() = 100;
+			}
+		}
+
+		m_CameraData.data< ImageT< unsigned char > >() = img;
 	}
 	catch ( _2Real::Exception &e )
 	{
