@@ -17,14 +17,6 @@
 	limitations under the License.
 */
 
-/*
-* This tutorial application demonstrates the basic use of the Tutorial Plugin and its services.
-* The sample uses a Counter service and prints its values out via another service.
-* It also shows how the counter values are multiplied by 2 and then printed out again.
-* 
-*			TERMINATE THE PROGRAM WITH "q+ ENTER/RETURN"
-*/
-
 #include "_2RealEngine.h"
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"

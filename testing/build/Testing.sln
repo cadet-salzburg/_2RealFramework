@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneralTestingApp", "Genera
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneralTestingBundle", "GeneralTestingBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageTestingApp", "ImageTestingApp.vcxproj", "{AA9EA0F4-CC54-41A7-9185-26B071B23154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
+		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Debug|Win32.Build.0 = Debug|Win32
+		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Release|Win32.ActiveCfg = Release|Win32
+		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
