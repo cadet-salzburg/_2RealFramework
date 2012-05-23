@@ -48,15 +48,15 @@ void CameraService::update()
 	{
 		Mat frame;
 		*m_Capture>>frame; // get a new frame from camera
-		//imshow("frame", frame);
+	//	 imshow("frame", frame);
 
 		unsigned char * cam_data = frame.data;
 
 		//cout<<" camera data"<< cam_data[1]<<endl;
 		unsigned char *copy = new unsigned char[640 * 480];
 		memcpy(copy, cam_data, 640*480*sizeof(unsigned char));
-		cout<<" copy data= "<< copy[0]<<endl;
-		m_CameraData.data< ImageT<unsigned char> >() =ImageT< unsigned char >(copy, true, 640, 480, _2Real::ImageChannelOrder::R);
+	//	cout<<" copy data= "<< copy[0]<<endl;
+		m_CameraData.data< ImageT<unsigned char> >() =ImageT< unsigned char >(copy, true, 640, 480, _2Real::ImageChannelOrder::RGB);
 			
 	 
 	}
