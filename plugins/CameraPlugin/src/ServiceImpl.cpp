@@ -26,11 +26,13 @@ void CameraService::setup( FrameworkContext &context )
 	try
 	{
 		m_CameraData = context.getOutletHandle( "s1 outlet" );
-		m_Capture = new VideoCapture(0);
+		m_Capture = new VideoCapture( 0 );
 		if(!m_Capture->isOpened())
 		{
 			throw Exception( "could not open device" );
 		}
+
+		m_Capture->set( CV_CAP_PROP_FRAME_WIDTH, 200 );
 	}
 	catch ( Exception &e )
 	{
@@ -55,8 +57,7 @@ void CameraService::update()
 		unsigned char *copy = new unsigned char[ sz ];
 		memcpy( copy, frame.data, sz*sizeof( unsigned char ) );
 
-		ImageT< unsigned char > frameImg( copy, true, width, height, ImageChannelOrder::RGB );
-		m_CameraData.data< ImageT< unsigned char > >() = frameImg;
+		m_CameraData.data< ImageT< unsigned char > >().assign( copy, true, width, height, ImageChannelOrder::RGB );
 	}
 	catch ( Exception &e )
 	{
