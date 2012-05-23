@@ -379,6 +379,8 @@ namespace _2Real
 		ImageChannelT< T > const&	getChannelBlue() const { return m_ImageObject->m_Channels[ImageChannelOrder::BLUE]; }
 		ImageChannelT< T > const&	getChannelAlpha() const { return m_ImageObject->m_Channels[ImageChannelOrder::ALPHA]; }
 
+		bool isEmpty() const		{ return ( m_ImageObject->m_Width == 0 || m_ImageObject->m_Height == 0 || m_ImageObject->m_ImageData == NULL ); }
+
 	private:
 
 		struct ImageObject

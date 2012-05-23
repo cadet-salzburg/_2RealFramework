@@ -44,13 +44,14 @@ namespace _2Real
 		void							createNewDataItem();
 		void							resetLinks();
 		void							discardCurrent();		//call by output handle when not writing anything
+		const EngineData				getCurrent() const;
 
 		//callback functions
 		void							registerCallback( DataFunctionCallback &callback );
 		void							unregisterCallback( DataFunctionCallback &callback );
 		void							registerCallback(AbstractDataCallbackHandler &callback);
 		void							unregisterCallback(AbstractDataCallbackHandler &callback);
-		void							addListener( Inlet &slot );
+		void						addListener( Inlet &slot );
 		void							removeListener( Inlet &slot );
 		void							clearLinks();
 

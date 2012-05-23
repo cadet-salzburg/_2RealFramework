@@ -240,8 +240,14 @@ namespace _2Real
 			return inletIt->second->getNewest();
 		}
 
+		OutletMap::const_iterator outletIt = m_Outlets.find(name);
+		if (outletIt != m_Outlets.end())
+		{
+			return outletIt->second->getCurrent();
+		}
+
 		std::ostringstream msg;
-		msg << "no inlet or setup parameter named " << name << " found in " << m_Owner.getName();
+		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 

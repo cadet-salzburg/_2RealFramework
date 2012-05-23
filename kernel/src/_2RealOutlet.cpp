@@ -93,6 +93,11 @@ namespace _2Real
 		return m_WriteData;
 	}
 
+	const EngineData Outlet::getCurrent() const
+	{
+		return m_NewestData.data();
+	}
+
 	void Outlet::createNewDataItem()
 	{
 		if ( !m_DiscardCurrent )

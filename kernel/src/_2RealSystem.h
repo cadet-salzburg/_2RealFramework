@@ -74,10 +74,22 @@ namespace _2Real
 
 		//void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
-		//void registerToException(ExceptionCallback callback);
-		//void unregisterFromException(ExceptionCallback callback);
-		//void registerToException(IExceptionListener &listener);
-		//void unregisterFromException(IExceptionListener &listener);
+		//void registerToException( ExceptionCallback callback, void *userData = NULL );
+		//void unregisterFromException( ExceptionCallback callback, void *userData = NULL );
+
+		//template< typename Callable >
+		//void registerToException( Callable &callable, void ( Callable::*callback )( RunnableError ) )
+		//{
+		//	AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+		//	registerToNewExceptionInternal( *handler );
+		//}
+
+		//template< typename Callable >
+		//void unregisterFromException( Callable &callable, void ( Callable::*callback )( RunnableError ) )
+		//{
+		//	AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+		//	unregisterFromExceptionInternal( *handler );
+		//}
 
 		void registerToNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
 		void unregisterFromNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
@@ -106,6 +118,8 @@ namespace _2Real
 		const EngineData	getValueInternal( Identifier const& id, std::string const& name ) const;
 		void				registerToNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
 		void				unregisterFromNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
+		//void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
+		//void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
 
 		SystemImpl			*m_Impl;
 
