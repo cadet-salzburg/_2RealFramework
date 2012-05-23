@@ -25,14 +25,13 @@ void CameraService::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_CameraData = context.getOutletHandle( "s1 outlet" );
+		m_CameraImage = context.getOutletHandle( "camera image" );
+		m_FastAssign = context.getInletHandle( "fast assign" );
 		m_Capture = new VideoCapture( 0 );
 		if(!m_Capture->isOpened())
 		{
 			throw Exception( "could not open device" );
 		}
-
-		m_Capture->set( CV_CAP_PROP_FRAME_WIDTH, 200 );
 	}
 	catch ( Exception &e )
 	{
@@ -53,11 +52,17 @@ void CameraService::update()
 		const unsigned int area = frame.size().area();
 		const unsigned int channels = frame.channels();
 
-		const unsigned int sz = area * channels;
-		unsigned char *copy = new unsigned char[ sz ];
-		memcpy( copy, frame.data, sz*sizeof( unsigned char ) );
-
-		m_CameraData.data< ImageT< unsigned char > >().assign( copy, true, width, height, ImageChannelOrder::RGB );
+		if ( !(m_FastAssign.data< bool >()) )
+		{
+			const unsigned int sz = area * channels;
+			unsigned char *copy = new unsigned char[ sz ];
+			memcpy( copy, frame.data, sz*sizeof( unsigned char ) );
+			m_CameraImage.data< ImageT< unsigned char > >().assign( copy, true, width, height, ImageChannelOrder::RGB );
+		}
+		else
+		{
+			m_CameraImage.data< ImageT< unsigned char > >().assign( frame.data, false, width, height, ImageChannelOrder::RGB );
+		}
 	}
 	catch ( Exception &e )
 	{

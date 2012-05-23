@@ -22,7 +22,8 @@ public:
 
 private:
 
-	_2Real::OutletHandle			m_CameraData;
+	_2Real::OutletHandle			m_CameraImage;
+	_2Real::InletHandle				m_FastAssign;
 	cv::VideoCapture				*m_Capture;
 
 };

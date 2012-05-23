@@ -24,27 +24,16 @@ void getBundleMetainfo( BundleMetainfo info )
 	
 	try
 	{
-		info.setDescription( "bla bla bla" );
-		info.setAuthor( "help@cadet.at" );
-		info.setCategory( "testing" );
+		info.setDescription( "WebCam bundle" );
+		info.setAuthor( "ahmed tolba" );
+		info.setCategory( "video" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		//ImageT< unsigned char > img( 640, 480, ImageChannelOrder::RGB );
-		//ImageT< unsigned char >::iterator it = img.iter();
-		//while( it.nextLine() )
-		//{
-		//	while( it.nextPixel() )
-		//	{
-		//		it.r() = 0;
-		//		it.g() = 0;
-		//		it.b() = 0;
-		//	}
-		//}
-
 		BlockMetainfo camera = info.exportBlock< CameraService >( "CameraService" );
-		camera.setDescription( "count from up from 0" );
-		camera.addOutlet< ImageT< unsigned char > >( "s1 outlet", ImageT< unsigned char >() );
+		camera.setDescription( "grabs data from a webcam" );
+		camera.addOutlet< ImageT< unsigned char > >( "camera image", ImageT< unsigned char >() );
+		camera.addInlet< bool >( "fast assign", false );
 	}
 	catch ( _2Real::Exception &e )
 	{
