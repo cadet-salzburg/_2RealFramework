@@ -2,34 +2,37 @@
 
 #include "_2RealFrameworkContext.h"
 #include "_2RealException.h"
-#include "_2RealEnum.h"
 #include "_2RealImageT.h"
 
+#include "opencv2/opencv.hpp"
+
 #include <iostream>
-#include <vector>
 #include <string>
 
 using _2Real::FrameworkContext;
 using _2Real::Exception;
 using _2Real::ImageT;
+using _2Real::ImageChannelOrder;
 
 using std::cout;
 using std::endl;
-using std::vector;
 using std::string;
 
-using namespace cv;
+using cv::Mat;
+using cv::VideoCapture;
 
 void CameraService::setup( FrameworkContext &context )
 {
 	try
 	{
 		m_CameraData = context.getOutletHandle( "s1 outlet" );
-		//m_Capture = new VideoCapture(0); // open the default camera
-		//if(!m_Capture->isOpened())  // check if we succeeded
-		//	cout<<" Camera is not opened"<<endl;
+		m_Capture = new VideoCapture(0);
+		if(!m_Capture->isOpened())
+		{
+			throw Exception( "could not open device" );
+		}
 	}
-	catch ( _2Real::Exception &e )
+	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();
@@ -40,36 +43,30 @@ void CameraService::update()
 {
 	try
 	{
-		//Mat frame;
-		//*m_Capture>>frame; // get a new frame from camera
-		////imshow("frame", frame);
+		Mat frame;
+		*m_Capture >> frame;
 
-		//unsigned char * cam_data = frame.data;
+		const unsigned int width = frame.size().width;
+		const unsigned int height = frame.size().height;
+		const unsigned int area = frame.size().area();
+		const unsigned int channels = frame.channels();
 
-		//cout<<" camera data"<< cam_data[1]<<endl;
-		//unsigned char *copy = new unsigned char[640 * 480];
-		//memcpy(copy, cam_data, 640*480*sizeof(unsigned char));
-		//cout<<" copy data= "<< copy[0]<<endl;
+		const unsigned int sz = area * channels;
+		unsigned char *copy = new unsigned char[ sz ];
+		memcpy( copy, frame.data, sz*sizeof( unsigned char ) );
 
-		ImageT< unsigned char > img( 640, 480, _2Real::ImageChannelOrder::RGB );
-
-		ImageT< unsigned char >::iterator it = img.iter();
-		while ( it.nextLine() )
-		{
-			while ( it.nextPixel() )
-			{
-				it.r() = 100;
-				it.g() = 100;
-				it.b() = 100;
-			}
-		}
-
-		m_CameraData.data< ImageT< unsigned char > >() = img;
+		ImageT< unsigned char > frameImg( copy, true, width, height, ImageChannelOrder::RGB );
+		m_CameraData.data< ImageT< unsigned char > >() = frameImg;
 	}
-	catch ( _2Real::Exception &e )
+	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();
 	}
 };
- 
+
+void CameraService::shutdown()
+{
+	m_Capture->release();
+	delete m_Capture;
+}
