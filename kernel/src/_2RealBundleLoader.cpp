@@ -94,7 +94,7 @@ namespace _2Real
 		}
 		catch ( Poco::Exception &e )
 		{
-			throw NotFoundException( e.message() );
+			throw _2Real::NotFoundException( e.message() );
 		}
 
 		BundleData *result = new BundleData();

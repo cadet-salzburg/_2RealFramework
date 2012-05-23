@@ -119,6 +119,9 @@ namespace _2Real
 		BundleInternal &bundle = getBundle( pluginId );
 		BundleData const& bundleData = bundle.getBundleData();
 		BlockData const& blockData = bundle.getBlockData( blockName );
+
+		std::cout << bundleData << std::endl;
+
 		Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
 		ServiceBlock *serviceBlock = new ServiceBlock( blockData, block, sys, triggers );
 

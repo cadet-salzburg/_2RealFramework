@@ -104,6 +104,8 @@ namespace _2Real
 
 	public:
 
+
+
 		ImageChannelT& operator=( ImageChannelT const& src )
 		{
 			if ( this == &src )
@@ -335,6 +337,12 @@ namespace _2Real
 		}
 
 		ImageT(T *data, const bool ownsData, const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder)
+		{
+			uint32_t rowBytes = width * sizeof(T) * channelOrder.getNumberOfChannels();
+			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(data, ownsData, width, height, rowBytes, channelOrder));
+		}
+
+		void assign( T *data, const bool ownsData, const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder )
 		{
 			uint32_t rowBytes = width * sizeof(T) * channelOrder.getNumberOfChannels();
 			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(data, ownsData, width, height, rowBytes, channelOrder));
