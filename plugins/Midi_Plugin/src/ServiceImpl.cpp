@@ -2,17 +2,20 @@
 #include "_2RealException.h"
 #include "_2RealEnum.h"
 #include "Poco/Mutex.h"
+#include "_2RealFrameworkContext.h"
 
 using namespace _2Real;
 using namespace std;
+using _2Real::FrameworkContext;
+using _2Real::Exception;
 
-void MidiInputService::setup(_2Real::ServiceContext &context)
+
+void MidiInputService::setup(_2Real::FrameworkContext &context)
 {
 	try
 	{
-		m_CurrentCount = 1;
-		m_CounterValue = context.getOutputHandle("counter outlet");
-		m_Test = context.getOutputHandle("test");
+	
+		m_InputMidi = context.getOutletHandle("inputmidi");
 	
 		m_midiInput = new RtMidiIn();
 		// Check available ports
@@ -66,7 +69,7 @@ void MidiInputService::update()
 		{
 
 			for ( i=0; i<nBytes; i++ ){
-				m_Test.data< std::vector < unsigned char  > >() = message;
+				m_InputMidi.data< std::vector < unsigned char  > >() = message;
 				std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
 			}
 
@@ -90,11 +93,11 @@ void MidiInputService::shutdown()
 	delete m_midiInput;
 }
 
-void MidiOutputService::setup( _2Real::ServiceContext &context )
+void MidiOutputService::setup(_2Real::FrameworkContext &context )
 {
 
 	m_midiOutput = new RtMidiOut();
-	m_OutputMidi = context.getOutputHandle("outputmidi");
+	m_OutputMidi = context.getOutletHandle("outputmidi");
 
 	// Check available ports
 	unsigned int port = 0;

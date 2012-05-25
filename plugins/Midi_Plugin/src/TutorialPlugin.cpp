@@ -1,36 +1,41 @@
-#include "TutorialPlugin.h"
 
-#include "_2RealPluginContext.h"
+#include "ServiceImpl.h"
+
+#include "_2RealBundle.h"
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
 
-#include "ServiceImpl.h"
+#include <vector>
 
-using namespace _2Real;
-using namespace std;
+using _2Real::BundleMetainfo;
+using _2Real::BlockMetainfo;
+using _2Real::Enumeration;
+using _2Real::Enums;
+using _2Real::Exception;
 
-void TutorialPlugin::getMetadata(Metadata &metadata)
+using std::vector;
+using std::string;
+using std::cout;
+using std::endl;
+
+void getBundleMetainfo(BundleMetainfo info )
 {
 	try
 	{
-		metadata.setDescription("Plugin 1");
-		metadata.setAuthor("help@cadet.at");
-		metadata.setVersion(0, 0, 0);
-		metadata.setContact("help@cadet.at");
+		info.setDescription("Midi Plugin");
+		info.setAuthor("help@cadet.at");
+		info.setVersion(0, 0, 0);
+		info.setContact("help@cadet.at");
 
-		metadata.addService("MidiInputService");
-		metadata.setDescription("MidiInputService", "midi input");
-		
-		metadata.addService("MidiOutputService");
-		metadata.setDescription("MidiOutputService", "midi output");
+		BlockMetainfo midiInputService = info.exportBlock< MidiInputService>("MidiInputService");
+		midiInputService.setDescription( "midi reading input" );
+		midiInputService.addOutlet<vector< unsigned char > >( "inputmidi", vector<unsigned char>() );
 
-
-
-		metadata.addOutputSlot< int >("MidiInputService", "counter outlet");
-		metadata.addOutputSlot< std::vector< unsigned char > >("MidiInputService", "test");
-		metadata.addOutputSlot< std::vector< unsigned char > >("MidiOutputService", "outputmidi");
-
+		BlockMetainfo midiOutputService = info.exportBlock< MidiOutputService >( "MidiOutputService" );
+		midiOutputService.setDescription( "midi reading output" );
+		midiOutputService.addOutlet< vector< unsigned char > >( "outputmidi", vector<unsigned char>()  );
+		 
 	
 	}
 	catch (_2Real::Exception &e)
@@ -41,22 +46,7 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 	{
 		std::ostringstream msg;
 		msg << "exception during setup: " << e.what();
-		throw PluginException(msg.str());
+		 
 	}
 }
-
-void TutorialPlugin::setup(PluginContext &context)
-{
-	context.registerService< MidiInputService >("MidiInputService");
-	context.registerService< MidiOutputService >("MidiOutputService");
-}
-
-void TutorialPlugin::shutdown()
-{
-}
-
-TutorialPlugin::~TutorialPlugin()
-{
-}
-
-_2REAL_EXPORT_PLUGIN(TutorialPlugin)
+ 
