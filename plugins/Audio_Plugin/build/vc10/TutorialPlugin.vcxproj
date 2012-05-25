@@ -17,7 +17,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\portaudio.h" />
     <ClInclude Include="..\..\src\ServiceImpl.h" />
-    <ClInclude Include="..\..\src\TutorialPlugin.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>

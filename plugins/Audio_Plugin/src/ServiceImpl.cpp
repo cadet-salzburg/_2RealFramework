@@ -1,8 +1,9 @@
 #include "ServiceImpl.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
-#include "Poco/Mutex.h"
+#include "_2RealFrameworkContext.h"
 
+#include "Poco/Mutex.h"
 #include "portaudio.h"
 
 #define NUM_SECONDS         (5)
@@ -18,12 +19,12 @@
 using namespace _2Real;
 using namespace std;
 
-void AudioOutputService::setup(_2Real::ServiceContext &context)
+void AudioOutputService::setup(_2Real::FrameworkContext &context)
 {
 	try
 	{
 	  
-		m_Test = context.getOutputHandle("test");
+		m_Test = context.getOutletHandle("test");
 
 		PaStreamParameters outputParameters;
 		PaStream *stream;

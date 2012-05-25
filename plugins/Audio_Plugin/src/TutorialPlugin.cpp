@@ -1,6 +1,5 @@
-#include "TutorialPlugin.h"
-
-#include "_2RealPluginContext.h"
+ 
+ 
 #include "_2RealMetadata.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
@@ -10,19 +9,20 @@
 using namespace _2Real;
 using namespace std;
 
-void TutorialPlugin::getMetadata(Metadata &metadata)
+void getBundleMetainfo( BundleMetainfo info )
 {
 	try
 	{
-		metadata.setDescription("Plugin 1");
-		metadata.setAuthor("help@cadet.at");
-		metadata.setVersion(0, 0, 0);
-		metadata.setContact("help@cadet.at");
+		info.setDescription("Audio Plugin");
+		info.setAuthor("help@cadet.at");
+		info.setVersion(0, 0, 0);
+		info.setContact("help@cadet.at");
 
-		metadata.addService("AudioOutputService");
-		metadata.setDescription("AudioOutputService", "audio input");
-	  
-		metadata.addOutputSlot< std::vector< unsigned char > >("AudioOutputService", "test");
+		BlockMetainfo audioplugin = info.exportBlock< AudioOutputService >( "AudioOutputService" );
+		audioplugin.setDescription( "audio plugin" );
+		audioplugin.addOutlet< std::vector< unsigned char >  >( "test", std::vector< unsigned char >() );
+	 
+		 
 		 
 
 	
@@ -39,18 +39,4 @@ void TutorialPlugin::getMetadata(Metadata &metadata)
 	}
 }
 
-void TutorialPlugin::setup(PluginContext &context)
-{
-	context.registerService< AudioOutputService >("AudioOutputService");
-	 
-}
-
-void TutorialPlugin::shutdown()
-{
-}
-
-TutorialPlugin::~TutorialPlugin()
-{
-}
-
-_2REAL_EXPORT_PLUGIN(TutorialPlugin)
+  

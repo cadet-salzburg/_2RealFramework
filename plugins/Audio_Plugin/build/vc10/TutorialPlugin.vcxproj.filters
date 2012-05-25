@@ -6,7 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ServiceImpl.h" />
-    <ClInclude Include="..\..\src\TutorialPlugin.h" />
     <ClInclude Include="..\..\src\portaudio.h" />
   </ItemGroup>
 </Project>
