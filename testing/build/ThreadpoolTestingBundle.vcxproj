@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\GeneralTestingBundle\ServiceImpl.cpp" />
-    <ClCompile Include="..\src\GeneralTestingBundle\TestBundle.cpp" />
+    <ClCompile Include="..\src\ThreadpoolTestingBundle\ServiceImpl.cpp" />
+    <ClCompile Include="..\src\ThreadpoolTestingBundle\TestBundle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\GeneralTestingBundle\ServiceImpl.h" />
+    <ClInclude Include="..\src\ThreadpoolTestingBundle\ServiceImpl.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{926B4D59-E1F0-4AB9-8CBA-234D1F792EF0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>GeneralTestingBundle</RootNamespace>
-    <ProjectName>GeneralTestingBundle</ProjectName>
+    <RootNamespace>ThreadpoolTestingBundle</RootNamespace>
+    <ProjectName>ThreadpoolTestingBundle</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -48,12 +48,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin</OutDir>
-    <TargetName>GeneralTesting_d</TargetName>
+    <TargetName>ThreadpoolTesting_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin</OutDir>
-    <TargetName>GeneralTesting</TargetName>
+    <TargetName>ThreadpoolTesting</TargetName>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
