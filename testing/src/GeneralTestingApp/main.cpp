@@ -35,7 +35,8 @@ using std::endl;
 using std::cin;
 using _2Real::Engine;
 using _2Real::System;
-using _2Real::Identifier;
+using _2Real::BundleIdentifier;
+using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
 using _2Real::Data;
 using _2Real::Exception;
@@ -84,26 +85,33 @@ int main( int argc, char *argv[] )
 
 	try 
 	{
-		//testEngine.setBaseDirectory( directory );
-		Identifier testBundle = testEngine.load( string( "GeneralTesting" ).append( shared_library_suffix ) );
+		BundleIdentifier testBundle = testEngine.load( string( "GeneralTesting" ).append( shared_library_suffix ) );
+
+		cout << testBundle << endl;
 
 		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 0.5f );
+		fpsTrigger.triggerByUpdateRate( 30.0f );
 
-		UpdatePolicy newTrigger;
-		newTrigger.triggerWhenAllDataNew();
+		//UpdatePolicy newTrigger1;
+		//newTrigger1.triggerWhenAllDataNew();
 
-		UpdatePolicy avTrigger;
-		avTrigger.triggerWhenAllDataAvailable();
+		UpdatePolicy newTrigger2;
+		newTrigger2.clear();
+		newTrigger2.triggerByUpdateRate( 30.0f );
+		newTrigger2.triggerWhenAllDataNew();
 
-		Identifier counter = testSystem.createService( testBundle, "counter", fpsTrigger );
-		testSystem.setup(counter);
+		BlockIdentifier counter = testSystem.createBlock( testBundle, "counter", fpsTrigger );
+		testSystem.setup( counter );
 
-		Identifier doubler = testSystem.createService( testBundle, "doubler", newTrigger );
-		testSystem.setup(doubler);
+		//Identifier doubler = testSystem.createService( testBundle, "doubler", newTrigger1 );
+		//testSystem.setup( doubler );
 
-		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
-		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+		BlockIdentifier print = testSystem.createBlock( testBundle, "print out", newTrigger2 );
+		testSystem.setup( print );
+
+		//testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
+		testSystem.link( counter, "counter outlet", print, "printout inlet" );
+		//testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
 	}
 	catch ( Exception &e )
 	{

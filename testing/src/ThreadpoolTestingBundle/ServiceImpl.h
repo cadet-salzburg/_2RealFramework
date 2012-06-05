@@ -4,55 +4,57 @@
 #include "_2RealInletHandle.h"
 #include "_2RealOutletHandle.h"
 
-class Counter : public _2Real::Block
+class Out : public _2Real::Block
 {
 
 public:
 
-	Counter() : Block() {}
+	Out() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
-	~Counter() {}
+	~Out() {}
 
 private:
 
-	int								m_CurrentCount;
-	_2Real::OutletHandle			m_CounterValue;
+	int								m_Counter;
+	_2Real::OutletHandle			m_Out;
 
 };
 
-class Doubler : public _2Real::Block
+class InOut : public _2Real::Block
 {
 
 public:
 
-	Doubler() : Block() {}
+	InOut() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
-	~Doubler() {}
+	~InOut() {}
 
 private:
 
-	_2Real::InletHandle				m_InputValue;
-	_2Real::OutletHandle			m_OutputValue;
+	int								m_Counter;
+	_2Real::InletHandle				m_In;
+	_2Real::OutletHandle			m_Out;
 
 };
 
-class PrintOut : public _2Real::Block
+class In : public _2Real::Block
 {
 
 public:
 
-	PrintOut() : Block() {}
+	In() : Block() {}
 	void shutdown() {}
 	void update();
 	void setup( _2Real::FrameworkContext &context );
-	~PrintOut() {}
+	~In() {}
 
 private:
 
-	_2Real::InletHandle				m_InputValue;
+	int								m_Counter;
+	_2Real::InletHandle				m_In;
 
 };

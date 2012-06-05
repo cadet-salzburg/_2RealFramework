@@ -21,26 +21,23 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
-#include "_2RealData.h"
 #include "_2RealUpdatePolicy.h"
-
-#include "Poco/Mutex.h"
 
 #include <windows.h>
 #include <iostream>
+#include <list>
 
+using std::list;
 using std::string;
 using std::cout;
 using std::endl;
 using std::cin;
 using _2Real::Engine;
 using _2Real::System;
-using _2Real::Identifier;
+using _2Real::BundleIdentifier;
+using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
-using _2Real::Data;
 using _2Real::Exception;
-using Poco::FastMutex;
-using Poco::ScopedLock;
 
 #ifndef _DEBUG
 	#define shared_library_suffix ".dll"
@@ -48,44 +45,16 @@ using Poco::ScopedLock;
 	#define shared_library_suffix "_d.dll"
 #endif
 
-template< typename T >
-class Receiver
-{
-
-public:
-
-	void receiveData( Data &data )
-	{
-		try
-		{
-			ScopedLock< FastMutex > lock( m_Mutex );
-			m_Data = data.getData< T >();
-			cout << "received: " << m_Data << endl;
-		}
-		catch ( Exception &e )
-		{
-			cout << e.message() << endl;
-		}
-	}
-
-private:
-
-	FastMutex	m_Mutex;
-	T			m_Data;
-
-};
-
 int main( int argc, char *argv[] )
 {
-	Receiver< unsigned int > *obj = new Receiver< unsigned int >();
-
 	Engine &testEngine = Engine::instance();
 	System testSystem( "test system" );
 
 	try 
 	{
-		//testEngine.setBaseDirectory( directory );
-		Identifier testBundle = testEngine.load( string( "GeneralTesting" ).append( shared_library_suffix ) );
+		BundleIdentifier testBundle = testEngine.load( string( "ThreadpoolTesting" ).append( shared_library_suffix ) );
+
+		cout << testBundle << endl;
 
 		UpdatePolicy fpsTrigger;
 		fpsTrigger.triggerByUpdateRate( 0.5f );
@@ -93,17 +62,20 @@ int main( int argc, char *argv[] )
 		UpdatePolicy newTrigger;
 		newTrigger.triggerWhenAllDataNew();
 
-		UpdatePolicy avTrigger;
-		avTrigger.triggerWhenAllDataAvailable();
+		for ( unsigned int i=0; i<500; ++i )
+		{
+			BlockIdentifier out = testSystem.createBlock( testBundle, "out", fpsTrigger );
+			testSystem.setup( out );
 
-		Identifier counter = testSystem.createService( testBundle, "counter", fpsTrigger );
-		testSystem.setup(counter);
+			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out", newTrigger );
+			testSystem.setup( inout );
 
-		Identifier doubler = testSystem.createService( testBundle, "doubler", newTrigger );
-		testSystem.setup(doubler);
+			BlockIdentifier in = testSystem.createBlock( testBundle, "in", newTrigger );
+			testSystem.setup( in );
 
-		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
-		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+			testSystem.link( out, "outlet", inout, "inlet" );
+			testSystem.link( inout, "outlet", in, "inlet" );
+		}
 	}
 	catch ( Exception &e )
 	{
@@ -123,6 +95,8 @@ int main( int argc, char *argv[] )
 
 	testSystem.clear();
 
+	cout << "SYSTEM CLEARED" << endl;
+
 	while(1)
 	{
 		string line;
@@ -133,8 +107,6 @@ int main( int argc, char *argv[] )
 			break;
 		}
 	}
-
-	delete obj;
 
 	return 0;
 }

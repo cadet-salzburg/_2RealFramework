@@ -13,12 +13,12 @@ using std::cout;
 using std::endl;
 using std::string;
 
-void Counter::setup( FrameworkContext &context )
+void Out::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_CurrentCount = 1;
-		m_CounterValue = context.getOutletHandle( "counter outlet" );
+		m_Counter = -1;
+		m_Out = context.getOutletHandle( "outlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -27,11 +27,11 @@ void Counter::setup( FrameworkContext &context )
 	}
 };
 
-void Counter::update()
+void Out::update()
 {
 	try
 	{
-		m_CounterValue.data< unsigned int >() = ++m_CurrentCount;
+		m_Out.data< unsigned int >() = ++m_Counter;
 	}
 	catch ( Exception &e )
 	{
@@ -40,12 +40,13 @@ void Counter::update()
 	}
 };
 
-void Doubler::setup( FrameworkContext &context )
+void InOut::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_InputValue = context.getInletHandle( "doubler inlet" );
-		m_OutputValue = context.getOutletHandle( "doubler outlet" );
+		m_Counter = -1;
+		m_In = context.getInletHandle( "inlet" );
+		m_Out = context.getOutletHandle( "outlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -54,11 +55,12 @@ void Doubler::setup( FrameworkContext &context )
 	}
 };
 
-void Doubler::update()
+void InOut::update()
 {
 	try
 	{
-		m_OutputValue.data< unsigned int>() = 2 * m_InputValue.data< unsigned int >();
+		++m_Counter;
+		m_Out.data< unsigned int>() = m_In.data< unsigned int >();
 	}
 	catch ( Exception &e)
 	{
@@ -67,11 +69,12 @@ void Doubler::update()
 	}
 };
 
-void PrintOut::setup( FrameworkContext &context )
+void In::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_InputValue = context.getInletHandle( "printout inlet" );
+		m_Counter = -1;
+		m_In = context.getInletHandle( "inlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -80,11 +83,16 @@ void PrintOut::setup( FrameworkContext &context )
 	}
 };
 
-void PrintOut::update()
+void In::update()
 {
 	try
 	{
-		cout << "PrintOut: " << m_InputValue.data< unsigned int >() << endl;
+		++m_Counter;
+		//if ( m_Counter == 10 )
+		//{
+			cout << m_In.data< unsigned int >() << endl;
+		//	m_Counter = 0;
+		//}
 	}
 	catch ( Exception &e )
 	{

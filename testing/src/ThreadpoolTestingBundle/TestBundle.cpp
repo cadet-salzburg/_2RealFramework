@@ -22,18 +22,18 @@ void getBundleMetainfo( BundleMetainfo info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		BlockMetainfo counter = info.exportBlock< Counter >( "counter" );
-		counter.setDescription( "count from up from 0" );
-		counter.addOutlet< unsigned int >( "counter outlet", (unsigned int)0 );
+		BlockMetainfo out = info.exportBlock< Out >( "out" );
+		out.setDescription( "test" );
+		out.addOutlet< unsigned int >( "outlet", (unsigned int)0 );
 
-		BlockMetainfo doubler = info.exportBlock< Doubler >( "doubler" );
-		doubler.setDescription( "double the inlets' value" );
-		doubler.addInlet< unsigned int >( "doubler inlet", (unsigned int)0 );
-		doubler.addOutlet< unsigned int >( "doubler outlet", (unsigned int)0 );
+		BlockMetainfo inout = info.exportBlock< InOut >( "in - out" );
+		inout.setDescription( "test" );
+		inout.addInlet< unsigned int >( "inlet", (unsigned int)0 );
+		inout.addOutlet< unsigned int >( "outlet", (unsigned int)0 );
 
-		BlockMetainfo printOut = info.exportBlock< PrintOut >( "print out" );
-		printOut.setDescription( "write the received value to std::out" );
-		printOut.addInlet< unsigned int >( "printout inlet", (unsigned int)0 );
+		BlockMetainfo in = info.exportBlock< In >( "in" );
+		in.setDescription( "test" );
+		in.addInlet< unsigned int >( "inlet", (unsigned int)0 );
 	}
 	catch ( Exception &e )
 	{
