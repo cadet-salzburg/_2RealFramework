@@ -19,12 +19,6 @@
 
 #pragma once
 
-/**
-*	annoying & ultimately harmless warning about
-*	template expressions that are longer than 255 bytes
-*/
-#pragma warning(disable:4503)
-
 #include <string>
 
 #ifdef _2REAL_WINDOWS

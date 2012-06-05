@@ -101,23 +101,23 @@ namespace _2Real
 		if (m_Elapsed >= 10000000)
 		{
 			m_FinishedAccess.lock();
-			unsigned int finished = m_FinishedRunnables.size();
-			unsigned int received = m_ReceivedRunnables.size();
+			size_t finished = m_FinishedRunnables.size();
+			size_t received = m_ReceivedRunnables.size();
 			m_FinishedAccess.unlock();
 
 			m_ReadyAccess.lock();
-			unsigned int ready = m_ReadyRunnables.size();
+			size_t ready = m_ReadyRunnables.size();
 			m_ReadyAccess.unlock();
 
 			m_ExecutingAccess.lock();
-			unsigned int executing = m_ExecutingRunnables.size();
+			size_t executing = m_ExecutingRunnables.size();
 			m_ExecutingAccess.unlock();
 
 			m_AbortedAccess.lock();
-			unsigned int aborted = m_AbortedRunnables.size();
+			size_t aborted = m_AbortedRunnables.size();
 			m_AbortedAccess.unlock();
 
-			unsigned int reallyRunning = executing - received - finished;
+			size_t reallyRunning = executing - received - finished;
 
 			std::cout << "ready: " << ready << std::endl;
 			std::cout << "executing: " << reallyRunning << std::endl;
