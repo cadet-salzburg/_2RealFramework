@@ -72,9 +72,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::registerToNewData( Identifier const& id, std::string const& outlet, DataCallback callback, void *userData )
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData )
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->registerToNewData( outlet, callback, userData );
 		}
@@ -85,9 +85,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::unregisterFromNewData( Identifier const& id, std::string const& outlet, DataCallback callback, void *userData )
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData )
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->unregisterFromNewData( outlet, callback, userData );
 		}
@@ -98,9 +98,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::registerToNewData( Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->registerToNewData( outlet, handler );
 		}
@@ -111,9 +111,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::unregisterFromNewData( Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->unregisterFromNewData( outlet, handler );
 		}
@@ -124,9 +124,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::setUp(Identifier const& id)
+	void SystemImpl::setUp(BlockIdentifier const& id)
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_StateManager->setUp();
 		}
@@ -137,11 +137,11 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::setValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	void SystemImpl::setValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
 	{
 		Data data(value, (long)m_Timestamp.elapsed());
 
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->setValue(paramName, data);
 		}
@@ -152,11 +152,11 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::insertValue(Identifier const& id, std::string const& paramName, EngineData const& value)
+	void SystemImpl::insertValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
 	{
 		Data data(value, (long)m_Timestamp.elapsed());
 
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			m_IOManager->insertValue(paramName, data);
 		}
@@ -167,9 +167,9 @@ namespace _2Real
 		}
 	}
 
-	const EngineData SystemImpl::getValue(Identifier const& id, std::string const& paramName) const
+	const EngineData SystemImpl::getValue(BlockIdentifier const& id, std::string const& paramName) const
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			return m_IOManager->getValue(paramName);
 		}
@@ -180,9 +180,9 @@ namespace _2Real
 		}
 	}
 
-	std::string const& SystemImpl::getKey(Identifier const& id, std::string const& paramName) const
+	std::string const& SystemImpl::getKey(BlockIdentifier const& id, std::string const& paramName) const
 	{
-		if (id == Entity::getIdentifier())
+		if ( id == AbstractBlock::getIdentifier() )
 		{
 			return m_IOManager->getKey(paramName);
 		}
@@ -193,7 +193,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::link(Identifier const& in, std::string const& nameIn, Identifier const& out, std::string const& nameOut)
+	void SystemImpl::link(BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut)
 	{
 		/**
 		*	TODO
@@ -203,15 +203,15 @@ namespace _2Real
 		objIn.linkWith(nameIn, objOut, nameOut);
 	}
 
-	const Identifier SystemImpl::createServiceBlock( Identifier const& pluginId, std::string const& blockName, UpdatePolicy const& triggers )
+	const BlockIdentifier SystemImpl::createServiceBlock( BundleIdentifier const& pluginId, std::string const& blockName, UpdatePolicy const& triggers )
 	{
 		ServiceBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this, *triggers.m_Impl );
 		addSubBlock( block );
-		return block.getIdentifier();
+		return BlockIdentifier( block.getIdentifier() );
 	}
 
-	const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds)
-	{
+	//const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds)
+	//{
 		//BlockList syncSet, readySet, finishedSet;
 		//for (std::list< Identifier >::const_iterator it = blockIds.begin(); it != blockIds.end(); ++it)
 		//{
@@ -219,7 +219,7 @@ namespace _2Real
 		//	syncSet.push_back(block);
 		//}
 
-		SyncBlock *syncBlock = new SyncBlock("sync block", *this);
+		//SyncBlock *syncBlock = new SyncBlock("sync block", *this);
 		//this->addSubBlock(*syncBlock);
 
 		//AbstractStateManager &triggerMgr = syncBlock->getStateManager();
@@ -243,7 +243,7 @@ namespace _2Real
 		////causes the sync block to start waiting for ready messages
 		//syncBlock->setUp();
 
-		return syncBlock->getIdentifier();
-	}
+	//	return syncBlock->getIdentifier();
+	//}
 
 }

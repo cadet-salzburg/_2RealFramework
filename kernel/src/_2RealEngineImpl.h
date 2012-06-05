@@ -56,7 +56,7 @@ namespace Poco
 namespace _2Real
 {
 
-	class Identifier;
+	class BundleIdentifier;
 	class ThreadPool;
 	class BundleManager;
 	class Typetable;
@@ -81,9 +81,9 @@ namespace _2Real
 		ThreadPool const&				getThreadPool() const;
 
 		void							setBaseDirectory( Poco::Path const& path );
-		const Identifier				loadLibrary( Poco::Path const& path );
+		const BundleIdentifier			loadLibrary( Poco::Path const& path );
 		const bool						isLibraryLoaded( Poco::Path const& path ) const;
-		const std::string				getInfoString( Identifier const& pluginId ) const;
+		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
 
 	private:
 

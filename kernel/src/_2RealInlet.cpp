@@ -30,41 +30,160 @@
 namespace _2Real
 {
 
-	Inlet::Inlet(ParameterData const& metadata, BufferPolicy &policy, const unsigned int bufferSize) :
-		Parameter(metadata),
-		m_DataMutex(),
-		m_CallbackMutex(),
-		m_OutletsMutex(),
-		m_ReceivedTable(bufferSize),
-		m_CurrentTable(bufferSize),
-		m_LinkedOutlets(),
-		m_OverflowPolicy(policy),
-		m_HasDefault(false),
-		m_DefaultValue(),
-		m_NrOfConsumed(0),
-		m_LastTimestamp(0),
-		m_IsSet(false),
-		m_SetValue()
+	class BufferPolicy
 	{
-		//if (metadata.hasDefaultValue())
-		//{
-			m_HasDefault = true;
 
-			//default value has a timestamp of 0
-			//meaning it will always fullfill the data-available requirement
-			//but never the data-new requirement
-			m_DefaultValue = TimestampedData(0, metadata.getDefaultValue());
-			//m_ReceivedTable.insert(m_DefaultValue);
-			m_CurrentTable.insert(m_DefaultValue);
-		//}
+	public:
+
+		virtual ~BufferPolicy() {}
+		virtual bool insertData( std::pair< long, EngineData > &data, DataBuffer &buffer ) = 0;
+		virtual std::pair< long, EngineData > getData( DataBuffer &buffer ) = 0;
+
+	};
+
+	class AlwaysInsert : public BufferPolicy
+	{
+
+	public:
+
+		AlwaysInsert( const unsigned int max ) : BufferPolicy(), m_Max( max ) {}
+		void setMaxBufferSize( const unsigned int max ) { m_Max = max; }
+
+		bool insertData( std::pair< long, EngineData > &data, DataBuffer &buffer )
+		{
+			if ( buffer.size() >= m_Max )
+			{
+				DataBuffer::iterator it = buffer.end();
+				it--;
+				buffer.erase( it );
+			}
+
+			buffer.insert( data );
+			return true;
+		}
+
+		std::pair< long, EngineData > getData( DataBuffer &buffer )
+		{
+			DataBuffer::iterator it = buffer.begin();
+			return *it;
+		}
+
+	private:
+
+		unsigned int		m_Max;
+
+	};
+
+	Inlet::Inlet( ParameterData const& metadata ) :
+		Parameter( metadata ),
+		m_BufferPolicy( new AlwaysInsert( 10 ) ),
+		m_LastTimestamp( 0 ),
+		m_HasFixedData( false )
+	{
+		m_DefaultData = std::make_pair( m_LastTimestamp, metadata.getDefaultValue() );	//default data has 0 as timestamp
+		m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
+		m_CurrentData = m_DefaultData;
 	}
 
 	Inlet::~Inlet()
 	{
+		delete m_BufferPolicy;
+	}
+
+	void Inlet::updateCurrentData()
+	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+		m_CurrentData = m_BufferPolicy->getData( m_ReceivedTable );
+	}
+
+	void Inlet::resetData()
+	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+		if ( m_HasFixedData )
+		{
+			m_BufferPolicy->insertData( m_FixedData, m_ReceivedTable );
+
+			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, m_FixedData.first );
+			m_DataReceived.notify( this, times );
+		}
+		else
+		{
+			m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
+
+			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, m_DefaultData.first );
+			m_DataReceived.notify( this, times );
+		}
+	}
+
+	void Inlet::setFixedData( Data const& data )
+	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+
+		clearLinks();
+
+		m_HasFixedData = true;
+		m_LastTimestamp = data.getTimestamp();
+		m_FixedData = std::make_pair( m_LastTimestamp, data.data() );
+
+		//the only point where i directly access the data buffer
+		m_ReceivedTable.clear();
+		m_ReceivedTable.insert( m_FixedData );
+
+		std::pair< long, long > times = std::make_pair< long, long >( 0, m_LastTimestamp ); // on first receiving the fixed value, 'new' is always fulfilled
+		m_DataReceived.notify( this, times );
+	}
+
+	void Inlet::receiveData( Data &data )
+	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+
+		long time = data.getTimestamp();
+		if ( m_BufferPolicy->insertData( std::make_pair( time, data.data() ), m_ReceivedTable ) )
+		{
+			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, time );
+			m_DataReceived.notify( this, times );
+		}
+	}
+
+	EngineData const& Inlet::getCurrentData() const
+	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+		return m_CurrentData.second;
+	}
+
+	void Inlet::linkWith(Outlet &outlet)
+	{
+		Poco::FastMutex::ScopedLock lock( m_OutletsAccess );
+
+		std::list< Outlet * >::iterator it = std::find< std::list< Outlet * >::iterator, Outlet * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
+		if ( it == m_LinkedOutlets.end() )
+		{
+			m_LinkedOutlets.push_back(&outlet);
+			outlet.addListener(*this);
+		}
+	}
+
+	void Inlet::breakLink( Outlet &outlet )
+	{
+		unlink( outlet );
+		outlet.removeListener(*this);
+	}
+
+	void Inlet::unlink( Outlet &outlet )
+	{
+		Poco::FastMutex::ScopedLock lock( m_OutletsAccess );
+
+		std::list< Outlet * >::iterator it = std::find< std::list< Outlet * >::iterator, Outlet * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
+		if (it != m_LinkedOutlets.end())
+		{
+			m_LinkedOutlets.erase(it);
+		}
 	}
 
 	void Inlet::clearLinks()
 	{
+		Poco::FastMutex::ScopedLock lock( m_OutletsAccess );
+
 		for ( std::list< Outlet * >::iterator it = m_LinkedOutlets.begin(); it != m_LinkedOutlets.end(); ++it )
 		{
 			(*it)->removeListener( *this );
@@ -73,199 +192,14 @@ namespace _2Real
 		m_LinkedOutlets.clear();
 	}
 
-	const bool Inlet::hasDefault() const
+	void Inlet::registerToDataReceived( AbstractStateManager &triggers )
 	{
-		return m_HasDefault;
+		m_DataReceived += Poco::delegate( &triggers, &AbstractStateManager::tryTriggerInlet );
 	}
 
-	void Inlet::removeConsumedItems()
+	void Inlet::unregisterFromDataReceived( AbstractStateManager &triggers )
 	{
-		//no sync, as this is only called after the update function is finished
-		for (unsigned int i=0; i<m_NrOfConsumed; ++i)
-		{
-			m_CurrentTable.erase(m_CurrentTable.begin());
-		}
-
-		m_NrOfConsumed = 0;
-	}
-
-	void Inlet::syncBuffers()
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		m_OverflowPolicy.copyData(m_CurrentTable, m_ReceivedTable);
-		m_ReceivedTable.setNewMax(m_CurrentTable.getMaxSize() - m_CurrentTable.size());
-
-		m_ReceivedTable.clear();
-
-		//now holds time of oldest item in buffer
-		if (!m_CurrentTable.empty())
-		{
-			m_LastTimestamp = m_CurrentTable.begin()->first;
-		}
-	}
-
-	void Inlet::resetData()
-	{
-		if (m_IsSet)
-		{
-			m_ReceivedTable.insert(m_SetValue);
-
-			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_SetValue.first);
-			m_DataReceived.notify(this, times);
-		}
-		else if (m_HasDefault)
-		{
-			m_ReceivedTable.insert(m_DefaultValue);
-
-			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, m_DefaultValue.first);
-			m_DataReceived.notify(this, times);
-		}
-	}
-
-	void Inlet::setData(TimestampedData const& data)
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		resetLinks();
-
-		m_IsSet = true;
-		m_SetValue = data;
-
-		//kills everything inside of received
-		m_ReceivedTable.clear();
-		m_ReceivedTable.insert(data);
-
-		m_LastTimestamp = m_SetValue.first;
-		std::pair< long, long > times = std::make_pair< long, long >(0, m_LastTimestamp);
-		m_DataReceived.notify(this, times);
-	}
-
-	void Inlet::insertData(TimestampedData const& data)
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		if (m_OverflowPolicy.insertData(data, m_ReceivedTable))
-		{
-			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, data.first);
-			m_DataReceived.notify(this, times);
-		}
-	}
-
-	void Inlet::receiveData(Data &data)
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		long timestamp = data.getTimestamp();
-
-		if (m_OverflowPolicy.insertData(TimestampedData(timestamp, data.data()), m_ReceivedTable))
-		{
-			std::pair< long, long > times = std::make_pair< long, long >(m_LastTimestamp, timestamp);
-			m_DataReceived.notify(this, times);
-		}
-	}
-
-	EngineData Inlet::consumeDataItem()
-	{
-		//no sync necessary, this is only called from within a service's update function
-
-		if (m_CurrentTable.empty())
-		{
-			throw Exception("internal exception: input slot " + getName() + " has no data.");
-		}
-
-		DataBuffer::iterator result = m_CurrentTable.begin();
-		for (unsigned int i=0; i<m_NrOfConsumed; ++i)
-		{
-			++result;
-		}
-		m_NrOfConsumed++;
-
-		return result->second;
-	}
-
-	const EngineData Inlet::getNewest() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		if (m_CurrentTable.empty())
-		{
-			throw Exception("internal exception: input slot " + getName() + " has no data.");
-		}
-
-		DataBuffer::const_iterator result = m_CurrentTable.begin();
-		return result->second;
-	}
-
-	void Inlet::linkWith(Outlet &outlet)
-	{
-		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
-
-		std::list< Outlet * >::iterator it = std::find< std::list< Outlet * >::iterator, Outlet * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
-		if (it == m_LinkedOutlets.end())
-		{
-			m_LinkedOutlets.push_back(&outlet);
-			outlet.addListener(*this);
-		}
-	}
-
-	void Inlet::breakLink(Outlet &outlet)
-	{
-		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
-
-		std::list< Outlet * >::iterator it = std::find< std::list< Outlet * >::iterator, Outlet * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
-		if (it != m_LinkedOutlets.end())
-		{
-			m_LinkedOutlets.erase(it);
-			outlet.removeListener(*this);
-		}
-	}
-
-	void Inlet::unlink(Outlet &outlet)
-	{
-		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
-
-		std::list< Outlet * >::iterator it = std::find< std::list< Outlet * >::iterator, Outlet * >(m_LinkedOutlets.begin(), m_LinkedOutlets.end(), &outlet);
-		if (it != m_LinkedOutlets.end())
-		{
-			m_LinkedOutlets.erase(it);
-		}
-	}
-
-	void Inlet::resetLinks()
-	{
-		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
-
-		for (std::list< Outlet * >::iterator it = m_LinkedOutlets.begin(); it != m_LinkedOutlets.end(); ++it)
-		{
-			(*it)->removeListener(*this);
-		}
-
-		m_LinkedOutlets.clear();
-	}
-
-	void Inlet::clearReceived()
-	{
-		Poco::FastMutex::ScopedLock lock(m_DataMutex);
-
-		m_ReceivedTable.clear();
-	}
-
-	const bool Inlet::isLinked() const
-	{
-		Poco::FastMutex::ScopedLock lock(m_OutletsMutex);
-
-		return (m_LinkedOutlets.size() > 0);
-	}
-
-	void Inlet::registerToDataReceived(AbstractStateManager &triggers)
-	{
-		m_DataReceived += Poco::delegate(&triggers, &AbstractStateManager::tryTriggerInlet);
-	}
-
-	void Inlet::unregisterFromDataReceived(AbstractStateManager &triggers)
-	{
-		m_DataReceived -= Poco::delegate(&triggers, &AbstractStateManager::tryTriggerInlet);
+		m_DataReceived -= Poco::delegate( &triggers, &AbstractStateManager::tryTriggerInlet );
 	}
 
 }

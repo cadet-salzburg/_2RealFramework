@@ -27,11 +27,6 @@ namespace _2Real
 	{
 	}
 
-	//System::System(std::string const& name, std::string const& xmlFile) :
-	//	m_EngineImpl(EngineImpl::instance())
-	//{
-	//}
-
 	System::System(System const& src) :
 		m_Impl(src.m_Impl)
 	{
@@ -47,46 +42,39 @@ namespace _2Real
 		m_Impl->clear();
 	}
 
-	//const Identifier System::createService(std::string const& name, Identifier const& plugin, std::string const& service, UpdatePolicy const& triggers)
+	const BlockIdentifier System::createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers )
+	{
+		return m_Impl->createServiceBlock( bundle, blockName, triggers );
+	}
+
+	//const Identifier System::createSynchronization(std::list< Identifier > const& blockIds)
 	//{
-	//	//std::string idName = validateName(name);
-	//	//unique(idName);
-	//	return m_Impl->createService(name, plugin, service, triggers);
+	//	return m_Impl->createSyncBlock(blockIds);
 	//}
 
-	const Identifier System::createService(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers)
+	void System::setup( BlockIdentifier const& block )
 	{
-		return m_Impl->createServiceBlock(pluginId, serviceName, triggers);
+		m_Impl->setUp( block );
 	}
 
-	const Identifier System::createSynchronization(std::list< Identifier > const& blockIds)
+	void System::setValueInternal( BlockIdentifier const& id, std::string const& param, EngineData const& value )
 	{
-		return m_Impl->createSyncBlock(blockIds);
+		m_Impl->setValue( id, param, value );
 	}
 
-	void System::setup(Identifier const& serviceId)
+	void System::insertValueInternal( BlockIdentifier const& id, std::string const& param, EngineData const& value )
 	{
-		m_Impl->setUp(serviceId);
+		m_Impl->insertValue( id, param, value );
 	}
 
-	void System::setValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
+	const EngineData System::getValueInternal( BlockIdentifier const& id, std::string const& name ) const
 	{
-		m_Impl->setValue(id, param, value);
+		return m_Impl->getValue( id, name );
 	}
 
-	void System::insertValueInternal(Identifier const& id, std::string const& param, EngineData const& value)
+	void System::link( BlockIdentifier const& outService, std::string const& outName, BlockIdentifier const& inService, std::string const& inName )
 	{
-		m_Impl->insertValue(id, param, value);
-	}
-
-	const EngineData System::getValueInternal(Identifier const& id, std::string const& name) const
-	{
-		return m_Impl->getValue(id, name);
-	}
-
-	void System::link(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
-	{
-		m_Impl->link(inService, inName, outService, outName);
+		m_Impl->link( inService, inName, outService, outName );
 	}
 
 	//void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
@@ -120,22 +108,22 @@ namespace _2Real
 	//{
 	//}
 
-	void System::registerToNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData )
+	void System::registerToNewData( BlockIdentifier const& service, std::string const& outletName, DataCallback callback, void *userData )
 	{
 		m_Impl->registerToNewData( service, outletName, callback, userData );
 	}
 
-	void System::unregisterFromNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData )
+	void System::unregisterFromNewData( BlockIdentifier const& service, std::string const& outletName, DataCallback callback, void *userData )
 	{
 		m_Impl->unregisterFromNewData( service, outletName, callback, userData );
 	}
 
-	void System::registerToNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
+	void System::registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
 	{
 		m_Impl->registerToNewData( service, outletName, handler );
 	}
 
-	void System::unregisterFromNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
+	void System::unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
 	{
 		m_Impl->unregisterFromNewData( service, outletName, handler );
 	}

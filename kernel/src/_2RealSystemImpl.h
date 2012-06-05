@@ -53,29 +53,27 @@ namespace _2Real
 		const long					getElapsedTime() const;
 		Poco::Timestamp	const&		getTimestamp() const;
 
-		const Identifier			createServiceBlock(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
-		//ServiceBlock &				createServiceBlock( BlockData const& meta, UpdatePolicy const& triggers );
-		const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
-		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds, std::list< Identifier > const& readyIds, std::list< Identifier > const& finishedIds);
+		const BlockIdentifier		createServiceBlock(BundleIdentifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
+		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
 
 		void						handleException(AbstractBlock &subBlock, Exception &exception);
-		void						registerToNewData(Identifier const& id, std::string const& outlet, DataCallback callback, void *userData);
-		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, DataCallback callback, void *userData);
-		void						registerToNewData(Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
-		void						unregisterFromNewData(Identifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
+		void						registerToNewData(BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData);
+		void						unregisterFromNewData(BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData);
+		void						registerToNewData(BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler);
+		void						unregisterFromNewData(BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler);
 
-		void						setUp(Identifier const& blockId);
+		void						setUp(BlockIdentifier const& blockId);
 
-		const EngineData			getValue(Identifier const& ownerId, std::string const& paramName) const;
-		std::string const&			getKey(Identifier const& ownerId, std::string const& paramName) const;
-		void						setValue(Identifier const& ownerId, std::string const& paramName, EngineData const& value);
-		void						insertValue(Identifier const& ownerId, std::string const& paramName, EngineData const& value);
-		void						link(Identifier const& ownerIn, std::string const& in, Identifier const& ownerOut, std::string const& out);
+		const EngineData			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
+		std::string const&			getKey(BlockIdentifier const& ownerId, std::string const& paramName) const;
+		void						setValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
+		void						insertValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
+		void						link(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
 
 	private:
 
 		EngineImpl					&m_Engine;
-		BundleManager					&m_PluginPool;
+		BundleManager				&m_PluginPool;
 		Poco::Timestamp				m_Timestamp;
 		ExceptionHandler			m_ExceptionHandler;
 		ExceptionFunctionCallbacks	m_ExceptionCallbacks;

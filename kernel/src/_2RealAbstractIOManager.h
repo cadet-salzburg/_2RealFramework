@@ -61,7 +61,7 @@ namespace _2Real
 		virtual const EngineData		getValue(std::string const& paramName) const = 0;
 		virtual std::string const&		getKey(std::string const& paramName) const = 0;
 		virtual void					setValue(std::string const& paramName, Data const& value) = 0;
-		virtual void					insertValue(std::string const& paramName, Data const& value) = 0;
+		virtual void					insertValue(std::string const& paramName, Data &value) = 0;
 
 		virtual void					linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet) = 0;
 

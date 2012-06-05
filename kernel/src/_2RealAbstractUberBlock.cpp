@@ -66,4 +66,9 @@ namespace _2Real
 		return *m_SuperBlock;
 	}
 
+	BlockIdentifier AbstractBlock::getIdentifier() const
+	{
+		return BlockIdentifier( Entity::getName(), Entity::getId() );
+	}
+
 }

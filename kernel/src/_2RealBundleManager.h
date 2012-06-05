@@ -30,7 +30,7 @@ namespace _2Real
 {
 
 	class BundleInternal;
-	class Identifier;
+	class BundleIdentifier;
 	class SystemImpl;
 	class ServiceBlock;
 	class UpdatePolicyImpl;
@@ -44,10 +44,10 @@ namespace _2Real
 		~BundleManager();
 
 		void							setBaseDirectory( Poco::Path const& path );
-		const Identifier				loadLibrary( Poco::Path const& path );
+		const BundleIdentifier			loadLibrary( Poco::Path const& path );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;
-		const std::string				getInfoString( Identifier const& pluginId ) const;
-		ServiceBlock &					createServiceBlock( Identifier const& pluginId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers );
+		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
+		ServiceBlock &					createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers );
 		
 	private:
 		 
@@ -55,12 +55,12 @@ namespace _2Real
 		BundleManager& operator=( BundleManager const& src );
 
 		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
-		BundleInternal &				getBundle( Identifier const& id );
-		BundleInternal const&			getBundle( Identifier const& id ) const;
-		const Identifier				getIdentifier( std::string const& path ) const;
+		BundleInternal &				getBundle( BundleIdentifier const& id );
+		BundleInternal const&			getBundle( BundleIdentifier const& id ) const;
+		const BundleIdentifier			getIdentifier( std::string const& path ) const;
 	
-		typedef std::map< Identifier, BundleInternal * >	BundleMap;
-		typedef std::map< std::string, Identifier >			LookupTable;
+		typedef std::map< BundleIdentifier, BundleInternal * >	BundleMap;
+		typedef std::map< std::string, BundleIdentifier >		LookupTable;
 
 		BundleLoader					m_BundleLoader;
 		BundleMap						m_BundleInstances;

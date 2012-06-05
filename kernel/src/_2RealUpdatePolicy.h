@@ -35,9 +35,8 @@ namespace _2Real
 		~UpdatePolicy();
 
 		void clear();
-		void triggerByUpdateRate(const float updatesPerSecond);
+		void triggerByUpdateRate( const float updatesPerSecond );
 		void triggerWhenAllDataNew();
-		void triggerWhenAllDataAvailable();
 
 	private:
 

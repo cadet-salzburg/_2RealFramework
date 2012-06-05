@@ -48,10 +48,9 @@ namespace _2Real
 		return *this;
 	}
 
-	//misnamed
-	const EngineData InletHandle::newest()
+	const EngineData InletHandle::current()
 	{
-		return m_Input->consumeDataItem();
+		return m_Input->getCurrentData();
 	}
 
 }

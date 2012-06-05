@@ -40,7 +40,9 @@ namespace _2Real
 
 		for (BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
+			std::cout << "preparing: " << ( *it )->getName() << std::endl;
 			(*it)->prepareForShutDown();
+			std::cout << "done: " << ( *it )->getName() << std::endl;
 		}
 
 		for (BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/)
@@ -48,6 +50,11 @@ namespace _2Real
 			if ((*it)->shutDown())
 			{
 				ready.push_back(*it);
+				std::cout << "shut down " << ( *it )->getName() << std::endl;
+			}
+			else
+			{
+				std::cout << "failed to shut down " << ( *it )->getName() << std::endl;
 			}
 
 			it = m_Blocks.erase(it);
@@ -60,7 +67,7 @@ namespace _2Real
 		}
 	}
 
-	AbstractBlock & OwnedAndUnordered::getBlock(Identifier const& id)
+	AbstractBlock & OwnedAndUnordered::getBlock(BlockIdentifier const& id)
 	{
 		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
@@ -71,11 +78,11 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "sub block " << id << " not found in " << m_Owner.getIdentifier();
+		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
-	AbstractBlock const& OwnedAndUnordered::getBlock(Identifier const& id) const
+	AbstractBlock const& OwnedAndUnordered::getBlock(BlockIdentifier const& id) const
 	{
 		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
@@ -86,7 +93,7 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "sub block " << id << " not found in " << m_Owner.getIdentifier();
+		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
@@ -120,13 +127,13 @@ namespace _2Real
 		//fail silently if not found
 	}
 
-	std::list< Identifier > OwnedAndUnordered::getCurrentBlockIds() const
+	std::list< BlockIdentifier > OwnedAndUnordered::getCurrentBlockIds() const
 	{
-		std::list< Identifier > result;
+		std::list< BlockIdentifier > result;
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
 		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
-			result.push_back((*it)->getIdentifier());
+			result.push_back( BlockIdentifier( (*it)->getIdentifier() ) );
 		}
 
 		return result;

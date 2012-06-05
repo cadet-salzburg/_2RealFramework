@@ -36,11 +36,11 @@ namespace _2Real
 		~OwnedAndUnordered();
 
 		void								clear();
-		AbstractBlock &						getBlock(Identifier const& blockId);
-		AbstractBlock const&				getBlock(Identifier const& blockId) const;
+		AbstractBlock &						getBlock(BlockIdentifier const& blockId);
+		AbstractBlock const&				getBlock(BlockIdentifier const& blockId) const;
 		void								addBlock(AbstractBlock &block);
 		void								removeBlock(AbstractBlock &block);
-		std::list< Identifier >				getCurrentBlockIds() const;
+		std::list< BlockIdentifier >				getCurrentBlockIds() const;
 
 	private:
 

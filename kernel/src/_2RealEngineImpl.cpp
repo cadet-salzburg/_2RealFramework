@@ -171,7 +171,7 @@ namespace _2Real
 		m_Plugins->setBaseDirectory(directory);
 	}
 
-	const Identifier EngineImpl::loadLibrary(Poco::Path const& path)
+	const BundleIdentifier EngineImpl::loadLibrary(Poco::Path const& path)
 	{
 		return m_Plugins->loadLibrary(path);
 	}
@@ -181,9 +181,9 @@ namespace _2Real
 		return m_Plugins->isLibraryLoaded(path);
 	}
 
-	const std::string EngineImpl::getInfoString( Identifier const& pluginId ) const
+	const std::string EngineImpl::getInfoString( BundleIdentifier const& bundleId ) const
 	{
-		return m_Plugins->getInfoString(pluginId);
+		return m_Plugins->getInfoString( bundleId );
 	}
 
 	//const Identifier EngineImpl::getPluginIdentifier( std::string const& idName ) const

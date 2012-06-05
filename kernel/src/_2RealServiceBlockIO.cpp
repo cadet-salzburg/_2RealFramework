@@ -25,6 +25,7 @@
 #include "_2RealInlet.h"
 #include "_2RealBlockData.h"
 #include "_2RealParameterData.h"
+#include "_2RealUpdatePolicyImpl.h"
 
 #include <sstream>
 
@@ -32,8 +33,7 @@ namespace _2Real
 {
 
 	ServiceIO::ServiceIO(AbstractBlock &owner) :
-		AbstractIOManager(owner),
-		m_Policy(new AlwaysInsertRemoveOldest())
+		AbstractIOManager(owner)
 	{
 	}
 
@@ -52,7 +52,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::initFrom(BlockData const& meta, Poco::Timestamp const& time)
+	void ServiceIO::initFrom(BlockData const& meta, Poco::Timestamp const& time, UpdatePolicyImpl const& policy)
 	{
 		std::map< std::string, ParameterData const* > const& setup = meta.getParameters();
 		std::map< std::string, ParameterData const* > const& input = meta.getInlets();
@@ -68,18 +68,16 @@ namespace _2Real
 		for (std::map< std::string, ParameterData const* >::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
 			ParameterData const& meta = *it->second;
-			Inlet *inlet = new Inlet(meta, *m_Policy, 50);
-			m_Inlets.insert(std::make_pair(inlet->getName(), inlet));
+			Inlet *inlet = new Inlet( meta );
+			m_Inlets.insert( std::make_pair( inlet->getName(), inlet ) );
 		}
 
 		for (std::map< std::string, ParameterData const* >::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
 			ParameterData const& meta = *it->second;
-			Outlet *outlet = new Outlet(meta, time);
-			m_Outlets.insert(std::make_pair(outlet->getName(), outlet));
+			Outlet *outlet = new Outlet( meta, time );
+			m_Outlets.insert( std::make_pair( outlet->getName(), outlet ) );
 		}
-
-
 	}
 
 	void ServiceIO::clear()
@@ -92,12 +90,6 @@ namespace _2Real
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			it->second->clearLinks();
-		}
-
-		if (m_Policy != NULL)
-		{
-			delete m_Policy;
-			m_Policy = NULL;
 		}
 
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); /**/)
@@ -237,7 +229,7 @@ namespace _2Real
 		InletMap::const_iterator inletIt = m_Inlets.find(name);
 		if (inletIt != m_Inlets.end())
 		{
-			return inletIt->second->getNewest();
+			return inletIt->second->getCurrentData();
 		}
 
 		OutletMap::const_iterator outletIt = m_Outlets.find(name);
@@ -282,7 +274,7 @@ namespace _2Real
 		InletMap::iterator inletIt = m_Inlets.find( name );
 		if (inletIt != m_Inlets.end())
 		{
-			inletIt->second->setData(TimestampedData(value.getTimestamp(), value.data()));
+			inletIt->second->setFixedData( value );
 			return;
 		}
 
@@ -291,12 +283,12 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	void ServiceIO::insertValue(std::string const& name, Data const& value)
+	void ServiceIO::insertValue(std::string const& name, Data &value)
 	{
 		InletMap::iterator inletIt = m_Inlets.find(name);
 		if (inletIt != m_Inlets.end())
 		{
-			inletIt->second->insertData(TimestampedData(value.getTimestamp(), value.data()));
+			inletIt->second->receiveData( value );
 		}
 
 		std::ostringstream msg;
@@ -357,7 +349,7 @@ namespace _2Real
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
-			it->second->syncBuffers();
+			it->second->updateCurrentData();
 		}
 	}
 
@@ -373,7 +365,6 @@ namespace _2Real
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
-			it->second->removeConsumedItems();
 			it->second->resetData();
 		}
 	}

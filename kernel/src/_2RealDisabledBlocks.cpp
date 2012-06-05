@@ -39,17 +39,17 @@ namespace _2Real
 	{
 	}
 
-	AbstractBlock & DisabledBlocks::getBlock(Identifier const& id)
+	AbstractBlock & DisabledBlocks::getBlock(BlockIdentifier const& id)
 	{
 		std::ostringstream msg;
-		msg << "block " << id.name() << " not found in " << m_Owner.getName();
+		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
-	AbstractBlock const& DisabledBlocks::getBlock(Identifier const& id) const
+	AbstractBlock const& DisabledBlocks::getBlock(BlockIdentifier const& id) const
 	{
 		std::ostringstream msg;
-		msg << "block " << id.name() << " not found in " << m_Owner.getName();
+		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
@@ -61,9 +61,9 @@ namespace _2Real
 	{
 	}
 
-	std::list< Identifier > DisabledBlocks::getCurrentBlockIds() const
+	std::list< BlockIdentifier > DisabledBlocks::getCurrentBlockIds() const
 	{
-		return std::list< Identifier >();
+		return std::list< BlockIdentifier >();
 	}
 
 }

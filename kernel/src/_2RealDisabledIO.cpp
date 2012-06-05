@@ -109,7 +109,7 @@ namespace _2Real
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::insertValue(std::string const& paramName, Data const& value)
+	void DisabledIO::insertValue(std::string const& paramName, Data &value)
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";

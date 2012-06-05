@@ -104,7 +104,7 @@ namespace _2Real
 			m_IOManager->setValue(paramName, value);
 		}
 
-		void insertValue(std::string const& paramName, Data const& value)
+		void insertValue(std::string const& paramName, Data &value)
 		{
 			m_IOManager->insertValue(paramName, value);
 		}

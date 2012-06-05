@@ -52,6 +52,8 @@ namespace _2Real
 		AbstractBlock(std::string const& name, AbstractBlock *superBlock);
 		virtual ~AbstractBlock();
 
+		BlockIdentifier							getIdentifier() const;
+
 		void									lockSuperBlock();
 		void									unlockSuperBlock();
 		AbstractBlock &							getSuperBlock();
@@ -72,7 +74,7 @@ namespace _2Real
 		virtual const EngineData				getValue(std::string const& paramName) const = 0;
 		virtual std::string const&				getKey(std::string const& paramName) const = 0;
 		virtual void							setValue(std::string const& paramName, Data const& value) = 0;
-		virtual void							insertValue(std::string const& paramName, Data const& value) = 0;
+		virtual void							insertValue(std::string const& paramName, Data &value) = 0;
 		virtual void							linkWith(std::string const& nameIn, AbstractBlock &out, std::string const& nameOut) = 0;
 
 		virtual void							setUp() = 0;

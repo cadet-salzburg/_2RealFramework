@@ -59,6 +59,11 @@ namespace _2Real
 		return *this;
 	}
 
+	BundleIdentifier BundleInternal::getIdentifier() const
+	{
+		return BundleIdentifier( Entity::getName(), Entity::getId() );
+	}
+
 	const string BundleInternal::getBundleInfoString() const
 	{
 		ostringstream info;

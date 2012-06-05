@@ -33,19 +33,14 @@ namespace _2Real
 	{
 	}
 
-	Identifier Entity::getIdentifier() const
-	{
-		return Identifier(m_Name, m_Id);
-	}
-
-	const Identifier Entity::InvalidId()
-	{
-		return Identifier("invalid", 0);
-	}
-
 	std::string const& Entity::getName() const
 	{
 		return m_Name;
+	}
+
+	unsigned int Entity::getId() const
+	{
+		return m_Id;
 	}
 
 }

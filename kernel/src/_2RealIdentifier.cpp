@@ -17,86 +17,139 @@
 */
 
 #include "_2RealIdentifier.h"
-#include "_2RealEntity.h"
+#include "_2RealEngineImpl.h"
 
 namespace _2Real
 {
 
-	Identifier::Identifier() :
-		m_Name(""),
-		m_Id(0)
+	BundleIdentifier::BundleIdentifier() :
+		m_Name( "invalid" ),
+		m_Id( 0 )
 	{
 	}
 
-	Identifier::Identifier(std::string const& name, unsigned int const& id) :
-		m_Name(name),
-		m_Id(id)
+	BundleIdentifier::BundleIdentifier( std::string const& name, const unsigned int id ) :
+		m_Name( name ), m_Id( id )
 	{
 	}
 
-	Identifier::Identifier(Identifier const& src) :
-		m_Name(src.m_Name),
-		m_Id(src.m_Id)
+	BundleIdentifier::BundleIdentifier( BundleIdentifier const& src ) :
+		m_Name( src.m_Name ), m_Id( src.m_Id )
 	{
 	}
 
-	Identifier& Identifier::operator=(Identifier const& src)
+	BundleIdentifier& BundleIdentifier::operator=( BundleIdentifier const& src )
 	{
 		m_Name = src.m_Name;
 		m_Id = src.m_Id;
-
 		return *this;
 	}
 
-	const bool Identifier::isValid() const
+	std::ostream& operator<<( std::ostream& out, BundleIdentifier const& bundleId )
 	{
-		return *this == Entity::InvalidId();
-	}
-
-	unsigned int Identifier::id() const
-	{
-		return m_Id;
-	}
-
-	std::string const& Identifier::name() const
-	{
-		return m_Name;
-	}
-
-	const bool Identifier::operator==(Identifier const& rhs) const
-	{
-		return (m_Id == rhs.m_Id);
-	}
-
-	const bool Identifier::operator!=(Identifier const& rhs) const
-	{
-		return !(m_Id == rhs.m_Id);
-	}
-
-	const bool Identifier::operator<(Identifier const& rhs) const
-	{
-		return (m_Id < rhs.m_Id);
-	}
-
-	const bool Identifier::operator<=(Identifier const& rhs) const
-	{
-		return (m_Id <= rhs.m_Id);
-	}
-
-	const bool Identifier::operator>(Identifier const& rhs) const
-	{
-		return (m_Id > rhs.m_Id);
-	}
-
-	const bool Identifier::operator>=(Identifier const& rhs) const
-	{
-		return (m_Id  >= rhs.m_Id );
-	}
-
-	std::ostream& operator<<(std::ostream& out, Identifier const& id)
-	{
-		out << id.name() << " " << id.id();
+		std::string info = EngineImpl::instance().getInfoString( bundleId );
+		out << info;
 		return out;
+	}
+
+	bool BundleIdentifier::operator==( BundleIdentifier const& rhs ) const
+	{
+		return m_Id == rhs.m_Id;
+	}
+
+	bool BundleIdentifier::operator!=( BundleIdentifier const& rhs ) const
+	{
+		return m_Id != rhs.m_Id;
+	}
+
+	bool BundleIdentifier::operator<( BundleIdentifier const& rhs ) const
+	{
+		return m_Id < rhs.m_Id;
+	}
+
+	bool BundleIdentifier::operator<=( BundleIdentifier const& rhs ) const
+	{
+		return m_Id <= rhs.m_Id;
+	}
+
+	bool BundleIdentifier::operator>( BundleIdentifier const& rhs ) const
+	{
+		return m_Id > rhs.m_Id;
+	}
+
+	bool BundleIdentifier::operator>=( BundleIdentifier const& rhs ) const
+	{
+		return m_Id >= rhs.m_Id;
+	}
+
+	bool BundleIdentifier::isValid() const
+	{
+		return !( m_Id == 0 && m_Name == "invalid" );
+	}
+
+	BlockIdentifier::BlockIdentifier() :
+		m_Name( "invalid" ),
+		m_Id( 0 )
+	{
+	}
+
+	BlockIdentifier::BlockIdentifier( std::string const& name, const unsigned int id ) :
+		m_Name( name ), m_Id( id )
+	{
+	}
+
+	BlockIdentifier::BlockIdentifier( BlockIdentifier const& src ) :
+		m_Name( src.m_Name ), m_Id( src.m_Id )
+	{
+	}
+
+	BlockIdentifier& BlockIdentifier::operator=( BlockIdentifier const& src )
+	{
+		m_Name = src.m_Name;
+		m_Id = src.m_Id;
+		return *this;
+	}
+
+	//std::ostream& operator<<( std::ostream& out, BlockIdentifier const& bundleId )
+	//{
+	//	std::string info = EngineImpl::instance().getInfoString( bundleId );
+	//	out << info;
+	//	return out;
+	//}
+
+	bool BlockIdentifier::operator==( BlockIdentifier const& rhs ) const
+	{
+		return m_Id == rhs.m_Id;
+	}
+
+	bool BlockIdentifier::operator!=( BlockIdentifier const& rhs ) const
+	{
+		return m_Id != rhs.m_Id;
+	}
+
+	bool BlockIdentifier::operator<( BlockIdentifier const& rhs ) const
+	{
+		return m_Id < rhs.m_Id;
+	}
+
+	bool BlockIdentifier::operator<=( BlockIdentifier const& rhs ) const
+	{
+		return m_Id <= rhs.m_Id;
+	}
+
+	bool BlockIdentifier::operator>( BlockIdentifier const& rhs ) const
+	{
+		return m_Id > rhs.m_Id;
+	}
+
+	bool BlockIdentifier::operator>=( BlockIdentifier const& rhs ) const
+	{
+		return m_Id >= rhs.m_Id;
+	}
+
+	bool BlockIdentifier::isValid() const
+	{
+		return !( m_Id == 0 && m_Name == "invalid" );
 	}
 
 }

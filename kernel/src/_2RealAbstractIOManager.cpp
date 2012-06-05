@@ -38,7 +38,7 @@ namespace _2Real
 
 	const unsigned int AbstractIOManager::getId() const
 	{
-		return m_Owner.getIdentifier().id();
+		return m_Owner.getId();
 	}
 
 }

@@ -21,7 +21,7 @@
 #include <set>
 
 #if defined(_WIN32)
-	#define _2REAL_CALLBACK __cdecl //poco forces me to to this ...
+	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall
 #else
 	#define _2REAL_CALLBACK
@@ -31,10 +31,10 @@
 namespace _2Real
 {
 
-	class RunnableError;
+	class BlockError;
 	class Data;
 
-	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, RunnableError &error );
+	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, BlockError &error );
 	typedef void ( _2REAL_CALLBACK *DataCallback )( void *userData, Data &data );
 
 	class DataFunctionCallback
@@ -90,7 +90,7 @@ namespace _2Real
 			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
 		}
 
-		void invoke( RunnableError &error )
+		void invoke( BlockError &error )
 		{
 			m_Callback( m_UserData, error );
 		}
@@ -121,7 +121,7 @@ namespace _2Real
 
 		AbstractExceptionCallbackHandler( void *object ) : m_Object(object) {};
 		virtual ~AbstractExceptionCallbackHandler() {};
-		virtual void invoke( RunnableError &error ) = 0;
+		virtual void invoke( BlockError &error ) = 0;
 		bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
 
 	private:
@@ -145,7 +145,7 @@ namespace _2Real
 
 	public:
 
-		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( RunnableError& );
+		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( BlockError& );
 
 		ExceptionCallbackHandler(Callable &callable, Callback method) :
 			AbstractExceptionCallbackHandler(&callable),
@@ -154,7 +154,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke(RunnableError &error)
+		void invoke(BlockError &error)
 		{
 			(m_Callable.*m_Method)(error);
 		}

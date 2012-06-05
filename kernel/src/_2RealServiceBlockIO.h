@@ -40,6 +40,7 @@ namespace _2Real
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
+	class UpdatePolicyImpl;
 
 	typedef std::map< std::string, Inlet * >		InletMap;
 	typedef std::map< std::string, Outlet * >		OutletMap;
@@ -53,7 +54,7 @@ namespace _2Real
 		ServiceIO(AbstractBlock &owner);
 		~ServiceIO();
 
-		void						initFrom( BlockData const& meta, Poco::Timestamp const& time );
+		void						initFrom( BlockData const& meta, Poco::Timestamp const& time, UpdatePolicyImpl const& policy );
 
 		void						clear();
 		//void						addParam(ParameterData const& meta);
@@ -66,7 +67,7 @@ namespace _2Real
 		const EngineData			getValue(std::string const& paramName) const;
 		std::string const&			getKey(std::string const& paramName) const;
 		void						setValue(std::string const& paramName, Data const& value);
-		void						insertValue(std::string const& paramName, Data const& value);
+		void						insertValue(std::string const& paramName, Data &value);
 
 		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
 		
@@ -94,8 +95,6 @@ namespace _2Real
 		InletMap					m_Inlets;
 		OutletMap					m_Outlets;
 		ParamMap					m_Params;
-
-		BufferPolicy				*m_Policy;
 
 		DataFunctionCallbacks		m_DataFunctionCallbacks;
 		DataCallbackHandlers		m_DataCallbackHandlers;

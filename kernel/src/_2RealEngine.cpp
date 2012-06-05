@@ -52,7 +52,7 @@ namespace _2Real
 		m_EngineImpl.setBaseDirectory( Poco::Path(directory) );
 	}
 
-	const Identifier Engine::load( std::string const& path )
+	const BundleIdentifier Engine::load( std::string const& path )
 	{
 		return m_EngineImpl.loadLibrary( Poco::Path(path) );
 	}
@@ -62,9 +62,9 @@ namespace _2Real
 		return m_EngineImpl.isLibraryLoaded(Poco::Path(libraryPath));
 	}
 
-	const std::string Engine::getInfoString( Identifier const& pluginId )
+	const std::string Engine::getInfoString( BundleIdentifier const& bundleId )
 	{
-		return m_EngineImpl.getInfoString( pluginId );
+		return m_EngineImpl.getInfoString( bundleId );
 	}
 
 

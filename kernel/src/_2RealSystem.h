@@ -36,39 +36,38 @@ namespace _2Real
 
 	public:
 
-		System(std::string const& name);
+		System( std::string const& name );
 		~System();
 
 		void clear();
 
-		const Identifier
-		createService(Identifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers = UpdatePolicy());
+		const BlockIdentifier
+		createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers = UpdatePolicy() );
 
-		const Identifier
-		createSynchronization(std::list< Identifier > const& blockIds);
+		//const Identifier
+		//createSynchronization(std::list< Identifier > const& blockIds);
 
-		void setup(Identifier const& serviceId);
+		void setup( BlockIdentifier const& block );
+		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 
-		void link(Identifier const& outService, std::string const& outlet, Identifier const& inService, std::string const& inlet);
-
-		template< typename DataType >
-		void setValue(Identifier const& id, std::string const& name, DataType const& value)
+		template< typename Datatype >
+		void setValue( BlockIdentifier const& block, std::string const& paramName, Datatype const& value )
 		{
-			EngineData data(value);
-			setValueInternal(id, name, data);
+			EngineData data( value );
+			setValueInternal( block, paramName, data );
 		}
 
-		template< typename DataType >
-		void insertValue(Identifier const& id, std::string const& name, DataType const& value)
+		template< typename Datatype >
+		void insertValue( BlockIdentifier const& block, std::string const& paramName, Datatype const& value )
 		{
-			EngineData data(value);
-			insertValueInternal(id, name, data);
+			EngineData data( value );
+			insertValueInternal( block, paramName, data );
 		}
 
-		template< typename DataType >
-		DataType const& getValue(Identifier const& id, std::string const& name) const
+		template< typename Datatype >
+		Datatype const& getValue( BlockIdentifier const& block, std::string const& paramName ) const
 		{
-			Poco::SharedPtr< DataType > ptr = Extract< DataType >( getValueInternal(id, name) );
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >( getValueInternal( block, paramName ) );
 			return *ptr.get();
 		}
 
@@ -91,21 +90,21 @@ namespace _2Real
 		//	unregisterFromExceptionInternal( *handler );
 		//}
 
-		void registerToNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
-		void unregisterFromNewData( Identifier const& service, std::string const& outletName, DataCallback callback, void *userData = NULL );
+		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
+		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
 
 		template< typename Callable >
-		void registerToNewData( Identifier const& service, std::string const& outletName, Callable &callable, void ( Callable::*callback )( Data& ) )
+		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( Data& ) )
 		{
 			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
-			registerToNewDataInternal( service, outletName, *handler );
+			registerToNewDataInternal( block, outlet, *handler );
 		}
 
 		template< typename Callable >
-		void unregisterFromNewData( Identifier const& service, std::string const& outletName, Callable &callable, void ( Callable::*callback )( Data& ) )
+		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( Data& ) )
 		{
 			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
-			unregisterFromNewDataInternal( service, outletName, *handler );
+			unregisterFromNewDataInternal( block, outlet, *handler );
 		}
 
 	private:
@@ -113,11 +112,11 @@ namespace _2Real
 		System(System const& src);
 		System& operator=(System const& src);
 
-		void				setValueInternal( Identifier const& id, std::string const& name, EngineData const& value );
-		void				insertValueInternal( Identifier const& id, std::string const& name, EngineData const& value );
-		const EngineData	getValueInternal( Identifier const& id, std::string const& name ) const;
-		void				registerToNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
-		void				unregisterFromNewDataInternal( Identifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
+		void				setValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
+		void				insertValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
+		const EngineData	getValueInternal( BlockIdentifier const& id, std::string const& name ) const;
+		void				registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
+		void				unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
 		//void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
 		//void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
 

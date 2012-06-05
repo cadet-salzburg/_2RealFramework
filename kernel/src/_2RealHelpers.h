@@ -214,14 +214,29 @@ namespace _2Real
 	}
 
 	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< Identifier, DataType > &m)
+	std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, DataType > &m)
 	{
 		if (m.empty())
 		{
 			return out;
 		}
 
-		for (typename std::map< Identifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< BundleIdentifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
+		{
+			out << it->second << "\n";
+		}
+		return out;
+	}
+
+	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::map< BlockIdentifier, DataType > &m)
+	{
+		if (m.empty())
+		{
+			return out;
+		}
+
+		for (typename std::map< BlockIdentifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
 		}
@@ -244,14 +259,29 @@ namespace _2Real
 	}
 
 	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< Identifier, DataType * > &m)
+	std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, DataType * > &m)
 	{
 		if (m.empty())
 		{
 			return out;
 		}
 
-		for (typename std::map< Identifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< BundleIdentifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
+		{
+			out << *it->second << "\n";
+		}
+		return out;
+	}
+
+	template< typename DataType >
+	std::ostream& operator<<(std::ostream &out, typename const std::map< BlockIdentifier, DataType * > &m)
+	{
+		if (m.empty())
+		{
+			return out;
+		}
+
+		for (typename std::map< BlockIdentifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << *it->second << "\n";
 		}

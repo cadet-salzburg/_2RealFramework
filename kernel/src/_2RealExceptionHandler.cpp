@@ -38,19 +38,9 @@ namespace _2Real
 		m_Event -= Poco::delegate(callback);
 	}
 
-	//void ExceptionHandler::registerExceptionListener(IExceptionListener &listener)
-	//{
-	//	m_Event += Poco::delegate(&listener, &IExceptionListener::receiveException);
-	//}
-
-	//void ExceptionHandler::unregisterExceptionListener(IExceptionListener &listener)
-	//{
-	//	m_Event -= Poco::delegate(&listener, &IExceptionListener::receiveException);
-	//}
-
-	void ExceptionHandler::handleException(Exception const& exception, Identifier const& sender)
+	void ExceptionHandler::handleException( Exception const& exception, BlockIdentifier const& sender )
 	{
-		RunnableError e(exception, sender);
+		BlockError e( exception, sender );
 		m_Event.notify(this, e);
 	}
 }

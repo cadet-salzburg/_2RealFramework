@@ -23,66 +23,62 @@
 namespace _2Real
 {
 
-	/**
-	*	identifiers refer to entities in the 2 real EngineImpl;
-	*	specifically, to entities created at the application programmer's request
-	*	- plugins
-	*	- concrete instances of the services exported by a plugin
-	*	- systems
-	*	- sequence graphs
-	*	- synchronization graphs
-	*/
-
-	class Identifier
+	class BundleIdentifier
 	{
+
+		friend class BundleInternal;
 
 	public:
 
-		Identifier();
-		Identifier(Identifier const& src);
-		Identifier& operator=(Identifier const& src);
+		BundleIdentifier();
+		BundleIdentifier( BundleIdentifier const& src );
+		BundleIdentifier& operator=( BundleIdentifier const& src );
 
-		const bool isValid() const;
+		bool isValid() const;
+		bool operator==( BundleIdentifier const& rhs ) const;
+		bool operator!=( BundleIdentifier const& rhs ) const;
+		bool operator<( BundleIdentifier const& rhs ) const;
+		bool operator<=( BundleIdentifier const& rhs ) const;
+		bool operator>( BundleIdentifier const& rhs ) const;
+		bool operator>=( BundleIdentifier const& rhs ) const;
 
-		/**
-		*	returns the entity's name
-		*
-		*	@return:		name
-		*/
-		std::string const& name() const;
+		friend std::ostream& operator<<( std::ostream &out, BundleIdentifier const& id );
 
-		/**
-		*	returns the entity's id
-		*
-		*	@return:		id
-		*/
-		unsigned int id() const;
-
-		/**
-		*	true if the identifiers refer to the same entity within the framework
-		*/
-		const bool operator==(Identifier const& rhs) const;
-
-		/**
-		*	true if the identifiers refer to different entities within the framework
-		*/
-		const bool operator!=(Identifier const& rhs) const;
-
-		/*
-		*	identifiers can be sorted in a strict monotonic order
-		*/
-		const bool operator<(Identifier const& rhs) const;
-		const bool operator<=(Identifier const& rhs) const;
-		const bool operator>(Identifier const& rhs) const;
-		const bool operator>=(Identifier const& rhs) const;
-
-		friend std::ostream& operator<<(std::ostream &out, Identifier const& id);
+		std::string const& getName() const { return m_Name; }
 
 	private:
 
-		friend class Entity;
+		BundleIdentifier( std::string const& name, const unsigned int id );
 
-		Identifier(std::string const& name, unsigned int const& id);
+		std::string			m_Name;
+		unsigned int		m_Id;
+
+	};
+
+	class BlockIdentifier
+	{
+
+		friend class AbstractBlock;
+
+	public:
+
+		BlockIdentifier();
+		BlockIdentifier( BlockIdentifier const& src );
+		BlockIdentifier& operator=( BlockIdentifier const& src );
+
+		bool isValid() const;
+		bool operator==( BlockIdentifier const& rhs ) const;
+		bool operator!=( BlockIdentifier const& rhs ) const;
+		bool operator<( BlockIdentifier const& rhs ) const;
+		bool operator<=( BlockIdentifier const& rhs ) const;
+		bool operator>( BlockIdentifier const& rhs ) const;
+		bool operator>=( BlockIdentifier const& rhs ) const;
+
+		std::string const& getName() const { return m_Name; }
+
+	private:
+
+		BlockIdentifier( std::string const& name, const unsigned int id );
 
 		std::string			m_Name;
 		unsigned int		m_Id;

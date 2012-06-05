@@ -42,7 +42,7 @@ namespace _2Real
 		const EngineData			getValue(std::string const& paramName) const;
 		std::string const&			getKey(std::string const& paramName) const;
 		void						setValue(std::string const& paramName, Data const& value);
-		void						insertValue(std::string const& paramName, Data const& value);
+		void						insertValue(std::string const& paramName, Data &value);
 		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
 
 		InletMap const&				getInlets() const;

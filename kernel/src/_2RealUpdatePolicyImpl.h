@@ -81,19 +81,23 @@ namespace _2Real
 		void clear();
 		void setInletDefault(AbstractInletDefault *inletDefault);
 		void setBlockDefault(AbstractBlockDefault *blockDefault);
-		void addInletBasedTrigger(std::string const& inletName, AbstractInletDefault *trigger);
-		void addTimeBasedTrigger(const long time);
-		void addBlockBasedTrigger(std::string const& blockName, AbstractBlockDefault *trigger);
+		void addInletBasedTrigger( std::string const& inletName, AbstractInletDefault *trigger );
+		void addTimeBasedTrigger( const long time );
+		void addBlockBasedTrigger( std::string const& blockName, AbstractBlockDefault *trigger );
+
 		AbstractTimeBasedTrigger * getTimeBasedTrigger() const;
-		AbstractInletBasedTrigger * getInletBasedTrigger(std::string const& name) const;
-		AbstractBlockBasedTrigger * getBlockBasedTrigger(std::string const& name) const;
+		AbstractInletBasedTrigger * getTriggerForInlet( std::string const& inletName ) const;
+		AbstractBlockBasedTrigger * getBlockBasedTrigger( std::string const& blockName ) const;
+
+		bool hasTimeBasedTrigger() const;
+		bool hasTriggerForInlet( std::string const& inletName ) const;
 
 	private:
 
 		long												m_Time;
-		AbstractInletDefault								*m_InletDefault;
 		std::map< std::string, AbstractInletDefault * >		m_Inlets;
 		std::map< std::string, AbstractBlockDefault * >		m_Blocks;
+		AbstractInletDefault								*m_InletDefault;
 		AbstractBlockDefault								*m_BlockDefault;
 
 	};

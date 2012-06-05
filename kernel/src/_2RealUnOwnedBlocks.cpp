@@ -40,22 +40,22 @@ namespace _2Real
 		m_Blocks.clear();
 	}
 
-	AbstractBlock & NotOwnedAndUnordered::getBlock(Identifier const& id)
+	AbstractBlock & NotOwnedAndUnordered::getBlock( BlockIdentifier const& id )
 	{
 		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
-			if ((*it)->getIdentifier() == id)
+			if ( (*it)->getIdentifier() == id )
 			{
 				return **it;
 			}
 		}
 
 		std::ostringstream msg;
-		msg << "sub block " << id << " not found in " << m_Owner.getIdentifier();
+		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
-	AbstractBlock const& NotOwnedAndUnordered::getBlock(Identifier const& id) const
+	AbstractBlock const& NotOwnedAndUnordered::getBlock(BlockIdentifier const& id) const
 	{
 		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
@@ -66,7 +66,7 @@ namespace _2Real
 		}
 
 		std::ostringstream msg;
-		msg << "sub block " << id << " not found in " << m_Owner.getIdentifier();
+		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
@@ -100,13 +100,13 @@ namespace _2Real
 		//fail silently if not found
 	}
 
-	std::list< Identifier > NotOwnedAndUnordered::getCurrentBlockIds() const
+	std::list< BlockIdentifier > NotOwnedAndUnordered::getCurrentBlockIds() const
 	{
-		std::list< Identifier > result;
+		std::list< BlockIdentifier > result;
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
 		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
-			result.push_back((*it)->getIdentifier());
+			result.push_back( BlockIdentifier( (*it)->getIdentifier() ) );
 		}
 
 		return result;

@@ -24,35 +24,35 @@
 namespace _2Real
 {
 
-	class RunnableError
+	class BlockError
 	{
 
 	public:
 
-		RunnableError(Exception const& exception, Identifier const& runnableId);
+		BlockError(Exception const& exception, BlockIdentifier const& runnableId);
 
-		Identifier const& getRunnableId() const;
+		BlockIdentifier const& getId() const;
 		Exception const& getException() const;
 
 	private:
 
 		Exception	m_Exception;
-		Identifier	m_Runnable;
+		BlockIdentifier	m_Runnable;
 
 	};
 
-	inline RunnableError::RunnableError(Exception const& exception, Identifier const& runnableId) :
+	inline BlockError::BlockError(Exception const& exception, BlockIdentifier const& runnableId) :
 		m_Exception(exception),
 		m_Runnable(runnableId)
 	{
 	}
 
-	inline Identifier const& RunnableError::getRunnableId() const
+	inline BlockIdentifier const& BlockError::getId() const
 	{
 		return m_Runnable;
 	}
 
-	inline Exception const& RunnableError::getException() const
+	inline Exception const& BlockError::getException() const
 	{
 		return m_Exception;
 	}

@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	class Identifier;
+	class BlockIdentifier;
 	class AbstractBlock;
 
 	class AbstractBlockManager
@@ -39,11 +39,11 @@ namespace _2Real
 		const unsigned int getId() const;
 
 		virtual void						clear() = 0;
-		virtual AbstractBlock &				getBlock(Identifier const& blockId) = 0;
-		virtual AbstractBlock const&		getBlock(Identifier const& blockId) const = 0;
+		virtual AbstractBlock &				getBlock(BlockIdentifier const& blockId) = 0;
+		virtual AbstractBlock const&		getBlock(BlockIdentifier const& blockId) const = 0;
 		virtual void						addBlock(AbstractBlock &block) = 0;
 		virtual	void						removeBlock(AbstractBlock &block) = 0;
-		virtual std::list< Identifier >		getCurrentBlockIds() const = 0;
+		virtual std::list< BlockIdentifier >		getCurrentBlockIds() const = 0;
 
 	protected:
 

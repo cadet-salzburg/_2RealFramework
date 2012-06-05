@@ -50,7 +50,7 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(current());
 			return *ptr.get();
 		}
 
@@ -69,7 +69,7 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< DataType > ptr = Extract< DataType >(newest());
+			Poco::SharedPtr< DataType > ptr = Extract< DataType >(current());
 			return *ptr.get();
 		}
 
@@ -87,13 +87,13 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(newest());
+			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(current());
 			return Poco::SharedPtr< DataType >(new DataType(*ptr.get()));
 		}
 
 	private:
 
-		const EngineData				newest();
+		const EngineData			current();
 		Inlet						*m_Input;
 
 	};

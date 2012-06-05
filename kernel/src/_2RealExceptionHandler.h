@@ -29,7 +29,7 @@
 namespace _2Real
 {
 
-	class RunnableError;
+	class BlockError;
 
 	class ExceptionHandler
 	{
@@ -37,15 +37,13 @@ namespace _2Real
 	public:
 
 		ExceptionHandler();
-		void registerExceptionCallback(ExceptionCallback callback);
-		void unregisterExceptionCallback(ExceptionCallback callback);
-		//void registerExceptionListener(IExceptionListener &listener);
-		//void unregisterExceptionListener(IExceptionListener &listener);
-		void handleException(Exception const& exception, Identifier const& sender);
+		void registerExceptionCallback( ExceptionCallback callback );
+		void unregisterExceptionCallback( ExceptionCallback callback );
+		void handleException( Exception const& exception, BlockIdentifier const& sender );
 
 	private:
 
-		Poco::BasicEvent< RunnableError >	m_Event;
+		Poco::BasicEvent< BlockError >	m_Event;
 
 	};
 }

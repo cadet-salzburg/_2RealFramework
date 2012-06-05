@@ -38,7 +38,7 @@ namespace _2Real
 
 	const unsigned int AbstractBlockManager::getId() const
 	{
-		return m_Owner.getIdentifier().id();
+		return m_Owner.getId();
 	}
 
 }

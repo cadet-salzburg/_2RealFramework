@@ -37,27 +37,24 @@ namespace _2Real
 		static Engine& instance();
 
 		/*
-		*	sets the base directory, from where all plugins will be searched
+		*	sets the base directory, from where all bundles will be searched
 		*/
-		void setBaseDirectory(std::string const& directory);
+		void setBaseDirectory( std::string const& directory );
 
 		/*
 		*	loads the dynamic lib from the given path
 		*	if path is relative, it will be interpreted with respect to the base directory
 		*	if lib is already loaded, returns identifier of bundle instance
 		*/
-		const Identifier load( std::string const& path );
+		const BundleIdentifier load( std::string const& path );
 
 		/**
 		*	returns true if the library in question is already loaded
 		*	if path is relative, it will be interpreted with respect to the base directory
 		*/
-		bool isLoaded(std::string const& libraryPath) const;
+		bool isLoaded( std::string const& libraryPath ) const;
 
-		/**
-		*	returns plugin's metadata as string
-		*/
-		const std::string getInfoString( Identifier const& id );
+		const std::string getInfoString( BundleIdentifier const& bundleId );
 
 	private:
 

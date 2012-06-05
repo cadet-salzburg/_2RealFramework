@@ -323,33 +323,30 @@ namespace _2Real
 	void ServiceStates::handleStateChangeException(Exception &e)
 	{
 		std::cout << getName() << " ERROR " << e.message() << std::endl;
+		m_Logger.addLine( std::string( getName() + " new service state: error\n\t" + e.message() ) );
 		disableAllTriggers();	//is this a good idea? -> i probably would hav to tell ubers..
 		delete m_CurrentState;
 		m_CurrentState = new ServiceStateError();
-		m_Logger.addLine( std::string( getName() + " new service state: error\n\t" + e.message() ) );
 	}
 
-	void ServiceStates::initFrom(UpdatePolicyImpl const& triggers)
+	void ServiceStates::initFrom( UpdatePolicyImpl const& triggers )
 	{
-		AbstractTimeBasedTrigger *t = triggers.getTimeBasedTrigger();
-		if (t != NULL)
+		if ( triggers.hasTimeBasedTrigger() )
 		{
-			EngineImpl::instance().getTimer().registerToTimerSignal(*this);
-			m_Time = t;
-		}
-		else
-		{
-			//i guess this should always be fulfilled
-			EngineImpl::instance().getTimer().registerToTimerSignal(*this);
-			m_Time = new TimeBasedTrigger< std::less_equal< long > >(LONG_MAX);
+			m_Time = triggers.getTimeBasedTrigger();
+			EngineImpl::instance().getTimer().registerToTimerSignal( *this );
 		}
 
 		InletMap inlets = m_IO->getInlets();
-		for (InletMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it)
+		for ( InletMap::const_iterator it = inlets.begin(); it != inlets.end(); ++it )
 		{
-			it->second->registerToDataReceived(*this);
-			AbstractInletBasedTrigger *t = triggers.getInletBasedTrigger(it->second->getName());
-			m_Inlets.insert(std::make_pair(t->getInletName(), t));
+			std::string inletName = it->second->getName();
+			if ( triggers.hasTriggerForInlet( inletName ) )
+			{
+				AbstractInletBasedTrigger *trigger = triggers.getTriggerForInlet( inletName );
+				it->second->registerToDataReceived( *this );
+				m_Inlets.insert( std::make_pair( inletName, trigger ) );
+			}
 		}
 	}
 
@@ -379,25 +376,13 @@ namespace _2Real
 		}
 	}
 
-	void ServiceStates::subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg)
+	void ServiceStates::subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg )
 	{
-		//service has no sub blocks
 	}
 
-	void ServiceStates::subBlockRemoved(AbstractBlock &subBlock)
+	void ServiceStates::subBlockRemoved( AbstractBlock &subBlock )
 	{
-		//service has no sub blocks
 	}
-
-	//void ServiceStates::inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger)
-	//{
-	//	//service cannot gain or loose inlets
-	//}
-
-	//void ServiceStates::inletRemoved(Inlet &slot)
-	//{
-	//	//service cannot gain or loose inlets
-	//}
 
 	void ServiceStates::tryTriggerInlet(const void *inlet, std::pair< long, long > &times)
 	{
@@ -471,7 +456,11 @@ namespace _2Real
 	void ServiceStates::evaluateTriggers()
 	{
 		//m_TriggerAccess.lock();
-		bool triggersOk = m_Time->ok();
+		bool triggersOk = true;
+		if ( m_Time != NULL )
+		{
+			triggersOk &= m_Time->ok();
+		}
 		for (std::map< std::string, AbstractInletBasedTrigger * >::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
 			triggersOk &= it->second->ok();
@@ -505,7 +494,10 @@ namespace _2Real
 	void ServiceStates::resetAndEnableTriggers()
 	{
 		m_TriggerAccess.lock();
-		m_Time->reset();
+		if ( m_Time != NULL )
+		{
+			m_Time->reset();
+		}
 		for (std::map< std::string, AbstractInletBasedTrigger * >::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
 			it->second->reset();

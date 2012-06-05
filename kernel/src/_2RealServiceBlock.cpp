@@ -34,7 +34,7 @@ namespace _2Real
 		ServiceStates *states = dynamic_cast< ServiceStates * >(m_StateManager);
 		states->m_IO = io;
 
-		io->initFrom( data, owner.getTimestamp() );
+		io->initFrom( data, owner.getTimestamp(), updateTriggers );
 		states->initFrom( updateTriggers );
 	}
 

@@ -34,8 +34,8 @@ namespace _2Real
 		Trigger() : m_IsFulfilled(false) {}
 		virtual ~Trigger() {}
 		const bool ok() { return m_IsFulfilled; }
-		void set() { m_IsFulfilled = true; }
-		void reset() { m_IsFulfilled = false; }
+		virtual void set() { m_IsFulfilled = true; }
+		virtual void reset() { m_IsFulfilled = false; }
 
 	private:
 
@@ -58,6 +58,16 @@ namespace _2Real
 		long		const m_DesiredTime;
 		long		m_ElapsedTime;
 
+	};
+
+	struct AlwaysTrue
+	{
+		bool operator()( const long t1, const long t2 ) { return true; }
+	};
+
+	struct AlwaysFalse
+	{
+		bool operator()( const long t1, const long t2 ) { return false; }
 	};
 
 	template< typename Condition >

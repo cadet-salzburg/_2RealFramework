@@ -45,6 +45,8 @@ namespace _2Real
 		BundleInternal( std::string const& name, BundleData const& data );
 		~BundleInternal();
 
+		BundleIdentifier	getIdentifier() const;
+
 		const std::string	getBundleInfoString() const;
 		const std::string	getBlockInfoString( std::string const& blockName ) const;
 		BundleData const&	getBundleData() const;

@@ -74,13 +74,13 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	const std::string BundleManager::getInfoString( Identifier const& bundleId ) const
+	const std::string BundleManager::getInfoString( BundleIdentifier const& bundleId ) const
 	{
 		BundleInternal const& bundle = getBundle( bundleId );
 		return bundle.getBundleInfoString();
 	}
 	
-	const Identifier BundleManager::loadLibrary( Path const& path )
+	const BundleIdentifier BundleManager::loadLibrary( Path const& path )
 	{
 		if ( m_BundleContexts == NULL )
 		{
@@ -105,22 +105,20 @@ namespace _2Real
 			UpdatePolicy policy;
 			policy.triggerByUpdateRate( 1.0f );
 
-			m_BundleContexts->createServiceBlock( bundle->getIdentifier(), "bundle context", policy );
+			m_BundleContexts->createServiceBlock( BundleIdentifier( bundle->getIdentifier() ), "bundle context", policy );
 
 			ServiceBlock &bundleContext = bundle->getBundleContext();
-			m_BundleContexts->setUp( bundleContext.getIdentifier() );
+			m_BundleContexts->setUp( BlockIdentifier( bundleContext.getIdentifier() ) );
 		}
 
-		return bundle->getIdentifier();
+		return BundleIdentifier( bundle->getIdentifier() );
 	}
 
-	ServiceBlock & BundleManager::createServiceBlock( Identifier const& pluginId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers )
+	ServiceBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers )
 	{
-		BundleInternal &bundle = getBundle( pluginId );
+		BundleInternal &bundle = getBundle( bundleId );
 		BundleData const& bundleData = bundle.getBundleData();
 		BlockData const& blockData = bundle.getBlockData( blockName );
-
-		std::cout << bundleData << std::endl;
 
 		Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
 		ServiceBlock *serviceBlock = new ServiceBlock( blockData, block, sys, triggers );
@@ -149,35 +147,35 @@ namespace _2Real
 		return *serviceBlock;
 	}
 
-	BundleInternal & BundleManager::getBundle( Identifier const& id )
+	BundleInternal & BundleManager::getBundle( BundleIdentifier const& id )
 	{
 		BundleMap::const_iterator it = m_BundleInstances.find( id );
 		
 		if ( it == m_BundleInstances.end() )
 		{
 			ostringstream msg;
-			msg << "bundle " << id.name() << " not found";
+			msg << "bundle " << id << " not found";
 			throw NotFoundException( msg.str() );
 		}
 
 		return *( it->second );
 	}
 
-	BundleInternal const& BundleManager::getBundle( Identifier const& id ) const
+	BundleInternal const& BundleManager::getBundle( BundleIdentifier const& id ) const
 	{
 		BundleMap::const_iterator it = m_BundleInstances.find( id );
 
 		if ( it == m_BundleInstances.end() )
 		{
 			ostringstream msg;
-			msg << "bundle " << id.name() << " not found";
+			msg << "bundle " << id << " not found";
 			throw NotFoundException( msg.str() );
 		}
 
 		return *( it->second );
 	}
 
-	const Identifier BundleManager::getIdentifier( string const& path ) const
+	const BundleIdentifier BundleManager::getIdentifier( string const& path ) const
 	{
 		LookupTable::const_iterator it = m_BundleNames.find( path );
 

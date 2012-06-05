@@ -58,10 +58,8 @@ namespace _2Real
 		Entity(std::string const& name);
 		virtual ~Entity();
 
-		static const Identifier		InvalidId();
-
-		Identifier					getIdentifier() const;
 		std::string const&			getName() const;
+		unsigned int				getId() const;
 
 	protected:
 

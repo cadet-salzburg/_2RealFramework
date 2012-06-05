@@ -39,27 +39,25 @@ namespace _2Real
 	void UpdatePolicy::clear()
 	{
 		m_Impl->clear();
-		m_Impl->setInletDefault(new InletDefault< ValidTimestamp >());
-		m_Impl->setBlockDefault(new BlockDefault< BLOCK_OK >());
 	}
 
-	void UpdatePolicy::triggerByUpdateRate(const float updatesPerSecond)
+	void UpdatePolicy::triggerByUpdateRate( const float updatesPerSecond )
 	{
 		//timeslice is in microseconds, since that's the resolution of a poco::timestamp
 		//however, the maximum timer update rate obtainable is ~ 2 milliseconds,
 		//and that's with a totally empty system -> silly update rates greater than 60 hertz won't be met, probably
 		double micros = 1000000/updatesPerSecond;
-		m_Impl->addTimeBasedTrigger(static_cast< long >(micros));
+		m_Impl->addTimeBasedTrigger( static_cast< long >(micros) );
 	}
 
 	void UpdatePolicy::triggerWhenAllDataNew()
 	{
-		m_Impl->setInletDefault(new InletDefault< NewerTimestamp >());
+		m_Impl->setInletDefault( new InletDefault< NewerTimestamp >() );
 	}
 
-	void UpdatePolicy::triggerWhenAllDataAvailable()
-	{
-		m_Impl->setInletDefault(new InletDefault< ValidTimestamp >());
-	}
+	//void UpdatePolicy::triggerWhenAllDataAvailable()
+	//{
+	//	m_Impl->setInletDefault(new InletDefault< ValidTimestamp >());
+	//}
 
 }
