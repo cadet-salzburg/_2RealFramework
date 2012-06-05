@@ -15,7 +15,6 @@
     <ClCompile Include="..\..\src\BlocksImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\AudioBundle.h" />
     <ClInclude Include="..\..\src\BlocksImpl.h" />
     <ClInclude Include="..\..\src\portaudio.h" />
   </ItemGroup>

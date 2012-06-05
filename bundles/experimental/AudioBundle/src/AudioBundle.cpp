@@ -21,11 +21,6 @@ void getBundleMetainfo( BundleMetainfo info )
 		BlockMetainfo audioplugin = info.exportBlock< AudioOutputService >( "AudioOutputService" );
 		audioplugin.setDescription( "audio plugin" );
 		audioplugin.addOutlet< std::vector< unsigned char >  >( "test", std::vector< unsigned char >() );
-	 
-		 
-		 
-
-	
 	}
 	catch (_2Real::Exception &e)
 	{
