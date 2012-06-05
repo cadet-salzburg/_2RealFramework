@@ -92,26 +92,21 @@ int main( int argc, char *argv[] )
 		UpdatePolicy fpsTrigger;
 		fpsTrigger.triggerByUpdateRate( 30.0f );
 
-		//UpdatePolicy newTrigger1;
-		//newTrigger1.triggerWhenAllDataNew();
-
-		UpdatePolicy newTrigger2;
-		newTrigger2.clear();
-		newTrigger2.triggerByUpdateRate( 30.0f );
-		newTrigger2.triggerWhenAllDataNew();
+		UpdatePolicy newTrigger;
+		newTrigger.triggerWhenAllDataNew();
 
 		BlockIdentifier counter = testSystem.createBlock( testBundle, "counter", fpsTrigger );
 		testSystem.setup( counter );
 
-		//Identifier doubler = testSystem.createService( testBundle, "doubler", newTrigger1 );
-		//testSystem.setup( doubler );
+		BlockIdentifier doubler = testSystem.createBlock( testBundle, "doubler", newTrigger );
+		testSystem.setup( doubler );
 
-		BlockIdentifier print = testSystem.createBlock( testBundle, "print out", newTrigger2 );
+		BlockIdentifier print = testSystem.createBlock( testBundle, "print out", newTrigger );
 		testSystem.setup( print );
 
-		//testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
+		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
 		testSystem.link( counter, "counter outlet", print, "printout inlet" );
-		//testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
 	}
 	catch ( Exception &e )
 	{
