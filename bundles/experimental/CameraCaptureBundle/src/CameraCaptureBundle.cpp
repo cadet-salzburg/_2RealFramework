@@ -17,7 +17,7 @@ using std::cout;
 using std::endl;
 
 //
-void getBundleMetainfo( BundleMetainfo info )
+void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
@@ -32,7 +32,7 @@ void getBundleMetainfo( BundleMetainfo info )
 		info.addContextParameter< unsigned int >( "context number", (unsigned int)0 );
 		info.addContextParameter< Enumeration >( "context enum", Enumeration( Enums( "enum 1", "value 1" )("enum 2", "value 2"), "no value" ) );
 
-		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock >( "CameraCapture" );
+		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock >( "CameraCaptureBlock" );
 		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )
