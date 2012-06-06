@@ -44,6 +44,41 @@ namespace _2Real
 	{
 	}
 
+	BundleData::BundleData( BundleData const& src ) :
+		m_Name( src.m_Name ),
+		m_Description( src.m_Description ),
+		m_Author( src.m_Author ),
+		m_Contact( src.m_Contact ),
+		m_InstallDirectory( src.m_InstallDirectory ),
+		m_Category( src.m_Category ),
+		m_Version( src.m_Version ),
+		m_ExportedBlocks( src.m_ExportedBlocks )
+	{
+	}
+
+	BundleData& BundleData::operator=( BundleData const& src )
+	{
+		if ( this == &src )
+		{
+			return *this;
+		}
+
+		m_Name = src.m_Name;
+		m_Description = src.m_Description;
+		m_Author = src.m_Author;
+		m_Contact = src.m_Contact;
+		m_InstallDirectory = src.m_InstallDirectory;
+		m_Category = src.m_Category;
+		m_Version = src.m_Version;
+		m_ExportedBlocks = src.m_ExportedBlocks;
+
+		return *this;
+	}
+
+	void BundleData::clear()
+	{
+	}
+
 	void BundleData::setInstallDirectory( std::string const& desc )
 	{
 		m_InstallDirectory = desc;
@@ -125,22 +160,22 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		return *(it->second);
+		return it->second;
 	}
 
 	void BundleData::addBlockData( BlockData const& data )
 	{
 		std::string blockName = data.getName();
-		BlockDataMap::iterator it = m_ExportedBlocks.find( blockName );
-		if ( it != m_ExportedBlocks.end() )
-		{
-			delete it->second;
-		}
+		//BlockDataMap::iterator it = m_ExportedBlocks.find( blockName );
+		//if ( it != m_ExportedBlocks.end() )
+		//{
+		//	delete it->second;
+		//}
 
-		m_ExportedBlocks[ blockName ] = &data;
+		m_ExportedBlocks[ blockName ] = data;
 	}
 
-	std::map< std::string, BlockData const* > const& BundleData::getExportedBlocks() const
+	std::map< std::string, BlockData > const& BundleData::getExportedBlocks() const
 	{
 		return m_ExportedBlocks;
 	}

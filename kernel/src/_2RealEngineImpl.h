@@ -56,6 +56,8 @@ namespace _2Real
 	class Typetable;
 	class Timer;
 	class Logger;
+	class BundleData;
+	class BlockData;
 	
 	class EngineImpl
 	{
@@ -78,6 +80,8 @@ namespace _2Real
 		const BundleIdentifier			loadLibrary( Poco::Path const& path );
 		const bool						isLibraryLoaded( Poco::Path const& path ) const;
 		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
+		BundleData const&				getBundleData( BundleIdentifier const& bundleId ) const;
+		BlockData const&				getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
 
 	private:
 

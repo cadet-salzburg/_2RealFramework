@@ -18,10 +18,8 @@
 
 #pragma once
 
-#include "Poco/ClassLibrary.h"
-
-#if defined(_WIN32)
-	#define _2REAL_LIBRARY_API __declspec(dllexport)
+#if defined( _WIN32 )
+	#define _2REAL_LIBRARY_API __declspec( dllexport )
 #else
 	#define _2REAL_LIBRARY_API
 #endif

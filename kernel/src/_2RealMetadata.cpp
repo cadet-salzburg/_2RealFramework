@@ -254,7 +254,7 @@ namespace _2Real
 
 	void Metainfo::postProcess()
 	{
-		std::map< std::string, ParameterData const* > params;
+		std::map< std::string, ParameterData > params;
 		if ( m_HasContext )
 		{
 			m_BundleData->addBlockData( *m_ContextInfo.data );
@@ -265,11 +265,11 @@ namespace _2Real
 		{
 			if ( m_HasContext )
 			{
-				for ( std::map< std::string, ParameterData const* >::iterator it = params.begin(); it != params.end(); ++it )
+				for ( std::map< std::string, ParameterData >::iterator it = params.begin(); it != params.end(); ++it )
 				{
-					ParameterData const* out = it->second;
-					ParameterData const *in= new ParameterData( out->getName(), out->getType(), out->getKeyword(), out->getCategory(), out->getDefaultValue() );
-					bIt->second.data->addInlet( *in );
+					ParameterData out = it->second;
+					ParameterData in( out.getName(), out.getType(), out.getKeyword(), out.getCategory(), out.getDefaultValue() );
+					bIt->second.data->addInlet( in );
 				}
 			}
 

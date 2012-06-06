@@ -54,27 +54,27 @@ namespace _2Real
 
 	void ServiceIO::initFrom(BlockData const& meta, Poco::Timestamp const& time, UpdatePolicyImpl const& policy)
 	{
-		std::map< std::string, ParameterData const* > const& setup = meta.getParameters();
-		std::map< std::string, ParameterData const* > const& input = meta.getInlets();
-		std::map< std::string, ParameterData const* > const& output = meta.getOutlets();
+		std::map< std::string, ParameterData > const& setup = meta.getParameters();
+		std::map< std::string, ParameterData > const& input = meta.getInlets();
+		std::map< std::string, ParameterData > const& output = meta.getOutlets();
 
-		for (std::map< std::string, ParameterData const* >::const_iterator it = setup.begin(); it != setup.end(); ++it)
+		for (std::map< std::string, ParameterData >::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
-			ParameterData const& meta = *it->second;
+			ParameterData const& meta = it->second;
 			SetupParameter *param = new SetupParameter(meta);
 			m_Params.insert(std::make_pair(param->getName(), param));
 		}
 
-		for (std::map< std::string, ParameterData const* >::const_iterator it = input.begin(); it != input.end(); ++it)
+		for (std::map< std::string, ParameterData >::const_iterator it = input.begin(); it != input.end(); ++it)
 		{
-			ParameterData const& meta = *it->second;
+			ParameterData const& meta = it->second;
 			Inlet *inlet = new Inlet( meta );
 			m_Inlets.insert( std::make_pair( inlet->getName(), inlet ) );
 		}
 
-		for (std::map< std::string, ParameterData const* >::const_iterator it = output.begin(); it != output.end(); ++it)
+		for (std::map< std::string, ParameterData >::const_iterator it = output.begin(); it != output.end(); ++it)
 		{
-			ParameterData const& meta = *it->second;
+			ParameterData const& meta = it->second;
 			Outlet *outlet = new Outlet( meta, time );
 			m_Outlets.insert( std::make_pair( outlet->getName(), outlet ) );
 		}

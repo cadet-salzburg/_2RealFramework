@@ -67,5 +67,14 @@ namespace _2Real
 		return m_EngineImpl.getInfoString( bundleId );
 	}
 
+	BundleData const& Engine::getBundleData( BundleIdentifier const& bundleId ) const
+	{
+		return m_EngineImpl.getBundleData( bundleId );
+	}
+
+	BlockData const& Engine::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
+	{
+		return m_EngineImpl.getBlockData( bundleId, blockName );
+	}
 
 }

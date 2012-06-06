@@ -186,6 +186,16 @@ namespace _2Real
 		return m_Plugins->getInfoString( bundleId );
 	}
 
+	BundleData const& EngineImpl::getBundleData( BundleIdentifier const& bundleId ) const
+	{
+		return m_Plugins->getBundleData( bundleId );
+	}
+
+	BlockData const& EngineImpl::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
+	{
+		return m_Plugins->getBlockData( bundleId, blockName );
+	}
+
 	//const Identifier EngineImpl::getPluginIdentifier( std::string const& idName ) const
 	//{
 	//	return m_Plugins->getIdentifier(idName);

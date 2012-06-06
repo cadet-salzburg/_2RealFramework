@@ -26,6 +26,14 @@ using std::string;
 namespace _2Real
 {
 
+	ParameterData::ParameterData() :
+		m_Name( "undefined" ),
+		m_Keyword( "undefined" ),
+		m_Type( "undefined" ),
+		m_Category( "undefined" )
+	{
+	}
+
 	ParameterData::ParameterData( string const& name, string const& type, string const& keyword, string const& category, EngineData const& defaultValue ) :
 		m_Name( name ),
 		m_Keyword( keyword ),
@@ -34,19 +42,6 @@ namespace _2Real
 		m_DefaultValue( defaultValue )
 	{
 	}
-
-	//inline void ParameterData::setDefaultValue(EngineData const& data)
-	//{
-	//	if (data.typeinfo().name() != m_Type)
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "datatype mismatch: " << m_Type << " vs. template parameter type " << data.typeinfo().name();
-	//		throw TypeMismatchException(msg.str());
-	//	}
-
-	//	m_DefaultValue = data;
-	//	m_HasDefault = true;
-	//}
 
 	ParameterData::~ParameterData()
 	{

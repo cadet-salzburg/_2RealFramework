@@ -79,6 +79,18 @@ namespace _2Real
 		BundleInternal const& bundle = getBundle( bundleId );
 		return bundle.getBundleInfoString();
 	}
+
+	BundleData const& BundleManager::getBundleData( BundleIdentifier const& bundleId ) const
+	{
+		BundleInternal const& bundle = getBundle( bundleId );
+		return bundle.getBundleData();
+	}
+
+	BlockData const& BundleManager::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
+	{
+		BundleInternal const& bundle = getBundle( bundleId );
+		return bundle.getBlockData( blockName );
+	}
 	
 	const BundleIdentifier BundleManager::loadLibrary( Path const& path )
 	{
@@ -131,9 +143,9 @@ namespace _2Real
 			{
 				ServiceBlock &bundleContext = bundle.getBundleContext();
 				BlockData const& bundleData = bundle.getBlockData( "bundle context" );
-				std::map< std::string, ParameterData const* > const& out = bundleData.getOutlets();
+				std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
 
-				for ( std::map< std::string, ParameterData const* >::const_iterator it = out.begin(); it != out.end(); ++it )
+				for ( std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
 				{
 					serviceBlock->linkWith( it->first, bundleContext, it->first );
 				}

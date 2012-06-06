@@ -30,19 +30,17 @@ namespace _2Real
 
 	public:
 
+		ParameterData();
 		ParameterData( std::string const& name, std::string const& type, std::string const& keyword, std::string const& category, EngineData const& defaultValue );
-		//ParameterData(std::string const& name, std::string const& type, std::string const& keyword);
 		~ParameterData();
 
-		friend std::ostream& operator<<(std::ostream &out, ParameterData const& metadata);
+		friend std::ostream& operator<<( std::ostream &out, ParameterData const& metadata );
 
 		std::string const& getName() const;
 		std::string const& getType() const;
 		std::string const& getKeyword() const;
 		std::string const& getCategory() const;
 		EngineData const& getDefaultValue() const;
-		//void setDefaultValue(EngineData const& data);
-		//bool hasDefaultValue() const;
 
 	private:
 
@@ -51,7 +49,6 @@ namespace _2Real
 		std::string			m_Type;
 		std::string			m_Category;
 		EngineData			m_DefaultValue;
-		//bool				m_HasDefault;
 
 	};
 

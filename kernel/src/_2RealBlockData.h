@@ -21,39 +21,47 @@
 #include <map>
 #include <string>
 
+#include "_2RealParameterData.h"
+
 namespace _2Real
 {
-
-	class ParameterData;
 
 	class BlockData
 	{
 
 	public:
 
+		BlockData();
 		BlockData( std::string const& name );
+		BlockData( BlockData const& src );
+		BlockData& operator=( BlockData const& src );
 		~BlockData();
 
-		friend std::ostream& operator<<(std::ostream &out, BlockData const& metadata);
+		friend std::ostream& operator<<( std::ostream &out, BlockData const& metadata );
 
 		void setDescription( std::string const& description );
+		void setCategory( std::string const& category );
 		void addParameter( ParameterData const& data );
 		void addInlet( ParameterData const& data );
 		void addOutlet( ParameterData const& data );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;
+		std::string const& getCategory() const;
 
-		std::map< std::string, ParameterData const* > const& getParameters() const;
-		std::map< std::string, ParameterData const* > const& getInlets() const;
-		std::map< std::string, ParameterData const* > const& getOutlets() const;
+		std::map< std::string, ParameterData > const& getParameters() const;
+		std::map< std::string, ParameterData > const& getInlets() const;
+		std::map< std::string, ParameterData > const& getOutlets() const;
 
 	private:
 
-		typedef std::map< std::string, ParameterData const* >	ParameterDataMap;
+		typedef std::map< std::string, ParameterData >	ParameterDataMap;
+
+		void clear();
 
 		std::string					m_Name;
 		std::string					m_Description;
+		std::string					m_Category;
 
 		ParameterDataMap			m_Parameters;
 		ParameterDataMap			m_Inlets;

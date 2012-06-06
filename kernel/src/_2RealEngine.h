@@ -26,8 +26,10 @@
 namespace _2Real
 {
 
-	class Identifier;
+	class BundleIdentifier;
 	class EngineImpl;
+	class BlockData;
+	class BundleData;
 
 	class Engine
 	{
@@ -55,6 +57,9 @@ namespace _2Real
 		bool isLoaded( std::string const& libraryPath ) const;
 
 		const std::string getInfoString( BundleIdentifier const& bundleId );
+
+		BundleData const& getBundleData( BundleIdentifier const& bundleId ) const;
+		BlockData const& getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
 
 	private:
 

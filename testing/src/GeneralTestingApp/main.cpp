@@ -23,19 +23,24 @@
 #include "_2RealException.h"
 #include "_2RealBlockError.h"
 #include "_2RealData.h"
+#include "_2RealBundleData.h"
+#include "_2RealBlockData.h"
+#include "_2RealParameterData.h"
 #include "_2RealUpdatePolicy.h"
 
 #include "Poco/Mutex.h"
 
 #include <windows.h>
 #include <iostream>
+#include <map>
 
-#include "vld.h"
+//#include "vld.h"
 
 using std::string;
 using std::cout;
 using std::endl;
 using std::cin;
+using std::map;
 using _2Real::Engine;
 using _2Real::System;
 using _2Real::BundleIdentifier;
@@ -44,6 +49,9 @@ using _2Real::UpdatePolicy;
 using _2Real::Data;
 using _2Real::Exception;
 using _2Real::BlockError;
+using _2Real::BundleData;
+using _2Real::BlockData;
+using _2Real::ParameterData;
 using Poco::FastMutex;
 using Poco::ScopedLock;
 
@@ -97,13 +105,31 @@ int main( int argc, char *argv[] )
 	{
 		BundleIdentifier testBundle = testEngine.load( string( "GeneralTesting" ).append( shared_library_suffix ) );
 
-		cout << testBundle << endl;
+		//cout << testBundle << endl;
 
 		UpdatePolicy fpsTrigger;
 		fpsTrigger.triggerByUpdateRate( 30.0f );
 
 		UpdatePolicy newTrigger;
 		newTrigger.triggerWhenAllDataNew();
+
+		//BundleData const& bundleData = testEngine.getBundleData( testBundle );
+		BlockData const& counterData = testEngine.getBlockData( testBundle, "counter" );
+		//cout << bundleData << endl;
+		//cout << counterData << endl;
+		//map< string, BlockData > const& b = bundleData.getExportedBlocks();
+		map< string, ParameterData > const& outlets = counterData.getOutlets();
+
+		cout << "counter outlets: " << endl;
+		for ( map< string, ParameterData >::const_iterator it = outlets.begin(); it != outlets.end(); ++it )
+		{
+			ParameterData p = it->second;
+			cout << "name: " << p.getName() << endl;
+			cout << "type: " << p.getType() << endl;
+			cout << "key: " << p.getKeyword() << endl;
+			cout << "category: " << p.getCategory() << endl;
+			cout << "default value: " << p.getDefaultValue() << endl;
+		}
 
 		BlockIdentifier counter = testSystem.createBlock( testBundle, "counter", fpsTrigger );
 		testSystem.setup( counter );
@@ -121,7 +147,7 @@ int main( int argc, char *argv[] )
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
+		cout << e.what() << " " << e.message() << endl;
 	}
 
 	while( 1 )
