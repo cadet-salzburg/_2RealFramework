@@ -13,6 +13,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\todo.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -49,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\samples\</OutDir>
+    <OutDir>..\..\..\..\..\test</OutDir>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -110,6 +113,10 @@
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
+    <PostBuildEvent>
+      <Message>copy used dlls to unit test directory</Message>
+      <Command>copy $(POCO_DIR)\bin\*.dll ..\..\..\..\..\test</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

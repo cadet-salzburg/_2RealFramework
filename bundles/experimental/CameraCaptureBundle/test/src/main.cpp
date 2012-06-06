@@ -56,13 +56,20 @@ int main( int argc, char *argv[] )
 
 	try 
 	{
+		// load bundles for use in runtime engine
 		testEngine.setBaseDirectory( directory );
 		BundleIdentifier testBundle = testEngine.load( string( "CameraCaptureBundle" ).append( shared_library_suffix ) );
 
+		// create certain blocks to a runtime system
 		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 10.0f );
-		BlockIdentifier test = testSystem.createBlock( testBundle, "CameraCaptureBlock", fpsTrigger );
-		testSystem.setup( test );
+		fpsTrigger.triggerByUpdateRate( 40.0f );
+		BlockIdentifier cameraCaptureBlock = testSystem.createBlock( testBundle, "CameraCaptureBlock", fpsTrigger );
+		
+		// set needed setup parameters for block otherwise set to default
+		
+
+		//start 
+		testSystem.setup(cameraCaptureBlock);
 	}
 	catch ( Exception &e )
 	{

@@ -31,7 +31,8 @@ void CameraDeviceManager::update()
 {
 	try
 	{
-		m_ContextNumber.data< unsigned int >() = rand();
+		static int cnt = 0;
+		m_ContextNumber.data< unsigned int >() = cnt++;
 	}
 	catch ( Exception &e )
 	{
