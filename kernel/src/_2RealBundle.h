@@ -33,5 +33,5 @@ namespace _2Real
 
 extern "C"
 {
-	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::BundleMetainfo info );
+	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::BundleMetainfo &info );
 }

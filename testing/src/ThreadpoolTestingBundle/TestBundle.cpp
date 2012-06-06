@@ -12,7 +12,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-void getBundleMetainfo( BundleMetainfo info )
+void getBundleMetainfo( BundleMetainfo &info )
 {
 	try
 	{

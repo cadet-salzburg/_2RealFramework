@@ -85,7 +85,7 @@ namespace _2Real
 			return NULL;
 		}
 
-		typedef void ( *MetainfoFunc )( BundleMetainfo info );
+		typedef void ( *MetainfoFunc )( BundleMetainfo &info );
 
 		SharedLibrary *lib;
 		try

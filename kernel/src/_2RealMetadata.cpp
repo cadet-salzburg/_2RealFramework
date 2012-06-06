@@ -38,12 +38,6 @@ namespace _2Real
 	{
 	}
 
-	BundleMetainfo::BundleMetainfo( BundleMetainfo const& src ) :
-		m_Impl( src.m_Impl ),
-		m_Typetable( src.m_Typetable )
-	{
-	}
-
 	void BundleMetainfo::setDescription( std::string const& description )
 	{
 		m_Impl.setDescription( description );

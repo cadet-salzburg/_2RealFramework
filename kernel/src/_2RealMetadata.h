@@ -177,7 +177,6 @@ namespace _2Real
 	public:
 
 		BundleMetainfo( Metainfo &info, Typetable const& typetable );
-		BundleMetainfo( BundleMetainfo const& src );
 		~BundleMetainfo();
 
 		template< typename BlockDerived >
