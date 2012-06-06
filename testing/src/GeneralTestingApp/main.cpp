@@ -21,6 +21,7 @@
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
+#include "_2RealBlockError.h"
 #include "_2RealData.h"
 #include "_2RealUpdatePolicy.h"
 
@@ -28,6 +29,8 @@
 
 #include <windows.h>
 #include <iostream>
+
+#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -40,6 +43,7 @@ using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
 using _2Real::Data;
 using _2Real::Exception;
+using _2Real::BlockError;
 using Poco::FastMutex;
 using Poco::ScopedLock;
 
@@ -69,6 +73,12 @@ public:
 		}
 	}
 
+	void receiveError( BlockError &error )
+	{
+		cout << "exception in: " << error.getIdentifier().getName() << endl;
+		cout << error.getException().message() << endl;
+	}
+
 private:
 
 	FastMutex	m_Mutex;
@@ -83,7 +93,7 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	System testSystem( "test system" );
 
-	try 
+	try
 	{
 		BundleIdentifier testBundle = testEngine.load( string( "GeneralTesting" ).append( shared_library_suffix ) );
 
@@ -105,8 +115,9 @@ int main( int argc, char *argv[] )
 		testSystem.setup( print );
 
 		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
-		testSystem.link( counter, "counter outlet", print, "printout inlet" );
+		testSystem.link( doubler, "doubler outlet", print, "printout inlet" );
 		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+		testSystem.registerToException( *obj, &Receiver< unsigned int >::receiveError );
 	}
 	catch ( Exception &e )
 	{

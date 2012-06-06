@@ -91,15 +91,7 @@ void Doubler::setup( FrameworkContext &context )
 
 void Doubler::update()
 {
-	try
-	{
-		m_OutputValue.data< unsigned int>() = 2 * m_InputValue.data< unsigned int >();
-	}
-	catch ( Exception &e)
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
+	m_OutputValue.data< unsigned int >() = 2 * m_InputValue.data< unsigned short >();
 };
 
 void PrintOut::setup( FrameworkContext &context )
