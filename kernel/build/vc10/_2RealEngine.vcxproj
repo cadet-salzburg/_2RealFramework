@@ -28,6 +28,7 @@
     <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
+    <ClInclude Include="..\..\src\_2RealBlockError.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
@@ -44,7 +45,6 @@
     <ClInclude Include="..\..\src\_2RealEntity.h" />
     <ClInclude Include="..\..\src\_2RealEnum.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
-    <ClInclude Include="..\..\src\_2RealExceptionHandler.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealIdentifier.h" />
@@ -60,7 +60,6 @@
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
-    <ClInclude Include="..\..\src\_2RealRunnableError.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlock.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlockIO.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlockStates.h" />
@@ -95,6 +94,7 @@
     <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealBlob.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
+    <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleData.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleLoader.cpp" />
@@ -107,7 +107,6 @@
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealEnum.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealExceptionHandler.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
@@ -272,7 +271,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN64;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -298,7 +297,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -325,7 +324,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_2REAL_DEBUG;_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_2REAL_WINDOWS;WIN64;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

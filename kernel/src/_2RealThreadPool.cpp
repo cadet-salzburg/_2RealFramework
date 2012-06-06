@@ -203,7 +203,7 @@ namespace _2Real
 				m_ExecutingRunnables.insert(NamedRunnable(service->getId(), service));
 				m_ExecutingAccess.unlock();
 				
-				thread->run(Poco::Thread::PRIO_NORMAL, *service);
+				thread->run( Poco::Thread::PRIO_NORMAL, *service );
 			}
 
 			m_ThreadAccess.lock();
@@ -255,8 +255,8 @@ namespace _2Real
 		//else
 		//{
 			//m_ThreadAccess.unlock();
-			Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
-			m_ReadyRunnables.push_back(&s);
+			Poco::ScopedLock< Poco::FastMutex > lock( m_ReadyAccess );
+			m_ReadyRunnables.push_back( &s );
 		//}
 	}
 

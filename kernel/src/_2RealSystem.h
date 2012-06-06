@@ -73,22 +73,22 @@ namespace _2Real
 
 		//void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
 
-		//void registerToException( ExceptionCallback callback, void *userData = NULL );
-		//void unregisterFromException( ExceptionCallback callback, void *userData = NULL );
+		void registerToException( ExceptionCallback callback, void *userData = NULL );
+		void unregisterFromException( ExceptionCallback callback, void *userData = NULL );
 
-		//template< typename Callable >
-		//void registerToException( Callable &callable, void ( Callable::*callback )( RunnableError ) )
-		//{
-		//	AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
-		//	registerToNewExceptionInternal( *handler );
-		//}
+		template< typename Callable >
+		void registerToException( Callable &callable, void ( Callable::*callback )( BlockError& ) )
+		{
+			AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+			registerToExceptionInternal( *handler );
+		}
 
-		//template< typename Callable >
-		//void unregisterFromException( Callable &callable, void ( Callable::*callback )( RunnableError ) )
-		//{
-		//	AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
-		//	unregisterFromExceptionInternal( *handler );
-		//}
+		template< typename Callable >
+		void unregisterFromException( Callable &callable, void ( Callable::*callback )( BlockError& ) )
+		{
+			AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+			unregisterFromExceptionInternal( *handler );
+		}
 
 		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
 		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
@@ -117,8 +117,8 @@ namespace _2Real
 		const EngineData	getValueInternal( BlockIdentifier const& id, std::string const& name ) const;
 		void				registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
 		void				unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
-		//void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
-		//void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
+		void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
+		void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
 
 		SystemImpl			*m_Impl;
 

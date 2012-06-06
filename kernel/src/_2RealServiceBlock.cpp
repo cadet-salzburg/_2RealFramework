@@ -33,6 +33,7 @@ namespace _2Real
 		ServiceIO *io = dynamic_cast< ServiceIO * >(m_IOManager);
 		ServiceStates *states = dynamic_cast< ServiceStates * >(m_StateManager);
 		states->m_IO = io;
+		states->m_System = &owner;
 
 		io->initFrom( data, owner.getTimestamp(), updateTriggers );
 		states->initFrom( updateTriggers );

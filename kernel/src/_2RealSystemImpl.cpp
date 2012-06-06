@@ -20,7 +20,6 @@
 #include "_2RealEngineImpl.h"
 #include "_2RealBundleManager.h"
 #include "_2RealThreadPool.h"
-#include "_2RealExceptionHandler.h"
 #include "_2RealException.h"
 #include "_2RealServiceBlock.h"
 #include "_2RealData.h"
@@ -29,6 +28,7 @@
 #include "_2RealTriggerTypes.h"
 #include "_2RealUpdatePolicyImpl.h"
 #include "_2RealMetadata.h"
+#include "_2RealBlockError.h"
 
 #include <sstream>
 
@@ -39,8 +39,7 @@ namespace _2Real
 		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, NULL),
 		m_Engine(EngineImpl::instance()),
 		m_PluginPool(EngineImpl::instance().getPluginPool()),
-		m_Timestamp(),
-		m_ExceptionHandler()
+		m_Timestamp()
 	{
 		m_Timestamp.update();
 	}
@@ -69,6 +68,18 @@ namespace _2Real
 		catch (TimeOutException &e)
 		{
 			std::cout << e.message() << std::endl;
+		}
+
+		for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); /**/ )
+		{
+			delete *it;
+			it = m_ExceptionCallbacks.erase( it );
+		}
+
+		for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); /**/ )
+		{
+			delete *it;
+			it = m_ExceptionCallbackHandlers.erase( it );
 		}
 	}
 
@@ -121,6 +132,83 @@ namespace _2Real
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
 			obj.unregisterFromNewData( outlet, handler );
+		}
+	}
+
+	void SystemImpl::registerToException( ExceptionCallback callback, void *userData )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
+		ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
+		if ( it == m_ExceptionCallbacks.end() )
+		{
+			m_ExceptionCallbacks.insert( cb );
+		}
+		else
+		{
+			delete cb;
+		}
+	}
+
+	void SystemImpl::unregisterFromException( ExceptionCallback callback, void *userData )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
+		ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
+		if ( it != m_ExceptionCallbacks.end() )
+		{
+			delete *it;
+			m_ExceptionCallbacks.erase(it);
+		}
+
+		delete cb;
+	}
+
+	void SystemImpl::registerToException( AbstractExceptionCallbackHandler &handler )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
+		if ( it == m_ExceptionCallbackHandlers.end() )
+		{
+			m_ExceptionCallbackHandlers.insert( &handler );
+		}
+		else
+		{
+			delete &handler;
+		}
+	}
+
+	void SystemImpl::unregisterFromException( AbstractExceptionCallbackHandler &handler )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
+		if ( it != m_ExceptionCallbackHandlers.end() )
+		{
+			delete *it;
+			m_ExceptionCallbackHandlers.erase(it);
+		}
+
+		delete &handler;
+	}
+
+	void SystemImpl::handleException( AbstractBlock &subBlock, Exception &exception )
+	{
+		BlockError e( exception, subBlock.getIdentifier() );
+
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
+		{
+			( *it )->invoke( e );
+		}
+
+		for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
+		{
+			( *it )->invoke( e );
 		}
 	}
 

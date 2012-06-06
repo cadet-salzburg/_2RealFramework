@@ -16,31 +16,25 @@
 	limitations under the License.
 */
 
-#include "_2RealExceptionHandler.h"
-#include "_2RealRunnableError.h"
-
-#include "Poco/Delegate.h"
+#include "_2RealBlockError.h"
 
 namespace _2Real
 {
 
-	ExceptionHandler::ExceptionHandler()
+	BlockError::BlockError( Exception const& exception, BlockIdentifier const& blockId ) :
+		m_Exception( exception ),
+		m_Block( blockId )
 	{
 	}
 
-	void ExceptionHandler::registerExceptionCallback(ExceptionCallback callback)
+	BlockIdentifier const& BlockError::getIdentifier() const
 	{
-		m_Event += Poco::delegate(callback);
+		return m_Block;
 	}
 
-	void ExceptionHandler::unregisterExceptionCallback(ExceptionCallback callback)
+	Exception const& BlockError::getException() const
 	{
-		m_Event -= Poco::delegate(callback);
+		return m_Exception;
 	}
 
-	void ExceptionHandler::handleException( Exception const& exception, BlockIdentifier const& sender )
-	{
-		BlockError e( exception, sender );
-		m_Event.notify(this, e);
-	}
 }

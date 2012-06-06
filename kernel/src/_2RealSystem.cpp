@@ -82,31 +82,25 @@ namespace _2Real
 	//	//m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
 	//}
 
-	//void System::clearOutputListeners(Identifier const& outService, std::string const& outName, const bool clearCallbacks)
-	//{
-	//	m_EngineImpl.clearOutputListeners(outService, outName, clearCallbacks, m_Id);
-	//}
+	void System::registerToException( ExceptionCallback callback, void *userData )
+	{
+		m_Impl->registerToException( callback, userData );
+	}
 
-	//void System::clearInputProviders(Identifier const& inService, std::string const& inName)
-	//{
-	//	m_EngineImpl.clearInputProviders(inService, inName, m_Id);
-	//}
+	void System::unregisterFromException( ExceptionCallback callback, void *userData )
+	{
+		m_Impl->unregisterFromException( callback, userData );
+	}
 
-	//void System::registerToException(ExceptionCallback callback)
-	//{
-	//}
+	void System::registerToExceptionInternal( AbstractExceptionCallbackHandler &handler )
+	{
+		m_Impl->registerToException( handler );
+	}
 
-	//void System::unregisterFromException(ExceptionCallback callback)
-	//{
-	//}
-
-	//void System::registerToException(IExceptionListener &listener)
-	//{
-	//}
-
-	//void System::unregisterFromException(IExceptionListener &listener)
-	//{
-	//}
+	void System::unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler )
+	{
+		m_Impl->unregisterFromException( handler );
+	}
 
 	void System::registerToNewData( BlockIdentifier const& service, std::string const& outletName, DataCallback callback, void *userData )
 	{

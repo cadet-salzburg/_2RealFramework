@@ -33,6 +33,7 @@
 #include "_2RealTimer.h"
 #include "_2RealInlet.h"
 #include "_2RealLogger.h"
+#include "_2RealSystemImpl.h"
 
 namespace _2Real
 {
@@ -131,11 +132,18 @@ namespace _2Real
 
 	void ServiceStates::executeService()
 	{
-		m_IO->syncInlets();
+		try
+		{
+			m_IO->syncInlets();
 
-		dynamic_cast< ServiceBlock & >(m_Owner).executeService();
+			dynamic_cast< ServiceBlock & >(m_Owner).executeService();
 
-		m_IO->updateOutlets();
+			m_IO->updateOutlets();
+		}
+		catch ( Exception &e )
+		{
+			handleStateChangeException( e );
+		}
 	}
 
 	void ServiceStates::setUpService()
@@ -322,11 +330,16 @@ namespace _2Real
 
 	void ServiceStates::handleStateChangeException(Exception &e)
 	{
-		std::cout << getName() << " ERROR " << e.message() << std::endl;
+#ifdef _2REAL_DEBUG
+		std::cout << "-------------------------------------------------------------------" << std::endl;
+		std::cout << getName() << " EXCEPTION: " << e.message() << std::endl;
+		std::cout << "-------------------------------------------------------------------" << std::endl;
+#endif
 		m_Logger.addLine( std::string( getName() + " new service state: error\n\t" + e.message() ) );
-		disableAllTriggers();	//is this a good idea? -> i probably would hav to tell ubers..
+		disableAllTriggers();
 		delete m_CurrentState;
 		m_CurrentState = new ServiceStateError();
+		m_System->handleException( m_Owner, e );
 	}
 
 	void ServiceStates::initFrom( UpdatePolicyImpl const& triggers )

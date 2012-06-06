@@ -31,6 +31,7 @@ namespace _2Real
 	class ServiceIO;
 	class ThreadPool;
 	class Logger;
+	class SystemImpl;
 
 	class ServiceStates : public AbstractStateManager
 	{
@@ -109,6 +110,7 @@ namespace _2Real
 		Poco::Event												m_StopEvent;
 
 		ServiceIO												*m_IO;
+		SystemImpl												*m_System;
 		ThreadPool												&m_Threads;
 		Logger													&m_Logger;
 

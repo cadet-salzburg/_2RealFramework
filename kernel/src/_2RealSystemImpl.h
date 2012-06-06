@@ -24,7 +24,6 @@
 #include "_2RealOwnedBlocks.h"
 #include "_2RealDisabledIO.h"
 #include "_2RealDisabledStates.h"
-#include "_2RealExceptionHandler.h"
 
 #include "Poco/Path.h"
 #include "Poco/Timer.h"
@@ -56,11 +55,15 @@ namespace _2Real
 		const BlockIdentifier		createServiceBlock(BundleIdentifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
 		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
 
-		void						handleException(AbstractBlock &subBlock, Exception &exception);
-		void						registerToNewData(BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData);
-		void						unregisterFromNewData(BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData);
-		void						registerToNewData(BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler);
-		void						unregisterFromNewData(BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler);
+		void						handleException( AbstractBlock &subBlock, Exception &exception );
+		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData );
+		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData );
+		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
+		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
+		void						registerToException( ExceptionCallback callback, void *userData );
+		void						unregisterFromException( ExceptionCallback callback, void *userData );
+		void						registerToException( AbstractExceptionCallbackHandler &handler );
+		void						unregisterFromException( AbstractExceptionCallbackHandler &handler );
 
 		void						setUp(BlockIdentifier const& blockId);
 
@@ -75,8 +78,9 @@ namespace _2Real
 		EngineImpl					&m_Engine;
 		BundleManager				&m_PluginPool;
 		Poco::Timestamp				m_Timestamp;
-		ExceptionHandler			m_ExceptionHandler;
+		mutable Poco::FastMutex		m_ExceptionAccess;
 		ExceptionFunctionCallbacks	m_ExceptionCallbacks;
+		ExceptionCallbackHandlers	m_ExceptionCallbackHandlers;
 
 	};
 
