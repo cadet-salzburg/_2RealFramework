@@ -1,27 +1,12 @@
-/*
-	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2012 Fachhochschule Salzburg GmbH
-
-		http://www.cadet.at
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
+#include "CameraCaptureTest.h"
+#include <QtGui/QApplication>
 
 #include "_2RealEngine.h"
 #include "_2RealSystem.h"
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealUpdatePolicy.h"
+#include "_2RealData.h"
 
 #include "Poco/Mutex.h"
 
@@ -38,6 +23,7 @@ using _2Real::BundleIdentifier;
 using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
 using _2Real::Exception;
+using _2Real::Data;
 using Poco::FastMutex;
 using Poco::ScopedLock;
 
@@ -47,8 +33,17 @@ using Poco::ScopedLock;
 	#define shared_library_suffix "_32d.dll"
 #endif
 
-int main( int argc, char *argv[] )
+
+
+void newCameraData(void *userdata, Data &data)
 {
+}
+
+int main(int argc, char *argv[])
+{
+	QApplication a(argc, argv);
+	CameraCaptureTest w;
+
 	string directory = "../experimental/bin/win/";
 
 	Engine &testEngine = Engine::instance();
@@ -67,6 +62,8 @@ int main( int argc, char *argv[] )
 		
 		// set needed setup parameters for block otherwise set to default
 		
+		// setup callbacks
+		testSystem.registerToNewData( cameraCaptureBlock, "inputmidi", newCameraData );
 
 		//start 
 		testSystem.setup(cameraCaptureBlock);
@@ -76,17 +73,10 @@ int main( int argc, char *argv[] )
 		cout << e.message() << endl;
 	}
 
-	while( 1 )
-	{
-		string line;
-		char lineEnd = '\n';
-		getline( cin, line, lineEnd );
-		if ( line == "q" )
-		{
-			break;
-		}
-	}
+	w.show();
+	int iRet = a.exec();
 
 	testSystem.clear();
-	return 0;
+
+	return iRet;
 }

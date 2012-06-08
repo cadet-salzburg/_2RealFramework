@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureBundle", "CameraCaptureBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureTest", "..\..\test\build\vc10\CameraCaptureTest.vcxproj", "{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureTest", "..\..\test\build\vc10\CameraCaptureTest.vcxproj", "{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}"
 	ProjectSection(ProjectDependencies) = postProject
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB} = {08E2BB90-C063-4892-8DB1-F68145C6A1BB}
 	EndProjectSection
@@ -24,12 +24,12 @@ Global
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.ActiveCfg = Release|x64
 		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.Build.0 = Release|x64
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Debug|Win32.Build.0 = Debug|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Debug|x64.ActiveCfg = Debug|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.ActiveCfg = Release|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.Build.0 = Release|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|x64.ActiveCfg = Release|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|Win32.Build.0 = Debug|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|x64.ActiveCfg = Debug|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|Win32.ActiveCfg = Release|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|Win32.Build.0 = Release|Win32
+		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,2 +1,9 @@
 update rate context ?
 	kann man die setzen?
+
+
+kernel 
+	ein hauptinclude file und ein include directory
+
+verändern der update rate zur laufzeit ?
+
