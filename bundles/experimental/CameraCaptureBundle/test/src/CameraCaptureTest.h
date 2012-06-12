@@ -12,7 +12,6 @@ public:
 	CameraCaptureTest(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~CameraCaptureTest();
 
-
 private:
 	QWidget			m_ButtonGroup;
 	QHBoxLayout		m_ButtonLayout;

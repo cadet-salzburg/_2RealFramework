@@ -1,12 +1,8 @@
-#include "CameraCaptureTest.h"
+#include "BlockUnitTestWidget.h"
+
 #include <QtGui/QApplication>
 
-#include "_2RealEngine.h"
-#include "_2RealSystem.h"
-#include "_2RealIdentifier.h"
-#include "_2RealException.h"
-#include "_2RealUpdatePolicy.h"
-#include "_2RealData.h"
+#include "_2RealApplication.h"
 
 #include "Poco/Mutex.h"
 
@@ -23,7 +19,7 @@ using _2Real::BundleIdentifier;
 using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
 using _2Real::Exception;
-using _2Real::Data;
+using _2Real::OutputData;
 using Poco::FastMutex;
 using Poco::ScopedLock;
 
@@ -33,29 +29,10 @@ using Poco::ScopedLock;
 	#define shared_library_suffix "_32d.dll"
 #endif
 
-
-class Receiver : public QObject
-{
-//Q_OBJECT
-
-public:
-	void receiveData(Data &data)
-	{
-		printf("received\n");
-		//emit newDataOnCameraImageOutlet();
-	}
-
-private:
-
-//signals:
-	//void newDataOnCameraImageOutlet();
-};
-
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	CameraCaptureTest w;
-	Receiver dataObj;
+	BlockUnitTestWidget testWidget;
 	string directory = "../experimental/bin/win/";
 
 	Engine &testEngine = Engine::instance();
@@ -75,17 +52,19 @@ int main(int argc, char *argv[])
 		// set needed setup parameters for block otherwise set to default
 		
 		// setup callbacks
-		testSystem.registerToNewData( cameraCaptureBlock, "context number", dataObj, &Receiver::receiveData );
+		testSystem.registerToNewData( cameraCaptureBlock, testWidget, &BlockUnitTestWidget::receiveData );
 
-		//start 
+		// start 
 		testSystem.setup(cameraCaptureBlock);
+
+		// add to test widget
+
 	}
 	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 	}
 
-	w.show();
 	int iRet = a.exec();
 
 	testSystem.clear();
