@@ -18,27 +18,17 @@
 
 #pragma once
 
+#include "_2RealEngine.h"
+#include "_2RealSystem.h"
 #include "_2RealBlockIdentifier.h"
+#include "_2RealBundleIdentifier.h"
 #include "_2RealException.h"
-
-namespace _2Real
-{
-
-	class BlockError
-	{
-
-	public:
-
-		BlockError( Exception const& exception, BlockIdentifier const& blockId );
-
-		BlockIdentifier const& getIdentifier() const;
-		Exception const& getException() const;
-
-	private:
-
-		Exception			m_Exception;
-		BlockIdentifier		m_Block;
-
-	};
-
-}
+#include "_2RealBlockError.h"
+#include "_2RealOutputData.h"
+#include "_2RealBundleData.h"
+#include "_2RealBlockData.h"
+#include "_2RealParameterData.h"
+#include "_2RealUpdatePolicy.h"
+//#include "_2RealEngineData.h"
+//#include "_2RealTypeHolder.h"
+//#include "_2RealHelpers.h"

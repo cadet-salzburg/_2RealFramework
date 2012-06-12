@@ -17,7 +17,7 @@
 */
 
 #include "_2RealHelpers.h"
-#include "_2RealStringHelpers.h"
+#include "_2RealHelpersInternal.h"
 #include "_2RealException.h"
 
 #include "Poco/Path.h"

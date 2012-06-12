@@ -22,6 +22,7 @@
 #include "_2RealTimestampedData.h"
 #include "_2RealOutputData.h"
 #include "_2RealCallbacks.h"
+#include "_2RealCallbacksInternal.h"
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
@@ -49,16 +50,13 @@ namespace _2Real
 		void							resetLinks();
 		void							discardCurrent();		//call by output handle when not writing anything
 		const EngineData				getCurrent() const;
+		OutputData						getOutputData() const;
 
 		// callback functions
 		void							registerCallback( OutletFunctionCallback &callback );
 		void							unregisterCallback( OutletFunctionCallback &callback );
 		void							registerCallback( AbstractOutletCallbackHandler &callback );
 		void							unregisterCallback( AbstractOutletCallbackHandler &callback );
-		void							registerCallback( OutputFunctionCallback &callback );
-		void							unregisterCallback( OutputFunctionCallback &callback );
-		void							registerCallback( AbstractOutputCallbackHandler &callback );
-		void							unregisterCallback( AbstractOutputCallbackHandler &callback );
 
 		// inlets
 		void							addListener( Inlet &slot );

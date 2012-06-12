@@ -20,10 +20,12 @@
 
 #include "_2RealOutputData.h"
 
-#include <set>
 #include <list>
 
-#if defined(_WIN32)
+#if defined( _WIN32 )
+	#define _2REAL_CALLBACK __cdecl
+	#define _2REAL_MEMBER_CALLBACK __thiscall
+#elif defined( _WIN64 )
 	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall
 #else
@@ -31,149 +33,21 @@
 	#define _2REAL_MEMBER_CALLBACK
 #endif
 
-#include "Poco/Mutex.h"
-
 namespace _2Real
 {
 
 	class BlockError;
-	class OutputData;
 
 	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, BlockError &error );
 	typedef void ( _2REAL_CALLBACK *OutletCallback )( void *userData, OutputData &data );
 	typedef void ( _2REAL_CALLBACK *OutputCallback )( void *userData, std::list< OutputData > data );
-
-	class OutletFunctionCallback
-	{
-
-	public:
-
-		OutletFunctionCallback( OutletCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
-		{
-		}
-
-		bool operator<( OutletFunctionCallback const& src ) const
-		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
-
-		void invoke( OutputData &data )
-		{
-			m_Callback( m_UserData, data );
-		}
-
-	private:
-
-		OutletCallback		m_Callback;
-		void				*m_UserData;
-
-	};
-
-	// what a nice name!
-	struct OutletCbCmp
-	{
-		bool operator()( OutletFunctionCallback *rhs, OutletFunctionCallback *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	class OutputFunctionCallback
-	{
-
-	public:
-
-		OutputFunctionCallback( OutputCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
-		{
-		}
-
-		bool operator<( OutputFunctionCallback const& src ) const
-		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
-
-		void invoke( OutputData &data )
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-			m_OutputData.push_back( data );
-		}
-
-		void complete()
-		{
-			m_Callback( m_UserData, m_OutputData );
-			m_OutputData.clear();
-		}
-
-	private:
-
-		mutable Poco::FastMutex			m_DataAccess;
-		std::list< OutputData >			m_OutputData;
-		OutputCallback					m_Callback;
-		void							*m_UserData;
-
-	};
-
-	// sigh
-	struct OutputCbCmp
-	{
-		bool operator()( OutputFunctionCallback *rhs, OutputFunctionCallback *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	class ExceptionFunctionCallback
-	{
-
-	public:
-
-		ExceptionFunctionCallback( ExceptionCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
-		{
-		}
-
-		bool operator<( ExceptionFunctionCallback const& src ) const
-		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
-
-		void invoke( BlockError &error )
-		{
-			m_Callback( m_UserData, error );
-		}
-
-	private:
-
-		ExceptionCallback	m_Callback;
-		void				*m_UserData;
-
-	};
-
-	// basically, i suck at naming stuff.
-	struct ExcCbCmp
-	{
-		bool operator()( ExceptionFunctionCallback *rhs, ExceptionFunctionCallback *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	// maybe move to other header?
-	typedef std::set< OutputFunctionCallback *, OutputCbCmp >	OutputFunctionCallbacks;
-	typedef std::set< OutletFunctionCallback *, OutletCbCmp >	OutletFunctionCallbacks;
-	typedef std::set< ExceptionFunctionCallback *, ExcCbCmp >	ExceptionFunctionCallbacks;
 
 	class AbstractExceptionCallbackHandler
 	{
 
 	public:
 
-		AbstractExceptionCallbackHandler( void *object ) : m_Object(object) {};
+		AbstractExceptionCallbackHandler( void *object ) : m_Object( object ) {};
 		virtual ~AbstractExceptionCallbackHandler() {};
 		virtual void invoke( BlockError &error ) = 0;
 		bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
@@ -182,15 +56,6 @@ namespace _2Real
 
 		void	*m_Object;
 
-	};
-
-	// .....
-	struct AExcCbCmp
-	{
-		bool operator()( AbstractExceptionCallbackHandler *rhs, AbstractExceptionCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
 	};
 
 	template< typename Callable >
@@ -236,15 +101,6 @@ namespace _2Real
 
 	};
 
-	// at some point, i might redo this :/
-	struct AOutletCbCmp
-	{
-		bool operator()( AbstractOutletCallbackHandler *rhs, AbstractOutletCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
 	template< typename Callable >
 	class OutletCallbackHandler : public AbstractOutletCallbackHandler
 	{
@@ -279,23 +135,13 @@ namespace _2Real
 
 		AbstractOutputCallbackHandler( void *object ) : m_Object( object ) {};
 		virtual ~AbstractOutputCallbackHandler() {} ;
-		virtual void invoke( OutputData &data ) = 0;
+		virtual void invoke( std::list< OutputData > &data ) = 0;
 		bool operator<( AbstractOutputCallbackHandler const& other ) { return m_Object < other.m_Object; }
-		virtual void complete() = 0;
 
 	private:
 
 		void	*m_Object;
 
-	};
-
-	// aaaaaaaaaaaaaaaaaaargh
-	struct AOutputCbCmp
-	{
-		bool operator()( AbstractOutputCallbackHandler *rhs, AbstractOutputCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
 	};
 
 	template< typename Callable >
@@ -313,30 +159,16 @@ namespace _2Real
 		{
 		}
 
-		void invoke( OutputData &data )
+		void invoke( std::list< OutputData > &data )
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-			m_OutputData.push_back( data );
-		}
-
-		void complete()
-		{
-			( m_Callable.*m_Method )( m_OutputData );
-			m_OutputData.clear();
+			( m_Callable.*m_Method )( data );
 		}
 
 	private:
 
-		mutable Poco::FastMutex			m_DataAccess;
-		std::list< OutputData >			m_OutputData;
 		Callable						&m_Callable;
 		Callback						m_Method;
 
 	};
-
-	// maybe move to other header?
-	typedef std::set< AbstractOutputCallbackHandler *, AOutputCbCmp >	OutputCallbackHandlers;
-	typedef std::set< AbstractOutletCallbackHandler *, AOutletCbCmp >	OutletCallbackHandlers;
-	typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
 
 }

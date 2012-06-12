@@ -105,6 +105,8 @@ namespace _2Real
 		OutputFunctionCallbacks		m_OutputFunctionCallbacks;
 		OutputCallbackHandlers		m_OutputCallbackHandlers;
 
+		std::list< OutputData >		m_OutputData;
+
 	};
 
 }

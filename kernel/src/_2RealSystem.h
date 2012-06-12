@@ -19,7 +19,8 @@
 
 #pragma once
 
-#include "_2RealIdentifier.h"
+#include "_2RealBlockIdentifier.h"
+#include "_2RealBundleIdentifier.h"
 #include "_2RealUpdatePolicy.h"
 #include "_2RealEngineData.h"
 #include "_2RealCallbacks.h"

@@ -38,6 +38,8 @@ namespace _2Real
 	class IOutputListener;
 	class ServiceBlock;
 	class BlockData;
+	class BundleIdentifier;
+	class BlockIdentifier;
 
 	class SystemImpl : public UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */ >
 	{

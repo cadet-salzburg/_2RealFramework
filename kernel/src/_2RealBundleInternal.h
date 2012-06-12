@@ -36,6 +36,7 @@ namespace _2Real
 	class BundleData;
 	class BlockData;
 	class ServiceBlock;
+	class BundleIdentifier;
 
 	class BundleInternal : public Entity
 	{

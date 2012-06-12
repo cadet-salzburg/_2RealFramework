@@ -92,6 +92,12 @@ namespace _2Real
 		return m_NewestData.data();
 	}
 
+	OutputData Outlet::getOutputData() const
+	{
+		OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+		return data;
+	}
+
 	void Outlet::createNewDataItem()
 	{
 		if ( !m_DiscardCurrent )
@@ -177,46 +183,6 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
 		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
-	}
-
-	void Outlet::registerCallback( OutputFunctionCallback &callback )
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_CallbackEvent += Poco::delegate( &callback, &OutputFunctionCallback::invoke );
-
-		//if ( m_HasData )
-		//{
-		//	OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
-		//	callback.invoke( data );
-		//}
-	}
-
-	void Outlet::unregisterCallback( OutputFunctionCallback &callback )
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_CallbackEvent -= Poco::delegate(&callback, &OutputFunctionCallback::invoke);
-	}
-
-	void Outlet::registerCallback( AbstractOutputCallbackHandler &handler )
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_CallbackEvent += Poco::delegate(&handler, &AbstractOutputCallbackHandler::invoke);
-
-		//if ( m_HasData )
-		//{
-		//	OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
-		//	handler.invoke( data );
-		//}
-	}
-
-	void Outlet::unregisterCallback( AbstractOutputCallbackHandler &handler )
-	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
-
-		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutputCallbackHandler::invoke);
 	}
 
 	void Outlet::resetLinks()

@@ -29,12 +29,15 @@
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
+    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
+    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
     <ClInclude Include="..\..\src\_2RealBundleLoader.h" />
     <ClInclude Include="..\..\src\_2RealBundleManager.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />
+    <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
     <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
     <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
     <ClInclude Include="..\..\src\_2RealDisabledStates.h" />
@@ -46,7 +49,7 @@
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
-    <ClInclude Include="..\..\src\_2RealIdentifier.h" />
+    <ClInclude Include="..\..\src\_2RealHelpersInternal.h" />
     <ClInclude Include="..\..\src\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealInlet.h" />
     <ClInclude Include="..\..\src\_2RealInletHandle.h" />
@@ -72,7 +75,6 @@
     <ClInclude Include="..\..\src\_2RealServiceStateUpdating.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
-    <ClInclude Include="..\..\src\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\_2RealSyncBlock.h" />
     <ClInclude Include="..\..\src\_2RealSyncBlockStates.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
@@ -97,7 +99,9 @@
     <ClCompile Include="..\..\src\_2RealBlob.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
+    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleData.cpp" />
+    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleLoader.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleManager.cpp" />
@@ -111,7 +115,7 @@
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
-    <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealImageT.cpp" />
     <ClCompile Include="..\..\src\_2RealInlet.cpp" />
     <ClCompile Include="..\..\src\_2RealInletHandle.cpp" />
@@ -135,7 +139,6 @@
     <ClCompile Include="..\..\src\_2RealServiceStateShutDown.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceStateUpdating.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealStringHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlockStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />

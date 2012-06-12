@@ -18,7 +18,8 @@
 
 #pragma once
 
-#include "_2RealIdentifier.h"
+#include "_2RealBlockIdentifier.h"
+#include "_2RealBundleIdentifier.h"
 
 #include <vector>
 #include <map>

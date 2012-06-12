@@ -23,50 +23,16 @@
 namespace _2Real
 {
 
-	class BundleIdentifier
-	{
-
-		friend class BundleInternal;
-
-	public:
-
-		BundleIdentifier();
-		BundleIdentifier( BundleIdentifier const& src );
-		BundleIdentifier& operator=( BundleIdentifier const& src );
-
-		bool isValid() const;
-		bool operator==( BundleIdentifier const& rhs ) const;
-		bool operator!=( BundleIdentifier const& rhs ) const;
-		bool operator<( BundleIdentifier const& rhs ) const;
-		bool operator<=( BundleIdentifier const& rhs ) const;
-		bool operator>( BundleIdentifier const& rhs ) const;
-		bool operator>=( BundleIdentifier const& rhs ) const;
-
-		friend std::ostream& operator<<( std::ostream &out, BundleIdentifier const& id );
-
-		std::string const& getName() const { return m_Name; }
-
-	private:
-
-		BundleIdentifier( std::string const& name, const unsigned int id );
-
-		std::string			m_Name;
-		unsigned int		m_Id;
-
-	};
-
 	class BlockIdentifier
 	{
-
-		friend class AbstractBlock;
 
 	public:
 
 		BlockIdentifier();
 		BlockIdentifier( BlockIdentifier const& src );
 		BlockIdentifier& operator=( BlockIdentifier const& src );
+		BlockIdentifier( std::string const& name, const unsigned int id );
 
-		bool isValid() const;
 		bool operator==( BlockIdentifier const& rhs ) const;
 		bool operator!=( BlockIdentifier const& rhs ) const;
 		bool operator<( BlockIdentifier const& rhs ) const;
@@ -77,8 +43,6 @@ namespace _2Real
 		std::string const& getName() const { return m_Name; }
 
 	private:
-
-		BlockIdentifier( std::string const& name, const unsigned int id );
 
 		std::string			m_Name;
 		unsigned int		m_Id;

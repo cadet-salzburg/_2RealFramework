@@ -21,6 +21,7 @@
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealBlock.h"
+#include "_2RealBundleIdentifier.h"
 
 #include <iostream>
 #include <sstream>

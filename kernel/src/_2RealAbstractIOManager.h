@@ -19,6 +19,7 @@
 #pragma once
 
 #include "_2RealCallbacks.h"
+#include "_2RealCallbacksInternal.h"
 
 #include <map>
 #include <string>

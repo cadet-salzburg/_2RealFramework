@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealIdentifier.h"
+#include "_2RealBundleIdentifier.h"
 #include "_2RealEngineImpl.h"
 
 namespace _2Real
@@ -80,76 +80,6 @@ namespace _2Real
 	bool BundleIdentifier::operator>=( BundleIdentifier const& rhs ) const
 	{
 		return m_Id >= rhs.m_Id;
-	}
-
-	bool BundleIdentifier::isValid() const
-	{
-		return !( m_Id == 0 && m_Name == "invalid" );
-	}
-
-	BlockIdentifier::BlockIdentifier() :
-		m_Name( "invalid" ),
-		m_Id( 0 )
-	{
-	}
-
-	BlockIdentifier::BlockIdentifier( std::string const& name, const unsigned int id ) :
-		m_Name( name ), m_Id( id )
-	{
-	}
-
-	BlockIdentifier::BlockIdentifier( BlockIdentifier const& src ) :
-		m_Name( src.m_Name ), m_Id( src.m_Id )
-	{
-	}
-
-	BlockIdentifier& BlockIdentifier::operator=( BlockIdentifier const& src )
-	{
-		m_Name = src.m_Name;
-		m_Id = src.m_Id;
-		return *this;
-	}
-
-	//std::ostream& operator<<( std::ostream& out, BlockIdentifier const& bundleId )
-	//{
-	//	std::string info = EngineImpl::instance().getInfoString( bundleId );
-	//	out << info;
-	//	return out;
-	//}
-
-	bool BlockIdentifier::operator==( BlockIdentifier const& rhs ) const
-	{
-		return m_Id == rhs.m_Id;
-	}
-
-	bool BlockIdentifier::operator!=( BlockIdentifier const& rhs ) const
-	{
-		return m_Id != rhs.m_Id;
-	}
-
-	bool BlockIdentifier::operator<( BlockIdentifier const& rhs ) const
-	{
-		return m_Id < rhs.m_Id;
-	}
-
-	bool BlockIdentifier::operator<=( BlockIdentifier const& rhs ) const
-	{
-		return m_Id <= rhs.m_Id;
-	}
-
-	bool BlockIdentifier::operator>( BlockIdentifier const& rhs ) const
-	{
-		return m_Id > rhs.m_Id;
-	}
-
-	bool BlockIdentifier::operator>=( BlockIdentifier const& rhs ) const
-	{
-		return m_Id >= rhs.m_Id;
-	}
-
-	bool BlockIdentifier::isValid() const
-	{
-		return !( m_Id == 0 && m_Name == "invalid" );
 	}
 
 }

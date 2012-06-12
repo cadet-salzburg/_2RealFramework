@@ -132,24 +132,6 @@ namespace _2Real
 		return m_Outlets;
 	}
 
-	//void ServiceIO::addParam(ParameterData const& meta)
-	//{
-	//	SetupParameter *param = new SetupParameter(meta);
-	//	m_Params.insert(std::make_pair(param->getName(), param));
-	//}
-
-	//void ServiceIO::addInlet(ParameterData const& meta)
-	//{
-	//	Inlet *inlet = new Inlet(meta, *m_Policy, 50);
-	//	m_Inlets.insert(std::make_pair(inlet->getName(), inlet));
-	//}
-
-	//void ServiceIO::addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp)
-	//{
-	//	Outlet *outlet = new Outlet(meta, timestamp);
-	//	m_Outlets.insert(std::make_pair(outlet->getName(), outlet));
-	//}
-
 	void ServiceIO::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
 		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
@@ -236,11 +218,6 @@ namespace _2Real
 		if ( it == m_OutputFunctionCallbacks.end() )
 		{
 			m_OutputFunctionCallbacks.insert( cb );
-			
-			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
-			{
-				outletIt->second->registerCallback( *cb );
-			}
 		}
 		else
 		{
@@ -255,11 +232,6 @@ namespace _2Real
 		OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.find( cb );
 		if ( it != m_OutputFunctionCallbacks.end() )
 		{
-			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
-			{
-				outletIt->second->unregisterCallback( **it );
-			}
-
 			delete *it;
 			m_OutputFunctionCallbacks.erase(it);
 		}
@@ -273,11 +245,6 @@ namespace _2Real
 		if ( it == m_OutputCallbackHandlers.end() )
 		{
 			m_OutputCallbackHandlers.insert( &handler );
-
-			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
-			{
-				outletIt->second->registerCallback( handler );
-			}
 		}
 		else
 		{
@@ -290,11 +257,6 @@ namespace _2Real
 		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
 		if ( it != m_OutputCallbackHandlers.end() )
 		{
-			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
-			{
-				outletIt->second->registerCallback( **it );
-			}
-
 			delete *it;
 			m_OutputCallbackHandlers.erase(it);
 		}
@@ -439,19 +401,21 @@ namespace _2Real
 
 	void ServiceIO::updateOutlets()
 	{
+		std::list< OutputData > data;
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
 		{
 			it->second->update();
+			data.push_back( it->second->getOutputData() );
 		}
 
 		for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
 		{
-			( *it )->complete();
+			( *it )->invoke( data );
 		}
 
 		for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
 		{
-			( *it )->complete();
+			( *it )->invoke( data );
 		}
 	}
 
