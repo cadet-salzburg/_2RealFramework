@@ -114,46 +114,33 @@ namespace _2Real
 		throw *this;								\
 	}
 
-	//exception in xml file
-	//e.g.: unknown key, plugin name != classname etc
-	DECLARE_EXCEPTION(XMLFormatException, Exception)
-
-	DECLARE_EXCEPTION(InvalidStateChangeException, Exception)
+	DECLARE_EXCEPTION( InvalidStateChangeException, Exception )
 
 	//occurs only during the plugin's getMetatdata function
 	//if any type of parameter (setup, input, output) is declared with
 	//a type not allowed in the framework
-	DECLARE_EXCEPTION(InvalidTypeException, Exception)
+	DECLARE_EXCEPTION( InvalidTypeException, Exception )
 
 	//occurs anytime sth is not found:
 	//in a plugin/service, when trying to access a non-existant parameter
 	//in the application, when trying to create a non-existant service or set a non-existant parameter
-	//etc
-	DECLARE_EXCEPTION(NotFoundException, Exception)
+	DECLARE_EXCEPTION( NotFoundException, Exception )
 
 	//occurs in the plugin anytime something is doubly defined, e.g. a plugin registering a service twice
 	//or metadata declaring a parameter twice
-	DECLARE_EXCEPTION(AlreadyExistsException, Exception)
+	DECLARE_EXCEPTION( AlreadyExistsException, Exception )
 
 	//occurs when there is a mismatch between the declared type of any parameter (according to the metadata)
 	//and the template parameter used (note that all functions involving parameters are function templates)
-	DECLARE_EXCEPTION(TypeMismatchException, Exception)
+	DECLARE_EXCEPTION( TypeMismatchException, Exception )
 
 	//occurs only in the service, when accessing a handle that is not initialized to an actual i/o slot
-	DECLARE_EXCEPTION(UninitializedHandleException, Exception)
+	DECLARE_EXCEPTION( UninitializedHandleException, Exception )
 
-	//something went so very wrong while calling any of an Block's functions
-	//that the service in question is only good for putting it out of its misery. YAY!
-	DECLARE_EXCEPTION(ServiceException, Exception)
+	DECLARE_EXCEPTION( InvalidNameException, Exception );
 
-	//something went so very wrong while calling any of an Bundle's functions
-	//that the plugin in question is only good for putting it out of its misery. MOAR YAY!
-	DECLARE_EXCEPTION(PluginException, Exception)
+	//DECLARE_EXCEPTION(InvalidAccessException, Exception);
 
-	DECLARE_EXCEPTION(InvalidNameException, Exception);
-
-	DECLARE_EXCEPTION(InvalidAccessException, Exception);
-
-	DECLARE_EXCEPTION(TimeOutException, Exception);
+	DECLARE_EXCEPTION( TimeOutException, Exception );
 
 }

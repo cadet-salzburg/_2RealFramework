@@ -45,7 +45,31 @@ namespace _2Real
 		const BlockIdentifier
 		createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers = UpdatePolicy() );
 
+		// will stop the block, if started
+		// will call setup
+		// block will then be in need of start() or update()
 		void setup( BlockIdentifier const& block );
+
+		// will stop the block, if started
+		// will cause block to update with @policy
+		// will throw an exception if block was not set succesfully
+		//void start( BlockIdentifier const& block, UpdatePolicy const& policy = UpdatePolicy() );
+
+		// stops the block
+		// block will then be in need of either start() or an update()
+		//void stop( BlockIdentifier const& block );
+
+		// stops the block, but does keep the policy?
+		//void pause( BlockIdentifier const& block );
+
+		// exactely what it says on the tin.
+		//void unpause( BlockIdentifier const& block );
+
+		// will stop the block, if started
+		// will then carry out the desired number of updated, with @policy
+		// block will then be stopped
+		//void update( const unsigned int count = 1, UpdatePolicy const& policy = UpdatePolicy() );
+
 		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 
 		template< typename Datatype >

@@ -71,17 +71,14 @@ namespace _2Real
 		throw *this;
 	}
 
-	IMPLEMENT_EXCEPTION(XMLFormatException, Exception, "xml format exception")
-	IMPLEMENT_EXCEPTION(InvalidStateChangeException, Exception, "invalid state change exception")
-	IMPLEMENT_EXCEPTION(InvalidTypeException, Exception, "invalid type exception")
-	IMPLEMENT_EXCEPTION(NotFoundException, Exception, "not found exception")
-	IMPLEMENT_EXCEPTION(AlreadyExistsException, Exception, "already exists exception")
-	IMPLEMENT_EXCEPTION(TypeMismatchException, Exception, "type mismatch exception")
-	IMPLEMENT_EXCEPTION(UninitializedHandleException, Exception, "uninitialized handle exception")
-	IMPLEMENT_EXCEPTION(PluginException, Exception, "plugin exception")
-	IMPLEMENT_EXCEPTION(ServiceException, Exception, "service exception")
-	IMPLEMENT_EXCEPTION(InvalidNameException, Exception, "invalid name exception")
-	IMPLEMENT_EXCEPTION(InvalidAccessException, Exception, "invalid access exception")
-	IMPLEMENT_EXCEPTION(TimeOutException, Exception, "time out exception")
+	IMPLEMENT_EXCEPTION( InvalidStateChangeException, Exception, "invalid state change exception" )
+	IMPLEMENT_EXCEPTION( InvalidTypeException, Exception, "invalid type exception" )
+	IMPLEMENT_EXCEPTION( NotFoundException, Exception, "not found exception" )
+	IMPLEMENT_EXCEPTION( AlreadyExistsException, Exception, "already exists exception" )
+	IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
+	IMPLEMENT_EXCEPTION( UninitializedHandleException, Exception, "uninitialized handle exception" )
+	IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
+	//IMPLEMENT_EXCEPTION(InvalidAccessException, Exception, "invalid access exception")
+	IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
 
 }
