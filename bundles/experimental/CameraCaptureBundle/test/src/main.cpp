@@ -34,16 +34,28 @@ using Poco::ScopedLock;
 #endif
 
 
-
-void newCameraData(void *userdata, Data &data)
+class Receiver : public QObject
 {
-}
+//Q_OBJECT
+
+public:
+	void receiveData(Data &data)
+	{
+		printf("received\n");
+		//emit newDataOnCameraImageOutlet();
+	}
+
+private:
+
+//signals:
+	//void newDataOnCameraImageOutlet();
+};
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 	CameraCaptureTest w;
-
+	Receiver dataObj;
 	string directory = "../experimental/bin/win/";
 
 	Engine &testEngine = Engine::instance();
@@ -63,7 +75,7 @@ int main(int argc, char *argv[])
 		// set needed setup parameters for block otherwise set to default
 		
 		// setup callbacks
-		testSystem.registerToNewData( cameraCaptureBlock, "inputmidi", newCameraData );
+		testSystem.registerToNewData( cameraCaptureBlock, "context number", dataObj, &Receiver::receiveData );
 
 		//start 
 		testSystem.setup(cameraCaptureBlock);

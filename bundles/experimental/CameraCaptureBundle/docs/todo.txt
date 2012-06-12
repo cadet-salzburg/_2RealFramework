@@ -1,9 +1,12 @@
-update rate context ?
+* update rate context ?
 	kann man die setzen?
 
 
-kernel 
+* kernel 
 	ein hauptinclude file und ein include directory
 
-verändern der update rate zur laufzeit ?
+* verändern der update rate zur laufzeit ?
 
+* get all outlets with one callback and onec structure which holds values and according types, names of the outlet and allows to iterate through it...
+
+* registertonewdata keine exception wenn man auf output hören will den es nicht gibt

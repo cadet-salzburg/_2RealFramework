@@ -1,7 +1,8 @@
 #ifndef CAMERACAPTURETEST_H
 #define CAMERACAPTURETEST_H
 
-#include <QtGui/QMainWindow>
+#include <QtGui>
+
 
 class CameraCaptureTest : public QMainWindow
 {
@@ -12,8 +13,12 @@ public:
 	~CameraCaptureTest();
 
 
-
 private:
+	QWidget			m_ButtonGroup;
+	QHBoxLayout		m_ButtonLayout;
+	QPushButton*	m_pStartButton;
+	QPushButton*	m_pStopButton;
+	
 };
 
 #endif // CAMERACAPTURETEST_H
