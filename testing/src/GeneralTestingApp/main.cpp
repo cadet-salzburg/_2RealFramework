@@ -17,16 +17,7 @@
 	limitations under the License.
 */
 
-#include "_2RealEngine.h"
-#include "_2RealSystem.h"
-#include "_2RealIdentifier.h"
-#include "_2RealException.h"
-#include "_2RealBlockError.h"
-#include "_2RealOutputData.h"
-#include "_2RealBundleData.h"
-#include "_2RealBlockData.h"
-#include "_2RealParameterData.h"
-#include "_2RealUpdatePolicy.h"
+#include "_2RealApplication.h"
 
 #include "Poco/Mutex.h"
 
@@ -176,8 +167,8 @@ int main( int argc, char *argv[] )
 
 		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
 		testSystem.link( doubler, "doubler outlet", print, "printout inlet" );
-		//testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
-		//testSystem.registerToException( *obj, &Receiver< unsigned int >::receiveError );
+		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+		testSystem.registerToException( *obj, &Receiver< unsigned int >::receiveError );
 		testSystem.registerToNewData( doubler, *b, &BlockReceiver::receiveData );
 	}
 	catch ( Exception &e )

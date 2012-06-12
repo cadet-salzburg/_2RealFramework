@@ -29,10 +29,10 @@ namespace _2Real
 	public:
 
 		OutputData();
-		OutputData( EngineData const& data, std::string const& keyword, std::string const& name );
+		OutputData( EngineData const& data, std::string const& type, std::string const& name );
 
-		const std::string getTypename() const;
-		std::string const& getKeyword() const;
+		const std::string getLongTypename() const;
+		std::string const& getTypename() const;
 		std::string const& getName() const;
 		const std::string getDataAsString() const;
 
@@ -47,7 +47,7 @@ namespace _2Real
 
 		std::string				m_Name;
 		EngineData				m_Data;
-		std::string				m_Keyword;
+		std::string				m_Typename;
 
 	};
 

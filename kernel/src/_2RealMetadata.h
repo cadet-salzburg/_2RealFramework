@@ -90,7 +90,6 @@ namespace _2Real
 
 		Singleton() : m_Obj( nullptr )
 		{
-			std::cout << "hello" << std::endl;
 		}
 
 		~Singleton()

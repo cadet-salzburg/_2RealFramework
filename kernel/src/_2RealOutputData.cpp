@@ -24,16 +24,16 @@
 namespace _2Real
 {
 
-	OutputData::OutputData() : m_Data(), m_Keyword() {}
+	OutputData::OutputData() : m_Data(), m_Typename() {}
 
-	OutputData::OutputData( EngineData const& data, std::string const& keyword, std::string const& name ) :
+	OutputData::OutputData( EngineData const& data, std::string const& type, std::string const& name ) :
 		m_Data( data ),
-		m_Keyword( keyword ),
+		m_Typename( type ),
 		m_Name( name )
 	{
 	}
 
-	const std::string OutputData::getTypename() const
+	const std::string OutputData::getLongTypename() const
 	{
 		return m_Data.getTypeinfo().name();
 	}
@@ -43,9 +43,9 @@ namespace _2Real
 		return m_Name;
 	}
 
-	std::string const& OutputData::getKeyword() const
+	std::string const& OutputData::getTypename() const
 	{
-		return m_Keyword;
+		return m_Typename;
 	}
 
 	const std::string OutputData::getDataAsString() const

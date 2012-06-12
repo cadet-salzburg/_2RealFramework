@@ -17,11 +17,7 @@
 	limitations under the License.
 */
 
-#include "_2RealEngine.h"
-#include "_2RealSystem.h"
-#include "_2RealIdentifier.h"
-#include "_2RealException.h"
-#include "_2RealUpdatePolicy.h"
+#include "_2RealApplication.h"
 
 #include <windows.h>
 #include <iostream>

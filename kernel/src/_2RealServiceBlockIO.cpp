@@ -408,14 +408,17 @@ namespace _2Real
 			data.push_back( it->second->getOutputData() );
 		}
 
-		for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+		if ( data.size() > 0 )
 		{
-			( *it )->invoke( data );
-		}
+			for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+			{
+				( *it )->invoke( data );
+			}
 
-		for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
-		{
-			( *it )->invoke( data );
+			for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
+			{
+				( *it )->invoke( data );
+			}
 		}
 	}
 
