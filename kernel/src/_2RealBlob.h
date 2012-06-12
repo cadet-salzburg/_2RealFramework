@@ -9,7 +9,7 @@ namespace _2Real
 
 	DECLARE_EXCEPTION(BlobException, Exception);
 
-	template< typename DataType >
+	template< typename Datatype >
 	class Blob
 	{
 
@@ -19,7 +19,7 @@ namespace _2Real
 		Blob(Blob const& src);
 		Blob& operator=(Blob const& src);
 
-		void assign(DataType* data, unsigned int size);
+		void assign(Datatype* data, unsigned int size);
 
 		template< typename T >
 		friend std::ostream& operator<<(std::ostream& out, typename Blob< T > const& blob);
@@ -29,34 +29,34 @@ namespace _2Real
 
 		const unsigned int size() const;
 
-		DataType const *const data() const;
-		const DataType operator[](unsigned int index) const;
+		Datatype const *const data() const;
+		const Datatype operator[](unsigned int index) const;
 
 	private:
 
-		void copydata(DataType const*data, unsigned int size);
+		void copydata(Datatype const*data, unsigned int size);
 
-		DataType						const* m_Data;
+		Datatype						const* m_Data;
 		unsigned int					m_Size;
 	};
 
-	template< typename DataType >
-	Blob< DataType >::Blob() :
+	template< typename Datatype >
+	Blob< Datatype >::Blob() :
 		m_Size(0),
-		m_Data(NULL)
+		m_Data(nullptr)
 	{
 	}
 
-	template< typename DataType >
-	Blob< DataType >::Blob(Blob< DataType > const& src) :
+	template< typename Datatype >
+	Blob< Datatype >::Blob(Blob< Datatype > const& src) :
 		m_Size(0),
-		m_Data(NULL)
+		m_Data(nullptr)
 	{
 		copydata(src.m_Data, src.m_Size);
 	}
 
-	template< typename DataType >
-	Blob< DataType >& Blob< DataType >::operator=(Blob< DataType > const& src)
+	template< typename Datatype >
+	Blob< Datatype >& Blob< Datatype >::operator=(Blob< Datatype > const& src)
 	{
 		if (this == &src)
 		{
@@ -68,8 +68,8 @@ namespace _2Real
 		return *this;
 	}
 
-	template< typename DataType >
-	void Blob< DataType >::assign(DataType* data, unsigned int size)
+	template< typename Datatype >
+	void Blob< Datatype >::assign(Datatype* data, unsigned int size)
 	{
 		m_Size = size;
 		m_Data = data;
@@ -89,20 +89,20 @@ namespace _2Real
 		return in;
 	}
 
-	template< typename DataType >
-	const unsigned int Blob< DataType >::size() const
+	template< typename Datatype >
+	const unsigned int Blob< Datatype >::size() const
 	{
 		return m_Size;
 	}
 	
-	template< typename DataType >
-	DataType const *const Blob< DataType >::data() const
+	template< typename Datatype >
+	Datatype const *const Blob< Datatype >::data() const
 	{
 		return m_Data;
 	}
 
-	template< typename DataType >
-	const DataType Blob< DataType >::operator[](unsigned int index) const
+	template< typename Datatype >
+	const Datatype Blob< Datatype >::operator[](unsigned int index) const
 	{
 		if (index >= m_Size)
 		{
@@ -114,23 +114,23 @@ namespace _2Real
 		return m_Data[index];
 	}
 
-	template< typename DataType >
-	void Blob< DataType >::copydata(DataType const*data, unsigned int size)
+	template< typename Datatype >
+	void Blob< Datatype >::copydata(Datatype const*data, unsigned int size)
 	{
 		m_Size = size;
 		delete[] m_Data;
-		m_Data = NULL;
+		m_Data = nullptr;
 		if (m_Size > 0)
 		{
-			m_Data = new DataType[m_Size];
-			if (m_Data == NULL)
+			m_Data = new Datatype[m_Size];
+			if (m_Data == nullptr)
 			{
 				std::stringstream txt;
 				txt << "memory allocation for " << m_Size << " bytes failed!";
 				m_Size = 0;
 				throw BlobException(txt.str());
 			}
-			m_Data = (DataType const*)memcpy((void*)m_Data, data, m_Size);
+			m_Data = (Datatype const*)memcpy((void*)m_Data, data, m_Size);
 		}
 	}
 }

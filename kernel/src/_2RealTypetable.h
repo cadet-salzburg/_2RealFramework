@@ -42,7 +42,7 @@ namespace _2Real
 		Typetable(EngineImpl const& EngineImpl);
 		~Typetable();
 
-		template< typename DataType >
+		template< typename Datatype >
 		void				registerType(std::string const& keyword);
 
 		const std::string	lookupKey(std::string const& type) const;
@@ -59,7 +59,7 @@ namespace _2Real
 
 	};
 
-	template< typename DataType >
+	template< typename Datatype >
 	void Typetable::registerType(std::string const& keyword)
 	{
 		EngineDataTable::iterator it = m_Typetable.find(keyword);
@@ -74,17 +74,17 @@ namespace _2Real
 		std::string keyword1 = std::string("vector " + keyword);
 		std::string keyword2 = std::string("list " + keyword);
 
-		EngineData data(new DataType());
-		EngineData data1(new std::vector< DataType >());
-		EngineData data2(new std::list< DataType >());
+		EngineData data(new Datatype());
+		EngineData data1(new std::vector< Datatype >());
+		EngineData data2(new std::list< Datatype >());
 
 		m_Typetable[keyword] = data;
 		m_Typetable[keyword1] = data1;
 		m_Typetable[keyword2] = data2;
 
-		std::string type = typeid(DataType).name();
-		std::string type1 = data1.typeinfo().name();
-		std::string type2 = data2.typeinfo().name();
+		std::string type = typeid(Datatype).name();
+		std::string type1 = data1.getTypeinfo().name();
+		std::string type2 = data2.getTypeinfo().name();
 
 		m_LookupTable[type] = keyword;
 		m_LookupTable[type1] = keyword1;

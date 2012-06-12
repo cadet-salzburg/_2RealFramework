@@ -44,9 +44,6 @@ namespace _2Real
 		const BlockIdentifier
 		createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers = UpdatePolicy() );
 
-		//const Identifier
-		//createSynchronization(std::list< Identifier > const& blockIds);
-
 		void setup( BlockIdentifier const& block );
 		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 
@@ -67,14 +64,12 @@ namespace _2Real
 		template< typename Datatype >
 		Datatype const& getValue( BlockIdentifier const& block, std::string const& paramName ) const
 		{
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >( getValueInternal( block, paramName ) );
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( getValueInternal( block, paramName ) );
 			return *ptr.get();
 		}
 
-		//void unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName);
-
-		void registerToException( ExceptionCallback callback, void *userData = NULL );
-		void unregisterFromException( ExceptionCallback callback, void *userData = NULL );
+		void registerToException( ExceptionCallback callback, void *userData = nullptr );
+		void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
 
 		template< typename Callable >
 		void registerToException( Callable &callable, void ( Callable::*callback )( BlockError& ) )
@@ -90,21 +85,38 @@ namespace _2Real
 			unregisterFromExceptionInternal( *handler );
 		}
 
-		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
-		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, DataCallback callback, void *userData = NULL );
+		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
+		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
 
 		template< typename Callable >
-		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( Data& ) )
+		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
 		{
-			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
+			AbstractOutletCallbackHandler *handler = new OutletCallbackHandler< Callable >( callable, callback );
 			registerToNewDataInternal( block, outlet, *handler );
 		}
 
 		template< typename Callable >
-		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( Data& ) )
+		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
 		{
-			AbstractDataCallbackHandler *handler = new DataCallbackHandler< Callable >( callable, callback );
+			AbstractOutletCallbackHandler *handler = new OutletCallbackHandler< Callable >( callable, callback );
 			unregisterFromNewDataInternal( block, outlet, *handler );
+		}
+
+		void registerToNewData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
+		void unregisterFromNewData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
+
+		template< typename Callable >
+		void registerToNewData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
+		{
+			AbstractOutputCallbackHandler *handler = new OutputCallbackHandler< Callable >( callable, callback );
+			registerToNewDataInternal( block, *handler );
+		}
+
+		template< typename Callable >
+		void unregisterFromNewData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
+		{
+			AbstractOutputCallbackHandler *handler = new OutputCallbackHandler< Callable >( callable, callback );
+			unregisterFromNewDataInternal( block, *handler );
 		}
 
 	private:
@@ -115,8 +127,10 @@ namespace _2Real
 		void				setValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
 		void				insertValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
 		const EngineData	getValueInternal( BlockIdentifier const& id, std::string const& name ) const;
-		void				registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
-		void				unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler );
+		void				registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler );
+		void				unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler );
+		void				registerToNewDataInternal( BlockIdentifier const& service, AbstractOutputCallbackHandler &handler );
+		void				unregisterFromNewDataInternal( BlockIdentifier const& service, AbstractOutputCallbackHandler &handler );
 		void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
 		void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
 

@@ -40,7 +40,7 @@ namespace _2Real
 		m_BundleLoader(),
 		m_BundleInstances(),
 		m_BaseDirectory( Path() ),
-		m_BundleContexts( NULL ),
+		m_BundleContexts( nullptr ),
 		m_BundleNames()
 	{
 	}
@@ -94,7 +94,7 @@ namespace _2Real
 	
 	const BundleIdentifier BundleManager::loadLibrary( Path const& path )
 	{
-		if ( m_BundleContexts == NULL )
+		if ( m_BundleContexts == nullptr )
 		{
 			m_BundleContexts = new SystemImpl( "context manager" );
 		}

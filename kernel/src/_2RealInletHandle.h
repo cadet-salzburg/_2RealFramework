@@ -19,16 +19,12 @@
 #pragma once
 
 #include "_2RealParameterHandle.h"
-
-#include "Poco/SharedPtr.h"
-
-#include <sstream>
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {
 
 	class Inlet;
-	class EngineData;
 
 	class InletHandle : public ParameterHandle
 	{
@@ -36,9 +32,9 @@ namespace _2Real
 	public:
 
 		InletHandle();
-		InletHandle(Inlet &slot);
-		InletHandle(InletHandle const& src);
-		InletHandle& operator=(InletHandle const& src);
+		InletHandle( Inlet &slot );
+		InletHandle( InletHandle const& src );
+		InletHandle& operator=( InletHandle const& src );
 
 		template< typename Datatype >
 		Datatype const& data()
@@ -50,7 +46,7 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(current());
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( current() );
 			return *ptr.get();
 		}
 
@@ -59,8 +55,8 @@ namespace _2Real
 		*	returns a const ref to the actual input data; no copying necessary.
 		*	of course, one can only read this.
 		*/
-		template< typename DataType >
-		DataType const& getReadableRef()
+		template< typename Datatype >
+		Datatype const& getReadableRef()
 		{
 			if (!m_Input)
 			{
@@ -69,7 +65,7 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< DataType > ptr = Extract< DataType >(current());
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(current());
 			return *ptr.get();
 		}
 
@@ -77,8 +73,8 @@ namespace _2Real
 		*	returns a shared pointer to a copy of the data. this can be written
 		*	as well as read, but it makes a copy a copy
 		*/
-		template< typename DataType >
-		Poco::SharedPtr< DataType > getWriteableCopy()
+		template< typename Datatype >
+		std::shared_ptr< Datatype > getWriteableCopy()
 		{
 			if (!m_Input)
 			{
@@ -87,8 +83,8 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(current());
-			return Poco::SharedPtr< DataType >(new DataType(*ptr.get()));
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(current());
+			return std::shared_ptr< Datatype >(new Datatype(*ptr.get()));
 		}
 
 	private:

@@ -48,7 +48,7 @@ namespace _2Real
 
 	template< typename T >
 	SingletonHolder< T >::SingletonHolder() :
-		m_Held(NULL)
+		m_Held(nullptr)
 	{
 	}
 

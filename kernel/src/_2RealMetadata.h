@@ -19,7 +19,7 @@
 #pragma once
 
 #include "_2RealEngineData.h"
-#include "_2RealSingletonHolder.h"
+//#include "_2RealSingletonHolder.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealBlock.h"
@@ -46,7 +46,7 @@ namespace _2Real
 		{
 		}
 
-		virtual Block & create() const = 0;
+		virtual Block & create() = 0;
 
 	};
 
@@ -60,7 +60,7 @@ namespace _2Real
 		{
 		}
 
-		virtual Block & create() const = 0;
+		virtual Block & create() = 0;
 
 	};
 
@@ -74,31 +74,48 @@ namespace _2Real
 		{
 		}
 
-		Block & create() const
+		Block & create()
 		{
 			return *( new BlockDerived() );
 		}
 
 	};
 
+	// this class currently needs not to be threadsafe
 	template< typename BlockDerived >
 	class Singleton : public CreationPolicy< BlockDerived >
 	{
 
 	public:
 
-		~Singleton()
+		Singleton() : m_Obj( nullptr )
 		{
+			std::cout << "hello" << std::endl;
 		}
 
-		Block & create() const
+		~Singleton()
 		{
-			return m_Holder.instance();
+			if ( m_Obj != nullptr )
+			{
+				delete m_Obj;
+			}
+		}
+
+		Block & create()
+		{
+			//return m_Holder.instance();
+			if ( m_Obj == nullptr )
+			{
+				m_Obj = new BlockDerived();
+			}
+
+			return *m_Obj;
 		}
 
 	private:
 
-		mutable SingletonHolder< BlockDerived >	m_Holder;
+		//mutable SingletonHolder< BlockDerived >	m_Holder;
+		BlockDerived			*m_Obj;
 
 	};
 
@@ -112,7 +129,7 @@ namespace _2Real
 		{
 		}
 
-		Block & create() const
+		Block & create()
 		{
 			return m_Policy.create();
 		}
@@ -137,22 +154,22 @@ namespace _2Real
 		BlockMetainfo( BlockMetainfo const& src );
 		~BlockMetainfo();
 
-		template< typename DataType >
-		void addParameter( std::string const& paramName, DataType defaultValue )
+		template< typename Datatype >
+		void addParameter( std::string const& paramName, Datatype defaultValue )
 		{
 			EngineData data( defaultValue );
 			addParameterInternal( setupName, data );
 		}
 
-		template< typename DataType >
-		void addInlet( std::string const& inletName, DataType defaultValue )
+		template< typename Datatype >
+		void addInlet( std::string const& inletName, Datatype defaultValue )
 		{
 			EngineData data( defaultValue );
 			addInletInternal( inletName, data );
 		}
 
-		template< typename DataType >
-		void addOutlet( std::string const& outletName, DataType defaultValue )
+		template< typename Datatype >
+		void addOutlet( std::string const& outletName, Datatype defaultValue )
 		{
 			EngineData data( defaultValue );
 			addOutletInternal( outletName, defaultValue );
@@ -186,8 +203,8 @@ namespace _2Real
 			setBundleContextInternal( *obj );
 		}
 
-		template< typename DataType >
-		void addContextParameter( std::string const& paramName, DataType defaultValue )
+		template< typename Datatype >
+		void addContextParameter( std::string const& paramName, Datatype defaultValue )
 		{
 			EngineData data(defaultValue);
 			addContextParameterInternal( paramName, data );
@@ -247,7 +264,7 @@ namespace _2Real
 
 		struct BlockInfo
 		{
-			BlockInfo() : ctor( NULL ), data( NULL ) {}
+			BlockInfo() : ctor( nullptr ), data( nullptr ) {}
 			BlockInfo( BlockInfo const& src ) : ctor( src.ctor ), data( src.data ) {}
 			AbstractBlockCreator	*ctor;
 			BlockData				*data;

@@ -26,8 +26,8 @@ namespace _2Real
 
 	UpdatePolicyImpl::UpdatePolicyImpl() :
 		m_Time( -1 ),
-		m_InletDefault( NULL ),
-		m_BlockDefault( NULL )
+		m_InletDefault( nullptr ),
+		m_BlockDefault( nullptr )
 	{
 	}
 
@@ -50,16 +50,16 @@ namespace _2Real
 			it = m_Blocks.erase(it);
 		}
 
-		if ( m_InletDefault != NULL )
+		if ( m_InletDefault != nullptr )
 		{
 			delete m_InletDefault;
-			m_InletDefault = NULL;
+			m_InletDefault = nullptr;
 		}
 
-		if ( m_BlockDefault != NULL )
+		if ( m_BlockDefault != nullptr )
 		{
 			delete m_BlockDefault;
-			m_BlockDefault = NULL;
+			m_BlockDefault = nullptr;
 		}
 
 		m_Time = -1;
@@ -67,7 +67,7 @@ namespace _2Real
 
 	void UpdatePolicyImpl::setInletDefault( AbstractInletDefault *inletDefault )
 	{
-		if ( m_InletDefault != NULL )
+		if ( m_InletDefault != nullptr )
 		{
 			delete m_InletDefault;
 		}
@@ -77,7 +77,7 @@ namespace _2Real
 
 	void UpdatePolicyImpl::setBlockDefault( AbstractBlockDefault *blockDefault )
 	{
-		if ( m_BlockDefault != NULL )
+		if ( m_BlockDefault != nullptr )
 		{
 			delete m_BlockDefault;
 		}
@@ -126,7 +126,7 @@ namespace _2Real
 
 	bool UpdatePolicyImpl::hasTriggerForInlet( std::string const& inletName ) const
 	{
-		return ( ( m_Inlets.find( inletName ) != m_Inlets.end() ) || m_InletDefault != NULL );
+		return ( ( m_Inlets.find( inletName ) != m_Inlets.end() ) || m_InletDefault != nullptr );
 	}
 
 	AbstractInletBasedTrigger * UpdatePolicyImpl::getTriggerForInlet( std::string const& inletName ) const
@@ -136,13 +136,13 @@ namespace _2Real
 		{
 			return it->second->createTrigger(inletName);
 		}
-		else if ( m_InletDefault != NULL )
+		else if ( m_InletDefault != nullptr )
 		{
 			return m_InletDefault->createTrigger(inletName);
 		}
 		else
 		{
-			return NULL;
+			return nullptr;
 		}
 	}
 

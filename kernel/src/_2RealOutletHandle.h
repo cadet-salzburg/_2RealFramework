@@ -19,12 +19,12 @@
 #pragma once
 
 #include "_2RealParameterHandle.h"
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {
 
 	class Outlet;
-	class EngineData;
 
 	class OutletHandle : public ParameterHandle
 	{
@@ -32,9 +32,9 @@ namespace _2Real
 	public:
 
 		OutletHandle();
-		OutletHandle(Outlet &slot);
-		OutletHandle(OutletHandle const& src);
-		OutletHandle& operator=(OutletHandle const& src);
+		OutletHandle( Outlet &slot );
+		OutletHandle( OutletHandle const& src );
+		OutletHandle& operator=( OutletHandle const& src );
 
 		/**
 		*	this returns a reference to the outlets' current data item
@@ -53,7 +53,7 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			Poco::SharedPtr< Datatype > ptr = Extract< Datatype >(data());
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(data());
 			return *ptr.get();
 		}
 
@@ -85,7 +85,7 @@ namespace _2Real
 	private:
 
 		EngineData			data();
-		Outlet			*m_Output;
+		Outlet				*m_Output;
 
 	};
 

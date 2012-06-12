@@ -16,52 +16,36 @@
 	limitations under the License.
 */
 
-#include "_2RealOutletHandle.h"
-#include "_2RealOutlet.h"
+#pragma once
+
 #include "_2RealEngineData.h"
 
 namespace _2Real
 {
 
-	OutletHandle::OutletHandle() :
-		ParameterHandle(""),
-		m_Output(nullptr)
+	class TimestampedData
 	{
-	}
 
-	OutletHandle::OutletHandle(Outlet &slot) :
-		ParameterHandle(slot.getName()),
-		m_Output(&slot)
-	{
-	}
+	public:
 
-	OutletHandle::OutletHandle(OutletHandle const& src) :
-		ParameterHandle(src),
-		m_Output(src.m_Output)
-	{
-	}
+		TimestampedData() ;
+		TimestampedData( EngineData const& data, long timestamp );
 
-	OutletHandle& OutletHandle::operator=(OutletHandle const& src)
-	{
-		ParameterHandle::operator=(src);
-		m_Output = src.m_Output;
+		template< typename Datatype >
+		Datatype const& getData() const
+		{
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
+			return *ptr.get();
+		}
 
-		return *this;
-	}
+		long getTimestamp() const;
+		EngineData const& data() const;
 
-	EngineData OutletHandle::data()
-	{
-		return m_Output->getDataForWriting();
-	}
+	private:
 
-	void OutletHandle::discard()
-	{
-		m_Output->discardCurrent();
-	}
+		EngineData				m_Data;
+		long					m_Timestamp;
 
-	void OutletHandle::otherDataItem()
-	{
-		m_Output->createNewDataItem();
-	}
+	};
 
 }

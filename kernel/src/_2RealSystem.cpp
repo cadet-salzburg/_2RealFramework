@@ -47,11 +47,6 @@ namespace _2Real
 		return m_Impl->createServiceBlock( bundle, blockName, triggers );
 	}
 
-	//const Identifier System::createSynchronization(std::list< Identifier > const& blockIds)
-	//{
-	//	return m_Impl->createSyncBlock(blockIds);
-	//}
-
 	void System::setup( BlockIdentifier const& block )
 	{
 		m_Impl->setUp( block );
@@ -77,11 +72,6 @@ namespace _2Real
 		m_Impl->link( inService, inName, outService, outName );
 	}
 
-	//void System::unlinkSlots(Identifier const& outService, std::string const& outName, Identifier const& inService, std::string const& inName)
-	//{
-	//	//m_EngineImpl.unlinkSlots(inService, inName, outService, outName, m_Id);
-	//}
-
 	void System::registerToException( ExceptionCallback callback, void *userData )
 	{
 		m_Impl->registerToException( callback, userData );
@@ -102,24 +92,44 @@ namespace _2Real
 		m_Impl->unregisterFromException( handler );
 	}
 
-	void System::registerToNewData( BlockIdentifier const& service, std::string const& outletName, DataCallback callback, void *userData )
+	void System::registerToNewData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
 	{
 		m_Impl->registerToNewData( service, outletName, callback, userData );
 	}
 
-	void System::unregisterFromNewData( BlockIdentifier const& service, std::string const& outletName, DataCallback callback, void *userData )
+	void System::unregisterFromNewData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
 	{
 		m_Impl->unregisterFromNewData( service, outletName, callback, userData );
 	}
 
-	void System::registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
+	void System::registerToNewData( BlockIdentifier const& service, OutputCallback callback, void *userData )
+	{
+		m_Impl->registerToNewData( service, callback, userData );
+	}
+
+	void System::unregisterFromNewData( BlockIdentifier const& service, OutputCallback callback, void *userData )
+	{
+		m_Impl->unregisterFromNewData( service, callback, userData );
+	}
+
+	void System::registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler )
 	{
 		m_Impl->registerToNewData( service, outletName, handler );
 	}
 
-	void System::unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractDataCallbackHandler &handler )
+	void System::unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler )
 	{
 		m_Impl->unregisterFromNewData( service, outletName, handler );
+	}
+
+	void System::registerToNewDataInternal( BlockIdentifier const& service, AbstractOutputCallbackHandler &handler )
+	{
+		m_Impl->registerToNewData( service, handler );
+	}
+
+	void System::unregisterFromNewDataInternal( BlockIdentifier const& service, AbstractOutputCallbackHandler &handler )
+	{
+		m_Impl->unregisterFromNewData( service, handler );
 	}
 
 }

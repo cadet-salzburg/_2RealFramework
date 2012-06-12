@@ -82,7 +82,7 @@ namespace _2Real
 	{
 		if ( isLibraryLoaded( path ) )
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		typedef void ( *MetainfoFunc )( BundleMetainfo &info );

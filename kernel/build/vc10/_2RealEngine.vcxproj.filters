@@ -12,7 +12,6 @@
     <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
     <ClInclude Include="..\..\src\_2RealBundleManager.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />
-    <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
     <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
     <ClInclude Include="..\..\src\_2RealDisabledStates.h" />
@@ -68,6 +67,9 @@
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
+    <ClInclude Include="..\..\src\_2RealStringHelpers.h" />
+    <ClInclude Include="..\..\src\_2RealOutputData.h" />
+    <ClInclude Include="..\..\src\_2RealTimestampedData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
@@ -85,7 +87,6 @@
     <ClCompile Include="..\..\src\_2RealEntity.cpp" />
     <ClCompile Include="..\..\src\_2RealEnum.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealImageT.cpp" />
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
@@ -123,5 +124,9 @@
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
+    <ClCompile Include="..\..\src\_2RealStringHelpers.cpp" />
+    <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
+    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
   </ItemGroup>
 </Project>

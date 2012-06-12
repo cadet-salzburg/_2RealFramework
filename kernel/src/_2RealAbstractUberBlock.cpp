@@ -48,7 +48,7 @@ namespace _2Real
 
 	AbstractBlock & AbstractBlock::getSuperBlock()
 	{
-		if (m_SuperBlock == NULL)
+		if (m_SuperBlock == nullptr)
 		{
 			return *this;
 		}
@@ -58,7 +58,7 @@ namespace _2Real
 
 	AbstractBlock const& AbstractBlock::getSuperBlock() const
 	{
-		if (m_SuperBlock == NULL)
+		if (m_SuperBlock == nullptr)
 		{
 			return *this;
 		}

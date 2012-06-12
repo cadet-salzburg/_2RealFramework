@@ -18,9 +18,8 @@
 
 #pragma once
 
+#include <memory>
 #include <iostream>
-
-#include "Poco/SharedPtr.h"
 
 namespace _2Real
 {
@@ -29,64 +28,58 @@ namespace _2Real
 	
 	public:
 	
-		virtual ~AbstractDataHolder();
-		virtual std::type_info const& typeinfo() const = 0;
+		virtual ~AbstractDataHolder() {}
+		virtual std::type_info const& getTypeinfo() const = 0;
 		virtual AbstractDataHolder* clone() const = 0;
 		virtual AbstractDataHolder* create() const = 0;
-		//virtual const std::string toString() const = 0;
-		virtual void writeTo(std::ostream &out) const = 0;
-		virtual void readFrom(std::istream &in) = 0;
+		virtual void writeTo( std::ostream &out ) const = 0;
+		virtual void readFrom( std::istream &in ) = 0;
 
 	};
 
-	inline AbstractDataHolder::~AbstractDataHolder()
-	{
-	}
-
-	template< typename DataType >
+	template< typename Datatype >
 	class DataHolder : public AbstractDataHolder
 	{
 	
 	public:
 
-		DataHolder(DataType *value);
-		DataHolder(DataType const& value);
-		DataHolder(DataHolder< DataType > const& src);
-		DataHolder& operator=(DataHolder< DataType > const& src);
+		DataHolder( Datatype *value );
+		DataHolder( Datatype const& value );
+		DataHolder( DataHolder< Datatype > const& src );
+		DataHolder& operator=( DataHolder< Datatype > const& src );
 		~DataHolder();
 
-		std::type_info const& typeinfo() const;
-		AbstractDataHolder* create() const;
-		AbstractDataHolder* clone() const;
-		//const std::string toString() const;
+		std::type_info const& getTypeinfo() const;
+		AbstractDataHolder * create() const;
+		AbstractDataHolder * clone() const;
 
-		Poco::SharedPtr< DataType >		m_Data;
+		void writeTo( std::ostream &out ) const;
+		void readFrom( std::istream &in );
 
-		void writeTo(std::ostream &out) const;
-		void readFrom(std::istream &in);
+		std::shared_ptr< Datatype >		m_Data;
 
 	};
 
-	template< typename DataType >
-	DataHolder< DataType >::DataHolder(DataType const& value)
+	template< typename Datatype >
+	DataHolder< Datatype >::DataHolder( Datatype const& value )
 	{
-		m_Data.assign(new DataType(value));
+		m_Data.reset( new Datatype(value) );
 	}
 
-	template< typename DataType >
-	DataHolder< DataType >::DataHolder(DataType *value)
+	template< typename Datatype >
+	DataHolder< Datatype >::DataHolder( Datatype *value )
 	{
-		m_Data.assign(value);
+		m_Data.reset( value );
 	}
 
-	template< typename DataType >
-	DataHolder< DataType >::DataHolder(DataHolder< DataType > const& src) :
-		m_Data(src.m_Data)
+	template< typename Datatype >
+	DataHolder< Datatype >::DataHolder( DataHolder< Datatype > const& src ) :
+		m_Data( src.m_Data )
 	{
 	}
 
-	template< typename DataType >
-	DataHolder< DataType >& DataHolder< DataType >::operator=(DataHolder< DataType > const& src)
+	template< typename Datatype >
+	DataHolder< Datatype >& DataHolder< Datatype >::operator=( DataHolder< Datatype > const& src )
 	{
 		if (this == &src)
 		{
@@ -98,50 +91,42 @@ namespace _2Real
 		return *this;
 	}
 
-	template< typename DataType >
-	DataHolder< DataType >::~DataHolder()
+	template< typename Datatype >
+	DataHolder< Datatype >::~DataHolder()
 	{
-		m_Data.assign(NULL);
+		m_Data.reset();
 	}
 
-	template< typename DataType >
-	std::type_info const& DataHolder< DataType >::typeinfo() const
+	template< typename Datatype >
+	std::type_info const& DataHolder< Datatype >::getTypeinfo() const
 	{
-		return typeid(DataType);
+		return typeid( Datatype );
 	}
 
-	template< typename DataType >
-	void DataHolder< DataType >::writeTo(std::ostream &out) const
+	template< typename Datatype >
+	void DataHolder< Datatype >::writeTo( std::ostream &out ) const
 	{
 		out << *m_Data.get();
 	}
 
-	template< typename DataType >
-	void DataHolder< DataType >::readFrom(std::istream &in)
+	template< typename Datatype >
+	void DataHolder< Datatype >::readFrom( std::istream &in )
 	{
 		in >> *m_Data.get();
 	}
 
-	//template< typename DataType >
-	//const std::string DataHolder< DataType >::toString() const
-	//{
-	//	std::ostringstream msg;
-	//	msg << *m_Data.get();
-	//	return msg.str();
-	//}
-
-	template< typename DataType >
-	AbstractDataHolder * DataHolder< DataType >::create() const
+	template< typename Datatype >
+	AbstractDataHolder * DataHolder< Datatype >::create() const
 	{ 
-		DataType *newContent = new DataType();
-		return new DataHolder(newContent);
+		Datatype *newContent = new Datatype();
+		return new DataHolder( newContent );
 	}
 
-	template< typename DataType >
-	AbstractDataHolder * DataHolder< DataType >::clone() const
+	template< typename Datatype >
+	AbstractDataHolder * DataHolder< Datatype >::clone() const
 	{
-		DataType *newContent = new DataType(*m_Data.get());
-		return new DataHolder(newContent);
+		Datatype *newContent = new Datatype( *m_Data.get() );
+		return new DataHolder( newContent );
 	}
 
 }

@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "_2RealIdentifier.h"
-
 #include <vector>
 #include <map>
 #include <list>
@@ -28,32 +26,14 @@
 #include <sstream>
 #include <iostream>
 
-#include "Poco/Path.h"
-
 namespace _2Real
 {
-	/**
-	*	to lowercasw
-	*/
-	const std::string toLower(std::string const& s);
 
-	/**
-	*	remove leading & ending whitespaces from a string
-	*/
-	const std::string trim(std::string const&s , std::string const& whitespace = " \t");
+	const std::string toLower( std::string const& s );
+	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
 
-	/**
-	*	trims, converts to lower case, checks for bad characters
-	*/
-	const std::string validateName(std::string const& s);
-
-	/**
-	*	converts a poco path to a name that may be used in the system
-	*/
-	const std::string pathToName(Poco::Path const& path);
-
-	template< typename DataType >
-	std::istream& operator>>(std::istream &in, typename std::vector< DataType > &v)
+	template< typename Datatype >
+	std::istream& operator>>( std::istream &in, typename std::vector< Datatype > &v )
 	{
 		std::string element;
 		char delim = ',';
@@ -61,7 +41,7 @@ namespace _2Real
 		while (getline(in, element, delim))
 		{
 			trim(element);
-			DataType tmp;
+			Datatype tmp;
 			std::stringstream stream;
 			stream << element;
 			stream >> tmp;
@@ -71,15 +51,15 @@ namespace _2Real
 		return in;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::set< DataType > &s)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::set< Datatype > &s)
 	{
 		if (s.empty())
 		{
 			return out;
 		}
 
-		typename std::set< DataType >::const_iterator it = s.begin();
+		typename std::set< Datatype >::const_iterator it = s.begin();
 		out << *it;
 		++it;
 		for (; it != s.end(); ++it)
@@ -89,15 +69,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::set< DataType * > &s)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::set< Datatype * > &s)
 	{
 		if (s.empty())
 		{
 			return out;
 		}
 
-		typename std::set< DataType >::const_iterator it = s.begin();
+		typename std::set< Datatype >::const_iterator it = s.begin();
 		out << **it;
 		++it;
 		for (; it != s.end(); ++it)
@@ -107,15 +87,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType > &v)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::vector< Datatype > &v)
 	{
 		if (v.empty())
 		{
 			return out;
 		}
 
-		typename std::vector< DataType >::const_iterator it = v.begin();
+		typename std::vector< Datatype >::const_iterator it = v.begin();
 		out << *it;
 		++it;
 		for (; it != v.end(); ++it)
@@ -125,15 +105,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::vector< DataType * > &v)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::vector< Datatype * > &v)
 	{
 		if (v.empty())
 		{
 			return out;
 		}
 
-		typename std::vector< DataType >::const_iterator it = v.begin();
+		typename std::vector< Datatype >::const_iterator it = v.begin();
 		out << **it;
 		++it;
 		for (; it != v.end(); ++it)
@@ -143,8 +123,8 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::istream& operator>>(std::istream &in, typename std::list< DataType > &l)
+	template< typename Datatype >
+	std::istream& operator>>(std::istream &in, typename std::list< Datatype > &l)
 	{
 		std::string element;
 		char delim = ',';
@@ -152,7 +132,7 @@ namespace _2Real
 		while (getline(in, element, delim))
 		{
 			trim(element);
-			DataType tmp;
+			Datatype tmp;
 			std::stringstream stream;
 			stream << element;
 			stream >> tmp;
@@ -162,15 +142,15 @@ namespace _2Real
 		return in;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType > &l)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::list< Datatype > &l)
 	{
 		if (l.empty())
 		{
 			return out;
 		}
 
-		typename std::list< DataType >::const_iterator it = l.begin();
+		typename std::list< Datatype >::const_iterator it = l.begin();
 		out << *it;
 		++it;
 		for (; it != l.end(); ++it)
@@ -180,15 +160,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::list< DataType * > &l)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::list< Datatype * > &l)
 	{
 		if (l.empty())
 		{
 			return out;
 		}
 
-		typename std::list< DataType >::const_iterator it = l.begin();
+		typename std::list< Datatype >::const_iterator it = l.begin();
 		out << **it;
 		++it;
 		for (; it != l.end(); ++it)
@@ -198,92 +178,32 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, DataType > &m)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, Datatype > &m)
 	{
 		if (m.empty())
 		{
 			return out;
 		}
 
-		for (typename std::map< std::string, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< std::string, Datatype >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << it->second << "\n";
 		}
 		return out;
 	}
 
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, DataType > &m)
+	template< typename Datatype >
+	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, Datatype * > &m)
 	{
 		if (m.empty())
 		{
 			return out;
 		}
 
-		for (typename std::map< BundleIdentifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
-		{
-			out << it->second << "\n";
-		}
-		return out;
-	}
-
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< BlockIdentifier, DataType > &m)
-	{
-		if (m.empty())
-		{
-			return out;
-		}
-
-		for (typename std::map< BlockIdentifier, DataType >::const_iterator it = m.begin(); it != m.end(); ++it)
-		{
-			out << it->second << "\n";
-		}
-		return out;
-	}
-
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< std::string, DataType * > &m)
-	{
-		if (m.empty())
-		{
-			return out;
-		}
-
-		for (typename std::map< std::string, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
+		for (typename std::map< std::string, Datatype * >::const_iterator it = m.begin(); it != m.end(); ++it)
 		{
 			out << *(it->second) << "\n";
-		}
-		return out;
-	}
-
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, DataType * > &m)
-	{
-		if (m.empty())
-		{
-			return out;
-		}
-
-		for (typename std::map< BundleIdentifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
-		{
-			out << *it->second << "\n";
-		}
-		return out;
-	}
-
-	template< typename DataType >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< BlockIdentifier, DataType * > &m)
-	{
-		if (m.empty())
-		{
-			return out;
-		}
-
-		for (typename std::map< BlockIdentifier, DataType * >::const_iterator it = m.begin(); it != m.end(); ++it)
-		{
-			out << *it->second << "\n";
 		}
 		return out;
 	}

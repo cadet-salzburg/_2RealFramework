@@ -47,8 +47,8 @@ namespace _2Real
 		m_StopEvent(false),
 		m_TriggersEnabled(false),
 		m_UberTriggersEnabled(false),
-		m_Time(NULL),
-		m_IO(NULL),
+		m_Time(nullptr),
+		m_IO(nullptr),
 		m_Threads(EngineImpl::instance().getThreadPool()),
 		m_Logger(EngineImpl::instance().getLogger())
 	{
@@ -63,17 +63,17 @@ namespace _2Real
 	{
 		disableAllTriggers();
 
-		if (m_CurrentState != NULL)
+		if (m_CurrentState != nullptr)
 		{
 			delete m_CurrentState;
-			m_CurrentState = NULL;
+			m_CurrentState = nullptr;
 		}
 
-		if (m_Time != NULL)
+		if (m_Time != nullptr)
 		{
 			EngineImpl::instance().getTimer().unregisterFromTimerSignal(*this);
 			delete m_Time;
-			m_Time = NULL;
+			m_Time = nullptr;
 		}
 
 		InletMap inlets = m_IO->getInlets();
@@ -427,7 +427,7 @@ namespace _2Real
 		if (areTriggersEnabled())
 		{
 			m_TriggerAccess.lock();
-			if (m_Time != NULL && m_Time->tryTrigger(time))
+			if (m_Time != nullptr && m_Time->tryTrigger(time))
 			{
 				//m_TriggerAccess.unlock();
 				evaluateTriggers();
@@ -470,7 +470,7 @@ namespace _2Real
 	{
 		//m_TriggerAccess.lock();
 		bool triggersOk = true;
-		if ( m_Time != NULL )
+		if ( m_Time != nullptr )
 		{
 			triggersOk &= m_Time->ok();
 		}
@@ -507,7 +507,7 @@ namespace _2Real
 	void ServiceStates::resetAndEnableTriggers()
 	{
 		m_TriggerAccess.lock();
-		if ( m_Time != NULL )
+		if ( m_Time != nullptr )
 		{
 			m_Time->reset();
 		}

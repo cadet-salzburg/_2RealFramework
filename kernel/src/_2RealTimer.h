@@ -65,7 +65,7 @@ namespace _2Real
 	};
 
 	inline Timer::Timer() :
-		m_Callback(NULL),
+		m_Callback(nullptr),
 		m_Timer(0, 1),	//attempt to get the best resolution possible, even if this won't work in practice
 		m_Timestamp(),
 		m_TimerSignal()

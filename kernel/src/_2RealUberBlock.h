@@ -69,24 +69,44 @@ namespace _2Real
 			m_SubBlockManager->removeBlock(subBlock);
 		}
 
-		void registerToNewData(std::string const& outlet, DataCallback callback, void *userData)
+		void registerToNewData(std::string const& outlet, OutletCallback callback, void *userData)
 		{
 			m_IOManager->registerToNewData(outlet, callback, userData);
 		}
 
-		void unregisterFromNewData(std::string const& outlet, DataCallback callback, void *userData)
+		void unregisterFromNewData(std::string const& outlet, OutletCallback callback, void *userData)
 		{
 			m_IOManager->unregisterFromNewData(outlet, callback, userData);
 		}
 
-		void registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler)
+		void registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler)
 		{
 			m_IOManager->registerToNewData(outlet, handler);
 		}
 
-		void unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler)
+		void unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler)
 		{
 			m_IOManager->unregisterFromNewData(outlet, handler);
+		}
+
+		void registerToNewData(OutputCallback callback, void *userData)
+		{
+			m_IOManager->registerToNewData(callback, userData);
+		}
+
+		void unregisterFromNewData(OutputCallback callback, void *userData)
+		{
+			m_IOManager->unregisterFromNewData(callback, userData);
+		}
+
+		void registerToNewData(AbstractOutputCallbackHandler &handler)
+		{
+			m_IOManager->registerToNewData(handler);
+		}
+
+		void unregisterFromNewData(AbstractOutputCallbackHandler &handler)
+		{
+			m_IOManager->unregisterFromNewData(handler);
 		}
 
 		const EngineData getValue(std::string const& paramName) const
@@ -99,12 +119,12 @@ namespace _2Real
 			return m_IOManager->getKey(paramName);
 		}
 
-		void setValue(std::string const& paramName, Data const& value)
+		void setValue(std::string const& paramName, TimestampedData const& value)
 		{
 			m_IOManager->setValue(paramName, value);
 		}
 
-		void insertValue(std::string const& paramName, Data &value)
+		void insertValue(std::string const& paramName, TimestampedData &value)
 		{
 			m_IOManager->insertValue(paramName, value);
 		}

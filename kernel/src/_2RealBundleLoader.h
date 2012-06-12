@@ -54,7 +54,7 @@ namespace _2Real
 		
 		struct BundleInfo
 		{
-			BundleInfo() : library( NULL ), metainfo( NULL ) {}
+			BundleInfo() : library( nullptr ), metainfo( nullptr ) {}
 			BundleInfo( BundleInfo const& src ) : library( src.library ), metainfo( src.metainfo ) {}
 			Poco::SharedLibrary		*library;
 			Metainfo				*metainfo;

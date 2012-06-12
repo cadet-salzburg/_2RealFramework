@@ -35,7 +35,6 @@
     <ClInclude Include="..\..\src\_2RealBundleLoader.h" />
     <ClInclude Include="..\..\src\_2RealBundleManager.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />
-    <ClInclude Include="..\..\src\_2RealData.h" />
     <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
     <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
     <ClInclude Include="..\..\src\_2RealDisabledStates.h" />
@@ -55,6 +54,7 @@
     <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\_2RealOutletHandle.h" />
+    <ClInclude Include="..\..\src\_2RealOutputData.h" />
     <ClInclude Include="..\..\src\_2RealOwnedBlocks.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
@@ -72,12 +72,14 @@
     <ClInclude Include="..\..\src\_2RealServiceStateUpdating.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
+    <ClInclude Include="..\..\src\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\_2RealSyncBlock.h" />
     <ClInclude Include="..\..\src\_2RealSyncBlockStates.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
+    <ClInclude Include="..\..\src\_2RealTimestampedData.h" />
     <ClInclude Include="..\..\src\_2RealTriggerTypes.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
@@ -116,6 +118,7 @@
     <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
     <ClCompile Include="..\..\src\_2RealOutletHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
     <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
@@ -132,11 +135,13 @@
     <ClCompile Include="..\..\src\_2RealServiceStateShutDown.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceStateUpdating.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
+    <ClCompile Include="..\..\src\_2RealStringHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlockStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
+    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
     <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
@@ -265,6 +270,9 @@
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -277,6 +285,7 @@
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>..\..\lib\_2RealEngine_64d.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -289,6 +298,9 @@
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -316,6 +328,9 @@
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -343,6 +358,9 @@
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

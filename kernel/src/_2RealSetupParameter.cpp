@@ -30,18 +30,15 @@ namespace _2Real
 		Parameter(metadata),
 		m_Data()
 	{
-		//if (metadata.hasDefaultValue())
-		//{
-			m_Data = metadata.getDefaultValue();
-		//}
+		m_Data = metadata.getDefaultValue();
 	}
 
 	void SetupParameter::setData(EngineData const& data)
 	{
-		if (data.typeinfo().name() != getDatatype())
+		if ( data.getTypeinfo().name() != getDatatype() )
 		{
 			std::ostringstream msg;
-			msg << "datatype mismatch: " <<  m_Datatype << " vs. template parameter type " << data.typeinfo().name();
+			msg << "datatype mismatch: " <<  m_Datatype << " vs. template parameter type " << data.getTypeinfo().name();
 			throw TypeMismatchException(msg.str());
 		}
 

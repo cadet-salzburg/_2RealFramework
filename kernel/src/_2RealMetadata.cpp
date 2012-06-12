@@ -76,7 +76,7 @@ namespace _2Real
 
 	void BundleMetainfo::addContextParameterInternal( std::string const& paramName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.typeinfo().name();
+		const std::string type = defaultValue.getTypeinfo().name();
 		const std::string keyword = m_Typetable.lookupKey( type );
 		ParameterData *data = new ParameterData( paramName, type, keyword, "context", defaultValue );
 		m_Impl.addContextParameter( *data );
@@ -105,7 +105,7 @@ namespace _2Real
 
 	void BlockMetainfo::addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.typeinfo().name();
+		const std::string type = defaultValue.getTypeinfo().name();
 		const std::string keyword = m_Typetable.lookupKey( type );
 		ParameterData *data = new ParameterData( paramName, type, keyword, "param", defaultValue );
 		m_Impl.addParameter( *data );
@@ -113,7 +113,7 @@ namespace _2Real
 
 	void BlockMetainfo::addInletInternal( std::string const& inletName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.typeinfo().name();
+		const std::string type = defaultValue.getTypeinfo().name();
 		const std::string keyword = m_Typetable.lookupKey( type );
 		ParameterData *data = new ParameterData( inletName, type, keyword, "inlet", defaultValue );
 		m_Impl.addInlet( *data );
@@ -121,7 +121,7 @@ namespace _2Real
 
 	void BlockMetainfo::addOutletInternal( std::string const& outletName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.typeinfo().name();
+		const std::string type = defaultValue.getTypeinfo().name();
 		const std::string keyword = m_Typetable.lookupKey( type );
 		ParameterData *data = new ParameterData( outletName, type, keyword, "outlet", defaultValue );
 		m_Impl.addOutlet( *data );
@@ -185,7 +185,7 @@ namespace _2Real
 	void Metainfo::setContextCreator( AbstractBlockCreator &obj )
 	{
 		m_HasContext = true;
-		if ( m_ContextInfo.data != NULL )
+		if ( m_ContextInfo.data != nullptr )
 		{
 			delete m_ContextInfo.ctor;
 			delete m_ContextInfo.data;
@@ -225,7 +225,7 @@ namespace _2Real
 
 	//Block & Metainfo::createBundleContext() const
 	//{
-	//	if ( m_ContextInfo.ctor != NULL )
+	//	if ( m_ContextInfo.ctor != nullptr )
 	//	{
 	//		return m_ContextInfo.ctor->create();
 	//	}
@@ -279,8 +279,8 @@ namespace _2Real
 		if ( m_HasContext )
 		{
 			m_ExportedBlocks.insert( std::make_pair( "bundle context", m_ContextInfo ) );
-			m_ContextInfo.ctor = NULL;
-			m_ContextInfo.data = NULL;
+			m_ContextInfo.ctor = nullptr;
+			m_ContextInfo.data = nullptr;
 		}
 	}
 

@@ -56,10 +56,17 @@ namespace _2Real
 		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
 
 		void						handleException( AbstractBlock &subBlock, Exception &exception );
-		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData );
-		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData );
-		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
-		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler );
+
+		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
+		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
+		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler );
+		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler );
+
+		void						registerToNewData( BlockIdentifier const& id, OutputCallback callback, void *userData );
+		void						unregisterFromNewData( BlockIdentifier const& id, OutputCallback callback, void *userData );
+		void						registerToNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler );
+		void						unregisterFromNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler );
+
 		void						registerToException( ExceptionCallback callback, void *userData );
 		void						unregisterFromException( ExceptionCallback callback, void *userData );
 		void						registerToException( AbstractExceptionCallbackHandler &handler );

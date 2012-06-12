@@ -173,12 +173,12 @@ namespace _2Real
 			it = m_FinishedRunnables.erase(it);
 		}
 
-		PooledThread *thread = NULL;
+		PooledThread *thread = nullptr;
 		m_ThreadAccess.lock();
-		while ((thread = tryGetFreeThread()) != NULL)
+		while ((thread = tryGetFreeThread()) != nullptr)
 		{
 			m_ReadyAccess.lock();
-			while (!m_ReadyRunnables.empty() && m_ReadyRunnables.front() == NULL)
+			while (!m_ReadyRunnables.empty() && m_ReadyRunnables.front() == nullptr)
 			{
 				m_ReadyRunnables.pop_front();
 			}
@@ -239,7 +239,7 @@ namespace _2Real
 	{
 		//m_ThreadAccess.lock();
 		//PooledThread *thread = tryGetFreeThread();
-		//if (thread != NULL)
+		//if (thread != nullptr)
 		//{
 		//	s.beginExecution();
 
@@ -266,7 +266,7 @@ namespace _2Real
 		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, ServiceStates * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &s);
 		if (it != m_ReadyRunnables.end())
 		{
-			*it = NULL;
+			*it = nullptr;
 			return true;
 		}
 
@@ -283,7 +283,7 @@ namespace _2Real
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 }

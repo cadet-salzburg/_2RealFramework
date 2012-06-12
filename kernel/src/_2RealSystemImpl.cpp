@@ -22,7 +22,7 @@
 #include "_2RealThreadPool.h"
 #include "_2RealException.h"
 #include "_2RealServiceBlock.h"
-#include "_2RealData.h"
+#include "_2RealTimestampedData.h"
 #include "_2RealUpdatePolicy.h"
 #include "_2RealSyncBlock.h"
 #include "_2RealTriggerTypes.h"
@@ -36,7 +36,7 @@ namespace _2Real
 {
 
 	SystemImpl::SystemImpl(std::string const& name) :
-		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, NULL),
+		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, nullptr),
 		m_Engine(EngineImpl::instance()),
 		m_PluginPool(EngineImpl::instance().getPluginPool()),
 		m_Timestamp()
@@ -83,7 +83,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData )
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData )
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -96,7 +96,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, DataCallback callback, void *userData )
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData )
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -109,7 +109,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler )
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -122,7 +122,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractDataCallbackHandler &handler )
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler )
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -132,6 +132,58 @@ namespace _2Real
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
 			obj.unregisterFromNewData( outlet, handler );
+		}
+	}
+
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, OutputCallback callback, void *userData )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_IOManager->registerToNewData( callback, userData );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			obj.registerToNewData( callback, userData );
+		}
+	}
+
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, OutputCallback callback, void *userData )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_IOManager->unregisterFromNewData( callback, userData );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.unregisterFromNewData( callback, userData );
+		}
+	}
+
+	void SystemImpl::registerToNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_IOManager->registerToNewData( handler );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			obj.registerToNewData( handler );
+		}
+	}
+
+	void SystemImpl::unregisterFromNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_IOManager->unregisterFromNewData( handler );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.unregisterFromNewData( handler );
 		}
 	}
 
@@ -227,7 +279,7 @@ namespace _2Real
 
 	void SystemImpl::setValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
 	{
-		Data data(value, (long)m_Timestamp.elapsed());
+		TimestampedData data(value, (long)m_Timestamp.elapsed());
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -242,7 +294,7 @@ namespace _2Real
 
 	void SystemImpl::insertValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
 	{
-		Data data(value, (long)m_Timestamp.elapsed());
+		TimestampedData data(value, (long)m_Timestamp.elapsed());
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{

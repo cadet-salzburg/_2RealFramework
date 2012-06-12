@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,59 +17,25 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealEngineData.h"
+#include "_2RealTimestampedData.h"
 
 namespace _2Real
 {
 
-	class Data
-	{
+	TimestampedData::TimestampedData() : m_Data(), m_Timestamp( 0 ) {}
 
-	public:
-
-		Data();
-		Data(EngineData const& data, long timestamp);
-
-		template< typename DataType >
-		DataType const&			getData() const;
-		long					getTimestamp() const;
-
-		EngineData const&		data() const;
-
-	private:
-
-		EngineData				m_Data;
-		long					m_Timestamp;
-
-	};
-
-	inline Data::Data() :
-		m_Data(),
-		m_Timestamp(0)
+	TimestampedData::TimestampedData( EngineData const& data, long timestamp ) :
+		m_Data( data ),
+		m_Timestamp( timestamp )
 	{
 	}
 
-	inline Data::Data(EngineData const& data, long timestamp) :
-		m_Data(data),
-		m_Timestamp(timestamp)
-	{
-	}
-
-	template< typename DataType >
-	DataType const& Data::getData() const
-	{
-		Poco::SharedPtr< DataType > ptr = Extract< DataType >(m_Data);
-		return *ptr.get();
-	}
-
-	inline long Data::getTimestamp() const
+	long TimestampedData::getTimestamp() const
 	{
 		return m_Timestamp;
 	}
 
-	inline EngineData const& Data::data() const
+	EngineData const& TimestampedData::data() const
 	{
 		return m_Data;
 	}

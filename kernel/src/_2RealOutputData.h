@@ -16,52 +16,39 @@
 	limitations under the License.
 */
 
-#include "_2RealOutletHandle.h"
-#include "_2RealOutlet.h"
+#pragma once
+
 #include "_2RealEngineData.h"
 
 namespace _2Real
 {
 
-	OutletHandle::OutletHandle() :
-		ParameterHandle(""),
-		m_Output(nullptr)
+	class OutputData
 	{
-	}
 
-	OutletHandle::OutletHandle(Outlet &slot) :
-		ParameterHandle(slot.getName()),
-		m_Output(&slot)
-	{
-	}
+	public:
 
-	OutletHandle::OutletHandle(OutletHandle const& src) :
-		ParameterHandle(src),
-		m_Output(src.m_Output)
-	{
-	}
+		OutputData();
+		OutputData( EngineData const& data, std::string const& keyword, std::string const& name );
 
-	OutletHandle& OutletHandle::operator=(OutletHandle const& src)
-	{
-		ParameterHandle::operator=(src);
-		m_Output = src.m_Output;
+		const std::string getTypename() const;
+		std::string const& getKeyword() const;
+		std::string const& getName() const;
+		const std::string getDataAsString() const;
 
-		return *this;
-	}
+		template< typename Datatype >
+		Datatype const& getData() const
+		{
+			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( m_Data );
+			return *ptr.get();
+		}
 
-	EngineData OutletHandle::data()
-	{
-		return m_Output->getDataForWriting();
-	}
+	private:
 
-	void OutletHandle::discard()
-	{
-		m_Output->discardCurrent();
-	}
+		std::string				m_Name;
+		EngineData				m_Data;
+		std::string				m_Keyword;
 
-	void OutletHandle::otherDataItem()
-	{
-		m_Output->createNewDataItem();
-	}
+	};
 
 }

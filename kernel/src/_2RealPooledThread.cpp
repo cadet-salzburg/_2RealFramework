@@ -29,7 +29,7 @@ namespace _2Real
 {
 
 	PooledThread::PooledThread(ThreadPoolCallback &callback, unsigned int stackSize) :
-		m_Target(NULL),
+		m_Target(nullptr),
 		m_IsIdle(true),
 		m_Thread("idle thread"),
 		m_Callback(&callback),
@@ -65,7 +65,7 @@ namespace _2Real
 		m_Mutex.lock();
 		if (m_IsIdle)
 		{
-			m_Target = NULL;
+			m_Target = nullptr;
 			m_IsIdle = false;
 			m_TargetCompleted.reset();
 			m_TargetReady.set();
@@ -118,7 +118,7 @@ namespace _2Real
 
 				ServiceStates *tmp = m_Target;
 
-				m_Target = NULL;
+				m_Target = nullptr;
 				m_IsIdle = true;
 
 				m_TargetCompleted.set();

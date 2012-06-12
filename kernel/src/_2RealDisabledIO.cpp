@@ -60,28 +60,56 @@ namespace _2Real
 	//	throw _2Real::Exception(msg.str());
 	//}
 
-	void DisabledIO::registerToNewData(std::string const& outName, DataCallback callback, void *userData )
+	void DisabledIO::registerToNewData(std::string const& outName, OutletCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, DataCallback callback, void *userData )
+	void DisabledIO::unregisterFromNewData(std::string const& outName, OutletCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::registerToNewData(std::string const& outName, AbstractDataCallbackHandler &handler )
+	void DisabledIO::registerToNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, AbstractDataCallbackHandler &handler )
+	void DisabledIO::unregisterFromNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIO::registerToNewData(OutputCallback callback, void *userData )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIO::unregisterFromNewData(OutputCallback callback, void *userData )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIO::registerToNewData(AbstractOutputCallbackHandler &handler )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIO::unregisterFromNewData(AbstractOutputCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
@@ -102,14 +130,14 @@ namespace _2Real
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::setValue(std::string const& paramName, Data const& value)
+	void DisabledIO::setValue(std::string const& paramName, TimestampedData const& value)
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::insertValue(std::string const& paramName, Data &value)
+	void DisabledIO::insertValue(std::string const& paramName, TimestampedData &value)
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";

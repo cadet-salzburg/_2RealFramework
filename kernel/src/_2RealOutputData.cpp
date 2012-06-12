@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,52 +17,42 @@
 	limitations under the License.
 */
 
-#include "_2RealOutletHandle.h"
-#include "_2RealOutlet.h"
-#include "_2RealEngineData.h"
+#include "_2RealOutputData.h"
+
+#include <sstream>
 
 namespace _2Real
 {
 
-	OutletHandle::OutletHandle() :
-		ParameterHandle(""),
-		m_Output(nullptr)
+	OutputData::OutputData() : m_Data(), m_Keyword() {}
+
+	OutputData::OutputData( EngineData const& data, std::string const& keyword, std::string const& name ) :
+		m_Data( data ),
+		m_Keyword( keyword ),
+		m_Name( name )
 	{
 	}
 
-	OutletHandle::OutletHandle(Outlet &slot) :
-		ParameterHandle(slot.getName()),
-		m_Output(&slot)
+	const std::string OutputData::getTypename() const
 	{
+		return m_Data.getTypeinfo().name();
 	}
 
-	OutletHandle::OutletHandle(OutletHandle const& src) :
-		ParameterHandle(src),
-		m_Output(src.m_Output)
+	std::string const& OutputData::getName() const
 	{
+		return m_Name;
 	}
 
-	OutletHandle& OutletHandle::operator=(OutletHandle const& src)
+	std::string const& OutputData::getKeyword() const
 	{
-		ParameterHandle::operator=(src);
-		m_Output = src.m_Output;
-
-		return *this;
+		return m_Keyword;
 	}
 
-	EngineData OutletHandle::data()
+	const std::string OutputData::getDataAsString() const
 	{
-		return m_Output->getDataForWriting();
-	}
-
-	void OutletHandle::discard()
-	{
-		m_Output->discardCurrent();
-	}
-
-	void OutletHandle::otherDataItem()
-	{
-		m_Output->createNewDataItem();
+		std::ostringstream value;
+		value << m_Data;
+		return value.str();
 	}
 
 }

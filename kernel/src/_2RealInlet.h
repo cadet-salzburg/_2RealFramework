@@ -25,12 +25,13 @@
 #include "Poco/BasicEvent.h"
 
 #include <map>
+#include <list>
 
 namespace _2Real
 {
 
 	class Outlet;
-	class Data;
+	class TimestampedData;
 	class ParameterData;
 	class AbstractStateManager;
 	class BufferPolicy;
@@ -45,8 +46,8 @@ namespace _2Real
 		Inlet( ParameterData const& metadata );
 		~Inlet();
 
-		void setFixedData( Data const& data );
-		void receiveData( Data &data ); //arg is nonconst bc poco events require exactely this signature
+		void setFixedData( TimestampedData const& data );
+		void receiveData( TimestampedData &data ); //arg is nonconst bc poco events require exactely this signature
 
 		void clearLinks();
 		void linkWith(Outlet &output);

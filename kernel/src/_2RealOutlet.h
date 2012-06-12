@@ -19,12 +19,16 @@
 #pragma once
 
 #include "_2RealParameter.h"
-#include "_2RealData.h"
+#include "_2RealTimestampedData.h"
+#include "_2RealOutputData.h"
 #include "_2RealCallbacks.h"
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
 #include "Poco/Timestamp.h"
+
+#include <map>
+#include <list>
 
 namespace _2Real
 {
@@ -37,7 +41,7 @@ namespace _2Real
 
 	public:
 
-		Outlet(ParameterData const& metadata, Poco::Timestamp const& timer);
+		Outlet( ParameterData const& metadata, Poco::Timestamp const& timer );
 
 		EngineData &					getDataForWriting();	//called by output handle to get data
 		void							update();
@@ -46,29 +50,36 @@ namespace _2Real
 		void							discardCurrent();		//call by output handle when not writing anything
 		const EngineData				getCurrent() const;
 
-		//callback functions
-		void							registerCallback( DataFunctionCallback &callback );
-		void							unregisterCallback( DataFunctionCallback &callback );
-		void							registerCallback(AbstractDataCallbackHandler &callback);
-		void							unregisterCallback(AbstractDataCallbackHandler &callback);
-		void						addListener( Inlet &slot );
+		// callback functions
+		void							registerCallback( OutletFunctionCallback &callback );
+		void							unregisterCallback( OutletFunctionCallback &callback );
+		void							registerCallback( AbstractOutletCallbackHandler &callback );
+		void							unregisterCallback( AbstractOutletCallbackHandler &callback );
+		void							registerCallback( OutputFunctionCallback &callback );
+		void							unregisterCallback( OutputFunctionCallback &callback );
+		void							registerCallback( AbstractOutputCallbackHandler &callback );
+		void							unregisterCallback( AbstractOutputCallbackHandler &callback );
+
+		// inlets
+		void							addListener( Inlet &slot );
 		void							removeListener( Inlet &slot );
 		void							clearLinks();
 
 	private:
 
-		const bool						isLinkedWith(Inlet &inlet) const;
+		const bool							isLinkedWith(Inlet &inlet) const;
 
 		Poco::Timestamp						const& m_SystemTime;
 		mutable Poco::FastMutex				m_Mutex;
 		EngineData							m_WriteData;
-		Poco::BasicEvent< Data >			m_Event;
-		std::list< Inlet * >			m_LinkedInlets;
+		Poco::BasicEvent< TimestampedData >	m_InletEvent;
+		Poco::BasicEvent< OutputData >		m_CallbackEvent;
+		std::list< Inlet * >				m_LinkedInlets;
 
 		//todo: multimap not really necessary, i don't acces elems by key anyway
 		std::multimap< long, EngineData >	m_DataItems;
 		bool								m_HasData;
-		Data								m_NewestData;
+		TimestampedData						m_NewestData;
 
 		bool								m_DiscardCurrent;
 		

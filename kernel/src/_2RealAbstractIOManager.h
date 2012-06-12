@@ -33,6 +33,7 @@ namespace _2Real
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
+	class TimestampedData;
 
 	typedef std::map< std::string, Inlet * >		InletMap;
 	typedef std::map< std::string, Outlet * >		OutletMap;
@@ -53,15 +54,19 @@ namespace _2Real
 		//virtual void					addParam(ParameterData const& meta) = 0;
 		//virtual void					addInlet(ParameterData const& meta) = 0;
 		//virtual void					addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp) = 0;
-		virtual void					registerToNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
-		virtual void					unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler) = 0;
+		virtual void					registerToNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
+		virtual void					unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
+		virtual void					registerToNewData(OutputCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData(OutputCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData(AbstractOutputCallbackHandler &handler) = 0;
+		virtual void					unregisterFromNewData(AbstractOutputCallbackHandler &handler) = 0;
 
 		virtual const EngineData		getValue(std::string const& paramName) const = 0;
 		virtual std::string const&		getKey(std::string const& paramName) const = 0;
-		virtual void					setValue(std::string const& paramName, Data const& value) = 0;
-		virtual void					insertValue(std::string const& paramName, Data &value) = 0;
+		virtual void					setValue(std::string const& paramName, TimestampedData const& value) = 0;
+		virtual void					insertValue(std::string const& paramName, TimestampedData &value) = 0;
 
 		virtual void					linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet) = 0;
 

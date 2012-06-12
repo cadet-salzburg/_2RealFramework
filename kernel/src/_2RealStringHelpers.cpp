@@ -17,33 +17,46 @@
 */
 
 #include "_2RealHelpers.h"
+#include "_2RealStringHelpers.h"
+#include "_2RealException.h"
+
+#include "Poco/Path.h"
 
 namespace _2Real
 {
-	const std::string toLower(std::string const& s)
+
+	const std::string validateName(std::string const& s)
+	{
+		std::string result = toLower(trim(s));
+
+		size_t pos = result.find_first_not_of("abcedefghijklmnopqrstuvwxyz_ .0123456789");
+		if (pos != std::string::npos)
+		{
+			std::stringstream msg;
+			msg << "invalid name " << result << "; contains forbidden character " << result[pos];
+			throw InvalidNameException(msg.str());
+		}
+
+		return result;
+	}
+
+	const std::string pathToName(Poco::Path const& path)
 	{
 		std::string result;
-		result.clear();
-		for (unsigned int i=0; i<s.length(); i++)
+
+		for (unsigned int i=0; i<path.depth(); ++i)
 		{
-			result.push_back(tolower(s[i]));
+			std::string dir = toLower(path.directory(i));
+			result.append(dir);
+			if (i < (path.depth() - 1)) result.append(".");
 		}
+
+		//if (path.isFile())
+		//{
+		//	result.append(toLower(path.getFileName()));
+		//}
+
 		return result;
 	}
 
-	const std::string trim(std::string const&s, std::string const& whitespace)
-	{
-		const size_t beginStr = s.find_first_not_of(whitespace);
-
-		if (beginStr == std::string::npos)
-		{
-			return "";
-		}
-
-		const size_t endStr = s.find_last_not_of(whitespace);
-		const size_t range = endStr - beginStr + 1;
-
-		std::string result = s.substr(beginStr, range);
-		return result;
-	}
 }

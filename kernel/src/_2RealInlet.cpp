@@ -19,7 +19,7 @@
 #include "_2RealInlet.h"
 #include "_2RealOutlet.h"
 #include "_2RealException.h"
-#include "_2RealData.h"
+#include "_2RealTimestampedData.h"
 #include "_2RealParameterData.h"
 #include "_2RealAbstractStateManager.h"
 
@@ -115,7 +115,7 @@ namespace _2Real
 		}
 	}
 
-	void Inlet::setFixedData( Data const& data )
+	void Inlet::setFixedData( TimestampedData const& data )
 	{
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
 
@@ -133,7 +133,7 @@ namespace _2Real
 		m_DataReceived.notify( this, times );
 	}
 
-	void Inlet::receiveData( Data &data )
+	void Inlet::receiveData( TimestampedData &data )
 	{
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
 

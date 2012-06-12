@@ -24,7 +24,7 @@ namespace _2Real
 
 	InletHandle::InletHandle() :
 		ParameterHandle(""),
-		m_Input(NULL)
+		m_Input(nullptr)
 	{
 	}
 

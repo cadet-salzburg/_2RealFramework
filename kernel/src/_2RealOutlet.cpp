@@ -31,24 +31,16 @@
 namespace _2Real
 {
 
-	Outlet::Outlet(ParameterData const& metadata, Poco::Timestamp const& timestamp) :
-		Parameter(metadata),
-		m_SystemTime(timestamp),
-		m_DataItems(),
+	Outlet::Outlet( ParameterData const& metadata, Poco::Timestamp const& timestamp ) :
+		Parameter( metadata ),
+		m_SystemTime( timestamp ),
 		m_DiscardCurrent( false ),
 		m_HasData( false )
 	{
-		//if (metadata.hasDefaultValue())
-		//{
-			m_WriteData = metadata.getDefaultValue();
-			m_NewestData = Data(m_WriteData, (long)m_SystemTime.elapsed());
-			m_WriteData.clone(m_WriteData);
-			m_HasData = true;
-		//}
-		//else
-		//{
-		//	m_WriteData.create( EngineImpl::instance().getTypetable().getInitialValueFromKey( metadata.getKeyword() ) );
-		//}
+		m_WriteData = metadata.getDefaultValue();
+		m_NewestData = TimestampedData( m_WriteData, (long)m_SystemTime.elapsed() );
+		m_WriteData.clone( m_WriteData );
+		m_HasData = true;
 	}
 
 	void Outlet::clearLinks()
@@ -56,7 +48,7 @@ namespace _2Real
 		for ( std::list< Inlet * >::iterator it = m_LinkedInlets.begin(); it != m_LinkedInlets.end(); ++it )
 		{
 			(*it)->unlink( *this );
-			m_Event -= Poco::delegate( *it, &Inlet::receiveData );
+			m_InletEvent -= Poco::delegate( *it, &Inlet::receiveData );
 		}
 	}
 
@@ -79,8 +71,10 @@ namespace _2Real
 		// send all current data items and empty the queue in the process - at the end, only m_NewestData will hold the newest data
 		for ( std::multimap< long, EngineData >::iterator it = m_DataItems.begin(); it != m_DataItems.end(); /**/ )
 		{
-			m_NewestData = Data( it->second, it->first );
-			m_Event.notify( this, m_NewestData );
+			m_NewestData = TimestampedData( it->second, it->first );
+			m_InletEvent.notify( this, m_NewestData );
+			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			m_CallbackEvent.notify( this, data );
 			it = m_DataItems.erase( it );
 		}
 
@@ -124,7 +118,7 @@ namespace _2Real
 		std::list< Inlet * >::iterator it = std::find< std::list< Inlet * >::iterator, Inlet * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
 		if (it == m_LinkedInlets.end())
 		{
-			m_Event += Poco::delegate(&inlet, &Inlet::receiveData);
+			m_InletEvent += Poco::delegate(&inlet, &Inlet::receiveData);
 			m_LinkedInlets.push_back( &inlet );
 			if ( m_HasData )
 			{
@@ -140,54 +134,96 @@ namespace _2Real
 		std::list< Inlet * >::iterator it = std::find< std::list< Inlet * >::iterator, Inlet * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
 		if (it != m_LinkedInlets.end())
 		{
-			m_Event -= Poco::delegate(&inlet, &Inlet::receiveData);
+			m_InletEvent -= Poco::delegate(&inlet, &Inlet::receiveData);
 			m_LinkedInlets.erase( it );
 		}
 	}
 
-	void Outlet::registerCallback( DataFunctionCallback &callback )
+	void Outlet::registerCallback( OutletFunctionCallback &callback )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event += Poco::delegate(&callback, &DataFunctionCallback::invoke);
+		m_CallbackEvent += Poco::delegate( &callback, &OutletFunctionCallback::invoke );
 
 		if ( m_HasData )
 		{
-			callback.invoke( m_NewestData );
+			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			callback.invoke( data );
 		}
 	}
 
-	void Outlet::unregisterCallback( DataFunctionCallback &callback )
+	void Outlet::unregisterCallback( OutletFunctionCallback &callback )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event -= Poco::delegate(&callback, &DataFunctionCallback::invoke);
+		m_CallbackEvent -= Poco::delegate(&callback, &OutletFunctionCallback::invoke);
 	}
 
-	void Outlet::registerCallback( AbstractDataCallbackHandler &handler )
+	void Outlet::registerCallback( AbstractOutletCallbackHandler &handler )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event += Poco::delegate(&handler, &AbstractDataCallbackHandler::invoke);
+		m_CallbackEvent += Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
 
 		if ( m_HasData )
 		{
-			handler.invoke( m_NewestData );
+			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			handler.invoke( data );
 		}
 	}
 
-	void Outlet::unregisterCallback( AbstractDataCallbackHandler &handler )
+	void Outlet::unregisterCallback( AbstractOutletCallbackHandler &handler )
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event -= Poco::delegate(&handler, &AbstractDataCallbackHandler::invoke);
+		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
+	}
+
+	void Outlet::registerCallback( OutputFunctionCallback &callback )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_CallbackEvent += Poco::delegate( &callback, &OutputFunctionCallback::invoke );
+
+		//if ( m_HasData )
+		//{
+		//	OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+		//	callback.invoke( data );
+		//}
+	}
+
+	void Outlet::unregisterCallback( OutputFunctionCallback &callback )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_CallbackEvent -= Poco::delegate(&callback, &OutputFunctionCallback::invoke);
+	}
+
+	void Outlet::registerCallback( AbstractOutputCallbackHandler &handler )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_CallbackEvent += Poco::delegate(&handler, &AbstractOutputCallbackHandler::invoke);
+
+		//if ( m_HasData )
+		//{
+		//	OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+		//	handler.invoke( data );
+		//}
+	}
+
+	void Outlet::unregisterCallback( AbstractOutputCallbackHandler &handler )
+	{
+		Poco::FastMutex::ScopedLock lock(m_Mutex);
+
+		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutputCallbackHandler::invoke);
 	}
 
 	void Outlet::resetLinks()
 	{
 		Poco::FastMutex::ScopedLock lock(m_Mutex);
 
-		m_Event.clear();
+		m_InletEvent.clear();
 
 		for(std::list< Inlet * >::iterator it = m_LinkedInlets.begin(); it != m_LinkedInlets.end(); /**/)
 		{

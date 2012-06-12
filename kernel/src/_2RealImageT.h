@@ -147,7 +147,7 @@ namespace _2Real
 
 		ImageChannelT()
 		{
-			m_ChannelObject = std::shared_ptr< ChannelObject >(new ChannelObject(NULL, false, 0, 0, 0, 1));
+			m_ChannelObject = std::shared_ptr< ChannelObject >(new ChannelObject(nullptr, false, 0, 0, 0, 1));
 		};
 
 		ImageChannelT(const uint32_t width, const uint32_t height)
@@ -283,7 +283,7 @@ namespace _2Real
 
 		ImageT()
 		{
-			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(NULL, false, 0, 0, 0, ImageChannelOrder::RGBA));
+			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(nullptr, false, 0, 0, 0, ImageChannelOrder::RGBA));
 		}
 
 		ImageT& operator=( ImageT const& src )
@@ -379,7 +379,7 @@ namespace _2Real
 		ImageChannelT< T > const&	getChannelBlue() const { return m_ImageObject->m_Channels[ImageChannelOrder::BLUE]; }
 		ImageChannelT< T > const&	getChannelAlpha() const { return m_ImageObject->m_Channels[ImageChannelOrder::ALPHA]; }
 
-		bool isEmpty() const		{ return ( m_ImageObject->m_Width == 0 || m_ImageObject->m_Height == 0 || m_ImageObject->m_ImageData == NULL ); }
+		bool isEmpty() const		{ return ( m_ImageObject->m_Width == 0 || m_ImageObject->m_Height == 0 || m_ImageObject->m_ImageData == nullptr ); }
 
 	private:
 

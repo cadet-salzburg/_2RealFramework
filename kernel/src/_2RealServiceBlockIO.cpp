@@ -41,12 +41,22 @@ namespace _2Real
 	{
 		clear();
 
-		for ( DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.begin(); it != m_DataFunctionCallbacks.end(); ++it )
+		for ( OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.begin(); it != m_OutletFunctionCallbacks.end(); ++it )
 		{
 			delete *it;
 		}
 
-		for ( DataCallbackHandlers::iterator it = m_DataCallbackHandlers.begin(); it != m_DataCallbackHandlers.end(); ++it )
+		for ( OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.begin(); it != m_OutletCallbackHandlers.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
 		{
 			delete *it;
 		}
@@ -140,14 +150,14 @@ namespace _2Real
 	//	m_Outlets.insert(std::make_pair(outlet->getName(), outlet));
 	//}
 
-	void ServiceIO::registerToNewData( std::string const& outName, DataCallback callback, void *userData )
+	void ServiceIO::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
-		DataFunctionCallback *cb = new DataFunctionCallback( callback, userData );
+		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
 		
-		DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.find( cb );
-		if ( it == m_DataFunctionCallbacks.end() )
+		OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.find( cb );
+		if ( it == m_OutletFunctionCallbacks.end() )
 		{
-			m_DataFunctionCallbacks.insert( cb );
+			m_OutletFunctionCallbacks.insert( cb );
 			
 			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
 			if (outletIt != m_Outlets.end())
@@ -161,12 +171,12 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData )
+	void ServiceIO::unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
-		DataFunctionCallback *cb = new DataFunctionCallback( callback, userData );
+		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
 
-		DataFunctionCallbacks::iterator it = m_DataFunctionCallbacks.find( cb );
-		if ( it != m_DataFunctionCallbacks.end() )
+		OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.find( cb );
+		if ( it != m_OutletFunctionCallbacks.end() )
 		{
 			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
 			if (outletIt != m_Outlets.end())
@@ -175,18 +185,18 @@ namespace _2Real
 			}
 
 			delete *it;
-			m_DataFunctionCallbacks.erase(it);
+			m_OutletFunctionCallbacks.erase(it);
 		}
 
 		delete cb;
 	}
 
-	void ServiceIO::registerToNewData( std::string const& outName, AbstractDataCallbackHandler &handler )
+	void ServiceIO::registerToNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
-		DataCallbackHandlers::iterator it = m_DataCallbackHandlers.find( &handler );
-		if ( it == m_DataCallbackHandlers.end() )
+		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
+		if ( it == m_OutletCallbackHandlers.end() )
 		{
-			m_DataCallbackHandlers.insert( &handler );
+			m_OutletCallbackHandlers.insert( &handler );
 
 			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
 			if (outletIt != m_Outlets.end())
@@ -200,10 +210,10 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( std::string const& outName, AbstractDataCallbackHandler &handler )
+	void ServiceIO::unregisterFromNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
-		DataCallbackHandlers::iterator it = m_DataCallbackHandlers.find( &handler );
-		if ( it != m_DataCallbackHandlers.end() )
+		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
+		if ( it != m_OutletCallbackHandlers.end() )
 		{
 			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
 			if (outletIt != m_Outlets.end())
@@ -212,7 +222,81 @@ namespace _2Real
 			}
 
 			delete *it;
-			m_DataCallbackHandlers.erase(it);
+			m_OutletCallbackHandlers.erase(it);
+		}
+
+		delete &handler;
+	}
+
+	void ServiceIO::registerToNewData( OutputCallback callback, void *userData )
+	{
+		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
+		
+		OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.find( cb );
+		if ( it == m_OutputFunctionCallbacks.end() )
+		{
+			m_OutputFunctionCallbacks.insert( cb );
+			
+			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
+			{
+				outletIt->second->registerCallback( *cb );
+			}
+		}
+		else
+		{
+			delete cb;
+		}
+	}
+
+	void ServiceIO::unregisterFromNewData( OutputCallback callback, void *userData )
+	{
+		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
+
+		OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.find( cb );
+		if ( it != m_OutputFunctionCallbacks.end() )
+		{
+			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
+			{
+				outletIt->second->unregisterCallback( **it );
+			}
+
+			delete *it;
+			m_OutputFunctionCallbacks.erase(it);
+		}
+
+		delete cb;
+	}
+
+	void ServiceIO::registerToNewData( AbstractOutputCallbackHandler &handler )
+	{
+		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
+		if ( it == m_OutputCallbackHandlers.end() )
+		{
+			m_OutputCallbackHandlers.insert( &handler );
+
+			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
+			{
+				outletIt->second->registerCallback( handler );
+			}
+		}
+		else
+		{
+			delete &handler;
+		}
+	}
+
+	void ServiceIO::unregisterFromNewData( AbstractOutputCallbackHandler &handler )
+	{
+		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
+		if ( it != m_OutputCallbackHandlers.end() )
+		{
+			for ( OutletMap::const_iterator outletIt = m_Outlets.begin(); outletIt != m_Outlets.end(); ++outletIt )
+			{
+				outletIt->second->registerCallback( **it );
+			}
+
+			delete *it;
+			m_OutputCallbackHandlers.erase(it);
 		}
 
 		delete &handler;
@@ -262,7 +346,7 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	void ServiceIO::setValue(std::string const& name, Data const& value)
+	void ServiceIO::setValue(std::string const& name, TimestampedData const& value)
 	{
 		ParamMap::iterator paramIt = m_Params.find(name);
 		if (paramIt != m_Params.end())
@@ -283,7 +367,7 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	void ServiceIO::insertValue(std::string const& name, Data &value)
+	void ServiceIO::insertValue(std::string const& name, TimestampedData &value)
 	{
 		InletMap::iterator inletIt = m_Inlets.find(name);
 		if (inletIt != m_Inlets.end())
@@ -358,6 +442,16 @@ namespace _2Real
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
 		{
 			it->second->update();
+		}
+
+		for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+		{
+			( *it )->complete();
+		}
+
+		for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
+		{
+			( *it )->complete();
 		}
 	}
 

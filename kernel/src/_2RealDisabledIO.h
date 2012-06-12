@@ -35,14 +35,18 @@ namespace _2Real
 		//void						addParam(ParameterData const& meta);
 		//void						addInlet(ParameterData const& meta);
 		//void						addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp);
-		void						registerToNewData( std::string const& outName, DataCallback callback, void *userData );
-		void						unregisterFromNewData( std::string const& outName, DataCallback callback, void *userData );
-		void						registerToNewData(std::string const& outlet, AbstractDataCallbackHandler &handler);
-		void						unregisterFromNewData(std::string const& outlet, AbstractDataCallbackHandler &handler);
+		void						registerToNewData( std::string const& outName, OutletCallback callback, void *userData );
+		void						unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData );
+		void						registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
+		void						unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
+		void						registerToNewData(OutputCallback callback, void *userData );
+		void						unregisterFromNewData(OutputCallback callback, void *userData );
+		void						registerToNewData(AbstractOutputCallbackHandler &handler);
+		void						unregisterFromNewData(AbstractOutputCallbackHandler &handler);
 		const EngineData			getValue(std::string const& paramName) const;
 		std::string const&			getKey(std::string const& paramName) const;
-		void						setValue(std::string const& paramName, Data const& value);
-		void						insertValue(std::string const& paramName, Data &value);
+		void						setValue(std::string const& paramName, TimestampedData const& value);
+		void						insertValue(std::string const& paramName, TimestampedData &value);
 		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
 
 		InletMap const&				getInlets() const;

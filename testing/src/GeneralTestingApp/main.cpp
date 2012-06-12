@@ -22,7 +22,7 @@
 #include "_2RealIdentifier.h"
 #include "_2RealException.h"
 #include "_2RealBlockError.h"
-#include "_2RealData.h"
+#include "_2RealOutputData.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealParameterData.h"
@@ -33,6 +33,7 @@
 #include <windows.h>
 #include <iostream>
 #include <map>
+#include <list>
 
 //#include "vld.h"
 
@@ -41,12 +42,13 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::map;
+using std::list;
 using _2Real::Engine;
 using _2Real::System;
 using _2Real::BundleIdentifier;
 using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
-using _2Real::Data;
+using _2Real::OutputData;
 using _2Real::Exception;
 using _2Real::BlockError;
 using _2Real::BundleData;
@@ -67,7 +69,7 @@ class Receiver
 
 public:
 
-	void receiveData( Data &data )
+	void receiveData( OutputData &data )
 	{
 		try
 		{
@@ -94,9 +96,41 @@ private:
 
 };
 
+class BlockReceiver
+{
+
+public:
+
+	void receiveData( list< OutputData > data )
+	{
+		try
+		{
+			ScopedLock< FastMutex > lock( m_Mutex );
+			cout << "received: " << data.size() << " data items" << endl;
+
+			for ( std::list< OutputData >::iterator it = data.begin(); it != data.end(); ++it )
+			{
+				cout << ( *it ).getName() << endl;
+				cout << ( *it ).getTypename() << endl;
+				cout << ( *it ).getDataAsString() << endl;
+			}
+		}
+		catch ( Exception &e )
+		{
+			cout << e.message() << endl;
+		}
+	}
+
+private:
+
+	FastMutex	m_Mutex;
+
+};
+
 int main( int argc, char *argv[] )
 {
 	Receiver< unsigned int > *obj = new Receiver< unsigned int >();
+	BlockReceiver *b = new BlockReceiver();
 
 	Engine &testEngine = Engine::instance();
 	System testSystem( "test system" );
@@ -142,8 +176,9 @@ int main( int argc, char *argv[] )
 
 		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
 		testSystem.link( doubler, "doubler outlet", print, "printout inlet" );
-		testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
-		testSystem.registerToException( *obj, &Receiver< unsigned int >::receiveError );
+		//testSystem.registerToNewData( doubler, "doubler outlet", *obj, &Receiver< unsigned int >::receiveData );
+		//testSystem.registerToException( *obj, &Receiver< unsigned int >::receiveError );
+		testSystem.registerToNewData( doubler, *b, &BlockReceiver::receiveData );
 	}
 	catch ( Exception &e )
 	{
@@ -175,6 +210,7 @@ int main( int argc, char *argv[] )
 	}
 
 	delete obj;
+	delete b;
 
 	return 0;
 }
