@@ -31,7 +31,7 @@ void CameraCaptureBlock::update()
 {
 	try
 	{
-		cout << "test block: context nr = " << m_ContextNumber.data< unsigned int >() << endl;
+	//	cout << "test block: context nr = " << m_ContextNumber.data< unsigned int >() << endl;
 	}
 	catch ( Exception &e )
 	{

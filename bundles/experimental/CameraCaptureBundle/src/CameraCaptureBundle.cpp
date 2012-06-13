@@ -33,6 +33,11 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.addContextParameter< Enumeration >( "context enum", Enumeration( Enums( "enum 1", "value 1" )("enum 2", "value 2"), "no value" ) );
 
 		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock >( "CameraCaptureBlock" );
+		cameraCapture.addInlet<int>("intValue", 0);
+		cameraCapture.addInlet<float>("floatValue", 0);
+		cameraCapture.addOutlet<int>("intValue", 0);
+		cameraCapture.addOutlet<float>("floatValue", 0);
+
 		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )
