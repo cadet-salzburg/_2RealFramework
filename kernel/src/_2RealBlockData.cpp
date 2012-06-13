@@ -207,17 +207,17 @@ namespace _2Real
 		return out;
 	}
 
-	std::map< std::string, ParameterData > const& BlockData::getParameters() const
+	ParameterDataMap const& BlockData::getParameters() const
 	{
 		return m_Parameters;
 	}
 
-	std::map< std::string, ParameterData > const& BlockData::getInlets() const
+	ParameterDataMap const& BlockData::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	std::map< std::string, ParameterData > const& BlockData::getOutlets() const
+	ParameterDataMap const& BlockData::getOutlets() const
 	{
 		return m_Outlets;
 	}

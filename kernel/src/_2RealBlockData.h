@@ -26,6 +26,8 @@
 namespace _2Real
 {
 
+	typedef std::map< std::string, ParameterData >	ParameterDataMap;
+
 	class BlockData
 	{
 
@@ -49,13 +51,11 @@ namespace _2Real
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 
-		std::map< std::string, ParameterData > const& getParameters() const;
-		std::map< std::string, ParameterData > const& getInlets() const;
-		std::map< std::string, ParameterData > const& getOutlets() const;
+		ParameterDataMap const& getParameters() const;
+		ParameterDataMap const& getInlets() const;
+		ParameterDataMap const& getOutlets() const;
 
 	private:
-
-		typedef std::map< std::string, ParameterData >	ParameterDataMap;
 
 		void clear();
 

@@ -175,7 +175,7 @@ namespace _2Real
 		m_ExportedBlocks[ blockName ] = data;
 	}
 
-	std::map< std::string, BlockData > const& BundleData::getExportedBlocks() const
+	BlockDataMap const& BundleData::getExportedBlocks() const
 	{
 		return m_ExportedBlocks;
 	}
