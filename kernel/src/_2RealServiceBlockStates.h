@@ -19,6 +19,8 @@
 #pragma once
 
 #include "_2RealAbstractStateManager.h"
+#include "_2RealUpdatePolicyImpl.h"
+#include "_2RealHelpersInternal.h"
 
 #include "Poco/Event.h"
 #include "Poco/Mutex.h"
@@ -26,93 +28,94 @@
 namespace _2Real
 {
 
-	class AbstractServiceState;
+	class AbstractFunctionBlockState;
 	class ServiceUpdates;
 	class ServiceIO;
 	class ThreadPool;
 	class Logger;
 	class SystemImpl;
+	class Block;
 
-	class ServiceStates : public AbstractStateManager
+	class FunctionBlockStateManager : public AbstractStateManager
 	{
 
 	public:
 
-		ServiceStates(AbstractBlock &owner);
-		~ServiceStates();
+		FunctionBlockStateManager( AbstractBlock &owner );
+		~FunctionBlockStateManager();
 
-		void clear();
-		void setUp();
-		void triggersReady();
-		void beginUpdate();
-		void beginExecution();
-		void finishExecution();
-		void prepareForShutDown();
-		const bool shutDown();
-		void abort();
+		void setUp();							// system
+		void start();							// system
+		Poco::Event & stop();					// system
+		void beginUpdate();						// threadpool
+		void finishUpdate();					// threadpool
+		void prepareForShutDown();				// system
+		bool shutDown( const long timeout );	// system
+		void updateFunctionBlock();				// threadpool
+		void setUpdatePolicy( UpdatePolicyImpl const& policy );
 
-		void disableAllTriggers();
+		void tryTriggerTime( long &time );
+		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
+		void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg ) {}
+		void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg );
 
-		void setUpService();
-		void executeService();
-		void shutDownService();
-		void flagForSetUp();
-		void flagForShutDown();
-		void flagStopped();
-
-		void tryTriggerTime(long &time);
-		void tryTriggerInlet(const void *inlet, std::pair< long, long > &times);
-		void tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage msg);
-		void tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg);
-
-		void subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void subBlockRemoved(AbstractBlock &subBlock);
-		void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void uberBlockRemoved(AbstractBlock &uberBlock);
-
-		const bool conditionalSetUp();
+		void subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg ) {}
+		void subBlockRemoved( AbstractBlock &subBlock) {}
+		void uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg );
+		void uberBlockRemoved( AbstractBlock &uberBlock);
 
 	private:
 
-		friend class ServiceBlock;
+		friend class FunctionBlock;		//needs to set a few things
 
-		const bool areTriggersEnabled() const;
-		const bool areUberTriggersEnabled() const;
-		void resetAndEnableTriggers();
-		void resetAndEnableUberTriggers();
-		void disableTriggers();
-		void disableUberTriggers();
-		void initFrom(UpdatePolicyImpl const& policy);
-		void evaluateTriggers();
-		void evaluateUberTriggers();
-		bool hasUberTriggers();
-		void notifyUberTriggers( const BlockMessage msg );
-
+		void changePolicy();
 		void handleStateChangeException(Exception &e);
+		void triggersAreOk();
+		void uberBlocksAreOk();
+		void disableAllTriggers();
+		void disableTriggers();
+		void disableUberBlockTriggers();
+		void resetAllTriggers();
+		void resetTriggers();
+		void resetUberBlockTriggers( const bool notify );
+		void enableAllTriggers();
+		void enableTriggers();
+		void enableUberBlockTriggers();
+		bool areTriggersEnabled() const;
+		bool areUberBlockTriggersEnabled() const;
+		void evaluateTriggers();
+		void evaluateUberBlockTriggers();
 
-		mutable Poco::FastMutex									m_TriggerAccess;
-		AbstractTimeBasedTrigger								*m_Time;
-		std::map< std::string, AbstractInletBasedTrigger * >	m_Inlets;
+		ThreadPool						&m_Threads;
+		Logger							&m_Logger;
+		ServiceIO						*m_IO;
+		SystemImpl						*m_System;
+		Block							*m_FunctionBlock;
 
-		mutable Poco::FastMutex									m_UberTriggerAccess;
-		TriggerMap												m_UberTriggers;
+		mutable Poco::FastMutex			m_TriggerAccess;
+		AbstractTimeBasedTrigger		*m_TimeTrigger;
+		InletTriggerMap					m_InletTriggers;
 
-		mutable Poco::FastMutex									m_EnabledAccess;
-		bool													m_UberTriggersEnabled;
-		bool													m_TriggersEnabled;
+		mutable Poco::FastMutex			m_UberTriggerAccess;
+		BlockTriggerMap					m_UberTriggers;
 
-		mutable Poco::FastMutex									m_StateAccess;
-		AbstractServiceState									*m_CurrentState;
+		mutable Poco::FastMutex			m_EnabledAccess;
+		bool							m_UberTriggersEnabled;
+		bool							m_TriggersEnabled;
 
-		bool													m_FlaggedForSetUp;
-		bool													m_FlaggedForShutDown;
-		bool													m_FlaggedForAbort;
-		Poco::Event												m_StopEvent;
+		mutable Poco::FastMutex			m_StateAccess;
+		AbstractFunctionBlockState		*m_CurrentState;
 
-		ServiceIO												*m_IO;
-		SystemImpl												*m_System;
-		ThreadPool												&m_Threads;
-		Logger													&m_Logger;
+		// the three types of user interactions that might occur during an update cycle
+		// ( ok, in theory there's also start - but that's pretty irrelevant )
+		SafeBool						m_FlaggedForSetUp;
+		SafeBool						m_FlaggedForStop;
+		SafeBool						m_FlaggedForPolicyChange;
+
+		// needed for policy change
+		Poco::FastMutex					m_PolicyAccess;
+		UpdatePolicyImpl				const* m_NewPolicy;
+		UpdatePolicyImpl				const* m_CurrentPolicy;
 
 	};
 

@@ -40,21 +40,20 @@ namespace _2Real
 
 		for (BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
-			std::cout << "preparing: " << ( *it )->getName() << std::endl;
 			(*it)->prepareForShutDown();
-			std::cout << "done: " << ( *it )->getName() << std::endl;
 		}
 
 		for (BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/)
 		{
-			if ((*it)->shutDown())
+			if ((*it)->shutDown( 1000 ))
 			{
 				ready.push_back(*it);
-				std::cout << "shut down " << ( *it )->getName() << std::endl;
 			}
 			else
 			{
+#ifdef _2REAL_DEBUG
 				std::cout << "failed to shut down " << ( *it )->getName() << std::endl;
+#endif
 			}
 
 			it = m_Blocks.erase(it);
@@ -97,7 +96,7 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	void OwnedAndUnordered::addBlock(AbstractBlock &block)
+	void OwnedAndUnordered::addBlock( AbstractBlock &block )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
 		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
@@ -109,17 +108,23 @@ namespace _2Real
 			}
 		}
 		
-		m_Blocks.push_back(&block);
+		m_Blocks.push_back( &block );
 	}
 
-	void OwnedAndUnordered::removeBlock(AbstractBlock &block)
+	void OwnedAndUnordered::removeBlock( AbstractBlock &block )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
-		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		for ( std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
-			if (*it == &block)
+			if ( *it == &block )
 			{
-				it = m_Blocks.erase(it);
+				( *it )->prepareForShutDown();
+				if ( (*it)->shutDown( 5000 ) )
+				{
+					delete *it;
+				}
+
+				m_Blocks.erase( it );
 				break;
 			}
 		}

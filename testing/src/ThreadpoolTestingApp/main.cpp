@@ -60,14 +60,20 @@ int main( int argc, char *argv[] )
 
 		for ( unsigned int i=0; i<500; ++i )
 		{
-			BlockIdentifier out = testSystem.createBlock( testBundle, "out", fpsTrigger );
+			BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
 			testSystem.setup( out );
+			testSystem.setPolicy( out, fpsTrigger );
+			testSystem.start( out );
 
-			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out", newTrigger );
+			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
 			testSystem.setup( inout );
+			testSystem.setPolicy( inout, newTrigger );
+			testSystem.start( inout );
 
-			BlockIdentifier in = testSystem.createBlock( testBundle, "in", newTrigger );
-			testSystem.setup( in );
+			BlockIdentifier in = testSystem.createBlock( testBundle, "in" );
+			testSystem.setup(  in );
+			testSystem.setPolicy( in, newTrigger );
+			testSystem.start( in );
 
 			testSystem.link( out, "outlet", inout, "inlet" );
 			testSystem.link( inout, "outlet", in, "inlet" );

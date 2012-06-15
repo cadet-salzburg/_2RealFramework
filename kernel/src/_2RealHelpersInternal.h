@@ -29,10 +29,49 @@
 #include <sstream>
 #include <iostream>
 
-#include "Poco/Path.h"
+#include "Poco/Mutex.h"
+
+namespace Poco
+{
+	class Path;
+}
 
 namespace _2Real
 {
+
+	class SafeBool
+	{
+
+	public:
+
+		explicit SafeBool( const bool val );
+
+		bool isSet() const;
+		bool isUnset() const;
+		void set();
+		void unset();
+
+	private:
+
+		SafeBool( SafeBool const& src );
+		SafeBool& operator=( SafeBool const& src );
+
+		mutable Poco::FastMutex		m_Access;
+		bool						m_Bool;
+
+	};
+
+	template< class T > void safeDelete( T*& pVal )
+	{
+		delete pVal;
+		pVal = nullptr;
+	}
+
+	template< class T > void safeDeleteArray( T*& pVal )
+	{
+		delete[] pVal;
+		pVal = nullptr;
+	}
 
 	const std::string validateName(std::string const& s);
 	const std::string pathToName(Poco::Path const& path);

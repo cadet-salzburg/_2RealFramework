@@ -42,33 +42,33 @@ namespace _2Real
 
 		void clear();
 
-		const BlockIdentifier
-		createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers = UpdatePolicy() );
+		// creates block & adds it to system
+		// default policy: all data must be new & 30 updates per second
+		const BlockIdentifier createBlock( BundleIdentifier const& bundle, std::string const& blockName );
 
-		// will stop the block, if started
-		// will call setup
-		// block will then be in need of start() or update()
+		// calls setup once the next update cycle is finished
+		// or immediately if block was never started
 		void setup( BlockIdentifier const& block );
 
-		// will stop the block, if started
-		// will cause block to update with @policy
-		// will throw an exception if block was not set succesfully
-		//void start( BlockIdentifier const& block, UpdatePolicy const& policy = UpdatePolicy() );
+		// starts the block -> causes it to be updated
+		// throws a InvalidStateChangeException if block was not set succesfully
+		void start( BlockIdentifier const& block );
 
 		// stops the block
-		// block will then be in need of either start() or an update()
-		//void stop( BlockIdentifier const& block );
+		// will block for up to the specified amount of time, and throw a TimeOutException if unsuccsessful
+		void stop( BlockIdentifier const& block, const long timeout = LONG_MAX );
 
-		// stops the block, but does keep the policy?
-		//void pause( BlockIdentifier const& block );
+		// throws a InvalidStateChangeException if block was not set succesfully
+		// stops the block, if you don't do it yourself before
+		// then, carries out a single update
+		void singleStep( BlockIdentifier const& block );
 
-		// exactely what it says on the tin.
-		//void unpause( BlockIdentifier const& block );
+		// calls shut down, and destroys the block
+		// will stop the block if you don't do it before
+		void destroy( BlockIdentifier const& block );
 
-		// will stop the block, if started
-		// will then carry out the desired number of updated, with @policy
-		// block will then be stopped
-		//void update( const unsigned int count = 1, UpdatePolicy const& policy = UpdatePolicy() );
+		// update cycle needs to be finished for this
+		void setPolicy( BlockIdentifier const& block, UpdatePolicy const& policy );
 
 		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 

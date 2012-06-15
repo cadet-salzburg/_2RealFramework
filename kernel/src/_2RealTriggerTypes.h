@@ -33,7 +33,7 @@ namespace _2Real
 
 		Trigger() : m_IsFulfilled(false) {}
 		virtual ~Trigger() {}
-		const bool ok() { return m_IsFulfilled; }
+		bool ok() { return m_IsFulfilled; }
 		virtual void set() { m_IsFulfilled = true; }
 		virtual void reset() { m_IsFulfilled = false; }
 
@@ -80,7 +80,7 @@ namespace _2Real
 		const bool tryTrigger(const long time)
 		{
 			m_ElapsedTime += time;
-			if (m_TriggerCondition(m_ElapsedTime, m_DesiredTime))
+			if ( m_TriggerCondition(m_ElapsedTime, m_DesiredTime) && !ok() )
 			{
 				m_ElapsedTime = 0;
 				set();
@@ -128,7 +128,7 @@ namespace _2Real
 		InletBasedTrigger(std::string const& inletName) : AbstractInletBasedTrigger(inletName) {}
 		const bool tryTrigger(const long lastUpdate, const long newData)
 		{
-			if (m_TriggerCondition(lastUpdate, newData))
+			if ( m_TriggerCondition(lastUpdate, newData) && !ok() )
 			{
 				set();
 				return true;
@@ -176,7 +176,7 @@ namespace _2Real
 		BlockBasedTrigger(std::string const& blockName) : AbstractBlockBasedTrigger(blockName) {}
 		const bool tryTrigger(const BlockMessage state)
 		{
-			if (state == TriggerState)
+			if ( state == TriggerState && !ok() )
 			{
 				set();
 				return true;
@@ -185,5 +185,10 @@ namespace _2Real
 		}
 
 	};
+
+	class AbstractStateManager;
+
+	typedef std::map< std::string, AbstractInletBasedTrigger * >	InletTriggerMap;
+	typedef std::map< std::string, std::pair< AbstractBlockBasedTrigger *, AbstractStateManager * > >	BlockTriggerMap;
 
 }

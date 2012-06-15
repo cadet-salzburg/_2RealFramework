@@ -41,6 +41,7 @@ namespace _2Real
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
+	class UpdatePolicyImpl;
 
 	typedef std::map< std::string, Inlet * >		InletMap;
 	typedef std::map< std::string, Outlet * >		OutletMap;
@@ -62,10 +63,10 @@ namespace _2Real
 		AbstractBlock const&					getSuperBlock() const;
 		void									setSuperBlock(AbstractBlock &superBlock);
 
-		virtual void							addSubBlock(AbstractBlock &subBlock) = 0;
-		virtual void							removeSubBlock(AbstractBlock &subBlock) = 0;
-		virtual void							addUberBlock(AbstractBlock &uberBlock) = 0;
-		virtual void							removeUberBlock(AbstractBlock &uberBlock) = 0;
+		virtual void							addSubBlock( AbstractBlock &subBlock ) = 0;
+		virtual void							removeSubBlock( AbstractBlock &subBlock ) = 0;
+		virtual void							addUberBlock( AbstractBlock &uberBlock ) = 0;
+		virtual void							removeUberBlock( AbstractBlock &uberBlock ) = 0;
 		//virtual std::list< Identifier >			getCurrentSubBlocks() const = 0;
 		//virtual std::list< Identifier >			getCurrentUberBlocks() const = 0;
 
@@ -77,6 +78,7 @@ namespace _2Real
 		virtual void							unregisterFromNewData(OutputCallback callback, void *userData) = 0;
 		virtual void							registerToNewData(AbstractOutputCallbackHandler &handler) = 0;
 		virtual void							unregisterFromNewData(AbstractOutputCallbackHandler &handler) = 0;
+
 		virtual const EngineData				getValue(std::string const& paramName) const = 0;
 		virtual std::string const&				getKey(std::string const& paramName) const = 0;
 		virtual void							setValue(std::string const& paramName, TimestampedData const& value) = 0;
@@ -84,17 +86,18 @@ namespace _2Real
 		virtual void							linkWith(std::string const& nameIn, AbstractBlock &out, std::string const& nameOut) = 0;
 
 		virtual void							setUp() = 0;
+		virtual void							start() = 0;
+		virtual void							stop( const bool blocking, const long timeout ) = 0;
 		virtual void							prepareForShutDown() = 0;
-		virtual const bool						shutDown() = 0;
+		virtual bool							shutDown( const long timeout ) = 0;
+		virtual void							setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
 		virtual AbstractStateManager &			getStateManager() = 0;
-		//virtual AbstractUpdateManager &			getTriggerManager() = 0;
 		virtual AbstractBlockManager &			getSubBlockManager() = 0;
 		virtual AbstractBlockManager &			getUberBlockManager() = 0;
 		virtual AbstractIOManager &				getIOManager() = 0;
 
 		virtual AbstractStateManager const&		getStateManager() const = 0;
-		//virtual AbstractUpdateManager const&	getTriggerManager() const = 0;
 		virtual AbstractBlockManager const&		getSubBlockManager() const = 0;
 		virtual AbstractBlockManager const &	getUberBlockManager() const = 0;
 		virtual AbstractIOManager const&		getIOManager() const = 0;

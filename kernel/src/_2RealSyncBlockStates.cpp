@@ -34,24 +34,23 @@ namespace _2Real
 
 	SyncStates::~SyncStates()
 	{
-		clear();
-	}
-
-	void SyncStates::clear()
-	{
 		delete m_CurrentState;
 
-		for (TriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); /**/)
+		for ( BlockTriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); /**/ )
 		{
 			delete it->second.first;
 			it = m_ReadySet.erase(it);
 		}
 
-		for (TriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); /**/)
+		for ( BlockTriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); /**/ )
 		{
 			delete it->second.first;
 			it = m_FinishedSet.erase(it);
 		}
+	}
+
+	void SyncStates::setUpdatePolicy( UpdatePolicyImpl const& policy )
+	{
 	}
 
 	void SyncStates::setUp()
@@ -70,6 +69,15 @@ namespace _2Real
 		}
 	}
 
+	void SyncStates::start()
+	{
+	}
+
+	Poco::Event & SyncStates::stop()
+	{
+		return m_StopEvent;
+	}
+
 	void SyncStates::prepareForShutDown()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_StateAccess);
@@ -86,12 +94,12 @@ namespace _2Real
 		}
 	}
 
-	const bool SyncStates::shutDown()
+	bool SyncStates::shutDown( const long timeout )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_StateAccess);
 		try
 		{
-			m_CurrentState->shutDown(*this);
+			m_CurrentState->shutDown( *this );
 			delete m_CurrentState;
 			m_CurrentState = new SyncStateShutDown();
 			//m_Logger.addLine( std::string( getName() + " new sync state: shut down" ) );
@@ -140,7 +148,6 @@ namespace _2Real
 
 	void SyncStates::handleStateChangeException(Exception &e)
 	{
-		std::cout << getName() << " ERROR " << e.message() << std::endl;
 		delete m_CurrentState;
 		m_CurrentState = new SyncStateError();
 		//m_Logger.addLine( std::string( getName() + " new sync state: error\n\t" + e.message() ) );
@@ -149,7 +156,7 @@ namespace _2Real
 	void SyncStates::resetAndEnableReadySet()
 	{
 		m_ReadyAccess.lock();
-		for (TriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
 		{
 			it->second.first->reset();
 		}
@@ -163,7 +170,7 @@ namespace _2Real
 	void SyncStates::resetAndEnableFinishedSet()
 	{
 		m_FinishedAccess.lock();
-		for (TriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
 		{
 			it->second.first->reset();
 		}
@@ -208,7 +215,7 @@ namespace _2Real
 	void SyncStates::notifyFinishedSet()
 	{
 		m_FinishedAccess.lock();
-		for (TriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
 		{
 			it->second.second->tryTriggerUberBlock( *this, BLOCK_OK );
 		}
@@ -218,7 +225,7 @@ namespace _2Real
 	void SyncStates::notifyReadySet()
 	{
 		m_ReadyAccess.lock();
-		for (TriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
 		{
 			it->second.second->tryTriggerUberBlock( *this, BLOCK_OK );
 		}
@@ -228,7 +235,7 @@ namespace _2Real
 	void SyncStates::evaluateReadyTriggers()
 	{
 		bool triggersOk = true;
-		for (TriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_ReadySet.begin(); it != m_ReadySet.end(); ++it)
 		{
 			triggersOk &= it->second.first->ok();
 		}
@@ -244,7 +251,7 @@ namespace _2Real
 	void SyncStates::evaluateFinishedTriggers()
 	{
 		bool triggersOk = true;
-		for (TriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
+		for (BlockTriggerMap::iterator it = m_FinishedSet.begin(); it != m_FinishedSet.end(); ++it)
 		{
 			triggersOk &= it->second.first->ok();
 		}
@@ -263,7 +270,7 @@ namespace _2Real
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_ReadyAccess );
 
-			TriggerMap::iterator it = m_ReadySet.find( subBlock.getName() );
+			BlockTriggerMap::iterator it = m_ReadySet.find( subBlock.getName() );
 			if ( it != m_ReadySet.end() )
 			{
 				delete it->second.first;
@@ -276,7 +283,7 @@ namespace _2Real
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_FinishedAccess );
 
-			TriggerMap::iterator it = m_FinishedSet.find( subBlock.getName() );
+			BlockTriggerMap::iterator it = m_FinishedSet.find( subBlock.getName() );
 			if ( it != m_FinishedSet.end() )
 			{
 				delete it->second.first;
@@ -290,7 +297,7 @@ namespace _2Real
 	void SyncStates::subBlockRemoved(AbstractBlock &subBlock)
 	{
 		//Poco::ScopedLock< Poco::FastMutex > lock(m_TriggerAccess);
-		//TriggerMap::iterator it = m_SubTriggers.find(subBlock.getName());
+		//BlockTriggerMap::iterator it = m_SubTriggers.find(subBlock.getName());
 		//if (it != m_SubTriggers.end())
 		//{
 		//	delete it->second.first;
@@ -329,7 +336,7 @@ namespace _2Real
 				return;
 			}
 
-			TriggerMap::iterator it = m_ReadySet.find(sub.getName());
+			BlockTriggerMap::iterator it = m_ReadySet.find(sub.getName());
 			if (it != m_ReadySet.end() && it->second.first->tryTrigger(msg))
 			{
 				evaluateReadyTriggers();
@@ -348,7 +355,7 @@ namespace _2Real
 				return;
 			}
 
-			TriggerMap::iterator it = m_FinishedSet.find(sub.getName());
+			BlockTriggerMap::iterator it = m_FinishedSet.find(sub.getName());
 			if (it != m_FinishedSet.end() && it->second.first->tryTrigger(msg))
 			{
 				evaluateFinishedTriggers();

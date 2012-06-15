@@ -156,14 +156,20 @@ int main( int argc, char *argv[] )
 			cout << "default value: " << p.getDefaultValue() << endl;
 		}
 
-		BlockIdentifier counter = testSystem.createBlock( testBundle, "counter", fpsTrigger );
+		BlockIdentifier counter = testSystem.createBlock( testBundle, "counter" );
 		testSystem.setup( counter );
+		testSystem.setPolicy( counter, fpsTrigger );
+		testSystem.start( counter );
 
-		BlockIdentifier doubler = testSystem.createBlock( testBundle, "doubler", newTrigger );
+		BlockIdentifier doubler = testSystem.createBlock( testBundle, "doubler" );
 		testSystem.setup( doubler );
+		testSystem.setPolicy( doubler, newTrigger );
+		testSystem.start( doubler );
 
-		BlockIdentifier print = testSystem.createBlock( testBundle, "print out", newTrigger );
+		BlockIdentifier print = testSystem.createBlock( testBundle, "print out" );
 		testSystem.setup( print );
+		testSystem.setPolicy( print, newTrigger );
+		testSystem.start( print );
 
 		testSystem.link( counter, "counter outlet", doubler, "doubler inlet" );
 		testSystem.link( doubler, "doubler outlet", print, "printout inlet" );

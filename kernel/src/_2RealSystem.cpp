@@ -42,14 +42,39 @@ namespace _2Real
 		m_Impl->clear();
 	}
 
-	const BlockIdentifier System::createBlock( BundleIdentifier const& bundle, std::string const& blockName, UpdatePolicy const& triggers )
+	const BlockIdentifier System::createBlock( BundleIdentifier const& bundle, std::string const& blockName )
 	{
-		return m_Impl->createServiceBlock( bundle, blockName, triggers );
+		return m_Impl->createFunctionBlock( bundle, blockName );
+	}
+
+	void System::setPolicy( BlockIdentifier const& block, UpdatePolicy const& policy )
+	{
+		m_Impl->setUpdatePolicy( block, policy );
 	}
 
 	void System::setup( BlockIdentifier const& block )
 	{
 		m_Impl->setUp( block );
+	}
+
+	void System::start( BlockIdentifier const& block )
+	{
+		m_Impl->start( block );
+	}
+
+	void System::stop( BlockIdentifier const& block, const long timeout )
+	{
+		m_Impl->stop( block, timeout );
+	}
+
+	void System::singleStep( BlockIdentifier const& block )
+	{
+		m_Impl->singleStep( block );
+	}
+
+	void System::destroy( BlockIdentifier const& block )
+	{
+		m_Impl->destroy( block );
 	}
 
 	void System::setValueInternal( BlockIdentifier const& id, std::string const& param, EngineData const& value )

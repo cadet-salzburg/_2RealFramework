@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractIOManager.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractServiceBlockState.h" />
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
@@ -32,13 +31,6 @@
     <ClInclude Include="..\..\src\_2RealServiceBlock.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlockIO.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlockStates.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateCreated.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateError.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateExecuting.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStatePreShutDown.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateSetUp.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateShutDown.h" />
-    <ClInclude Include="..\..\src\_2RealServiceStateUpdating.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSyncBlock.h" />
@@ -72,6 +64,7 @@
     <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
     <ClInclude Include="..\..\src\_2RealBundleIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealBlockIdentifier.h" />
+    <ClInclude Include="..\..\src\_2RealUserBlockState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
@@ -98,13 +91,6 @@
     <ClCompile Include="..\..\src\_2RealServiceBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceBlockIO.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceBlockStates.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateCreated.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateError.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateExecuting.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStatePreShutDown.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateSetUp.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateShutDown.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceStateUpdating.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealSyncBlockStates.cpp" />
@@ -131,5 +117,6 @@
     <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
+    <ClCompile Include="..\..\src\_2RealUserBlockState.cpp" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ namespace _2Real
 		ServiceIO(AbstractBlock &owner);
 		~ServiceIO();
 
-		void						initFrom( BlockData const& meta, Poco::Timestamp const& time, UpdatePolicyImpl const& policy );
+		void						initFrom( BlockData const& meta, Poco::Timestamp const& time );
 
 		void						clear();
 		//void						addParam(ParameterData const& meta);

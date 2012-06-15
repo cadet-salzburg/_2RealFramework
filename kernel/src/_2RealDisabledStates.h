@@ -20,33 +20,45 @@
 
 #include "_2RealAbstractStateManager.h"
 
+#include "Poco/Mutex.h"
+
 namespace _2Real
 {
 
-	class DisabledStates : public AbstractStateManager
+	class SystemStates : public AbstractStateManager
 	{
 
 	public:
 
-		DisabledStates(AbstractBlock &owner);
-		~DisabledStates();
+		SystemStates( AbstractBlock &owner );
 
-		void		clear();
-		void		setUp();
-		void		prepareForShutDown();
-		const bool	shutDown();
+		void				setUp();
+		void				start();
+		Poco::Event &		stop();
+		void				prepareForShutDown();
+		bool				shutDown( const long timeout );
+		void				setUpdatePolicy( UpdatePolicyImpl const& policy );
 
-		void tryTriggerTime(long &time);
-		void tryTriggerInlet(const void *inlet, std::pair< long, long > &times);
-		void tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage msg);
-		void tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg);
+		void tryTriggerTime( long &time );
+		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
+		void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg );
+		void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg );
 
-		void subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void subBlockRemoved(AbstractBlock &subBlock);
-		void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void uberBlockRemoved(AbstractBlock &uberBlock);
-		void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger);
-		void inletRemoved(Inlet &slot);
+		void subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg );
+		void subBlockRemoved( AbstractBlock &subBlock );
+		void uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg );
+		void uberBlockRemoved( AbstractBlock &uberBlock );
+		void inletAdded( Inlet &inlet, AbstractInletBasedTrigger &trigger );
+		void inletRemoved( Inlet &inlet );
+
+	private:
+
+		friend class SystemImpl;
+
+		void setAllowedUpdates( AbstractBlock &block, const unsigned long updates );
+
+		mutable Poco::FastMutex						m_UpdateAccess;
+		std::map< std::string, unsigned long >		m_BlockUpdates;
 
 	};
 

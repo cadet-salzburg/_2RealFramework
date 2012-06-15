@@ -27,27 +27,21 @@
 namespace _2Real
 {
 
+	class Block;
 	class SystemImpl;
 	class UpdatePolicyImpl;
 
-	class ServiceBlock : public UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates >
+	class FunctionBlock : public UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager >
 	{
 
 	public:
 
-		ServiceBlock( BlockData const& data, Block& block, SystemImpl &owner, UpdatePolicyImpl const& triggers );
-		~ServiceBlock();
+		FunctionBlock( BlockData const& data, Block& block, SystemImpl &owner, std::string const& name );
 
-		void			setUpService();
-		void			executeService();
-		void			shutDownService();
 		InletHandle		createInletHandle(std::string const& inletName);
 		OutletHandle	createOutletHandle(std::string const& outletName);
 
-		Block * getBlock()
-		{
-			return &m_Block;
-		}
+		Block * getBlock() { return &m_Block; }
 
 	private:
 

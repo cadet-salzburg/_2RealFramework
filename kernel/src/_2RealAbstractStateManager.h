@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "Poco/Event.h"
+
 namespace _2Real
 {
 
@@ -38,12 +40,14 @@ namespace _2Real
 		virtual ~AbstractStateManager();
 
 		std::string const& getName() const;
-		const unsigned int getId() const;
+		unsigned int getId() const;
 
-		virtual void clear() = 0;
 		virtual void setUp() = 0;
+		virtual void start() = 0;
+		virtual Poco::Event & stop() = 0;
 		virtual void prepareForShutDown() = 0;
-		virtual const bool shutDown() = 0;
+		virtual bool shutDown( const long timeout ) = 0;
+		virtual void setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
 		//called by the timer thread
 		virtual void tryTriggerTime(long &time) = 0;
@@ -71,9 +75,8 @@ namespace _2Real
 	protected:
 
 		AbstractBlock					&m_Owner;
+		Poco::Event						m_StopEvent;
 
 	};
-
-	typedef std::map< std::string, std::pair< AbstractBlockBasedTrigger *, AbstractStateManager * > >	TriggerMap;
 
 }

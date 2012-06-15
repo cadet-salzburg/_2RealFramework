@@ -22,6 +22,7 @@
 #include "_2RealAbstractUberBlockManager.h"
 #include "_2RealAbstractIOManager.h"
 #include "_2RealAbstractStateManager.h"
+#include "_2RealException.h"
 
 namespace _2Real
 {
@@ -49,24 +50,24 @@ namespace _2Real
 			delete m_UberBlockManager;
 		}
 
-		void addUberBlock(AbstractBlock &uberBlock)
+		void addUberBlock( AbstractBlock &uberBlock )
 		{
-			m_UberBlockManager->addBlock(uberBlock);
+			m_UberBlockManager->addBlock( uberBlock );
 		}
 		
-		void removeUberBlock(AbstractBlock &uberBlock)
+		void removeUberBlock( AbstractBlock &uberBlock )
 		{
-			m_UberBlockManager->removeBlock(uberBlock);
+			m_UberBlockManager->removeBlock( uberBlock);
 		}
 
-		void addSubBlock(AbstractBlock &subBlock)
+		void addSubBlock( AbstractBlock &subBlock )
 		{
-			m_SubBlockManager->addBlock(subBlock);
+			m_SubBlockManager->addBlock( subBlock );
 		}
 
-		void removeSubBlock(AbstractBlock &subBlock)
+		void removeSubBlock( AbstractBlock &subBlock )
 		{
-			m_SubBlockManager->removeBlock(subBlock);
+			m_SubBlockManager->removeBlock( subBlock );
 		}
 
 		void registerToNewData(std::string const& outlet, OutletCallback callback, void *userData)
@@ -139,14 +140,38 @@ namespace _2Real
 			m_StateManager->setUp();
 		}
 
+		void start()
+		{
+			m_StateManager->start();
+		}
+
+		void setUpdatePolicy( UpdatePolicyImpl const& policy )
+		{
+			m_StateManager->setUpdatePolicy( policy );
+		}
+
+		void stop( const bool blocking, const long timeout )
+		{
+			Poco::Event & ev = m_StateManager->stop();
+			if ( blocking )
+			{
+				if ( !ev.tryWait( timeout ) )
+				{
+					std::ostringstream msg;
+					msg << "timeout reached on " << getName() << " stop()" << std::endl;
+					throw TimeOutException( msg.str() );
+				}
+			}
+		}
+
 		void prepareForShutDown()
 		{
 			m_StateManager->prepareForShutDown();
 		}
 
-		const bool shutDown()
+		bool shutDown( const long timeout )
 		{
-			return m_StateManager->shutDown();
+			return m_StateManager->shutDown( timeout );
 		}
 
 		AbstractStateManager& getStateManager()

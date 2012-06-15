@@ -22,7 +22,8 @@
 namespace _2Real
 {
 	AbstractStateManager::AbstractStateManager(AbstractBlock &owner) : 
-		m_Owner(owner)
+		m_Owner(owner),
+		m_StopEvent( false )
 	{
 	}
 
@@ -35,8 +36,8 @@ namespace _2Real
 		return m_Owner.getName();
 	}
 
-	const unsigned int AbstractStateManager::getId() const 
-	{ 
+	unsigned int AbstractStateManager::getId() const 
+	{
 		return m_Owner.getId();
 	}
 

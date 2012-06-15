@@ -17,74 +17,106 @@
 */
 
 #include "_2RealDisabledStates.h"
+#include "_2RealAbstractUberBlock.h"
+
+#include <assert.h>
 
 namespace _2Real
 {
 
-	DisabledStates::DisabledStates(AbstractBlock &owner) :
+	SystemStates::SystemStates(AbstractBlock &owner) :
 		AbstractStateManager(owner)
 	{
 	}
 
-	DisabledStates::~DisabledStates()
-	{
-		clear();
-	}
-
-	void DisabledStates::clear()
+	void SystemStates::start()
 	{
 	}
 
-	void DisabledStates::setUp()
+	void SystemStates::setUp()
 	{
 	}
 
-	void DisabledStates::prepareForShutDown()
+	Poco::Event & SystemStates::stop()
+	{
+		return m_StopEvent;
+	}
+
+	void SystemStates::prepareForShutDown()
 	{
 	}
 
-	const bool DisabledStates::shutDown()
+	bool SystemStates::shutDown( const long timeout )
 	{
 		return true;
 	}
 
-	void DisabledStates::tryTriggerInlet(const void *inlet, std::pair< long, long > &times)
+	void SystemStates::setUpdatePolicy( UpdatePolicyImpl const& policy )
 	{
 	}
 
-	void DisabledStates::tryTriggerTime(long &time)
+	void SystemStates::tryTriggerInlet(const void *inlet, std::pair< long, long > &times)
 	{
 	}
 
-	void DisabledStates::tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage desiredMsg)
+	void SystemStates::tryTriggerTime(long &time)
 	{
 	}
 
-	void DisabledStates::tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage desiredMsg)
+	void SystemStates::tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UpdateAccess );
+		std::map< std::string, unsigned long >::iterator it = m_BlockUpdates.find( sub.getName() );
+		if ( it != m_BlockUpdates.end() && it->second > 0 )
+		{
+			it->second -= 1;	// consume an allowed update
+			sub.tryTriggerUberBlock( *this, BLOCK_OK );
+		}
+		else if ( it != m_BlockUpdates.end() && it->second == 0 )
+		{
+			sub.stop();
+		}
+		else
+		{
+#ifdef _DEBUG
+			assert( NULL );
+#endif
+		}
+	}
+
+	void SystemStates::tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg)
 	{
 	}
 
-	void DisabledStates::subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg)
+	void SystemStates::subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage msg )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UpdateAccess );
+		m_BlockUpdates[ subBlock.getName() ] = static_cast< unsigned long >( 0 );
+	}
+
+	void SystemStates::subBlockRemoved( AbstractBlock &subBlock )
 	{
 	}
 
-	void DisabledStates::subBlockRemoved(AbstractBlock &subBlock)
+	void SystemStates::setAllowedUpdates( AbstractBlock &block, const unsigned long updates )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UpdateAccess );
+		m_BlockUpdates[ block.getName() ] = updates;
+	}
+
+	void SystemStates::uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage msg )
 	{
 	}
 
-	void DisabledStates::uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg)
+	void SystemStates::uberBlockRemoved( AbstractBlock &uberBlock )
 	{
 	}
 
-	void DisabledStates::uberBlockRemoved(AbstractBlock &uberBlock)
+	void SystemStates::inletAdded( Inlet &inlet, AbstractInletBasedTrigger &trigger )
 	{
 	}
 
-	void DisabledStates::inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger)
-	{
-	}
-
-	void DisabledStates::inletRemoved(Inlet &slot)
+	void SystemStates::inletRemoved( Inlet &inlet )
 	{
 	}
 

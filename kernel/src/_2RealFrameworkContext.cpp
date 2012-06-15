@@ -24,7 +24,7 @@ using std::string;
 namespace _2Real
 {
 
-	FrameworkContext::FrameworkContext( ServiceBlock &block ) :
+	FrameworkContext::FrameworkContext( FunctionBlock &block ) :
 		m_Impl( block )
 	{
 	}

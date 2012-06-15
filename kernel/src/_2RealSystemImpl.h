@@ -36,12 +36,12 @@ namespace _2Real
 	class EngineData;
 	class UpdatePolicy;
 	class IOutputListener;
-	class ServiceBlock;
+	class FunctionBlock;
 	class BlockData;
 	class BundleIdentifier;
 	class BlockIdentifier;
 
-	class SystemImpl : public UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */ >
+	class SystemImpl : public UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates >
 	{
 
 	public:
@@ -54,8 +54,7 @@ namespace _2Real
 		const long					getElapsedTime() const;
 		Poco::Timestamp	const&		getTimestamp() const;
 
-		const BlockIdentifier		createServiceBlock(BundleIdentifier const& pluginId, std::string const& serviceName, UpdatePolicy const& triggers);
-		//const Identifier			createSyncBlock(std::list< Identifier > const& blockIds);
+		const BlockIdentifier		createFunctionBlock( BundleIdentifier const& pluginId, std::string const& serviceName );
 
 		void						handleException( AbstractBlock &subBlock, Exception &exception );
 
@@ -74,7 +73,12 @@ namespace _2Real
 		void						registerToException( AbstractExceptionCallbackHandler &handler );
 		void						unregisterFromException( AbstractExceptionCallbackHandler &handler );
 
-		void						setUp(BlockIdentifier const& blockId);
+		void						setUp( BlockIdentifier const& blockId );
+		void						start( BlockIdentifier const& blockId );
+		void						stop( BlockIdentifier const& blockId, const long timeout );
+		void						singleStep( BlockIdentifier const& blockId );
+		void						destroy( BlockIdentifier const& blockId );
+		void						setUpdatePolicy( BlockIdentifier const& blockId, UpdatePolicy const& policy );
 
 		const EngineData			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
 		std::string const&			getKey(BlockIdentifier const& ownerId, std::string const& paramName) const;

@@ -38,10 +38,12 @@ namespace _2Real
 		SyncStates(AbstractBlock &owner);
 		~SyncStates();
 
-		void		clear();
-		void		setUp();
-		void		prepareForShutDown();
-		const bool	shutDown();
+		void				setUp();
+		void				start();
+		Poco::Event &		stop();
+		void				prepareForShutDown();
+		bool				shutDown( const long timeout );
+		void				setUpdatePolicy( UpdatePolicyImpl const& policy );
 
 		//called by sync triggers
 		void		waitForReadySet();
@@ -80,8 +82,8 @@ namespace _2Real
 
 		mutable Poco::FastMutex									m_ReadyAccess;
 		mutable Poco::FastMutex									m_FinishedAccess;
-		TriggerMap												m_ReadySet;
-		TriggerMap												m_FinishedSet;
+		BlockTriggerMap												m_ReadySet;
+		BlockTriggerMap												m_FinishedSet;
 
 		mutable Poco::FastMutex									m_EnabledAccess;
 		bool													m_ReadyTriggersEnabled;

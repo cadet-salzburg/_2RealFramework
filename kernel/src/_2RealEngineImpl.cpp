@@ -118,7 +118,9 @@ namespace _2Real
 		}
 		catch (std::exception &e)
 		{
+#ifdef _DEBUG
 			std::cout << e.what() << std::endl;
+#endif
 		}
 	}
 

@@ -22,6 +22,7 @@
 #include "_2RealTriggerTypes.h"
 
 #include <string>
+#include <memory>
 
 namespace _2Real
 {
@@ -31,7 +32,7 @@ namespace _2Real
 
 	public:
 
-		virtual AbstractInletBasedTrigger * createTrigger(std::string const& name) = 0;
+		virtual AbstractInletBasedTrigger * createTrigger( std::string const& name ) = 0;
 
 	};
 
@@ -41,9 +42,9 @@ namespace _2Real
 
 	public:
 
-		AbstractInletBasedTrigger * createTrigger(std::string const& name)
+		AbstractInletBasedTrigger * createTrigger( std::string const& name )
 		{
-			return new InletBasedTrigger< Comparison >(name);
+			return new InletBasedTrigger< Comparison >( name );
 		}
 
 	};
@@ -53,7 +54,7 @@ namespace _2Real
 
 	public:
 
-		virtual AbstractBlockBasedTrigger * createTrigger(std::string const& name) = 0;
+		virtual AbstractBlockBasedTrigger * createTrigger( std::string const& name ) = 0;
 
 	};
 
@@ -63,9 +64,9 @@ namespace _2Real
 
 	public:
 
-		AbstractBlockBasedTrigger * createTrigger(std::string const& name)
+		AbstractBlockBasedTrigger * createTrigger( std::string const& name )
 		{
-			return new BlockBasedTrigger< TriggerState >(name);
+			return new BlockBasedTrigger< TriggerState >( name );
 		}
 
 	};
@@ -75,15 +76,18 @@ namespace _2Real
 
 	public:
 
+		typedef std::shared_ptr< AbstractInletDefault > InletDefaultPtr;
+		typedef std::shared_ptr< AbstractBlockDefault > BlockDefaultPtr;
+
 		UpdatePolicyImpl();
 		~UpdatePolicyImpl();
 
 		void clear();
-		void setInletDefault(AbstractInletDefault *inletDefault);
-		void setBlockDefault(AbstractBlockDefault *blockDefault);
-		void addInletBasedTrigger( std::string const& inletName, AbstractInletDefault *trigger );
+		void setInletDefault( UpdatePolicyImpl::InletDefaultPtr &inletDefault );
+		void setBlockDefault( UpdatePolicyImpl::BlockDefaultPtr &blockDefault );
+		void addInletBasedTrigger( std::string const& inletName, UpdatePolicyImpl::InletDefaultPtr &trigger );
 		void addTimeBasedTrigger( const long time );
-		void addBlockBasedTrigger( std::string const& blockName, AbstractBlockDefault *trigger );
+		void addBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger );
 
 		AbstractTimeBasedTrigger * getTimeBasedTrigger() const;
 		AbstractInletBasedTrigger * getTriggerForInlet( std::string const& inletName ) const;
@@ -94,11 +98,14 @@ namespace _2Real
 
 	private:
 
+		typedef std::shared_ptr< AbstractInletDefault > InletDefaultPtr;
+		typedef std::shared_ptr< AbstractBlockDefault > BlockDefaultPtr;
+
 		long												m_Time;
-		std::map< std::string, AbstractInletDefault * >		m_Inlets;
-		std::map< std::string, AbstractBlockDefault * >		m_Blocks;
-		AbstractInletDefault								*m_InletDefault;
-		AbstractBlockDefault								*m_BlockDefault;
+		std::map< std::string, InletDefaultPtr >			m_Inlets;
+		std::map< std::string, BlockDefaultPtr >			m_Blocks;
+		InletDefaultPtr										m_InletDefault;
+		BlockDefaultPtr										m_BlockDefault;
 
 	};
 

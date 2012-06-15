@@ -18,6 +18,7 @@
 */
 
 #include "_2RealUpdatePolicyImpl.h"
+#include "_2RealHelpersInternal.h"
 
 #include <map>
 
@@ -25,62 +26,61 @@ namespace _2Real
 {
 
 	UpdatePolicyImpl::UpdatePolicyImpl() :
-		m_Time( -1 ),
-		m_InletDefault( nullptr ),
-		m_BlockDefault( nullptr )
+		m_Time( -1 )
+		//m_InletDefault( nullptr ),
+		//m_BlockDefault( nullptr )
 	{
 	}
 
 	UpdatePolicyImpl::~UpdatePolicyImpl()
 	{
-		clear();
 	}
 
 	void UpdatePolicyImpl::clear()
 	{
-		for (std::map< std::string, AbstractInletDefault * >::iterator it = m_Inlets.begin(); it != m_Inlets.end(); /**/)
-		{
-			delete it->second;
-			it = m_Inlets.erase(it);
-		}
+		//for (std::map< std::string, AbstractInletDefault * >::iterator it = m_Inlets.begin(); it != m_Inlets.end(); /**/)
+		//{
+		//	delete it->second;
+		//	it = m_Inlets.erase(it);
+		//}
 
-		for (std::map< std::string, AbstractBlockDefault * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/)
-		{
-			delete it->second;
-			it = m_Blocks.erase(it);
-		}
+		//for (std::map< std::string, AbstractBlockDefault * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/)
+		//{
+		//	delete it->second;
+		//	it = m_Blocks.erase(it);
+		//}
 
-		if ( m_InletDefault != nullptr )
-		{
-			delete m_InletDefault;
-			m_InletDefault = nullptr;
-		}
+		//if ( m_InletDefault != nullptr )
+		//{
+		//	delete m_InletDefault;
+		//	m_InletDefault = nullptr;
+		//}
 
-		if ( m_BlockDefault != nullptr )
-		{
-			delete m_BlockDefault;
-			m_BlockDefault = nullptr;
-		}
+		//if ( m_BlockDefault != nullptr )
+		//{
+		//	delete m_BlockDefault;
+		//	m_BlockDefault = nullptr;
+		//}
 
 		m_Time = -1;
 	}
 
-	void UpdatePolicyImpl::setInletDefault( AbstractInletDefault *inletDefault )
+	void UpdatePolicyImpl::setInletDefault( UpdatePolicyImpl::InletDefaultPtr &inletDefault )
 	{
-		if ( m_InletDefault != nullptr )
-		{
-			delete m_InletDefault;
-		}
+		//if ( m_InletDefault != nullptr )
+		//{
+		//	delete m_InletDefault;
+		//}
 
 		m_InletDefault = inletDefault;
 	}
 
-	void UpdatePolicyImpl::setBlockDefault( AbstractBlockDefault *blockDefault )
+	void UpdatePolicyImpl::setBlockDefault( UpdatePolicyImpl::BlockDefaultPtr &blockDefault )
 	{
-		if ( m_BlockDefault != nullptr )
-		{
-			delete m_BlockDefault;
-		}
+		//if ( m_BlockDefault != nullptr )
+		//{
+		//	delete m_BlockDefault;
+		//}
 
 		m_BlockDefault = blockDefault;
 	}
@@ -90,28 +90,31 @@ namespace _2Real
 		m_Time = time;
 	}
 
-	void UpdatePolicyImpl::addInletBasedTrigger( std::string const& inletName, AbstractInletDefault *trigger )
+	void UpdatePolicyImpl::addInletBasedTrigger( std::string const& inletName, UpdatePolicyImpl::InletDefaultPtr &trigger )
 	{
-		std::map< std::string, AbstractInletDefault * >::iterator it = m_Inlets.find( inletName );
-		if ( it != m_Inlets.end() )
-		{
-			delete it->second;
-			m_Inlets.erase( it );
-		}
+		//std::map< std::string, AbstractInletDefault * >::iterator it = m_Inlets.find( inletName );
+		//if ( it != m_Inlets.end() )
+		//{
+		//	delete it->second;
+		//	m_Inlets.erase( it );
+		//}
+		//m_Inlets.insert( std::make_pair( inletName, trigger ) );
 
-		m_Inlets.insert( std::make_pair( inletName, trigger ) );
+		m_Inlets[ inletName ] = trigger;
 	}
 
-	void UpdatePolicyImpl::addBlockBasedTrigger(std::string const& blockName, AbstractBlockDefault *trigger)
+	void UpdatePolicyImpl::addBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger )
 	{
-		std::map< std::string, AbstractBlockDefault * >::iterator it = m_Blocks.find( blockName );
-		if ( it != m_Blocks.end() )
-		{
-			delete it->second;
-			m_Blocks.erase( it );
-		}
+		//std::map< std::string, AbstractBlockDefault * >::iterator it = m_Blocks.find( blockName );
+		//if ( it != m_Blocks.end() )
+		//{
+		//	delete it->second;
+		//	m_Blocks.erase( it );
+		//}
 
-		m_Blocks.insert( std::make_pair( blockName, trigger ) );
+		//m_Blocks.insert( std::make_pair( blockName, trigger ) );
+
+		m_Blocks[ blockName ] = trigger;
 	}
 
 	bool UpdatePolicyImpl::hasTimeBasedTrigger() const
@@ -131,14 +134,15 @@ namespace _2Real
 
 	AbstractInletBasedTrigger * UpdatePolicyImpl::getTriggerForInlet( std::string const& inletName ) const
 	{
-		std::map< std::string, AbstractInletDefault * >::const_iterator it = m_Inlets.find( inletName );
+		std::map< std::string, InletDefaultPtr >::const_iterator it = m_Inlets.find( inletName );
+
 		if ( it != m_Inlets.end() )
 		{
-			return it->second->createTrigger(inletName);
+			return it->second->createTrigger( inletName );
 		}
 		else if ( m_InletDefault != nullptr )
 		{
-			return m_InletDefault->createTrigger(inletName);
+			return m_InletDefault->createTrigger( inletName );
 		}
 		else
 		{
@@ -146,16 +150,21 @@ namespace _2Real
 		}
 	}
 
-	AbstractBlockBasedTrigger * UpdatePolicyImpl::getBlockBasedTrigger(std::string const& blockName) const
+	AbstractBlockBasedTrigger * UpdatePolicyImpl::getBlockBasedTrigger( std::string const& blockName ) const
 	{
-		std::map< std::string, AbstractBlockDefault * >::const_iterator it = m_Blocks.find(blockName);
-		if (it != m_Blocks.end())
+		std::map< std::string, BlockDefaultPtr >::const_iterator it = m_Blocks.find( blockName );
+
+		if ( it != m_Blocks.end() )
 		{
-			return it->second->createTrigger(blockName);
+			return it->second->createTrigger( blockName );
+		}
+		else if ( m_BlockDefault != nullptr )
+		{
+			return m_BlockDefault->createTrigger( blockName );
 		}
 		else
 		{
-			return m_BlockDefault->createTrigger(blockName);
+			return nullptr;
 		}
 	}
 

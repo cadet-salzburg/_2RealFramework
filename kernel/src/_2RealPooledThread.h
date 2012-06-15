@@ -25,7 +25,7 @@
 namespace _2Real
 {
 
-	class ServiceStates;
+	class FunctionBlockStateManager;
 	class ThreadPoolCallback;
 
 	class PooledThread : public Poco::Runnable
@@ -40,7 +40,7 @@ namespace _2Real
 		const bool join();
 
 		void run();
-		void run(Poco::Thread::Priority const& priority, ServiceStates &target);
+		void run(Poco::Thread::Priority const& priority, FunctionBlockStateManager &target);
 		void reactivate();
 
 		const bool operator<(PooledThread const& rhs) const;
@@ -50,7 +50,7 @@ namespace _2Real
 		/**
 		*	the service that we want to execute
 		*/
-		ServiceStates			*m_Target;
+		FunctionBlockStateManager			*m_Target;
 
 		/**
 		*	true if this thread has no target to execute

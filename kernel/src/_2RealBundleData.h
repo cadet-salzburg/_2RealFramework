@@ -42,9 +42,9 @@ namespace _2Real
 
 		friend std::ostream& operator<<( std::ostream &out, BundleData const& data );
 
-		void						addBlockData( BlockData const& data );
-		BlockData const&			getBlockData( std::string const& blockName ) const;
-		BlockDataMap const&			getExportedBlocks() const;
+		void													addBlockData( BlockData const& data );
+		BlockData	const&										getBlockData( std::string const& blockName ) const;
+		BlockDataMap	const&									getExportedBlocks() const;
 
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );

@@ -36,7 +36,7 @@ namespace _2Real
 {
 
 	SystemImpl::SystemImpl(std::string const& name) :
-		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, DisabledStates/*, SystemUpdates */>(name, nullptr),
+		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates/*, SystemUpdates */>(name, nullptr),
 		m_Engine(EngineImpl::instance()),
 		m_PluginPool(EngineImpl::instance().getPluginPool()),
 		m_Timestamp()
@@ -67,7 +67,9 @@ namespace _2Real
 		}
 		catch (TimeOutException &e)
 		{
+#ifdef _DEBUG
 			std::cout << e.message() << std::endl;
+#endif
 		}
 
 		for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); /**/ )
@@ -264,16 +266,74 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::setUp(BlockIdentifier const& id)
+	void SystemImpl::setUp( BlockIdentifier const& id )
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
-			m_StateManager->setUp();
+			throw InvalidOperationException( "system can not be set up" );
 		}
 		else
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
 			obj.setUp();
+		}
+	}
+
+	void SystemImpl::start( BlockIdentifier const& id )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_StateManager->start();
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( obj, LONG_MAX );
+			obj.start();
+		}
+	}
+
+	void SystemImpl::singleStep( BlockIdentifier const& id )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_StateManager->stop();
+			m_StateManager->start();
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.stop( true, LONG_MAX );	// blocks until the end of the world, basically
+			dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( obj, 1 );
+			obj.start();
+		}
+	}
+
+	void SystemImpl::stop( BlockIdentifier const& id, const long timeout )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			m_StateManager->stop();
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( obj, 0 );
+			obj.stop( true, timeout );
+		}
+	}
+
+	void SystemImpl::destroy( BlockIdentifier const& id )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			throw InvalidOperationException( "system can not be destroied" );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock( id );
+			dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( obj, 0 );
+			m_SubBlockManager->removeBlock( obj );
 		}
 	}
 
@@ -283,7 +343,7 @@ namespace _2Real
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{
-			m_IOManager->setValue(paramName, data);
+			throw InvalidOperationException( "system has no i/o" );
 		}
 		else
 		{
@@ -298,7 +358,7 @@ namespace _2Real
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{
-			m_IOManager->insertValue(paramName, data);
+			throw InvalidOperationException( "system has no i/o" );
 		}
 		else
 		{
@@ -311,7 +371,7 @@ namespace _2Real
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
-			return m_IOManager->getValue(paramName);
+			throw InvalidOperationException( "system has no i/o" );
 		}
 		else
 		{
@@ -324,7 +384,7 @@ namespace _2Real
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
-			return m_IOManager->getKey(paramName);
+			throw InvalidOperationException( "system has no i/o" );
 		}
 		else
 		{
@@ -343,11 +403,36 @@ namespace _2Real
 		objIn.linkWith(nameIn, objOut, nameOut);
 	}
 
-	const BlockIdentifier SystemImpl::createServiceBlock( BundleIdentifier const& pluginId, std::string const& blockName, UpdatePolicy const& triggers )
+	const BlockIdentifier SystemImpl::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
 	{
-		ServiceBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this, *triggers.m_Impl );
+		UpdatePolicy policy;
+		policy.triggerByUpdateRate( 30.0f );
+
+		FunctionBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this );
 		addSubBlock( block );
+		dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( block, 0 );
+
+		UpdatePolicyImpl *p = new UpdatePolicyImpl( *policy.m_Impl );
+		block.setUpdatePolicy( *p );
+
+		AbstractStateManager &mgr = block.getStateManager();
+		AbstractBlockBasedTrigger *trigger = new BlockBasedTrigger< BLOCK_OK >( this->getName() );
+		mgr.uberBlockAdded( *this, *trigger, BLOCK_OK );
 		return BlockIdentifier( block.getIdentifier() );
+	}
+
+	void SystemImpl::setUpdatePolicy( BlockIdentifier const& id, UpdatePolicy const& policy )
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			throw InvalidOperationException( "system has no update policy" );
+		}
+		else
+		{
+			UpdatePolicyImpl *p = new UpdatePolicyImpl( *policy.m_Impl );
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			obj.setUpdatePolicy( *p );
+		}
 	}
 
 	//const Identifier SystemImpl::createSyncBlock(std::list< Identifier > const& blockIds)

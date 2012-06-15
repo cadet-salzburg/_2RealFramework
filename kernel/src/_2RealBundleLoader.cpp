@@ -94,7 +94,9 @@ namespace _2Real
 		}
 		catch ( Poco::Exception &e )
 		{
-			throw _2Real::NotFoundException( e.message() );
+			ostringstream msg;
+			msg << e.what() << " shared library " << path << " does not exist";
+			throw NotFoundException( msg.str() );
 		}
 
 		BundleData *result = new BundleData();
@@ -133,7 +135,7 @@ namespace _2Real
 
 			ostringstream msg;
 			msg << "shared library " << path << " does not contain metadata";
-			throw Exception( msg.str() );
+			throw NotFoundException( msg.str() );
 		}
 	}
 

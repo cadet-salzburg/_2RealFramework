@@ -118,23 +118,29 @@ namespace _2Real
 			UpdatePolicy policy;
 			policy.triggerByUpdateRate( 1.0f );
 
-			m_BundleContexts->createServiceBlock( BundleIdentifier( bundle->getIdentifier() ), "bundle context", policy );
+			m_BundleContexts->createFunctionBlock( BundleIdentifier( bundle->getIdentifier() ), "bundle context" );
 
-			ServiceBlock &bundleContext = bundle->getBundleContext();
+			FunctionBlock &bundleContext = bundle->getBundleContext();
+			m_BundleContexts->setUpdatePolicy( BlockIdentifier( bundleContext.getIdentifier() ), policy );
 			m_BundleContexts->setUp( BlockIdentifier( bundleContext.getIdentifier() ) );
+			m_BundleContexts->start( BlockIdentifier( bundleContext.getIdentifier() ) );
 		}
 
 		return BundleIdentifier( bundle->getIdentifier() );
 	}
 
-	ServiceBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys, UpdatePolicyImpl const& triggers )
+	FunctionBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys )
 	{
 		BundleInternal &bundle = getBundle( bundleId );
 		BundleData const& bundleData = bundle.getBundleData();
 		BlockData const& blockData = bundle.getBlockData( blockName );
+		unsigned int count = bundle.getBlockInstanceCount( blockName );
+
+		std::ostringstream name;
+		name << blockName << " # " << count;
 
 		Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		ServiceBlock *serviceBlock = new ServiceBlock( blockData, block, sys, triggers );
+		FunctionBlock *serviceBlock = new FunctionBlock( blockData, block, sys, name.str() );
 
 		if ( blockName != "bundle context" )
 		{
@@ -142,7 +148,7 @@ namespace _2Real
 
 			if ( m_BundleLoader.hasContext( bundleData.getInstallDirectory() ) )
 			{
-				ServiceBlock &bundleContext = bundle.getBundleContext();
+				FunctionBlock &bundleContext = bundle.getBundleContext();
 				BlockData const& bundleData = bundle.getBlockData( "bundle context" );
 				std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
 

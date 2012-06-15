@@ -20,54 +20,33 @@
 #include "_2RealServiceBlock.h"
 #include "_2RealBlock.h"
 #include "_2RealBlockData.h"
-#include "_2RealFrameworkContext.h"
 #include "_2RealSystemImpl.h"
 
 namespace _2Real
 {
 
-	ServiceBlock::ServiceBlock( BlockData const& data, Block &block, SystemImpl &owner, UpdatePolicyImpl const& updateTriggers ) :
-		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, ServiceStates>( data.getName(), &owner ),
+	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemImpl &owner, std::string const& name ) :
+		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( name, &owner ),
 		m_Block( block )
 	{
-		ServiceIO *io = dynamic_cast< ServiceIO * >(m_IOManager);
-		ServiceStates *states = dynamic_cast< ServiceStates * >(m_StateManager);
+		ServiceIO *io = dynamic_cast< ServiceIO * >( m_IOManager );
+		FunctionBlockStateManager *states = dynamic_cast< FunctionBlockStateManager * >( m_StateManager );
 		states->m_IO = io;
 		states->m_System = &owner;
+		states->m_FunctionBlock = &block;
 
-		io->initFrom( data, owner.getTimestamp(), updateTriggers );
-		states->initFrom( updateTriggers );
+		io->initFrom( data, owner.getTimestamp() );
+		//states->initFrom( updateTriggers );
 	}
 
-	ServiceBlock::~ServiceBlock()
+	InletHandle FunctionBlock::createInletHandle(std::string const& name)
 	{
-		//delete &m_Block;
+		return dynamic_cast< ServiceIO * >( m_IOManager )->createInletHandle( name );
 	}
 
-	void ServiceBlock::setUpService()
+	OutletHandle FunctionBlock::createOutletHandle(std::string const& name)
 	{
-		FrameworkContext context(*this);
-		m_Block.setup( context );	//might throw
-	}
-
-	void ServiceBlock::executeService()
-	{
-		m_Block.update();		//might throw
-	}
-
-	void ServiceBlock::shutDownService()
-	{
-		m_Block.shutdown();		//might throw
-	}
-
-	InletHandle ServiceBlock::createInletHandle(std::string const& name)
-	{
-		return dynamic_cast< ServiceIO * >(m_IOManager)->createInletHandle(name);
-	}
-
-	OutletHandle ServiceBlock::createOutletHandle(std::string const& name)
-	{
-		return dynamic_cast< ServiceIO * >(m_IOManager)->createOutletHandle(name);
+		return dynamic_cast< ServiceIO * >( m_IOManager )->createOutletHandle( name );
 	}
 
 }

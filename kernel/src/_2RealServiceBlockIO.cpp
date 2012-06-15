@@ -62,7 +62,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::initFrom(BlockData const& meta, Poco::Timestamp const& time, UpdatePolicyImpl const& policy)
+	void ServiceIO::initFrom( BlockData const& meta, Poco::Timestamp const& time )
 	{
 		std::map< std::string, ParameterData > const& setup = meta.getParameters();
 		std::map< std::string, ParameterData > const& input = meta.getInlets();
@@ -71,8 +71,8 @@ namespace _2Real
 		for (std::map< std::string, ParameterData >::const_iterator it = setup.begin(); it != setup.end(); ++it)
 		{
 			ParameterData const& meta = it->second;
-			SetupParameter *param = new SetupParameter(meta);
-			m_Params.insert(std::make_pair(param->getName(), param));
+			SetupParameter *param = new SetupParameter( meta );
+			m_Params.insert( std::make_pair( param->getName(), param ) );
 		}
 
 		for (std::map< std::string, ParameterData >::const_iterator it = input.begin(); it != input.end(); ++it)

@@ -35,7 +35,7 @@ namespace _2Real
 	class Block;
 	class BundleData;
 	class BlockData;
-	class ServiceBlock;
+	class FunctionBlock;
 	class BundleIdentifier;
 
 	class BundleInternal : public Entity
@@ -53,8 +53,8 @@ namespace _2Real
 		BundleData const&	getBundleData() const;
 		BlockData const&	getBlockData( std::string const& blockName ) const;
 		void				addBlockInstance( Block &block, std::string const& blockName );
-		ServiceBlock &		getBundleContext();
-		void				setBundleContext( ServiceBlock &block );
+		FunctionBlock &		getBundleContext();
+		void				setBundleContext( FunctionBlock &block );
 		unsigned int		getBlockInstanceCount( std::string const& blockName ) const;
 
 	private:
@@ -66,7 +66,7 @@ namespace _2Real
 
 		BundleData						const& m_BundleData;
 		BlockMap						m_BlockInstances;
-		ServiceBlock					*m_BundleContext;
+		FunctionBlock					*m_BundleContext;
 
 	};
 

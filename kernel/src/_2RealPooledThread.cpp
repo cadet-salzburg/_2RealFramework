@@ -79,7 +79,7 @@ namespace _2Real
 		}
 	}
 
-	void PooledThread::run(Poco::Thread::Priority const& priority, ServiceStates &target)
+	void PooledThread::run(Poco::Thread::Priority const& priority, FunctionBlockStateManager &target)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
@@ -112,11 +112,11 @@ namespace _2Real
 			{
 				m_Mutex.unlock();
 
-				m_Target->executeService();
+				m_Target->updateFunctionBlock();
 
 				Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-				ServiceStates *tmp = m_Target;
+				FunctionBlockStateManager *tmp = m_Target;
 
 				m_Target = nullptr;
 				m_IsIdle = true;

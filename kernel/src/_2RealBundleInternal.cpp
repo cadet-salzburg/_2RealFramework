@@ -89,12 +89,12 @@ namespace _2Real
 		return m_BundleData.getBlockData( blockName );
 	}
 
-	void BundleInternal::setBundleContext( ServiceBlock &block )
+	void BundleInternal::setBundleContext( FunctionBlock &block )
 	{
 		m_BundleContext = &block;
 	}
 
-	ServiceBlock & BundleInternal::getBundleContext()
+	FunctionBlock & BundleInternal::getBundleContext()
 	{
 		return *m_BundleContext;
 	}

@@ -52,7 +52,7 @@ namespace _2Real
 
 	void UpdatePolicy::triggerWhenAllDataNew()
 	{
-		m_Impl->setInletDefault( new InletDefault< NewerTimestamp >() );
+		m_Impl->setInletDefault( UpdatePolicyImpl::InletDefaultPtr( new InletDefault< NewerTimestamp >() ) );
 	}
 
 	//void UpdatePolicy::triggerWhenAllDataAvailable()

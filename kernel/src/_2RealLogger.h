@@ -112,6 +112,7 @@ namespace _2Real
 				for ( LogList::iterator it = m_WriteLines->begin(); it != m_WriteLines->end(); ++it )
 				{
 					m_File << it->first << " " << it->second << "\n";
+					m_File.flush();
 				}
 				m_WriteLines->clear();
 			}

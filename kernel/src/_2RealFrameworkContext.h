@@ -26,7 +26,7 @@
 namespace _2Real
 {
 
-	class ServiceBlock;
+	class FunctionBlock;
 	class InletHandle;
 	class OutletHandle;
 
@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		FrameworkContext( ServiceBlock &block );
+		FrameworkContext( FunctionBlock &block );
 
 		/**
 		*	creates an input handle for an input slot
@@ -75,7 +75,7 @@ namespace _2Real
 
 		const EngineData		getSetupParameterInternal( std::string const& paramName ) const;
 
-		ServiceBlock			&m_Impl;
+		FunctionBlock			&m_Impl;
 
 	};
 

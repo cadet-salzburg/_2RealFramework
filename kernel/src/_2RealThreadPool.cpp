@@ -140,11 +140,11 @@ namespace _2Real
 			RunnableMap::iterator r = m_ExecutingRunnables.find(*it);
 			if (r != m_ExecutingRunnables.end())
 			{
-				ServiceStates *service = r->second;
+				FunctionBlockStateManager *service = r->second;
 				m_ExecutingRunnables.erase(r);
 				m_ExecutingAccess.unlock();
 
-				service->finishExecution();
+				service->finishUpdate();
 			}
 			else
 			{
@@ -154,15 +154,18 @@ namespace _2Real
 				RunnableMap::iterator r = m_AbortedRunnables.find(*it);
 				if (r != m_AbortedRunnables.end())
 				{
-					ServiceStates *service = r->second;
+					FunctionBlockStateManager *service = r->second;
 					m_AbortedRunnables.erase(r);
 					m_AbortedAccess.unlock();
 
+#ifdef _2REAL_DEBUG
 					std::cout << "threadpool finishing aborted service" << std::endl;
-					service->finishExecution();
-					//service is in set up now & shut doen should return immediately
-					service->shutDown();
-					delete service;
+#endif
+					service->finishUpdate();
+					if ( service->shutDown( 10000 ) )
+					{
+						delete service;
+					}
 				}
 				else
 				{
@@ -190,8 +193,8 @@ namespace _2Real
 			}
 			else
 			{
-				ServiceStates *service = m_ReadyRunnables.front();
-				service->beginExecution();
+				FunctionBlockStateManager *service = m_ReadyRunnables.front();
+				service->beginUpdate();
 				
 				m_ReadyRunnables.pop_front();
 				m_ReadyAccess.unlock();
@@ -211,13 +214,13 @@ namespace _2Real
 		m_ThreadAccess.unlock();
 	}
 
-	void ThreadPool::serviceIsFinished(ServiceStates &s)
+	void ThreadPool::serviceIsFinished(FunctionBlockStateManager &s)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_FinishedAccess);
 		m_ReceivedRunnables.push_back(s.getId());
 	}
 
-	void ThreadPool::abortService(ServiceStates &s)
+	void ThreadPool::abortService(FunctionBlockStateManager &s)
 	{
 		m_ExecutingAccess.lock();
 		RunnableMap::iterator it = m_ExecutingRunnables.find(s.getId());
@@ -235,7 +238,7 @@ namespace _2Real
 		}
 	}
 
-	void ThreadPool::scheduleService(ServiceStates &s)
+	void ThreadPool::scheduleService(FunctionBlockStateManager &s)
 	{
 		//m_ThreadAccess.lock();
 		//PooledThread *thread = tryGetFreeThread();
@@ -260,10 +263,10 @@ namespace _2Real
 		//}
 	}
 
-	const bool ThreadPool::unscheduleService(ServiceStates &s)
+	const bool ThreadPool::unscheduleService(FunctionBlockStateManager &s)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
-		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, ServiceStates * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &s);
+		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, FunctionBlockStateManager * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &s);
 		if (it != m_ReadyRunnables.end())
 		{
 			*it = nullptr;
