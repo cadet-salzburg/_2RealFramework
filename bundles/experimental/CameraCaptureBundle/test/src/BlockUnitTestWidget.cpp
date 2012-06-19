@@ -1,4 +1,5 @@
 #include "BlockUnitTestWidget.h"
+#include "BlockInletWidget.h"
 #include "BlockOutletWidget.h"
 
 using namespace std;
@@ -106,7 +107,18 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 QGroupBox* BlockUnitTestWidget::createInletWidgets()
 {
 	QGroupBox *groupBox = new QGroupBox("Inlets");
+	ParameterDataMap outlets = Engine::instance().getBlockData(m_BundleId, m_strBlockName).getInlets();
+	QVBoxLayout* layout = new QVBoxLayout();
+
+	for(auto it = outlets.begin(); it != outlets.end(); it++)
+	{
+		BlockInletWidget* tmp = new BlockInletWidget(m_BlockId, it->first);
+		layout->addWidget(tmp);
+	}
+
+	groupBox->setLayout(layout);
 	return groupBox;
+	
 }
 
 QGroupBox* BlockUnitTestWidget::createOutletWidgets()

@@ -1,3 +1,5 @@
+* inlet / outlet set minimum maximum ?
+
 * update rate context ?
 	kann man die setzen?
 
