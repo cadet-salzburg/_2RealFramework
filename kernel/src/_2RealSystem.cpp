@@ -117,22 +117,22 @@ namespace _2Real
 		m_Impl->unregisterFromException( handler );
 	}
 
-	void System::registerToNewData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
+	void System::registerToOutletData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
 	{
 		m_Impl->registerToNewData( service, outletName, callback, userData );
 	}
 
-	void System::unregisterFromNewData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
+	void System::unregisterFromOutletData( BlockIdentifier const& service, std::string const& outletName, OutletCallback callback, void *userData )
 	{
 		m_Impl->unregisterFromNewData( service, outletName, callback, userData );
 	}
 
-	void System::registerToNewData( BlockIdentifier const& service, OutputCallback callback, void *userData )
+	void System::registerToAllOutletData( BlockIdentifier const& service, OutputCallback callback, void *userData )
 	{
 		m_Impl->registerToNewData( service, callback, userData );
 	}
 
-	void System::unregisterFromNewData( BlockIdentifier const& service, OutputCallback callback, void *userData )
+	void System::unregisterFromAllOutletData( BlockIdentifier const& service, OutputCallback callback, void *userData )
 	{
 		m_Impl->unregisterFromNewData( service, callback, userData );
 	}

@@ -110,35 +110,35 @@ namespace _2Real
 			unregisterFromExceptionInternal( *handler );
 		}
 
-		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
-		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
+		void registerToOutletData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
+		void unregisterFromOutletData( BlockIdentifier const& block, std::string const& outlet, OutletCallback callback, void *userData = nullptr );
 
 		template< typename Callable >
-		void registerToNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
+		void registerToOutletData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
 		{
 			AbstractOutletCallbackHandler *handler = new OutletCallbackHandler< Callable >( callable, callback );
 			registerToNewDataInternal( block, outlet, *handler );
 		}
 
 		template< typename Callable >
-		void unregisterFromNewData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
+		void unregisterFromOutletData( BlockIdentifier const& block, std::string const& outlet, Callable &callable, void ( Callable::*callback )( OutputData& ) )
 		{
 			AbstractOutletCallbackHandler *handler = new OutletCallbackHandler< Callable >( callable, callback );
 			unregisterFromNewDataInternal( block, outlet, *handler );
 		}
 
-		void registerToNewData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
-		void unregisterFromNewData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
+		void registerToAllOutletData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
+		void unregisterFromAllOutletData( BlockIdentifier const& block, OutputCallback callback, void *userData = nullptr );
 
 		template< typename Callable >
-		void registerToNewData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
+		void registerToAllOutletData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
 		{
 			AbstractOutputCallbackHandler *handler = new OutputCallbackHandler< Callable >( callable, callback );
 			registerToNewDataInternal( block, *handler );
 		}
 
 		template< typename Callable >
-		void unregisterFromNewData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
+		void unregisterFromAllOutletData( BlockIdentifier const& block, Callable &callable, void ( Callable::*callback )( std::list< OutputData > ) )
 		{
 			AbstractOutputCallbackHandler *handler = new OutputCallbackHandler< Callable >( callable, callback );
 			unregisterFromNewDataInternal( block, *handler );
