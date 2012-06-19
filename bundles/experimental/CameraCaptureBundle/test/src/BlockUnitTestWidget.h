@@ -18,6 +18,7 @@ private slots:
 	void onStart();
 	void onStop();
 	void onStopFinished();
+	void stopBlock();
 
 private:
 	void setupGui();

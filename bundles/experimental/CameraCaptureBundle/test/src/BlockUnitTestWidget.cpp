@@ -37,15 +37,18 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		// create certain blocks to a runtime system
 		UpdatePolicy fpsTrigger;
 		fpsTrigger.triggerByUpdateRate( 10.0f );
-		m_BlockId = m_p2RealSystem->createBlock( m_BundleId, blockName, fpsTrigger );
+		m_BlockId = m_p2RealSystem->createBlock( m_BundleId, blockName);
+		m_p2RealSystem->setPolicy(m_BlockId, fpsTrigger);
 		
 		// set needed setup parameters for block otherwise set to default
 
 		// start 
 		m_p2RealSystem->setup(m_BlockId);
 
+		m_p2RealSystem->start(m_BlockId);
+
 		// setup callbacks
-		m_p2RealSystem->registerToNewData( m_BlockId, *this, &BlockUnitTestWidget::receiveData );
+		m_p2RealSystem->registerToAllOutletData( m_BlockId, *this, &BlockUnitTestWidget::receiveData );
 	}
 	catch ( Exception &e )
 	{
@@ -75,14 +78,14 @@ void BlockUnitTestWidget::setupGui()
 
 void BlockUnitTestWidget::receiveData(std::list<OutputData> data)
 {
-	printf("received");
+	//printf("received");
 }
 
 QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 {
 	m_pStartButton = new QPushButton(tr("Start"));
 	m_pStopButton = new QPushButton(tr("Stop"));
-	m_pStopButton->setDisabled(true);
+	m_pStartButton->setDisabled(true);
 
 	// connect signals
 	connect(m_pStartButton, SIGNAL(clicked()), this, SLOT(onStart()));
@@ -114,7 +117,9 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		layout->addWidget( new BlockOutletWidget(m_BlockId, it->first, this));
+		BlockOutletWidget* tmp = new BlockOutletWidget(m_BlockId, it->first);
+		m_p2RealSystem->registerToOutletData( m_BlockId, it->first, *tmp, &BlockOutletWidget::receiveData );
+		layout->addWidget(tmp);
 	}
 
 	groupBox->setLayout(layout);
@@ -125,12 +130,13 @@ void BlockUnitTestWidget::onStart()
 { 
 	m_pStartButton->setDisabled(true);
 	m_pStopButton->setDisabled(false);
+	m_p2RealSystem->start(m_BlockId);
 }
 
 void BlockUnitTestWidget::onStop()
 { 
 	m_pStopButton->setDisabled(true);
-	m_Future = QtConcurrent::run(this, &BlockUnitTestWidget::test);
+	m_Future = QtConcurrent::run(this, &BlockUnitTestWidget::stopBlock);
 	m_FutureWatcher.setFuture(m_Future);
 }
 
@@ -138,12 +144,9 @@ void BlockUnitTestWidget::onStopFinished()
 {
 	m_pStopButton->setDisabled(true);
 	m_pStartButton->setDisabled(false);
-	printf("finished\n");
 }
 
-void BlockUnitTestWidget::test()
+void BlockUnitTestWidget::stopBlock()
 {
-	int i=0;
-	while(i++<10000)
-		printf("kaka");
+	m_p2RealSystem->stop(m_BlockId);
 }

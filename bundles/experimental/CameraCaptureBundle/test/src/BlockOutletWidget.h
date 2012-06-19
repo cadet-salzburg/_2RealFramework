@@ -2,15 +2,16 @@
 #include <QtGui>
 #include <list>
 
-class BlockOutletWidget : public QWidget
+class BlockOutletWidget : public QGroupBox
 {
 Q_OBJECT
 
 public:
+	BlockOutletWidget::BlockOutletWidget(){};
 	BlockOutletWidget::BlockOutletWidget(_2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent=0);
-	void receiveData(std::list<_2Real::OutputData> data);
+
+	void receiveData(_2Real::OutputData& data);
 
 private:
-	std::string m_strDescription;
-
+	QLabel*		m_ValueLabel;
 };

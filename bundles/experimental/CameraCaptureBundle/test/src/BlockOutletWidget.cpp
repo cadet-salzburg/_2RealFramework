@@ -3,7 +3,17 @@
 using namespace std;
 using namespace _2Real;
 
-BlockOutletWidget::BlockOutletWidget(_2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent) : QWidget(parent)
+BlockOutletWidget::BlockOutletWidget(_2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent) : QGroupBox(parent)
 {
-	QLabel* outletDescription = new QLabel(QString::fromStdString( strOutletName ));
+	QHBoxLayout*	layout = new QHBoxLayout();
+	layout->addWidget( new QLabel(QString::fromStdString( strOutletName )) );
+	m_ValueLabel = new QLabel(QString::fromStdString( "" ));
+	layout->addWidget( m_ValueLabel );
+	setLayout( layout );
+}
+
+
+void BlockOutletWidget::receiveData(_2Real::OutputData& data)
+{
+	m_ValueLabel->setText(QString::fromStdString(data.getDataAsString()));
 }

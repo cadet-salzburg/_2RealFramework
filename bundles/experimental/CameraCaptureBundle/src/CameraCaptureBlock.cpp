@@ -1,5 +1,4 @@
 #include "CameraCaptureBlock.h"
-
 #include "_2RealFrameworkContext.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
@@ -19,6 +18,8 @@ void CameraCaptureBlock::setup( FrameworkContext &context )
 	{
 		m_ContextEnum = context.getInletHandle( "context enum" );
 		m_ContextNumber = context.getInletHandle( "context number" );
+		m_IntOutletHandle = context.getOutletHandle( "intValue" );
+		m_FloatOutletHandle = context.getOutletHandle( "floatValue" );
 	}
 	catch ( Exception &e )
 	{
@@ -31,6 +32,11 @@ void CameraCaptureBlock::update()
 {
 	try
 	{
+		static int i=0;
+		static float f=0;
+		m_IntOutletHandle.data<int>()++;// = i++;
+		m_FloatOutletHandle.data<float>() = f+=0.01;
+
 	//	cout << "test block: context nr = " << m_ContextNumber.data< unsigned int >() << endl;
 	}
 	catch ( Exception &e )
