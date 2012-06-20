@@ -22,7 +22,6 @@
 #include "_2RealBlockData.h"
 
 #include <map>
-#include <list>
 #include <string>
 
 namespace _2Real
@@ -36,15 +35,12 @@ namespace _2Real
 	public:
 
 		BundleData();
-		BundleData( BundleData const& src );
-		BundleData& operator=( BundleData const& src );
-		~BundleData();
 
 		friend std::ostream& operator<<( std::ostream &out, BundleData const& data );
 
-		void													addBlockData( BlockData const& data );
-		BlockData	const&										getBlockData( std::string const& blockName ) const;
-		BlockDataMap	const&									getExportedBlocks() const;
+		void						addBlockData( BlockData const& data );
+		BlockData const&			getBlockData( std::string const& blockName ) const;
+		BlockDataMap const&			getExportedBlocks() const;
 
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );
@@ -63,8 +59,6 @@ namespace _2Real
 		Version const&				getVersion() const;
 
 	private:
-
-		void clear();
 
 		std::string					m_Name;
 		std::string					m_InstallDirectory;

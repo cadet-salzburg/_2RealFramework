@@ -29,9 +29,6 @@ namespace _2Real
 	public:
 
 		BlockIdentifier();
-		BlockIdentifier( BlockIdentifier const& src );
-		BlockIdentifier& operator=( BlockIdentifier const& src );
-		BlockIdentifier( std::string const& name, const unsigned int id );
 
 		bool operator==( BlockIdentifier const& rhs ) const;
 		bool operator!=( BlockIdentifier const& rhs ) const;
@@ -41,8 +38,14 @@ namespace _2Real
 		bool operator>=( BlockIdentifier const& rhs ) const;
 
 		std::string const& getName() const { return m_Name; }
+		unsigned int getId() const { return m_Id; }
+
+		friend std::ostream& operator<<( std::ostream& out, BlockIdentifier const& id );
+		friend std::istream& operator>>( std::istream& in, BlockIdentifier &id );
 
 	private:
+
+		friend class EngineImpl;
 
 		std::string			m_Name;
 		unsigned int		m_Id;

@@ -19,11 +19,13 @@
 
 #include "_2RealSystem.h"
 #include "_2RealSystemImpl.h"
+#include "_2RealEngineImpl.h"
+#include <iostream>
 
 namespace _2Real
 {
 	System::System(std::string const& name) :
-		m_Impl(new SystemImpl(name))
+		m_Impl( new SystemImpl( EngineImpl::instance().createBlockId( name ) ) )
 	{
 	}
 

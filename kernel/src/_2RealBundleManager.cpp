@@ -25,6 +25,7 @@
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealBundleIdentifier.h"
+#include "_2RealEngineImpl.h"
 
 #include <iostream>
 #include <sstream>
@@ -97,23 +98,23 @@ namespace _2Real
 	{
 		if ( m_BundleContexts == nullptr )
 		{
-			m_BundleContexts = new SystemImpl( "context manager" );
+			m_BundleContexts = new SystemImpl( EngineImpl::instance().createBlockId( "context manager" ) );
 		}
 
-		string abs = makeAbsolutePath( path ).toString();
+		string absPath = makeAbsolutePath( path ).toString();
 
-		if ( m_BundleLoader.isLibraryLoaded( abs ) )
+		if ( m_BundleLoader.isLibraryLoaded( absPath ) )
 		{
-			return getIdentifier( abs );
+			return getIdentifier( absPath );
 		}
 
-		BundleData *data = m_BundleLoader.loadLibrary( abs );
-		BundleInternal *bundle = new BundleInternal( abs, *data );
+		BundleData const& data = m_BundleLoader.loadLibrary( absPath );
+		BundleInternal *bundle = new BundleInternal( EngineImpl::instance().createBundleId( absPath ), data );
 
 		m_BundleInstances.insert( make_pair( bundle->getIdentifier(), bundle ) );
-		m_BundleNames.insert( make_pair( abs, bundle->getIdentifier() ) );
+		m_BundleNames.insert( make_pair( absPath, bundle->getIdentifier() ) );
 
-		if ( m_BundleLoader.hasContext( abs ) )
+		if ( m_BundleLoader.hasContext( absPath ) )
 		{
 			UpdatePolicy policy;
 			policy.triggerByUpdateRate( 1.0f );
@@ -126,44 +127,52 @@ namespace _2Real
 			m_BundleContexts->start( BlockIdentifier( bundleContext.getIdentifier() ) );
 		}
 
-		return BundleIdentifier( bundle->getIdentifier() );
+		return bundle->getIdentifier();
 	}
 
 	FunctionBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys )
 	{
 		BundleInternal &bundle = getBundle( bundleId );
 		BundleData const& bundleData = bundle.getBundleData();
+
 		BlockData const& blockData = bundle.getBlockData( blockName );
 		unsigned int count = bundle.getBlockInstanceCount( blockName );
 
 		std::ostringstream name;
 		name << blockName << " # " << count;
 
-		Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		FunctionBlock *serviceBlock = new FunctionBlock( blockData, block, sys, name.str() );
+		BlockIdentifier blockId = EngineImpl::instance().createBlockId( name.str() );
+
+		FunctionBlock *uberBlock;
 
 		if ( blockName != "bundle context" )
 		{
+			Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
+			uberBlock = new FunctionBlock( blockData, block, sys, blockId );
+
 			bundle.addBlockInstance( block, blockName );
 
-			if ( m_BundleLoader.hasContext( bundleData.getInstallDirectory() ) )
-			{
-				FunctionBlock &bundleContext = bundle.getBundleContext();
-				BlockData const& bundleData = bundle.getBlockData( "bundle context" );
-				std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
+			//if ( m_BundleLoader.hasContext( bundleData.getInstallDirectory() ) )
+			//{
+			//	FunctionBlock &bundleContext = bundle.getBundleContext();
+			//	BlockData const& bundleData = bundle.getBlockData( "bundle context" );
+			//	std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
 
-				for ( std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
-				{
-					serviceBlock->linkWith( it->first, bundleContext, it->first );
-				}
-			}
+			//	for ( std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
+			//	{
+			//		serviceBlock->linkWith( it->first, bundleContext, it->first );
+			//	}
+			//}
 		}
 		else
 		{
-			bundle.setBundleContext( *serviceBlock );
+			Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
+			uberBlock = new FunctionBlock( blockData, block, sys, blockId );
+
+			bundle.setBundleContext( *uberBlock );
 		}
 
-		return *serviceBlock;
+		return *uberBlock;
 	}
 
 	BundleInternal & BundleManager::getBundle( BundleIdentifier const& id )

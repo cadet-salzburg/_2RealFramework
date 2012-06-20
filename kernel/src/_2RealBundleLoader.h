@@ -43,8 +43,8 @@ namespace _2Real
 
 		bool isLibraryLoaded( std::string const& path ) const;
 		bool hasContext( std::string const& path ) const;
-		BundleData * loadLibrary( std::string const& path );
-		//Block& createContext( std::string const& path ) const;
+		BundleData const& loadLibrary( std::string const& path );
+		Block& createContext( std::string const& path ) const;
 		Block& createBlock( std::string const& path, std::string const& blockName ) const;
 
 	private:
@@ -61,8 +61,7 @@ namespace _2Real
 		};
 
 		typedef std::map< std::string, BundleInfo >	BundleMap;
-
-		BundleMap	m_LoadedBundles;
+		BundleMap									m_LoadedBundles;
 
 	};
 

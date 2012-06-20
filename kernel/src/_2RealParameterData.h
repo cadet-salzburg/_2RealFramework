@@ -31,22 +31,21 @@ namespace _2Real
 	public:
 
 		ParameterData();
-		ParameterData( std::string const& name, std::string const& type, std::string const& keyword, std::string const& category, EngineData const& defaultValue );
-		~ParameterData();
+		ParameterData( std::string const& name, std::string const& longType, std::string const& type, std::string const& category, EngineData const& defaultValue );
 
 		friend std::ostream& operator<<( std::ostream &out, ParameterData const& metadata );
 
 		std::string const& getName() const;
-		std::string const& getType() const;
-		std::string const& getKeyword() const;
+		std::string const& getLongTypename() const;
+		std::string const& getTypename() const;
 		std::string const& getCategory() const;
 		EngineData const& getDefaultValue() const;
 
 	private:
 
 		std::string			m_Name;
-		std::string			m_Keyword;
-		std::string			m_Type;
+		std::string			m_Typename;
+		std::string			m_LongTypename;
 		std::string			m_Category;
 		EngineData			m_DefaultValue;
 

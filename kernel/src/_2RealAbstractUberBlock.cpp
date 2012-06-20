@@ -21,9 +21,9 @@
 namespace _2Real
 {
 
-	AbstractBlock::AbstractBlock(std::string const& name, AbstractBlock *superBlock) :
-		Entity(name),
-		m_SuperBlock(superBlock)
+	AbstractBlock::AbstractBlock( BlockIdentifier const& id, AbstractBlock *superBlock ) :
+		m_Identifier( id ),
+		m_SuperBlock( superBlock )
 	{
 	}
 
@@ -66,9 +66,19 @@ namespace _2Real
 		return *m_SuperBlock;
 	}
 
-	BlockIdentifier AbstractBlock::getIdentifier() const
+	BlockIdentifier const& AbstractBlock::getIdentifier() const
 	{
-		return BlockIdentifier( Entity::getName(), Entity::getId() );
+		return m_Identifier;
+	}
+
+	std::string const& AbstractBlock::getName() const
+	{
+		return m_Identifier.getName();
+	}
+
+	unsigned int AbstractBlock::getId() const
+	{
+		return m_Identifier.getId();
 	}
 
 }

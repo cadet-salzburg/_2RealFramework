@@ -22,14 +22,9 @@
 namespace _2Real
 {
 
-	SyncBlock::SyncBlock(std::string const& name, SystemImpl &owner) :
-		UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates/*, SynchronizedUpdates */>(name, &owner)
+	SyncBlock::SyncBlock( BlockIdentifier const& id, SystemImpl &owner ) :
+		UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates >( id, &owner )
 	{
-		//SyncStates *states = dynamic_cast< SyncStates * >(m_StateManager);
-		//SynchronizedUpdates *triggers = dynamic_cast< SynchronizedUpdates * >(m_TriggerManager);
-		
-		//triggers->m_States = states;
-		//states->m_Triggers = triggers;
 	}
 
 }

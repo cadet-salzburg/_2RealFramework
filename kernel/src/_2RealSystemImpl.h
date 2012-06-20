@@ -46,7 +46,7 @@ namespace _2Real
 
 	public:
 
-		SystemImpl(std::string const& name);
+		SystemImpl( BlockIdentifier const& id );
 		~SystemImpl();
 
 		void						clear();

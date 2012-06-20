@@ -2,130 +2,105 @@
 
 #include "_2RealFrameworkContext.h"
 #include "_2RealException.h"
-#include "_2RealEnum.h"
 
 #include <iostream>
-#include <vector>
-#include <string>
 
 using _2Real::FrameworkContext;
 using _2Real::Exception;
+using _2Real::ContextBlock;
+
 using std::cout;
 using std::endl;
-using std::vector;
-using std::string;
 
-void BlockManager::setup( FrameworkContext &context )
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void ContextManager::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_BundleEnum = context.getOutletHandle( "bundle enum" );
-		m_BundleVec = context.getOutletHandle( "config text" );
+		m_Value = 0;
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
 }
 
-void BlockManager::update()
+void ContextManager::update()
 {
 	try
 	{
-		m_BundleVec.data< vector< string > >().push_back( "yay" );
-		m_BundleVec.data< vector< string > >().push_back( "updated" );
-		m_BundleVec.data< vector< string > >().push_back( "again" );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		m_Value += 1000;
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
 }
 
-void Counter::setup( FrameworkContext &context )
+void ContextManager::shutdown()
 {
 	try
 	{
-		m_CurrentCount = 1;
-		m_CounterValue = context.getOutletHandle( "counter outlet" );
-		m_TestEnum = context.getInletHandle( "bundle enum" );
-		m_TestVec = context.getInletHandle( "config text" );
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}
 
-void Counter::update()
+unsigned long ContextManager::getValue() const
+{
+	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+	return m_Value;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TestBlock::TestBlock( ContextBlock &context ) :
+	Block(),
+	m_Context( dynamic_cast< ContextManager & >( context ) )
+{
+}
+
+void TestBlock::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_CounterValue.data< unsigned int >() = ++m_CurrentCount;
+		m_Counter = 0;
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}
 
-void Doubler::setup( FrameworkContext &context )
+void TestBlock::update()
 {
 	try
 	{
-		m_InputValue = context.getInletHandle( "doubler inlet" );
-		m_OutputValue = context.getOutletHandle( "doubler outlet" );
-		m_TestEnum = context.getInletHandle( "bundle enum" );
-		m_TestVec = context.getInletHandle( "config text" );
+		if ( ++m_Counter == 100 )
+		{
+			cout << m_Context.getValue() + m_Counter << endl;
+			m_Counter = 0;
+		}
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}
 
-void Doubler::update()
+void TestBlock::shutdown()
 {
 	try
 	{
-		m_OutputValue.data< unsigned int >() = 2 * m_InputValue.data< unsigned int >();
-	}
-	catch ( Exception &e)
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-};
-
-void PrintOut::setup( FrameworkContext &context )
-{
-	try
-	{
-		m_InputValue = context.getInletHandle( "printout inlet" );
-		m_TestEnum = context.getInletHandle( "bundle enum" );
-		m_TestVec = context.getInletHandle( "config text" );
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}
 
-void PrintOut::update()
-{
-	try
-	{
-		cout << "PrintOut: " << m_InputValue.data< unsigned int >() << endl;
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////

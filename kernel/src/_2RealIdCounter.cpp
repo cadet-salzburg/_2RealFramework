@@ -16,31 +16,20 @@
 	limitations under the License.
 */
 
-#include "_2RealEntity.h"
+#include "_2RealIdCounter.h"
 
 namespace _2Real
 {
 
-	IdCounter Entity::m_Counter = IdCounter();
-
-	Entity::Entity(std::string const& name) :
-		m_Id(m_Counter.getId()),
-		m_Name(name)
+	IdCounter::IdCounter() :
+		m_CounterValue(0)
 	{
 	}
 
-	Entity::~Entity()
+	unsigned int IdCounter::getId()
 	{
-	}
-
-	std::string const& Entity::getName() const
-	{
-		return m_Name;
-	}
-
-	unsigned int Entity::getId() const
-	{
-		return m_Id;
+		Poco::FastMutex::ScopedLock lock( m_CounterAccess );
+		return ++m_CounterValue;
 	}
 
 }

@@ -23,15 +23,31 @@ namespace _2Real
 {
 
 	Parameter::Parameter(ParameterData const& metadata) :
-		m_Name(metadata.getName()),
-		m_Datatype(metadata.getType()),
-		m_Keyword(metadata.getKeyword()),
-		m_IsInitialized( true /*metadata.hasDefaultValue()*/ )
+		m_Name( metadata.getName() ),
+		m_Datatype( metadata.getLongTypename() ),
+		m_Keyword( metadata.getTypename() ),
+		m_IsInitialized( true )
 	{
 	}
 
-	inline Parameter::~Parameter()
+	bool Parameter::isInitialized() const
 	{
+		return m_IsInitialized;
+	}
+
+	std::string const& Parameter::getName() const
+	{
+		return m_Name;
+	}
+
+	std::string const& Parameter::getKeyword() const
+	{
+		return m_Keyword;
+	}
+
+	std::string const& Parameter::getDatatype() const
+	{
+		return m_Datatype;
 	}
 
 }

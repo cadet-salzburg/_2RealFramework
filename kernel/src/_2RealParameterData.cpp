@@ -28,22 +28,18 @@ namespace _2Real
 
 	ParameterData::ParameterData() :
 		m_Name( "undefined" ),
-		m_Keyword( "undefined" ),
-		m_Type( "undefined" ),
+		m_Typename( "undefined" ),
+		m_LongTypename( "undefined" ),
 		m_Category( "undefined" )
 	{
 	}
 
-	ParameterData::ParameterData( string const& name, string const& type, string const& keyword, string const& category, EngineData const& defaultValue ) :
+	ParameterData::ParameterData( string const& name, string const& longType, string const& type, string const& category, EngineData const& defaultValue ) :
 		m_Name( name ),
-		m_Keyword( keyword ),
-		m_Type( type ),
+		m_Typename( type ),
+		m_LongTypename( longType ),
 		m_Category( category ),
 		m_DefaultValue( defaultValue )
-	{
-	}
-
-	ParameterData::~ParameterData()
 	{
 	}
 
@@ -52,14 +48,14 @@ namespace _2Real
 		return m_Name;
 	}
 
-	std::string const& ParameterData::getKeyword() const
+	std::string const& ParameterData::getTypename() const
 	{
-		return m_Keyword;
+		return m_Typename;
 	}
 
-	std::string const& ParameterData::getType() const
+	std::string const& ParameterData::getLongTypename() const
 	{
-		return m_Type;
+		return m_LongTypename;
 	}
 
 	std::string const& ParameterData::getCategory() const
@@ -72,9 +68,9 @@ namespace _2Real
 		return m_DefaultValue;
 	}
 
-	std::ostream& operator<<(std::ostream &out, ParameterData const& metadata)
+	std::ostream& operator<<( std::ostream &out, ParameterData const& metadata )
 	{
-		out << metadata.getName() << "\t" << metadata.getKeyword();
+		out << metadata.getName() << "\t" << metadata.getTypename();
 		out << ", default value: " << metadata.getDefaultValue();
 		return out;
 	}

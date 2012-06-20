@@ -19,7 +19,8 @@
 
 #pragma once
 
-#include <sstream>
+#include "_2RealHelpers.h"
+
 #include <string>
 #include <map>
 #include <list>
@@ -27,81 +28,132 @@
 namespace _2Real
 {
 
-	typedef std::map< std::string, std::string > EnumMap;
-	typedef std::list< std::string > StringList;
-
-	class Strings
+	template< typename T >
+	class ListInitializer
 	{
 
 	public:
 
-		Strings(std::string const& value);
-		Strings& operator()(std::string const& name);
-		operator StringList const& () const;
+		ListInitializer( T const& val )
+		{
+			m_List.push_back( val );
+		}
+
+		ListInitializer& operator()( T const& val )
+		{
+			m_List.push_back( val );
+			return *this;
+		}
+
+		operator std::list< T > const& () const
+		{
+			return m_List;
+		}
 
 	private:
 
-		StringList	m_List;
+		std::list< T >		m_List;
 
 	};
 
-	/**
-	*	helper obj for enumeration initialization
-	*/
-	class Enums
+	template< typename K, typename V >
+	class MapInitializer
 	{
 
 	public:
 
-		/**
-		*	the first (key, value) pair is immediately inserted into the map
-		*/
-		Enums(std::string const& name, std::string const& value);
+		MapInitializer( K const& key, V const& val )
+		{
+			m_Map[ key ] = val;
+		}
 
-		/**
-		*	to add additional (key, value) pairs, use the subscript operator
-		*/
-		Enums& operator()(std::string const& name, std::string const& value);
+		MapInitializer& operator()( K const& key, V const& val )
+		{
+			m_Map[ key ] = val;
+			return *this;
+		}
 
-		/**
-		*	let's cast to a map, yay!
-		*/
-		operator EnumMap const& () const;
+		operator std::map< K, V > const& () const
+		{
+			return m_Map;
+		}
 
 	private:
 
-		EnumMap	m_Map;
+		std::map< K, V > m_Map;
 
 	};
 
-	/**
-	*	the actual enumeration datatype
-	*/
+	typedef MapInitializer< std::string, std::string >			StringEnums;
+
+	template< typename V >
 	class Enumeration
 	{
 
 	public:
 
-		Enumeration();
-		Enumeration(EnumMap const& enums, std::string const& undefinedVal);
-		Enumeration(Enumeration const& src);
-		std::string& operator[](std::string const& key);
-		std::string const& valueFor(std::string const& key) const;
+		typedef std::map< std::string, V >	EnumMap;
 
-		void setValues(StringList values);
-		void setEnums(StringList const& enums);
+		Enumeration() {}
 
-		friend std::ostream& operator<<(std::ostream& out, Enumeration const& e);
-		friend std::istream& operator>>(std::istream& in, Enumeration &e);
+		Enumeration( EnumMap const& enums, std::string const& undefinedVal ) :
+			m_Content( enums ),
+			m_UndefinedValue( undefinedVal )
+		{
+		}
 
-		void writeTo(std::ostream& out) const;
-		void readFrom(std::istream& in);
+		V & operator[]( std::string const& key )
+		{
+			return m_Content[ key ];
+		}
+
+		V const& valueFor( std::string const& key ) const
+		{
+			if ( m_Content.find( key ) != m_Content.end() )
+			{
+				return m_Content.at( key );
+			}
+
+			return m_UndefinedValue;
+		}
+
+		template< typename V >
+		friend std::ostream& operator<<( std::ostream& out, typename Enumeration< V > const& e );
+
+		template< typename V >
+		friend std::istream& operator>>( std::istream& in, typename Enumeration< V > &e );
 
 	private:
 
+		void writeTo( std::ostream& out ) const
+		{
+			out << m_Content;
+		}
+
+		void readFrom( std::istream& in )
+		{
+			in >> m_Content;
+		}
+
 		EnumMap			m_Content;
-		std::string		m_Undefined;
+		V				m_UndefinedValue;
 
 	};
+
+	template< typename V >
+	std::ostream& operator<<( std::ostream& out, typename Enumeration< V > const& e )
+	{
+		e.writeTo( out );
+		return out;
+	}
+
+	template< typename V >
+	std::istream& operator>>( std::istream& in, typename Enumeration< V > &e )
+	{
+		e.readFrom( in );
+		return in;
+	}
+
+	typedef Enumeration< std::string >			StringEnumeration;
 
 }

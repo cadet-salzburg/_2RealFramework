@@ -28,23 +28,6 @@ namespace _2Real
 	{
 	}
 
-	BlockIdentifier::BlockIdentifier( std::string const& name, const unsigned int id ) :
-		m_Name( name ), m_Id( id )
-	{
-	}
-
-	BlockIdentifier::BlockIdentifier( BlockIdentifier const& src ) :
-		m_Name( src.m_Name ), m_Id( src.m_Id )
-	{
-	}
-
-	BlockIdentifier& BlockIdentifier::operator=( BlockIdentifier const& src )
-	{
-		m_Name = src.m_Name;
-		m_Id = src.m_Id;
-		return *this;
-	}
-
 	bool BlockIdentifier::operator==( BlockIdentifier const& rhs ) const
 	{
 		return m_Id == rhs.m_Id;
@@ -73,6 +56,18 @@ namespace _2Real
 	bool BlockIdentifier::operator>=( BlockIdentifier const& rhs ) const
 	{
 		return m_Id >= rhs.m_Id;
+	}
+
+	std::ostream& operator<<( std::ostream& out, BlockIdentifier const& id )
+	{
+		out << id.m_Name;
+		return out;
+	}
+
+	std::istream& operator>>( std::istream& in, BlockIdentifier &id )
+	{
+		in >> id.m_Name;
+		return in;
 	}
 
 }

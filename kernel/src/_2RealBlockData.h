@@ -18,10 +18,10 @@
 
 #pragma once
 
+#include "_2RealParameterData.h"
+
 #include <map>
 #include <string>
-
-#include "_2RealParameterData.h"
 
 namespace _2Real
 {

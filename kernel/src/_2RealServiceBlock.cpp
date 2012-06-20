@@ -25,9 +25,8 @@
 namespace _2Real
 {
 
-	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemImpl &owner, std::string const& name ) :
-		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( name, &owner ),
-		m_Block( block )
+	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemImpl &owner, BlockIdentifier const& id ) :
+		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( id, &owner )
 	{
 		ServiceIO *io = dynamic_cast< ServiceIO * >( m_IOManager );
 		FunctionBlockStateManager *states = dynamic_cast< FunctionBlockStateManager * >( m_StateManager );
@@ -36,7 +35,6 @@ namespace _2Real
 		states->m_FunctionBlock = &block;
 
 		io->initFrom( data, owner.getTimestamp() );
-		//states->initFrom( updateTriggers );
 	}
 
 	InletHandle FunctionBlock::createInletHandle(std::string const& name)

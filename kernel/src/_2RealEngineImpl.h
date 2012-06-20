@@ -58,6 +58,9 @@ namespace _2Real
 	class Logger;
 	class BundleData;
 	class BlockData;
+	class IdCounter;
+	class BlockIdentifier;
+	class BundleIdentifier;
 	
 	class EngineImpl
 	{
@@ -75,6 +78,9 @@ namespace _2Real
 		BundleManager const&			getPluginPool() const;
 		ThreadPool &					getThreadPool();
 		ThreadPool const&				getThreadPool() const;
+
+		BlockIdentifier					createBlockId( std::string const& name );
+		BundleIdentifier				createBundleId( std::string const& name );
 
 		void							setBaseDirectory( Poco::Path const& path );
 		const BundleIdentifier			loadLibrary( Poco::Path const& path );
@@ -96,6 +102,7 @@ namespace _2Real
 		Typetable				*m_Types;
 		ThreadPool				*m_Threads;
 		BundleManager			*m_Plugins;
+		IdCounter				*m_IdCounter;
 
 	};
 

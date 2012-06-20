@@ -26,6 +26,7 @@
 #include "_2RealThreadPool.h"
 #include "_2RealLogger.h"
 #include "_2RealSystemImpl.h"
+#include "_2RealIdCounter.h"
 
 #include "_2RealBlob.h"
 #include "_2RealImageT.h"
@@ -48,7 +49,8 @@ namespace _2Real
 		m_Timer( new Timer() ),
 		m_Types( new Typetable(*this) ),
 		m_Threads( new ThreadPool(15, 0, "2real engine threadpool") ),
-		m_Plugins( new BundleManager() )
+		m_Plugins( new BundleManager() ),
+		m_IdCounter( new IdCounter() )
 	{
 		m_Types->registerType< char >("char");
 		m_Types->registerType< unsigned char >("unsigned char");
@@ -66,7 +68,7 @@ namespace _2Real
 		/**
 		*	our enumeration datatype
 		*/
-		m_Types->registerType< Enumeration >("enum");
+		m_Types->registerType< StringEnumeration >( "enum_string" );
 
 		/**
 		*	our image datatype
@@ -104,6 +106,7 @@ namespace _2Real
 	{
 		try
 		{
+			delete m_IdCounter;
 			delete m_Plugins;
 
 			m_Threads->unregisterTimeListener( *m_Timer );
@@ -122,6 +125,24 @@ namespace _2Real
 			std::cout << e.what() << std::endl;
 #endif
 		}
+	}
+
+	BlockIdentifier EngineImpl::createBlockId( std::string const& name )
+	{
+		BlockIdentifier id;
+		id.m_Id = m_IdCounter->getId();
+		id.m_Name = name;
+
+		return id;
+	}
+
+	BundleIdentifier EngineImpl::createBundleId( std::string const& name )
+	{
+		BundleIdentifier id;
+		id.m_Id = m_IdCounter->getId();
+		id.m_Name = name;
+
+		return id;
 	}
 
 	Logger& EngineImpl::getLogger()

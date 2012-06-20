@@ -17,12 +17,7 @@
 */
 
 #include "_2RealBundleData.h"
-#include "_2RealBlockData.h"
-#include "_2RealParameterData.h"
-#include "_2RealException.h"
-#include "_2RealEngineImpl.h"
-#include "_2RealTypetable.h"
-#include "_2RealEngineData.h"
+//#include "_2RealException.h"
 
 #include <sstream>
 
@@ -40,76 +35,37 @@ namespace _2Real
 	{
 	}
 
-	BundleData::~BundleData()
+	void BundleData::setInstallDirectory( std::string const& dir )
 	{
+		m_InstallDirectory = dir;
 	}
 
-	BundleData::BundleData( BundleData const& src ) :
-		m_Name( src.m_Name ),
-		m_Description( src.m_Description ),
-		m_Author( src.m_Author ),
-		m_Contact( src.m_Contact ),
-		m_InstallDirectory( src.m_InstallDirectory ),
-		m_Category( src.m_Category ),
-		m_Version( src.m_Version ),
-		m_ExportedBlocks( src.m_ExportedBlocks )
-	{
-	}
-
-	BundleData& BundleData::operator=( BundleData const& src )
-	{
-		if ( this == &src )
-		{
-			return *this;
-		}
-
-		m_Name = src.m_Name;
-		m_Description = src.m_Description;
-		m_Author = src.m_Author;
-		m_Contact = src.m_Contact;
-		m_InstallDirectory = src.m_InstallDirectory;
-		m_Category = src.m_Category;
-		m_Version = src.m_Version;
-		m_ExportedBlocks = src.m_ExportedBlocks;
-
-		return *this;
-	}
-
-	void BundleData::clear()
-	{
-	}
-
-	void BundleData::setInstallDirectory( std::string const& desc )
-	{
-		m_InstallDirectory = desc;
-	}
-
-	void BundleData::setDescription(std::string const& desc)
+	void BundleData::setDescription( std::string const& desc )
 	{
 		m_Description = desc;
 	}
 
-	void BundleData::setVersion(Version const& version)
+	void BundleData::setVersion( Version const& version )
 	{
 		m_Version = version;
 	}
 
-	void BundleData::setAuthor(std::string const& author)
+	void BundleData::setAuthor( std::string const& author )
 	{
 		m_Author = author;
 	}
 
-	void BundleData::setContact(std::string const& contact)
+	void BundleData::setContact( std::string const& contact )
 	{
 		m_Contact = contact;
 	}
 
-	void BundleData::setName(std::string const& name)
+	void BundleData::setName( std::string const& name )
 	{
 		m_Name = name;
 	}
 
-	void BundleData::setCategory(std::string const& category)
+	void BundleData::setCategory( std::string const& category )
 	{
 		m_Category = category;
 	}
@@ -153,7 +109,7 @@ namespace _2Real
 	{
 		BlockDataMap::const_iterator it = m_ExportedBlocks.find(name);
 
-		if (it == m_ExportedBlocks.end())
+		if ( it == m_ExportedBlocks.end() )
 		{
 			std::ostringstream msg;
 			msg << "block " << name << " not found";
@@ -166,12 +122,6 @@ namespace _2Real
 	void BundleData::addBlockData( BlockData const& data )
 	{
 		std::string blockName = data.getName();
-		//BlockDataMap::iterator it = m_ExportedBlocks.find( blockName );
-		//if ( it != m_ExportedBlocks.end() )
-		//{
-		//	delete it->second;
-		//}
-
 		m_ExportedBlocks[ blockName ] = data;
 	}
 

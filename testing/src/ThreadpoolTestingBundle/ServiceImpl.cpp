@@ -8,16 +8,64 @@
 #include <string>
 
 using _2Real::FrameworkContext;
+using _2Real::ContextBlock;
 using _2Real::Exception;
+
 using std::cout;
 using std::endl;
 using std::string;
+
+TestContext::TestContext() :
+	ContextBlock(),
+	m_Counter( 100 )
+{
+}
+
+void TestContext::setup( FrameworkContext &context )
+{
+	try
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		m_Val = 2;
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+void TestContext::update()
+{
+	try
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		m_Val *= 4;
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+unsigned int TestContext::getCounterValue()
+{
+	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+	return ++m_Counter;
+}
+
+unsigned int TestContext::getCurrentValue()
+{
+	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+	return m_Val;
+}
+
 
 void Out::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_Counter = -1;
 		m_Out = context.getOutletHandle( "outlet" );
 	}
 	catch ( Exception &e )
@@ -88,11 +136,11 @@ void In::update()
 	try
 	{
 		++m_Counter;
-		//if ( m_Counter == 10 )
-		//{
+		if ( m_Counter == 100 )
+		{
 			cout << m_In.data< unsigned int >() << endl;
-		//	m_Counter = 0;
-		//}
+			m_Counter = 0;
+		}
 	}
 	catch ( Exception &e )
 	{

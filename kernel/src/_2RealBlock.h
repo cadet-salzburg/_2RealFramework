@@ -31,12 +31,20 @@ namespace _2Real
 		virtual void setup( FrameworkContext &context ) = 0;
 		virtual void update() = 0;
 		virtual void shutdown() = 0;
-		virtual ~Block() = 0;
-
-	protected:
+		virtual ~Block() {};
 
 	};
-	
-	inline Block::~Block() {}
+
+	class ContextBlock : public Block
+	{
+
+	public:
+
+		using Block::setup;
+		using Block::update;
+		using Block::shutdown;
+		virtual ~ContextBlock() {};
+
+	};
 
 }

@@ -33,12 +33,12 @@ namespace _2Real
 
 	public:
 
-		UberBlock(std::string const& name, AbstractBlock *super) :
-			AbstractBlock(name, super),
-			m_IOManager(new IOMgr(*this)),
-			m_SubBlockManager(new SubBlockMgr(*this)),
-			m_UberBlockManager(new UberBlockMgr(*this)),
-			m_StateManager(new StateMgr(*this))
+		UberBlock( BlockIdentifier const& id, AbstractBlock *super ) :
+			AbstractBlock( id, super ),
+			m_IOManager( new IOMgr(*this) ),
+			m_SubBlockManager( new SubBlockMgr(*this) ),
+			m_UberBlockManager( new UberBlockMgr(*this) ),
+			m_StateManager( new StateMgr(*this) )
 		{
 		}
 
@@ -158,7 +158,7 @@ namespace _2Real
 				if ( !ev.tryWait( timeout ) )
 				{
 					std::ostringstream msg;
-					msg << "timeout reached on " << getName() << " stop()" << std::endl;
+					msg << "timeout reached on " << m_Identifier.getName() << " stop()" << std::endl;
 					throw TimeOutException( msg.str() );
 				}
 			}

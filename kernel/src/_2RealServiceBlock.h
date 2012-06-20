@@ -36,16 +36,10 @@ namespace _2Real
 
 	public:
 
-		FunctionBlock( BlockData const& data, Block& block, SystemImpl &owner, std::string const& name );
+		FunctionBlock( BlockData const& data, Block& block, SystemImpl &owner, BlockIdentifier const& id );
 
 		InletHandle		createInletHandle(std::string const& inletName);
 		OutletHandle	createOutletHandle(std::string const& outletName);
-
-		Block * getBlock() { return &m_Block; }
-
-	private:
-
-		Block			&m_Block;
 
 	};
 

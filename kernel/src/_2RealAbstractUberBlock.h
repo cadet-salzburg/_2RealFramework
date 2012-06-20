@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealEntity.h"
+#include "_2RealBlockIdentifier.h"
 #include "_2RealInletHandle.h"
 #include "_2RealOutletHandle.h"
 #include "_2RealEngineData.h"
@@ -47,15 +47,17 @@ namespace _2Real
 	typedef std::map< std::string, Outlet * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
 
-	class AbstractBlock : public Entity
+	class AbstractBlock
 	{
 
 	public:
 
-		AbstractBlock(std::string const& name, AbstractBlock *superBlock);
+		AbstractBlock( BlockIdentifier const& id, AbstractBlock *superBlock );
 		virtual ~AbstractBlock();
 
-		BlockIdentifier							getIdentifier() const;
+		BlockIdentifier	const&					getIdentifier() const;
+		std::string const&						getName() const;
+		unsigned int							getId() const;
 
 		void									lockSuperBlock();
 		void									unlockSuperBlock();
@@ -106,6 +108,7 @@ namespace _2Real
 
 		mutable Poco::FastMutex					m_SuperBlockAccess;
 		AbstractBlock							*m_SuperBlock;
+		BlockIdentifier							const m_Identifier;
 
 	};
 

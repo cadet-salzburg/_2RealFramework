@@ -33,9 +33,8 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleInternal::BundleInternal( string const& name, BundleData const& data ) :
-		Entity( name ),
-		m_BlockInstances(),
+	BundleInternal::BundleInternal( BundleIdentifier const& id, BundleData const& data ) :
+		m_Identifier( id ),
 		m_BundleData( data )
 	{
 	}
@@ -49,20 +48,14 @@ namespace _2Real
 		}
 	}
 
-	BundleInternal::BundleInternal( BundleInternal const& src ) :
-		Entity( src.m_Name ),
-		m_BundleData( src.m_BundleData )
+	BundleIdentifier const& BundleInternal::getIdentifier() const
 	{
+		return m_Identifier;
 	}
-
-	BundleInternal& BundleInternal::operator=( BundleInternal const& src )
+	
+	std::string const& BundleInternal::getName() const
 	{
-		return *this;
-	}
-
-	BundleIdentifier BundleInternal::getIdentifier() const
-	{
-		return BundleIdentifier( Entity::getName(), Entity::getId() );
+		return m_Identifier.getName();
 	}
 
 	const string BundleInternal::getBundleInfoString() const

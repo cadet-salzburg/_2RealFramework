@@ -1,31 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealAbstractIOManager.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h" />
-    <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
-    <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
-    <ClInclude Include="..\..\src\_2RealBundleManager.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledStates.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
-    <ClInclude Include="..\..\src\_2RealEntity.h" />
     <ClInclude Include="..\..\src\_2RealEnum.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
-    <ClInclude Include="..\..\src\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
-    <ClInclude Include="..\..\src\_2RealMetadata.h" />
     <ClInclude Include="..\..\src\_2RealOwnedBlocks.h" />
-    <ClInclude Include="..\..\src\_2RealParameter.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealServiceBlock.h" />
@@ -47,13 +32,6 @@
     <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
-    <ClInclude Include="..\..\src\_2RealOutlet.h" />
-    <ClInclude Include="..\..\src\_2RealOutletHandle.h" />
-    <ClInclude Include="..\..\src\_2RealInletHandle.h" />
-    <ClInclude Include="..\..\src\_2RealInlet.h" />
-    <ClInclude Include="..\..\src\_2RealBundleLoader.h" />
-    <ClInclude Include="..\..\src\_2RealBlockData.h" />
-    <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
@@ -62,30 +40,95 @@
     <ClInclude Include="..\..\src\_2RealTimestampedData.h" />
     <ClInclude Include="..\..\src\_2RealHelpersInternal.h" />
     <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
-    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h" />
-    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealUserBlockState.h" />
+    <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
+    <ClInclude Include="..\..\src\_2RealBlockMetainfo.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlob.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockData.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleData.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleMetainfo.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractIOManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractStateManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleLoader.h">
+      <Filter>bundle internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleManager.h">
+      <Filter>bundle internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleInternal.h">
+      <Filter>bundle internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDisabledBlocks.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDisabledStates.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDisabledIO.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealImageT.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInlet.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutlet.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h">
+      <Filter>id</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h">
+      <Filter>id</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInletHandle.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutletHandle.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParameter.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIdCounter.h">
+      <Filter>id</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlob.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleInternal.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledStates.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealEntity.cpp" />
-    <ClCompile Include="..\..\src\_2RealEnum.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealImageT.cpp" />
-    <ClCompile Include="..\..\src\_2RealMetadata.cpp" />
     <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp" />
-    <ClCompile Include="..\..\src\_2RealParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealServiceBlock.cpp" />
@@ -101,13 +144,6 @@
     <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
-    <ClCompile Include="..\..\src\_2RealOutletHandle.cpp" />
-    <ClCompile Include="..\..\src\_2RealInlet.cpp" />
-    <ClCompile Include="..\..\src\_2RealInletHandle.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleLoader.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleData.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
@@ -115,8 +151,104 @@
     <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealUserBlockState.cpp" />
+    <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlob.cpp">
+      <Filter>datatype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockData.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleData.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleLoader.cpp">
+      <Filter>bundle internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleManager.cpp">
+      <Filter>bundle internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleInternal.cpp">
+      <Filter>bundle internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealDisabledStates.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealImageT.cpp">
+      <Filter>datatype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealInlet.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOutlet.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp">
+      <Filter>id</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp">
+      <Filter>id</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealInletHandle.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOutletHandle.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParameter.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleMetainfoImpl.cpp">
+      <Filter>metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealIdCounter.cpp">
+      <Filter>id</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="metadata">
+      <UniqueIdentifier>{7267e849-0a85-4211-b76a-dca3e96403c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bundle internal">
+      <UniqueIdentifier>{6f6a77b6-5597-4814-aaba-269457aa6e9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uberblock">
+      <UniqueIdentifier>{13f5f428-403b-4998-93e5-db223f0da2ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="datatype">
+      <UniqueIdentifier>{4c669e78-b917-49b4-a7e4-6e20c448f342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="parameter">
+      <UniqueIdentifier>{36359d54-e657-468e-a8dd-d357b8d40e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="id">
+      <UniqueIdentifier>{226fcc42-aee2-466a-a37b-b6a8b840faa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -31,8 +31,8 @@ namespace _2Real
 
 	public:
 
-		Parameter(ParameterData const& metadata);
-		virtual ~Parameter();
+		Parameter( ParameterData const& metadata );
+		virtual ~Parameter() {}
 
 		bool					isInitialized() const;
 		std::string const&		getKeyword() const;
@@ -47,25 +47,5 @@ namespace _2Real
 		const std::string		m_Name;
 
 	};
-
-	inline bool Parameter::isInitialized() const
-	{
-		return m_IsInitialized;
-	}
-
-	inline std::string const& Parameter::getName() const
-	{
-		return m_Name;
-	}
-
-	inline std::string const& Parameter::getKeyword() const
-	{
-		return m_Keyword;
-	}
-
-	inline std::string const& Parameter::getDatatype() const
-	{
-		return m_Datatype;
-	}
 
 }

@@ -29,9 +29,6 @@ namespace _2Real
 	public:
 
 		BundleIdentifier();
-		BundleIdentifier( BundleIdentifier const& src );
-		BundleIdentifier& operator=( BundleIdentifier const& src );
-		BundleIdentifier( std::string const& name, const unsigned int id );
 
 		bool operator==( BundleIdentifier const& rhs ) const;
 		bool operator!=( BundleIdentifier const& rhs ) const;
@@ -40,11 +37,15 @@ namespace _2Real
 		bool operator>( BundleIdentifier const& rhs ) const;
 		bool operator>=( BundleIdentifier const& rhs ) const;
 
-		friend std::ostream& operator<<( std::ostream &out, BundleIdentifier const& id );
+		friend std::ostream& operator<<( std::ostream& out, BundleIdentifier const& id );
+		friend std::istream& operator>>( std::istream& in, BundleIdentifier &id );
 
 		std::string const& getName() const { return m_Name; }
+		unsigned int getId() const { return m_Id; }
 
 	private:
+
+		friend class EngineImpl;
 
 		std::string			m_Name;
 		unsigned int		m_Id;

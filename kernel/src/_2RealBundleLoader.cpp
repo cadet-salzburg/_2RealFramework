@@ -19,7 +19,8 @@
 
 #include "_2RealBundleLoader.h"
 #include "_2RealException.h"
-#include "_2RealMetadata.h"
+#include "_2RealBundleMetainfoImpl.h"
+#include "_2RealBundleMetainfo.h"
 #include "_2RealEngineImpl.h"
 
 #include "Poco/SharedLibrary.h"
@@ -78,11 +79,12 @@ namespace _2Real
 		return it->second.metainfo->hasContext();
 	}
 
-	BundleData * BundleLoader::loadLibrary( string const& path )
+	BundleData const& BundleLoader::loadLibrary( string const& path )
 	{
 		if ( isLibraryLoaded( path ) )
 		{
-			return nullptr;
+			BundleMap::const_iterator it = m_LoadedBundles.find( path );
+			return it->second.metainfo->getBundleData();
 		}
 
 		typedef void ( *MetainfoFunc )( BundleMetainfo &info );
@@ -99,8 +101,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		BundleData *result = new BundleData();
-		Metainfo *info = new Metainfo( *result );
+		Metainfo *info = new Metainfo( EngineImpl::instance().getTypetable() );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{
@@ -109,17 +110,17 @@ namespace _2Real
 				BundleInfo bundleInfo;
 				MetainfoFunc func = ( MetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
 
-				BundleMetainfo metainfo( *info, EngineImpl::instance().getTypetable() );
+				BundleMetainfo metainfo( *info );
 				func( metainfo );
 				bundleInfo.library = lib;
 				bundleInfo.metainfo = info;
 				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 
-				bundleInfo.metainfo->postProcess();
+				bundleInfo.metainfo->cleanup();
 				bundleInfo.metainfo->setName( path );
 				bundleInfo.metainfo->setInstallDirectory( path );
 
-				return result;
+				return info->getBundleData();
 			}
 			catch ( Exception &e )
 			{
@@ -139,19 +140,19 @@ namespace _2Real
 		}
 	}
 
-	//Block& BundleLoader::createContext( std::string const& path ) const
-	//{
-	//	BundleMap::const_iterator it = m_LoadedBundles.find( path );
+	Block& BundleLoader::createContext( std::string const& path ) const
+	{
+		BundleMap::const_iterator it = m_LoadedBundles.find( path );
 
-	//	if ( it == m_LoadedBundles.end() )
-	//	{
-	//		ostringstream msg;
-	//		msg << "shared library " << path << " not found";
-	//		throw NotFoundException( msg.str() );
-	//	}
+		if ( it == m_LoadedBundles.end() )
+		{
+			ostringstream msg;
+			msg << "shared library " << path << " not found";
+			throw NotFoundException( msg.str() );
+		}
 
-	//	return it->second.metainfo->createBundleContext();
-	//}
+		return it->second.metainfo->createContextBlock();
+	}
 
 	Block& BundleLoader::createBlock( std::string const& path, std::string const& blockName ) const
 	{

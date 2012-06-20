@@ -34,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		SyncBlock(std::string const& name, SystemImpl &owner);
+		SyncBlock( BlockIdentifier const& id, SystemImpl &owner );
 
 	};
 

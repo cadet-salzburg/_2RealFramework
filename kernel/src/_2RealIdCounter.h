@@ -18,12 +18,7 @@
 
 #pragma once
 
-#include "_2RealBlockIdentifier.h"
-#include "_2RealBundleIdentifier.h"
-
 #include "Poco/Mutex.h"
-
-#include <string>
 
 namespace _2Real
 {
@@ -33,43 +28,13 @@ namespace _2Real
 
 	public:
 
-		IdCounter() :
-			m_CounterValue(0)
-		{
-		}
-
-		unsigned int getId()
-		{
-			Poco::FastMutex::ScopedLock lock(m_CounterAccess);
-			return ++m_CounterValue;
-		}
+		IdCounter();
+		unsigned int getId();
 
 	private:
 
 		Poco::FastMutex			m_CounterAccess;
 		unsigned int			m_CounterValue;
-
-	};
-
-	class Entity
-	{
-
-	public:
-
-		Entity( std::string const& name );
-		virtual ~Entity();
-
-		std::string const&			getName() const;
-		unsigned int				getId() const;
-
-	protected:
-
-		unsigned int				const m_Id;
-		std::string					const m_Name;
-
-	private:
-
-		static IdCounter			m_Counter;
 
 	};
 

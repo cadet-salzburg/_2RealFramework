@@ -27,7 +27,6 @@
 #include "_2RealSyncBlock.h"
 #include "_2RealTriggerTypes.h"
 #include "_2RealUpdatePolicyImpl.h"
-#include "_2RealMetadata.h"
 #include "_2RealBlockError.h"
 
 #include <sstream>
@@ -35,10 +34,10 @@
 namespace _2Real
 {
 
-	SystemImpl::SystemImpl(std::string const& name) :
-		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates/*, SystemUpdates */>(name, nullptr),
-		m_Engine(EngineImpl::instance()),
-		m_PluginPool(EngineImpl::instance().getPluginPool()),
+	SystemImpl::SystemImpl( BlockIdentifier const& id ) :
+		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates >( id, nullptr ),
+		m_Engine( EngineImpl::instance() ),
+		m_PluginPool( EngineImpl::instance().getPluginPool() ),
 		m_Timestamp()
 	{
 		m_Timestamp.update();
@@ -405,20 +404,19 @@ namespace _2Real
 
 	const BlockIdentifier SystemImpl::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
 	{
-		UpdatePolicy policy;
-		policy.triggerByUpdateRate( 30.0f );
-
 		FunctionBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this );
 		addSubBlock( block );
 		dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( block, 0 );
 
+		UpdatePolicy policy;
+		policy.triggerByUpdateRate( 30.0f );
 		UpdatePolicyImpl *p = new UpdatePolicyImpl( *policy.m_Impl );
 		block.setUpdatePolicy( *p );
 
 		AbstractStateManager &mgr = block.getStateManager();
 		AbstractBlockBasedTrigger *trigger = new BlockBasedTrigger< BLOCK_OK >( this->getName() );
 		mgr.uberBlockAdded( *this, *trigger, BLOCK_OK );
-		return BlockIdentifier( block.getIdentifier() );
+		return block.getIdentifier();
 	}
 
 	void SystemImpl::setUpdatePolicy( BlockIdentifier const& id, UpdatePolicy const& policy )

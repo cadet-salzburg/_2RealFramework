@@ -28,28 +28,16 @@ namespace _2Real
 	{
 	}
 
-	BundleIdentifier::BundleIdentifier( std::string const& name, const unsigned int id ) :
-		m_Name( name ), m_Id( id )
+	std::ostream& operator<<( std::ostream& out, BundleIdentifier const& id )
 	{
-	}
-
-	BundleIdentifier::BundleIdentifier( BundleIdentifier const& src ) :
-		m_Name( src.m_Name ), m_Id( src.m_Id )
-	{
-	}
-
-	BundleIdentifier& BundleIdentifier::operator=( BundleIdentifier const& src )
-	{
-		m_Name = src.m_Name;
-		m_Id = src.m_Id;
-		return *this;
-	}
-
-	std::ostream& operator<<( std::ostream& out, BundleIdentifier const& bundleId )
-	{
-		std::string info = EngineImpl::instance().getInfoString( bundleId );
-		out << info;
+		out << id.m_Name;
 		return out;
+	}
+
+	std::istream& operator>>( std::istream& in, BundleIdentifier &id )
+	{
+		in >> id.m_Name;
+		return in;
 	}
 
 	bool BundleIdentifier::operator==( BundleIdentifier const& rhs ) const

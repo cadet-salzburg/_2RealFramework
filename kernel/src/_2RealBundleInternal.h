@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealEntity.h"
+#include "_2RealBundleIdentifier.h"
 
 #include <map>
 #include <string>
@@ -38,15 +38,16 @@ namespace _2Real
 	class FunctionBlock;
 	class BundleIdentifier;
 
-	class BundleInternal : public Entity
+	class BundleInternal
 	{
 
 	public:
 
-		BundleInternal( std::string const& name, BundleData const& data );
+		BundleInternal( BundleIdentifier const& id, BundleData const& data );
 		~BundleInternal();
 
-		BundleIdentifier	getIdentifier() const;
+		BundleIdentifier const&	getIdentifier() const;
+		std::string const&		getName() const;
 
 		const std::string	getBundleInfoString() const;
 		const std::string	getBlockInfoString( std::string const& blockName ) const;
@@ -59,14 +60,12 @@ namespace _2Real
 
 	private:
 
-		BundleInternal( BundleInternal const& src );
-		BundleInternal& operator=( BundleInternal const& src );
-
 		typedef std::multimap< std::string, Block * >	BlockMap;
 
-		BundleData						const& m_BundleData;
+		BundleIdentifier				const m_Identifier;
+		BundleData						const& m_BundleData;	// must be deleted before the library is unloaded
 		BlockMap						m_BlockInstances;
-		FunctionBlock					*m_BundleContext;
+		FunctionBlock					*m_BundleContext;		// the context: null if none was exported
 
 	};
 

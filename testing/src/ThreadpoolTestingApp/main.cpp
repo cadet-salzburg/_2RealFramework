@@ -50,8 +50,6 @@ int main( int argc, char *argv[] )
 	{
 		BundleIdentifier testBundle = testEngine.load( string( "ThreadpoolTesting" ).append( shared_library_suffix ) );
 
-		//cout << testBundle << endl;
-
 		UpdatePolicy fpsTrigger;
 		fpsTrigger.triggerByUpdateRate( 60.0f );
 
