@@ -29,6 +29,10 @@
 
 #include <sstream>
 
+using std::map;
+using std::string;
+using std::make_pair;
+
 namespace _2Real
 {
 
@@ -62,31 +66,31 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::initFrom( BlockData const& meta, Poco::Timestamp const& time )
+	void ServiceIO::initFrom( BlockData const& meta )
 	{
 		std::map< std::string, ParameterData > const& setup = meta.getParameters();
 		std::map< std::string, ParameterData > const& input = meta.getInlets();
 		std::map< std::string, ParameterData > const& output = meta.getOutlets();
 
-		for (std::map< std::string, ParameterData >::const_iterator it = setup.begin(); it != setup.end(); ++it)
+		for ( std::map< std::string, ParameterData >::const_iterator it = setup.begin(); it != setup.end(); ++it )
 		{
 			ParameterData const& meta = it->second;
-			SetupParameter *param = new SetupParameter( meta );
-			m_Params.insert( std::make_pair( param->getName(), param ) );
+			SetupParameter &param = createSetupParameterFromParameterData( meta );
+			m_Params.insert( make_pair( param.getName(), &param ) );
 		}
 
-		for (std::map< std::string, ParameterData >::const_iterator it = input.begin(); it != input.end(); ++it)
+		for ( std::map< std::string, ParameterData >::const_iterator it = input.begin(); it != input.end(); ++it )
 		{
 			ParameterData const& meta = it->second;
-			Inlet *inlet = new Inlet( meta );
-			m_Inlets.insert( std::make_pair( inlet->getName(), inlet ) );
+			Inlet& inlet = createInletFromParameterData( meta );
+			m_Inlets.insert( make_pair( inlet.getName(), &inlet ) );
 		}
 
-		for (std::map< std::string, ParameterData >::const_iterator it = output.begin(); it != output.end(); ++it)
+		for (std::map< std::string, ParameterData >::const_iterator it = output.begin(); it != output.end(); ++it )
 		{
 			ParameterData const& meta = it->second;
-			Outlet *outlet = new Outlet( meta, time );
-			m_Outlets.insert( std::make_pair( outlet->getName(), outlet ) );
+			Outlet& outlet = createOutletFromParameterData( meta );
+			m_Outlets.insert( make_pair( outlet.getName(), &outlet ) );
 		}
 	}
 
@@ -269,7 +273,7 @@ namespace _2Real
 		ParamMap::const_iterator paramIt = m_Params.find(name);
 		if (paramIt != m_Params.end())
 		{
-			return paramIt->second->getData();
+			return paramIt->second->getValue();
 		}
 
 		InletMap::const_iterator inletIt = m_Inlets.find(name);
@@ -281,7 +285,7 @@ namespace _2Real
 		OutletMap::const_iterator outletIt = m_Outlets.find(name);
 		if (outletIt != m_Outlets.end())
 		{
-			return outletIt->second->getCurrent();
+			return outletIt->second->getLastData();
 		}
 
 		std::ostringstream msg;
@@ -294,13 +298,13 @@ namespace _2Real
 		ParamMap::const_iterator paramIt = m_Params.find(name);
 		if (paramIt != m_Params.end())
 		{
-			return paramIt->second->getKeyword();
+			return paramIt->second->getTypename();
 		}
 
 		InletMap::const_iterator inletIt = m_Inlets.find(name);
 		if (inletIt != m_Inlets.end())
 		{
-			return inletIt->second->getKeyword();
+			return inletIt->second->getTypename();
 		}
 
 		std::ostringstream msg;
@@ -313,7 +317,7 @@ namespace _2Real
 		ParamMap::iterator paramIt = m_Params.find(name);
 		if (paramIt != m_Params.end())
 		{
-			paramIt->second->setData(value.data());
+			paramIt->second->setValue( value.getData() );
 			return;
 		}
 
@@ -405,7 +409,7 @@ namespace _2Real
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
 		{
 			it->second->update();
-			data.push_back( it->second->getOutputData() );
+			data.push_back( it->second->getLastOutputData() );
 		}
 
 		if ( data.size() > 0 )

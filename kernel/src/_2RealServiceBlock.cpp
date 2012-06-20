@@ -33,8 +33,7 @@ namespace _2Real
 		states->m_IO = io;
 		states->m_System = &owner;
 		states->m_FunctionBlock = &block;
-
-		io->initFrom( data, owner.getTimestamp() );
+		io->initFrom( data );
 	}
 
 	InletHandle FunctionBlock::createInletHandle(std::string const& name)

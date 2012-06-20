@@ -24,44 +24,44 @@ namespace _2Real
 {
 
 	OutletHandle::OutletHandle() :
-		ParameterHandle(""),
-		m_Output(nullptr)
+		ParameterHandle( "" ),
+		m_Outlet( nullptr )
 	{
 	}
 
-	OutletHandle::OutletHandle(Outlet &slot) :
-		ParameterHandle(slot.getName()),
-		m_Output(&slot)
+	OutletHandle::OutletHandle( Outlet &outlet ) :
+		ParameterHandle( outlet.getName() ),
+		m_Outlet( &outlet )
 	{
 	}
 
-	OutletHandle::OutletHandle(OutletHandle const& src) :
-		ParameterHandle(src),
-		m_Output(src.m_Output)
+	OutletHandle::OutletHandle( OutletHandle const& src ) :
+		ParameterHandle( src ),
+		m_Outlet( src.m_Outlet )
 	{
 	}
 
-	OutletHandle& OutletHandle::operator=(OutletHandle const& src)
+	OutletHandle& OutletHandle::operator=( OutletHandle const& src )
 	{
-		ParameterHandle::operator=(src);
-		m_Output = src.m_Output;
+		ParameterHandle::operator=( src );
+		m_Outlet = src.m_Outlet;
 
 		return *this;
 	}
 
-	EngineData OutletHandle::data()
+	EngineData & OutletHandle::getOutletData()
 	{
-		return m_Output->getDataForWriting();
+		return m_Outlet->getCurrentData();
 	}
 
-	void OutletHandle::discard()
-	{
-		m_Output->discardCurrent();
-	}
+	//void OutletHandle::discardOutletData()
+	//{
+	//	m_Output->discardCurrent();
+	//}
 
-	void OutletHandle::otherDataItem()
-	{
-		m_Output->createNewDataItem();
-	}
+	//void OutletHandle::setOutletData( EngineData const& val )
+	//{
+	//	m_Outlet->setCurrentData( val );
+	//}
 
 }

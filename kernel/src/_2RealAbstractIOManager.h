@@ -35,10 +35,15 @@ namespace _2Real
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
+	class ParameterData;
 
 	typedef std::map< std::string, Inlet * >		InletMap;
 	typedef std::map< std::string, Outlet * >		OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
+
+	Inlet & createInletFromParameterData( ParameterData const& data );
+	Outlet & createOutletFromParameterData( ParameterData const& data );
+	SetupParameter & createSetupParameterFromParameterData( ParameterData const& data );
 
 	class AbstractIOManager
 	{

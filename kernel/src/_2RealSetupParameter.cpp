@@ -20,35 +20,35 @@
 #include "_2RealParameterData.h"
 #include "_2RealException.h"
 
-#include <iostream>
 #include <sstream>
+
+using std::string;
+using std::ostringstream;
 
 namespace _2Real
 {
 
-	SetupParameter::SetupParameter(ParameterData const& metadata) :
-		Parameter(metadata),
-		m_Data()
+	SetupParameter::SetupParameter( string const& name, string const& longTypename, string const& typeName, EngineData const& initialValue ) :
+		Parameter( name, longTypename, typeName ),
+		m_Value( initialValue )
 	{
-		m_Data = metadata.getDefaultValue();
 	}
 
-	void SetupParameter::setData(EngineData const& data)
+	void SetupParameter::setValue( EngineData const& value )
 	{
-		if ( data.getTypeinfo().name() != getDatatype() )
+		if ( value.getTypename() != Parameter::getLongTypename() )
 		{
-			std::ostringstream msg;
-			msg << "datatype mismatch: " <<  m_Datatype << " vs. template parameter type " << data.getTypeinfo().name();
+			ostringstream msg;
+			msg << "datatype mismatch: " << Parameter::getLongTypename() << " vs. template parameter type " << value.getTypename();
 			throw TypeMismatchException(msg.str());
 		}
 
-		m_Data = data;
-		m_IsInitialized = true;
+		m_Value = value;
 	}
 
-	EngineData const& SetupParameter::getData() const
+	EngineData const& SetupParameter::getValue() const
 	{
-		return m_Data;
+		return m_Value;
 	}
 
 }

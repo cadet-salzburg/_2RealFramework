@@ -20,6 +20,7 @@
 
 #include "_2RealEngineData.h"
 
+#include <typeinfo.h>
 #include <string>
 
 namespace _2Real
@@ -50,10 +51,9 @@ namespace _2Real
 		}
 
 		template< typename Datatype >
-		void addOutlet( std::string const& outletName, Datatype defaultValue )
+		void addOutlet( std::string const& outletName )
 		{
-			EngineData data( defaultValue );
-			addOutletInternal( outletName, defaultValue );
+			addOutletInternal( outletName, typeid( Datatype ).name() );
 		}
 
 		void setDescription( std::string const& description );
@@ -62,7 +62,7 @@ namespace _2Real
 
 		void	addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
 		void	addInletInternal( std::string const& inletName, EngineData const& defaultValue );
-		void	addOutletInternal( std::string const& outletName, EngineData const& defaultValue );
+		void	addOutletInternal( std::string const& outletName, std::string const& typeName );
 
 		Typetable		const& m_Typetable;
 		BlockData		&m_Impl;

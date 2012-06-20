@@ -36,25 +36,25 @@ namespace _2Real
 
 	void BlockMetainfo::addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.getTypeinfo().name();
+		const std::string type = defaultValue.getTypename();
 		const std::string keyword = m_Typetable.lookupKey( type );
-		ParameterData *data = new ParameterData( paramName, type, keyword, "param", defaultValue );
+		ParameterData *data = new ParameterData( paramName, type, keyword, defaultValue );
 		m_Impl.addParameter( *data );
 	}
 
 	void BlockMetainfo::addInletInternal( std::string const& inletName, EngineData const& defaultValue )
 	{
-		const std::string type = defaultValue.getTypeinfo().name();
+		const std::string type = defaultValue.getTypename();
 		const std::string keyword = m_Typetable.lookupKey( type );
-		ParameterData *data = new ParameterData( inletName, type, keyword, "inlet", defaultValue );
+		ParameterData *data = new ParameterData( inletName, type, keyword, defaultValue );
 		m_Impl.addInlet( *data );
 	}
 
-	void BlockMetainfo::addOutletInternal( std::string const& outletName, EngineData const& defaultValue )
+	void BlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& typeName )
 	{
-		const std::string type = defaultValue.getTypeinfo().name();
-		const std::string keyword = m_Typetable.lookupKey( type );
-		ParameterData *data = new ParameterData( outletName, type, keyword, "outlet", defaultValue );
+		const std::string keyword = m_Typetable.lookupKey( typeName );
+		EngineData empty = m_Typetable.getInitialValueFromKey( keyword );
+		ParameterData *data = new ParameterData( outletName, typeName, keyword, empty );
 		m_Impl.addOutlet( *data );
 	}
 

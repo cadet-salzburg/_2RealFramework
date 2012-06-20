@@ -40,7 +40,7 @@ namespace _2Real
 
 	public:
 
-		using Block::setup;
+		using Block::setup;		// does this type of block even need the framework context?
 		using Block::update;
 		using Block::shutdown;
 		virtual ~ContextBlock() {};

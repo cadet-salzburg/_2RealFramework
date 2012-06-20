@@ -24,7 +24,6 @@
     <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h" />
-    <ClInclude Include="..\..\src\_2RealBlob.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
@@ -93,7 +92,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlob.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
@@ -110,6 +108,7 @@
     <ClCompile Include="..\..\src\_2RealDisabledIO.cpp" />
     <ClCompile Include="..\..\src\_2RealDisabledStates.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
+    <ClCompile Include="..\..\src\_2RealEngineData.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />

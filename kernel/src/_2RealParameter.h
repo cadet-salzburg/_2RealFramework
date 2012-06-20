@@ -31,20 +31,18 @@ namespace _2Real
 
 	public:
 
-		Parameter( ParameterData const& metadata );
+		Parameter( std::string const& name, std::string const& longTypename, std::string const& typeName );
 		virtual ~Parameter() {}
 
-		bool					isInitialized() const;
-		std::string const&		getKeyword() const;
-		std::string const&		getDatatype() const;
-		std::string const&		getName() const;
+		std::string const& getTypename() const;
+		std::string const& getLongTypename() const;
+		std::string const& getName() const;
 
 	protected:
 
-		bool					m_IsInitialized;
-		const std::string		m_Datatype;
-		const std::string		m_Keyword;
-		const std::string		m_Name;
+		std::string		const m_LongTypename;
+		std::string		const m_Typename;
+		std::string		const m_Name;
 
 	};
 

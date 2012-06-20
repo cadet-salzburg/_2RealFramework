@@ -65,14 +65,8 @@ namespace _2Real
 		m_Types->registerType< bool >("bool");
 		m_Types->registerType< std::string >("string");
 
-		/**
-		*	our enumeration datatype
-		*/
 		m_Types->registerType< StringEnumeration >( "enum_string" );
 
-		/**
-		*	our image datatype
-		*/
 		m_Types->registerType< ImageT < char > >("img_char");
 		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
 		m_Types->registerType< ImageT < short > >("img_short");
@@ -84,21 +78,7 @@ namespace _2Real
 		m_Types->registerType< ImageT < float > >("img_float");
 		m_Types->registerType< ImageT < double > >("img_double");
 
-		/**
-		*	blobs for all primitive datatypes-> feel free to add / delete
-		*/
-		m_Types->registerType< Blob < char > >("blob_char");
-		m_Types->registerType< Blob < unsigned char > >("blob_uchar");
-		m_Types->registerType< Blob < short > >("blob_short");
-		m_Types->registerType< Blob < unsigned short > >("blob_ushort");
-		m_Types->registerType< Blob < int > >("blob_int");
-		m_Types->registerType< Blob < unsigned int > >("blob_uint");
-		m_Types->registerType< Blob < long > >("blob_long");
-		m_Types->registerType< Blob < unsigned long > >("blob_ulong");
-		m_Types->registerType< Blob < float > >("blob_float");
-		m_Types->registerType< Blob < double > >("blob_double");
-		m_Types->registerType< Blob < bool > >("blob_bool");
-
+		m_Timestamp.update();
 		m_Threads->registerTimeListener(*m_Timer);
 	}
 
@@ -125,6 +105,16 @@ namespace _2Real
 			std::cout << e.what() << std::endl;
 #endif
 		}
+	}
+
+	const long EngineImpl::getElapsedTime() const
+	{
+		return static_cast< long >( m_Timestamp.elapsed() );
+	}
+
+	Poco::Timestamp const& EngineImpl::getTimestamp() const
+	{
+		return m_Timestamp;
 	}
 
 	BlockIdentifier EngineImpl::createBlockId( std::string const& name )

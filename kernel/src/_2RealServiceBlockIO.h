@@ -21,7 +21,6 @@
 #include "_2RealAbstractIOManager.h"
 
 #include "Poco/Mutex.h"
-#include "Poco/Timestamp.h"
 
 #include <map>
 #include <string>
@@ -54,7 +53,7 @@ namespace _2Real
 		ServiceIO(AbstractBlock &owner);
 		~ServiceIO();
 
-		void						initFrom( BlockData const& meta, Poco::Timestamp const& time );
+		void						initFrom( BlockData const& meta );
 
 		void						clear();
 		//void						addParam(ParameterData const& meta);

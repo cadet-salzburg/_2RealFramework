@@ -51,12 +51,12 @@ int main( int argc, char *argv[] )
 		BundleIdentifier testBundle = testEngine.load( string( "ThreadpoolTesting" ).append( shared_library_suffix ) );
 
 		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 60.0f );
+		fpsTrigger.triggerByUpdateRate( 100.0f );
 
 		UpdatePolicy newTrigger;
 		newTrigger.triggerWhenAllDataNew();
 
-		for ( unsigned int i=0; i<500; ++i )
+		for ( unsigned int i=0; i<1; ++i )
 		{
 			BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
 			testSystem.setup( out );

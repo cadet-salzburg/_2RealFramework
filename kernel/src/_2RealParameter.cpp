@@ -17,22 +17,17 @@
 */
 
 #include "_2RealParameter.h"
-#include "_2RealParameterData.h"
+
+using std::string;
 
 namespace _2Real
 {
 
-	Parameter::Parameter(ParameterData const& metadata) :
-		m_Name( metadata.getName() ),
-		m_Datatype( metadata.getLongTypename() ),
-		m_Keyword( metadata.getTypename() ),
-		m_IsInitialized( true )
+	Parameter::Parameter( string const& name, string const& longTypename, string const& typeName ) :
+		m_Name( name ),
+		m_LongTypename( longTypename ),
+		m_Typename( typeName )
 	{
-	}
-
-	bool Parameter::isInitialized() const
-	{
-		return m_IsInitialized;
 	}
 
 	std::string const& Parameter::getName() const
@@ -40,14 +35,14 @@ namespace _2Real
 		return m_Name;
 	}
 
-	std::string const& Parameter::getKeyword() const
+	std::string const& Parameter::getTypename() const
 	{
-		return m_Keyword;
+		return m_Typename;
 	}
 
-	std::string const& Parameter::getDatatype() const
+	std::string const& Parameter::getLongTypename() const
 	{
-		return m_Datatype;
+		return m_LongTypename;
 	}
 
 }

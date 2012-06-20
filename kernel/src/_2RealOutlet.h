@@ -26,7 +26,6 @@
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
-#include "Poco/Timestamp.h"
 
 #include <map>
 #include <list>
@@ -36,51 +35,63 @@ namespace _2Real
 
 	class Inlet;
 	class Timer;
+	class EngineImpl;
 
-	class Outlet : public Parameter
+	class Outlet : private Parameter
 	{
 
 	public:
 
-		Outlet( ParameterData const& metadata, Poco::Timestamp const& timer );
+		Outlet( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& emptyData );
 
-		EngineData &					getDataForWriting();	//called by output handle to get data
-		void							update();
-		void							createNewDataItem();
-		void							resetLinks();
-		void							discardCurrent();		//call by output handle when not writing anything
-		const EngineData				getCurrent() const;
-		OutputData						getOutputData() const;
+		using Parameter::getTypename;
+		using Parameter::getLongTypename;
+		using Parameter::getName;
 
-		// callback functions
-		void							registerCallback( OutletFunctionCallback &callback );
-		void							unregisterCallback( OutletFunctionCallback &callback );
-		void							registerCallback( AbstractOutletCallbackHandler &callback );
-		void							unregisterCallback( AbstractOutletCallbackHandler &callback );
+		void									update();					// called by fw at the end of each update cycle
+		//void									createNewDataItem();
+		void									resetLinks();
+		//void									discardCurrent();
+		/*void									setCurrentData( EngineData const& value );*/
+		EngineData &							getCurrentData();
+		const EngineData						getLastData() const;		// returns the value that was sent after the last update cycle
+		const OutputData						getLastOutputData() const;
+
+		// application callback functions
+		void									registerCallback( OutletFunctionCallback &callback );
+		void									unregisterCallback( OutletFunctionCallback &callback );
+		void									registerCallback( AbstractOutletCallbackHandler &callback );
+		void									unregisterCallback( AbstractOutletCallbackHandler &callback );
 
 		// inlets
-		void							addListener( Inlet &slot );
-		void							removeListener( Inlet &slot );
-		void							clearLinks();
+		void									addListener( Inlet &slot );
+		void									removeListener( Inlet &slot );
+		void									clearLinks();
 
 	private:
 
-		const bool							isLinkedWith(Inlet &inlet) const;
+		typedef std::list< Inlet * >			LinkList;
+		typedef std::list< TimestampedData >	DataItemList;
 
-		Poco::Timestamp						const& m_SystemTime;
-		mutable Poco::FastMutex				m_Mutex;
-		EngineData							m_WriteData;
-		Poco::BasicEvent< TimestampedData >	m_InletEvent;
-		Poco::BasicEvent< OutputData >		m_CallbackEvent;
-		std::list< Inlet * >				m_LinkedInlets;
+		const bool								isLinkedWith( Inlet &inlet ) const;
 
-		//todo: multimap not really necessary, i don't acces elems by key anyway
-		std::multimap< long, EngineData >	m_DataItems;
-		bool								m_HasData;
-		TimestampedData						m_NewestData;
+		EngineImpl								&m_Engine;					// engine is necessary for timestamps
 
-		bool								m_DiscardCurrent;
-		
+		DataItemList							m_DataItemsToSend;			// stores all data items that are written during an update cycle
+
+		mutable Poco::FastMutex					m_Access;
+
+		TimestampedData							m_LastDataItem;				// the data item that was last at the end of the most recent update cycle
+																			// initially, holds an empty ( created by () ) data item of correct type
+		TimestampedData							m_CurrentDataItem;			// the data item that is currently being written
+																			// initially, holds an empty ( created by () ) data item of correct type
+																			// after the first update, holds a copy of the m_LastDataItem
+		bool									m_SendData;					// is flagged if the current data should be sent
+
+		Poco::BasicEvent< TimestampedData >		m_InletEvent;
+		LinkList								m_Links;
+		Poco::BasicEvent< OutputData >			m_CallbackEvent;			// unlike the linked inlets, callbacks are managed by the io mgr
+																			// hmmm, maybe i should move the links there as well....
 
 	};
 

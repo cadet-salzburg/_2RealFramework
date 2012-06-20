@@ -26,37 +26,21 @@ namespace _2Real
 {
 
 	class BlockData;
-	class Typetable;
 
 	class ContextBlockMetainfo
 	{
 
 	public:
 
-		ContextBlockMetainfo( BlockData &data, Typetable const& typetable );
-
-		template< typename Datatype >
-		void addInlet( std::string const& inletName, Datatype defaultValue )
-		{
-			EngineData data( defaultValue );
-			addInletInternal( inletName, data );
-		}
-
-		template< typename Datatype >
-		void addOutlet( std::string const& outletName, Datatype defaultValue )
-		{
-			EngineData data( defaultValue );
-			addOutletInternal( outletName, defaultValue );
-		}
+		ContextBlockMetainfo( BlockData &data );
 
 		void setDescription( std::string const& description );
 
+		// TODO: functions for context block may be added as the need arises
+		//void setUpdateRate( const float updatesPerSecond );
+
 	private:
 
-		void	addInletInternal( std::string const& inletName, EngineData const& defaultValue );
-		void	addOutletInternal( std::string const& outletName, EngineData const& defaultValue );
-
-		Typetable		const& m_Typetable;
 		BlockData		&m_Impl;
 
 	};

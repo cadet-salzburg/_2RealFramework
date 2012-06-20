@@ -158,7 +158,7 @@ namespace _2Real
 			//	BlockData const& bundleData = bundle.getBlockData( "bundle context" );
 			//	std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
 
-			//	for ( std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
+			//	for ( typename std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
 			//	{
 			//		serviceBlock->linkWith( it->first, bundleContext, it->first );
 			//	}

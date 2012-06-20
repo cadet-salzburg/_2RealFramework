@@ -35,7 +35,7 @@ namespace _2Real
 
 	const std::string OutputData::getLongTypename() const
 	{
-		return m_Data.getTypeinfo().name();
+		return m_Data.getTypename();
 	}
 
 	std::string const& OutputData::getName() const

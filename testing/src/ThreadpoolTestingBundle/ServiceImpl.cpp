@@ -61,7 +61,6 @@ unsigned int TestContext::getCurrentValue()
 	return m_Val;
 }
 
-
 void Out::setup( FrameworkContext &context )
 {
 	try
@@ -79,7 +78,7 @@ void Out::update()
 {
 	try
 	{
-		m_Out.data< unsigned int >() = ++m_Counter;
+		++m_Out.getDataRef< unsigned int >();
 	}
 	catch ( Exception &e )
 	{
@@ -92,7 +91,6 @@ void InOut::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_Counter = -1;
 		m_In = context.getInletHandle( "inlet" );
 		m_Out = context.getOutletHandle( "outlet" );
 	}
@@ -107,8 +105,7 @@ void InOut::update()
 {
 	try
 	{
-		++m_Counter;
-		m_Out.data< unsigned int>() = m_In.data< unsigned int >();
+		m_Out.getDataRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
 	}
 	catch ( Exception &e)
 	{
@@ -135,10 +132,9 @@ void In::update()
 {
 	try
 	{
-		++m_Counter;
-		if ( m_Counter == 100 )
+		if ( ++m_Counter == 100 )
 		{
-			cout << m_In.data< unsigned int >() << endl;
+			cout << " IN: " << m_In.getReadableRef< unsigned int >() << endl;
 			m_Counter = 0;
 		}
 	}

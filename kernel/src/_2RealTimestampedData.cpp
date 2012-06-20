@@ -35,9 +35,24 @@ namespace _2Real
 		return m_Timestamp;
 	}
 
-	EngineData const& TimestampedData::data() const
+	EngineData const& TimestampedData::getData() const
 	{
 		return m_Data;
+	}
+
+	EngineData & TimestampedData::getData()
+	{
+		return m_Data;
+	}
+
+	bool TimestampedData::isEmpty() const
+	{
+		return m_Data.isEmpty();
+	}
+
+	void TimestampedData::cloneData( TimestampedData const& src )
+	{
+		m_Data.clone( src.getData() );
 	}
 
 }

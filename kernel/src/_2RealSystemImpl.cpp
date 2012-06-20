@@ -37,25 +37,13 @@ namespace _2Real
 	SystemImpl::SystemImpl( BlockIdentifier const& id ) :
 		UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates >( id, nullptr ),
 		m_Engine( EngineImpl::instance() ),
-		m_PluginPool( EngineImpl::instance().getPluginPool() ),
-		m_Timestamp()
+		m_BundleManager( EngineImpl::instance().getPluginPool() )
 	{
-		m_Timestamp.update();
 	}
 
 	SystemImpl::~SystemImpl()
 	{
 		clear();
-	}
-
-	const long SystemImpl::getElapsedTime() const
-	{
-		return static_cast< long >(m_Timestamp.elapsed());
-	}
-
-	Poco::Timestamp const& SystemImpl::getTimestamp() const
-	{
-		return m_Timestamp;
 	}
 
 	void SystemImpl::clear()
@@ -336,9 +324,9 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::setValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
+	void SystemImpl::setValue( BlockIdentifier const& id, std::string const& paramName, EngineData const& value )
 	{
-		TimestampedData data(value, (long)m_Timestamp.elapsed());
+		TimestampedData data( value, m_Engine.getElapsedTime() );
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -353,7 +341,7 @@ namespace _2Real
 
 	void SystemImpl::insertValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
 	{
-		TimestampedData data(value, (long)m_Timestamp.elapsed());
+		TimestampedData data( value, m_Engine.getElapsedTime() );
 
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -404,7 +392,7 @@ namespace _2Real
 
 	const BlockIdentifier SystemImpl::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
 	{
-		FunctionBlock &block = m_PluginPool.createServiceBlock( pluginId, blockName, *this );
+		FunctionBlock &block = m_BundleManager.createServiceBlock( pluginId, blockName, *this );
 		addSubBlock( block );
 		dynamic_cast< SystemStates * >( m_StateManager )->setAllowedUpdates( block, 0 );
 

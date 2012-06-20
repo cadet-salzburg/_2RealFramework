@@ -22,6 +22,8 @@
 #include <iostream>
 
 using std::string;
+using std::ostream;
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -29,38 +31,31 @@ namespace _2Real
 	ParameterData::ParameterData() :
 		m_Name( "undefined" ),
 		m_Typename( "undefined" ),
-		m_LongTypename( "undefined" ),
-		m_Category( "undefined" )
+		m_LongTypename( "undefined" )
 	{
 	}
 
-	ParameterData::ParameterData( string const& name, string const& longType, string const& type, string const& category, EngineData const& defaultValue ) :
+	ParameterData::ParameterData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
 		m_Name( name ),
 		m_Typename( type ),
 		m_LongTypename( longType ),
-		m_Category( category ),
 		m_DefaultValue( defaultValue )
 	{
 	}
 
-	std::string const& ParameterData::getName() const
+	string const& ParameterData::getName() const
 	{
 		return m_Name;
 	}
 
-	std::string const& ParameterData::getTypename() const
+	string const& ParameterData::getTypename() const
 	{
 		return m_Typename;
 	}
 
-	std::string const& ParameterData::getLongTypename() const
+	string const& ParameterData::getLongTypename() const
 	{
 		return m_LongTypename;
-	}
-
-	std::string const& ParameterData::getCategory() const
-	{
-		return m_Category;
 	}
 
 	EngineData const& ParameterData::getDefaultValue() const
@@ -68,7 +63,19 @@ namespace _2Real
 		return m_DefaultValue;
 	}
 
-	std::ostream& operator<<( std::ostream &out, ParameterData const& metadata )
+	const string ParameterData::getDefaultValueAsString() const
+	{
+		ostringstream val;
+		val << m_DefaultValue;
+		return val.str();
+	}
+
+	bool ParameterData::hasDefaultValue() const
+	{
+		return m_DefaultValue.isEmpty();
+	}
+
+	ostream& operator<<( ostream &out, ParameterData const& metadata )
 	{
 		out << metadata.getName() << "\t" << metadata.getTypename();
 		out << ", default value: " << metadata.getDefaultValue();

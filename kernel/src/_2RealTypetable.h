@@ -83,8 +83,8 @@ namespace _2Real
 		m_Typetable[keyword2] = data2;
 
 		std::string type = typeid(Datatype).name();
-		std::string type1 = data1.getTypeinfo().name();
-		std::string type2 = data2.getTypeinfo().name();
+		std::string type1 = data1.getTypename();
+		std::string type2 = data2.getTypename();
 
 		m_LookupTable[type] = keyword;
 		m_LookupTable[type1] = keyword1;

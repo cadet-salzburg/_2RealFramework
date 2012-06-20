@@ -38,13 +38,17 @@ namespace _2Real
 
 	typedef std::multimap< long, EngineData, std::greater< long > >		DataBuffer;
 
-	class Inlet : public Parameter
+	class Inlet : private Parameter
 	{
 
 	public:
 
-		Inlet( ParameterData const& metadata );
+		Inlet( std::string const& name, std::string const& longTypename, std::string const& type, EngineData const& defaultValue );
 		~Inlet();
+
+		using Parameter::getTypename;
+		using Parameter::getLongTypename;
+		using Parameter::getName;
 
 		void setFixedData( TimestampedData const& data );
 		void receiveData( TimestampedData &data ); //arg is nonconst bc poco events require exactely this signature

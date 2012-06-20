@@ -25,9 +25,6 @@
 #include "_2RealDisabledIO.h"
 #include "_2RealDisabledStates.h"
 
-#include "Poco/Path.h"
-#include "Poco/Timer.h"
-
 namespace _2Real
 {
 
@@ -50,9 +47,6 @@ namespace _2Real
 		~SystemImpl();
 
 		void						clear();
-
-		const long					getElapsedTime() const;
-		Poco::Timestamp	const&		getTimestamp() const;
 
 		const BlockIdentifier		createFunctionBlock( BundleIdentifier const& pluginId, std::string const& serviceName );
 
@@ -89,8 +83,9 @@ namespace _2Real
 	private:
 
 		EngineImpl					&m_Engine;
-		BundleManager				&m_PluginPool;
-		Poco::Timestamp				m_Timestamp;
+		BundleManager				&m_BundleManager;
+
+		// handles exception callbacks
 		mutable Poco::FastMutex		m_ExceptionAccess;
 		ExceptionFunctionCallbacks	m_ExceptionCallbacks;
 		ExceptionCallbackHandlers	m_ExceptionCallbackHandlers;

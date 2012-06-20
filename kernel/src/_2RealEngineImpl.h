@@ -42,6 +42,8 @@
 	#endif
 #endif
 
+#include "Poco/Timer.h"
+
 namespace Poco
 {
 	class Path;
@@ -78,6 +80,8 @@ namespace _2Real
 		BundleManager const&			getPluginPool() const;
 		ThreadPool &					getThreadPool();
 		ThreadPool const&				getThreadPool() const;
+		const long						getElapsedTime() const;
+		Poco::Timestamp	const&			getTimestamp() const;
 
 		BlockIdentifier					createBlockId( std::string const& name );
 		BundleIdentifier				createBundleId( std::string const& name );
@@ -103,6 +107,7 @@ namespace _2Real
 		ThreadPool				*m_Threads;
 		BundleManager			*m_Plugins;
 		IdCounter				*m_IdCounter;
+		Poco::Timestamp				m_Timestamp;
 
 	};
 

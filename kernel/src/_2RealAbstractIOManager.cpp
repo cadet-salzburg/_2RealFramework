@@ -18,6 +18,10 @@
 
 #include "_2RealAbstractIOManager.h"
 #include "_2RealAbstractUberBlock.h"
+#include "_2RealInlet.h"
+#include "_2RealOutlet.h"
+#include "_2RealSetupParameter.h"
+#include "_2RealParameterData.h"
 
 namespace _2Real
 {
@@ -39,6 +43,24 @@ namespace _2Real
 	const unsigned int AbstractIOManager::getId() const
 	{
 		return m_Owner.getId();
+	}
+
+	Inlet & createInletFromParameterData( ParameterData const& data )
+	{
+		Inlet *inlet = new Inlet( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		return *inlet;
+	}
+
+	Outlet & createOutletFromParameterData( ParameterData const& data )
+	{
+		Outlet *outlet = new Outlet( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		return *outlet;
+	}
+
+	SetupParameter & createSetupParameterFromParameterData( ParameterData const& data )
+	{
+		SetupParameter *parameter = new SetupParameter( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		return *parameter;
 	}
 
 }

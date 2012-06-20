@@ -41,11 +41,11 @@ namespace _2Real
 		Timer();
 		~Timer();
 
-		void receiveTimerSignal(Poco::Timer &t);
-		void registerToTimerSignal(AbstractStateManager &triggers) const;
-		void unregisterFromTimerSignal(AbstractStateManager &triggers) const;
-		void registerToTimerSignal(ThreadPool &pool) const;
-		void unregisterFromTimerSignal(ThreadPool &pool) const;
+		void receiveTimerSignal( Poco::Timer &t );
+		void registerToTimerSignal( AbstractStateManager &triggers ) const;
+		void unregisterFromTimerSignal( AbstractStateManager &triggers ) const;
+		void registerToTimerSignal( ThreadPool &pool ) const;
+		void unregisterFromTimerSignal( ThreadPool &pool ) const;
 
 	private:
 

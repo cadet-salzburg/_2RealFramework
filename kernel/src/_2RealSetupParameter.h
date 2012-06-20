@@ -24,19 +24,23 @@
 namespace _2Real
 {
 
-	class SetupParameter : public Parameter
+	class SetupParameter : private Parameter
 	{
 
 	public:
 
-		SetupParameter(ParameterData const& metadata);
+		SetupParameter( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& initialValue );
 
-		void				setData(EngineData const& data);
-		EngineData const&	getData() const;
+		using Parameter::getTypename;
+		using Parameter::getLongTypename;
+		using Parameter::getName;
+
+		void				setValue( EngineData const& data );
+		EngineData const&	getValue() const;
 
 	private:
 
-		EngineData			m_Data;
+		EngineData			m_Value;
 
 	};
 

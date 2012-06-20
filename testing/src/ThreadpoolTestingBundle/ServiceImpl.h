@@ -40,7 +40,6 @@ public:
 
 private:
 
-	int								m_Counter;
 	_2Real::OutletHandle			m_Out;
 
 };
@@ -57,7 +56,6 @@ public:
 
 private:
 
-	int								m_Counter;
 	_2Real::InletHandle				m_In;
 	_2Real::OutletHandle			m_Out;
 

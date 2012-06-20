@@ -32,14 +32,17 @@ namespace _2Real
 		TimestampedData( EngineData const& data, long timestamp );
 
 		template< typename Datatype >
-		Datatype const& getData() const
+		Datatype const& getExtractedData() const
 		{
 			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
 			return *ptr.get();
 		}
 
 		long getTimestamp() const;
-		EngineData const& data() const;
+		EngineData & getData();
+		EngineData const& getData() const;
+		bool isEmpty() const;
+		void cloneData( TimestampedData const& src );
 
 	private:
 

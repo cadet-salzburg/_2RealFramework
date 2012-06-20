@@ -22,179 +22,177 @@
 #include "_2RealServiceBlock.h"
 #include "_2RealParameterData.h"
 #include "_2RealEngineImpl.h"
-#include "_2RealTypetable.h"
 
 #include "Poco/Delegate.h"
 
-#include <iostream>
+using std::string;
+using std::find;
+using std::ostringstream;
 
 namespace _2Real
 {
 
-	Outlet::Outlet( ParameterData const& metadata, Poco::Timestamp const& timestamp ) :
-		Parameter( metadata ),
-		m_SystemTime( timestamp ),
-		m_DiscardCurrent( false ),
-		m_HasData( false )
+	Outlet::Outlet( string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
+		Parameter( name, longTypename, typeName ),
+		m_Engine( EngineImpl::instance() ),
+		m_CurrentDataItem( emptyData, 0 ),
+		m_LastDataItem( emptyData, 0 )
 	{
-		m_WriteData = metadata.getDefaultValue();
-		m_NewestData = TimestampedData( m_WriteData, (long)m_SystemTime.elapsed() );
-		m_WriteData.clone( m_WriteData );
-		m_HasData = true;
-	}
-
-	void Outlet::clearLinks()
-	{
-		for ( std::list< Inlet * >::iterator it = m_LinkedInlets.begin(); it != m_LinkedInlets.end(); ++it )
-		{
-			(*it)->unlink( *this );
-			m_InletEvent -= Poco::delegate( *it, &Inlet::receiveData );
-		}
 	}
 
 	void Outlet::update()
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		// insert last value into the map of items if it was not explicitly discarded
-		if ( !m_DiscardCurrent )
+		if ( !m_CurrentDataItem.isEmpty() )
 		{
-			m_DataItems.insert( std::make_pair(static_cast< long >(m_SystemTime.elapsed()), m_WriteData) );
-		}
-		else
-		{
-			m_DiscardCurrent = false;
-		}
+			m_LastDataItem = TimestampedData( m_CurrentDataItem.getData(), m_Engine.getElapsedTime() );
+			m_CurrentDataItem.cloneData( m_LastDataItem );
 
-		m_HasData = !m_DataItems.empty();
-
-		// send all current data items and empty the queue in the process - at the end, only m_NewestData will hold the newest data
-		for ( std::multimap< long, EngineData >::iterator it = m_DataItems.begin(); it != m_DataItems.end(); /**/ )
-		{
-			m_NewestData = TimestampedData( it->second, it->first );
-			m_InletEvent.notify( this, m_NewestData );
-			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			m_InletEvent.notify( this, m_LastDataItem );
+			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
 			m_CallbackEvent.notify( this, data );
-			it = m_DataItems.erase( it );
 		}
 
-		// this creates an empty object of the same datatype as write data
-		m_WriteData.create( m_WriteData );
+		//// send all current data items and empty the queue in the process - at the end, only m_NewestData will hold the newest data
+		//for ( DataItemList::iterator it = m_DataItemsToSend.begin(); it != m_DataItemsToSend.end(); /**/ )
+		//{
+		//	// first notify the inlets
+		//	m_InletEvent.notify( this, *it );
+
+		//	// create OutletData for application callbacks
+		//	OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
+		//	m_CallbackEvent.notify( this, data );
+
+		//	m_LastDataItem = *it;
+		//	it = m_DataItemsToSend.erase( it );
+		//}
+
+		// copy the value that was sent into the current data
+		m_CurrentDataItem.cloneData( m_LastDataItem );
 	}
 
-	EngineData & Outlet::getDataForWriting()
+	const EngineData Outlet::getLastData() const
 	{
-		return m_WriteData;
+		return m_LastDataItem.getData();
 	}
 
-	const EngineData Outlet::getCurrent() const
+	const OutputData Outlet::getLastOutputData() const
 	{
-		return m_NewestData.data();
+		return OutputData( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
 	}
 
-	OutputData Outlet::getOutputData() const
+	//void Outlet::setCurrentData( EngineData const& value )
+	//{
+	//	if ( value.getTypeinfo().name() != Parameter.getLongTypename() )
+	//	{
+	//		ostringstream msg;
+	//		msg << "datatype mismatch: " << Parameter::getLongTypename() << " vs. value type " << value.getTypeinfo().name();
+	//		throw TypeMismatchException(msg.str());
+	//	}
+
+	//	m_DataItemsToSend.push_back( TimestampedData( value, m_Engine.getElapsedTime() ) );
+	//}
+
+	EngineData & Outlet::getCurrentData()
 	{
-		OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
-		return data;
+		return m_CurrentDataItem.getData();
 	}
 
-	void Outlet::createNewDataItem()
-	{
-		if ( !m_DiscardCurrent )
-		{
-			m_DataItems.insert( std::make_pair( static_cast< long >( m_SystemTime.elapsed() ), m_WriteData ) );
-		}
-		else
-		{
-			m_DiscardCurrent = false;
-		}
-
-		m_WriteData.create( m_WriteData );
-	}
-
-	void Outlet::discardCurrent()
-	{
-		m_DiscardCurrent = true;
-	}
+	//void Outlet::discardCurrent()
+	//{
+	//	m_DiscardCurrent = true;
+	//}
 
 	void Outlet::addListener( Inlet &inlet )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		std::list< Inlet * >::iterator it = std::find< std::list< Inlet * >::iterator, Inlet * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
-		if (it == m_LinkedInlets.end())
+		LinkList::iterator it = find< LinkList::iterator, Inlet * >( m_Links.begin(), m_Links.end(), &inlet );
+		if ( it == m_Links.end() )
 		{
 			m_InletEvent += Poco::delegate(&inlet, &Inlet::receiveData);
-			m_LinkedInlets.push_back( &inlet );
-			if ( m_HasData )
+			m_Links.push_back( &inlet );
+
+			if ( !m_LastDataItem.isEmpty() )
 			{
-				inlet.receiveData( m_NewestData );
+				inlet.receiveData( m_LastDataItem );
 			}
 		}
 	}
 
 	void Outlet::removeListener( Inlet &inlet )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		std::list< Inlet * >::iterator it = std::find< std::list< Inlet * >::iterator, Inlet * >(m_LinkedInlets.begin(), m_LinkedInlets.end(), &inlet);
-		if (it != m_LinkedInlets.end())
+		LinkList::iterator it = find< LinkList::iterator, Inlet * >( m_Links.begin(), m_Links.end(), &inlet );
+		if ( it != m_Links.end() )
 		{
 			m_InletEvent -= Poco::delegate(&inlet, &Inlet::receiveData);
-			m_LinkedInlets.erase( it );
+			m_Links.erase( it );
 		}
 	}
 
 	void Outlet::registerCallback( OutletFunctionCallback &callback )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
 		m_CallbackEvent += Poco::delegate( &callback, &OutletFunctionCallback::invoke );
 
-		if ( m_HasData )
+		if ( !m_LastDataItem.isEmpty() )
 		{
-			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
 			callback.invoke( data );
 		}
 	}
 
 	void Outlet::unregisterCallback( OutletFunctionCallback &callback )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		m_CallbackEvent -= Poco::delegate(&callback, &OutletFunctionCallback::invoke);
+		m_CallbackEvent -= Poco::delegate( &callback, &OutletFunctionCallback::invoke );
 	}
 
 	void Outlet::registerCallback( AbstractOutletCallbackHandler &handler )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		m_CallbackEvent += Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
+		m_CallbackEvent += Poco::delegate( &handler, &AbstractOutletCallbackHandler::invoke );
 
-		if ( m_HasData )
+		if ( !m_LastDataItem.isEmpty() )
 		{
-			OutputData data( m_NewestData.data(), Parameter::getKeyword(), Parameter::getName() );
+			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
 			handler.invoke( data );
 		}
 	}
 
 	void Outlet::unregisterCallback( AbstractOutletCallbackHandler &handler )
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
 		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
 	}
 
+	// hm
+	void Outlet::clearLinks()
+	{
+		for ( LinkList::iterator it = m_Links.begin(); it != m_Links.end(); ++it )
+		{
+			(*it)->unlink( *this );
+			m_InletEvent -= Poco::delegate( *it, &Inlet::receiveData );
+		}
+	}
+
 	void Outlet::resetLinks()
 	{
-		Poco::FastMutex::ScopedLock lock(m_Mutex);
+		Poco::FastMutex::ScopedLock lock( m_Access );
 
 		m_InletEvent.clear();
 
-		for(std::list< Inlet * >::iterator it = m_LinkedInlets.begin(); it != m_LinkedInlets.end(); /**/)
+		for( LinkList::iterator it = m_Links.begin(); it != m_Links.end(); /**/ )
 		{
 			(*it)->unlink(*this);
-			it = m_LinkedInlets.erase(it);
+			it = m_Links.erase(it);
 			break;
 		}
 	}

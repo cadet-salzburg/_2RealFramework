@@ -27,6 +27,11 @@
 
 #include "Poco/Delegate.h"
 
+using std::map;
+using std::string;
+using std::pair;
+using std::make_pair;
+
 namespace _2Real
 {
 
@@ -37,7 +42,7 @@ namespace _2Real
 
 		virtual ~BufferPolicy() {}
 		virtual bool insertData( std::pair< long, EngineData > &data, DataBuffer &buffer ) = 0;
-		virtual std::pair< long, EngineData > getData( DataBuffer &buffer ) = 0;
+		virtual pair< long, EngineData > getData( DataBuffer &buffer ) = 0;
 
 	};
 
@@ -49,7 +54,7 @@ namespace _2Real
 		AlwaysInsert( const unsigned int max ) : BufferPolicy(), m_Max( max ) {}
 		void setMaxBufferSize( const unsigned int max ) { m_Max = max; }
 
-		bool insertData( std::pair< long, EngineData > &data, DataBuffer &buffer )
+		bool insertData( pair< long, EngineData > &data, DataBuffer &buffer )
 		{
 			if ( buffer.size() >= m_Max )
 			{
@@ -62,7 +67,7 @@ namespace _2Real
 			return true;
 		}
 
-		std::pair< long, EngineData > getData( DataBuffer &buffer )
+		pair< long, EngineData > getData( DataBuffer &buffer )
 		{
 			DataBuffer::iterator it = buffer.begin();
 			return *it;
@@ -74,15 +79,26 @@ namespace _2Real
 
 	};
 
-	Inlet::Inlet( ParameterData const& metadata ) :
-		Parameter( metadata ),
+	//Inlet::Inlet( ParameterData const& metadata ) :
+	//	Parameter( metadata ),
+	//	m_BufferPolicy( new AlwaysInsert( 10 ) ),
+	//	m_LastTimestamp( 0 ),
+	//	m_HasFixedData( false )
+	//{
+	//	m_DefaultData = std::make_pair( m_LastTimestamp, metadata.getDefaultValue() );	//default data has 0 as timestamp
+	//	m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
+	//	m_CurrentData = m_DefaultData;
+	//}
+
+	Inlet::Inlet( string const& name, string const& longTypename, string const& type, EngineData const& defaultValue ) :
+		Parameter( name, longTypename, type ),
 		m_BufferPolicy( new AlwaysInsert( 10 ) ),
+		m_HasFixedData( false ),
 		m_LastTimestamp( 0 ),
-		m_HasFixedData( false )
+		m_DefaultData( make_pair( 0, defaultValue ) ),
+		m_CurrentData( make_pair( 0, defaultValue ) )
 	{
-		m_DefaultData = std::make_pair( m_LastTimestamp, metadata.getDefaultValue() );	//default data has 0 as timestamp
 		m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
-		m_CurrentData = m_DefaultData;
 	}
 
 	Inlet::~Inlet()
@@ -123,7 +139,7 @@ namespace _2Real
 
 		m_HasFixedData = true;
 		m_LastTimestamp = data.getTimestamp();
-		m_FixedData = std::make_pair( m_LastTimestamp, data.data() );
+		m_FixedData = std::make_pair( m_LastTimestamp, data.getData() );
 
 		//the only point where i directly access the data buffer
 		m_ReceivedTable.clear();
@@ -138,7 +154,7 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
 
 		long time = data.getTimestamp();
-		if ( m_BufferPolicy->insertData( std::make_pair( time, data.data() ), m_ReceivedTable ) )
+		if ( m_BufferPolicy->insertData( std::make_pair( time, data.getData() ), m_ReceivedTable ) )
 		{
 			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, time );
 			m_DataReceived.notify( this, times );

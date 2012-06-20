@@ -48,7 +48,7 @@ namespace _2Real
 			throw InvalidTypeException(msg.str());
 		}
 
-		return std::string(it->second.getTypeinfo().name());
+		return std::string( it->second.getTypename() );
 	}
 
 	const std::string Typetable::lookupKey(std::string const& type) const
