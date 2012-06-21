@@ -16,9 +16,14 @@
 	limitations under the License.
 */
 
-#include "_2RealBlob.h"
+#include "_2RealEngine.h"
+#include "_2RealEngineImpl.h"
+#include "_2RealBundleIdentifier.h"
+#include "_2RealSingletonHolder.h"
+#include "_2RealHelpers.h"
+
+#include "Poco/Path.h"
 
 namespace _2Real
 {
-	IMPLEMENT_EXCEPTION(BlobException, Exception, "Blob exception")
 }

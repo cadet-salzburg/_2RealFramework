@@ -16,7 +16,7 @@ namespace _2Real
 	public:
 	
 		template< typename Datatype >
-		friend std::shared_ptr< Datatype > const& extractFrom( EngineData const& data );
+		friend Datatype * extractFrom( EngineData const& data );
 		friend std::ostream& operator<<( std::ostream& out, EngineData const& data );
 		friend std::istream& operator>>( std::istream& in, EngineData &data );
 
@@ -34,6 +34,7 @@ namespace _2Real
 		EngineData( AbstractDataHolder *holder );
 
 		bool isEmpty() const;
+		const std::string getTypename() const;
 		std::type_info const& getTypeinfo() const;
 		void clone( EngineData const& src );
 		void create( EngineData const& src );
@@ -59,8 +60,24 @@ namespace _2Real
 		return in;
 	}
 
+	//template< typename Datatype >
+	//std::shared_ptr< Datatype > const& extractFrom( EngineData const& data )
+	//{
+	//	if ( data.getTypeinfo() == typeid( Datatype ) )
+	//	{
+	//		AbstractDataHolder const* ptr = data.m_Content.get();
+	//	}
+	//	else
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "type of data " << data.getTypeinfo().name() << " does not match template parameter " << typeid( Datatype ).name() << std::endl;
+	//		throw TypeMismatchException( msg.str() );
+	//	}			return ( static_cast< DataHolder< Datatype > const* >( ptr ) )->m_Data;
+
+	//}
+
 	template< typename Datatype >
-	std::shared_ptr< Datatype > const& extractFrom( EngineData const& data )
+	Datatype * extractFrom( EngineData const& data )
 	{
 		if ( data.getTypeinfo() == typeid( Datatype ) )
 		{
@@ -152,6 +169,18 @@ namespace _2Real
 		else
 		{
 			return m_Content->getTypeinfo();
+		}
+	}
+
+	inline const std::string EngineData::getTypename() const
+	{
+		if ( isEmpty() )
+		{
+			return typeid( void ).name();
+		}
+		else
+		{
+			return m_Content->getTypename();
 		}
 	}
 

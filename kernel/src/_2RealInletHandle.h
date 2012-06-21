@@ -46,8 +46,8 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(current());
-			return *ptr.get();
+			Datatype *ptr = extractFrom< Datatype >(current());
+			return *ptr;
 		}
 
 		/**
@@ -64,8 +64,10 @@ namespace _2Real
 				throw UninitializedHandleException(msg.str());
 			}
 
-			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( current() );
-			return std::shared_ptr< Datatype >( new Datatype( *ptr.get() ) );
+			//std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( current() );
+			//return std::shared_ptr< Datatype >( new Datatype( *ptr.get() ) );
+			Datatype *ptr = extractFrom< Datatype >(current());
+			return *ptr;
 		}
 
 	private:

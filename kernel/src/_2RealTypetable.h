@@ -71,18 +71,18 @@ namespace _2Real
 		}
 
 		//automatically also registers vector & list
-		std::string keyword1 = std::string("vector " + keyword);
-		std::string keyword2 = std::string("list " + keyword);
+		std::string keyword1 = std::string( "vector " + keyword );
+		std::string keyword2 = std::string( "list " + keyword );
 
-		EngineData data(new Datatype());
-		EngineData data1(new std::vector< Datatype >());
-		EngineData data2(new std::list< Datatype >());
+		EngineData data( new Datatype() );
+		EngineData data1( new std::vector< Datatype >() );
+		EngineData data2( new std::list< Datatype >() );
 
 		m_Typetable[keyword] = data;
 		m_Typetable[keyword1] = data1;
 		m_Typetable[keyword2] = data2;
 
-		std::string type = typeid(Datatype).name();
+		std::string type = typeid( Datatype ).name();
 		std::string type1 = data1.getTypename();
 		std::string type2 = data2.getTypename();
 

@@ -104,8 +104,6 @@ namespace _2Real
 
 	public:
 
-
-
 		ImageChannelT& operator=( ImageChannelT const& src )
 		{
 			if ( this == &src )
@@ -113,36 +111,36 @@ namespace _2Real
 				return *this;
 			}
 
-			if ( src.m_ChannelObject.get()->m_IsDataOwner )
-			{
-				T const* srcData = src.getData();
-				size_t sz = src.getWidth() * src.getHeight();
-				T *data = new T[ sz ];
-				memcpy( data, srcData, sz*sizeof( T ) );
-				m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
-			}
-			else
-			{
+			//if ( src.m_ChannelObject.get()->m_IsDataOwner )
+			//{
+			//	T const* srcData = src.getData();
+			//	size_t sz = src.getWidth() * src.getHeight();
+			//	T *data = new T[ sz ];
+			//	memcpy( data, srcData, sz*sizeof( T ) );
+			//	m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
+			//}
+			//else
+			//{
 				m_ChannelObject = src.m_ChannelObject;
-			}
+			//}
 
 			return *this;
 		}
 
 		ImageChannelT( ImageChannelT const& src )
 		{
-			if ( src.m_ChannelObject.get()->m_IsDataOwner )
-			{
-				T const* srcData = src.getData();
-				size_t sz = src.getWidth() * src.getHeight();
-				T *data = new T[ sz ];
-				memcpy( data, srcData, sz*sizeof( T ) );
-				m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
-			}
-			else
-			{
+			//if ( src.m_ChannelObject.get()->m_IsDataOwner )
+			//{
+			//	T const* srcData = src.getData();
+			//	size_t sz = src.getWidth() * src.getHeight();
+			//	T *data = new T[ sz ];
+			//	memcpy( data, srcData, sz*sizeof( T ) );
+			//	m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
+			//}
+			//else
+			//{
 				m_ChannelObject = src.m_ChannelObject;
-			}
+			//}
 		}
 
 		ImageChannelT()
@@ -293,40 +291,40 @@ namespace _2Real
 				return *this;
 			}
 
-			if ( src.m_ImageObject.get()->m_IsDataOwner )
-			{
-				T* srcData = src.getData();
-				size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
-				T *data = new T[ sz ];
+			//if ( src.m_ImageObject.get()->m_IsDataOwner )
+			//{
+			//	T* srcData = src.getData();
+			//	size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
+			//	T *data = new T[ sz ];
 
-				memcpy( data, srcData, sz*sizeof( T ) );
+			//	memcpy( data, srcData, sz*sizeof( T ) );
 
-				m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
-			}
-			else
-			{
+			//	m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
+			//}
+			//else
+			//{
 				m_ImageObject = src.m_ImageObject;
-			}
+			//}
 
 			return *this;
 		}
 
 		ImageT( ImageT const& src )
 		{
-			if ( src.m_ImageObject.get()->m_IsDataOwner )
-			{
-				T* srcData = src.getData();
-				size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
-				T *data = new T[ sz ];
+			//if ( src.m_ImageObject.get()->m_IsDataOwner )
+			//{
+			//	T* srcData = src.getData();
+			//	size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
+			//	T *data = new T[ sz ];
 
-				memcpy( data, srcData, sz*sizeof( T ) );
+			//	memcpy( data, srcData, sz*sizeof( T ) );
 
-				m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
-			}
-			else
-			{
+			//	m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
+			//}
+			//else
+			//{
 				m_ImageObject = src.m_ImageObject;
-			}
+			//}
 		}
 
 		ImageT(const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder)

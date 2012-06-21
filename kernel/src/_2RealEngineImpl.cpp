@@ -28,7 +28,6 @@
 #include "_2RealSystemImpl.h"
 #include "_2RealIdCounter.h"
 
-#include "_2RealBlob.h"
 #include "_2RealImageT.h"
 #include "_2RealEnum.h"
 

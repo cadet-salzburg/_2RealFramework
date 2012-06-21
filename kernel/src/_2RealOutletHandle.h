@@ -46,8 +46,8 @@ namespace _2Real
 				throw UninitializedHandleException( msg.str() );
 			}
 
-			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( getOutletData() );
-			return *ptr.get();
+			Datatype *ptr = extractFrom< Datatype >( getOutletData() );
+			return *ptr;
 		}
 
 		//template< typename Datatype >
