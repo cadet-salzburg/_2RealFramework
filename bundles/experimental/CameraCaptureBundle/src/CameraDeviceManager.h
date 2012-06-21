@@ -1,12 +1,12 @@
 #include "_2RealBlock.h"
 #include "_2RealOutletHandle.h"
 
-class CameraDeviceManager : public _2Real::Block
+class CameraDeviceManager : public _2Real::ContextBlock
 {
 
 public:
 
-	CameraDeviceManager() : Block() {}
+	CameraDeviceManager() : ContextBlock() {}
 	~CameraDeviceManager() {}
 	void update();
 	void shutdown() {}

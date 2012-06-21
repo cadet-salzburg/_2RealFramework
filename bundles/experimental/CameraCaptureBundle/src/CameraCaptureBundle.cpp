@@ -2,15 +2,13 @@
 #include "CameraCaptureBlock.h"
 
 #include "_2RealBundle.h"
-#include "_2RealMetadata.h"
+#include "_2RealBundleMetaInfo.h"
+#include "_2RealBlockMetaInfo.h"
+#include "_2RealContextBlockMetaInfo.h"
 #include "_2RealException.h"
 #include "_2RealEnum.h"
 
-using _2Real::BundleMetainfo;
-using _2Real::BlockMetainfo;
-using _2Real::Enumeration;
-using _2Real::Enums;
-using _2Real::Exception;
+using namespace _2Real;
 
 using std::string;
 using std::cout;
@@ -27,17 +25,14 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		info.exportBundleContext< CameraDeviceManager >();
+		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
 
-		info.addContextParameter< unsigned int >( "context number", (unsigned int)0 );
-		info.addContextParameter< Enumeration >( "context enum", Enumeration( Enums( "enum 1", "value 1" )("enum 2", "value 2"), "no value" ) );
-
-		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock >( "CameraCaptureBlock" );
+		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
 		cameraCapture.addInlet<int>("intValue", 0);
 		cameraCapture.addInlet<float>("floatValue", 0);
-		cameraCapture.addOutlet<int>("intValue", 10);
-		cameraCapture.addOutlet<float>("floatValue", 0);
-		cameraCapture.addOutlet<float>("floatValue1", 0);
+		cameraCapture.addOutlet<int>("intValue");
+		cameraCapture.addOutlet<float>("floatValue");
+		cameraCapture.addOutlet<float>("floatValue1");
 
 		cameraCapture.setDescription( "Camera Capture" );
 	}

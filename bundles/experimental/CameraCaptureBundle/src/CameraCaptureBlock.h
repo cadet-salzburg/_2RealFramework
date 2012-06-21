@@ -9,7 +9,7 @@ class CameraCaptureBlock : public _2Real::Block
 
 public:
 
-	CameraCaptureBlock() : Block() {}
+	CameraCaptureBlock( _2Real::ContextBlock & context ) : Block() {}
 	~CameraCaptureBlock() {}
 	void shutdown() {}
 	void update();

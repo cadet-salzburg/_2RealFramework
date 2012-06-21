@@ -16,8 +16,6 @@ void CameraCaptureBlock::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_ContextEnum = context.getInletHandle( "context enum" );
-		m_ContextNumber = context.getInletHandle( "context number" );
 		m_IntOutletHandle = context.getOutletHandle( "intValue" );
 		m_FloatOutletHandle = context.getOutletHandle( "floatValue" );
 	}
@@ -34,10 +32,10 @@ void CameraCaptureBlock::update()
 	{
 		static int i=0;
 		static float f=0;
-		m_IntOutletHandle.data<int>()++;// = i++;
-		m_FloatOutletHandle.data<float>() = f+=0.01;
+		m_IntOutletHandle.getDataRef<int>()++;
+		m_FloatOutletHandle.getDataRef<float>() = f+=0.01;
 
-	//	cout << "test block: context nr = " << m_ContextNumber.data< unsigned int >() << endl;
+
 	}
 	catch ( Exception &e )
 	{

@@ -17,8 +17,6 @@ void CameraDeviceManager::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_ContextEnum = context.getOutletHandle( "context enum" );
-		m_ContextNumber = context.getOutletHandle( "context number" );
 	}
 	catch ( Exception &e )
 	{
@@ -31,8 +29,6 @@ void CameraDeviceManager::update()
 {
 	try
 	{
-		static int cnt = 0;
-		m_ContextNumber.data< unsigned int >() = cnt++;
 	}
 	catch ( Exception &e )
 	{
