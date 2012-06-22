@@ -32,7 +32,7 @@ void CameraCaptureBlock::update()
 	{
 		static int i=0;
 		static float f=0;
-		m_DoubleOutletHandle.getDataRef<double>()+=m_DoubleInletHandle.getReadableRef<double>();
+		m_DoubleOutletHandle.getWriteableRef<double>()+=m_DoubleInletHandle.getReadableRef<double>();
 	}
 	catch ( Exception &e )
 	{

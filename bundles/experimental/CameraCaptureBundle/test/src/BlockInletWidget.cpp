@@ -3,7 +3,7 @@
 using namespace std;
 using namespace _2Real;
 
-BlockInletWidget::BlockInletWidget(_2Real::System* system, _2Real::BlockIdentifier blockId, std::string strInletName, QWidget *parent) : QGroupBox(parent), m_BlockId(blockId), m_strInletName(strInletName)
+BlockInletWidget::BlockInletWidget(_2Real::System* system, _2Real::BlockIdentifier blockId, std::string strInletName, QWidget *parent) : m_pSystem(system), QGroupBox(parent), m_BlockId(blockId), m_strInletName(strInletName)
 {
 	QHBoxLayout*	layout = new QHBoxLayout();
 	layout->addWidget( new QLabel(QString::fromStdString( strInletName )) );
