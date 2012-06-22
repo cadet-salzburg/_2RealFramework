@@ -43,11 +43,10 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		
 		// set needed setup parameters for block otherwise set to default
 
-		// start 
+		// setup
 		m_p2RealSystem->setup(m_BlockId);
-
+		// start
 		m_p2RealSystem->start(m_BlockId);
-
 		// setup callbacks
 		m_p2RealSystem->registerToAllOutletData( m_BlockId, *this, &BlockUnitTestWidget::receiveData );
 	}
@@ -112,7 +111,7 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		BlockInletWidget* tmp = new BlockInletWidget(m_BlockId, it->first);
+		BlockInletWidget* tmp = new BlockInletWidget(m_p2RealSystem, m_BlockId, it->first);
 		layout->addWidget(tmp);
 	}
 
@@ -129,8 +128,7 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		BlockOutletWidget* tmp = new BlockOutletWidget(m_BlockId, it->first);
-		m_p2RealSystem->registerToOutletData( m_BlockId, it->first, *tmp, &BlockOutletWidget::receiveData );
+		BlockOutletWidget* tmp = new BlockOutletWidget(m_p2RealSystem, m_BlockId, it->first);
 		layout->addWidget(tmp);
 	}
 

@@ -28,11 +28,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
 
 		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
-		cameraCapture.addInlet<int>("intValue", 0);
-		cameraCapture.addInlet<float>("floatValue", 0);
-		cameraCapture.addOutlet<int>("intValue");
-		cameraCapture.addOutlet<float>("floatValue");
-		cameraCapture.addOutlet<float>("floatValue1");
+		cameraCapture.addInlet<double>("doubleInlet", 0);
+		cameraCapture.addOutlet<double>("doubleOutlet");
 
 		cameraCapture.setDescription( "Camera Capture" );
 	}

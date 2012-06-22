@@ -8,7 +8,7 @@ Q_OBJECT
 
 public:
 	BlockOutletWidget::BlockOutletWidget(){};
-	BlockOutletWidget::BlockOutletWidget(_2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent=0);
+	BlockOutletWidget::BlockOutletWidget(_2Real::System* system, _2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent=0);
 
 	void receiveData(_2Real::OutputData& data);
 

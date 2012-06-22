@@ -16,8 +16,8 @@ void CameraCaptureBlock::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_IntOutletHandle = context.getOutletHandle( "intValue" );
-		m_FloatOutletHandle = context.getOutletHandle( "floatValue" );
+		m_DoubleInletHandle = context.getInletHandle( "doubleInlet" );
+		m_DoubleOutletHandle = context.getOutletHandle( "doubleOutlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -32,10 +32,7 @@ void CameraCaptureBlock::update()
 	{
 		static int i=0;
 		static float f=0;
-		m_IntOutletHandle.getDataRef<int>()++;
-		m_FloatOutletHandle.getDataRef<float>() = f+=0.01;
-
-
+		m_DoubleOutletHandle.getDataRef<double>()+=m_DoubleInletHandle.getReadableRef<double>();
 	}
 	catch ( Exception &e )
 	{
