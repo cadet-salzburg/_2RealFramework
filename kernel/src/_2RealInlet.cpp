@@ -127,6 +127,8 @@ namespace _2Real
 
 	void Inlet::setToValue( TimestampedData const& data )
 	{
+		Poco::FastMutex::ScopedLock lock( m_DataAccess );
+
 		m_DefaultValue = data;
 		m_BufferPolicy->setDefault( data );
 	}
