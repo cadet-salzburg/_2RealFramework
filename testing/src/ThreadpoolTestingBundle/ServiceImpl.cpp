@@ -78,7 +78,8 @@ void Out::update()
 {
 	try
 	{
-		++m_Out.getDataRef< unsigned int >();
+		cout << " OUT" << endl;
+		++m_Out.getWriteableRef< unsigned int >();
 	}
 	catch ( Exception &e )
 	{
@@ -105,7 +106,8 @@ void InOut::update()
 {
 	try
 	{
-		m_Out.getDataRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
+		cout << " INOUT" << endl;
+		m_Out.getWriteableRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
 	}
 	catch ( Exception &e)
 	{
@@ -132,11 +134,11 @@ void In::update()
 {
 	try
 	{
-		if ( ++m_Counter == 100 )
-		{
-			cout << " IN: " << m_In.getReadableRef< unsigned int >() << endl;
-			m_Counter = 0;
-		}
+		//if ( ++m_Counter == 100 )
+		//{
+			cout << m_In.getReadableRef< unsigned int >() << endl;
+		//	m_Counter = 0;
+		//}
 	}
 	catch ( Exception &e )
 	{

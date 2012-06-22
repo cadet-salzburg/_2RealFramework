@@ -1,10 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneralTestingApp", "GeneralTestingApp.vcxproj", "{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneralTestingBundle", "GeneralTestingBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageTestingApp", "ImageTestingApp.vcxproj", "{AA9EA0F4-CC54-41A7-9185-26B071B23154}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadpoolTestingBundle", "ThreadpoolTestingBundle.vcxproj", "{926B4D59-E1F0-4AB9-8CBA-234D1F792EF0}"
@@ -15,20 +11,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTestingApp", "Contex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTestingBundle", "ContextTestingBundle.vcxproj", "{6197A090-9357-40D3-8C5B-289F5D8DE9B0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageTestingBundle", "ImageTestingBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Debug|Win32.Build.0 = Debug|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.ActiveCfg = Release|Win32
-		{6800D387-DA7A-4397-ADA1-35EB0DC5FD94}.Release|Win32.Build.0 = Release|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
 		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Debug|Win32.ActiveCfg = Debug|Win32
 		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Debug|Win32.Build.0 = Debug|Win32
 		{AA9EA0F4-CC54-41A7-9185-26B071B23154}.Release|Win32.ActiveCfg = Release|Win32
@@ -49,6 +39,10 @@ Global
 		{6197A090-9357-40D3-8C5B-289F5D8DE9B0}.Debug|Win32.Build.0 = Debug|Win32
 		{6197A090-9357-40D3-8C5B-289F5D8DE9B0}.Release|Win32.ActiveCfg = Release|Win32
 		{6197A090-9357-40D3-8C5B-289F5D8DE9B0}.Release|Win32.Build.0 = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

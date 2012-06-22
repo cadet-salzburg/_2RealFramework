@@ -35,6 +35,8 @@ using _2Real::BlockIdentifier;
 using _2Real::UpdatePolicy;
 using _2Real::Exception;
 
+#include "vld.h"
+
 #ifndef _DEBUG
 	#define shared_library_suffix ".dll"
 #else
@@ -56,26 +58,43 @@ int main( int argc, char *argv[] )
 		UpdatePolicy newTrigger;
 		newTrigger.triggerWhenAllDataNew();
 
-		for ( unsigned int i=0; i<1; ++i )
-		{
-			BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
-			testSystem.setup( out );
-			testSystem.setPolicy( out, fpsTrigger );
-			testSystem.start( out );
+		//for ( unsigned int i=0; i<1; ++i )
+		//{
+			//BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
+			//testSystem.setup( out );
+			//testSystem.setPolicy( out, fpsTrigger );
+			//testSystem.start( out );
 
-			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
-			testSystem.setup( inout );
-			testSystem.setPolicy( inout, newTrigger );
-			testSystem.start( inout );
+			//BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
+			//testSystem.setup( inout );
+			//testSystem.setPolicy( inout, newTrigger );
+			//testSystem.start( inout );
 
 			BlockIdentifier in = testSystem.createBlock( testBundle, "in" );
 			testSystem.setup(  in );
-			testSystem.setPolicy( in, newTrigger );
+			testSystem.setPolicy( in, fpsTrigger );
 			testSystem.start( in );
 
-			testSystem.link( out, "outlet", inout, "inlet" );
-			testSystem.link( inout, "outlet", in, "inlet" );
+			//testSystem.link( out, "outlet", inout, "inlet" );
+			//testSystem.link( inout, "outlet", in, "inlet" );
+		//}
+
+		while( 1 )
+		{
+			string line;
+			char lineEnd = '\n';
+			getline( cin, line, lineEnd );
+			if ( line == "q" )
+			{
+				break;
+			}
+			else if ( line == "a" )
+			{
+				unsigned int cnt = 0;
+				testSystem.setValue< unsigned int >( in, "inlet", ++cnt );
+			}
 		}
+
 	}
 	catch ( Exception &e )
 	{
