@@ -36,18 +36,18 @@ namespace _2Real
 
 		BlockMetainfo( BlockData &data, Typetable const& typetable );
 
+		void setDescription( std::string const& description );
+
 		template< typename Datatype >
 		void addParameter( std::string const& paramName, Datatype defaultValue )
 		{
-			EngineData data( defaultValue );
-			addParameterInternal( setupName, data );
+			addParameterInternal( setupName, EngineData( defaultValue ) );
 		}
 
 		template< typename Datatype >
 		void addInlet( std::string const& inletName, Datatype defaultValue )
 		{
-			EngineData data( defaultValue );
-			addInletInternal( inletName, data );
+			addInletInternal( inletName, EngineData( defaultValue ) );
 		}
 
 		template< typename Datatype >
@@ -56,16 +56,14 @@ namespace _2Real
 			addOutletInternal( outletName, typeid( Datatype ).name() );
 		}
 
-		void setDescription( std::string const& description );
-
 	private:
 
-		void	addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
-		void	addInletInternal( std::string const& inletName, EngineData const& defaultValue );
-		void	addOutletInternal( std::string const& outletName, std::string const& typeName );
+		void		addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
+		void		addInletInternal( std::string const& inletName, EngineData const& defaultValue );
+		void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 
-		Typetable		const& m_Typetable;
-		BlockData		&m_Impl;
+		BlockData	&m_Impl;
+		Typetable	const& m_Typetable;
 
 	};
 

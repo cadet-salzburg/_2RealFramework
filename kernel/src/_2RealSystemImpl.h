@@ -74,10 +74,11 @@ namespace _2Real
 		void						destroy( BlockIdentifier const& blockId );
 		void						setUpdatePolicy( BlockIdentifier const& blockId, UpdatePolicy const& policy );
 
-		const EngineData			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
-		std::string const&			getKey(BlockIdentifier const& ownerId, std::string const& paramName) const;
+		EngineData const&			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
+		std::string const&			getTypename(BlockIdentifier const& ownerId, std::string const& paramName) const;
+		std::string const&			getLongTypename(BlockIdentifier const& ownerId, std::string const& paramName) const;
 		void						setValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
-		void						insertValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
+
 		void						link(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
 
 	private:

@@ -49,13 +49,12 @@ namespace _2Real
 		using Parameter::getName;
 
 		void									update();					// called by fw at the end of each update cycle
-		//void									createNewDataItem();
 		void									resetLinks();
-		//void									discardCurrent();
-		/*void									setCurrentData( EngineData const& value );*/
+		void									discardCurrentData();
 		EngineData &							getCurrentData();
-		const EngineData						getLastData() const;		// returns the value that was sent after the last update cycle
-		const OutputData						getLastOutputData() const;
+		EngineData const&						getLastData() const;		// returns the value that was sent after the last update cycle
+		OutputData const&						getLastOutputData() const;	// return a copy of the value that was sent after the last update cycle
+																			// for the application
 
 		// application callback functions
 		void									registerCallback( OutletFunctionCallback &callback );
@@ -64,7 +63,7 @@ namespace _2Real
 		void									unregisterCallback( AbstractOutletCallbackHandler &callback );
 
 		// inlets
-		void									addListener( Inlet &slot );
+		void									addListener( Inlet &inlet );
 		void									removeListener( Inlet &slot );
 		void									clearLinks();
 
@@ -77,8 +76,6 @@ namespace _2Real
 
 		EngineImpl								&m_Engine;					// engine is necessary for timestamps
 
-		DataItemList							m_DataItemsToSend;			// stores all data items that are written during an update cycle
-
 		mutable Poco::FastMutex					m_Access;
 
 		TimestampedData							m_LastDataItem;				// the data item that was last at the end of the most recent update cycle
@@ -86,7 +83,8 @@ namespace _2Real
 		TimestampedData							m_CurrentDataItem;			// the data item that is currently being written
 																			// initially, holds an empty ( created by () ) data item of correct type
 																			// after the first update, holds a copy of the m_LastDataItem
-		bool									m_SendData;					// is flagged if the current data should be sent
+		bool									m_DiscardCurrent;			// is flagged if the current data should not be sent
+		OutputData								m_LastOutputData;
 
 		Poco::BasicEvent< TimestampedData >		m_InletEvent;
 		LinkList								m_Links;

@@ -41,9 +41,11 @@ namespace _2Real
 	class SetupParameter;
 	class UpdatePolicyImpl;
 
-	typedef std::map< std::string, Inlet * >		InletMap;
-	typedef std::map< std::string, Outlet * >		OutletMap;
+	typedef std::map< std::string, Inlet * >			InletMap;
+	typedef std::map< std::string, Outlet * >			OutletMap;
 	typedef std::map< std::string, SetupParameter * >	ParamMap;
+
+	class AbstractInletBasedTrigger;
 
 	class ServiceIO : public AbstractIOManager
 	{
@@ -53,12 +55,9 @@ namespace _2Real
 		ServiceIO(AbstractBlock &owner);
 		~ServiceIO();
 
-		void						initFrom( BlockData const& meta );
+		// stuff that is inherited
 
 		void						clear();
-		//void						addParam(ParameterData const& meta);
-		//void						addInlet(ParameterData const& meta);
-		//void						addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp);
 		void						registerToNewData(std::string const& outName, OutletCallback callback, void *userData );
 		void						unregisterFromNewData(std::string const& outName, OutletCallback callback, void *userData );
 		void						registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
@@ -67,27 +66,29 @@ namespace _2Real
 		void						unregisterFromNewData(OutputCallback callback, void *userData );
 		void						registerToNewData(AbstractOutputCallbackHandler &handler);
 		void						unregisterFromNewData(AbstractOutputCallbackHandler &handler);
-		const EngineData			getValue(std::string const& paramName) const;
-		std::string const&			getKey(std::string const& paramName) const;
+
+		EngineData const&			getValue(std::string const& paramName) const;
+		std::string const&			getTypename(std::string const& paramName) const;
+		std::string const&			getLongTypename(std::string const& paramName) const;
 		void						setValue(std::string const& paramName, TimestampedData const& value);
-		void						insertValue(std::string const& paramName, TimestampedData &value);
 
 		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
-		
-		InletHandle					createInletHandle(std::string const& name);
-		OutletHandle				createOutletHandle(std::string const& name);
 
-		void						syncInlets();
-		void						updateOutlets();
-		void						updateInlets();
+		void						createInletTriggerFor( std::string const& inletName );
 
 		InletMap const&				getInlets() const;
 		OutletMap const&			getOutlets() const;
 
-		void						subBlockAdded(AbstractBlock &subBlock);
-		void						subBlockRemoved(AbstractBlock &subBlock);
-		void						uberBlockAdded(AbstractBlock &uberBlock);
-		void						uberBlockRemoved(AbstractBlock &uberBlock);
+		// stuff that needs a dynamic cast
+		
+		InletHandle					createInletHandle(std::string const& name);
+		OutletHandle				createOutletHandle(std::string const& name);
+
+		void						updateInletValues();
+		void						updateOutletValues();
+		void						updateInletBuffers();
+
+		void						initFrom( BlockData const& meta );
 
 	private:
 
@@ -107,5 +108,13 @@ namespace _2Real
 		std::list< OutputData >		m_OutputData;
 
 	};
+
+	//template< typename Condition >
+	//void ServiceIO::createInletTriggerFor( string const& inletName )
+	//{
+	//	//Inlet &inlet = _2Real::getValue< string, Inlet >( inletName, m_Inlets, "inlet" );
+
+	//	//InletBasedTrigger< Condition > trigger = new InletBasedTrigger< Condition >(
+	//}
 
 }

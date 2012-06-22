@@ -88,7 +88,7 @@ namespace _2Real
 	{
 	}
 
-	void SystemStates::subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage msg )
+	void SystemStates::subBlockAdded( AbstractBlock &subBlock, AbstractUberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_UpdateAccess );
 		m_BlockUpdates[ subBlock.getName() ] = static_cast< unsigned long >( 0 );
@@ -104,7 +104,7 @@ namespace _2Real
 		m_BlockUpdates[ block.getName() ] = updates;
 	}
 
-	void SystemStates::uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage msg )
+	void SystemStates::uberBlockAdded( AbstractBlock &uberBlock, AbstractUberBlockBasedTrigger &trigger )
 	{
 	}
 

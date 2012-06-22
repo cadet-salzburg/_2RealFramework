@@ -156,4 +156,64 @@ namespace _2Real
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	template< typename KeyType, typename ValueType >
+	ValueType *const getValue( KeyType const& key, typename std::map< KeyType, ValueType * > &map )
+	{
+		typename std::map< KeyType, ValueType * >::iterator it = map.find( key );
+		if ( it != map.end() )
+		{
+			return it->second;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	template< typename KeyType, typename ValueType >
+	ValueType const* const getValue( KeyType const& key, typename std::map< KeyType, ValueType * > const& map )
+	{
+		typename std::map< KeyType, ValueType * >::const_iterator it = map.find( key );
+		if ( it != map.end() )
+		{
+			return it->second;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	template< typename KeyType, typename ValueType >
+	ValueType & getValue( KeyType const& key, typename std::map< KeyType, ValueType * > &map, std::string const& keyType )
+	{
+		ValueType *const valPtr = getValue< KeyType, ValueType >( key, map );
+		if ( valPtr == nullptr )
+		{
+			std::ostringstream msg;
+			msg << keyType << " " << key << " not found";
+			throw NotFoundException( msg.str() );
+		}
+		else
+		{
+			return *valPtr;
+		}
+	}
+
+	template< typename KeyType, typename ValueType >
+	ValueType const& getValue( KeyType const& key, typename std::map< KeyType, ValueType * > const& map, std::string const& keyType )
+	{
+		ValueType const* const valPtr = getValue< KeyType, ValueType >( key, map );
+		if ( valPtr == nullptr )
+		{
+			std::ostringstream msg;
+			msg << keyType << " " << key << " not found";
+			throw NotFoundException( msg.str() );
+		}
+		else
+		{
+			return *valPtr;
+		}
+	}
+
 }

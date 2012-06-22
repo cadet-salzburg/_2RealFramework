@@ -18,24 +18,24 @@
 
 #pragma once
 
-#include "_2RealUberBlock.h"
-#include "_2RealDisabledIO.h"
-#include "_2RealUnOwnedBlocks.h"
-#include "_2RealSyncBlockStates.h"
-
-namespace _2Real
-{
-
-	class SystemImpl;
-	class UpdatePolicyImpl;
-
-	class SyncBlock : public UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates >
-	{
-
-	public:
-
-		SyncBlock( BlockIdentifier const& id, SystemImpl &owner );
-
-	};
-
-}
+//#include "_2RealUberBlock.h"
+//#include "_2RealDisabledIO.h"
+//#include "_2RealUnOwnedBlocks.h"
+//#include "_2RealSyncBlockStates.h"
+//
+//namespace _2Real
+//{
+//
+//	class SystemImpl;
+//	class UpdatePolicyImpl;
+//
+//	class SyncBlock : public UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates >
+//	{
+//
+//	public:
+//
+//		SyncBlock( BlockIdentifier const& id, SystemImpl &owner );
+//
+//	};
+//
+//}

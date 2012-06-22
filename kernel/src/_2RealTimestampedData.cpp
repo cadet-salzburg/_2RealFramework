@@ -30,6 +30,11 @@ namespace _2Real
 	{
 	}
 
+	bool TimestampedData::operator>( TimestampedData const& other ) const
+	{
+		return m_Timestamp > other.m_Timestamp;
+	}
+
 	long TimestampedData::getTimestamp() const
 	{
 		return m_Timestamp;
@@ -52,7 +57,7 @@ namespace _2Real
 
 	void TimestampedData::cloneData( TimestampedData const& src )
 	{
-		m_Data.clone( src.getData() );
+		m_Data.cloneFrom( src.getData() );
 	}
 
 }

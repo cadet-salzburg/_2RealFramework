@@ -110,24 +110,24 @@ namespace _2Real
 			m_IOManager->unregisterFromNewData(handler);
 		}
 
-		const EngineData getValue(std::string const& paramName) const
+		EngineData const& getValue(std::string const& paramName) const
 		{
 			return m_IOManager->getValue(paramName);
 		}
 
-		std::string const& getKey(std::string const& paramName) const
+		std::string const& getTypename( std::string const& paramName ) const
 		{
-			return m_IOManager->getKey(paramName);
+			return m_IOManager->getTypename( paramName );
+		}
+
+		std::string const& getLongTypename( std::string const& paramName ) const
+		{
+			return m_IOManager->getLongTypename( paramName );
 		}
 
 		void setValue(std::string const& paramName, TimestampedData const& value)
 		{
 			m_IOManager->setValue(paramName, value);
-		}
-
-		void insertValue(std::string const& paramName, TimestampedData &value)
-		{
-			m_IOManager->insertValue(paramName, value);
 		}
 
 		void linkWith(std::string const& nameIn, AbstractBlock &out, std::string const& nameOut)

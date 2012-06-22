@@ -19,7 +19,9 @@
 
 #pragma once
 
-#include "_2RealTriggerTypes.h"
+#include "_2RealUberBlockBasedTrigger.h"
+#include "_2RealInletBasedTrigger.h"
+#include "_2RealTimeBasedTrigger.h"
 
 #include <string>
 #include <memory>
@@ -54,7 +56,7 @@ namespace _2Real
 
 	public:
 
-		virtual AbstractBlockBasedTrigger * createTrigger( std::string const& name ) = 0;
+		virtual AbstractUberBlockBasedTrigger * createTrigger( std::string const& name ) = 0;
 
 	};
 
@@ -64,7 +66,7 @@ namespace _2Real
 
 	public:
 
-		AbstractBlockBasedTrigger * createTrigger( std::string const& name )
+		AbstractUberBlockBasedTrigger * createTrigger( std::string const& name )
 		{
 			return new BlockBasedTrigger< TriggerState >( name );
 		}
@@ -87,11 +89,11 @@ namespace _2Real
 		void setBlockDefault( UpdatePolicyImpl::BlockDefaultPtr &blockDefault );
 		void addInletBasedTrigger( std::string const& inletName, UpdatePolicyImpl::InletDefaultPtr &trigger );
 		void addTimeBasedTrigger( const long time );
-		void addBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger );
+		void addUberBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger );
 
 		AbstractTimeBasedTrigger * getTimeBasedTrigger() const;
 		AbstractInletBasedTrigger * getTriggerForInlet( std::string const& inletName ) const;
-		AbstractBlockBasedTrigger * getBlockBasedTrigger( std::string const& blockName ) const;
+		AbstractUberBlockBasedTrigger * getBlockBasedTrigger( std::string const& blockName ) const;
 
 		bool hasTimeBasedTrigger() const;
 		bool hasTriggerForInlet( std::string const& inletName ) const;

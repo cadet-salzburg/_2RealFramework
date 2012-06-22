@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,39 +19,24 @@
 
 #pragma once
 
-#include "_2RealEngineData.h"
-
 namespace _2Real
 {
 
-	class OutputData
+	class UpdateCondition
 	{
 
 	public:
 
-		OutputData();
-		OutputData( EngineData const& data, std::string const& type, std::string const& name );
+		UpdateCondition() : m_IsFulfilled( false ) {}
+		virtual ~UpdateCondition() {}
 
-		const std::string getLongTypename() const;
-		std::string const& getTypename() const;
-		std::string const& getName() const;
-		const std::string getDataAsString() const;
-
-		// this reference is only valid as long as the output data object exists
-		template< typename Datatype >
-		Datatype const& getData() const
-		{
-			//std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( m_Data );
-			//return *ptr.get();
-			Datatype *ptr = extractFrom< Datatype >( m_Data );
-			return *ptr;
-		}
+		bool isFullfilled()		{ return m_IsFulfilled; }
+		virtual void set()		{ m_IsFulfilled = true; }
+		virtual void reset()	{ m_IsFulfilled = false; }
 
 	private:
 
-		std::string				m_Name;
-		EngineData				m_Data;
-		std::string				m_Typename;
+		bool		m_IsFulfilled;
 
 	};
 

@@ -55,6 +55,8 @@
     <ClInclude Include="..\..\src\_2RealIdCounter.h" />
     <ClInclude Include="..\..\src\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealInlet.h" />
+    <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h" />
+    <ClInclude Include="..\..\src\_2RealInletBuffer.h" />
     <ClInclude Include="..\..\src\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
     <ClInclude Include="..\..\src\_2RealOutlet.h" />
@@ -75,15 +77,17 @@
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
+    <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
     <ClInclude Include="..\..\src\_2RealTimestampedData.h" />
-    <ClInclude Include="..\..\src\_2RealTriggerTypes.h" />
     <ClInclude Include="..\..\src\_2RealTypeHolder.h" />
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealUberBlock.h" />
+    <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h" />
     <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
+    <ClInclude Include="..\..\src\_2RealUpdateTrigger.h" />
     <ClInclude Include="..\..\src\_2RealUserBlockState.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
@@ -117,6 +121,7 @@
     <ClCompile Include="..\..\src\_2RealIdCounter.cpp" />
     <ClCompile Include="..\..\src\_2RealImageT.cpp" />
     <ClCompile Include="..\..\src\_2RealInlet.cpp" />
+    <ClCompile Include="..\..\src\_2RealInletBuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealInletHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
     <ClCompile Include="..\..\src\_2RealOutletHandle.cpp" />

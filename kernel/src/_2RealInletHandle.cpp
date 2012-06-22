@@ -23,34 +23,34 @@ namespace _2Real
 {
 
 	InletHandle::InletHandle() :
-		ParameterHandle(""),
-		m_Input(nullptr)
+		ParameterHandle( "" ),
+		m_Inlet( nullptr )
 	{
 	}
 
-	InletHandle::InletHandle(Inlet &slot) :
-		ParameterHandle(slot.getName()),
-		m_Input(&slot)
+	InletHandle::InletHandle( Inlet &inlet ) :
+		ParameterHandle( inlet.getName() ),
+		m_Inlet( &inlet )
 	{
 	}
 
-	InletHandle::InletHandle(InletHandle const& src) :
-		ParameterHandle(src),
-		m_Input(src.m_Input)
+	InletHandle::InletHandle( InletHandle const& src ) :
+		ParameterHandle( src ),
+		m_Inlet( src.m_Inlet )
 	{
 	}
 
-	InletHandle& InletHandle::operator=(InletHandle const& src)
+	InletHandle& InletHandle::operator=( InletHandle const& src )
 	{
-		ParameterHandle::operator=(src);
-		m_Input = src.m_Input;
+		ParameterHandle::operator=( src );
+		m_Inlet = src.m_Inlet;
 
 		return *this;
 	}
 
-	const EngineData InletHandle::current()
+	EngineData const& InletHandle::getCurrentValue() const
 	{
-		return m_Input->getCurrentData();
+		return m_Inlet->getCurrentValue();
 	}
 
 }

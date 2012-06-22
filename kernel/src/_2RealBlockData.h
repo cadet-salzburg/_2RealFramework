@@ -31,6 +31,8 @@ namespace _2Real
 	class BlockData
 	{
 
+		friend std::ostream& operator<<( std::ostream &out, BlockData const& metadata );
+
 	public:
 
 		BlockData();
@@ -38,8 +40,6 @@ namespace _2Real
 		BlockData( BlockData const& src );
 		BlockData& operator=( BlockData const& src );
 		~BlockData();
-
-		friend std::ostream& operator<<( std::ostream &out, BlockData const& metadata );
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
@@ -56,8 +56,6 @@ namespace _2Real
 		ParameterDataMap const& getOutlets() const;
 
 	private:
-
-		void clear();
 
 		std::string					m_Name;
 		std::string					m_Description;

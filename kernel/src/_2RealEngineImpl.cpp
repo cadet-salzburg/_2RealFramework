@@ -46,7 +46,7 @@ namespace _2Real
 	EngineImpl::EngineImpl() :
 		m_Logger( new Logger( "Logfile.txt" ) ),
 		m_Timer( new Timer() ),
-		m_Types( new Typetable(*this) ),
+		m_Types( new Typetable() ),
 		m_Threads( new ThreadPool(15, 0, "2real engine threadpool") ),
 		m_Plugins( new BundleManager() ),
 		m_IdCounter( new IdCounter() )

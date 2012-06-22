@@ -32,9 +32,6 @@ namespace _2Real
 		~DisabledIO();
 
 		void						clear();
-		//void						addParam(ParameterData const& meta);
-		//void						addInlet(ParameterData const& meta);
-		//void						addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp);
 		void						registerToNewData( std::string const& outName, OutletCallback callback, void *userData );
 		void						unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData );
 		void						registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
@@ -43,19 +40,16 @@ namespace _2Real
 		void						unregisterFromNewData(OutputCallback callback, void *userData );
 		void						registerToNewData(AbstractOutputCallbackHandler &handler);
 		void						unregisterFromNewData(AbstractOutputCallbackHandler &handler);
-		const EngineData			getValue(std::string const& paramName) const;
-		std::string const&			getKey(std::string const& paramName) const;
+
+		EngineData const&			getValue(std::string const& paramName) const;
+		std::string const&			getTypename( std::string const& paramName ) const;
+		std::string const&			getLongTypename( std::string const& paramName ) const;
 		void						setValue(std::string const& paramName, TimestampedData const& value);
-		void						insertValue(std::string const& paramName, TimestampedData &value);
+
 		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
 
 		InletMap const&				getInlets() const;
 		OutletMap const&			getOutlets() const;
-
-		void						subBlockAdded(AbstractBlock &subBlock);
-		void						subBlockRemoved(AbstractBlock &subBlock);
-		void						uberBlockAdded(AbstractBlock &uberBlock);
-		void						uberBlockRemoved(AbstractBlock &uberBlock);
 
 	};
 

@@ -26,24 +26,7 @@
 namespace _2Real
 {
 
-	AbstractIOManager::AbstractIOManager(AbstractBlock &owner) :
-		m_Owner(owner)
-	{
-	}
-
-	AbstractIOManager::~AbstractIOManager()
-	{
-	}
-
-	std::string const& AbstractIOManager::getName() const
-	{
-		return m_Owner.getName();
-	}
-
-	const unsigned int AbstractIOManager::getId() const
-	{
-		return m_Owner.getId();
-	}
+	// some free functions
 
 	Inlet & createInletFromParameterData( ParameterData const& data )
 	{
@@ -61,6 +44,27 @@ namespace _2Real
 	{
 		SetupParameter *parameter = new SetupParameter( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
 		return *parameter;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	AbstractIOManager::AbstractIOManager(AbstractBlock &owner) :
+		m_Owner(owner)
+	{
+	}
+
+	AbstractIOManager::~AbstractIOManager()
+	{
+	}
+
+	std::string const& AbstractIOManager::getName() const
+	{
+		return m_Owner.getName();
+	}
+
+	const unsigned int AbstractIOManager::getId() const
+	{
+		return m_Owner.getId();
 	}
 
 }

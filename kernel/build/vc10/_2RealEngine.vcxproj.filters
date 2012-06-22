@@ -4,28 +4,14 @@
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealCallbacks.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
-    <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
-    <ClInclude Include="..\..\src\_2RealLogger.h" />
-    <ClInclude Include="..\..\src\_2RealOwnedBlocks.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
-    <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
-    <ClInclude Include="..\..\src\_2RealTimer.h" />
-    <ClInclude Include="..\..\src\_2RealTriggerTypes.h" />
-    <ClInclude Include="..\..\src\_2RealTypetable.h" />
-    <ClInclude Include="..\..\src\_2RealUberBlock.h" />
-    <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h" />
-    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
-    <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
-    <ClInclude Include="..\..\src\_2RealVersion.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
     <ClInclude Include="..\..\src\_2RealOutputData.h" />
-    <ClInclude Include="..\..\src\_2RealTimestampedData.h" />
     <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
-    <ClInclude Include="..\..\src\_2RealUserBlockState.h" />
     <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
     <ClInclude Include="..\..\src\_2RealBlockMetainfo.h">
       <Filter>metadata</Filter>
@@ -150,23 +136,68 @@
     <ClInclude Include="..\..\src\_2RealServiceBlock.h">
       <Filter>uberblock</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemImpl.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOwnedBlocks.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUserBlockState.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUberBlock.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealVersion.h">
+      <Filter>metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimestampedData.h">
+      <Filter>internal data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealEngineImpl.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimer.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealLogger.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTypetable.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInletBuffer.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdateTrigger.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
-    <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp" />
-    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
-    <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
-    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
-    <ClCompile Include="..\..\src\_2RealUserBlockState.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
       <Filter>metadata</Filter>
     </ClCompile>
@@ -281,6 +312,36 @@
     <ClCompile Include="..\..\src\_2RealEngineData.cpp">
       <Filter>internal data</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUserBlockState.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
+      <Filter>internal data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTypetable.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealInletBuffer.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp">
+      <Filter>update policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
+      <Filter>update policy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="metadata">
@@ -309,6 +370,12 @@
     </Filter>
     <Filter Include="helpers">
       <UniqueIdentifier>{79a9230e-45f0-4b1a-9bd5-cd0c8ec0848e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{6d601228-76a7-4119-a2cd-874522fa40f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="update policy">
+      <UniqueIdentifier>{58e7f8f9-fcfe-49df-9fe6-1419e0b8c8b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

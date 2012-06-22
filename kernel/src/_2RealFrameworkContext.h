@@ -37,45 +37,21 @@ namespace _2Real
 
 		FrameworkContext( FunctionBlock &block );
 
-		/**
-		*	creates an input handle for an input slot
-		*	
-		*	@param name:	name of slot
-		*	@return:		input handle
-		*	@throw:			NotFoundException
-		*/
 		InletHandle getInletHandle( std::string const& name );
-
-		/**
-		*	creates an output handle for an output slot
-		*	
-		*	@param name:	name of slot
-		*	@return:		output handle
-		*	@throw:			NotFoundException
-		*/
 		OutletHandle getOutletHandle( std::string const& name );
 
-		/**
-		*	returns the value of a setup parameter
-		*	
-		*	@param name:	name of a setup parameter
-		*	@return:		constant reference to setup parameter
-		*	@throw:			NotFoundException, DatatypeMismatchException
-		*/
 		template< typename Datatype >
-		Datatype const& getParameterValue(std::string const& name)
+		Datatype const& getParameterValue( std::string const& name )
 		{
-			EngineData const& data = getSetupParameterInternal(name);
-			std::shared_ptr< Datatype > const& ptr = extractFrom< Datatype >(data);
-			return *ptr.get();
+			EngineData parameterValue = getSetupParameterInternal( name );
+			Datatype const& data = extractFrom< Datatype >( parameterValue );
+			return data;
 		}
-
 
 	private:
 
-		const EngineData		getSetupParameterInternal( std::string const& paramName ) const;
-
-		FunctionBlock			&m_Impl;
+		EngineData const& getSetupParameterInternal( std::string const& paramName ) const;
+		FunctionBlock	&m_Impl;
 
 	};
 

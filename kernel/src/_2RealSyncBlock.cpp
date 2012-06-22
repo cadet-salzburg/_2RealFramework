@@ -16,15 +16,15 @@
 	limitations under the License.
 */
 
-#include "_2RealSyncBlock.h"
-#include "_2RealSystemImpl.h"
-
-namespace _2Real
-{
-
-	SyncBlock::SyncBlock( BlockIdentifier const& id, SystemImpl &owner ) :
-		UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates >( id, &owner )
-	{
-	}
-
-}
+//#include "_2RealSyncBlock.h"
+//#include "_2RealSystemImpl.h"
+//
+//namespace _2Real
+//{
+//
+//	SyncBlock::SyncBlock( BlockIdentifier const& id, SystemImpl &owner ) :
+//		UberBlock< DisabledIO, NotOwnedAndUnordered, NotOwnedAndUnordered, SyncStates >( id, &owner )
+//	{
+//	}
+//
+//}

@@ -19,24 +19,24 @@
 #pragma once
 
 #include "_2RealParameter.h"
-#include "_2RealEngineData.h"
+#include "_2RealTimestampedData.h"
 
 #include "Poco/Mutex.h"
 #include "Poco/BasicEvent.h"
 
-#include <map>
+#include <set>
 #include <list>
 
 namespace _2Real
 {
 
 	class Outlet;
-	class TimestampedData;
 	class ParameterData;
 	class AbstractStateManager;
 	class BufferPolicy;
 
-	typedef std::multimap< long, EngineData, std::greater< long > >		DataBuffer;
+	// the newer the data is, the higher the timestamp
+	typedef std::multiset< TimestampedData, std::greater< TimestampedData > >		DataBuffer;
 
 	class Inlet : private Parameter
 	{
@@ -50,16 +50,16 @@ namespace _2Real
 		using Parameter::getLongTypename;
 		using Parameter::getName;
 
-		void setFixedData( TimestampedData const& data );
-		void receiveData( TimestampedData &data ); //arg is nonconst bc poco events require exactely this signature
+		void setToValue( TimestampedData const& data );
+		void receiveData( TimestampedData &data ); 
 
 		void clearLinks();
 		void linkWith(Outlet &output);
 		void breakLink(Outlet &output);
 		void unlink(Outlet &output);
 
-		void updateCurrentData();
-		EngineData const& getCurrentData() const;
+		void updateCurrentValue();						// called right before update
+		EngineData const& getCurrentValue() const;		//
 		void resetData();
 
 		void registerToDataReceived( AbstractStateManager &triggers );
@@ -70,17 +70,12 @@ namespace _2Real
 		mutable Poco::FastMutex		m_DataAccess;
 		mutable Poco::FastMutex		m_OutletsAccess;
 
-		DataBuffer					m_ReceivedTable;
+		DataBuffer					m_ReceivedDataItems;
 
-		std::pair< long, EngineData >		m_CurrentData;
-		std::pair< long, EngineData >		m_DefaultData;
-		std::pair< long, EngineData >		m_FixedData;
-		bool								m_HasFixedData;
-
-		long								m_LastTimestamp;
+		TimestampedData				m_DefaultValue;
+		TimestampedData				m_CurrentValue;
 
 		std::list< Outlet * >		m_LinkedOutlets;
-
 
 		BufferPolicy				*m_BufferPolicy;
 

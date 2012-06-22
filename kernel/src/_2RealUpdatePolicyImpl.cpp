@@ -103,7 +103,7 @@ namespace _2Real
 		m_Inlets[ inletName ] = trigger;
 	}
 
-	void UpdatePolicyImpl::addBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger )
+	void UpdatePolicyImpl::addUberBlockBasedTrigger( std::string const& blockName, UpdatePolicyImpl::BlockDefaultPtr &trigger )
 	{
 		//std::map< std::string, AbstractBlockDefault * >::iterator it = m_Blocks.find( blockName );
 		//if ( it != m_Blocks.end() )
@@ -150,7 +150,7 @@ namespace _2Real
 		}
 	}
 
-	AbstractBlockBasedTrigger * UpdatePolicyImpl::getBlockBasedTrigger( std::string const& blockName ) const
+	AbstractUberBlockBasedTrigger * UpdatePolicyImpl::getBlockBasedTrigger( std::string const& blockName ) const
 	{
 		std::map< std::string, BlockDefaultPtr >::const_iterator it = m_Blocks.find( blockName );
 

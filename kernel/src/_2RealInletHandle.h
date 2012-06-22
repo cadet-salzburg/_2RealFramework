@@ -37,43 +37,37 @@ namespace _2Real
 		InletHandle& operator=( InletHandle const& src );
 
 		template< typename Datatype >
-		Datatype const& getReadableRef()
+		Datatype const& getReadableRef() const
 		{
-			if (!m_Input)
+			if ( !m_Inlet )
 			{
 				std::ostringstream msg;
 				msg << "input handle was not initialized by framework";
-				throw UninitializedHandleException(msg.str());
+				throw UninitializedHandleException( msg.str() );
 			}
 
-			Datatype *ptr = extractFrom< Datatype >(current());
-			return *ptr;
+			Datatype const& data = extractFrom< Datatype >( getCurrentValue() );
+			return data;
 		}
 
-		/**
-		*	returns a shared pointer to a copy of the data. this can be written
-		*	as well as read, but it creates a copy
-		*/
 		template< typename Datatype >
-		std::shared_ptr< Datatype > getWriteableCopy()
+		Datatype * getWriteableCopy()
 		{
-			if (!m_Input)
+			if ( !m_Inlet )
 			{
 				std::ostringstream msg;
 				msg << "input handle was not initialized by framework";
-				throw UninitializedHandleException(msg.str());
+				throw UninitializedHandleException( msg.str() );
 			}
 
-			//std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( current() );
-			//return std::shared_ptr< Datatype >( new Datatype( *ptr.get() ) );
-			Datatype *ptr = extractFrom< Datatype >(current());
-			return *ptr;
+			Datatype const& data = extractFrom< Datatype >( getCurrentValue() );
+			return new Datatype( data );
 		}
 
 	private:
 
-		const EngineData			current();
-		Inlet						*m_Input;
+		EngineData const&			getCurrentValue() const;
+		Inlet						const* m_Inlet;
 
 	};
 

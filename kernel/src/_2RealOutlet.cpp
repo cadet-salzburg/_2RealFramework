@@ -36,7 +36,8 @@ namespace _2Real
 		Parameter( name, longTypename, typeName ),
 		m_Engine( EngineImpl::instance() ),
 		m_CurrentDataItem( emptyData, 0 ),
-		m_LastDataItem( emptyData, 0 )
+		m_LastDataItem( emptyData, 0 ),
+		m_DiscardCurrent( false )
 	{
 	}
 
@@ -44,65 +45,44 @@ namespace _2Real
 	{
 		Poco::FastMutex::ScopedLock lock( m_Access );
 
-		if ( !m_CurrentDataItem.isEmpty() )
+		if ( !m_DiscardCurrent )
 		{
+			// last data will hold the data of the last update cycle
 			m_LastDataItem = TimestampedData( m_CurrentDataItem.getData(), m_Engine.getElapsedTime() );
+
+			// copy last data back into the outlet's current data
 			m_CurrentDataItem.cloneData( m_LastDataItem );
 
+			// inlets get the datat that was really written, not a copy
 			m_InletEvent.notify( this, m_LastDataItem );
-			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
-			m_CallbackEvent.notify( this, data );
+
+			// create a copy for the application ( might not be necessary depending on listeners? )
+			EngineData copy;
+			copy.cloneFrom( m_LastDataItem.getData() );
+			m_LastOutputData = OutputData( copy, Parameter::getTypename(), Parameter::getName() );
+			m_CallbackEvent.notify( this, m_LastOutputData );
 		}
-
-		//// send all current data items and empty the queue in the process - at the end, only m_NewestData will hold the newest data
-		//for ( DataItemList::iterator it = m_DataItemsToSend.begin(); it != m_DataItemsToSend.end(); /**/ )
-		//{
-		//	// first notify the inlets
-		//	m_InletEvent.notify( this, *it );
-
-		//	// create OutletData for application callbacks
-		//	OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
-		//	m_CallbackEvent.notify( this, data );
-
-		//	m_LastDataItem = *it;
-		//	it = m_DataItemsToSend.erase( it );
-		//}
-
-		// copy the value that was sent into the current data
-		m_CurrentDataItem.cloneData( m_LastDataItem );
 	}
 
-	const EngineData Outlet::getLastData() const
+	EngineData const& Outlet::getLastData() const
 	{
 		return m_LastDataItem.getData();
 	}
 
-	const OutputData Outlet::getLastOutputData() const
+	OutputData const& Outlet::getLastOutputData() const
 	{
-		return OutputData( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
+		return m_LastOutputData;
 	}
-
-	//void Outlet::setCurrentData( EngineData const& value )
-	//{
-	//	if ( value.getTypeinfo().name() != Parameter.getLongTypename() )
-	//	{
-	//		ostringstream msg;
-	//		msg << "datatype mismatch: " << Parameter::getLongTypename() << " vs. value type " << value.getTypeinfo().name();
-	//		throw TypeMismatchException(msg.str());
-	//	}
-
-	//	m_DataItemsToSend.push_back( TimestampedData( value, m_Engine.getElapsedTime() ) );
-	//}
 
 	EngineData & Outlet::getCurrentData()
 	{
 		return m_CurrentDataItem.getData();
 	}
 
-	//void Outlet::discardCurrent()
-	//{
-	//	m_DiscardCurrent = true;
-	//}
+	void Outlet::discardCurrentData()
+	{
+		m_DiscardCurrent = true;
+	}
 
 	void Outlet::addListener( Inlet &inlet )
 	{

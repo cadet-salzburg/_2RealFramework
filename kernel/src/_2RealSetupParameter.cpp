@@ -34,7 +34,7 @@ namespace _2Real
 	{
 	}
 
-	void SetupParameter::setValue( EngineData const& value )
+	void SetupParameter::setParameterValue( EngineData const& value )
 	{
 		if ( value.getTypename() != Parameter::getLongTypename() )
 		{
@@ -46,7 +46,7 @@ namespace _2Real
 		m_Value = value;
 	}
 
-	EngineData const& SetupParameter::getValue() const
+	EngineData const& SetupParameter::getParameterValue() const
 	{
 		return m_Value;
 	}

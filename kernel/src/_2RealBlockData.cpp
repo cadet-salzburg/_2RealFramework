@@ -17,9 +17,6 @@
 */
 
 #include "_2RealBlockData.h"
-//#include "_2RealParameterData.h"
-//#include "_2RealException.h"
-//#include "_2RealHelpers.h"
 
 namespace _2Real
 {
@@ -45,21 +42,18 @@ namespace _2Real
 	{
 		for ( ParameterDataMap::const_iterator it = src.m_Parameters.begin(); it != src.m_Parameters.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Parameters[ data.getName() ] = data;
 		}
 
 		for ( ParameterDataMap::const_iterator it = src.m_Inlets.begin(); it != src.m_Inlets.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Inlets[ data.getName() ] = data;
 		}
 
 		for ( ParameterDataMap::const_iterator it = src.m_Outlets.begin(); it != src.m_Outlets.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Outlets[ data.getName() ] = data;
 		}
@@ -76,25 +70,20 @@ namespace _2Real
 		m_Description = src.m_Description;
 		m_Category = src.m_Category;
 
-		clear();
-
 		for ( ParameterDataMap::const_iterator it = src.m_Parameters.begin(); it != src.m_Parameters.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Parameters[ data.getName() ] = data;
 		}
 
 		for ( ParameterDataMap::const_iterator it = src.m_Inlets.begin(); it != src.m_Inlets.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Inlets[ data.getName() ] = data;
 		}
 
 		for ( ParameterDataMap::const_iterator it = src.m_Outlets.begin(); it != src.m_Outlets.end(); ++it )
 		{
-			//ParameterData *data = new ParameterData( *it->second );
 			ParameterData data( it->second );
 			m_Outlets[ data.getName() ] = data;
 		}
@@ -104,32 +93,6 @@ namespace _2Real
 
 	BlockData::~BlockData()
 	{
-		clear();
-	}
-
-	void BlockData::clear()
-	{
-		m_Parameters.clear();
-		m_Inlets.clear();
-		m_Outlets.clear();
-
-		//for ( ParameterDataMap::iterator it = m_Parameters.begin(); it != m_Parameters.end(); /**/ )
-		//{
-		//	delete it->second;
-		//	it = m_Parameters.erase( it );
-		//}
-
-		//for ( ParameterDataMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); /**/ )
-		//{
-		//	delete it->second;
-		//	it = m_Inlets.erase( it );
-		//}
-
-		//for ( ParameterDataMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); /**/ )
-		//{
-		//	delete it->second;
-		//	it = m_Outlets.erase( it );
-		//}
 	}
 
 	std::string const& BlockData::getName() const
@@ -159,35 +122,19 @@ namespace _2Real
 
 	void BlockData::addParameter( ParameterData const& data )
 	{
-		std::string paramName = data.getName();
-		//if ( m_Parameters.find( paramName ) != m_Parameters.end() )
-		//{
-		//	delete m_Parameters[ paramName ];
-		//}
-
-		m_Parameters[ paramName ] = data;
+		m_Parameters[ data.getName() ] = data;
 	}
 
 	void BlockData::addInlet( ParameterData const& data )
 	{
-		std::string inletName = data.getName();
-		//if ( m_Inlets.find( inletName ) != m_Inlets.end() )
-		//{
-		//	delete m_Inlets[ inletName ];
-		//}
-
-		m_Inlets[ inletName ] = data;
+		m_Inlets[ data.getName() ] = data;
 	}
 
 	void BlockData::addOutlet( ParameterData const& data )
 	{
 		std::string outletName = data.getName();
-		//if ( m_Outlets.find( outletName ) != m_Outlets.end() )
-		//{
-		//	delete m_Outlets[ outletName ];
-		//}
 
-		m_Outlets[ outletName ] = data;
+		m_Outlets[ data.getName() ] = data;
 	}
 
 	std::ostream& operator<<( std::ostream &out, BlockData const& data )

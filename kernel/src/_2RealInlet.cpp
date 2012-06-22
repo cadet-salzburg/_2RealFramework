@@ -41,8 +41,9 @@ namespace _2Real
 	public:
 
 		virtual ~BufferPolicy() {}
-		virtual bool insertData( std::pair< long, EngineData > &data, DataBuffer &buffer ) = 0;
-		virtual pair< long, EngineData > getData( DataBuffer &buffer ) = 0;
+		virtual bool receiveData( TimestampedData &data, DataBuffer &buffer ) = 0;
+		virtual TimestampedData const& getData( DataBuffer &buffer ) = 0;
+		virtual void setDefault( TimestampedData const& data ) = 0;
 
 	};
 
@@ -54,10 +55,16 @@ namespace _2Real
 		AlwaysInsert( const unsigned int max ) : BufferPolicy(), m_Max( max ) {}
 		void setMaxBufferSize( const unsigned int max ) { m_Max = max; }
 
-		bool insertData( pair< long, EngineData > &data, DataBuffer &buffer )
+		void setDefault( TimestampedData const& data )
+		{
+			m_Default = data;
+		}
+
+		bool receiveData( TimestampedData &data, DataBuffer &buffer )
 		{
 			if ( buffer.size() >= m_Max )
 			{
+				// deletes oldest
 				DataBuffer::iterator it = buffer.end();
 				it--;
 				buffer.erase( it );
@@ -67,38 +74,33 @@ namespace _2Real
 			return true;
 		}
 
-		pair< long, EngineData > getData( DataBuffer &buffer )
+		// this is actually a bit messy
+		TimestampedData const& getData( DataBuffer &buffer )
 		{
-			DataBuffer::iterator it = buffer.begin();
-			return *it;
+			if ( buffer.empty() )
+			{
+				return m_Default;
+			}
+			else
+			{
+				DataBuffer::iterator it = buffer.begin();
+				return *it;
+			}
 		}
 
 	private:
 
+		TimestampedData		m_Default;
 		unsigned int		m_Max;
 
 	};
 
-	//Inlet::Inlet( ParameterData const& metadata ) :
-	//	Parameter( metadata ),
-	//	m_BufferPolicy( new AlwaysInsert( 10 ) ),
-	//	m_LastTimestamp( 0 ),
-	//	m_HasFixedData( false )
-	//{
-	//	m_DefaultData = std::make_pair( m_LastTimestamp, metadata.getDefaultValue() );	//default data has 0 as timestamp
-	//	m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
-	//	m_CurrentData = m_DefaultData;
-	//}
-
 	Inlet::Inlet( string const& name, string const& longTypename, string const& type, EngineData const& defaultValue ) :
 		Parameter( name, longTypename, type ),
 		m_BufferPolicy( new AlwaysInsert( 10 ) ),
-		m_HasFixedData( false ),
-		m_LastTimestamp( 0 ),
-		m_DefaultData( make_pair( 0, defaultValue ) ),
-		m_CurrentData( make_pair( 0, defaultValue ) )
+		m_DefaultValue( defaultValue, 0 )
 	{
-		m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
+		m_BufferPolicy->setDefault( TimestampedData( defaultValue, 0 ) );
 	}
 
 	Inlet::~Inlet()
@@ -106,47 +108,27 @@ namespace _2Real
 		delete m_BufferPolicy;
 	}
 
-	void Inlet::updateCurrentData()
+	void Inlet::updateCurrentValue()
 	{
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
-		m_CurrentData = m_BufferPolicy->getData( m_ReceivedTable );
+
+		// returns default or last item
+		m_CurrentValue = m_BufferPolicy->getData( m_ReceivedDataItems );
 	}
 
+	// ok, this is seriously a mess
 	void Inlet::resetData()
 	{
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
-		if ( m_HasFixedData )
-		{
-			m_BufferPolicy->insertData( m_FixedData, m_ReceivedTable );
 
-			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, m_FixedData.first );
-			m_DataReceived.notify( this, times );
-		}
-		else
-		{
-			m_BufferPolicy->insertData( m_DefaultData, m_ReceivedTable );
-
-			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, m_DefaultData.first );
-			m_DataReceived.notify( this, times );
-		}
+		std::pair< long, long > times = std::make_pair< long, long >( m_CurrentValue.getTimestamp(), m_DefaultValue.getTimestamp() );
+		m_DataReceived.notify( this, times );
 	}
 
-	void Inlet::setFixedData( TimestampedData const& data )
+	void Inlet::setToValue( TimestampedData const& data )
 	{
-		Poco::FastMutex::ScopedLock lock( m_DataAccess );
-
-		clearLinks();
-
-		m_HasFixedData = true;
-		m_LastTimestamp = data.getTimestamp();
-		m_FixedData = std::make_pair( m_LastTimestamp, data.getData() );
-
-		//the only point where i directly access the data buffer
-		m_ReceivedTable.clear();
-		m_ReceivedTable.insert( m_FixedData );
-
-		std::pair< long, long > times = std::make_pair< long, long >( 0, m_LastTimestamp ); // on first receiving the fixed value, 'new' is always fulfilled
-		m_DataReceived.notify( this, times );
+		m_DefaultValue = data;
+		m_BufferPolicy->setDefault( data );
 	}
 
 	void Inlet::receiveData( TimestampedData &data )
@@ -154,17 +136,17 @@ namespace _2Real
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
 
 		long time = data.getTimestamp();
-		if ( m_BufferPolicy->insertData( std::make_pair( time, data.getData() ), m_ReceivedTable ) )
+		if ( m_BufferPolicy->receiveData( data, m_ReceivedDataItems) )
 		{
-			std::pair< long, long > times = std::make_pair< long, long >( m_LastTimestamp, time );
+			std::pair< long, long > times = std::make_pair< long, long >( m_CurrentValue.getTimestamp(), time );
 			m_DataReceived.notify( this, times );
 		}
 	}
 
-	EngineData const& Inlet::getCurrentData() const
+	EngineData const& Inlet::getCurrentValue() const
 	{
 		Poco::FastMutex::ScopedLock lock( m_DataAccess );
-		return m_CurrentData.second;
+		return m_CurrentValue.getData();
 	}
 
 	void Inlet::linkWith(Outlet &outlet)

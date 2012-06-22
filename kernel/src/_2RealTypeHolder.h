@@ -21,6 +21,8 @@
 #include <string>
 #include <memory>
 
+#include <iostream>
+
 namespace _2Real
 {
 	class AbstractDataHolder
@@ -44,11 +46,8 @@ namespace _2Real
 	
 	public:
 
-		DataHolder( Datatype *value );
-		DataHolder( Datatype const& value );
-		DataHolder( DataHolder< Datatype > const& src );
-		DataHolder& operator=( DataHolder< Datatype > const& src );
-		~DataHolder();
+		DataHolder();
+		explicit DataHolder( Datatype const& value );
 
 		const std::string getTypename() const;
 		std::type_info const& getTypeinfo() const;
@@ -58,50 +57,46 @@ namespace _2Real
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
-		// why is this a shared pointer?
-		//std::shared_ptr< Datatype >		m_Data;
-		Datatype		*m_Data;
+		Datatype		m_Data;
+
+	private:
+
+		DataHolder( DataHolder< Datatype > const& src );
+		DataHolder& operator=( DataHolder< Datatype > const& src );
 
 	};
 
 	template< typename Datatype >
-	DataHolder< Datatype >::DataHolder( Datatype const& value )
+	DataHolder< Datatype >::DataHolder() :
+		m_Data()
 	{
-		//m_Data.reset( new Datatype(value) );
-		m_Data = new Datatype( value );
 	}
 
 	template< typename Datatype >
-	DataHolder< Datatype >::DataHolder( Datatype *value )
+	DataHolder< Datatype >::DataHolder( Datatype const& value ) :
+		m_Data( value )
 	{
-		//m_Data.reset( value );
-		m_Data = value;
 	}
 
 	template< typename Datatype >
 	DataHolder< Datatype >::DataHolder( DataHolder< Datatype > const& src ) :
 		m_Data( src.m_Data )
 	{
+		std::cout << "XXXXXXXXXXXXXXXCOPYXXXXXXXXXXXX" << std::endl;
 	}
 
 	template< typename Datatype >
 	DataHolder< Datatype >& DataHolder< Datatype >::operator=( DataHolder< Datatype > const& src )
 	{
-		if (this == &src)
+		if ( this == &src )
 		{
 			return *this;
 		}
 
 		m_Data = src.m_Data;
+		std::cout << "XXXXXXXXXXXXASSIGNXXXXXXXXXXXXXXX" << std::endl;
 
 		return *this;
-	}
-
-	template< typename Datatype >
-	DataHolder< Datatype >::~DataHolder()
-	{
-		//m_Data.reset();
-		delete m_Data;
 	}
 
 	template< typename Datatype >
@@ -119,30 +114,25 @@ namespace _2Real
 	template< typename Datatype >
 	void DataHolder< Datatype >::writeTo( std::ostream &out ) const
 	{
-		//out << *m_Data.get();
-		out << *m_Data;
+		out << m_Data;
 	}
 
 	template< typename Datatype >
 	void DataHolder< Datatype >::readFrom( std::istream &in )
 	{
-		//in >> *m_Data.get();
-		in >> *m_Data;
+		in >> m_Data;
 	}
 
 	template< typename Datatype >
 	AbstractDataHolder * DataHolder< Datatype >::create() const
 	{ 
-		Datatype *newContent = new Datatype();
-		return new DataHolder( newContent );
+		return new DataHolder< Datatype >();
 	}
 
 	template< typename Datatype >
 	AbstractDataHolder * DataHolder< Datatype >::clone() const
 	{
-		//Datatype *newContent = new Datatype( *m_Data.get() );
-		Datatype *newContent = new Datatype( *m_Data );
-		return new DataHolder( newContent );
+		return new DataHolder< Datatype >( m_Data );
 	}
 
 }

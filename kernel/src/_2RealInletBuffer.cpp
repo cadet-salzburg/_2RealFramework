@@ -16,32 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealParameter.h"
-#include "_2RealEngineData.h"
+#include "_2RealInletBuffer.h"
 
 namespace _2Real
 {
-
-	class SetupParameter : private Parameter
-	{
-
-	public:
-
-		SetupParameter( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& initialValue );
-
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
-		using Parameter::getName;
-
-		void				setParameterValue( EngineData const& data );
-		EngineData const&	getParameterValue() const;
-
-	private:
-
-		EngineData			m_Value;
-
-	};
-
 }

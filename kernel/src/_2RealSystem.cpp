@@ -84,12 +84,7 @@ namespace _2Real
 		m_Impl->setValue( id, param, value );
 	}
 
-	void System::insertValueInternal( BlockIdentifier const& id, std::string const& param, EngineData const& value )
-	{
-		m_Impl->insertValue( id, param, value );
-	}
-
-	const EngineData System::getValueInternal( BlockIdentifier const& id, std::string const& name ) const
+	EngineData const& System::getValueInternal( BlockIdentifier const& id, std::string const& name ) const
 	{
 		return m_Impl->getValue( id, name );
 	}

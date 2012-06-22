@@ -72,25 +72,24 @@ namespace _2Real
 
 		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 
+		// for setup param: sets value, can be read during next setup
+		// for inlet: resets all links, sets value to value
+		// otherwise: not found exception
+		// inlet & update policy -> 'data new condition' will be met only when the value is first set
 		template< typename Datatype >
 		void setValue( BlockIdentifier const& block, std::string const& paramName, Datatype const& value )
 		{
-			EngineData data( value );
-			setValueInternal( block, paramName, data );
+			setValueInternal( block, paramName, EngineData( value ) );
 		}
 
-		template< typename Datatype >
-		void insertValue( BlockIdentifier const& block, std::string const& paramName, Datatype const& value )
-		{
-			EngineData data( value );
-			insertValueInternal( block, paramName, data );
-		}
-
+		// for setup: returns the value ( if it was never set -> default value from metadata )
+		// for inlet: returns what exactly?
+		// for outlet: returns the value of the most recent update cycle
 		template< typename Datatype >
 		Datatype const& getValue( BlockIdentifier const& block, std::string const& paramName ) const
 		{
-			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( getValueInternal( block, paramName ) );
-			return *ptr.get();
+			Datatype const& val = extractFrom< Datatype >( getValueInternal( block, paramName ) );
+			return val;
 		}
 
 		void registerToException( ExceptionCallback callback, void *userData = nullptr );
@@ -150,8 +149,8 @@ namespace _2Real
 		System& operator=(System const& src);
 
 		void				setValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
-		void				insertValueInternal( BlockIdentifier const& id, std::string const& name, EngineData const& value );
-		const EngineData	getValueInternal( BlockIdentifier const& id, std::string const& name ) const;
+		EngineData const&	getValueInternal( BlockIdentifier const& id, std::string const& name ) const;
+
 		void				registerToNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler );
 		void				unregisterFromNewDataInternal( BlockIdentifier const& service, std::string const& outletName, AbstractOutletCallbackHandler &handler );
 		void				registerToNewDataInternal( BlockIdentifier const& service, AbstractOutputCallbackHandler &handler );

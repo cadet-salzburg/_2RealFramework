@@ -29,9 +29,13 @@ namespace _2Real
 	{
 	}
 
-	const EngineData FrameworkContext::getSetupParameterInternal(std::string const& name) const
+	EngineData const& FrameworkContext::getSetupParameterInternal(std::string const& name) const
 	{
-		return m_Impl.getValue(name);
+		// clone the value for the bundle's use
+		//EngineData result;
+		//result.cloneFrom( m_Impl.getValue( name ) );
+		//return result;
+		return m_Impl.getValue( name );
 	}
 
 	InletHandle FrameworkContext::getInletHandle(std::string const& name)

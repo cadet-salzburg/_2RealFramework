@@ -100,7 +100,7 @@ namespace _2Real
 			bool			m_IsDataOwner;
 		};
 
-		std::shared_ptr< ChannelObject >		m_ChannelObject;
+		std::auto_ptr< ChannelObject >		m_ChannelObject;
 
 	public:
 
@@ -111,53 +111,39 @@ namespace _2Real
 				return *this;
 			}
 
-			//if ( src.m_ChannelObject.get()->m_IsDataOwner )
-			//{
-			//	T const* srcData = src.getData();
-			//	size_t sz = src.getWidth() * src.getHeight();
-			//	T *data = new T[ sz ];
-			//	memcpy( data, srcData, sz*sizeof( T ) );
-			//	m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
-			//}
-			//else
-			//{
-				m_ChannelObject = src.m_ChannelObject;
-			//}
+			T const* srcData = src.getData();
+			size_t sz = src.getWidth() * src.getHeight();
+			T *data = new T[ sz ];
+			memcpy( data, srcData, sz*sizeof( T ) );
+			m_ChannelObject = std::auto_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
 
 			return *this;
 		}
 
 		ImageChannelT( ImageChannelT const& src )
 		{
-			//if ( src.m_ChannelObject.get()->m_IsDataOwner )
-			//{
-			//	T const* srcData = src.getData();
-			//	size_t sz = src.getWidth() * src.getHeight();
-			//	T *data = new T[ sz ];
-			//	memcpy( data, srcData, sz*sizeof( T ) );
-			//	m_ChannelObject = std::shared_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
-			//}
-			//else
-			//{
-				m_ChannelObject = src.m_ChannelObject;
-			//}
+			T const* srcData = src.getData();
+			size_t sz = src.getWidth() * src.getHeight();
+			T *data = new T[ sz ];
+			memcpy( data, srcData, sz*sizeof( T ) );
+			m_ChannelObject = std::auto_ptr< ChannelObject >( new ChannelObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getIncrement() ) );
 		}
 
 		ImageChannelT()
 		{
-			m_ChannelObject = std::shared_ptr< ChannelObject >(new ChannelObject(nullptr, false, 0, 0, 0, 1));
+			m_ChannelObject = std::auto_ptr< ChannelObject >(new ChannelObject(nullptr, false, 0, 0, 0, 1));
 		};
 
 		ImageChannelT(const uint32_t width, const uint32_t height)
 		{
 			unsigned int rowBytes = width * sizeof(T);
 			T *data = new T[width*height];
-			m_ChannelObject = std::shared_ptr< ChannelObject >(new ChannelObject(data, false, with, height, rowBytes, 1));
+			m_ChannelObject = std::auto_ptr< ChannelObject >(new ChannelObject(data, false, with, height, rowBytes, 1));
 		}
 
 		ImageChannelT(T *data, const bool ownsData, const uint32_t width, const uint32_t height, const int32_t bytesPerRow, const uint8_t inc)
 		{
-			m_ChannelObject = std::shared_ptr< ChannelObject >(new ChannelObject(data, ownsData, width, height, bytesPerRow, inc));
+			m_ChannelObject = std::auto_ptr< ChannelObject >(new ChannelObject(data, ownsData, width, height, bytesPerRow, inc));
 		}
 
 		const uint32_t	getWidth() const { return m_ChannelObject->m_Width; }
@@ -281,7 +267,7 @@ namespace _2Real
 
 		ImageT()
 		{
-			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(nullptr, false, 0, 0, 0, ImageChannelOrder::RGBA));
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(nullptr, false, 0, 0, 0, ImageChannelOrder::RGBA) );
 		}
 
 		ImageT& operator=( ImageT const& src )
@@ -291,59 +277,45 @@ namespace _2Real
 				return *this;
 			}
 
-			//if ( src.m_ImageObject.get()->m_IsDataOwner )
-			//{
-			//	T* srcData = src.getData();
-			//	size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
-			//	T *data = new T[ sz ];
+			T* srcData = src.getData();
+			size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
+			T *data = new T[ sz ];
 
-			//	memcpy( data, srcData, sz*sizeof( T ) );
+			memcpy( data, srcData, sz*sizeof( T ) );
 
-			//	m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
-			//}
-			//else
-			//{
-				m_ImageObject = src.m_ImageObject;
-			//}
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
 
 			return *this;
 		}
 
 		ImageT( ImageT const& src )
 		{
-			//if ( src.m_ImageObject.get()->m_IsDataOwner )
-			//{
-			//	T* srcData = src.getData();
-			//	size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
-			//	T *data = new T[ sz ];
+			T* srcData = src.getData();
+			size_t sz = src.getWidth() * src.getChannelOrder().getNumberOfChannels() * src.getHeight();
+			T *data = new T[ sz ];
 
-			//	memcpy( data, srcData, sz*sizeof( T ) );
+			memcpy( data, srcData, sz*sizeof( T ) );
 
-			//	m_ImageObject = std::shared_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
-			//}
-			//else
-			//{
-				m_ImageObject = src.m_ImageObject;
-			//}
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject( data, true, src.getWidth(), src.getHeight(), src.getRowPitch(), src.getChannelOrder() ) );
 		}
 
-		ImageT(const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder)
+		ImageT( const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder )
 		{
 			uint32_t rowBytes = width * sizeof(T) * channelOrder.getNumberOfChannels();
 			T *data = new T[width*channelOrder.getNumberOfChannels()*height];
-			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(data, true, width, height, rowBytes, channelOrder));
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, true, width, height, rowBytes, channelOrder) );
 		}
 
 		ImageT(T *data, const bool ownsData, const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder)
 		{
 			uint32_t rowBytes = width * sizeof(T) * channelOrder.getNumberOfChannels();
-			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(data, ownsData, width, height, rowBytes, channelOrder));
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, ownsData, width, height, rowBytes, channelOrder) );
 		}
 
 		void assign( T *data, const bool ownsData, const uint32_t width, const uint32_t height, ImageChannelOrder const& channelOrder )
 		{
 			uint32_t rowBytes = width * sizeof(T) * channelOrder.getNumberOfChannels();
-			m_ImageObject = std::shared_ptr< ImageObject >(new ImageObject(data, ownsData, width, height, rowBytes, channelOrder));
+			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, ownsData, width, height, rowBytes, channelOrder) );
 		}
 
 		template< typename T >
@@ -359,7 +331,7 @@ namespace _2Real
 		T *							getData() { return m_ImageObject->m_ImageData; }
 		T *const					getData() const { return m_ImageObject->m_ImageData; }
 
-		const bool					hasAlpha() const { return m_ImageObject->m_ChannelOrder.hasAlpha(); }
+		bool						hasAlpha() const { return m_ImageObject->m_ChannelOrder.hasAlpha(); }
 		ImageChannelOrder const&	getChannelOrder() const { return m_ImageObject->m_ChannelOrder; }
 		void						setChannelOrder(ImageChannelOrder const& channelOrder) { m_ImageObject->setChannelOrder(channelOrder); }
 		uint8_t						getNumberOfChannels() const { return m_ImageObject->m_ChannelOrder.getNumberOfChannels(); }
@@ -434,7 +406,7 @@ namespace _2Real
 
 		};
 
-		std::shared_ptr< ImageObject >		m_ImageObject;
+		std::auto_ptr< ImageObject >			m_ImageObject;
 
 	public:
 
@@ -468,14 +440,14 @@ namespace _2Real
 			T &				b() const { return m_Ptr[m_BlueOffset]; }
 			T &				a() const { return m_Ptr[m_AlphaOffset]; }
 
-			const bool nextPixel()
+			bool nextPixel()
 			{
 				++m_X;
 				m_Ptr += m_NumChannels;
 				return m_X < m_EndX;
 			}
 
-			const bool nextLine()
+			bool nextLine()
 			{
 				++m_Y;
 				m_LinePtr += m_Pitch;
@@ -503,17 +475,17 @@ namespace _2Real
 			const_iterator(ImageT<T> const& image) :
 				m_RedOffset(image.getRedOffset()), m_GreenOffset(image.getGreenOffset()),
 				m_BlueOffset(image.getBlueOffset()), m_AlphaOffset(image.getAlphaOffset()),
-				m_NumChannels(image.getNumberOfChannels()), m_Pitch(image.getBytesPerRow()),
+				m_NumChannels(image.getNumberOfChannels()), m_Pitch(image.getRowPitch()),
 				m_Width(image.getWidth()), m_Height(image.getHeight())
 			{
 				m_LinePtr = reinterpret_cast< uint8_t const* >(image.getData());
 				m_Ptr = reinterpret_cast< T const* >(m_LinePtr);
-				
-				m_StartX = mX = 0;
-				m_StartY = mY = 0;
-				mEndX = m_Width;
-				mEndY = m_Height;
 
+				m_StartX = m_X = 0;
+				m_StartY = m_Y = 0;
+				m_EndX = m_Width;
+				m_EndY = m_Height;
+				
 				--m_Y;
 				m_LinePtr -= m_Pitch;
 			}
@@ -527,19 +499,19 @@ namespace _2Real
 
 			bool nextPixel()
 			{
-				++mX;
-				mPtr += mInc;
-				return mX < mEndX;
+				++m_X;
+				m_Ptr += m_NumChannels;
+				return m_X < m_EndX;
 			}
 
 			bool nextLine()
 			{
-				++mY;
+				++m_Y;
 				m_LinePtr += m_Pitch;
-				m_Ptr = reinterpret_cast< T const * >(m_LinePtr);
-				mPtr -= mInc;
-				mX = mStartX - 1;
-				return mY < mEndY;
+				m_Ptr = reinterpret_cast< T const* >(m_LinePtr);
+				m_Ptr -= m_NumChannels;
+				m_X = m_StartX - 1;
+				return m_Y < m_EndY;
 			}
 
 		private:
@@ -553,7 +525,7 @@ namespace _2Real
 		};
 
 		iterator			iter() { return iterator(*this); }
-		const_iterator		const_iter() const { return const_interator(*this); }
+		const_iterator		const_iter() const { return const_iterator(*this); }
 
 	};
 

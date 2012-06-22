@@ -57,32 +57,25 @@ namespace _2Real
 		const unsigned int getId() const;
 
 		virtual void					clear() = 0;
-		//virtual void					addParam(ParameterData const& meta) = 0;
-		//virtual void					addInlet(ParameterData const& meta) = 0;
-		//virtual void					addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp) = 0;
+
 		virtual void					registerToNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
 		virtual void					unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
-		virtual void					unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
-		virtual void					registerToNewData(OutputCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData(OutputCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData(AbstractOutputCallbackHandler &handler) = 0;
-		virtual void					unregisterFromNewData(AbstractOutputCallbackHandler &handler) = 0;
+		virtual void					registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
+		virtual void					unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
+		virtual void					registerToNewData( OutputCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData( OutputCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData( AbstractOutputCallbackHandler &handler ) = 0;
+		virtual void					unregisterFromNewData( AbstractOutputCallbackHandler &handler ) = 0;
 
-		virtual const EngineData		getValue(std::string const& paramName) const = 0;
-		virtual std::string const&		getKey(std::string const& paramName) const = 0;
-		virtual void					setValue(std::string const& paramName, TimestampedData const& value) = 0;
-		virtual void					insertValue(std::string const& paramName, TimestampedData &value) = 0;
+		virtual EngineData const&		getValue( std::string const& paramName ) const = 0;
+		virtual void					setValue( std::string const& paramName, TimestampedData const& value ) = 0;
+		virtual std::string const&		getTypename( std::string const& paramName ) const = 0;
+		virtual std::string const&		getLongTypename( std::string const& paramName ) const = 0;
 
 		virtual void					linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet) = 0;
 
 		virtual InletMap const&			getInlets() const = 0;
 		virtual OutletMap const&		getOutlets() const = 0;
-
-		virtual void					subBlockAdded(AbstractBlock &subBlock) = 0;
-		virtual void					subBlockRemoved(AbstractBlock &subBlock) = 0;
-		virtual void					uberBlockAdded(AbstractBlock &uberBlock) = 0;
-		virtual void					uberBlockRemoved(AbstractBlock &uberBlock) = 0;
 
 	protected:
 

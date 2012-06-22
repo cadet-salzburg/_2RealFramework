@@ -49,9 +49,14 @@ namespace _2Real
 		return *this;
 	}
 
-	EngineData & OutletHandle::getOutletData()
+	EngineData & OutletHandle::getCurrentData()
 	{
 		return m_Outlet->getCurrentData();
+	}
+
+	void OutletHandle::discard()
+	{
+		m_Outlet->discardCurrentData();
 	}
 
 	//void OutletHandle::discardOutletData()

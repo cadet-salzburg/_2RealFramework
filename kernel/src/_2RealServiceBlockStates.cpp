@@ -70,7 +70,7 @@ namespace _2Real
 
 		InletMap inlets = m_IO->getInlets();
 
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); /**/ )
+		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); /**/ )
 		{
 			InletMap::iterator ioIt = inlets.find( it->first );
 			if ( ioIt != inlets.end() )
@@ -82,7 +82,7 @@ namespace _2Real
 			it = m_InletTriggers.erase( it );
 		}
 
-		for ( BlockTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); /**/ )
+		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); /**/ )
 		{
 			safeDelete( it->second.first );
 			it = m_UberTriggers.erase( it );
@@ -117,7 +117,7 @@ namespace _2Real
 
 		InletMap inlets = m_IO->getInlets();
 
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); /**/ )
+		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); /**/ )
 		{
 			InletMap::iterator ioIt = inlets.find( it->first );
 			if ( ioIt != inlets.end() )
@@ -281,7 +281,7 @@ namespace _2Real
 			resetUberBlockTriggers( false );
 			enableUberBlockTriggers();
 			Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
-			for ( BlockTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
+			for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
 			{
 				it->second.second->tryTriggerSubBlock( *this, BLOCK_READY );
 			}
@@ -350,12 +350,12 @@ namespace _2Real
 		try
 		{
 			m_StateAccess.lock();
-			m_CurrentState->update( *this );	//no state change
+			m_CurrentState->update( *this );	// no state change in this case, although maybe i should add another? sigh
 			m_StateAccess.unlock();
-			m_IO->syncInlets();
-			m_FunctionBlock->update();
-			m_IO->updateOutlets();
-			m_IO->updateInlets();
+
+			m_IO->updateInletValues();			// make sure the inlets have the current data
+			m_FunctionBlock->update();			// carry out update
+			m_IO->updateOutletValues();			// make sure outlets send their data
 		}
 		catch ( Exception &e )
 		{
@@ -415,6 +415,9 @@ namespace _2Real
 
 				enableTriggers();
 			}
+
+			m_IO->updateInletBuffers();		// ok, so the last thing to do to complete the update is handling data
+											// that was received during the update
 
 			m_FlaggedForStop.unset();
 			m_FlaggedForSetUp.unset();
@@ -509,13 +512,13 @@ namespace _2Real
 		m_System->handleException( m_Owner, e );
 	}
 
-	void FunctionBlockStateManager::uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg )
+	void FunctionBlockStateManager::uberBlockAdded( AbstractBlock &uberBlock, AbstractUberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
 
 		std::string name = uberBlock.getName();
 
-		BlockTriggerMap::iterator it = m_UberTriggers.find( name );
+		UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( name );
 		if ( it != m_UberTriggers.end() )
 		{
 			delete it->second.first;
@@ -531,7 +534,7 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
 
-		BlockTriggerMap::iterator it = m_UberTriggers.find( uberBlock.getName() );
+		UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( uberBlock.getName() );
 		if ( it != m_UberTriggers.end() )
 		{
 			delete it->second.first;
@@ -546,8 +549,8 @@ namespace _2Real
 			Inlet const* in = static_cast< Inlet const* >( inlet );
 
 			m_TriggerAccess.lock();
-			InletTriggerMap::iterator it = m_InletTriggers.find( in->getName() );
-			if ( it != m_InletTriggers.end() && it->second->tryTrigger( times.first, times.second ) )
+			InletBasedTriggerMap::iterator it = m_InletTriggers.find( in->getName() );
+			if ( it != m_InletTriggers.end() && it->second->tryTriggerUpdate( times.first, times.second ) )
 			{
 				evaluateTriggers();				// access unlocked inside
 			}
@@ -579,8 +582,8 @@ namespace _2Real
 		if ( areUberBlockTriggersEnabled() )
 		{
 			m_UberTriggerAccess.lock();
-			BlockTriggerMap::iterator it = m_UberTriggers.find( uber.getName() );
-			if ( it != m_UberTriggers.end() && it->second.first->tryTrigger( msg ) )
+			UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( uber.getName() );
+			if ( it != m_UberTriggers.end() && it->second.first->tryTriggerUpdate( msg ) )
 			{
 				evaluateUberBlockTriggers();	// access unlocked inside
 			}
@@ -596,11 +599,11 @@ namespace _2Real
 		bool triggersOk = true;
 		if ( m_TimeTrigger != nullptr )
 		{
-			triggersOk &= m_TimeTrigger->ok();
+			triggersOk &= m_TimeTrigger->isFullfilled();
 		}
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
 		{
-			triggersOk &= it->second->ok();
+			triggersOk &= it->second->isFullfilled();
 		}
 		//if ( triggersOk ) disableTriggers();
 		m_TriggerAccess.unlock();	// was locked from within calling function
@@ -614,9 +617,9 @@ namespace _2Real
 	void FunctionBlockStateManager::evaluateUberBlockTriggers()
 	{
 		bool triggersOk = true;
-		for ( BlockTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
+		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
 		{
-			triggersOk &= it->second.first->ok();
+			triggersOk &= it->second.first->isFullfilled();
 		}
 		//if ( triggersOk ) disableUberBlockTriggers();
 		m_UberTriggerAccess.unlock();	// was locked from within calling function
@@ -634,7 +637,7 @@ namespace _2Real
 		{
 			m_TimeTrigger->reset();
 		}
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
 		{
 			it->second->reset();
 		}
@@ -644,7 +647,7 @@ namespace _2Real
 	void FunctionBlockStateManager::resetUberBlockTriggers( const bool notify )
 	{
 		m_UberTriggerAccess.lock();
-		for ( BlockTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
+		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
 		{
 			it->second.first->reset();
 		}

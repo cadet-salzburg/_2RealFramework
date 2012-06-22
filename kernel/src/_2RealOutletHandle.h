@@ -37,7 +37,7 @@ namespace _2Real
 		OutletHandle& operator=( OutletHandle const& src );
 
 		template< typename Datatype >
-		Datatype & getDataRef()
+		Datatype & getWriteableRef()
 		{
 			if ( !m_Outlet )
 			{
@@ -46,21 +46,15 @@ namespace _2Real
 				throw UninitializedHandleException( msg.str() );
 			}
 
-			Datatype *ptr = extractFrom< Datatype >( getOutletData() );
-			return *ptr;
+			Datatype &data = extractFrom< Datatype >( getCurrentData() );
+			return data;
 		}
 
-		//template< typename Datatype >
-		//void setOutletData( Datatype const& val )
-		//{
-		//	EngineData( val );
-		//	setOutletData( val );
-		//}
+		void discard();
 
 	private:
 
-		EngineData	&		getOutletData();
-		//void setOutletData( EngineData const& val );
+		EngineData	&		getCurrentData();
 		Outlet				*m_Outlet;
 
 	};

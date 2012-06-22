@@ -44,6 +44,8 @@ namespace _2Real
 		bool isEmpty() const;
 		void cloneData( TimestampedData const& src );
 
+		bool operator>( TimestampedData const& other ) const;
+
 	private:
 
 		EngineData				m_Data;

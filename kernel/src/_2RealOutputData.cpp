@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	OutputData::OutputData() : m_Data(), m_Typename() {}
+	OutputData::OutputData() : m_Data(), m_Typename( "void" ), m_Name( "undefined" ) {}
 
 	OutputData::OutputData( EngineData const& data, std::string const& type, std::string const& name ) :
 		m_Data( data ),

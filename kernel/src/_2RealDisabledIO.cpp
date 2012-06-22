@@ -39,27 +39,6 @@ namespace _2Real
 	{
 	}
 
-	//void DisabledIO::addParam(ParameterData const& meta)
-	//{
-	//	std::ostringstream msg;
-	//	msg << "this entity does not allow io";
-	//	throw _2Real::Exception(msg.str());
-	//}
-
-	//void DisabledIO::addInlet(ParameterData const& meta)
-	//{
-	//	std::ostringstream msg;
-	//	msg << "this entity does not allow io";
-	//	throw _2Real::Exception(msg.str());
-	//}
-
-	//void DisabledIO::addOutlet(ParameterData const& meta, Poco::Timestamp const& timestamp)
-	//{
-	//	std::ostringstream msg;
-	//	msg << "this entity does not allow io";
-	//	throw _2Real::Exception(msg.str());
-	//}
-
 	void DisabledIO::registerToNewData(std::string const& outName, OutletCallback callback, void *userData )
 	{
 		std::ostringstream msg;
@@ -116,14 +95,21 @@ namespace _2Real
 		throw _2Real::Exception(msg.str());
 	}
 
-	const EngineData DisabledIO::getValue(std::string const& paramName) const
+	EngineData const& DisabledIO::getValue(std::string const& paramName) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	std::string const& DisabledIO::getKey(std::string const& paramName) const
+	std::string const& DisabledIO::getTypename(std::string const& paramName) const
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	std::string const& DisabledIO::getLongTypename(std::string const& paramName) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
@@ -131,13 +117,6 @@ namespace _2Real
 	}
 
 	void DisabledIO::setValue(std::string const& paramName, TimestampedData const& value)
-	{
-		std::ostringstream msg;
-		msg << "this entity does not allow io";
-		throw _2Real::Exception(msg.str());
-	}
-
-	void DisabledIO::insertValue(std::string const& paramName, TimestampedData &value)
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
@@ -163,22 +142,6 @@ namespace _2Real
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
-	}
-
-	void DisabledIO::subBlockAdded(AbstractBlock &subBlock)
-	{
-	}
-
-	void DisabledIO::subBlockRemoved(AbstractBlock &subBlock)
-	{
-	}
-
-	void DisabledIO::uberBlockAdded(AbstractBlock &uberBlock)
-	{
-	}
-
-	void DisabledIO::uberBlockRemoved(AbstractBlock &uberBlock)
-	{
 	}
 
 }

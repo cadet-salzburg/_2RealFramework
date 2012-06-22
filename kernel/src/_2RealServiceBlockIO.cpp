@@ -27,11 +27,14 @@
 #include "_2RealParameterData.h"
 #include "_2RealUpdatePolicyImpl.h"
 
+#include "_2RealHelpersInternal.h"
+
 #include <sstream>
 
 using std::map;
 using std::string;
 using std::make_pair;
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -268,108 +271,114 @@ namespace _2Real
 		delete &handler;
 	}
 
-	const EngineData ServiceIO::getValue(std::string const& name) const
+	EngineData const& ServiceIO::getValue( string const& paramName ) const
 	{
-		ParamMap::const_iterator paramIt = m_Params.find(name);
-		if (paramIt != m_Params.end())
+		// TODO: parameter names have to be unique oO
+
+		SetupParameter const* param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
+		if ( param != nullptr )
 		{
-			return paramIt->second->getValue();
+			return param->getParameterValue();
 		}
 
-		InletMap::const_iterator inletIt = m_Inlets.find(name);
-		if (inletIt != m_Inlets.end())
+		Inlet const* inlet = _2Real::getValue< string, Inlet >( paramName, m_Inlets );
+		if ( inlet != nullptr )
 		{
-			return inletIt->second->getCurrentData();
+			return inlet->getCurrentValue();
 		}
 
-		OutletMap::const_iterator outletIt = m_Outlets.find(name);
-		if (outletIt != m_Outlets.end())
+		Outlet const* outlet = _2Real::getValue< string, Outlet >( paramName, m_Outlets );
+		if ( outlet != nullptr )
 		{
-			return outletIt->second->getLastData();
+			return outlet->getLastData();
 		}
 
-		std::ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		ostringstream msg;
+		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		throw NotFoundException( msg.str() );
 	}
 
-	std::string const& ServiceIO::getKey(std::string const& name) const
+	void ServiceIO::setValue( string const& paramName, TimestampedData const& value )
 	{
-		ParamMap::const_iterator paramIt = m_Params.find(name);
-		if (paramIt != m_Params.end())
+		SetupParameter *const param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
+		if ( param != nullptr )
 		{
-			return paramIt->second->getTypename();
-		}
-
-		InletMap::const_iterator inletIt = m_Inlets.find(name);
-		if (inletIt != m_Inlets.end())
-		{
-			return inletIt->second->getTypename();
-		}
-
-		std::ostringstream msg;
-		msg << "no inlet or setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
-	}
-
-	void ServiceIO::setValue(std::string const& name, TimestampedData const& value)
-	{
-		ParamMap::iterator paramIt = m_Params.find(name);
-		if (paramIt != m_Params.end())
-		{
-			paramIt->second->setValue( value.getData() );
+			param->setParameterValue( value.getData() );
 			return;
 		}
 
-		InletMap::iterator inletIt = m_Inlets.find( name );
-		if (inletIt != m_Inlets.end())
+		Inlet *const inlet = _2Real::getValue< string, Inlet >( paramName, m_Inlets );
+		if ( inlet != nullptr )
 		{
-			inletIt->second->setFixedData( value );
+			inlet->setToValue( value );
 			return;
 		}
 
-		std::ostringstream msg;
-		msg << "no inlet or setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		ostringstream msg;
+		msg << "no inlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		throw NotFoundException( msg.str() );
 	}
 
-	void ServiceIO::insertValue(std::string const& name, TimestampedData &value)
+	std::string const& ServiceIO::getTypename( string const& paramName ) const
 	{
-		InletMap::iterator inletIt = m_Inlets.find(name);
-		if (inletIt != m_Inlets.end())
+		SetupParameter const* param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
+		if ( param != nullptr )
 		{
-			inletIt->second->receiveData( value );
+			return param->getTypename();
 		}
 
-		std::ostringstream msg;
-		msg << "no inlet named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		Inlet const* inlet = _2Real::getValue< string, Inlet >( paramName, m_Inlets );
+		if ( inlet != nullptr )
+		{
+			return inlet->getTypename();
+		}
+
+		Outlet const* outlet = _2Real::getValue< string, Outlet >( paramName, m_Outlets );
+		if ( outlet != nullptr )
+		{
+			return outlet->getTypename();
+		}
+
+		ostringstream msg;
+		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		throw NotFoundException( msg.str() );
 	}
 
-	InletHandle ServiceIO::createInletHandle(std::string const& name)
+	std::string const& ServiceIO::getLongTypename( string const& paramName ) const
 	{
-		InletMap::iterator it = m_Inlets.find(name);
-		if (it != m_Inlets.end())
+		SetupParameter const* param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
+		if ( param != nullptr )
 		{
-			return InletHandle(*(it->second));
+			return param->getLongTypename();
 		}
 
-		std::ostringstream msg;
-		msg << "no inlet named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		Inlet const* inlet = _2Real::getValue< string, Inlet >( paramName, m_Inlets );
+		if ( inlet != nullptr )
+		{
+			return inlet->getLongTypename();
+		}
+
+		Outlet const* outlet = _2Real::getValue< string, Outlet >( paramName, m_Outlets );
+		if ( outlet != nullptr )
+		{
+			return outlet->getLongTypename();
+		}
+
+		ostringstream msg;
+		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		throw NotFoundException( msg.str() );
+	}
+
+	InletHandle ServiceIO::createInletHandle( string const& name )
+	{
+		Inlet &inlet = _2Real::getValue< string, Inlet >( name, m_Inlets, "inlet" );
+		return InletHandle( inlet );
 	}
 
 	OutletHandle ServiceIO::createOutletHandle(std::string const& name)
 	{
-		OutletMap::iterator it = m_Outlets.find(name);
-		if (it != m_Outlets.end())
-		{
-			return  OutletHandle(*(it->second));
-		}
-
-		std::ostringstream msg;
-		msg << "no outlet named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		Outlet &outlet = _2Real::getValue< string, Outlet >( name, m_Outlets, "outlet" );
+		return OutletHandle( outlet );
 	}
 
 	void ServiceIO::linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet)
@@ -395,15 +404,15 @@ namespace _2Real
 		itIn->second->linkWith(*(itOut->second));
 	}
 
-	void ServiceIO::syncInlets()
+	void ServiceIO::updateInletValues()
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
-			it->second->updateCurrentData();
+			it->second->updateCurrentValue();
 		}
 	}
 
-	void ServiceIO::updateOutlets()
+	void ServiceIO::updateOutletValues()
 	{
 		std::list< OutputData > data;
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
@@ -426,7 +435,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::updateInlets()
+	void ServiceIO::updateInletBuffers()
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
@@ -434,19 +443,4 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::subBlockAdded(AbstractBlock &subBlock)
-	{
-	}
-
-	void ServiceIO::subBlockRemoved(AbstractBlock &subBlock)
-	{
-	}
-
-	void ServiceIO::uberBlockAdded(AbstractBlock &uberBlock)
-	{
-	}
-
-	void ServiceIO::uberBlockRemoved(AbstractBlock &uberBlock)
-	{
-	}
 }

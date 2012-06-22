@@ -44,9 +44,9 @@ namespace _2Real
 		void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg );
 		void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg );
 
-		void subBlockAdded( AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg );
+		void subBlockAdded( AbstractBlock &subBlock, AbstractUberBlockBasedTrigger &trigger );
 		void subBlockRemoved( AbstractBlock &subBlock );
-		void uberBlockAdded( AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg );
+		void uberBlockAdded( AbstractBlock &uberBlock, AbstractUberBlockBasedTrigger &trigger );
 		void uberBlockRemoved( AbstractBlock &uberBlock );
 		void inletAdded( Inlet &inlet, AbstractInletBasedTrigger &trigger );
 		void inletRemoved( Inlet &inlet );

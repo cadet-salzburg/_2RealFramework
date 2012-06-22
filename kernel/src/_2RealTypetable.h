@@ -25,70 +25,73 @@
 #include <map>
 #include <string>
 #include <typeinfo>
+#include <assert.h>
+#include <iostream>
 
 namespace _2Real
 {
 
 	class EngineImpl;
 
-	typedef std::map< std::string, EngineData >		EngineDataTable;
-	typedef std::map< std::string, std::string >	StringMap;
-
 	class Typetable
 	{
 
 	public:
 
-		Typetable(EngineImpl const& EngineImpl);
-		~Typetable();
-
 		template< typename Datatype >
-		void				registerType(std::string const& keyword);
+		void registerType( std::string const& typeName );
 
-		const std::string	lookupKey(std::string const& type) const;
-		const std::string	lookupType(std::string const& keyword) const;
-		EngineData			getInitialValueFromType(std::string const& type) const;
-		EngineData			getInitialValueFromKey(std::string const& keyword) const;
-		bool				hasDefaultValue(std::string const& keyword) const;
+		std::string const&		lookupTypename( std::string const& longTypename ) const;
+		const std::string		lookupLongTypename( std::string const& typeName ) const;
+		EngineData const&		getInitialValueFromLongTypename( std::string const& longTypename ) const;
+		EngineData const&		getInitialValueFromTypename( std::string const& typeName ) const;
 
 	private:
 
-		EngineImpl				const& m_EngineImpl;
+		typedef std::map< std::string, EngineData >		EngineDataTable;
+		typedef std::map< std::string, std::string >	StringMap;
+
 		EngineDataTable		m_Typetable;
 		StringMap			m_LookupTable;
 
 	};
 
 	template< typename Datatype >
-	void Typetable::registerType(std::string const& keyword)
+	void Typetable::registerType( std::string const& typeName )
 	{
-		EngineDataTable::iterator it = m_Typetable.find(keyword);
-		if (it != m_Typetable.end())
+
+#ifdef _DEBUG
+		typename EngineDataTable::iterator it = m_Typetable.find( typeName );
+		if ( it != m_Typetable.end() )
 		{
-			std::ostringstream msg;
-			msg << "keyword " << keyword << " already exists";
-			throw AlreadyExistsException(msg.str());
+			std::cout << "keyword " << typeName << "already defined in typetable" << std::endl;
+			assert( NULL );
 		}
+#endif
 
-		//automatically also registers vector & list
-		std::string keyword1 = std::string( "vector " + keyword );
-		std::string keyword2 = std::string( "list " + keyword );
+		std::string nameVec = std::string( "vector " + typeName );
+		std::string nameList = std::string( "list " + typeName );
 
-		EngineData data( new Datatype() );
-		EngineData data1( new std::vector< Datatype >() );
-		EngineData data2( new std::list< Datatype >() );
+		Datatype data;
+		std::vector< Datatype > vec;
+		std::list< Datatype > list;
 
-		m_Typetable[keyword] = data;
-		m_Typetable[keyword1] = data1;
-		m_Typetable[keyword2] = data2;
+		EngineData simpleData( data );
+		EngineData vectorData( vec );
+		EngineData listData( list );
 
-		std::string type = typeid( Datatype ).name();
-		std::string type1 = data1.getTypename();
-		std::string type2 = data2.getTypename();
+		m_Typetable[ typeName ] = simpleData;
+		m_Typetable[ nameVec ] = vectorData;
+		m_Typetable[ nameList ] = listData;
 
-		m_LookupTable[type] = keyword;
-		m_LookupTable[type1] = keyword1;
-		m_LookupTable[type2] = keyword2;
+		std::string simpleType = typeid( Datatype ).name();
+		std::string typeVec= vectorData.getTypename();
+		std::string typeList = listData.getTypename();
+
+		m_LookupTable[ simpleType ] = typeName;
+		m_LookupTable[ typeVec ] = nameVec;
+		m_LookupTable[ typeList ] = nameList;
+
 	}
 
 }

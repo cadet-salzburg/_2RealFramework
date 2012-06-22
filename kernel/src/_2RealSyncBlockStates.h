@@ -18,81 +18,81 @@
 
 #pragma once
 
-#include "_2RealAbstractStateManager.h"
+//#include "_2RealAbstractStateManager.h"
+//
+//#include "_2RealException.h"
+//
+//#include "Poco/Mutex.h"
 
-#include "_2RealException.h"
+//namespace _2Real
+//{
+//
+	//class AbstractSyncState;
+	//class Logger;
 
-#include "Poco/Mutex.h"
+	//class SyncStates : public AbstractStateManager
+	//{
 
-namespace _2Real
-{
+	//public:
 
-	class AbstractSyncState;
-	class Logger;
+	//	SyncStates(AbstractBlock &owner);
+	//	~SyncStates();
 
-	class SyncStates : public AbstractStateManager
-	{
+	//	void				setUp();
+	//	void				start();
+	//	Poco::Event &		stop();
+	//	void				prepareForShutDown();
+	//	bool				shutDown( const long timeout );
+	//	void				setUpdatePolicy( UpdatePolicyImpl const& policy );
 
-	public:
+	//	//called by sync triggers
+	//	void		waitForReadySet();
+	//	void		waitForFinishedSet();
 
-		SyncStates(AbstractBlock &owner);
-		~SyncStates();
+	//	void resetAndEnableReadySet();
+	//	void resetAndEnableFinishedSet();
+	//	void disableAll();
+	//	void disableReadySet();
+	//	void disableFinishedSet();
+	//	void notifyFinishedSet();
+	//	void notifyReadySet();
 
-		void				setUp();
-		void				start();
-		Poco::Event &		stop();
-		void				prepareForShutDown();
-		bool				shutDown( const long timeout );
-		void				setUpdatePolicy( UpdatePolicyImpl const& policy );
+	//	void tryTriggerTime(long &time);
+	//	void tryTriggerInlet(const void *inlet, std::pair< long, long > &times);
+	//	void tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage msg);
+	//	void tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg);
 
-		//called by sync triggers
-		void		waitForReadySet();
-		void		waitForFinishedSet();
+	//	void subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
+	//	void subBlockRemoved(AbstractBlock &subBlock);
+	//	void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
+	//	void uberBlockRemoved(AbstractBlock &uberBlock);
+	//	void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger);
+	//	void inletRemoved(Inlet &slot);
 
-		void resetAndEnableReadySet();
-		void resetAndEnableFinishedSet();
-		void disableAll();
-		void disableReadySet();
-		void disableFinishedSet();
-		void notifyFinishedSet();
-		void notifyReadySet();
+	//private:
 
-		void tryTriggerTime(long &time);
-		void tryTriggerInlet(const void *inlet, std::pair< long, long > &times);
-		void tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage msg);
-		void tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg);
+	//	friend class SyncBlock;
 
-		void subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void subBlockRemoved(AbstractBlock &subBlock);
-		void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg);
-		void uberBlockRemoved(AbstractBlock &uberBlock);
-		void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger);
-		void inletRemoved(Inlet &slot);
+	//	void handleStateChangeException(Exception &e);
 
-	private:
+	//	void evaluateReadyTriggers();
+	//	void evaluateFinishedTriggers();
+	//	const bool areReadyTriggersEnabled() const;
+	//	const bool areFinishedTriggersEnabled() const;
 
-		friend class SyncBlock;
+	//	mutable Poco::FastMutex									m_ReadyAccess;
+	//	mutable Poco::FastMutex									m_FinishedAccess;
+	//	BlockTriggerMap												m_ReadySet;
+	//	BlockTriggerMap												m_FinishedSet;
 
-		void handleStateChangeException(Exception &e);
+	//	mutable Poco::FastMutex									m_EnabledAccess;
+	//	bool													m_ReadyTriggersEnabled;
+	//	bool													m_FinishedTriggersEnabled;
 
-		void evaluateReadyTriggers();
-		void evaluateFinishedTriggers();
-		const bool areReadyTriggersEnabled() const;
-		const bool areFinishedTriggersEnabled() const;
-
-		mutable Poco::FastMutex									m_ReadyAccess;
-		mutable Poco::FastMutex									m_FinishedAccess;
-		BlockTriggerMap												m_ReadySet;
-		BlockTriggerMap												m_FinishedSet;
-
-		mutable Poco::FastMutex									m_EnabledAccess;
-		bool													m_ReadyTriggersEnabled;
-		bool													m_FinishedTriggersEnabled;
-
-		mutable Poco::FastMutex									m_StateAccess;
-		AbstractSyncState										*m_CurrentState;
-		Logger													&m_Logger;
-
-	};
-
-}
+	//	mutable Poco::FastMutex									m_StateAccess;
+	//	AbstractSyncState										*m_CurrentState;
+	//	Logger													&m_Logger;
+//
+//	};
+//
+//}

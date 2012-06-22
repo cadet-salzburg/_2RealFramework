@@ -25,7 +25,9 @@
 #include "_2RealTimestampedData.h"
 #include "_2RealUpdatePolicy.h"
 #include "_2RealSyncBlock.h"
-#include "_2RealTriggerTypes.h"
+#include "_2RealUberBlockBasedTrigger.h"
+#include "_2RealInletBasedTrigger.h"
+#include "_2RealTimeBasedTrigger.h"
 #include "_2RealUpdatePolicyImpl.h"
 #include "_2RealBlockError.h"
 
@@ -339,22 +341,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemImpl::insertValue(BlockIdentifier const& id, std::string const& paramName, EngineData const& value)
-	{
-		TimestampedData data( value, m_Engine.getElapsedTime() );
-
-		if ( id == AbstractBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no i/o" );
-		}
-		else
-		{
-			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.insertValue(paramName, data);
-		}
-	}
-
-	const EngineData SystemImpl::getValue(BlockIdentifier const& id, std::string const& paramName) const
+	EngineData const& SystemImpl::getValue(BlockIdentifier const& id, std::string const& paramName) const
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -367,7 +354,7 @@ namespace _2Real
 		}
 	}
 
-	std::string const& SystemImpl::getKey(BlockIdentifier const& id, std::string const& paramName) const
+	std::string const& SystemImpl::getTypename(BlockIdentifier const& id, std::string const& paramName) const
 	{
 		if ( id == AbstractBlock::getIdentifier() )
 		{
@@ -376,7 +363,20 @@ namespace _2Real
 		else
 		{
 			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
-			return obj.getKey(paramName);
+			return obj.getTypename(paramName);
+		}
+	}
+
+	std::string const& SystemImpl::getLongTypename(BlockIdentifier const& id, std::string const& paramName) const
+	{
+		if ( id == AbstractBlock::getIdentifier() )
+		{
+			throw InvalidOperationException( "system has no i/o" );
+		}
+		else
+		{
+			AbstractBlock &obj = m_SubBlockManager->getBlock(id);
+			return obj.getLongTypename(paramName);
 		}
 	}
 
@@ -402,8 +402,8 @@ namespace _2Real
 		block.setUpdatePolicy( *p );
 
 		AbstractStateManager &mgr = block.getStateManager();
-		AbstractBlockBasedTrigger *trigger = new BlockBasedTrigger< BLOCK_OK >( this->getName() );
-		mgr.uberBlockAdded( *this, *trigger, BLOCK_OK );
+		AbstractUberBlockBasedTrigger *trigger = new UberBlockBasedTrigger< BLOCK_OK >( this->getName() );
+		mgr.uberBlockAdded( *this, *trigger );
 		return block.getIdentifier();
 	}
 

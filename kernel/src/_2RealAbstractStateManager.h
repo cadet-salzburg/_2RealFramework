@@ -18,7 +18,9 @@
 
 #pragma once
 
-#include "_2RealTriggerTypes.h"
+#include "_2RealUberBlockBasedTrigger.h"
+#include "_2RealInletBasedTrigger.h"
+#include "_2RealTimeBasedTrigger.h"
 
 #include <string>
 
@@ -50,27 +52,18 @@ namespace _2Real
 		virtual void setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
 		//called by the timer thread
-		virtual void tryTriggerTime(long &time) = 0;
+		virtual void tryTriggerTime( long &time ) = 0;
 		//called by the individual inlets
-		virtual void tryTriggerInlet(const void *inlet, std::pair< long, long > &times) = 0;
+		virtual void tryTriggerInlet( const void *inlet, std::pair< long, long > &times ) = 0;
 		//called when a certain sub block is ready or completed
-		virtual void tryTriggerSubBlock(AbstractStateManager &sub, const BlockMessage msg) = 0;
+		virtual void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg ) = 0;
 		//called when an uber block is ready
-		virtual void tryTriggerUberBlock(AbstractStateManager &uber, const BlockMessage msg) = 0;
+		virtual void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg ) = 0;
 
-		//relevant for group blocks
-		//virtual void subBlockAdded(AbstractBlock &subBlock, AbstractBlockBasedTrigger &trigger) = 0;
-		//virtual void subBlockRemoved(AbstractBlock &subBlock) = 0;
-		virtual void subBlockAdded(AbstractBlock &sub, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg) = 0;
-		virtual void subBlockRemoved(AbstractBlock &sub) = 0;
-		//relevant for any block
-		//virtual void uberBlockAdded(AbstractBlock &uberBlock, AbstractBlockBasedTrigger &trigger) = 0;
-		//virtual void uberBlockRemoved(AbstractBlock &uberBlock) = 0;
-		virtual void uberBlockAdded(AbstractBlock &uber, AbstractBlockBasedTrigger &trigger, const BlockMessage desiredMsg) = 0;
-		virtual void uberBlockRemoved(AbstractBlock &uber) = 0;
-		//relevant for blocks which can add inlets
-		//virtual void inletAdded(Inlet &slot, AbstractInletBasedTrigger &trigger) = 0;
-		//virtual void inletRemoved(Inlet &slot) = 0;
+		virtual void subBlockAdded( AbstractBlock &sub, AbstractUberBlockBasedTrigger &trigger ) = 0;
+		virtual void subBlockRemoved( AbstractBlock &sub ) = 0;
+		virtual void uberBlockAdded( AbstractBlock &uber, AbstractUberBlockBasedTrigger &trigger ) = 0;
+		virtual void uberBlockRemoved( AbstractBlock &uber ) = 0;
 
 	protected:
 
