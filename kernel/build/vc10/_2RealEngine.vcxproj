@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
@@ -50,6 +49,11 @@
     <ClInclude Include="..\..\src\_2RealEnum.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
+    <ClInclude Include="..\..\src\_2RealFunctionBlock.h" />
+    <ClInclude Include="..\..\src\_2RealFunctionBlockData.h" />
+    <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h" />
+    <ClInclude Include="..\..\src\_2RealFunctionBlockState.h" />
+    <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h" />
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealHelpersInternal.h" />
     <ClInclude Include="..\..\src\_2RealIdCounter.h" />
@@ -67,13 +71,8 @@
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
-    <ClInclude Include="..\..\src\_2RealServiceBlock.h" />
-    <ClInclude Include="..\..\src\_2RealServiceBlockIO.h" />
-    <ClInclude Include="..\..\src\_2RealServiceBlockStates.h" />
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
-    <ClInclude Include="..\..\src\_2RealSyncBlock.h" />
-    <ClInclude Include="..\..\src\_2RealSyncBlockStates.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
@@ -88,7 +87,6 @@
     <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
     <ClInclude Include="..\..\src\_2RealUpdateTrigger.h" />
-    <ClInclude Include="..\..\src\_2RealUserBlockState.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +114,10 @@
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealException.cpp" />
     <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
+    <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp" />
+    <ClCompile Include="..\..\src\_2RealFunctionBlockIOManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealFunctionBlockState.cpp" />
+    <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealIdCounter.cpp" />
@@ -131,12 +133,7 @@
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceBlock.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceBlockIO.cpp" />
-    <ClCompile Include="..\..\src\_2RealServiceBlockStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
-    <ClCompile Include="..\..\src\_2RealSyncBlock.cpp" />
-    <ClCompile Include="..\..\src\_2RealSyncBlockStates.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
@@ -145,7 +142,6 @@
     <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealUserBlockState.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

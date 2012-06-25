@@ -19,7 +19,7 @@
 #include "_2RealOutlet.h"
 #include "_2RealInlet.h"
 #include "_2RealException.h"
-#include "_2RealServiceBlock.h"
+#include "_2RealFunctionBlock.h"
 #include "_2RealParameterData.h"
 #include "_2RealEngineImpl.h"
 

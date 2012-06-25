@@ -18,7 +18,7 @@
 */
 
 #include "_2RealPooledThread.h"
-#include "_2RealServiceBlock.h"	//service states
+#include "_2RealFunctionBlockStateManager.h"
 #include "_2RealThreadPool.h"
 
 #include "Poco/ThreadLocal.h"

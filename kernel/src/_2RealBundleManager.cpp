@@ -21,7 +21,7 @@
 #include "_2RealBundleInternal.h"
 #include "_2RealSystemImpl.h"
 #include "_2RealUpdatePolicy.h"
-#include "_2RealServiceBlock.h"
+#include "_2RealFunctionBlock.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealBundleIdentifier.h"

@@ -47,13 +47,13 @@ namespace _2Real
 
 	class AbstractInletBasedTrigger;
 
-	class ServiceIO : public AbstractIOManager
+	class FunctionBlockIOManager : public AbstractIOManager
 	{
 
 	public:
 
-		ServiceIO(AbstractBlock &owner);
-		~ServiceIO();
+		FunctionBlockIOManager(AbstractBlock &owner);
+		~FunctionBlockIOManager();
 
 		// stuff that is inherited
 
@@ -110,7 +110,7 @@ namespace _2Real
 	};
 
 	//template< typename Condition >
-	//void ServiceIO::createInletTriggerFor( string const& inletName )
+	//void FunctionBlockIOManager::createInletTriggerFor( string const& inletName )
 	//{
 	//	//Inlet &inlet = _2Real::getValue< string, Inlet >( inletName, m_Inlets, "inlet" );
 

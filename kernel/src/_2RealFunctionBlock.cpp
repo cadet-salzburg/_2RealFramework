@@ -17,7 +17,7 @@
 */
 
 #include "_2RealException.h"
-#include "_2RealServiceBlock.h"
+#include "_2RealFunctionBlock.h"
 #include "_2RealBlock.h"
 #include "_2RealBlockData.h"
 #include "_2RealSystemImpl.h"
@@ -26,9 +26,9 @@ namespace _2Real
 {
 
 	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemImpl &owner, BlockIdentifier const& id ) :
-		UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( id, &owner )
+		UberBlock< FunctionBlockIOManager, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( id, &owner )
 	{
-		ServiceIO *io = dynamic_cast< ServiceIO * >( m_IOManager );
+		FunctionBlockIOManager *io = dynamic_cast< FunctionBlockIOManager * >( m_IOManager );
 		FunctionBlockStateManager *states = dynamic_cast< FunctionBlockStateManager * >( m_StateManager );
 		states->m_IO = io;
 		states->m_System = &owner;
@@ -38,12 +38,12 @@ namespace _2Real
 
 	InletHandle FunctionBlock::createInletHandle(std::string const& name)
 	{
-		return dynamic_cast< ServiceIO * >( m_IOManager )->createInletHandle( name );
+		return dynamic_cast< FunctionBlockIOManager * >( m_IOManager )->createInletHandle( name );
 	}
 
 	OutletHandle FunctionBlock::createOutletHandle(std::string const& name)
 	{
-		return dynamic_cast< ServiceIO * >( m_IOManager )->createOutletHandle( name );
+		return dynamic_cast< FunctionBlockIOManager * >( m_IOManager )->createOutletHandle( name );
 	}
 
 }

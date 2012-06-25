@@ -30,11 +30,12 @@ namespace _2Real
 
 	class AbstractFunctionBlockState;
 	class ServiceUpdates;
-	class ServiceIO;
+	class FunctionBlockIOManager;
 	class ThreadPool;
 	class Logger;
 	class SystemImpl;
 	class Block;
+	class Exception;
 
 	class FunctionBlockStateManager : public AbstractStateManager
 	{
@@ -88,7 +89,7 @@ namespace _2Real
 
 		ThreadPool						&m_Threads;
 		Logger							&m_Logger;
-		ServiceIO						*m_IO;
+		FunctionBlockIOManager						*m_IO;
 		SystemImpl						*m_System;
 		Block							*m_FunctionBlock;
 

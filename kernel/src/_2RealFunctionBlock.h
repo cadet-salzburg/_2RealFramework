@@ -20,9 +20,9 @@
 
 #include "_2RealUberBlock.h"
 #include "_2RealDisabledBlocks.h"
-#include "_2RealServiceBlockIO.h"
-#include "_2RealServiceBlockStates.h"
-#include "_2RealServiceBlockData.h"
+#include "_2RealFunctionBlockIOManager.h"
+#include "_2RealFunctionBlockStateManager.h"
+#include "_2RealFunctionBlockData.h"
 
 namespace _2Real
 {
@@ -31,7 +31,7 @@ namespace _2Real
 	class SystemImpl;
 	class UpdatePolicyImpl;
 
-	class FunctionBlock : public UberBlock< ServiceIO, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager >
+	class FunctionBlock : public UberBlock< FunctionBlockIOManager, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager >
 	{
 
 	public:

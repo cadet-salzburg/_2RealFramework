@@ -40,9 +40,6 @@
     <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h">
       <Filter>uberblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractSyncBlockState.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleLoader.h">
       <Filter>bundle internal</Filter>
     </ClInclude>
@@ -109,32 +106,17 @@
     <ClInclude Include="..\..\src\_2RealPooledThread.h">
       <Filter>thread managment</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSyncBlock.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceBlockStates.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSyncBlockStates.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealHelpers.h">
       <Filter>helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealHelpersInternal.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceBlockIO.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealSetupParameter.h">
       <Filter>parameter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealThreadPool.h">
       <Filter>thread managment</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealServiceBlock.h">
-      <Filter>uberblock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealSystemImpl.h">
       <Filter>uberblock</Filter>
@@ -143,9 +125,6 @@
       <Filter>uberblock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealOwnedBlocks.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUserBlockState.h">
       <Filter>uberblock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealUberBlock.h">
@@ -189,6 +168,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
       <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlock.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockData.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockState.h">
+      <Filter>uberblock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,29 +279,14 @@
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
       <Filter>thread managment</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSyncBlockStates.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceBlockStates.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSyncBlock.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealHelpers.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceBlockIO.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
       <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealServiceBlock.cpp">
-      <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealEngineData.cpp">
       <Filter>internal data</Filter>
@@ -319,9 +298,6 @@
       <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUserBlockState.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
@@ -341,6 +317,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
       <Filter>update policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockIOManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockState.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp">
+      <Filter>uberblock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

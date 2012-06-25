@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealServiceBlockIO.h"
+#include "_2RealFunctionBlockIOManager.h"
 #include "_2RealException.h"
 #include "_2RealAbstractUberBlock.h"
 #include "_2RealSetupParameter.h"
@@ -39,12 +39,12 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	ServiceIO::ServiceIO(AbstractBlock &owner) :
+	FunctionBlockIOManager::FunctionBlockIOManager(AbstractBlock &owner) :
 		AbstractIOManager(owner)
 	{
 	}
 
-	ServiceIO::~ServiceIO()
+	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
 		clear();
 
@@ -69,7 +69,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::initFrom( BlockData const& meta )
+	void FunctionBlockIOManager::initFrom( BlockData const& meta )
 	{
 		std::map< std::string, ParameterData > const& setup = meta.getParameters();
 		std::map< std::string, ParameterData > const& input = meta.getInlets();
@@ -97,7 +97,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::clear()
+	void FunctionBlockIOManager::clear()
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
@@ -129,17 +129,17 @@ namespace _2Real
 		}
 	}
 
-	InletMap const& ServiceIO::getInlets() const
+	InletMap const& FunctionBlockIOManager::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	OutletMap const& ServiceIO::getOutlets() const
+	OutletMap const& FunctionBlockIOManager::getOutlets() const
 	{
 		return m_Outlets;
 	}
 
-	void ServiceIO::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
+	void FunctionBlockIOManager::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
 		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
 		
@@ -160,7 +160,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData )
+	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
 		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
 
@@ -180,7 +180,7 @@ namespace _2Real
 		delete cb;
 	}
 
-	void ServiceIO::registerToNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void FunctionBlockIOManager::registerToNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
 		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
 		if ( it == m_OutletCallbackHandlers.end() )
@@ -199,7 +199,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
 		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
 		if ( it != m_OutletCallbackHandlers.end() )
@@ -217,7 +217,7 @@ namespace _2Real
 		delete &handler;
 	}
 
-	void ServiceIO::registerToNewData( OutputCallback callback, void *userData )
+	void FunctionBlockIOManager::registerToNewData( OutputCallback callback, void *userData )
 	{
 		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
 		
@@ -232,7 +232,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( OutputCallback callback, void *userData )
+	void FunctionBlockIOManager::unregisterFromNewData( OutputCallback callback, void *userData )
 	{
 		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
 
@@ -246,7 +246,7 @@ namespace _2Real
 		delete cb;
 	}
 
-	void ServiceIO::registerToNewData( AbstractOutputCallbackHandler &handler )
+	void FunctionBlockIOManager::registerToNewData( AbstractOutputCallbackHandler &handler )
 	{
 		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
 		if ( it == m_OutputCallbackHandlers.end() )
@@ -259,7 +259,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::unregisterFromNewData( AbstractOutputCallbackHandler &handler )
+	void FunctionBlockIOManager::unregisterFromNewData( AbstractOutputCallbackHandler &handler )
 	{
 		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
 		if ( it != m_OutputCallbackHandlers.end() )
@@ -271,7 +271,7 @@ namespace _2Real
 		delete &handler;
 	}
 
-	EngineData const& ServiceIO::getValue( string const& paramName ) const
+	EngineData const& FunctionBlockIOManager::getValue( string const& paramName ) const
 	{
 		// TODO: parameter names have to be unique oO
 
@@ -298,7 +298,7 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void ServiceIO::setValue( string const& paramName, TimestampedData const& value )
+	void FunctionBlockIOManager::setValue( string const& paramName, TimestampedData const& value )
 	{
 		SetupParameter *const param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
 		if ( param != nullptr )
@@ -319,7 +319,7 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	std::string const& ServiceIO::getTypename( string const& paramName ) const
+	std::string const& FunctionBlockIOManager::getTypename( string const& paramName ) const
 	{
 		SetupParameter const* param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
 		if ( param != nullptr )
@@ -344,7 +344,7 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	std::string const& ServiceIO::getLongTypename( string const& paramName ) const
+	std::string const& FunctionBlockIOManager::getLongTypename( string const& paramName ) const
 	{
 		SetupParameter const* param = _2Real::getValue< string, SetupParameter >( paramName, m_Params );
 		if ( param != nullptr )
@@ -369,19 +369,19 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	InletHandle ServiceIO::createInletHandle( string const& name )
+	InletHandle FunctionBlockIOManager::createInletHandle( string const& name )
 	{
 		Inlet &inlet = _2Real::getValue< string, Inlet >( name, m_Inlets, "inlet" );
 		return InletHandle( inlet );
 	}
 
-	OutletHandle ServiceIO::createOutletHandle(std::string const& name)
+	OutletHandle FunctionBlockIOManager::createOutletHandle(std::string const& name)
 	{
 		Outlet &outlet = _2Real::getValue< string, Outlet >( name, m_Outlets, "outlet" );
 		return OutletHandle( outlet );
 	}
 
-	void ServiceIO::linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet)
+	void FunctionBlockIOManager::linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet)
 	{
 		InletMap::iterator itIn = m_Inlets.find(inlet);
 		if (itIn == m_Inlets.end())
@@ -404,7 +404,7 @@ namespace _2Real
 		itIn->second->linkWith(*(itOut->second));
 	}
 
-	void ServiceIO::updateInletValues()
+	void FunctionBlockIOManager::updateInletValues()
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{
@@ -412,7 +412,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::updateOutletValues()
+	void FunctionBlockIOManager::updateOutletValues()
 	{
 		std::list< OutputData > data;
 		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
@@ -435,7 +435,7 @@ namespace _2Real
 		}
 	}
 
-	void ServiceIO::updateInletBuffers()
+	void FunctionBlockIOManager::updateInletBuffers()
 	{
 		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
 		{

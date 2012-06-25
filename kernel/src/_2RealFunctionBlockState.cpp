@@ -16,9 +16,9 @@
 	limitations under the License.
 */
 
-#include "_2RealUserBlockState.h"
+#include "_2RealFunctionBlockState.h"
 #include "_2RealException.h"
-#include "_2RealServiceBlock.h"
+#include "_2RealFunctionBlock.h"
 
 #include <iostream>
 #include <assert.h>
