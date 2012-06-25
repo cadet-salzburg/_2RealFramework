@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +16,45 @@
 	limitations under the License.
 */
 
-#pragma once
+#include "_2RealLink.h"
+#include "_2RealParameter.h"
+#include "_2RealSetupParameter.h"
+#include "_2RealInlet.h"
+#include "_2RealOutlet.h"
 
-#include <string>
+#include <iostream>
+#include <assert.h>
+
+using std::cout;
+using std::endl;
 
 namespace _2Real
 {
 
-	class Block;
-	class ServiceMetadata;
-
-	typedef struct
+	AbstractLink::AbstractLink( Parameter &p1, Parameter &p2 ) :
+		m_Link1( p1 ),
+		m_Link2( p2 )
 	{
-		std::string			name;
-		Block				* service;
-		ServiceMetadata		const* metainfo;
+#ifdef _DEBUG
+		if ( &p1 == &p2 )
+		{
+			cout << "cannot link a parameter to itself" << endl;
+			assert( NULL );
+		}
+#endif
 	}
-	ServiceData;
+
+	IOLink::IOLink( Inlet &inlet, Outlet &outlet ) :
+		AbstractLink( inlet, outlet ),
+		m_Inlet( inlet ),
+		m_Outlet( outlet )
+	{
+		//outlet.addInletLister( inlet );
+	}
+
+	IOLink::~IOLink()
+	{
+		//outlet.removeInletLister( inlet );
+	}
+
 }

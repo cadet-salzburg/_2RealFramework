@@ -25,29 +25,29 @@ namespace _2Real
 {
 
 	class BlockIdentifier;
-	class AbstractBlock;
+	class AbstractUberBlock;
 
 	class AbstractBlockManager
 	{
 
 	public:
 
-		AbstractBlockManager(AbstractBlock &owner);
+		AbstractBlockManager(AbstractUberBlock &owner);
 		virtual ~AbstractBlockManager();
 
 		std::string const& getName() const;
 		const unsigned int getId() const;
 
 		virtual void						clear() = 0;
-		virtual AbstractBlock &				getBlock(BlockIdentifier const& blockId) = 0;
-		virtual AbstractBlock const&		getBlock(BlockIdentifier const& blockId) const = 0;
-		virtual void						addBlock(AbstractBlock &block) = 0;
-		virtual	void						removeBlock(AbstractBlock &block) = 0;
+		virtual AbstractUberBlock &				getBlock(BlockIdentifier const& blockId) = 0;
+		virtual AbstractUberBlock const&		getBlock(BlockIdentifier const& blockId) const = 0;
+		virtual void						addBlock(AbstractUberBlock &block) = 0;
+		virtual	void						removeBlock(AbstractUberBlock &block) = 0;
 		virtual std::list< BlockIdentifier >		getCurrentBlockIds() const = 0;
 
 	protected:
 
-		AbstractBlock						&m_Owner;
+		AbstractUberBlock						&m_Owner;
 
 	};
 

@@ -42,7 +42,6 @@
     <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
     <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
     <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledStates.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
@@ -50,7 +49,6 @@
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlock.h" />
-    <ClInclude Include="..\..\src\_2RealFunctionBlockData.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlockState.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h" />
@@ -62,6 +60,7 @@
     <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealInletBuffer.h" />
     <ClInclude Include="..\..\src\_2RealInletHandle.h" />
+    <ClInclude Include="..\..\src\_2RealLink.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
     <ClInclude Include="..\..\src\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\_2RealOutletHandle.h" />
@@ -74,7 +73,8 @@
     <ClInclude Include="..\..\src\_2RealSetupParameter.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
-    <ClInclude Include="..\..\src\_2RealSystemImpl.h" />
+    <ClInclude Include="..\..\src\_2RealSystemBlock.h" />
+    <ClInclude Include="..\..\src\_2RealSystemBlockStates.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
@@ -108,7 +108,6 @@
     <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp" />
     <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp" />
     <ClCompile Include="..\..\src\_2RealDisabledIO.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledStates.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineData.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
@@ -125,6 +124,7 @@
     <ClCompile Include="..\..\src\_2RealInlet.cpp" />
     <ClCompile Include="..\..\src\_2RealInletBuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealInletHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealLink.cpp" />
     <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
     <ClCompile Include="..\..\src\_2RealOutletHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
@@ -135,7 +135,8 @@
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemBlock.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemBlockStates.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />

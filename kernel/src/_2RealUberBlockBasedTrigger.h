@@ -20,60 +20,91 @@
 #pragma once
 
 #include "_2RealUpdateTrigger.h"
+#include "_2RealAbstractUberBlock.h"
 
 #include <map>
 
 namespace _2Real
 {
 
-	enum BlockMessage
-	{
-		BLOCK_OK						=	0x00,
-		BLOCK_READY						=	0x01,
-		BLOCK_FINISHED					=	0x02,
-		BLOCK_NOT_OK					=	0x04,
-	};
+#if defined( _WIN32 )
+	#define _2REAL_MEMBER_FUNC __thiscall
+#elif defined( _WIN64 )
+	#define _2REAL_MEMBER_FUNC __thiscall
+#else
+	#define _2REAL_MEMBER_FUNC
+#endif
 
-	class AbstractUberBlockBasedTrigger : private UpdateCondition
+	class AbstractUberBlockBasedTrigger : public UpdateTrigger
 	{
 
 	public:
 
-		using UpdateCondition::isFullfilled;
-		using UpdateCondition::set;
-		using UpdateCondition::reset;
+		AbstractUberBlockBasedTrigger( AbstractUberBlock &owner, AbstractUberBlock &other ) :
+			m_Condition( false ),
+			m_Owner( owner ),
+			m_Other( other )
+		{
+		}
 
-		AbstractUberBlockBasedTrigger( std::string const& blockName ) : m_BlockName( blockName ) {}
 		virtual ~AbstractUberBlockBasedTrigger() {}
-		std::string const& getUberBlockName() { return m_BlockName; }
 
-		virtual bool tryTriggerUpdate( const BlockMessage state ) = 0;
+		void reset() { m_Condition = false; }
+		bool isOk() const { return m_Condition; }
+
+		virtual void tryTriggerOther( const BlockMessage msg ) = 0;
+		virtual bool tryTriggerUpdate( const BlockMessage msg ) = 0;
 
 	protected:
 
-		std::string		const m_BlockName;
+		bool					m_Condition;
+
+	private:
+
+		AbstractUberBlock		&m_Owner;
+		AbstractUberBlock		&m_Other;
 
 	};
 
-	class AbstractStateManager;
-	typedef std::map< std::string, std::pair< AbstractUberBlockBasedTrigger *, AbstractStateManager * > >	UberBlockBasedTriggerMap;
+	typedef std::map< unsigned int, AbstractUberBlockBasedTrigger * >	UberBlockBasedTriggerMap;
 
-	template< BlockMessage TriggerState >
+	template< class B >
 	class UberBlockBasedTrigger : public AbstractUberBlockBasedTrigger
 	{
 
 	public:
 
-		UberBlockBasedTrigger( std::string const& blockName ) : AbstractUberBlockBasedTrigger( blockName ) {}
-		bool tryTriggerUpdate( const BlockMessage state )
+		typedef void ( _2REAL_MEMBER_FUNC B::*Function )( const unsigned int, const BlockMessage msg );
+
+		UberBlockBasedTrigger( AbstractUberBlock &owner, B &other, Function func, const BlockMessage msg ) :
+			AbstractUberBlockBasedTrigger( owner, other ),
+			m_Id( owner.getId() ),
+			m_Other( other ),
+			m_Function( func ),
+			m_Message( msg )
 		{
-			if ( state == TriggerState && !isFullfilled() )
-			{
-				set();
-				return true;
-			}
-			return false;
 		}
+
+		void tryTriggerOther( const BlockMessage msg )
+		{
+			( m_Other.*m_Function )( m_Id, msg );
+		}
+
+		bool tryTriggerUpdate( const BlockMessage msg )
+		{
+			if ( !m_Condition && msg == m_Message )
+			{
+				m_Condition = true;
+			}
+			return m_Condition;
+		}
+
+	private:
+
+		unsigned int		const m_Id;
+		B					&m_Other;
+		Function			m_Function;
+		BlockMessage		const m_Message;
 
 	};
 

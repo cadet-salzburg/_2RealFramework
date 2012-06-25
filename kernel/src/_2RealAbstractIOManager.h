@@ -30,27 +30,28 @@ namespace _2Real
 	class EngineData;
 	class InletHandle;
 	class OutletHandle;
-	class AbstractBlock;
+	class AbstractUberBlock;
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
 	class ParameterData;
 
-	typedef std::map< std::string, Inlet * >		InletMap;
-	typedef std::map< std::string, Outlet * >		OutletMap;
-	typedef std::map< std::string, SetupParameter * >	ParamMap;
-
-	Inlet & createInletFromParameterData( ParameterData const& data );
-	Outlet & createOutletFromParameterData( ParameterData const& data );
-	SetupParameter & createSetupParameterFromParameterData( ParameterData const& data );
+	// declared here, as all io managers need those functions
+	Inlet &				createInletFromParameterData( ParameterData const& data );
+	Outlet &			createOutletFromParameterData( ParameterData const& data );
+	SetupParameter &	createSetupParameterFromParameterData( ParameterData const& data );
 
 	class AbstractIOManager
 	{
 
 	public:
 
-		AbstractIOManager(AbstractBlock &owner);
+		typedef std::map< std::string, Inlet * >			InletMap;
+		typedef std::map< std::string, Outlet * >			OutletMap;
+		typedef std::map< std::string, SetupParameter * >	ParamMap;
+
+		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
 
 		std::string const& getName() const;
@@ -72,14 +73,13 @@ namespace _2Real
 		virtual std::string const&		getTypename( std::string const& paramName ) const = 0;
 		virtual std::string const&		getLongTypename( std::string const& paramName ) const = 0;
 
-		virtual void					linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet) = 0;
-
-		virtual InletMap const&			getInlets() const = 0;
-		virtual OutletMap const&		getOutlets() const = 0;
+		virtual Inlet const&			getInlet( std::string const& name ) const = 0;
+		virtual Outlet const&			getOutlet( std::string const& name ) const = 0;
+		virtual SetupParameter const&	getSetupParameter( std::string const& name ) const = 0;
 
 	protected:
 
-		AbstractBlock					&m_Owner;
+		AbstractUberBlock					&m_Owner;
 
 	};
 

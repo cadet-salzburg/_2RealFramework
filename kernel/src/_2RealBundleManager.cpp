@@ -19,7 +19,7 @@
 
 #include "_2RealBundleManager.h"
 #include "_2RealBundleInternal.h"
-#include "_2RealSystemImpl.h"
+#include "_2RealSystemBlock.h"
 #include "_2RealUpdatePolicy.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealBundleData.h"
@@ -98,7 +98,7 @@ namespace _2Real
 	{
 		if ( m_BundleContexts == nullptr )
 		{
-			m_BundleContexts = new SystemImpl( EngineImpl::instance().createBlockId( "context manager" ) );
+			m_BundleContexts = new SystemBlock( EngineImpl::instance().createBlockId( "context manager" ) );
 		}
 
 		string absPath = makeAbsolutePath( path ).toString();
@@ -130,7 +130,7 @@ namespace _2Real
 		return bundle->getIdentifier();
 	}
 
-	FunctionBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys )
+	FunctionBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemBlock &sys )
 	{
 		BundleInternal &bundle = getBundle( bundleId );
 		BundleData const& bundleData = bundle.getBundleData();

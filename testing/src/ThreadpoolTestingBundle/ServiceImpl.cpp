@@ -134,11 +134,12 @@ void In::update()
 {
 	try
 	{
-		//if ( ++m_Counter == 100 )
-		//{
-			cout << m_In.getReadableRef< unsigned int >() << endl;
-		//	m_Counter = 0;
-		//}
+		if ( ++m_Counter == 100 )
+		{
+			//cout << m_In.getReadableRef< unsigned int >() << endl;
+			cout << "YAY!" << endl;
+			m_Counter = 0;
+		}
 	}
 	catch ( Exception &e )
 	{

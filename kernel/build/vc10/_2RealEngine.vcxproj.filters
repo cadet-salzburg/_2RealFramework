@@ -52,12 +52,6 @@
     <ClInclude Include="..\..\src\_2RealDisabledBlocks.h">
       <Filter>uberblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledStates.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledIO.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealImageT.h">
       <Filter>datatype</Filter>
     </ClInclude>
@@ -118,9 +112,6 @@
     <ClInclude Include="..\..\src\_2RealThreadPool.h">
       <Filter>thread managment</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemImpl.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h">
       <Filter>uberblock</Filter>
     </ClInclude>
@@ -175,13 +166,22 @@
     <ClInclude Include="..\..\src\_2RealFunctionBlock.h">
       <Filter>uberblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFunctionBlockData.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h">
       <Filter>uberblock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealFunctionBlockState.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealLink.h">
+      <Filter>parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemBlockStates.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemBlock.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDisabledIO.h">
       <Filter>uberblock</Filter>
     </ClInclude>
   </ItemGroup>
@@ -229,12 +229,6 @@
       <Filter>bundle internal</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledStates.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealImageT.cpp">
@@ -291,9 +285,6 @@
     <ClCompile Include="..\..\src\_2RealEngineData.cpp">
       <Filter>internal data</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemImpl.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
@@ -328,6 +319,18 @@
       <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealLink.cpp">
+      <Filter>parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemBlock.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemBlockStates.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
   </ItemGroup>

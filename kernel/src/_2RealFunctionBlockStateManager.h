@@ -33,7 +33,7 @@ namespace _2Real
 	class FunctionBlockIOManager;
 	class ThreadPool;
 	class Logger;
-	class SystemImpl;
+	class SystemBlock;
 	class Block;
 	class Exception;
 
@@ -42,7 +42,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockStateManager( AbstractBlock &owner );
+		FunctionBlockStateManager( AbstractUberBlock &owner );
 		~FunctionBlockStateManager();
 
 		void setUp();							// system
@@ -57,13 +57,13 @@ namespace _2Real
 
 		void tryTriggerTime( long &time );
 		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
-		void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg ) {}
-		void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg );
+		void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) {}
+		void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg );
 
-		void subBlockAdded( AbstractBlock &subBlock, AbstractUberBlockBasedTrigger &trigger ) {}
-		void subBlockRemoved( AbstractBlock &subBlock) {}
-		void uberBlockAdded( AbstractBlock &uberBlock, AbstractUberBlockBasedTrigger &trigger );
-		void uberBlockRemoved( AbstractBlock &uberBlock);
+		void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) {}
+		void removeTriggerForSubBlock( const unsigned int id ) {}
+		void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
+		void removeTriggerForSuperBlock( const unsigned int id );
 
 	private:
 
@@ -90,7 +90,7 @@ namespace _2Real
 		ThreadPool						&m_Threads;
 		Logger							&m_Logger;
 		FunctionBlockIOManager						*m_IO;
-		SystemImpl						*m_System;
+		SystemBlock						*m_System;
 		Block							*m_FunctionBlock;
 
 		mutable Poco::FastMutex			m_TriggerAccess;

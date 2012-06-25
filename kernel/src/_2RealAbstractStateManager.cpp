@@ -21,7 +21,7 @@
 
 namespace _2Real
 {
-	AbstractStateManager::AbstractStateManager(AbstractBlock &owner) : 
+	AbstractStateManager::AbstractStateManager(AbstractUberBlock &owner) : 
 		m_Owner(owner),
 		m_StopEvent( false )
 	{

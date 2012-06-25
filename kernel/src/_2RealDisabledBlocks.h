@@ -23,19 +23,19 @@
 namespace _2Real
 {
 
-	class DisabledBlocks : public AbstractBlockManager
+	class DisabledBlockManager : public AbstractBlockManager
 	{
 
 	public:
 
-		DisabledBlocks(AbstractBlock &owner);
-		~DisabledBlocks();
+		DisabledBlockManager(AbstractUberBlock &owner);
+		~DisabledBlockManager();
 
 		void								clear();
-		AbstractBlock &						getBlock(BlockIdentifier const& blockId);
-		AbstractBlock const&				getBlock(BlockIdentifier const& blockId) const;
-		void								addBlock(AbstractBlock &block);
-		void								removeBlock(AbstractBlock &block);
+		AbstractUberBlock &						getBlock(BlockIdentifier const& blockId);
+		AbstractUberBlock const&				getBlock(BlockIdentifier const& blockId) const;
+		void								addBlock(AbstractUberBlock &block);
+		void								removeBlock(AbstractUberBlock &block);
 		std::list< BlockIdentifier >				getCurrentBlockIds() const;
 
 	};

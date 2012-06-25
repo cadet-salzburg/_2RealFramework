@@ -157,7 +157,7 @@ namespace _2Real
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template< typename KeyType, typename ValueType >
-	ValueType *const getValue( KeyType const& key, typename std::map< KeyType, ValueType * > &map )
+	ValueType *const getMapElement( KeyType const& key, typename std::map< KeyType, ValueType * > &map )
 	{
 		typename std::map< KeyType, ValueType * >::iterator it = map.find( key );
 		if ( it != map.end() )
@@ -171,7 +171,7 @@ namespace _2Real
 	}
 
 	template< typename KeyType, typename ValueType >
-	ValueType const* const getValue( KeyType const& key, typename std::map< KeyType, ValueType * > const& map )
+	ValueType const* const getMapElement( KeyType const& key, typename std::map< KeyType, ValueType * > const& map )
 	{
 		typename std::map< KeyType, ValueType * >::const_iterator it = map.find( key );
 		if ( it != map.end() )
@@ -185,13 +185,13 @@ namespace _2Real
 	}
 
 	template< typename KeyType, typename ValueType >
-	ValueType & getValue( KeyType const& key, typename std::map< KeyType, ValueType * > &map, std::string const& keyType )
+	ValueType & getMapElement( KeyType const& key, typename std::map< KeyType, ValueType * > &map, std::string const& valueType )
 	{
-		ValueType *const valPtr = getValue< KeyType, ValueType >( key, map );
+		ValueType *const valPtr = getMapElement< KeyType, ValueType >( key, map );
 		if ( valPtr == nullptr )
 		{
 			std::ostringstream msg;
-			msg << keyType << " " << key << " not found";
+			msg << valueType << " " << key << " not found";
 			throw NotFoundException( msg.str() );
 		}
 		else
@@ -201,13 +201,13 @@ namespace _2Real
 	}
 
 	template< typename KeyType, typename ValueType >
-	ValueType const& getValue( KeyType const& key, typename std::map< KeyType, ValueType * > const& map, std::string const& keyType )
+	ValueType const& getMapElement( KeyType const& key, typename std::map< KeyType, ValueType * > const& map, std::string const& valueType )
 	{
-		ValueType const* const valPtr = getValue< KeyType, ValueType >( key, map );
+		ValueType const* const valPtr = getMapElement< KeyType, ValueType >( key, map );
 		if ( valPtr == nullptr )
 		{
 			std::ostringstream msg;
-			msg << keyType << " " << key << " not found";
+			msg << valueType << " " << key << " not found";
 			throw NotFoundException( msg.str() );
 		}
 		else

@@ -25,18 +25,20 @@
 namespace _2Real
 {
 
-	DisabledIO::DisabledIO(AbstractBlock &owner) :
+	DisabledIO::DisabledIO(AbstractUberBlock &owner) :
 		AbstractIOManager(owner)
 	{
 	}
 
 	DisabledIO::~DisabledIO()
 	{
-		clear();
 	}
 
 	void DisabledIO::clear()
 	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
 	}
 
 	void DisabledIO::registerToNewData(std::string const& outName, OutletCallback callback, void *userData )
@@ -123,21 +125,21 @@ namespace _2Real
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet)
+	Inlet const& DisabledIO::getInlet( std::string const& name ) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	InletMap const& DisabledIO::getInlets() const
+	Outlet const& DisabledIO::getOutlet( std::string const& name ) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	OutletMap const& DisabledIO::getOutlets() const
+	SetupParameter const& DisabledIO::getSetupParameter( std::string const& name ) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";

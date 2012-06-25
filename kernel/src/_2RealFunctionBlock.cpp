@@ -20,30 +20,34 @@
 #include "_2RealFunctionBlock.h"
 #include "_2RealBlock.h"
 #include "_2RealBlockData.h"
-#include "_2RealSystemImpl.h"
+#include "_2RealSystemBlock.h"
+#include "_2RealInletHandle.h"
+#include "_2RealOutletHandle.h"
 
 namespace _2Real
 {
 
-	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemImpl &owner, BlockIdentifier const& id ) :
-		UberBlock< FunctionBlockIOManager, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager>( id, &owner )
+	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemBlock &owner, BlockIdentifier const& id ) :
+		UberBlock< FunctionBlockIOManager, DisabledBlockManager, DisabledBlockManager, FunctionBlockStateManager>( id ),
+		m_IOManager( dynamic_cast< FunctionBlockIOManager * >( UberBlock::m_IOManager ) ),
+		m_StateManager( dynamic_cast< FunctionBlockStateManager * >( UberBlock::m_StateManager ) )
 	{
-		FunctionBlockIOManager *io = dynamic_cast< FunctionBlockIOManager * >( m_IOManager );
-		FunctionBlockStateManager *states = dynamic_cast< FunctionBlockStateManager * >( m_StateManager );
-		states->m_IO = io;
-		states->m_System = &owner;
-		states->m_FunctionBlock = &block;
-		io->initFrom( data );
+		// state manager needs some more stuff
+		m_StateManager->m_IO = m_IOManager;
+		m_StateManager->m_System = &owner;
+		m_StateManager->m_FunctionBlock = &block;
+
+		m_IOManager->initFrom( data );
 	}
 
 	InletHandle FunctionBlock::createInletHandle(std::string const& name)
 	{
-		return dynamic_cast< FunctionBlockIOManager * >( m_IOManager )->createInletHandle( name );
+		return m_IOManager->createInletHandle( name );
 	}
 
 	OutletHandle FunctionBlock::createOutletHandle(std::string const& name)
 	{
-		return dynamic_cast< FunctionBlockIOManager * >( m_IOManager )->createOutletHandle( name );
+		return m_IOManager->createOutletHandle( name );
 	}
 
 }

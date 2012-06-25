@@ -34,24 +34,23 @@ namespace _2Real
 
 	typedef std::less< long > NewerTimestamp;
 
-	class AbstractInletBasedTrigger : private UpdateCondition
+	class AbstractInletBasedTrigger : public UpdateTrigger
 	{
 
 	public:
 
-		using UpdateCondition::isFullfilled;
-		using UpdateCondition::set;
-		using UpdateCondition::reset;
-
-		AbstractInletBasedTrigger( std::string const& inletName ) : m_InletName( inletName ) {}
+		AbstractInletBasedTrigger( std::string const& inletName ) : m_InletName( inletName ), m_Condition( false ) {}
 		virtual ~AbstractInletBasedTrigger() {}
 		std::string const& getInletName() { return m_InletName; }
+		void reset() { m_Condition = false; }
+		bool isOk() const { return m_Condition; }
 
 		virtual bool tryTriggerUpdate( const long lastUpdate, const long newData ) = 0;
 
 	protected:
 
-		std::string		const m_InletName;
+		bool				m_Condition;
+		std::string			const m_InletName;
 
 	};
 
@@ -70,12 +69,11 @@ namespace _2Real
 
 		bool tryTriggerUpdate( const long lastUpdate, const long newData )
 		{
-			if ( m_TriggerCondition(lastUpdate, newData) && !isFullfilled() )
+			if ( !m_Condition && m_TriggerCondition(lastUpdate, newData) )
 			{
-				set();
-				return true;
+				m_Condition = true;
 			}
-			return false;
+			return m_Condition;
 		}
 
 	private:

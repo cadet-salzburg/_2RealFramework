@@ -38,7 +38,7 @@ namespace _2Real
 	// the newer the data is, the higher the timestamp
 	typedef std::multiset< TimestampedData, std::greater< TimestampedData > >		DataBuffer;
 
-	class Inlet : private Parameter
+	class Inlet : public Parameter
 	{
 
 	public:

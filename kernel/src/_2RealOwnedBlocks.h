@@ -25,21 +25,21 @@
 namespace _2Real
 {
 
-	typedef std::list< AbstractBlock * >	BlockList;
+	typedef std::list< AbstractUberBlock * >	BlockList;
 
-	class OwnedAndUnordered : public AbstractBlockManager
+	class OwningBlockManager : public AbstractBlockManager
 	{
 
 	public:
 
-		OwnedAndUnordered(AbstractBlock &owner);
-		~OwnedAndUnordered();
+		OwningBlockManager(AbstractUberBlock &owner);
+		~OwningBlockManager();
 
 		void								clear();
-		AbstractBlock &						getBlock(BlockIdentifier const& blockId);
-		AbstractBlock const&				getBlock(BlockIdentifier const& blockId) const;
-		void								addBlock(AbstractBlock &block);
-		void								removeBlock(AbstractBlock &block);
+		AbstractUberBlock &						getBlock(BlockIdentifier const& blockId);
+		AbstractUberBlock const&				getBlock(BlockIdentifier const& blockId) const;
+		void								addBlock(AbstractUberBlock &block);
+		void								removeBlock(AbstractUberBlock &block);
 		std::list< BlockIdentifier >				getCurrentBlockIds() const;
 
 	private:

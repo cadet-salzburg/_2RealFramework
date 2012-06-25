@@ -28,17 +28,17 @@ namespace _2Real
 {
 
 	template< typename IOMgr, typename UberBlockMgr, typename SubBlockMgr, typename StateMgr >
-	class UberBlock : public AbstractBlock
+	class UberBlock : public AbstractUberBlock
 	{
 
 	public:
 
-		UberBlock( BlockIdentifier const& id, AbstractBlock *super ) :
-			AbstractBlock( id, super ),
-			m_IOManager( new IOMgr(*this) ),
-			m_SubBlockManager( new SubBlockMgr(*this) ),
-			m_UberBlockManager( new UberBlockMgr(*this) ),
-			m_StateManager( new StateMgr(*this) )
+		UberBlock( BlockIdentifier const& id ) :
+			AbstractUberBlock( id ),
+			m_IOManager( new IOMgr( *this ) ),
+			m_SubBlockManager( new SubBlockMgr( *this ) ),
+			m_SuperBlockManager( new UberBlockMgr( *this ) ),
+			m_StateManager( new StateMgr( *this ) )
 		{
 		}
 
@@ -47,27 +47,37 @@ namespace _2Real
 			delete m_StateManager;
 			delete m_IOManager;
 			delete m_SubBlockManager;
-			delete m_UberBlockManager;
+			delete m_SuperBlockManager;
 		}
 
-		void addUberBlock( AbstractBlock &uberBlock )
+		void addSuperBlock( AbstractUberBlock &superBlock, AbstractUberBlockBasedTrigger *trigger )
 		{
-			m_UberBlockManager->addBlock( uberBlock );
+			m_SuperBlockManager->addBlock( superBlock );
+			if ( trigger != nullptr )
+			{
+				m_StateManager->addTriggerForSuperBlock( superBlock.getId(), *trigger );
+			}
 		}
 		
-		void removeUberBlock( AbstractBlock &uberBlock )
+		void removeSuperBlock( AbstractUberBlock &superBlock )
 		{
-			m_UberBlockManager->removeBlock( uberBlock);
+			m_SuperBlockManager->removeBlock( superBlock );
+			m_StateManager->removeTriggerForSuperBlock( superBlock.getId() );
 		}
 
-		void addSubBlock( AbstractBlock &subBlock )
+		void addSubBlock( AbstractUberBlock &subBlock, AbstractUberBlockBasedTrigger *trigger )
 		{
 			m_SubBlockManager->addBlock( subBlock );
+			if ( trigger != nullptr )
+			{
+				m_StateManager->addTriggerForSubBlock( subBlock.getId(), *trigger );
+			}
 		}
 
-		void removeSubBlock( AbstractBlock &subBlock )
+		void removeSubBlock( AbstractUberBlock &subBlock )
 		{
 			m_SubBlockManager->removeBlock( subBlock );
+			m_StateManager->removeTriggerForSubBlock( subBlock.getId() );
 		}
 
 		void registerToNewData(std::string const& outlet, OutletCallback callback, void *userData)
@@ -130,7 +140,7 @@ namespace _2Real
 			m_IOManager->setValue(paramName, value);
 		}
 
-		void linkWith(std::string const& nameIn, AbstractBlock &out, std::string const& nameOut)
+		void linkWith(std::string const& nameIn, AbstractUberBlock &out, std::string const& nameOut)
 		{
 			m_IOManager->linkWith(nameIn, out, nameOut);
 		}
@@ -174,51 +184,36 @@ namespace _2Real
 			return m_StateManager->shutDown( timeout );
 		}
 
-		AbstractStateManager& getStateManager()
+		Inlet const& getInlet( std::string const& name ) const
 		{
-			return *m_StateManager;
+			return m_IOManager->getInlet( name );
 		}
 
-		AbstractBlockManager& getSubBlockManager()
+		Outlet const& getOutlet( std::string const& name ) const
 		{
-			return *m_SubBlockManager;
+			return m_IOManager->getOutlet( name );
 		}
 
-		AbstractBlockManager& getUberBlockManager()
+		SetupParameter const& getSetupParameter( std::string const& name ) const
 		{
-			return *m_UberBlockManager;
+			return m_IOManager->getSetupParameter( name );
 		}
 
-		AbstractIOManager& getIOManager()
+		void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg )
 		{
-			return *m_IOManager;
+			m_StateManager->tryTriggerSubBlock( id, msg );
 		}
 
-		AbstractStateManager const& getStateManager() const
+		void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg )
 		{
-			return *m_StateManager;
-		}
-
-		AbstractBlockManager const& getSubBlockManager() const
-		{
-			return *m_SubBlockManager;
-		}
-
-		AbstractBlockManager const& getUberBlockManager() const
-		{
-			return *m_UberBlockManager;
-		}
-
-		AbstractIOManager const& getIOManager() const
-		{
-			return *m_IOManager;
+			m_StateManager->tryTriggerSuperBlock( id, msg );
 		}
 
 	protected:
 
 		AbstractIOManager				*m_IOManager;
 		AbstractBlockManager			*m_SubBlockManager;
-		AbstractBlockManager			*m_UberBlockManager;
+		AbstractBlockManager			*m_SuperBlockManager;
 		AbstractStateManager			*m_StateManager;
 
 	};

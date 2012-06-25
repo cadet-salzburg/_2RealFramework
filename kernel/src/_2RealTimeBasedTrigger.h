@@ -24,22 +24,21 @@
 namespace _2Real
 {
 
-	class AbstractTimeBasedTrigger : private UpdateCondition
+	class AbstractTimeBasedTrigger : public UpdateTrigger
 	{
 
 	public:
 
-		using UpdateCondition::isFullfilled;
-		using UpdateCondition::set;
-		using UpdateCondition::reset;
-
-		AbstractTimeBasedTrigger( const long timeslice ) : m_ElapsedTime( 0 ), m_DesiredTime( timeslice ) {}
+		AbstractTimeBasedTrigger( const long timeslice ) : m_ElapsedTime( 0 ), m_DesiredTime( timeslice ), m_Condition( false ) {}
 		virtual ~AbstractTimeBasedTrigger() {}
+		void reset() { m_Condition = false; }
+		bool isOk() const { return m_Condition; }
 
 		virtual bool tryTrigger( const long time ) = 0;
 
 	protected:
 
+		bool	m_Condition;
 		long	const m_DesiredTime;
 		long	m_ElapsedTime;
 
@@ -55,13 +54,13 @@ namespace _2Real
 		bool tryTrigger( const long time )
 		{
 			m_ElapsedTime += time;
-			if ( m_TriggerCondition( m_ElapsedTime, m_DesiredTime ) && !isFullfilled() )
+			if ( !m_Condition && m_TriggerCondition( m_ElapsedTime, m_DesiredTime ) )
 			{
 				m_ElapsedTime = 0;
-				set();
-				return true;
+				m_Condition = true;
 			}
-			return false;
+
+			return m_Condition;
 		}
 
 	private:

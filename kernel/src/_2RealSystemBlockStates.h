@@ -25,12 +25,13 @@
 namespace _2Real
 {
 
-	class SystemStates : public AbstractStateManager
+	class SystemBlockStateManager : public AbstractStateManager
 	{
 
 	public:
 
-		SystemStates( AbstractBlock &owner );
+		SystemBlockStateManager( AbstractUberBlock &owner );
+		~SystemBlockStateManager();
 
 		void				setUp();
 		void				start();
@@ -41,24 +42,18 @@ namespace _2Real
 
 		void tryTriggerTime( long &time );
 		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
-		void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg );
-		void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg );
+		void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg );
+		void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg );
 
-		void subBlockAdded( AbstractBlock &subBlock, AbstractUberBlockBasedTrigger &trigger );
-		void subBlockRemoved( AbstractBlock &subBlock );
-		void uberBlockAdded( AbstractBlock &uberBlock, AbstractUberBlockBasedTrigger &trigger );
-		void uberBlockRemoved( AbstractBlock &uberBlock );
-		void inletAdded( Inlet &inlet, AbstractInletBasedTrigger &trigger );
-		void inletRemoved( Inlet &inlet );
+		void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
+		void removeTriggerForSubBlock( const unsigned int id );
+		void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
+		void removeTriggerForSuperBlock( const unsigned int id );
 
 	private:
 
-		friend class SystemImpl;
-
-		void setAllowedUpdates( AbstractBlock &block, const unsigned long updates );
-
-		mutable Poco::FastMutex						m_UpdateAccess;
-		std::map< std::string, unsigned long >		m_BlockUpdates;
+		mutable Poco::FastMutex				m_TriggerAccess;
+		UberBlockBasedTriggerMap			m_SubBlockTriggers;
 
 	};
 

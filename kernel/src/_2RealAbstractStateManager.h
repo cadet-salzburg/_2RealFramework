@@ -29,7 +29,7 @@
 namespace _2Real
 {
 
-	class AbstractBlock;
+	class AbstractUberBlock;
 	class Inlet;
 	class UpdatePolicyImpl;
 
@@ -38,7 +38,7 @@ namespace _2Real
 
 	public:
 
-		AbstractStateManager(AbstractBlock &owner);
+		AbstractStateManager(AbstractUberBlock &owner);
 		virtual ~AbstractStateManager();
 
 		std::string const& getName() const;
@@ -51,23 +51,19 @@ namespace _2Real
 		virtual bool shutDown( const long timeout ) = 0;
 		virtual void setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
-		//called by the timer thread
 		virtual void tryTriggerTime( long &time ) = 0;
-		//called by the individual inlets
 		virtual void tryTriggerInlet( const void *inlet, std::pair< long, long > &times ) = 0;
-		//called when a certain sub block is ready or completed
-		virtual void tryTriggerSubBlock( AbstractStateManager &sub, const BlockMessage msg ) = 0;
-		//called when an uber block is ready
-		virtual void tryTriggerUberBlock( AbstractStateManager &uber, const BlockMessage msg ) = 0;
+		virtual void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) = 0;
+		virtual void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg ) = 0;
 
-		virtual void subBlockAdded( AbstractBlock &sub, AbstractUberBlockBasedTrigger &trigger ) = 0;
-		virtual void subBlockRemoved( AbstractBlock &sub ) = 0;
-		virtual void uberBlockAdded( AbstractBlock &uber, AbstractUberBlockBasedTrigger &trigger ) = 0;
-		virtual void uberBlockRemoved( AbstractBlock &uber ) = 0;
+		virtual void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) = 0;
+		virtual void removeTriggerForSubBlock( const unsigned int id ) = 0;
+		virtual void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) = 0;
+		virtual void removeTriggerForSuperBlock( const unsigned int id ) = 0;
 
 	protected:
 
-		AbstractBlock					&m_Owner;
+		AbstractUberBlock					&m_Owner;
 		Poco::Event						m_StopEvent;
 
 	};

@@ -30,7 +30,7 @@
 namespace _2Real
 {
 
-	class SystemImpl;
+	class SystemBlock;
 
 	class System
 	{
@@ -158,7 +158,7 @@ namespace _2Real
 		void				registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
 		void				unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
 
-		SystemImpl			*m_Impl;
+		SystemBlock			*m_Impl;
 
 	};
 

@@ -21,62 +21,26 @@
 namespace _2Real
 {
 
-	AbstractBlock::AbstractBlock( BlockIdentifier const& id, AbstractBlock *superBlock ) :
-		m_Identifier( id ),
-		m_SuperBlock( superBlock )
+	AbstractUberBlock::AbstractUberBlock( BlockIdentifier const& id ) :
+		m_Identifier( id )
 	{
 	}
 
-	AbstractBlock::~AbstractBlock()
+	AbstractUberBlock::~AbstractUberBlock()
 	{
 	}
 
-	void AbstractBlock::lockSuperBlock()
-	{
-		m_SuperBlockAccess.lock();
-	}
-
-	void AbstractBlock::unlockSuperBlock()
-	{
-		m_SuperBlockAccess.unlock();
-	}
-
-	void AbstractBlock::setSuperBlock(AbstractBlock &superBlock)
-	{
-		m_SuperBlock = &superBlock;
-	}
-
-	AbstractBlock & AbstractBlock::getSuperBlock()
-	{
-		if (m_SuperBlock == nullptr)
-		{
-			return *this;
-		}
-
-		return *m_SuperBlock;
-	}
-
-	AbstractBlock const& AbstractBlock::getSuperBlock() const
-	{
-		if (m_SuperBlock == nullptr)
-		{
-			return *this;
-		}
-
-		return *m_SuperBlock;
-	}
-
-	BlockIdentifier const& AbstractBlock::getIdentifier() const
+	BlockIdentifier const& AbstractUberBlock::getIdentifier() const
 	{
 		return m_Identifier;
 	}
 
-	std::string const& AbstractBlock::getName() const
+	std::string const& AbstractUberBlock::getName() const
 	{
 		return m_Identifier.getName();
 	}
 
-	unsigned int AbstractBlock::getId() const
+	unsigned int AbstractUberBlock::getId() const
 	{
 		return m_Identifier.getId();
 	}

@@ -40,7 +40,7 @@ namespace _2Real
 
 	private:
 
-		friend class SystemImpl;
+		friend class SystemBlock;
 
 		UpdatePolicy(UpdatePolicy const& src);
 		UpdatePolicy& operator=(UpdatePolicy const& src);

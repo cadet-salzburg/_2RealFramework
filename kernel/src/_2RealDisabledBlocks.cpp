@@ -25,43 +25,43 @@
 namespace _2Real
 {
 
-	DisabledBlocks::DisabledBlocks(AbstractBlock &owner) :
+	DisabledBlockManager::DisabledBlockManager(AbstractUberBlock &owner) :
 		AbstractBlockManager(owner)
 	{
 	}
 
-	DisabledBlocks::~DisabledBlocks()
+	DisabledBlockManager::~DisabledBlockManager()
 	{
 		clear();
 	}
 
-	void DisabledBlocks::clear()
+	void DisabledBlockManager::clear()
 	{
 	}
 
-	AbstractBlock & DisabledBlocks::getBlock(BlockIdentifier const& id)
-	{
-		std::ostringstream msg;
-		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
-	}
-
-	AbstractBlock const& DisabledBlocks::getBlock(BlockIdentifier const& id) const
+	AbstractUberBlock & DisabledBlockManager::getBlock(BlockIdentifier const& id)
 	{
 		std::ostringstream msg;
 		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
 		throw NotFoundException(msg.str());
 	}
 
-	void DisabledBlocks::addBlock(AbstractBlock &block)
+	AbstractUberBlock const& DisabledBlockManager::getBlock(BlockIdentifier const& id) const
+	{
+		std::ostringstream msg;
+		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
+		throw NotFoundException(msg.str());
+	}
+
+	void DisabledBlockManager::addBlock(AbstractUberBlock &block)
 	{
 	}
 
-	void DisabledBlocks::removeBlock(AbstractBlock &block)
+	void DisabledBlockManager::removeBlock(AbstractUberBlock &block)
 	{
 	}
 
-	std::list< BlockIdentifier > DisabledBlocks::getCurrentBlockIds() const
+	std::list< BlockIdentifier > DisabledBlockManager::getCurrentBlockIds() const
 	{
 		return std::list< BlockIdentifier >();
 	}

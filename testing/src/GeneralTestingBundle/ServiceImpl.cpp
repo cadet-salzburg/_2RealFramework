@@ -82,7 +82,8 @@ void TestBlock::update()
 	{
 		if ( ++m_Counter == 100 )
 		{
-			cout << m_Context.getValue() + m_Counter << endl;
+			//cout << m_Context.getValue() + m_Counter << endl;
+			cout << "YAY" << endl;
 			m_Counter = 0;
 		}
 	}

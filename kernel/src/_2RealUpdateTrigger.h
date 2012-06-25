@@ -22,21 +22,15 @@
 namespace _2Real
 {
 
-	class UpdateCondition
+	class UpdateTrigger
 	{
 
 	public:
 
-		UpdateCondition() : m_IsFulfilled( false ) {}
-		virtual ~UpdateCondition() {}
+		virtual ~UpdateTrigger() {}
 
-		bool isFullfilled()		{ return m_IsFulfilled; }
-		virtual void set()		{ m_IsFulfilled = true; }
-		virtual void reset()	{ m_IsFulfilled = false; }
-
-	private:
-
-		bool		m_IsFulfilled;
+		virtual bool isOk() const = 0;
+		virtual void reset() = 0;
 
 	};
 

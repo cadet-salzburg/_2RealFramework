@@ -28,7 +28,7 @@ namespace _2Real
 
 	public:
 
-		DisabledIO(AbstractBlock &owner);
+		DisabledIO(AbstractUberBlock &owner);
 		~DisabledIO();
 
 		void						clear();
@@ -46,10 +46,9 @@ namespace _2Real
 		std::string const&			getLongTypename( std::string const& paramName ) const;
 		void						setValue(std::string const& paramName, TimestampedData const& value);
 
-		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
-
-		InletMap const&				getInlets() const;
-		OutletMap const&			getOutlets() const;
+		Inlet const&				getInlet( std::string const& name ) const;
+		Outlet const&				getOutlet( std::string const& name ) const;
+		SetupParameter const&		getSetupParameter( std::string const& name ) const;
 
 	};
 

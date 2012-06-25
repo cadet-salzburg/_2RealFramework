@@ -25,7 +25,7 @@
 namespace _2Real
 {
 
-	NotOwnedAndUnordered::NotOwnedAndUnordered(AbstractBlock &owner) :
+	NotOwnedAndUnordered::NotOwnedAndUnordered(AbstractUberBlock &owner) :
 		AbstractBlockManager(owner)
 	{
 	}
@@ -40,9 +40,9 @@ namespace _2Real
 		m_Blocks.clear();
 	}
 
-	AbstractBlock & NotOwnedAndUnordered::getBlock( BlockIdentifier const& id )
+	AbstractUberBlock & NotOwnedAndUnordered::getBlock( BlockIdentifier const& id )
 	{
-		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		for (std::list< AbstractUberBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
 			if ( (*it)->getIdentifier() == id )
 			{
@@ -55,9 +55,9 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	AbstractBlock const& NotOwnedAndUnordered::getBlock(BlockIdentifier const& id) const
+	AbstractUberBlock const& NotOwnedAndUnordered::getBlock(BlockIdentifier const& id) const
 	{
-		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		for (std::list< AbstractUberBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
 			if ((*it)->getIdentifier() == id)
 			{
@@ -70,10 +70,10 @@ namespace _2Real
 		throw NotFoundException(msg.str());
 	}
 
-	void NotOwnedAndUnordered::addBlock(AbstractBlock &block)
+	void NotOwnedAndUnordered::addBlock(AbstractUberBlock &block)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
-		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		for (std::list< AbstractUberBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
 			if ((*it) == &block)
 			{
@@ -85,10 +85,10 @@ namespace _2Real
 		m_Blocks.push_back(&block);
 	}
 
-	void NotOwnedAndUnordered::removeBlock(AbstractBlock &block)
+	void NotOwnedAndUnordered::removeBlock(AbstractUberBlock &block)
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
-		for (std::list< AbstractBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		for (std::list< AbstractUberBlock * >::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
 			if (*it == &block)
 			{
@@ -104,7 +104,7 @@ namespace _2Real
 	{
 		std::list< BlockIdentifier > result;
 		Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
-		for (std::list< AbstractBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
+		for (std::list< AbstractUberBlock * >::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it)
 		{
 			result.push_back( BlockIdentifier( (*it)->getIdentifier() ) );
 		}

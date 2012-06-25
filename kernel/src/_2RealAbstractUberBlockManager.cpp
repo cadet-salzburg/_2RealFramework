@@ -22,7 +22,7 @@
 namespace _2Real
 {
 
-	AbstractBlockManager::AbstractBlockManager(AbstractBlock &owner) :
+	AbstractBlockManager::AbstractBlockManager(AbstractUberBlock &owner) :
 		m_Owner(owner)
 	{
 	}

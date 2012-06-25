@@ -37,7 +37,7 @@ namespace _2Real
 	class Timer;
 	class EngineImpl;
 
-	class Outlet : private Parameter
+	class Outlet : public Parameter
 	{
 
 	public:

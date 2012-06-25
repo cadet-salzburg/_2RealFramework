@@ -34,16 +34,12 @@ namespace _2Real
 	class TimestampedData;
 	class InletHandle;
 	class OutletHandle;
-	class AbstractBlock;
+	class AbstractUberBlock;
 	class BufferPolicy;
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
 	class UpdatePolicyImpl;
-
-	typedef std::map< std::string, Inlet * >			InletMap;
-	typedef std::map< std::string, Outlet * >			OutletMap;
-	typedef std::map< std::string, SetupParameter * >	ParamMap;
 
 	class AbstractInletBasedTrigger;
 
@@ -52,37 +48,35 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockIOManager(AbstractBlock &owner);
+		FunctionBlockIOManager(AbstractUberBlock &owner);
 		~FunctionBlockIOManager();
 
 		// stuff that is inherited
 
 		void						clear();
-		void						registerToNewData(std::string const& outName, OutletCallback callback, void *userData );
-		void						unregisterFromNewData(std::string const& outName, OutletCallback callback, void *userData );
-		void						registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
-		void						unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
-		void						registerToNewData(OutputCallback callback, void *userData );
-		void						unregisterFromNewData(OutputCallback callback, void *userData );
-		void						registerToNewData(AbstractOutputCallbackHandler &handler);
-		void						unregisterFromNewData(AbstractOutputCallbackHandler &handler);
 
-		EngineData const&			getValue(std::string const& paramName) const;
-		std::string const&			getTypename(std::string const& paramName) const;
-		std::string const&			getLongTypename(std::string const& paramName) const;
-		void						setValue(std::string const& paramName, TimestampedData const& value);
+		void						registerToNewData( std::string const& outName, OutletCallback callback, void *userData );
+		void						unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData );
+		void						registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler );
+		void						unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler );
+		void						registerToNewData( OutputCallback callback, void *userData );
+		void						unregisterFromNewData( OutputCallback callback, void *userData );
+		void						registerToNewData( AbstractOutputCallbackHandler &handler );
+		void						unregisterFromNewData( AbstractOutputCallbackHandler &handler );
 
-		void						linkWith(std::string const& inlet, AbstractBlock &out, std::string const& outlet);
+		EngineData const&			getValue( std::string const& paramName ) const;
+		void						setValue( std::string const& paramName, TimestampedData const& value );
+		std::string const&			getTypename( std::string const& paramName ) const;
+		std::string const&			getLongTypename( std::string const& paramName ) const;
 
-		void						createInletTriggerFor( std::string const& inletName );
+		Inlet const&				getInlet( std::string const& name ) const;
+		Outlet const&				getOutlet( std::string const& name ) const;
+		SetupParameter const&		getSetupParameter( std::string const& name ) const;
 
-		InletMap const&				getInlets() const;
-		OutletMap const&			getOutlets() const;
+		// stuff that is exclusive to this class:
 
-		// stuff that needs a dynamic cast
-		
-		InletHandle					createInletHandle(std::string const& name);
-		OutletHandle				createOutletHandle(std::string const& name);
+		InletHandle					createInletHandle( std::string const& name );
+		OutletHandle				createOutletHandle( std::string const& name );
 
 		void						updateInletValues();
 		void						updateOutletValues();
@@ -92,29 +86,25 @@ namespace _2Real
 
 	private:
 
-		mutable Poco::FastMutex		m_InletAccess;
-		mutable Poco::FastMutex		m_OutletAccess;
-		mutable Poco::FastMutex		m_ParamAccess;
+		// i could write lots of stupid get functions... but frankly, i don't see
+		// the point : function block io mgr & state mgr are totally tied to each other anyway,
+		// so let the state mgr do whatever it likes
+		friend class FunctionBlockStateManager;
 
-		InletMap					m_Inlets;
-		OutletMap					m_Outlets;
-		ParamMap					m_Params;
+		mutable Poco::FastMutex			m_InletAccess;
+		mutable Poco::FastMutex			m_OutletAccess;
+		mutable Poco::FastMutex			m_ParamAccess;
+		AbstractIOManager::InletMap		m_Inlets;
+		AbstractIOManager::OutletMap	m_Outlets;
+		AbstractIOManager::ParamMap		m_Params;
 
-		OutletFunctionCallbacks		m_OutletFunctionCallbacks;
-		OutletCallbackHandlers		m_OutletCallbackHandlers;
-		OutputFunctionCallbacks		m_OutputFunctionCallbacks;
-		OutputCallbackHandlers		m_OutputCallbackHandlers;
+		OutletFunctionCallbacks			m_OutletFunctionCallbacks;
+		OutletCallbackHandlers			m_OutletCallbackHandlers;
+		OutputFunctionCallbacks			m_OutputFunctionCallbacks;
+		OutputCallbackHandlers			m_OutputCallbackHandlers;
 
-		std::list< OutputData >		m_OutputData;
+		std::list< OutputData >			m_OutputData;
 
 	};
-
-	//template< typename Condition >
-	//void FunctionBlockIOManager::createInletTriggerFor( string const& inletName )
-	//{
-	//	//Inlet &inlet = _2Real::getValue< string, Inlet >( inletName, m_Inlets, "inlet" );
-
-	//	//InletBasedTrigger< Condition > trigger = new InletBasedTrigger< Condition >(
-	//}
 
 }

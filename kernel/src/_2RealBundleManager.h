@@ -33,7 +33,7 @@ namespace _2Real
 	class BlockData;
 	class BundleInternal;
 	class BundleIdentifier;
-	class SystemImpl;
+	class SystemBlock;
 	class FunctionBlock;
 	class UpdatePolicyImpl;
 
@@ -49,7 +49,7 @@ namespace _2Real
 		const BundleIdentifier			loadLibrary( Poco::Path const& path );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;
 		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
-		FunctionBlock &					createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemImpl &sys );
+		FunctionBlock &					createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemBlock &sys );
 		BundleData const&				getBundleData( BundleIdentifier const& bundleId ) const;
 		BlockData const&				getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
 
@@ -70,7 +70,7 @@ namespace _2Real
 		BundleMap						m_BundleInstances;
 		Poco::Path						m_BaseDirectory;
 		LookupTable						m_BundleNames;
-		SystemImpl						*m_BundleContexts;
+		SystemBlock						*m_BundleContexts;
 
 	};
 

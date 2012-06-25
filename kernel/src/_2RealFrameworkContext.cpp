@@ -18,6 +18,8 @@
 
 #include "_2RealFrameworkContext.h"
 #include "_2RealFunctionBlock.h"
+#include "_2RealInletHandle.h"
+#include "_2RealOutletHandle.h"
 
 using std::string;
 

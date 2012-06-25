@@ -22,24 +22,27 @@
 #include "_2RealDisabledBlocks.h"
 #include "_2RealFunctionBlockIOManager.h"
 #include "_2RealFunctionBlockStateManager.h"
-#include "_2RealFunctionBlockData.h"
 
 namespace _2Real
 {
 
 	class Block;
-	class SystemImpl;
-	class UpdatePolicyImpl;
+	class SystemBlock;
 
-	class FunctionBlock : public UberBlock< FunctionBlockIOManager, DisabledBlocks, DisabledBlocks, FunctionBlockStateManager >
+	class FunctionBlock : public UberBlock< FunctionBlockIOManager, DisabledBlockManager, DisabledBlockManager, FunctionBlockStateManager >
 	{
 
 	public:
 
-		FunctionBlock( BlockData const& data, Block& block, SystemImpl &owner, BlockIdentifier const& id );
+		FunctionBlock( BlockData const& data, Block& block, SystemBlock &owner, BlockIdentifier const& id );
 
 		InletHandle		createInletHandle(std::string const& inletName);
 		OutletHandle	createOutletHandle(std::string const& outletName);
+
+	private:
+
+		FunctionBlockIOManager 		*m_IOManager;
+		FunctionBlockStateManager	*m_StateManager;
 
 	};
 

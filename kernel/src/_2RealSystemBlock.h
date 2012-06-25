@@ -23,7 +23,9 @@
 #include "_2RealDisabledBlocks.h"
 #include "_2RealOwnedBlocks.h"
 #include "_2RealDisabledIO.h"
-#include "_2RealDisabledStates.h"
+#include "_2RealSystemBlockStates.h"
+
+#include <set>
 
 namespace _2Real
 {
@@ -37,20 +39,21 @@ namespace _2Real
 	class BlockData;
 	class BundleIdentifier;
 	class BlockIdentifier;
+	class AbstractLink;
 
-	class SystemImpl : public UberBlock< DisabledIO, DisabledBlocks, OwnedAndUnordered, SystemStates >
+	class SystemBlock : public UberBlock< DisabledIO, DisabledBlockManager, OwningBlockManager, SystemBlockStateManager >
 	{
 
 	public:
 
-		SystemImpl( BlockIdentifier const& id );
-		~SystemImpl();
+		SystemBlock( BlockIdentifier const& id );
+		~SystemBlock();
 
 		void						clear();
 
 		const BlockIdentifier		createFunctionBlock( BundleIdentifier const& pluginId, std::string const& serviceName );
 
-		void						handleException( AbstractBlock &subBlock, Exception &exception );
+		void						handleException( AbstractUberBlock &subBlock, Exception &exception );
 
 		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
 		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
@@ -83,13 +86,18 @@ namespace _2Real
 
 	private:
 
-		EngineImpl					&m_Engine;
-		BundleManager				&m_BundleManager;
+		typedef std::set< AbstractLink * >		LinkSet;
 
-		// handles exception callbacks
-		mutable Poco::FastMutex		m_ExceptionAccess;
-		ExceptionFunctionCallbacks	m_ExceptionCallbacks;
-		ExceptionCallbackHandlers	m_ExceptionCallbackHandlers;
+		EngineImpl								&m_Engine;
+		BundleManager							&m_BundleManager;
+
+		SystemBlockStateManager					*m_StateManager;
+
+		LinkSet									m_Links;
+
+		mutable Poco::FastMutex					m_ExceptionAccess;
+		ExceptionFunctionCallbacks				m_ExceptionCallbacks;
+		ExceptionCallbackHandlers				m_ExceptionCallbackHandlers;
 
 	};
 

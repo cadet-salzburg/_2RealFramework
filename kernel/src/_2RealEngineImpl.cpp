@@ -25,7 +25,7 @@
 #include "_2RealBundleManager.h"
 #include "_2RealThreadPool.h"
 #include "_2RealLogger.h"
-#include "_2RealSystemImpl.h"
+#include "_2RealSystemBlock.h"
 #include "_2RealIdCounter.h"
 
 #include "_2RealImageT.h"

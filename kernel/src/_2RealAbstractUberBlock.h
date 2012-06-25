@@ -19,72 +19,62 @@
 #pragma once
 
 #include "_2RealBlockIdentifier.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
-#include "_2RealEngineData.h"
 #include "_2RealCallbacks.h"
 
-#include "Poco/Mutex.h"
-
-#include <map>
 #include <string>
 
 namespace _2Real
 {
-
-	class AbstractUpdateManager;
-	class AbstractStateManager;
-	class AbstractBlockManager;
-	class AbstractIOManager;
 
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
 	class UpdatePolicyImpl;
+	class EngineData;
+	class AbstractUberBlockBasedTrigger;
 
-	typedef std::map< std::string, Inlet * >		InletMap;
-	typedef std::map< std::string, Outlet * >		OutletMap;
-	typedef std::map< std::string, SetupParameter * >	ParamMap;
+	enum BlockMessage
+	{
+		BLOCK_OK						=	0x00,
+		BLOCK_READY						=	0x01,
+		BLOCK_FINISHED					=	0x02,
+		BLOCK_NOT_OK					=	0x04,
+	};
 
-	class AbstractBlock
+	class AbstractUberBlock
 	{
 
 	public:
 
-		AbstractBlock( BlockIdentifier const& id, AbstractBlock *superBlock );
-		virtual ~AbstractBlock();
+		AbstractUberBlock( BlockIdentifier const& id );
+		virtual ~AbstractUberBlock();
 
 		BlockIdentifier	const&					getIdentifier() const;
 		std::string const&						getName() const;
 		unsigned int							getId() const;
 
-		void									lockSuperBlock();
-		void									unlockSuperBlock();
-		AbstractBlock &							getSuperBlock();
-		AbstractBlock const&					getSuperBlock() const;
-		void									setSuperBlock(AbstractBlock &superBlock);
+		virtual void							addSubBlock( AbstractUberBlock &subBlock, AbstractUberBlockBasedTrigger *trigger ) = 0;
+		virtual void							removeSubBlock( AbstractUberBlock &subBlock ) = 0;
+		virtual void							addSuperBlock( AbstractUberBlock &superBlock, AbstractUberBlockBasedTrigger *trigger ) = 0;
+		virtual void							removeSuperBlock( AbstractUberBlock &superBlock ) = 0;
 
-		virtual void							addSubBlock( AbstractBlock &subBlock ) = 0;
-		virtual void							removeSubBlock( AbstractBlock &subBlock ) = 0;
-		virtual void							addUberBlock( AbstractBlock &uberBlock ) = 0;
-		virtual void							removeUberBlock( AbstractBlock &uberBlock ) = 0;
+		virtual void							tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) = 0;
+		virtual void							tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg ) = 0;
 
-		virtual void							registerToNewData(std::string const& outlet, OutletCallback callback, void *userData) = 0;
-		virtual void							unregisterFromNewData(std::string const& outlet, OutletCallback callback, void *userData) = 0;
-		virtual void							registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
-		virtual void							unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler) = 0;
-		virtual void							registerToNewData(OutputCallback callback, void *userData) = 0;
-		virtual void							unregisterFromNewData(OutputCallback callback, void *userData) = 0;
-		virtual void							registerToNewData(AbstractOutputCallbackHandler &handler) = 0;
-		virtual void							unregisterFromNewData(AbstractOutputCallbackHandler &handler) = 0;
+		virtual void							registerToNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
+		virtual void							unregisterFromNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
+		virtual void							registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
+		virtual void							unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
+		virtual void							registerToNewData( OutputCallback callback, void *userData ) = 0;
+		virtual void							unregisterFromNewData( OutputCallback callback, void *userData ) = 0;
+		virtual void							registerToNewData( AbstractOutputCallbackHandler &handler ) = 0;
+		virtual void							unregisterFromNewData( AbstractOutputCallbackHandler &handler ) = 0;
 
-		virtual EngineData const&				getValue(std::string const& paramName) const = 0;
-		virtual std::string const&				getTypename(std::string const& paramName) const = 0;
-		virtual std::string const&				getLongTypename(std::string const& paramName) const = 0;
-		virtual void							setValue(std::string const& paramName, TimestampedData const& value) = 0;
-
-		virtual void							linkWith(std::string const& nameIn, AbstractBlock &out, std::string const& nameOut) = 0;
+		virtual EngineData const&				getValue( std::string const& paramName ) const = 0;
+		virtual std::string const&				getTypename( std::string const& paramName ) const = 0;
+		virtual std::string const&				getLongTypename( std::string const& paramName ) const = 0;
+		virtual void							setValue( std::string const& paramName, TimestampedData const& value ) = 0;
 
 		virtual void							setUp() = 0;
 		virtual void							start() = 0;
@@ -93,20 +83,12 @@ namespace _2Real
 		virtual bool							shutDown( const long timeout ) = 0;
 		virtual void							setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
-		virtual AbstractStateManager &			getStateManager() = 0;
-		virtual AbstractBlockManager &			getSubBlockManager() = 0;
-		virtual AbstractBlockManager &			getUberBlockManager() = 0;
-		virtual AbstractIOManager &				getIOManager() = 0;
-
-		virtual AbstractStateManager const&		getStateManager() const = 0;
-		virtual AbstractBlockManager const&		getSubBlockManager() const = 0;
-		virtual AbstractBlockManager const &	getUberBlockManager() const = 0;
-		virtual AbstractIOManager const&		getIOManager() const = 0;
+		virtual Inlet const&					getInlet( std::string const& name ) const = 0;
+		virtual Outlet const&					getOutlet( std::string const& name ) const = 0;
+		virtual SetupParameter const&			getSetupParameter( std::string const& name ) const = 0;
 
 	protected:
 
-		mutable Poco::FastMutex					m_SuperBlockAccess;
-		AbstractBlock							*m_SuperBlock;
 		BlockIdentifier							const m_Identifier;
 
 	};

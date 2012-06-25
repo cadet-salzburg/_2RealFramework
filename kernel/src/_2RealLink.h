@@ -18,29 +18,42 @@
 
 #pragma once
 
-#include "_2RealParameter.h"
-#include "_2RealEngineData.h"
-
 namespace _2Real
 {
 
-	class SetupParameter : public Parameter
+	class Parameter;
+	class SetupParameter;
+	class Inlet;
+	class Outlet;
+
+	class AbstractLink
 	{
 
 	public:
 
-		SetupParameter( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& initialValue );
-
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
-		using Parameter::getName;
-
-		void				setParameterValue( EngineData const& data );
-		EngineData const&	getParameterValue() const;
+		AbstractLink( Parameter &p1, Parameter &p2 );
+		virtual ~AbstractLink() {}
+		bool operator<( AbstractLink const& other );
 
 	private:
 
-		EngineData			m_Value;
+		Parameter	&m_Link1;
+		Parameter	&m_Link2;
+
+	};
+
+	class IOLink : public AbstractLink
+	{
+
+	public:
+
+		IOLink( Inlet &inlet, Outlet &outlet );
+		~IOLink();
+
+	private:
+
+		Inlet		&m_Inlet;
+		Outlet		&m_Outlet;
 
 	};
 
