@@ -20,10 +20,10 @@
 #pragma once
 
 #include "_2RealUberBlock.h"
-#include "_2RealDisabledBlocks.h"
-#include "_2RealOwnedBlocks.h"
-#include "_2RealDisabledIO.h"
-#include "_2RealSystemBlockStates.h"
+#include "_2RealDisabledBlockManager.h"
+#include "_2RealOwnedUberBlockManager.h"
+#include "_2RealDisabledIOManager.h"
+#include "_2RealSystemBlockStateManager.h"
 
 #include <set>
 
