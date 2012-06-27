@@ -58,22 +58,32 @@ namespace _2Real
 
 	};
 
+	class Inlet;
+	class InletHandle;
+	class AbstractInletBasedTrigger;
+
 	class InletBuffer
 	{
 
+	public:
+
 		InletBuffer( EngineData const& defaultData );
 		void receiveData( TimestampedData &data );
-		TimestampedData const& getCurrentData();
-		void update();
+		TimestampedData const& getCurrentData() const;
+		void updateDataBuffer();
 		void disableTriggering( TimestampedData const& data );
 		void setInsertionPolicy( AbstractInsertionPolicy &policy );
 		void setDefaultData( TimestampedData const& defaultData );
+		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
+		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
 
 	private:
 
+		typedef std::list< AbstractInletBasedTrigger * > InletTriggerList;
+
 		DataBuffer									m_ReceivedDataItems;	// holds all received data items
 		TimestampedData								m_TriggeringData;		// holds the data item which triggered the update condition
-		Poco::BasicEvent< TimestampedData >			m_DataReceived;			// yay.
+		InletTriggerList							m_InletTriggers;
 		TimestampedData								m_DefaultData;
 		bool										m_Notify;				// this is set to false as soon as any received data
 		mutable Poco::FastMutex						m_DataAccess;			// i use this for synchronizing policy, data access & default access oO

@@ -44,17 +44,30 @@ namespace _2Real
 #endif
 	}
 
+	bool AbstractLink::operator<( AbstractLink const& other )
+	{
+		return ( &m_Link1 < &other.m_Link1 && &m_Link2 < &other.m_Link2 );
+	}
+
 	IOLink::IOLink( Inlet &inlet, Outlet &outlet ) :
 		AbstractLink( inlet, outlet ),
 		m_Inlet( inlet ),
 		m_Outlet( outlet )
 	{
-		//outlet.addInletLister( inlet );
 	}
 
 	IOLink::~IOLink()
 	{
-		//outlet.removeInletLister( inlet );
+	}
+
+	void IOLink::activate()
+	{
+		m_Outlet.addInletListener( m_Inlet.m_Buffer );
+	}
+
+	void IOLink::deactivate()
+	{
+		m_Outlet.removeInletListener( m_Inlet.m_Buffer );
 	}
 
 }

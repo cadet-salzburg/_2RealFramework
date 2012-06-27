@@ -75,5 +75,6 @@ private:
 
 	int								m_Counter;
 	_2Real::InletHandle				m_In;
+	std::string						m_Message;
 
 };

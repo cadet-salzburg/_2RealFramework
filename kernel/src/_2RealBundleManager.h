@@ -35,7 +35,7 @@ namespace _2Real
 	class BundleIdentifier;
 	class SystemBlock;
 	class FunctionBlock;
-	class UpdatePolicyImpl;
+	class UpdatePolicy;
 
 	class BundleManager
 	{

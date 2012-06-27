@@ -32,32 +32,27 @@ namespace _2Real
 	class OutletHandle;
 	class AbstractUberBlock;
 	class Inlet;
+	class InletBuffer;
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
 	class ParameterData;
 
 	// declared here, as all io managers need those functions
-	Inlet &				createInletFromParameterData( ParameterData const& data );
-	Outlet &			createOutletFromParameterData( ParameterData const& data );
-	SetupParameter &	createSetupParameterFromParameterData( ParameterData const& data );
+	Inlet*					createInletFromParameterData( ParameterData const& data );
+	Outlet *				createOutletFromParameterData( ParameterData const& data );
+	SetupParameter *		createSetupParameterFromParameterData( ParameterData const& data );
 
 	class AbstractIOManager
 	{
 
 	public:
 
-		typedef std::map< std::string, Inlet * >			InletMap;
-		typedef std::map< std::string, Outlet * >			OutletMap;
-		typedef std::map< std::string, SetupParameter * >	ParamMap;
-
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
 
 		std::string const& getName() const;
-		const unsigned int getId() const;
-
-		virtual void					clear() = 0;
+		unsigned int getId() const;
 
 		virtual void					registerToNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
 		virtual void					unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
@@ -76,6 +71,14 @@ namespace _2Real
 		virtual Inlet const&			getInlet( std::string const& name ) const = 0;
 		virtual Outlet const&			getOutlet( std::string const& name ) const = 0;
 		virtual SetupParameter const&	getSetupParameter( std::string const& name ) const = 0;
+
+		virtual Inlet &					getInlet( std::string const& name ) = 0;
+		virtual Outlet &				getOutlet( std::string const& name ) = 0;
+		virtual SetupParameter &		getSetupParameter( std::string const& name ) = 0;
+
+		virtual void					addInlet( ParameterData const& data ) = 0;
+		virtual void					addOutlet( ParameterData const& data ) = 0;
+		virtual void					addSetupParameter( ParameterData const& data ) = 0;
 
 	protected:
 

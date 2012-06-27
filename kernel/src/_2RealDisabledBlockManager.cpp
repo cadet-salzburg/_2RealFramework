@@ -22,6 +22,8 @@
 
 #include <sstream>
 
+using std::ostringstream;
+
 namespace _2Real
 {
 
@@ -32,38 +34,32 @@ namespace _2Real
 
 	DisabledBlockManager::~DisabledBlockManager()
 	{
-		clear();
 	}
 
 	void DisabledBlockManager::clear()
 	{
 	}
 
-	AbstractUberBlock & DisabledBlockManager::getBlock(BlockIdentifier const& id)
+	AbstractUberBlock & DisabledBlockManager::getBlock( BlockIdentifier const& id )
 	{
-		std::ostringstream msg;
+		ostringstream msg;
 		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		throw NotFoundException( msg.str() );
 	}
 
-	AbstractUberBlock const& DisabledBlockManager::getBlock(BlockIdentifier const& id) const
+	AbstractUberBlock const& DisabledBlockManager::getBlock( BlockIdentifier const& id ) const
 	{
-		std::ostringstream msg;
+		ostringstream msg;
 		msg << "block " << id.getName() << " not found in " << m_Owner.getName();
-		throw NotFoundException(msg.str());
+		throw NotFoundException( msg.str() );
 	}
 
-	void DisabledBlockManager::addBlock(AbstractUberBlock &block)
+	void DisabledBlockManager::addBlock( AbstractUberBlock &block )
 	{
 	}
 
-	void DisabledBlockManager::removeBlock(AbstractUberBlock &block)
+	void DisabledBlockManager::removeBlock( AbstractUberBlock &block )
 	{
-	}
-
-	std::list< BlockIdentifier > DisabledBlockManager::getCurrentBlockIds() const
-	{
-		return std::list< BlockIdentifier >();
 	}
 
 }

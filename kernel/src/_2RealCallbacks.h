@@ -38,9 +38,9 @@ namespace _2Real
 
 	class BlockError;
 
-	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, BlockError &error );
-	typedef void ( _2REAL_CALLBACK *OutletCallback )( void *userData, OutputData &data );
-	typedef void ( _2REAL_CALLBACK *OutputCallback )( void *userData, std::list< OutputData > data );
+	typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, BlockError const& error );
+	typedef void ( _2REAL_CALLBACK *OutletCallback )( void *userData, OutputData const& data );
+	typedef void ( _2REAL_CALLBACK *OutputCallback )( void *userData, std::list< OutputData > const& data );
 
 	class AbstractExceptionCallbackHandler
 	{
@@ -49,7 +49,7 @@ namespace _2Real
 
 		AbstractExceptionCallbackHandler( void *object ) : m_Object( object ) {};
 		virtual ~AbstractExceptionCallbackHandler() {};
-		virtual void invoke( BlockError &error ) = 0;
+		virtual void invoke( BlockError const& error ) = 0;
 		bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
 
 	private:
@@ -73,7 +73,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke(BlockError &error)
+		void invoke(BlockError const& error)
 		{
 			(m_Callable.*m_Method)(error);
 		}
@@ -92,7 +92,7 @@ namespace _2Real
 
 		AbstractOutletCallbackHandler( void *object ) : m_Object( object ) {};
 		virtual ~AbstractOutletCallbackHandler() {} ;
-		virtual void invoke( OutputData &data ) = 0;
+		virtual void invoke( OutputData const& data ) = 0;
 		bool operator<( AbstractOutletCallbackHandler const& other ) { return m_Object < other.m_Object; }
 
 	private:
@@ -116,7 +116,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke( OutputData &data )
+		void invoke( OutputData const& data )
 		{
 			( m_Callable.*m_Method )( data );
 		}
@@ -135,7 +135,7 @@ namespace _2Real
 
 		AbstractOutputCallbackHandler( void *object ) : m_Object( object ) {};
 		virtual ~AbstractOutputCallbackHandler() {} ;
-		virtual void invoke( std::list< OutputData > &data ) = 0;
+		virtual void invoke( std::list< OutputData > const& data ) = 0;
 		bool operator<( AbstractOutputCallbackHandler const& other ) { return m_Object < other.m_Object; }
 
 	private:
@@ -150,7 +150,7 @@ namespace _2Real
 
 	public:
 
-		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( std::list< OutputData > data );
+		typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( std::list< OutputData > &data );
 
 		OutputCallbackHandler( Callable &callable, Callback method ) :
 			AbstractOutputCallbackHandler( &callable ),
@@ -159,7 +159,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke( std::list< OutputData > &data )
+		void invoke( std::list< OutputData > const& data )
 		{
 			( m_Callable.*m_Method )( data );
 		}

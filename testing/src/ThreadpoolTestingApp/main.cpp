@@ -32,7 +32,7 @@ using _2Real::Engine;
 using _2Real::System;
 using _2Real::BundleIdentifier;
 using _2Real::BlockIdentifier;
-using _2Real::UpdatePolicy;
+using _2Real::UpdatePolicyHandle;
 using _2Real::Exception;
 
 #include "vld.h"
@@ -52,32 +52,33 @@ int main( int argc, char *argv[] )
 	{
 		BundleIdentifier testBundle = testEngine.load( string( "ThreadpoolTesting" ).append( shared_library_suffix ) );
 
-		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 100.0f );
+		for ( unsigned int i=0; i<50; ++i )
+		{
+			std::ostringstream msg;
+			msg << "in # " << i;
 
-		UpdatePolicy newTrigger;
-		newTrigger.triggerWhenAllDataNew();
+			BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
+			UpdatePolicyHandle outHandle = testSystem.getUpdatePolicy( out );
+			outHandle.updateWithFixedRate( 60.0 );
+			testSystem.setup( out );
+			testSystem.start( out );
 
-		//for ( unsigned int i=0; i<1; ++i )
-		//{
-			//BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
-			//testSystem.setup( out );
-			//testSystem.setPolicy( out, fpsTrigger );
-			//testSystem.start( out );
-
-			//BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
-			//testSystem.setup( inout );
-			//testSystem.setPolicy( inout, newTrigger );
-			//testSystem.start( inout );
+			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
+			UpdatePolicyHandle inoutHandle = testSystem.getUpdatePolicy( inout );
+			inoutHandle.updateWhenAllInletDataNew();
+			testSystem.setup( inout );
+			testSystem.start( inout );
 
 			BlockIdentifier in = testSystem.createBlock( testBundle, "in" );
-			testSystem.setup(  in );
-			testSystem.setPolicy( in, fpsTrigger );
+			UpdatePolicyHandle inHandle = testSystem.getUpdatePolicy( in );
+			inHandle.updateWhenAllInletDataNew();
+			testSystem.setValue< string >( in, "in msg", msg.str() );
+			testSystem.setup( in );
 			testSystem.start( in );
 
-			//testSystem.link( out, "outlet", inout, "inlet" );
-			//testSystem.link( inout, "outlet", in, "inlet" );
-		//}
+			testSystem.link( out, "out outlet", inout, "inout inlet" );
+			testSystem.link( inout, "inout outlet", in, "in inlet" );
+		}
 
 		while( 1 )
 		{
@@ -88,11 +89,11 @@ int main( int argc, char *argv[] )
 			{
 				break;
 			}
-			else if ( line == "a" )
-			{
-				unsigned int cnt = 0;
-				testSystem.setValue< unsigned int >( in, "inlet", ++cnt );
-			}
+			//else if ( line == "a" )
+			//{
+			//	unsigned int cnt = 0;
+			//	testSystem.setValue< unsigned int >( in, "inlet", ++cnt );
+			//}
 		}
 
 	}

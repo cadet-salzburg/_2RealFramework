@@ -22,7 +22,6 @@
 #include "_2RealAbstractIOManager.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealThreadPool.h"
-#include "_2RealUpdatePolicyImpl.h"
 #include "_2RealFrameworkContext.h"
 #include "_2RealTimer.h"
 #include "_2RealInlet.h"
@@ -30,6 +29,7 @@
 #include "_2RealSystemBlock.h"
 #include "_2RealBlock.h"
 #include "_2RealHelpersInternal.h"
+#include "_2RealUberBlockBasedTrigger.h"
 
 using std::string;
 
@@ -41,14 +41,11 @@ namespace _2Real
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_FlaggedForSetUp( false ),
 		m_FlaggedForStop( false ),
-		m_FlaggedForPolicyChange( true ),
 		m_TriggersEnabled( false ),
-		m_UberTriggersEnabled( false ),
-		m_TimeTrigger( nullptr ),
-		m_IO( nullptr ),
+		m_UberBlockTriggersEnabled( false ),
+		m_IOManager( nullptr ),
 		m_System( nullptr ),
-		m_CurrentPolicy( nullptr ),
-		m_NewPolicy( nullptr ),
+		m_UpdatePolicy( nullptr ),
 		m_Threads( EngineImpl::instance().getThreadPool() ),
 		m_Logger( EngineImpl::instance().getLogger() )
 	{
@@ -58,93 +55,12 @@ namespace _2Real
 	{
 		disableAllTriggers();
 
-		safeDelete( m_CurrentState );
-		safeDelete( m_CurrentPolicy );
-		safeDelete( m_NewPolicy );
+		delete m_CurrentState;
 
-		if ( m_TimeTrigger != nullptr )
-		{
-			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *this );
-			safeDelete( m_TimeTrigger );
-		}
-
-		AbstractIOManager::InletMap &inlets = m_IO->m_Inlets;
-
-		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); /**/ )
-		{
-			AbstractIOManager::InletMap::iterator ioIt = inlets.find( it->first );
-			if ( ioIt != inlets.end() )
-			{
-				ioIt->second->unregisterFromDataReceived( *this );
-			}
-			
-			safeDelete( it->second );
-			it = m_InletTriggers.erase( it );
-		}
-
-		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); /**/ )
-		{
-			safeDelete( it->second );
-			it = m_UberTriggers.erase( it );
-		}
-	}
-
-	void FunctionBlockStateManager::setUpdatePolicy( UpdatePolicyImpl const& policy )
-	{
-		m_FlaggedForPolicyChange.set();
-
-		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-
-		safeDelete( m_NewPolicy );
-		m_NewPolicy = &policy;
-	}
-
-	void FunctionBlockStateManager::changePolicy()
-	{
-		m_PolicyAccess.lock();
-
-		safeDelete( m_CurrentPolicy );
-		m_CurrentPolicy = m_NewPolicy;
-		m_NewPolicy = nullptr;
-
-		m_PolicyAccess.unlock();
-
-		if ( m_TimeTrigger != nullptr )
-		{
-			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *this );
-			safeDelete( m_TimeTrigger );
-		}
-
-		AbstractIOManager::InletMap &inlets = m_IO->m_Inlets;
-
-		for ( InletBasedTriggerMap::iterator tIt = m_InletTriggers.begin(); tIt != m_InletTriggers.end(); /**/ )
-		{
-			AbstractIOManager::InletMap::iterator iIt = inlets.find( tIt->first );
-			if ( iIt != inlets.end() )
-			{
-				iIt->second->unregisterFromDataReceived( *this );
-			}
-			
-			safeDelete( tIt->second );
-			tIt = m_InletTriggers.erase( tIt );
-		}
-
-		if ( m_CurrentPolicy->hasTimeBasedTrigger() )
-		{
-			m_TimeTrigger =  m_CurrentPolicy->getTimeBasedTrigger();
-			EngineImpl::instance().getTimer().registerToTimerSignal( *this );
-		}
-
-		for ( AbstractIOManager::InletMap::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-		{
-			std::string inletName = iIt->second->getName();
-			if ( m_CurrentPolicy->hasTriggerForInlet( inletName ) )
-			{
-				AbstractInletBasedTrigger *trigger =  m_CurrentPolicy->getTriggerForInlet( inletName );
-				iIt->second->registerToDataReceived( *this );
-				m_InletTriggers.insert( std::make_pair( inletName, trigger ) );
-			}
-		}
+		//for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
+		//{
+		//	delete *it;
+		//}
 	}
 
 	void FunctionBlockStateManager::setUp()
@@ -156,7 +72,6 @@ namespace _2Real
 			{
 				disableAllTriggers();
 				resetTriggers();
-				resetUberBlockTriggers( false );	//hm - arg should be based on previous state ( if it was waiting )
 
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateSetUp();
@@ -183,18 +98,13 @@ namespace _2Real
 	{
 		try
 		{
-			if ( m_FlaggedForPolicyChange.isSet() )
-			{
-				changePolicy();
-				m_FlaggedForPolicyChange.unset();
-			}
+			m_UpdatePolicy->changePolicy();
 
 			m_StateAccess.lock();
 			if ( m_CurrentState->tryStart( *this ) )
 			{
 				disableAllTriggers();
 				resetTriggers();
-				resetUberBlockTriggers( false );	//hm - arg should be based on previous state ( if it was waiting )
 
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateStarted();
@@ -226,8 +136,6 @@ namespace _2Real
 			if ( m_CurrentState->prepareForShutDown(*this) )
 			{
 				disableAllTriggers();
-				resetTriggers();
-				resetUberBlockTriggers( false );	//hm - arg should be based on previous state ( if it was waiting )
 
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateStopped();
@@ -270,6 +178,7 @@ namespace _2Real
 
 			disableTriggers();
 			resetTriggers();
+			resetUberBlockTriggers();
 
 			delete m_CurrentState;
 			m_CurrentState = new FunctionBlockStateWaiting();
@@ -278,14 +187,13 @@ namespace _2Real
 
 			m_Logger.addLine( std::string( getName() + " new state: waiting" ) );
 
-			resetUberBlockTriggers( false );
 			enableUberBlockTriggers();
 
-			Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
+			Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
 
-			for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
+			for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
 			{
-				it->second->tryTriggerOther( BLOCK_OK );
+				( *it )->tryTriggerOther( BLOCK_READY );
 			}
 		}
 		catch ( Exception &e )
@@ -311,7 +219,6 @@ namespace _2Real
 			m_CurrentState->uberBlocksAreOk( *this );
 
 			disableUberBlockTriggers();
-			resetUberBlockTriggers( false );
 
 			delete m_CurrentState;
 			m_CurrentState = new FunctionBlockStateScheduled();
@@ -355,9 +262,9 @@ namespace _2Real
 			m_CurrentState->update( *this );	// no state change in this case, although maybe i should add another? sigh
 			m_StateAccess.unlock();
 
-			m_IO->updateInletValues();			// make sure the inlets have the current data
+			m_IOManager->updateInletValues();	// make sure the inlets have the current data
 			m_FunctionBlock->update();			// carry out update
-			m_IO->updateOutletValues();			// make sure outlets send their data
+			m_IOManager->updateOutletValues();	// make sure outlets send their data
 		}
 		catch ( Exception &e )
 		{
@@ -404,11 +311,7 @@ namespace _2Real
 				disableTriggers();
 				resetTriggers();
 
-				if ( m_FlaggedForPolicyChange.isSet() )
-				{
-					changePolicy();
-					m_FlaggedForPolicyChange.unset();
-				}
+				m_UpdatePolicy->changePolicy();
 
 				m_CurrentState = new FunctionBlockStateStarted();
 				m_StateAccess.unlock();
@@ -418,8 +321,8 @@ namespace _2Real
 				enableTriggers();
 			}
 
-			m_IO->updateInletBuffers();		// ok, so the last thing to do to complete the update is handling data
-											// that was received during the update
+			m_IOManager->updateInletBuffers();		// ok, so the last thing to do to complete the update is handling data
+													// that was received during the update
 
 			m_FlaggedForStop.unset();
 			m_FlaggedForSetUp.unset();
@@ -514,144 +417,103 @@ namespace _2Real
 		m_System->handleException( m_Owner, e );
 	}
 
-	void FunctionBlockStateManager::addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger )
+	void FunctionBlockStateManager::addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
-
-		UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( id );
-		if ( it != m_UberTriggers.end() )
-		{
-			delete it->second;
-			it->second = &trigger;
-		}
-		else
-		{
-			m_UberTriggers.insert( std::make_pair( id, &trigger ) );
-		}
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
+		m_UberBlockTriggers.push_back( &trigger );
 	}
 
-	void FunctionBlockStateManager::removeTriggerForSuperBlock( const unsigned int id )
+	void FunctionBlockStateManager::removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_UberTriggerAccess );
-
-		UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( id );
-		if ( it != m_UberTriggers.end() )
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
+		for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); /**/ )
 		{
-			delete it->second;
-			m_UberTriggers.erase( it );
-		}
-	}
-
-	void FunctionBlockStateManager::tryTriggerInlet( const void *inlet, std::pair< long, long > &times )
-	{
-		if ( areTriggersEnabled() )
-		{
-			Inlet const* in = static_cast< Inlet const* >( inlet );
-
-			m_TriggerAccess.lock();
-			InletBasedTriggerMap::iterator it = m_InletTriggers.find( in->getName() );
-			if ( it != m_InletTriggers.end() && it->second->tryTriggerUpdate( times.first, times.second ) )
+			if ( *it == &trigger )
 			{
-				evaluateTriggers();				// access unlocked inside
+				m_UberBlockTriggers.erase( it );
+				break;
 			}
-			else
-			{
-				m_TriggerAccess.unlock();
-			}
+			++it;
 		}
 	}
 
-	void FunctionBlockStateManager::tryTriggerTime( long &time )
+	void FunctionBlockStateManager::addTrigger( AbstractUpdateTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		m_Triggers.push_back( &trigger );
+	}
+
+	void FunctionBlockStateManager::removeTrigger( AbstractUpdateTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); /**/ )
+		{
+			if ( *it == &trigger )
+			{
+				m_Triggers.erase( it );
+				break;
+			}
+			++it;
+		}
+	}
+
+	void FunctionBlockStateManager::tryTrigger( AbstractUpdateTrigger &trigger )
 	{
 		if ( areTriggersEnabled() )
 		{
 			m_TriggerAccess.lock();
-			if ( m_TimeTrigger != nullptr && m_TimeTrigger->tryTrigger(time) )
+
+			bool triggersOk = true;
+			for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); ++it )
 			{
-				evaluateTriggers();				// access unlocked inside
+				triggersOk &= ( *it )->isOk();
 			}
-			else
+
+			m_TriggerAccess.unlock();
+
+			if ( triggersOk )
 			{
-				m_TriggerAccess.unlock();
+				triggersAreOk();	// request state change
 			}
-		}
-	}
-
-	void FunctionBlockStateManager::tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg )
-	{
-		if ( areUberBlockTriggersEnabled() )
-		{
-			m_UberTriggerAccess.lock();
-			UberBlockBasedTriggerMap::iterator it = m_UberTriggers.find( id );
-			if ( it != m_UberTriggers.end() && it->second->tryTriggerUpdate( msg ) )		// find out if the message is the desired one
-			{
-				evaluateUberBlockTriggers();	// access unlocked inside
-			}
-			else
-			{
-				m_UberTriggerAccess.unlock();
-			}
-		}
-	}
-
-	void FunctionBlockStateManager::evaluateTriggers()
-	{
-		bool triggersOk = true;
-		if ( m_TimeTrigger != nullptr )
-		{
-			triggersOk &= m_TimeTrigger->isOk();
-		}
-		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			triggersOk &= it->second->isOk();
-		}
-		//if ( triggersOk ) disableTriggers();
-		m_TriggerAccess.unlock();	// was locked from within calling function
-
-		if (triggersOk)
-		{
-			triggersAreOk();	// request state change
-		}
-	}
-
-	void FunctionBlockStateManager::evaluateUberBlockTriggers()
-	{
-		bool triggersOk = true;
-		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
-		{
-			triggersOk &= it->second->isOk();
-		}
-		//if ( triggersOk ) disableUberBlockTriggers();
-		m_UberTriggerAccess.unlock();	// was locked from within calling function
-
-		if (triggersOk)
-		{
-			uberBlocksAreOk();	//request state change
 		}
 	}
 
 	void FunctionBlockStateManager::resetTriggers()
 	{
-		m_TriggerAccess.lock();
-		if ( m_TimeTrigger != nullptr )
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); ++it )
 		{
-			m_TimeTrigger->reset();
+			( *it )->reset();
 		}
-		for ( InletBasedTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			it->second->reset();
-		}
-		m_TriggerAccess.unlock();
 	}
 
-	void FunctionBlockStateManager::resetUberBlockTriggers( const bool notify )
+	void FunctionBlockStateManager::tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger )
 	{
-		m_UberTriggerAccess.lock();
-		for ( UberBlockBasedTriggerMap::iterator it = m_UberTriggers.begin(); it != m_UberTriggers.end(); ++it )
+		if ( areUberBlockTriggersEnabled() )
 		{
-			it->second->reset();
+			m_UberBlockTriggerAccess.lock();
+			bool triggersOk = true;
+			for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
+			{
+				triggersOk &= ( *it )->isOk();
+			}
+			m_UberBlockTriggerAccess.unlock();
+
+			if (triggersOk)
+			{
+				uberBlocksAreOk();	//request state change
+			}
 		}
-		m_UberTriggerAccess.unlock();
+	}
+
+	void FunctionBlockStateManager::resetUberBlockTriggers()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
+		for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
+		{
+			( *it )->reset();
+			( *it )->resetOther();
+		}
 	}
 
 	bool FunctionBlockStateManager::areTriggersEnabled() const
@@ -663,14 +525,14 @@ namespace _2Real
 	bool FunctionBlockStateManager::areUberBlockTriggersEnabled() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_EnabledAccess );
-		return m_UberTriggersEnabled;
+		return m_UberBlockTriggersEnabled;
 	}
 
 	void FunctionBlockStateManager::disableAllTriggers()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_EnabledAccess );
 		m_TriggersEnabled = false;
-		m_UberTriggersEnabled = false;
+		m_UberBlockTriggersEnabled = false;
 	}
 
 	void FunctionBlockStateManager::disableTriggers()
@@ -682,14 +544,14 @@ namespace _2Real
 	void FunctionBlockStateManager::disableUberBlockTriggers()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_EnabledAccess );
-		m_UberTriggersEnabled = false;
+		m_UberBlockTriggersEnabled = false;
 	}
 
 	void FunctionBlockStateManager::enableAllTriggers()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_EnabledAccess );
 		m_TriggersEnabled = true;
-		m_UberTriggersEnabled = true;
+		m_UberBlockTriggersEnabled = true;
 	}
 
 	void FunctionBlockStateManager::enableTriggers()
@@ -701,7 +563,7 @@ namespace _2Real
 	void FunctionBlockStateManager::enableUberBlockTriggers()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_EnabledAccess );
-		m_UberTriggersEnabled = true;
+		m_UberBlockTriggersEnabled = true;
 	}
 
 }

@@ -39,9 +39,9 @@ namespace _2Real
 		void setDescription( std::string const& description );
 
 		template< typename Datatype >
-		void addParameter( std::string const& paramName, Datatype defaultValue )
+		void addParameter( std::string const& setupName, Datatype defaultValue )
 		{
-			addParameterInternal( setupName, EngineData( defaultValue ) );
+			addSetupParameterInternal( setupName, EngineData( defaultValue ) );
 		}
 
 		template< typename Datatype >

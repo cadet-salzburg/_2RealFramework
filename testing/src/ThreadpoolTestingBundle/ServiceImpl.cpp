@@ -65,7 +65,8 @@ void Out::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_Out = context.getOutletHandle( "outlet" );
+		m_Out = context.getOutletHandle( "out outlet" );
+		m_Out.getWriteableRef< unsigned int >() = 0;
 	}
 	catch ( Exception &e )
 	{
@@ -78,7 +79,7 @@ void Out::update()
 {
 	try
 	{
-		cout << " OUT" << endl;
+		//cout << "OUT" << endl;
 		++m_Out.getWriteableRef< unsigned int >();
 	}
 	catch ( Exception &e )
@@ -92,8 +93,8 @@ void InOut::setup( FrameworkContext &context )
 {
 	try
 	{
-		m_In = context.getInletHandle( "inlet" );
-		m_Out = context.getOutletHandle( "outlet" );
+		m_In = context.getInletHandle( "inout inlet" );
+		m_Out = context.getOutletHandle( "inout outlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -106,7 +107,7 @@ void InOut::update()
 {
 	try
 	{
-		cout << " INOUT" << endl;
+		//cout << "INOUT " << m_In.getReadableRef< unsigned int >() << endl;
 		m_Out.getWriteableRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
 	}
 	catch ( Exception &e)
@@ -121,7 +122,9 @@ void In::setup( FrameworkContext &context )
 	try
 	{
 		m_Counter = -1;
-		m_In = context.getInletHandle( "inlet" );
+		m_In = context.getInletHandle( "in inlet" );
+
+		m_Message = context.getParameterValue< string >( "in msg" );
 	}
 	catch ( Exception &e )
 	{
@@ -134,12 +137,11 @@ void In::update()
 {
 	try
 	{
-		if ( ++m_Counter == 100 )
-		{
-			//cout << m_In.getReadableRef< unsigned int >() << endl;
-			cout << "YAY!" << endl;
+		//if ( ++m_Counter == 100 )
+		//{
+			cout << m_Message << " " << m_In.getReadableRef< unsigned int >() << endl;
 			m_Counter = 0;
-		}
+		//}
 	}
 	catch ( Exception &e )
 	{

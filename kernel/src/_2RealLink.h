@@ -26,6 +26,16 @@ namespace _2Real
 	class Inlet;
 	class Outlet;
 
+	//class LinkSet
+	//{
+
+	//	LinkSet();
+	//	~LinkSet();
+
+	//	void link( 
+
+	//}
+
 	class AbstractLink
 	{
 
@@ -34,6 +44,11 @@ namespace _2Real
 		AbstractLink( Parameter &p1, Parameter &p2 );
 		virtual ~AbstractLink() {}
 		bool operator<( AbstractLink const& other );
+		//Parameter & getFirst();
+		//Parameter & getSecond();
+
+		virtual void activate() = 0;
+		virtual void deactivate() = 0;
 
 	private:
 
@@ -49,6 +64,9 @@ namespace _2Real
 
 		IOLink( Inlet &inlet, Outlet &outlet );
 		~IOLink();
+
+		void activate();
+		void deactivate();
 
 	private:
 

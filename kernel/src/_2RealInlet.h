@@ -20,66 +20,41 @@
 
 #include "_2RealParameter.h"
 #include "_2RealTimestampedData.h"
+#include "_2RealInletBuffer.h"
 
-#include "Poco/Mutex.h"
-#include "Poco/BasicEvent.h"
-
-#include <set>
-#include <list>
+#include <string>
 
 namespace _2Real
 {
 
-	class Outlet;
-	class ParameterData;
-	class AbstractStateManager;
-	class BufferPolicy;
-
-	// the newer the data is, the higher the timestamp
-	typedef std::multiset< TimestampedData, std::greater< TimestampedData > >		DataBuffer;
-
 	class Inlet : public Parameter
 	{
+
+		friend class IOLink;
 
 	public:
 
 		Inlet( std::string const& name, std::string const& longTypename, std::string const& type, EngineData const& defaultValue );
-		~Inlet();
 
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getName;
 
-		void setToValue( TimestampedData const& data );
-		void receiveData( TimestampedData &data ); 
+		EngineData const& getCurrentValue() const;
 
-		void clearLinks();
-		void linkWith(Outlet &output);
-		void breakLink(Outlet &output);
-		void unlink(Outlet &output);
+		void updateCurrentValue();
+		void updateDataBuffer();
 
-		void updateCurrentValue();						// called right before update
-		EngineData const& getCurrentValue() const;		//
-		void resetData();
-
-		void registerToDataReceived( AbstractStateManager &triggers );
-		void unregisterFromDataReceived( AbstractStateManager &triggers );
+		void setDefaultValue( TimestampedData const& defaultValue );
+		void disableTriggering( TimestampedData const& data );
+		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
+		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
 
 	private:
 
-		mutable Poco::FastMutex		m_DataAccess;
-		mutable Poco::FastMutex		m_OutletsAccess;
-
-		DataBuffer					m_ReceivedDataItems;
-
-		TimestampedData				m_DefaultValue;
-		TimestampedData				m_CurrentValue;
-
-		std::list< Outlet * >		m_LinkedOutlets;
-
-		BufferPolicy				*m_BufferPolicy;
-
-		Poco::BasicEvent< std::pair< long, long > >		m_DataReceived;
+		TimestampedData		m_CurrentData;
+		TimestampedData		m_LastData;
+		InletBuffer			m_Buffer;
 
 	};
 

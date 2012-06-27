@@ -18,27 +18,30 @@
 
 #pragma once
 
-#include "_2RealUberBlockBasedTrigger.h"
-#include "_2RealInletBasedTrigger.h"
-#include "_2RealTimeBasedTrigger.h"
+#include "_2RealUpdatePolicyHandle.h"
 
 #include <string>
+#include <list>
 
 #include "Poco/Event.h"
 
 namespace _2Real
 {
 
+	class AbstractUpdateTrigger;
+	class AbstractUberBlockBasedTrigger;
 	class AbstractUberBlock;
-	class Inlet;
-	class UpdatePolicyImpl;
+	class UpdatePolicy;
 
 	class AbstractStateManager
 	{
 
 	public:
 
-		AbstractStateManager(AbstractUberBlock &owner);
+		typedef std::list< AbstractUpdateTrigger * >			TriggerList;
+		typedef std::list< AbstractUberBlockBasedTrigger * >	UberBlockTriggerList;
+
+		AbstractStateManager( AbstractUberBlock &owner );
 		virtual ~AbstractStateManager();
 
 		std::string const& getName() const;
@@ -49,22 +52,19 @@ namespace _2Real
 		virtual Poco::Event & stop() = 0;
 		virtual void prepareForShutDown() = 0;
 		virtual bool shutDown( const long timeout ) = 0;
-		virtual void setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
-		virtual void tryTriggerTime( long &time ) = 0;
-		virtual void tryTriggerInlet( const void *inlet, std::pair< long, long > &times ) = 0;
-		virtual void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) = 0;
-		virtual void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg ) = 0;
+		virtual void tryTrigger( AbstractUpdateTrigger &trigger ) = 0;
+		virtual void tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger ) = 0;
 
-		virtual void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) = 0;
-		virtual void removeTriggerForSubBlock( const unsigned int id ) = 0;
-		virtual void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) = 0;
-		virtual void removeTriggerForSuperBlock( const unsigned int id ) = 0;
+		virtual void addTrigger( AbstractUpdateTrigger &trigger ) = 0;
+		virtual void removeTrigger( AbstractUpdateTrigger &trigger ) = 0;
+		virtual void addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger ) = 0;
+		virtual void removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger ) = 0;
 
 	protected:
 
-		AbstractUberBlock					&m_Owner;
-		Poco::Event						m_StopEvent;
+		AbstractUberBlock		&m_Owner;
+		Poco::Event				m_StopEvent;
 
 	};
 

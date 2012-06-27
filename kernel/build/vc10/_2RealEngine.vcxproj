@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\_2RealAbstractBlockManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
-    <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h" />
+    <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
@@ -40,8 +41,8 @@
     <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
     <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h" />
     <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledBlocks.h" />
-    <ClInclude Include="..\..\src\_2RealDisabledIO.h" />
+    <ClInclude Include="..\..\src\_2RealDisabledBlockManager.h" />
+    <ClInclude Include="..\..\src\_2RealDisabledIOManager.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
@@ -65,7 +66,7 @@
     <ClInclude Include="..\..\src\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\_2RealOutputData.h" />
-    <ClInclude Include="..\..\src\_2RealOwnedBlocks.h" />
+    <ClInclude Include="..\..\src\_2RealOwnedBlockManager.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
     <ClInclude Include="..\..\src\_2RealParameterHandle.h" />
@@ -74,7 +75,7 @@
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSystem.h" />
     <ClInclude Include="..\..\src\_2RealSystemBlock.h" />
-    <ClInclude Include="..\..\src\_2RealSystemBlockStates.h" />
+    <ClInclude Include="..\..\src\_2RealSystemBlockStateManager.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealTimer.h" />
@@ -83,17 +84,16 @@
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h" />
-    <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h" />
-    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
-    <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h" />
-    <ClInclude Include="..\..\src\_2RealUpdateTrigger.h" />
+    <ClInclude Include="..\..\src\_2RealUnownedBlockManager.h" />
+    <ClInclude Include="..\..\src\_2RealUpdatePolicyHandle.h" />
+    <ClInclude Include="..\..\src\_2RealUpdatePolicyl.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\_2RealAbstractBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp" />
-    <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
@@ -106,8 +106,8 @@
     <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleMetainfoImpl.cpp" />
     <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp" />
-    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp" />
+    <ClCompile Include="..\..\src\_2RealDisabledBlockManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealDisabledIOManager.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineData.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineImpl.cpp" />
@@ -128,7 +128,7 @@
     <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
     <ClCompile Include="..\..\src\_2RealOutletHandle.cpp" />
     <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
-    <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp" />
+    <ClCompile Include="..\..\src\_2RealOwnedBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterHandle.cpp" />
@@ -136,13 +136,13 @@
     <ClCompile Include="..\..\src\_2RealSetupParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealSystem.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemBlock.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemBlockStates.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
-    <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp" />
-    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
-    <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealUnownedBlockManager.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdatePolicyHandle.cpp" />
+    <ClCompile Include="..\..\src\_2RealUpdatePolicyl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>

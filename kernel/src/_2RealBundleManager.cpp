@@ -20,7 +20,6 @@
 #include "_2RealBundleManager.h"
 #include "_2RealBundleInternal.h"
 #include "_2RealSystemBlock.h"
-#include "_2RealUpdatePolicy.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
@@ -116,13 +115,9 @@ namespace _2Real
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			UpdatePolicy policy;
-			policy.triggerByUpdateRate( 1.0f );
-
 			m_BundleContexts->createFunctionBlock( BundleIdentifier( bundle->getIdentifier() ), "bundle context" );
 
 			FunctionBlock &bundleContext = bundle->getBundleContext();
-			m_BundleContexts->setUpdatePolicy( BlockIdentifier( bundleContext.getIdentifier() ), policy );
 			m_BundleContexts->setUp( BlockIdentifier( bundleContext.getIdentifier() ) );
 			m_BundleContexts->start( BlockIdentifier( bundleContext.getIdentifier() ) );
 		}
@@ -151,18 +146,6 @@ namespace _2Real
 			uberBlock = new FunctionBlock( blockData, block, sys, blockId );
 
 			bundle.addBlockInstance( block, blockName );
-
-			//if ( m_BundleLoader.hasContext( bundleData.getInstallDirectory() ) )
-			//{
-			//	FunctionBlock &bundleContext = bundle.getBundleContext();
-			//	BlockData const& bundleData = bundle.getBlockData( "bundle context" );
-			//	std::map< std::string, ParameterData > const& out = bundleData.getOutlets();
-
-			//	for ( typename std::map< std::string, ParameterData >::const_iterator it = out.begin(); it != out.end(); ++it )
-			//	{
-			//		serviceBlock->linkWith( it->first, bundleContext, it->first );
-			//	}
-			//}
 		}
 		else
 		{

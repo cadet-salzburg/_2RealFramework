@@ -39,7 +39,7 @@ namespace _2Real
 	class Inlet;
 	class Outlet;
 	class SetupParameter;
-	class UpdatePolicyImpl;
+	class UpdatePolicy;
 
 	class AbstractInletBasedTrigger;
 
@@ -48,7 +48,11 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockIOManager(AbstractUberBlock &owner);
+		typedef std::vector< Inlet* >				InletVector;
+		typedef std::vector< Outlet * >				OutletVector;
+		typedef std::vector< SetupParameter * >		ParamVector;
+
+		FunctionBlockIOManager( AbstractUberBlock &owner );
 		~FunctionBlockIOManager();
 
 		// stuff that is inherited
@@ -69,11 +73,19 @@ namespace _2Real
 		std::string const&			getTypename( std::string const& paramName ) const;
 		std::string const&			getLongTypename( std::string const& paramName ) const;
 
+		void						addInlet( ParameterData const& data );
+		void						addOutlet( ParameterData const& data );
+		void						addSetupParameter( ParameterData const& data );
+
 		Inlet const&				getInlet( std::string const& name ) const;
 		Outlet const&				getOutlet( std::string const& name ) const;
 		SetupParameter const&		getSetupParameter( std::string const& name ) const;
 
-		// stuff that is exclusive to this class:
+		Inlet &						getInlet( std::string const& name );
+		Outlet &					getOutlet( std::string const& name );
+		SetupParameter &			getSetupParameter( std::string const& name );
+
+		// stuff that is exclusive to this class: called by function block & function state mgr
 
 		InletHandle					createInletHandle( std::string const& name );
 		OutletHandle				createOutletHandle( std::string const& name );
@@ -82,22 +94,24 @@ namespace _2Real
 		void						updateOutletValues();
 		void						updateInletBuffers();
 
-		void						initFrom( BlockData const& meta );
-
 	private:
-
-		// i could write lots of stupid get functions... but frankly, i don't see
-		// the point : function block io mgr & state mgr are totally tied to each other anyway,
-		// so let the state mgr do whatever it likes
-		friend class FunctionBlockStateManager;
 
 		mutable Poco::FastMutex			m_InletAccess;
 		mutable Poco::FastMutex			m_OutletAccess;
 		mutable Poco::FastMutex			m_ParamAccess;
-		AbstractIOManager::InletMap		m_Inlets;
-		AbstractIOManager::OutletMap	m_Outlets;
-		AbstractIOManager::ParamMap		m_Params;
+		InletVector						m_Inlets;
+		OutletVector					m_Outlets;
+		ParamVector						m_Params;
 
+		Inlet const *const				findInlet( std::string const& name ) const;
+		Outlet const *const				findOutlet( std::string const& name ) const;
+		SetupParameter const *const		findSetupParameter( std::string const& name ) const;
+
+		Inlet *							findInlet( std::string const& name );
+		Outlet *						findOutlet( std::string const& name );
+		SetupParameter *				findSetupParameter( std::string const& name );
+
+		mutable Poco::FastMutex			m_CallbackAccess;
 		OutletFunctionCallbacks			m_OutletFunctionCallbacks;
 		OutletCallbackHandlers			m_OutletCallbackHandlers;
 		OutputFunctionCallbacks			m_OutputFunctionCallbacks;

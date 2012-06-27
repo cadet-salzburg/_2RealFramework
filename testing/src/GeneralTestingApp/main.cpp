@@ -33,7 +33,7 @@ using _2Real::Engine;
 using _2Real::System;
 using _2Real::BundleIdentifier;
 using _2Real::BlockIdentifier;
-using _2Real::UpdatePolicy;
+using _2Real::UpdatePolicyHandle;
 using _2Real::Exception;
 
 #ifndef _DEBUG
@@ -51,12 +51,10 @@ int main( int argc, char *argv[] )
 	{
 		BundleIdentifier testBundle = testEngine.load( string( "ContextTesting" ).append( shared_library_suffix ) );
 
-		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 100.0f );
-
 		BlockIdentifier testBlock = testSystem.createBlock( testBundle, "test block" );
+		UpdatePolicyHandle policy = testSystem.getUpdatePolicy( testBlock );
+		policy.updateWithFixedRate( 10.0 );
 		testSystem.setup( testBlock );
-		testSystem.setPolicy( testBlock, fpsTrigger );
 		testSystem.start( testBlock );
 	}
 	catch ( Exception &e )

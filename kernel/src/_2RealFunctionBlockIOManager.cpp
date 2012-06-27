@@ -22,10 +22,8 @@
 #include "_2RealSetupParameter.h"
 #include "_2RealInlet.h"
 #include "_2RealOutlet.h"
-#include "_2RealInlet.h"
-#include "_2RealBlockData.h"
+#include "_2RealInletBuffer.h"
 #include "_2RealParameterData.h"
-#include "_2RealUpdatePolicyImpl.h"
 #include "_2RealLink.h"
 #include "_2RealHelpersInternal.h"
 #include "_2RealInletHandle.h"
@@ -42,14 +40,27 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	FunctionBlockIOManager::FunctionBlockIOManager(AbstractUberBlock &owner) :
-		AbstractIOManager(owner)
+	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
+		AbstractIOManager( owner )
 	{
 	}
 
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
-		clear();
+		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( ParamVector::iterator it = m_Params.begin(); it != m_Params.end(); ++it )
+		{
+			delete *it;
+		}
 
 		for ( OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.begin(); it != m_OutletFunctionCallbacks.end(); ++it )
 		{
@@ -72,76 +83,6 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::initFrom( BlockData const& meta )
-	{
-		std::map< std::string, ParameterData > const& setup = meta.getParameters();
-		std::map< std::string, ParameterData > const& input = meta.getInlets();
-		std::map< std::string, ParameterData > const& output = meta.getOutlets();
-
-		for ( std::map< std::string, ParameterData >::const_iterator it = setup.begin(); it != setup.end(); ++it )
-		{
-			ParameterData const& meta = it->second;
-			SetupParameter &param = createSetupParameterFromParameterData( meta );
-			m_Params.insert( make_pair( param.getName(), &param ) );
-		}
-
-		for ( std::map< std::string, ParameterData >::const_iterator it = input.begin(); it != input.end(); ++it )
-		{
-			ParameterData const& meta = it->second;
-			Inlet& inlet = createInletFromParameterData( meta );
-			m_Inlets.insert( make_pair( inlet.getName(), &inlet ) );
-		}
-
-		for (std::map< std::string, ParameterData >::const_iterator it = output.begin(); it != output.end(); ++it )
-		{
-			ParameterData const& meta = it->second;
-			Outlet& outlet = createOutletFromParameterData( meta );
-			m_Outlets.insert( make_pair( outlet.getName(), &outlet ) );
-		}
-	}
-
-	void FunctionBlockIOManager::clear()
-	{
-		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			it->second->clearLinks();
-		}
-
-		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-		{
-			it->second->clearLinks();
-		}
-
-		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); /**/)
-		{
-			delete it->second;
-			it = m_Inlets.erase(it);
-		}
-
-		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); /**/)
-		{
-			it->second->clearLinks();
-			delete it->second;
-			it = m_Outlets.erase(it);
-		}
-
-		for (ParamMap::iterator it = m_Params.begin(); it != m_Params.end(); /**/)
-		{
-			delete it->second;
-			it = m_Params.erase(it);
-		}
-	}
-
-	//InletMap const& FunctionBlockIOManager::getInlets() const
-	//{
-	//	return m_Inlets;
-	//}
-
-	//OutletMap const& FunctionBlockIOManager::getOutlets() const
-	//{
-	//	return m_Outlets;
-	//}
-
 	void FunctionBlockIOManager::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
 	{
 		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
@@ -150,12 +91,6 @@ namespace _2Real
 		if ( it == m_OutletFunctionCallbacks.end() )
 		{
 			m_OutletFunctionCallbacks.insert( cb );
-			
-			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
-			if (outletIt != m_Outlets.end())
-			{
-				outletIt->second->registerCallback( *cb );
-			}
 		}
 		else
 		{
@@ -170,12 +105,6 @@ namespace _2Real
 		OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.find( cb );
 		if ( it != m_OutletFunctionCallbacks.end() )
 		{
-			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
-			if (outletIt != m_Outlets.end())
-			{
-				outletIt->second->unregisterCallback( **it );
-			}
-
 			delete *it;
 			m_OutletFunctionCallbacks.erase(it);
 		}
@@ -189,12 +118,6 @@ namespace _2Real
 		if ( it == m_OutletCallbackHandlers.end() )
 		{
 			m_OutletCallbackHandlers.insert( &handler );
-
-			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
-			if (outletIt != m_Outlets.end())
-			{
-				outletIt->second->registerCallback( handler );
-			}
 		}
 		else
 		{
@@ -207,12 +130,6 @@ namespace _2Real
 		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
 		if ( it != m_OutletCallbackHandlers.end() )
 		{
-			OutletMap::const_iterator outletIt = m_Outlets.find(outName);
-			if (outletIt != m_Outlets.end())
-			{
-				outletIt->second->unregisterCallback( **it );
-			}
-
 			delete *it;
 			m_OutletCallbackHandlers.erase(it);
 		}
@@ -274,154 +191,313 @@ namespace _2Real
 		delete &handler;
 	}
 
-	EngineData const& FunctionBlockIOManager::getValue( string const& paramName ) const
+	EngineData const& FunctionBlockIOManager::getValue( string const& name ) const
 	{
-		// TODO: parameter names have to be unique oO
-
-		SetupParameter const* param = getMapElement< string, SetupParameter >( paramName, m_Params );
+		SetupParameter const* const param = findSetupParameter( name );
 		if ( param != nullptr )
 		{
 			return param->getParameterValue();
 		}
 
-		Inlet const* inlet = getMapElement< string, Inlet >( paramName, m_Inlets );
+		Inlet const* const inlet = findInlet( name );
 		if ( inlet != nullptr )
 		{
 			return inlet->getCurrentValue();
 		}
 
-		Outlet const* outlet = getMapElement< string, Outlet >( paramName, m_Outlets );
+		Outlet const* const outlet = findOutlet( name );
 		if ( outlet != nullptr )
 		{
 			return outlet->getLastData();
 		}
 
 		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::setValue( string const& paramName, TimestampedData const& value )
+	void FunctionBlockIOManager::setValue( string const& name, TimestampedData const& value )
 	{
-		SetupParameter *const param = getMapElement< string, SetupParameter >( paramName, m_Params );
+		SetupParameter * const param = findSetupParameter( name );
 		if ( param != nullptr )
 		{
 			param->setParameterValue( value.getData() );
 			return;
 		}
 
-		Inlet *const inlet = getMapElement< string, Inlet >( paramName, m_Inlets );
+		Inlet * const inlet = findInlet( name );
 		if ( inlet != nullptr )
 		{
-			inlet->setToValue( value );
+			inlet->setDefaultValue( value );
 			return;
 		}
 
 		ostringstream msg;
-		msg << "no inlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		msg << "no inlet / setup parameter named " << name << " found in " << m_Owner.getName();
 		throw NotFoundException( msg.str() );
 	}
 
-	std::string const& FunctionBlockIOManager::getTypename( string const& paramName ) const
+	std::string const& FunctionBlockIOManager::getTypename( string const& name ) const
 	{
-		SetupParameter const* param = getMapElement< string, SetupParameter >( paramName, m_Params );
+		SetupParameter const* const param = findSetupParameter( name );
 		if ( param != nullptr )
 		{
 			return param->getTypename();
 		}
 
-		Inlet const* inlet = getMapElement< string, Inlet >( paramName, m_Inlets );
+		Inlet const* const inlet = findInlet( name );
 		if ( inlet != nullptr )
 		{
 			return inlet->getTypename();
 		}
 
-		Outlet const* outlet = getMapElement< string, Outlet >( paramName, m_Outlets );
+		Outlet const* const outlet = findOutlet( name );
 		if ( outlet != nullptr )
 		{
 			return outlet->getTypename();
 		}
 
 		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
 		throw NotFoundException( msg.str() );
 	}
 
-	std::string const& FunctionBlockIOManager::getLongTypename( string const& paramName ) const
+	std::string const& FunctionBlockIOManager::getLongTypename( string const& name ) const
 	{
-		SetupParameter const* param = getMapElement< string, SetupParameter >( paramName, m_Params );
+		SetupParameter const* const param = findSetupParameter( name );
 		if ( param != nullptr )
 		{
 			return param->getLongTypename();
 		}
 
-		Inlet const* inlet = getMapElement< string, Inlet >( paramName, m_Inlets );
+		Inlet const* const inlet = findInlet( name );
 		if ( inlet != nullptr )
 		{
 			return inlet->getLongTypename();
 		}
 
-		Outlet const* outlet = getMapElement< string, Outlet >( paramName, m_Outlets );
+		Outlet const* const outlet = findOutlet( name );
 		if ( outlet != nullptr )
 		{
 			return outlet->getLongTypename();
 		}
 
 		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << paramName << " found in " << m_Owner.getName();
+		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
 		throw NotFoundException( msg.str() );
 	}
 
 	InletHandle FunctionBlockIOManager::createInletHandle( string const& name )
 	{
-		Inlet &inlet = getMapElement< string, Inlet >( name, m_Inlets, "inlet" );
-		return InletHandle( inlet );
+		return InletHandle( getInlet( name ) );
 	}
 
 	OutletHandle FunctionBlockIOManager::createOutletHandle(std::string const& name)
 	{
-		Outlet &outlet = getMapElement< string, Outlet >( name, m_Outlets, "outlet" );
-		return OutletHandle( outlet );
+		return OutletHandle( getOutlet( name ) );
 	}
 
-	//void FunctionBlockIOManager::linkWith( std::string const& inlet, AbstractUberBlock &out, std::string const& outlet )
-	//{
-		//InletMap::iterator itIn = m_Inlets.find(inlet);
-		//if ( itIn == m_Inlets.end() )
-		//{
-		//	std::ostringstream msg;
-		//	msg << "no inlet named " << inlet << " found in " << m_Owner.getName();
-		//	throw NotFoundException(msg.str());
-		//}
+	Inlet const& FunctionBlockIOManager::getInlet( string const& name ) const
+	{
+		Inlet const* const inlet = findInlet( name );
+		if ( inlet == nullptr )
+		{
+			ostringstream msg;
+			msg << "inlet " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
 
-		//AbstractIOManager &mgr = out.getIOManager();
-		//OutletMap const& outlets = mgr.getOutlets();			//might throw!
-		//OutletMap::const_iterator itOut = outlets.find(outlet);
-		//if (itOut == outlets.end())
-		//{
-		//	std::ostringstream msg;
-		//	msg << "no outlet named " << outlet << " found in " << out.getName();
-		//	throw NotFoundException(msg.str());
-		//}
+		return *inlet;
+	}
 
-		//itIn->second->linkWith(*(itOut->second));
-	//}
+	Outlet const& FunctionBlockIOManager::getOutlet( string const& name ) const
+	{
+		Outlet const* const outlet = findOutlet( name );
+		if ( outlet == nullptr )
+		{
+			ostringstream msg;
+			msg << "outlet " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
+
+		return *outlet;
+	}
+
+	SetupParameter const& FunctionBlockIOManager::getSetupParameter( string const& name ) const
+	{
+		SetupParameter const* const param = findSetupParameter( name );
+		if ( param == nullptr )
+		{
+			ostringstream msg;
+			msg << "parameter " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
+
+		return *param;
+	}
+
+	Inlet const* const FunctionBlockIOManager::findInlet( string const& name ) const
+	{
+		for ( InletVector::const_iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	Outlet const* const FunctionBlockIOManager::findOutlet( string const& name ) const
+	{
+		for ( OutletVector::const_iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	SetupParameter const* const FunctionBlockIOManager::findSetupParameter( string const& name ) const
+	{
+		for ( ParamVector::const_iterator it = m_Params.begin(); it != m_Params.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	Inlet & FunctionBlockIOManager::getInlet( string const& name )
+	{
+		Inlet *inlet = findInlet( name );
+		if ( inlet == nullptr )
+		{
+			ostringstream msg;
+			msg << "inlet " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
+
+		return *inlet;
+	}
+
+	Outlet & FunctionBlockIOManager::getOutlet( string const& name )
+	{
+		Outlet *outlet = findOutlet( name );
+		if ( outlet == nullptr )
+		{
+			ostringstream msg;
+			msg << "outlet " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
+
+		return *outlet;
+	}
+
+	SetupParameter & FunctionBlockIOManager::getSetupParameter( string const& name )
+	{
+		SetupParameter *param = findSetupParameter( name );
+		if ( param == nullptr )
+		{
+			ostringstream msg;
+			msg << "parameter " << name<< " not found in" << m_Owner.getName();
+			throw NotFoundException( msg.str() );
+		}
+
+		return *param;
+	}
+
+	Inlet * FunctionBlockIOManager::findInlet( string const& name )
+	{
+		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	Outlet * FunctionBlockIOManager::findOutlet( string const& name )
+	{
+		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	SetupParameter * FunctionBlockIOManager::findSetupParameter( string const& name )
+	{
+		for ( ParamVector::iterator it = m_Params.begin(); it != m_Params.end(); ++it )
+		{
+			if ( ( *it )->getName() == name )
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
+	}
+
+	void FunctionBlockIOManager::addInlet( ParameterData const& data )
+	{
+		Inlet *inlet = createInletFromParameterData( data );
+		m_Inlets.push_back( inlet );
+	}
+
+	void FunctionBlockIOManager::addOutlet( ParameterData const& data )
+	{
+		Outlet *outlet = createOutletFromParameterData( data );
+		m_Outlets.push_back( outlet );
+	}
+
+	void FunctionBlockIOManager::addSetupParameter( ParameterData const& data )
+	{
+		SetupParameter *param = createSetupParameterFromParameterData( data );
+		m_Params.push_back( param );
+	}
 
 	void FunctionBlockIOManager::updateInletValues()
 	{
-		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
+		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			it->second->updateCurrentValue();
+			( *it )->updateCurrentValue();
 		}
 	}
 
 	void FunctionBlockIOManager::updateOutletValues()
 	{
 		std::list< OutputData > data;
-		for (OutletMap::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it)
+		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			it->second->update();
-			data.push_back( it->second->getLastOutputData() );
+			( *it )->update();
+			OutputData out = ( *it )->getLastOutputData();
+
+			for ( OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.begin(); it != m_OutletFunctionCallbacks.end(); ++it )
+			{
+				( *it )->invoke( out );
+			}
+
+			for ( OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.begin(); it != m_OutletCallbackHandlers.end(); ++it )
+			{
+				( *it )->invoke( out );
+			}
+
+			data.push_back( out );
 		}
 
 		if ( data.size() > 0 )
@@ -440,25 +516,10 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateInletBuffers()
 	{
-		for (InletMap::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it)
+		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			it->second->resetData();
+			( *it )->updateDataBuffer();
 		}
-	}
-
-	Inlet const& FunctionBlockIOManager::getInlet( std::string const& name ) const
-	{
-		return getMapElement< string, Inlet >( name, m_Inlets, "inlet" );
-	}
-
-	Outlet const& FunctionBlockIOManager::getOutlet( std::string const& name ) const
-	{
-		return getMapElement< string, Outlet >( name, m_Outlets, "outlet" );
-	}
-
-	SetupParameter const& FunctionBlockIOManager::getSetupParameter( std::string const& name ) const
-	{
-		return getMapElement< string, SetupParameter >( name, m_Params, "setup parameter" );
 	}
 
 }

@@ -18,6 +18,7 @@
 
 #include "_2RealSystemBlockStateManager.h"
 #include "_2RealAbstractUberBlock.h"
+#include "_2RealUberBlockBasedTrigger.h"
 
 #include <iostream>
 #include <assert.h>
@@ -31,14 +32,6 @@ namespace _2Real
 	SystemBlockStateManager::SystemBlockStateManager( AbstractUberBlock &owner ) :
 		AbstractStateManager( owner )
 	{
-	}
-
-	SystemBlockStateManager::~SystemBlockStateManager()
-	{
-		for ( UberBlockBasedTriggerMap::iterator it = m_SubBlockTriggers.begin(); it != m_SubBlockTriggers.end(); ++it )
-		{
-			delete it->second;
-		}
 	}
 
 	void SystemBlockStateManager::start()
@@ -78,74 +71,45 @@ namespace _2Real
 		return true;
 	}
 
-	void SystemBlockStateManager::setUpdatePolicy( UpdatePolicyImpl const& policy )
+	void SystemBlockStateManager::tryTrigger( AbstractUpdateTrigger &trigger )
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void SystemBlockStateManager::tryTriggerInlet(const void *inlet, std::pair< long, long > &times)
+	void SystemBlockStateManager::tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger )
 	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
+		trigger.tryTriggerOther( BLOCK_OK );		// system always allows an update
 	}
 
-	void SystemBlockStateManager::tryTriggerTime(long &time)
+	void SystemBlockStateManager::addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
 	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void SystemBlockStateManager::tryTriggerSubBlock( const unsigned int id, const BlockMessage msg )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		UberBlockBasedTriggerMap::iterator it = m_SubBlockTriggers.find( id );
-		if ( it != m_SubBlockTriggers.end() )
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		for ( UberBlockTriggerList::iterator it = m_SubBlockTriggers.begin(); it != m_SubBlockTriggers.end(); ++it )
 		{
-			it->second->tryTriggerOther( BLOCK_OK );
-		}
-		else
-		{
-#ifdef _DEBUG
-			assert( NULL );
-#endif
+			if ( *it == &trigger )
+			{
+				m_SubBlockTriggers.erase( it );
+				break;
+			}
 		}
 	}
 
-	void SystemBlockStateManager::tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg )
+	void SystemBlockStateManager::removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		m_SubBlockTriggers.push_back( &trigger );
+	}
+
+	void SystemBlockStateManager::addTrigger( AbstractUpdateTrigger &trigger )
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void SystemBlockStateManager::addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		UberBlockBasedTriggerMap::iterator it = m_SubBlockTriggers.find( id );
-		if ( it != m_SubBlockTriggers.end() )
-		{
-			delete it->second;
-		}
-
-		m_SubBlockTriggers[ id ] = &trigger;
-	}
-
-	void SystemBlockStateManager::removeTriggerForSubBlock( const unsigned int id )
-	{
-	}
-
-	void SystemBlockStateManager::addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger )
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void SystemBlockStateManager::removeTriggerForSuperBlock( const unsigned int id )
+	void SystemBlockStateManager::removeTrigger( AbstractUpdateTrigger &trigger )
 	{
 #ifdef _DEBUG
 		assert( NULL );

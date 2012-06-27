@@ -20,6 +20,7 @@
 
 #include "_2RealUberBlock.h"
 #include "_2RealDisabledBlockManager.h"
+#include "_2RealUnownedBlockManager.h"
 #include "_2RealFunctionBlockIOManager.h"
 #include "_2RealFunctionBlockStateManager.h"
 
@@ -29,7 +30,7 @@ namespace _2Real
 	class Block;
 	class SystemBlock;
 
-	class FunctionBlock : public UberBlock< FunctionBlockIOManager, DisabledBlockManager, DisabledBlockManager, FunctionBlockStateManager >
+	class FunctionBlock : public UberBlock< FunctionBlockIOManager, UnownedBlockManager, DisabledBlockManager, FunctionBlockStateManager >
 	{
 
 	public:
@@ -38,6 +39,16 @@ namespace _2Real
 
 		InletHandle		createInletHandle(std::string const& inletName);
 		OutletHandle	createOutletHandle(std::string const& outletName);
+
+		AbstractUberBlockBasedTrigger *	createSubBlockTrigger()
+		{
+			return nullptr;
+		}
+
+		AbstractUberBlockBasedTrigger *	createSuperBlockTrigger()
+		{
+			return new UberBlockBasedTrigger< FunctionBlockStateManager >( *m_StateManager, &FunctionBlockStateManager::tryTriggerUberBlock, BLOCK_OK );
+		}
 
 	private:
 

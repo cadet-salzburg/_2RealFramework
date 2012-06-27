@@ -19,7 +19,6 @@
 #pragma once
 
 #include "_2RealAbstractStateManager.h"
-#include "_2RealUpdatePolicyImpl.h"
 #include "_2RealHelpersInternal.h"
 
 #include "Poco/Event.h"
@@ -53,23 +52,19 @@ namespace _2Real
 		void prepareForShutDown();				// system
 		bool shutDown( const long timeout );	// system
 		void updateFunctionBlock();				// threadpool
-		void setUpdatePolicy( UpdatePolicyImpl const& policy );
 
-		void tryTriggerTime( long &time );
-		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
-		void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) {}
-		void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg );
+		void tryTrigger( AbstractUpdateTrigger &trigger );
+		void tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger );
 
-		void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger ) {}
-		void removeTriggerForSubBlock( const unsigned int id ) {}
-		void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
-		void removeTriggerForSuperBlock( const unsigned int id );
+		void addTrigger( AbstractUpdateTrigger &trigger );
+		void removeTrigger( AbstractUpdateTrigger &trigger );
+		void addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
+		void removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
 
 	private:
 
 		friend class FunctionBlock;		//needs to set a few things
 
-		void changePolicy();
 		void handleStateChangeException(Exception &e);
 		void triggersAreOk();
 		void uberBlocksAreOk();
@@ -78,7 +73,7 @@ namespace _2Real
 		void disableUberBlockTriggers();
 		void resetAllTriggers();
 		void resetTriggers();
-		void resetUberBlockTriggers( const bool notify );
+		void resetUberBlockTriggers();
 		void enableAllTriggers();
 		void enableTriggers();
 		void enableUberBlockTriggers();
@@ -87,36 +82,30 @@ namespace _2Real
 		void evaluateTriggers();
 		void evaluateUberBlockTriggers();
 
-		ThreadPool						&m_Threads;
-		Logger							&m_Logger;
-		FunctionBlockIOManager						*m_IO;
-		SystemBlock						*m_System;
-		Block							*m_FunctionBlock;
+		ThreadPool										&m_Threads;
+		Logger											&m_Logger;
+		FunctionBlockIOManager							*m_IOManager;
+		UpdatePolicy									*m_UpdatePolicy;
+		SystemBlock										*m_System;			// for error handling
+		Block											*m_FunctionBlock;
 
-		mutable Poco::FastMutex			m_TriggerAccess;
-		AbstractTimeBasedTrigger		*m_TimeTrigger;
-		InletBasedTriggerMap					m_InletTriggers;
+		mutable Poco::FastMutex							m_TriggerAccess;
+		AbstractStateManager::TriggerList				m_Triggers;
 
-		mutable Poco::FastMutex			m_UberTriggerAccess;
-		UberBlockBasedTriggerMap					m_UberTriggers;
+		mutable Poco::FastMutex							m_UberBlockTriggerAccess;
+		AbstractStateManager::UberBlockTriggerList		m_UberBlockTriggers;
 
-		mutable Poco::FastMutex			m_EnabledAccess;
-		bool							m_UberTriggersEnabled;
-		bool							m_TriggersEnabled;
+		mutable Poco::FastMutex							m_EnabledAccess;
+		bool											m_UberBlockTriggersEnabled;
+		bool											m_TriggersEnabled;
 
-		mutable Poco::FastMutex			m_StateAccess;
-		AbstractFunctionBlockState		*m_CurrentState;
+		mutable Poco::FastMutex							m_StateAccess;
+		AbstractFunctionBlockState						*m_CurrentState;
 
 		// the three types of user interactions that might occur during an update cycle
 		// ( ok, in theory there's also start - but that's pretty irrelevant )
-		SafeBool						m_FlaggedForSetUp;
-		SafeBool						m_FlaggedForStop;
-		SafeBool						m_FlaggedForPolicyChange;
-
-		// needed for policy change
-		Poco::FastMutex					m_PolicyAccess;
-		UpdatePolicyImpl				const* m_NewPolicy;
-		UpdatePolicyImpl				const* m_CurrentPolicy;
+		SafeBool										m_FlaggedForSetUp;
+		SafeBool										m_FlaggedForStop;
 
 	};
 

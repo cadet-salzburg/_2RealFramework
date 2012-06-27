@@ -21,9 +21,10 @@
 
 #include "_2RealUberBlock.h"
 #include "_2RealDisabledBlockManager.h"
-#include "_2RealOwnedUberBlockManager.h"
+#include "_2RealOwnedBlockManager.h"
 #include "_2RealDisabledIOManager.h"
 #include "_2RealSystemBlockStateManager.h"
+#include "_2RealUpdatePolicyHandle.h"
 
 #include <set>
 
@@ -33,7 +34,7 @@ namespace _2Real
 	class EngineImpl;
 	class BundleManager;
 	class EngineData;
-	class UpdatePolicy;
+	class UpdatePolicyHandle;
 	class IOutputListener;
 	class FunctionBlock;
 	class BlockData;
@@ -41,7 +42,7 @@ namespace _2Real
 	class BlockIdentifier;
 	class AbstractLink;
 
-	class SystemBlock : public UberBlock< DisabledIO, DisabledBlockManager, OwningBlockManager, SystemBlockStateManager >
+	class SystemBlock : public UberBlock< DisabledIOManager, DisabledBlockManager, SystemBlockManager, SystemBlockStateManager >
 	{
 
 	public:
@@ -75,7 +76,7 @@ namespace _2Real
 		void						stop( BlockIdentifier const& blockId, const long timeout );
 		void						singleStep( BlockIdentifier const& blockId );
 		void						destroy( BlockIdentifier const& blockId );
-		void						setUpdatePolicy( BlockIdentifier const& blockId, UpdatePolicy const& policy );
+		UpdatePolicyHandle			getUpdatePolicy( BlockIdentifier const& blockId );
 
 		EngineData const&			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
 		std::string const&			getTypename(BlockIdentifier const& ownerId, std::string const& paramName) const;
@@ -83,6 +84,11 @@ namespace _2Real
 		void						setValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
 
 		void						link(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
+		void						unlink(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
+
+		AbstractUberBlockBasedTrigger *	createSubBlockTrigger();
+		AbstractUberBlockBasedTrigger *	createSuperBlockTrigger();
+
 
 	private:
 

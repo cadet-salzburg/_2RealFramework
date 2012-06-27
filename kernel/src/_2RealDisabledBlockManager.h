@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealAbstractUberBlockManager.h"
+#include "_2RealAbstractBlockManager.h"
 
 namespace _2Real
 {
@@ -28,15 +28,14 @@ namespace _2Real
 
 	public:
 
-		DisabledBlockManager(AbstractUberBlock &owner);
+		DisabledBlockManager( AbstractUberBlock &owner );
 		~DisabledBlockManager();
 
 		void								clear();
-		AbstractUberBlock &						getBlock(BlockIdentifier const& blockId);
-		AbstractUberBlock const&				getBlock(BlockIdentifier const& blockId) const;
-		void								addBlock(AbstractUberBlock &block);
-		void								removeBlock(AbstractUberBlock &block);
-		std::list< BlockIdentifier >				getCurrentBlockIds() const;
+		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
+		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
+		void								addBlock( AbstractUberBlock &block );
+		void								removeBlock( AbstractUberBlock &block );
 
 	};
 

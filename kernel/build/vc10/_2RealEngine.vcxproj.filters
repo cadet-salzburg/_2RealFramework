@@ -37,9 +37,6 @@
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h">
       <Filter>uberblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractUberBlockManager.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleLoader.h">
       <Filter>bundle internal</Filter>
     </ClInclude>
@@ -48,9 +45,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleInternal.h">
       <Filter>bundle internal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledBlocks.h">
-      <Filter>uberblock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealImageT.h">
       <Filter>datatype</Filter>
@@ -112,12 +106,6 @@
     <ClInclude Include="..\..\src\_2RealThreadPool.h">
       <Filter>thread managment</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUnOwnedBlocks.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOwnedBlocks.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealUberBlock.h">
       <Filter>uberblock</Filter>
     </ClInclude>
@@ -141,15 +129,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInletBuffer.h">
       <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdatePolicyImpl.h">
-      <Filter>update policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h">
-      <Filter>update policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdateTrigger.h">
-      <Filter>update policy</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h">
       <Filter>update policy</Filter>
@@ -175,14 +154,35 @@
     <ClInclude Include="..\..\src\_2RealLink.h">
       <Filter>parameter</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemBlockStates.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealSystemBlock.h">
       <Filter>uberblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledIO.h">
+    <ClInclude Include="..\..\src\_2RealDisabledIOManager.h">
       <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealDisabledBlockManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemBlockStateManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUnownedBlockManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOwnedBlockManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractBlockManager.h">
+      <Filter>uberblock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdatePolicyl.h">
+      <Filter>update policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdatePolicyHandle.h">
+      <Filter>update policy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +216,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractUberBlockManager.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleLoader.cpp">
       <Filter>bundle internal</Filter>
     </ClCompile>
@@ -227,9 +224,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleInternal.cpp">
       <Filter>bundle internal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledBlocks.cpp">
-      <Filter>uberblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealImageT.cpp">
       <Filter>datatype</Filter>
@@ -285,12 +279,6 @@
     <ClCompile Include="..\..\src\_2RealEngineData.cpp">
       <Filter>internal data</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUnOwnedBlocks.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOwnedBlocks.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
       <Filter>internal data</Filter>
     </ClCompile>
@@ -302,12 +290,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealInletBuffer.cpp">
       <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUpdatePolicyImpl.cpp">
-      <Filter>update policy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
-      <Filter>update policy</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp">
       <Filter>uberblock</Filter>
@@ -327,11 +309,29 @@
     <ClCompile Include="..\..\src\_2RealSystemBlock.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemBlockStates.cpp">
+    <ClCompile Include="..\..\src\_2RealDisabledBlockManager.cpp">
       <Filter>uberblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledIO.cpp">
+    <ClCompile Include="..\..\src\_2RealDisabledIOManager.cpp">
       <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUnownedBlockManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOwnedBlockManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractBlockManager.cpp">
+      <Filter>uberblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUpdatePolicyHandle.cpp">
+      <Filter>update policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealUpdatePolicyl.cpp">
+      <Filter>update policy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

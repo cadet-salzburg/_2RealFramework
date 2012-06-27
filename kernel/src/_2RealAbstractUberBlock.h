@@ -20,6 +20,7 @@
 
 #include "_2RealBlockIdentifier.h"
 #include "_2RealCallbacks.h"
+#include "_2RealUpdatePolicyHandle.h"
 
 #include <string>
 
@@ -30,17 +31,9 @@ namespace _2Real
 	class Outlet;
 	class SetupParameter;
 	class TimestampedData;
-	class UpdatePolicyImpl;
+	class UpdatePolicy;
 	class EngineData;
 	class AbstractUberBlockBasedTrigger;
-
-	enum BlockMessage
-	{
-		BLOCK_OK						=	0x00,
-		BLOCK_READY						=	0x01,
-		BLOCK_FINISHED					=	0x02,
-		BLOCK_NOT_OK					=	0x04,
-	};
 
 	class AbstractUberBlock
 	{
@@ -58,9 +51,6 @@ namespace _2Real
 		virtual void							removeSubBlock( AbstractUberBlock &subBlock ) = 0;
 		virtual void							addSuperBlock( AbstractUberBlock &superBlock, AbstractUberBlockBasedTrigger *trigger ) = 0;
 		virtual void							removeSuperBlock( AbstractUberBlock &superBlock ) = 0;
-
-		virtual void							tryTriggerSubBlock( const unsigned int id, const BlockMessage msg ) = 0;
-		virtual void							tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg ) = 0;
 
 		virtual void							registerToNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
 		virtual void							unregisterFromNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
@@ -81,11 +71,12 @@ namespace _2Real
 		virtual void							stop( const bool blocking, const long timeout ) = 0;
 		virtual void							prepareForShutDown() = 0;
 		virtual bool							shutDown( const long timeout ) = 0;
-		virtual void							setUpdatePolicy( UpdatePolicyImpl const& policy ) = 0;
 
-		virtual Inlet const&					getInlet( std::string const& name ) const = 0;
-		virtual Outlet const&					getOutlet( std::string const& name ) const = 0;
-		virtual SetupParameter const&			getSetupParameter( std::string const& name ) const = 0;
+		virtual Inlet &							getInlet( std::string const& name ) = 0;
+		virtual Outlet &						getOutlet( std::string const& name ) = 0;
+		virtual SetupParameter &				getSetupParameter( std::string const& name ) = 0;
+
+		virtual UpdatePolicyHandle				getUpdatePolicyHandle() const = 0;
 
 	protected:
 

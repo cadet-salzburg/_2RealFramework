@@ -19,28 +19,20 @@
 
 #pragma once
 
-#include "_2RealUpdateTrigger.h"
+#include "_2RealAbstractUpdateTrigger.h"
+#include "_2RealAbstractStateManager.h"
 
 namespace _2Real
 {
 
-	class AbstractTimeBasedTrigger : public UpdateTrigger
+	class AbstractTimeBasedTrigger : public AbstractUpdateTrigger
 	{
 
 	public:
 
-		AbstractTimeBasedTrigger( const long timeslice ) : m_ElapsedTime( 0 ), m_DesiredTime( timeslice ), m_Condition( false ) {}
+		AbstractTimeBasedTrigger() : AbstractUpdateTrigger( false ) {}
 		virtual ~AbstractTimeBasedTrigger() {}
-		void reset() { m_Condition = false; }
-		bool isOk() const { return m_Condition; }
-
-		virtual bool tryTrigger( const long time ) = 0;
-
-	protected:
-
-		bool	m_Condition;
-		long	const m_DesiredTime;
-		long	m_ElapsedTime;
+		virtual void tryTriggerUpdate( long &time ) = 0;
 
 	};
 
@@ -50,22 +42,31 @@ namespace _2Real
 
 	public:
 
-		TimeBasedTrigger( const long timeslice ) : AbstractTimeBasedTrigger( timeslice ) {}
-		bool tryTrigger( const long time )
+		TimeBasedTrigger( AbstractStateManager &mgr, const long timeslice ) :
+			AbstractTimeBasedTrigger(),
+			m_UpdateManager( mgr ),
+			m_DesiredTime( timeslice ),
+			m_ElapsedTime( 0 )
+		{
+		}
+
+		void tryTriggerUpdate( long &time )
 		{
 			m_ElapsedTime += time;
-			if ( !m_Condition && m_TriggerCondition( m_ElapsedTime, m_DesiredTime ) )
+			if ( !isOk() && m_TriggerCondition( m_ElapsedTime, m_DesiredTime ) )
 			{
 				m_ElapsedTime = 0;
-				m_Condition = true;
+				m_IsOk = true;
+				m_UpdateManager.tryTrigger( *this );
 			}
-
-			return m_Condition;
 		}
 
 	private:
 
-		Condition		m_TriggerCondition;
+		AbstractStateManager	&m_UpdateManager;
+		long					const m_DesiredTime;
+		long					m_ElapsedTime;
+		Condition				m_TriggerCondition;
 
 	};
 

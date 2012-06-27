@@ -18,34 +18,37 @@
 
 #pragma once
 
-#include "_2RealAbstractUberBlockManager.h"
-
-#include "Poco/Mutex.h"
+#include <string>
+#include <list>
 
 namespace _2Real
 {
 
-	typedef std::list< AbstractUberBlock * >	BlockList;
+	class BlockIdentifier;
+	class AbstractUberBlock;
 
-	class OwningBlockManager : public AbstractBlockManager
+	class AbstractBlockManager
 	{
 
 	public:
 
-		OwningBlockManager(AbstractUberBlock &owner);
-		~OwningBlockManager();
+		typedef std::list< AbstractUberBlock * >	BlockList;
 
-		void								clear();
-		AbstractUberBlock &						getBlock(BlockIdentifier const& blockId);
-		AbstractUberBlock const&				getBlock(BlockIdentifier const& blockId) const;
-		void								addBlock(AbstractUberBlock &block);
-		void								removeBlock(AbstractUberBlock &block);
-		std::list< BlockIdentifier >				getCurrentBlockIds() const;
+		AbstractBlockManager( AbstractUberBlock &owner );
+		virtual ~AbstractBlockManager();
 
-	private:
+		std::string const& getName() const;
+		unsigned int getId() const;
 
-		mutable Poco::FastMutex				m_Access;
-		BlockList							m_Blocks;
+		virtual void								clear() = 0;
+		virtual AbstractUberBlock &					getBlock( BlockIdentifier const& blockId ) = 0;
+		virtual AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const = 0;
+		virtual void								addBlock( AbstractUberBlock &block ) = 0;
+		virtual	void								removeBlock( AbstractUberBlock &block ) = 0;
+
+	protected:
+
+		AbstractUberBlock							&m_Owner;
 
 	};
 

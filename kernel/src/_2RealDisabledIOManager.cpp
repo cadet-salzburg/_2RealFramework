@@ -25,121 +25,163 @@
 namespace _2Real
 {
 
-	DisabledIO::DisabledIO(AbstractUberBlock &owner) :
+	DisabledIOManager::DisabledIOManager(AbstractUberBlock &owner) :
 		AbstractIOManager(owner)
 	{
 	}
 
-	DisabledIO::~DisabledIO()
+	DisabledIOManager::~DisabledIOManager()
 	{
 	}
 
-	void DisabledIO::clear()
-	{
-		std::ostringstream msg;
-		msg << "this entity does not allow io";
-		throw _2Real::Exception(msg.str());
-	}
-
-	void DisabledIO::registerToNewData(std::string const& outName, OutletCallback callback, void *userData )
+	void DisabledIOManager::clear()
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, OutletCallback callback, void *userData )
+	void DisabledIOManager::registerToNewData(std::string const& outName, OutletCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::registerToNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void DisabledIOManager::unregisterFromNewData(std::string const& outName, OutletCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void DisabledIOManager::registerToNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::registerToNewData(OutputCallback callback, void *userData )
+	void DisabledIOManager::unregisterFromNewData(std::string const& outName, AbstractOutletCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(OutputCallback callback, void *userData )
+	void DisabledIOManager::registerToNewData(OutputCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::registerToNewData(AbstractOutputCallbackHandler &handler )
+	void DisabledIOManager::unregisterFromNewData(OutputCallback callback, void *userData )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::unregisterFromNewData(AbstractOutputCallbackHandler &handler )
+	void DisabledIOManager::registerToNewData(AbstractOutputCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	EngineData const& DisabledIO::getValue(std::string const& paramName) const
+	void DisabledIOManager::unregisterFromNewData(AbstractOutputCallbackHandler &handler )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	std::string const& DisabledIO::getTypename(std::string const& paramName) const
+	EngineData const& DisabledIOManager::getValue(std::string const& paramName) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	std::string const& DisabledIO::getLongTypename(std::string const& paramName) const
+	std::string const& DisabledIOManager::getTypename(std::string const& paramName) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	void DisabledIO::setValue(std::string const& paramName, TimestampedData const& value)
+	std::string const& DisabledIOManager::getLongTypename(std::string const& paramName) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	Inlet const& DisabledIO::getInlet( std::string const& name ) const
+	void DisabledIOManager::setValue(std::string const& paramName, TimestampedData const& value)
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	Outlet const& DisabledIO::getOutlet( std::string const& name ) const
+	Inlet const& DisabledIOManager::getInlet( std::string const& name ) const
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";
 		throw _2Real::Exception(msg.str());
 	}
 
-	SetupParameter const& DisabledIO::getSetupParameter( std::string const& name ) const
+	Outlet const& DisabledIOManager::getOutlet( std::string const& name ) const
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	SetupParameter const& DisabledIOManager::getSetupParameter( std::string const& name ) const
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	Inlet & DisabledIOManager::getInlet( std::string const& name )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	Outlet & DisabledIOManager::getOutlet( std::string const& name )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	SetupParameter & DisabledIOManager::getSetupParameter( std::string const& name )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIOManager::addInlet( ParameterData const& data )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIOManager::addOutlet( ParameterData const& data )
+	{
+		std::ostringstream msg;
+		msg << "this entity does not allow io";
+		throw _2Real::Exception(msg.str());
+	}
+
+	void DisabledIOManager::addSetupParameter( ParameterData const& data )
 	{
 		std::ostringstream msg;
 		msg << "this entity does not allow io";

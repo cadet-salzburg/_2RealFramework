@@ -31,29 +31,25 @@ namespace _2Real
 	public:
 
 		SystemBlockStateManager( AbstractUberBlock &owner );
-		~SystemBlockStateManager();
 
 		void				setUp();
 		void				start();
 		Poco::Event &		stop();
 		void				prepareForShutDown();
 		bool				shutDown( const long timeout );
-		void				setUpdatePolicy( UpdatePolicyImpl const& policy );
 
-		void tryTriggerTime( long &time );
-		void tryTriggerInlet( const void *inlet, std::pair< long, long > &times );
-		void tryTriggerSubBlock( const unsigned int id, const BlockMessage msg );
-		void tryTriggerSuperBlock( const unsigned int id, const BlockMessage msg );
+		void tryTrigger( AbstractUpdateTrigger &trigger );
+		void tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger );
 
-		void addTriggerForSubBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
-		void removeTriggerForSubBlock( const unsigned int id );
-		void addTriggerForSuperBlock( const unsigned int id, AbstractUberBlockBasedTrigger &trigger );
-		void removeTriggerForSuperBlock( const unsigned int id );
+		void addTrigger( AbstractUpdateTrigger &trigger );
+		void removeTrigger( AbstractUpdateTrigger &trigger );
+		void addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
+		void removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
 
 	private:
 
-		mutable Poco::FastMutex				m_TriggerAccess;
-		UberBlockBasedTriggerMap			m_SubBlockTriggers;
+		Poco::FastMutex									m_Access;
+		AbstractStateManager::UberBlockTriggerList		m_SubBlockTriggers;
 
 	};
 

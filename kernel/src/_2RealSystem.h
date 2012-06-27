@@ -21,7 +21,7 @@
 
 #include "_2RealBlockIdentifier.h"
 #include "_2RealBundleIdentifier.h"
-#include "_2RealUpdatePolicy.h"
+#include "_2RealUpdatePolicyHandle.h"
 #include "_2RealEngineData.h"
 #include "_2RealCallbacks.h"
 
@@ -67,8 +67,9 @@ namespace _2Real
 		// will stop the block if you don't do it before
 		void destroy( BlockIdentifier const& block );
 
-		// update cycle needs to be finished for this
-		void setPolicy( BlockIdentifier const& block, UpdatePolicy const& policy );
+		// returns handle to block's update policy.
+		// changes made will take effect after next update
+		UpdatePolicyHandle getUpdatePolicy( BlockIdentifier const& block );
 
 		void link( BlockIdentifier const& out, std::string const& outlet, BlockIdentifier const& in, std::string const& inlet );
 

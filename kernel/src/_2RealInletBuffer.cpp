@@ -17,6 +17,9 @@
 */
 
 #include "_2RealInletBuffer.h"
+#include "_2RealInlet.h"
+#include "_2RealInletHandle.h"
+#include "_2RealInletBasedTrigger.h"
 
 #include <iostream>
 #include <assert.h>
@@ -34,7 +37,6 @@ namespace _2Real
 #ifdef _DEBUG
 		if ( max == 0 )
 		{
-			cout << "inlet buffer size set to 0, must at least be 1" << endl;
 			assert( NULL );
 		}
 #endif
@@ -44,10 +46,10 @@ namespace _2Real
 	{
 		if ( buffer.size() >= m_Max )
 		{
-			buffer.pop_front();
+			buffer.pop_back();
 		}
 
-		buffer.push_back( data );
+		buffer.push_front( data );
 		return true;
 	}
 
@@ -67,7 +69,10 @@ namespace _2Real
 			// this will lead to an evaluation of the update condition
 			// which in turn can disable 'm_Notify'
 			// or it can reject the data completely
-			m_DataReceived.notify( this, data );		// blocking notify here ( can't afford more threads )
+			for ( InletTriggerList::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+			{
+				( *it )->tryTriggerUpdate( data );
+			}
 
 			// at this point, notificytions might have been disabled
 			m_NotificationAccess.unlock();
@@ -84,14 +89,13 @@ namespace _2Real
 	}
 
 	// called by i/o manager when it's time to actually update the inlets
-	TimestampedData const& InletBuffer::getCurrentData()
+	TimestampedData const& InletBuffer::getCurrentData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 
 #ifdef _DEBUG
 		if ( m_TriggeringData.isEmpty() )
 		{
-			//cout << "triggering data is empty for inlet buffer " << m_Name() << endl;
 			assert( NULL );
 		}
 #endif
@@ -101,7 +105,8 @@ namespace _2Real
 
 	// called by i/o manager after an update
 	// b/c default values & other data values need to be handled
-	void InletBuffer::update()
+	// also, this happens after update policy was changed!
+	void InletBuffer::updateDataBuffer()
 	{
 		m_ReceivedAccess.lock();
 
@@ -109,14 +114,22 @@ namespace _2Real
 		// while iterating over this, it might actually be receiving data
 		// since the trigger flag is, at this point, still not set
 		// not sure if the mutex here is the best solution?
-		for ( DataBuffer::iterator it = m_ReceivedDataItems.end(); it != m_ReceivedDataItems.begin(); --it )
+		for ( DataBuffer::iterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
 		{
-			m_DataReceived.notify( this, *it );
-		}
+			for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
+			{
+				( *inIt )->tryTriggerUpdate( *dIt );
+			}
 
+			dIt = m_ReceivedDataItems.erase( dIt );
+		}
 		// oh, and also try with the default value
 		m_DataAccess.lock();
-		m_DataReceived.notify( this, m_DefaultData );
+		for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
+		{
+			( *inIt )->tryTriggerUpdate( m_DefaultData );
+		}
+
 		m_DataAccess.unlock();
 
 		m_NotificationAccess.lock();
@@ -149,6 +162,25 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 		m_DefaultData = defaultData;
+	}
+
+	void InletBuffer::registerUpdateTrigger( AbstractInletBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
+		m_InletTriggers.push_back( &trigger );
+	}
+
+	void InletBuffer::unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
+		for ( InletTriggerList::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+		{
+			if ( *it == &trigger )
+			{
+				m_InletTriggers.erase( it );
+				break;
+			}
+		}
 	}
 
 }

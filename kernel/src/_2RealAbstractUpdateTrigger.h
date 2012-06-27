@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +17,26 @@
 	limitations under the License.
 */
 
-#include "_2RealAbstractUberBlockManager.h"
-#include "_2RealAbstractUberBlock.h"
+#pragma once
 
 namespace _2Real
 {
 
-	AbstractBlockManager::AbstractBlockManager(AbstractUberBlock &owner) :
-		m_Owner(owner)
+	class AbstractUpdateTrigger
 	{
-	}
 
-	AbstractBlockManager::~AbstractBlockManager()
-	{
-	}
+	public:
 
-	std::string const& AbstractBlockManager::getName() const
-	{
-		return m_Owner.getName();
-	}
+		AbstractUpdateTrigger( const bool init ) : m_IsOk( init ) {}
+		virtual ~AbstractUpdateTrigger() {}
 
-	const unsigned int AbstractBlockManager::getId() const
-	{
-		return m_Owner.getId();
-	}
+		virtual bool isOk() const { return m_IsOk; }
+		virtual void reset() { m_IsOk = false; }
+
+	protected:
+
+		bool		m_IsOk;
+
+	};
 
 }

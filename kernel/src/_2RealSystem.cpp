@@ -49,9 +49,9 @@ namespace _2Real
 		return m_Impl->createFunctionBlock( bundle, blockName );
 	}
 
-	void System::setPolicy( BlockIdentifier const& block, UpdatePolicy const& policy )
+	UpdatePolicyHandle System::getUpdatePolicy( BlockIdentifier const& block )
 	{
-		m_Impl->setUpdatePolicy( block, policy );
+		return m_Impl->getUpdatePolicy( block );
 	}
 
 	void System::setup( BlockIdentifier const& block )

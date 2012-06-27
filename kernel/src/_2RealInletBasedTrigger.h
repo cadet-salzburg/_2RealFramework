@@ -19,42 +19,63 @@
 
 #pragma once
 
-#include "_2RealUpdateTrigger.h"
-
-#include <map>
-#include <functional>
+#include "_2RealAbstractUpdateTrigger.h"
+#include "_2RealInlet.h"
+#include "_2RealAbstractStateManager.h"
 
 namespace _2Real
 {
 
-	struct ValidTimestamp
+	struct ValidData
 	{
-		bool operator()( const long oldData, const long newData ) { return newData >= 0; }
+		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
+		{
+			return !newData.getData().isEmpty();
+		}
 	};
 
-	typedef std::less< long > NewerTimestamp;
+	struct NewerTimestamp
+	{
+		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
+		{
+			return ( newData.getTimestamp() > oldData.getTimestamp() );
+		}
+	};
 
-	class AbstractInletBasedTrigger : public UpdateTrigger
+	class AbstractInletBasedTrigger : public AbstractUpdateTrigger
 	{
 
 	public:
 
-		AbstractInletBasedTrigger( std::string const& inletName ) : m_InletName( inletName ), m_Condition( false ) {}
-		virtual ~AbstractInletBasedTrigger() {}
-		std::string const& getInletName() { return m_InletName; }
-		void reset() { m_Condition = false; }
-		bool isOk() const { return m_Condition; }
+		AbstractInletBasedTrigger( Inlet &inlet, AbstractStateManager &mgr ) :
+			AbstractUpdateTrigger( false ),
+			m_Inlet( inlet ),
+			m_UpdateManager( mgr ),
+			m_LastData( EngineData(), -1 )	// this way, default value will also fulfill 'newer' cond
+		{
+		}
 
-		virtual bool tryTriggerUpdate( const long lastUpdate, const long newData ) = 0;
+		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& src )
+		{
+			m_LastData = src.m_LastData;
+			return *this;
+		}
+
+		virtual ~AbstractInletBasedTrigger()
+		{
+			m_UpdateManager.removeTrigger( *this );
+			m_Inlet.unregisterUpdateTrigger( *this );
+		}
+
+		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
 
 	protected:
 
-		bool				m_Condition;
-		std::string			const m_InletName;
+		Inlet					&m_Inlet;
+		AbstractStateManager	&m_UpdateManager;
+		TimestampedData			m_LastData;
 
 	};
-
-	typedef std::map< std::string, AbstractInletBasedTrigger * >	InletBasedTriggerMap;
 
 	template< typename Condition >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
@@ -62,23 +83,30 @@ namespace _2Real
 
 	public:
 
-		InletBasedTrigger( std::string const& inletName ) :
-			AbstractInletBasedTrigger( inletName )
+		InletBasedTrigger( Inlet &inlet, AbstractStateManager &mgr ) :
+			AbstractInletBasedTrigger( inlet, mgr )
 		{
+			mgr.addTrigger( *this );
+			inlet.registerUpdateTrigger( *this );
 		}
 
-		bool tryTriggerUpdate( const long lastUpdate, const long newData )
+		void tryTriggerUpdate( TimestampedData const& data )
 		{
-			if ( !m_Condition && m_TriggerCondition(lastUpdate, newData) )
+			if ( !m_IsOk && m_TriggerCondition( data, m_LastData ) )
 			{
-				m_Condition = true;
+				//std::cout << m_Inlet.getName() << " succeded in triggering" << std::endl;
+
+				m_IsOk = true;
+				m_Inlet.disableTriggering( data );
+				//std::cout << m_Inlet.getName() << " disabled trigger attempts" << std::endl;
+				m_LastData = data;
+				m_UpdateManager.tryTrigger( *this );
 			}
-			return m_Condition;
 		}
 
 	private:
 
-		Condition			m_TriggerCondition;
+		Condition				m_TriggerCondition;
 
 	};
 

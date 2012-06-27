@@ -16,37 +16,31 @@
 	limitations under the License.
 */
 
-#pragma once
+#include "_2RealAbstractBlockManager.h"
+#include "_2RealAbstractUberBlock.h"
 
-#include "_2RealAbstractUberBlockManager.h"
-
-#include "Poco/Mutex.h"
+using std::string;
 
 namespace _2Real
 {
 
-	typedef std::list< AbstractUberBlock * >	BlockList;
-
-	class NotOwnedAndUnordered : public AbstractBlockManager
+	AbstractBlockManager::AbstractBlockManager(AbstractUberBlock &owner) :
+		m_Owner(owner)
 	{
+	}
 
-	public:
+	AbstractBlockManager::~AbstractBlockManager()
+	{
+	}
 
-		NotOwnedAndUnordered(AbstractUberBlock &owner);
-		~NotOwnedAndUnordered();
+	string const& AbstractBlockManager::getName() const
+	{
+		return m_Owner.getName();
+	}
 
-		void								clear();
-		AbstractUberBlock &						getBlock(BlockIdentifier const& blockId);
-		AbstractUberBlock const&				getBlock(BlockIdentifier const& blockId) const;
-		void								addBlock(AbstractUberBlock &block);
-		void								removeBlock(AbstractUberBlock &block);
-		std::list< BlockIdentifier >		getCurrentBlockIds() const;
-
-	private:
-
-		mutable Poco::FastMutex				m_Access;
-		BlockList							m_Blocks;
-
-	};
+	unsigned int AbstractBlockManager::getId() const
+	{
+		return m_Owner.getId();
+	}
 
 }

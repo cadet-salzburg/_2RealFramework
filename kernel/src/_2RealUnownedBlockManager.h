@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,18 +18,31 @@
 
 #pragma once
 
+#include "_2RealAbstractBlockManager.h"
+
+#include "Poco/Mutex.h"
+
 namespace _2Real
 {
 
-	class UpdateTrigger
+	class UnownedBlockManager : public AbstractBlockManager
 	{
 
 	public:
 
-		virtual ~UpdateTrigger() {}
+		UnownedBlockManager( AbstractUberBlock &owner );
+		~UnownedBlockManager();
 
-		virtual bool isOk() const = 0;
-		virtual void reset() = 0;
+		void								clear();
+		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
+		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
+		void								addBlock( AbstractUberBlock &block );
+		void								removeBlock( AbstractUberBlock &block );
+
+	private:
+
+		mutable Poco::FastMutex				m_Access;
+		BlockList							m_Blocks;
 
 	};
 

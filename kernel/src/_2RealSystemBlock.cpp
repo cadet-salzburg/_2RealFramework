@@ -23,13 +23,12 @@
 #include "_2RealException.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealTimestampedData.h"
-#include "_2RealUpdatePolicy.h"
 #include "_2RealUberBlockBasedTrigger.h"
 #include "_2RealInletBasedTrigger.h"
 #include "_2RealTimeBasedTrigger.h"
-#include "_2RealUpdatePolicyImpl.h"
 #include "_2RealBlockError.h"
 #include "_2RealLink.h"
+#include "_2RealSystemBlockStateManager.h"
 
 #include <sstream>
 
@@ -37,7 +36,7 @@ namespace _2Real
 {
 
 	SystemBlock::SystemBlock( BlockIdentifier const& id ) :
-		UberBlock< DisabledIO, DisabledBlockManager, OwningBlockManager, SystemBlockStateManager >( id ),
+		UberBlock< DisabledIOManager, DisabledBlockManager, SystemBlockManager, SystemBlockStateManager >( id ),
 		m_Engine( EngineImpl::instance() ),
 		m_BundleManager( EngineImpl::instance().getPluginPool() ),
 		m_StateManager( dynamic_cast< SystemBlockStateManager * >( UberBlock::m_StateManager ) )
@@ -54,6 +53,8 @@ namespace _2Real
 		try
 		{
 			m_SubBlockManager->clear();
+
+			std::cout << "all sub blocks cleared!" << std::endl;
 		}
 		catch (TimeOutException &e)
 		{
@@ -278,7 +279,6 @@ namespace _2Real
 		else
 		{
 			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			//dynamic_cast< SystemBlockStateManager * >( m_StateManager )->setAllowedUpdates( obj, LONG_MAX );
 			obj.start();
 		}
 	}
@@ -294,7 +294,6 @@ namespace _2Real
 		{
 			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
 			obj.stop( true, LONG_MAX );	// blocks until the end of the world, basically
-			//dynamic_cast< SystemBlockStateManager * >( m_StateManager )->setAllowedUpdates( obj, 1 );
 			obj.start();
 		}
 	}
@@ -308,7 +307,6 @@ namespace _2Real
 		else
 		{
 			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			//dynamic_cast< SystemBlockStateManager * >( m_StateManager )->setAllowedUpdates( obj, 0 );
 			obj.stop( true, timeout );
 		}
 	}
@@ -322,7 +320,6 @@ namespace _2Real
 		else
 		{
 			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			//dynamic_cast< SystemBlockStateManager * >( m_StateManager )->setAllowedUpdates( obj, 0 );
 			m_SubBlockManager->removeBlock( obj );
 		}
 	}
@@ -381,39 +378,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlock::link( BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut )
-	{
-		//AbstractUberBlock &blockIn = m_SubBlockManager->getBlock( in );
-		//AbstractUberBlock &blockOut = m_SubBlockManager->getBlock( out );
-
-		//Inlet const& inlet = blockIn.getInlet( nameIn );
-		//Outlet const& outlet = blockOut.getOutlet( nameOut );
-
-		//blockOut.registerToNewData( nameOut, inlet );		// buffer, actually
-
-		//AbstractLink *link = new IOLink( inlet, outlet );
-		//m_Links.insert( link );
-	}
-
-	const BlockIdentifier SystemBlock::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
-	{
-		FunctionBlock &block = m_BundleManager.createServiceBlock( pluginId, blockName, *this );
-
-		UpdatePolicy policy;
-		policy.triggerByUpdateRate( 30.0f );
-		UpdatePolicyImpl *p = new UpdatePolicyImpl( *policy.m_Impl );
-		block.setUpdatePolicy( *p );
-
-		AbstractUberBlockBasedTrigger *subTrigger = new UberBlockBasedTrigger< FunctionBlock >( *this, block, &FunctionBlock::tryTriggerSuperBlock, BLOCK_OK );
-		AbstractUberBlockBasedTrigger *superTrigger = new UberBlockBasedTrigger< SystemBlock >( block, *this, &SystemBlock::tryTriggerSubBlock, BLOCK_OK );
-
-		this->addSubBlock( block, subTrigger );
-		block.addSuperBlock( *this, superTrigger );
-
-		return block.getIdentifier();
-	}
-
-	void SystemBlock::setUpdatePolicy( BlockIdentifier const& id, UpdatePolicy const& policy )
+	UpdatePolicyHandle SystemBlock::getUpdatePolicy( BlockIdentifier const& id )
 	{
 		if ( id == AbstractUberBlock::getIdentifier() )
 		{
@@ -421,10 +386,68 @@ namespace _2Real
 		}
 		else
 		{
-			UpdatePolicyImpl *p = new UpdatePolicyImpl( *policy.m_Impl );
 			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.setUpdatePolicy( *p );
+			return obj.getUpdatePolicyHandle();
 		}
+	}
+
+	void SystemBlock::link( BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut )
+	{
+		AbstractUberBlock &blockIn = m_SubBlockManager->getBlock( in );
+		AbstractUberBlock &blockOut = m_SubBlockManager->getBlock( out );
+
+		Inlet &inlet = blockIn.getInlet( nameIn );
+		Outlet &outlet = blockOut.getOutlet( nameOut );
+
+		AbstractLink *link = new IOLink( inlet, outlet );		// but, who takes care of the links?
+		link->activate();
+		m_Links.insert( link );
+	}
+
+	void SystemBlock::unlink( BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut )
+	{
+		AbstractUberBlock &blockIn = m_SubBlockManager->getBlock( in );
+		AbstractUberBlock &blockOut = m_SubBlockManager->getBlock( out );
+
+		Inlet &inlet = blockIn.getInlet( nameIn );
+		Outlet &outlet = blockOut.getOutlet( nameOut );
+
+		AbstractLink *link = new IOLink( inlet, outlet );
+		LinkSet::iterator it = m_Links.find( link );
+		if ( it != m_Links.end() )
+		{
+			( *it )->deactivate();
+			delete *it;
+			m_Links.erase( *it );
+		}
+	}
+
+	const BlockIdentifier SystemBlock::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
+	{
+		// this currently works b/c i know exactely what triggers to create oO
+
+		FunctionBlock &block = m_BundleManager.createServiceBlock( pluginId, blockName, *this );
+
+		AbstractUberBlockBasedTrigger *s = this->createSubBlockTrigger();
+		AbstractUberBlockBasedTrigger *f = block.createSuperBlockTrigger();
+
+		s->setOther( *f );
+		f->setOther( *s );
+
+		this->addSubBlock( block, f );
+		block.addSuperBlock( *this, s );
+
+		return block.getIdentifier();
+	}
+
+	AbstractUberBlockBasedTrigger * SystemBlock::createSubBlockTrigger()
+	{
+		return new UberBlockBasedTrigger< SystemBlockStateManager >( *m_StateManager, &SystemBlockStateManager::tryTriggerUberBlock, BLOCK_READY );
+	}
+
+	AbstractUberBlockBasedTrigger * SystemBlock::createSuperBlockTrigger()
+	{
+		return nullptr;
 	}
 
 }

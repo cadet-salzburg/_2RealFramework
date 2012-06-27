@@ -18,6 +18,7 @@
 
 #include "_2RealOutlet.h"
 #include "_2RealInlet.h"
+#include "_2RealInletBuffer.h"
 #include "_2RealException.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealParameterData.h"
@@ -60,121 +61,47 @@ namespace _2Real
 			EngineData copy;
 			copy.cloneFrom( m_LastDataItem.getData() );
 			m_LastOutputData = OutputData( copy, Parameter::getTypename(), Parameter::getName() );
-			m_CallbackEvent.notify( this, m_LastOutputData );
 		}
 	}
 
 	EngineData const& Outlet::getLastData() const
 	{
+		Poco::FastMutex::ScopedLock lock( m_Access );
 		return m_LastDataItem.getData();
 	}
 
 	OutputData const& Outlet::getLastOutputData() const
 	{
+		Poco::FastMutex::ScopedLock lock( m_Access );
 		return m_LastOutputData;
 	}
 
 	EngineData & Outlet::getCurrentData()
 	{
+		Poco::FastMutex::ScopedLock lock( m_Access );
 		return m_CurrentDataItem.getData();
 	}
 
 	void Outlet::discardCurrentData()
 	{
+		Poco::FastMutex::ScopedLock lock( m_Access );
 		m_DiscardCurrent = true;
 	}
 
-	void Outlet::addListener( Inlet &inlet )
+	void Outlet::addInletListener( InletBuffer &buffer )
 	{
 		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		LinkList::iterator it = find< LinkList::iterator, Inlet * >( m_Links.begin(), m_Links.end(), &inlet );
-		if ( it == m_Links.end() )
-		{
-			m_InletEvent += Poco::delegate(&inlet, &Inlet::receiveData);
-			m_Links.push_back( &inlet );
-
-			if ( !m_LastDataItem.isEmpty() )
-			{
-				inlet.receiveData( m_LastDataItem );
-			}
-		}
-	}
-
-	void Outlet::removeListener( Inlet &inlet )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		LinkList::iterator it = find< LinkList::iterator, Inlet * >( m_Links.begin(), m_Links.end(), &inlet );
-		if ( it != m_Links.end() )
-		{
-			m_InletEvent -= Poco::delegate(&inlet, &Inlet::receiveData);
-			m_Links.erase( it );
-		}
-	}
-
-	void Outlet::registerCallback( OutletFunctionCallback &callback )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		m_CallbackEvent += Poco::delegate( &callback, &OutletFunctionCallback::invoke );
-
+		m_InletEvent += Poco::delegate( &buffer, &InletBuffer::receiveData );
 		if ( !m_LastDataItem.isEmpty() )
 		{
-			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
-			callback.invoke( data );
+			buffer.receiveData( m_LastDataItem );
 		}
 	}
 
-	void Outlet::unregisterCallback( OutletFunctionCallback &callback )
+	void Outlet::removeInletListener( InletBuffer &buffer )
 	{
 		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		m_CallbackEvent -= Poco::delegate( &callback, &OutletFunctionCallback::invoke );
-	}
-
-	void Outlet::registerCallback( AbstractOutletCallbackHandler &handler )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		m_CallbackEvent += Poco::delegate( &handler, &AbstractOutletCallbackHandler::invoke );
-
-		if ( !m_LastDataItem.isEmpty() )
-		{
-			OutputData data( m_LastDataItem.getData(), Parameter::getTypename(), Parameter::getName() );
-			handler.invoke( data );
-		}
-	}
-
-	void Outlet::unregisterCallback( AbstractOutletCallbackHandler &handler )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		m_CallbackEvent -= Poco::delegate(&handler, &AbstractOutletCallbackHandler::invoke);
-	}
-
-	// hm
-	void Outlet::clearLinks()
-	{
-		for ( LinkList::iterator it = m_Links.begin(); it != m_Links.end(); ++it )
-		{
-			(*it)->unlink( *this );
-			m_InletEvent -= Poco::delegate( *it, &Inlet::receiveData );
-		}
-	}
-
-	void Outlet::resetLinks()
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
-		m_InletEvent.clear();
-
-		for( LinkList::iterator it = m_Links.begin(); it != m_Links.end(); /**/ )
-		{
-			(*it)->unlink(*this);
-			it = m_Links.erase(it);
-			break;
-		}
+		m_InletEvent -= Poco::delegate( &buffer, &InletBuffer::receiveData );
 	}
 
 }

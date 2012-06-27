@@ -56,7 +56,7 @@ namespace _2Real
 			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
 		}
 
-		void invoke( OutputData &data )
+		void invoke( OutputData const& data )
 		{
 			m_Callback( m_UserData, data );
 		}
@@ -93,7 +93,7 @@ namespace _2Real
 			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
 		}
 
-		void invoke( std::list< OutputData > &data )
+		void invoke( std::list< OutputData > const& data )
 		{
 			m_Callback( m_UserData, data );
 		}
@@ -130,7 +130,7 @@ namespace _2Real
 			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
 		}
 
-		void invoke( BlockError &error )
+		void invoke( BlockError const& error )
 		{
 			m_Callback( m_UserData, error );
 		}

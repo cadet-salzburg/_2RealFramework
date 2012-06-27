@@ -26,6 +26,7 @@ namespace _2Real
 {
 
 	class Inlet;
+	class InletBuffer;
 	class Outlet;
 	class SetupParameter;
 
@@ -33,9 +34,9 @@ namespace _2Real
 	{
 
 		friend std::ostream& operator<<( std::ostream &out, ParameterData const& metadata );
-		friend Inlet & createInletFromParameterData( ParameterData const& data );
-		friend Outlet & createOutletFromParameterData( ParameterData const& data );
-		friend SetupParameter & createSetupParameterFromParameterData( ParameterData const& data );
+		friend Inlet*				createInletFromParameterData( ParameterData const& data );
+		friend Outlet *				createOutletFromParameterData( ParameterData const& data );
+		friend SetupParameter *		createSetupParameterFromParameterData( ParameterData const& data );
 
 	public:
 

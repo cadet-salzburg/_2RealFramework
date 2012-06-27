@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,33 +18,33 @@
 
 #pragma once
 
-#include <string>
+#include "_2RealAbstractBlockManager.h"
+
+#include "Poco/Mutex.h"
 
 namespace _2Real
 {
 
-	class UpdatePolicyImpl;
+	typedef std::list< AbstractUberBlock * >	BlockList;
 
-	class UpdatePolicy
+	class SystemBlockManager : public AbstractBlockManager
 	{
 
 	public:
 
-		UpdatePolicy();
-		~UpdatePolicy();
+		SystemBlockManager( AbstractUberBlock &owner );
+		~SystemBlockManager();
 
-		void clear();
-		void triggerByUpdateRate( const float updatesPerSecond );
-		void triggerWhenAllDataNew();
+		void								clear();
+		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
+		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
+		void								addBlock( AbstractUberBlock &block );
+		void								removeBlock( AbstractUberBlock &block );
 
 	private:
 
-		friend class SystemBlock;
-
-		UpdatePolicy(UpdatePolicy const& src);
-		UpdatePolicy& operator=(UpdatePolicy const& src);
-
-		UpdatePolicyImpl			*m_Impl;
+		mutable Poco::FastMutex				m_Access;
+		AbstractBlockManager::BlockList		m_Blocks;
 
 	};
 

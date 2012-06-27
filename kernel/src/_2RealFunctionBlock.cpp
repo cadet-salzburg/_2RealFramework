@@ -23,21 +23,40 @@
 #include "_2RealSystemBlock.h"
 #include "_2RealInletHandle.h"
 #include "_2RealOutletHandle.h"
+#include "_2RealUpdatePolicyl.h"
 
 namespace _2Real
 {
 
 	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemBlock &owner, BlockIdentifier const& id ) :
-		UberBlock< FunctionBlockIOManager, DisabledBlockManager, DisabledBlockManager, FunctionBlockStateManager>( id ),
+		UberBlock< FunctionBlockIOManager, UnownedBlockManager, DisabledBlockManager, FunctionBlockStateManager>( id ),
 		m_IOManager( dynamic_cast< FunctionBlockIOManager * >( UberBlock::m_IOManager ) ),
 		m_StateManager( dynamic_cast< FunctionBlockStateManager * >( UberBlock::m_StateManager ) )
 	{
-		// state manager needs some more stuff
-		m_StateManager->m_IO = m_IOManager;
+		m_StateManager->m_IOManager = m_IOManager;
 		m_StateManager->m_System = &owner;
 		m_StateManager->m_FunctionBlock = &block;
+		m_StateManager->m_UpdatePolicy = m_UpdatePolicy;
 
-		m_IOManager->initFrom( data );
+		ParameterDataMap const& setup = data.getParameters();
+		ParameterDataMap const& input = data.getInlets();
+		ParameterDataMap const& output = data.getOutlets();
+
+		for ( ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it )
+		{
+			m_IOManager->addSetupParameter( it->second );
+		}
+
+		for ( ParameterDataMap::const_iterator it = input.begin(); it != input.end(); ++it )
+		{
+			m_IOManager->addInlet( it->second );
+			m_UpdatePolicy->addInlet( it->second.getName() );
+		}
+
+		for ( ParameterDataMap::const_iterator it = output.begin(); it != output.end(); ++it )
+		{
+			m_IOManager->addOutlet( it->second );
+		}
 	}
 
 	InletHandle FunctionBlock::createInletHandle(std::string const& name)
