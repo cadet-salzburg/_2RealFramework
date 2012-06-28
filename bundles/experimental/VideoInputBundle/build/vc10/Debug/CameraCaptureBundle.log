@@ -1,0 +1,40 @@
+﻿Build started 28.06.2012 14:22:18.
+     1>Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\VideoInputBundle.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\Libraries\boost_1_48_0 /ID:\Work\CADET\Repository\cadet\externalLibs\poco\XML\include /ID:\Work\CADET\Repository\cadet\externalLibs\poco\Foundation\include /I..\..\..\..\..\kernel\src /ID:\SDK\videoInputLib\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\VideoInputBlock.cpp ..\..\src\VideoInputBundle.cpp ..\..\src\CameraDeviceManager.cpp
+         CameraDeviceManager.cpp
+         VideoInputBundle.cpp
+         VideoInputBlock.cpp
+         Generating Code...
+     1>d:\work\cadet\repository\cadet\trunk\_2realframework\bundles\experimental\videoinputbundle\src\cameradevicemanager.cpp(62): warning C4715: 'CameraDeviceManager::isDeviceAvailable' : not all control paths return a value
+     1>d:\work\cadet\repository\cadet\trunk\_2realframework\bundles\experimental\videoinputbundle\src\cameradevicemanager.cpp(78): warning C4715: 'CameraDeviceManager::getPixels' : not all control paths return a value
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\VideoInputBundle_32d.dll.embed.manifest.res" Debug\VideoInputBundle_32d_manifest.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\..\bin\win\VideoInputBundle_32d.dll" /INCREMENTAL /NOLOGO /LIBPATH:D:\Libraries\boost_1_48_0\lib /LIBPATH:..\..\..\..\..\..\..\externalLibs\poco\lib /LIBPATH:..\..\..\..\..\kernel\lib /LIBPATH:D:\SDK\videoInputLib _2RealEngine_32d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib videoInput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /ManifestFile:"Debug\VideoInputBundle_32d.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\VideoInputBundle_32d.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\..\bin\win\VideoInputBundle_32d.lib" /MACHINE:X86 /DLL Debug\VideoInputBundle_32d.dll.embed.manifest.res
+         Debug\VideoInputBlock.obj
+         Debug\VideoInputBundle.obj
+         Debug\CameraDeviceManager.obj
+            Creating library ..\..\..\bin\win\VideoInputBundle_32d.lib and object ..\..\..\bin\win\VideoInputBundle_32d.exp
+     1>videoInput.lib(videoInput.obj) : warning LNK4099: PDB 'vc90.pdb' was not found with 'videoInput.lib(videoInput.obj)' or at 'D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\vc90.pdb'; linking object as if no debug info
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\VideoInputBundle_32d.dll.embed.manifest" /manifest Debug\VideoInputBundle_32d.dll.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\VideoInputBundle_32d.dll.embed.manifest.res" Debug\VideoInputBundle_32d_manifest.rc 
+       LinkEmbedManifest:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\..\bin\win\VideoInputBundle_32d.dll" /INCREMENTAL /NOLOGO /LIBPATH:D:\Libraries\boost_1_48_0\lib /LIBPATH:..\..\..\..\..\..\..\externalLibs\poco\lib /LIBPATH:..\..\..\..\..\kernel\lib /LIBPATH:D:\SDK\videoInputLib _2RealEngine_32d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib videoInput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /ManifestFile:"Debug\VideoInputBundle_32d.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\VideoInputBundle_32d.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\..\bin\win\VideoInputBundle_32d.lib" /MACHINE:X86 /DLL Debug\VideoInputBundle_32d.dll.embed.manifest.res
+         Debug\VideoInputBlock.obj
+         Debug\VideoInputBundle.obj
+         Debug\CameraDeviceManager.obj
+            Creating library ..\..\..\bin\win\VideoInputBundle_32d.lib and object ..\..\..\bin\win\VideoInputBundle_32d.exp
+     1>videoInput.lib(videoInput.obj) : warning LNK4099: PDB 'vc90.pdb' was not found with 'videoInput.lib(videoInput.obj)' or at 'D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\vc90.pdb'; linking object as if no debug info
+         CameraCaptureBundle.vcxproj -> D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\..\..\..\bin\win\VideoInputBundle_32d.dll
+       FinalizeBuildStatus:
+         Deleting file "Debug\VideoInputBundle.unsuccessfulbuild".
+         Touching "Debug\VideoInputBundle.lastbuildstate".
+     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.40
