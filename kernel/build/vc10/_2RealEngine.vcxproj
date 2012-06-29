@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\_2RealAppData.h" />
     <ClInclude Include="..\..\src\app\_2RealApplication.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
@@ -27,7 +28,6 @@
     <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealOutputData.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParamHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h" />
@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\_2RealAppData.cpp" />
     <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
@@ -119,12 +120,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealOutputData.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>

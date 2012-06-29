@@ -199,9 +199,6 @@
     <ClInclude Include="..\..\src\app\_2RealCallbacks.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealOutputData.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealBlock.h">
       <Filter>include\bundle</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealCreationPolicy.h">
       <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealAppData.h">
+      <Filter>include\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,9 +375,6 @@
     <ClCompile Include="..\..\src\_2RealSystemBlockManager.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealOutputData.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
       <Filter>src\bundle</Filter>
     </ClCompile>
@@ -389,6 +386,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealContextBlockMetainfo.cpp">
       <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
+      <Filter>src\app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
