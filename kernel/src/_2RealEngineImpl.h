@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "app/_2RealCallbacks.h"
+
 #include "_2RealPoco.h"
 
 #include <string>
@@ -67,7 +69,11 @@ namespace _2Real
 
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle				loadLibrary( std::string const& libraryPath );
-		//const bool					isLibraryLoaded( Poco::Path const& path ) const;
+		
+		void							registerToException( app::ExceptionCallback callback, void *userData );
+		void							unregisterFromException( app::ExceptionCallback callback, void *userData );
+		void							registerToException( app::AbstractExceptionCallbackHandler &handler );
+		void							unregisterFromException( app::AbstractExceptionCallbackHandler &handler );
 
 	private:
 

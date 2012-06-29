@@ -47,7 +47,6 @@
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
-    <ClInclude Include="..\..\src\_2RealBlockError.h" />
     <ClInclude Include="..\..\src\_2RealBlockIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealBundleIdentifier.h" />
@@ -195,7 +194,6 @@
     <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleData.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp" />

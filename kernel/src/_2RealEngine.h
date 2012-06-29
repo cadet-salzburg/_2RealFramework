@@ -19,80 +19,62 @@
 
 #pragma once
 
+#include "app/_2RealCallbacks.h"
+
 #include <string>
 
 namespace _2Real
 {
 
+	template< typename T >
+	class SingletonHolder;
 	class EngineImpl;
 
 	namespace app
 	{
 		class BundleHandle;
+
+		class Engine
+		{
+
+			template< typename T >
+			friend class _2Real::SingletonHolder;
+
+		public:
+
+			static Engine& instance();
+
+			void setBaseDirectory( std::string const& directory );
+
+			app::BundleHandle loadBundle( std::string const& libraryPath );
+
+			void registerToException( ExceptionCallback callback, void *userData = nullptr );
+			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
+
+			template< typename Callable >
+			void registerToException( Callable &callable, void ( Callable::*callback )( Exception const&, BlockHandle const& ) )
+			{
+				AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+				registerToExceptionInternal( *handler );
+			}
+
+			template< typename Callable >
+			void unregisterFromException( Callable &callable, void ( Callable::*callback )( Exception const&, BlockHandle const& ) )
+			{
+				AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
+				registerToExceptionInternal( *handler );
+			} 
+
+		private:
+
+			void registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
+			void unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
+
+			Engine();
+			Engine( Engine const& src );
+
+			EngineImpl		&m_EngineImpl;
+
+		};
 	}
-
-	class Engine
-	{
-
-		template< typename T >
-		friend class SingletonHolder;
-
-	public:
-
-		static Engine& instance();
-
-		/*
-		*	sets the base directory, from where all bundles will be searched
-		*/
-		void setBaseDirectory( std::string const& directory );
-
-		/*
-		*	loads the dynamic lib from the given path
-		*	if path is relative, it will be interpreted with respect to the base directory
-		*	if bundle is already loaded, will throw already exists exception
-		*	if library cannot be loaded ( not existing or no metadata ) will throw not found exception
-		*/
-		app::BundleHandle loadBundle( std::string const& libraryPath );
-
-		//bool isLoaded( std::string const& libraryPath ) const;
-		//app::BundleHandle getBundleHandle( std::string const& libraryPath ) const;
-
-	private:
-
-		Engine();
-		Engine( Engine const& src );
-		~Engine();
-
-		EngineImpl		&m_EngineImpl;
-
-	};
-
-
-	//class Engine
-	//{
-
-	//public:
-
-	//	static Engine& instance();
-
-	//	void setBaseDirectory( std::string const& directory );
-	//	const BundleIdentifier load( std::string const& path );
-	//	bool isLoaded( std::string const& libraryPath ) const;
-	//	const std::string getInfoString( BundleIdentifier const& bundleId );
-	//	BundleData const& getBundleData( BundleIdentifier const& bundleId ) const;
-	//	BlockData const& getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
-
-	//private:
-
-	//	template< typename T >
-	//	friend class SingletonHolder;
-
-	//	Engine();
-	//	Engine(Engine const& src);
-	//	~Engine();
-
-	//	EngineImpl								&m_EngineImpl;
-
-	//};
-
 }

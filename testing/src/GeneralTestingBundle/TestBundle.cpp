@@ -1,9 +1,9 @@
 #include "ServiceImpl.h"
 
-#include "_2RealBundle.h"
-#include "_2RealBundleMetainfo.h"
-#include "_2RealBlockMetainfo.h"
-#include "_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealBundle.h"
+#include "bundle/_2RealBundleMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
 #include "_2RealException.h"
 
 using _2Real::bundle::BundleMetainfo;

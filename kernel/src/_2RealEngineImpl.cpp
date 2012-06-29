@@ -28,6 +28,8 @@
 #include "_2RealSystemBlock.h"
 #include "_2RealIdCounter.h"
 #include "app/_2RealBundleHandle.h"
+#include "app/_2RealCallbacks.h"
+#include "app/_2RealCallbacksInternal.h"
 
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealEnum.h"
@@ -193,6 +195,26 @@ namespace _2Real
 		string path = libraryPath;
 		path.append( shared_library_suffix );
 		return m_BundleManager->loadLibrary( path );
+	}
+
+	void EngineImpl::registerToException( app::ExceptionCallback callback, void *userData )
+	{
+		m_SystemBlock->registerToException( callback, userData );
+	}
+
+	void EngineImpl::unregisterFromException( app::ExceptionCallback callback, void *userData )
+	{
+		m_SystemBlock->unregisterFromException( callback, userData );
+	}
+
+	void EngineImpl::registerToException( app::AbstractExceptionCallbackHandler &handler )
+	{
+		m_SystemBlock->registerToException( handler );
+	}
+
+	void EngineImpl::unregisterFromException( app::AbstractExceptionCallbackHandler &handler )
+	{
+		m_SystemBlock->unregisterFromException( handler );
 	}
 
 }

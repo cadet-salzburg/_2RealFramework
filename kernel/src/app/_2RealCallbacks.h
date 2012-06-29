@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealAppData.h"
+#include "app/_2RealAppData.h"
 
 #include <list>
 
@@ -36,14 +36,13 @@
 namespace _2Real
 {
 
-	class BlockError;
-
 	namespace app
 	{
+		class BlockHandle;
 
-		typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *userData, BlockError const& error );
-		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *userData, AppData const& data );
-		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *userData, std::list< AppData > const& data );
+		typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *, Exception const&, BlockHandle const& );
+		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, AppData const& );
+		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::list< AppData > const& );
 
 		class AbstractExceptionCallbackHandler
 		{
@@ -52,7 +51,7 @@ namespace _2Real
 
 			AbstractExceptionCallbackHandler( void *object ) : m_Object( object ) {};
 			virtual ~AbstractExceptionCallbackHandler() {};
-			virtual void invoke( BlockError const& error ) = 0;
+			virtual void invoke( Exception const&, BlockHandle const& ) = 0;
 			bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
 
 		private:
@@ -67,7 +66,7 @@ namespace _2Real
 
 		public:
 
-			typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( BlockError const& );
+			typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( Exception const&, BlockHandle const& );
 
 			ExceptionCallbackHandler(Callable &callable, Callback method) :
 				AbstractExceptionCallbackHandler(&callable),
@@ -76,9 +75,9 @@ namespace _2Real
 			{
 			}
 
-			void invoke(BlockError const& error)
+			void invoke( Exception const& e, BlockHandle const& h )
 			{
-				(m_Callable.*m_Method)(error);
+				( m_Callable.*m_Method )( e, h );
 			}
 
 		private:

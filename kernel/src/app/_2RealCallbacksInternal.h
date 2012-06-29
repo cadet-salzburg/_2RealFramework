@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "_2RealCallbacks.h"
+#include "app/_2RealCallbacks.h"
 
 #include <set>
 #include <list>
@@ -134,9 +134,9 @@ namespace _2Real
 				return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
 			}
 
-			void invoke( BlockError const& error )
+			void invoke( Exception const& e, BlockHandle const& h )
 			{
-				m_Callback( m_UserData, error );
+				m_Callback( m_UserData, e, h );
 			}
 
 		private:

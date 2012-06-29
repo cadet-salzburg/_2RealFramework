@@ -23,6 +23,7 @@
 #include "_2RealDisabledIOManager.h"
 #include "_2RealSystemBlockStateManager.h"
 #include "_2RealLink.h"
+#include "app/_2RealCallbacks.h"
 
 #include <set>
 
@@ -32,6 +33,7 @@ namespace _2Real
 	class EngineImpl;
 	class AbstractLink;
 	class SystemBlockManager;
+	class FunctionBlock;
 
 	class SystemBlock : public UberBlock< DisabledIOManager, SystemBlockStateManager >
 	{
@@ -45,16 +47,16 @@ namespace _2Real
 		void		clear();
 
 		// called by a block ( other that the system ) when an exception occurs
-		void		handleException( AbstractUberBlock &block, Exception &exception );
+		void		handleException( FunctionBlock &block, Exception const& exception );
 
 		// adds block to the system, yay
 		void		addUberBlock( AbstractUberBlock &block );
 
 		// will be called by the engine
-		//void		registerToException( ExceptionCallback callback, void *userData );
-		//void		unregisterFromException( ExceptionCallback callback, void *userData );
-		//void		registerToException( AbstractExceptionCallbackHandler &handler );
-		//void		unregisterFromException( AbstractExceptionCallbackHandler &handler );
+		void		registerToException( app::ExceptionCallback callback, void *userData );
+		void		unregisterFromException( app::ExceptionCallback callback, void *userData );
+		void		registerToException( app::AbstractExceptionCallbackHandler &handler );
+		void		unregisterFromException( app::AbstractExceptionCallbackHandler &handler );
 
 		// yay
 		void		createLink( Inlet &inlet, Outlet &outlet );
@@ -68,9 +70,9 @@ namespace _2Real
 		LinkSet									m_Links;
 
 		// TODO: write own delegate class to handle this shit
-		//mutable Poco::FastMutex					m_ExceptionAccess;
-		//ExceptionFunctionCallbacks				m_ExceptionCallbacks;
-		//ExceptionCallbackHandlers				m_ExceptionCallbackHandlers;
+		mutable Poco::FastMutex					m_ExceptionAccess;
+		app::ExceptionFunctionCallbacks			m_ExceptionCallbacks;
+		app::ExceptionCallbackHandlers			m_ExceptionCallbackHandlers;
 
 	};
 

@@ -421,7 +421,7 @@ namespace _2Real
 		disableAllTriggers();
 		delete m_CurrentState;
 		m_CurrentState = new FunctionBlockStateError();
-		m_System->handleException( m_Owner, e );
+		m_System->handleException( dynamic_cast< FunctionBlock & >( m_Owner ), e );
 	}
 
 	void FunctionBlockStateManager::addUberBlockTrigger( UberBlockBasedTrigger &trigger )

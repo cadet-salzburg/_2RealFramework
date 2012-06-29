@@ -17,7 +17,7 @@
 	limitations under the License.
 */
 
-#include "_2RealApplication.h"
+#include "app/_2RealApplication.h"
 
 #include <iostream>
 #include <map>
@@ -32,7 +32,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 
-using _2Real::Engine;
+using _2Real::app::Engine;
 using _2Real::Exception;
 using _2Real::BundleData;
 using _2Real::BlockData;

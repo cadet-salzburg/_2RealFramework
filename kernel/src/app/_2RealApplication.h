@@ -27,8 +27,6 @@
 #include "app/_2RealAppData.h"
 #include "app/_2RealCallbacks.h"
 
-#include "_2RealBlockError.h"
-
 // ? keep in _2Real or move to app
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
