@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_2RealBlock.h"
+#include "bundle/_2RealBlock.h"
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "bundle/_2RealParameterHandle.h"

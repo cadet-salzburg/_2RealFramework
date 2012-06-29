@@ -19,45 +19,46 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\_2RealApplication.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealCallbacks.h" />
+    <ClInclude Include="..\..\src\app\_2RealCallbacksInternal.h" />
     <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealOutputData.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParamHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBlock.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealCreationPolicy.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealEnum.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h" />
-    <ClInclude Include="..\..\src\_2RealApplication.h" />
-    <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBlockData.h" />
     <ClInclude Include="..\..\src\_2RealBlockError.h" />
-    <ClInclude Include="..\..\src\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\_2RealBlockIdentifier.h" />
-    <ClInclude Include="..\..\src\_2RealBlockMetainfo.h" />
-    <ClInclude Include="..\..\src\_2RealBundle.h" />
     <ClInclude Include="..\..\src\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\_2RealBundleIdentifier.h" />
     <ClInclude Include="..\..\src\_2RealBundleInternal.h" />
     <ClInclude Include="..\..\src\_2RealBundleLoader.h" />
     <ClInclude Include="..\..\src\_2RealBundleManager.h" />
-    <ClInclude Include="..\..\src\_2RealBundleMetainfo.h" />
     <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h" />
-    <ClInclude Include="..\..\src\_2RealCallbacks.h" />
-    <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
-    <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h" />
-    <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
     <ClInclude Include="..\..\src\_2RealDisabledIOManager.h" />
     <ClInclude Include="..\..\src\_2RealEngine.h" />
     <ClInclude Include="..\..\src\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\_2RealEngineImpl.h" />
-    <ClInclude Include="..\..\src\_2RealEnum.h" />
     <ClInclude Include="..\..\src\_2RealException.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlock.h" />
     <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h" />
@@ -66,14 +67,12 @@
     <ClInclude Include="..\..\src\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\_2RealHelpersInternal.h" />
     <ClInclude Include="..\..\src\_2RealIdCounter.h" />
-    <ClInclude Include="..\..\src\_2RealImageT.h" />
     <ClInclude Include="..\..\src\_2RealInlet.h" />
     <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h" />
     <ClInclude Include="..\..\src\_2RealInletBuffer.h" />
     <ClInclude Include="..\..\src\_2RealLink.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
     <ClInclude Include="..\..\src\_2RealOutlet.h" />
-    <ClInclude Include="..\..\src\_2RealOutputData.h" />
     <ClInclude Include="..\..\src\_2RealParam.h" />
     <ClInclude Include="..\..\src\_2RealParameter.h" />
     <ClInclude Include="..\..\src\_2RealParameterData.h" />
@@ -81,6 +80,7 @@
     <ClInclude Include="..\..\src\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\_2RealSystemBlock.h" />
+    <ClInclude Include="..\..\src\_2RealSystemBlockManager.h" />
     <ClInclude Include="..\..\src\_2RealSystemBlockStateManager.h" />
     <ClInclude Include="..\..\src\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h" />
@@ -90,7 +90,6 @@
     <ClInclude Include="..\..\src\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\_2RealUberBlock.h" />
     <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h" />
-    <ClInclude Include="..\..\src\_2RealUberBlockManager.h" />
     <ClInclude Include="..\..\src\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
@@ -125,18 +124,53 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutputData.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParamHandle.cpp" />
+    <ClCompile Include="..\..\src\app\_2RealParamHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealContextBlockMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
@@ -156,42 +190,24 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockData.cpp" />
     <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockHandle.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleData.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleLoader.cpp" />
     <ClCompile Include="..\..\src\_2RealBundleManager.cpp" />
-    <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleMetainfoImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealDisabledIOManager.cpp" />
     <ClCompile Include="..\..\src\_2RealEngine.cpp" />
     <ClCompile Include="..\..\src\_2RealEngineData.cpp" />
@@ -204,27 +220,20 @@
     <ClCompile Include="..\..\src\_2RealHelpers.cpp" />
     <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp" />
     <ClCompile Include="..\..\src\_2RealIdCounter.cpp" />
-    <ClCompile Include="..\..\src\_2RealImageT.cpp" />
     <ClCompile Include="..\..\src\_2RealInlet.cpp" />
     <ClCompile Include="..\..\src\_2RealInletBuffer.cpp" />
     <ClCompile Include="..\..\src\_2RealLink.cpp" />
     <ClCompile Include="..\..\src\_2RealOutlet.cpp" />
-    <ClCompile Include="..\..\src\_2RealOutputData.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealParam.cpp" />
     <ClCompile Include="..\..\src\_2RealParameter.cpp" />
     <ClCompile Include="..\..\src\_2RealParameterData.cpp" />
     <ClCompile Include="..\..\src\_2RealPooledThread.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemBlock.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp" />
     <ClCompile Include="..\..\src\_2RealThreadPool.cpp" />
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp" />
     <ClCompile Include="..\..\src\_2RealTypetable.cpp" />
-    <ClCompile Include="..\..\src\_2RealUberBlockManager.cpp" />
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

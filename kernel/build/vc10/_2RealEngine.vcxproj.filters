@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealApplication.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleInternal.h">
       <Filter>include\engine</Filter>
     </ClInclude>
@@ -12,12 +9,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleManager.h">
       <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEnum.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealImageT.h">
-      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealEngineImpl.h">
       <Filter>include\engine</Filter>
@@ -94,19 +85,10 @@
     <ClInclude Include="..\..\src\_2RealUberBlock.h">
       <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlock.h">
-      <Filter>include\bundle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundle.h">
-      <Filter>include\bundle</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h">
       <Filter>src\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUberBlockManager.h">
       <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h">
@@ -133,9 +115,6 @@
     <ClInclude Include="..\..\src\_2RealSingletonHolder.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlockMetainfo.h">
-      <Filter>include\bundle</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealBlockData.h">
       <Filter>include\metadata</Filter>
     </ClInclude>
@@ -150,12 +129,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h">
       <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleMetainfo.h">
-      <Filter>include\bundle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h">
-      <Filter>include\bundle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleIdentifier.h">
       <Filter>include</Filter>
@@ -174,12 +147,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealParameter.h">
       <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlockHandle.h">
-      <Filter>include\bundle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealCreationPolicy.h">
-      <Filter>include\bundle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h">
       <Filter>include\bundle</Filter>
@@ -211,17 +178,47 @@
     <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutputData.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealParamHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealCallbacks.h">
+    <ClInclude Include="..\..\src\datatypes\_2RealEnum.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealImageT.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemBlockManager.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealApplication.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealCallbacksInternal.h">
+    <ClInclude Include="..\..\src\app\_2RealCallbacksInternal.h">
       <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealCallbacks.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealOutputData.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlock.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealCreationPolicy.h">
+      <Filter>include\bundle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleManager.cpp">
       <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealImageT.cpp">
-      <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealTypetable.cpp">
       <Filter>src\engine</Filter>
@@ -300,9 +294,6 @@
     <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUberBlockManager.cpp">
-      <Filter>include\block</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
@@ -314,9 +305,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealEngine.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOutputData.cpp">
-      <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealParameterData.cpp">
       <Filter>src\metadata</Filter>
@@ -372,18 +360,6 @@
     <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
       <Filter>src\bundle</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlockHandle.cpp">
-      <Filter>src\bundle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
-      <Filter>src\bundle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp">
-      <Filter>src\bundle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp">
-      <Filter>src\bundle</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
       <Filter>src\bundle</Filter>
     </ClCompile>
@@ -392,6 +368,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealParamHandle.cpp">
       <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemBlockManager.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutputData.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealContextBlockMetainfo.cpp">
+      <Filter>src\bundle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

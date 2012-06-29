@@ -20,7 +20,7 @@
 #include "_2RealBundleLoader.h"
 #include "_2RealException.h"
 #include "_2RealBundleMetainfoImpl.h"
-#include "_2RealBundleMetainfo.h"
+#include "bundle/_2RealBundleMetainfo.h"
 #include "_2RealEngineImpl.h"
 
 #include <iostream>

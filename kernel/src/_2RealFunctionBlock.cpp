@@ -17,7 +17,7 @@
 */
 
 #include "_2RealFunctionBlock.h"
-#include "_2RealBlock.h"
+#include "bundle/_2RealBlock.h"
 #include "_2RealBlockData.h"
 #include "_2RealSystemBlock.h"
 #include "_2RealUpdatePolicy.h"

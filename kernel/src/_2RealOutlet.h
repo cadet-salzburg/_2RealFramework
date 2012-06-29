@@ -20,9 +20,9 @@
 
 #include "_2RealParameter.h"
 #include "_2RealTimestampedData.h"
-#include "_2RealOutputData.h"
+#include "app/_2RealOutputData.h"
 #include "_2RealPoco.h"
-#include "_2RealCallbacksInternal.h"
+#include "app/_2RealCallbacksInternal.h"
 
 namespace _2Real
 {

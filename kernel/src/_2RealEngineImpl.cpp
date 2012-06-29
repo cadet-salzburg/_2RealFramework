@@ -29,8 +29,8 @@
 #include "_2RealIdCounter.h"
 #include "app/_2RealBundleHandle.h"
 
-#include "_2RealImageT.h"
-#include "_2RealEnum.h"
+#include "datatypes/_2RealImageT.h"
+#include "datatypes/_2RealEnum.h"
 
 #include <sstream>
 #include <iostream>

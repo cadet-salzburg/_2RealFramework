@@ -17,12 +17,12 @@
 */
 
 #include "_2RealBundleMetainfoImpl.h"
-#include "_2RealCreationPolicy.h"
+#include "bundle/_2RealCreationPolicy.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealTypetable.h"
-#include "_2RealBlockMetainfo.h"
-#include "_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
 #include "_2RealHelpersInternal.h"
 
 #include <sstream>
