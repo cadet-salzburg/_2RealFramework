@@ -19,11 +19,7 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
-#include "Poco/Thread.h"
-#include "Poco/Runnable.h"
-#include "Poco/Event.h"
-#include "Poco/Timestamp.h"
+#include "_2RealPoco.h"
 
 #include <list>
 #include <fstream>

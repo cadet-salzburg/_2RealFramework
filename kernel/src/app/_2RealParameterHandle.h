@@ -18,32 +18,34 @@
 
 #pragma once
 
-#include "_2RealAbstractBlockManager.h"
-
-#include "Poco/Mutex.h"
+#include "_2RealEngineData.h"
+#include "_2RealParamHandle.h"
 
 namespace _2Real
 {
+	class Parameter;
 
-	class UnownedBlockManager : public AbstractBlockManager
+	namespace app
 	{
+		class ParameterHandle : public ParamHandle
+		{
 
-	public:
+		public:
 
-		UnownedBlockManager( AbstractUberBlock &owner );
-		~UnownedBlockManager();
+			ParameterHandle();
+			ParameterHandle( Parameter &param );
 
-		void								clear();
-		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
-		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
-		void								addBlock( AbstractUberBlock &block );
-		void								removeBlock( AbstractUberBlock &block );
+			template< typename T >
+			void setValue( T const& value )
+			{
+				setParameterValue( EngineData( value ) );
+			}
 
-	private:
+		private:
 
-		mutable Poco::FastMutex				m_Access;
-		BlockList							m_Blocks;
+			void		setParameterValue( EngineData const& data );
+			Parameter	*m_Parameter;
 
-	};
-
+		};
+	}
 }

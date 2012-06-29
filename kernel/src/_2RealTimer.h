@@ -21,12 +21,7 @@
 
 #include "_2RealTimeBasedTrigger.h"
 #include "_2RealThreadPool.h"
-
-#include "Poco/Timer.h"
-#include "Poco/Timestamp.h"
-#include "Poco/BasicEvent.h"
-#include "Poco/Delegate.h"
-#include "Poco/Mutex.h"
+#include "_2RealPoco.h"
 
 #include <iostream>
 
@@ -75,8 +70,8 @@ namespace _2Real
 		, m_DebugTime()
 #endif
 	{
-		m_Callback = new Poco::TimerCallback< Timer >(*this, &Timer::receiveTimerSignal);
-		m_Timer.start(*m_Callback, Poco::Thread::PRIO_HIGHEST);
+		m_Callback = new Poco::TimerCallback< Timer >( *this, &Timer::receiveTimerSignal );
+		m_Timer.start( *m_Callback, Poco::Thread::PRIO_HIGHEST );
 	}
 
 	inline Timer::~Timer()
@@ -90,7 +85,7 @@ namespace _2Real
 		Poco::ScopedLock< Poco::FastMutex > lock(m_TestMutex);
 
 		long elapsed = (long)m_Timestamp.elapsed();
-		m_TimerSignal.notify(this, elapsed);
+		m_TimerSignal.notify( this, elapsed );
 		m_Timestamp.update();
 
 #ifdef _2REAL_DEBUG

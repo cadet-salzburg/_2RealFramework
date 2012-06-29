@@ -20,12 +20,14 @@
 
 #include "_2RealAbstractStateManager.h"
 #include "_2RealHelpersInternal.h"
-
-#include "Poco/Event.h"
-#include "Poco/Mutex.h"
+#include "_2RealPoco.h"
 
 namespace _2Real
 {
+	namespace bundle
+	{
+		class Block;
+	}
 
 	class AbstractFunctionBlockState;
 	class ServiceUpdates;
@@ -54,12 +56,12 @@ namespace _2Real
 		void updateFunctionBlock();				// threadpool
 
 		void tryTrigger( AbstractUpdateTrigger &trigger );
-		void tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger );
+		void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
 
 		void addTrigger( AbstractUpdateTrigger &trigger );
 		void removeTrigger( AbstractUpdateTrigger &trigger );
-		void addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
-		void removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
+		void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
+		void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
 
 	private:
 
@@ -87,7 +89,7 @@ namespace _2Real
 		FunctionBlockIOManager							*m_IOManager;
 		UpdatePolicy									*m_UpdatePolicy;
 		SystemBlock										*m_System;			// for error handling
-		Block											*m_FunctionBlock;
+		bundle::Block									*m_FunctionBlock;
 
 		mutable Poco::FastMutex							m_TriggerAccess;
 		AbstractStateManager::TriggerList				m_Triggers;

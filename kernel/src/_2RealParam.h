@@ -19,36 +19,33 @@
 #pragma once
 
 #include <string>
-#include <list>
 
 namespace _2Real
 {
 
-	class BlockIdentifier;
+	class ParameterData;
 	class AbstractUberBlock;
 
-	class AbstractBlockManager
+	class Param
 	{
 
 	public:
 
-		typedef std::list< AbstractUberBlock * >	BlockList;
+		Param( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName );
+		virtual ~Param() {}
 
-		AbstractBlockManager( AbstractUberBlock &owner );
-		virtual ~AbstractBlockManager();
-
+		std::string const& getTypename() const;
+		std::string const& getLongTypename() const;
 		std::string const& getName() const;
-		unsigned int getId() const;
 
-		virtual void								clear() = 0;
-		virtual AbstractUberBlock &					getBlock( BlockIdentifier const& blockId ) = 0;
-		virtual AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const = 0;
-		virtual void								addBlock( AbstractUberBlock &block ) = 0;
-		virtual	void								removeBlock( AbstractUberBlock &block ) = 0;
+		AbstractUberBlock& getOwningUberBlock();
 
 	protected:
 
-		AbstractUberBlock							&m_Owner;
+		AbstractUberBlock		&m_Owner;
+		std::string				const m_LongTypename;
+		std::string				const m_Typename;
+		std::string				const m_Name;
 
 	};
 

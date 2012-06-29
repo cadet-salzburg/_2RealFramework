@@ -22,86 +22,86 @@
 
 namespace _2Real
 {
-
-	class AbstractBlockCreator
+	namespace bundle
 	{
-
-	public:
-
-		virtual ~AbstractBlockCreator() {}
-		virtual Block & create( ContextBlock *const context ) = 0;
-
-	};
-
-	template< typename BlockDerived >
-	class CreationPolicy
-	{
-
-	public:
-
-		virtual ~CreationPolicy() {}
-		virtual Block & create( ContextBlock *const context ) = 0;
-
-	};
-
-	template< typename BlockDerived >
-	class WithContext : public CreationPolicy< BlockDerived >
-	{
-
-	public:
-
-		Block & create ( ContextBlock *const context ) { return *( new BlockDerived( *context ) ); }
-
-	};
-
-	template< typename BlockDerived >
-	class WithoutContext : public CreationPolicy< BlockDerived >
-	{
-
-	public:
-
-		Block & create ( ContextBlock *const context ) { return *( new BlockDerived() ); }
-
-	};
-
-	// not threadsafe!
-	template< typename ContextBlockDerived >
-	class CreateContext : public CreationPolicy< ContextBlockDerived >
-	{
-
-	public:
-
-		CreateContext() : m_Obj( nullptr )		{}
-		~CreateContext()						{ delete m_Obj; }
-
-		Block & create( ContextBlock *const context )
+		class AbstractBlockCreator
 		{
-			if ( m_Obj == nullptr )
+
+		public:
+
+			virtual ~AbstractBlockCreator() {}
+			virtual Block & create( ContextBlock *const context ) = 0;
+
+		};
+
+		template< typename BlockDerived >
+		class CreationPolicy
+		{
+
+		public:
+
+			virtual ~CreationPolicy() {}
+			virtual Block & create( ContextBlock *const context ) = 0;
+
+		};
+
+		template< typename BlockDerived >
+		class WithContext : public CreationPolicy< BlockDerived >
+		{
+
+		public:
+
+			Block & create ( ContextBlock *const context ) { return *( new BlockDerived( *context ) ); }
+
+		};
+
+		template< typename BlockDerived >
+		class WithoutContext : public CreationPolicy< BlockDerived >
+		{
+
+		public:
+
+			Block & create ( ContextBlock *const context ) { return *( new BlockDerived() ); }
+
+		};
+
+		// not threadsafe!
+		template< typename ContextBlockDerived >
+		class CreateContext : public CreationPolicy< ContextBlockDerived >
+		{
+
+		public:
+
+			CreateContext() : m_Obj( nullptr )		{}
+			~CreateContext()						{ delete m_Obj; }
+
+			Block & create( ContextBlock *const context )
 			{
-				m_Obj = new ContextBlockDerived();
+				if ( m_Obj == nullptr )
+				{
+					m_Obj = new ContextBlockDerived();
+				}
+				return *m_Obj;
 			}
-			return *m_Obj;
-		}
 
-	private:
+		private:
 
-		ContextBlockDerived			*m_Obj;
+			ContextBlockDerived			*m_Obj;
 
-	};
+		};
 
-	template< typename BlockDerived, template < typename BlockDerived > class CreationPolicy >
-	class BlockCreator : public AbstractBlockCreator
-	{
+		template< typename BlockDerived, template < typename BlockDerived > class CreationPolicy >
+		class BlockCreator : public AbstractBlockCreator
+		{
 
-	public:
+		public:
 
-		Block & create( ContextBlock *const context ) { return m_Policy.create( context ); }
+			Block & create( ContextBlock *const context ) { return m_Policy.create( context ); }
 
-	private:
+		private:
 
-		CreationPolicy< BlockDerived >	m_Policy;
+			CreationPolicy< BlockDerived >	m_Policy;
 
-	};
-
-
+		};
+	}
 }

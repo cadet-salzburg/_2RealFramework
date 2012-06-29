@@ -38,152 +38,156 @@ namespace _2Real
 {
 
 	class BlockError;
-	class OutputData;
 
-	class OutletFunctionCallback
+	namespace app
 	{
 
-	public:
+		class AppData;
 
-		OutletFunctionCallback( OutletCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
+		class OutletDataFunctionCallback
 		{
-		}
 
-		bool operator<( OutletFunctionCallback const& src ) const
+		public:
+
+			OutletDataFunctionCallback( OutletDataCallback cb, void *userData ) :
+				m_Callback( cb ),
+				m_UserData( userData )
+			{
+			}
+
+			bool operator<( OutletDataFunctionCallback const& src ) const
+			{
+				return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
+			}
+
+			void invoke( AppData const& data )
+			{
+				m_Callback( m_UserData, data );
+			}
+
+		private:
+
+			OutletDataCallback	m_Callback;
+			void				*m_UserData;
+
+		};
+
+		// what a nice name!
+		struct OutletCbCmp
 		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
+			bool operator()( OutletDataFunctionCallback *rhs, OutletDataFunctionCallback *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-		void invoke( OutputData const& data )
+		class BlockDataFunctionCallback
 		{
-			m_Callback( m_UserData, data );
-		}
 
-	private:
+		public:
 
-		OutletCallback		m_Callback;
-		void				*m_UserData;
+			BlockDataFunctionCallback( BlockDataCallback cb, void *userData ) :
+				m_Callback( cb ),
+				m_UserData( userData )
+			{
+			}
 
-	};
+			bool operator<( BlockDataFunctionCallback const& src ) const
+			{
+				return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
+			}
 
-	// what a nice name!
-	struct OutletCbCmp
-	{
-		bool operator()( OutletFunctionCallback *rhs, OutletFunctionCallback *lhs )
+			void invoke( std::list< AppData > const& data )
+			{
+				m_Callback( m_UserData, data );
+			}
+
+		private:
+
+			BlockDataCallback				m_Callback;
+			void							*m_UserData;
+
+		};
+
+		// sigh
+		struct OutputCbCmp
 		{
-			return (*rhs < *lhs);
-		}
-	};
+			bool operator()( BlockDataFunctionCallback *rhs, BlockDataFunctionCallback *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-	class OutputFunctionCallback
-	{
-
-	public:
-
-		OutputFunctionCallback( OutputCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
+		class ExceptionFunctionCallback
 		{
-		}
 
-		bool operator<( OutputFunctionCallback const& src ) const
+		public:
+
+			ExceptionFunctionCallback( ExceptionCallback cb, void *userData ) :
+				m_Callback( cb ),
+				m_UserData( userData )
+			{
+			}
+
+			bool operator<( ExceptionFunctionCallback const& src ) const
+			{
+				return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
+			}
+
+			void invoke( BlockError const& error )
+			{
+				m_Callback( m_UserData, error );
+			}
+
+		private:
+
+			ExceptionCallback	m_Callback;
+			void				*m_UserData;
+
+		};
+
+		// basically, i suck at naming stuff.
+		struct ExcCbCmp
 		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
+			bool operator()( ExceptionFunctionCallback *rhs, ExceptionFunctionCallback *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-		void invoke( std::list< OutputData > const& data )
+		typedef std::set< BlockDataFunctionCallback *, OutputCbCmp >	BlockDataFunctionCallbacks;
+		typedef std::set< OutletDataFunctionCallback *, OutletCbCmp >	OutletDataFunctionCallbacks;
+		typedef std::set< ExceptionFunctionCallback *, ExcCbCmp >		ExceptionFunctionCallbacks;
+
+		// .....
+		struct AExcCbCmp
 		{
-			m_Callback( m_UserData, data );
-		}
+			bool operator()( AbstractExceptionCallbackHandler *rhs, AbstractExceptionCallbackHandler *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-	private:
-
-		OutputCallback					m_Callback;
-		void							*m_UserData;
-
-	};
-
-	// sigh
-	struct OutputCbCmp
-	{
-		bool operator()( OutputFunctionCallback *rhs, OutputFunctionCallback *lhs )
+		// at some point, i might redo this :/
+		struct AOutletCbCmp
 		{
-			return (*rhs < *lhs);
-		}
-	};
+			bool operator()( AbstractOutletDataCallbackHandler *rhs, AbstractOutletDataCallbackHandler *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-	class ExceptionFunctionCallback
-	{
-
-	public:
-
-		ExceptionFunctionCallback( ExceptionCallback cb, void *userData ) :
-			m_Callback( cb ),
-			m_UserData( userData )
+		// aaaaaaaaaaaaaaaaaaargh
+		struct AOutputCbCmp
 		{
-		}
+			bool operator()( AbstractBlockDataCallbackHandler *rhs, AbstractBlockDataCallbackHandler *lhs )
+			{
+				return (*rhs < *lhs);
+			}
+		};
 
-		bool operator<( ExceptionFunctionCallback const& src ) const
-		{
-			return ( m_Callback < src.m_Callback &&  m_UserData < src.m_UserData );
-		}
-
-		void invoke( BlockError const& error )
-		{
-			m_Callback( m_UserData, error );
-		}
-
-	private:
-
-		ExceptionCallback	m_Callback;
-		void				*m_UserData;
-
-	};
-
-	// basically, i suck at naming stuff.
-	struct ExcCbCmp
-	{
-		bool operator()( ExceptionFunctionCallback *rhs, ExceptionFunctionCallback *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	typedef std::set< OutputFunctionCallback *, OutputCbCmp >	OutputFunctionCallbacks;
-	typedef std::set< OutletFunctionCallback *, OutletCbCmp >	OutletFunctionCallbacks;
-	typedef std::set< ExceptionFunctionCallback *, ExcCbCmp >	ExceptionFunctionCallbacks;
-
-	// .....
-	struct AExcCbCmp
-	{
-		bool operator()( AbstractExceptionCallbackHandler *rhs, AbstractExceptionCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	// at some point, i might redo this :/
-	struct AOutletCbCmp
-	{
-		bool operator()( AbstractOutletCallbackHandler *rhs, AbstractOutletCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	// aaaaaaaaaaaaaaaaaaargh
-	struct AOutputCbCmp
-	{
-		bool operator()( AbstractOutputCallbackHandler *rhs, AbstractOutputCallbackHandler *lhs )
-		{
-			return (*rhs < *lhs);
-		}
-	};
-
-	typedef std::set< AbstractOutputCallbackHandler *, AOutputCbCmp >	OutputCallbackHandlers;
-	typedef std::set< AbstractOutletCallbackHandler *, AOutletCbCmp >	OutletCallbackHandlers;
-	typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
-
+		typedef std::set< AbstractBlockDataCallbackHandler *, AOutputCbCmp >	BlockDataCallbackHandlers;
+		typedef std::set< AbstractOutletDataCallbackHandler *, AOutletCbCmp >	OutletDataCallbackHandlers;
+		typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
+	}
 }

@@ -18,12 +18,13 @@
 */
 
 #include "_2RealBundleInternal.h"
+#include "app/_2RealBundleHandle.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
 #include "_2RealBlock.h"
-#include "_2RealBundleIdentifier.h"
+#include "app/_2RealBlockHandle.h"
+#include "_2RealBundleManager.h"
 
-#include <iostream>
 #include <sstream>
 
 using std::string;
@@ -33,18 +34,20 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleInternal::BundleInternal( BundleIdentifier const& id, BundleData const& data ) :
+	BundleInternal::BundleInternal( BundleIdentifier const& id, BundleData const& data, BundleManager &bundleManager ) :
+		m_BundleManager( bundleManager ),
 		m_Identifier( id ),
-		m_BundleData( data )
+		m_BundleData( data ),
+		m_BundleContext()
 	{
 	}
 
 	BundleInternal::~BundleInternal()
 	{
-		for ( BlockMap::iterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
+		for ( BlockMap::iterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
-			delete it->second;
-			it = m_BlockInstances.erase( it );
+			bundle::Block *b = it->second;
+			delete b;
 		}
 	}
 
@@ -58,38 +61,33 @@ namespace _2Real
 		return m_Identifier.getName();
 	}
 
-	const string BundleInternal::getBundleInfoString() const
+	app::BundleHandle BundleInternal::createHandle()
 	{
-		ostringstream info;
-		info << m_BundleData;
-		return info.str();
+		return app::BundleHandle( *this );
 	}
 
-	const string BundleInternal::getBlockInfoString( string const& blockName ) const
+	BundleData const& BundleInternal::getMetadata() const
 	{
-		ostringstream info;
-		info << m_BundleData.getBlockData( blockName );
-		return info.str();
-	}
-
-	BundleData const& BundleInternal::getBundleData() const
-	{
+		// TODO: copy this? there might be an issue with the engine data
 		return m_BundleData;
 	}
 
-	BlockData const& BundleInternal::getBlockData( string const& blockName ) const
+	app::BlockHandle BundleInternal::createBlockInstance( std::string const& blockName )
 	{
-		return m_BundleData.getBlockData( blockName );
+		// this is a bit strange, bundle mgr will call 'addBlockInstance'
+		// = result of interface changes
+		return m_BundleManager.createFunctionBlock( *this, blockName );
 	}
 
-	void BundleInternal::setBundleContext( FunctionBlock &block )
+	void BundleInternal::setBundleContextHandle( app::ContextBlockHandle const& handle )
 	{
-		m_BundleContext = &block;
+		// will be called by bundle manager on loading a bundle ( if there is one )
+		m_BundleContext = handle;
 	}
 
-	FunctionBlock & BundleInternal::getBundleContext()
+	app::ContextBlockHandle BundleInternal::getBundleContextHandle() const
 	{
-		return *m_BundleContext;
+		return m_BundleContext;
 	}
 
 	unsigned int BundleInternal::getBlockInstanceCount( string const& blockName ) const
@@ -104,7 +102,7 @@ namespace _2Real
 		return counter;
 	}
 
-	void BundleInternal::addBlockInstance( Block &block, string const& blockName )
+	void BundleInternal::addBlockInstance( bundle::Block &block, string const& blockName )
 	{
 		m_BlockInstances.insert( make_pair( blockName, &block ) );
 	}

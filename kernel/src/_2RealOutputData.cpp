@@ -21,38 +21,47 @@
 
 #include <sstream>
 
+using std::string;
+using std::ostringstream;
+
 namespace _2Real
 {
-
-	OutputData::OutputData() : m_Data(), m_Typename( "void" ), m_Name( "undefined" ) {}
-
-	OutputData::OutputData( EngineData const& data, std::string const& type, std::string const& name ) :
-		m_Data( data ),
-		m_Typename( type ),
-		m_Name( name )
+	namespace app
 	{
-	}
+		AppData::AppData() :
+			m_Data(),
+			m_Typename( "void" ),
+			m_Name( "undefined" )
+		{
+		}
 
-	const std::string OutputData::getLongTypename() const
-	{
-		return m_Data.getTypename();
-	}
+		AppData::AppData( EngineData const& data, string const& type, string const& name ) :
+			m_Data( data ),
+			m_Typename( type ),
+			m_Name( name )
+		{
+		}
 
-	std::string const& OutputData::getName() const
-	{
-		return m_Name;
-	}
+		const string AppData::getLongTypename() const
+		{
+			return m_Data.getTypename();
+		}
 
-	std::string const& OutputData::getTypename() const
-	{
-		return m_Typename;
-	}
+		string const& AppData::getName() const
+		{
+			return m_Name;
+		}
 
-	const std::string OutputData::getDataAsString() const
-	{
-		std::ostringstream value;
-		value << m_Data;
-		return value.str();
-	}
+		string const& AppData::getTypename() const
+		{
+			return m_Typename;
+		}
 
+		const string AppData::getDataAsString() const
+		{
+			ostringstream value;
+			value << m_Data;
+			return value.str();
+		}
+	}
 }

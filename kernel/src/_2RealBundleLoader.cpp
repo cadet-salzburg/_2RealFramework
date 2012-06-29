@@ -23,15 +23,12 @@
 #include "_2RealBundleMetainfo.h"
 #include "_2RealEngineImpl.h"
 
-#include "Poco/SharedLibrary.h"
-
 #include <iostream>
 #include <sstream>
 
 using std::make_pair;
 using std::string;
 using std::ostringstream;
-using Poco::SharedLibrary;
 
 namespace _2Real
 {
@@ -87,12 +84,12 @@ namespace _2Real
 			return it->second.metainfo->getBundleData();
 		}
 
-		typedef void ( *MetainfoFunc )( BundleMetainfo &info );
+		typedef void ( *MetainfoFunc )( bundle::BundleMetainfo &info );
 
-		SharedLibrary *lib;
+		Poco::SharedLibrary *lib;
 		try
 		{
-			lib = new SharedLibrary( path );
+			lib = new Poco::SharedLibrary( path );
 		}
 		catch ( Poco::Exception &e )
 		{
@@ -110,7 +107,7 @@ namespace _2Real
 				BundleInfo bundleInfo;
 				MetainfoFunc func = ( MetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
 
-				BundleMetainfo metainfo( *info );
+				bundle::BundleMetainfo metainfo( *info );
 				func( metainfo );
 				bundleInfo.library = lib;
 				bundleInfo.metainfo = info;
@@ -140,7 +137,7 @@ namespace _2Real
 		}
 	}
 
-	Block& BundleLoader::createContext( std::string const& path ) const
+	bundle::Block& BundleLoader::createContext( std::string const& path ) const
 	{
 		BundleMap::const_iterator it = m_LoadedBundles.find( path );
 
@@ -154,7 +151,7 @@ namespace _2Real
 		return it->second.metainfo->createContextBlock();
 	}
 
-	Block& BundleLoader::createBlock( std::string const& path, std::string const& blockName ) const
+	bundle::Block& BundleLoader::createBlock( std::string const& path, std::string const& blockName ) const
 	{
 		BundleMap::const_iterator it = m_LoadedBundles.find( path );
 

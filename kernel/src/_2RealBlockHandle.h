@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,41 +17,37 @@
 	limitations under the License.
 */
 
-#include "_2RealInletHandle.h"
-#include "_2RealInlet.h"
+#pragma once
+
+#include "_2RealEngineData.h"
+
+#include <string>
 
 namespace _2Real
 {
+	class FunctionBlock;
 
-	InletHandle::InletHandle() :
-		ParameterHandle( "" ),
-		m_Inlet( nullptr )
+	namespace bundle
 	{
+		class InletHandle;
+		class OutletHandle;
+		class ParameterHandle;
+
+		class BlockHandle
+		{
+
+		public:
+
+			BlockHandle( FunctionBlock &block );
+
+			ParameterHandle		getParameterHandle( std::string const& name );
+			InletHandle			getInletHandle( std::string const& name );
+			OutletHandle		getOutletHandle( std::string const& name );
+
+		private:
+
+			FunctionBlock	&m_Impl;
+
+		};
 	}
-
-	InletHandle::InletHandle( Inlet &inlet ) :
-		ParameterHandle( inlet.getName() ),
-		m_Inlet( &inlet )
-	{
-	}
-
-	InletHandle::InletHandle( InletHandle const& src ) :
-		ParameterHandle( src ),
-		m_Inlet( src.m_Inlet )
-	{
-	}
-
-	InletHandle& InletHandle::operator=( InletHandle const& src )
-	{
-		ParameterHandle::operator=( src );
-		m_Inlet = src.m_Inlet;
-
-		return *this;
-	}
-
-	EngineData const& InletHandle::getCurrentValue() const
-	{
-		return m_Inlet->getCurrentValue();
-	}
-
 }

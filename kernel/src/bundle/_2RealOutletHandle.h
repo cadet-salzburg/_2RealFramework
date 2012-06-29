@@ -18,30 +18,47 @@
 
 #pragma once
 
-#include "_2RealParameter.h"
 #include "_2RealEngineData.h"
+#include "_2RealException.h"
+
+#include <sstream>
 
 namespace _2Real
 {
+	class Outlet;
 
-	class SetupParameter : public Parameter
+	namespace bundle
 	{
+		class OutletHandle
+		{
 
-	public:
+		public:
 
-		SetupParameter( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& initialValue );
+			OutletHandle();
+			OutletHandle( Outlet &slot );
 
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
-		using Parameter::getName;
+			template< typename Datatype >
+			Datatype & getWriteableRef()
+			{
+				if ( !m_Outlet )
+				{
+					std::ostringstream msg;
+					msg << "output handle not initialized";
+					throw UninitializedHandleException( msg.str() );
+				}
 
-		void				setParameterValue( EngineData const& data );
-		EngineData const&	getParameterValue() const;
+				EngineData curr = getCurrentData();
+				Datatype &data = extractFrom< Datatype >( curr );
+				return data;
+			}
 
-	private:
+			void discard();
 
-		EngineData			m_Value;
+		private:
 
-	};
+			EngineData			getCurrentData();
+			Outlet				*m_Outlet;
 
+		};
+	}
 }

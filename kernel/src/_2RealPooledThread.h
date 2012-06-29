@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include "Poco/Thread.h"
-#include "Poco/Event.h"
+#include "_2RealPoco.h"
 
 namespace _2Real
 {

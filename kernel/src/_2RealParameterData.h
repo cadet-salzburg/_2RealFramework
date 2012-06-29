@@ -26,17 +26,17 @@ namespace _2Real
 {
 
 	class Inlet;
-	class InletBuffer;
 	class Outlet;
-	class SetupParameter;
+	class Parameter;
+	class AbstractUberBlock;
 
 	class ParameterData
 	{
 
 		friend std::ostream& operator<<( std::ostream &out, ParameterData const& metadata );
-		friend Inlet*				createInletFromParameterData( ParameterData const& data );
-		friend Outlet *				createOutletFromParameterData( ParameterData const& data );
-		friend SetupParameter *		createSetupParameterFromParameterData( ParameterData const& data );
+		friend Inlet*				createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
+		friend Outlet *				createOutletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
+		friend Parameter *			createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
 
 	public:
 

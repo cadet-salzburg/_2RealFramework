@@ -16,36 +16,26 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "_2RealAbstractBlockManager.h"
-
-#include "Poco/Mutex.h"
+#include "_2RealParameterHandle.h"
+#include "_2RealParameter.h"
 
 namespace _2Real
 {
-
-	typedef std::list< AbstractUberBlock * >	BlockList;
-
-	class SystemBlockManager : public AbstractBlockManager
+	namespace bundle
 	{
+		ParameterHandle::ParameterHandle() :
+			m_Parameter( nullptr )
+		{
+		}
 
-	public:
+		ParameterHandle::ParameterHandle( Parameter const& param ) :
+			m_Parameter( &param )
+		{
+		}
 
-		SystemBlockManager( AbstractUberBlock &owner );
-		~SystemBlockManager();
-
-		void								clear();
-		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
-		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
-		void								addBlock( AbstractUberBlock &block );
-		void								removeBlock( AbstractUberBlock &block );
-
-	private:
-
-		mutable Poco::FastMutex				m_Access;
-		AbstractBlockManager::BlockList		m_Blocks;
-
-	};
-
+		EngineData ParameterHandle::getParameterValue() const
+		{
+			return m_Parameter->getData();
+		}
+	}
 }

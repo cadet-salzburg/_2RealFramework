@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,39 +19,44 @@
 #pragma once
 
 #include "_2RealEngineData.h"
+#include "_2RealException.h"
 
-#include <string>
+#include <sstream>
 
 namespace _2Real
 {
+	class Parameter;
 
-	class FunctionBlock;
-	class InletHandle;
-	class OutletHandle;
-
-	class FrameworkContext
+	namespace bundle
 	{
-
-	public:
-
-		FrameworkContext( FunctionBlock &block );
-
-		InletHandle getInletHandle( std::string const& name );
-		OutletHandle getOutletHandle( std::string const& name );
-
-		template< typename Datatype >
-		Datatype const& getParameterValue( std::string const& name )
+		class ParameterHandle
 		{
-			EngineData parameterValue = getSetupParameterInternal( name );
-			Datatype const& data = extractFrom< Datatype >( parameterValue );
-			return data;
-		}
 
-	private:
+		public:
 
-		EngineData const& getSetupParameterInternal( std::string const& paramName ) const;
-		FunctionBlock	&m_Impl;
+			ParameterHandle();
+			ParameterHandle( Parameter const& parameter );
 
-	};
+			template< typename Datatype >
+			Datatype const& getReadableRef() const
+			{
+				if ( m_Parameter == nullptr )
+				{
+					std::ostringstream msg;
+					msg << "parameter handle not initialized";
+					throw UninitializedHandleException( msg.str() );
+				}
 
+				EngineData curr = getParameterValue();
+				Datatype const& data = extractFrom< Datatype >( curr );
+				return data;
+			}
+
+		private:
+
+			EngineData		getParameterValue() const;
+			Parameter		const* m_Parameter;
+
+		};
+	}
 }

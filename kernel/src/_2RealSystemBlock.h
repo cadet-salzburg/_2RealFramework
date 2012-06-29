@@ -20,11 +20,9 @@
 #pragma once
 
 #include "_2RealUberBlock.h"
-#include "_2RealDisabledBlockManager.h"
-#include "_2RealOwnedBlockManager.h"
 #include "_2RealDisabledIOManager.h"
 #include "_2RealSystemBlockStateManager.h"
-#include "_2RealUpdatePolicyHandle.h"
+#include "_2RealLink.h"
 
 #include <set>
 
@@ -32,78 +30,47 @@ namespace _2Real
 {
 
 	class EngineImpl;
-	class BundleManager;
-	class EngineData;
-	class UpdatePolicyHandle;
-	class IOutputListener;
-	class FunctionBlock;
-	class BlockData;
-	class BundleIdentifier;
-	class BlockIdentifier;
 	class AbstractLink;
+	class SystemBlockManager;
 
-	class SystemBlock : public UberBlock< DisabledIOManager, DisabledBlockManager, SystemBlockManager, SystemBlockStateManager >
+	class SystemBlock : public UberBlock< DisabledIOManager, SystemBlockStateManager >
 	{
 
 	public:
 
-		SystemBlock( BlockIdentifier const& id );
-		~SystemBlock();
+		SystemBlock( EngineImpl &engine, BlockIdentifier const& id );
 
-		void						clear();
+		// wipes the system completely
+		// all blocks, links etc. will be gone
+		void		clear();
 
-		const BlockIdentifier		createFunctionBlock( BundleIdentifier const& pluginId, std::string const& serviceName );
+		// called by a block ( other that the system ) when an exception occurs
+		void		handleException( AbstractUberBlock &block, Exception &exception );
 
-		void						handleException( AbstractUberBlock &subBlock, Exception &exception );
+		// adds block to the system, yay
+		void		addUberBlock( AbstractUberBlock &block );
 
-		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
-		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData );
-		void						registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler );
-		void						unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler );
+		// will be called by the engine
+		//void		registerToException( ExceptionCallback callback, void *userData );
+		//void		unregisterFromException( ExceptionCallback callback, void *userData );
+		//void		registerToException( AbstractExceptionCallbackHandler &handler );
+		//void		unregisterFromException( AbstractExceptionCallbackHandler &handler );
 
-		void						registerToNewData( BlockIdentifier const& id, OutputCallback callback, void *userData );
-		void						unregisterFromNewData( BlockIdentifier const& id, OutputCallback callback, void *userData );
-		void						registerToNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler );
-		void						unregisterFromNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler );
-
-		void						registerToException( ExceptionCallback callback, void *userData );
-		void						unregisterFromException( ExceptionCallback callback, void *userData );
-		void						registerToException( AbstractExceptionCallbackHandler &handler );
-		void						unregisterFromException( AbstractExceptionCallbackHandler &handler );
-
-		void						setUp( BlockIdentifier const& blockId );
-		void						start( BlockIdentifier const& blockId );
-		void						stop( BlockIdentifier const& blockId, const long timeout );
-		void						singleStep( BlockIdentifier const& blockId );
-		void						destroy( BlockIdentifier const& blockId );
-		UpdatePolicyHandle			getUpdatePolicy( BlockIdentifier const& blockId );
-
-		EngineData const&			getValue(BlockIdentifier const& ownerId, std::string const& paramName) const;
-		std::string const&			getTypename(BlockIdentifier const& ownerId, std::string const& paramName) const;
-		std::string const&			getLongTypename(BlockIdentifier const& ownerId, std::string const& paramName) const;
-		void						setValue(BlockIdentifier const& ownerId, std::string const& paramName, EngineData const& value);
-
-		void						link(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
-		void						unlink(BlockIdentifier const& ownerIn, std::string const& in, BlockIdentifier const& ownerOut, std::string const& out);
-
-		AbstractUberBlockBasedTrigger *	createSubBlockTrigger();
-		AbstractUberBlockBasedTrigger *	createSuperBlockTrigger();
-
+		// yay
+		void		createLink( Inlet &inlet, Outlet &outlet );
+		void		destroyLink( Inlet &inlet, Outlet &outlet );
 
 	private:
 
-		typedef std::set< AbstractLink * >		LinkSet;
-
 		EngineImpl								&m_Engine;
-		BundleManager							&m_BundleManager;
-
-		SystemBlockStateManager					*m_StateManager;
+		SystemBlockManager						*m_SubBlockManager;
 
 		LinkSet									m_Links;
 
-		mutable Poco::FastMutex					m_ExceptionAccess;
-		ExceptionFunctionCallbacks				m_ExceptionCallbacks;
-		ExceptionCallbackHandlers				m_ExceptionCallbackHandlers;
+		// TODO: write own delegate class to handle this shit
+		//mutable Poco::FastMutex					m_ExceptionAccess;
+		//ExceptionFunctionCallbacks				m_ExceptionCallbacks;
+		//ExceptionCallbackHandlers				m_ExceptionCallbackHandlers;
 
 	};
 

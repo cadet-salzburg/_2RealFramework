@@ -17,28 +17,34 @@
 */
 
 #include "_2RealInlet.h"
+#include "_2RealInletBuffer.h"
+#include "_2RealOutlet.h"
+#include "_2RealException.h"
+#include "_2RealAbstractUberBlock.h"
+#include "app/_2RealOutletHandle.h"
+
+#ifdef _DEBUG
+	#include <assert.h>
+#endif
 
 using std::string;
 
 namespace _2Real
 {
 
-	Inlet::Inlet( string const& name, string const& longTypename, string const& type, EngineData const& defaultValue ) :
-		Parameter( name, longTypename, type ),
+	Inlet::Inlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& type, EngineData const& defaultValue ) :
+		Parameter( owner, name, longTypename, type ),
 		m_Buffer( defaultValue ),
 		m_CurrentData( EngineData(), 0 ),
 		m_LastData( EngineData(), 0 )
 	{
 	}
 
-	EngineData const& Inlet::getCurrentValue() const
-	{
-		return m_CurrentData.getData();
-	}
-
 	void Inlet::updateCurrentValue()
 	{
-		m_CurrentData = m_Buffer.getCurrentData();
+		//m_CurrentData = m_Buffer.getCurrentData();
+		Parameter::setData( m_Buffer.getCurrentData() );
+		Parameter::synchronize();			// immediately makes changes visible to inlet and app
 	}
 
 	void Inlet::updateDataBuffer()
@@ -64,6 +70,36 @@ namespace _2Real
 	void Inlet::unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger )
 	{
 		m_Buffer.unregisterUpdateTrigger( trigger );
+	}
+
+	void Inlet::linkTo( app::OutletHandle &outletHandle )
+	{
+		Param *p = outletHandle.m_Param;
+#ifdef _DEBUG
+		if ( p == nullptr ) assert( NULL );
+#endif
+
+		Outlet *outlet = dynamic_cast< Outlet * >( p );
+#ifdef _DEBUG
+		if ( outlet == nullptr ) assert( NULL );
+#endif
+
+		m_Owner.createLink( *this, *outlet );
+	}
+
+	void Inlet::unlinkFrom( app::OutletHandle &outletHandle )
+	{
+		Param *p = outletHandle.m_Param;
+#ifdef _DEBUG
+		if ( p == nullptr ) assert( NULL );
+#endif
+
+		Outlet *outlet = dynamic_cast< Outlet * >( p );
+#ifdef _DEBUG
+		if ( outlet == nullptr ) assert( NULL );
+#endif
+
+		m_Owner.destroyLink( *this, *outlet );
 	}
 
 }

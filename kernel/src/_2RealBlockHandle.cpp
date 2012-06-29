@@ -16,38 +16,36 @@
 	limitations under the License.
 */
 
-#include "_2RealFrameworkContext.h"
+#include "_2RealBlockHandle.h"
 #include "_2RealFunctionBlock.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 
 using std::string;
 
 namespace _2Real
 {
-
-	FrameworkContext::FrameworkContext( FunctionBlock &block ) :
-		m_Impl( block )
+	namespace bundle
 	{
-	}
+		BlockHandle::BlockHandle( FunctionBlock &block ) :
+			m_Impl( block )
+		{
+		}
 
-	EngineData const& FrameworkContext::getSetupParameterInternal(std::string const& name) const
-	{
-		// clone the value for the bundle's use
-		//EngineData result;
-		//result.cloneFrom( m_Impl.getValue( name ) );
-		//return result;
-		return m_Impl.getValue( name );
-	}
+		ParameterHandle BlockHandle::getParameterHandle( string const& name )
+		{
+			return m_Impl.createBundleParameterHandle( name );
+		}
 
-	InletHandle FrameworkContext::getInletHandle(std::string const& name)
-	{
-		return m_Impl.createInletHandle(name);
-	}
+		InletHandle BlockHandle::getInletHandle( string const& name )
+		{
+			return m_Impl.createBundleInletHandle( name );
+		}
 
-	OutletHandle FrameworkContext::getOutletHandle(std::string const& name)
-	{
-		return m_Impl.createOutletHandle(name);
+		OutletHandle BlockHandle::getOutletHandle( string const& name )
+		{
+			return m_Impl.createBundleOutletHandle( name );
+		}
 	}
-
 }

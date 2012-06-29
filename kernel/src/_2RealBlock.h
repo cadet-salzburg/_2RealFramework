@@ -20,31 +20,32 @@
 
 namespace _2Real
 {
-
-	class FrameworkContext;
-
-	class Block
+	namespace bundle
 	{
+		class BlockHandle;
 
-	public:
+		class Block
+		{
 
-		virtual void setup( FrameworkContext &context ) = 0;
-		virtual void update() = 0;
-		virtual void shutdown() = 0;
-		virtual ~Block() {};
+		public:
 
-	};
+			virtual void setup( BlockHandle &context ) = 0;
+			virtual void update() = 0;
+			virtual void shutdown() = 0;
+			virtual ~Block() {};
 
-	class ContextBlock : public Block
-	{
+		};
 
-	public:
+		class ContextBlock : public Block
+		{
 
-		using Block::setup;		// does this type of block even need the framework context?
-		using Block::update;
-		using Block::shutdown;
-		virtual ~ContextBlock() {};
+		public:
 
-	};
+			using Block::setup;		// does this type of block even need the framework context?
+			using Block::update;
+			using Block::shutdown;
+			virtual ~ContextBlock() {};
 
+		};
+	}
 }

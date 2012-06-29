@@ -17,32 +17,45 @@
 */
 
 #include "_2RealParameter.h"
+#include "_2RealParameterData.h"
+#include "_2RealException.h"
+
+#include <sstream>
 
 using std::string;
+using std::ostringstream;
 
 namespace _2Real
 {
 
-	Parameter::Parameter( string const& name, string const& longTypename, string const& typeName ) :
-		m_Name( name ),
-		m_LongTypename( longTypename ),
-		m_Typename( typeName )
+	Parameter::Parameter( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName ) :
+		Param( owner, name, longTypename, typeName )
 	{
 	}
 
-	std::string const& Parameter::getName() const
+	void Parameter::setData( TimestampedData const& data )
 	{
-		return m_Name;
+		if ( data.getData().getTypename() != Param::getLongTypename() )
+		{
+			ostringstream msg;
+			msg << "datatype mismatch: " << Param::getLongTypename() << " vs. value type " << data.getData().getTypename();
+			throw TypeMismatchException( msg.str() );
+		}
+
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_WriteData = data;
 	}
 
-	std::string const& Parameter::getTypename() const
+	void Parameter::synchronize()
 	{
-		return m_Typename;
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_Data = m_WriteData;
 	}
 
-	std::string const& Parameter::getLongTypename() const
+	EngineData Parameter::getData() const
 	{
-		return m_LongTypename;
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		return m_Data.getData();
 	}
 
 }

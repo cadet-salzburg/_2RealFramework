@@ -18,15 +18,11 @@
 
 #include "_2RealLink.h"
 #include "_2RealParameter.h"
-#include "_2RealSetupParameter.h"
 #include "_2RealInlet.h"
 #include "_2RealOutlet.h"
 
-#include <iostream>
 #include <assert.h>
-
-using std::cout;
-using std::endl;
+#include <iostream>
 
 namespace _2Real
 {
@@ -38,7 +34,6 @@ namespace _2Real
 #ifdef _DEBUG
 		if ( &p1 == &p2 )
 		{
-			cout << "cannot link a parameter to itself" << endl;
 			assert( NULL );
 		}
 #endif
@@ -56,11 +51,7 @@ namespace _2Real
 	{
 	}
 
-	IOLink::~IOLink()
-	{
-	}
-
-	void IOLink::activate()
+	void IOLink::activate() 
 	{
 		m_Outlet.addInletListener( m_Inlet.m_Buffer );
 	}

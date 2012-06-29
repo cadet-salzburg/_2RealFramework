@@ -19,42 +19,58 @@
 #pragma once
 
 #include "_2RealUberBlock.h"
-#include "_2RealDisabledBlockManager.h"
-#include "_2RealUnownedBlockManager.h"
 #include "_2RealFunctionBlockIOManager.h"
 #include "_2RealFunctionBlockStateManager.h"
 
 namespace _2Real
 {
+	namespace app
+	{
+		class InletHandle;
+		class OutletHandle;
+		class ParameterHandle;
+	}
 
-	class Block;
+	namespace bundle
+	{
+		class Block;
+		class InletHandle;
+		class OutletHandle;
+		class ParameterHandle;
+	}
+
+	class BlockData;
 	class SystemBlock;
 
-	class FunctionBlock : public UberBlock< FunctionBlockIOManager, UnownedBlockManager, DisabledBlockManager, FunctionBlockStateManager >
+	class FunctionBlock : public UberBlock< FunctionBlockIOManager, FunctionBlockStateManager >
 	{
 
 	public:
 
-		FunctionBlock( BlockData const& data, Block& block, SystemBlock &owner, BlockIdentifier const& id );
+		using UberBlock::start;
+		using UberBlock::stop;
+		using UberBlock::setUp;
 
-		InletHandle		createInletHandle(std::string const& inletName);
-		OutletHandle	createOutletHandle(std::string const& outletName);
+		FunctionBlock( BlockData const& data, bundle::Block& block, SystemBlock &system, BlockIdentifier const& id );
 
-		AbstractUberBlockBasedTrigger *	createSubBlockTrigger()
-		{
-			return nullptr;
-		}
+		BlockData const&		getMetadata();
 
-		AbstractUberBlockBasedTrigger *	createSuperBlockTrigger()
-		{
-			return new UberBlockBasedTrigger< FunctionBlockStateManager >( *m_StateManager, &FunctionBlockStateManager::tryTriggerUberBlock, BLOCK_OK );
-		}
+		bundle::InletHandle		createBundleInletHandle( std::string const& inletName );
+		bundle::OutletHandle	createBundleOutletHandle( std::string const& outletName );
+		bundle::ParameterHandle	createBundleParameterHandle( std::string const& paramName );
+
+		app::InletHandle		createAppInletHandle( std::string const& inletName );
+		app::OutletHandle		createAppOutletHandle( std::string const& outletName );
+		app::ParameterHandle	createAppParameterHandle( std::string const& paramName );
+
+		void					createLink( Inlet &inlet, Outlet &outlet );
+		void					destroyLink( Inlet &inlet, Outlet &outlet );
 
 	private:
 
-		FunctionBlockIOManager 		*m_IOManager;
-		FunctionBlockStateManager	*m_StateManager;
+		bundle::Block	&m_Block;
+		SystemBlock		&m_System;
+		BlockData		const& m_BlockData;
 
 	};
-
 }

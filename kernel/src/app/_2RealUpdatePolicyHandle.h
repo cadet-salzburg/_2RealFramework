@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +19,36 @@
 
 #pragma once
 
-#include "_2RealAbstractBlockManager.h"
+#include <string>
 
 namespace _2Real
 {
+	class UpdatePolicy;
 
-	class DisabledBlockManager : public AbstractBlockManager
+	namespace app
 	{
+		class UpdatePolicyHandle
+		{
 
-	public:
+		public:
 
-		DisabledBlockManager( AbstractUberBlock &owner );
-		~DisabledBlockManager();
+			UpdatePolicyHandle();
+			UpdatePolicyHandle( UpdatePolicy &policy );
 
-		void								clear();
-		AbstractUberBlock &					getBlock( BlockIdentifier const& blockId );
-		AbstractUberBlock const&			getBlock( BlockIdentifier const& blockId ) const;
-		void								addBlock( AbstractUberBlock &block );
-		void								removeBlock( AbstractUberBlock &block );
+			/**
+			*	interface: todo, more or less
+			*/
 
-	};
+			void updateWithFixedRate( const double updatesPerSecond );
+			void updateWhenAllInletDataNew();
+			void updateWhenInletDataNew( std::string const& inletName );
+			void updateWhenAllInletDataValid();
+			void updateWhenInletDataValid( std::string const& inletName );
 
+		private:
+
+			UpdatePolicy	*m_Policy;
+
+		};
+	}
 }

@@ -34,14 +34,14 @@ namespace _2Real
 	class Inlet;
 	class InletBuffer;
 	class Outlet;
-	class SetupParameter;
+	class Parameter;
 	class TimestampedData;
 	class ParameterData;
 
 	// declared here, as all io managers need those functions
-	Inlet*					createInletFromParameterData( ParameterData const& data );
-	Outlet *				createOutletFromParameterData( ParameterData const& data );
-	SetupParameter *		createSetupParameterFromParameterData( ParameterData const& data );
+	Inlet*					createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
+	Outlet *				createOutletFromParameterData(AbstractUberBlock &owner, ParameterData const& data );
+	Parameter *				createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
 
 	class AbstractIOManager
 	{
@@ -54,31 +54,19 @@ namespace _2Real
 		std::string const& getName() const;
 		unsigned int getId() const;
 
-		virtual void					registerToNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
-		virtual void					unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
-		virtual void					registerToNewData( OutputCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData( OutputCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData( AbstractOutputCallbackHandler &handler ) = 0;
-		virtual void					unregisterFromNewData( AbstractOutputCallbackHandler &handler ) = 0;
+		virtual void					registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void					unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void					registerToNewData( app::BlockDataCallback callback, void *userData ) = 0;
+		virtual void					unregisterFromNewData( app::BlockDataCallback callback, void *userData ) = 0;
+		virtual void					registerToNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
+		virtual void					unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
 
-		virtual EngineData const&		getValue( std::string const& paramName ) const = 0;
-		virtual void					setValue( std::string const& paramName, TimestampedData const& value ) = 0;
-		virtual std::string const&		getTypename( std::string const& paramName ) const = 0;
-		virtual std::string const&		getLongTypename( std::string const& paramName ) const = 0;
-
-		virtual Inlet const&			getInlet( std::string const& name ) const = 0;
-		virtual Outlet const&			getOutlet( std::string const& name ) const = 0;
-		virtual SetupParameter const&	getSetupParameter( std::string const& name ) const = 0;
-
+		// not sure if those are really needed
 		virtual Inlet &					getInlet( std::string const& name ) = 0;
 		virtual Outlet &				getOutlet( std::string const& name ) = 0;
-		virtual SetupParameter &		getSetupParameter( std::string const& name ) = 0;
-
-		virtual void					addInlet( ParameterData const& data ) = 0;
-		virtual void					addOutlet( ParameterData const& data ) = 0;
-		virtual void					addSetupParameter( ParameterData const& data ) = 0;
+		virtual Parameter &				getParameter( std::string const& name ) = 0;
 
 	protected:
 

@@ -24,44 +24,46 @@
 
 namespace _2Real
 {
-
 	class Metainfo;
-	class BlockMetainfo;
-	class ContextBlockMetainfo;
 
-	class BundleMetainfo
+	namespace bundle
 	{
+		class BlockMetainfo;
+		class ContextBlockMetainfo;
 
-	public:
-
-		BundleMetainfo( Metainfo &info );
-
-		template< typename ContextDerived >
-		ContextBlockMetainfo & exportContextBlock()
+		class BundleMetainfo
 		{
-			AbstractBlockCreator *obj = new BlockCreator< ContextDerived, CreateContext >();
-			return exportContextBlockInternal( *obj );
-		}
 
-		template< typename BlockDerived, template < typename BlockDerived > class Policy >
-		BlockMetainfo & exportBlock( std::string const& blockName )
-		{
-			AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Policy >();
-			return exportBlockInternal( *obj, blockName ); 
-		}
+		public:
 
-		void setDescription( std::string const& description );
-		void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
-		void setAuthor( std::string const& author );
-		void setContact( std::string const& contact );
-		void setCategory( std::string const& category );
+			BundleMetainfo( Metainfo &info );
 
-	private:
+			template< typename ContextDerived >
+			ContextBlockMetainfo & exportContextBlock()
+			{
+				AbstractBlockCreator *obj = new BlockCreator< ContextDerived, CreateContext >();
+				return exportContextBlockInternal( *obj );
+			}
 
-		ContextBlockMetainfo &	exportContextBlockInternal( AbstractBlockCreator &obj );
-		BlockMetainfo &			exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName );
-		Metainfo				&m_Impl;
+			template< typename BlockDerived, template < typename BlockDerived > class Policy >
+			BlockMetainfo & exportBlock( std::string const& blockName )
+			{
+				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Policy >();
+				return exportBlockInternal( *obj, blockName ); 
+			}
 
-	};
+			void setDescription( std::string const& description );
+			void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
+			void setAuthor( std::string const& author );
+			void setContact( std::string const& contact );
+			void setCategory( std::string const& category );
 
+		private:
+
+			ContextBlockMetainfo &	exportContextBlockInternal( AbstractBlockCreator &obj );
+			BlockMetainfo &			exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName );
+			Metainfo				&m_Impl;
+
+		};
+	}
 }

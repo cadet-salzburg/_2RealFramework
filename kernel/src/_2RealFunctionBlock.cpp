@@ -16,22 +16,28 @@
 	limitations under the License.
 */
 
-#include "_2RealException.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealBlock.h"
 #include "_2RealBlockData.h"
 #include "_2RealSystemBlock.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
-#include "_2RealUpdatePolicyl.h"
+#include "_2RealUpdatePolicy.h"
+#include "bundle/_2RealParameterHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+
+using std::string;
 
 namespace _2Real
 {
 
-	FunctionBlock::FunctionBlock( BlockData const& data, Block &block, SystemBlock &owner, BlockIdentifier const& id ) :
-		UberBlock< FunctionBlockIOManager, UnownedBlockManager, DisabledBlockManager, FunctionBlockStateManager>( id ),
-		m_IOManager( dynamic_cast< FunctionBlockIOManager * >( UberBlock::m_IOManager ) ),
-		m_StateManager( dynamic_cast< FunctionBlockStateManager * >( UberBlock::m_StateManager ) )
+	FunctionBlock::FunctionBlock( BlockData const& data, bundle::Block &block, SystemBlock &owner, BlockIdentifier const& id ) :
+		UberBlock< FunctionBlockIOManager, FunctionBlockStateManager>( id ),
+		m_BlockData( data ),
+		m_Block( block ),
+		m_System( owner )
 	{
 		m_StateManager->m_IOManager = m_IOManager;
 		m_StateManager->m_System = &owner;
@@ -44,7 +50,7 @@ namespace _2Real
 
 		for ( ParameterDataMap::const_iterator it = setup.begin(); it != setup.end(); ++it )
 		{
-			m_IOManager->addSetupParameter( it->second );
+			m_IOManager->addParameter( it->second );
 		}
 
 		for ( ParameterDataMap::const_iterator it = input.begin(); it != input.end(); ++it )
@@ -59,14 +65,49 @@ namespace _2Real
 		}
 	}
 
-	InletHandle FunctionBlock::createInletHandle(std::string const& name)
+	BlockData const& FunctionBlock::getMetadata()
 	{
-		return m_IOManager->createInletHandle( name );
+		return m_BlockData;
 	}
 
-	OutletHandle FunctionBlock::createOutletHandle(std::string const& name)
+	app::InletHandle FunctionBlock::createAppInletHandle( string const& name )
 	{
-		return m_IOManager->createOutletHandle( name );
+		return m_IOManager->createAppInletHandle( name );
+	}
+
+	app::OutletHandle FunctionBlock::createAppOutletHandle( string const& name )
+	{
+		return m_IOManager->createAppOutletHandle( name );
+	}
+
+	app::ParameterHandle FunctionBlock::createAppParameterHandle( string const& name )
+	{
+		return m_IOManager->createAppParameterHandle( name );
+	}
+
+	bundle::InletHandle FunctionBlock::createBundleInletHandle( string const& name )
+	{
+		return m_IOManager->createBundleInletHandle( name );
+	}
+
+	bundle::OutletHandle FunctionBlock::createBundleOutletHandle( string const& name )
+	{
+		return m_IOManager->createBundleOutletHandle( name );
+	}
+
+	bundle::ParameterHandle FunctionBlock::createBundleParameterHandle( string const& name )
+	{
+		return m_IOManager->createBundleParameterHandle( name );
+	}
+
+	void FunctionBlock::createLink( Inlet &inlet, Outlet &outlet )
+	{
+		m_System.createLink( inlet, outlet );
+	}
+
+	void FunctionBlock::destroyLink( Inlet &inlet, Outlet &outlet )
+	{
+		m_System.destroyLink( inlet, outlet );
 	}
 
 }

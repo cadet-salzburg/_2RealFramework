@@ -20,43 +20,43 @@
 #pragma once
 
 #include "_2RealBundleLoader.h"
+#include "_2RealPoco.h"
 
 #include <map>
 #include <string>
 
-#include "Poco/Path.h"
-
 namespace _2Real
 {
 
-	class BundleData;
-	class BlockData;
+	namespace app
+	{
+		class BundleHandle;
+		class BlockHandle;
+		class ContextBlockHandle;
+	}
+
 	class BundleInternal;
 	class BundleIdentifier;
-	class SystemBlock;
 	class FunctionBlock;
-	class UpdatePolicy;
+
+	class EngineImpl;
 
 	class BundleManager
 	{
 	
 	public:
 
-		BundleManager();
+		BundleManager( EngineImpl &engine );
 		~BundleManager();
 
-		void							setBaseDirectory( Poco::Path const& path );
-		const BundleIdentifier			loadLibrary( Poco::Path const& path );
+		void							setBaseDirectory( std::string const& path );
+		app::BundleHandle				loadLibrary( std::string const& libraryPath );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;
-		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
-		FunctionBlock &					createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemBlock &sys );
-		BundleData const&				getBundleData( BundleIdentifier const& bundleId ) const;
-		BlockData const&				getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
+		app::BlockHandle				createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
 
 	private:
 
-		BundleManager( BundleManager const& src );
-		BundleManager& operator=( BundleManager const& src );
+		app::ContextBlockHandle			createContextBlock( BundleInternal &bundle );
 
 		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
 		BundleInternal &				getBundle( BundleIdentifier const& id );
@@ -66,11 +66,11 @@ namespace _2Real
 		typedef std::map< BundleIdentifier, BundleInternal * >	BundleMap;
 		typedef std::map< std::string, BundleIdentifier >		LookupTable;
 
+		EngineImpl						&m_Engine;
 		BundleLoader					m_BundleLoader;
 		BundleMap						m_BundleInstances;
+		LookupTable						m_BundleLookupTable;		// this might be unnecessary now
 		Poco::Path						m_BaseDirectory;
-		LookupTable						m_BundleNames;
-		SystemBlock						*m_BundleContexts;
 
 	};
 

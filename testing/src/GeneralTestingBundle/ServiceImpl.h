@@ -1,16 +1,19 @@
 #pragma once
 
 #include "_2RealBlock.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 
 #include "Poco/Mutex.h"
 
-class ContextManager : public _2Real::ContextBlock
+class ContextManager : public _2Real::bundle::ContextBlock
 {
 
 public:
 
 	void update();
-	void setup( _2Real::FrameworkContext &context );
+	void setup( _2Real::bundle::BlockHandle &handle );
 	void shutdown();
 
 	unsigned long getValue() const;
@@ -22,20 +25,43 @@ private:
 
 };
 
-class TestBlock : public _2Real::Block
+class Out : public _2Real::bundle::Block
 {
 
 public:
 
-	TestBlock( _2Real::ContextBlock &context );
+	Out( _2Real::bundle::ContextBlock &context );
 
 	void update();
-	void setup( _2Real::FrameworkContext &context );
+	void setup( _2Real::bundle::BlockHandle &handle );
 	void shutdown();
 
 private:
 
+	_2Real::bundle::OutletHandle		m_Out;
+	_2Real::bundle::OutletHandle		m_Discard;
 	ContextManager				&m_Context;
 	unsigned int				m_Counter;
 
 };
+
+class In: public _2Real::bundle::Block
+{
+
+public:
+
+	In( _2Real::bundle::ContextBlock &context );
+
+	void update();
+	void setup( _2Real::bundle::BlockHandle &handle );
+	void shutdown();
+
+private:
+
+	_2Real::bundle::InletHandle			m_In;
+	_2Real::bundle::ParameterHandle		m_Param;
+	ContextManager				&m_Context;
+	unsigned int				m_Counter;
+
+};
+

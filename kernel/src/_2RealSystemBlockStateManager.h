@@ -19,8 +19,7 @@
 #pragma once
 
 #include "_2RealAbstractStateManager.h"
-
-#include "Poco/Mutex.h"
+#include "_2RealPoco.h"
 
 namespace _2Real
 {
@@ -39,12 +38,12 @@ namespace _2Real
 		bool				shutDown( const long timeout );
 
 		void tryTrigger( AbstractUpdateTrigger &trigger );
-		void tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger );
+		void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
 
 		void addTrigger( AbstractUpdateTrigger &trigger );
 		void removeTrigger( AbstractUpdateTrigger &trigger );
-		void addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
-		void removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger );
+		void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
+		void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
 
 	private:
 

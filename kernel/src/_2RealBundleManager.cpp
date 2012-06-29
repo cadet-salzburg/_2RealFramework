@@ -25,11 +25,12 @@
 #include "_2RealBlockData.h"
 #include "_2RealBundleIdentifier.h"
 #include "_2RealEngineImpl.h"
+#include "app/_2RealBundleHandle.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
 
-#include <iostream>
 #include <sstream>
 
-using Poco::Path;
 using std::ostringstream;
 using std::string;
 using std::make_pair;
@@ -37,125 +38,109 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleManager::BundleManager() :
+	BundleManager::BundleManager( EngineImpl &engine ) :
+		m_Engine( engine ),
 		m_BundleLoader(),
 		m_BundleInstances(),
-		m_BaseDirectory( Path() ),
-		m_BundleContexts( nullptr ),
-		m_BundleNames()
+		m_BaseDirectory( Poco::Path() ),
+		m_BundleLookupTable()
 	{
 	}
 
 	BundleManager::~BundleManager()
 	{
-		if ( m_BundleContexts )
-		{
-			m_BundleContexts->clear();
-			delete m_BundleContexts;
-		}
-
-		m_BundleNames.clear();
-
-		for ( BundleMap::iterator it = m_BundleInstances.begin(); it != m_BundleInstances.end(); /**/ )
+		for ( BundleMap::iterator it = m_BundleInstances.begin(); it != m_BundleInstances.end(); ++it )
 		{
 			BundleInternal *b = it->second;
 			delete b;
-			it = m_BundleInstances.erase( it );
 		}
 	}
 
-	void BundleManager::setBaseDirectory( Path const& path )
+	void BundleManager::setBaseDirectory( string const& directory )
 	{
-		m_BaseDirectory = path;
-	}
-	
-	bool BundleManager::isLibraryLoaded( Path const& path ) const
-	{
-		Path abs = makeAbsolutePath( path );
-		return m_BundleLoader.isLibraryLoaded( abs.toString() );
+		m_BaseDirectory = Poco::Path( directory );
 	}
 
-	const std::string BundleManager::getInfoString( BundleIdentifier const& bundleId ) const
+	app::BundleHandle BundleManager::loadLibrary( string const& libraryPath )
 	{
-		BundleInternal const& bundle = getBundle( bundleId );
-		return bundle.getBundleInfoString();
-	}
-
-	BundleData const& BundleManager::getBundleData( BundleIdentifier const& bundleId ) const
-	{
-		BundleInternal const& bundle = getBundle( bundleId );
-		return bundle.getBundleData();
-	}
-
-	BlockData const& BundleManager::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
-	{
-		BundleInternal const& bundle = getBundle( bundleId );
-		return bundle.getBlockData( blockName );
-	}
-	
-	const BundleIdentifier BundleManager::loadLibrary( Path const& path )
-	{
-		if ( m_BundleContexts == nullptr )
-		{
-			m_BundleContexts = new SystemBlock( EngineImpl::instance().createBlockId( "context manager" ) );
-		}
-
-		string absPath = makeAbsolutePath( path ).toString();
+		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
 
 		if ( m_BundleLoader.isLibraryLoaded( absPath ) )
 		{
-			return getIdentifier( absPath );
+			ostringstream msg;
+			msg << "shared library " << absPath << " is already loaded";
+			throw AlreadyExistsException( msg.str() );
 		}
 
 		BundleData const& data = m_BundleLoader.loadLibrary( absPath );
-		BundleInternal *bundle = new BundleInternal( EngineImpl::instance().createBundleId( absPath ), data );
+		BundleInternal *bundle = new BundleInternal( m_Engine.createBundleId( absPath ), data, *this );
 
 		m_BundleInstances.insert( make_pair( bundle->getIdentifier(), bundle ) );
-		m_BundleNames.insert( make_pair( absPath, bundle->getIdentifier() ) );
+		m_BundleLookupTable.insert( make_pair( absPath, bundle->getIdentifier() ) );
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			m_BundleContexts->createFunctionBlock( BundleIdentifier( bundle->getIdentifier() ), "bundle context" );
-
-			FunctionBlock &bundleContext = bundle->getBundleContext();
-			m_BundleContexts->setUp( BlockIdentifier( bundleContext.getIdentifier() ) );
-			m_BundleContexts->start( BlockIdentifier( bundleContext.getIdentifier() ) );
+			app::ContextBlockHandle handle = createContextBlock( *bundle );
+			handle.setUpdateRate( 1.0 );
+			handle.setUp();
+			handle.start();
 		}
 
-		return bundle->getIdentifier();
+		return bundle->createHandle();
+	}
+	
+	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
+	{
+		Poco::Path abs = makeAbsolutePath( path );
+		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	FunctionBlock & BundleManager::createServiceBlock( BundleIdentifier const& bundleId, std::string const& blockName, SystemBlock &sys )
+	app::BlockHandle BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
 	{
-		BundleInternal &bundle = getBundle( bundleId );
-		BundleData const& bundleData = bundle.getBundleData();
+		SystemBlock &sys = m_Engine.getSystemBlock();
 
-		BlockData const& blockData = bundle.getBlockData( blockName );
+		BundleData const& bundleData = bundle.getMetadata();
+		BlockData const& blockData = bundleData.getBlockData( blockName );
 		unsigned int count = bundle.getBlockInstanceCount( blockName );
 
-		std::ostringstream name;
+		ostringstream name;
 		name << blockName << " # " << count;
 
-		BlockIdentifier blockId = EngineImpl::instance().createBlockId( name.str() );
+		BlockIdentifier blockId = m_Engine.createBlockId( name.str() );
 
-		FunctionBlock *uberBlock;
+		FunctionBlock *functionBlock;
 
-		if ( blockName != "bundle context" )
-		{
-			Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-			uberBlock = new FunctionBlock( blockData, block, sys, blockId );
+		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
+		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
+		sys.addUberBlock( *functionBlock );
 
-			bundle.addBlockInstance( block, blockName );
-		}
-		else
-		{
-			Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
-			uberBlock = new FunctionBlock( blockData, block, sys, blockId );
+		bundle.addBlockInstance( block, blockName );
 
-			bundle.setBundleContext( *uberBlock );
-		}
+		return app::BlockHandle( *functionBlock );
+	}
 
-		return *uberBlock;
+	app::ContextBlockHandle BundleManager::createContextBlock( BundleInternal &bundle )
+	{
+		SystemBlock &sys = m_Engine.getSystemBlock();
+
+		BundleData const& bundleData = bundle.getMetadata();
+		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
+
+		ostringstream name;
+		name << "bundle context";
+
+		BlockIdentifier blockId = m_Engine.createBlockId( name.str() );
+
+		FunctionBlock *functionBlock;
+
+		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
+		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
+		sys.addUberBlock( *functionBlock );
+
+		app::ContextBlockHandle handle = app::ContextBlockHandle( *functionBlock );
+		bundle.setBundleContextHandle( handle );
+
+		return handle;
 	}
 
 	BundleInternal & BundleManager::getBundle( BundleIdentifier const& id )
@@ -188,9 +173,9 @@ namespace _2Real
 
 	const BundleIdentifier BundleManager::getIdentifier( string const& path ) const
 	{
-		LookupTable::const_iterator it = m_BundleNames.find( path );
+		LookupTable::const_iterator it = m_BundleLookupTable.find( path );
 
-		if ( it == m_BundleNames.end() )
+		if ( it == m_BundleLookupTable.end() )
 		{
 			ostringstream msg;
 			msg << "bundle at " << path << " not found";
@@ -200,7 +185,7 @@ namespace _2Real
 		return it->second;
 	}
 
-	const Path BundleManager::makeAbsolutePath( Path const& path ) const
+	const Poco::Path BundleManager::makeAbsolutePath( Poco::Path const& path ) const
 	{
 		if ( path.isAbsolute() )
 		{
@@ -208,7 +193,7 @@ namespace _2Real
 		}
 		else
 		{
-			Path abs = m_BaseDirectory;
+			Poco::Path abs = m_BaseDirectory;
 			abs.append( path );
 			return abs;
 		}

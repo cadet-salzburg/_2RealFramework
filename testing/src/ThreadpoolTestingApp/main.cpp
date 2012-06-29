@@ -29,11 +29,15 @@ using std::cout;
 using std::endl;
 using std::cin;
 using _2Real::Engine;
-using _2Real::System;
-using _2Real::BundleIdentifier;
-using _2Real::BlockIdentifier;
-using _2Real::UpdatePolicyHandle;
 using _2Real::Exception;
+using _2Real::BundleData;
+using _2Real::BlockData;
+using _2Real::app::BlockHandle;
+using _2Real::app::BundleHandle;
+using _2Real::app::InletHandle;
+using _2Real::app::OutletHandle;
+using _2Real::app::ParameterHandle;
+using _2Real::app::AppData;
 
 #include "vld.h"
 
@@ -46,60 +50,46 @@ using _2Real::Exception;
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
-	System testSystem( "test system" );
 
 	try 
 	{
-		BundleIdentifier testBundle = testEngine.load( string( "ThreadpoolTesting" ).append( shared_library_suffix ) );
+		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
 
-		for ( unsigned int i=0; i<50; ++i )
+		for ( unsigned int i=0; i<1; ++i )
 		{
 			std::ostringstream msg;
 			msg << "in # " << i;
 
-			BlockIdentifier out = testSystem.createBlock( testBundle, "out" );
-			UpdatePolicyHandle outHandle = testSystem.getUpdatePolicy( out );
-			outHandle.updateWithFixedRate( 60.0 );
-			testSystem.setup( out );
-			testSystem.start( out );
+			BlockHandle out = testBundle.createBlockInstance( "out" );
+			OutletHandle outOut = out.getOutletHandle( "out outlet" );
+			out.setUpdateRate( 1.0 );
+			out.setUp();
+			out.start();
 
-			BlockIdentifier inout = testSystem.createBlock( testBundle, "in - out" );
-			UpdatePolicyHandle inoutHandle = testSystem.getUpdatePolicy( inout );
-			inoutHandle.updateWhenAllInletDataNew();
-			testSystem.setup( inout );
-			testSystem.start( inout );
+			BlockHandle inout = testBundle.createBlockInstance( "in - out" );
+			InletHandle inoutIn = inout.getInletHandle( "inout inlet" );
+			OutletHandle inoutOut = inout.getOutletHandle( "inout outlet" );
+			inout.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
+			inout.setUpdateRate( 0.5 );
+			inout.setUp();
+			inout.start();
 
-			BlockIdentifier in = testSystem.createBlock( testBundle, "in" );
-			UpdatePolicyHandle inHandle = testSystem.getUpdatePolicy( in );
-			inHandle.updateWhenAllInletDataNew();
-			testSystem.setValue< string >( in, "in msg", msg.str() );
-			testSystem.setup( in );
-			testSystem.start( in );
+			BlockHandle in = testBundle.createBlockInstance( "in" );
+			InletHandle inIn = in.getInletHandle( "in inlet" );
+			ParameterHandle inParam = in.getParameterHandle( "in msg" );
+			inParam.setValue< string >( msg.str() );
+			in.setUpdateRate( 0.25 );
+			in.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
+			in.setUp();
+			in.start();
 
-			testSystem.link( out, "out outlet", inout, "inout inlet" );
-			testSystem.link( inout, "inout outlet", in, "in inlet" );
+			inoutIn.linkTo( outOut );
+			inIn.linkTo( inoutOut );
 		}
-
-		while( 1 )
-		{
-			string line;
-			char lineEnd = '\n';
-			getline( cin, line, lineEnd );
-			if ( line == "q" )
-			{
-				break;
-			}
-			//else if ( line == "a" )
-			//{
-			//	unsigned int cnt = 0;
-			//	testSystem.setValue< unsigned int >( in, "inlet", ++cnt );
-			//}
-		}
-
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
+		cout << e.what() << " " << e.message() << endl;
 	}
 
 	while( 1 )
@@ -108,21 +98,6 @@ int main( int argc, char *argv[] )
 		char lineEnd = '\n';
 		getline( cin, line, lineEnd );
 		if ( line == "q" )
-		{
-			break;
-		}
-	}
-
-	testSystem.clear();
-
-	cout << "SYSTEM CLEARED" << endl;
-
-	while(1)
-	{
-		string line;
-		char lineEnd = '\n';
-		getline(cin, line, lineEnd);
-		if (line == "q")
 		{
 			break;
 		}

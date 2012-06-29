@@ -78,12 +78,13 @@ namespace _2Real
 #endif
 	}
 
-	void SystemBlockStateManager::tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger )
+	void SystemBlockStateManager::tryTriggerUberBlock( UberBlockBasedTrigger &trigger )
 	{
+		trigger.reset();
 		trigger.tryTriggerOther( BLOCK_OK );		// system always allows an update
 	}
 
-	void SystemBlockStateManager::addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
+	void SystemBlockStateManager::addUberBlockTrigger( UberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		for ( UberBlockTriggerList::iterator it = m_SubBlockTriggers.begin(); it != m_SubBlockTriggers.end(); ++it )
@@ -96,7 +97,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlockStateManager::removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
+	void SystemBlockStateManager::removeUberBlockTrigger( UberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_SubBlockTriggers.push_back( &trigger );

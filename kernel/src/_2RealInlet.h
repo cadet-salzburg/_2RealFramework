@@ -27,6 +27,11 @@
 namespace _2Real
 {
 
+	namespace app
+	{
+		class OutletHandle;
+	}
+
 	class Inlet : public Parameter
 	{
 
@@ -34,16 +39,19 @@ namespace _2Real
 
 	public:
 
-		Inlet( std::string const& name, std::string const& longTypename, std::string const& type, EngineData const& defaultValue );
+		Inlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& type, EngineData const& defaultValue );
 
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getName;
-
-		EngineData const& getCurrentValue() const;
+		using Parameter::getOwningUberBlock;
+		using Parameter::getData;
 
 		void updateCurrentValue();
 		void updateDataBuffer();
+
+		void linkTo( app::OutletHandle &outlet );
+		void unlinkFrom( app::OutletHandle &outlet );
 
 		void setDefaultValue( TimestampedData const& defaultValue );
 		void disableTriggering( TimestampedData const& data );

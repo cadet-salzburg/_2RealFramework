@@ -16,31 +16,34 @@
 	limitations under the License.
 */
 
-#include "_2RealAbstractBlockManager.h"
-#include "_2RealAbstractUberBlock.h"
-
-using std::string;
+#pragma once
 
 namespace _2Real
 {
+	class FunctionBlock;
+	class BlockData;
 
-	AbstractBlockManager::AbstractBlockManager(AbstractUberBlock &owner) :
-		m_Owner(owner)
+	namespace app
 	{
-	}
+		class ContextBlockHandle
+		{
 
-	AbstractBlockManager::~AbstractBlockManager()
-	{
-	}
+		public:
 
-	string const& AbstractBlockManager::getName() const
-	{
-		return m_Owner.getName();
-	}
+			ContextBlockHandle();
+			ContextBlockHandle( FunctionBlock &block );
 
-	unsigned int AbstractBlockManager::getId() const
-	{
-		return m_Owner.getId();
-	}
+			BlockData const& getBlockData() const;
 
+			void setUpdateRate( const double updatesPerSecond );
+			void setUp();
+			void start();
+
+		private:
+
+			FunctionBlock		*m_Block;
+
+		};
+
+	}
 }

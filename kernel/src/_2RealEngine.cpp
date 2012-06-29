@@ -18,11 +18,10 @@
 
 #include "_2RealEngine.h"
 #include "_2RealEngineImpl.h"
-#include "_2RealBundleIdentifier.h"
 #include "_2RealSingletonHolder.h"
-#include "_2RealHelpers.h"
+#include "app/_2RealBundleHandle.h"
 
-#include "Poco/Path.h"
+using std::string;
 
 namespace _2Real
 {
@@ -34,12 +33,12 @@ namespace _2Real
 	}
 
 	Engine::Engine() :
-		m_EngineImpl(EngineImpl::instance())
+		m_EngineImpl( EngineImpl::instance() )
 	{
 	}
 
-	Engine::Engine(Engine const& src) :
-		m_EngineImpl(EngineImpl::instance())
+	Engine::Engine( Engine const& src ) :
+		m_EngineImpl( EngineImpl::instance() )
 	{
 	}
 
@@ -49,32 +48,32 @@ namespace _2Real
 
 	void Engine::setBaseDirectory( std::string const& directory )
 	{
-		m_EngineImpl.setBaseDirectory( Poco::Path(directory) );
+		m_EngineImpl.setBaseDirectory( directory );
 	}
 
-	const BundleIdentifier Engine::load( std::string const& path )
+	app::BundleHandle Engine::loadBundle( std::string const& libraryPath )
 	{
-		return m_EngineImpl.loadLibrary( Poco::Path(path) );
+		return m_EngineImpl.loadLibrary( libraryPath );
 	}
 
-	bool Engine::isLoaded( std::string const& libraryPath ) const
-	{
-		return m_EngineImpl.isLibraryLoaded(Poco::Path(libraryPath));
-	}
+	//bool Engine::isLoaded( std::string const& libraryPath ) const
+	//{
+	//	return m_EngineImpl.isLibraryLoaded(Poco::Path(libraryPath));
+	//}
 
-	const std::string Engine::getInfoString( BundleIdentifier const& bundleId )
-	{
-		return m_EngineImpl.getInfoString( bundleId );
-	}
+	//const std::string Engine::getInfoString( BundleIdentifier const& bundleId )
+	//{
+	//	return m_EngineImpl.getInfoString( bundleId );
+	//}
 
-	BundleData const& Engine::getBundleData( BundleIdentifier const& bundleId ) const
-	{
-		return m_EngineImpl.getBundleData( bundleId );
-	}
+	//BundleData const& Engine::getBundleData( BundleIdentifier const& bundleId ) const
+	//{
+	//	return m_EngineImpl.getBundleData( bundleId );
+	//}
 
-	BlockData const& Engine::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
-	{
-		return m_EngineImpl.getBlockData( bundleId, blockName );
-	}
+	//BlockData const& Engine::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
+	//{
+	//	return m_EngineImpl.getBlockData( bundleId, blockName );
+	//}
 
 }

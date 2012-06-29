@@ -1,372 +1,441 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\_2RealBlock.h" />
-    <ClInclude Include="..\..\src\_2RealCallbacks.h" />
-    <ClInclude Include="..\..\src\_2RealEngine.h" />
-    <ClInclude Include="..\..\src\_2RealException.h" />
-    <ClInclude Include="..\..\src\_2RealSingletonHolder.h" />
-    <ClInclude Include="..\..\src\_2RealSystem.h" />
-    <ClInclude Include="..\..\src\_2RealFrameworkContext.h" />
-    <ClInclude Include="..\..\src\_2RealBundle.h" />
-    <ClInclude Include="..\..\src\_2RealBlockError.h" />
-    <ClInclude Include="..\..\src\_2RealOutputData.h" />
-    <ClInclude Include="..\..\src\_2RealCallbacksInternal.h" />
-    <ClInclude Include="..\..\src\_2RealCreationPolicy.h" />
-    <ClInclude Include="..\..\src\_2RealBlockMetainfo.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlockData.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleData.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleMetainfo.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractIOManager.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractStateManager.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleLoader.h">
-      <Filter>bundle internal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleManager.h">
-      <Filter>bundle internal</Filter>
+    <ClInclude Include="..\..\src\_2RealApplication.h">
+      <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleInternal.h">
-      <Filter>bundle internal</Filter>
+      <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealImageT.h">
-      <Filter>datatype</Filter>
+    <ClInclude Include="..\..\src\_2RealBundleLoader.h">
+      <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInlet.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutlet.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h">
-      <Filter>id</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h">
-      <Filter>id</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInletHandle.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOutletHandle.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParameter.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealIdCounter.h">
-      <Filter>id</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealEngineData.h">
-      <Filter>internal data</Filter>
+    <ClInclude Include="..\..\src\_2RealBundleManager.h">
+      <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealEnum.h">
-      <Filter>datatype</Filter>
+      <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTypeHolder.h">
-      <Filter>internal data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParameterHandle.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealParameterData.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealPooledThread.h">
-      <Filter>thread managment</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealHelpers.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealHelpersInternal.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSetupParameter.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealThreadPool.h">
-      <Filter>thread managment</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUberBlock.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealVersion.h">
-      <Filter>metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTimestampedData.h">
-      <Filter>internal data</Filter>
+    <ClInclude Include="..\..\src\_2RealImageT.h">
+      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealEngineImpl.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTimer.h">
-      <Filter>engine</Filter>
+      <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealLogger.h">
-      <Filter>engine</Filter>
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimer.h">
+      <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealTypetable.h">
-      <Filter>engine</Filter>
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIdCounter.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealInlet.h">
+      <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealInletBuffer.h">
-      <Filter>parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h">
-      <Filter>update policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h">
-      <Filter>update policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
-      <Filter>update policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFunctionBlock.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h">
-      <Filter>uberblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealFunctionBlockState.h">
-      <Filter>uberblock</Filter>
+      <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealLink.h">
-      <Filter>parameter</Filter>
+      <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemBlock.h">
-      <Filter>uberblock</Filter>
+    <ClInclude Include="..\..\src\_2RealOutlet.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPooledThread.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealThreadPool.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimestampedData.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealEngineData.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTypeHolder.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUberBlock.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractIOManager.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractStateManager.h">
+      <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealDisabledIOManager.h">
-      <Filter>uberblock</Filter>
+      <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledBlockManager.h">
-      <Filter>uberblock</Filter>
+    <ClInclude Include="..\..\src\_2RealFunctionBlock.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockIOManager.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockState.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemBlock.h">
+      <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealSystemBlockStateManager.h">
-      <Filter>uberblock</Filter>
+      <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUnownedBlockManager.h">
-      <Filter>uberblock</Filter>
+    <ClInclude Include="..\..\src\_2RealUberBlock.h">
+      <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealOwnedBlockManager.h">
-      <Filter>uberblock</Filter>
+    <ClInclude Include="..\..\src\_2RealBlock.h">
+      <Filter>include\bundle</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractBlockManager.h">
-      <Filter>uberblock</Filter>
+    <ClInclude Include="..\..\src\_2RealBundle.h">
+      <Filter>include\bundle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h">
-      <Filter>update policy</Filter>
+      <Filter>src\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdatePolicyl.h">
-      <Filter>update policy</Filter>
+    <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
+      <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdatePolicyHandle.h">
-      <Filter>update policy</Filter>
+    <ClInclude Include="..\..\src\_2RealUberBlockManager.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTimeBasedTrigger.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockError.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealEngine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealException.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealPoco.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSingletonHolder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockData.h">
+      <Filter>include\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleData.h">
+      <Filter>include\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParameterData.h">
+      <Filter>include\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealVersion.h">
+      <Filter>include\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealContextBlockMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealHelpers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealHelpersInternal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParam.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealParameter.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBlockHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealCreationPolicy.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealInletHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealOutletHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealOutputData.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParamHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealCallbacks.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealCallbacksInternal.h">
+      <Filter>include\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystem.cpp" />
-    <ClCompile Include="..\..\src\_2RealFrameworkContext.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockError.cpp" />
-    <ClCompile Include="..\..\src\_2RealOutputData.cpp" />
-    <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlockData.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleData.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealBundleInternal.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleLoader.cpp">
-      <Filter>bundle internal</Filter>
+      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealBundleManager.cpp">
-      <Filter>bundle internal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleInternal.cpp">
-      <Filter>bundle internal</Filter>
+      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealImageT.cpp">
-      <Filter>datatype</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealInlet.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOutlet.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp">
-      <Filter>id</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp">
-      <Filter>id</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealInletHandle.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOutletHandle.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParameter.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleMetainfoImpl.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealIdCounter.cpp">
-      <Filter>id</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParameterHandle.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealParameterData.cpp">
-      <Filter>metadata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealPooledThread.cpp">
-      <Filter>thread managment</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
-      <Filter>thread managment</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealHelpers.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSetupParameter.cpp">
-      <Filter>parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngineData.cpp">
-      <Filter>internal data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
-      <Filter>internal data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
-      <Filter>engine</Filter>
+      <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealTypetable.cpp">
-      <Filter>engine</Filter>
+      <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealInletBuffer.cpp">
-      <Filter>parameter</Filter>
+    <ClCompile Include="..\..\src\_2RealEngineImpl.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealIdCounter.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFunctionBlockIOManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealInlet.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFunctionBlockState.cpp">
-      <Filter>uberblock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealOutlet.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealLink.cpp">
-      <Filter>parameter</Filter>
+      <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemBlock.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealInletBuffer.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledBlockManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealPooledThread.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealThreadPool.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealEngineData.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealDisabledIOManager.cpp">
-      <Filter>uberblock</Filter>
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockIOManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockState.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemBlock.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp">
-      <Filter>uberblock</Filter>
+      <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUnownedBlockManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealUberBlockManager.cpp">
+      <Filter>include\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealOwnedBlockManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
+      <Filter>src\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractBlockManager.cpp">
-      <Filter>uberblock</Filter>
+    <ClCompile Include="..\..\src\_2RealBlockError.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUpdatePolicyHandle.cpp">
-      <Filter>update policy</Filter>
+    <ClCompile Include="..\..\src\_2RealException.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUpdatePolicyl.cpp">
-      <Filter>update policy</Filter>
+    <ClCompile Include="..\..\src\_2RealEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealOutputData.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParameterData.cpp">
+      <Filter>src\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleData.cpp">
+      <Filter>src\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockData.cpp">
+      <Filter>src\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleMetainfoImpl.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealHelpersInternal.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealHelpers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParameter.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealParam.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealContextBlockHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockHandle.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBlockMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealBundleMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealContextBlockMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParamHandle.cpp">
+      <Filter>src\app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="metadata">
-      <UniqueIdentifier>{7267e849-0a85-4211-b76a-dca3e96403c0}</UniqueIdentifier>
+    <Filter Include="include">
+      <UniqueIdentifier>{1a5b6126-709e-4530-80e5-b1600825fce8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="bundle internal">
-      <UniqueIdentifier>{6f6a77b6-5597-4814-aaba-269457aa6e9b}</UniqueIdentifier>
+    <Filter Include="include\app">
+      <UniqueIdentifier>{8b46eacf-23c5-4950-9a7f-f76504c36d53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="uberblock">
-      <UniqueIdentifier>{13f5f428-403b-4998-93e5-db223f0da2ee}</UniqueIdentifier>
+    <Filter Include="include\engine">
+      <UniqueIdentifier>{61217361-5676-40e7-b479-256cc69edf01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="datatype">
-      <UniqueIdentifier>{4c669e78-b917-49b4-a7e4-6e20c448f342}</UniqueIdentifier>
+    <Filter Include="include\datatypes">
+      <UniqueIdentifier>{03c8a586-437e-4dc5-8941-750d5443693f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="parameter">
-      <UniqueIdentifier>{36359d54-e657-468e-a8dd-d357b8d40e1c}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{7e91e32b-7a60-4fa7-84a3-fe57f2d511a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="id">
-      <UniqueIdentifier>{226fcc42-aee2-466a-a37b-b6a8b840faa2}</UniqueIdentifier>
+    <Filter Include="src\app">
+      <UniqueIdentifier>{091aebac-03c4-40da-98d3-ec95a35464eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="internal data">
-      <UniqueIdentifier>{1a431128-40a7-4cd0-9e6d-1ce3f89d1e2b}</UniqueIdentifier>
+    <Filter Include="src\engine">
+      <UniqueIdentifier>{1aec4a67-2cad-4629-b6aa-cf5c302cbb13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="thread managment">
-      <UniqueIdentifier>{fab70e3a-d9d1-44da-b974-4221ff019fa5}</UniqueIdentifier>
+    <Filter Include="src\bundle">
+      <UniqueIdentifier>{983f6fe8-2b2e-4ee7-b1b1-276d7dc3c889}</UniqueIdentifier>
     </Filter>
-    <Filter Include="helpers">
-      <UniqueIdentifier>{79a9230e-45f0-4b1a-9bd5-cd0c8ec0848e}</UniqueIdentifier>
+    <Filter Include="include\bundle">
+      <UniqueIdentifier>{8dd722d0-4771-4d55-8684-2ea2bbb4d125}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine">
-      <UniqueIdentifier>{6d601228-76a7-4119-a2cd-874522fa40f4}</UniqueIdentifier>
+    <Filter Include="include\block">
+      <UniqueIdentifier>{eb20b027-ca1c-44ae-b0c0-9d3560a51b7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="update policy">
-      <UniqueIdentifier>{58e7f8f9-fcfe-49df-9fe6-1419e0b8c8b5}</UniqueIdentifier>
+    <Filter Include="src\block">
+      <UniqueIdentifier>{54b2e2e0-3e75-4b2c-babc-cf9e6e9dd823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\metadata">
+      <UniqueIdentifier>{dfafe18c-ac40-4c83-9627-a45a480993e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\metadata">
+      <UniqueIdentifier>{ce53fb75-46af-4a58-8cdd-512e9f3a7e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\datatypes">
+      <UniqueIdentifier>{2371b8c9-c298-4489-bef7-7d24e008ec08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

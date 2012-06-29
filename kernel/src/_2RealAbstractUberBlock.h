@@ -20,20 +20,26 @@
 
 #include "_2RealBlockIdentifier.h"
 #include "_2RealCallbacks.h"
-#include "_2RealUpdatePolicyHandle.h"
+#include "app/_2RealUpdatePolicyHandle.h"
 
 #include <string>
 
 namespace _2Real
 {
+	namespace app
+	{
+		UpdatePolicyHandle;
+	}
 
 	class Inlet;
 	class Outlet;
-	class SetupParameter;
+	class Parameter;
 	class TimestampedData;
 	class UpdatePolicy;
 	class EngineData;
-	class AbstractUberBlockBasedTrigger;
+	class AbstractStateManager;
+	class AbstractIOManager;
+	class UberBlockBasedTrigger;
 
 	class AbstractUberBlock
 	{
@@ -47,24 +53,14 @@ namespace _2Real
 		std::string const&						getName() const;
 		unsigned int							getId() const;
 
-		virtual void							addSubBlock( AbstractUberBlock &subBlock, AbstractUberBlockBasedTrigger *trigger ) = 0;
-		virtual void							removeSubBlock( AbstractUberBlock &subBlock ) = 0;
-		virtual void							addSuperBlock( AbstractUberBlock &superBlock, AbstractUberBlockBasedTrigger *trigger ) = 0;
-		virtual void							removeSuperBlock( AbstractUberBlock &superBlock ) = 0;
-
-		virtual void							registerToNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
-		virtual void							unregisterFromNewData( std::string const& outlet, OutletCallback callback, void *userData ) = 0;
-		virtual void							registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
-		virtual void							unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler ) = 0;
-		virtual void							registerToNewData( OutputCallback callback, void *userData ) = 0;
-		virtual void							unregisterFromNewData( OutputCallback callback, void *userData ) = 0;
-		virtual void							registerToNewData( AbstractOutputCallbackHandler &handler ) = 0;
-		virtual void							unregisterFromNewData( AbstractOutputCallbackHandler &handler ) = 0;
-
-		virtual EngineData const&				getValue( std::string const& paramName ) const = 0;
-		virtual std::string const&				getTypename( std::string const& paramName ) const = 0;
-		virtual std::string const&				getLongTypename( std::string const& paramName ) const = 0;
-		virtual void							setValue( std::string const& paramName, TimestampedData const& value ) = 0;
+		virtual void							registerToNewData( std::string const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void							unregisterFromNewData( std::string const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void							registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void							unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void							registerToNewData( app::BlockDataCallback callback, void *userData ) = 0;
+		virtual void							unregisterFromNewData( app::BlockDataCallback callback, void *userData ) = 0;
+		virtual void							registerToNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
+		virtual void							unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
 
 		virtual void							setUp() = 0;
 		virtual void							start() = 0;
@@ -74,11 +70,19 @@ namespace _2Real
 
 		virtual Inlet &							getInlet( std::string const& name ) = 0;
 		virtual Outlet &						getOutlet( std::string const& name ) = 0;
-		virtual SetupParameter &				getSetupParameter( std::string const& name ) = 0;
+		virtual Parameter &						getParameter( std::string const& name ) = 0;
 
-		virtual UpdatePolicyHandle				getUpdatePolicyHandle() const = 0;
+		virtual void							createLink( Inlet &inlet, Outlet &outlet ) = 0;
+		virtual void							destroyLink( Inlet &inlet, Outlet &outlet ) = 0;
+
+		virtual app::UpdatePolicyHandle			getUpdatePolicyHandle() const = 0;
 
 	protected:
+
+		friend class TriggerLink;
+
+		virtual AbstractStateManager &			getStateManager() = 0;
+		virtual AbstractIOManager &				getIOManager() = 0;
 
 		BlockIdentifier							const m_Identifier;
 

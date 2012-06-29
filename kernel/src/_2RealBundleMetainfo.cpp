@@ -22,46 +22,47 @@
 
 namespace _2Real
 {
-
-	BundleMetainfo::BundleMetainfo( Metainfo &info ) :
-		m_Impl( info )
+	namespace bundle
 	{
-	}
+		BundleMetainfo::BundleMetainfo( Metainfo &info ) :
+			m_Impl( info )
+		{
+		}
 
-	void BundleMetainfo::setDescription( std::string const& description )
-	{
-		m_Impl.setDescription( description );
-	}
+		void BundleMetainfo::setDescription( std::string const& description )
+		{
+			m_Impl.setDescription( description );
+		}
 
-	void BundleMetainfo::setVersion( unsigned int major, unsigned int minor, unsigned int revision )
-	{
-		m_Impl.setVersion( Version( major, minor, revision ) );
-	}
+		void BundleMetainfo::setVersion( unsigned int major, unsigned int minor, unsigned int revision )
+		{
+			m_Impl.setVersion( Version( major, minor, revision ) );
+		}
 
-	void BundleMetainfo::setAuthor( std::string const& author )
-	{
-		m_Impl.setAuthor( author );
-	}
+		void BundleMetainfo::setAuthor( std::string const& author )
+		{
+			m_Impl.setAuthor( author );
+		}
 
-	void BundleMetainfo::setContact( std::string const& contact )
-	{
-		m_Impl.setContact( contact );
-	}
+		void BundleMetainfo::setContact( std::string const& contact )
+		{
+			m_Impl.setContact( contact );
+		}
 
-	void BundleMetainfo::setCategory( std::string const& category )
-	{
-		m_Impl.setCategory( category );
-	}
+		void BundleMetainfo::setCategory( std::string const& category )
+		{
+			m_Impl.setCategory( category );
+		}
 
-	ContextBlockMetainfo & BundleMetainfo::exportContextBlockInternal( AbstractBlockCreator &obj )
-	{
-		return m_Impl.setContextBlockCreator( obj );
-	}
+		ContextBlockMetainfo & BundleMetainfo::exportContextBlockInternal( AbstractBlockCreator &obj )
+		{
+			return m_Impl.setContextBlockCreator( obj );
+		}
 
-	BlockMetainfo & BundleMetainfo::exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName )
-	{
-		// TODO: perform block namecheck ( name != bundle context ), convert to lowercase
-		return m_Impl.setBlockCreator( blockName, obj );
+		BlockMetainfo & BundleMetainfo::exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName )
+		{
+			// TODO: perform block namecheck ( name != bundle context ), convert to lowercase
+			return m_Impl.setBlockCreator( blockName, obj );
+		}
 	}
-
 }

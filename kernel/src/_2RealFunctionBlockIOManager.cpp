@@ -19,16 +19,19 @@
 #include "_2RealFunctionBlockIOManager.h"
 #include "_2RealException.h"
 #include "_2RealAbstractUberBlock.h"
-#include "_2RealSetupParameter.h"
+#include "_2RealParameter.h"
 #include "_2RealInlet.h"
 #include "_2RealOutlet.h"
 #include "_2RealInletBuffer.h"
 #include "_2RealParameterData.h"
 #include "_2RealLink.h"
 #include "_2RealHelpersInternal.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
-
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 
 #include <sstream>
 
@@ -62,35 +65,34 @@ namespace _2Real
 			delete *it;
 		}
 
-		for ( OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.begin(); it != m_OutletFunctionCallbacks.end(); ++it )
+		for ( app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.begin(); it != m_OutletDataFunctionCallbacks.end(); ++it )
 		{
 			delete *it;
 		}
 
-		for ( OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.begin(); it != m_OutletCallbackHandlers.end(); ++it )
+		for ( app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.begin(); it != m_OutletDataCallbackHandlers.end(); ++it )
 		{
 			delete *it;
 		}
 
-		for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+		for ( app::BlockDataFunctionCallbacks::iterator it = m_BlockDataFunctionCallbacks.begin(); it != m_BlockDataFunctionCallbacks.end(); ++it )
 		{
 			delete *it;
 		}
 
-		for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
+		for ( app::BlockDataCallbackHandlers::iterator it = m_BlockDataCallbackHandlers.begin(); it != m_BlockDataCallbackHandlers.end(); ++it )
 		{
 			delete *it;
 		}
 	}
 
-	void FunctionBlockIOManager::registerToNewData( std::string const& outName, OutletCallback callback, void *userData )
+	void FunctionBlockIOManager::registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData )
 	{
-		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
-		
-		OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.find( cb );
-		if ( it == m_OutletFunctionCallbacks.end() )
+		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
+		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
+		if ( it == m_OutletDataFunctionCallbacks.end() )
 		{
-			m_OutletFunctionCallbacks.insert( cb );
+			m_OutletDataFunctionCallbacks.insert( cb );
 		}
 		else
 		{
@@ -98,26 +100,24 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData )
+	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData )
 	{
-		OutletFunctionCallback *cb = new OutletFunctionCallback( callback, userData );
-
-		OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.find( cb );
-		if ( it != m_OutletFunctionCallbacks.end() )
+		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
+		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
+		if ( it != m_OutletDataFunctionCallbacks.end() )
 		{
 			delete *it;
-			m_OutletFunctionCallbacks.erase(it);
+			m_OutletDataFunctionCallbacks.erase(it);
 		}
-
 		delete cb;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void FunctionBlockIOManager::registerToNewData( std::string const& outName, app::AbstractOutletDataCallbackHandler &handler )
 	{
-		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
-		if ( it == m_OutletCallbackHandlers.end() )
+		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
+		if ( it == m_OutletDataCallbackHandlers.end() )
 		{
-			m_OutletCallbackHandlers.insert( &handler );
+			m_OutletDataCallbackHandlers.insert( &handler );
 		}
 		else
 		{
@@ -125,26 +125,24 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, AbstractOutletCallbackHandler &handler )
+	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, app::AbstractOutletDataCallbackHandler &handler )
 	{
-		OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.find( &handler );
-		if ( it != m_OutletCallbackHandlers.end() )
+		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
+		if ( it != m_OutletDataCallbackHandlers.end() )
 		{
 			delete *it;
-			m_OutletCallbackHandlers.erase(it);
+			m_OutletDataCallbackHandlers.erase(it);
 		}
-
 		delete &handler;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( OutputCallback callback, void *userData )
+	void FunctionBlockIOManager::registerToNewData( app::BlockDataCallback callback, void *userData )
 	{
-		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
-		
-		OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.find( cb );
-		if ( it == m_OutputFunctionCallbacks.end() )
+		app::BlockDataFunctionCallback *cb = new app::BlockDataFunctionCallback( callback, userData );
+		app::BlockDataFunctionCallbacks::iterator it = m_BlockDataFunctionCallbacks.find( cb );
+		if ( it == m_BlockDataFunctionCallbacks.end() )
 		{
-			m_OutputFunctionCallbacks.insert( cb );
+			m_BlockDataFunctionCallbacks.insert( cb );
 		}
 		else
 		{
@@ -152,26 +150,24 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( OutputCallback callback, void *userData )
+	void FunctionBlockIOManager::unregisterFromNewData( app::BlockDataCallback callback, void *userData )
 	{
-		OutputFunctionCallback *cb = new OutputFunctionCallback( callback, userData );
-
-		OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.find( cb );
-		if ( it != m_OutputFunctionCallbacks.end() )
+		app::BlockDataFunctionCallback *cb = new app::BlockDataFunctionCallback( callback, userData );
+		app::BlockDataFunctionCallbacks::iterator it = m_BlockDataFunctionCallbacks.find( cb );
+		if ( it != m_BlockDataFunctionCallbacks.end() )
 		{
 			delete *it;
-			m_OutputFunctionCallbacks.erase(it);
+			m_BlockDataFunctionCallbacks.erase(it);
 		}
-
 		delete cb;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( AbstractOutputCallbackHandler &handler )
+	void FunctionBlockIOManager::registerToNewData( app::AbstractBlockDataCallbackHandler &handler )
 	{
-		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
-		if ( it == m_OutputCallbackHandlers.end() )
+		app::BlockDataCallbackHandlers::iterator it = m_BlockDataCallbackHandlers.find( &handler );
+		if ( it == m_BlockDataCallbackHandlers.end() )
 		{
-			m_OutputCallbackHandlers.insert( &handler );
+			m_BlockDataCallbackHandlers.insert( &handler );
 		}
 		else
 		{
@@ -179,200 +175,46 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( AbstractOutputCallbackHandler &handler )
+	void FunctionBlockIOManager::unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler )
 	{
-		OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.find( &handler );
-		if ( it != m_OutputCallbackHandlers.end() )
+		app::BlockDataCallbackHandlers::iterator it = m_BlockDataCallbackHandlers.find( &handler );
+		if ( it != m_BlockDataCallbackHandlers.end() )
 		{
 			delete *it;
-			m_OutputCallbackHandlers.erase(it);
+			m_BlockDataCallbackHandlers.erase(it);
 		}
 
 		delete &handler;
 	}
 
-	EngineData const& FunctionBlockIOManager::getValue( string const& name ) const
+	app::InletHandle FunctionBlockIOManager::createAppInletHandle( string const& name )
 	{
-		SetupParameter const* const param = findSetupParameter( name );
-		if ( param != nullptr )
-		{
-			return param->getParameterValue();
-		}
-
-		Inlet const* const inlet = findInlet( name );
-		if ( inlet != nullptr )
-		{
-			return inlet->getCurrentValue();
-		}
-
-		Outlet const* const outlet = findOutlet( name );
-		if ( outlet != nullptr )
-		{
-			return outlet->getLastData();
-		}
-
-		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
+		return app::InletHandle( getInlet( name ) );
 	}
 
-	void FunctionBlockIOManager::setValue( string const& name, TimestampedData const& value )
+	app::OutletHandle FunctionBlockIOManager::createAppOutletHandle( string const& name )
 	{
-		SetupParameter * const param = findSetupParameter( name );
-		if ( param != nullptr )
-		{
-			param->setParameterValue( value.getData() );
-			return;
-		}
-
-		Inlet * const inlet = findInlet( name );
-		if ( inlet != nullptr )
-		{
-			inlet->setDefaultValue( value );
-			return;
-		}
-
-		ostringstream msg;
-		msg << "no inlet / setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
+		return app::OutletHandle( getOutlet( name ) );
 	}
 
-	std::string const& FunctionBlockIOManager::getTypename( string const& name ) const
+	app::ParameterHandle FunctionBlockIOManager::createAppParameterHandle( string const& name )
 	{
-		SetupParameter const* const param = findSetupParameter( name );
-		if ( param != nullptr )
-		{
-			return param->getTypename();
-		}
-
-		Inlet const* const inlet = findInlet( name );
-		if ( inlet != nullptr )
-		{
-			return inlet->getTypename();
-		}
-
-		Outlet const* const outlet = findOutlet( name );
-		if ( outlet != nullptr )
-		{
-			return outlet->getTypename();
-		}
-
-		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
+		return app::ParameterHandle( getParameter( name ) );
 	}
 
-	std::string const& FunctionBlockIOManager::getLongTypename( string const& name ) const
+	bundle::InletHandle FunctionBlockIOManager::createBundleInletHandle( string const& name )
 	{
-		SetupParameter const* const param = findSetupParameter( name );
-		if ( param != nullptr )
-		{
-			return param->getLongTypename();
-		}
-
-		Inlet const* const inlet = findInlet( name );
-		if ( inlet != nullptr )
-		{
-			return inlet->getLongTypename();
-		}
-
-		Outlet const* const outlet = findOutlet( name );
-		if ( outlet != nullptr )
-		{
-			return outlet->getLongTypename();
-		}
-
-		ostringstream msg;
-		msg << "no inlet / outlet / setup parameter named " << name << " found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
+		return bundle::InletHandle( getInlet( name ) );
 	}
 
-	InletHandle FunctionBlockIOManager::createInletHandle( string const& name )
+	bundle::OutletHandle FunctionBlockIOManager::createBundleOutletHandle( string const& name )
 	{
-		return InletHandle( getInlet( name ) );
+		return bundle::OutletHandle( getOutlet( name ) );
 	}
 
-	OutletHandle FunctionBlockIOManager::createOutletHandle(std::string const& name)
+	bundle::ParameterHandle FunctionBlockIOManager::createBundleParameterHandle( string const& name )
 	{
-		return OutletHandle( getOutlet( name ) );
-	}
-
-	Inlet const& FunctionBlockIOManager::getInlet( string const& name ) const
-	{
-		Inlet const* const inlet = findInlet( name );
-		if ( inlet == nullptr )
-		{
-			ostringstream msg;
-			msg << "inlet " << name<< " not found in" << m_Owner.getName();
-			throw NotFoundException( msg.str() );
-		}
-
-		return *inlet;
-	}
-
-	Outlet const& FunctionBlockIOManager::getOutlet( string const& name ) const
-	{
-		Outlet const* const outlet = findOutlet( name );
-		if ( outlet == nullptr )
-		{
-			ostringstream msg;
-			msg << "outlet " << name<< " not found in" << m_Owner.getName();
-			throw NotFoundException( msg.str() );
-		}
-
-		return *outlet;
-	}
-
-	SetupParameter const& FunctionBlockIOManager::getSetupParameter( string const& name ) const
-	{
-		SetupParameter const* const param = findSetupParameter( name );
-		if ( param == nullptr )
-		{
-			ostringstream msg;
-			msg << "parameter " << name<< " not found in" << m_Owner.getName();
-			throw NotFoundException( msg.str() );
-		}
-
-		return *param;
-	}
-
-	Inlet const* const FunctionBlockIOManager::findInlet( string const& name ) const
-	{
-		for ( InletVector::const_iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			if ( ( *it )->getName() == name )
-			{
-				return *it;
-			}
-		}
-
-		return nullptr;
-	}
-
-	Outlet const* const FunctionBlockIOManager::findOutlet( string const& name ) const
-	{
-		for ( OutletVector::const_iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-		{
-			if ( ( *it )->getName() == name )
-			{
-				return *it;
-			}
-		}
-
-		return nullptr;
-	}
-
-	SetupParameter const* const FunctionBlockIOManager::findSetupParameter( string const& name ) const
-	{
-		for ( ParamVector::const_iterator it = m_Params.begin(); it != m_Params.end(); ++it )
-		{
-			if ( ( *it )->getName() == name )
-			{
-				return *it;
-			}
-		}
-
-		return nullptr;
+		return bundle::ParameterHandle( getParameter( name ) );
 	}
 
 	Inlet & FunctionBlockIOManager::getInlet( string const& name )
@@ -401,9 +243,9 @@ namespace _2Real
 		return *outlet;
 	}
 
-	SetupParameter & FunctionBlockIOManager::getSetupParameter( string const& name )
+	Parameter & FunctionBlockIOManager::getParameter( string const& name )
 	{
-		SetupParameter *param = findSetupParameter( name );
+		Parameter *param = findParameter( name );
 		if ( param == nullptr )
 		{
 			ostringstream msg;
@@ -440,7 +282,7 @@ namespace _2Real
 		return nullptr;
 	}
 
-	SetupParameter * FunctionBlockIOManager::findSetupParameter( string const& name )
+	Parameter * FunctionBlockIOManager::findParameter( string const& name )
 	{
 		for ( ParamVector::iterator it = m_Params.begin(); it != m_Params.end(); ++it )
 		{
@@ -455,19 +297,19 @@ namespace _2Real
 
 	void FunctionBlockIOManager::addInlet( ParameterData const& data )
 	{
-		Inlet *inlet = createInletFromParameterData( data );
+		Inlet *inlet = createInletFromParameterData( m_Owner, data );
 		m_Inlets.push_back( inlet );
 	}
 
 	void FunctionBlockIOManager::addOutlet( ParameterData const& data )
 	{
-		Outlet *outlet = createOutletFromParameterData( data );
+		Outlet *outlet = createOutletFromParameterData( m_Owner, data );
 		m_Outlets.push_back( outlet );
 	}
 
-	void FunctionBlockIOManager::addSetupParameter( ParameterData const& data )
+	void FunctionBlockIOManager::addParameter( ParameterData const& data )
 	{
-		SetupParameter *param = createSetupParameterFromParameterData( data );
+		Parameter *param = createParameterFromParameterData( m_Owner, data );
 		m_Params.push_back( param );
 	}
 
@@ -481,18 +323,22 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateOutletValues()
 	{
-		std::list< OutputData > data;
+		std::list< app::AppData > data;
 		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			( *it )->update();
-			OutputData out = ( *it )->getLastOutputData();
 
-			for ( OutletFunctionCallbacks::iterator it = m_OutletFunctionCallbacks.begin(); it != m_OutletFunctionCallbacks.end(); ++it )
+			EngineData const& lastData = ( *it )->getData();
+			app::AppData out = app::AppData( lastData, (*it)->getTypename(), (*it)->getName() );
+
+			// what if an outlet discarded its data?
+
+			for ( app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.begin(); it != m_OutletDataFunctionCallbacks.end(); ++it )
 			{
 				( *it )->invoke( out );
 			}
 
-			for ( OutletCallbackHandlers::iterator it = m_OutletCallbackHandlers.begin(); it != m_OutletCallbackHandlers.end(); ++it )
+			for ( app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.begin(); it != m_OutletDataCallbackHandlers.end(); ++it )
 			{
 				( *it )->invoke( out );
 			}
@@ -502,12 +348,12 @@ namespace _2Real
 
 		if ( data.size() > 0 )
 		{
-			for ( OutputFunctionCallbacks::iterator it = m_OutputFunctionCallbacks.begin(); it != m_OutputFunctionCallbacks.end(); ++it )
+			for ( app::BlockDataFunctionCallbacks::iterator it = m_BlockDataFunctionCallbacks.begin(); it != m_BlockDataFunctionCallbacks.end(); ++it )
 			{
 				( *it )->invoke( data );
 			}
 
-			for ( OutputCallbackHandlers::iterator it = m_OutputCallbackHandlers.begin(); it != m_OutputCallbackHandlers.end(); ++it )
+			for ( app::BlockDataCallbackHandlers::iterator it = m_BlockDataCallbackHandlers.begin(); it != m_BlockDataCallbackHandlers.end(); ++it )
 			{
 				( *it )->invoke( data );
 			}
@@ -519,6 +365,14 @@ namespace _2Real
 		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
 			( *it )->updateDataBuffer();
+		}
+	}
+
+	void FunctionBlockIOManager::updateParameterValues()
+	{
+		for ( ParamVector::iterator it = m_Params.begin(); it != m_Params.end(); ++it )
+		{
+			( *it )->synchronize();
 		}
 	}
 

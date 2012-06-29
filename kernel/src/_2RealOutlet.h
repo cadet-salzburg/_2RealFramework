@@ -21,14 +21,16 @@
 #include "_2RealParameter.h"
 #include "_2RealTimestampedData.h"
 #include "_2RealOutputData.h"
-
-#include "Poco/Mutex.h"
-#include "Poco/BasicEvent.h"
-
-#include <list>
+#include "_2RealPoco.h"
+#include "_2RealCallbacksInternal.h"
 
 namespace _2Real
 {
+
+	namespace app
+	{
+		class InletHandle;
+	}
 
 	class InletBuffer;
 	class EngineImpl;
@@ -38,35 +40,39 @@ namespace _2Real
 
 	public:
 
-		Outlet( std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& emptyData );
+		Outlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& emptyData );
 
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getName;
+		using Parameter::getOwningUberBlock;
+		using Parameter::getData;
 
-		void									update();					// called by fw at the end of each update cycle
-		void									discardCurrentData();
-		EngineData &							getCurrentData();
-		EngineData const&						getLastData() const;		// returns the value that was sent after the last update cycle
-		OutputData const&						getLastOutputData() const;	// return a copy of the value that was sent after the last update cycle
-																			// for the application
+		void linkTo( app::InletHandle &inlet );
+		void unlinkFrom( app::InletHandle &Inlet );
 
-		void									addInletListener( InletBuffer &buffer );
-		void									removeInletListener( InletBuffer &buffer );
+		void				update();
+		void				discardCurrentUpdate();
+		EngineData &		getDataForWriting();
+
+		void				addInletListener( InletBuffer &buffer );
+		void				removeInletListener( InletBuffer &buffer );
+
+		void				registerToNewData( app::OutletDataCallback callback, void *userData );
+		void				unregisterFromNewData( app::OutletDataCallback callback, void *userData );
+		void				registerToNewData( app::AbstractOutletDataCallbackHandler &handler );
+		void				unregisterFromNewData( app::AbstractOutletDataCallbackHandler &handler );
 
 	private:
 
 		EngineImpl										&m_Engine;					// engine is necessary for timestamps
 
-		mutable Poco::FastMutex							m_Access;
-		TimestampedData									m_LastDataItem;				// the data item that was last at the end of the most recent update cycle
-																					// initially, holds an empty ( created by () ) data item of correct type
-		TimestampedData									m_CurrentDataItem;			// the data item that is currently being written
+		TimestampedData									m_WriteDataItem;			// the data item that is currently being written
 																					// initially, holds an empty ( created by () ) data item of correct type
 																					// after the first update, holds a copy of the m_LastDataItem
 		bool											m_DiscardCurrent;			// is flagged if the current data should not be sent
-		OutputData										m_LastOutputData;
 
+		mutable Poco::FastMutex							m_Access;
 		mutable Poco::BasicEvent< TimestampedData >		m_InletEvent;
 
 	};

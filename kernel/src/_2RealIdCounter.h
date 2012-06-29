@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "Poco/Mutex.h"
+#include "_2RealPoco.h"
 
 namespace _2Real
 {

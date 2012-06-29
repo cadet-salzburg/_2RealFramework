@@ -23,56 +23,190 @@
 #include <map>
 #include <list>
 
+#include "Poco/Mutex.h"
+
 #include "vld.h"
 
 using std::string;
 using std::cout;
 using std::endl;
 using std::cin;
-using _2Real::Engine;
-using _2Real::System;
-using _2Real::BundleIdentifier;
-using _2Real::BlockIdentifier;
-using _2Real::UpdatePolicyHandle;
-using _2Real::Exception;
 
-#ifndef _DEBUG
-	#define shared_library_suffix ".dll"
-#else
-	#define shared_library_suffix "_d.dll"
-#endif
+using _2Real::Engine;
+using _2Real::Exception;
+using _2Real::BundleData;
+using _2Real::BlockData;
+using _2Real::app::BlockHandle;
+using _2Real::app::BundleHandle;
+using _2Real::app::InletHandle;
+using _2Real::app::OutletHandle;
+using _2Real::app::ParameterHandle;
+using _2Real::app::AppData;
+
+using Poco::ScopedLock;
+using Poco::FastMutex;
+
+class BlockReceiver
+{
+
+public:
+
+	void receiveData( std::list< AppData > const& data )
+	{
+		ScopedLock< FastMutex > lock( m_Mutex );
+		m_Received = data;
+		cout << "RECEIVED: " << m_Received.size() << endl;
+		for ( std::list< AppData >::iterator it = m_Received.begin(); it != m_Received.end(); ++it )
+		{
+			cout << "RECEIVED: " << ( *it ).getName() << endl;
+			cout << "RECEIVED: " << ( *it ).getDataAsString() << endl;
+		}
+	}
+
+private:
+
+	std::list< AppData >	m_Received;
+	mutable FastMutex		m_Mutex;
+
+};
+
+class Receiver
+{
+
+public:
+
+	void receiveData( AppData const& data )
+	{
+		ScopedLock< FastMutex > lock( m_Mutex );
+		m_Received = data;
+		cout << "RECEIVED: " << m_Received.getName() << endl;
+		cout << "RECEIVED: " << m_Received.getDataAsString() << endl;
+	}
+
+private:
+
+	AppData					m_Received;
+	mutable FastMutex		m_Mutex;
+
+};
 
 int main( int argc, char *argv[] )
 {
-	Engine &testEngine = Engine::instance();
-	System testSystem( "test system" );
+	Engine &engine = Engine::instance();
+
+	Receiver receiver;
+	BlockReceiver blockReceiver;
 
 	try
 	{
-		BundleIdentifier testBundle = testEngine.load( string( "ContextTesting" ).append( shared_library_suffix ) );
+		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
+		BundleData const& bundleData = bundleHandle.getBundleData();
+		//cout << bundleData << endl,			// DATA is ok, but formatting is all wrong
 
-		BlockIdentifier testBlock = testSystem.createBlock( testBundle, "test block" );
-		UpdatePolicyHandle policy = testSystem.getUpdatePolicy( testBlock );
-		policy.updateWithFixedRate( 10.0 );
-		testSystem.setup( testBlock );
-		testSystem.start( testBlock );
+		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
+		BlockData const& outData = outHandle.getBlockData();
+		//cout << outData << endl;				// DATA is ok, but formatting is all wrong
+
+		outHandle.setUpdateRate( 1.0 );
+		//outHandle.setUp();
+		//outHandle.start();
+
+		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
+
+		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
+		BlockData const& inData = inHandle.getBlockData();
+		//cout << inData << endl;				// DATA is ok, but formatting is all wrong
+
+		inHandle.setUpdateRate( 0.5 );
+		//inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
+		//inHandle.setInletPolicy( VALID_DATA );
+		//inHandle.setUp();
+		//inHandle.start();
+
+		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
+		inletHandle.setUpdatePolicy( InletHandle::DATA_NEW );
+
+		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
+
+		unsigned int cnt = 0;
+
+		while( 1 )
+		{
+			string line;
+			char lineEnd = '\n';
+			getline( cin, line, lineEnd );
+			if ( line == "quit" )
+			{
+				break;
+			}
+			else if ( line == "link" )
+			{
+				inletHandle.linkTo( outletHandle );
+			}
+			else if ( line == "ulink" )
+			{
+				inletHandle.unlinkFrom( outletHandle );
+			}
+			else if ( line == "setup in" )
+			{
+				inHandle.setUp();
+			}
+			else if ( line == "setup out" )
+			{
+				outHandle.setUp();
+			}
+			else if ( line == "stop in" )
+			{
+				inHandle.stop();
+			}
+			else if ( line == "stop out" )
+			{
+				outHandle.stop();
+			}
+			else if ( line == "start in" )
+			{
+				inHandle.start();
+			}
+			else if ( line == "start out" )
+			{
+				outHandle.start();
+			}
+			else if ( line == "data in" )
+			{
+				AppData d = inletHandle.getCurrentInput();
+				cout << d.getDataAsString() << endl;
+			}
+			else if ( line == "data out" )
+			{
+				AppData d = outletHandle.getLastOutput();
+				cout << d.getDataAsString() << endl;
+			}
+			else if ( line == "reg outlet" )
+			{
+				outletHandle.registerToNewData< Receiver >( receiver, &Receiver::receiveData );
+			}
+			else if ( line == "reg out" )
+			{
+				outHandle.registerToNewData< BlockReceiver >( blockReceiver, &BlockReceiver::receiveData );
+			}
+			else if ( line == "unreg outlet" )
+			{
+				outletHandle.unregisterFromNewData< Receiver >( receiver, &Receiver::receiveData );
+			}
+			else if ( line == "unreg out" )
+			{
+				outHandle.unregisterFromNewData< BlockReceiver >( blockReceiver, &BlockReceiver::receiveData );
+			}
+			else if ( line == "set" )
+			{
+				paramHandle.setValue< unsigned int >( ++cnt );
+			}
+		}
 	}
 	catch ( Exception &e )
 	{
 		cout << e.what() << " " << e.message() << endl;
 	}
 
-	while( 1 )
-	{
-		string line;
-		char lineEnd = '\n';
-		getline( cin, line, lineEnd );
-		if ( line == "q" )
-		{
-			break;
-		}
-	}
-
-	testSystem.clear();
 	return 0;
 }

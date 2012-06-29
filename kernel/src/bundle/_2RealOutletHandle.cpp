@@ -16,23 +16,31 @@
 	limitations under the License.
 */
 
-#include "_2RealParameterHandle.h"
+#include "_2RealOutletHandle.h"
+#include "_2RealOutlet.h"
 
 namespace _2Real
 {
-
-	ParameterHandle::ParameterHandle(std::string const& name) :
-		m_Name(name)
+	namespace bundle
 	{
-	}
+		OutletHandle::OutletHandle() :
+			m_Outlet( nullptr )
+		{
+		}
 
-	ParameterHandle::~ParameterHandle()
-	{
-	}
+		OutletHandle::OutletHandle( Outlet &outlet ) :
+			m_Outlet( &outlet )
+		{
+		}
 
-	std::string const& ParameterHandle::name() const
-	{
-		return m_Name;
-	}
+		EngineData OutletHandle::getCurrentData()
+		{
+			return m_Outlet->getDataForWriting();
+		}
 
+		void OutletHandle::discard()
+		{
+			m_Outlet->discardCurrentUpdate();
+		}
+	}
 }

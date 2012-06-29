@@ -20,16 +20,13 @@
 #pragma once
 
 #include "_2RealException.h"
+#include "_2RealPoco.h"
 
 #include <deque>
 #include <list>
 #include <map>
 #include <iostream>
 #include <string>
-
-#include "Poco/Mutex.h"
-#include "Poco/BasicEvent.h"
-#include "Poco/Delegate.h"
 
 namespace _2Real
 {

@@ -19,29 +19,26 @@
 #pragma once
 
 #include "_2RealAbstractIOManager.h"
-
-#include "Poco/Mutex.h"
+#include "_2RealPoco.h"
 
 #include <map>
 #include <string>
 
 namespace _2Real
 {
+	namespace app
+	{
+		class InletHandle;
+		class OutletHandle;
+		class ParameterHandle;
+	}
 
-	class BlockData;
-	class ParameterData;
-	class EngineData;
-	class TimestampedData;
-	class InletHandle;
-	class OutletHandle;
-	class AbstractUberBlock;
-	class BufferPolicy;
-	class Inlet;
-	class Outlet;
-	class SetupParameter;
-	class UpdatePolicy;
-
-	class AbstractInletBasedTrigger;
+	namespace bundle
+	{
+		class InletHandle;
+		class OutletHandle;
+		class ParameterHandle;
+	}
 
 	class FunctionBlockIOManager : public AbstractIOManager
 	{
@@ -50,7 +47,7 @@ namespace _2Real
 
 		typedef std::vector< Inlet* >				InletVector;
 		typedef std::vector< Outlet * >				OutletVector;
-		typedef std::vector< SetupParameter * >		ParamVector;
+		typedef std::vector< Parameter * >		ParamVector;
 
 		FunctionBlockIOManager( AbstractUberBlock &owner );
 		~FunctionBlockIOManager();
@@ -59,40 +56,37 @@ namespace _2Real
 
 		void						clear();
 
-		void						registerToNewData( std::string const& outName, OutletCallback callback, void *userData );
-		void						unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData );
-		void						registerToNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler );
-		void						unregisterFromNewData( std::string const& outlet, AbstractOutletCallbackHandler &handler );
-		void						registerToNewData( OutputCallback callback, void *userData );
-		void						unregisterFromNewData( OutputCallback callback, void *userData );
-		void						registerToNewData( AbstractOutputCallbackHandler &handler );
-		void						unregisterFromNewData( AbstractOutputCallbackHandler &handler );
-
-		EngineData const&			getValue( std::string const& paramName ) const;
-		void						setValue( std::string const& paramName, TimestampedData const& value );
-		std::string const&			getTypename( std::string const& paramName ) const;
-		std::string const&			getLongTypename( std::string const& paramName ) const;
-
-		void						addInlet( ParameterData const& data );
-		void						addOutlet( ParameterData const& data );
-		void						addSetupParameter( ParameterData const& data );
-
-		Inlet const&				getInlet( std::string const& name ) const;
-		Outlet const&				getOutlet( std::string const& name ) const;
-		SetupParameter const&		getSetupParameter( std::string const& name ) const;
+		void						registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
+		void						unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
+		void						registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void						unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void						registerToNewData( app::BlockDataCallback callback, void *userData );
+		void						unregisterFromNewData( app::BlockDataCallback callback, void *userData );
+		void						registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
+		void						unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
 
 		Inlet &						getInlet( std::string const& name );
 		Outlet &					getOutlet( std::string const& name );
-		SetupParameter &			getSetupParameter( std::string const& name );
+		Parameter &					getParameter( std::string const& name );
 
 		// stuff that is exclusive to this class: called by function block & function state mgr
 
-		InletHandle					createInletHandle( std::string const& name );
-		OutletHandle				createOutletHandle( std::string const& name );
+		void						addInlet( ParameterData const& data );
+		void						addOutlet( ParameterData const& data );
+		void						addParameter( ParameterData const& data );
+
+		app::InletHandle			createAppInletHandle( std::string const& name );
+		app::OutletHandle			createAppOutletHandle( std::string const& name );
+		app::ParameterHandle		createAppParameterHandle( std::string const& name );
+
+		bundle::InletHandle			createBundleInletHandle( std::string const& name );
+		bundle::OutletHandle		createBundleOutletHandle( std::string const& name );
+		bundle::ParameterHandle		createBundleParameterHandle( std::string const& name );
 
 		void						updateInletValues();
 		void						updateOutletValues();
 		void						updateInletBuffers();
+		void						updateParameterValues();
 
 	private:
 
@@ -103,21 +97,16 @@ namespace _2Real
 		OutletVector					m_Outlets;
 		ParamVector						m_Params;
 
-		Inlet const *const				findInlet( std::string const& name ) const;
-		Outlet const *const				findOutlet( std::string const& name ) const;
-		SetupParameter const *const		findSetupParameter( std::string const& name ) const;
-
 		Inlet *							findInlet( std::string const& name );
 		Outlet *						findOutlet( std::string const& name );
-		SetupParameter *				findSetupParameter( std::string const& name );
+		Parameter *						findParameter( std::string const& name );
 
-		mutable Poco::FastMutex			m_CallbackAccess;
-		OutletFunctionCallbacks			m_OutletFunctionCallbacks;
-		OutletCallbackHandlers			m_OutletCallbackHandlers;
-		OutputFunctionCallbacks			m_OutputFunctionCallbacks;
-		OutputCallbackHandlers			m_OutputCallbackHandlers;
-
-		std::list< OutputData >			m_OutputData;
+		// ugh
+		mutable Poco::FastMutex					m_CallbackAccess;
+		app::OutletDataFunctionCallbacks		m_OutletDataFunctionCallbacks;
+		app::OutletDataCallbackHandlers			m_OutletDataCallbackHandlers;
+		app::BlockDataFunctionCallbacks			m_BlockDataFunctionCallbacks;
+		app::BlockDataCallbackHandlers			m_BlockDataCallbackHandlers;
 
 	};
 

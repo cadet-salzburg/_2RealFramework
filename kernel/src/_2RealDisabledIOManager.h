@@ -29,34 +29,19 @@ namespace _2Real
 	public:
 
 		DisabledIOManager(AbstractUberBlock &owner);
-		~DisabledIOManager();
 
-		void							clear();
-		void							registerToNewData( std::string const& outName, OutletCallback callback, void *userData );
-		void							unregisterFromNewData( std::string const& outName, OutletCallback callback, void *userData );
-		void							registerToNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
-		void							unregisterFromNewData(std::string const& outlet, AbstractOutletCallbackHandler &handler);
-		void							registerToNewData(OutputCallback callback, void *userData );
-		void							unregisterFromNewData(OutputCallback callback, void *userData );
-		void							registerToNewData(AbstractOutputCallbackHandler &handler);
-		void							unregisterFromNewData(AbstractOutputCallbackHandler &handler);
-
-		EngineData const&				getValue(std::string const& paramName) const;
-		std::string const&				getTypename( std::string const& paramName ) const;
-		std::string const&				getLongTypename( std::string const& paramName ) const;
-		void							setValue(std::string const& paramName, TimestampedData const& value);
-
-		Inlet const&					getInlet( std::string const& name ) const;
-		Outlet const&					getOutlet( std::string const& name ) const;
-		SetupParameter const&			getSetupParameter( std::string const& name ) const;
+		void							registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
+		void							unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
+		void							registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void							unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void							registerToNewData( app::BlockDataCallback callback, void *userData );
+		void							unregisterFromNewData( app::BlockDataCallback callback, void *userData );
+		void							registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
+		void							unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
 
 		Inlet &							getInlet( std::string const& name );
 		Outlet &						getOutlet( std::string const& name );
-		SetupParameter &				getSetupParameter( std::string const& name );
-
-		void							addInlet( ParameterData const& data );
-		void							addOutlet( ParameterData const& data );
-		void							addSetupParameter( ParameterData const& data );
+		Parameter &						getParameter( std::string const& name );
 
 	};
 

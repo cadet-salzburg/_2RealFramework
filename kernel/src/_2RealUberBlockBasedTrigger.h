@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "_2RealAbstractUberBlock.h"
 #include "_2RealAbstractUpdateTrigger.h"
 #include "_2RealAbstractStateManager.h"
 
@@ -43,20 +44,24 @@ namespace _2Real
 		BLOCK_NOT_OK					=	0x04,
 	};
 
-	class AbstractUberBlockBasedTrigger : public AbstractUpdateTrigger
+	class UberBlockBasedTrigger : public AbstractUpdateTrigger
 	{
 
 	public:
 
-		AbstractUberBlockBasedTrigger() :
+		UberBlockBasedTrigger( AbstractStateManager &mine, const BlockMessage msg ) :
 			AbstractUpdateTrigger( false ),
+			m_Mine( mine ),
+			m_ExpectedMessage( msg ),
 			m_Other( nullptr )
 		{
 		}
 
-		virtual ~AbstractUberBlockBasedTrigger() {}
+		~UberBlockBasedTrigger()
+		{
+		}
 
-		void setOther( AbstractUberBlockBasedTrigger &other )
+		void setOther( UberBlockBasedTrigger &other )
 		{
 			m_Other = &other;
 		}
@@ -66,44 +71,6 @@ namespace _2Real
 			m_Other->tryTriggerUpdate( msg );
 		}
 
-		// not really a good solution
-		void resetOther()
-		{
-			m_Other->reset();
-		}
-
-	protected:
-
-		virtual void tryTriggerUpdate( const BlockMessage msg ) = 0;
-
-	private:
-
-		AbstractUberBlockBasedTrigger	*m_Other;
-
-	};
-
-	template< class StateMgrDerived >
-	class UberBlockBasedTrigger : public AbstractUberBlockBasedTrigger
-	{
-
-	public:
-
-		typedef void ( _2REAL_MEMBER_FUNC StateMgrDerived::*Function )( AbstractUberBlockBasedTrigger &trigger );
-
-		UberBlockBasedTrigger( StateMgrDerived &mgr, Function func, const BlockMessage msg ) :
-			AbstractUberBlockBasedTrigger(),
-			m_Owner( mgr ),
-			m_Function( func ),
-			m_ExpectedMessage( msg )
-		{
-			m_Owner.addUberBlockTrigger( *this );
-		}
-
-		~UberBlockBasedTrigger()
-		{
-			m_Owner.removeUberBlockTrigger( *this );
-		}
-
 	protected:
 
 		void tryTriggerUpdate( const BlockMessage msg )
@@ -111,15 +78,56 @@ namespace _2Real
 			if ( !m_IsOk && msg == m_ExpectedMessage )
 			{
 				m_IsOk = true;
-				(m_Owner.*m_Function)( *this );
+				m_Mine.tryTriggerUberBlock( *this );
 			}
+			//else if ( m_IsOk )
+			//{
+			//}
+			//else
+			//{
+			//}
 		}
 
 	private:
 
-		StateMgrDerived						&m_Owner;
-		Function							m_Function;
-		BlockMessage						m_ExpectedMessage;
+		AbstractStateManager		&m_Mine;
+		UberBlockBasedTrigger		*m_Other;
+		BlockMessage				m_ExpectedMessage;
+
+	};
+
+
+	// this needs to happen at the right moment, i.e. after
+	// an update cycle is complete
+	class TriggerLink
+	{
+
+	public:
+
+		TriggerLink( AbstractUberBlock &b1, const BlockMessage m1, AbstractUberBlock &b2, const BlockMessage m2 )
+		{
+			m_S1 = &b1.getStateManager();
+			m_S2 = &b2.getStateManager();
+			UberBlockBasedTrigger *t1 = new UberBlockBasedTrigger( *m_S1, m1 );
+			UberBlockBasedTrigger *t2 = new UberBlockBasedTrigger( *m_S2, m2 );
+			t1->setOther( *t2 );
+			t2->setOther( *t1 );
+			m_S1->addUberBlockTrigger( *t1 );
+			m_S2->addUberBlockTrigger( *t2 );
+		}
+
+		~TriggerLink()
+		{
+			m_S1->removeUberBlockTrigger( *m_T1 );
+			m_S2->removeUberBlockTrigger( *m_T2 );
+		}
+
+	private:
+
+		AbstractStateManager		*m_S1;
+		AbstractStateManager		*m_S2;
+		UberBlockBasedTrigger		*m_T1;
+		UberBlockBasedTrigger		*m_T2;
 
 	};
 

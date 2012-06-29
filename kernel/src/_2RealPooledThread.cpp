@@ -21,8 +21,6 @@
 #include "_2RealFunctionBlockStateManager.h"
 #include "_2RealThreadPool.h"
 
-#include "Poco/ThreadLocal.h"
-
 #include <iostream>
 
 namespace _2Real

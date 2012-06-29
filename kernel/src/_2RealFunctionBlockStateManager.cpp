@@ -22,7 +22,7 @@
 #include "_2RealAbstractIOManager.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealThreadPool.h"
-#include "_2RealFrameworkContext.h"
+#include "_2RealBlockHandle.h"
 #include "_2RealTimer.h"
 #include "_2RealInlet.h"
 #include "_2RealLogger.h"
@@ -76,7 +76,9 @@ namespace _2Real
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateSetUp();
 
-				FrameworkContext context( dynamic_cast< FunctionBlock& >( m_Owner) );
+				m_IOManager->updateParameterValues();
+
+				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
 				m_FunctionBlock->setup( context );
 
 				m_Logger.addLine( string( getName() + " new state: set up" ) );
@@ -112,6 +114,9 @@ namespace _2Real
 
 				m_StopEvent.reset();
 				enableTriggers();
+
+				m_IOManager->updateInletBuffers();		///???????????????????????
+				m_IOManager->updateParameterValues();
 
 				m_Logger.addLine( string( getName() + " new state: started" ) );
 			}
@@ -287,7 +292,9 @@ namespace _2Real
 			{
 				disableAllTriggers();
 
-				FrameworkContext context( dynamic_cast< FunctionBlock& >( m_Owner) );
+				m_IOManager->updateParameterValues();
+
+				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
 				m_FunctionBlock->setup( context );
 				m_CurrentState = new FunctionBlockStateSetUp();
 				m_StateAccess.unlock();
@@ -319,10 +326,10 @@ namespace _2Real
 				m_Logger.addLine( std::string( getName() + " new state: started ( finished update cycle )" ) );
 
 				enableTriggers();
-			}
 
-			m_IOManager->updateInletBuffers();		// ok, so the last thing to do to complete the update is handling data
-													// that was received during the update
+				m_IOManager->updateInletBuffers();
+				m_IOManager->updateParameterValues();
+			}
 
 			m_FlaggedForStop.unset();
 			m_FlaggedForSetUp.unset();
@@ -417,13 +424,13 @@ namespace _2Real
 		m_System->handleException( m_Owner, e );
 	}
 
-	void FunctionBlockStateManager::addUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
+	void FunctionBlockStateManager::addUberBlockTrigger( UberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
 		m_UberBlockTriggers.push_back( &trigger );
 	}
 
-	void FunctionBlockStateManager::removeUberBlockTrigger( AbstractUberBlockBasedTrigger &trigger )
+	void FunctionBlockStateManager::removeUberBlockTrigger( UberBlockBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
 		for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); /**/ )
@@ -487,7 +494,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockStateManager::tryTriggerUberBlock( AbstractUberBlockBasedTrigger &trigger )
+	void FunctionBlockStateManager::tryTriggerUberBlock( UberBlockBasedTrigger &trigger )
 	{
 		if ( areUberBlockTriggersEnabled() )
 		{
@@ -512,7 +519,6 @@ namespace _2Real
 		for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
 		{
 			( *it )->reset();
-			( *it )->resetOther();
 		}
 	}
 

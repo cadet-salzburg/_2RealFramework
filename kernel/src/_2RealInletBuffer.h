@@ -20,9 +20,7 @@
 
 #include "_2RealTimestampedData.h"
 #include "_2RealHelpersInternal.h"
-
-#include "Poco/Mutex.h"
-#include "Poco/BasicEvent.h"
+#include "_2RealPoco.h"
 
 #include <list>
 #include <memory>
@@ -85,7 +83,7 @@ namespace _2Real
 		TimestampedData								m_TriggeringData;		// holds the data item which triggered the update condition
 		InletTriggerList							m_InletTriggers;
 		TimestampedData								m_DefaultData;
-		bool										m_Notify;				// this is set to false as soon as any received data
+		volatile bool								m_Notify;				// this is set to false as soon as any received data
 		mutable Poco::FastMutex						m_DataAccess;			// i use this for synchronizing policy, data access & default access oO
 		mutable Poco::FastMutex						m_ReceivedAccess;
 		mutable Poco::FastMutex						m_NotificationAccess;

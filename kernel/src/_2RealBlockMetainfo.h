@@ -25,46 +25,47 @@
 
 namespace _2Real
 {
-
 	class Typetable;
 	class BlockData;
 
-	class BlockMetainfo
+	namespace bundle
 	{
-
-	public:
-
-		BlockMetainfo( BlockData &data, Typetable const& typetable );
-
-		void setDescription( std::string const& description );
-
-		template< typename Datatype >
-		void addParameter( std::string const& setupName, Datatype defaultValue )
+		class BlockMetainfo
 		{
-			addSetupParameterInternal( setupName, EngineData( defaultValue ) );
-		}
 
-		template< typename Datatype >
-		void addInlet( std::string const& inletName, Datatype defaultValue )
-		{
-			addInletInternal( inletName, EngineData( defaultValue ) );
-		}
+		public:
 
-		template< typename Datatype >
-		void addOutlet( std::string const& outletName )
-		{
-			addOutletInternal( outletName, typeid( Datatype ).name() );
-		}
+			BlockMetainfo( BlockData &data, Typetable const& typetable );
 
-	private:
+			void setDescription( std::string const& description );
 
-		void		addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
-		void		addInletInternal( std::string const& inletName, EngineData const& defaultValue );
-		void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
+			template< typename Datatype >
+			void addParameter( std::string const& setupName, Datatype defaultValue )
+			{
+				addSetupParameterInternal( setupName, EngineData( defaultValue ) );
+			}
 
-		BlockData	&m_Impl;
-		Typetable	const& m_Typetable;
+			template< typename Datatype >
+			void addInlet( std::string const& inletName, Datatype defaultValue )
+			{
+				addInletInternal( inletName, EngineData( defaultValue ) );
+			}
 
-	};
+			template< typename Datatype >
+			void addOutlet( std::string const& outletName )
+			{
+				addOutletInternal( outletName, typeid( Datatype ).name() );
+			}
 
+		private:
+
+			void		addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
+			void		addInletInternal( std::string const& inletName, EngineData const& defaultValue );
+			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
+
+			BlockData	&m_Impl;
+			Typetable	const& m_Typetable;
+
+		};
+	}
 }

@@ -24,25 +24,26 @@
 
 namespace _2Real
 {
-
 	class BlockData;
 
-	class ContextBlockMetainfo
+	namespace bundle
 	{
+		class ContextBlockMetainfo
+		{
 
-	public:
+		public:
 
-		ContextBlockMetainfo( BlockData &data );
+			ContextBlockMetainfo( BlockData &data );
 
-		void setDescription( std::string const& description );
+			void setDescription( std::string const& description );
 
-		// TODO: functions for context block may be added as the need arises
-		//void setUpdateRate( const float updatesPerSecond );
+			// TODO: functions for context block may be added as the need arises
+			//void setUpdateRate( const float updatesPerSecond );
 
-	private:
+		private:
 
-		BlockData		&m_Impl;
+			BlockData		&m_Impl;
 
-	};
-
+		};
+	}
 }

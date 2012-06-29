@@ -20,10 +20,6 @@
 #include "_2RealHelpersInternal.h"
 #include "_2RealException.h"
 
-#include "Poco/Path.h"
-
-using Poco::ScopedLock;
-using Poco::FastMutex;
 using std::string;
 
 namespace _2Real
@@ -45,25 +41,25 @@ namespace _2Real
 
 	bool SafeBool::isSet() const
 	{
-		ScopedLock< FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		return ( m_Bool == true );
 	}
 
 	bool SafeBool::isUnset() const
 	{
-		ScopedLock< FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		return ( m_Bool == false );
 	}
 
 	void SafeBool::set()
 	{
-		ScopedLock< FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Bool = true;
 	}
 
 	void SafeBool::unset()
 	{
-		ScopedLock< FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Bool = false;
 	}
 

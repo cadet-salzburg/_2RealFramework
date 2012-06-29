@@ -18,31 +18,35 @@
 
 #pragma once
 
-#include <string>
+#include "_2RealParam.h"
+#include "_2RealTimestampedData.h"
+#include "_2RealEngineData.h"
+#include "_2RealPoco.h"
 
 namespace _2Real
 {
 
-	class Runnable;
-	class ParameterData;
-
-	class Parameter
+	class Parameter : public Param
 	{
 
 	public:
 
-		Parameter( std::string const& name, std::string const& longTypename, std::string const& typeName );
-		virtual ~Parameter() {}
+		Parameter( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName );
 
-		std::string const& getTypename() const;
-		std::string const& getLongTypename() const;
-		std::string const& getName() const;
+		using Param::getTypename;
+		using Param::getLongTypename;
+		using Param::getName;
+		using Param::getOwningUberBlock;
 
-	protected:
+		void				setData( TimestampedData const& data );
+		void				synchronize();
+		EngineData			getData() const; // must return a copy, b/c could change anytime
 
-		std::string		const m_LongTypename;
-		std::string		const m_Typename;
-		std::string		const m_Name;
+	private:
+
+		mutable Poco::FastMutex		m_DataAccess;
+		TimestampedData				m_Data;
+		TimestampedData				m_WriteData;
 
 	};
 

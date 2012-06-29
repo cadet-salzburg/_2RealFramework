@@ -6,12 +6,13 @@
 #include "_2RealContextBlockMetainfo.h"
 #include "_2RealException.h"
 
-using _2Real::BundleMetainfo;
-using _2Real::BlockMetainfo;
-using _2Real::ContextBlockMetainfo;
+using _2Real::bundle::BundleMetainfo;
+using _2Real::bundle::BlockMetainfo;
+using _2Real::bundle::ContextBlockMetainfo;
+using _2Real::bundle::WithContext;
+using _2Real::bundle::WithoutContext;
+
 using _2Real::Exception;
-using _2Real::WithContext;
-using _2Real::WithoutContext;
 
 using std::string;
 

@@ -18,23 +18,14 @@
 
 #pragma once
 
+#include <set>
+
 namespace _2Real
 {
 
 	class Parameter;
-	class SetupParameter;
 	class Inlet;
 	class Outlet;
-
-	//class LinkSet
-	//{
-
-	//	LinkSet();
-	//	~LinkSet();
-
-	//	void link( 
-
-	//}
 
 	class AbstractLink
 	{
@@ -44,8 +35,6 @@ namespace _2Real
 		AbstractLink( Parameter &p1, Parameter &p2 );
 		virtual ~AbstractLink() {}
 		bool operator<( AbstractLink const& other );
-		//Parameter & getFirst();
-		//Parameter & getSecond();
 
 		virtual void activate() = 0;
 		virtual void deactivate() = 0;
@@ -57,13 +46,22 @@ namespace _2Real
 
 	};
 
+	struct LinkCmp
+	{
+		bool operator()( AbstractLink *l1, AbstractLink *l2 )
+		{
+			return ( *l1 < *l2 );
+		}
+	};
+
+	typedef std::set< AbstractLink *, LinkCmp >		LinkSet;
+
 	class IOLink : public AbstractLink
 	{
 
 	public:
 
 		IOLink( Inlet &inlet, Outlet &outlet );
-		~IOLink();
 
 		void activate();
 		void deactivate();

@@ -6,11 +6,11 @@
 #include "_2RealContextBlockMetainfo.h"
 #include "_2RealException.h"
 
-using _2Real::BundleMetainfo;
-using _2Real::BlockMetainfo;
-using _2Real::ContextBlockMetainfo;
+using _2Real::bundle::BundleMetainfo;
+using _2Real::bundle::BlockMetainfo;
+using _2Real::bundle::ContextBlockMetainfo;
+using _2Real::bundle::WithContext;
 using _2Real::Exception;
-using _2Real::WithContext;
 
 using std::string;
 
@@ -26,8 +26,15 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		ContextBlockMetainfo &context = info.exportContextBlock< ContextManager >();
 
-		BlockMetainfo test = info.exportBlock< TestBlock, WithContext >( "test block" );
-		test.setDescription( "testing the context's functionality" );
+		BlockMetainfo out = info.exportBlock< Out, WithContext >( "out" );
+		out.setDescription( "testing the context's functionality" );
+		out.addOutlet< unsigned int >( "outlet" );
+		out.addOutlet< unsigned int >( "discard" );
+
+		BlockMetainfo in = info.exportBlock< In, WithContext >( "in" );
+		in.setDescription( "testing the context's functionality" );
+		in.addInlet< unsigned int >( "inlet", (unsigned int)10 );
+		in.addParameter< unsigned int >( "param", (unsigned int)100 );
 	}
 	catch ( Exception &e )
 	{

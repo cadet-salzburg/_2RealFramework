@@ -27,12 +27,35 @@
 #include "_2RealLogger.h"
 #include "_2RealSystemBlock.h"
 #include "_2RealIdCounter.h"
+#include "app/_2RealBundleHandle.h"
 
 #include "_2RealImageT.h"
 #include "_2RealEnum.h"
 
 #include <sstream>
 #include <iostream>
+
+#ifdef _2REAL_WINDOWS
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dll"
+	#else
+		#define shared_library_suffix "_d.dll"
+	#endif
+#elif _2REAL_UNIX
+	#ifndef _DEBUG
+		#define shared_library_suffix ".so"
+	#else
+		#define shared_library_suffix "_d.so"
+	#endif
+#elif _2REAL_MAC
+	#ifndef _DEBUG
+		#define shared_library_suffix ".dylib"
+	#else
+		#define shared_library_suffix "_d.dylib"
+	#endif
+#endif
+
+using std::string;
 
 namespace _2Real
 {
@@ -44,76 +67,72 @@ namespace _2Real
 	}
 
 	EngineImpl::EngineImpl() :
-		m_Logger( new Logger( "Logfile.txt" ) ),
+		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer() ),
-		m_Types( new Typetable() ),
-		m_Threads( new ThreadPool(15, 0, "2real engine threadpool") ),
-		m_Plugins( new BundleManager() ),
-		m_IdCounter( new IdCounter() )
+		m_Typetable( new Typetable() ),
+		m_ThreadPool( new ThreadPool( 15, 0, "2real threadpool" ) ),
+		m_BundleManager( new BundleManager( *this ) ),
+		m_IdCounter( new IdCounter() ),
+		m_SystemBlock( new SystemBlock( *this, BlockIdentifier() ) )
 	{
-		m_Types->registerType< char >("char");
-		m_Types->registerType< unsigned char >("unsigned char");
-		m_Types->registerType< short >("short");
-		m_Types->registerType< unsigned short >("unsigned short");
-		m_Types->registerType< int >("int");
-		m_Types->registerType< unsigned int >("unsigned int");
-		m_Types->registerType< long >("long");
-		m_Types->registerType< unsigned long >("unsigned long");
-		m_Types->registerType< float >("float");
-		m_Types->registerType< double >("double");
-		m_Types->registerType< bool >("bool");
-		m_Types->registerType< std::string >("string");
+		m_Typetable->registerType< char >("char");
+		m_Typetable->registerType< unsigned char >("unsigned char");
+		m_Typetable->registerType< short >("short");
+		m_Typetable->registerType< unsigned short >("unsigned short");
+		m_Typetable->registerType< int >("int");
+		m_Typetable->registerType< unsigned int >("unsigned int");
+		m_Typetable->registerType< long >("long");
+		m_Typetable->registerType< unsigned long >("unsigned long");
+		m_Typetable->registerType< float >("float");
+		m_Typetable->registerType< double >("double");
+		m_Typetable->registerType< bool >("bool");
+		m_Typetable->registerType< std::string >("string");
 
-		m_Types->registerType< StringEnumeration >( "enum_string" );
+		m_Typetable->registerType< StringEnumeration >( "enum_string" );
 
-		m_Types->registerType< ImageT < char > >("img_char");
-		m_Types->registerType< ImageT < unsigned char > >("img_uchar");
-		m_Types->registerType< ImageT < short > >("img_short");
-		m_Types->registerType< ImageT < unsigned short > >("img_ushort");
-		m_Types->registerType< ImageT < int > >("img_int");
-		m_Types->registerType< ImageT < unsigned int > >("img_uint");
-		m_Types->registerType< ImageT < long > >("img_long");
-		m_Types->registerType< ImageT < unsigned long > >("img_ulong");
-		m_Types->registerType< ImageT < float > >("img_float");
-		m_Types->registerType< ImageT < double > >("img_double");
+		m_Typetable->registerType< ImageT < char > >("img_char");
+		m_Typetable->registerType< ImageT < unsigned char > >("img_uchar");
+		m_Typetable->registerType< ImageT < short > >("img_short");
+		m_Typetable->registerType< ImageT < unsigned short > >("img_ushort");
+		m_Typetable->registerType< ImageT < int > >("img_int");
+		m_Typetable->registerType< ImageT < unsigned int > >("img_uint");
+		m_Typetable->registerType< ImageT < long > >("img_long");
+		m_Typetable->registerType< ImageT < unsigned long > >("img_ulong");
+		m_Typetable->registerType< ImageT < float > >("img_float");
+		m_Typetable->registerType< ImageT < double > >("img_double");
+
+		// currently, the threadpool uses the timer signal to perform cleanup
+		// TODO: probably not a good idea
+		m_ThreadPool->registerTimeListener( *m_Timer );
 
 		m_Timestamp.update();
-		m_Threads->registerTimeListener(*m_Timer);
 	}
 
 	EngineImpl::~EngineImpl()
 	{
 		try
 		{
+			m_SystemBlock->clear();
+			delete m_SystemBlock;
 			delete m_IdCounter;
-			delete m_Plugins;
-
-			m_Threads->unregisterTimeListener( *m_Timer );
-			m_Threads->clear();
-
-			delete m_Types;
-			delete m_Threads;
+			delete m_BundleManager;
+			m_ThreadPool->unregisterTimeListener( *m_Timer );
+			m_ThreadPool->clear();
+			delete m_ThreadPool;
+			delete m_Typetable;
 			delete m_Timer;
-
 			m_Logger->stop();
 			delete m_Logger;
 		}
-		catch (std::exception &e)
+		catch ( std::exception &e )
 		{
-#ifdef _DEBUG
 			std::cout << e.what() << std::endl;
-#endif
 		}
 	}
 
 	const long EngineImpl::getElapsedTime() const
 	{
 		return static_cast< long >( m_Timestamp.elapsed() );
-	}
-
-	Poco::Timestamp const& EngineImpl::getTimestamp() const
-	{
-		return m_Timestamp;
 	}
 
 	BlockIdentifier EngineImpl::createBlockId( std::string const& name )
@@ -144,74 +163,36 @@ namespace _2Real
 		return *m_Timer;
 	}
 
-	Timer const& EngineImpl::getTimer() const
-	{
-		return *m_Timer;
-	}
-
-	Typetable & EngineImpl::getTypetable()
-	{
-		return *m_Types;
-	}
-
 	Typetable const& EngineImpl::getTypetable() const
 	{
-		return *m_Types;
+		return *m_Typetable;
 	}
 
-	BundleManager & EngineImpl::getPluginPool()
+	BundleManager & EngineImpl::getBundleManager()
 	{
-		return *m_Plugins;
-	}
-
-	BundleManager const& EngineImpl::getPluginPool() const
-	{
-		return *m_Plugins;
+		return *m_BundleManager;
 	}
 
 	ThreadPool & EngineImpl::getThreadPool()
 	{
-		return *m_Threads;
+		return *m_ThreadPool;
 	}
 
-	ThreadPool const& EngineImpl::getThreadPool() const
+	SystemBlock & EngineImpl::getSystemBlock()
 	{
-		return *m_Threads;
+		return *m_SystemBlock;
 	}
 
-	void EngineImpl::setBaseDirectory(Poco::Path const& directory)
+	void EngineImpl::setBaseDirectory( string const& directory )
 	{
-		m_Plugins->setBaseDirectory(directory);
+		m_BundleManager->setBaseDirectory( directory );
 	}
 
-	const BundleIdentifier EngineImpl::loadLibrary(Poco::Path const& path)
+	app::BundleHandle EngineImpl::loadLibrary( string const& libraryPath )
 	{
-		return m_Plugins->loadLibrary(path);
+		string path = libraryPath;
+		path.append( shared_library_suffix );
+		return m_BundleManager->loadLibrary( path );
 	}
-
-	const bool EngineImpl::isLibraryLoaded(Poco::Path const& path) const
-	{
-		return m_Plugins->isLibraryLoaded(path);
-	}
-
-	const std::string EngineImpl::getInfoString( BundleIdentifier const& bundleId ) const
-	{
-		return m_Plugins->getInfoString( bundleId );
-	}
-
-	BundleData const& EngineImpl::getBundleData( BundleIdentifier const& bundleId ) const
-	{
-		return m_Plugins->getBundleData( bundleId );
-	}
-
-	BlockData const& EngineImpl::getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const
-	{
-		return m_Plugins->getBlockData( bundleId, blockName );
-	}
-
-	//const Identifier EngineImpl::getPluginIdentifier( std::string const& idName ) const
-	//{
-	//	return m_Plugins->getIdentifier(idName);
-	//}
 
 }

@@ -16,12 +16,13 @@
 	limitations under the License.
 */
 
-#include "_2RealOwnedBlockManager.h"
+#include "_2RealUberBlockManager.h"
 #include "_2RealException.h"
 #include "_2RealAbstractUberBlock.h"
 
 #include <iostream>
 #include <sstream>
+#include <assert.h>
 
 using std::cout;
 using std::endl;
@@ -31,13 +32,9 @@ using std::list;
 namespace _2Real
 {
 
-	SystemBlockManager::SystemBlockManager( AbstractUberBlock &owner ) :
-		AbstractBlockManager( owner )
-	{
-	}
-
 	SystemBlockManager::~SystemBlockManager()
 	{
+		clear();
 	}
 
 	void SystemBlockManager::clear()
@@ -67,61 +64,31 @@ namespace _2Real
 
 		for ( BlockList::iterator it = ready.begin(); it != ready.end(); /**/ )
 		{
-			std::cout << "deleting!" << std::endl;
 			delete *it;
-			std::cout << "deleted!" << std::endl;
 			it = ready.erase( it );
 		}
 	}
 
-	AbstractUberBlock & SystemBlockManager::getBlock( BlockIdentifier const& id )
-	{
-		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
-		{
-			if ( ( *it )->getIdentifier() == id )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
-	}
-
-	AbstractUberBlock const& SystemBlockManager::getBlock( BlockIdentifier const& id ) const
-	{
-		for ( BlockList::const_iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
-		{
-			if ( ( *it )->getIdentifier() == id )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "sub block " << id.getName() << " not found in " << m_Owner.getName();
-		throw NotFoundException( msg.str() );
-	}
-
 	void SystemBlockManager::addBlock( AbstractUberBlock &block )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_BlockAccess );
 		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
 			if ( ( *it ) == &block )
 			{
-				//in case the block already is a sub block, fail silently
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 				return;
 			}
 		}
 		
 		m_Blocks.push_back( &block );
 	}
-	void SystemBlockManager::removeBlock( AbstractUberBlock &block )
+
+	void SystemBlockManager::destroyBlock( AbstractUberBlock &block )
 	{
-		// in case of a system, removing means shutdown
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_BlockAccess );
 		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
 			if ( *it == &block )
@@ -133,9 +100,12 @@ namespace _2Real
 				}
 
 				m_Blocks.erase( it );
-				break;
+				return;
 			}
 		}
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 }

@@ -1,14 +1,14 @@
 #include "ServiceImpl.h"
 
-#include "_2RealFrameworkContext.h"
+#include "_2RealBlockHandle.h"
 #include "_2RealException.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
 
-using _2Real::FrameworkContext;
-using _2Real::ContextBlock;
+using _2Real::bundle::BlockHandle;
+using _2Real::bundle::ContextBlock;
 using _2Real::Exception;
 
 using std::cout;
@@ -21,7 +21,7 @@ TestContext::TestContext() :
 {
 }
 
-void TestContext::setup( FrameworkContext &context )
+void TestContext::setup( BlockHandle &handle )
 {
 	try
 	{
@@ -61,11 +61,11 @@ unsigned int TestContext::getCurrentValue()
 	return m_Val;
 }
 
-void Out::setup( FrameworkContext &context )
+void Out::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_Out = context.getOutletHandle( "out outlet" );
+		m_Out = handle.getOutletHandle( "out outlet" );
 		m_Out.getWriteableRef< unsigned int >() = 0;
 	}
 	catch ( Exception &e )
@@ -79,7 +79,6 @@ void Out::update()
 {
 	try
 	{
-		//cout << "OUT" << endl;
 		++m_Out.getWriteableRef< unsigned int >();
 	}
 	catch ( Exception &e )
@@ -89,12 +88,12 @@ void Out::update()
 	}
 };
 
-void InOut::setup( FrameworkContext &context )
+void InOut::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_In = context.getInletHandle( "inout inlet" );
-		m_Out = context.getOutletHandle( "inout outlet" );
+		m_In = handle.getInletHandle( "inout inlet" );
+		m_Out = handle.getOutletHandle( "inout outlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -107,7 +106,7 @@ void InOut::update()
 {
 	try
 	{
-		//cout << "INOUT " << m_In.getReadableRef< unsigned int >() << endl;
+		cout << m_In.getReadableRef< unsigned int >() << endl;
 		m_Out.getWriteableRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
 	}
 	catch ( Exception &e)
@@ -117,14 +116,12 @@ void InOut::update()
 	}
 };
 
-void In::setup( FrameworkContext &context )
+void In::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_Counter = -1;
-		m_In = context.getInletHandle( "in inlet" );
-
-		m_Message = context.getParameterValue< string >( "in msg" );
+		m_In = handle.getInletHandle( "in inlet" );
+		m_Param = handle.getParameterHandle( "in msg" );
 	}
 	catch ( Exception &e )
 	{
@@ -137,11 +134,7 @@ void In::update()
 {
 	try
 	{
-		//if ( ++m_Counter == 100 )
-		//{
-			cout << m_Message << " " << m_In.getReadableRef< unsigned int >() << endl;
-			m_Counter = 0;
-		//}
+		cout << m_Param.getReadableRef< string >() << " " << m_In.getReadableRef< unsigned int >() << endl;
 	}
 	catch ( Exception &e )
 	{

@@ -18,34 +18,20 @@
 
 #include "_2RealSystemBlock.h"
 #include "_2RealEngineImpl.h"
-#include "_2RealBundleManager.h"
-#include "_2RealThreadPool.h"
-#include "_2RealException.h"
-#include "_2RealFunctionBlock.h"
-#include "_2RealTimestampedData.h"
-#include "_2RealUberBlockBasedTrigger.h"
-#include "_2RealInletBasedTrigger.h"
-#include "_2RealTimeBasedTrigger.h"
-#include "_2RealBlockError.h"
+#include "_2RealUberBlockManager.h"
 #include "_2RealLink.h"
-#include "_2RealSystemBlockStateManager.h"
 
+#include <assert.h>
 #include <sstream>
 
 namespace _2Real
 {
 
-	SystemBlock::SystemBlock( BlockIdentifier const& id ) :
-		UberBlock< DisabledIOManager, DisabledBlockManager, SystemBlockManager, SystemBlockStateManager >( id ),
-		m_Engine( EngineImpl::instance() ),
-		m_BundleManager( EngineImpl::instance().getPluginPool() ),
-		m_StateManager( dynamic_cast< SystemBlockStateManager * >( UberBlock::m_StateManager ) )
+	SystemBlock::SystemBlock( EngineImpl &engine, BlockIdentifier const& id ) :
+		UberBlock< DisabledIOManager, SystemBlockStateManager >( id ),
+		m_Engine( engine ),
+		m_SubBlockManager( new SystemBlockManager() )
 	{
-	}
-
-	SystemBlock::~SystemBlock()
-	{
-		clear();
 	}
 
 	void SystemBlock::clear()
@@ -53,401 +39,138 @@ namespace _2Real
 		try
 		{
 			m_SubBlockManager->clear();
-
-			std::cout << "all sub blocks cleared!" << std::endl;
 		}
 		catch (TimeOutException &e)
 		{
-#ifdef _DEBUG
 			std::cout << e.message() << std::endl;
+		}
+
+		//for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
+		//{
+		//	delete *it;
+		//}
+
+		//for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
+		//{
+		//	delete *it;
+		//}
+	}
+
+	void SystemBlock::addUberBlock( AbstractUberBlock &block )
+	{
+		if ( this == &block )
+		{
+#ifdef _DEBUG
+			assert( NULL );
 #endif
+			return;
 		}
 
-		for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); /**/ )
-		{
-			delete *it;
-			it = m_ExceptionCallbacks.erase( it );
-		}
+		m_SubBlockManager->addBlock( block );
 
-		for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); /**/ )
-		{
-			delete *it;
-			it = m_ExceptionCallbackHandlers.erase( it );
-		}
-	}
-
-	void SystemBlock::registerToNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->registerToNewData( outlet, callback, userData );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			obj.registerToNewData( outlet, callback, userData );
-		}
-	}
-
-	void SystemBlock::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, OutletCallback callback, void *userData )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->unregisterFromNewData( outlet, callback, userData );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.unregisterFromNewData( outlet, callback, userData );
-		}
-	}
-
-	void SystemBlock::registerToNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->registerToNewData( outlet, handler );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			obj.registerToNewData( outlet, handler );
-		}
-	}
-
-	void SystemBlock::unregisterFromNewData( BlockIdentifier const& id, std::string const& outlet, AbstractOutletCallbackHandler &handler )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->unregisterFromNewData( outlet, handler );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.unregisterFromNewData( outlet, handler );
-		}
-	}
-
-	void SystemBlock::registerToNewData( BlockIdentifier const& id, OutputCallback callback, void *userData )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->registerToNewData( callback, userData );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			obj.registerToNewData( callback, userData );
-		}
-	}
-
-	void SystemBlock::unregisterFromNewData( BlockIdentifier const& id, OutputCallback callback, void *userData )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->unregisterFromNewData( callback, userData );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.unregisterFromNewData( callback, userData );
-		}
-	}
-
-	void SystemBlock::registerToNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->registerToNewData( handler );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			obj.registerToNewData( handler );
-		}
-	}
-
-	void SystemBlock::unregisterFromNewData( BlockIdentifier const& id, AbstractOutputCallbackHandler &handler )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_IOManager->unregisterFromNewData( handler );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.unregisterFromNewData( handler );
-		}
-	}
-
-	void SystemBlock::registerToException( ExceptionCallback callback, void *userData )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
-		ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
-		if ( it == m_ExceptionCallbacks.end() )
-		{
-			m_ExceptionCallbacks.insert( cb );
-		}
-		else
-		{
-			delete cb;
-		}
-	}
-
-	void SystemBlock::unregisterFromException( ExceptionCallback callback, void *userData )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
-		ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
-		if ( it != m_ExceptionCallbacks.end() )
-		{
-			delete *it;
-			m_ExceptionCallbacks.erase(it);
-		}
-
-		delete cb;
-	}
-
-	void SystemBlock::registerToException( AbstractExceptionCallbackHandler &handler )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
-		if ( it == m_ExceptionCallbackHandlers.end() )
-		{
-			m_ExceptionCallbackHandlers.insert( &handler );
-		}
-		else
-		{
-			delete &handler;
-		}
-	}
-
-	void SystemBlock::unregisterFromException( AbstractExceptionCallbackHandler &handler )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
-		if ( it != m_ExceptionCallbackHandlers.end() )
-		{
-			delete *it;
-			m_ExceptionCallbackHandlers.erase(it);
-		}
-
-		delete &handler;
+		// TODO: in reality, this is probably unneccesary
+		// however, i want to keep this for later
+		TriggerLink *link = new TriggerLink( *this, BLOCK_READY, block, BLOCK_OK );
 	}
 
 	void SystemBlock::handleException( AbstractUberBlock &subBlock, Exception &exception )
 	{
-		BlockError e( exception, subBlock.getIdentifier() );
+		//BlockError e( exception, subBlock.getIdentifier() );
+		//Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+		//for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
+		//{
+		//	( *it )->invoke( e );
+		//}
 
-		for ( ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
-		{
-			( *it )->invoke( e );
-		}
-
-		for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
-		{
-			( *it )->invoke( e );
-		}
+		//for ( ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
+		//{
+		//	( *it )->invoke( e );
+		//}
 	}
 
-	void SystemBlock::setUp( BlockIdentifier const& id )
+	//void SystemBlock::registerToException( ExceptionCallback callback, void *userData )
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+	//	ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
+	//	ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
+	//	if ( it == m_ExceptionCallbacks.end() )
+	//	{
+	//		m_ExceptionCallbacks.insert( cb );
+	//	}
+	//	else
+	//	{
+	//		delete cb;
+	//	}
+	//}
+
+	//void SystemBlock::unregisterFromException( ExceptionCallback callback, void *userData )
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+	//	ExceptionFunctionCallback *cb = new ExceptionFunctionCallback( callback, userData );
+	//	ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
+	//	if ( it != m_ExceptionCallbacks.end() )
+	//	{
+	//		delete *it;
+	//		m_ExceptionCallbacks.erase(it);
+	//	}
+
+	//	delete cb;
+	//}
+
+	//void SystemBlock::registerToException( AbstractExceptionCallbackHandler &handler )
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+	//	ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
+	//	if ( it == m_ExceptionCallbackHandlers.end() )
+	//	{
+	//		m_ExceptionCallbackHandlers.insert( &handler );
+	//	}
+	//	else
+	//	{
+	//		delete &handler;
+	//	}
+	//}
+
+	//void SystemBlock::unregisterFromException( AbstractExceptionCallbackHandler &handler )
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+	//	ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
+	//	if ( it != m_ExceptionCallbackHandlers.end() )
+	//	{
+	//		delete *it;
+	//		m_ExceptionCallbackHandlers.erase(it);
+	//	}
+
+	//	delete &handler;
+	//}
+
+	void SystemBlock::createLink( Inlet &inlet, Outlet &outlet )
 	{
-		if ( id == AbstractUberBlock::getIdentifier() )
+		AbstractLink *link = new IOLink( inlet, outlet );
+		LinkSet::iterator it = m_Links.find( link );
+		if ( it == m_Links.end() )
 		{
-			throw InvalidOperationException( "system can not be set up" );
+			link->activate();
+			m_Links.insert( link );
 		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.setUp();
-		}
+		else delete link;
 	}
 
-	void SystemBlock::start( BlockIdentifier const& id )
+	void SystemBlock::destroyLink( Inlet &inlet, Outlet &outlet )
 	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_StateManager->start();
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.start();
-		}
-	}
-
-	void SystemBlock::singleStep( BlockIdentifier const& id )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_StateManager->stop();
-			m_StateManager->start();
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.stop( true, LONG_MAX );	// blocks until the end of the world, basically
-			obj.start();
-		}
-	}
-
-	void SystemBlock::stop( BlockIdentifier const& id, const long timeout )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			m_StateManager->stop();
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			obj.stop( true, timeout );
-		}
-	}
-
-	void SystemBlock::destroy( BlockIdentifier const& id )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system can not be destroied" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock( id );
-			m_SubBlockManager->removeBlock( obj );
-		}
-	}
-
-	void SystemBlock::setValue( BlockIdentifier const& id, std::string const& paramName, EngineData const& value )
-	{
-		TimestampedData data( value, m_Engine.getElapsedTime() );
-
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no i/o" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			obj.setValue(paramName, data);
-		}
-	}
-
-	EngineData const& SystemBlock::getValue(BlockIdentifier const& id, std::string const& paramName) const
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no i/o" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			return obj.getValue(paramName);
-		}
-	}
-
-	std::string const& SystemBlock::getTypename(BlockIdentifier const& id, std::string const& paramName) const
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no i/o" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			return obj.getTypename(paramName);
-		}
-	}
-
-	std::string const& SystemBlock::getLongTypename(BlockIdentifier const& id, std::string const& paramName) const
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no i/o" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			return obj.getLongTypename(paramName);
-		}
-	}
-
-	UpdatePolicyHandle SystemBlock::getUpdatePolicy( BlockIdentifier const& id )
-	{
-		if ( id == AbstractUberBlock::getIdentifier() )
-		{
-			throw InvalidOperationException( "system has no update policy" );
-		}
-		else
-		{
-			AbstractUberBlock &obj = m_SubBlockManager->getBlock(id);
-			return obj.getUpdatePolicyHandle();
-		}
-	}
-
-	void SystemBlock::link( BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut )
-	{
-		AbstractUberBlock &blockIn = m_SubBlockManager->getBlock( in );
-		AbstractUberBlock &blockOut = m_SubBlockManager->getBlock( out );
-
-		Inlet &inlet = blockIn.getInlet( nameIn );
-		Outlet &outlet = blockOut.getOutlet( nameOut );
-
-		AbstractLink *link = new IOLink( inlet, outlet );		// but, who takes care of the links?
-		link->activate();
-		m_Links.insert( link );
-	}
-
-	void SystemBlock::unlink( BlockIdentifier const& in, std::string const& nameIn, BlockIdentifier const& out, std::string const& nameOut )
-	{
-		AbstractUberBlock &blockIn = m_SubBlockManager->getBlock( in );
-		AbstractUberBlock &blockOut = m_SubBlockManager->getBlock( out );
-
-		Inlet &inlet = blockIn.getInlet( nameIn );
-		Outlet &outlet = blockOut.getOutlet( nameOut );
-
 		AbstractLink *link = new IOLink( inlet, outlet );
 		LinkSet::iterator it = m_Links.find( link );
 		if ( it != m_Links.end() )
 		{
-			( *it )->deactivate();
+			link->deactivate();
 			delete *it;
-			m_Links.erase( *it );
+			m_Links.erase( it );
 		}
-	}
-
-	const BlockIdentifier SystemBlock::createFunctionBlock( BundleIdentifier const& pluginId, std::string const& blockName )
-	{
-		// this currently works b/c i know exactely what triggers to create oO
-
-		FunctionBlock &block = m_BundleManager.createServiceBlock( pluginId, blockName, *this );
-
-		AbstractUberBlockBasedTrigger *s = this->createSubBlockTrigger();
-		AbstractUberBlockBasedTrigger *f = block.createSuperBlockTrigger();
-
-		s->setOther( *f );
-		f->setOther( *s );
-
-		this->addSubBlock( block, f );
-		block.addSuperBlock( *this, s );
-
-		return block.getIdentifier();
-	}
-
-	AbstractUberBlockBasedTrigger * SystemBlock::createSubBlockTrigger()
-	{
-		return new UberBlockBasedTrigger< SystemBlockStateManager >( *m_StateManager, &SystemBlockStateManager::tryTriggerUberBlock, BLOCK_READY );
-	}
-
-	AbstractUberBlockBasedTrigger * SystemBlock::createSuperBlockTrigger()
-	{
-		return nullptr;
+		delete link;
 	}
 
 }

@@ -19,19 +19,19 @@
 
 #pragma once
 
-#include <map>
+#include "_2RealPoco.h"
 
-namespace Poco
-{
-	class SharedLibrary;
-}
+#include <map>
 
 namespace _2Real
 {
-
 	class BundleData;
 	class Metainfo;
-	class Block;
+	
+	namespace bundle
+	{
+		class Block;
+	}
 
 	class BundleLoader
 	{
@@ -44,8 +44,8 @@ namespace _2Real
 		bool isLibraryLoaded( std::string const& path ) const;
 		bool hasContext( std::string const& path ) const;
 		BundleData const& loadLibrary( std::string const& path );
-		Block& createContext( std::string const& path ) const;
-		Block& createBlock( std::string const& path, std::string const& blockName ) const;
+		bundle::Block& createContext( std::string const& path ) const;
+		bundle::Block& createBlock( std::string const& path, std::string const& blockName ) const;
 
 	private:
 		

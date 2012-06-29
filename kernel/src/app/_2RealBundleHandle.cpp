@@ -16,26 +16,38 @@
 	limitations under the License.
 */
 
-#pragma once
-
+#include "_2RealBundleHandle.h"
+#include "_2RealBundleInternal.h"
 #include "_2RealException.h"
+#include "_2RealBlockHandle.h"
+
+#define checkHandle( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
 
 namespace _2Real
 {
-
-	class ParameterHandle
+	namespace app
 	{
+		BundleHandle::BundleHandle() :
+			m_Bundle( nullptr )
+		{
+		}
 
-	public:
+		BundleHandle::BundleHandle( BundleInternal &bundle ) :
+			m_Bundle( &bundle )
+		{
+		}
 
-		ParameterHandle(std::string const& name);
-		virtual ~ParameterHandle();
-		std::string const& name() const;
+		BundleData const& BundleHandle::getBundleData() const
+		{
+			checkHandle( m_Bundle );
+			return m_Bundle->getMetadata();
+		}
 
-	protected:
-
-		std::string			m_Name;
-
-	};
-
+		BlockHandle BundleHandle::createBlockInstance( std::string const& blockName )
+		{
+			checkHandle( m_Bundle );
+			return m_Bundle->createBlockInstance( blockName );
+		}
+	}
 }

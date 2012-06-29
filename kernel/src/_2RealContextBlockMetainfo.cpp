@@ -21,15 +21,16 @@
 
 namespace _2Real
 {
-
-	ContextBlockMetainfo::ContextBlockMetainfo( BlockData &data ) :
-		m_Impl( data )
+	namespace bundle
 	{
-	}
+		ContextBlockMetainfo::ContextBlockMetainfo( BlockData &data ) :
+			m_Impl( data )
+		{
+		}
 
-	void ContextBlockMetainfo::setDescription( std::string const& description )
-	{
-		m_Impl.setDescription( description );
+		void ContextBlockMetainfo::setDescription( std::string const& description )
+		{
+			m_Impl.setDescription( description );
+		}
 	}
-
 }

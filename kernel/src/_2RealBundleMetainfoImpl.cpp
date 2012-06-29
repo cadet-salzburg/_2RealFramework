@@ -100,7 +100,7 @@ namespace _2Real
 		m_BundleData.setName( name );
 	}
 
-	ContextBlockMetainfo & Metainfo::setContextBlockCreator( AbstractBlockCreator &obj )
+	bundle::ContextBlockMetainfo & Metainfo::setContextBlockCreator( bundle::AbstractBlockCreator &obj )
 	{
 		if ( m_HasContext )
 		{
@@ -113,14 +113,14 @@ namespace _2Real
 		// TODO: reserve name for context
 		m_ContextInfo.data = new BlockData( "bundle context" );
 		m_ContextInfo.data->setDescription( "context for all other blocks exported by the bundle" );
-		m_ContextInfo.meta = new ContextBlockMetainfo( *m_ContextInfo.data );
+		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data );
 
 		m_HasContext = true;
 
 		return *m_ContextInfo.meta;
 	}
 
-	BlockMetainfo & Metainfo::setBlockCreator( string const& blockName, AbstractBlockCreator &obj )
+	bundle::BlockMetainfo & Metainfo::setBlockCreator( string const& blockName, bundle::AbstractBlockCreator &obj )
 	{
 		if ( m_BlockInfos.find( blockName ) != m_BlockInfos.end() )
 		{
@@ -132,13 +132,13 @@ namespace _2Real
 		m_BlockInfos[ blockName ].ctor = &obj;
 		BlockData *data = new BlockData( blockName );
 		m_BlockInfos[ blockName ].data = data;
-		BlockMetainfo *meta = new BlockMetainfo( *data, m_Typetable );
+		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data, m_Typetable );
 		m_BlockInfos[ blockName ].meta = meta;
 
 		return *meta;
 	}
 
-	Block & Metainfo::createContextBlock() const
+	bundle::Block & Metainfo::createContextBlock() const
 	{
 		if ( m_HasContext )
 		{
@@ -152,13 +152,13 @@ namespace _2Real
 		}
 	}
 
-	Block & Metainfo::createBlock( string const& blockName ) const
+	bundle::Block & Metainfo::createBlock( string const& blockName ) const
 	{
-		ContextBlock *context = nullptr;
+		bundle::ContextBlock *context = nullptr;
 
 		if ( m_HasContext )
 		{
-			context = dynamic_cast< ContextBlock * > ( &( m_ContextInfo.ctor->create( nullptr ) ) );
+			context = dynamic_cast< bundle::ContextBlock * > ( &( m_ContextInfo.ctor->create( nullptr ) ) );
 		}
 
 		BlockInfoMap::const_iterator it = m_BlockInfos.find( blockName );

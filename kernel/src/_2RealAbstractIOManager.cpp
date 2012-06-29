@@ -21,29 +21,32 @@
 #include "_2RealInlet.h"
 #include "_2RealInletBuffer.h"
 #include "_2RealOutlet.h"
-#include "_2RealSetupParameter.h"
+#include "_2RealParameter.h"
 #include "_2RealParameterData.h"
+
+#include <iostream>
 
 namespace _2Real
 {
 
 	// some free functions
 
-	Inlet * createInletFromParameterData( ParameterData const& data )
+	Inlet * createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
 	{
-		Inlet *inlet = new Inlet( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		Inlet *inlet = new Inlet( owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
 		return inlet;
 	}
 
-	Outlet * createOutletFromParameterData( ParameterData const& data )
+	Outlet * createOutletFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
 	{
-		Outlet *outlet = new Outlet( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		Outlet *outlet = new Outlet( owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
 		return outlet;
 	}
 
-	SetupParameter * createSetupParameterFromParameterData( ParameterData const& data )
+	Parameter * createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
 	{
-		SetupParameter *parameter = new SetupParameter( data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		Parameter *parameter = new Parameter( owner, data.getName(), data.getLongTypename(), data.getTypename() );
+		parameter->setData( TimestampedData( data.getDefaultValue(), 0 ) );
 		return parameter;
 	}
 

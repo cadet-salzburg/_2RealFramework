@@ -28,12 +28,16 @@ namespace _2Real
 {
 
 	class Version;
-	class Block;
-	class ContextBlock;
-	class AbstractBlockCreator;
-	class BlockMetainfo;
-	class ContextBlockMetainfo;
 	class Typetable;
+
+	namespace bundle
+	{
+		class Block;
+		class ContextBlock;
+		class AbstractBlockCreator;
+		class BlockMetainfo;
+		class ContextBlockMetainfo;
+	}
 
 	class Metainfo
 	{
@@ -51,12 +55,12 @@ namespace _2Real
 		void setInstallDirectory( std::string const& path );
 		void setName( std::string const& name );
 
-		ContextBlockMetainfo & setContextBlockCreator( AbstractBlockCreator &obj );
-		BlockMetainfo & setBlockCreator( std::string const& blockName, AbstractBlockCreator &obj );
+		bundle::ContextBlockMetainfo & setContextBlockCreator( bundle::AbstractBlockCreator &obj );
+		bundle::BlockMetainfo & setBlockCreator( std::string const& blockName, bundle::AbstractBlockCreator &obj );
 
 		bool hasContext() const;
-		Block & createBlock( std::string const& blockName ) const;
-		Block & createContextBlock() const;
+		bundle::Block & createBlock( std::string const& blockName ) const;
+		bundle::Block & createContextBlock() const;
 
 		BundleData const& getBundleData() const;
 
@@ -68,18 +72,18 @@ namespace _2Real
 		{
 			BlockInfo() : ctor( nullptr ), data( nullptr ), meta( nullptr ) {}
 			BlockInfo( BlockInfo const& src ) : ctor( src.ctor ), data( src.data ), meta( src.meta ) {}
-			AbstractBlockCreator	*ctor;
-			BlockData				*data;
-			BlockMetainfo			*meta;
+			bundle::AbstractBlockCreator	*ctor;
+			BlockData						*data;
+			bundle::BlockMetainfo			*meta;
 		};
 
 		struct ContextBlockInfo
 		{
 			ContextBlockInfo() : ctor( nullptr ), data( nullptr ), meta( nullptr ) {}
 			ContextBlockInfo( ContextBlockInfo const& src ) : ctor( src.ctor ), data( src.data ), meta( src.meta ) {}
-			AbstractBlockCreator	*ctor;
-			BlockData				*data;
-			ContextBlockMetainfo	*meta;
+			bundle::AbstractBlockCreator	*ctor;
+			BlockData						*data;
+			bundle::ContextBlockMetainfo	*meta;
 		};
 
 		typedef std::map< std::string, BlockInfo >	BlockInfoMap;

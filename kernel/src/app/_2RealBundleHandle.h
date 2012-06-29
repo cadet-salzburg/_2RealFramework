@@ -16,10 +16,36 @@
 	limitations under the License.
 */
 
-#include "_2RealUberBlock.h"
+#pragma once
 
-#include <sstream>
+#include <string>
 
 namespace _2Real
 {
+	class BundleInternal;
+	class BundleData;
+
+	namespace app
+	{
+		class BlockHandle;
+
+		class BundleHandle
+		{
+
+		public:
+
+			BundleHandle();
+			BundleHandle( BundleInternal &bundle );
+
+			BundleData const& getBundleData() const;
+
+			BlockHandle createBlockInstance( std::string const& blockName );
+
+		private:
+
+			BundleInternal		*m_Bundle;
+
+		};
+
+	}
 }

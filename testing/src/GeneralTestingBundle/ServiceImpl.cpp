@@ -1,20 +1,20 @@
 #include "ServiceImpl.h"
 
-#include "_2RealFrameworkContext.h"
+#include "_2RealBlockHandle.h"
 #include "_2RealException.h"
 
 #include <iostream>
 
-using _2Real::FrameworkContext;
+using _2Real::bundle::BlockHandle;
+using _2Real::bundle::ContextBlock;
 using _2Real::Exception;
-using _2Real::ContextBlock;
 
 using std::cout;
 using std::endl;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContextManager::setup( FrameworkContext &context )
+void ContextManager::setup( BlockHandle &handle )
 {
 	try
 	{
@@ -58,50 +58,102 @@ unsigned long ContextManager::getValue() const
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TestBlock::TestBlock( ContextBlock &context ) :
+Out::Out( ContextBlock &context ) :
 	Block(),
 	m_Context( dynamic_cast< ContextManager & >( context ) )
 {
 }
 
-void TestBlock::setup( FrameworkContext &context )
+void Out::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_Counter = 0;
+		std::cout << "SETUP OUT" << std::endl;
+		m_Out = handle.getOutletHandle( "outlet" );
+		m_Discard = handle.getOutletHandle( "discard" );
+		m_Out.getWriteableRef< unsigned int >() = 0;
 	}
 	catch ( Exception &e )
 	{
+		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
 
-void TestBlock::update()
+void Out::update()
 {
 	try
 	{
-		if ( ++m_Counter == 100 )
-		{
-			//cout << m_Context.getValue() + m_Counter << endl;
-			cout << "YAY" << endl;
-			m_Counter = 0;
-		}
+		++m_Out.getWriteableRef< unsigned int >();
+		m_Discard.discard();
+		std::cout << "OUT " << m_Out.getWriteableRef< unsigned int >() << std::endl;
 	}
 	catch ( Exception &e )
 	{
+		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
 
-void TestBlock::shutdown()
+void Out::shutdown()
 {
 	try
 	{
 	}
 	catch ( Exception &e )
 	{
+		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+In::In( ContextBlock &context ) :
+	Block(),
+	m_Context( dynamic_cast< ContextManager & >( context ) )
+{
+}
+
+void In::setup( BlockHandle &handle )
+{
+	try
+	{
+		std::cout << "SETUP IN" << std::endl;
+
+		m_In = handle.getInletHandle( "inlet" );
+		m_Param = handle.getParameterHandle( "param" );
+		m_Counter = 0;
+	}
+	catch ( Exception &e )
+	{
+		cout << "XXX" << endl;
+		e.rethrow();
+	}
+}
+
+void In::update()
+{
+	try
+	{
+		std::cout << "IN inlet" << m_In.getReadableRef< unsigned int >() << std::endl;
+		std::cout << "IN param" << m_Param.getReadableRef< unsigned int >() << std::endl;
+	}
+	catch ( Exception &e )
+	{
+		cout << "XXX" << endl;
+		e.rethrow();
+	}
+}
+
+void In::shutdown()
+{
+	try
+	{
+	}
+	catch ( Exception &e )
+	{
+		cout << "XXX" << endl;
+		e.rethrow();
+	}
+}

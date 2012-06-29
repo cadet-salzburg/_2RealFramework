@@ -19,95 +19,72 @@
 
 #pragma once
 
+#include "_2RealPoco.h"
+
 #include <string>
-
-#ifdef _2REAL_WINDOWS
-	//#include "vld.h"
-	#ifndef _DEBUG
-		#define shared_library_suffix ".dll"
-	#else
-		#define shared_library_suffix "_d.dll"
-	#endif
-#elif _2REAL_UNIX
-	#ifndef _DEBUG
-		#define shared_library_suffix ".so"
-	#else
-		#define shared_library_suffix "_d.so"
-	#endif
-#elif _2REAL_MAC
-	#ifndef _DEBUG
-		#define shared_library_suffix ".dylib"
-	#else
-		#define shared_library_suffix "_d.dylib"
-	#endif
-#endif
-
-#include "Poco/Timer.h"
-
-namespace Poco
-{
-	class Path;
-}
 
 namespace _2Real
 {
 
-	class BundleIdentifier;
+	namespace app
+	{
+		class BundleHandle;
+	};
+
+	class Logger;
+	class Timer;
+	class Typetable;
 	class ThreadPool;
 	class BundleManager;
-	class Typetable;
-	class Timer;
-	class Logger;
-	class BundleData;
-	class BlockData;
 	class IdCounter;
+	class SystemBlock;
 	class BlockIdentifier;
 	class BundleIdentifier;
 	
 	class EngineImpl
 	{
 
+		template< typename T >
+		friend class SingletonHolder;
+
 	public:
 
 		static EngineImpl & instance();
 
+		// TODO: merge public interfaces with interface of engine impl ?
 		Logger&							getLogger();
 		Timer &							getTimer();
-		Timer const&					getTimer() const;
-		Typetable &						getTypetable();
 		Typetable const&				getTypetable() const;
-		BundleManager &					getPluginPool();
-		BundleManager const&			getPluginPool() const;
+		BundleManager &					getBundleManager();
 		ThreadPool &					getThreadPool();
-		ThreadPool const&				getThreadPool() const;
+		SystemBlock &					getSystemBlock();
+
+		// retruns time in millis since creation
 		const long						getElapsedTime() const;
-		Poco::Timestamp	const&			getTimestamp() const;
 
 		BlockIdentifier					createBlockId( std::string const& name );
 		BundleIdentifier				createBundleId( std::string const& name );
 
-		void							setBaseDirectory( Poco::Path const& path );
-		const BundleIdentifier			loadLibrary( Poco::Path const& path );
-		const bool						isLibraryLoaded( Poco::Path const& path ) const;
-		const std::string				getInfoString( BundleIdentifier const& bundleId ) const;
-		BundleData const&				getBundleData( BundleIdentifier const& bundleId ) const;
-		BlockData const&				getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
+		void							setBaseDirectory( std::string const& directory );
+		app::BundleHandle				loadLibrary( std::string const& libraryPath );
+		//const bool					isLibraryLoaded( Poco::Path const& path ) const;
 
 	private:
-
-		template< typename T >
-		friend class SingletonHolder;
 
 		EngineImpl();
 		~EngineImpl();
 
+		// whatever you do. do not change the ordering of member variables here!
+		// ( unless you absolutely have to, in which case, good luck )
+
 		Logger					*m_Logger;
 		Timer					*m_Timer;
-		Typetable				*m_Types;
-		ThreadPool				*m_Threads;
-		BundleManager			*m_Plugins;
+		Typetable				*m_Typetable;
+		ThreadPool				*m_ThreadPool;
+		BundleManager			*m_BundleManager;
 		IdCounter				*m_IdCounter;
-		Poco::Timestamp				m_Timestamp;
+		SystemBlock				*m_SystemBlock;
+		Poco::Timestamp			m_Timestamp;
 
 	};
 

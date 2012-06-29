@@ -20,11 +20,13 @@
 #include "_2RealInlet.h"
 #include "_2RealInletBuffer.h"
 #include "_2RealException.h"
-#include "_2RealFunctionBlock.h"
-#include "_2RealParameterData.h"
+#include "_2RealAbstractUberBlock.h"
 #include "_2RealEngineImpl.h"
+#include "app/_2RealInletHandle.h"
 
-#include "Poco/Delegate.h"
+#ifdef _DEBUG
+	#include <assert.h>
+#endif
 
 using std::string;
 using std::find;
@@ -33,69 +35,69 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	Outlet::Outlet( string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
-		Parameter( name, longTypename, typeName ),
+	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
+		Parameter( owner, name, longTypename, typeName ),
 		m_Engine( EngineImpl::instance() ),
-		m_CurrentDataItem( emptyData, 0 ),
-		m_LastDataItem( emptyData, 0 ),
+		m_WriteDataItem( emptyData, 0 ),
 		m_DiscardCurrent( false )
 	{
+		Parameter::setData( TimestampedData( emptyData, 0 ) );
+		Parameter::synchronize();
 	}
 
 	void Outlet::update()
 	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-
 		if ( !m_DiscardCurrent )
 		{
-			// last data will hold the data of the last update cycle
-			m_LastDataItem = TimestampedData( m_CurrentDataItem.getData(), m_Engine.getElapsedTime() );
+			TimestampedData data( m_WriteDataItem.getData(), m_Engine.getElapsedTime() );
 
-			// copy last data back into the outlet's current data
-			m_CurrentDataItem.cloneData( m_LastDataItem );
+			// copy data back into the outlet's writing data
+			m_WriteDataItem.cloneData( data );
 
 			// inlets get the datat that was really written, not a copy
-			m_InletEvent.notify( this, m_LastDataItem );
-
-			// create a copy for the application ( might not be necessary depending on listeners? )
-			EngineData copy;
-			copy.cloneFrom( m_LastDataItem.getData() );
-			m_LastOutputData = OutputData( copy, Parameter::getTypename(), Parameter::getName() );
+			m_InletEvent.notify( this, data );
+			
+			Parameter::setData( data );
+			Parameter::synchronize();		// immediately makes data visible to the app
 		}
 	}
 
-	EngineData const& Outlet::getLastData() const
+	EngineData & Outlet::getDataForWriting()
 	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-		return m_LastDataItem.getData();
+		return m_WriteDataItem.getData();
 	}
 
-	OutputData const& Outlet::getLastOutputData() const
+	void Outlet::discardCurrentUpdate()
 	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-		return m_LastOutputData;
-	}
-
-	EngineData & Outlet::getCurrentData()
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-		return m_CurrentDataItem.getData();
-	}
-
-	void Outlet::discardCurrentData()
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
 		m_DiscardCurrent = true;
+	}
+
+	void Outlet::linkTo( app::InletHandle &inletHandle )
+	{
+		Param *p = inletHandle.m_Param;
+#ifdef _DEBUG
+		if ( p == nullptr ) assert( NULL );
+#endif
+
+		Inlet &inlet = dynamic_cast< Inlet & >( *p );
+		Param::m_Owner.createLink( inlet, *this );
+	}
+
+	void Outlet::unlinkFrom( app::InletHandle &inletHandle )
+	{
+		Param *p = inletHandle.m_Param;
+#ifdef _DEBUG
+		if ( p == nullptr ) assert( NULL );
+#endif
+
+		Inlet &inlet = dynamic_cast< Inlet & >( *p );
+		Param::m_Owner.createLink( inlet, *this );
 	}
 
 	void Outlet::addInletListener( InletBuffer &buffer )
 	{
 		Poco::FastMutex::ScopedLock lock( m_Access );
 		m_InletEvent += Poco::delegate( &buffer, &InletBuffer::receiveData );
-		if ( !m_LastDataItem.isEmpty() )
-		{
-			buffer.receiveData( m_LastDataItem );
-		}
 	}
 
 	void Outlet::removeInletListener( InletBuffer &buffer )
@@ -104,4 +106,23 @@ namespace _2Real
 		m_InletEvent -= Poco::delegate( &buffer, &InletBuffer::receiveData );
 	}
 
+	void Outlet::registerToNewData( app::OutletDataCallback callback, void *userData )
+	{
+		Param::m_Owner.registerToNewData( Param::getName(), callback, userData );
+	}
+
+	void Outlet::unregisterFromNewData( app::OutletDataCallback callback, void *userData )
+	{
+		Param::m_Owner.unregisterFromNewData( Param::getName(), callback, userData );
+	}
+
+	void Outlet::registerToNewData( app::AbstractOutletDataCallbackHandler &handler )
+	{
+		Param::m_Owner.registerToNewData( Param::getName(), handler );
+	}
+
+	void Outlet::unregisterFromNewData( app::AbstractOutletDataCallbackHandler &handler )
+	{
+		Param::m_Owner.unregisterFromNewData( Param::getName(), handler );
+	}
 }

@@ -18,44 +18,32 @@
 
 #pragma once
 
-#include "_2RealParameterHandle.h"
-#include "_2RealEngineData.h"
+#include "_2RealPoco.h"
+
+#include <list>
 
 namespace _2Real
 {
 
-	class Outlet;
+	class AbstractUberBlock;
 
-	class OutletHandle : public ParameterHandle
+	class SystemBlockManager
 	{
 
 	public:
 
-		OutletHandle();
-		OutletHandle( Outlet &slot );
-		OutletHandle( OutletHandle const& src );
-		OutletHandle& operator=( OutletHandle const& src );
-
-		template< typename Datatype >
-		Datatype & getWriteableRef()
-		{
-			if ( !m_Outlet )
-			{
-				std::ostringstream msg;
-				msg << "output handle was not initialized by framework";
-				throw UninitializedHandleException( msg.str() );
-			}
-
-			Datatype &data = extractFrom< Datatype >( getCurrentData() );
-			return data;
-		}
-
-		void discard();
+		~SystemBlockManager();
+		void						clear();
+		void						addBlock( AbstractUberBlock &block );
+		void						destroyBlock( AbstractUberBlock &block );
 
 	private:
 
-		EngineData	&		getCurrentData();
-		Outlet				*m_Outlet;
+		typedef std::list< AbstractUberBlock * >	BlockList;
+
+		// this is probably not necessary
+		mutable Poco::FastMutex		m_BlockAccess;
+		BlockList					m_Blocks;
 
 	};
 

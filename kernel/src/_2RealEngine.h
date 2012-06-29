@@ -19,20 +19,23 @@
 
 #pragma once
 
-#include "_2RealEngineData.h"
-
 #include <string>
 
 namespace _2Real
 {
 
-	class BundleIdentifier;
 	class EngineImpl;
-	class BlockData;
-	class BundleData;
+
+	namespace app
+	{
+		class BundleHandle;
+	}
 
 	class Engine
 	{
+
+		template< typename T >
+		friend class SingletonHolder;
 
 	public:
 
@@ -46,32 +49,50 @@ namespace _2Real
 		/*
 		*	loads the dynamic lib from the given path
 		*	if path is relative, it will be interpreted with respect to the base directory
-		*	if lib is already loaded, returns identifier of bundle instance
+		*	if bundle is already loaded, will throw already exists exception
+		*	if library cannot be loaded ( not existing or no metadata ) will throw not found exception
 		*/
-		const BundleIdentifier load( std::string const& path );
+		app::BundleHandle loadBundle( std::string const& libraryPath );
 
-		/**
-		*	returns true if the library in question is already loaded
-		*	if path is relative, it will be interpreted with respect to the base directory
-		*/
-		bool isLoaded( std::string const& libraryPath ) const;
-
-		const std::string getInfoString( BundleIdentifier const& bundleId );
-
-		BundleData const& getBundleData( BundleIdentifier const& bundleId ) const;
-		BlockData const& getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
+		//bool isLoaded( std::string const& libraryPath ) const;
+		//app::BundleHandle getBundleHandle( std::string const& libraryPath ) const;
 
 	private:
 
-		template< typename T >
-		friend class SingletonHolder;
-
 		Engine();
-		Engine(Engine const& src);
+		Engine( Engine const& src );
 		~Engine();
 
-		EngineImpl								&m_EngineImpl;
+		EngineImpl		&m_EngineImpl;
 
 	};
+
+
+	//class Engine
+	//{
+
+	//public:
+
+	//	static Engine& instance();
+
+	//	void setBaseDirectory( std::string const& directory );
+	//	const BundleIdentifier load( std::string const& path );
+	//	bool isLoaded( std::string const& libraryPath ) const;
+	//	const std::string getInfoString( BundleIdentifier const& bundleId );
+	//	BundleData const& getBundleData( BundleIdentifier const& bundleId ) const;
+	//	BlockData const& getBlockData( BundleIdentifier const& bundleId, std::string const& blockName ) const;
+
+	//private:
+
+	//	template< typename T >
+	//	friend class SingletonHolder;
+
+	//	Engine();
+	//	Engine(Engine const& src);
+	//	~Engine();
+
+	//	EngineImpl								&m_EngineImpl;
+
+	//};
 
 }

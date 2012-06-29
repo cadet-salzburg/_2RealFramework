@@ -20,52 +20,59 @@
 #pragma once
 
 #include "_2RealBundleIdentifier.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
 
 #include <map>
 #include <string>
 
-namespace Poco
-{
-	class Path;
-}
-
 namespace _2Real
 {
 
-	class Block;
+	namespace app
+	{
+		class BundleHandle;
+		class BlockHandle;
+		class ContextBlockHandle;
+	}
+
+	namespace bundle
+	{
+		class Block;
+	}
+
 	class BundleData;
-	class BlockData;
-	class FunctionBlock;
 	class BundleIdentifier;
+	class BundleManager;
 
 	class BundleInternal
 	{
 
 	public:
 
-		BundleInternal( BundleIdentifier const& id, BundleData const& data );
+		BundleInternal( BundleIdentifier const& id, BundleData const& data, BundleManager &bundleManager );
 		~BundleInternal();
 
 		BundleIdentifier const&	getIdentifier() const;
 		std::string const&		getName() const;
 
-		const std::string	getBundleInfoString() const;
-		const std::string	getBlockInfoString( std::string const& blockName ) const;
-		BundleData const&	getBundleData() const;
-		BlockData const&	getBlockData( std::string const& blockName ) const;
-		void				addBlockInstance( Block &block, std::string const& blockName );
-		FunctionBlock &		getBundleContext();
-		void				setBundleContext( FunctionBlock &block );
-		unsigned int		getBlockInstanceCount( std::string const& blockName ) const;
+		app::BundleHandle		createHandle();
+		BundleData const&		getMetadata() const;
+		app::ContextBlockHandle	getBundleContextHandle() const;
+		void					setBundleContextHandle( app::ContextBlockHandle const& handle );
+		app::BlockHandle		createBlockInstance( std::string const& blockName );
+		void					addBlockInstance( bundle::Block &block, std::string const& blockName );
+		unsigned int			getBlockInstanceCount( std::string const& blockName ) const;
 
 	private:
 
-		typedef std::multimap< std::string, Block * >	BlockMap;
+		typedef std::multimap< std::string, bundle::Block * >	BlockMap;
 
-		BundleIdentifier				const m_Identifier;
-		BundleData						const& m_BundleData;	// must be deleted before the library is unloaded
-		BlockMap						m_BlockInstances;
-		FunctionBlock					*m_BundleContext;		// the context: null if none was exported
+		BundleManager			&m_BundleManager;
+		BundleIdentifier		const m_Identifier;
+		BundleData				const& m_BundleData;	// must be deleted before the library is unloaded
+		BlockMap				m_BlockInstances;
+		app::ContextBlockHandle	m_BundleContext;		// for strange reasons, i also hold a handle to the context here
 
 	};
 

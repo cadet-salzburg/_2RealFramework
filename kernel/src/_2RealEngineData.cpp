@@ -16,13 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealEngine.h"
-#include "_2RealEngineImpl.h"
-#include "_2RealBundleIdentifier.h"
-#include "_2RealSingletonHolder.h"
-#include "_2RealHelpers.h"
-
-#include "Poco/Path.h"
+#include "_2RealEngineData.h"
 
 namespace _2Real
 {

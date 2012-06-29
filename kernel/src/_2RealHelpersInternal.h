@@ -20,6 +20,7 @@
 
 #include "_2RealBlockIdentifier.h"
 #include "_2RealBundleIdentifier.h"
+#include "_2RealPoco.h"
 
 #include <vector>
 #include <map>
@@ -28,13 +29,6 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-
-#include "Poco/Mutex.h"
-
-namespace Poco
-{
-	class Path;
-}
 
 namespace _2Real
 {

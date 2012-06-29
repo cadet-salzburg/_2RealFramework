@@ -18,7 +18,6 @@
 
 #include "_2RealInletBuffer.h"
 #include "_2RealInlet.h"
-#include "_2RealInletHandle.h"
 #include "_2RealInletBasedTrigger.h"
 
 #include <iostream>
@@ -108,33 +107,36 @@ namespace _2Real
 	// also, this happens after update policy was changed!
 	void InletBuffer::updateDataBuffer()
 	{
-		m_ReceivedAccess.lock();
+		m_NotificationAccess.lock();
+		m_Notify = true;
+		m_NotificationAccess.unlock();
 
 		// TODO:
 		// while iterating over this, it might actually be receiving data
 		// since the trigger flag is, at this point, still not set
 		// not sure if the mutex here is the best solution?
-		for ( DataBuffer::iterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+		if ( m_ReceivedDataItems.empty() )
 		{
+			m_DataAccess.lock();
 			for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
 			{
-				( *inIt )->tryTriggerUpdate( *dIt );
+				( *inIt )->tryTriggerUpdate( m_DefaultData );
 			}
-
-			dIt = m_ReceivedDataItems.erase( dIt );
+			m_DataAccess.unlock();
 		}
-		// oh, and also try with the default value
-		m_DataAccess.lock();
-		for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
+		else
 		{
-			( *inIt )->tryTriggerUpdate( m_DefaultData );
+			for ( DataBuffer::iterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+			{
+				TimestampedData d = *dIt;
+				dIt = m_ReceivedDataItems.erase( dIt );
+
+				for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
+				{
+					receiveData( d );
+				}
+			}
 		}
-
-		m_DataAccess.unlock();
-
-		m_NotificationAccess.lock();
-		m_Notify = true;
-		m_NotificationAccess.unlock();
 
 		m_ReceivedAccess.unlock();
 	}

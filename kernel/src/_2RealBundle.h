@@ -26,10 +26,13 @@
 
 namespace _2Real
 {
-	class BundleMetainfo;
+	namespace bundle
+	{
+		class BundleMetainfo;
+	}
 }
 
 extern "C"
 {
-	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::BundleMetainfo &info );
+	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo &info );
 }

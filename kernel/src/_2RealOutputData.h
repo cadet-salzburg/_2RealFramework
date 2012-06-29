@@ -22,36 +22,41 @@
 
 namespace _2Real
 {
-
-	class OutputData
+	namespace app
 	{
-
-	public:
-
-		OutputData();
-		OutputData( EngineData const& data, std::string const& type, std::string const& name );
-
-		const std::string getLongTypename() const;
-		std::string const& getTypename() const;
-		std::string const& getName() const;
-		const std::string getDataAsString() const;
-
-		// this reference is only valid as long as the output data object exists
-		template< typename Datatype >
-		Datatype const& getData() const
+		class AppData
 		{
-			//std::shared_ptr< Datatype > ptr = extractFrom< Datatype >( m_Data );
-			//return *ptr.get();
-			Datatype *ptr = extractFrom< Datatype >( m_Data );
-			return *ptr;
-		}
 
-	private:
+		public:
 
-		std::string				m_Name;
-		EngineData				m_Data;
-		std::string				m_Typename;
+			AppData();
+			AppData( EngineData const& data, std::string const& type, std::string const& name );
 
-	};
+			const std::string getLongTypename() const;
+			std::string const& getTypename() const;
+			std::string const& getName() const;
+			const std::string getDataAsString() const;
 
+			template< typename T >
+			T const& getData() const
+			{
+				T const& data = extractFrom< T >( m_Data );
+				return data;
+			}
+
+			template< typename T >
+			void copyData( T &val )
+			{
+				T const& data = extractFrom< T >( m_Data );
+				val = data;
+			}
+
+		private:
+
+			std::string				m_Name;
+			EngineData				m_Data;
+			std::string				m_Typename;
+
+		};
+	}
 }

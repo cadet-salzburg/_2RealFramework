@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,39 +16,26 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include <string>
+#include "_2RealInletHandle.h"
+#include "_2RealInlet.h"
 
 namespace _2Real
 {
-
-	class UpdatePolicy;
-
-	class UpdatePolicyHandle
+	namespace bundle
 	{
+		InletHandle::InletHandle() :
+			m_Inlet( nullptr )
+		{
+		}
 
-	public:
+		InletHandle::InletHandle( Inlet &inlet ) :
+			m_Inlet( &inlet )
+		{
+		}
 
-		UpdatePolicyHandle();
-		UpdatePolicyHandle( UpdatePolicy &policy );
-		UpdatePolicyHandle( UpdatePolicyHandle const& src );
-		UpdatePolicyHandle& operator=( UpdatePolicyHandle const& src );
-
-		/**
-		*	interface: todo, more or less
-		*/
-
-		void updateWithFixedRate( const double updatesPerSecond );
-		void updateWhenAllInletDataNew();
-		void updateWhenInletDataNew( std::string const& inletName );
-		void updateWhenAllInletDataValid();
-		void updateWhenInletDataValid( std::string const& inletName );
-
-	private:
-
-		UpdatePolicy	*m_Policy;
-
-	};
-
+		EngineData InletHandle::getCurrentData() const
+		{
+			return m_Inlet->getData();
+		}
+	}
 }
