@@ -27,7 +27,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
-		class BlockData;
+		class BlockInfo;
 	}
 
 	namespace bundle
@@ -52,7 +52,7 @@ namespace _2Real
 		FunctionBlock( BlockData const& meta, bundle::Block& block, System &system, Identifier const& id );
 		~FunctionBlock();
 
-		app::BlockData			getBlockData();
+		app::BlockInfo			getBlockData();
 		BlockData const&		getMetadata() const;
 
 		bundle::InletHandle		createBundleInletHandle( std::string const& inletName );

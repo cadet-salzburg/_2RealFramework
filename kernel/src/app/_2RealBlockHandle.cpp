@@ -45,7 +45,7 @@ namespace _2Real
 		{
 		}
 
-		BlockData BlockHandle::getBlockData() const
+		BlockInfo BlockHandle::getBlockInfo() const
 		{
 			checkHandle( m_Block );
 			return m_Block->getBlockData();
@@ -70,7 +70,7 @@ namespace _2Real
 			}
 		}
 
-		void BlockHandle::setUp()
+		void BlockHandle::setup()
 		{
 			checkHandle( m_Block );
 			m_Block->setUp();

@@ -39,7 +39,7 @@ namespace _2Real
 		{
 		}
 
-		BundleData BundleHandle::getBundleData() const
+		BundleInfo BundleHandle::getBundleInfo() const
 		{
 			checkHandle( m_Bundle );
 			return m_Bundle->getBundleData();

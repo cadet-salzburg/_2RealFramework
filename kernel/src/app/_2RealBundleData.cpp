@@ -27,7 +27,7 @@ namespace _2Real
 {
 	namespace app
 	{
-		BundleData::BundleData() :
+		BundleInfo::BundleInfo() :
 			m_Name( "undefined" ),
 			m_Description( "undefined" ),
 			m_Author( "undefined" ),
@@ -38,42 +38,42 @@ namespace _2Real
 		{
 		}
 
-		string const& BundleData::getName() const
+		string const& BundleInfo::getName() const
 		{
 			return m_Name;
 		}
 
-		string const& BundleData::getInstallDirectory() const
+		string const& BundleInfo::getInstallDirectory() const
 		{
 			return m_InstallDirectory;
 		}
 
-		string const& BundleData::getDescription() const
+		string const& BundleInfo::getDescription() const
 		{
 			return m_Description;
 		}
 
-		string const& BundleData::getAuthor() const
+		string const& BundleInfo::getAuthor() const
 		{
 			return m_Author;
 		}
 
-		string const& BundleData::getContact() const
+		string const& BundleInfo::getContact() const
 		{
 			return m_Contact;
 		}
 
-		string const& BundleData::getCategory() const
+		string const& BundleInfo::getCategory() const
 		{
 			return m_Category;
 		}
 
-		Version const& BundleData::getVersion() const
+		Version const& BundleInfo::getVersion() const
 		{
 			return m_Version;
 		}
 
-		BundleData::Blocks const& BundleData::getExportedBlocks() const
+		BundleInfo::Blocks const& BundleInfo::getExportedBlocks() const
 		{
 			return m_ExportedBlocks;
 		}

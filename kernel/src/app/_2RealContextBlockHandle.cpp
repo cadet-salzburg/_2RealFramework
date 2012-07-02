@@ -38,7 +38,7 @@ namespace _2Real
 		{
 		}
 
-		BlockData ContextBlockHandle::getBlockData() const
+		BlockInfo ContextBlockHandle::getBlockInfo() const
 		{
 			checkHandle( m_Block );
 			return m_Block->getBlockData();
@@ -50,7 +50,7 @@ namespace _2Real
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
-		void ContextBlockHandle::setUp()
+		void ContextBlockHandle::setup()
 		{
 			checkHandle( m_Block );
 			m_Block->setUp();

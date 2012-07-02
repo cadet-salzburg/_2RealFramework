@@ -34,7 +34,7 @@ namespace _2Real
 		class BundleHandle;
 		class BlockHandle;
 		class ContextBlockHandle;
-		class BundleData;
+		class BundleInfo;
 	}
 
 	namespace bundle
@@ -58,7 +58,7 @@ namespace _2Real
 		std::string const&		getName() const;
 
 		app::BundleHandle		createHandle();
-		app::BundleData			getBundleData() const;
+		app::BundleInfo			getBundleData() const;
 		app::ContextBlockHandle	getBundleContextHandle() const;
 		app::BlockHandle		createBlockInstance( std::string const& blockName );
 

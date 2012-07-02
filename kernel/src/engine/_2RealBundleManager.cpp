@@ -49,11 +49,19 @@ namespace _2Real
 
 	BundleManager::~BundleManager()
 	{
-		for ( BundleMap::iterator it = m_BundleInstances.begin(); it != m_BundleInstances.end(); ++it )
+		clear();
+	}
+
+	void BundleManager::clear()
+	{
+		for ( BundleMap::iterator it = m_BundleInstances.begin(); it != m_BundleInstances.end(); /**/ )
 		{
 			BundleInternal *b = it->second;
 			delete b;
+			it = m_BundleInstances.erase( it );
 		}
+
+		m_BundleLookupTable.clear();
 	}
 
 	void BundleManager::setBaseDirectory( string const& directory )
@@ -82,7 +90,7 @@ namespace _2Real
 		{
 			app::ContextBlockHandle handle = createContextBlock( *bundle );
 			handle.setUpdateRate( 1.0 );
-			handle.setUp();
+			handle.setup();
 			handle.start();
 		}
 
@@ -112,7 +120,7 @@ namespace _2Real
 
 		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
 		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
-		sys.addUberBlock( *functionBlock );
+		sys.addUberBlock( *functionBlock, false );
 
 		bundle.addBlockInstance( block, blockName );
 
@@ -135,7 +143,7 @@ namespace _2Real
 
 		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
 		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
-		sys.addUberBlock( *functionBlock );
+		sys.addUberBlock( *functionBlock, true );
 
 		app::ContextBlockHandle handle = app::ContextBlockHandle( *functionBlock );
 		bundle.setBundleContextHandle( handle );

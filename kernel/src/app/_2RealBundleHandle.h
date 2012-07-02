@@ -27,7 +27,7 @@ namespace _2Real
 	namespace app
 	{
 		class BlockHandle;
-		class BundleData;
+		class BundleInfo;
 
 		class BundleHandle
 		{
@@ -37,7 +37,7 @@ namespace _2Real
 			BundleHandle();
 			BundleHandle( BundleInternal &bundle );
 
-			BundleData getBundleData() const;
+			BundleInfo getBundleInfo() const;
 
 			BlockHandle createBlockInstance( std::string const& blockName );
 

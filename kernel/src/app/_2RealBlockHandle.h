@@ -32,7 +32,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
-		class BlockData;
+		class BlockInfo;
 
 		class BlockHandle : public UberBlockHandle
 		{
@@ -48,12 +48,12 @@ namespace _2Real
 			BlockHandle();
 			BlockHandle( FunctionBlock &block );
 
-			BlockData getBlockData() const;
+			BlockInfo getBlockInfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );
 			void setInletUpdatePolicy( const InletUpdatePolicy p );
 
-			void setUp();
+			void setup();
 			void start();
 			void stop();
 

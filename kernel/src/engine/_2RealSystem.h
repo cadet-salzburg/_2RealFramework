@@ -42,11 +42,12 @@ namespace _2Real
 
 		System( EngineImpl &engine );
 
-		void		clear();
+		void		clearAll();
+		void		clearBlockInstances();
 
 		void		handleException( FunctionBlock &block, Exception const& exception );
 
-		void		addUberBlock( AbstractUberBlock &block );
+		void		addUberBlock( AbstractUberBlock &block, const bool isContext );
 
 		void		registerToException( app::ExceptionCallback callback, void *userData );
 		void		unregisterFromException( app::ExceptionCallback callback, void *userData );

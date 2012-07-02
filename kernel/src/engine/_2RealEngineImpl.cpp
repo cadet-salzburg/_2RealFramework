@@ -113,7 +113,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_SystemBlock->clear();
+			m_SystemBlock->clearAll();
 			delete m_SystemBlock;
 			delete m_IdCounter;
 			delete m_BundleManager;
@@ -129,6 +129,17 @@ namespace _2Real
 		{
 			std::cout << e.what() << std::endl;
 		}
+	}
+
+	void EngineImpl::clear()
+	{
+		m_SystemBlock->clearAll();
+		m_BundleManager->clear();
+	}
+
+	void EngineImpl::clearBlockInstances()
+	{
+		m_SystemBlock->clearBlockInstances();
 	}
 
 	const long EngineImpl::getElapsedTime() const

@@ -41,6 +41,7 @@ namespace _2Real
 		BundleLoader();
 		~BundleLoader();
 
+		void clear();
 		bool isLibraryLoaded( std::string const& path ) const;
 		bool hasContext( std::string const& path ) const;
 		BundleData const& loadLibrary( std::string const& path );

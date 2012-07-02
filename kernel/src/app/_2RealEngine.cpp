@@ -48,6 +48,16 @@ namespace _2Real
 			m_EngineImpl.setBaseDirectory( directory );
 		}
 
+		void Engine::clear()
+		{
+			m_EngineImpl.clear();
+		}
+
+		void Engine::clearBlockInstances()
+		{
+			m_EngineImpl.clearBlockInstances();
+		}
+
 		BundleHandle Engine::loadBundle( std::string const& libraryPath )
 		{
 			return m_EngineImpl.loadLibrary( libraryPath );

@@ -34,10 +34,64 @@ namespace _2Real
 
 	SystemBlockManager::~SystemBlockManager()
 	{
-		clear();
+		clearAll();
 	}
 
-	void SystemBlockManager::clear()
+	void SystemBlockManager::clearAll()
+	{
+		BlockList ready;
+
+		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+		{
+			(*it)->prepareForShutDown();
+		}
+
+		for ( BlockList::iterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+		{
+			(*it)->prepareForShutDown();
+		}
+
+		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/ )
+		{
+			if ( (*it)->shutDown( 1000 ) )
+			{
+				ready.push_back( *it );
+			}
+			else
+			{
+#ifdef _DEBUG
+				cout << "failed to shut down " << ( *it )->getName() << endl;
+#endif
+			}
+
+			it = m_Blocks.erase( it );
+		}
+
+		for ( BlockList::iterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
+		{
+			if ( (*it)->shutDown( 1000 ) )
+			{
+				ready.push_back( *it );
+			}
+			else
+			{
+#ifdef _DEBUG
+				cout << "failed to shut down " << ( *it )->getName() << endl;
+#endif
+			}
+
+			it = m_ContextBlocks.erase( it );
+		}
+
+		for ( BlockList::iterator it = ready.begin(); it != ready.end(); /**/ )
+		{
+			delete *it;
+			it = ready.erase( it );
+		}
+	}
+
+	
+	void SystemBlockManager::clearBlockInstances()
 	{
 		BlockList ready;
 
@@ -69,21 +123,38 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlockManager::addBlock( AbstractUberBlock &block )
+	void SystemBlockManager::addBlock( AbstractUberBlock &block, const bool isContext )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_BlockAccess );
-		for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+
+		if ( !isContext )
 		{
-			if ( ( *it ) == &block )
+			for ( BlockList::iterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 			{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-				return;
+				if ( ( *it ) == &block )
+				{
+	#ifdef _DEBUG
+			assert( NULL );
+	#endif
+					return;
+				}
 			}
+			m_Blocks.push_back( &block );
 		}
-		
-		m_Blocks.push_back( &block );
+		else
+		{
+			for ( BlockList::iterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+			{
+				if ( ( *it ) == &block )
+				{
+	#ifdef _DEBUG
+			assert( NULL );
+	#endif
+					return;
+				}
+			}
+			m_ContextBlocks.push_back( &block );
+		}
 	}
 
 	void SystemBlockManager::destroyBlock( AbstractUberBlock &block )

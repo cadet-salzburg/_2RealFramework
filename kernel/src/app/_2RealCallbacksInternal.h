@@ -36,9 +36,6 @@
 
 namespace _2Real
 {
-
-	class BlockError;
-
 	namespace app
 	{
 
@@ -188,82 +185,164 @@ namespace _2Real
 
 		typedef std::set< AbstractBlockDataCallbackHandler *, AOutputCbCmp >	BlockDataCallbackHandlers;
 		typedef std::set< AbstractOutletDataCallbackHandler *, AOutletCbCmp >	OutletDataCallbackHandlers;
-		typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
+		typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >		ExceptionCallbackHandlers;
 
-		//template< typename TArgs >
-		//class AbstractCallback
+		//template< typename TArg >
+		//class AbstractMemberCallback
 		//{
-		//	virtual AbstractCallback() {}
-		//	virtual void invoke( TArgs const& args ) = 0;
-		//	virtual void invoke( TArgs &args ) = 0;
-		//	virtual void invoke( void *, TArgs const& args ) = 0;
-		//	virtual void invoke( void *, TArgs &args ) = 0;
+		//	virtual ~AbstractMemberCallback() {}
+		//	bool opdator 
 		//};
 
-		//template< typename TArgs, bool WithSender >
-		//class Callback< TArgs, true > : public AbstractCallback< TArgs >
+		//template< typename TCallable, typename TArg >
+		//class MemberCallback
 		//{
-		//	void invoke( void *, TArgs const& args )
+
+		//public:
+
+		//	typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( TArg const& );
+
+		//	MemberCallback( TCallable &callable, Callback method ) :
+		//		m_Callable( callable ),
+		//		m_Method( method )
 		//	{
 		//	}
+
+		//	void invoke( TArg const& arg )
+		//	{
+		//		( m_Callable.*m_Method )( arg );
+		//	}
+
+		//	bool operator<( MemberCallback< TCallable, TArg > const& other )
+		//	{
+		//		return ( m_Callable < other.m_Callable && m_Method < other.m_Method );
+		//	}
+
+		//private:
+
+		//	TCallable			&m_Callable;
+		//	Callback			m_Method;
+
 		//};
 
-		//template< typename TArgs, bool WithSender >
-		//class Callback< TArgs, false > : public AbstractCallback< TArgs >
+		//template< typename TArg >
+		//class MemberCallbackCompare
 		//{
-		//	void invoke( void *, TArgs const& args )
+
+		//public:
+		//	bool operator()( MemberCallback< TArg > *cbA, MemberCallback< TArg > *cbB )
+		//	{
+		//		return ( *cbA < *cbB );
+		//	}
+
+		//};
+
+		//template< typename TArg >
+		//class FunctionCallback< TArg >
+		//{
+
+		//public:
+
+		//	typedef ( _2REAL_CALLBACK *CallbackFunction )( void *, TArg const& );
+
+		//	FunctionCallback( void *userData, CallbackFunction func ) :
+		//		m_UserData( userData ),
+		//		m_Function( func )
 		//	{
 		//	}
+
+		//	void invoke( TArg &arg )
+		//	{
+		//		( m_Function )( m_UserData, arg );
+		//	}
+
+		//	bool operator<( FunctionCallback< TArg > const& other )
+		//	{
+		//		return ( m_Function < other.m_Function && m_UserData < other.m_userData );
+		//	}
+
+		//private:
+
+		//	CallbackFunction	m_Function;
+		//	void				*m_UserData;
+
+		//};
+
+		//template< typename TArg >
+		//class FunctionCallbackCompare
+		//{
+
+		//public:
+		//	bool operator()( FunctionCallback< TArg > *cbA, FunctionCallback< TArg > *cbB )
+		//	{
+		//		return ( *cbA < *cbB );
+		//	}
+
 		//};
 
 		//// threadsafe callback event
+		//// protected against double registration
 		//template< typename TArgs >
 		//class CallbackEvent
 		//{
 
 		//public:
 
-		//	typedef std::set< AbstractCallback< TArgs > * >					Callbacks;
-		//	typedef std::set< AbstractCallback< TArgs > * >::iterator		CallbacksIterator;
-		//	typedef std::set< AbstractCallback< TArgs > * >::const_iterator	CallbacksConstIterator;
+		//	typedef std::set< FunctionCallback< TArg > *, FunctionCallbackCompare< TArg > >					FunctionCallbacks;
+		//	typedef std::set< FunctionCallback< TArg > *, FunctionCallbackCompare< TArg > >::iterator		FunctionCallbacksIterator;
+		//	typedef std::set< FunctionCallback< TArg > *, FunctionCallbackCompare< TArg > >::const_iterator	FunctionCallbacksConstIterator;
+
+		//	typedef std::set< MemberCallback< TArg > *, MemberCallbackCompare< TArg > >						MemberCallbacks;
+		//	typedef std::set< MemberCallback< TArg > *, MemberCallbackCompare< TArg > >::iterator			MemberCallbacksIterator;
+		//	typedef std::set< MemberCallback< TArg > *, MemberCallbackCompare< TArg > >::const_iterator		MemberCallbacksConstIterator;
 
 		//	CallbackEvent() {}
-
-		//	~CallbackEvent()
-		//	{
-		//		clear();
-		//	}
+		//	~CallbackEvent() { clear(); }
 
 		//	void clear()
 		//	{
-		//		for ( CallbacksIterator cbIt = m_Callbacks.begin(); cbIt != m_Callabcks.end(); ++cbIt )
-		//		{
-		//			delete *cbIt;
-		//		}
-
-		//		m_Callbacks.clear();
+		//		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		//		for ( FunctionCallbacksIterator cbIter = m_FunctionCallbacks.begin(); cbIter != m_FunctionCallbacks.end(); ++cbIter ) delete *cbIter;
+		//		for ( MemberCallbacksIterator cbIter = m_MemberCallbacks.begin(); cbIter != m_MemberCallbacks.end(); ++cbIter ) delete *cbIter;
+		//		m_FunctionCallbacks.clear();
+		//		m_MemberCallbacks.clear();
 		//	}
 
-		//	void addListener( AbstractCallback< TArgs > const& cb )
-		//	{
-		//	}
+		//	//void addListener( AbstractCallback< TArgs > const& callback )
+		//	//{
+		//	//	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		//	//	CallbacksConstIterator cbIter = m_Callbacks.find( &callback );
+		//	//	if ( cbIter == m_Callbacks.end() )
+		//	//	{
+		//	//		m_Callbacks.insert( &callback );
+		//	//	}
+		//	//	else delete &callback;
+		//	//}
 
-		//	void removeListener( AbstractCallback< TArgs > const& cb )
-		//	{
-		//	}
+		//	//void removeListener( AbstractCallback< TArgs > const& callback )
+		//	//{
+		//	//	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		//	//	CallbacksIterator cbIter = m_Callbacks.find( &callback );
+		//	//	if ( cbIter != m_Callbacks.end() )
+		//	//	{
+		//	//		delete *cbIter;
+		//	//		m_Callbacks.erase( cbIter );
+		//	//	}
+		//	//	delete &callback;
+		//	//}
 
-		//	void notify( TArgs const& args )
+		//	void notify( TArgs &args )
 		//	{
-		//		for ( CallbacksIterator cbIt = m_Callbacks.begin(); cbIt != m_Callabcks.end(); ++cbIt )
-		//		{
-		//			( *cbIt )->notify( userData, args );
-		//		}
+		//		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		//		for ( MemberCallbacksIterator cbIter = m_MemberCallbacks.begin(); cbIter != m_MemberCallbacks.end(); ++cbIter ) ( *cbIter )->invoke( args );
+		//		for ( FunctionCallbacksIterator cbIter = m_FunctionCallbacks.begin(); cbIter != m_FunctionCallbacks.end(); ++cbIter ) ( *cbIter )->invoke( args );
 		//	}
 
 		//private:
 
 		//	mutable Poco::FastMutex		m_Access;
-		//	Callbacks					m_Callbacks;
+		//	FunctionCallbacks			m_FunctionCallbacks;
+		//	MemberCallbacks				m_MemberCallbacks;
 
 		//};
 	}

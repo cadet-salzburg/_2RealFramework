@@ -23,6 +23,7 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "bundle/_2RealParameterHandle.h"
 #include "helpers/_2RealException.h"
+#include "_2RealDatatypes.h"
 
 namespace _2Real
 {

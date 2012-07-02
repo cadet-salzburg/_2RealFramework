@@ -69,9 +69,9 @@ namespace _2Real
 		return app::BundleHandle( *this );
 	}
 
-	app::BundleData BundleInternal::getBundleData() const
+	app::BundleInfo BundleInternal::getBundleData() const
 	{
-		app::BundleData bundleData;
+		app::BundleInfo bundleData;
 
 		bundleData.m_Author = m_Metadata.getAuthor();
 		bundleData.m_Category = m_Metadata.getCategory();
@@ -80,7 +80,7 @@ namespace _2Real
 
 		for ( BundleData::BlockMetasConstIterator it = blocks.begin(); it != blocks.end(); ++it )
 		{
-			app::BlockData blockData;
+			app::BlockInfo blockData;
 
 			blockData.m_Name = it->second.getName();
 			blockData.m_Description = it->second.getDescription();

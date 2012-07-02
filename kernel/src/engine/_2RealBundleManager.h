@@ -49,6 +49,7 @@ namespace _2Real
 		BundleManager( EngineImpl &engine );
 		~BundleManager();
 
+		void clear();
 		void							setBaseDirectory( std::string const& path );
 		app::BundleHandle				loadLibrary( std::string const& libraryPath );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;

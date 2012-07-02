@@ -22,6 +22,7 @@
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "helpers/_2RealException.h"
+#include "_2RealDatatypes.h"
 
 #if defined( _WIN32 )
 	#define _2REAL_LIBRARY_API __declspec( dllexport )

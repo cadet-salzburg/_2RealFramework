@@ -48,6 +48,9 @@ namespace _2Real
 
 			app::BundleHandle loadBundle( std::string const& libraryPath );
 
+			void clear();
+			void clearBlockInstances();
+
 			void registerToException( ExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
 

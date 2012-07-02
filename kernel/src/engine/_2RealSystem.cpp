@@ -35,31 +35,55 @@ namespace _2Real
 	{
 	}
 
-	void System::clear()
+	void System::clearAll()
 	{
 		try
 		{
-			m_SubBlockManager->clear();
+			m_SubBlockManager->clearAll();
 		}
 		catch (TimeOutException &e)
 		{
 			std::cout << e.message() << std::endl;
 		}
 
-		for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
-		{
-			delete *it;
-		}
+		//for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); /**/ )
+		//{
+		//	delete *it;
+		//	it = m_ExceptionCallbacks.erase( it );
+		//}
 
-		for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
-		{
-			delete *it;
-		}
+		//for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); /**/ )
+		//{
+		//	delete *it;
+		//	it = m_ExceptionCallbackHandlers.erase( it );
+		//}
 	}
 
-	void System::addUberBlock( AbstractUberBlock &block )
+	void System::clearBlockInstances()
 	{
-		m_SubBlockManager->addBlock( block );
+		try
+		{
+			m_SubBlockManager->clearBlockInstances();
+		}
+		catch (TimeOutException &e)
+		{
+			std::cout << e.message() << std::endl;
+		}
+
+		//for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
+		//{
+		//	delete *it;
+		//}
+
+		//for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
+		//{
+		//	delete *it;
+		//}
+	}
+
+	void System::addUberBlock( AbstractUberBlock &block, const bool isContext )
+	{
+		m_SubBlockManager->addBlock( block, isContext );
 	}
 
 	void System::handleException( FunctionBlock &block, Exception const& exception )

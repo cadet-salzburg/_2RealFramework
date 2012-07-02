@@ -26,7 +26,7 @@ namespace _2Real
 	
 	namespace app
 	{
-		class BlockData;
+		class BlockInfo;
 
 		class ContextBlockHandle : public UberBlockHandle
 		{
@@ -36,10 +36,10 @@ namespace _2Real
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock &block );
 
-			BlockData getBlockData() const;
+			BlockInfo getBlockInfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );
-			void setUp();
+			void setup();
 			void start();
 
 		private:

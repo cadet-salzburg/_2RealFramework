@@ -24,39 +24,39 @@ namespace _2Real
 {
 	namespace app
 	{
-		BlockData::BlockData() :
+		BlockInfo::BlockInfo() :
 			m_Name( "undefined" ),
 			m_Description( "undefined" ),
 			m_Category( "undefined" )
 		{
 		}
 
-		string const& BlockData::getName() const
+		string const& BlockInfo::getName() const
 		{
 			return m_Name;
 		}
 
-		string const& BlockData::getDescription() const
+		string const& BlockInfo::getDescription() const
 		{
 			return m_Description;
 		}
 
-		string const& BlockData::getCategory() const
+		string const& BlockInfo::getCategory() const
 		{
 			return m_Category;
 		}
 
-		BlockData::Params const& BlockData::getParameters() const
+		BlockInfo::Params const& BlockInfo::getParameters() const
 		{
 			return m_Parameters;
 		}
 
-		BlockData::Params const& BlockData::getInlets() const
+		BlockInfo::Params const& BlockInfo::getInlets() const
 		{
 			return m_Inlets;
 		}
 
-		BlockData::Params const& BlockData::getOutlets() const
+		BlockInfo::Params const& BlockInfo::getOutlets() const
 		{
 			return m_Outlets;
 		}

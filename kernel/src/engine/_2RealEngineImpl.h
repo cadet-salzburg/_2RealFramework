@@ -62,6 +62,9 @@ namespace _2Real
 		// retruns time in millis since creation
 		const long						getElapsedTime() const;
 
+		void clear();
+		void clearBlockInstances();
+
 		Identifier						createIdentifier( std::string const& name );
 
 		void							setBaseDirectory( std::string const& directory );

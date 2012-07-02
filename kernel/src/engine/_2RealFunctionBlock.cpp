@@ -85,9 +85,9 @@ namespace _2Real
 		return m_Metadata;
 	}
 
-	app::BlockData FunctionBlock::getBlockData()
+	app::BlockInfo FunctionBlock::getBlockData()
 	{
-		app::BlockData blockData;
+		app::BlockInfo blockData;
 
 		blockData.m_Name = m_Metadata.getName();
 		blockData.m_Description = m_Metadata.getDescription();

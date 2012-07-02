@@ -33,8 +33,9 @@ namespace _2Real
 	public:
 
 		~SystemBlockManager();
-		void						clear();
-		void						addBlock( AbstractUberBlock &block );
+		void						clearAll();
+		void						clearBlockInstances();
+		void						addBlock( AbstractUberBlock &block, const bool isContext );
 		void						destroyBlock( AbstractUberBlock &block );
 
 	private:
@@ -44,6 +45,7 @@ namespace _2Real
 		// this is probably not necessary
 		mutable Poco::FastMutex		m_BlockAccess;
 		BlockList					m_Blocks;
+		BlockList					m_ContextBlocks;
 
 	};
 

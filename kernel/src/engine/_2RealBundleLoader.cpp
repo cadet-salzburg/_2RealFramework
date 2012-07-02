@@ -39,13 +39,7 @@ namespace _2Real
 
 	BundleLoader::~BundleLoader()
 	{
-		for ( BundleMap::iterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
-		{
-			delete it->second.metainfo;
-			it->second.library->unload();
-			delete it->second.library;
-			it = m_LoadedBundles.erase( it );
-		}
+		clear();
 	}
 
 	BundleLoader::BundleLoader( BundleLoader const& src )
@@ -55,6 +49,17 @@ namespace _2Real
 	BundleLoader& BundleLoader::operator=( BundleLoader const& src )
 	{
 		return *this;
+	}
+
+	void BundleLoader::clear()
+	{
+		for ( BundleMap::iterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
+		{
+			delete it->second.metainfo;
+			it->second.library->unload();
+			delete it->second.library;
+			it = m_LoadedBundles.erase( it );
+		}
 	}
 
 	bool BundleLoader::isLibraryLoaded( string const& path ) const

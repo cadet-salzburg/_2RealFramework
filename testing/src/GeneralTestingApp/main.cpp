@@ -18,7 +18,6 @@
 */
 
 #include "_2RealApplication.h"
-#include "_2RealDatatypes.h"
 
 #include <iostream>
 #include <map>
@@ -36,8 +35,8 @@ using std::cin;
 using _2Real::Exception;
 
 using _2Real::app::Engine;
-using _2Real::app::BundleData;
-using _2Real::app::BlockData;
+using _2Real::app::BundleInfo;
+using _2Real::app::BlockInfo;
 using _2Real::app::BlockHandle;
 using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;
@@ -102,20 +101,20 @@ int main( int argc, char *argv[] )
 	try
 	{
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
-		BundleData const& bundleData = bundleHandle.getBundleData();
+		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
 
 		// (?) this also give you info concerning the context, do we want this?
-		for ( BundleData::BlocksConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
+		for ( BundleInfo::BlocksConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
 		{
 			cout << "EXPORTED BLOCK:" << endl;
 			cout << it->getName() << endl << it->getDescription() << endl;
 		}
 
 		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
-		BlockData const& outData = outHandle.getBlockData();
+		BlockInfo const& outData = outHandle.getBlockInfo();
 		outHandle.setUpdateRate( 0.2 );
 
-		for ( BlockData::ParamsConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
+		for ( BlockInfo::ParamsConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
 		{
 			cout << "OUT OUTLET:" << endl;
 			cout << it->getName() << endl << it->getLongTypename() << endl;
@@ -124,7 +123,7 @@ int main( int argc, char *argv[] )
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
 		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
-		BlockData const& inData = inHandle.getBlockData();
+		BlockInfo const& inData = inHandle.getBlockInfo();
 		inHandle.setUpdateRate( 1.0 );
 		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
@@ -154,11 +153,11 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "setup in" )
 			{
-				inHandle.setUp();
+				inHandle.setup();
 			}
 			else if ( line == "setup out" )
 			{
-				outHandle.setUp();
+				outHandle.setup();
 			}
 			else if ( line == "stop in" )
 			{

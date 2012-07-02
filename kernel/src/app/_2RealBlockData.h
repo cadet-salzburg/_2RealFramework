@@ -33,7 +33,7 @@ namespace _2Real
 
 	namespace app
 	{
-		class BlockData
+		class BlockInfo
 		{
 
 			friend class _2Real::FunctionBlock;
@@ -48,7 +48,7 @@ namespace _2Real
 			typedef std::vector< ParameterData >::iterator			ParamsIterator;
 			typedef std::vector< ParameterData >::const_iterator	ParamsConstIterator;
 
-			BlockData();
+			BlockInfo();
 
 			std::string const&	getName() const;
 			std::string const&	getDescription() const;
