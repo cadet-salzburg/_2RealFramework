@@ -40,6 +40,10 @@ namespace _2Real
 			OutletHandle();
 			OutletHandle( Outlet &outlet );
 
+			using ParamHandle::getName;
+			using ParamHandle::getTypename;
+			using ParamHandle::getLongTypename;
+
 			void linkTo( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );
 

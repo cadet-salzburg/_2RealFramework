@@ -35,6 +35,10 @@ namespace _2Real
 			ParameterHandle();
 			ParameterHandle( Parameter &param );
 
+			using ParamHandle::getName;
+			using ParamHandle::getTypename;
+			using ParamHandle::getLongTypename;
+
 			template< typename T >
 			void setValue( T const& value )
 			{

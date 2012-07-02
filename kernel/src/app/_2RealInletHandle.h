@@ -43,6 +43,10 @@ namespace _2Real
 			InletHandle();
 			InletHandle( Inlet &inlet );
 
+			using ParamHandle::getName;
+			using ParamHandle::getTypename;
+			using ParamHandle::getLongTypename;
+
 			void setUpdatePolicy( const InletUpdatePolicy p );
 
 			void linkTo( OutletHandle &outletHandle );

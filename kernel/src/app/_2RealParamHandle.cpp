@@ -17,6 +17,13 @@
 */
 
 #include "app/_2RealParamHandle.h"
+#include "helpers/_2RealException.h"
+#include "engine/_2RealParam.h"
+
+using std::string;
+
+#define checkHandle( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );\
 
 namespace _2Real
 {
@@ -30,6 +37,24 @@ namespace _2Real
 		ParamHandle::ParamHandle( Param &param ) :
 			m_Param( &param )
 		{
+		}
+
+		string const& ParamHandle::getName() const
+		{
+			checkHandle( m_Param );
+			return m_Param->getName();
+		}
+
+		string const& ParamHandle::getLongTypename() const
+		{
+			checkHandle( m_Param );
+			return m_Param->getLongTypename();
+		}
+
+		string const& ParamHandle::getTypename() const
+		{
+			checkHandle( m_Param );
+			return m_Param->getTypename();
 		}
 	}
 }

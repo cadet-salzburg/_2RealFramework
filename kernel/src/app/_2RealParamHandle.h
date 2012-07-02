@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace _2Real
 {
 
@@ -35,6 +37,10 @@ namespace _2Real
 
 			ParamHandle();
 			ParamHandle( Param &param );
+
+			std::string const&	getName() const;
+			std::string const&	getLongTypename() const;
+			std::string const&	getTypename() const;
 
 		private:
 
