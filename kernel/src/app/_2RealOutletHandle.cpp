@@ -18,8 +18,8 @@
 
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealInletHandle.h"
-#include "_2RealOutlet.h"
-#include "_2RealAbstractUberBlock.h"
+#include "engine/_2RealOutlet.h"
+#include "engine/_2RealAbstractUberBlock.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\

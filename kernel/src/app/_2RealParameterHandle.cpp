@@ -17,8 +17,8 @@
 */
 
 #include "app/_2RealParameterHandle.h"
-#include "_2RealParameter.h"
-#include "_2RealTimestampedData.h"
+#include "engine/_2RealParameter.h"
+#include "engine/_2RealTimestampedData.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\

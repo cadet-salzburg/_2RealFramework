@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "_2RealVersion.h"
-#include "_2RealBlockData.h"
+#include "app/_2RealBlockData.h"
+#include "helpers/_2RealVersion.h"
 
 #include <vector>
 #include <string>

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "_2RealEngineData.h"
-#include "_2RealException.h"
+#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealException.h"
 
 #include <sstream>
 

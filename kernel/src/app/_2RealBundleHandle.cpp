@@ -19,8 +19,8 @@
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealBundleData.h"
-#include "_2RealBundleInternal.h"
-#include "_2RealException.h"
+#include "engine/_2RealBundleInternal.h"
+#include "helpers/_2RealException.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "app/_2RealUberBlockHandle.h"
+
 namespace _2Real
 {
 	class FunctionBlock;
@@ -26,7 +28,7 @@ namespace _2Real
 	{
 		class BlockData;
 
-		class ContextBlockHandle
+		class ContextBlockHandle : public UberBlockHandle
 		{
 
 		public:

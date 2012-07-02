@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "_2RealAppData.h"
-#include "_2RealParamHandle.h"
-#include "_2RealCallbacks.h"
+#include "app/_2RealAppData.h"
+#include "app/_2RealParamHandle.h"
+#include "app/_2RealCallbacks.h"
 
 #include<list>
 

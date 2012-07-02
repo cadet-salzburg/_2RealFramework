@@ -21,8 +21,8 @@
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterHandle.h"
 #include "app/_2RealBlockData.h"
-#include "_2RealFunctionBlock.h"
-#include "_2RealException.h"
+#include "engine/_2RealFunctionBlock.h"
+#include "helpers/_2RealException.h"
 
 using std::string;
 

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "bundle/_2RealBlock.h"
-#include "bundle/_2RealInletHandle.h"
-#include "bundle/_2RealOutletHandle.h"
-#include "bundle/_2RealParameterHandle.h"
+#include "_2RealBlock.h"
 
 #include "Poco/Mutex.h"
 

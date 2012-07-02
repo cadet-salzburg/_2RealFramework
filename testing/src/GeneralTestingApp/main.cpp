@@ -17,7 +17,8 @@
 	limitations under the License.
 */
 
-#include "app/_2RealApplication.h"
+#include "_2RealApplication.h"
+#include "_2RealDatatypes.h"
 
 #include <iostream>
 #include <map>
@@ -32,10 +33,11 @@ using std::cout;
 using std::endl;
 using std::cin;
 
-using _2Real::app::Engine;
 using _2Real::Exception;
-using _2Real::BundleData;
-using _2Real::BlockData;
+
+using _2Real::app::Engine;
+using _2Real::app::BundleData;
+using _2Real::app::BlockData;
 using _2Real::app::BlockHandle;
 using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;

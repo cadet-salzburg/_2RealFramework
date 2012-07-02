@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "_2RealAppData.h"
-#include "_2RealParamHandle.h"
+#include "app/_2RealAppData.h"
+#include "app/_2RealParamHandle.h"
 
 namespace _2Real
 {

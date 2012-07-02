@@ -1,8 +1,5 @@
 #include "ServiceImpl.h"
 
-#include "bundle/_2RealBlockHandle.h"
-#include "_2RealException.h"
-
 #include <iostream>
 
 using _2Real::bundle::BlockHandle;

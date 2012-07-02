@@ -17,7 +17,7 @@
 */
 
 #include "bundle/_2RealInletHandle.h"
-#include "_2RealInlet.h"
+#include "engine/_2RealInlet.h"
 
 namespace _2Real
 {

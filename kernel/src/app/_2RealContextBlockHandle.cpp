@@ -18,8 +18,8 @@
 
 #include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealBlockData.h"
-#include "_2RealFunctionBlock.h"
-#include "_2RealException.h"
+#include "engine/_2RealFunctionBlock.h"
+#include "helpers/_2RealException.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\

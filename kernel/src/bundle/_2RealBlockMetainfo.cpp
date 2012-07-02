@@ -17,8 +17,8 @@
 */
 
 #include "bundle/_2RealBlockMetainfo.h"
-#include "_2RealBlockData.h"
-#include "_2RealTypetable.h"
+#include "engine/_2RealBlockData.h"
+#include "engine/_2RealTypetable.h"
 
 namespace _2Real
 {
