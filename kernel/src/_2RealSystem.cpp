@@ -16,13 +16,12 @@
 	limitations under the License.
 */
 
-#include "_2RealSystemBlock.h"
+#include "_2RealSystem.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealSystemBlockManager.h"
 #include "_2RealLink.h"
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
 #include "app/_2RealBlockHandle.h"
+#include "_2RealUberBlockBasedTrigger.h"
 
 #include <assert.h>
 #include <sstream>
@@ -30,14 +29,13 @@
 namespace _2Real
 {
 
-	SystemBlock::SystemBlock( EngineImpl &engine, BlockIdentifier const& id ) :
-		UberBlock< DisabledIOManager, SystemBlockStateManager >( id ),
+	System::System( EngineImpl &engine ) :
 		m_Engine( engine ),
 		m_SubBlockManager( new SystemBlockManager() )
 	{
 	}
 
-	void SystemBlock::clear()
+	void System::clear()
 	{
 		try
 		{
@@ -59,24 +57,12 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlock::addUberBlock( AbstractUberBlock &block )
+	void System::addUberBlock( AbstractUberBlock &block )
 	{
-		if ( this == &block )
-		{
-#ifdef _DEBUG
-			assert( NULL );
-#endif
-			return;
-		}
-
 		m_SubBlockManager->addBlock( block );
-
-		// TODO: in reality, this is probably unneccesary
-		// however, i want to keep this for later
-		TriggerLink *link = new TriggerLink( *this, BLOCK_READY, block, BLOCK_OK );
 	}
 
-	void SystemBlock::handleException( FunctionBlock &block, Exception const& exception )
+	void System::handleException( FunctionBlock &block, Exception const& exception )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
@@ -91,7 +77,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlock::registerToException( app::ExceptionCallback callback, void *userData )
+	void System::registerToException( app::ExceptionCallback callback, void *userData )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
@@ -107,7 +93,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlock::unregisterFromException( app::ExceptionCallback callback, void *userData )
+	void System::unregisterFromException( app::ExceptionCallback callback, void *userData )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
@@ -122,7 +108,7 @@ namespace _2Real
 		delete cb;
 	}
 
-	void SystemBlock::registerToException( app::AbstractExceptionCallbackHandler &handler )
+	void System::registerToException( app::AbstractExceptionCallbackHandler &handler )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
@@ -137,7 +123,7 @@ namespace _2Real
 		}
 	}
 
-	void SystemBlock::unregisterFromException( app::AbstractExceptionCallbackHandler &handler )
+	void System::unregisterFromException( app::AbstractExceptionCallbackHandler &handler )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 		app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
@@ -150,7 +136,7 @@ namespace _2Real
 		delete &handler;
 	}
 
-	void SystemBlock::createLink( Inlet &inlet, Outlet &outlet )
+	void System::createLink( Inlet &inlet, Outlet &outlet )
 	{
 		AbstractLink *link = new IOLink( inlet, outlet );
 		LinkSet::iterator it = m_Links.find( link );
@@ -162,7 +148,7 @@ namespace _2Real
 		else delete link;
 	}
 
-	void SystemBlock::destroyLink( Inlet &inlet, Outlet &outlet )
+	void System::destroyLink( Inlet &inlet, Outlet &outlet )
 	{
 		AbstractLink *link = new IOLink( inlet, outlet );
 		LinkSet::iterator it = m_Links.find( link );
@@ -174,5 +160,4 @@ namespace _2Real
 		}
 		delete link;
 	}
-
 }

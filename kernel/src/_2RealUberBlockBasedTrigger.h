@@ -106,26 +106,34 @@ namespace _2Real
 
 		TriggerLink( AbstractUberBlock &b1, const BlockMessage m1, AbstractUberBlock &b2, const BlockMessage m2 )
 		{
-			m_S1 = &b1.getStateManager();
-			m_S2 = &b2.getStateManager();
-			UberBlockBasedTrigger *t1 = new UberBlockBasedTrigger( *m_S1, m1 );
-			UberBlockBasedTrigger *t2 = new UberBlockBasedTrigger( *m_S2, m2 );
-			t1->setOther( *t2 );
-			t2->setOther( *t1 );
-			m_S1->addUberBlockTrigger( *t1 );
-			m_S2->addUberBlockTrigger( *t2 );
+			//m_S1 = &b1.getStateManager();
+			//m_S2 = &b2.getStateManager();
+			//UberBlockBasedTrigger *t1 = new UberBlockBasedTrigger( *m_S1, m1 );
+			//UberBlockBasedTrigger *t2 = new UberBlockBasedTrigger( *m_S2, m2 );
+			//t1->setOther( *t2 );
+			//t2->setOther( *t1 );
+			//m_S1->addUberBlockTrigger( *t1 );
+			//m_S2->addUberBlockTrigger( *t2 );
+			
+			//m_T1 = b1.createUberBlockTrigger( m1 );
+			//m_T2 = b2.createUberBlockTrigger( m2 );
+			//m_T1->setOther( *m_T2 );
+			//m_T2->setOther( *m_T1 );
 		}
 
 		~TriggerLink()
 		{
-			m_S1->removeUberBlockTrigger( *m_T1 );
-			m_S2->removeUberBlockTrigger( *m_T2 );
+			//m_S1->removeUberBlockTrigger( *m_T1 );
+			//m_S2->removeUberBlockTrigger( *m_T2 );
+
+			/*delete m_T1;
+			delete m_T2;*/
 		}
 
 	private:
 
-		AbstractStateManager		*m_S1;
-		AbstractStateManager		*m_S2;
+		//AbstractStateManager		*m_S1;
+		//AbstractStateManager		*m_S2;
 		UberBlockBasedTrigger		*m_T1;
 		UberBlockBasedTrigger		*m_T2;
 

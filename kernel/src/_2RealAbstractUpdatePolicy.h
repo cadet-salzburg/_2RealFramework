@@ -23,32 +23,22 @@
 namespace _2Real
 {
 
-	class BundleIdentifier
+	class AbstractUberBlock;
+
+	class AbstractUpdatePolicy
 	{
 
 	public:
 
-		BundleIdentifier();
+		AbstractUpdatePolicy( AbstractUberBlock &owner );
+		virtual ~AbstractUpdatePolicy();
 
-		bool operator==( BundleIdentifier const& rhs ) const;
-		bool operator!=( BundleIdentifier const& rhs ) const;
-		bool operator<( BundleIdentifier const& rhs ) const;
-		bool operator<=( BundleIdentifier const& rhs ) const;
-		bool operator>( BundleIdentifier const& rhs ) const;
-		bool operator>=( BundleIdentifier const& rhs ) const;
+		std::string const&		getName() const;
+		unsigned int			getId() const;
 
-		friend std::ostream& operator<<( std::ostream& out, BundleIdentifier const& id );
-		friend std::istream& operator>>( std::istream& in, BundleIdentifier &id );
+	protected:
 
-		std::string const& getName() const { return m_Name; }
-		unsigned int getId() const { return m_Id; }
-
-	private:
-
-		friend class EngineImpl;
-
-		std::string			m_Name;
-		unsigned int		m_Id;
+		AbstractUberBlock					&m_Owner;
 
 	};
 

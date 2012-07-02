@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "_2RealAbstractUpdatePolicy.h"
 #include "_2RealUberBlockBasedTrigger.h"
 #include "_2RealInletBasedTrigger.h"
 #include "_2RealTimeBasedTrigger.h"
@@ -34,9 +35,9 @@ namespace _2Real
 
 	class Inlet;
 	class ParameterData;
-	class AbstractUberBlock;
-	class AbstractIOManager;
-	class AbstractStateManager;
+	class FunctionBlock;
+	class FunctionBlockIOManager;
+	class FunctionBlockStateManager;
 
 	class AbstractInletTriggerCreator
 	{
@@ -54,34 +55,35 @@ namespace _2Real
 		}
 	};
 
-	class UpdatePolicy
+	class FunctionBlockUpdatePolicy : public AbstractUpdatePolicy
 	{
 
 	public:
 
 		typedef std::shared_ptr< AbstractInletTriggerCreator >	InletTriggerCtor;
 
-		UpdatePolicy( AbstractUberBlock &owner, AbstractStateManager &stateMgr, AbstractIOManager &mgr );
+		FunctionBlockUpdatePolicy( FunctionBlock &owner );
 
-		void addInlet( std::string const& name );
+		void addInlet( Inlet &inlet );
 
 		void changePolicy();
 
 		void setNewUpdateTime( const long time );
 		void setNewInletDefaultPolicy( InletTriggerCtor &inletDefault );
-		void setNewInletPolicy( std::string const& name, InletTriggerCtor &inletPolicy );
+		void setNewInletPolicy( Inlet &inlet, InletTriggerCtor &inletPolicy );
 
 	private:
 
 		typedef std::shared_ptr< AbstractTimeBasedTrigger >		TimeTriggerPtr;
 		typedef std::shared_ptr< AbstractInletBasedTrigger >	InletTriggerPtr;
 
-		typedef std::map< std::string, InletTriggerCtor >		InletPolicyMap;
-		typedef std::map< std::string, InletTriggerPtr >		InletTriggerMap;
+		typedef std::map< Inlet *, InletTriggerCtor >		InletPolicyMap;
+		typedef std::map< Inlet *, InletTriggerPtr >		InletTriggerMap;
 
-		AbstractUberBlock				&m_Owner;
-		AbstractStateManager			*m_StateManager;
-		AbstractIOManager				*m_IOManager;
+		friend class FunctionBlock;
+
+		FunctionBlockStateManager		*m_StateManager;
+		FunctionBlockIOManager			*m_IOManager;
 
 		mutable Poco::FastMutex			m_Access;
 		bool							m_WasChanged;	// true if user configured anything since the last update

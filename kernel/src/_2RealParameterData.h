@@ -25,33 +25,20 @@
 namespace _2Real
 {
 
-	class Inlet;
-	class Outlet;
-	class Parameter;
-	class AbstractUberBlock;
-
-	class ParameterData
+	class ParamData
 	{
-
-		friend std::ostream& operator<<( std::ostream &out, ParameterData const& metadata );
-		friend Inlet*				createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
-		friend Outlet *				createOutletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
-		friend Parameter *			createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
 
 	public:
 
-		ParameterData();
-		ParameterData( std::string const& name, std::string const& longType, std::string const& type, EngineData const& defaultValue );
+		ParamData();
+		ParamData( std::string const& name, std::string const& longType, std::string const& type, EngineData const& defaultValue );
 
-		std::string const& getName() const;
-		std::string const& getLongTypename() const;
-		std::string const& getTypename() const;
-		const std::string getDefaultValueAsString() const;
-		bool hasDefaultValue() const;
+		std::string const&	getName() const;
+		std::string const&	getLongTypename() const;
+		std::string const&	getTypename() const;
+		EngineData const&	getDefaultValue() const;
 
 	private:
-
-		EngineData const&	getDefaultValue() const;
 
 		std::string			m_Name;
 		std::string			m_Typename;

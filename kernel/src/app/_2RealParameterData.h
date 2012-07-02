@@ -22,34 +22,34 @@
 
 namespace _2Real
 {
+	//namespace engine
+	//{
+		class BundleInternal;
+		class FunctionBlock;
+	//}
 
-	class BlockIdentifier
+	namespace app
 	{
+		class ParameterData
+		{
 
-	public:
+			friend class _2Real::FunctionBlock;
+			friend class _2Real::BundleInternal;
 
-		BlockIdentifier();
+		public:
 
-		bool operator==( BlockIdentifier const& rhs ) const;
-		bool operator!=( BlockIdentifier const& rhs ) const;
-		bool operator<( BlockIdentifier const& rhs ) const;
-		bool operator<=( BlockIdentifier const& rhs ) const;
-		bool operator>( BlockIdentifier const& rhs ) const;
-		bool operator>=( BlockIdentifier const& rhs ) const;
+			ParameterData();
 
-		std::string const& getName() const { return m_Name; }
-		unsigned int getId() const { return m_Id; }
+			std::string const&	getName() const;
+			std::string const&	getLongTypename() const;
+			std::string const&	getTypename() const;
 
-		friend std::ostream& operator<<( std::ostream& out, BlockIdentifier const& id );
-		friend std::istream& operator>>( std::istream& in, BlockIdentifier &id );
+		private:
 
-	private:
+			std::string			m_Name;
+			std::string			m_Typename;
+			std::string			m_LongTypename;
 
-		friend class EngineImpl;
-
-		std::string			m_Name;
-		unsigned int		m_Id;
-
-	};
-
+		};
+	}
 }

@@ -16,20 +16,49 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParamHandle.h"
+#include "app/_2RealBlockData.h"
+
+using std::string;
 
 namespace _2Real
 {
 	namespace app
 	{
-		ParamHandle::ParamHandle() :
-			m_Param( nullptr )
+		BlockData::BlockData() :
+			m_Name( "undefined" ),
+			m_Description( "undefined" ),
+			m_Category( "undefined" )
 		{
 		}
 
-		ParamHandle::ParamHandle( Param &param ) :
-			m_Param( &param )
+		string const& BlockData::getName() const
 		{
+			return m_Name;
+		}
+
+		string const& BlockData::getDescription() const
+		{
+			return m_Description;
+		}
+
+		string const& BlockData::getCategory() const
+		{
+			return m_Category;
+		}
+
+		BlockData::Params const& BlockData::getParameters() const
+		{
+			return m_Parameters;
+		}
+
+		BlockData::Params const& BlockData::getInlets() const
+		{
+			return m_Inlets;
+		}
+
+		BlockData::Params const& BlockData::getOutlets() const
+		{
+			return m_Outlets;
 		}
 	}
 }

@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealBundleMetainfo.h"
+#include "bundle/_2RealBundleMetainfo.h"
 #include "_2RealBundleMetainfoImpl.h"
 #include "_2RealVersion.h"
 

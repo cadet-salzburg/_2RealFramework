@@ -19,10 +19,12 @@
 #include "_2RealAbstractStateManager.h"
 #include "_2RealAbstractUberBlock.h"
 
+using std::string;
+
 namespace _2Real
 {
-	AbstractStateManager::AbstractStateManager(AbstractUberBlock &owner) : 
-		m_Owner(owner),
+	AbstractStateManager::AbstractStateManager( AbstractUberBlock &owner ) : 
+		m_Owner( owner ),
 		m_StopEvent( false )
 	{
 	}
@@ -31,7 +33,7 @@ namespace _2Real
 	{
 	}
 
-	std::string const& AbstractStateManager::getName() const
+	string const& AbstractStateManager::getName() const
 	{
 		return m_Owner.getName();
 	}
@@ -40,5 +42,4 @@ namespace _2Real
 	{
 		return m_Owner.getId();
 	}
-
 }

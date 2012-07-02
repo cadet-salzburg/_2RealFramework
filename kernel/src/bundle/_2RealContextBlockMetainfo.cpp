@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
 #include "_2RealBlockData.h"
 
 namespace _2Real

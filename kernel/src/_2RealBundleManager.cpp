@@ -19,11 +19,11 @@
 
 #include "_2RealBundleManager.h"
 #include "_2RealBundleInternal.h"
-#include "_2RealSystemBlock.h"
+#include "_2RealSystem.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealBundleData.h"
 #include "_2RealBlockData.h"
-#include "_2RealBundleIdentifier.h"
+#include "_2RealIdentifier.h"
 #include "_2RealEngineImpl.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
@@ -73,7 +73,7 @@ namespace _2Real
 		}
 
 		BundleData const& data = m_BundleLoader.loadLibrary( absPath );
-		BundleInternal *bundle = new BundleInternal( m_Engine.createBundleId( absPath ), data, *this );
+		BundleInternal *bundle = new BundleInternal( m_Engine.createIdentifier( absPath ), data, *this );
 
 		m_BundleInstances.insert( make_pair( bundle->getIdentifier(), bundle ) );
 		m_BundleLookupTable.insert( make_pair( absPath, bundle->getIdentifier() ) );
@@ -97,7 +97,7 @@ namespace _2Real
 
 	app::BlockHandle BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
 	{
-		SystemBlock &sys = m_Engine.getSystemBlock();
+		System &sys = m_Engine.getSystemBlock();
 
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( blockName );
@@ -106,7 +106,7 @@ namespace _2Real
 		ostringstream name;
 		name << blockName << " # " << count;
 
-		BlockIdentifier blockId = m_Engine.createBlockId( name.str() );
+		Identifier blockId = m_Engine.createIdentifier( name.str() );
 
 		FunctionBlock *functionBlock;
 
@@ -121,7 +121,7 @@ namespace _2Real
 
 	app::ContextBlockHandle BundleManager::createContextBlock( BundleInternal &bundle )
 	{
-		SystemBlock &sys = m_Engine.getSystemBlock();
+		System &sys = m_Engine.getSystemBlock();
 
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
@@ -129,7 +129,7 @@ namespace _2Real
 		ostringstream name;
 		name << "bundle context";
 
-		BlockIdentifier blockId = m_Engine.createBlockId( name.str() );
+		Identifier blockId( m_Engine.createIdentifier( name.str() ) );
 
 		FunctionBlock *functionBlock;
 
@@ -143,7 +143,7 @@ namespace _2Real
 		return handle;
 	}
 
-	BundleInternal & BundleManager::getBundle( BundleIdentifier const& id )
+	BundleInternal & BundleManager::getBundle( Identifier const& id )
 	{
 		BundleMap::const_iterator it = m_BundleInstances.find( id );
 		
@@ -157,7 +157,7 @@ namespace _2Real
 		return *( it->second );
 	}
 
-	BundleInternal const& BundleManager::getBundle( BundleIdentifier const& id ) const
+	BundleInternal const& BundleManager::getBundle( Identifier const& id ) const
 	{
 		BundleMap::const_iterator it = m_BundleInstances.find( id );
 
@@ -171,7 +171,7 @@ namespace _2Real
 		return *( it->second );
 	}
 
-	const BundleIdentifier BundleManager::getIdentifier( string const& path ) const
+	const Identifier BundleManager::getIdentifier( string const& path ) const
 	{
 		LookupTable::const_iterator it = m_BundleLookupTable.find( path );
 

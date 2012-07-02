@@ -31,10 +31,6 @@
 namespace _2Real
 {
 
-	/**
-	*	within the framework, the threadpool is the first subsystem to be created, and the last to be deleted!
-	*/
-
 	class PooledThread;
 	class FunctionBlockStateManager;
 	class Timer;
@@ -52,43 +48,18 @@ namespace _2Real
 		ThreadPool(const unsigned int capacity, const unsigned int stackSize, std::string const& name);
 		~ThreadPool();
 
-		/**
-		*	kills all threads
-		*/
 		void clear();
+		void update( long &time );
 
-		/**
-		*	the threadpool regularly receives a timer signal
-		*/
-		void update(long &time);
 
-		/**
-		*	tries to 
-		*/
-		void scheduleService(FunctionBlockStateManager &s);
-
-		/**
-		*	unschedules scheduled runnable
-		*/
-		const bool unscheduleService(FunctionBlockStateManager &s);
-
-		/**
-		*	signals that a runnable is finished
-		*/
-		void serviceIsFinished(FunctionBlockStateManager &s);
-
-		/**
-		*	kill a runnable
-		*/
-		void abortService(FunctionBlockStateManager &s);
-
-		/**
-		*	yay
-		*/
+		void scheduleService( FunctionBlockStateManager &s );
+		const bool unscheduleService( FunctionBlockStateManager &s );
+		void serviceIsFinished( FunctionBlockStateManager &s );
+		void abortService( FunctionBlockStateManager &s );
 		void executeCleanUp();
 
-		void registerTimeListener(_2Real::Timer &timer);
-		void unregisterTimeListener(_2Real::Timer &timer);
+		void registerTimeListener( _2Real::Timer &timer );
+		void unregisterTimeListener( _2Real::Timer &timer );
 
 	private:
 

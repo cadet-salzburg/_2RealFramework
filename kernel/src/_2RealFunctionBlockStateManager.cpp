@@ -26,17 +26,19 @@
 #include "_2RealTimer.h"
 #include "_2RealInlet.h"
 #include "_2RealLogger.h"
-#include "_2RealSystemBlock.h"
 #include "bundle/_2RealBlock.h"
 #include "_2RealHelpersInternal.h"
 #include "_2RealUberBlockBasedTrigger.h"
+#include "_2RealFunctionBlockUpdatePolicy.h"
+#include "_2RealFunctionBlockStateManager.h"
+#include "_2RealFunctionBlockIOManager.h"
 
 using std::string;
 
 namespace _2Real
 {
 
-	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner ) :
+	FunctionBlockStateManager::FunctionBlockStateManager( FunctionBlock &owner ) :
 		AbstractStateManager( owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_FlaggedForSetUp( false ),
@@ -44,7 +46,6 @@ namespace _2Real
 		m_TriggersEnabled( false ),
 		m_UberBlockTriggersEnabled( false ),
 		m_IOManager( nullptr ),
-		m_System( nullptr ),
 		m_UpdatePolicy( nullptr ),
 		m_Threads( EngineImpl::instance().getThreadPool() ),
 		m_Logger( EngineImpl::instance().getLogger() )
@@ -196,9 +197,16 @@ namespace _2Real
 
 			Poco::ScopedLock< Poco::FastMutex > lock( m_UberBlockTriggerAccess );
 
-			for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
+			if ( !m_UberBlockTriggers.empty() )
 			{
-				( *it )->tryTriggerOther( BLOCK_READY );
+				for ( UberBlockTriggerList::iterator it = m_UberBlockTriggers.begin(); it != m_UberBlockTriggers.end(); ++it )
+				{
+					( *it )->tryTriggerOther( BLOCK_READY );
+				}
+			}
+			else
+			{
+				uberBlocksAreOk();
 			}
 		}
 		catch ( Exception &e )
@@ -421,7 +429,7 @@ namespace _2Real
 		disableAllTriggers();
 		delete m_CurrentState;
 		m_CurrentState = new FunctionBlockStateError();
-		m_System->handleException( dynamic_cast< FunctionBlock & >( m_Owner ), e );
+		m_Owner.handleException( e );
 	}
 
 	void FunctionBlockStateManager::addUberBlockTrigger( UberBlockBasedTrigger &trigger )

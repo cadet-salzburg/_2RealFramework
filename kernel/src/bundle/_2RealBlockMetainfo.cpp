@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealBlockMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
 #include "_2RealBlockData.h"
 #include "_2RealTypetable.h"
 
@@ -39,7 +39,7 @@ namespace _2Real
 		{
 			const std::string longTypename = defaultValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterData data( paramName, longTypename, typeName, defaultValue );
+			ParamData data( paramName, longTypename, typeName, defaultValue );
 			m_Impl.addParameter( data );
 		}
 
@@ -47,7 +47,7 @@ namespace _2Real
 		{
 			const std::string longTypename = defaultValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterData data( inletName, longTypename, typeName, defaultValue );
+			ParamData data( inletName, longTypename, typeName, defaultValue );
 			m_Impl.addInlet( data );
 		}
 
@@ -61,7 +61,7 @@ namespace _2Real
 			EngineData val;
 			val.cloneFrom( defaultConstructed );
 
-			ParameterData data( outletName, longTypename, typeName, val );
+			ParamData data( outletName, longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

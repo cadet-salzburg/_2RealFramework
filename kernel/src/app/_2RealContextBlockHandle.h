@@ -21,10 +21,11 @@
 namespace _2Real
 {
 	class FunctionBlock;
-	class BlockData;
-
+	
 	namespace app
 	{
+		class BlockData;
+
 		class ContextBlockHandle
 		{
 
@@ -33,7 +34,7 @@ namespace _2Real
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock &block );
 
-			BlockData const& getBlockData() const;
+			BlockData getBlockData() const;
 
 			void setUpdateRate( const double updatesPerSecond );
 			void setUp();

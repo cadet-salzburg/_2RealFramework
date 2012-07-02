@@ -16,10 +16,11 @@
 	limitations under the License.
 */
 
-#include "_2RealBundleHandle.h"
+#include "app/_2RealBundleHandle.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealBundleData.h"
 #include "_2RealBundleInternal.h"
 #include "_2RealException.h"
-#include "_2RealBlockHandle.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
@@ -38,10 +39,10 @@ namespace _2Real
 		{
 		}
 
-		BundleData const& BundleHandle::getBundleData() const
+		BundleData BundleHandle::getBundleData() const
 		{
 			checkHandle( m_Bundle );
-			return m_Bundle->getMetadata();
+			return m_Bundle->getBundleData();
 		}
 
 		BlockHandle BundleHandle::createBlockInstance( std::string const& blockName )

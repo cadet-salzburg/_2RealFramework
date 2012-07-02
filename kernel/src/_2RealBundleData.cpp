@@ -17,9 +17,11 @@
 */
 
 #include "_2RealBundleData.h"
-//#include "_2RealException.h"
+#include "_2RealException.h"
 
 #include <sstream>
+
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -107,11 +109,11 @@ namespace _2Real
 
 	BlockData const& BundleData::getBlockData( std::string const& name ) const
 	{
-		BlockDataMap::const_iterator it = m_ExportedBlocks.find(name);
+		BundleData::BlockMetasConstIterator it = m_ExportedBlocks.find( name );
 
 		if ( it == m_ExportedBlocks.end() )
 		{
-			std::ostringstream msg;
+			ostringstream msg;
 			msg << "block " << name << " not found";
 			throw NotFoundException( msg.str() );
 		}
@@ -125,22 +127,9 @@ namespace _2Real
 		m_ExportedBlocks[ blockName ] = data;
 	}
 
-	BlockDataMap const& BundleData::getExportedBlocks() const
+	BundleData::BlockMetas const& BundleData::getExportedBlocks() const
 	{
 		return m_ExportedBlocks;
-	}
-
-	std::ostream& operator<<( std::ostream &out, BundleData const& data )
-	{
-		out << data.getName() << std::endl;
-		out << "description:\t" << data.getDescription() << std::endl;
-		out << "category:\t" << data.getCategory() << std::endl;
-		out << "written by\t" << data.getAuthor() << std::endl;
-		out << "contact\t\t" << data.getContact() << std::endl;
-		out << "version\t\t" << data.getVersion() << std::endl;
-		out << "available services:" << std::endl;
-		out << data.getExportedBlocks() << std::endl;
-		return out;
 	}
 
 }

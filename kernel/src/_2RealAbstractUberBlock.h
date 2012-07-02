@@ -18,45 +18,32 @@
 
 #pragma once
 
-#include "_2RealBlockIdentifier.h"
+#include "_2RealIdentifier.h"
 #include "app/_2RealCallbacks.h"
-#include "app/_2RealUpdatePolicyHandle.h"
-
-#include <string>
 
 namespace _2Real
 {
-	namespace app
-	{
-		UpdatePolicyHandle;
-	}
 
 	class Inlet;
 	class Outlet;
-	class Parameter;
-	class TimestampedData;
-	class UpdatePolicy;
-	class EngineData;
-	class AbstractStateManager;
-	class AbstractIOManager;
-	class UberBlockBasedTrigger;
+	class Exception;
 
 	class AbstractUberBlock
 	{
 
 	public:
 
-		AbstractUberBlock( BlockIdentifier const& id );
+		AbstractUberBlock( Identifier const& id );
 		virtual ~AbstractUberBlock();
 
-		BlockIdentifier	const&					getIdentifier() const;
+		Identifier	const&						getIdentifier() const;
 		std::string const&						getName() const;
 		unsigned int							getId() const;
 
-		virtual void							registerToNewData( std::string const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void							unregisterFromNewData( std::string const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void							registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
-		virtual void							unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void							registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void							unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
+		virtual void							registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
+		virtual void							unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
 		virtual void							registerToNewData( app::BlockDataCallback callback, void *userData ) = 0;
 		virtual void							unregisterFromNewData( app::BlockDataCallback callback, void *userData ) = 0;
 		virtual void							registerToNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
@@ -68,23 +55,20 @@ namespace _2Real
 		virtual void							prepareForShutDown() = 0;
 		virtual bool							shutDown( const long timeout ) = 0;
 
-		virtual Inlet &							getInlet( std::string const& name ) = 0;
-		virtual Outlet &						getOutlet( std::string const& name ) = 0;
-		virtual Parameter &						getParameter( std::string const& name ) = 0;
-
 		virtual void							createLink( Inlet &inlet, Outlet &outlet ) = 0;
 		virtual void							destroyLink( Inlet &inlet, Outlet &outlet ) = 0;
 
-		virtual app::UpdatePolicyHandle			getUpdatePolicyHandle() const = 0;
+		virtual void							updateWhenInletDataNew( Inlet &inlet ) = 0;
+		virtual void							updateWhenInletDataValid( Inlet &inlet ) = 0;
+		virtual void							updateWhenAllInletDataNew() = 0;
+		virtual void							updateWhenAllInletDataValid() = 0;
+		virtual void							updateWithFixedRate( const double updatesPerSecond ) = 0;
+
+		virtual void							handleException( Exception &e ) = 0;
 
 	protected:
 
-		friend class TriggerLink;
-
-		virtual AbstractStateManager &			getStateManager() = 0;
-		virtual AbstractIOManager &				getIOManager() = 0;
-
-		BlockIdentifier							const m_Identifier;
+		Identifier								const m_Identifier;
 
 	};
 

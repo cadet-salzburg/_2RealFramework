@@ -16,11 +16,11 @@
 	limitations under the License.
 */
 
-#include "_2RealBlockHandle.h"
-#include "_2RealFunctionBlock.h"
+#include "bundle/_2RealBlockHandle.h"
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "bundle/_2RealParameterHandle.h"
+#include "_2RealFunctionBlock.h"
 
 using std::string;
 

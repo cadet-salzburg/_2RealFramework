@@ -19,6 +19,9 @@
 #pragma once
 
 #include "_2RealAbstractIOManager.h"
+#include "app/_2RealCallbacks.h"
+#include "app/_2RealCallbacksInternal.h"
+
 #include "_2RealPoco.h"
 
 #include <map>
@@ -39,41 +42,44 @@ namespace _2Real
 		class OutletHandle;
 		class ParameterHandle;
 	}
+	
+	class FunctionBlock;
+	class FunctionBlockStateManager;
+	class FunctionBlockUpdatePolicy;
 
 	class FunctionBlockIOManager : public AbstractIOManager
 	{
 
 	public:
 
-		typedef std::vector< Inlet* >				InletVector;
-		typedef std::vector< Outlet * >				OutletVector;
-		typedef std::vector< Parameter * >		ParamVector;
+		typedef std::vector< Inlet * >					InletVector;
+		typedef std::vector< Inlet * >::iterator		InletIterator;	
+		typedef std::vector< Outlet * >					OutletVector;
+		typedef std::vector< Outlet * >::iterator		OutletIterator;	
+		typedef std::vector< Parameter * >				ParamVector;
+		typedef std::vector< Parameter * >::iterator	ParamIterator;	
 
-		FunctionBlockIOManager( AbstractUberBlock &owner );
+		FunctionBlockIOManager( FunctionBlock &owner );
 		~FunctionBlockIOManager();
 
 		// stuff that is inherited
 
 		void						clear();
 
-		void						registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
-		void						unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData );
-		void						registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
-		void						unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void						registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
+		void						unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
+		void						registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void						unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
 		void						registerToNewData( app::BlockDataCallback callback, void *userData );
 		void						unregisterFromNewData( app::BlockDataCallback callback, void *userData );
 		void						registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
 		void						unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
 
-		Inlet &						getInlet( std::string const& name );
-		Outlet &					getOutlet( std::string const& name );
-		Parameter &					getParameter( std::string const& name );
-
 		// stuff that is exclusive to this class: called by function block & function state mgr
 
-		void						addInlet( ParameterData const& data );
-		void						addOutlet( ParameterData const& data );
-		void						addParameter( ParameterData const& data );
+		void						addInlet( ParamData const& data );
+		void						addOutlet( ParamData const& data );
+		void						addParameter( ParamData const& data );
 
 		app::InletHandle			createAppInletHandle( std::string const& name );
 		app::OutletHandle			createAppOutletHandle( std::string const& name );
@@ -90,12 +96,21 @@ namespace _2Real
 
 	private:
 
+		friend class FunctionBlock;
+
+		FunctionBlockStateManager		*m_StateManager;
+		FunctionBlockUpdatePolicy		*m_UpdatePolicy;
+
 		mutable Poco::FastMutex			m_InletAccess;
 		mutable Poco::FastMutex			m_OutletAccess;
 		mutable Poco::FastMutex			m_ParamAccess;
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 		ParamVector						m_Params;
+				
+		Inlet &						getInlet( std::string const& name );
+		Outlet &					getOutlet( std::string const& name );
+		Parameter &					getParameter( std::string const& name );
 
 		Inlet *							findInlet( std::string const& name );
 		Outlet *						findOutlet( std::string const& name );

@@ -39,9 +39,8 @@ namespace _2Real
 	class ThreadPool;
 	class BundleManager;
 	class IdCounter;
-	class SystemBlock;
-	class BlockIdentifier;
-	class BundleIdentifier;
+	class System;
+	class Identifier;
 	
 	class EngineImpl
 	{
@@ -59,13 +58,12 @@ namespace _2Real
 		Typetable const&				getTypetable() const;
 		BundleManager &					getBundleManager();
 		ThreadPool &					getThreadPool();
-		SystemBlock &					getSystemBlock();
+		System &						getSystemBlock();
 
 		// retruns time in millis since creation
 		const long						getElapsedTime() const;
 
-		BlockIdentifier					createBlockId( std::string const& name );
-		BundleIdentifier				createBundleId( std::string const& name );
+		Identifier						createIdentifier( std::string const& name );
 
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle				loadLibrary( std::string const& libraryPath );
@@ -89,7 +87,7 @@ namespace _2Real
 		ThreadPool				*m_ThreadPool;
 		BundleManager			*m_BundleManager;
 		IdCounter				*m_IdCounter;
-		SystemBlock				*m_SystemBlock;
+		System					*m_SystemBlock;
 		Poco::Timestamp			m_Timestamp;
 
 	};

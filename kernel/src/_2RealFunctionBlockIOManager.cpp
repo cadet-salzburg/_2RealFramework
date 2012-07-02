@@ -17,8 +17,9 @@
 */
 
 #include "_2RealFunctionBlockIOManager.h"
+#include "_2RealFunctionBlockUpdatePolicy.h"
 #include "_2RealException.h"
-#include "_2RealAbstractUberBlock.h"
+#include "_2RealFunctionBlock.h"
 #include "_2RealParameter.h"
 #include "_2RealInlet.h"
 #include "_2RealOutlet.h"
@@ -43,7 +44,7 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
+	FunctionBlockIOManager::FunctionBlockIOManager( FunctionBlock &owner ) :
 		AbstractIOManager( owner )
 	{
 	}
@@ -86,7 +87,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData )
+	void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
 	{
 		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
 		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
@@ -100,7 +101,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData )
+	void FunctionBlockIOManager::unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
 	{
 		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
 		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
@@ -112,7 +113,7 @@ namespace _2Real
 		delete cb;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( std::string const& outName, app::AbstractOutletDataCallbackHandler &handler )
+	void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
 	{
 		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
 		if ( it == m_OutletDataCallbackHandlers.end() )
@@ -125,7 +126,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( std::string const& outName, app::AbstractOutletDataCallbackHandler &handler )
+	void FunctionBlockIOManager::unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
 	{
 		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
 		if ( it != m_OutletDataCallbackHandlers.end() )
@@ -295,22 +296,24 @@ namespace _2Real
 		return nullptr;
 	}
 
-	void FunctionBlockIOManager::addInlet( ParameterData const& data )
+	void FunctionBlockIOManager::addInlet( ParamData const& data )
 	{
-		Inlet *inlet = createInletFromParameterData( m_Owner, data );
+		Inlet *inlet = new Inlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		m_UpdatePolicy->addInlet( *inlet );
 		m_Inlets.push_back( inlet );
 	}
 
-	void FunctionBlockIOManager::addOutlet( ParameterData const& data )
+	void FunctionBlockIOManager::addOutlet( ParamData const& data )
 	{
-		Outlet *outlet = createOutletFromParameterData( m_Owner, data );
+		Outlet *outlet = new Outlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
 		m_Outlets.push_back( outlet );
 	}
 
-	void FunctionBlockIOManager::addParameter( ParameterData const& data )
+	void FunctionBlockIOManager::addParameter( ParamData const& data )
 	{
-		Parameter *param = createParameterFromParameterData( m_Owner, data );
-		m_Params.push_back( param );
+		Parameter *parameter = new Parameter( m_Owner, data.getName(), data.getLongTypename(), data.getTypename() );
+		parameter->setData( TimestampedData( data.getDefaultValue(), 0 ) );
+		m_Params.push_back( parameter );
 	}
 
 	void FunctionBlockIOManager::updateInletValues()

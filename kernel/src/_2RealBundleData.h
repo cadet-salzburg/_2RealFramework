@@ -27,26 +27,26 @@
 namespace _2Real
 {
 
-	typedef std::map< std::string, BlockData >	BlockDataMap;
-
 	class BundleData
 	{
 
 	public:
 
-		BundleData();
+		typedef std::map< std::string, BlockData >					BlockMetas;
+		typedef std::map< std::string, BlockData >::iterator		BlockMetasIterator;
+		typedef std::map< std::string, BlockData >::const_iterator	BlockMetasConstIterator;
 
-		friend std::ostream& operator<<( std::ostream &out, BundleData const& data );
+		BundleData();
 
 		void						addBlockData( BlockData const& data );
 		BlockData const&			getBlockData( std::string const& blockName ) const;
-		BlockDataMap const&			getExportedBlocks() const;
+		BlockMetas const&			getExportedBlocks() const;
 
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );
 		void						setContact( std::string const& contact );
 		void						setName( std::string const& name );
-		void						setInstallDirectory( std::string const& path );
+		void						setInstallDirectory( std::string const& directory );
 		void						setCategory( std::string const& category );
 		void						setVersion( Version const& version );
 
@@ -67,7 +67,7 @@ namespace _2Real
 		std::string					m_Contact;
 		std::string					m_Category;
 		Version						m_Version;
-		BlockDataMap				m_ExportedBlocks;
+		BlockMetas					m_ExportedBlocks;
 
 	};
 

@@ -18,42 +18,14 @@
 
 #include "_2RealAbstractIOManager.h"
 #include "_2RealAbstractUberBlock.h"
-#include "_2RealInlet.h"
-#include "_2RealInletBuffer.h"
-#include "_2RealOutlet.h"
-#include "_2RealParameter.h"
-#include "_2RealParameterData.h"
 
-#include <iostream>
+using std::string;
 
 namespace _2Real
 {
 
-	// some free functions
-
-	Inlet * createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
-	{
-		Inlet *inlet = new Inlet( owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
-		return inlet;
-	}
-
-	Outlet * createOutletFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
-	{
-		Outlet *outlet = new Outlet( owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
-		return outlet;
-	}
-
-	Parameter * createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data )
-	{
-		Parameter *parameter = new Parameter( owner, data.getName(), data.getLongTypename(), data.getTypename() );
-		parameter->setData( TimestampedData( data.getDefaultValue(), 0 ) );
-		return parameter;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	AbstractIOManager::AbstractIOManager(AbstractUberBlock &owner) :
-		m_Owner(owner)
+	AbstractIOManager::AbstractIOManager( AbstractUberBlock &owner ) :
+		m_Owner( owner )
 	{
 	}
 
@@ -61,7 +33,7 @@ namespace _2Real
 	{
 	}
 
-	std::string const& AbstractIOManager::getName() const
+	string const& AbstractIOManager::getName() const
 	{
 		return m_Owner.getName();
 	}

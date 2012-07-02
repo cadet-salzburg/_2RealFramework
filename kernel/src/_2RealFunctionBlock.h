@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include "_2RealUberBlock.h"
-#include "_2RealFunctionBlockIOManager.h"
-#include "_2RealFunctionBlockStateManager.h"
+#include "_2RealAbstractUberBlock.h"
 
 namespace _2Real
 {
@@ -29,6 +27,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
+		class BlockData;
 	}
 
 	namespace bundle
@@ -40,20 +39,21 @@ namespace _2Real
 	}
 
 	class BlockData;
-	class SystemBlock;
+	class System;
+	class FunctionBlockUpdatePolicy;
+	class FunctionBlockIOManager;
+	class FunctionBlockStateManager;
 
-	class FunctionBlock : public UberBlock< FunctionBlockIOManager, FunctionBlockStateManager >
+	class FunctionBlock : public AbstractUberBlock
 	{
 
 	public:
 
-		using UberBlock::start;
-		using UberBlock::stop;
-		using UberBlock::setUp;
+		FunctionBlock( BlockData const& meta, bundle::Block& block, System &system, Identifier const& id );
+		~FunctionBlock();
 
-		FunctionBlock( BlockData const& data, bundle::Block& block, SystemBlock &system, BlockIdentifier const& id );
-
-		BlockData const&		getMetadata();
+		app::BlockData			getBlockData();
+		BlockData const&		getMetadata() const;
 
 		bundle::InletHandle		createBundleInletHandle( std::string const& inletName );
 		bundle::OutletHandle	createBundleOutletHandle( std::string const& outletName );
@@ -66,11 +66,38 @@ namespace _2Real
 		void					createLink( Inlet &inlet, Outlet &outlet );
 		void					destroyLink( Inlet &inlet, Outlet &outlet );
 
+		void					registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
+		void					unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
+		void					registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void					unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
+		void					registerToNewData( app::BlockDataCallback callback, void *userData );
+		void					unregisterFromNewData( app::BlockDataCallback callback, void *userData );
+		void					registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
+		void					unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
+
+		void					setUp();
+		void					start();
+		void					stop( const bool blocking, const long timeout );
+		void					prepareForShutDown();
+		bool					shutDown( const long timeout );
+
+		void					updateWhenInletDataNew( Inlet &inlet );
+		void					updateWhenInletDataValid( Inlet &inlet );
+		void					updateWhenAllInletDataNew();
+		void					updateWhenAllInletDataValid();
+		void					updateWithFixedRate( const double updatesPerSecond );
+
+		void					handleException( Exception &e );
+
 	private:
 
-		bundle::Block	&m_Block;
-		SystemBlock		&m_System;
-		BlockData		const& m_BlockData;
+		bundle::Block			&m_Block;
+		System					&m_System;
+		BlockData				const& m_Metadata;
+
+		FunctionBlockStateManager	*m_StateManager;
+		FunctionBlockIOManager		*m_IOManager;
+		FunctionBlockUpdatePolicy	*m_UpdatePolicy;
 
 	};
 }

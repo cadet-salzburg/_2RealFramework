@@ -16,19 +16,19 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParamHandle.h"
+#include "_2RealUberBlockHandle.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		ParamHandle::ParamHandle() :
-			m_Param( nullptr )
+		UberBlockHandle::UberBlockHandle() :
+			m_Block( nullptr )
 		{
 		}
 
-		ParamHandle::ParamHandle( Param &param ) :
-			m_Param( &param )
+		UberBlockHandle::UberBlockHandle( AbstractUberBlock &block ) :
+			m_Block( &block )
 		{
 		}
 	}

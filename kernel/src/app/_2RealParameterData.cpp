@@ -16,20 +16,34 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParamHandle.h"
+#include "app/_2RealParameterData.h"
+
+using std::string;
 
 namespace _2Real
 {
 	namespace app
 	{
-		ParamHandle::ParamHandle() :
-			m_Param( nullptr )
+		ParameterData::ParameterData() :
+			m_Name( "undefined" ),
+			m_Typename( "undefined" ),
+			m_LongTypename( "undefined" )
 		{
 		}
 
-		ParamHandle::ParamHandle( Param &param ) :
-			m_Param( &param )
+		string const& ParameterData::getName() const
 		{
+			return m_Name;
+		}
+
+		string const& ParameterData::getTypename() const
+		{
+			return m_Typename;
+		}
+
+		string const& ParameterData::getLongTypename() const
+		{
+			return m_LongTypename;
 		}
 	}
 }

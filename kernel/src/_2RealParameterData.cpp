@@ -28,14 +28,14 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	ParameterData::ParameterData() :
+	ParamData::ParamData() :
 		m_Name( "undefined" ),
 		m_Typename( "undefined" ),
 		m_LongTypename( "undefined" )
 	{
 	}
 
-	ParameterData::ParameterData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
+	ParamData::ParamData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
 		m_Name( name ),
 		m_Typename( type ),
 		m_LongTypename( longType ),
@@ -43,43 +43,24 @@ namespace _2Real
 	{
 	}
 
-	string const& ParameterData::getName() const
+	string const& ParamData::getName() const
 	{
 		return m_Name;
 	}
 
-	string const& ParameterData::getTypename() const
+	string const& ParamData::getTypename() const
 	{
 		return m_Typename;
 	}
 
-	string const& ParameterData::getLongTypename() const
+	string const& ParamData::getLongTypename() const
 	{
 		return m_LongTypename;
 	}
 
-	EngineData const& ParameterData::getDefaultValue() const
+	EngineData const& ParamData::getDefaultValue() const
 	{
 		return m_DefaultValue;
-	}
-
-	const string ParameterData::getDefaultValueAsString() const
-	{
-		ostringstream val;
-		val << m_DefaultValue;
-		return val.str();
-	}
-
-	bool ParameterData::hasDefaultValue() const
-	{
-		return m_DefaultValue.isEmpty();
-	}
-
-	ostream& operator<<( ostream &out, ParameterData const& metadata )
-	{
-		out << metadata.getName() << "\t" << metadata.getTypename();
-		out << ", default value: " << metadata.getDefaultValue();
-		return out;
 	}
 
 }

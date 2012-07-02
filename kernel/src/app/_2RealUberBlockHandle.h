@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,35 +18,23 @@
 
 #pragma once
 
-#include <string>
-
 namespace _2Real
 {
-	class UpdatePolicy;
+	class AbstractUberBlock;
 
 	namespace app
 	{
-		class UpdatePolicyHandle
+		class UberBlockHandle
 		{
 
 		public:
 
-			UpdatePolicyHandle();
-			UpdatePolicyHandle( UpdatePolicy &policy );
-
-			/**
-			*	interface: todo, more or less
-			*/
-
-			void updateWithFixedRate( const double updatesPerSecond );
-			void updateWhenAllInletDataNew();
-			void updateWhenInletDataNew( std::string const& inletName );
-			void updateWhenAllInletDataValid();
-			void updateWhenInletDataValid( std::string const& inletName );
+			UberBlockHandle();
+			UberBlockHandle( AbstractUberBlock &block );
 
 		private:
 
-			UpdatePolicy	*m_Policy;
+			AbstractUberBlock		*m_Block;
 
 		};
 	}

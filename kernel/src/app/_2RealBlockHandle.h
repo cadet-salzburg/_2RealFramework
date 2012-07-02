@@ -18,22 +18,23 @@
 
 #pragma once
 
-#include "_2RealCallbacks.h"
+#include "app/_2RealUberBlockHandle.h"
+#include "app/_2RealCallbacks.h"
 
 #include <string>
 
 namespace _2Real
 {
 	class FunctionBlock;
-	class BlockData;
 
 	namespace app
 	{
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
+		class BlockData;
 
-		class BlockHandle
+		class BlockHandle : public UberBlockHandle
 		{
 
 		public:
@@ -47,7 +48,7 @@ namespace _2Real
 			BlockHandle();
 			BlockHandle( FunctionBlock &block );
 
-			BlockData const& getBlockData() const;
+			BlockData getBlockData() const;
 
 			void setUpdateRate( const double updatesPerSecond );
 			void setInletUpdatePolicy( const InletUpdatePolicy p );
@@ -55,8 +56,6 @@ namespace _2Real
 			void setUp();
 			void start();
 			void stop();
-			//void destroy();
-			//void singleStep();
 
 			InletHandle		getInletHandle( std::string const& name );
 			OutletHandle	getOutletHandle( std::string const& name );
@@ -83,8 +82,6 @@ namespace _2Real
 
 			void registerToNewDataInternal( AbstractBlockDataCallbackHandler &handler );
 			void unregisterFromNewDataInternal( AbstractBlockDataCallbackHandler &handler );
-
-		private:
 
 			FunctionBlock		*m_Block;
 

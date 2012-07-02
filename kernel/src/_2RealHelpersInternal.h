@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include "_2RealBlockIdentifier.h"
-#include "_2RealBundleIdentifier.h"
+#include "_2RealIdentifier.h"
 #include "_2RealPoco.h"
 
 #include <vector>
@@ -72,81 +71,20 @@ namespace _2Real
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	template< typename Datatype >
-	std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, Datatype > &m)
+	template< typename Val >
+	std::ostream& operator<<( std::ostream &out, typename std::map< Identifier, Val > const& m)
 	{
 		if ( m.empty() )
 		{
 			return out;
 		}
 
-		for ( typename std::map< BundleIdentifier, Datatype >::const_iterator it = m.begin(); it != m.end(); ++it )
+		for ( typename std::map< Identifier, Val >::const_iterator it = m.begin(); it != m.end(); ++it )
 		{
 			out << it->first << " [ " << it->second << " ] \n";
 		}
 		return out;
 	}
-
-	//template< typename Datatype >
-	//std::ostream& operator<<(std::ostream &out, typename const std::map< BundleIdentifier, Datatype * > &m)
-	//{
-	//	if (m.empty())
-	//	{
-	//		return out;
-	//	}
-
-	//	for (typename std::map< BundleIdentifier, Datatype * >::const_iterator it = m.begin(); it != m.end(); ++it)
-	//	{
-			//if ( it->second == nullptr )
-			//{
-			//	out << "NULL \n";
-			//}
-			//else
-			//{
-			//	out << *( it->second ) << "\n";
-			//}
-	//	}
-	//	return out;
-	//}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	template< typename Datatype >
-	std::ostream& operator<<( std::ostream &out, typename std::map< BlockIdentifier, Datatype > const& m )
-	{
-		if ( m.empty() )
-		{
-			return out;
-		}
-
-		for ( typename std::map< BlockIdentifier, Datatype >::const_iterator it = m.begin(); it != m.end(); ++it )
-		{
-			out << it->first << " [ " << it->second << " ] \n";
-		}
-		return out;
-	}
-
-	//template< typename Datatype >
-	//std::ostream& operator<<( std::ostream &out, typename std::map< BlockIdentifier, Datatype * > const& m )
-	//{
-	//	if ( m.empty() )
-	//	{
-	//		return out;
-	//	}
-
-	//	for ( typename std::map< BlockIdentifier, Datatype * >::const_iterator it = m.begin(); it != m.end(); ++it )
-	//	{
-	//		if ( it->second == nullptr )
-	//		{
-	//			out << "NULL \n";
-	//		}
-	//		else
-	//		{
-	//			out << *( it->second ) << "\n";
-	//		}
-	//	}
-	//	return out;
-	//}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 

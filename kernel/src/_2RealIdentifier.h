@@ -16,20 +16,31 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParamHandle.h"
+#pragma once
+
+#include <string>
 
 namespace _2Real
 {
-	namespace app
-	{
-		ParamHandle::ParamHandle() :
-			m_Param( nullptr )
-		{
-		}
 
-		ParamHandle::ParamHandle( Param &param ) :
-			m_Param( &param )
-		{
-		}
-	}
+	class Identifier
+	{
+
+	public:
+
+		Identifier();
+		Identifier( std::string const& name, const unsigned int id );
+		bool operator<( Identifier const& rhs ) const;
+		friend std::ostream& operator<<( std::ostream& out, Identifier const& id );
+		friend std::istream& operator>>( std::istream& in, Identifier &id );
+		std::string const& getName() const { return m_Name; }
+		unsigned int getId() const { return m_Id; }
+
+	private:
+
+		std::string			m_Name;
+		unsigned int		m_Id;
+
+	};
+
 }

@@ -16,20 +16,29 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParamHandle.h"
+#include "_2RealAbstractUpdatePolicy.h"
+#include "_2RealAbstractUberBlock.h"
+
+using std::string;
 
 namespace _2Real
 {
-	namespace app
+	AbstractUpdatePolicy::AbstractUpdatePolicy( AbstractUberBlock &owner ) :
+		m_Owner( owner )
 	{
-		ParamHandle::ParamHandle() :
-			m_Param( nullptr )
-		{
-		}
+	}
 
-		ParamHandle::ParamHandle( Param &param ) :
-			m_Param( &param )
-		{
-		}
+	AbstractUpdatePolicy::~AbstractUpdatePolicy()
+	{
+	}
+
+	string const& AbstractUpdatePolicy::getName() const
+	{
+		return m_Owner.getName();
+	}
+
+	unsigned int AbstractUpdatePolicy::getId() const
+	{
+		return m_Owner.getId();
 	}
 }

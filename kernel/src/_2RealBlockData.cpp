@@ -35,66 +35,6 @@ namespace _2Real
 	{
 	}
 
-	BlockData::BlockData( BlockData const& src ) :
-		m_Name( src.m_Name ),
-		m_Description( src.m_Description ),
-		m_Category( src.m_Category )
-	{
-		for ( ParameterDataMap::const_iterator it = src.m_Parameters.begin(); it != src.m_Parameters.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Parameters[ data.getName() ] = data;
-		}
-
-		for ( ParameterDataMap::const_iterator it = src.m_Inlets.begin(); it != src.m_Inlets.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Inlets[ data.getName() ] = data;
-		}
-
-		for ( ParameterDataMap::const_iterator it = src.m_Outlets.begin(); it != src.m_Outlets.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Outlets[ data.getName() ] = data;
-		}
-	}
-
-	BlockData& BlockData::operator=( BlockData const& src )
-	{
-		if ( this == &src )
-		{
-			return *this;
-		}
-
-		m_Name = src.m_Name;
-		m_Description = src.m_Description;
-		m_Category = src.m_Category;
-
-		for ( ParameterDataMap::const_iterator it = src.m_Parameters.begin(); it != src.m_Parameters.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Parameters[ data.getName() ] = data;
-		}
-
-		for ( ParameterDataMap::const_iterator it = src.m_Inlets.begin(); it != src.m_Inlets.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Inlets[ data.getName() ] = data;
-		}
-
-		for ( ParameterDataMap::const_iterator it = src.m_Outlets.begin(); it != src.m_Outlets.end(); ++it )
-		{
-			ParameterData data( it->second );
-			m_Outlets[ data.getName() ] = data;
-		}
-
-		return *this;
-	}
-
-	BlockData::~BlockData()
-	{
-	}
-
 	std::string const& BlockData::getName() const
 	{
 		return m_Name;
@@ -120,48 +60,32 @@ namespace _2Real
 		m_Category = category;
 	}
 
-	void BlockData::addParameter( ParameterData const& data )
+	void BlockData::addParameter( ParamData const& data )
 	{
-		m_Parameters[ data.getName() ] = data;
+		m_Parameters.push_back( data );
 	}
 
-	void BlockData::addInlet( ParameterData const& data )
+	void BlockData::addInlet( ParamData const& data )
 	{
-		m_Inlets[ data.getName() ] = data;
+		m_Inlets.push_back( data );
 	}
 
-	void BlockData::addOutlet( ParameterData const& data )
+	void BlockData::addOutlet( ParamData const& data )
 	{
-		std::string outletName = data.getName();
-
-		m_Outlets[ data.getName() ] = data;
+		m_Outlets.push_back( data );
 	}
 
-	std::ostream& operator<<( std::ostream &out, BlockData const& data )
-	{
-		out << data.getName() << std::endl;
-		out << data.getDescription() << std::endl;
-		out << data.getCategory() << std::endl;
-		out << "parameters:" << std::endl;
-		out << data.getParameters() << std::endl;
-		out << "inlets:" << std::endl;
-		out << data.getInlets() << std::endl;
-		out << "outlets:" << std::endl;
-		out << data.getOutlets() << std::endl;
-		return out;
-	}
-
-	ParameterDataMap const& BlockData::getParameters() const
+	BlockData::ParamMetas const& BlockData::getParameters() const
 	{
 		return m_Parameters;
 	}
 
-	ParameterDataMap const& BlockData::getInlets() const
+	BlockData::ParamMetas const& BlockData::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	ParameterDataMap const& BlockData::getOutlets() const
+	BlockData::ParamMetas const& BlockData::getOutlets() const
 	{
 		return m_Outlets;
 	}

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "_2RealBundleIdentifier.h"
+#include "_2RealIdentifier.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
 
@@ -34,6 +34,7 @@ namespace _2Real
 		class BundleHandle;
 		class BlockHandle;
 		class ContextBlockHandle;
+		class BundleData;
 	}
 
 	namespace bundle
@@ -42,7 +43,7 @@ namespace _2Real
 	}
 
 	class BundleData;
-	class BundleIdentifier;
+	class Identifier;
 	class BundleManager;
 
 	class BundleInternal
@@ -50,17 +51,19 @@ namespace _2Real
 
 	public:
 
-		BundleInternal( BundleIdentifier const& id, BundleData const& data, BundleManager &bundleManager );
+		BundleInternal( Identifier const& id, BundleData const& data, BundleManager &bundleManager );
 		~BundleInternal();
 
-		BundleIdentifier const&	getIdentifier() const;
+		Identifier const&		getIdentifier() const;
 		std::string const&		getName() const;
 
 		app::BundleHandle		createHandle();
-		BundleData const&		getMetadata() const;
+		app::BundleData			getBundleData() const;
 		app::ContextBlockHandle	getBundleContextHandle() const;
-		void					setBundleContextHandle( app::ContextBlockHandle const& handle );
 		app::BlockHandle		createBlockInstance( std::string const& blockName );
+
+		BundleData const&		getMetadata() const;
+		void					setBundleContextHandle( app::ContextBlockHandle const& handle );
 		void					addBlockInstance( bundle::Block &block, std::string const& blockName );
 		unsigned int			getBlockInstanceCount( std::string const& blockName ) const;
 
@@ -69,8 +72,8 @@ namespace _2Real
 		typedef std::multimap< std::string, bundle::Block * >	BlockMap;
 
 		BundleManager			&m_BundleManager;
-		BundleIdentifier		const m_Identifier;
-		BundleData				const& m_BundleData;	// must be deleted before the library is unloaded
+		Identifier				const m_Identifier;
+		BundleData				const& m_Metadata;		// must be deleted before the library is unloaded
 		BlockMap				m_BlockInstances;
 		app::ContextBlockHandle	m_BundleContext;		// for strange reasons, i also hold a handle to the context here
 

@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealInletHandle.h"
+#include "bundle/_2RealInletHandle.h"
 #include "_2RealInlet.h"
 
 namespace _2Real

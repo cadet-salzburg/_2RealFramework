@@ -108,21 +108,21 @@ namespace _2Real
 
 	void Outlet::registerToNewData( app::OutletDataCallback callback, void *userData )
 	{
-		Param::m_Owner.registerToNewData( Param::getName(), callback, userData );
+		Param::m_Owner.registerToNewData( *this, callback, userData );
 	}
 
 	void Outlet::unregisterFromNewData( app::OutletDataCallback callback, void *userData )
 	{
-		Param::m_Owner.unregisterFromNewData( Param::getName(), callback, userData );
+		Param::m_Owner.unregisterFromNewData( *this, callback, userData );
 	}
 
 	void Outlet::registerToNewData( app::AbstractOutletDataCallbackHandler &handler )
 	{
-		Param::m_Owner.registerToNewData( Param::getName(), handler );
+		Param::m_Owner.registerToNewData( *this, handler );
 	}
 
 	void Outlet::unregisterFromNewData( app::AbstractOutletDataCallbackHandler &handler )
 	{
-		Param::m_Owner.unregisterFromNewData( Param::getName(), handler );
+		Param::m_Owner.unregisterFromNewData( *this, handler );
 	}
 }

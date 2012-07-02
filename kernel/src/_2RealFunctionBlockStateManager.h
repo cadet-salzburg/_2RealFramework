@@ -30,20 +30,24 @@ namespace _2Real
 	}
 
 	class AbstractFunctionBlockState;
+	class AbstractUpdateTrigger;
+	class UberBlockBasedTrigger;
 	class ServiceUpdates;
 	class FunctionBlockIOManager;
 	class ThreadPool;
 	class Logger;
-	class SystemBlock;
+	class System;
 	class Block;
 	class Exception;
+	class FunctionBlock;
+	class FunctionBlockUpdatePolicy;
 
 	class FunctionBlockStateManager : public AbstractStateManager
 	{
 
 	public:
 
-		FunctionBlockStateManager( AbstractUberBlock &owner );
+		FunctionBlockStateManager( FunctionBlock &owner );
 		~FunctionBlockStateManager();
 
 		void setUp();							// system
@@ -86,9 +90,9 @@ namespace _2Real
 
 		ThreadPool										&m_Threads;
 		Logger											&m_Logger;
+
 		FunctionBlockIOManager							*m_IOManager;
-		UpdatePolicy									*m_UpdatePolicy;
-		SystemBlock										*m_System;			// for error handling
+		FunctionBlockUpdatePolicy						*m_UpdatePolicy;
 		bundle::Block									*m_FunctionBlock;
 
 		mutable Poco::FastMutex							m_TriggerAccess;

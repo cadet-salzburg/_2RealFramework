@@ -36,7 +36,7 @@ namespace _2Real
 	}
 
 	class BundleInternal;
-	class BundleIdentifier;
+	class Identifier;
 	class FunctionBlock;
 
 	class EngineImpl;
@@ -59,12 +59,12 @@ namespace _2Real
 		app::ContextBlockHandle			createContextBlock( BundleInternal &bundle );
 
 		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
-		BundleInternal &				getBundle( BundleIdentifier const& id );
-		BundleInternal const&			getBundle( BundleIdentifier const& id ) const;
-		const BundleIdentifier			getIdentifier( std::string const& path ) const;
+		BundleInternal &				getBundle( Identifier const& id );
+		BundleInternal const&			getBundle( Identifier const& id ) const;
+		const Identifier				getIdentifier( std::string const& path ) const;
 	
-		typedef std::map< BundleIdentifier, BundleInternal * >	BundleMap;
-		typedef std::map< std::string, BundleIdentifier >		LookupTable;
+		typedef std::map< Identifier, BundleInternal * >	BundleMap;
+		typedef std::map< std::string, Identifier >		LookupTable;
 
 		EngineImpl						&m_Engine;
 		BundleLoader					m_BundleLoader;

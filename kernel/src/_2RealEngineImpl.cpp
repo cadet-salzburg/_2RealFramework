@@ -17,15 +17,14 @@
 */
 
 #include "_2RealEngineImpl.h"
-#include "_2RealBundleIdentifier.h"
-#include "_2RealBlockIdentifier.h"
+#include "_2RealIdentifier.h"
 #include "_2RealSingletonHolder.h"
 #include "_2RealTimer.h"
 #include "_2RealTypetable.h"
 #include "_2RealBundleManager.h"
 #include "_2RealThreadPool.h"
 #include "_2RealLogger.h"
-#include "_2RealSystemBlock.h"
+#include "_2RealSystem.h"
 #include "_2RealIdCounter.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealCallbacks.h"
@@ -75,7 +74,7 @@ namespace _2Real
 		m_ThreadPool( new ThreadPool( 15, 0, "2real threadpool" ) ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_IdCounter( new IdCounter() ),
-		m_SystemBlock( new SystemBlock( *this, BlockIdentifier() ) )
+		m_SystemBlock( new System( *this ) )
 	{
 		m_Typetable->registerType< char >("char");
 		m_Typetable->registerType< unsigned char >("unsigned char");
@@ -137,22 +136,9 @@ namespace _2Real
 		return static_cast< long >( m_Timestamp.elapsed() );
 	}
 
-	BlockIdentifier EngineImpl::createBlockId( std::string const& name )
+	Identifier EngineImpl::createIdentifier( std::string const& name )
 	{
-		BlockIdentifier id;
-		id.m_Id = m_IdCounter->getId();
-		id.m_Name = name;
-
-		return id;
-	}
-
-	BundleIdentifier EngineImpl::createBundleId( std::string const& name )
-	{
-		BundleIdentifier id;
-		id.m_Id = m_IdCounter->getId();
-		id.m_Name = name;
-
-		return id;
+		return Identifier( name, m_IdCounter->getId() );
 	}
 
 	Logger& EngineImpl::getLogger()
@@ -180,7 +166,7 @@ namespace _2Real
 		return *m_ThreadPool;
 	}
 
-	SystemBlock & EngineImpl::getSystemBlock()
+	System & EngineImpl::getSystemBlock()
 	{
 		return *m_SystemBlock;
 	}

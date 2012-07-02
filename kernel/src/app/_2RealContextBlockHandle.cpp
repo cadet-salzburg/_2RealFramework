@@ -16,10 +16,10 @@
 	limitations under the License.
 */
 
-#include "_2RealContextBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
+#include "app/_2RealBlockData.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealException.h"
-#include "_2RealUpdatePolicyHandle.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
@@ -38,17 +38,16 @@ namespace _2Real
 		{
 		}
 
-		BlockData const& ContextBlockHandle::getBlockData() const
+		BlockData ContextBlockHandle::getBlockData() const
 		{
 			checkHandle( m_Block );
-			return m_Block->getMetadata();
+			return m_Block->getBlockData();
 		}
 
 		void ContextBlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
 			checkHandle( m_Block );
-			UpdatePolicyHandle updatePolicy = m_Block->getUpdatePolicyHandle();
-			updatePolicy.updateWithFixedRate( updatesPerSecond );
+			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
 		void ContextBlockHandle::setUp()

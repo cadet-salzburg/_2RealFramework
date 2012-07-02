@@ -17,12 +17,13 @@
 	limitations under the License.
 */
 
-#include "_2RealUpdatePolicy.h"
+#include "_2RealFunctionBlockUpdatePolicy.h"
 #include "_2RealEngineImpl.h"
 #include "_2RealTimer.h"
 #include "_2RealInletBuffer.h"
-#include "_2RealAbstractStateManager.h"
-#include "_2RealAbstractIOManager.h"
+#include "_2RealFunctionBlock.h"
+#include "_2RealFunctionBlockStateManager.h"
+#include "_2RealFunctionBlockIOManager.h"
 #include "_2RealParameterData.h"
 
 using std::string;
@@ -35,24 +36,22 @@ using std::shared_ptr;
 namespace _2Real
 {
 
-	UpdatePolicy::UpdatePolicy( AbstractUberBlock &owner, AbstractStateManager &stateMgr, AbstractIOManager &ioMgr ) :
-		m_Owner( owner ),
+	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( FunctionBlock &owner ) :
+		AbstractUpdatePolicy( owner ),
 		m_WasChanged( false ),
-		m_UpdateTime( -1 ),
-		m_IOManager( &ioMgr ),
-		m_StateManager( &stateMgr )
+		m_UpdateTime( -1 )
 	{
 	}
 
-	void UpdatePolicy::addInlet( string const& name )
+	void FunctionBlockUpdatePolicy::addInlet( Inlet &inlet )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_WasChanged = true;
-		m_InletPolicies.insert( make_pair( name, InletTriggerCtor( new InletTriggerCreator< ValidData >() ) ) );
-		m_InletTriggers.insert( make_pair( name, InletTriggerPtr() ) );
+		m_InletPolicies.insert( make_pair( &inlet, InletTriggerCtor( new InletTriggerCreator< ValidData >() ) ) );
+		m_InletTriggers.insert( make_pair( &inlet, InletTriggerPtr() ) );
 	}
 
-	void UpdatePolicy::changePolicy()
+	void FunctionBlockUpdatePolicy::changePolicy()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 
@@ -75,39 +74,37 @@ namespace _2Real
 		else
 		{
 			m_TimeTrigger.reset();
-			//m_StateManager->addTrigger( *m_TimeTrigger.get() );
-			//EngineImpl::instance().getTimer().registerToTimerSignal( *m_TimeTrigger.get() );
 		}
 
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			string name = it->first;
-			InletTriggerPtr &triggerPtr = it->second;
+		//for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+		//{
+		//	string name = it->first;
+		//	InletTriggerPtr &triggerPtr = it->second;
 
-			InletTriggerCtor &ctor = m_InletPolicies[ name ];
-			Inlet &inlet = m_IOManager->getInlet( name );
+		//	InletTriggerCtor &ctor = m_InletPolicies[ name ];
+		//	Inlet &inlet = m_IOManager->getInlet( name );
 
-			AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( inlet, *m_StateManager );
+		//	AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( inlet, *m_StateManager );
 
-			if ( triggerPtr.get() != nullptr )
-			{
-				*newTrigger = *triggerPtr.get();		// copies the triggering data
-			}
+		//	if ( triggerPtr.get() != nullptr )
+		//	{
+		//		*newTrigger = *triggerPtr.get();		// copies the triggering data
+		//	}
 
-			triggerPtr.reset( newTrigger );			// deletes old trigger -> unregisters itself
-		}
+		//	triggerPtr.reset( newTrigger );			// deletes old trigger -> unregisters itself
+		//}
 
 		m_WasChanged = false;
 	}
 
-	void UpdatePolicy::setNewUpdateTime( const long time )
+	void FunctionBlockUpdatePolicy::setNewUpdateTime( const long time )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_WasChanged = true;
 		m_UpdateTime = time;
 	}
 
-	void UpdatePolicy::setNewInletDefaultPolicy( InletTriggerCtor &inletDefault )
+	void FunctionBlockUpdatePolicy::setNewInletDefaultPolicy( InletTriggerCtor &inletDefault )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_WasChanged = true;
@@ -117,11 +114,11 @@ namespace _2Real
 		}
 	}
 
-	void UpdatePolicy::setNewInletPolicy( string const& name, InletTriggerCtor &inletPolicy )
+	void FunctionBlockUpdatePolicy::setNewInletPolicy( Inlet &inlet, InletTriggerCtor &inletPolicy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_WasChanged = true;
-		InletPolicyMap::iterator it = m_InletPolicies.find( name );
+		InletPolicyMap::iterator it = m_InletPolicies.find( &inlet );
 		if ( it != m_InletPolicies.end() )
 		{
 			it->second = inletPolicy;

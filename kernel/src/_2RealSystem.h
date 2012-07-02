@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include "_2RealUberBlock.h"
-#include "_2RealDisabledIOManager.h"
-#include "_2RealSystemBlockStateManager.h"
 #include "_2RealLink.h"
 #include "app/_2RealCallbacks.h"
+#include "app/_2RealCallbacksInternal.h"
+
+#include "_2RealPoco.h"
 
 #include <set>
 
@@ -32,33 +32,28 @@ namespace _2Real
 
 	class EngineImpl;
 	class AbstractLink;
-	class SystemBlockManager;
+	class AbstractUberBlock;
 	class FunctionBlock;
+	class SystemBlockManager;
 
-	class SystemBlock : public UberBlock< DisabledIOManager, SystemBlockStateManager >
+	class System
 	{
 
 	public:
 
-		SystemBlock( EngineImpl &engine, BlockIdentifier const& id );
+		System( EngineImpl &engine );
 
-		// wipes the system completely
-		// all blocks, links etc. will be gone
 		void		clear();
 
-		// called by a block ( other that the system ) when an exception occurs
 		void		handleException( FunctionBlock &block, Exception const& exception );
 
-		// adds block to the system, yay
 		void		addUberBlock( AbstractUberBlock &block );
 
-		// will be called by the engine
 		void		registerToException( app::ExceptionCallback callback, void *userData );
 		void		unregisterFromException( app::ExceptionCallback callback, void *userData );
 		void		registerToException( app::AbstractExceptionCallbackHandler &handler );
 		void		unregisterFromException( app::AbstractExceptionCallbackHandler &handler );
 
-		// yay
 		void		createLink( Inlet &inlet, Outlet &outlet );
 		void		destroyLink( Inlet &inlet, Outlet &outlet );
 

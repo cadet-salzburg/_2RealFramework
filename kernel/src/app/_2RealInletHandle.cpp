@@ -16,9 +16,9 @@
 	limitations under the License.
 */
 
-#include "_2RealInletHandle.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
 #include "_2RealInlet.h"
-
 #include "_2RealAbstractUberBlock.h"
 
 #define checkHandle( obj )\
@@ -58,14 +58,13 @@ namespace _2Real
 
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
 		{
-			UpdatePolicyHandle h = m_Inlet->getOwningUberBlock().getUpdatePolicyHandle();
 			if ( p == InletHandle::DATA_NEW )
 			{
-				h.updateWhenAllInletDataNew();
+				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet );
 			}
 			else if ( p == InletHandle::DATA_VALID )
 			{
-				h.updateWhenAllInletDataValid();
+				m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_Inlet );
 			}
 		}
 	}

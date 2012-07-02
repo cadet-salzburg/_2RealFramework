@@ -61,9 +61,6 @@
     <ClInclude Include="..\..\src\_2RealAbstractStateManager.h">
       <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealDisabledIOManager.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealFunctionBlock.h">
       <Filter>include\block</Filter>
     </ClInclude>
@@ -76,18 +73,6 @@
     <ClInclude Include="..\..\src\_2RealFunctionBlockStateManager.h">
       <Filter>include\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemBlock.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemBlockStateManager.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUberBlock.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h">
-      <Filter>src\block</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealInletBasedTrigger.h">
       <Filter>include\block</Filter>
     </ClInclude>
@@ -95,9 +80,6 @@
       <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealUberBlockBasedTrigger.h">
-      <Filter>include\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUpdatePolicy.h">
       <Filter>include\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealEngine.h">
@@ -121,17 +103,8 @@
     <ClInclude Include="..\..\src\_2RealParameterData.h">
       <Filter>include\metadata</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealVersion.h">
-      <Filter>include\metadata</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\_2RealBundleMetainfoImpl.h">
       <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBundleIdentifier.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealBlockIdentifier.h">
-      <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealHelpers.h">
       <Filter>include</Filter>
@@ -170,9 +143,6 @@
       <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealParamHandle.h">
@@ -216,6 +186,36 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealAppData.h">
       <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUpdateTrigger.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealAbstractUpdatePolicy.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealFunctionBlockUpdatePolicy.h">
+      <Filter>include\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealUberBlockHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealIdentifier.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystem.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParameterData.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleData.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockData.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealVersion.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,16 +261,7 @@
     <ClCompile Include="..\..\src\_2RealTimestampedData.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealAbstractUberBlock.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealDisabledIOManager.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealFunctionBlock.cpp">
@@ -283,15 +274,6 @@
       <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealFunctionBlockStateManager.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemBlock.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemBlockStateManager.cpp">
-      <Filter>src\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealUpdatePolicy.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealException.cpp">
@@ -318,12 +300,6 @@
     <ClCompile Include="..\..\src\_2RealHelpers.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBlockIdentifier.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealBundleIdentifier.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\_2RealParameter.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
@@ -346,9 +322,6 @@
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
@@ -382,6 +355,36 @@
       <Filter>src\bundle</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractIOManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractStateManager.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealFunctionBlockUpdatePolicy.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealAbstractUpdatePolicy.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealUberBlockHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealIdentifier.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystem.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockData.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleData.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterData.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
   </ItemGroup>

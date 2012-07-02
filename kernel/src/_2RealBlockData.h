@@ -20,50 +20,47 @@
 
 #include "_2RealParameterData.h"
 
-#include <map>
+#include <vector>
 #include <string>
 
 namespace _2Real
 {
 
-	typedef std::map< std::string, ParameterData >	ParameterDataMap;
-
 	class BlockData
 	{
 
-		friend std::ostream& operator<<( std::ostream &out, BlockData const& metadata );
-
 	public:
+
+		typedef std::vector< ParamData >					ParamMetas;
+		typedef std::vector< ParamData >::iterator			ParamMetasIterator;
+		typedef std::vector< ParamData >::const_iterator	ParamMetasConstIterator;
 
 		BlockData();
 		BlockData( std::string const& name );
-		BlockData( BlockData const& src );
-		BlockData& operator=( BlockData const& src );
-		~BlockData();
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addParameter( ParameterData const& data );
-		void addInlet( ParameterData const& data );
-		void addOutlet( ParameterData const& data );
+		void addParameter( ParamData const& data );
+		void addInlet( ParamData const& data );
+		void addOutlet( ParamData const& data );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 
-		ParameterDataMap const& getParameters() const;
-		ParameterDataMap const& getInlets() const;
-		ParameterDataMap const& getOutlets() const;
+		ParamMetas const& getParameters() const;
+		ParamMetas const& getInlets() const;
+		ParamMetas const& getOutlets() const;
 
 	private:
 
-		std::string					m_Name;
-		std::string					m_Description;
-		std::string					m_Category;
+		std::string			m_Name;
+		std::string			m_Description;
+		std::string			m_Category;
 
-		ParameterDataMap			m_Parameters;
-		ParameterDataMap			m_Inlets;
-		ParameterDataMap			m_Outlets;
+		ParamMetas			m_Parameters;
+		ParamMetas			m_Inlets;
+		ParamMetas			m_Outlets;
 
 	};
 

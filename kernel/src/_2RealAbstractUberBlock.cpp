@@ -21,7 +21,7 @@
 namespace _2Real
 {
 
-	AbstractUberBlock::AbstractUberBlock( BlockIdentifier const& id ) :
+	AbstractUberBlock::AbstractUberBlock( Identifier const& id ) :
 		m_Identifier( id )
 	{
 	}
@@ -30,7 +30,7 @@ namespace _2Real
 	{
 	}
 
-	BlockIdentifier const& AbstractUberBlock::getIdentifier() const
+	Identifier const& AbstractUberBlock::getIdentifier() const
 	{
 		return m_Identifier;
 	}

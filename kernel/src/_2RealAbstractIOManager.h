@@ -18,30 +18,16 @@
 
 #pragma once
 
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
-
-#include <map>
 #include <string>
 
 namespace _2Real
 {
 
-	class EngineData;
-	class InletHandle;
-	class OutletHandle;
 	class AbstractUberBlock;
 	class Inlet;
-	class InletBuffer;
 	class Outlet;
 	class Parameter;
-	class TimestampedData;
-	class ParameterData;
-
-	// declared here, as all io managers need those functions
-	Inlet*					createInletFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
-	Outlet *				createOutletFromParameterData(AbstractUberBlock &owner, ParameterData const& data );
-	Parameter *				createParameterFromParameterData( AbstractUberBlock &owner, ParameterData const& data );
+	class ParamData;
 
 	class AbstractIOManager
 	{
@@ -51,26 +37,12 @@ namespace _2Real
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
 
-		std::string const& getName() const;
-		unsigned int getId() const;
-
-		virtual void					registerToNewData( std::string const& outName, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData( std::string const& outName, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
-		virtual void					unregisterFromNewData( std::string const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
-		virtual void					registerToNewData( app::BlockDataCallback callback, void *userData ) = 0;
-		virtual void					unregisterFromNewData( app::BlockDataCallback callback, void *userData ) = 0;
-		virtual void					registerToNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
-		virtual void					unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
-
-		// not sure if those are really needed
-		virtual Inlet &					getInlet( std::string const& name ) = 0;
-		virtual Outlet &				getOutlet( std::string const& name ) = 0;
-		virtual Parameter &				getParameter( std::string const& name ) = 0;
+		std::string const&	getName() const;
+		unsigned int		getId() const;
 
 	protected:
 
-		AbstractUberBlock					&m_Owner;
+		AbstractUberBlock	&m_Owner;
 
 	};
 

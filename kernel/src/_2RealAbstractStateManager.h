@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "app/_2RealUpdatePolicyHandle.h"
 #include "_2RealPoco.h"
 
 #include <string>
@@ -37,20 +36,14 @@ namespace _2Real
 
 	public:
 
-		typedef std::list< AbstractUpdateTrigger * >			TriggerList;
+		typedef std::list< AbstractUpdateTrigger * >	TriggerList;
 		typedef std::list< UberBlockBasedTrigger * >	UberBlockTriggerList;
 
 		AbstractStateManager( AbstractUberBlock &owner );
 		virtual ~AbstractStateManager();
 
-		std::string const& getName() const;
-		unsigned int getId() const;
-
-		virtual void setUp() = 0;
-		virtual void start() = 0;
-		virtual Poco::Event & stop() = 0;
-		virtual void prepareForShutDown() = 0;
-		virtual bool shutDown( const long timeout ) = 0;
+		std::string const&	getName() const;
+		unsigned int		getId() const;
 
 		virtual void tryTrigger( AbstractUpdateTrigger &trigger ) = 0;
 		virtual void tryTriggerUberBlock( UberBlockBasedTrigger &trigger ) = 0;

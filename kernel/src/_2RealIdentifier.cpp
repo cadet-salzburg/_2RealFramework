@@ -16,58 +16,40 @@
 	limitations under the License.
 */
 
-#include "_2RealBundleIdentifier.h"
-#include "_2RealEngineImpl.h"
+#include "_2RealIdentifier.h"
+
+#include <iostream>
 
 namespace _2Real
 {
 
-	BundleIdentifier::BundleIdentifier() :
+	Identifier::Identifier() :
 		m_Name( "invalid" ),
 		m_Id( 0 )
 	{
 	}
 
-	std::ostream& operator<<( std::ostream& out, BundleIdentifier const& id )
+	Identifier::Identifier( std::string const& name, const unsigned int id ) :
+		m_Name( name ),
+		m_Id( id )
+	{
+	}
+
+	std::ostream& operator<<( std::ostream& out, Identifier const& id )
 	{
 		out << id.m_Name;
 		return out;
 	}
 
-	std::istream& operator>>( std::istream& in, BundleIdentifier &id )
+	std::istream& operator>>( std::istream& in, Identifier &id )
 	{
 		in >> id.m_Name;
 		return in;
 	}
 
-	bool BundleIdentifier::operator==( BundleIdentifier const& rhs ) const
-	{
-		return m_Id == rhs.m_Id;
-	}
-
-	bool BundleIdentifier::operator!=( BundleIdentifier const& rhs ) const
-	{
-		return m_Id != rhs.m_Id;
-	}
-
-	bool BundleIdentifier::operator<( BundleIdentifier const& rhs ) const
+	bool Identifier::operator<( Identifier const& rhs ) const
 	{
 		return m_Id < rhs.m_Id;
-	}
-
-	bool BundleIdentifier::operator<=( BundleIdentifier const& rhs ) const
-	{
-		return m_Id <= rhs.m_Id;
-	}
-
-	bool BundleIdentifier::operator>( BundleIdentifier const& rhs ) const
-	{
-		return m_Id > rhs.m_Id;
-	}
-
-	bool BundleIdentifier::operator>=( BundleIdentifier const& rhs ) const
-	{
-		return m_Id >= rhs.m_Id;
 	}
 
 }

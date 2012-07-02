@@ -23,6 +23,9 @@
 #include "_2RealBlockData.h"
 #include "bundle/_2RealBlock.h"
 #include "app/_2RealBlockHandle.h"
+#include "app/_2RealBundleData.h"
+#include "app/_2RealBlockData.h"
+#include "app/_2RealParameterData.h"
 #include "_2RealBundleManager.h"
 
 #include <sstream>
@@ -34,10 +37,10 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleInternal::BundleInternal( BundleIdentifier const& id, BundleData const& data, BundleManager &bundleManager ) :
+	BundleInternal::BundleInternal( Identifier const& id, BundleData const& data, BundleManager &bundleManager ) :
 		m_BundleManager( bundleManager ),
 		m_Identifier( id ),
-		m_BundleData( data ),
+		m_Metadata( data ),
 		m_BundleContext()
 	{
 	}
@@ -51,7 +54,7 @@ namespace _2Real
 		}
 	}
 
-	BundleIdentifier const& BundleInternal::getIdentifier() const
+	Identifier const& BundleInternal::getIdentifier() const
 	{
 		return m_Identifier;
 	}
@@ -66,10 +69,68 @@ namespace _2Real
 		return app::BundleHandle( *this );
 	}
 
+	app::BundleData BundleInternal::getBundleData() const
+	{
+		app::BundleData bundleData;
+
+		bundleData.m_Author = m_Metadata.getAuthor();
+		bundleData.m_Category = m_Metadata.getCategory();
+
+		BundleData::BlockMetas const& blocks = m_Metadata.getExportedBlocks();
+
+		for ( BundleData::BlockMetasConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+		{
+			app::BlockData blockData;
+
+			blockData.m_Name = it->second.getName();
+			blockData.m_Description = it->second.getDescription();
+			blockData.m_Category = it->second.getCategory();
+
+			BlockData::ParamMetas const& params = it->second.getParameters();
+			BlockData::ParamMetas const& input = it->second.getInlets();
+			BlockData::ParamMetas const& output = it->second.getOutlets();
+			for ( BlockData::ParamMetasConstIterator it = params.begin(); it != params.end(); ++it )
+			{
+				app::ParameterData paramData;
+
+				paramData.m_Name = it->getName();
+				paramData.m_Typename = it->getTypename();
+				paramData.m_LongTypename = it->getLongTypename();
+
+				blockData.m_Parameters.push_back( paramData );
+			}
+
+			for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
+			{
+				app::ParameterData paramData;
+
+				paramData.m_Name = it->getName();
+				paramData.m_Typename = it->getTypename();
+				paramData.m_LongTypename = it->getLongTypename();
+
+				blockData.m_Inlets.push_back( paramData );
+			}
+
+			for ( BlockData::ParamMetasConstIterator it = output.begin(); it != output.end(); ++it )
+			{
+				app::ParameterData paramData;
+
+				paramData.m_Name = it->getName();
+				paramData.m_Typename = it->getTypename();
+				paramData.m_LongTypename = it->getLongTypename();
+
+				blockData.m_Outlets.push_back( paramData );
+			}
+
+			bundleData.m_ExportedBlocks.push_back( blockData );
+		}
+
+		return bundleData;
+	}
+
 	BundleData const& BundleInternal::getMetadata() const
 	{
-		// TODO: copy this? there might be an issue with the engine data
-		return m_BundleData;
+		return m_Metadata;
 	}
 
 	app::BlockHandle BundleInternal::createBlockInstance( std::string const& blockName )

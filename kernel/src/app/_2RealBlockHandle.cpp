@@ -16,13 +16,13 @@
 	limitations under the License.
 */
 
-#include "_2RealBlockHandle.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+#include "app/_2RealBlockData.h"
 #include "_2RealFunctionBlock.h"
 #include "_2RealException.h"
-#include "_2RealUpdatePolicyHandle.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
-#include "_2RealParameterHandle.h"
 
 using std::string;
 
@@ -34,38 +34,39 @@ namespace _2Real
 	namespace app
 	{
 		BlockHandle::BlockHandle() :
+			UberBlockHandle(),
 			m_Block( nullptr )
 		{
 		}
 
 		BlockHandle::BlockHandle( FunctionBlock &block ) :
+			UberBlockHandle( block ),
 			m_Block( &block )
 		{
 		}
 
-		BlockData const& BlockHandle::getBlockData() const
+		BlockData BlockHandle::getBlockData() const
 		{
 			checkHandle( m_Block );
-			return m_Block->getMetadata();
+			return m_Block->getBlockData();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
 			checkHandle( m_Block );
-			UpdatePolicyHandle updatePolicy = m_Block->getUpdatePolicyHandle();
-			updatePolicy.updateWithFixedRate( updatesPerSecond );
+			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
 		void BlockHandle::setInletUpdatePolicy( const BlockHandle::InletUpdatePolicy p )
 		{
-			UpdatePolicyHandle updatePolicy = m_Block->getUpdatePolicyHandle();
+			checkHandle( m_Block );
 			if ( p == BlockHandle::ALL_DATA_NEW )
 			{
-				updatePolicy.updateWhenAllInletDataNew();
+				m_Block->updateWhenAllInletDataNew();
 			}
 			else if ( p == BlockHandle::ALL_DATA_VALID )
 			{
-				updatePolicy.updateWhenAllInletDataValid();
+				m_Block->updateWhenAllInletDataValid();
 			}
 		}
 
@@ -87,16 +88,6 @@ namespace _2Real
 			m_Block->stop( true, 5000 );
 		}
 
-		//void BlockHandle::destroy()
-		//{
-		//	checkHandle( m_Block );
-		//}
-
-		//void BlockHandle::singleStep()
-		//{
-		//	checkHandle( m_Block );
-		//}
-
 		InletHandle BlockHandle::getInletHandle( string const& name )
 		{
 			checkHandle( m_Block );
@@ -117,21 +108,25 @@ namespace _2Real
 
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )
 		{
+			checkHandle( m_Block );
 			m_Block->registerToNewData( callback, userData );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData )
 		{
+			checkHandle( m_Block );
 			m_Block->unregisterFromNewData( callback, userData );
 		}
 
 		void BlockHandle::registerToNewDataInternal( AbstractBlockDataCallbackHandler &handler )
 		{
+			checkHandle( m_Block );
 			m_Block->registerToNewData( handler );
 		}
 
 		void BlockHandle::unregisterFromNewDataInternal( AbstractBlockDataCallbackHandler &handler )
 		{
+			checkHandle( m_Block );
 			m_Block->unregisterFromNewData( handler );
 		}
 	}
