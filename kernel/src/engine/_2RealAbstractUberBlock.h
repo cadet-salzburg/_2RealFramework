@@ -40,14 +40,10 @@ namespace _2Real
 		std::string const&						getName() const;
 		unsigned int							getId() const;
 
-		virtual void							registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void							unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData ) = 0;
-		virtual void							registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
-		virtual void							unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler ) = 0;
-		virtual void							registerToNewData( app::BlockDataCallback callback, void *userData ) = 0;
-		virtual void							unregisterFromNewData( app::BlockDataCallback callback, void *userData ) = 0;
-		virtual void							registerToNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
-		virtual void							unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler ) = 0;
+		virtual void							registerToNewData( Outlet const& outlet, app::OutletCallback &callback ) = 0;
+		virtual void							unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback) = 0;
+		virtual void							registerToNewData( app::BlockCallback &callback ) = 0;
+		virtual void							unregisterFromNewData( app::BlockCallback &callback ) = 0;
 
 		virtual void							setUp() = 0;
 		virtual void							start() = 0;

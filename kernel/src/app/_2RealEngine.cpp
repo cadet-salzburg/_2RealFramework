@@ -65,22 +65,24 @@ namespace _2Real
 
 		void Engine::registerToException( ExceptionCallback callback, void *userData )
 		{
-			m_EngineImpl.registerToException( callback, userData );
+			ErrorCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > const& >( callback, userData );
+			m_EngineImpl.registerToException( *cb );
 		}
 
 		void Engine::unregisterFromException( ExceptionCallback callback, void *userData )
 		{
-			m_EngineImpl.unregisterFromException( callback, userData );
+			ErrorCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > const& >( callback, userData );
+			m_EngineImpl.unregisterFromException( *cb );
 		}
 
-		void Engine::registerToExceptionInternal( AbstractExceptionCallbackHandler &handler )
+		void Engine::registerToExceptionInternal( ErrorCallback &cb )
 		{
-			m_EngineImpl.registerToException( handler );
+			m_EngineImpl.registerToException( cb );
 		}
 
-		void Engine::unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler )
+		void Engine::unregisterFromExceptionInternal( ErrorCallback &cb )
 		{
-			m_EngineImpl.unregisterFromException( handler );
+			m_EngineImpl.unregisterFromException( cb );
 		}
 	}
 }

@@ -434,5 +434,11 @@
     <ClCompile Include="..\..\src\engine\_2RealAbstractUpdateTrigger.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimer.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLogger.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

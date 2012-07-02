@@ -106,23 +106,13 @@ namespace _2Real
 		m_InletEvent -= Poco::delegate( &buffer, &InletBuffer::receiveData );
 	}
 
-	void Outlet::registerToNewData( app::OutletDataCallback callback, void *userData )
+	void Outlet::registerToNewData( app::OutletCallback &callback )
 	{
-		Param::m_Owner.registerToNewData( *this, callback, userData );
+		Param::m_Owner.registerToNewData( *this, callback );
 	}
 
-	void Outlet::unregisterFromNewData( app::OutletDataCallback callback, void *userData )
+	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
 	{
-		Param::m_Owner.unregisterFromNewData( *this, callback, userData );
-	}
-
-	void Outlet::registerToNewData( app::AbstractOutletDataCallbackHandler &handler )
-	{
-		Param::m_Owner.registerToNewData( *this, handler );
-	}
-
-	void Outlet::unregisterFromNewData( app::AbstractOutletDataCallbackHandler &handler )
-	{
-		Param::m_Owner.unregisterFromNewData( *this, handler );
+		Param::m_Owner.unregisterFromNewData( *this, callback );
 	}
 }

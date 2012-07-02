@@ -172,44 +172,24 @@ namespace _2Real
 		m_System.destroyLink( inlet, outlet );
 	}
 
-	void FunctionBlock::registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
+	void FunctionBlock::registerToNewData( Outlet const& outlet, app::OutletCallback &callback )
 	{
-		m_IOManager->registerToNewData( outlet, callback, userData );
+		m_IOManager->registerToNewData( outlet, callback );
 	}
 
-	void FunctionBlock::unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
+	void FunctionBlock::unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback )
 	{
-		m_IOManager->unregisterFromNewData( outlet, callback, userData );
+		m_IOManager->unregisterFromNewData( outlet, callback );
 	}
 
-	void FunctionBlock::registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
+	void FunctionBlock::registerToNewData( app::BlockCallback &callback )
 	{
-		m_IOManager->registerToNewData( outlet, handler );
+		m_IOManager->registerToNewData( callback );
 	}
 
-	void FunctionBlock::unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
+	void FunctionBlock::unregisterFromNewData( app::BlockCallback &callback )
 	{
-		m_IOManager->unregisterFromNewData( outlet, handler );
-	}
-
-	void FunctionBlock::registerToNewData( app::BlockDataCallback callback, void *userData )
-	{
-		m_IOManager->registerToNewData( callback, userData );
-	}
-
-	void FunctionBlock::unregisterFromNewData( app::BlockDataCallback callback, void *userData )
-	{
-		m_IOManager->unregisterFromNewData( callback, userData );
-	}
-
-	void FunctionBlock::registerToNewData( app::AbstractBlockDataCallbackHandler &handler )
-	{
-		m_IOManager->registerToNewData( handler );
-	}
-
-	void FunctionBlock::unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler )
-	{
-		m_IOManager->unregisterFromNewData( handler );
+		m_IOManager->unregisterFromNewData( callback );
 	}
 
 	void FunctionBlock::setUp()

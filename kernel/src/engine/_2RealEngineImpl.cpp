@@ -194,24 +194,14 @@ namespace _2Real
 		return m_BundleManager->loadLibrary( path );
 	}
 
-	void EngineImpl::registerToException( app::ExceptionCallback callback, void *userData )
+	void EngineImpl::registerToException( app::ErrorCallback &callback )
 	{
-		m_SystemBlock->registerToException( callback, userData );
+		m_SystemBlock->registerToException( callback );
 	}
 
-	void EngineImpl::unregisterFromException( app::ExceptionCallback callback, void *userData )
+	void EngineImpl::unregisterFromException( app::ErrorCallback &callback )
 	{
-		m_SystemBlock->unregisterFromException( callback, userData );
-	}
-
-	void EngineImpl::registerToException( app::AbstractExceptionCallbackHandler &handler )
-	{
-		m_SystemBlock->registerToException( handler );
-	}
-
-	void EngineImpl::unregisterFromException( app::AbstractExceptionCallbackHandler &handler )
-	{
-		m_SystemBlock->unregisterFromException( handler );
+		m_SystemBlock->unregisterFromException( callback );
 	}
 
 }

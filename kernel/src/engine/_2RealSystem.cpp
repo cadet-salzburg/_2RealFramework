@@ -22,6 +22,7 @@
 #include "engine/_2RealLink.h"
 #include "app/_2RealBlockHandle.h"
 #include "engine/_2RealUberBlockBasedTrigger.h"
+#include "helpers/_2RealException.h"
 
 #include <assert.h>
 #include <sstream>
@@ -41,22 +42,12 @@ namespace _2Real
 		{
 			m_SubBlockManager->clearAll();
 		}
-		catch (TimeOutException &e)
+		catch ( TimeOutException &e )
 		{
 			std::cout << e.message() << std::endl;
 		}
 
-		//for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); /**/ )
-		//{
-		//	delete *it;
-		//	it = m_ExceptionCallbacks.erase( it );
-		//}
-
-		//for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); /**/ )
-		//{
-		//	delete *it;
-		//	it = m_ExceptionCallbackHandlers.erase( it );
-		//}
+		m_ExceptionEvent.clear();
 	}
 
 	void System::clearBlockInstances()
@@ -65,20 +56,10 @@ namespace _2Real
 		{
 			m_SubBlockManager->clearBlockInstances();
 		}
-		catch (TimeOutException &e)
+		catch ( TimeOutException &e )
 		{
 			std::cout << e.message() << std::endl;
 		}
-
-		//for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
-		//{
-		//	delete *it;
-		//}
-
-		//for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
-		//{
-		//	delete *it;
-		//}
 	}
 
 	void System::addUberBlock( AbstractUberBlock &block, const bool isContext )
@@ -88,76 +69,17 @@ namespace _2Real
 
 	void System::handleException( FunctionBlock &block, Exception const& exception )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		for ( app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.begin(); it != m_ExceptionCallbackHandlers.end(); ++it )
-		{
-			( *it )->invoke( exception, app::BlockHandle( block ) );
-		}
-
-		for ( app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.begin(); it != m_ExceptionCallbacks.end(); ++it )
-		{
-			( *it )->invoke( exception, app::BlockHandle( block ) );
-		}
+		m_ExceptionEvent.notify( std::make_pair( exception, app::BlockHandle( block ) ) );
 	}
 
-	void System::registerToException( app::ExceptionCallback callback, void *userData )
+	void System::registerToException( app::ErrorCallback &callback )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		app::ExceptionFunctionCallback *cb = new app::ExceptionFunctionCallback( callback, userData );
-		app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
-		if ( it == m_ExceptionCallbacks.end() )
-		{
-			m_ExceptionCallbacks.insert( cb );
-		}
-		else
-		{
-			delete cb;
-		}
+		m_ExceptionEvent.addListener( callback );
 	}
 
-	void System::unregisterFromException( app::ExceptionCallback callback, void *userData )
+	void System::unregisterFromException( app::ErrorCallback &callback )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		app::ExceptionFunctionCallback *cb = new app::ExceptionFunctionCallback( callback, userData );
-		app::ExceptionFunctionCallbacks::iterator it = m_ExceptionCallbacks.find( cb );
-		if ( it != m_ExceptionCallbacks.end() )
-		{
-			delete *it;
-			m_ExceptionCallbacks.erase(it);
-		}
-
-		delete cb;
-	}
-
-	void System::registerToException( app::AbstractExceptionCallbackHandler &handler )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-
-		app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
-		if ( it == m_ExceptionCallbackHandlers.end() )
-		{
-			m_ExceptionCallbackHandlers.insert( &handler );
-		}
-		else
-		{
-			delete &handler;
-		}
-	}
-
-	void System::unregisterFromException( app::AbstractExceptionCallbackHandler &handler )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
-		app::ExceptionCallbackHandlers::iterator it = m_ExceptionCallbackHandlers.find( &handler );
-		if ( it != m_ExceptionCallbackHandlers.end() )
-		{
-			delete *it;
-			m_ExceptionCallbackHandlers.erase(it);
-		}
-
-		delete &handler;
+		m_ExceptionEvent.removeListener( callback );
 	}
 
 	void System::createLink( Inlet &inlet, Outlet &outlet )

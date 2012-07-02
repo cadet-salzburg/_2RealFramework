@@ -50,14 +50,11 @@ namespace _2Real
 		~FunctionBlockIOManager();
 
 		void						clear();
-		void						registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
-		void						unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
-		void						registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
-		void						unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
-		void						registerToNewData( app::BlockDataCallback callback, void *userData );
-		void						unregisterFromNewData( app::BlockDataCallback callback, void *userData );
-		void						registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
-		void						unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
+
+		void						registerToNewData( Outlet const& outlet, app::OutletCallback &cb );
+		void						unregisterFromNewData( Outlet const& outlet, app::OutletCallback &cb );
+		void						registerToNewData( app::BlockCallback &cb );
+		void						unregisterFromNewData( app::BlockCallback &cb );
 
 		void						addInlet( ParamData const& data );
 		void						addOutlet( ParamData const& data );
@@ -88,20 +85,11 @@ namespace _2Real
 		mutable Poco::FastMutex			m_ParamAccess;
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
-		ParamVector						m_Params;
+		ParameterVector					m_Parameters;
 
 		Inlet &							getInlet( std::string const& name );
 		Outlet &						getOutlet( std::string const& name );
 		Parameter &						getParameter( std::string const& name );
-
-		Inlet *							findInlet( std::string const& name );
-		Outlet *						findOutlet( std::string const& name );
-		Parameter *						findParameter( std::string const& name );
-
-		// ugh
-		mutable Poco::FastMutex					m_CallbackAccess;
-		app::BlockDataFunctionCallbacks			m_BlockDataFunctionCallbacks;
-		app::BlockDataCallbackHandlers			m_BlockDataCallbackHandlers;
 
 	};
 

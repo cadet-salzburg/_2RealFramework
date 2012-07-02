@@ -54,24 +54,24 @@ namespace _2Real
 			void registerToException( ExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
 
-			template< typename Callable >
-			void registerToException( Callable &callable, void ( Callable::*callback )( Exception const&, BlockHandle const& ) )
+			template< typename TCallable >
+			void registerToException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, BlockHandle > const& ) )
 			{
-				AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
-				registerToExceptionInternal( *handler );
+				ErrorCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
+				registerToExceptionInternal( *cb );
 			}
 
-			template< typename Callable >
-			void unregisterFromException( Callable &callable, void ( Callable::*callback )( Exception const&, BlockHandle const& ) )
+			template< typename TCallable >
+			void unregisterFromException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, BlockHandle > const& ) )
 			{
-				AbstractExceptionCallbackHandler *handler = new ExceptionCallbackHandler< Callable >( callable, callback );
-				registerToExceptionInternal( *handler );
+				ErrorCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
+				unregisterFromExceptionInternal( *cb );
 			} 
 
 		private:
 
-			void registerToExceptionInternal( AbstractExceptionCallbackHandler &handler );
-			void unregisterFromExceptionInternal( AbstractExceptionCallbackHandler &handler );
+			void registerToExceptionInternal( ErrorCallback &cb );
+			void unregisterFromExceptionInternal( ErrorCallback &cb );
 
 			Engine();
 			Engine( Engine const& src );

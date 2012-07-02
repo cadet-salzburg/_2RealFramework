@@ -42,22 +42,26 @@ namespace _2Real
 
 		AppData InletHandle::getCurrentInput() const
 		{
+			checkHandle( m_Inlet );
 			EngineData data = m_Inlet->getData();
 			return AppData( data, m_Inlet->getTypename(), m_Inlet->getName() );
 		}
 
 		void InletHandle::linkTo( OutletHandle &outlet )
 		{
+			checkHandle( m_Inlet );
 			m_Inlet->linkTo( outlet );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
+			checkHandle( m_Inlet );
 			m_Inlet->unlinkFrom( outlet );
 		}
 
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
 		{
+			checkHandle( m_Inlet );
 			if ( p == InletHandle::DATA_NEW )
 			{
 				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet );

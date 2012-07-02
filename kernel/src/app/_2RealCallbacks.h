@@ -18,8 +18,9 @@
 
 #pragma once
 
-#include "app/_2RealAppData.h"
+#include "app/_2RealCallbacksInternal.h"
 
+#include <utility>
 #include <list>
 
 #if defined( _WIN32 )
@@ -35,142 +36,19 @@
 
 namespace _2Real
 {
+	class Exception;
 
 	namespace app
 	{
+		class AppData;
 		class BlockHandle;
 
-		typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *, Exception const&, BlockHandle const& );
+		typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *, std::pair< Exception, BlockHandle > const& );
 		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, AppData const& );
 		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::list< AppData > const& );
 
-		class AbstractExceptionCallbackHandler
-		{
-
-		public:
-
-			AbstractExceptionCallbackHandler( void *object ) : m_Object( object ) {};
-			virtual ~AbstractExceptionCallbackHandler() {};
-			virtual void invoke( Exception const&, BlockHandle const& ) = 0;
-			bool operator<( AbstractExceptionCallbackHandler const& other ) { return m_Object < other.m_Object; }
-
-		private:
-
-			void	*m_Object;
-
-		};
-
-		template< typename Callable >
-		class ExceptionCallbackHandler : public AbstractExceptionCallbackHandler
-		{
-
-		public:
-
-			typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( Exception const&, BlockHandle const& );
-
-			ExceptionCallbackHandler(Callable &callable, Callback method) :
-				AbstractExceptionCallbackHandler(&callable),
-				m_Callable(callable),
-				m_Method(method)
-			{
-			}
-
-			void invoke( Exception const& e, BlockHandle const& h )
-			{
-				( m_Callable.*m_Method )( e, h );
-			}
-
-		private:
-
-			Callable			&m_Callable;
-			Callback			m_Method;
-
-		};
-
-		class AbstractOutletDataCallbackHandler
-		{
-
-		public:
-
-			AbstractOutletDataCallbackHandler( void *object ) : m_Object( object ) {};
-			virtual ~AbstractOutletDataCallbackHandler() {} ;
-			virtual void invoke( AppData const& data ) = 0;
-			bool operator<( AbstractOutletDataCallbackHandler const& other ) { return m_Object < other.m_Object; }
-
-		private:
-
-			void	*m_Object;
-
-		};
-
-		template< typename Callable >
-		class OutletDataCallbackHandler : public AbstractOutletDataCallbackHandler
-		{
-
-		public:
-
-			typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( AppData const& data );
-
-			OutletDataCallbackHandler( Callable &callable, Callback method ) :
-				AbstractOutletDataCallbackHandler( &callable ),
-				m_Callable( callable ),
-				m_Method( method )
-			{
-			}
-
-			void invoke( AppData const& data )
-			{
-				( m_Callable.*m_Method )( data );
-			}
-
-		private:
-
-			Callable			&m_Callable;
-			Callback			m_Method;
-
-		};
-
-		class AbstractBlockDataCallbackHandler
-		{
-
-		public:
-
-			AbstractBlockDataCallbackHandler( void *object ) : m_Object( object ) {};
-			virtual ~AbstractBlockDataCallbackHandler() {} ;
-			virtual void invoke( std::list< AppData > const& data ) = 0;
-			bool operator<( AbstractBlockDataCallbackHandler const& other ) { return m_Object < other.m_Object; }
-
-		private:
-
-			void	*m_Object;
-
-		};
-
-		template< typename Callable >
-		class BlockDataCallbackHandler : public AbstractBlockDataCallbackHandler
-		{
-
-		public:
-
-			typedef void ( _2REAL_MEMBER_CALLBACK Callable::*Callback )( std::list< AppData > const& data );
-
-			BlockDataCallbackHandler( Callable &callable, Callback method ) :
-				AbstractBlockDataCallbackHandler( &callable ),
-				m_Callable( callable ),
-				m_Method( method )
-			{
-			}
-
-			void invoke( std::list< AppData > const& data )
-			{
-				( m_Callable.*m_Method )( data );
-			}
-
-		private:
-
-			Callable						&m_Callable;
-			Callback						m_Method;
-
-		};
+		typedef _2Real::AbstractCallback< std::list< app::AppData > const& >			BlockCallback;
+		typedef _2Real::AbstractCallback< app::AppData const& >							OutletCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > const& >	ErrorCallback;
 	}
 }

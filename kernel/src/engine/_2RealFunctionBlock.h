@@ -66,14 +66,10 @@ namespace _2Real
 		void					createLink( Inlet &inlet, Outlet &outlet );
 		void					destroyLink( Inlet &inlet, Outlet &outlet );
 
-		void					registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
-		void					unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
-		void					registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
-		void					unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
-		void					registerToNewData( app::BlockDataCallback callback, void *userData );
-		void					unregisterFromNewData( app::BlockDataCallback callback, void *userData );
-		void					registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
-		void					unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
+		void					registerToNewData( Outlet const& outlet, app::OutletCallback &callback );
+		void					unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback );
+		void					registerToNewData( app::BlockCallback &callback );
+		void					unregisterFromNewData( app::BlockCallback &callback );
 
 		void					setUp();
 		void					start();

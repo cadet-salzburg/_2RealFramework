@@ -42,38 +42,47 @@ namespace _2Real
 
 		AppData OutletHandle::getLastOutput() const
 		{
+			checkHandle( m_Outlet );
 			EngineData data = m_Outlet->getData();
 			return AppData( data, m_Outlet->getTypename(), m_Outlet->getName() );
 		}
 
 		void OutletHandle::linkTo( InletHandle &inlet )
 		{
+			checkHandle( m_Outlet );
 			m_Outlet->linkTo( inlet );
 		}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
+			checkHandle( m_Outlet );
 			m_Outlet->unlinkFrom( inlet );
 		}
 
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData )
 		{
-			m_Outlet->registerToNewData( callback, userData );
+			checkHandle( m_Outlet );
+			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
+			m_Outlet->registerToNewData( *cb );
 		}
 
 		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData )
 		{
-			m_Outlet->unregisterFromNewData( callback, userData );
+			checkHandle( m_Outlet );
+			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
+			m_Outlet->unregisterFromNewData( *cb );
 		}
 
-		void OutletHandle::registerToNewDataInternal( AbstractOutletDataCallbackHandler &handler )
+		void OutletHandle::registerToNewDataInternal( OutletCallback &cb )
 		{
-			m_Outlet->registerToNewData( handler );
+			checkHandle( m_Outlet );
+			m_Outlet->registerToNewData( cb );
 		}
 
-		void OutletHandle::unregisterFromNewDataInternal( AbstractOutletDataCallbackHandler &handler )
+		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb )
 		{
-			m_Outlet->unregisterFromNewData( handler );
+			checkHandle( m_Outlet );
+			m_Outlet->unregisterFromNewData( cb );
 		}
 	}
 }

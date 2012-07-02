@@ -91,6 +91,15 @@ private:
 
 };
 
+class Tester
+{
+public:
+	Tester( ParameterHandle &p )
+	{
+		std::cout << p.getName() << std::endl;
+	}
+};
+
 int main( int argc, char *argv[] )
 {
 	Engine &engine = Engine::instance();
@@ -103,7 +112,6 @@ int main( int argc, char *argv[] )
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
 
-		// (?) this also give you info concerning the context, do we want this?
 		for ( BundleInfo::BlocksConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
 		{
 			cout << "EXPORTED BLOCK:" << endl;
@@ -131,6 +139,20 @@ int main( int argc, char *argv[] )
 		inletHandle.setUpdatePolicy( InletHandle::DATA_VALID );
 
 		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
+
+		Tester( inHandle.getParameterHandle( "param" ) );
+
+		cout << paramHandle.getLongTypename() << endl;
+		cout << paramHandle.getTypename() << endl;
+		cout << paramHandle.getName() << endl;
+
+		cout << inletHandle.getLongTypename() << endl;
+		cout << inletHandle.getTypename() << endl;
+		cout << inletHandle.getName() << endl;
+
+		cout << outletHandle.getLongTypename() << endl;
+		cout << outletHandle.getTypename() << endl;
+		cout << outletHandle.getName() << endl;
 
 		unsigned int cnt = 0;
 

@@ -23,6 +23,7 @@
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealCallbacksInternal.h"
 #include "helpers/_2RealPoco.h"
+#include "app/_2RealBlockHandle.h"
 
 #include <set>
 
@@ -49,10 +50,8 @@ namespace _2Real
 
 		void		addUberBlock( AbstractUberBlock &block, const bool isContext );
 
-		void		registerToException( app::ExceptionCallback callback, void *userData );
-		void		unregisterFromException( app::ExceptionCallback callback, void *userData );
-		void		registerToException( app::AbstractExceptionCallbackHandler &handler );
-		void		unregisterFromException( app::AbstractExceptionCallbackHandler &handler );
+		void		registerToException( app::ErrorCallback &callback );
+		void		unregisterFromException( app::ErrorCallback &callback );
 
 		void		createLink( Inlet &inlet, Outlet &outlet );
 		void		destroyLink( Inlet &inlet, Outlet &outlet );
@@ -64,10 +63,7 @@ namespace _2Real
 
 		LinkSet									m_Links;
 
-		// TODO: write own delegate class to handle this shit
-		mutable Poco::FastMutex					m_ExceptionAccess;
-		app::ExceptionFunctionCallbacks			m_ExceptionCallbacks;
-		app::ExceptionCallbackHandlers			m_ExceptionCallbackHandlers;
+		CallbackEvent< std::pair< Exception, app::BlockHandle > const& >		m_ExceptionEvent;
 
 	};
 

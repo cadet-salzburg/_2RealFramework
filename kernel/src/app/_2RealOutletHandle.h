@@ -49,27 +49,27 @@ namespace _2Real
 
 			AppData				getLastOutput() const;
 
-			void registerToNewData( app::OutletDataCallback callback, void *userData = nullptr );
-			void unregisterFromNewData( app::OutletDataCallback callback, void *userData = nullptr );
+			void registerToNewData( OutletDataCallback callback, void *userData = nullptr );
+			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr );
 
-			template< typename Callable >
-			void registerToNewData( Callable &callable, void ( Callable::*callback )( AppData const& ) )
+			template< typename TCallable >
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) )
 			{
-				AbstractOutletDataCallbackHandler *handler = new OutletDataCallbackHandler< Callable >( callable, callback );
-				registerToNewDataInternal( *handler );
+				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
+				registerToNewDataInternal( *cb );
 			}
 
-			template< typename Callable >
-			void unregisterFromNewData( Callable &callable, void ( Callable::*callback )( AppData const& ) )
+			template< typename TCallable >
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) )
 			{
-				AbstractOutletDataCallbackHandler *handler = new OutletDataCallbackHandler< Callable >( callable, callback );
-				unregisterFromNewDataInternal( *handler );
+				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
+				unregisterFromNewDataInternal( *cb );
 			}
 
 		private:
 
-			void registerToNewDataInternal( AbstractOutletDataCallbackHandler &handler );
-			void unregisterFromNewDataInternal( AbstractOutletDataCallbackHandler &handler );
+			void registerToNewDataInternal( OutletCallback &cb );
+			void unregisterFromNewDataInternal( OutletCallback &cb );
 
 			Outlet			*m_Outlet;
 

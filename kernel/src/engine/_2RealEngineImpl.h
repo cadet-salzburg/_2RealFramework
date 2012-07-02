@@ -70,10 +70,8 @@ namespace _2Real
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle				loadLibrary( std::string const& libraryPath );
 		
-		void							registerToException( app::ExceptionCallback callback, void *userData );
-		void							unregisterFromException( app::ExceptionCallback callback, void *userData );
-		void							registerToException( app::AbstractExceptionCallbackHandler &handler );
-		void							unregisterFromException( app::AbstractExceptionCallbackHandler &handler );
+		void							registerToException( app::ErrorCallback &callback );
+		void							unregisterFromException( app::ErrorCallback &callback );
 
 	private:
 

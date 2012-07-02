@@ -56,23 +56,23 @@ namespace _2Real
 
 		struct OutletIO
 		{
-			Outlet								*outlet;
-			app::OutletDataCallbackHandlers		handlers;
-			app::OutletDataFunctionCallbacks	callbacks;
+			Outlet									*outlet;
+			CallbackEvent< app::AppData const& >	*callbacks;
 		};
 
 		typedef std::vector< OutletIO >						OutletVector;
 		typedef std::vector< OutletIO >::iterator			OutletIterator;
 		typedef std::vector< OutletIO >::const_iterator		OutletConstIterator;
 
-		typedef std::vector< Parameter * >					ParamVector;
-		typedef std::vector< Parameter * >::iterator		ParamIterator;
-		typedef std::vector< Parameter * >::const_iterator	ParamConstIterator;
+		typedef std::vector< Parameter * >					ParameterVector;
+		typedef std::vector< Parameter * >::iterator		ParameterIterator;
+		typedef std::vector< Parameter * >::const_iterator	ParameterConstIterator;
 
 	protected:
 
-		Poco::FastMutex			m_IOAccess;
-		AbstractUberBlock		&m_Owner;
+		Poco::FastMutex										m_IOAccess;
+		AbstractUberBlock									&m_Owner;
+		CallbackEvent< std::list< app::AppData > const& >	m_BlockDataChanged;
 
 	};
 

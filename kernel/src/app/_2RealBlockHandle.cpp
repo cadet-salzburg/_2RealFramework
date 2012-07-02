@@ -109,25 +109,27 @@ namespace _2Real
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )
 		{
 			checkHandle( m_Block );
-			m_Block->registerToNewData( callback, userData );
+			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			m_Block->registerToNewData( *cb );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData )
 		{
 			checkHandle( m_Block );
-			m_Block->unregisterFromNewData( callback, userData );
+			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			m_Block->unregisterFromNewData( *cb);
 		}
 
-		void BlockHandle::registerToNewDataInternal( AbstractBlockDataCallbackHandler &handler )
+		void BlockHandle::registerToNewDataInternal( BlockCallback &cb )
 		{
 			checkHandle( m_Block );
-			m_Block->registerToNewData( handler );
+			m_Block->registerToNewData( cb );
 		}
 
-		void BlockHandle::unregisterFromNewDataInternal( AbstractBlockDataCallbackHandler &handler )
+		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb )
 		{
 			checkHandle( m_Block );
-			m_Block->unregisterFromNewData( handler );
+			m_Block->unregisterFromNewData( cb );
 		}
 	}
 }

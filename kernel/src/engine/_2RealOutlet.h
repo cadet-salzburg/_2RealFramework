@@ -22,7 +22,7 @@
 #include "engine/_2RealTimestampedData.h"
 #include "app/_2RealAppData.h"
 #include "helpers/_2RealPoco.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "app/_2RealCallbacks.h"
 
 namespace _2Real
 {
@@ -58,10 +58,8 @@ namespace _2Real
 		void				addInletListener( InletBuffer &buffer );
 		void				removeInletListener( InletBuffer &buffer );
 
-		void				registerToNewData( app::OutletDataCallback callback, void *userData );
-		void				unregisterFromNewData( app::OutletDataCallback callback, void *userData );
-		void				registerToNewData( app::AbstractOutletDataCallbackHandler &handler );
-		void				unregisterFromNewData( app::AbstractOutletDataCallbackHandler &handler );
+		void				registerToNewData( app::OutletCallback &callback );
+		void				unregisterFromNewData( app::OutletCallback &callback );
 
 	private:
 

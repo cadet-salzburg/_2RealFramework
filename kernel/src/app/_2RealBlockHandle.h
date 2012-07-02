@@ -64,24 +64,24 @@ namespace _2Real
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr );
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr );
 
-			template< typename Callable >
-			void registerToNewData( Callable &callable, void ( Callable::*callback )( std::list< AppData > const& ) )
+			template< typename TCallable >
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) )
 			{
-				AbstractBlockDataCallbackHandler *handler = new BlockDataCallbackHandler< Callable >( callable, callback );
-				registerToNewDataInternal( *handler );
+				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				registerToNewDataInternal( *cb );
 			}
 
-			template< typename Callable >
-			void unregisterFromNewData( Callable &callable, void ( Callable::*callback )( std::list< AppData > const& ) )
+			template< typename TCallable >
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) )
 			{
-				AbstractBlockDataCallbackHandler *handler = new BlockDataCallbackHandler< Callable >( callable, callback );
-				unregisterFromNewDataInternal( *handler );
+				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				unregisterFromNewDataInternal( *cb );
 			}
 
 		private:
 
-			void registerToNewDataInternal( AbstractBlockDataCallbackHandler &handler );
-			void unregisterFromNewDataInternal( AbstractBlockDataCallbackHandler &handler );
+			void registerToNewDataInternal( BlockCallback &cb );
+			void unregisterFromNewDataInternal( BlockCallback &cb );
 
 			FunctionBlock		*m_Block;
 
