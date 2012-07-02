@@ -57,11 +57,11 @@ public:
 	{
 		ScopedLock< FastMutex > lock( m_Mutex );
 		m_Received = data;
-		cout << "RECEIVED: " << m_Received.size() << endl;
+		cout << "RECEIVED (BLOCK): " << m_Received.size() << " DATA ITEMS" << endl;
 		for ( std::list< AppData >::iterator it = m_Received.begin(); it != m_Received.end(); ++it )
 		{
-			cout << "RECEIVED: " << ( *it ).getName() << endl;
-			cout << "RECEIVED: " << ( *it ).getDataAsString() << endl;
+			cout << "RECEIVED (BLOCK): name: " << ( *it ).getName() << "\t\t val: ";
+			cout << ( *it ).getDataAsString() << endl;
 		}
 	}
 
@@ -81,8 +81,8 @@ public:
 	{
 		ScopedLock< FastMutex > lock( m_Mutex );
 		m_Received = data;
-		cout << "RECEIVED: " << m_Received.getName() << endl;
-		cout << "RECEIVED: " << m_Received.getDataAsString() << endl;
+		cout << "RECEIVED (OUTLET): name: " << m_Received.getName() << "\t\t val: ";
+		cout << m_Received.getDataAsString() << endl;
 	}
 
 private:
@@ -104,9 +104,22 @@ int main( int argc, char *argv[] )
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 		BundleData const& bundleData = bundleHandle.getBundleData();
 
+		// (?) this also give you info concerning the context, do we want this?
+		for ( BundleData::BlocksConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
+		{
+			cout << "EXPORTED BLOCK:" << endl;
+			cout << it->getName() << endl << it->getDescription() << endl;
+		}
+
 		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
 		BlockData const& outData = outHandle.getBlockData();
 		outHandle.setUpdateRate( 0.2 );
+
+		for ( BlockData::ParamsConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
+		{
+			cout << "OUT OUTLET:" << endl;
+			cout << it->getName() << endl << it->getLongTypename() << endl;
+		}
 
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
@@ -116,7 +129,7 @@ int main( int argc, char *argv[] )
 		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
-		inletHandle.setUpdatePolicy( InletHandle::DATA_NEW );
+		inletHandle.setUpdatePolicy( InletHandle::DATA_VALID );
 
 		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
 

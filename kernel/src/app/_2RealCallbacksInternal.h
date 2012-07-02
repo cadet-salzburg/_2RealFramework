@@ -189,5 +189,82 @@ namespace _2Real
 		typedef std::set< AbstractBlockDataCallbackHandler *, AOutputCbCmp >	BlockDataCallbackHandlers;
 		typedef std::set< AbstractOutletDataCallbackHandler *, AOutletCbCmp >	OutletDataCallbackHandlers;
 		typedef std::set< AbstractExceptionCallbackHandler *, AExcCbCmp >	ExceptionCallbackHandlers;
+
+		//template< typename TArgs >
+		//class AbstractCallback
+		//{
+		//	virtual AbstractCallback() {}
+		//	virtual void invoke( TArgs const& args ) = 0;
+		//	virtual void invoke( TArgs &args ) = 0;
+		//	virtual void invoke( void *, TArgs const& args ) = 0;
+		//	virtual void invoke( void *, TArgs &args ) = 0;
+		//};
+
+		//template< typename TArgs, bool WithSender >
+		//class Callback< TArgs, true > : public AbstractCallback< TArgs >
+		//{
+		//	void invoke( void *, TArgs const& args )
+		//	{
+		//	}
+		//};
+
+		//template< typename TArgs, bool WithSender >
+		//class Callback< TArgs, false > : public AbstractCallback< TArgs >
+		//{
+		//	void invoke( void *, TArgs const& args )
+		//	{
+		//	}
+		//};
+
+		//// threadsafe callback event
+		//template< typename TArgs >
+		//class CallbackEvent
+		//{
+
+		//public:
+
+		//	typedef std::set< AbstractCallback< TArgs > * >					Callbacks;
+		//	typedef std::set< AbstractCallback< TArgs > * >::iterator		CallbacksIterator;
+		//	typedef std::set< AbstractCallback< TArgs > * >::const_iterator	CallbacksConstIterator;
+
+		//	CallbackEvent() {}
+
+		//	~CallbackEvent()
+		//	{
+		//		clear();
+		//	}
+
+		//	void clear()
+		//	{
+		//		for ( CallbacksIterator cbIt = m_Callbacks.begin(); cbIt != m_Callabcks.end(); ++cbIt )
+		//		{
+		//			delete *cbIt;
+		//		}
+
+		//		m_Callbacks.clear();
+		//	}
+
+		//	void addListener( AbstractCallback< TArgs > const& cb )
+		//	{
+		//	}
+
+		//	void removeListener( AbstractCallback< TArgs > const& cb )
+		//	{
+		//	}
+
+		//	void notify( TArgs const& args )
+		//	{
+		//		for ( CallbacksIterator cbIt = m_Callbacks.begin(); cbIt != m_Callabcks.end(); ++cbIt )
+		//		{
+		//			( *cbIt )->notify( userData, args );
+		//		}
+		//	}
+
+		//private:
+
+		//	mutable Poco::FastMutex		m_Access;
+		//	Callbacks					m_Callbacks;
+
+		//};
 	}
 }

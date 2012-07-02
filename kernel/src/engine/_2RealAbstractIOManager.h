@@ -29,6 +29,7 @@ namespace _2Real
 
 	class AbstractUberBlock;
 	class Inlet;
+	class InletBuffer;
 	class Outlet;
 	class Parameter;
 
@@ -42,6 +43,12 @@ namespace _2Real
 
 		std::string const&		getName() const;
 		unsigned int			getId() const;
+
+		struct InletIO
+		{
+			Inlet			*inlet;
+			InletBuffer		*buffer;
+		};
 
 		typedef std::vector< Inlet * >						InletVector;
 		typedef std::vector< Inlet * >::iterator			InletIterator;
@@ -64,7 +71,8 @@ namespace _2Real
 
 	protected:
 
-		AbstractUberBlock	&m_Owner;
+		Poco::FastMutex			m_IOAccess;
+		AbstractUberBlock		&m_Owner;
 
 	};
 

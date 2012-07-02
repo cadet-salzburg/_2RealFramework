@@ -2,6 +2,9 @@
 
 #include "_2RealBundle.h"
 
+#include <vector>
+#include <string>
+
 using _2Real::bundle::BundleMetainfo;
 using _2Real::bundle::BlockMetainfo;
 using _2Real::bundle::ContextBlockMetainfo;
@@ -9,6 +12,7 @@ using _2Real::bundle::WithContext;
 using _2Real::Exception;
 
 using std::string;
+using std::vector;
 
 void getBundleMetainfo( BundleMetainfo &info )
 {
@@ -26,6 +30,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 		out.setDescription( "testing the context's functionality" );
 		out.addOutlet< unsigned int >( "outlet" );
 		out.addOutlet< unsigned int >( "discard" );
+		out.addOutlet< vector< string > >( "whatever" );
 
 		BlockMetainfo in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "testing the context's functionality" );

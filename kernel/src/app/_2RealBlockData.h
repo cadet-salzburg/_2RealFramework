@@ -45,8 +45,8 @@ namespace _2Real
 			// would it be wiser to apply a form of type erasure?
 			// at this point, i don't think its worth the extra effort
 			typedef std::vector< ParameterData >					Params;
-			typedef std::vector< ParameterData >::iterator			ParamIterator;
-			typedef std::vector< ParameterData >::const_iterator	ParamConstIterator;
+			typedef std::vector< ParameterData >::iterator			ParamsIterator;
+			typedef std::vector< ParameterData >::const_iterator	ParamsConstIterator;
 
 			BlockData();
 
