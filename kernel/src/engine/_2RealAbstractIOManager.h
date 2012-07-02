@@ -18,6 +18,10 @@
 
 #pragma once
 
+#include "app/_2RealCallbacks.h"
+#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealPoco.h"
+
 #include <string>
 
 namespace _2Real
@@ -27,7 +31,6 @@ namespace _2Real
 	class Inlet;
 	class Outlet;
 	class Parameter;
-	class ParamData;
 
 	class AbstractIOManager
 	{
@@ -37,8 +40,27 @@ namespace _2Real
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
 
-		std::string const&	getName() const;
-		unsigned int		getId() const;
+		std::string const&		getName() const;
+		unsigned int			getId() const;
+
+		typedef std::vector< Inlet * >						InletVector;
+		typedef std::vector< Inlet * >::iterator			InletIterator;
+		typedef std::vector< Inlet * >::const_iterator		InletConstIterator;
+
+		struct OutletIO
+		{
+			Outlet								*outlet;
+			app::OutletDataCallbackHandlers		handlers;
+			app::OutletDataFunctionCallbacks	callbacks;
+		};
+
+		typedef std::vector< OutletIO >						OutletVector;
+		typedef std::vector< OutletIO >::iterator			OutletIterator;
+		typedef std::vector< OutletIO >::const_iterator		OutletConstIterator;
+
+		typedef std::vector< Parameter * >					ParamVector;
+		typedef std::vector< Parameter * >::iterator		ParamIterator;
+		typedef std::vector< Parameter * >::const_iterator	ParamConstIterator;
 
 	protected:
 

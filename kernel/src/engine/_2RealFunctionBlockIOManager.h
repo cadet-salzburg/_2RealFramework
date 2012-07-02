@@ -19,12 +19,6 @@
 #pragma once
 
 #include "engine/_2RealAbstractIOManager.h"
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
-#include "helpers/_2RealPoco.h"
-
-#include <map>
-#include <string>
 
 namespace _2Real
 {
@@ -42,6 +36,7 @@ namespace _2Real
 		class ParameterHandle;
 	}
 	
+	class ParamData;
 	class FunctionBlock;
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
@@ -51,20 +46,10 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< Inlet * >					InletVector;
-		typedef std::vector< Inlet * >::iterator		InletIterator;	
-		typedef std::vector< Outlet * >					OutletVector;
-		typedef std::vector< Outlet * >::iterator		OutletIterator;	
-		typedef std::vector< Parameter * >				ParamVector;
-		typedef std::vector< Parameter * >::iterator	ParamIterator;	
-
 		FunctionBlockIOManager( FunctionBlock &owner );
 		~FunctionBlockIOManager();
 
-		// stuff that is inherited
-
 		void						clear();
-
 		void						registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
 		void						unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData );
 		void						registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler );
@@ -73,8 +58,6 @@ namespace _2Real
 		void						unregisterFromNewData( app::BlockDataCallback callback, void *userData );
 		void						registerToNewData( app::AbstractBlockDataCallbackHandler &handler );
 		void						unregisterFromNewData( app::AbstractBlockDataCallbackHandler &handler );
-
-		// stuff that is exclusive to this class: called by function block & function state mgr
 
 		void						addInlet( ParamData const& data );
 		void						addOutlet( ParamData const& data );
@@ -106,10 +89,10 @@ namespace _2Real
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 		ParamVector						m_Params;
-				
-		Inlet &						getInlet( std::string const& name );
-		Outlet &					getOutlet( std::string const& name );
-		Parameter &					getParameter( std::string const& name );
+
+		Inlet &							getInlet( std::string const& name );
+		Outlet &						getOutlet( std::string const& name );
+		Parameter &						getParameter( std::string const& name );
 
 		Inlet *							findInlet( std::string const& name );
 		Outlet *						findOutlet( std::string const& name );
@@ -117,8 +100,6 @@ namespace _2Real
 
 		// ugh
 		mutable Poco::FastMutex					m_CallbackAccess;
-		app::OutletDataFunctionCallbacks		m_OutletDataFunctionCallbacks;
-		app::OutletDataCallbackHandlers			m_OutletDataCallbackHandlers;
 		app::BlockDataFunctionCallbacks			m_BlockDataFunctionCallbacks;
 		app::BlockDataCallbackHandlers			m_BlockDataCallbackHandlers;
 

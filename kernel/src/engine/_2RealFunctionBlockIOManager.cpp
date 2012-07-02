@@ -58,20 +58,19 @@ namespace _2Real
 
 		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			delete *it;
+			delete it->outlet;
+			for ( app::OutletDataFunctionCallbacks::iterator outIt = it->callbacks.begin(); outIt != it->callbacks.end(); ++outIt )
+			{
+				delete *outIt;
+			}
+
+			for ( app::OutletDataCallbackHandlers::iterator outIt = it->handlers.begin(); outIt != it->handlers.end(); ++outIt )
+			{
+				delete *outIt;
+			}
 		}
 
 		for ( ParamVector::iterator it = m_Params.begin(); it != m_Params.end(); ++it )
-		{
-			delete *it;
-		}
-
-		for ( app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.begin(); it != m_OutletDataFunctionCallbacks.end(); ++it )
-		{
-			delete *it;
-		}
-
-		for ( app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.begin(); it != m_OutletDataCallbackHandlers.end(); ++it )
 		{
 			delete *it;
 		}
@@ -90,51 +89,81 @@ namespace _2Real
 	void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
 	{
 		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
-		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
-		if ( it == m_OutletDataFunctionCallbacks.end() )
+		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			m_OutletDataFunctionCallbacks.insert( cb );
-		}
-		else
-		{
-			delete cb;
+			if ( it->outlet == &outlet )
+			{
+				//it->access.lock();
+				app::OutletDataFunctionCallbacks::iterator cbIt = it->callbacks.find( cb );
+				if ( cbIt == it->callbacks.end() )
+				{
+					it->callbacks.insert( cb );
+				}
+				else delete cb;
+				//it->access.unlock();
+				break;
+			}
 		}
 	}
 
 	void FunctionBlockIOManager::unregisterFromNewData( Outlet const& outlet, app::OutletDataCallback callback, void *userData )
 	{
 		app::OutletDataFunctionCallback *cb = new app::OutletDataFunctionCallback( callback, userData );
-		app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.find( cb );
-		if ( it != m_OutletDataFunctionCallbacks.end() )
+		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			delete *it;
-			m_OutletDataFunctionCallbacks.erase(it);
+			if ( it->outlet == &outlet )
+			{
+				//it->access.lock();
+				app::OutletDataFunctionCallbacks::iterator cbIt = it->callbacks.find( cb );
+				if ( cbIt != it->callbacks.end() )
+				{
+					delete *cbIt;
+					it->callbacks.erase( cbIt );
+				}
+				//it->access.unlock();
+				delete cb;
+				break;
+			}
 		}
-		delete cb;
 	}
 
 	void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
 	{
-		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
-		if ( it == m_OutletDataCallbackHandlers.end() )
+		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			m_OutletDataCallbackHandlers.insert( &handler );
-		}
-		else
-		{
-			delete &handler;
+			if ( it->outlet == &outlet )
+			{
+				//it->access.lock();
+				app::OutletDataCallbackHandlers::iterator cbIt = it->handlers.find( &handler );
+				if ( cbIt == it->handlers.end() )
+				{
+					it->handlers.insert( &handler );
+				}
+				else delete &handler;
+				//it->access.unlock();
+				break;
+			}
 		}
 	}
 
 	void FunctionBlockIOManager::unregisterFromNewData( Outlet const& outlet, app::AbstractOutletDataCallbackHandler &handler )
 	{
-		app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.find( &handler );
-		if ( it != m_OutletDataCallbackHandlers.end() )
+		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			delete *it;
-			m_OutletDataCallbackHandlers.erase(it);
+			if ( it->outlet == &outlet )
+			{
+				//it->access.lock();
+				app::OutletDataCallbackHandlers::iterator cbIt = it->handlers.find( &handler );
+				if ( cbIt != it->handlers.end() )
+				{
+					delete *cbIt;
+					it->handlers.erase( cbIt );
+				}
+				//it->access.unlock();
+				delete &handler;
+				break;
+			}
 		}
-		delete &handler;
 	}
 
 	void FunctionBlockIOManager::registerToNewData( app::BlockDataCallback callback, void *userData )
@@ -274,9 +303,9 @@ namespace _2Real
 	{
 		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( ( *it )->getName() == name )
+			if ( it->outlet->getName() == name )
 			{
-				return *it;
+				return it->outlet;
 			}
 		}
 
@@ -306,7 +335,11 @@ namespace _2Real
 	void FunctionBlockIOManager::addOutlet( ParamData const& data )
 	{
 		Outlet *outlet = new Outlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
-		m_Outlets.push_back( outlet );
+
+		OutletIO io;
+		io.outlet = outlet;
+
+		m_Outlets.push_back( io );
 	}
 
 	void FunctionBlockIOManager::addParameter( ParamData const& data )
@@ -329,21 +362,21 @@ namespace _2Real
 		std::list< app::AppData > data;
 		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			( *it )->update();
+			it->outlet->update();
 
-			EngineData const& lastData = ( *it )->getData();
-			app::AppData out = app::AppData( lastData, (*it)->getTypename(), (*it)->getName() );
+			EngineData const& lastData = it->outlet->getData();
+			app::AppData out = app::AppData( lastData, it->outlet->getTypename(), it->outlet->getName() );
 
 			// what if an outlet discarded its data?
 
-			for ( app::OutletDataFunctionCallbacks::iterator it = m_OutletDataFunctionCallbacks.begin(); it != m_OutletDataFunctionCallbacks.end(); ++it )
+			for ( app::OutletDataFunctionCallbacks::iterator cbIt = it->callbacks.begin(); cbIt != it->callbacks.end(); ++cbIt )
 			{
-				( *it )->invoke( out );
+				( *cbIt )->invoke( out );
 			}
 
-			for ( app::OutletDataCallbackHandlers::iterator it = m_OutletDataCallbackHandlers.begin(); it != m_OutletDataCallbackHandlers.end(); ++it )
+			for ( app::OutletDataCallbackHandlers::iterator cbIt = it->handlers.begin(); cbIt != it->handlers.end(); ++cbIt )
 			{
-				( *it )->invoke( out );
+				( *cbIt )->invoke( out );
 			}
 
 			data.push_back( out );

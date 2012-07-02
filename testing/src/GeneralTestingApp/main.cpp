@@ -103,27 +103,17 @@ int main( int argc, char *argv[] )
 	{
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 		BundleData const& bundleData = bundleHandle.getBundleData();
-		//cout << bundleData << endl,			// DATA is ok, but formatting is all wrong
 
 		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
 		BlockData const& outData = outHandle.getBlockData();
-		//cout << outData << endl;				// DATA is ok, but formatting is all wrong
-
-		outHandle.setUpdateRate( 1.0 );
-		//outHandle.setUp();
-		//outHandle.start();
+		outHandle.setUpdateRate( 0.2 );
 
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
 		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
 		BlockData const& inData = inHandle.getBlockData();
-		//cout << inData << endl;				// DATA is ok, but formatting is all wrong
-
-		inHandle.setUpdateRate( 0.5 );
-		//inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
-		//inHandle.setInletPolicy( VALID_DATA );
-		//inHandle.setUp();
-		//inHandle.start();
+		inHandle.setUpdateRate( 1.0 );
+		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::DATA_NEW );
