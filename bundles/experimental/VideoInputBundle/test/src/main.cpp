@@ -1,12 +1,9 @@
 #include <windows.h>
 #include <iostream>
 #include <string>
-
 #include "_2RealApplication.h"
-#include "_2RealEngine.h"
-#include "_2RealUpdatePolicy.h"
-#include "_2RealParameterData.h"
-#include "_2RealImageT.h"
+#include "app/_2RealBundleHandle.h"
+#include "_2RealDatatypes.h"
 #include <boost/thread/mutex.hpp>
 #include "GL/glew.h"
 #include "GL/wglew.h"
@@ -83,12 +80,13 @@ private:
 class videoApp {
 public:
 	ImageT<unsigned char>	m_VideoImage;
-	BundleIdentifier		m_BundleId;	
-	BlockIdentifier			m_BlockId; 
+
+	app::BundleHandle			m_BundleHandle;	
+	app::BlockHandle			m_BlockHandle; 
 	boost::mutex			m_Mutex;
 	int m_DeviceId;
 
-	void updateData(std::list<OutputData> data)
+	void updateData(std::list<_2Real::app::AppData > const &data)
 	{
 		m_Mutex.lock();
 		m_VideoImage = data.front().getData< ImageT<unsigned char> >();
@@ -98,25 +96,32 @@ public:
 	{
 		m_DeviceId = 0;
 		std::string directory	= "../experimental/bin/win/";
-		Engine		&m_Engine	= Engine::instance();
-		System*		m_System	= new _2Real::System( "VideoInput_System" );
+		app::Engine		&m_Engine	= app::Engine::instance();
 		std::string bundleName	= "VideoInputBundle";
 		std::string blockName	= "VideoInputBlock";
 		try 
 		{
 			//Load bundle for use in runtime engine
 			m_Engine.setBaseDirectory( directory );
-			m_BundleId = m_Engine.load( bundleName.append( shared_library_suffix ) );
-			m_BlockId  = m_System->createBlock( m_BundleId, blockName );
+			m_BundleHandle = m_Engine.loadBundle( bundleName );
+
+			app::BundleInfo const& bundleData = m_BundleHandle.getBundleInfo();
+
+			m_BlockHandle  = m_BundleHandle.createBlockInstance( blockName );
+			m_BlockHandle.setUpdateRate(30);
+
+			m_BlockHandle.setup();
+			m_BlockHandle.start();
 
 			//Create certain blocks to a runtime system
-			UpdatePolicy fpsTrigger;
-			fpsTrigger.triggerByUpdateRate( 100.f );
-			m_System->setPolicy(m_BlockId, fpsTrigger);
-			m_System->setup(m_BlockId);
-			m_System->start(m_BlockId);
+			//UpdatePolicy fpsTrigger;
+			//fpsTrigger.triggerByUpdateRate( 100.f );
+			//m_System->setPolicy(m_BlockId, fpsTrigger);
+			//m_System->setup(m_BlockId);
+			//m_System->start(m_BlockId);
+
+			m_BlockHandle.registerToNewData( *this, &videoApp::updateData );
 			// setup callbacks
-			m_System->registerToAllOutletData( m_BlockId, *this, &videoApp::updateData );
 
 			SDL_Init( SDL_INIT_VIDEO );
 			SDL_Window		*window;
@@ -126,6 +131,8 @@ public:
 			context = SDL_GL_CreateContext( window );
 			string error = SDL_GetError();
 			cout << error << endl;
+
+			app::ParameterHandle deviceIndex = m_BlockHandle.getParameterHandle("DeviceIndex");
 
 			//needs to happen after 1st window
 			GLenum err = glewInit();
@@ -218,11 +225,11 @@ public:
 						{
 						case SDLK_UP:
 							m_DeviceId-=1;
-							m_System->setValue<int>(m_BlockId, "deviceIndexInlet", m_DeviceId );
+							deviceIndex.setValue( m_DeviceId );
 							break;
 						case SDLK_DOWN:
 							m_DeviceId+=1;
-							m_System->setValue<int>(m_BlockId, "deviceIndexInlet", m_DeviceId );
+							deviceIndex.setValue( m_DeviceId );
 							break;
 						}
 						break;

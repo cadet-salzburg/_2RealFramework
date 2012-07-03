@@ -1,16 +1,14 @@
 #pragma once
 #include "_2RealBlock.h"
-#include "_2RealOutletHandle.h"
 #include "videoInput.h"
-#include "_2RealImageT.h"
 #include <vector>
 
-class CameraDeviceManager : public _2Real::ContextBlock
+class CameraDeviceManager : public _2Real::bundle::ContextBlock
 {
 public:
 	CameraDeviceManager() : ContextBlock() {};
 	~CameraDeviceManager() {};
-	void							setup( _2Real::FrameworkContext &context );
+	void							setup( _2Real::bundle::BlockHandle &context );
 	void							update();
 	void							shutdown() {};
 

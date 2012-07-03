@@ -1,12 +1,10 @@
 #include "CameraDeviceManager.h"
-#include "_2RealFrameworkContext.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
 
 #include <iostream>
 #include <string>
 
-using _2Real::FrameworkContext;
+using _2Real::bundle::Block;
+using _2Real::bundle::BlockHandle;
 using _2Real::Exception;
 using std::cout;
 using std::endl;
@@ -14,7 +12,7 @@ using std::string;
 
 int CameraDeviceManager::m_NumDevices = 0;
 
-void CameraDeviceManager::setup( FrameworkContext &context )
+void CameraDeviceManager::setup( BlockHandle &context )
 {
 	try
 	{

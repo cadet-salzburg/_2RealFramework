@@ -2,16 +2,12 @@
 #include "VideoInputBlock.h"
 
 #include "_2RealBundle.h"
-#include "_2RealBundleMetaInfo.h"
-#include "_2RealBlockMetaInfo.h"
-#include "_2RealContextBlockMetaInfo.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
-#include "_2RealImageT.h"
 #include <sstream>
 
 using namespace _2Real;
 
+using namespace _2Real::bundle;
+using			_2Real::Exception;
 using std::string;
 using std::cout;
 using std::endl;
@@ -21,7 +17,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 	try
 	{
 		info.setDescription( "Camera Capture" );
-		info.setAuthor( "Nikolas Psarudakis" );
+		info.setAuthor( "Robert Praxmarer" );
 		info.setCategory( "experimental" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
@@ -29,10 +25,10 @@ void getBundleMetainfo( BundleMetainfo& info )
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
 		BlockMetainfo cameraCapture = info.exportBlock< VideoInputBlock, WithContext >( "VideoInputBlock" );
 
-		cameraCapture.addInlet<int>("deviceIndexInlet", 2);
+		cameraCapture.addParameter<int>( "DeviceIndex", 0 );
 		cameraCapture.addOutlet<ImageT<unsigned char>>("imageOutlet");
 
-		cameraCapture.setDescription( "Video Input" );
+		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )
 	{

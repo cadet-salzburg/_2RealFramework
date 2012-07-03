@@ -1,19 +1,21 @@
-﻿Build started 28.06.2012 14:19:39.
-     1>Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" on node 2 (build target(s)).
-     1>InitializeBuildStatus:
+﻿Build started 03.07.2012 14:51:48.
+     1>Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" on node 2 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Release\VideoInputBundle.lastbuildstate".
+       InitializeBuildStatus:
          Creating "Release\VideoInputBundle.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\Libraries\boost_1_48_0 /ID:\Work\CADET\Repository\cadet\externalLibs\poco\XML\include /ID:\Work\CADET\Repository\cadet\externalLibs\poco\Foundation\include /I..\..\..\..\..\kernel\src /ID:\SDK\videoInputLib\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\CameraDeviceManager.cpp ..\..\src\VideoInputBlock.cpp ..\..\src\VideoInputBundle.cpp
-         CameraDeviceManager.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\Libraries\boost_1_48_0 /ID:\Work\CADET\Repository\cadet\externalLibs\poco\XML\include /ID:\Work\CADET\Repository\cadet\externalLibs\poco\Foundation\include /I..\..\..\..\..\kernel\src /ID:\SDK\videoInputLib\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\VideoInputBlock.cpp ..\..\src\VideoInputBundle.cpp ..\..\src\CameraDeviceManager.cpp
          VideoInputBlock.cpp
          VideoInputBundle.cpp
+         CameraDeviceManager.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\..\bin\win\VideoInputBundle_32.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\Libraries\boost_1_48_0\lib /LIBPATH:D:\Work\CADET\Repository\cadet\externalLibs\poco\lib /LIBPATH:..\..\..\..\..\kernel\lib /LIBPATH:D:\SDK\videoInputLib _2RealEngine_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib videoInput.lib /NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /ManifestFile:"Release\VideoInputBundle_32.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\VideoInputBundle_32.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\..\bin\win\VideoInputBundle_32.lib" /MACHINE:X86 /DLL Release\VideoInputBlock.obj
          Release\VideoInputBundle.obj
          Release\CameraDeviceManager.obj
             Creating library ..\..\..\bin\win\VideoInputBundle_32.lib and object ..\..\..\bin\win\VideoInputBundle_32.exp
          Generating code
-     1>d:\work\cadet\repository\cadet\trunk\_2realframework\bundles\experimental\videoinputbundle\src\cameradevicemanager.cpp(78): warning C4715: 'CameraDeviceManager::getPixels' : not all control paths return a value
+     1>d:\work\cadet\repository\cadet\trunk\_2realframework\bundles\experimental\videoinputbundle\src\cameradevicemanager.cpp(76): warning C4715: 'CameraDeviceManager::getPixels' : not all control paths return a value
          Finished generating code
      1>videoInput.lib(videoInput.obj) : warning LNK4099: PDB 'vc90.pdb' was not found with 'videoInput.lib(videoInput.obj)' or at 'D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\vc90.pdb'; linking object as if no debug info
          CameraCaptureBundle.vcxproj -> D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\..\..\..\bin\win\VideoInputBundle_32.dll
@@ -22,8 +24,8 @@
        FinalizeBuildStatus:
          Deleting file "Release\VideoInputBundle.unsuccessfulbuild".
          Touching "Release\VideoInputBundle.lastbuildstate".
-     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" (build target(s)).
+     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoInputBundle\build\vc10\CameraCaptureBundle.vcxproj" (rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.91
+Time Elapsed 00:00:02.87
