@@ -7,11 +7,11 @@ class BlockOutletWidget : public QGroupBox
 Q_OBJECT
 
 public:
-	BlockOutletWidget::BlockOutletWidget(){};
-	BlockOutletWidget::BlockOutletWidget(_2Real::System* system, _2Real::BlockIdentifier blockId, std::string strOutletName, QWidget *parent=0);
+	BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& outletHandle, QWidget *parent=0);
 
-	void receiveData(_2Real::OutputData& data);
+	void receiveData(_2Real::app::AppData const& data);
 
 private:
-	QLabel*		m_ValueLabel;
+	QWidget*						m_ValueWidget;
+	_2Real::app::OutletHandle		m_OutletHandle;
 };

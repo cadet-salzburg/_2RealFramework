@@ -1,18 +1,15 @@
 #include "CameraCaptureBlock.h"
-#include "_2RealFrameworkContext.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
 
 #include <iostream>
 #include <string>
 
-using _2Real::FrameworkContext;
+using _2Real::bundle::BlockHandle;
 using _2Real::Exception;
 using std::cout;
 using std::endl;
 using std::string;
 
-void CameraCaptureBlock::setup( FrameworkContext &context )
+void CameraCaptureBlock::setup( BlockHandle &context )
 {
 	try
 	{

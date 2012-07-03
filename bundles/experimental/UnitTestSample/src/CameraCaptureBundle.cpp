@@ -2,13 +2,10 @@
 #include "CameraCaptureBlock.h"
 
 #include "_2RealBundle.h"
-#include "_2RealBundleMetaInfo.h"
-#include "_2RealBlockMetaInfo.h"
-#include "_2RealContextBlockMetaInfo.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
+#include "_2RealDataTypes.h"
 
-using namespace _2Real;
+using namespace _2Real::bundle;
+using			_2Real::Exception;
 
 using std::string;
 using std::cout;
@@ -29,6 +26,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
 		cameraCapture.addInlet<double>("doubleInlet", 0);
+		cameraCapture.addOutlet<_2Real::ImageT<unsigned char>>("imageOutlet");
 		cameraCapture.addOutlet<double>("doubleOutlet");
 
 		cameraCapture.setDescription( "Camera Capture" );

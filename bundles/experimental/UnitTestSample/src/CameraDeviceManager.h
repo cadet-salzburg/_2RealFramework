@@ -1,7 +1,6 @@
 #include "_2RealBlock.h"
-#include "_2RealOutletHandle.h"
 
-class CameraDeviceManager : public _2Real::ContextBlock
+class CameraDeviceManager : public _2Real::bundle::ContextBlock
 {
 
 public:
@@ -10,11 +9,11 @@ public:
 	~CameraDeviceManager() {}
 	void update();
 	void shutdown() {}
-	void setup( _2Real::FrameworkContext &context );
+	void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 
-	_2Real::OutletHandle			m_ContextEnum;
-	_2Real::OutletHandle			m_ContextNumber;
+	_2Real::bundle::OutletHandle			m_ContextEnum;
+	_2Real::bundle::OutletHandle			m_ContextNumber;
 
 };

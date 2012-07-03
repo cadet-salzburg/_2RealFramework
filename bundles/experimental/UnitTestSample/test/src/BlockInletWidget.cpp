@@ -3,25 +3,32 @@
 using namespace std;
 using namespace _2Real;
 
-BlockInletWidget::BlockInletWidget(_2Real::System* system, _2Real::BlockIdentifier blockId, std::string strInletName, QWidget *parent) : m_pSystem(system), QGroupBox(parent), m_BlockId(blockId), m_strInletName(strInletName)
+BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) : QGroupBox(parent)
 {
-	QHBoxLayout*	layout = new QHBoxLayout();
-	layout->addWidget( new QLabel(QString::fromStdString( strInletName )) );
+	try
+	{
+		QHBoxLayout*	layout = new QHBoxLayout();
+		layout->addWidget( new QLabel(QString::fromStdString( inletHandle.getName())) );
 	
-	m_ValueWidget = new QDoubleSpinBox ();
-	m_ValueWidget->setSingleStep(1);
+		m_ValueWidget = new QDoubleSpinBox ();
+		m_ValueWidget->setSingleStep(1);
 	
-	connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setValue(double)));
-	layout->addWidget( m_ValueWidget );
+		connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setValue(double)));
+		layout->addWidget( m_ValueWidget );
 
-	setLayout( layout );
+		setLayout( layout );
+	}
+	catch(Exception& e)
+	{
+		cout << e.message() << e.what() << std::endl;
+	}
 }
 
 void BlockInletWidget::setValue(double value)
 {
 	try
 	{
-		m_pSystem->setValue<double>(m_BlockId, m_strInletName, value);
+	//	setValue<double>(value);
 	}
 	catch(_2Real::Exception& e)
 	{

@@ -1,16 +1,11 @@
 #include "BlockUnitTestWidget.h"
+
 #include "BlockInletWidget.h"
 #include "BlockOutletWidget.h"
 
 using namespace std;
 using namespace _2Real;
-
-
-#ifndef _DEBUG
-	#define shared_library_suffix "_32.dll"
-#else
-	#define shared_library_suffix "_32d.dll"
-#endif
+using namespace _2Real::app;
 
 
 BlockUnitTestWidget::BlockUnitTestWidget()
@@ -26,42 +21,39 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 {
 	string directory = "../experimental/bin/win/";
 	Engine &engine = Engine::instance();
-	m_p2RealSystem = new _2Real::System(blockName+"_UnitTest");
-	m_strBlockName = blockName;
 
 	try 
 	{
 		// load bundles for use in runtime engine
 		engine.setBaseDirectory( directory );
-		m_BundleId = engine.load( bundleName.append( shared_library_suffix ) );
-
-		// create certain blocks to a runtime system
-		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 10.0f );
-		m_BlockId = m_p2RealSystem->createBlock( m_BundleId, blockName);
-		m_p2RealSystem->setPolicy(m_BlockId, fpsTrigger);
+		BundleHandle bundleHandle = engine.loadBundle( "CameraCaptureBundle" );
+		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
+		
+		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
+		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
+		m_CameraBlockHandle.setUpdateRate( 0.2 );
 		
 		// set needed setup parameters for block otherwise set to default
 
 		// setup
-		m_p2RealSystem->setup(m_BlockId);
+		m_CameraBlockHandle.setup();
 		// start
-		m_p2RealSystem->start(m_BlockId);
+		m_CameraBlockHandle.start();
 		// setup callbacks
-		m_p2RealSystem->registerToAllOutletData( m_BlockId, *this, &BlockUnitTestWidget::receiveData );
+		m_CameraBlockHandle.registerToNewData( *this, &BlockUnitTestWidget::receiveData );
 	}
 	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 	}
-
+	
 	setupGui();
 
 }
 
 void BlockUnitTestWidget::shutdown()
 {
-	m_p2RealSystem->clear();
+	//Engine::instance().clear();
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -76,9 +68,9 @@ void BlockUnitTestWidget::setupGui()
 	show();
 }
 
-void BlockUnitTestWidget::receiveData(std::list<OutputData> data)
+void BlockUnitTestWidget::receiveData(std::list< _2Real::app::AppData > const& data)
 {
-	//printf("received");
+	//printf("received data");
 }
 
 QGroupBox* BlockUnitTestWidget::createButtonWidgets()
@@ -106,29 +98,28 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 QGroupBox* BlockUnitTestWidget::createInletWidgets()
 {
 	QGroupBox *groupBox = new QGroupBox("Inlets");
-	ParameterDataMap outlets = Engine::instance().getBlockData(m_BundleId, m_strBlockName).getInlets();
+	BlockInfo::Params inlets = m_CameraBlockHandle.getBlockInfo().getInlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
-	for(auto it = outlets.begin(); it != outlets.end(); it++)
+	for(auto it = inlets.begin(); it != inlets.end(); it++)
 	{
-		BlockInletWidget* tmp = new BlockInletWidget(m_p2RealSystem, m_BlockId, it->first);
+		BlockInletWidget* tmp = new BlockInletWidget(  m_CameraBlockHandle.getInletHandle(it->getName()) );
 		layout->addWidget(tmp);
 	}
 
 	groupBox->setLayout(layout);
 	return groupBox;
-	
 }
 
 QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 {
 	QGroupBox* groupBox = new QGroupBox("Outlets");
-	ParameterDataMap outlets = Engine::instance().getBlockData(m_BundleId, m_strBlockName).getOutlets();
+	BlockInfo::Params outlets = m_CameraBlockHandle.getBlockInfo().getOutlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		BlockOutletWidget* tmp = new BlockOutletWidget(m_p2RealSystem, m_BlockId, it->first);
+		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()) );
 		layout->addWidget(tmp);
 	}
 
@@ -140,7 +131,7 @@ void BlockUnitTestWidget::onStart()
 { 
 	m_pStartButton->setDisabled(true);
 	m_pStopButton->setDisabled(false);
-	m_p2RealSystem->start(m_BlockId);
+	m_CameraBlockHandle.start();
 }
 
 void BlockUnitTestWidget::onStop()
@@ -158,5 +149,5 @@ void BlockUnitTestWidget::onStopFinished()
 
 void BlockUnitTestWidget::stopBlock()
 {
-	m_p2RealSystem->stop(m_BlockId);
+	m_CameraBlockHandle.stop();
 }
