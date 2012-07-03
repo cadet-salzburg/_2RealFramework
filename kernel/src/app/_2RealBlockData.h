@@ -56,7 +56,7 @@ namespace _2Real
 
 			Params const&		getParameters() const;
 			Params const&		getInlets() const;
-			Params const&		getOutlets() const;
+			Params const&		getOutlets() const; 
 
 		private:
 
