@@ -22,6 +22,7 @@
 #include "helpers/_2RealException.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "app/_2RealOutletHandle.h"
+#include "engine/_2RealEngineImpl.h"
 
 #ifdef _DEBUG
 	#include <assert.h>
@@ -52,9 +53,9 @@ namespace _2Real
 		m_Buffer.updateDataBuffer();
 	}
 
-	void Inlet::setDefaultValue( TimestampedData const& defaultValue )
+	void Inlet::setDefaultValue( EngineData const& data )
 	{
-		m_Buffer.setDefaultData( defaultValue );
+		m_Buffer.setDefaultData( TimestampedData( data, EngineImpl::instance().getElapsedTime() ) );
 	}
 
 	void Inlet::disableTriggering( TimestampedData const& data )

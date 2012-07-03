@@ -22,7 +22,7 @@
 #include "engine/_2RealAbstractUberBlock.h"
 
 #define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
+	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );\
 
 namespace _2Real
 {

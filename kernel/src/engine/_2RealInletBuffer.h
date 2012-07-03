@@ -71,7 +71,7 @@ namespace _2Real
 		void updateDataBuffer();
 		void disableTriggering( TimestampedData const& data );
 		void setInsertionPolicy( AbstractInsertionPolicy &policy );
-		void setDefaultData( TimestampedData const& defaultData );
+		void setDefaultData( TimestampedData &defaultData );
 		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
 		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
 

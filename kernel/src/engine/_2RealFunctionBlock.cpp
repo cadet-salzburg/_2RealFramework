@@ -78,6 +78,14 @@ namespace _2Real
 
 	FunctionBlock::~FunctionBlock()
 	{
+		// at tis point, block should be stopped
+
+		//delete m_UpdatePolicy;
+		//std::cout << "deleted policy" << std::endl;
+		//delete m_IOManager;
+		//std::cout << "deleted io" << std::endl;
+		//delete m_StateManager;
+		//std::cout << "deleted states" << std::endl;
 	}
 
 	BlockData const& FunctionBlock::getMetadata() const

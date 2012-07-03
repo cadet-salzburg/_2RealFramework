@@ -19,7 +19,6 @@
 
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealEngineImpl.h"
-#include "engine/_2RealTimer.h"
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
@@ -39,13 +38,24 @@ namespace _2Real
 	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( FunctionBlock &owner ) :
 		AbstractUpdatePolicy( owner ),
 		m_WasChanged( false ),
-		m_UpdateTime( -1 )
+		m_UpdateTime( -1 ),
+		m_TimeTrigger( nullptr )
 	{
+	}
+
+	FunctionBlockUpdatePolicy::~FunctionBlockUpdatePolicy()
+	{
+		if ( m_TimeTrigger != nullptr )
+		{
+			delete m_TimeTrigger;
+			m_TimeTrigger = nullptr;
+		}
 	}
 
 	void FunctionBlockUpdatePolicy::addInlet( Inlet &inlet )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+
 		m_WasChanged = true;
 		m_InletPolicies.insert( make_pair( &inlet, InletTriggerCtor( new InletTriggerCreator< ValidData >() ) ) );
 		m_InletTriggers.insert( make_pair( &inlet, InletTriggerPtr() ) );
@@ -57,23 +67,15 @@ namespace _2Real
 
 		if ( !m_WasChanged ) return;
 
-		// this function is to be called by the state manager itself, after an update is finished but before the inlet buffers update themselves
-
-		if ( m_TimeTrigger.get() != nullptr )
+		if ( m_TimeTrigger != nullptr )
 		{
-			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *m_TimeTrigger.get() );
-			m_StateManager->removeTrigger( *m_TimeTrigger.get() );
+			delete m_TimeTrigger;
+			m_TimeTrigger = nullptr;
 		}
 
 		if ( m_UpdateTime > 0 )
 		{
-			m_TimeTrigger.reset( new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime ) );
-			m_StateManager->addTrigger( *m_TimeTrigger.get() );
-			EngineImpl::instance().getTimer().registerToTimerSignal( *m_TimeTrigger.get() );
-		}
-		else
-		{
-			m_TimeTrigger.reset();
+			m_TimeTrigger = new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime );
 		}
 
 		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )

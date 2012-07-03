@@ -23,7 +23,7 @@
 using std::string;
 
 #define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );\
+	if ( obj == nullptr ) throw UninitializedHandleException( "param handle not initialized" );\
 
 namespace _2Real
 {

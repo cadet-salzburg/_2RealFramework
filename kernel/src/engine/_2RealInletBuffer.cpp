@@ -160,10 +160,11 @@ namespace _2Real
 	}
 
 	// setting an inlets' value will set the default data, basically
-	void InletBuffer::setDefaultData( TimestampedData const& defaultData )
+	void InletBuffer::setDefaultData( TimestampedData &defaultData )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 		m_DefaultData = defaultData;
+		receiveData( defaultData );
 	}
 
 	void InletBuffer::registerUpdateTrigger( AbstractInletBasedTrigger &trigger )

@@ -22,7 +22,7 @@
 #include "helpers/_2RealException.h"
 
 #define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
+	if ( obj == nullptr ) throw UninitializedHandleException( "context block handle not initialized" );\
 
 namespace _2Real
 {

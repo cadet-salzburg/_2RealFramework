@@ -22,7 +22,7 @@
 #include "engine/_2RealAbstractUberBlock.h"
 
 #define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
+	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );\
 
 namespace _2Real
 {
@@ -70,6 +70,12 @@ namespace _2Real
 			{
 				m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_Inlet );
 			}
+		}
+
+		void InletHandle::setDefaultValue( EngineData const& data )
+		{
+			checkHandle( m_Inlet );
+			m_Inlet->setDefaultValue( data );
 		}
 	}
 }

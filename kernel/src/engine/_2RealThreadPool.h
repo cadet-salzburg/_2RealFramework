@@ -31,6 +31,7 @@
 namespace _2Real
 {
 
+	class EngineImpl;
 	class PooledThread;
 	class FunctionBlockStateManager;
 	class Timer;
@@ -45,7 +46,7 @@ namespace _2Real
 
 	public:
 
-		ThreadPool(const unsigned int capacity, const unsigned int stackSize, std::string const& name);
+		ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name );
 		~ThreadPool();
 
 		void clear();
@@ -57,9 +58,6 @@ namespace _2Real
 		void serviceIsFinished( FunctionBlockStateManager &s );
 		void abortService( FunctionBlockStateManager &s );
 		void executeCleanUp();
-
-		void registerTimeListener( _2Real::Timer &timer );
-		void unregisterTimeListener( _2Real::Timer &timer );
 
 	private:
 
@@ -130,6 +128,8 @@ namespace _2Real
 #ifdef _2REAL_DEBUG
 		long								m_Elapsed;
 #endif
+
+		Timer								&m_Timer;
 
 	};
 

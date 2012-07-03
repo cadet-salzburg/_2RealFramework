@@ -52,8 +52,8 @@ namespace _2Real
 		static EngineImpl & instance();
 
 		// TODO: merge public interfaces with interface of engine impl ?
+		Timer&							getTimer();
 		Logger&							getLogger();
-		Timer &							getTimer();
 		Typetable const&				getTypetable() const;
 		BundleManager &					getBundleManager();
 		ThreadPool &					getThreadPool();
@@ -81,8 +81,8 @@ namespace _2Real
 		// whatever you do. do not change the ordering of member variables here!
 		// ( unless you absolutely have to, in which case, good luck )
 
-		Logger					*m_Logger;
 		Timer					*m_Timer;
+		Logger					*m_Logger;
 		Typetable				*m_Typetable;
 		ThreadPool				*m_ThreadPool;
 		BundleManager			*m_BundleManager;

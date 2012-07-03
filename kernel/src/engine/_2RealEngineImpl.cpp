@@ -19,7 +19,6 @@
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealIdentifier.h"
 #include "helpers/_2RealSingletonHolder.h"
-#include "engine/_2RealTimer.h"
 #include "engine/_2RealTypetable.h"
 #include "engine/_2RealBundleManager.h"
 #include "engine/_2RealThreadPool.h"
@@ -29,6 +28,7 @@
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealCallbacksInternal.h"
+#include "engine/_2RealTimer.h"
 
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealEnum.h"
@@ -38,9 +38,9 @@
 
 #ifdef _2REAL_WINDOWS
 	#ifndef _DEBUG
-		#define shared_library_suffix ".dll"
+		#define shared_library_suffix "32.dll"
 	#else
-		#define shared_library_suffix "_d.dll"
+		#define shared_library_suffix "_32d.dll"
 	#endif
 #elif _2REAL_UNIX
 	#ifndef _DEBUG
@@ -68,10 +68,10 @@ namespace _2Real
 	}
 
 	EngineImpl::EngineImpl() :
-		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer() ),
+		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Typetable( new Typetable() ),
-		m_ThreadPool( new ThreadPool( 15, 0, "2real threadpool" ) ),
+		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_IdCounter( new IdCounter() ),
 		m_SystemBlock( new System( *this ) )
@@ -102,10 +102,6 @@ namespace _2Real
 		m_Typetable->registerType< ImageT < float > >("img_float");
 		m_Typetable->registerType< ImageT < double > >("img_double");
 
-		// currently, the threadpool uses the timer signal to perform cleanup
-		// TODO: probably not a good idea
-		m_ThreadPool->registerTimeListener( *m_Timer );
-
 		m_Timestamp.update();
 	}
 
@@ -117,13 +113,12 @@ namespace _2Real
 			delete m_SystemBlock;
 			delete m_IdCounter;
 			delete m_BundleManager;
-			m_ThreadPool->unregisterTimeListener( *m_Timer );
 			m_ThreadPool->clear();
 			delete m_ThreadPool;
 			delete m_Typetable;
-			delete m_Timer;
 			m_Logger->stop();
 			delete m_Logger;
+			delete m_Timer;
 		}
 		catch ( std::exception &e )
 		{
@@ -152,14 +147,14 @@ namespace _2Real
 		return Identifier( name, m_IdCounter->getId() );
 	}
 
+	Timer& EngineImpl::getTimer()
+	{
+		return *m_Timer;
+	}
+
 	Logger& EngineImpl::getLogger()
 	{
 		return *m_Logger;
-	}
-
-	Timer & EngineImpl::getTimer()
-	{
-		return *m_Timer;
 	}
 
 	Typetable const& EngineImpl::getTypetable() const

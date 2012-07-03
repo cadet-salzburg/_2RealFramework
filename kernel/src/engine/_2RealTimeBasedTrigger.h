@@ -21,6 +21,8 @@
 
 #include "engine/_2RealAbstractUpdateTrigger.h"
 #include "engine/_2RealAbstractStateManager.h"
+#include "engine/_2RealEngineImpl.h"
+#include "engine/_2RealTimer.h"
 
 namespace _2Real
 {
@@ -31,6 +33,7 @@ namespace _2Real
 	public:
 
 		AbstractTimeBasedTrigger() : AbstractUpdateTrigger( false ) {}
+
 		virtual ~AbstractTimeBasedTrigger() {}
 		virtual void tryTriggerUpdate( long &time ) = 0;
 
@@ -48,6 +51,16 @@ namespace _2Real
 			m_DesiredTime( timeslice ),
 			m_ElapsedTime( 0 )
 		{
+			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger< Condition >, long >( *this, &TimeBasedTrigger< Condition >::tryTriggerUpdate );
+			EngineImpl::instance().getTimer().registerToTimerSignal( *cb );
+			m_UpdateManager.addTrigger( *this );
+		}
+
+		~TimeBasedTrigger()
+		{
+			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger< Condition >, long >( *this, &TimeBasedTrigger< Condition >::tryTriggerUpdate );
+			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *cb );
+			m_UpdateManager.removeTrigger( *this );
 		}
 
 		void tryTriggerUpdate( long &time )

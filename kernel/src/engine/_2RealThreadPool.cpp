@@ -22,23 +22,28 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealTimer.h"
+#include "app/_2RealCallbacksInternal.h"
 
 #include <iostream>
 
 namespace _2Real
 {
 
-	ThreadPool::ThreadPool(const unsigned int capacity, const unsigned int stackSize, std::string const& name) :
+	ThreadPool::ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
 		m_StackSize(stackSize),
 		m_Name(name),
 		m_Threads(),
 		m_ReadyRunnables(),
 		m_ExecutingRunnables(),
-		m_AbortedRunnables()
+		m_AbortedRunnables(),
+		m_Timer( engine.getTimer() )
 #ifdef _2REAL_DEBUG
 		, m_Elapsed(0)
 #endif
 	{
+		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
+		m_Timer.registerToTimerSignal( *callback );
+
 		for (unsigned int i=0; i<capacity; ++i)
 		{
 			ThreadPoolCallback *callback = new ThreadPoolCallback(*this);
@@ -49,6 +54,9 @@ namespace _2Real
 
 	ThreadPool::~ThreadPool()
 	{
+		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
+		m_Timer.unregisterFromTimerSignal( *callback );
+
 		clear();
 	}
 
@@ -82,16 +90,6 @@ namespace _2Real
 			it = m_Threads.erase(it);
 		}
 		m_ThreadAccess.unlock();
-	}
-
-	void ThreadPool::registerTimeListener(_2Real::Timer &timer)
-	{
-		timer.registerToTimerSignal(*this);
-	}
-
-	void ThreadPool::unregisterTimeListener(_2Real::Timer &timer)
-	{
-		timer.unregisterFromTimerSignal(*this);
 	}
 
 	void ThreadPool::update(long &time)

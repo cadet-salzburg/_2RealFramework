@@ -63,6 +63,7 @@ namespace _2Real
 		typedef std::shared_ptr< AbstractInletTriggerCreator >	InletTriggerCtor;
 
 		FunctionBlockUpdatePolicy( FunctionBlock &owner );
+		~FunctionBlockUpdatePolicy();
 
 		void addInlet( Inlet &inlet );
 
@@ -74,9 +75,7 @@ namespace _2Real
 
 	private:
 
-		typedef std::shared_ptr< AbstractTimeBasedTrigger >		TimeTriggerPtr;
 		typedef std::shared_ptr< AbstractInletBasedTrigger >	InletTriggerPtr;
-
 		typedef std::map< Inlet *, InletTriggerCtor >		InletPolicyMap;
 		typedef std::map< Inlet *, InletTriggerPtr >		InletTriggerMap;
 
@@ -89,7 +88,7 @@ namespace _2Real
 		bool							m_WasChanged;	// true if user configured anything since the last update
 
 		long							m_UpdateTime;
-		TimeTriggerPtr					m_TimeTrigger;
+		AbstractTimeBasedTrigger		*m_TimeTrigger;
 
 		InletPolicyMap					m_InletPolicies;
 		InletTriggerMap					m_InletTriggers;

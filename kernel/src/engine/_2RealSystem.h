@@ -42,6 +42,7 @@ namespace _2Real
 	public:
 
 		System( EngineImpl &engine );
+		~System();
 
 		void		clearAll();
 		void		clearBlockInstances();

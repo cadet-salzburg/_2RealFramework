@@ -36,6 +36,12 @@ namespace _2Real
 	{
 	}
 
+	System::~System()
+	{
+		clearAll();
+		delete m_SubBlockManager;
+	}
+
 	void System::clearAll()
 	{
 		try
@@ -47,6 +53,7 @@ namespace _2Real
 			std::cout << e.message() << std::endl;
 		}
 
+		m_Links.clear();
 		m_ExceptionEvent.clear();
 	}
 

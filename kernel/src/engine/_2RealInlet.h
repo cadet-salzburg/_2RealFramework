@@ -53,7 +53,7 @@ namespace _2Real
 		void linkTo( app::OutletHandle &outlet );
 		void unlinkFrom( app::OutletHandle &outlet );
 
-		void setDefaultValue( TimestampedData const& defaultValue );
+		void setDefaultValue( EngineData const& data );
 		void disableTriggering( TimestampedData const& data );
 		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
 		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );

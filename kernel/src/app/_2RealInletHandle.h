@@ -52,11 +52,19 @@ namespace _2Real
 			void linkTo( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
 
+			template< typename T >
+			void setDefaultValue( T const& value )
+			{
+				setDefaultValue( EngineData( value ) );
+			}
+
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
 
 		private:
+
+			void				setDefaultValue( EngineData const& data );
 
 			Inlet				*m_Inlet;
 

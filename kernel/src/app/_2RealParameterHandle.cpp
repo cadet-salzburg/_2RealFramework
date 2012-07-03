@@ -21,7 +21,7 @@
 #include "engine/_2RealTimestampedData.h"
 
 #define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
+	if ( obj == nullptr ) throw UninitializedHandleException( "parameter handle not initialized" );\
 
 namespace _2Real
 {

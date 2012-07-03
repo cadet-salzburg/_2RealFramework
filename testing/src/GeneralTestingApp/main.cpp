@@ -91,22 +91,12 @@ private:
 
 };
 
-class Tester
-{
-public:
-	Tester( ParameterHandle &p )
-	{
-		std::cout << p.getName() << std::endl;
-	}
-};
-
 int main( int argc, char *argv[] )
 {
 	Engine &engine = Engine::instance();
 
 	Receiver receiver;
 	BlockReceiver blockReceiver;
-
 	try
 	{
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
@@ -136,11 +126,9 @@ int main( int argc, char *argv[] )
 		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
-		inletHandle.setUpdatePolicy( InletHandle::DATA_VALID );
+		inletHandle.setUpdatePolicy( InletHandle::DATA_NEW );
 
 		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
-
-		Tester( inHandle.getParameterHandle( "param" ) );
 
 		cout << paramHandle.getLongTypename() << endl;
 		cout << paramHandle.getTypename() << endl;
@@ -227,11 +215,26 @@ int main( int argc, char *argv[] )
 			{
 				paramHandle.setValue< unsigned int >( ++cnt );
 			}
+			else if ( line == "default" )
+			{
+				inletHandle.setDefaultValue< unsigned int >( ++cnt );
+			}
 		}
 	}
 	catch ( Exception &e )
 	{
 		cout << e.what() << " " << e.message() << endl;
+	}
+
+	while( 1 )
+	{
+		string line;
+		char lineEnd = '\n';
+		getline( cin, line, lineEnd );
+		if ( line == "quit" )
+		{
+			break;
+		}
 	}
 
 	return 0;
