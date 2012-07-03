@@ -57,7 +57,7 @@ namespace _2Real
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 
 		m_WasChanged = true;
-		m_InletPolicies.insert( make_pair( &inlet, InletTriggerCtor( new InletTriggerCreator< ValidData >() ) ) );
+		m_InletPolicies.insert( make_pair( &inlet, InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) ) );
 		m_InletTriggers.insert( make_pair( &inlet, InletTriggerPtr() ) );
 	}
 

@@ -45,15 +45,16 @@ namespace _2Real
 	{
 		if ( buffer.size() >= m_Max )
 		{
-			buffer.pop_back();
+			// TODO: some sort of overflow cb
+			buffer.pop_front();
 		}
 
-		buffer.push_front( data );
+		buffer.push_back( data );
 		return true;
 	}
 
 	InletBuffer::InletBuffer( EngineData const& defaultData ) :
-		m_InsertionPolicy( new RemoveFirst( 20 ) ),
+		m_InsertionPolicy( new RemoveFirst( 10 ) ),
 		m_Notify( true ),
 		m_DefaultData( defaultData, 0 )
 	{
@@ -65,29 +66,21 @@ namespace _2Real
 		m_NotificationAccess.lock();
 		if ( m_Notify )
 		{
-			// this will lead to an evaluation of the update condition
-			// which in turn can disable 'm_Notify'
-			// or it can reject the data completely
 			for ( InletTriggerList::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
 			{
 				( *it )->tryTriggerUpdate( data );
 			}
-
-			// at this point, notificytions might have been disabled
 			m_NotificationAccess.unlock();
 		}
 		else
 		{
 			m_NotificationAccess.unlock();
 
-			// ok, this data was sent to the buffer when
-			// its trigger cond was already fulfilled -> store it!
 			Poco::ScopedLock< Poco::FastMutex > lock( m_ReceivedAccess );
 			m_InsertionPolicy->insertData( data, m_ReceivedDataItems );
 		}
 	}
 
-	// called by i/o manager when it's time to actually update the inlets
 	TimestampedData const& InletBuffer::getCurrentData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
@@ -102,19 +95,12 @@ namespace _2Real
 		return m_TriggeringData;
 	}
 
-	// called by i/o manager after an update
-	// b/c default values & other data values need to be handled
-	// also, this happens after update policy was changed!
 	void InletBuffer::updateDataBuffer()
 	{
+		// receiving data will have to wait now
 		m_NotificationAccess.lock();
 		m_Notify = true;
-		m_NotificationAccess.unlock();
 
-		// TODO:
-		// while iterating over this, it might actually be receiving data
-		// since the trigger flag is, at this point, still not set
-		// not sure if the mutex here is the best solution?
 		if ( m_ReceivedDataItems.empty() )
 		{
 			m_DataAccess.lock();
@@ -128,6 +114,8 @@ namespace _2Real
 		{
 			for ( DataBuffer::iterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
 			{
+				if ( !m_Notify ) break;
+
 				TimestampedData d = *dIt;
 				dIt = m_ReceivedDataItems.erase( dIt );
 
@@ -138,7 +126,7 @@ namespace _2Real
 			}
 		}
 
-		m_ReceivedAccess.unlock();
+		m_NotificationAccess.unlock();
 	}
 
 	// called by an update manager if an update condition for this buffer was fulfilled

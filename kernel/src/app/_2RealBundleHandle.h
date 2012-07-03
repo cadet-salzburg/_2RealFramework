@@ -39,7 +39,7 @@ namespace _2Real
 
 			BundleInfo getBundleInfo() const;
 
-			BlockHandle createBlockInstance( std::string const& blockName );
+			BlockHandle & createBlockInstance( std::string const& blockName );
 
 		private:
 

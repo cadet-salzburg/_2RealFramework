@@ -33,19 +33,19 @@ namespace _2Real
 		{
 		}
 
-		ParameterHandle BlockHandle::getParameterHandle( string const& name )
+		ParameterHandle & BlockHandle::getParameterHandle( string const& name )
 		{
-			return m_Impl.createBundleParameterHandle( name );
+			return m_Impl.getBundleParameterHandle( name );
 		}
 
-		InletHandle BlockHandle::getInletHandle( string const& name )
+		InletHandle & BlockHandle::getInletHandle( string const& name )
 		{
-			return m_Impl.createBundleInletHandle( name );
+			return m_Impl.getBundleInletHandle( name );
 		}
 
-		OutletHandle BlockHandle::getOutletHandle( string const& name )
+		OutletHandle & BlockHandle::getOutletHandle( string const& name )
 		{
-			return m_Impl.createBundleOutletHandle( name );
+			return m_Impl.getBundleOutletHandle( name );
 		}
 	}
 }

@@ -31,6 +31,7 @@ namespace _2Real
 
 	class AbstractFunctionBlockState;
 	class AbstractUpdateTrigger;
+	class AbstractTimeBasedTrigger;
 	class UberBlockBasedTrigger;
 	class ServiceUpdates;
 	class FunctionBlockIOManager;
@@ -59,11 +60,14 @@ namespace _2Real
 		bool shutDown( const long timeout );	// system
 		void updateFunctionBlock();				// threadpool
 
-		void tryTrigger( AbstractUpdateTrigger &trigger );
+		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
+		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
 		void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
 
-		void addTrigger( AbstractUpdateTrigger &trigger );
-		void removeTrigger( AbstractUpdateTrigger &trigger );
+		void addTrigger( AbstractInletBasedTrigger &trigger );
+		void removeTrigger( AbstractInletBasedTrigger &trigger );
+		void addTrigger( AbstractTimeBasedTrigger &trigger );
+		void removeTrigger( AbstractTimeBasedTrigger &trigger );
 		void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
 		void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
 
@@ -97,6 +101,7 @@ namespace _2Real
 
 		mutable Poco::FastMutex							m_TriggerAccess;
 		AbstractStateManager::TriggerList				m_Triggers;
+		AbstractTimeBasedTrigger						*m_TimeTrigger;
 
 		mutable Poco::FastMutex							m_UberBlockTriggerAccess;
 		AbstractStateManager::UberBlockTriggerList		m_UberBlockTriggers;

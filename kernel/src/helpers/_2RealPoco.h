@@ -27,8 +27,8 @@
 #include "Poco/Runnable.h"
 #include "Poco/Event.h"
 #include "Poco/ThreadLocal.h"
-#include "Poco/Delegate.h"
-#include "Poco/BasicEvent.h"
+//#include "Poco/Delegate.h"
+//#include "Poco/BasicEvent.h"
 
 //namespace _2Real
 //{

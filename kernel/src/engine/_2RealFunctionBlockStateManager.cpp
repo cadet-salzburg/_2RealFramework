@@ -47,7 +47,8 @@ namespace _2Real
 		m_IOManager( nullptr ),
 		m_UpdatePolicy( nullptr ),
 		m_Threads( EngineImpl::instance().getThreadPool() ),
-		m_Logger( EngineImpl::instance().getLogger() )
+		m_Logger( EngineImpl::instance().getLogger() ),
+		m_TimeTrigger( nullptr )
 	{
 	}
 
@@ -451,13 +452,13 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockStateManager::addTrigger( AbstractUpdateTrigger &trigger )
+	void FunctionBlockStateManager::addTrigger( AbstractInletBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
 		m_Triggers.push_back( &trigger );
 	}
 
-	void FunctionBlockStateManager::removeTrigger( AbstractUpdateTrigger &trigger )
+	void FunctionBlockStateManager::removeTrigger( AbstractInletBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
 		for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); /**/ )
@@ -471,16 +472,87 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockStateManager::tryTrigger( AbstractUpdateTrigger &trigger )
+	void FunctionBlockStateManager::addTrigger( AbstractTimeBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		if ( m_TimeTrigger != nullptr )
+		{
+			delete m_TimeTrigger;
+		}
+		m_TimeTrigger = &trigger;
+	}
+
+	void FunctionBlockStateManager::removeTrigger( AbstractTimeBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		if ( m_TimeTrigger != nullptr )
+		{
+			delete m_TimeTrigger;
+		}
+		m_TimeTrigger = nullptr;
+	}
+
+	void FunctionBlockStateManager::tryTriggerInlet( AbstractInletBasedTrigger &trigger )
 	{
 		if ( areTriggersEnabled() )
 		{
 			m_TriggerAccess.lock();
 
-			bool triggersOk = true;
+			bool groupWeight = true;
+			bool singleWeight = false;
 			for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); ++it )
 			{
-				triggersOk &= ( *it )->isOk();
+				if ( ( *it )->isSingleWeight() )
+				{
+					std::cout << "single" << std::endl;
+					singleWeight |= ( *it )->isOk();
+				}
+				else
+				{
+					std::cout << "group" << std::endl;
+					groupWeight &= ( *it )->isOk();
+				}
+			}
+
+			// TODO: cache result of inlets?
+			bool triggersOk = ( groupWeight || singleWeight );
+			if ( m_TimeTrigger != nullptr )
+			{
+				triggersOk &= m_TimeTrigger->isOk();
+			}
+
+			m_TriggerAccess.unlock();
+
+			if ( triggersOk )
+			{
+				triggersAreOk();	// request state change
+			}
+		}
+	}
+
+	void FunctionBlockStateManager::tryTriggerTime( AbstractTimeBasedTrigger &trigger )
+	{
+		if ( areTriggersEnabled() )
+		{
+			m_TriggerAccess.lock();
+
+			bool groupWeight = true;
+			bool singleWeight = false;
+			for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); ++it )
+			{
+				if ( ( *it )->isSingleWeight() )
+				{
+					singleWeight |= ( *it )->isOk();
+				}
+
+				// result of all
+				groupWeight &= ( *it )->isOk();
+			}
+
+			bool triggersOk = ( groupWeight || singleWeight );
+			if ( m_TimeTrigger != nullptr )
+			{
+				triggersOk &= m_TimeTrigger->isOk();
 			}
 
 			m_TriggerAccess.unlock();
@@ -498,6 +570,10 @@ namespace _2Real
 		for ( TriggerList::iterator it = m_Triggers.begin(); it != m_Triggers.end(); ++it )
 		{
 			( *it )->reset();
+		}
+		if ( m_TimeTrigger != nullptr )
+		{
+			m_TimeTrigger->reset();
 		}
 	}
 

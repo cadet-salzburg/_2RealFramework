@@ -35,7 +35,7 @@ namespace _2Real
 
 		EngineData ParameterHandle::getParameterValue() const
 		{
-			return m_Parameter->getData();
+			return m_Parameter->getData().getData();
 		}
 	}
 }

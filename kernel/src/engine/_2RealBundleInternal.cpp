@@ -38,6 +38,7 @@ namespace _2Real
 {
 
 	BundleInternal::BundleInternal( Identifier const& id, BundleData const& data, BundleManager &bundleManager ) :
+		HandleAble< app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
 		m_Identifier( id ),
 		m_Metadata( data ),
@@ -133,7 +134,7 @@ namespace _2Real
 		return m_Metadata;
 	}
 
-	app::BlockHandle BundleInternal::createBlockInstance( std::string const& blockName )
+	app::BlockHandle & BundleInternal::createBlockInstance( std::string const& blockName )
 	{
 		// this is a bit strange, bundle mgr will call 'addBlockInstance'
 		// = result of interface changes

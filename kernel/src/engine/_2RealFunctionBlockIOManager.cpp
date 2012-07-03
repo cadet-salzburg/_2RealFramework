@@ -102,34 +102,34 @@ namespace _2Real
 		m_BlockDataChanged.removeListener( cb );
 	}
 
-	app::InletHandle FunctionBlockIOManager::createAppInletHandle( string const& name )
+	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
 	{
-		return app::InletHandle( getInlet( name ) );
+		return getInlet( name ).HandleAble< app::InletHandle >::getHandle();
 	}
 
-	app::OutletHandle FunctionBlockIOManager::createAppOutletHandle( string const& name )
+	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
 	{
-		return app::OutletHandle( getOutlet( name ) );
+		return getOutlet( name ).HandleAble< app::OutletHandle >::getHandle();
 	}
 
-	app::ParameterHandle FunctionBlockIOManager::createAppParameterHandle( string const& name )
+	app::ParameterHandle & FunctionBlockIOManager::getAppParameterHandle( string const& name )
 	{
-		return app::ParameterHandle( getParameter( name ) );
+		return getParameter( name ).HandleAble< app::ParameterHandle >::getHandle();
 	}
 
-	bundle::InletHandle FunctionBlockIOManager::createBundleInletHandle( string const& name )
+	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name )
 	{
-		return bundle::InletHandle( getInlet( name ) );
+		return getInlet( name ).HandleAble< bundle::InletHandle >::getHandle();
 	}
 
-	bundle::OutletHandle FunctionBlockIOManager::createBundleOutletHandle( string const& name )
+	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name )
 	{
-		return bundle::OutletHandle( getOutlet( name ) );
+		return getOutlet( name ).HandleAble< bundle::OutletHandle >::getHandle();
 	}
 
-	bundle::ParameterHandle FunctionBlockIOManager::createBundleParameterHandle( string const& name )
+	bundle::ParameterHandle & FunctionBlockIOManager::getBundleParameterHandle( string const& name )
 	{
-		return bundle::ParameterHandle( getParameter( name ) );
+		return getParameter( name ).HandleAble< bundle::ParameterHandle >::getHandle();
 	}
 
 	Inlet & FunctionBlockIOManager::getInlet( string const& name )
@@ -212,14 +212,16 @@ namespace _2Real
 		std::list< app::AppData > data;
 		for ( OutletVector::iterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			it->outlet->update();
+			Outlet &outlet = *it->outlet;
+			bool wasDiscarded = outlet.update();
 
-			EngineData const& lastData = it->outlet->getData();
-			app::AppData out = app::AppData( lastData, it->outlet->getTypename(), it->outlet->getName() );
-
-			// (?) what if an outlet discarded?
-			it->callbacks->notify( out );
-			data.push_back( out );
+			if ( !wasDiscarded )
+			{
+				TimestampedData lastData = outlet.getData();
+				app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getName() );
+				it->callbacks->notify( out );
+				data.push_back( out );
+			}
 		}
 
 		if ( data.size() > 0 )

@@ -35,7 +35,7 @@ namespace _2Real
 
 		EngineData InletHandle::getCurrentData() const
 		{
-			return m_Inlet->getData();
+			return m_Inlet->getData().getData();
 		}
 	}
 }

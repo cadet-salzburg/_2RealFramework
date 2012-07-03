@@ -34,6 +34,8 @@ namespace _2Real
 {
 
 	Inlet::Inlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& type, EngineData const& defaultValue ) :
+		HandleAble< app::InletHandle >( *this ),
+		HandleAble< bundle::InletHandle >( *this ),
 		Parameter( owner, name, longTypename, type ),
 		m_Buffer( defaultValue ),
 		m_CurrentData( EngineData(), 0 ),
@@ -101,6 +103,11 @@ namespace _2Real
 #endif
 
 		m_Owner.destroyLink( *this, *outlet );
+	}
+
+	void Inlet::setBufferSize( const unsigned int size )
+	{
+		m_Buffer.setInsertionPolicy( *( new RemoveFirst( size ) ) );
 	}
 
 }

@@ -25,6 +25,7 @@
 #include "app/_2RealCallbacksInternal.h"
 
 #include <iostream>
+#include <algorithm>
 
 namespace _2Real
 {

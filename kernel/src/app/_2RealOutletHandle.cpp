@@ -43,7 +43,7 @@ namespace _2Real
 		AppData OutletHandle::getLastOutput() const
 		{
 			checkHandle( m_Outlet );
-			EngineData data = m_Outlet->getData();
+			TimestampedData data = m_Outlet->getData();
 			return AppData( data, m_Outlet->getTypename(), m_Outlet->getName() );
 		}
 

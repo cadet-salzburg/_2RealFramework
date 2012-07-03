@@ -19,6 +19,9 @@
 #pragma once
 
 #include "engine/_2RealAbstractUberBlock.h"
+#include "helpers/_2RealHandleAble.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
 
 namespace _2Real
 {
@@ -44,7 +47,7 @@ namespace _2Real
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
 
-	class FunctionBlock : public AbstractUberBlock
+	class FunctionBlock : public AbstractUberBlock, public HandleAble< app::BlockHandle >, public HandleAble< app::ContextBlockHandle >
 	{
 
 	public:
@@ -55,13 +58,13 @@ namespace _2Real
 		app::BlockInfo			getBlockData();
 		BlockData const&		getMetadata() const;
 
-		bundle::InletHandle		createBundleInletHandle( std::string const& inletName );
-		bundle::OutletHandle	createBundleOutletHandle( std::string const& outletName );
-		bundle::ParameterHandle	createBundleParameterHandle( std::string const& paramName );
+		bundle::InletHandle &		getBundleInletHandle( std::string const& inletName );
+		bundle::OutletHandle &		getBundleOutletHandle( std::string const& outletName );
+		bundle::ParameterHandle &	getBundleParameterHandle( std::string const& paramName );
 
-		app::InletHandle		createAppInletHandle( std::string const& inletName );
-		app::OutletHandle		createAppOutletHandle( std::string const& outletName );
-		app::ParameterHandle	createAppParameterHandle( std::string const& paramName );
+		app::InletHandle &		getAppInletHandle( std::string const& inletName );
+		app::OutletHandle &		getAppOutletHandle( std::string const& outletName );
+		app::ParameterHandle &	getAppParameterHandle( std::string const& paramName );
 
 		void					createLink( Inlet &inlet, Outlet &outlet );
 		void					destroyLink( Inlet &inlet, Outlet &outlet );
@@ -77,7 +80,7 @@ namespace _2Real
 		void					prepareForShutDown();
 		bool					shutDown( const long timeout );
 
-		void					updateWhenInletDataNew( Inlet &inlet );
+		void					updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight );
 		void					updateWhenInletDataValid( Inlet &inlet );
 		void					updateWhenAllInletDataNew();
 		void					updateWhenAllInletDataValid();

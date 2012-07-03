@@ -22,6 +22,8 @@
 
 namespace _2Real
 {
+	class TimestampedData;
+
 	namespace app
 	{
 		class AppData
@@ -30,7 +32,7 @@ namespace _2Real
 		public:
 
 			AppData();
-			AppData( EngineData const& data, std::string const& type, std::string const& name );
+			AppData( TimestampedData const& data, std::string const& type, std::string const& name );
 
 			const std::string getLongTypename() const;
 			std::string const& getTypename() const;

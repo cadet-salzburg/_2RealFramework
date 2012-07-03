@@ -88,22 +88,22 @@ namespace _2Real
 			m_Block->stop( true, 5000 );
 		}
 
-		InletHandle BlockHandle::getInletHandle( string const& name )
+		InletHandle & BlockHandle::getInletHandle( string const& name )
 		{
 			checkHandle( m_Block );
-			return m_Block->createAppInletHandle( name );
+			return m_Block->getAppInletHandle( name );
 		}
 
-		OutletHandle BlockHandle::getOutletHandle( string const& name )
+		OutletHandle & BlockHandle::getOutletHandle( string const& name )
 		{
 			checkHandle( m_Block );
-			return m_Block->createAppOutletHandle( name );
+			return m_Block->getAppOutletHandle( name );
 		}
 
-		ParameterHandle BlockHandle::getParameterHandle( string const& name )
+		ParameterHandle & BlockHandle::getParameterHandle( string const& name )
 		{
 			checkHandle( m_Block );
-			return m_Block->createAppParameterHandle( name );
+			return m_Block->getAppParameterHandle( name );
 		}
 
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )

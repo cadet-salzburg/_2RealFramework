@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,35 +18,26 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
-
-#include <string>
-
 namespace _2Real
 {
-	class FunctionBlock;
 
-	namespace bundle
+	// muahahahaha
+
+	template< typename THandle >
+	class HandleAble
 	{
-		class InletHandle;
-		class OutletHandle;
-		class ParameterHandle;
 
-		class BlockHandle
-		{
+	public:
 
-		public:
+		template< typename TObj >
+		HandleAble( TObj &obj ) : m_Handle( obj ) {}
+		virtual ~HandleAble() {}
+		THandle& getHandle() { return m_Handle; }
 
-			BlockHandle( FunctionBlock &block );
+	private:
 
-			ParameterHandle &	getParameterHandle( std::string const& name );
-			InletHandle &		getInletHandle( std::string const& name );
-			OutletHandle &		getOutletHandle( std::string const& name );
+		THandle		m_Handle;
 
-		private:
+	};
 
-			FunctionBlock	&m_Impl;
-
-		};
-	}
 }

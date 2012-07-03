@@ -69,7 +69,7 @@ namespace _2Real
 		m_BaseDirectory = Poco::Path( directory );
 	}
 
-	app::BundleHandle BundleManager::loadLibrary( string const& libraryPath )
+	app::BundleHandle & BundleManager::loadLibrary( string const& libraryPath )
 	{
 		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
 
@@ -94,7 +94,7 @@ namespace _2Real
 			handle.start();
 		}
 
-		return bundle->createHandle();
+		return bundle->getHandle();
 	}
 	
 	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
@@ -103,7 +103,7 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	app::BlockHandle BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
+	app::BlockHandle & BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
 	{
 		System &sys = m_Engine.getSystemBlock();
 
@@ -124,7 +124,7 @@ namespace _2Real
 
 		bundle.addBlockInstance( block, blockName );
 
-		return app::BlockHandle( *functionBlock );
+		return functionBlock->HandleAble< app::BlockHandle >::getHandle();
 	}
 
 	app::ContextBlockHandle BundleManager::createContextBlock( BundleInternal &bundle )
@@ -148,7 +148,7 @@ namespace _2Real
 		app::ContextBlockHandle handle = app::ContextBlockHandle( *functionBlock );
 		bundle.setBundleContextHandle( handle );
 
-		return handle;
+		return functionBlock->HandleAble< app::ContextBlockHandle >::getHandle();
 	}
 
 	BundleInternal & BundleManager::getBundle( Identifier const& id )

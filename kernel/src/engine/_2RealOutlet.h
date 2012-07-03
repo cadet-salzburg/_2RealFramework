@@ -23,6 +23,9 @@
 #include "app/_2RealAppData.h"
 #include "helpers/_2RealPoco.h"
 #include "app/_2RealCallbacks.h"
+#include "helpers/_2RealHandleAble.h"
+#include "app/_2RealOutletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
 
 namespace _2Real
 {
@@ -32,10 +35,9 @@ namespace _2Real
 		class InletHandle;
 	}
 
-	class InletBuffer;
 	class EngineImpl;
 
-	class Outlet : public Parameter
+	class Outlet : public Parameter, public HandleAble< app::OutletHandle >, public HandleAble< bundle::OutletHandle >
 	{
 
 	public:
@@ -45,34 +47,29 @@ namespace _2Real
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getName;
-		using Parameter::getOwningUberBlock;
 		using Parameter::getData;
+		using Parameter::getOwningUberBlock;
 
-		void linkTo( app::InletHandle &inlet );
-		void unlinkFrom( app::InletHandle &Inlet );
+		void			linkTo( app::InletHandle &inlet );
+		void			unlinkFrom( app::InletHandle &Inlet );
+		void			registerToNewData( app::OutletCallback &callback );
+		void			unregisterFromNewData( app::OutletCallback &callback );
 
-		void				update();
-		void				discardCurrentUpdate();
-		EngineData &		getDataForWriting();
+		bool			update();
+		EngineData &	getDataForWriting();
+		void			discardCurrentUpdate();
 
-		void				addInletListener( InletBuffer &buffer );
-		void				removeInletListener( InletBuffer &buffer );
-
-		void				registerToNewData( app::OutletCallback &callback );
-		void				unregisterFromNewData( app::OutletCallback &callback );
+		void			addListener( AbstractCallback< TimestampedData > &callback );
+		void			removeListener( AbstractCallback< TimestampedData > &callback );
 
 	private:
 
 		EngineImpl										&m_Engine;					// engine is necessary for timestamps
-
 		TimestampedData									m_WriteDataItem;			// the data item that is currently being written
 																					// initially, holds an empty ( created by () ) data item of correct type
 																					// after the first update, holds a copy of the m_LastDataItem
 		bool											m_DiscardCurrent;			// is flagged if the current data should not be sent
-
-		mutable Poco::FastMutex							m_Access;
-		mutable Poco::BasicEvent< TimestampedData >		m_InletEvent;
-
+		CallbackEvent< TimestampedData >				m_InletEvent;
 	};
 
 }

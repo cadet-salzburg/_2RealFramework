@@ -60,13 +60,13 @@ namespace _2Real
 		void						addOutlet( ParamData const& data );
 		void						addParameter( ParamData const& data );
 
-		app::InletHandle			createAppInletHandle( std::string const& name );
-		app::OutletHandle			createAppOutletHandle( std::string const& name );
-		app::ParameterHandle		createAppParameterHandle( std::string const& name );
+		app::InletHandle &			getAppInletHandle( std::string const& name );
+		app::OutletHandle &			getAppOutletHandle( std::string const& name );
+		app::ParameterHandle &		getAppParameterHandle( std::string const& name );
 
-		bundle::InletHandle			createBundleInletHandle( std::string const& name );
-		bundle::OutletHandle		createBundleOutletHandle( std::string const& name );
-		bundle::ParameterHandle		createBundleParameterHandle( std::string const& name );
+		bundle::InletHandle &		getBundleInletHandle( std::string const& name );
+		bundle::OutletHandle &		getBundleOutletHandle( std::string const& name );
+		bundle::ParameterHandle &	getBundleParameterHandle( std::string const& name );
 
 		void						updateInletValues();
 		void						updateOutletValues();

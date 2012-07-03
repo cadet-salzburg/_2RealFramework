@@ -261,6 +261,12 @@
     <ClInclude Include="..\..\src\engine\_2RealTypetable.h">
       <Filter>include\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealHandleAble.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealNonCopyAble.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">

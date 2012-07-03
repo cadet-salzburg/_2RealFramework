@@ -29,6 +29,8 @@ namespace _2Real
 {
 
 	Parameter::Parameter( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName ) :
+		HandleAble< app::ParameterHandle >( *this ),
+		HandleAble< bundle::ParameterHandle >( *this ),
 		Param( owner, name, longTypename, typeName )
 	{
 	}
@@ -52,10 +54,10 @@ namespace _2Real
 		m_Data = m_WriteData;
 	}
 
-	EngineData Parameter::getData() const
+	TimestampedData Parameter::getData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		return m_Data.getData();
+		return m_Data;
 	}
 
 }

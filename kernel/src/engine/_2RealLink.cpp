@@ -20,6 +20,7 @@
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
+#include "app/_2RealCallbacksInternal.h"
 
 #include <assert.h>
 #include <iostream>
@@ -53,12 +54,14 @@ namespace _2Real
 
 	void IOLink::activate() 
 	{
-		m_Outlet.addInletListener( m_Inlet.m_Buffer );
+		AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
+		m_Outlet.addListener( *cb );
 	}
 
 	void IOLink::deactivate()
 	{
-		m_Outlet.removeInletListener( m_Inlet.m_Buffer );
+		AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
+		m_Outlet.removeListener( *cb );
 	}
 
 }

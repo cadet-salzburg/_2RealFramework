@@ -43,7 +43,7 @@ namespace _2Real
 		AppData InletHandle::getCurrentInput() const
 		{
 			checkHandle( m_Inlet );
-			EngineData data = m_Inlet->getData();
+			TimestampedData data = m_Inlet->getData();
 			return AppData( data, m_Inlet->getTypename(), m_Inlet->getName() );
 		}
 
@@ -62,11 +62,15 @@ namespace _2Real
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
 		{
 			checkHandle( m_Inlet );
-			if ( p == InletHandle::DATA_NEW )
+			if ( p == InletHandle::NEWER_DATA_SINGLE_WEIGHT )
 			{
-				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet );
+				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet, true );
 			}
-			else if ( p == InletHandle::DATA_VALID )
+			else if ( p == InletHandle::NEWER_DATA_GROUP_WEIGHT )
+			{
+				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet, false );
+			}
+			else if ( p == InletHandle::ALWAYS )
 			{
 				m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_Inlet );
 			}
@@ -76,6 +80,12 @@ namespace _2Real
 		{
 			checkHandle( m_Inlet );
 			m_Inlet->setDefaultValue( data );
+		}
+
+		void InletHandle::setBufferSize( const unsigned int size )
+		{
+			checkHandle( m_Inlet );
+			m_Inlet->setBufferSize( size );
 		}
 	}
 }

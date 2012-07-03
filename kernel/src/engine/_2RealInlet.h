@@ -21,6 +21,9 @@
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealInletBuffer.h"
+#include "helpers/_2RealHandleAble.h"
+#include "app/_2RealInletHandle.h"
+#include "bundle/_2RealInletHandle.h"
 
 #include <string>
 
@@ -32,7 +35,7 @@ namespace _2Real
 		class OutletHandle;
 	}
 
-	class Inlet : public Parameter
+	class Inlet : public Parameter, public HandleAble< app::InletHandle >, public HandleAble< bundle::InletHandle >
 	{
 
 		friend class IOLink;
@@ -52,6 +55,8 @@ namespace _2Real
 
 		void linkTo( app::OutletHandle &outlet );
 		void unlinkFrom( app::OutletHandle &outlet );
+
+		void setBufferSize( const unsigned int sz );
 
 		void setDefaultValue( EngineData const& data );
 		void disableTriggering( TimestampedData const& data );

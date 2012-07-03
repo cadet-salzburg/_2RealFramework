@@ -67,7 +67,14 @@ namespace _2Real
 			m_Inlet.unregisterUpdateTrigger( *this );
 		}
 
+		virtual bool isSingleWeight() const = 0;
+
 		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
+
+		bool operator==( AbstractInletBasedTrigger const& other ) const
+		{
+			return ( &m_Inlet == &other.m_Inlet );
+		}
 
 	protected:
 
@@ -77,14 +84,15 @@ namespace _2Real
 
 	};
 
-	template< typename Condition >
+	template< typename Condition, bool SingleWeight >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
 	{
 
 	public:
 
 		InletBasedTrigger( Inlet &inlet, AbstractStateManager &mgr ) :
-			AbstractInletBasedTrigger( inlet, mgr )
+			AbstractInletBasedTrigger( inlet, mgr ),
+			m_IsSingleWeight( SingleWeight )
 		{
 			mgr.addTrigger( *this );
 			inlet.registerUpdateTrigger( *this );
@@ -94,18 +102,21 @@ namespace _2Real
 		{
 			if ( !m_IsOk && m_TriggerCondition( data, m_LastData ) )
 			{
-				//std::cout << m_Inlet.getName() << " succeded in triggering" << std::endl;
-
 				m_IsOk = true;
 				m_Inlet.disableTriggering( data );
-				//std::cout << m_Inlet.getName() << " disabled trigger attempts" << std::endl;
 				m_LastData = data;
-				m_UpdateManager.tryTrigger( *this );
+				m_UpdateManager.tryTriggerInlet( *this );
 			}
+		}
+
+		bool isSingleWeight() const
+		{
+			return m_IsSingleWeight;
 		}
 
 	private:
 
+		bool					m_IsSingleWeight;
 		Condition				m_TriggerCondition;
 
 	};

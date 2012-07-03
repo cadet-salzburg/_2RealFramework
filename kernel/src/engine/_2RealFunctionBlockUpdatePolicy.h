@@ -45,13 +45,13 @@ namespace _2Real
 		virtual AbstractInletBasedTrigger * createTrigger( Inlet &inlet, AbstractStateManager &mgr ) = 0;
 	};
 
-	template< typename Condition >
+	template< typename Condition, bool SingleWeight >
 	class InletTriggerCreator : public AbstractInletTriggerCreator
 	{
 	public:
 		AbstractInletBasedTrigger * createTrigger( Inlet &inlet, AbstractStateManager &mgr )
 		{
-			return new InletBasedTrigger< Condition >( inlet, mgr );
+			return new InletBasedTrigger< Condition, SingleWeight >( inlet, mgr );
 		}
 	};
 

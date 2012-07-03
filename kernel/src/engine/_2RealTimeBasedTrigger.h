@@ -70,7 +70,7 @@ namespace _2Real
 			{
 				m_ElapsedTime = 0;
 				m_IsOk = true;
-				m_UpdateManager.tryTrigger( *this );
+				m_UpdateManager.tryTriggerTime( *this );
 			}
 		}
 

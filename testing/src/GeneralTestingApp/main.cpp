@@ -110,7 +110,7 @@ int main( int argc, char *argv[] )
 
 		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
 		BlockInfo const& outData = outHandle.getBlockInfo();
-		outHandle.setUpdateRate( 0.2 );
+		outHandle.setUpdateRate( 1.0 );
 
 		for ( BlockInfo::ParamsConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
 		{
@@ -122,11 +122,11 @@ int main( int argc, char *argv[] )
 
 		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
 		BlockInfo const& inData = inHandle.getBlockInfo();
-		inHandle.setUpdateRate( 1.0 );
+		inHandle.setUpdateRate( 0.0 );
 		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
-		inletHandle.setUpdatePolicy( InletHandle::DATA_NEW );
+		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
 
 		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
 

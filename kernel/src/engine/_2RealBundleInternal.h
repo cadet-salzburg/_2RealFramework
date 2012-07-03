@@ -22,6 +22,8 @@
 #include "engine/_2RealIdentifier.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
+#include "helpers/_2RealHandleAble.h"
+#include "app/_2RealBundleHandle.h"
 
 #include <map>
 #include <string>
@@ -46,7 +48,7 @@ namespace _2Real
 	class Identifier;
 	class BundleManager;
 
-	class BundleInternal
+	class BundleInternal : public HandleAble< app::BundleHandle >
 	{
 
 	public:
@@ -60,7 +62,7 @@ namespace _2Real
 		app::BundleHandle		createHandle();
 		app::BundleInfo			getBundleData() const;
 		app::ContextBlockHandle	getBundleContextHandle() const;
-		app::BlockHandle		createBlockInstance( std::string const& blockName );
+		app::BlockHandle &		createBlockInstance( std::string const& blockName );
 
 		BundleData const&		getMetadata() const;
 		void					setBundleContextHandle( app::ContextBlockHandle const& handle );

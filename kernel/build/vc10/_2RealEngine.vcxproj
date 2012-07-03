@@ -83,8 +83,10 @@
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEngineData.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealHandleAble.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpersInternal.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealNonCopyAble.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPoco.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealTypeHolder.h" />

@@ -38,6 +38,8 @@ namespace _2Real
 
 	FunctionBlock::FunctionBlock( BlockData const& meta, bundle::Block &block, System &owner, Identifier const& id ) :
 		AbstractUberBlock( id ),
+		HandleAble< app::BlockHandle >( *this ),
+		HandleAble< app::ContextBlockHandle >( *this ),
 		m_Metadata( meta ),
 		m_Block( block ),
 		m_System( owner ),
@@ -140,34 +142,34 @@ namespace _2Real
 		return blockData;
 	}
 
-	app::InletHandle FunctionBlock::createAppInletHandle( string const& name )
+	app::InletHandle & FunctionBlock::getAppInletHandle( string const& name )
 	{
-		return m_IOManager->createAppInletHandle( name );
+		return m_IOManager->getAppInletHandle( name );
 	}
 
-	app::OutletHandle FunctionBlock::createAppOutletHandle( string const& name )
+	app::OutletHandle & FunctionBlock::getAppOutletHandle( string const& name )
 	{
-		return m_IOManager->createAppOutletHandle( name );
+		return m_IOManager->getAppOutletHandle( name );
 	}
 
-	app::ParameterHandle FunctionBlock::createAppParameterHandle( string const& name )
+	app::ParameterHandle & FunctionBlock::getAppParameterHandle( string const& name )
 	{
-		return m_IOManager->createAppParameterHandle( name );
+		return m_IOManager->getAppParameterHandle( name );
 	}
 
-	bundle::InletHandle FunctionBlock::createBundleInletHandle( string const& name )
+	bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name )
 	{
-		return m_IOManager->createBundleInletHandle( name );
+		return m_IOManager->getBundleInletHandle( name );
 	}
 
-	bundle::OutletHandle FunctionBlock::createBundleOutletHandle( string const& name )
+	bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name )
 	{
-		return m_IOManager->createBundleOutletHandle( name );
+		return m_IOManager->getBundleOutletHandle( name );
 	}
 
-	bundle::ParameterHandle FunctionBlock::createBundleParameterHandle( string const& name )
+	bundle::ParameterHandle & FunctionBlock::getBundleParameterHandle( string const& name )
 	{
-		return m_IOManager->createBundleParameterHandle( name );
+		return m_IOManager->getBundleParameterHandle( name );
 	}
 
 	void FunctionBlock::createLink( Inlet &inlet, Outlet &outlet )
@@ -234,24 +236,31 @@ namespace _2Real
 		return m_StateManager->shutDown( timeout );
 	}
 
-	void FunctionBlock::updateWhenInletDataNew( Inlet &inlet )
+	void FunctionBlock::updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp >() ) );
+		if ( isSingleWeight )
+		{
+			m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, true >() ) );
+		}
+		else
+		{
+			m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
+		}
 	}
 
 	void FunctionBlock::updateWhenInletDataValid( Inlet &inlet )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData >() ) );
+		m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
 	}
 
 	void FunctionBlock::updateWhenAllInletDataNew()
 	{
-		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp >() ) );
+		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
 	}
 
 	void FunctionBlock::updateWhenAllInletDataValid()
 	{
-		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData >() ) );
+		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
 	}
 
 	void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )

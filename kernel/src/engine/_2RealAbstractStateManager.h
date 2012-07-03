@@ -27,16 +27,17 @@ namespace _2Real
 {
 
 	class AbstractUpdateTrigger;
+	class AbstractInletBasedTrigger;
+	class AbstractTimeBasedTrigger;
 	class UberBlockBasedTrigger;
 	class AbstractUberBlock;
-	class UpdatePolicy;
 
 	class AbstractStateManager
 	{
 
 	public:
 
-		typedef std::list< AbstractUpdateTrigger * >	TriggerList;
+		typedef std::list< AbstractInletBasedTrigger * >	TriggerList;
 		typedef std::list< UberBlockBasedTrigger * >	UberBlockTriggerList;
 
 		AbstractStateManager( AbstractUberBlock &owner );
@@ -45,11 +46,14 @@ namespace _2Real
 		std::string const&	getName() const;
 		unsigned int		getId() const;
 
-		virtual void tryTrigger( AbstractUpdateTrigger &trigger ) = 0;
+		virtual void tryTriggerInlet( AbstractInletBasedTrigger &trigger ) = 0;
+		virtual void tryTriggerTime( AbstractTimeBasedTrigger &trigger ) = 0;
 		virtual void tryTriggerUberBlock( UberBlockBasedTrigger &trigger ) = 0;
 
-		virtual void addTrigger( AbstractUpdateTrigger &trigger ) = 0;
-		virtual void removeTrigger( AbstractUpdateTrigger &trigger ) = 0;
+		virtual void addTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
+		virtual void removeTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
+		virtual void addTrigger( AbstractInletBasedTrigger &trigger ) = 0;
+		virtual void removeTrigger( AbstractInletBasedTrigger &trigger ) = 0;
 		virtual void addUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
 		virtual void removeUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
 

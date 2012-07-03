@@ -54,7 +54,7 @@ namespace _2Real
 		virtual void							createLink( Inlet &inlet, Outlet &outlet ) = 0;
 		virtual void							destroyLink( Inlet &inlet, Outlet &outlet ) = 0;
 
-		virtual void							updateWhenInletDataNew( Inlet &inlet ) = 0;
+		virtual void							updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight ) = 0;
 		virtual void							updateWhenInletDataValid( Inlet &inlet ) = 0;
 		virtual void							updateWhenAllInletDataNew() = 0;
 		virtual void							updateWhenAllInletDataValid() = 0;

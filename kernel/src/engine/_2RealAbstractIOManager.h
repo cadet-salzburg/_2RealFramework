@@ -21,6 +21,10 @@
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealCallbacksInternal.h"
 #include "helpers/_2RealPoco.h"
+#include "engine/_2RealTimestampedData.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealInletBuffer.h"
+#include "engine/_2RealOutlet.h"
 
 #include <string>
 
@@ -44,18 +48,22 @@ namespace _2Real
 		std::string const&		getName() const;
 		unsigned int			getId() const;
 
-		struct InletIO
+	protected:
+
+		class InletIO
 		{
-			Inlet			*inlet;
-			InletBuffer		*buffer;
+		public:
+			Inlet									m_Inlet;
+			InletBuffer								m_Buffer;
 		};
 
 		typedef std::vector< Inlet * >						InletVector;
 		typedef std::vector< Inlet * >::iterator			InletIterator;
 		typedef std::vector< Inlet * >::const_iterator		InletConstIterator;
 
-		struct OutletIO
+		class OutletIO
 		{
+		public:
 			Outlet									*outlet;
 			CallbackEvent< app::AppData const& >	*callbacks;
 		};
@@ -67,8 +75,6 @@ namespace _2Real
 		typedef std::vector< Parameter * >					ParameterVector;
 		typedef std::vector< Parameter * >::iterator		ParameterIterator;
 		typedef std::vector< Parameter * >::const_iterator	ParameterConstIterator;
-
-	protected:
 
 		Poco::FastMutex										m_IOAccess;
 		AbstractUberBlock									&m_Owner;

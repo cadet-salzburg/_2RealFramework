@@ -57,9 +57,9 @@ namespace _2Real
 			void start();
 			void stop();
 
-			InletHandle		getInletHandle( std::string const& name );
-			OutletHandle	getOutletHandle( std::string const& name );
-			ParameterHandle	getParameterHandle( std::string const& name );
+			InletHandle &		getInletHandle( std::string const& name );
+			OutletHandle &		getOutletHandle( std::string const& name );
+			ParameterHandle &	getParameterHandle( std::string const& name );
 
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr );
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr );

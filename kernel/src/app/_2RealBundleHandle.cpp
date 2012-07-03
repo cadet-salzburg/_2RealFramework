@@ -45,7 +45,7 @@ namespace _2Real
 			return m_Bundle->getBundleData();
 		}
 
-		BlockHandle BundleHandle::createBlockInstance( std::string const& blockName )
+		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
 		{
 			checkHandle( m_Bundle );
 			return m_Bundle->createBlockInstance( blockName );

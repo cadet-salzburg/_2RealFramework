@@ -36,8 +36,9 @@ namespace _2Real
 
 			enum InletUpdatePolicy
 			{
-				DATA_VALID,
-				DATA_NEW,
+				ALWAYS,
+				NEWER_DATA_SINGLE_WEIGHT,
+				NEWER_DATA_GROUP_WEIGHT,
 			};
 
 			InletHandle();
@@ -61,6 +62,8 @@ namespace _2Real
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
+
+			void				setBufferSize( const unsigned int size );
 
 		private:
 

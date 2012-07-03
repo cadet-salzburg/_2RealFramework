@@ -29,13 +29,14 @@
 #endif
 
 using std::string;
-using std::find;
 using std::ostringstream;
 
 namespace _2Real
 {
 
 	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
+		HandleAble< app::OutletHandle >( *this ),
+		HandleAble< bundle::OutletHandle >( *this ),
 		Parameter( owner, name, longTypename, typeName ),
 		m_Engine( EngineImpl::instance() ),
 		m_WriteDataItem( emptyData, 0 ),
@@ -45,7 +46,7 @@ namespace _2Real
 		Parameter::synchronize();
 	}
 
-	void Outlet::update()
+	bool Outlet::update()
 	{
 		if ( !m_DiscardCurrent )
 		{
@@ -54,11 +55,17 @@ namespace _2Real
 			// copy data back into the outlet's writing data
 			m_WriteDataItem.cloneData( data );
 
-			// inlets get the datat that was really written, not a copy
-			m_InletEvent.notify( this, data );
-			
+			m_InletEvent.notify( data );
+
 			Parameter::setData( data );
-			Parameter::synchronize();		// immediately makes data visible to the app
+			Parameter::synchronize();
+
+			return false;
+		}
+		else
+		{
+			m_DiscardCurrent = false;
+			return true;
 		}
 	}
 
@@ -94,18 +101,6 @@ namespace _2Real
 		Param::m_Owner.createLink( inlet, *this );
 	}
 
-	void Outlet::addInletListener( InletBuffer &buffer )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-		m_InletEvent += Poco::delegate( &buffer, &InletBuffer::receiveData );
-	}
-
-	void Outlet::removeInletListener( InletBuffer &buffer )
-	{
-		Poco::FastMutex::ScopedLock lock( m_Access );
-		m_InletEvent -= Poco::delegate( &buffer, &InletBuffer::receiveData );
-	}
-
 	void Outlet::registerToNewData( app::OutletCallback &callback )
 	{
 		Param::m_Owner.registerToNewData( *this, callback );
@@ -114,5 +109,15 @@ namespace _2Real
 	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
 	{
 		Param::m_Owner.unregisterFromNewData( *this, callback );
+	}
+
+	void Outlet::addListener( AbstractCallback< TimestampedData > &callback )
+	{
+		m_InletEvent.addListener( callback );
+	}
+
+	void Outlet::removeListener( AbstractCallback< TimestampedData > &callback )
+	{
+		m_InletEvent.removeListener( callback );
 	}
 }

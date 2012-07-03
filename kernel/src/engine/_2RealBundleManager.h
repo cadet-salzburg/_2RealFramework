@@ -51,9 +51,9 @@ namespace _2Real
 
 		void clear();
 		void							setBaseDirectory( std::string const& path );
-		app::BundleHandle				loadLibrary( std::string const& libraryPath );
+		app::BundleHandle &				loadLibrary( std::string const& libraryPath );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;
-		app::BlockHandle				createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
+		app::BlockHandle &				createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
 
 	private:
 

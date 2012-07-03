@@ -18,6 +18,7 @@
 */
 
 #include "app/_2RealAppData.h"
+#include "engine/_2RealTimestampedData.h"
 
 #include <sstream>
 
@@ -35,8 +36,8 @@ namespace _2Real
 		{
 		}
 
-		AppData::AppData( EngineData const& data, string const& type, string const& name ) :
-			m_Data( data ),
+		AppData::AppData( TimestampedData const& data, string const& type, string const& name ) :
+			m_Data( data.getData() ),
 			m_Typename( type ),
 			m_Name( name )
 		{
