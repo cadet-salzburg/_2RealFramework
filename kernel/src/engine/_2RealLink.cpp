@@ -52,16 +52,16 @@ namespace _2Real
 	{
 	}
 
-	void IOLink::activate() 
-	{
-		AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
-		m_Outlet.addListener( *cb );
-	}
+	//void IOLink::activate() 
+	//{
+	//	AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
+	//	m_Outlet.addListener( *cb );
+	//}
 
-	void IOLink::deactivate()
-	{
-		AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
-		m_Outlet.removeListener( *cb );
-	}
+	//void IOLink::deactivate()
+	//{
+	//	AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
+	//	m_Outlet.removeListener( *cb );
+	//}
 
 }

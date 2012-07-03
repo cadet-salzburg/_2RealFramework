@@ -72,10 +72,6 @@ namespace _2Real
 		typedef std::vector< OutletIO >::iterator			OutletIterator;
 		typedef std::vector< OutletIO >::const_iterator		OutletConstIterator;
 
-		typedef std::vector< Parameter * >					ParameterVector;
-		typedef std::vector< Parameter * >::iterator		ParameterIterator;
-		typedef std::vector< Parameter * >::const_iterator	ParameterConstIterator;
-
 		Poco::FastMutex										m_IOAccess;
 		AbstractUberBlock									&m_Owner;
 		CallbackEvent< std::list< app::AppData > const& >	m_BlockDataChanged;

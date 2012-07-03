@@ -42,10 +42,7 @@ namespace _2Real
 
 	protected:
 
-		AbstractUberBlock		&m_Owner;
-		std::string				const m_LongTypename;
-		std::string				const m_Typename;
-		std::string				const m_Name;
+
 
 	};
 

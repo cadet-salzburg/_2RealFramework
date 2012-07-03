@@ -81,34 +81,34 @@ namespace _2Real
 
 	void Outlet::linkTo( app::InletHandle &inletHandle )
 	{
-		Param *p = inletHandle.m_Param;
+		Parameter *p = inletHandle.m_Parameter;
 #ifdef _DEBUG
 		if ( p == nullptr ) assert( NULL );
 #endif
 
-		Inlet &inlet = dynamic_cast< Inlet & >( *p );
-		Param::m_Owner.createLink( inlet, *this );
+		Inlet &inlet = static_cast< Inlet & >( *p );
+		Parameter::getOwningUberBlock().createLink( inlet, *this );
 	}
 
 	void Outlet::unlinkFrom( app::InletHandle &inletHandle )
 	{
-		Param *p = inletHandle.m_Param;
+		Parameter *p = inletHandle.m_Parameter;
 #ifdef _DEBUG
 		if ( p == nullptr ) assert( NULL );
 #endif
 
-		Inlet &inlet = dynamic_cast< Inlet & >( *p );
-		Param::m_Owner.createLink( inlet, *this );
+		Inlet &inlet = static_cast< Inlet & >( *p );
+		Parameter::getOwningUberBlock().createLink( inlet, *this );
 	}
 
 	void Outlet::registerToNewData( app::OutletCallback &callback )
 	{
-		Param::m_Owner.registerToNewData( *this, callback );
+		Parameter::getOwningUberBlock().registerToNewData( *this, callback );
 	}
 
 	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
 	{
-		Param::m_Owner.unregisterFromNewData( *this, callback );
+		Parameter::getOwningUberBlock().unregisterFromNewData( *this, callback );
 	}
 
 	void Outlet::addListener( AbstractCallback< TimestampedData > &callback )

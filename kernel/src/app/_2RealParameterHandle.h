@@ -18,36 +18,33 @@
 
 #pragma once
 
-#include "app/_2RealParamHandle.h"
 #include "helpers/_2RealEngineData.h"
 
 namespace _2Real
 {
 	class Parameter;
+	class Inlet;
+	class Outlet;
 
 	namespace app
 	{
-		class ParameterHandle : public ParamHandle
+		class ParameterHandle
 		{
+
+			friend class _2Real::Inlet;
+			friend class _2Real::Outlet;
 
 		public:
 
 			ParameterHandle();
 			ParameterHandle( Parameter &param );
 
-			using ParamHandle::getName;
-			using ParamHandle::getTypename;
-			using ParamHandle::getLongTypename;
-
-			template< typename T >
-			void setValue( T const& value )
-			{
-				setParameterValue( EngineData( value ) );
-			}
+			std::string const&	getName() const;
+			std::string const&	getLongTypename() const;
+			std::string const&	getTypename() const;
 
 		private:
 
-			void		setParameterValue( EngineData const& data );
 			Parameter	*m_Parameter;
 
 		};

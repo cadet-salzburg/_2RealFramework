@@ -100,12 +100,6 @@ namespace _2Real
 			return m_Block->getAppOutletHandle( name );
 		}
 
-		ParameterHandle & BlockHandle::getParameterHandle( string const& name )
-		{
-			checkHandle( m_Block );
-			return m_Block->getAppParameterHandle( name );
-		}
-
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )
 		{
 			checkHandle( m_Block );

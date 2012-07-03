@@ -29,13 +29,13 @@ namespace _2Real
 	namespace app
 	{
 		OutletHandle::OutletHandle() :
-			ParamHandle(),
+			ParameterHandle(),
 			m_Outlet( nullptr )
 		{
 		}
 
 		OutletHandle::OutletHandle( Outlet &outlet ) :
-			ParamHandle( outlet ),
+			ParameterHandle( outlet ),
 			m_Outlet( &outlet )
 		{
 		}

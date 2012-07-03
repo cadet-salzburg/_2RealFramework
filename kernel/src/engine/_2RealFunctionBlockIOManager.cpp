@@ -61,11 +61,6 @@ namespace _2Real
 			delete it->outlet;
 			delete it->callbacks;
 		}
-
-		for ( ParameterVector::iterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			delete *it;
-		}
 	}
 
 	void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, AbstractCallback< app::AppData const& > &cb )
@@ -112,11 +107,6 @@ namespace _2Real
 		return getOutlet( name ).HandleAble< app::OutletHandle >::getHandle();
 	}
 
-	app::ParameterHandle & FunctionBlockIOManager::getAppParameterHandle( string const& name )
-	{
-		return getParameter( name ).HandleAble< app::ParameterHandle >::getHandle();
-	}
-
 	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name )
 	{
 		return getInlet( name ).HandleAble< bundle::InletHandle >::getHandle();
@@ -125,11 +115,6 @@ namespace _2Real
 	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name )
 	{
 		return getOutlet( name ).HandleAble< bundle::OutletHandle >::getHandle();
-	}
-
-	bundle::ParameterHandle & FunctionBlockIOManager::getBundleParameterHandle( string const& name )
-	{
-		return getParameter( name ).HandleAble< bundle::ParameterHandle >::getHandle();
 	}
 
 	Inlet & FunctionBlockIOManager::getInlet( string const& name )
@@ -162,24 +147,9 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	Parameter & FunctionBlockIOManager::getParameter( string const& name )
-	{
-		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			if ( ( *it )->getName() == name )
-			{
-				return **it;
-			}
-		}
-			
-		ostringstream msg;
-		msg << "parameter " << name<< " not found in" << m_Owner.getName();
-		throw NotFoundException( msg.str() );
-	}
-
 	void FunctionBlockIOManager::addInlet( ParamData const& data )
 	{
-		Inlet *inlet = new Inlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
+		Inlet *inlet = new Inlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename() );
 		m_UpdatePolicy->addInlet( *inlet );
 		m_Inlets.push_back( inlet );
 	}
@@ -190,13 +160,6 @@ namespace _2Real
 		io.outlet = new Outlet( m_Owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() );
 		io.callbacks = new CallbackEvent< app::AppData const& >();
 		m_Outlets.push_back( io );
-	}
-
-	void FunctionBlockIOManager::addParameter( ParamData const& data )
-	{
-		Parameter *parameter = new Parameter( m_Owner, data.getName(), data.getLongTypename(), data.getTypename() );
-		parameter->setData( TimestampedData( data.getDefaultValue(), 0 ) );
-		m_Parameters.push_back( parameter );
 	}
 
 	void FunctionBlockIOManager::updateInletValues()
@@ -235,14 +198,6 @@ namespace _2Real
 		for ( InletVector::iterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
 			( *it )->updateDataBuffer();
-		}
-	}
-
-	void FunctionBlockIOManager::updateParameterValues()
-	{
-		for ( ParameterVector::iterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			( *it )->synchronize();
 		}
 	}
 

@@ -77,8 +77,6 @@ namespace _2Real
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateSetUp();
 
-				m_IOManager->updateParameterValues();
-
 				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
 				m_FunctionBlock->setup( context );
 
@@ -117,7 +115,6 @@ namespace _2Real
 				enableTriggers();
 
 				m_IOManager->updateInletBuffers();		///???????????????????????
-				m_IOManager->updateParameterValues();
 
 				m_Logger.addLine( string( getName() + " new state: started" ) );
 			}
@@ -300,8 +297,6 @@ namespace _2Real
 			{
 				disableAllTriggers();
 
-				m_IOManager->updateParameterValues();
-
 				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
 				m_FunctionBlock->setup( context );
 				m_CurrentState = new FunctionBlockStateSetUp();
@@ -336,7 +331,6 @@ namespace _2Real
 				enableTriggers();
 
 				m_IOManager->updateInletBuffers();
-				m_IOManager->updateParameterValues();
 			}
 
 			m_FlaggedForStop.unset();

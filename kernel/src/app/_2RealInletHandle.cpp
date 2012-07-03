@@ -29,13 +29,13 @@ namespace _2Real
 	namespace app
 	{
 		InletHandle::InletHandle() :
-			ParamHandle(),
+			ParameterHandle(),
 			m_Inlet( nullptr )
 		{
 		}
 
 		InletHandle::InletHandle( Inlet &inlet ) :
-			ParamHandle( inlet ),
+			ParameterHandle( inlet ),
 			m_Inlet( &inlet )
 		{
 		}
@@ -79,13 +79,13 @@ namespace _2Real
 		void InletHandle::setDefaultValue( EngineData const& data )
 		{
 			checkHandle( m_Inlet );
-			m_Inlet->setDefaultValue( data );
+			//m_Inlet->setDefaultValue( data );
 		}
 
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
 			checkHandle( m_Inlet );
-			m_Inlet->setBufferSize( size );
+			//m_Inlet->setBufferSize( size );
 		}
 	}
 }

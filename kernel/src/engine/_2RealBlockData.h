@@ -40,7 +40,6 @@ namespace _2Real
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addParameter( ParamData const& data );
 		void addInlet( ParamData const& data );
 		void addOutlet( ParamData const& data );
 
@@ -48,7 +47,6 @@ namespace _2Real
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 
-		ParamMetas const& getParameters() const;
 		ParamMetas const& getInlets() const;
 		ParamMetas const& getOutlets() const;
 
@@ -58,7 +56,6 @@ namespace _2Real
 		std::string			m_Description;
 		std::string			m_Category;
 
-		ParamMetas			m_Parameters;
 		ParamMetas			m_Inlets;
 		ParamMetas			m_Outlets;
 

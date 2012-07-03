@@ -35,14 +35,6 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
-		void BlockMetainfo::addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue )
-		{
-			const std::string longTypename = defaultValue.getTypename();
-			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParamData data( paramName, longTypename, typeName, defaultValue );
-			m_Impl.addParameter( data );
-		}
-
 		void BlockMetainfo::addInletInternal( std::string const& inletName, EngineData const& defaultValue )
 		{
 			const std::string longTypename = defaultValue.getTypename();

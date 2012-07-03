@@ -18,7 +18,6 @@
 
 #include "app/_2RealParameterHandle.h"
 #include "engine/_2RealParameter.h"
-#include "engine/_2RealTimestampedData.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "parameter handle not initialized" );\
@@ -28,21 +27,31 @@ namespace _2Real
 	namespace app
 	{
 		ParameterHandle::ParameterHandle() :
-			ParamHandle(),
 			m_Parameter( nullptr )
 		{
 		}
 
 		ParameterHandle::ParameterHandle( Parameter &param ) :
-			ParamHandle( param ),
 			m_Parameter( &param )
 		{
 		}
 
-		void ParameterHandle::setParameterValue( EngineData const& data )
+		std::string const& ParameterHandle::getName() const
 		{
 			checkHandle( m_Parameter );
-			m_Parameter->setData( TimestampedData( data, 0 ) );
+			return m_Parameter->getName();
+		}
+
+		std::string const& ParameterHandle::getLongTypename() const
+		{
+			checkHandle( m_Parameter );
+			return m_Parameter->getLongTypename();
+		}
+
+		std::string const& ParameterHandle::getTypename() const
+		{
+			checkHandle( m_Parameter );
+			return m_Parameter->getTypename();
 		}
 	}
 }

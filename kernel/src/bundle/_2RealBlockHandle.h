@@ -31,7 +31,6 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 
 		class BlockHandle
 		{
@@ -40,7 +39,6 @@ namespace _2Real
 
 			BlockHandle( FunctionBlock &block );
 
-			ParameterHandle &	getParameterHandle( std::string const& name );
 			InletHandle &		getInletHandle( std::string const& name );
 			OutletHandle &		getOutletHandle( std::string const& name );
 

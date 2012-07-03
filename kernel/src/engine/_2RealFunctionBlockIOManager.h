@@ -58,20 +58,16 @@ namespace _2Real
 
 		void						addInlet( ParamData const& data );
 		void						addOutlet( ParamData const& data );
-		void						addParameter( ParamData const& data );
 
 		app::InletHandle &			getAppInletHandle( std::string const& name );
 		app::OutletHandle &			getAppOutletHandle( std::string const& name );
-		app::ParameterHandle &		getAppParameterHandle( std::string const& name );
 
 		bundle::InletHandle &		getBundleInletHandle( std::string const& name );
 		bundle::OutletHandle &		getBundleOutletHandle( std::string const& name );
-		bundle::ParameterHandle &	getBundleParameterHandle( std::string const& name );
 
 		void						updateInletValues();
 		void						updateOutletValues();
 		void						updateInletBuffers();
-		void						updateParameterValues();
 
 	private:
 
@@ -82,14 +78,11 @@ namespace _2Real
 
 		mutable Poco::FastMutex			m_InletAccess;
 		mutable Poco::FastMutex			m_OutletAccess;
-		mutable Poco::FastMutex			m_ParamAccess;
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
-		ParameterVector					m_Parameters;
 
 		Inlet &							getInlet( std::string const& name );
 		Outlet &						getOutlet( std::string const& name );
-		Parameter &						getParameter( std::string const& name );
 
 	};
 

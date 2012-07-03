@@ -20,7 +20,7 @@
 
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealTimestampedData.h"
-#include "engine/_2RealInletBuffer.h"
+//#include "engine/_2RealInletBuffer.h"
 #include "helpers/_2RealHandleAble.h"
 #include "app/_2RealInletHandle.h"
 #include "bundle/_2RealInletHandle.h"
@@ -38,36 +38,27 @@ namespace _2Real
 	class Inlet : public Parameter, public HandleAble< app::InletHandle >, public HandleAble< bundle::InletHandle >
 	{
 
-		friend class IOLink;
-
 	public:
 
-		Inlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& type, EngineData const& defaultValue );
+		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );
 
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
-		using Parameter::getName;
-		using Parameter::getOwningUberBlock;
-		using Parameter::getData;
-
-		void updateCurrentValue();
-		void updateDataBuffer();
+		//void updateCurrentValue();
+		//void updateDataBuffer();
 
 		void linkTo( app::OutletHandle &outlet );
 		void unlinkFrom( app::OutletHandle &outlet );
 
-		void setBufferSize( const unsigned int sz );
-
-		void setDefaultValue( EngineData const& data );
-		void disableTriggering( TimestampedData const& data );
-		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
-		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
+		//void setBufferSize( const unsigned int sz );
+		//void setDefaultValue( EngineData const& data );
+		//void disableTriggering( TimestampedData const& data );
+		//void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
+		//void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
 
 	private:
 
 		TimestampedData		m_CurrentData;
 		TimestampedData		m_LastData;
-		InletBuffer			m_Buffer;
+		//InletBuffer		m_Buffer;
 
 	};
 

@@ -33,11 +33,6 @@ namespace _2Real
 		{
 		}
 
-		ParameterHandle & BlockHandle::getParameterHandle( string const& name )
-		{
-			return m_Impl.getBundleParameterHandle( name );
-		}
-
 		InletHandle & BlockHandle::getInletHandle( string const& name )
 		{
 			return m_Impl.getBundleInletHandle( name );

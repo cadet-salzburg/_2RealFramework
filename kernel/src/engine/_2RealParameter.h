@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "engine/_2RealParam.h"
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealEngineData.h"
 #include "helpers/_2RealPoco.h"
@@ -29,27 +28,34 @@
 namespace _2Real
 {
 
-	class Parameter : public Param, public HandleAble< app::ParameterHandle >, public HandleAble< bundle::ParameterHandle >
+	class AbstractUberBlock;
+
+	class Parameter
 	{
 
 	public:
 
-		Parameter( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName );
+		Parameter( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName );
 
-		using Param::getTypename;
-		using Param::getLongTypename;
-		using Param::getName;
-		using Param::getOwningUberBlock;
+		std::string const&			getTypename() const;
+		std::string const&			getLongTypename() const;
+		std::string const&			getName() const;
+		AbstractUberBlock &			getOwningUberBlock();
 
 		void						setData( TimestampedData const& data );
-		void						synchronize();
-		TimestampedData				getData() const; // must return a copy, b/c could change anytime
+		void						synchronize();		// syncs data & write data
+		TimestampedData				getData() const;	// must return a copy, b/c could change anytime
 
 	private:
 
 		mutable Poco::FastMutex		m_DataAccess;
 		TimestampedData				m_Data;
-		TimestampedData				m_WriteData;
+		TimestampedData				m_DataBuffer;
+
+		AbstractUberBlock			&m_Owner;
+		std::string					const m_LongTypename;
+		std::string					const m_Typename;
+		std::string					const m_Name;
 
 	};
 

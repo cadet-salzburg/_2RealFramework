@@ -40,12 +40,6 @@ namespace _2Real
 			void setDescription( std::string const& description );
 
 			template< typename Datatype >
-			void addParameter( std::string const& setupName, Datatype defaultValue )
-			{
-				addSetupParameterInternal( setupName, EngineData( defaultValue ) );
-			}
-
-			template< typename Datatype >
 			void addInlet( std::string const& inletName, Datatype defaultValue )
 			{
 				addInletInternal( inletName, EngineData( defaultValue ) );
@@ -59,7 +53,6 @@ namespace _2Real
 
 		private:
 
-			void		addSetupParameterInternal( std::string const& paramName, EngineData const& defaultValue );
 			void		addInletInternal( std::string const& inletName, EngineData const& defaultValue );
 			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 

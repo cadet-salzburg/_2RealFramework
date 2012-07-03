@@ -58,13 +58,11 @@ namespace _2Real
 		app::BlockInfo			getBlockData();
 		BlockData const&		getMetadata() const;
 
-		bundle::InletHandle &		getBundleInletHandle( std::string const& inletName );
-		bundle::OutletHandle &		getBundleOutletHandle( std::string const& outletName );
-		bundle::ParameterHandle &	getBundleParameterHandle( std::string const& paramName );
+		bundle::InletHandle &	getBundleInletHandle( std::string const& inletName );
+		bundle::OutletHandle &	getBundleOutletHandle( std::string const& outletName );
 
 		app::InletHandle &		getAppInletHandle( std::string const& inletName );
 		app::OutletHandle &		getAppOutletHandle( std::string const& outletName );
-		app::ParameterHandle &	getAppParameterHandle( std::string const& paramName );
 
 		void					createLink( Inlet &inlet, Outlet &outlet );
 		void					destroyLink( Inlet &inlet, Outlet &outlet );

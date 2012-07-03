@@ -19,7 +19,7 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
-#include "app/_2RealParamHandle.h"
+#include "app/_2RealParameterHandle.h"
 
 namespace _2Real
 {
@@ -29,7 +29,7 @@ namespace _2Real
 	{
 		class OutletHandle;
 
-		class InletHandle : public ParamHandle
+		class InletHandle : public ParameterHandle
 		{
 
 		public:
@@ -44,9 +44,9 @@ namespace _2Real
 			InletHandle();
 			InletHandle( Inlet &inlet );
 
-			using ParamHandle::getName;
-			using ParamHandle::getTypename;
-			using ParamHandle::getLongTypename;
+			using ParameterHandle::getName;
+			using ParameterHandle::getTypename;
+			using ParameterHandle::getLongTypename;
 
 			void setUpdatePolicy( const InletUpdatePolicy p );
 

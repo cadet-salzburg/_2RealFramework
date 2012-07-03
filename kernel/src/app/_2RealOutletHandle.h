@@ -19,7 +19,7 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
-#include "app/_2RealParamHandle.h"
+#include "app/_2RealParameterHandle.h"
 #include "app/_2RealCallbacks.h"
 
 #include<list>
@@ -32,7 +32,7 @@ namespace _2Real
 	{
 		class InletHandle;
 
-		class OutletHandle : public ParamHandle
+		class OutletHandle : public ParameterHandle
 		{
 
 		public:
@@ -40,9 +40,9 @@ namespace _2Real
 			OutletHandle();
 			OutletHandle( Outlet &outlet );
 
-			using ParamHandle::getName;
-			using ParamHandle::getTypename;
-			using ParamHandle::getLongTypename;
+			using ParameterHandle::getName;
+			using ParameterHandle::getTypename;
+			using ParameterHandle::getLongTypename;
 
 			void linkTo( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );

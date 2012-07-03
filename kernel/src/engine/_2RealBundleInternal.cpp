@@ -87,19 +87,8 @@ namespace _2Real
 			blockData.m_Description = it->second.getDescription();
 			blockData.m_Category = it->second.getCategory();
 
-			BlockData::ParamMetas const& params = it->second.getParameters();
 			BlockData::ParamMetas const& input = it->second.getInlets();
 			BlockData::ParamMetas const& output = it->second.getOutlets();
-			for ( BlockData::ParamMetasConstIterator it = params.begin(); it != params.end(); ++it )
-			{
-				app::ParameterData paramData;
-
-				paramData.m_Name = it->getName();
-				paramData.m_Typename = it->getTypename();
-				paramData.m_LongTypename = it->getLongTypename();
-
-				blockData.m_Parameters.push_back( paramData );
-			}
 
 			for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
 			{

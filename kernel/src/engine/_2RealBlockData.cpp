@@ -60,11 +60,6 @@ namespace _2Real
 		m_Category = category;
 	}
 
-	void BlockData::addParameter( ParamData const& data )
-	{
-		m_Parameters.push_back( data );
-	}
-
 	void BlockData::addInlet( ParamData const& data )
 	{
 		m_Inlets.push_back( data );
@@ -73,11 +68,6 @@ namespace _2Real
 	void BlockData::addOutlet( ParamData const& data )
 	{
 		m_Outlets.push_back( data );
-	}
-
-	BlockData::ParamMetas const& BlockData::getParameters() const
-	{
-		return m_Parameters;
 	}
 
 	BlockData::ParamMetas const& BlockData::getInlets() const

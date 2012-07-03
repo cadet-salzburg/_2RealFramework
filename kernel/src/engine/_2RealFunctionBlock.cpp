@@ -58,14 +58,8 @@ namespace _2Real
 		m_IOManager->m_StateManager = m_StateManager;
 		m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
 
-		BlockData::ParamMetas const& params = meta.getParameters();
 		BlockData::ParamMetas const& input = meta.getInlets();
 		BlockData::ParamMetas const& output = meta.getOutlets();
-
-		for ( BlockData::ParamMetasConstIterator it = params.begin(); it != params.end(); ++it )
-		{
-			m_IOManager->addParameter( *it );
-		}
 
 		for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
 		{
@@ -81,7 +75,6 @@ namespace _2Real
 	FunctionBlock::~FunctionBlock()
 	{
 		// at tis point, block should be stopped
-
 		//delete m_UpdatePolicy;
 		//std::cout << "deleted policy" << std::endl;
 		//delete m_IOManager;
@@ -103,19 +96,8 @@ namespace _2Real
 		blockData.m_Description = m_Metadata.getDescription();
 		blockData.m_Category = m_Metadata.getCategory();
 
-		BlockData::ParamMetas const& params = m_Metadata.getParameters();
 		BlockData::ParamMetas const& input = m_Metadata.getInlets();
 		BlockData::ParamMetas const& output = m_Metadata.getOutlets();
-		for ( BlockData::ParamMetasConstIterator it = params.begin(); it != params.end(); ++it )
-		{
-			app::ParameterData paramData;
-
-			paramData.m_Name = it->getName();
-			paramData.m_Typename = it->getTypename();
-			paramData.m_LongTypename = it->getLongTypename();
-
-			blockData.m_Parameters.push_back( paramData );
-		}
 
 		for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
 		{
@@ -152,11 +134,6 @@ namespace _2Real
 		return m_IOManager->getAppOutletHandle( name );
 	}
 
-	app::ParameterHandle & FunctionBlock::getAppParameterHandle( string const& name )
-	{
-		return m_IOManager->getAppParameterHandle( name );
-	}
-
 	bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name )
 	{
 		return m_IOManager->getBundleInletHandle( name );
@@ -165,11 +142,6 @@ namespace _2Real
 	bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name )
 	{
 		return m_IOManager->getBundleOutletHandle( name );
-	}
-
-	bundle::ParameterHandle & FunctionBlock::getBundleParameterHandle( string const& name )
-	{
-		return m_IOManager->getBundleParameterHandle( name );
 	}
 
 	void FunctionBlock::createLink( Inlet &inlet, Outlet &outlet )
