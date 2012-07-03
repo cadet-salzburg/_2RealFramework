@@ -504,12 +504,10 @@ namespace _2Real
 			{
 				if ( ( *it )->isSingleWeight() )
 				{
-					std::cout << "single" << std::endl;
 					singleWeight |= ( *it )->isOk();
 				}
 				else
 				{
-					std::cout << "group" << std::endl;
 					groupWeight &= ( *it )->isOk();
 				}
 			}
