@@ -24,8 +24,8 @@
 namespace _2Real
 {
 
-	class Inlet;
-	class Outlet;
+	class InletIO;
+	class OutletIO;
 	class Exception;
 
 	class AbstractUberBlock
@@ -40,24 +40,19 @@ namespace _2Real
 		std::string const&						getName() const;
 		unsigned int							getId() const;
 
-		virtual void							registerToNewData( Outlet const& outlet, app::OutletCallback &callback ) = 0;
-		virtual void							unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback) = 0;
-		virtual void							registerToNewData( app::BlockCallback &callback ) = 0;
-		virtual void							unregisterFromNewData( app::BlockCallback &callback ) = 0;
-
 		virtual void							setUp() = 0;
 		virtual void							start() = 0;
 		virtual void							stop( const bool blocking, const long timeout ) = 0;
 		virtual void							prepareForShutDown() = 0;
 		virtual bool							shutDown( const long timeout ) = 0;
 
-		virtual void							createLink( Inlet &inlet, Outlet &outlet ) = 0;
-		virtual void							destroyLink( Inlet &inlet, Outlet &outlet ) = 0;
+		virtual void							createLink( InletIO &inlet, OutletIO &outletIO ) = 0;
+		virtual void							destroyLink( InletIO &inlet, OutletIO &outletIO ) = 0;
 
-		virtual void							updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight ) = 0;
-		virtual void							updateWhenInletDataValid( Inlet &inlet ) = 0;
-		virtual void							updateWhenAllInletDataNew() = 0;
-		virtual void							updateWhenAllInletDataValid() = 0;
+		virtual void							updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
+		virtual void							updateWhenInletDataValid( InletIO &inletIO ) = 0;
+		//virtual void							updateWhenAllInletDataNew() = 0;
+		//virtual void							updateWhenAllInletDataValid() = 0;
 		virtual void							updateWithFixedRate( const double updatesPerSecond ) = 0;
 
 		virtual void							handleException( Exception &e ) = 0;

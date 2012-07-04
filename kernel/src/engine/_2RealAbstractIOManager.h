@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
-#include "helpers/_2RealPoco.h"
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealOutlet.h"
+#include "app/_2RealCallbacks.h"
+#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealPoco.h"
 
 #include <string>
 
@@ -36,11 +36,39 @@ namespace _2Real
 	class InletBuffer;
 	class Outlet;
 	class Parameter;
+	class ParameterData;
+
+	class InletIO : public HandleAble< app::InletHandle >
+	{
+	public:
+		InletIO( AbstractUberBlock &owner, ParameterData const& data );
+		~InletIO();
+		Inlet													*m_Inlet;
+		InletBuffer												*m_Buffer;
+	};
+
+	class OutletIO : public HandleAble< app::OutletHandle >
+	{
+	public:
+		OutletIO( AbstractUberBlock &owner, ParameterData const& data );
+		~OutletIO();
+		Outlet													*m_Outlet;
+		CallbackEvent< app::AppData const& >					*m_AppEvent;
+		CallbackEvent< TimestampedData const& >					*m_InletEvent;
+	};
 
 	class AbstractIOManager
 	{
 
 	public:
+
+		typedef std::vector< InletIO * >						InletVector;
+		typedef std::vector< InletIO * >::iterator				InletIterator;
+		typedef std::vector< InletIO * >::const_iterator		InletConstIterator;
+
+		typedef std::vector< OutletIO * >						OutletVector;
+		typedef std::vector< OutletIO * >::iterator				OutletIterator;
+		typedef std::vector< OutletIO * >::const_iterator		OutletConstIterator;
 
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
@@ -50,31 +78,9 @@ namespace _2Real
 
 	protected:
 
-		class InletIO
-		{
-		public:
-			Inlet									m_Inlet;
-			InletBuffer								m_Buffer;
-		};
-
-		typedef std::vector< Inlet * >						InletVector;
-		typedef std::vector< Inlet * >::iterator			InletIterator;
-		typedef std::vector< Inlet * >::const_iterator		InletConstIterator;
-
-		class OutletIO
-		{
-		public:
-			Outlet									*outlet;
-			CallbackEvent< app::AppData const& >	*callbacks;
-		};
-
-		typedef std::vector< OutletIO >						OutletVector;
-		typedef std::vector< OutletIO >::iterator			OutletIterator;
-		typedef std::vector< OutletIO >::const_iterator		OutletConstIterator;
-
-		Poco::FastMutex										m_IOAccess;
-		AbstractUberBlock									&m_Owner;
-		CallbackEvent< std::list< app::AppData > const& >	m_BlockDataChanged;
+		AbstractUberBlock										&m_Owner;
+		Poco::FastMutex											m_IOAccess;
+		CallbackEvent< std::list< app::AppData > const& >		m_AppEvent;
 
 	};
 

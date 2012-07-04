@@ -36,7 +36,7 @@ namespace _2Real
 		class ParameterHandle;
 	}
 	
-	class ParamData;
+	class ParameterData;
 	class FunctionBlock;
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
@@ -51,13 +51,11 @@ namespace _2Real
 
 		void						clear();
 
-		void						registerToNewData( Outlet const& outlet, app::OutletCallback &cb );
-		void						unregisterFromNewData( Outlet const& outlet, app::OutletCallback &cb );
 		void						registerToNewData( app::BlockCallback &cb );
 		void						unregisterFromNewData( app::BlockCallback &cb );
 
-		void						addInlet( ParamData const& data );
-		void						addOutlet( ParamData const& data );
+		void						addInlet( ParameterData const& data );
+		void						addOutlet( ParameterData const& data );
 
 		app::InletHandle &			getAppInletHandle( std::string const& name );
 		app::OutletHandle &			getAppOutletHandle( std::string const& name );
@@ -65,8 +63,8 @@ namespace _2Real
 		bundle::InletHandle &		getBundleInletHandle( std::string const& name );
 		bundle::OutletHandle &		getBundleOutletHandle( std::string const& name );
 
-		void						updateInletValues();
-		void						updateOutletValues();
+		void						updateInletData();
+		void						updateOutletData();
 		void						updateInletBuffers();
 
 	private:
@@ -81,8 +79,8 @@ namespace _2Real
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 
-		Inlet &							getInlet( std::string const& name );
-		Outlet &						getOutlet( std::string const& name );
+		InletIO &						getInletIO( std::string const& name );
+		OutletIO &						getOutletIO( std::string const& name );
 
 	};
 

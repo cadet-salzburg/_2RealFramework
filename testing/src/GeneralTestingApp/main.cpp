@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+//#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -123,16 +123,9 @@ int main( int argc, char *argv[] )
 		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
 		BlockInfo const& inData = inHandle.getBlockInfo();
 		inHandle.setUpdateRate( 0.0 );
-		inHandle.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
-
-		ParameterHandle paramHandle = inHandle.getParameterHandle( "param" );
-
-		cout << paramHandle.getLongTypename() << endl;
-		cout << paramHandle.getTypename() << endl;
-		cout << paramHandle.getName() << endl;
 
 		cout << inletHandle.getLongTypename() << endl;
 		cout << inletHandle.getTypename() << endl;
@@ -210,10 +203,6 @@ int main( int argc, char *argv[] )
 			else if ( line == "unreg out" )
 			{
 				outHandle.unregisterFromNewData< BlockReceiver >( blockReceiver, &BlockReceiver::receiveData );
-			}
-			else if ( line == "set" )
-			{
-				paramHandle.setValue< unsigned int >( ++cnt );
 			}
 			else if ( line == "default" )
 			{

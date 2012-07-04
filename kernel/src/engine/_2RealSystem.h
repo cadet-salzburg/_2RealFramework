@@ -30,6 +30,8 @@
 namespace _2Real
 {
 
+	class InletIO;
+	class OutletIO;
 	class EngineImpl;
 	class AbstractLink;
 	class AbstractUberBlock;
@@ -54,16 +56,14 @@ namespace _2Real
 		void		registerToException( app::ErrorCallback &callback );
 		void		unregisterFromException( app::ErrorCallback &callback );
 
-		void		createLink( Inlet &inlet, Outlet &outlet );
-		void		destroyLink( Inlet &inlet, Outlet &outlet );
+		void		createLink( InletIO &inlet, OutletIO &outlet );
+		void		destroyLink( InletIO &inlet, OutletIO &outlet );
 
 	private:
 
 		EngineImpl								&m_Engine;
 		SystemBlockManager						*m_SubBlockManager;
-
-		LinkSet									m_Links;
-
+		IOLink::LinkSet							m_Links;
 		CallbackEvent< std::pair< Exception, app::BlockHandle > const& >		m_ExceptionEvent;
 
 	};

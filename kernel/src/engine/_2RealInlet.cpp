@@ -34,71 +34,31 @@ namespace _2Real
 {
 
 	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& type ) :
-		HandleAble< app::InletHandle >( *this ),
 		HandleAble< bundle::InletHandle >( *this ),
-		Parameter( owningBlock, name, longTypename, type ),
-		m_CurrentData( EngineData(), 0 ),
-		m_LastData( EngineData(), 0 )
+		Parameter( owningBlock, name, longTypename, type )
 	{
 	}
 
-	//void Inlet::updateCurrentValue()
-	//{
-	//	//m_CurrentData = m_Buffer.getCurrentData();
-	//	Parameter::setData( m_Buffer.getCurrentData() );
-	//	Parameter::synchronize();			// immediately makes changes visible to inlet and app
-	//}
-
-	//void Inlet::updateDataBuffer()
-	//{
-	//	m_Buffer.updateDataBuffer();
-	//}
-
-	//void Inlet::setDefaultValue( EngineData const& data )
-	//{
-	//	m_Buffer.setDefaultData( TimestampedData( data, EngineImpl::instance().getElapsedTime() ) );
-	//}
-
-	//void Inlet::disableTriggering( TimestampedData const& data )
-	//{
-	//	m_Buffer.disableTriggering( data );
-	//}
-
-	//void Inlet::registerUpdateTrigger( AbstractInletBasedTrigger &trigger )
-	//{
-	//	m_Buffer.registerUpdateTrigger( trigger );
-	//}
-
-	//void Inlet::unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger )
-	//{
-	//	m_Buffer.unregisterUpdateTrigger( trigger );
-	//}
-
-	//void Inlet::setBufferSize( const unsigned int size )
-	//{
-	//	m_Buffer.setInsertionPolicy( *( new RemoveFirst( size ) ) );
-	//}
-
-	void Inlet::linkTo( app::OutletHandle &outletHandle )
-	{
-		Parameter *p = outletHandle.ParameterHandle::m_Parameter;
-#ifdef _DEBUG
-		if ( p == nullptr ) assert( NULL );
-#endif
-
-		Outlet *outlet = static_cast< Outlet * >( p );
-		Parameter::getOwningUberBlock().createLink( *this, *outlet );
-	}
-
-	void Inlet::unlinkFrom( app::OutletHandle &outletHandle )
-	{
-		Parameter *p = outletHandle.ParameterHandle::m_Parameter;
-#ifdef _DEBUG
-		if ( p == nullptr ) assert( NULL );
-#endif
-
-		Outlet *outlet = static_cast< Outlet * >( p );
-		Parameter::getOwningUberBlock().destroyLink( *this, *outlet );
-	}
+//	void Inlet::linkTo( app::OutletHandle &outletHandle )
+//	{
+//		Parameter *p = outletHandle.ParameterHandle::m_Parameter;
+//#ifdef _DEBUG
+//		if ( p == nullptr ) assert( NULL );
+//#endif
+//
+//		Outlet *outlet = static_cast< Outlet * >( p );
+//		Parameter::getOwningUberBlock().createLink( *this, *outlet );
+//	}
+//
+//	void Inlet::unlinkFrom( app::OutletHandle &outletHandle )
+//	{
+//		Parameter *p = outletHandle.ParameterHandle::m_Parameter;
+//#ifdef _DEBUG
+//		if ( p == nullptr ) assert( NULL );
+//#endif
+//
+//		Outlet *outlet = static_cast< Outlet * >( p );
+//		Parameter::getOwningUberBlock().destroyLink( *this, *outlet );
+//	}
 
 }

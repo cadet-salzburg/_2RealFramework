@@ -47,7 +47,7 @@ namespace _2Real
 					throw UninitializedHandleException( msg.str() );
 				}
 
-				EngineData curr = getCurrentData();
+				EngineData &curr = getCurrentData();
 				Datatype &data = extractFrom< Datatype >( curr );
 				return data;
 			}
@@ -56,7 +56,7 @@ namespace _2Real
 
 		private:
 
-			EngineData			getCurrentData();
+			EngineData &		getCurrentData();
 			Outlet				*m_Outlet;
 
 		};

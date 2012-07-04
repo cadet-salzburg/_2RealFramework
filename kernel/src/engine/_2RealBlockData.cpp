@@ -60,12 +60,12 @@ namespace _2Real
 		m_Category = category;
 	}
 
-	void BlockData::addInlet( ParamData const& data )
+	void BlockData::addInlet( ParameterData const& data )
 	{
 		m_Inlets.push_back( data );
 	}
 
-	void BlockData::addOutlet( ParamData const& data )
+	void BlockData::addOutlet( ParameterData const& data )
 	{
 		m_Outlets.push_back( data );
 	}

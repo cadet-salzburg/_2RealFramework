@@ -31,17 +31,17 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< ParamData >					ParamMetas;
-		typedef std::vector< ParamData >::iterator			ParamMetasIterator;
-		typedef std::vector< ParamData >::const_iterator	ParamMetasConstIterator;
+		typedef std::vector< ParameterData >					ParamMetas;
+		typedef std::vector< ParameterData >::iterator			ParamMetasIterator;
+		typedef std::vector< ParameterData >::const_iterator	ParamMetasConstIterator;
 
 		BlockData();
 		BlockData( std::string const& name );
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addInlet( ParamData const& data );
-		void addOutlet( ParamData const& data );
+		void addInlet( ParameterData const& data );
+		void addOutlet( ParameterData const& data );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;

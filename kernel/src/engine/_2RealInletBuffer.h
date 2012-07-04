@@ -20,6 +20,7 @@
 
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealHelpersInternal.h"
+#include "app/_2RealCallbacksInternal.h"
 #include "helpers/_2RealPoco.h"
 
 #include <list>
@@ -28,27 +29,22 @@
 namespace _2Real
 {
 
-	// within the data buffer, data items are stored by the order which they arrived in
-	typedef std::list< TimestampedData >		DataBuffer;
-
-	// synchronisation is not part of the policy
 	class AbstractInsertionPolicy
 	{
 
 	public:
 
-		virtual bool insertData( TimestampedData const& data, DataBuffer &buffer ) = 0;
+		virtual bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer ) = 0;
 
 	};
 
-	// on overflow, throws out the very first element
-	class RemoveFirst : public AbstractInsertionPolicy
+	class RemoveOldest : public AbstractInsertionPolicy
 	{
 
 	public:
 
-		RemoveFirst( const unsigned int max );
-		bool insertData( TimestampedData const& data, DataBuffer &buffer );
+		RemoveOldest( const unsigned int max );
+		bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer );
 
 	private:
 
@@ -56,38 +52,40 @@ namespace _2Real
 
 	};
 
-	class Inlet;
-	class InletHandle;
-	class AbstractInletBasedTrigger;
+	class EngineImpl;
 
 	class InletBuffer
 	{
 
 	public:
 
+		// within the data buffer, data items are stored by the order which they arrived in;
+		// not necessarily in timestamp order
+		typedef std::list< TimestampedData >			DataBuffer;
+		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
+
 		InletBuffer( EngineData const& defaultData );
-		void receiveData( TimestampedData &data );
-		TimestampedData const& getCurrentData() const;
-		void updateDataBuffer();
+		void receiveData( TimestampedData const& data );
+		TimestampedData const& getTriggeringData() const;
+		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );
-		void setInsertionPolicy( AbstractInsertionPolicy &policy );
-		void setDefaultData( TimestampedData &defaultData );
-		void unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger );
-		void registerUpdateTrigger( AbstractInletBasedTrigger &trigger );
+		void setBufferSize( const unsigned int size );
+		void setDefaultData( EngineData const& defaultData );
+		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
+		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
 
 	private:
 
-		typedef std::list< AbstractInletBasedTrigger * > InletTriggerList;
-
-		DataBuffer									m_ReceivedDataItems;	// holds all received data items
-		TimestampedData								m_TriggeringData;		// holds the data item which triggered the update condition
-		InletTriggerList							m_InletTriggers;
-		TimestampedData								m_DefaultData;
-		volatile bool								m_Notify;				// this is set to false as soon as any received data
-		mutable Poco::FastMutex						m_DataAccess;			// i use this for synchronizing policy, data access & default access oO
-		mutable Poco::FastMutex						m_ReceivedAccess;
-		mutable Poco::FastMutex						m_NotificationAccess;
-		std::auto_ptr< AbstractInsertionPolicy >	m_InsertionPolicy;
+		EngineImpl										&m_Engine;
+		DataBuffer										m_ReceivedDataItems;	// holds all received data items
+		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
+		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
+		volatile bool									m_Notify;
+		TimestampedData									m_DefaultData;
+		mutable Poco::FastMutex							m_PolicyAccess;
+		mutable Poco::FastMutex							m_DataAccess;
+		mutable Poco::FastMutex							m_NotificationAccess;
+		std::auto_ptr< AbstractInsertionPolicy >		m_InsertionPolicy;
 
 	};
 

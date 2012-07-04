@@ -21,7 +21,6 @@
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealTimestampedData.h"
 #include "app/_2RealAppData.h"
-#include "helpers/_2RealPoco.h"
 #include "app/_2RealCallbacks.h"
 #include "helpers/_2RealHandleAble.h"
 #include "app/_2RealOutletHandle.h"
@@ -37,7 +36,7 @@ namespace _2Real
 
 	class EngineImpl;
 
-	class Outlet : public Parameter, public HandleAble< app::OutletHandle >, public HandleAble< bundle::OutletHandle >
+	class Outlet : public Parameter, public HandleAble< bundle::OutletHandle >
 	{
 
 	public:
@@ -50,26 +49,23 @@ namespace _2Real
 		using Parameter::getData;
 		using Parameter::getOwningUberBlock;
 
-		void			linkTo( app::InletHandle &inlet );
-		void			unlinkFrom( app::InletHandle &Inlet );
-		void			registerToNewData( app::OutletCallback &callback );
-		void			unregisterFromNewData( app::OutletCallback &callback );
+		//void			linkTo( app::InletHandle &inlet );
+		//void			unlinkFrom( app::InletHandle &Inlet );
+		//void			registerToNewData( app::OutletCallback &callback );
+		//void			unregisterFromNewData( app::OutletCallback &callback );
 
-		bool			update();
-		EngineData &	getDataForWriting();
+		bool			synchronize();
+		EngineData &	getWriteableData();
 		void			discardCurrentUpdate();
 
-		void			addListener( AbstractCallback< TimestampedData > &callback );
-		void			removeListener( AbstractCallback< TimestampedData > &callback );
+		//void			addListener( AbstractCallback< TimestampedData > &callback );
+		//void			removeListener( AbstractCallback< TimestampedData > &callback );
 
 	private:
 
-		EngineImpl										&m_Engine;					// engine is necessary for timestamps
-		TimestampedData									m_WriteDataItem;			// the data item that is currently being written
-																					// initially, holds an empty ( created by () ) data item of correct type
-																					// after the first update, holds a copy of the m_LastDataItem
-		bool											m_DiscardCurrent;			// is flagged if the current data should not be sent
-		CallbackEvent< TimestampedData >				m_InletEvent;
+		EngineImpl		&m_Engine;
+		bool			m_DiscardCurrent;
+
 	};
 
 }

@@ -43,6 +43,7 @@ namespace _2Real
 
 	class BlockData;
 	class System;
+	class InletIO;
 	class FunctionBlockUpdatePolicy;
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
@@ -64,11 +65,9 @@ namespace _2Real
 		app::InletHandle &		getAppInletHandle( std::string const& inletName );
 		app::OutletHandle &		getAppOutletHandle( std::string const& outletName );
 
-		void					createLink( Inlet &inlet, Outlet &outlet );
-		void					destroyLink( Inlet &inlet, Outlet &outlet );
+		void					createLink( InletIO &inletIO, OutletIO &outletIO );
+		void					destroyLink( InletIO &inletIO, OutletIO &outletIO );
 
-		void					registerToNewData( Outlet const& outlet, app::OutletCallback &callback );
-		void					unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback );
 		void					registerToNewData( app::BlockCallback &callback );
 		void					unregisterFromNewData( app::BlockCallback &callback );
 
@@ -78,10 +77,10 @@ namespace _2Real
 		void					prepareForShutDown();
 		bool					shutDown( const long timeout );
 
-		void					updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight );
-		void					updateWhenInletDataValid( Inlet &inlet );
-		void					updateWhenAllInletDataNew();
-		void					updateWhenAllInletDataValid();
+		void					updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight );
+		void					updateWhenInletDataValid( InletIO &inletIO );
+		//void					updateWhenAllInletDataNew();
+		//void					updateWhenAllInletDataValid();
 		void					updateWithFixedRate( const double updatesPerSecond );
 
 		void					handleException( Exception &e );

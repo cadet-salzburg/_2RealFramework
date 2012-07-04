@@ -25,13 +25,13 @@
 namespace _2Real
 {
 
-	class ParamData
+	class ParameterData
 	{
 
 	public:
 
-		ParamData();
-		ParamData( std::string const& name, std::string const& longType, std::string const& type, EngineData const& defaultValue );
+		ParameterData();
+		ParameterData( std::string const& name, std::string const& longType, std::string const& type, EngineData const& defaultValue );
 
 		std::string const&	getName() const;
 		std::string const&	getLongTypename() const;

@@ -72,7 +72,6 @@ void Out::setup( BlockHandle &handle )
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
@@ -87,7 +86,6 @@ void Out::update()
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
@@ -99,7 +97,6 @@ void Out::shutdown()
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
@@ -119,12 +116,10 @@ void In::setup( BlockHandle &handle )
 		std::cout << "SETUP IN" << std::endl;
 
 		m_In = handle.getInletHandle( "inlet" );
-		m_Param = handle.getParameterHandle( "param" );
 		m_Counter = 0;
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
@@ -134,11 +129,9 @@ void In::update()
 	try
 	{
 		std::cout << "IN inlet" << m_In.getReadableRef< unsigned int >() << std::endl;
-		std::cout << "IN param" << m_Param.getReadableRef< unsigned int >() << std::endl;
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }
@@ -150,7 +143,6 @@ void In::shutdown()
 	}
 	catch ( Exception &e )
 	{
-		cout << "XXX" << endl;
 		e.rethrow();
 	}
 }

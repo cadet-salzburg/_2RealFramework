@@ -57,18 +57,18 @@ namespace _2Real
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
-		void BlockHandle::setInletUpdatePolicy( const BlockHandle::InletUpdatePolicy p )
-		{
-			checkHandle( m_Block );
-			if ( p == BlockHandle::ALL_DATA_NEW )
-			{
-				m_Block->updateWhenAllInletDataNew();
-			}
-			else if ( p == BlockHandle::ALL_DATA_VALID )
-			{
-				m_Block->updateWhenAllInletDataValid();
-			}
-		}
+		//void BlockHandle::setInletUpdatePolicy( const BlockHandle::InletUpdatePolicy p )
+		//{
+		//	checkHandle( m_Block );
+		//	if ( p == BlockHandle::ALL_DATA_NEW )
+		//	{
+		//		m_Block->updateWhenAllInletDataNew();
+		//	}
+		//	else if ( p == BlockHandle::ALL_DATA_VALID )
+		//	{
+		//		m_Block->updateWhenAllInletDataValid();
+		//	}
+		//}
 
 		void BlockHandle::setup()
 		{

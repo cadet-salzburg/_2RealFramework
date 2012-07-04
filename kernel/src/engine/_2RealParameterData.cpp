@@ -28,14 +28,14 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	ParamData::ParamData() :
+	ParameterData::ParameterData() :
 		m_Name( "undefined" ),
 		m_Typename( "undefined" ),
 		m_LongTypename( "undefined" )
 	{
 	}
 
-	ParamData::ParamData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
+	ParameterData::ParameterData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
 		m_Name( name ),
 		m_Typename( type ),
 		m_LongTypename( longType ),
@@ -43,22 +43,22 @@ namespace _2Real
 	{
 	}
 
-	string const& ParamData::getName() const
+	string const& ParameterData::getName() const
 	{
 		return m_Name;
 	}
 
-	string const& ParamData::getTypename() const
+	string const& ParameterData::getTypename() const
 	{
 		return m_Typename;
 	}
 
-	string const& ParamData::getLongTypename() const
+	string const& ParameterData::getLongTypename() const
 	{
 		return m_LongTypename;
 	}
 
-	EngineData const& ParamData::getDefaultValue() const
+	EngineData const& ParameterData::getDefaultValue() const
 	{
 		return m_DefaultValue;
 	}

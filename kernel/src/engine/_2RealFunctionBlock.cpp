@@ -144,24 +144,14 @@ namespace _2Real
 		return m_IOManager->getBundleOutletHandle( name );
 	}
 
-	void FunctionBlock::createLink( Inlet &inlet, Outlet &outlet )
+	void FunctionBlock::createLink( InletIO &inlet, OutletIO &outlet )
 	{
 		m_System.createLink( inlet, outlet );
 	}
 
-	void FunctionBlock::destroyLink( Inlet &inlet, Outlet &outlet )
+	void FunctionBlock::destroyLink( InletIO &inlet, OutletIO &outlet )
 	{
 		m_System.destroyLink( inlet, outlet );
-	}
-
-	void FunctionBlock::registerToNewData( Outlet const& outlet, app::OutletCallback &callback )
-	{
-		m_IOManager->registerToNewData( outlet, callback );
-	}
-
-	void FunctionBlock::unregisterFromNewData( Outlet const& outlet, app::OutletCallback &callback )
-	{
-		m_IOManager->unregisterFromNewData( outlet, callback );
 	}
 
 	void FunctionBlock::registerToNewData( app::BlockCallback &callback )
@@ -208,32 +198,32 @@ namespace _2Real
 		return m_StateManager->shutDown( timeout );
 	}
 
-	void FunctionBlock::updateWhenInletDataNew( Inlet &inlet, const bool isSingleWeight )
+	void FunctionBlock::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
 	{
 		if ( isSingleWeight )
 		{
-			m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, true >() ) );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
 		}
 		else
 		{
-			m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
 		}
 	}
 
-	void FunctionBlock::updateWhenInletDataValid( Inlet &inlet )
+	void FunctionBlock::updateWhenInletDataValid( InletIO &inletIO )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inlet, FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
 	}
 
-	void FunctionBlock::updateWhenAllInletDataNew()
-	{
-		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
-	}
+	//void FunctionBlock::updateWhenAllInletDataNew()
+	//{
+	//	m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
+	//}
 
-	void FunctionBlock::updateWhenAllInletDataValid()
-	{
-		m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
-	}
+	//void FunctionBlock::updateWhenAllInletDataValid()
+	//{
+	//	m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
+	//}
 
 	void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )
 	{

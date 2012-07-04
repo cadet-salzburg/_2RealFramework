@@ -56,7 +56,6 @@ public:
 private:
 
 	_2Real::bundle::InletHandle			m_In;
-	_2Real::bundle::ParameterHandle		m_Param;
 	ContextManager				&m_Context;
 	unsigned int				m_Counter;
 

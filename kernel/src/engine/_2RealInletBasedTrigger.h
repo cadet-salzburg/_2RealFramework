@@ -20,8 +20,8 @@
 #pragma once
 
 #include "engine/_2RealAbstractUpdateTrigger.h"
-#include "engine/_2RealInlet.h"
 #include "engine/_2RealAbstractStateManager.h"
+#include "engine/_2RealInletBuffer.h"
 
 namespace _2Real
 {
@@ -47,55 +47,59 @@ namespace _2Real
 
 	public:
 
-		AbstractInletBasedTrigger( Inlet &inlet, AbstractStateManager &mgr ) :
+		AbstractInletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) :
 			AbstractUpdateTrigger( false ),
-			m_Inlet( inlet ),
+			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
-			m_LastData( EngineData(), -1 )	// this way, default value will also fulfill 'newer' cond
+			m_LastData( EngineData(), -1 )	// this way, default value will also fulfill 'newer' cond once
 		{
 		}
 
 		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& src )
 		{
+			// this copies the triggering info, kind of imprtant for policy changes
 			m_LastData = src.m_LastData;
 			return *this;
 		}
 
-		virtual ~AbstractInletBasedTrigger()
-		{
-			m_UpdateManager.removeTrigger( *this );
-			m_Inlet.unregisterUpdateTrigger( *this );
-		}
-
-		virtual bool isSingleWeight() const = 0;
-
-		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
-
 		bool operator==( AbstractInletBasedTrigger const& other ) const
 		{
-			return ( &m_Inlet == &other.m_Inlet );
+			return ( &m_Buffer == &other.m_Buffer );
 		}
+
+		virtual ~AbstractInletBasedTrigger() {}
+		virtual bool isSingleWeight() const = 0;
+		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
 
 	protected:
 
-		Inlet					&m_Inlet;
+		InletBuffer				&m_Buffer;
 		AbstractStateManager	&m_UpdateManager;
 		TimestampedData			m_LastData;
 
 	};
 
-	template< typename Condition, bool SingleWeight >
+	template< typename TCond, bool SingleWeight >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
 	{
 
 	public:
 
-		InletBasedTrigger( Inlet &inlet, AbstractStateManager &mgr ) :
-			AbstractInletBasedTrigger( inlet, mgr ),
-			m_IsSingleWeight( SingleWeight )
+		InletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) :
+			AbstractInletBasedTrigger( buffer, mgr )
 		{
 			mgr.addTrigger( *this );
-			inlet.registerUpdateTrigger( *this );
+			AbstractCallback< TimestampedData const& > *cb =
+				new MemberCallback< InletBasedTrigger< TCond, SingleWeight >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, SingleWeight >::tryTriggerUpdate );
+			buffer.setTrigger( *cb );
+		}
+
+		~InletBasedTrigger()
+		{
+			m_UpdateManager.removeTrigger( *this );
+			AbstractCallback< TimestampedData const& > *cb =
+				new MemberCallback< InletBasedTrigger< TCond, SingleWeight >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, SingleWeight >::tryTriggerUpdate );
+			m_Buffer.removeTrigger( *cb );
 		}
 
 		void tryTriggerUpdate( TimestampedData const& data )
@@ -103,7 +107,7 @@ namespace _2Real
 			if ( !m_IsOk && m_TriggerCondition( data, m_LastData ) )
 			{
 				m_IsOk = true;
-				m_Inlet.disableTriggering( data );
+				m_Buffer.disableTriggering( data );
 				m_LastData = data;
 				m_UpdateManager.tryTriggerInlet( *this );
 			}
@@ -111,13 +115,12 @@ namespace _2Real
 
 		bool isSingleWeight() const
 		{
-			return m_IsSingleWeight;
+			return SingleWeight;
 		}
 
 	private:
 
-		bool					m_IsSingleWeight;
-		Condition				m_TriggerCondition;
+		TCond			m_TriggerCondition;
 
 	};
 

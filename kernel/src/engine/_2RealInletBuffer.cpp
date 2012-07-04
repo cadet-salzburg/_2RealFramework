@@ -19,6 +19,7 @@
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealInletBasedTrigger.h"
+#include "engine/_2RealEngineImpl.h"
 
 #include <iostream>
 #include <assert.h>
@@ -30,7 +31,7 @@ using std::auto_ptr;
 namespace _2Real
 {
 
-	RemoveFirst::RemoveFirst( const unsigned int max ) :
+	RemoveOldest::RemoveOldest( const unsigned int max ) :
 		m_Max( max )
 	{
 #ifdef _DEBUG
@@ -41,11 +42,12 @@ namespace _2Real
 #endif
 	}
 
-	bool RemoveFirst::insertData( TimestampedData const& data, DataBuffer &buffer )
+	bool RemoveOldest::insertData( TimestampedData const& data, InletBuffer::DataBuffer &buffer )
 	{
 		if ( buffer.size() >= m_Max )
 		{
-			// TODO: some sort of overflow cb
+			// TODO: some sort of overflow cb for the app i guess
+			// anyway, remove oldest elem from buffer
 			buffer.pop_front();
 		}
 
@@ -54,78 +56,72 @@ namespace _2Real
 	}
 
 	InletBuffer::InletBuffer( EngineData const& defaultData ) :
-		m_InsertionPolicy( new RemoveFirst( 10 ) ),
-		m_Notify( true ),
-		m_DefaultData( defaultData, 0 )
+		m_InsertionPolicy( new RemoveOldest( 10 ) ),
+		m_Notify( false ),
+		m_DefaultData( defaultData, 0 ),
+		m_Engine( EngineImpl::instance() )
 	{
 	}
 
 	// this may be call simultaneously by many threads
-	void InletBuffer::receiveData( TimestampedData &data )
+	void InletBuffer::receiveData( TimestampedData const& data )
 	{
+		// sync point: only one of many threads can cause the update cond to be evaluated at once
 		m_NotificationAccess.lock();
 		if ( m_Notify )
 		{
-			for ( InletTriggerList::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-			{
-				( *it )->tryTriggerUpdate( data );
-			}
+			m_TriggeringEvent.notify( data );
 			m_NotificationAccess.unlock();
 		}
 		else
 		{
 			m_NotificationAccess.unlock();
-
-			Poco::ScopedLock< Poco::FastMutex > lock( m_ReceivedAccess );
+			// once the cond was fulfilled, buffering starts
+			Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
+			Poco::ScopedLock< Poco::FastMutex > dLock( m_DataAccess );
 			m_InsertionPolicy->insertData( data, m_ReceivedDataItems );
 		}
 	}
 
-	TimestampedData const& InletBuffer::getCurrentData() const
+	TimestampedData const& InletBuffer::getTriggeringData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-
 #ifdef _DEBUG
 		if ( m_TriggeringData.isEmpty() )
 		{
 			assert( NULL );
 		}
 #endif
-
 		return m_TriggeringData;
 	}
 
-	void InletBuffer::updateDataBuffer()
+	void InletBuffer::processBufferedData()
 	{
-		// receiving data will have to wait now
+		// no reception of data allowed during this time
 		m_NotificationAccess.lock();
 		m_Notify = true;
-
+		// default value only is tried out if there are no other data items available at all
 		if ( m_ReceivedDataItems.empty() )
 		{
 			m_DataAccess.lock();
-			for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
-			{
-				( *inIt )->tryTriggerUpdate( m_DefaultData );
-			}
+			m_TriggeringEvent.notify( m_DefaultData );
 			m_DataAccess.unlock();
 		}
 		else
 		{
-			for ( DataBuffer::iterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+			Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+			for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
 			{
-				if ( !m_Notify ) break;
-
 				TimestampedData d = *dIt;
 				dIt = m_ReceivedDataItems.erase( dIt );
+				m_TriggeringEvent.notify( d );
 
-				for ( InletTriggerList::iterator inIt = m_InletTriggers.begin(); inIt != m_InletTriggers.end(); ++inIt )
+				if ( !m_Notify )
 				{
-					receiveData( d );
+					break;
 				}
 			}
 		}
-
 		m_NotificationAccess.unlock();
 	}
 
@@ -134,44 +130,32 @@ namespace _2Real
 	void InletBuffer::disableTriggering( TimestampedData const& data )
 	{
 		m_Notify = false;		// no sync here, since access is locked from within receiveData
-								// TODO: find out if i need to declare this var volatile oO
-
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 		m_TriggeringData = data;
 	}
 
 	// let's just assume that this might, at some point, change
-	void InletBuffer::setInsertionPolicy( AbstractInsertionPolicy &policy )
+	void InletBuffer::setBufferSize( const unsigned int size )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ReceivedAccess );
-		m_InsertionPolicy.reset( &policy );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
+		m_InsertionPolicy.reset( new RemoveOldest( size ) );
 	}
 
-	// setting an inlets' value will set the default data, basically
-	void InletBuffer::setDefaultData( TimestampedData &defaultData )
+	void InletBuffer::setDefaultData( EngineData const& defaultData )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		m_DefaultData = defaultData;
-		receiveData( defaultData );
+		//Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		//m_DefaultData = TimestampedData( defaultData, m_Engine.getElapsedSeconds() );
+		receiveData( TimestampedData( defaultData, m_Engine.getElapsedTime() ) );
 	}
 
-	void InletBuffer::registerUpdateTrigger( AbstractInletBasedTrigger &trigger )
+	void InletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
-		m_InletTriggers.push_back( &trigger );
+		m_TriggeringEvent.addListener( callback );
 	}
 
-	void InletBuffer::unregisterUpdateTrigger( AbstractInletBasedTrigger &trigger )
+	void InletBuffer::removeTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
-		for ( InletTriggerList::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			if ( *it == &trigger )
-			{
-				m_InletTriggers.erase( it );
-				break;
-			}
-		}
+		m_TriggeringEvent.removeListener( callback );
 	}
 
 }

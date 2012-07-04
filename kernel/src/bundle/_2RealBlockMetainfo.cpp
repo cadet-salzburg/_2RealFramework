@@ -39,7 +39,7 @@ namespace _2Real
 		{
 			const std::string longTypename = defaultValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParamData data( inletName, longTypename, typeName, defaultValue );
+			ParameterData data( inletName, longTypename, typeName, defaultValue );
 			m_Impl.addInlet( data );
 		}
 
@@ -53,7 +53,7 @@ namespace _2Real
 			EngineData val;
 			val.cloneFrom( defaultConstructed );
 
-			ParamData data( outletName, longTypename, typeName, val );
+			ParameterData data( outletName, longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

@@ -39,11 +39,11 @@ namespace _2Real
 
 		public:
 
-			enum InletUpdatePolicy
-			{
-				ALL_DATA_VALID,
-				ALL_DATA_NEW,
-			};
+			//enum InletUpdatePolicy
+			//{
+			//	ALL_DATA_VALID,
+			//	ALL_DATA_NEW,
+			//};
 
 			BlockHandle();
 			BlockHandle( FunctionBlock &block );
@@ -51,7 +51,7 @@ namespace _2Real
 			BlockInfo getBlockInfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );
-			void setInletUpdatePolicy( const InletUpdatePolicy p );
+			//void setInletUpdatePolicy( const InletUpdatePolicy p );
 
 			void setup();
 			void start();

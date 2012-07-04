@@ -35,7 +35,6 @@ void getBundleMetainfo( BundleMetainfo &info )
 		BlockMetainfo in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "testing the context's functionality" );
 		in.addInlet< unsigned int >( "inlet", (unsigned int)10 );
-		in.addParameter< unsigned int >( "param", (unsigned int)100 );
 	}
 	catch ( Exception &e )
 	{

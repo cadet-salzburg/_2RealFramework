@@ -19,30 +19,29 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
-#include "app/_2RealParameterHandle.h"
 #include "app/_2RealCallbacks.h"
 
 #include<list>
 
 namespace _2Real
 {
-	class Outlet;
+	class OutletIO;
 
 	namespace app
 	{
 		class InletHandle;
 
-		class OutletHandle : public ParameterHandle
+		class OutletHandle
 		{
 
 		public:
 
 			OutletHandle();
-			OutletHandle( Outlet &outlet );
+			OutletHandle( OutletIO &outletIO );
 
-			using ParameterHandle::getName;
-			using ParameterHandle::getTypename;
-			using ParameterHandle::getLongTypename;
+			std::string const&	getName() const;
+			std::string const&	getLongTypename() const;
+			std::string const&	getTypename() const;
 
 			void linkTo( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );
@@ -68,10 +67,12 @@ namespace _2Real
 
 		private:
 
+			friend class InletHandle;
+
 			void registerToNewDataInternal( OutletCallback &cb );
 			void unregisterFromNewDataInternal( OutletCallback &cb );
 
-			Outlet			*m_Outlet;
+			OutletIO			*m_OutletIO;
 
 		};
 	}

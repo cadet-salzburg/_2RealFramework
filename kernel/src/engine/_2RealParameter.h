@@ -46,7 +46,7 @@ namespace _2Real
 		void						synchronize();		// syncs data & write data
 		TimestampedData				getData() const;	// must return a copy, b/c could change anytime
 
-	private:
+	protected:
 
 		mutable Poco::FastMutex		m_DataAccess;
 		TimestampedData				m_Data;

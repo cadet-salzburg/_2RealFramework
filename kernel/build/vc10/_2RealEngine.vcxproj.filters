@@ -93,9 +93,6 @@
     <ClInclude Include="..\..\src\app\_2RealParameterData.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealUberBlockHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
@@ -291,9 +288,6 @@
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealParameterData.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealUberBlockHandle.cpp">

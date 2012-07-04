@@ -18,11 +18,42 @@
 
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "engine/_2RealParameterData.h"
 
 using std::string;
 
 namespace _2Real
 {
+
+	InletIO::InletIO( AbstractUberBlock &owner, ParameterData const& data ) :
+		HandleAble< app::InletHandle >( *this ),
+		m_Inlet( new Inlet( owner, data.getName(), data.getLongTypename(), data.getTypename() ) ),
+		m_Buffer( new InletBuffer( data.getDefaultValue() ) )
+	{
+	}
+
+	OutletIO::OutletIO( AbstractUberBlock &owner, ParameterData const& data ) :
+		HandleAble< app::OutletHandle >( *this ),
+		m_Outlet( new Outlet( owner, data.getName(), data.getLongTypename(), data.getTypename(), data.getDefaultValue() ) ),
+		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
+		m_InletEvent( new CallbackEvent< TimestampedData const& >() )
+	{
+	}
+
+	InletIO::~InletIO()
+	{
+		delete m_Inlet;
+		delete m_Buffer;
+	}
+
+	OutletIO::~OutletIO()
+	{
+		delete m_Outlet;
+		delete m_AppEvent;
+		delete m_InletEvent;
+	}
 
 	AbstractIOManager::AbstractIOManager( AbstractUberBlock &owner ) :
 		m_Owner( owner )

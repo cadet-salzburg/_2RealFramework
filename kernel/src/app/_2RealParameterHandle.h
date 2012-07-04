@@ -23,16 +23,11 @@
 namespace _2Real
 {
 	class Parameter;
-	class Inlet;
-	class Outlet;
 
 	namespace app
 	{
 		class ParameterHandle
 		{
-
-			friend class _2Real::Inlet;
-			friend class _2Real::Outlet;
 
 		public:
 

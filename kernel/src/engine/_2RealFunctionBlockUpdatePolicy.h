@@ -20,9 +20,9 @@
 #pragma once
 
 #include "engine/_2RealAbstractUpdatePolicy.h"
-#include "engine/_2RealUberBlockBasedTrigger.h"
 #include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealTimeBasedTrigger.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 #include <map>
 #include <string>
@@ -39,19 +39,19 @@ namespace _2Real
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
 
-	class AbstractInletTriggerCreator
+	class AbstractInletTriggerCtor
 	{
 	public:
-		virtual AbstractInletBasedTrigger * createTrigger( Inlet &inlet, AbstractStateManager &mgr ) = 0;
+		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
 	};
 
 	template< typename Condition, bool SingleWeight >
-	class InletTriggerCreator : public AbstractInletTriggerCreator
+	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
-		AbstractInletBasedTrigger * createTrigger( Inlet &inlet, AbstractStateManager &mgr )
+		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr )
 		{
-			return new InletBasedTrigger< Condition, SingleWeight >( inlet, mgr );
+			return new InletBasedTrigger< Condition, SingleWeight >( buffer, mgr );
 		}
 	};
 
@@ -60,24 +60,30 @@ namespace _2Real
 
 	public:
 
-		typedef std::shared_ptr< AbstractInletTriggerCreator >	InletTriggerCtor;
-
 		FunctionBlockUpdatePolicy( FunctionBlock &owner );
 		~FunctionBlockUpdatePolicy();
 
-		void addInlet( Inlet &inlet );
+		void addInlet( InletIO &io );
 
 		void changePolicy();
 
 		void setNewUpdateTime( const long time );
-		void setNewInletDefaultPolicy( InletTriggerCtor &inletDefault );
-		void setNewInletPolicy( Inlet &inlet, InletTriggerCtor &inletPolicy );
+		//void setNewInletDefaultPolicy( InletTriggerCtor &inletDefault );
+		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy );
 
 	private:
 
-		typedef std::shared_ptr< AbstractInletBasedTrigger >	InletTriggerPtr;
-		typedef std::map< Inlet *, InletTriggerCtor >		InletPolicyMap;
-		typedef std::map< Inlet *, InletTriggerPtr >		InletTriggerMap;
+		class InletPolicy
+		{
+		public:
+			~InletPolicy();
+			bool						m_WasChanged;
+			AbstractInletTriggerCtor	*m_Ctor;
+			AbstractInletBasedTrigger	*m_Trigger;
+		};
+
+		typedef std::map< InletIO *, InletPolicy * >				InletPolicyMap;
+		typedef std::map< InletIO *, InletPolicy * >::iterator		InletPolicyIterator;
 
 		friend class FunctionBlock;
 
@@ -85,17 +91,11 @@ namespace _2Real
 		FunctionBlockIOManager			*m_IOManager;
 
 		mutable Poco::FastMutex			m_Access;
-		bool							m_WasChanged;	// true if user configured anything since the last update
-
+		bool							m_TimeChanged;
+		bool							m_InletsChanged;
 		long							m_UpdateTime;
 		AbstractTimeBasedTrigger		*m_TimeTrigger;
-
 		InletPolicyMap					m_InletPolicies;
-		InletTriggerMap					m_InletTriggers;
-
-		InletTriggerCtor				m_ValidDataCtor;
-		InletTriggerCtor				m_NewDataCtor;
-
 	};
 
 }

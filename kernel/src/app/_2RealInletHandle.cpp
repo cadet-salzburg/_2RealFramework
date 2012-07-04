@@ -18,8 +18,8 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "engine/_2RealInlet.h"
 #include "engine/_2RealAbstractUberBlock.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 #define checkHandle( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );\
@@ -29,63 +29,79 @@ namespace _2Real
 	namespace app
 	{
 		InletHandle::InletHandle() :
-			ParameterHandle(),
-			m_Inlet( nullptr )
+			m_InletIO( nullptr )
 		{
 		}
 
-		InletHandle::InletHandle( Inlet &inlet ) :
-			ParameterHandle( inlet ),
-			m_Inlet( &inlet )
+		InletHandle::InletHandle( InletIO &inletIO ) :
+			m_InletIO( &inletIO )
 		{
 		}
 
 		AppData InletHandle::getCurrentInput() const
 		{
-			checkHandle( m_Inlet );
-			TimestampedData data = m_Inlet->getData();
-			return AppData( data, m_Inlet->getTypename(), m_Inlet->getName() );
+			checkHandle( m_InletIO );
+			TimestampedData data = m_InletIO->m_Inlet->getData();
+			return AppData( data, m_InletIO->m_Inlet->getTypename(), m_InletIO->m_Inlet->getName() );
 		}
 
 		void InletHandle::linkTo( OutletHandle &outlet )
 		{
-			checkHandle( m_Inlet );
-			m_Inlet->linkTo( outlet );
+			checkHandle( m_InletIO );
+			m_InletIO->m_Inlet->getOwningUberBlock().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
-			checkHandle( m_Inlet );
-			m_Inlet->unlinkFrom( outlet );
+			checkHandle( m_InletIO );
+			m_InletIO->m_Inlet->getOwningUberBlock().destroyLink( *m_InletIO, *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
 		{
-			checkHandle( m_Inlet );
+			checkHandle( m_InletIO );
 			if ( p == InletHandle::NEWER_DATA_SINGLE_WEIGHT )
 			{
-				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet, true );
+				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, true );
 			}
 			else if ( p == InletHandle::NEWER_DATA_GROUP_WEIGHT )
 			{
-				m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_Inlet, false );
+				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, false );
 			}
 			else if ( p == InletHandle::ALWAYS )
 			{
-				m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_Inlet );
+				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_InletIO );
 			}
 		}
 
 		void InletHandle::setDefaultValue( EngineData const& data )
 		{
-			checkHandle( m_Inlet );
-			//m_Inlet->setDefaultValue( data );
+			checkHandle( m_InletIO );
+			m_InletIO->m_Buffer->setDefaultData( data );
 		}
 
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
-			checkHandle( m_Inlet );
-			//m_Inlet->setBufferSize( size );
+			checkHandle( m_InletIO );
+			m_InletIO->m_Buffer->setBufferSize( size );
+		}
+
+		std::string const& InletHandle::getName() const
+		{
+			checkHandle( m_InletIO );
+			return m_InletIO->m_Inlet->getName();
+		}
+
+		std::string const& InletHandle::getLongTypename() const
+		{
+			checkHandle( m_InletIO );
+			return m_InletIO->m_Inlet->getLongTypename();
+		}
+
+		std::string const& InletHandle::getTypename() const
+		{
+			checkHandle( m_InletIO );
+			return m_InletIO->m_Inlet->getTypename();
 		}
 	}
 }

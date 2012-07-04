@@ -17,9 +17,7 @@
 */
 
 #include "engine/_2RealLink.h"
-#include "engine/_2RealParameter.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealOutlet.h"
+#include "engine/_2RealAbstractIOManager.h"
 #include "app/_2RealCallbacksInternal.h"
 
 #include <assert.h>
@@ -28,40 +26,44 @@
 namespace _2Real
 {
 
-	AbstractLink::AbstractLink( Parameter &p1, Parameter &p2 ) :
-		m_Link1( p1 ),
-		m_Link2( p2 )
+//	AbstractLink::AbstractLink( Parameter &p1, Parameter &p2 ) :
+//		m_Link1( p1 ),
+//		m_Link2( p2 )
+//	{
+//#ifdef _DEBUG
+//		if ( &p1 == &p2 )
+//		{
+//			assert( NULL );
+//		}
+//#endif
+//	}
+//
+//	bool AbstractLink::operator<( AbstractLink const& other )
+//	{
+//		return ( &m_Link1 < &other.m_Link1 && &m_Link2 < &other.m_Link2 );
+//	}
+
+	IOLink::IOLink( InletIO &inlet, OutletIO &outlet ) :
+		m_InletIO( inlet ),
+		m_OutletIO( outlet )
 	{
-#ifdef _DEBUG
-		if ( &p1 == &p2 )
-		{
-			assert( NULL );
-		}
-#endif
 	}
 
-	bool AbstractLink::operator<( AbstractLink const& other )
+	bool IOLink::operator<( IOLink const& other )
 	{
-		return ( &m_Link1 < &other.m_Link1 && &m_Link2 < &other.m_Link2 );
+		return ( m_InletIO.m_Inlet < other.m_InletIO.m_Inlet && m_OutletIO.m_Outlet < other.m_OutletIO.m_Outlet );
 	}
 
-	IOLink::IOLink( Inlet &inlet, Outlet &outlet ) :
-		AbstractLink( inlet, outlet ),
-		m_Inlet( inlet ),
-		m_Outlet( outlet )
+	void IOLink::activate() 
 	{
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< InletBuffer, TimestampedData const& >( *m_InletIO.m_Buffer, &InletBuffer::receiveData );
+		m_OutletIO.m_InletEvent->addListener( *cb );
 	}
 
-	//void IOLink::activate() 
-	//{
-	//	AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
-	//	m_Outlet.addListener( *cb );
-	//}
-
-	//void IOLink::deactivate()
-	//{
-	//	AbstractCallback< TimestampedData > *cb = new MemberCallback< InletBuffer, TimestampedData >( m_Inlet.m_Buffer, &InletBuffer::receiveData );
-	//	m_Outlet.removeListener( *cb );
-	//}
+	void IOLink::deactivate()
+	{
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< InletBuffer, TimestampedData const& >( *m_InletIO.m_Buffer, &InletBuffer::receiveData );
+		m_OutletIO.m_InletEvent->removeListener( *cb );
+	}
 
 }

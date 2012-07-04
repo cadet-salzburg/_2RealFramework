@@ -114,7 +114,7 @@ namespace _2Real
 				m_StopEvent.reset();
 				enableTriggers();
 
-				m_IOManager->updateInletBuffers();		///???????????????????????
+				m_IOManager->updateInletBuffers();
 
 				m_Logger.addLine( string( getName() + " new state: started" ) );
 			}
@@ -272,9 +272,9 @@ namespace _2Real
 			m_CurrentState->update( *this );	// no state change in this case, although maybe i should add another? sigh
 			m_StateAccess.unlock();
 
-			m_IOManager->updateInletValues();	// make sure the inlets have the current data
+			m_IOManager->updateInletData();		// make sure the inlets have the current data
 			m_FunctionBlock->update();			// carry out update
-			m_IOManager->updateOutletValues();	// make sure outlets send their data
+			m_IOManager->updateOutletData();	// make sure outlets send their data
 		}
 		catch ( Exception &e )
 		{
@@ -500,10 +500,9 @@ namespace _2Real
 				{
 					singleWeight |= ( *it )->isOk();
 				}
-				else
-				{
-					groupWeight &= ( *it )->isOk();
-				}
+
+				// result of all
+				groupWeight &= ( *it )->isOk();
 			}
 
 			// TODO: cache result of inlets?

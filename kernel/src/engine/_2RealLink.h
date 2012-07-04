@@ -23,53 +23,37 @@
 namespace _2Real
 {
 
-	class Parameter;
-	class Inlet;
-	class Outlet;
+	class InletIO;
+	class OutletIO;
 
-	class AbstractLink
+	class IOLink
 	{
 
 	public:
 
-		AbstractLink( Parameter &p1, Parameter &p2 );
-		virtual ~AbstractLink() {}
-		bool operator<( AbstractLink const& other );
-
-		virtual void activate() = 0;
-		virtual void deactivate() = 0;
-
-	private:
-
-		Parameter	&m_Link1;
-		Parameter	&m_Link2;
-
-	};
-
-	struct LinkCmp
-	{
-		bool operator()( AbstractLink *l1, AbstractLink *l2 )
-		{
-			return ( *l1 < *l2 );
-		}
-	};
-
-	typedef std::set< AbstractLink *, LinkCmp >		LinkSet;
-
-	class IOLink : public AbstractLink
-	{
-
-	public:
-
-		IOLink( Inlet &inlet, Outlet &outlet );
+		IOLink( InletIO &inlet, OutletIO &outlet );
 
 		void activate();
 		void deactivate();
 
+		bool operator<( IOLink const& other );
+
+		struct LinkCmp
+		{
+			bool operator()( IOLink *l1, IOLink *l2 )
+			{
+				return ( *l1 < *l2 );
+			}
+		};
+
+		typedef std::set< IOLink *, LinkCmp >					LinkSet;
+		typedef std::set< IOLink *, LinkCmp >::iterator			LinkIterator;
+		typedef std::set< IOLink *, LinkCmp >::const_iterator	LinkConstIterator;
+
 	private:
 
-		Inlet		&m_Inlet;
-		Outlet		&m_Outlet;
+		InletIO		&m_InletIO;
+		OutletIO	&m_OutletIO;
 
 	};
 

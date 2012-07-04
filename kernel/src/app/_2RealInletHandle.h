@@ -19,17 +19,16 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
-#include "app/_2RealParameterHandle.h"
 
 namespace _2Real
 {
-	class Inlet;
+	class InletIO;
 
 	namespace app
 	{
 		class OutletHandle;
 
-		class InletHandle : public ParameterHandle
+		class InletHandle
 		{
 
 		public:
@@ -42,11 +41,11 @@ namespace _2Real
 			};
 
 			InletHandle();
-			InletHandle( Inlet &inlet );
+			InletHandle( InletIO &inletIO );
 
-			using ParameterHandle::getName;
-			using ParameterHandle::getTypename;
-			using ParameterHandle::getLongTypename;
+			std::string const&	getName() const;
+			std::string const&	getLongTypename() const;
+			std::string const&	getTypename() const;
 
 			void setUpdatePolicy( const InletUpdatePolicy p );
 
@@ -67,9 +66,10 @@ namespace _2Real
 
 		private:
 
-			void				setDefaultValue( EngineData const& data );
+			friend class OutletHandle;
 
-			Inlet				*m_Inlet;
+			void				setDefaultValue( EngineData const& data );
+			InletIO				*m_InletIO;
 
 		};
 	}

@@ -90,10 +90,10 @@ namespace _2Real
 		m_ExceptionEvent.removeListener( callback );
 	}
 
-	void System::createLink( Inlet &inlet, Outlet &outlet )
+	void System::createLink( InletIO &inlet, OutletIO &outlet )
 	{
-		AbstractLink *link = new IOLink( inlet, outlet );
-		LinkSet::iterator it = m_Links.find( link );
+		IOLink *link = new IOLink( inlet, outlet );
+		IOLink::LinkIterator it = m_Links.find( link );
 		if ( it == m_Links.end() )
 		{
 			link->activate();
@@ -102,10 +102,10 @@ namespace _2Real
 		else delete link;
 	}
 
-	void System::destroyLink( Inlet &inlet, Outlet &outlet )
+	void System::destroyLink( InletIO &inlet, OutletIO &outlet )
 	{
-		AbstractLink *link = new IOLink( inlet, outlet );
-		LinkSet::iterator it = m_Links.find( link );
+		IOLink *link = new IOLink( inlet, outlet );
+		IOLink::LinkIterator it = m_Links.find( link );
 		if ( it != m_Links.end() )
 		{
 			link->deactivate();

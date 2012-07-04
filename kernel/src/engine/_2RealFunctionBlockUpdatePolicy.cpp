@@ -30,14 +30,22 @@ using std::make_pair;
 using std::greater;
 using std::shared_ptr;
 
+#include <assert.h>
 #include <iostream>
 
 namespace _2Real
 {
 
+	FunctionBlockUpdatePolicy::InletPolicy::~InletPolicy()
+	{
+		delete m_Ctor;
+		delete m_Trigger;
+	}
+
 	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( FunctionBlock &owner ) :
 		AbstractUpdatePolicy( owner ),
-		m_WasChanged( false ),
+		m_TimeChanged( false ),
+		m_InletsChanged( false ),
 		m_UpdateTime( -1 ),
 		m_TimeTrigger( nullptr )
 	{
@@ -48,80 +56,100 @@ namespace _2Real
 		if ( m_TimeTrigger != nullptr )
 		{
 			delete m_TimeTrigger;
-			m_TimeTrigger = nullptr;
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::addInlet( Inlet &inlet )
+	void FunctionBlockUpdatePolicy::addInlet( InletIO &inletIO )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-
-		m_WasChanged = true;
-		m_InletPolicies.insert( make_pair( &inlet, InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) ) );
-		m_InletTriggers.insert( make_pair( &inlet, InletTriggerPtr() ) );
+#ifdef _DEBUG
+		if ( m_InletPolicies.find( &inletIO ) != m_InletPolicies.end() )
+		{
+			assert( NULL );
+		}
+#endif
+		m_InletsChanged = true;
+		InletPolicy *p = new InletPolicy();
+		p->m_Ctor = new InletTriggerCtor< ValidData, false >();
+		p->m_Trigger = nullptr;
+		p->m_WasChanged = true;
+		m_InletPolicies.insert( make_pair( &inletIO, p ) );
 	}
 
 	void FunctionBlockUpdatePolicy::changePolicy()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 
-		if ( !m_WasChanged ) return;
+		if ( ! ( m_TimeChanged || m_InletsChanged ) ) return;
 
-		if ( m_TimeTrigger != nullptr )
+		if ( m_TimeChanged )
 		{
-			delete m_TimeTrigger;
-			m_TimeTrigger = nullptr;
-		}
-
-		if ( m_UpdateTime > 0 )
-		{
-			m_TimeTrigger = new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime );
-		}
-
-		for ( InletTriggerMap::iterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			Inlet *inlet = it->first;
-			InletTriggerPtr &triggerPtr = it->second;
-			InletTriggerCtor &ctor = m_InletPolicies[ inlet ];
-
-			AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *inlet, *m_StateManager );
-
-			if ( triggerPtr.get() != nullptr )
+			if ( m_TimeTrigger != nullptr )
 			{
-				*newTrigger = *triggerPtr.get();		// copies the triggering data
+				delete m_TimeTrigger;
+				m_TimeTrigger = nullptr;
+			}
+			if ( m_UpdateTime > 0 )
+			{
+				m_TimeTrigger = new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime );
 			}
 
-			triggerPtr.reset( newTrigger );			// deletes old trigger -> unregisters itself
+			m_TimeChanged = false;
 		}
 
-		m_WasChanged = false;
+		if ( m_InletsChanged )
+		{
+			for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
+			{
+				if ( it->second->m_WasChanged )
+				{
+					InletBuffer *buffer = it->first->m_Buffer;
+					AbstractInletTriggerCtor *ctor = it->second->m_Ctor;
+					AbstractInletBasedTrigger *currTrigger = it->second->m_Trigger;
+					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager );
+
+					if ( currTrigger != nullptr )
+					{
+						*newTrigger = *currTrigger;		// copies the triggering data + timestamp
+					}
+
+					delete currTrigger;
+					currTrigger = newTrigger;
+
+					it->second->m_WasChanged = false;
+				}
+			}
+			m_InletsChanged = false;
+		}
 	}
 
 	void FunctionBlockUpdatePolicy::setNewUpdateTime( const long time )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-		m_WasChanged = true;
+		m_TimeChanged = true;
 		m_UpdateTime = time;
 	}
 
-	void FunctionBlockUpdatePolicy::setNewInletDefaultPolicy( InletTriggerCtor &inletDefault )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-		m_WasChanged = true;
-		for ( InletPolicyMap::iterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
-		{
-			it->second = inletDefault;
-		}
-	}
+	//void FunctionBlockUpdatePolicy::setNewInletDefaultPolicy( InletTriggerCtor &inletDefault )
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+	//	m_WasChanged = true;
+	//	for ( InletPolicyMap::iterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
+	//	{
+	//		it->second = inletDefault;
+	//	}
+	//}
 
-	void FunctionBlockUpdatePolicy::setNewInletPolicy( Inlet &inlet, InletTriggerCtor &inletPolicy )
+	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-		m_WasChanged = true;
-		InletPolicyMap::iterator it = m_InletPolicies.find( &inlet );
+		m_InletsChanged = true;
+		InletPolicyIterator it = m_InletPolicies.find( &io );
 		if ( it != m_InletPolicies.end() )
 		{
-			it->second = inletPolicy;
+			it->second->m_WasChanged = true;
+			delete it->second->m_Ctor;
+			it->second->m_Ctor = inletPolicy;
 		}
 	}
 

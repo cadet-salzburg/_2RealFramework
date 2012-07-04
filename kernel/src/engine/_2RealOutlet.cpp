@@ -35,31 +35,26 @@ namespace _2Real
 {
 
 	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
-		HandleAble< app::OutletHandle >( *this ),
 		HandleAble< bundle::OutletHandle >( *this ),
 		Parameter( owner, name, longTypename, typeName ),
 		m_Engine( EngineImpl::instance() ),
-		m_WriteDataItem( emptyData, 0 ),
 		m_DiscardCurrent( false )
 	{
-		Parameter::setData( TimestampedData( emptyData, 0 ) );
-		Parameter::synchronize();
+		Parameter::m_Data = TimestampedData( emptyData, 0 );
+		Parameter::m_DataBuffer.cloneData( Parameter::m_Data );
 	}
 
-	bool Outlet::update()
+	bool Outlet::synchronize()
 	{
 		if ( !m_DiscardCurrent )
 		{
-			TimestampedData data( m_WriteDataItem.getData(), m_Engine.getElapsedTime() );
+			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.getData(), m_Engine.getElapsedTime() );
 
-			// copy data back into the outlet's writing data
-			m_WriteDataItem.cloneData( data );
-
-			m_InletEvent.notify( data );
-
-			Parameter::setData( data );
+			// shallow-copy written data into readable data
 			Parameter::synchronize();
-
+			// deep-copy readable data back into writeable data
+			// this way, outlet always holds the last written value
+			Parameter::m_DataBuffer.cloneData( Parameter::m_Data );
 			return false;
 		}
 		else
@@ -69,9 +64,9 @@ namespace _2Real
 		}
 	}
 
-	EngineData & Outlet::getDataForWriting()
+	EngineData & Outlet::getWriteableData()
 	{
-		return m_WriteDataItem.getData();
+		return Parameter::m_DataBuffer.getData();
 	}
 
 	void Outlet::discardCurrentUpdate()
@@ -79,45 +74,35 @@ namespace _2Real
 		m_DiscardCurrent = true;
 	}
 
-	void Outlet::linkTo( app::InletHandle &inletHandle )
-	{
-		Parameter *p = inletHandle.m_Parameter;
-#ifdef _DEBUG
-		if ( p == nullptr ) assert( NULL );
-#endif
-
-		Inlet &inlet = static_cast< Inlet & >( *p );
-		Parameter::getOwningUberBlock().createLink( inlet, *this );
-	}
-
-	void Outlet::unlinkFrom( app::InletHandle &inletHandle )
-	{
-		Parameter *p = inletHandle.m_Parameter;
-#ifdef _DEBUG
-		if ( p == nullptr ) assert( NULL );
-#endif
-
-		Inlet &inlet = static_cast< Inlet & >( *p );
-		Parameter::getOwningUberBlock().createLink( inlet, *this );
-	}
-
-	void Outlet::registerToNewData( app::OutletCallback &callback )
-	{
-		Parameter::getOwningUberBlock().registerToNewData( *this, callback );
-	}
-
-	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
-	{
-		Parameter::getOwningUberBlock().unregisterFromNewData( *this, callback );
-	}
-
-	void Outlet::addListener( AbstractCallback< TimestampedData > &callback )
-	{
-		m_InletEvent.addListener( callback );
-	}
-
-	void Outlet::removeListener( AbstractCallback< TimestampedData > &callback )
-	{
-		m_InletEvent.removeListener( callback );
-	}
+//	void Outlet::linkTo( app::InletHandle &inletHandle )
+//	{
+//		Parameter *p = inletHandle.m_Parameter;
+//#ifdef _DEBUG
+//		if ( p == nullptr ) assert( NULL );
+//#endif
+//
+//		Inlet &inlet = static_cast< Inlet & >( *p );
+//		Parameter::getOwningUberBlock().createLink( inlet, *this );
+//	}
+//
+//	void Outlet::unlinkFrom( app::InletHandle &inletHandle )
+//	{
+//		Parameter *p = inletHandle.m_Parameter;
+//#ifdef _DEBUG
+//		if ( p == nullptr ) assert( NULL );
+//#endif
+//
+//		Inlet &inlet = static_cast< Inlet & >( *p );
+//		Parameter::getOwningUberBlock().createLink( inlet, *this );
+//	}
+//
+//	void Outlet::registerToNewData( app::OutletCallback &callback )
+//	{
+//		Parameter::getOwningUberBlock().registerToNewData( *this, callback );
+//	}
+//
+//	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
+//	{
+//		Parameter::getOwningUberBlock().unregisterFromNewData( *this, callback );
+//	}
 }

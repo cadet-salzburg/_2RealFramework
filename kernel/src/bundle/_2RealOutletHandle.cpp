@@ -33,9 +33,9 @@ namespace _2Real
 		{
 		}
 
-		EngineData OutletHandle::getCurrentData()
+		EngineData & OutletHandle::getCurrentData()
 		{
-			return m_Outlet->getDataForWriting();
+			return m_Outlet->getWriteableData();
 		}
 
 		void OutletHandle::discard()
