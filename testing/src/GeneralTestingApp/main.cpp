@@ -221,6 +221,11 @@ int main( int argc, char *argv[] )
 			{
 				inletHandle.setBufferSize( 1 );
 			}
+			else if ( line == "links" )
+			{
+				Engine::Links links( engine.getCurrentLinks() );
+				std::cout << "# OF LINKS: " << links.size() << std::endl;
+			}
 		}
 	}
 	catch ( Exception &e )
