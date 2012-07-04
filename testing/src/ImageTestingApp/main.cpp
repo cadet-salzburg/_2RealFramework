@@ -18,29 +18,33 @@
 */
 
 #include "_2RealApplication.h"
-#include "_2RealImageT.h"
 
-#include <windows.h>
 #include <iostream>
-
-#include "vld.h"
+#include <map>
+#include <list>
 
 #include "Poco/Mutex.h"
+
+#include "vld.h"
 
 using std::string;
 using std::cout;
 using std::endl;
 using std::cin;
-using _2Real::ImageT;
-using _2Real::ImageChannelT;
-using _2Real::ImageChannelOrder;
-using _2Real::OutputData;
-using _2Real::Engine;
-using _2Real::System;
-using _2Real::BundleIdentifier;
-using _2Real::BlockIdentifier;
-using _2Real::UpdatePolicy;
+
 using _2Real::Exception;
+
+using _2Real::app::Engine;
+using _2Real::app::BundleInfo;
+using _2Real::app::BlockInfo;
+using _2Real::app::BlockHandle;
+using _2Real::app::BundleHandle;
+using _2Real::app::InletHandle;
+using _2Real::app::OutletHandle;
+using _2Real::app::AppData;
+
+using Poco::ScopedLock;
+using Poco::FastMutex;
 
 template< typename T >
 class Receiver
@@ -74,31 +78,21 @@ private:
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
-	System testSystem( "test system" );
 
 	try
 	{
-		BundleIdentifier testBundle = testEngine.load( string( "ImageTesting" ).append( shared_library_suffix ) );
+		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
-		UpdatePolicy fpsTrigger;
-		fpsTrigger.triggerByUpdateRate( 100.0f );
+		BlockHandle out = testBundle.createBlockInstance( "image out" );
+		out.setup();
+		out.start();
 
-		UpdatePolicy newTrigger;
-		newTrigger.triggerWhenAllDataNew();
-
-		BlockIdentifier out = testSystem.createBlock( testBundle, "image out" );
-		testSystem.setup( out );
-		testSystem.setPolicy( out, fpsTrigger );
-		testSystem.start( out );
-
-		BlockIdentifier inout = testSystem.createBlock( testBundle, "image in - out" );
+		BlockHandle inout = testBundle.createBlockInstance( "image in - out" );
 		testSystem.setup( inout );
-		testSystem.setPolicy( inout, newTrigger );
 		testSystem.start( inout );
 
-		BlockIdentifier in = testSystem.createBlock( testBundle, "image in" );
+		BlockHandle in = testBundle.createBlock( "image in" );
 		testSystem.setup( in );
-		testSystem.setPolicy( in, newTrigger );
 		testSystem.start( in );
 
 		testSystem.link( out, "image outlet", inout, "image inlet" );

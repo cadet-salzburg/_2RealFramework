@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-//#include "vld.h"
+#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -101,21 +101,24 @@ int main( int argc, char *argv[] )
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
 
-		for ( BundleInfo::BlockConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
-		{
-			cout << "EXPORTED BLOCK:" << endl;
-			cout << it->getName() << endl << it->getDescription() << endl;
-		}
+		//for ( BundleInfo::BlockConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
+		//{
+		//	cout << "EXPORTED BLOCK:" << endl;
+		//	cout << it->getName() << endl << it->getDescription() << endl;
+		//}
 
 		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
 		BlockInfo const& outData = outHandle.getBlockInfo();
 		outHandle.setUpdateRate( 1.0 );
 
-		for ( BlockInfo::ParamConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
-		{
-			cout << "OUT OUTLET:" << endl;
-			cout << it->getName() << endl << it->getLongTypename() << endl;
-		}
+		BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
+		cout << outHandles.size() << endl;
+
+		//for ( BlockInfo::ParamConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
+		//{
+		//	cout << "OUT OUTLET:" << endl;
+		//	cout << it->getName() << endl << it->getLongTypename() << endl;
+		//}
 
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
@@ -126,13 +129,16 @@ int main( int argc, char *argv[] )
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
 
-		cout << inletHandle.getLongTypename() << endl;
-		cout << inletHandle.getTypename() << endl;
-		cout << inletHandle.getName() << endl;
+		BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
+		cout << inHandles.size() << endl;
 
-		cout << outletHandle.getLongTypename() << endl;
-		cout << outletHandle.getTypename() << endl;
-		cout << outletHandle.getName() << endl;
+		//cout << inletHandle.getLongTypename() << endl;
+		//cout << inletHandle.getTypename() << endl;
+		//cout << inletHandle.getName() << endl;
+
+		//cout << outletHandle.getLongTypename() << endl;
+		//cout << outletHandle.getTypename() << endl;
+		//cout << outletHandle.getName() << endl;
 
 		unsigned int cnt = 0;
 
@@ -203,9 +209,17 @@ int main( int argc, char *argv[] )
 			{
 				outHandle.unregisterFromNewData< BlockReceiver >( blockReceiver, &BlockReceiver::receiveData );
 			}
-			else if ( line == "default" )
+			else if ( line == "set" )
 			{
 				inletHandle.setValue< unsigned int >( ++cnt );
+			}
+			else if ( line == "buffer 10" )
+			{
+				inletHandle.setBufferSize( 10 );
+			}
+			else if ( line == "buffer 1" )
+			{
+				inletHandle.setBufferSize( 1 );
 			}
 		}
 	}
