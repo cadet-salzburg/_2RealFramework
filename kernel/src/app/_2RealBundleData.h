@@ -44,8 +44,8 @@ namespace _2Real
 			// would it be wiser to apply a form of type erasure?
 			// at this point, i don't think its worth the extra effort
 			typedef std::vector< BlockInfo >					Blocks;
-			typedef std::vector< BlockInfo >::iterator			BlocksIterator;
-			typedef std::vector< BlockInfo >::const_iterator	BlocksConstIterator;
+			typedef std::vector< BlockInfo >::iterator			BlockIterator;
+			typedef std::vector< BlockInfo >::const_iterator	BlockConstIterator;
 
 			BundleInfo();
 

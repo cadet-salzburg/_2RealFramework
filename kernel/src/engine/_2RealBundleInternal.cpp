@@ -79,7 +79,7 @@ namespace _2Real
 
 		BundleData::BlockMetas const& blocks = m_Metadata.getExportedBlocks();
 
-		for ( BundleData::BlockMetasConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+		for ( BundleData::BlockMetaConstIterator it = blocks.begin(); it != blocks.end(); ++it )
 		{
 			app::BlockInfo blockData;
 
@@ -90,7 +90,7 @@ namespace _2Real
 			BlockData::ParamMetas const& input = it->second.getInlets();
 			BlockData::ParamMetas const& output = it->second.getOutlets();
 
-			for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 			{
 				app::ParameterData paramData;
 
@@ -101,7 +101,7 @@ namespace _2Real
 				blockData.m_Inlets.push_back( paramData );
 			}
 
-			for ( BlockData::ParamMetasConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
 			{
 				app::ParameterData paramData;
 

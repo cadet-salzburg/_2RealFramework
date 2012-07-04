@@ -109,7 +109,7 @@ namespace _2Real
 
 	BlockData const& BundleData::getBlockData( std::string const& name ) const
 	{
-		BundleData::BlockMetasConstIterator it = m_ExportedBlocks.find( name );
+		BundleData::BlockMetaConstIterator it = m_ExportedBlocks.find( name );
 
 		if ( it == m_ExportedBlocks.end() )
 		{

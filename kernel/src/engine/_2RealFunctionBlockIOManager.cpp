@@ -51,29 +51,25 @@ namespace _2Real
 	{
 	}
 
-	//void FunctionBlockIOManager::registerToNewData( Outlet const& outlet, AbstractCallback< app::AppData const& > &cb )
-	//{
-	//	for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-	//	{
-	//		if ( it->m_Outlet == &outlet )
-	//		{
-	//			it->m_AppEvent->addListener( cb );
-	//			break;
-	//		}
-	//	}
-	//}
+	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const
+	{
+		return m_AppInletHandles;
+	}
 
-	//void FunctionBlockIOManager::unregisterFromNewData( Outlet const& outlet, AbstractCallback< app::AppData const& > &cb )
-	//{
-	//	for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-	//	{
-	//		if ( it->m_Outlet == &outlet )
-	//		{
-	//			it->m_AppEvent->removeListener( cb );
-	//			break;
-	//		}
-	//	}
-	//}
+	AppOutletHandles const& FunctionBlockIOManager::getAppOutletHandles() const
+	{
+		return m_AppOutletHandles;
+	}
+
+	BundleInletHandles const& FunctionBlockIOManager::getBundleInletHandles() const
+	{
+		return m_BundleInletHandles;
+	}
+
+	BundleOutletHandles const& FunctionBlockIOManager::getBundleOutletHandles() const
+	{
+		return m_BundleOutletHandles;
+	}
 
 	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::list< app::AppData > const& > &cb )
 	{
@@ -140,12 +136,16 @@ namespace _2Real
 		InletIO *io = new InletIO( m_Owner, data );
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
+		m_AppInletHandles.push_back( io->getHandle() );
+		m_BundleInletHandles.push_back( io->m_Inlet->getHandle() );
 	}
 
 	void FunctionBlockIOManager::addOutlet( ParameterData const& data )
 	{
 		OutletIO *io = new OutletIO( m_Owner, data );
 		m_Outlets.push_back( io );
+		m_AppOutletHandles.push_back( io->getHandle() );
+		m_BundleOutletHandles.push_back( io->m_Outlet->getHandle() );
 	}
 
 	void FunctionBlockIOManager::updateInletData()

@@ -37,10 +37,20 @@ namespace _2Real
 
 		public:
 
+			typedef std::vector< InletHandle >					InletHandles;
+			typedef std::vector< InletHandle >::iterator		InletHandleIterator;
+			typedef std::vector< InletHandle >::const_iterator	InletHandleConstIterator;
+
+			typedef std::vector< OutletHandle >					OutletHandles;
+			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
+			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
+
 			BlockHandle( FunctionBlock &block );
 
-			InletHandle &		getInletHandle( std::string const& name );
-			OutletHandle &		getOutletHandle( std::string const& name );
+			InletHandle &			getInletHandle( std::string const& name ) const;
+			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			InletHandles const&		getAllInletHandles() const;
+			OutletHandles const&	getAllOutletHandles() const;
 
 		private:
 

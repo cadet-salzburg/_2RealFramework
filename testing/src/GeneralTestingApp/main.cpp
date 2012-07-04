@@ -41,7 +41,6 @@ using _2Real::app::BlockHandle;
 using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;
 using _2Real::app::OutletHandle;
-using _2Real::app::ParameterHandle;
 using _2Real::app::AppData;
 
 using Poco::ScopedLock;
@@ -102,7 +101,7 @@ int main( int argc, char *argv[] )
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
 
-		for ( BundleInfo::BlocksConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
+		for ( BundleInfo::BlockConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
 		{
 			cout << "EXPORTED BLOCK:" << endl;
 			cout << it->getName() << endl << it->getDescription() << endl;
@@ -112,7 +111,7 @@ int main( int argc, char *argv[] )
 		BlockInfo const& outData = outHandle.getBlockInfo();
 		outHandle.setUpdateRate( 1.0 );
 
-		for ( BlockInfo::ParamsConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
+		for ( BlockInfo::ParamConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
 		{
 			cout << "OUT OUTLET:" << endl;
 			cout << it->getName() << endl << it->getLongTypename() << endl;

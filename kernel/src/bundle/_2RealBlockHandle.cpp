@@ -32,14 +32,24 @@ namespace _2Real
 		{
 		}
 
-		InletHandle & BlockHandle::getInletHandle( string const& name )
+		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
 			return m_Impl.getBundleInletHandle( name );
 		}
 
-		OutletHandle & BlockHandle::getOutletHandle( string const& name )
+		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
 			return m_Impl.getBundleOutletHandle( name );
+		}
+
+		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
+		{
+			return m_Impl.getBundleInletHandles();
+		}
+
+		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
+		{
+			return m_Impl.getBundleOutletHandles();
 		}
 	}
 }

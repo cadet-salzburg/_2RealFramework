@@ -31,7 +31,6 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 		class BlockInfo;
 
 		class BlockHandle : public UberBlockHandle
@@ -39,30 +38,36 @@ namespace _2Real
 
 		public:
 
-			//enum InletUpdatePolicy
-			//{
-			//	ALL_DATA_VALID,
-			//	ALL_DATA_NEW,
-			//};
+			typedef std::vector< InletHandle >					InletHandles;
+			typedef std::vector< InletHandle >::iterator		InletHandleIterator;
+			typedef std::vector< InletHandle >::const_iterator	InletHandleConstIterator;
+
+			typedef std::vector< OutletHandle >					OutletHandles;
+			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
+			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
 			BlockHandle();
 			BlockHandle( FunctionBlock &block );
 
 			BlockInfo getBlockInfo() const;
 
+			// negative or zero: no time based update at all
 			void setUpdateRate( const double updatesPerSecond );
-			//void setInletUpdatePolicy( const InletUpdatePolicy p );
 
 			void setup();
 			void start();
 			void stop();
 
-			InletHandle &		getInletHandle( std::string const& name );
-			OutletHandle &		getOutletHandle( std::string const& name );
+			InletHandle &			getInletHandle( std::string const& name ) const;
+			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			InletHandles const&		getAllInletHandles() const;
+			OutletHandles const&	getAllOutletHandles() const;
 
+			// callback registration for free functions
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr );
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr );
 
+			// callback registration for member functions
 			template< typename TCallable >
 			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) )
 			{

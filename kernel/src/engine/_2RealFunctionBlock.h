@@ -22,6 +22,7 @@
 #include "helpers/_2RealHandleAble.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 namespace _2Real
 {
@@ -29,7 +30,6 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 		class BlockInfo;
 	}
 
@@ -38,7 +38,6 @@ namespace _2Real
 		class Block;
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 	}
 
 	class BlockData;
@@ -56,40 +55,42 @@ namespace _2Real
 		FunctionBlock( BlockData const& meta, bundle::Block& block, System &system, Identifier const& id );
 		~FunctionBlock();
 
-		app::BlockInfo			getBlockData();
-		BlockData const&		getMetadata() const;
+		app::BlockInfo				getBlockData();
+		BlockData const&			getMetadata() const;
 
-		bundle::InletHandle &	getBundleInletHandle( std::string const& inletName );
-		bundle::OutletHandle &	getBundleOutletHandle( std::string const& outletName );
+		bundle::InletHandle &		getBundleInletHandle( std::string const& inletName ) const;
+		bundle::OutletHandle &		getBundleOutletHandle( std::string const& outletName ) const;
+		app::InletHandle &			getAppInletHandle( std::string const& inletName ) const;
+		app::OutletHandle &			getAppOutletHandle( std::string const& outletName ) const;
 
-		app::InletHandle &		getAppInletHandle( std::string const& inletName );
-		app::OutletHandle &		getAppOutletHandle( std::string const& outletName );
+		AppInletHandles const&		getAppInletHandles() const;
+		AppOutletHandles const&		getAppOutletHandles() const;
+		BundleInletHandles const&	getBundleInletHandles() const;
+		BundleOutletHandles const&	getBundleOutletHandles() const;
 
-		void					createLink( InletIO &inletIO, OutletIO &outletIO );
-		void					destroyLink( InletIO &inletIO, OutletIO &outletIO );
+		void						createLink( InletIO &inletIO, OutletIO &outletIO );
+		void						destroyLink( InletIO &inletIO, OutletIO &outletIO );
 
-		void					registerToNewData( app::BlockCallback &callback );
-		void					unregisterFromNewData( app::BlockCallback &callback );
+		void						registerToNewData( app::BlockCallback &callback );
+		void						unregisterFromNewData( app::BlockCallback &callback );
 
-		void					setUp();
-		void					start();
-		void					stop( const bool blocking, const long timeout );
-		void					prepareForShutDown();
-		bool					shutDown( const long timeout );
+		void						setUp();
+		void						start();
+		void						stop( const bool blocking, const long timeout );
+		void						prepareForShutDown();
+		bool						shutDown( const long timeout );
 
-		void					updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight );
-		void					updateWhenInletDataValid( InletIO &inletIO );
-		//void					updateWhenAllInletDataNew();
-		//void					updateWhenAllInletDataValid();
-		void					updateWithFixedRate( const double updatesPerSecond );
+		void						updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight );
+		void						updateWhenInletDataValid( InletIO &inletIO );
+		void						updateWithFixedRate( const double updatesPerSecond );
 
-		void					handleException( Exception &e );
+		void						handleException( Exception &e );
 
 	private:
 
-		bundle::Block			&m_Block;
-		System					&m_System;
-		BlockData				const& m_Metadata;
+		bundle::Block				&m_Block;
+		System						&m_System;
+		BlockData					const& m_Metadata;
 
 		FunctionBlockStateManager	*m_StateManager;
 		FunctionBlockIOManager		*m_IOManager;

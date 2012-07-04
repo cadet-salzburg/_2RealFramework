@@ -59,12 +59,12 @@ namespace _2Real
 		BlockData::ParamMetas const& input = meta.getInlets();
 		BlockData::ParamMetas const& output = meta.getOutlets();
 
-		for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 		{
 			m_IOManager->addInlet( *it );
 		}
 
-		for ( BlockData::ParamMetasConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
 		{
 			m_IOManager->addOutlet( *it );
 		}
@@ -97,7 +97,7 @@ namespace _2Real
 		BlockData::ParamMetas const& input = m_Metadata.getInlets();
 		BlockData::ParamMetas const& output = m_Metadata.getOutlets();
 
-		for ( BlockData::ParamMetasConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 		{
 			app::ParameterData paramData;
 
@@ -108,7 +108,7 @@ namespace _2Real
 			blockData.m_Inlets.push_back( paramData );
 		}
 
-		for ( BlockData::ParamMetasConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
 		{
 			app::ParameterData paramData;
 
@@ -122,24 +122,44 @@ namespace _2Real
 		return blockData;
 	}
 
-	app::InletHandle & FunctionBlock::getAppInletHandle( string const& name )
+	app::InletHandle & FunctionBlock::getAppInletHandle( string const& name ) const
 	{
 		return m_IOManager->getAppInletHandle( name );
 	}
 
-	app::OutletHandle & FunctionBlock::getAppOutletHandle( string const& name )
+	app::OutletHandle & FunctionBlock::getAppOutletHandle( string const& name ) const
 	{
 		return m_IOManager->getAppOutletHandle( name );
 	}
 
-	bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name )
+	bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name ) const
 	{
 		return m_IOManager->getBundleInletHandle( name );
 	}
 
-	bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name )
+	bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name ) const
 	{
 		return m_IOManager->getBundleOutletHandle( name );
+	}
+
+	AppInletHandles const& FunctionBlock::getAppInletHandles() const
+	{
+		return m_IOManager->getAppInletHandles();
+	}
+
+	AppOutletHandles const& FunctionBlock::getAppOutletHandles() const
+	{
+		return m_IOManager->getAppOutletHandles();
+	}
+
+	BundleInletHandles const& FunctionBlock::getBundleInletHandles() const
+	{
+		return m_IOManager->getBundleInletHandles();
+	}
+
+	BundleOutletHandles const& FunctionBlock::getBundleOutletHandles() const
+	{
+		return m_IOManager->getBundleOutletHandles();
 	}
 
 	void FunctionBlock::createLink( InletIO &inlet, OutletIO &outlet )
@@ -212,16 +232,6 @@ namespace _2Real
 	{
 		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
 	}
-
-	//void FunctionBlock::updateWhenAllInletDataNew()
-	//{
-	//	m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< NewerTimestamp, false >() ) );
-	//}
-
-	//void FunctionBlock::updateWhenAllInletDataValid()
-	//{
-	//	m_UpdatePolicy->setNewInletDefaultPolicy( FunctionBlockUpdatePolicy::InletTriggerCtor( new InletTriggerCreator< ValidData, false >() ) );
-	//}
 
 	void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )
 	{

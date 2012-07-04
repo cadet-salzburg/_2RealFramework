@@ -134,8 +134,8 @@ namespace _2Real
 	public:
 
 		typedef std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >								Callbacks;
-		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::iterator			CallbacksIterator;
-		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::const_iterator	CallbacksConstIterator;
+		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::iterator			CallbackIterator;
+		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::const_iterator	CallbackConstIterator;
 
 		CallbackEvent() {}
 		~CallbackEvent() { clear(); }
@@ -143,14 +143,14 @@ namespace _2Real
 		void clear()
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			for ( CallbacksIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) delete *cbIter;
+			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) delete *cbIter;
 			m_Callbacks.clear();
 		}
 
 		void addListener( AbstractCallback< TArg > &callback )
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			CallbacksIterator cbIter = m_Callbacks.find( &callback );
+			CallbackIterator cbIter = m_Callbacks.find( &callback );
 			if ( cbIter == m_Callbacks.end() )
 			{
 				m_Callbacks.insert( &callback );
@@ -161,7 +161,7 @@ namespace _2Real
 		void removeListener( AbstractCallback< TArg > &callback )
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			CallbacksIterator cbIter = m_Callbacks.find( &callback );
+			CallbackIterator cbIter = m_Callbacks.find( &callback );
 			if ( cbIter != m_Callbacks.end() )
 			{
 				delete *cbIter;
@@ -173,7 +173,7 @@ namespace _2Real
 		void notify( TArg &arg )
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			for ( CallbacksIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) ( *cbIter )->invoke( arg );
+			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) ( *cbIter )->invoke( arg );
 		}
 
 	private:

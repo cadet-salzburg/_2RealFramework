@@ -33,8 +33,8 @@ namespace _2Real
 	public:
 
 		typedef std::map< std::string, BlockData >					BlockMetas;
-		typedef std::map< std::string, BlockData >::iterator		BlockMetasIterator;
-		typedef std::map< std::string, BlockData >::const_iterator	BlockMetasConstIterator;
+		typedef std::map< std::string, BlockData >::iterator		BlockMetaIterator;
+		typedef std::map< std::string, BlockData >::const_iterator	BlockMetaConstIterator;
 
 		BundleData();
 

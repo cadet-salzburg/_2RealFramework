@@ -26,14 +26,12 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 	}
 
 	namespace bundle
 	{
 		class InletHandle;
 		class OutletHandle;
-		class ParameterHandle;
 	}
 	
 	class ParameterData;
@@ -59,9 +57,13 @@ namespace _2Real
 
 		app::InletHandle &			getAppInletHandle( std::string const& name );
 		app::OutletHandle &			getAppOutletHandle( std::string const& name );
-
 		bundle::InletHandle &		getBundleInletHandle( std::string const& name );
 		bundle::OutletHandle &		getBundleOutletHandle( std::string const& name );
+
+		AppInletHandles const&		getAppInletHandles() const;
+		AppOutletHandles const&		getAppOutletHandles() const;
+		BundleInletHandles const&	getBundleInletHandles() const;
+		BundleOutletHandles const&	getBundleOutletHandles() const;
 
 		void						updateInletData();
 		void						updateOutletData();
@@ -81,6 +83,11 @@ namespace _2Real
 
 		InletIO &						getInletIO( std::string const& name );
 		OutletIO &						getOutletIO( std::string const& name );
+
+		AppInletHandles					m_AppInletHandles;
+		AppOutletHandles				m_AppOutletHandles;
+		BundleInletHandles				m_BundleInletHandles;
+		BundleOutletHandles				m_BundleOutletHandles;
 
 	};
 

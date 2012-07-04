@@ -57,18 +57,34 @@ namespace _2Real
 		CallbackEvent< TimestampedData const& >					*m_InletEvent;
 	};
 
+	typedef std::vector< app::InletHandle >						AppInletHandles;
+	typedef std::vector< app::InletHandle >::iterator			AppInletHandleIterator;
+	typedef std::vector< app::InletHandle >::const_iterator		AppInletHandleConstIterator;
+
+	typedef std::vector< app::OutletHandle >					AppOutletHandles;
+	typedef std::vector< app::OutletHandle >::iterator			AppOutletHandleIterator;
+	typedef std::vector< app::OutletHandle >::const_iterator	AppOutletHandleConstIterator;
+
+	typedef std::vector< bundle::InletHandle >					BundleInletHandles;
+	typedef std::vector< bundle::InletHandle >::iterator		BundleInletHandleIterator;
+	typedef std::vector< bundle::InletHandle >::const_iterator	BundleInletHandleConstIterator;
+
+	typedef std::vector< bundle::OutletHandle >					BundleOutletHandles;
+	typedef std::vector< bundle::OutletHandle >::iterator		BundleOutletHandleIterator;
+	typedef std::vector< bundle::OutletHandle >::const_iterator	BundleOutletHandleConstIterator;
+
 	class AbstractIOManager
 	{
 
 	public:
 
-		typedef std::vector< InletIO * >						InletVector;
-		typedef std::vector< InletIO * >::iterator				InletIterator;
-		typedef std::vector< InletIO * >::const_iterator		InletConstIterator;
+		typedef std::vector< InletIO * >							InletVector;
+		typedef std::vector< InletIO * >::iterator					InletIterator;
+		typedef std::vector< InletIO * >::const_iterator			InletConstIterator;
 
-		typedef std::vector< OutletIO * >						OutletVector;
-		typedef std::vector< OutletIO * >::iterator				OutletIterator;
-		typedef std::vector< OutletIO * >::const_iterator		OutletConstIterator;
+		typedef std::vector< OutletIO * >							OutletVector;
+		typedef std::vector< OutletIO * >::iterator					OutletIterator;
+		typedef std::vector< OutletIO * >::const_iterator			OutletConstIterator;
 
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
@@ -78,9 +94,9 @@ namespace _2Real
 
 	protected:
 
-		AbstractUberBlock										&m_Owner;
-		Poco::FastMutex											m_IOAccess;
-		CallbackEvent< std::list< app::AppData > const& >		m_AppEvent;
+		AbstractUberBlock											&m_Owner;
+		Poco::FastMutex												m_IOAccess;
+		CallbackEvent< std::list< app::AppData > const& >			m_AppEvent;
 
 	};
 

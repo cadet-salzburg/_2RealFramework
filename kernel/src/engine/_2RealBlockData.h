@@ -32,8 +32,8 @@ namespace _2Real
 	public:
 
 		typedef std::vector< ParameterData >					ParamMetas;
-		typedef std::vector< ParameterData >::iterator			ParamMetasIterator;
-		typedef std::vector< ParameterData >::const_iterator	ParamMetasConstIterator;
+		typedef std::vector< ParameterData >::iterator			ParamMetaIterator;
+		typedef std::vector< ParameterData >::const_iterator	ParamMetaConstIterator;
 
 		BlockData();
 		BlockData( std::string const& name );
