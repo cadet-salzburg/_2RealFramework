@@ -66,11 +66,12 @@ namespace _2Real
 
 		InletBuffer( EngineData const& defaultData );
 		void receiveData( TimestampedData const& data );
+		void receiveData( EngineData const& data );
 		TimestampedData const& getTriggeringData() const;
 		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );
-		void setDefaultData( EngineData const& defaultData );
+		//void setDefaultData( EngineData const& defaultData );
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
 

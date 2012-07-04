@@ -44,7 +44,7 @@ namespace _2Real
 
 	bool RemoveOldest::insertData( TimestampedData const& data, InletBuffer::DataBuffer &buffer )
 	{
-		if ( buffer.size() >= m_Max )
+		while ( buffer.size() >= m_Max )
 		{
 			// TODO: some sort of overflow cb for the app i guess
 			// anyway, remove oldest elem from buffer
@@ -56,11 +56,17 @@ namespace _2Real
 	}
 
 	InletBuffer::InletBuffer( EngineData const& defaultData ) :
-		m_InsertionPolicy( new RemoveOldest( 10 ) ),
+		m_InsertionPolicy( new RemoveOldest( 1 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() )
 	{
+		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
+	}
+
+	void InletBuffer::receiveData( EngineData const& data )
+	{
+		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
 
 	// this may be call simultaneously by many threads
@@ -101,27 +107,30 @@ namespace _2Real
 		m_NotificationAccess.lock();
 		m_Notify = true;
 		// default value only is tried out if there are no other data items available at all
-		if ( m_ReceivedDataItems.empty() )
-		{
-			m_DataAccess.lock();
-			m_TriggeringEvent.notify( m_DefaultData );
-			m_DataAccess.unlock();
-		}
-		else
-		{
+		//if ( m_ReceivedDataItems.empty() )
+		//{
+		//	m_DataAccess.lock();
+		//	m_TriggeringEvent.notify( m_DefaultData );
+		//	m_DataAccess.unlock();
+		//}
+		//else
+		//{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 			for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
 			{
 				TimestampedData d = *dIt;
-				dIt = m_ReceivedDataItems.erase( dIt );
 				m_TriggeringEvent.notify( d );
 
 				if ( !m_Notify )
 				{
 					break;
 				}
+				else
+				{
+					dIt = m_ReceivedDataItems.erase( dIt );
+				}
 			}
-		}
+		//}
 		m_NotificationAccess.unlock();
 	}
 
@@ -141,12 +150,12 @@ namespace _2Real
 		m_InsertionPolicy.reset( new RemoveOldest( size ) );
 	}
 
-	void InletBuffer::setDefaultData( EngineData const& defaultData )
-	{
-		//Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		//m_DefaultData = TimestampedData( defaultData, m_Engine.getElapsedSeconds() );
-		receiveData( TimestampedData( defaultData, m_Engine.getElapsedTime() ) );
-	}
+	//void InletBuffer::setDefaultData( EngineData const& defaultData )
+	//{
+	//	//Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+	//	//m_DefaultData = TimestampedData( defaultData, m_Engine.getElapsedSeconds() );
+	//	receiveData( TimestampedData( defaultData, m_Engine.getElapsedTime() ) );
+	//}
 
 	void InletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{

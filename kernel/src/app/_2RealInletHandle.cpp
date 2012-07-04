@@ -74,10 +74,10 @@ namespace _2Real
 			}
 		}
 
-		void InletHandle::setDefaultValue( EngineData const& data )
+		void InletHandle::setValue( EngineData const& data )
 		{
 			checkHandle( m_InletIO );
-			m_InletIO->m_Buffer->setDefaultData( data );
+			m_InletIO->m_Buffer->receiveData( data );
 		}
 
 		void InletHandle::setBufferSize( const unsigned int size )

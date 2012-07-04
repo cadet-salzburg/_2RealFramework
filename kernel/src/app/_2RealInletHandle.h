@@ -53,22 +53,23 @@ namespace _2Real
 			void unlinkFrom( OutletHandle &outletHandle );
 
 			template< typename T >
-			void setDefaultValue( T const& value )
+			void setValue( T const& value )
 			{
-				setDefaultValue( EngineData( value ) );
+				setValue( EngineData( value ) );
 			}
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
 
+			// default = 1, 0: invalid
 			void				setBufferSize( const unsigned int size );
 
 		private:
 
 			friend class OutletHandle;
 
-			void				setDefaultValue( EngineData const& data );
+			void				setValue( EngineData const& data );
 			InletIO				*m_InletIO;
 
 		};

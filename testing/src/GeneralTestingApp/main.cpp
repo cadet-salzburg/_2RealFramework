@@ -122,7 +122,7 @@ int main( int argc, char *argv[] )
 
 		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
 		BlockInfo const& inData = inHandle.getBlockInfo();
-		inHandle.setUpdateRate( 0.0 );
+		inHandle.setUpdateRate( 0.5 );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
@@ -206,7 +206,7 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "default" )
 			{
-				inletHandle.setDefaultValue< unsigned int >( ++cnt );
+				inletHandle.setValue< unsigned int >( ++cnt );
 			}
 		}
 	}
