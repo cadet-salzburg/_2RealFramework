@@ -21,7 +21,12 @@
 
 #include "app/_2RealCallbacks.h"
 #include "helpers/_2RealPoco.h"
+#include "engine/_2RealLink.h"
+#include "helpers/_2RealException.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
 
+#include <set>
 #include <string>
 
 namespace _2Real
@@ -40,6 +45,8 @@ namespace _2Real
 	class IdCounter;
 	class System;
 	class Identifier;
+	class IOLink;
+	class AbstractUberBlock;
 	
 	class EngineImpl
 	{
@@ -49,29 +56,47 @@ namespace _2Real
 
 	public:
 
+		struct LinkCmp
+		{
+			bool operator()( IOLink *l1, IOLink *l2 )
+			{
+				return ( *l1 < *l2 );
+			}
+		};
+
+		typedef std::set< IOLink *, LinkCmp >						Links;
+		typedef std::set< IOLink *, LinkCmp >::iterator				LinkIterator;
+		typedef std::set< IOLink *, LinkCmp >::const_iterator		LinkConstIterator;
+
 		static EngineImpl & instance();
 
 		// TODO: merge public interfaces with interface of engine impl ?
 		Timer&							getTimer();
 		Logger&							getLogger();
 		Typetable const&				getTypetable() const;
-		BundleManager &					getBundleManager();
 		ThreadPool &					getThreadPool();
-		System &						getSystemBlock();
 
-		// retruns time in millis since creation
 		const long						getElapsedTime() const;
-
-		void clear();
-		void clearBlockInstances();
 
 		Identifier						createIdentifier( std::string const& name );
 
-		void							setBaseDirectory( std::string const& directory );
-		app::BundleHandle				loadLibrary( std::string const& libraryPath );
-		
+		void							clearFully();
+		void							clearBlockInstances();
+
+		void							addBlockInstance( AbstractUberBlock &block );
+		void							addContextBlock( AbstractUberBlock &context );
+
 		void							registerToException( app::ErrorCallback &callback );
 		void							unregisterFromException( app::ErrorCallback &callback );
+		void							handleBlockException( app::BlockHandle &block, Exception const& exception ) const;
+		void							handleContextBlockException( app::ContextBlockHandle &block, Exception const& exception ) const;
+
+		Links const&					getCurrentLinks() const;
+		void							createLink( InletIO &inlet, OutletIO &outlet );
+		void							destroyLink( InletIO &inlet, OutletIO &outlet );
+
+		void							setBaseDirectory( std::string const& directory );
+		app::BundleHandle				loadLibrary( std::string const& libraryPath );
 
 	private:
 
@@ -87,8 +112,15 @@ namespace _2Real
 		ThreadPool				*m_ThreadPool;
 		BundleManager			*m_BundleManager;
 		IdCounter				*m_IdCounter;
-		System					*m_SystemBlock;
+		System					*m_System;
 		Poco::Timestamp			m_Timestamp;
+
+		typedef std::pair< Exception, app::BlockHandle >			BlockException;
+		typedef std::pair< Exception, app::ContextBlockHandle >		ContextBlockException;
+
+		Links														m_Links;
+		CallbackEvent< BlockException const& >						m_BlockExceptionEvent;
+		CallbackEvent< ContextBlockException const& >				m_ContextBlockExceptionEvent;
 
 	};
 

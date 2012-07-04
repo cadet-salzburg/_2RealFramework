@@ -19,52 +19,38 @@
 
 #pragma once
 
-#include "engine/_2RealLink.h"
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
-#include "helpers/_2RealPoco.h"
-#include "app/_2RealBlockHandle.h"
-
-#include <set>
+#include <list>
 
 namespace _2Real
 {
 
-	class InletIO;
-	class OutletIO;
-	class EngineImpl;
-	class AbstractLink;
+	class Logger;
 	class AbstractUberBlock;
-	class FunctionBlock;
-	class SystemBlockManager;
 
 	class System
 	{
 
 	public:
 
-		System( EngineImpl &engine );
+		System( Logger &logger );
 		~System();
 
-		void		clearAll();
-		void		clearBlockInstances();
+		void	clearFully();
+		void	clearBlocksOnly();
 
-		void		handleException( FunctionBlock &block, Exception const& exception );
-
-		void		addUberBlock( AbstractUberBlock &block, const bool isContext );
-
-		void		registerToException( app::ErrorCallback &callback );
-		void		unregisterFromException( app::ErrorCallback &callback );
-
-		void		createLink( InletIO &inlet, OutletIO &outlet );
-		void		destroyLink( InletIO &inlet, OutletIO &outlet );
+		void	addContextBlock( AbstractUberBlock &context );
+		void	addBlockInstance( AbstractUberBlock &block );
+		void	removeBlock( AbstractUberBlock &block, const long timeout );
 
 	private:
 
-		EngineImpl								&m_Engine;
-		SystemBlockManager						*m_SubBlockManager;
-		IOLink::LinkSet							m_Links;
-		CallbackEvent< std::pair< Exception, app::BlockHandle > const& >		m_ExceptionEvent;
+		typedef std::list< AbstractUberBlock * >					Blocks;
+		typedef std::list< AbstractUberBlock * >::iterator			BlockIterator;
+		typedef std::list< AbstractUberBlock * >::const_iterator	BlockConstIterator;
+
+		Logger														&m_Logger;
+		Blocks														m_Blocks;
+		Blocks														m_ContextBlocks;
 
 	};
 

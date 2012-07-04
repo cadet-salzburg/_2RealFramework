@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "app/_2RealUberBlockHandle.h"
 #include "app/_2RealCallbacks.h"
+#include "helpers/_2RealHandleAble.h"
 
 #include <string>
 
@@ -33,7 +33,7 @@ namespace _2Real
 		class OutletHandle;
 		class BlockInfo;
 
-		class BlockHandle : public UberBlockHandle
+		class BlockHandle : public Handle
 		{
 
 		public:
@@ -48,6 +48,9 @@ namespace _2Real
 
 			BlockHandle();
 			BlockHandle( FunctionBlock &block );
+			~BlockHandle();
+			BlockHandle( BlockHandle const& other );
+			BlockHandle& operator=( BlockHandle const& other );
 
 			BlockInfo getBlockInfo() const;
 

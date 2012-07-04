@@ -170,7 +170,7 @@ namespace _2Real
 			delete &callback;
 		}
 
-		void notify( TArg &arg )
+		void notify( TArg &arg ) const
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) ( *cbIter )->invoke( arg );

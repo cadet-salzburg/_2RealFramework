@@ -20,8 +20,11 @@
 #pragma once
 
 #include "app/_2RealCallbacks.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
 
 #include <string>
+#include <set>
 
 namespace _2Real
 {
@@ -33,6 +36,8 @@ namespace _2Real
 	namespace app
 	{
 		class BundleHandle;
+		class InletHandle;
+		class OutletHandle;
 
 		class Engine
 		{
@@ -42,14 +47,33 @@ namespace _2Real
 
 		public:
 
+			typedef std::pair< InletHandle, OutletHandle >				Link;
+
+			struct SortByInlet
+			{
+				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.first < l2.first ); }
+			};
+
+			struct SortByOutlet
+			{
+				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
+			};
+
+			typedef std::set< Link, SortByOutlet >						Links;
+			typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
+			typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
+
 			static Engine& instance();
 
 			void setBaseDirectory( std::string const& directory );
 
 			app::BundleHandle loadBundle( std::string const& libraryPath );
 
-			void clear();
+			void clearFully();
 			void clearBlockInstances();
+
+			// (?) if we start with this, we may need to do the same for current bundles as well as current blocks
+			Links getCurrentLinks() const;
 
 			void registerToException( ExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );

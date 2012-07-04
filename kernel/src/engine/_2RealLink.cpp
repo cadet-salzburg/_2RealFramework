@@ -20,33 +20,23 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "app/_2RealCallbacksInternal.h"
 
-#include <assert.h>
-#include <iostream>
-
 namespace _2Real
 {
-
-//	AbstractLink::AbstractLink( Parameter &p1, Parameter &p2 ) :
-//		m_Link1( p1 ),
-//		m_Link2( p2 )
-//	{
-//#ifdef _DEBUG
-//		if ( &p1 == &p2 )
-//		{
-//			assert( NULL );
-//		}
-//#endif
-//	}
-//
-//	bool AbstractLink::operator<( AbstractLink const& other )
-//	{
-//		return ( &m_Link1 < &other.m_Link1 && &m_Link2 < &other.m_Link2 );
-//	}
 
 	IOLink::IOLink( InletIO &inlet, OutletIO &outlet ) :
 		m_InletIO( inlet ),
 		m_OutletIO( outlet )
 	{
+	}
+
+	InletIO const& IOLink::getInletIO() const
+	{
+		return m_InletIO;
+	}
+
+	OutletIO const& IOLink::getOutletIO() const
+	{
+		return m_OutletIO;
 	}
 
 	bool IOLink::operator<( IOLink const& other )

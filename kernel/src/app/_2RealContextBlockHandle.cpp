@@ -36,6 +36,43 @@ namespace _2Real
 		ContextBlockHandle::ContextBlockHandle( FunctionBlock &block ) :
 			m_Block( &block )
 		{
+			m_Block->registerHandle( *this );
+		}
+
+		ContextBlockHandle::~ContextBlockHandle()
+		{
+			if ( isValid() )
+			m_Block->unregisterHandle( *this );
+		}
+
+		ContextBlockHandle::ContextBlockHandle( ContextBlockHandle const& other ) :
+			Handle( other.m_Block ),
+			m_Block( other.m_Block )
+		{
+			m_Block->registerHandle( *this );
+		}
+
+		ContextBlockHandle& ContextBlockHandle::operator=( ContextBlockHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_Block->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_Block = other.m_Block;
+
+			if ( isValid() )
+			{
+				m_Block->registerHandle( *this );
+			}
+
+			return *this;
 		}
 
 		BlockInfo ContextBlockHandle::getBlockInfo() const

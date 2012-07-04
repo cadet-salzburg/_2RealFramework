@@ -34,13 +34,13 @@ using std::string;
 namespace _2Real
 {
 
-	FunctionBlock::FunctionBlock( BlockData const& meta, bundle::Block &block, System &owner, Identifier const& id ) :
+	FunctionBlock::FunctionBlock( BlockData const& meta, bundle::Block &block, Identifier const& id ) :
 		AbstractUberBlock( id ),
 		HandleAble< app::BlockHandle >( *this ),
 		HandleAble< app::ContextBlockHandle >( *this ),
-		m_Metadata( meta ),
+		m_Engine( EngineImpl::instance() ),
 		m_Block( block ),
-		m_System( owner ),
+		m_Metadata( meta ),
 		m_StateManager( new FunctionBlockStateManager( *this ) ),
 		m_IOManager( new FunctionBlockIOManager( *this ) ),
 		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
@@ -158,16 +158,6 @@ namespace _2Real
 		return m_IOManager->getBundleOutletHandles();
 	}
 
-	void FunctionBlock::createLink( InletIO &inlet, OutletIO &outlet )
-	{
-		m_System.createLink( inlet, outlet );
-	}
-
-	void FunctionBlock::destroyLink( InletIO &inlet, OutletIO &outlet )
-	{
-		m_System.destroyLink( inlet, outlet );
-	}
-
 	void FunctionBlock::registerToNewData( app::BlockCallback &callback )
 	{
 		m_IOManager->registerToNewData( callback );
@@ -245,7 +235,7 @@ namespace _2Real
 
 	void FunctionBlock::handleException( Exception &e )
 	{
-		m_System.handleException( *this, e );
+		m_Engine.handleBlockException( HandleAble< app::BlockHandle >::getHandle(), e );
 	}
 
 }

@@ -52,7 +52,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlock( BlockData const& meta, bundle::Block& block, System &system, Identifier const& id );
+		FunctionBlock( BlockData const& meta, bundle::Block& block, Identifier const& id );
 		~FunctionBlock();
 
 		app::BlockInfo				getBlockData();
@@ -67,9 +67,6 @@ namespace _2Real
 		AppOutletHandles const&		getAppOutletHandles() const;
 		BundleInletHandles const&	getBundleInletHandles() const;
 		BundleOutletHandles const&	getBundleOutletHandles() const;
-
-		void						createLink( InletIO &inletIO, OutletIO &outletIO );
-		void						destroyLink( InletIO &inletIO, OutletIO &outletIO );
 
 		void						registerToNewData( app::BlockCallback &callback );
 		void						unregisterFromNewData( app::BlockCallback &callback );
@@ -88,8 +85,8 @@ namespace _2Real
 
 	private:
 
+		EngineImpl					&m_Engine;
 		bundle::Block				&m_Block;
-		System						&m_System;
 		BlockData					const& m_Metadata;
 
 		FunctionBlockStateManager	*m_StateManager;

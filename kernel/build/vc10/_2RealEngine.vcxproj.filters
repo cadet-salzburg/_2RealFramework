@@ -93,9 +93,6 @@
     <ClInclude Include="..\..\src\app\_2RealParameterData.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealUberBlockHandle.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h">
       <Filter>include\bundle</Filter>
     </ClInclude>
@@ -231,9 +228,6 @@
     <ClInclude Include="..\..\src\engine\_2RealSystem.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealSystemBlockManager.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealThreadPool.h">
       <Filter>include\engine</Filter>
     </ClInclude>
@@ -290,9 +284,6 @@
     <ClCompile Include="..\..\src\app\_2RealParameterData.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealUberBlockHandle.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
       <Filter>src\bundle</Filter>
     </ClCompile>
@@ -330,9 +321,6 @@
       <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealThreadPool.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealSystemBlockManager.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSystem.cpp">

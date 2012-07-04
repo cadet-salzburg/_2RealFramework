@@ -105,8 +105,6 @@ namespace _2Real
 
 	app::BlockHandle & BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
 	{
-		System &sys = m_Engine.getSystemBlock();
-
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( blockName );
 		unsigned int count = bundle.getBlockInstanceCount( blockName );
@@ -119,8 +117,8 @@ namespace _2Real
 		FunctionBlock *functionBlock;
 
 		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
-		sys.addUberBlock( *functionBlock, false );
+		functionBlock = new FunctionBlock( blockData, block, blockId );
+		m_Engine.addBlockInstance( *functionBlock );
 
 		bundle.addBlockInstance( block, blockName );
 
@@ -129,8 +127,6 @@ namespace _2Real
 
 	app::ContextBlockHandle BundleManager::createContextBlock( BundleInternal &bundle )
 	{
-		System &sys = m_Engine.getSystemBlock();
-
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
 
@@ -142,8 +138,8 @@ namespace _2Real
 		FunctionBlock *functionBlock;
 
 		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
-		functionBlock = new FunctionBlock( blockData, block, sys, blockId );
-		sys.addUberBlock( *functionBlock, true );
+		functionBlock = new FunctionBlock( blockData, block, blockId );
+		m_Engine.addContextBlock( *functionBlock );
 
 		app::ContextBlockHandle handle = app::ContextBlockHandle( *functionBlock );
 		bundle.setBundleContextHandle( handle );

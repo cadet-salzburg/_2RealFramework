@@ -20,6 +20,8 @@
 #include "engine/_2RealEngineImpl.h"
 #include "helpers/_2RealSingletonHolder.h"
 #include "app/_2RealBundleHandle.h"
+#include "engine/_2RealLink.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 using std::string;
 
@@ -48,9 +50,9 @@ namespace _2Real
 			m_EngineImpl.setBaseDirectory( directory );
 		}
 
-		void Engine::clear()
+		void Engine::clearFully()
 		{
-			m_EngineImpl.clear();
+			m_EngineImpl.clearFully();
 		}
 
 		void Engine::clearBlockInstances()
@@ -83,6 +85,19 @@ namespace _2Real
 		void Engine::unregisterFromExceptionInternal( ErrorCallback &cb )
 		{
 			m_EngineImpl.unregisterFromException( cb );
+		}
+
+		Engine::Links Engine::getCurrentLinks() const
+		{
+			EngineImpl::Links const& currLinks = m_EngineImpl.getCurrentLinks();
+			Engine::Links links;
+			for ( EngineImpl::LinkConstIterator it = currLinks.begin(); it != currLinks.end(); ++it )
+			{
+				Engine::Link link( ( *it )->getInletIO().getHandle(), ( *it )->getOutletIO().getHandle() );
+				links.insert( link );
+			}
+
+			return links;
 		}
 	}
 }

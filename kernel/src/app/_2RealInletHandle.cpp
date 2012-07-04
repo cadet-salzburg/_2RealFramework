@@ -18,6 +18,7 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealAbstractIOManager.h"
 
@@ -29,13 +30,53 @@ namespace _2Real
 	namespace app
 	{
 		InletHandle::InletHandle() :
+			Handle(),
 			m_InletIO( nullptr )
 		{
+			m_InletIO->registerHandle( *this );
 		}
 
 		InletHandle::InletHandle( InletIO &inletIO ) :
+			Handle( &inletIO ),
 			m_InletIO( &inletIO )
 		{
+			m_InletIO->registerHandle( *this );
+		}
+
+		InletHandle::~InletHandle()
+		{
+			if ( isValid() )
+			m_InletIO->unregisterHandle( *this );
+		}
+
+		InletHandle::InletHandle( InletHandle const& other ) :
+			Handle( other.m_InletIO ),
+			m_InletIO( other.m_InletIO )
+		{
+			m_InletIO->registerHandle( *this );
+		}
+
+		InletHandle& InletHandle::operator=( InletHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_InletIO->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_InletIO = other.m_InletIO;
+
+			if ( isValid() )
+			{
+				m_InletIO->registerHandle( *this );
+			}
+
+			return *this;
 		}
 
 		AppData InletHandle::getCurrentInput() const
@@ -48,13 +89,13 @@ namespace _2Real
 		void InletHandle::linkTo( OutletHandle &outlet )
 		{
 			checkHandle( m_InletIO );
-			m_InletIO->m_Inlet->getOwningUberBlock().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
+			EngineImpl::instance().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
 			checkHandle( m_InletIO );
-			m_InletIO->m_Inlet->getOwningUberBlock().destroyLink( *m_InletIO, *( outlet.m_OutletIO ) );
+			EngineImpl::instance().destroyLink( *m_InletIO, *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )

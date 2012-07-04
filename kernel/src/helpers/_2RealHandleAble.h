@@ -18,25 +18,119 @@
 
 #pragma once
 
+#include <set>
+
 namespace _2Real
 {
 
-	// muahahahaha
+	class Handle
+	{
+
+	public:
+
+		Handle() :
+			m_Obj( nullptr )
+		{
+		}
+
+		Handle( void *obj ) :
+			m_Obj( obj )
+		{
+		}
+
+		virtual ~Handle()
+		{
+		}
+
+		bool isValid() const
+		{
+			return m_Obj != nullptr;
+		}
+
+		void invalidate()
+		{
+			m_Obj = nullptr;
+		}
+
+		bool operator==( Handle const& other ) const
+		{
+			return m_Obj == other.m_Obj;
+		}
+
+		bool operator!=( Handle const& other ) const
+		{
+			return m_Obj != other.m_Obj;
+		}
+
+		bool operator<( Handle const& other ) const
+		{
+			return m_Obj < other.m_Obj;
+		}
+
+		bool operator<=( Handle const& other ) const
+		{
+			return m_Obj <= other.m_Obj;
+		}
+
+		bool operator>( Handle const& other ) const
+		{
+			return m_Obj > other.m_Obj;
+		}
+
+		bool operator>=( Handle const& other ) const
+		{
+			return m_Obj >= other.m_Obj;
+		}
+
+	private:
+
+		void *m_Obj;
+
+	};
+
+	class AbstractHandleAble
+	{
+	public:
+		virtual ~AbstractHandleAble()
+		{
+			for ( HandleIterator it = m_Handles.begin(); it != m_Handles.end(); ++it )
+			{
+				( *it )->invalidate();
+			}
+		}
+		void registerHandle( Handle &handle )
+		{
+			m_Handles.insert( &handle );
+		}
+		void unregisterHandle( Handle &handle )
+		{
+			HandleIterator it = m_Handles.find( &handle );
+			if ( it != m_Handles.end() )
+			{
+				m_Handles.erase( it );
+			}
+		}
+	private:
+		typedef std::set< Handle * >				Handles;
+		typedef std::set< Handle * >::iterator		HandleIterator;
+
+		Handles		m_Handles;
+	};
 
 	template< typename THandle >
-	class HandleAble
+	class HandleAble : public virtual AbstractHandleAble
 	{
 
 	public:
 
 		template< typename TObj >
-		HandleAble( TObj &obj ) : m_Handle( obj ) {}
-		virtual ~HandleAble() {}
-		THandle& getHandle() { return m_Handle; }
+		HandleAble( TObj &obj ) : m_Handle( new THandle( obj ) ) {}
+		virtual ~HandleAble() { delete m_Handle; }
+		THandle& getHandle() const { return *m_Handle; }
 
 	private:
 
-		THandle		m_Handle;
+		THandle		*m_Handle;
 
 	};
 

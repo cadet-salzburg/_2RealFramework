@@ -17,112 +17,156 @@
 */
 
 #include "engine/_2RealSystem.h"
-#include "engine/_2RealEngineImpl.h"
-#include "engine/_2RealSystemBlockManager.h"
-#include "engine/_2RealLink.h"
-#include "app/_2RealBlockHandle.h"
-#include "engine/_2RealUberBlockBasedTrigger.h"
+#include "engine/_2RealLogger.h"
+#include "engine/_2RealAbstractUberBlock.h"
 #include "helpers/_2RealException.h"
 
+#include <string>
 #include <assert.h>
 #include <sstream>
-#include <iostream>
+
+using std::ostringstream;
+using std::string;
 
 namespace _2Real
 {
 
-	System::System( EngineImpl &engine ) :
-		m_Engine( engine ),
-		m_SubBlockManager( new SystemBlockManager() )
+	System::System( Logger &logger ) :
+		m_Logger( logger )
 	{
 	}
 
 	System::~System()
 	{
-		clearAll();
-		delete m_SubBlockManager;
+		clearFully();
 	}
 
-	void System::clearAll()
+	void System::clearFully()
 	{
-		try
+		Blocks ready;
+
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
-			m_SubBlockManager->clearAll();
-		}
-		catch ( TimeOutException &e )
-		{
-			std::cout << e.message() << std::endl;
+			(*it)->prepareForShutDown();
 		}
 
-		for ( IOLink::LinkIterator it = m_Links.begin(); it != m_Links.end(); /**/ )
+		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+		{
+			(*it)->prepareForShutDown();
+		}
+
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/ )
+		{
+			if ( (*it)->shutDown( 1000 ) )
+			{
+				ready.push_back( *it );
+			}
+			else
+			{
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+			}
+
+			it = m_Blocks.erase( it );
+		}
+
+		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
+		{
+			if ( (*it)->shutDown( 1000 ) )
+			{
+				ready.push_back( *it );
+			}
+			else
+			{
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+			}
+
+			it = m_ContextBlocks.erase( it );
+		}
+
+		for ( BlockIterator it = ready.begin(); it != ready.end(); /**/ )
 		{
 			delete *it;
-			it = m_Links.erase( it );
+			it = ready.erase( it );
 		}
-
-		m_ExceptionEvent.clear();
 	}
 
-	void System::clearBlockInstances()
+	void System::clearBlocksOnly()
 	{
-		try
+		Blocks ready;
+
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
-			m_SubBlockManager->clearBlockInstances();
-		}
-		catch ( TimeOutException &e )
-		{
-			std::cout << e.message() << std::endl;
+			(*it)->prepareForShutDown();
 		}
 
-		for ( IOLink::LinkIterator it = m_Links.begin(); it != m_Links.end(); /**/ )
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/ )
+		{
+			if ( (*it)->shutDown( 1000 ) )
+			{
+				ready.push_back( *it );
+			}
+			else
+			{
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+			}
+
+			it = m_Blocks.erase( it );
+		}
+
+		for ( BlockIterator it = ready.begin(); it != ready.end(); /**/ )
 		{
 			delete *it;
-			it = m_Links.erase( it );
+			it = ready.erase( it );
 		}
 	}
 
-	void System::addUberBlock( AbstractUberBlock &block, const bool isContext )
+	void System::addContextBlock( AbstractUberBlock &context )
 	{
-		m_SubBlockManager->addBlock( block, isContext );
-	}
-
-	void System::handleException( FunctionBlock &block, Exception const& exception )
-	{
-		m_ExceptionEvent.notify( std::make_pair( exception, app::BlockHandle( block ) ) );
-	}
-
-	void System::registerToException( app::ErrorCallback &callback )
-	{
-		m_ExceptionEvent.addListener( callback );
-	}
-
-	void System::unregisterFromException( app::ErrorCallback &callback )
-	{
-		m_ExceptionEvent.removeListener( callback );
-	}
-
-	void System::createLink( InletIO &inlet, OutletIO &outlet )
-	{
-		IOLink *link = new IOLink( inlet, outlet );
-		IOLink::LinkIterator it = m_Links.find( link );
-		if ( it == m_Links.end() )
+#ifdef _DEBUG
+		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
 		{
-			link->activate();
-			m_Links.insert( link );
+			if ( ( *it ) == &context ) assert( NULL );
 		}
-		else delete link;
+#endif
+		m_ContextBlocks.push_back( &context );
 	}
 
-	void System::destroyLink( InletIO &inlet, OutletIO &outlet )
+	void System::addBlockInstance( AbstractUberBlock &block )
 	{
-		IOLink *link = new IOLink( inlet, outlet );
-		IOLink::LinkIterator it = m_Links.find( link );
-		if ( it != m_Links.end() )
+#ifdef _DEBUG
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
-			link->deactivate();
-			delete *it;
-			m_Links.erase( it );
+			if ( ( *it ) == &block ) assert( NULL );
 		}
-		delete link;
+#endif
+		m_Blocks.push_back( &block );
 	}
+
+	void System::removeBlock( AbstractUberBlock &block, const long timeout )
+	{
+		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+		{
+			if ( *it == &block )
+			{
+				( *it )->prepareForShutDown();
+				if ( (*it)->shutDown( timeout ) )
+				{
+					delete *it;
+					m_Blocks.erase( it );
+					return;
+				}
+				else
+				{
+					m_Blocks.erase( it );
+					ostringstream msg;
+					msg << " timeout reached on shutdown of " << block.getName();
+					throw TimeOutException( msg.str() );
+				}
+			}
+		}
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
 }

@@ -74,7 +74,7 @@ namespace _2Real
 		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_IdCounter( new IdCounter() ),
-		m_SystemBlock( new System( *this ) )
+		m_System( new System( *m_Logger ) )
 	{
 		m_Typetable->registerType< char >("char");
 		m_Typetable->registerType< unsigned char >("unsigned char");
@@ -109,8 +109,8 @@ namespace _2Real
 	{
 		try
 		{
-			m_SystemBlock->clearAll();
-			delete m_SystemBlock;
+			m_System->clearFully();
+			delete m_System;
 			delete m_IdCounter;
 			delete m_BundleManager;
 			m_ThreadPool->clear();
@@ -126,15 +126,25 @@ namespace _2Real
 		}
 	}
 
-	void EngineImpl::clear()
+	void EngineImpl::clearFully()
 	{
-		m_SystemBlock->clearAll();
+		m_System->clearFully();
 		m_BundleManager->clear();
 	}
 
 	void EngineImpl::clearBlockInstances()
 	{
-		m_SystemBlock->clearBlockInstances();
+		m_System->clearBlocksOnly();
+	}
+
+	void EngineImpl::addBlockInstance( AbstractUberBlock &block )
+	{
+		m_System->addBlockInstance( block );
+	}
+
+	void EngineImpl::addContextBlock( AbstractUberBlock &context )
+	{
+		m_System->addContextBlock( context );
 	}
 
 	const long EngineImpl::getElapsedTime() const
@@ -147,12 +157,12 @@ namespace _2Real
 		return Identifier( name, m_IdCounter->getId() );
 	}
 
-	Timer& EngineImpl::getTimer()
+	Timer & EngineImpl::getTimer()
 	{
 		return *m_Timer;
 	}
 
-	Logger& EngineImpl::getLogger()
+	Logger & EngineImpl::getLogger()
 	{
 		return *m_Logger;
 	}
@@ -162,19 +172,9 @@ namespace _2Real
 		return *m_Typetable;
 	}
 
-	BundleManager & EngineImpl::getBundleManager()
-	{
-		return *m_BundleManager;
-	}
-
 	ThreadPool & EngineImpl::getThreadPool()
 	{
 		return *m_ThreadPool;
-	}
-
-	System & EngineImpl::getSystemBlock()
-	{
-		return *m_SystemBlock;
 	}
 
 	void EngineImpl::setBaseDirectory( string const& directory )
@@ -191,12 +191,51 @@ namespace _2Real
 
 	void EngineImpl::registerToException( app::ErrorCallback &callback )
 	{
-		m_SystemBlock->registerToException( callback );
+		m_BlockExceptionEvent.addListener( callback );
 	}
 
 	void EngineImpl::unregisterFromException( app::ErrorCallback &callback )
 	{
-		m_SystemBlock->unregisterFromException( callback );
+		m_BlockExceptionEvent.removeListener( callback );
+	}
+
+	void EngineImpl::handleBlockException( app::BlockHandle &block, Exception const& exception ) const
+	{
+		m_BlockExceptionEvent.notify( make_pair( exception, block ) );
+	}
+
+	void EngineImpl::handleContextBlockException( app::ContextBlockHandle &block, Exception const& exception ) const
+	{
+	}
+
+	EngineImpl::Links const& EngineImpl::getCurrentLinks() const
+	{
+		return m_Links;
+	}
+
+	void EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )
+	{
+		IOLink *link = new IOLink( inlet, outlet );
+		LinkIterator it = m_Links.find( link );
+		if ( it == m_Links.end() )
+		{
+			link->activate();
+			m_Links.insert( link );
+		}
+		else delete link;
+	}
+
+	void EngineImpl::destroyLink( InletIO &inlet, OutletIO &outlet )
+	{
+		IOLink *link = new IOLink( inlet, outlet );
+		LinkIterator it = m_Links.find( link );
+		if ( it != m_Links.end() )
+		{
+			link->deactivate();
+			delete *it;
+			m_Links.erase( it );
+		}
+		delete link;
 	}
 
 }

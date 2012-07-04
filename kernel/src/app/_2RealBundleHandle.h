@@ -20,6 +20,8 @@
 
 #include <string>
 
+#include "helpers/_2RealHandleAble.h"
+
 namespace _2Real
 {
 	class BundleInternal;
@@ -29,13 +31,16 @@ namespace _2Real
 		class BlockHandle;
 		class BundleInfo;
 
-		class BundleHandle
+		class BundleHandle : public Handle
 		{
 
 		public:
 
 			BundleHandle();
 			BundleHandle( BundleInternal &bundle );
+			~BundleHandle();
+			BundleHandle( BundleHandle const& other );
+			BundleHandle& operator=( BundleHandle const& other );
 
 			BundleInfo getBundleInfo() const;
 

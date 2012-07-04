@@ -19,6 +19,7 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
+#include "helpers/_2RealHandleAble.h"
 
 namespace _2Real
 {
@@ -28,7 +29,7 @@ namespace _2Real
 	{
 		class OutletHandle;
 
-		class InletHandle
+		class InletHandle : public Handle
 		{
 
 		public:
@@ -42,6 +43,9 @@ namespace _2Real
 
 			InletHandle();
 			InletHandle( InletIO &inletIO );
+			~InletHandle();
+			InletHandle( InletHandle const& other );
+			InletHandle& operator=( InletHandle const& other );
 
 			std::string const&	getName() const;
 			std::string const&	getLongTypename() const;
@@ -52,6 +56,7 @@ namespace _2Real
 			void linkTo( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
 
+			// if the inlet is linked, the value might be overwritten of course
 			template< typename T >
 			void setValue( T const& value )
 			{
@@ -62,7 +67,7 @@ namespace _2Real
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
 
-			// default = 1, 0: invalid
+			// default = 0 = no buffering
 			void				setBufferSize( const unsigned int size );
 
 		private:

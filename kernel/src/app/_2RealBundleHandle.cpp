@@ -30,13 +30,52 @@ namespace _2Real
 	namespace app
 	{
 		BundleHandle::BundleHandle() :
+			Handle(),
 			m_Bundle( nullptr )
 		{
 		}
 
 		BundleHandle::BundleHandle( BundleInternal &bundle ) :
+			Handle( &bundle ),
 			m_Bundle( &bundle )
 		{
+			m_Bundle->registerHandle( *this );
+		}
+
+		BundleHandle::~BundleHandle()
+		{
+			if ( isValid() )
+			m_Bundle->unregisterHandle( *this );
+		}
+
+		BundleHandle::BundleHandle( BundleHandle const& other ) :
+			Handle( other.m_Bundle ),
+			m_Bundle( other.m_Bundle )
+		{
+			m_Bundle->registerHandle( *this );
+		}
+
+		BundleHandle& BundleHandle::operator=( BundleHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_Bundle->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_Bundle = other.m_Bundle;
+
+			if ( isValid() )
+			{
+				m_Bundle->registerHandle( *this );
+			}
+
+			return *this;
 		}
 
 		BundleInfo BundleHandle::getBundleInfo() const

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "app/_2RealUberBlockHandle.h"
+#include "helpers/_2RealHandleAble.h"
 
 namespace _2Real
 {
@@ -28,13 +28,16 @@ namespace _2Real
 	{
 		class BlockInfo;
 
-		class ContextBlockHandle : public UberBlockHandle
+		class ContextBlockHandle : public Handle
 		{
 
 		public:
 
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock &block );
+			~ContextBlockHandle();
+			ContextBlockHandle( ContextBlockHandle const& other );
+			ContextBlockHandle& operator=( ContextBlockHandle const& other );
 
 			BlockInfo getBlockInfo() const;
 

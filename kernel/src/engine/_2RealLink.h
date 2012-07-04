@@ -36,19 +36,11 @@ namespace _2Real
 		void activate();
 		void deactivate();
 
+		InletIO const& getInletIO() const;
+		OutletIO const& getOutletIO() const;
+
 		bool operator<( IOLink const& other );
 
-		struct LinkCmp
-		{
-			bool operator()( IOLink *l1, IOLink *l2 )
-			{
-				return ( *l1 < *l2 );
-			}
-		};
-
-		typedef std::set< IOLink *, LinkCmp >					LinkSet;
-		typedef std::set< IOLink *, LinkCmp >::iterator			LinkIterator;
-		typedef std::set< IOLink *, LinkCmp >::const_iterator	LinkConstIterator;
 
 	private:
 

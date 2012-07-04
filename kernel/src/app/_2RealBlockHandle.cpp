@@ -33,15 +33,52 @@ namespace _2Real
 	namespace app
 	{
 		BlockHandle::BlockHandle() :
-			UberBlockHandle(),
+			Handle(),
 			m_Block( nullptr )
 		{
 		}
 
 		BlockHandle::BlockHandle( FunctionBlock &block ) :
-			UberBlockHandle( block ),
+			Handle( &block ),
 			m_Block( &block )
 		{
+			m_Block->registerHandle( *this );
+		}
+
+		BlockHandle::~BlockHandle()
+		{
+			if ( isValid() )
+			m_Block->unregisterHandle( *this );
+		}
+
+		BlockHandle::BlockHandle( BlockHandle const& other ) :
+			Handle( other.m_Block ),
+			m_Block( other.m_Block )
+		{
+			m_Block->registerHandle( *this );
+		}
+
+		BlockHandle& BlockHandle::operator=( BlockHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_Block->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_Block = other.m_Block;
+
+			if ( isValid() )
+			{
+				m_Block->registerHandle( *this );
+			}
+
+			return *this;
 		}
 
 		BlockInfo BlockHandle::getBlockInfo() const

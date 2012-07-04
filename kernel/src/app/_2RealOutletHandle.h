@@ -20,6 +20,7 @@
 
 #include "app/_2RealAppData.h"
 #include "app/_2RealCallbacks.h"
+#include "helpers/_2RealHandleAble.h"
 
 #include<list>
 
@@ -31,13 +32,16 @@ namespace _2Real
 	{
 		class InletHandle;
 
-		class OutletHandle
+		class OutletHandle : public Handle
 		{
 
 		public:
 
 			OutletHandle();
 			OutletHandle( OutletIO &outletIO );
+			~OutletHandle();
+			OutletHandle( OutletHandle const& other );
+			OutletHandle& operator=( OutletHandle const& other );
 
 			std::string const&	getName() const;
 			std::string const&	getLongTypename() const;

@@ -19,7 +19,6 @@
 #pragma once
 
 #include "engine/_2RealIdentifier.h"
-#include "app/_2RealCallbacks.h"
 
 namespace _2Real
 {
@@ -36,30 +35,25 @@ namespace _2Real
 		AbstractUberBlock( Identifier const& id );
 		virtual ~AbstractUberBlock();
 
-		Identifier	const&						getIdentifier() const;
-		std::string const&						getName() const;
-		unsigned int							getId() const;
+		Identifier	const&			getIdentifier() const;
+		std::string const&			getName() const;
+		unsigned int				getId() const;
 
-		virtual void							setUp() = 0;
-		virtual void							start() = 0;
-		virtual void							stop( const bool blocking, const long timeout ) = 0;
-		virtual void							prepareForShutDown() = 0;
-		virtual bool							shutDown( const long timeout ) = 0;
+		virtual void				setUp() = 0;
+		virtual void				start() = 0;
+		virtual void				stop( const bool blocking, const long timeout ) = 0;
+		virtual void				prepareForShutDown() = 0;
+		virtual bool				shutDown( const long timeout ) = 0;
 
-		virtual void							createLink( InletIO &inlet, OutletIO &outletIO ) = 0;
-		virtual void							destroyLink( InletIO &inlet, OutletIO &outletIO ) = 0;
+		virtual void				updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
+		virtual void				updateWhenInletDataValid( InletIO &inletIO ) = 0;
+		virtual void				updateWithFixedRate( const double updatesPerSecond ) = 0;
 
-		virtual void							updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
-		virtual void							updateWhenInletDataValid( InletIO &inletIO ) = 0;
-		//virtual void							updateWhenAllInletDataNew() = 0;
-		//virtual void							updateWhenAllInletDataValid() = 0;
-		virtual void							updateWithFixedRate( const double updatesPerSecond ) = 0;
-
-		virtual void							handleException( Exception &e ) = 0;
+		virtual void				handleException( Exception &e ) = 0;
 
 	protected:
 
-		Identifier								const m_Identifier;
+		Identifier					const m_Identifier;
 
 	};
 
