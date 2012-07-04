@@ -49,7 +49,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> triggersAreOK" << endl;
 		assert( NULL );
 #endif
 	}
@@ -57,7 +56,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> uberBlocksAreOK" << endl;
 		assert( NULL );
 #endif
 	}
@@ -65,7 +63,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -73,7 +70,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -81,7 +77,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -89,7 +84,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -102,7 +96,6 @@ namespace _2Real
 	void FunctionBlockStateCreated::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: created -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -127,7 +120,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> triggersAreOK" << endl;
 		assert( NULL );
 #endif
 	}
@@ -135,7 +127,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> uberBlocksAreOK" << endl;
 		assert( NULL );
 #endif
 	}
@@ -143,7 +134,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -151,7 +141,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -159,7 +148,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -167,7 +155,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -180,7 +167,6 @@ namespace _2Real
 	void FunctionBlockStateSetUp::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: set up -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -209,7 +195,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> uberBlocksAreOK" << endl;
 		assert( NULL );
 #endif
 	}
@@ -217,7 +202,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -225,7 +209,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -233,7 +216,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -241,7 +223,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -254,7 +235,6 @@ namespace _2Real
 	void FunctionBlockStateStarted::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: started -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -279,7 +259,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> triggersAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -291,7 +270,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -299,7 +277,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -307,7 +284,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -315,7 +291,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -328,7 +303,6 @@ namespace _2Real
 	void FunctionBlockStateWaiting::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: waiting -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -353,7 +327,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> triggersAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -361,7 +334,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> uberBlocksAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -369,7 +341,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -381,7 +352,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -389,7 +359,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -402,7 +371,6 @@ namespace _2Real
 	void FunctionBlockStateScheduled::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: scheduled -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -427,7 +395,6 @@ namespace _2Real
 	void FunctionBlockStateUpdating::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: updating -> triggersAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -435,7 +402,6 @@ namespace _2Real
 	void FunctionBlockStateUpdating::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: updating -> uberBlocksAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -443,7 +409,6 @@ namespace _2Real
 	void FunctionBlockStateUpdating::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: updating -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -451,7 +416,6 @@ namespace _2Real
 	void FunctionBlockStateUpdating::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: updating -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -472,7 +436,6 @@ namespace _2Real
 	void FunctionBlockStateUpdating::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: updating -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}
@@ -497,7 +460,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> triggersAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -505,7 +467,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> uberBlocksAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -513,7 +474,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -521,7 +481,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -529,7 +488,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -537,7 +495,6 @@ namespace _2Real
 	void FunctionBlockStateStopped::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: stopped -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -571,7 +528,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> triggersAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -579,7 +535,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> uberBlocksAreOk" << endl;
 		assert( NULL );
 #endif
 	}
@@ -587,7 +542,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> scheduleUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -595,7 +549,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> beginUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -603,7 +556,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> update" << endl;
 		assert( NULL );
 #endif
 	}
@@ -611,7 +563,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> finishUpdate" << endl;
 		assert( NULL );
 #endif
 	}
@@ -619,7 +570,6 @@ namespace _2Real
 	bool FunctionBlockStateShutDown::prepareForShutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> prepareForShutDown" << endl;
 		assert( NULL );
 #endif
 		return false;
@@ -628,7 +578,6 @@ namespace _2Real
 	void FunctionBlockStateShutDown::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
-		cout << "invalid state transition: shut down -> shutDown" << endl;
 		assert( NULL );
 #endif
 	}

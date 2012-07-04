@@ -57,6 +57,12 @@ namespace _2Real
 		{
 			delete m_TimeTrigger;
 		}
+
+		for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); /**/ )
+		{
+			delete it->second;
+			it = m_InletPolicies.erase( it );
+		}
 	}
 
 	void FunctionBlockUpdatePolicy::addInlet( InletIO &inletIO )
@@ -114,7 +120,7 @@ namespace _2Real
 					}
 
 					delete currTrigger;
-					currTrigger = newTrigger;
+					it->second->m_Trigger = newTrigger;
 
 					it->second->m_WasChanged = false;
 				}
@@ -130,16 +136,6 @@ namespace _2Real
 		m_UpdateTime = time;
 	}
 
-	//void FunctionBlockUpdatePolicy::setNewInletDefaultPolicy( InletTriggerCtor &inletDefault )
-	//{
-	//	Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-	//	m_WasChanged = true;
-	//	for ( InletPolicyMap::iterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
-	//	{
-	//		it->second = inletDefault;
-	//	}
-	//}
-
 	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
@@ -150,6 +146,13 @@ namespace _2Real
 			it->second->m_WasChanged = true;
 			delete it->second->m_Ctor;
 			it->second->m_Ctor = inletPolicy;
+		}
+		else
+		{
+#ifdef _DEBUG
+			assert( NULL );
+#endif
+			delete inletPolicy;
 		}
 	}
 

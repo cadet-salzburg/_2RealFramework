@@ -54,7 +54,12 @@ namespace _2Real
 			std::cout << e.message() << std::endl;
 		}
 
-		m_Links.clear();
+		for ( IOLink::LinkIterator it = m_Links.begin(); it != m_Links.end(); /**/ )
+		{
+			delete *it;
+			it = m_Links.erase( it );
+		}
+
 		m_ExceptionEvent.clear();
 	}
 
@@ -67,6 +72,12 @@ namespace _2Real
 		catch ( TimeOutException &e )
 		{
 			std::cout << e.message() << std::endl;
+		}
+
+		for ( IOLink::LinkIterator it = m_Links.begin(); it != m_Links.end(); /**/ )
+		{
+			delete *it;
+			it = m_Links.erase( it );
 		}
 	}
 

@@ -92,6 +92,7 @@ namespace _2Real
 
 	void EngineData::cloneFrom( EngineData const& src )
 	{
+
 		m_Content.reset( src.m_Content->clone() );
 	}
 

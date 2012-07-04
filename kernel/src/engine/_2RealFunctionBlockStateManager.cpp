@@ -469,20 +469,12 @@ namespace _2Real
 	void FunctionBlockStateManager::addTrigger( AbstractTimeBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		if ( m_TimeTrigger != nullptr )
-		{
-			delete m_TimeTrigger;
-		}
 		m_TimeTrigger = &trigger;
 	}
 
 	void FunctionBlockStateManager::removeTrigger( AbstractTimeBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		if ( m_TimeTrigger != nullptr )
-		{
-			delete m_TimeTrigger;
-		}
 		m_TimeTrigger = nullptr;
 	}
 

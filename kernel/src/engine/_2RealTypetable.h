@@ -64,7 +64,6 @@ namespace _2Real
 		typename EngineDataTable::iterator it = m_Typetable.find( typeName );
 		if ( it != m_Typetable.end() )
 		{
-			std::cout << "keyword " << typeName << "already defined in typetable" << std::endl;
 			assert( NULL );
 		}
 #endif

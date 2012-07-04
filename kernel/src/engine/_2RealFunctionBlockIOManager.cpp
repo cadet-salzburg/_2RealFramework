@@ -34,9 +34,8 @@
 
 #include <sstream>
 
-using std::map;
+using std::list;
 using std::string;
-using std::make_pair;
 using std::ostringstream;
 
 namespace _2Real
@@ -49,6 +48,15 @@ namespace _2Real
 
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
+		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			delete *it;
+		}
 	}
 
 	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const
@@ -71,12 +79,12 @@ namespace _2Real
 		return m_BundleOutletHandles;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::list< app::AppData > const& > &cb )
+	void FunctionBlockIOManager::registerToNewData( AbstractCallback< list< app::AppData > const& > &cb )
 	{
 		m_AppEvent.addListener( cb );
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( AbstractCallback< std::list< app::AppData > const& > &cb )
+	void FunctionBlockIOManager::unregisterFromNewData( AbstractCallback< list< app::AppData > const& > &cb )
 	{
 		m_AppEvent.removeListener( cb );
 	}
@@ -161,7 +169,7 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateOutletData()
 	{
-		std::list< app::AppData > data;
+		list< app::AppData > data;
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			Outlet &outlet = *( ( *it )->m_Outlet );

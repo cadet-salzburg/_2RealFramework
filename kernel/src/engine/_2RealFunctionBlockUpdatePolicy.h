@@ -64,11 +64,8 @@ namespace _2Real
 		~FunctionBlockUpdatePolicy();
 
 		void addInlet( InletIO &io );
-
 		void changePolicy();
-
 		void setNewUpdateTime( const long time );
-		//void setNewInletDefaultPolicy( InletTriggerCtor &inletDefault );
 		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy );
 
 	private:
