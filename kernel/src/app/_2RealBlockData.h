@@ -27,8 +27,8 @@ namespace _2Real
 {
 	//namespace engine
 	//{
-		class BundleInternal;
-		class FunctionBlock;
+		class Bundle;
+		template< typename T > class FunctionBlock;
 	//}
 
 	namespace app
@@ -36,24 +36,25 @@ namespace _2Real
 		class BlockInfo
 		{
 
+			template< typename T >
 			friend class _2Real::FunctionBlock;
-			friend class _2Real::BundleInternal;
+			friend class _2Real::Bundle;
 
 		public:
 
-			typedef std::vector< ParameterData >					Params;
-			typedef std::vector< ParameterData >::iterator			ParamIterator;
-			typedef std::vector< ParameterData >::const_iterator	ParamConstIterator;
+			typedef std::vector< ParameterInfo >					ParameterInfos;
+			typedef std::vector< ParameterInfo >::iterator			ParameterInfoIterator;
+			typedef std::vector< ParameterInfo >::const_iterator	ParameterInfoConstIterator;
 
 			BlockInfo();
 
-			std::string const&	getName() const;
-			std::string const&	getDescription() const;
-			std::string const&	getCategory() const;
+			std::string const&			getName() const;
+			std::string const&			getDescription() const;
+			std::string const&			getCategory() const;
 
-			Params const&		getParameters() const;
-			Params const&		getInlets() const;
-			Params const&		getOutlets() const; 
+			ParameterInfos const&		getParameters() const;
+			ParameterInfos const&		getInlets() const;
+			ParameterInfos const&		getOutlets() const; 
 
 		private:
 
@@ -61,9 +62,9 @@ namespace _2Real
 			std::string			m_Description;
 			std::string			m_Category;
 
-			Params				m_Parameters;
-			Params				m_Inlets;
-			Params				m_Outlets;
+			ParameterInfos		m_Parameters;
+			ParameterInfos		m_Inlets;
+			ParameterInfos		m_Outlets;
 
 		};
 	}

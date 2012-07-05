@@ -38,7 +38,7 @@ namespace _2Real
 		{
 		}
 
-		BlockHandle::BlockHandle( FunctionBlock &block ) :
+		BlockHandle::BlockHandle( FunctionBlock< BlockHandle > &block ) :
 			Handle( &block ),
 			m_Block( &block )
 		{

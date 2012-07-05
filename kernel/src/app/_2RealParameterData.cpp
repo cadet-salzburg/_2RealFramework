@@ -24,24 +24,31 @@ namespace _2Real
 {
 	namespace app
 	{
-		ParameterData::ParameterData() :
+		ParameterInfo::ParameterInfo() :
 			m_Name( "undefined" ),
 			m_Typename( "undefined" ),
 			m_LongTypename( "undefined" )
 		{
 		}
 
-		string const& ParameterData::getName() const
+		ParameterInfo::ParameterInfo( string const& name, string const& typeName, string const& longTypename ) :
+			m_Name( name ),
+			m_Typename( typeName ),
+			m_LongTypename( longTypename )
+		{
+		}
+
+		string const& ParameterInfo::getName() const
 		{
 			return m_Name;
 		}
 
-		string const& ParameterData::getTypename() const
+		string const& ParameterInfo::getTypename() const
 		{
 			return m_Typename;
 		}
 
-		string const& ParameterData::getLongTypename() const
+		string const& ParameterInfo::getLongTypename() const
 		{
 			return m_LongTypename;
 		}

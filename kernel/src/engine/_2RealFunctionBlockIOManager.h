@@ -35,43 +35,43 @@ namespace _2Real
 	}
 	
 	class ParameterData;
-	class FunctionBlock;
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
 
 	class FunctionBlockIOManager : public AbstractIOManager
 	{
 
+		template< typename T >
+		friend class FunctionBlock;
+
 	public:
 
-		FunctionBlockIOManager( FunctionBlock &owner );
+		FunctionBlockIOManager( AbstractUberBlock &owner );
 		~FunctionBlockIOManager();
 
-		void						clear();
+		void							clear();
 
-		void						registerToNewData( app::BlockCallback &cb );
-		void						unregisterFromNewData( app::BlockCallback &cb );
+		void							registerToNewData( app::BlockCallback &cb );
+		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void						addInlet( ParameterData const& data );
-		void						addOutlet( ParameterData const& data );
+		void							addInlet( ParameterData const& data );
+		void							addOutlet( ParameterData const& data );
 
-		app::InletHandle &			getAppInletHandle( std::string const& name );
-		app::OutletHandle &			getAppOutletHandle( std::string const& name );
-		bundle::InletHandle &		getBundleInletHandle( std::string const& name );
-		bundle::OutletHandle &		getBundleOutletHandle( std::string const& name );
+		app::InletHandle &				getAppInletHandle( std::string const& name );
+		app::OutletHandle &				getAppOutletHandle( std::string const& name );
+		bundle::InletHandle &			getBundleInletHandle( std::string const& name );
+		bundle::OutletHandle &			getBundleOutletHandle( std::string const& name );
 
-		AppInletHandles const&		getAppInletHandles() const;
-		AppOutletHandles const&		getAppOutletHandles() const;
-		BundleInletHandles const&	getBundleInletHandles() const;
-		BundleOutletHandles const&	getBundleOutletHandles() const;
+		AppInletHandles const&			getAppInletHandles() const;
+		AppOutletHandles const&			getAppOutletHandles() const;
+		BundleInletHandles const&		getBundleInletHandles() const;
+		BundleOutletHandles const&		getBundleOutletHandles() const;
 
-		void						updateInletData();
-		void						updateOutletData();
-		void						updateInletBuffers();
+		void							updateInletData();
+		void							updateOutletData();
+		void							updateInletBuffers();
 
 	private:
-
-		friend class FunctionBlock;
 
 		FunctionBlockStateManager		*m_StateManager;
 		FunctionBlockUpdatePolicy		*m_UpdatePolicy;

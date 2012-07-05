@@ -41,9 +41,7 @@ namespace _2Real
 	BundleManager::BundleManager( EngineImpl &engine ) :
 		m_Engine( engine ),
 		m_BundleLoader(),
-		m_BundleInstances(),
-		m_BaseDirectory( Poco::Path() ),
-		m_BundleLookupTable()
+		m_BaseDirectory( Poco::Path() )
 	{
 	}
 
@@ -54,14 +52,16 @@ namespace _2Real
 
 	void BundleManager::clear()
 	{
-		for ( BundleMap::iterator it = m_BundleInstances.begin(); it != m_BundleInstances.end(); /**/ )
+		for ( BundleIterator it = m_Bundles.begin(); it != m_Bundles.end(); /**/ )
 		{
-			BundleInternal *b = it->second;
-			delete b;
-			it = m_BundleInstances.erase( it );
+			delete *it;
+			it = m_Bundles.erase( it );
 		}
+	}
 
-		m_BundleLookupTable.clear();
+	BundleManager::Bundles const& BundleManager::getBundles() const
+	{
+		return m_Bundles;
 	}
 
 	void BundleManager::setBaseDirectory( string const& directory )
@@ -69,7 +69,7 @@ namespace _2Real
 		m_BaseDirectory = Poco::Path( directory );
 	}
 
-	BundleInternal * BundleManager::loadLibrary( string const& libraryPath )
+	Bundle * BundleManager::loadLibrary( string const& libraryPath )
 	{
 		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
 
@@ -81,14 +81,13 @@ namespace _2Real
 		}
 
 		BundleData const& data = m_BundleLoader.loadLibrary( absPath );
-		BundleInternal *bundle = new BundleInternal( m_Engine.createIdentifier( absPath ), data, *this );
+		Bundle *bundle = new Bundle( m_Engine.createIdentifier( absPath ), data, *this );
 
-		m_BundleInstances.insert( make_pair( bundle->getIdentifier(), bundle ) );
-		m_BundleLookupTable.insert( make_pair( absPath, bundle->getIdentifier() ) );
+		m_Bundles.insert( bundle );
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			FunctionBlock *contextBlock = createContextBlock( *bundle );
+			BundleContext *contextBlock = createContextBlock( *bundle );
 			contextBlock->updateWithFixedRate( 1.0 );
 			contextBlock->setUp();
 			contextBlock->start();
@@ -103,7 +102,7 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	FunctionBlock * BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
+	BlockInstance * BundleManager::createFunctionBlock( Bundle &bundle, std::string const& blockName )
 	{
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( blockName );
@@ -115,13 +114,13 @@ namespace _2Real
 		Identifier blockId = m_Engine.createIdentifier( name.str() );
 
 		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		FunctionBlock *functionBlock = new FunctionBlock( blockData, block, blockId );
+		BlockInstance *functionBlock = new FunctionBlock< app::BlockHandle >( blockData, block, blockId );
 		m_Engine.addBlockInstance( *functionBlock );
 		bundle.addBlockInstance( block, blockName );
 		return functionBlock;
 	}
 
-	FunctionBlock * BundleManager::createContextBlock( BundleInternal &bundle )
+	BundleContext * BundleManager::createContextBlock( Bundle &bundle )
 	{
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
@@ -131,51 +130,9 @@ namespace _2Real
 
 		Identifier blockId( m_Engine.createIdentifier( name.str() ) );
 		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
-		FunctionBlock *contextBlock = new FunctionBlock( blockData, block, blockId );
+		BundleContext *contextBlock = new BundleContext( blockData, block, blockId );
 		m_Engine.addContextBlock( *contextBlock );
 		return contextBlock;
-	}
-
-	BundleInternal & BundleManager::getBundle( Identifier const& id )
-	{
-		BundleMap::const_iterator it = m_BundleInstances.find( id );
-		
-		if ( it == m_BundleInstances.end() )
-		{
-			ostringstream msg;
-			msg << "bundle " << id << " not found";
-			throw NotFoundException( msg.str() );
-		}
-
-		return *( it->second );
-	}
-
-	BundleInternal const& BundleManager::getBundle( Identifier const& id ) const
-	{
-		BundleMap::const_iterator it = m_BundleInstances.find( id );
-
-		if ( it == m_BundleInstances.end() )
-		{
-			ostringstream msg;
-			msg << "bundle " << id << " not found";
-			throw NotFoundException( msg.str() );
-		}
-
-		return *( it->second );
-	}
-
-	const Identifier BundleManager::getIdentifier( string const& path ) const
-	{
-		LookupTable::const_iterator it = m_BundleLookupTable.find( path );
-
-		if ( it == m_BundleLookupTable.end() )
-		{
-			ostringstream msg;
-			msg << "bundle at " << path << " not found";
-			throw NotFoundException( msg.str() );
-		}
-
-		return it->second;
 	}
 
 	const Poco::Path BundleManager::makeAbsolutePath( Poco::Path const& path ) const

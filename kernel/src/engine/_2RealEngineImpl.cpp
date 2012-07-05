@@ -212,18 +212,36 @@ namespace _2Real
 		m_BlockExceptionEvent.removeListener( callback );
 	}
 
-	void EngineImpl::handleBlockException( app::BlockHandle &block, Exception const& exception ) const
+	void EngineImpl::handleException( app::BlockHandle &block, Exception const& exception ) const
 	{
 		m_BlockExceptionEvent.notify( make_pair( exception, block ) );
 	}
 
-	void EngineImpl::handleContextBlockException( app::ContextBlockHandle &block, Exception const& exception ) const
+	void EngineImpl::handleException( app::ContextBlockHandle &block, Exception const& exception ) const
 	{
 	}
 
 	EngineImpl::Links const& EngineImpl::getCurrentLinks() const
 	{
 		return m_Links;
+	}
+
+	EngineImpl::BlockInstances EngineImpl::getCurrentBlockInstances() const
+	{
+		System::Blocks const& blocks = m_System->getBlockInstances();
+		EngineImpl::BlockInstances result;
+
+		for ( System::BlockConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+		{
+			BlockInstance *instance = static_cast< BlockInstance * >( *it );
+			result.push_back( instance );
+		}
+		return result;
+	}
+
+	EngineImpl::Bundles const& EngineImpl::getCurrentBundles() const
+	{
+		return m_BundleManager->getBundles();
 	}
 
 	void EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )

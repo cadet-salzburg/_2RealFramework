@@ -37,7 +37,7 @@ using std::string;
 namespace _2Real
 {
 
-	FunctionBlockStateManager::FunctionBlockStateManager( FunctionBlock &owner ) :
+	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner ) :
 		AbstractStateManager( owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_FlaggedForSetUp( false ),
@@ -77,7 +77,7 @@ namespace _2Real
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateSetUp();
 
-				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
+				bundle::BlockHandle context( *m_IOManager );
 				m_FunctionBlock->setup( context );
 
 				m_Logger.addLine( string( getName() + " new state: set up" ) );
@@ -297,7 +297,7 @@ namespace _2Real
 			{
 				disableAllTriggers();
 
-				bundle::BlockHandle context( dynamic_cast< FunctionBlock& >( m_Owner) );
+				bundle::BlockHandle context( *m_IOManager );
 				m_FunctionBlock->setup( context );
 				m_CurrentState = new FunctionBlockStateSetUp();
 				m_StateAccess.unlock();

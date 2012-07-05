@@ -34,208 +34,198 @@ using std::string;
 namespace _2Real
 {
 
-	FunctionBlock::FunctionBlock( BlockData const& meta, bundle::Block &block, Identifier const& id ) :
-		AbstractUberBlock( id ),
-		HandleAble< app::BlockHandle >( *this ),
-		HandleAble< app::ContextBlockHandle >( *this ),
-		m_Engine( EngineImpl::instance() ),
-		m_Block( block ),
-		m_Metadata( meta ),
-		m_StateManager( new FunctionBlockStateManager( *this ) ),
-		m_IOManager( new FunctionBlockIOManager( *this ) ),
-		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
-	{
-		m_StateManager->m_FunctionBlock = &block;
+	//FunctionBlock::FunctionBlock( BlockData const& meta, bundle::Block &block, Identifier const& id ) :
+	//	AbstractUberBlock( id ),
+	//	HandleAble< app::BlockHandle >( *this ),
+	//	HandleAble< app::ContextBlockHandle >( *this ),
+	//	m_Engine( EngineImpl::instance() ),
+	//	m_Block( block ),
+	//	m_Metadata( meta ),
+	//	m_StateManager( new FunctionBlockStateManager( *this ) ),
+	//	m_IOManager( new FunctionBlockIOManager( *this ) ),
+	//	m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
+	//{
+	//	m_StateManager->m_FunctionBlock = &block;
 
-		m_StateManager->m_IOManager = m_IOManager;
-		m_StateManager->m_UpdatePolicy = m_UpdatePolicy;
+	//	m_StateManager->m_IOManager = m_IOManager;
+	//	m_StateManager->m_UpdatePolicy = m_UpdatePolicy;
 
-		m_UpdatePolicy->m_IOManager = m_IOManager;
-		m_UpdatePolicy->m_StateManager = m_StateManager;
-		
-		m_IOManager->m_StateManager = m_StateManager;
-		m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
+	//	m_UpdatePolicy->m_IOManager = m_IOManager;
+	//	m_UpdatePolicy->m_StateManager = m_StateManager;
+	//	
+	//	m_IOManager->m_StateManager = m_StateManager;
+	//	m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
 
-		BlockData::ParamMetas const& input = meta.getInlets();
-		BlockData::ParamMetas const& output = meta.getOutlets();
+	//	BlockData::ParamMetas const& input = meta.getInlets();
+	//	BlockData::ParamMetas const& output = meta.getOutlets();
 
-		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
-		{
-			m_IOManager->addInlet( *it );
-		}
+	//	for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+	//	{
+	//		m_IOManager->addInlet( *it );
+	//	}
 
-		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
-		{
-			m_IOManager->addOutlet( *it );
-		}
-	}
+	//	for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+	//	{
+	//		m_IOManager->addOutlet( *it );
+	//	}
+	//}
 
-	FunctionBlock::~FunctionBlock()
-	{
-		delete m_UpdatePolicy;
-		delete m_IOManager;
-		delete m_StateManager;
-	}
+	//FunctionBlock::~FunctionBlock()
+	//{
+	//	delete m_UpdatePolicy;
+	//	delete m_IOManager;
+	//	delete m_StateManager;
+	//}
 
-	BlockData const& FunctionBlock::getMetadata() const
-	{
-		return m_Metadata;
-	}
+	//BlockData const& FunctionBlock::getMetadata() const
+	//{
+	//	return m_Metadata;
+	//}
 
-	app::BlockInfo FunctionBlock::getBlockData()
-	{
-		app::BlockInfo blockData;
+	//app::BlockInfo FunctionBlock::getBlockData()
+	//{
+	//	app::BlockInfo blockData;
 
-		blockData.m_Name = m_Metadata.getName();
-		blockData.m_Description = m_Metadata.getDescription();
-		blockData.m_Category = m_Metadata.getCategory();
+	//	blockData.m_Name = m_Metadata.getName();
+	//	blockData.m_Description = m_Metadata.getDescription();
+	//	blockData.m_Category = m_Metadata.getCategory();
 
-		BlockData::ParamMetas const& input = m_Metadata.getInlets();
-		BlockData::ParamMetas const& output = m_Metadata.getOutlets();
+	//	BlockData::ParamMetas const& input = m_Metadata.getInlets();
+	//	BlockData::ParamMetas const& output = m_Metadata.getOutlets();
 
-		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
-		{
-			app::ParameterData paramData;
+	//	for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+	//	{
+	//		app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+	//		blockData.m_Inlets.push_back( paramInfo );
+	//	}
 
-			paramData.m_Name = it->getName();
-			paramData.m_Typename = it->getTypename();
-			paramData.m_LongTypename = it->getLongTypename();
+	//	for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+	//	{
+	//		app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+	//		blockData.m_Outlets.push_back( paramInfo );
+	//	}
 
-			blockData.m_Inlets.push_back( paramData );
-		}
+	//	return blockData;
+	//}
 
-		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
-		{
-			app::ParameterData paramData;
+	//app::InletHandle & FunctionBlock::getAppInletHandle( string const& name ) const
+	//{
+	//	return m_IOManager->getAppInletHandle( name );
+	//}
 
-			paramData.m_Name = it->getName();
-			paramData.m_Typename = it->getTypename();
-			paramData.m_LongTypename = it->getLongTypename();
+	//app::OutletHandle & FunctionBlock::getAppOutletHandle( string const& name ) const
+	//{
+	//	return m_IOManager->getAppOutletHandle( name );
+	//}
 
-			blockData.m_Outlets.push_back( paramData );
-		}
+	//bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name ) const
+	//{
+	//	return m_IOManager->getBundleInletHandle( name );
+	//}
 
-		return blockData;
-	}
+	//bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name ) const
+	//{
+	//	return m_IOManager->getBundleOutletHandle( name );
+	//}
 
-	app::InletHandle & FunctionBlock::getAppInletHandle( string const& name ) const
-	{
-		return m_IOManager->getAppInletHandle( name );
-	}
+	//AppInletHandles const& FunctionBlock::getAppInletHandles() const
+	//{
+	//	return m_IOManager->getAppInletHandles();
+	//}
 
-	app::OutletHandle & FunctionBlock::getAppOutletHandle( string const& name ) const
-	{
-		return m_IOManager->getAppOutletHandle( name );
-	}
+	//AppOutletHandles const& FunctionBlock::getAppOutletHandles() const
+	//{
+	//	return m_IOManager->getAppOutletHandles();
+	//}
 
-	bundle::InletHandle & FunctionBlock::getBundleInletHandle( string const& name ) const
-	{
-		return m_IOManager->getBundleInletHandle( name );
-	}
+	//BundleInletHandles const& FunctionBlock::getBundleInletHandles() const
+	//{
+	//	return m_IOManager->getBundleInletHandles();
+	//}
 
-	bundle::OutletHandle & FunctionBlock::getBundleOutletHandle( string const& name ) const
-	{
-		return m_IOManager->getBundleOutletHandle( name );
-	}
+	//BundleOutletHandles const& FunctionBlock::getBundleOutletHandles() const
+	//{
+	//	return m_IOManager->getBundleOutletHandles();
+	//}
 
-	AppInletHandles const& FunctionBlock::getAppInletHandles() const
-	{
-		return m_IOManager->getAppInletHandles();
-	}
+	//void FunctionBlock::registerToNewData( app::BlockCallback &callback )
+	//{
+	//	m_IOManager->registerToNewData( callback );
+	//}
 
-	AppOutletHandles const& FunctionBlock::getAppOutletHandles() const
-	{
-		return m_IOManager->getAppOutletHandles();
-	}
+	//void FunctionBlock::unregisterFromNewData( app::BlockCallback &callback )
+	//{
+	//	m_IOManager->unregisterFromNewData( callback );
+	//}
 
-	BundleInletHandles const& FunctionBlock::getBundleInletHandles() const
-	{
-		return m_IOManager->getBundleInletHandles();
-	}
+	//void FunctionBlock::setUp()
+	//{
+	//	m_StateManager->setUp();
+	//}
 
-	BundleOutletHandles const& FunctionBlock::getBundleOutletHandles() const
-	{
-		return m_IOManager->getBundleOutletHandles();
-	}
+	//void FunctionBlock::start()
+	//{
+	//	m_StateManager->start();
+	//}
 
-	void FunctionBlock::registerToNewData( app::BlockCallback &callback )
-	{
-		m_IOManager->registerToNewData( callback );
-	}
+	//void FunctionBlock::stop( const bool blocking, const long timeout )
+	//{
+	//	Poco::Event & ev = m_StateManager->stop();
+	//	if ( blocking )
+	//	{
+	//		if ( !ev.tryWait( timeout ) )
+	//		{
+	//			std::ostringstream msg;
+	//			msg << "timeout reached on " << m_Identifier.getName() << " stop()" << std::endl;
+	//			throw TimeOutException( msg.str() );
+	//		}
+	//	}
+	//}
 
-	void FunctionBlock::unregisterFromNewData( app::BlockCallback &callback )
-	{
-		m_IOManager->unregisterFromNewData( callback );
-	}
+	//void FunctionBlock::prepareForShutDown()
+	//{
+	//	m_StateManager->prepareForShutDown();
+	//}
 
-	void FunctionBlock::setUp()
-	{
-		m_StateManager->setUp();
-	}
+	//bool FunctionBlock::shutDown( const long timeout )
+	//{
+	//	return m_StateManager->shutDown( timeout );
+	//}
 
-	void FunctionBlock::start()
-	{
-		m_StateManager->start();
-	}
+	//void FunctionBlock::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
+	//{
+	//	if ( isSingleWeight )
+	//	{
+	//		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
+	//	}
+	//	else
+	//	{
+	//		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
+	//	}
+	//}
 
-	void FunctionBlock::stop( const bool blocking, const long timeout )
-	{
-		Poco::Event & ev = m_StateManager->stop();
-		if ( blocking )
-		{
-			if ( !ev.tryWait( timeout ) )
-			{
-				std::ostringstream msg;
-				msg << "timeout reached on " << m_Identifier.getName() << " stop()" << std::endl;
-				throw TimeOutException( msg.str() );
-			}
-		}
-	}
+	//void FunctionBlock::updateWhenInletDataValid( InletIO &inletIO )
+	//{
+	//	m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
+	//}
 
-	void FunctionBlock::prepareForShutDown()
-	{
-		m_StateManager->prepareForShutDown();
-	}
+	//void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )
+	//{
+	//	if ( updatesPerSecond == 0. )
+	//	{
+	//		m_UpdatePolicy->setNewUpdateTime( -1 );
+	//	}
 
-	bool FunctionBlock::shutDown( const long timeout )
-	{
-		return m_StateManager->shutDown( timeout );
-	}
+	//	// timeslice is in microseconds, since that's the resolution of a poco::timestamp
+	//	// however, the maximum timer update rate obtainable is ~ 2 milliseconds,
+	//	// and that's with a totally empty system -> silly update rates greater than 60 hertz won't be met, probably
+	//	double micros = 1000000/updatesPerSecond;
+	//	m_UpdatePolicy->setNewUpdateTime( static_cast< long >(micros) );
+	//}
 
-	void FunctionBlock::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
-	{
-		if ( isSingleWeight )
-		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
-		}
-		else
-		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
-		}
-	}
-
-	void FunctionBlock::updateWhenInletDataValid( InletIO &inletIO )
-	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
-	}
-
-	void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )
-	{
-		if ( updatesPerSecond == 0. )
-		{
-			m_UpdatePolicy->setNewUpdateTime( -1 );
-		}
-
-		// timeslice is in microseconds, since that's the resolution of a poco::timestamp
-		// however, the maximum timer update rate obtainable is ~ 2 milliseconds,
-		// and that's with a totally empty system -> silly update rates greater than 60 hertz won't be met, probably
-		double micros = 1000000/updatesPerSecond;
-		m_UpdatePolicy->setNewUpdateTime( static_cast< long >(micros) );
-	}
-
-	void FunctionBlock::handleException( Exception &e )
-	{
-		m_Engine.handleBlockException( HandleAble< app::BlockHandle >::getHandle(), e );
-	}
+	//void FunctionBlock::handleException( Exception &e )
+	//{
+	//	m_Engine.handleBlockException( HandleAble< app::BlockHandle >::getHandle(), e );
+	//}
 
 }

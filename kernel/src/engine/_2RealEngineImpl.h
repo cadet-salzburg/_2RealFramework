@@ -23,8 +23,9 @@
 #include "helpers/_2RealPoco.h"
 #include "engine/_2RealLink.h"
 #include "helpers/_2RealException.h"
-#include "app/_2RealBlockHandle.h"
+#include "engine/_2RealFunctionBlock.h"
 #include "app/_2RealContextBlockHandle.h"
+#include "engine/_2RealBundleInternal.h"
 
 #include <set>
 #include <string>
@@ -64,9 +65,21 @@ namespace _2Real
 			}
 		};
 
-		typedef std::set< IOLink *, LinkCmp >						Links;
-		typedef std::set< IOLink *, LinkCmp >::iterator				LinkIterator;
-		typedef std::set< IOLink *, LinkCmp >::const_iterator		LinkConstIterator;
+		typedef std::set< IOLink *, LinkCmp >											Links;
+		typedef std::set< IOLink *, LinkCmp >::iterator									LinkIterator;
+		typedef std::set< IOLink *, LinkCmp >::const_iterator							LinkConstIterator;
+
+		typedef std::list< FunctionBlock< app::BlockHandle > * >						BlockInstances;
+		typedef std::list< FunctionBlock< app::BlockHandle > * >::iterator				BlockInstanceIterator;
+		typedef std::list< FunctionBlock< app::BlockHandle > * >::const_iterator		BlockInstanceConstIterator;
+
+		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >					BundleContexts;
+		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >::iterator		BundleContextIterator;
+		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >::const_iterator	BundleContextConstIterator;
+
+		typedef std::set< Bundle * >													Bundles;
+		typedef std::set< Bundle * >::iterator											BundleIterator;
+		typedef std::set< Bundle * >::const_iterator									BundleConstIterator;
 
 		static EngineImpl & instance();
 
@@ -88,9 +101,11 @@ namespace _2Real
 
 		void							registerToException( app::ErrorCallback &callback );
 		void							unregisterFromException( app::ErrorCallback &callback );
-		void							handleBlockException( app::BlockHandle &block, Exception const& exception ) const;
-		void							handleContextBlockException( app::ContextBlockHandle &block, Exception const& exception ) const;
+		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
+		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
 
+		BlockInstances					getCurrentBlockInstances() const;
+		Bundles const&					getCurrentBundles() const;
 		Links const&					getCurrentLinks() const;
 		void							createLink( InletIO &inlet, OutletIO &outlet );
 		void							destroyLink( InletIO &inlet, OutletIO &outlet );

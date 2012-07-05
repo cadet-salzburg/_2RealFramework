@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <list>
+#include <set>
 
 namespace _2Real
 {
@@ -32,21 +32,23 @@ namespace _2Real
 
 	public:
 
+		typedef std::set< AbstractUberBlock * >						Blocks;
+		typedef std::set< AbstractUberBlock * >::iterator			BlockIterator;
+		typedef std::set< AbstractUberBlock * >::const_iterator		BlockConstIterator;
+
 		System( Logger &logger );
 		~System();
 
-		void	clearFully();
-		void	clearBlocksOnly();
+		void			clearFully();
+		void			clearBlocksOnly();
 
-		void	addContextBlock( AbstractUberBlock &context );
-		void	addBlockInstance( AbstractUberBlock &block );
-		void	removeBlock( AbstractUberBlock &block, const long timeout );
+		void			addContextBlock( AbstractUberBlock &context );
+		void			addBlockInstance( AbstractUberBlock &block );
+		void			removeBlock( AbstractUberBlock &block, const long timeout );
+		Blocks const&	getBlockInstances() const;
+		Blocks const&	getBundleContexts() const;
 
 	private:
-
-		typedef std::list< AbstractUberBlock * >					Blocks;
-		typedef std::list< AbstractUberBlock * >::iterator			BlockIterator;
-		typedef std::list< AbstractUberBlock * >::const_iterator	BlockConstIterator;
 
 		Logger														&m_Logger;
 		Blocks														m_Blocks;

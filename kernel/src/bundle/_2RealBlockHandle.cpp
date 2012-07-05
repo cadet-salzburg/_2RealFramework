@@ -19,7 +19,7 @@
 #include "bundle/_2RealBlockHandle.h"
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
-#include "engine/_2RealFunctionBlock.h"
+#include "engine/_2RealFunctionBlockIoManager.h"
 
 using std::string;
 
@@ -27,7 +27,7 @@ namespace _2Real
 {
 	namespace bundle
 	{
-		BlockHandle::BlockHandle( FunctionBlock &block ) :
+		BlockHandle::BlockHandle( FunctionBlockIOManager &block ) :
 			m_Impl( block )
 		{
 		}

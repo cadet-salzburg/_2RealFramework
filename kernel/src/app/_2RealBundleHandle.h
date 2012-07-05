@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	class BundleInternal;
+	class Bundle;
 
 	namespace app
 	{
@@ -37,7 +37,7 @@ namespace _2Real
 		public:
 
 			BundleHandle();
-			BundleHandle( BundleInternal &bundle );
+			BundleHandle( Bundle &bundle );
 			~BundleHandle();
 			BundleHandle( BundleHandle const& other );
 			BundleHandle& operator=( BundleHandle const& other );
@@ -48,7 +48,7 @@ namespace _2Real
 
 		private:
 
-			BundleInternal		*m_Bundle;
+			Bundle		*m_Bundle;
 
 		};
 

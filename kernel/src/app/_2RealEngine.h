@@ -25,6 +25,7 @@
 
 #include <string>
 #include <set>
+#include <vector>
 
 namespace _2Real
 {
@@ -59,22 +60,35 @@ namespace _2Real
 				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
 			};
 
+			// (?) chose set here only b/c of the sorting advantage
+			// maybe should be vector, too
 			typedef std::set< Link, SortByOutlet >						Links;
 			typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
 			typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
 
+			typedef std::vector< BundleHandle >							BundleHandles;
+			typedef std::vector< BundleHandle >::iterator				BundleHandleIterator;
+			typedef std::vector< BundleHandle >::const_iterator			BundleHandleConstIterator;
+
+			typedef std::vector< BlockHandle >							BlockHandles;
+			typedef std::vector< BlockHandle >::iterator				BlockHandleIterator;
+			typedef std::vector< BlockHandle >::const_iterator			BlockHandleConstIterator;
+
 			static Engine& instance();
 
 			void setBaseDirectory( std::string const& directory );
-
 			app::BundleHandle & loadBundle( std::string const& libraryPath );
 
-			void clearFully();
+			// either clears everything, incl bundles and contexts, or just the block instances
+			void clearAll();
 			void clearBlockInstances();
 
-			// (?) if we start with this, we may need to do the same for current bundles as well as current blocks
-			Links getCurrentLinks() const;
+			// these functions give information about the current state of the framework
+			Links			getCurrentLinks() const;
+			BlockHandles	getCurrentBlocks() const;
+			BundleHandles	getCurrentBundles() const;
 
+			// exception callback
 			void registerToException( ExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
 
@@ -90,7 +104,9 @@ namespace _2Real
 			{
 				ErrorCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
 				unregisterFromExceptionInternal( *cb );
-			} 
+			}
+
+			// TODO: context block needs a special callback!
 
 		private:
 

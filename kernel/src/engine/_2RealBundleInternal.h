@@ -48,13 +48,13 @@ namespace _2Real
 	class Identifier;
 	class BundleManager;
 
-	class BundleInternal : public HandleAble< app::BundleHandle >
+	class Bundle : public HandleAble< app::BundleHandle >
 	{
 
 	public:
 
-		BundleInternal( Identifier const& id, BundleData const& data, BundleManager &bundleManager );
-		~BundleInternal();
+		Bundle( Identifier const& id, BundleData const& data, BundleManager &bundleManager );
+		~Bundle();
 
 		Identifier const&		getIdentifier() const;
 		std::string const&		getName() const;

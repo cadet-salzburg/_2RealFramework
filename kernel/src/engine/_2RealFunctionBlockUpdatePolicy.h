@@ -35,7 +35,6 @@ namespace _2Real
 
 	class Inlet;
 	class ParameterData;
-	class FunctionBlock;
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
 
@@ -60,7 +59,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockUpdatePolicy( FunctionBlock &owner );
+		FunctionBlockUpdatePolicy( AbstractUberBlock &owner );
 		~FunctionBlockUpdatePolicy();
 
 		void addInlet( InletIO &io );
@@ -82,6 +81,7 @@ namespace _2Real
 		typedef std::map< InletIO *, InletPolicy * >				InletPolicyMap;
 		typedef std::map< InletIO *, InletPolicy * >::iterator		InletPolicyIterator;
 
+		template< typename T >
 		friend class FunctionBlock;
 
 		FunctionBlockStateManager		*m_StateManager;

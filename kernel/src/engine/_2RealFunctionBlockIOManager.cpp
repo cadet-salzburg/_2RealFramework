@@ -41,7 +41,7 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	FunctionBlockIOManager::FunctionBlockIOManager( FunctionBlock &owner ) :
+	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
 		AbstractIOManager( owner )
 	{
 	}

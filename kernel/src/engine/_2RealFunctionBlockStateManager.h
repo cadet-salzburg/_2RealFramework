@@ -40,7 +40,6 @@ namespace _2Real
 	class System;
 	class Block;
 	class Exception;
-	class FunctionBlock;
 	class FunctionBlockUpdatePolicy;
 
 	class FunctionBlockStateManager : public AbstractStateManager
@@ -48,7 +47,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockStateManager( FunctionBlock &owner );
+		FunctionBlockStateManager( AbstractUberBlock &owner );
 		~FunctionBlockStateManager();
 
 		void setUp();							// system
@@ -73,7 +72,8 @@ namespace _2Real
 
 	private:
 
-		friend class FunctionBlock;		//needs to set a few things
+		template< typename T >
+		friend class FunctionBlock;
 
 		void handleStateChangeException(Exception &e);
 		void triggersAreOk();

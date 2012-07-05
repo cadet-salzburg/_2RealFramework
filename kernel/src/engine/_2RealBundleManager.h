@@ -20,16 +20,16 @@
 #pragma once
 
 #include "engine/_2RealBundleLoader.h"
+#include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealPoco.h"
 
-#include <map>
+#include <set>
 #include <string>
 
 namespace _2Real
 {
-	class BundleInternal;
+	class Bundle;
 	class Identifier;
-	class FunctionBlock;
 	class EngineImpl;
 
 	class BundleManager
@@ -37,32 +37,30 @@ namespace _2Real
 	
 	public:
 
+		typedef std::set< Bundle * >					Bundles;
+		typedef std::set< Bundle * >::iterator			BundleIterator;
+		typedef std::set< Bundle * >::const_iterator	BundleConstIterator;
+
 		BundleManager( EngineImpl &engine );
 		~BundleManager();
 
 		void clear();
-		void							setBaseDirectory( std::string const& path );
-		BundleInternal *				loadLibrary( std::string const& libraryPath );
-		bool							isLibraryLoaded( Poco::Path const& path ) const;
-		FunctionBlock *					createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
+		void											setBaseDirectory( std::string const& path );
+		Bundle *										loadLibrary( std::string const& libraryPath );
+		bool											isLibraryLoaded( Poco::Path const& path ) const;
+		FunctionBlock< app::BlockHandle > *				createFunctionBlock( Bundle &bundle, std::string const& blockName );
+		Bundles const&									getBundles() const;
 
 	private:
 
-		FunctionBlock *			createContextBlock( BundleInternal &bundle );
+		FunctionBlock< app::ContextBlockHandle > *		createContextBlock( Bundle &bundle );
 
-		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
-		BundleInternal &				getBundle( Identifier const& id );
-		BundleInternal const&			getBundle( Identifier const& id ) const;
-		const Identifier				getIdentifier( std::string const& path ) const;
-	
-		typedef std::map< Identifier, BundleInternal * >	BundleMap;
-		typedef std::map< std::string, Identifier >		LookupTable;
+		const Poco::Path								makeAbsolutePath( Poco::Path const& path ) const;
 
-		EngineImpl						&m_Engine;
-		BundleLoader					m_BundleLoader;
-		BundleMap						m_BundleInstances;
-		LookupTable						m_BundleLookupTable;		// this might be unnecessary now
-		Poco::Path						m_BaseDirectory;
+		EngineImpl										&m_Engine;
+		BundleLoader									m_BundleLoader;
+		Bundles											m_Bundles;
+		Poco::Path										m_BaseDirectory;
 
 	};
 

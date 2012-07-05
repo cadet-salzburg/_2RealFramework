@@ -25,7 +25,7 @@
 
 namespace _2Real
 {
-	class FunctionBlock;
+	class FunctionBlockIOManager;
 
 	namespace bundle
 	{
@@ -45,7 +45,7 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
-			BlockHandle( FunctionBlock &block );
+			BlockHandle( FunctionBlockIOManager &block );
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;
@@ -54,7 +54,7 @@ namespace _2Real
 
 		private:
 
-			FunctionBlock	&m_Impl;
+			FunctionBlockIOManager	&m_Impl;
 
 		};
 	}

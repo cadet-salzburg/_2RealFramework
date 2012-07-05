@@ -22,23 +22,16 @@
 
 namespace _2Real
 {
-	//namespace engine
-	//{
-		class BundleInternal;
-		class FunctionBlock;
-	//}
 
 	namespace app
 	{
-		class ParameterData
+		class ParameterInfo
 		{
-
-			friend class _2Real::FunctionBlock;
-			friend class _2Real::BundleInternal;
 
 		public:
 
-			ParameterData();
+			ParameterInfo();
+			ParameterInfo( std::string const& name, std::string const& typeName, std::string const& longTypename );
 
 			std::string const&	getName() const;
 			std::string const&	getLongTypename() const;

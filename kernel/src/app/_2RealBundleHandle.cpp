@@ -35,7 +35,7 @@ namespace _2Real
 		{
 		}
 
-		BundleHandle::BundleHandle( BundleInternal &bundle ) :
+		BundleHandle::BundleHandle( Bundle &bundle ) :
 			Handle( &bundle ),
 			m_Bundle( &bundle )
 		{

@@ -42,7 +42,7 @@ namespace _2Real
 		delete m_Trigger;
 	}
 
-	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( FunctionBlock &owner ) :
+	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( AbstractUberBlock &owner ) :
 		AbstractUpdatePolicy( owner ),
 		m_TimeChanged( false ),
 		m_InletsChanged( false ),

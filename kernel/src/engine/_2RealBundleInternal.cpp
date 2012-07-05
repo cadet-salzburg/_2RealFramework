@@ -38,7 +38,7 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleInternal::BundleInternal( Identifier const& id, BundleData const& data, BundleManager &bundleManager ) :
+	Bundle::Bundle( Identifier const& id, BundleData const& data, BundleManager &bundleManager ) :
 		HandleAble< app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
 		m_Identifier( id ),
@@ -46,7 +46,7 @@ namespace _2Real
 	{
 	}
 
-	BundleInternal::~BundleInternal()
+	Bundle::~Bundle()
 	{
 		for ( BlockMap::iterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
@@ -55,22 +55,22 @@ namespace _2Real
 		}
 	}
 
-	Identifier const& BundleInternal::getIdentifier() const
+	Identifier const& Bundle::getIdentifier() const
 	{
 		return m_Identifier;
 	}
 	
-	std::string const& BundleInternal::getName() const
+	std::string const& Bundle::getName() const
 	{
 		return m_Identifier.getName();
 	}
 
-	app::BundleHandle BundleInternal::createHandle()
+	app::BundleHandle Bundle::createHandle()
 	{
 		return app::BundleHandle( *this );
 	}
 
-	app::BundleInfo BundleInternal::getBundleData() const
+	app::BundleInfo Bundle::getBundleData() const
 	{
 		app::BundleInfo bundleData;
 
@@ -92,24 +92,14 @@ namespace _2Real
 
 			for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				app::ParameterData paramData;
-
-				paramData.m_Name = it->getName();
-				paramData.m_Typename = it->getTypename();
-				paramData.m_LongTypename = it->getLongTypename();
-
-				blockData.m_Inlets.push_back( paramData );
+				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				blockData.m_Inlets.push_back( paramInfo );
 			}
 
 			for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				app::ParameterData paramData;
-
-				paramData.m_Name = it->getName();
-				paramData.m_Typename = it->getTypename();
-				paramData.m_LongTypename = it->getLongTypename();
-
-				blockData.m_Outlets.push_back( paramData );
+				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				blockData.m_Outlets.push_back( paramInfo );
 			}
 
 			bundleData.m_ExportedBlocks.push_back( blockData );
@@ -118,30 +108,30 @@ namespace _2Real
 		return bundleData;
 	}
 
-	BundleData const& BundleInternal::getMetadata() const
+	BundleData const& Bundle::getMetadata() const
 	{
 		return m_Metadata;
 	}
 
-	app::BlockHandle & BundleInternal::createBlockInstance( std::string const& blockName )
+	app::BlockHandle & Bundle::createBlockInstance( std::string const& blockName )
 	{
 		// this is a bit strange, bundle mgr will call 'addBlockInstance'
 		// = result of interface changes
 		return m_BundleManager.createFunctionBlock( *this, blockName )->HandleAble< app::BlockHandle >::getHandle();
 	}
 
-	//void BundleInternal::setBundleContextHandle( app::ContextBlockHandle const& handle )
+	//void Bundle::setBundleContextHandle( app::ContextBlockHandle const& handle )
 	//{
 	//	// will be called by bundle manager on loading a bundle ( if there is one )
 	//	m_BundleContext = handle;
 	//}
 
-	//app::ContextBlockHandle BundleInternal::getBundleContextHandle() const
+	//app::ContextBlockHandle Bundle::getBundleContextHandle() const
 	//{
 	//	return m_BundleContext;
 	//}
 
-	unsigned int BundleInternal::getBlockInstanceCount( string const& blockName ) const
+	unsigned int Bundle::getBlockInstanceCount( string const& blockName ) const
 	{
 		unsigned int counter = 0;
 		std::pair< BlockMap::const_iterator, BlockMap::const_iterator > range = m_BlockInstances.equal_range( blockName );
@@ -153,7 +143,7 @@ namespace _2Real
 		return counter;
 	}
 
-	void BundleInternal::addBlockInstance( bundle::Block &block, string const& blockName )
+	void Bundle::addBlockInstance( bundle::Block &block, string const& blockName )
 	{
 		m_BlockInstances.insert( make_pair( blockName, &block ) );
 	}

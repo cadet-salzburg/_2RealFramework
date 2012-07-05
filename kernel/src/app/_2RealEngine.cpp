@@ -22,6 +22,7 @@
 #include "app/_2RealBundleHandle.h"
 #include "engine/_2RealLink.h"
 #include "engine/_2RealAbstractIOManager.h"
+#include "engine/_2RealFunctionBlock.h"
 
 using std::string;
 
@@ -50,7 +51,7 @@ namespace _2Real
 			m_EngineImpl.setBaseDirectory( directory );
 		}
 
-		void Engine::clearFully()
+		void Engine::clearAll()
 		{
 			m_EngineImpl.clearFully();
 		}
@@ -98,6 +99,30 @@ namespace _2Real
 			}
 
 			return links;
+		}
+
+		Engine::BlockHandles Engine::getCurrentBlocks() const
+		{
+			EngineImpl::BlockInstances const& currBlocks = m_EngineImpl.getCurrentBlockInstances();
+			Engine::BlockHandles blocks;
+			for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
+			{
+				blocks.push_back( ( *it )->getHandle() );
+			}
+
+			return blocks;
+		}
+
+		Engine::BundleHandles Engine::getCurrentBundles() const
+		{
+			EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
+			Engine::BundleHandles bundles;
+			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
+			{
+				bundles.push_back( ( *it )->getHandle() );
+			}
+
+			return bundles;
 		}
 	}
 }

@@ -19,35 +19,38 @@
 #pragma once
 
 #include "engine/_2RealAbstractUberBlock.h"
+#include "engine/_2RealFunctionBlockIOManager.h"
+#include "engine/_2RealFunctionBlockStateManager.h"
+#include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "helpers/_2RealHandleAble.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "engine/_2RealAbstractIOManager.h"
+#include "app/_2RealBlockData.h"
+#include "app/_2RealParameterData.h"
+#include "engine/_2RealBlockData.h"
 
 namespace _2Real
 {
-	namespace app
-	{
-		class InletHandle;
-		class OutletHandle;
-		class BlockInfo;
-	}
+	//namespace app
+	//{
+	//	class InletHandle;
+	//	class OutletHandle;
+	//	class BlockInfo;
+	//}
 
-	namespace bundle
-	{
-		class Block;
-		class InletHandle;
-		class OutletHandle;
-	}
+	//namespace bundle
+	//{
+	//	class Block;
+	//	class InletHandle;
+	//	class OutletHandle;
+	//}
 
-	class BlockData;
-	class System;
-	class InletIO;
-	class FunctionBlockUpdatePolicy;
-	class FunctionBlockIOManager;
-	class FunctionBlockStateManager;
+	//class BlockData;
+	//class System;
+	//class InletIO;
 
-	class FunctionBlock : public AbstractUberBlock, public HandleAble< app::BlockHandle >, public HandleAble< app::ContextBlockHandle >
+	template< typename THandle >
+	class FunctionBlock : public AbstractUberBlock, public HandleAble< THandle >
 	{
 
 	public:
@@ -94,4 +97,221 @@ namespace _2Real
 		FunctionBlockUpdatePolicy	*m_UpdatePolicy;
 
 	};
+
+	template< typename THandle >
+	FunctionBlock< THandle >::FunctionBlock( BlockData const& meta, bundle::Block &block, Identifier const& id ) :
+		AbstractUberBlock( id ),
+		HandleAble< THandle >( *this ),
+		m_Engine( EngineImpl::instance() ),
+		m_Block( block ),
+		m_Metadata( meta ),
+		m_StateManager( new FunctionBlockStateManager( *this ) ),
+		m_IOManager( new FunctionBlockIOManager( *this ) ),
+		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
+	{
+		m_StateManager->m_FunctionBlock = &block;
+
+		m_StateManager->m_IOManager = m_IOManager;
+		m_StateManager->m_UpdatePolicy = m_UpdatePolicy;
+
+		m_UpdatePolicy->m_IOManager = m_IOManager;
+		m_UpdatePolicy->m_StateManager = m_StateManager;
+		
+		m_IOManager->m_StateManager = m_StateManager;
+		m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
+
+		BlockData::ParamMetas const& input = meta.getInlets();
+		BlockData::ParamMetas const& output = meta.getOutlets();
+
+		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+		{
+			m_IOManager->addInlet( *it );
+		}
+
+		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+		{
+			m_IOManager->addOutlet( *it );
+		}
+	}
+
+	template< typename THandle >
+	FunctionBlock< THandle >::~FunctionBlock()
+	{
+		delete m_UpdatePolicy;
+		delete m_IOManager;
+		delete m_StateManager;
+	}
+
+	template< typename THandle >
+	BlockData const& FunctionBlock< THandle >::getMetadata() const
+	{
+		return m_Metadata;
+	}
+
+	template< typename THandle >
+	app::BlockInfo FunctionBlock< THandle >::getBlockData()
+	{
+		app::BlockInfo blockData;
+
+		blockData.m_Name = m_Metadata.getName();
+		blockData.m_Description = m_Metadata.getDescription();
+		blockData.m_Category = m_Metadata.getCategory();
+
+		BlockData::ParamMetas const& input = m_Metadata.getInlets();
+		BlockData::ParamMetas const& output = m_Metadata.getOutlets();
+
+		for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+		{
+			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+			blockData.m_Inlets.push_back( paramInfo );
+		}
+
+		for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+		{
+			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+			blockData.m_Outlets.push_back( paramInfo );
+		}
+
+		return blockData;
+	}
+
+	template< typename THandle >
+	app::InletHandle & FunctionBlock< THandle >::getAppInletHandle( std::string const& name ) const
+	{
+		return m_IOManager->getAppInletHandle( name );
+	}
+
+	template< typename THandle >
+	app::OutletHandle & FunctionBlock< THandle >::getAppOutletHandle( std::string const& name ) const
+	{
+		return m_IOManager->getAppOutletHandle( name );
+	}
+
+	template< typename THandle >
+	bundle::InletHandle & FunctionBlock< THandle >::getBundleInletHandle( std::string const& name ) const
+	{
+		return m_IOManager->getBundleInletHandle( name );
+	}
+
+	template< typename THandle >
+	bundle::OutletHandle & FunctionBlock< THandle >::getBundleOutletHandle( std::string const& name ) const
+	{
+		return m_IOManager->getBundleOutletHandle( name );
+	}
+
+	template< typename THandle >
+	AppInletHandles const& FunctionBlock< THandle >::getAppInletHandles() const
+	{
+		return m_IOManager->getAppInletHandles();
+	}
+
+	template< typename THandle >
+	AppOutletHandles const& FunctionBlock< THandle >::getAppOutletHandles() const
+	{
+		return m_IOManager->getAppOutletHandles();
+	}
+
+	template< typename THandle >
+	BundleInletHandles const& FunctionBlock< THandle >::getBundleInletHandles() const
+	{
+		return m_IOManager->getBundleInletHandles();
+	}
+
+	template< typename THandle >
+	BundleOutletHandles const& FunctionBlock< THandle >::getBundleOutletHandles() const
+	{
+		return m_IOManager->getBundleOutletHandles();
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::registerToNewData( app::BlockCallback &callback )
+	{
+		m_IOManager->registerToNewData( callback );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::unregisterFromNewData( app::BlockCallback &callback )
+	{
+		m_IOManager->unregisterFromNewData( callback );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::setUp()
+	{
+		m_StateManager->setUp();
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::start()
+	{
+		m_StateManager->start();
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::stop( const bool blocking, const long timeout )
+	{
+		Poco::Event & ev = m_StateManager->stop();
+		if ( blocking )
+		{
+			if ( !ev.tryWait( timeout ) )
+			{
+				std::ostringstream msg;
+				msg << "timeout reached on " << m_Identifier.getName() << " stop()" << std::endl;
+				throw TimeOutException( msg.str() );
+			}
+		}
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::prepareForShutDown()
+	{
+		m_StateManager->prepareForShutDown();
+	}
+
+	template< typename THandle >
+	bool FunctionBlock< THandle >::shutDown( const long timeout )
+	{
+		return m_StateManager->shutDown( timeout );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
+	{
+		if ( isSingleWeight )
+		{
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
+		}
+		else
+		{
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
+		}
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
+	{
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::updateWithFixedRate( const double updatesPerSecond )
+	{
+		if ( updatesPerSecond == 0. )
+		{
+			m_UpdatePolicy->setNewUpdateTime( -1 );
+		}
+
+		double micros = 1000000/updatesPerSecond;
+		m_UpdatePolicy->setNewUpdateTime( static_cast< long >(micros) );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::handleException( Exception &e )
+	{
+		m_Engine.handleException( HandleAble< THandle >::getHandle(), e );
+	}
+
+	typedef FunctionBlock< app::BlockHandle >				BlockInstance;
+	typedef FunctionBlock< app::ContextBlockHandle >		BundleContext;
+
 }

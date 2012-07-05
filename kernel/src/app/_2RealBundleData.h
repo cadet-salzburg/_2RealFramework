@@ -28,7 +28,7 @@ namespace _2Real
 {
 	//namespace engine
 	//{
-		class BundleInternal;
+		class Bundle;
 	//}
 
 	namespace app
@@ -36,20 +36,18 @@ namespace _2Real
 		class BundleInfo
 		{
 
-			friend class _2Real::BundleInternal;
+			friend class _2Real::Bundle;
 
 		public:
 
-			// (?) are we going to keep this as a vector for sure, or
-			// would it be wiser to apply a form of type erasure?
-			// at this point, i don't think its worth the extra effort
-			typedef std::vector< BlockInfo >					Blocks;
-			typedef std::vector< BlockInfo >::iterator			BlockIterator;
-			typedef std::vector< BlockInfo >::const_iterator	BlockConstIterator;
+			typedef std::vector< BlockInfo >					BlockInfos;
+			typedef std::vector< BlockInfo >::iterator			BlockInfoIterator;
+			typedef std::vector< BlockInfo >::const_iterator	BlockInfoConstIterator;
 
 			BundleInfo();
+			//BundleInfo( BundleData const& data, BlockInfos const& infos );
 
-			Blocks const&				getExportedBlocks() const;
+			BlockInfos const&			getExportedBlocks() const;
 			std::string const&			getInstallDirectory() const;
 			std::string const&			getDescription() const;
 			std::string const&			getAuthor() const;
@@ -67,7 +65,7 @@ namespace _2Real
 			std::string					m_Contact;
 			std::string					m_Category;
 			Version						m_Version;
-			Blocks						m_ExportedBlocks;
+			BlockInfos					m_ExportedBlocks;
 
 		};
 	}

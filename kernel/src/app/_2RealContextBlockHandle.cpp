@@ -33,7 +33,7 @@ namespace _2Real
 		{
 		}
 
-		ContextBlockHandle::ContextBlockHandle( FunctionBlock &block ) :
+		ContextBlockHandle::ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block ) :
 			Handle( &block ),
 			m_Block( &block )
 		{

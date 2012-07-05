@@ -59,7 +59,7 @@ namespace _2Real
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
-				ready.push_back( *it );
+				ready.insert( *it );
 			}
 			else
 			{
@@ -73,7 +73,7 @@ namespace _2Real
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
-				ready.push_back( *it );
+				ready.insert( *it );
 			}
 			else
 			{
@@ -103,7 +103,7 @@ namespace _2Real
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
-				ready.push_back( *it );
+				ready.insert( *it );
 			}
 			else
 			{
@@ -122,24 +122,12 @@ namespace _2Real
 
 	void System::addContextBlock( AbstractUberBlock &context )
 	{
-#ifdef _DEBUG
-		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
-		{
-			if ( ( *it ) == &context ) assert( NULL );
-		}
-#endif
-		m_ContextBlocks.push_back( &context );
+		m_ContextBlocks.insert( &context );
 	}
 
 	void System::addBlockInstance( AbstractUberBlock &block )
 	{
-#ifdef _DEBUG
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
-		{
-			if ( ( *it ) == &block ) assert( NULL );
-		}
-#endif
-		m_Blocks.push_back( &block );
+		m_Blocks.insert( &block );
 	}
 
 	void System::removeBlock( AbstractUberBlock &block, const long timeout )
@@ -167,6 +155,16 @@ namespace _2Real
 #ifdef _DEBUG
 		assert( NULL );
 #endif
+	}
+
+	System::Blocks const& System::getBlockInstances() const
+	{
+		return m_Blocks;
+	}
+
+	System::Blocks const& System::getBundleContexts() const
+	{
+		return m_ContextBlocks;
 	}
 
 }

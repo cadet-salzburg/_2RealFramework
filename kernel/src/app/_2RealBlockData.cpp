@@ -46,17 +46,17 @@ namespace _2Real
 			return m_Category;
 		}
 
-		BlockInfo::Params const& BlockInfo::getParameters() const
+		BlockInfo::ParameterInfos const& BlockInfo::getParameters() const
 		{
 			return m_Parameters;
 		}
 
-		BlockInfo::Params const& BlockInfo::getInlets() const
+		BlockInfo::ParameterInfos const& BlockInfo::getInlets() const
 		{
 			return m_Inlets;
 		}
 
-		BlockInfo::Params const& BlockInfo::getOutlets() const
+		BlockInfo::ParameterInfos const& BlockInfo::getOutlets() const
 		{
 			return m_Outlets;
 		}

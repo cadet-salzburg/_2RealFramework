@@ -22,6 +22,7 @@
 
 namespace _2Real
 {
+	template< typename T >
 	class FunctionBlock;
 	
 	namespace app
@@ -34,7 +35,7 @@ namespace _2Real
 		public:
 
 			ContextBlockHandle();
-			ContextBlockHandle( FunctionBlock &block );
+			ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block );
 			~ContextBlockHandle();
 			ContextBlockHandle( ContextBlockHandle const& other );
 			ContextBlockHandle& operator=( ContextBlockHandle const& other );
@@ -47,7 +48,7 @@ namespace _2Real
 
 		private:
 
-			FunctionBlock		*m_Block;
+			FunctionBlock< ContextBlockHandle >		*m_Block;
 
 		};
 

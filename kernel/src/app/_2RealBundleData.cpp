@@ -73,7 +73,7 @@ namespace _2Real
 			return m_Version;
 		}
 
-		BundleInfo::Blocks const& BundleInfo::getExportedBlocks() const
+		BundleInfo::BlockInfos const& BundleInfo::getExportedBlocks() const
 		{
 			return m_ExportedBlocks;
 		}

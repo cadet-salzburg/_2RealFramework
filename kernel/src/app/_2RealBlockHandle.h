@@ -25,6 +25,7 @@
 
 namespace _2Real
 {
+	template< typename T >
 	class FunctionBlock;
 
 	namespace app
@@ -47,7 +48,7 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
 			BlockHandle();
-			BlockHandle( FunctionBlock &block );
+			BlockHandle( FunctionBlock< BlockHandle > &block );
 			~BlockHandle();
 			BlockHandle( BlockHandle const& other );
 			BlockHandle& operator=( BlockHandle const& other );
@@ -90,7 +91,7 @@ namespace _2Real
 			void registerToNewDataInternal( BlockCallback &cb );
 			void unregisterFromNewDataInternal( BlockCallback &cb );
 
-			FunctionBlock		*m_Block;
+			FunctionBlock< BlockHandle >		*m_Block;
 
 		};
 	}
