@@ -23,9 +23,16 @@
 #include <map>
 #include <list>
 
+#include "GL/glew.h"
+#include "GL/wglew.h"
+#include "SDL.h"
+
 #include "Poco/Mutex.h"
 
 #include "vld.h"
+#include <sstream>
+
+#include "windows.h"
 
 using std::string;
 using std::cout;
@@ -42,125 +49,174 @@ using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;
 using _2Real::app::OutletHandle;
 using _2Real::app::AppData;
+using _2Real::ImageT;
 
 using Poco::ScopedLock;
 using Poco::FastMutex;
 
-template< typename T >
 class Receiver
 {
 
 public:
 
-	void receiveData( OutputData &data )
+	Receiver()
+	{
+		ImageT< float > img( 4, 3, _2Real::ImageChannelOrder::RGBA );
+		ImageT< float >::iterator it = img.iter();
+		while( it.nextLine() )
+		{
+			while( it.nextPixel() )
+			{
+				it.r() = float( rand()%255 + 1 ) / 255.0f;
+				it.g() = float( rand()%255 + 1 ) / 255.0f;
+				it.b() = float( rand()%255 + 1 ) / 255.0f;
+				it.a() = float( rand()%255 + 1 ) / 255.0f;
+			}
+		}
+
+		m_ImageData.data = img.getData();
+		m_ImageData.w = 4;
+		m_ImageData.h = 3;
+
+
+		glGenTextures( 1, &m_Texture );
+		glEnable( GL_TEXTURE_2D );
+		glBindTexture( GL_TEXTURE_2D, m_Texture );
+
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glGenerateMipmap( GL_TEXTURE_2D );
+	}
+
+	void updateTexture()
+	{
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glGenerateMipmap( GL_TEXTURE_2D );
+
+		// have the update take extra long
+		/*Sleep( 1000 );*/
+	}
+
+	void receiveData( AppData const& data )
 	{
 		m_Access.lock();
 
-		m_Received = data.getData< T >();
+		m_ImageData.data = data.getData< ImageT< float > >().getData();
+		m_ImageData.w = 4;
+		m_ImageData.h = 3;
+
+		// no ImageT dtor will ever be called like this
+		//m_Old.push_back( m_Data );
+		m_Data = data;
 
 		m_Access.unlock();
 	}
 
+	void useData()
+	{
+		m_Access.lock();
+
+		if ( m_Data.getTypename() == "img_float" )
+		{
+			// the reason this has to happen here is
+			// the opengl context + exection thread problem
+			updateTexture();
+		}
+
+		m_Access.unlock();
+
+		glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+		glClear( GL_COLOR_BUFFER_BIT );
+		glBegin( GL_QUADS );
+		glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f, -1.0f, 0.0f );
+		glTexCoord2f( 1.0f, 1.0f ); glVertex3f(  1.0f, -1.0f, 0.0f );
+		glTexCoord2f( 1.0f, 0.0f ); glVertex3f(  1.0f,  1.0f, 0.0f );
+		glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f,  1.0f, 0.0f );
+		glEnd();
+	}
+
 private:
 
-	Poco::FastMutex	m_Access;
-	T				m_Received;
-	//T				m_Current;
+	struct ImageData
+	{
+		float *data;
+		unsigned int w;
+		unsigned int h;
+	};
+	ImageData				m_ImageData;
+
+	AppData					m_Data;
+	GLuint					m_Texture;
+	Poco::FastMutex			m_Access;
+	std::list< AppData >	m_Old;
 
 };
 
-#ifndef _DEBUG
-	#define shared_library_suffix ".dll"
-#else
-	#define shared_library_suffix "_d.dll"
-#endif
-
 int main( int argc, char *argv[] )
 {
-	Engine &testEngine = Engine::instance();
-
 	try
 	{
+		SDL_Init( SDL_INIT_VIDEO );
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+		SDL_Window *window = SDL_CreateWindow( "yay", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+		SDL_GLContext context = SDL_GL_CreateContext( window );
+		SDL_GL_MakeCurrent( window, context );
+
+		string error = SDL_GetError();
+		cout << error << endl;
+
+		GLenum err = glewInit();
+		if ( err != GLEW_OK )
+		{
+			throw Exception( "glew error" );
+		}
+
+		SDL_GL_SetSwapInterval( 1 );
+
+		Engine &testEngine = Engine::instance();
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
 		BlockHandle out = testBundle.createBlockInstance( "image out" );
+		out.setUpdateRate( 1.0 );
 		out.setup();
 		out.start();
 
-		BlockHandle inout = testBundle.createBlockInstance( "image in - out" );
-		testSystem.setup( inout );
-		testSystem.start( inout );
+		OutletHandle oOut = out.getOutletHandle( "image outlet" );
+		Receiver receiver;
+		oOut.registerToNewData( receiver, &Receiver::receiveData );
 
-		BlockHandle in = testBundle.createBlock( "image in" );
-		testSystem.setup( in );
-		testSystem.start( in );
-
-		testSystem.link( out, "image outlet", inout, "image inlet" );
-		testSystem.link( inout, "image outlet", in, "image inlet" );
-
-		//ImageT< unsigned int > *img1 = new ImageT< unsigned int >( 10, 10, ImageChannelOrder::RGB );
-
-		//ImageT< unsigned int >::iterator it1a = img1->iter();
-		//while( it1a.nextLine() )
-		//{
-		//	while ( it1a.nextPixel() )
-		//	{
-		//		it1a.r() = 255;
-		//		it1a.g() = 0;
-		//		it1a.b() = 0;
-		//	}
-		//}
-
-		//ImageT< unsigned int > img2( *img1 );
-
-		//delete img1;
-
-		//ImageT< unsigned int >::iterator it2a = img2.iter();
-		//while( it2a.nextLine() )
-		//{
-		//	while ( it2a.nextPixel() )
-		//	{
-		//		cout << it2a.x() << " " << it2a.y() << " : " << it2a.r() << " " << it2a.g() << " " << it2a.b() << endl;
-		//	}
-		//}
-
-		//ImageT< unsigned int > img3 = img2;
-
-		//ImageT< unsigned int >::iterator it2b = img2.iter();
-		//while( it2b.nextLine() )
-		//{
-		//	while ( it2b.nextPixel() )
-		//	{
-		//		it2b.r() = 0;
-		//		it2b.g() = 255;
-		//		it2b.b() = 0;
-		//	}
-		//}
-
-		//ImageT< unsigned int >::iterator it3a = img3.iter();
-		//while( it3a.nextLine() )
-		//{
-		//	while ( it3a.nextPixel() )
-		//	{
-		//		cout << it3a.x() << " " << it3a.y() << " : " << it3a.r() << " " << it3a.g() << " " << it3a.b() << endl;
-		//	}
-		//}
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-	}
-
-	while( 1 )
-	{
-		string line;
-		char lineEnd = '\n';
-		getline( cin, line, lineEnd );
-		if ( line == "q" )
+		bool run = true;
+		SDL_Event ev;
+		while( run )
 		{
-			break;
-		}
-	}
+			while( SDL_PollEvent( &ev ) )
+			{
+				switch ( ev.type )
+				{
+				case SDL_QUIT:
+					run = false;
+					break;
+				default:
+					break;
+				}
+			}
 
-	return 0;
+			receiver.useData();
+			SDL_GL_SwapWindow( window );
+		}
+
+		SDL_DestroyWindow( window );
+		SDL_GL_DeleteContext( context );
+		SDL_Quit();
+	}
+	catch ( std::exception &e )
+	{
+		cout << e.what() << endl;
+	}
 }

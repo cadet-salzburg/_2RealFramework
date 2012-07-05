@@ -17,7 +17,7 @@
 	limitations under the License.
 */
 
-#include "app/_2RealApplication.h"
+#include "_2RealApplication.h"
 
 #include <windows.h>
 #include <iostream>

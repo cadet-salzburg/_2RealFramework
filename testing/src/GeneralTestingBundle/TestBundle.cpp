@@ -10,6 +10,9 @@ using _2Real::bundle::BlockMetainfo;
 using _2Real::bundle::ContextBlockMetainfo;
 using _2Real::bundle::WithContext;
 using _2Real::Exception;
+using _2Real::Enumeration;
+using _2Real::StringEnumeration;
+using _2Real::StringEnums;
 
 using std::string;
 using std::vector;
@@ -35,6 +38,8 @@ void getBundleMetainfo( BundleMetainfo &info )
 		BlockMetainfo in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "testing the context's functionality" );
 		in.addInlet< unsigned int >( "inlet", (unsigned int)10 );
+
+		StringEnumeration e( StringEnums( "yay", "yay" )( "woho", "narf" ), "undef" );
 	}
 	catch ( Exception &e )
 	{

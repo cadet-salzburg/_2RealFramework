@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-//include "vld.h"
+#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -235,7 +235,7 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "clear" )
 			{
-				engine.clearFully();
+				engine.clearAll();
 			}
 		}
 	}
