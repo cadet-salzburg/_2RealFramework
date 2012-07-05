@@ -17,4 +17,7 @@ private:
 
 	_2Real::bundle::InletHandle				m_DoubleInletHandle;
 	_2Real::bundle::OutletHandle			m_DoubleOutletHandle;
+	_2Real::bundle::OutletHandle			m_ImageOutletHandle;
+
+	_2Real::ImageT<unsigned char>			m_Image;
 };

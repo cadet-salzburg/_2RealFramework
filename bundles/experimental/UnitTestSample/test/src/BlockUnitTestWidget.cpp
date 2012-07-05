@@ -31,10 +31,8 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		
 		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
 		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
-		m_CameraBlockHandle.setUpdateRate( 0.2 );
+		m_CameraBlockHandle.setUpdateRate( 50 );
 		
-		// set needed setup parameters for block otherwise set to default
-
 		// setup
 		m_CameraBlockHandle.setup();
 		// start
@@ -53,7 +51,7 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 
 void BlockUnitTestWidget::shutdown()
 {
-	//Engine::instance().clear();
+	Engine::instance().clear();
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -103,7 +101,7 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 
 	for(auto it = inlets.begin(); it != inlets.end(); it++)
 	{
-		BlockInletWidget* tmp = new BlockInletWidget(  m_CameraBlockHandle.getInletHandle(it->getName()) );
+		BlockInletWidget* tmp = new BlockInletWidget(  m_CameraBlockHandle.getInletHandle(it->getName()), this );
 		layout->addWidget(tmp);
 	}
 
@@ -119,7 +117,7 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()) );
+		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()), this );
 		layout->addWidget(tmp);
 	}
 

@@ -3,12 +3,12 @@
 using namespace std;
 using namespace _2Real;
 
-BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) : QGroupBox(parent)
+BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) : m_InletHandle(inletHandle), QGroupBox(parent)
 {
 	try
 	{
 		QHBoxLayout*	layout = new QHBoxLayout();
-		layout->addWidget( new QLabel(QString::fromStdString( inletHandle.getName())) );
+		layout->addWidget( new QLabel(QString::fromStdString( m_InletHandle.getName())) );
 	
 		m_ValueWidget = new QDoubleSpinBox ();
 		m_ValueWidget->setSingleStep(1);
@@ -28,7 +28,7 @@ void BlockInletWidget::setValue(double value)
 {
 	try
 	{
-	//	setValue<double>(value);
+		m_InletHandle.setDefaultValue<double>(value);
 	}
 	catch(_2Real::Exception& e)
 	{
