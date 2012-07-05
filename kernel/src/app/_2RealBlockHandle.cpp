@@ -47,8 +47,7 @@ namespace _2Real
 
 		BlockHandle::~BlockHandle()
 		{
-			if ( isValid() )
-			m_Block->unregisterHandle( *this );
+			if ( isValid() ) m_Block->unregisterHandle( *this );
 		}
 
 		BlockHandle::BlockHandle( BlockHandle const& other ) :
@@ -83,94 +82,81 @@ namespace _2Real
 
 		BlockInfo BlockHandle::getBlockInfo() const
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			return m_Block->getBlockData();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
-		//void BlockHandle::setInletUpdatePolicy( const BlockHandle::InletUpdatePolicy p )
-		//{
-		//	checkHandle( m_Block );
-		//	if ( p == BlockHandle::ALL_DATA_NEW )
-		//	{
-		//		m_Block->updateWhenAllInletDataNew();
-		//	}
-		//	else if ( p == BlockHandle::ALL_DATA_VALID )
-		//	{
-		//		m_Block->updateWhenAllInletDataValid();
-		//	}
-		//}
-
 		void BlockHandle::setup()
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->setUp();
 		}
 
 		void BlockHandle::start()
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->start();
 		}
 
 		void BlockHandle::stop()
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->stop( true, 5000 );
 		}
 
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			return m_Block->getAppInletHandle( name );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			return m_Block->getAppOutletHandle( name );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			return m_Block->getAppInletHandles();
 		}
 
 		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			return m_Block->getAppOutletHandles();
 		}
 
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->registerToNewData( *cb );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData )
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->unregisterFromNewData( *cb);
 		}
 
 		void BlockHandle::registerToNewDataInternal( BlockCallback &cb )
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->registerToNewData( cb );
 		}
 
 		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb )
 		{
-			checkHandle( m_Block );
+			Handle::checkValidity( "block" );
 			m_Block->unregisterFromNewData( cb );
 		}
 	}

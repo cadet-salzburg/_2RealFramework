@@ -34,6 +34,7 @@ namespace _2Real
 		}
 
 		ContextBlockHandle::ContextBlockHandle( FunctionBlock &block ) :
+			Handle( &block ),
 			m_Block( &block )
 		{
 			m_Block->registerHandle( *this );
@@ -41,8 +42,7 @@ namespace _2Real
 
 		ContextBlockHandle::~ContextBlockHandle()
 		{
-			if ( isValid() )
-			m_Block->unregisterHandle( *this );
+			if ( isValid() ) m_Block->unregisterHandle( *this );
 		}
 
 		ContextBlockHandle::ContextBlockHandle( ContextBlockHandle const& other ) :

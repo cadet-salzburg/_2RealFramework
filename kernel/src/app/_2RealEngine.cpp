@@ -60,7 +60,7 @@ namespace _2Real
 			m_EngineImpl.clearBlockInstances();
 		}
 
-		BundleHandle Engine::loadBundle( std::string const& libraryPath )
+		BundleHandle & Engine::loadBundle( std::string const& libraryPath )
 		{
 			return m_EngineImpl.loadLibrary( libraryPath );
 		}

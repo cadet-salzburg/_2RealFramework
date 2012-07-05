@@ -21,6 +21,7 @@
 #include "helpers/_2RealSingletonHolder.h"
 #include "engine/_2RealTypetable.h"
 #include "engine/_2RealBundleManager.h"
+#include "engine/_2RealBundleInternal.h"
 #include "engine/_2RealThreadPool.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealSystem.h"
@@ -109,7 +110,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_System->clearFully();
+			clearFully();
 			delete m_System;
 			delete m_IdCounter;
 			delete m_BundleManager;
@@ -128,12 +129,24 @@ namespace _2Real
 
 	void EngineImpl::clearFully()
 	{
+		for ( EngineImpl::LinkIterator it = m_Links.begin(); it != m_Links.end(); ++it )
+		{
+			( *it )->deactivate();
+			delete *it;
+		}
+		m_Links.clear();
 		m_System->clearFully();
 		m_BundleManager->clear();
 	}
 
 	void EngineImpl::clearBlockInstances()
 	{
+		for ( EngineImpl::LinkIterator it = m_Links.begin(); it != m_Links.end(); ++it )
+		{
+			( *it )->deactivate();
+			delete *it;
+		}
+		m_Links.clear();
 		m_System->clearBlocksOnly();
 	}
 
@@ -182,11 +195,11 @@ namespace _2Real
 		m_BundleManager->setBaseDirectory( directory );
 	}
 
-	app::BundleHandle EngineImpl::loadLibrary( string const& libraryPath )
+	app::BundleHandle & EngineImpl::loadLibrary( string const& libraryPath )
 	{
 		string path = libraryPath;
 		path.append( shared_library_suffix );
-		return m_BundleManager->loadLibrary( path );
+		return m_BundleManager->loadLibrary( path )->getHandle();
 	}
 
 	void EngineImpl::registerToException( app::ErrorCallback &callback )

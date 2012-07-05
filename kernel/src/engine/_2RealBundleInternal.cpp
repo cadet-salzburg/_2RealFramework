@@ -27,6 +27,7 @@
 #include "app/_2RealBlockData.h"
 #include "app/_2RealParameterData.h"
 #include "engine/_2RealBundleManager.h"
+#include "engine/_2RealFunctionBlock.h"
 
 #include <sstream>
 
@@ -41,8 +42,7 @@ namespace _2Real
 		HandleAble< app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
 		m_Identifier( id ),
-		m_Metadata( data ),
-		m_BundleContext()
+		m_Metadata( data )
 	{
 	}
 
@@ -127,19 +127,19 @@ namespace _2Real
 	{
 		// this is a bit strange, bundle mgr will call 'addBlockInstance'
 		// = result of interface changes
-		return m_BundleManager.createFunctionBlock( *this, blockName );
+		return m_BundleManager.createFunctionBlock( *this, blockName )->HandleAble< app::BlockHandle >::getHandle();
 	}
 
-	void BundleInternal::setBundleContextHandle( app::ContextBlockHandle const& handle )
-	{
-		// will be called by bundle manager on loading a bundle ( if there is one )
-		m_BundleContext = handle;
-	}
+	//void BundleInternal::setBundleContextHandle( app::ContextBlockHandle const& handle )
+	//{
+	//	// will be called by bundle manager on loading a bundle ( if there is one )
+	//	m_BundleContext = handle;
+	//}
 
-	app::ContextBlockHandle BundleInternal::getBundleContextHandle() const
-	{
-		return m_BundleContext;
-	}
+	//app::ContextBlockHandle BundleInternal::getBundleContextHandle() const
+	//{
+	//	return m_BundleContext;
+	//}
 
 	unsigned int BundleInternal::getBlockInstanceCount( string const& blockName ) const
 	{

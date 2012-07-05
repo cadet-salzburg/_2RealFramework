@@ -69,7 +69,7 @@ namespace _2Real
 		m_BaseDirectory = Poco::Path( directory );
 	}
 
-	app::BundleHandle & BundleManager::loadLibrary( string const& libraryPath )
+	BundleInternal * BundleManager::loadLibrary( string const& libraryPath )
 	{
 		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
 
@@ -88,13 +88,13 @@ namespace _2Real
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			app::ContextBlockHandle handle = createContextBlock( *bundle );
-			handle.setUpdateRate( 1.0 );
-			handle.setup();
-			handle.start();
+			FunctionBlock *contextBlock = createContextBlock( *bundle );
+			contextBlock->updateWithFixedRate( 1.0 );
+			contextBlock->setUp();
+			contextBlock->start();
 		}
 
-		return bundle->getHandle();
+		return bundle;
 	}
 	
 	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
@@ -103,7 +103,7 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	app::BlockHandle & BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
+	FunctionBlock * BundleManager::createFunctionBlock( BundleInternal &bundle, std::string const& blockName )
 	{
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( blockName );
@@ -114,37 +114,26 @@ namespace _2Real
 
 		Identifier blockId = m_Engine.createIdentifier( name.str() );
 
-		FunctionBlock *functionBlock;
-
 		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		functionBlock = new FunctionBlock( blockData, block, blockId );
+		FunctionBlock *functionBlock = new FunctionBlock( blockData, block, blockId );
 		m_Engine.addBlockInstance( *functionBlock );
-
 		bundle.addBlockInstance( block, blockName );
-
-		return functionBlock->HandleAble< app::BlockHandle >::getHandle();
+		return functionBlock;
 	}
 
-	app::ContextBlockHandle BundleManager::createContextBlock( BundleInternal &bundle )
+	FunctionBlock * BundleManager::createContextBlock( BundleInternal &bundle )
 	{
 		BundleData const& bundleData = bundle.getMetadata();
 		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
 
 		ostringstream name;
-		name << "bundle context";
+		name << bundle.getName() << " bundle context";
 
 		Identifier blockId( m_Engine.createIdentifier( name.str() ) );
-
-		FunctionBlock *functionBlock;
-
 		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
-		functionBlock = new FunctionBlock( blockData, block, blockId );
-		m_Engine.addContextBlock( *functionBlock );
-
-		app::ContextBlockHandle handle = app::ContextBlockHandle( *functionBlock );
-		bundle.setBundleContextHandle( handle );
-
-		return functionBlock->HandleAble< app::ContextBlockHandle >::getHandle();
+		FunctionBlock *contextBlock = new FunctionBlock( blockData, block, blockId );
+		m_Engine.addContextBlock( *contextBlock );
+		return contextBlock;
 	}
 
 	BundleInternal & BundleManager::getBundle( Identifier const& id )

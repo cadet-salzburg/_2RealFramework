@@ -67,7 +67,7 @@ namespace _2Real
 
 			void setBaseDirectory( std::string const& directory );
 
-			app::BundleHandle loadBundle( std::string const& libraryPath );
+			app::BundleHandle & loadBundle( std::string const& libraryPath );
 
 			void clearFully();
 			void clearBlockInstances();

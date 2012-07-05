@@ -34,17 +34,11 @@ namespace _2Real
 	RemoveOldest::RemoveOldest( const unsigned int max ) :
 		m_Max( max )
 	{
-#ifdef _DEBUG
-		if ( max == 0 )
-		{
-			assert( NULL );
-		}
-#endif
 	}
 
 	bool RemoveOldest::insertData( TimestampedData const& data, InletBuffer::DataBuffer &buffer )
 	{
-		while ( buffer.size() >= m_Max )
+		while ( buffer.size() >= m_Max && !buffer.empty() )
 		{
 			// TODO: some sort of overflow cb for the app i guess
 			// anyway, remove oldest elem from buffer
@@ -56,7 +50,7 @@ namespace _2Real
 	}
 
 	InletBuffer::InletBuffer( EngineData const& defaultData ) :
-		m_InsertionPolicy( new RemoveOldest( 1 ) ),
+		m_InsertionPolicy( new RemoveOldest( 0 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() )

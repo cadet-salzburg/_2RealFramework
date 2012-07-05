@@ -18,7 +18,11 @@
 
 #pragma once
 
+#include "helpers\_2RealException.h"
+
 #include <set>
+#include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
@@ -45,11 +49,6 @@ namespace _2Real
 		bool isValid() const
 		{
 			return m_Obj != nullptr;
-		}
-
-		void invalidate()
-		{
-			m_Obj = nullptr;
 		}
 
 		bool operator==( Handle const& other ) const
@@ -82,7 +81,24 @@ namespace _2Real
 			return m_Obj >= other.m_Obj;
 		}
 
+		void checkValidity( std::string const& handleType ) const
+		{
+			if ( m_Obj == nullptr )
+			{
+				std::ostringstream msg;
+				msg << handleType << " handle not initialized";
+				throw UninitializedHandleException( msg.str() );
+			}
+		}
+
 	private:
+
+		friend class AbstractHandleAble;
+
+		void invalidate()
+		{
+			m_Obj = nullptr;
+		}
 
 		void *m_Obj;
 
@@ -97,6 +113,7 @@ namespace _2Real
 			{
 				( *it )->invalidate();
 			}
+			m_Handles.clear();
 		}
 		void registerHandle( Handle &handle )
 		{

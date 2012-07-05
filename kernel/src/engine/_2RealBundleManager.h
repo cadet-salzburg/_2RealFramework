@@ -27,18 +27,9 @@
 
 namespace _2Real
 {
-
-	namespace app
-	{
-		class BundleHandle;
-		class BlockHandle;
-		class ContextBlockHandle;
-	}
-
 	class BundleInternal;
 	class Identifier;
 	class FunctionBlock;
-
 	class EngineImpl;
 
 	class BundleManager
@@ -51,13 +42,13 @@ namespace _2Real
 
 		void clear();
 		void							setBaseDirectory( std::string const& path );
-		app::BundleHandle &				loadLibrary( std::string const& libraryPath );
+		BundleInternal *				loadLibrary( std::string const& libraryPath );
 		bool							isLibraryLoaded( Poco::Path const& path ) const;
-		app::BlockHandle &				createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
+		FunctionBlock *					createFunctionBlock( BundleInternal &bundle, std::string const& blockName );
 
 	private:
 
-		app::ContextBlockHandle			createContextBlock( BundleInternal &bundle );
+		FunctionBlock *			createContextBlock( BundleInternal &bundle );
 
 		const Poco::Path				makeAbsolutePath( Poco::Path const& path ) const;
 		BundleInternal &				getBundle( Identifier const& id );

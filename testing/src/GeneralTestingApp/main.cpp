@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+//include "vld.h"
 
 using std::string;
 using std::cout;
@@ -92,28 +92,36 @@ private:
 
 int main( int argc, char *argv[] )
 {
-	Engine &engine = Engine::instance();
-
-	Receiver receiver;
-	BlockReceiver blockReceiver;
 	try
 	{
-		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
-		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
+		Receiver receiver;
+		BlockReceiver blockReceiver;
 
+		Engine &engine = Engine::instance();
+
+		BlockHandle outHandle;
+		BlockHandle inHandle;
+
+		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
+
+		//BundleInfo const& bundleData = bundleHandle.getBundleInfo();
+		//cout << "BUNDLE INFO: EXPORTED BLOCKS" << endl;
 		//for ( BundleInfo::BlockConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
 		//{
-		//	cout << "EXPORTED BLOCK:" << endl;
-		//	cout << it->getName() << endl << it->getDescription() << endl;
+		//	cout << it->getName() << endl << it->getDescription() << endl << endl;
 		//}
 
-		BlockHandle outHandle = bundleHandle.createBlockInstance( "out" );
-		BlockInfo const& outData = outHandle.getBlockInfo();
+		outHandle = bundleHandle.createBlockInstance( "out" );
 		outHandle.setUpdateRate( 1.0 );
 
 		BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
 		cout << outHandles.size() << endl;
+		for ( BlockHandle::OutletHandleConstIterator it = outHandles.begin(); it != outHandles.end(); ++it )
+		{
+			cout << it->getName() << " " << it->getTypename() << std::endl;
+		}
 
+		//BlockInfo const& outData = outHandle.getBlockInfo();
 		//for ( BlockInfo::ParamConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
 		//{
 		//	cout << "OUT OUTLET:" << endl;
@@ -122,8 +130,7 @@ int main( int argc, char *argv[] )
 
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
-		BlockHandle inHandle = bundleHandle.createBlockInstance( "in" );
-		BlockInfo const& inData = inHandle.getBlockInfo();
+		inHandle = bundleHandle.createBlockInstance( "in" );
 		inHandle.setUpdateRate( 0.5 );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
@@ -225,6 +232,10 @@ int main( int argc, char *argv[] )
 			{
 				Engine::Links links( engine.getCurrentLinks() );
 				std::cout << "# OF LINKS: " << links.size() << std::endl;
+			}
+			else if ( line == "clear" )
+			{
+				engine.clearFully();
 			}
 		}
 	}

@@ -96,7 +96,7 @@ namespace _2Real
 		void							destroyLink( InletIO &inlet, OutletIO &outlet );
 
 		void							setBaseDirectory( std::string const& directory );
-		app::BundleHandle				loadLibrary( std::string const& libraryPath );
+		app::BundleHandle &				loadLibrary( std::string const& libraryPath );
 
 	private:
 

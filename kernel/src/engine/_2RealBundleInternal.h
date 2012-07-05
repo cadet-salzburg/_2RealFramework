@@ -61,11 +61,11 @@ namespace _2Real
 
 		app::BundleHandle		createHandle();
 		app::BundleInfo			getBundleData() const;
-		app::ContextBlockHandle	getBundleContextHandle() const;
+		//app::ContextBlockHandle	getBundleContextHandle() const;
 		app::BlockHandle &		createBlockInstance( std::string const& blockName );
 
 		BundleData const&		getMetadata() const;
-		void					setBundleContextHandle( app::ContextBlockHandle const& handle );
+		//void					setBundleContextHandle( app::ContextBlockHandle const& handle );
 		void					addBlockInstance( bundle::Block &block, std::string const& blockName );
 		unsigned int			getBlockInstanceCount( std::string const& blockName ) const;
 
@@ -77,7 +77,7 @@ namespace _2Real
 		Identifier				const m_Identifier;
 		BundleData				const& m_Metadata;		// must be deleted before the library is unloaded
 		BlockMap				m_BlockInstances;
-		app::ContextBlockHandle	m_BundleContext;		// for strange reasons, i also hold a handle to the context here
+		//FunctionBlock			*m_BundleContext;		// for strange reasons, i also hold a handle to the context here
 
 	};
 
