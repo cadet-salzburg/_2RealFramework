@@ -18,14 +18,16 @@ protected:
 private:
 	QWidget*						m_ValueWidget;
 	_2Real::app::OutletHandle		m_OutletHandle;
-	Poco::Mutex						m_Mutex;
+	QMutex							m_Mutex;
 	_2Real::app::AppData			m_AppData;	
 	QImage							m_Img;
 	QPixmap							m_Pixmap;
 
 public slots:
 	void updatePixmap(const QImage &img);
+	void updateString(const QString& str);
 
 signals:
 	void sendPixmap(const QImage &img);
+	void sendString(const QString &str);
 };

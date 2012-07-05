@@ -51,7 +51,7 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 
 void BlockUnitTestWidget::shutdown()
 {
-	Engine::instance().clear();
+	Engine::instance().clearFully();
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -68,7 +68,6 @@ void BlockUnitTestWidget::setupGui()
 
 void BlockUnitTestWidget::receiveData(std::list< _2Real::app::AppData > const& data)
 {
-	//printf("received data");
 }
 
 QGroupBox* BlockUnitTestWidget::createButtonWidgets()

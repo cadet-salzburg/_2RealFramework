@@ -16,9 +16,7 @@ void CameraCaptureBlock::setup( BlockHandle &context )
 		m_DoubleInletHandle = context.getInletHandle( "doubleInlet" );
 		m_DoubleOutletHandle = context.getOutletHandle( "doubleOutlet" );
 		m_ImageOutletHandle = context.getOutletHandle( "imageOutlet" );
-
 		m_Image = _2Real::ImageT<unsigned char>(320,240, _2Real::ImageChannelOrder::RGBA);
-	
 	}
 	catch ( Exception &e )
 	{

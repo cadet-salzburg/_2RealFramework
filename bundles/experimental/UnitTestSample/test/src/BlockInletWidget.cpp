@@ -28,7 +28,7 @@ void BlockInletWidget::setValue(double value)
 {
 	try
 	{
-		m_InletHandle.setDefaultValue<double>(value);
+		m_InletHandle.setValue<double>(value);
 	}
 	catch(_2Real::Exception& e)
 	{
