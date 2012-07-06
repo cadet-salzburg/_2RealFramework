@@ -31,7 +31,7 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		
 		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
 		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
-		m_CameraBlockHandle.setUpdateRate( 30.0 );
+		m_CameraBlockHandle.setUpdateRate( 60.0 );
 		
 		// setup
 		m_CameraBlockHandle.setup();

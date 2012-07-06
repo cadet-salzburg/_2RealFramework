@@ -2,46 +2,50 @@
 
 using namespace std;
 using namespace _2Real;
+using namespace _2Real::app;
 
 BlockOutletWidget::BlockOutletWidget( _2Real::app::OutletHandle& outletHandle, QWidget *parent ) :
 	QGroupBox( parent ),
-	m_OutletHandle( outletHandle ),
-	m_2RealImage( 320, 240, _2Real::ImageChannelOrder::RGBA )
+	m_Handle( outletHandle ),
+	m_2RealImage( 320, 240, _2Real::ImageChannelOrder::RGBA ),
+	m_Typename( outletHandle.getTypename() )
 {
 	QHBoxLayout *layout = new QHBoxLayout();
-	layout->addWidget( new QLabel( QString::fromStdString( m_OutletHandle.getName() ) ) );
+	layout->addWidget( new QLabel( QString::fromStdString( m_Handle.getName() ) ) );
 
-	m_OutletHandle.registerToNewData( *this, &BlockOutletWidget::receiveData );
-
-	qRegisterMetaType< QImage >( "QImage" );
-	connect( this, SIGNAL( sendPixmap( QImage const& ) ), this, SLOT( updatePixmap( QImage const& ) ), Qt::DirectConnection );
+	// note that the moc is quite pedantic with regards to namespaces:
+	// you must use the full symbol name here & in the function implementations
+	qRegisterMetaType< _2Real::app::AppData >( "_2Real::app::AppData" );
+	connect( this, SIGNAL( sendPixmap( _2Real::app::AppData ) ), this, SLOT( updatePixmap( _2Real::app::AppData ) ) );
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	// not really necessary, just giving some initial display img to the widget
-
-	ImageT< unsigned char >::iterator it = m_2RealImage.iter();
-	while ( it.nextLine() )
+	if ( m_Typename == "img_uchar" )
 	{
-		while ( it.nextPixel() )
+		ImageT< unsigned char >::iterator it = m_2RealImage.iter();
+		while ( it.nextLine() )
 		{
-			it.r() = 0;
-			it.g() = 100;
-			it.b() = 255;
-			it.a() = 255;
+			while ( it.nextPixel() )
+			{
+				it.r() = 0;
+				it.g() = 100;
+				it.b() = 255;
+				it.a() = 255;
+			}
 		}
-	}
 
+		m_QImage = QImage( m_2RealImage.getData(), 320, 240, QImage::Format_RGB32 );
+		m_QPixmap = QPixmap::fromImage( m_QImage );
+		update();
+	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	m_QPixmapAccess.lock();
-
-	m_QImage = QImage( m_2RealImage.getData(), 320, 240, QImage::Format_RGB32 );
-	emit sendPixmap( m_QImage );
+	m_Handle.registerToNewData( *this, &BlockOutletWidget::receiveData );
 }
 
 void BlockOutletWidget::paintEvent( QPaintEvent *event )
 {
-	if ( m_OutletHandle.getTypename().find( "img_uchar" ) == 0 )
+	if ( m_Typename == "img_uchar" )
 	{
 		m_QPixmapAccess.lock();
 
@@ -52,22 +56,25 @@ void BlockOutletWidget::paintEvent( QPaintEvent *event )
 	}
 }
 
-void BlockOutletWidget::receiveData( _2Real::app::AppData const& data )
+void BlockOutletWidget::receiveData( AppData const& data )
 {
-	if( m_OutletHandle.getTypename().find( "img_uchar" ) == 0 )
-	{
-		m_QPixmapAccess.lock();		// <- locked here, but will be unlocked in update pixmap fnc
-
-		m_AppData = data;
-		//m_2RealImage = m_AppData.getData< ImageT< unsigned char > >();
-		m_QImage = QImage( m_AppData.getData< ImageT< unsigned char > >().getData(), 320, 240, QImage::Format_RGB32 );
-		emit sendPixmap( m_QImage );
-	}
+	emit sendPixmap( data );		// since a copy of the incoming data is emitted
+									// it does not matter how much time passes 
+									// between this and 'updatePixmap':
+									// the data will for sure be alive when the pixmap is updated
 }
 
-void BlockOutletWidget::updatePixmap( QImage const& image ) 
+void BlockOutletWidget::updatePixmap( _2Real::app::AppData data ) 
 {
-	m_QPixmap = QPixmap::fromImage( m_QImage );
-	update();
-	m_QPixmapAccess.unlock();		// <-- was locked from the calling function
+	if ( m_Typename == "img_uchar" )
+	{
+		m_QPixmapAccess.lock();
+
+		m_AppData = data;			// keeps current image data alive
+		m_QImage = QImage( data.getData< ImageT< unsigned char > >().getData(), 320, 240, QImage::Format_RGB32 );
+		m_QPixmap = QPixmap::fromImage( m_QImage );
+		update();
+
+		m_QPixmapAccess.unlock();
+	}
 }
