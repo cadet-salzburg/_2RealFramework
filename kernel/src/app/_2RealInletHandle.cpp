@@ -33,7 +33,6 @@ namespace _2Real
 			Handle(),
 			m_InletIO( nullptr )
 		{
-			m_InletIO->registerHandle( *this );
 		}
 
 		InletHandle::InletHandle( InletIO &inletIO ) :
@@ -45,15 +44,14 @@ namespace _2Real
 
 		InletHandle::~InletHandle()
 		{
-			if ( isValid() )
-			m_InletIO->unregisterHandle( *this );
+			if ( isValid() ) m_InletIO->unregisterHandle( *this );
 		}
 
 		InletHandle::InletHandle( InletHandle const& other ) :
 			Handle( other.m_InletIO ),
 			m_InletIO( other.m_InletIO )
 		{
-			m_InletIO->registerHandle( *this );
+			if ( isValid() ) m_InletIO->registerHandle( *this );
 		}
 
 		InletHandle& InletHandle::operator=( InletHandle const& other )

@@ -44,15 +44,14 @@ namespace _2Real
 
 		BundleHandle::~BundleHandle()
 		{
-			if ( isValid() )
-			m_Bundle->unregisterHandle( *this );
+			if ( isValid() ) m_Bundle->unregisterHandle( *this );
 		}
 
 		BundleHandle::BundleHandle( BundleHandle const& other ) :
 			Handle( other.m_Bundle ),
 			m_Bundle( other.m_Bundle )
 		{
-			m_Bundle->registerHandle( *this );
+			if ( isValid() ) m_Bundle->registerHandle( *this );
 		}
 
 		BundleHandle& BundleHandle::operator=( BundleHandle const& other )

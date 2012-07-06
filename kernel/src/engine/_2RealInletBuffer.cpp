@@ -24,8 +24,6 @@
 #include <iostream>
 #include <assert.h>
 
-using std::auto_ptr;
-
 namespace _2Real
 {
 
@@ -139,7 +137,8 @@ namespace _2Real
 	void InletBuffer::setBufferSize( const unsigned int size )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-		m_InsertionPolicy.reset( new RemoveOldest( size ) );
+		delete m_InsertionPolicy;
+		m_InsertionPolicy = new RemoveOldest( size );
 	}
 
 	//void InletBuffer::setDefaultData( EngineData const& defaultData )

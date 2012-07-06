@@ -52,7 +52,10 @@ int main( int argc, char *argv[] )
 	{
 		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
 
-		for ( unsigned int i=0; i<100; ++i )
+		std::vector< BlockHandle > vec;
+		vec.resize( 3000 );
+
+		for ( unsigned int i=0; i<1000; ++i )
 		{
 			std::ostringstream msg;
 			msg << "in # " << i;
@@ -61,7 +64,6 @@ int main( int argc, char *argv[] )
 			OutletHandle outOut = out.getOutletHandle( "out outlet" );
 			out.setUpdateRate( 1.0 );
 			out.setup();
-			out.start();
 
 			BlockHandle inout = testBundle.createBlockInstance( "in - out" );
 			InletHandle inoutIn = inout.getInletHandle( "inout inlet" );
@@ -69,7 +71,6 @@ int main( int argc, char *argv[] )
 			inoutIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
 			inout.setUpdateRate( 0.5 );
 			inout.setup();
-			inout.start();
 
 			BlockHandle in = testBundle.createBlockInstance( "in" );
 			InletHandle inIn = in.getInletHandle( "in inlet" );
@@ -78,11 +79,21 @@ int main( int argc, char *argv[] )
 			in.setUpdateRate( 0.25 );
 			inIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
 			in.setup();
-			in.start();
 
 			inoutIn.linkTo( outOut );
 			inIn.linkTo( inoutOut );
+
+			vec[ i ] = in;
+			vec[ 1000 + i ] = inout;
+			vec[ 2000 + i ] = out;
 		}
+
+		for ( std::vector< BlockHandle >::iterator it = vec.begin(); it != vec.end(); ++it )
+		{
+			it->start();
+		}
+
+
 	}
 	catch ( Exception &e )
 	{

@@ -26,7 +26,6 @@
 
 #include <map>
 #include <string>
-#include <memory>
 
 #include "Poco/Mutex.h"
 

@@ -21,10 +21,12 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		BlockMetainfo &out = info.exportBlock< Out, WithContext >( "out" );
 		out.setDescription( "test" );
+		out.addInlet< string >( "out msg", "undefined" );
 		out.addOutlet< unsigned int >( "out outlet" );
 
 		BlockMetainfo &inout = info.exportBlock< InOut, WithContext >( "in - out" );
 		inout.setDescription( "test" );
+		inout.addInlet< string >( "inout msg", "undefined" );
 		inout.addInlet< unsigned int >( "inout inlet", (unsigned int)0 );
 		inout.addOutlet< unsigned int >( "inout outlet" );
 

@@ -35,25 +35,8 @@ namespace _2Real
 			m_Content.reset( holder );
 		}
 
-		// called from either a bundle or the app
-		//template< typename Datatype >
-		//void clone( Datatype const& value )
-		//{
-		//	DataHolder< Datatype > *holder = new DataHolder< Datatype >( value );
-		//	m_Content.reset( holder );
-		//}
-
-		// called from outside of the framework
-		//template< typename Datatype >
-		//EngineData( Datatype const& value )
-		//{
-		//	Datatype *newData = new Datatype( value );
-		//	DataHolder< Datatype > *holder = new DataHolder< Datatype >( newData );
-		//	m_Content.reset(holder);
-		//}
-
 		bool isEmpty() const;
-		const std::string getTypename() const;	//argh
+		const std::string getTypename() const;
 
 		void cloneFrom( EngineData const& src );
 		void createNew( EngineData const& src );
@@ -67,21 +50,6 @@ namespace _2Real
 
 	};
 
-	//template< typename Datatype >
-	//std::shared_ptr< Datatype > const& extractFrom( EngineData const& data )
-	//{
-	//	if ( data.getTypeinfo() == typeid( Datatype ) )
-	//	{
-	//		AbstractDataHolder const* ptr = data.m_Content.get();
-	//	}
-	//	else
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "type of data " << data.getTypeinfo().name() << " does not match template parameter " << typeid( Datatype ).name() << std::endl;
-	//		throw TypeMismatchException( msg.str() );
-	//	}			return ( static_cast< DataHolder< Datatype > const* >( ptr ) )->m_Data;
-	//}
-
 	template< typename Datatype >
 	Datatype & extractFrom( EngineData &data )
 	{
@@ -89,7 +57,6 @@ namespace _2Real
 		{
 			AbstractDataHolder *ptr = data.m_Content.get();
 			DataHolder< Datatype > &holder = dynamic_cast< DataHolder< Datatype > & >( *ptr );
-			//return ( static_cast< DataHolder< Datatype > const* >( ptr ) )->m_Data;
 			return holder.m_Data;
 		}
 		else
@@ -107,7 +74,6 @@ namespace _2Real
 		{
 			AbstractDataHolder *ptr = data.m_Content.get();
 			DataHolder< Datatype > &holder = dynamic_cast< DataHolder< Datatype > & >( *ptr );
-			//return ( static_cast< DataHolder< Datatype > const* >( ptr ) )->m_Data;
 			return holder.m_Data;
 		}
 		else

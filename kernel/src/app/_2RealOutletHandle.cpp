@@ -44,15 +44,14 @@ namespace _2Real
 
 		OutletHandle::~OutletHandle()
 		{
-			if ( isValid() )
-			m_OutletIO->unregisterHandle( *this );
+			if ( isValid() ) m_OutletIO->unregisterHandle( *this );
 		}
 
 		OutletHandle::OutletHandle( OutletHandle const& other ) :
 			Handle( other.m_OutletIO ),
 			m_OutletIO( other.m_OutletIO )
 		{
-			m_OutletIO->registerHandle( *this );
+			if ( isValid() ) m_OutletIO->registerHandle( *this );
 		}
 
 		OutletHandle& OutletHandle::operator=( OutletHandle const& other )

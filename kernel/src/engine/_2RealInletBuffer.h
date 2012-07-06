@@ -24,7 +24,6 @@
 #include "helpers/_2RealPoco.h"
 
 #include <list>
-#include <memory>
 
 namespace _2Real
 {
@@ -86,7 +85,7 @@ namespace _2Real
 		mutable Poco::FastMutex							m_PolicyAccess;
 		mutable Poco::FastMutex							m_DataAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
-		std::auto_ptr< AbstractInsertionPolicy >		m_InsertionPolicy;
+		AbstractInsertionPolicy							*m_InsertionPolicy;
 
 	};
 

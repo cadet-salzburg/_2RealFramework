@@ -54,7 +54,7 @@ namespace _2Real
 			Handle( other.m_Block ),
 			m_Block( other.m_Block )
 		{
-			m_Block->registerHandle( *this );
+			if ( isValid() ) m_Block->registerHandle( *this );
 		}
 
 		BlockHandle& BlockHandle::operator=( BlockHandle const& other )

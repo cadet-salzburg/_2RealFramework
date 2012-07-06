@@ -38,7 +38,8 @@ public:
 
 private:
 
-	_2Real::bundle::OutletHandle			m_Out;
+	_2Real::bundle::InletHandle			m_Msg;
+	_2Real::bundle::OutletHandle		m_Out;
 
 };
 
@@ -54,8 +55,9 @@ public:
 
 private:
 
-	_2Real::bundle::InletHandle				m_In;
-	_2Real::bundle::OutletHandle			m_Out;
+	_2Real::bundle::InletHandle			m_Msg;
+	_2Real::bundle::InletHandle			m_In;
+	_2Real::bundle::OutletHandle		m_Out;
 
 };
 

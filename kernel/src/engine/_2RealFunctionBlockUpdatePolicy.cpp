@@ -28,7 +28,6 @@
 using std::string;
 using std::make_pair;
 using std::greater;
-using std::shared_ptr;
 
 #include <assert.h>
 #include <iostream>
@@ -53,10 +52,7 @@ namespace _2Real
 
 	FunctionBlockUpdatePolicy::~FunctionBlockUpdatePolicy()
 	{
-		if ( m_TimeTrigger != nullptr )
-		{
-			delete m_TimeTrigger;
-		}
+		safeDelete( m_TimeTrigger );
 
 		for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); /**/ )
 		{
@@ -90,11 +86,7 @@ namespace _2Real
 
 		if ( m_TimeChanged )
 		{
-			if ( m_TimeTrigger != nullptr )
-			{
-				delete m_TimeTrigger;
-				m_TimeTrigger = nullptr;
-			}
+			safeDelete( m_TimeTrigger );
 			if ( m_UpdateTime > 0 )
 			{
 				m_TimeTrigger = new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime );

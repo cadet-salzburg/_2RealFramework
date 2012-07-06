@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 using _2Real::bundle::BlockHandle;
 using _2Real::bundle::ContextBlock;
@@ -13,6 +14,7 @@ using _2Real::Exception;
 using std::cout;
 using std::endl;
 using std::string;
+using std::ostringstream;
 
 TestContext::TestContext() :
 	ContextBlock(),
@@ -64,6 +66,7 @@ void Out::setup( BlockHandle &handle )
 {
 	try
 	{
+		m_Msg= handle.getInletHandle( "out msg" );
 		m_Out = handle.getOutletHandle( "out outlet" );
 		m_Out.getWriteableRef< unsigned int >() = 0;
 	}
@@ -92,6 +95,7 @@ void InOut::setup( BlockHandle &handle )
 	try
 	{
 		m_In = handle.getInletHandle( "inout inlet" );
+		m_Msg= handle.getInletHandle( "inout msg" );
 		m_Out = handle.getOutletHandle( "inout outlet" );
 	}
 	catch ( Exception &e )
@@ -105,7 +109,6 @@ void InOut::update()
 {
 	try
 	{
-		cout << m_In.getReadableRef< unsigned int >() << endl;
 		m_Out.getWriteableRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
 	}
 	catch ( Exception &e)
@@ -133,7 +136,9 @@ void In::update()
 {
 	try
 	{
-		cout << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< unsigned int >() << endl;
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< unsigned int >() << endl;
+		cout << msg.str();
 	}
 	catch ( Exception &e )
 	{

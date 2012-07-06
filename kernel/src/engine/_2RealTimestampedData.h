@@ -31,12 +31,12 @@ namespace _2Real
 		TimestampedData() ;
 		TimestampedData( EngineData const& data, long timestamp );
 
-		template< typename Datatype >
-		Datatype const& getExtractedData() const
-		{
-			std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
-			return *ptr.get();
-		}
+		//template< typename Datatype >
+		//Datatype const& getExtractedData() const
+		//{
+		//	std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
+		//	return *ptr.get();
+		//}
 
 		long getTimestamp() const;
 		EngineData & getData();

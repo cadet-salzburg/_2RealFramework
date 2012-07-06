@@ -29,6 +29,7 @@ namespace _2Real
 	namespace app
 	{
 		ContextBlockHandle::ContextBlockHandle() :
+			Handle(),
 			m_Block( nullptr )
 		{
 		}
@@ -49,7 +50,7 @@ namespace _2Real
 			Handle( other.m_Block ),
 			m_Block( other.m_Block )
 		{
-			m_Block->registerHandle( *this );
+			if ( isValid() ) m_Block->registerHandle( *this );
 		}
 
 		ContextBlockHandle& ContextBlockHandle::operator=( ContextBlockHandle const& other )
