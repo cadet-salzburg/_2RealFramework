@@ -31,24 +31,6 @@
 
 namespace _2Real
 {
-	//namespace app
-	//{
-	//	class InletHandle;
-	//	class OutletHandle;
-	//	class BlockInfo;
-	//}
-
-	//namespace bundle
-	//{
-	//	class Block;
-	//	class InletHandle;
-	//	class OutletHandle;
-	//}
-
-	//class BlockData;
-	//class System;
-	//class InletIO;
-
 	template< typename THandle >
 	class FunctionBlock : public AbstractUberBlock, public HandleAble< THandle >
 	{
@@ -79,6 +61,7 @@ namespace _2Real
 		void						stop( const bool blocking, const long timeout );
 		void						prepareForShutDown();
 		bool						shutDown( const long timeout );
+		void						singleStep();
 
 		void						updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight );
 		void						updateWhenInletDataValid( InletIO &inletIO );
@@ -92,9 +75,9 @@ namespace _2Real
 		bundle::Block				&m_Block;
 		BlockData					const& m_Metadata;
 
-		FunctionBlockStateManager	*m_StateManager;
-		FunctionBlockIOManager		*m_IOManager;
 		FunctionBlockUpdatePolicy	*m_UpdatePolicy;
+		FunctionBlockIOManager		*m_IOManager;
+		FunctionBlockStateManager	*m_StateManager;
 
 	};
 
@@ -132,6 +115,13 @@ namespace _2Real
 		{
 			m_IOManager->addOutlet( *it );
 		}
+
+		string name = getName();
+		name.append( " singlestep trigger" );
+		EngineData init( false );
+		ParameterData data( name, "bool", "bool", init );
+		
+		m_IOManager->addSingleStepTrigger( data );
 	}
 
 	template< typename THandle >
@@ -275,22 +265,28 @@ namespace _2Real
 	}
 
 	template< typename THandle >
+	void FunctionBlock< THandle >::singleStep()
+	{
+		m_UpdatePolicy->singleStep();
+	}
+
+	template< typename THandle >
 	void FunctionBlock< THandle >::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
 	{
 		if ( isSingleWeight )
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true, false >() );
 		}
 		else
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false, false >() );
 		}
 	}
 
 	template< typename THandle >
 	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false, false >() );
 	}
 
 	template< typename THandle >

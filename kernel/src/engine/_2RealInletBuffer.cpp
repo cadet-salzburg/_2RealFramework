@@ -49,9 +49,15 @@ namespace _2Real
 		m_InsertionPolicy( new RemoveOldest( 0 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
-		m_Engine( EngineImpl::instance() )
+		m_Engine( EngineImpl::instance() ),
+		m_TriggeringData( defaultData, 0 )
 	{
 		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
+	}
+
+	InletBuffer::~InletBuffer()
+	{
+		delete m_InsertionPolicy;
 	}
 
 	void InletBuffer::receiveData( EngineData const& data )

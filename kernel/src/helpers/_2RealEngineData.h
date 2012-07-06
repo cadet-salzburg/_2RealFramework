@@ -35,6 +35,12 @@ namespace _2Real
 			m_Content.reset( holder );
 		}
 
+		template< typename T >
+		bool isDatatype() const
+		{
+			return m_Content->getTypename() == typeinfo( T ).name();
+		}
+
 		bool isEmpty() const;
 		const std::string getTypename() const;
 

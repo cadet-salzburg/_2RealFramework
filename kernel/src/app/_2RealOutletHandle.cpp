@@ -96,27 +96,27 @@ namespace _2Real
 			EngineImpl::instance().destroyLink( *( inlet.m_InletIO ), *m_OutletIO );
 		}
 
-		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData )
+		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkHandle( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
 			m_OutletIO->m_AppEvent->addListener( *cb );
 		}
 
-		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData )
+		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkHandle( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
 			m_OutletIO->m_AppEvent->removeListener( *cb );
 		}
 
-		void OutletHandle::registerToNewDataInternal( OutletCallback &cb )
+		void OutletHandle::registerToNewDataInternal( OutletCallback &cb ) const
 		{
 			checkHandle( m_OutletIO );
 			m_OutletIO->m_AppEvent->addListener( cb );
 		}
 
-		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb )
+		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb ) const
 		{
 			checkHandle( m_OutletIO );
 			m_OutletIO->m_AppEvent->removeListener( cb );

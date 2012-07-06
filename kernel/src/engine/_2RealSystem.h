@@ -44,7 +44,7 @@ namespace _2Real
 
 		void			addContextBlock( AbstractUberBlock &context );
 		void			addBlockInstance( AbstractUberBlock &block );
-		void			removeBlock( AbstractUberBlock &block, const long timeout );
+		void			removeBlockInstance( AbstractUberBlock &block, const long timeout );
 		Blocks const&	getBlockInstances() const;
 		Blocks const&	getBundleContexts() const;
 

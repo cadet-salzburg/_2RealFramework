@@ -43,8 +43,6 @@ namespace _2Real
 			BlockInfo getBlockInfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );
-			void setup();
-			void start();
 
 		private:
 

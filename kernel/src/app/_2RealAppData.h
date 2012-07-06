@@ -39,6 +39,13 @@ namespace _2Real
 			std::string const& getName() const;
 			const std::string getDataAsString() const;
 
+			// probably more efficient than wuerying the typename all the time
+			template< typename T >
+			bool isDatatype() const
+			{
+				return EngineData.isDatatype< T >();
+			}
+
 			template< typename T >
 			T const& getData() const
 			{

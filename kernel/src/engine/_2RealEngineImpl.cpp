@@ -155,6 +155,11 @@ namespace _2Real
 		m_System->addBlockInstance( block );
 	}
 
+	void EngineImpl::killBlockInstance( AbstractUberBlock &block, const long timeout )
+	{
+		m_System->removeBlockInstance( block, timeout );
+	}
+
 	void EngineImpl::addContextBlock( AbstractUberBlock &context )
 	{
 		m_System->addContextBlock( context );

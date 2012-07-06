@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-//#include "vld.h"
+#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
 		//}
 
 		outHandle = bundleHandle.createBlockInstance( "out" );
-		outHandle.setUpdateRate( 100.0 );
+		outHandle.setUpdateRate( 0.0 );
 
 		BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
 		cout << outHandles.size() << endl;
@@ -131,10 +131,10 @@ int main( int argc, char *argv[] )
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
 		inHandle = bundleHandle.createBlockInstance( "in" );
-		inHandle.setUpdateRate( 105.0 );
+		inHandle.setUpdateRate( 0.0 );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
-		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
+		inletHandle.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 
 		BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
 		cout << inHandles.size() << endl;
@@ -233,9 +233,13 @@ int main( int argc, char *argv[] )
 				Engine::Links links( engine.getCurrentLinks() );
 				std::cout << "# OF LINKS: " << links.size() << std::endl;
 			}
-			else if ( line == "clear" )
+			else if ( line == "step in" )
 			{
-				engine.clearAll();
+				inHandle.singleStep();
+			}
+			else if ( line == "step out" )
+			{
+				outHandle.singleStep();
 			}
 		}
 	}

@@ -82,82 +82,94 @@ namespace _2Real
 
 		BlockInfo BlockHandle::getBlockInfo() const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			return m_Block->getBlockData();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
 		void BlockHandle::setup()
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			m_Block->setUp();
 		}
 
 		void BlockHandle::start()
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			m_Block->start();
 		}
 
-		void BlockHandle::stop()
+		void BlockHandle::stop( const long timeout )
 		{
-			Handle::checkValidity( "block" );
-			m_Block->stop( true, 5000 );
+			checkHandle( m_Block );
+			m_Block->stop( true, timeout );
 		}
 
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			return m_Block->getAppInletHandle( name );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			return m_Block->getAppOutletHandle( name );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			return m_Block->getAppInletHandles();
 		}
 
 		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			return m_Block->getAppOutletHandles();
 		}
 
-		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData )
+		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->registerToNewData( *cb );
 		}
 
-		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData )
+		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->unregisterFromNewData( *cb);
 		}
 
-		void BlockHandle::registerToNewDataInternal( BlockCallback &cb )
+		void BlockHandle::registerToNewDataInternal( BlockCallback &cb ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			m_Block->registerToNewData( cb );
 		}
 
-		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb )
+		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb ) const
 		{
-			Handle::checkValidity( "block" );
+			checkHandle( m_Block );
 			m_Block->unregisterFromNewData( cb );
+		}
+
+		void BlockHandle::kill( const long timeout )
+		{
+			checkHandle( m_Block );
+			EngineImpl::instance().killBlockInstance( *m_Block, timeout );
+		}
+
+		void BlockHandle::singleStep()
+		{
+			checkHandle( m_Block );
+			m_Block->singleStep();
 		}
 	}
 }

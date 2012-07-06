@@ -87,17 +87,5 @@ namespace _2Real
 			checkHandle( m_Block );
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
-
-		void ContextBlockHandle::setup()
-		{
-			checkHandle( m_Block );
-			m_Block->setUp();
-		}
-
-		void ContextBlockHandle::start()
-		{
-			checkHandle( m_Block );
-			m_Block->start();
-		}
 	}
 }

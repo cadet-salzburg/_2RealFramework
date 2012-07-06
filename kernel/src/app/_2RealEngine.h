@@ -85,7 +85,7 @@ namespace _2Real
 
 			// these functions give information about the current state of the framework
 			Links			getCurrentLinks() const;
-			BlockHandles	getCurrentBlocks() const;
+			BlockHandles	getCurrentBlocks() const;		// these are only the block instances, not the contexts
 			BundleHandles	getCurrentBundles() const;
 
 			// exception callback

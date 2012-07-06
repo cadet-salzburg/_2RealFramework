@@ -174,7 +174,6 @@ namespace _2Real
 			m_CurrentState->triggersAreOk( *this );
 
 			disableTriggers();
-			resetTriggers();
 			//resetUberBlockTriggers();
 
 			delete m_CurrentState;
@@ -282,46 +281,35 @@ namespace _2Real
 			m_StateAccess.lock();
 
 			m_CurrentState->finishUpdate( *this );
-
 			delete m_CurrentState;
 
 			if ( m_FlaggedForSetUp.isSet() )
 			{
-				disableAllTriggers();
-
 				bundle::BlockHandle context( *m_IOManager );
 				m_FunctionBlock->setup( context );
 				m_CurrentState = new FunctionBlockStateSetUp();
 				m_StateAccess.unlock();
-
 				m_Logger.addLine( std::string( getName() + " new state: set up ( finished update cycle )" ) );
 			}
 			
 			if ( m_FlaggedForStop.isSet() )
 			{
-				disableAllTriggers();
 				m_StopEvent.set();
 				m_CurrentState = new FunctionBlockStateStopped();
 				m_StateAccess.unlock();
-
 				m_Logger.addLine( std::string( getName() + " new state: stopped ( finished update cycle )" ) );
-
 				m_StopEvent.set();
 			}
 			else
 			{
-				disableTriggers();
 				resetTriggers();
 
 				m_UpdatePolicy->changePolicy();
-
 				m_CurrentState = new FunctionBlockStateStarted();
 				m_StateAccess.unlock();
-
 				m_Logger.addLine( std::string( getName() + " new state: started ( finished update cycle )" ) );
 
 				enableTriggers();
-
 				m_IOManager->updateInletBuffers();
 			}
 
@@ -440,6 +428,7 @@ namespace _2Real
 	void FunctionBlockStateManager::addTrigger( AbstractInletBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		if ( !trigger.isSingleStep() )
 		m_InletTriggers.insert( &trigger );
 	}
 
@@ -469,32 +458,40 @@ namespace _2Real
 	{
 		if ( areTriggersEnabled() )
 		{
-			m_TriggerAccess.lock();
-
-			bool groupWeight = true;
-			bool singleWeight = false;
-			for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-			{
-				if ( ( *it )->isSingleWeight() )
-				{
-					singleWeight |= ( *it )->isOk();
-				}
-
-				groupWeight &= ( *it )->isOk();
-			}
-
-			// TODO: cache result of inlets?
-			bool triggersOk = ( groupWeight || singleWeight );
-			if ( m_TimeTrigger != nullptr )
-			{
-				triggersOk &= m_TimeTrigger->isOk();
-			}
-
-			m_TriggerAccess.unlock();
-
-			if ( triggersOk )
+			if ( trigger.isSingleStep() )
 			{
 				triggersAreOk();
+			}
+			else
+			{
+				m_TriggerAccess.lock();
+
+				bool andRes = true;
+				unsigned int andCount = 0;
+				bool orRes = false;
+				for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+				{
+					if ( ( *it )->isOr() )
+					{
+						orRes |= ( *it )->isOk();
+					}
+					else
+					{
+						andCount++;
+						andRes &= ( *it )->isOk();
+					}
+				}
+				bool triggersOk = ( ( andRes && ( andCount > 0 ) ) || orRes );
+				if ( m_TimeTrigger != nullptr )
+				{
+					triggersOk &= m_TimeTrigger->isOk();
+				}
+
+				m_TriggerAccess.unlock();
+				if ( triggersOk )
+				{
+					triggersAreOk();
+				}
 			}
 		}
 	}
@@ -505,29 +502,36 @@ namespace _2Real
 		{
 			m_TriggerAccess.lock();
 
-			bool groupWeight = true;
-			bool singleWeight = false;
-			for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+			if ( m_InletTriggers.empty() )
 			{
-				if ( ( *it )->isSingleWeight() )
-				{
-					singleWeight |= ( *it )->isOk();
-				}
-
-				groupWeight &= ( *it )->isOk();
-			}
-
-			bool triggersOk = ( groupWeight || singleWeight );
-			if ( m_TimeTrigger != nullptr )
-			{
-				triggersOk &= m_TimeTrigger->isOk();
-			}
-
-			m_TriggerAccess.unlock();
-
-			if ( triggersOk )
-			{
+				m_TriggerAccess.unlock();
 				triggersAreOk();
+			}
+			else
+			{
+				bool andRes = true;
+				unsigned int andCount = 0;
+				bool orRes = false;
+				for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
+				{
+					if ( ( *it )->isOr() )
+					{
+						orRes |= ( *it )->isOk();
+					}
+					else
+					{
+						andCount++;
+						andRes &= ( *it )->isOk();
+					}
+				}
+				
+				bool triggersOk = ( ( andRes && ( andCount > 0 ) ) || orRes );
+				m_TriggerAccess.unlock();
+
+				if ( triggersOk )
+				{
+					triggersAreOk();
+				}
 			}
 		}
 	}

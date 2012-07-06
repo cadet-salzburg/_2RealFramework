@@ -46,7 +46,8 @@ namespace _2Real
 		m_TimeChanged( false ),
 		m_InletsChanged( false ),
 		m_UpdateTime( -1 ),
-		m_TimeTrigger( nullptr )
+		m_TimeTrigger( nullptr ),
+		m_Engine( EngineImpl::instance() )
 	{
 	}
 
@@ -59,6 +60,8 @@ namespace _2Real
 			delete it->second;
 			it = m_InletPolicies.erase( it );
 		}
+
+		delete m_SingleStepTrigger;
 	}
 
 	void FunctionBlockUpdatePolicy::addInlet( InletIO &inletIO )
@@ -70,12 +73,18 @@ namespace _2Real
 			assert( NULL );
 		}
 #endif
+
 		m_InletsChanged = true;
 		InletPolicy *p = new InletPolicy();
-		p->m_Ctor = new InletTriggerCtor< ValidData, false >();
+		p->m_Ctor = new InletTriggerCtor< ValidData, false, false >();
 		p->m_Trigger = nullptr;
 		p->m_WasChanged = true;
 		m_InletPolicies.insert( make_pair( &inletIO, p ) );
+	}
+
+	void FunctionBlockUpdatePolicy::addSingleStepTrigger( InletIO &inletIO )
+	{
+		m_SingleStepTrigger = new InletBasedTrigger< NewerTimestamp, false, true >( *inletIO.m_Buffer, *m_StateManager );
 	}
 
 	void FunctionBlockUpdatePolicy::changePolicy()
@@ -146,6 +155,13 @@ namespace _2Real
 #endif
 			delete inletPolicy;
 		}
+	}
+
+	void FunctionBlockUpdatePolicy::singleStep()
+	{
+		TimestampedData data( EngineData(), m_Engine.getElapsedTime() );
+		m_SingleStepTrigger->tryTriggerUpdate( data );
+		m_SingleStepTrigger->reset();
 	}
 
 }

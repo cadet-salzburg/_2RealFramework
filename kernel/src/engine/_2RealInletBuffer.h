@@ -63,6 +63,8 @@ namespace _2Real
 		typedef std::list< TimestampedData >			DataBuffer;
 		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
 
+		~InletBuffer();
+
 		InletBuffer( EngineData const& defaultData );
 		void receiveData( TimestampedData const& data );
 		void receiveData( EngineData const& data );
@@ -70,7 +72,6 @@ namespace _2Real
 		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );
-		//void setDefaultData( EngineData const& defaultData );
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
 

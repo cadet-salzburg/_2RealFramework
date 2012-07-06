@@ -37,8 +37,8 @@ namespace _2Real
 			enum InletUpdatePolicy
 			{
 				ALWAYS,
-				NEWER_DATA_SINGLE_WEIGHT,
-				NEWER_DATA_GROUP_WEIGHT,
+				OR_NEWER_DATA,
+				AND_NEWER_DATA,
 			};
 
 			InletHandle();

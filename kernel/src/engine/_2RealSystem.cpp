@@ -130,7 +130,7 @@ namespace _2Real
 		m_Blocks.insert( &block );
 	}
 
-	void System::removeBlock( AbstractUberBlock &block, const long timeout )
+	void System::removeBlockInstance( AbstractUberBlock &block, const long timeout )
 	{
 		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{

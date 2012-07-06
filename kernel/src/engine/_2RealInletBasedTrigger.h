@@ -51,7 +51,7 @@ namespace _2Real
 			AbstractUpdateTrigger( false ),
 			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
-			m_LastData( EngineData(), -1 )	// this way, default value will also fulfill 'newer' cond once
+			m_LastData( EngineData(), 0 )	// this way, default value will not fulfill 'newer' cond
 		{
 		}
 
@@ -68,7 +68,8 @@ namespace _2Real
 		}
 
 		virtual ~AbstractInletBasedTrigger() {}
-		virtual bool isSingleWeight() const = 0;
+		virtual bool isOr() const = 0;
+		virtual bool isSingleStep() const = 0;
 		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
 
 	protected:
@@ -79,7 +80,7 @@ namespace _2Real
 
 	};
 
-	template< typename TCond, bool SingleWeight >
+	template< typename TCond, bool IsOr, bool IsSingleStep  >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
 	{
 
@@ -90,7 +91,7 @@ namespace _2Real
 		{
 			mgr.addTrigger( *this );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, SingleWeight >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, SingleWeight >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond, IsOr, IsSingleStep >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr, IsSingleStep >::tryTriggerUpdate );
 			buffer.setTrigger( *cb );
 		}
 
@@ -98,7 +99,7 @@ namespace _2Real
 		{
 			m_UpdateManager.removeTrigger( *this );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, SingleWeight >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, SingleWeight >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond, IsOr, IsSingleStep  >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr, IsSingleStep >::tryTriggerUpdate );
 			m_Buffer.removeTrigger( *cb );
 		}
 
@@ -113,9 +114,14 @@ namespace _2Real
 			}
 		}
 
-		bool isSingleWeight() const
+		bool isOr() const
 		{
-			return SingleWeight;
+			return IsOr;
+		}
+
+		bool isSingleStep() const
+		{
+			return IsSingleStep;
 		}
 
 	private:

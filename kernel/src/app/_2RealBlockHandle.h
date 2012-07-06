@@ -23,6 +23,8 @@
 
 #include <string>
 
+#define NO_TIMEOUT	LONG_MAX
+
 namespace _2Real
 {
 	template< typename T >
@@ -58,9 +60,11 @@ namespace _2Real
 			// negative or zero: no time based update at all
 			void setUpdateRate( const double updatesPerSecond );
 
-			void setup();
-			void start();
-			void stop();
+			void setup();										// will stop the block and then set it up -> a new start is nee
+			void start();										// will
+			void stop( const long timeout = NO_TIMEOUT );		// um, yeah. no timeout is probably a bad idea :)
+			void kill( const long timeout = NO_TIMEOUT );		// see above
+			void singleStep();									// if block was not stopped before, this will not do anything at all
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;
@@ -68,19 +72,19 @@ namespace _2Real
 			OutletHandles const&	getAllOutletHandles() const;
 
 			// callback registration for free functions
-			void registerToNewData( BlockDataCallback callback, void *userData = nullptr );
-			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr );
+			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
+			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 
 			// callback registration for member functions
 			template< typename TCallable >
-			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) )
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
 			{
 				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
 				registerToNewDataInternal( *cb );
 			}
 
 			template< typename TCallable >
-			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) )
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
 			{
 				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
@@ -88,8 +92,8 @@ namespace _2Real
 
 		private:
 
-			void registerToNewDataInternal( BlockCallback &cb );
-			void unregisterFromNewDataInternal( BlockCallback &cb );
+			void registerToNewDataInternal( BlockCallback &cb ) const;
+			void unregisterFromNewDataInternal( BlockCallback &cb ) const;
 
 			FunctionBlock< BlockHandle >		*m_Block;
 

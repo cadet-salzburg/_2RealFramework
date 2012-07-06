@@ -99,11 +99,11 @@ namespace _2Real
 		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
 		{
 			checkHandle( m_InletIO );
-			if ( p == InletHandle::NEWER_DATA_SINGLE_WEIGHT )
+			if ( p == InletHandle::OR_NEWER_DATA )
 			{
 				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, true );
 			}
-			else if ( p == InletHandle::NEWER_DATA_GROUP_WEIGHT )
+			else if ( p == InletHandle::AND_NEWER_DATA )
 			{
 				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, false );
 			}

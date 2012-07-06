@@ -52,18 +52,18 @@ namespace _2Real
 
 			AppData				getLastOutput() const;
 
-			void registerToNewData( OutletDataCallback callback, void *userData = nullptr );
-			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr );
+			void registerToNewData( OutletDataCallback callback, void *userData = nullptr ) const;
+			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 
 			template< typename TCallable >
-			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) )
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) ) const
 			{
 				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
 				registerToNewDataInternal( *cb );
 			}
 
 			template< typename TCallable >
-			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) )
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) ) const
 			{
 				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
@@ -73,8 +73,8 @@ namespace _2Real
 
 			friend class InletHandle;
 
-			void registerToNewDataInternal( OutletCallback &cb );
-			void unregisterFromNewDataInternal( OutletCallback &cb );
+			void registerToNewDataInternal( OutletCallback &cb ) const;
+			void unregisterFromNewDataInternal( OutletCallback &cb ) const;
 
 			OutletIO			*m_OutletIO;
 

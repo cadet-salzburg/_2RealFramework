@@ -46,6 +46,12 @@ namespace _2Real
 	{
 	}
 
+	void FunctionBlockIOManager::addSingleStepTrigger( ParameterData const& data )
+	{
+		m_SingleStepTrigger = new InletIO( m_Owner, data );
+		m_UpdatePolicy->addSingleStepTrigger( *m_SingleStepTrigger );
+	}
+
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
@@ -57,6 +63,8 @@ namespace _2Real
 		{
 			delete *it;
 		}
+
+		delete m_SingleStepTrigger;
 	}
 
 	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const

@@ -43,13 +43,13 @@ namespace _2Real
 		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
 	};
 
-	template< typename Condition, bool SingleWeight >
+	template< typename Condition, bool IsOr, bool IsSingleStep >
 	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
 		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr )
 		{
-			return new InletBasedTrigger< Condition, SingleWeight >( buffer, mgr );
+			return new InletBasedTrigger< Condition, IsOr, IsSingleStep  >( buffer, mgr );
 		}
 	};
 
@@ -65,6 +65,9 @@ namespace _2Real
 		void changePolicy();
 		void setNewUpdateTime( const long time );
 		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy );
+
+		void addSingleStepTrigger( InletIO &io );
+		void singleStep();
 
 	private:
 
@@ -83,6 +86,7 @@ namespace _2Real
 		template< typename T >
 		friend class FunctionBlock;
 
+		EngineImpl						&m_Engine;
 		FunctionBlockStateManager		*m_StateManager;
 		FunctionBlockIOManager			*m_IOManager;
 
@@ -92,6 +96,8 @@ namespace _2Real
 		long							m_UpdateTime;
 		AbstractTimeBasedTrigger		*m_TimeTrigger;
 		InletPolicyMap					m_InletPolicies;
+
+		AbstractInletBasedTrigger		*m_SingleStepTrigger;
 	};
 
 }
