@@ -2,7 +2,6 @@
 #include "CameraCaptureBlock.h"
 
 #include "_2RealBundle.h"
-#include "_2RealDataTypes.h"
 
 using namespace _2Real::bundle;
 using			_2Real::Exception;
@@ -16,7 +15,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setDescription( "Camera Capture" );
+		info.setDescription( "Camera Capture Bundle" );
 		info.setAuthor( "Robert Praxmarer" );
 		info.setCategory( "experimental" );
 		info.setContact( "help@cadet.at" );

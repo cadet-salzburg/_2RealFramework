@@ -50,7 +50,7 @@ void BlockOutletWidget::receiveData(_2Real::app::AppData const& data)
 		unsigned char* ptr = data.getData<ImageT<unsigned char>>().getData();
 		static unsigned char* ptr1 = new unsigned char[320*240*4]; 
 		memcpy( ptr1, ptr, 320*240*4);
-		m_Img = QImage( ptr1, 320,240, QImage::Format_RGB32);
+		m_Img = QImage( ptr, 320,240, QImage::Format_RGB32);
 	
 		m_AppData = data;
 		emit sendPixmap( m_Img );	
