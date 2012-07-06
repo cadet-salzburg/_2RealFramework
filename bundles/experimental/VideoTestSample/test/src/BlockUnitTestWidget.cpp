@@ -48,12 +48,11 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 	}
 	
 	setupGui();
-
 }
 
 void BlockUnitTestWidget::shutdown()
 {
-	//Engine::instance().clear();
+	Engine::instance().clearAll();
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -98,7 +97,7 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 QGroupBox* BlockUnitTestWidget::createInletWidgets()
 {
 	QGroupBox *groupBox = new QGroupBox("Inlets");
-	BlockInfo::Params inlets = m_CameraBlockHandle.getBlockInfo().getInlets();
+	BlockInfo::ParameterInfos inlets = m_CameraBlockHandle.getBlockInfo().getInlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
 	for(auto it = inlets.begin(); it != inlets.end(); it++)
@@ -114,14 +113,15 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 {
 	QGroupBox* groupBox = new QGroupBox("Outlets");
-	BlockInfo::Params outlets = m_CameraBlockHandle.getBlockInfo().getOutlets();
+	BlockInfo::ParameterInfos outlets = m_CameraBlockHandle.getBlockInfo().getOutlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
-	for(auto it = outlets.begin(); it != outlets.end(); it++)
-	{
-		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()) );
+//	for(auto it = outlets.begin(); it != outlets.end(); it++)
+//	{
+
+		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle("ImageDataOutlet") );
 		layout->addWidget(tmp);
-	}
+//	}
 
 	groupBox->setLayout(layout);
 	return groupBox;

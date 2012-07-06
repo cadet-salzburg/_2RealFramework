@@ -25,9 +25,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
 		BlockMetainfo cameraCapture = info.exportBlock< VideoInputBlock, WithContext >( "CameraCaptureBlock" );
 
-		cameraCapture.addParameter<int>( "DeviceIndex", 0 );
-		cameraCapture.addOutlet<ImageT<unsigned char>>("imageOutlet");
-
+		cameraCapture.addInlet<int>( "DeviceIndexInlet", 0 );
+		cameraCapture.addOutlet< ImageT<unsigned char> >("ImageDataOutlet");
 		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )

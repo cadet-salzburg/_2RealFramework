@@ -3,19 +3,29 @@
 #include "videoInput.h"
 #include <vector>
 
-class CameraDeviceManager : public _2Real::bundle::ContextBlock
+using namespace _2Real::bundle;
+
+class CameraDeviceManager : public ContextBlock
 {
 public:
-	CameraDeviceManager() : ContextBlock() {};
-	~CameraDeviceManager() {};
+	CameraDeviceManager();
+	~CameraDeviceManager();
 	void							setup( _2Real::bundle::BlockHandle &context );
 	void							update();
-	void							shutdown() {};
+	void							shutdown() 
+	{
+		m_VideoInputContoller.stopDevice( m_CurrentDeviceIndex );
+	};
 
-	int								getNumberOfDevices() const;
-	bool							isDeviceAvailable( const unsigned int deviceIdx );
+	int								getNumberOfConnectedDevices() const;
+	bool							deviceIsSetup( const unsigned int deviceIdx );
+	void							switchToDevice( const unsigned int deviceIdx );
 	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
+	int								getVideoWidth();
+	int								getVideoHeight();
+
 private:
-	static int						m_NumDevices;
+	int								m_NumDevices;
 	videoInput						m_VideoInputContoller;
+	int								m_CurrentDeviceIndex;
 };

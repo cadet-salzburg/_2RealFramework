@@ -14,5 +14,5 @@ public:
 
 private:
 	QDoubleSpinBox* m_ValueWidget;
-	
+	_2Real::app::InletHandle m_InletHandle;
 };

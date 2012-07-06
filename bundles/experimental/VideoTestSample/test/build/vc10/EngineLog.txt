@@ -1,272 +1,450 @@
-515008 bundle context new state: set up
-515008 bundle context new state: started
-516008 CameraCaptureBlock # 0 new state: set up
-516008 CameraCaptureBlock # 0 new state: started
-566010 CameraCaptureBlock # 0 new state: waiting
-566010 CameraCaptureBlock # 0 new state: scheduled
-567010 CameraCaptureBlock # 0 new state: updating
-1036037 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1036037 CameraCaptureBlock # 0 new state: waiting
-1036037 CameraCaptureBlock # 0 new state: scheduled
-1037037 CameraCaptureBlock # 0 new state: updating
-1068039 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1086040 CameraCaptureBlock # 0 new state: waiting
-1086040 CameraCaptureBlock # 0 new state: scheduled
-1087040 CameraCaptureBlock # 0 new state: updating
-1115042 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1136043 CameraCaptureBlock # 0 new state: waiting
-1136043 CameraCaptureBlock # 0 new state: scheduled
-1137043 CameraCaptureBlock # 0 new state: updating
-1147044 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1186046 CameraCaptureBlock # 0 new state: waiting
-1186046 CameraCaptureBlock # 0 new state: scheduled
-1187046 CameraCaptureBlock # 0 new state: updating
-1197047 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1236049 CameraCaptureBlock # 0 new state: waiting
-1236049 CameraCaptureBlock # 0 new state: scheduled
-1237049 CameraCaptureBlock # 0 new state: updating
-1246049 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1286052 CameraCaptureBlock # 0 new state: waiting
-1286052 CameraCaptureBlock # 0 new state: scheduled
-1287052 CameraCaptureBlock # 0 new state: updating
-1296052 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1336054 CameraCaptureBlock # 0 new state: waiting
-1336054 CameraCaptureBlock # 0 new state: scheduled
-1337055 CameraCaptureBlock # 0 new state: updating
-1349055 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1386057 CameraCaptureBlock # 0 new state: waiting
-1386057 CameraCaptureBlock # 0 new state: scheduled
-1387057 CameraCaptureBlock # 0 new state: updating
-1399058 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1436060 CameraCaptureBlock # 0 new state: waiting
-1436060 CameraCaptureBlock # 0 new state: scheduled
-1437060 CameraCaptureBlock # 0 new state: updating
-1448061 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1486063 CameraCaptureBlock # 0 new state: waiting
-1486063 CameraCaptureBlock # 0 new state: scheduled
-1487063 CameraCaptureBlock # 0 new state: updating
-1496064 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1515065 bundle context new state: waiting
-1515065 bundle context new state: scheduled
-1516065 bundle context new state: updating
-1517065 bundle context new state: started ( finished update cycle )
-1536066 CameraCaptureBlock # 0 new state: waiting
-1536066 CameraCaptureBlock # 0 new state: scheduled
-1537066 CameraCaptureBlock # 0 new state: updating
-1547067 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1586069 CameraCaptureBlock # 0 new state: waiting
-1586069 CameraCaptureBlock # 0 new state: scheduled
-1587069 CameraCaptureBlock # 0 new state: updating
-1596069 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1636072 CameraCaptureBlock # 0 new state: waiting
-1636072 CameraCaptureBlock # 0 new state: scheduled
-1637072 CameraCaptureBlock # 0 new state: updating
-1647072 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1686074 CameraCaptureBlock # 0 new state: waiting
-1686074 CameraCaptureBlock # 0 new state: scheduled
-1687075 CameraCaptureBlock # 0 new state: updating
-1696075 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1736077 CameraCaptureBlock # 0 new state: waiting
-1736077 CameraCaptureBlock # 0 new state: scheduled
-1737077 CameraCaptureBlock # 0 new state: updating
-1746078 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1786080 CameraCaptureBlock # 0 new state: waiting
-1786080 CameraCaptureBlock # 0 new state: scheduled
-1787080 CameraCaptureBlock # 0 new state: updating
-1799081 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1836083 CameraCaptureBlock # 0 new state: waiting
-1836083 CameraCaptureBlock # 0 new state: scheduled
-1837083 CameraCaptureBlock # 0 new state: updating
-1849084 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1886086 CameraCaptureBlock # 0 new state: waiting
-1886086 CameraCaptureBlock # 0 new state: scheduled
-1887086 CameraCaptureBlock # 0 new state: updating
-1899087 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1936089 CameraCaptureBlock # 0 new state: waiting
-1936089 CameraCaptureBlock # 0 new state: scheduled
-1937089 CameraCaptureBlock # 0 new state: updating
-1948089 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-1986092 CameraCaptureBlock # 0 new state: waiting
-1986092 CameraCaptureBlock # 0 new state: scheduled
-1987092 CameraCaptureBlock # 0 new state: updating
-1996092 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2036095 CameraCaptureBlock # 0 new state: waiting
-2036095 CameraCaptureBlock # 0 new state: scheduled
-2037095 CameraCaptureBlock # 0 new state: updating
-2046095 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2086097 CameraCaptureBlock # 0 new state: waiting
-2086097 CameraCaptureBlock # 0 new state: scheduled
-2087097 CameraCaptureBlock # 0 new state: updating
-2096098 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2136100 CameraCaptureBlock # 0 new state: waiting
-2136100 CameraCaptureBlock # 0 new state: scheduled
-2137100 CameraCaptureBlock # 0 new state: updating
-2146101 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2186103 CameraCaptureBlock # 0 new state: waiting
-2186103 CameraCaptureBlock # 0 new state: scheduled
-2187103 CameraCaptureBlock # 0 new state: updating
-2200104 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2236106 CameraCaptureBlock # 0 new state: waiting
-2236106 CameraCaptureBlock # 0 new state: scheduled
-2237106 CameraCaptureBlock # 0 new state: updating
-2246107 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2286109 CameraCaptureBlock # 0 new state: waiting
-2286109 CameraCaptureBlock # 0 new state: scheduled
-2287109 CameraCaptureBlock # 0 new state: updating
-2297109 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2336112 CameraCaptureBlock # 0 new state: waiting
-2336112 CameraCaptureBlock # 0 new state: scheduled
-2337112 CameraCaptureBlock # 0 new state: updating
-2347112 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2386115 CameraCaptureBlock # 0 new state: waiting
-2386115 CameraCaptureBlock # 0 new state: scheduled
-2387115 CameraCaptureBlock # 0 new state: updating
-2396115 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2436117 CameraCaptureBlock # 0 new state: waiting
-2436117 CameraCaptureBlock # 0 new state: scheduled
-2437117 CameraCaptureBlock # 0 new state: updating
-2446118 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2486120 CameraCaptureBlock # 0 new state: waiting
-2486120 CameraCaptureBlock # 0 new state: scheduled
-2487120 CameraCaptureBlock # 0 new state: updating
-2496121 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2515122 bundle context new state: waiting
-2515122 bundle context new state: scheduled
-2516122 bundle context new state: updating
-2517122 bundle context new state: started ( finished update cycle )
-2536123 CameraCaptureBlock # 0 new state: waiting
-2536123 CameraCaptureBlock # 0 new state: scheduled
-2537123 CameraCaptureBlock # 0 new state: updating
-2546124 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2586126 CameraCaptureBlock # 0 new state: waiting
-2586126 CameraCaptureBlock # 0 new state: scheduled
-2587126 CameraCaptureBlock # 0 new state: updating
-2600127 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2636129 CameraCaptureBlock # 0 new state: waiting
-2636129 CameraCaptureBlock # 0 new state: scheduled
-2637129 CameraCaptureBlock # 0 new state: updating
-2648130 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2686132 CameraCaptureBlock # 0 new state: waiting
-2686132 CameraCaptureBlock # 0 new state: scheduled
-2687132 CameraCaptureBlock # 0 new state: updating
-2696132 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2736135 CameraCaptureBlock # 0 new state: waiting
-2736135 CameraCaptureBlock # 0 new state: scheduled
-2737135 CameraCaptureBlock # 0 new state: updating
-2747135 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2786137 CameraCaptureBlock # 0 new state: waiting
-2786137 CameraCaptureBlock # 0 new state: scheduled
-2787137 CameraCaptureBlock # 0 new state: updating
-2796138 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2836140 CameraCaptureBlock # 0 new state: waiting
-2836140 CameraCaptureBlock # 0 new state: scheduled
-2837140 CameraCaptureBlock # 0 new state: updating
-2849141 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2886143 CameraCaptureBlock # 0 new state: waiting
-2886143 CameraCaptureBlock # 0 new state: scheduled
-2887143 CameraCaptureBlock # 0 new state: updating
-2897144 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2936146 CameraCaptureBlock # 0 new state: waiting
-2936146 CameraCaptureBlock # 0 new state: scheduled
-2937146 CameraCaptureBlock # 0 new state: updating
-2947147 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-2986149 CameraCaptureBlock # 0 new state: waiting
-2986149 CameraCaptureBlock # 0 new state: scheduled
-2987149 CameraCaptureBlock # 0 new state: updating
-2999150 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3036152 CameraCaptureBlock # 0 new state: waiting
-3036152 CameraCaptureBlock # 0 new state: scheduled
-3037152 CameraCaptureBlock # 0 new state: updating
-3046152 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3086155 CameraCaptureBlock # 0 new state: waiting
-3086155 CameraCaptureBlock # 0 new state: scheduled
-3087155 CameraCaptureBlock # 0 new state: updating
-3097155 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3136157 CameraCaptureBlock # 0 new state: waiting
-3136157 CameraCaptureBlock # 0 new state: scheduled
-3137157 CameraCaptureBlock # 0 new state: updating
-3147158 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3186160 CameraCaptureBlock # 0 new state: waiting
-3186160 CameraCaptureBlock # 0 new state: scheduled
-3187160 CameraCaptureBlock # 0 new state: updating
-3197161 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3236163 CameraCaptureBlock # 0 new state: waiting
-3236163 CameraCaptureBlock # 0 new state: scheduled
-3237163 CameraCaptureBlock # 0 new state: updating
-3248164 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3286166 CameraCaptureBlock # 0 new state: waiting
-3286166 CameraCaptureBlock # 0 new state: scheduled
-3287166 CameraCaptureBlock # 0 new state: updating
-3296167 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3336169 CameraCaptureBlock # 0 new state: waiting
-3336169 CameraCaptureBlock # 0 new state: scheduled
-3337169 CameraCaptureBlock # 0 new state: updating
-3348170 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3386172 CameraCaptureBlock # 0 new state: waiting
-3386172 CameraCaptureBlock # 0 new state: scheduled
-3387172 CameraCaptureBlock # 0 new state: updating
-3397172 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3436175 CameraCaptureBlock # 0 new state: waiting
-3436175 CameraCaptureBlock # 0 new state: scheduled
-3437175 CameraCaptureBlock # 0 new state: updating
-3449175 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3486177 CameraCaptureBlock # 0 new state: waiting
-3486177 CameraCaptureBlock # 0 new state: scheduled
-3487178 CameraCaptureBlock # 0 new state: updating
-3499178 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3515179 bundle context new state: waiting
-3515179 bundle context new state: scheduled
-3516179 bundle context new state: updating
-3517179 bundle context new state: started ( finished update cycle )
-3536180 CameraCaptureBlock # 0 new state: waiting
-3536180 CameraCaptureBlock # 0 new state: scheduled
-3537180 CameraCaptureBlock # 0 new state: updating
-3545181 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3586183 CameraCaptureBlock # 0 new state: waiting
-3586183 CameraCaptureBlock # 0 new state: scheduled
-3587183 CameraCaptureBlock # 0 new state: updating
-3597184 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3636186 CameraCaptureBlock # 0 new state: waiting
-3636186 CameraCaptureBlock # 0 new state: scheduled
-3637186 CameraCaptureBlock # 0 new state: updating
-3646187 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3686189 CameraCaptureBlock # 0 new state: waiting
-3686189 CameraCaptureBlock # 0 new state: scheduled
-3687189 CameraCaptureBlock # 0 new state: updating
-3697190 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3736192 CameraCaptureBlock # 0 new state: waiting
-3736192 CameraCaptureBlock # 0 new state: scheduled
-3737192 CameraCaptureBlock # 0 new state: updating
-3746192 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3786195 CameraCaptureBlock # 0 new state: waiting
-3786195 CameraCaptureBlock # 0 new state: scheduled
-3787195 CameraCaptureBlock # 0 new state: updating
-3796195 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3836197 CameraCaptureBlock # 0 new state: waiting
-3836197 CameraCaptureBlock # 0 new state: scheduled
-3837198 CameraCaptureBlock # 0 new state: updating
-3847198 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3886200 CameraCaptureBlock # 0 new state: waiting
-3886200 CameraCaptureBlock # 0 new state: scheduled
-3887200 CameraCaptureBlock # 0 new state: updating
-3896201 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3936203 CameraCaptureBlock # 0 new state: waiting
-3936203 CameraCaptureBlock # 0 new state: scheduled
-3937203 CameraCaptureBlock # 0 new state: updating
-3945204 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-3986206 CameraCaptureBlock # 0 new state: waiting
-3986206 CameraCaptureBlock # 0 new state: scheduled
-3987206 CameraCaptureBlock # 0 new state: updating
-3996207 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-4036209 CameraCaptureBlock # 0 new state: waiting
-4036209 CameraCaptureBlock # 0 new state: scheduled
-4037209 CameraCaptureBlock # 0 new state: updating
-4046209 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-4086212 CameraCaptureBlock # 0 new state: waiting
-4086212 CameraCaptureBlock # 0 new state: scheduled
-4087212 CameraCaptureBlock # 0 new state: updating
-4097212 CameraCaptureBlock # 0 new state: started ( finished update cycle )
-4136215 CameraCaptureBlock # 0 new state: waiting
-4136215 CameraCaptureBlock # 0 new state: scheduled
-4137215 CameraCaptureBlock # 0 new state: updating
-4145215 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+1540002 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: set up
+1540002 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started
+1540002 CameraCaptureBlock # 0 new state: set up
+1540002 CameraCaptureBlock # 0 new state: started
+1590004 CameraCaptureBlock # 0 new state: waiting
+1590004 CameraCaptureBlock # 0 new state: scheduled
+1591004 CameraCaptureBlock # 0 new state: updating
+1814017 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+1814017 CameraCaptureBlock # 0 new state: waiting
+1814017 CameraCaptureBlock # 0 new state: scheduled
+1815017 CameraCaptureBlock # 0 new state: updating
+1878020 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+1914022 CameraCaptureBlock # 0 new state: waiting
+1914022 CameraCaptureBlock # 0 new state: scheduled
+1915022 CameraCaptureBlock # 0 new state: updating
+1941024 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+1964025 CameraCaptureBlock # 0 new state: waiting
+1964025 CameraCaptureBlock # 0 new state: scheduled
+1965025 CameraCaptureBlock # 0 new state: updating
+2005027 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2014028 CameraCaptureBlock # 0 new state: waiting
+2014028 CameraCaptureBlock # 0 new state: scheduled
+2015028 CameraCaptureBlock # 0 new state: updating
+2069031 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2114034 CameraCaptureBlock # 0 new state: waiting
+2114034 CameraCaptureBlock # 0 new state: scheduled
+2115034 CameraCaptureBlock # 0 new state: updating
+2165037 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2214039 CameraCaptureBlock # 0 new state: waiting
+2214039 CameraCaptureBlock # 0 new state: scheduled
+2215039 CameraCaptureBlock # 0 new state: updating
+2218040 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2264042 CameraCaptureBlock # 0 new state: waiting
+2264042 CameraCaptureBlock # 0 new state: scheduled
+2265042 CameraCaptureBlock # 0 new state: updating
+2268042 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2314045 CameraCaptureBlock # 0 new state: waiting
+2314045 CameraCaptureBlock # 0 new state: scheduled
+2315045 CameraCaptureBlock # 0 new state: updating
+2325046 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2364048 CameraCaptureBlock # 0 new state: waiting
+2364048 CameraCaptureBlock # 0 new state: scheduled
+2365048 CameraCaptureBlock # 0 new state: updating
+2389049 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2414051 CameraCaptureBlock # 0 new state: waiting
+2414051 CameraCaptureBlock # 0 new state: scheduled
+2415051 CameraCaptureBlock # 0 new state: updating
+2453053 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2464054 CameraCaptureBlock # 0 new state: waiting
+2464054 CameraCaptureBlock # 0 new state: scheduled
+2465054 CameraCaptureBlock # 0 new state: updating
+2517057 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2540058 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+2540058 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+2541058 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+2542058 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+2564059 CameraCaptureBlock # 0 new state: waiting
+2564059 CameraCaptureBlock # 0 new state: scheduled
+2565059 CameraCaptureBlock # 0 new state: updating
+2581060 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2614062 CameraCaptureBlock # 0 new state: waiting
+2614062 CameraCaptureBlock # 0 new state: scheduled
+2615062 CameraCaptureBlock # 0 new state: updating
+2645064 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2664065 CameraCaptureBlock # 0 new state: waiting
+2664065 CameraCaptureBlock # 0 new state: scheduled
+2665065 CameraCaptureBlock # 0 new state: updating
+2709068 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2714068 CameraCaptureBlock # 0 new state: waiting
+2714068 CameraCaptureBlock # 0 new state: scheduled
+2715068 CameraCaptureBlock # 0 new state: updating
+2837075 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2837075 CameraCaptureBlock # 0 new state: waiting
+2837075 CameraCaptureBlock # 0 new state: scheduled
+2838075 CameraCaptureBlock # 0 new state: updating
+2901079 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2937081 CameraCaptureBlock # 0 new state: waiting
+2937081 CameraCaptureBlock # 0 new state: scheduled
+2938081 CameraCaptureBlock # 0 new state: updating
+2966082 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+2987084 CameraCaptureBlock # 0 new state: waiting
+2987084 CameraCaptureBlock # 0 new state: scheduled
+2988084 CameraCaptureBlock # 0 new state: updating
+2997084 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3037086 CameraCaptureBlock # 0 new state: waiting
+3037086 CameraCaptureBlock # 0 new state: scheduled
+3038087 CameraCaptureBlock # 0 new state: updating
+3061088 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3087089 CameraCaptureBlock # 0 new state: waiting
+3087089 CameraCaptureBlock # 0 new state: scheduled
+3088089 CameraCaptureBlock # 0 new state: updating
+3125091 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3137092 CameraCaptureBlock # 0 new state: waiting
+3137092 CameraCaptureBlock # 0 new state: scheduled
+3138092 CameraCaptureBlock # 0 new state: updating
+3189095 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3237098 CameraCaptureBlock # 0 new state: waiting
+3237098 CameraCaptureBlock # 0 new state: scheduled
+3238098 CameraCaptureBlock # 0 new state: updating
+3253099 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3287101 CameraCaptureBlock # 0 new state: waiting
+3287101 CameraCaptureBlock # 0 new state: scheduled
+3288101 CameraCaptureBlock # 0 new state: updating
+3317102 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3337104 CameraCaptureBlock # 0 new state: waiting
+3337104 CameraCaptureBlock # 0 new state: scheduled
+3338104 CameraCaptureBlock # 0 new state: updating
+3413108 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3437109 CameraCaptureBlock # 0 new state: waiting
+3437109 CameraCaptureBlock # 0 new state: scheduled
+3438109 CameraCaptureBlock # 0 new state: updating
+3445110 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3487112 CameraCaptureBlock # 0 new state: waiting
+3487112 CameraCaptureBlock # 0 new state: scheduled
+3488112 CameraCaptureBlock # 0 new state: updating
+3509113 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+3537115 CameraCaptureBlock # 0 new state: waiting
+3537115 CameraCaptureBlock # 0 new state: scheduled
+3538115 CameraCaptureBlock # 0 new state: updating
+3540115 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+3540115 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+3541115 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+3551115 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+4540133 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+4540133 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+4541133 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+4542133 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+4897153 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+4897153 CameraCaptureBlock # 0 new state: waiting
+4897153 CameraCaptureBlock # 0 new state: scheduled
+4898153 CameraCaptureBlock # 0 new state: updating
+4945156 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+4947156 CameraCaptureBlock # 0 new state: waiting
+4947156 CameraCaptureBlock # 0 new state: scheduled
+4948156 CameraCaptureBlock # 0 new state: updating
+4977158 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+4997159 CameraCaptureBlock # 0 new state: waiting
+4997159 CameraCaptureBlock # 0 new state: scheduled
+4998159 CameraCaptureBlock # 0 new state: updating
+5000159 
+-------------------------------------------------------------------------
+THREADPOOL: ready: 0
+THREADPOOL: executing: 1
+THREADPOOL: aborted: 0
+-------------------------------------------------------------------------
+5008160 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5047162 CameraCaptureBlock # 0 new state: waiting
+5047162 CameraCaptureBlock # 0 new state: scheduled
+5048162 CameraCaptureBlock # 0 new state: updating
+5056162 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5097165 CameraCaptureBlock # 0 new state: waiting
+5097165 CameraCaptureBlock # 0 new state: scheduled
+5098165 CameraCaptureBlock # 0 new state: updating
+5105165 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5147168 CameraCaptureBlock # 0 new state: waiting
+5147168 CameraCaptureBlock # 0 new state: scheduled
+5148168 CameraCaptureBlock # 0 new state: updating
+5156168 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5197170 CameraCaptureBlock # 0 new state: waiting
+5197170 CameraCaptureBlock # 0 new state: scheduled
+5198170 CameraCaptureBlock # 0 new state: updating
+5206171 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5247173 CameraCaptureBlock # 0 new state: waiting
+5247173 CameraCaptureBlock # 0 new state: scheduled
+5248173 CameraCaptureBlock # 0 new state: updating
+5256174 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5297176 CameraCaptureBlock # 0 new state: waiting
+5297176 CameraCaptureBlock # 0 new state: scheduled
+5298176 CameraCaptureBlock # 0 new state: updating
+5306177 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5347179 CameraCaptureBlock # 0 new state: waiting
+5347179 CameraCaptureBlock # 0 new state: scheduled
+5348179 CameraCaptureBlock # 0 new state: updating
+5356179 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5397182 CameraCaptureBlock # 0 new state: waiting
+5397182 CameraCaptureBlock # 0 new state: scheduled
+5398182 CameraCaptureBlock # 0 new state: updating
+5406182 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5447185 CameraCaptureBlock # 0 new state: waiting
+5447185 CameraCaptureBlock # 0 new state: scheduled
+5448185 CameraCaptureBlock # 0 new state: updating
+5456185 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5497188 CameraCaptureBlock # 0 new state: waiting
+5497188 CameraCaptureBlock # 0 new state: scheduled
+5498188 CameraCaptureBlock # 0 new state: updating
+5506188 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5540190 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+5540190 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+5541190 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+5542190 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+5547190 CameraCaptureBlock # 0 new state: waiting
+5547190 CameraCaptureBlock # 0 new state: scheduled
+5548190 CameraCaptureBlock # 0 new state: updating
+5556191 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5597193 CameraCaptureBlock # 0 new state: waiting
+5597193 CameraCaptureBlock # 0 new state: scheduled
+5598193 CameraCaptureBlock # 0 new state: updating
+5606194 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5647196 CameraCaptureBlock # 0 new state: waiting
+5647196 CameraCaptureBlock # 0 new state: scheduled
+5648196 CameraCaptureBlock # 0 new state: updating
+5656197 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5697199 CameraCaptureBlock # 0 new state: waiting
+5697199 CameraCaptureBlock # 0 new state: scheduled
+5698199 CameraCaptureBlock # 0 new state: updating
+5706200 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5747202 CameraCaptureBlock # 0 new state: waiting
+5747202 CameraCaptureBlock # 0 new state: scheduled
+5748202 CameraCaptureBlock # 0 new state: updating
+5756202 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5797205 CameraCaptureBlock # 0 new state: waiting
+5797205 CameraCaptureBlock # 0 new state: scheduled
+5798205 CameraCaptureBlock # 0 new state: updating
+5808205 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5847208 CameraCaptureBlock # 0 new state: waiting
+5847208 CameraCaptureBlock # 0 new state: scheduled
+5848208 CameraCaptureBlock # 0 new state: updating
+5856208 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5897210 CameraCaptureBlock # 0 new state: waiting
+5897210 CameraCaptureBlock # 0 new state: scheduled
+5898210 CameraCaptureBlock # 0 new state: updating
+5906211 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5947213 CameraCaptureBlock # 0 new state: waiting
+5947213 CameraCaptureBlock # 0 new state: scheduled
+5948213 CameraCaptureBlock # 0 new state: updating
+5956214 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+5997216 CameraCaptureBlock # 0 new state: waiting
+5997216 CameraCaptureBlock # 0 new state: scheduled
+5998216 CameraCaptureBlock # 0 new state: updating
+6006217 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6047219 CameraCaptureBlock # 0 new state: waiting
+6047219 CameraCaptureBlock # 0 new state: scheduled
+6048219 CameraCaptureBlock # 0 new state: updating
+6056220 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6097222 CameraCaptureBlock # 0 new state: waiting
+6097222 CameraCaptureBlock # 0 new state: scheduled
+6098222 CameraCaptureBlock # 0 new state: updating
+6106222 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6147225 CameraCaptureBlock # 0 new state: waiting
+6147225 CameraCaptureBlock # 0 new state: scheduled
+6148225 CameraCaptureBlock # 0 new state: updating
+6156225 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6197228 CameraCaptureBlock # 0 new state: waiting
+6197228 CameraCaptureBlock # 0 new state: scheduled
+6198228 CameraCaptureBlock # 0 new state: updating
+6206228 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6247230 CameraCaptureBlock # 0 new state: waiting
+6247230 CameraCaptureBlock # 0 new state: scheduled
+6248231 CameraCaptureBlock # 0 new state: updating
+6256231 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6297233 CameraCaptureBlock # 0 new state: waiting
+6297233 CameraCaptureBlock # 0 new state: scheduled
+6298233 CameraCaptureBlock # 0 new state: updating
+6306234 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6347236 CameraCaptureBlock # 0 new state: waiting
+6347236 CameraCaptureBlock # 0 new state: scheduled
+6348236 CameraCaptureBlock # 0 new state: updating
+6356237 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6397239 CameraCaptureBlock # 0 new state: waiting
+6397239 CameraCaptureBlock # 0 new state: scheduled
+6398239 CameraCaptureBlock # 0 new state: updating
+6406240 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6447242 CameraCaptureBlock # 0 new state: waiting
+6447242 CameraCaptureBlock # 0 new state: scheduled
+6448242 CameraCaptureBlock # 0 new state: updating
+6456242 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6497245 CameraCaptureBlock # 0 new state: waiting
+6497245 CameraCaptureBlock # 0 new state: scheduled
+6498245 CameraCaptureBlock # 0 new state: updating
+6541245 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+6541245 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+6551245 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+6561245 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+6861245 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6861245 CameraCaptureBlock # 0 new state: waiting
+6861245 CameraCaptureBlock # 0 new state: scheduled
+6862246 CameraCaptureBlock # 0 new state: updating
+6871246 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+6911248 CameraCaptureBlock # 0 new state: waiting
+6911248 CameraCaptureBlock # 0 new state: scheduled
+6912248 CameraCaptureBlock # 0 new state: updating
+6987253 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7011254 CameraCaptureBlock # 0 new state: waiting
+7011254 CameraCaptureBlock # 0 new state: scheduled
+7012254 CameraCaptureBlock # 0 new state: updating
+7020255 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7061257 CameraCaptureBlock # 0 new state: waiting
+7061257 CameraCaptureBlock # 0 new state: scheduled
+7062257 CameraCaptureBlock # 0 new state: updating
+7070257 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7111260 CameraCaptureBlock # 0 new state: waiting
+7111260 CameraCaptureBlock # 0 new state: scheduled
+7112260 CameraCaptureBlock # 0 new state: updating
+7120260 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7161263 CameraCaptureBlock # 0 new state: waiting
+7161263 CameraCaptureBlock # 0 new state: scheduled
+7162263 CameraCaptureBlock # 0 new state: updating
+7169263 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7211266 CameraCaptureBlock # 0 new state: waiting
+7211266 CameraCaptureBlock # 0 new state: scheduled
+7212266 CameraCaptureBlock # 0 new state: updating
+7220266 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7261268 CameraCaptureBlock # 0 new state: waiting
+7261268 CameraCaptureBlock # 0 new state: scheduled
+7262268 CameraCaptureBlock # 0 new state: updating
+7270269 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7311271 CameraCaptureBlock # 0 new state: waiting
+7311271 CameraCaptureBlock # 0 new state: scheduled
+7312271 CameraCaptureBlock # 0 new state: updating
+7320272 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7361274 CameraCaptureBlock # 0 new state: waiting
+7361274 CameraCaptureBlock # 0 new state: scheduled
+7362274 CameraCaptureBlock # 0 new state: updating
+7369275 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7411277 CameraCaptureBlock # 0 new state: waiting
+7411277 CameraCaptureBlock # 0 new state: scheduled
+7412277 CameraCaptureBlock # 0 new state: updating
+7419277 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7461280 CameraCaptureBlock # 0 new state: waiting
+7461280 CameraCaptureBlock # 0 new state: scheduled
+7462280 CameraCaptureBlock # 0 new state: updating
+7469280 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7511283 CameraCaptureBlock # 0 new state: waiting
+7511283 CameraCaptureBlock # 0 new state: scheduled
+7512283 CameraCaptureBlock # 0 new state: updating
+7519283 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7541284 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+7541284 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+7542284 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+7543285 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+7561286 CameraCaptureBlock # 0 new state: waiting
+7561286 CameraCaptureBlock # 0 new state: scheduled
+7562286 CameraCaptureBlock # 0 new state: updating
+7569286 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+7611288 CameraCaptureBlock # 0 new state: waiting
+7611288 CameraCaptureBlock # 0 new state: scheduled
+7612288 CameraCaptureBlock # 0 new state: updating
+8541321 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+8541321 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+8542322 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+8543322 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+8617326 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8617326 CameraCaptureBlock # 0 new state: waiting
+8617326 CameraCaptureBlock # 0 new state: scheduled
+8618326 CameraCaptureBlock # 0 new state: updating
+8648328 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8667329 CameraCaptureBlock # 0 new state: waiting
+8667329 CameraCaptureBlock # 0 new state: scheduled
+8668329 CameraCaptureBlock # 0 new state: updating
+8696330 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8717332 CameraCaptureBlock # 0 new state: waiting
+8717332 CameraCaptureBlock # 0 new state: scheduled
+8718332 CameraCaptureBlock # 0 new state: updating
+8728332 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8767334 CameraCaptureBlock # 0 new state: waiting
+8767334 CameraCaptureBlock # 0 new state: scheduled
+8768334 CameraCaptureBlock # 0 new state: updating
+8775335 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8817337 CameraCaptureBlock # 0 new state: waiting
+8817337 CameraCaptureBlock # 0 new state: scheduled
+8818337 CameraCaptureBlock # 0 new state: updating
+8826338 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8867340 CameraCaptureBlock # 0 new state: waiting
+8867340 CameraCaptureBlock # 0 new state: scheduled
+8868340 CameraCaptureBlock # 0 new state: updating
+8875341 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8917343 CameraCaptureBlock # 0 new state: waiting
+8917343 CameraCaptureBlock # 0 new state: scheduled
+8918343 CameraCaptureBlock # 0 new state: updating
+8926344 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+8967346 CameraCaptureBlock # 0 new state: waiting
+8967346 CameraCaptureBlock # 0 new state: scheduled
+8968346 CameraCaptureBlock # 0 new state: updating
+8976346 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9017349 CameraCaptureBlock # 0 new state: waiting
+9017349 CameraCaptureBlock # 0 new state: scheduled
+9018349 CameraCaptureBlock # 0 new state: updating
+9026349 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9067352 CameraCaptureBlock # 0 new state: waiting
+9067352 CameraCaptureBlock # 0 new state: scheduled
+9068352 CameraCaptureBlock # 0 new state: updating
+9076352 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9117354 CameraCaptureBlock # 0 new state: waiting
+9117354 CameraCaptureBlock # 0 new state: scheduled
+9118355 CameraCaptureBlock # 0 new state: updating
+9125355 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9167357 CameraCaptureBlock # 0 new state: waiting
+9167357 CameraCaptureBlock # 0 new state: scheduled
+9168357 CameraCaptureBlock # 0 new state: updating
+9175358 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9217360 CameraCaptureBlock # 0 new state: waiting
+9217360 CameraCaptureBlock # 0 new state: scheduled
+9218360 CameraCaptureBlock # 0 new state: updating
+9226361 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9267363 CameraCaptureBlock # 0 new state: waiting
+9267363 CameraCaptureBlock # 0 new state: scheduled
+9268363 CameraCaptureBlock # 0 new state: updating
+9276364 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9317366 CameraCaptureBlock # 0 new state: waiting
+9317366 CameraCaptureBlock # 0 new state: scheduled
+9318366 CameraCaptureBlock # 0 new state: updating
+9325366 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9367369 CameraCaptureBlock # 0 new state: waiting
+9367369 CameraCaptureBlock # 0 new state: scheduled
+9368369 CameraCaptureBlock # 0 new state: updating
+9377369 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9417372 CameraCaptureBlock # 0 new state: waiting
+9417372 CameraCaptureBlock # 0 new state: scheduled
+9418372 CameraCaptureBlock # 0 new state: updating
+9425372 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9467374 CameraCaptureBlock # 0 new state: waiting
+9467374 CameraCaptureBlock # 0 new state: scheduled
+9468375 CameraCaptureBlock # 0 new state: updating
+9475375 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9517377 CameraCaptureBlock # 0 new state: waiting
+9517377 CameraCaptureBlock # 0 new state: scheduled
+9518377 CameraCaptureBlock # 0 new state: updating
+9525378 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9541379 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: waiting
+9541379 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: scheduled
+9542379 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: updating
+9543379 ..\experimental\bin\win\CameraCaptureBundle_32d.dll bundle context new state: started ( finished update cycle )
+9567380 CameraCaptureBlock # 0 new state: waiting
+9567380 CameraCaptureBlock # 0 new state: scheduled
+9568380 CameraCaptureBlock # 0 new state: updating
+9575381 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9617383 CameraCaptureBlock # 0 new state: waiting
+9617383 CameraCaptureBlock # 0 new state: scheduled
+9618383 CameraCaptureBlock # 0 new state: updating
+9625384 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9667386 CameraCaptureBlock # 0 new state: waiting
+9667386 CameraCaptureBlock # 0 new state: scheduled
+9668386 CameraCaptureBlock # 0 new state: updating
+9676386 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9717389 CameraCaptureBlock # 0 new state: waiting
+9717389 CameraCaptureBlock # 0 new state: scheduled
+9718389 CameraCaptureBlock # 0 new state: updating
+9726389 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9767392 CameraCaptureBlock # 0 new state: waiting
+9767392 CameraCaptureBlock # 0 new state: scheduled
+9768392 CameraCaptureBlock # 0 new state: updating
+9776392 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9817394 CameraCaptureBlock # 0 new state: waiting
+9817394 CameraCaptureBlock # 0 new state: scheduled
+9818395 CameraCaptureBlock # 0 new state: updating
+9825395 CameraCaptureBlock # 0 new state: started ( finished update cycle )
+9867397 CameraCaptureBlock # 0 new state: waiting
+9867397 CameraCaptureBlock # 0 new state: scheduled
+9868397 CameraCaptureBlock # 0 new state: updating
+9875398 CameraCaptureBlock # 0 new state: started ( finished update cycle )

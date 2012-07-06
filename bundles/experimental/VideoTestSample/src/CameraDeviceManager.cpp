@@ -10,17 +10,26 @@ using std::cout;
 using std::endl;
 using std::string;
 
-int CameraDeviceManager::m_NumDevices = 0;
+
+CameraDeviceManager::CameraDeviceManager()
+	:ContextBlock(),
+	 m_CurrentDeviceIndex( 0 )
+{
+
+}
+
+CameraDeviceManager::~CameraDeviceManager()
+{
+	
+}
 
 void CameraDeviceManager::setup( BlockHandle &context )
 {
 	try
 	{
 		m_NumDevices = m_VideoInputContoller.listDevices();
-		for( int idx = 0; idx < m_NumDevices; ++idx )
-		{
-			m_VideoInputContoller.setupDevice( idx );
-		}
+		if ( m_NumDevices >= 1)
+			m_VideoInputContoller.setupDevice( 0 );
 	}
 	catch ( Exception &e )
 	{
@@ -42,16 +51,34 @@ void CameraDeviceManager::update()
 	}
 }
 
-int	 CameraDeviceManager::getNumberOfDevices() const
+int	 CameraDeviceManager::getNumberOfConnectedDevices() const
 {
 	return m_NumDevices;
 }
 
-bool CameraDeviceManager::isDeviceAvailable( const unsigned int deviceIdx )
+bool CameraDeviceManager::deviceIsSetup( const unsigned int deviceIdx )
 {
 	try
 	{
 		return  !m_VideoInputContoller.isDeviceSetup( deviceIdx );
+	}
+	catch ( ... )
+	{
+		std::cerr << "The device index is out of bounds" << std::endl;
+	}
+	return false;
+}
+
+void CameraDeviceManager::switchToDevice( const unsigned int deviceIdx )
+{
+	try
+	{
+		if ( deviceIdx != m_CurrentDeviceIndex )
+		{
+			m_VideoInputContoller.stopDevice( m_CurrentDeviceIndex );
+			m_VideoInputContoller.setupDevice( deviceIdx );
+			m_CurrentDeviceIndex = deviceIdx;
+		}
 	}
 	catch ( ... )
 	{
@@ -63,7 +90,7 @@ _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int
 {
 	try
 	{
-		unsigned char *pixels = m_VideoInputContoller.getPixels( deviceIdx );
+		unsigned char *pixels = m_VideoInputContoller.getPixels( deviceIdx, true, true );
 		int w =  m_VideoInputContoller.getWidth( deviceIdx );
 		int h  = m_VideoInputContoller.getHeight( deviceIdx );
 		_2Real::ImageT<unsigned char> img( pixels, false, w, h, _2Real::ImageChannelOrder::RGB );
@@ -73,4 +100,14 @@ _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int
 	{
 		std::cerr << "Couldn't get the pixels" << std::endl;
 	}
+}
+
+int CameraDeviceManager::getVideoWidth()
+{
+	return m_VideoInputContoller.getWidth( m_CurrentDeviceIndex );
+}
+
+int CameraDeviceManager::getVideoHeight()
+{
+	return m_VideoInputContoller.getHeight( m_CurrentDeviceIndex );
 }

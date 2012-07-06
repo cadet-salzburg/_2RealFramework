@@ -1,24 +1,28 @@
-#include "CameraCaptureBlock.h"
 #include <iostream>
 #include <string>
+#include <sstream>
+#include "CameraCaptureBlock.h"
+#include "_2RealDatatypes.h"
 
+using namespace _2Real;
 using _2Real::bundle::BlockHandle;
 using _2Real::Exception;
 using std::cout;
 using std::endl;
 using std::string;
 
-VideoInputBlock::VideoInputBlock(_2Real::bundle::ContextBlock & context )
+VideoInputBlock::VideoInputBlock( ContextBlock & context )
 	:Block()
 {
 	m_CameraDeviceManager = static_cast<CameraDeviceManager*>( &context );
 }
-void VideoInputBlock::setup( _2Real::bundle::BlockHandle &block )
+
+void VideoInputBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_DeviceIndexHandle	= block.getParameterHandle("DeviceIndex");
-		m_ImageOutletHandle = block.getOutletHandle( "imageOutlet" );
+		m_DeviceIndexHandle	= block.getInletHandle("DeviceIndexInlet");
+		m_ImageOutletHandle = block.getOutletHandle("ImageDataOutlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -31,7 +35,8 @@ void VideoInputBlock::update()
 {
 	try
 	{
-		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>() )%m_CameraDeviceManager->getNumberOfDevices();  //Sanitize input
+		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>() )%m_CameraDeviceManager->getNumberOfConnectedDevices() ;  //Sanitize input
+		m_CameraDeviceManager->switchToDevice( cameraIndex );
 		m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( cameraIndex );
 	}
 	catch ( Exception &e )

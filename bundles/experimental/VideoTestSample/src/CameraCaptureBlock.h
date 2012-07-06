@@ -2,17 +2,19 @@
 #include "_2RealBlock.h"
 #include "CameraDeviceManager.h"
 
-class VideoInputBlock : public _2Real::bundle::Block
+using namespace _2Real::bundle;
+
+class VideoInputBlock : public Block
 {
 public:
-	VideoInputBlock( _2Real::bundle::ContextBlock & context );
+	VideoInputBlock( ContextBlock & context );
 	~VideoInputBlock() {}
-	void shutdown() {}
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
-
+	void					shutdown() {}
+	void					update();
+	void					setup( BlockHandle &context );
 private:
-	_2Real::bundle::ParameterHandle			m_DeviceIndexHandle;
-	_2Real::bundle::OutletHandle			m_ImageOutletHandle;
-	CameraDeviceManager*			m_CameraDeviceManager;
+	InletHandle				m_DeviceIndexHandle;
+	OutletHandle			m_ImageOutletHandle;
+	CameraDeviceManager*	m_CameraDeviceManager;
+
 };

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'BlockOutletWidget.h'
 **
-** Created: Wed 4. Jul 13:29:40 2012
+** Created: Fri 6. Jul 11:08:37 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!

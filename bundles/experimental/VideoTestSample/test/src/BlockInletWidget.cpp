@@ -3,7 +3,9 @@
 using namespace std;
 using namespace _2Real;
 
-BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) : QGroupBox(parent)
+BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) 
+	: QGroupBox(parent),
+	  m_InletHandle ( inletHandle )
 {
 	try
 	{
@@ -28,6 +30,7 @@ void BlockInletWidget::setValue(double value)
 {
 	try
 	{
+		m_InletHandle.setValue<int>((int)value);
 	//	setValue<double>(value);
 	}
 	catch(_2Real::Exception& e)
