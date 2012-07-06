@@ -39,7 +39,7 @@
 
 #ifdef _2REAL_WINDOWS
 	#ifndef _DEBUG
-		#define shared_library_suffix "32.dll"
+		#define shared_library_suffix "_32.dll"
 	#else
 		#define shared_library_suffix "_32d.dll"
 	#endif
@@ -69,10 +69,10 @@ namespace _2Real
 	}
 
 	EngineImpl::EngineImpl() :
-		m_Timer( new Timer() ),
 		m_Logger( new Logger( "EngineLog.txt" ) ),
-		m_Typetable( new Typetable() ),
+		m_Timer( new Timer( *m_Logger ) ),
 		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
+		m_Typetable( new Typetable() ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_IdCounter( new IdCounter() ),
 		m_System( new System( *m_Logger ) )

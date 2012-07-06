@@ -23,8 +23,8 @@
 namespace _2Real
 {
 	Logger::Logger( std::string const& logfile ) :
-		m_CurrLines( new LogList ),
-		m_WriteLines( new LogList ),
+		m_CurrLines( new LogMessages ),
+		m_WriteLines( new LogMessages ),
 		m_File( logfile ),
 		m_KeepRunning( true ),
 		m_StopEvent( true ),
@@ -69,7 +69,7 @@ namespace _2Real
 			{
 				std::swap( m_CurrLines, m_WriteLines );
 				m_Access.unlock();
-				for ( LogList::iterator it = m_WriteLines->begin(); it != m_WriteLines->end(); ++it )
+				for ( LogMessageIterator it = m_WriteLines->begin(); it != m_WriteLines->end(); ++it )
 				{
 					m_File << it->first << " " << it->second << "\n";
 					m_File.flush();

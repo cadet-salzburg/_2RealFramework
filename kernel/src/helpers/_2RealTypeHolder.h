@@ -82,7 +82,6 @@ namespace _2Real
 	DataHolder< Datatype >::DataHolder( DataHolder< Datatype > const& src ) :
 		m_Data( src.m_Data )
 	{
-		std::cout << "XXXXXXXXXXXXXXXCOPYXXXXXXXXXXXX" << std::endl;
 	}
 
 	template< typename Datatype >
@@ -94,7 +93,6 @@ namespace _2Real
 		}
 
 		m_Data = src.m_Data;
-		std::cout << "XXXXXXXXXXXXASSIGNXXXXXXXXXXXXXXX" << std::endl;
 
 		return *this;
 	}

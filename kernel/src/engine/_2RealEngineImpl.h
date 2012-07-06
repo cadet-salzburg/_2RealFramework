@@ -121,10 +121,10 @@ namespace _2Real
 		// whatever you do. do not change the ordering of member variables here!
 		// ( unless you absolutely have to, in which case, good luck )
 
-		Timer					*m_Timer;
 		Logger					*m_Logger;
-		Typetable				*m_Typetable;
+		Timer					*m_Timer;
 		ThreadPool				*m_ThreadPool;
+		Typetable				*m_Typetable;
 		BundleManager			*m_BundleManager;
 		IdCounter				*m_IdCounter;
 		System					*m_System;

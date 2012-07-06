@@ -48,10 +48,15 @@ namespace _2Real
 
 	Bundle::~Bundle()
 	{
-		for ( BlockMap::iterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
+		clear();
+	}
+
+	void Bundle::clear()
+	{
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
-			bundle::Block *b = it->second;
-			delete b;
+			delete it->second;
+			it = m_BlockInstances.erase( it );
 		}
 	}
 
@@ -120,22 +125,11 @@ namespace _2Real
 		return m_BundleManager.createFunctionBlock( *this, blockName )->HandleAble< app::BlockHandle >::getHandle();
 	}
 
-	//void Bundle::setBundleContextHandle( app::ContextBlockHandle const& handle )
-	//{
-	//	// will be called by bundle manager on loading a bundle ( if there is one )
-	//	m_BundleContext = handle;
-	//}
-
-	//app::ContextBlockHandle Bundle::getBundleContextHandle() const
-	//{
-	//	return m_BundleContext;
-	//}
-
 	unsigned int Bundle::getBlockInstanceCount( string const& blockName ) const
 	{
 		unsigned int counter = 0;
-		std::pair< BlockMap::const_iterator, BlockMap::const_iterator > range = m_BlockInstances.equal_range( blockName );
-		for ( BlockMap::const_iterator it = range.first; it != range.second; ++it )
+		std::pair< BlockConstIterator, BlockConstIterator > range = m_BlockInstances.equal_range( blockName );
+		for ( BlockConstIterator it = range.first; it != range.second; ++it )
 		{
 			++counter;
 		}

@@ -1,17 +1,8 @@
 #include "ServiceImpl.h"
 
-#include "bundle/_2RealBundle.h"
-#include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealBlockMetainfo.h"
-#include "bundle/_2RealContextBlockMetainfo.h"
-#include "_2RealException.h"		// TODO: bundle->exception?
+#include "_2RealBundle.h"
 
-using _2Real::bundle::BundleMetainfo;
-using _2Real::bundle::BlockMetainfo;
-using _2Real::bundle::ContextBlockMetainfo;
-using _2Real::bundle::WithContext;
-using _2Real::bundle::WithoutContext;
-
+using namespace _2Real::bundle;
 using _2Real::Exception;
 
 using std::string;
@@ -39,7 +30,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		BlockMetainfo &in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "test" );
-		in.addParameter< string >( "in msg", "undefined" );
+		in.addInlet< string >( "in msg", "undefined" );
 		in.addInlet< unsigned int >( "in inlet", (unsigned int)0 );
 	}
 	catch ( Exception &e )

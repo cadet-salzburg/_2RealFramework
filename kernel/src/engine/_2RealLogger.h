@@ -40,13 +40,13 @@ namespace _2Real
 
 	private:
 
-		typedef std::list< std::pair< long, std::string > >					LogList;
-		typedef std::list< std::pair< long, std::string > >::iterator		LogListIterator;
-		typedef std::list< std::pair< long, std::string > >::const_iterator	LogListConstIterator;
+		typedef std::list< std::pair< long, std::string > >					LogMessages;
+		typedef std::list< std::pair< long, std::string > >::iterator		LogMessageIterator;
+		typedef std::list< std::pair< long, std::string > >::const_iterator	LogMessageConstIterator;
 
 		mutable Poco::FastMutex		m_Access;
-		LogList						*m_CurrLines;
-		LogList						*m_WriteLines;
+		LogMessages					*m_CurrLines;
+		LogMessages					*m_WriteLines;
 		std::ofstream				m_File;
 		Poco::Thread				m_Thread;
 		bool						m_KeepRunning;

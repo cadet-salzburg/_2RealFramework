@@ -1,7 +1,6 @@
 #include "ServiceImpl.h"
 
 #include "bundle/_2RealBlockHandle.h"
-#include "_2RealException.h"
 
 #include <iostream>
 #include <vector>
@@ -121,7 +120,7 @@ void In::setup( BlockHandle &handle )
 	try
 	{
 		m_In = handle.getInletHandle( "in inlet" );
-		m_Param = handle.getParameterHandle( "in msg" );
+		m_Msg= handle.getInletHandle( "in msg" );
 	}
 	catch ( Exception &e )
 	{
@@ -134,7 +133,7 @@ void In::update()
 {
 	try
 	{
-		cout << m_Param.getReadableRef< string >() << " " << m_In.getReadableRef< unsigned int >() << endl;
+		cout << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< unsigned int >() << endl;
 	}
 	catch ( Exception &e )
 	{

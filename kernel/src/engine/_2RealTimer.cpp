@@ -18,20 +18,19 @@
 */
 
 #include "engine/_2RealTimer.h"
-#include "helpers/_2RealSingletonHolder.h"
+#include "engine/_2RealLogger.h"
 
-#include <iostream>
+#include <sstream>
 
 namespace _2Real
 {
-	Timer::Timer() :
+	Timer::Timer( Logger &logger ) :
 		m_Callback( nullptr ),
-		m_Timer( 0, 1 )				//attempt to get the best resolution possible, even if this won't work in practice
-#ifdef _2REAL_DEBUG
-		, m_UpdateCount( 0 )
-		, m_SkippedCount( 0 )
-		, m_DebugTime()
-#endif
+		m_Logger( logger ),
+		m_Timer( 0, 1 ),				//attempt to get the best resolution possible, even if this won't work in practice
+		m_UpdateCount( 0 ),
+		m_SkippedCount( 0 ),
+		m_DebugTime()
 	{
 		m_Callback = new Poco::TimerCallback< Timer >( *this, &Timer::receiveTimerSignal );
 		m_Timer.start( *m_Callback, Poco::Thread::PRIO_HIGHEST );
@@ -51,18 +50,23 @@ namespace _2Real
 		m_TimerSignal.notify( elapsed );
 		m_Timestamp.update();
 
-#ifdef _2REAL_DEBUG
 		m_UpdateCount++;
 		m_SkippedCount += t.skipped();
 		if ( ( m_UpdateCount + m_SkippedCount ) >= 20000 )
 		{
-			std::cout << "updated " << m_UpdateCount << " times, skipped " << m_SkippedCount << " times, elapsed: " << m_DebugTime.elapsed() << std::endl;
+			std::ostringstream msg;
+			msg << std::endl;
+			msg << "-------------------------------------------------------------------------\n";
+			msg << "TIMER: updated " << m_UpdateCount << " times" << std::endl;
+			msg << "TIMER: skipped " << m_SkippedCount << " times" << std::endl;
+			msg << "TIMER: elapsed: " << m_DebugTime.elapsed() << std::endl;
+			msg << "-------------------------------------------------------------------------";
+			m_Logger.addLine( msg.str() );
+
 			m_UpdateCount = 0;
 			m_SkippedCount = 0;
 			m_DebugTime.update();
 		}
-#endif
-
 	}
 
 	void Timer::registerToTimerSignal( AbstractCallback< long > &callback )

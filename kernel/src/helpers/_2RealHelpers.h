@@ -32,53 +32,6 @@ namespace _2Real
 	const std::string toLower( std::string const& s );
 	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	template< typename Datatype >
-	std::ostream& operator<<( std::ostream &out, typename std::set< Datatype > const& s )
-	{
-		if ( s.empty() )
-		{
-			return out;
-		}
-
-		typename std::set< Datatype >::const_iterator it = s.begin();
-		out << *it;
-		++it;
-		for ( ; it != s.end(); ++it )
-		{
-			out << ", " << *it;
-		}
-		return out;
-	}
-
-	//template< typename Datatype >
-	//std::ostream& operator<<( std::ostream &out, typename std::set< Datatype * > const& s )
-	//{
-	//	if ( s.empty() )
-	//	{
-	//		return out;
-	//	}
-
-	//	typename std::set< Datatype >::const_iterator it = s.begin();
-	//	out << **it;
-	//	++it;
-	//	for ( ; it != s.end(); ++it )
-	//	{
-	//		if ( *it == nullptr )
-	//		{
-	//			out << ", NULL";
-	//		}
-	//		else
-	//		{
-	//			out << ", " << **it;
-	//		}
-	//	}
-	//	return out;
-	//}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	template< typename Datatype >
 	std::ostream& operator<<( std::ostream &out, typename std::vector< Datatype > const& v )
 	{
@@ -96,33 +49,6 @@ namespace _2Real
 		}
 		return out;
 	}
-
-	//template< typename Datatype >
-	//std::ostream& operator<<( std::ostream &out, typename std::vector< Datatype * > const& v )
-	//{
-	//	if ( v.empty() )
-	//	{
-	//		return out;
-	//	}
-
-	//	typename std::vector< Datatype >::const_iterator it = v.begin();
-	//	out << **it;
-	//	++it;
-	//	for ( ; it != v.end(); ++it )
-	//	{
-	//		if ( *it == nullptr )
-	//		{
-	//			out << ", NULL";
-	//		}
-	//		else
-	//		{
-	//			out << ", " << **it;
-	//		}
-	//	}
-	//	return out;
-	//}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template< typename Datatype >
 	std::ostream& operator<<( std::ostream &out, typename std::list< Datatype > const& l )
@@ -142,33 +68,6 @@ namespace _2Real
 		return out;
 	}
 
-	//template< typename Datatype >
-	//std::ostream& operator<<(std::ostream &out, typename std::list< Datatype * > const& l)
-	//{
-	//	if ( l.empty() )
-	//	{
-	//		return out;
-	//	}
-
-	//	typename std::list< Datatype >::const_iterator it = l.begin();
-	//	out << **it;
-	//	++it;
-	//	for ( ; it != l.end(); ++it )
-	//	{
-	//		if ( *it == nullptr )
-	//		{
-	//			out << ", NULL";
-	//		}
-	//		else
-	//		{
-	//			out << ", " << **it;
-	//		}
-	//	}
-	//	return out;
-	//}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	template< typename Datatype >
 	std::ostream& operator<<( std::ostream &out, typename std::map< std::string, Datatype > const& m )
 	{
@@ -177,36 +76,15 @@ namespace _2Real
 			return out;
 		}
 
-		for ( typename std::map< std::string, Datatype >::const_iterator it = m.begin(); it != m.end(); ++it )
+		typename std::map< std::string, Datatype >::const_iterator it = m.begin();
+		out << "[ " << it->first << " , " << it->second << " ]";
+		++it;
+		for ( ; it != m.end(); ++it )
 		{
-			out << it->first << " [ " << it->second << " ] \n";
+			out << "\n[ " << it->first << " , " << it->second << " ]";
 		}
 		return out;
 	}
-
-	//template< typename Datatype >
-	//std::ostream& operator<<( std::ostream &out, typename std::map< std::string, Datatype * > const& m )
-	//{
-	//	if ( m.empty() )
-	//	{
-	//		return out;
-	//	}
-
-	//	for ( typename std::map< std::string, Datatype * >::const_iterator it = m.begin(); it != m.end(); ++it )
-	//	{
-	//		if ( it->second == nullptr )
-	//		{
-	//			out << "NULL \n";
-	//		}
-	//		else
-	//		{
-	//			out << *( it->second ) << "\n";
-	//		}
-	//	}
-	//	return out;
-	//}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template< typename Datatype >
 	std::istream& operator>>( std::istream &in, typename std::list< Datatype > &l )

@@ -86,10 +86,12 @@ namespace _2Real
 			bundle::ContextBlockMetainfo	*meta;
 		};
 
-		typedef std::map< std::string, BlockInfo >	BlockInfoMap;
+		typedef std::map< std::string, BlockInfo >					BlockInfos;
+		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
+		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
 
 		bool										m_HasContext;
-		BlockInfoMap								m_BlockInfos;
+		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
 		BundleData									m_BundleData;
 		Typetable const&							m_Typetable;

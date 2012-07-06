@@ -30,16 +30,13 @@ using std::endl;
 using std::cin;
 using _2Real::app::Engine;
 using _2Real::Exception;
-using _2Real::BundleData;
-using _2Real::BlockData;
 using _2Real::app::BlockHandle;
 using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;
 using _2Real::app::OutletHandle;
-using _2Real::app::ParameterHandle;
 using _2Real::app::AppData;
 
-#include "vld.h"
+//#include "vld.h"
 
 #ifndef _DEBUG
 	#define shared_library_suffix ".dll"
@@ -55,7 +52,7 @@ int main( int argc, char *argv[] )
 	{
 		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
 
-		for ( unsigned int i=0; i<1; ++i )
+		for ( unsigned int i=0; i<100; ++i )
 		{
 			std::ostringstream msg;
 			msg << "in # " << i;
@@ -63,24 +60,24 @@ int main( int argc, char *argv[] )
 			BlockHandle out = testBundle.createBlockInstance( "out" );
 			OutletHandle outOut = out.getOutletHandle( "out outlet" );
 			out.setUpdateRate( 1.0 );
-			out.setUp();
+			out.setup();
 			out.start();
 
 			BlockHandle inout = testBundle.createBlockInstance( "in - out" );
 			InletHandle inoutIn = inout.getInletHandle( "inout inlet" );
 			OutletHandle inoutOut = inout.getOutletHandle( "inout outlet" );
-			inout.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
+			inoutIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
 			inout.setUpdateRate( 0.5 );
-			inout.setUp();
+			inout.setup();
 			inout.start();
 
 			BlockHandle in = testBundle.createBlockInstance( "in" );
 			InletHandle inIn = in.getInletHandle( "in inlet" );
-			ParameterHandle inParam = in.getParameterHandle( "in msg" );
-			inParam.setValue< string >( msg.str() );
+			InletHandle inMsg = in.getInletHandle( "in msg" );
+			inMsg.setValue< string >( msg.str() );
 			in.setUpdateRate( 0.25 );
-			in.setInletUpdatePolicy( BlockHandle::ALL_DATA_NEW );
-			in.setUp();
+			inIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
+			in.setup();
 			in.start();
 
 			inoutIn.linkTo( outOut );

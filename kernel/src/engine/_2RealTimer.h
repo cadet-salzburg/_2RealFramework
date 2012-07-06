@@ -24,12 +24,15 @@
 
 namespace _2Real
 {
+
+	class Logger;
+
 	class Timer
 	{
 
 	public:
 
-		Timer();
+		Timer( Logger &logger );
 		~Timer();
 
 		void receiveTimerSignal( Poco::Timer &t );
@@ -42,14 +45,14 @@ namespace _2Real
 		Poco::Timer							m_Timer;
 		Poco::Timestamp						m_Timestamp;
 
+		Logger								&m_Logger;
+
 		mutable Poco::FastMutex				m_Access;
 		CallbackEvent< long >				m_TimerSignal;
 
-#ifdef _2REAL_DEBUG
 		long								m_UpdateCount;
 		long								m_SkippedCount;
 		Poco::Timestamp						m_DebugTime;
-#endif
 
 	};
 }

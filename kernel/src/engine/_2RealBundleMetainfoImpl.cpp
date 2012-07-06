@@ -43,7 +43,7 @@ namespace _2Real
 
 	Metainfo::~Metainfo()
 	{
-		for ( BlockInfoMap::iterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
+		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
 			safeDelete( it->second.ctor );
 			safeDelete( it->second.data );
@@ -161,7 +161,7 @@ namespace _2Real
 			context = dynamic_cast< bundle::ContextBlock * > ( &( m_ContextInfo.ctor->create( nullptr ) ) );
 		}
 
-		BlockInfoMap::const_iterator it = m_BlockInfos.find( blockName );
+		BlockInfoConstIterator it = m_BlockInfos.find( blockName );
 		if ( it != m_BlockInfos.end() )
 		{
 			return it->second.ctor->create( context );
@@ -176,7 +176,7 @@ namespace _2Real
 
 	void Metainfo::cleanup()
 	{
-		for ( BlockInfoMap::iterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
+		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
 			m_BundleData.addBlockData( *it->second.data );
 		}

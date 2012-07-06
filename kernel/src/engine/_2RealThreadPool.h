@@ -22,9 +22,8 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealPoco.h"
 
-#include <deque>
 #include <list>
-#include <map>
+#include <set>
 #include <iostream>
 #include <string>
 
@@ -35,11 +34,7 @@ namespace _2Real
 	class PooledThread;
 	class FunctionBlockStateManager;
 	class Timer;
-
-	typedef std::list< PooledThread * >								ThreadList;
-	typedef std::deque< FunctionBlockStateManager * >				RunnableDeque;
-	typedef std::map< unsigned int, FunctionBlockStateManager * >	RunnableMap;
-	typedef std::pair< unsigned int, FunctionBlockStateManager * >	NamedRunnable;
+	class Logger;
 
 	class ThreadPool
 	{
@@ -52,101 +47,59 @@ namespace _2Real
 		void clear();
 		void update( long &time );
 
-
 		void scheduleService( FunctionBlockStateManager &s );
-		const bool unscheduleService( FunctionBlockStateManager &s );
 		void serviceIsFinished( FunctionBlockStateManager &s );
 		void abortService( FunctionBlockStateManager &s );
 		void executeCleanUp();
 
 	private:
 
+		typedef std::list< PooledThread * >									Threads;
+		typedef std::list< PooledThread * >::iterator						ThreadIterator;
+		typedef std::list< PooledThread * >::const_iterator					ThreadConstIterator;
+
+		typedef std::list< FunctionBlockStateManager * >					BlockBuffer;
+		typedef std::list< FunctionBlockStateManager * >::iterator			BufferedBlockIterator;
+		typedef std::list< FunctionBlockStateManager * >::const_iterator	BufferedBlockConstIterator;
+
+		typedef std::set< FunctionBlockStateManager * >						Blocks;
+		typedef std::set< FunctionBlockStateManager * >::iterator			BlockIterator;
+		typedef std::set< FunctionBlockStateManager * >::const_iterator		BlockConstIterator;
+
 		PooledThread * tryGetFreeThread();
 
-		/**
-		*	name (for debugging)
-		*/
-		std::string							m_Name;
+		Timer								&m_Timer;
+		Logger								&m_Logger;
 
-		/*
-		*	default stack size for the threads
-		*/
+		std::string							m_Name;
 		unsigned int						m_StackSize;
 
-		/**
-		*	the pooled threads
-		*/
-		ThreadList							m_Threads;
+		Threads								m_Threads;
 
-		/**
-		*	runnables waiting for a thread
-		*/
-		RunnableDeque						m_ReadyRunnables;
+		BlockBuffer							m_ReadyBlocks;
+		BlockBuffer							m_FinishedBlocks;
+		BlockBuffer							m_FinishedBuffer;
 
-		std::list< unsigned int >			m_ReceivedRunnables;
-		std::list< unsigned int >			m_FinishedRunnables;
+		Blocks								m_ExecutingBlocks;
+		Blocks								m_AbortedBlocks;
 
-		/**
-		*	runnables in execution
-		*/
-		RunnableMap							m_ExecutingRunnables;
-
-		/**
-		*	runnables that were aborted
-		*/
-		RunnableMap							m_AbortedRunnables;
-
-		/**
-		*	sync stuff
-		*/
-
-		/**
-		*	access to the pooled threads
-		*/
 		mutable Poco::FastMutex				m_ThreadAccess;
-
-		/**
-		*	access to executing runnables
-		*/
 		mutable Poco::FastMutex				m_ExecutingAccess;
-
-		/**
-		*	access to aborted runnables
-		*/
 		mutable Poco::FastMutex				m_AbortedAccess;
-
-		/**
-		*	access to ready runnables
-		*/
 		mutable Poco::FastMutex				m_ReadyAccess;
-
-		/**
-		*	access to finished runnables
-		*/
 		mutable Poco::FastMutex				m_FinishedAccess;
 
-#ifdef _2REAL_DEBUG
 		long								m_Elapsed;
-#endif
-
-		Timer								&m_Timer;
 
 	};
 
-	/**
-	*	maybe I'll just give the pooled threads references to their pool, instead of this
-	*/
 	class ThreadPoolCallback
 	{
 
 	public:
 
-		ThreadPoolCallback(ThreadPool &pool) : m_ThreadPool(pool) {}
-
-		void invoke(FunctionBlockStateManager &s)
-		{
-			m_ThreadPool.serviceIsFinished(s);
-		}
+		ThreadPoolCallback( ThreadPool &pool ) : m_ThreadPool(pool) {}
+		void invoke( FunctionBlockStateManager &s ) { m_ThreadPool.serviceIsFinished(s); }
 
 	private:
 

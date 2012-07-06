@@ -42,18 +42,9 @@ namespace _2Real
 		clear();
 	}
 
-	BundleLoader::BundleLoader( BundleLoader const& src )
-	{
-	}
-
-	BundleLoader& BundleLoader::operator=( BundleLoader const& src )
-	{
-		return *this;
-	}
-
 	void BundleLoader::clear()
 	{
-		for ( BundleMap::iterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
+		for ( BundleInfoIterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
 		{
 			delete it->second.metainfo;
 			it->second.library->unload();
@@ -69,7 +60,7 @@ namespace _2Real
 
 	bool BundleLoader::hasContext( string const& path ) const
 	{
-		BundleMap::const_iterator it = m_LoadedBundles.find( path );
+		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
 		if ( it == m_LoadedBundles.end() )
 		{
@@ -85,7 +76,7 @@ namespace _2Real
 	{
 		if ( isLibraryLoaded( path ) )
 		{
-			BundleMap::const_iterator it = m_LoadedBundles.find( path );
+			BundleInfoConstIterator it = m_LoadedBundles.find( path );
 			return it->second.metainfo->getBundleData();
 		}
 
@@ -144,7 +135,7 @@ namespace _2Real
 
 	bundle::Block& BundleLoader::createContext( std::string const& path ) const
 	{
-		BundleMap::const_iterator it = m_LoadedBundles.find( path );
+		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
 		if ( it == m_LoadedBundles.end() )
 		{
@@ -158,7 +149,7 @@ namespace _2Real
 
 	bundle::Block& BundleLoader::createBlock( std::string const& path, std::string const& blockName ) const
 	{
-		BundleMap::const_iterator it = m_LoadedBundles.find( path );
+		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
 		if ( it == m_LoadedBundles.end() )
 		{

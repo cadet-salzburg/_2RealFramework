@@ -29,7 +29,7 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+//#include "vld.h"
 #include <sstream>
 
 #include "windows.h"

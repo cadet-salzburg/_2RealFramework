@@ -61,36 +61,36 @@ namespace _2Real
 
 		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
 		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
-		void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
+		//void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
 
 		void addTrigger( AbstractInletBasedTrigger &trigger );
 		void removeTrigger( AbstractInletBasedTrigger &trigger );
 		void addTrigger( AbstractTimeBasedTrigger &trigger );
 		void removeTrigger( AbstractTimeBasedTrigger &trigger );
-		void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
-		void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
+		//void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
+		//void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
 
 	private:
 
 		template< typename T >
 		friend class FunctionBlock;
 
-		void handleStateChangeException(Exception &e);
+		void handleStateChangeException( Exception &e );
 		void triggersAreOk();
 		void uberBlocksAreOk();
 		void disableAllTriggers();
 		void disableTriggers();
-		void disableUberBlockTriggers();
+		//void disableUberBlockTriggers();
 		void resetAllTriggers();
 		void resetTriggers();
-		void resetUberBlockTriggers();
+		//void resetUberBlockTriggers();
 		void enableAllTriggers();
 		void enableTriggers();
-		void enableUberBlockTriggers();
+		//void enableUberBlockTriggers();
 		bool areTriggersEnabled() const;
-		bool areUberBlockTriggersEnabled() const;
+		//bool areUberBlockTriggersEnabled() const;
 		void evaluateTriggers();
-		void evaluateUberBlockTriggers();
+		//void evaluateUberBlockTriggers();
 
 		ThreadPool										&m_Threads;
 		Logger											&m_Logger;
@@ -100,11 +100,11 @@ namespace _2Real
 		bundle::Block									*m_FunctionBlock;
 
 		mutable Poco::FastMutex							m_TriggerAccess;
-		AbstractStateManager::TriggerList				m_Triggers;
+		AbstractStateManager::InletTriggers				m_InletTriggers;
 		AbstractTimeBasedTrigger						*m_TimeTrigger;
 
-		mutable Poco::FastMutex							m_UberBlockTriggerAccess;
-		AbstractStateManager::UberBlockTriggerList		m_UberBlockTriggers;
+		//mutable Poco::FastMutex						m_UberBlockTriggerAccess;
+		//AbstractStateManager::UberBlockTriggerList	m_UberBlockTriggers;
 
 		mutable Poco::FastMutex							m_EnabledAccess;
 		bool											m_UberBlockTriggersEnabled;

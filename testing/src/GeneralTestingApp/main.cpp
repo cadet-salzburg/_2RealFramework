@@ -25,7 +25,7 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+//#include "vld.h"
 
 using std::string;
 using std::cout;
@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
 		//}
 
 		outHandle = bundleHandle.createBlockInstance( "out" );
-		outHandle.setUpdateRate( 1.0 );
+		outHandle.setUpdateRate( 100.0 );
 
 		BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
 		cout << outHandles.size() << endl;
@@ -131,7 +131,7 @@ int main( int argc, char *argv[] )
 		OutletHandle outletHandle = outHandle.getOutletHandle( "outlet" );
 
 		inHandle = bundleHandle.createBlockInstance( "in" );
-		inHandle.setUpdateRate( 0.5 );
+		inHandle.setUpdateRate( 105.0 );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );

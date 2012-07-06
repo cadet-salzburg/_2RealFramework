@@ -20,30 +20,27 @@
 
 namespace _2Real
 {
-	const std::string toLower(std::string const& s)
+	const std::string toLower( std::string const& s )
 	{
 		std::string result;
 		result.clear();
-		for (unsigned int i=0; i<s.length(); i++)
+		for ( unsigned int i=0; i<s.length(); ++i )
 		{
-			result.push_back(tolower(s[i]));
+			result.push_back( tolower( s[i] ) );
 		}
 		return result;
 	}
 
-	const std::string trim(std::string const&s, std::string const& whitespace)
+	const std::string trim( std::string const& s, std::string const& whitespace )
 	{
 		const size_t beginStr = s.find_first_not_of(whitespace);
-
-		if (beginStr == std::string::npos)
+		if ( beginStr == std::string::npos )
 		{
 			return "";
 		}
-
-		const size_t endStr = s.find_last_not_of(whitespace);
+		const size_t endStr = s.find_last_not_of( whitespace );
 		const size_t range = endStr - beginStr + 1;
-
-		std::string result = s.substr(beginStr, range);
+		std::string result = s.substr( beginStr, range );
 		return result;
 	}
 }

@@ -48,11 +48,16 @@ namespace _2Real
 
 	private:
 
-		typedef std::map< std::string, EngineData >		EngineDataTable;
-		typedef std::map< std::string, std::string >	StringMap;
+		typedef std::map< std::string, EngineData >						Datatypes;
+		typedef std::map< std::string, EngineData >::iterator			DatatypeIterator;
+		typedef std::map< std::string, EngineData >::const_iterator		DatatypeConstIterator;
 
-		EngineDataTable		m_Typetable;
-		StringMap			m_LookupTable;
+		typedef std::map< std::string, std::string >					Typenames;
+		typedef std::map< std::string, std::string >::iterator			TypenameIterator;
+		typedef std::map< std::string, std::string >::const_iterator	TypenameConstIterator;
+
+		Datatypes			m_Datatypes;
+		Typenames			m_Typenames;
 
 	};
 
@@ -61,8 +66,8 @@ namespace _2Real
 	{
 
 #ifdef _DEBUG
-		typename EngineDataTable::iterator it = m_Typetable.find( typeName );
-		if ( it != m_Typetable.end() )
+		DatatypeIterator it = m_Datatypes.find( typeName );
+		if ( it != m_Datatypes.end() )
 		{
 			assert( NULL );
 		}
@@ -79,17 +84,17 @@ namespace _2Real
 		EngineData vectorData( vec );
 		EngineData listData( list );
 
-		m_Typetable[ typeName ] = simpleData;
-		m_Typetable[ nameVec ] = vectorData;
-		m_Typetable[ nameList ] = listData;
+		m_Datatypes[ typeName ] = simpleData;
+		m_Datatypes[ nameVec ] = vectorData;
+		m_Datatypes[ nameList ] = listData;
 
 		std::string simpleType = typeid( Datatype ).name();
 		std::string typeVec= vectorData.getTypename();
 		std::string typeList = listData.getTypename();
 
-		m_LookupTable[ simpleType ] = typeName;
-		m_LookupTable[ typeVec ] = nameVec;
-		m_LookupTable[ typeList ] = nameList;
+		m_Typenames[ simpleType ] = typeName;
+		m_Typenames[ typeVec ] = nameVec;
+		m_Typenames[ typeList ] = nameList;
 
 	}
 

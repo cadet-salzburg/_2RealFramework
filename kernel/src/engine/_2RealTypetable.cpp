@@ -29,9 +29,9 @@ namespace _2Real
 
 	const string Typetable::lookupLongTypename( string const& typeName ) const
 	{
-		EngineDataTable::const_iterator it = m_Typetable.find( typeName );
+		DatatypeConstIterator it = m_Datatypes.find( typeName );
 
-		if ( it == m_Typetable.end() )
+		if ( it == m_Datatypes.end() )
 		{
 			ostringstream msg;
 			msg << typeName << " is not known by the engine";
@@ -43,9 +43,9 @@ namespace _2Real
 
 	string const& Typetable::lookupTypename( string const& longTypename ) const
 	{
-		StringMap::const_iterator it = m_LookupTable.find( longTypename );
+		TypenameConstIterator it = m_Typenames.find( longTypename );
 
-		if ( it == m_LookupTable.end() )
+		if ( it == m_Typenames.end() )
 		{
 			ostringstream msg;
 			msg << longTypename << " is not a valid datatype in the engine";
@@ -63,9 +63,9 @@ namespace _2Real
 
 	EngineData const& Typetable::getInitialValueFromTypename( string const& typeName ) const
 	{
-		EngineDataTable::const_iterator it = m_Typetable.find( typeName );
+		DatatypeConstIterator it = m_Datatypes.find( typeName );
 
-		if ( it == m_Typetable.end() )
+		if ( it == m_Datatypes.end() )
 		{
 			ostringstream msg;
 			msg << typeName << " is not known by the engine";

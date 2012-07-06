@@ -30,7 +30,7 @@ namespace _2Real
 
 		Exception(std::string const& message);
 		Exception(Exception const& src);
-		~Exception();
+		virtual ~Exception() throw();
 		Exception& operator=(Exception const& src);
 
 		virtual const char* name() const;

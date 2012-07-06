@@ -22,6 +22,7 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealTimer.h"
+#include "engine/_2RealLogger.h"
 #include "app/_2RealCallbacksInternal.h"
 
 #include <iostream>
@@ -31,25 +32,20 @@ namespace _2Real
 {
 
 	ThreadPool::ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
-		m_StackSize(stackSize),
-		m_Name(name),
-		m_Threads(),
-		m_ReadyRunnables(),
-		m_ExecutingRunnables(),
-		m_AbortedRunnables(),
-		m_Timer( engine.getTimer() )
-#ifdef _2REAL_DEBUG
-		, m_Elapsed(0)
-#endif
+		m_StackSize( stackSize ),
+		m_Name( name ),
+		m_Timer( engine.getTimer() ),
+		m_Logger( engine.getLogger() ),
+		m_Elapsed(0)
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
 		m_Timer.registerToTimerSignal( *callback );
 
-		for (unsigned int i=0; i<capacity; ++i)
+		for ( unsigned int i=0; i<capacity; ++i )
 		{
-			ThreadPoolCallback *callback = new ThreadPoolCallback(*this);
-			PooledThread *thread = new PooledThread(*callback, m_StackSize);
-			m_Threads.push_back(thread);
+			ThreadPoolCallback *callback = new ThreadPoolCallback( *this );
+			PooledThread *thread = new PooledThread( *callback, m_StackSize );
+			m_Threads.push_back( thread );
 		}
 	}
 
@@ -64,24 +60,24 @@ namespace _2Real
 	void ThreadPool::clear()
 	{
 		m_ReadyAccess.lock();
-		m_ReadyRunnables.clear();
+		m_ReadyBlocks.clear();
 		m_ReadyAccess.unlock();
 
 		m_ExecutingAccess.lock();
-		m_ExecutingRunnables.clear();
+		m_ExecutingBlocks.clear();
 		m_ExecutingAccess.unlock();
 
 		m_AbortedAccess.lock();
-		m_AbortedRunnables.clear();
+		m_AbortedBlocks.clear();
 		m_AbortedAccess.unlock();
 
 		m_FinishedAccess.lock();
-		m_FinishedRunnables.clear();
-		m_ReceivedRunnables.clear();
+		m_FinishedBlocks.clear();
+		m_FinishedBuffer.clear();
 		m_FinishedAccess.unlock();
 
 		m_ThreadAccess.lock();
-		for (ThreadList::iterator it=m_Threads.begin(); it!=m_Threads.end(); /**/)
+		for ( ThreadIterator it = m_Threads.begin(); it != m_Threads.end(); /**/ )
 		{
 			if ((*it)->join())
 			{
@@ -95,75 +91,79 @@ namespace _2Real
 
 	void ThreadPool::update(long &time)
 	{
-#ifdef _2REAL_DEBUG
 		m_Elapsed += time;
-		if (m_Elapsed >= 10000000)
+		if ( m_Elapsed >= 5000000 )
 		{
 			m_FinishedAccess.lock();
-			size_t finished = m_FinishedRunnables.size();
-			size_t received = m_ReceivedRunnables.size();
+			size_t finished = m_FinishedBuffer.size();
+			size_t received = m_FinishedBlocks.size();
 			m_FinishedAccess.unlock();
 
 			m_ReadyAccess.lock();
-			size_t ready = m_ReadyRunnables.size();
+			size_t ready = m_ReadyBlocks.size();
 			m_ReadyAccess.unlock();
 
 			m_ExecutingAccess.lock();
-			size_t executing = m_ExecutingRunnables.size();
+			size_t executing = m_ExecutingBlocks.size();
 			m_ExecutingAccess.unlock();
 
 			m_AbortedAccess.lock();
-			size_t aborted = m_AbortedRunnables.size();
+			size_t aborted = m_AbortedBlocks.size();
 			m_AbortedAccess.unlock();
 
 			size_t reallyRunning = executing - received - finished;
 
-			std::cout << "ready: " << ready << std::endl;
-			std::cout << "executing: " << reallyRunning << std::endl;
-			std::cout << "aborted: " << aborted << std::endl;
+			std::ostringstream msg;
+			msg << std::endl;
+			msg << "-------------------------------------------------------------------------\n";
+			msg << "THREADPOOL: ready: " << ready << std::endl;
+			msg << "THREADPOOL: executing: " << reallyRunning << std::endl;
+			msg << "THREADPOOL: aborted: " << aborted << std::endl;
+			msg << "-------------------------------------------------------------------------";
+			m_Logger.addLine( msg.str() );
+
 			m_Elapsed = 0;
 		}
-#endif
+
 		executeCleanUp();
 	}
 
 	void ThreadPool::executeCleanUp()
 	{
 		m_FinishedAccess.lock();
-		m_FinishedRunnables.splice(m_FinishedRunnables.begin(), m_ReceivedRunnables, m_ReceivedRunnables.begin(), m_ReceivedRunnables.end());
+		m_FinishedBuffer.splice( m_FinishedBuffer.begin(), m_FinishedBlocks, m_FinishedBlocks.begin(), m_FinishedBlocks.end() );
 		m_FinishedAccess.unlock();
 
-		for (std::list< unsigned int >::iterator it = m_FinishedRunnables.begin(); it != m_FinishedRunnables.end(); /**/)
+		for ( BufferedBlockIterator it = m_FinishedBuffer.begin(); it != m_FinishedBuffer.end(); /**/ )
 		{
 			m_ExecutingAccess.lock();
-			RunnableMap::iterator r = m_ExecutingRunnables.find(*it);
-			if (r != m_ExecutingRunnables.end())
+			BlockIterator bIt = m_ExecutingBlocks.find( *it );
+			if ( bIt != m_ExecutingBlocks.end() )
 			{
-				FunctionBlockStateManager *service = r->second;
-				m_ExecutingRunnables.erase(r);
+				FunctionBlockStateManager *block = *bIt;
+				m_ExecutingBlocks.erase( bIt );
 				m_ExecutingAccess.unlock();
 
-				service->finishUpdate();
+				block->finishUpdate();
 			}
 			else
 			{
 				m_ExecutingAccess.unlock();
 				
 				m_AbortedAccess.lock();
-				RunnableMap::iterator r = m_AbortedRunnables.find(*it);
-				if (r != m_AbortedRunnables.end())
+				BlockIterator bIt = m_AbortedBlocks.find( *it );
+				if ( bIt != m_AbortedBlocks.end() )
 				{
-					FunctionBlockStateManager *service = r->second;
-					m_AbortedRunnables.erase(r);
+					FunctionBlockStateManager *block = *bIt;
+					m_AbortedBlocks.erase( bIt );
 					m_AbortedAccess.unlock();
 
-#ifdef _2REAL_DEBUG
-					std::cout << "threadpool finishing aborted service" << std::endl;
-#endif
-					service->finishUpdate();
-					if ( service->shutDown( 10000 ) )
+					m_Logger.addLine( "THREADPOOL: finishing aborted block" );
+
+					block->finishUpdate();
+					if ( block->shutDown( 10000 ) )
 					{
-						delete service;
+						delete block;
 					}
 				}
 				else
@@ -172,64 +172,63 @@ namespace _2Real
 				}
 			}
 
-			it = m_FinishedRunnables.erase(it);
+			it = m_FinishedBuffer.erase( it );
 		}
 
 		PooledThread *thread = nullptr;
 		m_ThreadAccess.lock();
-		while ((thread = tryGetFreeThread()) != nullptr)
+		while ( ( thread = tryGetFreeThread() ) != nullptr )
 		{
 			m_ReadyAccess.lock();
-			while (!m_ReadyRunnables.empty() && m_ReadyRunnables.front() == nullptr)
+			while ( !m_ReadyBlocks.empty() && m_ReadyBlocks.front() == nullptr )
 			{
-				m_ReadyRunnables.pop_front();
+				m_ReadyBlocks.pop_front();
 			}
 
-			if (m_ReadyRunnables.empty())
+			if ( m_ReadyBlocks.empty() )
 			{
 				m_ReadyAccess.unlock();
-				break; //thread acc. is unlocked outside of while loop
+				break; // thread acc. is unlocked outside of while loop
 			}
 			else
 			{
-				FunctionBlockStateManager *service = m_ReadyRunnables.front();
-				service->beginUpdate();
+				FunctionBlockStateManager *block = m_ReadyBlocks.front();
+				block->beginUpdate();
 				
-				m_ReadyRunnables.pop_front();
+				m_ReadyBlocks.pop_front();
 				m_ReadyAccess.unlock();
 
 				thread->reactivate();
 				m_ThreadAccess.unlock();
 
 				m_ExecutingAccess.lock();
-				m_ExecutingRunnables.insert(NamedRunnable(service->getId(), service));
+				m_ExecutingBlocks.insert( block );
 				m_ExecutingAccess.unlock();
 				
-				thread->run( Poco::Thread::PRIO_NORMAL, *service );
+				thread->run( Poco::Thread::PRIO_NORMAL, *block );
 			}
-
 			m_ThreadAccess.lock();
 		}
 		m_ThreadAccess.unlock();
 	}
 
-	void ThreadPool::serviceIsFinished(FunctionBlockStateManager &s)
+	void ThreadPool::serviceIsFinished( FunctionBlockStateManager &mgr )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_FinishedAccess);
-		m_ReceivedRunnables.push_back(s.getId());
+		Poco::ScopedLock< Poco::FastMutex > lock( m_FinishedAccess );
+		m_FinishedBlocks.push_back( &mgr );
 	}
 
-	void ThreadPool::abortService(FunctionBlockStateManager &s)
+	void ThreadPool::abortService( FunctionBlockStateManager &mgr )
 	{
 		m_ExecutingAccess.lock();
-		RunnableMap::iterator it = m_ExecutingRunnables.find(s.getId());
-		if (it != m_ExecutingRunnables.end())
+		BlockIterator it = m_ExecutingBlocks.find( &mgr );
+		if ( it != m_ExecutingBlocks.end() )
 		{
-			m_ExecutingRunnables.erase(it);
+			m_ExecutingBlocks.erase( it );
 			m_ExecutingAccess.unlock();
 
-			Poco::ScopedLock< Poco::FastMutex > lock(m_AbortedAccess);
-			m_AbortedRunnables.insert(NamedRunnable(s.getId(), &s));
+			Poco::ScopedLock< Poco::FastMutex > lock( m_AbortedAccess );
+			m_AbortedBlocks.insert( &mgr );
 		}
 		else
 		{
@@ -237,49 +236,17 @@ namespace _2Real
 		}
 	}
 
-	void ThreadPool::scheduleService(FunctionBlockStateManager &s)
+	void ThreadPool::scheduleService( FunctionBlockStateManager &mgr )
 	{
-		//m_ThreadAccess.lock();
-		//PooledThread *thread = tryGetFreeThread();
-		//if (thread != nullptr)
-		//{
-		//	s.beginExecution();
-
-		//	thread->reactivate();
-		//	m_ThreadAccess.unlock();
-
-		//	m_ExecutingAccess.lock();
-		//	m_ExecutingRunnables.insert(NamedRunnable(s.getId(), &s));
-		//	m_ExecutingAccess.unlock();
-
-		//	thread->run(Poco::Thread::PRIO_NORMAL, s);
-		//}
-		//else
-		//{
-			//m_ThreadAccess.unlock();
-			Poco::ScopedLock< Poco::FastMutex > lock( m_ReadyAccess );
-			m_ReadyRunnables.push_back( &s );
-		//}
-	}
-
-	const bool ThreadPool::unscheduleService(FunctionBlockStateManager &s)
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_ReadyAccess);
-		RunnableDeque::iterator it = std::find< RunnableDeque::iterator, FunctionBlockStateManager * >(m_ReadyRunnables.begin(), m_ReadyRunnables.end(), &s);
-		if (it != m_ReadyRunnables.end())
-		{
-			*it = nullptr;
-			return true;
-		}
-
-		return false;
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ReadyAccess );
+		m_ReadyBlocks.push_back( &mgr );
 	}
 
 	PooledThread * ThreadPool::tryGetFreeThread()
 	{
-		for (ThreadList::iterator it = m_Threads.begin(); it != m_Threads.end(); ++it)
+		for ( ThreadIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )
 		{
-			if ((*it)->isIdle())
+			if ( (*it)->isIdle() )
 			{
 				return *it;
 			}

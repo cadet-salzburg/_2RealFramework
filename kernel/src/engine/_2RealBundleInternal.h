@@ -59,25 +59,25 @@ namespace _2Real
 		Identifier const&		getIdentifier() const;
 		std::string const&		getName() const;
 
+		void					clear();
 		app::BundleHandle		createHandle();
 		app::BundleInfo			getBundleData() const;
-		//app::ContextBlockHandle	getBundleContextHandle() const;
 		app::BlockHandle &		createBlockInstance( std::string const& blockName );
 
 		BundleData const&		getMetadata() const;
-		//void					setBundleContextHandle( app::ContextBlockHandle const& handle );
 		void					addBlockInstance( bundle::Block &block, std::string const& blockName );
 		unsigned int			getBlockInstanceCount( std::string const& blockName ) const;
 
 	private:
 
-		typedef std::multimap< std::string, bundle::Block * >	BlockMap;
+		typedef std::multimap< std::string, bundle::Block * >					Blocks;
+		typedef std::multimap< std::string, bundle::Block * >::iterator			BlockIterator;
+		typedef std::multimap< std::string, bundle::Block * >::const_iterator	BlockConstIterator;
 
 		BundleManager			&m_BundleManager;
 		Identifier				const m_Identifier;
 		BundleData				const& m_Metadata;		// must be deleted before the library is unloaded
-		BlockMap				m_BlockInstances;
-		//FunctionBlock			*m_BundleContext;		// for strange reasons, i also hold a handle to the context here
+		Blocks					m_BlockInstances;
 
 	};
 

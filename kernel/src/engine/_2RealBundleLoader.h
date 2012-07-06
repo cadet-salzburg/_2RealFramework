@@ -49,10 +49,7 @@ namespace _2Real
 		bundle::Block& createBlock( std::string const& path, std::string const& blockName ) const;
 
 	private:
-		
-		BundleLoader( BundleLoader const& src );
-		BundleLoader& operator=( BundleLoader const& src );
-		
+
 		struct BundleInfo
 		{
 			BundleInfo() : library( nullptr ), metainfo( nullptr ) {}
@@ -61,8 +58,10 @@ namespace _2Real
 			Metainfo				*metainfo;
 		};
 
-		typedef std::map< std::string, BundleInfo >	BundleMap;
-		BundleMap									m_LoadedBundles;
+		typedef std::map< std::string, BundleInfo >						BundleInfos;
+		typedef std::map< std::string, BundleInfo >::iterator			BundleInfoIterator;
+		typedef std::map< std::string, BundleInfo >::const_iterator		BundleInfoConstIterator;
+		BundleInfos														m_LoadedBundles;
 
 	};
 

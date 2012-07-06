@@ -21,7 +21,7 @@
 #include "helpers/_2RealPoco.h"
 
 #include <string>
-#include <list>
+#include <set>
 
 namespace _2Real
 {
@@ -37,8 +37,7 @@ namespace _2Real
 
 	public:
 
-		typedef std::list< AbstractInletBasedTrigger * >	TriggerList;
-		typedef std::list< UberBlockBasedTrigger * >	UberBlockTriggerList;
+		//typedef std::list< UberBlockBasedTrigger * >		UberBlockTriggerList;
 
 		AbstractStateManager( AbstractUberBlock &owner );
 		virtual ~AbstractStateManager();
@@ -48,16 +47,20 @@ namespace _2Real
 
 		virtual void tryTriggerInlet( AbstractInletBasedTrigger &trigger ) = 0;
 		virtual void tryTriggerTime( AbstractTimeBasedTrigger &trigger ) = 0;
-		virtual void tryTriggerUberBlock( UberBlockBasedTrigger &trigger ) = 0;
+		//virtual void tryTriggerUberBlock( UberBlockBasedTrigger &trigger ) = 0;
 
 		virtual void addTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
 		virtual void removeTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
 		virtual void addTrigger( AbstractInletBasedTrigger &trigger ) = 0;
 		virtual void removeTrigger( AbstractInletBasedTrigger &trigger ) = 0;
-		virtual void addUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
-		virtual void removeUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
+		//virtual void addUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
+		//virtual void removeUberBlockTrigger( UberBlockBasedTrigger &trigger ) = 0;
 
 	protected:
+
+		typedef std::set< AbstractInletBasedTrigger * >						InletTriggers;
+		typedef std::set< AbstractInletBasedTrigger * >::iterator			InletTriggerIterator;
+		typedef std::set< AbstractInletBasedTrigger * >::const_iterator		InletTriggerConstIterator;
 
 		AbstractUberBlock		&m_Owner;
 		Poco::Event				m_StopEvent;
