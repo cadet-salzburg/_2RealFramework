@@ -1,13 +1,13 @@
-﻿Build started 06.07.2012 11:23:56.
+﻿Build started 06.07.2012 15:13:33.
      1>Project "D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\experimental\VideoTestSample\test\build\vc10\CameraCaptureTest.vcxproj" on node 2 (build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(299,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
      1>InitializeBuildStatus:
-         Touching "Debug\CameraCaptureTest.unsuccessfulbuild".
+         Creating "Debug\CameraCaptureTest.unsuccessfulbuild" because "AlwaysCreate" was specified.
        CustomBuild:
          All outputs are up-to-date.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include /I.\GeneratedFiles\Debug /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtCore /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtGui /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtOpenGL /I..\..\src /ID:\Work\CADET\Repository\cadet\externalLibs\poco\foundation\include /ID:\Work\CADET\Repository\cadet\trunk\_2RealFramework\kernel\src /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D QT_LARGEFILE_SUPPORT /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\BlockUnitTestWidget.cpp
-         BlockUnitTestWidget.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include /I.\GeneratedFiles\Debug /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtCore /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtGui /ID:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\include\QtOpenGL /I..\..\src /ID:\Work\CADET\Repository\cadet\externalLibs\poco\foundation\include /ID:\Work\CADET\Repository\cadet\trunk\_2RealFramework\kernel\src /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D QT_LARGEFILE_SUPPORT /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\BlockOutletWidget.cpp
+         BlockOutletWidget.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\\CameraCaptureTest.exe" /NOLOGO /LIBPATH:D:\SDK\QT\Desktop\Qt\4.8.1\msvc2010\\lib /LIBPATH:D:\Work\CADET\Repository\cadet\externalLibs\poco\lib /LIBPATH:D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\kernel\lib qtmaind.lib QtCored4.lib QtGuid4.lib QtOpenGLd4.lib opengl32.lib glu32.lib _2RealEngine_32d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\CameraCaptureTest.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\CameraCaptureTest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\CameraCaptureTest.lib" /MACHINE:X86 Debug\BlockInletWidget.obj
          Debug\BlockOutletWidget.obj
@@ -16,6 +16,7 @@
          Debug\moc_BlockInletWidget.obj
          Debug\moc_BlockOutletWidget.obj
          Debug\moc_BlockUnitTestWidget.obj
+         LINK : D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\\CameraCaptureTest.exe not found or not built by the last incremental link; performing full link
          CameraCaptureTest.vcxproj -> D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\CameraCaptureTest.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\CADET\Repository\cadet\trunk\_2RealFramework\bundles\test\\CameraCaptureTest.exe;#1" /manifest Debug\CameraCaptureTest.exe.intermediate.manifest
@@ -34,4 +35,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.50
+Time Elapsed 00:00:03.43

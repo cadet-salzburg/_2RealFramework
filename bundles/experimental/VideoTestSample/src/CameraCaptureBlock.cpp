@@ -35,7 +35,7 @@ void VideoInputBlock::update()
 {
 	try
 	{
-		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>() )%m_CameraDeviceManager->getNumberOfConnectedDevices() ;  //Sanitize input
+		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  //Sanitize input
 		m_CameraDeviceManager->switchToDevice( cameraIndex );
 		m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( cameraIndex );
 	}

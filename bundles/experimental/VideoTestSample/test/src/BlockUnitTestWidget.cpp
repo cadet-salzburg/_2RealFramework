@@ -116,12 +116,11 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 	BlockInfo::ParameterInfos outlets = m_CameraBlockHandle.getBlockInfo().getOutlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
-//	for(auto it = outlets.begin(); it != outlets.end(); it++)
-//	{
-
-		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle("ImageDataOutlet") );
+	for(auto it = outlets.begin(); it != outlets.end(); it++)
+	{
+		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()), this );
 		layout->addWidget(tmp);
-//	}
+	}
 
 	groupBox->setLayout(layout);
 	return groupBox;

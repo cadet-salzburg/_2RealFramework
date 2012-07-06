@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'BlockUnitTestWidget.h'
 **
-** Created: Fri 6. Jul 10:46:36 2012
+** Created: Fri 6. Jul 15:09:42 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
