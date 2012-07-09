@@ -10,14 +10,14 @@ using std::string;
 using std::cout;
 using std::endl;
 
-//
+// this signature mus be implemented 
 void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
 		info.setDescription( "Camera Capture Bundle" );
 		info.setAuthor( "Robert Praxmarer" );
-		info.setCategory( "experimental" );
+		info.setCategory( "Experimental" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
@@ -27,7 +27,6 @@ void getBundleMetainfo( BundleMetainfo& info )
 		cameraCapture.addInlet<double>("doubleInlet", 0);
 		cameraCapture.addOutlet<_2Real::ImageT<unsigned char>>("imageOutlet");
 		cameraCapture.addOutlet<double>("doubleOutlet");
-
 		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )

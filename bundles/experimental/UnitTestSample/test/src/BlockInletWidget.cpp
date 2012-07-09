@@ -3,10 +3,11 @@
 using namespace std;
 using namespace _2Real;
 
-BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) : m_InletHandle(inletHandle), QGroupBox(parent)
+BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) :  QGroupBox(parent)
 {
 	try
 	{
+		m_InletHandle = inletHandle;
 		QHBoxLayout*	layout = new QHBoxLayout();
 		layout->addWidget( new QLabel(QString::fromStdString( m_InletHandle.getName())) );
 	
