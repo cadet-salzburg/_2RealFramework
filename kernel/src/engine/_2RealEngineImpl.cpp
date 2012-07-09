@@ -32,6 +32,7 @@
 #include "helpers/_2RealEvent.h"
 #include "engine/_2RealTimer.h"
 
+#include "datatypes/_2RealDeviceList.h"
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealEnum.h"
 
@@ -78,31 +79,35 @@ namespace _2Real
 		m_IdCounter( new IdCounter() ),
 		m_System( new System( *m_Logger ) )
 	{
-		m_Typetable->registerType< char >("char");
-		m_Typetable->registerType< unsigned char >("unsigned char");
-		m_Typetable->registerType< short >("short");
-		m_Typetable->registerType< unsigned short >("unsigned short");
-		m_Typetable->registerType< int >("int");
-		m_Typetable->registerType< unsigned int >("unsigned int");
-		m_Typetable->registerType< long >("long");
-		m_Typetable->registerType< unsigned long >("unsigned long");
-		m_Typetable->registerType< float >("float");
-		m_Typetable->registerType< double >("double");
-		m_Typetable->registerType< bool >("bool");
-		m_Typetable->registerType< std::string >("string");
+		// TODO: do not automatically regsiter lists & vectors
+
+		m_Typetable->registerType< char >( "char");
+		m_Typetable->registerType< unsigned char >( "unsigned char" );
+		m_Typetable->registerType< short >( "short");
+		m_Typetable->registerType< unsigned short >( "unsigned short" );
+		m_Typetable->registerType< int >( "int" );
+		m_Typetable->registerType< unsigned int >( "unsigned int" );
+		m_Typetable->registerType< long >( "long" );
+		m_Typetable->registerType< unsigned long >( "unsigned long" );
+		m_Typetable->registerType< float >( "float" );
+		m_Typetable->registerType< double >( "double" );
+		m_Typetable->registerType< bool >( "bool" );
+		m_Typetable->registerType< std::string >( "string" );
 
 		m_Typetable->registerType< StringEnumeration >( "enum_string" );
 
-		m_Typetable->registerType< ImageT < char > >("img_char");
-		m_Typetable->registerType< ImageT < unsigned char > >("img_uchar");
-		m_Typetable->registerType< ImageT < short > >("img_short");
-		m_Typetable->registerType< ImageT < unsigned short > >("img_ushort");
-		m_Typetable->registerType< ImageT < int > >("img_int");
-		m_Typetable->registerType< ImageT < unsigned int > >("img_uint");
-		m_Typetable->registerType< ImageT < long > >("img_long");
-		m_Typetable->registerType< ImageT < unsigned long > >("img_ulong");
-		m_Typetable->registerType< ImageT < float > >("img_float");
-		m_Typetable->registerType< ImageT < double > >("img_double");
+		m_Typetable->registerType< ImageT < char > >( "img_char" );
+		m_Typetable->registerType< ImageT < unsigned char > >( "img_uchar" );
+		m_Typetable->registerType< ImageT < short > >( "img_short" );
+		m_Typetable->registerType< ImageT < unsigned short > >( "img_ushort" );
+		m_Typetable->registerType< ImageT < int > >( "img_int" );
+		m_Typetable->registerType< ImageT < unsigned int > >( "img_uint" );
+		m_Typetable->registerType< ImageT < long > >( "img_long" );
+		m_Typetable->registerType< ImageT < unsigned long > >( "img_ulong" );
+		m_Typetable->registerType< ImageT < float > >( "img_float" );
+		m_Typetable->registerType< ImageT < double > >( "img_double" );
+
+		m_Typetable->registerType< DeviceInfos >( "device_infos" );
 
 		m_Timestamp.update();
 	}

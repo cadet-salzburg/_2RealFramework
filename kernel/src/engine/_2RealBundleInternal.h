@@ -49,6 +49,8 @@ namespace _2Real
 	class BundleData;
 	class Identifier;
 	class BundleManager;
+	template< typename T >
+	class FunctionBlock;
 
 	class Bundle : private NonCopyable< Bundle >, private Handleable< app::BundleHandle >
 	{
@@ -62,17 +64,19 @@ namespace _2Real
 		using Handleable< app::BundleHandle >::registerHandle;
 		using Handleable< app::BundleHandle >::unregisterHandle;
 
-		Identifier const&		getIdentifier() const;
-		std::string const&		getName() const;
+		Identifier const&			getIdentifier() const;
+		std::string const&			getName() const;
 
-		void					clear();
-		app::BundleHandle		createHandle();
-		app::BundleInfo			getBundleData() const;
-		app::BlockHandle &		createBlockInstance( std::string const& blockName );
+		void						clear();
+		app::BundleHandle			createHandle();
+		app::BundleInfo				getBundleData() const;
+		app::BlockHandle &			createBlockInstance( std::string const& blockName );
+		app::ContextBlockHandle &	getBundleContextHandle() const;
+		void						setBundleContext( FunctionBlock< app::ContextBlockHandle > &context );
 
-		BundleData const&		getMetadata() const;
-		void					addBlockInstance( bundle::Block &block, std::string const& blockName );
-		unsigned int			getBlockInstanceCount( std::string const& blockName ) const;
+		BundleData const&			getMetadata() const;
+		void						addBlockInstance( bundle::Block &block, std::string const& blockName );
+		unsigned int				getBlockInstanceCount( std::string const& blockName ) const;
 
 	private:
 
@@ -84,6 +88,7 @@ namespace _2Real
 		Identifier				const m_Identifier;
 		BundleData				const& m_Metadata;		// must be deleted before the library is unloaded
 		Blocks					m_BlockInstances;
+		FunctionBlock< app::ContextBlockHandle >			*m_Context;
 
 	};
 

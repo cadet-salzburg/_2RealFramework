@@ -29,6 +29,7 @@ namespace _2Real
 	namespace app
 	{
 		class BlockHandle;
+		class ContextBlockHandle;
 		class BundleInfo;
 
 		class BundleHandle : private Handle
@@ -43,6 +44,7 @@ namespace _2Real
 			BundleHandle& operator=( BundleHandle const& other );
 
 			BundleInfo getBundleInfo() const;
+			ContextBlockHandle & getContextBlock() const;
 
 			bool isValid() const;
 			bool operator==( BundleHandle const& other ) const;

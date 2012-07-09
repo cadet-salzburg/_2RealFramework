@@ -88,6 +88,7 @@ namespace _2Real
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
 			BundleContext *contextBlock = createContextBlock( *bundle );
+			bundle->setBundleContext( *contextBlock );
 			contextBlock->updateWithFixedRate( 1.0 );
 			contextBlock->setUp();
 			contextBlock->start();

@@ -142,4 +142,14 @@ namespace _2Real
 		m_BlockInstances.insert( make_pair( blockName, &block ) );
 	}
 
+	app::ContextBlockHandle & Bundle::getBundleContextHandle() const
+	{
+		return m_Context->getHandle();
+	}
+
+	void Bundle::setBundleContext( FunctionBlock< app::ContextBlockHandle > &context )
+	{
+		m_Context = &context;
+	}
+
 }

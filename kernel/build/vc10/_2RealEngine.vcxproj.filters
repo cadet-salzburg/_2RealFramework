@@ -255,6 +255,15 @@
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealDeviceList.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">

@@ -21,6 +21,8 @@
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
+using std::string;
+
 #define checkValidity( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "context block handle not initialized" );
 
@@ -111,21 +113,53 @@ namespace _2Real
 			return m_Block >= other.m_Block;
 		}
 
+		void ContextBlockHandle::invalidate()
+		{
+			m_Block = nullptr;
+		}
+
 		BlockInfo ContextBlockHandle::getBlockInfo() const
 		{
 			checkValidity( m_Block );
 			return m_Block->getBlockData();
 		}
 
-		void ContextBlockHandle::setUpdateRate( const double updatesPerSecond )
+		OutletHandle & ContextBlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			m_Block->updateWithFixedRate( updatesPerSecond );
+			return m_Block->getAppOutletHandle( name );
 		}
 
-		void ContextBlockHandle::invalidate()
+		ContextBlockHandle::OutletHandles const& ContextBlockHandle::getAllOutletHandles() const
 		{
-			m_Block = nullptr;
+			checkValidity( m_Block );
+			return m_Block->getAppOutletHandles();
+		}
+
+		void ContextBlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
+		{
+			checkValidity( m_Block );
+			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			m_Block->registerToNewData( *cb );
+		}
+
+		void ContextBlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
+		{
+			checkValidity( m_Block );
+			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			m_Block->unregisterFromNewData( *cb);
+		}
+
+		void ContextBlockHandle::registerToNewDataInternal( BlockCallback &cb ) const
+		{
+			checkValidity( m_Block );
+			m_Block->registerToNewData( cb );
+		}
+
+		void ContextBlockHandle::unregisterFromNewDataInternal( BlockCallback &cb ) const
+		{
+			checkValidity( m_Block );
+			m_Block->unregisterFromNewData( cb );
 		}
 	}
 }

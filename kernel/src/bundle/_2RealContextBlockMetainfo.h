@@ -25,6 +25,7 @@
 namespace _2Real
 {
 	class BlockData;
+	class Typetable;
 
 	namespace bundle
 	{
@@ -33,16 +34,25 @@ namespace _2Real
 
 		public:
 
-			ContextBlockMetainfo( BlockData &data );
+			ContextBlockMetainfo( BlockData &data, Typetable const& typetable );
 
 			void setDescription( std::string const& description );
+
+			template< typename Datatype >
+			void addOutlet( std::string const& outletName )
+			{
+				addOutletInternal( outletName, typeid( Datatype ).name() );
+			}
 
 			// TODO: functions for context block may be added as the need arises
 			//void setUpdateRate( const float updatesPerSecond );
 
 		private:
 
-			BlockData		&m_Impl;
+			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
+
+			BlockData	&m_Impl;
+			Typetable	const& m_Typetable;
 
 		};
 	}

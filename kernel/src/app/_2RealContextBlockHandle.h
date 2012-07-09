@@ -19,6 +19,9 @@
 #pragma once
 
 #include "helpers/_2RealHandle.h"
+#include "app/_2RealCallbacks.h"
+
+#include <vector>
 
 namespace _2Real
 {
@@ -27,12 +30,17 @@ namespace _2Real
 	
 	namespace app
 	{
+		class OutletHandle;
 		class BlockInfo;
 
 		class ContextBlockHandle : private Handle
 		{
 
 		public:
+
+			typedef std::vector< OutletHandle >					OutletHandles;
+			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
+			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block );
@@ -42,8 +50,6 @@ namespace _2Real
 
 			BlockInfo getBlockInfo() const;
 
-			void setUpdateRate( const double updatesPerSecond );
-
 			bool isValid() const;
 			bool operator==( ContextBlockHandle const& other ) const;
 			bool operator!=( ContextBlockHandle const& other ) const;
@@ -52,11 +58,36 @@ namespace _2Real
 			bool operator>( ContextBlockHandle const& other ) const;
 			bool operator>=( ContextBlockHandle const& other ) const;
 
+			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			OutletHandles const&	getAllOutletHandles() const;
+
+			// callback registration for free functions
+			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
+			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;
+
+			// callback registration for member functions
+			template< typename TCallable >
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
+			{
+				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				registerToNewDataInternal( *cb );
+			}
+
+			template< typename TCallable >
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
+			{
+				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				unregisterFromNewDataInternal( *cb );
+			}
+
 		protected:
 
 			void invalidate();
 
 		private:
+
+			void registerToNewDataInternal( BlockCallback &cb ) const;
+			void unregisterFromNewDataInternal( BlockCallback &cb ) const;
 
 			FunctionBlock< ContextBlockHandle >		*m_Block;
 

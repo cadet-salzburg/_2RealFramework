@@ -19,6 +19,7 @@
 #pragma once
 
 #include "engine/_2RealIdentifier.h"
+#include "helpers/_2RealNonCopyable.h"
 
 namespace _2Real
 {
@@ -27,7 +28,7 @@ namespace _2Real
 	class OutletIO;
 	class Exception;
 
-	class AbstractUberBlock
+	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >
 	{
 
 	public:

@@ -118,6 +118,12 @@ namespace _2Real
 			return m_Bundle->getBundleData();
 		}
 
+		ContextBlockHandle & BundleHandle::getContextBlock() const
+		{
+			checkValidity( m_Bundle );
+			return m_Bundle->getBundleContextHandle();
+		}
+
 		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
 		{
 			checkValidity( m_Bundle );

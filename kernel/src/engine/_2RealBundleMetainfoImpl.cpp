@@ -112,7 +112,7 @@ namespace _2Real
 		// TODO: reserve name for context
 		m_ContextInfo.data = new BlockData( "bundle context" );
 		m_ContextInfo.data->setDescription( "context for all other blocks exported by the bundle" );
-		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data );
+		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data, m_Typetable );
 
 		m_HasContext = true;
 

@@ -18,19 +18,35 @@
 
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "engine/_2RealBlockData.h"
+#include "engine/_2RealTypetable.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ContextBlockMetainfo::ContextBlockMetainfo( BlockData &data ) :
-			m_Impl( data )
+		ContextBlockMetainfo::ContextBlockMetainfo( BlockData &data, Typetable const& typetable ) :
+			m_Impl( data ),
+			m_Typetable( typetable )
 		{
 		}
 
 		void ContextBlockMetainfo::setDescription( std::string const& description )
 		{
 			m_Impl.setDescription( description );
+		}
+
+		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
+		{
+			const std::string typeName = m_Typetable.lookupTypename( longTypename );
+			Any const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
+
+			// the outlet does not get a default value, but the data needs to be allocated anyway
+			// so copy the value stored inside the typetable ( constructed with default ctor )
+			Any val;
+			val.cloneFrom( defaultConstructed );
+
+			ParameterData data( outletName, longTypename, typeName, val );
+			m_Impl.addOutlet( data );
 		}
 	}
 }
