@@ -30,7 +30,7 @@ namespace _2Real
 	class Parameter
 	{
 
-	public:
+	protected:
 
 		Parameter( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName );
 

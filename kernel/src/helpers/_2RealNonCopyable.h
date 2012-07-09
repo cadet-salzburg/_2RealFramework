@@ -18,34 +18,23 @@
 
 #pragma once
 
-#include <string>
-#include <sstream>
-
 namespace _2Real
 {
-	class Version
+
+	template< typename T >
+	class NonCopyable
 	{
 
-	public:
+	protected:
 
-		Version( unsigned int major, unsigned int minor, unsigned int revision );
-
-		bool operator==( Version const& rhs );
-		bool operator<( Version const& rhs );
-
-		friend std::ostream& operator<<( std::ostream &out, Version const& version );
-
-		std::string asString() const;
-
-		unsigned int major() const;
-		unsigned int minor() const;
-		unsigned int revision() const;
-
+		NonCopyable () {}
+		~NonCopyable () {}
+	
 	private:
 
-		unsigned int		m_Major;
-		unsigned int		m_Minor;
-		unsigned int		m_Revision;
+		NonCopyable ( NonCopyable const& src );
+		T & operator= ( T const& src );
 
 	};
+
 }

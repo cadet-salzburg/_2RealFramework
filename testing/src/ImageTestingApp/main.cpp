@@ -157,29 +157,31 @@ private:
 
 int main( int argc, char *argv[] )
 {
+	Engine &testEngine = Engine::instance();
+
+	SDL_Init( SDL_INIT_VIDEO );
+
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+	SDL_Window *window = SDL_CreateWindow( "yay", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+	SDL_GLContext context = SDL_GL_CreateContext( window );
+	SDL_GL_MakeCurrent( window, context );
+
+	string error = SDL_GetError();
+	cout << error << endl;
+
+	GLenum err = glewInit();
+	if ( err != GLEW_OK )
+	{
+		throw Exception( "glew error" );
+	}
+
+	SDL_GL_SetSwapInterval( 1 );
+
 	try
 	{
-		SDL_Init( SDL_INIT_VIDEO );
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
-		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-		SDL_Window *window = SDL_CreateWindow( "yay", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-		SDL_GLContext context = SDL_GL_CreateContext( window );
-		SDL_GL_MakeCurrent( window, context );
-
-		string error = SDL_GetError();
-		cout << error << endl;
-
-		GLenum err = glewInit();
-		if ( err != GLEW_OK )
-		{
-			throw Exception( "glew error" );
-		}
-
-		SDL_GL_SetSwapInterval( 1 );
-
-		Engine &testEngine = Engine::instance();
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
 		BlockHandle out = testBundle.createBlockInstance( "image out" );
@@ -207,16 +209,16 @@ int main( int argc, char *argv[] )
 				}
 			}
 
-			receiver.useData();
 			SDL_GL_SwapWindow( window );
+			receiver.useData();
 		}
-
-		SDL_DestroyWindow( window );
-		SDL_GL_DeleteContext( context );
-		SDL_Quit();
 	}
 	catch ( std::exception &e )
 	{
 		cout << e.what() << endl;
 	}
+
+	SDL_DestroyWindow( window );
+	SDL_GL_DeleteContext( context );
+	SDL_Quit();
 }

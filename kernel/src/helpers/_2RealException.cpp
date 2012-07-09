@@ -16,7 +16,9 @@
 	limitations under the License.
 */
 
-#include "_2RealException.h"
+#include "helpers/_2RealException.h"
+
+using std::string;
 
 namespace _2Real
 {
@@ -25,14 +27,14 @@ namespace _2Real
 	{
 	}
 
-	Exception::Exception(std::string const& message) :
-		m_Message(message)
+	Exception::Exception( string const& message ) :
+		m_Message( message )
 	{
 	}
 
-	Exception::Exception(Exception const& src):
-		std::exception(src),
-		m_Message(src.m_Message)
+	Exception::Exception( Exception const& src ):
+		std::exception( src ),
+		m_Message( src.m_Message )
 	{
 	}
 
@@ -40,7 +42,7 @@ namespace _2Real
 	{
 	}
 
-	Exception& Exception::operator=(Exception const& src)
+	Exception& Exception::operator=( Exception const& src )
 	{
 		m_Message = src.m_Message;
 		return *this;
@@ -53,7 +55,7 @@ namespace _2Real
 
 	const char* Exception::className() const
 	{
-		return typeid(*this).name();
+		return typeid( *this ).name();
 	}
 
 	const char* Exception::what() const
@@ -63,12 +65,22 @@ namespace _2Real
 
 	Exception* Exception::clone() const
 	{
-		return new Exception(*this);
+		return new Exception( *this );
 	}
 
 	void Exception::rethrow() const
 	{
 		throw *this;
+	}
+
+	string const& Exception::message() const
+	{
+		return m_Message;
+	}
+
+	void Exception::setMessage( string const& message )
+	{
+		m_Message = message;
 	}
 
 	IMPLEMENT_EXCEPTION( InvalidStateChangeException, Exception, "invalid state change exception" )

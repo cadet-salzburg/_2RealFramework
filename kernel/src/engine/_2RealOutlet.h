@@ -19,47 +19,34 @@
 #pragma once
 
 #include "engine/_2RealParameter.h"
-#include "engine/_2RealTimestampedData.h"
-#include "app/_2RealAppData.h"
-#include "app/_2RealCallbacks.h"
-#include "helpers/_2RealHandleAble.h"
-#include "app/_2RealOutletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
+#include "helpers/_2RealHandleable.h"
+#include "helpers/_2RealNonCopyable.h"
 
 namespace _2Real
 {
-
-	namespace app
-	{
-		class InletHandle;
-	}
-
 	class EngineImpl;
 
-	class Outlet : public Parameter, public Handleable< bundle::OutletHandle >
+	class Outlet : private Parameter, private NonCopyable< Outlet >, private Handleable< bundle::OutletHandle >
 	{
 
 	public:
 
 		Outlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
 
+		using Handleable< bundle::OutletHandle >::getHandle;
+		using Handleable< bundle::OutletHandle >::registerHandle;
+		using Handleable< bundle::OutletHandle >::unregisterHandle;
+
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getName;
-		using Parameter::getData;
 		using Parameter::getOwningUberBlock;
-
-		//void			linkTo( app::InletHandle &inlet );
-		//void			unlinkFrom( app::InletHandle &Inlet );
-		//void			registerToNewData( app::OutletCallback &callback );
-		//void			unregisterFromNewData( app::OutletCallback &callback );
+		using Parameter::getData;
 
 		bool			synchronize();
-		Any &	getWriteableData();
+		Any &			getWriteableData();
 		void			discardCurrentUpdate();
-
-		//void			addListener( AbstractCallback< TimestampedData > &callback );
-		//void			removeListener( AbstractCallback< TimestampedData > &callback );
 
 	private:
 
@@ -67,5 +54,4 @@ namespace _2Real
 		bool			m_DiscardCurrent;
 
 	};
-
 }

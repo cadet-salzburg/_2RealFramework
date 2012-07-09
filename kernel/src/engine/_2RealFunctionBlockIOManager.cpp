@@ -41,6 +41,8 @@ namespace _2Real
 {
 
 	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
+		AbstractHandleable(),
+		Handleable< bundle::BlockHandle >( *this ),
 		AbstractIOManager( owner )
 	{
 	}
@@ -98,22 +100,22 @@ namespace _2Real
 
 	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
 	{
-		return getInletIO( name ).Handleable< app::InletHandle >::getHandle();
+		return getInletIO( name ).getHandle();
 	}
 
 	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
 	{
-		return getOutletIO( name ).Handleable< app::OutletHandle >::getHandle();
+		return getOutletIO( name ).getHandle();
 	}
 
 	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name )
 	{
-		return getInletIO( name ).m_Inlet->Handleable< bundle::InletHandle >::getHandle();
+		return getInletIO( name ).m_Inlet->getHandle();
 	}
 
 	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name )
 	{
-		return getOutletIO( name ).m_Outlet->Handleable< bundle::OutletHandle >::getHandle();
+		return getOutletIO( name ).m_Outlet->getHandle();
 	}
 
 	InletIO & FunctionBlockIOManager::getInletIO( string const& name )
@@ -170,7 +172,6 @@ namespace _2Real
 			Inlet &inlet = *( ( *it )->m_Inlet );
 			TimestampedData const& data = ( *it )->m_Buffer->getTriggeringData();
 			inlet.setData( data );
-			inlet.synchronize();
 		}
 	}
 

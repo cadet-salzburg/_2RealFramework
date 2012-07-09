@@ -21,6 +21,9 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "engine/_2RealParameterData.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealOutlet.h"
+#include "engine/_2RealInletBuffer.h"
 
 using std::string;
 

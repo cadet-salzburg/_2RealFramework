@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "helpers\_2RealException.h"
-#include "helpers\_2RealHandle.h"
+#include "helpers/_2RealException.h"
+#include "helpers/_2RealHandle.h"
 
 #include <set>
 #include <iostream>
@@ -49,7 +49,7 @@ namespace _2Real
 	class Handleable : public virtual AbstractHandleable
 	{
 
-	public:
+	protected:
 
 		template< typename TObj >
 		Handleable( TObj &obj ) :
@@ -57,7 +57,7 @@ namespace _2Real
 		{
 		}
 
-		virtual ~Handleable()
+		~Handleable()
 		{
 			delete m_Handle;
 		}

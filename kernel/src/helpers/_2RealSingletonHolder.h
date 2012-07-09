@@ -24,10 +24,6 @@
 namespace _2Real
 {
 
-	/**
-	*	singleton holder helper class
-	*/
-
 	template< typename T >
 	class SingletonHolder
 	{

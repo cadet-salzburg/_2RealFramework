@@ -68,7 +68,7 @@ int main( int argc, char *argv[] )
 			BlockHandle inout = testBundle.createBlockInstance( "in - out" );
 			InletHandle inoutIn = inout.getInletHandle( "inout inlet" );
 			OutletHandle inoutOut = inout.getOutletHandle( "inout outlet" );
-			inoutIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
+			inoutIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 			inout.setUpdateRate( 0.5 );
 			inout.setup();
 
@@ -77,7 +77,7 @@ int main( int argc, char *argv[] )
 			InletHandle inMsg = in.getInletHandle( "in msg" );
 			inMsg.setValue< string >( msg.str() );
 			in.setUpdateRate( 0.25 );
-			inIn.setUpdatePolicy( InletHandle::NEWER_DATA_SINGLE_WEIGHT );
+			inIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 			in.setup();
 
 			inoutIn.linkTo( outOut );

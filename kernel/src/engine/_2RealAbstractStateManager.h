@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealPoco.h"
+#include "helpers/_2RealNonCopyable.h"
 
 #include <string>
 #include <set>
@@ -32,7 +33,7 @@ namespace _2Real
 	class UberBlockBasedTrigger;
 	class AbstractUberBlock;
 
-	class AbstractStateManager
+	class AbstractStateManager : private NonCopyable< AbstractStateManager >
 	{
 
 	public:

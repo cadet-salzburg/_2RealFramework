@@ -19,13 +19,16 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealInletBuffer.h"
-#include "engine/_2RealOutlet.h"
 #include "app/_2RealCallbacks.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealEvent.h"
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealPoco.h"
+#include "helpers/_2RealNonCopyable.h"
+#include "helpers/_2RealHandleable.h"
 
 #include <string>
 
@@ -36,45 +39,58 @@ namespace _2Real
 	class Inlet;
 	class InletBuffer;
 	class Outlet;
-	class Parameter;
 	class ParameterData;
 
-	class InletIO : public Handleable< app::InletHandle >
+	class InletIO : private NonCopyable< InletIO >, private Handleable< app::InletHandle >
 	{
+
 	public:
+
+		using Handleable< app::InletHandle >::getHandle;
+		using Handleable< app::InletHandle >::registerHandle;
+		using Handleable< app::InletHandle >::unregisterHandle;
+
 		InletIO( AbstractUberBlock &owner, ParameterData const& data );
 		~InletIO();
 		Inlet													*m_Inlet;
 		InletBuffer												*m_Buffer;
+
 	};
 
-	class OutletIO : public Handleable< app::OutletHandle >
+	class OutletIO : private NonCopyable< InletIO >, private Handleable< app::OutletHandle >
 	{
+
 	public:
+
+		using Handleable< app::OutletHandle >::getHandle;
+		using Handleable< app::OutletHandle >::registerHandle;
+		using Handleable< app::OutletHandle >::unregisterHandle;
+
 		OutletIO( AbstractUberBlock &owner, ParameterData const& data );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;
 		CallbackEvent< TimestampedData const& >					*m_InletEvent;
+
 	};
 
-	typedef std::vector< app::InletHandle >						AppInletHandles;
-	typedef std::vector< app::InletHandle >::iterator			AppInletHandleIterator;
-	typedef std::vector< app::InletHandle >::const_iterator		AppInletHandleConstIterator;
+	typedef std::vector< app::InletHandle >							AppInletHandles;
+	typedef std::vector< app::InletHandle >::iterator				AppInletHandleIterator;
+	typedef std::vector< app::InletHandle >::const_iterator			AppInletHandleConstIterator;
 
-	typedef std::vector< app::OutletHandle >					AppOutletHandles;
-	typedef std::vector< app::OutletHandle >::iterator			AppOutletHandleIterator;
-	typedef std::vector< app::OutletHandle >::const_iterator	AppOutletHandleConstIterator;
+	typedef std::vector< app::OutletHandle >						AppOutletHandles;
+	typedef std::vector< app::OutletHandle >::iterator				AppOutletHandleIterator;
+	typedef std::vector< app::OutletHandle >::const_iterator		AppOutletHandleConstIterator;
 
-	typedef std::vector< bundle::InletHandle >					BundleInletHandles;
-	typedef std::vector< bundle::InletHandle >::iterator		BundleInletHandleIterator;
-	typedef std::vector< bundle::InletHandle >::const_iterator	BundleInletHandleConstIterator;
+	typedef std::vector< bundle::InletHandle >						BundleInletHandles;
+	typedef std::vector< bundle::InletHandle >::iterator			BundleInletHandleIterator;
+	typedef std::vector< bundle::InletHandle >::const_iterator		BundleInletHandleConstIterator;
 
-	typedef std::vector< bundle::OutletHandle >					BundleOutletHandles;
-	typedef std::vector< bundle::OutletHandle >::iterator		BundleOutletHandleIterator;
-	typedef std::vector< bundle::OutletHandle >::const_iterator	BundleOutletHandleConstIterator;
+	typedef std::vector< bundle::OutletHandle >						BundleOutletHandles;
+	typedef std::vector< bundle::OutletHandle >::iterator			BundleOutletHandleIterator;
+	typedef std::vector< bundle::OutletHandle >::const_iterator		BundleOutletHandleConstIterator;
 
-	class AbstractIOManager
+	class AbstractIOManager : private NonCopyable< AbstractIOManager >
 	{
 
 	public:

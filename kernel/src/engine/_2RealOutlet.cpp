@@ -17,26 +17,18 @@
 */
 
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealInletBuffer.h"
-#include "helpers/_2RealException.h"
-#include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealEngineImpl.h"
-#include "app/_2RealInletHandle.h"
-
-#ifdef _DEBUG
-	#include <assert.h>
-#endif
 
 using std::string;
 using std::ostringstream;
 
 namespace _2Real
 {
-
 	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, Any const& emptyData ) :
-		Handleable< bundle::OutletHandle >( *this ),
 		Parameter( owner, name, longTypename, typeName ),
+		NonCopyable< Outlet >(),
+		AbstractHandleable(),
+		Handleable< bundle::OutletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_DiscardCurrent( false )
 	{
@@ -49,7 +41,6 @@ namespace _2Real
 		if ( !m_DiscardCurrent )
 		{
 			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.getData(), m_Engine.getElapsedTime() );
-
 			// shallow-copy written data into readable data
 			Parameter::synchronize();
 			// deep-copy readable data back into writeable data
@@ -73,36 +64,4 @@ namespace _2Real
 	{
 		m_DiscardCurrent = true;
 	}
-
-//	void Outlet::linkTo( app::InletHandle &inletHandle )
-//	{
-//		Parameter *p = inletHandle.m_Parameter;
-//#ifdef _DEBUG
-//		if ( p == nullptr ) assert( NULL );
-//#endif
-//
-//		Inlet &inlet = static_cast< Inlet & >( *p );
-//		Parameter::getOwningUberBlock().createLink( inlet, *this );
-//	}
-//
-//	void Outlet::unlinkFrom( app::InletHandle &inletHandle )
-//	{
-//		Parameter *p = inletHandle.m_Parameter;
-//#ifdef _DEBUG
-//		if ( p == nullptr ) assert( NULL );
-//#endif
-//
-//		Inlet &inlet = static_cast< Inlet & >( *p );
-//		Parameter::getOwningUberBlock().createLink( inlet, *this );
-//	}
-//
-//	void Outlet::registerToNewData( app::OutletCallback &callback )
-//	{
-//		Parameter::getOwningUberBlock().registerToNewData( *this, callback );
-//	}
-//
-//	void Outlet::unregisterFromNewData( app::OutletCallback &callback )
-//	{
-//		Parameter::getOwningUberBlock().unregisterFromNewData( *this, callback );
-//	}
 }

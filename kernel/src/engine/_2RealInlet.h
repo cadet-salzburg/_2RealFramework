@@ -19,27 +19,38 @@
 #pragma once
 
 #include "engine/_2RealParameter.h"
-#include "helpers/_2RealHandleAble.h"
-#include "app/_2RealInletHandle.h"
 #include "bundle/_2RealInletHandle.h"
+#include "helpers/_2RealHandleable.h"
+#include "helpers/_2RealNonCopyable.h"
 
 #include <string>
 
 namespace _2Real
 {
+	class EngineImpl;
 
-	namespace app
-	{
-		class OutletHandle;
-	}
-
-	class Inlet : public Parameter, public Handleable< bundle::InletHandle >
+	class Inlet : private Parameter, private NonCopyable< Inlet >, private Handleable< bundle::InletHandle >
 	{
 
 	public:
 
 		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );
 
-	};
+		using Handleable< bundle::InletHandle >::getHandle;
+		using Handleable< bundle::InletHandle >::registerHandle;
+		using Handleable< bundle::InletHandle >::unregisterHandle;
 
+		using Parameter::getTypename;
+		using Parameter::getLongTypename;
+		using Parameter::getName;
+		using Parameter::getOwningUberBlock;
+		using Parameter::getData;
+
+		void setData( TimestampedData const& data );
+
+	private:
+
+		EngineImpl		&m_Engine;
+
+	};
 }

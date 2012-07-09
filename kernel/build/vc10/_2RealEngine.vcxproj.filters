@@ -252,6 +252,9 @@
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
@@ -414,6 +417,9 @@
       <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealHelpers.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
   </ItemGroup>

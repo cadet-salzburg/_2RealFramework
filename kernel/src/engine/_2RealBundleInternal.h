@@ -22,8 +22,10 @@
 #include "engine/_2RealIdentifier.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "helpers/_2RealHandleAble.h"
 #include "app/_2RealBundleHandle.h"
+
+#include "helpers/_2RealHandleable.h"
+#include "helpers/_2RealNonCopyable.h"
 
 #include <map>
 #include <string>
@@ -48,13 +50,17 @@ namespace _2Real
 	class Identifier;
 	class BundleManager;
 
-	class Bundle : public Handleable< app::BundleHandle >
+	class Bundle : private NonCopyable< Bundle >, private Handleable< app::BundleHandle >
 	{
 
 	public:
 
 		Bundle( Identifier const& id, BundleData const& data, BundleManager &bundleManager );
 		~Bundle();
+
+		using Handleable< app::BundleHandle >::getHandle;
+		using Handleable< app::BundleHandle >::registerHandle;
+		using Handleable< app::BundleHandle >::unregisterHandle;
 
 		Identifier const&		getIdentifier() const;
 		std::string const&		getName() const;

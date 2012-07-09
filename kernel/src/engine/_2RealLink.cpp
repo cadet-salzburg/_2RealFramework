@@ -20,6 +20,7 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
+#include "engine/_2RealInletBuffer.h"
 
 namespace _2Real
 {

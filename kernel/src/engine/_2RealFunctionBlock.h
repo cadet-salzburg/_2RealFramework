@@ -22,23 +22,29 @@
 #include "engine/_2RealFunctionBlockIOManager.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
-#include "helpers/_2RealHandleAble.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealBlockData.h"
 #include "app/_2RealParameterData.h"
 #include "engine/_2RealBlockData.h"
 
+#include "helpers/_2RealHandleable.h"
+#include "helpers/_2RealNonCopyable.h"
+
 namespace _2Real
 {
 	template< typename THandle >
-	class FunctionBlock : public AbstractUberBlock, public Handleable< THandle >
+	class FunctionBlock : public AbstractUberBlock, private NonCopyable< FunctionBlock< THandle > >, private Handleable< THandle >
 	{
 
 	public:
 
 		FunctionBlock( BlockData const& meta, bundle::Block& block, Identifier const& id );
 		~FunctionBlock();
+
+		using Handleable< THandle >::getHandle;
+		using Handleable< THandle >::registerHandle;
+		using Handleable< THandle >::unregisterHandle;
 
 		app::BlockInfo				getBlockData();
 		BlockData const&			getMetadata() const;
@@ -267,6 +273,7 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::singleStep()
 	{
+		m_StateManager->start();
 		m_UpdatePolicy->singleStep();
 	}
 

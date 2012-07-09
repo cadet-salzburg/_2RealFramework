@@ -19,6 +19,8 @@
 #pragma once
 
 #include "engine/_2RealAbstractIOManager.h"
+#include "helpers/_2RealHandleable.h"
+#include "bundle/_2RealBlockHandle.h"
 
 namespace _2Real
 {
@@ -38,7 +40,7 @@ namespace _2Real
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
 
-	class FunctionBlockIOManager : public AbstractIOManager
+	class FunctionBlockIOManager : public AbstractIOManager, private Handleable< bundle::BlockHandle >
 	{
 
 		template< typename T >

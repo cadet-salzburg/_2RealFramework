@@ -122,7 +122,7 @@ namespace _2Real
 	{
 		// this is a bit strange, bundle mgr will call 'addBlockInstance'
 		// = result of interface changes
-		return m_BundleManager.createFunctionBlock( *this, blockName )->Handleable< app::BlockHandle >::getHandle();
+		return m_BundleManager.createFunctionBlock( *this, blockName )->getHandle();
 	}
 
 	unsigned int Bundle::getBlockInstanceCount( string const& blockName ) const

@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealSynchronizedBool.h"
+#include "helpers/_2RealSynchronizedBool.h"
 
 namespace _2Real
 {

@@ -28,10 +28,10 @@ namespace _2Real
 	{
 	public:
 
-		Exception(std::string const& message);
-		Exception(Exception const& src);
+		Exception( std::string const& message );
+		Exception( Exception const& src );
 		virtual ~Exception() throw();
-		Exception& operator=(Exception const& src);
+		Exception& operator=( Exception const& src );
 
 		virtual const char* name() const;
 		virtual const char* className() const;
@@ -45,24 +45,13 @@ namespace _2Real
 	protected:
 
 		Exception();
-		void setMessage(const std::string& message);
+		void setMessage( std::string const& message);
 
 	private:
 
 		std::string		m_Message;
 
 	};
-
-	inline std::string const& Exception::message() const
-	{
-		return m_Message;
-	}
-
-
-	inline void Exception::setMessage(std::string const& message)
-	{
-		m_Message = message;
-	}
 
 #define DECLARE_EXCEPTION(CLS, BASE)				\
 	class CLS: public BASE							\

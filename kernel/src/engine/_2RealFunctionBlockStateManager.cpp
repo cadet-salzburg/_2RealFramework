@@ -92,11 +92,11 @@ namespace _2Real
 	{
 		try
 		{
-			m_UpdatePolicy->changePolicy();
-
 			m_StateAccess.lock();
 			if ( m_CurrentState->tryStart( *this ) )
 			{
+				m_UpdatePolicy->changePolicy();
+
 				disableAllTriggers();
 				resetTriggers();
 
