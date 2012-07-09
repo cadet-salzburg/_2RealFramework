@@ -13,25 +13,18 @@ public:
 
 	void receiveData(_2Real::app::AppData const& data);
 
-protected:
-	void paintEvent(QPaintEvent *event);
-	void resizeEvent(QResizeEvent *event);
 private:
 	QWidget*						m_ValueWidget;
 	_2Real::app::OutletHandle		m_OutletHandle;
-	_2Real::app::AppData			m_AppData;
 	QImage							m_Img;
 	QPixmap							m_Pixmap;
-	QMutex							m_QPixmapAccess;
 	int								m_Width;
 	int								m_Height;
 	QHBoxLayout*					m_Layout;
 
 public slots:
-	void updatePixmap(const QImage &img);
-	void updateString(const QString& str);
+	void updateData(_2Real::app::AppData data); 
 
 signals:
-	void sendPixmap(const QImage &img);
-	void sendString(const QString &str);
+	void sendData(_2Real::app::AppData data);
 };

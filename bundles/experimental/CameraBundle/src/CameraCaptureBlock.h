@@ -16,5 +16,4 @@ private:
 	InletHandle				m_DeviceIndexHandle;
 	OutletHandle			m_ImageOutletHandle;
 	CameraDeviceManager*	m_CameraDeviceManager;
-
 };

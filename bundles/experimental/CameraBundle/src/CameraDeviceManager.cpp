@@ -88,18 +88,24 @@ void CameraDeviceManager::switchToDevice( const unsigned int deviceIdx )
 
 _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int deviceIdx )
 {
+	_2Real::ImageT<unsigned char> img;
+
 	try
 	{
-		unsigned char *pixels = m_VideoInputContoller.getPixels( deviceIdx, true, true );
-		int w =  m_VideoInputContoller.getWidth( deviceIdx );
-		int h  = m_VideoInputContoller.getHeight( deviceIdx );
-		_2Real::ImageT<unsigned char> img( pixels, false, w, h, _2Real::ImageChannelOrder::RGB );
-		return img;
+		if(m_VideoInputContoller.isFrameNew(deviceIdx))
+		{
+			unsigned char *pixels = m_VideoInputContoller.getPixels( deviceIdx, true, true );
+			int w =  m_VideoInputContoller.getWidth( deviceIdx );
+			int h  = m_VideoInputContoller.getHeight( deviceIdx );
+			img = _2Real::ImageT<unsigned char>( pixels, false, w, h, _2Real::ImageChannelOrder::RGB );
+		}
 	}
 	catch ( ... )
 	{
 		std::cerr << "Couldn't get the pixels" << std::endl;
 	}
+
+	return img;
 }
 
 int CameraDeviceManager::getVideoWidth()
