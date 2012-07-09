@@ -18,11 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealPoco.h"
-
-#include <set>
-#include <list>
-
 #if defined( _WIN32 )
 	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall
@@ -124,62 +119,6 @@ namespace _2Real
 
 		CallbackFunction	m_Function;
 		void				*m_UserData;
-
-	};
-
-	template< typename TArg >
-	class CallbackEvent
-	{
-
-	public:
-
-		typedef std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >								Callbacks;
-		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::iterator			CallbackIterator;
-		typedef typename std::set< AbstractCallback< TArg > *, AbstractCallbackCompare< TArg > >::const_iterator	CallbackConstIterator;
-
-		CallbackEvent() {}
-		~CallbackEvent() { clear(); }
-
-		void clear()
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) delete *cbIter;
-			m_Callbacks.clear();
-		}
-
-		void addListener( AbstractCallback< TArg > &callback )
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			CallbackIterator cbIter = m_Callbacks.find( &callback );
-			if ( cbIter == m_Callbacks.end() )
-			{
-				m_Callbacks.insert( &callback );
-			}
-			else delete &callback;
-		}
-
-		void removeListener( AbstractCallback< TArg > &callback )
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			CallbackIterator cbIter = m_Callbacks.find( &callback );
-			if ( cbIter != m_Callbacks.end() )
-			{
-				delete *cbIter;
-				m_Callbacks.erase( cbIter );
-			}
-			delete &callback;
-		}
-
-		void notify( TArg &arg ) const
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) ( *cbIter )->invoke( arg );
-		}
-
-	private:
-
-		mutable Poco::FastMutex		m_Access;
-		Callbacks					m_Callbacks;
 
 	};
 }

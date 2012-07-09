@@ -22,8 +22,8 @@
 #include "engine/_2RealBundleInternal.h"
 #include "helpers/_2RealException.h"
 
-#define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "bundle handle not initialized" );\
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "bundle handle not initialized" );
 
 namespace _2Real
 {
@@ -36,7 +36,7 @@ namespace _2Real
 		}
 
 		BundleHandle::BundleHandle( Bundle &bundle ) :
-			Handle( &bundle ),
+			Handle(),
 			m_Bundle( &bundle )
 		{
 			m_Bundle->registerHandle( *this );
@@ -48,7 +48,7 @@ namespace _2Real
 		}
 
 		BundleHandle::BundleHandle( BundleHandle const& other ) :
-			Handle( other.m_Bundle ),
+			Handle(),
 			m_Bundle( other.m_Bundle )
 		{
 			if ( isValid() ) m_Bundle->registerHandle( *this );
@@ -77,16 +77,56 @@ namespace _2Real
 			return *this;
 		}
 
+		bool BundleHandle::isValid() const
+		{
+			return m_Bundle != nullptr;
+		}
+
+		bool BundleHandle::operator==( BundleHandle const& other ) const
+		{
+			return m_Bundle == other.m_Bundle;
+		}
+
+		bool BundleHandle::operator!=( BundleHandle const& other ) const
+		{
+			return m_Bundle != other.m_Bundle;
+		}
+
+		bool BundleHandle::operator<( BundleHandle const& other ) const
+		{
+			return m_Bundle < other.m_Bundle;
+		}
+
+		bool BundleHandle::operator<=( BundleHandle const& other ) const
+		{
+			return m_Bundle <= other.m_Bundle;
+		}
+
+		bool BundleHandle::operator>( BundleHandle const& other ) const
+		{
+			return m_Bundle > other.m_Bundle;
+		}
+
+		bool BundleHandle::operator>=( BundleHandle const& other ) const
+		{
+			return m_Bundle >= other.m_Bundle;
+		}
+
 		BundleInfo BundleHandle::getBundleInfo() const
 		{
-			checkHandle( m_Bundle );
+			checkValidity( m_Bundle );
 			return m_Bundle->getBundleData();
 		}
 
 		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
 		{
-			checkHandle( m_Bundle );
+			checkValidity( m_Bundle );
 			return m_Bundle->createBlockInstance( blockName );
+		}
+
+		void BundleHandle::invalidate()
+		{
+			m_Bundle = nullptr;
 		}
 	}
 }

@@ -159,7 +159,7 @@ namespace _2Real
 
 	void FunctionBlockUpdatePolicy::singleStep()
 	{
-		TimestampedData data( EngineData(), m_Engine.getElapsedTime() );
+		TimestampedData data( Any(), m_Engine.getElapsedTime() );
 		m_SingleStepTrigger->tryTriggerUpdate( data );
 		m_SingleStepTrigger->reset();
 	}

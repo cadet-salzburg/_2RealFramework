@@ -22,8 +22,8 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
 
-#define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );\
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );
 
 namespace _2Real
 {
@@ -36,7 +36,7 @@ namespace _2Real
 		}
 
 		OutletHandle::OutletHandle( OutletIO &outletIO ) :
-			Handle( &outletIO ),
+			Handle(),
 			m_OutletIO( &outletIO )
 		{
 			m_OutletIO->registerHandle( *this );
@@ -48,7 +48,7 @@ namespace _2Real
 		}
 
 		OutletHandle::OutletHandle( OutletHandle const& other ) :
-			Handle( other.m_OutletIO ),
+			Handle(),
 			m_OutletIO( other.m_OutletIO )
 		{
 			if ( isValid() ) m_OutletIO->registerHandle( *this );
@@ -77,67 +77,107 @@ namespace _2Real
 			return *this;
 		}
 
+		bool OutletHandle::isValid() const
+		{
+			return m_OutletIO != nullptr;
+		}
+
+		bool OutletHandle::operator==( OutletHandle const& other ) const
+		{
+			return m_OutletIO == other.m_OutletIO;
+		}
+
+		bool OutletHandle::operator!=( OutletHandle const& other ) const
+		{
+			return m_OutletIO != other.m_OutletIO;
+		}
+
+		bool OutletHandle::operator<( OutletHandle const& other ) const
+		{
+			return m_OutletIO < other.m_OutletIO;
+		}
+
+		bool OutletHandle::operator<=( OutletHandle const& other ) const
+		{
+			return m_OutletIO <= other.m_OutletIO;
+		}
+
+		bool OutletHandle::operator>( OutletHandle const& other ) const
+		{
+			return m_OutletIO > other.m_OutletIO;
+		}
+
+		bool OutletHandle::operator>=( OutletHandle const& other ) const
+		{
+			return m_OutletIO >= other.m_OutletIO;
+		}
+
 		AppData OutletHandle::getLastOutput() const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			TimestampedData data = m_OutletIO->m_Outlet->getData();
 			return AppData( data, m_OutletIO->m_Outlet->getTypename(), m_OutletIO->m_Outlet->getName() );
 		}
 
 		void OutletHandle::linkTo( InletHandle &inlet )
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			EngineImpl::instance().createLink( *( inlet.m_InletIO ), *m_OutletIO );
 		}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			EngineImpl::instance().destroyLink( *( inlet.m_InletIO ), *m_OutletIO );
 		}
 
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
 			m_OutletIO->m_AppEvent->addListener( *cb );
 		}
 
 		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData ) const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
 			m_OutletIO->m_AppEvent->removeListener( *cb );
 		}
 
 		void OutletHandle::registerToNewDataInternal( OutletCallback &cb ) const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			m_OutletIO->m_AppEvent->addListener( cb );
 		}
 
 		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb ) const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			m_OutletIO->m_AppEvent->removeListener( cb );
 		}
 
 		std::string const& OutletHandle::getName() const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			return m_OutletIO->m_Outlet->getName();
 		}
 
 		std::string const& OutletHandle::getLongTypename() const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			return m_OutletIO->m_Outlet->getLongTypename();
 		}
 
 		std::string const& OutletHandle::getTypename() const
 		{
-			checkHandle( m_OutletIO );
+			checkValidity( m_OutletIO );
 			return m_OutletIO->m_Outlet->getTypename();
+		}
+
+		void OutletHandle::invalidate()
+		{
+			m_OutletIO = nullptr;
 		}
 	}
 }

@@ -18,21 +18,9 @@
 
 #pragma once
 
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealCallback.h"
 
-#include <utility>
 #include <list>
-
-#if defined( _WIN32 )
-	#define _2REAL_CALLBACK __cdecl
-	#define _2REAL_MEMBER_CALLBACK __thiscall
-#elif defined( _WIN64 )
-	#define _2REAL_CALLBACK __cdecl
-	#define _2REAL_MEMBER_CALLBACK __thiscall
-#else
-	#define _2REAL_CALLBACK
-	#define _2REAL_MEMBER_CALLBACK
-#endif
 
 namespace _2Real
 {
@@ -42,13 +30,16 @@ namespace _2Real
 	{
 		class AppData;
 		class BlockHandle;
+		class ContextBlockHandle;
 
-		typedef void ( _2REAL_CALLBACK *ExceptionCallback )( void *, std::pair< Exception, BlockHandle > const& );
+		typedef void ( _2REAL_CALLBACK *BlockExceptionCallback )( void *, std::pair< Exception, BlockHandle > const& );
+		typedef void ( _2REAL_CALLBACK *ContextBlockExceptionCallback )( void *, std::pair< Exception, ContextBlockHandle > const& );
 		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, AppData const& );
 		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::list< AppData > const& );
 
-		typedef _2Real::AbstractCallback< std::list< app::AppData > const& >			BlockCallback;
-		typedef _2Real::AbstractCallback< app::AppData const& >							OutletCallback;
-		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > const& >	ErrorCallback;
+		typedef _2Real::AbstractCallback< std::list< app::AppData > const& >					BlockCallback;
+		typedef _2Real::AbstractCallback< app::AppData const& >									OutletCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > const& >			BlockExcCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, ContextBlockHandle > const& >	ContextBlockExcCallback;
 	}
 }

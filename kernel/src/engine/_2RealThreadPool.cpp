@@ -23,7 +23,8 @@
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealTimer.h"
 #include "engine/_2RealLogger.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealCallback.h"
+#include "helpers/_2RealEvent.h"
 
 #include <iostream>
 #include <algorithm>

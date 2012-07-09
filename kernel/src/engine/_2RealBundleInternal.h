@@ -48,7 +48,7 @@ namespace _2Real
 	class Identifier;
 	class BundleManager;
 
-	class Bundle : public HandleAble< app::BundleHandle >
+	class Bundle : public Handleable< app::BundleHandle >
 	{
 
 	public:

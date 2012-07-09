@@ -16,41 +16,23 @@
 	limitations under the License.
 */
 
-#pragma once
+#include "helpers\_2RealHandle.h"
+#include "helpers\_2RealException.h"
 
-#include "helpers/_2RealAny.h"
+#include <sstream>
+
+using std::ostringstream;
+using std::string;
 
 namespace _2Real
 {
 
-	class TimestampedData
+	Handle::Handle()
 	{
+	}
 
-	public:
-
-		TimestampedData() ;
-		TimestampedData( Any const& data, long timestamp );
-
-		//template< typename Datatype >
-		//Datatype const& getExtractedData() const
-		//{
-		//	std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
-		//	return *ptr.get();
-		//}
-
-		long getTimestamp() const;
-		Any & getData();
-		Any const& getData() const;
-		bool isEmpty() const;
-		void cloneData( TimestampedData const& src );
-
-		bool operator>( TimestampedData const& other ) const;
-
-	private:
-
-		Any				m_Data;
-		long					m_Timestamp;
-
-	};
+	Handle::~Handle()
+	{
+	}
 
 }

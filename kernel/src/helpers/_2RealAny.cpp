@@ -16,36 +16,36 @@
 	limitations under the License.
 */
 
-#include "_2RealEngineData.h"
+#include "_2RealAny.h"
 
 namespace _2Real
 {
 
-	std::ostream& operator<<( std::ostream& out, EngineData const& data )
+	std::ostream& operator<<( std::ostream& out, Any const& data )
 	{
 		data.writeTo( out );
 		return out;
 	}
 
-	std::istream& operator>>( std::istream& in, EngineData &data )
+	std::istream& operator>>( std::istream& in, Any &data )
 	{
 		data.readFrom( in );
 		return in;
 	}
 
-	EngineData::EngineData() :
+	Any::Any() :
 		m_Content()
 	{
-		AbstractDataHolder *h = nullptr;
+		AbstractAnyHolder *h = nullptr;
 		m_Content.reset( h );
 	}
 
-	EngineData::EngineData( EngineData const& src ) :
+	Any::Any( Any const& src ) :
 		m_Content( src.m_Content )
 	{
 	}
 
-	EngineData& EngineData::operator=( EngineData const& src )
+	Any& Any::operator=( Any const& src )
 	{
 		if (this == &src)
 		{
@@ -57,12 +57,12 @@ namespace _2Real
 		return *this;
 	}
 
-	bool EngineData::isEmpty() const
+	bool Any::isEmpty() const
 	{
 		return m_Content.get() == nullptr;
 	}
 
-	void EngineData::writeTo(std::ostream &out) const
+	void Any::writeTo(std::ostream &out) const
 	{
 		if ( !isEmpty() )
 		{
@@ -70,7 +70,7 @@ namespace _2Real
 		}
 	}
 
-	void EngineData::readFrom(std::istream &in)
+	void Any::readFrom(std::istream &in)
 	{
 		if ( !isEmpty() )
 		{
@@ -78,7 +78,7 @@ namespace _2Real
 		}
 	}
 
-	const std::string EngineData::getTypename() const
+	const std::string Any::getTypename() const
 	{
 		if ( isEmpty() )
 		{
@@ -90,13 +90,13 @@ namespace _2Real
 		}
 	}
 
-	void EngineData::cloneFrom( EngineData const& src )
+	void Any::cloneFrom( Any const& src )
 	{
 
 		m_Content.reset( src.m_Content->clone() );
 	}
 
-	void EngineData::createNew( EngineData const& src )
+	void Any::createNew( Any const& src )
 	{
 		m_Content.reset( src.m_Content->create() );
 	}

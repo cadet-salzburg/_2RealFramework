@@ -18,38 +18,22 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
+#include <string>
 
 namespace _2Real
 {
 
-	class TimestampedData
+	class Handle
 	{
 
-	public:
+		friend class AbstractHandleable;
 
-		TimestampedData() ;
-		TimestampedData( Any const& data, long timestamp );
+	protected:
 
-		//template< typename Datatype >
-		//Datatype const& getExtractedData() const
-		//{
-		//	std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
-		//	return *ptr.get();
-		//}
+		Handle();
+		~Handle();
 
-		long getTimestamp() const;
-		Any & getData();
-		Any const& getData() const;
-		bool isEmpty() const;
-		void cloneData( TimestampedData const& src );
-
-		bool operator>( TimestampedData const& other ) const;
-
-	private:
-
-		Any				m_Data;
-		long					m_Timestamp;
+		virtual void invalidate() = 0;
 
 	};
 

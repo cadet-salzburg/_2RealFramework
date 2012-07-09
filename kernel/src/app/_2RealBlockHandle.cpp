@@ -23,10 +23,10 @@
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
-using std::string;
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );
 
-#define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );\
+using std::string;
 
 namespace _2Real
 {
@@ -39,7 +39,7 @@ namespace _2Real
 		}
 
 		BlockHandle::BlockHandle( FunctionBlock< BlockHandle > &block ) :
-			Handle( &block ),
+			Handle(),
 			m_Block( &block )
 		{
 			m_Block->registerHandle( *this );
@@ -51,7 +51,7 @@ namespace _2Real
 		}
 
 		BlockHandle::BlockHandle( BlockHandle const& other ) :
-			Handle( other.m_Block ),
+			Handle(),
 			m_Block( other.m_Block )
 		{
 			if ( isValid() ) m_Block->registerHandle( *this );
@@ -80,96 +80,136 @@ namespace _2Real
 			return *this;
 		}
 
+		bool BlockHandle::isValid() const
+		{
+			return m_Block != nullptr;
+		}
+
+		bool BlockHandle::operator==( BlockHandle const& other ) const
+		{
+			return m_Block == other.m_Block;
+		}
+
+		bool BlockHandle::operator!=( BlockHandle const& other ) const
+		{
+			return m_Block != other.m_Block;
+		}
+
+		bool BlockHandle::operator<( BlockHandle const& other ) const
+		{
+			return m_Block < other.m_Block;
+		}
+
+		bool BlockHandle::operator<=( BlockHandle const& other ) const
+		{
+			return m_Block <= other.m_Block;
+		}
+
+		bool BlockHandle::operator>( BlockHandle const& other ) const
+		{
+			return m_Block > other.m_Block;
+		}
+
+		bool BlockHandle::operator>=( BlockHandle const& other ) const
+		{
+			return m_Block >= other.m_Block;
+		}
+
 		BlockInfo BlockHandle::getBlockInfo() const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getBlockData();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->updateWithFixedRate( updatesPerSecond );
 		}
 
 		void BlockHandle::setup()
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->setUp();
 		}
 
 		void BlockHandle::start()
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->start();
 		}
 
 		void BlockHandle::stop( const long timeout )
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->stop( true, timeout );
 		}
 
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getAppInletHandle( name );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getAppOutletHandle( name );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getAppInletHandles();
 		}
 
 		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getAppOutletHandles();
 		}
 
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->registerToNewData( *cb );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
 			m_Block->unregisterFromNewData( *cb);
 		}
 
 		void BlockHandle::registerToNewDataInternal( BlockCallback &cb ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->registerToNewData( cb );
 		}
 
 		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb ) const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->unregisterFromNewData( cb );
 		}
 
 		void BlockHandle::kill( const long timeout )
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			EngineImpl::instance().killBlockInstance( *m_Block, timeout );
 		}
 
 		void BlockHandle::singleStep()
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->singleStep();
+		}
+
+		void BlockHandle::invalidate()
+		{
+			m_Block = nullptr;
 		}
 	}
 }

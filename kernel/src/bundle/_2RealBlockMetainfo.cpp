@@ -35,7 +35,7 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& inletName, EngineData const& defaultValue )
+		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& defaultValue )
 		{
 			const std::string longTypename = defaultValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
@@ -46,11 +46,11 @@ namespace _2Real
 		void BlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
 		{
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			EngineData const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
+			Any const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
 
 			// the outlet does not get a default value, but the data needs to be allocated anyway
 			// so copy the value stored inside the typetable ( constructed with default ctor )
-			EngineData val;
+			Any val;
 			val.cloneFrom( defaultConstructed );
 
 			ParameterData data( outletName, longTypename, typeName, val );

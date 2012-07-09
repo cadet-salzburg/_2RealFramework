@@ -28,7 +28,8 @@
 #include "engine/_2RealIdCounter.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealCallback.h"
+#include "helpers/_2RealEvent.h"
 #include "engine/_2RealTimer.h"
 
 #include "datatypes/_2RealImageT.h"
@@ -207,12 +208,12 @@ namespace _2Real
 		return m_BundleManager->loadLibrary( path )->getHandle();
 	}
 
-	void EngineImpl::registerToException( app::ErrorCallback &callback )
+	void EngineImpl::registerToException( app::BlockExcCallback &callback )
 	{
 		m_BlockExceptionEvent.addListener( callback );
 	}
 
-	void EngineImpl::unregisterFromException( app::ErrorCallback &callback )
+	void EngineImpl::unregisterFromException( app::BlockExcCallback &callback )
 	{
 		m_BlockExceptionEvent.removeListener( callback );
 	}

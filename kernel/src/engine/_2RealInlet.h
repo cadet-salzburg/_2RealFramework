@@ -33,7 +33,7 @@ namespace _2Real
 		class OutletHandle;
 	}
 
-	class Inlet : public Parameter, public HandleAble< bundle::InletHandle >
+	class Inlet : public Parameter, public Handleable< bundle::InletHandle >
 	{
 
 	public:

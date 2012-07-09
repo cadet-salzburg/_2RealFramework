@@ -34,8 +34,8 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, EngineData const& emptyData ) :
-		HandleAble< bundle::OutletHandle >( *this ),
+	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, Any const& emptyData ) :
+		Handleable< bundle::OutletHandle >( *this ),
 		Parameter( owner, name, longTypename, typeName ),
 		m_Engine( EngineImpl::instance() ),
 		m_DiscardCurrent( false )
@@ -64,7 +64,7 @@ namespace _2Real
 		}
 	}
 
-	EngineData & Outlet::getWriteableData()
+	Any & Outlet::getWriteableData()
 	{
 		return Parameter::m_DataBuffer.getData();
 	}

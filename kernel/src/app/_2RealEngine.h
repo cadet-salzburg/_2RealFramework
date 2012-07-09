@@ -89,20 +89,20 @@ namespace _2Real
 			BundleHandles	getCurrentBundles() const;
 
 			// exception callback
-			void registerToException( ExceptionCallback callback, void *userData = nullptr );
-			void unregisterFromException( ExceptionCallback callback, void *userData = nullptr );
+			void registerToException( BlockExceptionCallback callback, void *userData = nullptr );
+			void unregisterFromException( BlockExceptionCallback callback, void *userData = nullptr );
 
 			template< typename TCallable >
 			void registerToException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, BlockHandle > const& ) )
 			{
-				ErrorCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
+				BlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
 				registerToExceptionInternal( *cb );
 			}
 
 			template< typename TCallable >
 			void unregisterFromException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, BlockHandle > const& ) )
 			{
-				ErrorCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
+				BlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
 				unregisterFromExceptionInternal( *cb );
 			}
 
@@ -110,8 +110,8 @@ namespace _2Real
 
 		private:
 
-			void registerToExceptionInternal( ErrorCallback &cb );
-			void unregisterFromExceptionInternal( ErrorCallback &cb );
+			void registerToExceptionInternal( BlockExcCallback &cb );
+			void unregisterFromExceptionInternal( BlockExcCallback &cb );
 
 			Engine();
 			Engine( Engine const& src );

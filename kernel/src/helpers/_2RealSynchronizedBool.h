@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "engine/_2RealIdentifier.h"
 #include "helpers/_2RealPoco.h"
 
 #include <vector>
@@ -53,22 +52,5 @@ namespace _2Real
 		bool						m_Bool;
 
 	};
-
-	template< class T > void safeDelete( T*& pVal )
-	{
-		delete pVal;
-		pVal = nullptr;
-	}
-
-	template< class T > void safeDeleteArray( T*& pVal )
-	{
-		delete[] pVal;
-		pVal = nullptr;
-	}
-
-	const std::string validateName(std::string const& s);
-	const std::string pathToName(Poco::Path const& path);
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }

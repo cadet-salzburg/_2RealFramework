@@ -100,8 +100,8 @@ namespace _2Real
 		void							killBlockInstance( AbstractUberBlock &block, const long timeout );
 		void							addContextBlock( AbstractUberBlock &context );
 
-		void							registerToException( app::ErrorCallback &callback );
-		void							unregisterFromException( app::ErrorCallback &callback );
+		void							registerToException( app::BlockExcCallback &callback );
+		void							unregisterFromException( app::BlockExcCallback &callback );
 		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
 		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
 

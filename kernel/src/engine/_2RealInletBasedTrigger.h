@@ -51,7 +51,7 @@ namespace _2Real
 			AbstractUpdateTrigger( false ),
 			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
-			m_LastData( EngineData(), 0 )	// this way, default value will not fulfill 'newer' cond
+			m_LastData( Any(), 0 )	// this way, default value will not fulfill 'newer' cond
 		{
 		}
 

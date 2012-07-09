@@ -18,7 +18,8 @@
 
 #include "engine/_2RealLink.h"
 #include "engine/_2RealAbstractIOManager.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealCallback.h"
+#include "helpers/_2RealEvent.h"
 
 namespace _2Real
 {

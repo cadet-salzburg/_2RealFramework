@@ -26,7 +26,6 @@
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealParameterData.h"
 #include "engine/_2RealLink.h"
-#include "helpers/_2RealHelpersInternal.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "bundle/_2RealInletHandle.h"
@@ -99,22 +98,22 @@ namespace _2Real
 
 	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
 	{
-		return getInletIO( name ).HandleAble< app::InletHandle >::getHandle();
+		return getInletIO( name ).Handleable< app::InletHandle >::getHandle();
 	}
 
 	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
 	{
-		return getOutletIO( name ).HandleAble< app::OutletHandle >::getHandle();
+		return getOutletIO( name ).Handleable< app::OutletHandle >::getHandle();
 	}
 
 	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name )
 	{
-		return getInletIO( name ).m_Inlet->HandleAble< bundle::InletHandle >::getHandle();
+		return getInletIO( name ).m_Inlet->Handleable< bundle::InletHandle >::getHandle();
 	}
 
 	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name )
 	{
-		return getOutletIO( name ).m_Outlet->HandleAble< bundle::OutletHandle >::getHandle();
+		return getOutletIO( name ).m_Outlet->Handleable< bundle::OutletHandle >::getHandle();
 	}
 
 	InletIO & FunctionBlockIOManager::getInletIO( string const& name )

@@ -19,8 +19,8 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-#include "helpers/_2RealHelpersInternal.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealEvent.h"
+#include "helpers/_2RealCallback.h"
 #include "helpers/_2RealPoco.h"
 
 #include <list>
@@ -65,9 +65,9 @@ namespace _2Real
 
 		~InletBuffer();
 
-		InletBuffer( EngineData const& defaultData );
+		InletBuffer( Any const& defaultData );
 		void receiveData( TimestampedData const& data );
-		void receiveData( EngineData const& data );
+		void receiveData( Any const& data );
 		TimestampedData const& getTriggeringData() const;
 		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );

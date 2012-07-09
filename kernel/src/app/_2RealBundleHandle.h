@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "helpers/_2RealHandleAble.h"
+#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {
@@ -31,7 +31,7 @@ namespace _2Real
 		class BlockHandle;
 		class BundleInfo;
 
-		class BundleHandle : public Handle
+		class BundleHandle : private Handle
 		{
 
 		public:
@@ -44,7 +44,19 @@ namespace _2Real
 
 			BundleInfo getBundleInfo() const;
 
+			bool isValid() const;
+			bool operator==( BundleHandle const& other ) const;
+			bool operator!=( BundleHandle const& other ) const;
+			bool operator<( BundleHandle const& other ) const;
+			bool operator<=( BundleHandle const& other ) const;
+			bool operator>( BundleHandle const& other ) const;
+			bool operator>=( BundleHandle const& other ) const;
+
 			BlockHandle & createBlockInstance( std::string const& blockName );
+
+		protected:
+
+			void invalidate();
 
 		private:
 

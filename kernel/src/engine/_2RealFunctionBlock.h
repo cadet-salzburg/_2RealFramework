@@ -32,7 +32,7 @@
 namespace _2Real
 {
 	template< typename THandle >
-	class FunctionBlock : public AbstractUberBlock, public HandleAble< THandle >
+	class FunctionBlock : public AbstractUberBlock, public Handleable< THandle >
 	{
 
 	public:
@@ -84,7 +84,7 @@ namespace _2Real
 	template< typename THandle >
 	FunctionBlock< THandle >::FunctionBlock( BlockData const& meta, bundle::Block &block, Identifier const& id ) :
 		AbstractUberBlock( id ),
-		HandleAble< THandle >( *this ),
+		Handleable< THandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_Block( block ),
 		m_Metadata( meta ),
@@ -118,7 +118,7 @@ namespace _2Real
 
 		string name = getName();
 		name.append( " singlestep trigger" );
-		EngineData init( false );
+		Any init( false );
 		ParameterData data( name, "bool", "bool", init );
 		
 		m_IOManager->addSingleStepTrigger( data );
@@ -304,7 +304,7 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::handleException( Exception &e )
 	{
-		m_Engine.handleException( HandleAble< THandle >::getHandle(), e );
+		m_Engine.handleException( Handleable< THandle >::getHandle(), e );
 	}
 
 	typedef FunctionBlock< app::BlockHandle >				BlockInstance;

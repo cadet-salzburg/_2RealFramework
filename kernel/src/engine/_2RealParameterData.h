@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealAny.h"
 
 #include <string>
 
@@ -31,19 +31,19 @@ namespace _2Real
 	public:
 
 		ParameterData();
-		ParameterData( std::string const& name, std::string const& longType, std::string const& type, EngineData const& defaultValue );
+		ParameterData( std::string const& name, std::string const& longType, std::string const& type, Any const& defaultValue );
 
 		std::string const&	getName() const;
 		std::string const&	getLongTypename() const;
 		std::string const&	getTypename() const;
-		EngineData const&	getDefaultValue() const;
+		Any const&	getDefaultValue() const;
 
 	private:
 
 		std::string			m_Name;
 		std::string			m_Typename;
 		std::string			m_LongTypename;
-		EngineData			m_DefaultValue;
+		Any			m_DefaultValue;
 
 	};
 

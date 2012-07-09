@@ -33,7 +33,7 @@ namespace _2Real
 		{
 		}
 
-		EngineData & OutletHandle::getCurrentData()
+		Any & OutletHandle::getCurrentData()
 		{
 			return m_Outlet->getWriteableData();
 		}

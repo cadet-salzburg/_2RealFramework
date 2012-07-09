@@ -24,7 +24,7 @@ namespace _2Real
 
 	TimestampedData::TimestampedData() : m_Data(), m_Timestamp( 0 ) {}
 
-	TimestampedData::TimestampedData( EngineData const& data, long timestamp ) :
+	TimestampedData::TimestampedData( Any const& data, long timestamp ) :
 		m_Data( data ),
 		m_Timestamp( timestamp )
 	{
@@ -40,12 +40,12 @@ namespace _2Real
 		return m_Timestamp;
 	}
 
-	EngineData const& TimestampedData::getData() const
+	Any const& TimestampedData::getData() const
 	{
 		return m_Data;
 	}
 
-	EngineData & TimestampedData::getData()
+	Any & TimestampedData::getData()
 	{
 		return m_Data;
 	}

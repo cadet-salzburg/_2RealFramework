@@ -36,12 +36,12 @@ namespace _2Real
 
 	class EngineImpl;
 
-	class Outlet : public Parameter, public HandleAble< bundle::OutletHandle >
+	class Outlet : public Parameter, public Handleable< bundle::OutletHandle >
 	{
 
 	public:
 
-		Outlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, EngineData const& emptyData );
+		Outlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
 
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
@@ -55,7 +55,7 @@ namespace _2Real
 		//void			unregisterFromNewData( app::OutletCallback &callback );
 
 		bool			synchronize();
-		EngineData &	getWriteableData();
+		Any &	getWriteableData();
 		void			discardCurrentUpdate();
 
 		//void			addListener( AbstractCallback< TimestampedData > &callback );

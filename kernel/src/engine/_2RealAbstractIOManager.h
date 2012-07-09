@@ -23,7 +23,8 @@
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealOutlet.h"
 #include "app/_2RealCallbacks.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealEvent.h"
+#include "helpers/_2RealCallback.h"
 #include "helpers/_2RealPoco.h"
 
 #include <string>
@@ -38,7 +39,7 @@ namespace _2Real
 	class Parameter;
 	class ParameterData;
 
-	class InletIO : public HandleAble< app::InletHandle >
+	class InletIO : public Handleable< app::InletHandle >
 	{
 	public:
 		InletIO( AbstractUberBlock &owner, ParameterData const& data );
@@ -47,7 +48,7 @@ namespace _2Real
 		InletBuffer												*m_Buffer;
 	};
 
-	class OutletIO : public HandleAble< app::OutletHandle >
+	class OutletIO : public Handleable< app::OutletHandle >
 	{
 	public:
 		OutletIO( AbstractUberBlock &owner, ParameterData const& data );

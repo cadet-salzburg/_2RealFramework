@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealAny.h"
 
 #include <typeinfo.h>
 #include <string>
@@ -42,7 +42,7 @@ namespace _2Real
 			template< typename Datatype >
 			void addInlet( std::string const& inletName, Datatype defaultValue )
 			{
-				addInletInternal( inletName, EngineData( defaultValue ) );
+				addInletInternal( inletName, Any( defaultValue ) );
 			}
 
 			template< typename Datatype >
@@ -53,7 +53,7 @@ namespace _2Real
 
 		private:
 
-			void		addInletInternal( std::string const& inletName, EngineData const& defaultValue );
+			void		addInletInternal( std::string const& inletName, Any const& defaultValue );
 			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 
 			BlockData	&m_Impl;

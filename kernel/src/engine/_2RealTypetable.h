@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealAny.h"
 
 #include <list>
 #include <vector>
@@ -43,14 +43,14 @@ namespace _2Real
 
 		std::string const&		lookupTypename( std::string const& longTypename ) const;
 		const std::string		lookupLongTypename( std::string const& typeName ) const;
-		EngineData const&		getInitialValueFromLongTypename( std::string const& longTypename ) const;
-		EngineData const&		getInitialValueFromTypename( std::string const& typeName ) const;
+		Any const&		getInitialValueFromLongTypename( std::string const& longTypename ) const;
+		Any const&		getInitialValueFromTypename( std::string const& typeName ) const;
 
 	private:
 
-		typedef std::map< std::string, EngineData >						Datatypes;
-		typedef std::map< std::string, EngineData >::iterator			DatatypeIterator;
-		typedef std::map< std::string, EngineData >::const_iterator		DatatypeConstIterator;
+		typedef std::map< std::string, Any >						Datatypes;
+		typedef std::map< std::string, Any >::iterator			DatatypeIterator;
+		typedef std::map< std::string, Any >::const_iterator		DatatypeConstIterator;
 
 		typedef std::map< std::string, std::string >					Typenames;
 		typedef std::map< std::string, std::string >::iterator			TypenameIterator;
@@ -80,9 +80,9 @@ namespace _2Real
 		std::vector< Datatype > vec;
 		std::list< Datatype > list;
 
-		EngineData simpleData( data );
-		EngineData vectorData( vec );
-		EngineData listData( list );
+		Any simpleData( data );
+		Any vectorData( vec );
+		Any listData( list );
 
 		m_Datatypes[ typeName ] = simpleData;
 		m_Datatypes[ nameVec ] = vectorData;

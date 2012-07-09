@@ -20,7 +20,7 @@
 
 #include "app/_2RealAppData.h"
 #include "app/_2RealCallbacks.h"
-#include "helpers/_2RealHandleAble.h"
+#include "helpers/_2RealHandle.h"
 
 #include<list>
 
@@ -32,7 +32,7 @@ namespace _2Real
 	{
 		class InletHandle;
 
-		class OutletHandle : public Handle
+		class OutletHandle : private Handle
 		{
 
 		public:
@@ -46,6 +46,14 @@ namespace _2Real
 			std::string const&	getName() const;
 			std::string const&	getLongTypename() const;
 			std::string const&	getTypename() const;
+
+			bool isValid() const;
+			bool operator==( OutletHandle const& other ) const;
+			bool operator!=( OutletHandle const& other ) const;
+			bool operator<( OutletHandle const& other ) const;
+			bool operator<=( OutletHandle const& other ) const;
+			bool operator>( OutletHandle const& other ) const;
+			bool operator>=( OutletHandle const& other ) const;
 
 			void linkTo( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );
@@ -68,6 +76,10 @@ namespace _2Real
 				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
+
+		protected:
+
+			void invalidate();
 
 		private:
 

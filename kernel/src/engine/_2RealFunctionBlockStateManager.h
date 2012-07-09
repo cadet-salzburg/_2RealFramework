@@ -19,7 +19,7 @@
 #pragma once
 
 #include "engine/_2RealAbstractStateManager.h"
-#include "helpers/_2RealHelpersInternal.h"
+#include "helpers/_2RealSynchronizedBool.h"
 #include "helpers/_2RealPoco.h"
 
 namespace _2Real

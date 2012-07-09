@@ -22,7 +22,6 @@
 
 namespace _2Real
 {
-
 	namespace app
 	{
 		class ParameterInfo

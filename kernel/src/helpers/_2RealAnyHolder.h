@@ -25,34 +25,34 @@
 
 namespace _2Real
 {
-	class AbstractDataHolder
+	class AbstractAnyHolder
 	{
 	
 	public:
 	
-		virtual ~AbstractDataHolder() {}
+		virtual ~AbstractAnyHolder() {}
 		virtual const std::string getTypename() const = 0;
 		virtual std::type_info const& getTypeinfo() const = 0;
-		virtual AbstractDataHolder* clone() const = 0;
-		virtual AbstractDataHolder* create() const = 0;
+		virtual AbstractAnyHolder* clone() const = 0;
+		virtual AbstractAnyHolder* create() const = 0;
 		virtual void writeTo( std::ostream &out ) const = 0;
 		virtual void readFrom( std::istream &in ) = 0;
 
 	};
 
 	template< typename Datatype >
-	class DataHolder : public AbstractDataHolder
+	class AnyHolder : public AbstractAnyHolder
 	{
 	
 	public:
 
-		DataHolder();
-		explicit DataHolder( Datatype const& value );
+		AnyHolder();
+		explicit AnyHolder( Datatype const& value );
 
 		const std::string getTypename() const;
 		std::type_info const& getTypeinfo() const;
-		AbstractDataHolder * create() const;
-		AbstractDataHolder * clone() const;
+		AbstractAnyHolder * create() const;
+		AbstractAnyHolder * clone() const;
 
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
@@ -61,31 +61,31 @@ namespace _2Real
 
 	private:
 
-		DataHolder( DataHolder< Datatype > const& src );
-		DataHolder& operator=( DataHolder< Datatype > const& src );
+		AnyHolder( AnyHolder< Datatype > const& src );
+		AnyHolder& operator=( AnyHolder< Datatype > const& src );
 
 	};
 
 	template< typename Datatype >
-	DataHolder< Datatype >::DataHolder() :
+	AnyHolder< Datatype >::AnyHolder() :
 		m_Data()
 	{
 	}
 
 	template< typename Datatype >
-	DataHolder< Datatype >::DataHolder( Datatype const& value ) :
+	AnyHolder< Datatype >::AnyHolder( Datatype const& value ) :
 		m_Data( value )
 	{
 	}
 
 	template< typename Datatype >
-	DataHolder< Datatype >::DataHolder( DataHolder< Datatype > const& src ) :
+	AnyHolder< Datatype >::AnyHolder( AnyHolder< Datatype > const& src ) :
 		m_Data( src.m_Data )
 	{
 	}
 
 	template< typename Datatype >
-	DataHolder< Datatype >& DataHolder< Datatype >::operator=( DataHolder< Datatype > const& src )
+	AnyHolder< Datatype >& AnyHolder< Datatype >::operator=( AnyHolder< Datatype > const& src )
 	{
 		if ( this == &src )
 		{
@@ -98,39 +98,39 @@ namespace _2Real
 	}
 
 	template< typename Datatype >
-	std::type_info const& DataHolder< Datatype >::getTypeinfo() const
+	std::type_info const& AnyHolder< Datatype >::getTypeinfo() const
 	{
 		return typeid( Datatype );
 	}
 
 	template< typename Datatype >
-	const std::string DataHolder< Datatype >::getTypename() const
+	const std::string AnyHolder< Datatype >::getTypename() const
 	{
 		return typeid( Datatype ).name();
 	}
 
 	template< typename Datatype >
-	void DataHolder< Datatype >::writeTo( std::ostream &out ) const
+	void AnyHolder< Datatype >::writeTo( std::ostream &out ) const
 	{
 		out << m_Data;
 	}
 
 	template< typename Datatype >
-	void DataHolder< Datatype >::readFrom( std::istream &in )
+	void AnyHolder< Datatype >::readFrom( std::istream &in )
 	{
 		in >> m_Data;
 	}
 
 	template< typename Datatype >
-	AbstractDataHolder * DataHolder< Datatype >::create() const
+	AbstractAnyHolder * AnyHolder< Datatype >::create() const
 	{ 
-		return new DataHolder< Datatype >();
+		return new AnyHolder< Datatype >();
 	}
 
 	template< typename Datatype >
-	AbstractDataHolder * DataHolder< Datatype >::clone() const
+	AbstractAnyHolder * AnyHolder< Datatype >::clone() const
 	{
-		return new DataHolder< Datatype >( m_Data );
+		return new AnyHolder< Datatype >( m_Data );
 	}
 
 }

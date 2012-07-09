@@ -16,25 +16,37 @@
 	limitations under the License.
 */
 
-#pragma once
+#include "helpers\_2RealHandleable.h"
+
+#include <sstream>
+
+using std::ostringstream;
+using std::string;
 
 namespace _2Real
 {
 
-	// muahahahaha
-
-	template< typename T >
-	class NonCopyable
+	AbstractHandleable::~AbstractHandleable()
 	{
+		for ( HandleIterator it = m_Handles.begin(); it != m_Handles.end(); ++it )
+		{
+			( *it )->invalidate();
+		}
+		m_Handles.clear();
+	}
 
-	protected:
-		NonCopyable () {}
-		~NonCopyable () {}
-	
-	private: 
-		NonCopyable ( NonCopyable const& src );
-		T & operator= ( T const& src );
+	void AbstractHandleable::registerHandle( Handle &handle )
+	{
+		m_Handles.insert( &handle );
+	}
 
-	};
+	void AbstractHandleable::unregisterHandle( Handle &handle )
+	{
+		HandleIterator it = m_Handles.find( &handle );
+		if ( it != m_Handles.end() )
+		{
+			m_Handles.erase( it );
+		}
+	}
 
 }

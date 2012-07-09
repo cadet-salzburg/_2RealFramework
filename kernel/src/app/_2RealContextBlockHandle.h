@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealHandleAble.h"
+#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {
@@ -29,7 +29,7 @@ namespace _2Real
 	{
 		class BlockInfo;
 
-		class ContextBlockHandle : public Handle
+		class ContextBlockHandle : private Handle
 		{
 
 		public:
@@ -43,6 +43,18 @@ namespace _2Real
 			BlockInfo getBlockInfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );
+
+			bool isValid() const;
+			bool operator==( ContextBlockHandle const& other ) const;
+			bool operator!=( ContextBlockHandle const& other ) const;
+			bool operator<( ContextBlockHandle const& other ) const;
+			bool operator<=( ContextBlockHandle const& other ) const;
+			bool operator>( ContextBlockHandle const& other ) const;
+			bool operator>=( ContextBlockHandle const& other ) const;
+
+		protected:
+
+			void invalidate();
 
 		private:
 

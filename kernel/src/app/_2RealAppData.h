@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealAny.h"
 
 namespace _2Real
 {
@@ -43,7 +43,7 @@ namespace _2Real
 			template< typename T >
 			bool isDatatype() const
 			{
-				return EngineData.isDatatype< T >();
+				return Any.isDatatype< T >();
 			}
 
 			template< typename T >
@@ -63,7 +63,7 @@ namespace _2Real
 		private:
 
 			std::string				m_Name;
-			EngineData				m_Data;
+			Any				m_Data;
 			std::string				m_Typename;
 
 		};

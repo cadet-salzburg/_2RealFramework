@@ -2,7 +2,7 @@
 
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealHelpers.h"
-#include "helpers/_2RealTypeHolder.h"
+#include "helpers/_2RealAnyHolder.h"
 
 #include <typeinfo>
 #include <sstream>
@@ -10,28 +10,28 @@
 namespace _2Real
 {
 
-	class EngineData
+	class Any
 	{
 
 		template< typename Datatype >
-		friend Datatype & extractFrom( EngineData &data );
+		friend Datatype & extractFrom( Any &data );
 
 		template< typename Datatype >
-		friend Datatype const& extractFrom( EngineData const& data );
+		friend Datatype const& extractFrom( Any const& data );
 
-		friend std::ostream& operator<<( std::ostream& out, EngineData const& data );
-		friend std::istream& operator>>( std::istream& in, EngineData &data );
+		friend std::ostream& operator<<( std::ostream& out, Any const& data );
+		friend std::istream& operator>>( std::istream& in, Any &data );
 
 	public:
 
-		EngineData();
-		EngineData( EngineData const& src );
-		EngineData& operator=( EngineData const& src );
+		Any();
+		Any( Any const& src );
+		Any& operator=( Any const& src );
 
 		template< typename Datatype >
-		explicit EngineData( Datatype const& value )
+		explicit Any( Datatype const& value )
 		{
-			DataHolder< Datatype > *holder = new DataHolder< Datatype >( value );
+			AnyHolder< Datatype > *holder = new AnyHolder< Datatype >( value );
 			m_Content.reset( holder );
 		}
 
@@ -44,25 +44,25 @@ namespace _2Real
 		bool isEmpty() const;
 		const std::string getTypename() const;
 
-		void cloneFrom( EngineData const& src );
-		void createNew( EngineData const& src );
+		void cloneFrom( Any const& src );
+		void createNew( Any const& src );
 
 	private:
 
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
-		std::shared_ptr< AbstractDataHolder >	m_Content;
+		std::shared_ptr< AbstractAnyHolder >	m_Content;
 
 	};
 
 	template< typename Datatype >
-	Datatype & extractFrom( EngineData &data )
+	Datatype & extractFrom( Any &data )
 	{
 		if ( data.getTypename() == typeid( Datatype ).name() )
 		{
-			AbstractDataHolder *ptr = data.m_Content.get();
-			DataHolder< Datatype > &holder = dynamic_cast< DataHolder< Datatype > & >( *ptr );
+			AbstractAnyHolder *ptr = data.m_Content.get();
+			AnyHolder< Datatype > &holder = dynamic_cast< AnyHolder< Datatype > & >( *ptr );
 			return holder.m_Data;
 		}
 		else
@@ -74,12 +74,12 @@ namespace _2Real
 	}
 
 	template< typename Datatype >
-	Datatype const& extractFrom( EngineData const& data )
+	Datatype const& extractFrom( Any const& data )
 	{
 		if ( data.getTypename() == typeid( Datatype ).name() )
 		{
-			AbstractDataHolder *ptr = data.m_Content.get();
-			DataHolder< Datatype > &holder = dynamic_cast< DataHolder< Datatype > & >( *ptr );
+			AbstractAnyHolder *ptr = data.m_Content.get();
+			AnyHolder< Datatype > &holder = dynamic_cast< AnyHolder< Datatype > & >( *ptr );
 			return holder.m_Data;
 		}
 		else

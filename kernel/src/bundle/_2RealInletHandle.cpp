@@ -33,7 +33,7 @@ namespace _2Real
 		{
 		}
 
-		EngineData InletHandle::getCurrentData() const
+		Any InletHandle::getCurrentData() const
 		{
 			return m_Inlet->getData().getData();
 		}

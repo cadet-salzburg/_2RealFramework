@@ -16,11 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealHelpers.h"
-#include "_2RealHelpersInternal.h"
-#include "_2RealException.h"
-
-using std::string;
+#include "_2RealSynchronizedBool.h"
 
 namespace _2Real
 {
@@ -61,38 +57,6 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Bool = false;
-	}
-
-	const std::string validateName( string const& name )
-	{
-		std::string result = toLower( trim(name) );
-
-		size_t pos = result.find_first_not_of( "abcedefghijklmnopqrstuvwxyz_ .0123456789" );
-		if ( pos != std::string::npos )
-		{
-			std::stringstream msg;
-			msg << "invalid name " << result << "; contains forbidden character " << result[pos];
-			throw InvalidNameException(msg.str());
-		}
-
-		return result;
-	}
-
-	const std::string pathToName( Poco::Path const& path )
-	{
-		std::string result;
-
-		for ( unsigned int i=0; i<path.depth(); ++i )
-		{
-			std::string dir = toLower( path.directory( i ) );
-			result.append( dir );
-			if ( i < ( path.depth() - 1 ) ) result.append( "." );
-		}
-		//if (path.isFile())
-		//{
-		//	result.append(toLower(path.getFileName()));
-		//}
-		return result;
 	}
 
 }

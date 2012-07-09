@@ -72,9 +72,6 @@
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealCallbacksInternal.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealCallbacks.h">
       <Filter>include\app</Filter>
     </ClInclude>
@@ -114,25 +111,16 @@
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
       <Filter>include\bundle</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealEngineData.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealException.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealHelpersInternal.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealPoco.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealTypeHolder.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
@@ -243,10 +231,25 @@
     <ClInclude Include="..\..\src\engine\_2RealTypetable.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealHandleAble.h">
+    <ClInclude Include="..\..\src\helpers\_2RealAny.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealNonCopyAble.h">
+    <ClInclude Include="..\..\src\helpers\_2RealEvent.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealCallback.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealHandle.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealHandleable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -301,18 +304,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
       <Filter>src\bundle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealEngineData.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHelpers.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHelpersInternal.cpp">
-      <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealTypetable.cpp">
       <Filter>src\engine</Filter>
@@ -406,6 +397,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealLogger.cpp">
       <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealSynchronizedBool.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealHandle.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealHandleable.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealHelpers.cpp">
+      <Filter>src\helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

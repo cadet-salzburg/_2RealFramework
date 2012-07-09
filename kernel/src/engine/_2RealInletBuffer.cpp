@@ -45,7 +45,7 @@ namespace _2Real
 		return true;
 	}
 
-	InletBuffer::InletBuffer( EngineData const& defaultData ) :
+	InletBuffer::InletBuffer( Any const& defaultData ) :
 		m_InsertionPolicy( new RemoveOldest( 0 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
@@ -60,7 +60,7 @@ namespace _2Real
 		delete m_InsertionPolicy;
 	}
 
-	void InletBuffer::receiveData( EngineData const& data )
+	void InletBuffer::receiveData( Any const& data )
 	{
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
@@ -147,7 +147,7 @@ namespace _2Real
 		m_InsertionPolicy = new RemoveOldest( size );
 	}
 
-	//void InletBuffer::setDefaultData( EngineData const& defaultData )
+	//void InletBuffer::setDefaultData( Any const& defaultData )
 	//{
 	//	//Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 	//	//m_DefaultData = TimestampedData( defaultData, m_Engine.getElapsedSeconds() );

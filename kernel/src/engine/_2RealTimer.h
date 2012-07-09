@@ -20,7 +20,8 @@
 #pragma once
 
 #include "helpers/_2RealPoco.h"
-#include "app/_2RealCallbacksInternal.h"
+#include "helpers/_2RealEvent.h"
+#include "helpers/_2RealCallback.h"
 
 namespace _2Real
 {

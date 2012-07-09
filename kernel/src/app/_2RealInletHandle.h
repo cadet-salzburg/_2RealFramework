@@ -19,7 +19,7 @@
 #pragma once
 
 #include "app/_2RealAppData.h"
-#include "helpers/_2RealHandleAble.h"
+#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {
@@ -29,7 +29,7 @@ namespace _2Real
 	{
 		class OutletHandle;
 
-		class InletHandle : public Handle
+		class InletHandle : private Handle
 		{
 
 		public:
@@ -51,7 +51,15 @@ namespace _2Real
 			std::string const&	getLongTypename() const;
 			std::string const&	getTypename() const;
 
-			void setUpdatePolicy( const InletUpdatePolicy p );
+			bool isValid() const;
+			bool operator==( InletHandle const& other ) const;
+			bool operator!=( InletHandle const& other ) const;
+			bool operator<( InletHandle const& other ) const;
+			bool operator<=( InletHandle const& other ) const;
+			bool operator>( InletHandle const& other ) const;
+			bool operator>=( InletHandle const& other ) const;
+
+			void setUpdatePolicy( const InletUpdatePolicy policy );
 
 			void linkTo( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
@@ -60,7 +68,7 @@ namespace _2Real
 			template< typename T >
 			void setValue( T const& value )
 			{
-				setValue( EngineData( value ) );
+				setValue( Any( value ) );
 			}
 
 			// returns the inlet's most recent input data
@@ -70,11 +78,15 @@ namespace _2Real
 			// default = 0 = no buffering
 			void				setBufferSize( const unsigned int size );
 
+		protected:
+
+			void invalidate();
+
 		private:
 
 			friend class OutletHandle;
 
-			void				setValue( EngineData const& data );
+			void				setValue( Any const& data );
 			InletIO				*m_InletIO;
 
 		};

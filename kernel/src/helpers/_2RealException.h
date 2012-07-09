@@ -115,32 +115,11 @@ namespace _2Real
 	}
 
 	DECLARE_EXCEPTION( InvalidStateChangeException, Exception )
-
-	//occurs only during the plugin's getMetatdata function
-	//if any type of parameter (setup, input, output) is declared with
-	//a type not allowed in the framework
 	DECLARE_EXCEPTION( InvalidTypeException, Exception )
-
-	//occurs anytime sth is not found:
-	//in a plugin/service, when trying to access a non-existant parameter
-	//in the application, when trying to create a non-existant service or set a non-existant parameter
 	DECLARE_EXCEPTION( NotFoundException, Exception )
-
-	//occurs in the plugin anytime something is doubly defined, e.g. a plugin registering a service twice
-	//or metadata declaring a parameter twice
 	DECLARE_EXCEPTION( AlreadyExistsException, Exception )
-
-	//occurs when there is a mismatch between the declared type of any parameter (according to the metadata)
-	//and the template parameter used (note that all functions involving parameters are function templates)
 	DECLARE_EXCEPTION( TypeMismatchException, Exception )
-
-	//occurs only in the service, when accessing a handle that is not initialized to an actual i/o slot
 	DECLARE_EXCEPTION( UninitializedHandleException, Exception )
-
-	DECLARE_EXCEPTION( InvalidNameException, Exception );
-
-	DECLARE_EXCEPTION( InvalidOperationException, Exception );
-
 	DECLARE_EXCEPTION( TimeOutException, Exception );
 
 }

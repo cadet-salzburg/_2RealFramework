@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealEngineData.h"
+#include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
 
 #include <sstream>
@@ -47,7 +47,7 @@ namespace _2Real
 					throw UninitializedHandleException( msg.str() );
 				}
 
-				EngineData &curr = getCurrentData();
+				Any &curr = getCurrentData();
 				Datatype &data = extractFrom< Datatype >( curr );
 				return data;
 			}
@@ -56,7 +56,7 @@ namespace _2Real
 
 		private:
 
-			EngineData &		getCurrentData();
+			Any &		getCurrentData();
 			Outlet				*m_Outlet;
 
 		};

@@ -21,8 +21,8 @@
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
-#define checkHandle( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "context block handle not initialized" );\
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "context block handle not initialized" );
 
 namespace _2Real
 {
@@ -35,7 +35,7 @@ namespace _2Real
 		}
 
 		ContextBlockHandle::ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block ) :
-			Handle( &block ),
+			Handle(),
 			m_Block( &block )
 		{
 			m_Block->registerHandle( *this );
@@ -47,7 +47,7 @@ namespace _2Real
 		}
 
 		ContextBlockHandle::ContextBlockHandle( ContextBlockHandle const& other ) :
-			Handle( other.m_Block ),
+			Handle(),
 			m_Block( other.m_Block )
 		{
 			if ( isValid() ) m_Block->registerHandle( *this );
@@ -76,16 +76,56 @@ namespace _2Real
 			return *this;
 		}
 
+		bool ContextBlockHandle::isValid() const
+		{
+			return m_Block != nullptr;
+		}
+
+		bool ContextBlockHandle::operator==( ContextBlockHandle const& other ) const
+		{
+			return m_Block == other.m_Block;
+		}
+
+		bool ContextBlockHandle::operator!=( ContextBlockHandle const& other ) const
+		{
+			return m_Block != other.m_Block;
+		}
+
+		bool ContextBlockHandle::operator<( ContextBlockHandle const& other ) const
+		{
+			return m_Block < other.m_Block;
+		}
+
+		bool ContextBlockHandle::operator<=( ContextBlockHandle const& other ) const
+		{
+			return m_Block <= other.m_Block;
+		}
+
+		bool ContextBlockHandle::operator>( ContextBlockHandle const& other ) const
+		{
+			return m_Block > other.m_Block;
+		}
+
+		bool ContextBlockHandle::operator>=( ContextBlockHandle const& other ) const
+		{
+			return m_Block >= other.m_Block;
+		}
+
 		BlockInfo ContextBlockHandle::getBlockInfo() const
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			return m_Block->getBlockData();
 		}
 
 		void ContextBlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
-			checkHandle( m_Block );
+			checkValidity( m_Block );
 			m_Block->updateWithFixedRate( updatesPerSecond );
+		}
+
+		void ContextBlockHandle::invalidate()
+		{
+			m_Block = nullptr;
 		}
 	}
 }

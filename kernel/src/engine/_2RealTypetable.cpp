@@ -55,13 +55,13 @@ namespace _2Real
 		return it->second;
 	}
 
-	EngineData const& Typetable::getInitialValueFromLongTypename( string const& longTypename ) const
+	Any const& Typetable::getInitialValueFromLongTypename( string const& longTypename ) const
 	{
 		string typeName = lookupTypename( longTypename );
 		return getInitialValueFromTypename( typeName );
 	}
 
-	EngineData const& Typetable::getInitialValueFromTypename( string const& typeName ) const
+	Any const& Typetable::getInitialValueFromTypename( string const& typeName ) const
 	{
 		DatatypeConstIterator it = m_Datatypes.find( typeName );
 

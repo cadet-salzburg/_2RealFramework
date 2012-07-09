@@ -23,7 +23,7 @@ using std::string;
 namespace _2Real
 {
 	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& type ) :
-		HandleAble< bundle::InletHandle >( *this ),
+		Handleable< bundle::InletHandle >( *this ),
 		Parameter( owningBlock, name, longTypename, type )
 	{
 	}

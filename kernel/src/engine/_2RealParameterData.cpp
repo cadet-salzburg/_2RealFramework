@@ -35,7 +35,7 @@ namespace _2Real
 	{
 	}
 
-	ParameterData::ParameterData( string const& name, string const& longType, string const& type, EngineData const& defaultValue ) :
+	ParameterData::ParameterData( string const& name, string const& longType, string const& type, Any const& defaultValue ) :
 		m_Name( name ),
 		m_Typename( type ),
 		m_LongTypename( longType ),
@@ -58,7 +58,7 @@ namespace _2Real
 		return m_LongTypename;
 	}
 
-	EngineData const& ParameterData::getDefaultValue() const
+	Any const& ParameterData::getDefaultValue() const
 	{
 		return m_DefaultValue;
 	}

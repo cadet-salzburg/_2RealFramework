@@ -24,13 +24,24 @@
 #include <set>
 #include <string>
 #include <sstream>
-#include <iostream>
 
 namespace _2Real
 {
 
 	const std::string toLower( std::string const& s );
 	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
+
+	template< class T > void safeDelete( T*& pVal )
+	{
+		delete pVal;
+		pVal = nullptr;
+	}
+
+	template< class T > void safeDeleteArray( T*& pVal )
+	{
+		delete[] pVal;
+		pVal = nullptr;
+	}
 
 	template< typename Datatype >
 	std::ostream& operator<<( std::ostream &out, typename std::vector< Datatype > const& v )
