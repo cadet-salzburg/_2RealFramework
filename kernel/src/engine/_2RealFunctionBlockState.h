@@ -18,9 +18,6 @@
 
 #pragma once
 
-#include <string>
-#include <sstream>
-
 namespace _2Real
 {
 

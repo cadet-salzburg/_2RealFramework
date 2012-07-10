@@ -22,18 +22,16 @@
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealTimeBasedTrigger.h"
-#include "engine/_2RealAbstractIOManager.h"
+#include "helpers/_2RealPoco.h"
 
 #include <map>
-#include <string>
-
-#include "Poco/Mutex.h"
 
 namespace _2Real
 {
 
 	class Inlet;
-	class ParameterData;
+	class InletIO;
+	class OutletIO;
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
 

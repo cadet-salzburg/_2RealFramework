@@ -17,12 +17,6 @@
 */
 
 #include "helpers/_2RealHandle.h"
-#include "helpers/_2RealException.h"
-
-#include <sstream>
-
-using std::ostringstream;
-using std::string;
 
 namespace _2Real
 {

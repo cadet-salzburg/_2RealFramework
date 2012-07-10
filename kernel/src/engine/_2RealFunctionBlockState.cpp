@@ -18,9 +18,8 @@
 
 #include "engine/_2RealFunctionBlockState.h"
 #include "helpers/_2RealException.h"
-#include "engine/_2RealFunctionBlock.h"
+#include "engine/_2RealFunctionBlockStateManager.h"
 
-#include <iostream>
 #include <assert.h>
 
 namespace _2Real

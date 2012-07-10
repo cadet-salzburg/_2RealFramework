@@ -17,27 +17,24 @@
 */
 
 #include "engine/_2RealEngineImpl.h"
-#include "engine/_2RealIdentifier.h"
-#include "helpers/_2RealSingletonHolder.h"
 #include "engine/_2RealTypetable.h"
 #include "engine/_2RealBundleManager.h"
-#include "engine/_2RealBundleInternal.h"
+#include "engine/_2RealBundle.h"
+#include "engine/_2RealTimer.h"
 #include "engine/_2RealThreadPool.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealSystem.h"
-#include "engine/_2RealIdCounter.h"
-#include "app/_2RealBundleHandle.h"
-#include "app/_2RealCallbacks.h"
+#include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
-#include "engine/_2RealTimer.h"
+#include "helpers/_2RealSingletonHolder.h"
+#include "helpers/_2RealHelpers.h"
 
 #include "datatypes/_2RealDeviceList.h"
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealEnum.h"
 
 #include <sstream>
-#include <iostream>
 
 #ifdef _2REAL_WINDOWS
 	#ifndef _DEBUG
@@ -76,11 +73,8 @@ namespace _2Real
 		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
 		m_Typetable( new Typetable() ),
 		m_BundleManager( new BundleManager( *this ) ),
-		m_IdCounter( new IdCounter() ),
 		m_System( new System( *m_Logger ) )
 	{
-		// TODO: do not automatically regsiter lists & vectors
-
 		m_Typetable->registerType< char >( "char");
 		m_Typetable->registerType< unsigned char >( "unsigned char" );
 		m_Typetable->registerType< short >( "short");
@@ -118,7 +112,6 @@ namespace _2Real
 		{
 			clearFully();
 			delete m_System;
-			delete m_IdCounter;
 			delete m_BundleManager;
 			m_ThreadPool->clear();
 			delete m_ThreadPool;
@@ -176,11 +169,6 @@ namespace _2Real
 		return static_cast< long >( m_Timestamp.elapsed() );
 	}
 
-	Identifier EngineImpl::createIdentifier( std::string const& name )
-	{
-		return Identifier( name, m_IdCounter->getId() );
-	}
-
 	Timer & EngineImpl::getTimer()
 	{
 		return *m_Timer;
@@ -210,7 +198,7 @@ namespace _2Real
 	{
 		string path = libraryPath;
 		path.append( shared_library_suffix );
-		return m_BundleManager->loadLibrary( path )->getHandle();
+		return m_BundleManager->loadLibrary( path ).getHandle();
 	}
 
 	void EngineImpl::registerToException( app::BlockExcCallback &callback )
@@ -244,7 +232,7 @@ namespace _2Real
 
 		for ( System::BlockConstIterator it = blocks.begin(); it != blocks.end(); ++it )
 		{
-			BlockInstance *instance = static_cast< BlockInstance * >( *it );
+			FunctionBlock< app::BlockHandle > *instance = static_cast< FunctionBlock< app::BlockHandle > * >( *it );
 			result.push_back( instance );
 		}
 		return result;

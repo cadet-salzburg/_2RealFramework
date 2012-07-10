@@ -73,7 +73,6 @@ namespace _2Real
 		public:
 
 			CreateContext() : m_Obj( nullptr )		{}
-			~CreateContext()						{ delete m_Obj; }
 
 			Block & create( ContextBlock *const context )
 			{

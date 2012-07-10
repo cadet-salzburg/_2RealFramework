@@ -20,12 +20,12 @@
 #pragma once
 
 #include "engine/_2RealAbstractUpdateTrigger.h"
+#include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealAbstractStateManager.h"
 #include "engine/_2RealInletBuffer.h"
 
 namespace _2Real
 {
-
 	struct ValidData
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )

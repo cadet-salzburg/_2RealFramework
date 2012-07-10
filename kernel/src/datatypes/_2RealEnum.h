@@ -23,38 +23,9 @@
 
 #include <string>
 #include <map>
-#include <list>
 
 namespace _2Real
 {
-
-	template< typename T >
-	class ListInitializer
-	{
-
-	public:
-
-		ListInitializer( T const& val )
-		{
-			m_List.push_back( val );
-		}
-
-		ListInitializer& operator()( T const& val )
-		{
-			m_List.push_back( val );
-			return *this;
-		}
-
-		operator std::list< T > const& () const
-		{
-			return m_List;
-		}
-
-	private:
-
-		std::list< T >		m_List;
-
-	};
 
 	template< typename K, typename V >
 	class MapInitializer

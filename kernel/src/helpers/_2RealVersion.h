@@ -28,6 +28,7 @@ namespace _2Real
 
 	public:
 
+		Version();
 		Version( unsigned int major, unsigned int minor, unsigned int revision );
 
 		bool operator==( Version const& rhs );

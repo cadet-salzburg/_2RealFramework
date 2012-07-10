@@ -18,8 +18,6 @@
 
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
-#include "app/_2RealInletHandle.h"
-#include "app/_2RealOutletHandle.h"
 #include "engine/_2RealParameterData.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
@@ -67,14 +65,9 @@ namespace _2Real
 	{
 	}
 
-	string const& AbstractIOManager::getName() const
+	const string AbstractIOManager::getName() const
 	{
-		return m_Owner.getName();
-	}
-
-	unsigned int AbstractIOManager::getId() const
-	{
-		return m_Owner.getId();
+		return m_Owner.getFullName();
 	}
 
 }

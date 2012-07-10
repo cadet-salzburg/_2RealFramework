@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "app/_2RealAppData.h"
+#include "helpers/_2RealAny.h"
 #include "helpers/_2RealHandle.h"
 
 namespace _2Real
@@ -27,6 +27,7 @@ namespace _2Real
 
 	namespace app
 	{
+		class AppData;
 		class OutletHandle;
 
 		class InletHandle : private Handle

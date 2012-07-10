@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealBundleData.h"
+#include "engine/_2RealBlockData.h"
 #include "helpers/_2RealException.h"
 
 #include <sstream>

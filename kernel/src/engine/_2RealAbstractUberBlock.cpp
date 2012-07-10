@@ -18,31 +18,16 @@
 
 #include "engine/_2RealAbstractUberBlock.h"
 
+using std::string;
+
 namespace _2Real
 {
-
-	AbstractUberBlock::AbstractUberBlock( Identifier const& id ) :
-		m_Identifier( id )
+	AbstractUberBlock::AbstractUberBlock( Ids const& ids, std::string const& name ) :
+		Identifiable< AbstractUberBlock >( ids, name )
 	{
 	}
 
 	AbstractUberBlock::~AbstractUberBlock()
 	{
 	}
-
-	Identifier const& AbstractUberBlock::getIdentifier() const
-	{
-		return m_Identifier;
-	}
-
-	std::string const& AbstractUberBlock::getName() const
-	{
-		return m_Identifier.getName();
-	}
-
-	unsigned int AbstractUberBlock::getId() const
-	{
-		return m_Identifier.getId();
-	}
-
 }

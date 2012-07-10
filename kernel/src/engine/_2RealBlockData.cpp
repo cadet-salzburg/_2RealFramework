@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealBlockData.h"
+#include "engine/_2RealParameterData.h"
 
 namespace _2Real
 {

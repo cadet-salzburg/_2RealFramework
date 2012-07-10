@@ -19,16 +19,18 @@
 #pragma once
 
 #include "engine/_2RealBundleData.h"
-#include "engine/_2RealBlockData.h"
 
 #include <map>
+#include <list>
 #include <string>
 
 namespace _2Real
 {
-
+	class ParameterData;
 	class Version;
 	class Typetable;
+	class BlockData;
+	class Any;
 
 	namespace bundle
 	{
@@ -57,6 +59,7 @@ namespace _2Real
 
 		bundle::ContextBlockMetainfo & setContextBlockCreator( bundle::AbstractBlockCreator &obj );
 		bundle::BlockMetainfo & setBlockCreator( std::string const& blockName, bundle::AbstractBlockCreator &obj );
+		void addContextDependentInlet( std::string const& name, Any const& val );
 
 		bool hasContext() const;
 		bundle::Block & createBlock( std::string const& blockName ) const;
@@ -90,12 +93,16 @@ namespace _2Real
 		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
 		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
 
+		typedef std::list< ParameterData >							Parameters;
+		typedef std::list< ParameterData >::iterator				ParameterIterator;
+		typedef std::list< ParameterData >::const_iterator			ParameterConstIterator;
+
 		bool										m_HasContext;
 		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
 		BundleData									m_BundleData;
-		Typetable const&							m_Typetable;
+		Typetable									const& m_Typetable;
+		Parameters									m_GlobalInlets;
 
 	};
-
 }

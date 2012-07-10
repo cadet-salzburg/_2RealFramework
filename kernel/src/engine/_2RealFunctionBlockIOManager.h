@@ -20,6 +20,7 @@
 
 #include "engine/_2RealAbstractIOManager.h"
 #include "helpers/_2RealHandleable.h"
+#include "app/_2RealCallbacks.h"
 #include "bundle/_2RealBlockHandle.h"
 
 namespace _2Real
@@ -34,6 +35,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
+		class BlockHandle;
 	}
 	
 	class ParameterData;

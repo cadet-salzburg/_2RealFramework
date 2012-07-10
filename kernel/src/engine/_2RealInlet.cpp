@@ -17,6 +17,8 @@
 */
 
 #include "engine/_2RealInlet.h"
+#include "bundle/_2RealInletHandle.h"
+#include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealEngineImpl.h"
 
 using std::string;
@@ -24,17 +26,24 @@ using std::string;
 namespace _2Real
 {
 	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& type ) :
-		Parameter( owningBlock, name, longTypename, type ),
+		Parameter( longTypename, type ),
 		NonCopyable< Inlet >(),
+		Identifiable< Inlet >( owningBlock.getIds(), name ),
 		AbstractHandleable(),
 		Handleable< bundle::InletHandle >( *this ),
-		m_Engine( EngineImpl::instance() )
+		m_Engine( EngineImpl::instance() ),
+		m_OwningUberBlock( owningBlock )
 	{
 	}
 
-	void Inlet::setData( TimestampedData const& data )
+	void Inlet::setDataAndSynchronize( TimestampedData const& data )
 	{
 		Parameter::setData( data );
 		Parameter::synchronize();
+	}
+
+	AbstractUberBlock & Inlet::getOwningUberBlock()
+	{
+		return m_OwningUberBlock;
 	}
 }

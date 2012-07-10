@@ -17,9 +17,6 @@
 */
 
 #include "app/_2RealBlockHandle.h"
-#include "app/_2RealInletHandle.h"
-#include "app/_2RealOutletHandle.h"
-#include "app/_2RealBlockData.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
@@ -115,10 +112,10 @@ namespace _2Real
 			return m_Block >= other.m_Block;
 		}
 
-		BlockInfo BlockHandle::getBlockInfo() const
+		BlockInfo const& BlockHandle::getBlockInfo() const
 		{
 			checkValidity( m_Block );
-			return m_Block->getBlockData();
+			return m_Block->getBlockInfo();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )

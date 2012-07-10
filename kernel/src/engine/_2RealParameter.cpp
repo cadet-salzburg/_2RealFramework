@@ -27,17 +27,10 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	Parameter::Parameter( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& typeName ) :
-		m_Owner( owningBlock ),
-		m_Name( name ),
+	Parameter::Parameter( string const& longTypename, string const& typeName ) :
 		m_LongTypename( longTypename ),
 		m_Typename( typeName )
 	{
-	}
-
-	std::string const& Parameter::getName() const
-	{
-		return m_Name;
 	}
 
 	std::string const& Parameter::getTypename() const
@@ -48,11 +41,6 @@ namespace _2Real
 	std::string const& Parameter::getLongTypename() const
 	{
 		return m_LongTypename;
-	}
-
-	AbstractUberBlock& Parameter::getOwningUberBlock()
-	{
-		return m_Owner;
 	}
 
 	void Parameter::setData( TimestampedData const& data )

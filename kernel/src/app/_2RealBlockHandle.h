@@ -64,13 +64,13 @@ namespace _2Real
 			bool operator>( BlockHandle const& other ) const;
 			bool operator>=( BlockHandle const& other ) const;
 
-			BlockInfo getBlockInfo() const;
+			BlockInfo const& getBlockInfo() const;
 
 			// negative or zero: no time based update at all
 			void setUpdateRate( const double updatesPerSecond );
 
-			void setup();										// will stop the block and then set it up -> a new start is nee
-			void start();										// will
+			void setup();										// will stop the block and then set it up -> a new start is needed
+			void start();
 			void stop( const long timeout = NO_TIMEOUT );		// um, yeah. no timeout is probably a bad idea :)
 			void kill( const long timeout = NO_TIMEOUT );		// see above
 			void singleStep();									// if block was not stopped before, this will not do anything at all

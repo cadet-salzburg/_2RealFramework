@@ -46,29 +46,11 @@ namespace _2Real
 
 	private:
 
-		/**
-		*	the service that we want to execute
-		*/
-		FunctionBlockStateManager			*m_Target;
-
-		/**
-		*	true if this thread has no target to execute
-		*/
+		FunctionBlockStateManager	*m_Target;
 		volatile bool				m_IsIdle;
-
-		/**
-		*	the underlying thread
-		*/
 		Poco::Thread				m_Thread;
-
-		/**
-		*	callback to the threadpool
-		*/
 		ThreadPoolCallback			*m_Callback;
 
-		/*
-		*	sync stuff - mainly a lot of events!
-		*/
 		Poco::Event					m_TargetReady;
 		Poco::Event					m_TargetCompleted;
 		Poco::Event					m_ThreadStarted;

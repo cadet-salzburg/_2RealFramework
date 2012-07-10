@@ -48,7 +48,7 @@ namespace _2Real
 			ContextBlockHandle( ContextBlockHandle const& other );
 			ContextBlockHandle& operator=( ContextBlockHandle const& other );
 
-			BlockInfo getBlockInfo() const;
+			BlockInfo const& getBlockInfo() const;
 
 			bool isValid() const;
 			bool operator==( ContextBlockHandle const& other ) const;

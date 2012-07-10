@@ -18,6 +18,7 @@
 
 #include "bundle/_2RealBlockMetainfo.h"
 #include "engine/_2RealBlockData.h"
+#include "engine/_2RealParameterData.h"
 #include "engine/_2RealTypetable.h"
 
 namespace _2Real

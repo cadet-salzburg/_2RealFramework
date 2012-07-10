@@ -25,7 +25,6 @@
 
 namespace _2Real
 {
-
 	class BlockData
 	{
 
@@ -60,5 +59,4 @@ namespace _2Real
 		ParamMetas			m_Outlets;
 
 	};
-
 }

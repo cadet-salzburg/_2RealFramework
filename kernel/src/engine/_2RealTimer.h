@@ -21,12 +21,13 @@
 
 #include "helpers/_2RealPoco.h"
 #include "helpers/_2RealEvent.h"
-#include "helpers/_2RealCallback.h"
 
 namespace _2Real
 {
 
 	class Logger;
+	template< typename T >
+	class Callback;
 
 	class Timer
 	{

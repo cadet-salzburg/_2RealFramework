@@ -18,11 +18,8 @@
 
 #pragma once
 
-#include "app/_2RealAppData.h"
 #include "app/_2RealCallbacks.h"
 #include "helpers/_2RealHandle.h"
-
-#include<list>
 
 namespace _2Real
 {
@@ -30,6 +27,7 @@ namespace _2Real
 
 	namespace app
 	{
+		class AppData;
 		class InletHandle;
 
 		class OutletHandle : private Handle

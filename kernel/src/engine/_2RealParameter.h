@@ -19,8 +19,9 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-#include "helpers/_2RealAny.h"
 #include "helpers/_2RealPoco.h"
+
+#include <string>
 
 namespace _2Real
 {
@@ -32,12 +33,10 @@ namespace _2Real
 
 	protected:
 
-		Parameter( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName );
+		Parameter( std::string const& longTypename, std::string const& typeName );
 
 		std::string const&			getTypename() const;
 		std::string const&			getLongTypename() const;
-		std::string const&			getName() const;
-		AbstractUberBlock &			getOwningUberBlock();
 
 		void						setData( TimestampedData const& data );
 		void						synchronize();		// syncs data & write data
@@ -49,10 +48,8 @@ namespace _2Real
 		TimestampedData				m_Data;
 		TimestampedData				m_DataBuffer;
 
-		AbstractUberBlock			&m_Owner;
 		std::string					const m_LongTypename;
 		std::string					const m_Typename;
-		std::string					const m_Name;
 
 	};
 

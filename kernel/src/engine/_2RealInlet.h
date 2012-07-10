@@ -22,14 +22,13 @@
 #include "bundle/_2RealInletHandle.h"
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
-
-#include <string>
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 	class EngineImpl;
 
-	class Inlet : private Parameter, private NonCopyable< Inlet >, private Handleable< bundle::InletHandle >
+	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< bundle::InletHandle >
 	{
 
 	public:
@@ -40,17 +39,20 @@ namespace _2Real
 		using Handleable< bundle::InletHandle >::registerHandle;
 		using Handleable< bundle::InletHandle >::unregisterHandle;
 
+		using Identifiable< Inlet >::getFullName;
+		using Identifiable< Inlet >::getName;
+
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
-		using Parameter::getName;
-		using Parameter::getOwningUberBlock;
 		using Parameter::getData;
 
-		void setData( TimestampedData const& data );
+		void setDataAndSynchronize( TimestampedData const& data );
+		AbstractUberBlock & getOwningUberBlock();
 
 	private:
 
-		EngineImpl		&m_Engine;
+		EngineImpl				&m_Engine;
+		AbstractUberBlock		&m_OwningUberBlock;
 
 	};
 }

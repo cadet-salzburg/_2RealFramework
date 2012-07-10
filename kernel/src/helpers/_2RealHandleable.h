@@ -18,15 +18,12 @@
 
 #pragma once
 
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealHandle.h"
-
 #include <set>
-#include <iostream>
-#include <sstream>
 
 namespace _2Real
 {
+
+	class Handle;
 
 	class AbstractHandleable
 	{

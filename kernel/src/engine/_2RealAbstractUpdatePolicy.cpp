@@ -32,13 +32,8 @@ namespace _2Real
 	{
 	}
 
-	string const& AbstractUpdatePolicy::getName() const
+	const string AbstractUpdatePolicy::getName() const
 	{
-		return m_Owner.getName();
-	}
-
-	unsigned int AbstractUpdatePolicy::getId() const
-	{
-		return m_Owner.getId();
+		return m_Owner.getFullName();
 	}
 }

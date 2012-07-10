@@ -23,7 +23,6 @@
 #include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealEngineImpl.h"
 
-#include <iostream>
 #include <sstream>
 
 using std::make_pair;
@@ -147,7 +146,21 @@ namespace _2Real
 		return it->second.metainfo->createContextBlock();
 	}
 
-	bundle::Block& BundleLoader::createBlock( std::string const& path, std::string const& blockName ) const
+	BundleData const& BundleLoader::getBundleMetadata( string const& path ) const
+	{
+		BundleInfoConstIterator it = m_LoadedBundles.find( path );
+
+		if ( it == m_LoadedBundles.end() )
+		{
+			ostringstream msg;
+			msg << "shared library " << path << " not found";
+			throw NotFoundException( msg.str() );
+		}
+
+		return it->second.metainfo->getBundleData();
+	}
+
+	bundle::Block& BundleLoader::createBlockInstance( std::string const& path, std::string const& blockName ) const
 	{
 		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 

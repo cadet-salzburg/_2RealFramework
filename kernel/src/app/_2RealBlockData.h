@@ -25,46 +25,39 @@
 
 namespace _2Real
 {
-	//namespace engine
-	//{
-		class Bundle;
-		template< typename T > class FunctionBlock;
-	//}
-
 	namespace app
 	{
 		class BlockInfo
 		{
 
-			template< typename T >
-			friend class _2Real::FunctionBlock;
-			friend class _2Real::Bundle;
-
 		public:
+
+			struct BlockData
+			{
+				std::string			name;
+				std::string			description;
+				std::string			category;
+			};
 
 			typedef std::vector< ParameterInfo >					ParameterInfos;
 			typedef std::vector< ParameterInfo >::iterator			ParameterInfoIterator;
 			typedef std::vector< ParameterInfo >::const_iterator	ParameterInfoConstIterator;
 
 			BlockInfo();
+			BlockInfo( BlockData const& data, ParameterInfos const& inlets, ParameterInfos const& outlets );
 
 			std::string const&			getName() const;
 			std::string const&			getDescription() const;
 			std::string const&			getCategory() const;
 
-			ParameterInfos const&		getParameters() const;
 			ParameterInfos const&		getInlets() const;
 			ParameterInfos const&		getOutlets() const; 
 
 		private:
 
-			std::string			m_Name;
-			std::string			m_Description;
-			std::string			m_Category;
-
-			ParameterInfos		m_Parameters;
-			ParameterInfos		m_Inlets;
-			ParameterInfos		m_Outlets;
+			BlockData					m_BlockData;
+			ParameterInfos				m_Inlets;
+			ParameterInfos				m_Outlets;
 
 		};
 	}

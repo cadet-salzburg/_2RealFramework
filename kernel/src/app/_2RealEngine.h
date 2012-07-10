@@ -22,6 +22,8 @@
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealBundleHandle.h"
+#include "app/_2RealBlockHandle.h"
 
 #include <string>
 #include <set>
@@ -36,10 +38,6 @@ namespace _2Real
 
 	namespace app
 	{
-		class BundleHandle;
-		class InletHandle;
-		class OutletHandle;
-
 		class Engine
 		{
 

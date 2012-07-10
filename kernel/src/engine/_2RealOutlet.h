@@ -22,36 +22,40 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 	class EngineImpl;
 
-	class Outlet : private Parameter, private NonCopyable< Outlet >, private Handleable< bundle::OutletHandle >
+	class Outlet : private Parameter, private NonCopyable< Outlet >, private Identifiable< Outlet >, private Handleable< bundle::OutletHandle >
 	{
 
 	public:
 
-		Outlet( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
+		Outlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
 
 		using Handleable< bundle::OutletHandle >::getHandle;
 		using Handleable< bundle::OutletHandle >::registerHandle;
 		using Handleable< bundle::OutletHandle >::unregisterHandle;
 
+		using Identifiable< Outlet >::getFullName;
+		using Identifiable< Outlet >::getName;
+
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
-		using Parameter::getName;
-		using Parameter::getOwningUberBlock;
 		using Parameter::getData;
 
 		bool			synchronize();
 		Any &			getWriteableData();
 		void			discardCurrentUpdate();
+		AbstractUberBlock & getOwningUberBlock();
 
 	private:
 
-		EngineImpl		&m_Engine;
-		bool			m_DiscardCurrent;
+		EngineImpl				&m_Engine;
+		AbstractUberBlock		&m_OwningUberBlock;
+		bool					m_DiscardCurrent;
 
 	};
 }

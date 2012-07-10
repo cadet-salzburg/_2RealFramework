@@ -31,13 +31,6 @@ namespace _2Real
 		TimestampedData() ;
 		TimestampedData( Any const& data, long timestamp );
 
-		//template< typename Datatype >
-		//Datatype const& getExtractedData() const
-		//{
-		//	std::shared_ptr< Datatype > ptr = extractFrom< Datatype >(m_Data);
-		//	return *ptr.get();
-		//}
-
 		long getTimestamp() const;
 		Any & getData();
 		Any const& getData() const;

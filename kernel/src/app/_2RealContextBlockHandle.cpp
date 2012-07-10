@@ -17,7 +17,6 @@
 */
 
 #include "app/_2RealContextBlockHandle.h"
-#include "app/_2RealBlockData.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
@@ -118,10 +117,10 @@ namespace _2Real
 			m_Block = nullptr;
 		}
 
-		BlockInfo ContextBlockHandle::getBlockInfo() const
+		BlockInfo const& ContextBlockHandle::getBlockInfo() const
 		{
 			checkValidity( m_Block );
-			return m_Block->getBlockData();
+			return m_Block->getBlockInfo();
 		}
 
 		OutletHandle & ContextBlockHandle::getOutletHandle( string const& name ) const

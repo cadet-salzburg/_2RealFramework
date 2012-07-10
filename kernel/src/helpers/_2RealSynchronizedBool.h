@@ -20,14 +20,6 @@
 
 #include "helpers/_2RealPoco.h"
 
-#include <vector>
-#include <map>
-#include <list>
-#include <set>
-#include <string>
-#include <sstream>
-#include <iostream>
-
 namespace _2Real
 {
 

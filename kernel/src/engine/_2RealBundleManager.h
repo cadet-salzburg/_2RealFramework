@@ -20,7 +20,6 @@
 #pragma once
 
 #include "engine/_2RealBundleLoader.h"
-#include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealPoco.h"
 
 #include <set>
@@ -29,8 +28,14 @@
 namespace _2Real
 {
 	class Bundle;
-	class Identifier;
+	template< typename T >
+	class FunctionBlock;
 	class EngineImpl;
+
+	namespace app
+	{
+		class BlockHandle;
+	}
 
 	class BundleManager
 	{
@@ -46,22 +51,19 @@ namespace _2Real
 
 		void clear();
 		void											setBaseDirectory( std::string const& path );
-		Bundle *										loadLibrary( std::string const& libraryPath );
+		Bundle &										loadLibrary( std::string const& libraryPath );
 		bool											isLibraryLoaded( Poco::Path const& path ) const;
-		FunctionBlock< app::BlockHandle > *				createFunctionBlock( Bundle &bundle, std::string const& blockName );
+		FunctionBlock< app::BlockHandle > &				createBlockInstance( Bundle &bundle, std::string const& blockName );
 		Bundles const&									getBundles() const;
 
 	private:
 
-		FunctionBlock< app::ContextBlockHandle > *		createContextBlock( Bundle &bundle );
-
 		const Poco::Path								makeAbsolutePath( Poco::Path const& path ) const;
 
 		EngineImpl										&m_Engine;
-		BundleLoader									m_BundleLoader;
-		Bundles											m_Bundles;
 		Poco::Path										m_BaseDirectory;
+		Bundles											m_Bundles;
+		BundleLoader									m_BundleLoader;
 
 	};
-
 }

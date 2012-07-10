@@ -19,7 +19,7 @@
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealBundleData.h"
-#include "engine/_2RealBundleInternal.h"
+#include "engine/_2RealBundle.h"
 #include "helpers/_2RealException.h"
 
 #define checkValidity( obj )\
@@ -112,16 +112,16 @@ namespace _2Real
 			return m_Bundle >= other.m_Bundle;
 		}
 
-		BundleInfo BundleHandle::getBundleInfo() const
+		BundleInfo const& BundleHandle::getBundleInfo() const
 		{
 			checkValidity( m_Bundle );
-			return m_Bundle->getBundleData();
+			return m_Bundle->getBundleInfo();
 		}
 
 		ContextBlockHandle & BundleHandle::getContextBlock() const
 		{
 			checkValidity( m_Bundle );
-			return m_Bundle->getBundleContextHandle();
+			return m_Bundle->getContextBlockHandle();
 		}
 
 		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )

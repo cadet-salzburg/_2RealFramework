@@ -19,13 +19,12 @@
 #include "engine/_2RealFunctionBlockIOManager.h"
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "helpers/_2RealException.h"
-#include "engine/_2RealFunctionBlock.h"
-#include "engine/_2RealParameter.h"
+#include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
-#include "engine/_2RealParameterData.h"
-#include "engine/_2RealLink.h"
+//#include "engine/_2RealParameterData.h"
+#include "app/_2RealAppData.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "bundle/_2RealInletHandle.h"
@@ -129,7 +128,7 @@ namespace _2Real
 		}
 
 		ostringstream msg;
-		msg << "inlet " << name<< " not found in" << m_Owner.getName();
+		msg << "inlet " << name<< " not found in" << m_Owner.getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -144,7 +143,7 @@ namespace _2Real
 		}
 
 		ostringstream msg;
-		msg << "outlet " << name<< " not found in" << m_Owner.getName();
+		msg << "outlet " << name<< " not found in" << m_Owner.getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -171,7 +170,7 @@ namespace _2Real
 		{
 			Inlet &inlet = *( ( *it )->m_Inlet );
 			TimestampedData const& data = ( *it )->m_Buffer->getTriggeringData();
-			inlet.setData( data );
+			inlet.setDataAndSynchronize( data );
 		}
 	}
 

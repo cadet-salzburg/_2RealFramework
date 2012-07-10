@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealOutlet.h"
+#include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealEngineImpl.h"
 
 using std::string;
@@ -24,12 +25,14 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	Outlet::Outlet( AbstractUberBlock &owner, string const& name, string const& longTypename, string const& typeName, Any const& emptyData ) :
-		Parameter( owner, name, longTypename, typeName ),
+	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& typeName, Any const& emptyData ) :
+		Parameter( longTypename, typeName ),
 		NonCopyable< Outlet >(),
+		Identifiable< Outlet >( owningBlock.getIds(), name ),
 		AbstractHandleable(),
 		Handleable< bundle::OutletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
+		m_OwningUberBlock( owningBlock ),
 		m_DiscardCurrent( false )
 	{
 		Parameter::m_Data = TimestampedData( emptyData, 0 );
@@ -63,5 +66,10 @@ namespace _2Real
 	void Outlet::discardCurrentUpdate()
 	{
 		m_DiscardCurrent = true;
+	}
+
+	AbstractUberBlock & Outlet::getOwningUberBlock()
+	{
+		return m_OwningUberBlock;
 	}
 }

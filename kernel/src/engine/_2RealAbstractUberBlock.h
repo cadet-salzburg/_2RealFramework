@@ -18,43 +18,38 @@
 
 #pragma once
 
-#include "engine/_2RealIdentifier.h"
 #include "helpers/_2RealNonCopyable.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 
 	class InletIO;
-	class OutletIO;
 	class Exception;
 
-	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >
+	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
 	{
 
 	public:
 
-		AbstractUberBlock( Identifier const& id );
+		AbstractUberBlock( Ids const& ids, std::string const& name );
 		virtual ~AbstractUberBlock();
 
-		Identifier	const&			getIdentifier() const;
-		std::string const&			getName() const;
-		unsigned int				getId() const;
+		using Identifiable< AbstractUberBlock >::getFullName;
+		using Identifiable< AbstractUberBlock >::getIds;
+		using Identifiable< AbstractUberBlock >::setName;
 
-		virtual void				setUp() = 0;
-		virtual void				start() = 0;
-		virtual void				stop( const bool blocking, const long timeout ) = 0;
-		virtual void				prepareForShutDown() = 0;
-		virtual bool				shutDown( const long timeout ) = 0;
+		virtual void	setUp() = 0;
+		virtual void	start() = 0;
+		virtual void	stop( const bool blocking, const long timeout ) = 0;
+		virtual void	prepareForShutDown() = 0;
+		virtual bool	shutDown( const long timeout ) = 0;
 
-		virtual void				updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
-		virtual void				updateWhenInletDataValid( InletIO &inletIO ) = 0;
-		virtual void				updateWithFixedRate( const double updatesPerSecond ) = 0;
+		virtual void	updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
+		virtual void	updateWhenInletDataValid( InletIO &inletIO ) = 0;
+		virtual void	updateWithFixedRate( const double updatesPerSecond ) = 0;
 
-		virtual void				handleException( Exception &e ) = 0;
-
-	protected:
-
-		Identifier					const m_Identifier;
+		virtual void	handleException( Exception &e ) = 0;
 
 	};
 

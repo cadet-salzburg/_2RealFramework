@@ -18,12 +18,7 @@
 
 #include "engine/_2RealParameterData.h"
 
-#include <sstream>
-#include <iostream>
-
 using std::string;
-using std::ostream;
-using std::ostringstream;
 
 namespace _2Real
 {

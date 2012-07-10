@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealException.h"
 #include "helpers/_2RealPoco.h"
 
 namespace _2Real

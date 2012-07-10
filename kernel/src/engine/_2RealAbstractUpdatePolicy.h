@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "helpers/_2RealNonCopyable.h"
+
 #include <string>
 
 namespace _2Real
@@ -25,16 +27,14 @@ namespace _2Real
 
 	class AbstractUberBlock;
 
-	class AbstractUpdatePolicy
+	class AbstractUpdatePolicy : private NonCopyable< AbstractUpdatePolicy >
 	{
 
 	public:
 
 		AbstractUpdatePolicy( AbstractUberBlock &owner );
 		virtual ~AbstractUpdatePolicy();
-
-		std::string const&		getName() const;
-		unsigned int			getId() const;
+		const std::string getName() const;
 
 	protected:
 

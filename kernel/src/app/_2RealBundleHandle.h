@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <string>
-
 #include "helpers/_2RealHandle.h"
+
+#include <string>
 
 namespace _2Real
 {
@@ -43,8 +43,7 @@ namespace _2Real
 			BundleHandle( BundleHandle const& other );
 			BundleHandle& operator=( BundleHandle const& other );
 
-			BundleInfo getBundleInfo() const;
-			ContextBlockHandle & getContextBlock() const;
+			BundleInfo const& getBundleInfo() const;
 
 			bool isValid() const;
 			bool operator==( BundleHandle const& other ) const;
@@ -54,6 +53,7 @@ namespace _2Real
 			bool operator>( BundleHandle const& other ) const;
 			bool operator>=( BundleHandle const& other ) const;
 
+			ContextBlockHandle & getContextBlock() const;
 			BlockHandle & createBlockInstance( std::string const& blockName );
 
 		protected:

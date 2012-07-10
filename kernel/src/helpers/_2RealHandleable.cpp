@@ -17,11 +17,7 @@
 */
 
 #include "helpers/_2RealHandleable.h"
-
-#include <sstream>
-
-using std::ostringstream;
-using std::string;
+#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {

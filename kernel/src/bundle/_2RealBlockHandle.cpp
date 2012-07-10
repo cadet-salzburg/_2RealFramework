@@ -17,9 +17,7 @@
 */
 
 #include "bundle/_2RealBlockHandle.h"
-#include "bundle/_2RealInletHandle.h"
-#include "bundle/_2RealOutletHandle.h"
-#include "engine/_2RealFunctionBlockIoManager.h"
+#include "engine/_2RealFunctionBlockIOManager.h"
 
 using std::string;
 

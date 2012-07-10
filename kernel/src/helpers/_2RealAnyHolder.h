@@ -19,9 +19,6 @@
 #pragma once
 
 #include <string>
-#include <memory>
-
-#include <iostream>
 
 namespace _2Real
 {

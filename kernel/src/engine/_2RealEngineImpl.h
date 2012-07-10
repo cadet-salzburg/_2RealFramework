@@ -20,12 +20,11 @@
 #pragma once
 
 #include "app/_2RealCallbacks.h"
-#include "helpers/_2RealPoco.h"
 #include "engine/_2RealLink.h"
-#include "helpers/_2RealException.h"
-#include "engine/_2RealFunctionBlock.h"
+#include "helpers/_2RealEvent.h"
+#include "helpers/_2RealPoco.h"
+#include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "engine/_2RealBundleInternal.h"
 
 #include <set>
 #include <string>
@@ -36,19 +35,22 @@ namespace _2Real
 	namespace app
 	{
 		class BundleHandle;
-	};
+	}
 
 	class Logger;
 	class Timer;
 	class Typetable;
 	class ThreadPool;
 	class BundleManager;
-	class IdCounter;
-	class System;
-	class Identifier;
-	class IOLink;
 	class AbstractUberBlock;
-	
+	class System;
+	class InletIO;
+	class OutletIO;
+	class Bundle;
+
+	template< typename T >
+	class FunctionBlock;
+
 	class EngineImpl
 	{
 
@@ -83,15 +85,12 @@ namespace _2Real
 
 		static EngineImpl & instance();
 
-		// TODO: merge public interfaces with interface of engine impl ?
 		Timer&							getTimer();
 		Logger&							getLogger();
 		Typetable const&				getTypetable() const;
 		ThreadPool &					getThreadPool();
 
 		const long						getElapsedTime() const;
-
-		Identifier						createIdentifier( std::string const& name );
 
 		void							clearFully();
 		void							clearBlockInstances();
@@ -127,7 +126,6 @@ namespace _2Real
 		ThreadPool				*m_ThreadPool;
 		Typetable				*m_Typetable;
 		BundleManager			*m_BundleManager;
-		IdCounter				*m_IdCounter;
 		System					*m_System;
 		Poco::Timestamp			m_Timestamp;
 

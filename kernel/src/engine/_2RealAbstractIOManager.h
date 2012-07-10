@@ -18,23 +18,34 @@
 
 #pragma once
 
-#include "engine/_2RealTimestampedData.h"
-#include "app/_2RealCallbacks.h"
-#include "app/_2RealInletHandle.h"
-#include "app/_2RealOutletHandle.h"
-#include "bundle/_2RealInletHandle.h"
-#include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealEvent.h"
-#include "helpers/_2RealCallback.h"
 #include "helpers/_2RealPoco.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealHandleable.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
 
-#include <string>
+#include <list>
+#include <vector>
 
 namespace _2Real
 {
 
+	namespace bundle
+	{
+		class BlockHandle;
+		class InletHandle;
+		class OutletHandle;
+	}
+
+	namespace app
+	{
+		class AppData;
+		class InletHandle;
+		class OutletHandle;
+	}
+
+	class TimestampedData;
 	class AbstractUberBlock;
 	class Inlet;
 	class InletBuffer;
@@ -105,9 +116,7 @@ namespace _2Real
 
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();
-
-		std::string const&		getName() const;
-		unsigned int			getId() const;
+		const std::string getName() const;
 
 	protected:
 

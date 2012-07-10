@@ -18,13 +18,16 @@
 
 #include "engine/_2RealBundleMetainfoImpl.h"
 #include "bundle/_2RealCreationPolicy.h"
-#include "engine/_2RealBundleData.h"
+#include "helpers/_2RealHelpers.h"
+#include "helpers/_2RealException.h"
 #include "engine/_2RealBlockData.h"
-#include "engine/_2RealTypetable.h"
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
+#include "engine/_2RealParameterData.h"
+#include "engine/_2RealTypetable.h"
 
 #include <sstream>
+#include <iostream>
 
 using std::string;
 using std::ostringstream;
@@ -177,6 +180,11 @@ namespace _2Real
 	{
 		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
+			for ( Metainfo::ParameterIterator pIt = m_GlobalInlets.begin(); pIt != m_GlobalInlets.end(); ++pIt )
+			{
+				it->second.data->addInlet( *pIt );
+			}
+
 			m_BundleData.addBlockData( *it->second.data );
 		}
 
@@ -184,6 +192,14 @@ namespace _2Real
 		{
 			m_BundleData.addBlockData( *m_ContextInfo.data );
 		}
+	}
+
+	void Metainfo::addContextDependentInlet( std::string const& name, Any const& defaultValue )
+	{
+		const std::string longTypename = defaultValue.getTypename();
+		const std::string typeName = m_Typetable.lookupTypename( longTypename );
+		ParameterData data( name, longTypename, typeName, defaultValue );
+		m_GlobalInlets.push_back( data );
 	}
 
 }

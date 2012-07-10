@@ -18,8 +18,6 @@
 
 #include "app/_2RealBundleData.h"
 
-#include <iostream>
-
 using std::string;
 using std::ostream;
 
@@ -27,50 +25,56 @@ namespace _2Real
 {
 	namespace app
 	{
-		BundleInfo::BundleInfo() :
-			m_Name( "undefined" ),
-			m_Description( "undefined" ),
-			m_Author( "undefined" ),
-			m_Contact( "undefined" ),
-			m_InstallDirectory( "undefined" ),
-			m_Category( "undefined" ),
-			m_Version( 0, 0, 0 )
+		BundleInfo::BundleInfo()
+		{
+			m_BundleData.name = "undefined";
+			m_BundleData.directory = "undefined";
+			m_BundleData.description = "undefined";
+			m_BundleData.author = "undefined";
+			m_BundleData.contact = "undefined";
+			m_BundleData.category = "undefined";
+			m_BundleData.version = Version( 0, 0, 0 );
+		}
+
+		BundleInfo::BundleInfo( BundleData const& data, BlockInfos const& blocks ) :
+			m_BundleData( data ),
+			m_ExportedBlocks( blocks )
 		{
 		}
 
 		string const& BundleInfo::getName() const
 		{
-			return m_Name;
+			return m_BundleData.name;
 		}
 
 		string const& BundleInfo::getInstallDirectory() const
 		{
-			return m_InstallDirectory;
+			return m_BundleData.directory;
 		}
 
 		string const& BundleInfo::getDescription() const
 		{
-			return m_Description;
+			return m_BundleData.description;
 		}
 
 		string const& BundleInfo::getAuthor() const
 		{
-			return m_Author;
+			return m_BundleData.author;
 		}
 
 		string const& BundleInfo::getContact() const
 		{
-			return m_Contact;
+			return m_BundleData.contact;
 		}
 
 		string const& BundleInfo::getCategory() const
 		{
-			return m_Category;
+			return m_BundleData.category;
 		}
 
 		Version const& BundleInfo::getVersion() const
 		{
-			return m_Version;
+			return m_BundleData.version;
 		}
 
 		BundleInfo::BlockInfos const& BundleInfo::getExportedBlocks() const

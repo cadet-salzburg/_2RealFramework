@@ -43,7 +43,7 @@ namespace _2Real
 
 	void System::clearFully()
 	{
-		Blocks ready;
+		Blocks readyBlocks;
 
 		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
 		{
@@ -59,11 +59,11 @@ namespace _2Real
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
-				ready.insert( *it );
+				readyBlocks.insert( *it );
 			}
 			else
 			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
 			}
 
 			it = m_Blocks.erase( it );
@@ -73,20 +73,20 @@ namespace _2Real
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
-				ready.insert( *it );
+				readyBlocks.insert( *it );
 			}
 			else
 			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
 			}
 
 			it = m_ContextBlocks.erase( it );
 		}
 
-		for ( BlockIterator it = ready.begin(); it != ready.end(); /**/ )
+		for ( BlockIterator it = readyBlocks.begin(); it != readyBlocks.end(); /**/ )
 		{
 			delete *it;
-			it = ready.erase( it );
+			it = readyBlocks.erase( it );
 		}
 	}
 
@@ -107,7 +107,7 @@ namespace _2Real
 			}
 			else
 			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getName() ) );
+				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
 			}
 
 			it = m_Blocks.erase( it );
@@ -147,7 +147,7 @@ namespace _2Real
 				{
 					m_Blocks.erase( it );
 					ostringstream msg;
-					msg << " timeout reached on shutdown of " << block.getName();
+					msg << " timeout reached on shutdown of " << block.getFullName();
 					throw TimeOutException( msg.str() );
 				}
 			}

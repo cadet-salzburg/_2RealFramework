@@ -20,7 +20,6 @@
 #pragma once
 
 #include "helpers/_2RealPoco.h"
-
 #include <map>
 
 namespace _2Real
@@ -42,11 +41,12 @@ namespace _2Real
 		~BundleLoader();
 
 		void clear();
-		bool isLibraryLoaded( std::string const& path ) const;
-		bool hasContext( std::string const& path ) const;
+		bool isLibraryLoaded( std::string const& absPath ) const;
+		bool hasContext( std::string const& absPath ) const;
 		BundleData const& loadLibrary( std::string const& path );
-		bundle::Block& createContext( std::string const& path ) const;
-		bundle::Block& createBlock( std::string const& path, std::string const& blockName ) const;
+		bundle::Block& createContext( std::string const& absPath ) const;
+		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName ) const;
+		BundleData const& getBundleMetadata( std::string const& absPath ) const;
 
 	private:
 

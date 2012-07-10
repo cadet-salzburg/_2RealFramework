@@ -27,16 +27,3 @@
 #include "Poco/Runnable.h"
 #include "Poco/Event.h"
 #include "Poco/ThreadLocal.h"
-
-//namespace _2Real
-//{
-	//typedef Poco::Timestamp							Timestamp;
-	//typedef Poco::Timer								Timer;
-	//typedef Poco::Path								Path;
-	//typedef Poco::SharedLibrary						SharedLibrary;
-	//typedef Poco::FastMutex							FastMutex;
-	//typedef Poco::Event								Event;
-	//typedef Poco::ScopedLock< Poco::FastMutex >		ScopedLock;
-	//typedef Poco::Thread								Thread;
-	//typedef Poco::Runnable							Runnable;
-//}

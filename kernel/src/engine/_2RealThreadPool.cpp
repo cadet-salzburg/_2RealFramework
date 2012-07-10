@@ -26,7 +26,7 @@
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
 
-#include <iostream>
+#include <sstream>
 #include <algorithm>
 
 namespace _2Real

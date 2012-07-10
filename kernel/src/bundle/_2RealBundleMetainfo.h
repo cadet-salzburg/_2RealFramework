@@ -19,6 +19,7 @@
 #pragma once
 
 #include "bundle/_2RealCreationPolicy.h"
+#include "helpers/_2RealAny.h"
 
 #include <string>
 
@@ -52,6 +53,12 @@ namespace _2Real
 				return exportBlockInternal( *obj, blockName ); 
 			}
 
+			template< typename Datatype >
+			void addInletToAllWithContext( std::string const& inletName, Datatype const& defaultValue )
+			{
+				addInletInternal( inletName, Any( defaultValue ) );
+			}
+
 			void setDescription( std::string const& description );
 			void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
 			void setAuthor( std::string const& author );
@@ -62,6 +69,7 @@ namespace _2Real
 
 			ContextBlockMetainfo &	exportContextBlockInternal( AbstractBlockCreator &obj );
 			BlockMetainfo &			exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName );
+			void					addInletInternal( std::string const& inletName, Any const& defaultValue );
 			Metainfo				&m_Impl;
 
 		};

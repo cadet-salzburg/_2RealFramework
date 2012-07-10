@@ -21,8 +21,6 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealThreadPool.h"
 
-#include <iostream>
-
 namespace _2Real
 {
 

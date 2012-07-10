@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "_2RealImageT.h"
+#include "datatypes/_2RealImageT.h"
 
 namespace _2Real
 {

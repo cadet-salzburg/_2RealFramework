@@ -18,34 +18,38 @@
 
 #pragma once
 
-#include "app/_2RealBlockData.h"
 #include "helpers/_2RealVersion.h"
+#include "app/_2RealBlockData.h"
 
 #include <vector>
 #include <string>
 
 namespace _2Real
 {
-	//namespace engine
-	//{
-		class Bundle;
-	//}
-
 	namespace app
 	{
 		class BundleInfo
 		{
 
-			friend class _2Real::Bundle;
-
 		public:
+
+			struct BundleData
+			{
+				std::string					name;
+				std::string					directory;
+				std::string					description;
+				std::string					author;
+				std::string					contact;
+				std::string					category;
+				Version						version;
+			};
 
 			typedef std::vector< BlockInfo >					BlockInfos;
 			typedef std::vector< BlockInfo >::iterator			BlockInfoIterator;
 			typedef std::vector< BlockInfo >::const_iterator	BlockInfoConstIterator;
 
 			BundleInfo();
-			//BundleInfo( BundleData const& data, BlockInfos const& infos );
+			BundleInfo( BundleData const& data, BlockInfos const& blocks );
 
 			BlockInfos const&			getExportedBlocks() const;
 			std::string const&			getInstallDirectory() const;
@@ -58,13 +62,7 @@ namespace _2Real
 
 		private:
 
-			std::string					m_Name;
-			std::string					m_InstallDirectory;
-			std::string					m_Description;
-			std::string					m_Author;
-			std::string					m_Contact;
-			std::string					m_Category;
-			Version						m_Version;
+			BundleData					m_BundleData;
 			BlockInfos					m_ExportedBlocks;
 
 		};

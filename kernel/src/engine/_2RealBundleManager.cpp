@@ -18,16 +18,12 @@
 */
 
 #include "engine/_2RealBundleManager.h"
-#include "engine/_2RealBundleInternal.h"
-#include "engine/_2RealSystem.h"
+#include "engine/_2RealBundle.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "engine/_2RealBundleData.h"
 #include "engine/_2RealBlockData.h"
-#include "engine/_2RealIdentifier.h"
+#include "engine/_2RealParameterData.h"
 #include "engine/_2RealEngineImpl.h"
-#include "app/_2RealBundleHandle.h"
-#include "app/_2RealBlockHandle.h"
-#include "app/_2RealContextBlockHandle.h"
 
 #include <sstream>
 
@@ -69,7 +65,7 @@ namespace _2Real
 		m_BaseDirectory = Poco::Path( directory );
 	}
 
-	Bundle * BundleManager::loadLibrary( string const& libraryPath )
+	Bundle & BundleManager::loadLibrary( string const& libraryPath )
 	{
 		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
 
@@ -80,21 +76,65 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		BundleData const& data = m_BundleLoader.loadLibrary( absPath );
-		Bundle *bundle = new Bundle( m_Engine.createIdentifier( absPath ), data, *this );
+		BundleData const& bundleData = m_BundleLoader.loadLibrary( absPath );
 
+		app::BundleInfo::BundleData data;
+		app::BundleInfo::BlockInfos blocks;
+
+		data.name = bundleData.getName();
+		data.directory = bundleData.getInstallDirectory();
+		data.description = bundleData.getDescription();
+		data.contact = bundleData.getContact();
+		data.author = bundleData.getAuthor();
+		data.category = bundleData.getCategory();
+
+		BundleData::BlockMetas const& blockMetadata = bundleData.getExportedBlocks();
+
+		for ( BundleData::BlockMetaConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
+		{
+			app::BlockInfo::BlockData blockData;
+			app::BlockInfo::ParameterInfos inlets;
+			app::BlockInfo::ParameterInfos outlets;
+
+			blockData.name = it->second.getName();
+			blockData.description = it->second.getDescription();
+			blockData.category = it->second.getCategory();
+
+			BlockData::ParamMetas const& input = it->second.getInlets();
+			BlockData::ParamMetas const& output = it->second.getOutlets();
+
+			for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				inlets.push_back( paramInfo );
+			}
+
+			for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				outlets.push_back( paramInfo );
+			}
+
+			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
+		}
+
+		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
 		m_Bundles.insert( bundle );
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			BundleContext *contextBlock = createContextBlock( *bundle );
-			bundle->setBundleContext( *contextBlock );
+			BlockData const& contextData = bundleData.getBlockData( "bundle context" );
+			bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
+			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( *bundle, block, contextData );
+			bundle->setContextBlock( *contextBlock );
+			m_Engine.addBlockInstance( *contextBlock );
+
 			contextBlock->updateWithFixedRate( 1.0 );
 			contextBlock->setUp();
 			contextBlock->start();
 		}
 
-		return bundle;
+		return *bundle;
 	}
 	
 	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
@@ -103,37 +143,16 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
-	BlockInstance * BundleManager::createFunctionBlock( Bundle &bundle, std::string const& blockName )
+	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName )
 	{
-		BundleData const& bundleData = bundle.getMetadata();
-		BlockData const& blockData = bundleData.getBlockData( blockName );
-		unsigned int count = bundle.getBlockInstanceCount( blockName );
+		BundleData const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getName() );
+		BlockData const& blockMetadata = bundleMetadata.getBlockData( blockName );
 
-		ostringstream name;
-		name << blockName << " # " << count;
-
-		Identifier blockId = m_Engine.createIdentifier( name.str() );
-
-		bundle::Block & block = m_BundleLoader.createBlock( bundleData.getInstallDirectory(), blockName );
-		BlockInstance *functionBlock = new FunctionBlock< app::BlockHandle >( blockData, block, blockId );
-		m_Engine.addBlockInstance( *functionBlock );
-		bundle.addBlockInstance( block, blockName );
-		return functionBlock;
-	}
-
-	BundleContext * BundleManager::createContextBlock( Bundle &bundle )
-	{
-		BundleData const& bundleData = bundle.getMetadata();
-		BlockData const& blockData = bundleData.getBlockData( "bundle context" );
-
-		ostringstream name;
-		name << bundle.getName() << " bundle context";
-
-		Identifier blockId( m_Engine.createIdentifier( name.str() ) );
-		bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
-		BundleContext *contextBlock = new BundleContext( blockData, block, blockId );
-		m_Engine.addContextBlock( *contextBlock );
-		return contextBlock;
+		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getName(), blockName );
+		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, blockMetadata );
+		bundle.addBlockInstance( *functionBlock, blockName );
+		m_Engine.addContextBlock( *functionBlock );
+		return *functionBlock;
 	}
 
 	const Poco::Path BundleManager::makeAbsolutePath( Poco::Path const& path ) const

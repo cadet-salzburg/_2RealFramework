@@ -19,13 +19,13 @@
 #pragma once
 
 #include "helpers/_2RealVersion.h"
-#include "engine/_2RealBlockData.h"
 
 #include <map>
 #include <string>
 
 namespace _2Real
 {
+	class BlockData;
 
 	class BundleData
 	{
@@ -70,5 +70,4 @@ namespace _2Real
 		BlockMetas					m_ExportedBlocks;
 
 	};
-
 }

@@ -39,7 +39,6 @@ namespace _2Real
 			std::string const& getName() const;
 			const std::string getDataAsString() const;
 
-			// probably more efficient than wuerying the typename all the time
 			template< typename T >
 			bool isDatatype() const
 			{
@@ -62,9 +61,9 @@ namespace _2Real
 
 		private:
 
-			std::string				m_Name;
+			std::string		m_Name;
 			Any				m_Data;
-			std::string				m_Typename;
+			std::string		m_Typename;
 
 		};
 	}

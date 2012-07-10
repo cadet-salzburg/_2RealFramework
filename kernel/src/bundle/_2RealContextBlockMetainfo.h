@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
-
 #include <string>
 
 namespace _2Real
@@ -43,9 +41,6 @@ namespace _2Real
 			{
 				addOutletInternal( outletName, typeid( Datatype ).name() );
 			}
-
-			// TODO: functions for context block may be added as the need arises
-			//void setUpdateRate( const float updatesPerSecond );
 
 		private:
 

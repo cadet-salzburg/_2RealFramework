@@ -18,8 +18,10 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealAppData.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealInlet.h"
+#include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealAbstractIOManager.h"

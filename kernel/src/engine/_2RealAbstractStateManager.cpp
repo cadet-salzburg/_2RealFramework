@@ -33,13 +33,9 @@ namespace _2Real
 	{
 	}
 
-	string const& AbstractStateManager::getName() const
+	const string AbstractStateManager::getName() const
 	{
-		return m_Owner.getName();
+		return m_Owner.getFullName();
 	}
 
-	unsigned int AbstractStateManager::getId() const 
-	{
-		return m_Owner.getId();
-	}
 }

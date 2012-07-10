@@ -24,6 +24,13 @@ using std::ostream;
 
 namespace _2Real
 {
+	Version::Version() :
+		m_Major( 0 ),
+		m_Minor( 0 ),
+		m_Revision( 0 )
+	{
+	}
+
 	Version::Version( unsigned int major, unsigned int minor, unsigned int revision ) :
 		m_Major( major ),
 		m_Minor( minor ),

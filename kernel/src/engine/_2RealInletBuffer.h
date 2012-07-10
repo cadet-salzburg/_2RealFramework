@@ -20,13 +20,15 @@
 
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealEvent.h"
-#include "helpers/_2RealCallback.h"
 #include "helpers/_2RealPoco.h"
 
 #include <list>
 
 namespace _2Real
 {
+
+	template< typename T >
+	class AbstractCallback;
 
 	class AbstractInsertionPolicy
 	{

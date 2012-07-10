@@ -64,5 +64,10 @@ namespace _2Real
 			// TODO: perform block namecheck ( name != bundle context ), convert to lowercase
 			return m_Impl.setBlockCreator( blockName, obj );
 		}
+
+		void BundleMetainfo::addInletInternal( std::string const& inletName, Any const& defaultValue )
+		{
+			m_Impl.addContextDependentInlet( inletName, defaultValue );
+		}
 	}
 }

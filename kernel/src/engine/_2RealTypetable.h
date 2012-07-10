@@ -24,15 +24,10 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <typeinfo>
 #include <assert.h>
-#include <iostream>
 
 namespace _2Real
 {
-
-	class EngineImpl;
-
 	class Typetable
 	{
 
@@ -43,14 +38,14 @@ namespace _2Real
 
 		std::string const&		lookupTypename( std::string const& longTypename ) const;
 		const std::string		lookupLongTypename( std::string const& typeName ) const;
-		Any const&		getInitialValueFromLongTypename( std::string const& longTypename ) const;
-		Any const&		getInitialValueFromTypename( std::string const& typeName ) const;
+		Any const&				getInitialValueFromLongTypename( std::string const& longTypename ) const;
+		Any const&				getInitialValueFromTypename( std::string const& typeName ) const;
 
 	private:
 
-		typedef std::map< std::string, Any >						Datatypes;
-		typedef std::map< std::string, Any >::iterator			DatatypeIterator;
-		typedef std::map< std::string, Any >::const_iterator		DatatypeConstIterator;
+		typedef std::map< std::string, Any >							Datatypes;
+		typedef std::map< std::string, Any >::iterator					DatatypeIterator;
+		typedef std::map< std::string, Any >::const_iterator			DatatypeConstIterator;
 
 		typedef std::map< std::string, std::string >					Typenames;
 		typedef std::map< std::string, std::string >::iterator			TypenameIterator;

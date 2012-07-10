@@ -17,11 +17,8 @@
 */
 
 #include "engine/_2RealInletBuffer.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealEngineImpl.h"
 
-#include <iostream>
 #include <assert.h>
 
 namespace _2Real

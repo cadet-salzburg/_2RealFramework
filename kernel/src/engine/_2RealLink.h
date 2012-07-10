@@ -18,11 +18,8 @@
 
 #pragma once
 
-#include <set>
-
 namespace _2Real
 {
-
 	class InletIO;
 	class OutletIO;
 
@@ -48,5 +45,4 @@ namespace _2Real
 		OutletIO	&m_OutletIO;
 
 	};
-
 }

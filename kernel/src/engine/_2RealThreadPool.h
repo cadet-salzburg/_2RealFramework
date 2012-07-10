@@ -19,12 +19,10 @@
 
 #pragma once
 
-#include "helpers/_2RealException.h"
 #include "helpers/_2RealPoco.h"
 
 #include <list>
 #include <set>
-#include <iostream>
 #include <string>
 
 namespace _2Real
