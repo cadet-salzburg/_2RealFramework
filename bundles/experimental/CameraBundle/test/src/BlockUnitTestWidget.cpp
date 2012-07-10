@@ -6,12 +6,11 @@ using namespace std;
 using namespace _2Real;
 using namespace _2Real::app;
 
-
 BlockUnitTestWidget::BlockUnitTestWidget()
 {
 }
 
-BlockUnitTestWidget::BlockUnitTestWidget(std::string bundleName, string blockName)
+BlockUnitTestWidget::BlockUnitTestWidget(std::string bundleName, string blockName) 
 {
 	setup(bundleName, blockName);
 }
@@ -30,7 +29,8 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		
 		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
 		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
-		m_CameraBlockHandle.setUpdateRate( 30 );	// 30 fps
+		m_fDefaultFps = 30.0;
+		m_CameraBlockHandle.setUpdateRate( m_fDefaultFps );	
 		
 		// setup initializes default values of block
 		m_CameraBlockHandle.setup();
@@ -41,7 +41,7 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
+		cout << e.message() << e.what() << endl;
 	}
 	
 	setupGui();
@@ -76,6 +76,7 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 	m_pStopButton = new QPushButton(tr("Stop"));
 	m_pSingleStepButton = new QPushButton(tr("Single Step"));
 	m_pFpsSpinBox = new QDoubleSpinBox();
+	m_pFpsSpinBox->setValue(m_fDefaultFps);
 
 	// connect signals
 	connect(m_pStartButton, SIGNAL(clicked()), this, SLOT(onStart()));
@@ -134,7 +135,16 @@ void BlockUnitTestWidget::onStart()
 { 
 	m_pStartButton->setDisabled(true);
 	m_pStopButton->setDisabled(false);
-	m_CameraBlockHandle.start();
+
+	try
+	{
+		m_CameraBlockHandle.start();
+
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << e.what() << endl;
+	}
 }
 
 void BlockUnitTestWidget::onStop()
@@ -152,19 +162,40 @@ void BlockUnitTestWidget::onStopFinished()
 
 void BlockUnitTestWidget::stopBlock()
 {
-	m_CameraBlockHandle.stop();
+	try
+	{
+		m_CameraBlockHandle.stop();
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << e.what() << endl;
+	}
 }
 
 void BlockUnitTestWidget::onSingleStep()
 {
 	m_pStopButton->setDisabled(true);
 	m_pStartButton->setDisabled(false);
-	m_CameraBlockHandle.stop();
-	
-	m_CameraBlockHandle.singleStep();
+
+	try
+	{
+		m_CameraBlockHandle.stop();
+		m_CameraBlockHandle.singleStep();
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << e.what() << endl;
+	}
 }
 
 void BlockUnitTestWidget::setFpsValue(double value)
 {
-	m_CameraBlockHandle.setUpdateRate( value );	
+	try
+	{
+		m_CameraBlockHandle.setUpdateRate( value );
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << e.what() << endl;
+	}
 }

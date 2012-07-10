@@ -51,7 +51,7 @@ void CameraDeviceManager::update()
 
 void CameraDeviceManager::shutdown()
 {
-	for( int i = 0; i<m_DevicesInUse.size(); i++)
+	for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
 	{
 		if(m_DevicesInUse[i].m_bIsUsed)
 			m_VideoInputContoller->stopDevice( i );
@@ -63,7 +63,7 @@ void CameraDeviceManager::initDeviceList()
 	m_iNumDevices = m_VideoInputContoller->listDevices();	// rescan devices silently (true==silent, no console output)
 
 	m_DevicesInUse.clear();
-	for(int i=0; i<m_iNumDevices; i++)
+	for(unsigned int i=0; i<m_iNumDevices; i++)
 	{
 		m_DevicesInUse.push_back(DeviceItem(m_VideoInputContoller->getDeviceName(i), false));
 	}
@@ -71,7 +71,7 @@ void CameraDeviceManager::initDeviceList()
 
 int	CameraDeviceManager::getFirstFreeDevices()
 {
-	for(int i=0; i<m_DevicesInUse.size(); i++)
+	for(unsigned int i=0; i<m_DevicesInUse.size(); i++)
 	{
 		if(!m_DevicesInUse[i].m_bIsUsed)
 			return i;

@@ -38,6 +38,9 @@ void VideoInputBlock::update()
 {
 	try
 	{
+		if(m_CameraDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
+			return;
+
 		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  // sanitize input
 		if(cameraIndex != m_iCurrentCamera)
 		{

@@ -38,6 +38,6 @@ private:
 	};
 
 	std::vector< DeviceItem >					m_DevicesInUse; 
-	int											m_iNumDevices;
+	unsigned int								m_iNumDevices;
 	videoInput*									m_VideoInputContoller;
 };

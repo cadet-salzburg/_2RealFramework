@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\BlockInletWidget.cpp" />
+    <ClCompile Include="..\..\src\BlockOutletWidget.cpp" />
+    <ClCompile Include="..\..\src\BlockUnitTestWidget.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockUnitTestWidget.cpp">
+      <Filter>GeneratedFiles\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockOutletWidget.cpp">
+      <Filter>GeneratedFiles\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockInletWidget.cpp">
+      <Filter>GeneratedFiles\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BlockInletWidget.cpp">
+      <Filter>GeneratedFiles\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BlockOutletWidget.cpp">
+      <Filter>GeneratedFiles\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BlockUnitTestWidget.cpp">
+      <Filter>GeneratedFiles\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\src\BlockUnitTestWidget.h" />
+    <CustomBuild Include="..\..\src\BlockOutletWidget.h" />
+    <CustomBuild Include="..\..\src\BlockInletWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GeneratedFiles">
+      <UniqueIdentifier>{b142c219-9065-4527-b989-cc6d09ccce9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeneratedFiles\Debug">
+      <UniqueIdentifier>{2bbcbe95-b325-41a2-b7e9-49756641dbbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeneratedFiles\Release">
+      <UniqueIdentifier>{a4695c71-b3ce-4552-b3d0-a9ff09013eab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

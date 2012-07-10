@@ -38,4 +38,5 @@ private:
 	QDoubleSpinBox*				m_pFpsSpinBox;
 	QFuture<void>				m_Future;
 	QFutureWatcher<void>		m_FutureWatcher;
+	double						m_fDefaultFps;
 };
