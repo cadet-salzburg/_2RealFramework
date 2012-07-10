@@ -1,20 +1,16 @@
-﻿Build started 09.07.2012 13:54:27.
+﻿Build started 10.07.2012 16:59:52.
      1>Project "D:\code\cadet\trunk\_2RealFramework\bundles\experimental\CameraBundle\build\vc10\CameraCaptureBundle.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\CameraCaptureBundle.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\code\cadet\externalLibs\poco\XML\include /ID:\code\cadet\externalLibs\poco\Foundation\include /I..\..\..\..\..\kernel\src /I..\..\..\..\..\..\..\externalLibs\videoinputlib\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\CameraCaptureBlock.cpp ..\..\src\CameraCaptureBundle.cpp ..\..\src\CameraDeviceManager.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\code\cadet\externalLibs\poco\XML\include /ID:\code\cadet\externalLibs\poco\Foundation\include /I..\..\..\..\..\kernel\src /I..\..\..\..\..\..\..\externalLibs\videoinputlib\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\CameraDeviceManager.cpp
          CameraDeviceManager.cpp
-         Generating Code...
-         Compiling...
-         CameraCaptureBlock.cpp
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         CameraCaptureBundle.cpp
+     1>d:\code\cadet\trunk\_2realframework\bundles\experimental\camerabundle\src\cameradevicemanager.cpp(54): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\code\cadet\trunk\_2realframework\bundles\experimental\camerabundle\src\cameradevicemanager.cpp(74): warning C4018: '<' : signed/unsigned mismatch
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\..\bin\win\CameraCaptureBundle_32d.dll" /INCREMENTAL /NOLOGO /LIBPATH:..\..\..\..\..\..\..\externalLibs\videoinputlib\lib /LIBPATH:..\..\..\..\..\..\..\externalLibs\poco\lib /LIBPATH:..\..\..\..\..\kernel\lib videoInput.lib _2RealEngine_32d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:atlthunk.lib /MANIFEST /ManifestFile:"Debug\CameraCaptureBundle_32d.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\code\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\CameraCaptureBundle_32d.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\..\bin\win\CameraCaptureBundle_32d.lib" /MACHINE:X86 /DLL Debug\CameraCaptureBundle_32d.dll.embed.manifest.res
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\..\bin\win\CameraCaptureBundle_32d.dll" /INCREMENTAL /NOLOGO /LIBPATH:..\..\..\..\..\..\..\externalLibs\videoinputlib\lib /LIBPATH:..\..\..\..\..\..\..\externalLibs\poco\lib /LIBPATH:..\..\..\..\..\kernel\lib videoInput_mtd_32d.lib _2RealEngine_32d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:atlthunk.lib /MANIFEST /ManifestFile:"Debug\CameraCaptureBundle_32d.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\code\cadet\trunk\_2RealFramework\bundles\experimental\bin\win\CameraCaptureBundle_32d.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\..\bin\win\CameraCaptureBundle_32d.lib" /MACHINE:X86 /DLL Debug\CameraCaptureBundle_32d.dll.embed.manifest.res
          Debug\CameraCaptureBlock.obj
          Debug\CameraCaptureBundle.obj
          Debug\CameraDeviceManager.obj
@@ -31,4 +27,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.44
+Time Elapsed 00:00:01.71

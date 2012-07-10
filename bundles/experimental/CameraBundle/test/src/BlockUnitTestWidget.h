@@ -17,6 +17,7 @@ public:
 private slots:
 	void onStart();
 	void onStop();
+	void onSingleStep();
 	void onStopFinished();
 	void stopBlock();
 
@@ -25,7 +26,6 @@ private:
 	QGroupBox* createButtonWidgets();
 	QGroupBox* createInletWidgets();
 	QGroupBox* createOutletWidgets();
-	void test();
 
 	//_2Real
 	_2Real::app::BlockHandle    m_CameraBlockHandle;
@@ -33,6 +33,7 @@ private:
 	// buttons for starting and stoppping (stopping is called asynchronously via the QFuture Mechanism)
 	QPushButton*				m_pStartButton;
 	QPushButton*				m_pStopButton;
+	QPushButton*                m_pSingleStepButton;
 	QFuture<void>				m_Future;
 	QFutureWatcher<void>		m_FutureWatcher;
 };

@@ -23,25 +23,44 @@ void VideoInputBlock::setup( BlockHandle &block )
 	{
 		m_DeviceIndexHandle	= block.getInletHandle("DeviceIndexInlet");
 		m_ImageOutletHandle = block.getOutletHandle("ImageDataOutlet" );
+
+		m_iCurrentCamera = -1;	// no device set yet
+			
 	}
 	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}
 
 void VideoInputBlock::update()
 {
 	try
 	{
-		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  //Sanitize input
-		m_CameraDeviceManager->switchToDevice( cameraIndex );
-		m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( cameraIndex );
+		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  // sanitize input
+		if(cameraIndex != m_iCurrentCamera)
+		{
+			// unbind old cam
+			if(m_iCurrentCamera>=0)
+			{
+				m_CameraDeviceManager->unbindDevice( m_iCurrentCamera );
+			}
+
+			if( m_CameraDeviceManager->bindDevice( cameraIndex ) )
+			{
+				m_iCurrentCamera = cameraIndex;
+			}
+		}
+
+		if(m_iCurrentCamera>=0)
+		{
+			m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+		}
 	}
 	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();
 	}
-};
+}

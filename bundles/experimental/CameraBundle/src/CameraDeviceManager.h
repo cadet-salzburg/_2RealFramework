@@ -12,20 +12,32 @@ public:
 	~CameraDeviceManager();
 	void							setup( _2Real::bundle::BlockHandle &context );
 	void							update();
-	void							shutdown() 
-	{
-		m_VideoInputContoller.stopDevice( m_CurrentDeviceIndex );
-	};
+	void							shutdown();
 
-	int								getNumberOfConnectedDevices() const;
-	bool							deviceIsSetup( const unsigned int deviceIdx );
-	void							switchToDevice( const unsigned int deviceIdx );
+	bool							bindDevice(const unsigned int deviceIdx);
+	void							unbindDevice(const unsigned int deviceIdx);
+	unsigned int					getNumberOfConnectedDevices() const;
+	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
 	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
-	int								getVideoWidth();
-	int								getVideoHeight();
+	int								getVideoWidth(const unsigned int  deviceIdx);
+	int								getVideoHeight(const unsigned int  deviceIdx);
 
 private:
-	int								m_NumDevices;
-	videoInput						m_VideoInputContoller;
-	int								m_CurrentDeviceIndex;
+	void							initDeviceList();
+	void							rescanDeviceList();
+	bool							isDeviceAvailable(const unsigned int deviceIdx);
+	bool							isDeviceFree(const unsigned int deviceIdx);
+
+	struct DeviceItem {
+		DeviceItem::DeviceItem(std::string strDescription, bool bIsUsed) : m_strDescription(strDescription), m_bIsUsed(bIsUsed)
+		{
+		}
+		_2Real::ImageT<unsigned char>	m_Image;
+		std::string						m_strDescription;
+		bool							m_bIsUsed;
+	};
+
+	std::vector< DeviceItem >					m_DevicesInUse; 
+	int											m_iNumDevices;
+	videoInput*									m_VideoInputContoller;
 };

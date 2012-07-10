@@ -11,25 +11,23 @@ using std::endl;
 using std::string;
 
 
-CameraDeviceManager::CameraDeviceManager()
-	:ContextBlock(),
-	 m_CurrentDeviceIndex( 0 )
+CameraDeviceManager::CameraDeviceManager() : ContextBlock()
 {
-
+	// this is super weird, videoinputlib in multithreaded environment set coinitializeex for multithread mode and complain that another library already did
+	// neither _2Real nor Poco use com interfaces so not sure why this next line is needed but otherwise the whole thing won't work, sometimes I had coding ;-(
+	CoUninitialize();
+	m_VideoInputContoller = new videoInput();
 }
 
 CameraDeviceManager::~CameraDeviceManager()
 {
-	
 }
 
 void CameraDeviceManager::setup( BlockHandle &context )
 {
 	try
 	{
-		m_NumDevices = m_VideoInputContoller.listDevices();
-		if ( m_NumDevices >= 1)
-			m_VideoInputContoller.setupDevice( 0 );
+		initDeviceList();
 	}
 	catch ( Exception &e )
 	{
@@ -42,7 +40,7 @@ void CameraDeviceManager::update()
 {
 	try
 	{
-
+	//	rescanDevices();
 	}
 	catch ( Exception &e )
 	{
@@ -51,53 +49,95 @@ void CameraDeviceManager::update()
 	}
 }
 
-int	 CameraDeviceManager::getNumberOfConnectedDevices() const
+void CameraDeviceManager::shutdown()
 {
-	return m_NumDevices;
+	for( int i = 0; i<m_DevicesInUse.size(); i++)
+	{
+		if(m_DevicesInUse[i].m_bIsUsed)
+			m_VideoInputContoller->stopDevice( i );
+	}
 }
 
-bool CameraDeviceManager::deviceIsSetup( const unsigned int deviceIdx )
+void CameraDeviceManager::initDeviceList()
 {
-	try
+	m_iNumDevices = m_VideoInputContoller->listDevices();	// rescan devices silently (true==silent, no console output)
+
+	m_DevicesInUse.clear();
+	for(int i=0; i<m_iNumDevices; i++)
 	{
-		return  !m_VideoInputContoller.isDeviceSetup( deviceIdx );
+		m_DevicesInUse.push_back(DeviceItem(m_VideoInputContoller->getDeviceName(i), false));
 	}
-	catch ( ... )
-	{
-		std::cerr << "The device index is out of bounds" << std::endl;
-	}
-	return false;
 }
 
-void CameraDeviceManager::switchToDevice( const unsigned int deviceIdx )
+int	CameraDeviceManager::getFirstFreeDevices()
 {
-	try
+	for(int i=0; i<m_DevicesInUse.size(); i++)
 	{
-		if ( deviceIdx != m_CurrentDeviceIndex )
-		{
-			m_VideoInputContoller.stopDevice( m_CurrentDeviceIndex );
-			m_VideoInputContoller.setupDevice( deviceIdx );
-			m_CurrentDeviceIndex = deviceIdx;
-		}
+		if(!m_DevicesInUse[i].m_bIsUsed)
+			return i;
 	}
-	catch ( ... )
+	return -1;	// no device is free
+}
+
+void CameraDeviceManager::rescanDeviceList()
+{
+}
+
+bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)
+{
+	return  (deviceIdx < m_DevicesInUse.size());
+}
+
+bool CameraDeviceManager::isDeviceFree(const unsigned int deviceIdx)
+{
+	if(isDeviceAvailable(deviceIdx))
+		return  !m_DevicesInUse[deviceIdx].m_bIsUsed;
+	else
 	{
-		std::cerr << "The device index is out of bounds" << std::endl;
+		return false;
 	}
 }
+
+bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx)
+{
+	m_iNumDevices = m_VideoInputContoller->listDevices();
+	if(isDeviceFree(deviceIdx))
+	{
+		bool ret = m_VideoInputContoller->setupDevice( deviceIdx );
+		return m_DevicesInUse[deviceIdx].m_bIsUsed = ret;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
+{
+	if(!isDeviceFree(deviceIdx))
+	{
+		m_VideoInputContoller->stopDevice( deviceIdx );
+		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
+	}
+}
+
+unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
+{
+	return m_iNumDevices;
+}
+
 
 _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int deviceIdx )
 {
-	_2Real::ImageT<unsigned char> img;
-
 	try
 	{
-		if(m_VideoInputContoller.isFrameNew(deviceIdx))
+		if(m_VideoInputContoller->isFrameNew(deviceIdx))
 		{
-			unsigned char *pixels = m_VideoInputContoller.getPixels( deviceIdx, true, true );
-			int w =  m_VideoInputContoller.getWidth( deviceIdx );
-			int h  = m_VideoInputContoller.getHeight( deviceIdx );
-			img = _2Real::ImageT<unsigned char>( pixels, false, w, h, _2Real::ImageChannelOrder::RGB );
+			unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false,
+				m_VideoInputContoller->getWidth( deviceIdx ), 
+				m_VideoInputContoller->getHeight( deviceIdx ),
+				_2Real::ImageChannelOrder::RGB );
 		}
 	}
 	catch ( ... )
@@ -105,15 +145,15 @@ _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int
 		std::cerr << "Couldn't get the pixels" << std::endl;
 	}
 
-	return img;
+	return m_DevicesInUse[deviceIdx].m_Image;
 }
 
-int CameraDeviceManager::getVideoWidth()
+int CameraDeviceManager::getVideoWidth( const unsigned int  deviceIdx )
 {
-	return m_VideoInputContoller.getWidth( m_CurrentDeviceIndex );
+	return m_VideoInputContoller->getWidth( deviceIdx );
 }
 
-int CameraDeviceManager::getVideoHeight()
+int CameraDeviceManager::getVideoHeight( const unsigned int  deviceIdx )
 {
-	return m_VideoInputContoller.getHeight( m_CurrentDeviceIndex );
+	return m_VideoInputContoller->getHeight( deviceIdx );
 }

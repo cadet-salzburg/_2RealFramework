@@ -12,8 +12,11 @@ public:
 	void					shutdown() {}
 	void					update();
 	void					setup( BlockHandle &context );
+
 private:
-	InletHandle				m_DeviceIndexHandle;
-	OutletHandle			m_ImageOutletHandle;
-	CameraDeviceManager*	m_CameraDeviceManager;
+
+	InletHandle							m_DeviceIndexHandle;
+	OutletHandle						m_ImageOutletHandle;
+	CameraDeviceManager*				m_CameraDeviceManager;
+	int									m_iCurrentCamera;
 };

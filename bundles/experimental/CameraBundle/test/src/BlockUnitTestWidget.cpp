@@ -1,5 +1,4 @@
 #include "BlockUnitTestWidget.h"
-
 #include "BlockInletWidget.h"
 #include "BlockOutletWidget.h"
 
@@ -31,15 +30,13 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 		
 		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
 		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
-		m_CameraBlockHandle.setUpdateRate( 20 );
+		m_CameraBlockHandle.setUpdateRate( 30 );	// 30 fps
 		
-		// set needed setup parameters for block otherwise set to default
-
-		// setup
+		// setup initializes default values of block
 		m_CameraBlockHandle.setup();
-		// start
+		// start the block
 		m_CameraBlockHandle.start();
-		// setup callbacks
+		// register new data callback (in this case not specific to an outlet, but gives you all outlet data)
 		m_CameraBlockHandle.registerToNewData( *this, &BlockUnitTestWidget::receiveData );
 	}
 	catch ( Exception &e )
@@ -76,17 +73,20 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 {
 	m_pStartButton = new QPushButton(tr("Start"));
 	m_pStopButton = new QPushButton(tr("Stop"));
+	m_pSingleStepButton = new QPushButton(tr("Single Step"));
 	m_pStartButton->setDisabled(true);
 
 	// connect signals
 	connect(m_pStartButton, SIGNAL(clicked()), this, SLOT(onStart()));
 	connect(m_pStopButton, SIGNAL(clicked()), this, SLOT(onStop()));
 	connect(&m_FutureWatcher, SIGNAL(finished()), this, SLOT(onStopFinished()));
+	connect(m_pSingleStepButton, SIGNAL(clicked()), this, SLOT(onSingleStep()));
 
 	QHBoxLayout* layout = new QHBoxLayout();
 	layout->setAlignment(Qt::AlignBottom);
 	layout->addWidget(m_pStartButton);
     layout->addWidget(m_pStopButton);
+	layout->addWidget(m_pSingleStepButton);
 	
 	QGroupBox *groupBox = new QGroupBox("Controls");
 	groupBox->setLayout(layout);
@@ -149,4 +149,11 @@ void BlockUnitTestWidget::onStopFinished()
 void BlockUnitTestWidget::stopBlock()
 {
 	m_CameraBlockHandle.stop();
+}
+
+void BlockUnitTestWidget::onSingleStep()
+{
+	m_pStopButton->setDisabled(true);
+	stopBlock();
+	m_CameraBlockHandle.singleStep();
 }
