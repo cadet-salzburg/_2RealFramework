@@ -72,21 +72,25 @@ void BlockUnitTestWidget::receiveData(std::list< _2Real::app::AppData > const& d
 QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 {
 	m_pStartButton = new QPushButton(tr("Start"));
+	m_pStartButton->setDisabled(true);
 	m_pStopButton = new QPushButton(tr("Stop"));
 	m_pSingleStepButton = new QPushButton(tr("Single Step"));
-	m_pStartButton->setDisabled(true);
+	m_pFpsSpinBox = new QDoubleSpinBox();
 
 	// connect signals
 	connect(m_pStartButton, SIGNAL(clicked()), this, SLOT(onStart()));
 	connect(m_pStopButton, SIGNAL(clicked()), this, SLOT(onStop()));
 	connect(&m_FutureWatcher, SIGNAL(finished()), this, SLOT(onStopFinished()));
 	connect(m_pSingleStepButton, SIGNAL(clicked()), this, SLOT(onSingleStep()));
+	connect(m_pFpsSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setFpsValue(double)));
 
 	QHBoxLayout* layout = new QHBoxLayout();
 	layout->setAlignment(Qt::AlignBottom);
 	layout->addWidget(m_pStartButton);
     layout->addWidget(m_pStopButton);
 	layout->addWidget(m_pSingleStepButton);
+	layout->addWidget(new QLabel("fps:"));
+	layout->addWidget(m_pFpsSpinBox);
 	
 	QGroupBox *groupBox = new QGroupBox("Controls");
 	groupBox->setLayout(layout);
@@ -154,6 +158,13 @@ void BlockUnitTestWidget::stopBlock()
 void BlockUnitTestWidget::onSingleStep()
 {
 	m_pStopButton->setDisabled(true);
-	stopBlock();
+	m_pStartButton->setDisabled(false);
+	m_CameraBlockHandle.stop();
+	
 	m_CameraBlockHandle.singleStep();
+}
+
+void BlockUnitTestWidget::setFpsValue(double value)
+{
+	m_CameraBlockHandle.setUpdateRate( value );	
 }

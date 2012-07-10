@@ -81,6 +81,7 @@ int	CameraDeviceManager::getFirstFreeDevices()
 
 void CameraDeviceManager::rescanDeviceList()
 {
+
 }
 
 bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)

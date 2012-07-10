@@ -1,4 +1,4 @@
-﻿Build started 10.07.2012 16:59:52.
+﻿Build started 10.07.2012 17:44:11.
      1>Project "D:\code\cadet\trunk\_2RealFramework\bundles\experimental\CameraBundle\build\vc10\CameraCaptureBundle.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\CameraCaptureBundle.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -27,4 +27,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.71
+Time Elapsed 00:00:01.80

@@ -20,6 +20,7 @@ private slots:
 	void onSingleStep();
 	void onStopFinished();
 	void stopBlock();
+	void setFpsValue(double value);
 
 private:
 	void setupGui();
@@ -34,6 +35,7 @@ private:
 	QPushButton*				m_pStartButton;
 	QPushButton*				m_pStopButton;
 	QPushButton*                m_pSingleStepButton;
+	QDoubleSpinBox*				m_pFpsSpinBox;
 	QFuture<void>				m_Future;
 	QFutureWatcher<void>		m_FutureWatcher;
 };
