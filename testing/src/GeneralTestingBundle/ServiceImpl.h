@@ -18,6 +18,7 @@ public:
 private:
 
 	mutable Poco::FastMutex			m_Access;
+	_2Real::bundle::OutletHandle	m_Devices;
 	unsigned long					m_Value;
 
 };
@@ -55,9 +56,9 @@ public:
 
 private:
 
-	_2Real::bundle::InletHandle			m_In;
-	ContextManager				&m_Context;
-	unsigned int				m_Counter;
+	_2Real::bundle::InletHandle		m_In;
+	ContextManager					&m_Context;
+	unsigned int					m_Counter;
 
 };
 

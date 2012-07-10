@@ -13,6 +13,7 @@ using _2Real::Exception;
 using _2Real::Enumeration;
 using _2Real::StringEnumeration;
 using _2Real::StringEnums;
+using _2Real::DeviceInfos;
 
 using std::string;
 using std::vector;
@@ -28,6 +29,9 @@ void getBundleMetainfo( BundleMetainfo &info )
 		info.setVersion( 0, 0, 0 );
 
 		ContextBlockMetainfo &context = info.exportContextBlock< ContextManager >();
+		context.addOutlet< DeviceInfos >( "devices" );
+
+		info.addInletToAllWithContext< int >( "device index", -1 );
 
 		BlockMetainfo out = info.exportBlock< Out, WithContext >( "out" );
 		out.setDescription( "testing the context's functionality" );
@@ -38,8 +42,6 @@ void getBundleMetainfo( BundleMetainfo &info )
 		BlockMetainfo in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "testing the context's functionality" );
 		in.addInlet< unsigned int >( "inlet", (unsigned int)10 );
-
-		StringEnumeration e( StringEnums( "yay", "yay" )( "woho", "narf" ), "undef" );
 	}
 	catch ( Exception &e )
 	{

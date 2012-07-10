@@ -37,6 +37,7 @@ using _2Real::Exception;
 using _2Real::app::Engine;
 using _2Real::app::BundleInfo;
 using _2Real::app::BlockInfo;
+using _2Real::app::ContextBlockHandle;
 using _2Real::app::BlockHandle;
 using _2Real::app::BundleHandle;
 using _2Real::app::InletHandle;
@@ -95,6 +96,7 @@ int main( int argc, char *argv[] )
 	try
 	{
 		Receiver receiver;
+		Receiver contextOutlet;
 		BlockReceiver blockReceiver;
 
 		Engine &engine = Engine::instance();
@@ -104,12 +106,33 @@ int main( int argc, char *argv[] )
 
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 
-		//BundleInfo const& bundleData = bundleHandle.getBundleInfo();
+		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
 		//cout << "BUNDLE INFO: EXPORTED BLOCKS" << endl;
-		//for ( BundleInfo::BlockConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
+		//for ( BundleInfo::BlockInfoConstIterator it = bundleData.getExportedBlocks().begin(); it != bundleData.getExportedBlocks().end(); ++it )
 		//{
 		//	cout << it->getName() << endl << it->getDescription() << endl << endl;
+		//	for ( BlockInfo::ParameterInfoConstIterator pIt = it->getOutlets().begin(); pIt != it->getOutlets().end(); ++pIt )
+		//	{
+		//		cout << "OUTLET:" << endl;
+		//		cout << pIt->getName() << endl << pIt->getLongTypename() << endl;
+		//	}
+		//	for ( BlockInfo::ParameterInfoConstIterator pIt = it->getInlets().begin(); pIt != it->getInlets().end(); ++pIt )
+		//	{
+		//		cout << "INLET:" << endl;
+		//		cout << pIt->getName() << endl << pIt->getLongTypename() << endl;
+		//	}
 		//}
+
+		ContextBlockHandle const& contextHandle = bundleHandle.getContextBlock();
+		BlockInfo const& contextData = contextHandle.getBlockInfo();
+		//for ( BlockInfo::ParameterInfoConstIterator it = contextData.getOutlets().begin(); it != contextData.getOutlets().end(); ++it )
+		//{
+		//	cout << "CONTEXT OUTLET:" << endl;
+		//	cout << it->getName() << endl << it->getLongTypename() << endl;
+		//}
+
+		OutletHandle contextOut = contextHandle.getOutletHandle( "devices" );
+		//contextOut.registerToNewData( contextOutlet, &Receiver::receiveData );
 
 		outHandle = bundleHandle.createBlockInstance( "out" );
 		outHandle.setUpdateRate( 0.0 );
@@ -139,13 +162,7 @@ int main( int argc, char *argv[] )
 		BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
 		cout << inHandles.size() << endl;
 
-		//cout << inletHandle.getLongTypename() << endl;
-		//cout << inletHandle.getTypename() << endl;
-		//cout << inletHandle.getName() << endl;
-
-		//cout << outletHandle.getLongTypename() << endl;
-		//cout << outletHandle.getTypename() << endl;
-		//cout << outletHandle.getName() << endl;
+		InletHandle in2 = inHandle.getInletHandle( "device index" );
 
 		unsigned int cnt = 0;
 
@@ -235,13 +252,20 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "step in" )
 			{
+				inHandle.stop();
 				inHandle.singleStep();
 			}
 			else if ( line == "step out" )
 			{
+				outHandle.stop();
 				outHandle.singleStep();
 			}
 		}
+
+		outletHandle.unregisterFromNewData< Receiver >( receiver, &Receiver::receiveData );
+		//contextOut.unregisterFromNewData( contextOutlet, &Receiver::receiveData );
+
+		engine.clearAll();
 	}
 	catch ( Exception &e )
 	{

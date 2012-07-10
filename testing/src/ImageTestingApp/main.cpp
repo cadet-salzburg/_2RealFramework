@@ -29,7 +29,7 @@
 
 #include "Poco/Mutex.h"
 
-//#include "vld.h"
+#include "vld.h"
 #include <sstream>
 
 #include "windows.h"
@@ -87,6 +87,11 @@ public:
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glGenerateMipmap( GL_TEXTURE_2D );
+	}
+
+	~Receiver()
+	{
+		glDeleteTextures( 1, &m_Texture );
 	}
 
 	void updateTexture()
@@ -157,31 +162,31 @@ private:
 
 int main( int argc, char *argv[] )
 {
-	Engine &testEngine = Engine::instance();
-
-	SDL_Init( SDL_INIT_VIDEO );
-
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-	SDL_Window *window = SDL_CreateWindow( "yay", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-	SDL_GLContext context = SDL_GL_CreateContext( window );
-	SDL_GL_MakeCurrent( window, context );
-
-	string error = SDL_GetError();
-	cout << error << endl;
-
-	GLenum err = glewInit();
-	if ( err != GLEW_OK )
-	{
-		throw Exception( "glew error" );
-	}
-
-	SDL_GL_SetSwapInterval( 1 );
-
 	try
 	{
+		SDL_Init( SDL_INIT_VIDEO );
+
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+		SDL_Window *window = SDL_CreateWindow( "yay", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+		SDL_GLContext context = SDL_GL_CreateContext( window );
+		SDL_GL_MakeCurrent( window, context );
+
+		string error = SDL_GetError();
+		cout << error << endl;
+
+		GLenum err = glewInit();
+		if ( err != GLEW_OK )
+		{
+			cout << "glew error" << endl;
+		}
+
+		SDL_GL_SetSwapInterval( 1 );
+
+		Engine &testEngine = Engine::instance();
+
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
 		BlockHandle out = testBundle.createBlockInstance( "image out" );
@@ -194,31 +199,45 @@ int main( int argc, char *argv[] )
 		oOut.registerToNewData( receiver, &Receiver::receiveData );
 
 		bool run = true;
-		SDL_Event ev;
+		SDL_Event *ev = new SDL_Event;
 		while( run )
 		{
-			while( SDL_PollEvent( &ev ) )
+			//while( SDL_PollEvent( ev ) )
+			//{
+				//switch ( ev->type )
+				//{
+				//case SDL_QUIT:
+					//oOut.unregisterFromNewData( receiver, &Receiver::receiveData );
+				//	run = false;
+				//	break;
+				//default:
+				//	break;
+				//}
+			//}
+
+			string line;
+			char lineEnd = '\n';
+			getline( cin, line, lineEnd );
+			if ( line == "quit" )
 			{
-				switch ( ev.type )
-				{
-				case SDL_QUIT:
-					run = false;
-					break;
-				default:
-					break;
-				}
+				oOut.unregisterFromNewData( receiver, &Receiver::receiveData );
+				run = false;
+				break;
 			}
 
-			SDL_GL_SwapWindow( window );
 			receiver.useData();
+			SDL_GL_SwapWindow( window );
 		}
+
+		delete ev;
+		SDL_GL_DeleteContext( context );
+		SDL_DestroyWindow( window );
+		SDL_QUIT;
 	}
 	catch ( std::exception &e )
 	{
 		cout << e.what() << endl;
 	}
 
-	SDL_DestroyWindow( window );
-	SDL_GL_DeleteContext( context );
-	SDL_Quit();
+	return 0;
 }

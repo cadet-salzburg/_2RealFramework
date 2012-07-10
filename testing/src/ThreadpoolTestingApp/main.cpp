@@ -36,7 +36,7 @@ using _2Real::app::InletHandle;
 using _2Real::app::OutletHandle;
 using _2Real::app::AppData;
 
-//#include "vld.h"
+#include "vld.h"
 
 #ifndef _DEBUG
 	#define shared_library_suffix ".dll"

@@ -5,6 +5,8 @@
 using _2Real::bundle::BlockHandle;
 using _2Real::bundle::ContextBlock;
 using _2Real::Exception;
+using _2Real::DeviceInfos;
+using _2Real::DeviceInfo;
 
 using std::cout;
 using std::endl;
@@ -16,6 +18,7 @@ void ContextManager::setup( BlockHandle &handle )
 	try
 	{
 		m_Value = 0;
+		m_Devices = handle.getOutletHandle( "devices" );
 	}
 	catch ( Exception &e )
 	{
@@ -29,6 +32,13 @@ void ContextManager::update()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Value += 1000;
+
+		DeviceInfos &devices = m_Devices.getWriteableRef< DeviceInfos >();
+		devices.resize( 3 );
+
+		devices[ 0 ] = DeviceInfo( "device 0", "fuck you!", false );
+		devices[ 1 ] = DeviceInfo( "device 1", "you suck!", false );
+		devices[ 2 ] = DeviceInfo( "device 2", "die!", false );
 	}
 	catch ( Exception &e )
 	{
