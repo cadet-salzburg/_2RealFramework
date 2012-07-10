@@ -138,7 +138,7 @@ namespace _2Real
 		{
 			unsigned int rowBytes = width * sizeof(T);
 			T *data = new T[width*height];
-			m_ChannelObject = std::auto_ptr< ChannelObject >(new ChannelObject(data, false, with, height, rowBytes, 1));
+			m_ChannelObject = std::auto_ptr< ChannelObject >(new ChannelObject(data, false, width, height, rowBytes, 1));
 		}
 
 		ImageChannelT(T *data, const bool ownsData, const uint32_t width, const uint32_t height, const int32_t bytesPerRow, const uint8_t inc)
