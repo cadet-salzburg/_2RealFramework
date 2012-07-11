@@ -17,6 +17,7 @@ public:
 
 	bool							bindDevice(const unsigned int deviceIdx);
 	void							unbindDevice(const unsigned int deviceIdx);
+	bool							setResolution(const unsigned int deviceIdx, int w, int h);
 	unsigned int					getNumberOfConnectedDevices() const;
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device

@@ -23,7 +23,6 @@ void VideoInputBlock::setup( BlockHandle &block )
 	{
 		m_DeviceIndexHandle	= block.getInletHandle("DeviceIndexInlet");
 		m_ImageOutletHandle = block.getOutletHandle("ImageDataOutlet" );
-
 		m_iCurrentCamera = -1;	// no device set yet
 			
 	}

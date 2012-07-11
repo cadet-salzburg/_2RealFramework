@@ -88,7 +88,7 @@ void CameraDeviceManager::rescanDeviceList()
 				m_VideoInputContoller->stopDevice( i );
 		}
 
-		initDeviceList();
+		initDeviceList();		// reinit list
 		m_iNumDevices = numDevices;
 	}
 }
@@ -133,8 +133,7 @@ bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx)
 
 	if(isDeviceFree(deviceIdx))
 	{
-		bool ret = m_VideoInputContoller->setupDevice( deviceIdx );
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = ret;
+		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx );
 	}
 	else
 	{
@@ -150,6 +149,17 @@ void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
 	{
 		m_VideoInputContoller->stopDevice( deviceIdx );
 		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
+	}
+}
+
+
+bool CameraDeviceManager::setResolution(const unsigned int deviceIdx, int w, int h)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
+	if(!isDeviceFree(deviceIdx))
+	{
+		 return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
 	}
 }
 
