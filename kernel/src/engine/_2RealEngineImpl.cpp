@@ -35,6 +35,7 @@
 #include "datatypes/_2RealEnum.h"
 
 #include <sstream>
+#include <iostream>
 
 #ifdef _2REAL_WINDOWS
 	#ifndef _DEBUG
