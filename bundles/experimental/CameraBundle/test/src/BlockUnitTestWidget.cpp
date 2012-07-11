@@ -43,7 +43,7 @@ void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << e.what() << endl;
+		cout << e.message() << " " << e.what() << endl;
 	}
 	
 	setupGui();
