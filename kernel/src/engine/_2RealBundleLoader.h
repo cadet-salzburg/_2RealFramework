@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	class BundleData;
+	class BundleMetadata;
 	class Metainfo;
 	
 	namespace bundle
@@ -43,10 +43,10 @@ namespace _2Real
 		void clear();
 		bool isLibraryLoaded( std::string const& absPath ) const;
 		bool hasContext( std::string const& absPath ) const;
-		BundleData const& loadLibrary( std::string const& path );
+		BundleMetadata const& loadLibrary( std::string const& path );
 		bundle::Block& createContext( std::string const& absPath ) const;
 		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName ) const;
-		BundleData const& getBundleMetadata( std::string const& absPath ) const;
+		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;
 
 	private:
 

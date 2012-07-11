@@ -44,14 +44,14 @@ namespace _2Real
 		FunctionBlockStateManager( AbstractUberBlock &owner );
 		~FunctionBlockStateManager();
 
-		void setUp();							// system
-		void start();							// system
-		Poco::Event & stop();					// system
-		void beginUpdate();						// threadpool
-		void finishUpdate();					// threadpool
-		void prepareForShutDown();				// system
-		bool shutDown( const long timeout );	// system
-		void updateFunctionBlock();				// threadpool
+		void setUp();
+		void start();
+		Poco::Event & stop();
+		void beginUpdate();
+		void finishUpdate();
+		void prepareForShutDown();
+		bool shutDown( const long timeout );
+		void updateFunctionBlock();
 
 		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
 		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
@@ -88,10 +88,12 @@ namespace _2Real
 		mutable Poco::FastMutex				m_EnabledAccess;
 		bool								m_IsTriggeringEnabled;
 
-		SafeBool							m_IsFlaggedForSetup;
-		SafeBool							m_IsFlaggedForStop;
-		SafeBool							m_IsFlaggedForShutdown;
-		SafeBool							m_IsSingleStepping;
+		SynchronizedBool							m_IsFlaggedForSetup;
+		SynchronizedBool							m_IsFlaggedForHalting;
+		SynchronizedBool							m_IsFlaggedForShutdown;
+
+		Poco::Event							m_StopEvent;
+		Poco::Event							m_ShutdownEvent;
 
 	};
 

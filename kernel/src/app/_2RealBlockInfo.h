@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "app/_2RealParameterData.h"
+#include "app/_2RealParameterInfo.h"
 
 #include <vector>
 #include <string>

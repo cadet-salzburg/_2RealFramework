@@ -87,6 +87,28 @@ namespace _2Real
 			m_EngineImpl.unregisterFromException( cb );
 		}
 
+		void Engine::registerToExceptionInternal( ContextBlockExcCallback &cb )
+		{
+			m_EngineImpl.registerToException( cb );
+		}
+
+		void Engine::unregisterFromExceptionInternal( ContextBlockExcCallback &cb )
+		{
+			m_EngineImpl.unregisterFromException( cb );
+		}
+
+		void Engine::registerToException( ContextBlockExceptionCallback callback, void *userData )
+		{
+			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > const& >( callback, userData );
+			m_EngineImpl.registerToException( *cb );
+		}
+
+		void Engine::unregisterFromException( ContextBlockExceptionCallback callback, void *userData )
+		{
+			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > const& >( callback, userData );
+			m_EngineImpl.unregisterFromException( *cb );
+		}
+
 		Engine::Links Engine::getCurrentLinks() const
 		{
 			EngineImpl::Links const& currLinks = m_EngineImpl.getCurrentLinks();

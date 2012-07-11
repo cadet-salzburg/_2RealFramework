@@ -21,39 +21,39 @@
 namespace _2Real
 {
 
-	SafeBool::SafeBool( const bool val ) :
+	SynchronizedBool::SynchronizedBool( const bool val ) :
 		m_Bool( val )
 	{
 	}
 
-	SafeBool::SafeBool( SafeBool const& src )
+	SynchronizedBool::SynchronizedBool( SynchronizedBool const& src )
 	{
 	}
 
-	SafeBool& SafeBool::operator=( SafeBool const& src )
+	SynchronizedBool& SynchronizedBool::operator=( SynchronizedBool const& src )
 	{
 		return *this;
 	}
 
-	bool SafeBool::isSet() const
+	bool SynchronizedBool::isSet() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		return ( m_Bool == true );
 	}
 
-	bool SafeBool::isUnset() const
+	bool SynchronizedBool::isUnset() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		return ( m_Bool == false );
 	}
 
-	void SafeBool::set()
+	void SynchronizedBool::set()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Bool = true;
 	}
 
-	void SafeBool::unset()
+	void SynchronizedBool::unset()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Bool = false;

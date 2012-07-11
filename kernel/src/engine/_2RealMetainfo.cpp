@@ -16,14 +16,14 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealBundleMetainfoImpl.h"
+#include "engine/_2RealMetainfo.h"
 #include "bundle/_2RealCreationPolicy.h"
 #include "helpers/_2RealHelpers.h"
 #include "helpers/_2RealException.h"
-#include "engine/_2RealBlockData.h"
+#include "engine/_2RealBlockMetadata.h"
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealTypetable.h"
 
 #include <sstream>
@@ -62,7 +62,7 @@ namespace _2Real
 		return m_HasContext;
 	}
 
-	BundleData const& Metainfo::getBundleData() const
+	BundleMetadata const& Metainfo::getBundleData() const
 	{
 		return m_BundleData;
 	}
@@ -113,7 +113,7 @@ namespace _2Real
 
 		m_ContextInfo.ctor = &obj;
 		// TODO: reserve name for context
-		m_ContextInfo.data = new BlockData( "bundle context" );
+		m_ContextInfo.data = new BlockMetadata( "bundle context" );
 		m_ContextInfo.data->setDescription( "context for all other blocks exported by the bundle" );
 		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data, m_Typetable );
 
@@ -132,7 +132,7 @@ namespace _2Real
 		}
 
 		m_BlockInfos[ blockName ].ctor = &obj;
-		BlockData *data = new BlockData( blockName );
+		BlockMetadata *data = new BlockMetadata( blockName );
 		m_BlockInfos[ blockName ].data = data;
 		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data, m_Typetable );
 		m_BlockInfos[ blockName ].meta = meta;
@@ -198,7 +198,7 @@ namespace _2Real
 	{
 		const std::string longTypename = defaultValue.getTypename();
 		const std::string typeName = m_Typetable.lookupTypename( longTypename );
-		ParameterData data( name, longTypename, typeName, defaultValue );
+		ParameterMetadata data( name, longTypename, typeName, defaultValue );
 		m_GlobalInlets.push_back( data );
 	}
 

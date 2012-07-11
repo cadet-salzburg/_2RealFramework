@@ -17,10 +17,17 @@
 */
 
 #include "engine/_2RealLink.h"
+#include "helpers/_2RealException.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
+
+#include <sstream>
+
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -29,6 +36,12 @@ namespace _2Real
 		m_InletIO( inlet ),
 		m_OutletIO( outlet )
 	{
+		if ( m_InletIO.m_Inlet->getLongTypename() != m_OutletIO.m_Outlet->getLongTypename() )
+		{
+			ostringstream msg;
+			msg << "type of " << m_InletIO.m_Inlet->getName() << " does not match type of " << m_OutletIO.m_Outlet->getName();
+			throw TypeMismatchException( msg.str() );
+		}
 	}
 
 	InletIO const& IOLink::getInletIO() const

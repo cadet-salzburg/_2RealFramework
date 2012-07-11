@@ -111,9 +111,6 @@
     <ClInclude Include="..\..\src\engine\_2RealAbstractUpdateTrigger.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealBlockData.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealBundle.h">
       <Filter>include\engine</Filter>
     </ClInclude>
@@ -132,13 +129,7 @@
     <ClInclude Include="..\..\src\app\_2RealAppData.h">
       <Filter>include\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealBlockData.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealBundleData.h">
       <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h">
@@ -157,9 +148,6 @@
       <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealParameterData.h">
       <Filter>include\app</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h">
@@ -183,16 +171,10 @@
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
       <Filter>include\bundle</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealBundleData.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealBundleLoader.h">
       <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealBundleManager.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealBundleMetainfoImpl.h">
       <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h">
@@ -220,9 +202,6 @@
       <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealParameter.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealParameterData.h">
       <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealPooledThread.h">
@@ -260,6 +239,27 @@
     </ClInclude>
     <ClInclude Include="..\..\src\_2RealDatatypes.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBundleMetadata.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockMetadata.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealParameterMetadata.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealMetainfo.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleInfo.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockInfo.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParameterInfo.h">
+      <Filter>include\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -305,9 +305,6 @@
     <ClCompile Include="..\..\src\engine\_2RealAbstractUpdateTrigger.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBlockData.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundle.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
@@ -326,13 +323,7 @@
     <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBlockData.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleData.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
@@ -348,9 +339,6 @@
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterData.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
@@ -371,16 +359,10 @@
     <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
       <Filter>src\bundle</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBundleData.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleLoader.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleManager.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBundleMetainfoImpl.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
@@ -404,9 +386,6 @@
     <ClCompile Include="..\..\src\engine\_2RealParameter.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealParameterData.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealPooledThread.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
@@ -424,6 +403,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealTypetable.cpp">
       <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealParameterMetadata.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBundleMetadata.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockMetadata.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealMetainfo.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterInfo.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockInfo.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleInfo.cpp">
+      <Filter>src\app</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

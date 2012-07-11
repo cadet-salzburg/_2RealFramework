@@ -24,10 +24,10 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealBundle.h"
-#include "engine/_2RealBlockData.h"
+#include "engine/_2RealBlockMetadata.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "app/_2RealBlockData.h"
+#include "app/_2RealBlockInfo.h"
 #include "helpers/_2RealHandleable.h"
 #include "../_2RealBlock.h"
 
@@ -39,7 +39,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockData const& data );
+		FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockMetadata const& data );
 		~FunctionBlock();
 
 		using Handleable< THandle >::getHandle;
@@ -91,7 +91,7 @@ namespace _2Real
 	};
 
 	template< typename THandle >
-	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockData const& data ) :
+	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockMetadata const& data ) :
 		AbstractUberBlock( owningBundle.getIds(), data.getName() ),
 		Handleable< THandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
@@ -120,17 +120,17 @@ namespace _2Real
 		blockData.description = data.getDescription();
 		blockData.category = data.getCategory();
 
-		BlockData::ParamMetas const& inputMetadata = data.getInlets();
-		BlockData::ParamMetas const& outputMetadata = data.getOutlets();
+		BlockMetadata::ParamMetas const& inputMetadata = data.getInlets();
+		BlockMetadata::ParamMetas const& outputMetadata = data.getOutlets();
 
-		for ( BlockData::ParamMetaConstIterator it = inputMetadata.begin(); it != inputMetadata.end(); ++it )
+		for ( BlockMetadata::ParamMetaConstIterator it = inputMetadata.begin(); it != inputMetadata.end(); ++it )
 		{
 			m_IOManager->addInlet( *it );
 			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
 			inletInfo.push_back( paramInfo );
 		}
 
-		for ( BlockData::ParamMetaConstIterator it = outputMetadata.begin(); it != outputMetadata.end(); ++it )
+		for ( BlockMetadata::ParamMetaConstIterator it = outputMetadata.begin(); it != outputMetadata.end(); ++it )
 		{
 			m_IOManager->addOutlet( *it );
 			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );

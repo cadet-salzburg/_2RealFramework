@@ -104,12 +104,30 @@ namespace _2Real
 				unregisterFromExceptionInternal( *cb );
 			}
 
-			// TODO: context block needs a special callback!
+			// context block exception callback
+			void registerToException( ContextBlockExceptionCallback callback, void *userData = nullptr );
+			void unregisterFromException( ContextBlockExceptionCallback callback, void *userData = nullptr );
+
+			template< typename TCallable >
+			void registerToException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, ContextBlockHandle > const& ) )
+			{
+				ContextBlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, ContextBlockHandle > const& >( callable, callback );
+				registerToExceptionInternal( *cb );
+			}
+
+			template< typename TCallable >
+			void unregisterFromException( TCallable &callable, void ( TCallable::*callback )( std::pair< Exception, ContextBlockHandle > const& ) )
+			{
+				ContextBlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, ContextBlockHandle > const& >( callable, callback );
+				unregisterFromExceptionInternal( *cb );
+			}
 
 		private:
 
 			void registerToExceptionInternal( BlockExcCallback &cb );
 			void unregisterFromExceptionInternal( BlockExcCallback &cb );
+			void registerToExceptionInternal( ContextBlockExcCallback &cb );
+			void unregisterFromExceptionInternal( ContextBlockExcCallback &cb );
 
 			Engine();
 			Engine( Engine const& src );

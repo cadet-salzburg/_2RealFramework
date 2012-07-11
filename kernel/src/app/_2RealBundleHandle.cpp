@@ -18,7 +18,7 @@
 
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
-#include "app/_2RealBundleData.h"
+#include "app/_2RealBundleInfo.h"
 #include "engine/_2RealBundle.h"
 #include "helpers/_2RealException.h"
 

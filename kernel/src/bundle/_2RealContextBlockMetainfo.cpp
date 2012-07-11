@@ -17,15 +17,15 @@
 */
 
 #include "bundle/_2RealContextBlockMetainfo.h"
-#include "engine/_2RealBlockData.h"
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealTypetable.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ContextBlockMetainfo::ContextBlockMetainfo( BlockData &data, Typetable const& typetable ) :
+		ContextBlockMetainfo::ContextBlockMetainfo( BlockMetadata &data, Typetable const& typetable ) :
 			m_Impl( data ),
 			m_Typetable( typetable )
 		{
@@ -46,7 +46,7 @@ namespace _2Real
 			Any val;
 			val.cloneFrom( defaultConstructed );
 
-			ParameterData data( outletName, longTypename, typeName, val );
+			ParameterMetadata data( outletName, longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

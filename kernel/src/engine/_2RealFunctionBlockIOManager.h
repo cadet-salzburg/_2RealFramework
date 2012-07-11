@@ -38,7 +38,7 @@ namespace _2Real
 		class BlockHandle;
 	}
 	
-	class ParameterData;
+	class ParameterMetadata;
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
 
@@ -62,8 +62,8 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addInlet( ParameterData const& data );
-		void							addOutlet( ParameterData const& data );
+		void							addInlet( ParameterMetadata const& data );
+		void							addOutlet( ParameterMetadata const& data );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name );
 		app::OutletHandle &				getAppOutletHandle( std::string const& name );

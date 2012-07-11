@@ -16,21 +16,21 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealParameterMetadata.h"
 
 using std::string;
 
 namespace _2Real
 {
 
-	ParameterData::ParameterData() :
+	ParameterMetadata::ParameterMetadata() :
 		m_Name( "undefined" ),
 		m_Typename( "undefined" ),
 		m_LongTypename( "undefined" )
 	{
 	}
 
-	ParameterData::ParameterData( string const& name, string const& longType, string const& type, Any const& defaultValue ) :
+	ParameterMetadata::ParameterMetadata( string const& name, string const& longType, string const& type, Any const& defaultValue ) :
 		m_Name( name ),
 		m_Typename( type ),
 		m_LongTypename( longType ),
@@ -38,22 +38,22 @@ namespace _2Real
 	{
 	}
 
-	string const& ParameterData::getName() const
+	string const& ParameterMetadata::getName() const
 	{
 		return m_Name;
 	}
 
-	string const& ParameterData::getTypename() const
+	string const& ParameterMetadata::getTypename() const
 	{
 		return m_Typename;
 	}
 
-	string const& ParameterData::getLongTypename() const
+	string const& ParameterMetadata::getLongTypename() const
 	{
 		return m_LongTypename;
 	}
 
-	Any const& ParameterData::getDefaultValue() const
+	Any const& ParameterMetadata::getDefaultValue() const
 	{
 		return m_DefaultValue;
 	}

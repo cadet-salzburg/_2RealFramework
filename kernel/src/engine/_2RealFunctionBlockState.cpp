@@ -32,13 +32,11 @@ namespace _2Real
 
 	bool FunctionBlockStateCreated::tryStart( FunctionBlockStateManager &states ) const
 	{
-		// is a user error ( setup before start )
 		throw InvalidStateChangeException( "state change: created -> start" );
 	}
 
 	bool FunctionBlockStateCreated::tryStop( FunctionBlockStateManager &states ) const
 	{
-		// is a user error ( setup before stop )
 		throw InvalidStateChangeException( "state change: created -> stop" );
 	}
 
@@ -51,7 +49,7 @@ namespace _2Real
 
 	bool FunctionBlockStateCreated::singleStep( FunctionBlockStateManager &states ) const
 	{
-		throw InvalidStateChangeException( "state change: created -> waiting" );
+		throw InvalidStateChangeException( "state change: created -> single step" );
 	}
 
 	void FunctionBlockStateCreated::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -179,71 +177,71 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	bool FunctionBlockStateStarted::trySetUp( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateTriggering::trySetUp( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	bool FunctionBlockStateStarted::tryStart( FunctionBlockStateManager &states ) const
-	{
-		return true;
-	}
-
-	bool FunctionBlockStateStarted::tryStop( FunctionBlockStateManager &states ) const
-	{
-		return true;
-	}
-
-	void FunctionBlockStateStarted::triggersAreOk( FunctionBlockStateManager &states ) const
-	{
-	}
-
-	bool FunctionBlockStateStarted::singleStep( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateTriggering::tryStart( FunctionBlockStateManager &states ) const
 	{
 		return false;
 	}
 
-	void FunctionBlockStateStarted::uberBlocksAreOk( FunctionBlockStateManager &states ) const
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void FunctionBlockStateStarted::scheduleUpdate( FunctionBlockStateManager &states ) const
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void FunctionBlockStateStarted::beginUpdate( FunctionBlockStateManager &states ) const
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void FunctionBlockStateStarted::update( FunctionBlockStateManager &states ) const
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void FunctionBlockStateStarted::finishUpdate( FunctionBlockStateManager &states ) const
-	{
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	bool FunctionBlockStateStarted::prepareForShutDown( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateTriggering::tryStop( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	void FunctionBlockStateStarted::shutDown( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateTriggering::triggersAreOk( FunctionBlockStateManager &states ) const
+	{
+	}
+
+	bool FunctionBlockStateTriggering::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
+	void FunctionBlockStateTriggering::uberBlocksAreOk( FunctionBlockStateManager &states ) const
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	void FunctionBlockStateTriggering::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	void FunctionBlockStateTriggering::beginUpdate( FunctionBlockStateManager &states ) const
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	void FunctionBlockStateTriggering::update( FunctionBlockStateManager &states ) const
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	void FunctionBlockStateTriggering::finishUpdate( FunctionBlockStateManager &states ) const
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	bool FunctionBlockStateTriggering::prepareForShutDown( FunctionBlockStateManager &states ) const
+	{
+		return true;
+	}
+
+	void FunctionBlockStateTriggering::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
@@ -470,17 +468,17 @@ namespace _2Real
 
 	bool FunctionBlockStateStopped::trySetUp( FunctionBlockStateManager &states ) const
 	{
-		return true;
+		throw InvalidStateChangeException( "state change: shut down -> set up" );
 	}
 
 	bool FunctionBlockStateStopped::tryStart( FunctionBlockStateManager &states ) const
 	{
-		return true;
+		throw InvalidStateChangeException( "state change: shut down -> start" );
 	}
 
 	bool FunctionBlockStateStopped::tryStop( FunctionBlockStateManager &states ) const
 	{
-		return false;
+		throw InvalidStateChangeException( "state change: shut down -> stop" );
 	}
 
 	void FunctionBlockStateStopped::triggersAreOk( FunctionBlockStateManager &states ) const
@@ -492,7 +490,7 @@ namespace _2Real
 
 	bool FunctionBlockStateStopped::singleStep( FunctionBlockStateManager &states ) const
 	{
-		return true;
+		throw InvalidStateChangeException( "state change: shut down -> single step" );
 	}
 
 	void FunctionBlockStateStopped::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -543,7 +541,7 @@ namespace _2Real
 
 	bool FunctionBlockStateShutDown::trySetUp( FunctionBlockStateManager &states ) const
 	{
-		throw InvalidStateChangeException( "state change: shut down -> setUp" );
+		throw InvalidStateChangeException( "state change: shut down -> set up" );
 	}
 
 	bool FunctionBlockStateShutDown::tryStart( FunctionBlockStateManager &states ) const
@@ -565,7 +563,7 @@ namespace _2Real
 
 	bool FunctionBlockStateShutDown::singleStep( FunctionBlockStateManager &states ) const
 	{
-		return false;
+		throw InvalidStateChangeException( "state change: shut down -> single step" );
 	}
 
 	void FunctionBlockStateShutDown::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -637,31 +635,49 @@ namespace _2Real
 
 	void FunctionBlockStateError::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	bool FunctionBlockStateError::singleStep( FunctionBlockStateManager &states ) const
 	{
-		return false;
+		throw InvalidStateChangeException( "state change: error -> single step" );
 	}
 
 	void FunctionBlockStateError::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	void FunctionBlockStateError::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	void FunctionBlockStateError::beginUpdate( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	void FunctionBlockStateError::update( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	void FunctionBlockStateError::finishUpdate( FunctionBlockStateManager &states ) const
 	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
 	}
 
 	bool FunctionBlockStateError::prepareForShutDown( FunctionBlockStateManager &states ) const

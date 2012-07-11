@@ -20,16 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealAppData.h" />
-    <ClInclude Include="..\..\src\app\_2RealBlockData.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealBundleData.h" />
+    <ClInclude Include="..\..\src\app\_2RealBlockInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealBundleInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealCallbacks.h" />
     <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealEngine.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealParameterData.h" />
+    <ClInclude Include="..\..\src\app\_2RealParameterInfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
@@ -45,12 +45,11 @@
     <ClInclude Include="..\..\src\engine\_2RealAbstractUberBlock.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUpdatePolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUpdateTrigger.h" />
-    <ClInclude Include="..\..\src\engine\_2RealBlockData.h" />
+    <ClInclude Include="..\..\src\engine\_2RealBlockMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundle.h" />
-    <ClInclude Include="..\..\src\engine\_2RealBundleData.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleLoader.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleManager.h" />
-    <ClInclude Include="..\..\src\engine\_2RealBundleMetainfoImpl.h" />
+    <ClInclude Include="..\..\src\engine\_2RealBundleMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h" />
     <ClInclude Include="..\..\src\engine\_2RealFunctionBlock.h" />
     <ClInclude Include="..\..\src\engine\_2RealFunctionBlockIOManager.h" />
@@ -62,9 +61,10 @@
     <ClInclude Include="..\..\src\engine\_2RealInletBuffer.h" />
     <ClInclude Include="..\..\src\engine\_2RealLink.h" />
     <ClInclude Include="..\..\src\engine\_2RealLogger.h" />
+    <ClInclude Include="..\..\src\engine\_2RealMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealParameter.h" />
-    <ClInclude Include="..\..\src\engine\_2RealParameterData.h" />
+    <ClInclude Include="..\..\src\engine\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\engine\_2RealSystem.h" />
     <ClInclude Include="..\..\src\engine\_2RealThreadPool.h" />
@@ -101,25 +101,25 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBlockData.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleData.cpp">
+    <ClCompile Include="..\..\src\app\_2RealBlockInfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleInfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
@@ -149,7 +149,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterData.cpp">
+    <ClCompile Include="..\..\src\app\_2RealParameterInfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
@@ -227,19 +227,13 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBlockData.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealBlockMetadata.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundle.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBundleData.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
@@ -257,7 +251,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBundleMetainfoImpl.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealBundleMetadata.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
@@ -317,6 +311,12 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealOutlet.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
@@ -329,7 +329,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealParameterData.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealParameterMetadata.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>

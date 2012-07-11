@@ -18,29 +18,29 @@
 
 #pragma once
 
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealParameterMetadata.h"
 
 #include <vector>
 #include <string>
 
 namespace _2Real
 {
-	class BlockData
+	class BlockMetadata
 	{
 
 	public:
 
-		typedef std::vector< ParameterData >					ParamMetas;
-		typedef std::vector< ParameterData >::iterator			ParamMetaIterator;
-		typedef std::vector< ParameterData >::const_iterator	ParamMetaConstIterator;
+		typedef std::vector< ParameterMetadata >					ParamMetas;
+		typedef std::vector< ParameterMetadata >::iterator			ParamMetaIterator;
+		typedef std::vector< ParameterMetadata >::const_iterator	ParamMetaConstIterator;
 
-		BlockData();
-		BlockData( std::string const& name );
+		BlockMetadata();
+		BlockMetadata( std::string const& name );
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addInlet( ParameterData const& data );
-		void addOutlet( ParameterData const& data );
+		void addInlet( ParameterMetadata const& data );
+		void addOutlet( ParameterMetadata const& data );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;

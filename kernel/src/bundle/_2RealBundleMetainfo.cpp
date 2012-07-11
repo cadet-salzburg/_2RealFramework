@@ -17,7 +17,7 @@
 */
 
 #include "bundle/_2RealBundleMetainfo.h"
-#include "engine/_2RealBundleMetainfoImpl.h"
+#include "engine/_2RealMetainfo.h"
 #include "helpers/_2RealVersion.h"
 
 namespace _2Real

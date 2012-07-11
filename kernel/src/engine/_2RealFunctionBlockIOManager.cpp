@@ -138,7 +138,7 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( ParameterData const& data )
+	void FunctionBlockIOManager::addInlet( ParameterMetadata const& data )
 	{
 		InletIO *io = new InletIO( m_Owner, data );
 		m_UpdatePolicy->addInlet( *io );
@@ -147,7 +147,7 @@ namespace _2Real
 		m_BundleInletHandles.push_back( io->m_Inlet->getHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( ParameterData const& data )
+	void FunctionBlockIOManager::addOutlet( ParameterMetadata const& data )
 	{
 		OutletIO *io = new OutletIO( m_Owner, data );
 		m_Outlets.push_back( io );

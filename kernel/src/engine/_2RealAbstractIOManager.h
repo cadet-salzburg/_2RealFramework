@@ -50,7 +50,7 @@ namespace _2Real
 	class Inlet;
 	class InletBuffer;
 	class Outlet;
-	class ParameterData;
+	class ParameterMetadata;
 
 	class InletIO : private NonCopyable< InletIO >, private Handleable< app::InletHandle >
 	{
@@ -61,7 +61,7 @@ namespace _2Real
 		using Handleable< app::InletHandle >::registerHandle;
 		using Handleable< app::InletHandle >::unregisterHandle;
 
-		InletIO( AbstractUberBlock &owner, ParameterData const& data );
+		InletIO( AbstractUberBlock &owner, ParameterMetadata const& data );
 		~InletIO();
 		Inlet													*m_Inlet;
 		InletBuffer												*m_Buffer;
@@ -77,7 +77,7 @@ namespace _2Real
 		using Handleable< app::OutletHandle >::registerHandle;
 		using Handleable< app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, ParameterData const& data );
+		OutletIO( AbstractUberBlock &owner, ParameterMetadata const& data );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;

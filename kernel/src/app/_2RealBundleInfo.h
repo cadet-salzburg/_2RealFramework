@@ -19,7 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealVersion.h"
-#include "app/_2RealBlockData.h"
+#include "app/_2RealBlockInfo.h"
 
 #include <vector>
 #include <string>

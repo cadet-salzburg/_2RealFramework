@@ -16,8 +16,8 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealBundleData.h"
-#include "engine/_2RealBlockData.h"
+#include "engine/_2RealBundleMetadata.h"
+#include "engine/_2RealBlockMetadata.h"
 #include "helpers/_2RealException.h"
 
 #include <sstream>
@@ -27,7 +27,7 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	BundleData::BundleData() :
+	BundleMetadata::BundleMetadata() :
 		m_Name( "undefined" ),
 		m_Description( "undefined" ),
 		m_Author( "undefined" ),
@@ -38,79 +38,79 @@ namespace _2Real
 	{
 	}
 
-	void BundleData::setInstallDirectory( std::string const& dir )
+	void BundleMetadata::setInstallDirectory( std::string const& dir )
 	{
 		m_InstallDirectory = dir;
 	}
 
-	void BundleData::setDescription( std::string const& desc )
+	void BundleMetadata::setDescription( std::string const& desc )
 	{
 		m_Description = desc;
 	}
 
-	void BundleData::setVersion( Version const& version )
+	void BundleMetadata::setVersion( Version const& version )
 	{
 		m_Version = version;
 	}
 
-	void BundleData::setAuthor( std::string const& author )
+	void BundleMetadata::setAuthor( std::string const& author )
 	{
 		m_Author = author;
 	}
 
-	void BundleData::setContact( std::string const& contact )
+	void BundleMetadata::setContact( std::string const& contact )
 	{
 		m_Contact = contact;
 	}
 
-	void BundleData::setName( std::string const& name )
+	void BundleMetadata::setName( std::string const& name )
 	{
 		m_Name = name;
 	}
 
-	void BundleData::setCategory( std::string const& category )
+	void BundleMetadata::setCategory( std::string const& category )
 	{
 		m_Category = category;
 	}
 
-	std::string const& BundleData::getName() const
+	std::string const& BundleMetadata::getName() const
 	{
 		return m_Name;
 	}
 
-	std::string const& BundleData::getInstallDirectory() const
+	std::string const& BundleMetadata::getInstallDirectory() const
 	{
 		return m_InstallDirectory;
 	}
 
-	std::string const& BundleData::getDescription() const
+	std::string const& BundleMetadata::getDescription() const
 	{
 		return m_Description;
 	}
 
-	std::string const& BundleData::getAuthor() const
+	std::string const& BundleMetadata::getAuthor() const
 	{
 		return m_Author;
 	}
 
-	std::string const& BundleData::getContact() const
+	std::string const& BundleMetadata::getContact() const
 	{
 		return m_Contact;
 	}
 
-	std::string const& BundleData::getCategory() const
+	std::string const& BundleMetadata::getCategory() const
 	{
 		return m_Category;
 	}
 
-	Version const& BundleData::getVersion() const
+	Version const& BundleMetadata::getVersion() const
 	{
 		return m_Version;
 	}
 
-	BlockData const& BundleData::getBlockData( std::string const& name ) const
+	BlockMetadata const& BundleMetadata::getBlockData( std::string const& name ) const
 	{
-		BundleData::BlockMetaConstIterator it = m_ExportedBlocks.find( name );
+		BundleMetadata::BlockMetaConstIterator it = m_ExportedBlocks.find( name );
 
 		if ( it == m_ExportedBlocks.end() )
 		{
@@ -122,13 +122,13 @@ namespace _2Real
 		return it->second;
 	}
 
-	void BundleData::addBlockData( BlockData const& data )
+	void BundleMetadata::addBlockData( BlockMetadata const& data )
 	{
 		std::string blockName = data.getName();
 		m_ExportedBlocks[ blockName ] = data;
 	}
 
-	BundleData::BlockMetas const& BundleData::getExportedBlocks() const
+	BundleMetadata::BlockMetas const& BundleMetadata::getExportedBlocks() const
 	{
 		return m_ExportedBlocks;
 	}

@@ -101,6 +101,8 @@ namespace _2Real
 
 		void							registerToException( app::BlockExcCallback &callback );
 		void							unregisterFromException( app::BlockExcCallback &callback );
+		void							registerToException( app::ContextBlockExcCallback &callback );
+		void							unregisterFromException( app::ContextBlockExcCallback &callback );
 		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
 		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
 

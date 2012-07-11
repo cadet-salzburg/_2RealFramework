@@ -207,6 +207,16 @@ namespace _2Real
 		m_BlockExceptionEvent.addListener( callback );
 	}
 
+	void EngineImpl::unregisterFromException( app::ContextBlockExcCallback &callback )
+	{
+		m_ContextBlockExceptionEvent.removeListener( callback );
+	}
+
+	void EngineImpl::registerToException( app::ContextBlockExcCallback &callback )
+	{
+		m_ContextBlockExceptionEvent.addListener( callback );
+	}
+
 	void EngineImpl::unregisterFromException( app::BlockExcCallback &callback )
 	{
 		m_BlockExceptionEvent.removeListener( callback );
@@ -219,6 +229,7 @@ namespace _2Real
 
 	void EngineImpl::handleException( app::ContextBlockHandle &block, Exception const& exception ) const
 	{
+		m_ContextBlockExceptionEvent.notify( make_pair( exception, block ) );
 	}
 
 	EngineImpl::Links const& EngineImpl::getCurrentLinks() const

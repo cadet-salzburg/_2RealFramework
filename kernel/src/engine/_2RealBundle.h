@@ -22,7 +22,7 @@
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
-#include "app/_2RealBundleData.h"
+#include "app/_2RealBundleInfo.h"
 #include "app/_2RealBundleHandle.h"
 
 #include <map>

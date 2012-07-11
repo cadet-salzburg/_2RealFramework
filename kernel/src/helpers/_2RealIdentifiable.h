@@ -33,11 +33,9 @@ namespace _2Real
 	class AbstractIdentifiable
 	{
 
-	public:
-
-		virtual ~AbstractIdentifiable() {}
-
 	protected:
+
+		virtual ~AbstractIdentifiable();
 
 		typedef std::list< AbstractIdentifiable const* >					Ids;
 		typedef std::list< AbstractIdentifiable const* >::iterator			IdIterator;

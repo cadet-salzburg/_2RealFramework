@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "app/_2RealBundleData.h"
+#include "app/_2RealBundleInfo.h"
 
 using std::string;
 using std::ostream;

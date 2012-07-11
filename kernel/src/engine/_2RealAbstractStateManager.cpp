@@ -24,8 +24,7 @@ using std::string;
 namespace _2Real
 {
 	AbstractStateManager::AbstractStateManager( AbstractUberBlock &owner ) : 
-		m_Owner( owner ),
-		m_StopEvent( false )
+		m_Owner( owner )
 	{
 	}
 
@@ -37,5 +36,4 @@ namespace _2Real
 	{
 		return m_Owner.getFullName();
 	}
-
 }

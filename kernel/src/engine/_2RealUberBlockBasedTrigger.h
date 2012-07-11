@@ -17,17 +17,13 @@
 	limitations under the License.
 */
 
-#pragma once
-
+//#pragma once
 //#include "engine/_2RealAbstractUberBlock.h"
 //#include "engine/_2RealAbstractUpdateTrigger.h"
 //#include "engine/_2RealAbstractStateManager.h"
-
 //#include <map>
-
-namespace _2Real
-{
-
+//namespace _2Real
+//{
 //#if defined( _WIN32 )
 //	#define _2REAL_MEMBER_FUNC __thiscall
 //#elif defined( _WIN64 )
@@ -132,5 +128,4 @@ namespace _2Real
 //		UberBlockBasedTrigger		*m_T2;
 //
 //	};
-
-}
+//}

@@ -17,15 +17,15 @@
 */
 
 #include "bundle/_2RealBlockMetainfo.h"
-#include "engine/_2RealBlockData.h"
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealTypetable.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		BlockMetainfo::BlockMetainfo( BlockData &data, Typetable const& typetable ) :
+		BlockMetainfo::BlockMetainfo( BlockMetadata &data, Typetable const& typetable ) :
 			m_Impl( data ),
 			m_Typetable( typetable )
 		{
@@ -40,7 +40,7 @@ namespace _2Real
 		{
 			const std::string longTypename = defaultValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterData data( inletName, longTypename, typeName, defaultValue );
+			ParameterMetadata data( inletName, longTypename, typeName, defaultValue );
 			m_Impl.addInlet( data );
 		}
 
@@ -54,7 +54,7 @@ namespace _2Real
 			Any val;
 			val.cloneFrom( defaultConstructed );
 
-			ParameterData data( outletName, longTypename, typeName, val );
+			ParameterMetadata data( outletName, longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

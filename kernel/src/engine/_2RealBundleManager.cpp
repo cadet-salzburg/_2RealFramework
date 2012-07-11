@@ -20,9 +20,9 @@
 #include "engine/_2RealBundleManager.h"
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealFunctionBlock.h"
-#include "engine/_2RealBundleData.h"
-#include "engine/_2RealBlockData.h"
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealBundleMetadata.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealEngineImpl.h"
 
 #include <sstream>
@@ -76,7 +76,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		BundleData const& bundleData = m_BundleLoader.loadLibrary( absPath );
+		BundleMetadata const& bundleData = m_BundleLoader.loadLibrary( absPath );
 
 		app::BundleInfo::BundleData data;
 		app::BundleInfo::BlockInfos blocks;
@@ -88,9 +88,9 @@ namespace _2Real
 		data.author = bundleData.getAuthor();
 		data.category = bundleData.getCategory();
 
-		BundleData::BlockMetas const& blockMetadata = bundleData.getExportedBlocks();
+		BundleMetadata::BlockMetas const& blockMetadata = bundleData.getExportedBlocks();
 
-		for ( BundleData::BlockMetaConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
+		for ( BundleMetadata::BlockMetaConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
 		{
 			app::BlockInfo::BlockData blockData;
 			app::BlockInfo::ParameterInfos inlets;
@@ -100,16 +100,16 @@ namespace _2Real
 			blockData.description = it->second.getDescription();
 			blockData.category = it->second.getCategory();
 
-			BlockData::ParamMetas const& input = it->second.getInlets();
-			BlockData::ParamMetas const& output = it->second.getOutlets();
+			BlockMetadata::ParamMetas const& input = it->second.getInlets();
+			BlockMetadata::ParamMetas const& output = it->second.getOutlets();
 
-			for ( BlockData::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 			{
 				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
 				inlets.push_back( paramInfo );
 			}
 
-			for ( BlockData::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
 			{
 				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
 				outlets.push_back( paramInfo );
@@ -117,17 +117,16 @@ namespace _2Real
 
 			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
 		}
-
 		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
 		m_Bundles.insert( bundle );
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			BlockData const& contextData = bundleData.getBlockData( "bundle context" );
-			bundle::Block & block = m_BundleLoader.createContext( bundleData.getInstallDirectory() );
+			BlockMetadata const& contextData = bundleData.getBlockData( "bundle context" );
+			bundle::Block & block = m_BundleLoader.createContext( absPath );
 			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( *bundle, block, contextData );
 			bundle->setContextBlock( *contextBlock );
-			m_Engine.addBlockInstance( *contextBlock );
+			m_Engine.addContextBlock( *contextBlock );
 
 			contextBlock->updateWithFixedRate( 1.0 );
 			contextBlock->setUp();
@@ -145,13 +144,13 @@ namespace _2Real
 
 	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName )
 	{
-		BundleData const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getName() );
-		BlockData const& blockMetadata = bundleMetadata.getBlockData( blockName );
+		BundleMetadata const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getName() );
+		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
 
 		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getName(), blockName );
 		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, blockMetadata );
 		bundle.addBlockInstance( *functionBlock, blockName );
-		m_Engine.addContextBlock( *functionBlock );
+		m_Engine.addBlockInstance( *functionBlock );
 		return *functionBlock;
 	}
 

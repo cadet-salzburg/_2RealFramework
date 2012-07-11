@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealPoco.h"
 #include "helpers/_2RealNonCopyable.h"
 
 #include <string>
@@ -53,7 +52,6 @@ namespace _2Real
 		typedef std::set< AbstractInletBasedTrigger * >::const_iterator		InletTriggerConstIterator;
 
 		AbstractUberBlock		&m_Owner;
-		Poco::Event				m_StopEvent;
 
 	};
 

@@ -16,67 +16,67 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealBlockData.h"
-#include "engine/_2RealParameterData.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealParameterMetadata.h"
 
 namespace _2Real
 {
 
-	BlockData::BlockData() :
+	BlockMetadata::BlockMetadata() :
 		m_Name( "undefined" ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" )
 	{
 	}
 
-	BlockData::BlockData( std::string const& name ) :
+	BlockMetadata::BlockMetadata( std::string const& name ) :
 		m_Name( name ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" )
 	{
 	}
 
-	std::string const& BlockData::getName() const
+	std::string const& BlockMetadata::getName() const
 	{
 		return m_Name;
 	}
 
-	std::string const& BlockData::getDescription() const
+	std::string const& BlockMetadata::getDescription() const
 	{
 		return m_Description;
 	}
 
-	void BlockData::setDescription(std::string const& description)
+	void BlockMetadata::setDescription(std::string const& description)
 	{
 		m_Description = description;
 	}
 
-	std::string const& BlockData::getCategory() const
+	std::string const& BlockMetadata::getCategory() const
 	{
 		return m_Category;
 	}
 
-	void BlockData::setCategory(std::string const& category)
+	void BlockMetadata::setCategory(std::string const& category)
 	{
 		m_Category = category;
 	}
 
-	void BlockData::addInlet( ParameterData const& data )
+	void BlockMetadata::addInlet( ParameterMetadata const& data )
 	{
 		m_Inlets.push_back( data );
 	}
 
-	void BlockData::addOutlet( ParameterData const& data )
+	void BlockMetadata::addOutlet( ParameterMetadata const& data )
 	{
 		m_Outlets.push_back( data );
 	}
 
-	BlockData::ParamMetas const& BlockData::getInlets() const
+	BlockMetadata::ParamMetas const& BlockMetadata::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	BlockData::ParamMetas const& BlockData::getOutlets() const
+	BlockMetadata::ParamMetas const& BlockMetadata::getOutlets() const
 	{
 		return m_Outlets;
 	}

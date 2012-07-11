@@ -22,7 +22,7 @@
 
 namespace _2Real
 {
-	class BlockData;
+	class BlockMetadata;
 	class Typetable;
 
 	namespace bundle
@@ -32,7 +32,7 @@ namespace _2Real
 
 		public:
 
-			ContextBlockMetainfo( BlockData &data, Typetable const& typetable );
+			ContextBlockMetainfo( BlockMetadata &data, Typetable const& typetable );
 
 			void setDescription( std::string const& description );
 
@@ -46,8 +46,8 @@ namespace _2Real
 
 			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 
-			BlockData	&m_Impl;
-			Typetable	const& m_Typetable;
+			BlockMetadata	&m_Impl;
+			Typetable		const& m_Typetable;
 
 		};
 	}

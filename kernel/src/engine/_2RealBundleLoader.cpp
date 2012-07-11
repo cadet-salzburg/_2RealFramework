@@ -19,7 +19,7 @@
 
 #include "engine/_2RealBundleLoader.h"
 #include "helpers/_2RealException.h"
-#include "engine/_2RealBundleMetainfoImpl.h"
+#include "engine/_2RealMetainfo.h"
 #include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealEngineImpl.h"
 
@@ -71,7 +71,7 @@ namespace _2Real
 		return it->second.metainfo->hasContext();
 	}
 
-	BundleData const& BundleLoader::loadLibrary( string const& path )
+	BundleMetadata const& BundleLoader::loadLibrary( string const& path )
 	{
 		if ( isLibraryLoaded( path ) )
 		{
@@ -146,7 +146,7 @@ namespace _2Real
 		return it->second.metainfo->createContextBlock();
 	}
 
-	BundleData const& BundleLoader::getBundleMetadata( string const& path ) const
+	BundleMetadata const& BundleLoader::getBundleMetadata( string const& path ) const
 	{
 		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 

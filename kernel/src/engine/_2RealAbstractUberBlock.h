@@ -39,9 +39,6 @@ namespace _2Real
 		using Identifiable< AbstractUberBlock >::getIds;
 		using Identifiable< AbstractUberBlock >::setName;
 
-		virtual void	setUp() = 0;
-		virtual void	start() = 0;
-		virtual void	stop( const bool blocking, const long timeout ) = 0;
 		virtual void	prepareForShutDown() = 0;
 		virtual bool	shutDown( const long timeout ) = 0;
 

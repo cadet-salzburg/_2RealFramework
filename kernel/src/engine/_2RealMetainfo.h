@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "engine/_2RealBundleData.h"
+#include "engine/_2RealBundleMetadata.h"
 
 #include <map>
 #include <list>
@@ -26,10 +26,10 @@
 
 namespace _2Real
 {
-	class ParameterData;
+	class ParameterMetadata;
 	class Version;
 	class Typetable;
-	class BlockData;
+	class BlockMetadata;
 	class Any;
 
 	namespace bundle
@@ -65,7 +65,7 @@ namespace _2Real
 		bundle::Block & createBlock( std::string const& blockName ) const;
 		bundle::Block & createContextBlock() const;
 
-		BundleData const& getBundleData() const;
+		BundleMetadata const& getBundleData() const;
 
 		void cleanup();
 
@@ -76,7 +76,7 @@ namespace _2Real
 			BlockInfo() : ctor( nullptr ), data( nullptr ), meta( nullptr ) {}
 			BlockInfo( BlockInfo const& src ) : ctor( src.ctor ), data( src.data ), meta( src.meta ) {}
 			bundle::AbstractBlockCreator	*ctor;
-			BlockData						*data;
+			BlockMetadata					*data;
 			bundle::BlockMetainfo			*meta;
 		};
 
@@ -85,7 +85,7 @@ namespace _2Real
 			ContextBlockInfo() : ctor( nullptr ), data( nullptr ), meta( nullptr ) {}
 			ContextBlockInfo( ContextBlockInfo const& src ) : ctor( src.ctor ), data( src.data ), meta( src.meta ) {}
 			bundle::AbstractBlockCreator	*ctor;
-			BlockData						*data;
+			BlockMetadata					*data;
 			bundle::ContextBlockMetainfo	*meta;
 		};
 
@@ -93,14 +93,14 @@ namespace _2Real
 		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
 		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
 
-		typedef std::list< ParameterData >							Parameters;
-		typedef std::list< ParameterData >::iterator				ParameterIterator;
-		typedef std::list< ParameterData >::const_iterator			ParameterConstIterator;
+		typedef std::list< ParameterMetadata >							Parameters;
+		typedef std::list< ParameterMetadata >::iterator				ParameterIterator;
+		typedef std::list< ParameterMetadata >::const_iterator			ParameterConstIterator;
 
 		bool										m_HasContext;
 		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
-		BundleData									m_BundleData;
+		BundleMetadata									m_BundleData;
 		Typetable									const& m_Typetable;
 		Parameters									m_GlobalInlets;
 

@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "app/_2RealParameterData.h"
+#include "app/_2RealParameterInfo.h"
 
 using std::string;
 

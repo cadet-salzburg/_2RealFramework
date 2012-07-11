@@ -23,12 +23,12 @@
 namespace _2Real
 {
 
-	class SafeBool
+	class SynchronizedBool
 	{
 
 	public:
 
-		explicit SafeBool( const bool val );
+		explicit SynchronizedBool( const bool val );
 
 		bool isSet() const;
 		bool isUnset() const;
@@ -37,8 +37,8 @@ namespace _2Real
 
 	private:
 
-		SafeBool( SafeBool const& src );
-		SafeBool& operator=( SafeBool const& src );
+		SynchronizedBool( SynchronizedBool const& src );
+		SynchronizedBool& operator=( SynchronizedBool const& src );
 
 		mutable Poco::FastMutex		m_Access;
 		bool						m_Bool;

@@ -25,9 +25,9 @@
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealAppData.h"
 #include "app/_2RealCallbacks.h"
-#include "app/_2RealBundleData.h"
-#include "app/_2RealBlockData.h"
-#include "app/_2RealParameterData.h"
+#include "app/_2RealBundleInfo.h"
+#include "app/_2RealBlockInfo.h"
+#include "app/_2RealParameterInfo.h"
 #include "app/_2RealEngine.h"
 
 #include "helpers/_2RealVersion.h"

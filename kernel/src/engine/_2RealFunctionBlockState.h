@@ -99,7 +99,7 @@ namespace _2Real
 	};
 
 	// after start has been called
-	class FunctionBlockStateStarted : public AbstractFunctionBlockState
+	class FunctionBlockStateTriggering : public AbstractFunctionBlockState
 	{
 
 	public:

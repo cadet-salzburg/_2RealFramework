@@ -26,7 +26,11 @@ namespace _2Real
 		m_Type( type )
 	{
 	}
-		
+
+	AbstractIdentifiable::~AbstractIdentifiable()
+	{
+	}
+
 	const AbstractIdentifiable::Ids AbstractIdentifiable::getIds() const
 	{
 		Ids result = m_Ids;

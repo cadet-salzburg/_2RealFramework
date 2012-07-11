@@ -25,21 +25,29 @@
 
 namespace _2Real
 {
-	class BlockData;
+	class BlockMetadata;
 
-	class BundleData
+	namespace app
+	{
+		class BlockInfo;
+		class BundleInfo;
+	}
+
+	class BundleMetadata
 	{
 
 	public:
 
-		typedef std::map< std::string, BlockData >					BlockMetas;
-		typedef std::map< std::string, BlockData >::iterator		BlockMetaIterator;
-		typedef std::map< std::string, BlockData >::const_iterator	BlockMetaConstIterator;
+		typedef std::map< std::string, BlockMetadata >					BlockMetas;
+		typedef std::map< std::string, BlockMetadata >::iterator		BlockMetaIterator;
+		typedef std::map< std::string, BlockMetadata >::const_iterator	BlockMetaConstIterator;
 
-		BundleData();
+		BundleMetadata();
 
-		void						addBlockData( BlockData const& data );
-		BlockData const&			getBlockData( std::string const& blockName ) const;
+		app::BundleInfo				getBundleInfo() const;
+
+		void						addBlockData( BlockMetadata const& data );
+		BlockMetadata const&		getBlockData( std::string const& blockName ) const;
 		BlockMetas const&			getExportedBlocks() const;
 
 		void						setDescription( std::string const& description );
