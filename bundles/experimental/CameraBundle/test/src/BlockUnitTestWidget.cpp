@@ -12,23 +12,16 @@ BlockUnitTestWidget::BlockUnitTestWidget()
 {
 }
 
-BlockUnitTestWidget::BlockUnitTestWidget(std::string bundleName, string blockName) 
+BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string blockName) 
 {
-	setup(bundleName, blockName);
+	setup(bundleHandle, blockName);
 }
 
-void BlockUnitTestWidget::setup(std::string bundleName, std::string blockName)
+void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName)
 {
-	string directory = "../experimental/bin/win/";
-	Engine &engine = Engine::instance();
 
 	try 
 	{
-		// load bundles for use in runtime engine
-		engine.setBaseDirectory( directory );
-		BundleHandle bundleHandle = engine.loadBundle( "CameraCaptureBundle" );
-		BundleInfo const& bundleData = bundleHandle.getBundleInfo();
-		
 		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
 		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
 		m_fDefaultFps = 30.0;

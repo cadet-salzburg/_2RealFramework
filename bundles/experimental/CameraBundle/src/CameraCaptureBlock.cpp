@@ -48,6 +48,7 @@ void VideoInputBlock::update()
 			if(m_iCurrentCamera>=0)
 			{
 				m_CameraDeviceManager->unbindDevice( m_iCurrentCamera );
+				m_iCurrentCamera = -1;
 			}
 
 			if( m_CameraDeviceManager->bindDevice( cameraIndex ) )

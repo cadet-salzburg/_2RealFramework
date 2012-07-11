@@ -101,7 +101,8 @@ bool CameraDeviceManager::isDeviceFree(const unsigned int deviceIdx)
 
 bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx)
 {
-	m_iNumDevices = m_VideoInputContoller->listDevices();
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
 	if(isDeviceFree(deviceIdx))
 	{
 		bool ret = m_VideoInputContoller->setupDevice( deviceIdx );
@@ -115,6 +116,8 @@ bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx)
 
 void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
 	if(!isDeviceFree(deviceIdx))
 	{
 		m_VideoInputContoller->stopDevice( deviceIdx );

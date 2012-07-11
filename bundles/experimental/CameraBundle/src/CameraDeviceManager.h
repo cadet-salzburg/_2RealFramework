@@ -1,6 +1,7 @@
 #pragma once
 #include "_2RealBlock.h"
 #include "videoInput.h"
+#include "Poco/Mutex.h"
 #include <vector>
 
 using namespace _2Real::bundle;
@@ -40,4 +41,5 @@ private:
 	std::vector< DeviceItem >					m_DevicesInUse; 
 	unsigned int								m_iNumDevices;
 	videoInput*									m_VideoInputContoller;
+	Poco::Mutex									m_Mutex;
 };
