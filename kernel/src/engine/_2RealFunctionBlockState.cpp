@@ -49,6 +49,11 @@ namespace _2Real
 #endif
 	}
 
+	bool FunctionBlockStateCreated::singleStep( FunctionBlockStateManager &states ) const
+	{
+		throw InvalidStateChangeException( "state change: created -> waiting" );
+	}
+
 	void FunctionBlockStateCreated::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
@@ -120,6 +125,11 @@ namespace _2Real
 #endif
 	}
 
+	bool FunctionBlockStateSetUp::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return true;
+	}
+
 	void FunctionBlockStateSetUp::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
@@ -186,6 +196,11 @@ namespace _2Real
 
 	void FunctionBlockStateStarted::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
+	}
+
+	bool FunctionBlockStateStarted::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	void FunctionBlockStateStarted::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -259,6 +274,11 @@ namespace _2Real
 #endif
 	}
 
+	bool FunctionBlockStateWaiting::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
 	void FunctionBlockStateWaiting::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 	}
@@ -316,6 +336,11 @@ namespace _2Real
 	}
 
 	bool FunctionBlockStateScheduled::tryStop( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
+	bool FunctionBlockStateScheduled::singleStep( FunctionBlockStateManager &states ) const
 	{
 		return false;
 	}
@@ -395,6 +420,11 @@ namespace _2Real
 #endif
 	}
 
+	bool FunctionBlockStateUpdating::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
 	void FunctionBlockStateUpdating::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
@@ -458,6 +488,11 @@ namespace _2Real
 #ifdef _DEBUG
 		assert( NULL );
 #endif
+	}
+
+	bool FunctionBlockStateStopped::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return true;
 	}
 
 	void FunctionBlockStateStopped::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -526,6 +561,11 @@ namespace _2Real
 #ifdef _DEBUG
 		assert( NULL );
 #endif
+	}
+
+	bool FunctionBlockStateShutDown::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	void FunctionBlockStateShutDown::uberBlocksAreOk( FunctionBlockStateManager &states ) const
@@ -597,6 +637,11 @@ namespace _2Real
 
 	void FunctionBlockStateError::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
+	}
+
+	bool FunctionBlockStateError::singleStep( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	void FunctionBlockStateError::uberBlocksAreOk( FunctionBlockStateManager &states ) const

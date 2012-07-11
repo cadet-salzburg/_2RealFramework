@@ -69,7 +69,6 @@ namespace _2Real
 
 		virtual ~AbstractInletBasedTrigger() {}
 		virtual bool isOr() const = 0;
-		virtual bool isSingleStep() const = 0;
 		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
 
 	protected:
@@ -80,7 +79,7 @@ namespace _2Real
 
 	};
 
-	template< typename TCond, bool IsOr, bool IsSingleStep  >
+	template< typename TCond, bool IsOr >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
 	{
 
@@ -91,7 +90,7 @@ namespace _2Real
 		{
 			mgr.addTrigger( *this );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, IsOr, IsSingleStep >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr, IsSingleStep >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond, IsOr >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr >::tryTriggerUpdate );
 			buffer.setTrigger( *cb );
 		}
 
@@ -99,7 +98,7 @@ namespace _2Real
 		{
 			m_UpdateManager.removeTrigger( *this );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, IsOr, IsSingleStep  >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr, IsSingleStep >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond, IsOr >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr >::tryTriggerUpdate );
 			m_Buffer.removeTrigger( *cb );
 		}
 
@@ -117,11 +116,6 @@ namespace _2Real
 		bool isOr() const
 		{
 			return IsOr;
-		}
-
-		bool isSingleStep() const
-		{
-			return IsSingleStep;
 		}
 
 	private:

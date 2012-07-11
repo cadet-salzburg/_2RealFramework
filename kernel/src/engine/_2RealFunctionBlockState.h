@@ -38,6 +38,7 @@ namespace _2Real
 		virtual bool tryStop( FunctionBlockStateManager &states ) const = 0;
 		// all triggers -> ok
 		virtual void triggersAreOk( FunctionBlockStateManager &states ) const = 0;
+		virtual bool singleStep( FunctionBlockStateManager &states ) const = 0;
 		// uber blocks -> ok
 		virtual void uberBlocksAreOk( FunctionBlockStateManager &states ) const = 0;
 		// request thread
@@ -65,6 +66,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -85,6 +87,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -105,6 +108,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -125,6 +129,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -145,6 +150,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -165,6 +171,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -185,6 +192,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -205,6 +213,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;
@@ -225,6 +234,7 @@ namespace _2Real
 		bool tryStart( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 		void triggersAreOk( FunctionBlockStateManager &states ) const;
+		bool singleStep( FunctionBlockStateManager &states ) const;
 		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
 		void scheduleUpdate( FunctionBlockStateManager &states ) const;
 		void beginUpdate( FunctionBlockStateManager &states ) const;

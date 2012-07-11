@@ -53,6 +53,10 @@ namespace _2Real
 		FunctionBlockIOManager( AbstractUberBlock &owner );
 		~FunctionBlockIOManager();
 
+		using Handleable< bundle::BlockHandle >::getHandle;
+		using Handleable< bundle::BlockHandle >::registerHandle;
+		using Handleable< bundle::BlockHandle >::unregisterHandle;
+
 		void							clear();
 
 		void							registerToNewData( app::BlockCallback &cb );
@@ -60,7 +64,6 @@ namespace _2Real
 
 		void							addInlet( ParameterData const& data );
 		void							addOutlet( ParameterData const& data );
-		void							addSingleStepTrigger( ParameterData const& data );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name );
 		app::OutletHandle &				getAppOutletHandle( std::string const& name );
@@ -93,9 +96,6 @@ namespace _2Real
 		AppOutletHandles				m_AppOutletHandles;
 		BundleInletHandles				m_BundleInletHandles;
 		BundleOutletHandles				m_BundleOutletHandles;
-
-		InletIO							*m_SingleStepTrigger;
-
 	};
 
 }

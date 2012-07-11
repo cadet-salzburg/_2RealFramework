@@ -23,7 +23,6 @@
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
-//#include "engine/_2RealParameterData.h"
 #include "app/_2RealAppData.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
@@ -46,12 +45,6 @@ namespace _2Real
 	{
 	}
 
-	void FunctionBlockIOManager::addSingleStepTrigger( ParameterData const& data )
-	{
-		m_SingleStepTrigger = new InletIO( m_Owner, data );
-		m_UpdatePolicy->addSingleStepTrigger( *m_SingleStepTrigger );
-	}
-
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
@@ -63,8 +56,6 @@ namespace _2Real
 		{
 			delete *it;
 		}
-
-		delete m_SingleStepTrigger;
 	}
 
 	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const

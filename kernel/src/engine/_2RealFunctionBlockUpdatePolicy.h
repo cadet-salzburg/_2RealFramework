@@ -41,13 +41,13 @@ namespace _2Real
 		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
 	};
 
-	template< typename Condition, bool IsOr, bool IsSingleStep >
+	template< typename Condition, bool IsOr >
 	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
 		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr )
 		{
-			return new InletBasedTrigger< Condition, IsOr, IsSingleStep  >( buffer, mgr );
+			return new InletBasedTrigger< Condition, IsOr >( buffer, mgr );
 		}
 	};
 
@@ -63,9 +63,6 @@ namespace _2Real
 		void changePolicy();
 		void setNewUpdateTime( const long time );
 		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy );
-
-		void addSingleStepTrigger( InletIO &io );
-		void singleStep();
 
 	private:
 
@@ -91,11 +88,9 @@ namespace _2Real
 		mutable Poco::FastMutex			m_Access;
 		bool							m_TimeChanged;
 		bool							m_InletsChanged;
-		long							m_UpdateTime;
 		AbstractTimeBasedTrigger		*m_TimeTrigger;
+		long							m_UpdateTime;
 		InletPolicyMap					m_InletPolicies;
 
-		AbstractInletBasedTrigger		*m_SingleStepTrigger;
 	};
-
 }

@@ -29,18 +29,12 @@ namespace _2Real
 		class Block;
 	}
 
-	class AbstractFunctionBlockState;
-	class AbstractUpdateTrigger;
-	class AbstractTimeBasedTrigger;
-	class UberBlockBasedTrigger;
-	class ServiceUpdates;
-	class FunctionBlockIOManager;
 	class ThreadPool;
 	class Logger;
-	class System;
-	class Block;
 	class Exception;
 	class FunctionBlockUpdatePolicy;
+	class AbstractFunctionBlockState;
+	class FunctionBlockIOManager;
 
 	class FunctionBlockStateManager : public AbstractStateManager
 	{
@@ -61,14 +55,11 @@ namespace _2Real
 
 		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
 		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
-		//void tryTriggerUberBlock( UberBlockBasedTrigger &trigger );
 
 		void addTrigger( AbstractInletBasedTrigger &trigger );
 		void removeTrigger( AbstractInletBasedTrigger &trigger );
 		void addTrigger( AbstractTimeBasedTrigger &trigger );
 		void removeTrigger( AbstractTimeBasedTrigger &trigger );
-		//void addUberBlockTrigger( UberBlockBasedTrigger &trigger );
-		//void removeUberBlockTrigger( UberBlockBasedTrigger &trigger );
 
 	private:
 
@@ -78,45 +69,29 @@ namespace _2Real
 		void handleStateChangeException( Exception &e );
 		void triggersAreOk();
 		void uberBlocksAreOk();
-		void disableAllTriggers();
-		void disableTriggers();
-		//void disableUberBlockTriggers();
-		void resetAllTriggers();
+		void singleStep();
 		void resetTriggers();
-		//void resetUberBlockTriggers();
-		void enableAllTriggers();
-		void enableTriggers();
-		//void enableUberBlockTriggers();
-		bool areTriggersEnabled() const;
-		//bool areUberBlockTriggersEnabled() const;
-		void evaluateTriggers();
-		//void evaluateUberBlockTriggers();
 
-		ThreadPool										&m_Threads;
-		Logger											&m_Logger;
+		ThreadPool							&m_Threads;
+		Logger								&m_Logger;
+		FunctionBlockIOManager				*m_IOManager;
+		FunctionBlockUpdatePolicy			*m_UpdatePolicy;
+		bundle::Block						*m_FunctionBlock;
 
-		FunctionBlockIOManager							*m_IOManager;
-		FunctionBlockUpdatePolicy						*m_UpdatePolicy;
-		bundle::Block									*m_FunctionBlock;
+		mutable Poco::FastMutex				m_TriggerAccess;
+		InletTriggers						m_InletTriggers;
+		AbstractTimeBasedTrigger			*m_TimeTrigger;
 
-		mutable Poco::FastMutex							m_TriggerAccess;
-		AbstractStateManager::InletTriggers				m_InletTriggers;
-		AbstractTimeBasedTrigger						*m_TimeTrigger;
+		mutable Poco::FastMutex				m_StateAccess;
+		AbstractFunctionBlockState			*m_CurrentState;
 
-		//mutable Poco::FastMutex						m_UberBlockTriggerAccess;
-		//AbstractStateManager::UberBlockTriggerList	m_UberBlockTriggers;
+		mutable Poco::FastMutex				m_EnabledAccess;
+		bool								m_IsTriggeringEnabled;
 
-		mutable Poco::FastMutex							m_EnabledAccess;
-		bool											m_UberBlockTriggersEnabled;
-		bool											m_TriggersEnabled;
-
-		mutable Poco::FastMutex							m_StateAccess;
-		AbstractFunctionBlockState						*m_CurrentState;
-
-		// the three types of user interactions that might occur during an update cycle
-		// ( ok, in theory there's also start - but that's pretty irrelevant )
-		SafeBool										m_FlaggedForSetUp;
-		SafeBool										m_FlaggedForStop;
+		SafeBool							m_IsFlaggedForSetup;
+		SafeBool							m_IsFlaggedForStop;
+		SafeBool							m_IsFlaggedForShutdown;
+		SafeBool							m_IsSingleStepping;
 
 	};
 

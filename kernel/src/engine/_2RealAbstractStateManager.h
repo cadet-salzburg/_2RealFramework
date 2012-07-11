@@ -26,8 +26,8 @@
 
 namespace _2Real
 {
-	class AbstractInletBasedTrigger;
 	class AbstractTimeBasedTrigger;
+	class AbstractInletBasedTrigger;
 	class AbstractUberBlock;
 
 	class AbstractStateManager : private NonCopyable< AbstractStateManager >

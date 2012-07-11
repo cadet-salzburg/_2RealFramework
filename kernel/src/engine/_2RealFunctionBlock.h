@@ -138,13 +138,6 @@ namespace _2Real
 		}
 
 		m_BlockInfo = app::BlockInfo( blockData, inletInfo, outletInfo );
-
-		string name = getFullName();
-		name.append( " singlestep trigger" );
-		Any init( false );
-		ParameterData data( name, "bool", "bool", init );
-		
-		m_IOManager->addSingleStepTrigger( data );
 	}
 
 	template< typename THandle >
@@ -264,8 +257,7 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::singleStep()
 	{
-		m_StateManager->start();
-		m_UpdatePolicy->singleStep();
+		m_StateManager->singleStep();
 	}
 
 	template< typename THandle >
@@ -273,18 +265,18 @@ namespace _2Real
 	{
 		if ( isSingleWeight )
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true, false >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
 		}
 		else
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false, false >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
 		}
 	}
 
 	template< typename THandle >
 	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false, false >() );
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
 	}
 
 	template< typename THandle >

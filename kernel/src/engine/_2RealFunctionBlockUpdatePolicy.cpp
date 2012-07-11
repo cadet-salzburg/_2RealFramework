@@ -19,9 +19,9 @@
 
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealEngineImpl.h"
-#include "helpers/_2RealHelpers.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
+#include "helpers/_2RealHelpers.h"
 
 using std::string;
 using std::make_pair;
@@ -57,8 +57,6 @@ namespace _2Real
 			delete it->second;
 			it = m_InletPolicies.erase( it );
 		}
-
-		delete m_SingleStepTrigger;
 	}
 
 	void FunctionBlockUpdatePolicy::addInlet( InletIO &inletIO )
@@ -73,15 +71,10 @@ namespace _2Real
 
 		m_InletsChanged = true;
 		InletPolicy *p = new InletPolicy();
-		p->m_Ctor = new InletTriggerCtor< ValidData, false, false >();
+		p->m_Ctor = new InletTriggerCtor< ValidData, false >();
 		p->m_Trigger = nullptr;
 		p->m_WasChanged = true;
 		m_InletPolicies.insert( make_pair( &inletIO, p ) );
-	}
-
-	void FunctionBlockUpdatePolicy::addSingleStepTrigger( InletIO &inletIO )
-	{
-		m_SingleStepTrigger = new InletBasedTrigger< NewerTimestamp, false, true >( *inletIO.m_Buffer, *m_StateManager );
 	}
 
 	void FunctionBlockUpdatePolicy::changePolicy()
@@ -152,13 +145,6 @@ namespace _2Real
 #endif
 			delete inletPolicy;
 		}
-	}
-
-	void FunctionBlockUpdatePolicy::singleStep()
-	{
-		TimestampedData data( Any(), m_Engine.getElapsedTime() );
-		m_SingleStepTrigger->tryTriggerUpdate( data );
-		m_SingleStepTrigger->reset();
 	}
 
 }
