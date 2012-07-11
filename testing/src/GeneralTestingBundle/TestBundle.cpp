@@ -31,7 +31,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 		ContextBlockMetainfo &context = info.exportContextBlock< ContextManager >();
 		context.addOutlet< DeviceInfos >( "devices" );
 
-		info.addInletToAllWithContext< int >( "device index", -1 );
+		//info.addInletToAllWithContext< int >( "device index", -1 );
 
 		BlockMetainfo out = info.exportBlock< Out, WithContext >( "out" );
 		out.setDescription( "testing the context's functionality" );

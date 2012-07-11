@@ -123,26 +123,26 @@ int main( int argc, char *argv[] )
 		//	}
 		//}
 
-		ContextBlockHandle const& contextHandle = bundleHandle.getContextBlock();
-		BlockInfo const& contextData = contextHandle.getBlockInfo();
+		//ContextBlockHandle const& contextHandle = bundleHandle.getContextBlock();
+		//BlockInfo const& contextData = contextHandle.getBlockInfo();
 		//for ( BlockInfo::ParameterInfoConstIterator it = contextData.getOutlets().begin(); it != contextData.getOutlets().end(); ++it )
 		//{
 		//	cout << "CONTEXT OUTLET:" << endl;
 		//	cout << it->getName() << endl << it->getLongTypename() << endl;
 		//}
 
-		OutletHandle contextOut = contextHandle.getOutletHandle( "devices" );
+		//OutletHandle contextOut = contextHandle.getOutletHandle( "devices" );
 		//contextOut.registerToNewData( contextOutlet, &Receiver::receiveData );
 
 		outHandle = bundleHandle.createBlockInstance( "out" );
 		outHandle.setUpdateRate( 0.0 );
 
-		BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
-		cout << outHandles.size() << endl;
-		for ( BlockHandle::OutletHandleConstIterator it = outHandles.begin(); it != outHandles.end(); ++it )
-		{
-			cout << it->getName() << " " << it->getTypename() << std::endl;
-		}
+		//BlockHandle::OutletHandles const& outHandles = outHandle.getAllOutletHandles();
+		//cout << outHandles.size() << endl;
+		//for ( BlockHandle::OutletHandleConstIterator it = outHandles.begin(); it != outHandles.end(); ++it )
+		//{
+		//	cout << it->getName() << " " << it->getTypename() << std::endl;
+		//}
 
 		//BlockInfo const& outData = outHandle.getBlockInfo();
 		//for ( BlockInfo::ParamConstIterator it = outData.getOutlets().begin(); it != outData.getOutlets().end(); ++it )
@@ -159,10 +159,10 @@ int main( int argc, char *argv[] )
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
 		inletHandle.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 
-		BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
-		cout << inHandles.size() << endl;
+		//BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
+		//cout << inHandles.size() << endl;
 
-		InletHandle in2 = inHandle.getInletHandle( "device index" );
+		//InletHandle in2 = inHandle.getInletHandle( "device index" );
 
 		unsigned int cnt = 0;
 
@@ -262,7 +262,7 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		outletHandle.unregisterFromNewData< Receiver >( receiver, &Receiver::receiveData );
+		//outletHandle.unregisterFromNewData< Receiver >( receiver, &Receiver::receiveData );
 		//contextOut.unregisterFromNewData( contextOutlet, &Receiver::receiveData );
 
 		engine.clearAll();
