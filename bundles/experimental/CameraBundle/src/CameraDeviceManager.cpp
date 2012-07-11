@@ -21,6 +21,7 @@ CameraDeviceManager::CameraDeviceManager() : ContextBlock()
 
 CameraDeviceManager::~CameraDeviceManager()
 {
+	delete m_VideoInputContoller;
 }
 
 void CameraDeviceManager::setup( BlockHandle &context )
@@ -40,7 +41,7 @@ void CameraDeviceManager::update()
 {
 	try
 	{
-	//	rescanDevices();
+		rescanDeviceList();
 	}
 	catch ( Exception &e )
 	{
@@ -51,6 +52,7 @@ void CameraDeviceManager::update()
 
 void CameraDeviceManager::shutdown()
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
 	{
 		if(m_DevicesInUse[i].m_bIsUsed)
@@ -60,6 +62,8 @@ void CameraDeviceManager::shutdown()
 
 void CameraDeviceManager::initDeviceList()
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
 	m_iNumDevices = m_VideoInputContoller->listDevices();	// rescan devices silently (true==silent, no console output)
 
 	m_DevicesInUse.clear();
@@ -69,8 +73,30 @@ void CameraDeviceManager::initDeviceList()
 	}
 }
 
+void CameraDeviceManager::rescanDeviceList()
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
+	printf("rescanning\n");
+	int numDevices = m_VideoInputContoller->listDevices(true);	// rescan devices silently (true==silent, no console output)
+	if(numDevices != m_iNumDevices)
+	{
+		// stop all devices in the graph
+		for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
+		{
+			if(m_DevicesInUse[i].m_bIsUsed)
+				m_VideoInputContoller->stopDevice( i );
+		}
+
+		initDeviceList();
+		m_iNumDevices = numDevices;
+	}
+}
+
 int	CameraDeviceManager::getFirstFreeDevices()
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+
 	for(unsigned int i=0; i<m_DevicesInUse.size(); i++)
 	{
 		if(!m_DevicesInUse[i].m_bIsUsed)
@@ -79,9 +105,11 @@ int	CameraDeviceManager::getFirstFreeDevices()
 	return -1;	// no device is free
 }
 
-void CameraDeviceManager::rescanDeviceList()
+bool CameraDeviceManager::isDeviceRunning(const unsigned int deviceIdx)
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 
+	return m_VideoInputContoller->isDeviceSetup(deviceIdx);
 }
 
 bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)

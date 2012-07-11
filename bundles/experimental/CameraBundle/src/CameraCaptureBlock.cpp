@@ -57,9 +57,16 @@ void VideoInputBlock::update()
 			}
 		}
 
-		if(m_iCurrentCamera>=0)
+		if(m_iCurrentCamera>=0)  
 		{
-			m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+			if( m_CameraDeviceManager->isDeviceRunning(m_iCurrentCamera))
+			{
+				m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+			}
+			else
+			{
+				m_iCurrentCamera = -1;		// it was all running and ok bu through a rescan all devices have quit
+			}
 		}
 	}
 	catch ( Exception &e )

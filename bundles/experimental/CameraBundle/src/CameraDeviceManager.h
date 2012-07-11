@@ -18,6 +18,7 @@ public:
 	bool							bindDevice(const unsigned int deviceIdx);
 	void							unbindDevice(const unsigned int deviceIdx);
 	unsigned int					getNumberOfConnectedDevices() const;
+	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
 	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
 	int								getVideoWidth(const unsigned int  deviceIdx);
