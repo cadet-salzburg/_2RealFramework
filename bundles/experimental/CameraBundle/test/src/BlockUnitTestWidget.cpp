@@ -2,6 +2,8 @@
 #include "BlockInletWidget.h"
 #include "BlockOutletWidget.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace _2Real;
 using namespace _2Real::app;

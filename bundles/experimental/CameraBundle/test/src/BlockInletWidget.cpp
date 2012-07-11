@@ -1,5 +1,7 @@
 #include "BlockInletWidget.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace _2Real;
 

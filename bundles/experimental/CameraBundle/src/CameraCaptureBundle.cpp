@@ -3,6 +3,7 @@
 
 #include "_2RealBundle.h"
 #include <sstream>
+#include <iostream>
 
 using namespace _2Real;
 
