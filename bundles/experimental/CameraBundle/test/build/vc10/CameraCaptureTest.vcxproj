@@ -16,15 +16,9 @@
     <ClCompile Include="..\..\src\BlockUnitTestWidget.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\TestImageWidget.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_BlockInletWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_BlockOutletWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_BlockUnitTestWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockInletWidget.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockOutletWidget.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_BlockUnitTestWidget.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_TestImageWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
