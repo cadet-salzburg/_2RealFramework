@@ -11,13 +11,17 @@ using std::cout;
 using std::endl;
 using std::string;
 
-VideoInputBlock::VideoInputBlock( ContextBlock & context )
+CameraCaptureBlock::CameraCaptureBlock( ContextBlock & context )
 	:Block()
 {
 	m_CameraDeviceManager = static_cast<CameraDeviceManager*>( &context );
 }
 
-void VideoInputBlock::setup( BlockHandle &block )
+CameraCaptureBlock::~CameraCaptureBlock()
+{
+}
+
+void CameraCaptureBlock::setup( BlockHandle &block )
 {
 	try
 	{
@@ -42,14 +46,14 @@ void VideoInputBlock::setup( BlockHandle &block )
 	}
 }
 
-void VideoInputBlock::update()
+void CameraCaptureBlock::update()
 {
 	try
 	{
 		if(m_CameraDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
 			return;
 
-		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  // sanitize input
+		int cameraIndex = m_DeviceIndexHandle.getReadableRef<int>();
 		int w = m_WidthHandle.getReadableRef<int>();
 		int h = m_HeightHandle.getReadableRef<int>();
 		int fps = m_FpsHandle.getReadableRef<int>();
@@ -70,6 +74,7 @@ void VideoInputBlock::update()
 			}
 		}
 
+		// there is a camera so grab image or set new parameters on this device if there are
 		if(m_iCurrentCamera>=0)  
 		{
 			// resolution changed
@@ -88,7 +93,7 @@ void VideoInputBlock::update()
 			}
 			else
 			{
-				m_iCurrentCamera = -1;		// it was all running and ok bu through a rescan all devices have quit
+				m_iCurrentCamera = -1;		// it was all running and ok bu through a rescan a change in the device list got noticed and so all devices have to quit
 			}
 		}
 	}
@@ -96,5 +101,14 @@ void VideoInputBlock::update()
 	{
 		cout << e.message() << endl;
 		e.rethrow();
+	}
+}
+
+void CameraCaptureBlock::shutdown()
+{
+	if(m_iCurrentCamera>=0)
+	{
+		m_CameraDeviceManager->unbindDevice( m_iCurrentCamera );
+		m_iCurrentCamera = -1;
 	}
 }

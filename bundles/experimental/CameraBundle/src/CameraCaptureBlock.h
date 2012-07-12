@@ -4,12 +4,12 @@
 
 using namespace _2Real::bundle;
 
-class VideoInputBlock : public Block
+class CameraCaptureBlock : public Block
 {
 public:
-	VideoInputBlock( ContextBlock & context );
-	~VideoInputBlock() {}
-	void					shutdown() {}
+	CameraCaptureBlock( ContextBlock & context );
+	~CameraCaptureBlock();
+	void					shutdown();
 	void					update();
 	void					setup( BlockHandle &context );
 
