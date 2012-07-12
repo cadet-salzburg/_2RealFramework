@@ -52,7 +52,7 @@ void VideoInputBlock::update()
 		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  // sanitize input
 		int w = m_WidthHandle.getReadableRef<int>();
 		int h = m_HeightHandle.getReadableRef<int>();
-		double fps = m_FpsHandle.getReadableRef<int>();
+		int fps = m_FpsHandle.getReadableRef<int>();
 
 		// camera index changed
 		if(cameraIndex != m_iCurrentCamera)

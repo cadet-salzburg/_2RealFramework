@@ -19,7 +19,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 	{
 		info.setDescription( "Camera Capture" );
 		info.setAuthor( "Robert Praxmarer" );
-		info.setCategory( "experimental" );
+		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 

@@ -24,5 +24,5 @@ private:
 	int									m_iCurrentCamera;
 	int									m_iWidth;
 	int									m_iHeight;
-	double								m_iFps;
+	int									m_iFps;
 };
