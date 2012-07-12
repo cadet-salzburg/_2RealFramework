@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealEngine", "_2RealEngine.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -18,10 +18,7 @@
 
 #pragma once
 
-#if defined( _WIN32 )
-	#define _2REAL_CALLBACK __cdecl
-	#define _2REAL_MEMBER_CALLBACK __thiscall
-#elif defined( _WIN64 )
+#ifdef _2REAL_WINDOWS
 	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall
 #else
