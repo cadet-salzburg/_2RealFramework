@@ -21,10 +21,19 @@ void VideoInputBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_DeviceIndexHandle	= block.getInletHandle("DeviceIndexInlet");
-		m_ImageOutletHandle = block.getOutletHandle("ImageDataOutlet" );
+		// inlet handles
+		m_DeviceIndexHandle	= block.getInletHandle("DeviceIndex");
+		m_WidthHandle = block.getInletHandle("Width");
+		m_HeightHandle = block.getInletHandle("Height");
+		m_FpsHandle = block.getInletHandle("Fps");
+
+		m_iWidth = m_WidthHandle.getReadableRef<int>();
+		m_iHeight = m_HeightHandle.getReadableRef<int>();
+		m_iFps = m_FpsHandle.getReadableRef<int>();
+
+		// outlet handles
+		m_ImageOutletHandle = block.getOutletHandle("ImageData" );
 		m_iCurrentCamera = -1;	// no device set yet
-			
 	}
 	catch ( Exception &e )
 	{
@@ -41,6 +50,11 @@ void VideoInputBlock::update()
 			return;
 
 		int cameraIndex = abs( m_DeviceIndexHandle.getReadableRef<int>()  )%( m_CameraDeviceManager->getNumberOfConnectedDevices() ) ;  // sanitize input
+		int w = m_WidthHandle.getReadableRef<int>();
+		int h = m_HeightHandle.getReadableRef<int>();
+		double fps = m_FpsHandle.getReadableRef<int>();
+
+		// camera index changed
 		if(cameraIndex != m_iCurrentCamera)
 		{
 			// unbind old cam
@@ -50,7 +64,7 @@ void VideoInputBlock::update()
 				m_iCurrentCamera = -1;
 			}
 
-			if( m_CameraDeviceManager->bindDevice( cameraIndex ) )
+			if( m_CameraDeviceManager->bindDevice( cameraIndex, m_iWidth, m_iHeight, m_iFps ) )
 			{
 				m_iCurrentCamera = cameraIndex;
 			}
@@ -58,6 +72,16 @@ void VideoInputBlock::update()
 
 		if(m_iCurrentCamera>=0)  
 		{
+			// resolution changed
+			if(w != m_iWidth || h != m_iHeight || fps != m_iFps)
+			{
+				m_iWidth  = w;
+				m_iHeight = h;
+				m_iFps = fps;
+				if(!m_CameraDeviceManager->setCameraParams(m_iCurrentCamera, m_iWidth, m_iHeight, m_iFps))	// failed ?
+					m_iCurrentCamera = -1;
+			}
+
 			if( m_CameraDeviceManager->isDeviceRunning(m_iCurrentCamera))
 			{
 				m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );

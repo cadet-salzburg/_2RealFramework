@@ -127,13 +127,14 @@ bool CameraDeviceManager::isDeviceFree(const unsigned int deviceIdx)
 	}
 }
 
-bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx)
+bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h, int fps)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
 	if(isDeviceFree(deviceIdx))
 	{
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx );
+		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
+		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
 	}
 	else
 	{
@@ -153,14 +154,17 @@ void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
 }
 
 
-bool CameraDeviceManager::setResolution(const unsigned int deviceIdx, int w, int h)
+bool CameraDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, int h, int fps)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
 	if(!isDeviceFree(deviceIdx))
 	{
-		 return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
+		m_VideoInputContoller->stopDevice( deviceIdx );
+		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
+		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
 	}
+	return false;
 }
 
 unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
@@ -171,6 +175,7 @@ unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
 
 _2Real::ImageT<unsigned char> CameraDeviceManager::getPixels( const unsigned int deviceIdx )
 {
+	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
 	try
 	{
 		if(m_VideoInputContoller->isFrameNew(deviceIdx))

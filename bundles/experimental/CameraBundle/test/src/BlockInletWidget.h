@@ -8,11 +8,13 @@ Q_OBJECT
 
 public slots:
 	void setValue(double value);
+	void setValue(int value);
 
 public:
 	BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent=0);
 
 private:
-	QDoubleSpinBox* m_ValueWidget;
+
+	QWidget*				 m_ValueWidget;
 	_2Real::app::InletHandle m_InletHandle;
 };

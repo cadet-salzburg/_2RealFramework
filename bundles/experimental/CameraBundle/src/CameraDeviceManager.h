@@ -15,9 +15,9 @@ public:
 	void							update();
 	void							shutdown();
 
-	bool							bindDevice(const unsigned int deviceIdx);
+	bool							bindDevice(const unsigned int deviceIdx, int w, int h, int fps=30);
 	void							unbindDevice(const unsigned int deviceIdx);
-	bool							setResolution(const unsigned int deviceIdx, int w, int h);
+	bool							setCameraParams(const unsigned int deviceIdx, int w, int h, int fps=30);
 	unsigned int					getNumberOfConnectedDevices() const;
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device

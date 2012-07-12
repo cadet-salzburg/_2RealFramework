@@ -16,7 +16,13 @@ public:
 private:
 
 	InletHandle							m_DeviceIndexHandle;
+	InletHandle							m_WidthHandle;
+	InletHandle							m_HeightHandle;
+	InletHandle							m_FpsHandle;
 	OutletHandle						m_ImageOutletHandle;
 	CameraDeviceManager*				m_CameraDeviceManager;
 	int									m_iCurrentCamera;
+	int									m_iWidth;
+	int									m_iHeight;
+	double								m_iFps;
 };
