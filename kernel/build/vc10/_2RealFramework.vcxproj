@@ -476,25 +476,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\lib\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>_2RealEngine_32d</TargetName>
+    <TargetName>_2RealFramework_32d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\lib\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>_2RealEngine_64d</TargetName>
+    <TargetName>_2RealFramework_64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\lib\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>_2RealEngine_32</TargetName>
+    <TargetName>_2RealFramework_32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\lib\</OutDir>
     <TargetExt>.lib</TargetExt>
-    <TargetName>_2RealEngine_64</TargetName>
+    <TargetName>_2RealFramework_64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MTD|Win32'">
     <OutDir>..\bin</OutDir>
@@ -529,7 +529,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ProgramDataBaseFileName>..\..\lib\_2RealEngine_32d.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\_2RealFramework_32d.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
     </ClCompile>
@@ -540,7 +540,7 @@
     <Lib>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <OutputFile>..\..\lib\_2RealEngine_32d.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealFramework_32d.lib</OutputFile>
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
@@ -557,7 +557,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ProgramDataBaseFileName>..\..\lib\_2RealEngine_64d.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\_2RealFramework_64d.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
@@ -569,7 +569,7 @@
     <Lib>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <OutputFile>..\..\lib\_2RealEngine_64d.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealFramework_64d.lib</OutputFile>
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
@@ -591,6 +591,7 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>..\..\lib\_2RealFramework_32.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -600,7 +601,7 @@
     </Link>
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
-      <OutputFile>..\..\lib\_2RealEngine_32.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealFramework_32.lib</OutputFile>
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
     </Lib>
@@ -622,6 +623,7 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>..\..\lib\_2RealFramework_64.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -631,7 +633,7 @@
     </Link>
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
-      <OutputFile>..\..\lib\_2RealEngine_64.lib</OutputFile>
+      <OutputFile>..\..\lib\_2RealFramework_64.lib</OutputFile>
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
