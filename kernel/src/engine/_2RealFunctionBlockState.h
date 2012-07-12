@@ -78,7 +78,7 @@ namespace _2Real
 	};
 
 	// after setup has been called the first time
-	class FunctionBlockStateSetUp : public AbstractFunctionBlockState
+	class FunctionBlockStateInitialized : public AbstractFunctionBlockState
 	{
 
 	public:

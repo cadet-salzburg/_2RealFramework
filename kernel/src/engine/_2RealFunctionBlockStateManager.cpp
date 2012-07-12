@@ -59,7 +59,7 @@ namespace _2Real
 			if ( m_CurrentState->trySetUp( *this ) )
 			{
 				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateSetUp();
+				m_CurrentState = new FunctionBlockStateInitialized();
 
 				m_IOManager->updateInletData();
 
@@ -87,7 +87,6 @@ namespace _2Real
 			{
 				m_UpdatePolicy->changePolicy();
 				m_StopEvent.reset();
-				resetTriggers();
 
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateTriggering();
@@ -98,8 +97,45 @@ namespace _2Real
 				m_IsTriggeringEnabled = true;
 				m_EnabledAccess.unlock();
 
+				resetTriggers();
 				m_IOManager->updateInletBuffers();		// give buffered data a chance of triggering
 				m_Logger.addLine( string( getName() + " new state: triggering" ) );
+			}
+			else
+			{
+				m_StateAccess.unlock();
+			}
+		}
+		catch ( Exception &e )
+		{
+			handleStateChangeException( e );
+			m_StateAccess.unlock();
+		}
+	}
+
+	// like start, singlestep only works in initialized state, hoever, the whole waiting for triggers does not happen
+	void FunctionBlockStateManager::singleStep()
+	{
+		try
+		{
+			m_StateAccess.lock();
+
+			if ( m_CurrentState->singleStep( *this ) )
+			{
+				m_UpdatePolicy->changePolicy();
+				m_StopEvent.reset();
+
+				m_IsFlaggedForHalting.set();	// after this update cycle, stay initialized
+
+				delete m_CurrentState;
+				m_CurrentState = new FunctionBlockStateWaiting();
+				m_StateAccess.unlock();
+
+				resetTriggers();
+				m_IOManager->updateInletBuffers();
+				m_Logger.addLine( std::string( getName() + " new state: waiting ( singlestepped )" ) );
+
+				uberBlocksAreOk();				// this is kinda unnneccesary currently
 			}
 			else
 			{
@@ -125,7 +161,7 @@ namespace _2Real
 				m_EnabledAccess.unlock();
 
 				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateSetUp();
+				m_CurrentState = new FunctionBlockStateInitialized();
 
 				m_Logger.addLine( std::string( getName() + " new state: setup ( stop requested by user )" ) );
 
@@ -172,42 +208,6 @@ namespace _2Real
 
 			m_Logger.addLine( std::string( getName() + " new state: waiting ( triggered )" ) );
 			uberBlocksAreOk();	// currently, does nothing
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
-	}
-
-	void FunctionBlockStateManager::singleStep()
-	{
-		try
-		{
-			m_StateAccess.lock();
-
-			if ( m_CurrentState->singleStep( *this ) )
-			{
-				m_StopEvent.reset();
-
-				// a singlestep overrides all triggers
-				m_EnabledAccess.lock();
-				m_IsTriggeringEnabled = false;
-				m_EnabledAccess.unlock();
-
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateWaiting();
-
-				m_IsFlaggedForHalting.set();
-				m_StateAccess.unlock();
-
-				m_Logger.addLine( std::string( getName() + " new state: waiting ( singlestepped )" ) );
-				uberBlocksAreOk();
-			}
-			else
-			{
-				m_StateAccess.unlock();
-			}
 		}
 		catch ( Exception &e )
 		{
@@ -297,16 +297,15 @@ namespace _2Real
 			}
 			else if ( m_IsFlaggedForHalting.isSet() )
 			{
-				m_IOManager->updateInletData();
-
 				if ( m_IsFlaggedForSetup.isSet() )
 				{
+					//m_IOManager->updateInletData();
 					bundle::BlockHandle context( *m_IOManager );
 					m_FunctionBlock->setup( context );
 					m_IsFlaggedForSetup.unset();
 				}
 
-				m_CurrentState = new FunctionBlockStateSetUp();
+				m_CurrentState = new FunctionBlockStateInitialized();
 				m_StateAccess.unlock();
 
 				m_StopEvent.set();
@@ -316,10 +315,9 @@ namespace _2Real
 			}
 			else
 			{
-				m_IOManager->updateInletData();
-
 				if ( m_IsFlaggedForSetup.isSet() )
 				{
+					//m_IOManager->updateInletData();
 					bundle::BlockHandle context( *m_IOManager );
 					m_FunctionBlock->setup( context );
 					m_IsFlaggedForSetup.unset();

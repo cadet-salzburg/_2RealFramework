@@ -71,6 +71,7 @@ namespace _2Real
 		void receiveData( TimestampedData const& data );
 		void receiveData( Any const& data );
 		TimestampedData const& getTriggeringData() const;
+		//TimestampedData const& getOldestBufferData();
 		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );

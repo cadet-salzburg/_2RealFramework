@@ -101,74 +101,74 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	bool FunctionBlockStateSetUp::trySetUp( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateInitialized::trySetUp( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	bool FunctionBlockStateSetUp::tryStart( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateInitialized::tryStart( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	bool FunctionBlockStateSetUp::tryStop( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateInitialized::tryStop( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	void FunctionBlockStateSetUp::triggersAreOk( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::triggersAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	bool FunctionBlockStateSetUp::singleStep( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateInitialized::singleStep( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	void FunctionBlockStateSetUp::uberBlocksAreOk( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::uberBlocksAreOk( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void FunctionBlockStateSetUp::scheduleUpdate( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::scheduleUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void FunctionBlockStateSetUp::beginUpdate( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::beginUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void FunctionBlockStateSetUp::update( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::update( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	void FunctionBlockStateSetUp::finishUpdate( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::finishUpdate( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );
 #endif
 	}
 
-	bool FunctionBlockStateSetUp::prepareForShutDown( FunctionBlockStateManager &states ) const
+	bool FunctionBlockStateInitialized::prepareForShutDown( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
-	void FunctionBlockStateSetUp::shutDown( FunctionBlockStateManager &states ) const
+	void FunctionBlockStateInitialized::shutDown( FunctionBlockStateManager &states ) const
 	{
 #ifdef _DEBUG
 		assert( NULL );

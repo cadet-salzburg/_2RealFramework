@@ -88,9 +88,9 @@ namespace _2Real
 		mutable Poco::FastMutex				m_EnabledAccess;
 		bool								m_IsTriggeringEnabled;
 
-		SynchronizedBool							m_IsFlaggedForSetup;
-		SynchronizedBool							m_IsFlaggedForHalting;
-		SynchronizedBool							m_IsFlaggedForShutdown;
+		SynchronizedBool					m_IsFlaggedForSetup;			// if set, block will carry out a setup after current update cycle
+		SynchronizedBool					m_IsFlaggedForHalting;			// if set, block will stop after current update cycle
+		SynchronizedBool					m_IsFlaggedForShutdown;			// if set, block will shut itself doen after current update cycle
 
 		Poco::Event							m_StopEvent;
 		Poco::Event							m_ShutdownEvent;

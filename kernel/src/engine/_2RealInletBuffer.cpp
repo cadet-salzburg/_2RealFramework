@@ -43,7 +43,7 @@ namespace _2Real
 	}
 
 	InletBuffer::InletBuffer( Any const& defaultData ) :
-		m_InsertionPolicy( new RemoveOldest( 0 ) ),
+		m_InsertionPolicy( new RemoveOldest( 1 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() ),
@@ -94,6 +94,22 @@ namespace _2Real
 		return m_TriggeringData;
 	}
 
+	//TimestampedData const& InletBuffer::getOldestBufferData()
+	//{
+	//	Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
+	//	Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+	//	if ( m_ReceivedDataItems.empty() )
+	//	{
+	//		return m_TriggeringData;
+	//	}
+	//	else
+	//	{
+	//		TimestampedData const& data = m_ReceivedDataItems.front();
+	//		m_ReceivedDataItems.pop_front();
+	//		return data;
+	//	}
+	//}
+
 	void InletBuffer::processBufferedData()
 	{
 		// no reception of data allowed during this time
@@ -123,6 +139,8 @@ namespace _2Real
 					dIt = m_ReceivedDataItems.erase( dIt );
 				}
 			}
+
+			m_TriggeringEvent.notify( m_TriggeringData ); // try fulfilling available cond!
 		//}
 		m_NotificationAccess.unlock();
 	}
