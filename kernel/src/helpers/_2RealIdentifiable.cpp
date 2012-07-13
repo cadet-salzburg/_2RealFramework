@@ -43,7 +43,7 @@ namespace _2Real
 		std::ostringstream name;
 		for ( IdConstIterator it = m_Ids.begin(); it != m_Ids.end(); ++it )
 		{
-			name << ( **it ).getType() << " : " << ( **it ).getName() << " , ";
+			name << ( **it ).getType() << ": " << ( **it ).getName() << " - ";
 		}
 		name << m_Type << " : " << m_Name;
 		return name.str();

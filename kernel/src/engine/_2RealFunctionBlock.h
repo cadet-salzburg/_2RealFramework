@@ -24,7 +24,6 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealBundle.h"
-#include "engine/_2RealBlockMetadata.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealBlockInfo.h"
@@ -33,13 +32,14 @@
 
 namespace _2Real
 {
+
 	template< typename THandle >
 	class FunctionBlock :  public AbstractUberBlock, private Handleable< THandle >
 	{
 
 	public:
 
-		FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockMetadata const& data );
+		FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info );
 		~FunctionBlock();
 
 		using Handleable< THandle >::getHandle;
@@ -77,6 +77,9 @@ namespace _2Real
 
 		void						handleException( Exception &e );
 
+		void						addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+		void						addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+
 	private:
 
 		EngineImpl					&m_Engine;
@@ -91,18 +94,18 @@ namespace _2Real
 	};
 
 	template< typename THandle >
-	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, BlockMetadata const& data ) :
-		AbstractUberBlock( owningBundle.getIds(), data.getName() ),
+	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info ) :
+		AbstractUberBlock( owningBundle.getIds(), info.getName() ),
 		Handleable< THandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_Bundle( owningBundle ),
 		m_Block( &block ),
+		m_BlockInfo( info ),
 		m_StateManager( new FunctionBlockStateManager( *this ) ),
 		m_IOManager( new FunctionBlockIOManager( *this ) ),
 		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
 	{
 		m_StateManager->m_FunctionBlock = &block;
-
 		m_StateManager->m_IOManager = m_IOManager;
 		m_StateManager->m_UpdatePolicy = m_UpdatePolicy;
 
@@ -111,33 +114,6 @@ namespace _2Real
 		
 		m_IOManager->m_StateManager = m_StateManager;
 		m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
-
-		app::BlockInfo::BlockData blockData;
-		app::BlockInfo::ParameterInfos inletInfo;
-		app::BlockInfo::ParameterInfos outletInfo;
-
-		blockData.name = data.getName();
-		blockData.description = data.getDescription();
-		blockData.category = data.getCategory();
-
-		BlockMetadata::ParamMetas const& inputMetadata = data.getInlets();
-		BlockMetadata::ParamMetas const& outputMetadata = data.getOutlets();
-
-		for ( BlockMetadata::ParamMetaConstIterator it = inputMetadata.begin(); it != inputMetadata.end(); ++it )
-		{
-			m_IOManager->addInlet( *it );
-			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
-			inletInfo.push_back( paramInfo );
-		}
-
-		for ( BlockMetadata::ParamMetaConstIterator it = outputMetadata.begin(); it != outputMetadata.end(); ++it )
-		{
-			m_IOManager->addOutlet( *it );
-			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
-			outletInfo.push_back( paramInfo );
-		}
-
-		m_BlockInfo = app::BlockInfo( blockData, inletInfo, outletInfo );
 	}
 
 	template< typename THandle >
@@ -147,6 +123,18 @@ namespace _2Real
 		delete m_IOManager;
 		delete m_StateManager;
 		delete m_Block;
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
+	{
+		m_IOManager->addInlet( name, longTypename, typeName, initialValue );
+	}
+
+	template< typename THandle >
+	void FunctionBlock< THandle >::addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
+	{
+		m_IOManager->addOutlet( name, longTypename, typeName, initialValue );
 	}
 
 	template< typename THandle >

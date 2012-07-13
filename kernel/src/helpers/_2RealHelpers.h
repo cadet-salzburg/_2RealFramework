@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "helpers/_2RealStringHelpers.h"
+
 #include <vector>
 #include <map>
 #include <list>
@@ -26,10 +28,6 @@
 
 namespace _2Real
 {
-
-	const std::string toLower( std::string const& s );
-	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
-
 	template< class T > void safeDelete( T*& pVal )
 	{
 		delete pVal;
@@ -153,6 +151,4 @@ namespace _2Real
 
 		return in;
 	}
-
-
 }

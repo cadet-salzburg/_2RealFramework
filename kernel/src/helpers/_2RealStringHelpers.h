@@ -18,35 +18,10 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
-
 #include <string>
 
 namespace _2Real
 {
-
-	class ParameterMetadata
-	{
-
-	public:
-
-		ParameterMetadata();
-		ParameterMetadata( std::string const& name, std::string const& longType, std::string const& type, Any const& defaultValue );
-
-		std::string const&	getName() const;
-		std::string const&	getLongTypename() const;
-		std::string const&	getTypename() const;
-		Any const&	getDefaultValue() const;
-
-		static void performParameterNameCheck( std::string const& name );
-
-	private:
-
-		std::string			m_Name;
-		std::string			m_Typename;
-		std::string			m_LongTypename;
-		Any					m_DefaultValue;
-
-	};
-
+	const std::string toLower( std::string const& s );
+	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
 }

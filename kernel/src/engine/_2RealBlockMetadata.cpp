@@ -23,6 +23,7 @@
 #include <sstream>
 
 using std::ostringstream;
+using std::string;
 
 namespace _2Real
 {
@@ -34,24 +35,24 @@ namespace _2Real
 	{
 	}
 
-	BlockMetadata::BlockMetadata( std::string const& name ) :
+	BlockMetadata::BlockMetadata( string const& name ) :
 		m_Name( name ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" )
 	{
 	}
 
-	std::string const& BlockMetadata::getName() const
+	string const& BlockMetadata::getName() const
 	{
 		return m_Name;
 	}
 
-	std::string const& BlockMetadata::getDescription() const
+	string const& BlockMetadata::getDescription() const
 	{
 		return m_Description;
 	}
 
-	void BlockMetadata::setDescription(std::string const& description)
+	void BlockMetadata::setDescription( string const& description )
 	{
 		m_Description = description;
 	}
@@ -61,7 +62,7 @@ namespace _2Real
 		return m_Category;
 	}
 
-	void BlockMetadata::setCategory(std::string const& category)
+	void BlockMetadata::setCategory( string const& category )
 	{
 		m_Category = category;
 	}
@@ -73,7 +74,7 @@ namespace _2Real
 			if ( it->getName() == data.getName() )
 			{
 				ostringstream msg;
-				msg << "inlet named " << data.getName() << " is already defined in " << getName() << std::endl;
+				msg << "inlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -88,7 +89,7 @@ namespace _2Real
 			if ( it->getName() == data.getName() )
 			{
 				ostringstream msg;
-				msg << "outlet named " << data.getName() << " is already defined in " << getName() << std::endl;
+				msg << "outlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -104,6 +105,10 @@ namespace _2Real
 	BlockMetadata::ParamMetas const& BlockMetadata::getOutlets() const
 	{
 		return m_Outlets;
+	}
+
+	void BlockMetadata::performBlockNameCheck( string const& name )
+	{
 	}
 
 }

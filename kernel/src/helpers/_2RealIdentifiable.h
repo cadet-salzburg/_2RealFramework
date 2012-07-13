@@ -53,7 +53,7 @@ namespace _2Real
 
 		std::string				const m_Type;
 		std::string				m_Name;
-		Ids						const m_Ids;
+		Ids						m_Ids;
 
 	};
 
@@ -68,28 +68,28 @@ namespace _2Real
 	class Identifiable< Bundle > : public AbstractIdentifiable
 	{
 	protected:
-		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "BUNDLE", name ) {}
+		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "bundle", name ) {}
 	};
 
 	template< >
 	class Identifiable< AbstractUberBlock > : public AbstractIdentifiable
 	{
 	protected:
-		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "BLOCK", name ) {}
+		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "block", name ) {}
 	};
 
 	template< >
 	class Identifiable< Outlet > : public AbstractIdentifiable
 	{
 	protected:
-		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "OUTLET", name ) {}
+		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "outlet", name ) {}
 	};
 
 	template< >
 	class Identifiable< Inlet > : public AbstractIdentifiable
 	{
 	protected:
-		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "INLET", name ) {}
+		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "inlet", name ) {}
 	};
 
 }

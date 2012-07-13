@@ -21,6 +21,7 @@
 #include "app/_2RealBundleInfo.h"
 #include "engine/_2RealBundle.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStringHelpers.h"
 
 #define checkValidity( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "bundle handle not initialized" );
@@ -127,7 +128,7 @@ namespace _2Real
 		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
 		{
 			checkValidity( m_Bundle );
-			return m_Bundle->createBlockInstance( blockName );
+			return m_Bundle->createBlockInstance( toLower( trim( blockName ) ) );
 		}
 
 		void BundleHandle::invalidate()

@@ -59,7 +59,7 @@ namespace _2Real
 
 		bundle::ContextBlockMetainfo & setContextBlockCreator( bundle::AbstractBlockCreator &obj );
 		bundle::BlockMetainfo & setBlockCreator( std::string const& blockName, bundle::AbstractBlockCreator &obj );
-		void addContextDependentInlet( std::string const& name, Any const& val );
+		void addGlobalInlet( std::string const& name, Any const& initialValue );
 
 		bool hasContext() const;
 		bundle::Block & createBlock( std::string const& blockName ) const;
@@ -93,14 +93,14 @@ namespace _2Real
 		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
 		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
 
-		typedef std::list< ParameterMetadata >							Parameters;
-		typedef std::list< ParameterMetadata >::iterator				ParameterIterator;
-		typedef std::list< ParameterMetadata >::const_iterator			ParameterConstIterator;
+		typedef std::list< ParameterMetadata >						Parameters;
+		typedef std::list< ParameterMetadata >::iterator			ParameterIterator;
+		typedef std::list< ParameterMetadata >::const_iterator		ParameterConstIterator;
 
 		bool										m_HasContext;
 		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
-		BundleMetadata									m_BundleData;
+		BundleMetadata								m_BundleData;
 		Typetable									const& m_Typetable;
 		Parameters									m_GlobalInlets;
 

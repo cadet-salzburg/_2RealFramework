@@ -49,6 +49,8 @@ namespace _2Real
 		ParamMetas const& getInlets() const;
 		ParamMetas const& getOutlets() const;
 
+		static void performBlockNameCheck( std::string const& name );
+
 	private:
 
 		std::string			m_Name;

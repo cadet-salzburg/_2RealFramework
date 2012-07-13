@@ -20,6 +20,7 @@
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealTypetable.h"
+#include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
@@ -36,11 +37,11 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& defaultValue )
+		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& initialValue )
 		{
-			const std::string longTypename = defaultValue.getTypename();
+			const std::string longTypename = initialValue.getTypename();
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterMetadata data( inletName, longTypename, typeName, defaultValue );
+			ParameterMetadata data( toLower( trim( inletName ) ), longTypename, typeName, initialValue );
 			m_Impl.addInlet( data );
 		}
 
@@ -54,7 +55,7 @@ namespace _2Real
 			Any val;
 			val.cloneFrom( defaultConstructed );
 
-			ParameterMetadata data( outletName, longTypename, typeName, val );
+			ParameterMetadata data( toLower( trim( outletName ) ), longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

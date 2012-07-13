@@ -27,7 +27,7 @@
 #include "engine/_2RealTypetable.h"
 
 #include <sstream>
-#include <iostream>
+#include <assert.h>
 
 using std::string;
 using std::ostringstream;
@@ -107,14 +107,13 @@ namespace _2Real
 		if ( m_HasContext )
 		{
 			ostringstream msg;
-			msg << "bundles' context block was already exported " << m_BundleData.getName();
+			msg << "context block is already defined in bundle " << m_BundleData.getName();
 			throw AlreadyExistsException( msg.str() );
 		}
 
 		m_ContextInfo.ctor = &obj;
-		// TODO: reserve name for context
-		m_ContextInfo.data = new BlockMetadata( "bundle context" );
-		m_ContextInfo.data->setDescription( "context for all other blocks exported by the bundle" );
+		m_ContextInfo.data = new BlockMetadata( "context block" );
+		m_ContextInfo.data->setDescription( "context block" );
 		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data, m_Typetable );
 
 		m_HasContext = true;
@@ -127,7 +126,7 @@ namespace _2Real
 		if ( m_BlockInfos.find( blockName ) != m_BlockInfos.end() )
 		{
 			ostringstream msg;
-			msg << "block " << blockName << " was exported already " << m_BundleData.getName();
+			msg << "block " << blockName << " is already defined in bundle " << m_BundleData.getName();
 			throw AlreadyExistsException( msg.str() );
 		}
 
@@ -142,16 +141,14 @@ namespace _2Real
 
 	bundle::Block & Metainfo::createContextBlock() const
 	{
-		if ( m_HasContext )
+#ifdef _DEBUG
+		if ( m_ContextInfo.ctor == nullptr )
 		{
-			return m_ContextInfo.ctor->create( nullptr );
+			assert( NULL );
 		}
-		else
-		{
-			ostringstream msg;
-			msg << "no bundle context declared in " << m_BundleData.getName();
-			throw NotFoundException( msg.str() );
-		}
+#endif
+
+		return m_ContextInfo.ctor->create( nullptr );
 	}
 
 	bundle::Block & Metainfo::createBlock( string const& blockName ) const
@@ -194,11 +191,11 @@ namespace _2Real
 		}
 	}
 
-	void Metainfo::addContextDependentInlet( std::string const& name, Any const& defaultValue )
+	void Metainfo::addGlobalInlet( std::string const& name, Any const& initialValue )
 	{
-		const std::string longTypename = defaultValue.getTypename();
+		const std::string longTypename = initialValue.getTypename();
 		const std::string typeName = m_Typetable.lookupTypename( longTypename );
-		ParameterMetadata data( name, longTypename, typeName, defaultValue );
+		ParameterMetadata data( name, longTypename, typeName, initialValue );
 		m_GlobalInlets.push_back( data );
 	}
 

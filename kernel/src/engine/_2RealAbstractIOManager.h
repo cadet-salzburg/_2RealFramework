@@ -45,12 +45,11 @@ namespace _2Real
 		class OutletHandle;
 	}
 
-	class TimestampedData;
-	class AbstractUberBlock;
 	class Inlet;
 	class InletBuffer;
 	class Outlet;
-	class ParameterMetadata;
+	class TimestampedData;
+	class AbstractUberBlock;
 
 	class InletIO : private NonCopyable< InletIO >, private Handleable< app::InletHandle >
 	{
@@ -61,7 +60,7 @@ namespace _2Real
 		using Handleable< app::InletHandle >::registerHandle;
 		using Handleable< app::InletHandle >::unregisterHandle;
 
-		InletIO( AbstractUberBlock &owner, ParameterMetadata const& data );
+		InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 		~InletIO();
 		Inlet													*m_Inlet;
 		InletBuffer												*m_Buffer;
@@ -77,7 +76,7 @@ namespace _2Real
 		using Handleable< app::OutletHandle >::registerHandle;
 		using Handleable< app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, ParameterMetadata const& data );
+		OutletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;

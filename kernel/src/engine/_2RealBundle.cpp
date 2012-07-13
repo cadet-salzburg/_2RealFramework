@@ -49,11 +49,6 @@ namespace _2Real
 
 	void Bundle::clear()
 	{
-		//for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
-		//{
-		//	delete it->second;
-		//	it = m_BlockInstances.erase( it );
-		//}
 		m_BlockInstances.clear();
 	}
 
@@ -64,7 +59,14 @@ namespace _2Real
 
 	app::BlockHandle & Bundle::createBlockInstance( std::string const& blockName )
 	{
-		return m_BundleManager.createBlockInstance( *this, blockName ).getHandle();
+		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName );
+
+		ostringstream name;
+		name << blockName << " # " << getBlockInstanceCount( blockName );
+		block->setName( name.str() );
+
+		m_BlockInstances.insert( make_pair( blockName, block ) );
+		return block->getHandle();
 	}
 
 	app::ContextBlockHandle & Bundle::getContextBlockHandle() const
@@ -82,11 +84,6 @@ namespace _2Real
 		}
 
 		return counter;
-	}
-
-	void Bundle::addBlockInstance( FunctionBlock< app::BlockHandle > &block, string const& blockName )
-	{
-		m_BlockInstances.insert( make_pair( blockName, &block ) );
 	}
 
 	void Bundle::setContextBlock( FunctionBlock< app::ContextBlockHandle > &context )

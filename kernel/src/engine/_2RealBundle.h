@@ -60,10 +60,8 @@ namespace _2Real
 		void						clear();
 		app::BundleInfo const&		getBundleInfo() const;
 		app::ContextBlockHandle &	getContextBlockHandle() const;
-		app::BlockHandle &			createBlockInstance( std::string const& blockName );
-
 		void						setContextBlock( FunctionBlock< app::ContextBlockHandle > &context );
-		void						addBlockInstance( FunctionBlock< app::BlockHandle > &block, std::string const& blockName );
+		app::BlockHandle &			createBlockInstance( std::string const& blockName );
 
 	private:
 

@@ -261,6 +261,9 @@
     <ClInclude Include="..\..\src\app\_2RealParameterInfo.h">
       <Filter>include\app</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
@@ -273,9 +276,6 @@
       <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealHandleable.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHelpers.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealIdentifiable.cpp">
@@ -424,6 +424,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBundleInfo.cpp">
       <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
+      <Filter>src\helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

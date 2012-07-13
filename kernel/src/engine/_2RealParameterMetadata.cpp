@@ -58,4 +58,8 @@ namespace _2Real
 		return m_DefaultValue;
 	}
 
+	void ParameterMetadata::performParameterNameCheck( std::string const& name )
+	{
+	}
+
 }

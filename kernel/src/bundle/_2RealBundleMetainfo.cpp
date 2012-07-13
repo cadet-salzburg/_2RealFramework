@@ -19,6 +19,7 @@
 #include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealMetainfo.h"
 #include "helpers/_2RealVersion.h"
+#include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
@@ -31,7 +32,7 @@ namespace _2Real
 
 		void BundleMetainfo::setDescription( std::string const& description )
 		{
-			m_Impl.setDescription( description );
+			m_Impl.setDescription( trim( description ) );
 		}
 
 		void BundleMetainfo::setVersion( unsigned int major, unsigned int minor, unsigned int revision )
@@ -41,17 +42,17 @@ namespace _2Real
 
 		void BundleMetainfo::setAuthor( std::string const& author )
 		{
-			m_Impl.setAuthor( author );
+			m_Impl.setAuthor( trim( author ) );
 		}
 
 		void BundleMetainfo::setContact( std::string const& contact )
 		{
-			m_Impl.setContact( contact );
+			m_Impl.setContact( trim( contact ) );
 		}
 
 		void BundleMetainfo::setCategory( std::string const& category )
 		{
-			m_Impl.setCategory( category );
+			m_Impl.setCategory( trim( category ) );
 		}
 
 		ContextBlockMetainfo & BundleMetainfo::exportContextBlockInternal( AbstractBlockCreator &obj )
@@ -61,13 +62,7 @@ namespace _2Real
 
 		BlockMetainfo & BundleMetainfo::exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName )
 		{
-			// TODO: perform block namecheck ( name != bundle context ), convert to lowercase
-			return m_Impl.setBlockCreator( blockName, obj );
-		}
-
-		void BundleMetainfo::addInletInternal( std::string const& inletName, Any const& defaultValue )
-		{
-			m_Impl.addContextDependentInlet( inletName, defaultValue );
+			return m_Impl.setBlockCreator( toLower( trim( blockName ) ), obj );
 		}
 	}
 }

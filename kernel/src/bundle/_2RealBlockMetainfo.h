@@ -40,9 +40,9 @@ namespace _2Real
 			void setDescription( std::string const& description );
 
 			template< typename Datatype >
-			void addInlet( std::string const& inletName, Datatype defaultValue )
+			void addInlet( std::string const& inletName, Datatype initialValue )
 			{
-				addInletInternal( inletName, Any( defaultValue ) );
+				addInletInternal( inletName, Any( initialValue ) );
 			}
 
 			template< typename Datatype >
@@ -53,7 +53,7 @@ namespace _2Real
 
 		private:
 
-			void		addInletInternal( std::string const& inletName, Any const& defaultValue );
+			void		addInletInternal( std::string const& inletName, Any const& initialValue );
 			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 
 			BlockMetadata	&m_Impl;

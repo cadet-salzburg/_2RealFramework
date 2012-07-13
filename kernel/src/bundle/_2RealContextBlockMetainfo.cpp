@@ -20,6 +20,7 @@
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealTypetable.h"
+#include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {

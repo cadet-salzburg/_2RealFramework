@@ -19,6 +19,7 @@
 #include "app/_2RealBlockHandle.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStringHelpers.h"
 
 #define checkValidity( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );
@@ -145,13 +146,13 @@ namespace _2Real
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppInletHandle( name );
+			return m_Block->getAppInletHandle( toLower( trim( name ) ) );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( name );
+			return m_Block->getAppOutletHandle( toLower( trim( name ) ) );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const

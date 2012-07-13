@@ -138,18 +138,18 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( ParameterMetadata const& data )
+	void FunctionBlockIOManager::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
 	{
-		InletIO *io = new InletIO( m_Owner, data );
+		InletIO *io = new InletIO( m_Owner, name, longTypename, typeName, initialValue );
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->m_Inlet->getHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( ParameterMetadata const& data )
+	void FunctionBlockIOManager::addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
 	{
-		OutletIO *io = new OutletIO( m_Owner, data );
+		OutletIO *io = new OutletIO( m_Owner, name, longTypename, typeName, initialValue );
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );
 		m_BundleOutletHandles.push_back( io->m_Outlet->getHandle() );

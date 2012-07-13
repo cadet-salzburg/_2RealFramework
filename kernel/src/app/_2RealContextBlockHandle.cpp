@@ -19,6 +19,7 @@
 #include "app/_2RealContextBlockHandle.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStringHelpers.h"
 
 using std::string;
 
@@ -126,7 +127,7 @@ namespace _2Real
 		OutletHandle & ContextBlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( name );
+			return m_Block->getAppOutletHandle( toLower( trim( name ) ) );
 		}
 
 		ContextBlockHandle::OutletHandles const& ContextBlockHandle::getAllOutletHandles() const
