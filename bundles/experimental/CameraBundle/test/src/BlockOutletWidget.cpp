@@ -47,7 +47,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 
 		dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
 	}
-	else if( m_OutletHandle.getTypename() == "double" )
+	else if( m_OutletHandle.getTypename() == "int" || m_OutletHandle.getTypename() == "double" )
 	{
 		dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 	}

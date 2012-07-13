@@ -31,6 +31,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		cameraCapture.addInlet<int>( "Height", 240 );
 		cameraCapture.addInlet<int>( "Fps", 30 );
 		cameraCapture.addOutlet< ImageT<unsigned char> >("ImageData");
+		cameraCapture.addOutlet<int>( "Width" );
+		cameraCapture.addOutlet<int>( "Height" );
+	
 		cameraCapture.setDescription( "Camera Capture" );
 	}
 	catch ( Exception &e )

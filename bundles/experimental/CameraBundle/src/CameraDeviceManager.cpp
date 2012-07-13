@@ -167,8 +167,9 @@ bool CameraDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, i
 	return false;
 }
 
-unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
+unsigned int CameraDeviceManager::getNumberOfConnectedDevices() 
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	return m_iNumDevices;
 }
 
