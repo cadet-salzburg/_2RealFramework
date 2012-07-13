@@ -61,7 +61,7 @@ public:
 
 	Receiver()
 	{
-		ImageT< float > img( 4, 3, _2Real::ImageChannelOrder::RGBA );
+		ImageT< float > img( 8, 6, _2Real::ImageChannelOrder::RGBA );
 		ImageT< float >::iterator it = img.iter();
 		while( it.nextLine() )
 		{
@@ -83,7 +83,7 @@ public:
 		glEnable( GL_TEXTURE_2D );
 		glBindTexture( GL_TEXTURE_2D, m_Texture );
 
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 8, 6, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glGenerateMipmap( GL_TEXTURE_2D );
@@ -96,13 +96,10 @@ public:
 
 	void updateTexture()
 	{
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 8, 6, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glGenerateMipmap( GL_TEXTURE_2D );
-
-		// have the update take extra long
-		/*Sleep( 1000 );*/
 	}
 
 	void receiveData( AppData const& data )
@@ -166,7 +163,7 @@ int main( int argc, char *argv[] )
 	{
 		SDL_Init( SDL_INIT_VIDEO );
 
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
 		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
@@ -202,27 +199,17 @@ int main( int argc, char *argv[] )
 		SDL_Event *ev = new SDL_Event;
 		while( run )
 		{
-			//while( SDL_PollEvent( ev ) )
-			//{
-				//switch ( ev->type )
-				//{
-				//case SDL_QUIT:
-					//oOut.unregisterFromNewData( receiver, &Receiver::receiveData );
-				//	run = false;
-				//	break;
-				//default:
-				//	break;
-				//}
-			//}
-
-			string line;
-			char lineEnd = '\n';
-			getline( cin, line, lineEnd );
-			if ( line == "quit" )
+			while( SDL_PollEvent( ev ) )
 			{
-				oOut.unregisterFromNewData( receiver, &Receiver::receiveData );
-				run = false;
-				break;
+				switch ( ev->type )
+				{
+				case SDL_QUIT:
+					oOut.unregisterFromNewData( receiver, &Receiver::receiveData );
+					run = false;
+					break;
+				default:
+					break;
+				}
 			}
 
 			receiver.useData();

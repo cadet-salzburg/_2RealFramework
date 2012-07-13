@@ -19,7 +19,7 @@ void ImageOut::setup( BlockHandle &context )
 		m_Out = context.getOutletHandle( "image outlet" );
 
 		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
-		outImg = ImageT< float >( 4, 3, ImageChannelOrder::RGBA );
+		outImg = ImageT< float >( 8, 6, ImageChannelOrder::RGBA );
 
 		ImageT< float >::iterator it = outImg.iter();
 		while( it.nextLine() )
