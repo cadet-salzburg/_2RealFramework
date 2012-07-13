@@ -18,6 +18,11 @@
 
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
+#include "helpers/_2RealException.h"
+
+#include <sstream>
+
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -63,11 +68,31 @@ namespace _2Real
 
 	void BlockMetadata::addInlet( ParameterMetadata const& data )
 	{
+		for ( BlockMetadata::ParamMetaIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			if ( it->getName() == data.getName() )
+			{
+				ostringstream msg;
+				msg << "inlet named " << data.getName() << " is already defined in " << getName() << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
 		m_Inlets.push_back( data );
 	}
 
 	void BlockMetadata::addOutlet( ParameterMetadata const& data )
 	{
+		for ( BlockMetadata::ParamMetaIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			if ( it->getName() == data.getName() )
+			{
+				ostringstream msg;
+				msg << "outlet named " << data.getName() << " is already defined in " << getName() << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
 		m_Outlets.push_back( data );
 	}
 
