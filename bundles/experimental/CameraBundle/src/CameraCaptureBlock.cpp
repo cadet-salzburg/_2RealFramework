@@ -26,19 +26,19 @@ void CameraCaptureBlock::setup( BlockHandle &block )
 	try
 	{
 		// inlet handles
-		m_DeviceIndexInletHandle	= block.getInletHandle("DeviceIndex");
-		m_WidthInletHandle = block.getInletHandle("Width");
-		m_HeightInletHandle = block.getInletHandle("Height");
-		m_FpsInletHandle = block.getInletHandle("Fps");
+		m_DeviceIndexInletHandle = block.getInletHandle("deviceindex");
+		m_WidthInletHandle = block.getInletHandle("width");
+		m_HeightInletHandle = block.getInletHandle("height");
+		m_FpsInletHandle = block.getInletHandle("fps");
 
 		m_iWidth = m_WidthInletHandle.getReadableRef<int>();
 		m_iHeight = m_HeightInletHandle.getReadableRef<int>();
 		m_iFps = m_FpsInletHandle.getReadableRef<int>();
 
 		// outlet handles
-		m_ImageOutletHandle = block.getOutletHandle("ImageData" );
-		m_WidthOutletHandle = block.getOutletHandle("Width" );
-		m_HeightOutletHandle = block.getOutletHandle("Height" );
+		m_ImageOutletHandle = block.getOutletHandle("imagedata" );
+		m_WidthOutletHandle = block.getOutletHandle("width" );
+		m_HeightOutletHandle = block.getOutletHandle("height" );
 
 		m_WidthOutletHandle.getWriteableRef<int>() = 0;
 		m_HeightOutletHandle.getWriteableRef<int>() = 0;

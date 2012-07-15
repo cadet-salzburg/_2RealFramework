@@ -19,20 +19,19 @@ BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string block
 
 void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName)
 {
-
 	try 
 	{
-		m_CameraBlockHandle = bundleHandle.createBlockInstance( "CameraCaptureBlock" );
-		BlockInfo const& blockData = m_CameraBlockHandle.getBlockInfo();
+		m_BlockHandle = bundleHandle.createBlockInstance( blockName );
+		BlockInfo const& blockData = m_BlockHandle.getBlockInfo();
 		m_fDefaultFps = 30.0;
-		m_CameraBlockHandle.setUpdateRate( m_fDefaultFps );	
+		m_BlockHandle.setUpdateRate( m_fDefaultFps );	
 		
 		// setup initializes default values of block
-		m_CameraBlockHandle.setup();
+		m_BlockHandle.setup();
 		// start the block
-		m_CameraBlockHandle.start();
+		m_BlockHandle.start();
 		// register new data callback (in this case not specific to an outlet, but gives you all outlet data)
-		m_CameraBlockHandle.registerToNewData( *this, &BlockUnitTestWidget::receiveData );
+		m_BlockHandle.registerToNewData( *this, &BlockUnitTestWidget::receiveData );
 	}
 	catch ( Exception &e )
 	{
@@ -44,7 +43,6 @@ void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName
 
 void BlockUnitTestWidget::shutdown()
 {
-	Engine::instance().clearAll();
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -97,12 +95,12 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 QGroupBox* BlockUnitTestWidget::createInletWidgets()
 {
 	QGroupBox *groupBox = new QGroupBox("Inlets");
-	BlockInfo::ParameterInfos inlets = m_CameraBlockHandle.getBlockInfo().getInlets();
+	BlockInfo::ParameterInfos inlets = m_BlockHandle.getBlockInfo().getInlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
 	for(auto it = inlets.begin(); it != inlets.end(); it++)
 	{
-		BlockInletWidget* tmp = new BlockInletWidget(  m_CameraBlockHandle.getInletHandle(it->getName()) );
+		BlockInletWidget* tmp = new BlockInletWidget(  m_BlockHandle.getInletHandle(it->getName()) );
 		layout->addWidget(tmp);
 	}
 
@@ -113,12 +111,12 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 {
 	QGroupBox* groupBox = new QGroupBox("Outlets");
-	BlockInfo::ParameterInfos outlets = m_CameraBlockHandle.getBlockInfo().getOutlets();
+	BlockInfo::ParameterInfos outlets = m_BlockHandle.getBlockInfo().getOutlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
 	for(auto it = outlets.begin(); it != outlets.end(); it++)
 	{
-		BlockOutletWidget* tmp = new BlockOutletWidget( m_CameraBlockHandle.getOutletHandle(it->getName()), this );
+		BlockOutletWidget* tmp = new BlockOutletWidget( m_BlockHandle.getOutletHandle(it->getName()), this );
 		layout->addWidget(tmp);
 	}
 
@@ -133,7 +131,7 @@ void BlockUnitTestWidget::onStart()
 
 	try
 	{
-		m_CameraBlockHandle.start();
+		m_BlockHandle.start();
 
 	}
 	catch ( Exception &e )
@@ -159,7 +157,7 @@ void BlockUnitTestWidget::stopBlock()
 {
 	try
 	{
-		m_CameraBlockHandle.stop();
+		m_BlockHandle.stop();
 	}
 	catch ( Exception &e )
 	{
@@ -174,8 +172,8 @@ void BlockUnitTestWidget::onSingleStep()
 
 	try
 	{
-		m_CameraBlockHandle.stop();
-		m_CameraBlockHandle.singleStep();
+		m_BlockHandle.stop();
+		m_BlockHandle.singleStep();
 	}
 	catch ( Exception &e )
 	{
@@ -187,7 +185,7 @@ void BlockUnitTestWidget::setFpsValue(double value)
 {
 	try
 	{
-		m_CameraBlockHandle.setUpdateRate( value );
+		m_BlockHandle.setUpdateRate( value );
 	}
 	catch ( Exception &e )
 	{

@@ -29,7 +29,7 @@ private:
 	QGroupBox* createOutletWidgets();
 
 	//_2Real
-	_2Real::app::BlockHandle    m_CameraBlockHandle;
+	_2Real::app::BlockHandle    m_BlockHandle;
 
 	// buttons for starting and stoppping (stopping is called asynchronously via the QFuture Mechanism)
 	QPushButton*				m_pStartButton;

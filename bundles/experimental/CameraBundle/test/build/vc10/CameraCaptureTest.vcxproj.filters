@@ -5,12 +5,6 @@
     <ClCompile Include="..\..\src\BlockOutletWidget.cpp" />
     <ClCompile Include="..\..\src\BlockUnitTestWidget.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_TestImageWidget.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_TestImageWidget.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_BlockInletWidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -29,13 +23,19 @@
     <ClCompile Include="GeneratedFiles\Release\moc_BlockUnitTestWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\TestImageWidget.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_BundleUnitTestWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BundleUnitTestWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BundleUnitTestWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\BlockUnitTestWidget.h" />
     <CustomBuild Include="..\..\src\BlockOutletWidget.h" />
     <CustomBuild Include="..\..\src\BlockInletWidget.h" />
-    <CustomBuild Include="..\..\src\TestImageWidget.h" />
+    <CustomBuild Include="..\..\src\BundleUnitTestWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\todo.txt" />
