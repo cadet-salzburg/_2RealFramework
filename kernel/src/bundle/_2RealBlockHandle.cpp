@@ -18,6 +18,7 @@
 
 #include "bundle/_2RealBlockHandle.h"
 #include "engine/_2RealFunctionBlockIOManager.h"
+#include "helpers/_2RealStringHelpers.h"
 
 using std::string;
 
@@ -32,12 +33,12 @@ namespace _2Real
 
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
-			return m_Impl.getBundleInletHandle( name );
+			return m_Impl.getBundleInletHandle( toLower( trim ( name ) ) );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
-			return m_Impl.getBundleOutletHandle( name );
+			return m_Impl.getBundleOutletHandle( toLower( trim ( name ) ) );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const

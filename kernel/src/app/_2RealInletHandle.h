@@ -76,7 +76,6 @@ namespace _2Real
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
 
-			// default = 0 = no buffering
 			void				setBufferSize( const unsigned int size );
 
 		protected:
