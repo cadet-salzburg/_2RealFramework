@@ -1,4 +1,4 @@
-#include "BundleUnitTestWidget.h"
+#include "_2RealBundlesUnitTest.h"
 #include <QtGui/QApplication>
 
 #include <windows.h>

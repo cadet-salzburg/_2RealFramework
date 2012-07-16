@@ -1,11 +1,17 @@
 #ifndef BUNDLEUNITTESTWIDGET_H
 #define BUNDLEUNITTESTWIDGET_H
 
+#if defined _2REAL_UNIT_TEST_EXPORT
+#define _2REAL_UNIT_TEST_DLLSPEC  Q_DECL_EXPORT
+#else
+#define _2REAL_UNIT_TEST_DLLSPEC Q_DECL_IMPORT
+#endif
+
 #include <QObject>
 #include "_2RealApplication.h"
 #include "BlockUnitTestWidget.h"
 
-class BundleUnitTestWidget : public QWidget
+class _2REAL_UNIT_TEST_DLLSPEC BundleUnitTestWidget : public QWidget
 {
 	Q_OBJECT
 
