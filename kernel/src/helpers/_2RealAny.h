@@ -56,7 +56,7 @@ namespace _2Real
 		template< typename T >
 		bool isDatatype() const
 		{
-			return m_Content->getTypename() == typeinfo( T ).name();
+			return m_Content->getTypename() == typeid( T ).name();
 		}
 
 		bool isEmpty() const;

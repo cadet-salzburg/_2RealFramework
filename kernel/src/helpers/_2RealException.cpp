@@ -38,7 +38,7 @@ namespace _2Real
 	{
 	}
 
-	Exception::~Exception()
+	Exception::~Exception() throw()
 	{
 	}
 
@@ -58,7 +58,7 @@ namespace _2Real
 		return typeid( *this ).name();
 	}
 
-	const char* Exception::what() const
+	const char* Exception::what() const throw()
 	{
 		return name();
 	}

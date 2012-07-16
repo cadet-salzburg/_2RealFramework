@@ -74,7 +74,7 @@ namespace _2Real
 		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( TArg & );
 
 		MemberCallback( TCallable &callable, Callback method ) :
-			AbstractCallback( &callable ),
+			AbstractCallback< TArg >( &callable ),
 			m_Callable( callable ),
 			m_Method( method )
 		{
@@ -101,7 +101,7 @@ namespace _2Real
 		typedef void ( _2REAL_CALLBACK *CallbackFunction )( void *, TArg & );
 
 		FunctionCallback( CallbackFunction func, void *userData ) :
-			AbstractCallback( func ),
+			AbstractCallback< TArg >( func ),
 			m_UserData( userData ),
 			m_Function( func )
 		{

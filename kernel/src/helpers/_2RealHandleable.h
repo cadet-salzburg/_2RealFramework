@@ -54,7 +54,7 @@ namespace _2Real
 		{
 		}
 
-		~Handleable()
+		virtual ~Handleable()
 		{
 			delete m_Handle;
 		}

@@ -18,16 +18,19 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include "helpers/_2RealHandle.h"
 #include "app/_2RealCallbacks.h"
 
-#include <vector>
+
 
 namespace _2Real
 {
 	template< typename T >
 	class FunctionBlock;
-	
+
 	namespace app
 	{
 		class OutletHandle;
@@ -44,7 +47,7 @@ namespace _2Real
 
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block );
-			~ContextBlockHandle();
+			virtual ~ContextBlockHandle();
 			ContextBlockHandle( ContextBlockHandle const& other );
 			ContextBlockHandle& operator=( ContextBlockHandle const& other );
 

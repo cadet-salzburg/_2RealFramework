@@ -88,11 +88,9 @@ namespace _2Real
 			return m_UndefinedValue;
 		}
 
-		template< typename V >
-		friend std::ostream& operator<<( std::ostream& out, typename Enumeration< V > const& e );
+		friend std::ostream& operator<<( std::ostream& out, Enumeration< V > const& e );
 
-		template< typename V >
-		friend std::istream& operator>>( std::istream& in, typename Enumeration< V > &e );
+		friend std::istream& operator>>( std::istream& in, Enumeration< V > &e );
 
 	private:
 
@@ -112,14 +110,14 @@ namespace _2Real
 	};
 
 	template< typename V >
-	std::ostream& operator<<( std::ostream& out, typename Enumeration< V > const& e )
+	std::ostream& operator<<( std::ostream& out, Enumeration< V > const& e )
 	{
 		e.writeTo( out );
 		return out;
 	}
 
 	template< typename V >
-	std::istream& operator>>( std::istream& in, typename Enumeration< V > &e )
+	std::istream& operator>>( std::istream& in, Enumeration< V > &e )
 	{
 		e.readFrom( in );
 		return in;

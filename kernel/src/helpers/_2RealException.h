@@ -19,7 +19,11 @@
 #pragma once
 
 #include <stdexcept>
-#include <typeinfo.h>
+#ifdef _UNIX
+    #include <typeinfo>
+#else
+    #include <typeinfo.h>
+#endif
 
 namespace _2Real
 {
@@ -35,7 +39,7 @@ namespace _2Real
 
 		virtual const char* name() const;
 		virtual const char* className() const;
-		virtual const char* what() const;
+		virtual const char* what() const throw();
 
 		std::string const& message() const;
 
@@ -60,7 +64,7 @@ namespace _2Real
 		CLS();										\
 		CLS(std::string const& msg);				\
 		CLS(CLS const& src);						\
-		~CLS();										\
+		~CLS() throw();										\
 		CLS& operator=(CLS const& src);				\
 		const char* name() const;					\
 		const char* className() const;				\
@@ -78,7 +82,7 @@ namespace _2Real
 	CLS::CLS(CLS const& src): BASE(src)				\
 	{												\
 	}												\
-	CLS::~CLS()										\
+	CLS::~CLS() throw()										\
 	{												\
 	}												\
 	CLS& CLS::operator=(CLS const& src)				\

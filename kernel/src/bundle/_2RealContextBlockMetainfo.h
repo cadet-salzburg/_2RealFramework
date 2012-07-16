@@ -20,6 +20,10 @@
 
 #include <string>
 
+#ifdef _UNIX
+    #include <typeinfo>
+#endif
+
 namespace _2Real
 {
 	class BlockMetadata;

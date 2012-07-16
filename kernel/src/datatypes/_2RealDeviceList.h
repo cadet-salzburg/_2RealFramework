@@ -42,7 +42,7 @@ namespace _2Real
 		std::string const& getDescription() const { return m_Description; }
 		bool isUsed() const { return m_IsUsed; }
 
-		bool setUsage( const bool isUsed ) { m_IsUsed = isUsed; }
+		bool setUsage( const bool isUsed ) { return (m_IsUsed = isUsed); }
 
 	private:
 

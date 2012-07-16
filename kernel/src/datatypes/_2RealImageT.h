@@ -23,6 +23,11 @@
 #include <stdint.h>
 #include <memory>
 
+//stdio is not pulled in automatically on unix (ottona)
+#ifdef _UNIX
+    #include <string.h>
+#endif
+
 namespace _2Real
 {
 
@@ -59,11 +64,11 @@ namespace _2Real
 		uint8_t			m_BlueOffset;
 		uint8_t			m_AlphaOffset;
 		uint8_t			m_NumChannels;
-	
+
 	};
 
 	template< typename T >
-	class ImageChannelT 
+	class ImageChannelT
 	{
 
 	private:
@@ -201,7 +206,7 @@ namespace _2Real
 
 		};
 
-		class const_iterator 
+		class const_iterator
 		{
 
 		public:
@@ -210,8 +215,8 @@ namespace _2Real
 				m_Increment(channel.getIncrement()), m_RowPitch(channel.getRowPitch()),
 				m_Width(channel.getWidth()), m_Height(channel.getHeight())
 			{
-				mLinePtr = reinterpret_cast< uint8_t const* >(channel.getData());
-				mPtr = reinterpret_cast< T const* >(m_LinePtr);
+				m_LinePtr = reinterpret_cast< uint8_t const* >(channel.getData());
+				m_Ptr = reinterpret_cast< T const* >(m_LinePtr);
 				m_StartX = m_X = 0;
 				m_StartY = m_Y = 0;
 				m_EndX = m_Width();
@@ -234,9 +239,9 @@ namespace _2Real
 			const bool nextLine()
 			{
 				++m_Y;
-				m_LinePtr += m_RowIncrement;
+				//m_LinePtr += m_RowIncrement;
 				m_Ptr = reinterpret_cast< T const* >(m_LinePtr);
-				m_Ptr -= m_Inc;
+				//m_Ptr -= m_Inc;
 				m_X = m_StartX - 1;
 				return m_Y < m_EndY;
 			}
@@ -257,7 +262,7 @@ namespace _2Real
 	};
 
 	template< typename T >
-	class ImageT 
+	class ImageT
 	{
 
 	public:
@@ -315,10 +320,8 @@ namespace _2Real
 			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, ownsData, width, height, rowBytes, channelOrder) );
 		}
 
-		template< typename T >
 		friend std::ostream& operator<<(std::ostream& out, ImageT< T > const& img);
 
-		template< typename T >
 		friend std::istream& operator>>(std::istream& in, ImageT< T > &img);
 
 		const uint32_t				getWidth() const { return m_ImageObject->m_Width; }
@@ -409,7 +412,7 @@ namespace _2Real
 
 		class iterator
 		{
-		
+
 		public:
 
 			iterator(ImageT< T > &image) :
@@ -425,7 +428,7 @@ namespace _2Real
 				m_StartY = m_Y = 0;
 				m_EndX = m_Width;
 				m_EndY = m_Height;
-				
+
 				--m_Y;
 				m_LinePtr -= m_Pitch;
 			}
@@ -482,7 +485,7 @@ namespace _2Real
 				m_StartY = m_Y = 0;
 				m_EndX = m_Width;
 				m_EndY = m_Height;
-				
+
 				--m_Y;
 				m_LinePtr -= m_Pitch;
 			}
@@ -527,7 +530,7 @@ namespace _2Real
 	};
 
 	template< typename T >
-	std::ostream& operator<<(std::ostream& out, typename ImageT< T > const& img)
+	std::ostream& operator<<(std::ostream& out, ImageT< T > const& img)
 	{
 		/* TODO */
 		out << img.getWidth() << " " << img.getHeight();
@@ -536,7 +539,7 @@ namespace _2Real
 	}
 
 	template< typename T >
-	std::istream& operator>>(std::istream& in, typename ImageT< T > &img)
+	std::istream& operator>>(std::istream& in, ImageT< T > &img)
 	{
 		/* TODO */
 		return in;

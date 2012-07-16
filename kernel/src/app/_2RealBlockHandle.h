@@ -24,6 +24,10 @@
 #include <vector>
 #include <string>
 
+#ifdef _UNIX
+    #include <limits.h>
+#endif
+
 #define NO_TIMEOUT	LONG_MAX
 
 namespace _2Real
@@ -52,7 +56,7 @@ namespace _2Real
 
 			BlockHandle();
 			BlockHandle( FunctionBlock< BlockHandle > &block );
-			~BlockHandle();
+			virtual ~BlockHandle();
 			BlockHandle( BlockHandle const& other );
 			BlockHandle& operator=( BlockHandle const& other );
 

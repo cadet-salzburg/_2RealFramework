@@ -42,7 +42,8 @@ namespace _2Real
 			template< typename T >
 			bool isDatatype() const
 			{
-				return Any.isDatatype< T >();
+				//return Any.isDatatype< T >(); //how should this work? replaced it with the following (ottona)
+				m_Data.isDatatype< T >();
 			}
 
 			template< typename T >

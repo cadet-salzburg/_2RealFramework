@@ -35,7 +35,7 @@ namespace _2Real
 
 		VectorInitializer& operator()( T const& val )
 		{
-			m_vector.push_back( val );
+			m_Vector.push_back( val );
 			return *this;
 		}
 

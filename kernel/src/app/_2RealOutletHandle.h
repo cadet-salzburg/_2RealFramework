@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <string.h>
+
 #include "app/_2RealCallbacks.h"
 #include "helpers/_2RealHandle.h"
 

@@ -20,7 +20,11 @@
 
 #include "helpers/_2RealAny.h"
 
-#include <typeinfo.h>
+#ifdef _UNIX
+    #include <typeinfo>
+#else
+    #include <typeinfo.h>
+#endif
 #include <string>
 
 namespace _2Real
