@@ -43,6 +43,8 @@ void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName
 
 void BlockUnitTestWidget::shutdown()
 {
+	m_BlockHandle.kill();	// this kills the block, be sure not to use it anymore
+	delete this;			// this is secure, because shutdown is called as an outside destructor when the window is closed, otherwise this would need some signal sending an cleanup in the bundletest widget
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -191,4 +193,10 @@ void BlockUnitTestWidget::setFpsValue(double value)
 	{
 		cout << e.message() << e.what() << endl;
 	}
+}
+
+void BlockUnitTestWidget::closeEvent( QCloseEvent *e )
+{
+	cout << "shutdown block instance" << std::endl;
+	shutdown();
 }

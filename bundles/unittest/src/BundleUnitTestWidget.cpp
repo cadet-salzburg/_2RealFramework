@@ -41,7 +41,8 @@ void BundleUnitTestWidget::setup(std::string strBundleName)
 		QComboBox *comboBox = new QComboBox();
 		for(int i=0; i < m_BlockInfos.size(); i++)
 		{
-			comboBox->addItem(QString::fromStdString(m_BlockInfos[i].getName()));
+			if(m_BlockInfos[i].getName().find("contextblock")==string::npos)
+				comboBox->addItem(QString::fromStdString(m_BlockInfos[i].getName()));
 		}
 		layout->addWidget(comboBox,0,1,Qt::AlignTop);
 		m_strBlockName = m_BlockInfos[0].getName();
@@ -80,7 +81,7 @@ void BundleUnitTestWidget::onCreate()
 	for(int i=0; i<m_iInstances; i++)
 	{
 		BlockUnitTestWidget* tmp = new BlockUnitTestWidget(m_BundleHandle, m_strBlockName);
-		m_BlockTestWidgets.push_back(tmp);
+		//m_BlockTestWidgets.push_back(tmp);	// as the object is deletes itself on close we don't need to manage the created instances here, leave it here if we decide otherwise later
 	}
 }
 

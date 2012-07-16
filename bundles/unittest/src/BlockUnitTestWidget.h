@@ -13,7 +13,10 @@ public:
 	void setup(_2Real::app::BundleHandle bundleHandle, std::string blockName);
 	void shutdown();
 	void receiveData(std::list< _2Real::app::AppData > const& data);
-	
+
+protected :
+    void closeEvent( QCloseEvent *e );
+
 private slots:
 	void onStart();
 	void onStop();
