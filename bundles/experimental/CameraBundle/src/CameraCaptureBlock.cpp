@@ -121,9 +121,11 @@ void CameraCaptureBlock::update()
 
 void CameraCaptureBlock::shutdown()
 {
+	std::cout << "shutdown block" << std::endl;
 	if(m_iCurrentCamera>=0)
 	{
 		m_CameraDeviceManager->unbindDevice( m_iCurrentCamera );
 		m_iCurrentCamera = -1;
 	}
 }
+
