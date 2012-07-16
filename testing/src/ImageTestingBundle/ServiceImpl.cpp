@@ -16,7 +16,7 @@ void ImageOut::setup( BlockHandle &context )
 {
 	try
 	{
-		m_Out = context.getOutletHandle( "image outlet" );
+		m_Out = context.getOutletHandle( "image_outlet" );
 
 		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
 		outImg = ImageT< float >( 8, 6, ImageChannelOrder::RGBA );
@@ -77,8 +77,8 @@ void ImageInOut::setup( BlockHandle &context )
 {
 	try
 	{
-		m_In = context.getInletHandle( "image inlet" );
-		m_Out = context.getOutletHandle( "image outlet" );
+		m_In = context.getInletHandle( "image_inlet" );
+		m_Out = context.getOutletHandle( "image_outlet" );
 
 		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
 		outImg = ImageT< float >( 640, 640, ImageChannelOrder::RGBA );
@@ -146,7 +146,7 @@ void ImageIn::setup( BlockHandle &context )
 	try
 	{
 		m_Counter = 0;
-		m_In = context.getInletHandle( "image inlet" );
+		m_In = context.getInletHandle( "image_inlet" );
 	}
 	catch ( Exception &e )
 	{

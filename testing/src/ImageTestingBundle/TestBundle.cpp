@@ -18,18 +18,18 @@ void getBundleMetainfo( BundleMetainfo &info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		BlockMetainfo imgOut = info.exportBlock< ImageOut, WithoutContext >( "image out" );
+		BlockMetainfo imgOut = info.exportBlock< ImageOut, WithoutContext >( "image_out" );
 		imgOut.setDescription( "testing the context's functionality" );
-		imgOut.addOutlet< ImageT< float > >( "image outlet" );
+		imgOut.addOutlet< ImageT< float > >( "image_outlet" );
 
-		BlockMetainfo imgInOut = info.exportBlock< ImageInOut, WithoutContext >( "image in - out" );
+		BlockMetainfo imgInOut = info.exportBlock< ImageInOut, WithoutContext >( "image_in_out" );
 		imgInOut.setDescription( "testing the context's functionality" );
-		imgInOut.addInlet< ImageT< float > >( "image inlet", ImageT< float >() );
-		imgInOut.addOutlet< ImageT< float > >( "image outlet" );
+		imgInOut.addInlet< ImageT< float > >( "image_inlet", ImageT< float >() );
+		imgInOut.addOutlet< ImageT< float > >( "image_outlet" );
 
-		BlockMetainfo imgIn = info.exportBlock< ImageIn, WithoutContext >( "image in" );
+		BlockMetainfo imgIn = info.exportBlock< ImageIn, WithoutContext >( "image_in" );
 		imgIn.setDescription( "testing the context's functionality" );
-		imgIn.addInlet< ImageT< float > >( "image inlet", ImageT< float >() );
+		imgIn.addInlet< ImageT< float > >( "image_inlet", ImageT< float >() );
 	}
 	catch ( Exception &e )
 	{

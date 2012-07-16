@@ -186,12 +186,12 @@ int main( int argc, char *argv[] )
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
-		BlockHandle out = testBundle.createBlockInstance( "image out" );
+		BlockHandle out = testBundle.createBlockInstance( "image_out" );
 		out.setUpdateRate( 1.0 );
 		out.setup();
 		out.start();
 
-		OutletHandle oOut = out.getOutletHandle( "image outlet" );
+		OutletHandle oOut = out.getOutletHandle( "image_outlet" );
 		Receiver receiver;
 		oOut.registerToNewData( receiver, &Receiver::receiveData );
 
