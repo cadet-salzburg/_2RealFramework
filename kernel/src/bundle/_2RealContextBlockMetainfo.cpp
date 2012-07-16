@@ -39,6 +39,7 @@ namespace _2Real
 
 		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
 		{
+			checkChars( toLower( trim( outletName ) ) );
 			const std::string typeName = m_Typetable.lookupTypename( longTypename );
 			Any const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
 
@@ -47,7 +48,7 @@ namespace _2Real
 			Any val;
 			val.cloneFrom( defaultConstructed );
 
-			ParameterMetadata data( outletName, longTypename, typeName, val );
+			ParameterMetadata data( toLower( trim( outletName ) ), longTypename, typeName, val );
 			m_Impl.addOutlet( data );
 		}
 	}

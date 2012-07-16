@@ -112,7 +112,7 @@ namespace _2Real
 		}
 
 		m_ContextInfo.ctor = &obj;
-		m_ContextInfo.data = new BlockMetadata( "context block" );
+		m_ContextInfo.data = new BlockMetadata( "contextblock" );
 		m_ContextInfo.data->setDescription( "context block" );
 		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data, m_Typetable );
 

@@ -124,7 +124,7 @@ namespace _2Real
 
 		if ( m_BundleLoader.hasContext( absPath ) )
 		{
-			BlockMetadata const& contextData = bundleData.getBlockData( "context block" );
+			BlockMetadata const& contextData = bundleData.getBlockData( "contextblock" );
 
 			app::BlockInfo::BlockData blockData;
 			app::BlockInfo::ParameterInfos inlets;

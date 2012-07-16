@@ -17,10 +17,16 @@
 */
 
 #include "helpers/_2RealHelpers.h"
+#include "_2RealException.h"
+
+#include <sstream>
+
+using std::string;
+using std::ostringstream;
 
 namespace _2Real
 {
-	const std::string toLower( std::string const& s )
+	const string toLower( string const& s )
 	{
 		std::string result;
 		result.clear();
@@ -31,16 +37,27 @@ namespace _2Real
 		return result;
 	}
 
-	const std::string trim( std::string const& s, std::string const& whitespace )
+	const string trim( string const& s, string const& whitespaces )
 	{
-		const size_t beginStr = s.find_first_not_of(whitespace);
-		if ( beginStr == std::string::npos )
+		const size_t beginStr = s.find_first_not_of( whitespaces );
+		if ( beginStr == string::npos )
 		{
 			return "";
 		}
-		const size_t endStr = s.find_last_not_of( whitespace );
+		const size_t endStr = s.find_last_not_of( whitespaces );
 		const size_t range = endStr - beginStr + 1;
 		std::string result = s.substr( beginStr, range );
 		return result;
+	}
+
+	void checkChars( string const& s, string const& validChars )
+	{
+		size_t pos = s.find_first_not_of( validChars );
+		if ( pos != string::npos )
+		{
+			ostringstream msg;
+			msg << "invalid name " << s << " contains invalid char " << s[ pos ];
+			throw InvalidNameException( msg.str() );
+		}
 	}
 }

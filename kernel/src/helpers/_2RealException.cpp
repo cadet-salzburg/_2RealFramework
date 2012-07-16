@@ -90,5 +90,7 @@ namespace _2Real
 	IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
 	IMPLEMENT_EXCEPTION( UninitializedHandleException, Exception, "uninitialized handle exception" )
 	IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
+	IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
+
 
 }

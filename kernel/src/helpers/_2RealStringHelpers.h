@@ -23,5 +23,6 @@
 namespace _2Real
 {
 	const std::string toLower( std::string const& s );
-	const std::string trim( std::string const&s , std::string const& whitespace = " \t" );
+	const std::string trim( std::string const& s, std::string const& whitespaces = " \t\n" );
+	void checkChars( std::string const& s, std::string const& validChars = "abcedefghijklmnopqrstuvwxyz_0123456789" );
 }
