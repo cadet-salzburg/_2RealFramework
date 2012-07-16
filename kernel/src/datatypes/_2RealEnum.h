@@ -58,6 +58,15 @@ namespace _2Real
 	typedef MapInitializer< std::string, std::string >			StringEnums;
 
 	template< typename V >
+	class Enumeration;
+
+	template< typename V >
+	std::ostream& operator<<( std::ostream& out, Enumeration< V > const& e );
+
+	template< typename V >
+	std::istream& operator>>( std::istream& in, Enumeration< V > &e );
+
+	template< typename V >
 	class Enumeration
 	{
 
@@ -88,9 +97,8 @@ namespace _2Real
 			return m_UndefinedValue;
 		}
 
-		friend std::ostream& operator<<( std::ostream& out, Enumeration< V > const& e );
-
-		friend std::istream& operator>>( std::istream& in, Enumeration< V > &e );
+		friend std::ostream& operator<< < V >( std::ostream& out, Enumeration< V > const& e );
+		friend std::istream& operator>> < V >( std::istream& in, Enumeration< V > &e );
 
 	private:
 
