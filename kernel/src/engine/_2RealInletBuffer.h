@@ -36,6 +36,7 @@ namespace _2Real
 	public:
 
 		virtual bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer ) = 0;
+		virtual ~AbstractInsertionPolicy();
 
 	};
 

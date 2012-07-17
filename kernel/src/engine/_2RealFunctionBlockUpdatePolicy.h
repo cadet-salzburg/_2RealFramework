@@ -39,6 +39,7 @@ namespace _2Real
 	{
 	public:
 		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
+		virtual ~AbstractInletTriggerCtor();
 	};
 
 	template< typename Condition, bool IsOr >

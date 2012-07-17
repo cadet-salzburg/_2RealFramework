@@ -29,7 +29,7 @@ namespace _2Real
 	protected:
 
 		Handle();
-		~Handle();
+		virtual ~Handle();
 
 		virtual void invalidate() = 0;
 

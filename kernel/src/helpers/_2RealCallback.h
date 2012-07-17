@@ -101,7 +101,7 @@ namespace _2Real
 		typedef void ( _2REAL_CALLBACK *CallbackFunction )( void *, TArg & );
 
 		FunctionCallback( CallbackFunction func, void *userData ) :
-			AbstractCallback< TArg >( func ),
+			AbstractCallback< TArg >( (void*)func ),
 			m_UserData( userData ),
 			m_Function( func )
 		{

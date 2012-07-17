@@ -59,7 +59,6 @@
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-Wno-reorder" />
-			<Add option="-fpermissive" />
 			<Add option="-D_UNIX" />
 			<Add option="-D_2REAL_UNIX" />
 			<Add directory="../../src" />
