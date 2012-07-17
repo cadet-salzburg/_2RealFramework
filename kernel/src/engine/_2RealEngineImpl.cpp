@@ -199,7 +199,7 @@ namespace _2Real
 	{
 		string path = libraryPath;
 
-		if ( path.find( shared_library_suffix ) != string::npos )
+		if ( path.find( shared_library_suffix ) == string::npos )
 		{
 			path.append( shared_library_suffix );
 		}
