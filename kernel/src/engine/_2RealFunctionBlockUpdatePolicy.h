@@ -39,7 +39,7 @@ namespace _2Real
 	{
 	public:
 		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
-		virtual ~AbstractInletTriggerCtor();
+		virtual ~AbstractInletTriggerCtor() {};
 	};
 
 	template< typename Condition, bool IsOr >
@@ -62,22 +62,25 @@ namespace _2Real
 
 		void addInlet( InletIO &io );
 		void changePolicy();
-		void setNewUpdateTime( const long time );
-		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy );
+		void setNewUpdateRate( const double rate );
+		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy, std::string const& typeName );
+		const std::string getUpdatePolicyAsString( std::string const& inlet ) const;
+		double getUpdateRate() const;
 
 	private:
 
-		class InletPolicy
+		struct InletPolicy
 		{
-		public:
 			~InletPolicy();
-			bool						m_WasChanged;
-			AbstractInletTriggerCtor	*m_Ctor;
-			AbstractInletBasedTrigger	*m_Trigger;
+			bool						wasChanged;
+			AbstractInletTriggerCtor	*ctor;
+			AbstractInletBasedTrigger	*trigger;
+			std::string					typeString;
 		};
 
-		typedef std::map< InletIO *, InletPolicy * >				InletPolicyMap;
-		typedef std::map< InletIO *, InletPolicy * >::iterator		InletPolicyIterator;
+		typedef std::map< InletIO *, InletPolicy * >						InletPolicyMap;
+		typedef std::map< InletIO *, InletPolicy * >::iterator				InletPolicyIterator;
+		typedef std::map< InletIO *, InletPolicy * >::const_iterator		InletPolicyConstIterator;
 
 		template< typename T >
 		friend class FunctionBlock;
@@ -91,6 +94,7 @@ namespace _2Real
 		bool							m_InletsChanged;
 		AbstractTimeBasedTrigger		*m_TimeTrigger;
 		long							m_UpdateTime;
+		double							m_UpdateRate;
 		InletPolicyMap					m_InletPolicies;
 
 	};
