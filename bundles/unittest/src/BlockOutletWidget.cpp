@@ -56,10 +56,10 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 
 			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
 		}
-		else if( m_OutletHandle.getTypename() == "short" || m_OutletHandle.getTypename() == "unsigned short" ||
+		else if( m_OutletHandle.getTypename() == "short" || m_OutletHandle.getTypename() == "unsigned short" ||			// handle numeric types all the same and display the number as string '1234'
 			m_OutletHandle.getTypename() == "int" || m_OutletHandle.getTypename() == "unsigned int" || 
 			m_OutletHandle.getTypename() == "long" || m_OutletHandle.getTypename() == "unsigned long" ||
-			m_OutletHandle.getTypename() == "double" || m_OutletHandle.getTypename() == "bool")
+			m_OutletHandle.getTypename() == "double" ||  m_OutletHandle.getTypename() == "string")
 		{
 			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 		}
@@ -75,6 +75,21 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			strTmp << data.getDataAsString() << " : " << data.getData<unsigned char>();
 			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString( strTmp.str()));
 		}
+		else if( m_OutletHandle.getTypename() == "bool" )
+		{
+			stringstream strTmp;
+			bool bTmp =  data.getData<bool>();
+			if(bTmp)
+			{
+				strTmp << bTmp << " : true";
+			}
+			else
+			{
+				strTmp << bTmp << " : false";
+			}
+			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString( strTmp.str()));
+		}
+
 
 		update();
 	}
