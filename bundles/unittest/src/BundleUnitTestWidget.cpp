@@ -23,7 +23,8 @@ BundleUnitTestWidget::~BundleUnitTestWidget()
 
 void BundleUnitTestWidget::setup(std::string strBundleName)
 {
-	std::string directory = "../experimental/bin/win/";
+	std::string directory = "../bin/win/";
+
 	try 
 	{
 		// load bundles for use in runtime engine
