@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\ThroughputBlock.cpp" />
     <ClCompile Include="..\..\src\TutorialBundle.cpp" />
     <ClCompile Include="..\..\src\MultiplierBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\MultiplierBlock.h" />
+    <ClInclude Include="..\..\src\ThroughputBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>

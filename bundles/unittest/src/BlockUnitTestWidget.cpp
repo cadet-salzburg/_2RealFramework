@@ -51,9 +51,9 @@ void BlockUnitTestWidget::setupGui()
 {
 	QGridLayout *grid = new QGridLayout;	// all things added with new as long as they belong to a parent are deleted by the parent so no need to care for that
 
-	grid->addWidget(createInletWidgets());
-	grid->addWidget(createOutletWidgets());
-	grid->addWidget(createButtonWidgets());
+	grid->addWidget(createInletWidgets(),0,0);
+	grid->addWidget(createOutletWidgets(),0,1);
+	grid->addWidget(createButtonWidgets(),1,1);
 
 	setLayout(grid);
 	show();

@@ -7,8 +7,19 @@ class BlockInletWidget : public QGroupBox
 Q_OBJECT
 
 public slots:
-	void setValue(double value);
-	void setValue(int value);
+	void setBoolValue(int value);
+	void setUCharValue(int value);
+	void setCharValue(int value);
+	void setUShortValue(int value);
+	void setShortValue(int value);
+	void setUIntValue(double value);
+	void setIntValue(int value);
+	void setULongValue(double value);
+	void setLongValue(double value);
+	void setFloatValue(double value);
+	void setDoubleValue(double value);
+	void setStringValue(const QString & text);
+	
 
 public:
 	BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent=0);
