@@ -15,9 +15,18 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 		layout->addWidget( new QLabel(QString::fromStdString( m_InletHandle.getName())) );
 	
 		// set and init input widget according to inlet's type
-		if(m_InletHandle.getTypename() == "int")
+		if(m_InletHandle.getTypename() == "unsigned int")
 		{
 			m_ValueWidget = new QSpinBox();
+			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMinimum(-UINT_MAX);
+			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(UINT_MAX);
+			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<unsigned int>());
+			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setValue(int)));
+		}
+		else if(m_InletHandle.getTypename() == "int")
+		{
+			m_ValueWidget = new QSpinBox();
+			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMinimum(INT_MIN);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(INT_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<int>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setValue(int)));
