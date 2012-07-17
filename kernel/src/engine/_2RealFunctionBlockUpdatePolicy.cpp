@@ -19,6 +19,7 @@
 
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealEngineImpl.h"
+#include "engine/_2RealInlet.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "helpers/_2RealHelpers.h"
@@ -34,8 +35,8 @@ namespace _2Real
 
 	FunctionBlockUpdatePolicy::InletPolicy::~InletPolicy()
 	{
-		delete m_Ctor;
-		delete m_Trigger;
+		delete ctor;
+		delete trigger;
 	}
 
 	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( AbstractUberBlock &owner ) :
@@ -43,6 +44,7 @@ namespace _2Real
 		m_TimeChanged( false ),
 		m_InletsChanged( false ),
 		m_UpdateTime( -1 ),
+		m_UpdateRate( 0.0 ),
 		m_TimeTrigger( nullptr ),
 		m_Engine( EngineImpl::instance() )
 	{
@@ -71,9 +73,10 @@ namespace _2Real
 
 		m_InletsChanged = true;
 		InletPolicy *p = new InletPolicy();
-		p->m_Ctor = new InletTriggerCtor< ValidData, false >();
-		p->m_Trigger = nullptr;
-		p->m_WasChanged = true;
+		p->ctor = new InletTriggerCtor< ValidData, false >();
+		p->trigger = nullptr;
+		p->wasChanged = true;
+		p->typeString = "valid_data";
 		m_InletPolicies.insert( make_pair( &inletIO, p ) );
 	}
 
@@ -98,11 +101,11 @@ namespace _2Real
 		{
 			for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
 			{
-				if ( it->second->m_WasChanged )
+				if ( it->second->wasChanged )
 				{
 					InletBuffer *buffer = it->first->m_Buffer;
-					AbstractInletTriggerCtor *ctor = it->second->m_Ctor;
-					AbstractInletBasedTrigger *currTrigger = it->second->m_Trigger;
+					AbstractInletTriggerCtor *ctor = it->second->ctor;
+					AbstractInletBasedTrigger *currTrigger = it->second->trigger;
 					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager );
 
 					if ( currTrigger != nullptr )
@@ -111,32 +114,41 @@ namespace _2Real
 					}
 
 					delete currTrigger;
-					it->second->m_Trigger = newTrigger;
+					it->second->trigger = newTrigger;
 
-					it->second->m_WasChanged = false;
+					it->second->wasChanged = false;
 				}
 			}
 			m_InletsChanged = false;
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::setNewUpdateTime( const long time )
+	void FunctionBlockUpdatePolicy::setNewUpdateRate( const double rate )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_TimeChanged = true;
-		m_UpdateTime = time;
+		if ( rate <= 0. )
+		{
+			m_UpdateTime = -1;
+			m_UpdateRate = 0.0;
+		}
+
+		double micros = 1000000/rate;
+		m_UpdateTime = static_cast< long >(micros);
+		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy )
+	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy, std::string const& typeName )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_InletsChanged = true;
 		InletPolicyIterator it = m_InletPolicies.find( &io );
 		if ( it != m_InletPolicies.end() )
 		{
-			it->second->m_WasChanged = true;
-			delete it->second->m_Ctor;
-			it->second->m_Ctor = inletPolicy;
+			it->second->wasChanged = true;
+			delete it->second->ctor;
+			it->second->ctor = inletPolicy;
+			it->second->typeString = typeName;
 		}
 		else
 		{
@@ -145,6 +157,28 @@ namespace _2Real
 #endif
 			delete inletPolicy;
 		}
+	}
+
+	const std::string FunctionBlockUpdatePolicy::getUpdatePolicyAsString( std::string const& inlet ) const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		for ( InletPolicyConstIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
+		{
+			if ( it->first->m_Inlet->getName() == inlet )
+			{
+				return it->second->typeString;
+			}
+		}
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return "";
+	}
+
+	double FunctionBlockUpdatePolicy::getUpdateRate() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		return m_UpdateRate;
 	}
 
 }

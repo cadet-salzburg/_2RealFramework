@@ -37,6 +37,12 @@
     <Filter Include="src\helpers">
       <UniqueIdentifier>{3a6c8ffc-700a-4516-bfef-74db6db3baa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\xml">
+      <UniqueIdentifier>{841b9ae2-d9a1-4824-a8d1-87e6a6164b2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\xml">
+      <UniqueIdentifier>{e41e60c2-e6df-4603-a707-bb0f9a05a527}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\helpers\_2RealAny.h">
@@ -264,6 +270,12 @@
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\xml\_2RealXML.h">
+      <Filter>include\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xml\_2RealXMLWriter.h">
+      <Filter>include\xml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
@@ -427,6 +439,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
       <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xml\_2RealXMLWriter.cpp">
+      <Filter>src\xml</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

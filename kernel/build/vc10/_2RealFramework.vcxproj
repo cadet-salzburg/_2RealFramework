@@ -90,6 +90,8 @@
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
+    <ClInclude Include="..\..\src\xml\_2RealXML.h" />
+    <ClInclude Include="..\..\src\xml\_2RealXMLWriter.h" />
     <ClInclude Include="..\..\src\_2RealApplication.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
@@ -419,6 +421,12 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xml\_2RealXMLWriter.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\xml\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\xml\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\xml</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\xml</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">

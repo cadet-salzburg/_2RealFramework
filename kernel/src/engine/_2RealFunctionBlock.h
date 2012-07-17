@@ -46,8 +46,14 @@ namespace _2Real
 		using Handleable< THandle >::registerHandle;
 		using Handleable< THandle >::unregisterHandle;
 
+		using AbstractUberBlock::setName;
+		using AbstractUberBlock::getName;
 		using AbstractUberBlock::getFullName;
-		using AbstractUberBlock::getIds;
+
+		std::string const&			getBundleName() const;
+		const std::string			getUpdateRateAsString() const;
+		const std::string			getUpdatePolicyAsString( std::string const& inlet ) const;
+		const std::string			getBufferSizeAsString( std::string const& inlet ) const;
 
 		app::BlockInfo const&		getBlockInfo();
 
@@ -71,7 +77,7 @@ namespace _2Real
 		bool						shutDown( const long timeout );
 		void						singleStep();
 
-		void						updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight );
+		void						updateWhenInletDataNew( InletIO &inletIO, const bool isOr);
 		void						updateWhenInletDataValid( InletIO &inletIO );
 		void						updateWithFixedRate( const double updatesPerSecond );
 
@@ -123,6 +129,36 @@ namespace _2Real
 		delete m_IOManager;
 		delete m_StateManager;
 		delete m_Block;
+	}
+
+	template< typename THandle >
+	std::string const& FunctionBlock< THandle >::getBundleName() const
+	{
+		return m_Bundle.getName();
+	}
+
+	template< typename THandle >
+	const std::string FunctionBlock< THandle >::getBufferSizeAsString( std::string const& name ) const
+	{
+		std::ostringstream str;
+		str << m_IOManager->getInletBufferSize( name );
+		return str.str();
+	}
+
+	template< typename THandle >
+	const std::string FunctionBlock< THandle >::getUpdatePolicyAsString( std::string const& name ) const
+	{
+		std::ostringstream str;
+		str << m_UpdatePolicy->getUpdatePolicyAsString( name );
+		return str.str();
+	}
+
+	template< typename THandle >
+	const std::string FunctionBlock< THandle >::getUpdateRateAsString() const
+	{
+		std::ostringstream str;
+		str << m_UpdatePolicy->getUpdateRate();
+		return str.str();
 	}
 
 	template< typename THandle >
@@ -249,34 +285,28 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight )
+	void FunctionBlock< THandle >::updateWhenInletDataNew( InletIO &inletIO, const bool isOr )
 	{
-		if ( isSingleWeight )
+		if ( isOr )
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >(), "or_newer_data" );
 		}
 		else
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >() );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >(), "and_newer_data" );
 		}
 	}
 
 	template< typename THandle >
 	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >() );
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >(), "valid_data" );
 	}
 
 	template< typename THandle >
 	void FunctionBlock< THandle >::updateWithFixedRate( const double updatesPerSecond )
 	{
-		if ( updatesPerSecond == 0. )
-		{
-			m_UpdatePolicy->setNewUpdateTime( -1 );
-		}
-
-		double micros = 1000000/updatesPerSecond;
-		m_UpdatePolicy->setNewUpdateTime( static_cast< long >(micros) );
+		m_UpdatePolicy->setNewUpdateRate( updatesPerSecond );
 	}
 
 	template< typename THandle >

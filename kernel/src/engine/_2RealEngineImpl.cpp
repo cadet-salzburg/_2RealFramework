@@ -198,7 +198,11 @@ namespace _2Real
 	app::BundleHandle & EngineImpl::loadLibrary( string const& libraryPath )
 	{
 		string path = libraryPath;
-		path.append( shared_library_suffix );
+
+		if ( path.find( shared_library_suffix ) != string::npos )
+		{
+			path.append( shared_library_suffix );
+		}
 		return m_BundleManager->loadLibrary( path ).getHandle();
 	}
 

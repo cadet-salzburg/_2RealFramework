@@ -62,7 +62,7 @@ namespace _2Real
 		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName );
 
 		ostringstream name;
-		name << blockName << " # " << getBlockInstanceCount( blockName );
+		name << blockName << "_" << getBlockInstanceCount( blockName );
 		block->setName( name.str() );
 
 		m_BlockInstances.insert( make_pair( blockName, block ) );

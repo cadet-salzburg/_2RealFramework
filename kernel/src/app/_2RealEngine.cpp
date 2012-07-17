@@ -19,9 +19,12 @@
 #include "app/_2RealEngine.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLink.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealOutlet.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealSingletonHolder.h"
+#include "xml/_2RealXMLWriter.h"
 
 using std::string;
 
@@ -144,6 +147,65 @@ namespace _2Real
 			}
 
 			return bundles;
+		}
+
+		void Engine::safeConfig( string const& filePath )
+		{
+			EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
+			EngineImpl::BlockInstances const& currBlocks = m_EngineImpl.getCurrentBlockInstances();
+			EngineImpl::Links const& currLinks = m_EngineImpl.getCurrentLinks();
+
+			xml::XMLConfig config;
+
+			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
+			{
+				xml::BundleConfig b;
+				b.bundlePath = ( *it )->getName();
+				config.addBundle( b );
+			}
+
+			for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
+			{
+				app::BlockInfo const& blockInfo = ( *it )->getBlockInfo();
+
+				xml::BlockConfig c;
+				c.blockInstanceId = ( *it )->getName();
+				c.blockId = blockInfo.getName();
+				c.bundleId = ( *it )->getBundleName();
+				c.fps = ( *it )->getUpdateRateAsString();
+
+				for ( app::BlockInfo::ParameterInfoConstIterator pIt = blockInfo.getInlets().begin(); pIt != blockInfo.getInlets().end(); ++pIt )
+				{
+					xml::InletConfig i;
+					i.inletId = pIt->getName();
+					i.updatePolicy = ( *it )->getUpdatePolicyAsString( pIt->getName() );
+					i.bufferSize = ( *it )->getBufferSizeAsString( pIt->getName() );
+					c.inlets.push_back( i );
+				}
+
+				config.addBlockInstance( c );
+			}
+
+			for ( EngineImpl::LinkConstIterator it = currLinks.begin(); it != currLinks.end(); ++it )
+			{
+				xml::ParamConfig in;
+				xml::ParamConfig out;
+
+				in.paramId = ( *it )->getInletIO().m_Inlet->getName();
+				in.blockInstanceId = ( *it )->getInletIO().m_Inlet->getOwningUberBlock().getName();
+
+				out.paramId = ( *it )->getOutletIO().m_Outlet->getName();
+				out.blockInstanceId = ( *it )->getOutletIO().m_Outlet->getOwningUberBlock().getName();
+
+				config.addLink( in, out );
+			}
+
+			config.writeTo( filePath );
+		}
+
+		void Engine::loadConfig( string const& filePath )
+		{
+			xml::XMLConfig::loadConfig( *this, filePath );
 		}
 	}
 }

@@ -115,5 +115,6 @@ namespace _2Real
 	DECLARE_EXCEPTION( UninitializedHandleException, Exception )
 	DECLARE_EXCEPTION( TimeOutException, Exception );
 	DECLARE_EXCEPTION( InvalidNameException, Exception );
+	DECLARE_EXCEPTION( XMLFormatException, Exception );
 
 }

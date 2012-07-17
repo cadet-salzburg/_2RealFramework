@@ -88,24 +88,29 @@ namespace _2Real
 		m_AppEvent.removeListener( cb );
 	}
 
-	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
+	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name ) const
 	{
 		return getInletIO( name ).getHandle();
 	}
 
-	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
+	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name ) const
 	{
 		return getOutletIO( name ).getHandle();
 	}
 
-	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name )
+	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
 	{
 		return getInletIO( name ).m_Inlet->getHandle();
 	}
 
-	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name )
+	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
 	{
 		return getOutletIO( name ).m_Outlet->getHandle();
+	}
+
+	unsigned int FunctionBlockIOManager::getInletBufferSize( std::string const& inlet ) const
+	{
+		return getInletIO( inlet ).m_Buffer->getBufferSize();
 	}
 
 	InletIO & FunctionBlockIOManager::getInletIO( string const& name )
@@ -126,6 +131,36 @@ namespace _2Real
 	OutletIO & FunctionBlockIOManager::getOutletIO( string const& name )
 	{
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			if ( ( *it )->m_Outlet->getName() == name )
+			{
+				return **it;
+			}
+		}
+
+		ostringstream msg;
+		msg << "outlet " << name<< " not found in" << m_Owner.getFullName();
+		throw NotFoundException( msg.str() );
+	}
+
+	InletIO const& FunctionBlockIOManager::getInletIO( string const& name ) const
+	{
+		for ( InletConstIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			if ( ( *it )->m_Inlet->getName() == name )
+			{
+				return **it;
+			}
+		}
+
+		ostringstream msg;
+		msg << "inlet " << name<< " not found in" << m_Owner.getFullName();
+		throw NotFoundException( msg.str() );
+	}
+
+	OutletIO const& FunctionBlockIOManager::getOutletIO( string const& name ) const
+	{
+		for ( OutletConstIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			if ( ( *it )->m_Outlet->getName() == name )
 			{

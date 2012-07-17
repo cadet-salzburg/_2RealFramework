@@ -122,6 +122,9 @@ namespace _2Real
 				unregisterFromExceptionInternal( *cb );
 			}
 
+			void safeConfig( std::string const& filePath );
+			void loadConfig( std::string const& filePath );
+
 		private:
 
 			void registerToExceptionInternal( BlockExcCallback &cb );

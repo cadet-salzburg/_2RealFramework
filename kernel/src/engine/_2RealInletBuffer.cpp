@@ -47,7 +47,8 @@ namespace _2Real
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() ),
-		m_TriggeringData( defaultData, 0 )
+		m_TriggeringData( defaultData, 0 ),
+		m_BufferSize( 1 )
 	{
 		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
 	}
@@ -154,12 +155,18 @@ namespace _2Real
 		m_TriggeringData = data;
 	}
 
-	// let's just assume that this might, at some point, change
 	void InletBuffer::setBufferSize( const unsigned int size )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
 		delete m_InsertionPolicy;
 		m_InsertionPolicy = new RemoveOldest( size );
+		m_BufferSize = size;
+	}
+
+	unsigned int InletBuffer::getBufferSize() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
+		return m_BufferSize;
 	}
 
 	//void InletBuffer::setDefaultData( Any const& defaultData )

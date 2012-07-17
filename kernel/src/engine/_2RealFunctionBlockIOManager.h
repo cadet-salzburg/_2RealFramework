@@ -64,10 +64,10 @@ namespace _2Real
 		void							addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 		void							addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 
-		app::InletHandle &				getAppInletHandle( std::string const& name );
-		app::OutletHandle &				getAppOutletHandle( std::string const& name );
-		bundle::InletHandle &			getBundleInletHandle( std::string const& name );
-		bundle::OutletHandle &			getBundleOutletHandle( std::string const& name );
+		app::InletHandle &				getAppInletHandle( std::string const& name ) const;
+		app::OutletHandle &				getAppOutletHandle( std::string const& name ) const;
+		bundle::InletHandle &			getBundleInletHandle( std::string const& name ) const;
+		bundle::OutletHandle &			getBundleOutletHandle( std::string const& name ) const;
 
 		AppInletHandles const&			getAppInletHandles() const;
 		AppOutletHandles const&			getAppOutletHandles() const;
@@ -77,6 +77,8 @@ namespace _2Real
 		void							updateInletData();
 		void							updateOutletData();
 		void							updateInletBuffers();
+
+		unsigned int					getInletBufferSize( std::string const& inlet ) const;
 
 	private:
 
@@ -90,6 +92,8 @@ namespace _2Real
 
 		InletIO &						getInletIO( std::string const& name );
 		OutletIO &						getOutletIO( std::string const& name );
+		InletIO const&					getInletIO( std::string const& name ) const;
+		OutletIO const&					getOutletIO( std::string const& name ) const;
 
 		AppInletHandles					m_AppInletHandles;
 		AppOutletHandles				m_AppOutletHandles;
