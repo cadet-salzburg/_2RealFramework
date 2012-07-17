@@ -36,7 +36,7 @@ namespace _2Real
 	public:
 
 		virtual bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer ) = 0;
-		virtual ~AbstractInsertionPolicy();
+		virtual ~AbstractInsertionPolicy() {};
 
 	};
 
@@ -76,6 +76,7 @@ namespace _2Real
 		void processBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );
+		unsigned int getBufferSize() const;
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
 
@@ -91,6 +92,7 @@ namespace _2Real
 		mutable Poco::FastMutex							m_DataAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
+		unsigned int									m_BufferSize;
 
 	};
 
