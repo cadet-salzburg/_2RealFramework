@@ -56,7 +56,10 @@ namespace _2Real
 
 	bool IOLink::operator<( IOLink const& other )
 	{
-		return ( m_InletIO.m_Inlet < other.m_InletIO.m_Inlet && m_OutletIO.m_Outlet < other.m_OutletIO.m_Outlet );
+		if ( m_InletIO.m_Inlet < other.m_InletIO.m_Inlet ) return true;
+		if ( other.m_InletIO.m_Inlet < m_InletIO.m_Inlet ) return false;
+		if ( m_OutletIO.m_Outlet < other.m_OutletIO.m_Outlet ) return true;
+		return false;
 	}
 
 	void IOLink::activate() 

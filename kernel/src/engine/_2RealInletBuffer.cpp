@@ -20,6 +20,9 @@
 #include "engine/_2RealEngineImpl.h"
 
 #include <assert.h>
+#include <sstream>
+
+using std::stringstream;
 
 namespace _2Real
 {
@@ -60,6 +63,20 @@ namespace _2Real
 
 	void InletBuffer::receiveData( Any const& data )
 	{
+		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
+	}
+
+	void InletBuffer::receiveData( std::string const& value )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+
+		Any data;
+		data.createNew( m_TriggeringData.getData() );
+
+		stringstream s;
+		s << value;
+		s >> data;
+
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
 
@@ -116,33 +133,24 @@ namespace _2Real
 		// no reception of data allowed during this time
 		m_NotificationAccess.lock();
 		m_Notify = true;
-		// default value only is tried out if there are no other data items available at all
-		//if ( m_ReceivedDataItems.empty() )
-		//{
-		//	m_DataAccess.lock();
-		//	m_TriggeringEvent.notify( m_DefaultData );
-		//	m_DataAccess.unlock();
-		//}
-		//else
-		//{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-			for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+		{
+			TimestampedData d = *dIt;
+			m_TriggeringEvent.notify( d );
+
+			if ( !m_Notify )
 			{
-				TimestampedData d = *dIt;
-				m_TriggeringEvent.notify( d );
-
-				if ( !m_Notify )
-				{
-					break;
-				}
-				else
-				{
-					dIt = m_ReceivedDataItems.erase( dIt );
-				}
+				dIt = m_ReceivedDataItems.erase( dIt );
+				break;
 			}
+			else
+			{
+				dIt = m_ReceivedDataItems.erase( dIt );
+			}
+		}
 
-			m_TriggeringEvent.notify( m_TriggeringData ); // try fulfilling available cond!
-		//}
+		m_TriggeringEvent.notify( m_TriggeringData ); // try fulfilling available cond!
 		m_NotificationAccess.unlock();
 	}
 

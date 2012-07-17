@@ -158,6 +158,12 @@ namespace _2Real
 			m_InletIO->m_Buffer->receiveData( data );
 		}
 
+		void InletHandle::setValueToString( std::string const& data )
+		{
+			checkValidity( m_InletIO );
+			m_InletIO->m_Buffer->receiveData( data );
+		}
+
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
 			checkValidity( m_InletIO );

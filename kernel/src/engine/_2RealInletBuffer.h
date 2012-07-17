@@ -71,6 +71,7 @@ namespace _2Real
 		InletBuffer( Any const& defaultData );
 		void receiveData( TimestampedData const& data );
 		void receiveData( Any const& data );
+		void receiveData( std::string const& data );
 		TimestampedData const& getTriggeringData() const;
 		//TimestampedData const& getOldestBufferData();
 		void processBufferedData();

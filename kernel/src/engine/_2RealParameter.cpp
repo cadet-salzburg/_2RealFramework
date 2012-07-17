@@ -23,6 +23,7 @@
 
 using std::string;
 using std::ostringstream;
+using std::stringstream;
 
 namespace _2Real
 {
@@ -45,6 +46,7 @@ namespace _2Real
 
 	void Parameter::setData( TimestampedData const& data )
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 		if ( data.getData().getTypename() != m_LongTypename )
 		{
 			ostringstream msg;
@@ -52,7 +54,6 @@ namespace _2Real
 			throw TypeMismatchException( msg.str() );
 		}
 
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 		m_DataBuffer = data;
 	}
 

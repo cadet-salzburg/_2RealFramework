@@ -84,6 +84,9 @@ namespace _2Real
 			InletHandles const&		getAllInletHandles() const;
 			OutletHandles const&	getAllOutletHandles() const;
 
+			// true if block was started ( but not if singlestep was called )
+			bool isRunning() const;
+
 			// callback registration for free functions
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;

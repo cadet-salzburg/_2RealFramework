@@ -209,5 +209,11 @@ namespace _2Real
 		{
 			m_Block = nullptr;
 		}
+
+		bool BlockHandle::isRunning() const
+		{
+			checkValidity( m_Block );
+			return m_Block->isRunning();
+		}
 	}
 }

@@ -61,7 +61,9 @@ using namespace Poco::XML;
 #define INLET_UPDATE_POLICY		"policy"
 #define INLET_BUFFER_SIZE		"buffer"
 #define INLET_ID				"inlet_id"
+#define INLET_VALUE				"value"
 #define OUTLET_ID				"outlet_id"
+#define BLOCK_STATE				"state"
 
 namespace _2Real
 {
@@ -98,6 +100,7 @@ namespace _2Real
 			installedBundles->release();
 
 			map< string, app::BlockHandle > blockInstances;
+			map< string, bool > blockStates;
 			NodeList *instancedBlocks = blocks->childNodes();
 			for ( unsigned int i=0; i<instancedBlocks->length(); ++i )
 			{
@@ -124,6 +127,11 @@ namespace _2Real
 					Element *fps = getChildElementByName( UPDATE_RATE, *settings );
 					config.fps = trim( fps->innerText() );
 
+					Element *state = getChildElementByName( BLOCK_STATE, *settings );
+					config.isRunning = ( state->innerText() == "1" );
+
+					blockStates.insert( make_pair( config.blockInstanceId, config.isRunning ) );
+
 					stringstream sFps;
 					double updateRate;
 					sFps << config.fps;
@@ -147,7 +155,11 @@ namespace _2Real
 							inConfig.bufferSize = trim( bufferSize->innerText() );
 							config.inlets.push_back( inConfig );
 
+							Element *value = getChildElementByName( INLET_VALUE, *inletConfiguration );
+							inConfig.value = trim( value->innerText() );
+
 							app::InletHandle inletHandle = blockHandle.getInletHandle( inConfig.inletId );
+							if ( !inConfig.value.empty() ) inletHandle.setValueToString( inConfig.value );
 
 							stringstream sBuffer;
 							unsigned int buffer;
@@ -207,6 +219,15 @@ namespace _2Real
 				}
 			}
 			createdLinks->release();
+
+			for ( map< string, app::BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
+			{
+				it->second.setup();
+				if ( blockStates[ it->first ] )
+				{
+					it->second.start();
+				}
+			}
 		}
 
 		Element * XMLConfig::getChildElementByName( string const& name, Node &node )
@@ -290,8 +311,12 @@ namespace _2Real
 			blockInstance->appendChild( settings );
 			AutoPtr< Element > updates = m_Document->createElement( UPDATE_RATE );
 			AutoPtr< Text > fps = m_Document->createTextNode( config.fps );
+			AutoPtr< Element > blockState = m_Document->createElement( BLOCK_STATE );
+			AutoPtr< Text > state = m_Document->createTextNode( config.isRunning ? "1" : "0" );
 			settings->appendChild( updates );
 			updates->appendChild( fps );
+			settings->appendChild( blockState );
+			blockState->appendChild( state );
 			AutoPtr< Element > inlets = m_Document->createElement( INLET_CONFIGURATIONS );
 			settings->appendChild( inlets );
 
@@ -302,15 +327,19 @@ namespace _2Real
 				AutoPtr< Element > inletName = m_Document->createElement( INLET_ID );
 				AutoPtr< Element > inletPolicy = m_Document->createElement( INLET_UPDATE_POLICY );
 				AutoPtr< Element > inletBuffer = m_Document->createElement( INLET_BUFFER_SIZE );
+				AutoPtr< Element > inletValue = m_Document->createElement( INLET_VALUE );
 				AutoPtr< Text > name = m_Document->createTextNode( it->inletId );
 				AutoPtr< Text > policy = m_Document->createTextNode( it->updatePolicy );
 				AutoPtr< Text > buffer = m_Document->createTextNode( it->bufferSize );
+				AutoPtr< Text > val = m_Document->createTextNode( it->value );
 				inlet->appendChild( inletName );
 				inletName->appendChild( name );
 				inlet->appendChild( inletPolicy );
 				inletPolicy->appendChild( policy );
 				inlet->appendChild( inletBuffer );
 				inletBuffer->appendChild( buffer );
+				inlet->appendChild( inletValue );
+				inletValue->appendChild( val );
 			}
 		}
 

@@ -42,7 +42,8 @@ namespace _2Real
 		m_UpdatePolicy( nullptr ),
 		m_Threads( EngineImpl::instance().getThreadPool() ),
 		m_Logger( EngineImpl::instance().getLogger() ),
-		m_TimeTrigger( nullptr )
+		m_TimeTrigger( nullptr ),
+		m_WasStarted( false )
 	{
 	}
 
@@ -78,11 +79,18 @@ namespace _2Real
 		}
 	}
 
+	bool FunctionBlockStateManager::isRunning() const
+	{
+		m_StateAccess.lock();
+		return m_WasStarted;
+	}
+
 	void FunctionBlockStateManager::start()
 	{
 		try
 		{
 			m_StateAccess.lock();
+			m_WasStarted = true;
 			if ( m_CurrentState->tryStart( *this ) )
 			{
 				m_UpdatePolicy->changePolicy();
@@ -156,6 +164,7 @@ namespace _2Real
 		{
 			if ( m_CurrentState->prepareForShutDown(*this) )
 			{
+				m_WasStarted = false;
 				m_EnabledAccess.lock();
 				m_IsTriggeringEnabled = false;
 				m_EnabledAccess.unlock();

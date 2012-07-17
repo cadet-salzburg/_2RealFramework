@@ -17,6 +17,7 @@
 */
 
 #include "app/_2RealEngine.h"
+#include "app/_2RealAppData.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLink.h"
 #include "engine/_2RealInlet.h"
@@ -173,13 +174,24 @@ namespace _2Real
 				c.blockId = blockInfo.getName();
 				c.bundleId = ( *it )->getBundleName();
 				c.fps = ( *it )->getUpdateRateAsString();
+				c.isRunning = ( *it )->isRunning();
 
 				for ( app::BlockInfo::ParameterInfoConstIterator pIt = blockInfo.getInlets().begin(); pIt != blockInfo.getInlets().end(); ++pIt )
 				{
 					xml::InletConfig i;
 					i.inletId = pIt->getName();
+					app::InletHandle h = ( *it )->getAppInletHandle( i.inletId );
 					i.updatePolicy = ( *it )->getUpdatePolicyAsString( pIt->getName() );
 					i.bufferSize = ( *it )->getBufferSizeAsString( pIt->getName() );
+					// TODO: hacky wacky!
+					if ( h.getTypename().find( "img_" ) == string::npos )
+					{
+						i.value = h.getCurrentInput().getDataAsString();
+					}
+					else
+					{
+						i.value = "";
+					}
 					c.inlets.push_back( i );
 				}
 

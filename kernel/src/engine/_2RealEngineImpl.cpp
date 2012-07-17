@@ -268,7 +268,11 @@ namespace _2Real
 			link->activate();
 			m_Links.insert( link );
 		}
-		else delete link;
+		else
+		{
+			std::cout << "ALREADY EXISTS!" << std::endl;
+			delete link;
+		}
 	}
 
 	void EngineImpl::destroyLink( InletIO &inlet, OutletIO &outlet )

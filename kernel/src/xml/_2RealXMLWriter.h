@@ -44,6 +44,7 @@ namespace _2Real
 			std::string					inletId;
 			std::string					bufferSize;
 			std::string					updatePolicy;
+			std::string					value;
 		};
 
 		struct BlockConfig
@@ -53,6 +54,7 @@ namespace _2Real
 			std::string					blockInstanceId;
 			std::string					fps;
 			std::vector< InletConfig >	inlets;
+			bool						isRunning;
 		};
 
 		struct ParamConfig

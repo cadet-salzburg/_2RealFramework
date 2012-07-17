@@ -54,6 +54,7 @@ namespace _2Real
 		const std::string			getUpdateRateAsString() const;
 		const std::string			getUpdatePolicyAsString( std::string const& inlet ) const;
 		const std::string			getBufferSizeAsString( std::string const& inlet ) const;
+		bool						isRunning() const;
 
 		app::BlockInfo const&		getBlockInfo();
 
@@ -135,6 +136,12 @@ namespace _2Real
 	std::string const& FunctionBlock< THandle >::getBundleName() const
 	{
 		return m_Bundle.getName();
+	}
+
+	template< typename THandle >
+	bool FunctionBlock< THandle >::isRunning() const
+	{
+		return m_StateManager->isRunning();
 	}
 
 	template< typename THandle >

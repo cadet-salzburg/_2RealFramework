@@ -52,6 +52,7 @@ namespace _2Real
 		void prepareForShutDown();
 		bool shutDown( const long timeout );
 		void updateFunctionBlock();
+		bool isRunning() const;
 
 		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
 		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
@@ -94,6 +95,7 @@ namespace _2Real
 
 		Poco::Event							m_StopEvent;
 		Poco::Event							m_ShutdownEvent;
+		bool								m_WasStarted;
 
 	};
 

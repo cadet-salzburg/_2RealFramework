@@ -72,6 +72,8 @@ namespace _2Real
 				setValue( Any( value ) );
 			}
 
+			void setValueToString( std::string const& value );
+
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
 			AppData				getCurrentInput() const;
