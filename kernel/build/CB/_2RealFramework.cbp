@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug - Static Library">
-				<Option output="../../bin/Debug/_2RealFramework" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/_2RealFrameworkD" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="../../obj/Debug/" />
 				<Option type="2" />
@@ -17,7 +17,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Debug - Shared Object">
-				<Option output="../../bin/Debug/_2RealFramework" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/_2RealFrameworkD" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin/Debug" />
 				<Option object_output="../../obj/Debug/" />
 				<Option type="3" />
@@ -28,7 +28,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release - Static Library">
-				<Option output="../../bin/Release/_2RealFramework" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/_2RealFramework" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="../../obj/Release/" />
 				<Option type="2" />
@@ -41,7 +41,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release - Shared Object">
-				<Option output="../../bin/Release/_2RealFramework" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/_2RealFramework" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin/Release" />
 				<Option object_output="../../obj/Release/" />
 				<Option type="3" />
@@ -198,10 +198,22 @@
 		<Unit filename="../../src/helpers/_2RealVectorInitializer.h" />
 		<Unit filename="../../src/helpers/_2RealVersion.cpp" />
 		<Unit filename="../../src/helpers/_2RealVersion.h" />
+		<Unit filename="../../src/xml/_2RealXML.h" />
+		<Unit filename="../../src/xml/_2RealXMLWriter.cpp" />
+		<Unit filename="../../src/xml/_2RealXMLWriter.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
 			<envvars />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

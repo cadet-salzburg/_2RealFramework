@@ -2,11 +2,15 @@
 
 #include <iostream>
 
+#ifdef _UNIX
+    #include <float.h>  //for DBL_MAX
+#endif
+
 using namespace std;
 using namespace _2Real;
 
 // sorry for all the codeduplication but QT doesn't support templated signal/slot concept which sucks
-BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent) 
+BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent)
 	: QGroupBox(parent),
 	  m_InletHandle ( inletHandle )
 {
@@ -14,7 +18,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 	{
 		QHBoxLayout*	layout = new QHBoxLayout();
 		layout->addWidget( new QLabel(QString::fromStdString( m_InletHandle.getName())) );
-	
+
 		// set and init input widget according to inlet's type
 		if(m_InletHandle.getTypename() == "bool")
 		{
@@ -106,7 +110,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QLineEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getData<string>()));
 			connect(m_ValueWidget, SIGNAL(textChanged(const QString &)), this, SLOT(setStringValue(const QString &)));
 		}
-		
+
 		layout->addWidget( m_ValueWidget );
 		setLayout( layout );
 	}
@@ -126,7 +130,7 @@ void BlockInletWidget::setBoolValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -138,7 +142,7 @@ void BlockInletWidget::setUCharValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -150,7 +154,7 @@ void BlockInletWidget::setCharValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -162,7 +166,7 @@ void BlockInletWidget::setUShortValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -174,7 +178,7 @@ void BlockInletWidget::setShortValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -186,7 +190,7 @@ void BlockInletWidget::setUIntValue(double value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -198,7 +202,7 @@ void BlockInletWidget::setIntValue(int value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -210,7 +214,7 @@ void BlockInletWidget::setULongValue(double value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -222,7 +226,7 @@ void BlockInletWidget::setLongValue(double value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -234,7 +238,7 @@ void BlockInletWidget::setFloatValue(double value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -246,7 +250,7 @@ void BlockInletWidget::setDoubleValue(double value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 
@@ -258,7 +262,7 @@ void BlockInletWidget::setStringValue(const QString & value)
 	}
 	catch(_2Real::Exception& e)
 	{
-		cout << e.message() << " " << e.what() << std::endl; 
+		cout << e.message() << " " << e.what() << std::endl;
 	}
 }
 

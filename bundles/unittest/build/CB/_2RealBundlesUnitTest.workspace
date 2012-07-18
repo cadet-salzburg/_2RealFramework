@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="_2RealBundlesUnitTest Workspace">
+		<Project filename="_2RealBundlesUnitTest.cbp" />
+		<Project filename="../../../tutorial/build/CB/TutorialBundle.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

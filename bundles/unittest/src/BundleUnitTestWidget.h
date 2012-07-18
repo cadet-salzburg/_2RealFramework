@@ -16,8 +16,8 @@ class _2REAL_UNIT_TEST_DLLSPEC BundleUnitTestWidget : public QWidget
 	Q_OBJECT
 
 public:
-	BundleUnitTestWidget::BundleUnitTestWidget();
-	BundleUnitTestWidget::BundleUnitTestWidget(std::string strBundleName);
+	BundleUnitTestWidget();
+	BundleUnitTestWidget(std::string strBundleName);
 	~BundleUnitTestWidget();
 
 	void setup(std::string strBundleName);

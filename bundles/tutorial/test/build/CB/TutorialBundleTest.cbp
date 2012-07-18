@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TutorialBundleTest" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../bin/TutorialBundleTest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="../../../../../kernel/lib/lib_2RealFrameworkD.so" />
+					<Add library="../../../../unittest/lib/lib_2RealBundlesUnitTestD.so" />
+					<Add library="../../../lib/libTutorialBundleD.so" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../../bin/TutorialBundleTest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="../../../../../kernel/lib/lib_2RealFramework.so" />
+					<Add library="../../../../unittest/lib/lib_2RealBundlesUnitTest.so" />
+					<Add library="../../../lib/libTutorialBundle.so" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-D_UNIX" />
+			<Add option="-D_2REAL_UNIT_TEST_EXPORT" />
+			<Add directory="/usr/include/QtGui" />
+			<Add directory="/usr/include/QtCore" />
+			<Add directory="../../../../unittest/include" />
+			<Add directory="../../../../unittest/src" />
+			<Add directory="../../../../../kernel/src" />
+		</Compiler>
+		<Linker>
+			<Add library="QtGui" />
+		</Linker>
+		<Unit filename="../../src/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

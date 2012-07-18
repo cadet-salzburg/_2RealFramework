@@ -12,20 +12,20 @@ BlockUnitTestWidget::BlockUnitTestWidget()
 {
 }
 
-BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string blockName) 
+BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string blockName)
 {
 	setup(bundleHandle, blockName);
 }
 
 void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName)
 {
-	try 
+	try
 	{
 		m_BlockHandle = bundleHandle.createBlockInstance( blockName );
-		BlockInfo const& blockData = m_BlockHandle.getBlockInfo();
+//		BlockInfo const& blockData = m_BlockHandle.getBlockInfo();
 		m_fDefaultFps = 30.0;
-		m_BlockHandle.setUpdateRate( m_fDefaultFps );	
-		
+		m_BlockHandle.setUpdateRate( m_fDefaultFps );
+
 		// setup initializes default values of block
 		m_BlockHandle.setup();
 		// start the block
@@ -37,7 +37,7 @@ void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName
 	{
 		cout << e.message() << " " << e.what() << endl;
 	}
-	
+
 	setupGui();
 }
 
@@ -87,7 +87,7 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 	layout->addWidget(m_pSingleStepButton);
 	layout->addWidget(new QLabel("fps:"));
 	layout->addWidget(m_pFpsSpinBox);
-	
+
 	QGroupBox *groupBox = new QGroupBox("Controls");
 	groupBox->setLayout(layout);
 
@@ -127,7 +127,7 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 }
 
 void BlockUnitTestWidget::onStart()
-{ 
+{
 	m_pStartButton->setDisabled(true);
 	m_pStopButton->setDisabled(false);
 
@@ -143,7 +143,7 @@ void BlockUnitTestWidget::onStart()
 }
 
 void BlockUnitTestWidget::onStop()
-{ 
+{
 	m_pStopButton->setDisabled(true);
 	m_Future = QtConcurrent::run(this, &BlockUnitTestWidget::stopBlock);
 	m_FutureWatcher.setFuture(m_Future);

@@ -8,8 +8,8 @@ class BlockUnitTestWidget : public QWidget
 Q_OBJECT
 
 public:
-	BlockUnitTestWidget::BlockUnitTestWidget();
-	BlockUnitTestWidget::BlockUnitTestWidget(_2Real::app::BundleHandle bundleHandle, std::string blockName);
+	BlockUnitTestWidget();
+	BlockUnitTestWidget(_2Real::app::BundleHandle bundleHandle, std::string blockName);
 	void setup(_2Real::app::BundleHandle bundleHandle, std::string blockName);
 	void shutdown();
 	void receiveData(std::list< _2Real::app::AppData > const& data);

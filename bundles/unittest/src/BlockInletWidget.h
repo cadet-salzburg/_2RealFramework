@@ -22,7 +22,7 @@ public slots:
 	
 
 public:
-	BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent=0);
+	BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent=0);
 
 private:
 

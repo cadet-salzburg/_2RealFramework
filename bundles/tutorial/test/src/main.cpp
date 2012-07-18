@@ -1,7 +1,9 @@
 #include "_2RealBundlesUnitTest.h"
 #include <QtGui/QApplication>
 
-#include <windows.h>
+#ifndef _UNIX
+    #include <windows.h>
+#endif
 #include <iostream>
 
 using namespace _2Real;
@@ -13,7 +15,7 @@ int main(int argc, char *argv[])
 
 	BundleUnitTestWidget testBundle;
 	testBundle.setup("TutorialBundle");
-	
+
 	int iRet = a.exec();
 	return iRet;
 }

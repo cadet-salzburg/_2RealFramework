@@ -19,6 +19,9 @@
 #pragma once
 
 #include "helpers/_2RealHandle.h"
+#ifdef _UNIX
+    #include <limits.h> // for the limits defs
+#endif
 
 #include <string>
 
