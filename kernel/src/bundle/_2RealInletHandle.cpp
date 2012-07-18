@@ -19,23 +19,74 @@
 #include "bundle/_2RealInletHandle.h"
 #include "engine/_2RealInlet.h"
 
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );
+
 namespace _2Real
 {
 	namespace bundle
 	{
 		InletHandle::InletHandle() :
+			Handle(),
 			m_Inlet( nullptr )
 		{
 		}
 
 		InletHandle::InletHandle( Inlet &inlet ) :
+			Handle(),
 			m_Inlet( &inlet )
 		{
+			m_Inlet->registerHandle( *this );
+		}
+
+		InletHandle::~InletHandle()
+		{
+			if ( isValid() ) m_Inlet->unregisterHandle( *this );
+		}
+
+		InletHandle::InletHandle( InletHandle const& other ) :
+			Handle(),
+			m_Inlet( other.m_Inlet )
+		{
+			if ( isValid() ) m_Inlet->registerHandle( *this );
+		}
+
+		InletHandle& InletHandle::operator=( InletHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_Inlet->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_Inlet = other.m_Inlet;
+
+			if ( isValid() )
+			{
+				m_Inlet->registerHandle( *this );
+			}
+
+			return *this;
+		}
+
+		bool InletHandle::isValid() const
+		{
+			return m_Inlet != nullptr;
 		}
 
 		Any InletHandle::getCurrentData() const
 		{
 			return m_Inlet->getData().getData();
+		}
+
+		void InletHandle::invalidate()
+		{
+			m_Inlet = nullptr;
 		}
 	}
 }

@@ -22,33 +22,93 @@
 
 using std::string;
 
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );
+
 namespace _2Real
 {
 	namespace bundle
 	{
-		BlockHandle::BlockHandle( FunctionBlockIOManager &block ) :
-			m_Impl( block )
+		BlockHandle::BlockHandle() :
+			Handle(),
+			m_IO( nullptr )
 		{
+		}
+
+		BlockHandle::BlockHandle( FunctionBlockIOManager &io ) :
+			Handle(),
+			m_IO( &io )
+		{
+			m_IO->registerHandle( *this );
+		}
+
+		BlockHandle::~BlockHandle()
+		{
+			if ( isValid() ) m_IO->unregisterHandle( *this );
+		}
+
+		BlockHandle::BlockHandle( BlockHandle const& other ) :
+			Handle(),
+			m_IO( other.m_IO )
+		{
+			if ( isValid() ) m_IO->registerHandle( *this );
+		}
+
+		BlockHandle& BlockHandle::operator=( BlockHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_IO->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_IO = other.m_IO;
+
+			if ( isValid() )
+			{
+				m_IO->registerHandle( *this );
+			}
+
+			return *this;
+		}
+
+		bool BlockHandle::isValid() const
+		{
+			return m_IO != nullptr;
+		}
+
+		void BlockHandle::invalidate()
+		{
+			m_IO = nullptr;
 		}
 
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
-			return m_Impl.getBundleInletHandle( toLower( trim ( name ) ) );
+			checkValidity( m_IO );
+			return m_IO->getBundleInletHandle( toLower( trim ( name ) ) );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
-			return m_Impl.getBundleOutletHandle( toLower( trim ( name ) ) );
+			checkValidity( m_IO );
+			return m_IO->getBundleOutletHandle( toLower( trim ( name ) ) );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
 		{
-			return m_Impl.getBundleInletHandles();
+			checkValidity( m_IO );
+			return m_IO->getBundleInletHandles();
 		}
 
 		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
 		{
-			return m_Impl.getBundleOutletHandles();
+			checkValidity( m_IO );
+			return m_IO->getBundleOutletHandles();
 		}
 	}
 }

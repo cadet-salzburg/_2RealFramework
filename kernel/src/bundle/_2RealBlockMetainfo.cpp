@@ -37,6 +37,11 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
+		void BlockMetainfo::setCategory( std::string const& category )
+		{
+			m_Impl.setDescription( category );
+		}
+
 		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& initialValue )
 		{
 			checkChars( toLower( trim( inletName ) ) );

@@ -36,6 +36,7 @@ namespace _2Real
 	{
 		struct BundleConfig
 		{
+			std::string					bundleName;
 			std::string					bundlePath;
 		};
 
@@ -75,6 +76,7 @@ namespace _2Real
 			void writeTo( std::string const& filePath ) const;
 
 			static void loadConfig( app::Engine &engine, std::string const& filePath );
+			static std::list< std::string > tryConfig( app::Engine &engine, std::string const& filePath );
 
 		private:
 

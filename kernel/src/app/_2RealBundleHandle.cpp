@@ -135,5 +135,11 @@ namespace _2Real
 		{
 			m_Bundle = nullptr;
 		}
+
+		void BundleHandle::unload( const long blockTimeout )
+		{
+			checkValidity( m_Bundle );
+			m_Bundle->unload( blockTimeout );
+		}
 	}
 }

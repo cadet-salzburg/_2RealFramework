@@ -95,9 +95,10 @@ namespace _2Real
 		void							clearFully();
 		void							clearBlockInstances();
 
-		void							addBlockInstance( AbstractUberBlock &block );
-		void							killBlockInstance( AbstractUberBlock &block, const long timeout );
-		void							addContextBlock( AbstractUberBlock &context );
+		void							addBlock( FunctionBlock< app::BlockHandle > &block );
+		void							addBlock( FunctionBlock< app::ContextBlockHandle > &block );
+		void							removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout );
+		void							removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout );
 
 		void							registerToException( app::BlockExcCallback &callback );
 		void							unregisterFromException( app::BlockExcCallback &callback );
@@ -114,6 +115,8 @@ namespace _2Real
 
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle &				loadLibrary( std::string const& libraryPath );
+		app::BundleHandle &				findBundleByName( std::string const& name ) const;
+		app::BundleHandle &				findBundleByPath( std::string const& libraryPath ) const;
 
 	private:
 

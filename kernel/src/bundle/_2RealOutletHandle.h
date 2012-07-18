@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealHandle.h"
 
 #include <sstream>
 
@@ -29,13 +30,16 @@ namespace _2Real
 
 	namespace bundle
 	{
-		class OutletHandle
+		class OutletHandle : private Handle
 		{
 
 		public:
 
 			OutletHandle();
-			OutletHandle( Outlet &slot );
+			OutletHandle( Outlet &outlet );
+			OutletHandle( OutletHandle const& other );
+			OutletHandle& operator=( OutletHandle const& other );
+			virtual ~OutletHandle();
 
 			template< typename Datatype >
 			Datatype & getWriteableRef()
@@ -54,7 +58,11 @@ namespace _2Real
 
 			void discard();
 
+			bool isValid() const;
+
 		private:
+
+			void invalidate();
 
 			Any &		getCurrentData();
 			Outlet				*m_Outlet;

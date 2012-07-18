@@ -28,11 +28,16 @@
 #include "xml/_2RealXMLWriter.h"
 
 using std::string;
+using std::list;
 
 namespace _2Real
 {
 	namespace app
 	{
+		class ConfigAccess
+		{
+		};
+
 		Engine & Engine::instance()
 		{
 			static SingletonHolder< Engine > holder;
@@ -64,9 +69,19 @@ namespace _2Real
 			m_EngineImpl.clearBlockInstances();
 		}
 
-		BundleHandle & Engine::loadBundle( std::string const& libraryPath )
+		BundleHandle & Engine::loadBundle( string const& libraryPath )
 		{
 			return m_EngineImpl.loadLibrary( libraryPath );
+		}
+
+		BundleHandle & Engine::findBundleByName( string const& name ) const
+		{
+			return m_EngineImpl.findBundleByName( name );
+		}
+
+		BundleHandle & Engine::findBundleByPath( string const& libraryPath ) const
+		{
+			return m_EngineImpl.findBundleByPath( libraryPath );
 		}
 
 		void Engine::registerToException( BlockExceptionCallback callback, void *userData )
@@ -161,7 +176,8 @@ namespace _2Real
 			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
 			{
 				xml::BundleConfig b;
-				b.bundlePath = ( *it )->getName();
+				b.bundleName = ( *it )->getName();
+				//b.bundlePath = ( *it )->getInstallDirectory();
 				config.addBundle( b );
 			}
 
@@ -218,6 +234,11 @@ namespace _2Real
 		void Engine::loadConfig( string const& filePath )
 		{
 			xml::XMLConfig::loadConfig( *this, filePath );
+		}
+
+		list< string > Engine::tryConfig( string const& filePath )
+		{
+			return xml::XMLConfig::tryConfig( *this, filePath );
 		}
 	}
 }

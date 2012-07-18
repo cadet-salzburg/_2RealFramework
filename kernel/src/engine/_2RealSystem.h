@@ -26,6 +26,14 @@ namespace _2Real
 
 	class Logger;
 	class AbstractUberBlock;
+	template< typename T >
+	class FunctionBlock;
+
+	namespace app
+	{
+		class BlockHandle;
+		class ContextBlockHandle;
+	}
 
 	class System
 	{
@@ -39,20 +47,21 @@ namespace _2Real
 		System( Logger &logger );
 		~System();
 
-		void			clearFully();
-		void			clearBlocksOnly();
+		void			clearAll();
+		void			clearBlockInstances();
 
-		void			addContextBlock( AbstractUberBlock &context );
-		void			addBlockInstance( AbstractUberBlock &block );
-		void			removeBlockInstance( AbstractUberBlock &block, const long timeout );
+		void			addBlock( FunctionBlock< app::BlockHandle > &block );
+		void			addBlock( FunctionBlock< app::ContextBlockHandle > &block );
+		void			removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout );
+		void			removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout );
 		Blocks const&	getBlockInstances() const;
 		Blocks const&	getBundleContexts() const;
 
 	private:
 
-		Logger														&m_Logger;
-		Blocks														m_Blocks;
-		Blocks														m_ContextBlocks;
+		Logger			&m_Logger;
+		Blocks			m_BlockInstances;
+		Blocks			m_ContextBlocks;
 
 	};
 

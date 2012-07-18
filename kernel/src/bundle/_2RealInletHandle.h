@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealHandle.h"
 
 #include <sstream>
 
@@ -29,13 +30,16 @@ namespace _2Real
 
 	namespace bundle
 	{
-		class InletHandle
+		class InletHandle : private Handle
 		{
 
 		public:
 
 			InletHandle();
-			InletHandle( Inlet &slot );
+			InletHandle( Inlet &inlet );
+			InletHandle( InletHandle const& src );
+			InletHandle& operator=( InletHandle const& src );
+			virtual ~InletHandle();
 
 			template< typename Datatype >
 			Datatype const& getReadableRef() const
@@ -67,10 +71,14 @@ namespace _2Real
 				return new Datatype( data );
 			}
 
+			bool isValid() const;
+
 		private:
 
-			Any			getCurrentData() const;
-			Inlet				const* m_Inlet;
+			void invalidate();
+
+			Any					getCurrentData() const;
+			Inlet				*m_Inlet;
 
 		};
 	}

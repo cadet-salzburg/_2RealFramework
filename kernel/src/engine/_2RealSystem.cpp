@@ -18,7 +18,7 @@
 
 #include "engine/_2RealSystem.h"
 #include "engine/_2RealLogger.h"
-#include "engine/_2RealAbstractUberBlock.h"
+#include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
 
 #include <string>
@@ -38,14 +38,14 @@ namespace _2Real
 
 	System::~System()
 	{
-		clearFully();
+		clearAll();
 	}
 
-	void System::clearFully()
+	void System::clearAll()
 	{
 		Blocks readyBlocks;
 
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
 			(*it)->prepareForShutDown();
 		}
@@ -55,7 +55,7 @@ namespace _2Real
 			(*it)->prepareForShutDown();
 		}
 
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/ )
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
@@ -66,7 +66,7 @@ namespace _2Real
 				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
 			}
 
-			it = m_Blocks.erase( it );
+			it = m_BlockInstances.erase( it );
 		}
 
 		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
@@ -90,16 +90,16 @@ namespace _2Real
 		}
 	}
 
-	void System::clearBlocksOnly()
+	void System::clearBlockInstances()
 	{
 		Blocks ready;
 
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
 			(*it)->prepareForShutDown();
 		}
 
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); /**/ )
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
 			if ( (*it)->shutDown( 1000 ) )
 			{
@@ -110,7 +110,7 @@ namespace _2Real
 				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
 			}
 
-			it = m_Blocks.erase( it );
+			it = m_BlockInstances.erase( it );
 		}
 
 		for ( BlockIterator it = ready.begin(); it != ready.end(); /**/ )
@@ -120,19 +120,19 @@ namespace _2Real
 		}
 	}
 
-	void System::addContextBlock( AbstractUberBlock &context )
+	void System::addBlock( FunctionBlock< app::ContextBlockHandle > &block )
 	{
-		m_ContextBlocks.insert( &context );
+		m_ContextBlocks.insert( &block );
 	}
 
-	void System::addBlockInstance( AbstractUberBlock &block )
+	void System::addBlock( FunctionBlock< app::BlockHandle > &block )
 	{
-		m_Blocks.insert( &block );
+		m_BlockInstances.insert( &block );
 	}
 
-	void System::removeBlockInstance( AbstractUberBlock &block, const long timeout )
+	void System::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
 	{
-		for ( BlockIterator it = m_Blocks.begin(); it != m_Blocks.end(); ++it )
+		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
 			if ( *it == &block )
 			{
@@ -140,12 +140,39 @@ namespace _2Real
 				if ( (*it)->shutDown( timeout ) )
 				{
 					delete *it;
-					m_Blocks.erase( it );
+					m_BlockInstances.erase( it );
 					return;
 				}
 				else
 				{
-					m_Blocks.erase( it );
+					m_BlockInstances.erase( it );
+					ostringstream msg;
+					msg << " timeout reached on shutdown of " << block.getFullName();
+					throw TimeOutException( msg.str() );
+				}
+			}
+		}
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	void System::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
+	{
+		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+		{
+			if ( *it == &block )
+			{
+				( *it )->prepareForShutDown();
+				if ( (*it)->shutDown( timeout ) )
+				{
+					delete *it;
+					m_ContextBlocks.erase( it );
+					return;
+				}
+				else
+				{
+					m_ContextBlocks.erase( it );
 					ostringstream msg;
 					msg << " timeout reached on shutdown of " << block.getFullName();
 					throw TimeOutException( msg.str() );
@@ -159,7 +186,7 @@ namespace _2Real
 
 	System::Blocks const& System::getBlockInstances() const
 	{
-		return m_Blocks;
+		return m_BlockInstances;
 	}
 
 	System::Blocks const& System::getBundleContexts() const

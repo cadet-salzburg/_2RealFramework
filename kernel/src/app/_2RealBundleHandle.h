@@ -56,6 +56,8 @@ namespace _2Real
 			ContextBlockHandle & getContextBlock() const;
 			BlockHandle & createBlockInstance( std::string const& blockName );
 
+			void unload( const long blockTimeout = LONG_MAX );
+
 		protected:
 
 			void invalidate();

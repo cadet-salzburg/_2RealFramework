@@ -55,6 +55,9 @@ namespace _2Real
 		bool											isLibraryLoaded( Poco::Path const& path ) const;
 		FunctionBlock< app::BlockHandle > &				createBlockInstance( Bundle &bundle, std::string const& blockName );
 		Bundles const&									getBundles() const;
+		Bundle &										findBundleByName( std::string const& name ) const;
+		Bundle &										findBundleByPath( std::string const& libraryPath ) const;
+		void											destroyBundle( Bundle &bundle, const long timeout );
 
 	private:
 

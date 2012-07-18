@@ -53,6 +53,7 @@ namespace _2Real
 				return exportBlockInternal( *obj, blockName ); 
 			}
 
+			void setName( std::string const& name );
 			void setDescription( std::string const& description );
 			void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
 			void setAuthor( std::string const& author );

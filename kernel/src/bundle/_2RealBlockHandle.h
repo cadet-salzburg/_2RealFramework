@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "helpers/_2RealHandle.h"
+
 #include <string>
 #include <vector>
 
@@ -31,7 +33,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 
-		class BlockHandle
+		class BlockHandle : private Handle
 		{
 
 		public:
@@ -44,7 +46,11 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
+			BlockHandle();
 			BlockHandle( FunctionBlockIOManager &block );
+			BlockHandle( BlockHandle const& src );
+			BlockHandle& operator=( BlockHandle const& src );
+			virtual ~BlockHandle();
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;
@@ -53,7 +59,10 @@ namespace _2Real
 
 		private:
 
-			FunctionBlockIOManager	&m_Impl;
+			bool isValid() const;
+			void invalidate();
+
+			FunctionBlockIOManager	*m_IO;
 
 		};
 	}

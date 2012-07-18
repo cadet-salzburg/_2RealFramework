@@ -30,6 +30,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <list>
 
 using std::string;
 using std::ostringstream;
@@ -39,6 +40,7 @@ using std::ifstream;
 using std::vector;
 using std::map;
 using std::make_pair;
+using std::list;
 
 using namespace Poco::XML;
 
@@ -69,6 +71,40 @@ namespace _2Real
 {
 	namespace xml
 	{
+		list< string > XMLConfig::tryConfig( app::Engine &engine, string const& filePath )
+		{
+			ifstream in( filePath );
+			InputSource src( in );
+			DOMParser parser;
+
+			Document *document = parser.parse( &src );
+			Element *root = getChildElementByName( ROOT, *document );
+			Element *bundles = getChildElementByName( BUNDLE_LIST, *root );
+
+			list< string > neededBundles;
+			NodeList *bundleList = bundles->childNodes();
+			for ( unsigned int i=0; i<bundleList->length(); ++i )
+			{
+				Node *bundle = bundleList->item( i );
+				if ( bundle->nodeType() == Node::ELEMENT_NODE && bundle->localName() == BUNDLE )
+				{
+					string name = trim( bundle->innerText() );
+
+					try
+					{
+						app::BundleHandle handle = engine.findBundleByName( name );
+					}
+					catch ( NotFoundException &e )
+					{
+						( void ) e;
+						neededBundles.push_back( name );
+					}
+				}
+			}
+			bundleList->release();
+			return neededBundles;
+		}
+
 		void XMLConfig::loadConfig( app::Engine &engine, string const& filePath )
 		{
 			ifstream in( filePath );
@@ -89,12 +125,10 @@ namespace _2Real
 				if ( bundle->nodeType() == Node::ELEMENT_NODE && bundle->localName() == BUNDLE )
 				{
 					BundleConfig config;
-					config.bundlePath = trim( bundle->innerText() );
+					config.bundleName = trim( bundle->innerText() );
 
-					// TODO: the bundle might actually already be loaded, in that case get the handle
-
-					app::BundleHandle bundleHandle = engine.loadBundle( config.bundlePath );
-					loadedBundles.insert( make_pair( config.bundlePath, bundleHandle ) );
+					app::BundleHandle handle = engine.findBundleByName( config.bundleName );
+					loadedBundles.insert( make_pair( config.bundleName, handle ) );
 				}
 			}
 			installedBundles->release();

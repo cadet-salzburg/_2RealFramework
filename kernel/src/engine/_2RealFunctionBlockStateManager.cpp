@@ -309,8 +309,7 @@ namespace _2Real
 				if ( m_IsFlaggedForSetup.isSet() )
 				{
 					//m_IOManager->updateInletData();
-					bundle::BlockHandle context( *m_IOManager );
-					m_FunctionBlock->setup( context );
+					m_FunctionBlock->setup( m_IOManager->getHandle() );
 					m_IsFlaggedForSetup.unset();
 				}
 
@@ -327,8 +326,7 @@ namespace _2Real
 				if ( m_IsFlaggedForSetup.isSet() )
 				{
 					//m_IOManager->updateInletData();
-					bundle::BlockHandle context( *m_IOManager );
-					m_FunctionBlock->setup( context );
+					m_FunctionBlock->setup( m_IOManager->getHandle() );
 					m_IsFlaggedForSetup.unset();
 				}
 

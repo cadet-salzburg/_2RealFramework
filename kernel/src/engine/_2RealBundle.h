@@ -54,22 +54,28 @@ namespace _2Real
 		using Handleable< app::BundleHandle >::registerHandle;
 		using Handleable< app::BundleHandle >::unregisterHandle;
 
+		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >					BlockInstances;
+		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::iterator			BlockInstanceIterator;
+		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::const_iterator	BlockInstanceConstIterator;
+
 		using Identifiable< Bundle >::getIds;
 		using Identifiable< Bundle >::getName;
 
+		std::string const& getAbsPath() const;
+
 		void						clear();
+		void						unload( const long timeout );
 		app::BundleInfo const&		getBundleInfo() const;
 		app::ContextBlockHandle &	getContextBlockHandle() const;
+		bool						hasContext() const;
 		void						setContextBlock( FunctionBlock< app::ContextBlockHandle > &context );
 		app::BlockHandle &			createBlockInstance( std::string const& blockName );
+		BlockInstances &							getBlockInstances( BundleManager const& m );
+		FunctionBlock< app::ContextBlockHandle > &	getContextBlock( BundleManager const& m );
 
 	private:
 
 		unsigned int				getBlockInstanceCount( std::string const& blockName ) const;
-
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >					BlockInstances;
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::iterator			BlockInstanceIterator;
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::const_iterator	BlockInstanceConstIterator;
 
 		BundleManager									&m_BundleManager;
 		FunctionBlock< app::ContextBlockHandle >		*m_ContextBlock;

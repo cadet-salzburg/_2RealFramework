@@ -109,7 +109,7 @@ namespace _2Real
 				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 
 				bundleInfo.metainfo->cleanup();
-				bundleInfo.metainfo->setName( path );
+				//bundleInfo.metainfo->setName( path );
 				bundleInfo.metainfo->setInstallDirectory( path );
 
 				return info->getBundleData();

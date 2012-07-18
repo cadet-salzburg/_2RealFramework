@@ -19,18 +19,69 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "engine/_2RealOutlet.h"
 
+#define checkValidity( obj )\
+	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );
+
 namespace _2Real
 {
 	namespace bundle
 	{
 		OutletHandle::OutletHandle() :
+			Handle(),
 			m_Outlet( nullptr )
 		{
 		}
 
 		OutletHandle::OutletHandle( Outlet &outlet ) :
+			Handle(),
 			m_Outlet( &outlet )
 		{
+			outlet.registerHandle( *this );
+		}
+
+		OutletHandle::~OutletHandle()
+		{
+			if ( isValid() ) m_Outlet->unregisterHandle( *this );
+		}
+
+		OutletHandle::OutletHandle( OutletHandle const& src ) :
+			Handle(),
+			m_Outlet( src.m_Outlet )
+		{
+			if ( isValid() ) m_Outlet->registerHandle( *this );
+		}
+
+		OutletHandle& OutletHandle::operator=( OutletHandle const& other )
+		{
+			if ( this == &other )
+			{
+				return *this;
+			}
+
+			if ( isValid() )
+			{
+				m_Outlet->unregisterHandle( *this );
+			}
+
+			Handle::operator=( other );
+			m_Outlet = other.m_Outlet;
+
+			if ( isValid() )
+			{
+				m_Outlet->registerHandle( *this );
+			}
+
+			return *this;
+		}
+
+		bool OutletHandle::isValid() const
+		{
+			return m_Outlet != nullptr;
+		}
+
+		void OutletHandle::invalidate()
+		{
+			m_Outlet = nullptr;
 		}
 
 		Any & OutletHandle::getCurrentData()
@@ -40,6 +91,7 @@ namespace _2Real
 
 		void OutletHandle::discard()
 		{
+			checkValidity( m_Outlet );
 			m_Outlet->discardCurrentUpdate();
 		}
 	}

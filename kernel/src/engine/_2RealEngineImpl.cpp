@@ -89,20 +89,20 @@ namespace _2Real
 		m_Typetable->registerType< bool >( "bool" );
 		m_Typetable->registerType< std::string >( "string" );
 
-		m_Typetable->registerType< StringEnumeration >( "enum_string" );
+		//m_Typetable->registerType< StringEnumeration >( "enum_string" );
 
 		m_Typetable->registerType< ImageT < char > >( "img_char" );
 		m_Typetable->registerType< ImageT < unsigned char > >( "img_uchar" );
 		m_Typetable->registerType< ImageT < short > >( "img_short" );
 		m_Typetable->registerType< ImageT < unsigned short > >( "img_ushort" );
-		m_Typetable->registerType< ImageT < int > >( "img_int" );
-		m_Typetable->registerType< ImageT < unsigned int > >( "img_uint" );
-		m_Typetable->registerType< ImageT < long > >( "img_long" );
-		m_Typetable->registerType< ImageT < unsigned long > >( "img_ulong" );
+		//m_Typetable->registerType< ImageT < int > >( "img_int" );
+		//m_Typetable->registerType< ImageT < unsigned int > >( "img_uint" );
+		//m_Typetable->registerType< ImageT < long > >( "img_long" );
+		//m_Typetable->registerType< ImageT < unsigned long > >( "img_ulong" );
 		m_Typetable->registerType< ImageT < float > >( "img_float" );
 		m_Typetable->registerType< ImageT < double > >( "img_double" );
 
-		m_Typetable->registerType< DeviceInfos >( "device_infos" );
+		//m_Typetable->registerType< DeviceInfos >( "device_infos" );
 
 		m_Timestamp.update();
 	}
@@ -135,7 +135,7 @@ namespace _2Real
 			delete *it;
 		}
 		m_Links.clear();
-		m_System->clearFully();
+		m_System->clearAll();
 		m_BundleManager->clear();
 	}
 
@@ -147,22 +147,27 @@ namespace _2Real
 			delete *it;
 		}
 		m_Links.clear();
-		m_System->clearBlocksOnly();
+		m_System->clearBlockInstances();
 	}
 
-	void EngineImpl::addBlockInstance( AbstractUberBlock &block )
+	void EngineImpl::addBlock( FunctionBlock< app::BlockHandle > &block )
 	{
-		m_System->addBlockInstance( block );
+		m_System->addBlock( block );
 	}
 
-	void EngineImpl::killBlockInstance( AbstractUberBlock &block, const long timeout )
+	void EngineImpl::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
 	{
-		m_System->removeBlockInstance( block, timeout );
+		m_System->removeBlock( block, timeout );
 	}
 
-	void EngineImpl::addContextBlock( AbstractUberBlock &context )
+	void EngineImpl::addBlock( FunctionBlock< app::ContextBlockHandle > &block )
 	{
-		m_System->addContextBlock( context );
+		m_System->addBlock( block );
+	}
+
+	void EngineImpl::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
+	{
+		m_System->removeBlock( block, timeout );
 	}
 
 	const long EngineImpl::getElapsedTime() const
@@ -204,6 +209,16 @@ namespace _2Real
 			path.append( shared_library_suffix );
 		}
 		return m_BundleManager->loadLibrary( path ).getHandle();
+	}
+
+	app::BundleHandle & EngineImpl::findBundleByName( string const& name ) const
+	{
+		return m_BundleManager->findBundleByName( name ).getHandle();
+	}
+
+	app::BundleHandle & EngineImpl::findBundleByPath( string const& libraryPath ) const
+	{
+		return m_BundleManager->findBundleByPath( libraryPath ).getHandle();
 	}
 
 	void EngineImpl::registerToException( app::BlockExcCallback &callback )
@@ -270,7 +285,6 @@ namespace _2Real
 		}
 		else
 		{
-			std::cout << "ALREADY EXISTS!" << std::endl;
 			delete link;
 		}
 	}

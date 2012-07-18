@@ -42,6 +42,7 @@ namespace _2Real
 			BlockMetainfo( BlockMetadata &data, Typetable const& typetable );
 
 			void setDescription( std::string const& description );
+			void setCategory( std::string const& category );
 
 			template< typename Datatype >
 			void addInlet( std::string const& inletName, Datatype initialValue )

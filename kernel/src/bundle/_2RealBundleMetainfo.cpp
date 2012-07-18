@@ -30,6 +30,11 @@ namespace _2Real
 		{
 		}
 
+		void BundleMetainfo::setName( std::string const& name )
+		{
+			m_Impl.setName( trim( name ) );
+		}
+
 		void BundleMetainfo::setDescription( std::string const& description )
 		{
 			m_Impl.setDescription( trim( description ) );

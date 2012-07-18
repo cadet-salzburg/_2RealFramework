@@ -52,6 +52,32 @@ namespace _2Real
 		m_BlockInstances.clear();
 	}
 
+	bool Bundle::hasContext() const
+	{
+		return ( m_ContextBlock != nullptr );
+	}
+
+	void Bundle::unload( const long timeout )
+	{
+		m_BundleManager.destroyBundle( *this, timeout );
+		delete this;
+	}
+
+	Bundle::BlockInstances & Bundle::getBlockInstances( BundleManager const& m )
+	{
+		return m_BlockInstances;
+	}
+
+	FunctionBlock< app::ContextBlockHandle > & Bundle::getContextBlock( BundleManager const& m )
+	{
+		return *m_ContextBlock;
+	}
+
+	string const& Bundle::getAbsPath() const
+	{
+		return m_BundleInfo.getInstallDirectory();
+	}
+
 	app::BundleInfo const& Bundle::getBundleInfo() const
 	{
 		return m_BundleInfo;

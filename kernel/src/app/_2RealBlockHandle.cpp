@@ -196,7 +196,7 @@ namespace _2Real
 		void BlockHandle::kill( const long timeout )
 		{
 			checkValidity( m_Block );
-			EngineImpl::instance().killBlockInstance( *m_Block, timeout );
+			EngineImpl::instance().removeBlock( *m_Block, timeout );
 		}
 
 		void BlockHandle::singleStep()

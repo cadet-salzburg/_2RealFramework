@@ -76,6 +76,8 @@ namespace _2Real
 
 			void setBaseDirectory( std::string const& directory );
 			app::BundleHandle & loadBundle( std::string const& libraryPath );
+			app::BundleHandle & findBundleByPath( std::string const& libraryPath ) const;
+			app::BundleHandle & findBundleByName( std::string const& name ) const;
 
 			// either clears everything, incl bundles and contexts, or just the block instances
 			void clearAll();
@@ -123,6 +125,7 @@ namespace _2Real
 			}
 
 			void safeConfig( std::string const& filePath );
+			std::list< std::string > tryConfig( std::string const& filePath );
 			void loadConfig( std::string const& filePath );
 
 		private:

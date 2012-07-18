@@ -175,6 +175,13 @@ namespace _2Real
 
 	void Metainfo::cleanup()
 	{
+		if ( m_BundleData.getName() == "undefined" )
+		{
+			ostringstream msg;
+			msg << "bundle " << m_BundleData.getInstallDirectory() << " does not define a name";
+			throw NotFoundException( msg.str() );
+		}
+
 		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
 			for ( Metainfo::ParameterIterator pIt = m_GlobalInlets.begin(); pIt != m_GlobalInlets.end(); ++pIt )
