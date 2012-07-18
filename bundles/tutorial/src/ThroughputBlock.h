@@ -14,5 +14,5 @@ public:
 
 private:
 
-	BlockHandle*		m_pBlockHandle;
+	BlockHandle			m_pBlockHandle;
 };

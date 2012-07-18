@@ -24,7 +24,7 @@ void ThroughputBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_pBlockHandle = (BlockHandle*)&block;
+		m_pBlockHandle = block;
 	}
 	catch ( Exception &e )
 	{
@@ -38,18 +38,18 @@ void ThroughputBlock::update()
 	try
 	{
 		// throughput inlets to outlets
-		m_pBlockHandle->getOutletHandle("bool").getWriteableRef<bool>() = m_pBlockHandle->getInletHandle("bool").getReadableRef<bool>();
-		m_pBlockHandle->getOutletHandle("uchar").getWriteableRef<unsigned char>() = m_pBlockHandle->getInletHandle("uchar").getReadableRef<unsigned char>();
-		m_pBlockHandle->getOutletHandle("char").getWriteableRef<char>() = m_pBlockHandle->getInletHandle("char").getReadableRef<char>();
-		m_pBlockHandle->getOutletHandle("ushort").getWriteableRef<unsigned short>() = m_pBlockHandle->getInletHandle("ushort").getReadableRef<unsigned short>();
-		m_pBlockHandle->getOutletHandle("short").getWriteableRef<short>() = m_pBlockHandle->getInletHandle("short").getReadableRef<short>();
-		m_pBlockHandle->getOutletHandle("uint").getWriteableRef<unsigned int>() = m_pBlockHandle->getInletHandle("uint").getReadableRef<unsigned int>();
-		m_pBlockHandle->getOutletHandle("int").getWriteableRef<int>() = m_pBlockHandle->getInletHandle("int").getReadableRef<int>();
-		m_pBlockHandle->getOutletHandle("ulong").getWriteableRef<unsigned long>() = m_pBlockHandle->getInletHandle("ulong").getReadableRef<unsigned long>();
-		m_pBlockHandle->getOutletHandle("long").getWriteableRef<long>() = m_pBlockHandle->getInletHandle("long").getReadableRef<long>();
-		m_pBlockHandle->getOutletHandle("float").getWriteableRef<float>() = m_pBlockHandle->getInletHandle("float").getReadableRef<float>();
-		m_pBlockHandle->getOutletHandle("double").getWriteableRef<double>() = m_pBlockHandle->getInletHandle("double").getReadableRef<double>();
-		m_pBlockHandle->getOutletHandle("string").getWriteableRef<string>() = m_pBlockHandle->getInletHandle("string").getReadableRef<string>();
+		m_pBlockHandle.getOutletHandle("bool").getWriteableRef<bool>() = m_pBlockHandle.getInletHandle("bool").getReadableRef<bool>();
+		m_pBlockHandle.getOutletHandle("uchar").getWriteableRef<unsigned char>() = m_pBlockHandle.getInletHandle("uchar").getReadableRef<unsigned char>();
+		m_pBlockHandle.getOutletHandle("char").getWriteableRef<char>() = m_pBlockHandle.getInletHandle("char").getReadableRef<char>();
+		m_pBlockHandle.getOutletHandle("ushort").getWriteableRef<unsigned short>() = m_pBlockHandle.getInletHandle("ushort").getReadableRef<unsigned short>();
+		m_pBlockHandle.getOutletHandle("short").getWriteableRef<short>() = m_pBlockHandle.getInletHandle("short").getReadableRef<short>();
+		m_pBlockHandle.getOutletHandle("uint").getWriteableRef<unsigned int>() = m_pBlockHandle.getInletHandle("uint").getReadableRef<unsigned int>();
+		m_pBlockHandle.getOutletHandle("int").getWriteableRef<int>() = m_pBlockHandle.getInletHandle("int").getReadableRef<int>();
+		m_pBlockHandle.getOutletHandle("ulong").getWriteableRef<unsigned long>() = m_pBlockHandle.getInletHandle("ulong").getReadableRef<unsigned long>();
+		m_pBlockHandle.getOutletHandle("long").getWriteableRef<long>() = m_pBlockHandle.getInletHandle("long").getReadableRef<long>();
+		m_pBlockHandle.getOutletHandle("float").getWriteableRef<float>() = m_pBlockHandle.getInletHandle("float").getReadableRef<float>();
+		m_pBlockHandle.getOutletHandle("double").getWriteableRef<double>() = m_pBlockHandle.getInletHandle("double").getReadableRef<double>();
+		m_pBlockHandle.getOutletHandle("string").getWriteableRef<string>() = m_pBlockHandle.getInletHandle("string").getReadableRef<string>();
 	}
 	catch ( Exception &e )
 	{
