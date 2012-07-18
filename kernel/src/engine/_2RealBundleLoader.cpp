@@ -108,11 +108,8 @@ namespace _2Real
 				bundleInfo.metainfo = info;
 				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 
-				bundleInfo.metainfo->cleanup();
-				//bundleInfo.metainfo->setName( path );
 				bundleInfo.metainfo->setInstallDirectory( path );
-
-				return info->getBundleData();
+				bundleInfo.metainfo->cleanup();
 			}
 			catch ( Exception &e )
 			{
@@ -120,6 +117,16 @@ namespace _2Real
 				delete info;
 				throw e;
 			}
+
+			BundleMetadata const& meta = info->getBundleData();
+			if ( meta.getName() == "undefined" )
+			{
+				ostringstream msg;
+				msg << "bundle " << meta.getInstallDirectory() << " does not define a name";
+				throw NotFoundException( msg.str() );
+			}
+
+			return meta;
 		}
 		else
 		{

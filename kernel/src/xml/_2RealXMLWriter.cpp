@@ -320,7 +320,7 @@ namespace _2Real
 		{
 			AutoPtr< Element > bundle = m_Document->createElement( BUNDLE );
 			m_Bundles->appendChild( bundle );
-			AutoPtr< Text > path = m_Document->createTextNode( config.bundlePath );
+			AutoPtr< Text > path = m_Document->createTextNode( config.bundleName );
 			bundle->appendChild( path );
 		}
 
