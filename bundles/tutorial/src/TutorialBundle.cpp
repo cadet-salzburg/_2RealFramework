@@ -17,6 +17,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
+		info.setName("TutorialBundle");
 		info.setDescription( "Tutorial Bundle" );
 		info.setAuthor( "Robert Praxmarer" );
 		info.setCategory( "Tutorial" );

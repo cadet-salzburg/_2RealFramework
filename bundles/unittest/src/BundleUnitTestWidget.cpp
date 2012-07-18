@@ -18,7 +18,6 @@ BundleUnitTestWidget::BundleUnitTestWidget(std::string strBundleName) : m_iInsta
 
 BundleUnitTestWidget::~BundleUnitTestWidget()
 {
-
 }
 
 void BundleUnitTestWidget::setup(std::string strBundleName)

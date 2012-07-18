@@ -17,6 +17,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
+		info.setName("CameraCaptureBundle");
 		info.setDescription( "Camera Capture" );
 		info.setAuthor( "Robert Praxmarer" );
 		info.setCategory( "Devices" );
