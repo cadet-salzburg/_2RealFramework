@@ -83,7 +83,7 @@ public:
 		glEnable( GL_TEXTURE_2D );
 		glBindTexture( GL_TEXTURE_2D, m_Texture );
 
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 8, 6, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glGenerateMipmap( GL_TEXTURE_2D );
@@ -96,7 +96,7 @@ public:
 
 	void updateTexture()
 	{
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 8, 6, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 3, 0, GL_RGBA, GL_FLOAT, (const GLvoid *)m_ImageData.data );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glGenerateMipmap( GL_TEXTURE_2D );
@@ -183,13 +183,18 @@ int main( int argc, char *argv[] )
 		SDL_GL_SetSwapInterval( 1 );
 
 		Engine &testEngine = Engine::instance();
+		testEngine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin\\");
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
+
+		std::cout << "LOADED!" << std::endl;
 
 		BlockHandle out = testBundle.createBlockInstance( "image_out" );
 		out.setUpdateRate( 1.0 );
 		out.setup();
 		out.start();
+
+		BlockHandle inout = testBundle.createBlockInstance( "image_in_out" );
 
 		OutletHandle oOut = out.getOutletHandle( "image_outlet" );
 		Receiver receiver;
@@ -220,10 +225,13 @@ int main( int argc, char *argv[] )
 		SDL_GL_DeleteContext( context );
 		SDL_DestroyWindow( window );
 		SDL_QUIT;
+
+		testEngine.safeConfig( "img_test.xml" );
+		testBundle.unload();
 	}
-	catch ( std::exception &e )
+	catch ( Exception &e )
 	{
-		cout << e.what() << endl;
+		cout << e.what() << " " << e.message() << endl;
 	}
 
 	return 0;

@@ -50,50 +50,50 @@ int main( int argc, char *argv[] )
 
 	try 
 	{
-		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
+		testEngine.loadConfig( "test.xml" );
+		//BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
 
-		std::vector< BlockHandle > vec;
-		vec.resize( 3000 );
+		//std::vector< BlockHandle > vec;
+		//vec.resize( 30 );
 
-		for ( unsigned int i=0; i<1000; ++i )
-		{
-			std::ostringstream msg;
-			msg << "in # " << i;
+		//for ( unsigned int i=0; i<10; ++i )
+		//{
+		//	std::ostringstream msg;
+		//	msg << "in_instance_" << i;
 
-			BlockHandle out = testBundle.createBlockInstance( "out" );
-			OutletHandle outOut = out.getOutletHandle( "out outlet" );
-			out.setUpdateRate( 1.0 );
-			out.setup();
+		//	BlockHandle out = testBundle.createBlockInstance( "out" );
+		//	OutletHandle outOut = out.getOutletHandle( "out_outlet" );
+		//	out.setUpdateRate( 1.0 );
+		//	//out.setup();
 
-			BlockHandle inout = testBundle.createBlockInstance( "in - out" );
-			InletHandle inoutIn = inout.getInletHandle( "inout inlet" );
-			OutletHandle inoutOut = inout.getOutletHandle( "inout outlet" );
-			inoutIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
-			inout.setUpdateRate( 0.5 );
-			inout.setup();
+		//	BlockHandle inout = testBundle.createBlockInstance( "in_out" );
+		//	InletHandle inoutIn = inout.getInletHandle( "inout_inlet" );
+		//	OutletHandle inoutOut = inout.getOutletHandle( "inout_outlet" );
+		//	inoutIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+		//	inout.setUpdateRate( 0.5 );
+		//	//inout.setup();
 
-			BlockHandle in = testBundle.createBlockInstance( "in" );
-			InletHandle inIn = in.getInletHandle( "in inlet" );
-			InletHandle inMsg = in.getInletHandle( "in msg" );
-			inMsg.setValue< string >( msg.str() );
-			in.setUpdateRate( 0.25 );
-			inIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
-			in.setup();
+		//	BlockHandle in = testBundle.createBlockInstance( "in" );
+		//	InletHandle inIn = in.getInletHandle( "in_inlet" );
+		//	InletHandle inMsg = in.getInletHandle( "in_msg" );
+		//	inMsg.setValue< string >( msg.str() );
+		//	in.setUpdateRate( 0.25 );
+		//	inIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+		//	//in.setup();
 
-			inoutIn.linkTo( outOut );
-			inIn.linkTo( inoutOut );
+		//	inoutIn.linkTo( outOut );
+		//	inIn.linkTo( inoutOut );
 
-			vec[ i ] = in;
-			vec[ 1000 + i ] = inout;
-			vec[ 2000 + i ] = out;
-		}
+		//	vec[ i ] = in;
+		//	vec[ 10 + i ] = inout;
+		//	vec[ 20 + i ] = out;
+		//}
 
-		for ( std::vector< BlockHandle >::iterator it = vec.begin(); it != vec.end(); ++it )
-		{
-			it->start();
-		}
-
-
+		//for ( std::vector< BlockHandle >::iterator it = vec.begin(); it != vec.end(); ++it )
+		//{
+		//	it->setup();
+		//	it->start();
+		//}
 	}
 	catch ( Exception &e )
 	{
@@ -110,6 +110,8 @@ int main( int argc, char *argv[] )
 			break;
 		}
 	}
+
+	//testEngine.safeConfig( "test.xml" );
 
 	return 0;
 }

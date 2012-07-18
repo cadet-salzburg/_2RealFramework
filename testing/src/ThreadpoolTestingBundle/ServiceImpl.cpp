@@ -66,9 +66,9 @@ void Out::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_Msg= handle.getInletHandle( "out msg" );
-		m_Out = handle.getOutletHandle( "out outlet" );
-		m_Out.getWriteableRef< unsigned int >() = 0;
+		m_Msg= handle.getInletHandle( "out_msg" );
+		m_Out = handle.getOutletHandle( "out_outlet" );
+		m_Out.getWriteableRef< unsigned int >() = 100;
 	}
 	catch ( Exception &e )
 	{
@@ -82,6 +82,7 @@ void Out::update()
 	try
 	{
 		++m_Out.getWriteableRef< unsigned int >();
+		//cout << "out: out " << m_Out.getWriteableRef< unsigned int >() << endl;
 	}
 	catch ( Exception &e )
 	{
@@ -94,9 +95,9 @@ void InOut::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_In = handle.getInletHandle( "inout inlet" );
-		m_Msg= handle.getInletHandle( "inout msg" );
-		m_Out = handle.getOutletHandle( "inout outlet" );
+		m_In = handle.getInletHandle( "inout_inlet" );
+		m_Msg= handle.getInletHandle( "inout_msg" );
+		m_Out = handle.getOutletHandle( "inout_outlet" );
 	}
 	catch ( Exception &e )
 	{
@@ -109,7 +110,9 @@ void InOut::update()
 {
 	try
 	{
+		//cout << "inout : in " << m_In.getReadableRef< unsigned int >() << endl;
 		m_Out.getWriteableRef< unsigned int>() = m_In.getReadableRef< unsigned int >();
+		//cout << "inout : out " << m_Out.getWriteableRef< unsigned int >() << endl;
 	}
 	catch ( Exception &e)
 	{
@@ -122,8 +125,8 @@ void In::setup( BlockHandle &handle )
 {
 	try
 	{
-		m_In = handle.getInletHandle( "in inlet" );
-		m_Msg= handle.getInletHandle( "in msg" );
+		m_In = handle.getInletHandle( "in_inlet" );
+		m_Msg= handle.getInletHandle( "in_msg" );
 	}
 	catch ( Exception &e )
 	{

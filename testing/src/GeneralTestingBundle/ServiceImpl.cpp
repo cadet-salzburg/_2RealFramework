@@ -18,7 +18,6 @@ void ContextManager::setup( BlockHandle &handle )
 	try
 	{
 		m_Value = 0;
-		m_Devices = handle.getOutletHandle( "devices" );
 	}
 	catch ( Exception &e )
 	{
@@ -32,13 +31,6 @@ void ContextManager::update()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_Value += 1000;
-
-		DeviceInfos &devices = m_Devices.getWriteableRef< DeviceInfos >();
-		devices.resize( 3 );
-
-		devices[ 0 ] = DeviceInfo( "device 0", "fuck you!", false );
-		devices[ 1 ] = DeviceInfo( "device 1", "you suck!", false );
-		devices[ 2 ] = DeviceInfo( "device 2", "die!", false );
 	}
 	catch ( Exception &e )
 	{
@@ -125,7 +117,9 @@ void In::setup( BlockHandle &handle )
 	{
 		std::cout << "SETUP IN" << std::endl;
 
-		m_In = handle.getInletHandle( "inlet" );
+		m_Block = handle;
+
+		m_In = m_Block.getInletHandle( "inlet" );
 		m_Counter = 0;
 	}
 	catch ( Exception &e )
@@ -138,6 +132,8 @@ void In::update()
 {
 	try
 	{
+		cout << m_Block.getAllInletHandles().size() << std::endl;
+		cout << m_Block.getAllOutletHandles().size() << std::endl;
 		std::cout << "IN inlet" << m_In.getReadableRef< unsigned int >() << std::endl;
 	}
 	catch ( Exception &e )

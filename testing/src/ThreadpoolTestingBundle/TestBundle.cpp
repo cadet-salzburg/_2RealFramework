@@ -21,19 +21,19 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		BlockMetainfo &out = info.exportBlock< Out, WithContext >( "out" );
 		out.setDescription( "test" );
-		out.addInlet< string >( "out msg", "undefined" );
-		out.addOutlet< unsigned int >( "out outlet" );
+		out.addInlet< string >( "out_msg", "undefined" );
+		out.addOutlet< unsigned int >( "out_outlet" );
 
-		BlockMetainfo &inout = info.exportBlock< InOut, WithContext >( "in - out" );
+		BlockMetainfo &inout = info.exportBlock< InOut, WithContext >( "in_out" );
 		inout.setDescription( "test" );
-		inout.addInlet< string >( "inout msg", "undefined" );
-		inout.addInlet< unsigned int >( "inout inlet", (unsigned int)0 );
-		inout.addOutlet< unsigned int >( "inout outlet" );
+		inout.addInlet< string >( "inout_msg", "undefined" );
+		inout.addInlet< unsigned int >( "inout_inlet", (unsigned int)0 );
+		inout.addOutlet< unsigned int >( "inout_outlet" );
 
 		BlockMetainfo &in = info.exportBlock< In, WithContext >( "in" );
 		in.setDescription( "test" );
-		in.addInlet< string >( "in msg", "undefined" );
-		in.addInlet< unsigned int >( "in inlet", (unsigned int)0 );
+		in.addInlet< string >( "in_msg", "undefined" );
+		in.addInlet< unsigned int >( "in_inlet", (unsigned int)20 );
 	}
 	catch ( Exception &e )
 	{

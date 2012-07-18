@@ -22,6 +22,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 {
 	try
 	{
+		info.setName( "tralala" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "context testing" );
@@ -29,9 +30,6 @@ void getBundleMetainfo( BundleMetainfo &info )
 		info.setVersion( 0, 0, 0 );
 
 		ContextBlockMetainfo &context = info.exportContextBlock< ContextManager >();
-		context.addOutlet< DeviceInfos >( "devices" );
-
-		//info.addInletToAllWithContext< int >( "device index", -1 );
 
 		BlockMetainfo out = info.exportBlock< Out, WithContext >( "out" );
 		out.setDescription( "testing the context's functionality" );
