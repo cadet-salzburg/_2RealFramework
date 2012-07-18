@@ -24,6 +24,8 @@ public:
 	void shutdown();
 
 private:
+	bool loadBundle(std::string strFile);
+
 	std::vector<BlockUnitTestWidget*>		m_BlockTestWidgets;
 	_2Real::app::Engine&					m_Engine;
 	_2Real::app::BundleHandle				m_BundleHandle;
