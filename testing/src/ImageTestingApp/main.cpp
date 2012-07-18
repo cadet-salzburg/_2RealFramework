@@ -187,8 +187,6 @@ int main( int argc, char *argv[] )
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
-		std::cout << "LOADED!" << std::endl;
-
 		BlockHandle out = testBundle.createBlockInstance( "image_out" );
 		out.setUpdateRate( 1.0 );
 		out.setup();

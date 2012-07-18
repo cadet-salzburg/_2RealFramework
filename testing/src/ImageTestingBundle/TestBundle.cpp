@@ -12,6 +12,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 {
 	try
 	{
+		info.setName( "imagetest" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "context testing" );
