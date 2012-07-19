@@ -12,12 +12,10 @@ MidiInputBlock::MidiInputBlock( ContextBlock & context ) :
 	m_iMidiInCurrentPort( -1 ),
 	m_MidiIn( 0 )
 {
-
 }
 
 MidiInputBlock::~MidiInputBlock()
 {
-
 }
 
 void MidiInputBlock::update()
