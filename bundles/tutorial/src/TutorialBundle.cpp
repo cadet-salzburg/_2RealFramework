@@ -59,6 +59,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		throughputBlock.addOutlet<float>( "float" );
 		throughputBlock.addOutlet<double>( "double" );
 		throughputBlock.addOutlet<string>( "string" );
+
+		throughputBlock.addOutlet<std::list<unsigned char>>( "vector" );
 	}
 	catch ( Exception &e )
 	{

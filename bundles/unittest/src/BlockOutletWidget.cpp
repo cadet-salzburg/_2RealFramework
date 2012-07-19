@@ -14,10 +14,9 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		m_Layout = new QHBoxLayout();
 		m_Layout->addWidget( new QLabel(QString::fromStdString( m_OutletHandle.getName() )) );
 
-		if(m_OutletHandle.getTypename().find("vector")!=string::npos)
+		if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
 			m_ValueWidget = new QTextBrowser();
-		//	dynamic_cast<QTextEdit*>(m_ValueWidget)->setDisabled(true);
 		}
 		else
 		{
@@ -66,7 +65,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 
 			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
 		}
-		else if(m_OutletHandle.getTypename().find("vector")!=string::npos)
+		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
 			dynamic_cast<QTextBrowser*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 		}
