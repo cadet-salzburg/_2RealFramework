@@ -13,9 +13,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\docs\todo.txt" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
