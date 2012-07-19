@@ -16,10 +16,12 @@ using std::string;
 using std::cout;
 using std::endl;
 
+// Defines the MidiInOut Bundle which consists of two Blocks, one MidiIn and one MidiOut Block
 void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
+		// Bundle information
 		info.setName( "MidiInOutBundle" );
 		info.setDescription( "Midi In and Out" );
 		info.setAuthor( "Steven Stojanovic" );
@@ -27,6 +29,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
+		// MidiInput Block information as well as In and Outlet definition
 		BlockMetainfo midiIn = info.exportBlock< MidiInputBlock, WithContext >( "MidiInBlock" );
 		midiIn.addInlet<unsigned int>( "MidiInPort", 0 );
 		midiIn.addOutlet<unsigned char>( "MidiInMessage0" );
@@ -34,6 +37,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		midiIn.addOutlet<unsigned char>( "MidiInMessage2" );
 		midiIn.setDescription( "Midi In" );
 
+		// MidiOutput Block information as well as In and Outlet definition
 		BlockMetainfo midiOut = info.exportBlock< MidiOutputBlock, WithContext >( "MidiOutBlock" );
 		midiOut.addInlet<unsigned int>( "MidiOutPort", 0 );
 		midiOut.addInlet<unsigned char>( "MidiOutMessage0", 'a' );
