@@ -68,10 +68,10 @@ bool BundleUnitTestWidget::loadBundle(std::string strFile)
 {
 	std::vector<std::string> directories;
 	
-	directories.push_back("../../bin/win/");
-	directories.push_back("../../experimental/bin/win/");
-	directories.push_back("../../core/bin/win/");
-	directories.push_back("../../tutorial/bin/win/");
+	directories.push_back("../../bin/");
+	directories.push_back("../../experimental/bin/");
+	directories.push_back("../../core/bin/");
+	directories.push_back("../../tutorial/bin/");
 
 	QString curDir = QDir::currentPath();
 

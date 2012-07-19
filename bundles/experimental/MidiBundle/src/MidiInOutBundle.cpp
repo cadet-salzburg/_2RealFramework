@@ -40,9 +40,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		// MidiOutput Block information as well as In and Outlet definition
 		BlockMetainfo midiOut = info.exportBlock< MidiOutputBlock, WithContext >( "MidiOutBlock" );
 		midiOut.addInlet<unsigned int>( "MidiOutPort", 0 );
-		midiOut.addInlet<unsigned char>( "MidiOutMessage0", 'a' );
-		midiOut.addInlet<unsigned char>( "MidiOutMessage1", 'a' );
-		midiOut.addInlet<unsigned char>( "MidiOutMessage2", 'a' );
+		midiOut.addInlet<unsigned char>( "MidiOutMessage0", 0 );
+		midiOut.addInlet<unsigned char>( "MidiOutMessage1", 0 );
+		midiOut.addInlet<unsigned char>( "MidiOutMessage2", 0 );
 		midiOut.setDescription( "Midi Out" );
 	}
 	catch ( Exception &e )

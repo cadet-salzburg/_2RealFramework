@@ -75,10 +75,10 @@ void MidiOutputBlock::setup( BlockHandle &context )
 	try
 	{
 		// Get the handles to all needed Inlets
-		m_MidiOutPortInlet = context.getInletHandle( "midioutport" );
-		m_MidiOutMessage0Inlet = context.getInletHandle( "midioutmessage0" );
-		m_MidiOutMessage1Inlet = context.getInletHandle( "midioutmessage1" );
-		m_MidiOutMessage2Inlet = context.getInletHandle( "midioutmessage2" );
+		m_MidiOutPortInlet = context.getInletHandle( "MidiOutPort" );
+		m_MidiOutMessage0Inlet = context.getInletHandle( "MidiOutMessage0" );
+		m_MidiOutMessage1Inlet = context.getInletHandle( "MidioutMessage1" );
+		m_MidiOutMessage2Inlet = context.getInletHandle( "MidioutMessage2" );
 
 		// Initialize the RtMidiOut instance
 		initRtMidiOut();

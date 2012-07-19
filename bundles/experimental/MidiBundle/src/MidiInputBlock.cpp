@@ -84,10 +84,10 @@ void MidiInputBlock::setup( BlockHandle &context )
 	try
 	{
 		// Get the handles to all needed In and Outlets
-		m_MidiInPortInlet = context.getInletHandle( "midiinport" );
-		m_MidiInMessage0Outlet = context.getOutletHandle( "midiinmessage0" );
-		m_MidiInMessage1Outlet = context.getOutletHandle( "midiinmessage1" );
-		m_MidiInMessage2Outlet = context.getOutletHandle( "midiinmessage2" );
+		m_MidiInPortInlet = context.getInletHandle( "MidiInPort" );
+		m_MidiInMessage0Outlet = context.getOutletHandle( "MidiInMessage0" );
+		m_MidiInMessage1Outlet = context.getOutletHandle( "MidiinMessage1" );
+		m_MidiInMessage2Outlet = context.getOutletHandle( "MidiInMessage2" );
 
 		// Initialize the RtMidiIn instance
 		initRtMidiIn();
