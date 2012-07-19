@@ -14,7 +14,17 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		m_Layout = new QHBoxLayout();
 		m_Layout->addWidget( new QLabel(QString::fromStdString( m_OutletHandle.getName() )) );
 
-		m_ValueWidget = new QLabel(this);
+		if(m_OutletHandle.getTypename().find("vector")!=string::npos)
+		{
+			m_ValueWidget = new QTextBrowser();
+		//	dynamic_cast<QTextEdit*>(m_ValueWidget)->setDisabled(true);
+		}
+		else
+		{
+			m_ValueWidget = new QLabel();
+		}
+
+
 		m_Layout->addWidget( m_ValueWidget );
 		setLayout( m_Layout );
 
@@ -58,7 +68,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos)
 		{
-			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
+			dynamic_cast<QTextBrowser*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 		}
 		else if( m_OutletHandle.getTypename() == "short" || m_OutletHandle.getTypename() == "unsigned short" ||			// handle numeric types all the same and display the number as string '1234'
 			m_OutletHandle.getTypename() == "int" || m_OutletHandle.getTypename() == "unsigned int" || 
