@@ -19,6 +19,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
+    <ProjectName>MidiInOutTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
