@@ -305,8 +305,7 @@ namespace _2Real
 		}
 		else
 		{
-			Poco::Path abs = m_BaseDirectory;
-			abs.append( path );
+			Poco::Path abs = m_BaseDirectory.absolute().append( path );
 			return abs;
 		}
 	}
