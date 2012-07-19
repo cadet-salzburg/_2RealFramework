@@ -15,7 +15,10 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		m_Layout->addWidget( new QLabel(QString::fromStdString( m_OutletHandle.getName() )) );
 
 		m_ValueWidget = new QLabel(this);
-		m_Layout->addWidget( m_ValueWidget );
+		QScrollArea* scrollArea = new QScrollArea();
+		scrollArea->setWidget(m_ValueWidget);
+
+		m_Layout->addWidget( scrollArea );
 		setLayout( m_Layout );
 
 		// register data callback for _2Real Framework
@@ -55,6 +58,10 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			m_Pixmap = QPixmap::fromImage(m_Img);
 
 			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
+		}
+		else if(m_OutletHandle.getTypename().find("vector")!=string::npos)
+		{
+			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 		}
 		else if( m_OutletHandle.getTypename() == "short" || m_OutletHandle.getTypename() == "unsigned short" ||			// handle numeric types all the same and display the number as string '1234'
 			m_OutletHandle.getTypename() == "int" || m_OutletHandle.getTypename() == "unsigned int" || 
