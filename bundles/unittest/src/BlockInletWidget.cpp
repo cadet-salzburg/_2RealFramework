@@ -25,6 +25,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			m_ValueWidget = new QCheckBox();
 			dynamic_cast<QCheckBox*>(m_ValueWidget)->setChecked(m_InletHandle.getCurrentInput().getData<bool>());
 			connect(m_ValueWidget, SIGNAL(stateChanged(int)), this, SLOT(setBoolValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "unsigned char")
 		{
@@ -33,6 +34,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(UCHAR_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<unsigned char>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setUCharValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "char")
 		{
@@ -41,6 +43,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(CHAR_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<char>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setCharValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "unsigned short")
 		{
@@ -49,6 +52,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(USHRT_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<unsigned short>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setUShortValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "short")
 		{
@@ -57,6 +61,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(SHRT_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<short>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setShortValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		if(m_InletHandle.getTypename() == "unsigned int")
 		{
@@ -65,6 +70,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(UINT_MAX);
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<unsigned int>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setUIntValue(double)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "int")
 		{
@@ -73,6 +79,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setMaximum(INT_MAX);
 			dynamic_cast<QSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<int>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(int)), this, SLOT(setIntValue(int)));
+			layout->addWidget( m_ValueWidget );
 		}
 		if(m_InletHandle.getTypename() == "unsigned long")
 		{
@@ -81,6 +88,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(ULONG_MAX);
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<unsigned long>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setULongValue(double)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "long")
 		{
@@ -89,6 +97,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(LONG_MAX);
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<long>());
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setLongValue(double)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "float")
 		{
@@ -96,6 +105,7 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<float>());
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(DBL_MAX);
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setFloatValue(double)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "double")
 		{
@@ -103,15 +113,16 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<double>());
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(DBL_MAX);
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setDoubleValue(double)));
+			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "string")
 		{
 			m_ValueWidget = new QLineEdit();
 			dynamic_cast<QLineEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getData<string>()));
 			connect(m_ValueWidget, SIGNAL(textChanged(const QString &)), this, SLOT(setStringValue(const QString &)));
+			layout->addWidget( m_ValueWidget );
 		}
 
-		layout->addWidget( m_ValueWidget );
 		setLayout( layout );
 	}
 	catch(Exception& e)
