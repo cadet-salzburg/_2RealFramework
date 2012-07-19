@@ -18,8 +18,6 @@ private:
 	_2Real::app::OutletHandle		m_OutletHandle;
 	QImage							m_Img;
 	QPixmap							m_Pixmap;
-	int								m_Width;
-	int								m_Height;
 	QHBoxLayout*					m_Layout;
 
 public slots:

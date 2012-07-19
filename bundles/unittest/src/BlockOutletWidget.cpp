@@ -57,10 +57,23 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 	{
 		if(m_OutletHandle.getTypename().find("img_uchar")==0)
 		{	
-			m_Width  = data.getData<ImageT<unsigned char>>().getWidth();
-			m_Height = data.getData<ImageT<unsigned char>>().getHeight();
+			int width  = data.getData<ImageT<unsigned char>>().getWidth();
+			int height = data.getData<ImageT<unsigned char>>().getHeight();
+			int channels = data.getData<ImageT<unsigned char>>().getNumberOfChannels();
 			unsigned char* ptr = data.getData<ImageT<unsigned char>>().getData();
-			m_Img = QImage( ptr, m_Width,m_Height, QImage::Format_RGB888);
+
+			if(channels == 1)
+			{
+				m_Img = QImage( ptr, width, height, QImage::Format_Indexed8);
+			}
+			else if(channels == 3)
+			{
+				m_Img = QImage( ptr, width, height, QImage::Format_RGB888);
+			}
+			else if(channels == 4)
+			{
+				m_Img = QImage( ptr, width, height, QImage::Format_ARGB32);
+			}
 			m_Pixmap = QPixmap::fromImage(m_Img);
 
 			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
