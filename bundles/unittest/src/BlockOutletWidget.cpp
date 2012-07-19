@@ -15,10 +15,7 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		m_Layout->addWidget( new QLabel(QString::fromStdString( m_OutletHandle.getName() )) );
 
 		m_ValueWidget = new QLabel(this);
-		QScrollArea* scrollArea = new QScrollArea();
-		scrollArea->setWidget(m_ValueWidget);
-
-		m_Layout->addWidget( scrollArea );
+		m_Layout->addWidget( m_ValueWidget );
 		setLayout( m_Layout );
 
 		// register data callback for _2Real Framework
