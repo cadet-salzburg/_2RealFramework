@@ -22,13 +22,10 @@
     <ClCompile Include="..\..\src\MidiInOutBundle.cpp" />
     <ClCompile Include="..\..\src\MidiInputBlock.cpp" />
     <ClCompile Include="..\..\src\MidiOutputBlock.cpp" />
-    <ClCompile Include="..\..\src\RtMidi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\MidiInputBlock.h" />
     <ClInclude Include="..\..\src\MidiOutputBlock.h" />
-    <ClInclude Include="..\..\src\RtError.h" />
-    <ClInclude Include="..\..\src\RtMidi.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
@@ -101,15 +98,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include;$(_2REAL_DEPENDENCIES_DIR)\rtmidi-2.0.0</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\rtmidi-2.0.0\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;_2RealFramework_32d.lib;rtmidi_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -138,7 +135,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include;$(_2REAL_DEPENDENCIES_DIR)\rtmidi-2.0.0</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -147,8 +144,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;_2RealFramework_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib;$(_2REAL_DEPENDENCIES_DIR)\rtmidi-2.0.0\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;_2RealFramework_32.lib;kernel32.lib;user32.lib;gdi32.lib;rtmidi_32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
