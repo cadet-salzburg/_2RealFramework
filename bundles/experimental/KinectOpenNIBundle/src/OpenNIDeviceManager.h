@@ -21,7 +21,8 @@ public:
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
-	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
+
+	_2Real::ImageT<unsigned char>	getRgbImage( const unsigned int deviceIdx );
 
 private:
 	void							initDeviceList();
@@ -30,16 +31,15 @@ private:
 	bool							isDeviceFree(const unsigned int deviceIdx);
 
 	struct DeviceItem {
-		DeviceItem::DeviceItem(std::string strDescription, bool bIsUsed) : m_strDescription(strDescription), m_bIsUsed(bIsUsed)
+		DeviceItem::DeviceItem(bool bIsUsed) : m_bIsUsed(bIsUsed)
 		{
 		}
 		_2Real::ImageT<unsigned char>	m_Image;
-		std::string						m_strDescription;
 		bool							m_bIsUsed;
 	};
 
 	std::vector< DeviceItem >					m_DevicesInUse; 
 	unsigned int								m_iNumDevices;
-	_2RealKinect*								m_2RealKinect;
+	_2RealKinectWrapper::_2RealKinect*			m_2RealKinect;
 	Poco::Mutex									m_Mutex;
 };

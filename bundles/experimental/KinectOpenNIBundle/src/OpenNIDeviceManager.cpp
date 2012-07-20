@@ -27,6 +27,7 @@ void OpenNIDeviceManager::setup( BlockHandle &context )
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
 		m_iNumDevices = m_2RealKinect->getNumberOfDevices();
+		initDeviceList();
 	}
 	catch ( Exception &e )
 	{
@@ -51,24 +52,18 @@ void OpenNIDeviceManager::update()
 void OpenNIDeviceManager::shutdown()
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
-	for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
-	{
-		if(m_DevicesInUse[i].m_bIsUsed)
-		{
-		}
-			
-	}
+	
+	m_2RealKinect->shutdown();
 }
 
 void OpenNIDeviceManager::initDeviceList()
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
-
 	
 	m_DevicesInUse.clear();
 	for(unsigned int i=0; i<m_iNumDevices; i++)
 	{
-		//m_DevicesInUse.push_back(DeviceItem(m_VideoInputContoller->getDeviceName(i), false));
+		m_DevicesInUse.push_back(DeviceItem(false));
 	}
 }
 
@@ -125,7 +120,23 @@ bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h,
 
 	if(isDeviceFree(deviceIdx))
 	{
-		// setup devices
+		// setup device
+		bool bResult = false;
+
+		uint32_t resolution = IMAGE_COLOR_320X240;
+		if(w == 640 && h == 480)
+		{
+			 resolution = IMAGE_COLOR_640X480;
+		}
+
+		bResult = m_2RealKinect->configure( deviceIdx,  COLORIMAGE, resolution  );
+
+		if( bResult )
+		{
+			std::cout << "_2RealKinectWrapper Device " << deviceIdx << " started successfully!..." << std::endl;
+		}
+		m_2RealKinect->startGenerator( deviceIdx, COLORIMAGE );
+
 		return m_DevicesInUse[deviceIdx].m_bIsUsed = true;
 	}
 	else
@@ -152,9 +163,7 @@ bool OpenNIDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, i
 
 	if(!isDeviceFree(deviceIdx))
 	{
-		m_VideoInputContoller->stopDevice( deviceIdx );
-		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
+		return true;
 	}
 	return false;
 }
@@ -166,24 +175,23 @@ unsigned int OpenNIDeviceManager::getNumberOfConnectedDevices()
 }
 
 
-_2Real::ImageT<unsigned char> OpenNIDeviceManager::getPixels( const unsigned int deviceIdx )
+_2Real::ImageT<unsigned char> OpenNIDeviceManager::getRgbImage( const unsigned int deviceIdx )
 {
-	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-		if(m_VideoInputContoller->isFrameNew(deviceIdx))
+	//	if(m_2RealKinect->isNewData(deviceIdx, COLORIMAGE))
 		{
-			//unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
+			int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, COLORIMAGE );		
+			int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, COLORIMAGE ).get();
 
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false,
-				m_VideoInputContoller->getWidth( deviceIdx ), 
-				m_VideoInputContoller->getHeight( deviceIdx ),
-				_2Real::ImageChannelOrder::RGB );
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 		}
 	}
 	catch ( ... )
 	{
-		std::cerr << "Couldn't get the pixels" << std::endl;
+		std::cerr << "Couldn't get the rgb image" << std::endl;
 	}
 
 	return m_DevicesInUse[deviceIdx].m_Image;

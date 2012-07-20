@@ -23,7 +23,7 @@ private:
 	OutletHandle						m_WidthOutletHandle;
 	OutletHandle						m_HeightOutletHandle;
 	OpenNIDeviceManager*				m_OpenNIDeviceManager;
-	int									m_iCurrentCamera;
+	int									m_iCurrentDevice;
 	int									m_iWidth;
 	int									m_iHeight;
 	int									m_iFps;

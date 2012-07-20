@@ -25,16 +25,16 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setVersion( 0, 1, 0 );
 
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< OpenNIDeviceManager >();
-		BlockMetainfo cameraCapture = info.exportBlock< KinectOpenNIRgbBlock, WithContext >( "KinectOpenNIRgbBlock" );
+		BlockMetainfo blockInfo = info.exportBlock< KinectOpenNIRgbBlock, WithContext >( "KinectOpenNIRgbBlock" );
 
-		cameraCapture.addInlet<int>( "DeviceIndex", 0 );
-		cameraCapture.addInlet<int>( "Width", 320 );
-		cameraCapture.addInlet<int>( "Height", 240 );
-		cameraCapture.addInlet<int>( "Fps", 30 );
-		cameraCapture.addOutlet< ImageT<unsigned char> >("ImageData");
-		cameraCapture.addOutlet<int>( "Width" );
-		cameraCapture.addOutlet<int>( "Height" );
-		cameraCapture.setDescription( "RGB Kinect Image Block" );
+		blockInfo.addInlet<int>( "DeviceIndex", 0 );
+		blockInfo.addInlet<int>( "Width", 320 );
+		blockInfo.addInlet<int>( "Height", 240 );
+		blockInfo.addInlet<int>( "Fps", 30 );
+		blockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
+		blockInfo.addOutlet<int>( "Width" );
+		blockInfo.addOutlet<int>( "Height" );
+		blockInfo.setDescription( "RGB Kinect Image Block" );
 	}
 	catch ( Exception &e )
 	{
