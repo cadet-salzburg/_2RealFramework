@@ -64,9 +64,7 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test
-copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_core242d.dll $(_2REAL_DIR)\bundles\test
-copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_imgproc242d.dll $(_2REAL_DIR)\bundles\test</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,9 +86,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_imgproc242d.dll $(_2R
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test
-copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_core242.dll $(_2REAL_DIR)\bundles\test
-copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_imgproc242.dll $(_2REAL_DIR)\bundles\test</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
