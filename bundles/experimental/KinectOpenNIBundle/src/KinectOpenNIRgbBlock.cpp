@@ -77,8 +77,8 @@ void KinectOpenNIRgbBlock::update()
 			if( m_OpenNIDeviceManager->bindDevice( deviceIndex, m_iWidth, m_iHeight, m_iFps ) )
 			{
 				m_iCurrentDevice = deviceIndex;
-			//	m_WidthOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getVideoWidth(m_iCurrentDevice);
-			//	m_HeightOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getVideoHeight(m_iCurrentDevice);
+				m_WidthOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getWidth(m_iCurrentDevice, _2RealKinectWrapper::COLORIMAGE);
+				m_HeightOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getHeight(m_iCurrentDevice, _2RealKinectWrapper::COLORIMAGE);
 			}
 		}
 

@@ -15,14 +15,15 @@ public:
 	void							update();
 	void							shutdown();
 
-	bool							bindDevice(const unsigned int deviceIdx, int w, int h, int fps=30);
-	void							unbindDevice(const unsigned int deviceIdx);
+	bool							bindDevice(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, int w, int h, int fps=30);
+	void							unbindDevice(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType);
 	bool							setCameraParams(const unsigned int deviceIdx, int w, int h, int fps=30);
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
-	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
 
-	_2Real::ImageT<unsigned char>	getRgbImage( const unsigned int deviceIdx );
+	_2Real::ImageT<unsigned char>	getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 
 private:
 	void							initDeviceList();
@@ -31,11 +32,11 @@ private:
 	bool							isDeviceFree(const unsigned int deviceIdx);
 
 	struct DeviceItem {
-		DeviceItem::DeviceItem(bool bIsUsed) : m_bIsUsed(bIsUsed)
+		DeviceItem::DeviceItem()
 		{
 		}
 		_2Real::ImageT<unsigned char>	m_Image;
-		bool							m_bIsUsed;
+		std::vector<bool>				m_bGeneratorIsUsed;
 	};
 
 	std::vector< DeviceItem >					m_DevicesInUse; 

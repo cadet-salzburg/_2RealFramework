@@ -63,7 +63,7 @@ void OpenNIDeviceManager::initDeviceList()
 	m_DevicesInUse.clear();
 	for(unsigned int i=0; i<m_iNumDevices; i++)
 	{
-		m_DevicesInUse.push_back(DeviceItem(false));
+		m_DevicesInUse.push_back(DeviceItem());
 	}
 }
 
@@ -78,18 +78,6 @@ void OpenNIDeviceManager::rescanDeviceList()
 		// reinit devices
 		m_iNumDevices = numDevices;
 	}
-}
-
-int	OpenNIDeviceManager::getFirstFreeDevices()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	for(unsigned int i=0; i<m_DevicesInUse.size(); i++)
-	{
-		if(!m_DevicesInUse[i].m_bIsUsed)
-			return i;
-	}
-	return -1;	// no device is free
 }
 
 bool OpenNIDeviceManager::isDeviceRunning(const unsigned int deviceIdx)
@@ -114,7 +102,7 @@ bool OpenNIDeviceManager::isDeviceFree(const unsigned int deviceIdx)
 	}
 }
 
-bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h, int fps)
+bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, _2RealGenerator generatorType, int w, int h, int fps)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
@@ -123,7 +111,7 @@ bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h,
 		// setup device
 		bool bResult = false;
 
-		uint32_t resolution = IMAGE_COLOR_320X240;
+		uint32_t resolution = IMAGE_COLOR_640X480;
 		if(w == 640 && h == 480)
 		{
 			 resolution = IMAGE_COLOR_640X480;
@@ -135,7 +123,7 @@ bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h,
 		{
 			std::cout << "_2RealKinectWrapper Device " << deviceIdx << " started successfully!..." << std::endl;
 		}
-		m_2RealKinect->startGenerator( deviceIdx, COLORIMAGE );
+		m_2RealKinect->startGenerator( deviceIdx, generatorType );
 
 		return m_DevicesInUse[deviceIdx].m_bIsUsed = true;
 	}
@@ -145,13 +133,14 @@ bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h,
 	}
 }
 
-void OpenNIDeviceManager::unbindDevice(const unsigned int deviceIdx)
+void OpenNIDeviceManager::unbindDevice(const unsigned int deviceIdx, _2RealGenerator generatorType)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
 	if(!isDeviceFree(deviceIdx))
 	{
 		// stop device
+		m_2RealKinect->stopGenerator( deviceIdx, generatorType );
 		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
 	}
 }
@@ -180,14 +169,11 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getRgbImage( const unsigned i
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-	//	if(m_2RealKinect->isNewData(deviceIdx, COLORIMAGE))
-		{
-			int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, COLORIMAGE );		
-			int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
-			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, COLORIMAGE ).get();
+		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, COLORIMAGE );		
+		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
+		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, COLORIMAGE ).get();
 
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
-		}
+		m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 	}
 	catch ( ... )
 	{
@@ -195,4 +181,14 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getRgbImage( const unsigned i
 	}
 
 	return m_DevicesInUse[deviceIdx].m_Image;
+}
+
+int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )
+{
+	return m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
+}
+
+int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerator generatorType )
+{
+	return m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
 }
