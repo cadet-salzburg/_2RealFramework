@@ -38,7 +38,7 @@ namespace _2Real
 			InletHandle( Inlet &inlet );
 			InletHandle( InletHandle const& src );
 			InletHandle& operator=( InletHandle const& src );
-			virtual ~InletHandle();
+			~InletHandle();
 
 			template< typename Datatype >
 			Datatype const& getReadableRef() const

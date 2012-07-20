@@ -38,7 +38,7 @@ namespace _2Real
 			OutletHandle( Outlet &outlet );
 			OutletHandle( OutletHandle const& other );
 			OutletHandle& operator=( OutletHandle const& other );
-			virtual ~OutletHandle();
+			~OutletHandle();
 
 			template< typename Datatype >
 			Datatype & getWriteableRef()

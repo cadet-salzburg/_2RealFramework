@@ -23,6 +23,8 @@
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
+#include "helpers/_2RealOptions.h"
+//#include "helpers/_2RealRange.h"
 
 namespace _2Real
 {
@@ -34,6 +36,8 @@ namespace _2Real
 	public:
 
 		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );
+		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Options const& options );
+		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Range const& range );
 
 		using Handleable< Inlet, bundle::InletHandle >::getHandle;
 		using Handleable< Inlet, bundle::InletHandle >::registerHandle;
@@ -48,6 +52,9 @@ namespace _2Real
 
 		void setDataAndSynchronize( TimestampedData const& data );
 		AbstractUberBlock & getOwningUberBlock();
+
+		//bool					hasOptions() const;
+		//bool					hasRange() const;
 
 	private:
 

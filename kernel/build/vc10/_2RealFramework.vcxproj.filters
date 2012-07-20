@@ -276,6 +276,9 @@
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealOptions.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">

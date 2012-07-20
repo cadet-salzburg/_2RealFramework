@@ -84,6 +84,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealOptions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPoco.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />

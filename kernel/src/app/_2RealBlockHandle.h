@@ -55,7 +55,7 @@ namespace _2Real
 
 			BlockHandle();
 			BlockHandle( FunctionBlock< BlockHandle > &block );
-			virtual ~BlockHandle();
+			~BlockHandle();
 			BlockHandle( BlockHandle const& other );
 			BlockHandle& operator=( BlockHandle const& other );
 

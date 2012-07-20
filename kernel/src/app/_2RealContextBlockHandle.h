@@ -44,7 +44,7 @@ namespace _2Real
 
 			ContextBlockHandle();
 			ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block );
-			virtual ~ContextBlockHandle();
+			~ContextBlockHandle();
 			ContextBlockHandle( ContextBlockHandle const& other );
 			ContextBlockHandle& operator=( ContextBlockHandle const& other );
 

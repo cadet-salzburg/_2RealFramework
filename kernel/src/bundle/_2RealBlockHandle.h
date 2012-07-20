@@ -48,7 +48,7 @@ namespace _2Real
 			BlockHandle( FunctionBlockIOManager &block );
 			BlockHandle( BlockHandle const& src );
 			BlockHandle& operator=( BlockHandle const& src );
-			virtual ~BlockHandle();
+			~BlockHandle();
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;

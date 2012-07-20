@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
+#include "helpers/_2RealOptions.h"
 
 #ifdef _UNIX
     #include <typeinfo>
@@ -44,16 +45,16 @@ namespace _2Real
 			void setDescription( std::string const& description );
 			void setCategory( std::string const& category );
 
-			template< typename Datatype >
-			void addInlet( std::string const& inletName, Datatype initialValue )
+			template< typename TData >
+			void addInlet( std::string const& name, TData initialValue )
 			{
-				addInletInternal( inletName, Any( initialValue ) );
+				addInletInternal( name, Any( initialValue ) );
 			}
 
-			template< typename Datatype >
+			template< typename TData >
 			void addOutlet( std::string const& outletName )
 			{
-				addOutletInternal( outletName, typeid( Datatype ).name() );
+				addOutletInternal( outletName, typeid( TData ).name() );
 			}
 
 		private:
