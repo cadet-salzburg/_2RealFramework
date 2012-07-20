@@ -55,7 +55,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 {
 	try
 	{
-		if(m_OutletHandle.getTypename().find("img_uchar")==0)
+		if(m_OutletHandle.getTypename().find("img_uchar")!=string::npos)
 		{	
 			int width  = data.getData<ImageT<unsigned char>>().getWidth();
 			int height = data.getData<ImageT<unsigned char>>().getHeight();

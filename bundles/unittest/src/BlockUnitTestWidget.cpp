@@ -43,8 +43,15 @@ void BlockUnitTestWidget::setup(BundleHandle bundleHandle, std::string blockName
 
 void BlockUnitTestWidget::shutdown()
 {
-	m_BlockHandle.kill();	// this kills the block, be sure not to use it anymore
-	delete this;			// this is secure, because shutdown is called as an outside destructor when the window is closed, otherwise this would need some signal sending an cleanup in the bundletest widget
+	try
+	{
+		m_BlockHandle.kill();	// this kills the block, be sure not to use it anymore
+		delete this;			// this is secure, because shutdown is called as an outside destructor when the window is closed, otherwise this would need some signal sending an cleanup in the bundletest widget
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << " " << e.what() << endl;
+	}
 }
 
 void BlockUnitTestWidget::setupGui()
@@ -97,15 +104,22 @@ QGroupBox* BlockUnitTestWidget::createButtonWidgets()
 QGroupBox* BlockUnitTestWidget::createInletWidgets()
 {
 	QGroupBox *groupBox = new QGroupBox("Inlets");
-	BlockInfo::ParameterInfos inlets = m_BlockHandle.getBlockInfo().getInlets();
 	QVBoxLayout* layout = new QVBoxLayout();
 
-	for(auto it = inlets.begin(); it != inlets.end(); it++)
+	try
 	{
-		BlockInletWidget* tmp = new BlockInletWidget(  m_BlockHandle.getInletHandle(it->getName()) );
-		layout->addWidget(tmp);
+		BlockInfo::ParameterInfos inlets = m_BlockHandle.getBlockInfo().getInlets();
+		for(auto it = inlets.begin(); it != inlets.end(); it++)
+		{
+			BlockInletWidget* tmp = new BlockInletWidget(  m_BlockHandle.getInletHandle(it->getName()) );
+			layout->addWidget(tmp);
+		}
 	}
-
+	catch(Exception& e)
+	{
+		cout << e.message() << e.what() << std::endl;
+	}
+	
 	groupBox->setLayout(layout);
 	return groupBox;
 }
@@ -113,15 +127,22 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 {
 	QGroupBox* groupBox = new QGroupBox("Outlets");
-	BlockInfo::ParameterInfos outlets = m_BlockHandle.getBlockInfo().getOutlets();
 	QVBoxLayout* layout = new QVBoxLayout();
-
-	for(auto it = outlets.begin(); it != outlets.end(); it++)
+	
+	try
 	{
-		BlockOutletWidget* tmp = new BlockOutletWidget( m_BlockHandle.getOutletHandle(it->getName()), this );
-		layout->addWidget(tmp);
+		BlockInfo::ParameterInfos outlets = m_BlockHandle.getBlockInfo().getOutlets();
+		for(auto it = outlets.begin(); it != outlets.end(); it++)
+		{
+			BlockOutletWidget* tmp = new BlockOutletWidget( m_BlockHandle.getOutletHandle(it->getName()), this );
+			layout->addWidget(tmp);
+		}
 	}
-
+	catch(Exception& e)
+	{
+		cout << e.message() << e.what() << std::endl;
+	}
+	
 	groupBox->setLayout(layout);
 	return groupBox;
 }
