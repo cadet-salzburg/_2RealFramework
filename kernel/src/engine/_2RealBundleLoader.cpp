@@ -89,7 +89,7 @@ namespace _2Real
 		catch ( Poco::Exception &e )
 		{
 			ostringstream msg;
-			msg << e.what() << " shared library " << path << " does not exist";
+			msg << e.what() << " " << e.message() << " lib could not be loaded";
 			throw NotFoundException( msg.str() );
 		}
 
