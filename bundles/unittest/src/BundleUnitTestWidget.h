@@ -33,6 +33,7 @@ private:
 	int										m_iInstances;
 	std::string								m_strBlockName;
 
+
 private slots:
 	void onCreate();
 	void onSetInstanceValue(int iValue);

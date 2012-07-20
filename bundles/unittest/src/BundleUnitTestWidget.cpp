@@ -38,9 +38,15 @@ void BundleUnitTestWidget::setup(std::string strBundleName)
 			comboBox->addItem(QString::fromStdString(m_BlockInfos[i].getName()));
 	}
 	layout->addWidget(comboBox,0,1,Qt::AlignTop);
+	// init string so we know what to initialise, be careful not to set it on contextblock which can't be initialized
 	if(m_BlockInfos.size()>0)
 	{
-		m_strBlockName = m_BlockInfos[0].getName();
+		for(int i=0; i<m_BlockInfos.size(); i++)
+		{
+			m_strBlockName = m_BlockInfos[i].getName();
+			if(m_strBlockName.find("contextblock")==string::npos)
+				break;
+		}
 	}
 	connect(comboBox, SIGNAL(activated (QString)), this, SLOT(onSetBlockName(QString)));
 
