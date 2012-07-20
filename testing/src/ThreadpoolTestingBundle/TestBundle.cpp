@@ -11,6 +11,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 {
 	try
 	{
+		info.setName( "threadpool test" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "testing" );

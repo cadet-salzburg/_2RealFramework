@@ -22,36 +22,21 @@
 #include <windows.h>
 #include <iostream>
 #include <list>
-
-using std::list;
-using std::string;
-using std::cout;
-using std::endl;
-using std::cin;
-using _2Real::app::Engine;
-using _2Real::Exception;
-using _2Real::app::BlockHandle;
-using _2Real::app::BundleHandle;
-using _2Real::app::InletHandle;
-using _2Real::app::OutletHandle;
-using _2Real::app::AppData;
-
 #include "vld.h"
 
-#ifndef _DEBUG
-	#define shared_library_suffix ".dll"
-#else
-	#define shared_library_suffix "_d.dll"
-#endif
+using namespace std;
+using namespace _2Real;
+using namespace _2Real::app;
 
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
+	testEngine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin" );
 
 	try 
 	{
-		testEngine.loadConfig( "test.xml" );
-		//BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
+		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
+		testEngine.loadConfig( "threadpooltest.xml" );
 
 		//std::vector< BlockHandle > vec;
 		//vec.resize( 30 );
@@ -64,14 +49,12 @@ int main( int argc, char *argv[] )
 		//	BlockHandle out = testBundle.createBlockInstance( "out" );
 		//	OutletHandle outOut = out.getOutletHandle( "out_outlet" );
 		//	out.setUpdateRate( 1.0 );
-		//	//out.setup();
 
 		//	BlockHandle inout = testBundle.createBlockInstance( "in_out" );
 		//	InletHandle inoutIn = inout.getInletHandle( "inout_inlet" );
 		//	OutletHandle inoutOut = inout.getOutletHandle( "inout_outlet" );
 		//	inoutIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 		//	inout.setUpdateRate( 0.5 );
-		//	//inout.setup();
 
 		//	BlockHandle in = testBundle.createBlockInstance( "in" );
 		//	InletHandle inIn = in.getInletHandle( "in_inlet" );
@@ -79,7 +62,6 @@ int main( int argc, char *argv[] )
 		//	inMsg.setValue< string >( msg.str() );
 		//	in.setUpdateRate( 0.25 );
 		//	inIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
-		//	//in.setup();
 
 		//	inoutIn.linkTo( outOut );
 		//	inIn.linkTo( inoutOut );
@@ -111,7 +93,7 @@ int main( int argc, char *argv[] )
 		}
 	}
 
-	//testEngine.safeConfig( "test.xml" );
+	//testEngine.safeConfig( "threadpooltest.xml" );
 
 	return 0;
 }
