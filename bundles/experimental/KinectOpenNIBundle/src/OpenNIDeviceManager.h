@@ -1,16 +1,16 @@
 #pragma once
 #include "_2RealBlock.h"
-#include "videoInput.h"
+#include "_2RealKinect.h"
 #include "Poco/Mutex.h"
 #include <vector>
 
 using namespace _2Real::bundle;
 
-class CameraDeviceManager : public ContextBlock
+class OpenNIDeviceManager : public ContextBlock
 {
 public:
-	CameraDeviceManager();
-	~CameraDeviceManager();
+	OpenNIDeviceManager();
+	~OpenNIDeviceManager();
 	void							setup( _2Real::bundle::BlockHandle &context );
 	void							update();
 	void							shutdown();
@@ -22,8 +22,6 @@ public:
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
 	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
-	int								getVideoWidth(const unsigned int  deviceIdx);
-	int								getVideoHeight(const unsigned int  deviceIdx);
 
 private:
 	void							initDeviceList();
@@ -42,6 +40,6 @@ private:
 
 	std::vector< DeviceItem >					m_DevicesInUse; 
 	unsigned int								m_iNumDevices;
-	videoInput*									m_VideoInputContoller;
+	_2RealKinect*								m_2RealKinect;
 	Poco::Mutex									m_Mutex;
 };

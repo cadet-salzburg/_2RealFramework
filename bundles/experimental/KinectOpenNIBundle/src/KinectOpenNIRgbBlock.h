@@ -1,14 +1,14 @@
 #pragma once
 #include "_2RealBlock.h"
-#include "CameraDeviceManager.h"
+#include "OpenNIDeviceManager.h"
 
 using namespace _2Real::bundle;
 
-class CameraCaptureBlock : public Block
+class KinectOpenNIRgbBlock : public Block
 {
 public:
-	CameraCaptureBlock( ContextBlock & context );
-	~CameraCaptureBlock();
+	KinectOpenNIRgbBlock( ContextBlock & context );
+	~KinectOpenNIRgbBlock();
 	void					shutdown();
 	void					update();
 	void					setup( BlockHandle &context );
@@ -22,7 +22,7 @@ private:
 	OutletHandle						m_ImageOutletHandle;
 	OutletHandle						m_WidthOutletHandle;
 	OutletHandle						m_HeightOutletHandle;
-	CameraDeviceManager*				m_CameraDeviceManager;
+	OpenNIDeviceManager*				m_OpenNIDeviceManager;
 	int									m_iCurrentCamera;
 	int									m_iWidth;
 	int									m_iHeight;

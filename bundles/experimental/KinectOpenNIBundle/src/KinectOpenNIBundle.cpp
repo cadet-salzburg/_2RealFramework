@@ -1,5 +1,5 @@
-#include "CameraDeviceManager.h"
-#include "CameraCaptureBlock.h"
+#include "OpenNIDeviceManager.h"
+#include "KinectOpenNIRgbBlock.h"
 
 #include "_2RealBundle.h"
 #include <sstream>
@@ -17,15 +17,15 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName("CameraCaptureBundle");
-		info.setDescription( "Camera Capture" );
-		info.setAuthor( "Robert Praxmarer" );
+		info.setName("KinectOpenNIBundle");
+		info.setDescription( "Kinect OpenNI Bundle" );
+		info.setAuthor( "Robert Praxmarer, Nikolas Psaroudakis" );
 		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
-		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
+		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< OpenNIDeviceManager >();
+		BlockMetainfo cameraCapture = info.exportBlock< KinectOpenNIRgbBlock, WithContext >( "KinectOpenNIRgbBlock" );
 
 		cameraCapture.addInlet<int>( "DeviceIndex", 0 );
 		cameraCapture.addInlet<int>( "Width", 320 );
@@ -34,8 +34,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		cameraCapture.addOutlet< ImageT<unsigned char> >("ImageData");
 		cameraCapture.addOutlet<int>( "Width" );
 		cameraCapture.addOutlet<int>( "Height" );
-
-		cameraCapture.setDescription( "Camera Capture" );
+		cameraCapture.setDescription( "RGB Kinect Image Block" );
 	}
 	catch ( Exception &e )
 	{

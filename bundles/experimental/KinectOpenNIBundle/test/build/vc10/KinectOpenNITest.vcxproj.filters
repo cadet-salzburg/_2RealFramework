@@ -3,7 +3,4 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\docs\todo.txt" />
-  </ItemGroup>
 </Project>
