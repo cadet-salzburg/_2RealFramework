@@ -42,7 +42,7 @@ namespace _2Real
 	template< typename T >
 	class FunctionBlock;
 
-	class Bundle : private NonCopyable< Bundle >, private Identifiable< Bundle >, private Handleable< app::BundleHandle >
+	class Bundle : private NonCopyable< Bundle >, private Identifiable< Bundle >, private Handleable< Bundle, app::BundleHandle >
 	{
 
 	public:
@@ -50,9 +50,9 @@ namespace _2Real
 		Bundle( app::BundleInfo const& info, BundleManager &bundleManager );
 		~Bundle();
 
-		using Handleable< app::BundleHandle >::getHandle;
-		using Handleable< app::BundleHandle >::registerHandle;
-		using Handleable< app::BundleHandle >::unregisterHandle;
+		using Handleable< Bundle, app::BundleHandle >::getHandle;
+		using Handleable< Bundle, app::BundleHandle >::registerHandle;
+		using Handleable< Bundle, app::BundleHandle >::unregisterHandle;
 
 		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >					BlockInstances;
 		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::iterator			BlockInstanceIterator;

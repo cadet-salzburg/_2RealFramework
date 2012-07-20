@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include "helpers/_2RealHandle.h"
 #ifdef _UNIX
-    #include <limits.h> // for the limits defs
+	#include <limits.h> // for the limits defs
 #endif
 
 #include <string>
@@ -35,7 +34,7 @@ namespace _2Real
 		class ContextBlockHandle;
 		class BundleInfo;
 
-		class BundleHandle : private Handle
+		class BundleHandle
 		{
 
 		public:
@@ -49,6 +48,7 @@ namespace _2Real
 			BundleInfo const& getBundleInfo() const;
 
 			bool isValid() const;
+			void invalidate();
 			bool operator==( BundleHandle const& other ) const;
 			bool operator!=( BundleHandle const& other ) const;
 			bool operator<( BundleHandle const& other ) const;
@@ -60,10 +60,6 @@ namespace _2Real
 			BlockHandle & createBlockInstance( std::string const& blockName );
 
 			void unload( const long blockTimeout = LONG_MAX );
-
-		protected:
-
-			void invalidate();
 
 		private:
 

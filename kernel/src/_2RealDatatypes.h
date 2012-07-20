@@ -19,6 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealEnum.h"
+#include "datatypes/_2RealImage.h"
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealDeviceList.h"
 #include "helpers/_2RealException.h"

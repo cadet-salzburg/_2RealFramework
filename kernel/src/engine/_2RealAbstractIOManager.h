@@ -51,14 +51,14 @@ namespace _2Real
 	class TimestampedData;
 	class AbstractUberBlock;
 
-	class InletIO : private NonCopyable< InletIO >, private Handleable< app::InletHandle >
+	class InletIO : private NonCopyable< InletIO >, private Handleable< InletIO, app::InletHandle >
 	{
 
 	public:
 
-		using Handleable< app::InletHandle >::getHandle;
-		using Handleable< app::InletHandle >::registerHandle;
-		using Handleable< app::InletHandle >::unregisterHandle;
+		using Handleable< InletIO, app::InletHandle >::getHandle;
+		using Handleable< InletIO, app::InletHandle >::registerHandle;
+		using Handleable< InletIO, app::InletHandle >::unregisterHandle;
 
 		InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 		~InletIO();
@@ -67,14 +67,14 @@ namespace _2Real
 
 	};
 
-	class OutletIO : private NonCopyable< InletIO >, private Handleable< app::OutletHandle >
+	class OutletIO : private NonCopyable< InletIO >, private Handleable< OutletIO, app::OutletHandle >
 	{
 
 	public:
 
-		using Handleable< app::OutletHandle >::getHandle;
-		using Handleable< app::OutletHandle >::registerHandle;
-		using Handleable< app::OutletHandle >::unregisterHandle;
+		using Handleable< OutletIO, app::OutletHandle >::getHandle;
+		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
+		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
 		OutletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
 		~OutletIO();

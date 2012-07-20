@@ -19,13 +19,12 @@
 #pragma once
 
 #include "app/_2RealCallbacks.h"
-#include "helpers/_2RealHandle.h"
 
 #include <vector>
 #include <string>
 
 #ifdef _UNIX
-    #include <limits.h>
+	#include <limits.h>
 #endif
 
 #define NO_TIMEOUT	LONG_MAX
@@ -41,7 +40,7 @@ namespace _2Real
 		class OutletHandle;
 		class BlockInfo;
 
-		class BlockHandle : private Handle
+		class BlockHandle
 		{
 
 		public:
@@ -61,6 +60,7 @@ namespace _2Real
 			BlockHandle& operator=( BlockHandle const& other );
 
 			bool isValid() const;
+			void invalidate();
 			bool operator==( BlockHandle const& other ) const;
 			bool operator!=( BlockHandle const& other ) const;
 			bool operator<( BlockHandle const& other ) const;
@@ -105,10 +105,6 @@ namespace _2Real
 				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
-
-		protected:
-
-			void invalidate();
 
 		private:
 

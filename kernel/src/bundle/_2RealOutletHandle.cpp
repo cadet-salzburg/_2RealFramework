@@ -27,13 +27,11 @@ namespace _2Real
 	namespace bundle
 	{
 		OutletHandle::OutletHandle() :
-			Handle(),
 			m_Outlet( nullptr )
 		{
 		}
 
 		OutletHandle::OutletHandle( Outlet &outlet ) :
-			Handle(),
 			m_Outlet( &outlet )
 		{
 			outlet.registerHandle( *this );
@@ -45,7 +43,6 @@ namespace _2Real
 		}
 
 		OutletHandle::OutletHandle( OutletHandle const& src ) :
-			Handle(),
 			m_Outlet( src.m_Outlet )
 		{
 			if ( isValid() ) m_Outlet->registerHandle( *this );
@@ -63,7 +60,6 @@ namespace _2Real
 				m_Outlet->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_Outlet = other.m_Outlet;
 
 			if ( isValid() )

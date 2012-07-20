@@ -28,14 +28,14 @@ namespace _2Real
 {
 
 	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue ) :
-		Handleable< app::InletHandle >( *this ),
+		Handleable< InletIO, app::InletHandle >( *this ),
 		m_Inlet( new Inlet( owner, name, longTypename, typeName ) ),
 		m_Buffer( new InletBuffer( initialValue ) )
 	{
 	}
 
 	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue ) :
-		Handleable< app::OutletHandle >( *this ),
+		Handleable< OutletIO, app::OutletHandle >( *this ),
 		m_Outlet( new Outlet( owner, name, longTypename, typeName, initialValue ) ),
 		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
 		m_InletEvent( new CallbackEvent< TimestampedData const& >() )

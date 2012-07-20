@@ -29,8 +29,7 @@ namespace _2Real
 		Parameter( longTypename, type ),
 		NonCopyable< Inlet >(),
 		Identifiable< Inlet >( owningBlock.getIds(), name ),
-		AbstractHandleable(),
-		Handleable< bundle::InletHandle >( *this ),
+		Handleable< Inlet, bundle::InletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_OwningUberBlock( owningBlock )
 	{

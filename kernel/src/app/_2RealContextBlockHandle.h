@@ -21,10 +21,7 @@
 #include <vector>
 #include <string>
 
-#include "helpers/_2RealHandle.h"
 #include "app/_2RealCallbacks.h"
-
-
 
 namespace _2Real
 {
@@ -36,7 +33,7 @@ namespace _2Real
 		class OutletHandle;
 		class BlockInfo;
 
-		class ContextBlockHandle : private Handle
+		class ContextBlockHandle
 		{
 
 		public:
@@ -54,6 +51,7 @@ namespace _2Real
 			BlockInfo const& getBlockInfo() const;
 
 			bool isValid() const;
+			void invalidate();
 			bool operator==( ContextBlockHandle const& other ) const;
 			bool operator!=( ContextBlockHandle const& other ) const;
 			bool operator<( ContextBlockHandle const& other ) const;
@@ -82,10 +80,6 @@ namespace _2Real
 				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
-
-		protected:
-
-			void invalidate();
 
 		private:
 

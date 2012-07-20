@@ -35,7 +35,7 @@ namespace _2Real
 	Bundle::Bundle( app::BundleInfo const& info, BundleManager &bundleManager ) :
 		NonCopyable< Bundle >(),
 		Identifiable< Bundle >( Ids(), info.getName() ),
-		Handleable< app::BundleHandle >( *this ),
+		Handleable< Bundle, app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
 		m_BundleInfo( info ),
 		m_ContextBlock( nullptr )

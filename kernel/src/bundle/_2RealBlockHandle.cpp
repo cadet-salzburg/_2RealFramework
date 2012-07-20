@@ -30,13 +30,11 @@ namespace _2Real
 	namespace bundle
 	{
 		BlockHandle::BlockHandle() :
-			Handle(),
 			m_IO( nullptr )
 		{
 		}
 
 		BlockHandle::BlockHandle( FunctionBlockIOManager &io ) :
-			Handle(),
 			m_IO( &io )
 		{
 			m_IO->registerHandle( *this );
@@ -48,7 +46,6 @@ namespace _2Real
 		}
 
 		BlockHandle::BlockHandle( BlockHandle const& other ) :
-			Handle(),
 			m_IO( other.m_IO )
 		{
 			if ( isValid() ) m_IO->registerHandle( *this );
@@ -66,7 +63,6 @@ namespace _2Real
 				m_IO->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_IO = other.m_IO;
 
 			if ( isValid() )

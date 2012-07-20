@@ -33,13 +33,11 @@ namespace _2Real
 	namespace app
 	{
 		OutletHandle::OutletHandle() :
-			Handle(),
 			m_OutletIO( nullptr )
 		{
 		}
 
 		OutletHandle::OutletHandle( OutletIO &outletIO ) :
-			Handle(),
 			m_OutletIO( &outletIO )
 		{
 			m_OutletIO->registerHandle( *this );
@@ -51,7 +49,6 @@ namespace _2Real
 		}
 
 		OutletHandle::OutletHandle( OutletHandle const& other ) :
-			Handle(),
 			m_OutletIO( other.m_OutletIO )
 		{
 			if ( isValid() ) m_OutletIO->registerHandle( *this );
@@ -69,7 +66,6 @@ namespace _2Real
 				m_OutletIO->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_OutletIO = other.m_OutletIO;
 
 			if ( isValid() )

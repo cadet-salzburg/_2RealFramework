@@ -20,7 +20,6 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
-#include "helpers/_2RealHandle.h"
 
 #include <sstream>
 
@@ -30,7 +29,7 @@ namespace _2Real
 
 	namespace bundle
 	{
-		class OutletHandle : private Handle
+		class OutletHandle
 		{
 
 		public:
@@ -59,10 +58,9 @@ namespace _2Real
 			void discard();
 
 			bool isValid() const;
+			void invalidate();
 
 		private:
-
-			void invalidate();
 
 			Any &		getCurrentData();
 			Outlet				*m_Outlet;

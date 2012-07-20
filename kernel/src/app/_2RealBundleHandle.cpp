@@ -31,13 +31,11 @@ namespace _2Real
 	namespace app
 	{
 		BundleHandle::BundleHandle() :
-			Handle(),
 			m_Bundle( nullptr )
 		{
 		}
 
 		BundleHandle::BundleHandle( Bundle &bundle ) :
-			Handle(),
 			m_Bundle( &bundle )
 		{
 			m_Bundle->registerHandle( *this );
@@ -49,7 +47,6 @@ namespace _2Real
 		}
 
 		BundleHandle::BundleHandle( BundleHandle const& other ) :
-			Handle(),
 			m_Bundle( other.m_Bundle )
 		{
 			if ( isValid() ) m_Bundle->registerHandle( *this );
@@ -67,7 +64,6 @@ namespace _2Real
 				m_Bundle->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_Bundle = other.m_Bundle;
 
 			if ( isValid() )

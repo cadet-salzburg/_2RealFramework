@@ -106,10 +106,11 @@ namespace _2Real
 				func( metainfo );
 				bundleInfo.library = lib;
 				bundleInfo.metainfo = info;
-				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 
 				bundleInfo.metainfo->setInstallDirectory( path );
 				bundleInfo.metainfo->cleanup();
+
+				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 			}
 			catch ( Exception &e )
 			{
@@ -117,7 +118,6 @@ namespace _2Real
 				delete info;
 				throw e;
 			}
-
 			BundleMetadata const& meta = info->getBundleData();
 			if ( meta.getName() == "undefined" )
 			{

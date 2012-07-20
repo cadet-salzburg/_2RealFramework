@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealDeviceList.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealEnum.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
@@ -78,7 +79,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealHandle.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
@@ -194,6 +194,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
@@ -386,18 +387,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHandle.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHandleable.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealIdentifiable.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
@@ -425,8 +414,8 @@
     <ClCompile Include="..\..\src\xml\_2RealXMLWriter.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\xml\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\xml\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\xml</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\xml</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\xml\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\xml\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -28,16 +28,16 @@ namespace _2Real
 {
 	class EngineImpl;
 
-	class Outlet : private Parameter, private NonCopyable< Outlet >, private Identifiable< Outlet >, private Handleable< bundle::OutletHandle >
+	class Outlet : private Parameter, private NonCopyable< Outlet >, private Identifiable< Outlet >, private Handleable< Outlet, bundle::OutletHandle >
 	{
 
 	public:
 
 		Outlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
 
-		using Handleable< bundle::OutletHandle >::getHandle;
-		using Handleable< bundle::OutletHandle >::registerHandle;
-		using Handleable< bundle::OutletHandle >::unregisterHandle;
+		using Handleable< Outlet, bundle::OutletHandle >::getHandle;
+		using Handleable< Outlet, bundle::OutletHandle >::registerHandle;
+		using Handleable< Outlet, bundle::OutletHandle >::unregisterHandle;
 
 		using Identifiable< Outlet >::getFullName;
 		using Identifiable< Outlet >::getName;

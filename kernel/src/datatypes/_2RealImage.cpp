@@ -16,17 +16,8 @@
 	limitations under the License.
 */
 
-#include "helpers/_2RealHandle.h"
+#include "datatypes/_2RealImage.h"
 
 namespace _2Real
 {
-
-	Handle::Handle()
-	{
-	}
-
-	Handle::~Handle()
-	{
-	}
-
 }

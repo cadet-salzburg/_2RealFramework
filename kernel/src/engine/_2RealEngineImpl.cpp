@@ -89,20 +89,12 @@ namespace _2Real
 		m_Typetable->registerType< bool >( "bool" );
 		m_Typetable->registerType< std::string >( "string" );
 
-		//m_Typetable->registerType< StringEnumeration >( "enum_string" );
-
-		m_Typetable->registerType< ImageT < char > >( "img_char" );
 		m_Typetable->registerType< ImageT < unsigned char > >( "img_uchar" );
-		m_Typetable->registerType< ImageT < short > >( "img_short" );
 		m_Typetable->registerType< ImageT < unsigned short > >( "img_ushort" );
-		//m_Typetable->registerType< ImageT < int > >( "img_int" );
-		//m_Typetable->registerType< ImageT < unsigned int > >( "img_uint" );
-		//m_Typetable->registerType< ImageT < long > >( "img_long" );
-		//m_Typetable->registerType< ImageT < unsigned long > >( "img_ulong" );
 		m_Typetable->registerType< ImageT < float > >( "img_float" );
 		m_Typetable->registerType< ImageT < double > >( "img_double" );
 
-		//m_Typetable->registerType< DeviceInfos >( "device_infos" );
+		//m_Typetable->registerType< Image >( "dynamic_image" );
 
 		m_Timestamp.update();
 	}

@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include "helpers/_2RealHandle.h"
-
 #include <string>
 #include <vector>
 
@@ -33,7 +31,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 
-		class BlockHandle : private Handle
+		class BlockHandle
 		{
 
 		public:
@@ -57,10 +55,10 @@ namespace _2Real
 			InletHandles const&		getAllInletHandles() const;
 			OutletHandles const&	getAllOutletHandles() const;
 
-		private:
-
 			bool isValid() const;
 			void invalidate();
+
+		private:
 
 			FunctionBlockIOManager	*m_IO;
 

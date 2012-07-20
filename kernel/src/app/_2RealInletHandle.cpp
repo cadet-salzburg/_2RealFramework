@@ -34,13 +34,11 @@ namespace _2Real
 	namespace app
 	{
 		InletHandle::InletHandle() :
-			Handle(),
 			m_InletIO( nullptr )
 		{
 		}
 
 		InletHandle::InletHandle( InletIO &inletIO ) :
-			Handle(),
 			m_InletIO( &inletIO )
 		{
 			m_InletIO->registerHandle( *this );
@@ -52,7 +50,6 @@ namespace _2Real
 		}
 
 		InletHandle::InletHandle( InletHandle const& other ) :
-			Handle(),
 			m_InletIO( other.m_InletIO )
 		{
 			if ( isValid() ) m_InletIO->registerHandle( *this );
@@ -70,7 +67,6 @@ namespace _2Real
 				m_InletIO->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_InletIO = other.m_InletIO;
 
 			if ( isValid() )

@@ -21,7 +21,6 @@
 #include <string.h>
 
 #include "app/_2RealCallbacks.h"
-#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {
@@ -32,7 +31,7 @@ namespace _2Real
 		class AppData;
 		class InletHandle;
 
-		class OutletHandle : private Handle
+		class OutletHandle
 		{
 
 		public:
@@ -48,6 +47,7 @@ namespace _2Real
 			std::string const&	getTypename() const;
 
 			bool isValid() const;
+			void invalidate();
 			bool operator==( OutletHandle const& other ) const;
 			bool operator!=( OutletHandle const& other ) const;
 			bool operator<( OutletHandle const& other ) const;
@@ -76,10 +76,6 @@ namespace _2Real
 				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
-
-		protected:
-
-			void invalidate();
 
 		private:
 

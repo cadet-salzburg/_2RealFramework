@@ -19,7 +19,6 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
-#include "helpers/_2RealHandle.h"
 
 namespace _2Real
 {
@@ -30,7 +29,7 @@ namespace _2Real
 		class AppData;
 		class OutletHandle;
 
-		class InletHandle : private Handle
+		class InletHandle
 		{
 
 		public:
@@ -53,6 +52,7 @@ namespace _2Real
 			std::string const&	getTypename() const;
 
 			bool isValid() const;
+			void invalidate();
 			bool operator==( InletHandle const& other ) const;
 			bool operator!=( InletHandle const& other ) const;
 			bool operator<( InletHandle const& other ) const;
@@ -79,10 +79,6 @@ namespace _2Real
 			AppData				getCurrentInput() const;
 
 			void				setBufferSize( const unsigned int size );
-
-		protected:
-
-			void invalidate();
 
 		private:
 

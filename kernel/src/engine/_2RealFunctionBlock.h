@@ -34,7 +34,7 @@ namespace _2Real
 {
 
 	template< typename THandle >
-	class FunctionBlock :  public AbstractUberBlock, private Handleable< THandle >
+	class FunctionBlock :  public AbstractUberBlock, private Handleable< FunctionBlock< THandle >, THandle >
 	{
 
 	public:
@@ -42,9 +42,9 @@ namespace _2Real
 		FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info );
 		~FunctionBlock();
 
-		using Handleable< THandle >::getHandle;
-		using Handleable< THandle >::registerHandle;
-		using Handleable< THandle >::unregisterHandle;
+		using Handleable< FunctionBlock< THandle >, THandle >::getHandle;
+		using Handleable< FunctionBlock< THandle >, THandle >::registerHandle;
+		using Handleable< FunctionBlock< THandle >, THandle >::unregisterHandle;
 
 		using AbstractUberBlock::setName;
 		using AbstractUberBlock::getName;
@@ -103,7 +103,7 @@ namespace _2Real
 	template< typename THandle >
 	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info ) :
 		AbstractUberBlock( owningBundle.getIds(), info.getName() ),
-		Handleable< THandle >( *this ),
+		Handleable< FunctionBlock< THandle >, THandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_Bundle( owningBundle ),
 		m_Block( &block ),
@@ -319,7 +319,7 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::handleException( Exception &e )
 	{
-		m_Engine.handleException( Handleable< THandle >::getHandle(), e );
+		m_Engine.handleException( getHandle(), e );
 	}
 
 }

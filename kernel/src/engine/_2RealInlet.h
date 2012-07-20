@@ -28,16 +28,16 @@ namespace _2Real
 {
 	class EngineImpl;
 
-	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< bundle::InletHandle >
+	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< Inlet, bundle::InletHandle >
 	{
 
 	public:
 
 		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );
 
-		using Handleable< bundle::InletHandle >::getHandle;
-		using Handleable< bundle::InletHandle >::registerHandle;
-		using Handleable< bundle::InletHandle >::unregisterHandle;
+		using Handleable< Inlet, bundle::InletHandle >::getHandle;
+		using Handleable< Inlet, bundle::InletHandle >::registerHandle;
+		using Handleable< Inlet, bundle::InletHandle >::unregisterHandle;
 
 		using Identifiable< Inlet >::getFullName;
 		using Identifiable< Inlet >::getName;

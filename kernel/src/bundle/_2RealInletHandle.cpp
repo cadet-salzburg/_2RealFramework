@@ -27,13 +27,11 @@ namespace _2Real
 	namespace bundle
 	{
 		InletHandle::InletHandle() :
-			Handle(),
 			m_Inlet( nullptr )
 		{
 		}
 
 		InletHandle::InletHandle( Inlet &inlet ) :
-			Handle(),
 			m_Inlet( &inlet )
 		{
 			m_Inlet->registerHandle( *this );
@@ -45,7 +43,6 @@ namespace _2Real
 		}
 
 		InletHandle::InletHandle( InletHandle const& other ) :
-			Handle(),
 			m_Inlet( other.m_Inlet )
 		{
 			if ( isValid() ) m_Inlet->registerHandle( *this );
@@ -63,7 +60,6 @@ namespace _2Real
 				m_Inlet->unregisterHandle( *this );
 			}
 
-			Handle::operator=( other );
 			m_Inlet = other.m_Inlet;
 
 			if ( isValid() )

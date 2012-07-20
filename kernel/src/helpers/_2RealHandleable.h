@@ -22,52 +22,60 @@
 
 namespace _2Real
 {
-
-	class Handle;
-
-	class AbstractHandleable
+	template< typename TObj, typename THandle >
+	class Handleable
 	{
-
-	public:
-
-		virtual ~AbstractHandleable();
-		void registerHandle( Handle &handle );
-		void unregisterHandle( Handle &handle );
 
 	private:
 
-		typedef std::set< Handle * >				Handles;
-		typedef std::set< Handle * >::iterator		HandleIterator;
-		Handles										m_Handles;
+		typedef std::set< THandle * >							Handles;
+		typedef typename std::set< THandle * >::iterator		HandleIterator;
+		typedef typename std::set< THandle * >::const_iterator	HandleConstIterator;
 
-	};
-
-	template< typename THandle >
-	class Handleable : public virtual AbstractHandleable
-	{
+		TObj			&m_Obj;
+		mutable THandle	*m_Handle;
+		Handles			m_Handles;
 
 	protected:
 
 		template< typename TObj >
 		Handleable( TObj &obj ) :
-			m_Handle( new THandle( obj ) )
+			m_Obj( obj ),
+			m_Handle( nullptr )
 		{
 		}
 
-		~Handleable()
+		virtual ~Handleable()
 		{
 			delete m_Handle;
+			for ( HandleIterator it = m_Handles.begin(); it != m_Handles.end(); ++it )
+			{
+				( *it )->invalidate();
+			}
 		}
 
 		THandle& getHandle() const
 		{
+			if ( m_Handle == nullptr )
+			{
+				m_Handle = new THandle( m_Obj );
+			}
+
 			return *m_Handle;
 		}
 
-	private:
+		void registerHandle( THandle &handle )
+		{
+			m_Handles.insert( &handle );
+		}
 
-		THandle		*m_Handle;
-
+		void unregisterHandle( THandle &handle )
+		{
+			HandleIterator it = m_Handles.find( &handle );
+			if ( it != m_Handles.end() )
+			{
+				m_Handles.erase( it );
+			}
+		}
 	};
-
 }

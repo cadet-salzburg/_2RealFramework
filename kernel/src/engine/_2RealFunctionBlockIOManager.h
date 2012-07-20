@@ -41,7 +41,7 @@ namespace _2Real
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
 
-	class FunctionBlockIOManager : public AbstractIOManager, private Handleable< bundle::BlockHandle >
+	class FunctionBlockIOManager : private AbstractIOManager, private Handleable< FunctionBlockIOManager, bundle::BlockHandle >
 	{
 
 		template< typename T >
@@ -52,9 +52,9 @@ namespace _2Real
 		FunctionBlockIOManager( AbstractUberBlock &owner );
 		~FunctionBlockIOManager();
 
-		using Handleable< bundle::BlockHandle >::getHandle;
-		using Handleable< bundle::BlockHandle >::registerHandle;
-		using Handleable< bundle::BlockHandle >::unregisterHandle;
+		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::getHandle;
+		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::registerHandle;
+		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::unregisterHandle;
 
 		void							clear();
 

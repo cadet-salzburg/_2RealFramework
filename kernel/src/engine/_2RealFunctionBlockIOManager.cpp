@@ -39,8 +39,7 @@ namespace _2Real
 {
 
 	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
-		AbstractHandleable(),
-		Handleable< bundle::BlockHandle >( *this ),
+		Handleable< FunctionBlockIOManager, bundle::BlockHandle >( *this ),
 		AbstractIOManager( owner )
 	{
 	}

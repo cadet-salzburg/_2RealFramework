@@ -81,9 +81,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealHandle.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
@@ -276,18 +273,15 @@
     <ClInclude Include="..\..\src\xml\_2RealXMLWriter.h">
       <Filter>include\xml</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealImage.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHandle.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealHandleable.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealIdentifiable.cpp">
@@ -442,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\xml\_2RealXMLWriter.cpp">
       <Filter>src\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp">
+      <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

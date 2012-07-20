@@ -29,8 +29,7 @@ namespace _2Real
 		Parameter( longTypename, typeName ),
 		NonCopyable< Outlet >(),
 		Identifiable< Outlet >( owningBlock.getIds(), name ),
-		AbstractHandleable(),
-		Handleable< bundle::OutletHandle >( *this ),
+		Handleable< Outlet, bundle::OutletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_OwningUberBlock( owningBlock ),
 		m_DiscardCurrent( false )
