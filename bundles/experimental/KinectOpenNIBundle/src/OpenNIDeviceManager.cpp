@@ -29,10 +29,10 @@ void OpenNIDeviceManager::setup( BlockHandle &context )
 		m_iNumDevices = m_2RealKinect->getNumberOfDevices();
 		initDeviceList();
 	}
-	catch ( Exception &e )
+	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
-		cout << e.message() << endl;
-		e.rethrow();
+		m_2RealKinect = nullptr;
+		cout << e.what() << endl;
 	}
 }
 
@@ -53,7 +53,15 @@ void OpenNIDeviceManager::shutdown()
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	
-	m_2RealKinect->shutdown();
+	try
+	{
+		if(m_2RealKinect != nullptr)
+		m_2RealKinect->shutdown();
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
 }
 
 void OpenNIDeviceManager::initDeviceList()
@@ -71,12 +79,21 @@ void OpenNIDeviceManager::rescanDeviceList()
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
-	printf("rescanning\n");
-	int numDevices = m_2RealKinect->getNumberOfDevices();
-	if(numDevices != m_iNumDevices)
+	try
 	{
-		// reinit devices
-		m_iNumDevices = numDevices;
+		printf("rescanning\n");
+		if(m_2RealKinect==nullptr)
+			return;						// no driver found
+		int numDevices = m_2RealKinect->getNumberOfDevices();
+		if(numDevices != m_iNumDevices)
+		{
+			// reinit devices
+			m_iNumDevices = numDevices;
+		}
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
 	}
 }
 
@@ -92,65 +109,94 @@ bool OpenNIDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)
 	return  (deviceIdx < m_DevicesInUse.size());
 }
 
-bool OpenNIDeviceManager::isDeviceFree(const unsigned int deviceIdx)
+bool OpenNIDeviceManager::isGeneratorFree(const unsigned int deviceIdx, _2RealGenerator generatorType)
 {
 	if(isDeviceAvailable(deviceIdx))
-		return  !m_DevicesInUse[deviceIdx].m_bIsUsed;
+		return  !m_DevicesInUse[deviceIdx].m_bGeneratorIsUsed[generatorType];
 	else
 	{
 		return false;
 	}
 }
 
-bool OpenNIDeviceManager::bindDevice(const unsigned int deviceIdx, _2RealGenerator generatorType, int w, int h, int fps)
+bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGenerator generatorType, int w, int h, int fps)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	if(isDeviceFree(deviceIdx))
+	try
 	{
-		// setup device
-		bool bResult = false;
-
-		uint32_t resolution = IMAGE_COLOR_640X480;
-		if(w == 640 && h == 480)
+		if(isGeneratorFree(deviceIdx, generatorType))
 		{
-			 resolution = IMAGE_COLOR_640X480;
+			// setup device
+			bool bResult = false;
+
+			uint32_t resolution;
+			if(generatorType == _2RealKinectWrapper::COLORIMAGE)
+			{
+				resolution = IMAGE_COLOR_640X480;
+				if(w == 640 && h == 480)
+				{
+					 resolution = IMAGE_COLOR_640X480;
+				}
+			}
+			else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+			{
+				resolution = IMAGE_USER_DEPTH_640X480;
+				if(w == 640 && h == 480)
+				{
+					resolution = IMAGE_USER_DEPTH_640X480;
+				}
+			}
+
+			bResult = m_2RealKinect->configure( deviceIdx,  generatorType, resolution  );
+
+			if( bResult )
+			{
+				std::cout << "_2RealKinectWrapper Device " << deviceIdx << " started successfully!..." << std::endl;
+			}
+			m_2RealKinect->startGenerator( deviceIdx, generatorType );
+
+			return m_DevicesInUse[deviceIdx].m_bGeneratorIsUsed[generatorType] = true;
 		}
-
-		bResult = m_2RealKinect->configure( deviceIdx,  COLORIMAGE, resolution  );
-
-		if( bResult )
+		else
 		{
-			std::cout << "_2RealKinectWrapper Device " << deviceIdx << " started successfully!..." << std::endl;
+			return false;
 		}
-		m_2RealKinect->startGenerator( deviceIdx, generatorType );
-
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = true;
 	}
-	else
+	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
-		return false;
+		cout << e.what() << endl;
+	}
+	catch(...)
+	{
+		printf("ramala");
 	}
 }
 
-void OpenNIDeviceManager::unbindDevice(const unsigned int deviceIdx, _2RealGenerator generatorType)
+void OpenNIDeviceManager::unbindGenerator(const unsigned int deviceIdx, _2RealGenerator generatorType)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
-	if(!isDeviceFree(deviceIdx))
+	try
 	{
-		// stop device
-		m_2RealKinect->stopGenerator( deviceIdx, generatorType );
-		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
+		if(!isGeneratorFree(deviceIdx, generatorType))
+		{
+			// stop device
+			m_2RealKinect->stopGenerator( deviceIdx, generatorType );
+			m_DevicesInUse[deviceIdx].m_bGeneratorIsUsed[generatorType] = false;
+		}
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
 	}
 }
 
 
-bool OpenNIDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, int h, int fps)
+bool OpenNIDeviceManager::setGeneratorParams(const unsigned int deviceIdx, _2RealGenerator generatorType, int w, int h, int fps)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 
-	if(!isDeviceFree(deviceIdx))
+	if(!isGeneratorFree(deviceIdx, generatorType))
 	{
 		return true;
 	}
@@ -164,20 +210,22 @@ unsigned int OpenNIDeviceManager::getNumberOfConnectedDevices()
 }
 
 
-_2Real::ImageT<unsigned char> OpenNIDeviceManager::getRgbImage( const unsigned int deviceIdx )
+_2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType )
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, COLORIMAGE );		
-		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
-		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, COLORIMAGE ).get();
+		if(!m_2RealKinect->isNewData(deviceIdx, generatorType))
+			return  m_DevicesInUse[deviceIdx].m_Image;
+		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
+		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
+		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
 
 		m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 	}
-	catch ( ... )
+	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
-		std::cerr << "Couldn't get the rgb image" << std::endl;
+		cout << e.what() << endl;
 	}
 
 	return m_DevicesInUse[deviceIdx].m_Image;
@@ -185,10 +233,24 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getRgbImage( const unsigned i
 
 int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )
 {
-	return m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
+	try
+	{
+		return m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
 }
 
 int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerator generatorType )
 {
-	return m_2RealKinect->getImageHeight( deviceIdx, COLORIMAGE );
+	try
+	{
+		return m_2RealKinect->getImageHeight( deviceIdx, generatorType );
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
 }

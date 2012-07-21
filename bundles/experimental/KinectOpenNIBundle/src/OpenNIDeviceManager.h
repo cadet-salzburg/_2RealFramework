@@ -15,9 +15,9 @@ public:
 	void							update();
 	void							shutdown();
 
-	bool							bindDevice(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, int w, int h, int fps=30);
-	void							unbindDevice(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType);
-	bool							setCameraParams(const unsigned int deviceIdx, int w, int h, int fps=30);
+	bool							bindGenerator(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, int w, int h, int fps=30);
+	void							unbindGenerator(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType);
+	bool							setGeneratorParams(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, int w, int h, int fps);
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
@@ -29,14 +29,14 @@ private:
 	void							initDeviceList();
 	void							rescanDeviceList();
 	bool							isDeviceAvailable(const unsigned int deviceIdx);
-	bool							isDeviceFree(const unsigned int deviceIdx);
+	bool							isGeneratorFree(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType);
 
 	struct DeviceItem {
 		DeviceItem::DeviceItem()
 		{
 		}
-		_2Real::ImageT<unsigned char>	m_Image;
-		std::vector<bool>				m_bGeneratorIsUsed;
+		_2Real::ImageT<unsigned char>							m_Image;
+		std::map<_2RealKinectWrapper::_2RealGenerator,bool>		m_bGeneratorIsUsed;
 	};
 
 	std::vector< DeviceItem >					m_DevicesInUse; 
