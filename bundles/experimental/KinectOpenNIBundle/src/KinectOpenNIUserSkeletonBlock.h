@@ -19,6 +19,7 @@ private:
 	InletHandle							m_WidthInletHandle;
 	InletHandle							m_HeightInletHandle;
 	InletHandle							m_FpsInletHandle;
+	InletHandle							m_IsMirroredInletHandle;
 	OutletHandle						m_ImageOutletHandle;
 	OutletHandle						m_WidthOutletHandle;
 	OutletHandle						m_HeightOutletHandle;
@@ -27,4 +28,5 @@ private:
 	int									m_iWidth;
 	int									m_iHeight;
 	int									m_iFps;
+	bool								m_bIsMirrored;
 };

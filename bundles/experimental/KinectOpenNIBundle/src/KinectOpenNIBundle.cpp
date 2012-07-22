@@ -1,5 +1,6 @@
 #include "OpenNIDeviceManager.h"
 #include "KinectOpenNIRgbBlock.h"
+#include "KinectOpenNIDepthBlock.h"
 #include "KinectOpenNIUserSkeletonBlock.h"
 
 #include "_2RealBundle.h"
@@ -32,20 +33,34 @@ void getBundleMetainfo( BundleMetainfo& info )
 		rgbBlockInfo.addInlet<int>( "Width", 640 );
 		rgbBlockInfo.addInlet<int>( "Height", 480 );
 		rgbBlockInfo.addInlet<int>( "Fps", 30 );
+		rgbBlockInfo.addInlet<bool>( "IsMirrored", false );
+		rgbBlockInfo.addInlet<bool>( "IsAlignedToDepth", false );
 		rgbBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
 		rgbBlockInfo.addOutlet<int>( "Width" );
 		rgbBlockInfo.addOutlet<int>( "Height" );
-		rgbBlockInfo.setDescription( "RGB Kinect Rgb Image Block" );
+		rgbBlockInfo.setDescription( "OpenNI Kinect Rgb Image Block" );
+
+		BlockMetainfo depthBlockInfo = info.exportBlock< KinectOpenNIDepthBlock, WithContext >( "KinectOpenNIDepthBlock" );
+		depthBlockInfo.addInlet<int>( "DeviceIndex", 0 );
+		depthBlockInfo.addInlet<int>( "Width", 640 );
+		depthBlockInfo.addInlet<int>( "Height", 480 );
+		depthBlockInfo.addInlet<int>( "Fps", 30 );
+		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
+		depthBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
+		depthBlockInfo.addOutlet<int>( "Width" );
+		depthBlockInfo.addOutlet<int>( "Height" );
+		depthBlockInfo.setDescription( "OpenNI Kinect Depth Image Block" );
 
 		BlockMetainfo userSkeletonBlockInfo = info.exportBlock< KinectOpenNIUserSkeletonBlock, WithContext >( "KinectOpenNIUserSkeletonBlock" );
 		userSkeletonBlockInfo.addInlet<int>( "DeviceIndex", 0 );
 		userSkeletonBlockInfo.addInlet<int>( "Width", 640 );
 		userSkeletonBlockInfo.addInlet<int>( "Height", 480 );
 		userSkeletonBlockInfo.addInlet<int>( "Fps", 30 );
+		userSkeletonBlockInfo.addInlet<bool>( "IsMirrored", false );
 		userSkeletonBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
-		userSkeletonBlockInfo.setDescription( "RGB Kinect User/Skeleton Image Block" );
+		userSkeletonBlockInfo.setDescription( "OpenNI Kinect User/Skeleton Image Block" );
 	}
 	catch ( Exception &e )
 	{

@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\KinectOpenNIBundle.cpp" />
+    <ClCompile Include="..\..\src\KinectOpenNIDepthBlock.cpp" />
     <ClCompile Include="..\..\src\KinectOpenNIRgbBlock.cpp" />
     <ClCompile Include="..\..\src\KinectOpenNIUserSkeletonBlock.cpp" />
     <ClCompile Include="..\..\src\OpenNIDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\KinectOpenNIDepthBlock.h" />
     <ClInclude Include="..\..\src\KinectOpenNIRgbBlock.h" />
     <ClInclude Include="..\..\src\KinectOpenNIUserSkeletonBlock.h" />
     <ClInclude Include="..\..\src\OpenNIDeviceManager.h" />

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "KinectOpenNIUserSkeletonBlock.h"
+#include "KinectOpenNIDepthBlock.h"
 #include "_2RealDatatypes.h"
 
 using namespace _2Real;
@@ -11,17 +11,17 @@ using std::cout;
 using std::endl;
 using std::string;
 
-KinectOpenNIUserSkeletonBlock::KinectOpenNIUserSkeletonBlock( ContextBlock & context )
+KinectOpenNIDepthBlock::KinectOpenNIDepthBlock( ContextBlock & context )
 	:Block()
 {
 	m_OpenNIDeviceManager = static_cast<OpenNIDeviceManager*>( &context );
 }
 
-KinectOpenNIUserSkeletonBlock::~KinectOpenNIUserSkeletonBlock()
+KinectOpenNIDepthBlock::~KinectOpenNIDepthBlock()
 {
 }
 
-void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
+void KinectOpenNIDepthBlock::setup( BlockHandle &block )
 {
 	try
 	{
@@ -31,7 +31,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 		m_HeightInletHandle = block.getInletHandle("Height");
 		m_FpsInletHandle = block.getInletHandle("Fps");
 		m_IsMirroredInletHandle = block.getInletHandle("IsMirrored");
-
+		
 		m_iWidth = m_WidthInletHandle.getReadableRef<int>();
 		m_iHeight = m_HeightInletHandle.getReadableRef<int>();
 		m_iFps = m_FpsInletHandle.getReadableRef<int>();
@@ -54,7 +54,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 	}
 }
 
-void KinectOpenNIUserSkeletonBlock::update()
+void KinectOpenNIDepthBlock::update()
 {
 	try
 	{
@@ -73,15 +73,15 @@ void KinectOpenNIUserSkeletonBlock::update()
 			// unbind old cam
 			if(m_iCurrentDevice>=0)
 			{
-				m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice,_2RealKinectWrapper::USERIMAGE );
+				m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice,_2RealKinectWrapper::DEPTHIMAGE );
 				m_iCurrentDevice = -1;
 			}
 
-			if( m_OpenNIDeviceManager->bindGenerator( deviceIndex, _2RealKinectWrapper::USERIMAGE, m_iWidth, m_iHeight, m_iFps ) )
+			if( m_OpenNIDeviceManager->bindGenerator( deviceIndex, _2RealKinectWrapper::DEPTHIMAGE, m_iWidth, m_iHeight, m_iFps ) )
 			{
 				m_iCurrentDevice = deviceIndex;
-				m_WidthOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getWidth(m_iCurrentDevice, _2RealKinectWrapper::USERIMAGE);
-				m_HeightOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getHeight(m_iCurrentDevice, _2RealKinectWrapper::USERIMAGE);
+				m_WidthOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getWidth(m_iCurrentDevice, _2RealKinectWrapper::DEPTHIMAGE);
+				m_HeightOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getHeight(m_iCurrentDevice, _2RealKinectWrapper::DEPTHIMAGE);
 			}
 		}
 
@@ -104,13 +104,13 @@ void KinectOpenNIUserSkeletonBlock::update()
 			}
 			else if(bIsMirrored != m_bIsMirrored)
 			{
-				m_OpenNIDeviceManager->setMirrored(m_iCurrentDevice, _2RealKinectWrapper::USERIMAGE, bIsMirrored);
+				m_OpenNIDeviceManager->setMirrored(m_iCurrentDevice, _2RealKinectWrapper::COLORIMAGE, bIsMirrored);
 				m_bIsMirrored = bIsMirrored;
 			}
 
 			//if( m_OpenNIDeviceManager->isDeviceRunning(m_iCurrentDevice))
 			{
-				m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, _2RealKinectWrapper::USERIMAGE );
+				m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, _2RealKinectWrapper::DEPTHIMAGE );
 			}
 			//else
 			//{
@@ -125,12 +125,12 @@ void KinectOpenNIUserSkeletonBlock::update()
 	}
 }
 
-void KinectOpenNIUserSkeletonBlock::shutdown()
+void KinectOpenNIDepthBlock::shutdown()
 {
 	std::cout << "shutdown block" << std::endl;
 	if(m_iCurrentDevice>=0)
 	{
-		m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice, _2RealKinectWrapper::USERIMAGE );
+		m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice, _2RealKinectWrapper::DEPTHIMAGE );
 		m_iCurrentDevice = -1;
 	}
 }

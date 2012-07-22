@@ -30,10 +30,14 @@ void KinectOpenNIRgbBlock::setup( BlockHandle &block )
 		m_WidthInletHandle = block.getInletHandle("Width");
 		m_HeightInletHandle = block.getInletHandle("Height");
 		m_FpsInletHandle = block.getInletHandle("Fps");
+		m_IsMirroredInletHandle = block.getInletHandle("IsMirrored");
+		m_IsAlignedToDepthInletHandle = block.getInletHandle("IsAlignedToDepth");
 
 		m_iWidth = m_WidthInletHandle.getReadableRef<int>();
 		m_iHeight = m_HeightInletHandle.getReadableRef<int>();
 		m_iFps = m_FpsInletHandle.getReadableRef<int>();
+		m_bIsMirrored = m_IsMirroredInletHandle.getReadableRef<bool>();
+		m_bIsAlignedToDepth = m_IsAlignedToDepthInletHandle.getReadableRef<bool>();
 
 		// outlet handles
 		m_ImageOutletHandle = block.getOutletHandle("ImageData" );
@@ -63,6 +67,8 @@ void KinectOpenNIRgbBlock::update()
 		int w = m_WidthInletHandle.getReadableRef<int>();
 		int h = m_HeightInletHandle.getReadableRef<int>();
 		int fps = m_FpsInletHandle.getReadableRef<int>();
+		bool bIsMirrored = m_IsMirroredInletHandle.getReadableRef<bool>();
+		bool bIsAlignedToDepth = m_IsAlignedToDepthInletHandle.getReadableRef<bool>();
 
 		// camera index changed
 		if(deviceIndex != m_iCurrentDevice)
@@ -98,8 +104,16 @@ void KinectOpenNIRgbBlock::update()
 				//	m_WidthOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getVideoWidth(m_iCurrentDevice);
 				//	m_HeightOutletHandle.getWriteableRef<int>() = m_OpenNIDeviceManager->getVideoHeight(m_iCurrentDevice);
 				//}
-
-
+			}
+			else if(bIsMirrored != m_bIsMirrored)
+			{
+				m_OpenNIDeviceManager->setMirrored(m_iCurrentDevice, _2RealKinectWrapper::COLORIMAGE, bIsMirrored);
+				m_bIsMirrored = bIsMirrored;
+			}
+			else if(bIsAlignedToDepth != m_bIsAlignedToDepth)
+			{
+				m_OpenNIDeviceManager->setAlignToDepth(m_iCurrentDevice, bIsAlignedToDepth);
+				m_bIsAlignedToDepth = bIsAlignedToDepth;
 			}
 
 			//if( m_OpenNIDeviceManager->isDeviceRunning(m_iCurrentDevice))

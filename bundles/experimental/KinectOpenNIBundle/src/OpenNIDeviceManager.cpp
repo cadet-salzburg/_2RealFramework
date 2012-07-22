@@ -145,7 +145,7 @@ bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGene
 					 resolution = IMAGE_COLOR_640X480;
 				}
 			}
-			else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+			else if(generatorType == _2RealKinectWrapper::DEPTHIMAGE || generatorType == _2RealKinectWrapper::USERIMAGE)
 			{
 				resolution = IMAGE_USER_DEPTH_640X480;
 				if(w == 640 && h == 480)
@@ -229,7 +229,14 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
 		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
 
-		m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
+		{
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+		}
+		else
+		{
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+		}
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
@@ -256,6 +263,32 @@ int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerato
 	try
 	{
 		return m_2RealKinect->getImageHeight( deviceIdx, generatorType );
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
+}
+
+void OpenNIDeviceManager::setMirrored(const unsigned int deviceIdx, _2RealGenerator generatorType, bool bIsMirrored)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	try
+	{
+		m_2RealKinect->setMirrored( deviceIdx, generatorType, bIsMirrored );
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
+}
+
+void OpenNIDeviceManager::setAlignToDepth(const unsigned int deviceIdx, bool bIsAligned)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	try
+	{
+		m_2RealKinect->alignColorToDepth( deviceIdx, bIsAligned );
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{

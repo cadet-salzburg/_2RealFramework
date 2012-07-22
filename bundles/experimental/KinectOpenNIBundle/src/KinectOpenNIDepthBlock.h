@@ -4,11 +4,11 @@
 
 using namespace _2Real::bundle;
 
-class KinectOpenNIRgbBlock : public Block
+class KinectOpenNIDepthBlock : public Block
 {
 public:
-	KinectOpenNIRgbBlock( ContextBlock & context );
-	~KinectOpenNIRgbBlock();
+	KinectOpenNIDepthBlock( ContextBlock & context );
+	~KinectOpenNIDepthBlock();
 	void					shutdown();
 	void					update();
 	void					setup( BlockHandle &context );
@@ -20,7 +20,6 @@ private:
 	InletHandle							m_HeightInletHandle;
 	InletHandle							m_FpsInletHandle;
 	InletHandle							m_IsMirroredInletHandle;
-	InletHandle							m_IsAlignedToDepthInletHandle;
 	OutletHandle						m_ImageOutletHandle;
 	OutletHandle						m_WidthOutletHandle;
 	OutletHandle						m_HeightOutletHandle;
@@ -30,5 +29,4 @@ private:
 	int									m_iHeight;
 	int									m_iFps;
 	bool								m_bIsMirrored;
-	bool								m_bIsAlignedToDepth;
 };
