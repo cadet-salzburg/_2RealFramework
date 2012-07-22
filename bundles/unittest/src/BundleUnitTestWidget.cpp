@@ -66,7 +66,6 @@ void BundleUnitTestWidget::setup(std::string strBundleName)
 
 	setLayout(layout);
 	setWindowTitle(QString::fromStdString(strBundleName)+" Unit Test");
-	
 	show();
 }
 

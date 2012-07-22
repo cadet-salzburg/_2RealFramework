@@ -42,4 +42,5 @@ private:
 	QFuture<void>				m_Future;
 	QFutureWatcher<void>		m_FutureWatcher;
 	double						m_fDefaultFps;
+	std::string					m_strBlockName;
 };

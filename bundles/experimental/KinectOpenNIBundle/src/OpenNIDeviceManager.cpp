@@ -24,9 +24,16 @@ void OpenNIDeviceManager::setup( BlockHandle &context )
 {
 	try
 	{
+		m_iNumDevices=0;
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
-		m_iNumDevices = m_2RealKinect->getNumberOfDevices();
+		if(m_2RealKinect!=nullptr)
+			m_iNumDevices = m_2RealKinect->getNumberOfDevices();
+		
+		for(int i=0; i<m_iNumDevices; i++)
+		{
+			m_2RealKinect->configure( i,  _2RealKinectWrapper::COLORIMAGE | _2RealKinectWrapper::DEPTHIMAGE | _2RealKinectWrapper::USERIMAGE  );
+		}
 		initDeviceList();
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
@@ -215,8 +222,9 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-		if(!m_2RealKinect->isNewData(deviceIdx, generatorType))
-			return  m_DevicesInUse[deviceIdx].m_Image;
+		// this makes serious problems
+		/*if(!m_2RealKinect->isNewData(deviceIdx, generatorType))
+			return  m_DevicesInUse[deviceIdx].m_Image;*/
 		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
 		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
 		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();

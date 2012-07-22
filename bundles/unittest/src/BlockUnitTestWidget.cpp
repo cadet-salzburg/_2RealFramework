@@ -12,7 +12,7 @@ BlockUnitTestWidget::BlockUnitTestWidget()
 {
 }
 
-BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string blockName)
+BlockUnitTestWidget::BlockUnitTestWidget(BundleHandle bundleHandle, string blockName) : m_strBlockName(blockName)
 {
 	setup(bundleHandle, blockName);
 }
@@ -58,11 +58,27 @@ void BlockUnitTestWidget::setupGui()
 {
 	QGridLayout *grid = new QGridLayout;	// all things added with new as long as they belong to a parent are deleted by the parent so no need to care for that
 
-	grid->addWidget(createInletWidgets(),0,0);
-	grid->addWidget(createOutletWidgets(),0,1);
-	grid->addWidget(createButtonWidgets(),1,1);
+	QGroupBox* inletsBox = createInletWidgets();
+	QScrollArea *scrollAreaInlets = new QScrollArea(this);  
+	scrollAreaInlets->setWidget(inletsBox);  
+	scrollAreaInlets->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollAreaInlets->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	scrollAreaInlets->setWidgetResizable(true);
 
+	QGroupBox* outletsBox = createOutletWidgets();
+	QScrollArea *scrollAreaOutlets = new QScrollArea(this);  
+	scrollAreaOutlets->setWidget(outletsBox);  
+	scrollAreaOutlets->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollAreaOutlets->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	scrollAreaOutlets->setWidgetResizable(true);
+
+	grid->addWidget(scrollAreaInlets,0,0);
+	grid->addWidget(scrollAreaOutlets,0,1);
+	grid->addWidget(createButtonWidgets(),1,1);
 	setLayout(grid);
+
+	setWindowTitle(QString::fromStdString(m_strBlockName));
+	setMinimumSize(320,240);
 	show();
 }
 

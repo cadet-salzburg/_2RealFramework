@@ -77,6 +77,9 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			m_Pixmap = QPixmap::fromImage(m_Img);
 
 			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
+			dynamic_cast<QLabel*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QLabel*>(m_ValueWidget)->setScaledContents(true);
+			dynamic_cast<QLabel*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
