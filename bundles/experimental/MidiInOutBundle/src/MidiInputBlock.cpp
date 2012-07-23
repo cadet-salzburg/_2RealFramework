@@ -24,14 +24,19 @@ void MidiInputBlock::update()
 {
 	try
 	{
+		// If there are no MidiOIn ports available jump out of the method and set the current
+		// MidiIn port index to -1
 		if ( m_MidiInOutDeviceManager->getMidiInPortCount() == 0 )
 		{
 			m_iMidiInCurrentPort = -1;
 			return;
 		}
 
+		// Get the current MidiIn port that is set in the Inlet
 		unsigned int portIndex = m_MidiInPortInlet.getReadableRef<unsigned int>();
 
+		// If the current MidiIn port differs from the port in the last update call
+		// unbind the last port and bind the new one
 		if ( portIndex != m_iMidiInCurrentPort )
 		{
 			if ( m_iMidiInCurrentPort >= 0 )
@@ -44,10 +49,14 @@ void MidiInputBlock::update()
 				m_iMidiInCurrentPort = portIndex;
 		}
 
+		// Get the MidiIn message at the current index but only if the desired MidiIn device is available
+		// and used
 		if ( m_MidiInOutDeviceManager->isMidiInDeviceRunning( m_iMidiInCurrentPort ) )
 		{
+			// Retreive the MidiIn message and store it into a std::vector<unsigned char>
 			vector<unsigned char> midiMessage = m_MidiInOutDeviceManager->getMidiInMessage( m_iMidiInCurrentPort );
 			
+			// Store the message to the three Outles and print it into the console
 			if ( !midiMessage.empty() && midiMessage.size() >= 3 )
 			{
 				m_MidiInMessage0Outlet.getWriteableRef<unsigned char>() = midiMessage[0];
@@ -63,7 +72,7 @@ void MidiInputBlock::update()
 			
 		}
 		else
-			m_iMidiInCurrentPort = -1;
+			m_iMidiInCurrentPort = -1; // Set the current MidiIn index back to -1 if something went wrong
 
 	}
 	catch ( Exception& e )

@@ -9,7 +9,6 @@
 class MidiInputBlock
 
 Defines the MidiInput Block --> Via a Midi Input Port the Midi Messages are sent through three Outlets.
-The class automatically checks for available Ports and opens Ports accordingly to availability.
 */
 class MidiInputBlock : public _2Real::bundle::Block
 {

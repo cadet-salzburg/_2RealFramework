@@ -25,14 +25,19 @@ void MidiOutputBlock::update()
 {
 	try
 	{
+		// If there are no MidiOut ports available jump out of the method and set the current
+		// MidiOut port index to -1
 		if ( m_MidiInOutDeviceManager->getMidiOutPortCount() == 0 )
 		{
 			m_iMidiOutCurrentPort = -1;
 			return;
 		}
 
+		// Get the current MidiOut port that is set in the Inlet
 		unsigned int portIndex = m_MidiOutPortInlet.getReadableRef<unsigned int>();
 
+		// If the current MidiOut port differs from the port in the last update call
+		// unbind the last port and bind the new one
 		if ( portIndex != m_iMidiOutCurrentPort )
 		{
 			if ( m_iMidiOutCurrentPort >= 0 )
@@ -45,6 +50,7 @@ void MidiOutputBlock::update()
 				m_iMidiOutCurrentPort = portIndex;
 		}
 
+		// Send the MidiOut messages but only if the desired MidiOut device is available and used
 		if ( m_MidiInOutDeviceManager->isMidiOutDeviceRunning( m_iMidiOutCurrentPort ) )
 		{
 			// Put the received messages in a vector and send them via the RtMidiOut instance
@@ -56,7 +62,7 @@ void MidiOutputBlock::update()
 			m_MidiInOutDeviceManager->sendMidiOutMessage( m_iMidiOutCurrentPort, midiMessage );
 		}
 		else
-			m_iMidiOutCurrentPort = -1;
+			m_iMidiOutCurrentPort = -1; // Set the current MidiOut index back to -1 if something went wrong
 	}
 	catch ( Exception& e )
 	{

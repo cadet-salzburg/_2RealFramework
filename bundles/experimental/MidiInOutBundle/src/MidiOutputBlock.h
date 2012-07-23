@@ -9,7 +9,6 @@
 class MidiOutputBlock
 
 Defines the MidiOutBlock --> A Midi Output Port is opened and receives messages via three Inlets.
-The class automatically checks for available Ports and opens Ports accordingly to availability.
 */
 
 class MidiOutputBlock : public _2Real::bundle::Block
