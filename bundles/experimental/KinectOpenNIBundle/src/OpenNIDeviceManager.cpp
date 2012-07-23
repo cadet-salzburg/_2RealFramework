@@ -153,6 +153,14 @@ bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGene
 					resolution = IMAGE_USER_DEPTH_640X480;
 				}
 			}
+			else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+			{
+				resolution = IMAGE_INFRARED_640X480;
+				if(w == 640 && h == 480)
+				{
+					resolution = IMAGE_INFRARED_640X480;
+				}
+			}
 
 			bResult = m_2RealKinect->configure( deviceIdx,  generatorType, resolution  );
 
@@ -229,7 +237,7 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
 		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
 
-		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
+		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE || generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{
 			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
 		}
@@ -283,7 +291,7 @@ void OpenNIDeviceManager::setMirrored(const unsigned int deviceIdx, _2RealGenera
 	}
 }
 
-void OpenNIDeviceManager::setAlignToDepth(const unsigned int deviceIdx, bool bIsAligned)
+void OpenNIDeviceManager::setAlignToColor(const unsigned int deviceIdx, bool bIsAligned)
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try

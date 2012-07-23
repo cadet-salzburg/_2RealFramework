@@ -1,6 +1,7 @@
 #include "OpenNIDeviceManager.h"
 #include "KinectOpenNIRgbBlock.h"
 #include "KinectOpenNIDepthBlock.h"
+#include "KinectOpenNIIrBlock.h"
 #include "KinectOpenNIUserSkeletonBlock.h"
 
 #include "_2RealBundle.h"
@@ -34,7 +35,6 @@ void getBundleMetainfo( BundleMetainfo& info )
 		rgbBlockInfo.addInlet<int>( "Height", 480 );
 		rgbBlockInfo.addInlet<int>( "Fps", 30 );
 		rgbBlockInfo.addInlet<bool>( "IsMirrored", false );
-		rgbBlockInfo.addInlet<bool>( "IsAlignedToDepth", false );
 		rgbBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
 		rgbBlockInfo.addOutlet<int>( "Width" );
 		rgbBlockInfo.addOutlet<int>( "Height" );
@@ -46,6 +46,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addInlet<int>( "Height", 480 );
 		depthBlockInfo.addInlet<int>( "Fps", 30 );
 		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
+		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
 		depthBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
@@ -57,10 +58,22 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addInlet<int>( "Height", 480 );
 		userSkeletonBlockInfo.addInlet<int>( "Fps", 30 );
 		userSkeletonBlockInfo.addInlet<bool>( "IsMirrored", false );
+		userSkeletonBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
 		userSkeletonBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
 		userSkeletonBlockInfo.setDescription( "OpenNI Kinect User/Skeleton Image Block" );
+
+		BlockMetainfo irBlockInfo = info.exportBlock< KinectOpenNIIrBlock, WithContext >( "KinectOpenNIIrBlock" );
+		irBlockInfo.addInlet<int>( "DeviceIndex", 0 );
+		irBlockInfo.addInlet<int>( "Width", 640 );
+		irBlockInfo.addInlet<int>( "Height", 480 );
+		irBlockInfo.addInlet<int>( "Fps", 30 );
+		irBlockInfo.addInlet<bool>( "IsMirrored", false );
+		irBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
+		irBlockInfo.addOutlet<int>( "Width" );
+		irBlockInfo.addOutlet<int>( "Height" );
+		irBlockInfo.setDescription( "OpenNI Kinect Infrared Image Block" );
 	}
 	catch ( Exception &e )
 	{

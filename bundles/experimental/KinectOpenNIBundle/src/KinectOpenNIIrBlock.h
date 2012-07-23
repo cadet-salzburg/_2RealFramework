@@ -3,10 +3,10 @@
 
 using namespace _2Real::bundle;
 
-class KinectOpenNIRgbBlock : public KinectOpenNIBlockBase
+class KinectOpenNIIrBlock : public KinectOpenNIBlockBase
 {
 public:
-	KinectOpenNIRgbBlock( ContextBlock & context ) : KinectOpenNIBlockBase(context)
+	KinectOpenNIIrBlock( ContextBlock & context ) : KinectOpenNIBlockBase(context)
 	{};
 
 	void					setup( BlockHandle &context );

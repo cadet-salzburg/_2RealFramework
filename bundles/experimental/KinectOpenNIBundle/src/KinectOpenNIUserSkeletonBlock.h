@@ -1,32 +1,17 @@
 #pragma once
-#include "_2RealBlock.h"
-#include "OpenNIDeviceManager.h"
+#include "KinectOpenNIDepthBlock.h"
 
 using namespace _2Real::bundle;
 
-class KinectOpenNIUserSkeletonBlock : public Block
+class KinectOpenNIUserSkeletonBlock : public KinectOpenNIDepthBlock
 {
 public:
-	KinectOpenNIUserSkeletonBlock( ContextBlock & context );
-	~KinectOpenNIUserSkeletonBlock();
-	void					shutdown();
-	void					update();
+	KinectOpenNIUserSkeletonBlock( ContextBlock & context ) : KinectOpenNIDepthBlock(context)
+	{
+	};
+	
 	void					setup( BlockHandle &context );
+	void					update();
 
 private:
-
-	InletHandle							m_DeviceIndexInletHandle;
-	InletHandle							m_WidthInletHandle;
-	InletHandle							m_HeightInletHandle;
-	InletHandle							m_FpsInletHandle;
-	InletHandle							m_IsMirroredInletHandle;
-	OutletHandle						m_ImageOutletHandle;
-	OutletHandle						m_WidthOutletHandle;
-	OutletHandle						m_HeightOutletHandle;
-	OpenNIDeviceManager*				m_OpenNIDeviceManager;
-	int									m_iCurrentDevice;
-	int									m_iWidth;
-	int									m_iHeight;
-	int									m_iFps;
-	bool								m_bIsMirrored;
 };

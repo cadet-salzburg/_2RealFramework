@@ -19,7 +19,7 @@ public:
 	void							unbindGenerator(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType);
 	bool							setGeneratorParams(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, int w, int h, int fps);
 	void							setMirrored(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIsMirrored);
-	void							setAlignToDepth(const unsigned int deviceIdx, bool bIsAligned);
+	void							setAlignToColor(const unsigned int deviceIdx, bool bIsAligned);
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 

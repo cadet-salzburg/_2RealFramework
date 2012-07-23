@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "KinectOpenNIRgbBlock.h"
+#include "KinectOpenNIIrBlock.h"
 #include "_2RealDatatypes.h"
 
 using namespace _2Real;
@@ -11,9 +11,9 @@ using std::cout;
 using std::endl;
 using std::string;
 
-void KinectOpenNIRgbBlock::setup( BlockHandle &block )
+void KinectOpenNIIrBlock::setup( BlockHandle &block )
 {
 	// set generator type so base class object works on that generator, this inheritance helps avoid useless codeduplicatio, you could use templates as well
-	setGeneratorType(_2RealKinectWrapper::COLORIMAGE);
+	setGeneratorType(_2RealKinectWrapper::INFRAREDIMAGE);
 	KinectOpenNIBlockBase::setup(block);
 }
