@@ -1,6 +1,7 @@
 #include "OpenNIDeviceManager.h"
 #include "KinectOpenNIRgbBlock.h"
 #include "KinectOpenNIDepthBlock.h"
+#include "KinectOpenNIDepth16BitBlock.h"
 #include "KinectOpenNIIrBlock.h"
 #include "KinectOpenNIUserSkeletonBlock.h"
 
@@ -51,6 +52,18 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
 		depthBlockInfo.setDescription( "OpenNI Kinect Depth Image Block" );
+
+		BlockMetainfo depthBlockInfo = info.exportBlock< KinectOpenNIDepth16BitBlock, WithContext >( "KinectOpenNIDepth16BitBlock" );
+		depthBlockInfo.addInlet<int>( "DeviceIndex", 0 );
+		depthBlockInfo.addInlet<int>( "Width", 640 );
+		depthBlockInfo.addInlet<int>( "Height", 480 );
+		depthBlockInfo.addInlet<int>( "Fps", 30 );
+		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
+		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
+		depthBlockInfo.addOutlet< ImageT<unsigned short> >("ImageData");
+		depthBlockInfo.addOutlet<int>( "Width" );
+		depthBlockInfo.addOutlet<int>( "Height" );
+		depthBlockInfo.setDescription( "OpenNI Kinect Depth 16 Bit Image Block" );
 
 		BlockMetainfo userSkeletonBlockInfo = info.exportBlock< KinectOpenNIUserSkeletonBlock, WithContext >( "KinectOpenNIUserSkeletonBlock" );
 		userSkeletonBlockInfo.addInlet<int>( "DeviceIndex", 0 );
