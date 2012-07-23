@@ -122,6 +122,10 @@ void KinectOpenNIBlockBase::update()
 			//	m_iCurrentDevice = -1;		// it was all running and ok bu through a rescan a change in the device list got noticed and so all devices have to quit
 			//}
 		}
+		else
+		{
+			m_ImageOutletHandle.discard();
+		}
 	}
 	catch ( Exception &e )
 	{

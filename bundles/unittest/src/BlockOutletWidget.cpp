@@ -18,6 +18,11 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		{
 			m_ValueWidget = new QTextBrowser();
 		}
+		else if(m_OutletHandle.getTypename().find("img")!=string::npos)
+		{
+			static QMutex mutex;
+			m_ValueWidget = new QGlTextureImage(&mutex);
+		}
 		else
 		{
 			m_ValueWidget = new QLabel();
@@ -62,24 +67,9 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			int channels = data.getData<ImageT<unsigned char>>().getNumberOfChannels();
 			unsigned char* ptr = data.getData<ImageT<unsigned char>>().getData();
 
-			if(channels == 1)
-			{
-				m_Img = QImage( ptr, width, height, QImage::Format_Indexed8);
-			}
-			else if(channels == 3)
-			{
-				m_Img = QImage( ptr, width, height, QImage::Format_RGB888);
-			}
-			else if(channels == 4)
-			{
-				m_Img = QImage( ptr, width, height, QImage::Format_ARGB32);
-			}
-			m_Pixmap = QPixmap::fromImage(m_Img);
-
-			dynamic_cast<QLabel*>(m_ValueWidget)->setPixmap(m_Pixmap);
-			dynamic_cast<QLabel*>(m_ValueWidget)->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-			dynamic_cast<QLabel*>(m_ValueWidget)->setScaledContents(true);
-			dynamic_cast<QLabel*>(m_ValueWidget)->setMinimumSize(80, 60);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture(width, height, channels, ptr);
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
