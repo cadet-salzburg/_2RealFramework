@@ -29,6 +29,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
+		// MidiInOutDeviceManager ContextBlock definition
+		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< MidiInOutDeviceManager >();
+
 		// MidiInput Block information as well as In and Outlet definition
 		BlockMetainfo midiIn = info.exportBlock< MidiInputBlock, WithContext >( "MidiInBlock" );
 		midiIn.addInlet<unsigned int>( "MidiInPort", 0 );

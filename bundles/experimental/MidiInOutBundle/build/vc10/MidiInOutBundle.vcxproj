@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\MidiInOutBundle.cpp" />
+    <ClCompile Include="..\..\src\MidiInOutDeviceManager.cpp" />
     <ClCompile Include="..\..\src\MidiInputBlock.cpp" />
     <ClCompile Include="..\..\src\MidiOutputBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\MidiInOutDeviceManager.h" />
     <ClInclude Include="..\..\src\MidiInputBlock.h" />
     <ClInclude Include="..\..\src\MidiOutputBlock.h" />
   </ItemGroup>

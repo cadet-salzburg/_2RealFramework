@@ -9,10 +9,10 @@ using namespace _2Real::bundle;
 
 MidiOutputBlock::MidiOutputBlock( ContextBlock & context ) :
 	Block(),
-	m_iMidiOutCurrentPort( -1 ),
-	m_MidiOut( 0 )
+	m_iMidiOutCurrentPort( -1 )
 {
-
+	m_MidiInOutDeviceManager = static_cast<MidiInOutDeviceManager*>( &context );
+	m_MidiInOutDeviceManager->registerMidiOutBlock();
 }
 
 
@@ -23,50 +23,45 @@ MidiOutputBlock::~MidiOutputBlock(void)
 
 void MidiOutputBlock::update()
 {
-	if ( m_MidiOut != 0 )
+	try
 	{
-		try
+		if ( m_MidiInOutDeviceManager->getMidiOutPortCount() == 0 )
 		{
-			// If there are no Ports available set the current Port index back to -1 and jump out of the method
-			if ( m_MidiOut->getPortCount() == 0 )
+			m_iMidiOutCurrentPort = -1;
+			return;
+		}
+
+		unsigned int portIndex = m_MidiOutPortInlet.getReadableRef<unsigned int>();
+
+		if ( portIndex != m_iMidiOutCurrentPort )
+		{
+			if ( m_iMidiOutCurrentPort >= 0 )
 			{
+				m_MidiInOutDeviceManager->unsbindMidiOutDevice( m_iMidiOutCurrentPort );
 				m_iMidiOutCurrentPort = -1;
-				return;
 			}
 
-			// Check if the current Port index has changed since the last update call and open the new Port accordingly
-			rescanMidiOutPorts();
+			if ( m_MidiInOutDeviceManager->bindMidiOutDevice( portIndex ) )
+				m_iMidiOutCurrentPort = portIndex;
+		}
 
+		if ( m_MidiInOutDeviceManager->isMidiOutDeviceRunning( m_iMidiOutCurrentPort ) )
+		{
 			// Put the received messages in a vector and send them via the RtMidiOut instance
 			vector<unsigned char> midiMessage;
 			midiMessage.push_back( m_MidiOutMessage0Inlet.getReadableRef<unsigned char>() );
 			midiMessage.push_back( m_MidiOutMessage1Inlet.getReadableRef<unsigned char>() );
 			midiMessage.push_back( m_MidiOutMessage2Inlet.getReadableRef<unsigned char>() );
 
-			m_MidiOut->sendMessage( &midiMessage );
+			m_MidiInOutDeviceManager->sendMidiOutMessage( m_iMidiOutCurrentPort, midiMessage );
 		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-		}
-		catch ( Exception& e )
-		{
-			cout << e.message() << endl;
-			e.rethrow();
-		}
+		else
+			m_iMidiOutCurrentPort = -1;
 	}
-	else // Try initializing the RtMidiOut Instance if something should have gone wrong during the setup phase
+	catch ( Exception& e )
 	{
-		try
-		{
-			initRtMidiOut();
-		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-			delete m_MidiOut;
-			m_MidiOut = 0;
-		}
+		cout << e.message() << endl;
+		e.rethrow();
 	}
 }
 
@@ -79,16 +74,6 @@ void MidiOutputBlock::setup( BlockHandle &context )
 		m_MidiOutMessage0Inlet = context.getInletHandle( "MidiOutMessage0" );
 		m_MidiOutMessage1Inlet = context.getInletHandle( "MidioutMessage1" );
 		m_MidiOutMessage2Inlet = context.getInletHandle( "MidioutMessage2" );
-
-		// Initialize the RtMidiOut instance
-		initRtMidiOut();
-	}
-	catch ( RtError& error )
-	{
-		error.printMessage();
-		// Delete the RtMidiOut instance if something went wrong while allocating memory
-		delete m_MidiOut;
-		m_MidiOut = 0;
 	}
 	catch ( Exception& e )
 	{
@@ -99,26 +84,6 @@ void MidiOutputBlock::setup( BlockHandle &context )
 
 void MidiOutputBlock::shutdown()
 {
-	if ( m_MidiOut != 0 )
-		delete m_MidiOut;
-}
-
-void MidiOutputBlock::rescanMidiOutPorts()
-{
-	// Ask the Inlet for the Port that should be opened / used
-	unsigned int portToOpen = m_MidiOutPortInlet.getReadableRef<unsigned int>();
-
-	// If the Port index in the Inlet is different from the currently used Port index
-	// close the old Port and open a new Port according to the new Port index
-	if ( m_iMidiOutCurrentPort != portToOpen )
-	{
-		m_MidiOut->closePort();
-		m_iMidiOutCurrentPort = portToOpen;
-		m_MidiOut->openPort( m_iMidiOutCurrentPort );
-	}
-}
-
-void MidiOutputBlock::initRtMidiOut()
-{
-	m_MidiOut = new RtMidiOut();
+	m_MidiInOutDeviceManager->unsbindMidiOutDevice( m_iMidiOutCurrentPort );
+	m_MidiInOutDeviceManager->unregisterMidiOutBlock();
 }

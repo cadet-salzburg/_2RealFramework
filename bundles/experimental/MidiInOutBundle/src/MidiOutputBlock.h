@@ -3,6 +3,8 @@
 #include "_2realblock.h"
 #include "RtMidi.h"
 
+#include "MidiInOutDeviceManager.h"
+
 /*
 class MidiOutputBlock
 
@@ -22,16 +24,10 @@ public:
 	virtual void shutdown();
 
 private:
-	// Gets the new Port index from the Block Inlet and checks, whether the Port has changed since the last call
-	// --> If so, the old Port is closed and the new one opened
-	void							rescanMidiOutPorts();
-	// Initializes the RtMidiOut Pointer
-	void							initRtMidiOut();
-
-	// Te current MidiOut Port index
+	// The current MidiOut Port index
 	int								m_iMidiOutCurrentPort;
 
-	// The Block Outle for the MidiOut Port index
+	// The Block Outlet for the MidiOut Port index
 	_2Real::bundle::InletHandle		m_MidiOutPortInlet;
 
 	// The three Block Inlets that describe the incoming Midi messages
@@ -39,7 +35,7 @@ private:
 	_2Real::bundle::InletHandle		m_MidiOutMessage1Inlet;
 	_2Real::bundle::InletHandle		m_MidiOutMessage2Inlet;
 
-	// The RtMidiOut instance
-	RtMidiOut*						m_MidiOut;
+	// The MidiInOutDeviceManager
+	MidiInOutDeviceManager*			m_MidiInOutDeviceManager;
 };
 
