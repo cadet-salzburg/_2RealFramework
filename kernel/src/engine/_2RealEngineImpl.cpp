@@ -87,7 +87,7 @@ namespace _2Real
 		m_Typetable->registerType< bool >( "bool" );
 		m_Typetable->registerType< std::string >( "string" );
 
-		m_Typetable->registerType< ImageSource >( "image_source" );
+		m_Typetable->registerType< Image >( "image" );
 
 		m_Timestamp.update();
 	}

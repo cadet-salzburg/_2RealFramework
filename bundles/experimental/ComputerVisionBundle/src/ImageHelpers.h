@@ -37,7 +37,40 @@ TData * makeCheckerboard( const unsigned int width, const unsigned int height, c
 	return data;
 }
 
-inline cv::Mat * convertToCvMat( ImageSource const& src )
+// ok, clearly i'm too stupid or something
+template< >
+inline unsigned short * makeCheckerboard( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz )
+{
+	unsigned short *data = new unsigned short[ width * height * channels ];
+	unsigned short *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = static_cast< unsigned short >( 0xFF00 );
+					++p;
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = static_cast< unsigned short >( 0x0000 );
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
+inline cv::Mat * convertToCvMat( Image const& src )
 {
 	unsigned int width = src.getWidth();
 	unsigned int height = src.getHeight();
@@ -47,29 +80,10 @@ inline cv::Mat * convertToCvMat( ImageSource const& src )
 
 	if ( width == 0 || height == 0 )
 	{
-		// no image size was defined
+		
 	}
 
 	ImageType type = src.getImageType();
-
-	//switch( type.getDatatype() )
-	//{
-	//case ImageType::UNSIGNED_BYTE:
-	//	cvType = CV_8UC1;
-	//	break;
-	//case ImageType::UNSIGNED_SHORT:
-	//	cvType = CV_16UC1;
-	//	break;
-	//case ImageType::FLOAT:
-	//	cvType = CV_32FC1;
-	//	break;
-	//case ImageType::DOUBLE:
-	//	cvType = CV_64FC1;
-	//	break;
-	//default:
-	//	cvType = CV_8UC1;
-	//	break;
-	//}
 
 	unsigned int numChannels = src.getChannelOrder().getNumberOfChannels();
 	switch ( numChannels )

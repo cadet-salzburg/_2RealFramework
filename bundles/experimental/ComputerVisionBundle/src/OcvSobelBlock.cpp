@@ -1,4 +1,5 @@
 #include "OcvSobelBlock.h"
+#include "ImageHelpers.h"
 #include "_2RealDatatypes.h"
 #include "opencv2/imgproc/imgproc.hpp"
 
@@ -8,7 +9,7 @@ using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
 
-OcvSobelBlock::OcvSobelBlock() : Block() {}
+OcvSobelBlock::OcvSobelBlock() : Block(), m_OutChannelOrder( ImageChannelOrder::RGB ), m_OutImageType( ImageType::UNSIGNED_BYTE ) {}
 OcvSobelBlock::~OcvSobelBlock() {}
 
 void OcvSobelBlock::setup( BlockHandle &block )
@@ -16,24 +17,13 @@ void OcvSobelBlock::setup( BlockHandle &block )
 	try
 	{
 		m_Block = block;
-		ImageT< unsigned short > &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageT< unsigned short > >();
+		Image &output = block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
+		output = Image();
 
-		size_t sz = 640 * 480 * 3;
-		unsigned short *init = new unsigned short[ sz ];
-		unsigned short *p = init;
-		for ( unsigned int i=0; i<480; ++i )
-		{
-			for ( unsigned int j=0; j<640; ++j )
-			{
-				*p = static_cast< unsigned short >( 0 );
-				++p;
-				*p = static_cast< unsigned short >( 0 );
-				++p;
-				*p = static_cast< unsigned short >( 0 );
-				++p;
-			}
-		}
-		output.assign( init, true, 640, 480, ImageChannelOrder::RGB );
+		m_OutWidth = output.getWidth();
+		m_OutHeight = output.getHeight();
+		m_OutChannelOrder = output.getChannelOrder();
+		m_OutImageType = output.getImageType();
 	}
 	catch( Exception & e )
 	{
@@ -52,12 +42,12 @@ void OcvSobelBlock::update()
 {
 	try
 	{
-		ImageT< unsigned short > &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageT< unsigned short > >();
+		Image &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
 
 		vector< InletHandle > inlets = m_Block.getAllInletHandles();
 
 		// inlets are accessible in the same order they were declared in the metadata
-		ImageT< unsigned char > const& input = inlets[ 0 ].getReadableRef< ImageT < unsigned char > >();
+		Image const& input = inlets[ 0 ].getReadableRef< Image >();
 		unsigned char orderX = inlets[ 1 ].getReadableRef< unsigned char >();
 		unsigned char orderY = inlets[ 2 ].getReadableRef< unsigned char >();
 		unsigned char aperture = inlets[ 3 ].getReadableRef< unsigned char >();
@@ -71,11 +61,25 @@ void OcvSobelBlock::update()
 			return;
 		}
 
-		// (?) where to get the format from, C1 - C4 comes from channel order; 8U whatever comes from the template type
-		// thankfully, the conversion thing itself is super easy
-		cv::Mat matSrc( input.getWidth(), input.getHeight(), CV_8UC3, input.getData() );
-		cv::Mat matDst( output.getWidth(), output.getHeight(), CV_16UC3, output.getData() );
-		cv::Sobel( matSrc, matDst, 2, orderX, orderY, aperture, 1.0, 0.0, 4 );
+		if ( !( m_OutImageType == input.getImageType() && m_OutChannelOrder == input.getChannelOrder() ) || m_OutWidth != input.getWidth() || m_OutHeight != input.getHeight() )
+		{
+			cout << "creating new out image" << endl;
+			output = input;	// this involves a copy of the data, thus making sure that the outlet has the correct datatype & channel order
+							// could, however, be more efficient as the memcpy that happens is not needed
+			m_OutWidth = output.getWidth();
+			m_OutHeight = output.getHeight();
+			m_OutChannelOrder = output.getChannelOrder();
+			m_OutImageType = output.getImageType();
+		}
+
+		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
+		cv::Mat *matSrc = convertToCvMat( input );
+		cv::Mat *matDst = convertToCvMat( output );
+
+		cv::Sobel( *matSrc, *matDst, 2, orderX, orderY, aperture, 1.0, 0.0, 4 );
+
+		delete matSrc;
+		delete matDst;
 	}
 	catch( Exception & e )
 	{

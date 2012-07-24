@@ -98,15 +98,15 @@ namespace _2Real
 
 	};
 
-	class ImageSource
+	class Image
 	{
 
-		friend std::ostream& operator<<( std::ostream& out, ImageSource const& image );
-		friend std::istream& operator>>( std::istream& in, ImageSource &image );
+		friend std::ostream& operator<<( std::ostream& out, Image const& image );
+		friend std::istream& operator>>( std::istream& in, Image &image );
 
 	public:
 
-		ImageSource() :
+		Image() :
 			m_Data( nullptr ),
 			m_Size( 0 ),
 			m_Width( 0 ),
@@ -117,13 +117,13 @@ namespace _2Real
 		{
 		}
 
-		~ImageSource()
+		~Image()
 		{
 			m_Deleter->safeDelete( m_Data );
 			delete m_Deleter;
 		}
 
-		ImageSource( ImageSource const& src ) :
+		Image( Image const& src ) :
 			m_Size( src.m_Size ),
 			m_Width( src.m_Width ),
 			m_Height( src.m_Height ),
@@ -143,7 +143,7 @@ namespace _2Real
 			}
 		}
 
-		ImageSource& operator=( ImageSource const& src )
+		Image& operator=( Image const& src )
 		{
 			if ( this == &src )
 			{
@@ -174,7 +174,7 @@ namespace _2Real
 			return *this;
 		}
 
-		ImageSource( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+		Image( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( data ),
 			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) ),
 			m_Width( w ),
@@ -185,7 +185,7 @@ namespace _2Real
 		{
 		}
 
-		ImageSource( unsigned short *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+		Image( unsigned short *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
 			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned short ) ),
 			m_Width( w ),
@@ -196,7 +196,7 @@ namespace _2Real
 		{
 		}
 
-		ImageSource( float *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+		Image( float *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
 			m_Size( w * h * o.getNumberOfChannels() * sizeof( float ) ),
 			m_Width( w ),
@@ -207,7 +207,7 @@ namespace _2Real
 		{
 		}
 
-		ImageSource( double *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+		Image( double *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
 			m_Size( w * h * o.getNumberOfChannels() * sizeof( double ) ),
 			m_Width( w ),
@@ -336,12 +336,12 @@ namespace _2Real
 
 	};
 
-	inline std::ostream& operator<<( std::ostream& out, ImageSource const& image )
+	inline std::ostream& operator<<( std::ostream& out, Image const& image )
 	{
 		return out;
 	}
 
-	inline std::istream& operator>>( std::istream& in, ImageSource &image )
+	inline std::istream& operator>>( std::istream& in, Image &image )
 	{
 		return in;
 	}

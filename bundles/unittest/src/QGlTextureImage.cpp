@@ -1,23 +1,30 @@
 #include "QGlTextureImage.h"
+#include "_2RealDatatypes.h"
 
-QGlTextureImage::QGlTextureImage( QWidget *parent)
-	:  QGLWidget(QGLFormat(QGL::SampleBuffers), parent), m_bIsTextureGenerated(false)
-{
-}
+using _2Real::ImageType;
 
-QGlTextureImage::~QGlTextureImage()
-{
-}
+#include <iostream>
+
+QGlTextureImage::QGlTextureImage( QWidget *parent) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent) {}
+QGlTextureImage::~QGlTextureImage() {}
 
 void QGlTextureImage::initializeGL() 
 {
 	makeCurrent();
-	glClearColor (0.0,0.0,0.0,1.0);
-	glDisable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();        
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();        
+
+	glGenTextures( 1, &m_iTexture );
+	glBindTexture( GL_TEXTURE_2D, m_iTexture );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	glOrtho( 0, 1, 0, 1, 0, 1 );
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
+
+	glColor4f( 1, 1, 1, 1 );
+	glEnable( GL_TEXTURE_2D );
 }
 
 void QGlTextureImage::resizeGL(int w, int h)
@@ -28,117 +35,72 @@ void QGlTextureImage::resizeGL(int w, int h)
 
 void QGlTextureImage::paintGL()
 {
-	makeCurrent();						// this is important for qt so things happen in the correct threaded opengl context
-	glClear (GL_COLOR_BUFFER_BIT);       
-	glDisable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();    
+	makeCurrent();
 
-	glOrtho(0,1,0,1,0,1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();        
-	glEnable(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D,m_iTexture); 
-	glColor4f(1,1,1,1);
-	glBegin(GL_QUADS);   
+	glClear( GL_COLOR_BUFFER_BIT );
+	glBegin( GL_QUADS );
 		glTexCoord2i(0,1); glVertex2i(0,0);
 		glTexCoord2i(0,0); glVertex2i(0,1);
 		glTexCoord2i(1,0); glVertex2i(1,1);
 		glTexCoord2i(1,1); glVertex2i(1,0);
-	glEnd();         
+	glEnd();
+
 	glFlush();
 }
 
-void QGlTextureImage::updateTexture(int w, int h, int channels, int bitsPerPixel, void* pTexture)
+void QGlTextureImage::checkGLState( std::string const& msg )
 {
-	int iInternalTextureFormat;
-	int iTextureFormat;
-	int iTextureType;
+	GLenum status = glGetError();
+	if ( status != GL_NO_ERROR )
+	{
+		std::cout << "the GL is in error state: " << status << " " << std::endl;
+	}
+}
 
-	// this is important for qt so things happen in the correct threaded opengl context
+void QGlTextureImage::updateTexture( const unsigned int width, const unsigned int height, const unsigned int channels, ImageType const& type, void const* data )
+{
 	makeCurrent();
 
-	if(w>0 && h>0 && channels>0 && (bitsPerPixel==8 || bitsPerPixel==16))
+	if ( ( width > 0 ) && ( height > 0 ) )
 	{
-		glEnable(GL_TEXTURE_2D);
+		GLint iTextureFormat, iPixelFormat, iDataType;
 
-		if(m_iWidth != w || m_iHeight != h || m_iChannels != channels || m_iBitsPerPixel != bitsPerPixel)		// settings changes so we need to allocate a new texture
+		if ( channels == 1 )			iTextureFormat = iPixelFormat = GL_LUMINANCE;
+		else if ( channels == 3 )		iTextureFormat = iPixelFormat = GL_RGB;
+		else if ( channels == 4 )		iTextureFormat = iPixelFormat = GL_RGBA;
+		else if ( channels == 2 )
 		{
-			if(m_bIsTextureGenerated)
-			{
-				glDeleteTextures(1, &m_iTexture);		// delete old texture and try to generate new due to boolean flag
-				m_bIsTextureGenerated = false;
-			}
+			std::cout << "2 channel images cannot be converted to gl textures" << std::endl;
+			return;
 		}
-		// get opengl texture format
-		if(channels==1)
+		else
 		{
-			iTextureFormat = GL_LUMINANCE;
-			if(bitsPerPixel == 8)
-			{
-				iInternalTextureFormat = GL_LUMINANCE8;
-			}
-			else if(bitsPerPixel == 16)
-			{
-				iInternalTextureFormat = GL_LUMINANCE16;
-			}
+			std::cout << "invalid number of channels" << std::endl;
+			return;
 		}
-		else if(channels==3)
-		{
-			iTextureFormat = GL_RGB;
-			if(bitsPerPixel == 8)
-			{
-				iInternalTextureFormat = GL_RGB8;
-			}
-			else if(bitsPerPixel == 16)
-			{
-				iInternalTextureFormat = GL_RGB16;
-			}
-		}
-		else if(channels==4)
-		{
-			iTextureFormat = GL_RGBA;
-			if(bitsPerPixel == 8)
-			{
-				iInternalTextureFormat = GL_RGBA8;
-			}
-			else if(bitsPerPixel == 16)
-			{
-				iInternalTextureFormat = GL_RGBA16;
-			}
-		}
-		// set data type
-		if(bitsPerPixel == 8)
-		{
-			iTextureType = GL_UNSIGNED_BYTE;
-		}
-		else if(bitsPerPixel == 16)
-		{
-			iTextureType = GL_UNSIGNED_SHORT;
-		}
-		
-		// generate texture if not already generated
-		if(!m_bIsTextureGenerated)
-		{
-			m_iWidth = w;
-			m_iHeight = h;
-			m_iChannels = channels;
-			m_iBitsPerPixel = bitsPerPixel;
 
-			glGenTextures(1, &m_iTexture);
-			glBindTexture(GL_TEXTURE_2D,m_iTexture);       
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);   
-			glTexImage2D(GL_TEXTURE_2D, 0, iInternalTextureFormat, w, h, 0, iTextureFormat, iTextureType, NULL );    
-			m_bIsTextureGenerated = true;
+		if ( type == ImageType::UNSIGNED_BYTE )			iDataType = GL_UNSIGNED_BYTE;
+		else if ( type == ImageType::UNSIGNED_SHORT )	iDataType = GL_UNSIGNED_SHORT;
+		else if ( type == ImageType::FLOAT )			iDataType = GL_FLOAT;
+		else if ( type == ImageType::DOUBLE)
+		{
+			std::cout << "DOUBLE images cannot be converted to gl textures" << std::endl;
+			return;
 		}
-		// update texture
-		glBindTexture(GL_TEXTURE_2D,m_iTexture); 
-		glTexImage2D(GL_TEXTURE_2D, 0, iInternalTextureFormat, w, h, 0, iTextureFormat, iTextureType, pTexture );    
+		else
+		{
+			std::cout << "invalid image type" << std::endl;
+			return;
+		}
 
-		glDisable(GL_TEXTURE_2D);
+		glTexImage2D(GL_TEXTURE_2D, 0, iTextureFormat, width, height, 0, iPixelFormat, iDataType, data );
+
+		checkGLState( ", encountered after pixel transfer" );
+	}
+	else
+	{
+		std::cout << "image has invalid size" << std::endl;
+		return;
 	}
 
 	update();

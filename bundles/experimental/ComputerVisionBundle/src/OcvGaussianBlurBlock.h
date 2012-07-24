@@ -16,5 +16,9 @@ public:
 private:
 
 	_2Real::bundle::BlockHandle			m_Block;
+	unsigned int						m_OutWidth;
+	unsigned int						m_OutHeight;
+	_2Real::ImageType					m_OutImageType;
+	_2Real::ImageChannelOrder			m_OutChannelOrder;
 
 };

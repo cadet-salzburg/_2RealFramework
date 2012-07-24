@@ -18,7 +18,7 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		{
 			m_ValueWidget = new QTextBrowser();
 		}
-		else if(m_OutletHandle.getTypename().find("image_source")!=string::npos)
+		else if(m_OutletHandle.getTypename().find("image")!=string::npos)
 		{
 			m_ValueWidget = new QGlTextureImage();
 		}
@@ -58,18 +58,12 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 {
 	try
 	{
-		if( m_OutletHandle.getTypename().find( "image_source" )!=string::npos )
+		if( m_OutletHandle.getTypename().find( "image" )!=string::npos )
 		{
-			ImageSource const& source = data.getData< ImageSource >();
-			int w = source.getWidth();
-			int h = source.getHeight();
-			int c = source.getNumberOfChannels();
-			unsigned char *ptr = source.getData();
-			unsigned int bpp = source.getBitsPerPixel();
-
+			Image const& img = data.getData< Image >();
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
-			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture( w, h, c, bpp, ptr );
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture( img.getWidth(), img.getHeight(), img.getNumberOfChannels(), img.getImageType(), img.getData() );
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
