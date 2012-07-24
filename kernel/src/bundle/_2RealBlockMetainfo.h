@@ -52,6 +52,9 @@ namespace _2Real
 			}
 
 			template< typename TData >
+			void addInlet( std::string const& name, TData initialValue, Options< TData > const& options );
+
+			template< typename TData >
 			void addOutlet( std::string const& outletName )
 			{
 				addOutletInternal( outletName, typeid( TData ).name() );
@@ -60,11 +63,18 @@ namespace _2Real
 		private:
 
 			void		addInletInternal( std::string const& inletName, Any const& initialValue );
+			void		addInletInternal( std::string const& inletName, Any const& initialValue, AnyOptionSet const& options );
 			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
 
 			BlockMetadata	&m_Impl;
 			Typetable		const& m_Typetable;
 
 		};
+
+		template< >
+		inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, Options< int > const& options )
+		{
+			addInletInternal( name, Any( initialValue ), AnyOptionSet( options ) );
+		}
 	}
 }

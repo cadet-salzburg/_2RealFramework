@@ -195,7 +195,7 @@ namespace _2Real
 			// adding inlets & outlets
 			for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				contextBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue() );
+				contextBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue(), it->getOptions() );
 			}
 
 			for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
@@ -254,7 +254,7 @@ namespace _2Real
 		// adding inlets & outlets
 		for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
 		{
-			functionBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue() );
+			functionBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue(), it->getOptions() );
 		}
 
 		for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )

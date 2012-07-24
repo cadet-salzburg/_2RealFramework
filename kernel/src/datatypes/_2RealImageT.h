@@ -48,8 +48,9 @@ namespace _2Real
 		enum { RED = 0, GREEN = 1, BLUE = 2, ALPHA = 3, INVALID = 255 };
 		enum CHANNEL_CODE { RGBA, BGRA, ARGB, ABGR, RGBX, BGRX, XRGB, XBGR, RGB, BGR, R, G, B, A };
 
-		ImageChannelOrder(const CHANNEL_CODE channelCode);
+		ImageChannelOrder( const CHANNEL_CODE channelCode );
 		ImageChannelOrder( ImageChannelOrder const& src );
+		ImageChannelOrder& operator=( ImageChannelOrder const& src );
 
 		const uint8_t	getRedOffset() const { return m_RedOffset; }
 		const uint8_t	getGreenOffset() const { return m_GreenOffset; }
@@ -59,11 +60,9 @@ namespace _2Real
 		const uint8_t	getNumberOfChannels() const { return m_NumChannels; }
 		int				getCode() const { return m_ChannelCode; }
 
-		const bool operator==(ImageChannelOrder const& rhs) const { return m_ChannelCode == rhs.m_ChannelCode; }
+		const bool operator==( ImageChannelOrder const& rhs ) const { return m_ChannelCode == rhs.m_ChannelCode; }
 
 	private:
-
-		ImageChannelOrder& operator=( ImageChannelOrder const& src );
 
 		void			set(const uint8_t red, const uint8_t green, const uint8_t blue, const uint8_t alpha, const uint8_t channelCount);
 

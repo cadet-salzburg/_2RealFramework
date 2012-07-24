@@ -21,6 +21,7 @@
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealEvent.h"
 #include "helpers/_2RealPoco.h"
+#include "helpers/_2RealOptions.h"
 
 #include <list>
 
@@ -68,7 +69,7 @@ namespace _2Real
 
 		~InletBuffer();
 
-		InletBuffer( Any const& defaultData );
+		InletBuffer( Any const& defaultData, AnyOptionSet const& options );
 		void receiveData( TimestampedData const& data );
 		void receiveData( Any const& data );
 		void receiveData( std::string const& data );
@@ -80,6 +81,7 @@ namespace _2Real
 		unsigned int getBufferSize() const;
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
+		AnyOptionSet const& getOptionSet() const;
 
 	private:
 
@@ -94,6 +96,7 @@ namespace _2Real
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
 		unsigned int									m_BufferSize;
+		AnyOptionSet										m_Options;
 
 	};
 

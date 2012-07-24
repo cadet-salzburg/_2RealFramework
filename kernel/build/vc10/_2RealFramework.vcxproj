@@ -37,8 +37,6 @@
     <ClInclude Include="..\..\src\bundle\_2RealCreationPolicy.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealDeviceList.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealEnum.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
@@ -78,6 +76,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealAny.h" />
     <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealComparisons.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />

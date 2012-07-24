@@ -20,449 +20,329 @@
 #pragma once
 
 #include "datatypes/_2RealImageT.h"
-
-#undef min
-#undef max
-#include <limits>
-#include <numeric>
-#include <iostream>
+#include "helpers/_2RealHelpers.h"
 
 namespace _2Real
 {
-	//template< typename T >
-	//class Deleter
-	//{
-	//public:
-	//	Deleter( T *data ) : m_Data( data ) {};
-	//	virtual ~Deleter() {}
-	//	T *m_Data;
-	//};
 
-	//template< typename T >
-	//class NullDeleter : public Deleter< T >
-	//{
-	//public:
-	//	NullDeleter( T *data ) : Deleter( data ) {};
-	//};
-
-	//template< typename T >
-	//class ArrayDeleter : public Deleter< T >
-	//{
-	//public:
-	//	ArrayDeleter( T *data ) : Deleter( data ) {};
-	//	~ArrayDeleter() { delete [] m_Data; }
-	//};
-
-	//template< typename T >
-	//struct static_cast_func
-	//{
-	//	template < typename TOther >
-	//	T const& operator()( TOther const& val ) const { return static_cast< T const& >( val ); }
-	//};
-
-	//class ImageChannel
-	//{
-
-	//	template< typename TData >
-	//	friend TData* extractData( ImageChannel &channel );
-
-	//	template< typename TData >
-	//	friend TData *const extractData( ImageChannel const& channel );
-
-	//private:
-
-	//	template< typename T >
-	//	class ChannelObjectT;
-
-	//	class AbstractChannelObject
-	//	{
-
-	//	public:
-
-	//		AbstractChannelObject( const unsigned int width, const unsigned int height, const unsigned int bytesPerRow, const unsigned char inc );
-	//		virtual ~AbstractChannelObject();
-
-	//		virtual void copyInto( AbstractChannelObject *other ) const = 0;
-
-	//		unsigned int				m_Width, m_Height, m_RowPitch;
-	//		unsigned char				m_Increment;
-
-	//	};
-
-	//	template< typename TData >
-	//	class ChannelObjectT : public AbstractChannelObject
-	//	{
-
-	//	public:
-
-	//		ChannelObjectT( TData *data, const bool ownsData, const unsigned int width, const unsigned int height, const unsigned int bytesPerRow, const unsigned char inc ) :
-	//			AbstractChannelObject( width, height, bytesPerRow, inc ),
-	//			m_Data( data ),
-	//			m_Deleter( ownsData ? ( Deleter< TData > )ArrayDeleter< TData >( data ) : NullDeleter( data ) )
-	//		{
-	//		}
-
-	//		void copyInto( AbstractChannelObject *other ) const
-	//		{
-	//		}
-
-	//		TData						*m_Data;
-	//		Deleter< TData >			m_Deleter;
-
-	//	};
-
-	//	template< >
-	//	class ChannelObjectT< unsigned char > : public AbstractChannelObject
-	//	{
-
-	//	public:
-
-	//		ChannelObjectT( unsigned char *data, const bool ownsData, const uint32_t width, const uint32_t height, const uint32_t bytesPerRow, const uint8_t inc ) :
-	//			AbstractChannelObject( width, height, bytesPerRow, inc ),
-	//			m_Data( data ),
-	//			m_Deleter( ownsData ? ( Deleter< unsigned char > )ArrayDeleter< unsigned char >( data ) : NullDeleter< unsigned char >( data ) )
-	//		{
-	//		}
-
-	//		void copyInto( AbstractChannelObject *other ) const
-	//		{
-	//		}
-
-	//		unsigned char				*m_Data;
-	//		Deleter< unsigned char >	m_Deleter;
-
-	//	};
-
-	//	typedef ChannelObjectT< unsigned char >		Channel_uchar;
-	//	typedef ChannelObjectT< unsigned short >	Channel_ushort;
-	//	typedef ChannelObjectT< float >				Channel_float;
-	//	typedef ChannelObjectT< double >			Channel_double;
-
-	//	AbstractChannelObject	*m_ChannelObject;
-
-	//public:
-
-	//	ImageChannel() :
-	//		m_ChannelObject( nullptr )
-	//	{
-	//	};
-
-	//	~ImageChannel()
-	//	{
-	//		delete m_ChannelObject;
-	//	}
-
-	//	ImageChannel( ImageChannel const& src ) :
-	//		m_ChannelObject( nullptr )
-	//	{
-	//		src.m_ChannelObject->copyInto( m_ChannelObject );
-	//	}
-
-	//};
-
-	//template< typename TData >
-	//class ImageSource
-	//{
-	//	ImageSource( const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order );
-	//	ImageSource( TData *data, const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order );
-	//};
-
-	//class Image
-	//{
-
-	//	friend std::ostream& operator<<( std::ostream& out, Image const& image );
-	//	friend std::istream& operator>>( std::istream& in, Image &image );
-
-	//	template< typename TData >
-	//	friend TData* extractData( Image &img );
-
-	//	template< typename TData >
-	//	friend TData *const extractData( Image const& img );
-
-	//private:
-
-	//	template< typename TData >
-	//	class ImageObjectT;
-
-	//	class AbstractImageObject
-	//	{
-
-	//	public:
-
-	//		AbstractImageObject( const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order ) :
-	//			m_Width( w ),
-	//			m_Height( h ),
-	//			m_RowPitch( bpr ),
-	//			m_Increment( inc ),
-	//			m_ChannelOrder( order )
-	//		{
-	//		}
-
-	//		virtual ~AbstractImageObject() {}
-
-	//		bool isEmpty() const
-	//		{
-	//			return ( m_Width == 0 || m_Height == 0 );
-	//		}
-
-	//		virtual void copyInto( AbstractImageObject *other ) const = 0;
-
-	//		virtual void convertTo( ImageT< unsigned char > &img ) const = 0;
-	//		virtual void convertTo( ImageT< unsigned short > &img ) const = 0;
-	//		virtual void convertTo( ImageT< float > &img ) const = 0;
-	//		virtual void convertTo( ImageT< double > &img ) const = 0;
-
-	//		unsigned int		m_Width, m_Height, m_RowPitch;
-	//		unsigned char		m_Increment;
-	//		ImageChannelOrder	m_ChannelOrder;
-
-	//	};
-
-	//	template< typename TData >
-	//	class ImageObjectT : public AbstractImageObject
-	//	{
-
-	//	public:
-
-	//		ImageObjectT( TData *data, const bool owns, const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order ) :
-	//			AbstractImageObject( w, h, bpr, inc, order ),
-	//			m_Data( data ),
-	//			m_Deleter( owns ? ( Deleter< TData > )ArrayDeleter< TData >( data ) : NullDeleter< TData >( data ) )
-	//		{
-	//		}
-
-	//		void copyInto( AbstractImageObject *other ) const
-	//		{
-	//			if ( other != nullptr )
-	//			{
-	//				delete other;
-	//			}
-
-	//			size_t sz = m_Width * m_Height;
-	//			TData *data = new TData[ sz ];
-	//			memcpy( data, m_Data, sz*sizeof( TData ) );
-
-	//			other = new ImageObjectT< TData >( data, true, m_Width, m_Height, m_RowPitch, m_Increment, m_ChannelOrder );
-	//		}
-
-	//		void convertTo( ImageT< unsigned char > &img ) const
-	//		{
-	//		}
-
-	//		void convertTo( ImageT< unsigned short > &img ) const
-	//		{
-	//		}
-
-	//		void convertTo( ImageT< float > &img ) const
-	//		{
-	//		}
-
-	//		void convertTo( ImageT< double > &img ) const
-	//		{
-	//		}
-
-	//		TData						*m_Data;
-	//		Deleter< TData >			m_Deleter;
-
-	//	};
-
-	//	template< >
-	//	class ImageObjectT< unsigned char > : public AbstractImageObject
-	//	{
-
-	//	public:
-
-	//		ImageObjectT( unsigned char *data, const bool owns, const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order ) :
-	//			AbstractImageObject( w, h, bpr, inc, order ),
-	//			m_Data( data ),
-	//			m_Deleter( owns ? ( Deleter< unsigned char > )ArrayDeleter< unsigned char >( data ) : NullDeleter< unsigned char >( data ) )
-	//		{
-	//		}
-
-	//		void copyInto( AbstractImageObject *other ) const
-	//		{
-	//			if ( other != nullptr )
-	//			{
-	//				delete other;
-	//			}
-
-	//			size_t sz = m_Width * m_Height;
-	//			unsigned char *data = new unsigned char[ sz ];
-	//			memcpy( data, m_Data, sz*sizeof( unsigned char ) );
-
-	//			other = new ImageObjectT< unsigned char >( data, true, m_Width, m_Height, m_RowPitch, m_Increment, m_ChannelOrder );
-	//		}
-
-	//		void convertTo( ImageT< unsigned char > &img ) const
-	//		{
-	//		}
-
-	//		void convertTo( ImageT< unsigned short > &img ) const
-	//		{
-	//			// check: if nullptr
-	//			// if size = 0
-	//			// if channel mismatch
-
-	//			size_t sz = m_Width * m_Height;
-	//			unsigned short *data = new unsigned short[ sz ];
-	//			memset( data, 0, sz*sizeof( unsigned short ) );
-
-	//			unsigned char *pUChar = &m_Data[ 0 ];
-	//			unsigned short *pUShort = &data[ 0 ];
-
-	//			pUShort += sizeof( unsigned char );
-
-	//			for ( unsigned int i=0; i<sz; ++i )
-	//			{
-	//				*pUShort = *pUChar;
-	//				pUShort++;
-	//				pUChar++;
-	//			}
-	//		}
-
-	//		void convertTo( ImageT< float > &img ) const
-	//		{
-	//		}
-
-	//		void convertTo( ImageT< double > &img ) const
-	//		{
-	//		}
-
-	//		unsigned char				*m_Data;
-	//		Deleter< unsigned char >	m_Deleter;
-
-	//	};
-
-	//	//template< >
-	//	//class ImageObjectT< unsigned short > : public AbstractImageObject
-	//	//{
-
-	//	//public:
-
-	//	//	ImageObjectT( unsigned short *data, const bool owns, const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order ) :
-	//	//		AbstractImageObject( w, h, bpr, inc, order ),
-	//	//		m_Data( data ),
-	//	//		m_Deleter( owns ? ( Deleter< unsigned short > )ArrayDeleter< unsigned short >( data ) : NullDeleter< unsigned short >( data ) )
-	//	//	{
-	//	//	}
-
-	//	//	void copyInto( AbstractImageObject *other ) const
-	//	//	{
-	//	//		if ( other != nullptr )
-	//	//		{
-	//	//			delete other;
-	//	//		}
-
-	//	//		size_t sz = m_Width * m_Height;
-	//	//		unsigned short *data = new unsigned short[ sz ];
-	//	//		memcpy( data, m_Data, sz*sizeof( unsigned short ) );
-
-	//	//		other = new ImageObjectT< unsigned short >( data, true, m_Width, m_Height, m_RowPitch, m_Increment, m_ChannelOrder );
-	//	//	}
-
-	//	//	void convertTo( ImageT< unsigned char > &img )
-	//	//	{
-	//	//	}
-
-	//	//	void convertTo( ImageT< unsigned short > &img )
-	//	//	{
-	//	//	}
-
-	//	//	void convertTo( ImageT< float > &img )
-	//	//	{
-	//	//	}
-
-	//	//	void convertTo( ImageT< double > &img )
-	//	//	{
-	//	//	}
-
-	//	//	unsigned short				*m_Data;
-	//	//	Deleter< unsigned short >	m_Deleter;
-
-	//	//};
-
-	//	//typedef ImageObjectT< unsigned char >		Image_uchar;
-	//	//typedef ImageObjectT< unsigned short >		Image_ushort;
-	//	//typedef ImageObjectT< float >				Image_float;
-	//	//typedef ImageObjectT< double >				Image_double;
-
-	//	AbstractImageObject		*m_ImageObject;
-
-	//public:
-
-	//	Image() :
-	//		m_ImageObject( nullptr )
-	//	{
-	//		std::cout << "IMAGE CTOR" << std::endl;
-	//	};
-
-	//	template< typename TData >
-	//	Image( TData *data, const bool owns, const unsigned int w, const unsigned int h, const unsigned int bpr, const unsigned char inc, ImageChannelOrder const& order ) :
-	//		m_ImageObject( new ImageObjectT< TData >( data, owns, w, h, bpr, inc, order ) )
-	//	{
-	//		std::cout << "IMAGE INIT" << std::endl;
-	//	}
-
-	//	//template< typename TData >
-	//	//Image( ImageSource< TData > &src, bool owns ) :
-	//	//	m_ImageObject( new ImageObjectT< TData >( src.data, owns, src.w, src.h, src.bpr, src.inc, src.order ) )
-	//	//{
-	//	//}
-
-	//	~Image()
-	//	{
-	//		std::cout << "IMAGE DTOR" << std::endl;
-	//		delete m_ImageObject;
-	//	}
-
-	//	Image( Image const& src ) :
-	//		m_ImageObject( nullptr )
-	//	{
-	//		std::cout << "IMAGE COPY" << std::endl;
-	//		//src.m_ImageObject->copyInto( m_ImageObject );
-	//	}
-
-	//	void copyTo( ImageT< unsigned char > &img ) const
-	//	{
-	//		m_ImageObject->convertTo( img );
-	//	}
-
-	//	void copyTo( ImageT< unsigned short > &img ) const
-	//	{
-	//		m_ImageObject->convertTo( img );
-	//	}
-
-	//	void copyTo( ImageT< float > &img ) const
-	//	{
-	//		m_ImageObject->convertTo( img );
-	//	}
-
-	//	void copyTo( ImageT< double > &img ) const
-	//	{
-	//		m_ImageObject->convertTo( img );
-	//	}
-
-	//};
-
-	//template< typename TData >
-	//TData * extractData( Image &image )
-	//{
-	//	return nullptr;
-	//}
-
-	//template< typename TData >
-	//TData *const extractData( Image const& image )
-	//{
-	//	return nullptr;
-	//}
-
-	//inline std::ostream& operator<<( std::ostream& out, Image const& image )
-	//{
-	//	return out;
-	//}
-
-	//inline std::istream& operator>>( std::istream& in, Image &image )
-	//{
-	//	return in;
-	//}
+	template< typename TData >
+	class Deleter
+	{
+	public:
+		virtual void safeDelete( TData *& data) const = 0;
+	};
+
+	template< typename TData >
+	class NullDeleter : public Deleter< TData >
+	{
+	public:
+		void safeDelete( TData *& data) const {}
+	};
+
+	template< typename TData >
+	class ArrayDeleter : public Deleter< TData >
+	{
+	public:
+		void safeDelete( TData *& data) const { delete [] data; data = nullptr; }
+	};
+
+	class ImageType
+	{
+
+	public:
+
+		enum IMAGE_TYPE { UNSIGNED_BYTE, UNSIGNED_SHORT, FLOAT, DOUBLE };
+
+		ImageType( const IMAGE_TYPE imageType ) :
+			m_ImageType( imageType )
+		{
+			switch ( imageType )
+			{
+			case UNSIGNED_BYTE:
+				m_ByteSize = sizeof( unsigned char );
+				break;
+			case UNSIGNED_SHORT:
+				m_ByteSize = sizeof( unsigned short );
+				break;
+			case FLOAT:
+				m_ByteSize = sizeof( float );
+				break;
+			case DOUBLE:
+				m_ByteSize = sizeof( double );
+				break;
+			}
+		}
+
+		ImageType( ImageType const& src ) :
+			m_ImageType( src.m_ImageType ),
+			m_ByteSize( src.m_ByteSize )
+		{
+		}
+
+		ImageType& operator=( ImageType const& src )
+		{
+			m_ImageType = src.m_ImageType;
+			m_ByteSize = src.m_ByteSize;
+			return *this;
+		}
+
+		unsigned char	getByteSize() const { return m_ByteSize; }
+		int				getDatatype() const { return m_ImageType; }
+
+		const bool operator==( ImageType const& src ) const { return m_ImageType == src.m_ImageType; }
+
+	private:
+
+		IMAGE_TYPE		m_ImageType;
+		size_t			m_ByteSize;
+
+	};
+
+	class ImageSource
+	{
+
+		friend std::ostream& operator<<( std::ostream& out, ImageSource const& image );
+		friend std::istream& operator>>( std::istream& in, ImageSource &image );
+
+	public:
+
+		ImageSource() :
+			m_Data( nullptr ),
+			m_Size( 0 ),
+			m_Width( 0 ),
+			m_Height( 0 ),
+			m_ChannelOrder( ImageChannelOrder::R ),
+			m_ImageType( ImageType::UNSIGNED_BYTE ),
+			m_Deleter( new NullDeleter< unsigned char >() )
+		{
+		}
+
+		~ImageSource()
+		{
+			m_Deleter->safeDelete( m_Data );
+			delete m_Deleter;
+		}
+
+		ImageSource( ImageSource const& src ) :
+			m_Size( src.m_Size ),
+			m_Width( src.m_Width ),
+			m_Height( src.m_Height ),
+			m_ChannelOrder( src.m_ChannelOrder ),
+			m_ImageType( src.m_ImageType )
+		{
+			if ( src.m_Data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, src.m_Data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+		}
+
+		ImageSource& operator=( ImageSource const& src )
+		{
+			if ( this == &src )
+			{
+				return *this;
+			}
+
+			m_Size = src.m_Size;
+			m_Width = src.m_Width;
+			m_Height = src.m_Height;
+			m_ChannelOrder = src.m_ChannelOrder;
+			m_ImageType = src.m_ImageType;
+
+			m_Deleter->safeDelete( m_Data );
+			safeDelete( m_Deleter );
+
+			if ( src.m_Data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, src.m_Data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+
+			return *this;
+		}
+
+		ImageSource( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+			m_Data( data ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) ),
+			m_Width( w ),
+			m_Height( h ),
+			m_ImageType( ImageType::UNSIGNED_BYTE ),
+			m_ChannelOrder( o ),
+			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
+		{
+		}
+
+		ImageSource( unsigned short *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+			m_Data( reinterpret_cast< unsigned char * >( data ) ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned short ) ),
+			m_Width( w ),
+			m_Height( h ),
+			m_ImageType( ImageType::UNSIGNED_SHORT ),
+			m_ChannelOrder( o ),
+			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
+		{
+		}
+
+		ImageSource( float *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+			m_Data( reinterpret_cast< unsigned char * >( data ) ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( float ) ),
+			m_Width( w ),
+			m_Height( h ),
+			m_ImageType( ImageType::FLOAT ),
+			m_ChannelOrder( o ),
+			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
+		{
+		}
+
+		ImageSource( double *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
+			m_Data( reinterpret_cast< unsigned char * >( data ) ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( double ) ),
+			m_Width( w ),
+			m_Height( h ),
+			m_ImageType( ImageType::DOUBLE ),
+			m_ChannelOrder( o ),
+			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
+		{
+		}
+
+		void assign( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o )
+		{
+			m_ImageType = ImageType::UNSIGNED_BYTE;
+			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) );
+			m_Width = w;
+			m_Height = h;
+			m_ChannelOrder = o;
+
+			m_Deleter->safeDelete( m_Data );
+			safeDelete( m_Deleter );
+
+			if ( data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+		}
+
+		void assign( unsigned short *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o )
+		{
+			m_ImageType = ImageType::UNSIGNED_SHORT;
+			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( unsigned short ) );
+			m_Width = w;
+			m_Height = h;
+			m_ChannelOrder = o;
+
+			m_Deleter->safeDelete( m_Data );
+			safeDelete( m_Deleter );
+
+			if ( data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+		}
+
+		void assign( float *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o )
+		{
+			m_ImageType = ImageType::FLOAT;
+			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( float ) );
+			m_Width = w;
+			m_Height = h;
+			m_ChannelOrder = o;
+
+			m_Deleter->safeDelete( m_Data );
+			safeDelete( m_Deleter );
+
+			if ( data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+		}
+
+		void assign( double *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o )
+		{
+			m_ImageType = ImageType::DOUBLE;
+			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( double ) );
+			m_Width = w;
+			m_Height = h;
+			m_ChannelOrder = o;
+
+			m_Deleter->safeDelete( m_Data );
+			safeDelete( m_Deleter );
+
+			if ( data != nullptr )
+			{
+				m_Deleter = new ArrayDeleter< unsigned char >();
+				m_Data = new unsigned char[ m_Size ];
+				memcpy( m_Data, data, m_Size );
+			}
+			else
+			{
+				m_Data = nullptr;
+				m_Deleter = new NullDeleter< unsigned char >();
+			}
+		}
+
+		ImageType const&			getImageType() const { return m_ImageType; }
+		ImageChannelOrder const&	getChannelOrder() const { return m_ChannelOrder; }
+		unsigned int				getNumberOfChannels() const { return m_ChannelOrder.getNumberOfChannels(); }
+		size_t						getByteSize() const { return m_Size; }
+		size_t						getBitsPerPixel() const { return m_ImageType.getByteSize()*8; }
+		unsigned int				getWidth() const { return m_Width; }
+		unsigned int				getHeight() const { return m_Height; }
+		unsigned char const*		getData() { return m_Data; }
+		unsigned char*				getData() const { return m_Data; }
+
+	private:
+
+		unsigned char				*m_Data;
+		unsigned int				m_Width;
+		unsigned int				m_Height;
+		size_t						m_Size;
+		ImageType					m_ImageType;
+		ImageChannelOrder			m_ChannelOrder;
+		Deleter< unsigned char >	*m_Deleter;
+
+	};
+
+	inline std::ostream& operator<<( std::ostream& out, ImageSource const& image )
+	{
+		return out;
+	}
+
+	inline std::istream& operator>>( std::istream& in, ImageSource &image )
+	{
+		return in;
+	}
 }

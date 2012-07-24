@@ -50,6 +50,7 @@ namespace _2Real
 	class Outlet;
 	class TimestampedData;
 	class AbstractUberBlock;
+	class AnyOptionSet;
 
 	class InletIO : private NonCopyable< InletIO >, private Handleable< InletIO, app::InletHandle >
 	{
@@ -60,7 +61,7 @@ namespace _2Real
 		using Handleable< InletIO, app::InletHandle >::registerHandle;
 		using Handleable< InletIO, app::InletHandle >::unregisterHandle;
 
-		InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+		InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options );
 		~InletIO();
 		Inlet													*m_Inlet;
 		InletBuffer												*m_Buffer;

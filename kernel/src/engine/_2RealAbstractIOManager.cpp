@@ -27,10 +27,10 @@ using std::string;
 namespace _2Real
 {
 
-	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue ) :
+	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options ) :
 		Handleable< InletIO, app::InletHandle >( *this ),
 		m_Inlet( new Inlet( owner, name, longTypename, typeName ) ),
-		m_Buffer( new InletBuffer( initialValue ) )
+		m_Buffer( new InletBuffer( initialValue, options ) )
 	{
 	}
 

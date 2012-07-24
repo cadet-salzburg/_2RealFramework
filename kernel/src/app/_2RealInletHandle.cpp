@@ -184,6 +184,11 @@ namespace _2Real
 			return m_InletIO->m_Inlet->getTypename();
 		}
 
+		AnyOptionSet const& InletHandle::getOptionSet() const
+		{
+			return m_InletIO->m_Buffer->getOptionSet();
+		}
+
 		void InletHandle::invalidate()
 		{
 			m_InletIO = nullptr;

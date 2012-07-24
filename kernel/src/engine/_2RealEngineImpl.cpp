@@ -30,9 +30,7 @@
 #include "helpers/_2RealSingletonHolder.h"
 #include "helpers/_2RealHelpers.h"
 
-#include "datatypes/_2RealDeviceList.h"
-#include "datatypes/_2RealImageT.h"
-#include "datatypes/_2RealEnum.h"
+#include "datatypes/_2RealImage.h"
 
 #include <sstream>
 #include <iostream>
@@ -89,12 +87,7 @@ namespace _2Real
 		m_Typetable->registerType< bool >( "bool" );
 		m_Typetable->registerType< std::string >( "string" );
 
-		m_Typetable->registerType< ImageT < unsigned char > >( "img_uchar" );
-		m_Typetable->registerType< ImageT < unsigned short > >( "img_ushort" );
-		m_Typetable->registerType< ImageT < float > >( "img_float" );
-		m_Typetable->registerType< ImageT < double > >( "img_double" );
-
-		//m_Typetable->registerType< Image >( "dynamic_image" );
+		m_Typetable->registerType< ImageSource >( "image_source" );
 
 		m_Timestamp.update();
 	}

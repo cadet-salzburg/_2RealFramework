@@ -1,6 +1,7 @@
 #include "OcvGaussianBlurBlock.h"
 #include "_2RealDatatypes.h"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "ImageHelpers.h"
 
 #include <iostream>
 
@@ -16,24 +17,24 @@ void OcvGaussianBlurBlock::setup( BlockHandle &block )
 	try
 	{
 		m_Block = block;
-		ImageT< unsigned char > &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageT< unsigned char > >();
+		//ImageSource &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageSource >();
 
-		size_t sz = 640 * 480 * 3;
-		unsigned char *init = new unsigned char[ sz ];
-		unsigned char *p = init;
-		for ( unsigned int i=0; i<480; ++i )
-		{
-			for ( unsigned int j=0; j<640; ++j )
-			{
-				*p = static_cast< unsigned char >( 0 );
-				++p;
-				*p = static_cast< unsigned char >( 0 );
-				++p;
-				*p = static_cast< unsigned char >( 0 );
-				++p;
-			}
-		}
-		output.assign( init, true, 640, 480, ImageChannelOrder::RGB );
+		//size_t sz = 640 * 480 * 3;
+		//unsigned char *init = new unsigned char[ sz ];
+		//unsigned char *p = init;
+		//for ( unsigned int i=0; i<480; ++i )
+		//{
+		//	for ( unsigned int j=0; j<640; ++j )
+		//	{
+		//		*p = static_cast< unsigned char >( 0 );
+		//		++p;
+		//		*p = static_cast< unsigned char >( 0 );
+		//		++p;
+		//		*p = static_cast< unsigned char >( 0 );
+		//		++p;
+		//	}
+		//}
+		//output.assign( init, true, 640, 480, ImageChannelOrder::RGB );
 	}
 	catch( Exception & e )
 	{
@@ -52,17 +53,19 @@ void OcvGaussianBlurBlock::update()
 {
 	try
 	{
-		ImageT< unsigned char > &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageT< unsigned char > >();
+		ImageSource &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< ImageSource >();
 
 		vector< InletHandle > inlets = m_Block.getAllInletHandles();
 
 		// inlets are accessible in the same order they were declared in the metadata
-		ImageT< unsigned char > const& input = inlets[ 0 ].getReadableRef< ImageT < unsigned char > >();
+		ImageSource const& input = inlets[ 0 ].getReadableRef< ImageSource>();
 		unsigned char kernelX = inlets[ 1 ].getReadableRef< unsigned char >();
 		unsigned char kernelY = inlets[ 2 ].getReadableRef< unsigned char >();
 		double const& sigmaX = inlets[ 3 ].getReadableRef< double >();
 		double const& sigmaY = inlets[ 4 ].getReadableRef< double >();
+		int const& border = inlets[ 5 ].getReadableRef< int >();
 
+		// requires a range -> maye be checked by the fw in the future
 		if ( sigmaX < 0. || sigmaY < 0. )
 		{
 			// (?) throwing an exception is not really a good idea in this case
@@ -72,6 +75,7 @@ void OcvGaussianBlurBlock::update()
 			return;
 		}
 
+		// kernel size must be odd. i don't think the framework should handle this
 		if ( kernelX%2 != 1 || kernelY%2 != 1 )
 		{
 			// (?) throwing an exception is not really a good idea in this case
@@ -81,17 +85,11 @@ void OcvGaussianBlurBlock::update()
 			return;
 		}
 
-		//ImageT< unsigned char > const& input = m_Block.getInletHandle( "image_in" ).getReadableRef< ImageT < unsigned char > >();
-		//unsigned char kernelX = m_Block.getInletHandle( "kernel_x" ).getReadableRef< unsigned char >();
-		//unsigned char kernelY = m_Block.getInletHandle( "kernel_y" ).getReadableRef< unsigned char >();
-		//double sigmaX = m_Block.getInletHandle( "sigma_x" ).getReadableRef< double >();
-		//double sigmaY = m_Block.getInletHandle( "sigma_y" ).getReadableRef< double >();
-
-		// (?) where to get the format from, C1 - C4 comes from channel order; 8U whatever comes from the template type
-		// thankfully, the conversion thing itself is super easy
-		cv::Mat matSrc( input.getWidth(), input.getHeight(), CV_8UC3, input.getData() );
-		cv::Mat matDst( output.getWidth(), output.getHeight(), CV_8UC3, output.getData() );
-		cv::GaussianBlur( matSrc, matDst, cv::Size( kernelX, kernelY ), sigmaX, sigmaY, cv::BORDER_DEFAULT );
+		cv::Mat *matSrc = convertToCvMat( input );
+		cv::Mat *matDst = convertToCvMat( output );
+		cv::GaussianBlur( *matSrc, *matDst, cv::Size( kernelX, kernelY ), sigmaX, sigmaY, border );
+		delete matSrc;
+		delete matDst;
 	}
 	catch( Exception & e )
 	{

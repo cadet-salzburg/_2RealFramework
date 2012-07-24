@@ -172,9 +172,9 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
+	void FunctionBlockIOManager::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options )
 	{
-		InletIO *io = new InletIO( m_Owner, name, longTypename, typeName, initialValue );
+		InletIO *io = new InletIO( m_Owner, name, longTypename, typeName, initialValue, options );
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "_2RealComparisons.h"
+
 #include <string>
 
 namespace _2Real
@@ -34,17 +36,19 @@ namespace _2Real
 		virtual AbstractAnyHolder* create() const = 0;
 		virtual void writeTo( std::ostream &out ) const = 0;
 		virtual void readFrom( std::istream &in ) = 0;
+		virtual bool isEqualTo( AbstractAnyHolder const& other ) const = 0;
+		virtual bool isLessThan( AbstractAnyHolder const& other ) const = 0;
 
 	};
 
-	template< typename Datatype >
+	template< typename TData >
 	class AnyHolder : public AbstractAnyHolder
 	{
 	
 	public:
 
 		AnyHolder();
-		explicit AnyHolder( Datatype const& value );
+		explicit AnyHolder( TData const& value );
 
 		const std::string getTypename() const;
 		std::type_info const& getTypeinfo() const;
@@ -54,35 +58,38 @@ namespace _2Real
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
-		Datatype		m_Data;
+		bool isEqualTo( AbstractAnyHolder const& other ) const;
+		bool isLessThan( AbstractAnyHolder const& other ) const;
+
+		TData		m_Data;
 
 	private:
 
-		AnyHolder( AnyHolder< Datatype > const& src );
-		AnyHolder& operator=( AnyHolder< Datatype > const& src );
+		AnyHolder( AnyHolder< TData > const& src );
+		AnyHolder& operator=( AnyHolder< TData > const& src );
 
 	};
 
-	template< typename Datatype >
-	AnyHolder< Datatype >::AnyHolder() :
+	template< typename TData >
+	AnyHolder< TData >::AnyHolder() :
 		m_Data()
 	{
 	}
 
-	template< typename Datatype >
-	AnyHolder< Datatype >::AnyHolder( Datatype const& value ) :
+	template< typename TData >
+	AnyHolder< TData >::AnyHolder( TData const& value ) :
 		m_Data( value )
 	{
 	}
 
-	template< typename Datatype >
-	AnyHolder< Datatype >::AnyHolder( AnyHolder< Datatype > const& src ) :
+	template< typename TData >
+	AnyHolder< TData >::AnyHolder( AnyHolder< TData > const& src ) :
 		m_Data( src.m_Data )
 	{
 	}
 
-	template< typename Datatype >
-	AnyHolder< Datatype >& AnyHolder< Datatype >::operator=( AnyHolder< Datatype > const& src )
+	template< typename TData >
+	AnyHolder< TData >& AnyHolder< TData >::operator=( AnyHolder< TData > const& src )
 	{
 		if ( this == &src )
 		{
@@ -94,40 +101,72 @@ namespace _2Real
 		return *this;
 	}
 
-	template< typename Datatype >
-	std::type_info const& AnyHolder< Datatype >::getTypeinfo() const
+	template< typename TData >
+	std::type_info const& AnyHolder< TData >::getTypeinfo() const
 	{
-		return typeid( Datatype );
+		return typeid( TData );
 	}
 
-	template< typename Datatype >
-	const std::string AnyHolder< Datatype >::getTypename() const
+	template< typename TData >
+	const std::string AnyHolder< TData >::getTypename() const
 	{
-		return typeid( Datatype ).name();
+		return typeid( TData ).name();
 	}
 
-	template< typename Datatype >
-	void AnyHolder< Datatype >::writeTo( std::ostream &out ) const
+	template< typename TData >
+	bool AnyHolder< TData >::isEqualTo( AbstractAnyHolder const& other ) const
+	{
+		if ( other.getTypename() == this->getTypename() )
+		{
+			AnyHolder< TData > const& holder = dynamic_cast< AnyHolder< TData > const& >( other );
+			return isEqual( m_Data, holder.m_Data );
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "type of data " << other.getTypename() << " does not match type " << this->getTypename() << std::endl;
+			throw TypeMismatchException( msg.str() );
+		}
+	}
+
+	template< typename TData >
+	bool AnyHolder< TData >::isLessThan( AbstractAnyHolder const& other ) const
+	{
+		if ( other.getTypename() == this->getTypename() )
+		{
+			AnyHolder< TData > const& holder = dynamic_cast< AnyHolder< TData > const& >( other );
+			return isLess( m_Data, holder.m_Data );
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "type of data " << other.getTypename() << " does not match type " << this->getTypename() << std::endl;
+			throw TypeMismatchException( msg.str() );
+		}
+	}
+
+	template< typename TData >
+	void AnyHolder< TData >::writeTo( std::ostream &out ) const
 	{
 		out << m_Data;
 	}
 
-	template< typename Datatype >
-	void AnyHolder< Datatype >::readFrom( std::istream &in )
+	template< typename TData >
+	void AnyHolder< TData >::readFrom( std::istream &in )
 	{
 		in >> m_Data;
 	}
 
-	template< typename Datatype >
-	AbstractAnyHolder * AnyHolder< Datatype >::create() const
+	template< typename TData >
+	AbstractAnyHolder * AnyHolder< TData >::create() const
 	{ 
-		return new AnyHolder< Datatype >();
+		return new AnyHolder< TData >();
 	}
 
-	template< typename Datatype >
-	AbstractAnyHolder * AnyHolder< Datatype >::clone() const
+	template< typename TData >
+	AbstractAnyHolder * AnyHolder< TData >::clone() const
 	{
-		return new AnyHolder< Datatype >( m_Data );
+		return new AnyHolder< TData >( m_Data );
 	}
 
 }

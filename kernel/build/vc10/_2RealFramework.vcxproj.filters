@@ -93,12 +93,6 @@
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealEnum.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealDeviceList.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h">
       <Filter>include\engine</Filter>
     </ClInclude>
@@ -279,6 +273,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealOptions.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealComparisons.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>

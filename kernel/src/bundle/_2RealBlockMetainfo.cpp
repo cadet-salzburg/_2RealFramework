@@ -51,6 +51,16 @@ namespace _2Real
 			m_Impl.addInlet( data );
 		}
 
+		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& initialValue, AnyOptionSet const& options )
+		{
+			checkChars( toLower( trim( inletName ) ) );
+			const std::string longTypename = initialValue.getTypename();
+			const std::string typeName = m_Typetable.lookupTypename( longTypename );
+			ParameterMetadata data( toLower( trim( inletName ) ), longTypename, typeName, initialValue );
+			data.enableOptions( options );
+			m_Impl.addInlet( data );
+		}
+
 		void BlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
 		{
 			checkChars( toLower( trim( outletName ) ) );

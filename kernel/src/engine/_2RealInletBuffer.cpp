@@ -45,13 +45,14 @@ namespace _2Real
 		return true;
 	}
 
-	InletBuffer::InletBuffer( Any const& defaultData ) :
+	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
 		m_InsertionPolicy( new RemoveOldest( 1 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() ),
 		m_TriggeringData( defaultData, 0 ),
-		m_BufferSize( 1 )
+		m_BufferSize( 1 ),
+		m_Options( options )
 	{
 		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
 	}
@@ -83,6 +84,16 @@ namespace _2Real
 	// this may be call simultaneously by many threads
 	void InletBuffer::receiveData( TimestampedData const& data )
 	{
+		if ( !m_Options.isEmpty() )
+		{
+			Any const& value = data.getData();
+			if ( !m_Options.isOption( value ) )
+			{
+				std::cout << "NOT AN OPTION!!!!!!!!!!!!" << std::endl;
+				return;
+			}
+		}
+
 		// sync point: only one of many threads can cause the update cond to be evaluated at once
 		m_NotificationAccess.lock();
 		if ( m_Notify )
@@ -192,6 +203,11 @@ namespace _2Real
 	void InletBuffer::removeTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{
 		m_TriggeringEvent.removeListener( callback );
+	}
+
+	AnyOptionSet const& InletBuffer::getOptionSet() const
+	{
+		return m_Options;
 	}
 
 }

@@ -81,6 +81,17 @@ namespace _2Real
 	{
 	}
 
+	ImageChannelOrder & ImageChannelOrder::operator=( ImageChannelOrder const& src )
+	{
+		m_RedOffset = src.m_RedOffset;
+		m_GreenOffset = src.m_GreenOffset;
+		m_BlueOffset = src.m_BlueOffset;
+		m_AlphaOffset = src.m_AlphaOffset;
+		m_ChannelCode = src.m_ChannelCode;
+		m_NumChannels = src.m_NumChannels;
+		return *this;
+	}
+
 	void ImageChannelOrder::set(const uint8_t red, const uint8_t green, const uint8_t blue, const uint8_t alpha, const uint8_t channelCount)
 	{
 		m_RedOffset = red;

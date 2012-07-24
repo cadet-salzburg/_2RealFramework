@@ -18,125 +18,167 @@
 
 #pragma once
 
-#include <list>
+#include "helpers/_2RealAny.h"
+
+#include <set>
 
 namespace _2Real
 {
 
-	//template< typename TData >
-	//class Option
-	//{
+	template< typename TData >
+	class Option
+	{
 
-	//public:
+	public:
 
-	//	Option( TData const& v, std::string const& d ) : m_Val( v ), m_Desc( d ) {}
+		Option( TData const& v, std::string const& d ) : m_Val( v ), m_Desc( d ) {}
 
-	//private:
+		bool operator<( Option< TData > const& other ) const
+		{
+			return m_Val < other.m_Val;
+		}
 
-	//	TData			m_Val;
-	//	std::string		m_Desc;
+		TData			m_Val;
+		std::string		m_Desc;
 
-	//};
+	};
 
-	//template< typename TData >
-	//class Options
-	//{
+	class AnyOption
+	{
 
-	//public:
+	public:
 
-	//	Options( TData const& v, std::string const& d )
-	//	{
-	//		m_List.push_back( Option< TData >( v, d ) );
-	//	}
+		template< typename TData >
+		AnyOption( TData const& v, std::string const& d ) : m_Val( v ), m_Desc( d ) {}
 
-	//	Options& operator()( TData const& v, std::string const& d )
-	//	{
-	//		m_List.push_back( Option< TData >( v, d ) );
-	//		return *this;
-	//	}
+		bool isEqualTo( Any const& any ) const
+		{
+			return m_Val.isEqualTo( any );
+		}
 
-	//	operator std::list< Option< TData > > const& () const
-	//	{
-	//		return m_List;
-	//	}
+		bool operator<( AnyOption const& other ) const
+		{
+			return m_Val.isLessThan( other.m_Val );
+		}
 
-	//private:
+		std::string const& getDescription() const
+		{
+			return m_Desc;
+		}
 
-	//	std::list< Option< TData > >	m_List;
+		Any const& getValue() const
+		{
+			return m_Val;
+		}
 
-	//};
+	private:
 
-	//class AbstractOptionsHolder
-	//{
+		Any				m_Val;
+		std::string		m_Desc;
 
-	//public:
+	};
 
-	//	virtual const std::string getOptionType() const = 0;
-	//	virtual bool isValidOption( Any const& any ) const = 0;
+	template< typename TData >
+	class Options
+	{
 
-	//};
+	public:
 
-	//template< typename TData >
-	//class OptionsHolder : public AbstractOptionsHolder
-	//{
+		Options( TData const& v, std::string const& d )
+		{
+			m_Set.insert( AnyOption( v, d ) );
+		}
 
-	//public:
+		Options& operator()( TData const& v, std::string const& d )
+		{
+			m_Set.insert( AnyOption( v, d ) );
+			return *this;
+		}
 
-	//	OptionsHolder( Options< TData > const& options ) :
-	//		m_Options( options )
-	//	{
-	//	}
+		operator std::set< AnyOption > const& () const
+		{
+			return m_Set;
+		}
 
-	//	const std::string getOptionType() const
-	//	{
-	//		return std::string();
-	//	}
+	private:
 
-	//	bool isValidOption( Any const& any ) const
-	//	{
-	//	}
+		std::set< AnyOption >	m_Set;
 
-	//private:
+	};
 
-	//	std::list< Option< TData > >		m_Options;
+	class AnyOptionSet
+	{
 
-	//};
+		template< typename TData >
+		friend std::set< Option< TData > > extractFrom( AnyOptionSet const& options );
 
-	//class AnyOptions
-	//{
+	private:
 
-	//public:
+		typedef std::set< AnyOption >						Options;
+		typedef std::set< AnyOption >::iterator				OptionIterator;
+		typedef std::set< AnyOption >::const_iterator		OptionConstIterator;
 
-	//	AnyOptions() :
-	//		m_Holder( nullptr )
-	//	{
-	//	}
+		Options			m_Options;
+		std::string		m_Typename;
 
-	//	~AnyOptions()
-	//	{
-	//		delete m_Holder;
-	//	}
+	public:
 
-	//	template< typename TData >
-	//	AnyOptions( Options< TData > const& o ) :
-	//		m_Holder( new OptionsHolder< TData >( o ) )
-	//	{
-	//	}
+		AnyOptionSet() : m_Options(), m_Typename( typeid( void ).name() ) {}
 
-	//	const std::string getOptionType() const
-	//	{
-	//		return m_Holder->getOptionType();
-	//	}
+		AnyOptionSet( std::set< AnyOption > const& options ) : m_Options( options )
+		{
+			if ( options.empty() )
+			{
+				m_Typename = typeid( void ).name();
+			}
 
-	//	bool isValidOption( Any const& any )
-	//	{
-	//		return m_Holder->isValidOption( any );
-	//	}
+			m_Typename = options.begin()->getValue().getTypename();
+		}
 
-	//private:
+		bool isEmpty() const
+		{
+			return m_Options.empty();
+		}
 
-	//	AbstractOptionsHolder		*m_Holder;
+		const std::string getTypename() const
+		{
+			return m_Typename;
+		}
 
-	//};
+		bool isOption( Any const& any ) const
+		{
+			for ( OptionConstIterator it = m_Options.begin(); it != m_Options.end(); ++it )
+			{
+				if ( it->isEqualTo( any ) )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+	};
+
+	template< typename TData >
+	std::set< Option< TData > > extractFrom( AnyOptionSet const& options )
+	{
+		if ( options.getTypename() == typeid( TData ).name() )
+		{
+			std::set< Option< TData > > result;
+			for ( AnyOptionSet::OptionIterator it = options.m_Options.begin(); it != options.m_Options.end(); ++it )
+			{
+				TData const& v = extractFrom< TData >( it->getValue() );
+				result.insert( Option< TData >( v, it->getDescription() ) );
+			}
+
+			return result;
+		}
+		else
+		{
+			std::ostringstream msg;
+			msg << "type of data " << options.getTypename() << " does not match template parameter " << typeid( TData ).name() << std::endl;
+			throw TypeMismatchException( msg.str() );
+		}
+	}
 
 }

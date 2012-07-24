@@ -38,6 +38,21 @@ namespace _2Real
 	{
 	}
 
+	void ParameterMetadata::enableOptions( AnyOptionSet const& options )
+	{
+		m_Options = options;
+	}
+
+	bool ParameterMetadata::hasOptions() const
+	{
+		return !m_Options.isEmpty();
+	}
+
+	AnyOptionSet const& ParameterMetadata::getOptions() const
+	{
+		return m_Options;
+	}
+
 	string const& ParameterMetadata::getName() const
 	{
 		return m_Name;

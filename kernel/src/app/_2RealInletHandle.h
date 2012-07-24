@@ -19,10 +19,12 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
+#include "helpers/_2RealOptions.h"
 
 namespace _2Real
 {
 	class InletIO;
+	class AnyOptionSet;
 
 	namespace app
 	{
@@ -66,8 +68,8 @@ namespace _2Real
 			void unlinkFrom( OutletHandle &outletHandle );
 
 			// if the inlet is linked, the value might be overwritten of course
-			template< typename T >
-			void setValue( T const& value )
+			template< typename TData >
+			void setValue( TData const& value )
 			{
 				setValue( Any( value ) );
 			}
@@ -80,9 +82,18 @@ namespace _2Real
 
 			void				setBufferSize( const unsigned int size );
 
+			template< typename TData >
+			std::set< Option< TData > > getOptionMapping() const
+			{
+				AnyOptionSet const& anyOptions = this->getOptionSet();
+				return extractFrom< TData >( anyOptions );
+			}
+
 		private:
 
 			friend class OutletHandle;
+
+			AnyOptionSet const& getOptionSet() const;
 
 			void				setValue( Any const& data );
 			InletIO				*m_InletIO;

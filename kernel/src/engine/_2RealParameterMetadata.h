@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
+#include "helpers/_2RealOptions.h"
 
 #include <string>
 
@@ -38,6 +39,10 @@ namespace _2Real
 		std::string const&	getTypename() const;
 		Any const&	getDefaultValue() const;
 
+		void enableOptions( AnyOptionSet const& options );
+		bool hasOptions() const;
+		AnyOptionSet const& getOptions() const;
+
 		static void performParameterNameCheck( std::string const& name );
 
 	private:
@@ -46,6 +51,7 @@ namespace _2Real
 		std::string			m_Typename;
 		std::string			m_LongTypename;
 		Any					m_DefaultValue;
+		AnyOptionSet			m_Options;
 
 	};
 

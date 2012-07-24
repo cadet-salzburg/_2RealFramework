@@ -62,6 +62,26 @@ namespace _2Real
 		return m_Content.get() == nullptr;
 	}
 
+	bool Any::isEqualTo( Any const& any ) const
+	{
+		if ( any.isEmpty() )
+		{
+			return isEmpty();
+		}
+
+		return m_Content->isEqualTo( *any.m_Content.get() );
+	}
+
+	bool Any::isLessThan( Any const& any ) const
+	{
+		if ( any.isEmpty() )
+		{
+			return false;
+		}
+
+		return m_Content->isLessThan( *any.m_Content.get() );
+	}
+
 	void Any::writeTo(std::ostream &out) const
 	{
 		if ( !isEmpty() )
