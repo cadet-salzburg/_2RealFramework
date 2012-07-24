@@ -21,7 +21,7 @@ public:
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
-	_2Real::ImageT<unsigned char>	getPixels( const unsigned int deviceIdx );
+	_2Real::ImageSource&  			getPixels( const unsigned int deviceIdx );
 	int								getVideoWidth(const unsigned int  deviceIdx);
 	int								getVideoHeight(const unsigned int  deviceIdx);
 
@@ -35,7 +35,7 @@ private:
 		DeviceItem::DeviceItem(std::string strDescription, bool bIsUsed) : m_strDescription(strDescription), m_bIsUsed(bIsUsed)
 		{
 		}
-		_2Real::ImageT<unsigned char>	m_Image;
+		_2Real::ImageSource				m_Image;
 		std::string						m_strDescription;
 		bool							m_bIsUsed;
 	};
