@@ -15,8 +15,8 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
 		KinectOpenNIDepthBlock::setup(block);
+		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
 	}
 	catch ( Exception &e )
 	{

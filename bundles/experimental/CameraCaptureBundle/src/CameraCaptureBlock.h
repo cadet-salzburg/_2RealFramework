@@ -14,6 +14,7 @@ public:
 	void					setup( BlockHandle &context );
 
 private:
+	void					discardOutlets();
 
 	InletHandle							m_DeviceIndexInletHandle;
 	InletHandle							m_WidthInletHandle;

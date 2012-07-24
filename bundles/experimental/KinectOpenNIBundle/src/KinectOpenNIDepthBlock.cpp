@@ -25,7 +25,12 @@ void KinectOpenNIDepthBlock::update()
 	try
 	{
 		if(m_OpenNIDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
+		{
+			m_WidthOutletHandle.discard();
+			m_HeightOutletHandle.discard();
+			m_ImageOutletHandle.discard();
 			return;
+		}
 
 		bool bIsAlignedToColor = m_IsAlignedToColorInletHandle.getReadableRef<bool>();
 		if( bIsAlignedToColor != m_bIsAlignedToColor)

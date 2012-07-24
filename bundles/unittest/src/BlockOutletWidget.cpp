@@ -20,14 +20,12 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		}
 		else if(m_OutletHandle.getTypename().find("img")!=string::npos)
 		{
-			static QMutex mutex;
-			m_ValueWidget = new QGlTextureImage(&mutex);
+			m_ValueWidget = new QGlTextureImage();
 		}
 		else
 		{
 			m_ValueWidget = new QLabel();
 		}
-
 
 		m_Layout->addWidget( m_ValueWidget );
 		setLayout( m_Layout );

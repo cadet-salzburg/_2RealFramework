@@ -22,6 +22,7 @@ OpenNIDeviceManager::~OpenNIDeviceManager()
 
 void OpenNIDeviceManager::setup( BlockHandle &context )
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
 		m_iNumDevices=0;
@@ -32,7 +33,8 @@ void OpenNIDeviceManager::setup( BlockHandle &context )
 		
 		for(int i=0; i<m_iNumDevices; i++)
 		{
-			m_2RealKinect->configure( i,  _2RealKinectWrapper::COLORIMAGE | _2RealKinectWrapper::DEPTHIMAGE | _2RealKinectWrapper::USERIMAGE  );
+			// you can't add infrared generator here, as it cannot be added together with the color generator
+			m_2RealKinect->configure( i,  _2RealKinectWrapper::COLORIMAGE | _2RealKinectWrapper::DEPTHIMAGE | _2RealKinectWrapper::USERIMAGE );
 		}
 		initDeviceList();
 	}
@@ -183,7 +185,7 @@ bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGene
 	}
 	catch(...)
 	{
-		printf("ramala");
+		printf("exception");
 	}
 }
 
@@ -256,6 +258,7 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 
 int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
 		return m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
@@ -268,6 +271,7 @@ int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator
 
 int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerator generatorType )
 {
+	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
 		return m_2RealKinect->getImageHeight( deviceIdx, generatorType );

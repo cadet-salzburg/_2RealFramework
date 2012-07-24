@@ -64,7 +64,12 @@ void KinectOpenNIBlockBase::update()
 	try
 	{
 		if(m_OpenNIDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
+		{
+			m_WidthOutletHandle.discard();
+			m_HeightOutletHandle.discard();
+			m_ImageOutletHandle.discard();
 			return;
+		}
 
 		int deviceIndex = m_DeviceIndexInletHandle.getReadableRef<int>();
 		int w = m_WidthInletHandle.getReadableRef<int>();
