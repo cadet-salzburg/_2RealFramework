@@ -12,7 +12,6 @@ public:
 	
 	void					setup( BlockHandle &context );
 	void					update();
-	virtual void			getGeneratorData();
 
 private:
 	InletHandle								m_IsAlignedToColorInletHandle;

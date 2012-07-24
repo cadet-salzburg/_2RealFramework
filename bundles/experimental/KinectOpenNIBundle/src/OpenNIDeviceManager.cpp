@@ -225,7 +225,7 @@ unsigned int OpenNIDeviceManager::getNumberOfConnectedDevices()
 }
 
 
-_2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType )
+_2Real::ImageSource& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType )
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
@@ -235,15 +235,22 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 			return  m_DevicesInUse[deviceIdx].m_Image;*/
 		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
 		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
-		unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+		
 
-		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE || generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
 		{
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+			unsigned short* pixels = m_2RealKinect->getImageDataDepth16Bit( deviceIdx ).get();
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageSource( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+		}
+		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		{
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageSource( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
 		}
 		else
 		{
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageT<unsigned char>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageSource( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 		}
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
@@ -252,28 +259,6 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 	}
 
 	return m_DevicesInUse[deviceIdx].m_Image;
-}
-
-_2Real::ImageT<unsigned short> OpenNIDeviceManager::getDepthImage16Bit( const unsigned int deviceIdx )
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-	try
-	{
-		// this makes serious problems
-		/*if(!m_2RealKinect->isNewData(deviceIdx, generatorType))
-			return  m_DevicesInUse[deviceIdx].m_Image;*/
-		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, _2RealKinectWrapper::DEPTHIMAGE );		
-		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, _2RealKinectWrapper::DEPTHIMAGE );
-		unsigned short* pixels = m_2RealKinect->getImageDataDepth16Bit( deviceIdx ).get();
-
-		m_DevicesInUse[deviceIdx].m_Image16Bit = _2Real::ImageT<unsigned short>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
-	}
-	catch ( _2RealKinectWrapper::_2RealException &e )
-	{
-		cout << e.what() << endl;
-	}
-
-	return m_DevicesInUse[deviceIdx].m_Image16Bit;
 }
 
 int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )

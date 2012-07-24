@@ -37,8 +37,3 @@ void KinectOpenNIUserSkeletonBlock::update()
 		e.rethrow();
 	}
 }
-
-void KinectOpenNIUserSkeletonBlock::getGeneratorData()
-{
-	m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
-}

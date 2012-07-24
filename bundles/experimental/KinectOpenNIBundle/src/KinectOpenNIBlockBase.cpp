@@ -120,7 +120,7 @@ void KinectOpenNIBlockBase::update()
 
 			//if( m_OpenNIDeviceManager->isDeviceRunning(m_iCurrentDevice))
 			{
-				getGeneratorData();
+				m_ImageOutletHandle.getWriteableRef<_2Real::ImageSource >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
 			}
 			//else
 			//{
@@ -147,9 +147,4 @@ void KinectOpenNIBlockBase::shutdown()
 		m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice, m_GeneratorType );
 		m_iCurrentDevice = -1;
 	}
-}
-
-void KinectOpenNIBlockBase::getGeneratorData()
-{
-	m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned char> >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
 }
