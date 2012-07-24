@@ -41,6 +41,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealEnum.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUberBlock.h" />
