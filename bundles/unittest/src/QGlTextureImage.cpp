@@ -28,7 +28,7 @@ void QGlTextureImage::resizeGL(int w, int h)
 
 void QGlTextureImage::paintGL()
 {
-	makeCurrent();
+	makeCurrent();						// this is important for qt so things happen in the correct threaded opengl context
 	glClear (GL_COLOR_BUFFER_BIT);       
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
@@ -51,14 +51,20 @@ void QGlTextureImage::paintGL()
 	glFlush();
 }
 
-void QGlTextureImage::updateTexture(int w, int h, int channels, unsigned char* pTexture)
+void QGlTextureImage::updateTexture(int w, int h, int channels, int bitsPerPixel, void* pTexture)
 {
-	makeCurrent();
+	int iInternalTextureFormat;
 	int iTextureFormat;
+	int iTextureType;
 
-	if(w>0 && h>0 && channels>0)
+	// this is important for qt so things happen in the correct threaded opengl context
+	makeCurrent();
+
+	if(w>0 && h>0 && channels>0 && (bitsPerPixel==8 || bitsPerPixel==16))
 	{
-		if(m_iWidth != w || m_iHeight != h || m_iChannels != channels)		// settings changes so we need to allocate a new texture
+		glEnable(GL_TEXTURE_2D);
+
+		if(m_iWidth != w || m_iHeight != h || m_iChannels != channels || m_iBitsPerPixel != bitsPerPixel)		// settings changes so we need to allocate a new texture
 		{
 			if(m_bIsTextureGenerated)
 			{
@@ -66,37 +72,71 @@ void QGlTextureImage::updateTexture(int w, int h, int channels, unsigned char* p
 				m_bIsTextureGenerated = false;
 			}
 		}
-
+		// get opengl texture format
 		if(channels==1)
 		{
 			iTextureFormat = GL_LUMINANCE;
+			if(bitsPerPixel == 8)
+			{
+				iInternalTextureFormat = GL_LUMINANCE8;
+			}
+			else if(bitsPerPixel == 16)
+			{
+				iInternalTextureFormat = GL_LUMINANCE16;
+			}
 		}
 		else if(channels==3)
 		{
 			iTextureFormat = GL_RGB;
+			if(bitsPerPixel == 8)
+			{
+				iInternalTextureFormat = GL_RGB8;
+			}
+			else if(bitsPerPixel == 16)
+			{
+				iInternalTextureFormat = GL_RGB16;
+			}
 		}
 		else if(channels==4)
 		{
 			iTextureFormat = GL_RGBA;
+			if(bitsPerPixel == 8)
+			{
+				iInternalTextureFormat = GL_RGBA8;
+			}
+			else if(bitsPerPixel == 16)
+			{
+				iInternalTextureFormat = GL_RGBA16;
+			}
 		}
-
-		glEnable(GL_TEXTURE_2D);
+		// set data type
+		if(bitsPerPixel == 8)
+		{
+			iTextureType = GL_UNSIGNED_BYTE;
+		}
+		else if(bitsPerPixel == 16)
+		{
+			iTextureType = GL_UNSIGNED_SHORT;
+		}
+		
+		// generate texture if not already generated
 		if(!m_bIsTextureGenerated)
 		{
 			m_iWidth = w;
 			m_iHeight = h;
 			m_iChannels = channels;
+			m_iBitsPerPixel = bitsPerPixel;
 
 			glGenTextures(1, &m_iTexture);
 			glBindTexture(GL_TEXTURE_2D,m_iTexture);       
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);   
-			glTexImage2D(GL_TEXTURE_2D, 0, iTextureFormat, w, h, 0, iTextureFormat, GL_UNSIGNED_BYTE, NULL );    
+			glTexImage2D(GL_TEXTURE_2D, 0, iInternalTextureFormat, w, h, 0, iTextureFormat, iTextureType, NULL );    
 			m_bIsTextureGenerated = true;
 		}
 		// update texture
 		glBindTexture(GL_TEXTURE_2D,m_iTexture); 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, iTextureFormat, GL_UNSIGNED_BYTE, pTexture);    
+		glTexImage2D(GL_TEXTURE_2D, 0, iInternalTextureFormat, w, h, 0, iTextureFormat, iTextureType, pTexture );    
 
 		glDisable(GL_TEXTURE_2D);
 	}

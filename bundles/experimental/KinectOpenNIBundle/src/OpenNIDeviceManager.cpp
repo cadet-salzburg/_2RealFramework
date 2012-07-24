@@ -174,10 +174,6 @@ bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGene
 
 			return m_DevicesInUse[deviceIdx].m_bGeneratorIsUsed[generatorType] = true;
 		}
-		else
-		{
-			return false;
-		}
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
@@ -187,6 +183,8 @@ bool OpenNIDeviceManager::bindGenerator(const unsigned int deviceIdx, _2RealGene
 	{
 		printf("exception");
 	}
+
+	return false;
 }
 
 void OpenNIDeviceManager::unbindGenerator(const unsigned int deviceIdx, _2RealGenerator generatorType)
@@ -256,6 +254,28 @@ _2Real::ImageT<unsigned char> OpenNIDeviceManager::getImage( const unsigned int 
 	return m_DevicesInUse[deviceIdx].m_Image;
 }
 
+_2Real::ImageT<unsigned short> OpenNIDeviceManager::getDepthImage16Bit( const unsigned int deviceIdx )
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	try
+	{
+		// this makes serious problems
+		/*if(!m_2RealKinect->isNewData(deviceIdx, generatorType))
+			return  m_DevicesInUse[deviceIdx].m_Image;*/
+		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, _2RealKinectWrapper::DEPTHIMAGE );		
+		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, _2RealKinectWrapper::DEPTHIMAGE );
+		unsigned short* pixels = m_2RealKinect->getImageDataDepth16Bit( deviceIdx ).get();
+
+		m_DevicesInUse[deviceIdx].m_Image16Bit = _2Real::ImageT<unsigned short>( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+	}
+
+	return m_DevicesInUse[deviceIdx].m_Image16Bit;
+}
+
 int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
@@ -267,6 +287,7 @@ int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator
 	{
 		cout << e.what() << endl;
 	}
+	return 0;
 }
 
 int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerator generatorType )
@@ -280,6 +301,7 @@ int OpenNIDeviceManager::getHeight( const unsigned int deviceIdx, _2RealGenerato
 	{
 		cout << e.what() << endl;
 	}
+	return 0;
 }
 
 void OpenNIDeviceManager::setMirrored(const unsigned int deviceIdx, _2RealGenerator generatorType, bool bIsMirrored)

@@ -12,6 +12,7 @@ public:
 	virtual void	shutdown();
 	virtual void	update();
 	virtual void	setup( BlockHandle &context );
+	virtual void	getGeneratorData();
 	void			setGeneratorType(_2RealKinectWrapper::_2RealGenerator generatorType);
 
 protected:

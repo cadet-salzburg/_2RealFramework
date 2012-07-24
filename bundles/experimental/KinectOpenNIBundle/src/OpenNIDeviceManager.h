@@ -24,6 +24,7 @@ public:
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
 	_2Real::ImageT<unsigned char>	getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	_2Real::ImageT<unsigned short>  getDepthImage16Bit( const unsigned int deviceIdx );
 	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 
@@ -38,6 +39,7 @@ private:
 		{
 		}
 		_2Real::ImageT<unsigned char>							m_Image;
+		_2Real::ImageT<unsigned short>							m_Image16Bit;
 		std::map<_2RealKinectWrapper::_2RealGenerator,bool>		m_bGeneratorIsUsed;
 	};
 

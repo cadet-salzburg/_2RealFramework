@@ -67,7 +67,18 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
-			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture(width, height, channels, ptr);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture(width, height, channels, 8, ptr);
+		}
+		else if(m_OutletHandle.getTypename().find("img_ushort")!=string::npos)
+		{	
+			int width  = data.getData<ImageT<unsigned short>>().getWidth();
+			int height = data.getData<ImageT<unsigned short>>().getHeight();
+			int channels = data.getData<ImageT<unsigned short>>().getNumberOfChannels();
+			unsigned short* ptr = data.getData<ImageT<unsigned short>>().getData();
+
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture(width, height, channels, 16, ptr);
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{

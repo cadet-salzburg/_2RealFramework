@@ -47,7 +47,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addInlet<int>( "Fps", 30 );
 		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
 		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
-		depthBlockInfo.addOutlet< ImageT<unsigned char> >("ImageData");
+		depthBlockInfo.addOutlet< ImageT<unsigned short> >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
 		depthBlockInfo.setDescription( "OpenNI Kinect Depth Image Block" );

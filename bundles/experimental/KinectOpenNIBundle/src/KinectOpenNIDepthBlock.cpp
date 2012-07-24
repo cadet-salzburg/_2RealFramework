@@ -50,3 +50,8 @@ void KinectOpenNIDepthBlock::update()
 		e.rethrow();
 	}
 }
+
+void KinectOpenNIDepthBlock::getGeneratorData()
+{
+	m_ImageOutletHandle.getWriteableRef<_2Real::ImageT<unsigned short> >() = m_OpenNIDeviceManager->getDepthImage16Bit( m_iCurrentDevice );
+}

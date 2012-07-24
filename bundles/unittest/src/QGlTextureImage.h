@@ -11,7 +11,7 @@ public:
 	QGlTextureImage( QWidget *parent=0);
 	~QGlTextureImage();
 
-	void updateTexture(int w, int h, int channels, unsigned char* pTexture);
+	void updateTexture(int w, int h, int channels, int bitsPerPixel, void* pTexture);
 
 protected:
     void initializeGL();
@@ -24,6 +24,7 @@ private:
 	int		m_iWidth;
 	int		m_iHeight;
 	int		m_iChannels;
+	int		m_iBitsPerPixel;
 	bool	m_bIsTextureGenerated;
 };
 

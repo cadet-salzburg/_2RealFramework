@@ -12,6 +12,7 @@ public:
 	
 	void					setup( BlockHandle &context );
 	void					update();
+	void					getGeneratorData();
 
 private:
 };
