@@ -67,8 +67,6 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			unsigned char *ptr = source.getData();
 			unsigned int bpp = source.getBitsPerPixel();
 
-			std::cout << w << " " << h << " " << c << " " << bpp << std::endl;
-
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture( w, h, c, bpp, ptr );
