@@ -20,8 +20,9 @@ public:
 	bool							setCameraParams(const unsigned int deviceIdx, int w, int h, int fps=30);
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
+	bool							isNewFrameAvailable(const unsigned int deviceIdx);
 	int								getFirstFreeDevices();	// returns -1 for no free devices at all, otherwise int is the index for the free device
-	_2Real::Image&  			getPixels( const unsigned int deviceIdx );
+	_2Real::Image&  				getPixels( const unsigned int deviceIdx );
 	int								getVideoWidth(const unsigned int  deviceIdx);
 	int								getVideoHeight(const unsigned int  deviceIdx);
 

@@ -79,8 +79,6 @@ void CameraCaptureBlock::update()
 					m_iWidth  = w;
 					m_iHeight = h;
 					m_iFps = fps;
-					m_WidthOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoWidth(m_iCurrentCamera);
-					m_HeightOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoHeight(m_iCurrentCamera);
 				}
 			}
 
@@ -102,14 +100,21 @@ void CameraCaptureBlock::update()
 						m_iWidth  = w;
 						m_iHeight = h;
 						m_iFps = fps;
-						m_WidthOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoWidth(m_iCurrentCamera);
-						m_HeightOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoHeight(m_iCurrentCamera);
 					}
 				}
 
 				if( m_CameraDeviceManager->isDeviceRunning(m_iCurrentCamera))
 				{
-					m_ImageOutletHandle.getWriteableRef<_2Real::Image>() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+					if(m_CameraDeviceManager->isNewFrameAvailable(m_iCurrentCamera))
+					{
+						m_ImageOutletHandle.getWriteableRef<_2Real::Image>() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+						m_WidthOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoWidth(m_iCurrentCamera);
+						m_HeightOutletHandle.getWriteableRef<int>() = m_CameraDeviceManager->getVideoHeight(m_iCurrentCamera);
+					}
+					else
+					{
+						discardOutlets();
+					}
 				}
 				else
 				{

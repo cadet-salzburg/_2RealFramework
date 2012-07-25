@@ -112,6 +112,11 @@ bool CameraDeviceManager::isDeviceRunning(const unsigned int deviceIdx)
 	return m_VideoInputContoller->isDeviceSetup(deviceIdx);
 }
 
+bool CameraDeviceManager::isNewFrameAvailable(const unsigned int deviceIdx)
+{
+	return m_VideoInputContoller->isFrameNew(deviceIdx);
+}
+
 bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)
 {
 	return  (deviceIdx < m_DevicesInUse.size());
@@ -179,14 +184,11 @@ _2Real::Image& CameraDeviceManager::getPixels( const unsigned int deviceIdx )
 	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
 	try
 	{
-		if(m_VideoInputContoller->isFrameNew(deviceIdx))
-		{
-			unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false,
+		unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
+		m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false,
 				m_VideoInputContoller->getWidth( deviceIdx ), 
 				m_VideoInputContoller->getHeight( deviceIdx ),
 				_2Real::ImageChannelOrder::RGB );
-		}
 	}
 	catch ( ... )
 	{
