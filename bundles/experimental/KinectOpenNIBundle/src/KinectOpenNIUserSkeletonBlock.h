@@ -14,4 +14,8 @@ public:
 	void					update();
 
 private:
+	OutletHandle			m_NrOfUsersOutletHandle;
+	OutletHandle			m_NrOfSkeletonsOutletHandle;
+	int						m_iNrOfUsers;
+	int						m_iNrOfSkeletons;
 };

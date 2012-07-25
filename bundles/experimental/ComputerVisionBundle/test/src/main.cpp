@@ -4,9 +4,9 @@
 #include <windows.h>
 #include <iostream>
 
-#ifdef _WIN32
-	#include <vld.h>
-#endif
+//#ifdef _WIN32
+//	#include <vld.h>
+//#endif
 
 using namespace _2Real;
 using namespace _2Real::app;

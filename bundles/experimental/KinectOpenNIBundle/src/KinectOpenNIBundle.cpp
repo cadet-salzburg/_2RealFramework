@@ -62,6 +62,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addOutlet< Image >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
+		userSkeletonBlockInfo.addOutlet<int>( "NrOfUsers" );
+		userSkeletonBlockInfo.addOutlet<int>( "NrOfSkeletons" );
 		userSkeletonBlockInfo.setDescription( "OpenNI Kinect User/Skeleton Image Block" );
 
 		BlockMetainfo irBlockInfo = info.exportBlock< KinectOpenNIIrBlock, WithContext >( "KinectOpenNIIrBlock" );

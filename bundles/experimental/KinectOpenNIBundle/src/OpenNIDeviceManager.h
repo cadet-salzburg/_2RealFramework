@@ -21,9 +21,11 @@ public:
 	void							setMirrored(const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIsMirrored);
 	void							setAlignToColor(const unsigned int deviceIdx, bool bIsAligned);
 	unsigned int					getNumberOfConnectedDevices();
+	int								getNumberOfUsers( const unsigned int deviceIdx );
+	int								getNumberOfSkeletons( const unsigned int deviceIdx );
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
-	_2Real::Image&			getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 

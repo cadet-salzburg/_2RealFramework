@@ -313,3 +313,15 @@ void OpenNIDeviceManager::setAlignToColor(const unsigned int deviceIdx, bool bIs
 		cout << e.what() << endl;
 	}
 }
+
+int	OpenNIDeviceManager::getNumberOfUsers( const unsigned int deviceIdx )
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getNumberOfUsers(deviceIdx);
+}
+
+int	OpenNIDeviceManager::getNumberOfSkeletons( const unsigned int deviceIdx )
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getNumberOfSkeletons(deviceIdx);
+}
