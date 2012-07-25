@@ -22,6 +22,8 @@ public:
 	virtual void					shutdown();
 
 private:
+	void							discardAllOutlets();
+
 	// The current MidiIn Port index
 	int								m_iMidiInCurrentPort;
 

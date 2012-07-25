@@ -264,12 +264,18 @@ vector<unsigned char> MidiInOutDeviceManager::getMidiInMessage( const unsigned i
 	// Read message from MidiIn with the device index deviceIdx and write the message into
 	// an std::vector<unsigned char>
 	vector<unsigned char> message;
+	vector<unsigned char> tmpMessage;	// needed for keeping up with last valid message
 	// Check if the device at the index deviceIdx is available and used
 	if ( isMidiInDeviceRunning( deviceIdx ) )
 	{
 		try
 		{
-			( (RtMidiIn *)m_MidiInDevicesInUse[deviceIdx].m_Midi )->getMessage( &message );
+			double timestamp = ( (RtMidiIn *)m_MidiInDevicesInUse[deviceIdx].m_Midi )->getMessage( &tmpMessage );
+			while( timestamp > 0.0 )
+			{
+				message = tmpMessage;
+				timestamp = ( (RtMidiIn *)m_MidiInDevicesInUse[deviceIdx].m_Midi )->getMessage( &tmpMessage );	// this sets 0 message if there is no message to be found, so we need to keep the last valid
+			}
 		}
 		catch ( RtError& error )
 		{

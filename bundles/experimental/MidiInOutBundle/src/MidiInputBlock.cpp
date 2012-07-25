@@ -29,6 +29,7 @@ void MidiInputBlock::update()
 		if ( m_MidiInOutDeviceManager->getMidiInPortCount() == 0 )
 		{
 			m_iMidiInCurrentPort = -1;
+			discardAllOutlets();
 			return;
 		}
 
@@ -69,10 +70,17 @@ void MidiInputBlock::update()
 				}
 				cout << endl;
 			}
+			else
+			{
+				discardAllOutlets();
+			}
 			
 		}
 		else
+		{
+			discardAllOutlets();
 			m_iMidiInCurrentPort = -1; // Set the current MidiIn index back to -1 if something went wrong
+		}
 
 	}
 	catch ( Exception& e )
@@ -103,4 +111,11 @@ void MidiInputBlock::shutdown()
 {
 	m_MidiInOutDeviceManager->unsbindMidiInDevice( m_iMidiInCurrentPort );
 	m_MidiInOutDeviceManager->unregisterMidiInBlock();
+}
+
+void MidiInputBlock::discardAllOutlets()
+{
+	m_MidiInMessage0Outlet.discard();
+	m_MidiInMessage1Outlet.discard();
+	m_MidiInMessage2Outlet.discard();
 }
