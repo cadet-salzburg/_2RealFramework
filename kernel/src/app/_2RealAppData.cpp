@@ -60,9 +60,9 @@ namespace _2Real
 
 		const string AppData::getDataAsString() const
 		{
-			ostringstream value;
-			value << m_Data;
-			return value.str();
+			ostringstream str;
+			m_Data.writeTo( str );
+			return str.str();
 		}
 	}
 }

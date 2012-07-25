@@ -30,28 +30,29 @@ namespace _2Real
 	class Skeleton
 	{
 
-	friend std::ostream& operator<<( std::ostream& out, Skeleton const& data );
-	friend std::istream& operator>>( std::istream& in, Skeleton &data );
+	//friend std::ostream& operator<<( std::ostream& out, Skeleton const& data );
+	//friend std::istream& operator>>( std::istream& in, Skeleton &data );
 
 	public:
 
 		Skeleton() {}
-		
+		Skeleton( Skeleton const& src ) {}
+
 	private:
 
 	
 	};
 
-	inline std::ostream& operator<<( std::ostream& out, Skeleton const& info )
-	{
-		//out <<  << std::endl;
-		return out;
-	}
+	//inline std::ostream& operator<<( std::ostream& out, Skeleton const& info )
+	//{
+	//	//out <<  << std::endl;
+	//	return out;
+	//}
 
-	inline std::istream& operator>>( std::istream& in, Skeleton &info )
-	{
-		//in >> 
-		return in;
-	}
+	//inline std::istream& operator>>( std::istream& in, Skeleton &info )
+	//{
+	//	//in >> 
+	//	return in;
+	//}
 
 }

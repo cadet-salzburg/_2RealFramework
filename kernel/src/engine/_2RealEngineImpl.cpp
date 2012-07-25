@@ -31,6 +31,9 @@
 #include "helpers/_2RealHelpers.h"
 
 #include "datatypes/_2RealImage.h"
+#include "datatypes/_2RealSkeleton.h"
+#include "datatypes/_2RealNumber.h"
+#include "datatypes/_2RealPoint.h"
 
 #include <sstream>
 #include <iostream>
@@ -88,6 +91,9 @@ namespace _2Real
 		m_Typetable->registerType< std::string >( "string" );
 
 		m_Typetable->registerType< Image >( "image" );
+		m_Typetable->registerType< Skeleton >( "skeleton" );
+		m_Typetable->registerType< Number >( "number" );
+		m_Typetable->registerType< Point >( "point" );
 
 		m_Timestamp.update();
 	}

@@ -24,21 +24,13 @@
 #include <typeinfo>
 #include <sstream>
 #include <memory>
+#include <assert.h>
 
 namespace _2Real
 {
 
 	class Any
 	{
-
-		template< typename TData >
-		friend TData & extractFrom( Any &data );
-
-		template< typename TData >
-		friend TData const& extractFrom( Any const& data );
-
-		friend std::ostream& operator<<( std::ostream& out, Any const& data );
-		friend std::istream& operator>>( std::istream& in, Any &data );
 
 	public:
 
@@ -51,16 +43,17 @@ namespace _2Real
 		{
 			AnyHolder< TData > *holder = new AnyHolder< TData >( value );
 			m_Content.reset( holder );
+			m_Typename = typeid( TData ).name();
+			m_TypeCode = typeid( TData ).hash_code();
 		}
 
 		template< typename T >
 		bool isDatatype() const
 		{
-			return m_Content->getTypename() == typeid( T ).name();
+			return m_Typename == typeid( T ).name();
 		}
 
 		bool isEmpty() const;
-		const std::string getTypename() const;
 
 		bool isEqualTo( Any const& any ) const;
 		bool isLessThan( Any const& any ) const;
@@ -68,48 +61,52 @@ namespace _2Real
 		void cloneFrom( Any const& src );
 		void createNew( Any const& src );
 
-	private:
-
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
+		std::string const& getTypename() const;
+
+		template< typename TData >
+		TData & extract()
+		{
+			std::string name = typeid( TData ).name();
+			if ( name == m_Typename )
+			{
+				AbstractAnyHolder *ptr = m_Content.get();
+				AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
+				return holder.m_Data;
+			}
+			else
+			{
+				std::ostringstream msg;
+				msg << "type of data " << m_Typename << " does not match template parameter " << name << std::endl;
+				throw TypeMismatchException( msg.str() );
+			}
+		}
+
+		template< typename TData >
+		TData const& extract() const
+		{
+			std::string name = typeid( TData ).name();
+			if ( name == m_Typename )
+			{
+				AbstractAnyHolder *ptr = m_Content.get();
+				AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
+				return holder.m_Data;
+			}
+			else
+			{
+				std::ostringstream msg;
+				msg << "type of data " << m_Typename << " does not match template parameter " << name << std::endl;
+				throw TypeMismatchException( msg.str() );
+			}
+		}
+
+	private:
+
 		std::shared_ptr< AbstractAnyHolder >	m_Content;
+		std::string								m_Typename;
+		size_t									m_TypeCode;
 
 	};
-
-	template< typename TData >
-	TData & extractFrom( Any &data )
-	{
-		if ( data.getTypename() == typeid( TData ).name() )
-		{
-			AbstractAnyHolder *ptr = data.m_Content.get();
-			AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
-			return holder.m_Data;
-		}
-		else
-		{
-			std::ostringstream msg;
-			msg << "type of data " << data.getTypename() << " does not match template parameter " << typeid( TData ).name() << std::endl;
-			throw TypeMismatchException( msg.str() );
-		}
-	}
-
-	template< typename TData >
-	TData const& extractFrom( Any const& data )
-	{
-		if ( data.getTypename() == typeid( TData ).name() )
-		{
-			AbstractAnyHolder *ptr = data.m_Content.get();
-			AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
-			return holder.m_Data;
-		}
-		else
-		{
-			std::ostringstream msg;
-			msg << "type of data " << data.getTypename() << " does not match template parameter " << typeid( TData ).name() << std::endl;
-			throw TypeMismatchException( msg.str() );
-		}
-	}
-
-
 }

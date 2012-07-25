@@ -39,6 +39,8 @@
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealNumber.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealPoint.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
@@ -77,16 +79,19 @@
     <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
     <ClInclude Include="..\..\src\helpers\_2RealComparisons.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealConversions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealInitializers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealOptions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPoco.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealStreamOperators.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
@@ -195,8 +200,31 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealNumber.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealPoint.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealSkeleton.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>

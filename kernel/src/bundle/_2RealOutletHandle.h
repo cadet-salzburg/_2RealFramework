@@ -40,8 +40,8 @@ namespace _2Real
 			OutletHandle& operator=( OutletHandle const& other );
 			~OutletHandle();
 
-			template< typename Datatype >
-			Datatype & getWriteableRef()
+			template< typename TData >
+			TData & getWriteableRef()
 			{
 				if ( !m_Outlet )
 				{
@@ -51,7 +51,7 @@ namespace _2Real
 				}
 
 				Any &curr = getCurrentData();
-				Datatype &data = extractFrom< Datatype >( curr );
+				TData &data = curr.extract< TData >();
 				return data;
 			}
 

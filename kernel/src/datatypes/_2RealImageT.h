@@ -25,7 +25,7 @@
 
 //stdio is not pulled in automatically on unix (ottona)
 #ifdef _UNIX
-    #include <string.h>
+	#include <string.h>
 #endif
 
 namespace _2Real
@@ -34,11 +34,11 @@ namespace _2Real
 	template< typename T >
 	class ImageT;
 
-	template< typename T >
-	std::ostream& operator<<(std::ostream& out, ImageT< T > const& img);
+	//template< typename T >
+	//std::ostream& operator<<(std::ostream& out, ImageT< T > const& img);
 
-	template< typename T >
-	std::istream& operator>>(std::istream& in, ImageT< T > &img);
+	//template< typename T >
+	//std::istream& operator>>(std::istream& in, ImageT< T > &img);
 
 	class ImageChannelOrder
 	{
@@ -328,8 +328,8 @@ namespace _2Real
 			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, ownsData, width, height, rowBytes, channelOrder) );
 		}
 
-		friend std::ostream& operator<< < T >(std::ostream& out, ImageT< T > const& img);
-		friend std::istream& operator>> < T >(std::istream& in, ImageT< T > &img);
+		//friend std::ostream& operator<< < T >(std::ostream& out, ImageT< T > const& img);
+		//friend std::istream& operator>> < T >(std::istream& in, ImageT< T > &img);
 
 		const uint32_t				getWidth() const { return m_ImageObject->m_Width; }
 		const uint32_t				getHeight() const { return m_ImageObject->m_Height; }
@@ -536,19 +536,17 @@ namespace _2Real
 
 	};
 
-	template< typename T >
-	std::ostream& operator<<(std::ostream& out, ImageT< T > const& img)
-	{
-		/* TODO */
-		out << img.getWidth() << " " << img.getHeight();
-		return out;
-	}
+	//template< typename T >
+	//std::ostream& operator<<(std::ostream& out, ImageT< T > const& img)
+	//{
+	//	out << img.getWidth() << " " << img.getHeight();
+	//	return out;
+	//}
 
-	template< typename T >
-	std::istream& operator>>(std::istream& in, ImageT< T > &img)
-	{
-		/* TODO */
-		return in;
-	}
+	//template< typename T >
+	//std::istream& operator>>(std::istream& in, ImageT< T > &img)
+	//{
+	//	return in;
+	//}
 
 }

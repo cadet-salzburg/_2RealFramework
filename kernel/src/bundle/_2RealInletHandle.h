@@ -40,8 +40,8 @@ namespace _2Real
 			InletHandle& operator=( InletHandle const& src );
 			~InletHandle();
 
-			template< typename Datatype >
-			Datatype const& getReadableRef() const
+			template< typename TData >
+			TData const& getReadableRef() const
 			{
 				if ( m_Inlet == nullptr )
 				{
@@ -51,12 +51,12 @@ namespace _2Real
 				}
 
 				Any curr = getCurrentData();
-				Datatype const& data = extractFrom< Datatype >( curr );
+				TData const& data = curr.extract< TData >();
 				return data;
 			}
 
-			template< typename Datatype >
-			Datatype * getWriteableCopy()
+			template< typename TData >
+			TData * getWriteableCopy()
 			{
 				if ( m_Inlet == nullptr )
 				{
@@ -66,8 +66,8 @@ namespace _2Real
 				}
 
 				Any curr = getCurrentData();
-				Datatype const& data = extractFrom< Datatype >( curr );
-				return new Datatype( data );
+				TData const& data = curr.extract< TData >();
+				return new TData( data );
 			}
 
 			bool isValid() const;

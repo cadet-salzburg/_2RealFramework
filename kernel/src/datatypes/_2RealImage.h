@@ -87,7 +87,7 @@ namespace _2Real
 			return *this;
 		}
 
-		unsigned char	getByteSize() const { return m_ByteSize; }
+		size_t			getByteSize() const { return m_ByteSize; }
 		int				getDatatype() const { return m_ImageType; }
 
 		const bool operator==( ImageType const& src ) const { return m_ImageType == src.m_ImageType; }
@@ -102,8 +102,8 @@ namespace _2Real
 	class Image
 	{
 
-		friend std::ostream& operator<<( std::ostream& out, Image const& image );
-		friend std::istream& operator>>( std::istream& in, Image &image );
+		//friend std::ostream& operator<<( std::ostream& out, Image const& image );
+		//friend std::istream& operator>>( std::istream& in, Image &image );
 
 	public:
 
@@ -337,13 +337,13 @@ namespace _2Real
 
 	};
 
-	inline std::ostream& operator<<( std::ostream& out, Image const& image )
-	{
-		return out;
-	}
+	//inline std::ostream& operator<<( std::ostream& out, Image const& image )
+	//{
+	//	return out;
+	//}
 
-	inline std::istream& operator>>( std::istream& in, Image &image )
-	{
-		return in;
-	}
+	//inline std::istream& operator>>( std::istream& in, Image &image )
+	//{
+	//	return in;
+	//}
 }

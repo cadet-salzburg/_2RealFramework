@@ -16,11 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealImageT.h"
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealPoint.h"
 #include "datatypes/_2RealSkeleton.h"
-#include "helpers/_2RealException.h"
+
+namespace _2Real
+{
+}

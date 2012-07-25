@@ -21,27 +21,29 @@
 namespace _2Real
 {
 
-	std::ostream& operator<<( std::ostream& out, Any const& data )
-	{
-		data.writeTo( out );
-		return out;
-	}
+	//std::ostream& operator<<( std::ostream& out, Any const& data )
+	//{
+	//	data.writeTo( out );
+	//	return out;
+	//}
 
-	std::istream& operator>>( std::istream& in, Any &data )
-	{
-		data.readFrom( in );
-		return in;
-	}
+	//std::istream& operator>>( std::istream& in, Any &data )
+	//{
+	//	data.readFrom( in );
+	//	return in;
+	//}
 
 	Any::Any() :
-		m_Content()
+		m_Content(),
+		m_Typename( typeid( void ).name() )
 	{
 		AbstractAnyHolder *h = nullptr;
 		m_Content.reset( h );
 	}
 
 	Any::Any( Any const& src ) :
-		m_Content( src.m_Content )
+		m_Content( src.m_Content ),
+		m_Typename( src.m_Typename )
 	{
 	}
 
@@ -52,6 +54,7 @@ namespace _2Real
 			return *this;
 		}
 
+		m_Typename = src.m_Typename;
 		m_Content = src.m_Content;
 
 		return *this;
@@ -98,27 +101,21 @@ namespace _2Real
 		}
 	}
 
-	const std::string Any::getTypename() const
+	std::string const& Any::getTypename() const
 	{
-		if ( isEmpty() )
-		{
-			return typeid( void ).name();
-		}
-		else
-		{
-			return m_Content->getTypename();
-		}
+		return m_Typename;
 	}
 
 	void Any::cloneFrom( Any const& src )
 	{
-
 		m_Content.reset( src.m_Content->clone() );
+		m_Typename = src.m_Typename;
 	}
 
 	void Any::createNew( Any const& src )
 	{
 		m_Content.reset( src.m_Content->create() );
+		m_Typename = src.m_Typename;
 	}
 
 }

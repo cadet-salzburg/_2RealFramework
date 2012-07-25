@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +19,31 @@
 
 #pragma once
 
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealImageT.h"
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealPoint.h"
-#include "datatypes/_2RealSkeleton.h"
-#include "helpers/_2RealException.h"
+namespace _2Real
+{
+	class Number
+	{
+
+	public:
+
+		Number();
+		Number( const char c );
+		Number( const unsigned char c );
+		Number( const short s );
+		Number( const unsigned short s );
+		Number( const int i );
+		Number( const unsigned int i );
+		Number( const long l );
+		Number( const unsigned long l );
+		Number( const float f );
+		Number( const double d );
+
+		Number( Number const& src );
+		Number & operator=( Number const& src );
+
+	private:
+
+		double			m_Val;
+
+	};
+}

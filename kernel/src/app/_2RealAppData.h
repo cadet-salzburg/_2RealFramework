@@ -49,14 +49,14 @@ namespace _2Real
 			template< typename T >
 			T const& getData() const
 			{
-				T const& data = extractFrom< T >( m_Data );
+				T const& data = m_Data.extract< T >();
 				return data;
 			}
 
 			template< typename T >
 			void copyData( T &val )
 			{
-				T const& data = extractFrom< T >( m_Data );
+				T const& data = m_Data.extract< T >();
 				val = data;
 			}
 

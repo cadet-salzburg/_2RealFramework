@@ -76,7 +76,7 @@ namespace _2Real
 
 		stringstream s;
 		s << value;
-		s >> data;
+		data.readFrom( s );
 
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "_2RealComparisons.h"
+#include "_2RealStreamOperators.h"
 
 #include <string>
 
@@ -152,13 +153,13 @@ namespace _2Real
 	template< typename TData >
 	void AnyHolder< TData >::writeTo( std::ostream &out ) const
 	{
-		out << m_Data;
+		_2Real::writeTo( out, m_Data );
 	}
 
 	template< typename TData >
 	void AnyHolder< TData >::readFrom( std::istream &in )
 	{
-		in >> m_Data;
+		_2Real::readFrom( in, m_Data );
 	}
 
 	template< typename TData >

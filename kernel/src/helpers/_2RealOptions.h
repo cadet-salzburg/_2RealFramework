@@ -167,7 +167,7 @@ namespace _2Real
 			std::set< Option< TData > > result;
 			for ( AnyOptionSet::OptionIterator it = options.m_Options.begin(); it != options.m_Options.end(); ++it )
 			{
-				TData const& v = extractFrom< TData >( it->getValue() );
+				TData const& v = it->getValue().extract< TData >();
 				result.insert( Option< TData >( v, it->getDescription() ) );
 			}
 
