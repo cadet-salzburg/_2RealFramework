@@ -20,6 +20,18 @@
 
 namespace _2Real
 {
+	std::istream & operator>>( std::istream &in, Number &number )
+	{
+		in >> number.m_Val;
+		return in;
+	}
+
+	std::ostream & operator<<( std::ostream &out, Number const& number )
+	{
+		out << number.m_Val;
+		return out;
+	}
+
 	Number::Number() : m_Val( 0. ) {}
 	Number::Number( const char c ) : m_Val( static_cast< double >( c ) ) {}
 	Number::Number( const unsigned char c ) : m_Val( static_cast< double >( c ) ) {}
@@ -34,4 +46,14 @@ namespace _2Real
 
 	Number::Number( Number const& src ) : m_Val( src.m_Val ) {}
 	Number & Number::operator=( Number const& src ) { m_Val = src.m_Val; return *this; }
+
+	Number Number::operator+( Number const& rhs ) const { return Number( m_Val + rhs.m_Val ); }
+	Number Number::operator-( Number const& rhs ) const { return Number( m_Val - rhs.m_Val ); }
+	Number Number::operator*( Number const& rhs ) const { return Number( m_Val * rhs.m_Val ); }
+	Number Number::operator/( Number const& rhs ) const { return Number( m_Val / rhs.m_Val ); }
+
+	Number & Number::operator+=( Number const& rhs ) { m_Val += rhs.m_Val; return *this; }
+	Number & Number::operator-=( Number const& rhs ) { m_Val -= rhs.m_Val; return *this; }
+	Number & Number::operator*=( Number const& rhs ) { m_Val *= rhs.m_Val; return *this; }
+	Number & Number::operator/=( Number const& rhs ) { m_Val /= rhs.m_Val; return *this; }
 }

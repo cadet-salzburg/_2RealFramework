@@ -21,12 +21,17 @@
 
 #include "datatypes/_2RealNumber.h"
 
+#include <istream>
+#include <ostream>
 #include <string>
 
 namespace _2Real
 {
 	class Point
 	{
+
+		friend std::istream & operator>>( std::istream &in, Point &number );
+		friend std::ostream & operator<<( std::ostream &out, Point const& number );
 
 	public:
 

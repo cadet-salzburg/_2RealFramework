@@ -19,10 +19,16 @@
 
 #pragma once
 
+#include <istream>
+#include <ostream>
+
 namespace _2Real
 {
 	class Number
 	{
+
+		friend std::istream & operator>>( std::istream &in, Number &number );
+		friend std::ostream & operator<<( std::ostream &out, Number const& number );
 
 	public:
 
@@ -40,6 +46,17 @@ namespace _2Real
 
 		Number( Number const& src );
 		Number & operator=( Number const& src );
+
+		Number operator+( Number const& rhs ) const;
+		Number operator-( Number const& rhs ) const;
+		Number operator*( Number const& rhs ) const;
+		Number operator/( Number const& rhs ) const;
+
+		Number & operator+=( Number const& rhs );
+		Number & operator-=( Number const& rhs );
+		Number & operator*=( Number const& rhs );
+		Number & operator/=( Number const& rhs );
+		// and, or, xor, <<, >>
 
 	private:
 

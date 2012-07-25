@@ -20,4 +20,15 @@
 
 namespace _2Real
 {
+	std::istream & operator>>( std::istream &in, Point &point )
+	{
+		in >> point.m_X >> point.m_Y >> point.m_Z >> point.m_Label >> point.m_Id;
+		return in;
+	}
+
+	std::ostream & operator<<( std::ostream &out, Point const& point )
+	{
+		out << point.m_X << " " << point.m_Y << " " << point.m_Z << " " << point.m_Label << " " << point.m_Id;
+		return out;
+	}
 }

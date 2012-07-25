@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include "datatypes/_2RealNumber.h"
+#include "datatypes/_2RealPoint.h"
+
 #include <typeinfo.h>
 #include <string>
 #include <iostream>
@@ -28,6 +31,20 @@ namespace _2Real
 	inline std::ostream & writeTo( std::ostream &out, TData const& v )
 	{
 		out << "UNSERIALIZABLE " << typeid( TData ).name();
+		return out;
+	}
+
+	template< >
+	inline std::ostream & writeTo< Number >( std::ostream &out, Number const& v )
+	{
+		out << v;
+		return out;
+	}
+
+	template< >
+	inline std::ostream & writeTo< Point >( std::ostream &out, Point const& v )
+	{
+		out << v;
 		return out;
 	}
 
@@ -107,6 +124,20 @@ namespace _2Real
 		std::string unserializable;
 		std::string name;
 		in >> unserializable >> name;
+		return in;
+	}
+
+	template< >
+	inline std::istream & readFrom< Number >( std::istream &in, Number &v )
+	{
+		in >> v;
+		return in;
+	}
+
+	template< >
+	inline std::istream & readFrom< Point >( std::istream &in, Point &v )
+	{
+		in >> v;
 		return in;
 	}
 
