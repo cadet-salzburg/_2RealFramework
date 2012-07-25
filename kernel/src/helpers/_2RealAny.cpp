@@ -20,19 +20,6 @@
 
 namespace _2Real
 {
-
-	//std::ostream& operator<<( std::ostream& out, Any const& data )
-	//{
-	//	data.writeTo( out );
-	//	return out;
-	//}
-
-	//std::istream& operator>>( std::istream& in, Any &data )
-	//{
-	//	data.readFrom( in );
-	//	return in;
-	//}
-
 	Any::Any() :
 		m_Content(),
 		m_Typename( typeid( void ).name() )

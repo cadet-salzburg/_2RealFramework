@@ -36,61 +36,61 @@ namespace _2Real
 	}
 
 	template < >
-	inline bool isEqual< char >( char const& v1, char const& v2 )
+	inline bool isEqual( char const& v1, char const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< unsigned char >( unsigned char const& v1, unsigned char const& v2 )
+	inline bool isEqual( unsigned char const& v1, unsigned char const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< short >( short const& v1, short const& v2 )
+	inline bool isEqual( short const& v1, short const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< unsigned short >( unsigned short const& v1, unsigned short const& v2 )
+	inline bool isEqual( unsigned short const& v1, unsigned short const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< int >( int const& v1, int const& v2 )
+	inline bool isEqual( int const& v1, int const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< unsigned int >( unsigned int const& v1, unsigned int const& v2 )
+	inline bool isEqual( unsigned int const& v1, unsigned int const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< long >( long const& v1, long const& v2 )
+	inline bool isEqual( long const& v1, long const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< unsigned long >( unsigned long const& v1, unsigned long const& v2 )
+	inline bool isEqual( unsigned long const& v1, unsigned long const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< bool >( bool const& v1, bool const& v2 )
+	inline bool isEqual( bool const& v1, bool const& v2 )
 	{
 		return ( v1 == v2 );
 	}
 
 	template < >
-	inline bool isEqual< std::string >( std::string const& v1, std::string const& v2 )
+	inline bool isEqual( std::string const& v1, std::string const& v2 )
 	{
 		return ( v1 == v2 );
 	}
@@ -107,61 +107,61 @@ namespace _2Real
 	}
 
 	template < >
-	inline bool isLess< char >( char const& v1, char const& v2 )
+	inline bool isLess( char const& v1, char const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< unsigned char >( unsigned char const& v1, unsigned char const& v2 )
+	inline bool isLess( unsigned char const& v1, unsigned char const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< short >( short const& v1, short const& v2 )
+	inline bool isLess( short const& v1, short const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< unsigned short >( unsigned short const& v1, unsigned short const& v2 )
+	inline bool isLess( unsigned short const& v1, unsigned short const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< int >( int const& v1, int const& v2 )
+	inline bool isLess( int const& v1, int const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< unsigned int >( unsigned int const& v1, unsigned int const& v2 )
+	inline bool isLess( unsigned int const& v1, unsigned int const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< long >( long const& v1, long const& v2 )
+	inline bool isLess( long const& v1, long const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< unsigned long >( unsigned long const& v1, unsigned long const& v2 )
+	inline bool isLess( unsigned long const& v1, unsigned long const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< bool >( bool const& v1, bool const& v2 )
+	inline bool isLess( bool const& v1, bool const& v2 )
 	{
 		return ( v1 < v2 );
 	}
 
 	template < >
-	inline bool isLess< std::string >( std::string const& v1, std::string const& v2 )
+	inline bool isLess( std::string const& v1, std::string const& v2 )
 	{
 		return ( v1 < v2 );
 	}

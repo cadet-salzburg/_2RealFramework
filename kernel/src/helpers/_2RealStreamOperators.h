@@ -24,190 +24,246 @@
 #include <typeinfo.h>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <list>
 
 namespace _2Real
 {
 	template< typename TData >
-	inline std::ostream & writeTo( std::ostream &out, TData const& v )
+	inline void writeTo( std::ostream &out, TData const& v )
 	{
-		out << "UNSERIALIZABLE " << typeid( TData ).name();
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< Number >( std::ostream &out, Number const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< Point >( std::ostream &out, Point const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< char >( std::ostream &out, char const& v )
-	{
-		out << static_cast< int >( v );
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< unsigned char >( std::ostream &out, unsigned char const& v )
-	{
-		out << static_cast< int >( v );
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< short >( std::ostream &out, short const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< unsigned short >( std::ostream &out, unsigned short const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< int >( std::ostream &out, int const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< unsigned int >( std::ostream &out, unsigned int const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< long >( std::ostream &out, long const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< unsigned long >( std::ostream &out, unsigned long const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< bool >( std::ostream &out, bool const& v )
-	{
-		out << v;
-		return out;
-	}
-
-	template< >
-	inline std::ostream & writeTo< std::string >( std::ostream &out, std::string const& v )
-	{
-		out << v;
-		return out;
+		std::string name = typeid( TData ).name();
+		for ( unsigned int i=0; i<name.length(); ++i )
+		{
+			if ( name[i] == ' ' ) name[i] = '#';
+		}
+		out << "UNSTREAMABLE " << name;
 	}
 
 	template< typename TData >
-	inline std::istream & readFrom( std::istream &in, TData &v )
+	inline void writeTo( std::ostream &out, typename std::vector< TData > const& v )
 	{
-		std::string unserializable;
-		std::string name;
-		in >> unserializable >> name;
-		return in;
+		if ( v.empty() )
+		{
+			return;
+		}
+
+		typename std::vector< TData >::const_iterator it = v.begin();
+		writeTo( out, *it );
+		++it;
+		for ( ; it != v.end(); ++it )
+		{
+			out << ", ";
+			writeTo( out, *it );
+		}
+	}
+
+	template< typename TData >
+	inline void writeTo( std::ostream &out, typename std::list< TData > const& v )
+	{
+		if ( v.empty() )
+		{
+			return;
+		}
+
+		typename std::list< TData >::const_iterator it = v.begin();
+		writeTo( out, *it );
+		++it;
+		for ( ; it != v.end(); ++it )
+		{
+			out << ", ";
+			writeTo( out, *it );
+		}
 	}
 
 	template< >
-	inline std::istream & readFrom< Number >( std::istream &in, Number &v )
+	inline void writeTo( std::ostream &out, Number const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< Point >( std::istream &in, Point &v )
+	inline void writeTo( std::ostream &out, Point const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< char >( std::istream &in, char &v )
+	inline void writeTo( std::ostream &out, char const& v )
 	{
-		in >> v;
-		return in;
+		out << static_cast< int >( v );
 	}
 
 	template< >
-	inline std::istream & readFrom< unsigned char >( std::istream &in, unsigned char &v )
+	inline void writeTo( std::ostream &out, unsigned char const& v )
 	{
-		in >> v;
-		return in;
+		out << static_cast< int >( v );
 	}
 
 	template< >
-	inline std::istream & readFrom< short >( std::istream &in, short &v )
+	inline void writeTo( std::ostream &out, short const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< unsigned short >( std::istream &in, unsigned short &v )
+	inline void writeTo( std::ostream &out, unsigned short const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< int >( std::istream &in, int &v )
+	inline void writeTo( std::ostream &out, int const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< unsigned int >( std::istream &in, unsigned int &v )
+	inline void writeTo( std::ostream &out, unsigned int const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< long >( std::istream &in, long &v )
+	inline void writeTo( std::ostream &out, long const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< unsigned long >( std::istream &in, unsigned long &v )
+	inline void writeTo( std::ostream &out, unsigned long const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< bool >( std::istream &in, bool &v )
+	inline void writeTo( std::ostream &out, bool const& v )
 	{
-		in >> v;
-		return in;
+		out << v;
 	}
 
 	template< >
-	inline std::istream & readFrom< std::string >( std::istream &in, std::string &v )
+	inline void writeTo( std::ostream &out, std::string const& v )
+	{
+		out << v;
+	}
+
+	template< typename TData >
+	inline void readFrom( std::istream &in, TData &v )
+	{
+		std::string unstreamable;
+		std::string typeName;
+		in >> unstreamable >> typeName;
+		for ( unsigned int i=0; i<typeName.length(); ++i )
+		{
+			if ( typeName[i] == '#' ) typeName[i] = ' ';
+		}
+
+		std::cout << unstreamable << " " << typeName << std::endl;
+	}
+
+	template< typename TData >
+	inline void readFrom( std::istream &in, typename std::vector< TData > &v )
+	{
+		std::string element;
+
+		while ( getline( in, element, ',' ) )
+		{
+			trim( element );
+			TData tmp;
+			std::stringstream stream;
+			stream << element;
+			readFrom( stream, tmp );
+			v.push_back( tmp );
+		}
+	}
+
+	template< typename TData >
+	inline void readFrom( std::istream &in, typename std::list< TData > &v )
+	{
+		std::string element;
+
+		while ( getline( in, element, ',' ) )
+		{
+			trim( element );
+			TData tmp;
+			std::stringstream stream;
+			stream << element;
+			readFrom( stream, tmp );
+			v.push_back( tmp );
+		}
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, Number &v )
 	{
 		in >> v;
-		return in;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, Point &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, char &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned char &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, short &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned short &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, int &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned int &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, long &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned long &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, bool &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, std::string &v )
+	{
+		in >> v;
 	}
 }

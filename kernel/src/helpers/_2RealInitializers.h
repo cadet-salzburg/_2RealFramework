@@ -18,7 +18,63 @@
 
 #pragma once
 
+#include <assert.h>
+
 namespace _2Real
 {
-
+//	template< typename TData >
+//	void initialize( TData &data )
+//	{
+//#ifdef _DEBUG
+//		assert( NULL );
+//#endif
+//	};
+//
+//	template< >
+//	void initialize( char &data )
+//	{
+//		data = static_cast< char >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( unsigned char &data )
+//	{
+//		data = static_cast< unsigned char >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( short &data )
+//	{
+//		data = static_cast< short >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( unsigned short &data )
+//	{
+//		data = static_cast< unsigned short >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( int &data )
+//	{
+//		data = static_cast< int >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( unsigned int &data )
+//	{
+//		data = static_cast< unsigned int >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( long &data )
+//	{
+//		data = static_cast< long >( 0 );
+//	}
+//
+//	template< >
+//	void initialize( unsigned long &data )
+//	{
+//		data = static_cast< unsigned long >( 0 );
+//	}
 }

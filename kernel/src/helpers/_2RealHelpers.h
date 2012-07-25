@@ -40,15 +40,15 @@ namespace _2Real
 		pVal = nullptr;
 	}
 
-	template< typename Datatype >
-	std::ostream& operator<<( std::ostream &out, typename std::vector< Datatype > const& v )
+	template< typename TData >
+	std::ostream& operator<<( std::ostream &out, typename std::vector< TData > const& v )
 	{
 		if ( v.empty() )
 		{
 			return out;
 		}
 
-		typename std::vector< Datatype >::const_iterator it = v.begin();
+		typename std::vector< TData >::const_iterator it = v.begin();
 		out << *it;
 		++it;
 		for ( ; it != v.end(); ++it )
@@ -58,15 +58,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename Datatype >
-	std::ostream& operator<<( std::ostream &out, typename std::list< Datatype > const& l )
+	template< typename TData >
+	std::ostream& operator<<( std::ostream &out, typename std::list< TData > const& l )
 	{
 		if ( l.empty() )
 		{
 			return out;
 		}
 
-		typename std::list< Datatype >::const_iterator it = l.begin();
+		typename std::list< TData >::const_iterator it = l.begin();
 		out << *it;
 		++it;
 		for ( ; it != l.end(); ++it )
@@ -76,15 +76,15 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename Datatype >
-	std::ostream& operator<<( std::ostream &out, typename std::map< std::string, Datatype > const& m )
+	template< typename TData >
+	std::ostream& operator<<( std::ostream &out, typename std::map< std::string, TData > const& m )
 	{
 		if ( m.empty() )
 		{
 			return out;
 		}
 
-		typename std::map< std::string, Datatype >::const_iterator it = m.begin();
+		typename std::map< std::string, TData >::const_iterator it = m.begin();
 		out << "[ " << it->first << " , " << it->second << " ]";
 		++it;
 		for ( ; it != m.end(); ++it )
@@ -94,8 +94,8 @@ namespace _2Real
 		return out;
 	}
 
-	template< typename Datatype >
-	std::istream& operator>>( std::istream &in, typename std::list< Datatype > &l )
+	template< typename TData >
+	std::istream& operator>>( std::istream &in, typename std::list< TData > &l )
 	{
 		std::string element;
 		char delim = ',';
@@ -103,7 +103,7 @@ namespace _2Real
 		while ( getline( in, element, delim ) )
 		{
 			trim( element );
-			Datatype tmp;
+			TData tmp;
 			std::stringstream stream;
 			stream << element;
 			stream >> tmp;
@@ -113,8 +113,8 @@ namespace _2Real
 		return in;
 	}
 
-	template< typename Datatype >
-	std::istream& operator>>( std::istream &in, typename std::vector< Datatype > &v )
+	template< typename TData >
+	std::istream& operator>>( std::istream &in, typename std::vector< TData > &v )
 	{
 		std::string element;
 		char delim = ',';
@@ -122,7 +122,7 @@ namespace _2Real
 		while ( getline( in, element, delim ) )
 		{
 			trim( element );
-			Datatype tmp;
+			TData tmp;
 			std::stringstream stream;
 			stream << element;
 			stream >> tmp;
@@ -132,8 +132,8 @@ namespace _2Real
 		return in;
 	}
 
-	template< typename Datatype >
-	std::istream& operator>>( std::istream &in, typename std::map< std::string, Datatype > &m )
+	template< typename TData >
+	std::istream& operator>>( std::istream &in, typename std::map< std::string, TData > &m )
 	{
 		std::string element;
 
@@ -141,7 +141,7 @@ namespace _2Real
 		{
 			trim( element );
 			std::string key;
-			Datatype tmp;
+			TData tmp;
 			std::stringstream stream;
 			stream << element;
 			char delim;

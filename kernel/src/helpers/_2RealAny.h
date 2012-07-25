@@ -28,7 +28,6 @@
 
 namespace _2Real
 {
-
 	class Any
 	{
 
@@ -47,10 +46,10 @@ namespace _2Real
 			m_TypeCode = typeid( TData ).hash_code();
 		}
 
-		template< typename T >
+		template< typename TData >
 		bool isDatatype() const
 		{
-			return m_Typename == typeid( T ).name();
+			return m_Typename == typeid( TData ).name();
 		}
 
 		bool isEmpty() const;

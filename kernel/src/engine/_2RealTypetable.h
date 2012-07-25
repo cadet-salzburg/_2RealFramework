@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
+#include "helpers/_2RealInitializers.h"
 
 #include <list>
 #include <vector>
@@ -33,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		template< typename Datatype >
+		template< typename TType >
 		void registerType( std::string const& typeName );
 
 		std::string const&		lookupTypename( std::string const& longTypename ) const;
@@ -56,7 +57,7 @@ namespace _2Real
 
 	};
 
-	template< typename Datatype >
+	template< typename TType >
 	void Typetable::registerType( std::string const& typeName )
 	{
 
@@ -68,28 +69,12 @@ namespace _2Real
 		}
 #endif
 
-		std::string nameVec = std::string( "vector " + typeName );
-		std::string nameList = std::string( "list " + typeName );
+		TType data;// = _2Real::initialValue< TType >();
+		Any any( data );
+		m_Datatypes[ typeName ] = any;
 
-		Datatype data;
-		std::vector< Datatype > vec;
-		std::list< Datatype > list;
-
-		Any simpleData( data );
-		Any vectorData( vec );
-		Any listData( list );
-
-		m_Datatypes[ typeName ] = simpleData;
-		m_Datatypes[ nameVec ] = vectorData;
-		m_Datatypes[ nameList ] = listData;
-
-		std::string simpleType = typeid( Datatype ).name();
-		std::string typeVec= vectorData.getTypename();
-		std::string typeList = listData.getTypename();
-
-		m_Typenames[ simpleType ] = typeName;
-		m_Typenames[ typeVec ] = nameVec;
-		m_Typenames[ typeList ] = nameList;
+		std::string type = typeid( TType ).name();
+		m_Typenames[ type ] = typeName;
 
 	}
 

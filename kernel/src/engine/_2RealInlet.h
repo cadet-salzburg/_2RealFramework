@@ -33,6 +33,8 @@ namespace _2Real
 	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< Inlet, bundle::InletHandle >
 	{
 
+		//friend void * findConversion( Inlet &inlet, Outlet &outlet );
+
 	public:
 
 		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );

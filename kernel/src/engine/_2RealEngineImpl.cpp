@@ -77,6 +77,11 @@ namespace _2Real
 		m_BundleManager( new BundleManager( *this ) ),
 		m_System( new System( *m_Logger ) )
 	{
+		m_Typetable->registerType< Image >( "image" );
+		m_Typetable->registerType< Skeleton >( "skeleton" );
+		m_Typetable->registerType< Number >( "number" );
+		m_Typetable->registerType< Point >( "point" );
+
 		m_Typetable->registerType< char >( "char");
 		m_Typetable->registerType< unsigned char >( "unsigned char" );
 		m_Typetable->registerType< short >( "short");
@@ -90,10 +95,38 @@ namespace _2Real
 		m_Typetable->registerType< bool >( "bool" );
 		m_Typetable->registerType< std::string >( "string" );
 
-		m_Typetable->registerType< Image >( "image" );
-		m_Typetable->registerType< Skeleton >( "skeleton" );
-		m_Typetable->registerType< Number >( "number" );
-		m_Typetable->registerType< Point >( "point" );
+		m_Typetable->registerType< std::vector< Number > >( "number vector" );
+		m_Typetable->registerType< std::vector< Point > >( "point vector" );
+		m_Typetable->registerType< std::vector< Image > >( "image vector" );
+
+		m_Typetable->registerType< std::vector< char > >( "char vector" );
+		m_Typetable->registerType< std::vector< unsigned char > >( "unsigned char vector" );
+		m_Typetable->registerType< std::vector< short > >( "short vector");
+		m_Typetable->registerType< std::vector< unsigned short > >( "unsigned short vector" );
+		m_Typetable->registerType< std::vector< int > >( "int vector" );
+		m_Typetable->registerType< std::vector< unsigned int > >( "unsigned int vector" );
+		m_Typetable->registerType< std::vector< long > >( "long vector" );
+		m_Typetable->registerType< std::vector< unsigned long > >( "unsigned long vector" );
+		m_Typetable->registerType< std::vector< float > >( "float vector" );
+		m_Typetable->registerType< std::vector< double > >( "double vector" );
+		m_Typetable->registerType< std::vector< bool > >( "bool vector" );
+		m_Typetable->registerType< std::vector< std::string > >( "string vector" );
+
+		m_Typetable->registerType< std::list< Number > >( "number list" );
+		m_Typetable->registerType< std::list< Point > >( "point list" );
+
+		m_Typetable->registerType< std::list< char > >( "char list");
+		m_Typetable->registerType< std::list< unsigned char > >( "unsigned char list" );
+		m_Typetable->registerType< std::list< short > >( "short list");
+		m_Typetable->registerType< std::list< unsigned short > >( "unsigned short list" );
+		m_Typetable->registerType< std::list< int > >( "int list" );
+		m_Typetable->registerType< std::list< unsigned int > >( "unsigned int list" );
+		m_Typetable->registerType< std::list< long > >( "long list" );
+		m_Typetable->registerType< std::list< unsigned long > >( "unsigned long list" );
+		m_Typetable->registerType< std::list< float > >( "float list" );
+		m_Typetable->registerType< std::list< double > >( "double list" );
+		m_Typetable->registerType< std::list< bool > >( "bool list" );
+		m_Typetable->registerType< std::list< std::string > >( "string list" );
 
 		m_Timestamp.update();
 	}

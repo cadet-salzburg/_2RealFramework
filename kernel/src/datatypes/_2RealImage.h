@@ -102,9 +102,6 @@ namespace _2Real
 	class Image
 	{
 
-		//friend std::ostream& operator<<( std::ostream& out, Image const& image );
-		//friend std::istream& operator>>( std::istream& in, Image &image );
-
 	public:
 
 		Image() :
@@ -336,14 +333,4 @@ namespace _2Real
 		Deleter< unsigned char >	*m_Deleter;
 
 	};
-
-	//inline std::ostream& operator<<( std::ostream& out, Image const& image )
-	//{
-	//	return out;
-	//}
-
-	//inline std::istream& operator>>( std::istream& in, Image &image )
-	//{
-	//	return in;
-	//}
 }
