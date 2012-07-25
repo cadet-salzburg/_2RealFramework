@@ -109,7 +109,7 @@ void CameraCaptureBlock::update()
 
 				if( m_CameraDeviceManager->isDeviceRunning(m_iCurrentCamera))
 				{
-					m_ImageOutletHandle.getWriteableRef<_2Real::ImageSource>() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
+					m_ImageOutletHandle.getWriteableRef<_2Real::Image>() = m_CameraDeviceManager->getPixels( m_iCurrentCamera );
 				}
 				else
 				{

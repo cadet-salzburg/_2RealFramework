@@ -174,7 +174,7 @@ unsigned int CameraDeviceManager::getNumberOfConnectedDevices()
 }
 
 
-_2Real::ImageSource& CameraDeviceManager::getPixels( const unsigned int deviceIdx )
+_2Real::Image& CameraDeviceManager::getPixels( const unsigned int deviceIdx )
 {
 	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
 	try
@@ -182,7 +182,7 @@ _2Real::ImageSource& CameraDeviceManager::getPixels( const unsigned int deviceId
 		if(m_VideoInputContoller->isFrameNew(deviceIdx))
 		{
 			unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::ImageSource( pixels, false,
+			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false,
 				m_VideoInputContoller->getWidth( deviceIdx ), 
 				m_VideoInputContoller->getHeight( deviceIdx ),
 				_2Real::ImageChannelOrder::RGB );
