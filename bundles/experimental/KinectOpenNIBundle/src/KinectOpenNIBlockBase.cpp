@@ -120,7 +120,7 @@ void KinectOpenNIBlockBase::update()
 
 			//if( m_OpenNIDeviceManager->isDeviceRunning(m_iCurrentDevice))
 			{
-				m_ImageOutletHandle.getWriteableRef<_2Real::ImageSource >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
+				m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
 			}
 			//else
 			//{

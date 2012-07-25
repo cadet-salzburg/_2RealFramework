@@ -23,7 +23,7 @@ public:
 	unsigned int					getNumberOfConnectedDevices();
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
-	_2Real::ImageSource&			getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	_2Real::Image&			getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 
@@ -37,7 +37,7 @@ private:
 		DeviceItem::DeviceItem()
 		{
 		}
-		_2Real::ImageSource										m_Image;
+		_2Real::Image										m_Image;
 		std::map<_2RealKinectWrapper::_2RealGenerator,bool>		m_bGeneratorIsUsed;
 	};
 

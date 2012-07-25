@@ -35,7 +35,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		rgbBlockInfo.addInlet<int>( "Height", 480 );
 		rgbBlockInfo.addInlet<int>( "Fps", 30 );
 		rgbBlockInfo.addInlet<bool>( "IsMirrored", false );
-		rgbBlockInfo.addOutlet< ImageSource >("ImageData");
+		rgbBlockInfo.addOutlet< Image >("ImageData");
 		rgbBlockInfo.addOutlet<int>( "Width" );
 		rgbBlockInfo.addOutlet<int>( "Height" );
 		rgbBlockInfo.setDescription( "OpenNI Kinect Rgb Image Block" );
@@ -47,7 +47,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addInlet<int>( "Fps", 30 );
 		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
 		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
-		depthBlockInfo.addOutlet< ImageSource >("ImageData");
+		depthBlockInfo.addOutlet< Image >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
 		depthBlockInfo.setDescription( "OpenNI Kinect Depth Image Block" );
@@ -59,7 +59,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addInlet<int>( "Fps", 30 );
 		userSkeletonBlockInfo.addInlet<bool>( "IsMirrored", false );
 		userSkeletonBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
-		userSkeletonBlockInfo.addOutlet< ImageSource >("ImageData");
+		userSkeletonBlockInfo.addOutlet< Image >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
 		userSkeletonBlockInfo.setDescription( "OpenNI Kinect User/Skeleton Image Block" );
@@ -70,7 +70,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		irBlockInfo.addInlet<int>( "Height", 480 );
 		irBlockInfo.addInlet<int>( "Fps", 30 );
 		irBlockInfo.addInlet<bool>( "IsMirrored", false );
-		irBlockInfo.addOutlet< ImageSource >("ImageData");
+		irBlockInfo.addOutlet< Image >("ImageData");
 		irBlockInfo.addOutlet<int>( "Width" );
 		irBlockInfo.addOutlet<int>( "Height" );
 		irBlockInfo.setDescription( "OpenNI Kinect Infrared Image Block" );
