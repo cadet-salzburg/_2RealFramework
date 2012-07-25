@@ -38,7 +38,6 @@ namespace _2Real
 
 	protected:
 
-		template< typename TObj >
 		Handleable( TObj &obj ) :
 			m_Obj( obj ),
 			m_Handle( nullptr )

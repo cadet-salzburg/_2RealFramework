@@ -22,13 +22,17 @@
 
 #include <string>
 
+#ifdef _UNIX
+    #include <sstream>
+#endif
+
 namespace _2Real
 {
 	class AbstractAnyHolder
 	{
-	
+
 	public:
-	
+
 		virtual ~AbstractAnyHolder() {}
 		virtual const std::string getTypename() const = 0;
 		virtual std::type_info const& getTypeinfo() const = 0;
@@ -44,7 +48,7 @@ namespace _2Real
 	template< typename TData >
 	class AnyHolder : public AbstractAnyHolder
 	{
-	
+
 	public:
 
 		AnyHolder();
@@ -159,7 +163,7 @@ namespace _2Real
 
 	template< typename TData >
 	AbstractAnyHolder * AnyHolder< TData >::create() const
-	{ 
+	{
 		return new AnyHolder< TData >();
 	}
 

@@ -30,6 +30,7 @@ namespace _2Real
 	{
 	public:
 		virtual void safeDelete( TData *& data) const = 0;
+		virtual ~Deleter() {}
 	};
 
 	template< typename TData >

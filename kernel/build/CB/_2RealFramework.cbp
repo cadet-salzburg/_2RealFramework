@@ -14,9 +14,21 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-D_DEBUG" />
 				</Compiler>
 			</Target>
-			<Target title="Debug - Shared Object">
+			<Target title="Debug - Shared Object (32bit)">
+				<Option output="../../lib/_2RealFrameworkD" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin/Debug" />
+				<Option object_output="../../obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="Debug - Shared Object (64bit)">
 				<Option output="../../lib/_2RealFrameworkD" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin/Debug" />
 				<Option object_output="../../obj/Debug/" />
@@ -25,6 +37,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-fPIC" />
+					<Add option="-D_DEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="Release - Static Library">
@@ -40,7 +53,20 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
-			<Target title="Release - Shared Object">
+			<Target title="Release - Shared Object (32bit)">
+				<Option output="../../lib/_2RealFramework" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin/Release" />
+				<Option object_output="../../obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Release - Shared Object (64bit)">
 				<Option output="../../lib/_2RealFramework" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin/Release" />
 				<Option object_output="../../obj/Release/" />
@@ -109,8 +135,10 @@
 		<Unit filename="../../src/bundle/_2RealOutletHandle.h" />
 		<Unit filename="../../src/datatypes/_2RealDeviceList.h" />
 		<Unit filename="../../src/datatypes/_2RealEnum.h" />
+		<Unit filename="../../src/datatypes/_2RealImage.h" />
 		<Unit filename="../../src/datatypes/_2RealImageT.cpp" />
 		<Unit filename="../../src/datatypes/_2RealImageT.h" />
+		<Unit filename="../../src/datatypes/_2RealSkeleton.h" />
 		<Unit filename="../../src/engine/_2RealAbstractIOManager.cpp" />
 		<Unit filename="../../src/engine/_2RealAbstractIOManager.h" />
 		<Unit filename="../../src/engine/_2RealAbstractStateManager.cpp" />
@@ -177,13 +205,10 @@
 		<Unit filename="../../src/helpers/_2RealAny.h" />
 		<Unit filename="../../src/helpers/_2RealAnyHolder.h" />
 		<Unit filename="../../src/helpers/_2RealCallback.h" />
+		<Unit filename="../../src/helpers/_2RealComparisons.h" />
 		<Unit filename="../../src/helpers/_2RealEvent.h" />
 		<Unit filename="../../src/helpers/_2RealException.cpp" />
 		<Unit filename="../../src/helpers/_2RealException.h" />
-		<Unit filename="../../src/helpers/_2RealHandle.cpp" />
-		<Unit filename="../../src/helpers/_2RealHandle.h" />
-		<Unit filename="../../src/helpers/_2RealHandleable.cpp" />
-		<Unit filename="../../src/helpers/_2RealHandleable.h" />
 		<Unit filename="../../src/helpers/_2RealHelpers.h" />
 		<Unit filename="../../src/helpers/_2RealIdentifiable.cpp" />
 		<Unit filename="../../src/helpers/_2RealIdentifiable.h" />
