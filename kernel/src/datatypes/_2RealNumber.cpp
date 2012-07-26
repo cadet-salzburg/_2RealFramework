@@ -56,4 +56,15 @@ namespace _2Real
 	Number & Number::operator-=( Number const& rhs ) { m_Val -= rhs.m_Val; return *this; }
 	Number & Number::operator*=( Number const& rhs ) { m_Val *= rhs.m_Val; return *this; }
 	Number & Number::operator/=( Number const& rhs ) { m_Val /= rhs.m_Val; return *this; }
+
+	Number::operator char() const { return static_cast< char >( m_Val ); }
+	Number::operator unsigned char() const { return static_cast< unsigned char >( m_Val ); }
+	Number::operator short() const { return static_cast< short >( m_Val ); }
+	Number::operator unsigned short() const { return static_cast< unsigned short >( m_Val ); }
+	Number::operator int() const { return static_cast< int >( m_Val ); }
+	Number::operator unsigned int() const { return static_cast< unsigned int >( m_Val ); }
+	Number::operator long() const { return static_cast< long >( m_Val ); }
+	Number::operator unsigned long() const { return static_cast< unsigned long >( m_Val ); }
+	Number::operator float() const { return static_cast< float >( m_Val ); }
+	Number::operator double() const { return m_Val; }
 }
