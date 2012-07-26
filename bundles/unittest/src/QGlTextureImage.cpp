@@ -19,7 +19,7 @@ void QGlTextureImage::initializeGL()
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glOrtho( 0, 1, 0, 1, 0, 1 );
+	glOrtho( 0, 1, 1, 0, 0, 1 );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 
@@ -39,10 +39,10 @@ void QGlTextureImage::paintGL()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 	glBegin( GL_QUADS );
-		glTexCoord2i(0,1); glVertex2i(0,0);
-		glTexCoord2i(0,0); glVertex2i(0,1);
-		glTexCoord2i(1,0); glVertex2i(1,1);
-		glTexCoord2i(1,1); glVertex2i(1,0);
+		glTexCoord2i(0,0); glVertex2i(0,0);
+		glTexCoord2i(0,1); glVertex2i(0,1);
+		glTexCoord2i(1,1); glVertex2i(1,1);
+		glTexCoord2i(1,0); glVertex2i(1,0);
 	glEnd();
 
 	glFlush();

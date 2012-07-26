@@ -22,10 +22,14 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		else if(m_OutletHandle.getTypename() == "image")
 		{
 			m_ValueWidget = new QGlTextureImage();
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
 		else if(m_OutletHandle.getTypename() == "skeleton")
 		{
 			m_ValueWidget = new QGlSkeletonWidget();
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
 		else
 		{
@@ -63,12 +67,15 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 {
 	try
 	{
-		if( m_OutletHandle.getTypename().find( "image" )!=string::npos )
+		if( m_OutletHandle.getTypename() == "image" )
 		{
 			Image const& img = data.getData< Image >();
-			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture( img.getWidth(), img.getHeight(), img.getNumberOfChannels(), img.getImageType(), img.getData() );
+		}
+		else if(m_OutletHandle.getTypename() == "skeleton")
+		{
+			Skeleton const& skeleton = data.getData< Skeleton >();
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->updateSkeleton( skeleton );
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{

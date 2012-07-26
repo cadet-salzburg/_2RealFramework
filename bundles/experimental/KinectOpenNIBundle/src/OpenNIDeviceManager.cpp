@@ -293,6 +293,8 @@ void OpenNIDeviceManager::setMirrored(const unsigned int deviceIdx, _2RealGenera
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
+		if( generatorType == USERIMAGE)		// mirroring for user only works for mirroring the depth with openni
+			generatorType = DEPTHIMAGE;
 		m_2RealKinect->setMirrored( deviceIdx, generatorType, bIsMirrored );
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
