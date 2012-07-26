@@ -35,6 +35,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		// throughput block (for testing unit test datatypes)
 		BlockMetainfo throughputBlock = info.exportBlock< ThroughputBlock, WithoutContext >( "ThroughPutBlock" );
 		throughputBlock.setDescription( "ThroughPut Block" );
+		throughputBlock.addInlet<_2Real::Number>( "number", 0 );
 		throughputBlock.addInlet<bool>( "bool", 0 );
 		throughputBlock.addInlet<unsigned char>( "uchar", 0 );
 		throughputBlock.addInlet<char>( "char", 0 );
@@ -47,6 +48,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		throughputBlock.addInlet<float>( "float", 0 );
 		throughputBlock.addInlet<double>( "double", 0 );
 		throughputBlock.addInlet<std::string>( "string", "" );
+		throughputBlock.addInlet<_2Real::Number>( "number" );
 		throughputBlock.addOutlet<bool>( "bool" );
 		throughputBlock.addOutlet<unsigned char>( "uchar" );
 		throughputBlock.addOutlet<char>( "char");

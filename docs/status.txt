@@ -1,0 +1,11 @@
+Bugs
+----
+
+
+Discussions / Todo
+------------------
+* discard explizitly sucks (error prone, programmers forget to discard)
+* default values for outlets !!!
+* outlets need buffering (multiple writes in one update (compare midi bundle)	
+* think about Synchronisationsblock ?
+* think aboout Mutexblock ?
