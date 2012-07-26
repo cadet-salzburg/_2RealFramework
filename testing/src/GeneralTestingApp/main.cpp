@@ -25,7 +25,9 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+#ifndef _UNIX
+    #include "vld.h"
+#endif
 
 using std::string;
 using std::cout;
@@ -165,7 +167,7 @@ int main( int argc, char *argv[] )
 		//InletHandle in2 = inHandle.getInletHandle( "device index" );
 
 		unsigned int cnt = 0;
-
+        printf("startup ok!\n");
 		while( 1 )
 		{
 			string line;

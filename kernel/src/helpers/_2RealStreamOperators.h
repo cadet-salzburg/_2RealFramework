@@ -20,8 +20,14 @@
 
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealPoint.h"
+#include "helpers/_2RealStringHelpers.h"
 
-#include <typeinfo.h>
+#ifdef _UNIX
+    #include <typeinfo>
+#else
+    #include <typeinfo.h>
+#endif
+
 #include <string>
 #include <iostream>
 #include <sstream>

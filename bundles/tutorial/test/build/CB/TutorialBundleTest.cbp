@@ -8,6 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="../../bin/TutorialBundleTest" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="../../obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -15,13 +16,14 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="../../../../../kernel/lib/lib_2RealFrameworkD.so" />
-					<Add library="../../../../unittest/lib/lib_2RealBundlesUnitTestD.so" />
-					<Add library="../../../lib/libTutorialBundleD.so" />
+					<Add library="_2RealFrameworkD" />
+					<Add library="TutorialBundleD" />
+					<Add library="src" />
 				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="../../bin/TutorialBundleTest" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="../../obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -41,6 +43,7 @@
 			<Add option="-Wall" />
 			<Add option="-D_UNIX" />
 			<Add option="-D_2REAL_UNIT_TEST_EXPORT" />
+			<Add option="-D_NO_QT" />
 			<Add directory="/usr/include/QtGui" />
 			<Add directory="/usr/include/QtCore" />
 			<Add directory="../../../../unittest/include" />
@@ -49,13 +52,21 @@
 		</Compiler>
 		<Linker>
 			<Add library="QtGui" />
+			<Add library="QtCore" />
+			<Add directory="../../../../../kernel/lib" />
+			<Add directory="../../../../unittest/src" />
+			<Add directory="../../../lib" />
 		</Linker>
 		<Unit filename="../../src/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<lib_finder disable_auto="1" />
-			<debugger />
+			<debugger>
+				<search_path add="../../../lib" />
+				<search_path add="../../../../../kernel/lib" />
+				<search_path add="../../../../unittest/src" />
+			</debugger>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

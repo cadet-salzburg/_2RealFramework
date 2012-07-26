@@ -15,7 +15,6 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-fPIC" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -36,12 +35,18 @@
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="-fPIC" />
 			<Add option="-D_UNIX" />
-			<Add option="-D_2REAL_UNIT_TEST_EXPORT" />
-			<Add directory="../../../../kernel/src" />
+			<Add directory="/usr/include" />
 			<Add directory="/usr/include/QtGui" />
 			<Add directory="/usr/include/QtCore" />
+			<Add directory="../../../../kernel/src" />
 		</Compiler>
+		<Linker>
+			<Add library="QtCore" />
+			<Add library="QtGui" />
+			<Add directory="/usr/lib" />
+		</Linker>
 		<Unit filename="../../src/BlockInletWidget.cpp" />
 		<Unit filename="../../src/BlockInletWidget.h" />
 		<Unit filename="../../src/BlockOutletWidget.cpp" />
