@@ -97,6 +97,7 @@ namespace _2Real
 
 		m_Typetable->registerType< std::vector< Number > >( "number vector" );
 		m_Typetable->registerType< std::vector< Point > >( "point vector" );
+		m_Typetable->registerType< std::vector< Skeleton > >( "skeleton vector" );
 		m_Typetable->registerType< std::vector< Image > >( "image vector" );
 
 		m_Typetable->registerType< std::vector< char > >( "char vector" );

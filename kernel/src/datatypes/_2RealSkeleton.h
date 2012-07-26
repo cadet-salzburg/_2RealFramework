@@ -19,30 +19,40 @@
 
 #pragma once
 
-#include "helpers/_2RealVectorInitializer.h"
+#include "datatypes/_2RealPoint.h"
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace _2Real
 {
 
 	class Skeleton
 	{
-
+	// no serialization for now
 	//friend std::ostream& operator<<( std::ostream& out, Skeleton const& data );
 	//friend std::istream& operator>>( std::istream& in, Skeleton &data );
 
 	public:
 
 		Skeleton() {}
-		Skeleton( Skeleton const& src ) {}
+		Skeleton( Skeleton const& src ) : m_JointPositions(src.m_JointPositions), m_JointOrientations(src.m_JointOrientations) {}
+		Skeleton( const std::vector<_2Real::Point> jointPositions ) : m_JointPositions(jointPositions) {}
+		Skeleton( const std::vector<_2Real::Point> jointPositions, const std::vector<_2Real::Point> jointOrientations ) : m_JointPositions(jointPositions), m_JointOrientations(jointOrientations) {}
+
+		//_2Real::Point&					getJoint(int id);
+		std::vector<_2Real::Point>&		getJointPositions();
+		std::vector<_2Real::Point>&		getJointOrientations();
+		const int						getNumberOfJoints() const;
 
 	private:
+		std::vector<_2Real::Point>		m_JointPositions;
+		std::vector<_2Real::Point>		m_JointOrientations;
 
-	
 	};
 
+	// no serialization for now
 	//inline std::ostream& operator<<( std::ostream& out, Skeleton const& info )
 	//{
 	//	//out <<  << std::endl;

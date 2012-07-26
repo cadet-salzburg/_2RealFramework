@@ -20,4 +20,18 @@
 
 namespace _2Real
 {
+	std::vector<_2Real::Point>&	Skeleton::getJointPositions()
+	{
+		return m_JointPositions;
+	}
+
+	std::vector<_2Real::Point>&	Skeleton::getJointOrientations()
+	{
+		return m_JointOrientations;
+	}
+
+	const int Skeleton::getNumberOfJoints() const
+	{
+		return m_JointPositions.size();
+	}
 }
