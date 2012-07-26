@@ -43,6 +43,9 @@
     <Filter Include="src\xml">
       <UniqueIdentifier>{e41e60c2-e6df-4603-a707-bb0f9a05a527}</UniqueIdentifier>
     </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{15f9d992-1b23-4ce1-bc76-bc64cf0ed99b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\helpers\_2RealAny.h">
@@ -467,5 +470,10 @@
     <ClCompile Include="..\..\src\datatypes\_2RealPoint.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\status.txt">
+      <Filter>docs</Filter>
+    </None>
   </ItemGroup>
 </Project>

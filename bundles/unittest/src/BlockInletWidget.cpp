@@ -1,4 +1,5 @@
 #include "BlockInletWidget.h"
+#include "QPointWidget.h"
 
 #include <iostream>
 
@@ -113,6 +114,19 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue(m_InletHandle.getCurrentInput().getData<double>());
 			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(DBL_MAX);
 			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setDoubleValue(double)));
+			layout->addWidget( m_ValueWidget );
+		}
+		else if(m_InletHandle.getTypename() == "number")
+		{
+			m_ValueWidget = new QDoubleSpinBox();
+			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setValue((double)m_InletHandle.getCurrentInput().getData<_2Real::Number>());
+			dynamic_cast<QDoubleSpinBox*>(m_ValueWidget)->setMaximum(DBL_MAX);
+			connect(m_ValueWidget, SIGNAL(valueChanged(double)), this, SLOT(setNumberValue(double)));
+			layout->addWidget( m_ValueWidget );
+		}
+		else if(m_InletHandle.getTypename() == "point")
+		{
+			m_ValueWidget = new QPointWidget(m_InletHandle, this);
 			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename() == "string")
@@ -258,6 +272,18 @@ void BlockInletWidget::setDoubleValue(double value)
 	try
 	{
 		m_InletHandle.setValue<double>(value);
+	}
+	catch(_2Real::Exception& e)
+	{
+		cout << e.message() << " " << e.what() << std::endl;
+	}
+}
+
+void BlockInletWidget::setNumberValue(double value)
+{
+	try
+	{
+		m_InletHandle.setValue<_2Real::Number>(Number(value));
 	}
 	catch(_2Real::Exception& e)
 	{

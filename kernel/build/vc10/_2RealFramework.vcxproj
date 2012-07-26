@@ -447,6 +447,9 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\xml\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\status.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91102D4C-49DE-485F-8AAD-A1216B09C070}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

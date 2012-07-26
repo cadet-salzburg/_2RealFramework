@@ -49,6 +49,21 @@ namespace _2Real
 			m_Id = id;
 		}
 
+		void setX(  Number const& x )
+		{
+			m_X = x;
+		}
+
+		void setY(  Number const& y )
+		{
+			m_Y = y;
+		}
+
+		void setZ(  Number const& z )
+		{
+			m_Z = z;
+		}
+
 		void setLabel( std::string const& l )	{ m_Label = l; }
 		std::string const& getLabel() const		{ return m_Label; }
 		void setId( int id )					{ m_Id = id; }

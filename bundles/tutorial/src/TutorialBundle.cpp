@@ -47,8 +47,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		throughputBlock.addInlet<long>( "long", 0 );
 		throughputBlock.addInlet<float>( "float", 0 );
 		throughputBlock.addInlet<double>( "double", 0 );
+		throughputBlock.addInlet<_2Real::Point>( "point", _2Real::Point());
 		throughputBlock.addInlet<std::string>( "string", "" );
-		throughputBlock.addInlet<_2Real::Number>( "number" );
+		throughputBlock.addOutlet<_2Real::Number>( "number" );
 		throughputBlock.addOutlet<bool>( "bool" );
 		throughputBlock.addOutlet<unsigned char>( "uchar" );
 		throughputBlock.addOutlet<char>( "char");
@@ -60,6 +61,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		throughputBlock.addOutlet<long>( "long" );
 		throughputBlock.addOutlet<float>( "float" );
 		throughputBlock.addOutlet<double>( "double" );
+		throughputBlock.addOutlet<_2Real::Point>( "point" );
 		throughputBlock.addOutlet<string>( "string" );
 
 		throughputBlock.addOutlet<std::list<unsigned char>>( "vector" );
