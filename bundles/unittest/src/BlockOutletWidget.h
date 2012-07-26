@@ -1,8 +1,9 @@
+#pragma once
+
 #include "_2RealApplication.h"
 #include <QtGui>
 #include "qmutex.h"
 #include <list>
-#include "QGlTextureImage.h"
 #include "_2RealDatatypes.h"
 
 class BlockOutletWidget : public QGroupBox

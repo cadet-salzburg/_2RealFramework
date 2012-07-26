@@ -22,7 +22,8 @@ public:
 	void							setAlignToColor(const unsigned int deviceIdx, bool bIsAligned);
 	unsigned int					getNumberOfConnectedDevices();
 	int								getNumberOfUsers( const unsigned int deviceIdx );
-	int								getNumberOfSkeletons( const unsigned int deviceIdx );
+	int								getNumberOfSkeletons( const unsigned int deviceIdx);
+	_2Real::Skeleton				getSkeletonScreen(const unsigned int deviceIdx, unsigned int userId );
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
 	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );

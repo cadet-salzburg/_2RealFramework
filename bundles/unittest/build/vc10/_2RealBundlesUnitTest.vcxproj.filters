@@ -78,6 +78,15 @@
     <ClCompile Include="..\..\src\QPointWidget.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QGlSkeletonWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QGlSkeletonWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\QGlSkeletonWidget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\BlockInletWidget.h">
@@ -96,6 +105,9 @@
       <Filter>src</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\QPointWidget.h">
+      <Filter>src</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\QGlSkeletonWidget.h">
       <Filter>src</Filter>
     </CustomBuild>
   </ItemGroup>

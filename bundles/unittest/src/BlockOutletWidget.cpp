@@ -1,5 +1,6 @@
 #include "BlockOutletWidget.h"
-
+#include "QGlSkeletonWidget.h"
+#include "QGlTextureImage.h"
 #include <iostream>
 
 using namespace std;
@@ -18,9 +19,13 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		{
 			m_ValueWidget = new QTextBrowser();
 		}
-		else if(m_OutletHandle.getTypename().find("image")!=string::npos)
+		else if(m_OutletHandle.getTypename() == "image")
 		{
 			m_ValueWidget = new QGlTextureImage();
+		}
+		else if(m_OutletHandle.getTypename() == "skeleton")
+		{
+			m_ValueWidget = new QGlSkeletonWidget();
 		}
 		else
 		{

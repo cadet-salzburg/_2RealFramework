@@ -17,6 +17,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 	{
 		KinectOpenNIDepthBlock::setup(block);
 		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
+		m_SkeletonsOutletHandle = block.getOutletHandle("Skeletons");
 		m_NrOfUsersOutletHandle = block.getOutletHandle("NrOfUsers");
 		m_NrOfSkeletonsOutletHandle = block.getOutletHandle("NrOfSkeletons");
 		m_iNrOfUsers = m_iNrOfSkeletons = 0;
@@ -56,6 +57,9 @@ void KinectOpenNIUserSkeletonBlock::update()
 		{
 			m_NrOfSkeletonsOutletHandle.discard();
 		}
+
+		m_SkeletonsOutletHandle.getWriteableRef<_2Real::Skeleton>() = m_OpenNIDeviceManager->getSkeletonScreen(m_iCurrentDevice, 0);
+
 	}
 	catch ( Exception &e )
 	{

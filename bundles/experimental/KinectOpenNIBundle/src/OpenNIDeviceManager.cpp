@@ -325,3 +325,32 @@ int	OpenNIDeviceManager::getNumberOfSkeletons( const unsigned int deviceIdx )
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	return m_2RealKinect->getNumberOfSkeletons(deviceIdx);
 }
+
+_2Real::Skeleton OpenNIDeviceManager::getSkeletonScreen(const unsigned int deviceIdx, unsigned int userId )
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	try
+	{
+		if(m_2RealKinect->getNumberOfSkeletons(deviceIdx)>0)
+		{
+			_2RealKinectWrapper::_2RealPositionsVector3f positions = m_2RealKinect->getSkeletonScreenPositions(deviceIdx, userId);
+			std::vector<_2Real::Point> jointPositions;
+
+			for(int i=0; i < positions.size(); i++)
+			{
+				jointPositions.push_back(_2Real::Point(_2Real::Number(positions[i].x), _2Real::Number(positions[i].y), _2Real::Number(positions[i].z)));
+			}
+
+			return _2Real::Skeleton(jointPositions);
+		}
+		else
+		{
+			return _2Real::Skeleton(); 
+		}
+	}
+	catch ( _2RealKinectWrapper::_2RealException &e )
+	{
+		cout << e.what() << endl;
+		return _2Real::Skeleton(); 
+	}
+}
