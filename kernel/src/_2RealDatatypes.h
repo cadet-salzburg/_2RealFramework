@@ -23,4 +23,6 @@
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealPoint.h"
 #include "datatypes/_2RealSkeleton.h"
+#include "datatypes/_2RealRigidBody.h"
+#include "datatypes/_2RealQuaternion.h"
 #include "helpers/_2RealException.h"

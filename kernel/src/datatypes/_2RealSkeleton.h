@@ -20,6 +20,7 @@
 #pragma once
 
 #include "datatypes/_2RealPoint.h"
+#include "datatypes/_2RealRigidBody.h"
 
 #include <string>
 #include <sstream>
@@ -37,19 +38,27 @@ namespace _2Real
 	public:
 
 		Skeleton() {}
-		Skeleton( Skeleton const& src ) : m_JointPositions(src.m_JointPositions), m_JointOrientations(src.m_JointOrientations) {}
-		Skeleton( const std::vector<_2Real::Point> jointPositions ) : m_JointPositions(jointPositions) {}
-		Skeleton( const std::vector<_2Real::Point> jointPositions, const std::vector<_2Real::Point> jointOrientations ) : m_JointPositions(jointPositions), m_JointOrientations(jointOrientations) {}
-
-		//_2Real::Point&					getJoint(int id);
-		std::vector<_2Real::Point>&		getJointPositions();
-		std::vector<_2Real::Point>&		getJointOrientations();
-		const int						getNumberOfJoints() const;
+		Skeleton( Skeleton const& src ) : m_RigidBodies( src.m_RigidBodies ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_Global( src.m_Global ) {}
+		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies, std::string const& l, const unsigned int id, const bool global ) : m_RigidBodies( rigidBodies ), m_Label( l ), m_Id ( id ), m_Global( global ) {}
+		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies ) : m_RigidBodies( rigidBodies ), m_Label( "undefined" ), m_Id( -1 ), m_Global( true ) {}
+		
+		std::vector<_2Real::RigidBody>&	getRigidBodies()	{ return m_RigidBodies; }
+	
+		void setLabel( std::string const& l )	{ m_Label = l; }
+		std::string const& getLabel() const		{ return m_Label; }
+		
+		void setId( int id )					{ m_Id = id; }
+		int getId() const						{ return m_Id; }
+		
+		void setGlobal( bool global)			{ m_Global = global; }
+		bool isGlobal() const					{ return m_Global; }
+		
 
 	private:
-		std::vector<_2Real::Point>		m_JointPositions;
-		std::vector<_2Real::Point>		m_JointOrientations;
-
+		std::vector<_2Real::RigidBody>  m_RigidBodies;
+		std::string						m_Label;
+		int								m_Id;
+		bool							m_Global;
 	};
 
 	// no serialization for now

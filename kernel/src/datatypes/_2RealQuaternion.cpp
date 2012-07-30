@@ -16,22 +16,19 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealSkeleton.h"
+#include "datatypes/_2RealQuaternion.h"
 
 namespace _2Real
 {
-	/*std::vector<_2Real::Point>&	Skeleton::getJointPositions()
+	std::istream & operator>>( std::istream &in, Quaternion &quaternion )
 	{
-		return m_JointPositions;
+		in >> quaternion.m_X >> quaternion.m_Y >> quaternion.m_Z >> quaternion.m_Label >> quaternion.m_Id;
+		return in;
 	}
 
-	std::vector<_2Real::Point>&	Skeleton::getJointOrientations()
+	std::ostream & operator<<( std::ostream &out, Quaternion const& quaternion )
 	{
-		return m_JointOrientations;
+		out << quaternion.m_X << " " << quaternion.m_Y << " " << quaternion.m_Z << " " << quaternion.m_W << " " << quaternion.m_Label << " " << quaternion.m_Id;
+		return out;
 	}
-
-	const int Skeleton::getNumberOfJoints() const
-	{
-		return m_JointPositions.size();
-	}*/
 }
