@@ -308,7 +308,7 @@ void OpenNIDeviceManager::setAlignToColor(const unsigned int deviceIdx, bool bIs
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-		m_2RealKinect->alignColorToDepth( deviceIdx, bIsAligned );
+		m_2RealKinect->alignDepthToColor( deviceIdx, bIsAligned );
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
@@ -336,14 +336,16 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeletonScreen(const unsigned int devic
 		if(m_2RealKinect->getNumberOfSkeletons(deviceIdx)>0)
 		{
 			_2RealKinectWrapper::_2RealPositionsVector3f positions = m_2RealKinect->getSkeletonScreenPositions(deviceIdx, userId);
-			std::vector<_2Real::Point> jointPositions;
+			std::vector<_2Real::RigidBody> jointPositions;
 
 			for(int i=0; i < positions.size(); i++)
 			{
-				jointPositions.push_back(_2Real::Point(_2Real::Number(positions[i].x), _2Real::Number(positions[i].y), _2Real::Number(positions[i].z)));
+				std::vector<_2Real::Point> joint;
+				joint.push_back(_2Real::Point(_2Real::Number(positions[i].x), _2Real::Number(positions[i].y), _2Real::Number(positions[i].z)));
+				jointPositions.push_back(_2Real::RigidBody( joint ) );
 			}
 
-			return _2Real::Skeleton(jointPositions);
+			return _2Real::Skeleton( jointPositions );
 		}
 		else
 		{

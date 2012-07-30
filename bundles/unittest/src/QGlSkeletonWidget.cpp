@@ -32,19 +32,23 @@ void QGlSkeletonWidget::paintGL()
 	makeCurrent();
 
 	glClear( GL_COLOR_BUFFER_BIT );
-	glPointSize(5);
-	std::vector<_2Real::Point> joints = m_Skeleton.getJointPositions();
 	glColor4f(1,1,1,1);
-	for(int i=0; i<joints.size(); i++)
+	glPointSize(5);
+
+	std::vector<_2Real::RigidBody> rigidBodies = m_Skeleton.getRigidBodies();
+	for(int i=0; i<rigidBodies.size(); i++)
 	{
-		double x = double(joints[i].x()) / 640.0; 
-		double y = double(joints[i].y()) / 480.0; 
+		std::vector<_2Real::Point> joints = rigidBodies[i].getPoints();
+		for(int j=0; j<joints.size(); j++)
+		{
+			double x = double(joints[j].x()) / 640.0; 
+			double y = double(joints[j].y()) / 480.0; 
 
-		glBegin(GL_POINTS);
-			glVertex2f(x,y);
-		glEnd();
+			glBegin(GL_POINTS);
+				glVertex2f(x,y);
+			glEnd();
+		}
 	}
-
 	glFlush();
 }
 
