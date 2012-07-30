@@ -22,7 +22,7 @@ namespace _2Real
 {
 	std::istream & operator>>( std::istream &in, Quaternion &quaternion )
 	{
-		in >> quaternion.m_X >> quaternion.m_Y >> quaternion.m_Z >> quaternion.m_Label >> quaternion.m_Id;
+		in >> quaternion.m_X >> quaternion.m_Y >> quaternion.m_Z >> quaternion.m_W >> quaternion.m_Label >> quaternion.m_Id;
 		return in;
 	}
 
