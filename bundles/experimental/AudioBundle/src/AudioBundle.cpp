@@ -1,11 +1,10 @@
 #include "_2RealBundle.h"
-#include "_2RealMetadata.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
-
+#include "helpers/_2RealException.h"
+#include "bundle/_2RealBundleMetainfo.h"
 #include "BlocksImpl.h"
 
 using namespace _2Real;
+using namespace _2Real::bundle;
 using namespace std;
 
 void getBundleMetainfo( BundleMetainfo info )

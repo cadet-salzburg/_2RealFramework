@@ -30,7 +30,7 @@
     <ClInclude Include="..\..\src\MidiOutputBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{444B650D-14FD-4BE0-85F9-AC26F109E64F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>MidiInOutBundle</ProjectName>

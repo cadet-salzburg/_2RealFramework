@@ -28,7 +28,7 @@
     <ClInclude Include="..\..\src\CameraDeviceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>CameraCaptureBundle</ProjectName>

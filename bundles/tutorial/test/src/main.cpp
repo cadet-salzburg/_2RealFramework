@@ -2,7 +2,7 @@
 #include <QtGui/QApplication>
 
 #ifndef _UNIX
-    #include <windows.h>
+	#include <windows.h>
 #endif
 #include <iostream>
 

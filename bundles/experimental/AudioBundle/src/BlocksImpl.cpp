@@ -1,7 +1,5 @@
 #include "BlocksImpl.h"
-#include "_2RealException.h"
-#include "_2RealEnum.h"
-#include "_2RealFrameworkContext.h"
+#include "helpers/_2RealException.h"
 
 #include "Poco/Mutex.h"
 #include "portaudio.h"
@@ -19,7 +17,7 @@
 using namespace _2Real;
 using namespace std;
 
-void AudioOutputService::setup(_2Real::FrameworkContext &context)
+void AudioOutputService::setup(_2Real::bundle::BlockHandle &context)
 {
 	try
 	{

@@ -33,7 +33,7 @@
     <ClInclude Include="..\..\src\OcvSobelBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>ComputerVisionBundle</ProjectName>

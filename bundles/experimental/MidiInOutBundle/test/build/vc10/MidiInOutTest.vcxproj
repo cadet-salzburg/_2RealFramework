@@ -14,7 +14,7 @@
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}</ProjectGuid>
+    <ProjectGuid>{5FB8281B-FA5C-4E06-86D7-69104C02F10D}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
     <ProjectName>MidiInOutTest</ProjectName>
   </PropertyGroup>

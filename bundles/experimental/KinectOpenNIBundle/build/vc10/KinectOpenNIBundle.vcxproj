@@ -36,7 +36,7 @@
     <ClInclude Include="..\..\src\OpenNIDeviceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>KinectOpenNIBundle</ProjectName>

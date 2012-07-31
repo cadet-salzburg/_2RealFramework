@@ -1,13 +1,13 @@
 #pragma once
 
 #include "_2RealBlock.h"
-#include "_2RealInletHandle.h"
-#include "_2RealOutletHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
 
 #include <iostream>
  
 
-class AudioOutputService :public _2Real::Block
+class AudioOutputService :public _2Real::bundle::Block
 {
 
 public:
@@ -15,13 +15,13 @@ public:
 	AudioOutputService() {}
 	void shutdown();
 	void update();
-	void setup(_2Real::FrameworkContext &context);
+	void setup(_2Real::bundle::BlockHandle &context);
 	~AudioOutputService() {}
 
 private:
 
 	  
-	_2Real::OutletHandle			m_Test;
+	_2Real::bundle::OutletHandle			m_Test;
 	 
 };
 

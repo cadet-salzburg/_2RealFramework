@@ -18,7 +18,7 @@
     <ClInclude Include="..\src\ImageTestingBundle\ServiceImpl.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{EE72375C-A239-4FA3-86B8-547AB3A3F92A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ImageTestingBundle</RootNamespace>
     <ProjectName>ImageTestingBundle</ProjectName>

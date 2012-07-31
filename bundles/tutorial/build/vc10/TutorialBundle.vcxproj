@@ -28,7 +28,7 @@
     <ClInclude Include="..\..\src\ThroughputBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
+    <ProjectGuid>{303E4B19-D857-48E8-AF82-821D4A65A6F6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>TutorialBundle</ProjectName>
