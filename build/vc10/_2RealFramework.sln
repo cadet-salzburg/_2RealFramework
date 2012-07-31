@@ -9,51 +9,58 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{DA1402E5-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experimental", "Experimental", "{3305A484-6763-492E-B6FF-3C8AA7AA825D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureBundle", "..\bundles\experimental\CameraCaptureBundle\build\vc10\CameraCaptureBundle.vcxproj", "{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioBundle", "..\..\bundles\experimental\AudioBundle\build\vc10\AudioBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputerVisionBundle", "..\bundles\experimental\ComputerVisionBundle\build\vc10\ComputerVisionBundle.vcxproj", "{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureBundle", "..\..\bundles\experimental\CameraCaptureBundle\build\vc10\CameraCaptureBundle.vcxproj", "{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectOpenNIBundle", "..\bundles\experimental\KinectOpenNIBundle\build\vc10\KinectOpenNIBundle.vcxproj", "{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputerVisionBundle", "..\..\bundles\experimental\ComputerVisionBundle\build\vc10\ComputerVisionBundle.vcxproj", "{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MidiInOutBundle", "..\bundles\experimental\MidiInOutBundle\build\vc10\MidiInOutBundle.vcxproj", "{444B650D-14FD-4BE0-85F9-AC26F109E64F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectOpenNIBundle", "..\..\bundles\experimental\KinectOpenNIBundle\build\vc10\KinectOpenNIBundle.vcxproj", "{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MidiInOutBundle", "..\..\bundles\experimental\MidiInOutBundle\build\vc10\MidiInOutBundle.vcxproj", "{444B650D-14FD-4BE0-85F9-AC26F109E64F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unittest", "Unittest", "{123AB176-2B71-470B-9B70-BBE82D9FB7C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorial", "Tutorial", "{025F30D1-27BE-4A4B-B3C2-2F188D76BB23}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TutorialBundle", "..\bundles\tutorial\build\vc10\TutorialBundle.vcxproj", "{303E4B19-D857-48E8-AF82-821D4A65A6F6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TutorialBundle", "..\..\bundles\tutorial\build\vc10\TutorialBundle.vcxproj", "{303E4B19-D857-48E8-AF82-821D4A65A6F6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealBundlesUnitTest", "..\bundles\unittest\build\vc10\_2RealBundlesUnitTest.vcxproj", "{156298E0-906B-4488-A690-02B223C22C13}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealBundlesUnitTest", "..\..\bundles\unittest\build\vc10\_2RealBundlesUnitTest.vcxproj", "{156298E0-906B-4488-A690-02B223C22C13}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureTest", "..\bundles\experimental\CameraCaptureBundle\test\build\vc10\CameraCaptureTest.vcxproj", "{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCaptureTest", "..\..\bundles\experimental\CameraCaptureBundle\test\build\vc10\CameraCaptureTest.vcxproj", "{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5} = {D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputerVisionTest", "..\bundles\experimental\ComputerVisionBundle\test\build\vc10\ComputerVisionTest.vcxproj", "{F4DAC285-D019-4BC8-9096-D6EB5F42A920}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputerVisionTest", "..\..\bundles\experimental\ComputerVisionBundle\test\build\vc10\ComputerVisionTest.vcxproj", "{F4DAC285-D019-4BC8-9096-D6EB5F42A920}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E17C616B-6931-4F9A-87D8-EB57BB78FEE4} = {E17C616B-6931-4F9A-87D8-EB57BB78FEE4}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audio", "Audio", "{7089A2CC-768E-40AC-A253-2D2D5C4C119B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CameraCapture", "CameraCapture", "{DDDAFF2D-9F18-4E7E-BA51-E3BFDE067FC1}"
 EndProject
@@ -61,22 +68,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputerVision", "ComputerV
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KinectOpenNI", "KinectOpenNI", "{89A977C2-F09B-479C-B974-8FCA117A874C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TutorialBundleTest", "..\bundles\tutorial\test\build\vc10\TutorialBundleTest.vcxproj", "{EF0D100A-B0A7-482D-A058-A23C00B0779A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TutorialBundleTest", "..\..\bundles\tutorial\test\build\vc10\TutorialBundleTest.vcxproj", "{EF0D100A-B0A7-482D-A058-A23C00B0779A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{303E4B19-D857-48E8-AF82-821D4A65A6F6} = {303E4B19-D857-48E8-AF82-821D4A65A6F6}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectOpenNITest", "..\bundles\experimental\KinectOpenNIBundle\test\build\vc10\KinectOpenNITest.vcxproj", "{F839E82C-9CB1-41E4-8E23-B7F5C2BA51B1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectOpenNITest", "..\..\bundles\experimental\KinectOpenNIBundle\test\build\vc10\KinectOpenNITest.vcxproj", "{F839E82C-9CB1-41E4-8E23-B7F5C2BA51B1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD} = {B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MidiInOut", "MidiInOut", "{497673D3-303A-4684-8EDC-2DD58F2105F0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MidiInOutTest", "..\bundles\experimental\MidiInOutBundle\test\build\vc10\MidiInOutTest.vcxproj", "{5FB8281B-FA5C-4E06-86D7-69104C02F10D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MidiInOutTest", "..\..\bundles\experimental\MidiInOutBundle\test\build\vc10\MidiInOutTest.vcxproj", "{5FB8281B-FA5C-4E06-86D7-69104C02F10D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{444B650D-14FD-4BE0-85F9-AC26F109E64F} = {444B650D-14FD-4BE0-85F9-AC26F109E64F}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serial", "Serial", "{DD641177-9EB6-4CC8-92E1-13EF282641C7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerialBundle", "..\..\bundles\experimental\SerialBundle\build\vc10\SerialBundle.vcxproj", "{7ECC0389-B694-485C-B984-6F9CBA7C5303}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerialTest", "..\..\bundles\experimental\SerialBundle\test\build\vc10\SerialTest.vcxproj", "{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +99,12 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|x64.ActiveCfg = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.ActiveCfg = Release|Win32
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Debug|Win32.Build.0 = Debug|Win32
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Debug|x64.ActiveCfg = Debug|x64
@@ -170,6 +189,20 @@ Global
 		{5FB8281B-FA5C-4E06-86D7-69104C02F10D}.Release|Win32.ActiveCfg = Release|Win32
 		{5FB8281B-FA5C-4E06-86D7-69104C02F10D}.Release|Win32.Build.0 = Release|Win32
 		{5FB8281B-FA5C-4E06-86D7-69104C02F10D}.Release|x64.ActiveCfg = Release|Win32
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Debug|Win32.Build.0 = Debug|Win32
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Debug|x64.ActiveCfg = Debug|x64
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Debug|x64.Build.0 = Debug|x64
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Release|Win32.ActiveCfg = Release|Win32
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Release|Win32.Build.0 = Release|Win32
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Release|x64.ActiveCfg = Release|x64
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303}.Release|x64.Build.0 = Release|x64
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Debug|Win32.Build.0 = Debug|Win32
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Debug|x64.ActiveCfg = Debug|Win32
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Release|Win32.ActiveCfg = Release|Win32
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Release|Win32.Build.0 = Release|Win32
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,10 +213,13 @@ Global
 		{123AB176-2B71-470B-9B70-BBE82D9FB7C3} = {E5B0CB27-1AE5-4E10-9A68-87D6B9D1C4E1}
 		{025F30D1-27BE-4A4B-B3C2-2F188D76BB23} = {E5B0CB27-1AE5-4E10-9A68-87D6B9D1C4E1}
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {58B5D97E-1E46-4703-8692-90FF94E6C398}
+		{7089A2CC-768E-40AC-A253-2D2D5C4C119B} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
 		{DDDAFF2D-9F18-4E7E-BA51-E3BFDE067FC1} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
 		{00E4619E-ABF8-4E0A-8D2B-EBE4AC1A94DB} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
 		{89A977C2-F09B-479C-B974-8FCA117A874C} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
 		{497673D3-303A-4684-8EDC-2DD58F2105F0} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
+		{DD641177-9EB6-4CC8-92E1-13EF282641C7} = {3305A484-6763-492E-B6FF-3C8AA7AA825D}
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB} = {7089A2CC-768E-40AC-A253-2D2D5C4C119B}
 		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827} = {DDDAFF2D-9F18-4E7E-BA51-E3BFDE067FC1}
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5} = {DDDAFF2D-9F18-4E7E-BA51-E3BFDE067FC1}
 		{F4DAC285-D019-4BC8-9096-D6EB5F42A920} = {00E4619E-ABF8-4E0A-8D2B-EBE4AC1A94DB}
@@ -195,5 +231,7 @@ Global
 		{156298E0-906B-4488-A690-02B223C22C13} = {123AB176-2B71-470B-9B70-BBE82D9FB7C3}
 		{303E4B19-D857-48E8-AF82-821D4A65A6F6} = {025F30D1-27BE-4A4B-B3C2-2F188D76BB23}
 		{EF0D100A-B0A7-482D-A058-A23C00B0779A} = {025F30D1-27BE-4A4B-B3C2-2F188D76BB23}
+		{7ECC0389-B694-485C-B984-6F9CBA7C5303} = {DD641177-9EB6-4CC8-92E1-13EF282641C7}
+		{6D4E8BFE-171E-4B67-B5A4-02D52CE585CF} = {DD641177-9EB6-4CC8-92E1-13EF282641C7}
 	EndGlobalSection
 EndGlobal
