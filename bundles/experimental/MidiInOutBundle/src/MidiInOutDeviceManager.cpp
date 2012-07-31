@@ -189,7 +189,7 @@ bool MidiInOutDeviceManager::bindMidiOutDevice( const unsigned int deviceIdx )
 	}
 }
 
-void MidiInOutDeviceManager::unsbindMidiInDevice( const unsigned int deviceIdx )
+void MidiInOutDeviceManager::unbindMidiInDevice( const unsigned int deviceIdx )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
 
@@ -212,7 +212,7 @@ void MidiInOutDeviceManager::unsbindMidiInDevice( const unsigned int deviceIdx )
 	}
 }
 
-void MidiInOutDeviceManager::unsbindMidiOutDevice( const unsigned int deviceIdx )
+void MidiInOutDeviceManager::unbindMidiOutDevice( const unsigned int deviceIdx )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
 

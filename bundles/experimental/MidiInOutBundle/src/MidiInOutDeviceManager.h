@@ -45,9 +45,9 @@ public:
 	// Bind a MidiOut device via an index
 	bool							bindMidiOutDevice( const unsigned int deviceIdx );
 	// Unbind a MidiIn device via an index
-	void							unsbindMidiInDevice( const unsigned int deviceIdx );
+	void							unbindMidiInDevice( const unsigned int deviceIdx );
 	// Unbind a MidiOut device via an index
-	void							unsbindMidiOutDevice( const unsigned int deviceIdx );
+	void							unbindMidiOutDevice( const unsigned int deviceIdx );
 
 	// Get the number of available MidiIn Ports
 	unsigned int					getMidiInPortCount();

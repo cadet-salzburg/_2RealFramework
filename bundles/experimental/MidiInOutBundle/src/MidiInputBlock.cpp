@@ -42,7 +42,7 @@ void MidiInputBlock::update()
 		{
 			if ( m_iMidiInCurrentPort >= 0 )
 			{
-				m_MidiInOutDeviceManager->unsbindMidiInDevice( m_iMidiInCurrentPort );
+				m_MidiInOutDeviceManager->unbindMidiInDevice( m_iMidiInCurrentPort );
 				m_iMidiInCurrentPort = -1;
 			}
 
@@ -109,7 +109,7 @@ void MidiInputBlock::setup( BlockHandle &context )
 
 void MidiInputBlock::shutdown()
 {
-	m_MidiInOutDeviceManager->unsbindMidiInDevice( m_iMidiInCurrentPort );
+	m_MidiInOutDeviceManager->unbindMidiInDevice( m_iMidiInCurrentPort );
 	m_MidiInOutDeviceManager->unregisterMidiInBlock();
 }
 
