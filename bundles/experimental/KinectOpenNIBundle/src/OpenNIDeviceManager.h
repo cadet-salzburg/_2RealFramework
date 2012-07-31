@@ -26,7 +26,7 @@ public:
 	_2Real::Skeleton				getSkeletonScreen(const unsigned int deviceIdx, unsigned int userId );
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
-	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIs16Bit = false);
 	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 

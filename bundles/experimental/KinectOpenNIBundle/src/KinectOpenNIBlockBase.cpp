@@ -116,14 +116,8 @@ void KinectOpenNIBlockBase::update()
 				m_bIsMirrored = bIsMirrored;
 			}
 
-			//if( m_OpenNIDeviceManager->isDeviceRunning(m_iCurrentDevice))
-			{
-				m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
-			}
-			//else
-			//{
-			//	m_iCurrentDevice = -1;		// it was all running and ok bu through a rescan a change in the device list got noticed and so all devices have to quit
-			//}
+			// set outlet
+			updateImageOutlet();
 		}
 		else
 		{
@@ -137,6 +131,11 @@ void KinectOpenNIBlockBase::update()
 	}
 }
 
+void KinectOpenNIBlockBase::updateImageOutlet()
+{
+	m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
+}
+
 void KinectOpenNIBlockBase::shutdown()
 {
 	std::cout << "shutdown block" << std::endl;
@@ -146,6 +145,7 @@ void KinectOpenNIBlockBase::shutdown()
 		m_iCurrentDevice = -1;
 	}
 }
+
 
 void KinectOpenNIBlockBase::discardAllOutlets()
 {

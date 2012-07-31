@@ -11,6 +11,7 @@ public:
 	virtual			~KinectOpenNIBlockBase();
 	virtual void	shutdown();
 	virtual void	update();
+	virtual void	updateImageOutlet();
 	virtual void	setup( BlockHandle &context );
 	void			setGeneratorType(_2RealKinectWrapper::_2RealGenerator generatorType);
 

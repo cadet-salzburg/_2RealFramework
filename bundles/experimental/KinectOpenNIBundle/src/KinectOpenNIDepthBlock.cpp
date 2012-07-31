@@ -40,6 +40,12 @@ void KinectOpenNIDepthBlock::update()
 			m_bIsAlignedToColor = bIsAlignedToColor;
 		}
 
+		bool bIs16Bit = m_Is16BitInletHandle.getReadableRef<bool>();
+		if( bIs16Bit != m_bIs16Bit)
+		{
+			m_bIs16Bit = bIs16Bit;
+		}
+
 		// call update of base class
 		KinectOpenNIBlockBase::update();
 
@@ -48,5 +54,18 @@ void KinectOpenNIDepthBlock::update()
 	{
 		cout << e.message() << endl;
 		e.rethrow();
+	}
+}
+
+
+void KinectOpenNIDepthBlock::updateImageOutlet()
+{
+	if(m_bIs16Bit)
+	{
+		m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType, true );
+	}
+	else
+	{
+		m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
 	}
 }

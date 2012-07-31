@@ -12,8 +12,11 @@ public:
 	
 	void					setup( BlockHandle &context );
 	void					update();
+	void					updateImageOutlet();
 
 private:
 	InletHandle								m_IsAlignedToColorInletHandle;
+	InletHandle								m_Is16BitInletHandle;
 	bool									m_bIsAlignedToColor;
+	bool									m_bIs16Bit;
 };

@@ -225,7 +225,7 @@ unsigned int OpenNIDeviceManager::getNumberOfConnectedDevices()
 }
 
 
-_2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType )
+_2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIs16Bit) 
 {
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
@@ -236,12 +236,12 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 		int imageWidth = m_2RealKinect->getImageWidth( deviceIdx, generatorType );		
 		int imageHeight = m_2RealKinect->getImageHeight( deviceIdx, generatorType );
 
-		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
+		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE && bIs16Bit)	// get 16bit depth image
 		{
 			unsigned short* pixels = m_2RealKinect->getImageDataDepth16Bit( deviceIdx ).get();
 			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
 		}
-		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		else if(generatorType == _2RealKinectWrapper::DEPTHIMAGE || generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{
 			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
 			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
