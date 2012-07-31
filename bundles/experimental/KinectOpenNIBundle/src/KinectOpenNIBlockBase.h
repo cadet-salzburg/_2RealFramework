@@ -15,6 +15,8 @@ public:
 	void			setGeneratorType(_2RealKinectWrapper::_2RealGenerator generatorType);
 
 protected:
+	void									discardAllOutlets();
+
 	InletHandle								m_DeviceIndexInletHandle;
 	InletHandle								m_WidthInletHandle;
 	InletHandle								m_HeightInletHandle;

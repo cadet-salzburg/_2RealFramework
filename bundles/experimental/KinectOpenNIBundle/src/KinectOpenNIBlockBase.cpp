@@ -65,9 +65,7 @@ void KinectOpenNIBlockBase::update()
 	{
 		if(m_OpenNIDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
 		{
-			m_WidthOutletHandle.discard();
-			m_HeightOutletHandle.discard();
-			m_ImageOutletHandle.discard();
+			discardAllOutlets();
 			return;
 		}
 
@@ -147,4 +145,11 @@ void KinectOpenNIBlockBase::shutdown()
 		m_OpenNIDeviceManager->unbindGenerator( m_iCurrentDevice, m_GeneratorType );
 		m_iCurrentDevice = -1;
 	}
+}
+
+void KinectOpenNIBlockBase::discardAllOutlets()
+{
+	m_WidthOutletHandle.discard();
+	m_HeightOutletHandle.discard();
+	m_ImageOutletHandle.discard();
 }

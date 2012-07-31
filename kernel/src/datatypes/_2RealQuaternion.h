@@ -132,7 +132,7 @@ namespace _2Real
         inline Quaternion& normalize()
         {
             const Number n = m_X*m_X + m_Y*m_Y + m_Z*m_Z + m_W*m_W;
-            return (*this *=  Number(sqrt( n )));
+            return (*this *=  Number(sqrt( double(n) )));
         }
 
         inline Number dotProduct(const Quaternion& q2) const
