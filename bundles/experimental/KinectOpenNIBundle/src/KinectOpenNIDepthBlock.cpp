@@ -17,7 +17,7 @@ void KinectOpenNIDepthBlock::setup( BlockHandle &block )
 	setGeneratorType(_2RealKinectWrapper::DEPTHIMAGE);
 	KinectOpenNIBlockBase::setup(block);
 	m_IsAlignedToColorInletHandle = block.getInletHandle("IsAlignedToColor");
-	m_Is16BitInletHandle = block.getInletHandle("Is16Bit");
+	m_Is16BitInletHandle = block.getInletHandle("Is16BitImage");
 	m_bIsAlignedToColor = m_IsAlignedToColorInletHandle.getReadableRef<bool>();
 }
 
@@ -34,10 +34,9 @@ void KinectOpenNIDepthBlock::update()
 		}
 
 		bool bIsAlignedToColor = m_IsAlignedToColorInletHandle.getReadableRef<bool>();
-		if( bIsAlignedToColor != m_bIsAlignedToColor)
+		if( m_iCurrentDevice!=-1 && bIsAlignedToColor != m_bIsAlignedToColor)
 		{
-			if(m_iCurrentDevice!=-1)
-				m_OpenNIDeviceManager->setAlignToColor(m_iCurrentDevice, bIsAlignedToColor);
+			m_OpenNIDeviceManager->setAlignToColor(m_iCurrentDevice, bIsAlignedToColor);
 			m_bIsAlignedToColor = bIsAlignedToColor;
 		}
 

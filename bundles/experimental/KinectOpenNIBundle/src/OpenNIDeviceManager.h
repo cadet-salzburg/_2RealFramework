@@ -23,7 +23,8 @@ public:
 	unsigned int					getNumberOfConnectedDevices();
 	int								getNumberOfUsers( const unsigned int deviceIdx );
 	int								getNumberOfSkeletons( const unsigned int deviceIdx);
-	_2Real::Skeleton				getSkeletonScreen(const unsigned int deviceIdx, unsigned int userId );
+	std::vector<_2Real::Skeleton>	getSkeletons(const unsigned int deviceIdx, bool bIsWorldCoordinates = false );
+	_2Real::Skeleton				getSkeleton(const unsigned int deviceIdx, int userId, bool bIsWorldCoordinates );
 	bool							isDeviceRunning(const unsigned int deviceIdx);
 
 	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIs16Bit = false);

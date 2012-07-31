@@ -15,8 +15,9 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		KinectOpenNIDepthBlock::setup(block);
 		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
+		KinectOpenNIBlockBase::setup(block);
+		m_IsAlignedToColorInletHandle = block.getInletHandle("IsAlignedToColor");
 		m_SkeletonsOutletHandle = block.getOutletHandle("Skeletons");
 		m_NrOfUsersOutletHandle = block.getOutletHandle("NrOfUsers");
 		m_NrOfSkeletonsOutletHandle = block.getOutletHandle("NrOfSkeletons");
@@ -33,33 +34,53 @@ void KinectOpenNIUserSkeletonBlock::update()
 {
 	try
 	{
-		KinectOpenNIDepthBlock::update();
-
-		// get and set nr of detected users
-		int iNrOfUsers = m_OpenNIDeviceManager->getNumberOfUsers(m_iCurrentDevice);
-		if(iNrOfUsers != m_iNrOfUsers)
+		if(m_OpenNIDeviceManager->getNumberOfConnectedDevices()<=0)	// if there is no cameras connected there is nothing todo so return
 		{
-			m_iNrOfUsers = iNrOfUsers;
-			m_NrOfUsersOutletHandle.getWriteableRef<int>() = m_iNrOfUsers;
-		}
-		else
-		{
-			m_NrOfUsersOutletHandle.discard();
-		}
-		//get and set nr of skeletons
-		int iNrOfSkeletons = m_OpenNIDeviceManager->getNumberOfSkeletons(m_iCurrentDevice);
-		if(iNrOfSkeletons != m_iNrOfSkeletons)
-		{
-			m_iNrOfSkeletons = iNrOfSkeletons;
-			m_NrOfSkeletonsOutletHandle.getWriteableRef<int>() = m_iNrOfSkeletons;
-		}
-		else
-		{
-			m_NrOfSkeletonsOutletHandle.discard();
+			m_WidthOutletHandle.discard();
+			m_HeightOutletHandle.discard();
+			m_ImageOutletHandle.discard();
+			return;
 		}
 
-		m_SkeletonsOutletHandle.getWriteableRef<_2Real::Skeleton>() = m_OpenNIDeviceManager->getSkeletonScreen(m_iCurrentDevice, 0);
+		if(m_iCurrentDevice!=-1)
+		{
+			// depth to color alignment switched 
+			bool bIsAlignedToColor = m_IsAlignedToColorInletHandle.getReadableRef<bool>();
+			if( bIsAlignedToColor != m_bIsAlignedToColor)
+			{
+				m_OpenNIDeviceManager->setAlignToColor(m_iCurrentDevice, bIsAlignedToColor);
+				m_bIsAlignedToColor = bIsAlignedToColor;
+			}
 
+			// get and set nr of detected users
+			int iNrOfUsers = m_OpenNIDeviceManager->getNumberOfUsers(m_iCurrentDevice);
+			if(iNrOfUsers != m_iNrOfUsers)
+			{
+				m_iNrOfUsers = iNrOfUsers;
+				m_NrOfUsersOutletHandle.getWriteableRef<int>() = m_iNrOfUsers;
+			}
+			else
+			{
+				m_NrOfUsersOutletHandle.discard();
+			}
+			//get and set nr of skeletons
+			int iNrOfSkeletons = m_OpenNIDeviceManager->getNumberOfSkeletons(m_iCurrentDevice);
+			if(iNrOfSkeletons != m_iNrOfSkeletons)
+			{
+				m_iNrOfSkeletons = iNrOfSkeletons;
+				m_NrOfSkeletonsOutletHandle.getWriteableRef<int>() = m_iNrOfSkeletons;
+			}
+			else
+			{
+				m_NrOfSkeletonsOutletHandle.discard();
+			}
+
+			// get and set skeletons
+			m_SkeletonsOutletHandle.getWriteableRef<std::vector< _2Real::Skeleton >>() = m_OpenNIDeviceManager->getSkeletons(m_iCurrentDevice);
+		}
+
+		// call update of base class for getting device and possible user image
+		KinectOpenNIBlockBase::update();
 	}
 	catch ( Exception &e )
 	{

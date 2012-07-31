@@ -1,12 +1,12 @@
 #pragma once
-#include "KinectOpenNIDepthBlock.h"
+#include "KinectOpenNIBlockBase.h"
 
 using namespace _2Real::bundle;
 
-class KinectOpenNIUserSkeletonBlock : public KinectOpenNIDepthBlock
+class KinectOpenNIUserSkeletonBlock : public KinectOpenNIBlockBase
 {
 public:
-	KinectOpenNIUserSkeletonBlock( ContextBlock & context ) : KinectOpenNIDepthBlock(context)
+	KinectOpenNIUserSkeletonBlock( ContextBlock & context ) : KinectOpenNIBlockBase(context)
 	{
 	};
 	
@@ -14,9 +14,11 @@ public:
 	void					update();
 
 private:
+	InletHandle				m_IsAlignedToColorInletHandle;
 	OutletHandle			m_SkeletonsOutletHandle;
 	OutletHandle			m_NrOfUsersOutletHandle;
 	OutletHandle			m_NrOfSkeletonsOutletHandle;
 	int						m_iNrOfUsers;
 	int						m_iNrOfSkeletons;
+	bool					m_bIsAlignedToColor;
 };

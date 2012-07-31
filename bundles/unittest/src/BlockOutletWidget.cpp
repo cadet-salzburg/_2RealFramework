@@ -15,9 +15,11 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 		m_Layout = new QHBoxLayout();
 		m_Layout->addWidget( new QLabel(QString::fromStdString( m_OutletHandle.getName() )) );
 
-		if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
+		if(m_OutletHandle.getTypename().find("skeleton")!=string::npos )
 		{
-			m_ValueWidget = new QTextBrowser();
+			m_ValueWidget = new QGlSkeletonWidget();
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
 		else if(m_OutletHandle.getTypename() == "image")
 		{
@@ -25,11 +27,9 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
-		else if(m_OutletHandle.getTypename() == "skeleton")
+		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{
-			m_ValueWidget = new QGlSkeletonWidget();
-			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setMinimumSize(80, 60);
+			m_ValueWidget = new QTextBrowser();
 		}
 		else
 		{
@@ -76,6 +76,11 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 		{
 			Skeleton const& skeleton = data.getData< Skeleton >();
 			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->updateSkeleton( skeleton );
+		}
+		else if(m_OutletHandle.getTypename() == "skeleton vector")
+		{
+			std::vector<Skeleton> const& skeletons = data.getData< std::vector<Skeleton >>();
+			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->updateSkeletons( skeletons );
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{

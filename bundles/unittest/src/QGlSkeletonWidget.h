@@ -13,6 +13,7 @@ public:
 	~QGlSkeletonWidget();
 
 	void updateSkeleton( const _2Real::Skeleton& skeleton  );
+	void updateSkeletons( const std::vector<_2Real::Skeleton>& skeletons );
 
 protected:
 
@@ -21,7 +22,7 @@ protected:
     void paintGL();
 
 private:
-	_2Real::Skeleton	m_Skeleton;
+	std::vector<_2Real::Skeleton>	m_Skeletons;
 };
 
 #endif // QGLSKELETONWIDGET_H

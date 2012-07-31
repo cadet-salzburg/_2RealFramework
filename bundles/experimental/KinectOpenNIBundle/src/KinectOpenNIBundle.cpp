@@ -47,7 +47,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addInlet<int>( "Fps", 30 );
 		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
 		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
-		depthBlockInfo.addInlet<bool>( "Is16Bit", true );
+		depthBlockInfo.addInlet<bool>( "Is16BitImage", true );
 		depthBlockInfo.addOutlet< Image >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
@@ -63,7 +63,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addOutlet< Image >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
-		userSkeletonBlockInfo.addOutlet< Skeleton >( "Skeletons" );
+		userSkeletonBlockInfo.addOutlet< std::vector< Skeleton > >( "Skeletons" );
 		userSkeletonBlockInfo.addOutlet<int>( "NrOfUsers" );
 		userSkeletonBlockInfo.addOutlet<int>( "NrOfSkeletons" );
 		userSkeletonBlockInfo.setDescription( "OpenNI Kinect User/Skeleton Image Block" );
