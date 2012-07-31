@@ -20,6 +20,7 @@ public slots:
 	void setDoubleValue(double value);
 	void setNumberValue(double value);
 	void setStringValue(const QString & text);
+	void setNumericVectorListValue();
 	
 public:
 	BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidget *parent=0);

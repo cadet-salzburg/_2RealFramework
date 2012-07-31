@@ -136,6 +136,19 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			connect(m_ValueWidget, SIGNAL(textChanged(const QString &)), this, SLOT(setStringValue(const QString &)));
 			layout->addWidget( m_ValueWidget );
 		}
+		else if(m_InletHandle.getTypename().find("vector")!=string::npos || m_InletHandle.getTypename().find("list")!=string::npos)
+		{
+			// those types aren't supported as they are not easy to enter via a widget and no one wants to enter them I guess
+			if(m_InletHandle.getTypename().find("image")!=string::npos || m_InletHandle.getTypename().find("point")!=string::npos ||
+				m_InletHandle.getTypename().find("skeleton")!=string::npos || m_InletHandle.getTypename().find("quaternion")!=string::npos)
+				return;
+
+			// numeric list and vector types
+			m_ValueWidget = new QTextEdit();
+			dynamic_cast<QTextEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getDataAsString()));
+			connect(m_ValueWidget, SIGNAL(textChanged()), this, SLOT(setNumericVectorListValue()));
+			layout->addWidget( m_ValueWidget );
+		}
 
 		setLayout( layout );
 	}
@@ -303,3 +316,19 @@ void BlockInletWidget::setStringValue(const QString & value)
 	}
 }
 
+void BlockInletWidget::setNumericVectorListValue()
+{
+	try
+	{
+		if(m_InletHandle.getTypename() == "unsigned char vector")
+		{
+			QString str = dynamic_cast<QTextEdit*>(m_ValueWidget)->toPlainText();
+			// interpret string with numbers seperated by spaces or ',' as elements of a vector
+			//	m_InletHandle.setValue<string>(value.toStdString());
+		}
+	}
+	catch(_2Real::Exception& e)
+	{
+		cout << e.message() << " " << e.what() << std::endl;
+	}
+}

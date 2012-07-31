@@ -52,11 +52,7 @@ void ThroughputBlock::update()
 		m_pBlockHandle.getOutletHandle("double").getWriteableRef<double>() = m_pBlockHandle.getInletHandle("double").getReadableRef<double>();
 		m_pBlockHandle.getOutletHandle("point").getWriteableRef<_2Real::Point>() = m_pBlockHandle.getInletHandle("point").getReadableRef<_2Real::Point>();
 		m_pBlockHandle.getOutletHandle("string").getWriteableRef<string>() = m_pBlockHandle.getInletHandle("string").getReadableRef<string>();
-
-		std::list<unsigned char> tmp;
-		for(int i=0; i<=100; i++)
-			tmp.push_back(rand()%255);
-		m_pBlockHandle.getOutletHandle("vector").getWriteableRef<std::list<unsigned char>>() = tmp;
+		m_pBlockHandle.getOutletHandle("vector").getWriteableRef<std::vector<unsigned char>>() = m_pBlockHandle.getInletHandle("vector").getReadableRef<std::vector<unsigned char>>();
 	}
 	catch ( Exception &e )
 	{
