@@ -41,6 +41,8 @@
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealNumber.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealPoint.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealQuaternion.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealRigidBody.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
@@ -224,6 +226,8 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealQuaternion.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealRigidBody.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealSkeleton.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
