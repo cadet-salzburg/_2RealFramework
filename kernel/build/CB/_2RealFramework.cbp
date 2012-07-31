@@ -133,8 +133,6 @@
 		<Unit filename="../../src/bundle/_2RealInletHandle.h" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.cpp" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.h" />
-		<Unit filename="../../src/datatypes/_2RealDeviceList.h" />
-		<Unit filename="../../src/datatypes/_2RealEnum.h" />
 		<Unit filename="../../src/datatypes/_2RealImage.cpp" />
 		<Unit filename="../../src/datatypes/_2RealImage.h" />
 		<Unit filename="../../src/datatypes/_2RealImageT.cpp" />
@@ -143,6 +141,10 @@
 		<Unit filename="../../src/datatypes/_2RealNumber.h" />
 		<Unit filename="../../src/datatypes/_2RealPoint.cpp" />
 		<Unit filename="../../src/datatypes/_2RealPoint.h" />
+		<Unit filename="../../src/datatypes/_2RealQuaternion.cpp" />
+		<Unit filename="../../src/datatypes/_2RealQuaternion.h" />
+		<Unit filename="../../src/datatypes/_2RealRigidBody.cpp" />
+		<Unit filename="../../src/datatypes/_2RealRigidBody.h" />
 		<Unit filename="../../src/datatypes/_2RealSkeleton.cpp" />
 		<Unit filename="../../src/datatypes/_2RealSkeleton.h" />
 		<Unit filename="../../src/engine/_2RealAbstractIOManager.cpp" />

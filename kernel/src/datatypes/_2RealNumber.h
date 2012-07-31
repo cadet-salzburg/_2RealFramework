@@ -46,6 +46,7 @@ namespace _2Real
 
 		Number( Number const& src );
 		Number & operator=( Number const& src );
+		bool operator==( Number const& rhs ) const;
 
 		Number operator+( Number const& rhs ) const;
 		Number operator-( Number const& rhs ) const;

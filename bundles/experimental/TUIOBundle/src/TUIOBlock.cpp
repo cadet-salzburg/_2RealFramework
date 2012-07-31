@@ -8,9 +8,9 @@ using _2Real::Exception;
 using namespace std;
 using namespace TUIO;
 
-TUIOBlock::TUIOBlock() : Block()
+TUIOBlock::TUIOBlock() : Block(), server(0)
 {
-    server = new TUIO::TuioServer("127.0.0.1", 3333);
+    //server = new TUIO::TuioServer("127.0.0.1", 3333);
 }
 
 TUIOBlock::~TUIOBlock()
@@ -22,7 +22,15 @@ void TUIOBlock::setup(BlockHandle& handle)
 {
     try
     {
+        if (server)
+        {
+            delete server;
+        }
+        cursormap.clear();
         tracks = handle.getInletHandle("Tracklist");
+        host = handle.getInletHandle("Host");
+        port = handle.getInletHandle("Port");
+        server = new TUIO::TuioServer(host.getReadableRef<string>().c_str(), port.getReadableRef<unsigned short>());
     }
     catch ( Exception &e )
 	{
@@ -93,5 +101,8 @@ void TUIOBlock::update()
 
 void TUIOBlock::shutdown()
 {
-    delete server;
+    if (server)
+        delete server;
+    server = 0;
+    cursormap.clear();
 }

@@ -26,7 +26,7 @@ private:
         class TUIO::TuioCursor* cur;
         bool updated;
     };
-    InletHandle tracks;
+    InletHandle tracks, host, port;
     std::map<int, curStruct> cursormap;
     class TUIO::TuioServer* server;
 };

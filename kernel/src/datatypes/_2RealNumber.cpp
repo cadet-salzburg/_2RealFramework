@@ -46,6 +46,7 @@ namespace _2Real
 
 	Number::Number( Number const& src ) : m_Val( src.m_Val ) {}
 	Number & Number::operator=( Number const& src ) { m_Val = src.m_Val; return *this; }
+	bool Number::operator==(Number const& rhs) const { return (m_Val == rhs.m_Val); }
 
 	Number Number::operator+( Number const& rhs ) const { return Number( m_Val + rhs.m_Val ); }
 	Number Number::operator-( Number const& rhs ) const { return Number( m_Val - rhs.m_Val ); }

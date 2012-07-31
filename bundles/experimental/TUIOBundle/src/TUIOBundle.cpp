@@ -18,6 +18,8 @@ void getBundleMetainfo(BundleMetainfo& info)
 
 		BlockMetainfo tuioBlockInfo = info.exportBlock<TUIOBlock, WithoutContext>( "TUIOBlock" );
 		tuioBlockInfo.addInlet<std::vector<_2Real::Point>>("Tracklist", std::vector<_2Real::Point>());
+		tuioBlockInfo.addInlet<std::string>("Host", "127.0.0.1");
+		tuioBlockInfo.addInlet<unsigned short>("Port", 3333);
 
     }
     catch ( Exception &e )
