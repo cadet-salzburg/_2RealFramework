@@ -1,5 +1,6 @@
 #include "BlockInletWidget.h"
 #include "QPointWidget.h"
+#include "QFileDialogWidget.h"
 
 #include <iostream>
 
@@ -134,6 +135,11 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 			m_ValueWidget = new QLineEdit();
 			dynamic_cast<QLineEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getData<string>()));
 			connect(m_ValueWidget, SIGNAL(textChanged(const QString &)), this, SLOT(setStringValue(const QString &)));
+			layout->addWidget( m_ValueWidget );
+		}
+		else if(m_InletHandle.getTypename() == "filepath")
+		{
+			m_ValueWidget = new QFileDialogWidget(m_InletHandle, this);
 			layout->addWidget( m_ValueWidget );
 		}
 		else if(m_InletHandle.getTypename().find("vector")!=string::npos || m_InletHandle.getTypename().find("list")!=string::npos)

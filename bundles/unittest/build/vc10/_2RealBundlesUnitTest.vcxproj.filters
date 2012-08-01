@@ -22,6 +22,16 @@
     <Filter Include="include">
       <UniqueIdentifier>{f8b9a2c2-aa2c-4a35-8110-a756feb969f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\BlockInletWidget.cpp">
@@ -87,6 +97,15 @@
     <ClCompile Include="..\..\src\QGlSkeletonWidget.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QFileDialogWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QFileDialogWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\QFileDialogWidget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\BlockInletWidget.h">
@@ -108,6 +127,9 @@
       <Filter>src</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\QGlSkeletonWidget.h">
+      <Filter>src</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\QFileDialogWidget.h">
       <Filter>src</Filter>
     </CustomBuild>
   </ItemGroup>
