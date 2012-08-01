@@ -1,0 +1,21 @@
+datatypes
+
+to add a type:
+
+-make sure there's a default ctor
+
+-if the class internally handles owned pointers,
+	make sure that there's a cpy ctor & assignment operator
+	that creates deep copies
+
+-in datatypes\_2RealType.h:
+	add an element to the Type::Code enum, which will represent the type
+
+-in datatypes\_2RealTypes.h:
+	add a specialization for the desired type: as type, use the new addition to the enum
+	as category, use TypeCategory::UNIQUE
+
+-if the type should be written to & read from xml files:
+	add a specialization to in datatypes\_2RealTypeStreamOperators.h
+	for big types like an image, this probably makes no sense
+
