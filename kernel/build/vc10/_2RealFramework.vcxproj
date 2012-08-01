@@ -447,6 +447,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\docs\datatypes.txt" />
     <None Include="..\..\..\docs\status.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

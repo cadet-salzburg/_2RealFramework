@@ -505,5 +505,8 @@
     <None Include="..\..\..\docs\status.txt">
       <Filter>docs</Filter>
     </None>
+    <None Include="..\..\..\docs\datatypes.txt">
+      <Filter>docs</Filter>
+    </None>
   </ItemGroup>
 </Project>
