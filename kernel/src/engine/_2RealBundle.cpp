@@ -37,8 +37,9 @@ namespace _2Real
 		Identifiable< Bundle >( Ids(), info.getName() ),
 		Handleable< Bundle, app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
-		m_BundleInfo( info ),
-		m_ContextBlock( nullptr )
+		m_ContextBlock( nullptr ),
+		m_BundleInfo( info )
+
 	{
 	}
 

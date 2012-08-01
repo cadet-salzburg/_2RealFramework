@@ -110,9 +110,9 @@ namespace _2Real
 		m_Bundle( owningBundle ),
 		m_Block( &block ),
 		m_BlockInfo( info ),
-		m_StateManager( new FunctionBlockStateManager( *this ) ),
+		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) ),
 		m_IOManager( new FunctionBlockIOManager( *this ) ),
-		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) )
+		m_StateManager( new FunctionBlockStateManager( *this ) )
 	{
 		m_StateManager->m_FunctionBlock = &block;
 		m_StateManager->m_IOManager = m_IOManager;
@@ -120,7 +120,7 @@ namespace _2Real
 
 		m_UpdatePolicy->m_IOManager = m_IOManager;
 		m_UpdatePolicy->m_StateManager = m_StateManager;
-		
+
 		m_IOManager->m_StateManager = m_StateManager;
 		m_IOManager->m_UpdatePolicy = m_UpdatePolicy;
 	}

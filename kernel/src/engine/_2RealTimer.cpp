@@ -26,8 +26,8 @@ namespace _2Real
 {
 	Timer::Timer( Logger &logger ) :
 		m_Callback( nullptr ),
-		m_Logger( logger ),
 		m_Timer( 0, 1 ),				//attempt to get the best resolution possible, even if this won't work in practice
+		m_Logger( logger ),
 		m_UpdateCount( 0 ),
 		m_SkippedCount( 0 ),
 		m_DebugTime()

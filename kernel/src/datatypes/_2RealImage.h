@@ -106,11 +106,11 @@ namespace _2Real
 
 		Image() :
 			m_Data( nullptr ),
-			m_Size( 0 ),
 			m_Width( 0 ),
 			m_Height( 0 ),
-			m_ChannelOrder( ImageChannelOrder::R ),
+			m_Size( 0 ),
 			m_ImageType( ImageType::UNSIGNED_BYTE ),
+			m_ChannelOrder( ImageChannelOrder::R ),
 			m_Deleter( new NullDeleter< unsigned char >() )
 		{
 		}
@@ -122,11 +122,11 @@ namespace _2Real
 		}
 
 		Image( Image const& src ) :
-			m_Size( src.m_Size ),
 			m_Width( src.m_Width ),
 			m_Height( src.m_Height ),
-			m_ChannelOrder( src.m_ChannelOrder ),
-			m_ImageType( src.m_ImageType )
+			m_Size( src.m_Size ),
+			m_ImageType( src.m_ImageType ),
+			m_ChannelOrder( src.m_ChannelOrder )
 		{
 			if ( src.m_Data != nullptr )
 			{
@@ -174,9 +174,9 @@ namespace _2Real
 
 		Image( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( data ),
-			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) ),
 			m_Width( w ),
 			m_Height( h ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) ),
 			m_ImageType( ImageType::UNSIGNED_BYTE ),
 			m_ChannelOrder( o ),
 			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
@@ -185,9 +185,9 @@ namespace _2Real
 
 		Image( unsigned short *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
-			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned short ) ),
 			m_Width( w ),
 			m_Height( h ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( unsigned short ) ),
 			m_ImageType( ImageType::UNSIGNED_SHORT ),
 			m_ChannelOrder( o ),
 			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
@@ -196,9 +196,9 @@ namespace _2Real
 
 		Image( float *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
-			m_Size( w * h * o.getNumberOfChannels() * sizeof( float ) ),
 			m_Width( w ),
 			m_Height( h ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( float ) ),
 			m_ImageType( ImageType::FLOAT ),
 			m_ChannelOrder( o ),
 			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
@@ -207,9 +207,9 @@ namespace _2Real
 
 		Image( double *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o ) :
 			m_Data( reinterpret_cast< unsigned char * >( data ) ),
-			m_Size( w * h * o.getNumberOfChannels() * sizeof( double ) ),
 			m_Width( w ),
 			m_Height( h ),
+			m_Size( w * h * o.getNumberOfChannels() * sizeof( double ) ),
 			m_ImageType( ImageType::DOUBLE ),
 			m_ChannelOrder( o ),
 			m_Deleter( owns ? static_cast< Deleter< unsigned char > * >( new ArrayDeleter< unsigned char > ) : new NullDeleter< unsigned char > )
@@ -219,9 +219,9 @@ namespace _2Real
 		void assign( unsigned char *data, bool owns, const unsigned int w, const unsigned int h, const ImageChannelOrder o )
 		{
 			m_ImageType = ImageType::UNSIGNED_BYTE;
-			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) );
 			m_Width = w;
 			m_Height = h;
+			m_Size = ( w * h * o.getNumberOfChannels() * sizeof( unsigned char ) );
 			m_ChannelOrder = o;
 
 			m_Deleter->safeDelete( m_Data );

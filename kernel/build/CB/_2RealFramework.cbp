@@ -84,7 +84,6 @@
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
-			<Add option="-Wno-reorder" />
 			<Add option="-D_UNIX" />
 			<Add option="-D_2REAL_UNIX" />
 			<Add directory="../../src" />
@@ -133,6 +132,7 @@
 		<Unit filename="../../src/bundle/_2RealInletHandle.h" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.cpp" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.h" />
+		<Unit filename="../../src/datatypes/_2RealFilePath.h" />
 		<Unit filename="../../src/datatypes/_2RealImage.cpp" />
 		<Unit filename="../../src/datatypes/_2RealImage.h" />
 		<Unit filename="../../src/datatypes/_2RealImageT.cpp" />

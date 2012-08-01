@@ -37,8 +37,8 @@ namespace _2Real
 
 	BundleManager::BundleManager( EngineImpl &engine ) :
 		m_Engine( engine ),
-		m_BundleLoader(),
-		m_BaseDirectory( Poco::Path() )
+		m_BaseDirectory( Poco::Path() ),
+		m_BundleLoader()
 	{
 	}
 
@@ -210,7 +210,7 @@ namespace _2Real
 
 		return *bundle;
 	}
-	
+
 	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
 	{
 		Poco::Path abs = makeAbsolutePath( path );

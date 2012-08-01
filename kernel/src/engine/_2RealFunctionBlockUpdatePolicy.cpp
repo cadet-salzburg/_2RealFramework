@@ -41,12 +41,12 @@ namespace _2Real
 
 	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( AbstractUberBlock &owner ) :
 		AbstractUpdatePolicy( owner ),
+		m_Engine( EngineImpl::instance() ),
 		m_TimeChanged( false ),
 		m_InletsChanged( false ),
 		m_UpdateTime( -1 ),
-		m_UpdateRate( 0.0 ),
 		m_TimeTrigger( nullptr ),
-		m_Engine( EngineImpl::instance() )
+		m_UpdateRate( 0.0 )
 	{
 	}
 

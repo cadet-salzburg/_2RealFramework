@@ -102,8 +102,8 @@ namespace _2Real
 
 		FunctionCallback( CallbackFunction func, void *userData ) :
 			AbstractCallback< TArg >( (void*)func ),
-			m_UserData( userData ),
-			m_Function( func )
+			m_Function( func ),
+			m_UserData( userData )
 		{
 		}
 

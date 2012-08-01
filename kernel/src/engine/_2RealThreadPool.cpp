@@ -33,10 +33,10 @@ namespace _2Real
 {
 
 	ThreadPool::ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
-		m_StackSize( stackSize ),
-		m_Name( name ),
 		m_Timer( engine.getTimer() ),
 		m_Logger( engine.getLogger() ),
+		m_Name( name ),
+		m_StackSize( stackSize ),
 		m_Elapsed(0)
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
@@ -150,7 +150,7 @@ namespace _2Real
 			else
 			{
 				m_ExecutingAccess.unlock();
-				
+
 				m_AbortedAccess.lock();
 				BlockIterator bIt = m_AbortedBlocks.find( *it );
 				if ( bIt != m_AbortedBlocks.end() )
@@ -195,7 +195,7 @@ namespace _2Real
 			{
 				FunctionBlockStateManager *block = m_ReadyBlocks.front();
 				block->beginUpdate();
-				
+
 				m_ReadyBlocks.pop_front();
 				m_ReadyAccess.unlock();
 
@@ -205,7 +205,7 @@ namespace _2Real
 				m_ExecutingAccess.lock();
 				m_ExecutingBlocks.insert( block );
 				m_ExecutingAccess.unlock();
-				
+
 				thread->run( Poco::Thread::PRIO_NORMAL, *block );
 			}
 			m_ThreadAccess.lock();
