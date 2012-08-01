@@ -3,6 +3,7 @@
 #include "_2RealKinect.h"
 #include "Poco/Mutex.h"
 #include <vector>
+#include <map>
 
 using namespace _2Real::bundle;
 
