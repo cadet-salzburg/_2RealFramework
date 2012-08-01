@@ -354,8 +354,24 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
-		_2RealKinectWrapper::_2RealPositionsVector3f positions = m_2RealKinect->getSkeletonScreenPositions(deviceIdx, userId);
+		_2RealKinectWrapper::_2RealPositionsVector3f positions;
 		std::vector<_2Real::RigidBody> jointPositions;
+
+		if(bIsWorldCoordinates)
+		{
+			positions = m_2RealKinect->getSkeletonWorldPositions(deviceIdx, userId);
+		}
+		else	// normalized screen coords range [0..1]
+		{
+			int w = getWidth(deviceIdx, USERIMAGE);
+			int h = getHeight(deviceIdx, USERIMAGE);
+			positions = m_2RealKinect->getSkeletonScreenPositions(deviceIdx, userId);
+			for(int i=0; i < positions.size(); i++)
+			{
+				positions[i].x/=(float)w;
+				positions[i].y/=(float)h;
+			}
+		}
 
 		for(int i=0; i < positions.size(); i++)
 		{

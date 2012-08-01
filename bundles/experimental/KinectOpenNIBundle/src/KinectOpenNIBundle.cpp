@@ -60,6 +60,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addInlet<int>( "Fps", 30 );
 		userSkeletonBlockInfo.addInlet<bool>( "IsMirrored", false );
 		userSkeletonBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
+		userSkeletonBlockInfo.addInlet<bool>( "IsWorldCoordinates", false );
 		userSkeletonBlockInfo.addOutlet< Image >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
