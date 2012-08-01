@@ -320,19 +320,85 @@ void BlockInletWidget::setNumericVectorListValue()
 {
 	try
 	{
+		QString str = dynamic_cast<QTextEdit*>(m_ValueWidget)->toPlainText();
+		QStringList list = str.split(",", QString::SkipEmptyParts);
+
 		if(m_InletHandle.getTypename() == "unsigned char vector")
 		{
-			QString str = dynamic_cast<QTextEdit*>(m_ValueWidget)->toPlainText();
 			// interpret string with numbers seperated by spaces or ',' as elements of a vector
 			std::vector<unsigned char> values;
-			QStringList list = str.split(",", QString::SkipEmptyParts);
 			for (int i = 0; i < list.count(); i++) 
 			{
 				values.push_back((unsigned char)list[i].toInt());
 			}
-
 			m_InletHandle.setValue<std::vector<unsigned char>>(values);
 		}
+		else if(m_InletHandle.getTypename() == "char vector")
+		{
+			// interpret string with numbers seperated by spaces or ',' as elements of a vector
+			std::vector<char> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((char)list[i].toInt());
+			}
+			m_InletHandle.setValue<std::vector<char>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "unsigned int vector")
+		{
+			// interpret string with numbers seperated by spaces or ',' as elements of a vector
+			std::vector<unsigned int> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((unsigned int)list[i].toInt());
+			}
+			m_InletHandle.setValue<std::vector<unsigned int>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "int vector")
+		{
+			std::vector<int> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((int)list[i].toInt());
+			}
+			m_InletHandle.setValue<std::vector<int>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "unsigned long vector")
+		{
+			std::vector<unsigned long> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((unsigned long)list[i].toULong());
+			}
+			m_InletHandle.setValue<std::vector<unsigned long>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "long vector")
+		{
+			std::vector<long> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((long)list[i].toLong());
+			}
+			m_InletHandle.setValue<std::vector<long>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "double vector")
+		{
+			std::vector<double> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((double)list[i].toDouble());
+			}
+			m_InletHandle.setValue<std::vector<double>>(values);
+		}
+		else if(m_InletHandle.getTypename() == "number vector")
+		{
+			std::vector<_2Real::Number> values;
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back(_2Real::Number(list[i].toDouble()));
+			}
+			m_InletHandle.setValue<std::vector<_2Real::Number>>(values);
+		}
+
 	}
 	catch(_2Real::Exception& e)
 	{
