@@ -324,7 +324,14 @@ void BlockInletWidget::setNumericVectorListValue()
 		{
 			QString str = dynamic_cast<QTextEdit*>(m_ValueWidget)->toPlainText();
 			// interpret string with numbers seperated by spaces or ',' as elements of a vector
-			//	m_InletHandle.setValue<string>(value.toStdString());
+			std::vector<unsigned char> values;
+			QStringList list = str.split(",", QString::SkipEmptyParts);
+			for (int i = 0; i < list.count(); i++) 
+			{
+				values.push_back((unsigned char)list[i].toInt());
+			}
+
+			m_InletHandle.setValue<std::vector<unsigned char>>(values);
 		}
 	}
 	catch(_2Real::Exception& e)
