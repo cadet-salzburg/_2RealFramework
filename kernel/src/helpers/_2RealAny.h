@@ -20,8 +20,15 @@
 
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealAnyHolder.h"
+#include "helpers/_2RealTypeDescriptor.h"
+#include "datatypes/_2RealTypes.h"
 
-#include <typeinfo>
+#ifdef _UNIX
+	#include <typeinfo>
+#else
+	#include <typeinfo.h>
+#endif
+
 #include <sstream>
 #include <memory>
 #include <assert.h>
@@ -37,22 +44,22 @@ namespace _2Real
 		Any( Any const& src );
 		Any& operator=( Any const& src );
 
-		template< typename TData >
-		explicit Any( TData const& value )
+		template< typename TType >
+		explicit Any( TType const& value )
 		{
-			AnyHolder< TData > *holder = new AnyHolder< TData >( value );
-			m_Content.reset( holder );
-			m_Typename = typeid( TData ).name();
-			m_TypeCode = typeid( TData ).hash_code();
+			m_Content.reset( new AnyHolder< TType >( value ) );
+			m_TypeDescriptor.reset( createTypeDescriptor< TType >() );
 		}
 
-		template< typename TData >
+		bool isNull() const;
+		Type const& getType() const;
+		TypeCategory const& getTypeCategory() const;
+
+		template< typename TType >
 		bool isDatatype() const
 		{
-			return m_Typename == typeid( TData ).name();
+			return m_TypeDescriptor->getTypeInfo() == typeid( TType );
 		}
-
-		bool isEmpty() const;
 
 		bool isEqualTo( Any const& any ) const;
 		bool isLessThan( Any const& any ) const;
@@ -63,49 +70,48 @@ namespace _2Real
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
-		std::string const& getTypename() const;
-
-		template< typename TData >
-		TData & extract()
+		template< typename TType >
+		TType & extract()
 		{
-			std::string name = typeid( TData ).name();
-			if ( name == m_Typename )
+			std::type_info const& info = typeid( TType );
+			if ( info == m_TypeDescriptor->getTypeInfo() )
 			{
 				AbstractAnyHolder *ptr = m_Content.get();
-				AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
+				AnyHolder< TType > &holder = dynamic_cast< AnyHolder< TType > & >( *ptr );
 				return holder.m_Data;
 			}
 			else
 			{
+				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of data " << m_Typename << " does not match template parameter " << name << std::endl;
+				msg << "type of data " << m_TypeDescriptor->getTypename() << " does not match the template parameter " << t->getTypename() << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}
 
-		template< typename TData >
-		TData const& extract() const
+		template< typename TType >
+		TType const& extract() const
 		{
-			std::string name = typeid( TData ).name();
-			if ( name == m_Typename )
+			std::type_info const& info = typeid( TType );
+			if ( info == m_TypeDescriptor->getTypeInfo() )
 			{
 				AbstractAnyHolder *ptr = m_Content.get();
-				AnyHolder< TData > &holder = dynamic_cast< AnyHolder< TData > & >( *ptr );
+				AnyHolder< TType > &holder = dynamic_cast< AnyHolder< TType > & >( *ptr );
 				return holder.m_Data;
 			}
 			else
 			{
+				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of data " << m_Typename << " does not match template parameter " << name << std::endl;
+				msg << "type of data " << m_TypeDescriptor->getTypename() << " does not match the template parameter " << t->getTypename() << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}
 
 	private:
 
+		std::shared_ptr< TypeDescriptor >		m_TypeDescriptor;
 		std::shared_ptr< AbstractAnyHolder >	m_Content;
-		std::string								m_Typename;
-		size_t									m_TypeCode;
 
 	};
 }

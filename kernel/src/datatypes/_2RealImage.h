@@ -24,7 +24,6 @@
 
 namespace _2Real
 {
-
 	template< typename TData >
 	class Deleter
 	{

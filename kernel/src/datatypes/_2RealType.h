@@ -20,15 +20,44 @@
 
 namespace _2Real
 {
-	template< class T > void safeDelete( T*& pVal )
+	class Type
 	{
-		delete pVal;
-		pVal = nullptr;
-	}
 
-	template< class T > void safeDeleteArray( T*& pVal )
-	{
-		delete[] pVal;
-		pVal = nullptr;
-	}
+	public:
+
+		enum Code
+		{
+			EMPTY,
+			BYTE,
+			UBYTE,
+			SHORT,
+			USHORT,
+			INT,
+			UINT,
+			LONG,
+			ULONG,
+			FLOAT,
+			DOUBLE,
+			BOOL,
+			STRING,
+			VECTOR,
+			LIST,
+			IMAGE,
+			NUMBER,
+			POINT,
+			SKELETON,
+			RIGIDBODY,
+			QUATERNION
+		};
+
+		Type( Code const& code ) : m_Code( code ) {}
+		Code getCode() const { return m_Code; }
+		bool operator==( Type const& rhs ) const { return m_Code == rhs.m_Code; }
+		bool operator!=( Type const& rhs ) const { return m_Code != rhs.m_Code; }
+
+	private:
+
+		Code		const m_Code;
+
+	};
 }

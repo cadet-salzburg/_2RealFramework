@@ -36,16 +36,17 @@ namespace _2Real
 		{
 		}
 
-		AppData::AppData( TimestampedData const& data, string const& type, string const& name ) :
+		AppData::AppData( TimestampedData const& data, string const& typeName, std::string const& longTypename, string const& name ) :
 			m_Data( data.getData() ),
-			m_Typename( type ),
+			m_Typename( typeName ),
+			m_LongTypename( longTypename ),
 			m_Name( name )
 		{
 		}
 
 		const string AppData::getLongTypename() const
 		{
-			return m_Data.getTypename();
+			return m_LongTypename;
 		}
 
 		string const& AppData::getName() const

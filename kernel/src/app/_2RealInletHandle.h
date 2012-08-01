@@ -50,7 +50,7 @@ namespace _2Real
 			InletHandle& operator=( InletHandle const& other );
 
 			std::string const&	getName() const;
-			std::string const&	getLongTypename() const;
+			const std::string	getLongTypename() const;
 			std::string const&	getTypename() const;
 
 			bool isValid() const;
@@ -64,7 +64,8 @@ namespace _2Real
 
 			void setUpdatePolicy( const InletUpdatePolicy policy );
 
-			void linkTo( OutletHandle &outletHandle );
+			bool tryLink( OutletHandle &outletHandle );
+			bool tryLinkWithConversion( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
 
 			// if the inlet is linked, the value might be overwritten of course

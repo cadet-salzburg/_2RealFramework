@@ -25,8 +25,8 @@ using std::string;
 
 namespace _2Real
 {
-	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& type ) :
-		Parameter( longTypename, type ),
+	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, TypeDescriptor const& type ) :
+		Parameter( type ),
 		NonCopyable< Inlet >(),
 		Identifiable< Inlet >( owningBlock.getIds(), name ),
 		Handleable< Inlet, bundle::InletHandle >( *this ),

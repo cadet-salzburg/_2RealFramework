@@ -526,4 +526,9 @@ namespace _2Real
 		const_iterator		const_iter() const { return const_iterator(*this); }
 
 	};
+
+	typedef ImageT< unsigned char >		Image8U;
+	typedef ImageT< unsigned short >	Image16U;
+	typedef ImageT< float >				Image32F;
+	typedef ImageT< double >			Image64F;
 }

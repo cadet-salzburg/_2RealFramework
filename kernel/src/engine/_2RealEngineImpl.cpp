@@ -17,7 +17,6 @@
 */
 
 #include "engine/_2RealEngineImpl.h"
-#include "engine/_2RealTypetable.h"
 #include "engine/_2RealBundleManager.h"
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealTimer.h"
@@ -34,6 +33,8 @@
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealPoint.h"
+
+#include "internal_bundles/_2RealConversionBundle.h"
 
 #include <sstream>
 #include <iostream>
@@ -59,6 +60,7 @@
 #endif
 
 using std::string;
+using std::ostringstream;
 
 namespace _2Real
 {
@@ -73,63 +75,12 @@ namespace _2Real
 		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer( *m_Logger ) ),
 		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
-		m_Typetable( new Typetable() ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_System( new System( *m_Logger ) )
 	{
-		m_Typetable->registerType< Image >( "image" );
-		m_Typetable->registerType< Skeleton >( "skeleton" );
-		m_Typetable->registerType< Number >( "number" );
-		m_Typetable->registerType< Point >( "point" );
-
-		m_Typetable->registerType< char >( "char");
-		m_Typetable->registerType< unsigned char >( "unsigned char" );
-		m_Typetable->registerType< short >( "short");
-		m_Typetable->registerType< unsigned short >( "unsigned short" );
-		m_Typetable->registerType< int >( "int" );
-		m_Typetable->registerType< unsigned int >( "unsigned int" );
-		m_Typetable->registerType< long >( "long" );
-		m_Typetable->registerType< unsigned long >( "unsigned long" );
-		m_Typetable->registerType< float >( "float" );
-		m_Typetable->registerType< double >( "double" );
-		m_Typetable->registerType< bool >( "bool" );
-		m_Typetable->registerType< std::string >( "string" );
-
-		m_Typetable->registerType< std::vector< Number > >( "number vector" );
-		m_Typetable->registerType< std::vector< Point > >( "point vector" );
-		m_Typetable->registerType< std::vector< Skeleton > >( "skeleton vector" );
-		m_Typetable->registerType< std::vector< Image > >( "image vector" );
-
-		m_Typetable->registerType< std::vector< char > >( "char vector" );
-		m_Typetable->registerType< std::vector< unsigned char > >( "unsigned char vector" );
-		m_Typetable->registerType< std::vector< short > >( "short vector");
-		m_Typetable->registerType< std::vector< unsigned short > >( "unsigned short vector" );
-		m_Typetable->registerType< std::vector< int > >( "int vector" );
-		m_Typetable->registerType< std::vector< unsigned int > >( "unsigned int vector" );
-		m_Typetable->registerType< std::vector< long > >( "long vector" );
-		m_Typetable->registerType< std::vector< unsigned long > >( "unsigned long vector" );
-		m_Typetable->registerType< std::vector< float > >( "float vector" );
-		m_Typetable->registerType< std::vector< double > >( "double vector" );
-		m_Typetable->registerType< std::vector< bool > >( "bool vector" );
-		m_Typetable->registerType< std::vector< std::string > >( "string vector" );
-
-		m_Typetable->registerType< std::list< Number > >( "number list" );
-		m_Typetable->registerType< std::list< Point > >( "point list" );
-
-		m_Typetable->registerType< std::list< char > >( "char list");
-		m_Typetable->registerType< std::list< unsigned char > >( "unsigned char list" );
-		m_Typetable->registerType< std::list< short > >( "short list");
-		m_Typetable->registerType< std::list< unsigned short > >( "unsigned short list" );
-		m_Typetable->registerType< std::list< int > >( "int list" );
-		m_Typetable->registerType< std::list< unsigned int > >( "unsigned int list" );
-		m_Typetable->registerType< std::list< long > >( "long list" );
-		m_Typetable->registerType< std::list< unsigned long > >( "unsigned long list" );
-		m_Typetable->registerType< std::list< float > >( "float list" );
-		m_Typetable->registerType< std::list< double > >( "double list" );
-		m_Typetable->registerType< std::list< bool > >( "bool list" );
-		m_Typetable->registerType< std::list< std::string > >( "string list" );
-
 		m_Timestamp.update();
+
+		m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
 	}
 
 	EngineImpl::~EngineImpl()
@@ -141,7 +92,6 @@ namespace _2Real
 			delete m_BundleManager;
 			m_ThreadPool->clear();
 			delete m_ThreadPool;
-			delete m_Typetable;
 			m_Logger->stop();
 			delete m_Logger;
 			delete m_Timer;
@@ -208,11 +158,6 @@ namespace _2Real
 	Logger & EngineImpl::getLogger()
 	{
 		return *m_Logger;
-	}
-
-	Typetable const& EngineImpl::getTypetable() const
-	{
-		return *m_Typetable;
 	}
 
 	ThreadPool & EngineImpl::getThreadPool()
@@ -299,19 +244,69 @@ namespace _2Real
 		return m_BundleManager->getBundles();
 	}
 
-	void EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )
+	bool EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )
 	{
-		IOLink *link = new IOLink( inlet, outlet );
-		LinkIterator it = m_Links.find( link );
-		if ( it == m_Links.end() )
+		IOLink *link = IOLink::tryLink( inlet, outlet );
+		if ( link != nullptr )
 		{
-			link->activate();
-			m_Links.insert( link );
+			LinkIterator it = m_Links.find( link );
+			if ( it == m_Links.end() )
+			{
+				link->activate();
+				m_Links.insert( link );
+			}
+			else
+			{
+				delete link;
+			}
+
+			return true;
 		}
 		else
 		{
-			delete link;
+			return false;
 		}
+	}
+
+	bool EngineImpl::createLinkWithConversion( InletIO &inlet, OutletIO &outlet )
+	{
+		if ( IOLink::canAutoConvert( inlet, outlet ) )
+		{
+			IOLink *link = new IOLink( inlet, outlet );
+			LinkIterator it = m_Links.find( link );
+			if ( it == m_Links.end() )
+			{
+				link->activate();
+				m_Links.insert( link );
+			}
+			else
+			{
+				delete link;
+			}
+
+			return true;
+		}
+
+		const string conversionName = IOLink::findConversion( inlet, outlet );
+		Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
+
+		if ( bundle.canCreate( conversionName ) )
+		{
+			app::BlockHandle &block = bundle.createBlockInstance( conversionName );
+			block.setUpdateRate( 0. );
+			app::InletHandle &in = block.getInletHandle( "src" );
+			in.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
+			app::OutletHandle &out = block.getOutletHandle( "dst" );
+
+			in.tryLink( outlet.getHandle() );
+			out.tryLink( inlet.getHandle() );
+
+			block.setup();
+			block.start();
+			return true;
+		}
+
+		return false;
 	}
 
 	void EngineImpl::destroyLink( InletIO &inlet, OutletIO &outlet )

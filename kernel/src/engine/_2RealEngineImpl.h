@@ -87,7 +87,6 @@ namespace _2Real
 
 		Timer&							getTimer();
 		Logger&							getLogger();
-		Typetable const&				getTypetable() const;
 		ThreadPool &					getThreadPool();
 
 		const long						getElapsedTime() const;
@@ -110,7 +109,8 @@ namespace _2Real
 		BlockInstances					getCurrentBlockInstances() const;
 		Bundles const&					getCurrentBundles() const;
 		Links const&					getCurrentLinks() const;
-		void							createLink( InletIO &inlet, OutletIO &outlet );
+		bool							createLink( InletIO &inlet, OutletIO &outlet );
+		bool							createLinkWithConversion( InletIO &inlet, OutletIO &outlet );
 		void							destroyLink( InletIO &inlet, OutletIO &outlet );
 
 		void							setBaseDirectory( std::string const& directory );
@@ -129,7 +129,6 @@ namespace _2Real
 		Logger					*m_Logger;
 		Timer					*m_Timer;
 		ThreadPool				*m_ThreadPool;
-		Typetable				*m_Typetable;
 		BundleManager			*m_BundleManager;
 		System					*m_System;
 		Poco::Timestamp			m_Timestamp;

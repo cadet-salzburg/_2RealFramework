@@ -20,9 +20,9 @@
 
 #include <stdexcept>
 #ifdef _UNIX
-    #include <typeinfo>
+	#include <typeinfo>
 #else
-    #include <typeinfo.h>
+	#include <typeinfo.h>
 #endif
 
 namespace _2Real

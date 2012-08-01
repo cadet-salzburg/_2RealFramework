@@ -27,16 +27,16 @@ using std::string;
 namespace _2Real
 {
 
-	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options ) :
+	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options ) :
 		Handleable< InletIO, app::InletHandle >( *this ),
-		m_Inlet( new Inlet( owner, name, longTypename, typeName ) ),
+		m_Inlet( new Inlet( owner, name, type ) ),
 		m_Buffer( new InletBuffer( initialValue, options ) )
 	{
 	}
 
-	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue ) :
+	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
-		m_Outlet( new Outlet( owner, name, longTypename, typeName, initialValue ) ),
+		m_Outlet( new Outlet( owner, name, type, initialValue ) ),
 		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
 		m_InletEvent( new CallbackEvent< TimestampedData const& >() )
 	{

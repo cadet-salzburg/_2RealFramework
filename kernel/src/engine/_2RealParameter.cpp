@@ -28,31 +28,40 @@ using std::stringstream;
 namespace _2Real
 {
 
-	Parameter::Parameter( string const& longTypename, string const& typeName ) :
-		m_LongTypename( longTypename ),
-		m_Typename( typeName )
+	Parameter::Parameter( TypeDescriptor const& type ) :
+		m_Descriptor( type )
 	{
 	}
 
 	std::string const& Parameter::getTypename() const
 	{
-		return m_Typename;
+		return m_Descriptor.getTypename();
 	}
 
-	std::string const& Parameter::getLongTypename() const
+	const std::string Parameter::getLongTypename() const
 	{
-		return m_LongTypename;
+		return m_Descriptor.getLongTypename();
+	}
+
+	Type const& Parameter::getType() const
+	{
+		return m_Descriptor.getType();
+	}
+
+	TypeCategory const& Parameter::getTypeCategory() const
+	{
+		return m_Descriptor.getTypeCategory();
 	}
 
 	void Parameter::setData( TimestampedData const& data )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		if ( data.getData().getTypename() != m_LongTypename )
-		{
-			ostringstream msg;
-			msg << "datatype mismatch: " << m_LongTypename << " vs. value type " << data.getData().getTypename();
-			throw TypeMismatchException( msg.str() );
-		}
+		//if ( data.getData().getLongTypename() != m_LongTypename )
+		//{
+		//	ostringstream msg;
+		//	msg << "datatype mismatch: " << m_LongTypename << " vs. value type " << data.getData().getLongTypename();
+		//	throw TypeMismatchException( msg.str() );
+		//}
 
 		m_DataBuffer = data;
 	}

@@ -20,15 +20,27 @@
 
 namespace _2Real
 {
-	template< class T > void safeDelete( T*& pVal )
+	class TypeCategory
 	{
-		delete pVal;
-		pVal = nullptr;
-	}
 
-	template< class T > void safeDeleteArray( T*& pVal )
-	{
-		delete[] pVal;
-		pVal = nullptr;
-	}
+	public:
+
+		enum Category
+		{
+			ARITHMETHIC,		// byte - unsigned long, Number
+			LOGICAL,			// bool
+			CONTAINER,			// vector / list / string / image
+			UNIQUE				// everything else
+		};
+
+		TypeCategory( Category const& cat ) : m_Category( cat ) {}
+		Category getCategory() const { return m_Category; }
+		bool operator==( TypeCategory const& rhs ) const { return m_Category == rhs.m_Category; }
+		bool operator!=( TypeCategory const& rhs ) const { return m_Category != rhs.m_Category; }
+
+	private:
+
+		Category		m_Category;
+
+	};
 }

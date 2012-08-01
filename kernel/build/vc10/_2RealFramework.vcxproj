@@ -45,6 +45,12 @@
     <ClInclude Include="..\..\src\datatypes\_2RealQuaternion.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealRigidBody.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealType.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUberBlock.h" />
@@ -76,29 +82,27 @@
     <ClInclude Include="..\..\src\engine\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimer.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimestampedData.h" />
-    <ClInclude Include="..\..\src\engine\_2RealTypetable.h" />
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h" />
     <ClInclude Include="..\..\src\helpers\_2RealAny.h" />
     <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealComparisons.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealConversions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealInitializers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealOptions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPoco.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealStreamOperators.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealTypeDescriptor.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
+    <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h" />
+    <ClInclude Include="..\..\src\internal_bundles\_2RealInternalBundles.h" />
     <ClInclude Include="..\..\src\xml\_2RealXML.h" />
     <ClInclude Include="..\..\src\xml\_2RealXMLWriter.h" />
     <ClInclude Include="..\..\src\_2RealApplication.h" />
@@ -403,18 +407,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealTypetable.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
@@ -439,6 +432,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealTypeDescriptor.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>

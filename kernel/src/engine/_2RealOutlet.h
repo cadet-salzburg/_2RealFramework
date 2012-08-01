@@ -33,7 +33,7 @@ namespace _2Real
 
 	public:
 
-		Outlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& emptyData );
+		Outlet( AbstractUberBlock &owningBlock, std::string const& name, TypeDescriptor const& type, Any const& emptyData );
 
 		using Handleable< Outlet, bundle::OutletHandle >::getHandle;
 		using Handleable< Outlet, bundle::OutletHandle >::registerHandle;
@@ -45,6 +45,8 @@ namespace _2Real
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getData;
+		using Parameter::getType;
+		using Parameter::getTypeCategory;
 
 		bool			synchronize();
 		Any &			getWriteableData();

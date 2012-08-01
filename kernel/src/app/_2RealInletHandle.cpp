@@ -116,13 +116,19 @@ namespace _2Real
 		{
 			checkValidity( m_InletIO );
 			TimestampedData data = m_InletIO->m_Inlet->getData();
-			return AppData( data, m_InletIO->m_Inlet->getTypename(), m_InletIO->m_Inlet->getName() );
+			return AppData( data, m_InletIO->m_Inlet->getTypename(), m_InletIO->m_Inlet->getLongTypename(), m_InletIO->m_Inlet->getName() );
 		}
 
-		void InletHandle::linkTo( OutletHandle &outlet )
+		bool InletHandle::tryLink( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			EngineImpl::instance().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
+			return EngineImpl::instance().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
+		}
+
+		bool InletHandle::tryLinkWithConversion( OutletHandle &outlet )
+		{
+			checkValidity( m_InletIO );
+			return EngineImpl::instance().createLinkWithConversion( *m_InletIO, *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
@@ -172,7 +178,7 @@ namespace _2Real
 			return m_InletIO->m_Inlet->getName();
 		}
 
-		std::string const& InletHandle::getLongTypename() const
+		const std::string InletHandle::getLongTypename() const
 		{
 			checkValidity( m_InletIO );
 			return m_InletIO->m_Inlet->getLongTypename();

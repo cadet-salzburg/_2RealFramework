@@ -17,20 +17,19 @@
 */
 
 #include "helpers/_2RealAny.h"
+#include "datatypes/_2RealTypes.h"
 
 namespace _2Real
 {
 	Any::Any() :
-		m_Content(),
-		m_Typename( typeid( void ).name() )
+		m_Content( new AnyHolder< NullType >() ),
+		m_TypeDescriptor( createTypeDescriptor< NullType >() )
 	{
-		AbstractAnyHolder *h = nullptr;
-		m_Content.reset( h );
 	}
 
 	Any::Any( Any const& src ) :
 		m_Content( src.m_Content ),
-		m_Typename( src.m_Typename )
+		m_TypeDescriptor( src.m_TypeDescriptor )
 	{
 	}
 
@@ -41,68 +40,57 @@ namespace _2Real
 			return *this;
 		}
 
-		m_Typename = src.m_Typename;
 		m_Content = src.m_Content;
+		m_TypeDescriptor = src.m_TypeDescriptor;
 
 		return *this;
 	}
 
-	bool Any::isEmpty() const
+	bool Any::isNull() const
 	{
-		return m_Content.get() == nullptr;
+		return isDatatype< NullType >();
 	}
 
 	bool Any::isEqualTo( Any const& any ) const
 	{
-		if ( any.isEmpty() )
-		{
-			return isEmpty();
-		}
-
 		return m_Content->isEqualTo( *any.m_Content.get() );
 	}
 
 	bool Any::isLessThan( Any const& any ) const
 	{
-		if ( any.isEmpty() )
-		{
-			return false;
-		}
-
 		return m_Content->isLessThan( *any.m_Content.get() );
 	}
 
 	void Any::writeTo(std::ostream &out) const
 	{
-		if ( !isEmpty() )
-		{
-			m_Content->writeTo(out);
-		}
+		m_Content->writeTo(out);
 	}
 
 	void Any::readFrom(std::istream &in)
 	{
-		if ( !isEmpty() )
-		{
-			m_Content->readFrom(in);
-		}
+		m_Content->readFrom(in);
 	}
 
-	std::string const& Any::getTypename() const
+	Type const& Any::getType() const
 	{
-		return m_Typename;
+		return m_TypeDescriptor->getType();
+	}
+
+	TypeCategory const& Any::getTypeCategory() const
+	{
+		return m_TypeDescriptor->getTypeCategory();
 	}
 
 	void Any::cloneFrom( Any const& src )
 	{
 		m_Content.reset( src.m_Content->clone() );
-		m_Typename = src.m_Typename;
+		m_TypeDescriptor = src.m_TypeDescriptor;
 	}
 
 	void Any::createNew( Any const& src )
 	{
 		m_Content.reset( src.m_Content->create() );
-		m_Typename = src.m_Typename;
+		m_TypeDescriptor = src.m_TypeDescriptor;
 	}
 
 }

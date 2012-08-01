@@ -37,6 +37,11 @@ namespace _2Real
 		class BlockHandle;
 	}
 
+	namespace bundle
+	{
+		class BundleMetainfo;
+	}
+
 	class BundleManager
 	{
 	
@@ -50,6 +55,7 @@ namespace _2Real
 		~BundleManager();
 
 		void clear();
+		void											createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
 		void											setBaseDirectory( std::string const& path );
 		Bundle &										loadLibrary( std::string const& libraryPath );
 		bool											isLibraryLoaded( Poco::Path const& path ) const;

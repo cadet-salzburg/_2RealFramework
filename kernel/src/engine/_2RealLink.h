@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace _2Real
 {
 	class InletIO;
@@ -38,6 +40,9 @@ namespace _2Real
 
 		bool operator<( IOLink const& other );
 
+		static IOLink * tryLink( InletIO &inlet, OutletIO &outlet );
+		static const std::string findConversion( InletIO &inlet, OutletIO &outlet );
+		static bool canAutoConvert( InletIO &inlet, OutletIO &outlet );
 
 	private:
 

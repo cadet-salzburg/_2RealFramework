@@ -109,9 +109,6 @@ namespace _2Real
 	class AnyOptionSet
 	{
 
-		template< typename TData >
-		friend std::set< Option< TData > > extractFrom( AnyOptionSet const& options );
-
 	private:
 
 		typedef std::set< AnyOption >						Options;
@@ -119,30 +116,16 @@ namespace _2Real
 		typedef std::set< AnyOption >::const_iterator		OptionConstIterator;
 
 		Options			m_Options;
-		std::string		m_Typename;
 
 	public:
 
-		AnyOptionSet() : m_Options(), m_Typename( typeid( void ).name() ) {}
+		AnyOptionSet() : m_Options() {}
 
-		AnyOptionSet( std::set< AnyOption > const& options ) : m_Options( options )
-		{
-			if ( options.empty() )
-			{
-				m_Typename = typeid( void ).name();
-			}
-
-			m_Typename = options.begin()->getValue().getTypename();
-		}
+		AnyOptionSet( std::set< AnyOption > const& options ) : m_Options( options ) {}
 
 		bool isEmpty() const
 		{
 			return m_Options.empty();
-		}
-
-		const std::string getTypename() const
-		{
-			return m_Typename;
 		}
 
 		bool isOption( Any const& any ) const
@@ -157,12 +140,8 @@ namespace _2Real
 			return false;
 		}
 
-	};
-
-	template< typename TData >
-	std::set< Option< TData > > extractFrom( AnyOptionSet const& options )
-	{
-		if ( options.getTypename() == typeid( TData ).name() )
+		template< typename TData >
+		std::set< Option< TData > > extract()
 		{
 			std::set< Option< TData > > result;
 			for ( AnyOptionSet::OptionIterator it = options.m_Options.begin(); it != options.m_Options.end(); ++it )
@@ -170,15 +149,7 @@ namespace _2Real
 				TData const& v = it->getValue().extract< TData >();
 				result.insert( Option< TData >( v, it->getDescription() ) );
 			}
-
 			return result;
 		}
-		else
-		{
-			std::ostringstream msg;
-			msg << "type of data " << options.getTypename() << " does not match template parameter " << typeid( TData ).name() << std::endl;
-			throw TypeMismatchException( msg.str() );
-		}
-	}
-
+	};
 }

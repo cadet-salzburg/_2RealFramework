@@ -27,6 +27,273 @@ using std::stringstream;
 namespace _2Real
 {
 
+	Any arithmethicConversion( Any const& src, const Type tDst )
+	{
+		const Type::Code cSrc = src.getType().getCode();
+		const Type::Code cDst = tDst.getCode();
+		switch ( cSrc )
+		{
+		case Type::BYTE:
+		{
+			char val = src.extract< char >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::UBYTE:
+		{
+			unsigned char val = src.extract< unsigned char >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::SHORT:
+		{
+			short val = src.extract< short >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::USHORT:
+		{
+			unsigned short val = src.extract< unsigned short >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::INT:
+		{
+			int val = src.extract< int >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::UINT:
+		{
+			unsigned int val = src.extract< unsigned int >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::LONG:
+		{
+			long val = src.extract< long >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::ULONG:
+		{
+			unsigned long val = src.extract< unsigned long >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::FLOAT:
+		{
+			float val = src.extract< float >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::DOUBLE:
+		{
+			double val = src.extract< double >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		case Type::NUMBER:
+		{
+			Number val = src.extract< Number >();
+			switch ( cDst )
+			{
+			case Type::BYTE:		return Any( static_cast< char >( val ) );
+			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
+			case Type::SHORT:		return Any( static_cast< short >( val ) );
+			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
+			case Type::INT:			return Any( static_cast< int >( val ) );
+			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
+			case Type::LONG:		return Any( static_cast< long >( val ) );
+			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
+			case Type::FLOAT:		return Any( static_cast< float >( val ) );
+			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
+			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
+			default:
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+			return Any();
+			}
+		}
+		default:
+#ifdef _DEBUG
+			assert( NULL );
+#endif
+		return Any();
+		}
+	}
+
 	RemoveOldest::RemoveOldest( const unsigned int max ) :
 		m_Max( max )
 	{
@@ -84,9 +351,27 @@ namespace _2Real
 	// this may be call simultaneously by many threads
 	void InletBuffer::receiveData( TimestampedData const& data )
 	{
+		TimestampedData rec;
+		const Type tSrc = data.getData().getType();
+		const Type tDst = m_DefaultData.getData().getType();
+		if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
+		{
+			const TypeCategory cSrc = data.getData().getTypeCategory();
+			const TypeCategory cDst = m_DefaultData.getData().getTypeCategory();
+			if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
+			{
+				Any converted = arithmethicConversion( data.getData(), tDst );
+				rec = TimestampedData( converted, data.getTimestamp() );
+			}
+		}
+		else
+		{
+			rec = data;
+		}
+
 		if ( !m_Options.isEmpty() )
 		{
-			Any const& value = data.getData();
+			Any const& value = rec.getData();
 			if ( !m_Options.isOption( value ) )
 			{
 				std::cout << "NOT AN OPTION!!!!!!!!!!!!" << std::endl;
@@ -98,7 +383,7 @@ namespace _2Real
 		m_NotificationAccess.lock();
 		if ( m_Notify )
 		{
-			m_TriggeringEvent.notify( data );
+			m_TriggeringEvent.notify( rec );
 			m_NotificationAccess.unlock();
 		}
 		else
@@ -107,7 +392,7 @@ namespace _2Real
 			// once the cond was fulfilled, buffering starts
 			Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
 			Poco::ScopedLock< Poco::FastMutex > dLock( m_DataAccess );
-			m_InsertionPolicy->insertData( data, m_ReceivedDataItems );
+			m_InsertionPolicy->insertData( rec, m_ReceivedDataItems );
 		}
 	}
 
@@ -122,22 +407,6 @@ namespace _2Real
 #endif
 		return m_TriggeringData;
 	}
-
-	//TimestampedData const& InletBuffer::getOldestBufferData()
-	//{
-	//	Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
-	//	Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-	//	if ( m_ReceivedDataItems.empty() )
-	//	{
-	//		return m_TriggeringData;
-	//	}
-	//	else
-	//	{
-	//		TimestampedData const& data = m_ReceivedDataItems.front();
-	//		m_ReceivedDataItems.pop_front();
-	//		return data;
-	//	}
-	//}
 
 	void InletBuffer::processBufferedData()
 	{
@@ -187,13 +456,6 @@ namespace _2Real
 		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
 		return m_BufferSize;
 	}
-
-	//void InletBuffer::setDefaultData( Any const& defaultData )
-	//{
-	//	//Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-	//	//m_DefaultData = TimestampedData( defaultData, m_Engine.getElapsedSeconds() );
-	//	receiveData( TimestampedData( defaultData, m_Engine.getElapsedTime() ) );
-	//}
 
 	void InletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{

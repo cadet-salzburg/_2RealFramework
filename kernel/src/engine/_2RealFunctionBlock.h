@@ -86,8 +86,8 @@ namespace _2Real
 
 		void						handleException( Exception &e );
 
-		void						addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options );
-		void						addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+		void						addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		void						addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 	private:
 
@@ -171,15 +171,15 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options )
+	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options )
 	{
-		m_IOManager->addInlet( name, longTypename, typeName, initialValue, options );
+		m_IOManager->addInlet( name, type, initialValue, options );
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
+	void FunctionBlock< THandle >::addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue )
 	{
-		m_IOManager->addOutlet( name, longTypename, typeName, initialValue );
+		m_IOManager->addOutlet( name, type, initialValue );
 	}
 
 	template< typename THandle >

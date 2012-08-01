@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include <string>
+
 namespace _2Real
 {
+	const std::string strTypeConversions = "TypeConversions";
 }

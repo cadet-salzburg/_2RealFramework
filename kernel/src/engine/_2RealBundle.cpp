@@ -84,6 +84,17 @@ namespace _2Real
 		return m_BundleInfo;
 	}
 
+	bool Bundle::canCreate( std::string const& blockName ) const
+	{
+		app::BundleInfo::BlockInfos const& blocks = m_BundleInfo.getExportedBlocks();
+		for ( app::BundleInfo::BlockInfoConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+		{
+			if ( it->getName() == blockName ) return true;
+		}
+
+		return false;
+	}
+
 	app::BlockHandle & Bundle::createBlockInstance( std::string const& blockName )
 	{
 		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName );

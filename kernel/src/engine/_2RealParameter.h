@@ -33,10 +33,12 @@ namespace _2Real
 
 	protected:
 
-		Parameter( std::string const& longTypename, std::string const& typeName );
+		Parameter( TypeDescriptor const& type );
 
 		std::string const&			getTypename() const;
-		std::string const&			getLongTypename() const;
+		const std::string			getLongTypename() const;
+		Type const&					getType() const;
+		TypeCategory const&			getTypeCategory() const;
 
 		void						setData( TimestampedData const& data );
 		void						synchronize();		// syncs data & write data
@@ -44,12 +46,10 @@ namespace _2Real
 
 	protected:
 
+		TypeDescriptor		const& m_Descriptor;
 		mutable Poco::FastMutex		m_DataAccess;
 		TimestampedData				m_Data;
 		TimestampedData				m_DataBuffer;
-
-		std::string					const m_LongTypename;
-		std::string					const m_Typename;
 
 	};
 

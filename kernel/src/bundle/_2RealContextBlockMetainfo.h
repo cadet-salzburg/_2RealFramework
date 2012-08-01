@@ -18,16 +18,19 @@
 
 #pragma once
 
-#include <string>
+#include "helpers/_2RealAny.h"
+#include "datatypes/_2RealTypes.h"
 
 #ifdef _UNIX
-    #include <typeinfo>
+	#include <typeinfo>
+#else
+	#include <typeinfo.h>
 #endif
+#include <string>
 
 namespace _2Real
 {
 	class BlockMetadata;
-	class Typetable;
 
 	namespace bundle
 	{
@@ -36,22 +39,24 @@ namespace _2Real
 
 		public:
 
-			ContextBlockMetainfo( BlockMetadata &data, Typetable const& typetable );
+			ContextBlockMetainfo( BlockMetadata &data );
 
 			void setDescription( std::string const& description );
 
-			template< typename Datatype >
-			void addOutlet( std::string const& outletName )
+			template< typename TData >
+			void addOutlet( std::string const& name )
 			{
-				addOutletInternal( outletName, typeid( Datatype ).name() );
+				TypeDescriptor *d = createTypeDescriptor< TData >();
+				TData data;
+				Any init( data );
+				addOutletInternal( name, *d, init );
 			}
 
 		private:
 
-			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
+			void		addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
 
 			BlockMetadata	&m_Impl;
-			Typetable		const& m_Typetable;
 
 		};
 	}

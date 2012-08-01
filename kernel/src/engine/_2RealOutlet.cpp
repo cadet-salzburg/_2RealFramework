@@ -25,8 +25,8 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, string const& longTypename, string const& typeName, Any const& emptyData ) :
-		Parameter( longTypename, typeName ),
+	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, TypeDescriptor const& type, Any const& emptyData ) :
+		Parameter( type ),
 		NonCopyable< Outlet >(),
 		Identifiable< Outlet >( owningBlock.getIds(), name ),
 		Handleable< Outlet, bundle::OutletHandle >( *this ),

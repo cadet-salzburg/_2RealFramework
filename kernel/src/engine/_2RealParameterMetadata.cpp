@@ -17,25 +17,23 @@
 */
 
 #include "engine/_2RealParameterMetadata.h"
+#include "helpers/_2RealTypeDescriptor.h"
 
 using std::string;
 
 namespace _2Real
 {
 
-	ParameterMetadata::ParameterMetadata() :
-		m_Name( "undefined" ),
-		m_Typename( "undefined" ),
-		m_LongTypename( "undefined" )
+	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initialValue ) :
+		m_Name( name ),
+		m_TypeDescriptor( &descriptor ),
+		m_InitialValue( initialValue )
 	{
 	}
 
-	ParameterMetadata::ParameterMetadata( string const& name, string const& longType, string const& type, Any const& defaultValue ) :
-		m_Name( name ),
-		m_Typename( type ),
-		m_LongTypename( longType ),
-		m_DefaultValue( defaultValue )
+	ParameterMetadata::~ParameterMetadata()
 	{
+		delete m_TypeDescriptor;
 	}
 
 	void ParameterMetadata::enableOptions( AnyOptionSet const& options )
@@ -58,19 +56,24 @@ namespace _2Real
 		return m_Name;
 	}
 
+	TypeDescriptor const& ParameterMetadata::getTypeDescriptor() const
+	{
+		return *m_TypeDescriptor;
+	}
+
 	string const& ParameterMetadata::getTypename() const
 	{
-		return m_Typename;
+		return m_TypeDescriptor->getTypename();
 	}
 
-	string const& ParameterMetadata::getLongTypename() const
+	const string ParameterMetadata::getLongTypename() const
 	{
-		return m_LongTypename;
+		return m_TypeDescriptor->getLongTypename();
 	}
 
-	Any const& ParameterMetadata::getDefaultValue() const
+	Any const& ParameterMetadata::getInitialValue() const
 	{
-		return m_DefaultValue;
+		return m_InitialValue;
 	}
 
 	void ParameterMetadata::performParameterNameCheck( std::string const& name )

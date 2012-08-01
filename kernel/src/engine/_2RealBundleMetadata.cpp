@@ -110,7 +110,7 @@ namespace _2Real
 
 	BlockMetadata const& BundleMetadata::getBlockData( std::string const& name ) const
 	{
-		BundleMetadata::BlockMetaConstIterator it = m_ExportedBlocks.find( name );
+		BundleMetadata::BlockMetadataConstIterator it = m_ExportedBlocks.find( name );
 
 		if ( it == m_ExportedBlocks.end() )
 		{
@@ -119,16 +119,16 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		return it->second;
+		return *it->second;
 	}
 
 	void BundleMetadata::addBlockData( BlockMetadata const& data )
 	{
 		std::string blockName = data.getName();
-		m_ExportedBlocks[ blockName ] = data;
+		m_ExportedBlocks[ blockName ] = &data;
 	}
 
-	BundleMetadata::BlockMetas const& BundleMetadata::getExportedBlocks() const
+	BundleMetadata::BlockMetadatas const& BundleMetadata::getExportedBlocks() const
 	{
 		return m_ExportedBlocks;
 	}

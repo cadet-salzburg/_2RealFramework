@@ -52,7 +52,7 @@ namespace _2Real
 
 	bool TimestampedData::isEmpty() const
 	{
-		return m_Data.isEmpty();
+		return m_Data.isNull();
 	}
 
 	void TimestampedData::cloneData( TimestampedData const& src )

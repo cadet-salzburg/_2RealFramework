@@ -18,14 +18,17 @@
 
 #pragma once
 
-#include "_2RealComparisons.h"
-#include "_2RealStreamOperators.h"
-
-#include <string>
+#include "datatypes/_2RealTypeComparisons.h"
+#include "datatypes/_2RealTypeStreamOperators.h"
 
 #ifdef _UNIX
-    #include <sstream>
+	#include <typeinfo>
+#else
+	#include <typeinfo.h>
 #endif
+
+#include <string>
+#include <sstream>
 
 namespace _2Real
 {
@@ -43,7 +46,6 @@ namespace _2Real
 		virtual void readFrom( std::istream &in ) = 0;
 		virtual bool isEqualTo( AbstractAnyHolder const& other ) const = 0;
 		virtual bool isLessThan( AbstractAnyHolder const& other ) const = 0;
-
 	};
 
 	template< typename TData >

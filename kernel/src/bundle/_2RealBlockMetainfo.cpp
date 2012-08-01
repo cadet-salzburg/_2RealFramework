@@ -19,16 +19,14 @@
 #include "bundle/_2RealBlockMetainfo.h"
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
-#include "engine/_2RealTypetable.h"
 #include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		BlockMetainfo::BlockMetainfo( BlockMetadata &data, Typetable const& typetable ) :
-			m_Impl( data ),
-			m_Typetable( typetable )
+		BlockMetainfo::BlockMetainfo( BlockMetadata &data ) :
+			m_Impl( data )
 		{
 		}
 
@@ -42,38 +40,26 @@ namespace _2Real
 			m_Impl.setDescription( category );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& initialValue )
+		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
 		{
-			checkChars( toLower( trim( inletName ) ) );
-			const std::string longTypename = initialValue.getTypename();
-			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterMetadata data( toLower( trim( inletName ) ), longTypename, typeName, initialValue );
-			m_Impl.addInlet( data );
+			checkChars( toLower( trim( name ) ) );
+			ParameterMetadata *data = new ParameterMetadata( toLower( trim( name ) ), descriptor, init );
+			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& inletName, Any const& initialValue, AnyOptionSet const& options )
+		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options )
 		{
-			checkChars( toLower( trim( inletName ) ) );
-			const std::string longTypename = initialValue.getTypename();
-			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			ParameterMetadata data( toLower( trim( inletName ) ), longTypename, typeName, initialValue );
-			data.enableOptions( options );
-			m_Impl.addInlet( data );
+			checkChars( toLower( trim( name ) ) );
+			ParameterMetadata *data = new ParameterMetadata( toLower( trim( name ) ), descriptor, init );
+			data->enableOptions( options );
+			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
+		void BlockMetainfo::addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
 		{
-			checkChars( toLower( trim( outletName ) ) );
-			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			Any const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
-
-			// the outlet does not get a default value, but the data needs to be allocated anyway
-			// so copy the value stored inside the typetable ( constructed with default ctor )
-			Any val;
-			val.cloneFrom( defaultConstructed );
-
-			ParameterMetadata data( toLower( trim( outletName ) ), longTypename, typeName, val );
-			m_Impl.addOutlet( data );
+			checkChars( toLower( trim( name ) ) );
+			ParameterMetadata *data = new ParameterMetadata( toLower( trim( name ) ), descriptor, init );
+			m_Impl.addOutlet( *data );
 		}
 	}
 }

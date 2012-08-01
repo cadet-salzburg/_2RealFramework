@@ -95,6 +95,18 @@ namespace _2Real
 		return ( v1 == v2 );
 	}
 
+	template < >
+	inline bool isEqual( float const& v1, float const& v2 )
+	{
+		return ( v1 == v2 );
+	}
+
+	template < >
+	inline bool isEqual( double const& v1, double const& v2 )
+	{
+		return ( v1 == v2 );
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template< typename TData >
@@ -162,6 +174,18 @@ namespace _2Real
 
 	template < >
 	inline bool isLess( std::string const& v1, std::string const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( float const& v1, float const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( double const& v1, double const& v2 )
 	{
 		return ( v1 < v2 );
 	}

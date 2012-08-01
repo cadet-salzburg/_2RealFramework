@@ -30,12 +30,13 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< ParameterMetadata >					ParamMetas;
-		typedef std::vector< ParameterMetadata >::iterator			ParamMetaIterator;
-		typedef std::vector< ParameterMetadata >::const_iterator	ParamMetaConstIterator;
+		typedef std::vector< ParameterMetadata const* >					ParameterMetadatas;
+		typedef std::vector< ParameterMetadata const* >::iterator		ParameterMetadataIterator;
+		typedef std::vector< ParameterMetadata const* >::const_iterator	ParameterMetadataConstIterator;
 
 		BlockMetadata();
 		BlockMetadata( std::string const& name );
+		~BlockMetadata();
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
@@ -46,8 +47,8 @@ namespace _2Real
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 
-		ParamMetas const& getInlets() const;
-		ParamMetas const& getOutlets() const;
+		ParameterMetadatas const& getInlets() const;
+		ParameterMetadatas const& getOutlets() const;
 
 		static void performBlockNameCheck( std::string const& name );
 
@@ -57,8 +58,8 @@ namespace _2Real
 		std::string			m_Description;
 		std::string			m_Category;
 
-		ParamMetas			m_Inlets;
-		ParamMetas			m_Outlets;
+		ParameterMetadatas	m_Inlets;
+		ParameterMetadatas	m_Outlets;
 
 	};
 }

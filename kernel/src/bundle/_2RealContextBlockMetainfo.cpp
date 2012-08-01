@@ -19,16 +19,14 @@
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
-#include "engine/_2RealTypetable.h"
 #include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ContextBlockMetainfo::ContextBlockMetainfo( BlockMetadata &data, Typetable const& typetable ) :
-			m_Impl( data ),
-			m_Typetable( typetable )
+		ContextBlockMetainfo::ContextBlockMetainfo( BlockMetadata &data ) :
+			m_Impl( data )
 		{
 		}
 
@@ -37,19 +35,11 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
-		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, std::string const& longTypename )
+		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, TypeDescriptor &descriptor, Any const& init )
 		{
 			checkChars( toLower( trim( outletName ) ) );
-			const std::string typeName = m_Typetable.lookupTypename( longTypename );
-			Any const& defaultConstructed = m_Typetable.getInitialValueFromTypename( typeName );
-
-			// the outlet does not get a default value, but the data needs to be allocated anyway
-			// so copy the value stored inside the typetable ( constructed with default ctor )
-			Any val;
-			val.cloneFrom( defaultConstructed );
-
-			ParameterMetadata data( toLower( trim( outletName ) ), longTypename, typeName, val );
-			m_Impl.addOutlet( data );
+			ParameterMetadata *data = new ParameterMetadata( toLower( trim( outletName ) ), descriptor, init );
+			m_Impl.addOutlet( *data );
 		}
 	}
 }

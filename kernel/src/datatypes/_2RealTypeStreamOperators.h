@@ -23,9 +23,9 @@
 #include "helpers/_2RealStringHelpers.h"
 
 #ifdef _UNIX
-    #include <typeinfo>
+	#include <typeinfo>
 #else
-    #include <typeinfo.h>
+	#include <typeinfo.h>
 #endif
 
 #include <string>
@@ -36,6 +36,10 @@
 
 namespace _2Real
 {
+	// these functions are used when reading / writing xml files;
+	// any type that should be saved & reconstructed with the xml writer needs these
+	// e.g. images don't provid them currently; as such any image encountered in an xml file will be default constructed
+
 	template< typename TData >
 	inline void writeTo( std::ostream &out, TData const& v )
 	{
@@ -155,6 +159,18 @@ namespace _2Real
 		out << v;
 	}
 
+	template< >
+	inline void writeTo( std::ostream &out, float const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, double const& v )
+	{
+		out << v;
+	}
+
 	template< typename TData >
 	inline void readFrom( std::istream &in, TData &v )
 	{
@@ -166,7 +182,7 @@ namespace _2Real
 			if ( typeName[i] == '#' ) typeName[i] = ' ';
 		}
 
-		std::cout << unstreamable << " " << typeName << std::endl;
+		//std::cout << unstreamable << " " << typeName << std::endl;
 	}
 
 	template< typename TData >
@@ -269,6 +285,18 @@ namespace _2Real
 
 	template< >
 	inline void readFrom( std::istream &in, std::string &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, float &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, double &v )
 	{
 		in >> v;
 	}

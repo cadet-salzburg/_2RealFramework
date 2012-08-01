@@ -46,15 +46,12 @@
     <Filter Include="docs">
       <UniqueIdentifier>{15f9d992-1b23-4ce1-bc76-bc64cf0ed99b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\internal_bundles">
+      <UniqueIdentifier>{23dd44ce-47d7-4fc3-860a-c05d5bd722fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\helpers\_2RealAny.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealException.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h">
@@ -222,9 +219,6 @@
     <ClInclude Include="..\..\src\engine\_2RealTimestampedData.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealTypetable.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h">
       <Filter>include\engine</Filter>
     </ClInclude>
@@ -279,18 +273,6 @@
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealComparisons.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealConversions.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealStreamOperators.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealInitializers.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealNumber.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
@@ -306,11 +288,41 @@
     <ClInclude Include="..\..\src\datatypes\_2RealFilePath.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h">
+      <Filter>include\internal_bundles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\internal_bundles\_2RealInternalBundles.h">
+      <Filter>include\internal_bundles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealAny.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealTypeDescriptor.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealType.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypes.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
@@ -434,9 +446,6 @@
     <ClCompile Include="..\..\src\engine\_2RealTimestampedData.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealTypetable.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealParameterMetadata.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
@@ -484,6 +493,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealQuaternion.cpp">
       <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealTypeDescriptor.cpp">
+      <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
+      <Filter>src\helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

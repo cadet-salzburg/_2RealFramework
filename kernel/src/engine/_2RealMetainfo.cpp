@@ -24,7 +24,6 @@
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "engine/_2RealParameterMetadata.h"
-#include "engine/_2RealTypetable.h"
 
 #include <sstream>
 #include <assert.h>
@@ -37,9 +36,8 @@ using std::map;
 namespace _2Real
 {
 
-	Metainfo::Metainfo( Typetable const& typetable ) :
-		m_HasContext( false ),
-		m_Typetable( typetable )
+	Metainfo::Metainfo() :
+		m_HasContext( false )
 	{
 	}
 
@@ -114,7 +112,7 @@ namespace _2Real
 		m_ContextInfo.ctor = &obj;
 		m_ContextInfo.data = new BlockMetadata( "contextblock" );
 		m_ContextInfo.data->setDescription( "context block" );
-		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data, m_Typetable );
+		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data );
 
 		m_HasContext = true;
 
@@ -133,7 +131,7 @@ namespace _2Real
 		m_BlockInfos[ blockName ].ctor = &obj;
 		BlockMetadata *data = new BlockMetadata( blockName );
 		m_BlockInfos[ blockName ].data = data;
-		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data, m_Typetable );
+		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data );
 		m_BlockInfos[ blockName ].meta = meta;
 
 		return *meta;
@@ -177,11 +175,6 @@ namespace _2Real
 	{
 		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
-			for ( Metainfo::ParameterIterator pIt = m_GlobalInlets.begin(); pIt != m_GlobalInlets.end(); ++pIt )
-			{
-				it->second.data->addInlet( *pIt );
-			}
-
 			m_BundleData.addBlockData( *it->second.data );
 		}
 
@@ -189,14 +182,6 @@ namespace _2Real
 		{
 			m_BundleData.addBlockData( *m_ContextInfo.data );
 		}
-	}
-
-	void Metainfo::addGlobalInlet( std::string const& name, Any const& initialValue )
-	{
-		const std::string longTypename = initialValue.getTypename();
-		const std::string typeName = m_Typetable.lookupTypename( longTypename );
-		ParameterMetadata data( name, longTypename, typeName, initialValue );
-		m_GlobalInlets.push_back( data );
 	}
 
 }

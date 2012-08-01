@@ -31,17 +31,55 @@ using std::ostringstream;
 
 namespace _2Real
 {
+	IOLink * IOLink::tryLink( InletIO &inlet, OutletIO &outlet )
+	{
+		if ( inlet.m_Inlet->getLongTypename() != outlet.m_Outlet->getLongTypename() )
+		{
+			return nullptr;
+		}
+		else return new IOLink( inlet, outlet );
+	}
+
+	bool IOLink::canAutoConvert( InletIO &inlet, OutletIO &outlet )
+	{
+		const Type tSrc = outlet.m_Outlet->getType();
+		const Type tDst = inlet.m_Inlet->getType();
+		if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
+		{
+			const TypeCategory cSrc = outlet.m_Outlet->getTypeCategory();
+			const TypeCategory cDst = inlet.m_Inlet->getTypeCategory();
+			if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	const std::string IOLink::findConversion( InletIO &inlet, OutletIO &outlet )
+	{
+		std::string inType = inlet.m_Inlet->getTypename();
+		std::string outType = outlet.m_Outlet->getTypename();
+
+		for ( unsigned int i = 0; i<inType.length(); ++i )
+		{
+			if ( inType[i] == ' ' ) inType[i] = '_';
+		}
+		for ( unsigned int i = 0; i<outType.length(); ++i )
+		{
+			if ( outType[i] == ' ' ) outType[i] = '_';
+		}
+
+		std::string conversion = outType + "_to_" + inType;
+
+		return conversion;
+	}
 
 	IOLink::IOLink( InletIO &inlet, OutletIO &outlet ) :
 		m_InletIO( inlet ),
 		m_OutletIO( outlet )
 	{
-		if ( m_InletIO.m_Inlet->getLongTypename() != m_OutletIO.m_Outlet->getLongTypename() )
-		{
-			ostringstream msg;
-			msg << "type of " << m_InletIO.m_Inlet->getName() << " does not match type of " << m_OutletIO.m_Outlet->getName();
-			throw TypeMismatchException( msg.str() );
-		}
+		// no more typechecking here
 	}
 
 	InletIO const& IOLink::getInletIO() const

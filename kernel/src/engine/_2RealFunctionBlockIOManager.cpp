@@ -172,18 +172,21 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options )
+	void FunctionBlockIOManager::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options )
 	{
-		InletIO *io = new InletIO( m_Owner, name, longTypename, typeName, initialValue, options );
+		InletIO *io = new InletIO( m_Owner, name, type, initialValue, options );
+		TimestampedData const& data = io->m_Buffer->getTriggeringData();
+		io->m_Inlet->setDataAndSynchronize( data );
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->m_Inlet->getHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue )
+	void FunctionBlockIOManager::addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue )
 	{
-		OutletIO *io = new OutletIO( m_Owner, name, longTypename, typeName, initialValue );
+		OutletIO *io = new OutletIO( m_Owner, name, type, initialValue );
+		io->m_Outlet->synchronize();
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );
 		m_BundleOutletHandles.push_back( io->m_Outlet->getHandle() );
@@ -211,7 +214,7 @@ namespace _2Real
 			{
 				TimestampedData lastData = outlet.getData();
 				( *it )->m_InletEvent->notify( lastData );
-				app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getName() );
+				app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getLongTypename(), outlet.getName() );
 				( *it )->m_AppEvent->notify( out );
 				data.push_back( out );
 			}

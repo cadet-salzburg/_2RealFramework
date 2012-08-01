@@ -40,6 +40,7 @@ namespace _2Real
 	
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
+	class TypeDescriptor;
 
 	class FunctionBlockIOManager : private AbstractIOManager, private Handleable< FunctionBlockIOManager, bundle::BlockHandle >
 	{
@@ -61,8 +62,8 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addInlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options );
-		void							addOutlet( std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+		void							addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		void							addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name ) const;
 		app::OutletHandle &				getAppOutletHandle( std::string const& name ) const;

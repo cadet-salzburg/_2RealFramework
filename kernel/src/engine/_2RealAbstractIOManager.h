@@ -51,6 +51,7 @@ namespace _2Real
 	class TimestampedData;
 	class AbstractUberBlock;
 	class AnyOptionSet;
+	class TypeDescriptor;
 
 	class InletIO : private NonCopyable< InletIO >, private Handleable< InletIO, app::InletHandle >
 	{
@@ -61,7 +62,7 @@ namespace _2Real
 		using Handleable< InletIO, app::InletHandle >::registerHandle;
 		using Handleable< InletIO, app::InletHandle >::unregisterHandle;
 
-		InletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue, AnyOptionSet const& options );
+		InletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
 		~InletIO();
 		Inlet													*m_Inlet;
 		InletBuffer												*m_Buffer;
@@ -77,7 +78,7 @@ namespace _2Real
 		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
 		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, std::string const& name, std::string const& longTypename, std::string const& typeName, Any const& initialValue );
+		OutletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;

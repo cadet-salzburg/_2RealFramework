@@ -19,18 +19,18 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
+#include "datatypes/_2RealTypes.h"
 #include "helpers/_2RealOptions.h"
 
 #ifdef _UNIX
-    #include <typeinfo>
+	#include <typeinfo>
 #else
-    #include <typeinfo.h>
+	#include <typeinfo.h>
 #endif
 #include <string>
 
 namespace _2Real
 {
-	class Typetable;
 	class BlockMetadata;
 
 	namespace bundle
@@ -40,7 +40,7 @@ namespace _2Real
 
 		public:
 
-			BlockMetainfo( BlockMetadata &data, Typetable const& typetable );
+			BlockMetainfo( BlockMetadata &data );
 
 			void setDescription( std::string const& description );
 			void setCategory( std::string const& category );
@@ -48,33 +48,37 @@ namespace _2Real
 			template< typename TData >
 			void addInlet( std::string const& name, TData initialValue )
 			{
-				addInletInternal( name, Any( initialValue ) );
+				TypeDescriptor *d = createTypeDescriptor< TData >();
+				addInletInternal( name, *d, Any( initialValue ) );
 			}
 
 			template< typename TData >
 			void addInlet( std::string const& name, TData initialValue, Options< TData > const& options );
 
 			template< typename TData >
-			void addOutlet( std::string const& outletName )
+			void addOutlet( std::string const& name )
 			{
-				addOutletInternal( outletName, typeid( TData ).name() );
+				TypeDescriptor *d = createTypeDescriptor< TData >();
+				TData data;
+				Any init( data );
+				addOutletInternal( name, *d, init );
 			}
 
 		private:
 
-			void		addInletInternal( std::string const& inletName, Any const& initialValue );
-			void		addInletInternal( std::string const& inletName, Any const& initialValue, AnyOptionSet const& options );
-			void		addOutletInternal( std::string const& outletName, std::string const& longTypename );
+			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
+			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options );
+			void		addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
 
 			BlockMetadata	&m_Impl;
-			Typetable		const& m_Typetable;
 
 		};
 
 		template< >
 		inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, Options< int > const& options )
 		{
-			addInletInternal( name, Any( initialValue ), AnyOptionSet( options ) );
+			TypeDescriptor *d = createTypeDescriptor< int >();
+			addInletInternal( name, *d, Any( initialValue ), AnyOptionSet( options ) );
 		}
 	}
 }

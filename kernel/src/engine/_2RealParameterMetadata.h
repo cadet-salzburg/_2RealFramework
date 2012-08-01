@@ -26,18 +26,21 @@
 namespace _2Real
 {
 
+	class TypeDescriptor;
+
 	class ParameterMetadata
 	{
 
 	public:
 
-		ParameterMetadata();
-		ParameterMetadata( std::string const& name, std::string const& longType, std::string const& type, Any const& defaultValue );
+		ParameterMetadata( std::string const& name, TypeDescriptor &descriptor, Any const& initialValue );
+		~ParameterMetadata();
 
-		std::string const&	getName() const;
-		std::string const&	getLongTypename() const;
-		std::string const&	getTypename() const;
-		Any const&	getDefaultValue() const;
+		std::string const&		getName() const;
+		std::string const&		getTypename() const;
+		const std::string		getLongTypename() const;
+		TypeDescriptor const&	getTypeDescriptor() const;
+		Any const&				getInitialValue() const;
 
 		void enableOptions( AnyOptionSet const& options );
 		bool hasOptions() const;
@@ -47,10 +50,9 @@ namespace _2Real
 
 	private:
 
-		std::string			m_Name;
-		std::string			m_Typename;
-		std::string			m_LongTypename;
-		Any					m_DefaultValue;
+		TypeDescriptor			*m_TypeDescriptor;
+		std::string				m_Name;
+		Any						m_InitialValue;
 		AnyOptionSet			m_Options;
 
 	};

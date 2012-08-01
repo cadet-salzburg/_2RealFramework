@@ -30,6 +30,7 @@ namespace _2Real
 	namespace bundle
 	{
 		class Block;
+		class BundleMetainfo;
 	}
 
 	class BundleLoader
@@ -41,6 +42,7 @@ namespace _2Real
 		~BundleLoader();
 
 		void clear();
+		BundleMetadata const& createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
 		bool isLibraryLoaded( std::string const& absPath ) const;
 		bool hasContext( std::string const& absPath ) const;
 		BundleMetadata const& loadLibrary( std::string const& path );

@@ -38,9 +38,9 @@ namespace _2Real
 
 	public:
 
-		typedef std::map< std::string, BlockMetadata >					BlockMetas;
-		typedef std::map< std::string, BlockMetadata >::iterator		BlockMetaIterator;
-		typedef std::map< std::string, BlockMetadata >::const_iterator	BlockMetaConstIterator;
+		typedef std::map< std::string, BlockMetadata const* >					BlockMetadatas;
+		typedef std::map< std::string, BlockMetadata const* >::iterator			BlockMetadataIterator;
+		typedef std::map< std::string, BlockMetadata const* >::const_iterator	BlockMetadataConstIterator;
 
 		BundleMetadata();
 
@@ -48,7 +48,7 @@ namespace _2Real
 
 		void						addBlockData( BlockMetadata const& data );
 		BlockMetadata const&		getBlockData( std::string const& blockName ) const;
-		BlockMetas const&			getExportedBlocks() const;
+		BlockMetadatas const&		getExportedBlocks() const;
 
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );
@@ -75,7 +75,7 @@ namespace _2Real
 		std::string					m_Contact;
 		std::string					m_Category;
 		Version						m_Version;
-		BlockMetas					m_ExportedBlocks;
+		BlockMetadatas				m_ExportedBlocks;
 
 	};
 }

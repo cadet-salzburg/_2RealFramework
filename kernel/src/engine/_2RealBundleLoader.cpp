@@ -46,8 +46,11 @@ namespace _2Real
 		for ( BundleInfoIterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
 		{
 			delete it->second.metainfo;
-			it->second.library->unload();
-			delete it->second.library;
+			if ( it->second.library != nullptr )
+			{
+				it->second.library->unload();
+				delete it->second.library;
+			}
 			it = m_LoadedBundles.erase( it );
 		}
 	}
@@ -69,6 +72,37 @@ namespace _2Real
 		}
 
 		return it->second.metainfo->hasContext();
+	}
+
+	BundleMetadata const& BundleLoader::createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) )
+	{
+		Metainfo *info = new Metainfo();
+
+		try
+		{
+			BundleInfo bundleInfo;
+			bundle::BundleMetainfo metainfo( *info );
+			MetainfoFunc( metainfo );
+			bundleInfo.metainfo = info;
+			bundleInfo.metainfo->setInstallDirectory( path );
+			bundleInfo.metainfo->cleanup();
+			m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
+		}
+		catch ( Exception &e )
+		{
+			delete info;
+			throw e;
+		}
+
+		BundleMetadata const& meta = info->getBundleData();
+		if ( meta.getName() == "undefined" )
+		{
+			ostringstream msg;
+			msg << "bundle " << meta.getInstallDirectory() << " does not define a name";
+			throw NotFoundException( msg.str() );
+		}
+
+		return meta;
 	}
 
 	BundleMetadata const& BundleLoader::loadLibrary( string const& path )
@@ -93,7 +127,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		Metainfo *info = new Metainfo( EngineImpl::instance().getTypetable() );
+		Metainfo *info = new Metainfo();
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{

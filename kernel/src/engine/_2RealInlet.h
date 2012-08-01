@@ -33,11 +33,9 @@ namespace _2Real
 	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< Inlet, bundle::InletHandle >
 	{
 
-		//friend void * findConversion( Inlet &inlet, Outlet &outlet );
-
 	public:
 
-		Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type );
+		Inlet( AbstractUberBlock &owningBlock, std::string const& name, TypeDescriptor const& type );
 		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Options const& options );
 		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Range const& range );
 
@@ -51,6 +49,8 @@ namespace _2Real
 		using Parameter::getTypename;
 		using Parameter::getLongTypename;
 		using Parameter::getData;
+		using Parameter::getType;
+		using Parameter::getTypeCategory;
 
 		void setDataAndSynchronize( TimestampedData const& data );
 		AbstractUberBlock & getOwningUberBlock();

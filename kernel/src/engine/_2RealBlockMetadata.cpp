@@ -42,6 +42,19 @@ namespace _2Real
 	{
 	}
 
+	BlockMetadata::~BlockMetadata()
+	{
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			delete *it;
+		}
+
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		{
+			delete *it;
+		}
+	}
+
 	string const& BlockMetadata::getName() const
 	{
 		return m_Name;
@@ -69,9 +82,9 @@ namespace _2Real
 
 	void BlockMetadata::addInlet( ParameterMetadata const& data )
 	{
-		for ( BlockMetadata::ParamMetaIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( it->getName() == data.getName() )
+			if ( ( **it ).getName() == data.getName() )
 			{
 				ostringstream msg;
 				msg << "inlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
@@ -79,14 +92,14 @@ namespace _2Real
 			}
 		}
 
-		m_Inlets.push_back( data );
+		m_Inlets.push_back( &data );
 	}
 
 	void BlockMetadata::addOutlet( ParameterMetadata const& data )
 	{
-		for ( BlockMetadata::ParamMetaIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( it->getName() == data.getName() )
+			if ( ( **it ).getName() == data.getName() )
 			{
 				ostringstream msg;
 				msg << "outlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
@@ -94,15 +107,15 @@ namespace _2Real
 			}
 		}
 
-		m_Outlets.push_back( data );
+		m_Outlets.push_back( &data );
 	}
 
-	BlockMetadata::ParamMetas const& BlockMetadata::getInlets() const
+	BlockMetadata::ParameterMetadatas const& BlockMetadata::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	BlockMetadata::ParamMetas const& BlockMetadata::getOutlets() const
+	BlockMetadata::ParameterMetadatas const& BlockMetadata::getOutlets() const
 	{
 		return m_Outlets;
 	}

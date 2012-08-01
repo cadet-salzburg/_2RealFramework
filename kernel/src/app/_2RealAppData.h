@@ -32,7 +32,7 @@ namespace _2Real
 		public:
 
 			AppData();
-			AppData( TimestampedData const& data, std::string const& type, std::string const& name );
+			AppData( TimestampedData const& data, std::string const& typeName, std::string const& longTypename, std::string const& name );
 
 			const std::string getLongTypename() const;
 			std::string const& getTypename() const;
@@ -42,7 +42,6 @@ namespace _2Real
 			template< typename T >
 			bool isDatatype() const
 			{
-				//return Any.isDatatype< T >(); //how should this work? replaced it with the following (ottona)
 				return m_Data.isDatatype< T >();
 			}
 
@@ -65,6 +64,7 @@ namespace _2Real
 			std::string		m_Name;
 			Any				m_Data;
 			std::string		m_Typename;
+			std::string		m_LongTypename;
 
 		};
 	}

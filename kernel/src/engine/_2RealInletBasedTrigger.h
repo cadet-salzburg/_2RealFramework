@@ -30,7 +30,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return !newData.getData().isEmpty();
+			return !newData.getData().isNull();
 		}
 	};
 

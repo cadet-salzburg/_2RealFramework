@@ -90,6 +90,53 @@ namespace _2Real
 		m_BaseDirectory = Poco::Path( directory );
 	}
 
+	void BundleManager::createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) )
+	{
+		BundleMetadata const& bundleData = m_BundleLoader.createBundleEx( path, MetainfoFunc );
+
+		app::BundleInfo::BundleData data;
+		app::BundleInfo::BlockInfos blocks;
+
+		data.name = bundleData.getName();
+		data.directory = bundleData.getInstallDirectory();
+		data.description = bundleData.getDescription();
+		data.contact = bundleData.getContact();
+		data.author = bundleData.getAuthor();
+		data.category = bundleData.getCategory();
+
+		BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
+
+		for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
+		{
+			app::BlockInfo::BlockData blockData;
+			app::BlockInfo::ParameterInfos inlets;
+			app::BlockInfo::ParameterInfos outlets;
+
+			blockData.name = it->second->getName();
+			blockData.description = it->second->getDescription();
+			blockData.category = it->second->getCategory();
+
+			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
+			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
+				inlets.push_back( paramInfo );
+			}
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
+				outlets.push_back( paramInfo );
+			}
+
+			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
+		}
+		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
+		m_Bundles.insert( bundle );
+	}
+
 	Bundle & BundleManager::loadLibrary( string const& libraryPath )
 	{
 		// TODO: this could could be a lot shorter :)
@@ -125,30 +172,30 @@ namespace _2Real
 			}
 		}
 
-		BundleMetadata::BlockMetas const& blockMetadata = bundleData.getExportedBlocks();
+		BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
 
-		for ( BundleMetadata::BlockMetaConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
+		for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
 		{
 			app::BlockInfo::BlockData blockData;
 			app::BlockInfo::ParameterInfos inlets;
 			app::BlockInfo::ParameterInfos outlets;
 
-			blockData.name = it->second.getName();
-			blockData.description = it->second.getDescription();
-			blockData.category = it->second.getCategory();
+			blockData.name = it->second->getName();
+			blockData.description = it->second->getDescription();
+			blockData.category = it->second->getCategory();
 
-			BlockMetadata::ParamMetas const& input = it->second.getInlets();
-			BlockMetadata::ParamMetas const& output = it->second.getOutlets();
+			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
+			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
 
-			for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 				inlets.push_back( paramInfo );
 			}
 
-			for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 				outlets.push_back( paramInfo );
 			}
 
@@ -169,18 +216,18 @@ namespace _2Real
 			blockData.description = contextData.getDescription();
 			blockData.category = contextData.getCategory();
 
-			BlockMetadata::ParamMetas const& input = contextData.getInlets();
-			BlockMetadata::ParamMetas const& output = contextData.getOutlets();
+			BlockMetadata::ParameterMetadatas const& input = contextData.getInlets();
+			BlockMetadata::ParameterMetadatas const& output = contextData.getOutlets();
 
-			for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 				inlets.push_back( paramInfo );
 			}
 
-			for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 				outlets.push_back( paramInfo );
 			}
 
@@ -193,14 +240,14 @@ namespace _2Real
 			m_Engine.addBlock( *contextBlock );
 
 			// adding inlets & outlets
-			for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				contextBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue(), it->getOptions() );
+				contextBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
 			}
 
-			for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				contextBlock->addOutlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue() );
+				contextBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
 			}
 
 			contextBlock->updateWithFixedRate( 1.0 );
@@ -230,18 +277,18 @@ namespace _2Real
 		blockData.description = blockMetadata.getDescription();
 		blockData.category = blockMetadata.getCategory();
 
-		BlockMetadata::ParamMetas const& input = blockMetadata.getInlets();
-		BlockMetadata::ParamMetas const& output = blockMetadata.getOutlets();
+		BlockMetadata::ParameterMetadatas const& input = blockMetadata.getInlets();
+		BlockMetadata::ParameterMetadatas const& output = blockMetadata.getOutlets();
 
-		for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 		{
-			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 			inlets.push_back( paramInfo );
 		}
 
-		for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 		{
-			app::ParameterInfo paramInfo( it->getName(), it->getTypename(), it->getLongTypename() );
+			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
 			outlets.push_back( paramInfo );
 		}
 
@@ -252,14 +299,14 @@ namespace _2Real
 		m_Engine.addBlock( *functionBlock );
 
 		// adding inlets & outlets
-		for ( BlockMetadata::ParamMetaConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 		{
-			functionBlock->addInlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue(), it->getOptions() );
+			functionBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
 		}
 
-		for ( BlockMetadata::ParamMetaConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 		{
-			functionBlock->addOutlet( it->getName(), it->getLongTypename(), it->getTypename(), it->getDefaultValue() );
+			functionBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
 		}
 
 		return *functionBlock;
