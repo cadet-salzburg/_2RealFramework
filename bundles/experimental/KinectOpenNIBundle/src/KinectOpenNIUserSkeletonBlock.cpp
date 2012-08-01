@@ -18,6 +18,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
 		KinectOpenNIBlockBase::setup(block);
 		m_IsAlignedToColorInletHandle = block.getInletHandle("IsAlignedToColor");
+		m_IsWorldCoordinatesInletHandle = block.getInletHandle("IsAlignedToColor");
 		m_SkeletonsOutletHandle = block.getOutletHandle("Skeletons");
 		m_NrOfUsersOutletHandle = block.getOutletHandle("NrOfUsers");
 		m_NrOfSkeletonsOutletHandle = block.getOutletHandle("NrOfSkeletons");
@@ -52,6 +53,9 @@ void KinectOpenNIUserSkeletonBlock::update()
 				m_bIsAlignedToColor = bIsAlignedToColor;
 			}
 
+			// world coords
+			m_bIsWorldCoordinates = m_IsWorldCoordinatesInletHandle.getReadableRef<bool>();
+
 			// get and set nr of detected users
 			int iNrOfUsers = m_OpenNIDeviceManager->getNumberOfUsers(m_iCurrentDevice);
 			if(iNrOfUsers != m_iNrOfUsers)
@@ -76,7 +80,7 @@ void KinectOpenNIUserSkeletonBlock::update()
 			}
 
 			// get and set skeletons
-			m_SkeletonsOutletHandle.getWriteableRef<std::vector< _2Real::Skeleton >>() = m_OpenNIDeviceManager->getSkeletons(m_iCurrentDevice);
+			m_SkeletonsOutletHandle.getWriteableRef<std::vector< _2Real::Skeleton >>() = m_OpenNIDeviceManager->getSkeletons(m_iCurrentDevice, m_bIsWorldCoordinates);
 		}
 
 		// call update of base class for getting device and possible user image

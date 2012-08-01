@@ -15,10 +15,12 @@ public:
 
 private:
 	InletHandle				m_IsAlignedToColorInletHandle;
+	InletHandle				m_IsWorldCoordinatesInletHandle;
 	OutletHandle			m_SkeletonsOutletHandle;
 	OutletHandle			m_NrOfUsersOutletHandle;
 	OutletHandle			m_NrOfSkeletonsOutletHandle;
 	int						m_iNrOfUsers;
 	int						m_iNrOfSkeletons;
 	bool					m_bIsAlignedToColor;
+	bool					m_bIsWorldCoordinates;
 };
