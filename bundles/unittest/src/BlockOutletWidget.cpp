@@ -21,7 +21,7 @@ BlockOutletWidget::BlockOutletWidget(_2Real::app::OutletHandle& imageHandle, QWi
 			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->setMinimumSize(80, 60);
 		}
-		else if(m_OutletHandle.getTypename() == "image of number")
+		else if(m_OutletHandle.getTypename() == "number image")
 		{
 			m_ValueWidget = new QGlTextureImage();
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -67,7 +67,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 {
 	try
 	{
-		if( m_OutletHandle.getTypename() == "image of number" )
+		if( m_OutletHandle.getTypename() == "number image" )
 		{
 			Image const& img = data.getData< Image >();
 			dynamic_cast<QGlTextureImage*>(m_ValueWidget)->updateTexture( img.getWidth(), img.getHeight(), img.getNumberOfChannels(), img.getImageType(), img.getData() );
