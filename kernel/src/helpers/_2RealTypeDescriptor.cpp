@@ -24,7 +24,7 @@ namespace _2Real
 			m_NestedType( nestedType ),
 			m_Type( type ),
 			m_TypeCategory( TypeCategory::CONTAINER ),
-			m_HumanReadableName( std::string( name ).append(" of ").append( nestedType->getTypename() ) ),
+			m_HumanReadableName( std::string( nestedType->getTypename() ).append(" ").append( name ) ),
 			m_TypeInfo( info )
 		{
 		}
