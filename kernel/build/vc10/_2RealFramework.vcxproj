@@ -51,6 +51,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealVector.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUberBlock.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
     <ClInclude Include="..\..\src\helpers\_2RealTypeDescriptor.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
     <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h" />
@@ -558,7 +560,7 @@
       <PreprocessorDefinitions>_2REAL_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>..\..\lib\_2RealFramework_32d.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
@@ -572,7 +574,7 @@
       </LinkTimeCodeGeneration>
       <OutputFile>..\..\lib\_2RealFramework_32d.lib</OutputFile>
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -617,7 +619,7 @@
       <PreprocessorDefinitions>_2REAL_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\..\..\..\externalLibs\vld\include;..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\externalLibs\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)\</ObjectFileName>
@@ -633,7 +635,7 @@
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
       <OutputFile>..\..\lib\_2RealFramework_32.lib</OutputFile>
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

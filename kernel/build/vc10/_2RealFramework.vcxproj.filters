@@ -321,6 +321,12 @@
     <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealVector.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
