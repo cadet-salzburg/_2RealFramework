@@ -100,6 +100,20 @@ namespace _2Real
 		return false;
 	}
 
+	bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
+	{
+		if ( &m_InletIO.m_Inlet->getOwningUberBlock() == &b )
+		{
+			return true;
+		}
+		else if ( &m_OutletIO.m_Outlet->getOwningUberBlock() == &b )
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	void IOLink::activate() 
 	{
 		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< InletBuffer, TimestampedData const& >( *m_InletIO.m_Buffer, &InletBuffer::receiveData );

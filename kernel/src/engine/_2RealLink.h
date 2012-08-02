@@ -24,6 +24,7 @@ namespace _2Real
 {
 	class InletIO;
 	class OutletIO;
+	class AbstractUberBlock;
 
 	class IOLink
 	{
@@ -39,6 +40,7 @@ namespace _2Real
 		OutletIO const& getOutletIO() const;
 
 		bool operator<( IOLink const& other );
+		bool isBlockInvolved( AbstractUberBlock const& b ) const;
 
 		static IOLink * tryLink( InletIO &inlet, OutletIO &outlet );
 		static const std::string findConversion( InletIO &inlet, OutletIO &outlet );

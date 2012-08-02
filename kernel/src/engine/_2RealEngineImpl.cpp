@@ -132,6 +132,16 @@ namespace _2Real
 
 	void EngineImpl::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
 	{
+		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		{
+			if ( ( *it )->isBlockInvolved( block ) )
+			{
+				( *it )->deactivate();
+				delete *it;
+				it = m_Links.erase( it );
+			}
+			else ++it;
+		}
 		m_System->removeBlock( block, timeout );
 	}
 
@@ -142,6 +152,16 @@ namespace _2Real
 
 	void EngineImpl::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
 	{
+		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		{
+			if ( ( *it )->isBlockInvolved( block ) )
+			{
+				( *it )->deactivate();
+				delete *it;
+				it = m_Links.erase( it );
+			}
+			else ++it;
+		}
 		m_System->removeBlock( block, timeout );
 	}
 
