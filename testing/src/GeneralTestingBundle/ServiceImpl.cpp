@@ -5,8 +5,6 @@
 using _2Real::bundle::BlockHandle;
 using _2Real::bundle::ContextBlock;
 using _2Real::Exception;
-using _2Real::DeviceInfos;
-using _2Real::DeviceInfo;
 
 using std::cout;
 using std::endl;

@@ -29,7 +29,9 @@
 
 #include "Poco/Mutex.h"
 
-#include "vld.h"
+#ifndef _UNIX
+	#include "vld.h"
+#endif
 #include <sstream>
 
 #include "windows.h"
@@ -61,7 +63,7 @@ public:
 
 	Receiver()
 	{
-		ImageT< float > img( 8, 6, _2Real::ImageChannelOrder::RGBA );
+		ImageT< float > img( 4, 3, _2Real::ImageChannelOrder::RGBA );
 		ImageT< float >::iterator it = img.iter();
 		while( it.nextLine() )
 		{
@@ -104,6 +106,7 @@ public:
 
 	void receiveData( AppData const& data )
 	{
+		//std::cout << "received!" << std::endl;
 		m_Access.lock();
 
 		m_ImageData.data = data.getData< ImageT< float > >().getData();
@@ -121,7 +124,7 @@ public:
 	{
 		m_Access.lock();
 
-		if ( m_Data.getTypename() == "img_float" )
+		if ( m_Data.getTypename() == "image of float" )
 		{
 			// the reason this has to happen here is
 			// the opengl context + exection thread problem
@@ -183,7 +186,7 @@ int main( int argc, char *argv[] )
 		SDL_GL_SetSwapInterval( 1 );
 
 		Engine &testEngine = Engine::instance();
-		testEngine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin\\");
+		testEngine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin" );
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
@@ -193,10 +196,31 @@ int main( int argc, char *argv[] )
 		out.start();
 
 		BlockHandle inout = testBundle.createBlockInstance( "image_in_out" );
+		InletHandle ioIn = inout.getInletHandle( "image_inlet" );
+		OutletHandle ioOut = inout.getOutletHandle( "image_outlet" );
+
+		BlockHandle in = testBundle.createBlockInstance( "image_in" );
+		InletHandle iIn = in.getInletHandle( "image_inlet" );
 
 		OutletHandle oOut = out.getOutletHandle( "image_outlet" );
 		Receiver receiver;
 		oOut.registerToNewData( receiver, &Receiver::receiveData );
+
+		if ( !ioIn.tryLink( oOut ) )
+		{
+			ioIn.tryLinkWithConversion( oOut );
+		}
+		if ( !iIn.tryLink( ioOut ) )
+		{
+			try
+			{
+				iIn.tryLinkWithConversion( ioOut );
+			}
+			catch( Exception &e )
+			{
+				std::cout << e.message() << std::endl;
+			}
+		}
 
 		bool run = true;
 		SDL_Event *ev = new SDL_Event;

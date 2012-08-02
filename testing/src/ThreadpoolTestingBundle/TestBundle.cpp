@@ -3,7 +3,7 @@
 #include "_2RealBundle.h"
 
 using namespace _2Real::bundle;
-using _2Real::Exception;
+using namespace _2Real;
 
 using std::string;
 
@@ -18,23 +18,21 @@ void getBundleMetainfo( BundleMetainfo &info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		ContextBlockMetainfo &context = info.exportContextBlock< TestContext >();
-
-		BlockMetainfo &out = info.exportBlock< Out, WithContext >( "out" );
+		BlockMetainfo &out = info.exportBlock< Out, WithoutContext >( "out" );
 		out.setDescription( "test" );
 		out.addInlet< string >( "out_msg", "undefined" );
-		out.addOutlet< unsigned int >( "out_outlet" );
+		out.addOutlet< long >( "out_outlet" );
 
-		BlockMetainfo &inout = info.exportBlock< InOut, WithContext >( "in_out" );
+		BlockMetainfo &inout = info.exportBlock< InOut, WithoutContext >( "in_out" );
 		inout.setDescription( "test" );
 		inout.addInlet< string >( "inout_msg", "undefined" );
-		inout.addInlet< unsigned int >( "inout_inlet", (unsigned int)0 );
-		inout.addOutlet< unsigned int >( "inout_outlet" );
+		inout.addInlet< double >( "inout_inlet", 0. );
+		inout.addOutlet< double >( "inout_outlet" );
 
-		BlockMetainfo &in = info.exportBlock< In, WithContext >( "in" );
+		BlockMetainfo &in = info.exportBlock< In, WithoutContext >( "in" );
 		in.setDescription( "test" );
 		in.addInlet< string >( "in_msg", "undefined" );
-		in.addInlet< unsigned int >( "in_inlet", (unsigned int)20 );
+		in.addInlet< Number >( "in_inlet", Number( 0x0000 ) );
 	}
 	catch ( Exception &e )
 	{

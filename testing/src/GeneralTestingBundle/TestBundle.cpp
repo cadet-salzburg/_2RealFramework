@@ -10,10 +10,6 @@ using _2Real::bundle::BlockMetainfo;
 using _2Real::bundle::ContextBlockMetainfo;
 using _2Real::bundle::WithContext;
 using _2Real::Exception;
-using _2Real::Enumeration;
-using _2Real::StringEnumeration;
-using _2Real::StringEnums;
-using _2Real::DeviceInfos;
 
 using std::string;
 using std::vector;

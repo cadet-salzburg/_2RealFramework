@@ -4,6 +4,7 @@
 
 using namespace _2Real::bundle;
 using _2Real::ImageT;
+using _2Real::Image;
 using _2Real::Exception;
 
 using std::string;
@@ -25,8 +26,8 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		BlockMetainfo imgInOut = info.exportBlock< ImageInOut, WithoutContext >( "image_in_out" );
 		imgInOut.setDescription( "testing the context's functionality" );
-		imgInOut.addInlet< ImageT< float > >( "image_inlet", ImageT< float >() );
-		imgInOut.addOutlet< ImageT< float > >( "image_outlet" );
+		imgInOut.addInlet< Image >( "image_inlet", Image() );
+		imgInOut.addOutlet< Image >( "image_outlet" );
 
 		BlockMetainfo imgIn = info.exportBlock< ImageIn, WithoutContext >( "image_in" );
 		imgIn.setDescription( "testing the context's functionality" );

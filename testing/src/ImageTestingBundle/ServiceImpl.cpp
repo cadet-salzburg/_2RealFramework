@@ -53,6 +53,8 @@ void ImageOut::update()
 				itOut.g() = float( rand()%255 + 1 ) / 255.0f;
 				itOut.b() = float( rand()%255 + 1 ) / 255.0f;
 				itOut.a() = float( rand()%255 + 1 ) / 255.0f;
+
+				//std::cout << itOut.r() << " " << itOut.g() << " " << itOut.b() << " " << itOut.a() << std::endl;
 			}
 		}
 	}
@@ -77,23 +79,23 @@ void ImageInOut::setup( BlockHandle &context )
 {
 	try
 	{
-		m_In = context.getInletHandle( "image_inlet" );
-		m_Out = context.getOutletHandle( "image_outlet" );
+		//m_In = context.getInletHandle( "image_inlet" );
+		//m_Out = context.getOutletHandle( "image_outlet" );
 
-		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
-		outImg = ImageT< float >( 640, 640, ImageChannelOrder::RGBA );
+		//ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
+		//outImg = ImageT< float >( 640, 640, ImageChannelOrder::RGBA );
 
-		ImageT< float >::iterator it = outImg.iter();
-		while( it.nextLine() )
-		{
-			while ( it.nextPixel() )
-			{
-				it.r() = 0.0f;
-				it.g() = 0.0f;
-				it.b() = 0.0f;
-				it.a() = 0.0f;
-			}
-		}
+		//ImageT< float >::iterator it = outImg.iter();
+		//while( it.nextLine() )
+		//{
+		//	while ( it.nextPixel() )
+		//	{
+		//		it.r() = 0.0f;
+		//		it.g() = 0.0f;
+		//		it.b() = 0.0f;
+		//		it.a() = 0.0f;
+		//	}
+		//}
 	}
 	catch ( Exception &e )
 	{
@@ -105,24 +107,26 @@ void ImageInOut::update()
 {
 	try
 	{
-		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
-		ImageT< float > const& inImg = m_In.getReadableRef< ImageT< float > >();
+		//ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();
+		//ImageT< float > const& inImg = m_In.getReadableRef< ImageT< float > >();
 
-		ImageT< float >::iterator outIt = outImg.iter();
-		ImageT< float >::const_iterator inIt = inImg.const_iter();
+		//ImageT< float >::iterator outIt = outImg.iter();
+		//ImageT< float >::const_iterator inIt = inImg.const_iter();
 
-		//outImg = inImg;
+		////outImg = inImg;
 
-		while( inIt.nextLine() && outIt.nextLine() )
-		{
-			while ( inIt.nextPixel() && outIt.nextPixel() )
-			{
-				outIt.r() = inIt.a() - 1.0f;
-				outIt.g() = inIt.g() + 1.0f;
-				outIt.b() = inIt.b() + 1.0f;
-				outIt.a() = 100.0f;
-			}
-		}
+		//while( inIt.nextLine() && outIt.nextLine() )
+		//{
+		//	while ( inIt.nextPixel() && outIt.nextPixel() )
+		//	{
+		//		outIt.r() = inIt.a() - 1.0f;
+		//		outIt.g() = inIt.g() + 1.0f;
+		//		outIt.b() = inIt.b() + 1.0f;
+		//		outIt.a() = 100.0f;
+		//	}
+		//}
+
+		std::cout << "updated image" << std::endl;
 	}
 	catch ( Exception &e )
 	{
