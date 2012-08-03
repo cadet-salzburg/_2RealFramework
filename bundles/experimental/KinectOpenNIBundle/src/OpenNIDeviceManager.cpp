@@ -338,6 +338,7 @@ std::vector<_2Real::Skeleton> OpenNIDeviceManager::getSkeletons(const unsigned i
 		for(int i=0; i<iNrOfSkeletons; i++)
 		{
 			skeletons.push_back( getSkeleton(deviceIdx, i, bIsWorldCoordinates ) );
+			skeletons.back().setGlobal(bIsWorldCoordinates);
 		}
 		
 		return skeletons; 
@@ -370,6 +371,7 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 			{
 				positions[i].x/=(float)w;
 				positions[i].y/=(float)h;
+				positions[i].z=0;				// useless for screen coords
 			}
 		}
 

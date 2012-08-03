@@ -327,6 +327,9 @@
     <ClInclude Include="..\..\src\datatypes\_2RealVector.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealBoundingBox.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">

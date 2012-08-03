@@ -21,6 +21,7 @@
 
 #include "datatypes/_2RealPoint.h"
 #include "datatypes/_2RealRigidBody.h"
+#include "datatypes/_2RealBoundingBox.h"
 
 #include <string>
 #include <sstream>
@@ -53,12 +54,16 @@ namespace _2Real
 		void setGlobal( bool global)			{ m_Global = global; }
 		bool isGlobal() const					{ return m_Global; }
 		
+		void setLimit(_2Real::BoundingBox& bb)							{ m_BoundingBoxLimit = bb; }
+		const _2Real::BoundingBox& getLimit()							{ return m_BoundingBoxLimit; }
 
 	private:
 		std::vector<_2Real::RigidBody>  m_RigidBodies;
 		std::string						m_Label;
 		int								m_Id;
 		bool							m_Global;
+		_2Real::BoundingBox				m_BoundingBoxLimit;			// space limits which describe e.g. for kinect the volume for world coordinates it's working, need this for the rendering in a 3d scene
+	
 	};
 
 	// no serialization for now

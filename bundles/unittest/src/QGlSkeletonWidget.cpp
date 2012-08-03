@@ -1,6 +1,11 @@
 #include "QGlSkeletonWidget.h"
 
-QGlSkeletonWidget::QGlSkeletonWidget( QWidget *parent) : QGLViewer(parent) 
+QGlSkeletonWidget::QGlSkeletonWidget( QWidget *parent) : m_MinSceneLimit(-1), m_MaxSceneLimit(1), m_bIsGlobal(false), QGLViewer(parent) 
+{
+}
+
+
+QGlSkeletonWidget::QGlSkeletonWidget(_2Real::Vec3 minSceneLimit, _2Real::Vec3 maxSceneLimit, QWidget *parent) : m_MinSceneLimit(minSceneLimit), m_MaxSceneLimit(maxSceneLimit), m_bIsGlobal(false), QGLViewer(parent)
 {
 }
 
@@ -10,9 +15,9 @@ QGlSkeletonWidget::~QGlSkeletonWidget()
 
 void QGlSkeletonWidget::init()
 {
-	//camera()->showEntireScene();
+	setSceneBoundingBox(qglviewer::Vec(m_MinSceneLimit[0], m_MinSceneLimit[1], m_MinSceneLimit[2]), qglviewer::Vec(m_MaxSceneLimit[0], m_MaxSceneLimit[1], m_MaxSceneLimit[2]));
+	camera()->showEntireScene();
 	setAxisIsDrawn(true);
-	
 }
 
 void QGlSkeletonWidget::draw()
@@ -34,7 +39,7 @@ void QGlSkeletonWidget::draw()
 			{
 				double x = -1 + 2 * (double(joints[k].x())); 
 				double y = -1 + 2 * (double(joints[k].y())); 
-				double z = double(joints[k].y());
+				double z = double(joints[k].z());
 
 				glBegin(GL_POINTS);
 					glVertex3f(x,y,z);
@@ -49,6 +54,7 @@ void QGlSkeletonWidget::updateSkeleton( const _2Real::Skeleton& skeleton  )
 {
 	m_Skeletons.clear();
 	m_Skeletons.push_back(skeleton);
+
 	update();
 }
 
@@ -57,4 +63,13 @@ void QGlSkeletonWidget::updateSkeletons( const std::vector<_2Real::Skeleton>& sk
 	m_Skeletons.clear();
 	m_Skeletons = skeletons;
 	update();
+}
+
+
+void QGlSkeletonWidget::setSceneLimis(_2Real::Vec3 minSceneLimit, _2Real::Vec3 maxSceneLimit)
+{
+	m_MinSceneLimit = minSceneLimit;
+	m_MaxSceneLimit = maxSceneLimit;
+	setSceneBoundingBox(qglviewer::Vec(m_MinSceneLimit[0], m_MinSceneLimit[1], m_MinSceneLimit[2]), qglviewer::Vec(m_MaxSceneLimit[0], m_MaxSceneLimit[1], m_MaxSceneLimit[2]));
+	camera()->showEntireScene();
 }
