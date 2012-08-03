@@ -79,7 +79,7 @@ namespace _2Real
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( char ), Type::BYTE, "byte", TypeCategory::ARITHMETHIC );
+			return new TypeDescriptor( typeid( char ), Type::BYTE, "char", TypeCategory::ARITHMETHIC );
 		}
 	};
 
@@ -88,7 +88,7 @@ namespace _2Real
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( unsigned char ), Type::UBYTE, "unsigned byte", TypeCategory::ARITHMETHIC );
+			return new TypeDescriptor( typeid( unsigned char ), Type::UBYTE, "unsigned char", TypeCategory::ARITHMETHIC );
 		}
 	};
 
