@@ -18,7 +18,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 		setGeneratorType(_2RealKinectWrapper::USERIMAGE);
 		KinectOpenNIBlockBase::setup(block);
 		m_IsAlignedToColorInletHandle = block.getInletHandle("IsAlignedToColor");
-		m_IsWorldCoordinatesInletHandle = block.getInletHandle("IsAlignedToColor");
+		m_IsWorldCoordinatesInletHandle = block.getInletHandle("IsWorldCoordinates");
 		m_SkeletonsOutletHandle = block.getOutletHandle("Skeletons");
 		m_NrOfUsersOutletHandle = block.getOutletHandle("NrOfUsers");
 		m_NrOfSkeletonsOutletHandle = block.getOutletHandle("NrOfSkeletons");

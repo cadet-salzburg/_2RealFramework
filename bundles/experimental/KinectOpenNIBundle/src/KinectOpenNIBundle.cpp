@@ -3,6 +3,7 @@
 #include "KinectOpenNIDepthBlock.h"
 #include "KinectOpenNIIrBlock.h"
 #include "KinectOpenNIUserSkeletonBlock.h"
+#include "KinectOpenNIMotorBlock.h"
 
 #include "_2RealBundle.h"
 #include <sstream>
@@ -79,6 +80,12 @@ void getBundleMetainfo( BundleMetainfo& info )
 		irBlockInfo.addOutlet<int>( "Width" );
 		irBlockInfo.addOutlet<int>( "Height" );
 		irBlockInfo.setDescription( "OpenNI Kinect Infrared Image Block" );
+
+		BlockMetainfo motorBlockInfo = info.exportBlock< KinectOpenNIMotorBlock, WithContext >( "KinectOpenNIMotorBlock" );
+		motorBlockInfo.addInlet<int>( "DeviceIndex", 0 );
+		motorBlockInfo.addInlet<int>( "Angle", 0 );
+		motorBlockInfo.addOutlet<int>("Angle");
+		motorBlockInfo.setDescription( "OpenNI Kinect Motor Control Block" );
 	}
 	catch ( Exception &e )
 	{

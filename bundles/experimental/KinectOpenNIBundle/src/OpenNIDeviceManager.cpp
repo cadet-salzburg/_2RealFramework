@@ -388,3 +388,13 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 		return _2Real::Skeleton(); 
 	}
 }
+
+ void OpenNIDeviceManager::setMotorAngle(int deviceIdx, int angle)
+ {
+	 m_2RealKinect->setMotorAngle(deviceIdx, angle);
+ }
+
+ int OpenNIDeviceManager::getMotorAngle(int deviceIdx)
+ {
+	 return m_2RealKinect->getMotorAngle(deviceIdx);
+ }
