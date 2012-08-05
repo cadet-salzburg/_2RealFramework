@@ -33,16 +33,16 @@ namespace _2Real
 	public:
 
 		Number();
-		explicit Number( const char c );
-		explicit Number( const unsigned char c );
-		explicit Number( const short s );
-		explicit Number( const unsigned short s );
-		explicit Number( const int i );
-		explicit Number( const unsigned int i );
-		explicit Number( const long l );
-		explicit Number( const unsigned long l );
-		explicit Number( const float f );
-		explicit Number( const double d );
+		Number( const char c );
+		Number( const unsigned char c );
+		Number( const short s );
+		Number( const unsigned short s );
+		Number( const int i );
+		Number( const unsigned int i );
+		Number( const long l );
+		Number( const unsigned long l );
+		Number( const float f );
+		Number( const double d );
 
 		Number( Number const& src );
 		Number & operator=( Number const& src );

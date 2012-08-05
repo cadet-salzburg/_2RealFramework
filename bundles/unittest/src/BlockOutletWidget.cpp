@@ -80,7 +80,10 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 		else if(m_OutletHandle.getTypename() == "skeleton vector")
 		{
 			std::vector<Skeleton> const& skeletons = data.getData< std::vector<Skeleton >>();
-			dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->updateSkeletons( skeletons );
+			if(skeletons.size()>0)
+			{
+				dynamic_cast<QGlSkeletonWidget*>(m_ValueWidget)->updateSkeletons( skeletons );
+			}
 		}
 		else if(m_OutletHandle.getTypename().find("vector")!=string::npos || m_OutletHandle.getTypename().find("list")!=string::npos)
 		{

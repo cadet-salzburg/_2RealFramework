@@ -76,6 +76,9 @@ namespace _2Real
 		Number const& y() const { return m_Y; }
 		Number const& z() const { return m_Z; }
 
+		bool operator==(Point const& rhs) const { return (m_X == rhs.m_X && m_Y == rhs.m_Y && m_Z == rhs.m_Z && m_Id == rhs.m_Id); }
+		bool operator!=(Point const& rhs) const { return !(*this == rhs); }
+
 	private:
 
 		Number			m_X;

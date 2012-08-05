@@ -11,12 +11,12 @@ class QGlSkeletonWidget : public QGLViewer
 
 public:
 	QGlSkeletonWidget(QWidget *parent=0);
-	QGlSkeletonWidget(_2Real::Vec3 minSceneLimit, _2Real::Vec3 maxSceneLimit, QWidget *parent=0);
 	~QGlSkeletonWidget();
 
 	void updateSkeleton( const _2Real::Skeleton& skeleton  );
 	void updateSkeletons( const std::vector<_2Real::Skeleton>& skeletons );
-	void setSceneLimis(_2Real::Vec3 minSceneLimit, _2Real::Vec3 maxSceneLimit);
+	void setSceneLimits(_2Real::BoundingBox sceneLimit);
+
 protected:
 
 	virtual void init();
@@ -24,8 +24,7 @@ protected:
 
 private:
 	std::vector<_2Real::Skeleton>	m_Skeletons;
-	_2Real::Vec3					m_MinSceneLimit;
-	_2Real::Vec3					m_MaxSceneLimit;
+	_2Real::BoundingBox				m_SceneLimit;
 	bool							m_bIsGlobal;
 };
 

@@ -23,6 +23,7 @@
 
 #include <istream>
 #include <ostream>
+#include <iostream>
 #include <string>
 
 namespace _2Real
@@ -32,23 +33,27 @@ namespace _2Real
 
 	public:
 
-		BoundingBox() : m_Min( 0 ), m_Max( 0 ) {}
-		BoundingBox( Vec3 const& min, Vec3 const& max ) : m_Min( min ), m_Max( max ) {}
+		BoundingBox() : m_Min(  ), m_Max( ) {}
+		BoundingBox( Point min, Point max ) : m_Min( min ), m_Max( max ) {}
 		BoundingBox( BoundingBox const& src ) : m_Min( src.m_Min ), m_Max( src.m_Max ) {}
+		BoundingBox & BoundingBox::operator=( BoundingBox const& src ) { m_Min = src.m_Min; m_Max = src.m_Max; return *this; }
 
-		void set( Vec3 const& min, Vec3 const& max)
+		void set( const Point& min, const Point& max)
 		{
 			m_Min = min;
 			m_Max = max;
 		}
 
-		const Vec3& getMin()	{ return m_Min; }
-		const Vec3& getMax()	{ return m_Max; }
+		Point getMin()	{ return m_Min; }
+		Point getMax()	{ return m_Max; }
+
+		bool operator==(BoundingBox const& rhs) const { return (m_Min == rhs.m_Min && m_Max == rhs.m_Max); }
+		bool operator!=(BoundingBox const& rhs) const { return !(*this == rhs); }
 
 	private:
 
-		_2Real::Vec3	m_Min;
-		_2Real::Vec3	m_Max;
+		_2Real::Point	m_Min;
+		_2Real::Point	m_Max;
 
 	};
 }

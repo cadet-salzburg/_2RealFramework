@@ -339,6 +339,14 @@ std::vector<_2Real::Skeleton> OpenNIDeviceManager::getSkeletons(const unsigned i
 		{
 			skeletons.push_back( getSkeleton(deviceIdx, i, bIsWorldCoordinates ) );
 			skeletons.back().setGlobal(bIsWorldCoordinates);
+			if(bIsWorldCoordinates)
+			{
+				skeletons.back().setLimit(_2Real::BoundingBox(_2Real::Point(-3000,-3000,-3000), _2Real::Point(3000,3000,3000))); 
+			}
+			else
+			{
+				skeletons.back().setLimit(_2Real::BoundingBox(_2Real::Point(-1,-1,-1), _2Real::Point(1,1,1)));
+			}
 		}
 		
 		return skeletons; 

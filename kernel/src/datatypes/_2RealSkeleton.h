@@ -39,7 +39,7 @@ namespace _2Real
 	public:
 
 		Skeleton() {}
-		Skeleton( Skeleton const& src ) : m_RigidBodies( src.m_RigidBodies ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_Global( src.m_Global ) {}
+		Skeleton( Skeleton const& src ) : m_RigidBodies( src.m_RigidBodies ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_Global( src.m_Global ), m_BoundingBoxLimit(src.m_BoundingBoxLimit) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies, std::string const& l, const unsigned int id, const bool global ) : m_RigidBodies( rigidBodies ), m_Label( l ), m_Id ( id ), m_Global( global ) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies ) : m_RigidBodies( rigidBodies ), m_Label( "undefined" ), m_Id( -1 ), m_Global( true ) {}
 		
@@ -54,8 +54,8 @@ namespace _2Real
 		void setGlobal( bool global)			{ m_Global = global; }
 		bool isGlobal() const					{ return m_Global; }
 		
-		void setLimit(_2Real::BoundingBox& bb)							{ m_BoundingBoxLimit = bb; }
-		const _2Real::BoundingBox& getLimit()							{ return m_BoundingBoxLimit; }
+		void setLimit(_2Real::BoundingBox bb)							{ m_BoundingBoxLimit = bb; }
+		_2Real::BoundingBox getLimit()									{ return m_BoundingBoxLimit; }
 
 	private:
 		std::vector<_2Real::RigidBody>  m_RigidBodies;
