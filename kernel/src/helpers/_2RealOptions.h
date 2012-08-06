@@ -141,10 +141,10 @@ namespace _2Real
 		}
 
 		template< typename TData >
-		std::set< Option< TData > > extract()
+		std::set< Option< TData > > extract() const
 		{
 			std::set< Option< TData > > result;
-			for ( AnyOptionSet::OptionIterator it = options.m_Options.begin(); it != options.m_Options.end(); ++it )
+			for ( AnyOptionSet::OptionIterator it = m_Options.begin(); it != m_Options.end(); ++it )
 			{
 				TData const& v = it->getValue().extract< TData >();
 				result.insert( Option< TData >( v, it->getDescription() ) );
