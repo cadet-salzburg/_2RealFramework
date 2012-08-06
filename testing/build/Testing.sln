@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTestingBundle", "Con
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageTestingBundle", "ImageTestingBundle.vcxproj", "{EE72375C-A239-4FA3-86B8-547AB3A3F92A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTestingApp", "FaceTestingApp.vcxproj", "{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{EE72375C-A239-4FA3-86B8-547AB3A3F92A}.Debug|Win32.Build.0 = Debug|Win32
 		{EE72375C-A239-4FA3-86B8-547AB3A3F92A}.Release|Win32.ActiveCfg = Release|Win32
 		{EE72375C-A239-4FA3-86B8-547AB3A3F92A}.Release|Win32.Build.0 = Release|Win32
+		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Debug|Win32.Build.0 = Debug|Win32
+		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Release|Win32.ActiveCfg = Release|Win32
+		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
