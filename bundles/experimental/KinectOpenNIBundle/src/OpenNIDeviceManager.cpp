@@ -379,6 +379,7 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 			{
 				positions[i].x/=(float)w;
 				positions[i].y/=(float)h;
+				positions[i].y = 1.0f - positions[i].y;
 				positions[i].z=0;				// useless for screen coords
 			}
 		}
