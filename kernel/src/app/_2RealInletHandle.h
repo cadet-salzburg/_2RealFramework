@@ -87,7 +87,7 @@ namespace _2Real
 			std::set< Option< TData > > getOptionMapping() const
 			{
 				AnyOptionSet const& anyOptions = this->getOptionSet();
-				return extractFrom< TData >( anyOptions );
+				return anyOptions.extract< TData >();
 			}
 
 		private:
