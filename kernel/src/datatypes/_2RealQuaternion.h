@@ -20,6 +20,7 @@
 #pragma once
 
 #include "datatypes/_2RealNumber.h"
+#include "datatypes/_2RealVector.h"
 
 #include <istream>
 #include <ostream>
@@ -148,6 +149,15 @@ namespace _2Real
             m_Z = Number(0.f);
             return *this;
         }
+
+		void getAxisAngle(_2Real::Vec3& axis, float& angle)
+		{
+			float scale = sqrt((float(m_X * m_X + m_Y * m_Y + m_Z * m_Z)));
+			axis[0] = float(m_X) / scale;
+			axis[1] = float(m_Y) / scale;
+			axis[2] = float(m_Z) / scale;
+			angle = acos(float(m_W)) * 2.0f;
+		}
 
 		void setLabel( std::string const& l )	{ m_Label = l; }
 		std::string const& getLabel() const		{ return m_Label; }
