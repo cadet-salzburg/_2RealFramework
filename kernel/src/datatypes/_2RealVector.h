@@ -287,22 +287,22 @@ namespace _2Real
 			return o;
 		}
 
-		template<typename T, std::size_t s>	friend std::ostream &operator << ( std::ostream &ostr, const Vector<T,s> &v );
+		template<typename T0, std::size_t s0>				friend std::ostream &operator << ( std::ostream &ostr, const Vector<T0,s0> &v );
 
-		template<typename T, std::size_t s> 			friend Vector<T,s> 	operator - ( const Vector<T,s> &v );
-		template<typename T, std::size_t s, typename F>	friend Vector<T,s> 	operator * ( F f, const Vector<T,s> &v );
-		template<typename T, std::size_t s, typename F>	friend Vector<T,s> 	operator * ( const Vector<T,s> &v, F f );
-		template<typename T, std::size_t s, typename F>	friend Vector<T,s>	operator / ( const Vector<T,s> &v, F f );
-		template<typename T, std::size_t s>				friend Vector<T,s> 	operator + ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend Vector<T,s> 	operator - ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend T 		operator * ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend Vector<T,s> 	operator ^ ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
+		template<typename T0, std::size_t s0> 				friend Vector<T0,s0> 	operator - ( const Vector<T0,s0> &v );
+		template<typename T0, std::size_t s0, typename F>	friend Vector<T0,s0> 	operator * ( F f, const Vector<T0,s0> &v );
+		template<typename T0, std::size_t s0, typename F>	friend Vector<T0,s0> 	operator * ( const Vector<T0,s0> &v, F f );
+		template<typename T0, std::size_t s0, typename F>	friend Vector<T0,s0>	operator / ( const Vector<T0,s0> &v, F f );
+		template<typename T0, std::size_t s0>				friend Vector<T0,s0> 	operator + ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend Vector<T0,s0> 	operator - ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend T 		operator * ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend Vector<T0,s0> 	operator ^ ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
 
-		template<typename T, std::size_t s>				friend bool		operator < ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend bool		operator > ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend bool		operator <= ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend bool		operator >= ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
-		template<typename T, std::size_t s>				friend bool		operator == ( const Vector<T,s> &lhs, const Vector<T,s> &rhs );
+		template<typename T0, std::size_t s0>				friend bool		operator < ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend bool		operator > ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend bool		operator <= ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend bool		operator >= ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
+		template<typename T0, std::size_t s0>				friend bool		operator == ( const Vector<T0,s0> &lhs, const Vector<T0,s0> &rhs );
 
 	private:
 #ifdef _2REAL_BLAS_DYNAMIC_MEMORY
