@@ -77,9 +77,6 @@ namespace _2Real
 		typedef T*			iterator;
 		typedef const T*	const_iterator;		
 
-		friend std::istream & operator>>( std::istream &in, Point &number );
-		friend std::ostream & operator<<( std::ostream &out, Point const& number );
-
 	public:
 
 		//default constructor, initializes with 0
