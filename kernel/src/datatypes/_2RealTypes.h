@@ -24,6 +24,8 @@
 #include "datatypes/_2RealImage.h"
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealPoint.h"
+#include "datatypes/_2RealSpace.h"
+#include "datatypes/_2RealVector.h"
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealRigidBody.h"
@@ -269,6 +271,60 @@ namespace _2Real
 		static TypeDescriptor *createTypeDescriptor()
 		{
 			return new TypeDescriptor( typeid( RigidBody ), Type::RIGIDBODY, "rigid body", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
+	struct traits< Vec2 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Vec2 ), Type::VECTOR2D, "vector 2D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Vec3 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Vec3 ), Type::VECTOR3D, "vector 3D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Vec4 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Vec4 ), Type::VECTOR4D, "vector 4D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Space2D >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Space2D ), Type::SPACE2D, "space 2D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Space3D >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Space3D ), Type::SPACE3D, "space 3D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Space4D >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Space4D ), Type::SPACE4D, "space 4D", TypeCategory::ARITHMETHIC );
 		}
 	};
 

@@ -55,6 +55,9 @@ namespace _2Real
 		int				getCode() const { return m_ChannelCode; }
 
 		const bool operator==( ImageChannelOrder const& rhs ) const { return m_ChannelCode == rhs.m_ChannelCode; }
+		const bool operator!=( ImageChannelOrder const& rhs ) const { return m_ChannelCode != rhs.m_ChannelCode; }
+
+		const char *toString() const;
 
 	private:
 
@@ -67,7 +70,18 @@ namespace _2Real
 		uint8_t			m_AlphaOffset;
 		uint8_t			m_NumChannels;
 
+		friend std::ostream &operator << ( std::ostream &ostr, const ImageChannelOrder &ico );
+		friend bool operator==( const ImageChannelOrder &lhs, ImageChannelOrder::CHANNEL_CODE rhs );
+		friend bool operator==( ImageChannelOrder::CHANNEL_CODE lhs, const ImageChannelOrder &rhs );
+		friend bool operator!=( const ImageChannelOrder &lhs, ImageChannelOrder::CHANNEL_CODE rhs );
+		friend bool operator!=( ImageChannelOrder::CHANNEL_CODE lhs, const ImageChannelOrder &rhs );
 	};
+
+	inline std::ostream &operator << ( std::ostream &ostr, const ImageChannelOrder &ico )			{	return ostr << ico.toString();		}
+	inline bool operator==( const ImageChannelOrder &lhs, ImageChannelOrder::CHANNEL_CODE rhs )		{	return lhs.m_ChannelCode == rhs;	}
+	inline bool operator==( ImageChannelOrder::CHANNEL_CODE lhs, const ImageChannelOrder &rhs )		{	return lhs == rhs.m_ChannelCode;	}
+	inline bool operator!=( const ImageChannelOrder &lhs, ImageChannelOrder::CHANNEL_CODE rhs )		{	return lhs.m_ChannelCode != rhs;	}
+	inline bool operator!=( ImageChannelOrder::CHANNEL_CODE lhs, const ImageChannelOrder &rhs )		{	return lhs != rhs.m_ChannelCode;	}
 
 	template< typename T >
 	class ImageChannelT

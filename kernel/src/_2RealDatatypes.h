@@ -22,6 +22,7 @@
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealPoint.h"
+#include "datatypes/_2RealSpace.h"
 #include "datatypes/_2RealVector.h"
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealRigidBody.h"

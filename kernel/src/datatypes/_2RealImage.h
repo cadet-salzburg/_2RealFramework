@@ -89,14 +89,42 @@ namespace _2Real
 		size_t			getByteSize() const { return m_ByteSize; }
 		int				getDatatype() const { return m_ImageType; }
 
-		const bool operator==( ImageType const& src ) const { return m_ImageType == src.m_ImageType; }
+		bool operator==( ImageType const& src ) const { return m_ImageType == src.m_ImageType; }
+		bool operator!=( ImageType const& src ) const { return m_ImageType != src.m_ImageType; }
+
+		const char *toString() const
+		{
+			switch( m_ImageType )
+			{
+			case UNSIGNED_BYTE:
+				return "ubyte";
+			case UNSIGNED_SHORT:
+				return "ushort";
+			case FLOAT:
+				return "float";
+			case DOUBLE:
+				return "double";
+			}
+			return "INVALID";
+		}
 
 	private:
 
 		IMAGE_TYPE		m_ImageType;
 		size_t			m_ByteSize;
 
+		friend std::ostream &operator << ( std::ostream &ostr, const ImageType &it );
+		friend bool operator==( const ImageType &lhs, ImageType::IMAGE_TYPE rhs );
+		friend bool operator==( ImageType::IMAGE_TYPE lhs, const ImageType &rhs );
+		friend bool operator!=( const ImageType &lhs, ImageType::IMAGE_TYPE rhs );
+		friend bool operator!=( ImageType::IMAGE_TYPE lhs, const ImageType &rhs );
 	};
+
+	inline std::ostream &operator << ( std::ostream &ostr, const ImageType &it )	{	return ostr << it.toString();	}
+	inline bool operator==( const ImageType &lhs, ImageType::IMAGE_TYPE rhs )		{	return lhs.m_ImageType == rhs;	}
+	inline bool operator==( ImageType::IMAGE_TYPE lhs, const ImageType &rhs )		{	return lhs == rhs.m_ImageType;	}
+	inline bool operator!=( const ImageType &lhs, ImageType::IMAGE_TYPE rhs )		{	return lhs.m_ImageType != rhs;	}
+	inline bool operator!=( ImageType::IMAGE_TYPE lhs, const ImageType &rhs )		{	return lhs != rhs.m_ImageType;	}
 
 	class Image
 	{

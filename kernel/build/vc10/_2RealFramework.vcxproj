@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealQuaternion.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealRigidBody.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealSpace.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealType.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h" />

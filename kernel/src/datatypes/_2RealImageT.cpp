@@ -101,4 +101,39 @@ namespace _2Real
 		m_NumChannels = channelCount;
 	}
 
+	const char *ImageChannelOrder::toString() const
+	{
+		switch( m_ChannelCode )
+		{
+		case RGBA:
+			return "rgba";
+		case BGRA:
+			return "bgra";
+		case ARGB:
+			return "argb";
+		case ABGR:
+			return "abgr";
+		case RGBX:
+			return "rgbx";
+		case BGRX:
+			return "bgrx";
+		case XRGB:
+			return "xrgb";
+		case XBGR:
+			return "xbgr";
+		case RGB:
+			return "rgb";
+		case BGR:
+			return "bgr";
+		case R:
+			return "r";
+		case G:
+			return "g";
+		case B:
+			return "b";
+		case A:
+			return "a";
+		}
+		return "INVALID";
+	}
 }

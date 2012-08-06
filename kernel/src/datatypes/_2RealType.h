@@ -47,7 +47,13 @@ namespace _2Real
 			POINT,
 			SKELETON,
 			RIGIDBODY,
-			QUATERNION
+			QUATERNION,
+			VECTOR2D,
+			VECTOR3D,
+			VECTOR4D,
+			SPACE2D,
+			SPACE3D,
+			SPACE4D
 		};
 
 		Type( Code const& code ) : m_Code( code ) {}
