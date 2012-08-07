@@ -343,7 +343,7 @@ namespace _2Real
 		ImageChannelOrder const&	getChannelOrder() const { return m_ChannelOrder; }
 		unsigned int				getNumberOfChannels() const { return m_ChannelOrder.getNumberOfChannels(); }
 		size_t						getByteSize() const { return m_Size; }
-		size_t						getBitsPerPixel() const { return m_ImageType.getByteSize()*8; }
+		size_t						getBitsPerPixel() const { return m_ImageType.getByteSize()*m_ChannelOrder.getNumberOfChannels()*8; }
 		unsigned int				getWidth() const { return m_Width; }
 		unsigned int				getHeight() const { return m_Height; }
 		unsigned char const*		getData() { return m_Data; }
