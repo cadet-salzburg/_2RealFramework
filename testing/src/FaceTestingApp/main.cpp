@@ -67,15 +67,13 @@ public:
 	Receiver()
 	{
 		m_ImageData.data = NULL;
-		m_ImageData.w = 640;
-		m_ImageData.h = 480;
 		m_ImageData.dirty = false;
 
 		glGenTextures( 1, &m_Texture );
 		glEnable( GL_TEXTURE_2D );
 		glBindTexture( GL_TEXTURE_2D, m_Texture );
 
-		this->updateDimensions();
+		this->updateDimensions( 640, 480, 24 );
 
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -86,6 +84,11 @@ public:
 
 	~Receiver()
 	{
+		if( m_ImageData.data )
+		{
+			delete m_ImageData.data;
+			m_ImageData.data = NULL;
+		}
 		glDeleteTextures( 1, &m_Texture );
 	}
 
@@ -98,10 +101,21 @@ public:
 		}
 	}
 
-	void updateDimensions()
+	void updateDimensions( unsigned int width, unsigned int height, unsigned int bpp )
 	{
-		std::cout << "set texture dimensions to " << m_ImageData.w << " x " << m_ImageData.h << std::endl;
+		if( m_ImageData.data )
+			delete m_ImageData.data;
 
+		m_ImageData.w = width;
+		m_ImageData.h = height;
+		m_ImageData.d = bpp / 8;
+
+		std::cout << "set texture dimensions to " << m_ImageData.w << " x " << m_ImageData.h << " x " << m_ImageData.d << std::endl;
+
+		m_ImageData.dataSize = m_ImageData.w * m_ImageData.h * m_ImageData.d;
+		m_ImageData.data = new unsigned char[m_ImageData.dataSize];
+
+		//TODO: set format according to color channel order and bpp
 		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, m_ImageData.w, m_ImageData.h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
 	}
 
@@ -114,34 +128,6 @@ public:
 		glGenerateMipmap( GL_TEXTURE_2D );
 	}
 
-	void receiveDimensions( AppData const &data )
-	{
-		if( !data.getName().compare( "width" ) )
-		{
-			int width = data.getData< int >();
-			if( width != m_ImageData.w )
-			{
-				m_ImageData.w = width;
-				this->updateDimensions();
-			}
-		}
-		else if( !data.getName().compare( "height" ) )
-		{
-			int height = data.getData< int >();
-			if( height != m_ImageData.h )
-			{
-				m_ImageData.h = height;
-				this->updateDimensions();
-			}
-		}
-		else
-		{
-			std::stringstream sstr;
-			sstr << "invalid data received: " << data.getName();
-			throw std::runtime_error( sstr.str() );
-		}
-	}
-
 	void receiveFaces( AppData const &data )
 	{
 		std::cout << "received faces" << std::endl;
@@ -149,13 +135,26 @@ public:
 
 	void receiveImage( AppData const &data )
 	{
+		std::cout << "received " << data.getName() << std::endl;
+
 		m_Access.lock();
 
 		//TODO: handle (changes in) image type
 		//TODO: handle (changes in) bpp
 		//TODO: handle (changes in) byte order
-		m_ImageData.data = data.getData< _2Real::Image >().getData();
-		m_ImageData.dirty = true;
+
+		_2Real::Image img = data.getData< _2Real::Image >();
+		if( img.getWidth() != m_ImageData.w || img.getHeight() != m_ImageData.h )// || img.getBitsPerPixel() / 8 != m_ImageData.d ) //TODO:  //TODO: this return 8 when in fact it should return 24
+			this->updateDimensions( img.getWidth(), img.getHeight(), 
+										24 );// img.getBitsPerPixel() ); //TODO: this return 8 when in fact it should return 24
+
+		if( img.getByteSize() != m_ImageData.dataSize )
+			std::cerr << "ERROR: received image with unexpected data size" << std::endl;
+		else
+		{
+			memcpy( m_ImageData.data, img.getData(), img.getByteSize() );
+			m_ImageData.dirty = true;
+		}
 
 		m_Access.unlock();
 	}
@@ -186,8 +185,13 @@ private:
 	struct ImageData
 	{
 		unsigned char	*data;
+
+		unsigned int	dataSize;
+
 		unsigned int	w;
 		unsigned int	h;
+		unsigned int	d;
+
 		bool			dirty;
 	};
 	ImageData				m_ImageData;
@@ -247,9 +251,9 @@ int main( int argc, char *argv[] )
 		faceFeatures.setUpdateRate( 30.0f );
 
 		InletHandle ffInImg = faceFeatures.getInletHandle( "image_in" );
+		ffInImg.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 
 		OutletHandle ffOutFaces = faceFeatures.getOutletHandle( "faces_out" );
-
 		if ( !ffInImg.tryLink( camOutImg ) )
 		{
 			std::cerr << "WARNING: conversion failed, trying to link with conversion" << std::endl;
@@ -260,11 +264,12 @@ int main( int argc, char *argv[] )
 		ffOutFaces.registerToNewData( receiver, &Receiver::receiveFaces );
 
 		camOutImg.registerToNewData( receiver, &Receiver::receiveImage );
-		camOutWidth.registerToNewData( receiver, &Receiver::receiveDimensions );
-		camOutHeight.registerToNewData( receiver, &Receiver::receiveDimensions );
 
 		camera.setup();
 		camera.start();
+
+		faceFeatures.setup();
+		faceFeatures.start();
 
 		bool run = true;
 		SDL_Event *ev = new SDL_Event;
@@ -279,11 +284,10 @@ int main( int argc, char *argv[] )
 					break;
 				case SDL_QUIT:
 					camera.stop();
+					faceFeatures.stop();
 
 					camOutImg.unregisterFromNewData( receiver, &Receiver::receiveFaces );
 					camOutImg.unregisterFromNewData( receiver, &Receiver::receiveImage );
-					camOutWidth.unregisterFromNewData( receiver, &Receiver::receiveDimensions );
-					camOutHeight.unregisterFromNewData( receiver, &Receiver::receiveDimensions );
 
 					run = false;
 
