@@ -266,7 +266,7 @@ namespace _2Real
 
 	bool EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )
 	{
-		IOLink *link = IOLink::tryLink( inlet, outlet );
+		IOLink *link = IOLink::link( inlet, outlet );
 		if ( link != nullptr )
 		{
 			LinkIterator it = m_Links.find( link );
@@ -318,8 +318,8 @@ namespace _2Real
 			in.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
 			app::OutletHandle &out = block.getOutletHandle( "dst" );
 
-			in.tryLink( outlet.getHandle() );
-			out.tryLink( inlet.getHandle() );
+			in.link( outlet.getHandle() );
+			out.link( inlet.getHandle() );
 
 			block.setup();
 			block.start();

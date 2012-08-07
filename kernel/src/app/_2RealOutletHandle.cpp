@@ -118,13 +118,13 @@ namespace _2Real
 			return AppData( data, m_OutletIO->m_Outlet->getTypename(), m_OutletIO->m_Outlet->getLongTypename(), m_OutletIO->m_Outlet->getName() );
 		}
 
-		bool OutletHandle::tryLink( InletHandle &inlet )
+		bool OutletHandle::link( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
 			return EngineImpl::instance().createLink( *( inlet.m_InletIO ), *m_OutletIO );
 		}
 
-		bool OutletHandle::tryLinkWithConversion( InletHandle &inlet )
+		bool OutletHandle::linkWithConversion( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
 			return EngineImpl::instance().createLinkWithConversion( *( inlet.m_InletIO ), *m_OutletIO );

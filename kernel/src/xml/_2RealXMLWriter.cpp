@@ -248,9 +248,9 @@ namespace _2Real
 						app::InletHandle inHandle = inIt->second.getInletHandle( inletConfig.paramId );
 						app::OutletHandle outHandle = outIt->second.getOutletHandle( outletConfig.paramId );
 
-						if ( !inHandle.tryLink( outHandle ) )
+						if ( !inHandle.link( outHandle ) )
 						{
-							inHandle.tryLinkWithConversion( outHandle );
+							inHandle.linkWithConversion( outHandle );
 						}
 					}
 				}

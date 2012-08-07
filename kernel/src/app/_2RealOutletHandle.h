@@ -55,8 +55,8 @@ namespace _2Real
 			bool operator>( OutletHandle const& other ) const;
 			bool operator>=( OutletHandle const& other ) const;
 
-			bool tryLink( InletHandle &inletHandle );
-			bool tryLinkWithConversion( InletHandle &inletHandle );
+			bool link( InletHandle &inletHandle );
+			bool linkWithConversion( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );
 
 			AppData				getLastOutput() const;

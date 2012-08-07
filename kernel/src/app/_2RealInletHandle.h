@@ -64,8 +64,8 @@ namespace _2Real
 
 			void setUpdatePolicy( const InletUpdatePolicy policy );
 
-			bool tryLink( OutletHandle &outletHandle );
-			bool tryLinkWithConversion( OutletHandle &outletHandle );
+			bool link( OutletHandle &outletHandle );
+			bool linkWithConversion( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
 
 			// if the inlet is linked, the value might be overwritten of course

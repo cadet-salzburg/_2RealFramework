@@ -42,7 +42,7 @@ namespace _2Real
 		bool operator<( IOLink const& other );
 		bool isBlockInvolved( AbstractUberBlock const& b ) const;
 
-		static IOLink * tryLink( InletIO &inlet, OutletIO &outlet );
+		static IOLink * link( InletIO &inlet, OutletIO &outlet );
 		static const std::string findConversion( InletIO &inlet, OutletIO &outlet );
 		static bool canAutoConvert( InletIO &inlet, OutletIO &outlet );
 

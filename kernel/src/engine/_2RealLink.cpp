@@ -31,7 +31,7 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	IOLink * IOLink::tryLink( InletIO &inlet, OutletIO &outlet )
+	IOLink * IOLink::link( InletIO &inlet, OutletIO &outlet )
 	{
 		if ( inlet.m_Inlet->getLongTypename() != outlet.m_Outlet->getLongTypename() )
 		{
