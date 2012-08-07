@@ -36,7 +36,7 @@ namespace _2Real
 		BoundingBox() : m_Min(  ), m_Max( ) {}
 		BoundingBox( Point min, Point max ) : m_Min( min ), m_Max( max ) {}
 		BoundingBox( BoundingBox const& src ) : m_Min( src.m_Min ), m_Max( src.m_Max ) {}
-		BoundingBox & BoundingBox::operator=( BoundingBox const& src ) { m_Min = src.m_Min; m_Max = src.m_Max; return *this; }
+		BoundingBox & operator=( BoundingBox const& src ) { m_Min = src.m_Min; m_Max = src.m_Max; return *this; }
 
 		void set( const Point& min, const Point& max)
 		{

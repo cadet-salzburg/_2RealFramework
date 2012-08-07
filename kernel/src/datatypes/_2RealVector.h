@@ -23,7 +23,12 @@
 
 #include <istream>
 #include <ostream>
-#include <string>
+#ifdef _UNIX
+    #include <cstring>
+    #include <stdexcept>
+#else
+    #include <string>
+#endif
 
 #include <numeric>
 #include <algorithm>
@@ -32,7 +37,7 @@
 
 namespace _2Real
 {
-	//TODO: move this somewhere else or remove it completely... 
+	//TODO: move this somewhere else or remove it completely...
 	template<bool> struct CompileTimeError;
 	template<> struct CompileTimeError<true> {};
 #define _2REAL_CT_CONDITION( XPR, MSG )							\
@@ -76,7 +81,7 @@ namespace _2Real
 		typedef const T&	const_reference;
 
 		typedef T*			iterator;
-		typedef const T*	const_iterator;		
+		typedef const T*	const_iterator;
 
 	public:
 
@@ -320,7 +325,7 @@ namespace _2Real
 		std::streamsize oldPrecision = ostr.precision( 3 );
 
 		bool first = true;
-		for( Vector<T,s>::const_iterator it = v.begin(); it != v.end(); ++it )
+		for(typename Vector<T,s>::const_iterator it = v.begin(); it != v.end(); ++it )
 		{
 			ostr << ( first ? "{" : ", " ) << ( *it );
 			first = false;
@@ -333,7 +338,7 @@ namespace _2Real
 	}
 
 	//return negative of v
-	template<typename T, std::size_t s> 
+	template<typename T, std::size_t s>
 	Vector<T,s> operator - ( const Vector<T,s> &v )
 	{
 		return v * -1.0;
@@ -402,7 +407,7 @@ namespace _2Real
 	{
 		_2REAL_CT_CONDITION( s == 3, Cross_product_only_defined_in_3D_space );
 
-		Vector<T,s> result( 
+		Vector<T,s> result(
 			lhs.data[1] * rhs.data[2] - lhs.data[2] * rhs.data[1],
 			lhs.data[2] * rhs.data[0] - lhs.data[0] * rhs.data[2],
 			lhs.data[0] * rhs.data[1] - lhs.data[1] * rhs.data[0] );

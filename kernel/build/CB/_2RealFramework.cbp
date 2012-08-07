@@ -84,6 +84,7 @@
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="-Wno-reorder" />
 			<Add option="-D_UNIX" />
 			<Add option="-D_2REAL_UNIX" />
 			<Add directory="../../src" />
@@ -132,6 +133,7 @@
 		<Unit filename="../../src/bundle/_2RealInletHandle.h" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.cpp" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.h" />
+		<Unit filename="../../src/datatypes/_2RealBoundingBox.h" />
 		<Unit filename="../../src/datatypes/_2RealFilePath.h" />
 		<Unit filename="../../src/datatypes/_2RealImage.cpp" />
 		<Unit filename="../../src/datatypes/_2RealImage.h" />
@@ -147,6 +149,14 @@
 		<Unit filename="../../src/datatypes/_2RealRigidBody.h" />
 		<Unit filename="../../src/datatypes/_2RealSkeleton.cpp" />
 		<Unit filename="../../src/datatypes/_2RealSkeleton.h" />
+		<Unit filename="../../src/datatypes/_2RealSpace.h" />
+		<Unit filename="../../src/datatypes/_2RealType.h" />
+		<Unit filename="../../src/datatypes/_2RealTypeCategory.h" />
+		<Unit filename="../../src/datatypes/_2RealTypeComparisons.h" />
+		<Unit filename="../../src/datatypes/_2RealTypeInitializers.h" />
+		<Unit filename="../../src/datatypes/_2RealTypeStreamOperators.h" />
+		<Unit filename="../../src/datatypes/_2RealTypes.h" />
+		<Unit filename="../../src/datatypes/_2RealVector.h" />
 		<Unit filename="../../src/engine/_2RealAbstractIOManager.cpp" />
 		<Unit filename="../../src/engine/_2RealAbstractIOManager.h" />
 		<Unit filename="../../src/engine/_2RealAbstractStateManager.cpp" />
@@ -206,15 +216,11 @@
 		<Unit filename="../../src/engine/_2RealTimer.h" />
 		<Unit filename="../../src/engine/_2RealTimestampedData.cpp" />
 		<Unit filename="../../src/engine/_2RealTimestampedData.h" />
-		<Unit filename="../../src/engine/_2RealTypetable.cpp" />
-		<Unit filename="../../src/engine/_2RealTypetable.h" />
 		<Unit filename="../../src/engine/_2RealUberBlockBasedTrigger.h" />
 		<Unit filename="../../src/helpers/_2RealAny.cpp" />
 		<Unit filename="../../src/helpers/_2RealAny.h" />
 		<Unit filename="../../src/helpers/_2RealAnyHolder.h" />
 		<Unit filename="../../src/helpers/_2RealCallback.h" />
-		<Unit filename="../../src/helpers/_2RealComparisons.h" />
-		<Unit filename="../../src/helpers/_2RealConversions.h" />
 		<Unit filename="../../src/helpers/_2RealEvent.h" />
 		<Unit filename="../../src/helpers/_2RealException.cpp" />
 		<Unit filename="../../src/helpers/_2RealException.h" />
@@ -222,20 +228,23 @@
 		<Unit filename="../../src/helpers/_2RealHelpers.h" />
 		<Unit filename="../../src/helpers/_2RealIdentifiable.cpp" />
 		<Unit filename="../../src/helpers/_2RealIdentifiable.h" />
-		<Unit filename="../../src/helpers/_2RealInitializers.h" />
 		<Unit filename="../../src/helpers/_2RealListInitializer.h" />
 		<Unit filename="../../src/helpers/_2RealNonCopyable.h" />
 		<Unit filename="../../src/helpers/_2RealOptions.h" />
 		<Unit filename="../../src/helpers/_2RealPoco.h" />
 		<Unit filename="../../src/helpers/_2RealSingletonHolder.h" />
-		<Unit filename="../../src/helpers/_2RealStreamOperators.h" />
 		<Unit filename="../../src/helpers/_2RealStringHelpers.cpp" />
 		<Unit filename="../../src/helpers/_2RealStringHelpers.h" />
 		<Unit filename="../../src/helpers/_2RealSynchronizedBool.cpp" />
 		<Unit filename="../../src/helpers/_2RealSynchronizedBool.h" />
+		<Unit filename="../../src/helpers/_2RealTypeDescriptor.cpp" />
+		<Unit filename="../../src/helpers/_2RealTypeDescriptor.h" />
+		<Unit filename="../../src/helpers/_2RealVectorFunctions.h" />
 		<Unit filename="../../src/helpers/_2RealVectorInitializer.h" />
 		<Unit filename="../../src/helpers/_2RealVersion.cpp" />
 		<Unit filename="../../src/helpers/_2RealVersion.h" />
+		<Unit filename="../../src/internal_bundles/_2RealConversionBundle.h" />
+		<Unit filename="../../src/internal_bundles/_2RealInternalBundles.h" />
 		<Unit filename="../../src/xml/_2RealXML.h" />
 		<Unit filename="../../src/xml/_2RealXMLWriter.cpp" />
 		<Unit filename="../../src/xml/_2RealXMLWriter.h" />

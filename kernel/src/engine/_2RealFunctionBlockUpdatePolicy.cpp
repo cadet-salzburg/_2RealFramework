@@ -44,8 +44,8 @@ namespace _2Real
 		m_Engine( EngineImpl::instance() ),
 		m_TimeChanged( false ),
 		m_InletsChanged( false ),
-		m_UpdateTime( -1 ),
 		m_TimeTrigger( nullptr ),
+		m_UpdateTime( -1 ),
 		m_UpdateRate( 0.0 )
 	{
 	}

@@ -34,10 +34,10 @@ namespace _2Real
 	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner ) :
 		AbstractStateManager( owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
+		m_IsTriggeringEnabled( false ),
 		m_IsFlaggedForSetup( false ),
 		m_IsFlaggedForHalting( false ),
 		m_IsFlaggedForShutdown( false ),
-		m_IsTriggeringEnabled( false ),
 		m_IOManager( nullptr ),
 		m_UpdatePolicy( nullptr ),
 		m_Threads( EngineImpl::instance().getThreadPool() ),
@@ -369,7 +369,7 @@ namespace _2Real
 
 				m_StopEvent.set();
 				m_ShutdownEvent.set();
-	
+
 				m_Logger.addLine( std::string( getName() + " new state: stopped ( requested by framework )" ) );
 				m_StateAccess.unlock();
 			}
@@ -541,7 +541,7 @@ namespace _2Real
 						andRes &= ( *it )->isOk();
 					}
 				}
-				
+
 				bool triggersOk = ( ( andRes && ( andCount > 0 ) ) || orRes );
 				m_TriggerAccess.unlock();
 

@@ -43,15 +43,15 @@ namespace _2Real
 		typedef Vector<T,d>	vector_type;
 
 	public:
-		Space() : 
-			p0( 0 ), p1( 0 ) 
+		Space() :
+			p0( 0 ), p1( 0 )
 		{}
 
-		Space( const Vector<T,d> &p0, const Vector<T,d> &p1 ) : 
+		Space( const Vector<T,d> &p0, const Vector<T,d> &p1 ) :
 			p0( p0 ), p1( p1 )
 		{}
 
-		Space( const Space &rhs ) : 
+		Space( const Space &rhs ) :
 			p0( rhs.p0 ), p1( rhs.p1 )
 		{}
 
@@ -79,15 +79,15 @@ namespace _2Real
 			return std::abs( std::accumulate( e.begin(), e.end(), 1, std::multiplies<T>() ) );
 		}
 
-		Space<T,d> &Space::operator = ( Space<T,d> const& rhs )
+		Space<T,d> &operator = ( Space<T,d> const& rhs )
 		{
-			this->p0 = rhs.p0; 
+			this->p0 = rhs.p0;
 			this->p1 = rhs.p1;
 			return *this;
 		}
 
 		bool operator == ( const Space<T,d> &rhs ) const
-		{	
+		{
 			return ( this->p0 == rhs.p0 && this->p1 == rhs.p1 );
 		}
 
@@ -109,7 +109,7 @@ namespace _2Real
 		//Space<T,d> friend operator | ( const Space<T,d> &lhs, const Space<T,d> &rhs );
 		//Space<T,d> operator ^= ( const Space<T,d> &rhs ) const;
 		//Space<T,d> friend operator ^ ( const Space<T,d> &lhs, const Space<T,d> &rhs );
-		
+
 
 	private:
 

@@ -63,7 +63,7 @@ namespace _2Real
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( std::list< T > ), Type::LIST, "list", traits< T >::::createTypeDescriptor() );
+			return new TypeDescriptor( typeid( std::list< T > ), Type::LIST, "list", traits< T >::createTypeDescriptor() );
 		}
 	};
 
