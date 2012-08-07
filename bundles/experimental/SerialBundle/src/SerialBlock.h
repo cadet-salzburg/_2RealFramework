@@ -23,15 +23,14 @@ public:
 private:
 	void							discardAllOutlets();
 
-	// The Block Inlet for the Serial Port index
-	_2Real::bundle::InletHandle		m_SerialPortInlet;
-
-	// The Block Inlets Outlets
-	_2Real::bundle::InletHandle m_iPortInlet;
+	// The Block Inlets 
+	_2Real::bundle::InletHandle	m_SerialPortInlet;
 	_2Real::bundle::InletHandle m_iBaudRateInlet;
 	_2Real::bundle::InletHandle m_ReadIntel;
+
+	// The Block Outlets
 	_2Real::bundle::OutletHandle m_WriteOutlet;
 	
 	// The SerialDevice Manager
-	SerialDeviceManager*			m_SerialDeviceManager;
+	SerialDeviceManager*		m_SerialDeviceManager;
 };

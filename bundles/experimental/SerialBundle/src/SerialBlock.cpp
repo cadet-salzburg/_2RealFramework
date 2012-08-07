@@ -23,7 +23,7 @@ void SerialBlock::setup( BlockHandle &context )
 	try
 	{
 		// Get the handles to all needed In and Outlets
-		m_iPortInlet = context.getInletHandle( "SerialPort" );
+		m_SerialPortInlet = context.getInletHandle( "SerialPort" );
 		m_iBaudRateInlet = context.getInletHandle( "BaudRate" );
 		m_ReadIntel = context.getInletHandle( "Read" );
 		m_WriteOutlet = context.getOutletHandle( "Write" );
@@ -50,7 +50,7 @@ void SerialBlock::update()
 	try
 	{
 		// Get the current Serial port that is set in the Inlet
-		unsigned int portIndex = m_SerialPortInlet.getReadableRef<unsigned int>();
+		std::string port = m_SerialPortInlet.getReadableRef<std::string>();
 		unsigned int bauRrate = m_iBaudRateInlet.getReadableRef<unsigned int>();
 /*
 		// Retreive the Serial message and store it into a std::vector<unsigned char>

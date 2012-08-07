@@ -124,7 +124,6 @@ class ofSerial {
 				char 		** portNamesFriendly; ///[MAX_SERIAL_PORTS];
 				HANDLE  	hComm;		// the handle to the serial port pc
 				int	 		nPorts;
-				bool 		bPortsEnumerated;
 				void 		enumerateWin32Ports();
 				COMMTIMEOUTS 	oldTimeout;	// we alter this, so keep a record
 

@@ -162,6 +162,10 @@ bool MidiInOutDeviceManager::bindMidiInDevice( const unsigned int deviceIdx )
 			return false;
 		}
 	}
+	else
+	{
+		return false;
+	}
 }
 
 bool MidiInOutDeviceManager::bindMidiOutDevice( const unsigned int deviceIdx )
@@ -186,6 +190,10 @@ bool MidiInOutDeviceManager::bindMidiOutDevice( const unsigned int deviceIdx )
 			m_MidiOutDevicesInUse[deviceIdx].m_bIsUsed = false;
 			return false;
 		}
+	}
+	else
+	{
+		return false;
 	}
 }
 

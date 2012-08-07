@@ -1,5 +1,5 @@
 #include "SerialDeviceManager.h"
-
+#include "ofSerial.h"
 #include <iostream>
 
 using namespace std;
@@ -10,29 +10,27 @@ using _2Real::bundle::Block;
 using _2Real::bundle::BlockHandle;
 
 
-SerialDeviceManager::SerialDeviceManager(void) : 
-	ContextBlock(),
-	m_iSerialReferenceCount( 0 ),
-	m_iNumSerialDevices( 0 )
+SerialDeviceManager::SerialDeviceManager() 
+: ContextBlock()
+, m_iSerialReferenceCount( 0 )
 {
 }
 
 
-SerialDeviceManager::~SerialDeviceManager(void)
+SerialDeviceManager::~SerialDeviceManager()
 {
-	clearSerialList();
 }
 
 void SerialDeviceManager::setup( _2Real::bundle::BlockHandle &context )
 {
-	
+	// nothing
 }
 
 void SerialDeviceManager::update()
 {
 	try
 	{
-		// TODO
+		// nothing
 	}
 	catch ( Exception& e )
 	{
@@ -44,26 +42,17 @@ void SerialDeviceManager::update()
 void SerialDeviceManager::shutdown()
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
-	try
-	{
-	/*
-			for ( unsigned int i = 0; i < m_SerialDevices.size(); i++ )
-			{
-				if ( m_SerialDevices[i].m_bIsUsed )
-					m_SerialDevices[i].m_Serial->closePort();
-			}
-	*/
-	}
-	catch ( Exception& e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
+	clearSerialList();
 }
 
 void SerialDeviceManager::registerSerialBlock()
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
+
+	if (m_iSerialReferenceCount == 0)
+	{
+		initSerialDeviceList();
+	}
 
 	// Increase reference counter
 	m_iSerialReferenceCount++;
@@ -80,302 +69,208 @@ void SerialDeviceManager::unregisterSerialBlock()
 	if ( m_iSerialReferenceCount <= 0 )
 	{
 		m_iSerialReferenceCount = 0;
-		m_iNumSerialDevices = 0;
 		clearSerialList();
 	}
 }
 
 void SerialDeviceManager::clearSerialList()
 {
+	for (stdext::hash_map<std::string, DeviceItem*>::iterator it = m_SerialDevices.begin(); it != m_SerialDevices.end(); it++)
+	{
+		SerialDeviceManager::DeviceItem *pDeviceItem = it->second;
+		delete pDeviceItem;
+	}
 	m_SerialDevices.clear();
 }
 
-/*
-bool SerialDeviceManager::bindSerialDevice( const unsigned int deviceIdx )
+SerialDeviceManager::DeviceItem	*SerialDeviceManager::getDeviceItem(const std::string identifier)
 {
-	Poco::Mutex::ScopedLock lock( m_Mutex );
-
-	// Only bind the device if the device is actually available and not used yet
-	if ( isSerialDeviceFree( deviceIdx ) )
+	stdext::hash_map<std::string, DeviceItem*>::const_iterator it = m_SerialDevices.find(identifier);
+	if (it == m_SerialDevices.end())
 	{
-		try
-		{
-			// Open the Serial port
-			m_SerialDevices[deviceIdx].m_Serial->openPort( deviceIdx );
-			// Set the isUsed flag of this device to true
-			m_SerialDevices[deviceIdx].m_bIsUsed = true;
-			return true;
-		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-			// Set the isUsed flag of that device back to false if something went wrong while opening the port
-			m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed = false;
-			return false;
-		}
+		return NULL;
 	}
-}
-
-bool SerialDeviceManager::bindSerialOutDevice( const unsigned int deviceIdx )
-{
-	Poco::Mutex::ScopedLock lock( m_Mutex );
-
-	// Only bind the device if the device is actually available and not used yet
-	if ( isSerialOutDeviceFree( deviceIdx ) )
-	{
-		try
-		{
-			// Open the SerialOut port
-			m_SerialOutDevicesInUse[deviceIdx].m_Serial->openPort( deviceIdx );
-			// Set the isUsed flag of this device to true
-			m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed = true;
-			return true;
-		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-			// Set the isUsed flag of that device back to false if something went wrong while opening the port
-			m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed = false;
-			return false;
-		}
-	}
-}
-
-void SerialDeviceManager::unbindSerialDevice( const unsigned int deviceIdx )
-{
-	Poco::Mutex::ScopedLock lock( m_Mutex );
-
-	// Unbind the device if it is available and running
-	if ( isSerialDeviceRunning( deviceIdx ) )
-	{
-		try
-		{
-			// Close the Serial port
-			m_SerialDevices[deviceIdx].m_Serial->closePort();
-			// Set the isUsed flag to false
-			m_SerialDevices[deviceIdx].m_bIsUsed = false;
-		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-			// Set the isUsed flag to false if something went wrong while closing the port
-			m_SerialDevices[deviceIdx].m_bIsUsed = false;
-		}
-	}
-}
-
-void SerialDeviceManager::unbindSerialOutDevice( const unsigned int deviceIdx )
-{
-	Poco::Mutex::ScopedLock lock( m_Mutex );
-
-	// Unbind the device if it is available and running
-	if ( isSerialOutDeviceRunning( deviceIdx ) )
-	{
-		try
-		{
-			// Close the SerialOut port
-			m_SerialOutDevicesInUse[deviceIdx].m_Serial->closePort();
-			// Set the isUsed flag to false
-			m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed = false;
-		}
-		catch ( RtError& error )
-		{
-			error.printMessage();
-			// Set the isUsed flag to false if something went wrong while closing the port
-			m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed = false;
-		}
-	}
+	SerialDeviceManager::DeviceItem *pDeviceItem = it->second;
+	return pDeviceItem;
 }
 
 unsigned int SerialDeviceManager::getSerialPortCount()
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
-	return m_iNumSerialDevices;
+	return m_SerialDevices.size();
 }
 
-unsigned int SerialDeviceManager::getSerialOutPortCount()
+bool SerialDeviceManager::isSerialDeviceRunning( const std::string identifier )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
-	return m_iNumSerialOutDevices;
-}
-
-bool SerialDeviceManager::isSerialDeviceRunning( const unsigned int deviceIdx )
-{
-	return isSerialDeviceAvailable( deviceIdx ) && m_SerialDevices[deviceIdx].m_bIsUsed;
-}
-
-bool SerialDeviceManager::isSerialOutDeviceRunning( const unsigned int deviceIdx )
-{
-	return isSerialOutDeviceAvailable( deviceIdx ) && m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed;
-}
-
-vector<unsigned char> SerialDeviceManager::getSerialMessage( const unsigned int deviceIdx )
-{
-	Poco::Mutex::ScopedLock lock( m_Mutex );
-
-	// Read message from Serial with the device index deviceIdx and write the message into
-	// an std::vector<unsigned char>
-	vector<unsigned char> message;
-	vector<unsigned char> tmpMessage;	// needed for keeping up with last valid message
-	// Check if the device at the index deviceIdx is available and used
-	if ( isSerialDeviceRunning( deviceIdx ) )
+	stdext::hash_map<std::string, DeviceItem*>::const_iterator it = m_SerialDevices.find(identifier);
+	if (it == m_SerialDevices.end())
 	{
-		try
+		return false;
+	}
+	SerialDeviceManager::DeviceItem *pDeviceItem = it->second;
+
+	return pDeviceItem->m_bIsUsed;
+}
+
+vector<unsigned char> SerialDeviceManager::getSerialMessage( const std::string identifier )
+{
+	Poco::Mutex::ScopedLock lock( m_Mutex );
+
+	// Read message from Serial and write the message into an std::vector<unsigned char>
+	vector<unsigned char> message;
+
+	if ( isSerialDeviceRunning( identifier ) )
+	{
+		SerialDeviceManager::DeviceItem	*pDev = getDeviceItem(identifier);
+		int length = pDev->m_pSerial->available();
+		if (length <= 0)
 		{
-			double timestamp = ( (Serial *)m_SerialDevices[deviceIdx].m_Serial )->getMessage( &tmpMessage );
-			while( timestamp > 0.0 )
-			{
-				message = tmpMessage;
-				timestamp = ( (Serial *)m_SerialDevices[deviceIdx].m_Serial )->getMessage( &tmpMessage );	// this sets 0 message if there is no message to be found, so we need to keep the last valid
-			}
+			return message;
 		}
-		catch ( RtError& error )
+		unsigned char *buffer = new unsigned char[length];
+		int read = pDev->m_pSerial->readBytes(buffer, length);
+		if (read != length)
 		{
-			error.printMessage();
+			std::cout << "failed to read all " << length << " bytes from " << identifier << std::endl;
 		}
+		if (read <= 0)
+		{
+			delete[] buffer;
+			return message;
+		}
+		length = read;
+
+		for (int i=0; i<length; i++)
+		{
+			message.push_back(buffer[i]);
+		}
+		delete[] buffer;
+	}
+	else
+	{
+		std::cout << "failed to read from " << identifier << " as it is not open" << std::endl;
 	}
 	
 	return message;
 }
 
-void SerialDeviceManager::sendSerialOutMessage( const unsigned int deviceIdx, std::vector<unsigned char> message )
+void SerialDeviceManager::sendSerialMessage( const std::string identifier, std::vector<unsigned char> &message )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
 
-	// Check if the device at the index deviceIdx is available and used
-	if ( isSerialOutDeviceRunning( deviceIdx ) )
+	if ( isSerialDeviceRunning( identifier ) )
 	{
-		try
+		int length = message.size();
+		if (length == 0)
 		{
-			// Send the message via the SerialOut port defined by deviceIdx
-			( (SerialOut *)m_SerialOutDevicesInUse[deviceIdx].m_Serial )->sendMessage( &message );
+			return;
 		}
-		catch ( RtError& error )
+		unsigned char *buffer = new unsigned char[length];
+		for (std::vector<unsigned char>::iterator it = message.begin(); it != message.end(); it++)
 		{
-			error.printMessage();
+			*buffer = *it;
+			buffer++;
 		}
+		buffer -= length;
+
+		SerialDeviceManager::DeviceItem	*pDev = getDeviceItem(identifier);
+		if (pDev->m_pSerial->writeBytes(buffer, length) != length)
+		{
+			std::cout << "failed to write " << length << " bytes to " << identifier << std::endl;
+		}
+		delete[] buffer;
+	}
+	else
+	{
+		std::cout << "failed to write to " << identifier << " as it is not open" << std::endl;
 	}
 }
 
 void SerialDeviceManager::initSerialDeviceList()
 {
-	try
-	{
-		// Store the number of available Serial ports
-		Serial tmpSerial;
-		m_iNumSerialDevices = tmpSerial.getPortCount();
+	ofSerial ofs;
+	std::vector<ofSerialDeviceInfo> devices = ofs.getDeviceList();
 
-		// Clear the old Serial list before initializing the new one
-		clearSerialList();
-
-		// Initialize the new Serial list according to the number of available Serial ports
-		for ( unsigned int i = 0; i < m_iNumSerialDevices; i++ )
-		{
-			m_SerialDevices.push_back( DeviceItem( tmpSerial.getPortName( i ), false ) );
-			m_SerialDevices[i].m_Serial = new Serial();
-		}
-	}
-	catch ( RtError& error )
+	for (std::vector<ofSerialDeviceInfo>::iterator it =  devices.begin(); it != devices.end(); it++)
 	{
-		error.printMessage();
+		ofSerialDeviceInfo devInfo = *it;
+		// add port to list
+		DeviceItem *pItem = new DeviceItem(devInfo.getDeviceName());
+		pItem->m_pSerial = new ofSerial();
+		m_SerialDevices[devInfo.getDeviceName()] = pItem;
 	}
 }
 
-void SerialDeviceManager::initSerialOutDeviceList()
+bool SerialDeviceManager::isSerialDeviceAvailable( const std::string identifier ) 
 {
-	try
-	{
-		// Store the number of available SerialOut ports
-		SerialOut tmpSerialOut;
-		m_iNumSerialOutDevices = tmpSerialOut.getPortCount();
-
-		// Clear the old SerialOut list before initializing the new one
-		clearSerialOutList();
-
-		// Initialize the new SerialOut list according to the number of available SerialOut ports
-		for ( unsigned int i = 0; i < m_iNumSerialOutDevices; i++ )
-		{
-			m_SerialOutDevicesInUse.push_back( DeviceItem( tmpSerialOut.getPortName( i ), false ) );
-			m_SerialOutDevicesInUse[i].m_Serial = new SerialOut();
-		}
-	}
-	catch ( RtError& error )
-	{
-		error.printMessage();
-	}
+	return (getDeviceItem(identifier) != NULL);
 }
 
-void SerialDeviceManager::rescanSerialPorts()
+bool SerialDeviceManager::isSerialDeviceFree( const std::string identifier ) 
+{
+	Poco::Mutex::ScopedLock lock( m_Mutex );
+	stdext::hash_map<std::string, DeviceItem*>::const_iterator it = m_SerialDevices.find(identifier);
+	if (it == m_SerialDevices.end())
+	{
+		return false;
+	}
+	SerialDeviceManager::DeviceItem *pDeviceItem = it->second;
+
+	return !pDeviceItem->m_bIsUsed;
+}
+
+
+bool SerialDeviceManager::bindSerialDevice( const std::string identifier, unsigned int baudrate )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
 
-	// Get the number of currently available Serial ports
-	Serial tmpSerial;
-	unsigned int numDevices = tmpSerial.getPortCount();
-
-	// If the number of available Serial ports differs from the number that was detected in the last call
-	// --> close all ports and re-initialize the Serial list
-	if ( numDevices != m_iNumSerialDevices )
+	// Only bind the device if the device is actually available and not used yet
+	if ( isSerialDeviceFree( identifier ) )
 	{
-		for ( unsigned int i = 0; i < m_SerialDevices.size(); i++ )
+		SerialDeviceManager::DeviceItem	*pDev = getDeviceItem(identifier);
+		if (pDev->m_pSerial->setup(identifier, baudrate))
 		{
-			if ( m_SerialDevices[i].m_bIsUsed )
-				m_SerialDevices[i].m_Serial->closePort();
+			pDev->m_bIsUsed = true;
+			std::cout << "comport " << identifier << " opened with baud rate " << baudrate << std::endl;
+			return true;
 		}
-
-		initSerialDeviceList();
-
-		// Store the new number of available Serial ports
-		m_iNumSerialDevices = numDevices;
+		else
+		{
+			std::cout << "failed to open comport " << identifier << " with baud rate " << baudrate << std::endl;
+			return false;
+		}
 	}
+	return false;
 }
 
-void SerialDeviceManager::rescanSerialOutPorts()
+// Unbind a MidiIn device via an index
+void SerialDeviceManager::unbindSerialDevice( const std::string identifier )
 {
 	Poco::Mutex::ScopedLock lock( m_Mutex );
 
-	// Get the number of currently available SerialOut ports
-	SerialOut tmpSerialOut;
-	unsigned int numDevices = tmpSerialOut.getPortCount();
-
-	// If the number of available SerialOut ports differs from the number that was detected in the last call
-	// --> close all ports and re-initialize the SerialOut list
-	if ( numDevices != m_iNumSerialOutDevices )
+	// Only bind the device if the device is actually available and not used yet
+	if ( isSerialDeviceRunning( identifier ) )
 	{
-		for ( unsigned int i = 0; i < m_SerialOutDevicesInUse.size(); i++ )
-		{
-			if ( m_SerialOutDevicesInUse[i].m_bIsUsed )
-				m_SerialOutDevicesInUse[i].m_Serial->closePort();
-		}
-
-		initSerialOutDeviceList();
-
-		// Store the new number of available SerialOut ports
-		m_iNumSerialOutDevices = numDevices;
+		SerialDeviceManager::DeviceItem	*pDev = getDeviceItem(identifier);
+		pDev->m_pSerial->close();
+		pDev->m_bIsUsed = false;
+		std::cout << "comport " << identifier << " closed" << std::endl;
 	}
 }
 
-bool SerialDeviceManager::isSerialDeviceAvailable( const unsigned int deviceIdx ) const
+SerialDeviceManager::DeviceItem::DeviceItem( std::string strDescription, bool bIsUsed) 
+: m_strDescription ( strDescription )
+, m_bIsUsed ( bIsUsed )
+, m_pSerial (NULL)
 {
-	return ( deviceIdx < m_SerialDevices.size() );
 }
 
-bool SerialDeviceManager::isSerialOutDeviceAvailable( const unsigned int deviceIdx ) const
+SerialDeviceManager::DeviceItem::~DeviceItem()
 {
-	return ( deviceIdx < m_SerialOutDevicesInUse.size() );
+	if (m_pSerial)
+	{
+		m_pSerial->close();
+		delete m_pSerial;
+	}
 }
-
-bool SerialDeviceManager::isSerialDeviceFree( const unsigned int deviceIdx ) const
-{
-	if ( isSerialDeviceAvailable( deviceIdx ) && !m_SerialDevices[deviceIdx].m_bIsUsed )
-		return true;
-	return false;
-}
-
-bool SerialDeviceManager::isSerialOutDeviceFree( const unsigned int deviceIdx ) const
-{
-	if ( isSerialOutDeviceAvailable( deviceIdx ) && !m_SerialOutDevicesInUse[deviceIdx].m_bIsUsed )
-		return true;
-	return false;
-}
-*/

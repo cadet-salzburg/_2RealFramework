@@ -30,8 +30,6 @@ void ofSerial::enumerateWin32Ports(){
 
 	// thanks joerg for fixes...
 
-	if (bPortsEnumerated == true) return;
-
 	HDEVINFO hDevInfo = NULL;
 	SP_DEVINFO_DATA DeviceInterfaceData;
 	int i = 0;
@@ -85,8 +83,6 @@ void ofSerial::enumerateWin32Ports(){
 	  }
    }
    SetupDiDestroyDeviceInfoList(hDevInfo);
-
-   bPortsEnumerated = false;
 }
 
 
@@ -103,7 +99,6 @@ ofSerial::ofSerial(){
 	#ifdef TARGET_WIN32
 	//---------------------------------------------
 		nPorts 				= 0;
-		bPortsEnumerated 	= false;
 
 		portNamesShort = new char * [MAX_SERIAL_PORTS];
 		portNamesFriendly = new char * [MAX_SERIAL_PORTS];
@@ -129,7 +124,6 @@ ofSerial::~ofSerial(){
 	#ifdef TARGET_WIN32
 	//---------------------------------------------
 		nPorts 				= 0;
-		bPortsEnumerated 	= false;
 
 		for (int i = 0; i < MAX_SERIAL_PORTS; i++) {
 			delete [] portNamesShort[i];
