@@ -28,6 +28,7 @@
 #include <numeric>
 #include <algorithm>
 #include <functional>
+#include <sstream>
 
 namespace _2Real
 {
