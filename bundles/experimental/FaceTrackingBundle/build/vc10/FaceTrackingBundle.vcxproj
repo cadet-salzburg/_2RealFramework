@@ -101,15 +101,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\highgui\include\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\build\x86\vc10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealFramework_32d.lib;opencv_core231d.lib;opencv_features2d231d.lib;opencv_flann231d.lib;opencv_highgui231d.lib;opencv_imgproc231d.lib;opencv_legacy231d.lib;opencv_objdetect231d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -147,7 +147,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\modules\highgui\include\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -156,8 +156,8 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\OpenCV-2.3.1\build\x86\vc10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealFramework_32.lib;opencv_core231.lib;opencv_features2d231.lib;opencv_flann231.lib;opencv_highgui231.lib;opencv_imgproc231.lib;opencv_legacy231.lib;opencv_objdetect231.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>

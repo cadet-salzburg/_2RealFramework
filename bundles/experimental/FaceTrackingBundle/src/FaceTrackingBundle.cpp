@@ -44,9 +44,23 @@ void getBundleMetainfo( BundleMetainfo& info )
 		faceFeatures.setCategory( "" ); //TODO: set
 		// can handle any format
 		//TODO: only rgb/greyscale -- how to specify?
+
 		faceFeatures.addInlet< Image >( "image_in", initImage );
 
-		faceFeatures.addOutlet< std::vector< Space2D > >( "faces_out" );
+		faceFeatures.addInlet< bool >( "use_face", true );
+		faceFeatures.addInlet< bool >( "use_eyes", true );
+		faceFeatures.addInlet< bool >( "use_nose", true );
+		faceFeatures.addInlet< bool >( "use_mouth", true );
+
+		faceFeatures.addInlet< std::string >( "cascadefile_face", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
+		faceFeatures.addInlet< std::string >( "cascadefile_eyes", "ressources\\FaceTrackingBundle\\haarcascade_eye.xml" );
+		faceFeatures.addInlet< std::string >( "cascadefile_nose", "ressources\\FaceTrackingBundle\\haarcascade_mcs_nose.xml" );
+		faceFeatures.addInlet< std::string >( "cascadefile_mouth", "ressources\\FaceTrackingBundle\\haarcascade_mcs_mouth.xml" );
+
+		faceFeatures.addOutlet< std::vector< Space2D > >( "face_out" );
+		faceFeatures.addOutlet< std::vector< Space2D > >( "eyes_out" );
+		faceFeatures.addOutlet< std::vector< Space2D > >( "nose_out" );
+		faceFeatures.addOutlet< std::vector< Space2D > >( "mouth_out" );
 	}
 	catch ( Exception &e )
 	{
