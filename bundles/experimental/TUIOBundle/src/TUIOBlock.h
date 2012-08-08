@@ -2,6 +2,8 @@
 
 #include "_2RealBlock.h"
 
+#include <map>
+
 using namespace _2Real::bundle;
 
 namespace TUIO

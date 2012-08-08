@@ -7,9 +7,9 @@ using			_2Real::Exception;
 
 void getBundleMetainfo(BundleMetainfo& info)
 {
-    try
-    {
-        info.setName("TUIOBundle");
+	try
+	{
+		info.setName("TUIOBundle");
 		info.setDescription( "This bundle takes a vector of Points representing some track ID plus the x and y value as coordinates ranging from 0.f to 1.f (according to the TUIO protocol specification." );
 		info.setAuthor( "Otto Naderer" );
 		info.setCategory( "Experimental" );
@@ -21,8 +21,8 @@ void getBundleMetainfo(BundleMetainfo& info)
 		tuioBlockInfo.addInlet<std::string>("Host", "127.0.0.1");
 		tuioBlockInfo.addInlet<unsigned short>("Port", 3333);
 
-    }
-    catch ( Exception &e )
+	}
+	catch ( Exception &e )
 	{
 		std::cout << e.message() << std::endl;
 		e.rethrow();

@@ -19,21 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\ofSerial.cpp" />
-    <ClCompile Include="..\..\src\SerialBlock.cpp" />
-    <ClCompile Include="..\..\src\SerialBundle.cpp" />
-    <ClCompile Include="..\..\src\SerialDeviceManager.cpp" />
+    <ClCompile Include="..\..\src\fbsimpletcpip_client.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ShapeWrapBlock.cpp" />
+    <ClCompile Include="..\..\src\ShapeWrapBundle.cpp" />
+    <ClCompile Include="..\..\src\ShapeWrapDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\ofSerial.h" />
-    <ClInclude Include="..\..\src\SerialBlock.h" />
-    <ClInclude Include="..\..\src\SerialDeviceManager.h" />
+    <ClInclude Include="..\..\src\fbsimpletcpip_client.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ShapeWrapBlock.h" />
+    <ClInclude Include="..\..\src\ShapeWrapDeviceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7ECC0389-B694-485C-B984-6F9CBA7C5303}</ProjectGuid>
+    <ProjectGuid>{5757653E-E563-42DE-8D5C-AACEB8C5D3CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
-    <ProjectName>SerialBundle</ProjectName>
+    <ProjectName>ShapeWrapBundle</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
