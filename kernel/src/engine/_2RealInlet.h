@@ -55,7 +55,7 @@ namespace _2Real
 		void setDataAndSynchronize( TimestampedData const& data );
 		AbstractUberBlock & getOwningUberBlock();
 
-		bool wasUpdated() const;
+		bool hasUpdated() const;
 		bool valueChanged() const;
 
 		//bool					hasOptions() const;

@@ -48,7 +48,7 @@ namespace _2Real
 		return m_OwningUberBlock;
 	}
 
-	bool Inlet::wasUpdated() const
+	bool Inlet::hasUpdated() const
 	{
 		return ( Parameter::m_Data.getKey() != m_LastData.getKey() );
 	}
