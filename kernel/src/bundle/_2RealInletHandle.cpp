@@ -91,10 +91,10 @@ namespace _2Real
 			return m_Inlet->hasUpdated();
 		}
 
-		bool InletHandle::valueChanged() const
+		bool InletHandle::hasChanged() const
 		{
 			checkValidity( m_Inlet );
-			return m_Inlet->valueChanged();
+			return m_Inlet->hasChanged();
 		}
 	}
 }

@@ -53,7 +53,7 @@ namespace _2Real
 		return ( Parameter::m_Data.getKey() != m_LastData.getKey() );
 	}
 
-	bool Inlet::valueChanged() const
+	bool Inlet::hasChanged() const
 	{
 		return ( !Parameter::m_Data.getData().isEqualTo( m_LastData.getData() ) );
 	}

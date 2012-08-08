@@ -74,7 +74,7 @@ namespace _2Real
 			void invalidate();
 
 			bool hasUpdated() const;
-			bool valueChanged() const;
+			bool hasChanged() const;
 
 		private:
 

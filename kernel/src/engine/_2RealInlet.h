@@ -56,7 +56,7 @@ namespace _2Real
 		AbstractUberBlock & getOwningUberBlock();
 
 		bool hasUpdated() const;
-		bool valueChanged() const;
+		bool hasChanged() const;
 
 		//bool					hasOptions() const;
 		//bool					hasRange() const;
