@@ -328,7 +328,7 @@ namespace _2Real
 
 	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
 		m_InsertionPolicy( new RemoveOldest( 1 ) ),
-		m_Notify( false ),
+		m_Notify( true ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() ),
 		m_TriggeringData( defaultData, 0 ),
