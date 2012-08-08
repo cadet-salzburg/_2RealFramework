@@ -174,6 +174,7 @@ namespace _2Real
 	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options )
 	{
 		m_IOManager->addInlet( name, type, initialValue, options );
+		m_UpdatePolicy->changePolicy();
 	}
 
 	template< typename THandle >

@@ -59,6 +59,7 @@ namespace _2Real
 		{
 			if ( m_CurrentState->trySetUp( *this ) )
 			{
+				m_UpdatePolicy->changePolicy();
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateInitialized();
 
