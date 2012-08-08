@@ -29,5 +29,8 @@
     <ClInclude Include="..\..\src\FaceFeaturesBlock.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bench.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

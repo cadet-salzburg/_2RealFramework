@@ -31,12 +31,28 @@ private:
 	_2Real::bundle::InletHandle		m_useNoseIn;
 	_2Real::bundle::InletHandle		m_useMouthIn;
 
+	_2Real::bundle::InletHandle		m_haarMinNeighboursFaceIn;
+	_2Real::bundle::InletHandle		m_haarMinNeighboursEyesIn;
+	_2Real::bundle::InletHandle		m_haarMinNeighboursNoseIn;
+	_2Real::bundle::InletHandle		m_haarMinNeighboursMouthIn;
+
+	_2Real::bundle::InletHandle		m_haarMinSizeFaceIn;
+	_2Real::bundle::InletHandle		m_haarMinSizeEyesIn;
+	_2Real::bundle::InletHandle		m_haarMinSizeNoseIn;
+	_2Real::bundle::InletHandle		m_haarMinSizeMouthIn;
+
+	_2Real::bundle::InletHandle		m_haarDoCannyPruningIn;
+	_2Real::bundle::InletHandle		m_haarScaleFactorIn;
+
 	_2Real::bundle::InletHandle		m_cascFileFaceIn;
 	_2Real::bundle::InletHandle		m_cascFileEyesIn;
 	_2Real::bundle::InletHandle		m_cascFileNoseIn;
 	_2Real::bundle::InletHandle		m_cascFileMouthIn;
 
-	_2Real::bundle::OutletHandle	m_facesOut;
+	_2Real::bundle::OutletHandle	m_faceOut;
+	_2Real::bundle::OutletHandle	m_eyesOut;
+	_2Real::bundle::OutletHandle	m_noseOut;
+	_2Real::bundle::OutletHandle	m_mouthOut;
 
 	CVImpl	*m_cvImpl;
 };

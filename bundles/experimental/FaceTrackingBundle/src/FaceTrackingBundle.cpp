@@ -48,9 +48,23 @@ void getBundleMetainfo( BundleMetainfo& info )
 		faceFeatures.addInlet< Image >( "image_in", initImage );
 
 		faceFeatures.addInlet< bool >( "use_face", true );
-		faceFeatures.addInlet< bool >( "use_eyes", true );
-		faceFeatures.addInlet< bool >( "use_nose", true );
-		faceFeatures.addInlet< bool >( "use_mouth", true );
+		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_face", 3 );
+		faceFeatures.addInlet< Vec2 >( "haar_minSizeFace", Vec2( 0 ) );
+
+		faceFeatures.addInlet< bool >( "use_eyes", false );
+		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_eyes", 3 );
+		faceFeatures.addInlet< Vec2 >( "haar_min_size_eyes", Vec2( 0 ) );
+
+		faceFeatures.addInlet< bool >( "use_nose", false );
+		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_nose", 3 );
+		faceFeatures.addInlet< Vec2 >( "haar_min_size_nose", Vec2( 0 ) );
+
+		faceFeatures.addInlet< bool >( "use_mouth", false );
+		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_mouth", 3 );
+		faceFeatures.addInlet< Vec2 >( "haar_min_size_mouth", Vec2( 0 ) );
+
+		faceFeatures.addInlet< bool >( "haar_do_canny_pruning", false );
+		faceFeatures.addInlet< double >( "haar_scalefactor", 1.1 );
 
 		faceFeatures.addInlet< std::string >( "cascadefile_face", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
 		faceFeatures.addInlet< std::string >( "cascadefile_eyes", "ressources\\FaceTrackingBundle\\haarcascade_eye.xml" );
