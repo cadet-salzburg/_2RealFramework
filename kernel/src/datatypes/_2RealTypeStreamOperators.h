@@ -181,8 +181,6 @@ namespace _2Real
 		{
 			if ( typeName[i] == '#' ) typeName[i] = ' ';
 		}
-
-		//std::cout << unstreamable << " " << typeName << std::endl;
 	}
 
 	template< typename TData >

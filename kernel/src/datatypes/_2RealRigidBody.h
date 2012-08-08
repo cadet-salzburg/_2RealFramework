@@ -42,6 +42,10 @@ namespace _2Real
 		RigidBody( const std::vector<_2Real::Point> points ) : m_Points( points ), m_Label( "undefined" ), m_Id( -1 ), m_ParentId( -1 ), m_Position ( _2Real::Point() ), m_Orientation ( _2Real::Quaternion() ) {}	
 		RigidBody( const std::vector<_2Real::Point> points, std::string const& l, const unsigned int id, const unsigned int parentId, const _2Real::Point &position, const _2Real::Quaternion &orientation ) : m_Points( points ), m_Label( l ), m_Id( id ), m_ParentId( parentId ), m_Position( position ), m_Orientation( orientation ) {}
 		
+		bool operator==( RigidBody const& other ) const
+		{
+			return ( m_Id == other.m_Id && m_ParentId == other.m_ParentId && m_Label == other.m_Label && m_Position == other.m_Position && m_Points == other.m_Points );
+		}
 
 		std::vector<_2Real::Point>&	getPoints()	{ return m_Points; }
 

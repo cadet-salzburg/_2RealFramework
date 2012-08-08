@@ -301,6 +301,8 @@ namespace _2Real
 
 	bool RemoveOldest::insertData( TimestampedData const& data, InletBuffer::DataBuffer &buffer )
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
+
 		while ( buffer.size() >= m_Max && !buffer.empty() )
 		{
 			// TODO: some sort of overflow cb for the app i guess
@@ -312,14 +314,26 @@ namespace _2Real
 		return true;
 	}
 
+	void RemoveOldest::setMaxSize( const unsigned int max )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
+		m_Max = max;
+	}
+
+	unsigned int RemoveOldest::getMaxSize() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
+		return m_Max;
+	}
+
 	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
 		m_InsertionPolicy( new RemoveOldest( 1 ) ),
 		m_Notify( false ),
 		m_DefaultData( defaultData, 0 ),
 		m_Engine( EngineImpl::instance() ),
 		m_TriggeringData( defaultData, 0 ),
-		m_BufferSize( 1 ),
-		m_Options( options )
+		m_Options( options ),
+		m_Counter( 0 )
 	{
 		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
 	}
@@ -354,19 +368,19 @@ namespace _2Real
 		TimestampedData rec;
 		const Type tSrc = data.getData().getType();
 		const Type tDst = m_DefaultData.getData().getType();
-		if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
+		if ( !( tSrc == tDst ) )
 		{
 			const TypeCategory cSrc = data.getData().getTypeCategory();
 			const TypeCategory cDst = m_DefaultData.getData().getTypeCategory();
-			if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
+			if ( cSrc == TypeCategory::ARITHMETHIC && cDst == TypeCategory::ARITHMETHIC )
 			{
 				Any converted = arithmethicConversion( data.getData(), tDst );
-				rec = TimestampedData( converted, data.getTimestamp() );
+				rec = TimestampedData( converted, data.getTimestamp(), ++m_Counter );
 			}
 		}
 		else
 		{
-			rec = data;
+			rec = TimestampedData( data.getData(), data.getTimestamp(), ++m_Counter );
 		}
 
 		if ( !m_Options.isEmpty() )
@@ -390,7 +404,7 @@ namespace _2Real
 		{
 			m_NotificationAccess.unlock();
 			// once the cond was fulfilled, buffering starts
-			Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
+			//Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
 			Poco::ScopedLock< Poco::FastMutex > dLock( m_DataAccess );
 			m_InsertionPolicy->insertData( rec, m_ReceivedDataItems );
 		}
@@ -445,16 +459,18 @@ namespace _2Real
 
 	void InletBuffer::setBufferSize( const unsigned int size )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-		delete m_InsertionPolicy;
-		m_InsertionPolicy = new RemoveOldest( size );
-		m_BufferSize = size;
+		//Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
+		//delete m_InsertionPolicy;
+		//m_InsertionPolicy = new RemoveOldest( size );
+		//m_BufferSize = size;
+		m_InsertionPolicy->setMaxSize( size );
 	}
 
 	unsigned int InletBuffer::getBufferSize() const
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-		return m_BufferSize;
+		//Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
+		//return m_BufferSize;
+		return m_InsertionPolicy->getMaxSize();
 	}
 
 	void InletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )

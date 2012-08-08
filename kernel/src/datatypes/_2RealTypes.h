@@ -45,7 +45,10 @@
 
 namespace _2Real
 {
-	struct NullType {};
+	struct NullType
+	{
+		bool operator==( NullType const& other ) const { return false; }
+	};
 
 	template< typename T > struct traits;
 
@@ -189,7 +192,7 @@ namespace _2Real
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( std::string ), Type::STRING, "string", traits< char >::createTypeDescriptor() );
+			return new TypeDescriptor( typeid( std::string ), Type::STRING, "string", TypeCategory::UNIQUE );
 		}
 	};
 

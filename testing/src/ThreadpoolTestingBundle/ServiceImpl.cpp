@@ -91,6 +91,15 @@ void In::update()
 {
 	try
 	{
+		if ( m_Msg.wasUpdated() )
+		{
+			cout << m_Msg.getReadableRef< string >() << " msg updated" << endl;
+		}
+		else if ( m_Msg.valueChanged() )
+		{
+			cout << m_Msg.getReadableRef< string >() << " msg value changed" << endl;
+		}
+
 		ostringstream msg;
 		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< _2Real::Number >() << endl;
 		cout << msg.str();

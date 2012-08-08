@@ -28,6 +28,7 @@ namespace _2Real
 		enum Code
 		{
 			EMPTY,
+
 			BYTE,
 			UBYTE,
 			SHORT,
@@ -38,12 +39,15 @@ namespace _2Real
 			ULONG,
 			FLOAT,
 			DOUBLE,
+			NUMBER,
+
 			BOOL,
+
 			STRING,
 			VECTOR,
 			LIST,
 			IMAGE,
-			NUMBER,
+
 			POINT,
 			SKELETON,
 			RIGIDBODY,

@@ -336,6 +336,11 @@ namespace _2Real
 			m_ImageObject = std::auto_ptr< ImageObject >( new ImageObject(data, ownsData, width, height, rowBytes, channelOrder) );
 		}
 
+		bool operator==( ImageT< T > const& other ) const
+		{
+			return ( m_ImageObject.get() == other.m_ImageObject.get() || *m_ImageObject.get() == *other.m_ImageObject.get() );
+		}
+
 		const uint32_t				getWidth() const { return m_ImageObject->m_Width; }
 		const uint32_t				getHeight() const { return m_ImageObject->m_Height; }
 		const uint32_t				getRowPitch() const { return m_ImageObject->m_RowPitch; }
@@ -377,6 +382,28 @@ namespace _2Real
 				m_ChannelOrder(order)
 			{
 				initChannels();
+			}
+
+			bool operator==( ImageObject const& other ) const
+			{
+				if ( m_ChannelOrder != other.m_ChannelOrder ) return false;
+				else if ( m_Width != other.m_Width ) return false;
+				else if ( m_Height != other.m_Height ) return false;
+				else if ( m_RowPitch != other.m_RowPitch ) return false;
+				else
+				{
+					T *pThis = m_ImageData;
+					T *pOther = other.m_ImageData;
+					unsigned int sz = m_Width * m_Height * m_ChannelOrder.getNumberOfChannels();
+					for ( unsigned int i=0; i<sz; ++i )
+					{
+						if ( *pThis != *pOther ) return false;
+						++pThis;
+						++pOther;
+					}
+
+					return true;
+				}
 			}
 
 			~ImageObject()

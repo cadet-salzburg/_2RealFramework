@@ -68,7 +68,7 @@ namespace _2Real
 		BlockMetainfo & BundleMetainfo::exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName )
 		{
 			checkChars( toLower( trim( blockName ) ) );
-			return m_Impl.setBlockCreator( toLower( trim( blockName ) ), obj );
+			return m_Impl.setBlockCreator( trim( blockName ), obj );
 		}
 	}
 }

@@ -86,13 +86,13 @@ namespace _2Real
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
 			checkValidity( m_IO );
-			return m_IO->getBundleInletHandle( toLower( trim ( name ) ) );
+			return m_IO->getBundleInletHandle( trim ( name ) );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_IO );
-			return m_IO->getBundleOutletHandle( toLower( trim ( name ) ) );
+			return m_IO->getBundleOutletHandle( trim ( name ) );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const

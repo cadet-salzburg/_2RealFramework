@@ -134,42 +134,6 @@ namespace _2Real
 		}
 	};
 
-	//template< >
-	//class ConversionBlock< Image, Image8U > : public AbstractConversionBlock
-	//{
-	//	void update()
-	//	{
-	//		std::cout << "TODO" << std::endl;
-	//	}
-	//};
-
-	//template< >
-	//class ConversionBlock< Image, Image16U > : public AbstractConversionBlock
-	//{
-	//	void update()
-	//	{
-	//		std::cout << "TODO" << std::endl;
-	//	}
-	//};
-
-	//template< >
-	//class ConversionBlock< Image, Image32F > : public AbstractConversionBlock
-	//{
-	//	void update()
-	//	{
-	//		std::cout << "TODO" << std::endl;
-	//	}
-	//};
-
-	//template< >
-	//class ConversionBlock< Image, Image64F > : public AbstractConversionBlock
-	//{
-	//	void update()
-	//	{
-	//		std::cout << "TODO" << std::endl;
-	//	}
-	//};
-
 	template< typename TSrc, typename TDst >
 	std::string getConversionName()
 	{

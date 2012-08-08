@@ -73,6 +73,9 @@ namespace _2Real
 			bool isValid() const;
 			void invalidate();
 
+			bool wasUpdated() const;
+			bool valueChanged() const;
+
 		private:
 
 			Any					getCurrentData() const;

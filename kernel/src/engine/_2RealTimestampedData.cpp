@@ -22,11 +22,19 @@
 namespace _2Real
 {
 
-	TimestampedData::TimestampedData() : m_Data(), m_Timestamp( 0 ) {}
+	TimestampedData::TimestampedData() : m_Data(), m_Timestamp( 0 ), m_Key( -1 ) {}
 
-	TimestampedData::TimestampedData( Any const& data, long timestamp ) :
+	TimestampedData::TimestampedData( Any const& data, const long timestamp ) :
 		m_Data( data ),
-		m_Timestamp( timestamp )
+		m_Timestamp( timestamp ),
+		m_Key( -1 )
+	{
+	}
+
+	TimestampedData::TimestampedData( Any const& data, const long timestamp, const long key ) :
+		m_Data( data ),
+		m_Timestamp( timestamp ),
+		m_Key( key )
 	{
 	}
 
@@ -38,6 +46,11 @@ namespace _2Real
 	long TimestampedData::getTimestamp() const
 	{
 		return m_Timestamp;
+	}
+
+	long TimestampedData::getKey() const
+	{
+		return m_Key;
 	}
 
 	Any const& TimestampedData::getData() const

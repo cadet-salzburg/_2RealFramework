@@ -31,12 +31,14 @@ namespace _2Real
 		Identifiable< Inlet >( owningBlock.getIds(), name ),
 		Handleable< Inlet, bundle::InletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
-		m_OwningUberBlock( owningBlock )
+		m_OwningUberBlock( owningBlock ),
+		m_LastData( Any(), -1 )
 	{
 	}
 
 	void Inlet::setDataAndSynchronize( TimestampedData const& data )
 	{
+		m_LastData = Parameter::m_Data;
 		Parameter::setData( data );
 		Parameter::synchronize();
 	}
@@ -44,5 +46,15 @@ namespace _2Real
 	AbstractUberBlock & Inlet::getOwningUberBlock()
 	{
 		return m_OwningUberBlock;
+	}
+
+	bool Inlet::wasUpdated() const
+	{
+		return ( Parameter::m_Data.getKey() != m_LastData.getKey() );
+	}
+
+	bool Inlet::valueChanged() const
+	{
+		return ( !Parameter::m_Data.getData().isEqualTo( m_LastData.getData() ) );
 	}
 }

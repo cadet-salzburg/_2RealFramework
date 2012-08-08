@@ -23,15 +23,19 @@
 namespace _2Real
 {
 
+	// todo: the timestamp really is of no use rigth now
+
 	class TimestampedData
 	{
 
 	public:
 
 		TimestampedData() ;
-		TimestampedData( Any const& data, long timestamp );
+		TimestampedData( Any const& data, const long timestamp );
+		TimestampedData( Any const& data, const long timestamp, const long key );
 
 		long getTimestamp() const;
+		long getKey() const;
 		Any & getData();
 		Any const& getData() const;
 		bool isEmpty() const;
@@ -42,7 +46,8 @@ namespace _2Real
 	private:
 
 		Any				m_Data;
-		long					m_Timestamp;
+		long			m_Timestamp;
+		long			m_Key;
 
 	};
 

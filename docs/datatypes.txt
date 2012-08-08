@@ -4,6 +4,9 @@ to add a type:
 
 -make sure there's a default ctor
 
+CHANGE 08/08/12: due the new 'hasChanged' function concerning inlets, 
+all datatypes now must have a == operator!
+
 -if the class internally handles owned pointers,
 	make sure that there's a cpy ctor & assignment operator
 	that creates deep copies

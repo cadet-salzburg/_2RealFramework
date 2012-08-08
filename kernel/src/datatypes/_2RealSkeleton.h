@@ -32,9 +32,6 @@ namespace _2Real
 
 	class Skeleton
 	{
-	// no serialization for now
-	//friend std::ostream& operator<<( std::ostream& out, Skeleton const& data );
-	//friend std::istream& operator>>( std::istream& in, Skeleton &data );
 
 	public:
 
@@ -42,6 +39,11 @@ namespace _2Real
 		Skeleton( Skeleton const& src ) : m_RigidBodies( src.m_RigidBodies ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_Global( src.m_Global ), m_BoundingBoxLimit(src.m_BoundingBoxLimit) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies, std::string const& l, const unsigned int id, const bool global ) : m_RigidBodies( rigidBodies ), m_Label( l ), m_Id ( id ), m_Global( global ) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies ) : m_RigidBodies( rigidBodies ), m_Label( "undefined" ), m_Id( -1 ), m_Global( true ) {}
+
+		bool operator==( Skeleton const& other ) const
+		{
+			return ( m_Label == other.m_Label && m_Id == other.m_Id && m_BoundingBoxLimit == other.m_BoundingBoxLimit && m_RigidBodies == other.m_RigidBodies );
+		}
 		
 		std::vector<_2Real::RigidBody>&	getRigidBodies()	{ return m_RigidBodies; }
 	
@@ -58,6 +60,7 @@ namespace _2Real
 		_2Real::BoundingBox getLimit()									{ return m_BoundingBoxLimit; }
 
 	private:
+
 		std::vector<_2Real::RigidBody>  m_RigidBodies;
 		std::string						m_Label;
 		int								m_Id;
@@ -65,18 +68,5 @@ namespace _2Real
 		_2Real::BoundingBox				m_BoundingBoxLimit;			// space limits which describe e.g. for kinect the volume for world coordinates it's working, need this for the rendering in a 3d scene
 	
 	};
-
-	// no serialization for now
-	//inline std::ostream& operator<<( std::ostream& out, Skeleton const& info )
-	//{
-	//	//out <<  << std::endl;
-	//	return out;
-	//}
-
-	//inline std::istream& operator>>( std::istream& in, Skeleton &info )
-	//{
-	//	//in >> 
-	//	return in;
-	//}
 
 }

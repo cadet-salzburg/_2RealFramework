@@ -89,7 +89,7 @@ namespace _2Real
 		app::BundleInfo::BlockInfos const& blocks = m_BundleInfo.getExportedBlocks();
 		for ( app::BundleInfo::BlockInfoConstIterator it = blocks.begin(); it != blocks.end(); ++it )
 		{
-			if ( it->getName() == blockName ) return true;
+			if ( toLower( it->getName() ) == toLower( blockName ) ) return true;
 		}
 
 		return false;

@@ -121,11 +121,14 @@ namespace _2Real
 
 	bundle::BlockMetainfo & Metainfo::setBlockCreator( string const& blockName, bundle::AbstractBlockCreator &obj )
 	{
-		if ( m_BlockInfos.find( blockName ) != m_BlockInfos.end() )
+		for ( BlockInfoConstIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
-			ostringstream msg;
-			msg << "block " << blockName << " is already defined in bundle " << m_BundleData.getName();
-			throw AlreadyExistsException( msg.str() );
+			if ( toLower( it->first ) == toLower( blockName ) )
+			{
+				ostringstream msg;
+				msg << "block " << blockName << " is already defined in bundle " << m_BundleData.getName();
+				throw AlreadyExistsException( msg.str() );
+			}
 		}
 
 		m_BlockInfos[ blockName ].ctor = &obj;
@@ -158,17 +161,29 @@ namespace _2Real
 			context = dynamic_cast< bundle::ContextBlock * > ( &( m_ContextInfo.ctor->create( nullptr ) ) );
 		}
 
-		BlockInfoConstIterator it = m_BlockInfos.find( blockName );
-		if ( it != m_BlockInfos.end() )
+		//BlockInfoConstIterator it = m_BlockInfos.find( blockName );
+		//if ( it != m_BlockInfos.end() )
+		//{
+		//	return it->second.ctor->create( context );
+		//}
+		//else
+		//{
+		//	ostringstream msg;
+		//	msg << "block " << blockName << " is not exported by " << m_BundleData.getName();
+		//	throw NotFoundException( msg.str() );
+		//}
+
+		for ( BlockInfoConstIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
-			return it->second.ctor->create( context );
+			if ( toLower( it->first ) == toLower( blockName ) )
+			{
+				return it->second.ctor->create( context );
+			}
 		}
-		else
-		{
-			ostringstream msg;
-			msg << "block " << blockName << " is not exported by " << m_BundleData.getName();
-			throw NotFoundException( msg.str() );
-		}
+
+		ostringstream msg;
+		msg << "block " << blockName << " is not exported by " << m_BundleData.getName();
+		throw NotFoundException( msg.str() );
 	}
 
 	void Metainfo::cleanup()

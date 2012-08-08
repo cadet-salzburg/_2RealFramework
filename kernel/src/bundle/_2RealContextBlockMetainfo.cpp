@@ -38,7 +38,7 @@ namespace _2Real
 		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, TypeDescriptor &descriptor, Any const& init )
 		{
 			checkChars( toLower( trim( outletName ) ) );
-			ParameterMetadata *data = new ParameterMetadata( toLower( trim( outletName ) ), descriptor, init );
+			ParameterMetadata *data = new ParameterMetadata( trim( outletName ), descriptor, init );
 			m_Impl.addOutlet( *data );
 		}
 	}

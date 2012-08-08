@@ -123,7 +123,7 @@ namespace _2Real
 		OutletHandle & ContextBlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( toLower( trim( name ) ) );
+			return m_Block->getAppOutletHandle( trim( name ) );
 		}
 
 		ContextBlockHandle::OutletHandles const& ContextBlockHandle::getAllOutletHandles() const

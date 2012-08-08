@@ -28,6 +28,7 @@
 #include "app/_2RealOutletHandle.h"
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
+#include "helpers/_2RealStringHelpers.h"
 
 #include <sstream>
 
@@ -116,7 +117,7 @@ namespace _2Real
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( ( *it )->m_Inlet->getName() == name )
+			if ( toLower( ( *it )->m_Inlet->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
@@ -131,7 +132,7 @@ namespace _2Real
 	{
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( ( *it )->m_Outlet->getName() == name )
+			if ( toLower( ( *it )->m_Outlet->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
@@ -146,7 +147,7 @@ namespace _2Real
 	{
 		for ( InletConstIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( ( *it )->m_Inlet->getName() == name )
+			if ( toLower( ( *it )->m_Inlet->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
@@ -161,7 +162,7 @@ namespace _2Real
 	{
 		for ( OutletConstIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( ( *it )->m_Outlet->getName() == name )
+			if ( toLower( ( *it )->m_Outlet->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}

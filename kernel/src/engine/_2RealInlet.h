@@ -55,6 +55,9 @@ namespace _2Real
 		void setDataAndSynchronize( TimestampedData const& data );
 		AbstractUberBlock & getOwningUberBlock();
 
+		bool wasUpdated() const;
+		bool valueChanged() const;
+
 		//bool					hasOptions() const;
 		//bool					hasRange() const;
 
@@ -62,6 +65,7 @@ namespace _2Real
 
 		EngineImpl				&m_Engine;
 		AbstractUberBlock		&m_OwningUberBlock;
+		TimestampedData			m_LastData;
 
 	};
 }

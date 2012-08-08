@@ -339,6 +339,28 @@ namespace _2Real
 			}
 		}
 
+		bool operator==( Image const& other ) const
+		{
+			if ( m_ChannelOrder != other.m_ChannelOrder ) return false;
+			else if ( m_ImageType != other.m_ImageType ) return false;
+			else if ( m_Width != other.m_Width ) return false;
+			else if ( m_Height != other.m_Height ) return false;
+			else if ( m_Size != other.m_Size ) return false;
+			else
+			{
+				unsigned char *pThis = m_Data;
+				unsigned char *pOther = other.m_Data;
+				for ( unsigned int i=0; i<m_Size; ++i )
+				{
+					if ( *pThis != *pOther ) return false;
+					++pThis;
+					++pOther;
+				}
+
+				return true;
+			}
+		}
+
 		ImageType const&			getImageType() const { return m_ImageType; }
 		ImageChannelOrder const&	getChannelOrder() const { return m_ChannelOrder; }
 		unsigned int				getNumberOfChannels() const { return m_ChannelOrder.getNumberOfChannels(); }
@@ -347,8 +369,8 @@ namespace _2Real
 		size_t						getBitsPerChannel() const { return m_ImageType.getByteSize()*8; }
 		unsigned int				getWidth() const { return m_Width; }
 		unsigned int				getHeight() const { return m_Height; }
-		unsigned char const*		getData() { return m_Data; }
-		unsigned char*				getData() const { return m_Data; }
+		unsigned char const *		getData() const { return m_Data; }
+		unsigned char *				getData() { return m_Data; }
 
 	private:
 

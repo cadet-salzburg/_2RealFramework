@@ -124,7 +124,7 @@ namespace _2Real
 		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
 		{
 			checkValidity( m_Bundle );
-			return m_Bundle->createBlockInstance( toLower( trim( blockName ) ) );
+			return m_Bundle->createBlockInstance( trim( blockName ) );
 		}
 
 		void BundleHandle::invalidate()

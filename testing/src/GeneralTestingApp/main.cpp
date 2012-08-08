@@ -180,7 +180,7 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "link" )
 			{
-				inletHandle.tryLink( outletHandle );
+				inletHandle.link( outletHandle );
 			}
 			else if ( line == "ulink" )
 			{

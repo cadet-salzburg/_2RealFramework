@@ -84,5 +84,17 @@ namespace _2Real
 		{
 			m_Inlet = nullptr;
 		}
+
+		bool InletHandle::wasUpdated() const
+		{
+			checkValidity( m_Inlet );
+			return m_Inlet->wasUpdated();
+		}
+
+		bool InletHandle::valueChanged() const
+		{
+			checkValidity( m_Inlet );
+			return m_Inlet->valueChanged();
+		}
 	}
 }

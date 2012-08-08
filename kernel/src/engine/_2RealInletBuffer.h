@@ -38,6 +38,8 @@ namespace _2Real
 
 		virtual bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer ) = 0;
 		virtual ~AbstractInsertionPolicy() {};
+		virtual void setMaxSize( const unsigned int max ) = 0;
+		virtual unsigned int getMaxSize() const = 0;
 
 	};
 
@@ -48,10 +50,13 @@ namespace _2Real
 
 		RemoveOldest( const unsigned int max );
 		bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer );
+		void setMaxSize( const unsigned int max );
+		unsigned int getMaxSize() const;
 
 	private:
 
-		unsigned int	const m_Max;
+		mutable Poco::FastMutex		m_Mutex;
+		unsigned int				m_Max;
 
 	};
 
@@ -85,17 +90,18 @@ namespace _2Real
 
 	private:
 
+				unsigned long				m_Counter;
 		EngineImpl										&m_Engine;
 		DataBuffer										m_ReceivedDataItems;	// holds all received data items
 		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
 		volatile bool									m_Notify;
 		TimestampedData									m_DefaultData;
-		mutable Poco::FastMutex							m_PolicyAccess;
+		//mutable Poco::FastMutex							m_PolicyAccess;
 		mutable Poco::FastMutex							m_DataAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
-		unsigned int									m_BufferSize;
+		//unsigned int									m_BufferSize;
 		AnyOptionSet										m_Options;
 
 	};

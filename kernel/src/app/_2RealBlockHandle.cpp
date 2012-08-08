@@ -142,13 +142,13 @@ namespace _2Real
 		InletHandle & BlockHandle::getInletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppInletHandle( toLower( trim( name ) ) );
+			return m_Block->getAppInletHandle( trim( name ) );
 		}
 
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( toLower( trim( name ) ) );
+			return m_Block->getAppOutletHandle( trim( name ) );
 		}
 
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const

@@ -130,6 +130,16 @@ void In::update()
 {
 	try
 	{
+		if ( m_In.wasUpdated() )
+		{
+			cout << "UPDATED" << endl;
+		}
+
+		if ( m_In.valueChanged() )
+		{
+			cout << "CHANGED" << endl;
+		}
+
 		cout << m_Block.getAllInletHandles().size() << std::endl;
 		cout << m_Block.getAllOutletHandles().size() << std::endl;
 		std::cout << "IN inlet" << m_In.getReadableRef< unsigned int >() << std::endl;

@@ -126,13 +126,11 @@ namespace _2Real
 		if ( other.getTypename() == this->getTypename() )
 		{
 			AnyHolder< TData > const& holder = dynamic_cast< AnyHolder< TData > const& >( other );
-			return isEqual( m_Data, holder.m_Data );
+			return m_Data == holder.m_Data;
 		}
 		else
 		{
-			std::ostringstream msg;
-			msg << "type of data " << other.getTypename() << " does not match type " << this->getTypename() << std::endl;
-			throw TypeMismatchException( msg.str() );
+			return false;
 		}
 	}
 

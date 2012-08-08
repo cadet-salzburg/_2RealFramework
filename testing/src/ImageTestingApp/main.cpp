@@ -206,6 +206,14 @@ int main( int argc, char *argv[] )
 		Receiver receiver;
 		oOut.registerToNewData( receiver, &Receiver::receiveData );
 
+		InletHandle iOps = inout.getInletHandle( "image_options" );
+		std::set< _2Real::Option< int > > ops = iOps.getOptionMapping< int >();
+		cout << ops.size() << endl;
+		for ( std::set< _2Real::Option< int > >::iterator it = ops.begin(); it != ops.end(); ++it )
+		{
+			cout << it->m_Desc << endl;
+		}
+
 		if ( !ioIn.tryLink( oOut ) )
 		{
 			ioIn.tryLinkWithConversion( oOut );

@@ -201,59 +201,9 @@ namespace _2Real
 
 			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
 		}
+
 		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
 		m_Bundles.insert( bundle );
-
-		if ( m_BundleLoader.hasContext( absPath ) )
-		{
-			BlockMetadata const& contextData = bundleData.getBlockData( "contextblock" );
-
-			app::BlockInfo::BlockData blockData;
-			app::BlockInfo::ParameterInfos inlets;
-			app::BlockInfo::ParameterInfos outlets;
-
-			blockData.name = contextData.getName();
-			blockData.description = contextData.getDescription();
-			blockData.category = contextData.getCategory();
-
-			BlockMetadata::ParameterMetadatas const& input = contextData.getInlets();
-			BlockMetadata::ParameterMetadatas const& output = contextData.getOutlets();
-
-			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				inlets.push_back( paramInfo );
-			}
-
-			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				outlets.push_back( paramInfo );
-			}
-
-			app::BlockInfo info( blockData, inlets, outlets );
-
-			bundle::Block & block = m_BundleLoader.createContext( absPath );
-			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( *bundle, block, info );
-			bundle->setContextBlock( *contextBlock );
-
-			m_Engine.addBlock( *contextBlock );
-
-			// adding inlets & outlets
-			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-			{
-				contextBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
-			}
-
-			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-			{
-				contextBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
-			}
-
-			contextBlock->updateWithFixedRate( 1.0 );
-			contextBlock->setUp();
-			contextBlock->start();
-		}
 
 		return *bundle;
 	}
@@ -266,45 +216,95 @@ namespace _2Real
 
 	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName )
 	{
+		std::string absPath = bundle.getAbsPath();
 		BundleMetadata const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getAbsPath() );
-		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
 
+		if ( !bundle.hasContext() && m_BundleLoader.hasContext( absPath ) )
+		{
+			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( "contextblock" );
+			app::BlockInfo::BlockData contextData;
+			app::BlockInfo::ParameterInfos contextInletData;
+			app::BlockInfo::ParameterInfos contextOutletData;
+
+			contextData.name = contextMetadata.getName();
+			contextData.description = contextMetadata.getDescription();
+			contextData.category = contextMetadata.getCategory();
+
+			BlockMetadata::ParameterMetadatas const& inletMetadata = contextMetadata.getInlets();
+			BlockMetadata::ParameterMetadatas const& outletMetadata = contextMetadata.getOutlets();
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
+				contextInletData.push_back( paramInfo );
+			}
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			{
+				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
+				contextOutletData.push_back( paramInfo );
+			}
+
+			app::BlockInfo info( contextData, contextInletData, contextOutletData );
+
+			bundle::Block & block = m_BundleLoader.createContext( absPath );
+			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( bundle, block, info );
+			bundle.setContextBlock( *contextBlock );
+
+			m_Engine.addBlock( *contextBlock );
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			{
+				contextBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
+			}
+
+			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			{
+				contextBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
+			}
+
+			contextBlock->updateWithFixedRate( 1.0 );
+			contextBlock->setUp();
+			contextBlock->start();
+		}
+
+		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
 		app::BlockInfo::BlockData blockData;
-		app::BlockInfo::ParameterInfos inlets;
-		app::BlockInfo::ParameterInfos outlets;
+		app::BlockInfo::ParameterInfos blockInletData;
+		app::BlockInfo::ParameterInfos blockOutletData;
 
 		blockData.name = blockMetadata.getName();
 		blockData.description = blockMetadata.getDescription();
 		blockData.category = blockMetadata.getCategory();
 
-		BlockMetadata::ParameterMetadatas const& input = blockMetadata.getInlets();
-		BlockMetadata::ParameterMetadatas const& output = blockMetadata.getOutlets();
+		BlockMetadata::ParameterMetadatas const& inletMetadata = blockMetadata.getInlets();
+		BlockMetadata::ParameterMetadatas const& outletMetadata = blockMetadata.getOutlets();
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-			inlets.push_back( paramInfo );
+			blockInletData.push_back( paramInfo );
 		}
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-			outlets.push_back( paramInfo );
+			blockOutletData.push_back( paramInfo );
 		}
 
-		app::BlockInfo info( blockData, inlets, outlets );
+		app::BlockInfo info( blockData, blockInletData, blockOutletData );
 
 		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getAbsPath(), blockName );
 		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, info );
 		m_Engine.addBlock( *functionBlock );
 
 		// adding inlets & outlets
-		for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			functionBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
 		}
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			functionBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
 		}
@@ -356,5 +356,4 @@ namespace _2Real
 			return abs;
 		}
 	}
-
 }
