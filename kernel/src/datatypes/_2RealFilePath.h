@@ -37,7 +37,7 @@ namespace _2Real
 
 		FilePath() {}
 		FilePath(std::string strPath) : Poco::Path(strPath) {}
-
+		FilePath( FilePath const& src ) : Poco::Path(src) {}
 
 		bool operator==(FilePath const& rhs) const { return (this->toString() == rhs.toString()); }
 		bool operator!=(FilePath const& rhs) const { return !(*this == rhs); }
@@ -48,12 +48,13 @@ namespace _2Real
 
 	inline std::istream & operator>>( std::istream &in, FilePath &path )
 	{
-		in >> path.toString();
+		in >> path.toString();  // this is most likely wrong and it should gíve a compile time error
 		return in;
 	}
 
 	inline std::ostream & operator<<( std::ostream &out, FilePath const& path )
 	{
 		out << path.toString();
+		return out;
 	}
 }

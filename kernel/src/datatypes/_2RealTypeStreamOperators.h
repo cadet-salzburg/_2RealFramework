@@ -20,6 +20,7 @@
 
 #include "datatypes/_2RealNumber.h"
 #include "datatypes/_2RealPoint.h"
+#include "datatypes/_2RealFilePath.h"
 #include "helpers/_2RealStringHelpers.h"
 
 #ifdef _UNIX
@@ -160,6 +161,12 @@ namespace _2Real
 	}
 
 	template< >
+	inline void writeTo( std::ostream &out, FilePath const& v )
+	{
+		out << v;
+	}
+
+	template< >
 	inline void writeTo( std::ostream &out, float const& v )
 	{
 		out << v;
@@ -286,6 +293,13 @@ namespace _2Real
 	{
 		in >> v;
 	}
+
+	template< >
+	inline void readFrom( std::istream &in, FilePath &v )
+	{
+		in >> v;
+	}
+
 
 	template< >
 	inline void readFrom( std::istream &in, float &v )
