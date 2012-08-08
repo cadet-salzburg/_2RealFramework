@@ -19,7 +19,7 @@ public slots:
 	void setFloatValue(double value);
 	void setDoubleValue(double value);
 	void setNumberValue(double value);
-	void setStringValue(const QString & text);
+	void setStringValue(const QString & value);
 	void setNumericVectorListValue();
 	
 public:

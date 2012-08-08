@@ -10,3 +10,8 @@ Discussions / Todo
 * outlets need buffering maybe (multiple writes in one update (compare midi bundle)	
 * think about Synchronisationsblock ?
 * think aboout Mutexblock ?
+
+For later / Nice to haves
+-------------------------
+
+Sandboxing, engine runs in own process so segfaulting blocks don't crash the app

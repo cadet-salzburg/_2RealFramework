@@ -93,7 +93,7 @@ void BlockOutletWidget::updateData(_2Real::app::AppData data)
 			m_OutletHandle.getTypename() == "int" || m_OutletHandle.getTypename() == "unsigned int" || 
 			m_OutletHandle.getTypename() == "long" || m_OutletHandle.getTypename() == "unsigned long" ||
 			m_OutletHandle.getTypename() == "float" || m_OutletHandle.getTypename() == "double" || m_OutletHandle.getTypename() == "number" ||
-			m_OutletHandle.getTypename() == "point" || m_OutletHandle.getTypename() == "string")
+			m_OutletHandle.getTypename() == "point" || m_OutletHandle.getTypename() == "string" ||  m_OutletHandle.getTypename() == "filepath")
 		{
 			dynamic_cast<QLabel*>(m_ValueWidget)->setText(QString::fromStdString(data.getDataAsString()));
 		}

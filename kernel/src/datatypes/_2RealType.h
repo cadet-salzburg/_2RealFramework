@@ -44,6 +44,8 @@ namespace _2Real
 			BOOL,
 
 			STRING,
+			
+			FILEPATH,
 			VECTOR,
 			LIST,
 			IMAGE,

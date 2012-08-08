@@ -197,6 +197,15 @@ namespace _2Real
 	};
 
 	template< >
+	struct traits< FilePath >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( FilePath ), Type::FILEPATH, "filepath", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
 	struct traits< Image8U >
 	{
 		static TypeDescriptor *createTypeDescriptor()

@@ -27,7 +27,8 @@ void QFileDialogWidget::openFile()
 {
 	 QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"));
 	 m_PathEdit->setText(fileName);
-	 m_InletHandle.setValue<std::string>(fileName.toStdString());
+	 _2Real::FilePath path(fileName.toStdString());
+	 m_InletHandle.setValue<_2Real::FilePath>(path);
 }
 
 void QFileDialogWidget::setPath()

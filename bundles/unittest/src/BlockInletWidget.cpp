@@ -322,6 +322,7 @@ void BlockInletWidget::setStringValue(const QString & value)
 	}
 }
 
+
 void BlockInletWidget::setNumericVectorListValue()
 {
 	try
