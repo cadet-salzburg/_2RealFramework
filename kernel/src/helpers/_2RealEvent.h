@@ -22,6 +22,7 @@
 #include "helpers/_2RealCallback.h"
 
 #include <set>
+#include <iostream>
 
 namespace _2Real
 {
