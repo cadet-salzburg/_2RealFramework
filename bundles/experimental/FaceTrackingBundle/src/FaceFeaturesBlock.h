@@ -18,10 +18,6 @@ public:
 
 private:
 
-	unsigned int				m_numChannels;
-	_2Real::ImageType			m_imageType;
-	_2Real::ImageChannelOrder	m_channelOrder;
-
 	_2Real::bundle::BlockHandle		m_Block;
 
 	_2Real::bundle::InletHandle		m_imageIn;

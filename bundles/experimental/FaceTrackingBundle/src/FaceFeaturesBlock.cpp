@@ -297,6 +297,8 @@ public:
 		CvRectVector tempVecNoses;
 		CvRectVector tempVecMouths;
 
+		//TODO: before scanning whole image for faces, search in areas faces were previously at (with some tolerance, framerate-dependent)
+		// only if unsuccessuful, or no previous face positions present, scan overall image
 		this->detect( tempVecFaces, m_cascadeFace, m_minNeighboursFace, m_minSizeFace );
 		std::cout << "found " << tempVecFaces.size() << " faces" << std::endl;
 
@@ -573,9 +575,6 @@ private:
 
 FaceFeaturesBlock::FaceFeaturesBlock() : 
 	Block(), 
-	m_numChannels( 0 ),
-	m_imageType( ImageType::UNSIGNED_BYTE ),
-	m_channelOrder( ImageChannelOrder::RGB ),
 	m_cvImpl( new CVImpl() )
 {}
 
@@ -628,14 +627,6 @@ void FaceFeaturesBlock::setup( BlockHandle &block )
 
 		const Image &image = m_imageIn.getReadableRef< Image >();
 
-		m_numChannels = image.getNumberOfChannels();
-		m_imageType = image.getImageType();
-		m_channelOrder = image.getChannelOrder();
-
-		std::cout << "number of channels: " << m_numChannels << std::endl;
-		std::cout << "imageType : " << m_imageType << std::endl;
-		std::cout << "channel order: " << m_channelOrder << std::endl;
-
 		m_cvImpl->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
 		m_cvImpl->loadEyesCascade( m_cascFileEyesIn.getReadableRef< std::string >() );
 		m_cvImpl->loadNoseCascade( m_cascFileNoseIn.getReadableRef< std::string >() );
@@ -683,65 +674,99 @@ void FaceFeaturesBlock::update()
 
 		const Image &image = m_imageIn.getReadableRef< Image >();
 
-		if( image.getNumberOfChannels() != m_numChannels )
-		{
-			std::cout << "number of channels changed from " << m_numChannels << " to " << image.getNumberOfChannels() << std::endl;
-			m_numChannels = image.getNumberOfChannels();
-		}
+		bool doUpdate = m_imageIn.hasUpdated();
 
-		if( image.getImageType() != m_imageType )
-		{
-			std::cout << "imageType changed from " << m_imageType << " to " << image.getImageType() << std::endl;
-			m_imageType = image.getImageType();
-		}
-
-		if( image.getChannelOrder() != m_channelOrder )
-		{
-			std::cout << "channel order changed from " << m_channelOrder << " to " << image.getChannelOrder() << std::endl;
-			m_channelOrder = image.getChannelOrder();
-		}
-
-		//TODO: call if inlest changed
 		if( m_cascFileFaceIn.hasChanged() )
+		{
 			m_cvImpl->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
+			doUpdate = true;
+		}
 		if( m_cascFileEyesIn.hasChanged() )
+		{
 			m_cvImpl->loadEyesCascade( m_cascFileEyesIn.getReadableRef< std::string >() );
+			doUpdate = true;
+		}
 		if( m_cascFileNoseIn.hasChanged() )
+		{
 			m_cvImpl->loadNoseCascade( m_cascFileNoseIn.getReadableRef< std::string >() );
+			doUpdate = true;
+		}
 		if( m_cascFileMouthIn.hasChanged() )
+		{
 			m_cvImpl->loadMouthCascade( m_cascFileMouthIn.getReadableRef< std::string >() );
+			doUpdate = true;
+		}
 
 		if( m_haarMinNeighboursFaceIn.hasChanged() )
+		{
 			m_cvImpl->minNeighboursFace( m_haarMinNeighboursFaceIn.getReadableRef< unsigned int >() );
+			doUpdate = true;
+		}
 		if( m_haarMinNeighboursEyesIn.hasChanged() )
+		{
 			m_cvImpl->minNeighboursEyes( m_haarMinNeighboursEyesIn.getReadableRef< unsigned int >() );
+			doUpdate = true;
+		}
 		if( m_haarMinNeighboursNoseIn.hasChanged() )
+		{
 			m_cvImpl->minNeighboursNose( m_haarMinNeighboursNoseIn.getReadableRef< unsigned int >() );
+			doUpdate = true;
+		}
 		if( m_haarMinNeighboursMouthIn.hasChanged() )
+		{
 			m_cvImpl->minNeighboursMouth( m_haarMinNeighboursMouthIn.getReadableRef< unsigned int >() );
+			doUpdate = true;
+		}
 
 		if( m_haarMinSizeFaceIn.hasChanged() )
+		{
 			m_cvImpl->minSizeFace( m_haarMinSizeFaceIn.getReadableRef< Vec2 >() );
+			doUpdate = true;
+		}
 		if( m_haarMinSizeEyesIn.hasChanged() )
+		{
 			m_cvImpl->minSizeEyes( m_haarMinSizeEyesIn.getReadableRef< Vec2 >() );
+			doUpdate = true;
+		}
 		if( m_haarMinSizeNoseIn.hasChanged() )
+		{
 			m_cvImpl->minSizeNose( m_haarMinSizeNoseIn.getReadableRef< Vec2 >() );
+			doUpdate = true;
+		}
 		if( m_haarMinSizeMouthIn.hasChanged() )
+		{
 			m_cvImpl->minSizeMouth( m_haarMinSizeMouthIn.getReadableRef< Vec2 >() );
+			doUpdate = true;
+		}
 
 		if( m_haarScaleFactorIn.hasChanged() )
+		{
 			m_cvImpl->haarScaleFactor( m_haarScaleFactorIn.getReadableRef< double >() );
+			doUpdate = true;
+		}
 
 		if( m_useFaceIn.hasChanged() )
+		{
 			m_cvImpl->useFace( m_useFaceIn.getReadableRef< bool >() );
+			doUpdate = true;
+		}
 		if( m_useEyesIn.hasChanged() )
+		{
 			m_cvImpl->useEyes( m_useEyesIn.getReadableRef< bool >() );
+			doUpdate = true;
+		}
 		if( m_useNoseIn.hasChanged() )
+		{
 			m_cvImpl->useNose( m_useNoseIn.getReadableRef< bool >() );
+			doUpdate = true;
+		}
 		if( m_useMouthIn.hasChanged() )
+		{
 			m_cvImpl->useMouth( m_useMouthIn.getReadableRef< bool >() );
+			doUpdate = true;
+		}
 
-		if( m_imageIn.hasUpdated() )
+		if( doUpdate )
 		{
 			FeatureVector &faces = m_faceOut.getWriteableRef< FeatureVector >();
 			FeatureVector &eyes = m_eyesOut.getWriteableRef< FeatureVector >();
@@ -760,6 +785,11 @@ void FaceFeaturesBlock::update()
 			*/
 
 			m_cvImpl->detect( image, faces, eyes, noses, mouths );
+
+			//TODO: run plausability check (discard eyes on bottom of face, mouth up at forehead...)
+			//TODO: run coherency check by calculating distance measures based on change of angle,
+			// speed and size (threshold framerate-dependent) and assign to userID accordingly. use
+			// video file for proper testing
 
 			if( !m_cvImpl->useFace() )
 				m_faceOut.discard();

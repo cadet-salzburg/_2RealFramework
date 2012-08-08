@@ -32,7 +32,7 @@
     <ClInclude Include="..\..\src\FaceFeaturesBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6855388C-3AD5-416B-ADA1-EACAB038E6F6}</ProjectGuid>
+    <ProjectGuid>{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>FaceTrackingBundle</ProjectName>

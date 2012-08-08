@@ -3,7 +3,7 @@
 #include <iostream>
 
 //don't panic, i'll remove boost dependencies in final version, this is just for debugging
-//TODO
+//TODO: remove bench class
 #include <boost/timer/timer.hpp>
 
 class Bench
