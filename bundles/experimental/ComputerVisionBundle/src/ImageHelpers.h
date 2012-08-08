@@ -70,11 +70,118 @@ inline unsigned short * makeCheckerboard( const unsigned int width, const unsign
 	return data;
 }
 
-inline cv::Mat * convertToCvMat( Image const& src )
+inline cv::Mat *const convertToCvMat( Image &src )
 {
 	unsigned int width = src.getWidth();
 	unsigned int height = src.getHeight();
 	unsigned char *data = src.getData();
+	void *d = static_cast< void * >( data );
+	int cvType;
+
+	if ( width == 0 || height == 0 )
+	{
+		
+	}
+
+	ImageType type = src.getImageType();
+
+	unsigned int numChannels = src.getChannelOrder().getNumberOfChannels();
+	switch ( numChannels )
+	{
+	case 1:
+		switch( type.getDatatype() )
+		{
+		case ImageType::UNSIGNED_BYTE:
+			cvType = CV_8UC1;
+			break;
+		case ImageType::UNSIGNED_SHORT:
+			cvType = CV_16UC1;
+			break;
+		case ImageType::FLOAT:
+			cvType = CV_32FC1;
+			break;
+		case ImageType::DOUBLE:
+			cvType = CV_64FC1;
+			break;
+		default:
+			cvType = CV_8UC1;
+			break;
+		}
+		break;
+	case 2:
+		switch( type.getDatatype() )
+		{
+		case ImageType::UNSIGNED_BYTE:
+			cvType = CV_8UC2;
+			break;
+		case ImageType::UNSIGNED_SHORT:
+			cvType = CV_16UC2;
+			break;
+		case ImageType::FLOAT:
+			cvType = CV_32FC2;
+			break;
+		case ImageType::DOUBLE:
+			cvType = CV_64FC2;
+			break;
+		default:
+			cvType = CV_8UC2;
+			break;
+		}
+		break;
+	case 3:
+		switch( type.getDatatype() )
+		{
+		case ImageType::UNSIGNED_BYTE:
+			cvType = CV_8UC3;
+			break;
+		case ImageType::UNSIGNED_SHORT:
+			cvType = CV_16UC3;
+			break;
+		case ImageType::FLOAT:
+			cvType = CV_32FC3;
+			break;
+		case ImageType::DOUBLE:
+			cvType = CV_64FC3;
+			break;
+		default:
+			cvType = CV_8UC3;
+			break;
+		}
+		break;
+	case 4:
+		switch( type.getDatatype() )
+		{
+		case ImageType::UNSIGNED_BYTE:
+			cvType = CV_8UC4;
+			break;
+		case ImageType::UNSIGNED_SHORT:
+			cvType = CV_16UC4;
+			break;
+		case ImageType::FLOAT:
+			cvType = CV_32FC4;
+			break;
+		case ImageType::DOUBLE:
+			cvType = CV_64FC4;
+			break;
+		default:
+			cvType = CV_8UC4;
+			break;
+		}
+		break;
+	default:
+		cvType = CV_8UC1;
+		break;
+	}
+
+	cv::Mat *result = new cv::Mat( src.getWidth(), src.getHeight(), cvType, d );
+	return result;
+}
+
+inline cv::Mat const* const convertToCvMat( Image const& src )
+{
+	unsigned int width = src.getWidth();
+	unsigned int height = src.getHeight();
+	unsigned char * data = const_cast< unsigned char * >( src.getData() );
 	void *d = static_cast< void * >( data );
 	int cvType;
 

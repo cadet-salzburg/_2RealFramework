@@ -94,8 +94,8 @@ void OcvGaussianBlurBlock::update()
 		}
 
 		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
-		cv::Mat *matSrc = convertToCvMat( input );
-		cv::Mat *matDst = convertToCvMat( output );
+		cv::Mat const* const matSrc = convertToCvMat( input );
+		cv::Mat *const matDst = convertToCvMat( output );
 
 		cv::GaussianBlur( *matSrc, *matDst, cv::Size( kernelX, kernelY ), sigmaX, sigmaY, border );
 

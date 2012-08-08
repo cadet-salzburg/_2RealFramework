@@ -73,8 +73,8 @@ void OcvSobelBlock::update()
 		}
 
 		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
-		cv::Mat *matSrc = convertToCvMat( input );
-		cv::Mat *matDst = convertToCvMat( output );
+		cv::Mat const* const matSrc = convertToCvMat( input );
+		cv::Mat *const matDst = convertToCvMat( output );
 
 		cv::Sobel( *matSrc, *matDst, 2, orderX, orderY, aperture, 1.0, 0.0, 4 );
 
