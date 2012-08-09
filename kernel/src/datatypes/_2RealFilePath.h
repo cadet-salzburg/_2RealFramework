@@ -35,20 +35,21 @@ namespace _2Real
 
 	public:
 
-		FilePath() {}
-		FilePath(std::string strPath) : Poco::Path(strPath) {}
+		FilePath() : Poco::Path() {}
+		FilePath( std::string const& strPath ) : Poco::Path( strPath ) {}
 		FilePath( FilePath const& src ) : Poco::Path(src) {}
+		FilePath& operator=( FilePath const& src ) { Poco::Path::operator=( src ); return *this; }
 
-		bool operator==(FilePath const& rhs) const { return (this->toString() == rhs.toString()); }
-		bool operator!=(FilePath const& rhs) const { return !(*this == rhs); }
-
-	private:
+		bool operator==( FilePath const& rhs ) const { return (this->toString() == rhs.toString()); }
+		bool operator!=( FilePath const& rhs ) const { return !(*this == rhs); }
 
 	};
 
 	inline std::istream & operator>>( std::istream &in, FilePath &path )
 	{
-		in >> path.toString();  // this is most likely wrong and it should gíve a compile time error
+		std::string tmp;
+		in >> tmp;
+		path = FilePath( tmp );
 		return in;
 	}
 
