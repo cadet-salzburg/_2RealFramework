@@ -99,7 +99,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GLEW_MX;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -146,7 +146,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>

@@ -6,15 +6,11 @@
 using namespace _2Real;
 using namespace _2Real::bundle;
 
-using std::string;
-using std::cout;
-using std::endl;
-
 void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName( "SFMLWindowBundle" );
+		info.setName( "SFMLBundle" );
 		info.setDescription( "xxxx" );
 		info.setAuthor( "gerlinde emsenhuber" );
 		info.setCategory( "xxxx" );
@@ -24,19 +20,24 @@ void getBundleMetainfo( BundleMetainfo& info )
 		BlockMetainfo win = info.exportBlock< WindowBlock, WithoutContext >( "SFMLWindowBlock" );
 		win.setDescription( "xxxx" );
 		win.setCategory( "xxxx" );
-		win.addInlet< float >( "bg_color_val_r", 0.5f );
-		win.addInlet< float >( "bg_color_val_g", 0.5f );
-		win.addInlet< float >( "bg_color_val_b", 0.5f );
-		win.addInlet< string >( "window_title", "yay" );
 
-		//BlockMetainfo tex = info.exportBlock< TexBlock, WithoutContext >( "SFMLTextureBlock" );
-		//tex.setDescription( "xxxx" );
-		//tex.setCategory( "xxxx" );
-		//tex.addOutlet< string >( "error_state" );
+		//win.addInlet< _2Real::Mat4 >( "test_mat4", _2Real::Mat4::Identity() );
+
+		// testing mat4-->scale
+		_2Real::Mat4 matScale;
+		matScale << 0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0;
+		win.addInlet< _2Real::Mat4 >( "scale_mat", matScale );
+
+		// testing vec3-->clear color
+		_2Real::Vec3 vecClear;
+		vecClear << 0, 0.5, 0.8;
+		win.addInlet< Vec3 >( "clear_color", vecClear );
+
+		win.addInlet< std::string >( "window_title", "yay" );
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
+		std::cout << e.message() << std::endl;
 		e.rethrow();
 	}
 }

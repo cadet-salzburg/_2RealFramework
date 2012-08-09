@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+//#include "unsupported/Eigen/OpenGLSupport"
+
 using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
@@ -118,12 +120,14 @@ void WindowBlock::update()
 			glGenerateMipmap( GL_TEXTURE_2D );
 
 			m_Win->setTitle( m_Block.getInletHandle( "window_title" ).getReadableRef< std::string >() );
+			_2Real::Vec3 const& vec = m_Block.getInletHandle( "clear_color" ).getReadableRef< _2Real::Vec3 >();
+			_2Real::Mat4 const& mat = m_Block.getInletHandle( "scale_mat" ).getReadableRef< _2Real::Mat4 >();
 
-			float r = m_Block.getInletHandle( "bg_color_val_r" ).getReadableRef< float >();
-			float g = m_Block.getInletHandle( "bg_color_val_g" ).getReadableRef< float >();
-			float b = m_Block.getInletHandle( "bg_color_val_b" ).getReadableRef< float >();
-			glClearColor( r, g, b, 1.0f );
+			glClearColor( (GLfloat)vec.x(), (GLfloat)vec.y(), (GLfloat)vec.z(), 1.0f );
 			glClear( GL_COLOR_BUFFER_BIT );
+
+			glMatrixMode( GL_MODELVIEW );
+			glLoadMatrixd( mat.data() );
 
 			glColor3f( 1.0f, 1.0f, 1.0f );
 			glEnable( GL_TEXTURE_2D );
