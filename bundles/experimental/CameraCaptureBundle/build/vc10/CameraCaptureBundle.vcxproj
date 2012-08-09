@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -138,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\videoinputlib\include;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>

@@ -1,5 +1,5 @@
 #include "CameraDeviceManager.h"
-
+#include "Objbase.h"	// needed for couninitialize
 #include <iostream>
 #include <string>
 
