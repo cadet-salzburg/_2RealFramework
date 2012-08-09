@@ -38,6 +38,7 @@ void ThroughputBlock::update()
 	try
 	{
 		// throughput inlets to 
+		m_pBlockHandle.getOutletHandle("filepath").getWriteableRef<_2Real::FilePath>() = m_pBlockHandle.getInletHandle("filepath").getReadableRef<_2Real::FilePath>();
 		m_pBlockHandle.getOutletHandle("number").getWriteableRef<_2Real::Number>() = m_pBlockHandle.getInletHandle("number").getReadableRef<_2Real::Number>();
 		m_pBlockHandle.getOutletHandle("bool").getWriteableRef<bool>() = m_pBlockHandle.getInletHandle("bool").getReadableRef<bool>();
 		m_pBlockHandle.getOutletHandle("uchar").getWriteableRef<unsigned char>() = m_pBlockHandle.getInletHandle("uchar").getReadableRef<unsigned char>();
