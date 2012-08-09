@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_1_48_0)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_1_48_0);$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -148,7 +148,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_1_48_0)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_1_48_0);$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>

@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTrackingBundle", "FaceTrackingBundle.vcxproj", "{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTrackingTest", "..\..\test\build\vc10\FaceTrackingTest.vcxproj", "{F4DAC285-D019-4BC8-9096-D6EB5F42A920}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTrackingTest", "..\..\test\build\vc10\FaceTrackingTest.vcxproj", "{CF4B25AE-BE71-4F19-A5EF-313D14905542}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTestingApp", "..\..\..\..\..\testing\build\FaceTestingApp.vcxproj", "{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -47,12 +47,12 @@ Global
 		{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}.Release|Win32.Build.0 = Release|Win32
 		{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}.Release|x64.ActiveCfg = Release|x64
 		{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}.Release|x64.Build.0 = Release|x64
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Debug|Win32.Build.0 = Debug|Win32
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Debug|x64.ActiveCfg = Debug|Win32
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Release|Win32.ActiveCfg = Release|Win32
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Release|Win32.Build.0 = Release|Win32
-		{F4DAC285-D019-4BC8-9096-D6EB5F42A920}.Release|x64.ActiveCfg = Release|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Debug|Win32.Build.0 = Debug|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Debug|x64.ActiveCfg = Debug|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Release|Win32.ActiveCfg = Release|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Release|Win32.Build.0 = Release|Win32
+		{CF4B25AE-BE71-4F19-A5EF-313D14905542}.Release|x64.ActiveCfg = Release|Win32
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Debug|Win32.Build.0 = Debug|Win32
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Debug|x64.ActiveCfg = Debug|Win32

@@ -28,8 +28,8 @@ void WindowBlock::setup( BlockHandle &block )
 
 		if ( m_Win == nullptr )
 		{
-			sf::ContextSettings windowSettings( 16, 8, 32, 3, 1 );
-			m_Win = new sf::Window( sf::VideoMode( 400, 300, 32 ), "xxx", sf::Style::Resize, windowSettings );
+			sf::ContextSettings windowSettings( 16, 8, 32, 2, 0 );
+			m_Win = new sf::Window( sf::VideoMode( 400, 300, 32 ), "uberhorn", sf::Style::Resize, windowSettings );
 
 			if ( m_Win == nullptr )
 			{
@@ -53,11 +53,11 @@ void WindowBlock::setup( BlockHandle &block )
 
 			m_Win->setTitle( m_Block.getInletHandle( "window_title" ).getReadableRef< std::string >() );
 
-			windowSettings = m_Win->getSettings();
+			//windowSettings = m_Win->getSettings();
 
-			std::cout << "OPENGL SETTINGS: " << std::endl;
-			std::cout << "version: " << windowSettings.majorVersion << "." << windowSettings.minorVersion << std::endl;
-			std::cout << "antialiasing samples: " << windowSettings.antialiasingLevel << std::endl;
+			//std::cout << "OPENGL SETTINGS: " << std::endl;
+			//std::cout << "version: " << windowSettings.majorVersion << "." << windowSettings.minorVersion << std::endl;
+			//std::cout << "antialiasing samples: " << windowSettings.antialiasingLevel << std::endl;
 
 			glGenTextures( 1, &m_Texture );
 			glBindTexture( GL_TEXTURE_2D, m_Texture );
@@ -89,8 +89,8 @@ void WindowBlock::update()
 {
 	try
 	{
-		//if ( m_Win->isOpen() )
-		//{
+		if ( m_Win->isOpen() )
+		{
 
 			m_Win->setActive( true );
 
@@ -141,7 +141,7 @@ void WindowBlock::update()
 			m_Win->display();
 			m_Win->setActive( false );
 
-		//}
+		}
 	}
 	catch( Exception & e )
 	{

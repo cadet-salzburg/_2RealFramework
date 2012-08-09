@@ -10,4 +10,11 @@
       <Filter>docs</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\AudioFMODBundle.cpp" />
+    <ClCompile Include="..\..\src\FMODContextManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\FMODContextManager.h" />
+  </ItemGroup>
 </Project>
