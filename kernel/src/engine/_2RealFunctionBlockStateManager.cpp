@@ -63,7 +63,8 @@ namespace _2Real
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateInitialized();
 
-				m_IOManager->updateInletData();
+				m_IOManager->clearInletBuffers();
+				m_IOManager->updateInletData();		// will be the default data
 
 				m_FunctionBlock->setup( m_IOManager->getHandle() );
 				m_Logger.addLine( string( getName() + " new state: set up" ) );
@@ -307,12 +308,12 @@ namespace _2Real
 			}
 			else if ( m_IsFlaggedForHalting.isSet() )
 			{
-				if ( m_IsFlaggedForSetup.isSet() )
-				{
-					//m_IOManager->updateInletData();
-					m_FunctionBlock->setup( m_IOManager->getHandle() );
-					m_IsFlaggedForSetup.unset();
-				}
+				//if ( m_IsFlaggedForSetup.isSet() )
+				//{
+				//	//m_IOManager->updateInletData();
+				//	m_FunctionBlock->setup( m_IOManager->getHandle() );
+				//	m_IsFlaggedForSetup.unset();
+				//}
 
 				m_CurrentState = new FunctionBlockStateInitialized();
 				m_StateAccess.unlock();
@@ -326,7 +327,8 @@ namespace _2Real
 			{
 				if ( m_IsFlaggedForSetup.isSet() )
 				{
-					//m_IOManager->updateInletData();
+					m_IOManager->clearInletBuffers();
+					m_IOManager->updateInletData();
 					m_FunctionBlock->setup( m_IOManager->getHandle() );
 					m_IsFlaggedForSetup.unset();
 				}

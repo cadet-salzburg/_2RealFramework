@@ -27,6 +27,7 @@
 #include "datatypes/_2RealSpace.h"
 #include "datatypes/_2RealVector.h"
 #include "datatypes/_2RealNumber.h"
+#include "datatypes/_2RealMatrix.h"
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealRigidBody.h"
 #include "datatypes/_2RealQuaternion.h"
@@ -58,6 +59,15 @@ namespace _2Real
 		static TypeDescriptor *createTypeDescriptor()
 		{
 			return new TypeDescriptor( typeid( std::vector< T > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
+		}
+	};
+
+	template< typename T >
+	struct traits< std::vector< T, Eigen::aligned_allocator< T > > >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( std::vector< T, Eigen::aligned_allocator< T > > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
 		}
 	};
 
@@ -310,6 +320,24 @@ namespace _2Real
 		static TypeDescriptor *createTypeDescriptor()
 		{
 			return new TypeDescriptor( typeid( Vec4 ), Type::VECTOR4D, "vector 4D", TypeCategory::ARITHMETHIC );
+		}
+	};
+
+	template< >
+	struct traits< Mat3 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Mat3 ), Type::VECTOR2D, "3x3 matrix", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
+	struct traits< Mat4 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Mat4 ), Type::VECTOR3D, "4x4 matrix", TypeCategory::UNIQUE );
 		}
 	};
 

@@ -31,9 +31,6 @@ namespace _2Real
 
 	class RigidBody
 	{
-	// no serialization for now
-	//friend std::ostream& operator<<( std::ostream& out, RigidBody const& data );
-	//friend std::istream& operator>>( std::istream& in, RigidBody &data );
 
 	public:
 
@@ -60,11 +57,12 @@ namespace _2Real
 		void setPosition (Number x, Number y, Number z)	{ m_Position.setX(x); m_Position.setY(y); m_Position.setZ(z); }
 		_2Real::Point getPosition() const		{ return m_Position; }
 		
-		void setOrientation (Number x, Number y, Number z, Number w) { m_Orientation.setX(x); m_Orientation.setY(y); m_Orientation.setZ(z); m_Orientation.setW(w); }
+		void setOrientation (Number x, Number y, Number z, Number w) { m_Orientation.x() = x; m_Orientation.y() = y; m_Orientation.z() = z; m_Orientation.w() = w; }
 		_2Real::Quaternion getOrientation() const { return m_Orientation; }
 		
 		
 	private:
+
 		std::vector<_2Real::Point>		m_Points;
 		std::string						m_Label;
 		int								m_Id;
@@ -73,17 +71,4 @@ namespace _2Real
 		_2Real::Quaternion				m_Orientation;
 
 	};
-
-	// no serialization for now
-	//inline std::ostream& operator<<( std::ostream& out, RigidBody const& info )
-	//{
-	//	//out <<  << std::endl;
-	//	return out;
-	//}
-
-	//inline std::istream& operator>>( std::istream& in, RigidBody &info )
-	//{
-	//	//in >> 
-	//	return in;
-	//}
 }

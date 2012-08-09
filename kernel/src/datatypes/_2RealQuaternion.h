@@ -19,168 +19,17 @@
 
 #pragma once
 
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealVector.h"
+#define EIGEN_DONT_ALIGN_STATICALLY
+#define EIGEN_DONT_VECTORIZE
+#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
-#include <istream>
-#include <ostream>
-#include <string>
-#include <math.h>
+#include "Eigen/Dense"
+//#include "Eigen/StdVector"
+//#include <list>
 
 namespace _2Real
 {
-	class Quaternion
-	{
-
-		friend std::istream & operator>>( std::istream &in, Quaternion &number );
-		friend std::ostream & operator<<( std::ostream &out, Quaternion const& number );
-
-	public:
-
-		Quaternion() : m_X( 0 ), m_Y( 0 ), m_Z( 0 ), m_W( 0 ), m_Label( "undefined" ), m_Id( -1 ) {}
-		Quaternion( Number const& x, Number const& y, Number const& z, Number const& w ) : m_X( x ), m_Y( y ), m_Z( z ), m_W ( w ), m_Label( "undefined" ), m_Id( -1 ) {}
-		Quaternion( Number const& x, Number const& y, Number const& z, Number const& w, std::string const& l, const unsigned int id ) : m_X( x ), m_Y( y ), m_Z( z ), m_W( w ), m_Label( l ), m_Id( id ) {}
-		Quaternion( Quaternion const& src ) : m_X( src.m_X ), m_Y( src.m_Y ), m_Z( src.m_Z ), m_W( src.m_W ), m_Label( src.m_Label ), m_Id( src.m_Id ) {}
-
-		void set(  Number const& x, Number const& y, Number const& z, Number const& w, std::string const& l, const unsigned int id )
-		{
-			m_X = x;
-			m_Y = y;
-			m_Z = z;
-			m_W = w;
-			m_Label = l;
-			m_Id = id;
-		}
-
-		void setX(  Number const& x )
-		{
-			m_X = x;
-		}
-
-		void setY(  Number const& y )
-		{
-			m_Y = y;
-		}
-
-		void setZ(  Number const& z )
-		{
-			m_Z = z;
-		}
-
-		void setW(  Number const& w )
-		{
-			m_W = w;
-		}
-
-		inline bool operator==(const Quaternion& other) const
-        {
-            return ((m_X == other.m_X) &&
-                    (m_Y == other.m_Y) &&
-                    (m_Z == other.m_Z) &&
-                    (m_W == other.m_W));
-        }
-
-        inline bool operator!=(const Quaternion& other) const
-        {
-            return !(*this == other);
-        }
-
-        inline Quaternion& operator=(const Quaternion& other)
-        {
-            m_X = other.m_X;
-            m_Y = other.m_Y;
-            m_Z = other.m_Z;
-            m_W = other.m_W;
-            return *this;
-        }
-
-        inline Quaternion operator*(const Quaternion& other) const
-        {
-            Quaternion tmp;
-
-            tmp.m_W = (other.m_W * m_W) - (other.m_X * m_X) - (other.m_Y * m_Y) - (other.m_Z * m_Z);
-            tmp.m_X = (other.m_W * m_X) + (other.m_X * m_W) + (other.m_Y * m_Z) - (other.m_Z * m_Y);
-            tmp.m_Y = (other.m_W * m_Y) + (other.m_Y * m_W) + (other.m_Z * m_X) - (other.m_X * m_Z);
-            tmp.m_Z = (other.m_W * m_Z) + (other.m_Z * m_W) + (other.m_X * m_Y) - (other.m_Y * m_X);
-
-            return tmp;
-        }
-
-        inline Quaternion& operator*=(const Number& s)
-        {
-            m_X*=s;
-            m_Y*=s;
-            m_Z*=s;
-            m_W*=s;
-            return *this;
-        }
-
-        inline Quaternion& operator*=(const Quaternion& other)
-        {
-            return (*this = other * (*this));
-        }
-
-        inline Quaternion operator+(const Quaternion& b) const
-        {
-            return Quaternion(m_X+b.m_X, m_Y+b.m_Y, m_Z+b.m_Z, m_W+b.m_W);
-}
-
-        inline Quaternion operator*(const Number& s) const
-        {
-            return Quaternion(s*m_X, s*m_Y, s*m_Z, s*m_W);
-        }
-
-        inline Quaternion& normalize()
-        {
-            const Number n = m_X*m_X + m_Y*m_Y + m_Z*m_Z + m_W*m_W;
-            return (*this *=  Number(sqrt( double(n) )));
-        }
-
-        inline Number dotProduct(const Quaternion& q2) const
-        {
-            return (m_X * q2.m_X) + (m_Y * q2.m_Y) + (m_Z * q2.m_Z) + (m_W * q2.m_W);
-        }
-
-        inline Quaternion makeIdentity()
-        {
-            m_W = Number(1.f);
-            m_X = Number(0.f);
-            m_Y = Number(0.f);
-            m_Z = Number(0.f);
-            return *this;
-        }
-
-		void getAxisAngle(_2Real::Vec3& axis, float& angle)
-		{
-			float scale = sqrt((float(m_X * m_X + m_Y * m_Y + m_Z * m_Z)));
-			axis[0] = float(m_X) / scale;
-			axis[1] = float(m_Y) / scale;
-			axis[2] = float(m_Z) / scale;
-			angle = acos(float(m_W)) * 2.0f;
-		}
-
-		void setLabel( std::string const& l )	{ m_Label = l; }
-		std::string const& getLabel() const		{ return m_Label; }
-		void setId( int id )					{ m_Id = id; }
-		int getId() const						{ return m_Id; }
-
-		Number & x() { return m_X; }
-		Number & y() { return m_Y; }
-		Number & z() { return m_Z; }
-		Number & w() { return m_W; }
-		Number const& x() const { return m_X; }
-		Number const& y() const { return m_Y; }
-		Number const& z() const { return m_Z; }
-		Number const& w() const { return m_W; }
-
-	private:
-
-		Number			m_X;
-		Number			m_Y;
-		Number			m_Z;
-		Number 			m_W;
-		std::string		m_Label;
-		int				m_Id;
-
-	};
+	typedef Eigen::Quaterniond Quaternion;
+	//typedef std::vector< Quaternion, Eigen::aligned_allocator< Quaternion > >	QuaternionVector;
+	//typedef std::list< Quaternion, Eigen::aligned_allocator< Quaternion > >		QuaternionList;
 }

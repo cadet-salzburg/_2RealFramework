@@ -177,7 +177,7 @@ namespace _2Real
 	{
 		InletIO *io = new InletIO( m_Owner, name, type, initialValue, options );
 		TimestampedData const& data = io->m_Buffer->getTriggeringData();
-		io->m_Inlet->setDataAndSynchronize( data );
+		//io->m_Inlet->setDataAndSynchronize( data );
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
@@ -224,6 +224,14 @@ namespace _2Real
 		if ( data.size() > 0 )
 		{
 			m_AppEvent.notify( data );
+		}
+	}
+
+	void FunctionBlockIOManager::clearInletBuffers()
+	{
+		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			( *it )->m_Buffer->clearBufferedData();
 		}
 	}
 

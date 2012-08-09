@@ -24,6 +24,8 @@
 #include "datatypes/_2RealPoint.h"
 #include "datatypes/_2RealSpace.h"
 #include "datatypes/_2RealVector.h"
+#include "datatypes/_2RealFilePath.h"
+#include "datatypes/_2RealMatrix.h"
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealRigidBody.h"
 #include "datatypes/_2RealQuaternion.h"

@@ -103,7 +103,7 @@ namespace _2Real
 			{
 				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of data " << m_TypeDescriptor->getTypename() << " does not match the template parameter " << t->getTypename() << std::endl;
+				msg << "type of data " << info.name() << " does not match the template parameter " << m_TypeDescriptor->getLongTypename() << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}

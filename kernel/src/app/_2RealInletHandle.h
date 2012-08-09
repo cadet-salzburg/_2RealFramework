@@ -75,6 +75,12 @@ namespace _2Real
 				setValue( Any( value ) );
 			}
 
+			template< typename TData >
+			void setDefaultValue( TData const& value )
+			{
+				setDefaultValue( Any( value ) );
+			}
+
 			void setValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
@@ -97,6 +103,7 @@ namespace _2Real
 			AnyOptionSet const& getOptionSet() const;
 
 			void				setValue( Any const& data );
+			void				setDefaultValue( Any const& data );
 			InletIO				*m_InletIO;
 
 		};

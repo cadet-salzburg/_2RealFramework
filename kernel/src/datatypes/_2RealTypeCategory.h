@@ -20,6 +20,7 @@
 
 namespace _2Real
 {
+	// cat = important for auto conversion and the like
 	class TypeCategory
 	{
 
@@ -30,7 +31,8 @@ namespace _2Real
 			ARITHMETHIC,		// byte - unsigned long, Number
 			LOGICAL,			// bool
 			CONTAINER,			// vector / list / string / image
-			UNIQUE				// everything else
+			UNIQUE,				// everything else
+			EIGEN_TYPE			// stuff taken from the eigen lib
 		};
 
 		TypeCategory( Category const& cat ) : m_Category( cat ) {}

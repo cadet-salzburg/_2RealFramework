@@ -61,7 +61,7 @@ namespace _2Real
 
 	private:
 
-		std::vector<_2Real::RigidBody>  m_RigidBodies;
+		std::vector< _2Real::RigidBody > m_RigidBodies;
 		std::string						m_Label;
 		int								m_Id;
 		bool							m_Global;

@@ -78,6 +78,7 @@ namespace _2Real
 		void							updateInletData();
 		void							updateOutletData();
 		void							updateInletBuffers();
+		void							clearInletBuffers();
 
 		unsigned int					getInletBufferSize( std::string const& inlet ) const;
 

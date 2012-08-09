@@ -329,18 +329,23 @@ namespace _2Real
 	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
 		m_InsertionPolicy( new RemoveOldest( 1 ) ),
 		m_Notify( true ),
-		m_DefaultData( defaultData, 0 ),
+		m_DefaultData( defaultData, 0, 0 ),
 		m_Engine( EngineImpl::instance() ),
-		m_TriggeringData( defaultData, 0 ),
+		m_TriggeringData( Any(), -1, -1 ),
 		m_Options( options ),
 		m_Counter( 0 )
 	{
-		m_InsertionPolicy->insertData( m_DefaultData, m_ReceivedDataItems );
 	}
 
 	InletBuffer::~InletBuffer()
 	{
 		delete m_InsertionPolicy;
+	}
+
+	void InletBuffer::setDefaultValue( Any const& defaultValue )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_DefaultData = TimestampedData( defaultValue, m_Engine.getElapsedTime(), ++m_Counter );
 	}
 
 	void InletBuffer::receiveData( Any const& data )
@@ -353,7 +358,7 @@ namespace _2Real
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
 
 		Any data;
-		data.createNew( m_TriggeringData.getData() );
+		data.createNew( m_DefaultData.getData() );
 
 		stringstream s;
 		s << value;
@@ -403,8 +408,6 @@ namespace _2Real
 		else
 		{
 			m_NotificationAccess.unlock();
-			// once the cond was fulfilled, buffering starts
-			//Poco::ScopedLock< Poco::FastMutex > pLock( m_PolicyAccess );
 			Poco::ScopedLock< Poco::FastMutex > dLock( m_DataAccess );
 			m_InsertionPolicy->insertData( rec, m_ReceivedDataItems );
 		}
@@ -413,13 +416,25 @@ namespace _2Real
 	TimestampedData const& InletBuffer::getTriggeringData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		if ( m_TriggeringData.isEmpty() )
 		{
-			assert( NULL );
+			//assert( NULL );
+			return m_DefaultData;
 		}
-#endif
+//#endif
 		return m_TriggeringData;
+	}
+
+	void InletBuffer::clearBufferedData()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
+		{
+			dIt = m_ReceivedDataItems.erase( dIt );
+		}
+
+		m_TriggeringData = TimestampedData( Any(), 0, 0 );
 	}
 
 	void InletBuffer::processBufferedData()
@@ -444,7 +459,8 @@ namespace _2Real
 			}
 		}
 
-		m_TriggeringEvent.notify( m_TriggeringData ); // try fulfilling available cond!
+		m_TriggeringEvent.notify( m_TriggeringData );	// try fulfilling available cond with prev data
+		m_TriggeringEvent.notify( m_DefaultData );		// try fulfilling available cond with default data
 		m_NotificationAccess.unlock();
 	}
 

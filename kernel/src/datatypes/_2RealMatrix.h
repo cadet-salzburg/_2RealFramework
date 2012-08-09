@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +17,22 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealQuaternion.h"
+#pragma once
+
+#define EIGEN_DONT_ALIGN_STATICALLY
+#define EIGEN_DONT_VECTORIZE
+#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+
+#include "Eigen/Dense"
+//#include "Eigen/StdVector"
+//#include <list>
 
 namespace _2Real
 {
-	//std::istream & operator>>( std::istream &in, Quaternion &quaternion )
-	//{
-	//	in >> quaternion.m_X >> quaternion.m_Y >> quaternion.m_Z >> quaternion.m_W >> quaternion.m_Label >> quaternion.m_Id;
-	//	return in;
-	//}
-
-	//std::ostream & operator<<( std::ostream &out, Quaternion const& quaternion )
-	//{
-	//	out << quaternion.m_X << " " << quaternion.m_Y << " " << quaternion.m_Z << " " << quaternion.m_W << " " << quaternion.m_Label << " " << quaternion.m_Id;
-	//	return out;
-	//}
+	typedef Eigen::Matrix3d Mat3;
+	typedef Eigen::Matrix4d Mat4;
+	//typedef std::vector< _2Real::Mat3, Eigen::aligned_allocator< _2Real::Mat3 > >	Mat3Vector;
+	//typedef std::list< _2Real::Mat3, Eigen::aligned_allocator< _2Real::Mat3 > >		Mat3List;
+	//typedef std::vector< _2Real::Mat4, Eigen::aligned_allocator< _2Real::Mat4 > >	Mat4Vector;
+	//typedef std::list< _2Real::Mat4, Eigen::aligned_allocator< _2Real::Mat4 > >		Mat4List;
 }

@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealPoint.h"
-#include "datatypes/_2RealFilePath.h"
+#include "_2RealDatatypes.h"
 #include "helpers/_2RealStringHelpers.h"
 
 #ifdef _UNIX
@@ -178,6 +176,36 @@ namespace _2Real
 		out << v;
 	}
 
+	template< >
+	inline void writeTo( std::ostream &out, Vec2 const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, Vec3 const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, Vec4 const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, Mat3 const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, Mat4 const& v )
+	{
+		out << v;
+	}
+
 	template< typename TData >
 	inline void readFrom( std::istream &in, TData &v )
 	{
@@ -312,4 +340,22 @@ namespace _2Real
 	{
 		in >> v;
 	}
+
+	//template< >
+	//inline void readFrom( std::istream &in, Vec2 &v )
+	//{
+	//	in >> v;
+	//}
+
+	//template< >
+	//inline void readFrom( std::istream &in, Vec3 &v )
+	//{
+	//	in >> v;
+	//}
+
+	//template< >
+	//inline void readFrom( std::istream &in, Vec4 &v )
+	//{
+	//	in >> v;
+	//}
 }

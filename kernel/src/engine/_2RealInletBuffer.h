@@ -74,6 +74,7 @@ namespace _2Real
 
 		~InletBuffer();
 
+		void setDefaultValue( Any const& defaultValue );
 		InletBuffer( Any const& defaultData, AnyOptionSet const& options );
 		void receiveData( TimestampedData const& data );
 		void receiveData( Any const& data );
@@ -81,6 +82,7 @@ namespace _2Real
 		TimestampedData const& getTriggeringData() const;
 		//TimestampedData const& getOldestBufferData();
 		void processBufferedData();
+		void clearBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );
 		unsigned int getBufferSize() const;
@@ -90,19 +92,17 @@ namespace _2Real
 
 	private:
 
-				unsigned long				m_Counter;
+		unsigned long									m_Counter;
 		EngineImpl										&m_Engine;
 		DataBuffer										m_ReceivedDataItems;	// holds all received data items
 		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
 		volatile bool									m_Notify;
 		TimestampedData									m_DefaultData;
-		//mutable Poco::FastMutex							m_PolicyAccess;
 		mutable Poco::FastMutex							m_DataAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
-		//unsigned int									m_BufferSize;
-		AnyOptionSet										m_Options;
+		AnyOptionSet									m_Options;
 
 	};
 
