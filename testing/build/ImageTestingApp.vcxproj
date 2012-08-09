@@ -60,14 +60,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..\..\externalLibs\glew\include;..\..\..\..\externalLibs\sdl 2.0\include;..\..\kernel\src;..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;..\..\..\..\externalLibs\glew\include;..\..\..\..\externalLibs\sdl 2.0\include;..\..\kernel\src;..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\externalLibs\glew\lib;..\..\..\..\externalLibs\sdl 2.0\lib;..\..\kernel\lib;..\..\..\..\externalLibs\poco\lib;..\..\..\..\externalLibs\vld\lib\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL.lib;SDLmain.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32d.lib;SDL.lib;SDLmain.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -86,7 +86,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\..\..\externalLibs\glew\include;..\..\..\..\externalLibs\sdl 2.0\include;..\..\kernel\src;..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;..\..\..\..\externalLibs\glew\include;..\..\..\..\externalLibs\sdl 2.0\include;..\..\kernel\src;..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\externalLibs\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

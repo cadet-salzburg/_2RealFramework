@@ -16,6 +16,12 @@ void ImageOut::setup( BlockHandle &context )
 {
 	try
 	{
+		std::cout << "SETUP!" << std::endl;
+
+		InletHandle in = context.getInletHandle( "image_out_vec2" );
+		if ( in.hasUpdated() ) std::cout << "UPDATED!" << std::endl;
+		if ( in.hasChanged() ) std::cout << "CHANGED!" << std::endl;
+		cout << in.getReadableRef< _2Real::Vec2 >() << endl;
 		m_Out = context.getOutletHandle( "image_outlet" );
 
 		ImageT< float > &outImg = m_Out.getWriteableRef< ImageT< float > >();

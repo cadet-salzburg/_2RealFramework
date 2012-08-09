@@ -23,6 +23,8 @@
 #include <map>
 #include <list>
 
+#undef M_PI
+
 #include "GL/glew.h"
 #include "GL/wglew.h"
 #include "SDL.h"
@@ -34,7 +36,7 @@
 #endif
 #include <sstream>
 
-#include "windows.h"
+#include <Windows.h>
 
 using std::string;
 using std::cout;
@@ -106,15 +108,12 @@ public:
 
 	void receiveData( AppData const& data )
 	{
-		//std::cout << "received!" << std::endl;
 		m_Access.lock();
 
 		m_ImageData.data = data.getData< ImageT< float > >().getData();
 		m_ImageData.w = 4;
 		m_ImageData.h = 3;
 
-		// no ImageT dtor will ever be called like this
-		//m_Old.push_back( m_Data );
 		m_Data = data;
 
 		m_Access.unlock();
@@ -124,7 +123,7 @@ public:
 	{
 		m_Access.lock();
 
-		if ( m_Data.getTypename() == "image of float" )
+		if ( m_Data.getTypename() == "float image" )
 		{
 			// the reason this has to happen here is
 			// the opengl context + exection thread problem
@@ -191,6 +190,8 @@ int main( int argc, char *argv[] )
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 
 		BlockHandle out = testBundle.createBlockInstance( "image_out" );
+		InletHandle vecTest = out.getInletHandle( "image_out_vec2" );
+		vecTest.setValue< _2Real::Vec2 >( _2Real::Vec2( 2.0, 3.0 ) );
 		out.setUpdateRate( 1.0 );
 		out.setup();
 		out.start();
@@ -206,29 +207,29 @@ int main( int argc, char *argv[] )
 		Receiver receiver;
 		oOut.registerToNewData( receiver, &Receiver::receiveData );
 
-		InletHandle iOps = inout.getInletHandle( "image_options" );
-		std::set< _2Real::Option< int > > ops = iOps.getOptionMapping< int >();
-		cout << ops.size() << endl;
-		for ( std::set< _2Real::Option< int > >::iterator it = ops.begin(); it != ops.end(); ++it )
-		{
-			cout << it->m_Desc << endl;
-		}
+		//InletHandle iOps = inout.getInletHandle( "image_options" );
+		//std::set< _2Real::Option< int > > ops = iOps.getOptionMapping< int >();
+		//cout << ops.size() << endl;
+		//for ( std::set< _2Real::Option< int > >::iterator it = ops.begin(); it != ops.end(); ++it )
+		//{
+		//	cout << it->m_Desc << endl;
+		//}
 
-		if ( !ioIn.tryLink( oOut ) )
-		{
-			ioIn.tryLinkWithConversion( oOut );
-		}
-		if ( !iIn.tryLink( ioOut ) )
-		{
-			try
-			{
-				iIn.tryLinkWithConversion( ioOut );
-			}
-			catch( Exception &e )
-			{
-				std::cout << e.message() << std::endl;
-			}
-		}
+		//if ( !ioIn.link( oOut ) )
+		//{
+		//	ioIn.linkWithConversion( oOut );
+		//}
+		//if ( !iIn.link( ioOut ) )
+		//{
+		//	try
+		//	{
+		//		iIn.linkWithConversion( ioOut );
+		//	}
+		//	catch( Exception &e )
+		//	{
+		//		std::cout << e.message() << std::endl;
+		//	}
+		//}
 
 		bool run = true;
 		SDL_Event *ev = new SDL_Event;

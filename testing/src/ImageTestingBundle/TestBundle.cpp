@@ -25,6 +25,8 @@ void getBundleMetainfo( BundleMetainfo &info )
 		BlockMetainfo imgOut = info.exportBlock< ImageOut, WithoutContext >( "image_out" );
 		imgOut.setDescription( "testing the context's functionality" );
 		imgOut.addOutlet< ImageT< float > >( "image_outlet" );
+		imgOut.addInlet< _2Real::Vec2 >( "image_out_vec2", Vec2( 0.0, 1.0 ) );
+		imgOut.addInlet< std::vector< Vec2 > >( "image_out_vec2vec", std::vector< Vec2 >() );
 
 		_2Real::Options< int > o = _2Real::Options< int >( 0, "constant" )( 1, "replicate" )( 2, "reflect" )( 4, "reflect_101" );
 

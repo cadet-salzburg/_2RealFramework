@@ -119,6 +119,16 @@ void In::setup( BlockHandle &handle )
 
 		m_In = m_Block.getInletHandle( "inlet" );
 		m_Counter = 0;
+
+		if ( m_In.hasUpdated() )
+		{
+			cout << "UPDATED (SETUP)" << endl;
+		}
+
+		if ( m_In.hasChanged() )
+		{
+			cout << "CHANGED (SETUP)" << endl;
+		}
 	}
 	catch ( Exception &e )
 	{
@@ -130,14 +140,14 @@ void In::update()
 {
 	try
 	{
-		if ( m_In.wasUpdated() )
+		if ( m_In.hasUpdated() )
 		{
-			cout << "UPDATED" << endl;
+			cout << "UPDATED (UPDATE)" << endl;
 		}
 
-		if ( m_In.valueChanged() )
+		if ( m_In.hasChanged() )
 		{
-			cout << "CHANGED" << endl;
+			cout << "CHANGED (UPDATE)" << endl;
 		}
 
 		cout << m_Block.getAllInletHandles().size() << std::endl;

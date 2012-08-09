@@ -91,11 +91,11 @@ void In::update()
 {
 	try
 	{
-		if ( m_Msg.wasUpdated() )
+		if ( m_Msg.hasUpdated() )
 		{
 			cout << m_Msg.getReadableRef< string >() << " msg updated" << endl;
 		}
-		else if ( m_Msg.valueChanged() )
+		else if ( m_Msg.hasChanged() )
 		{
 			cout << m_Msg.getReadableRef< string >() << " msg value changed" << endl;
 		}
