@@ -25,12 +25,12 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		// testing mat4-->scale
 		_2Real::Mat4 matScale;
-		matScale << 0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0;
+		matScale << 0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0;
 		win.addInlet< _2Real::Mat4 >( "scale_mat", matScale );
 
 		// testing vec3-->clear color
 		_2Real::Vec3 vecClear;
-		vecClear << 0, 0.5, 0.8;
+		vecClear << 0.5, 0.5, 1.0;
 		win.addInlet< Vec3 >( "clear_color", vecClear );
 
 		win.addInlet< std::string >( "window_title", "yay" );
