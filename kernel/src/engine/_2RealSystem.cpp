@@ -174,7 +174,6 @@ namespace _2Real
 				{
 					m_ContextBlocks.erase( it );
 					ostringstream msg;
-					msg << " timeout reached on shutdown of " << block.getFullName();
 					throw TimeOutException( msg.str() );
 				}
 			}

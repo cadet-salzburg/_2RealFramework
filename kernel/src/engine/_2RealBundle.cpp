@@ -107,6 +107,18 @@ namespace _2Real
 		return block->getHandle();
 	}
 
+	void Bundle::removeBlockInstance( FunctionBlock< app::BlockHandle > &block )
+	{
+		for ( BlockInstanceIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
+		{
+			if ( it->second->getName() == block.getName() )
+			{
+				m_BlockInstances.erase( it );
+				break;
+			}
+		}
+	}
+
 	app::ContextBlockHandle & Bundle::getContextBlockHandle() const
 	{
 		return m_ContextBlock->getHandle();

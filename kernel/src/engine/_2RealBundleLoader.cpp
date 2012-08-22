@@ -55,6 +55,25 @@ namespace _2Real
 		}
 	}
 
+	void BundleLoader::unloadLibrary( string const& path )
+	{
+		BundleInfoConstIterator it = m_LoadedBundles.find( path );
+
+		if ( it == m_LoadedBundles.end() )
+		{
+			ostringstream msg;
+			throw NotFoundException( msg.str() );
+		}
+
+		delete it->second.metainfo;
+		if ( it->second.library != nullptr )
+		{
+			it->second.library->unload();
+			delete it->second.library;
+		}
+		it = m_LoadedBundles.erase( it );
+	}
+
 	bool BundleLoader::isLibraryLoaded( string const& path ) const
 	{
 		return ( m_LoadedBundles.find( path ) != m_LoadedBundles.end() );

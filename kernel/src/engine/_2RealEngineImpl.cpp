@@ -132,6 +132,8 @@ namespace _2Real
 
 	void EngineImpl::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
 	{
+		Bundle &b = m_BundleManager->findBundleByName( block.getBundleName() );
+		b.removeBlockInstance( block );
 		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
 		{
 			if ( ( *it )->isBlockInvolved( block ) )
@@ -143,6 +145,7 @@ namespace _2Real
 			else ++it;
 		}
 		m_System->removeBlock( block, timeout );
+
 	}
 
 	void EngineImpl::addBlock( FunctionBlock< app::ContextBlockHandle > &block )

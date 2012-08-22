@@ -46,6 +46,7 @@ namespace _2Real
 		bool isLibraryLoaded( std::string const& absPath ) const;
 		bool hasContext( std::string const& absPath ) const;
 		BundleMetadata const& loadLibrary( std::string const& path );
+		void unloadLibrary( std::string const& path );
 		bundle::Block& createContext( std::string const& absPath ) const;
 		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName ) const;
 		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;

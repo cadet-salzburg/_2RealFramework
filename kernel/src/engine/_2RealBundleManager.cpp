@@ -78,6 +78,8 @@ namespace _2Real
 			FunctionBlock< app::ContextBlockHandle > &context = bundle.getContextBlock( *this );
 			m_Engine.removeBlock( context, timeout );
 		}
+
+		m_BundleLoader.unloadLibrary( bundle.getAbsPath() );
 	}
 
 	BundleManager::Bundles const& BundleManager::getBundles() const
