@@ -28,6 +28,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <assert.h>
 
 namespace _2Real
 {
@@ -37,16 +38,27 @@ namespace _2Real
 		m_Logger( engine.getLogger() ),
 		m_Name( name ),
 		m_StackSize( stackSize ),
-		m_Elapsed(0)
+		m_Elapsed( 0 )
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
 		m_Timer.registerToTimerSignal( *callback );
 
 		for ( unsigned int i=0; i<capacity; ++i )
 		{
-			ThreadPoolCallback *callback = new ThreadPoolCallback( *this );
-			PooledThread *thread = new PooledThread( *callback, m_StackSize );
-			m_Threads.push_back( thread );
+			PooledThread *thread = new PooledThread( *this, m_StackSize );
+			ThreadQueue q;
+			q.isReserved = false;
+			q.isUnique = false;
+			m_Threads[ thread ] = q;
+		}
+
+		for ( unsigned int i=0; i<capacity; ++i )
+		{
+			PooledThread *thread = new PooledThread( *this, m_StackSize );
+			ThreadQueue q;
+			q.isReserved = true;
+			q.isUnique = false;
+			m_Threads[ thread ] = q;
 		}
 	}
 
@@ -55,39 +67,22 @@ namespace _2Real
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
 		m_Timer.unregisterFromTimerSignal( *callback );
 
-		clear();
-	}
-
-	void ThreadPool::clear()
-	{
-		m_ReadyAccess.lock();
-		m_ReadyBlocks.clear();
-		m_ReadyAccess.unlock();
-
-		m_ExecutingAccess.lock();
-		m_ExecutingBlocks.clear();
-		m_ExecutingAccess.unlock();
-
-		m_AbortedAccess.lock();
-		m_AbortedBlocks.clear();
-		m_AbortedAccess.unlock();
-
-		m_FinishedAccess.lock();
-		m_FinishedBlocks.clear();
-		m_FinishedBuffer.clear();
-		m_FinishedAccess.unlock();
-
-		m_ThreadAccess.lock();
-		for ( ThreadIterator it = m_Threads.begin(); it != m_Threads.end(); /**/ )
+		m_ThreadQueuesAccess.lock();
+		for ( ThreadQueueIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )
 		{
-			if ((*it)->join())
+			if ( ( it->first )->join() )
 			{
-				delete *it;
+				delete it->first;
 			}
-
-			it = m_Threads.erase(it);
 		}
-		m_ThreadAccess.unlock();
+		m_ThreadQueuesAccess.unlock();
+
+		m_RequestQueueAccess.lock();
+		for ( RequestIterator it = m_RequestQueue.begin(); it != m_RequestQueue.end(); ++it )
+		{
+			delete *it;
+		}
+		m_RequestQueueAccess.unlock();
 	}
 
 	void ThreadPool::update(long &time)
@@ -95,33 +90,33 @@ namespace _2Real
 		m_Elapsed += time;
 		if ( m_Elapsed >= 5000000 )
 		{
-			m_FinishedAccess.lock();
-			size_t finished = m_FinishedBuffer.size();
-			size_t received = m_FinishedBlocks.size();
-			m_FinishedAccess.unlock();
+		//	m_FinishedAccess.lock();
+		//	size_t finished = m_FinishedBuffer.size();
+		//	size_t received = m_FinishedBlocks.size();
+		//	m_FinishedAccess.unlock();
 
-			m_ReadyAccess.lock();
-			size_t ready = m_ReadyBlocks.size();
-			m_ReadyAccess.unlock();
+		//	m_ReadyAccess.lock();
+		//	size_t ready = m_ReadyBlocks.size();
+		//	m_ReadyAccess.unlock();
 
-			m_ExecutingAccess.lock();
-			size_t executing = m_ExecutingBlocks.size();
-			m_ExecutingAccess.unlock();
+		//	m_ExecutingAccess.lock();
+		//	size_t executing = m_ExecutingBlocks.size();
+		//	m_ExecutingAccess.unlock();
 
-			m_AbortedAccess.lock();
-			size_t aborted = m_AbortedBlocks.size();
-			m_AbortedAccess.unlock();
+		//	m_AbortedAccess.lock();
+		//	size_t aborted = m_AbortedBlocks.size();
+		//	m_AbortedAccess.unlock();
 
-			size_t reallyRunning = executing - received - finished;
+		//	size_t reallyRunning = executing - received - finished;
 
-			std::ostringstream msg;
-			msg << std::endl;
-			msg << "-------------------------------------------------------------------------\n";
-			msg << "THREADPOOL: ready: " << ready << std::endl;
-			msg << "THREADPOOL: executing: " << reallyRunning << std::endl;
-			msg << "THREADPOOL: aborted: " << aborted << std::endl;
-			msg << "-------------------------------------------------------------------------";
-			m_Logger.addLine( msg.str() );
+		//	std::ostringstream msg;
+		//	msg << std::endl;
+		//	msg << "-------------------------------------------------------------------------\n";
+		//	msg << "THREADPOOL: ready: " << ready << std::endl;
+		//	msg << "THREADPOOL: executing: " << reallyRunning << std::endl;
+		//	msg << "THREADPOOL: aborted: " << aborted << std::endl;
+		//	msg << "-------------------------------------------------------------------------";
+		//	m_Logger.addLine( msg.str() );
 
 			m_Elapsed = 0;
 		}
@@ -131,129 +126,71 @@ namespace _2Real
 
 	void ThreadPool::executeCleanUp()
 	{
-		m_FinishedAccess.lock();
-		m_FinishedBuffer.splice( m_FinishedBuffer.begin(), m_FinishedBlocks, m_FinishedBlocks.begin(), m_FinishedBlocks.end() );
-		m_FinishedAccess.unlock();
+		m_ThreadQueuesAccess.lock();
 
-		for ( BufferedBlockIterator it = m_FinishedBuffer.begin(); it != m_FinishedBuffer.end(); /**/ )
+		for ( ThreadQueueIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )
 		{
-			m_ExecutingAccess.lock();
-			BlockIterator bIt = m_ExecutingBlocks.find( *it );
-			if ( bIt != m_ExecutingBlocks.end() )
+			if ( ( it->first )->isIdle() )
 			{
-				FunctionBlockStateManager *block = *bIt;
-				m_ExecutingBlocks.erase( bIt );
-				m_ExecutingAccess.unlock();
-
-				block->finishUpdate();
-			}
-			else
-			{
-				m_ExecutingAccess.unlock();
-
-				m_AbortedAccess.lock();
-				BlockIterator bIt = m_AbortedBlocks.find( *it );
-				if ( bIt != m_AbortedBlocks.end() )
+				if ( it->second.isUnique )
 				{
-					FunctionBlockStateManager *block = *bIt;
-					m_AbortedBlocks.erase( bIt );
-					m_AbortedAccess.unlock();
-
-					m_Logger.addLine( "THREADPOOL: finishing aborted block" );
-
-					block->finishUpdate();
-					if ( block->shutDown( 10000 ) )
+					if ( !it->second.localQueue.empty() )
 					{
-						delete block;
+						ThreadExecRequest *req = it->second.localQueue.front();
+						it->second.localQueue.pop_front();
+						it->first->reactivate();
+						it->first->run( Poco::Thread::PRIO_NORMAL, *req );
 					}
 				}
-				else
-				{
-					m_AbortedAccess.unlock();
-				}
-			}
+				//else if ( it->second.isReserved && !it->second.localQueue.empty() )		// if reserved, favor own queue.. else, use common requests
+				//{
+				//	std::cout << "free reserved thread!" << std::endl;
+				//}
+				//else
+				//{
+				//	m_RequestQueueAccess.lock();
+				//	if ( m_RequestQueue.empty() )
+				//	{
+				//		m_RequestQueueAccess.unlock();
+				//		continue;															// thread queue acc. is unlocked outside of while loop
+				//	}
+				//	else
+				//	{
+				//		ThreadExecRequest *req = m_RequestQueue.front();
+				//		m_RequestQueue.pop_front();
+				//		m_RequestQueueAccess.unlock();
 
-			it = m_FinishedBuffer.erase( it );
+				//		it->first->reactivate();
+				//		it->first->run( Poco::Thread::PRIO_NORMAL, *req );
+				//	}
+				//}
+			}
 		}
-
-		PooledThread *thread = nullptr;
-		m_ThreadAccess.lock();
-		while ( ( thread = tryGetFreeThread() ) != nullptr )
-		{
-			m_ReadyAccess.lock();
-			while ( !m_ReadyBlocks.empty() && m_ReadyBlocks.front() == nullptr )
-			{
-				m_ReadyBlocks.pop_front();
-			}
-
-			if ( m_ReadyBlocks.empty() )
-			{
-				m_ReadyAccess.unlock();
-				break; // thread acc. is unlocked outside of while loop
-			}
-			else
-			{
-				FunctionBlockStateManager *block = m_ReadyBlocks.front();
-				block->beginUpdate();
-
-				m_ReadyBlocks.pop_front();
-				m_ReadyAccess.unlock();
-
-				thread->reactivate();
-				m_ThreadAccess.unlock();
-
-				m_ExecutingAccess.lock();
-				m_ExecutingBlocks.insert( block );
-				m_ExecutingAccess.unlock();
-
-				thread->run( Poco::Thread::PRIO_NORMAL, *block );
-			}
-			m_ThreadAccess.lock();
-		}
-		m_ThreadAccess.unlock();
+		m_ThreadQueuesAccess.unlock();
 	}
 
-	void ThreadPool::serviceIsFinished( FunctionBlockStateManager &mgr )
+	void ThreadPool::scheduleRequest( ThreadExecRequest &request, PooledThread *thread )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_FinishedAccess );
-		m_FinishedBlocks.push_back( &mgr );
-	}
-
-	void ThreadPool::abortService( FunctionBlockStateManager &mgr )
-	{
-		m_ExecutingAccess.lock();
-		BlockIterator it = m_ExecutingBlocks.find( &mgr );
-		if ( it != m_ExecutingBlocks.end() )
+		if ( thread == nullptr )
 		{
-			m_ExecutingBlocks.erase( it );
-			m_ExecutingAccess.unlock();
-
-			Poco::ScopedLock< Poco::FastMutex > lock( m_AbortedAccess );
-			m_AbortedBlocks.insert( &mgr );
+			Poco::ScopedLock< Poco::FastMutex > lock( m_RequestQueueAccess );
+			m_RequestQueue.push_back( &request );
 		}
 		else
 		{
-			m_ExecutingAccess.unlock();
+			Poco::ScopedLock< Poco::FastMutex > lock( m_ThreadQueuesAccess );
+			ThreadQueueIterator it = m_Threads.find( thread );
+			it->second.localQueue.push_back( &request );
 		}
 	}
 
-	void ThreadPool::scheduleService( FunctionBlockStateManager &mgr )
+	PooledThread * ThreadPool::requestUniqueThread()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_ReadyAccess );
-		m_ReadyBlocks.push_back( &mgr );
+		PooledThread *thread = new PooledThread( *this, m_StackSize );
+		ThreadQueue q;
+		q.isReserved = false;
+		q.isUnique = true;
+		m_Threads[ thread ] = q;
+		return thread;
 	}
-
-	PooledThread * ThreadPool::tryGetFreeThread()
-	{
-		for ( ThreadIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )
-		{
-			if ( (*it)->isIdle() )
-			{
-				return *it;
-			}
-		}
-
-		return nullptr;
-	}
-
 }

@@ -19,23 +19,27 @@
 
 #pragma once
 
+#include "helpers/_2RealPoco.h"
+
 namespace _2Real
 {
 
-	class AbstractUpdateTrigger
+	class UpdateCondition
 	{
 
 	public:
 
-		AbstractUpdateTrigger( const bool init ) : m_IsOk( init ) {}
-		virtual ~AbstractUpdateTrigger() {}
+		UpdateCondition( const bool fulfilled ) : m_IsFulfilled( fulfilled ) {}
+		virtual ~UpdateCondition() {}
 
-		virtual bool isOk() const { return m_IsOk; }
-		virtual void reset() { m_IsOk = false; }
+		bool isFulfilled() const { Poco::ScopedLock< Poco::FastMutex > lock( m_Access ); return m_IsFulfilled; }
+		void set( const bool fulfilled ) { Poco::ScopedLock< Poco::FastMutex > lock( m_Access ); m_IsFulfilled = fulfilled; }
 
 	protected:
 
-		bool		m_IsOk;
+		mutable Poco::FastMutex		m_Access;
+		bool						m_IsFulfilled;
+		bool						m_IsOr;
 
 	};
 

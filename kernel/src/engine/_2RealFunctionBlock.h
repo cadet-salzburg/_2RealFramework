@@ -299,18 +299,18 @@ namespace _2Real
 	{
 		if ( isOr )
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, true >(), "or_newer_data" );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp>(), true, "or_newer_data" );
 		}
 		else
 		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp, false >(), "and_newer_data" );
+			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp>(), false, "and_newer_data" );
 		}
 	}
 
 	template< typename THandle >
 	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
 	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData, false >(), "valid_data" );
+		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData >(), false, "valid_data" );
 	}
 
 	template< typename THandle >

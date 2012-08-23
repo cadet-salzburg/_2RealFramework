@@ -28,220 +28,113 @@ namespace _2Real
 
 	public:
 
+		enum StateCode
+		{
+			CREATED,
+			INITIALIZED,
+			UPDATING,
+			STOPPED,
+			SHUTDOWN,
+			EXCEPTION,
+		};
+
+		AbstractFunctionBlockState( const StateCode state ) : m_State( state ) {}
 		virtual ~AbstractFunctionBlockState() {}
 
-		// carry out function block setup -> return true if it was carried out
-		virtual bool trySetUp( FunctionBlockStateManager &states ) const = 0;
-		// enables triggers -> return true if state was setup (?)
-		virtual bool tryStart( FunctionBlockStateManager &states ) const = 0;
-		// stops update cycle -> retrun true if it was carried out
+		virtual void setUp( FunctionBlockStateManager &states ) const = 0;
+		virtual void start( FunctionBlockStateManager &states ) const = 0;
+		virtual bool tryHalt( FunctionBlockStateManager &states ) const = 0;
 		virtual bool tryStop( FunctionBlockStateManager &states ) const = 0;
-		// all triggers -> ok
-		virtual void triggersAreOk( FunctionBlockStateManager &states ) const = 0;
-		virtual bool singleStep( FunctionBlockStateManager &states ) const = 0;
-		// uber blocks -> ok
-		virtual void uberBlocksAreOk( FunctionBlockStateManager &states ) const = 0;
-		// request thread
-		virtual void scheduleUpdate( FunctionBlockStateManager &states ) const = 0;
-		// received thread -> carry out update
-		virtual void beginUpdate( FunctionBlockStateManager &states ) const = 0;
-		// update ( no state change )
-		virtual void update( FunctionBlockStateManager &states ) const = 0;
-		// release thread
-		virtual void finishUpdate( FunctionBlockStateManager &states ) const = 0;
-		// flag shutdown
-		virtual bool prepareForShutDown( FunctionBlockStateManager &states ) const = 0;
-		// perform shutdown
-		virtual void shutDown( FunctionBlockStateManager &states ) const = 0;
+
+		bool operator==( const StateCode state ) const { return m_State == state; }
+
+	private:
+
+		StateCode		const m_State;
 
 	};
 
-	// after ctor
 	class FunctionBlockStateCreated : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateCreated() : AbstractFunctionBlockState( CREATED ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 
-	// after setup has been called the first time
 	class FunctionBlockStateInitialized : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateInitialized() : AbstractFunctionBlockState( INITIALIZED ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 
-	// after start has been called
-	class FunctionBlockStateTriggering : public AbstractFunctionBlockState
-	{
-
-	public:
-
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
-		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
-
-	};
-
-	// after triggersAreOk -> waiting for uber blocks
-	class FunctionBlockStateWaiting : public AbstractFunctionBlockState
-	{
-
-	public:
-
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
-		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
-
-	};
-
-	// after uberBlocksAreOk -> waiting for thread
-	class FunctionBlockStateScheduled : public AbstractFunctionBlockState
-	{
-
-	public:
-
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
-		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
-
-	};
-
-	// after beginUpdate -> has thread
 	class FunctionBlockStateUpdating : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateUpdating() : AbstractFunctionBlockState( UPDATING ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 
-	// after prepareForShutdown
 	class FunctionBlockStateStopped : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateStopped() : AbstractFunctionBlockState( STOPPED ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 
-	// after shutDown
 	class FunctionBlockStateShutDown : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateShutDown() : AbstractFunctionBlockState( SHUTDOWN ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 
-	// error state
 	class FunctionBlockStateError : public AbstractFunctionBlockState
 	{
 
 	public:
 
-		bool trySetUp( FunctionBlockStateManager &states ) const;
-		bool tryStart( FunctionBlockStateManager &states ) const;
+		FunctionBlockStateError() : AbstractFunctionBlockState( EXCEPTION ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
-		void triggersAreOk( FunctionBlockStateManager &states ) const;
-		bool singleStep( FunctionBlockStateManager &states ) const;
-		void uberBlocksAreOk( FunctionBlockStateManager &states ) const;
-		void scheduleUpdate( FunctionBlockStateManager &states ) const;
-		void beginUpdate( FunctionBlockStateManager &states ) const;
-		void update( FunctionBlockStateManager &states ) const;
-		void finishUpdate( FunctionBlockStateManager &states ) const;
-		bool prepareForShutDown( FunctionBlockStateManager &states ) const;
-		void shutDown( FunctionBlockStateManager &states ) const;
 
 	};
 

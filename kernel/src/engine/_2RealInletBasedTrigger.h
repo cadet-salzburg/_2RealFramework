@@ -42,22 +42,21 @@ namespace _2Real
 		}
 	};
 
-	class AbstractInletBasedTrigger : public AbstractUpdateTrigger
+	class AbstractInletBasedTrigger
 	{
 
 	public:
 
 		AbstractInletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) :
-			AbstractUpdateTrigger( false ),
+			m_Condition( false ),
 			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
-			m_LastData( Any(), 0 )	// this way, default value will not fulfill 'newer' cond
+			m_LastData( Any(), 0 )			// default data has timestamp 0 and thus will not fulfill the newer cond
 		{
 		}
 
 		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& src )
 		{
-			// this copies the triggering info, kind of imprtant for policy changes
 			m_LastData = src.m_LastData;
 			return *this;
 		}
@@ -68,59 +67,65 @@ namespace _2Real
 		}
 
 		virtual ~AbstractInletBasedTrigger() {}
-		virtual bool isOr() const = 0;
+
 		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
+
+		void resetData()
+		{
+			m_LastData = TimestampedData( Any(), 0 );
+		}
+
+		bool isFulfilled() const { return m_Condition.isFulfilled(); }
+		void set( const bool fulfilled ) { m_Condition.set( fulfilled ); }
 
 	protected:
 
+		UpdateCondition			m_Condition;
 		InletBuffer				&m_Buffer;
 		AbstractStateManager	&m_UpdateManager;
 		TimestampedData			m_LastData;
 
 	};
 
-	template< typename TCond, bool IsOr >
+	template< typename TCond >
 	class InletBasedTrigger : public AbstractInletBasedTrigger
 	{
 
 	public:
 
-		InletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) :
-			AbstractInletBasedTrigger( buffer, mgr )
+		InletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) :
+			AbstractInletBasedTrigger( buffer, mgr ),
+			m_IsOr( isOr )
 		{
-			mgr.addTrigger( *this );
+			mgr.addTrigger( *this, isOr );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, IsOr >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond >, TimestampedData const& >( *this, &InletBasedTrigger< TCond >::tryTriggerUpdate );
 			buffer.setTrigger( *cb );
 		}
 
 		~InletBasedTrigger()
 		{
-			m_UpdateManager.removeTrigger( *this );
+			m_UpdateManager.removeTrigger( *this, m_IsOr );
 			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond, IsOr >, TimestampedData const& >( *this, &InletBasedTrigger< TCond, IsOr >::tryTriggerUpdate );
+				new MemberCallback< InletBasedTrigger< TCond >, TimestampedData const& >( *this, &InletBasedTrigger< TCond >::tryTriggerUpdate );
 			m_Buffer.removeTrigger( *cb );
 		}
 
 		void tryTriggerUpdate( TimestampedData const& data )
 		{
-			if ( !m_IsOk && m_TriggerCondition( data, m_LastData ) )
+			if ( !m_Condition.isFulfilled() && m_ConditionCheck( data, m_LastData ) )
 			{
-				m_IsOk = true;
+				m_Condition.set( true );
 				m_Buffer.disableTriggering( data );
 				m_LastData = data;
 				m_UpdateManager.tryTriggerInlet( *this );
 			}
 		}
 
-		bool isOr() const
-		{
-			return IsOr;
-		}
-
 	private:
 
-		TCond			m_TriggerCondition;
+		bool				m_IsOr;
+		TCond				m_ConditionCheck;
 
 	};
 

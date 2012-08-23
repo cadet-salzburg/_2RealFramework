@@ -38,17 +38,17 @@ namespace _2Real
 	class AbstractInletTriggerCtor
 	{
 	public:
-		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) = 0;
+		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) = 0;
 		virtual ~AbstractInletTriggerCtor() {};
 	};
 
-	template< typename Condition, bool IsOr >
+	template< typename Condition >
 	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
-		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr )
+		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr )
 		{
-			return new InletBasedTrigger< Condition, IsOr >( buffer, mgr );
+			return new InletBasedTrigger< Condition >( buffer, mgr, isOr );
 		}
 	};
 
@@ -63,7 +63,7 @@ namespace _2Real
 		void addInlet( InletIO &io );
 		void changePolicy();
 		void setNewUpdateRate( const double rate );
-		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy, std::string const& typeName );
+		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy, const bool isOr, std::string const& typeName );
 		const std::string getUpdatePolicyAsString( std::string const& inlet ) const;
 		double getUpdateRate() const;
 
@@ -73,6 +73,7 @@ namespace _2Real
 		{
 			~InletPolicy();
 			bool						wasChanged;
+			bool						isOr;
 			AbstractInletTriggerCtor	*ctor;
 			AbstractInletBasedTrigger	*trigger;
 			std::string					typeString;
@@ -92,7 +93,7 @@ namespace _2Real
 		mutable Poco::FastMutex			m_Access;
 		bool							m_TimeChanged;
 		bool							m_InletsChanged;
-		AbstractTimeBasedTrigger		*m_TimeTrigger;
+		TimeBasedTrigger				*m_TimeTrigger;
 		long							m_UpdateTime;
 		double							m_UpdateRate;
 		InletPolicyMap					m_InletPolicies;

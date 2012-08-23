@@ -27,38 +27,25 @@
 namespace _2Real
 {
 
-	class AbstractTimeBasedTrigger : public AbstractUpdateTrigger
-	{
-
-	public:
-
-		AbstractTimeBasedTrigger() : AbstractUpdateTrigger( false ) {}
-
-		virtual ~AbstractTimeBasedTrigger() {}
-		virtual void tryTriggerUpdate( long &time ) = 0;
-
-	};
-
-	template< typename Condition >
-	class TimeBasedTrigger : public AbstractTimeBasedTrigger
+	class TimeBasedTrigger
 	{
 
 	public:
 
 		TimeBasedTrigger( AbstractStateManager &mgr, const long timeslice ) :
-			AbstractTimeBasedTrigger(),
+			m_Condition( false ),
 			m_UpdateManager( mgr ),
 			m_DesiredTime( timeslice ),
 			m_ElapsedTime( 0 )
 		{
-			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger< Condition >, long >( *this, &TimeBasedTrigger< Condition >::tryTriggerUpdate );
+			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger, long >( *this, &TimeBasedTrigger::tryTriggerUpdate );
 			EngineImpl::instance().getTimer().registerToTimerSignal( *cb );
 			m_UpdateManager.addTrigger( *this );
 		}
 
 		~TimeBasedTrigger()
 		{
-			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger< Condition >, long >( *this, &TimeBasedTrigger< Condition >::tryTriggerUpdate );
+			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger, long >( *this, &TimeBasedTrigger::tryTriggerUpdate );
 			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *cb );
 			m_UpdateManager.removeTrigger( *this );
 		}
@@ -66,20 +53,28 @@ namespace _2Real
 		void tryTriggerUpdate( long &time )
 		{
 			m_ElapsedTime += time;
-			if ( !isOk() && m_TriggerCondition( m_ElapsedTime, m_DesiredTime ) )
+			if ( !m_Condition.isFulfilled() && m_ElapsedTime >= m_DesiredTime )
 			{
 				m_ElapsedTime = 0;
-				m_IsOk = true;
+				m_Condition.set( true );
 				m_UpdateManager.tryTriggerTime( *this );
 			}
 		}
 
+		void resetTime()
+		{
+			m_ElapsedTime = 0;
+		}
+
+		bool isFulfilled() const { return m_Condition.isFulfilled(); }
+		void set( const bool fulfilled ) { m_Condition.set( fulfilled ); }
+
 	private:
 
 		AbstractStateManager	&m_UpdateManager;
-		long					const m_DesiredTime;
+		UpdateCondition			m_Condition;
+		long					m_DesiredTime;
 		long					m_ElapsedTime;
-		Condition				m_TriggerCondition;
 
 	};
 

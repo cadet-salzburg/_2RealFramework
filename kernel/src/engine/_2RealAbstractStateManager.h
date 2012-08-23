@@ -25,7 +25,7 @@
 
 namespace _2Real
 {
-	class AbstractTimeBasedTrigger;
+	class TimeBasedTrigger;
 	class AbstractInletBasedTrigger;
 	class AbstractUberBlock;
 
@@ -39,11 +39,11 @@ namespace _2Real
 		const std::string getName() const;
 
 		virtual void tryTriggerInlet( AbstractInletBasedTrigger &trigger ) = 0;
-		virtual void tryTriggerTime( AbstractTimeBasedTrigger &trigger ) = 0;
-		virtual void addTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
-		virtual void removeTrigger( AbstractTimeBasedTrigger &trigger ) = 0;
-		virtual void addTrigger( AbstractInletBasedTrigger &trigger ) = 0;
-		virtual void removeTrigger( AbstractInletBasedTrigger &trigger ) = 0;
+		virtual void tryTriggerTime( TimeBasedTrigger &trigger ) = 0;
+		virtual void addTrigger( TimeBasedTrigger &trigger ) = 0;
+		virtual void removeTrigger( TimeBasedTrigger &trigger ) = 0;
+		virtual void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr ) = 0;
+		virtual void removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr ) = 0;
 
 	protected:
 

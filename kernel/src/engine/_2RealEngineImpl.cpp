@@ -74,7 +74,7 @@ namespace _2Real
 	EngineImpl::EngineImpl() :
 		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer( *m_Logger ) ),
-		m_ThreadPool( new ThreadPool( *this, 15, 0, "2Real threadpool" ) ),
+		m_ThreadPool( new ThreadPool( *this, 3, 0, "2Real threadpool" ) ),
 		m_BundleManager( new BundleManager( *this ) ),
 		m_System( new System( *m_Logger ) )
 	{
@@ -87,10 +87,10 @@ namespace _2Real
 	{
 		try
 		{
+			m_Logger->addLine( "ENGINE SHUTDOWN" );
 			clearFully();
 			delete m_System;
 			delete m_BundleManager;
-			m_ThreadPool->clear();
 			delete m_ThreadPool;
 			m_Logger->stop();
 			delete m_Logger;
@@ -146,6 +146,12 @@ namespace _2Real
 		}
 		m_System->removeBlock( block, timeout );
 
+		if ( b.hasContext() && b.getBlockInstances( *m_BundleManager ).empty() )
+		{
+			FunctionBlock< app::ContextBlockHandle > & context = b.getContextBlock( *m_BundleManager );
+			m_System->removeBlock( context, timeout );
+			b.contextBlockRemoved();
+		}
 	}
 
 	void EngineImpl::addBlock( FunctionBlock< app::ContextBlockHandle > &block )

@@ -73,7 +73,8 @@ namespace _2Real
 
 		m_InletsChanged = true;
 		InletPolicy *p = new InletPolicy();
-		p->ctor = new InletTriggerCtor< ValidData, false >();
+		p->ctor = new InletTriggerCtor< ValidData >();
+		p->isOr = false;
 		p->trigger = nullptr;
 		p->wasChanged = true;
 		p->typeString = "valid_data";
@@ -91,7 +92,7 @@ namespace _2Real
 			safeDelete( m_TimeTrigger );
 			if ( m_UpdateTime > 0 )
 			{
-				m_TimeTrigger = new TimeBasedTrigger< std::greater< long > >( *m_StateManager, m_UpdateTime );
+				m_TimeTrigger = new TimeBasedTrigger( *m_StateManager, m_UpdateTime );
 			}
 
 			m_TimeChanged = false;
@@ -106,7 +107,7 @@ namespace _2Real
 					InletBuffer *buffer = it->first->m_Buffer;
 					AbstractInletTriggerCtor *ctor = it->second->ctor;
 					AbstractInletBasedTrigger *currTrigger = it->second->trigger;
-					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager );
+					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager, it->second->isOr );
 
 					if ( currTrigger != nullptr )
 					{
@@ -138,7 +139,7 @@ namespace _2Real
 		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy, std::string const& typeName )
+	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy, const bool isOr, std::string const& typeName )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_InletsChanged = true;
@@ -148,6 +149,7 @@ namespace _2Real
 			it->second->wasChanged = true;
 			delete it->second->ctor;
 			it->second->ctor = inletPolicy;
+			it->second->isOr = isOr;
 			it->second->typeString = typeName;
 		}
 		else

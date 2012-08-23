@@ -58,6 +58,11 @@ namespace _2Real
 		return ( m_ContextBlock != nullptr );
 	}
 
+	void Bundle::contextBlockRemoved()
+	{
+		m_ContextBlock = nullptr;
+	}
+
 	void Bundle::unload( const long timeout )
 	{
 		m_BundleManager.destroyBundle( *this, timeout );

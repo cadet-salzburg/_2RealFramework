@@ -24,32 +24,38 @@
 namespace _2Real
 {
 
+	class ThreadPool;
 	class FunctionBlockStateManager;
-	class ThreadPoolCallback;
+	struct ThreadExecRequest;
 
 	class PooledThread : public Poco::Runnable
 	{
 	
 	public:
 
-		PooledThread(ThreadPoolCallback &callback, unsigned int stackSize = POCO_THREAD_STACK_SIZE);
-		~PooledThread();
+		enum Action
+		{
+			SETUP, UPDATE, SHUTDOWN
+		};
+
+		PooledThread( ThreadPool &pool, unsigned int stackSize = POCO_THREAD_STACK_SIZE );
 
 		const bool isIdle() const;
 		const bool join();
 
 		void run();
-		void run(Poco::Thread::Priority const& priority, FunctionBlockStateManager &target);
+		void run( Poco::Thread::Priority const& priority, ThreadExecRequest &request );
 		void reactivate();
 
-		const bool operator<(PooledThread const& rhs) const;
+		const bool operator<( PooledThread const& rhs ) const;
 
 	private:
 
-		FunctionBlockStateManager	*m_Target;
+		ThreadExecRequest			*m_Request;
 		volatile bool				m_IsIdle;
 		Poco::Thread				m_Thread;
-		ThreadPoolCallback			*m_Callback;
+
+		ThreadPool					*m_ThreadPool;
 
 		Poco::Event					m_TargetReady;
 		Poco::Event					m_TargetCompleted;

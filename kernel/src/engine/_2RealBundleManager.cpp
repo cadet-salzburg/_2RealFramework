@@ -265,7 +265,7 @@ namespace _2Real
 				contextBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
 			}
 
-			contextBlock->updateWithFixedRate( 1.0 );
+			contextBlock->updateWithFixedRate( 30.0 );
 			contextBlock->setUp();
 			contextBlock->start();
 		}

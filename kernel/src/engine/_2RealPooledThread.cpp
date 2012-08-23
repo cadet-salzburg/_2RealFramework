@@ -24,25 +24,19 @@
 namespace _2Real
 {
 
-	PooledThread::PooledThread(ThreadPoolCallback &callback, unsigned int stackSize) :
-		m_Target(nullptr),
-		m_IsIdle(true),
-		m_Thread("idle thread"),
-		m_Callback(&callback),
-		m_TargetReady(true),
-		m_TargetCompleted(true),
-		m_ThreadStarted(true),
-		m_ThreadStopped(true),
-		m_Mutex()
+	PooledThread::PooledThread( ThreadPool &pool, unsigned int stackSize ) :
+		m_Request( nullptr ),
+		m_IsIdle( true ),
+		m_Thread( "idle thread" ),
+		m_ThreadPool( &pool ),
+		m_TargetReady( true ),
+		m_TargetCompleted( true ),
+		m_ThreadStarted( true ),
+		m_ThreadStopped( true )
 	{
 		m_Thread.setStackSize(stackSize);
 		m_Thread.start(*this);
 		m_ThreadStarted.wait();
-	}
-
-	PooledThread::~PooledThread()
-	{
-		delete m_Callback;
 	}
 
 	const bool PooledThread::operator<(PooledThread const& rhs) const
@@ -61,7 +55,7 @@ namespace _2Real
 		m_Mutex.lock();
 		if (m_IsIdle)
 		{
-			m_Target = nullptr;
+			m_Request = nullptr;
 			m_IsIdle = false;
 			m_TargetCompleted.reset();
 			m_TargetReady.set();
@@ -75,13 +69,13 @@ namespace _2Real
 		}
 	}
 
-	void PooledThread::run(Poco::Thread::Priority const& priority, FunctionBlockStateManager &target)
+	void PooledThread::run( Poco::Thread::Priority const& priority, ThreadExecRequest &request )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
 
-		m_Thread.setName(target.getName());
-		m_Thread.setPriority(priority);
-		m_Target = &target;
+		m_Thread.setName( request.block.getName() );
+		m_Thread.setPriority( priority );
+		m_Request = &request;
 
 		m_TargetReady.set();
 	}
@@ -103,26 +97,27 @@ namespace _2Real
 			m_TargetReady.wait();
 
 			m_Mutex.lock();
-			if (m_Target)
-			//if the runnable is ever null & targetReady is signalled, the thread will kill itself (happens in join)
+			if ( m_Request )										// if the request is ever null & targetReady is signalled, the thread will kill itself
 			{
 				m_Mutex.unlock();
 
-				m_Target->updateFunctionBlock();
+				FunctionBlockStateManager &mgr = m_Request->block;
+				FunctionToExecute func = m_Request->function;
+				( mgr.*func )();									// function pointer syntax sucks :/
 
 				Poco::ScopedLock< Poco::FastMutex > lock(m_Mutex);
 
-				FunctionBlockStateManager *tmp = m_Target;
-
-				m_Target = nullptr;
+				ThreadExecRequest *tmp = m_Request;
+				m_Request = nullptr;
 				m_IsIdle = true;
 
 				m_TargetCompleted.set();
 				Poco::ThreadLocalStorage::clear();
-				m_Thread.setName("unused thread");
-				m_Thread.setPriority(Poco::Thread::PRIO_NORMAL);
+				m_Thread.setName( "unused thread" );
+				m_Thread.setPriority( Poco::Thread::PRIO_NORMAL );
 
-				m_Callback->invoke(*tmp);
+				if ( tmp->event != nullptr ) tmp->event->set();		// maybe i could do this immediately?
+				delete tmp;
 			}
 			else
 			{

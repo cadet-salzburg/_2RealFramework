@@ -24,6 +24,8 @@
 #include <list>
 #include <set>
 #include <string>
+#include <deque>
+#include <map>
 
 namespace _2Real
 {
@@ -34,6 +36,8 @@ namespace _2Real
 	class Timer;
 	class Logger;
 
+	struct ThreadExecRequest;
+
 	class ThreadPool
 	{
 
@@ -42,29 +46,29 @@ namespace _2Real
 		ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name );
 		~ThreadPool();
 
-		void clear();
-		void update( long &time );
+		PooledThread * requestUniqueThread();
 
-		void scheduleService( FunctionBlockStateManager &s );
-		void serviceIsFinished( FunctionBlockStateManager &s );
-		void abortService( FunctionBlockStateManager &s );
+		void update( long &time );
+		void scheduleRequest( ThreadExecRequest &request, PooledThread *thread );
 		void executeCleanUp();
 
 	private:
 
-		typedef std::list< PooledThread * >									Threads;
-		typedef std::list< PooledThread * >::iterator						ThreadIterator;
-		typedef std::list< PooledThread * >::const_iterator					ThreadConstIterator;
 
-		typedef std::list< FunctionBlockStateManager * >					BlockBuffer;
-		typedef std::list< FunctionBlockStateManager * >::iterator			BufferedBlockIterator;
-		typedef std::list< FunctionBlockStateManager * >::const_iterator	BufferedBlockConstIterator;
+		typedef std::deque< ThreadExecRequest * >							RequestQueue;
+		typedef std::deque< ThreadExecRequest * >::iterator					RequestIterator;
+		typedef std::deque< ThreadExecRequest * >::const_iterator			RequestConstIterator;
 
-		typedef std::set< FunctionBlockStateManager * >						Blocks;
-		typedef std::set< FunctionBlockStateManager * >::iterator			BlockIterator;
-		typedef std::set< FunctionBlockStateManager * >::const_iterator		BlockConstIterator;
+		struct ThreadQueue
+		{
+			RequestQueue		localQueue;
+			bool				isReserved;
+			bool				isUnique;
+		};
 
-		PooledThread * tryGetFreeThread();
+		typedef std::map< PooledThread *, ThreadQueue >						ThreadQueues;
+		typedef std::map< PooledThread *, ThreadQueue >::iterator			ThreadQueueIterator;
+		typedef std::map< PooledThread *, ThreadQueue >::const_iterator		ThreadQueueConstIterator;
 
 		Timer								&m_Timer;
 		Logger								&m_Logger;
@@ -72,36 +76,13 @@ namespace _2Real
 		std::string							m_Name;
 		unsigned int						m_StackSize;
 
-		Threads								m_Threads;
+		ThreadQueues						m_Threads;
+		RequestQueue						m_RequestQueue;
 
-		BlockBuffer							m_ReadyBlocks;
-		BlockBuffer							m_FinishedBlocks;
-		BlockBuffer							m_FinishedBuffer;
-
-		Blocks								m_ExecutingBlocks;
-		Blocks								m_AbortedBlocks;
-
-		mutable Poco::FastMutex				m_ThreadAccess;
-		mutable Poco::FastMutex				m_ExecutingAccess;
-		mutable Poco::FastMutex				m_AbortedAccess;
-		mutable Poco::FastMutex				m_ReadyAccess;
-		mutable Poco::FastMutex				m_FinishedAccess;
+		mutable Poco::FastMutex				m_ThreadQueuesAccess;
+		mutable Poco::FastMutex				m_RequestQueueAccess;
 
 		long								m_Elapsed;
-
-	};
-
-	class ThreadPoolCallback
-	{
-
-	public:
-
-		ThreadPoolCallback( ThreadPool &pool ) : m_ThreadPool(pool) {}
-		void invoke( FunctionBlockStateManager &s ) { m_ThreadPool.serviceIsFinished(s); }
-
-	private:
-
-		ThreadPool		&m_ThreadPool;
 
 	};
 

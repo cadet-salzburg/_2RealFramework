@@ -45,6 +45,8 @@ namespace _2Real
 	{
 		for ( BundleInfoIterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
 		{
+			std::string t = it->second.metainfo->getBundleData().getName();
+			std::cout << t << std::endl;
 			delete it->second.metainfo;
 			if ( it->second.library != nullptr )
 			{
@@ -52,6 +54,7 @@ namespace _2Real
 				delete it->second.library;
 			}
 			it = m_LoadedBundles.erase( it );
+			std::cout << "! " << t << std::endl;
 		}
 	}
 

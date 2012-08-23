@@ -74,6 +74,7 @@ namespace _2Real
 		bool canCreate( std::string const& blockName ) const;
 		BlockInstances &							getBlockInstances( BundleManager const& m );
 		FunctionBlock< app::ContextBlockHandle > &	getContextBlock( BundleManager const& m );
+		void contextBlockRemoved();
 
 	private:
 

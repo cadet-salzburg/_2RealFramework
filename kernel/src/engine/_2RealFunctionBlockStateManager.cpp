@@ -35,7 +35,6 @@ namespace _2Real
 		AbstractStateManager( owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_IsTriggeringEnabled( false ),
-		m_IsFlaggedForSetup( false ),
 		m_IsFlaggedForHalting( false ),
 		m_IsFlaggedForShutdown( false ),
 		m_IOManager( nullptr ),
@@ -43,8 +42,11 @@ namespace _2Real
 		m_Threads( EngineImpl::instance().getThreadPool() ),
 		m_Logger( EngineImpl::instance().getLogger() ),
 		m_TimeTrigger( nullptr ),
-		m_WasStarted( false )
+		m_Thread( nullptr ),
+		m_HasException( false ),
+		m_Exception( "" )
 	{
+		m_Thread = m_Threads.requestUniqueThread();
 	}
 
 	FunctionBlockStateManager::~FunctionBlockStateManager()
@@ -52,524 +54,489 @@ namespace _2Real
 		delete m_CurrentState;
 	}
 
-	void FunctionBlockStateManager::setUp()
+	void FunctionBlockStateManager::handleStateChangeException( Exception &e )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_StateAccess );
-		try
-		{
-			if ( m_CurrentState->trySetUp( *this ) )
-			{
-				m_UpdatePolicy->changePolicy();
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateInitialized();
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
 
-				m_IOManager->clearInletBuffers();
-				m_IOManager->updateInletData();		// will be the default data
+		std::cout << "-------------------------------------------------------------------" << std::endl;
+		std::cout << getName() << " EXCEPTION: " << e.message() << std::endl;
+		std::cout << "-------------------------------------------------------------------" << std::endl;
 
-				m_FunctionBlock->setup( m_IOManager->getHandle() );
-				m_Logger.addLine( string( getName() + " new state: set up" ) );
-			}
-			else
-			{
-				m_IsFlaggedForSetup.set();
-				m_Logger.addLine( string( getName() + " flagged for delayed set up" ) );
-			}
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-		}
+		m_Logger.addLine( std::string( getName() + " state: error\n\t" + e.message() ) );
+
+		m_HasException = true;
+		m_Exception = e;
 	}
 
 	bool FunctionBlockStateManager::isRunning() const
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_StateAccess );
+		return ( *m_CurrentState == AbstractFunctionBlockState::UPDATING );
+	}
+
+	void FunctionBlockStateManager::setUp()
+	{
 		m_StateAccess.lock();
-		return m_WasStarted;
+
+		// created: ok
+		// initialized: ok
+		// excpetion: ok
+		// else: throw exception
+		m_CurrentState->setUp( *this );
+
+		m_UpdatePolicy->changePolicy();
+
+		// blocking request /////////////////////////////////////
+		ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::setupFunctionBlock );
+		Poco::Event *ev = new Poco::Event();
+		req->event = ev;
+		m_Threads.scheduleRequest( *req, m_Thread );
+		ev->wait();
+		delete ev;
+		// blocking request /////////////////////////////////////
+
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		if ( m_HasException )
+		{
+			// state change /////////////////////////////////////////
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateError();
+			m_StateAccess.unlock();
+			// state change /////////////////////////////////////////
+
+			m_Owner.handleException( m_Exception );
+		}
+		else
+		{
+			// state change /////////////////////////////////////////
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateInitialized();
+			m_Logger.addLine( string( getName() + " state: initialized" ) );
+			m_StateAccess.unlock();
+			// state change /////////////////////////////////////////
+		}
+	}
+
+	void FunctionBlockStateManager::setupFunctionBlock()
+	{
+		// called by pooled thread
+
+		try
+		{
+			m_IOManager->clearInletBuffers();
+			m_IOManager->updateInletData();
+			m_FunctionBlock->setup( m_IOManager->getHandle() );
+			m_Logger.addLine( std::string( getName() + " carried out setup" ) );
+		}
+		catch ( Exception &e )
+		{
+			handleStateChangeException( e );
+		}
 	}
 
 	void FunctionBlockStateManager::start()
 	{
-		try
-		{
-			m_StateAccess.lock();
-			m_WasStarted = true;
-			if ( m_CurrentState->tryStart( *this ) )
-			{
-				m_UpdatePolicy->changePolicy();
-				m_StopEvent.reset();
+		m_StateAccess.lock();
 
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateTriggering();
-				m_StateAccess.unlock();
+		// initialized: ok
+		// else: throw exception
+		m_CurrentState->start( *this );
 
-				// enable triggers ( inlets, time )
-				m_EnabledAccess.lock();
-				m_IsTriggeringEnabled = true;
-				m_EnabledAccess.unlock();
+		// state change /////////////////////////////////////////
+		delete m_CurrentState;
+		m_Logger.addLine( string( getName() + " new state: updating" ) );
+		m_CurrentState = new FunctionBlockStateUpdating();
+		// state change /////////////////////////////////////////
 
-				resetTriggers();
-				m_IOManager->updateInletBuffers();		// give buffered data a chance of triggering
-				m_Logger.addLine( string( getName() + " new state: triggering" ) );
-			}
-			else
-			{
-				m_StateAccess.unlock();
-			}
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
-	}
+		m_StateAccess.unlock();
 
-	// like start, singlestep only works in initialized state, hoever, the whole waiting for triggers does not happen
-	void FunctionBlockStateManager::singleStep()
-	{
-		try
-		{
-			m_StateAccess.lock();
+		m_StopEvent.reset();
+		m_UpdatePolicy->changePolicy();
 
-			if ( m_CurrentState->singleStep( *this ) )
-			{
-				m_UpdatePolicy->changePolicy();
-				m_StopEvent.reset();
+		// enable triggers /////////////////////////////////////////
+		m_EnabledAccess.lock();
+		m_IsTriggeringEnabled = true;
+		m_EnabledAccess.unlock();
+		// enable triggers /////////////////////////////////////////
 
-				m_IsFlaggedForHalting.set();	// after this update cycle, stay initialized
-
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateWaiting();
-				m_StateAccess.unlock();
-
-				resetTriggers();
-				m_IOManager->updateInletBuffers();
-				m_Logger.addLine( std::string( getName() + " new state: waiting ( singlestepped )" ) );
-
-				uberBlocksAreOk();				// this is kinda unnneccesary currently
-			}
-			else
-			{
-				m_StateAccess.unlock();
-			}
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
-	}
-
-	Poco::Event & FunctionBlockStateManager::stop()
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_StateAccess );
-		try
-		{
-			if ( m_CurrentState->prepareForShutDown(*this) )
-			{
-				m_WasStarted = false;
-				m_EnabledAccess.lock();
-				m_IsTriggeringEnabled = false;
-				m_EnabledAccess.unlock();
-
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateInitialized();
-
-				m_Logger.addLine( std::string( getName() + " new state: setup ( stop requested by user )" ) );
-
-				m_StopEvent.set();
-				return m_StopEvent;
-			}
-			else
-			{
-				m_IsFlaggedForHalting.set();
-				m_Logger.addLine( std::string( getName() + " flagged for delayed stop" ) );
-				return m_StopEvent;
-			}
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			return m_StopEvent;
-		}
-	}
-
-	void FunctionBlockStateManager::triggersAreOk()
-	{
-		try
-		{
-			m_StateAccess.lock();
-
-			if ( !m_IsTriggeringEnabled )
-			{
-				m_StateAccess.unlock();
-				return;
-			}
-
-			m_CurrentState->triggersAreOk( *this );
-
-			// no more triggers accepted
-			m_EnabledAccess.lock();
-			m_IsTriggeringEnabled = false;
-			m_EnabledAccess.unlock();
-
-			delete m_CurrentState;
-			m_CurrentState = new FunctionBlockStateWaiting();
-
-			m_StateAccess.unlock();
-
-			m_Logger.addLine( std::string( getName() + " new state: waiting ( triggered )" ) );
-			uberBlocksAreOk();	// currently, does nothing
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
-	}
-
-	void FunctionBlockStateManager::uberBlocksAreOk()
-	{
-		try
-		{
-			m_StateAccess.lock();
-			m_CurrentState->uberBlocksAreOk( *this );
-
-			delete m_CurrentState;
-			m_CurrentState = new FunctionBlockStateScheduled();
-			m_StateAccess.unlock();
-
-			m_Logger.addLine( std::string( getName() + " new state: scheduled" ) );
-			m_Threads.scheduleService( *this );
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
-	}
-
-	void FunctionBlockStateManager::beginUpdate()
-	{
-		try
-		{
-			m_StateAccess.lock();
-			m_CurrentState->beginUpdate( *this );
-			delete m_CurrentState;
-			m_CurrentState = new FunctionBlockStateUpdating();
-			m_StateAccess.unlock();
-
-			m_Logger.addLine( std::string( getName() + " new state: updating" ) );
-		}
-		catch ( Exception &e )
-		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
-		}
+		setTriggers( false );
+		m_IOManager->updateInletBuffers();
 	}
 
 	void FunctionBlockStateManager::updateFunctionBlock()
 	{
 		try
 		{
-			m_StateAccess.lock();
-			m_CurrentState->update( *this );	// no state change in this case, although maybe i should add another? sigh
-			m_StateAccess.unlock();
+			m_IOManager->updateInletData();
+			m_FunctionBlock->update();
+			m_IOManager->updateOutletData();
 
-			m_IOManager->updateInletData();		// make sure the inlets have the current data
-			m_FunctionBlock->update();			// carry out update
-			m_IOManager->updateOutletData();	// make sure outlets send their data
+			m_Logger.addLine( std::string( getName() + " carried out update" ) );
 		}
 		catch ( Exception &e )
 		{
 			handleStateChangeException( e );
+		}
+
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ExceptionAccess );
+
+		if ( m_IsFlaggedForShutdown.isSet() )
+		{
+			m_StateAccess.lock();
+
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateStopped();
+			m_Logger.addLine( std::string( getName() + " new state: stopped ( finished update cycle )" ) );
+
+			m_StopEvent.set();
+			m_ShutdownEvent.set();
+			m_IsFlaggedForShutdown.unset();
+			m_IsFlaggedForHalting.unset();
+
+			m_StateAccess.unlock();
+		}
+		else if ( m_HasException )
+		{
+			m_StateAccess.lock();
+
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateError();
+			m_StateAccess.unlock();
+
+			m_Owner.handleException( m_Exception );
+		}
+		else if ( m_IsFlaggedForHalting.isSet() )
+		{
+			m_StateAccess.lock();
+
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateInitialized();
+			m_Logger.addLine( std::string( getName() + " new state: initialized ( finished update cycle )" ) );
+
+			m_StopEvent.set();
+			m_IsFlaggedForHalting.unset();
+
+			m_StateAccess.unlock();
+		}
+		else
+		{
+			m_UpdatePolicy->changePolicy();
+
+			m_EnabledAccess.lock();
+			m_IsTriggeringEnabled = true;
+			m_EnabledAccess.unlock();
+
+			setTriggers( false );
+
+			m_IOManager->updateInletBuffers();
+		}
+	}
+
+	void FunctionBlockStateManager::singleStep()
+	{
+		m_StateAccess.lock();
+
+		// initialized: ok
+		// else: throw exception
+		m_CurrentState->start( *this );
+
+		// without enabling triggers update inlet data //////////
+		setTriggers( false );
+		m_IOManager->updateInletBuffers();
+		/////////////////////////////////////////////////////////
+
+		// blocking request /////////////////////////////////////
+		ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::singleStepFunctionBlock );
+		Poco::Event *ev = new Poco::Event();
+		req->event = ev;
+		m_Threads.scheduleRequest( *req, m_Thread );
+		ev->wait();
+		delete ev;
+		// blocking request /////////////////////////////////////
+
+		if ( m_HasException )
+		{
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateError();
+			m_StateAccess.unlock();
+
+			m_Owner.handleException( m_Exception );
+		}
+		else
+		{
 			m_StateAccess.unlock();
 		}
 	}
 
-	void FunctionBlockStateManager::finishUpdate()
+	void FunctionBlockStateManager::singleStepFunctionBlock()
 	{
 		try
 		{
-			m_StateAccess.lock();
+			m_IOManager->updateInletData();
+			m_FunctionBlock->update();
+			m_IOManager->updateOutletData();
 
-			m_CurrentState->finishUpdate( *this );
-			delete m_CurrentState;
-
-			if ( m_IsFlaggedForShutdown.isSet() )
-			{
-				m_StopEvent.set();		// just in case someone is waiting for a stop
-				m_ShutdownEvent.set();
-
-				m_CurrentState = new FunctionBlockStateStopped();
-				m_StateAccess.unlock();
-
-				m_Logger.addLine( std::string( getName() + " new state: shut down ( finished update cycle )" ) );
-				m_IsFlaggedForShutdown.unset();
-			}
-			else if ( m_IsFlaggedForHalting.isSet() )
-			{
-				//if ( m_IsFlaggedForSetup.isSet() )
-				//{
-				//	//m_IOManager->updateInletData();
-				//	m_FunctionBlock->setup( m_IOManager->getHandle() );
-				//	m_IsFlaggedForSetup.unset();
-				//}
-
-				m_CurrentState = new FunctionBlockStateInitialized();
-				m_StateAccess.unlock();
-
-				m_StopEvent.set();
-
-				m_Logger.addLine( std::string( getName() + " new state: set up ( finished update cycle )" ) );
-				m_IsFlaggedForHalting.unset();
-			}
-			else
-			{
-				if ( m_IsFlaggedForSetup.isSet() )
-				{
-					m_IOManager->clearInletBuffers();
-					m_IOManager->updateInletData();
-					m_FunctionBlock->setup( m_IOManager->getHandle() );
-					m_IsFlaggedForSetup.unset();
-				}
-
-				m_UpdatePolicy->changePolicy();
-				m_CurrentState = new FunctionBlockStateTriggering();
-
-				// re-enable triggering
-				m_EnabledAccess.lock();
-				m_IsTriggeringEnabled = true;
-				m_EnabledAccess.unlock();
-
-				m_StateAccess.unlock();
-
-				m_Logger.addLine( std::string( getName() + " new state: started ( finished update cycle )" ) );
-
-				resetTriggers();
-				m_IOManager->updateInletBuffers();
-			}
+			m_Logger.addLine( std::string( getName() + " carried out singlestep" ) );
 		}
 		catch ( Exception &e )
 		{
 			handleStateChangeException( e );
-			m_StateAccess.unlock();
 		}
 	}
 
 	void FunctionBlockStateManager::prepareForShutDown()
 	{
-		try
+		m_StateAccess.lock();
+		if ( m_CurrentState->tryStop( *this ) )
 		{
-			m_StateAccess.lock();
-			if ( m_CurrentState->prepareForShutDown( *this ) )
-			{
-				m_EnabledAccess.lock();
-				m_IsTriggeringEnabled = false;
-				m_EnabledAccess.unlock();
+			// state change /////////////////////////////////////////
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateStopped();
+			m_Logger.addLine( std::string( getName() + " state: stopped ( framework stop )" ) );
+			// state change /////////////////////////////////////////
 
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateStopped();
-
-				m_StopEvent.set();
-				m_ShutdownEvent.set();
-
-				m_Logger.addLine( std::string( getName() + " new state: stopped ( requested by framework )" ) );
-				m_StateAccess.unlock();
-			}
-			else
-			{
-				m_StateAccess.unlock();
-				m_IsFlaggedForShutdown.set();
-				m_Logger.addLine( std::string( getName() + " flagged for delayed stop" ) );
-			}
+			m_StopEvent.set();
+			m_ShutdownEvent.set();
 		}
-		catch ( Exception &e )
+		else
 		{
-			handleStateChangeException( e );
-			m_StateAccess.unlock();
+			m_IsFlaggedForShutdown.set();
+			m_Logger.addLine( std::string( getName() + " flagged for shutdown" ) );
 		}
+
+		m_StateAccess.unlock();
+	}
+
+	Poco::Event & FunctionBlockStateManager::stop()
+	{
+		m_StateAccess.lock();
+
+		if ( m_CurrentState->tryHalt( *this ) )
+		{
+			// state change /////////////////////////////////////////
+			delete m_CurrentState;
+			m_CurrentState = new FunctionBlockStateInitialized();
+			m_Logger.addLine( std::string( getName() + " state: initialized ( user stop )" ) );
+			// state change /////////////////////////////////////////
+
+			m_StopEvent.set();
+		}
+		else
+		{
+			m_IsFlaggedForHalting.set();
+			m_Logger.addLine( std::string( getName() + " flagged for halting" ) );
+		}
+
+		m_StateAccess.unlock();
+		return m_StopEvent;
 	}
 
 	bool FunctionBlockStateManager::shutDown( const long timeout )
 	{
-		try
+		if ( m_ShutdownEvent.tryWait( timeout ) )
 		{
-			if ( m_ShutdownEvent.tryWait( timeout ) )
-			{
-				m_StateAccess.lock();
-				m_CurrentState->shutDown( *this );
-				delete m_CurrentState;
-				m_CurrentState = new FunctionBlockStateShutDown();
-				m_StateAccess.unlock();
+			m_StateAccess.lock();
 
-				m_Logger.addLine( std::string( getName() + " new state: shut down" ) );
+			// blocking request /////////////////////////////////////
+			ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::shutdownFunctionBlock );
+			Poco::Event *ev = new Poco::Event();
+			req->event = ev;
+			m_Threads.scheduleRequest( *req, m_Thread );
+			ev->wait();
+			delete ev;
+			// blocking request /////////////////////////////////////
 
-				m_FunctionBlock->shutdown();
-				return true;
-			}
-			else
+			if ( m_HasException )
 			{
-				m_StateAccess.lock();
+				// state change /////////////////////////////////////////
 				delete m_CurrentState;
 				m_CurrentState = new FunctionBlockStateError();
 				m_StateAccess.unlock();
+				// state change /////////////////////////////////////////
 
-				m_Logger.addLine( std::string( getName() + " new state: error (aborted because of timeout on shutdown)" ) );
-
-				m_Threads.abortService( *this );
-				return false;
+				m_Owner.handleException( m_Exception );
 			}
+			else
+			{
+				// state change /////////////////////////////////////////
+				delete m_CurrentState;
+				m_CurrentState = new FunctionBlockStateShutDown();
+				m_Logger.addLine( std::string( getName() + " state: shut down" ) );
+				// state change /////////////////////////////////////////
+
+				m_StateAccess.unlock();
+			}
+			return true;
 		}
-		catch ( Exception &e )
+		else
 		{
+			// state change /////////////////////////////////////////
+			_2Real::Exception e( "timeout on shutdown" );
 			handleStateChangeException( e );
-			m_StateAccess.unlock();
+			// state change /////////////////////////////////////////
+
 			return false;
 		}
 	}
 
-	void FunctionBlockStateManager::handleStateChangeException(Exception &e)
+	void FunctionBlockStateManager::shutdownFunctionBlock()
 	{
-		std::cout << "-------------------------------------------------------------------" << std::endl;
-		std::cout << getName() << " EXCEPTION: " << e.message() << std::endl;
-		std::cout << "-------------------------------------------------------------------" << std::endl;
-
-		m_Logger.addLine( std::string( getName() + " new function block state: error\n\t" + e.message() ) );
-
-		m_EnabledAccess.lock();
-		m_IsTriggeringEnabled = false;
-		m_EnabledAccess.unlock();
-
-		delete m_CurrentState;
-		m_CurrentState = new FunctionBlockStateError();
-		m_Owner.handleException( e );
-	}
-
-	void FunctionBlockStateManager::addTrigger( AbstractInletBasedTrigger &trigger )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		m_InletTriggers.insert( &trigger );
-	}
-
-	void FunctionBlockStateManager::removeTrigger( AbstractInletBasedTrigger &trigger )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		InletTriggerIterator it = m_InletTriggers.find( &trigger );
-		if ( it != m_InletTriggers.end() )
+		try
 		{
-			m_InletTriggers.erase( it );
+			m_FunctionBlock->shutdown();
+			m_Logger.addLine( std::string( getName() + " carried out shutdown" ) );
 		}
-	}
-
-	void FunctionBlockStateManager::addTrigger( AbstractTimeBasedTrigger &trigger )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		m_TimeTrigger = &trigger;
-	}
-
-	void FunctionBlockStateManager::removeTrigger( AbstractTimeBasedTrigger &trigger )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		m_TimeTrigger = nullptr;
+		catch ( Exception &e )
+		{
+			m_StateAccess.lock();
+			handleStateChangeException( e );
+			m_StateAccess.unlock();
+		}
 	}
 
 	void FunctionBlockStateManager::tryTriggerInlet( AbstractInletBasedTrigger &trigger )
 	{
 		m_EnabledAccess.lock();
+
 		if ( m_IsTriggeringEnabled )
 		{
-			m_EnabledAccess.unlock();
 			m_TriggerAccess.lock();
 
-			bool andRes = true;
-			unsigned int andCount = 0;
-			bool orRes = false;
-			for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-			{
-				if ( ( *it )->isOr() )
-				{
-					orRes |= ( *it )->isOk();
-				}
-				else
-				{
-					andCount++;
-					andRes &= ( *it )->isOk();
-				}
-			}
-			bool triggersOk = ( ( andRes && ( andCount > 0 ) ) || orRes );
+			// check inlet triggers /////////////////////////////////////////
+			bool groupWeightResult = true;
+			bool singleWeightResult = false;
+
+			for ( InletTriggerIterator it = m_SingleInletTriggers.begin(); it != m_SingleInletTriggers.end(); ++it )	singleWeightResult |= ( *it )->isFulfilled();
+			for ( InletTriggerIterator it = m_GroupInletTriggers.begin(); it != m_GroupInletTriggers.end(); ++it )		groupWeightResult &= ( *it )->isFulfilled();
+			groupWeightResult &= !m_GroupInletTriggers.empty();
+
+			bool triggersOk = ( groupWeightResult || singleWeightResult );
+			// check inlet triggers /////////////////////////////////////////
+
 			if ( m_TimeTrigger != nullptr )
 			{
-				triggersOk &= m_TimeTrigger->isOk();
+				triggersOk &= m_TimeTrigger->isFulfilled();
 			}
 
 			m_TriggerAccess.unlock();
+
+			// schedule request /////////////////////////////////////////
 			if ( triggersOk )
 			{
-				triggersAreOk();
-			}
-		}
-		else
-		{
-			m_EnabledAccess.unlock();
-		}
-	}
+				m_IsTriggeringEnabled = false;
+				m_Logger.addLine( std::string( getName() + " inlet fulfilled trigger conditions" ) );
 
-	void FunctionBlockStateManager::tryTriggerTime( AbstractTimeBasedTrigger &trigger )
-	{
-		m_EnabledAccess.lock();
-		if ( m_IsTriggeringEnabled )
-		{
-			m_EnabledAccess.unlock();
-			m_TriggerAccess.lock();
+				ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::updateFunctionBlock );
+				m_Threads.scheduleRequest( *req, m_Thread );
 
-			if ( m_InletTriggers.empty() )
-			{
-				m_TriggerAccess.unlock();
-				triggersAreOk();
+				m_Logger.addLine( std::string( getName() + " scheduled update request" ) );
 			}
+			// schedule request /////////////////////////////////////////
 			else
 			{
-				bool andRes = true;
-				unsigned int andCount = 0;
-				bool orRes = false;
-				for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-				{
-					if ( ( *it )->isOr() )
-					{
-						orRes |= ( *it )->isOk();
-					}
-					else
-					{
-						andCount++;
-						andRes &= ( *it )->isOk();
-					}
-				}
-
-				bool triggersOk = ( ( andRes && ( andCount > 0 ) ) || orRes );
-				m_TriggerAccess.unlock();
-
-				if ( triggersOk )
-				{
-					triggersAreOk();
-				}
+				//m_Logger.addLine( std::string( getName() + " recvd inlet trigger but no update" ) );
 			}
 		}
 		else
 		{
-			m_EnabledAccess.unlock();
+			//m_Logger.addLine( std::string( getName() + " recvd inlet trigger while disabled" ) );
+		}
+
+		m_EnabledAccess.unlock();
+	}
+
+	void FunctionBlockStateManager::tryTriggerTime( TimeBasedTrigger &trigger )
+	{
+		m_EnabledAccess.lock();
+
+		if ( m_IsTriggeringEnabled )
+		{
+			m_TriggerAccess.lock();
+
+			bool triggersOk = true;
+			if ( !( m_SingleInletTriggers.empty() && m_GroupInletTriggers.empty() ) )
+			{
+				// check inlet triggers /////////////////////////////////////////
+				bool groupWeightResult = true;
+				bool singleWeightResult = false;
+
+				for ( InletTriggerIterator it = m_SingleInletTriggers.begin(); it != m_SingleInletTriggers.end(); ++it )	singleWeightResult |= ( *it )->isFulfilled();
+				for ( InletTriggerIterator it = m_GroupInletTriggers.begin(); it != m_GroupInletTriggers.end(); ++it )		groupWeightResult &= ( *it )->isFulfilled();
+				groupWeightResult &= !m_GroupInletTriggers.empty();
+
+				triggersOk = ( groupWeightResult || singleWeightResult );
+				// check inlet triggers /////////////////////////////////////////
+			}
+
+			// time need not be checked, as this is the time trigger anyway
+
+			m_TriggerAccess.unlock();
+
+			// schedule request /////////////////////////////////////////
+			if ( triggersOk )
+			{
+				m_IsTriggeringEnabled = false;
+				m_Logger.addLine( std::string( getName() + " time fulfilled trigger conditions" ) );
+
+				ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::updateFunctionBlock );
+				m_Threads.scheduleRequest( *req, m_Thread );
+
+				m_Logger.addLine( std::string( getName() + " scheduled update request" ) );
+			}
+			// schedule request /////////////////////////////////////////
+			else
+			{
+				//m_Logger.addLine( std::string( getName() + " recvd time trigger but no update" ) );
+			}
+		}
+		else
+		{
+			//m_Logger.addLine( std::string( getName() + " recvd time trigger while disabled" ) );
+		}
+
+		m_EnabledAccess.unlock();
+	}
+
+	void FunctionBlockStateManager::addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		if ( isOr )		m_SingleInletTriggers.insert( &trigger );
+		else			m_GroupInletTriggers.insert( &trigger );
+	}
+
+	void FunctionBlockStateManager::removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		if ( isOr )
+		{
+			InletTriggerIterator it = m_SingleInletTriggers.find( &trigger );
+			if ( it != m_SingleInletTriggers.end() )	m_SingleInletTriggers.erase( it );
+		}
+		else
+		{
+			InletTriggerIterator it = m_GroupInletTriggers.find( &trigger );
+			if ( it != m_GroupInletTriggers.end() )		m_GroupInletTriggers.erase( it );
 		}
 	}
 
-	void FunctionBlockStateManager::resetTriggers()
+	void FunctionBlockStateManager::addTrigger( TimeBasedTrigger &trigger )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
-		for ( InletTriggerIterator it = m_InletTriggers.begin(); it != m_InletTriggers.end(); ++it )
-		{
-			( *it )->reset();
-		}
-		if ( m_TimeTrigger != nullptr )
-		{
-			m_TimeTrigger->reset();
-		}
+		m_TimeTrigger = &trigger;
+	}
+
+	void FunctionBlockStateManager::removeTrigger( TimeBasedTrigger &trigger )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		m_TimeTrigger = nullptr;
+	}
+
+	void FunctionBlockStateManager::setTriggers( const bool fulfilled )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_TriggerAccess );
+		for ( InletTriggerIterator it = m_SingleInletTriggers.begin(); it != m_SingleInletTriggers.end(); ++it )	( *it )->set( fulfilled );
+		for ( InletTriggerIterator it = m_GroupInletTriggers.begin(); it != m_GroupInletTriggers.end(); ++it )		( *it )->set( fulfilled );
+		if ( m_TimeTrigger != nullptr )																				m_TimeTrigger->set( fulfilled );
 	}
 }

@@ -21,6 +21,7 @@
 #include "engine/_2RealAbstractStateManager.h"
 #include "helpers/_2RealSynchronizedBool.h"
 #include "helpers/_2RealPoco.h"
+#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
@@ -35,6 +36,19 @@ namespace _2Real
 	class FunctionBlockUpdatePolicy;
 	class AbstractFunctionBlockState;
 	class FunctionBlockIOManager;
+	class PooledThread;
+	class FunctionBlockStateManager;
+
+	typedef void ( FunctionBlockStateManager::*FunctionToExecute )();
+
+	struct ThreadExecRequest
+	{
+		ThreadExecRequest( FunctionBlockStateManager &mgr, FunctionToExecute func ) : block( mgr ), function( func ), event( nullptr ) {}
+
+		FunctionBlockStateManager	&block;
+		FunctionToExecute			function;
+		Poco::Event					*event;
+	};
 
 	class FunctionBlockStateManager : public AbstractStateManager
 	{
@@ -47,20 +61,24 @@ namespace _2Real
 		void setUp();
 		void start();
 		Poco::Event & stop();
-		void beginUpdate();
-		void finishUpdate();
 		void prepareForShutDown();
 		bool shutDown( const long timeout );
+		void singleStep();
+
 		void updateFunctionBlock();
+		void singleStepFunctionBlock();
+		void setupFunctionBlock();
+		void shutdownFunctionBlock();
+
 		bool isRunning() const;
 
 		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
-		void tryTriggerTime( AbstractTimeBasedTrigger &trigger );
+		void tryTriggerTime( TimeBasedTrigger &trigger );
 
-		void addTrigger( AbstractInletBasedTrigger &trigger );
-		void removeTrigger( AbstractInletBasedTrigger &trigger );
-		void addTrigger( AbstractTimeBasedTrigger &trigger );
-		void removeTrigger( AbstractTimeBasedTrigger &trigger );
+		void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );
+		void removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );
+		void addTrigger( TimeBasedTrigger &trigger );
+		void removeTrigger( TimeBasedTrigger &trigger );
 
 	private:
 
@@ -68,10 +86,7 @@ namespace _2Real
 		friend class FunctionBlock;
 
 		void handleStateChangeException( Exception &e );
-		void triggersAreOk();
-		void uberBlocksAreOk();
-		void singleStep();
-		void resetTriggers();
+		void setTriggers( const bool fulfilled );
 
 		ThreadPool							&m_Threads;
 		Logger								&m_Logger;
@@ -80,8 +95,9 @@ namespace _2Real
 		bundle::Block						*m_FunctionBlock;
 
 		mutable Poco::FastMutex				m_TriggerAccess;
-		InletTriggers						m_InletTriggers;
-		AbstractTimeBasedTrigger			*m_TimeTrigger;
+		InletTriggers						m_GroupInletTriggers;
+		InletTriggers						m_SingleInletTriggers;
+		TimeBasedTrigger					*m_TimeTrigger;
 
 		mutable Poco::FastMutex				m_StateAccess;
 		AbstractFunctionBlockState			*m_CurrentState;
@@ -89,13 +105,17 @@ namespace _2Real
 		mutable Poco::FastMutex				m_EnabledAccess;
 		bool								m_IsTriggeringEnabled;
 
-		SynchronizedBool					m_IsFlaggedForSetup;			// if set, block will carry out a setup after current update cycle
 		SynchronizedBool					m_IsFlaggedForHalting;			// if set, block will stop after current update cycle
 		SynchronizedBool					m_IsFlaggedForShutdown;			// if set, block will shut itself doen after current update cycle
 
 		Poco::Event							m_StopEvent;
 		Poco::Event							m_ShutdownEvent;
-		bool								m_WasStarted;
+
+		PooledThread						*m_Thread;
+
+		Poco::FastMutex						m_ExceptionAccess;
+		bool								m_HasException;
+		Exception							m_Exception;
 
 	};
 
