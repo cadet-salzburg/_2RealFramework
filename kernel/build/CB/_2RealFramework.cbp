@@ -84,6 +84,7 @@
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="`pkg-config --cflags eigen2`" />
 			<Add option="-Wno-reorder" />
 			<Add option="-D_UNIX" />
 			<Add option="-D_2REAL_UNIX" />
@@ -139,6 +140,7 @@
 		<Unit filename="../../src/datatypes/_2RealImage.h" />
 		<Unit filename="../../src/datatypes/_2RealImageT.cpp" />
 		<Unit filename="../../src/datatypes/_2RealImageT.h" />
+		<Unit filename="../../src/datatypes/_2RealMatrix.h" />
 		<Unit filename="../../src/datatypes/_2RealNumber.cpp" />
 		<Unit filename="../../src/datatypes/_2RealNumber.h" />
 		<Unit filename="../../src/datatypes/_2RealPoint.cpp" />

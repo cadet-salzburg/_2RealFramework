@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "poco/Path.h"
+#include "Poco/Path.h"
 
 #include <istream>
 #include <ostream>
