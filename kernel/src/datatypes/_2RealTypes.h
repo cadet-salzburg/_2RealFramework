@@ -368,6 +368,24 @@ namespace _2Real
 		}
 	};
 
+	template< >
+	struct traits< FaceDesc >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( FaceDesc ), Type::FACEDESC, "face description", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
+	struct traits< FaceCast >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( FaceCast ), Type::FACECAST, "face depth cast", TypeCategory::UNIQUE );
+		}
+	};
+
 	//template< typename T >
 	//struct traits
 	//{

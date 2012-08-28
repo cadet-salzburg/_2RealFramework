@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealBoundingBox.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealFace.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFilePath.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImageT.h" />

@@ -59,7 +59,9 @@ namespace _2Real
 			VECTOR4D,
 			SPACE2D,
 			SPACE3D,
-			SPACE4D
+			SPACE4D,
+			FACEDESC,
+			FACECAST
 		};
 
 		Type( Code const& code ) : m_Code( code ) {}

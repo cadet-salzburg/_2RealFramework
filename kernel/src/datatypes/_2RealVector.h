@@ -29,9 +29,15 @@
 
 namespace _2Real
 {
+#ifdef _2REAL_BLAS_DOUBLE_PRECISION
 	typedef Eigen::Vector2d		Vec2;
 	typedef Eigen::Vector3d		Vec3;
 	typedef Eigen::Vector4d		Vec4;
+#else
+	typedef Eigen::Vector2f		Vec2;
+	typedef Eigen::Vector3f		Vec3;
+	typedef Eigen::Vector4f		Vec4;
+#endif
 	//typedef std::vector< Vec2, Eigen::aligned_allocator< Vec2 > >	Vec2Vector;
 	//typedef std::vector< Vec3, Eigen::aligned_allocator< Vec3 > >	Vec3Vector;
 	//typedef std::vector< Vec4, Eigen::aligned_allocator< Vec4 > >	Vec4Vector;

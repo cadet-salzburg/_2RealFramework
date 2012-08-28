@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "datatypes/_2RealFace.h"
 #include "datatypes/_2RealImage.h"
 #include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealNumber.h"
