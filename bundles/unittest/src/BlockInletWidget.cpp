@@ -150,9 +150,9 @@ BlockInletWidget::BlockInletWidget(_2Real::app::InletHandle& inletHandle, QWidge
 				return;
 
 			// numeric list and vector types
-			m_ValueWidget = new QTextEdit();
-			dynamic_cast<QTextEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getDataAsString()));
-			connect(m_ValueWidget, SIGNAL(textChanged()), this, SLOT(setNumericVectorListValue()));
+			m_ValueWidget = new QLineEdit();
+			dynamic_cast<QLineEdit*>(m_ValueWidget)->setText(QString::fromStdString(m_InletHandle.getCurrentInput().getDataAsString()));
+			connect(m_ValueWidget, SIGNAL(returnPressed()), this, SLOT(setNumericVectorListValue()));
 			layout->addWidget( m_ValueWidget );
 		}
 
@@ -327,7 +327,7 @@ void BlockInletWidget::setNumericVectorListValue()
 {
 	try
 	{
-		QString str = dynamic_cast<QTextEdit*>(m_ValueWidget)->toPlainText();
+		QString str = dynamic_cast<QLineEdit*>(m_ValueWidget)->text();
 		QStringList list = str.split(",", QString::SkipEmptyParts);
 
 		if(m_InletHandle.getTypename() == "unsigned char vector")
