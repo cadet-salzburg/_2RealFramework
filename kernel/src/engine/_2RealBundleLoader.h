@@ -50,6 +50,7 @@ namespace _2Real
 		bundle::Block& createContext( std::string const& absPath ) const;
 		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName ) const;
 		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;
+		void removeContextBlock( std::string const& absPath );
 
 	private:
 

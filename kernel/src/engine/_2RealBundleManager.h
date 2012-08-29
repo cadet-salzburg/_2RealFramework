@@ -64,6 +64,7 @@ namespace _2Real
 		Bundle &										findBundleByName( std::string const& name ) const;
 		Bundle &										findBundleByPath( std::string const& libraryPath ) const;
 		void											destroyBundle( Bundle &bundle, const long timeout );
+		void											removeContextBlock( Bundle const& bundle );
 
 	private:
 

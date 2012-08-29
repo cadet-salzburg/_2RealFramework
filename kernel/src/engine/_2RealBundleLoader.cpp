@@ -46,7 +46,6 @@ namespace _2Real
 		for ( BundleInfoIterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); /**/ )
 		{
 			std::string t = it->second.metainfo->getBundleData().getName();
-			std::cout << t << std::endl;
 			delete it->second.metainfo;
 			if ( it->second.library != nullptr )
 			{
@@ -54,7 +53,6 @@ namespace _2Real
 				delete it->second.library;
 			}
 			it = m_LoadedBundles.erase( it );
-			std::cout << "! " << t << std::endl;
 		}
 	}
 
@@ -75,6 +73,20 @@ namespace _2Real
 			delete it->second.library;
 		}
 		it = m_LoadedBundles.erase( it );
+	}
+
+	void BundleLoader::removeContextBlock( std::string const& absPath )
+	{
+		BundleInfoIterator it = m_LoadedBundles.find( absPath );
+
+		if ( it == m_LoadedBundles.end() )
+		{
+			ostringstream msg;
+			msg << "shared library " << absPath << " not found";
+			throw NotFoundException( msg.str() );
+		}
+
+		it->second.metainfo->removeContextBlock();
 	}
 
 	bool BundleLoader::isLibraryLoaded( string const& path ) const

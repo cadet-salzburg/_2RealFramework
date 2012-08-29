@@ -126,7 +126,9 @@ namespace _2Real
 		{
 			m_IOManager->clearInletBuffers();
 			m_IOManager->updateInletData();
-			m_FunctionBlock->setup( m_IOManager->getHandle() );
+
+			bundle::BlockHandle &h = m_IOManager->getHandle();
+			m_FunctionBlock->setup( h );
 			m_Logger.addLine( std::string( getName() + " carried out setup" ) );
 		}
 		catch ( Exception &e )

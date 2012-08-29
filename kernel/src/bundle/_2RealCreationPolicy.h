@@ -31,6 +31,7 @@ namespace _2Real
 
 			virtual ~AbstractBlockCreator() {}
 			virtual Block & create( ContextBlock *const context ) = 0;
+			virtual void reset() {}
 
 		};
 
@@ -42,6 +43,7 @@ namespace _2Real
 
 			virtual ~CreationPolicy() {}
 			virtual Block & create( ContextBlock *const context ) = 0;
+			virtual void reset() {}
 
 		};
 
@@ -83,6 +85,8 @@ namespace _2Real
 				return *m_Obj;
 			}
 
+			void reset() { m_Obj = nullptr; }
+
 		private:
 
 			ContextBlockDerived			*m_Obj;
@@ -96,6 +100,7 @@ namespace _2Real
 		public:
 
 			Block & create( ContextBlock *const context ) { return m_Policy.create( context ); }
+			void reset() { m_Policy.reset(); }
 
 		private:
 

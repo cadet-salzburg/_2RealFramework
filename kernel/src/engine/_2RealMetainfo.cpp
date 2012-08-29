@@ -186,6 +186,11 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
+	void Metainfo::removeContextBlock()
+	{
+		m_ContextInfo.ctor->reset();
+	}
+
 	void Metainfo::cleanup()
 	{
 		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )

@@ -216,6 +216,11 @@ namespace _2Real
 		return m_BundleLoader.isLibraryLoaded( abs.toString() );
 	}
 
+	void BundleManager::removeContextBlock( Bundle const& bundle )
+	{
+		m_BundleLoader.removeContextBlock( bundle.getAbsPath() );
+	}
+
 	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName )
 	{
 		std::string absPath = bundle.getAbsPath();
@@ -223,6 +228,7 @@ namespace _2Real
 
 		if ( !bundle.hasContext() && m_BundleLoader.hasContext( absPath ) )
 		{
+
 			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( "contextblock" );
 			app::BlockInfo::BlockData contextData;
 			app::BlockInfo::ParameterInfos contextInletData;
@@ -252,7 +258,6 @@ namespace _2Real
 			bundle::Block & block = m_BundleLoader.createContext( absPath );
 			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( bundle, block, info );
 			bundle.setContextBlock( *contextBlock );
-
 			m_Engine.addBlock( *contextBlock );
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )

@@ -61,6 +61,7 @@ namespace _2Real
 	void Bundle::contextBlockRemoved()
 	{
 		m_ContextBlock = nullptr;
+		m_BundleManager.removeContextBlock( *this );
 	}
 
 	void Bundle::unload( const long timeout )
