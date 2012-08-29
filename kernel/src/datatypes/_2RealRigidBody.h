@@ -50,6 +50,7 @@ namespace _2Real
 		std::string const& getLabel() const		{ return m_Label; }
 		
 		void setId( int id )					{ m_Id = id; }
+		int getId() const						{ return m_Id; }
 		
 		void setParentId( int id )				{ m_ParentId = id; }
 		int getParentId() const					{ return m_ParentId; }
