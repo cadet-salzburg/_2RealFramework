@@ -72,7 +72,10 @@ namespace _2Real
 		void notify( TArg &arg ) const
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter ) ( *cbIter )->invoke( arg );
+			for ( CallbackIterator cbIter = m_Callbacks.begin(); cbIter != m_Callbacks.end(); ++cbIter )
+            {
+                ( *cbIter )->invoke( arg );
+            }
 		}
 
 	private:

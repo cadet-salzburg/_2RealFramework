@@ -31,6 +31,7 @@ void TUIOBlock::setup(BlockHandle& handle)
 		host = handle.getInletHandle("Host");
 		port = handle.getInletHandle("Port");
 		server = new TUIO::TuioServer(host.getReadableRef<string>().c_str(), port.getReadableRef<unsigned short>());
+		printf("TUIOBLOCK: Setup server OK. Host \"%s\", port %u\n", host.getReadableRef<string>().c_str(), port.getReadableRef<unsigned short>());
 	}
 	catch ( Exception &e )
 	{
@@ -41,6 +42,7 @@ void TUIOBlock::setup(BlockHandle& handle)
 
 void TUIOBlock::update()
 {
+    printf("UPDATE!\n");
 	try
 	{
 		//invalidate all known tracks

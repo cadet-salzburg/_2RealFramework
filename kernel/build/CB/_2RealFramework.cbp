@@ -5,6 +5,12 @@
 		<Option title="_2RealFramework" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option show_notes="1">
+			<notes>
+				<![CDATA[- get rid of eigen2 dep
+- get rid of Poco/Path.h dep]]>
+			</notes>
+		</Option>
 		<Build>
 			<Target title="Debug - Static Library">
 				<Option output="../../lib/_2RealFrameworkD" prefix_auto="1" extension_auto="1" />
