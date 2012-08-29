@@ -27,7 +27,7 @@ private:
 
 	typedef	std::vector<_2Real::Vec3>	VertexList;
 	typedef std::vector<_2Real::Vec3>	NormalList;
-	typedef std::vector<int>			IndexList;
+	typedef std::vector<unsigned int>	IndexList;
 	typedef std::vector<unsigned short>	DepthList;
 
 	unsigned int	m_frames;
@@ -42,9 +42,6 @@ private:
 	unsigned int	m_avrgResX;
 	unsigned int	m_avrgResY;
 
-	//VertexList		m_vertices;
-	//NormalList		m_normals;
-	//IndexList		m_indices;
 	DepthList		m_avrgArray;	// downsampled depth values
 
 	_2Real::Vec2	m_extrapolationMinSizeFace;
@@ -56,6 +53,8 @@ private:
 
 	_2Real::bundle::InletHandle		m_resXIn;
 	_2Real::bundle::InletHandle		m_resYIn;
+
+	_2Real::bundle::InletHandle		m_cutoffIn;
 
 	_2Real::bundle::InletHandle		m_fovVerIn;
 
@@ -95,6 +94,6 @@ private:
 
 	faceTracking::impl::TimeImpl			*m_timeImpl;
 
-	bool makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast );
+	bool makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, float depthCutoff );
 	void resizeCast();
 };

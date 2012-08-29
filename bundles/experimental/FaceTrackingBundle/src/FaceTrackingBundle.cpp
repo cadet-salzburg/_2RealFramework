@@ -34,8 +34,10 @@ void getBundleMetainfo( BundleMetainfo& info )
 		faceCast.addInlet< Image >( "image_in", initRGBImage );
 		faceCast.addInlet< Image >( "depth_in", initDepthImage );
 
-		faceCast.addInlet< unsigned int >( "res_x", 50 );
-		faceCast.addInlet< unsigned int >( "res_y", 50 );
+		faceCast.addInlet< unsigned int >( "res_x", 40 );
+		faceCast.addInlet< unsigned int >( "res_y", 40 );
+
+		faceCast.addInlet< double >( "depth_cutoff", 0.1 );
 
 		//default values taken from Asus Xtion
 		//faceCast.addInlet< double >( "fov_hor", 58.5907 );	//redundant, not used

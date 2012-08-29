@@ -163,7 +163,7 @@ namespace _2Real
 			unsigned int height,
 			const std::vector<Vec3> &vertices, 
 			const std::vector<Vec3> &normals, 
-			const std::vector<int> &indices ) :
+			const std::vector<unsigned int> &indices ) :
 			m_faceID( faceID ),
 			m_width( width ),
 			m_height( height ),
@@ -279,13 +279,13 @@ namespace _2Real
 				m_cntr = size;
 		}
 
-		std::vector<Vec3> &getVertices()				{	return m_vertices;	}
-		std::vector<Vec3> &getNormals() 				{	return m_normals;	}
-		std::vector<int> &getIndices()					{	return m_indices;	}
+		std::vector<Vec3> &getVertices()					{	return m_vertices;	}
+		std::vector<Vec3> &getNormals() 					{	return m_normals;	}
+		std::vector<unsigned int> &getIndices()				{	return m_indices;	}
 
-		const std::vector<Vec3> &getVertices() const	{	return m_vertices;	}
-		const std::vector<Vec3> &getNormals() const		{	return m_normals;	}
-		const std::vector<int> &getIndices() const		{	return m_indices;	}
+		const std::vector<Vec3> &getVertices() const		{	return m_vertices;	}
+		const std::vector<Vec3> &getNormals() const			{	return m_normals;	}
+		const std::vector<unsigned int> &getIndices() const	{	return m_indices;	}
 
 	private:
 		unsigned int	m_faceID;
@@ -295,8 +295,8 @@ namespace _2Real
 
 		unsigned int	m_cntr;
 
-		std::vector<Vec3>	m_vertices;
-		std::vector<Vec3>	m_normals;
-		std::vector<int>	m_indices;
+		std::vector<Vec3>			m_vertices;
+		std::vector<Vec3>			m_normals;
+		std::vector<unsigned int>	m_indices;
 	};
 }

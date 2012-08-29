@@ -38,7 +38,7 @@ inline float toDeg( float rad )
 	return rad * s;
 }
 
-unsigned short avrgArea( const unsigned short *depthData, int x0, int y0, int x1, int y1, size_t stride )
+unsigned short avrgArea( const unsigned short *depthData, int x0, int y0, int x1, int y1, size_t stride, unsigned short maxValue )
 {
 	unsigned int cntr = 0;
 	unsigned int sum = 0;
@@ -49,7 +49,7 @@ unsigned short avrgArea( const unsigned short *depthData, int x0, int y0, int x1
 	for( int j = y0; j <= y1; j++, ptr += advance )
 		for( int i = x0; i <= x1; i++, ptr++ )
 		{
-			if( *ptr )
+			if( *ptr && *ptr < maxValue )
 			{
 				sum += *ptr;
 				cntr++;
@@ -132,6 +132,7 @@ void FaceCastBlock::setup( BlockHandle &block )
 
 		m_resXIn = m_Block.getInletHandle( "res_x" );
 		m_resYIn = m_Block.getInletHandle( "res_y" );
+		m_cutoffIn = m_Block.getInletHandle( "depth_cutoff" );
 
 		m_fovVerIn = m_Block.getInletHandle( "fov_ver" );
 
@@ -289,7 +290,7 @@ void FaceCastBlock::update()
 
 						FaceCast &cast = faces.back();
 
-						if( !this->makeDepthCast( depthImg, itT->getFaceTrajectory().getLastRegion(), cast ) )
+						if( !this->makeDepthCast( depthImg, itT->getFaceTrajectory().getLastRegion(), cast, m_depthIn.getReadableRef<double>() ) )
 							faces.pop_back();
 					}
 
@@ -322,7 +323,7 @@ void FaceCastBlock::update()
 
 void FaceCastBlock::shutdown() {}
 
-bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast )
+bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, float depthCutoff )
 {
 	if( !m_avrgArray.size() )
 	{
@@ -366,6 +367,11 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 	unsigned short *avrgPtr = &( this->m_avrgArray[0] );
 
+	unsigned short minDepth = 0;
+	//find min depth within area
+	//for( int i = 0; i < 
+	unsigned short cutoff = minDepth - depthCutoff * 1000.0f;
+
 	float v = y0;
 	for( int j = 0; j < m_avrgResY; j++, v += stepSizeY )
 	{
@@ -379,7 +385,7 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 			v0 = clamp( v, 0.0f, depthImg.getHeight() - 1.0f );
 			v1 = clamp( v + stepSizeY, 0.0f, depthImg.getHeight() - 1.0f );
 
-			*( avrgPtr++ ) = avrgArea( (unsigned short*)depthImg.getData(), u0, v0, u1, v1, depthImg.getWidth() );
+			*( avrgPtr++ ) = avrgArea( (unsigned short*)depthImg.getData(), u0, v0, u1, v1, depthImg.getWidth(), cutoff );
 		}
 	}
 
@@ -468,9 +474,9 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 			if( sum && info.count > 2 )
 			{
-				( *vIt )[0] = x0 + ( i + 0.5f ) * stepSizeX;
-				( *vIt )[1] = y0 + ( j + 0.5f ) * stepSizeY;
-				( *vIt )[2] = (float)sum / info.count;
+				( *vIt )[0] = ( x0 + ( i + 0.5f ) * stepSizeX ) * 0.001;
+				( *vIt )[1] = ( y0 + ( j + 0.5f ) * stepSizeY ) * 0.001;
+				( *vIt )[2] = ( (float)sum / info.count ) * 0.001;
 
 				infoList.push_back( info );
 
@@ -481,11 +487,15 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 			}
 		}
 
+	std::fill( iIt, indices.end(), ~0x00 );
+
+	/*
 	if( vertexCntr )
 		inverseProjection( vertexCntr, &( vertices[0] ), &( vertices[0] ), depthImg.getWidth(), depthImg.getHeight(), f );
 
 	if( cornerIndexCntr )
 		inverseProjection( cornerIndexCntr, &( normalCorners[0] ), &( normalCorners[0] ), depthImg.getWidth(), depthImg.getHeight(), f );
+	*/
 
 	NormalList::iterator nIt = normals.begin();
 	for( std::list<NormalCornerInfo>::const_iterator it = infoList.begin(); it != infoList.end(); ++it, nIt++ )
