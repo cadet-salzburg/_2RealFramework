@@ -14,7 +14,7 @@
     <ClCompile Include="..\src\NatNetTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}</ProjectGuid>
+    <ProjectGuid>{9E3F9A3E-508C-4322-B408-1B7E50C7EF02}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFramework</RootNamespace>
   </PropertyGroup>

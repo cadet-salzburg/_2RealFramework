@@ -14,7 +14,7 @@
     <ClCompile Include="..\src\OpenBeaconTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}</ProjectGuid>
+    <ProjectGuid>{D3B6203B-1A14-4786-A5FE-6DF806F486F1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFramework</RootNamespace>
   </PropertyGroup>

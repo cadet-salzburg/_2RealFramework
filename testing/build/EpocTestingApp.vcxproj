@@ -14,7 +14,7 @@
     <ClCompile Include="..\src\EpocTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}</ProjectGuid>
+    <ProjectGuid>{8BCA80C8-5621-4158-A25E-96130E3AED99}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFramework</RootNamespace>
   </PropertyGroup>
