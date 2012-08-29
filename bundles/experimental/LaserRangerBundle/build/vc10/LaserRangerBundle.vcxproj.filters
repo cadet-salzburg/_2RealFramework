@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\LaserRangerDevice.cpp" />
+    <ClCompile Include="..\..\src\RangingImageBlock.cpp" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_delay.c">
+      <Filter>urg\system</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_ticks.c">
+      <Filter>urg\system</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\ring_buffer.c">
+      <Filter>urg\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_ctrl.c">
+      <Filter>urg\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_utils.c">
+      <Filter>urg\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\scip_handler.c">
+      <Filter>urg\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_ctrl.c">
+      <Filter>urg\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.c">
+      <Filter>urg\urg</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\LaserRangerDevice.h" />
+    <ClInclude Include="..\..\src\RangingImageBlock.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\detect_os.h">
+      <Filter>urg\system</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\math_utils.h">
+      <Filter>urg\system</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_delay.h">
+      <Filter>urg\system</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_ticks.h">
+      <Filter>urg\system</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\ring_buffer.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_ctrl.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_errno.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t_lin.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t_win.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_utils.h">
+      <Filter>urg\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\scip_handler.h">
+      <Filter>urg\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_ctrl.h">
+      <Filter>urg\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.h">
+      <Filter>urg\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_parameter_t.h">
+      <Filter>urg\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_t.h">
+      <Filter>urg\urg</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="urg">
+      <UniqueIdentifier>{1a9bf891-9c3a-4ff4-9892-cd6ff9adf731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="urg\connection">
+      <UniqueIdentifier>{adbcd6ae-f52a-42ee-b9cb-ec04cefa0135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="urg\system">
+      <UniqueIdentifier>{a265a5b5-02e0-4c2a-ba14-198b0afdb28b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="urg\urg">
+      <UniqueIdentifier>{a1cb81ca-0d14-4ce2-addc-d543447ff0e3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

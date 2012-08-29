@@ -13,59 +13,63 @@ LaserRangerDevice::LaserRangerDevice() : deviceStr(""), baudrate(0),  maxVals(0)
 
 LaserRangerDevice::~LaserRangerDevice()
 {
-    disconnect();
+	disconnect();
+}
+
+void LaserRangerDevice::shutdown()
+{
 }
 
 bool LaserRangerDevice::connect()
 {
-    if (connected)
-    {
-        return true;
-    }
+	if (connected)
+	{
+		return true;
+	}
 
-    int ret = urg_connect(&dev, deviceStr.c_str(), baudrate);
+	int ret = urg_connect(&dev, deviceStr.c_str(), baudrate);
 
-    if (ret < 0)
-    {
-        printf("LASERRANGERDEVICE %s: Unable to connect. Error: %s", deviceStr.c_str(), urg_error(&dev));
-    }
-    else
-    {
-        maxVals = urg_dataMax(&dev);
-        dataVals.resize(maxVals);
-        connected = true;
-    }
+	if (ret < 0)
+	{
+		printf("LASERRANGERDEVICE %s: Unable to connect. Error: %s", deviceStr.c_str(), urg_error(&dev));
+	}
+	else
+	{
+		maxVals = urg_dataMax(&dev);
+		dataVals.resize(maxVals);
+		connected = true;
+	}
 
-    return connected;
+	return connected;
 }
 
 bool LaserRangerDevice::disconnect()
 {
-    if (!connected)
-    {
-        return false;
-    }
+	if (!connected)
+	{
+		return false;
+	}
 
-    urg_disconnect(&dev);
-    connected = false;
-    printf("LASERRANGERDEVICE::disconnect(): Connection closed!\n");
-    return true;
+	urg_disconnect(&dev);
+	connected = false;
+	printf("LASERRANGERDEVICE::disconnect(): Connection closed!\n");
+	return true;
 }
 
 void LaserRangerDevice::setup(BlockHandle& handle)
 {
-    try
-    {
-        devInlet = handle.getInletHandle("Devicepath");
-        baudInlet = handle.getInletHandle("Baudrate");
-        rangeOutlet = handle.getOutletHandle("Rangeimage");
+	try
+	{
+		devInlet = handle.getInletHandle("Devicepath");
+		baudInlet = handle.getInletHandle("Baudrate");
+		rangeOutlet = handle.getOutletHandle("Rangeimage");
 
-        baudrate = baudInlet.getReadableRef<int>();
-        deviceStr = devInlet.getReadableRef<std::string>();
+		baudrate = baudInlet.getReadableRef<int>();
+		deviceStr = devInlet.getReadableRef<std::string>();
 
-        connect();
-    }
-    catch ( Exception &e )
+		connect();
+	}
+	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();
@@ -74,34 +78,34 @@ void LaserRangerDevice::setup(BlockHandle& handle)
 
 void LaserRangerDevice::update()
 {
-    try
-    {
-        rangeOutlet.discard();
-        dataVals.clear();
+	try
+	{
+		rangeOutlet.discard();
+		dataVals.clear();
 
-        if (!connected)
-        {
-            printf("LASERRANGERDEVICE::receive(): Not connected!\n");
-            return;
-        }
+		if (!connected)
+		{
+			printf("LASERRANGERDEVICE::receive(): Not connected!\n");
+			return;
+		}
 
-        if (urg_requestData(&dev, URG_GD, URG_FIRST, URG_LAST) < 0)
-        {
-            printf("LASERRANGERDEVICE::receive(): Unable to request data from the device! Disconnecting.\n");
-            disconnect();
-            return;
-        }
+		if (urg_requestData(&dev, URG_GD, URG_FIRST, URG_LAST) < 0)
+		{
+			printf("LASERRANGERDEVICE::receive(): Unable to request data from the device! Disconnecting.\n");
+			disconnect();
+			return;
+		}
 
-        int recv = urg_receiveData(&dev, &(dataVals[0]), maxVals);
-        if (recv < 0)
-        {
-            printf("LASERRANGERDEVICE::receive(): Unable to receive data from the device!\n");
-            return;
-        }
+		int recv = urg_receiveData(&dev, &(dataVals[0]), maxVals);
+		if (recv < 0)
+		{
+			printf("LASERRANGERDEVICE::receive(): Unable to receive data from the device!\n");
+			return;
+		}
 
-        rangeOutlet.getWriteableRef<std::vector<long>>() = dataVals;
-    }
-    catch ( Exception &e )
+		rangeOutlet.getWriteableRef<std::vector<long>>() = dataVals;
+	}
+	catch ( Exception &e )
 	{
 		cout << e.message() << endl;
 		e.rethrow();

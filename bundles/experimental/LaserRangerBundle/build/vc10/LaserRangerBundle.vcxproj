@@ -19,10 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\ring_buffer.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_ctrl.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_utils.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_delay.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_ticks.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\scip_handler.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_ctrl.c" />
+    <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.c" />
     <ClCompile Include="..\..\src\LaserRangerDevice.cpp" />
     <ClCompile Include="..\..\src\RangingImageBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\ring_buffer.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_ctrl.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_errno.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t_lin.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_t_win.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\serial_utils.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\detect_os.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\math_utils.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_delay.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\system\urg_ticks.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\scip_handler.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_ctrl.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_parameter_t.h" />
+    <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_t.h" />
     <ClInclude Include="..\..\src\LaserRangerDevice.h" />
     <ClInclude Include="..\..\src\RangingImageBlock.h" />
   </ItemGroup>
@@ -97,7 +121,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\urg</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\connection;$(_2REAL_DEPENDENCIES_DIR)\urg\system</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -115,14 +139,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\urg</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\connection;$(_2REAL_DEPENDENCIES_DIR)\urg\system</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\externalLibs\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>_2RealEngine_64d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -134,7 +158,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\urg</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\connection;$(_2REAL_DEPENDENCIES_DIR)\urg\system</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -156,7 +180,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\urg</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\urg\urg;$(_2REAL_DEPENDENCIES_DIR)\urg\connection;$(_2REAL_DEPENDENCIES_DIR)\urg\system</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -165,7 +189,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\externalLibs\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>_2RealEngine_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
