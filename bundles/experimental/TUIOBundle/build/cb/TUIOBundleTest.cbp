@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../bin/TUIOBundleTestD" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../bin/TUIOBundleTestD" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../../bin/" />
 				<Option object_output="../../obj/Debug/" />
 				<Option type="1" />
@@ -49,6 +49,10 @@
 			<Add library="../../../../../../../externalLibs/TUIO-1.4/libTUIO.a" />
 			<Add directory="../../../../../kernel/lib" />
 		</Linker>
+		<ExtraCommands>
+			<Add after="cp ../../src/startTUIOBundleTest.sh ../../../bin/" />
+			<Mode after="always" />
+		</ExtraCommands>
 		<Unit filename="../../src/test/TUIOBundleTestWindow.cpp" />
 		<Unit filename="../../src/test/TUIOBundleTestWindow.h" />
 		<Unit filename="../../src/test/main.cpp" />
