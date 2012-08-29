@@ -14,9 +14,9 @@
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{14F6BEDC-4D56-4187-B7FF-E19285793FEF}</ProjectGuid>
+    <ProjectGuid>{2EC09C68-DC0F-4FFB-81F6-4D922F893344}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
-    <ProjectName>OpenBeaconTest</ProjectName>
+    <ProjectName>NatNetTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
