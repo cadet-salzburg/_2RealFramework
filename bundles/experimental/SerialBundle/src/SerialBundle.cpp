@@ -31,13 +31,13 @@ void getBundleMetainfo( BundleMetainfo& info )
 		// SerialDeviceManager ContextBlock definition
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< SerialDeviceManager >();
 
-		// SerialInput Block information as well as In and Outlet definition
-		BlockMetainfo serial = info.exportBlock< SerialBlock, WithContext >( "SerialInBlock" );
+		// Serial Block information as well as In and Outlet definition
+		BlockMetainfo serial = info.exportBlock< SerialBlock, WithContext >( "SerialBlock" );
+		
 		serial.addInlet<std::string>( "SerialPort", "" );
 		serial.addInlet<unsigned int>( "BaudRate", 0 );
-
-		serial.addInlet<std::vector<unsigned char>>( "Read", std::vector<unsigned char>());
-		serial.addOutlet<std::vector<unsigned char>>( "Write" );
+		serial.addInlet<std::vector<unsigned char>>( "Write", std::vector<unsigned char>());
+		serial.addOutlet<std::vector<unsigned char>>( "Read" );
 
 		serial.setDescription( "Serial Port" );
 	}

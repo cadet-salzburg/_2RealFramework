@@ -244,6 +244,14 @@ bool SerialDeviceManager::bindSerialDevice( const std::string identifier, unsign
 	return false;
 }
 
+int SerialDeviceManager::hasDataPending( const std::string identifier )
+{
+	Poco::Mutex::ScopedLock lock( m_Mutex );
+
+	SerialDeviceManager::DeviceItem	*pDev = getDeviceItem(identifier);
+	return pDev->m_pSerial->available();
+}
+
 // Unbind a MidiIn device via an index
 void SerialDeviceManager::unbindSerialDevice( const std::string identifier )
 {

@@ -13,6 +13,9 @@ Class SerialDeviceManager
 Manages two lists, one Serial Input and one Serial Output list. The lists are initialized and updated automatically
 according to the Blocks that are requesting these lists. Furthermore, the manager offers methods to get and send
 Serial messages using a certain port.
+
+TODO right now there is only one mutex that is mutexing the whole class at more or less every operation. this means that this is a very bad thing for concurrent operations accessing the hardware.
+Read and write operations should be always possible asynchronously without mutexing one shared context.
 */
 class SerialDeviceManager : public _2Real::bundle::ContextBlock
 {
@@ -48,6 +51,10 @@ public:
 
 	// Sends the message to a serial device and returns the message as a std::vector
 	void							sendSerialMessage( const std::string identifier, std::vector<unsigned char> &message );
+
+	// if data is read to be read it returns the number of bytes pending
+	int							hasDataPending( const std::string identifier );
+
 
 private:
 	// A struct to define a simple DeviceItem, which is stored in lists

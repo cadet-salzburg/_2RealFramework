@@ -46,6 +46,7 @@ void ofSerial::enumerateWin32Ports(){
 		 DeviceInterfaceData.cbSize = sizeof(DeviceInterfaceData);
 		 if (!SetupDiEnumDeviceInfo(hDevInfo, i, &DeviceInterfaceData)){
 			 // SetupDiEnumDeviceInfo failed
+			 DWORD error =  GetLastError();
 			 break;
 		 }
 
@@ -203,7 +204,7 @@ void ofSerial::buildDeviceList(){
 	#ifdef TARGET_WIN32
 	//---------------------------------------------
 	enumerateWin32Ports();
-	std::cout << "ofSerial: listing devices (" << nPorts << " total)" << std::endl;
+//	std::cout << "ofSerial: listing devices (" << nPorts << " total)" << std::endl;
 	for (int i = 0; i < nPorts; i++){
 		//NOTE: we give the short port name for both as that is what the user should pass and the short name is more friendly
 		devices.push_back(ofSerialDeviceInfo(string(portNamesShort[i]), string(portNamesShort[i]), i));

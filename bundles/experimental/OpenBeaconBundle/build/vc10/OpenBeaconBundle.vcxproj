@@ -29,7 +29,7 @@
     <ClCompile Include="..\..\src\OpenBeaconBundle.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}</ProjectGuid>
+    <ProjectGuid>{6884C90A-A38B-4086-8DA1-EB786CC3C4CE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
     <ProjectName>OpenBeaconBundle</ProjectName>

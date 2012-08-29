@@ -26,11 +26,18 @@ private:
 	// The Block Inlets 
 	_2Real::bundle::InletHandle	m_SerialPortInlet;
 	_2Real::bundle::InletHandle m_iBaudRateInlet;
-	_2Real::bundle::InletHandle m_ReadIntel;
+	_2Real::bundle::InletHandle m_DataInIntel;
 
 	// The Block Outlets
-	_2Real::bundle::OutletHandle m_WriteOutlet;
+	_2Real::bundle::OutletHandle m_DataOutOutlet;
 	
 	// The SerialDevice Manager
 	SerialDeviceManager*		m_SerialDeviceManager;
+
+	// internal binding status
+	bool m_bBound;
+	bool m_bBindable;
+
+	// current active serial identifier (empty string means none)
+	std::string m_SerialIdentifer;
 };

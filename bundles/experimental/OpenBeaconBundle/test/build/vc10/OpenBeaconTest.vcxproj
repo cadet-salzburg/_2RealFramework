@@ -14,7 +14,7 @@
     <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CF4B25AE-BE71-4F19-A5EF-313D14905542}</ProjectGuid>
+    <ProjectGuid>{14F6BEDC-4D56-4187-B7FF-E19285793FEF}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
