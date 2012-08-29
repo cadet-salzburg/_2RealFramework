@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTestingApp", "..\..\..\
 		{6855388C-3AD5-416B-ADA1-EACAB038E6F6} = {6855388C-3AD5-416B-ADA1-EACAB038E6F6}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectOpenNIBundle", "..\..\..\KinectOpenNIBundle\build\vc10\KinectOpenNIBundle.vcxproj", "{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -59,6 +61,14 @@ Global
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Release|Win32.ActiveCfg = Release|Win32
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Release|Win32.Build.0 = Release|Win32
 		{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}.Release|x64.ActiveCfg = Release|Win32
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Debug|Win32.Build.0 = Debug|Win32
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Debug|x64.ActiveCfg = Debug|x64
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Debug|x64.Build.0 = Debug|x64
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Release|Win32.ActiveCfg = Release|Win32
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Release|Win32.Build.0 = Release|Win32
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Release|x64.ActiveCfg = Release|x64
+		{B50C17F7-3D65-4CA6-9BFB-EEB4E571F5BD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -102,14 +102,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_1_48_0);$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\core\include;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\imgproc\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\video\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\features2d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\flann\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\calib3d\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\objdetect\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\legacy\include\;$(_2REAL_DEPENDENCIES_DIR)\opencv\modules\highgui\include\;$(BOOST_DIR);$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(BOOST_1_48_0)\stage\lib;$(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(BOOST_DIR)\lib;$(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>_2RealFramework_32d.lib;opencv_core242d.lib;opencv_features2d242d.lib;opencv_flann242d.lib;opencv_highgui242d.lib;opencv_imgproc242d.lib;opencv_legacy242d.lib;opencv_objdetect242d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>

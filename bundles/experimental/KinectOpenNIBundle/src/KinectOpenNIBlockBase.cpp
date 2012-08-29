@@ -133,7 +133,7 @@ void KinectOpenNIBlockBase::update()
 
 void KinectOpenNIBlockBase::updateImageOutlet()
 {
-	m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
+	m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType ); 
 }
 
 void KinectOpenNIBlockBase::shutdown()

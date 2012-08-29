@@ -90,7 +90,6 @@ void OpenNIDeviceManager::rescanDeviceList()
 
 	try
 	{
-		printf("rescanning\n");
 		if(m_2RealKinect==nullptr)
 			return;						// no driver found
 		int numDevices = m_2RealKinect->getNumberOfDevices();
@@ -239,25 +238,49 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE && bIs16Bit)	// get 16bit depth image
 		{
 			unsigned short* pixels = m_2RealKinect->getImageDataDepth16Bit( deviceIdx ).get();
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+			m_DevicesInUse[deviceIdx].m_ImageDepth16Bit = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+			return m_DevicesInUse[deviceIdx].m_ImageDepth16Bit;
 		}
-		else if(generatorType == _2RealKinectWrapper::DEPTHIMAGE || generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		else if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
 		{
 			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+			m_DevicesInUse[deviceIdx].m_ImageDepth8Bit = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::A );
+			return m_DevicesInUse[deviceIdx].m_ImageDepth8Bit;
 		}
-		else
+		else if(generatorType == _2RealKinectWrapper::COLORIMAGE)
 		{
 			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
-			m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			m_DevicesInUse[deviceIdx].m_ImageRgb = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			return m_DevicesInUse[deviceIdx].m_ImageRgb;
+		}
+		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		{
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+			m_DevicesInUse[deviceIdx].m_ImageIr = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			return m_DevicesInUse[deviceIdx].m_ImageIr;
 		}
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
 		cout << e.what() << endl;
+		
+		if(generatorType == _2RealKinectWrapper::DEPTHIMAGE && bIs16Bit)	// get 16bit depth image
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageDepth16Bit;
+		}
+		else if(generatorType == _2RealKinectWrapper::DEPTHIMAGE)
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageDepth8Bit;
+		}
+		else if(generatorType == _2RealKinectWrapper::COLORIMAGE)
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageRgb;
+		}
+		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageIr;
+		}
 	}
-
-	return m_DevicesInUse[deviceIdx].m_Image;
 }
 
 int OpenNIDeviceManager::getWidth( const unsigned int deviceIdx, _2RealGenerator generatorType )
@@ -407,10 +430,12 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 
  void OpenNIDeviceManager::setMotorAngle(int deviceIdx, int angle)
  {
+	 Poco::Mutex::ScopedLock lock(m_Mutex);
 	 m_2RealKinect->setMotorAngle(deviceIdx, angle);
  }
 
  int OpenNIDeviceManager::getMotorAngle(int deviceIdx)
  {
+	 Poco::Mutex::ScopedLock lock(m_Mutex);
 	 return m_2RealKinect->getMotorAngle(deviceIdx);
  }

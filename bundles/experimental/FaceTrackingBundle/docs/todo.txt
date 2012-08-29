@@ -1,1 +1,4 @@
-test
+todo
+----
+
+* performance with mutexes: split up getImage and use different mutexes so the different gets don't lock each other out

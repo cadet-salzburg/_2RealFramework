@@ -44,7 +44,11 @@ private:
 		DeviceItem::DeviceItem()
 		{
 		}
-		_2Real::Image										m_Image;
+		_2Real::Image									    	m_ImageRgb;
+		_2Real::Image									    	m_ImageIr;
+		_2Real::Image									    	m_ImageDepth8Bit;
+		_2Real::Image									    	m_ImageDepth16Bit;
+		_2Real::Image									    	m_ImageUser;
 		std::map<_2RealKinectWrapper::_2RealGenerator,bool>		m_bGeneratorIsUsed;
 	};
 
