@@ -65,7 +65,7 @@ namespace _2Real
 	class FaceDesc
 	{
 	public:
-		FaceDesc() : 
+		FaceDesc() :
 		  m_faceID( ~0x00 )
 		{}
 
@@ -102,12 +102,12 @@ namespace _2Real
 
 		bool operator == ( const FaceDesc &rhs ) const
 		{
-			return ( 
+			return (
 				m_faceID == rhs.m_faceID &&
-				m_faceRegion == rhs.m_faceRegion && 
-				m_eyeLeft == rhs.m_eyeLeft && 
-				m_eyeRight == rhs.m_eyeRight && 
-				m_nose == rhs.m_nose && 
+				m_faceRegion == rhs.m_faceRegion &&
+				m_eyeLeft == rhs.m_eyeLeft &&
+				m_eyeRight == rhs.m_eyeRight &&
+				m_nose == rhs.m_nose &&
 				m_mouth == rhs.m_mouth );
 		}
 
@@ -161,8 +161,8 @@ namespace _2Real
 		FaceCast( unsigned int faceID,
 			unsigned int width,
 			unsigned int height,
-			const std::vector<Vec3> &vertices, 
-			const std::vector<Vec3> &normals, 
+			const std::vector<Vec3> &vertices,
+			const std::vector<Vec3> &normals,
 			const std::vector<unsigned int> &indices ) :
 			m_faceID( faceID ),
 			m_width( width ),
@@ -173,7 +173,7 @@ namespace _2Real
 			m_indices( indices )
 		{
 			if( m_vertices.size() != width * height ||
-				m_normals.size() != width * height || 
+				m_normals.size() != width * height ||
 				m_indices.size() != width * height )
 				throw std::runtime_error( "FaceCast: size of vectors not valid!" );
 		}
@@ -219,15 +219,15 @@ namespace _2Real
 			if( m_indices.size() != rhs.m_indices.size() )
 				return false;
 
-			for( int i = 0; i < m_vertices.size(); i++ )
+			for( unsigned int i = 0; i < m_vertices.size(); i++ )
 				if( m_vertices[i] != rhs.m_vertices[i] )
 					return false;
 
-			for( int i = 0; i < m_normals.size(); i++ )
+			for( unsigned int i = 0; i < m_normals.size(); i++ )
 				if( m_normals[i] != rhs.m_normals[i] )
 					return false;
 
-			for( int i = 0; i < m_indices.size(); i++ )
+			for( unsigned int i = 0; i < m_indices.size(); i++ )
 				if( m_indices[i] != rhs.m_indices[i] )
 					return false;
 

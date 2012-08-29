@@ -7,8 +7,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../lib/TUIOBundleD" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../obj/Debug/" />
+				<Option output="../../../lib/TUIOBundleD" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -16,8 +16,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../../lib/TUIOBundle" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../obj/Release/" />
+				<Option output="../../../lib/TUIOBundle" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../obj/Release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -34,16 +34,16 @@
 			<Add option="`pkg-config --cflags eigen2`" />
 			<Add option="-fPIC" />
 			<Add option="-D_UNIX" />
-			<Add directory="../../../../kernel/src" />
-			<Add directory="../../../../../../externalLibs/TUIO-1.4" />
-			<Add directory="../../../../../../externalLibs/TUIO-1.4/oscpack" />
+			<Add directory="../../../../../kernel/src" />
+			<Add directory="../../../../../../../externalLibs/TUIO-1.4" />
+			<Add directory="../../../../../../../externalLibs/TUIO-1.4/oscpack" />
 		</Compiler>
 		<Linker>
-			<Add library="../../../../../../externalLibs/TUIO-1.4/libTUIO.a" />
+			<Add library="../../../../../../../externalLibs/TUIO-1.4/libTUIO.a" />
 		</Linker>
-		<Unit filename="../src/TUIOBlock.cpp" />
-		<Unit filename="../src/TUIOBlock.h" />
-		<Unit filename="../src/TUIOBundle.cpp" />
+		<Unit filename="../../src/TUIOBlock.cpp" />
+		<Unit filename="../../src/TUIOBlock.h" />
+		<Unit filename="../../src/TUIOBundle.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

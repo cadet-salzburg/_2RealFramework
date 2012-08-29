@@ -25,6 +25,7 @@
 #include <ostream>
 #include <iostream>
 #include <string>
+#include <numeric>
 
 namespace _2Real
 {
