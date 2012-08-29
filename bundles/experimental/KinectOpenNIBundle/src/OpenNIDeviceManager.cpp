@@ -65,7 +65,11 @@ void OpenNIDeviceManager::shutdown()
 	try
 	{
 		if(m_2RealKinect != nullptr)
-		m_2RealKinect->shutdown();
+		{
+			m_2RealKinect->shutdown();
+			m_2RealKinect->destroyInstance();
+			m_2RealKinect = nullptr;
+		}
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
