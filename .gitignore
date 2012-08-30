@@ -1,0 +1,63 @@
+#SVN Files
+.svn
+
+#OS Junk
+[Tt]humbs.db
+.DS_Store
+
+#XCode Files
+*.swp
+*~.nib
+*/DerivedData/
+build/osx/DerivedData
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+*.user
+xcuserdata
+
+#Visual Studio files
+*.[Oo]bj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+ipch/
+obj/
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.opensdf
+*.sdf
+
+# Visual Studio profiler
+*.psess
+*.vsp
+
+
+[Bb]in
+Ankh.NoLoad
+
+#Common Files
+[Dd]ebug*/
+[Rr]elease*/
