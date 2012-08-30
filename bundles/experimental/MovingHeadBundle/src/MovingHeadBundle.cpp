@@ -15,7 +15,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-// Defines the MovingHead Bundle which consists of two Blocks, one MovingHeadIn and one MovingHeadOut Block
+// Defines the MovingHead Bundle which consists of one MovingHead Block
 void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
