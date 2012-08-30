@@ -2,10 +2,11 @@ License
 -------
 
 	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
+	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology & Ars Electronica Futurelab
 
 	http://www.cadet.at
-	http://multimediatechnology.at/
+	http://multimediatechnology.at
+	http://research.aec.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
