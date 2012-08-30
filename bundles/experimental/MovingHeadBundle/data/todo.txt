@@ -1,0 +1,6 @@
+Copy these two folders into your arduino installation folder
+Overwrite everything when asked, this installation includes a hack:
+
+	The function SIGNAL(USART1_RX_vect) needs to be commented out in HardwareSerial.cpp (line 127 to line 131) in [Arduino Install Folder]\hardware\arduino\cores\arduino in order to run the ax12 library.
+	
+	Original HardwareSerial.cpp from arduino 1.0.1 is preserved as orig_HardwareSerial.cpp
