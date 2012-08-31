@@ -30,4 +30,5 @@
 #include "datatypes/_2RealSkeleton.h"
 #include "datatypes/_2RealRigidBody.h"
 #include "datatypes/_2RealQuaternion.h"
+#include "datatypes/_2RealAudioBuffer.h"
 #include "helpers/_2RealException.h"
