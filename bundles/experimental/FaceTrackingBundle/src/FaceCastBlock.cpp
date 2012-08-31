@@ -1,19 +1,17 @@
 #include "_2RealDatatypes.h"
+
 #include "FaceCastBlock.h"
-#include "FaceTrackingImpl.h"
+
+#include "FaceTracking.h"
+#include "FaceDetection.h"
+#include "StopWatch.h"
 
 #include <iostream>
 #include <vector>
 
-//TODO
-#include "bench.h"
-//-----
-
 using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
-
-using namespace faceTracking::impl;
 
 template<typename T>
 inline const T clamp( const T &value, const T &minValue, const T &maxValue )
@@ -21,20 +19,20 @@ inline const T clamp( const T &value, const T &minValue, const T &maxValue )
 	return std::max( minValue, std::min( value, maxValue ) );
 }
 
-inline float PI()
+inline double PI()
 {
 	__asm fldpi;	
 }
 
-inline float toRad( float deg )
+inline double toRad( double deg )
 {
-	static float s = PI() / 180.0f;
+	static double s = PI() / 180.0;
 	return deg * s;
 }
 
-inline float toDeg( float rad )
+inline double toDeg( double rad )
 {
-	static float s = 180.0f / PI();
+	static double s = 180.0 / PI();
 	return rad * s;
 }
 
@@ -59,19 +57,19 @@ unsigned short avrgArea( const unsigned short *depthData, int x0, int y0, int x1
 	return ( cntr ? (unsigned short)( sum / cntr ) : 0 );
 }
 
-void inverseProjection( size_t size, const Vec3 *in, Vec3 *out, unsigned int width, unsigned int height, float f )
+void inverseProjection( size_t size, const Vec3 *in, Vec3 *out, unsigned int width, unsigned int height, double f )
 {
-	float s = 1.0f / f;
-	float a = - ( width * 0.5f ) * s;
-	float b = - ( height * 0.5f ) * s;
+	double s = 1.0 / f;
+	double a = - ( width * 0.5 ) * s;
+	double b = - ( height * 0.5 ) * s;
 
 	while( size-- )
 	{
-		float c = ( *in )[2] * s;
+		double c = ( *in )[2] * s;
 
-		( *out )[0] = ( ( *in )[0] * s + a ) * ( *in )[2];
-		( *out )[1] = -( ( *in )[1] * s + b ) * ( *in )[2];
-		( *out )[2] = ( *in )[2];
+		( *out )[0] = (Vec2::Scalar)( -( ( *in )[0] * s + a ) * ( *in )[2] );
+		( *out )[1] = (Vec2::Scalar)( -( ( *in )[1] * s + b ) * ( *in )[2] );
+		( *out )[2] = (Vec2::Scalar)( ( *in )[2] );
 
 		in++;
 		out++;
@@ -88,30 +86,30 @@ FaceCastBlock::FaceCastBlock() :
 	m_resY( 0 ),
 	m_avrgResX( 1 ),
 	m_avrgResY( 1 ),
-	m_extrapolationMinSizeFace( 0.0f, 0.0f ),
-	m_cvImpl( new CVImpl() ),
-	m_timeImpl( new TimeImpl() ),
-	m_faceTrackingImpl( new FaceTrackingImpl( 4 ) )
+	m_extrapolationMinSizeFace( 0.0, 0.0 ),
+	m_faceDetection( new FaceDetection() ),
+	m_stopWatch( new StopWatch() ),
+	m_faceTracking( new FaceTracking( 4 ) )
 {}
 
 FaceCastBlock::~FaceCastBlock()
 {
-	if( m_cvImpl )
+	if( m_faceDetection )
 	{
-		delete m_cvImpl;
-		m_cvImpl = NULL;
+		delete m_faceDetection;
+		m_faceDetection = NULL;
 	}
 
-	if( m_faceTrackingImpl )
+	if( m_faceTracking )
 	{
-		delete m_faceTrackingImpl;
-		m_faceTrackingImpl = NULL;
+		delete m_faceTracking;
+		m_faceTracking = NULL;
 	}
 
-	if( m_timeImpl )
+	if( m_stopWatch )
 	{
-		delete m_timeImpl;
-		m_timeImpl = NULL;
+		delete m_stopWatch;
+		m_stopWatch = NULL;
 	}
 }
 
@@ -119,8 +117,6 @@ void FaceCastBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		std::cout << "SETUP facefeaturesblock" << std::endl;
-
 		m_frames = 0;
 		m_timeAccu = 0.0;
 		m_timeOverall = 0.0;
@@ -132,6 +128,10 @@ void FaceCastBlock::setup( BlockHandle &block )
 
 		m_resXIn = m_Block.getInletHandle( "res_x" );
 		m_resYIn = m_Block.getInletHandle( "res_y" );
+
+		m_faceScaleXIn = m_Block.getInletHandle( "face_scale_x" );
+		m_faceScaleYIn = m_Block.getInletHandle( "face_scale_y" );
+
 		m_cutoffIn = m_Block.getInletHandle( "depth_cutoff" );
 
 		m_fovVerIn = m_Block.getInletHandle( "fov_ver" );
@@ -165,31 +165,31 @@ void FaceCastBlock::setup( BlockHandle &block )
 		m_coherenceThresholdIn = m_Block.getInletHandle( "coherence_threshold" );
 		m_discardThresholdIn = m_Block.getInletHandle( "discard_threshold" );
 
-		m_extrapolationMinSizeFace = Vec2( 0.0f, 0.0f );
+		m_extrapolationMinSizeFace = Vec2( 0.0, 0.0 );
 
 		m_faceOut = m_Block.getOutletHandle( "face_out" );
 
 		const Image &image = m_imageIn.getReadableRef< Image >();
 
-		m_cvImpl->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
+		m_faceDetection->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
 
-		m_cvImpl->minNeighboursFace( m_haarMinNeighboursFaceIn.getReadableRef< unsigned int >() );
+		m_faceDetection->minNeighboursFace( m_haarMinNeighboursFaceIn.getReadableRef< unsigned int >() );
 
-		m_cvImpl->minSizeFace( m_haarMinSizeFaceIn.getReadableRef< Vec2 >() );
+		m_faceDetection->minSizeFace( m_haarMinSizeFaceIn.getReadableRef< Vec2 >() );
 
-		m_cvImpl->doCannyPruning( m_haarDoCannyPruningIn.getReadableRef< bool >() );
-		m_cvImpl->haarScaleFactor( m_haarScaleFactorIn.getReadableRef< double >() );
+		m_faceDetection->doCannyPruning( m_haarDoCannyPruningIn.getReadableRef< bool >() );
+		m_faceDetection->haarScaleFactor( m_haarScaleFactorIn.getReadableRef< double >() );
 
-		m_cvImpl->equalizeHist( m_equalizeHistogramIn.getReadableRef< bool >() );
+		m_faceDetection->equalizeHist( m_equalizeHistogramIn.getReadableRef< bool >() );
 
 		this->resizeCast();
 
 		m_fov = toRad( m_fovVerIn.getReadableRef<double>() );
 
-		if( !m_cvImpl->createImages( image ) )
+		if( !m_faceDetection->createImages( image ) )
 			std::cerr << "warning: creating initial cv images failed" << std::endl;
 
-		m_timeImpl->restart();
+		m_stopWatch->restart();
 	}
 	catch( Exception & e )
 	{
@@ -208,27 +208,25 @@ void FaceCastBlock::update()
 {
 	try
 	{
-		Bench bench( "update facecast block" );
-
 		const Image &image = m_imageIn.getReadableRef< Image >();
 
 		if( m_haarDetectionDownscaleIn.hasChanged() )
-			m_cvImpl->greyImgSmlScale( m_haarDetectionDownscaleIn.getReadableRef< double >() );
+			m_faceDetection->greyImgSmlScale( m_haarDetectionDownscaleIn.getReadableRef< double >() );
 
 		if( m_cascFileFaceIn.hasChanged() )
-			m_cvImpl->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
+			m_faceDetection->loadFaceCascade( m_cascFileFaceIn.getReadableRef< std::string >() );
 
 		if( m_haarMinNeighboursFaceIn.hasChanged() )
-			m_cvImpl->minNeighboursFace( m_haarMinNeighboursFaceIn.getReadableRef< unsigned int >() );
+			m_faceDetection->minNeighboursFace( m_haarMinNeighboursFaceIn.getReadableRef< unsigned int >() );
 
 		if( m_haarMinSizeFaceIn.hasChanged() )
-			m_cvImpl->minSizeFace( m_haarMinSizeFaceIn.getReadableRef< Vec2 >() );
+			m_faceDetection->minSizeFace( m_haarMinSizeFaceIn.getReadableRef< Vec2 >() );
 
 		if( m_equalizeHistogramIn.hasChanged() )
-			m_cvImpl->equalizeHist( m_equalizeHistogramIn.getReadableRef< bool >() );
+			m_faceDetection->equalizeHist( m_equalizeHistogramIn.getReadableRef< bool >() );
 
 		if( m_haarScaleFactorIn.hasChanged() )
-			m_cvImpl->haarScaleFactor( m_haarScaleFactorIn.getReadableRef< double >() );
+			m_faceDetection->haarScaleFactor( m_haarScaleFactorIn.getReadableRef< double >() );
 
 		if( m_resXIn.hasChanged() || m_resYIn.hasChanged() )
 			this->resizeCast();
@@ -238,7 +236,7 @@ void FaceCastBlock::update()
 
 		if( m_imageIn.hasUpdated() )
 		{
-			double dt = m_timeImpl->milliSeconds();
+			double dt = m_stopWatch->milliSeconds();
 
 			m_timeAccu += dt;
 			m_timeOverall += dt;
@@ -246,17 +244,17 @@ void FaceCastBlock::update()
 			if( m_timeAccu > 1.0 )
 			{
 				m_frames = 0;
-				m_timeAccu = 0.0f;
+				m_timeAccu = 0.0;
 			}
 
-			m_timeImpl->restart();
+			m_stopWatch->restart();
 
 			m_frames++;
 
 			FeatureVector faces;
 
-			m_cvImpl->detectFaces( image, faces );
-			m_faceTrackingImpl->track( faces,
+			m_faceDetection->detectFaces( image, faces );
+			m_faceTracking->track( faces,
 				m_affinityWeightPosIn.getReadableRef<double>(), 
 				m_affinityWeightSizeIn.getReadableRef<double>(),
 				m_affinityThresholdIn.getReadableRef<double>(),
@@ -273,10 +271,8 @@ void FaceCastBlock::update()
 				m_extrapolationMinSizeFace,
 				m_timeOverall );
 
-			if( m_faceTrackingImpl->trackingInfoList().size() )
+			if( m_faceTracking->trackingInfoList().size() )
 			{
-				std::cout << "tracking " << m_faceTrackingImpl->trackingInfoList().size() << " faces" << std::endl;
-
 				const Image &depthImg = m_depthIn.getReadableRef<Image>();
 
 				if( depthImg.getData() )
@@ -284,21 +280,26 @@ void FaceCastBlock::update()
 					std::vector< FaceCast > &faces = m_faceOut.getWriteableRef< std::vector< FaceCast > >();
 					faces.clear();
 
-					for( TrackingInfoList::iterator itT = m_faceTrackingImpl->trackingInfoList().begin(); itT != m_faceTrackingImpl->trackingInfoList().end(); ++itT )
+					for( TrackingInfoList::iterator itT = m_faceTracking->trackingInfoList().begin(); itT != m_faceTracking->trackingInfoList().end(); ++itT )
 					{
-						faces.push_back( FaceCast( itT->getUserID(), m_resXIn.getReadableRef<unsigned int>(), m_resYIn.getReadableRef<unsigned int>() ) );
+						Space2D faceRegion = itT->getFaceTrajectory().getLastRegion();
+						Vec2 center = ( faceRegion.getP0() + faceRegion.getP1() ) * 0.5;
+						Vec2 size = faceRegion.getP1() - faceRegion.getP0();
 
+						size[0] *= (Vec2::Scalar)( m_faceScaleXIn.getReadableRef<double>() );
+						size[1] *= (Vec2::Scalar)( m_faceScaleYIn.getReadableRef<double>() );
+
+						faceRegion.set( center - size * 0.5, center + size * 0.5 );
+
+						faces.push_back( FaceCast( itT->getUserID(), m_resXIn.getReadableRef<unsigned int>(), m_resYIn.getReadableRef<unsigned int>(), faceRegion ) );
 						FaceCast &cast = faces.back();
 
-						if( !this->makeDepthCast( depthImg, itT->getFaceTrajectory().getLastRegion(), cast, m_depthIn.getReadableRef<double>() ) )
+						if( !this->makeDepthCast( depthImg, faceRegion, cast, m_cutoffIn.getReadableRef<double>() ) )
 							faces.pop_back();
 					}
-
-					std::cout << "sending " << faces.size() << " faces" << std::endl;
 				}
 				else
 				{
-					std::cout << "no depth data available" << std::endl;
 					m_faceOut.discard();
 				}
 			}
@@ -323,69 +324,69 @@ void FaceCastBlock::update()
 
 void FaceCastBlock::shutdown() {}
 
-bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, float depthCutoff )
+bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, double depthCutoff )
 {
 	if( !m_avrgArray.size() )
-	{
-		std::cerr << "average array is of size 0" << std::endl;
-		return false;
-	}
+		throw std::runtime_error( "average array is of size 0" );
 
 	if( !depthImg.getData() || ( depthImg.getWidth() * depthImg.getHeight() ) == 0 )
+		throw std::runtime_error( "depth image is invalid" );
+
+	double f = depthImg.getHeight() / ( 2.0 * tan( m_fov * 0.5 ) );
+
+	double x0 = area.getP0()[0] * depthImg.getWidth();
+	double y0 = area.getP0()[1] * depthImg.getHeight();
+
+	double width = ( area.getP1()[0] - area.getP0()[0]  );
+	double height = ( area.getP1()[1] - area.getP0()[1] );
+
+	if( width <= std::numeric_limits<double>::epsilon() || height < std::numeric_limits<double>::epsilon() )
 	{
-		std::cerr << "depth image is invalid" << std::endl;
+		std::cerr << "FaceCastBlock: face area invalid" << std::endl;
 		return false;
 	}
 
-	float f = depthImg.getWidth() / ( 2.0 * tan( m_fov * 0.5 ) );
+	double stepSizeX = width * depthImg.getWidth() / m_avrgResX;
+	double stepSizeY = height * depthImg.getHeight() / m_avrgResY;
 
-	float x0 = area.getP0()[0] * depthImg.getWidth();
-	float y0 = area.getP0()[1] * depthImg.getHeight();
-
-	float width = ( area.getP1()[0] - area.getP0()[0]  );
-	float height = ( area.getP1()[1] - area.getP0()[1] );
-
-	if( width <= std::numeric_limits<float>::epsilon() || height < std::numeric_limits<float>::epsilon() )
-	{
-		std::cerr << "area not valid" << std::endl;
-		return false;
-	}
-
-	float stepSizeX = width * depthImg.getWidth() / m_avrgResX;
-	float stepSizeY = height * depthImg.getHeight() / m_avrgResY;
-
-	if( stepSizeX < 1.0f || stepSizeY < 1.0f )
+	if( stepSizeX < 1.0 || stepSizeY < 1.0 )
 	{
 		std::cerr << "face rect too small for downsampling" << std::endl;
 		return false;
 	}
 
-	float u0 = 0.0f;
-	float u1 = 0.0f;
-	float v0 = 0.0f;
-	float v1 = 0.0f;
+	double u0 = clamp( x0, 0.0, depthImg.getWidth() - 1.0 );
+	double u1 = clamp( x0 + width * depthImg.getWidth(), 0.0, depthImg.getWidth() - 1.0 );
+	double v0 = clamp( y0, 0.0, depthImg.getHeight() - 1.0 );
+	double v1 = clamp( y0 + height * depthImg.getHeight(), 0.0, depthImg.getHeight() - 1.0 );
 
-	unsigned short *avrgPtr = &( this->m_avrgArray[0] );
+	unsigned short *avrgPtr = &( m_avrgArray[0] );
 
-	unsigned short minDepth = 0;
-	//find min depth within area
-	//for( int i = 0; i < 
-	unsigned short cutoff = minDepth - depthCutoff * 1000.0f;
+	unsigned short minDepth = ~0x00;
+	for( int j = (int)v0; j < (int)v1; j++ )
+	{
+		unsigned short *depthPtr = (unsigned short*)depthImg.getData() + j * depthImg.getWidth() + (int)u0;
+		for( int i = (int)u0; i < (int)u1; i++, depthPtr++ )
+			if( *depthPtr && minDepth > *depthPtr )
+				minDepth = *depthPtr;
+	}
 
-	float v = y0;
+	unsigned short cutoff = (unsigned short)( minDepth + depthCutoff * 1000.0 );
+
+	double v = y0;
 	for( int j = 0; j < m_avrgResY; j++, v += stepSizeY )
 	{
-		float u = x0;
+		double u = x0;
 
 		for( int i = 0; i < m_avrgResX; i++, u += stepSizeX )
 		{
-			u0 = clamp( u, 0.0f, depthImg.getWidth() - 1.0f );
-			u1 = clamp( u + stepSizeX, 0.0f, depthImg.getWidth() - 1.0f );
+			u0 = clamp( u, 0.0, depthImg.getWidth() - 1.0 );
+			u1 = clamp( u + stepSizeX, 0.0, depthImg.getWidth() - 1.0 );
 
-			v0 = clamp( v, 0.0f, depthImg.getHeight() - 1.0f );
-			v1 = clamp( v + stepSizeY, 0.0f, depthImg.getHeight() - 1.0f );
+			v0 = clamp( v, 0.0, depthImg.getHeight() - 1.0 );
+			v1 = clamp( v + stepSizeY, 0.0, depthImg.getHeight() - 1.0 );
 
-			*( avrgPtr++ ) = avrgArea( (unsigned short*)depthImg.getData(), u0, v0, u1, v1, depthImg.getWidth(), cutoff );
+			*( avrgPtr++ ) = avrgArea( (unsigned short*)depthImg.getData(), (int)u0, (int)v0, (int)u1, (int)v1, depthImg.getWidth(), cutoff );
 		}
 	}
 
@@ -430,9 +431,9 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 				info.count++;
 				info.indices[0] = cornerIndexCntr++;
-				( *cIt )[0] = x0 + i * stepSizeX;
-				( *cIt )[1] = y0 + j * stepSizeY;
-				( *cIt )[2] = *avrgPtr;
+				( *cIt )[0] = (Vec3::Scalar)( x0 + i * stepSizeX );
+				( *cIt )[1] = (Vec3::Scalar)( y0 + j * stepSizeY );
+				( *cIt )[2] = (Vec3::Scalar)( *avrgPtr );
 				cIt++;
 			}
 
@@ -442,9 +443,9 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 				info.count++;
 				info.indices[1] = cornerIndexCntr++;
-				( *cIt )[0] = x0 + ( i + 1.0f ) * stepSizeX;
-				( *cIt )[1] = y0 + j * stepSizeY;
-				( *cIt )[2] = *( avrgPtr + 1 );
+				( *cIt )[0] = (Vec3::Scalar)( x0 + ( i + 1.0 ) * stepSizeX );
+				( *cIt )[1] = (Vec3::Scalar)( y0 + j * stepSizeY );
+				( *cIt )[2] = (Vec3::Scalar)( *( avrgPtr + 1 ) );
 				cIt++;
 			}
 
@@ -454,9 +455,9 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 				info.count++;
 				info.indices[2] = cornerIndexCntr++;
-				( *cIt )[0] = x0 + i * stepSizeX;
-				( *cIt )[1] = y0 + ( j + 1.0f ) * stepSizeY;
-				( *cIt )[2] = *( avrgPtr + m_avrgResX );
+				( *cIt )[0] = (Vec3::Scalar)( x0 + i * stepSizeX );
+				( *cIt )[1] = (Vec3::Scalar)( y0 + ( j + 1.0 ) * stepSizeY );
+				( *cIt )[2] = (Vec3::Scalar)( *( avrgPtr + m_avrgResX ) );
 				cIt++;
 			}
 
@@ -466,17 +467,17 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 				info.count++;
 				info.indices[3] = cornerIndexCntr++;
-				( *cIt )[0] = x0 + ( i + 1.0f ) * stepSizeX;
-				( *cIt )[1] = y0 + ( j + 1.0f ) * stepSizeY;
-				( *cIt )[2] = *( avrgPtr + m_avrgResX + 1 );
+				( *cIt )[0] = (Vec3::Scalar)( x0 + ( i + 1.0 ) * stepSizeX );
+				( *cIt )[1] = (Vec3::Scalar)( y0 + ( j + 1.0 ) * stepSizeY );
+				( *cIt )[2] = (Vec3::Scalar)( *( avrgPtr + m_avrgResX + 1 ) );
 				cIt++;
 			}
 
 			if( sum && info.count > 2 )
 			{
-				( *vIt )[0] = ( x0 + ( i + 0.5f ) * stepSizeX ) * 0.001;
-				( *vIt )[1] = ( y0 + ( j + 0.5f ) * stepSizeY ) * 0.001;
-				( *vIt )[2] = ( (float)sum / info.count ) * 0.001;
+				( *vIt )[0] = (Vec3::Scalar)( x0 + ( i + 0.5 ) * stepSizeX );
+				( *vIt )[1] = (Vec3::Scalar)( y0 + ( j + 0.5 ) * stepSizeY );
+				( *vIt )[2] = (Vec3::Scalar)( (double)sum / info.count );
 
 				infoList.push_back( info );
 
@@ -489,19 +490,23 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 
 	std::fill( iIt, indices.end(), ~0x00 );
 
-	/*
 	if( vertexCntr )
+	{
 		inverseProjection( vertexCntr, &( vertices[0] ), &( vertices[0] ), depthImg.getWidth(), depthImg.getHeight(), f );
+
+		vIt = vertices.begin();
+		for( int i = 0; i < vertexCntr; i++, ++vIt )
+			*( vIt ) *= (Vec3::Scalar)( 0.001 );
+	}
 
 	if( cornerIndexCntr )
 		inverseProjection( cornerIndexCntr, &( normalCorners[0] ), &( normalCorners[0] ), depthImg.getWidth(), depthImg.getHeight(), f );
-	*/
 
 	NormalList::iterator nIt = normals.begin();
 	for( std::list<NormalCornerInfo>::const_iterator it = infoList.begin(); it != infoList.end(); ++it, nIt++ )
 	{
-		Vec3 d0( 0.0f, 0.0f, 0.0f );
-		Vec3 d1( 0.0f, 0.0f, 0.0f );
+		Vec3 d0( 0.0, 0.0, 0.0 );
+		Vec3 d1( 0.0, 0.0, 0.0 );
 
 		if( it->count == 3 )
 		{
@@ -553,7 +558,7 @@ bool FaceCastBlock::makeDepthCast( const _2Real::Image &depthImg, const _2Real::
 			d1 = Vec3( c1[0] - c2[0], c1[1] - c2[1], c1[2] - c2[2] );
 		}
 
-		*nIt = d1.cross( d0 ).normalized();
+		*nIt = d0.cross( d1 ).normalized();
 	}
 
 	return true;

@@ -2,15 +2,9 @@
 
 #include "_2RealBlock.h"
 
-namespace faceTracking
-{
-namespace impl
-{
-	class CVImpl;
-	class TimeImpl;
-	class FaceTrackingImpl;
-}
-}
+class StopWatch;
+class FaceTracking;
+class FaceDetection;
 
 class FaceCastBlock : public _2Real::bundle::Block
 {
@@ -54,6 +48,9 @@ private:
 	_2Real::bundle::InletHandle		m_resXIn;
 	_2Real::bundle::InletHandle		m_resYIn;
 
+	_2Real::bundle::InletHandle		m_faceScaleXIn;
+	_2Real::bundle::InletHandle		m_faceScaleYIn;
+
 	_2Real::bundle::InletHandle		m_cutoffIn;
 
 	_2Real::bundle::InletHandle		m_fovVerIn;
@@ -89,11 +86,11 @@ private:
 
 	_2Real::bundle::OutletHandle	m_faceOut;
 
-	faceTracking::impl::CVImpl				*m_cvImpl;
-	faceTracking::impl::FaceTrackingImpl	*m_faceTrackingImpl;
+	FaceDetection		*m_faceDetection;
+	FaceTracking		*m_faceTracking;
 
-	faceTracking::impl::TimeImpl			*m_timeImpl;
+	StopWatch			*m_stopWatch;
 
-	bool makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, float depthCutoff );
+	bool makeDepthCast( const _2Real::Image &depthImg, const _2Real::Space2D &area, _2Real::FaceCast &cast, double depthCutoff );
 	void resizeCast();
 };

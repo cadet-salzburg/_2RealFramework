@@ -1,17 +1,10 @@
 #pragma once
 
 #include "_2RealBlock.h"
-//#include "_2RealDatatypes.h"
 
-namespace faceTracking
-{
-namespace impl
-{
-	class CVImpl;
-	class TimeImpl;
-	class FaceTrackingImpl;
-}
-}
+class StopWatch;
+class FaceTracking;
+class FaceDetection;
 
 class FaceFeaturesBlock : public _2Real::bundle::Block
 {
@@ -83,8 +76,8 @@ private:
 
 	_2Real::bundle::OutletHandle	m_faceOut;
 
-	faceTracking::impl::CVImpl				*m_cvImpl;
-	faceTracking::impl::FaceTrackingImpl	*m_faceTrackingImpl;
+	FaceDetection		*m_faceDetection;
+	FaceTracking		*m_faceTracking;
 
-	faceTracking::impl::TimeImpl			*m_timeImpl;
+	StopWatch			*m_stopWatch;
 };

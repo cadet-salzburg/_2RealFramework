@@ -7,9 +7,27 @@
 using namespace _2Real;
 using namespace _2Real::bundle;
 
-using std::string;
-using std::cout;
-using std::endl;
+//TODO: remove this when _2Real utils have arrived
+template<typename T>
+void fillChecker( T *buffer, size_t width, size_t height, size_t depth )
+{
+	for( int i = 0; i < width; i++ )
+	{
+		for( int j = 0; j < height; j++ )
+		{
+			if( i >> 3 & 0x01 ^ j >> 3 & 0x01 )
+			{
+				for( int k = 0; k < depth; k++ )
+					*( buffer++ ) = std::numeric_limits<T>::max();
+			}
+			else
+			{
+				for( int k = 0; k < depth; k++ )
+					*( buffer++ ) = std::numeric_limits<T>::min();
+			}
+		}
+	}
+}
 
 void getBundleMetainfo( BundleMetainfo& info )
 {
@@ -22,24 +40,37 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		//TODO: init with checker pattern
+
+		unsigned char rgbChecker[640 * 480 * 3];
+		unsigned short depthChecker[640 * 480 * 1];
+
+		fillChecker( rgbChecker, 640, 480, 3 );
+		fillChecker( depthChecker, 640, 480, 1 );
+
+		Image initRGBImage( rgbChecker, true, 640, 480, ImageChannelOrder::RGB );
+		Image initDepthImage( depthChecker, true, 640, 480, ImageChannelOrder::A );
+
+		/*
 		Image initRGBImage( (unsigned char*)NULL, false, 640, 480, ImageChannelOrder::RGB );
 		Image initDepthImage( (unsigned short*)NULL, false, 640, 480, ImageChannelOrder::A );
+		*/
 
 		BlockMetainfo faceCast = info.exportBlock< FaceCastBlock, WithoutContext>( "FaceCastBlock" );
 		faceCast.setDescription( "creates 3D vertex and normal data for faces find in an RGBD image stream" );
-		faceCast.setCategory( "" );	//TODO: set
-		// can handle any format
-		//TODO: only rgb/greyscale -- how to specify?
+		faceCast.setCategory( "" );
+		//TODO: only rgb/greyscale allowed -- how to specify?
 		faceCast.addInlet< Image >( "image_in", initRGBImage );
 		faceCast.addInlet< Image >( "depth_in", initDepthImage );
 
 		faceCast.addInlet< unsigned int >( "res_x", 40 );
 		faceCast.addInlet< unsigned int >( "res_y", 40 );
 
+		faceCast.addInlet< double >( "face_scale_x", 1.35 );
+		faceCast.addInlet< double >( "face_scale_y", 1.6 );
+
 		faceCast.addInlet< double >( "depth_cutoff", 0.1 );
 
-		//default values taken from Asus Xtion
+		//default values taken from Asus Xtion Pro
 		//faceCast.addInlet< double >( "fov_hor", 58.5907 );	//redundant, not used
 		faceCast.addInlet< double >( "fov_ver", 45.6427 );
 
@@ -77,10 +108,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		BlockMetainfo faceFeatures = info.exportBlock< FaceFeaturesBlock, WithoutContext>( "FaceFeaturesBlock" );
 		faceFeatures.setDescription( "detects faces and face features in input image stream" );
-		faceFeatures.setCategory( "" ); //TODO: set
+		faceFeatures.setCategory( "" );
 		// can handle any format
-		//TODO: only rgb/greyscale -- how to specify?
-
+		//TODO: only rgb/greyscale allowed -- how to specify?
 		faceFeatures.addInlet< Image >( "image_in", initRGBImage );
 
 		faceFeatures.addInlet< double >( "haar_detection_downscale", 0.75 );
@@ -132,7 +162,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 	}
 	catch ( Exception &e )
 	{
-		cout << e.message() << endl;
+		std::cout << e.message() << std::endl;
 		e.rethrow();
 	}
 }

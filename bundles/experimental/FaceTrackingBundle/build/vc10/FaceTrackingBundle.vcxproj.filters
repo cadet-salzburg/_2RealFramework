@@ -21,6 +21,15 @@
     <ClCompile Include="..\..\src\FaceFeaturesBlock.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\FaceTracking.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\FaceDetection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\StopWatch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\FaceCastBlock.h">
@@ -29,7 +38,13 @@
     <ClInclude Include="..\..\src\FaceFeaturesBlock.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bench.h">
+    <ClInclude Include="..\..\src\FaceTracking.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\FaceDetection.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\StopWatch.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

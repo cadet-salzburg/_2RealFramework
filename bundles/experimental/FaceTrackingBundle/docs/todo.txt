@@ -1,4 +1,14 @@
 todo
 ----
 
-* performance with mutexes: split up getImage and use different mutexes so the different gets don't lock each other out
+* performance with mutexes: split up getImage and use different mutexes so the different gets don't lock each other out (@robert: WUT?)
+* possible performance improvement for facetracker: before scanning whole image for faces, search in areas faces were previously at (with some tolerance, framerate-dependent) only if unsuccessuful, or no previous face positions present, scan overall image
+* figure out why this is recommended in the OpenCV book but actually feature detection (eyes, etc.) works better without
+
+* remove all warnings
+* naming conventions (inlets/outlets/members)
+* write documentation
+* create unittest
+* clean and check in test app
+* insert legal notices in include files
+* replace all std::runtime_errors

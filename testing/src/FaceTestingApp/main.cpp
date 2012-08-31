@@ -501,8 +501,8 @@ public:
 		m_windowHeight( 0 ),
 		m_motionSpeed( 5.0f ),
 		m_rotationSpeed( 180.0f ),
-		m_trackballTrans( 0.0f, 0.0f, -5.0f ),
-		m_trackballRot( 0.0f, 0.0f, 0.0f ),
+		m_trackballTrans( 1.15f, -0.85f, -2.65f ),
+		m_trackballRot( 5.5f, -170.0f, 0.0f ),
 		m_clipNear( 0.005 ),
 		m_clipFar( 500.0 )
 	{
@@ -511,6 +511,26 @@ public:
 
 	virtual ~FaceCastReceiver()
 	{}
+
+	void drawFaceRects()
+	{
+		glPushAttrib( GL_ALL_ATTRIB_BITS );
+		{
+			m_Access.lock();
+			for( std::vector< _2Real::FaceCast >::const_iterator it = m_FaceData.faces.begin(); it != m_FaceData.faces.end(); ++it )
+			{
+				glColor3fv( m_colors[it->faceID() % m_colors.size()].data() );
+
+				glLineWidth( 1.0f );
+				if( m_showRGB )
+					drawRect( it->getFaceRegion().getP0() * 0.5f, it->getFaceRegion().getP1() * 0.5f );
+				else
+					drawRect( it->getFaceRegion().getP0(), it->getFaceRegion().getP1() );
+			}
+			m_Access.unlock();
+		}
+		glPopAttrib();
+	}
 
 	void draw3DFaces()
 	{
@@ -533,6 +553,8 @@ public:
 
 			drawAxes( 1.0f );
 
+			glScalef( 10.0f, 10.0f, 10.0f );
+
 			glDisable( GL_LIGHTING );
 			glDisable( GL_TEXTURE_2D );
 			glEnable( GL_COLOR_MATERIAL );
@@ -552,7 +574,6 @@ public:
 				std::vector<Vec3>::const_iterator vIt = vertices.begin();
 				std::vector<unsigned int>::const_iterator iIt = indices.begin();
 				
-				std::cout << "drawing " << vertices.size() << " vertices" << std::endl;
 				glColor3fv( color.data() );
 				glBegin( GL_POINTS );
 				for( vIt; vIt != vertices.end() && iIt != indices.end(); ++vIt, ++iIt )
@@ -566,8 +587,6 @@ public:
 
 				vIt = vertices.begin();
 
-				/*
-				std::cout << "drawing " << normals.size() << " normals" << std::endl;
 				glColor3fv( color.data() );
 				glBegin( GL_LINES );
 				for( std::vector<Vec3>::const_iterator nIt = normals.begin(); nIt != normals.end() && vIt != vertices.end(); ++nIt, ++vIt )
@@ -576,7 +595,6 @@ public:
 					glVertex3fv( Vec3( *vIt + ( *nIt * 0.01 ) ).data() );
 				}
 				glEnd();
-				*/
 			}
 		}
 		glMatrixMode( GL_PROJECTION_MATRIX );
@@ -643,7 +661,11 @@ public:
 		}
 		m_Access.unlock();
 
-		/*
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		glOrtho( -1.0, 1.0, -1.0, 1.0, -1.0, 1.0 );
+		glMatrixMode( GL_MODELVIEW );
+		glLoadIdentity();
 		glColor3fv( white().data() );
 		glBegin( GL_QUADS );
 		{
@@ -653,7 +675,8 @@ public:
 			glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f,  1.0f, 0.0f );
 		}
 		glEnd();
-		*/
+
+		drawFaceRects();
 
 		draw3DFaces();
 		m_FaceData.dirty = false;
@@ -841,6 +864,8 @@ void setupCast()
 	rgb.setUpdateRate( 30.0 );
 	depth.setUpdateRate( 30.0 );
 
+	depth.getInletHandle( "IsAlignedToColor" ).setDefaultValue( true );
+
 	rgbOutImg = rgb.getOutletHandle( "ImageData" );
 	depthOutImg = depth.getOutletHandle( "ImageData" );
 
@@ -870,8 +895,8 @@ void setupCast()
 
 	receiver = new FaceCastReceiver();
 
-	//rgbOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveImage );
-	//depthOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveDepth );
+	rgbOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveImage );
+	depthOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveDepth );
 	faceCast.getOutletHandle( "face_out" ).registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveFaces );
 
 	rgb.setup();

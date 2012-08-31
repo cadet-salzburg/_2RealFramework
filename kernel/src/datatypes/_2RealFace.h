@@ -148,10 +148,17 @@ namespace _2Real
 			m_cntr( 0 )
 		{}
 
-		explicit FaceCast( unsigned int faceID, unsigned width, unsigned height ) :
+		explicit FaceCast( unsigned int faceID, unsigned width, unsigned height
+			//test
+			, const Space2D &faceRegion
+			//------
+			) :
 			m_faceID( faceID ),
 			m_width( width ),
 			m_height( height ),
+			//test
+			m_faceRegion( faceRegion ),
+			//------
 			m_cntr( 0 )
 		{
 			this->resize( width, height );
@@ -161,6 +168,9 @@ namespace _2Real
 		FaceCast( unsigned int faceID,
 			unsigned int width,
 			unsigned int height,
+			//test
+			const Space2D &faceRegion,
+			//------
 			const std::vector<Vec3> &vertices,
 			const std::vector<Vec3> &normals,
 			const std::vector<unsigned int> &indices ) :
@@ -168,6 +178,9 @@ namespace _2Real
 			m_width( width ),
 			m_height( height ),
 			m_cntr( 0 ),
+			//test
+			m_faceRegion( faceRegion ),
+			//------
 			m_vertices( vertices ),
 			m_normals( normals ),
 			m_indices( indices )
@@ -183,6 +196,9 @@ namespace _2Real
 			m_width( rhs.m_width ),
 			m_height( rhs.m_height ),
 			m_cntr( rhs.m_cntr ),
+			//test
+			m_faceRegion( rhs.m_faceRegion ),
+			//------
 			m_vertices( rhs.m_vertices ),
 			m_normals( rhs.m_normals ),
 			m_indices( rhs.m_indices )
@@ -196,6 +212,9 @@ namespace _2Real
 
 			m_cntr = rhs.m_cntr;
 
+			//test
+			m_faceRegion = rhs.m_faceRegion;
+			//------
 			m_vertices.assign( rhs.m_vertices.begin(), rhs.m_vertices.end() );
 			m_normals.assign( rhs.m_normals.begin(), rhs.m_normals.end() );
 			m_indices.assign( rhs.m_indices.begin(), rhs.m_indices.end() );
@@ -211,6 +230,11 @@ namespace _2Real
 				return false;
 			if( m_height != rhs.m_height )
 				return false;
+
+			//test
+			if( m_faceRegion != rhs.m_faceRegion )
+				return false;
+			//------
 
 			if( m_vertices.size() != rhs.m_vertices.size() )
 				return false;
@@ -287,6 +311,10 @@ namespace _2Real
 		const std::vector<Vec3> &getNormals() const			{	return m_normals;	}
 		const std::vector<unsigned int> &getIndices() const	{	return m_indices;	}
 
+		//test
+		const Space2D &getFaceRegion() const				{	return m_faceRegion;	}
+		//------
+
 	private:
 		unsigned int	m_faceID;
 
@@ -294,6 +322,10 @@ namespace _2Real
 		unsigned int	m_height;
 
 		unsigned int	m_cntr;
+
+		//test
+		Space2D			m_faceRegion;
+		//------
 
 		std::vector<Vec3>			m_vertices;
 		std::vector<Vec3>			m_normals;
