@@ -3,15 +3,15 @@
 #include "_2realblock.h"
 
 /*
-class MovingHeadBlock
+class MovingHeadTrackingBlock
 
 Defines the MovingHeadput Block --> Via a MovingHead Input Port the MovingHead Messages are sent through three Outlets.
 */
-class MovingHeadBlock : public _2Real::bundle::Block
+class MovingHeadTrackingBlock : public _2Real::bundle::Block
 {
 public:
-	MovingHeadBlock( _2Real::bundle::ContextBlock & context );
-	~MovingHeadBlock(void);
+	MovingHeadTrackingBlock( _2Real::bundle::ContextBlock & context );
+	~MovingHeadTrackingBlock(void);
 
 	// Virtual Methods
 	virtual void					update();
@@ -22,13 +22,15 @@ private:
 	void							discardAllOutlets();
 
 	// The Block Inlets 
-	_2Real::bundle::InletHandle	m_MotorIDInlet;
-	_2Real::bundle::InletHandle m_CommandInlet;
-	_2Real::bundle::InletHandle m_ValueInlet;
+	_2Real::bundle::InletHandle m_CenterOfMassInlet;
+	_2Real::bundle::InletHandle m_UserIDInlet;
 
-	// The Block Outlets
-	_2Real::bundle::OutletHandle m_SerialOutlet;
+	_2Real::bundle::OutletHandle m_ValueXOutlet;
+	_2Real::bundle::OutletHandle m_ValueYOutlet;
 
 	// current active MovingHead identifier (empty string means none)
 	std::string m_MovingHeadIdentifer;
+
+	int m_CurrentPosX;
+	int m_CurrentPosY;
 };

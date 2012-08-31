@@ -50,6 +50,8 @@ namespace _2Real
 			LIST,
 			IMAGE,
 
+			AUDIO,
+
 			POINT,
 			SKELETON,
 			RIGIDBODY,
@@ -61,7 +63,7 @@ namespace _2Real
 			SPACE3D,
 			SPACE4D,
 			FACEDESC,
-			FACECAST
+			FACECAST,
 		};
 
 		Type( Code const& code ) : m_Code( code ) {}

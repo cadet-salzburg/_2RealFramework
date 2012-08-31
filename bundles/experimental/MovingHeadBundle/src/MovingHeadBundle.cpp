@@ -1,6 +1,7 @@
 #include "_2RealBundle.h"
 
 #include "MovingHeadBlock.h"
+#include "MovingHeadTrackingBlock.h"
 
 #include <sstream>
 #include <iostream>
@@ -22,8 +23,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 	{
 		// Bundle information
 		info.setName( "MovingHeadBundle" );
-		info.setDescription( "Sending MovingHead Commands to Serial Port" );
-		info.setAuthor( "Roland Haring" );
+		info.setDescription( "Sending MovingHead Commands from Tracking-Camera to Serial Port" );
+		info.setAuthor( "Roland Haring, Veronika Pauser" );
 		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
@@ -37,6 +38,20 @@ void getBundleMetainfo( BundleMetainfo& info )
 		MovingHead.addOutlet<std::vector<unsigned char>>( "SerialByteStream" );
 
 		MovingHead.setDescription( "MovingHead Control" );
+
+
+		// MovingHeadOutput Block information as well as In and Outlet definition
+		BlockMetainfo MovingHeadTracking = info.exportBlock< MovingHeadTrackingBlock, WithContext >( "MovingHeadTrackingBlock" );
+				
+		MovingHeadTracking.addInlet<_2Real::Point>( "CentorOfMass", _2Real::Point() );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIdX", 0 );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIdY", 0 );
+		MovingHeadTracking.addInlet<unsigned int>( "UserID", 0 );
+		MovingHeadTracking.addOutlet<unsigned int>( "MotorID" );
+		MovingHeadTracking.addOutlet<unsigned char>( "Command" );
+		MovingHeadTracking.addOutlet<unsigned int>( "Value" );
+
+		MovingHeadTracking.setDescription( "MovingHead Tracking" );
 	}
 	catch ( Exception &e )
 	{

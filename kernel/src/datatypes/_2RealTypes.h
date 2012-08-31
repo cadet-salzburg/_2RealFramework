@@ -32,6 +32,7 @@
 #include "datatypes/_2RealRigidBody.h"
 #include "datatypes/_2RealQuaternion.h"
 #include "datatypes/_2RealFilePath.h"
+#include "datatypes/_2RealAudioBuffer.h"
 
 #include <vector>
 #include <list>
@@ -383,6 +384,15 @@ namespace _2Real
 		static TypeDescriptor *createTypeDescriptor()
 		{
 			return new TypeDescriptor( typeid( FaceCast ), Type::FACECAST, "face depth cast", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
+	struct traits< AudioBuffer >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( AudioBuffer ), Type::AUDIO, "audio buffer", TypeCategory::UNIQUE );
 		}
 	};
 
