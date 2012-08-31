@@ -235,11 +235,11 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockIOManager::updateInletBuffers()
+	void FunctionBlockIOManager::updateInletBuffers( const bool enableTriggering )
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			( *it )->m_Buffer->processBufferedData();
+			( *it )->m_Buffer->processBufferedData( enableTriggering );
 		}
 	}
 

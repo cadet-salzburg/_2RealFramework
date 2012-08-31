@@ -163,7 +163,7 @@ namespace _2Real
 		// enable triggers /////////////////////////////////////////
 
 		setTriggers( false );
-		m_IOManager->updateInletBuffers();
+		m_IOManager->updateInletBuffers( true );
 	}
 
 	void FunctionBlockStateManager::updateFunctionBlock()
@@ -231,7 +231,7 @@ namespace _2Real
 
 			setTriggers( false );
 
-			m_IOManager->updateInletBuffers();
+			m_IOManager->updateInletBuffers( true );
 		}
 	}
 
@@ -245,7 +245,7 @@ namespace _2Real
 
 		// without enabling triggers update inlet data //////////
 		setTriggers( false );
-		m_IOManager->updateInletBuffers();
+		m_IOManager->updateInletBuffers( false );
 		/////////////////////////////////////////////////////////
 
 		// blocking request /////////////////////////////////////
@@ -256,6 +256,8 @@ namespace _2Real
 		ev->wait();
 		delete ev;
 		// blocking request /////////////////////////////////////
+
+		//
 
 		if ( m_HasException )
 		{

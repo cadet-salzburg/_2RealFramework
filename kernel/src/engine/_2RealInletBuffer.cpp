@@ -294,6 +294,8 @@ namespace _2Real
 		}
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	RemoveOldest::RemoveOldest( const unsigned int max ) :
 		m_Max( max )
 	{
@@ -306,7 +308,6 @@ namespace _2Real
 		while ( buffer.size() >= m_Max && !buffer.empty() )
 		{
 			// TODO: some sort of overflow cb for the app i guess
-			// anyway, remove oldest elem from buffer
 			buffer.pop_front();
 		}
 
@@ -326,15 +327,17 @@ namespace _2Real
 		return m_Max;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
 		m_InsertionPolicy( new RemoveOldest( 1 ) ),
-		m_Notify( true ),
-		m_DefaultData( defaultData, 0, 0 ),
+		m_NotifyOnReceive( false ),								// initially, no notifications are allowed
 		m_Engine( EngineImpl::instance() ),
-		m_TriggeringData( Any(), -1, -1 ),
 		m_Options( options ),
 		m_Counter( 0 )
 	{
+		m_DefaultData = TimestampedData( defaultData, 0, ++m_Counter );
+		m_TriggeringData = TimestampedData( defaultData, 0, m_DefaultData.getKey() );
 	}
 
 	InletBuffer::~InletBuffer()
@@ -344,7 +347,7 @@ namespace _2Real
 
 	void InletBuffer::setDefaultValue( Any const& defaultValue )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
 		m_DefaultData = TimestampedData( defaultValue, m_Engine.getElapsedTime(), ++m_Counter );
 	}
 
@@ -355,10 +358,12 @@ namespace _2Real
 
 	void InletBuffer::receiveData( std::string const& value )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-
 		Any data;
-		data.createNew( m_DefaultData.getData() );
+
+		{
+			Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
+			data.createNew( m_DefaultData.getData() );
+		}
 
 		stringstream s;
 		s << value;
@@ -367,88 +372,84 @@ namespace _2Real
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
 
-	// this may be call simultaneously by many threads
 	void InletBuffer::receiveData( TimestampedData const& data )
 	{
-		TimestampedData rec;
+		// perform conversion, if necessary //////////////////////////////////////////////////////
+		m_DefaultAccess.lock();
+		const Type tDst= data.getData().getType();
+		const TypeCategory cDst = m_DefaultData.getData().getTypeCategory();
+		m_DefaultAccess.unlock();
+
+		TimestampedData received;
 		const Type tSrc = data.getData().getType();
-		const Type tDst = m_DefaultData.getData().getType();
 		if ( !( tSrc == tDst ) )
 		{
 			const TypeCategory cSrc = data.getData().getTypeCategory();
-			const TypeCategory cDst = m_DefaultData.getData().getTypeCategory();
 			if ( cSrc == TypeCategory::ARITHMETHIC && cDst == TypeCategory::ARITHMETHIC )
 			{
 				Any converted = arithmethicConversion( data.getData(), tDst );
-				rec = TimestampedData( converted, data.getTimestamp(), ++m_Counter );
+				received = TimestampedData( converted, data.getTimestamp(), ++m_Counter );
 			}
 		}
-		else
-		{
-			rec = TimestampedData( data.getData(), data.getTimestamp(), ++m_Counter );
-		}
+		else received = TimestampedData( data.getData(), data.getTimestamp(), ++m_Counter );
+		/////////////////////////////////////////////////////////////////////////////////////////
 
+		// perform option check, if necessary ///////////////////////////////////////////////////
 		if ( !m_Options.isEmpty() )
 		{
-			Any const& value = rec.getData();
+			Any const& value = received.getData();
 			if ( !m_Options.isOption( value ) )
 			{
-				std::cout << "NOT AN OPTION!!!!!!!!!!!!" << std::endl;
+				// TODO: callback to app
 				return;
 			}
 		}
+		/////////////////////////////////////////////////////////////////////////////////////////
 
-		// sync point: only one of many threads can cause the update cond to be evaluated at once
+		// m_Notify -> true: processBufferedData was called, meaning an update cycle was finished OR start was called
+		// otherwise: move data into buffer
 		m_NotificationAccess.lock();
-		if ( m_Notify )
-		{
-			m_TriggeringEvent.notify( rec );
-			m_NotificationAccess.unlock();
-		}
+		if ( m_NotifyOnReceive )		m_TriggeringEvent.notify( received );
 		else
 		{
-			m_NotificationAccess.unlock();
-			Poco::ScopedLock< Poco::FastMutex > dLock( m_DataAccess );
-			m_InsertionPolicy->insertData( rec, m_ReceivedDataItems );
+			Poco::ScopedLock< Poco::FastMutex > lock( m_BufferAccess );
+			m_InsertionPolicy->insertData( received, m_ReceivedDataItems );
 		}
+		m_NotificationAccess.unlock();
 	}
 
 	TimestampedData const& InletBuffer::getTriggeringData() const
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-//#ifdef _DEBUG
-		if ( m_TriggeringData.isEmpty() )
-		{
-			//assert( NULL );
-			return m_DefaultData;
-		}
-//#endif
 		return m_TriggeringData;
 	}
 
+	// called right before block setup, will clear all received data
+	// since m_Notify should be false, all data that is received afterwards will be buffered
+	// meaning the triggering data will stay on default
 	void InletBuffer::clearBufferedData()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
-		{
-			dIt = m_ReceivedDataItems.erase( dIt );
-		}
+		m_BufferAccess.lock();
+		m_ReceivedDataItems.clear();
+		m_BufferAccess.unlock();
 
-		m_TriggeringData = TimestampedData( Any(), 0, 0 );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
+		m_TriggeringData = TimestampedData( m_DefaultData.getData(), m_DefaultData.getTimestamp(), m_DefaultData.getKey() );
 	}
 
-	void InletBuffer::processBufferedData()
+	// called right after block update; re-enables triggering, then tries to fulfill the trigger cond with buffered data / last data / default data
+	// receiving data from other sources ( user input, outlets ) is blocked during this time
+	void InletBuffer::processBufferedData( const bool enableTriggering )
 	{
-		// no reception of data allowed during this time
-		m_NotificationAccess.lock();
-		m_Notify = true;
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
+		m_NotifyOnReceive = true;
+
+		m_BufferAccess.lock();
 		for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
 		{
 			TimestampedData d = *dIt;
 			m_TriggeringEvent.notify( d );
 
-			if ( !m_Notify )
+			if ( !m_NotifyOnReceive )
 			{
 				dIt = m_ReceivedDataItems.erase( dIt );
 				break;
@@ -458,34 +459,30 @@ namespace _2Real
 				dIt = m_ReceivedDataItems.erase( dIt );
 			}
 		}
+		m_BufferAccess.unlock();
 
-		m_TriggeringEvent.notify( m_TriggeringData );	// try fulfilling available cond with prev data
-		m_TriggeringEvent.notify( m_DefaultData );		// try fulfilling available cond with default data
-		m_NotificationAccess.unlock();
+		m_TriggeringEvent.notify( m_TriggeringData );
+
+		Poco::ScopedLock< Poco::FastMutex > dLock( m_DefaultAccess );
+		m_TriggeringEvent.notify( m_DefaultData );
+
+		// should be false only in singlestep
+		if ( !enableTriggering ) m_NotifyOnReceive = false;
 	}
 
-	// called by an update manager if an update condition for this buffer was fulfilled
-	// update manager is responsible for calling this with the right data
 	void InletBuffer::disableTriggering( TimestampedData const& data )
 	{
-		m_Notify = false;		// no sync here, since access is locked from within receiveData
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_NotifyOnReceive = false;
 		m_TriggeringData = data;
 	}
 
 	void InletBuffer::setBufferSize( const unsigned int size )
 	{
-		//Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-		//delete m_InsertionPolicy;
-		//m_InsertionPolicy = new RemoveOldest( size );
-		//m_BufferSize = size;
 		m_InsertionPolicy->setMaxSize( size );
 	}
 
 	unsigned int InletBuffer::getBufferSize() const
 	{
-		//Poco::ScopedLock< Poco::FastMutex > lock( m_PolicyAccess );
-		//return m_BufferSize;
 		return m_InsertionPolicy->getMaxSize();
 	}
 

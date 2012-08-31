@@ -80,8 +80,7 @@ namespace _2Real
 		void receiveData( Any const& data );
 		void receiveData( std::string const& data );
 		TimestampedData const& getTriggeringData() const;
-		//TimestampedData const& getOldestBufferData();
-		void processBufferedData();
+		void processBufferedData( const bool enableTriggering );
 		void clearBufferedData();
 		void disableTriggering( TimestampedData const& data );
 		void setBufferSize( const unsigned int size );
@@ -94,12 +93,17 @@ namespace _2Real
 
 		unsigned long									m_Counter;
 		EngineImpl										&m_Engine;
+
 		DataBuffer										m_ReceivedDataItems;	// holds all received data items
 		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
+
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
-		volatile bool									m_Notify;
+
+		volatile bool									m_NotifyOnReceive;		// if true: try triggering
+
 		TimestampedData									m_DefaultData;
-		mutable Poco::FastMutex							m_DataAccess;
+		mutable Poco::FastMutex							m_DefaultAccess;
+		mutable Poco::FastMutex							m_BufferAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
 		AnyOptionSet									m_Options;
