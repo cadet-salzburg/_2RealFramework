@@ -55,8 +55,6 @@ ipch/
 *.psess
 *.vsp
 
-
-[Bb]in
 Ankh.NoLoad
 
 #Common Files

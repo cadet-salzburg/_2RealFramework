@@ -30,12 +30,11 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		// EMGShieldInput Block information as well as In and Outlet definition
 		BlockMetainfo EMGShield = info.exportBlock< EMGShieldBlock, WithContext >( "EMGShieldBlock" );
-				
-		EMGShield.addInlet<unsigned int>( "MotorID", 0 );
-		EMGShield.addInlet<unsigned char>( "Command", 0 );
-		EMGShield.addInlet<unsigned int>( "Value", 0 );
 
 		EMGShield.addInlet<std::vector<unsigned char>>( "SerialByteStream",  std::vector<unsigned char>());
+
+		EMGShield.addOutlet<unsigned int>( "Channel0Value");
+		EMGShield.addOutlet<unsigned int>( "Channel1Value");
 
 		EMGShield.setDescription( "EMGShield Control" );
 	}
