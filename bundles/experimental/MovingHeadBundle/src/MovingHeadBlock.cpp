@@ -24,7 +24,7 @@ void MovingHeadBlock::setup( BlockHandle &context )
 		// Get the handles to all needed In and Outlets
 		m_MotorIDInlet = context.getInletHandle( "MotorID" );
 		m_CommandInlet = context.getInletHandle( "Command" );
-		m_ValueIntel = context.getInletHandle( "Value" );
+		m_ValueInlet = context.getInletHandle( "Value" );
 		m_SerialOutlet = context.getOutletHandle( "SerialByteStream" );
 	}
 	catch ( Exception& e )
@@ -48,7 +48,7 @@ void MovingHeadBlock::update()
 	try
 	{
 		// there is only something happening when a new value is provided!
-		if (m_ValueIntel.hasChanged())
+		if (m_ValueInlet.hasChanged())
 		{
 			// make a proper command
 
@@ -70,7 +70,7 @@ void MovingHeadBlock::update()
 			byteStream.push_back('X');
 			byteStream.push_back('0' + m_MotorIDInlet.getReadableRef<unsigned int>());
 			byteStream.push_back(m_CommandInlet.getReadableRef<unsigned char>());
-			unsigned int value = m_ValueIntel.getReadableRef<unsigned int>();
+			unsigned int value = m_ValueInlet.getReadableRef<unsigned int>();
 			byteStream.push_back('0' + (value % 10000) / 1000);
 			byteStream.push_back('0' + (value % 1000) / 100);
 			byteStream.push_back('0' + (value % 100) / 10);

@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\MovingHeadBlock.cpp" />
     <ClCompile Include="..\..\src\MovingHeadBundle.cpp" />
+    <ClCompile Include="..\..\src\MovingHeadTrackingBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\MovingHeadBlock.h" />
+    <ClInclude Include="..\..\src\MovingHeadTrackingBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{50426D59-CBFC-4553-96DA-6A413EFC1664}</ProjectGuid>
