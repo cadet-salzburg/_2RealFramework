@@ -22,12 +22,11 @@ private:
 	void							discardAllOutlets();
 
 	// The Block Inlets 
-	_2Real::bundle::InletHandle	m_MotorIDInlet;
-	_2Real::bundle::InletHandle m_CommandInlet;
-	_2Real::bundle::InletHandle m_ValueIntel;
+	_2Real::bundle::OutletHandle m_Channel0Value;
+	_2Real::bundle::OutletHandle m_Channel1Value;
 
 	// The Block Outlets
-	_2Real::bundle::OutletHandle m_SerialOutlet;
+	_2Real::bundle::InletHandle m_SerialByteStream;
 
 	// current active EMGShield identifier (empty string means none)
 	std::string m_EMGShieldIdentifer;
