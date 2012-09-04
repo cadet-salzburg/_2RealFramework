@@ -1,3 +1,9 @@
+#2Real Specific
+/kernel/lib/
+/bundles/unittest/lib/
+/bundles/test/
+
+
 #SVN Files
 .svn
 
@@ -9,7 +15,7 @@
 *.swp
 *~.nib
 */DerivedData/
-/kernel/lib
+
 build/osx/DerivedData
 *.pbxuser
 *.perspective
@@ -24,8 +30,11 @@ xcuserdata
 *.exe
 *.pdb
 *.user
+*.vcxproj.user
 *.aps
 *.pch
+
+
 
 *.vspscc
 *.vssscc
@@ -40,6 +49,8 @@ xcuserdata
 *.ilk
 *.log
 *.lib
+*.exp
+*.dll
 *.sbr
 *.sdf
 ipch/
