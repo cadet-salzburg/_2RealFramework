@@ -32,7 +32,7 @@ class FMODContextManager : public _2Real::bundle::ContextBlock
 		FMOD::Channel*					PlaySound( FMOD::Sound* sound );
 
 		void							CreateSoundExInfo( FMOD_CREATESOUNDEXINFO* outInfo, const uint32_t sizeDecodeBuffer, const uint8_t numChannels, const int lengthPCM, const uint16_t defaultFrequenzy, const FMOD_SOUND_FORMAT format, FMOD_SOUND_PCMREADCALLBACK callback );
-	private:
+	//private:
 	
 					/*! \brief     Standard Fmod error checking, will throw a std::expection with fmod error-message
 		\param     method - name of the function

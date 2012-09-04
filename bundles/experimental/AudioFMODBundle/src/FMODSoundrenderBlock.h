@@ -28,6 +28,11 @@ class FMODSoundrenderBlock : public _2Real::bundle::Block
 		FMOD::Sound*							m_Sound;
 		FMOD::Channel*							m_Channel;
 		FMOD_CREATESOUNDEXINFO					m_SoundExInfo;
+public:
+FMOD::Sound*							s;
+FMOD::Channel							*c;
+ static FMODSoundrenderBlock*	srb;
+
 };
 
 /*! \brief     If created sound with exinfo and this callback, sound buffer has to be handled/filled by

@@ -128,7 +128,7 @@ FMOD::Sound* FMODContextManager::CreateSound( std::string file, FMOD_MODE mode, 
 	try
 	{
 		FMOD::Sound* sound = nullptr;
-		checkFMODError( "CreateSound()", m_System->createSound( file.c_str(), mode, exInfo, &sound ) );
+		checkFMODError( "CreateSound()", m_System->createStream( 0, mode, exInfo, &sound ) );
 		return sound;
 	}
 	catch( FMODContextException& e )
