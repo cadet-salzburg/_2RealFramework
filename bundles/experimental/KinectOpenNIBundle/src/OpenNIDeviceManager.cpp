@@ -257,6 +257,12 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 			m_DevicesInUse[deviceIdx].m_ImageRgb = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 			return m_DevicesInUse[deviceIdx].m_ImageRgb;
 		}
+		else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+		{
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+			m_DevicesInUse[deviceIdx].m_ImageUser = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			return m_DevicesInUse[deviceIdx].m_ImageUser;
+		}
 		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{
 			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
@@ -279,6 +285,10 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 		else if(generatorType == _2RealKinectWrapper::COLORIMAGE)
 		{
 			return m_DevicesInUse[deviceIdx].m_ImageRgb;
+		}
+		else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageUser;
 		}
 		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{

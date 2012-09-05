@@ -87,7 +87,7 @@ void KinectOpenNIUserSkeletonBlock::update()
 				{
 					points.push_back(m_OpenNIDeviceManager->getUsersCenterOfMass(m_iCurrentDevice, i, m_bIsWorldCoordinates));
 				}
-				m_SkeletonsOutletHandle.getWriteableRef<std::vector< _2Real::Point >>() = points;
+				m_UsersCenterOfMass.getWriteableRef<std::vector< _2Real::Point >>() = points;
 			}
 			else
 			{
