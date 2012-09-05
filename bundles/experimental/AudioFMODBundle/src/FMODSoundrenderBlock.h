@@ -28,9 +28,11 @@ class FMODSoundrenderBlock : public _2Real::bundle::Block
 		FMOD::Sound*							m_Sound;
 		FMOD::Channel*							m_Channel;
 		FMOD_CREATESOUNDEXINFO					m_SoundExInfo;
-public:
-FMOD::Sound*							s;
-FMOD::Channel							*c;
+
+
+public: // temporaries will be deleted
+		FMOD::Sound*							s;
+		FMOD::Channel							*c;
  static FMODSoundrenderBlock*	srb;
 
 };
@@ -39,7 +41,7 @@ FMOD::Channel							*c;
  *! this callack function
 	\param     sound - Pointer to the sound - Cast FMOD_SOUND* to FMOD::Sound* inside the callback and use as normal
 	\param     data - Pointer to raw PCM data that the user can either read or write to. 
-	\param     datalen - Length of data in bytes
+	\param     datalen - Desired Length of data in bytes to fill fmod (behind the scene)decode buffer 
 	\return    FMOD_RESULT F_CALLBACK - Returning FMOD_OK or any value defined in FMOD_RESULT
 */
-FMOD_RESULT F_CALLBACK	pcmReadCallback( FMOD_SOUND *sound, void *data, unsigned int datalen );
+FMOD_RESULT F_CALLBACK pcmReadCallback( FMOD_SOUND *sound, void *data, unsigned int datalen );
