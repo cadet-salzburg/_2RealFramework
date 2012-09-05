@@ -443,3 +443,31 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	 Poco::Mutex::ScopedLock lock(m_Mutex);
 	 return m_2RealKinect->getMotorAngle(deviceIdx);
  }
+
+_2Real::Point OpenNIDeviceManager::getUsersCenterOfMass(int deviceIdx, int userId, bool bIsWorldCoordinates)
+ {
+	try
+	{
+		 Poco::Mutex::ScopedLock lock(m_Mutex);
+		 _2Real::Point point;
+		 _2RealVector3f tmp;
+		 if(bIsWorldCoordinates)
+		 {
+			tmp = m_2RealKinect->getUsersWorldCenterOfMass(deviceIdx, userId);
+		 }
+		 else
+		 {
+			 tmp = m_2RealKinect->getUsersScreenCenterOfMass(deviceIdx, userId);
+		 }
+		 point.setX(tmp.x);
+		 point.setY(tmp.y);
+		 point.setZ(tmp.z);
+		 point.setId(userId);
+		 return point;
+	}
+	catch(_2RealKinectWrapper::_2RealException &e)
+	{
+		cout << e.what() << endl;
+		return _2Real::Point(); 
+	}
+ }

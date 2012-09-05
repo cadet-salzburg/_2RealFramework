@@ -22,6 +22,7 @@ void KinectOpenNIUserSkeletonBlock::setup( BlockHandle &block )
 		m_SkeletonsOutletHandle = block.getOutletHandle("Skeletons");
 		m_NrOfUsersOutletHandle = block.getOutletHandle("NrOfUsers");
 		m_NrOfSkeletonsOutletHandle = block.getOutletHandle("NrOfSkeletons");
+		m_UsersCenterOfMass = block.getOutletHandle("UsersCenterOfMass");
 		m_iNrOfUsers = m_iNrOfSkeletons = 0;
 	}
 	catch ( Exception &e )
@@ -77,6 +78,20 @@ void KinectOpenNIUserSkeletonBlock::update()
 			else
 			{
 				m_NrOfSkeletonsOutletHandle.discard();
+			}
+
+			if(m_iNrOfUsers>0)
+			{
+				std::vector<Point> points;
+				for(int i=0; i<m_iNrOfUsers; i++)
+				{
+					points.push_back(m_OpenNIDeviceManager->getUsersCenterOfMass(m_iCurrentDevice, i, m_bIsWorldCoordinates));
+				}
+				m_SkeletonsOutletHandle.getWriteableRef<std::vector< _2Real::Point >>() = points;
+			}
+			else
+			{
+				m_SkeletonsOutletHandle.discard();
 			}
 
 			// get and set skeletons
