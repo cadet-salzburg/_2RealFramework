@@ -42,7 +42,6 @@ void TUIOBlock::setup(BlockHandle& handle)
 
 void TUIOBlock::update()
 {
-    printf("UPDATE!\n");
 	try
 	{
 		//invalidate all known tracks

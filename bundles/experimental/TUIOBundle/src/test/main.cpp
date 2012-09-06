@@ -12,7 +12,7 @@ int main()
     {
         engine = &(_2Real::app::Engine::instance());
 
-        engine->setBaseDirectory("../lib");
+        engine->setBaseDirectory("../bin");
         tuioBundle = &(engine->loadBundle("libTUIOBundle"));
         printf("DESC: %s\n", tuioBundle->getBundleInfo().getDescription().c_str());
         tuioBlockHandle = &(tuioBundle->createBlockInstance("TUIOBlock"));
@@ -21,14 +21,8 @@ int main()
             printf("TUIOBlockHandle OK!\n");
         }
         tuioBlockHandle->setup();
-        printf("SETUP OK!\n");
         tuioBlockHandle->setUpdateRate(30.f);
-        printf("UPDATERATE OK!\n");
         tuioBlockHandle->start();
-        printf("START OK!\n");
-
-//        tuioBundleTest = &(engine->loadBundle("libTUIOBundleTest"));
-//        printf("DESC: %s\n", tuioBundleTest->getBundleInfo().getDescription().c_str());
 
     }
     catch ( _2Real::Exception &e )
@@ -53,9 +47,6 @@ int main()
                 app.close();
         }
 
-        // Clear screen
-        //app.clear(sf::Color(0, 0, 255));
-
         // Draw the sprite
         app.update();
 
@@ -63,12 +54,7 @@ int main()
         app.display();
     }
 
-    //_2Real::app::BundleHandle* tuioBundleTest = nullptr;
-
 	engine->clearAll();
-
-
-
 
     return 0;
 }

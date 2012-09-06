@@ -79,6 +79,9 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\..\bin\</OutDir>
     <TargetName>$(ProjectName)_32d</TargetName>
+    <CustomBuildAfterTargets />
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -113,8 +116,18 @@
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin
+copy  $(_2REAL_DIR)\bundles\bin\AudioFMODBundle_32d.pdb $(_2REAL_DIR)\bundles\test\AudioFMODBundle_32d.pdb
+copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -155,7 +168,9 @@
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin
+copy  $(_2REAL_DIR)\bundles\bin\AudioFMODBundle_32d.pdb $(_2REAL_DIR)\bundles\test\AudioFMODBundle_32d.pdb
+copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

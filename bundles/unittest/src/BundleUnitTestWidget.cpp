@@ -77,6 +77,7 @@ bool BundleUnitTestWidget::loadBundle(std::string strFile)
 	directories.push_back("../../experimental/bin/");
 	directories.push_back("../../core/bin/");
 	directories.push_back("../../tutorial/bin/");
+	directories.push_back("./");
 
 	QString curDir = QDir::currentPath();
 

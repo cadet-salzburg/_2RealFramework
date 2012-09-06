@@ -140,6 +140,7 @@
 		<Unit filename="../../src/bundle/_2RealInletHandle.h" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.cpp" />
 		<Unit filename="../../src/bundle/_2RealOutletHandle.h" />
+		<Unit filename="../../src/datatypes/_2RealAudioBuffer.h" />
 		<Unit filename="../../src/datatypes/_2RealBoundingBox.h" />
 		<Unit filename="../../src/datatypes/_2RealFace.h" />
 		<Unit filename="../../src/datatypes/_2RealFilePath.h" />

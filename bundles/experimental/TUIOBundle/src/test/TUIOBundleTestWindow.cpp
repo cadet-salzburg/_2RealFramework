@@ -20,19 +20,6 @@ TUIOBundleTestWindow::~TUIOBundleTestWindow()
 
 }
 
-//void TUIOBundleTestWindow::setup(bundle::BlockHandle& handle)
-//{
-//    try
-//    {
-//        outletHandle = handle.getOutletHandle("TracklistOut");
-//    }
-//    catch ( Exception &e )
-//	{
-//		std::cout << e.message() << std::endl;
-//		e.rethrow();
-//	}
-//}
-
 void TUIOBundleTestWindow::update()
 {
     tracks.clear();
@@ -46,7 +33,6 @@ void TUIOBundleTestWindow::update()
             return;
         }
         circle.setPosition(x - CIRCLE_W, y - CIRCLE_W);
-        printf("X: %1.2f, Y: %1.2f\n", x / winX, y / winY);
         Point p(Number(x / winX), Number(y / winY), Number(0.f), "TRACK", 0);
         tracks.push_back(p);
     }
@@ -54,38 +40,17 @@ void TUIOBundleTestWindow::update()
     {
         circle.setPosition(-100.f, -100.f);
     }
-
-//    if (outletHandle.isValid())
-//        outletHandle.getWriteableRef<std::vector<Point>>() = tracks;
-
-//
-//    sf::Event Event;
-//    while (pollEvent(Event))
-//    {
-//        // Close window : exit
-//        if (Event.type == sf::Event::Closed)
-//            close();
-//    }
-//
-//    // Clear screen
-//    clear(sf::Color(128, 128, 196));
-//
-//    drawAll();
-//    display();
 }
 
 void TUIOBundleTestWindow::drawAll()
 {
     clear(sf::Color(128, 128, 196));
     draw(circle);
-    if (handle && tracks.size() > 0)
+    if (handle)
     {
         try
         {
             handle->getInletHandle("Tracklist").setValue(tracks);
-            printf("GOT INLET HANDLE!\n");
-            //handle->singleStep();
-            printf("SINGLESTEP SUCCEEDED!\n");
         }
         catch ( _2Real::Exception &e )
         {

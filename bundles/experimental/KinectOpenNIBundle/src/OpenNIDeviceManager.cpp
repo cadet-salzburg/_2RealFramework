@@ -257,6 +257,12 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 			m_DevicesInUse[deviceIdx].m_ImageRgb = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
 			return m_DevicesInUse[deviceIdx].m_ImageRgb;
 		}
+		else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+		{
+			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
+			m_DevicesInUse[deviceIdx].m_ImageUser = _2Real::Image( pixels, false, imageWidth, imageHeight, _2Real::ImageChannelOrder::RGB );
+			return m_DevicesInUse[deviceIdx].m_ImageUser;
+		}
 		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{
 			unsigned char* pixels = m_2RealKinect->getImageData( deviceIdx, generatorType ).get();
@@ -279,6 +285,10 @@ _2Real::Image& OpenNIDeviceManager::getImage( const unsigned int deviceIdx, _2Re
 		else if(generatorType == _2RealKinectWrapper::COLORIMAGE)
 		{
 			return m_DevicesInUse[deviceIdx].m_ImageRgb;
+		}
+		else if(generatorType == _2RealKinectWrapper::USERIMAGE)
+		{
+			return m_DevicesInUse[deviceIdx].m_ImageUser;
 		}
 		else if(generatorType == _2RealKinectWrapper::INFRAREDIMAGE)
 		{
@@ -442,4 +452,32 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
  {
 	 Poco::Mutex::ScopedLock lock(m_Mutex);
 	 return m_2RealKinect->getMotorAngle(deviceIdx);
+ }
+
+_2Real::Point OpenNIDeviceManager::getUsersCenterOfMass(int deviceIdx, int userId, bool bIsWorldCoordinates)
+ {
+	try
+	{
+		 Poco::Mutex::ScopedLock lock(m_Mutex);
+		 _2Real::Point point;
+		 _2RealVector3f tmp;
+		 if(bIsWorldCoordinates)
+		 {
+			tmp = m_2RealKinect->getUsersWorldCenterOfMass(deviceIdx, userId);
+		 }
+		 else
+		 {
+			 tmp = m_2RealKinect->getUsersScreenCenterOfMass(deviceIdx, userId);
+		 }
+		 point.setX(tmp.x);
+		 point.setY(tmp.y);
+		 point.setZ(tmp.z);
+		 point.setId(userId);
+		 return point;
+	}
+	catch(_2RealKinectWrapper::_2RealException &e)
+	{
+		cout << e.what() << endl;
+		return _2Real::Point(); 
+	}
  }

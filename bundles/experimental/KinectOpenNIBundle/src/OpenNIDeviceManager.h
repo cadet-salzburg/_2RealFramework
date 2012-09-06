@@ -31,6 +31,7 @@ public:
 	_2Real::Image&					getImage( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType, bool bIs16Bit = false);
 	int								getWidth( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
 	int								getHeight( const unsigned int deviceIdx, _2RealKinectWrapper::_2RealGenerator generatorType );
+	_2Real::Point					getUsersCenterOfMass(int deviceIdx, int userId, bool bIsWorldCoordinates);
 	void							setMotorAngle(int deviceIdx, int angle);
 	int								getMotorAngle(int deviceIdx);
 

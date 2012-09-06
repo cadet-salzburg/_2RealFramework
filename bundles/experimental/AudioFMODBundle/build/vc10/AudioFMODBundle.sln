@@ -9,13 +9,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\..\..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMODBundle", "AudioFMODBundle.vcxproj", "{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}"
-	ProjectSection(ProjectDependencies) = postProject
-		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMODTest", "..\..\test\build\vc10\AudioFMODTest.vcxproj", "{DF3F7D8D-E670-41C0-8FDD-1507FC463816}"
 	ProjectSection(ProjectDependencies) = postProject
-		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5} = {D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}
 	EndProjectSection
 EndProject
