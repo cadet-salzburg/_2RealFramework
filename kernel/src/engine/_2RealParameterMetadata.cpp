@@ -63,12 +63,12 @@ namespace _2Real
 
 	string const& ParameterMetadata::getTypename() const
 	{
-		return m_TypeDescriptor->getTypename();
+		return m_TypeDescriptor->m_TypeName;
 	}
 
 	const string ParameterMetadata::getLongTypename() const
 	{
-		return m_TypeDescriptor->getLongTypename();
+		return m_TypeDescriptor->m_LongTypename;
 	}
 
 	Any const& ParameterMetadata::getInitialValue() const

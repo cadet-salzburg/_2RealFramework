@@ -61,52 +61,93 @@ namespace _2Real
 	};
 
 	class EngineImpl;
+	class BasicInletBuffer;
 
-	class InletBuffer
+	class AbstractInletBuffer
 	{
 
 	public:
 
-		// within the data buffer, data items are stored by the order which they arrived in;
-		// not necessarily in timestamp order
 		typedef std::list< TimestampedData >			DataBuffer;
 		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
 
-		~InletBuffer();
+		AbstractInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		virtual ~AbstractInletBuffer() {}
 
-		void setDefaultValue( Any const& defaultValue );
-		InletBuffer( Any const& defaultData, AnyOptionSet const& options );
-		void receiveData( TimestampedData const& data );
+		virtual BasicInletBuffer & operator[]( const unsigned int index ) = 0;
+		AnyOptionSet const& getOptionSet() const { return m_Options; }
+
+	protected:
+
+		EngineImpl										&m_Engine;
+		AnyOptionSet									m_Options;
+
+	};
+
+	class BasicInletBuffer : public AbstractInletBuffer
+	{
+
+	public:
+
+		BasicInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		~BasicInletBuffer();
+
+		BasicInletBuffer & operator[]( const unsigned int index ) { return *this; }
+
+		void setInitialValue( Any const& initialValue );
 		void receiveData( Any const& data );
 		void receiveData( std::string const& data );
-		TimestampedData const& getTriggeringData() const;
 		void processBufferedData( const bool enableTriggering );
 		void clearBufferedData();
-		void disableTriggering( TimestampedData const& data );
+		AnyOptionSet const& getOptionSet() const;
+
+		TimestampedData const& getTriggeringData() const;
 		void setBufferSize( const unsigned int size );
 		unsigned int getBufferSize() const;
+
+		// direct linking is based on basic buffers
+		void receiveData( TimestampedData const& data );
+
+		// triggers is based on basic buffers only
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
-		AnyOptionSet const& getOptionSet() const;
+		void disableTriggering( TimestampedData const& data );
 
 	private:
 
 		unsigned long									m_Counter;
-		EngineImpl										&m_Engine;
-
 		DataBuffer										m_ReceivedDataItems;	// holds all received data items
 		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
-
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
-
 		volatile bool									m_NotifyOnReceive;		// if true: try triggering
 
-		TimestampedData									m_DefaultData;
-		mutable Poco::FastMutex							m_DefaultAccess;
+		TimestampedData									m_InitialData;
+		mutable Poco::FastMutex							m_InitialDataAccess;
 		mutable Poco::FastMutex							m_BufferAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
-		AnyOptionSet									m_Options;
+
+	};
+
+	class MultiInletBuffer : public AbstractInletBuffer
+	{
+
+	public:
+
+		typedef std::vector< BasicInletBuffer * >						BasicBuffers;
+		typedef std::vector< BasicInletBuffer * >::iterator				BasicBufferIterator;
+		typedef std::vector< BasicInletBuffer * >::const_iterator		BasicBufferConstInterator;
+
+		MultiInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		~MultiInletBuffer();
+
+		BasicInletBuffer & operator[]( const unsigned int index );
+		void addBasicBuffer( BasicInletBuffer &buffer );
+		void removeBasicBuffer( BasicInletBuffer &buffer );
+
+	private:
+
+		BasicBuffers				m_Buffers;
 
 	};
 

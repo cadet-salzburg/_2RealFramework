@@ -18,6 +18,8 @@
 
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
+#include "engine/_2RealFunctionBlockUpdatePolicy.h"
+#include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
@@ -27,12 +29,194 @@ using std::string;
 namespace _2Real
 {
 
-	InletIO::InletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options ) :
-		Handleable< InletIO, app::InletHandle >( *this ),
-		m_Inlet( new Inlet( owner, name, type ) ),
-		m_Buffer( new InletBuffer( initialValue, options ) )
+	AbstractInletIO::AbstractInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, AnyOptionSet const& options ) :
+		NonCopyable< AbstractInletIO >(),
+		Handleable< AbstractInletIO, app::InletHandle >( *this ),
+		m_Info( name, owner.getName(), type, options ),
+		m_OwningBlock( owner ),
+		m_Policy( policy )
 	{
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	BasicInletIO::BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options ) :
+		AbstractInletIO( owner, policy, name, type, options ),
+		m_Inlet( new BasicInlet( owner, name ) ),
+		m_Buffer( new BasicInletBuffer( initialValue, options ) )
+	{
+	}
+
+	BasicInletIO::~BasicInletIO()
+	{
+	}
+
+	bundle::InletHandle & BasicInletIO::getBundleInletHandle() const
+	{
+		return m_Inlet->getHandle();
+	}
+	
+	std::string const& BasicInletIO::getName() const
+	{
+		return m_Info.baseName;
+	}
+
+	TimestampedData const& BasicInletIO::getData() const
+	{
+		return m_Inlet->getCurrentData();
+	}
+
+	void BasicInletIO::setBufferSize( const unsigned int size )
+	{
+		m_Buffer->setBufferSize( size );
+	}
+
+	void BasicInletIO::updateWhenInletDataNew( const bool isSingleWeight )
+	{
+		std::string policyAsString = ( isSingleWeight ? "or_newer_data" : "and_newer_data" );
+
+		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< NewerTimestamp >, isSingleWeight, policyAsString );
+	}
+
+	void BasicInletIO::updateWhenInletDataValid()
+	{
+		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< ValidData >, false, "valid_data" );
+	}
+
+	void BasicInletIO::receiveData( Any const& dataAsAny )
+	{
+		m_Buffer->receiveData( dataAsAny );
+	}
+
+	void BasicInletIO::receiveData( std::string const& dataAsString )
+	{
+		m_Buffer->receiveData( dataAsString );
+	}
+
+	void BasicInletIO::setInitialValue( Any const& any )
+	{
+		m_Buffer->setInitialValue( any );
+	}
+
+	void BasicInletIO::syncInletData()
+	{
+		std::cout << m_Info.baseName << " sync!" << std::endl;
+		std::cout << m_Buffer->getTriggeringData().getAny().getType().getCode() << std::endl;
+		m_Inlet->setData( m_Buffer->getTriggeringData() );
+	}
+
+	void BasicInletIO::processBufferedData( const bool enableTriggering )
+	{
+		m_Buffer->processBufferedData( enableTriggering );
+	}
+
+	void BasicInletIO::clearBufferedData()
+	{
+		m_Buffer->clearBufferedData();
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	MultiInletIO::MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options ) :
+		AbstractInletIO( owner, policy, name, type, options ),
+		m_Inlet( new MultiInlet( owner, name ) ),
+		m_Buffer( new MultiInletBuffer( initialValue, options ) ),
+		m_InitialValue( initialValue )
+	{
+		// TODO: add first inlet ?
+	}
+
+	MultiInletIO::~MultiInletIO()
+	{
+	}
+
+	BasicInletIO &  MultiInletIO::operator[]( const unsigned int index )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+
+		try
+		{
+			return *( m_InletIOs.at( index ).io );
+		}
+		catch ( std::out_of_range &e )
+		{
+			throw Exception( e.what() );
+		}
+	}
+
+	bundle::InletHandle & MultiInletIO::getBundleInletHandle() const
+	{
+		return m_Inlet->getHandle();
+	}
+
+	AbstractInletIO * MultiInletIO::addBasicInlet()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+
+		// basic inlets still need unique names
+		// however, they do not necessarily correspond to the order within the vector
+		unsigned int size = m_InletIOs.size();
+		std::ostringstream name;
+		name << m_Info.baseName << ":" << size;
+		// basic inlet is created & stored, but not yed added to the multiinlet - the owning block might be in update / setup
+		BasicInletIO *io = new BasicInletIO( m_OwningBlock, m_Policy, name.str(), m_Info.type, m_InitialValue, m_Info.options );
+		m_InletIOs.push_back( IO( io ) );
+		// causes inlet to be added to the policy
+		m_Policy.addInlet( *io );
+
+		return io;
+	}
+
+	void MultiInletIO::removeBasicInlet( AbstractInletIO *io )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+
+		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
+		{
+			if ( io == ( *it ).io )
+			{
+				if ( m_InletIOs.size() == 1 )	throw IllegalActionException( "cannot remove last inlet from multiinlet" );
+
+				// basic inlet must stay in the multiinlet, since owning block might be in update /setup & thus the inlet might be accessed
+				( *it ).todoRemove = true;
+				// once the app programmer calls 'remove', the inlet should not influence the update policy any more, so remove it
+				m_Policy.removeInlet( *( *it ).io );
+				// done - basic inlets are unique within the multiinlet
+				return;
+			}
+		}
+
+		// ( ? ) not found exc if abstr inlet does not belong to multiinlet?
+	}
+
+	void MultiInletIO::syncInletChanges()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+
+		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
+		{
+			if ( ( *it ).todoAdd &! ( *it ).todoRemove )
+			{
+				BasicInletIO *io = ( *it ).io;
+				m_Inlet->addBasicInlet( io->getInlet() );
+				m_Buffer->addBasicBuffer( io->getBuffer() );
+
+				( *it ).todoAdd = false;
+			}
+			else if ( ( *it ).todoAdd && ( *it ).todoRemove ) {}		// added & removed again in same cycle
+			else if ( ( *it ).todoRemove )
+			{
+				BasicInletIO *io = ( *it ).io;
+				m_Inlet->removeBasicInlet( io->getInlet() );
+				m_Buffer->removeBasicBuffer( io->getBuffer() );
+
+				it = m_InletIOs.erase( it );
+			}
+			else {}														// nothing
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
@@ -42,18 +226,14 @@ namespace _2Real
 	{
 	}
 
-	InletIO::~InletIO()
-	{
-		delete m_Inlet;
-		delete m_Buffer;
-	}
-
 	OutletIO::~OutletIO()
 	{
 		delete m_Outlet;
 		delete m_AppEvent;
 		delete m_InletEvent;
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	AbstractIOManager::AbstractIOManager( AbstractUberBlock &owner ) :
 		m_Owner( owner )

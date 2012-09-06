@@ -22,7 +22,7 @@
 
 namespace _2Real
 {
-	class InletIO;
+	class BasicInletIO;
 	class OutletIO;
 	class AbstractUberBlock;
 
@@ -31,25 +31,25 @@ namespace _2Real
 
 	public:
 
-		IOLink( InletIO &inlet, OutletIO &outlet );
+		IOLink( BasicInletIO &inlet, OutletIO &outlet );
 
 		void activate();
 		void deactivate();
 
-		InletIO const& getInletIO() const;
+		BasicInletIO const& getInletIO() const;
 		OutletIO const& getOutletIO() const;
 
 		bool operator<( IOLink const& other );
 		bool isBlockInvolved( AbstractUberBlock const& b ) const;
 
-		static IOLink * link( InletIO &inlet, OutletIO &outlet );
-		static const std::string findConversion( InletIO &inlet, OutletIO &outlet );
-		static bool canAutoConvert( InletIO &inlet, OutletIO &outlet );
+		static IOLink * link( BasicInletIO &inlet, OutletIO &outlet );
+		static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
+		static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
 
 	private:
 
-		InletIO		&m_InletIO;
-		OutletIO	&m_OutletIO;
+		BasicInletIO		&m_InletIO;
+		OutletIO			&m_OutletIO;
 
 	};
 }

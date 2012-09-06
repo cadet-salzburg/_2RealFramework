@@ -194,21 +194,21 @@ namespace _2Real
 
 				for ( app::BlockInfo::ParameterInfoConstIterator pIt = blockInfo.getInlets().begin(); pIt != blockInfo.getInlets().end(); ++pIt )
 				{
-					xml::InletConfig i;
-					i.inletId = pIt->getName();
-					app::InletHandle h = ( *it )->getAppInletHandle( i.inletId );
-					i.updatePolicy = ( *it )->getUpdatePolicyAsString( pIt->getName() );
-					i.bufferSize = ( *it )->getBufferSizeAsString( pIt->getName() );
-					// TODO: hacky wacky!
-					if ( h.getTypename().find( "img_" ) == string::npos )
-					{
-						i.value = h.getCurrentInput().getDataAsString();
-					}
-					else
-					{
-						i.value = "";
-					}
-					c.inlets.push_back( i );
+					//xml::InletConfig i;
+					//i.inletId = pIt->getName();
+					//app::InletHandle h = ( *it )->getAppInletHandle( i.inletId );
+					//i.updatePolicy = ( *it )->getUpdatePolicyAsString( pIt->getName() );
+					//i.bufferSize = ( *it )->getBufferSizeAsString( pIt->getName() );
+					//// TODO: hacky wacky!
+					//if ( h.getTypename().find( "img_" ) == string::npos )
+					//{
+					//	i.value = h.getCurrentInput().getDataAsString();
+					//}
+					//else
+					//{
+					//	i.value = "";
+					//}
+					//c.inlets.push_back( i );
 				}
 
 				config.addBlockInstance( c );
@@ -219,8 +219,8 @@ namespace _2Real
 				xml::ParamConfig in;
 				xml::ParamConfig out;
 
-				in.paramId = ( *it )->getInletIO().m_Inlet->getName();
-				in.blockInstanceId = ( *it )->getInletIO().m_Inlet->getOwningUberBlock().getName();
+				in.paramId = ( *it )->getInletIO().getName();
+				in.blockInstanceId = ( *it )->getInletIO().info().blockName;
 
 				out.paramId = ( *it )->getOutletIO().m_Outlet->getName();
 				out.blockInstanceId = ( *it )->getOutletIO().m_Outlet->getOwningUberBlock().getName();

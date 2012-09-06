@@ -36,10 +36,11 @@ namespace _2Real
 
 		long getTimestamp() const;
 		long getKey() const;
-		Any & getData();
-		Any const& getData() const;
+		Any & getAny();
+		Any const& getAny() const;
 		bool isEmpty() const;
-		void cloneData( TimestampedData const& src );
+		void cloneAnyFrom( TimestampedData const& src );
+		void createAnyFrom( TimestampedData const& src );
 
 		bool operator>( TimestampedData const& other ) const;
 

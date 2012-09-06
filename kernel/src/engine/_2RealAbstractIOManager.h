@@ -45,31 +45,146 @@ namespace _2Real
 		class OutletHandle;
 	}
 
-	class Inlet;
-	class InletBuffer;
+	class AbstractIOManager;
+	class AbstractInlet;
+	class AbstractInletBuffer;
+	class BasicInlet;
+	class BasicInletBuffer;
+	class MultiInlet;
+	class MultiInletBuffer;
+	class BasicInletIO;
 	class Outlet;
 	class TimestampedData;
 	class AbstractUberBlock;
 	class AnyOptionSet;
 	class TypeDescriptor;
+	class AbstractUpdatePolicy;
 
-	class InletIO : private NonCopyable< InletIO >, private Handleable< InletIO, app::InletHandle >
+	class AbstractInletIO : private NonCopyable< AbstractInletIO >, private Handleable< AbstractInletIO, app::InletHandle >
 	{
 
 	public:
 
-		using Handleable< InletIO, app::InletHandle >::getHandle;
-		using Handleable< InletIO, app::InletHandle >::registerHandle;
-		using Handleable< InletIO, app::InletHandle >::unregisterHandle;
+		struct InletInfo
+		{
+			InletInfo( std::string const& n, std::string const& b, TypeDescriptor const& t, AnyOptionSet const& o ) :
+				type( t ), options( o ), baseName( n ), blockName( b ) {}
 
-		InletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
-		~InletIO();
-		Inlet													*m_Inlet;
-		InletBuffer												*m_Buffer;
+			TypeDescriptor		const& type;
+			AnyOptionSet		const& options;
+			std::string			const baseName;
+			std::string			const blockName;
+		};
+
+		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
+		using Handleable< AbstractInletIO, app::InletHandle >::registerHandle;
+		using Handleable< AbstractInletIO, app::InletHandle >::unregisterHandle;
+
+		AbstractInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, AnyOptionSet const& options );
+		virtual ~AbstractInletIO() {}
+
+		virtual bool						isMultiInlet() const = 0;
+		virtual unsigned int				getSize() const = 0;
+		virtual BasicInletIO &				operator[]( const unsigned int index ) = 0;
+		virtual AbstractInletIO *			addBasicInlet() = 0;
+		virtual void						removeBasicInlet( AbstractInletIO *io ) = 0;
+		virtual void						syncInletChanges() = 0;
+		virtual bundle::InletHandle &		getBundleInletHandle() const = 0;
+
+		InletInfo const&					info() const { return m_Info; }
+		bool								belongsToBlock( AbstractUberBlock const* const block ) const { return ( &m_OwningBlock == block ); }
+
+	protected:
+
+		InletInfo							m_Info;
+		AbstractUpdatePolicy				&m_Policy;		// subinlets need to be +/- to the policy as well
+		AbstractUberBlock					&m_OwningBlock;
 
 	};
 
-	class OutletIO : private NonCopyable< InletIO >, private Handleable< OutletIO, app::OutletHandle >
+	class BasicInletIO : public AbstractInletIO
+	{
+
+	public:
+
+		BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		~BasicInletIO();
+
+		bool								isMultiInlet() const { return false; }
+		unsigned int						getSize() const { return 1; }
+		BasicInletIO &						operator[]( const unsigned int index ) { return *this; }
+		AbstractInletIO *					addBasicInlet() { throw Exception( "not a multiinlet" ); }
+		void								removeBasicInlet( AbstractInletIO *io ){ throw Exception( "not a multiinlet" ); }
+		void								syncInletChanges() {}
+		bundle::InletHandle &				getBundleInletHandle() const;
+
+		BasicInlet &						getInlet() { return *m_Inlet; }
+		BasicInletBuffer &					getBuffer() { return *m_Buffer; }
+		BasicInlet * getInletPtr()			{ return m_Inlet; }
+		BasicInletBuffer * getBufferPtr()	{ return m_Buffer; }
+
+		std::string const&					getName() const;
+		TimestampedData const&				getData() const;
+		void								setBufferSize( const unsigned int size );
+		void								updateWhenInletDataNew( const bool isSingleWeight );
+		void								updateWhenInletDataValid();
+		void								receiveData( Any const& dataAsAny );
+		void								receiveData( std::string const& dataAsString );
+		void								setInitialValue( Any const& any );
+		void								syncInletData();
+		void								processBufferedData( const bool enableTriggering );
+		void								clearBufferedData();
+
+	private:
+
+		BasicInlet							*m_Inlet;
+		BasicInletBuffer					*m_Buffer;
+
+	};
+
+	class MultiInletIO : public AbstractInletIO
+	{
+
+	public:
+
+		// holds inletios for all subinlets + update flags ( add or remove )
+		struct IO
+		{
+			IO( BasicInletIO *io ) : io( io ), todoAdd( true ), todoRemove( false ) {}
+			~IO() { delete io; }
+
+			BasicInletIO	*io;
+			bool			todoAdd;
+			bool			todoRemove;
+		};
+
+		MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		~MultiInletIO();
+
+		bool isMultiInlet()					const { return true; }
+		unsigned int getSize()				const { return m_InletIOs.size(); }
+		BasicInletIO &						operator[]( const unsigned int index );
+		AbstractInletIO *					addBasicInlet();
+		void								removeBasicInlet( AbstractInletIO *io );
+		void								syncInletChanges();
+		bundle::InletHandle &				getBundleInletHandle() const;
+
+	private:
+
+		typedef std::vector< IO >						BasicIOs;
+		typedef std::vector< IO >::iterator				BasicIOIterator;
+		typedef std::vector< IO >::const_iterator		BasicIOConstInterator;
+
+		BasicIOs							m_InletIOs;
+		MultiInlet							*m_Inlet;
+		MultiInletBuffer					*m_Buffer;
+		Any									m_InitialValue;
+		mutable Poco::FastMutex				m_Access;
+
+	};
+
+
+	class OutletIO : private NonCopyable< OutletIO >, private Handleable< OutletIO, app::OutletHandle >
 	{
 
 	public:
@@ -107,9 +222,9 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< InletIO * >							InletVector;
-		typedef std::vector< InletIO * >::iterator					InletIterator;
-		typedef std::vector< InletIO * >::const_iterator			InletConstIterator;
+		typedef std::vector< AbstractInletIO * >					InletVector;
+		typedef std::vector< AbstractInletIO * >::iterator			InletIterator;
+		typedef std::vector< AbstractInletIO * >::const_iterator	InletConstIterator;
 
 		typedef std::vector< OutletIO * >							OutletVector;
 		typedef std::vector< OutletIO * >::iterator					OutletIterator;

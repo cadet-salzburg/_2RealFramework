@@ -19,42 +19,79 @@
 #include "engine/_2RealInlet.h"
 #include "bundle/_2RealInletHandle.h"
 #include "engine/_2RealAbstractUberBlock.h"
-#include "engine/_2RealEngineImpl.h"
 
 using std::string;
 
 namespace _2Real
 {
-	Inlet::Inlet( AbstractUberBlock &owningBlock, string const& name, TypeDescriptor const& type ) :
-		Parameter( type ),
-		NonCopyable< Inlet >(),
-		Identifiable< Inlet >( owningBlock.getIds(), name ),
-		Handleable< Inlet, bundle::InletHandle >( *this ),
-		m_Engine( EngineImpl::instance() ),
-		m_OwningUberBlock( owningBlock ),
-		m_LastData( Any(), -1 )
+	AbstractInlet::AbstractInlet( AbstractUberBlock &owningBlock, string const& name ) :
+		NonCopyable< AbstractInlet >(),
+		Identifiable< AbstractInlet >( owningBlock.getIds(),  name ),
+		Handleable< AbstractInlet, bundle::InletHandle >( *this )
 	{
 	}
 
-	void Inlet::setDataAndSynchronize( TimestampedData const& data )
+	BasicInlet::BasicInlet( AbstractUberBlock &owningBlock, string const& name ) :
+		AbstractInlet( owningBlock, name )
 	{
-		m_LastData = Parameter::m_Data;
-		Parameter::setData( data );
-		Parameter::synchronize();
 	}
 
-	AbstractUberBlock & Inlet::getOwningUberBlock()
+	TimestampedData const& BasicInlet::getCurrentData() const
 	{
-		return m_OwningUberBlock;
+		return m_CurrentData;
 	}
 
-	bool Inlet::hasUpdated() const
+	bool BasicInlet::hasUpdated() const
 	{
-		return ( Parameter::m_Data.getKey() != m_LastData.getKey() );
+		return ( m_CurrentData.getKey() != m_LastData.getKey() );
 	}
 
-	bool Inlet::hasChanged() const
+	bool BasicInlet::hasChanged() const
 	{
-		return ( !Parameter::m_Data.getData().isEqualTo( m_LastData.getData() ) );
+		return ( !m_CurrentData.getAny().isEqualTo( m_LastData.getAny() ) );
+	}
+
+	void BasicInlet::setData( TimestampedData const& data )
+	{
+		m_LastData = m_CurrentData;
+		m_CurrentData = data;
+	}
+
+	MultiInlet::MultiInlet( AbstractUberBlock &owningBlock, string const& name ) :
+		AbstractInlet( owningBlock, name )
+	{
+	}
+
+	MultiInlet::~MultiInlet()
+	{
+	}
+
+	BasicInlet & MultiInlet::operator[]( const unsigned int index )
+	{
+		try
+		{
+			return *m_Inlets.at( index );
+		}
+		catch ( std::out_of_range &e )
+		{
+			throw _2Real::Exception( e.what() );
+		}
+	}
+
+	void MultiInlet::addBasicInlet( BasicInlet &inlet )
+	{
+		m_Inlets.push_back( &inlet );
+	}
+
+	void MultiInlet::removeBasicInlet( BasicInlet &inlet )
+	{
+		for ( BasicInletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		{
+			if ( &inlet == *it )
+			{
+				m_Inlets.erase( it );
+				break;
+			}
+		}
 	}
 }

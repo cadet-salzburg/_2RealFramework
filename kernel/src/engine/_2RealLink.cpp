@@ -31,23 +31,23 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	IOLink * IOLink::link( InletIO &inlet, OutletIO &outlet )
+	IOLink * IOLink::link( BasicInletIO &inlet, OutletIO &outlet )
 	{
-		if ( inlet.m_Inlet->getLongTypename() != outlet.m_Outlet->getLongTypename() )
+		if ( inlet.info().type.m_LongTypename != outlet.m_Outlet->getLongTypename() )
 		{
 			return nullptr;
 		}
 		else return new IOLink( inlet, outlet );
 	}
 
-	bool IOLink::canAutoConvert( InletIO &inlet, OutletIO &outlet )
+	bool IOLink::canAutoConvert( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		const Type tSrc = outlet.m_Outlet->getType();
-		const Type tDst = inlet.m_Inlet->getType();
+		const Type tDst = inlet.info().type.m_Type;
 		if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
 		{
 			const TypeCategory cSrc = outlet.m_Outlet->getTypeCategory();
-			const TypeCategory cDst = inlet.m_Inlet->getTypeCategory();
+			const TypeCategory cDst = inlet.info().type.m_TypeCategory;
 			if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
 			{
 				return true;
@@ -56,9 +56,9 @@ namespace _2Real
 		return false;
 	}
 
-	const std::string IOLink::findConversion( InletIO &inlet, OutletIO &outlet )
+	const std::string IOLink::findConversion( BasicInletIO &inlet, OutletIO &outlet )
 	{
-		std::string inType = inlet.m_Inlet->getTypename();
+		std::string inType = inlet.info().type.m_TypeName;
 		std::string outType = outlet.m_Outlet->getTypename();
 
 		for ( unsigned int i = 0; i<inType.length(); ++i )
@@ -75,14 +75,14 @@ namespace _2Real
 		return conversion;
 	}
 
-	IOLink::IOLink( InletIO &inlet, OutletIO &outlet ) :
+	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet ) :
 		m_InletIO( inlet ),
 		m_OutletIO( outlet )
 	{
 		// no more typechecking here
 	}
 
-	InletIO const& IOLink::getInletIO() const
+	BasicInletIO const& IOLink::getInletIO() const
 	{
 		return m_InletIO;
 	}
@@ -94,15 +94,15 @@ namespace _2Real
 
 	bool IOLink::operator<( IOLink const& other )
 	{
-		if ( m_InletIO.m_Inlet < other.m_InletIO.m_Inlet ) return true;
-		if ( other.m_InletIO.m_Inlet < m_InletIO.m_Inlet ) return false;
+		if ( m_InletIO.getInletPtr() < other.m_InletIO.getInletPtr() ) return true;
+		if ( other.m_InletIO.getInletPtr() < m_InletIO.getInletPtr() ) return false;
 		if ( m_OutletIO.m_Outlet < other.m_OutletIO.m_Outlet ) return true;
 		return false;
 	}
 
 	bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
 	{
-		if ( &m_InletIO.m_Inlet->getOwningUberBlock() == &b )
+		if ( m_InletIO.belongsToBlock( &b ) )
 		{
 			return true;
 		}
@@ -116,13 +116,13 @@ namespace _2Real
 
 	void IOLink::activate() 
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< InletBuffer, TimestampedData const& >( *m_InletIO.m_Buffer, &InletBuffer::receiveData );
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO.getBuffer(), &BasicInletBuffer::receiveData );
 		m_OutletIO.m_InletEvent->addListener( *cb );
 	}
 
 	void IOLink::deactivate()
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< InletBuffer, TimestampedData const& >( *m_InletIO.m_Buffer, &InletBuffer::receiveData );
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO.getBuffer(), &BasicInletBuffer::receiveData );
 		m_OutletIO.m_InletEvent->removeListener( *cb );
 	}
 

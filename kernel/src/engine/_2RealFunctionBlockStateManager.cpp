@@ -84,7 +84,7 @@ namespace _2Real
 		// else: throw exception
 		m_CurrentState->setUp( *this );
 
-		m_UpdatePolicy->changePolicy();
+		m_UpdatePolicy->syncChanges();
 
 		// blocking request /////////////////////////////////////
 		ThreadExecRequest *req = new ThreadExecRequest( *this, &FunctionBlockStateManager::setupFunctionBlock );
@@ -154,7 +154,7 @@ namespace _2Real
 		m_StateAccess.unlock();
 
 		m_StopEvent.reset();
-		m_UpdatePolicy->changePolicy();
+		m_UpdatePolicy->syncChanges();
 
 		// enable triggers /////////////////////////////////////////
 		m_EnabledAccess.lock();
@@ -223,7 +223,7 @@ namespace _2Real
 		}
 		else
 		{
-			m_UpdatePolicy->changePolicy();
+			m_UpdatePolicy->syncChanges();
 
 			m_EnabledAccess.lock();
 			m_IsTriggeringEnabled = true;

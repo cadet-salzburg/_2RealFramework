@@ -80,13 +80,11 @@ namespace _2Real
 		bool						shutDown( const long timeout );
 		void						singleStep();
 
-		void						updateWhenInletDataNew( InletIO &inletIO, const bool isOr);
-		void						updateWhenInletDataValid( InletIO &inletIO );
 		void						updateWithFixedRate( const double updatesPerSecond );
 
 		void						handleException( Exception &e );
 
-		void						addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		void						addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti );
 		void						addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 	private:
@@ -171,10 +169,9 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options )
+	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
 	{
-		m_IOManager->addInlet( name, type, initialValue, options );
-		m_UpdatePolicy->changePolicy();
+		m_IOManager->addInlet( name, type, initialValue, options, isMulti );
 	}
 
 	template< typename THandle >
@@ -292,25 +289,6 @@ namespace _2Real
 	void FunctionBlock< THandle >::singleStep()
 	{
 		m_StateManager->singleStep();
-	}
-
-	template< typename THandle >
-	void FunctionBlock< THandle >::updateWhenInletDataNew( InletIO &inletIO, const bool isOr )
-	{
-		if ( isOr )
-		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp>(), true, "or_newer_data" );
-		}
-		else
-		{
-			m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< NewerTimestamp>(), false, "and_newer_data" );
-		}
-	}
-
-	template< typename THandle >
-	void FunctionBlock< THandle >::updateWhenInletDataValid( InletIO &inletIO )
-	{
-		m_UpdatePolicy->setNewInletPolicy( inletIO, new InletTriggerCtor< ValidData >(), false, "valid_data" );
 	}
 
 	template< typename THandle >

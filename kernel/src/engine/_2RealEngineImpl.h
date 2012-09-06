@@ -44,7 +44,7 @@ namespace _2Real
 	class BundleManager;
 	class AbstractUberBlock;
 	class System;
-	class InletIO;
+	class AbstractInletIO;
 	class OutletIO;
 	class Bundle;
 
@@ -109,9 +109,9 @@ namespace _2Real
 		BlockInstances					getCurrentBlockInstances() const;
 		Bundles const&					getCurrentBundles() const;
 		Links const&					getCurrentLinks() const;
-		bool							createLink( InletIO &inlet, OutletIO &outlet );
-		bool							createLinkWithConversion( InletIO &inlet, OutletIO &outlet );
-		void							destroyLink( InletIO &inlet, OutletIO &outlet );
+		bool							createLink( BasicInletIO &inlet, OutletIO &outlet );
+		bool							createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
+		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
 
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle &				loadLibrary( std::string const& libraryPath );

@@ -53,12 +53,12 @@ namespace _2Real
 		return m_Key;
 	}
 
-	Any const& TimestampedData::getData() const
+	Any const& TimestampedData::getAny() const
 	{
 		return m_Data;
 	}
 
-	Any & TimestampedData::getData()
+	Any & TimestampedData::getAny()
 	{
 		return m_Data;
 	}
@@ -68,9 +68,14 @@ namespace _2Real
 		return m_Data.isNull();
 	}
 
-	void TimestampedData::cloneData( TimestampedData const& src )
+	void TimestampedData::cloneAnyFrom( TimestampedData const& src )
 	{
-		m_Data.cloneFrom( src.getData() );
+		m_Data.cloneFrom( src.m_Data );
+	}
+
+	void TimestampedData::createAnyFrom( TimestampedData const& src )
+	{
+		m_Data.createNew( src.m_Data );
 	}
 
 }

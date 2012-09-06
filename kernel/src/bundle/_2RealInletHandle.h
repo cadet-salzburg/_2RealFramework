@@ -25,7 +25,7 @@
 
 namespace _2Real
 {
-	class Inlet;
+	class AbstractInlet;
 
 	namespace bundle
 	{
@@ -35,7 +35,7 @@ namespace _2Real
 		public:
 
 			InletHandle();
-			InletHandle( Inlet &inlet );
+			InletHandle( AbstractInlet &inlet );
 			InletHandle( InletHandle const& src );
 			InletHandle& operator=( InletHandle const& src );
 			~InletHandle();
@@ -73,13 +73,20 @@ namespace _2Real
 			bool isValid() const;
 			void invalidate();
 
+			// true if inlet was declared as mutli inlet according to metadata
+			bool isMultiInlet() const;
+			// if not multi: returns 1
+			unsigned int getSize() const;
+
 			bool hasUpdated() const;
 			bool hasChanged() const;
+
+			InletHandle operator[]( const unsigned int index );
 
 		private:
 
 			Any					getCurrentData() const;
-			Inlet				*m_Inlet;
+			AbstractInlet		*m_Inlet;
 
 		};
 	}

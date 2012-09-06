@@ -24,7 +24,7 @@
 namespace _2Real
 {
 
-	class InletIO;
+	class BasicInletIO;
 	class Exception;
 
 	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
@@ -42,9 +42,6 @@ namespace _2Real
 
 		virtual void	prepareForShutDown() = 0;
 		virtual bool	shutDown( const long timeout ) = 0;
-
-		virtual void	updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
-		virtual void	updateWhenInletDataValid( InletIO &inletIO ) = 0;
 		virtual void	updateWithFixedRate( const double updatesPerSecond ) = 0;
 
 		virtual void	handleException( Exception &e ) = 0;

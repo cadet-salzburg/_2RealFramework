@@ -273,7 +273,7 @@ namespace _2Real
 		return m_BundleManager->getBundles();
 	}
 
-	bool EngineImpl::createLink( InletIO &inlet, OutletIO &outlet )
+	bool EngineImpl::createLink( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		IOLink *link = IOLink::link( inlet, outlet );
 		if ( link != nullptr )
@@ -297,7 +297,7 @@ namespace _2Real
 		}
 	}
 
-	bool EngineImpl::createLinkWithConversion( InletIO &inlet, OutletIO &outlet )
+	bool EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		if ( IOLink::canAutoConvert( inlet, outlet ) )
 		{
@@ -338,7 +338,7 @@ namespace _2Real
 		return false;
 	}
 
-	void EngineImpl::destroyLink( InletIO &inlet, OutletIO &outlet )
+	void EngineImpl::destroyLink( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		IOLink *link = new IOLink( inlet, outlet );
 		LinkIterator it = m_Links.find( link );

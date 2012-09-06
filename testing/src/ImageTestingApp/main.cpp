@@ -185,10 +185,9 @@ int main( int argc, char *argv[] )
 		SDL_GL_SetSwapInterval( 1 );
 
 		Engine &testEngine = Engine::instance();
-		testEngine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin" );
+		testEngine.setBaseDirectory( "D:\\git\\trunk\\_2RealFramework\\testing\\bin" );
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
-
 		BlockHandle out = testBundle.createBlockInstance( "image_out" );
 		InletHandle vecTest = out.getInletHandle( "image_out_vec2" );
 		vecTest.setValue< _2Real::Vec2 >( _2Real::Vec2( 2.0, 3.0 ) );
@@ -257,7 +256,7 @@ int main( int argc, char *argv[] )
 		SDL_DestroyWindow( window );
 		SDL_QUIT;
 
-		testEngine.safeConfig( "img_test.xml" );
+		//testEngine.safeConfig( "img_test.xml" );
 		testBundle.unload();
 	}
 	catch ( Exception &e )
