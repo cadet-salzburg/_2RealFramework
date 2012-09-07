@@ -111,6 +111,7 @@ namespace _2Real
 	void BasicInletIO::clearBufferedData()
 	{
 		m_Buffer->clearBufferedData();
+		m_Buffer->receiveData( m_Buffer->getInitialValue() );
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +164,7 @@ namespace _2Real
 		m_InletIOs.push_back( IO( io ) );
 		// causes inlet to be added to the policy
 		m_Policy.addInlet( *io );
+		io->receiveData( m_Info.initValue.anyValue );
 
 		return io;
 	}

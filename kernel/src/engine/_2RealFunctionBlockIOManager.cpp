@@ -180,8 +180,6 @@ namespace _2Real
 
 	void FunctionBlockIOManager::addMultiInlet( AbstractInletIO::InletInfo const& info )
 	{
-		std::cout << "ADDING MULTIINLET" << std::endl;
-
 		MultiInletIO *io = new MultiInletIO( m_Owner, *m_UpdatePolicy, info );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );

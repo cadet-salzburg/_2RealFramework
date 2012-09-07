@@ -235,8 +235,6 @@ namespace _2Real
 
 	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName )
 	{
-		std::cout << "CREATING BLOCK INSTANCE" << std::endl;
-
 		std::string absPath = bundle.getAbsPath();
 		BundleMetadata const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getAbsPath() );
 
@@ -304,8 +302,6 @@ namespace _2Real
 
 		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			std::cout << "ADDING INLET" << std::endl;
-
 			app::InletInfo info;
 			info.name = ( *it )->name;
 			info.typeName = ( *it )->type->m_TypeName;
@@ -317,8 +313,6 @@ namespace _2Real
 
 		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
-			std::cout << "ADDING OUTLET" << std::endl;
-
 			app::OutletInfo info;
 			info.name = ( *it )->name;
 			info.typeName = ( *it )->type->m_TypeName;
@@ -328,8 +322,6 @@ namespace _2Real
 
 		app::BlockInfo info( blockInfo );
 
-		std::cout << "CREATING" << std::endl;
-
 		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getAbsPath(), blockName );
 		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, info );
 		m_Engine.addBlock( *functionBlock );
@@ -337,7 +329,6 @@ namespace _2Real
 		// adding inlets & outlets
 		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			std::cout << "adding inlet to function block!" << std::endl;
 			functionBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, ( *it )->isMultiple );
 		}
 
@@ -345,8 +336,6 @@ namespace _2Real
 		{
 			functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 		}
-
-		std::cout << "DONE" << std::endl;
 
 		return *functionBlock;
 	}

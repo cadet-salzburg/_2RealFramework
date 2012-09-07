@@ -174,8 +174,6 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
 	{
-		if ( isMulti ) std::cout << "adding a multi inlet" << std::endl;
-		else std::cout << "adding a normal inlet" << std::endl;
 		AbstractInletIO::InletInfo info( name, getName(), type, options, initialValue );
 		isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}

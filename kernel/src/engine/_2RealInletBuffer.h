@@ -71,7 +71,7 @@ namespace _2Real
 		typedef std::list< TimestampedData >			DataBuffer;
 		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
 
-		AbstractInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		AbstractInletBuffer( AnyOptionSet const& options );
 		virtual ~AbstractInletBuffer() {}
 
 		virtual BasicInletBuffer & operator[]( const unsigned int index ) = 0;
@@ -94,12 +94,14 @@ namespace _2Real
 
 		BasicInletBuffer & operator[]( const unsigned int index ) { return *this; }
 
-		void setInitialValue( Any const& initialValue );
 		void receiveData( Any const& data );
 		void receiveData( std::string const& data );
 		void processBufferedData( const bool enableTriggering );
 		void clearBufferedData();
 		AnyOptionSet const& getOptionSet() const;
+
+		void setInitialValue( Any const& initialValue );
+		Any const& getInitialValue() const;
 
 		TimestampedData const& getTriggeringData() const;
 		void setBufferSize( const unsigned int size );
@@ -121,7 +123,7 @@ namespace _2Real
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
 		volatile bool									m_NotifyOnReceive;		// if true: try triggering
 
-		TimestampedData									m_InitialData;
+		Any												m_InitialValue;
 		mutable Poco::FastMutex							m_InitialDataAccess;
 		mutable Poco::FastMutex							m_BufferAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
