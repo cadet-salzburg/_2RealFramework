@@ -78,6 +78,7 @@ void In::setup( BlockHandle &handle )
 	try
 	{
 		m_In = handle.getInletHandle( "in_inlet" );
+		m_InOptions = handle.getInletHandle( "in_inlet_options" );
 		m_Msg = handle.getInletHandle( "in_msg" );
 	}
 	catch ( Exception &e )
@@ -91,17 +92,40 @@ void In::update()
 {
 	try
 	{
-		if ( m_Msg.hasUpdated() )
-		{
-			cout << m_Msg.getReadableRef< string >() << " msg updated" << endl;
-		}
-		else if ( m_Msg.hasChanged() )
-		{
-			cout << m_Msg.getReadableRef< string >() << " msg value changed" << endl;
-		}
-
 		ostringstream msg;
-		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< _2Real::Number >() << endl;
+		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< int >() << endl;
+		cout << msg.str();
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+void MultiIn::setup( BlockHandle &handle )
+{
+	try
+	{
+		std::cout << "--MULTIIN SETUP--" << std::endl;
+		m_In = handle.getInletHandle( "multiin_inlet" );
+		m_InOptions = handle.getInletHandle( "multiin_inlet_options" );
+		m_Msg = handle.getInletHandle( "multiin_msg" );
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+void MultiIn::update()
+{
+	try
+	{
+		std::cout << "--MULTIIN UPDATE--" << std::endl;
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " size is " << m_In.getSize() << endl;
 		cout << msg.str();
 	}
 	catch ( Exception &e )

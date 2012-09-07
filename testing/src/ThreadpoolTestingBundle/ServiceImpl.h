@@ -51,6 +51,26 @@ private:
 
 	int									m_Counter;
 	_2Real::bundle::InletHandle			m_In;
+	_2Real::bundle::InletHandle			m_InOptions;
+	_2Real::bundle::InletHandle			m_Msg;
+
+};
+
+class MultiIn : public _2Real::bundle::Block
+{
+
+public:
+
+	MultiIn() : Block() {}
+	void shutdown() {}
+	void update();
+	void setup( _2Real::bundle::BlockHandle &handle );
+
+private:
+
+	int									m_Counter;
+	_2Real::bundle::InletHandle			m_In;
+	_2Real::bundle::InletHandle			m_InOptions;
 	_2Real::bundle::InletHandle			m_Msg;
 
 };

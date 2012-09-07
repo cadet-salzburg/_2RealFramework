@@ -96,6 +96,7 @@ public:
 	~Receiver()
 	{
 		glDeleteTextures( 1, &m_Texture );
+
 	}
 
 	void updateTexture()
@@ -188,6 +189,10 @@ int main( int argc, char *argv[] )
 		testEngine.setBaseDirectory( "D:\\git\\trunk\\_2RealFramework\\testing\\bin" );
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
+
+		BundleInfo const& info = testBundle.getBundleInfo();
+
+
 		BlockHandle out = testBundle.createBlockInstance( "image_out" );
 		InletHandle vecTest = out.getInletHandle( "image_out_vec2" );
 		vecTest.setValue< _2Real::Vec2 >( _2Real::Vec2( 2.0, 3.0 ) );
@@ -258,10 +263,15 @@ int main( int argc, char *argv[] )
 
 		//testEngine.safeConfig( "img_test.xml" );
 		testBundle.unload();
+		std::cout << "DONE!" << std::endl;
 	}
 	catch ( Exception &e )
 	{
 		cout << e.what() << " " << e.message() << endl;
+	}
+
+	while ( 1 )
+	{
 	}
 
 	return 0;
