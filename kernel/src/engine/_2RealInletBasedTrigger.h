@@ -30,7 +30,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return !newData.getAny().isNull();
+			return !newData.anyValue.isNull();
 		}
 	};
 
@@ -38,7 +38,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return ( newData.getTimestamp() > oldData.getTimestamp() );
+			return ( newData.timestamp > oldData.timestamp );
 		}
 	};
 

@@ -37,7 +37,7 @@ namespace _2Real
 		}
 
 		AppData::AppData( TimestampedData const& data, string const& typeName, std::string const& longTypename, string const& name ) :
-			m_Data( data.getAny() ),
+			m_Data( data.anyValue ),
 			m_Typename( typeName ),
 			m_LongTypename( longTypename ),
 			m_Name( name )

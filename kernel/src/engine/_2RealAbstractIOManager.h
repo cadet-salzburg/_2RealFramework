@@ -24,6 +24,7 @@
 #include "helpers/_2RealHandleable.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "engine/_2RealTimestampedData.h"
 
 #include <list>
 #include <vector>
@@ -67,20 +68,23 @@ namespace _2Real
 
 		struct InletInfo
 		{
-			InletInfo( std::string const& n, std::string const& b, TypeDescriptor const& t, AnyOptionSet const& o ) :
-				type( t ), options( o ), baseName( n ), blockName( b ) {}
+			InletInfo( std::string const& n, std::string const& b, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i ) :
+				type( t ), options( o ), baseName( n ), blockName( b ), initValue( i ) {}
 
-			TypeDescriptor		const& type;
-			AnyOptionSet		const& options;
-			std::string			const baseName;
-			std::string			const blockName;
+			TypeDescriptor			const& type;
+			AnyOptionSet			const& options;
+			std::string				baseName;
+			std::string				const blockName;
+			TimestampedData			initValue;
+			//TimestampedData			lastValue;
+			//TimestampedData			currentValue;
 		};
 
 		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
 		using Handleable< AbstractInletIO, app::InletHandle >::registerHandle;
 		using Handleable< AbstractInletIO, app::InletHandle >::unregisterHandle;
 
-		AbstractInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, AnyOptionSet const& options );
+		AbstractInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info );
 		virtual ~AbstractInletIO() {}
 
 		virtual bool						isMultiInlet() const = 0;
@@ -107,7 +111,7 @@ namespace _2Real
 
 	public:
 
-		BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info );
 		~BasicInletIO();
 
 		bool								isMultiInlet() const { return false; }
@@ -151,14 +155,13 @@ namespace _2Real
 		struct IO
 		{
 			IO( BasicInletIO *io ) : io( io ), todoAdd( true ), todoRemove( false ) {}
-			~IO() { delete io; }
 
 			BasicInletIO	*io;
 			bool			todoAdd;
 			bool			todoRemove;
 		};
 
-		MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info );
 		~MultiInletIO();
 
 		bool isMultiInlet()					const { return true; }
@@ -178,7 +181,6 @@ namespace _2Real
 		BasicIOs							m_InletIOs;
 		MultiInlet							*m_Inlet;
 		MultiInletBuffer					*m_Buffer;
-		Any									m_InitialValue;
 		mutable Poco::FastMutex				m_Access;
 
 	};

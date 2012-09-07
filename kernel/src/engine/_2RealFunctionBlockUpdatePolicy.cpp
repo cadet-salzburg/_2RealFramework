@@ -93,6 +93,8 @@ namespace _2Real
 
 		if ( ! ( m_TimeChanged || m_InletPoliciesChanged ) ) return;
 
+		std::cout << "----" << getName() << "----" << std::endl;
+
 		if ( m_TimeChanged )
 		{
 			safeDelete( m_TimeTrigger );

@@ -62,7 +62,8 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti );
+		void							addBasicInlet( AbstractInletIO::InletInfo const& info );
+		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
 		void							addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name ) const;
@@ -79,8 +80,6 @@ namespace _2Real
 		void							updateOutletData();
 		void							updateInletBuffers( const bool enableTriggering );
 		void							clearInletBuffers();
-
-		//unsigned int					getInletBufferSize( std::string const& inlet ) const;
 
 	private:
 

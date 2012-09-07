@@ -90,7 +90,7 @@ namespace _2Real
 		Any InletHandle::getCurrentData() const
 		{
 			checkValidity( m_Inlet );
-			return ( *m_Inlet )[ 0 ].getCurrentData().getAny();
+			return ( *m_Inlet )[ 0 ].getCurrentData().anyValue;
 		}
 
 		bool InletHandle::hasUpdated() const

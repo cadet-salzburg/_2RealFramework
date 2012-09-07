@@ -187,12 +187,12 @@ namespace _2Real
 
 				xml::BlockConfig c;
 				c.blockInstanceId = ( *it )->getName();
-				c.blockId = blockInfo.getName();
+				c.blockId = blockInfo.name;
 				c.bundleId = ( *it )->getBundleName();
 				c.fps = ( *it )->getUpdateRateAsString();
 				c.isRunning = ( *it )->isRunning();
 
-				for ( app::BlockInfo::ParameterInfoConstIterator pIt = blockInfo.getInlets().begin(); pIt != blockInfo.getInlets().end(); ++pIt )
+				for ( app::BlockInfo::InletInfoConstIterator pIt = blockInfo.inlets.begin(); pIt != blockInfo.inlets.end(); ++pIt )
 				{
 					//xml::InletConfig i;
 					//i.inletId = pIt->getName();

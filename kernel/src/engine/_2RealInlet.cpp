@@ -43,12 +43,12 @@ namespace _2Real
 
 	bool BasicInlet::hasUpdated() const
 	{
-		return ( m_CurrentData.getKey() != m_LastData.getKey() );
+		return ( m_CurrentData.key != m_LastData.key );
 	}
 
 	bool BasicInlet::hasChanged() const
 	{
-		return ( !m_CurrentData.getAny().isEqualTo( m_LastData.getAny() ) );
+		return ( !m_CurrentData.anyValue.isEqualTo( m_LastData.anyValue ) );
 	}
 
 	void BasicInlet::setData( TimestampedData const& data )

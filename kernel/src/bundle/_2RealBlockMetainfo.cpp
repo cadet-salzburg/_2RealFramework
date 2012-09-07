@@ -43,15 +43,28 @@ namespace _2Real
 		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
 		{
 			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init );
+			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, AnyOptionSet(), false );
 			m_Impl.addInlet( *data );
 		}
 
 		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options )
 		{
 			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init );
-			data->enableOptions( options );
+			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, options, false );
+			m_Impl.addInlet( *data );
+		}
+
+		void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
+		{
+			checkChars( toLower( trim( name ) ) );
+			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, AnyOptionSet(), true );
+			m_Impl.addInlet( *data );
+		}
+
+		void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options )
+		{
+			checkChars( toLower( trim( name ) ) );
+			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, options, true );
 			m_Impl.addInlet( *data );
 		}
 

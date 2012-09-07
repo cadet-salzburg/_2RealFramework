@@ -168,27 +168,21 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
+	void FunctionBlockIOManager::addBasicInlet( AbstractInletIO::InletInfo const& info )
 	{
-		AbstractInletIO *io;
+		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
+		io->syncInletData();
+		m_UpdatePolicy->addInlet( *io );
+		m_Inlets.push_back( io );
+		m_AppInletHandles.push_back( io->getHandle() );
+		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
+	}
 
-		// sync inlet data is called, becaus, in theory, getCurrentData might be called before the first setup
+	void FunctionBlockIOManager::addMultiInlet( AbstractInletIO::InletInfo const& info )
+	{
+		std::cout << "ADDING MULTIINLET" << std::endl;
 
-		if ( isMulti )
-		{
-			io = new MultiInletIO( m_Owner, *m_UpdatePolicy, name, type, initialValue, options );
-			BasicInletIO &inlet = ( *io )[ 0 ];
-			inlet.syncInletData();
-			m_UpdatePolicy->addInlet( inlet );
-		}
-		else
-		{
-			io = new BasicInletIO( m_Owner, *m_UpdatePolicy, name, type, initialValue, options );
-			BasicInletIO &inlet = static_cast< BasicInletIO & >( *io );
-			inlet.syncInletData();
-			m_UpdatePolicy->addInlet( inlet );
-		}
-
+		MultiInletIO *io = new MultiInletIO( m_Owner, *m_UpdatePolicy, info );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );

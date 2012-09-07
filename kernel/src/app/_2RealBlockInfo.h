@@ -27,38 +27,22 @@ namespace _2Real
 {
 	namespace app
 	{
-		class BlockInfo
+		struct BlockInfo
 		{
+			typedef std::vector< InletInfo >					InletInfos;
+			typedef std::vector< InletInfo >::iterator			InletInfoIterator;
+			typedef std::vector< InletInfo >::const_iterator	InletInfoConstIterator;
+			typedef std::vector< OutletInfo >					OutletInfos;
+			typedef std::vector< OutletInfo >::iterator			OutletInfoIterator;
+			typedef std::vector< OutletInfo >::const_iterator	OutletInfoConstIterator;
 
-		public:
+			BlockInfo() : name( "undefined" ), description( "undefined" ), category( "undefined" ), inlets(), outlets() {}
 
-			struct BlockData
-			{
-				std::string			name;
-				std::string			description;
-				std::string			category;
-			};
-
-			typedef std::vector< ParameterInfo >					ParameterInfos;
-			typedef std::vector< ParameterInfo >::iterator			ParameterInfoIterator;
-			typedef std::vector< ParameterInfo >::const_iterator	ParameterInfoConstIterator;
-
-			BlockInfo();
-			BlockInfo( BlockData const& data, ParameterInfos const& inlets, ParameterInfos const& outlets );
-
-			std::string const&			getName() const;
-			std::string const&			getDescription() const;
-			std::string const&			getCategory() const;
-
-			ParameterInfos const&		getInlets() const;
-			ParameterInfos const&		getOutlets() const; 
-
-		private:
-
-			BlockData					m_BlockData;
-			ParameterInfos				m_Inlets;
-			ParameterInfos				m_Outlets;
-
+			std::string			name;
+			std::string			description;
+			std::string			category;
+			InletInfos			inlets;
+			OutletInfos			outlets;
 		};
 	}
 }

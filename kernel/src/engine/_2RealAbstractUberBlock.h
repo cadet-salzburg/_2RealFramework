@@ -27,6 +27,24 @@ namespace _2Real
 	class BasicInletIO;
 	class Exception;
 
+	class AbstractIOManager;
+	class AbstractStateManager;
+	class AbstractUpdatePolicy;
+	class EngineImpl;
+	class AbstractUberBlock;
+
+	struct Refs
+	{
+		Refs( EngineImpl &e, AbstractUberBlock &b, AbstractIOManager &i, AbstractStateManager &s, AbstractUpdatePolicy &p ) :
+			engine( e ), block( b ), ios( i ), states( s ), policies( p ) {}
+
+		EngineImpl				&engine;
+		AbstractUberBlock		&block;
+		AbstractIOManager		&ios;
+		AbstractStateManager	&states;
+		AbstractUpdatePolicy	&policies;
+	};
+
 	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
 	{
 

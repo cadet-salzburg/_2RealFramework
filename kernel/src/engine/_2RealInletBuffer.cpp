@@ -344,7 +344,7 @@ namespace _2Real
 		m_Counter( 0 )
 	{
 		m_InitialData = TimestampedData( initialData, 0, ++m_Counter );
-		m_TriggeringData = TimestampedData( initialData, 0, m_InitialData.getKey() );
+		m_TriggeringData = TimestampedData( initialData, 0, m_InitialData.key );
 	}
 
 	BasicInletBuffer::~BasicInletBuffer()
@@ -369,7 +369,7 @@ namespace _2Real
 
 		{
 			Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
-			data.createNew( m_InitialData.getAny() );
+			data.createNew( m_InitialData.anyValue );
 		}
 
 		stringstream s;
@@ -383,28 +383,28 @@ namespace _2Real
 	{
 		// perform conversion, if necessary //////////////////////////////////////////////////////
 		m_InitialDataAccess.lock();
-		const Type tDst= data.getAny().getType();
-		const TypeCategory cDst = m_InitialData.getAny().getTypeCategory();
+		const Type tDst= m_InitialData.anyValue.getType();
+		const TypeCategory cDst = m_InitialData.anyValue.getTypeCategory();
 		m_InitialDataAccess.unlock();
 
 		TimestampedData received;
-		const Type tSrc = data.getAny().getType();
+		const Type tSrc = data.anyValue.getType();
 		if ( !( tSrc == tDst ) )
 		{
-			const TypeCategory cSrc = data.getAny().getTypeCategory();
+			const TypeCategory cSrc = data.anyValue.getTypeCategory();
 			if ( cSrc == TypeCategory::ARITHMETHIC && cDst == TypeCategory::ARITHMETHIC )
 			{
-				Any converted = arithmethicConversion( data.getAny(), tDst );
-				received = TimestampedData( converted, data.getTimestamp(), ++m_Counter );
+				Any converted = arithmethicConversion( data.anyValue, tDst );
+				received = TimestampedData( converted, data.timestamp, ++m_Counter );
 			}
 		}
-		else received = TimestampedData( data.getAny(), data.getTimestamp(), ++m_Counter );
+		else received = TimestampedData( data.anyValue, data.timestamp, ++m_Counter );
 		/////////////////////////////////////////////////////////////////////////////////////////
 
 		// perform option check, if necessary ///////////////////////////////////////////////////
 		if ( !m_Options.isEmpty() )
 		{
-			Any const& value = received.getAny();
+			Any const& value = received.anyValue;
 			if ( !m_Options.isOption( value ) )
 			{
 				// TODO: callback to app

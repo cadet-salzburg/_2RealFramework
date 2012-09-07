@@ -98,11 +98,13 @@ namespace _2Real
 		FunctionBlockIOManager		*m_IOManager;
 		FunctionBlockStateManager	*m_StateManager;
 
+		Refs						m_Refs;
+
 	};
 
 	template< typename THandle >
 	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info ) :
-		AbstractUberBlock( owningBundle.getIds(), info.getName() ),
+		AbstractUberBlock( owningBundle.getIds(), info.name ),
 		Handleable< FunctionBlock< THandle >, THandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_Bundle( owningBundle ),
@@ -110,7 +112,8 @@ namespace _2Real
 		m_BlockInfo( info ),
 		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) ),
 		m_IOManager( new FunctionBlockIOManager( *this ) ),
-		m_StateManager( new FunctionBlockStateManager( *this ) )
+		m_StateManager( new FunctionBlockStateManager( *this ) ),
+		m_Refs( m_Engine, *this, *m_IOManager, *m_StateManager, *m_UpdatePolicy )
 	{
 		m_StateManager->m_FunctionBlock = &block;
 		m_StateManager->m_IOManager = m_IOManager;
@@ -171,7 +174,10 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
 	{
-		m_IOManager->addInlet( name, type, initialValue, options, isMulti );
+		if ( isMulti ) std::cout << "adding a multi inlet" << std::endl;
+		else std::cout << "adding a normal inlet" << std::endl;
+		AbstractInletIO::InletInfo info( name, getName(), type, options, initialValue );
+		isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}
 
 	template< typename THandle >

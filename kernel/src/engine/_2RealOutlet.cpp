@@ -42,7 +42,7 @@ namespace _2Real
 	{
 		if ( !m_DiscardCurrent )
 		{
-			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.getAny(), m_Engine.getElapsedTime() );
+			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.anyValue, m_Engine.getElapsedTime() );
 			// shallow-copy written data into readable data
 			Parameter::synchronize();
 			// deep-copy readable data back into writeable data
@@ -59,7 +59,7 @@ namespace _2Real
 
 	Any & Outlet::getWriteableData()
 	{
-		return Parameter::m_DataBuffer.getAny();
+		return Parameter::m_DataBuffer.anyValue;
 	}
 
 	void Outlet::discardCurrentUpdate()

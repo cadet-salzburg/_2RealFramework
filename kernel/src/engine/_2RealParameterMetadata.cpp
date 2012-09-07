@@ -23,61 +23,26 @@ using std::string;
 
 namespace _2Real
 {
+	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initValue, AnyOptionSet const& options, const bool isMultiple ) :
+		name( name ),
+		type( &descriptor ),
+		initValue( initValue ),
+		options( options ),
+		isMultiple( isMultiple )
+	{
+	}
 
-	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initialValue ) :
-		m_Name( name ),
-		m_TypeDescriptor( &descriptor ),
-		m_InitialValue( initialValue )
+	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initValue ) :
+		name( name ),
+		type( &descriptor ),
+		initValue( initValue ),
+		options(),
+		isMultiple( false )
 	{
 	}
 
 	ParameterMetadata::~ParameterMetadata()
 	{
-		delete m_TypeDescriptor;
+		delete type;
 	}
-
-	void ParameterMetadata::enableOptions( AnyOptionSet const& options )
-	{
-		m_Options = options;
-	}
-
-	bool ParameterMetadata::hasOptions() const
-	{
-		return !m_Options.isEmpty();
-	}
-
-	AnyOptionSet const& ParameterMetadata::getOptions() const
-	{
-		return m_Options;
-	}
-
-	string const& ParameterMetadata::getName() const
-	{
-		return m_Name;
-	}
-
-	TypeDescriptor const& ParameterMetadata::getTypeDescriptor() const
-	{
-		return *m_TypeDescriptor;
-	}
-
-	string const& ParameterMetadata::getTypename() const
-	{
-		return m_TypeDescriptor->m_TypeName;
-	}
-
-	const string ParameterMetadata::getLongTypename() const
-	{
-		return m_TypeDescriptor->m_LongTypename;
-	}
-
-	Any const& ParameterMetadata::getInitialValue() const
-	{
-		return m_InitialValue;
-	}
-
-	void ParameterMetadata::performParameterNameCheck( std::string const& name )
-	{
-	}
-
 }
