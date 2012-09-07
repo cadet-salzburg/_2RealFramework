@@ -107,7 +107,6 @@ void MultiIn::setup( BlockHandle &handle )
 {
 	try
 	{
-		std::cout << "--MULTIIN SETUP--" << std::endl;
 		m_In = handle.getInletHandle( "multiin_inlet" );
 		m_InOptions = handle.getInletHandle( "multiin_inlet_options" );
 		m_Msg = handle.getInletHandle( "multiin_msg" );
@@ -123,9 +122,17 @@ void MultiIn::update()
 {
 	try
 	{
-		std::cout << "--MULTIIN UPDATE--" << std::endl;
+		unsigned int sz = m_In.getSize();
+
+		int sum = 0;
+		for ( unsigned int i = 0; i<sz; ++i )
+		{
+			sum += m_In.getReadableRef< int >();
+		}
+
 		ostringstream msg;
-		msg << m_Msg.getReadableRef< string >() << " size is " << m_In.getSize() << endl;
+		msg << m_Msg.getReadableRef< string >() << " nr of items is " << sz << endl;
+		msg << m_Msg.getReadableRef< string >() << " sum of items is " << sum << endl;
 		cout << msg.str();
 	}
 	catch ( Exception &e )
