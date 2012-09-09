@@ -15,6 +15,8 @@
 *.swp
 *~.nib
 */DerivedData/
+*.a
+*.dylib
 
 build/osx/DerivedData
 *.pbxuser

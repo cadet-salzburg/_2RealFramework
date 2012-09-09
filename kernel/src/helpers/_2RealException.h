@@ -19,7 +19,7 @@
 #pragma once
 
 #include <stdexcept>
-#ifdef _UNIX
+#if defined _UNIX || defined TARGET_OS_MAC 
 	#include <typeinfo>
 #else
 	#include <typeinfo.h>

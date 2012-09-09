@@ -21,10 +21,10 @@
 #include "datatypes/_2RealTypeComparisons.h"
 #include "datatypes/_2RealTypeStreamOperators.h"
 
-#ifdef _UNIX
-	#include <typeinfo>
+#if defined _UNIX || defined TARGET_OS_MAC
+#include <typeinfo>
 #else
-	#include <typeinfo.h>
+#include <typeinfo.h>
 #endif
 
 #include <string>

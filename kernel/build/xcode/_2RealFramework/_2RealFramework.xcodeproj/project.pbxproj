@@ -1,0 +1,913 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8E6B601015FD04CA00E3828F /* _2RealApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F6D15FD04CA00E3828F /* _2RealApplication.h */; };
+		8E6B601115FD04CA00E3828F /* _2RealBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F6E15FD04CA00E3828F /* _2RealBlock.h */; };
+		8E6B601215FD04CA00E3828F /* _2RealBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F6F15FD04CA00E3828F /* _2RealBundle.h */; };
+		8E6B601315FD04CA00E3828F /* _2RealDatatypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7015FD04CA00E3828F /* _2RealDatatypes.h */; };
+		8E6B601415FD04CA00E3828F /* _2RealAppData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7215FD04CA00E3828F /* _2RealAppData.cpp */; };
+		8E6B601515FD04CA00E3828F /* _2RealAppData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7315FD04CA00E3828F /* _2RealAppData.h */; };
+		8E6B601615FD04CA00E3828F /* _2RealBlockHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7415FD04CA00E3828F /* _2RealBlockHandle.cpp */; };
+		8E6B601715FD04CA00E3828F /* _2RealBlockHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7515FD04CA00E3828F /* _2RealBlockHandle.h */; };
+		8E6B601815FD04CA00E3828F /* _2RealBlockInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7615FD04CA00E3828F /* _2RealBlockInfo.cpp */; };
+		8E6B601915FD04CA00E3828F /* _2RealBlockInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7715FD04CA00E3828F /* _2RealBlockInfo.h */; };
+		8E6B601A15FD04CA00E3828F /* _2RealBundleHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7815FD04CA00E3828F /* _2RealBundleHandle.cpp */; };
+		8E6B601B15FD04CA00E3828F /* _2RealBundleHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7915FD04CA00E3828F /* _2RealBundleHandle.h */; };
+		8E6B601C15FD04CA00E3828F /* _2RealBundleInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7A15FD04CA00E3828F /* _2RealBundleInfo.cpp */; };
+		8E6B601D15FD04CA00E3828F /* _2RealBundleInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7B15FD04CA00E3828F /* _2RealBundleInfo.h */; };
+		8E6B601E15FD04CA00E3828F /* _2RealCallbacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7C15FD04CA00E3828F /* _2RealCallbacks.h */; };
+		8E6B601F15FD04CA00E3828F /* _2RealContextBlockHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7D15FD04CA00E3828F /* _2RealContextBlockHandle.cpp */; };
+		8E6B602015FD04CA00E3828F /* _2RealContextBlockHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F7E15FD04CA00E3828F /* _2RealContextBlockHandle.h */; };
+		8E6B602115FD04CA00E3828F /* _2RealEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F7F15FD04CA00E3828F /* _2RealEngine.cpp */; };
+		8E6B602215FD04CA00E3828F /* _2RealEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8015FD04CA00E3828F /* _2RealEngine.h */; };
+		8E6B602315FD04CA00E3828F /* _2RealInletHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8115FD04CA00E3828F /* _2RealInletHandle.cpp */; };
+		8E6B602415FD04CA00E3828F /* _2RealInletHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8215FD04CA00E3828F /* _2RealInletHandle.h */; };
+		8E6B602515FD04CA00E3828F /* _2RealOutletHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8315FD04CA00E3828F /* _2RealOutletHandle.cpp */; };
+		8E6B602615FD04CA00E3828F /* _2RealOutletHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8415FD04CA00E3828F /* _2RealOutletHandle.h */; };
+		8E6B602715FD04CA00E3828F /* _2RealParameterInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8515FD04CA00E3828F /* _2RealParameterInfo.cpp */; };
+		8E6B602815FD04CA00E3828F /* _2RealParameterInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8615FD04CA00E3828F /* _2RealParameterInfo.h */; };
+		8E6B602915FD04CA00E3828F /* _2RealBlockHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8815FD04CA00E3828F /* _2RealBlockHandle.cpp */; };
+		8E6B602A15FD04CA00E3828F /* _2RealBlockHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8915FD04CA00E3828F /* _2RealBlockHandle.h */; };
+		8E6B602B15FD04CA00E3828F /* _2RealBlockMetainfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8A15FD04CA00E3828F /* _2RealBlockMetainfo.cpp */; };
+		8E6B602C15FD04CA00E3828F /* _2RealBlockMetainfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8B15FD04CA00E3828F /* _2RealBlockMetainfo.h */; };
+		8E6B602D15FD04CA00E3828F /* _2RealBundleMetainfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8C15FD04CA00E3828F /* _2RealBundleMetainfo.cpp */; };
+		8E6B602E15FD04CA00E3828F /* _2RealBundleMetainfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8D15FD04CA00E3828F /* _2RealBundleMetainfo.h */; };
+		8E6B602F15FD04CA00E3828F /* _2RealContextBlockMetainfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F8E15FD04CA00E3828F /* _2RealContextBlockMetainfo.cpp */; };
+		8E6B603015FD04CA00E3828F /* _2RealContextBlockMetainfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F8F15FD04CA00E3828F /* _2RealContextBlockMetainfo.h */; };
+		8E6B603115FD04CA00E3828F /* _2RealCreationPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9015FD04CA00E3828F /* _2RealCreationPolicy.h */; };
+		8E6B603215FD04CA00E3828F /* _2RealInletHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F9115FD04CA00E3828F /* _2RealInletHandle.cpp */; };
+		8E6B603315FD04CA00E3828F /* _2RealInletHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9215FD04CA00E3828F /* _2RealInletHandle.h */; };
+		8E6B603415FD04CA00E3828F /* _2RealOutletHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F9315FD04CA00E3828F /* _2RealOutletHandle.cpp */; };
+		8E6B603515FD04CA00E3828F /* _2RealOutletHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9415FD04CA00E3828F /* _2RealOutletHandle.h */; };
+		8E6B603615FD04CA00E3828F /* _2RealAudioBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9615FD04CA00E3828F /* _2RealAudioBuffer.h */; };
+		8E6B603715FD04CA00E3828F /* _2RealBoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9715FD04CA00E3828F /* _2RealBoundingBox.h */; };
+		8E6B603815FD04CA00E3828F /* _2RealFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9815FD04CA00E3828F /* _2RealFace.h */; };
+		8E6B603915FD04CA00E3828F /* _2RealFilePath.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9915FD04CA00E3828F /* _2RealFilePath.h */; };
+		8E6B603A15FD04CA00E3828F /* _2RealImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F9A15FD04CA00E3828F /* _2RealImage.cpp */; };
+		8E6B603B15FD04CA00E3828F /* _2RealImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9B15FD04CA00E3828F /* _2RealImage.h */; };
+		8E6B603C15FD04CA00E3828F /* _2RealImageT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F9C15FD04CA00E3828F /* _2RealImageT.cpp */; };
+		8E6B603D15FD04CA00E3828F /* _2RealImageT.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9D15FD04CA00E3828F /* _2RealImageT.h */; };
+		8E6B603E15FD04CA00E3828F /* _2RealMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5F9E15FD04CA00E3828F /* _2RealMatrix.h */; };
+		8E6B603F15FD04CA00E3828F /* _2RealNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5F9F15FD04CA00E3828F /* _2RealNumber.cpp */; };
+		8E6B604015FD04CA00E3828F /* _2RealNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA015FD04CA00E3828F /* _2RealNumber.h */; };
+		8E6B604115FD04CA00E3828F /* _2RealPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FA115FD04CA00E3828F /* _2RealPoint.cpp */; };
+		8E6B604215FD04CA00E3828F /* _2RealPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA215FD04CA00E3828F /* _2RealPoint.h */; };
+		8E6B604315FD04CA00E3828F /* _2RealQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FA315FD04CA00E3828F /* _2RealQuaternion.cpp */; };
+		8E6B604415FD04CA00E3828F /* _2RealQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA415FD04CA00E3828F /* _2RealQuaternion.h */; };
+		8E6B604515FD04CA00E3828F /* _2RealRigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FA515FD04CA00E3828F /* _2RealRigidBody.cpp */; };
+		8E6B604615FD04CA00E3828F /* _2RealRigidBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA615FD04CA00E3828F /* _2RealRigidBody.h */; };
+		8E6B604715FD04CA00E3828F /* _2RealSkeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FA715FD04CA00E3828F /* _2RealSkeleton.cpp */; };
+		8E6B604815FD04CA00E3828F /* _2RealSkeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA815FD04CA00E3828F /* _2RealSkeleton.h */; };
+		8E6B604915FD04CA00E3828F /* _2RealSpace.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FA915FD04CA00E3828F /* _2RealSpace.h */; };
+		8E6B604A15FD04CA00E3828F /* _2RealType.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAA15FD04CA00E3828F /* _2RealType.h */; };
+		8E6B604B15FD04CA00E3828F /* _2RealTypeCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAB15FD04CA00E3828F /* _2RealTypeCategory.h */; };
+		8E6B604C15FD04CA00E3828F /* _2RealTypeComparisons.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAC15FD04CA00E3828F /* _2RealTypeComparisons.h */; };
+		8E6B604D15FD04CA00E3828F /* _2RealTypeInitializers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAD15FD04CA00E3828F /* _2RealTypeInitializers.h */; };
+		8E6B604E15FD04CA00E3828F /* _2RealTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAE15FD04CA00E3828F /* _2RealTypes.h */; };
+		8E6B604F15FD04CA00E3828F /* _2RealTypeStreamOperators.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FAF15FD04CA00E3828F /* _2RealTypeStreamOperators.h */; };
+		8E6B605015FD04CA00E3828F /* _2RealVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FB015FD04CA00E3828F /* _2RealVector.h */; };
+		8E6B605115FD04CA00E3828F /* _2RealAbstractIOManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FB215FD04CA00E3828F /* _2RealAbstractIOManager.cpp */; };
+		8E6B605215FD04CA00E3828F /* _2RealAbstractIOManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FB315FD04CA00E3828F /* _2RealAbstractIOManager.h */; };
+		8E6B605315FD04CA00E3828F /* _2RealAbstractStateManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FB415FD04CA00E3828F /* _2RealAbstractStateManager.cpp */; };
+		8E6B605415FD04CA00E3828F /* _2RealAbstractStateManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FB515FD04CA00E3828F /* _2RealAbstractStateManager.h */; };
+		8E6B605515FD04CA00E3828F /* _2RealAbstractUberBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FB615FD04CA00E3828F /* _2RealAbstractUberBlock.cpp */; };
+		8E6B605615FD04CA00E3828F /* _2RealAbstractUberBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FB715FD04CA00E3828F /* _2RealAbstractUberBlock.h */; };
+		8E6B605715FD04CA00E3828F /* _2RealAbstractUpdatePolicy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FB815FD04CA00E3828F /* _2RealAbstractUpdatePolicy.cpp */; };
+		8E6B605815FD04CA00E3828F /* _2RealAbstractUpdatePolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FB915FD04CA00E3828F /* _2RealAbstractUpdatePolicy.h */; };
+		8E6B605915FD04CA00E3828F /* _2RealAbstractUpdateTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FBA15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.cpp */; };
+		8E6B605A15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FBB15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.h */; };
+		8E6B605B15FD04CA00E3828F /* _2RealBlockMetadata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FBC15FD04CA00E3828F /* _2RealBlockMetadata.cpp */; };
+		8E6B605C15FD04CA00E3828F /* _2RealBlockMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FBD15FD04CA00E3828F /* _2RealBlockMetadata.h */; };
+		8E6B605D15FD04CA00E3828F /* _2RealBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FBE15FD04CA00E3828F /* _2RealBundle.cpp */; };
+		8E6B605E15FD04CA00E3828F /* _2RealBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FBF15FD04CA00E3828F /* _2RealBundle.h */; };
+		8E6B605F15FD04CA00E3828F /* _2RealBundleLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FC015FD04CA00E3828F /* _2RealBundleLoader.cpp */; };
+		8E6B606015FD04CA00E3828F /* _2RealBundleLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FC115FD04CA00E3828F /* _2RealBundleLoader.h */; };
+		8E6B606115FD04CA00E3828F /* _2RealBundleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FC215FD04CA00E3828F /* _2RealBundleManager.cpp */; };
+		8E6B606215FD04CA00E3828F /* _2RealBundleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FC315FD04CA00E3828F /* _2RealBundleManager.h */; };
+		8E6B606315FD04CA00E3828F /* _2RealBundleMetadata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FC415FD04CA00E3828F /* _2RealBundleMetadata.cpp */; };
+		8E6B606415FD04CA00E3828F /* _2RealBundleMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FC515FD04CA00E3828F /* _2RealBundleMetadata.h */; };
+		8E6B606515FD04CA00E3828F /* _2RealEngineImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FC615FD04CA00E3828F /* _2RealEngineImpl.cpp */; };
+		8E6B606615FD04CA00E3828F /* _2RealEngineImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FC715FD04CA00E3828F /* _2RealEngineImpl.h */; };
+		8E6B606715FD04CA00E3828F /* _2RealFunctionBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FC815FD04CA00E3828F /* _2RealFunctionBlock.h */; };
+		8E6B606815FD04CA00E3828F /* _2RealFunctionBlockIOManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FC915FD04CA00E3828F /* _2RealFunctionBlockIOManager.cpp */; };
+		8E6B606915FD04CA00E3828F /* _2RealFunctionBlockIOManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FCA15FD04CA00E3828F /* _2RealFunctionBlockIOManager.h */; };
+		8E6B606A15FD04CA00E3828F /* _2RealFunctionBlockState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FCB15FD04CA00E3828F /* _2RealFunctionBlockState.cpp */; };
+		8E6B606B15FD04CA00E3828F /* _2RealFunctionBlockState.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FCC15FD04CA00E3828F /* _2RealFunctionBlockState.h */; };
+		8E6B606C15FD04CA00E3828F /* _2RealFunctionBlockStateManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FCD15FD04CA00E3828F /* _2RealFunctionBlockStateManager.cpp */; };
+		8E6B606D15FD04CA00E3828F /* _2RealFunctionBlockStateManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FCE15FD04CA00E3828F /* _2RealFunctionBlockStateManager.h */; };
+		8E6B606E15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FCF15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.cpp */; };
+		8E6B606F15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD015FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.h */; };
+		8E6B607015FD04CA00E3828F /* _2RealInlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FD115FD04CA00E3828F /* _2RealInlet.cpp */; };
+		8E6B607115FD04CA00E3828F /* _2RealInlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD215FD04CA00E3828F /* _2RealInlet.h */; };
+		8E6B607215FD04CA00E3828F /* _2RealInletBasedTrigger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD315FD04CA00E3828F /* _2RealInletBasedTrigger.h */; };
+		8E6B607315FD04CA00E3828F /* _2RealInletBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FD415FD04CA00E3828F /* _2RealInletBuffer.cpp */; };
+		8E6B607415FD04CA00E3828F /* _2RealInletBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD515FD04CA00E3828F /* _2RealInletBuffer.h */; };
+		8E6B607515FD04CA00E3828F /* _2RealLink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FD615FD04CA00E3828F /* _2RealLink.cpp */; };
+		8E6B607615FD04CA00E3828F /* _2RealLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD715FD04CA00E3828F /* _2RealLink.h */; };
+		8E6B607715FD04CA00E3828F /* _2RealLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FD815FD04CA00E3828F /* _2RealLogger.cpp */; };
+		8E6B607815FD04CA00E3828F /* _2RealLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FD915FD04CA00E3828F /* _2RealLogger.h */; };
+		8E6B607915FD04CA00E3828F /* _2RealMetainfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FDA15FD04CA00E3828F /* _2RealMetainfo.cpp */; };
+		8E6B607A15FD04CA00E3828F /* _2RealMetainfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FDB15FD04CA00E3828F /* _2RealMetainfo.h */; };
+		8E6B607B15FD04CA00E3828F /* _2RealOutlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FDC15FD04CA00E3828F /* _2RealOutlet.cpp */; };
+		8E6B607C15FD04CA00E3828F /* _2RealOutlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FDD15FD04CA00E3828F /* _2RealOutlet.h */; };
+		8E6B607D15FD04CA00E3828F /* _2RealParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FDE15FD04CA00E3828F /* _2RealParameter.cpp */; };
+		8E6B607E15FD04CA00E3828F /* _2RealParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FDF15FD04CA00E3828F /* _2RealParameter.h */; };
+		8E6B607F15FD04CA00E3828F /* _2RealParameterMetadata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FE015FD04CA00E3828F /* _2RealParameterMetadata.cpp */; };
+		8E6B608015FD04CA00E3828F /* _2RealParameterMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FE115FD04CA00E3828F /* _2RealParameterMetadata.h */; };
+		8E6B608115FD04CA00E3828F /* _2RealPooledThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FE215FD04CA00E3828F /* _2RealPooledThread.cpp */; };
+		8E6B608215FD04CA00E3828F /* _2RealPooledThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FE315FD04CA00E3828F /* _2RealPooledThread.h */; };
+		8E6B608315FD04CA00E3828F /* _2RealSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FE415FD04CA00E3828F /* _2RealSystem.cpp */; };
+		8E6B608415FD04CA00E3828F /* _2RealSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FE515FD04CA00E3828F /* _2RealSystem.h */; };
+		8E6B608515FD04CA00E3828F /* _2RealThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FE615FD04CA00E3828F /* _2RealThreadPool.cpp */; };
+		8E6B608615FD04CA00E3828F /* _2RealThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FE715FD04CA00E3828F /* _2RealThreadPool.h */; };
+		8E6B608715FD04CA00E3828F /* _2RealTimeBasedTrigger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FE815FD04CA00E3828F /* _2RealTimeBasedTrigger.h */; };
+		8E6B608815FD04CA00E3828F /* _2RealTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FE915FD04CA00E3828F /* _2RealTimer.cpp */; };
+		8E6B608915FD04CA00E3828F /* _2RealTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FEA15FD04CA00E3828F /* _2RealTimer.h */; };
+		8E6B608A15FD04CA00E3828F /* _2RealTimestampedData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FEB15FD04CA00E3828F /* _2RealTimestampedData.cpp */; };
+		8E6B608B15FD04CA00E3828F /* _2RealTimestampedData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FEC15FD04CA00E3828F /* _2RealTimestampedData.h */; };
+		8E6B608C15FD04CA00E3828F /* _2RealUberBlockBasedTrigger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FED15FD04CA00E3828F /* _2RealUberBlockBasedTrigger.h */; };
+		8E6B608D15FD04CA00E3828F /* _2RealAny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FEF15FD04CA00E3828F /* _2RealAny.cpp */; };
+		8E6B608E15FD04CA00E3828F /* _2RealAny.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF015FD04CA00E3828F /* _2RealAny.h */; };
+		8E6B608F15FD04CA00E3828F /* _2RealAnyHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF115FD04CA00E3828F /* _2RealAnyHolder.h */; };
+		8E6B609015FD04CA00E3828F /* _2RealCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF215FD04CA00E3828F /* _2RealCallback.h */; };
+		8E6B609115FD04CA00E3828F /* _2RealEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF315FD04CA00E3828F /* _2RealEvent.h */; };
+		8E6B609215FD04CA00E3828F /* _2RealException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FF415FD04CA00E3828F /* _2RealException.cpp */; };
+		8E6B609315FD04CA00E3828F /* _2RealException.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF515FD04CA00E3828F /* _2RealException.h */; };
+		8E6B609415FD04CA00E3828F /* _2RealHandleable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF615FD04CA00E3828F /* _2RealHandleable.h */; };
+		8E6B609515FD04CA00E3828F /* _2RealHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF715FD04CA00E3828F /* _2RealHelpers.h */; };
+		8E6B609615FD04CA00E3828F /* _2RealIdentifiable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FF815FD04CA00E3828F /* _2RealIdentifiable.cpp */; };
+		8E6B609715FD04CA00E3828F /* _2RealIdentifiable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FF915FD04CA00E3828F /* _2RealIdentifiable.h */; };
+		8E6B609815FD04CA00E3828F /* _2RealListInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FFA15FD04CA00E3828F /* _2RealListInitializer.h */; };
+		8E6B609915FD04CA00E3828F /* _2RealNonCopyable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FFB15FD04CA00E3828F /* _2RealNonCopyable.h */; };
+		8E6B609A15FD04CA00E3828F /* _2RealOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FFC15FD04CA00E3828F /* _2RealOptions.h */; };
+		8E6B609B15FD04CA00E3828F /* _2RealPoco.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FFD15FD04CA00E3828F /* _2RealPoco.h */; };
+		8E6B609C15FD04CA00E3828F /* _2RealSingletonHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B5FFE15FD04CA00E3828F /* _2RealSingletonHolder.h */; };
+		8E6B609D15FD04CA00E3828F /* _2RealStringHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B5FFF15FD04CA00E3828F /* _2RealStringHelpers.cpp */; };
+		8E6B609E15FD04CA00E3828F /* _2RealStringHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600015FD04CA00E3828F /* _2RealStringHelpers.h */; };
+		8E6B609F15FD04CA00E3828F /* _2RealSynchronizedBool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B600115FD04CA00E3828F /* _2RealSynchronizedBool.cpp */; };
+		8E6B60A015FD04CA00E3828F /* _2RealSynchronizedBool.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600215FD04CA00E3828F /* _2RealSynchronizedBool.h */; };
+		8E6B60A115FD04CA00E3828F /* _2RealTypeDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B600315FD04CA00E3828F /* _2RealTypeDescriptor.cpp */; };
+		8E6B60A215FD04CA00E3828F /* _2RealTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600415FD04CA00E3828F /* _2RealTypeDescriptor.h */; };
+		8E6B60A315FD04CA00E3828F /* _2RealVectorFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600515FD04CA00E3828F /* _2RealVectorFunctions.h */; };
+		8E6B60A415FD04CA00E3828F /* _2RealVectorInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600615FD04CA00E3828F /* _2RealVectorInitializer.h */; };
+		8E6B60A515FD04CA00E3828F /* _2RealVersion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B600715FD04CA00E3828F /* _2RealVersion.cpp */; };
+		8E6B60A615FD04CA00E3828F /* _2RealVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600815FD04CA00E3828F /* _2RealVersion.h */; };
+		8E6B60A715FD04CA00E3828F /* _2RealConversionBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600A15FD04CA00E3828F /* _2RealConversionBundle.h */; };
+		8E6B60A815FD04CA00E3828F /* _2RealInternalBundles.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600B15FD04CA00E3828F /* _2RealInternalBundles.h */; };
+		8E6B60A915FD04CA00E3828F /* _2RealXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600D15FD04CA00E3828F /* _2RealXML.h */; };
+		8E6B60AA15FD04CA00E3828F /* _2RealXMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E6B600E15FD04CA00E3828F /* _2RealXMLWriter.cpp */; };
+		8E6B60AB15FD04CA00E3828F /* _2RealXMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E6B600F15FD04CA00E3828F /* _2RealXMLWriter.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8E6B5F6615FD043900E3828F /* _2RealFramework_d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = _2RealFramework_d.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E6B5F6D15FD04CA00E3828F /* _2RealApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealApplication.h; path = ../../../src/_2RealApplication.h; sourceTree = "<group>"; };
+		8E6B5F6E15FD04CA00E3828F /* _2RealBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealBlock.h; path = ../../../src/_2RealBlock.h; sourceTree = "<group>"; };
+		8E6B5F6F15FD04CA00E3828F /* _2RealBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealBundle.h; path = ../../../src/_2RealBundle.h; sourceTree = "<group>"; };
+		8E6B5F7015FD04CA00E3828F /* _2RealDatatypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealDatatypes.h; path = ../../../src/_2RealDatatypes.h; sourceTree = "<group>"; };
+		8E6B5F7215FD04CA00E3828F /* _2RealAppData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAppData.cpp; sourceTree = "<group>"; };
+		8E6B5F7315FD04CA00E3828F /* _2RealAppData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAppData.h; sourceTree = "<group>"; };
+		8E6B5F7415FD04CA00E3828F /* _2RealBlockHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBlockHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F7515FD04CA00E3828F /* _2RealBlockHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBlockHandle.h; sourceTree = "<group>"; };
+		8E6B5F7615FD04CA00E3828F /* _2RealBlockInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBlockInfo.cpp; sourceTree = "<group>"; };
+		8E6B5F7715FD04CA00E3828F /* _2RealBlockInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBlockInfo.h; sourceTree = "<group>"; };
+		8E6B5F7815FD04CA00E3828F /* _2RealBundleHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F7915FD04CA00E3828F /* _2RealBundleHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleHandle.h; sourceTree = "<group>"; };
+		8E6B5F7A15FD04CA00E3828F /* _2RealBundleInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleInfo.cpp; sourceTree = "<group>"; };
+		8E6B5F7B15FD04CA00E3828F /* _2RealBundleInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleInfo.h; sourceTree = "<group>"; };
+		8E6B5F7C15FD04CA00E3828F /* _2RealCallbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealCallbacks.h; sourceTree = "<group>"; };
+		8E6B5F7D15FD04CA00E3828F /* _2RealContextBlockHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealContextBlockHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F7E15FD04CA00E3828F /* _2RealContextBlockHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealContextBlockHandle.h; sourceTree = "<group>"; };
+		8E6B5F7F15FD04CA00E3828F /* _2RealEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealEngine.cpp; sourceTree = "<group>"; };
+		8E6B5F8015FD04CA00E3828F /* _2RealEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealEngine.h; sourceTree = "<group>"; };
+		8E6B5F8115FD04CA00E3828F /* _2RealInletHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealInletHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F8215FD04CA00E3828F /* _2RealInletHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInletHandle.h; sourceTree = "<group>"; };
+		8E6B5F8315FD04CA00E3828F /* _2RealOutletHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealOutletHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F8415FD04CA00E3828F /* _2RealOutletHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealOutletHandle.h; sourceTree = "<group>"; };
+		8E6B5F8515FD04CA00E3828F /* _2RealParameterInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealParameterInfo.cpp; sourceTree = "<group>"; };
+		8E6B5F8615FD04CA00E3828F /* _2RealParameterInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealParameterInfo.h; sourceTree = "<group>"; };
+		8E6B5F8815FD04CA00E3828F /* _2RealBlockHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBlockHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F8915FD04CA00E3828F /* _2RealBlockHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBlockHandle.h; sourceTree = "<group>"; };
+		8E6B5F8A15FD04CA00E3828F /* _2RealBlockMetainfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBlockMetainfo.cpp; sourceTree = "<group>"; };
+		8E6B5F8B15FD04CA00E3828F /* _2RealBlockMetainfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBlockMetainfo.h; sourceTree = "<group>"; };
+		8E6B5F8C15FD04CA00E3828F /* _2RealBundleMetainfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleMetainfo.cpp; sourceTree = "<group>"; };
+		8E6B5F8D15FD04CA00E3828F /* _2RealBundleMetainfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleMetainfo.h; sourceTree = "<group>"; };
+		8E6B5F8E15FD04CA00E3828F /* _2RealContextBlockMetainfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealContextBlockMetainfo.cpp; sourceTree = "<group>"; };
+		8E6B5F8F15FD04CA00E3828F /* _2RealContextBlockMetainfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealContextBlockMetainfo.h; sourceTree = "<group>"; };
+		8E6B5F9015FD04CA00E3828F /* _2RealCreationPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealCreationPolicy.h; sourceTree = "<group>"; };
+		8E6B5F9115FD04CA00E3828F /* _2RealInletHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealInletHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F9215FD04CA00E3828F /* _2RealInletHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInletHandle.h; sourceTree = "<group>"; };
+		8E6B5F9315FD04CA00E3828F /* _2RealOutletHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealOutletHandle.cpp; sourceTree = "<group>"; };
+		8E6B5F9415FD04CA00E3828F /* _2RealOutletHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealOutletHandle.h; sourceTree = "<group>"; };
+		8E6B5F9615FD04CA00E3828F /* _2RealAudioBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAudioBuffer.h; sourceTree = "<group>"; };
+		8E6B5F9715FD04CA00E3828F /* _2RealBoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBoundingBox.h; sourceTree = "<group>"; };
+		8E6B5F9815FD04CA00E3828F /* _2RealFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFace.h; sourceTree = "<group>"; };
+		8E6B5F9915FD04CA00E3828F /* _2RealFilePath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFilePath.h; sourceTree = "<group>"; };
+		8E6B5F9A15FD04CA00E3828F /* _2RealImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealImage.cpp; sourceTree = "<group>"; };
+		8E6B5F9B15FD04CA00E3828F /* _2RealImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealImage.h; sourceTree = "<group>"; };
+		8E6B5F9C15FD04CA00E3828F /* _2RealImageT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealImageT.cpp; sourceTree = "<group>"; };
+		8E6B5F9D15FD04CA00E3828F /* _2RealImageT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealImageT.h; sourceTree = "<group>"; };
+		8E6B5F9E15FD04CA00E3828F /* _2RealMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealMatrix.h; sourceTree = "<group>"; };
+		8E6B5F9F15FD04CA00E3828F /* _2RealNumber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealNumber.cpp; sourceTree = "<group>"; };
+		8E6B5FA015FD04CA00E3828F /* _2RealNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealNumber.h; sourceTree = "<group>"; };
+		8E6B5FA115FD04CA00E3828F /* _2RealPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealPoint.cpp; sourceTree = "<group>"; };
+		8E6B5FA215FD04CA00E3828F /* _2RealPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealPoint.h; sourceTree = "<group>"; };
+		8E6B5FA315FD04CA00E3828F /* _2RealQuaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealQuaternion.cpp; sourceTree = "<group>"; };
+		8E6B5FA415FD04CA00E3828F /* _2RealQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealQuaternion.h; sourceTree = "<group>"; };
+		8E6B5FA515FD04CA00E3828F /* _2RealRigidBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealRigidBody.cpp; sourceTree = "<group>"; };
+		8E6B5FA615FD04CA00E3828F /* _2RealRigidBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealRigidBody.h; sourceTree = "<group>"; };
+		8E6B5FA715FD04CA00E3828F /* _2RealSkeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealSkeleton.cpp; sourceTree = "<group>"; };
+		8E6B5FA815FD04CA00E3828F /* _2RealSkeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealSkeleton.h; sourceTree = "<group>"; };
+		8E6B5FA915FD04CA00E3828F /* _2RealSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealSpace.h; sourceTree = "<group>"; };
+		8E6B5FAA15FD04CA00E3828F /* _2RealType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealType.h; sourceTree = "<group>"; };
+		8E6B5FAB15FD04CA00E3828F /* _2RealTypeCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypeCategory.h; sourceTree = "<group>"; };
+		8E6B5FAC15FD04CA00E3828F /* _2RealTypeComparisons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypeComparisons.h; sourceTree = "<group>"; };
+		8E6B5FAD15FD04CA00E3828F /* _2RealTypeInitializers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypeInitializers.h; sourceTree = "<group>"; };
+		8E6B5FAE15FD04CA00E3828F /* _2RealTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypes.h; sourceTree = "<group>"; };
+		8E6B5FAF15FD04CA00E3828F /* _2RealTypeStreamOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypeStreamOperators.h; sourceTree = "<group>"; };
+		8E6B5FB015FD04CA00E3828F /* _2RealVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealVector.h; sourceTree = "<group>"; };
+		8E6B5FB215FD04CA00E3828F /* _2RealAbstractIOManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAbstractIOManager.cpp; sourceTree = "<group>"; };
+		8E6B5FB315FD04CA00E3828F /* _2RealAbstractIOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAbstractIOManager.h; sourceTree = "<group>"; };
+		8E6B5FB415FD04CA00E3828F /* _2RealAbstractStateManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAbstractStateManager.cpp; sourceTree = "<group>"; };
+		8E6B5FB515FD04CA00E3828F /* _2RealAbstractStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAbstractStateManager.h; sourceTree = "<group>"; };
+		8E6B5FB615FD04CA00E3828F /* _2RealAbstractUberBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAbstractUberBlock.cpp; sourceTree = "<group>"; };
+		8E6B5FB715FD04CA00E3828F /* _2RealAbstractUberBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAbstractUberBlock.h; sourceTree = "<group>"; };
+		8E6B5FB815FD04CA00E3828F /* _2RealAbstractUpdatePolicy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAbstractUpdatePolicy.cpp; sourceTree = "<group>"; };
+		8E6B5FB915FD04CA00E3828F /* _2RealAbstractUpdatePolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAbstractUpdatePolicy.h; sourceTree = "<group>"; };
+		8E6B5FBA15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAbstractUpdateTrigger.cpp; sourceTree = "<group>"; };
+		8E6B5FBB15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAbstractUpdateTrigger.h; sourceTree = "<group>"; };
+		8E6B5FBC15FD04CA00E3828F /* _2RealBlockMetadata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBlockMetadata.cpp; sourceTree = "<group>"; };
+		8E6B5FBD15FD04CA00E3828F /* _2RealBlockMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBlockMetadata.h; sourceTree = "<group>"; };
+		8E6B5FBE15FD04CA00E3828F /* _2RealBundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundle.cpp; sourceTree = "<group>"; };
+		8E6B5FBF15FD04CA00E3828F /* _2RealBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundle.h; sourceTree = "<group>"; };
+		8E6B5FC015FD04CA00E3828F /* _2RealBundleLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleLoader.cpp; sourceTree = "<group>"; };
+		8E6B5FC115FD04CA00E3828F /* _2RealBundleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleLoader.h; sourceTree = "<group>"; };
+		8E6B5FC215FD04CA00E3828F /* _2RealBundleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleManager.cpp; sourceTree = "<group>"; };
+		8E6B5FC315FD04CA00E3828F /* _2RealBundleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleManager.h; sourceTree = "<group>"; };
+		8E6B5FC415FD04CA00E3828F /* _2RealBundleMetadata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealBundleMetadata.cpp; sourceTree = "<group>"; };
+		8E6B5FC515FD04CA00E3828F /* _2RealBundleMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealBundleMetadata.h; sourceTree = "<group>"; };
+		8E6B5FC615FD04CA00E3828F /* _2RealEngineImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealEngineImpl.cpp; sourceTree = "<group>"; };
+		8E6B5FC715FD04CA00E3828F /* _2RealEngineImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealEngineImpl.h; sourceTree = "<group>"; };
+		8E6B5FC815FD04CA00E3828F /* _2RealFunctionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFunctionBlock.h; sourceTree = "<group>"; };
+		8E6B5FC915FD04CA00E3828F /* _2RealFunctionBlockIOManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealFunctionBlockIOManager.cpp; sourceTree = "<group>"; };
+		8E6B5FCA15FD04CA00E3828F /* _2RealFunctionBlockIOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFunctionBlockIOManager.h; sourceTree = "<group>"; };
+		8E6B5FCB15FD04CA00E3828F /* _2RealFunctionBlockState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealFunctionBlockState.cpp; sourceTree = "<group>"; };
+		8E6B5FCC15FD04CA00E3828F /* _2RealFunctionBlockState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFunctionBlockState.h; sourceTree = "<group>"; };
+		8E6B5FCD15FD04CA00E3828F /* _2RealFunctionBlockStateManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealFunctionBlockStateManager.cpp; sourceTree = "<group>"; };
+		8E6B5FCE15FD04CA00E3828F /* _2RealFunctionBlockStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFunctionBlockStateManager.h; sourceTree = "<group>"; };
+		8E6B5FCF15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealFunctionBlockUpdatePolicy.cpp; sourceTree = "<group>"; };
+		8E6B5FD015FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealFunctionBlockUpdatePolicy.h; sourceTree = "<group>"; };
+		8E6B5FD115FD04CA00E3828F /* _2RealInlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealInlet.cpp; sourceTree = "<group>"; };
+		8E6B5FD215FD04CA00E3828F /* _2RealInlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInlet.h; sourceTree = "<group>"; };
+		8E6B5FD315FD04CA00E3828F /* _2RealInletBasedTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInletBasedTrigger.h; sourceTree = "<group>"; };
+		8E6B5FD415FD04CA00E3828F /* _2RealInletBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealInletBuffer.cpp; sourceTree = "<group>"; };
+		8E6B5FD515FD04CA00E3828F /* _2RealInletBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInletBuffer.h; sourceTree = "<group>"; };
+		8E6B5FD615FD04CA00E3828F /* _2RealLink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealLink.cpp; sourceTree = "<group>"; };
+		8E6B5FD715FD04CA00E3828F /* _2RealLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealLink.h; sourceTree = "<group>"; };
+		8E6B5FD815FD04CA00E3828F /* _2RealLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealLogger.cpp; sourceTree = "<group>"; };
+		8E6B5FD915FD04CA00E3828F /* _2RealLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealLogger.h; sourceTree = "<group>"; };
+		8E6B5FDA15FD04CA00E3828F /* _2RealMetainfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealMetainfo.cpp; sourceTree = "<group>"; };
+		8E6B5FDB15FD04CA00E3828F /* _2RealMetainfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealMetainfo.h; sourceTree = "<group>"; };
+		8E6B5FDC15FD04CA00E3828F /* _2RealOutlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealOutlet.cpp; sourceTree = "<group>"; };
+		8E6B5FDD15FD04CA00E3828F /* _2RealOutlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealOutlet.h; sourceTree = "<group>"; };
+		8E6B5FDE15FD04CA00E3828F /* _2RealParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealParameter.cpp; sourceTree = "<group>"; };
+		8E6B5FDF15FD04CA00E3828F /* _2RealParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealParameter.h; sourceTree = "<group>"; };
+		8E6B5FE015FD04CA00E3828F /* _2RealParameterMetadata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealParameterMetadata.cpp; sourceTree = "<group>"; };
+		8E6B5FE115FD04CA00E3828F /* _2RealParameterMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealParameterMetadata.h; sourceTree = "<group>"; };
+		8E6B5FE215FD04CA00E3828F /* _2RealPooledThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealPooledThread.cpp; sourceTree = "<group>"; };
+		8E6B5FE315FD04CA00E3828F /* _2RealPooledThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealPooledThread.h; sourceTree = "<group>"; };
+		8E6B5FE415FD04CA00E3828F /* _2RealSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealSystem.cpp; sourceTree = "<group>"; };
+		8E6B5FE515FD04CA00E3828F /* _2RealSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealSystem.h; sourceTree = "<group>"; };
+		8E6B5FE615FD04CA00E3828F /* _2RealThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealThreadPool.cpp; sourceTree = "<group>"; };
+		8E6B5FE715FD04CA00E3828F /* _2RealThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealThreadPool.h; sourceTree = "<group>"; };
+		8E6B5FE815FD04CA00E3828F /* _2RealTimeBasedTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTimeBasedTrigger.h; sourceTree = "<group>"; };
+		8E6B5FE915FD04CA00E3828F /* _2RealTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealTimer.cpp; sourceTree = "<group>"; };
+		8E6B5FEA15FD04CA00E3828F /* _2RealTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTimer.h; sourceTree = "<group>"; };
+		8E6B5FEB15FD04CA00E3828F /* _2RealTimestampedData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealTimestampedData.cpp; sourceTree = "<group>"; };
+		8E6B5FEC15FD04CA00E3828F /* _2RealTimestampedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTimestampedData.h; sourceTree = "<group>"; };
+		8E6B5FED15FD04CA00E3828F /* _2RealUberBlockBasedTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealUberBlockBasedTrigger.h; sourceTree = "<group>"; };
+		8E6B5FEF15FD04CA00E3828F /* _2RealAny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealAny.cpp; sourceTree = "<group>"; };
+		8E6B5FF015FD04CA00E3828F /* _2RealAny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAny.h; sourceTree = "<group>"; };
+		8E6B5FF115FD04CA00E3828F /* _2RealAnyHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealAnyHolder.h; sourceTree = "<group>"; };
+		8E6B5FF215FD04CA00E3828F /* _2RealCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealCallback.h; sourceTree = "<group>"; };
+		8E6B5FF315FD04CA00E3828F /* _2RealEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealEvent.h; sourceTree = "<group>"; };
+		8E6B5FF415FD04CA00E3828F /* _2RealException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealException.cpp; sourceTree = "<group>"; };
+		8E6B5FF515FD04CA00E3828F /* _2RealException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealException.h; sourceTree = "<group>"; };
+		8E6B5FF615FD04CA00E3828F /* _2RealHandleable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealHandleable.h; sourceTree = "<group>"; };
+		8E6B5FF715FD04CA00E3828F /* _2RealHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealHelpers.h; sourceTree = "<group>"; };
+		8E6B5FF815FD04CA00E3828F /* _2RealIdentifiable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealIdentifiable.cpp; sourceTree = "<group>"; };
+		8E6B5FF915FD04CA00E3828F /* _2RealIdentifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealIdentifiable.h; sourceTree = "<group>"; };
+		8E6B5FFA15FD04CA00E3828F /* _2RealListInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealListInitializer.h; sourceTree = "<group>"; };
+		8E6B5FFB15FD04CA00E3828F /* _2RealNonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealNonCopyable.h; sourceTree = "<group>"; };
+		8E6B5FFC15FD04CA00E3828F /* _2RealOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealOptions.h; sourceTree = "<group>"; };
+		8E6B5FFD15FD04CA00E3828F /* _2RealPoco.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealPoco.h; sourceTree = "<group>"; };
+		8E6B5FFE15FD04CA00E3828F /* _2RealSingletonHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealSingletonHolder.h; sourceTree = "<group>"; };
+		8E6B5FFF15FD04CA00E3828F /* _2RealStringHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealStringHelpers.cpp; sourceTree = "<group>"; };
+		8E6B600015FD04CA00E3828F /* _2RealStringHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealStringHelpers.h; sourceTree = "<group>"; };
+		8E6B600115FD04CA00E3828F /* _2RealSynchronizedBool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealSynchronizedBool.cpp; sourceTree = "<group>"; };
+		8E6B600215FD04CA00E3828F /* _2RealSynchronizedBool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealSynchronizedBool.h; sourceTree = "<group>"; };
+		8E6B600315FD04CA00E3828F /* _2RealTypeDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealTypeDescriptor.cpp; sourceTree = "<group>"; };
+		8E6B600415FD04CA00E3828F /* _2RealTypeDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealTypeDescriptor.h; sourceTree = "<group>"; };
+		8E6B600515FD04CA00E3828F /* _2RealVectorFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealVectorFunctions.h; sourceTree = "<group>"; };
+		8E6B600615FD04CA00E3828F /* _2RealVectorInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealVectorInitializer.h; sourceTree = "<group>"; };
+		8E6B600715FD04CA00E3828F /* _2RealVersion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealVersion.cpp; sourceTree = "<group>"; };
+		8E6B600815FD04CA00E3828F /* _2RealVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealVersion.h; sourceTree = "<group>"; };
+		8E6B600A15FD04CA00E3828F /* _2RealConversionBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealConversionBundle.h; sourceTree = "<group>"; };
+		8E6B600B15FD04CA00E3828F /* _2RealInternalBundles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealInternalBundles.h; sourceTree = "<group>"; };
+		8E6B600D15FD04CA00E3828F /* _2RealXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealXML.h; sourceTree = "<group>"; };
+		8E6B600E15FD04CA00E3828F /* _2RealXMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _2RealXMLWriter.cpp; sourceTree = "<group>"; };
+		8E6B600F15FD04CA00E3828F /* _2RealXMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _2RealXMLWriter.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8E6B5F6315FD043900E3828F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8E6B5F5B15FD043900E3828F = {
+			isa = PBXGroup;
+			children = (
+				8E6B5F6D15FD04CA00E3828F /* _2RealApplication.h */,
+				8E6B5F6E15FD04CA00E3828F /* _2RealBlock.h */,
+				8E6B5F6F15FD04CA00E3828F /* _2RealBundle.h */,
+				8E6B5F7015FD04CA00E3828F /* _2RealDatatypes.h */,
+				8E6B5F7115FD04CA00E3828F /* app */,
+				8E6B5F8715FD04CA00E3828F /* bundle */,
+				8E6B5F9515FD04CA00E3828F /* datatypes */,
+				8E6B5FB115FD04CA00E3828F /* engine */,
+				8E6B5FEE15FD04CA00E3828F /* helpers */,
+				8E6B600915FD04CA00E3828F /* internal_bundles */,
+				8E6B600C15FD04CA00E3828F /* xml */,
+				8E6B5F6715FD043900E3828F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8E6B5F6715FD043900E3828F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5F6615FD043900E3828F /* _2RealFramework_d.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8E6B5F7115FD04CA00E3828F /* app */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5F7215FD04CA00E3828F /* _2RealAppData.cpp */,
+				8E6B5F7315FD04CA00E3828F /* _2RealAppData.h */,
+				8E6B5F7415FD04CA00E3828F /* _2RealBlockHandle.cpp */,
+				8E6B5F7515FD04CA00E3828F /* _2RealBlockHandle.h */,
+				8E6B5F7615FD04CA00E3828F /* _2RealBlockInfo.cpp */,
+				8E6B5F7715FD04CA00E3828F /* _2RealBlockInfo.h */,
+				8E6B5F7815FD04CA00E3828F /* _2RealBundleHandle.cpp */,
+				8E6B5F7915FD04CA00E3828F /* _2RealBundleHandle.h */,
+				8E6B5F7A15FD04CA00E3828F /* _2RealBundleInfo.cpp */,
+				8E6B5F7B15FD04CA00E3828F /* _2RealBundleInfo.h */,
+				8E6B5F7C15FD04CA00E3828F /* _2RealCallbacks.h */,
+				8E6B5F7D15FD04CA00E3828F /* _2RealContextBlockHandle.cpp */,
+				8E6B5F7E15FD04CA00E3828F /* _2RealContextBlockHandle.h */,
+				8E6B5F7F15FD04CA00E3828F /* _2RealEngine.cpp */,
+				8E6B5F8015FD04CA00E3828F /* _2RealEngine.h */,
+				8E6B5F8115FD04CA00E3828F /* _2RealInletHandle.cpp */,
+				8E6B5F8215FD04CA00E3828F /* _2RealInletHandle.h */,
+				8E6B5F8315FD04CA00E3828F /* _2RealOutletHandle.cpp */,
+				8E6B5F8415FD04CA00E3828F /* _2RealOutletHandle.h */,
+				8E6B5F8515FD04CA00E3828F /* _2RealParameterInfo.cpp */,
+				8E6B5F8615FD04CA00E3828F /* _2RealParameterInfo.h */,
+			);
+			name = app;
+			path = ../../../src/app;
+			sourceTree = "<group>";
+		};
+		8E6B5F8715FD04CA00E3828F /* bundle */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5F8815FD04CA00E3828F /* _2RealBlockHandle.cpp */,
+				8E6B5F8915FD04CA00E3828F /* _2RealBlockHandle.h */,
+				8E6B5F8A15FD04CA00E3828F /* _2RealBlockMetainfo.cpp */,
+				8E6B5F8B15FD04CA00E3828F /* _2RealBlockMetainfo.h */,
+				8E6B5F8C15FD04CA00E3828F /* _2RealBundleMetainfo.cpp */,
+				8E6B5F8D15FD04CA00E3828F /* _2RealBundleMetainfo.h */,
+				8E6B5F8E15FD04CA00E3828F /* _2RealContextBlockMetainfo.cpp */,
+				8E6B5F8F15FD04CA00E3828F /* _2RealContextBlockMetainfo.h */,
+				8E6B5F9015FD04CA00E3828F /* _2RealCreationPolicy.h */,
+				8E6B5F9115FD04CA00E3828F /* _2RealInletHandle.cpp */,
+				8E6B5F9215FD04CA00E3828F /* _2RealInletHandle.h */,
+				8E6B5F9315FD04CA00E3828F /* _2RealOutletHandle.cpp */,
+				8E6B5F9415FD04CA00E3828F /* _2RealOutletHandle.h */,
+			);
+			name = bundle;
+			path = ../../../src/bundle;
+			sourceTree = "<group>";
+		};
+		8E6B5F9515FD04CA00E3828F /* datatypes */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5F9615FD04CA00E3828F /* _2RealAudioBuffer.h */,
+				8E6B5F9715FD04CA00E3828F /* _2RealBoundingBox.h */,
+				8E6B5F9815FD04CA00E3828F /* _2RealFace.h */,
+				8E6B5F9915FD04CA00E3828F /* _2RealFilePath.h */,
+				8E6B5F9A15FD04CA00E3828F /* _2RealImage.cpp */,
+				8E6B5F9B15FD04CA00E3828F /* _2RealImage.h */,
+				8E6B5F9C15FD04CA00E3828F /* _2RealImageT.cpp */,
+				8E6B5F9D15FD04CA00E3828F /* _2RealImageT.h */,
+				8E6B5F9E15FD04CA00E3828F /* _2RealMatrix.h */,
+				8E6B5F9F15FD04CA00E3828F /* _2RealNumber.cpp */,
+				8E6B5FA015FD04CA00E3828F /* _2RealNumber.h */,
+				8E6B5FA115FD04CA00E3828F /* _2RealPoint.cpp */,
+				8E6B5FA215FD04CA00E3828F /* _2RealPoint.h */,
+				8E6B5FA315FD04CA00E3828F /* _2RealQuaternion.cpp */,
+				8E6B5FA415FD04CA00E3828F /* _2RealQuaternion.h */,
+				8E6B5FA515FD04CA00E3828F /* _2RealRigidBody.cpp */,
+				8E6B5FA615FD04CA00E3828F /* _2RealRigidBody.h */,
+				8E6B5FA715FD04CA00E3828F /* _2RealSkeleton.cpp */,
+				8E6B5FA815FD04CA00E3828F /* _2RealSkeleton.h */,
+				8E6B5FA915FD04CA00E3828F /* _2RealSpace.h */,
+				8E6B5FAA15FD04CA00E3828F /* _2RealType.h */,
+				8E6B5FAB15FD04CA00E3828F /* _2RealTypeCategory.h */,
+				8E6B5FAC15FD04CA00E3828F /* _2RealTypeComparisons.h */,
+				8E6B5FAD15FD04CA00E3828F /* _2RealTypeInitializers.h */,
+				8E6B5FAE15FD04CA00E3828F /* _2RealTypes.h */,
+				8E6B5FAF15FD04CA00E3828F /* _2RealTypeStreamOperators.h */,
+				8E6B5FB015FD04CA00E3828F /* _2RealVector.h */,
+			);
+			name = datatypes;
+			path = ../../../src/datatypes;
+			sourceTree = "<group>";
+		};
+		8E6B5FB115FD04CA00E3828F /* engine */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5FB215FD04CA00E3828F /* _2RealAbstractIOManager.cpp */,
+				8E6B5FB315FD04CA00E3828F /* _2RealAbstractIOManager.h */,
+				8E6B5FB415FD04CA00E3828F /* _2RealAbstractStateManager.cpp */,
+				8E6B5FB515FD04CA00E3828F /* _2RealAbstractStateManager.h */,
+				8E6B5FB615FD04CA00E3828F /* _2RealAbstractUberBlock.cpp */,
+				8E6B5FB715FD04CA00E3828F /* _2RealAbstractUberBlock.h */,
+				8E6B5FB815FD04CA00E3828F /* _2RealAbstractUpdatePolicy.cpp */,
+				8E6B5FB915FD04CA00E3828F /* _2RealAbstractUpdatePolicy.h */,
+				8E6B5FBA15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.cpp */,
+				8E6B5FBB15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.h */,
+				8E6B5FBC15FD04CA00E3828F /* _2RealBlockMetadata.cpp */,
+				8E6B5FBD15FD04CA00E3828F /* _2RealBlockMetadata.h */,
+				8E6B5FBE15FD04CA00E3828F /* _2RealBundle.cpp */,
+				8E6B5FBF15FD04CA00E3828F /* _2RealBundle.h */,
+				8E6B5FC015FD04CA00E3828F /* _2RealBundleLoader.cpp */,
+				8E6B5FC115FD04CA00E3828F /* _2RealBundleLoader.h */,
+				8E6B5FC215FD04CA00E3828F /* _2RealBundleManager.cpp */,
+				8E6B5FC315FD04CA00E3828F /* _2RealBundleManager.h */,
+				8E6B5FC415FD04CA00E3828F /* _2RealBundleMetadata.cpp */,
+				8E6B5FC515FD04CA00E3828F /* _2RealBundleMetadata.h */,
+				8E6B5FC615FD04CA00E3828F /* _2RealEngineImpl.cpp */,
+				8E6B5FC715FD04CA00E3828F /* _2RealEngineImpl.h */,
+				8E6B5FC815FD04CA00E3828F /* _2RealFunctionBlock.h */,
+				8E6B5FC915FD04CA00E3828F /* _2RealFunctionBlockIOManager.cpp */,
+				8E6B5FCA15FD04CA00E3828F /* _2RealFunctionBlockIOManager.h */,
+				8E6B5FCB15FD04CA00E3828F /* _2RealFunctionBlockState.cpp */,
+				8E6B5FCC15FD04CA00E3828F /* _2RealFunctionBlockState.h */,
+				8E6B5FCD15FD04CA00E3828F /* _2RealFunctionBlockStateManager.cpp */,
+				8E6B5FCE15FD04CA00E3828F /* _2RealFunctionBlockStateManager.h */,
+				8E6B5FCF15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.cpp */,
+				8E6B5FD015FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.h */,
+				8E6B5FD115FD04CA00E3828F /* _2RealInlet.cpp */,
+				8E6B5FD215FD04CA00E3828F /* _2RealInlet.h */,
+				8E6B5FD315FD04CA00E3828F /* _2RealInletBasedTrigger.h */,
+				8E6B5FD415FD04CA00E3828F /* _2RealInletBuffer.cpp */,
+				8E6B5FD515FD04CA00E3828F /* _2RealInletBuffer.h */,
+				8E6B5FD615FD04CA00E3828F /* _2RealLink.cpp */,
+				8E6B5FD715FD04CA00E3828F /* _2RealLink.h */,
+				8E6B5FD815FD04CA00E3828F /* _2RealLogger.cpp */,
+				8E6B5FD915FD04CA00E3828F /* _2RealLogger.h */,
+				8E6B5FDA15FD04CA00E3828F /* _2RealMetainfo.cpp */,
+				8E6B5FDB15FD04CA00E3828F /* _2RealMetainfo.h */,
+				8E6B5FDC15FD04CA00E3828F /* _2RealOutlet.cpp */,
+				8E6B5FDD15FD04CA00E3828F /* _2RealOutlet.h */,
+				8E6B5FDE15FD04CA00E3828F /* _2RealParameter.cpp */,
+				8E6B5FDF15FD04CA00E3828F /* _2RealParameter.h */,
+				8E6B5FE015FD04CA00E3828F /* _2RealParameterMetadata.cpp */,
+				8E6B5FE115FD04CA00E3828F /* _2RealParameterMetadata.h */,
+				8E6B5FE215FD04CA00E3828F /* _2RealPooledThread.cpp */,
+				8E6B5FE315FD04CA00E3828F /* _2RealPooledThread.h */,
+				8E6B5FE415FD04CA00E3828F /* _2RealSystem.cpp */,
+				8E6B5FE515FD04CA00E3828F /* _2RealSystem.h */,
+				8E6B5FE615FD04CA00E3828F /* _2RealThreadPool.cpp */,
+				8E6B5FE715FD04CA00E3828F /* _2RealThreadPool.h */,
+				8E6B5FE815FD04CA00E3828F /* _2RealTimeBasedTrigger.h */,
+				8E6B5FE915FD04CA00E3828F /* _2RealTimer.cpp */,
+				8E6B5FEA15FD04CA00E3828F /* _2RealTimer.h */,
+				8E6B5FEB15FD04CA00E3828F /* _2RealTimestampedData.cpp */,
+				8E6B5FEC15FD04CA00E3828F /* _2RealTimestampedData.h */,
+				8E6B5FED15FD04CA00E3828F /* _2RealUberBlockBasedTrigger.h */,
+			);
+			name = engine;
+			path = ../../../src/engine;
+			sourceTree = "<group>";
+		};
+		8E6B5FEE15FD04CA00E3828F /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B5FEF15FD04CA00E3828F /* _2RealAny.cpp */,
+				8E6B5FF015FD04CA00E3828F /* _2RealAny.h */,
+				8E6B5FF115FD04CA00E3828F /* _2RealAnyHolder.h */,
+				8E6B5FF215FD04CA00E3828F /* _2RealCallback.h */,
+				8E6B5FF315FD04CA00E3828F /* _2RealEvent.h */,
+				8E6B5FF415FD04CA00E3828F /* _2RealException.cpp */,
+				8E6B5FF515FD04CA00E3828F /* _2RealException.h */,
+				8E6B5FF615FD04CA00E3828F /* _2RealHandleable.h */,
+				8E6B5FF715FD04CA00E3828F /* _2RealHelpers.h */,
+				8E6B5FF815FD04CA00E3828F /* _2RealIdentifiable.cpp */,
+				8E6B5FF915FD04CA00E3828F /* _2RealIdentifiable.h */,
+				8E6B5FFA15FD04CA00E3828F /* _2RealListInitializer.h */,
+				8E6B5FFB15FD04CA00E3828F /* _2RealNonCopyable.h */,
+				8E6B5FFC15FD04CA00E3828F /* _2RealOptions.h */,
+				8E6B5FFD15FD04CA00E3828F /* _2RealPoco.h */,
+				8E6B5FFE15FD04CA00E3828F /* _2RealSingletonHolder.h */,
+				8E6B5FFF15FD04CA00E3828F /* _2RealStringHelpers.cpp */,
+				8E6B600015FD04CA00E3828F /* _2RealStringHelpers.h */,
+				8E6B600115FD04CA00E3828F /* _2RealSynchronizedBool.cpp */,
+				8E6B600215FD04CA00E3828F /* _2RealSynchronizedBool.h */,
+				8E6B600315FD04CA00E3828F /* _2RealTypeDescriptor.cpp */,
+				8E6B600415FD04CA00E3828F /* _2RealTypeDescriptor.h */,
+				8E6B600515FD04CA00E3828F /* _2RealVectorFunctions.h */,
+				8E6B600615FD04CA00E3828F /* _2RealVectorInitializer.h */,
+				8E6B600715FD04CA00E3828F /* _2RealVersion.cpp */,
+				8E6B600815FD04CA00E3828F /* _2RealVersion.h */,
+			);
+			name = helpers;
+			path = ../../../src/helpers;
+			sourceTree = "<group>";
+		};
+		8E6B600915FD04CA00E3828F /* internal_bundles */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B600A15FD04CA00E3828F /* _2RealConversionBundle.h */,
+				8E6B600B15FD04CA00E3828F /* _2RealInternalBundles.h */,
+			);
+			name = internal_bundles;
+			path = ../../../src/internal_bundles;
+			sourceTree = "<group>";
+		};
+		8E6B600C15FD04CA00E3828F /* xml */ = {
+			isa = PBXGroup;
+			children = (
+				8E6B600D15FD04CA00E3828F /* _2RealXML.h */,
+				8E6B600E15FD04CA00E3828F /* _2RealXMLWriter.cpp */,
+				8E6B600F15FD04CA00E3828F /* _2RealXMLWriter.h */,
+			);
+			name = xml;
+			path = ../../../src/xml;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8E6B5F6415FD043900E3828F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8E6B601015FD04CA00E3828F /* _2RealApplication.h in Headers */,
+				8E6B601115FD04CA00E3828F /* _2RealBlock.h in Headers */,
+				8E6B601215FD04CA00E3828F /* _2RealBundle.h in Headers */,
+				8E6B601315FD04CA00E3828F /* _2RealDatatypes.h in Headers */,
+				8E6B601515FD04CA00E3828F /* _2RealAppData.h in Headers */,
+				8E6B601715FD04CA00E3828F /* _2RealBlockHandle.h in Headers */,
+				8E6B601915FD04CA00E3828F /* _2RealBlockInfo.h in Headers */,
+				8E6B601B15FD04CA00E3828F /* _2RealBundleHandle.h in Headers */,
+				8E6B601D15FD04CA00E3828F /* _2RealBundleInfo.h in Headers */,
+				8E6B601E15FD04CA00E3828F /* _2RealCallbacks.h in Headers */,
+				8E6B602015FD04CA00E3828F /* _2RealContextBlockHandle.h in Headers */,
+				8E6B602215FD04CA00E3828F /* _2RealEngine.h in Headers */,
+				8E6B602415FD04CA00E3828F /* _2RealInletHandle.h in Headers */,
+				8E6B602615FD04CA00E3828F /* _2RealOutletHandle.h in Headers */,
+				8E6B602815FD04CA00E3828F /* _2RealParameterInfo.h in Headers */,
+				8E6B602A15FD04CA00E3828F /* _2RealBlockHandle.h in Headers */,
+				8E6B602C15FD04CA00E3828F /* _2RealBlockMetainfo.h in Headers */,
+				8E6B602E15FD04CA00E3828F /* _2RealBundleMetainfo.h in Headers */,
+				8E6B603015FD04CA00E3828F /* _2RealContextBlockMetainfo.h in Headers */,
+				8E6B603115FD04CA00E3828F /* _2RealCreationPolicy.h in Headers */,
+				8E6B603315FD04CA00E3828F /* _2RealInletHandle.h in Headers */,
+				8E6B603515FD04CA00E3828F /* _2RealOutletHandle.h in Headers */,
+				8E6B603615FD04CA00E3828F /* _2RealAudioBuffer.h in Headers */,
+				8E6B603715FD04CA00E3828F /* _2RealBoundingBox.h in Headers */,
+				8E6B603815FD04CA00E3828F /* _2RealFace.h in Headers */,
+				8E6B603915FD04CA00E3828F /* _2RealFilePath.h in Headers */,
+				8E6B603B15FD04CA00E3828F /* _2RealImage.h in Headers */,
+				8E6B603D15FD04CA00E3828F /* _2RealImageT.h in Headers */,
+				8E6B603E15FD04CA00E3828F /* _2RealMatrix.h in Headers */,
+				8E6B604015FD04CA00E3828F /* _2RealNumber.h in Headers */,
+				8E6B604215FD04CA00E3828F /* _2RealPoint.h in Headers */,
+				8E6B604415FD04CA00E3828F /* _2RealQuaternion.h in Headers */,
+				8E6B604615FD04CA00E3828F /* _2RealRigidBody.h in Headers */,
+				8E6B604815FD04CA00E3828F /* _2RealSkeleton.h in Headers */,
+				8E6B604915FD04CA00E3828F /* _2RealSpace.h in Headers */,
+				8E6B604A15FD04CA00E3828F /* _2RealType.h in Headers */,
+				8E6B604B15FD04CA00E3828F /* _2RealTypeCategory.h in Headers */,
+				8E6B604C15FD04CA00E3828F /* _2RealTypeComparisons.h in Headers */,
+				8E6B604D15FD04CA00E3828F /* _2RealTypeInitializers.h in Headers */,
+				8E6B604E15FD04CA00E3828F /* _2RealTypes.h in Headers */,
+				8E6B604F15FD04CA00E3828F /* _2RealTypeStreamOperators.h in Headers */,
+				8E6B605015FD04CA00E3828F /* _2RealVector.h in Headers */,
+				8E6B605215FD04CA00E3828F /* _2RealAbstractIOManager.h in Headers */,
+				8E6B605415FD04CA00E3828F /* _2RealAbstractStateManager.h in Headers */,
+				8E6B605615FD04CA00E3828F /* _2RealAbstractUberBlock.h in Headers */,
+				8E6B605815FD04CA00E3828F /* _2RealAbstractUpdatePolicy.h in Headers */,
+				8E6B605A15FD04CA00E3828F /* _2RealAbstractUpdateTrigger.h in Headers */,
+				8E6B605C15FD04CA00E3828F /* _2RealBlockMetadata.h in Headers */,
+				8E6B605E15FD04CA00E3828F /* _2RealBundle.h in Headers */,
+				8E6B606015FD04CA00E3828F /* _2RealBundleLoader.h in Headers */,
+				8E6B606215FD04CA00E3828F /* _2RealBundleManager.h in Headers */,
+				8E6B606415FD04CA00E3828F /* _2RealBundleMetadata.h in Headers */,
+				8E6B606615FD04CA00E3828F /* _2RealEngineImpl.h in Headers */,
+				8E6B606715FD04CA00E3828F /* _2RealFunctionBlock.h in Headers */,
+				8E6B606915FD04CA00E3828F /* _2RealFunctionBlockIOManager.h in Headers */,
+				8E6B606B15FD04CA00E3828F /* _2RealFunctionBlockState.h in Headers */,
+				8E6B606D15FD04CA00E3828F /* _2RealFunctionBlockStateManager.h in Headers */,
+				8E6B606F15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.h in Headers */,
+				8E6B607115FD04CA00E3828F /* _2RealInlet.h in Headers */,
+				8E6B607215FD04CA00E3828F /* _2RealInletBasedTrigger.h in Headers */,
+				8E6B607415FD04CA00E3828F /* _2RealInletBuffer.h in Headers */,
+				8E6B607615FD04CA00E3828F /* _2RealLink.h in Headers */,
+				8E6B607815FD04CA00E3828F /* _2RealLogger.h in Headers */,
+				8E6B607A15FD04CA00E3828F /* _2RealMetainfo.h in Headers */,
+				8E6B607C15FD04CA00E3828F /* _2RealOutlet.h in Headers */,
+				8E6B607E15FD04CA00E3828F /* _2RealParameter.h in Headers */,
+				8E6B608015FD04CA00E3828F /* _2RealParameterMetadata.h in Headers */,
+				8E6B608215FD04CA00E3828F /* _2RealPooledThread.h in Headers */,
+				8E6B608415FD04CA00E3828F /* _2RealSystem.h in Headers */,
+				8E6B608615FD04CA00E3828F /* _2RealThreadPool.h in Headers */,
+				8E6B608715FD04CA00E3828F /* _2RealTimeBasedTrigger.h in Headers */,
+				8E6B608915FD04CA00E3828F /* _2RealTimer.h in Headers */,
+				8E6B608B15FD04CA00E3828F /* _2RealTimestampedData.h in Headers */,
+				8E6B608C15FD04CA00E3828F /* _2RealUberBlockBasedTrigger.h in Headers */,
+				8E6B608E15FD04CA00E3828F /* _2RealAny.h in Headers */,
+				8E6B608F15FD04CA00E3828F /* _2RealAnyHolder.h in Headers */,
+				8E6B609015FD04CA00E3828F /* _2RealCallback.h in Headers */,
+				8E6B609115FD04CA00E3828F /* _2RealEvent.h in Headers */,
+				8E6B609315FD04CA00E3828F /* _2RealException.h in Headers */,
+				8E6B609415FD04CA00E3828F /* _2RealHandleable.h in Headers */,
+				8E6B609515FD04CA00E3828F /* _2RealHelpers.h in Headers */,
+				8E6B609715FD04CA00E3828F /* _2RealIdentifiable.h in Headers */,
+				8E6B609815FD04CA00E3828F /* _2RealListInitializer.h in Headers */,
+				8E6B609915FD04CA00E3828F /* _2RealNonCopyable.h in Headers */,
+				8E6B609A15FD04CA00E3828F /* _2RealOptions.h in Headers */,
+				8E6B609B15FD04CA00E3828F /* _2RealPoco.h in Headers */,
+				8E6B609C15FD04CA00E3828F /* _2RealSingletonHolder.h in Headers */,
+				8E6B609E15FD04CA00E3828F /* _2RealStringHelpers.h in Headers */,
+				8E6B60A015FD04CA00E3828F /* _2RealSynchronizedBool.h in Headers */,
+				8E6B60A215FD04CA00E3828F /* _2RealTypeDescriptor.h in Headers */,
+				8E6B60A315FD04CA00E3828F /* _2RealVectorFunctions.h in Headers */,
+				8E6B60A415FD04CA00E3828F /* _2RealVectorInitializer.h in Headers */,
+				8E6B60A615FD04CA00E3828F /* _2RealVersion.h in Headers */,
+				8E6B60A715FD04CA00E3828F /* _2RealConversionBundle.h in Headers */,
+				8E6B60A815FD04CA00E3828F /* _2RealInternalBundles.h in Headers */,
+				8E6B60A915FD04CA00E3828F /* _2RealXML.h in Headers */,
+				8E6B60AB15FD04CA00E3828F /* _2RealXMLWriter.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8E6B5F6515FD043900E3828F /* _2RealFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8E6B5F6A15FD043900E3828F /* Build configuration list for PBXNativeTarget "_2RealFramework" */;
+			buildPhases = (
+				8E6B5F6215FD043900E3828F /* Sources */,
+				8E6B5F6315FD043900E3828F /* Frameworks */,
+				8E6B5F6415FD043900E3828F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = _2RealFramework;
+			productName = _2RealFramework;
+			productReference = 8E6B5F6615FD043900E3828F /* _2RealFramework_d.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8E6B5F5D15FD043900E3828F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Nikolas Psaroudakis";
+			};
+			buildConfigurationList = 8E6B5F6015FD043900E3828F /* Build configuration list for PBXProject "_2RealFramework" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 8E6B5F5B15FD043900E3828F;
+			productRefGroup = 8E6B5F6715FD043900E3828F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8E6B5F6515FD043900E3828F /* _2RealFramework */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8E6B5F6215FD043900E3828F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8E6B601415FD04CA00E3828F /* _2RealAppData.cpp in Sources */,
+				8E6B601615FD04CA00E3828F /* _2RealBlockHandle.cpp in Sources */,
+				8E6B601815FD04CA00E3828F /* _2RealBlockInfo.cpp in Sources */,
+				8E6B601A15FD04CA00E3828F /* _2RealBundleHandle.cpp in Sources */,
+				8E6B601C15FD04CA00E3828F /* _2RealBundleInfo.cpp in Sources */,
+				8E6B601F15FD04CA00E3828F /* _2RealContextBlockHandle.cpp in Sources */,
+				8E6B602115FD04CA00E3828F /* _2RealEngine.cpp in Sources */,
+				8E6B602315FD04CA00E3828F /* _2RealInletHandle.cpp in Sources */,
+				8E6B602515FD04CA00E3828F /* _2RealOutletHandle.cpp in Sources */,
+				8E6B602715FD04CA00E3828F /* _2RealParameterInfo.cpp in Sources */,
+				8E6B602915FD04CA00E3828F /* _2RealBlockHandle.cpp in Sources */,
+				8E6B602B15FD04CA00E3828F /* _2RealBlockMetainfo.cpp in Sources */,
+				8E6B602D15FD04CA00E3828F /* _2RealBundleMetainfo.cpp in Sources */,
+				8E6B602F15FD04CA00E3828F /* _2RealContextBlockMetainfo.cpp in Sources */,
+				8E6B603215FD04CA00E3828F /* _2RealInletHandle.cpp in Sources */,
+				8E6B603415FD04CA00E3828F /* _2RealOutletHandle.cpp in Sources */,
+				8E6B603A15FD04CA00E3828F /* _2RealImage.cpp in Sources */,
+				8E6B603C15FD04CA00E3828F /* _2RealImageT.cpp in Sources */,
+				8E6B603F15FD04CA00E3828F /* _2RealNumber.cpp in Sources */,
+				8E6B604115FD04CA00E3828F /* _2RealPoint.cpp in Sources */,
+				8E6B604315FD04CA00E3828F /* _2RealQuaternion.cpp in Sources */,
+				8E6B604515FD04CA00E3828F /* _2RealRigidBody.cpp in Sources */,
+				8E6B604715FD04CA00E3828F /* _2RealSkeleton.cpp in Sources */,
+				8E6B605115FD04CA00E3828F /* _2RealAbstractIOManager.cpp in Sources */,
+				8E6B605315FD04CA00E3828F /* _2RealAbstractStateManager.cpp in Sources */,
+				8E6B605515FD04CA00E3828F /* _2RealAbstractUberBlock.cpp in Sources */,
+				8E6B605715FD04CA00E3828F /* _2RealAbstractUpdatePolicy.cpp in Sources */,
+				8E6B605915FD04CA00E3828F /* _2RealAbstractUpdateTrigger.cpp in Sources */,
+				8E6B605B15FD04CA00E3828F /* _2RealBlockMetadata.cpp in Sources */,
+				8E6B605D15FD04CA00E3828F /* _2RealBundle.cpp in Sources */,
+				8E6B605F15FD04CA00E3828F /* _2RealBundleLoader.cpp in Sources */,
+				8E6B606115FD04CA00E3828F /* _2RealBundleManager.cpp in Sources */,
+				8E6B606315FD04CA00E3828F /* _2RealBundleMetadata.cpp in Sources */,
+				8E6B606515FD04CA00E3828F /* _2RealEngineImpl.cpp in Sources */,
+				8E6B606815FD04CA00E3828F /* _2RealFunctionBlockIOManager.cpp in Sources */,
+				8E6B606A15FD04CA00E3828F /* _2RealFunctionBlockState.cpp in Sources */,
+				8E6B606C15FD04CA00E3828F /* _2RealFunctionBlockStateManager.cpp in Sources */,
+				8E6B606E15FD04CA00E3828F /* _2RealFunctionBlockUpdatePolicy.cpp in Sources */,
+				8E6B607015FD04CA00E3828F /* _2RealInlet.cpp in Sources */,
+				8E6B607315FD04CA00E3828F /* _2RealInletBuffer.cpp in Sources */,
+				8E6B607515FD04CA00E3828F /* _2RealLink.cpp in Sources */,
+				8E6B607715FD04CA00E3828F /* _2RealLogger.cpp in Sources */,
+				8E6B607915FD04CA00E3828F /* _2RealMetainfo.cpp in Sources */,
+				8E6B607B15FD04CA00E3828F /* _2RealOutlet.cpp in Sources */,
+				8E6B607D15FD04CA00E3828F /* _2RealParameter.cpp in Sources */,
+				8E6B607F15FD04CA00E3828F /* _2RealParameterMetadata.cpp in Sources */,
+				8E6B608115FD04CA00E3828F /* _2RealPooledThread.cpp in Sources */,
+				8E6B608315FD04CA00E3828F /* _2RealSystem.cpp in Sources */,
+				8E6B608515FD04CA00E3828F /* _2RealThreadPool.cpp in Sources */,
+				8E6B608815FD04CA00E3828F /* _2RealTimer.cpp in Sources */,
+				8E6B608A15FD04CA00E3828F /* _2RealTimestampedData.cpp in Sources */,
+				8E6B608D15FD04CA00E3828F /* _2RealAny.cpp in Sources */,
+				8E6B609215FD04CA00E3828F /* _2RealException.cpp in Sources */,
+				8E6B609615FD04CA00E3828F /* _2RealIdentifiable.cpp in Sources */,
+				8E6B609D15FD04CA00E3828F /* _2RealStringHelpers.cpp in Sources */,
+				8E6B609F15FD04CA00E3828F /* _2RealSynchronizedBool.cpp in Sources */,
+				8E6B60A115FD04CA00E3828F /* _2RealTypeDescriptor.cpp in Sources */,
+				8E6B60A515FD04CA00E3828F /* _2RealVersion.cpp in Sources */,
+				8E6B60AA15FD04CA00E3828F /* _2RealXMLWriter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8E6B5F6815FD043900E3828F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8E6B5F6915FD043900E3828F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		8E6B5F6B15FD043900E3828F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				EIGEN_PATH = /Users/psaroudakis/Frameworks/Eigen3.1.1;
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					TARGET_OS_MAC,
+					"$(inherited)",
+				);
+				GCC_VERSION = "";
+				OTHER_LDFLAGS = (
+					"$(POCO_PATH)/lib/libPocoFoundation.a",
+					"$(POCO_PATH)/lib/libPocoXML.a",
+				);
+				POCO_PATH = /Users/psaroudakis/SDKs/Poco1.4.4;
+				PRODUCT_NAME = "$(TARGET_NAME)_d";
+				USER_HEADER_SEARCH_PATHS = "../../../src/ $(EIGEN_PATH) $(POCO_PATH)/include/";
+			};
+			name = Debug;
+		};
+		8E6B5F6C15FD043900E3828F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				EIGEN_PATH = /Users/psaroudakis/Frameworks/Eigen3.1.1;
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_OS_MAC;
+				GCC_VERSION = "";
+				OTHER_LDFLAGS = (
+					"$(POCO_PATH)/lib/libPocoFoundation.a",
+					"$(POCO_PATH)/lib/libPocoXML.a",
+				);
+				POCO_PATH = /Users/psaroudakis/SDKs/Poco1.4.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "../../../src/ $(EIGEN_PATH) $(POCO_PATH)/include/";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8E6B5F6015FD043900E3828F /* Build configuration list for PBXProject "_2RealFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E6B5F6815FD043900E3828F /* Debug */,
+				8E6B5F6915FD043900E3828F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8E6B5F6A15FD043900E3828F /* Build configuration list for PBXNativeTarget "_2RealFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E6B5F6B15FD043900E3828F /* Debug */,
+				8E6B5F6C15FD043900E3828F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8E6B5F5D15FD043900E3828F /* Project object */;
+}

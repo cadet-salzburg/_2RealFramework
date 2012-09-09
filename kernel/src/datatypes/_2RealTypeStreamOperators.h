@@ -21,10 +21,10 @@
 #include "_2RealDatatypes.h"
 #include "helpers/_2RealStringHelpers.h"
 
-#ifdef _UNIX
-	#include <typeinfo>
+#if defined _UNIX || defined TARGET_OS_MAC
+#include <typeinfo>
 #else
-	#include <typeinfo.h>
+#include <typeinfo.h>
 #endif
 
 #include <string>
