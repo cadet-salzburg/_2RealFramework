@@ -38,7 +38,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
-		class BlockInfo;
+		struct BlockInfo;
 
 		class BlockHandle
 		{

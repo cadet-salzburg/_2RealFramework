@@ -56,6 +56,16 @@ namespace _2Real
 			void addInlet( std::string const& name, TData initialValue, Options< TData > const& options );
 
 			template< typename TData >
+			void addMultiInlet( std::string const& name, TData initialValue )
+			{
+				TypeDescriptor *d = createTypeDescriptor< TData >();
+				addMultiInletInternal( name, *d, Any( initialValue ) );
+			}
+
+			template< typename TData >
+			void addMultiInlet( std::string const& name, TData initialValue, Options< TData > const& options );
+
+			template< typename TData >
 			void addOutlet( std::string const& name )
 			{
 				TypeDescriptor *d = createTypeDescriptor< TData >();
@@ -68,6 +78,8 @@ namespace _2Real
 
 			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
 			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options );
+			void		addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
+			void		addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options );
 			void		addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
 
 			BlockMetadata	&m_Impl;
@@ -79,6 +91,13 @@ namespace _2Real
 		{
 			TypeDescriptor *d = createTypeDescriptor< int >();
 			addInletInternal( name, *d, Any( initialValue ), AnyOptionSet( options ) );
+		}
+
+		template< >
+		inline void BlockMetainfo::addMultiInlet< int >( std::string const& name, int initialValue, Options< int > const& options )
+		{
+			TypeDescriptor *d = createTypeDescriptor< int >();
+			addMultiInletInternal( name, *d, Any( initialValue ), AnyOptionSet( options ) );
 		}
 	}
 }

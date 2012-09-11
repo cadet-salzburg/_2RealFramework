@@ -140,8 +140,8 @@ namespace _2Real
 		TypeDescriptor *tSrc = createTypeDescriptor< TSrc >();
 		TypeDescriptor *tDst = createTypeDescriptor< TDst >();
 
-		std::string src = tSrc->getTypename();
-		std::string dst = tDst->getTypename();
+		std::string src = tSrc->m_TypeName;
+		std::string dst = tDst->m_TypeName;
 
 		for ( unsigned int i = 0; i<src.length(); ++i )
 		{

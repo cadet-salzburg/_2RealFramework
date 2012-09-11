@@ -24,8 +24,9 @@ namespace _2Real
 			m_NestedType( nestedType ),
 			m_Type( type ),
 			m_TypeCategory( TypeCategory::CONTAINER ),
-			m_HumanReadableName( std::string( nestedType->getTypename() ).append(" ").append( name ) ),
-			m_TypeInfo( info )
+			m_TypeInfo( info ),
+			m_TypeName( std::string( nestedType->m_TypeName ).append(" ").append( name ) ),
+			m_LongTypename( info.name() )
 		{
 		}
 
@@ -33,8 +34,9 @@ namespace _2Real
 			m_NestedType( nullptr ),
 			m_Type( type ),
 			m_TypeCategory( category ),
-			m_HumanReadableName( name ),
-			m_TypeInfo( info )
+			m_TypeInfo( info ),
+			m_TypeName( name ),
+			m_LongTypename( info.name() )
 		{
 		}
 
@@ -43,35 +45,35 @@ namespace _2Real
 			delete m_NestedType;
 		}
 
-		std::type_info const& TypeDescriptor::getTypeInfo() const
-		{
-			return m_TypeInfo;
-		}
+		//std::type_info const& TypeDescriptor::getTypeInfo() const
+		//{
+		//	return m_TypeInfo;
+		//}
 
-		std::string const& TypeDescriptor::getTypename() const
-		{
-			return m_HumanReadableName;
-		}
+		//std::string const& TypeDescriptor::getTypename() const
+		//{
+		//	return m_HumanReadableName;
+		//}
 
-		const std::string TypeDescriptor::getLongTypename() const
-		{
-			return m_TypeInfo.name();
-		}
+		//const std::string TypeDescriptor::getLongTypename() const
+		//{
+		//	return m_TypeInfo.name();
+		//}
 
-		TypeCategory const& TypeDescriptor::getTypeCategory() const
-		{
-			return m_TypeCategory;
-		}
+		//TypeCategory const& TypeDescriptor::getTypeCategory() const
+		//{
+		//	return m_TypeCategory;
+		//}
 
-		Type const& TypeDescriptor::getType() const
-		{
-			return m_Type;
-		}
+		//Type const& TypeDescriptor::getType() const
+		//{
+		//	return m_Type;
+		//}
 
-		TypeDescriptor const* const TypeDescriptor::getNestedType() const
-		{
-			return m_NestedType;
-		}
+		//TypeDescriptor const* const TypeDescriptor::getNestedType() const
+		//{
+		//	return m_NestedType;
+		//}
 
 		bool TypeDescriptor::operator!=( TypeDescriptor const& other ) const
 		{

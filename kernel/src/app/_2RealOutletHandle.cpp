@@ -121,19 +121,19 @@ namespace _2Real
 		bool OutletHandle::link( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			return EngineImpl::instance().createLink( *( inlet.m_InletIO ), *m_OutletIO );
+			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
 		}
 
 		bool OutletHandle::linkWithConversion( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			return EngineImpl::instance().createLinkWithConversion( *( inlet.m_InletIO ), *m_OutletIO );
+			return EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
 		}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			EngineImpl::instance().destroyLink( *( inlet.m_InletIO ), *m_OutletIO );
+			EngineImpl::instance().destroyLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
 		}
 
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const

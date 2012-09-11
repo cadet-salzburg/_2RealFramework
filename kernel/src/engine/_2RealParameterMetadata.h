@@ -33,27 +33,15 @@ namespace _2Real
 
 	public:
 
-		ParameterMetadata( std::string const& name, TypeDescriptor &descriptor, Any const& initialValue );
+		ParameterMetadata( std::string const& name, TypeDescriptor &descriptor, Any const& initValue, AnyOptionSet const& options, const bool isMultiple );
+		ParameterMetadata( std::string const& name, TypeDescriptor &descriptor, Any const& initValue );
 		~ParameterMetadata();
 
-		std::string const&		getName() const;
-		std::string const&		getTypename() const;
-		const std::string		getLongTypename() const;
-		TypeDescriptor const&	getTypeDescriptor() const;
-		Any const&				getInitialValue() const;
-
-		void enableOptions( AnyOptionSet const& options );
-		bool hasOptions() const;
-		AnyOptionSet const& getOptions() const;
-
-		static void performParameterNameCheck( std::string const& name );
-
-	private:
-
-		TypeDescriptor			*m_TypeDescriptor;
-		std::string				m_Name;
-		Any						m_InitialValue;
-		AnyOptionSet			m_Options;
+		TypeDescriptor			const *const type;
+		std::string				const name;
+		Any						const initValue;
+		AnyOptionSet			const options;
+		bool					const isMultiple;
 
 	};
 

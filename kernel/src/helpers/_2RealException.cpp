@@ -92,5 +92,7 @@ namespace _2Real
 	IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
 	IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
 	IMPLEMENT_EXCEPTION( XMLFormatException, Exception, "xml format exception" )
+	IMPLEMENT_EXCEPTION( OutOfRangeException, Exception, "out of range exception" )
+	IMPLEMENT_EXCEPTION( IllegalActionException, Exception, "illegal action exception" )
 
 }

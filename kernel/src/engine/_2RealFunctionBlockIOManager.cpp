@@ -100,7 +100,7 @@ namespace _2Real
 
 	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
 	{
-		return getInletIO( name ).m_Inlet->getHandle();
+		return getInletIO( name ).getBundleInletHandle();
 	}
 
 	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
@@ -108,16 +108,11 @@ namespace _2Real
 		return getOutletIO( name ).m_Outlet->getHandle();
 	}
 
-	unsigned int FunctionBlockIOManager::getInletBufferSize( std::string const& inlet ) const
-	{
-		return getInletIO( inlet ).m_Buffer->getBufferSize();
-	}
-
-	InletIO & FunctionBlockIOManager::getInletIO( string const& name )
+	AbstractInletIO & FunctionBlockIOManager::getInletIO( string const& name )
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Inlet->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->info().baseName ) == toLower( name ) )
 			{
 				return **it;
 			}
@@ -143,11 +138,11 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	InletIO const& FunctionBlockIOManager::getInletIO( string const& name ) const
+	AbstractInletIO const& FunctionBlockIOManager::getInletIO( string const& name ) const
 	{
 		for ( InletConstIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Inlet->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->info().baseName ) == toLower( name ) )
 			{
 				return **it;
 			}
@@ -173,15 +168,22 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options )
+	void FunctionBlockIOManager::addBasicInlet( AbstractInletIO::InletInfo const& info )
 	{
-		InletIO *io = new InletIO( m_Owner, name, type, initialValue, options );
-		TimestampedData const& data = io->m_Buffer->getTriggeringData();
-		//io->m_Inlet->setDataAndSynchronize( data );
+		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
+		io->syncInletData();
 		m_UpdatePolicy->addInlet( *io );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
-		m_BundleInletHandles.push_back( io->m_Inlet->getHandle() );
+		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
+	}
+
+	void FunctionBlockIOManager::addMultiInlet( AbstractInletIO::InletInfo const& info )
+	{
+		MultiInletIO *io = new MultiInletIO( m_Owner, *m_UpdatePolicy, info );
+		m_Inlets.push_back( io );
+		m_AppInletHandles.push_back( io->getHandle() );
+		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
 	}
 
 	void FunctionBlockIOManager::addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue )
@@ -197,9 +199,13 @@ namespace _2Real
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			Inlet &inlet = *( ( *it )->m_Inlet );
-			TimestampedData const& data = ( *it )->m_Buffer->getTriggeringData();
-			inlet.setDataAndSynchronize( data );
+			( *it )->syncInletChanges();		// makes changes to multiinlet visible
+
+			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
+			{
+				BasicInletIO &inletIO = ( **it )[ i ];
+				inletIO.syncInletData();		// makes changed data visible
+			}
 		}
 	}
 
@@ -231,7 +237,11 @@ namespace _2Real
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			( *it )->m_Buffer->clearBufferedData();
+			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
+			{
+				BasicInletIO &inletIO = ( **it )[ i ];
+				inletIO.clearBufferedData();
+			}
 		}
 	}
 
@@ -239,7 +249,11 @@ namespace _2Real
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			( *it )->m_Buffer->processBufferedData( enableTriggering );
+			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
+			{
+				BasicInletIO &inletIO = ( **it )[ i ];
+				inletIO.processBufferedData( enableTriggering );
+			}
 		}
 	}
 

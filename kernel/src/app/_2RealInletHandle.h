@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class InletIO;
+	class AbstractInletIO;
 	class AnyOptionSet;
 
 	namespace app
@@ -44,7 +44,7 @@ namespace _2Real
 			};
 
 			InletHandle();
-			InletHandle( InletIO &inletIO );
+			InletHandle( AbstractInletIO &inletIO );
 			~InletHandle();
 			InletHandle( InletHandle const& other );
 			InletHandle& operator=( InletHandle const& other );
@@ -82,6 +82,7 @@ namespace _2Real
 			}
 
 			void setValueToString( std::string const& value );
+			void setDefaultValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
@@ -96,6 +97,25 @@ namespace _2Real
 				return anyOptions.extract< TData >();
 			}
 
+			//////////////// multi inlet functions; should never be used on a standard inlet ////////////////////
+
+			bool isMultiInlet() const;
+			unsigned int getSize() const;
+			InletHandle operator[]( const unsigned int index );
+
+			InletHandle add();
+			void remove( InletHandle &handle );
+
+			struct InletState
+			{
+				std::string defaultValue;
+				std::string currentValue;
+				std::string updatePolicy;
+				std::string bufferSize;
+			};
+
+			InletState getCurrentState() const;
+
 		private:
 
 			friend class OutletHandle;
@@ -104,7 +124,7 @@ namespace _2Real
 
 			void				setValue( Any const& data );
 			void				setDefaultValue( Any const& data );
-			InletIO				*m_InletIO;
+			AbstractInletIO		*m_InletIO;
 
 		};
 	}

@@ -84,10 +84,10 @@ namespace _2Real
 	{
 		for ( BlockMetadata::ParameterMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).getName() ) == toLower( data.getName() ) )
+			if ( toLower( ( **it ).name ) == toLower( data.name ) )
 			{
 				ostringstream msg;
-				msg << "inlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
+				msg << "inlet named " << data.name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -99,10 +99,10 @@ namespace _2Real
 	{
 		for ( BlockMetadata::ParameterMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).getName() ) == toLower( data.getName() ) )
+			if ( toLower( ( **it ).name ) == toLower( data.name ) )
 			{
 				ostringstream msg;
-				msg << "outlet named " << data.getName() << " is already defined in block " << getName() << std::endl;
+				msg << "outlet named " << data.name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}

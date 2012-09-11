@@ -34,6 +34,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		win.addInlet< Vec3 >( "clear_color", vecClear );
 
 		win.addInlet< std::string >( "window_title", "yay" );
+
+		win.addInlet< _2Real::AudioBuffer >( "buffer", AudioBuffer() );
 	}
 	catch ( Exception &e )
 	{

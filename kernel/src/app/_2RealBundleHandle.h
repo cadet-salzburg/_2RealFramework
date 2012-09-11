@@ -32,7 +32,7 @@ namespace _2Real
 	{
 		class BlockHandle;
 		class ContextBlockHandle;
-		class BundleInfo;
+		struct BundleInfo;
 
 		class BundleHandle
 		{

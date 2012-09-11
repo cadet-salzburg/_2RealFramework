@@ -22,6 +22,7 @@
 #include "helpers/_2RealStringHelpers.h"
 #include "app/_2RealEngine.h"
 #include "app/_2RealBlockHandle.h"
+#include "app/_2RealBlockInfo.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
@@ -55,6 +56,9 @@ using namespace Poco::XML;
 #define LINK					"link"
 #define LINK_LIST				"links"
 #define INLET					"inlet"
+#define BASIC_INLET				"basic_inlet"
+#define BASIC_INLETS			"basic_inlets"
+#define MULTI_INLET				"multi_inlet"
 #define INLET_CONFIGURATION		"inlet_configuration"
 #define INLET_CONFIGURATIONS	"inlet_configurations"
 #define OUTLET					"outlet"
@@ -63,7 +67,8 @@ using namespace Poco::XML;
 #define INLET_UPDATE_POLICY		"policy"
 #define INLET_BUFFER_SIZE		"buffer"
 #define INLET_ID				"inlet_id"
-#define INLET_VALUE				"value"
+#define INLET_BUFFER_VALUE		"value"
+#define INLET_DEFAULT_VALUE		"default_value"
 #define OUTLET_ID				"outlet_id"
 #define BLOCK_STATE				"state"
 
@@ -136,6 +141,9 @@ namespace _2Real
 			map< string, app::BlockHandle > blockInstances;
 			map< string, bool > blockStates;
 			NodeList *instancedBlocks = blocks->childNodes();
+
+			map< InletHandleId, app::InletHandle > inletHandles;
+
 			for ( unsigned int i=0; i<instancedBlocks->length(); ++i )
 			{
 				Node *blockInstance = instancedBlocks->item( i );
@@ -183,35 +191,106 @@ namespace _2Real
 							InletConfig inConfig;
 							Element *inletId = getChildElementByName( INLET_ID, *inletConfiguration );
 							inConfig.inletId = trim( inletId->innerText() );
-							Element *updatePolicy = getChildElementByName( INLET_UPDATE_POLICY, *inletConfiguration );
-							inConfig.updatePolicy = trim( updatePolicy->innerText() );
-							Element *bufferSize = getChildElementByName( INLET_BUFFER_SIZE, *inletConfiguration );
-							inConfig.bufferSize = trim( bufferSize->innerText() );
-							config.inlets.push_back( inConfig );
+							Element *isMultiInlet = getChildElementByName( MULTI_INLET, *inletConfiguration );
+							inConfig.isMulti = ( isMultiInlet->innerText() == "1" );
 
-							Element *value = getChildElementByName( INLET_VALUE, *inletConfiguration );
-							inConfig.value = trim( value->innerText() );
-
-							app::InletHandle inletHandle = blockHandle.getInletHandle( inConfig.inletId );
-							if ( !inConfig.value.empty() ) inletHandle.setValueToString( inConfig.value );
-
-							stringstream sBuffer;
-							unsigned int buffer;
-							sBuffer << inConfig.bufferSize;
-							sBuffer >> buffer;
-
-							inletHandle.setBufferSize( buffer );
-							if ( inConfig.updatePolicy == "valid_data" )
+							if ( inConfig.isMulti )
 							{
-								inletHandle.setUpdatePolicy( app::InletHandle::ALWAYS );
+								app::InletHandle inletHandle = blockHandle.getInletHandle( inConfig.inletId );
+
+								Element *basics = getChildElementByName( BASIC_INLETS, *inletConfiguration );
+								NodeList *basicInlets = basics->childNodes();
+								for ( unsigned int u=0; u<basicInlets->length(); ++u )
+								{
+									Node *basicInlet = basicInlets->item( u );
+									if ( basicInlet->nodeType() == Node::ELEMENT_NODE && basicInlet->localName() == BASIC_INLET )
+									{
+										BasicInletConfig basicConfig;
+
+										Element *basicName = getChildElementByName( INLET_ID, *basicInlet );
+										basicConfig.inletId = trim( basicName->innerText() );
+										Element *updatePolicy = getChildElementByName( INLET_UPDATE_POLICY, *basicInlet );
+										basicConfig.updatePolicy = trim( updatePolicy->innerText() );
+										Element *bufferSize = getChildElementByName( INLET_BUFFER_SIZE, *basicInlet );
+										basicConfig.bufferSize = trim( bufferSize->innerText() );
+										Element *value = getChildElementByName( INLET_BUFFER_VALUE, *basicInlet );
+										basicConfig.bufferedValue = trim( value->innerText() );
+										Element *initialValue = getChildElementByName( INLET_DEFAULT_VALUE, *basicInlet );
+										basicConfig.initialValue = trim( initialValue->innerText() );
+										inConfig.basicInlets.push_back( basicConfig );
+
+										app::InletHandle subHandle;
+										subHandle = inletHandle.add();
+
+										if ( !basicConfig.initialValue.empty() ) subHandle.setDefaultValueToString( basicConfig.initialValue );
+
+										stringstream sBuffer;
+										unsigned int buffer;
+										sBuffer << basicConfig.bufferSize;
+										sBuffer >> buffer;
+
+										subHandle.setBufferSize( buffer );
+										if ( basicConfig.updatePolicy == "valid_data" )
+										{
+											subHandle.setUpdatePolicy( app::InletHandle::ALWAYS );
+										}
+										else if ( basicConfig.updatePolicy == "or_newer_data" )
+										{
+											subHandle.setUpdatePolicy( app::InletHandle::OR_NEWER_DATA );
+										}
+										else if ( basicConfig.updatePolicy == "and_newer_data" )
+										{
+											subHandle.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
+										}
+
+										InletHandleId id;
+										id.blockInstanceId = config.blockInstanceId;
+										id.inletId = basicConfig.inletId;
+										inletHandles.insert( make_pair( id, subHandle ) );
+									}
+								}
+								basicInlets->release();
 							}
-							else if ( inConfig.updatePolicy == "or_newer_data" )
+							else
 							{
-								inletHandle.setUpdatePolicy( app::InletHandle::OR_NEWER_DATA );
-							}
-							else if ( inConfig.updatePolicy == "and_newer_data" )
-							{
-								inletHandle.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
+								BasicInletConfig basicConfig;
+								basicConfig.inletId = inConfig.inletId;
+								Element *updatePolicy = getChildElementByName( INLET_UPDATE_POLICY, *inletConfiguration );
+								basicConfig.updatePolicy = trim( updatePolicy->innerText() );
+								Element *bufferSize = getChildElementByName( INLET_BUFFER_SIZE, *inletConfiguration );
+								basicConfig.bufferSize = trim( bufferSize->innerText() );
+								Element *value = getChildElementByName( INLET_BUFFER_VALUE, *inletConfiguration );
+								basicConfig.bufferedValue = trim( value->innerText() );
+								Element *initialValue = getChildElementByName( INLET_DEFAULT_VALUE, *inletConfiguration );
+								basicConfig.initialValue = trim( initialValue->innerText() );
+								inConfig.basicInlets.push_back( basicConfig );
+
+								app::InletHandle inletHandle = blockHandle.getInletHandle( basicConfig.inletId );
+								if ( !basicConfig.initialValue.empty() ) inletHandle.setDefaultValueToString( basicConfig.initialValue );
+
+								stringstream sBuffer;
+								unsigned int buffer;
+								sBuffer << basicConfig.bufferSize;
+								sBuffer >> buffer;
+
+								inletHandle.setBufferSize( buffer );
+								if ( basicConfig.updatePolicy == "valid_data" )
+								{
+									inletHandle.setUpdatePolicy( app::InletHandle::ALWAYS );
+								}
+								else if ( basicConfig.updatePolicy == "or_newer_data" )
+								{
+									inletHandle.setUpdatePolicy( app::InletHandle::OR_NEWER_DATA );
+								}
+								else if ( basicConfig.updatePolicy == "and_newer_data" )
+								{
+									inletHandle.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
+								}
+
+								InletHandleId id;
+								id.blockInstanceId = config.blockInstanceId;
+								id.inletId = basicConfig.inletId;
+								inletHandles.insert( make_pair( id, inletHandle ) );
 							}
 						}
 					}
@@ -243,9 +322,31 @@ namespace _2Real
 					map< string, app::BlockHandle >::iterator inIt = blockInstances.find( inletConfig.blockInstanceId );
 					map< string, app::BlockHandle >::iterator outIt = blockInstances.find( outletConfig.blockInstanceId );
 
+					if ( inIt == blockInstances.end() )
+					{
+						std::cout << "missing " << inletConfig.blockInstanceId << std::endl;
+					}
+
+					if ( outIt == blockInstances.end() )
+					{
+						std::cout << "missing " << outletConfig.blockInstanceId << std::endl;
+					}
+
 					if ( inIt != blockInstances.end() && outIt != blockInstances.end() && inIt->second.isValid() && outIt->second.isValid() )
 					{
-						app::InletHandle inHandle = inIt->second.getInletHandle( inletConfig.paramId );
+						InletHandleId id;
+						id.blockInstanceId = inletConfig.blockInstanceId;
+						id.inletId = inletConfig.paramId;
+
+						map< InletHandleId, app::InletHandle >::iterator inHandleIt = inletHandles.find( id );
+
+						if ( inHandleIt == inletHandles.end() )
+						{
+							std::cout << "notfound " << inletConfig.paramId << std::endl;
+							continue;
+						}
+
+						app::InletHandle inHandle = inHandleIt->second;
 						app::OutletHandle outHandle = outIt->second.getOutletHandle( outletConfig.paramId );
 
 						if ( !inHandle.link( outHandle ) )
@@ -361,22 +462,73 @@ namespace _2Real
 			{
 				AutoPtr< Element > inlet = m_Document->createElement( INLET_CONFIGURATION );
 				inlets->appendChild( inlet );
+
 				AutoPtr< Element > inletName = m_Document->createElement( INLET_ID );
-				AutoPtr< Element > inletPolicy = m_Document->createElement( INLET_UPDATE_POLICY );
-				AutoPtr< Element > inletBuffer = m_Document->createElement( INLET_BUFFER_SIZE );
-				AutoPtr< Element > inletValue = m_Document->createElement( INLET_VALUE );
 				AutoPtr< Text > name = m_Document->createTextNode( it->inletId );
-				AutoPtr< Text > policy = m_Document->createTextNode( it->updatePolicy );
-				AutoPtr< Text > buffer = m_Document->createTextNode( it->bufferSize );
-				AutoPtr< Text > val = m_Document->createTextNode( it->value );
 				inlet->appendChild( inletName );
 				inletName->appendChild( name );
-				inlet->appendChild( inletPolicy );
-				inletPolicy->appendChild( policy );
-				inlet->appendChild( inletBuffer );
-				inletBuffer->appendChild( buffer );
-				inlet->appendChild( inletValue );
-				inletValue->appendChild( val );
+
+				AutoPtr< Element > isMulti = m_Document->createElement( MULTI_INLET );
+				inlet->appendChild( isMulti );
+
+				if ( it->isMulti )
+				{
+					AutoPtr< Text > multiValue = m_Document->createTextNode( "1" );
+					isMulti->appendChild( multiValue );
+
+					AutoPtr< Element > basicInlets = m_Document->createElement( BASIC_INLETS );
+					inlet->appendChild( basicInlets );
+
+					for ( vector< BasicInletConfig >::const_iterator bIt = it->basicInlets.begin(); bIt != it->basicInlets.end(); ++bIt )
+					{
+						AutoPtr< Element > basicInlet = m_Document->createElement( BASIC_INLET );
+						basicInlets->appendChild( basicInlet );
+
+						AutoPtr< Element > inId = m_Document->createElement( INLET_ID );
+						AutoPtr< Element > inletPolicy = m_Document->createElement( INLET_UPDATE_POLICY );
+						AutoPtr< Element > inletBuffer = m_Document->createElement( INLET_BUFFER_SIZE );
+						AutoPtr< Element > inletBufferValue = m_Document->createElement( INLET_BUFFER_VALUE );
+						AutoPtr< Element > inletDefaultValue = m_Document->createElement( INLET_DEFAULT_VALUE );
+						AutoPtr< Text > id = m_Document->createTextNode( bIt->inletId );
+						AutoPtr< Text > policy = m_Document->createTextNode( bIt->updatePolicy );
+						AutoPtr< Text > buffer = m_Document->createTextNode( bIt->bufferSize );
+						AutoPtr< Text > bufferVal = m_Document->createTextNode( bIt->bufferedValue );
+						AutoPtr< Text > defaultVal = m_Document->createTextNode( bIt->initialValue );
+						basicInlet->appendChild( inId );
+						inId->appendChild( id );
+						basicInlet->appendChild( inletPolicy );
+						inletPolicy->appendChild( policy );
+						basicInlet->appendChild( inletBuffer );
+						inletBuffer->appendChild( buffer );
+						basicInlet->appendChild( inletBufferValue );
+						inletBufferValue->appendChild( bufferVal );
+						basicInlet->appendChild( inletDefaultValue );
+						inletDefaultValue->appendChild( defaultVal );
+					}
+				}
+				else
+				{
+					AutoPtr< Text > multiValue = m_Document->createTextNode( "0" );
+					isMulti->appendChild( multiValue );
+
+					BasicInletConfig c = it->basicInlets[ 0 ];
+					AutoPtr< Element > inletPolicy = m_Document->createElement( INLET_UPDATE_POLICY );
+					AutoPtr< Element > inletBuffer = m_Document->createElement( INLET_BUFFER_SIZE );
+					AutoPtr< Element > inletBufferValue = m_Document->createElement( INLET_BUFFER_VALUE );
+					AutoPtr< Element > inletDefaultValue = m_Document->createElement( INLET_DEFAULT_VALUE );
+					AutoPtr< Text > policy = m_Document->createTextNode( c.updatePolicy );
+					AutoPtr< Text > buffer = m_Document->createTextNode( c.bufferSize );
+					AutoPtr< Text > bufferVal = m_Document->createTextNode( c.bufferedValue );
+					AutoPtr< Text > defaultVal = m_Document->createTextNode( c.initialValue );
+					inlet->appendChild( inletPolicy );
+					inletPolicy->appendChild( policy );
+					inlet->appendChild( inletBuffer );
+					inletBuffer->appendChild( buffer );
+					inlet->appendChild( inletBufferValue );
+					inletBufferValue->appendChild( bufferVal );
+					inlet->appendChild( inletDefaultValue );
+					inletDefaultValue->appendChild( defaultVal );
+				}
 			}
 		}
 

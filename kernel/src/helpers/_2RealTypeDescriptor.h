@@ -44,23 +44,22 @@ namespace _2Real
 		TypeDescriptor( std::type_info const& info, Type const& type, std::string const& name, TypeCategory const& category );
 		~TypeDescriptor();
 
-		std::type_info const&			getTypeInfo() const;
-		const std::string				getLongTypename() const;
-		std::string const&				getTypename() const;
-		TypeCategory const&				getTypeCategory() const;
-		Type const&						getType() const;
-		TypeDescriptor const* const		getNestedType() const;
+		//std::type_info const&				getTypeInfo() const;
+		//const std::string					getLongTypename() const;
+		//std::string const&				getTypename() const;
+		//TypeCategory const&				getTypeCategory() const;
+		//Type const&						getType() const;
+		//TypeDescriptor const* const		getNestedType() const;
 
 		bool operator!=( TypeDescriptor const& other ) const;
 		bool operator==( TypeDescriptor const& other ) const;
 
-	private:
-
-		TypeDescriptor					*m_NestedType;
-		Type							m_Type;
-		TypeCategory					m_TypeCategory;
-		std::type_info					const& m_TypeInfo;
-		std::string						m_HumanReadableName;
+		TypeDescriptor						const* const m_NestedType;
+		Type								const m_Type;
+		TypeCategory						const m_TypeCategory;
+		std::type_info						const& m_TypeInfo;
+		std::string							const m_TypeName;
+		std::string							const m_LongTypename;
 
 	};
 }

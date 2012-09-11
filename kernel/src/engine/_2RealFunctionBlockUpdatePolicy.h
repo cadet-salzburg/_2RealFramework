@@ -30,7 +30,7 @@ namespace _2Real
 {
 
 	class Inlet;
-	class InletIO;
+	class BasicInletIO;
 	class OutletIO;
 	class FunctionBlockIOManager;
 	class FunctionBlockStateManager;
@@ -38,7 +38,7 @@ namespace _2Real
 	class AbstractInletTriggerCtor
 	{
 	public:
-		virtual AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) = 0;
+		virtual AbstractInletBasedTrigger * createTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isSingleWeight ) = 0;
 		virtual ~AbstractInletTriggerCtor() {};
 	};
 
@@ -46,9 +46,9 @@ namespace _2Real
 	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
-		AbstractInletBasedTrigger * createTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr )
+		AbstractInletBasedTrigger * createTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isSingleWeight )
 		{
-			return new InletBasedTrigger< Condition >( buffer, mgr, isOr );
+			return new InletBasedTrigger< Condition >( buffer, mgr, isSingleWeight );
 		}
 	};
 
@@ -60,28 +60,38 @@ namespace _2Real
 		FunctionBlockUpdatePolicy( AbstractUberBlock &owner );
 		~FunctionBlockUpdatePolicy();
 
-		void addInlet( InletIO &io );
-		void changePolicy();
+		// update policy has no concept of multiinlets
+		void addInlet( BasicInletIO &io );
+		void removeInlet( BasicInletIO &io );
+
+		void syncChanges();
+
 		void setNewUpdateRate( const double rate );
-		void setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *policy, const bool isOr, std::string const& typeName );
-		const std::string getUpdatePolicyAsString( std::string const& inlet ) const;
 		double getUpdateRate() const;
+
+		void setNewInletPolicy( BasicInletIO &io, AbstractInletTriggerCtor *policy, const bool isSingleWeight, std::string const& policyAsString );
+		const std::string getUpdatePolicyAsString( std::string const& inlet ) const;
 
 	private:
 
 		struct InletPolicy
 		{
-			~InletPolicy();
-			bool						wasChanged;
-			bool						isOr;
+			InletPolicy( AbstractInletTriggerCtor *c, AbstractInletBasedTrigger *t, const bool w ) :
+				wasPolicyChanged( true ), isSingleWeight( w ),
+				policyString( "valid_data" ), ctor( c ), trigger( t ) {}
+
+			~InletPolicy() { delete ctor; delete trigger; }
+
+			bool						wasPolicyChanged;
+			bool						isSingleWeight;
+			std::string					policyString;
 			AbstractInletTriggerCtor	*ctor;
 			AbstractInletBasedTrigger	*trigger;
-			std::string					typeString;
 		};
 
-		typedef std::map< InletIO *, InletPolicy * >						InletPolicyMap;
-		typedef std::map< InletIO *, InletPolicy * >::iterator				InletPolicyIterator;
-		typedef std::map< InletIO *, InletPolicy * >::const_iterator		InletPolicyConstIterator;
+		typedef std::map< BasicInletIO *, InletPolicy * >						InletPolicyMap;
+		typedef std::map< BasicInletIO *, InletPolicy * >::iterator				InletPolicyIterator;
+		typedef std::map< BasicInletIO *, InletPolicy * >::const_iterator		InletPolicyConstIterator;
 
 		template< typename T >
 		friend class FunctionBlock;
@@ -92,7 +102,7 @@ namespace _2Real
 
 		mutable Poco::FastMutex			m_Access;
 		bool							m_TimeChanged;
-		bool							m_InletsChanged;
+		bool							m_InletPoliciesChanged;
 		TimeBasedTrigger				*m_TimeTrigger;
 		long							m_UpdateTime;
 		double							m_UpdateRate;

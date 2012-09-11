@@ -65,11 +65,16 @@ namespace _2Real
 			assert( NULL );
 		}
 #endif
-		m_Bundles.erase( it );
-		Bundle::BlockInstances & blocks = bundle.getBlockInstances( *this );
 
-		for ( Bundle::BlockInstanceIterator it = blocks.begin(); it != blocks.end(); ++it )
+		Bundle::BlockInstances & blocks = bundle.getBlockInstances( *this );
+		//for ( Bundle::BlockInstanceIterator it = blocks.begin(); it != blocks.end(); ++it )
+		//{
+		//	m_Engine.removeBlock( *it->second, timeout );
+		//}
+
+		while ( !blocks.empty() )
 		{
+			Bundle::BlockInstanceIterator it = blocks.begin();
 			m_Engine.removeBlock( *it->second, timeout );
 		}
 
@@ -80,6 +85,7 @@ namespace _2Real
 		}
 
 		m_BundleLoader.unloadLibrary( bundle.getAbsPath() );
+		m_Bundles.erase( it );
 	}
 
 	BundleManager::Bundles const& BundleManager::getBundles() const
@@ -96,46 +102,49 @@ namespace _2Real
 	{
 		BundleMetadata const& bundleData = m_BundleLoader.createBundleEx( path, MetainfoFunc );
 
-		app::BundleInfo::BundleData data;
-		app::BundleInfo::BlockInfos blocks;
-
-		data.name = bundleData.getName();
-		data.directory = bundleData.getInstallDirectory();
-		data.description = bundleData.getDescription();
-		data.contact = bundleData.getContact();
-		data.author = bundleData.getAuthor();
-		data.category = bundleData.getCategory();
+		app::BundleInfo bundleInfo;
+		bundleInfo.name = bundleData.getName();
+		bundleInfo.directory = bundleData.getInstallDirectory();
+		bundleInfo.description = bundleData.getDescription();
+		bundleInfo.contact = bundleData.getContact();
+		bundleInfo.author = bundleData.getAuthor();
+		bundleInfo.category = bundleData.getCategory();
 
 		BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
 
 		for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
 		{
-			app::BlockInfo::BlockData blockData;
-			app::BlockInfo::ParameterInfos inlets;
-			app::BlockInfo::ParameterInfos outlets;
-
-			blockData.name = it->second->getName();
-			blockData.description = it->second->getDescription();
-			blockData.category = it->second->getCategory();
+			app::BlockInfo blockInfo;
+			blockInfo.name = it->second->getName();
+			blockInfo.description = it->second->getDescription();
+			blockInfo.category = it->second->getCategory();
 
 			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
 			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				inlets.push_back( paramInfo );
+				app::InletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				info.isMultiInlet = ( *it )->isMultiple;
+				info.hasOptionCheck = !( *it )->options.isEmpty();
+				blockInfo.inlets.push_back( info );
 			}
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				outlets.push_back( paramInfo );
+				app::OutletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				blockInfo.outlets.push_back( info );
 			}
 
-			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
+			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
-		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
+		Bundle *bundle = new Bundle( bundleInfo, *this );
 		m_Bundles.insert( bundle );
 	}
 
@@ -154,22 +163,20 @@ namespace _2Real
 
 		BundleMetadata const& bundleData = m_BundleLoader.loadLibrary( absPath );
 
-		app::BundleInfo::BundleData data;
-		app::BundleInfo::BlockInfos blocks;
-
-		data.name = bundleData.getName();
-		data.directory = bundleData.getInstallDirectory();
-		data.description = bundleData.getDescription();
-		data.contact = bundleData.getContact();
-		data.author = bundleData.getAuthor();
-		data.category = bundleData.getCategory();
+		app::BundleInfo bundleInfo;
+		bundleInfo.name = bundleData.getName();
+		bundleInfo.directory = bundleData.getInstallDirectory();
+		bundleInfo.description = bundleData.getDescription();
+		bundleInfo.contact = bundleData.getContact();
+		bundleInfo.author = bundleData.getAuthor();
+		bundleInfo.category = bundleData.getCategory();
 
 		for ( BundleConstIterator it = m_Bundles.begin(); it != m_Bundles.end(); ++it )
 		{
-			if ( ( *it )->getName() == data.name )
+			if ( ( *it )->getName() == bundleInfo.name )
 			{
 				ostringstream msg;
-				msg << "a bundle named" << data.name << " is already loaded";
+				msg << "a bundle named" << bundleInfo.name << " is already loaded";
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -178,33 +185,38 @@ namespace _2Real
 
 		for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
 		{
-			app::BlockInfo::BlockData blockData;
-			app::BlockInfo::ParameterInfos inlets;
-			app::BlockInfo::ParameterInfos outlets;
-
-			blockData.name = it->second->getName();
-			blockData.description = it->second->getDescription();
-			blockData.category = it->second->getCategory();
+			app::BlockInfo blockInfo;
+			blockInfo.name = it->second->getName();
+			blockInfo.description = it->second->getDescription();
+			blockInfo.category = it->second->getCategory();
 
 			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
 			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				inlets.push_back( paramInfo );
+				app::InletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				info.isMultiInlet = ( *it )->isMultiple;
+				info.hasOptionCheck = !( *it )->options.isEmpty();
+				blockInfo.inlets.push_back( info );
 			}
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				outlets.push_back( paramInfo );
+				app::OutletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				blockInfo.outlets.push_back( info );
 			}
 
-			blocks.push_back( app::BlockInfo( blockData, inlets, outlets ) );
+			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
 
-		Bundle *bundle = new Bundle( app::BundleInfo( data, blocks ), *this );
+		Bundle *bundle = new Bundle( bundleInfo, *this );
 		m_Bundles.insert( bundle );
 
 		return *bundle;
@@ -228,46 +240,49 @@ namespace _2Real
 
 		if ( !bundle.hasContext() && m_BundleLoader.hasContext( absPath ) )
 		{
-
 			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( "contextblock" );
-			app::BlockInfo::BlockData contextData;
-			app::BlockInfo::ParameterInfos contextInletData;
-			app::BlockInfo::ParameterInfos contextOutletData;
 
-			contextData.name = contextMetadata.getName();
-			contextData.description = contextMetadata.getDescription();
-			contextData.category = contextMetadata.getCategory();
+			app::BlockInfo contextInfo;
+			contextInfo.name = contextMetadata.getName();
+			contextInfo.description = contextMetadata.getDescription();
+			contextInfo.category = contextMetadata.getCategory();
 
 			BlockMetadata::ParameterMetadatas const& inletMetadata = contextMetadata.getInlets();
 			BlockMetadata::ParameterMetadatas const& outletMetadata = contextMetadata.getOutlets();
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				contextInletData.push_back( paramInfo );
+				app::InletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				info.isMultiInlet = ( *it )->isMultiple;
+				info.hasOptionCheck = !( *it )->options.isEmpty();
+				contextInfo.inlets.push_back( info );
 			}
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 			{
-				app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-				contextOutletData.push_back( paramInfo );
+				app::OutletInfo info;
+				info.name = ( *it )->name;
+				info.typeName = ( *it )->type->m_TypeName;
+				info.longTypename = ( *it )->type->m_LongTypename;
+				contextInfo.outlets.push_back( info );
 			}
 
-			app::BlockInfo info( contextData, contextInletData, contextOutletData );
-
 			bundle::Block & block = m_BundleLoader.createContext( absPath );
-			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( bundle, block, info );
+			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( bundle, block, contextInfo );
 			bundle.setContextBlock( *contextBlock );
 			m_Engine.addBlock( *contextBlock );
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-			{
-				contextBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
-			}
+			//for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			//{
+			//	contextBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, false );
+			//}
 
 			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 			{
-				contextBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
+				contextBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 			}
 
 			contextBlock->updateWithFixedRate( 30.0 );
@@ -276,30 +291,36 @@ namespace _2Real
 		}
 
 		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
-		app::BlockInfo::BlockData blockData;
-		app::BlockInfo::ParameterInfos blockInletData;
-		app::BlockInfo::ParameterInfos blockOutletData;
 
-		blockData.name = blockMetadata.getName();
-		blockData.description = blockMetadata.getDescription();
-		blockData.category = blockMetadata.getCategory();
+		app::BlockInfo blockInfo;
+		blockInfo.name = blockMetadata.getName();
+		blockInfo.description = blockMetadata.getDescription();
+		blockInfo.category = blockMetadata.getCategory();
 
 		BlockMetadata::ParameterMetadatas const& inletMetadata = blockMetadata.getInlets();
 		BlockMetadata::ParameterMetadatas const& outletMetadata = blockMetadata.getOutlets();
 
 		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-			blockInletData.push_back( paramInfo );
+			app::InletInfo info;
+			info.name = ( *it )->name;
+			info.typeName = ( *it )->type->m_TypeName;
+			info.longTypename = ( *it )->type->m_LongTypename;
+			info.isMultiInlet = ( *it )->isMultiple;
+			info.hasOptionCheck = !( *it )->options.isEmpty();
+			blockInfo.inlets.push_back( info );
 		}
 
 		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
-			app::ParameterInfo paramInfo( ( *it )->getName(), ( *it )->getTypename(), ( *it )->getLongTypename() );
-			blockOutletData.push_back( paramInfo );
+			app::OutletInfo info;
+			info.name = ( *it )->name;
+			info.typeName = ( *it )->type->m_TypeName;
+			info.longTypename = ( *it )->type->m_LongTypename;
+			blockInfo.outlets.push_back( info );
 		}
 
-		app::BlockInfo info( blockData, blockInletData, blockOutletData );
+		app::BlockInfo info( blockInfo );
 
 		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getAbsPath(), blockName );
 		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, info );
@@ -308,12 +329,12 @@ namespace _2Real
 		// adding inlets & outlets
 		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			functionBlock->addInlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue(), ( *it )->getOptions() );
+			functionBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, ( *it )->isMultiple );
 		}
 
 		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
-			functionBlock->addOutlet( ( *it )->getName(), ( *it )->getTypeDescriptor(), ( *it )->getInitialValue() );
+			functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 		}
 
 		return *functionBlock;

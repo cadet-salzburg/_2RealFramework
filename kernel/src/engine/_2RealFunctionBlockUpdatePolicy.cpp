@@ -33,17 +33,11 @@ using std::greater;
 namespace _2Real
 {
 
-	FunctionBlockUpdatePolicy::InletPolicy::~InletPolicy()
-	{
-		delete ctor;
-		delete trigger;
-	}
-
 	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( AbstractUberBlock &owner ) :
 		AbstractUpdatePolicy( owner ),
 		m_Engine( EngineImpl::instance() ),
 		m_TimeChanged( false ),
-		m_InletsChanged( false ),
+		m_InletPoliciesChanged( false ),
 		m_TimeTrigger( nullptr ),
 		m_UpdateTime( -1 ),
 		m_UpdateRate( 0.0 )
@@ -61,7 +55,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::addInlet( InletIO &inletIO )
+	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 #ifdef _DEBUG
@@ -71,21 +65,34 @@ namespace _2Real
 		}
 #endif
 
-		m_InletsChanged = true;
-		InletPolicy *p = new InletPolicy();
-		p->ctor = new InletTriggerCtor< ValidData >();
-		p->isOr = false;
-		p->trigger = nullptr;
-		p->wasChanged = true;
-		p->typeString = "valid_data";
-		m_InletPolicies.insert( make_pair( &inletIO, p ) );
+		// create a default trigger: valid data, groupWeight - this should always be fulfilled
+		BasicInletBuffer *buffer = inletIO.getBufferPtr();
+		AbstractInletTriggerCtor *c = new InletTriggerCtor< ValidData >();
+		AbstractInletBasedTrigger *t = c->createTrigger( *buffer, *m_StateManager, false );
+		InletPolicy *policy = new InletPolicy( c, t, false );
+		m_InletPolicies.insert( make_pair( &inletIO, policy ) );
 	}
 
-	void FunctionBlockUpdatePolicy::changePolicy()
+
+	void FunctionBlockUpdatePolicy::removeInlet( BasicInletIO &inletIO )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		InletPolicyIterator it = m_InletPolicies.find( &inletIO );
+#ifdef _DEBUG
+		if ( it == m_InletPolicies.end() )
+		{
+			assert( NULL );
+		}
+#endif
+		delete it->second;
+		m_InletPolicies.erase( it );
+	}
+
+	void FunctionBlockUpdatePolicy::syncChanges()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 
-		if ( ! ( m_TimeChanged || m_InletsChanged ) ) return;
+		if ( ! ( m_TimeChanged || m_InletPoliciesChanged ) ) return;
 
 		if ( m_TimeChanged )
 		{
@@ -98,16 +105,18 @@ namespace _2Real
 			m_TimeChanged = false;
 		}
 
-		if ( m_InletsChanged )
+		if ( m_InletPoliciesChanged )
 		{
 			for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
 			{
-				if ( it->second->wasChanged )
+				InletPolicy *policy = it->second;
+
+				if ( policy->wasPolicyChanged )
 				{
-					InletBuffer *buffer = it->first->m_Buffer;
+					BasicInletBuffer *buffer = it->first->getBufferPtr();
 					AbstractInletTriggerCtor *ctor = it->second->ctor;
 					AbstractInletBasedTrigger *currTrigger = it->second->trigger;
-					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager, it->second->isOr );
+					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager, it->second->isSingleWeight );
 
 					if ( currTrigger != nullptr )
 					{
@@ -117,10 +126,11 @@ namespace _2Real
 					delete currTrigger;
 					it->second->trigger = newTrigger;
 
-					it->second->wasChanged = false;
+					it->second->wasPolicyChanged = false;
 				}
 			}
-			m_InletsChanged = false;
+
+			m_InletPoliciesChanged = false;
 		}
 	}
 
@@ -139,18 +149,18 @@ namespace _2Real
 		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setNewInletPolicy( InletIO &io, AbstractInletTriggerCtor *inletPolicy, const bool isOr, std::string const& typeName )
+	void FunctionBlockUpdatePolicy::setNewInletPolicy( BasicInletIO &io, AbstractInletTriggerCtor *inletPolicy, const bool isOr, std::string const& typeName )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-		m_InletsChanged = true;
+		m_InletPoliciesChanged = true;
 		InletPolicyIterator it = m_InletPolicies.find( &io );
 		if ( it != m_InletPolicies.end() )
 		{
-			it->second->wasChanged = true;
+			it->second->wasPolicyChanged = true;
 			delete it->second->ctor;
 			it->second->ctor = inletPolicy;
-			it->second->isOr = isOr;
-			it->second->typeString = typeName;
+			it->second->isSingleWeight = isOr;
+			it->second->policyString = typeName;
 		}
 		else
 		{
@@ -166,9 +176,9 @@ namespace _2Real
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		for ( InletPolicyConstIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
 		{
-			if ( it->first->m_Inlet->getName() == inlet )
+			if ( it->first->getName() == inlet )
 			{
-				return it->second->typeString;
+				return it->second->policyString;
 			}
 		}
 #ifdef _DEBUG

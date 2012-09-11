@@ -73,12 +73,12 @@ namespace _2Real
 
 	Type const& Any::getType() const
 	{
-		return m_TypeDescriptor->getType();
+		return m_TypeDescriptor->m_Type;
 	}
 
 	TypeCategory const& Any::getTypeCategory() const
 	{
-		return m_TypeDescriptor->getTypeCategory();
+		return m_TypeDescriptor->m_TypeCategory;
 	}
 
 	void Any::cloneFrom( Any const& src )

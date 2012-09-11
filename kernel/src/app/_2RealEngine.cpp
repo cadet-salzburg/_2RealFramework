@@ -187,27 +187,44 @@ namespace _2Real
 
 				xml::BlockConfig c;
 				c.blockInstanceId = ( *it )->getName();
-				c.blockId = blockInfo.getName();
+				c.blockId = blockInfo.name;
 				c.bundleId = ( *it )->getBundleName();
 				c.fps = ( *it )->getUpdateRateAsString();
 				c.isRunning = ( *it )->isRunning();
 
-				for ( app::BlockInfo::ParameterInfoConstIterator pIt = blockInfo.getInlets().begin(); pIt != blockInfo.getInlets().end(); ++pIt )
+				for ( app::BlockInfo::InletInfoConstIterator pIt = blockInfo.inlets.begin(); pIt != blockInfo.inlets.end(); ++pIt )
 				{
 					xml::InletConfig i;
-					i.inletId = pIt->getName();
+					i.inletId = pIt->name;
 					app::InletHandle h = ( *it )->getAppInletHandle( i.inletId );
-					i.updatePolicy = ( *it )->getUpdatePolicyAsString( pIt->getName() );
-					i.bufferSize = ( *it )->getBufferSizeAsString( pIt->getName() );
-					// TODO: hacky wacky!
-					if ( h.getTypename().find( "img_" ) == string::npos )
+					if ( h.isMultiInlet() )
 					{
-						i.value = h.getCurrentInput().getDataAsString();
+						i.isMulti = true;
+						for ( unsigned int j=0; j<h.getSize(); ++j )
+						{
+							xml::BasicInletConfig b;
+							app::InletHandle s = h[ j ];
+							b.inletId = s.getName();
+							app::InletHandle::InletState curr = s.getCurrentState();
+							b.updatePolicy = curr.updatePolicy;
+							b.bufferSize = curr.bufferSize;
+							b.bufferedValue = curr.currentValue;
+							b.initialValue = curr.defaultValue;
+							i.basicInlets.push_back( b );
+						}
 					}
 					else
 					{
-						i.value = "";
+						i.isMulti = false;
+						xml::BasicInletConfig b;
+						b.inletId = h.getName();
+						app::InletHandle::InletState curr = h.getCurrentState();
+						b.updatePolicy = curr.updatePolicy;
+						b.bufferedValue = curr.currentValue;
+						b.initialValue = curr.defaultValue;
+						i.basicInlets.push_back( b );
 					}
+
 					c.inlets.push_back( i );
 				}
 
@@ -219,8 +236,8 @@ namespace _2Real
 				xml::ParamConfig in;
 				xml::ParamConfig out;
 
-				in.paramId = ( *it )->getInletIO().m_Inlet->getName();
-				in.blockInstanceId = ( *it )->getInletIO().m_Inlet->getOwningUberBlock().getName();
+				in.paramId = ( *it )->getInletIO().getName();
+				in.blockInstanceId = ( *it )->getInletIO().info().owner.getName();
 
 				out.paramId = ( *it )->getOutletIO().m_Outlet->getName();
 				out.blockInstanceId = ( *it )->getOutletIO().m_Outlet->getOwningUberBlock().getName();

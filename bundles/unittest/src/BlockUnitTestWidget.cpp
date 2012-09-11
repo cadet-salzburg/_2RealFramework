@@ -124,10 +124,10 @@ QGroupBox* BlockUnitTestWidget::createInletWidgets()
 
 	try
 	{
-		BlockInfo::ParameterInfos inlets = m_BlockHandle.getBlockInfo().getInlets();
+		BlockInfo::InletInfos inlets = m_BlockHandle.getBlockInfo().inlets;
 		for(auto it = inlets.begin(); it != inlets.end(); it++)
 		{
-			BlockInletWidget* tmp = new BlockInletWidget(  m_BlockHandle.getInletHandle(it->getName()) );
+			BlockInletWidget* tmp = new BlockInletWidget(  m_BlockHandle.getInletHandle(it->name) );
 			layout->addWidget(tmp);
 		}
 	}
@@ -147,10 +147,10 @@ QGroupBox* BlockUnitTestWidget::createOutletWidgets()
 	
 	try
 	{
-		BlockInfo::ParameterInfos outlets = m_BlockHandle.getBlockInfo().getOutlets();
+		BlockInfo::OutletInfos outlets = m_BlockHandle.getBlockInfo().outlets;
 		for(auto it = outlets.begin(); it != outlets.end(); it++)
 		{
-			BlockOutletWidget* tmp = new BlockOutletWidget( m_BlockHandle.getOutletHandle(it->getName()), this );
+			BlockOutletWidget* tmp = new BlockOutletWidget( m_BlockHandle.getOutletHandle(it->name), this );
 			layout->addWidget(tmp);
 		}
 	}
