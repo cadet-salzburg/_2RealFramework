@@ -101,6 +101,7 @@ namespace _2Real
 		AnyOptionSet const& getOptionSet() const;
 
 		void setInitialValue( Any const& initialValue );
+		void setInitialValueToString( std::string const& dataAsString );
 		Any const& getInitialValue() const;
 
 		TimestampedData const& getTriggeringData() const;

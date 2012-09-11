@@ -49,6 +49,8 @@ namespace _2Real
 
 	BasicInletIO::~BasicInletIO()
 	{
+		delete m_Inlet;
+		delete m_Buffer;
 	}
 
 	bundle::InletHandle & BasicInletIO::getBundleInletHandle() const
@@ -75,12 +77,17 @@ namespace _2Real
 	{
 		std::string policyAsString = ( isSingleWeight ? "or_newer_data" : "and_newer_data" );
 
+		m_Info.policyString = policyAsString;
+
 		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< NewerTimestamp >, isSingleWeight, policyAsString );
 	}
 
 	void BasicInletIO::updateWhenInletDataValid()
 	{
-		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< ValidData >, false, "valid_data" );
+		std::string policyAsString = "valid_data";
+		m_Info.policyString = policyAsString;
+
+		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< ValidData >, false, policyAsString );
 	}
 
 	void BasicInletIO::receiveData( Any const& dataAsAny )
@@ -91,6 +98,11 @@ namespace _2Real
 	void BasicInletIO::receiveData( std::string const& dataAsString )
 	{
 		m_Buffer->receiveData( dataAsString );
+	}
+
+	void BasicInletIO::setInitialValueToString( std::string const& dataAsString )
+	{
+		m_Buffer->setInitialValueToString( dataAsString );
 	}
 
 	void BasicInletIO::setInitialValue( Any const& any )
@@ -114,6 +126,33 @@ namespace _2Real
 		m_Buffer->receiveData( m_Buffer->getInitialValue() );
 	}
 
+	const std::string BasicInletIO::getBufferSizeAsString() const
+	{
+		std::ostringstream str;
+		str << m_Buffer->getBufferSize();
+		return str.str();
+	}
+
+	const std::string BasicInletIO::getUpdatePolicyAsString() const
+	{
+		// sync not needed since setting is done by app interf
+		return m_Info.policyString;
+	}
+
+	const std::string BasicInletIO::getCurrentValueAsString() const
+	{
+		std::ostringstream str;
+		m_Inlet->getCurrentData().anyValue.writeTo( str );
+		return str.str();
+	}
+
+	const std::string BasicInletIO::getInitialValueAsString() const
+	{
+		std::ostringstream str;
+		m_Buffer->getInitialValue().writeTo( str );
+		return str.str();
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	MultiInletIO::MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
@@ -121,12 +160,20 @@ namespace _2Real
 		m_Inlet( new MultiInlet( owner, info.baseName ) ),
 		m_Buffer( new MultiInletBuffer( info.initValue.anyValue, info.options ) )
 	{
-		// adding the very first inlet
-		addBasicInlet();
+		//adding the very first inlet
+		//addBasicInlet();
 	}
 
 	MultiInletIO::~MultiInletIO()
 	{
+		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
+		{
+			IO io = *it;
+			delete io.io;
+		}
+
+		delete m_Inlet;
+		delete m_Buffer;
 	}
 
 	BasicInletIO &  MultiInletIO::operator[]( const unsigned int index )
@@ -177,12 +224,10 @@ namespace _2Real
 		{
 			if ( io == ( *it ).io )
 			{
-				if ( m_InletIOs.size() == 1 )	throw IllegalActionException( "cannot remove last inlet from multiinlet" );
+				//if ( m_InletIOs.size() == 1 )	throw IllegalActionException( "cannot remove last inlet from multiinlet" );
 
 				// kill all links involving this inlet
-				// m_Engine
-
-				// delete the buffer
+				EngineImpl::instance().clearLinksFor( *( ( *it ).io ) );
 
 				// once the app programmer calls 'remove', the inlet should not influence the update policy any more, so remove it
 				m_Policy.removeInlet( *( *it ).io );
@@ -218,6 +263,8 @@ namespace _2Real
 				BasicInletIO *io = ( *it ).io;
 				m_Inlet->removeBasicInlet( io->getInlet() );
 				m_Buffer->removeBasicBuffer( io->getBuffer() );
+
+				delete io;
 
 				it = m_InletIOs.erase( it );
 			}

@@ -54,8 +54,6 @@ namespace _2Real
 
 		std::string const&			getBundleName() const;
 		const std::string			getUpdateRateAsString() const;
-		const std::string			getUpdatePolicyAsString( std::string const& inlet ) const;
-		const std::string			getBufferSizeAsString( std::string const& inlet ) const;
 		bool						isRunning() const;
 
 		app::BlockInfo const&		getBlockInfo();
@@ -148,22 +146,6 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	const std::string FunctionBlock< THandle >::getBufferSizeAsString( std::string const& name ) const
-	{
-		std::ostringstream str;
-		str << m_IOManager->getInletBufferSize( name );
-		return str.str();
-	}
-
-	template< typename THandle >
-	const std::string FunctionBlock< THandle >::getUpdatePolicyAsString( std::string const& name ) const
-	{
-		std::ostringstream str;
-		str << m_UpdatePolicy->getUpdatePolicyAsString( name );
-		return str.str();
-	}
-
-	template< typename THandle >
 	const std::string FunctionBlock< THandle >::getUpdateRateAsString() const
 	{
 		std::ostringstream str;
@@ -174,7 +156,7 @@ namespace _2Real
 	template< typename THandle >
 	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
 	{
-		AbstractInletIO::InletInfo info( name, getName(), type, options, initialValue );
+		AbstractInletIO::InletInfo info( *this, name, type, options, initialValue, "valid_data" );
 		isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}
 

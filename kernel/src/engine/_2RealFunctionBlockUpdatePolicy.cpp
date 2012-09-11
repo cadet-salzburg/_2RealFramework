@@ -84,6 +84,7 @@ namespace _2Real
 			assert( NULL );
 		}
 #endif
+		delete it->second;
 		m_InletPolicies.erase( it );
 	}
 

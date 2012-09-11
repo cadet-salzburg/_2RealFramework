@@ -357,6 +357,20 @@ namespace _2Real
 		m_InitialValue = initialValue;
 	}
 
+	void BasicInletBuffer::setInitialValueToString( std::string const& dataAsString )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
+
+		Any data;
+		data.createNew( m_InitialValue );
+
+		stringstream s;
+		s << dataAsString;
+		data.readFrom( s );
+
+		m_InitialValue = data;
+	}
+
 	Any const& BasicInletBuffer::getInitialValue() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );

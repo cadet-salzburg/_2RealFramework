@@ -100,6 +100,15 @@ namespace _2Real
 		return false;
 	}
 
+	bool IOLink::isInletInvolved( BasicInletIO const& i ) const
+	{
+		if ( &m_InletIO == &i )
+		{
+			return true;
+		}
+		return false;
+	}
+
 	bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
 	{
 		if ( m_InletIO.belongsToBlock( &b ) )

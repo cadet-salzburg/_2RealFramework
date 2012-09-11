@@ -112,6 +112,7 @@ namespace _2Real
 		bool							createLink( BasicInletIO &inlet, OutletIO &outlet );
 		bool							createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
 		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
+		void							clearLinksFor( BasicInletIO &inlet );
 
 		void							setBaseDirectory( std::string const& directory );
 		app::BundleHandle &				loadLibrary( std::string const& libraryPath );

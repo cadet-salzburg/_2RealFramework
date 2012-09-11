@@ -273,6 +273,20 @@ namespace _2Real
 		return m_BundleManager->getBundles();
 	}
 
+	void EngineImpl::clearLinksFor( BasicInletIO &inlet )
+	{
+		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		{
+			if ( ( *it )->isInletInvolved( inlet ) )
+			{
+				( *it )->deactivate();
+				delete *it;
+				it = m_Links.erase( it );
+			}
+			else ++it;
+		}
+	}
+
 	bool EngineImpl::createLink( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		IOLink *link = IOLink::link( inlet, outlet );

@@ -22,6 +22,8 @@
 #include <windows.h>
 #include <iostream>
 #include <list>
+#include <deque>
+#include <vector>
 #ifndef _UNIX
 	#include "vld.h"
 #endif
@@ -35,11 +37,18 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "D:\\git\\trunk\\_2RealFramework\\testing\\bin" );
 
+	unsigned int count = 5;
+	std::vector< BlockHandle > blockInstances;
+	blockInstances.resize( 3*count );
+	std::deque< InletHandle > multiinInlets;
+
+	InletHandle multiinIn;
+
 	try
 	{
-		unsigned int count = 5;
-
 		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
+		//testEngine.loadConfig( "threadpooltest.xml" );
+
 		BundleInfo info = testBundle.getBundleInfo();
 		BundleInfo::BlockInfos blocks = info.exportedBlocks;
 		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
@@ -57,17 +66,12 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		//testEngine.loadConfig( "threadpooltest.xml" );
-
-		std::vector< BlockHandle > vec;
-		vec.resize( 3*count );
-
 		BlockHandle multiin = testBundle.createBlockInstance( "multiin" );
 		InletHandle multiinMsg = multiin.getInletHandle( "multiin_msg" );
 		multiinMsg.setDefaultValue< string >( "multiin" );
-		InletHandle multiinIn = multiin.getInletHandle( "multiin_inlet" );
+		multiinIn = multiin.getInletHandle( "multiin_inlet" );
 		InletHandle multiinInOptions = multiin.getInletHandle( "multiin_inlet_options" );
-		multiin.setUpdateRate( 2.0 );
+		multiin.setUpdateRate( 0.5 );
 		multiin.setup();
 		multiin.start();
 
@@ -85,7 +89,7 @@ int main( int argc, char *argv[] )
 			outMsg.setUpdatePolicy( InletHandle::ALWAYS );
 
 			OutletHandle outOut = out.getOutletHandle( "out_outlet" );
-			out.setUpdateRate( 2.0 );
+			out.setUpdateRate( 0.5 );
 
 			BlockHandle inout = testBundle.createBlockInstance( "in_out" );
 
@@ -98,7 +102,7 @@ int main( int argc, char *argv[] )
 			inoutMsg.setUpdatePolicy( InletHandle::ALWAYS );
 
 			OutletHandle inoutOut = inout.getOutletHandle( "inout_outlet" );
-			inout.setUpdateRate( 2.0 );
+			inout.setUpdateRate( 0.5 );
 
 			BlockHandle in = testBundle.createBlockInstance( "in" );
 
@@ -110,7 +114,7 @@ int main( int argc, char *argv[] )
 			inMsg.setBufferSize( 10 );
 			inMsg.setUpdatePolicy( InletHandle::ALWAYS );
 
-			in.setUpdateRate( 2.0 );
+			in.setUpdateRate( 0.5 );
 
 			if ( !inoutIn.link( outOut ) )
 			{
@@ -148,6 +152,8 @@ int main( int argc, char *argv[] )
 				std::cout << next.getName() << std::endl;
 			}
 
+			multiinInlets.push_back( next );
+
 			if ( !next.link( inoutOut ) )
 			{
 				std::cout << "failed to link inout_out with multiin_in, trying with conversion" << std::endl;
@@ -160,19 +166,19 @@ int main( int argc, char *argv[] )
 			}
 			else std::cout << "linked inout_out with multiin_in" << std::endl;
 
+			inMsg.setDefaultValue< string >( inmsg.str() );
 			in.setup();
-			inMsg.setValue< string >( inmsg.str() );
+			inoutMsg.setDefaultValue< string >( inoutmsg.str() );
 			inout.setup();
-			inoutMsg.setValue< string >( inoutmsg.str() );
+			outMsg.setDefaultValue< string >( outmsg.str() );
 			out.setup();
-			outMsg.setValue< string >( outmsg.str() );
 
-			vec[ i ] = in;
-			vec[ count + i ] = inout;
-			vec[ 2*count + i ] = out;
+			blockInstances[ i ] = in;
+			blockInstances[ count + i ] = inout;
+			blockInstances[ 2*count + i ] = out;
 		}
 
-		for ( std::vector< BlockHandle >::iterator it = vec.begin(); it != vec.end(); ++it )
+		for ( std::vector< BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
 		{
 			it->start();
 		}
@@ -191,9 +197,15 @@ int main( int argc, char *argv[] )
 		{
 			break;
 		}
+		else if ( line == "r" )
+		{
+			InletHandle h = multiinInlets.front();
+			multiinInlets.pop_front();
+			multiinIn.remove( h );
+		}
 	}
 
-	testEngine.safeConfig( "threadpooltest.xml" );
+	//testEngine.safeConfig( "threadpooltest.xml" );
 
 	return 0;
 }

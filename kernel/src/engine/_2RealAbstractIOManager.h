@@ -68,16 +68,15 @@ namespace _2Real
 
 		struct InletInfo
 		{
-			InletInfo( std::string const& n, std::string const& b, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i ) :
-				type( t ), options( o ), baseName( n ), blockName( b ), initValue( i ) {}
+			InletInfo( AbstractUberBlock &b, std::string const& n, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i, std::string const& p ) :
+				type( t ), options( o ), baseName( n ), initValue( i ), policyString( p ), owner( b ) {}
 
 			TypeDescriptor			const& type;
 			AnyOptionSet			const& options;
 			std::string				baseName;
-			std::string				const blockName;
 			TimestampedData			initValue;
-			//TimestampedData			lastValue;
-			//TimestampedData			currentValue;
+			std::string				policyString;
+			AbstractUberBlock		&owner;
 		};
 
 		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
@@ -135,9 +134,15 @@ namespace _2Real
 		void								receiveData( Any const& dataAsAny );
 		void								receiveData( std::string const& dataAsString );
 		void								setInitialValue( Any const& any );
+		void								setInitialValueToString( std::string const& dataAsString );
 		void								syncInletData();
 		void								processBufferedData( const bool enableTriggering );
 		void								clearBufferedData();
+
+		const std::string					getBufferSizeAsString() const;
+		const std::string					getUpdatePolicyAsString() const;
+		const std::string					getCurrentValueAsString() const;
+		const std::string					getInitialValueAsString() const;
 
 	private:
 

@@ -41,6 +41,7 @@ namespace _2Real
 
 		bool operator<( IOLink const& other );
 		bool isBlockInvolved( AbstractUberBlock const& b ) const;
+		bool isInletInvolved( BasicInletIO const& inlet ) const;
 
 		static IOLink * link( BasicInletIO &inlet, OutletIO &outlet );
 		static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );

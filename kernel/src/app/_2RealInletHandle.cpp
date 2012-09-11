@@ -171,6 +171,12 @@ namespace _2Real
 			( *m_InletIO )[ 0 ].setInitialValue( data );
 		}
 
+		void InletHandle::setDefaultValueToString( std::string const& data )
+		{
+			checkValidity( m_InletIO );
+			( *m_InletIO )[ 0 ].setInitialValueToString( data );
+		}
+
 		void InletHandle::setValueToString( std::string const& data )
 		{
 			checkValidity( m_InletIO );
@@ -236,8 +242,22 @@ namespace _2Real
 
 			if ( handle.isValid() )
 			{
+				// TODO: check if this handle actually belongs to the inlet
 				m_InletIO->removeBasicInlet( handle.m_InletIO );
 			}
+		}
+
+		InletHandle::InletState InletHandle::getCurrentState() const
+		{
+			checkValidity( m_InletIO );
+
+			InletState res;
+			res.bufferSize = ( *m_InletIO )[ 0 ].getBufferSizeAsString();
+			res.currentValue = ( *m_InletIO )[ 0 ].getCurrentValueAsString();
+			res.defaultValue = ( *m_InletIO )[ 0 ].getInitialValueAsString();
+			res.updatePolicy = ( *m_InletIO )[ 0 ].getUpdatePolicyAsString();
+
+			return res;
 		}
 	}
 }

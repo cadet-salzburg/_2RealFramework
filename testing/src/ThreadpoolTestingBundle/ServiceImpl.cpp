@@ -36,7 +36,10 @@ void Out::update()
 {
 	try
 	{
-		++m_Out.getWriteableRef< long >();
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << ++m_Out.getWriteableRef< long >() << endl;
+		cout << msg.str();
+		//m_Out.getWriteableRef< long >();
 	}
 	catch ( Exception &e )
 	{
@@ -64,6 +67,9 @@ void InOut::update()
 {
 	try
 	{
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< double >() << endl;
+		cout << msg.str();
 		m_Out.getWriteableRef< double >() = m_In.getReadableRef< double >();
 	}
 	catch ( Exception &e)

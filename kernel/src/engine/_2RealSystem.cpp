@@ -57,7 +57,7 @@ namespace _2Real
 
 		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 1000 ) )
+			if ( (*it)->shutDown( 10000 ) )
 			{
 				readyBlocks.insert( *it );
 			}
@@ -71,7 +71,7 @@ namespace _2Real
 
 		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 1000 ) )
+			if ( (*it)->shutDown( 10000 ) )
 			{
 				readyBlocks.insert( *it );
 			}
@@ -101,7 +101,7 @@ namespace _2Real
 
 		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 1000 ) )
+			if ( (*it)->shutDown( 10000 ) )
 			{
 				ready.insert( *it );
 			}

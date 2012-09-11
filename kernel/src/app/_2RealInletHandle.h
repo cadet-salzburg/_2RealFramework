@@ -82,6 +82,7 @@ namespace _2Real
 			}
 
 			void setValueToString( std::string const& value );
+			void setDefaultValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
@@ -104,6 +105,16 @@ namespace _2Real
 
 			InletHandle add();
 			void remove( InletHandle &handle );
+
+			struct InletState
+			{
+				std::string defaultValue;
+				std::string currentValue;
+				std::string updatePolicy;
+				std::string bufferSize;
+			};
+
+			InletState getCurrentState() const;
 
 		private:
 
