@@ -1,6 +1,8 @@
 #ifndef _FB_SIMPLETCPIP_CLIENT_H_
 #define _FB_SIMPLETCPIP_CLIENT_H_
 
+#include <fbsdk/fbsdk.h>
+
 /**	\file	fbsimpletcpip_client.h
 *	Declaration for the data channels & network client.
 *	Declarations for the DataChannel class, representing a channel
@@ -65,7 +67,7 @@ struct SHAPEHAND_DATA {
 	float index[3][4];
 	float middle[3][4];
 	float ring[3][4];
-	float small[3][4];
+	float small_[3][4];
 };
 
 struct NETWORK_TIMECODE {//time code that gets sent over network connection
@@ -107,6 +109,8 @@ public:
 	float GetZRot() {
 		return mRot[2];
 	}
+
+	
 	FBString			mName;				//!< Name of marker as displayed in the spreadsheet.
 	HFBAnimationNode	mTAnimNode;			//!< Position animation output node. 
 	HFBAnimationNode	mRAnimNode;			//!< Rotation animation output node.
@@ -200,8 +204,6 @@ public:
 *	Represnets marker information from channel data.
 
 */
-
-extern char rootProgramFolder[_MAX_PATH];
 
 class FBSimpleNetworkClient  
 {
