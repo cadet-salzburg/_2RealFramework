@@ -9,9 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\docs\todo.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\src\OpenBeaconBlock.cpp">
       <Filter>src</Filter>
     </ClCompile>

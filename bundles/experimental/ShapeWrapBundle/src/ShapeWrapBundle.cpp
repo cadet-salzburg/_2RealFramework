@@ -33,6 +33,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		// ShapeWrapInput Block information as well as In and Outlet definition
 		BlockMetainfo ShapeWrap = info.exportBlock< ShapeWrapBlock, WithContext >( "ShapeWrapInBlock" );
+		ShapeWrap.setDescription( "ShapeWrap In and Out" );
+		ShapeWrap.setCategory( "Devices" );
 		ShapeWrap.addInlet<std::string>( "ShapeWrapPort", "" );
 		ShapeWrap.addInlet<unsigned int>( "BaudRate", 0 );
 

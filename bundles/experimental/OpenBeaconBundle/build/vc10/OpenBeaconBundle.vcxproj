@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\docs\todo.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\src\OpenBeaconBlock.h" />
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Net\include;$(_2REAL_DEPENDENCIES_DIR)\rapidjson\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -107,12 +104,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PocoNetd.lib;PocoFoundationd.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\PocoNet*.* $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -121,7 +117,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Net\include;$(_2REAL_DEPENDENCIES_DIR)\rapidjson\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -145,7 +141,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Net\include;$(_2REAL_DEPENDENCIES_DIR)\rapidjson\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -155,12 +151,11 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PocoNet.lib;PocoFoundation.lib;_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\PocoNet*.* $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,7 +166,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\poco\Net\include;$(_2REAL_DEPENDENCIES_DIR)\rapidjson\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
