@@ -26,7 +26,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		openBeacon.setDescription( "OpenBeacon life stream data" );
 		openBeacon.setCategory( "Devices" );
 
-		openBeacon.addInlet< int >( "udp_port", 0 );
+		openBeacon.addInlet< int >( "UDPport", 0 );
 		openBeacon.addOutlet< std::vector<Point> >( "tags" );
 	}
 	catch ( Exception &e )

@@ -34,7 +34,7 @@ void OpenBeaconBlock::setup( BlockHandle &block )
 	{
 		m_Context = block;
 
-		m_UDPPort = m_Context.getInletHandle( "udp_port" );
+		m_UDPPort = m_Context.getInletHandle( "UDPport" );
 		m_Tags = m_Context.getOutletHandle( "tags" );
 	}
 	catch( Exception & e )
