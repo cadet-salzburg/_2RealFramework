@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealOptions.h"
+#include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
 {
@@ -35,13 +36,6 @@ namespace _2Real
 		{
 
 		public:
-
-			enum InletUpdatePolicy
-			{
-				ALWAYS,
-				OR_NEWER_DATA,
-				AND_NEWER_DATA,
-			};
 
 			InletHandle();
 			InletHandle( AbstractInletIO &inletIO );
@@ -62,7 +56,17 @@ namespace _2Real
 			bool operator>( InletHandle const& other ) const;
 			bool operator>=( InletHandle const& other ) const;
 
-			void setUpdatePolicy( const InletUpdatePolicy policy );
+			struct InletState
+			{
+				std::string defaultValue;
+				std::string currentValue;
+				std::string updatePolicy;
+				std::string bufferSize;
+			};
+
+			InletState getCurrentState() const;
+
+			void setUpdatePolicy( InletPolicy const& policy );
 
 			bool link( OutletHandle &outletHandle );
 			bool linkWithConversion( OutletHandle &outletHandle );
@@ -97,24 +101,12 @@ namespace _2Real
 				return anyOptions.extract< TData >();
 			}
 
-			//////////////// multi inlet functions; should never be used on a standard inlet ////////////////////
-
 			bool isMultiInlet() const;
 			unsigned int getSize() const;
 			InletHandle operator[]( const unsigned int index );
 
 			InletHandle add();
 			void remove( InletHandle &handle );
-
-			struct InletState
-			{
-				std::string defaultValue;
-				std::string currentValue;
-				std::string updatePolicy;
-				std::string bufferSize;
-			};
-
-			InletState getCurrentState() const;
 
 		private:
 

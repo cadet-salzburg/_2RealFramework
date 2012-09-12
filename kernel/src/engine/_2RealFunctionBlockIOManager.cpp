@@ -172,7 +172,7 @@ namespace _2Real
 	{
 		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
 		io->syncInletData();
-		m_UpdatePolicy->addInlet( *io );
+		m_UpdatePolicy->addInlet( *io, info.policy );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );

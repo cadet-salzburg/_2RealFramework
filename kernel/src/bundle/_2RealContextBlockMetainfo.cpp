@@ -35,10 +35,15 @@ namespace _2Real
 			m_Impl.setDescription( description );
 		}
 
-		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, TypeDescriptor &descriptor, Any const& init )
+		void ContextBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		{
+			m_Impl.setThreadingPolicy( policy );
+		}
+
+		void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, TypeDescriptor const *const descriptor, Any const& init )
 		{
 			checkChars( toLower( trim( outletName ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( outletName ), descriptor, init );
+			OutletMetadata *data = new OutletMetadata( trim( outletName ), descriptor, init );
 			m_Impl.addOutlet( *data );
 		}
 	}

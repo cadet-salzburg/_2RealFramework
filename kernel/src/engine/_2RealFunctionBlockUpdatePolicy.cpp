@@ -55,7 +55,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO )
+	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, InletPolicy const& policy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 #ifdef _DEBUG
@@ -65,12 +65,33 @@ namespace _2Real
 		}
 #endif
 
-		// create a default trigger: valid data, groupWeight - this should always be fulfilled
 		BasicInletBuffer *buffer = inletIO.getBufferPtr();
-		AbstractInletTriggerCtor *c = new InletTriggerCtor< ValidData >();
-		AbstractInletBasedTrigger *t = c->createTrigger( *buffer, *m_StateManager, false );
-		InletPolicy *policy = new InletPolicy( c, t, false );
-		m_InletPolicies.insert( make_pair( &inletIO, policy ) );
+
+		AbstractInletTriggerCtor *c;
+		AbstractInletBasedTrigger *t;
+		bool s;
+
+		if ( policy == InletPolicy::ALWAYS )
+		{
+			c = new InletTriggerCtor< ValidData >();
+			t = c->createTrigger( *buffer, *m_StateManager, false );
+			s = false;
+		}
+		else if ( policy == InletPolicy::OR_NEWER_DATA )
+		{
+			c = new InletTriggerCtor< NewerTimestamp >();
+			t = c->createTrigger( *buffer, *m_StateManager, true );
+			s = true;
+		}
+		else if ( policy == InletPolicy::AND_NEWER_DATA )
+		{
+			c = new InletTriggerCtor< NewerTimestamp >();
+			t = c->createTrigger( *buffer, *m_StateManager, false );
+			s = false;
+		}
+
+		InletPolicyInfo *p = new InletPolicyInfo( c, t, s );
+		m_InletPolicies.insert( make_pair( &inletIO, p ) );
 	}
 
 
@@ -109,7 +130,7 @@ namespace _2Real
 		{
 			for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
 			{
-				InletPolicy *policy = it->second;
+				InletPolicyInfo *policy = it->second;
 
 				if ( policy->wasPolicyChanged )
 				{
@@ -149,7 +170,7 @@ namespace _2Real
 		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setNewInletPolicy( BasicInletIO &io, AbstractInletTriggerCtor *inletPolicy, const bool isOr, std::string const& typeName )
+	void FunctionBlockUpdatePolicy::setInletPolicy( BasicInletIO &io, InletPolicy const& p )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_InletPoliciesChanged = true;
@@ -158,33 +179,29 @@ namespace _2Real
 		{
 			it->second->wasPolicyChanged = true;
 			delete it->second->ctor;
-			it->second->ctor = inletPolicy;
-			it->second->isSingleWeight = isOr;
-			it->second->policyString = typeName;
+
+			if ( p == InletPolicy::ALWAYS )
+			{
+				it->second->ctor = new InletTriggerCtor< ValidData >();
+				it->second->isSingleWeight = false;
+			}
+			else if ( p == InletPolicy::OR_NEWER_DATA )
+			{
+				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
+				it->second->isSingleWeight = true;
+			}
+			else if ( p == InletPolicy::AND_NEWER_DATA )
+			{
+				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
+				it->second->isSingleWeight = false;
+			}
 		}
 		else
 		{
 #ifdef _DEBUG
 			assert( NULL );
 #endif
-			delete inletPolicy;
 		}
-	}
-
-	const std::string FunctionBlockUpdatePolicy::getUpdatePolicyAsString( std::string const& inlet ) const
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-		for ( InletPolicyConstIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); ++it )
-		{
-			if ( it->first->getName() == inlet )
-			{
-				return it->second->policyString;
-			}
-		}
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-			return "";
 	}
 
 	double FunctionBlockUpdatePolicy::getUpdateRate() const

@@ -23,25 +23,22 @@ using std::string;
 
 namespace _2Real
 {
-	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initValue, AnyOptionSet const& options, const bool isMultiple ) :
-		name( name ),
-		type( &descriptor ),
-		initValue( initValue ),
-		options( options ),
-		isMultiple( isMultiple )
+	InletMetadata::InletMetadata( string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p, const bool m ) :
+		name( n ), type( t ), initValue( i ), options( o ), defaultPolicy( p ), isMulti( m )
 	{
 	}
 
-	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initValue ) :
-		name( name ),
-		type( &descriptor ),
-		initValue( initValue ),
-		options(),
-		isMultiple( false )
+	InletMetadata::~InletMetadata()
+	{
+		delete type;
+	}
+
+	OutletMetadata::OutletMetadata( string const& n, TypeDescriptor const *const t, Any const& i ) :
+		name( n ), type( t ), initValue( i )
 	{
 	}
 
-	ParameterMetadata::~ParameterMetadata()
+	OutletMetadata::~OutletMetadata()
 	{
 		delete type;
 	}

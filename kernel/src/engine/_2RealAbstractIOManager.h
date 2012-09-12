@@ -68,14 +68,14 @@ namespace _2Real
 
 		struct InletInfo
 		{
-			InletInfo( AbstractUberBlock &b, std::string const& n, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i, std::string const& p ) :
-				type( t ), options( o ), baseName( n ), initValue( i ), policyString( p ), owner( b ) {}
+			InletInfo( AbstractUberBlock &b, std::string const& n, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i, InletPolicy const& p ) :
+				type( t ), options( o ), baseName( n ), initValue( i ), policy( p ), owner( b ) {}
 
 			TypeDescriptor			const& type;
 			AnyOptionSet			const& options;
 			std::string				baseName;
 			TimestampedData			initValue;
-			std::string				policyString;
+			InletPolicy				policy;
 			AbstractUberBlock		&owner;
 		};
 
@@ -129,8 +129,7 @@ namespace _2Real
 		std::string const&					getName() const;
 		TimestampedData const&				getData() const;
 		void								setBufferSize( const unsigned int size );
-		void								updateWhenInletDataNew( const bool isSingleWeight );
-		void								updateWhenInletDataValid();
+		void								setUpdatePolicy( InletPolicy const& p );
 		void								receiveData( Any const& dataAsAny );
 		void								receiveData( std::string const& dataAsString );
 		void								setInitialValue( Any const& any );

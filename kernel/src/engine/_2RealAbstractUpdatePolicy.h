@@ -25,9 +25,9 @@
 namespace _2Real
 {
 
-	class AbstractInletTriggerCtor;
 	class AbstractUberBlock;
 	class BasicInletIO;
+	class InletPolicy;
 
 	class AbstractUpdatePolicy : private NonCopyable< AbstractUpdatePolicy >
 	{
@@ -38,9 +38,9 @@ namespace _2Real
 		virtual ~AbstractUpdatePolicy();
 		const std::string getName() const;
 
-		virtual void addInlet( BasicInletIO &io ) = 0;
+		virtual void addInlet( BasicInletIO &io, InletPolicy const& p ) = 0;
 		virtual void removeInlet( BasicInletIO &io ) = 0;
-		virtual void setNewInletPolicy( BasicInletIO &io, AbstractInletTriggerCtor *policy, const bool isSingleWeight, std::string const& policyAsString ) = 0;
+		virtual void setInletPolicy( BasicInletIO &io, InletPolicy const& p ) = 0;
 
 	protected:
 

@@ -119,21 +119,22 @@ namespace _2Real
 			blockInfo.description = it->second->getDescription();
 			blockInfo.category = it->second->getCategory();
 
-			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
-			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
+			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
+			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
 				app::InletInfo info;
 				info.name = ( *it )->name;
 				info.typeName = ( *it )->type->m_TypeName;
 				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMultiple;
+				info.isMultiInlet = ( *it )->isMulti;
 				info.hasOptionCheck = !( *it )->options.isEmpty();
+				info.defaultPolicy = ( *it )->defaultPolicy;
 				blockInfo.inlets.push_back( info );
 			}
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
 				app::OutletInfo info;
 				info.name = ( *it )->name;
@@ -190,21 +191,22 @@ namespace _2Real
 			blockInfo.description = it->second->getDescription();
 			blockInfo.category = it->second->getCategory();
 
-			BlockMetadata::ParameterMetadatas const& input = it->second->getInlets();
-			BlockMetadata::ParameterMetadatas const& output = it->second->getOutlets();
+			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
+			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+			for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
 			{
 				app::InletInfo info;
 				info.name = ( *it )->name;
 				info.typeName = ( *it )->type->m_TypeName;
 				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMultiple;
+				info.isMultiInlet = ( *it )->isMulti;
 				info.hasOptionCheck = !( *it )->options.isEmpty();
+				info.defaultPolicy = ( *it )->defaultPolicy;
 				blockInfo.inlets.push_back( info );
 			}
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+			for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
 			{
 				app::OutletInfo info;
 				info.name = ( *it )->name;
@@ -247,21 +249,22 @@ namespace _2Real
 			contextInfo.description = contextMetadata.getDescription();
 			contextInfo.category = contextMetadata.getCategory();
 
-			BlockMetadata::ParameterMetadatas const& inletMetadata = contextMetadata.getInlets();
-			BlockMetadata::ParameterMetadatas const& outletMetadata = contextMetadata.getOutlets();
+			BlockMetadata::InletMetadatas const& inletMetadata = contextMetadata.getInlets();
+			BlockMetadata::OutletMetadatas const& outletMetadata = contextMetadata.getOutlets();
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 			{
 				app::InletInfo info;
 				info.name = ( *it )->name;
 				info.typeName = ( *it )->type->m_TypeName;
 				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMultiple;
+				info.isMultiInlet = ( *it )->isMulti;
 				info.hasOptionCheck = !( *it )->options.isEmpty();
+				info.defaultPolicy = ( *it )->defaultPolicy;
 				contextInfo.inlets.push_back( info );
 			}
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 			{
 				app::OutletInfo info;
 				info.name = ( *it )->name;
@@ -280,7 +283,7 @@ namespace _2Real
 			//	contextBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, false );
 			//}
 
-			for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 			{
 				contextBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 			}
@@ -297,21 +300,22 @@ namespace _2Real
 		blockInfo.description = blockMetadata.getDescription();
 		blockInfo.category = blockMetadata.getCategory();
 
-		BlockMetadata::ParameterMetadatas const& inletMetadata = blockMetadata.getInlets();
-		BlockMetadata::ParameterMetadatas const& outletMetadata = blockMetadata.getOutlets();
+		BlockMetadata::InletMetadatas const& inletMetadata = blockMetadata.getInlets();
+		BlockMetadata::OutletMetadatas const& outletMetadata = blockMetadata.getOutlets();
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			app::InletInfo info;
 			info.name = ( *it )->name;
 			info.typeName = ( *it )->type->m_TypeName;
 			info.longTypename = ( *it )->type->m_LongTypename;
-			info.isMultiInlet = ( *it )->isMultiple;
+			info.isMultiInlet = ( *it )->isMulti;
 			info.hasOptionCheck = !( *it )->options.isEmpty();
+			info.defaultPolicy = ( *it )->defaultPolicy;
 			blockInfo.inlets.push_back( info );
 		}
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			app::OutletInfo info;
 			info.name = ( *it )->name;
@@ -327,12 +331,12 @@ namespace _2Real
 		m_Engine.addBlock( *functionBlock );
 
 		// adding inlets & outlets
-		for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			functionBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, ( *it )->isMultiple );
+			functionBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, ( *it )->defaultPolicy, ( *it )->isMulti );
 		}
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 		}

@@ -338,7 +338,7 @@ namespace _2Real
 			app::BlockHandle &block = bundle.createBlockInstance( conversionName );
 			block.setUpdateRate( 0. );
 			app::InletHandle &in = block.getInletHandle( "src" );
-			in.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
+			in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
 			app::OutletHandle &out = block.getOutletHandle( "dst" );
 
 			in.link( outlet.getHandle() );

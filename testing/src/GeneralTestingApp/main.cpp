@@ -160,7 +160,7 @@ int main( int argc, char *argv[] )
 		inHandle.setUpdateRate( 0.0 );
 
 		InletHandle inletHandle = inHandle.getInletHandle( "inlet" );
-		inletHandle.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+		inletHandle.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
 		//BlockHandle::InletHandles const& inHandles = inHandle.getAllInletHandles();
 		//cout << inHandles.size() << endl;

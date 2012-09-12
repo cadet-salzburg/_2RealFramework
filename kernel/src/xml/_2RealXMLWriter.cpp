@@ -230,18 +230,9 @@ namespace _2Real
 										sBuffer >> buffer;
 
 										subHandle.setBufferSize( buffer );
-										if ( basicConfig.updatePolicy == "valid_data" )
-										{
-											subHandle.setUpdatePolicy( app::InletHandle::ALWAYS );
-										}
-										else if ( basicConfig.updatePolicy == "or_newer_data" )
-										{
-											subHandle.setUpdatePolicy( app::InletHandle::OR_NEWER_DATA );
-										}
-										else if ( basicConfig.updatePolicy == "and_newer_data" )
-										{
-											subHandle.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
-										}
+
+										InletPolicy p = InletPolicy::getPolicyFromString( basicConfig.updatePolicy );
+										subHandle.setUpdatePolicy( p );
 
 										InletHandleId id;
 										id.blockInstanceId = config.blockInstanceId;
@@ -274,18 +265,8 @@ namespace _2Real
 								sBuffer >> buffer;
 
 								inletHandle.setBufferSize( buffer );
-								if ( basicConfig.updatePolicy == "valid_data" )
-								{
-									inletHandle.setUpdatePolicy( app::InletHandle::ALWAYS );
-								}
-								else if ( basicConfig.updatePolicy == "or_newer_data" )
-								{
-									inletHandle.setUpdatePolicy( app::InletHandle::OR_NEWER_DATA );
-								}
-								else if ( basicConfig.updatePolicy == "and_newer_data" )
-								{
-									inletHandle.setUpdatePolicy( app::InletHandle::AND_NEWER_DATA );
-								}
+								InletPolicy p = InletPolicy::getPolicyFromString( basicConfig.updatePolicy );
+								inletHandle.setUpdatePolicy( p );
 
 								InletHandleId id;
 								id.blockInstanceId = config.blockInstanceId;

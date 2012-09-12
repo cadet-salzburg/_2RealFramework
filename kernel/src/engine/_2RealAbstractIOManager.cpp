@@ -73,21 +73,10 @@ namespace _2Real
 		m_Buffer->setBufferSize( size );
 	}
 
-	void BasicInletIO::updateWhenInletDataNew( const bool isSingleWeight )
+	void BasicInletIO::setUpdatePolicy( InletPolicy const& p )
 	{
-		std::string policyAsString = ( isSingleWeight ? "or_newer_data" : "and_newer_data" );
-
-		m_Info.policyString = policyAsString;
-
-		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< NewerTimestamp >, isSingleWeight, policyAsString );
-	}
-
-	void BasicInletIO::updateWhenInletDataValid()
-	{
-		std::string policyAsString = "valid_data";
-		m_Info.policyString = policyAsString;
-
-		m_Policy.setNewInletPolicy( *this, new InletTriggerCtor< ValidData >, false, policyAsString );
+		m_Info.policy = p;
+		m_Policy.setInletPolicy( *this, p );
 	}
 
 	void BasicInletIO::receiveData( Any const& dataAsAny )
@@ -136,7 +125,7 @@ namespace _2Real
 	const std::string BasicInletIO::getUpdatePolicyAsString() const
 	{
 		// sync not needed since setting is done by app interf
-		return m_Info.policyString;
+		return InletPolicy::getPolicyAsString( m_Info.policy.getPolicy() );
 	}
 
 	const std::string BasicInletIO::getCurrentValueAsString() const
@@ -210,7 +199,7 @@ namespace _2Real
 		BasicInletIO *io = new BasicInletIO( m_OwningBlock, m_Policy, info );
 		m_InletIOs.push_back( IO( io ) );
 		// causes inlet to be added to the policy
-		m_Policy.addInlet( *io );
+		m_Policy.addInlet( *io, info.policy );
 		io->receiveData( m_Info.initValue.anyValue );
 
 		return io;

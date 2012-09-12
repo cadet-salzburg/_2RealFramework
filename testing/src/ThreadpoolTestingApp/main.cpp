@@ -47,141 +47,141 @@ int main( int argc, char *argv[] )
 	try
 	{
 		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
-		//testEngine.loadConfig( "threadpooltest.xml" );
+		testEngine.loadConfig( "threadpooltest.xml" );
 
-		BundleInfo info = testBundle.getBundleInfo();
-		BundleInfo::BlockInfos blocks = info.exportedBlocks;
-		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
-		{
-			std::cout << it->name << std::endl;
-			BlockInfo::InletInfos inlets = it->inlets;
-			for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-			{
-				std::cout << iIt->name << ( iIt->hasOptionCheck ? " +o " : " -o " ) << ( iIt->isMultiInlet ? " +m " : " -m " ) << std::endl;
-			}
-			BlockInfo::OutletInfos outlets = it->outlets;
-			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			{
-				std::cout << oIt->name << std::endl;
-			}
-		}
+		//BundleInfo info = testBundle.getBundleInfo();
+		//BundleInfo::BlockInfos blocks = info.exportedBlocks;
+		//for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+		//{
+		//	std::cout << it->name << std::endl;
+		//	BlockInfo::InletInfos inlets = it->inlets;
+		//	for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		//	{
+		//		std::cout << iIt->name << ( iIt->hasOptionCheck ? " +o " : " -o " ) << ( iIt->isMultiInlet ? " +m " : " -m " ) << std::endl;
+		//	}
+		//	BlockInfo::OutletInfos outlets = it->outlets;
+		//	for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		//	{
+		//		std::cout << oIt->name << std::endl;
+		//	}
+		//}
 
-		BlockHandle multiin = testBundle.createBlockInstance( "multiin" );
-		InletHandle multiinMsg = multiin.getInletHandle( "multiin_msg" );
-		multiinMsg.setDefaultValue< string >( "multiin" );
-		multiinIn = multiin.getInletHandle( "multiin_inlet" );
-		InletHandle multiinInOptions = multiin.getInletHandle( "multiin_inlet_options" );
-		multiin.setUpdateRate( 0.5 );
-		multiin.setup();
-		multiin.start();
+		//BlockHandle multiin = testBundle.createBlockInstance( "multiin" );
+		//InletHandle multiinMsg = multiin.getInletHandle( "multiin_msg" );
+		//multiinMsg.setDefaultValue< string >( "multiin" );
+		//multiinIn = multiin.getInletHandle( "multiin_inlet" );
+		//InletHandle multiinInOptions = multiin.getInletHandle( "multiin_inlet_options" );
+		//multiin.setUpdateRate( 0.5 );
+		//multiin.setup();
+		//multiin.start();
 
-		for ( unsigned int i=0; i<count; ++i )
-		{
-			std::ostringstream inmsg, inoutmsg, outmsg;
-			inmsg << "in_instance_" << i;
-			inoutmsg << "inout_instance_" << i;
-			outmsg << "out_instance_" << i;
+		//for ( unsigned int i=0; i<count; ++i )
+		//{
+		//	std::ostringstream inmsg, inoutmsg, outmsg;
+		//	inmsg << "in_instance_" << i;
+		//	inoutmsg << "inout_instance_" << i;
+		//	outmsg << "out_instance_" << i;
 
-			BlockHandle out = testBundle.createBlockInstance( "out" );
+		//	BlockHandle out = testBundle.createBlockInstance( "out" );
 
-			InletHandle outMsg = out.getInletHandle( "out_msg" );
-			outMsg.setBufferSize( 10 );
-			outMsg.setUpdatePolicy( InletHandle::ALWAYS );
+		//	InletHandle outMsg = out.getInletHandle( "out_msg" );
+		//	outMsg.setBufferSize( 10 );
+		//	outMsg.setUpdatePolicy( InletPolicy::ALWAYS );
 
-			OutletHandle outOut = out.getOutletHandle( "out_outlet" );
-			out.setUpdateRate( 0.5 );
+		//	OutletHandle outOut = out.getOutletHandle( "out_outlet" );
+		//	out.setUpdateRate( 0.5 );
 
-			BlockHandle inout = testBundle.createBlockInstance( "in_out" );
+		//	BlockHandle inout = testBundle.createBlockInstance( "in_out" );
 
-			InletHandle inoutIn = inout.getInletHandle( "inout_inlet" );
-			inoutIn.setBufferSize( 10 );
-			inoutIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+		//	InletHandle inoutIn = inout.getInletHandle( "inout_inlet" );
+		//	inoutIn.setBufferSize( 10 );
+		//	inoutIn.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
-			InletHandle inoutMsg = inout.getInletHandle( "inout_msg" );
-			inoutMsg.setBufferSize( 10 );
-			inoutMsg.setUpdatePolicy( InletHandle::ALWAYS );
+		//	InletHandle inoutMsg = inout.getInletHandle( "inout_msg" );
+		//	inoutMsg.setBufferSize( 10 );
+		//	inoutMsg.setUpdatePolicy( InletPolicy::ALWAYS );
 
-			OutletHandle inoutOut = inout.getOutletHandle( "inout_outlet" );
-			inout.setUpdateRate( 0.5 );
+		//	OutletHandle inoutOut = inout.getOutletHandle( "inout_outlet" );
+		//	inout.setUpdateRate( 0.5 );
 
-			BlockHandle in = testBundle.createBlockInstance( "in" );
+		//	BlockHandle in = testBundle.createBlockInstance( "in" );
 
-			InletHandle inIn = in.getInletHandle( "in_inlet" );
-			inIn.setBufferSize( 10 );
-			inIn.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+		//	InletHandle inIn = in.getInletHandle( "in_inlet" );
+		//	inIn.setBufferSize( 10 );
+		//	inIn.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
-			InletHandle inMsg = in.getInletHandle( "in_msg" );
-			inMsg.setBufferSize( 10 );
-			inMsg.setUpdatePolicy( InletHandle::ALWAYS );
+		//	InletHandle inMsg = in.getInletHandle( "in_msg" );
+		//	inMsg.setBufferSize( 10 );
+		//	inMsg.setUpdatePolicy( InletPolicy::ALWAYS );
 
-			in.setUpdateRate( 0.5 );
+		//	in.setUpdateRate( 0.5 );
 
-			if ( !inoutIn.link( outOut ) )
-			{
-				std::cout << "failed to link inout_in with out_out, trying with conversion" << std::endl;
+		//	if ( !inoutIn.link( outOut ) )
+		//	{
+		//		std::cout << "failed to link inout_in with out_out, trying with conversion" << std::endl;
 
-				if ( !inoutIn.linkWithConversion( outOut ) )
-				{
-					std::cout << "failed to link inout_in with out_out" << std::endl;
-				}
-				else std::cout << "linked inout_in with out_out with conversion" << std::endl;
-			}
-			else std::cout << "linked inout_in with out_out" << std::endl;
-			if ( !inIn.link( inoutOut ) )
-			{
-				std::cout << "failed to link inout_out with in_in, trying with conversion" << std::endl;
+		//		if ( !inoutIn.linkWithConversion( outOut ) )
+		//		{
+		//			std::cout << "failed to link inout_in with out_out" << std::endl;
+		//		}
+		//		else std::cout << "linked inout_in with out_out with conversion" << std::endl;
+		//	}
+		//	else std::cout << "linked inout_in with out_out" << std::endl;
+		//	if ( !inIn.link( inoutOut ) )
+		//	{
+		//		std::cout << "failed to link inout_out with in_in, trying with conversion" << std::endl;
 
-				if ( !inIn.linkWithConversion( inoutOut ) )
-				{
-					std::cout << "failed to link inout_out with in_in" << std::endl;
-				}
-				else std::cout << "linked inout_out with in_in with conversion" << std::endl;
-			}
-			else std::cout << "linked inout_out with in_in" << std::endl;
+		//		if ( !inIn.linkWithConversion( inoutOut ) )
+		//		{
+		//			std::cout << "failed to link inout_out with in_in" << std::endl;
+		//		}
+		//		else std::cout << "linked inout_out with in_in with conversion" << std::endl;
+		//	}
+		//	else std::cout << "linked inout_out with in_in" << std::endl;
 
-			InletHandle next;
-			unsigned int sz = multiinIn.getSize();
-			if ( i < sz )
-			{
-				next = multiinIn[ i ];
-				std::cout << next.getName() << std::endl;
-			}
-			else
-			{
-				next = multiinIn.add();
-				std::cout << next.getName() << std::endl;
-			}
+		//	InletHandle next;
+		//	unsigned int sz = multiinIn.getSize();
+		//	if ( i < sz )
+		//	{
+		//		next = multiinIn[ i ];
+		//		std::cout << next.getName() << std::endl;
+		//	}
+		//	else
+		//	{
+		//		next = multiinIn.add();
+		//		std::cout << next.getName() << std::endl;
+		//	}
 
-			multiinInlets.push_back( next );
+		//	multiinInlets.push_back( next );
 
-			if ( !next.link( inoutOut ) )
-			{
-				std::cout << "failed to link inout_out with multiin_in, trying with conversion" << std::endl;
+		//	if ( !next.link( inoutOut ) )
+		//	{
+		//		std::cout << "failed to link inout_out with multiin_in, trying with conversion" << std::endl;
 
-				if ( !next.linkWithConversion( inoutOut ) )
-				{
-					std::cout << "failed to link inout_out with multiin_in" << std::endl;
-				}
-				else std::cout << "linked inout_out with multiin_in with conversion" << std::endl;
-			}
-			else std::cout << "linked inout_out with multiin_in" << std::endl;
+		//		if ( !next.linkWithConversion( inoutOut ) )
+		//		{
+		//			std::cout << "failed to link inout_out with multiin_in" << std::endl;
+		//		}
+		//		else std::cout << "linked inout_out with multiin_in with conversion" << std::endl;
+		//	}
+		//	else std::cout << "linked inout_out with multiin_in" << std::endl;
 
-			inMsg.setDefaultValue< string >( inmsg.str() );
-			in.setup();
-			inoutMsg.setDefaultValue< string >( inoutmsg.str() );
-			inout.setup();
-			outMsg.setDefaultValue< string >( outmsg.str() );
-			out.setup();
+		//	inMsg.setDefaultValue< string >( inmsg.str() );
+		//	in.setup();
+		//	inoutMsg.setDefaultValue< string >( inoutmsg.str() );
+		//	inout.setup();
+		//	outMsg.setDefaultValue< string >( outmsg.str() );
+		//	out.setup();
 
-			blockInstances[ i ] = in;
-			blockInstances[ count + i ] = inout;
-			blockInstances[ 2*count + i ] = out;
-		}
+		//	blockInstances[ i ] = in;
+		//	blockInstances[ count + i ] = inout;
+		//	blockInstances[ 2*count + i ] = out;
+		//}
 
-		for ( std::vector< BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
-		{
-			it->start();
-		}
+		//for ( std::vector< BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
+		//{
+		//	it->start();
+		//}
 	}
 	catch ( Exception &e )
 	{
@@ -197,12 +197,12 @@ int main( int argc, char *argv[] )
 		{
 			break;
 		}
-		else if ( line == "r" )
-		{
-			InletHandle h = multiinInlets.front();
-			multiinInlets.pop_front();
-			multiinIn.remove( h );
-		}
+		//else if ( line == "r" )
+		//{
+		//	InletHandle h = multiinInlets.front();
+		//	multiinInlets.pop_front();
+		//	multiinIn.remove( h );
+		//}
 	}
 
 	//testEngine.safeConfig( "threadpooltest.xml" );

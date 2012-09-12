@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "engine/_2RealInletPolicy.h"
+
 #include <string>
 
 namespace _2Real
@@ -27,12 +29,12 @@ namespace _2Real
 		struct InletInfo
 		{
 			InletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ),
-				isMultiInlet( false ), hasOptionCheck( false ), hasRangeCheck( false ), defaultPolicy( "undefined" ) {}
+				isMultiInlet( false ), hasOptionCheck( false ), hasRangeCheck( false ), defaultPolicy( InletPolicy::INVALID ) {}
 
 			std::string		name;
 			std::string		typeName;
 			std::string		longTypename;
-			std::string		defaultPolicy;
+			InletPolicy		defaultPolicy;
 			bool			isMultiInlet;
 			bool			hasOptionCheck;
 			bool			hasRangeCheck;

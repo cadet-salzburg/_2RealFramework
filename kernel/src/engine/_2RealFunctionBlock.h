@@ -82,7 +82,7 @@ namespace _2Real
 
 		void						handleException( Exception &e );
 
-		void						addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti );
+		void						addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, InletPolicy const& p, const bool isMulti );
 		void						addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 	private:
@@ -154,9 +154,9 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, const bool isMulti )
+	void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, InletPolicy const& p, const bool isMulti )
 	{
-		AbstractInletIO::InletInfo info( *this, name, type, options, initialValue, "valid_data" );
+		AbstractInletIO::InletInfo info( *this, name, type, options, initialValue, p );
 		isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}
 

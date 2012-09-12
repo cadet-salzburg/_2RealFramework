@@ -40,38 +40,29 @@ namespace _2Real
 			m_Impl.setDescription( category );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
+		void BlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		{
+			m_Impl.setThreadingPolicy( policy );
+		}
+
+		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init, AnyOptionSet const& options, InletPolicy const& defaultPolicy )
 		{
 			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, AnyOptionSet(), false );
+			InletMetadata *data = new InletMetadata( trim( name ), descriptor, init, options, defaultPolicy, false );
 			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options )
+		void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init, AnyOptionSet const& options, InletPolicy const& defaultPolicy )
 		{
 			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, options, false );
+			InletMetadata *data = new InletMetadata( trim( name ), descriptor, init, options, defaultPolicy, true );
 			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
+		void BlockMetainfo::addOutletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init )
 		{
 			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, AnyOptionSet(), true );
-			m_Impl.addInlet( *data );
-		}
-
-		void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options )
-		{
-			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init, options, true );
-			m_Impl.addInlet( *data );
-		}
-
-		void BlockMetainfo::addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init )
-		{
-			checkChars( toLower( trim( name ) ) );
-			ParameterMetadata *data = new ParameterMetadata( trim( name ), descriptor, init );
+			OutletMetadata *data = new OutletMetadata( trim( name ), descriptor, init );
 			m_Impl.addOutlet( *data );
 		}
 	}

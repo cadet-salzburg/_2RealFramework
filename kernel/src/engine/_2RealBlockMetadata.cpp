@@ -31,25 +31,27 @@ namespace _2Real
 	BlockMetadata::BlockMetadata() :
 		m_Name( "undefined" ),
 		m_Description( "undefined" ),
-		m_Category( "undefined" )
+		m_Category( "undefined" ),
+		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD )
 	{
 	}
 
 	BlockMetadata::BlockMetadata( string const& name ) :
 		m_Name( name ),
 		m_Description( "undefined" ),
-		m_Category( "undefined" )
+		m_Category( "undefined" ),
+		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD )
 	{
 	}
 
 	BlockMetadata::~BlockMetadata()
 	{
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		for ( BlockMetadata::InletMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
 			delete *it;
 		}
 
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			delete *it;
 		}
@@ -80,9 +82,14 @@ namespace _2Real
 		m_Category = category;
 	}
 
-	void BlockMetadata::addInlet( ParameterMetadata const& data )
+	void BlockMetadata::setThreadingPolicy( ThreadingPolicy const& policy )
 	{
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		m_ThreadingPolicy = policy;
+	}
+
+	void BlockMetadata::addInlet( InletMetadata const& data )
+	{
+		for ( BlockMetadata::InletMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
 			if ( toLower( ( **it ).name ) == toLower( data.name ) )
 			{
@@ -95,9 +102,9 @@ namespace _2Real
 		m_Inlets.push_back( &data );
 	}
 
-	void BlockMetadata::addOutlet( ParameterMetadata const& data )
+	void BlockMetadata::addOutlet( OutletMetadata const& data )
 	{
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			if ( toLower( ( **it ).name ) == toLower( data.name ) )
 			{
@@ -110,12 +117,12 @@ namespace _2Real
 		m_Outlets.push_back( &data );
 	}
 
-	BlockMetadata::ParameterMetadatas const& BlockMetadata::getInlets() const
+	BlockMetadata::InletMetadatas const& BlockMetadata::getInlets() const
 	{
 		return m_Inlets;
 	}
 
-	BlockMetadata::ParameterMetadatas const& BlockMetadata::getOutlets() const
+	BlockMetadata::OutletMetadatas const& BlockMetadata::getOutlets() const
 	{
 		return m_Outlets;
 	}

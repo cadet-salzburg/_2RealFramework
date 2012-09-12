@@ -452,7 +452,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle affectivUserIdIn = affectivData.getInletHandle( "user_id" );
 
-		affectivUserIdIn.setUpdatePolicy( InletHandle::ALWAYS );
+		affectivUserIdIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 		affectivData.getOutletHandle( "engagement" ).registerToNewData( receiver, &Receiver::receiveEngagement );
 		affectivData.getOutletHandle( "frustration" ).registerToNewData( receiver, &Receiver::receiveFrustration );
@@ -468,7 +468,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle cognitivUserIdIn = cognitivData.getInletHandle( "user_id" );
 
-		cognitivUserIdIn.setUpdatePolicy( InletHandle::ALWAYS );
+		cognitivUserIdIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 		cognitivData.getOutletHandle( "neutral" ).registerToNewData( receiver, &Receiver::receiveNeutral );
 		cognitivData.getOutletHandle( "push" ).registerToNewData( receiver, &Receiver::receivePush);
@@ -494,7 +494,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle expressivUserIdIn = cognitivData.getInletHandle( "user_id" );
 
-		expressivUserIdIn.setUpdatePolicy( InletHandle::ALWAYS );
+		expressivUserIdIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 
 		expressivData.getOutletHandle( "blink" ).registerToNewData( receiver, &Receiver::receiveBlink );
@@ -519,7 +519,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle userIdIn = gyroData.getInletHandle( "user_id" );
 
-		userIdIn.setUpdatePolicy( InletHandle::ALWAYS );
+		userIdIn.setUpdatePolicy( InletPolicy::ALWAYS );
 		
 		gyroData.getOutletHandle( "gyro_x" ).registerToNewData( receiver, &Receiver::receiveX );
 		gyroData.getOutletHandle( "gyro_y" ).registerToNewData( receiver, &Receiver::receiveY );

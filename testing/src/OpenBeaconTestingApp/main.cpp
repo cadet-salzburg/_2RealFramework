@@ -109,7 +109,7 @@ void setup()
 	dummyOut = obBlock.getOutletHandle( "dummy_out" );
 
 	dummyIn.setValue( 1 );
-	dummyIn.setUpdatePolicy( InletHandle::ALWAYS );
+	dummyIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 	receiver = new Receiver();
 

@@ -142,21 +142,10 @@ namespace _2Real
 			EngineImpl::instance().destroyLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
 		}
 
-		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
+		void InletHandle::setUpdatePolicy( InletPolicy const& p )
 		{
 			checkValidity( m_InletIO );
-			if ( p == InletHandle::OR_NEWER_DATA )
-			{
-				( *m_InletIO )[ 0 ].updateWhenInletDataNew( true );
-			}
-			else if ( p == InletHandle::AND_NEWER_DATA )
-			{
-				( *m_InletIO )[ 0 ].updateWhenInletDataNew( false );
-			}
-			else if ( p == InletHandle::ALWAYS )
-			{
-				( *m_InletIO )[ 0 ].updateWhenInletDataValid();
-			}
+			( *m_InletIO )[ 0 ].setUpdatePolicy( p );
 		}
 
 		void InletHandle::setValue( Any const& data )

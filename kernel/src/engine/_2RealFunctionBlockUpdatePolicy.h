@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "engine/_2RealInletPolicy.h"
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealTimeBasedTrigger.h"
@@ -61,7 +62,7 @@ namespace _2Real
 		~FunctionBlockUpdatePolicy();
 
 		// update policy has no concept of multiinlets
-		void addInlet( BasicInletIO &io );
+		void addInlet( BasicInletIO &io, InletPolicy const& p );
 		void removeInlet( BasicInletIO &io );
 
 		void syncChanges();
@@ -69,29 +70,28 @@ namespace _2Real
 		void setNewUpdateRate( const double rate );
 		double getUpdateRate() const;
 
-		void setNewInletPolicy( BasicInletIO &io, AbstractInletTriggerCtor *policy, const bool isSingleWeight, std::string const& policyAsString );
-		const std::string getUpdatePolicyAsString( std::string const& inlet ) const;
+		void setInletPolicy( BasicInletIO &io, InletPolicy const& p );
 
 	private:
 
-		struct InletPolicy
+		struct InletPolicyInfo
 		{
-			InletPolicy( AbstractInletTriggerCtor *c, AbstractInletBasedTrigger *t, const bool w ) :
+			InletPolicyInfo( AbstractInletTriggerCtor *c, AbstractInletBasedTrigger *t, const bool w ) :
 				wasPolicyChanged( true ), isSingleWeight( w ),
-				policyString( "valid_data" ), ctor( c ), trigger( t ) {}
+				policy( InletPolicy::ALWAYS ), ctor( c ), trigger( t ) {}
 
-			~InletPolicy() { delete ctor; delete trigger; }
+			~InletPolicyInfo() { delete ctor; delete trigger; }
 
 			bool						wasPolicyChanged;
 			bool						isSingleWeight;
-			std::string					policyString;
+			InletPolicy					policy;
 			AbstractInletTriggerCtor	*ctor;
 			AbstractInletBasedTrigger	*trigger;
 		};
 
-		typedef std::map< BasicInletIO *, InletPolicy * >						InletPolicyMap;
-		typedef std::map< BasicInletIO *, InletPolicy * >::iterator				InletPolicyIterator;
-		typedef std::map< BasicInletIO *, InletPolicy * >::const_iterator		InletPolicyConstIterator;
+		typedef std::map< BasicInletIO *, InletPolicyInfo * >						InletPolicyMap;
+		typedef std::map< BasicInletIO *, InletPolicyInfo * >::iterator				InletPolicyIterator;
+		typedef std::map< BasicInletIO *, InletPolicyInfo * >::const_iterator		InletPolicyConstIterator;
 
 		template< typename T >
 		friend class FunctionBlock;
