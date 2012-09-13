@@ -71,3 +71,4 @@ Ankh.NoLoad
 #Common Files
 [Dd]ebug*/
 [Rr]elease*/
+/bundles/unittest/bin/EngineLog.txt
