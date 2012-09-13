@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\FaceTestingApp\main.cpp" />
+    <ClCompile Include="..\..\..\src\FaceTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}</ProjectGuid>
@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -76,9 +76,9 @@
       </LinkTimeCodeGeneration>
     </Lib>
     <PreLinkEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\bin
-copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\..\..\bin
+copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\..\..\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\..\..\bin</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,9 +110,9 @@ copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <PreLinkEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\bin
-copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\..\..\bin
+copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\..\..\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\..\..\bin</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

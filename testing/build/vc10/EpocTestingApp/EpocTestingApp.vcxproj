@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\EpocTestingApp\main.cpp" />
+    <ClCompile Include="..\..\..\src\EpocTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8BCA80C8-5621-4158-A25E-96130E3AED99}</ProjectGuid>
@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -76,9 +76,8 @@
       </LinkTimeCodeGeneration>
     </Lib>
     <PreLinkEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\bin
-copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,9 +109,8 @@ copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <PreLinkEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\glew\bin\*.dll ..\bin
-copy "$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\bin\*.dll" ..\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\bin</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

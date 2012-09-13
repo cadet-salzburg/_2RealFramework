@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ImageTestingApp\main.cpp" />
+    <ClCompile Include="..\..\..\src\ImageTestingApp\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AA9EA0F4-CC54-41A7-9185-26B071B23154}</ProjectGuid>
@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\</OutDir>
+    <OutDir>..\..\..\bin\</OutDir>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -60,13 +60,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\include;$(_2REAL_DEPENDENCIES_DIR)\vld\include;..\..\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\include;$(_2REAL_DEPENDENCIES_DIR)\vld\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\lib;..\..\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\vld\lib\Win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\lib;$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\vld\lib\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32d.lib;SDL.lib;SDLmain.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\include;..\..\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DEPENDENCIES_DIR)\vld\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -98,7 +98,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\lib;..\..\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\vld\lib\Win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\sdl 2.0\lib;$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DEPENDENCIES_DIR)\vld\lib\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;SDL.lib;SDLmain.lib;_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
