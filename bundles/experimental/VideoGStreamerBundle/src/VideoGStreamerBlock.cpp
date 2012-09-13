@@ -76,6 +76,7 @@ void VideoGStreamerBlock::update()
 			unsigned char* cAudioBuffer = m_2RealGStreamerPlayer->getAudio();
 			if ( cAudioBuffer != NULL )
 			{
+				std::cout << "AUDIO" << std::endl;
 				m_Audio.getWriteableRef<AudioBuffer>() = AudioBuffer( cAudioBuffer,
 																	  false,
 																	  m_2RealGStreamerPlayer->getAudioBufferSize(),
@@ -175,17 +176,17 @@ void VideoGStreamerBlock::setLoopMode( int iLoopMode )
 {
 	switch ( iLoopMode )
 	{
-	case 0:
-		m_2RealGStreamerPlayer->setLoopMode( NO_LOOP );
-		break;
-	case 1:
-		m_2RealGStreamerPlayer->setLoopMode( LOOP );
-		break;
-	case 2:
-		m_2RealGStreamerPlayer->setLoopMode( BIDIRECTIONAL_LOOP );
-		break;
-	default:
-		break;
+		case 0:
+			m_2RealGStreamerPlayer->setLoopMode( NO_LOOP );
+			break;
+		case 1:
+			m_2RealGStreamerPlayer->setLoopMode( LOOP );
+			break;
+		case 2:
+			m_2RealGStreamerPlayer->setLoopMode( BIDIRECTIONAL_LOOP );
+			break;
+		default:
+			break;
 	}
 }
 
