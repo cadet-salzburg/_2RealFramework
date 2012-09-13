@@ -42,16 +42,14 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "support@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-
-		unsigned char rgbChecker[640 * 480 * 3];
-		unsigned short depthChecker[640 * 480 * 1];
+		unsigned char *rgbChecker = new unsigned char[640 * 480 * 3];
+		unsigned short *depthChecker = new unsigned short[640 * 480 * 1];
 
 		fillChecker( rgbChecker, 640, 480, 3 );
 		fillChecker( depthChecker, 640, 480, 1 );
 
 		Image initRGBImage( rgbChecker, true, 640, 480, ImageChannelOrder::RGB );
 		Image initDepthImage( depthChecker, true, 640, 480, ImageChannelOrder::A );
-
 		/*
 		Image initRGBImage( (unsigned char*)NULL, false, 640, 480, ImageChannelOrder::RGB );
 		Image initDepthImage( (unsigned short*)NULL, false, 640, 480, ImageChannelOrder::A );
