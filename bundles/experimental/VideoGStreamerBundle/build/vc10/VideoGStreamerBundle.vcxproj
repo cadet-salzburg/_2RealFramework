@@ -104,7 +104,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\_2RealGStreamerWrapper\lib;$(_2REAL_DEPENDENCIES_DIR)\gstreamer\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>_2RealFramework_32d.lib;_2RealGStreamerWrapper_static32_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>_2RealFramework_32d.lib;_2RealGStreamerWrapper_mtd_32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
