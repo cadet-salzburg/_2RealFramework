@@ -6,7 +6,7 @@
 double Trajectory::calcPosAffinity( const _2Real::Vec2 &p, double screenWidth, double time ) const
 {
 	if( !this->canCalcPosAffinity() )
-		throw std::exception( "cannot calc position affinity -- not enough values" );
+		throw _2Real::Exception( "cannot calc position affinity -- not enough values" );
 
 	double ret = ( p - m_v1 ).norm();
 	double dt = time - m_prevTime;
@@ -17,7 +17,7 @@ double Trajectory::calcPosAffinity( const _2Real::Vec2 &p, double screenWidth, d
 double Trajectory::calcSizeAffinity( const _2Real::Vec2 &size, double time ) const
 {
 	if( !this->canCalcSizeAffinity() )
-		throw std::exception( "cannot calc size affinity -- not enough values" );
+		throw _2Real::Exception( "cannot calc size affinity -- not enough values" );
 
 	double area0 = m_s1[0] * m_s1[1];	//calc area of previous size
 	double area1 = size[0] * size[1];			//calc area of this size
@@ -38,7 +38,7 @@ double Trajectory::calcSizeAffinity( const _2Real::Vec2 &size, double time ) con
 double Trajectory::calcDirCoherence( const _2Real::Vec2 &p, double time, double dirTolerance ) const
 {
 	if( !this->canCalcDirCoherence() )
-		throw std::exception( "cannot calc directional coherence -- not enough values" );
+		throw _2Real::Exception( "cannot calc directional coherence -- not enough values" );
 
 	_2Real::Vec2 d0( m_v1 - m_v0 );
 	_2Real::Vec2 d1( p - m_v1 );
@@ -63,7 +63,7 @@ double Trajectory::calcDirCoherence( const _2Real::Vec2 &p, double time, double 
 double Trajectory::calcVelCoherence( const _2Real::Vec2 &p, double time, double velTolerance ) const
 {
 	if( !this->canCalcVelCoherence() )
-		throw std::exception( "cannot calc velocity coherence -- not enough values" );
+		throw _2Real::Exception( "cannot calc velocity coherence -- not enough values" );
 
 	_2Real::Vec2 d0( m_v1 - m_v0 );
 	_2Real::Vec2 d1( p - m_v1 );
@@ -82,7 +82,7 @@ double Trajectory::calcVelCoherence( const _2Real::Vec2 &p, double time, double 
 double Trajectory::calcSizeCoherence( const _2Real::Vec2 &s, double time, double sizeTolerance ) const
 {
 	if( !this->canCalcSizeCoherence() )
-		throw std::exception( "cannot calc size coherence -- not enough values" );
+		throw _2Real::Exception( "cannot calc size coherence -- not enough values" );
 
 	double a0 = sqrt( m_s0[0] * m_s0[1] );
 	double a1 = sqrt( m_s1[0] * m_s1[1] );
@@ -104,7 +104,7 @@ double Trajectory::calcSizeCoherence( const _2Real::Vec2 &s, double time, double
 double Trajectory::calcAffinity( const _2Real::Space2D &region, double posWeight, double sizeWeight, double screenWidth, double time ) const
 {
 	if( !this->canCalcAffinity() )
-		throw std::exception( "cannot calc affinity -- not enough values" );
+		throw _2Real::Exception( "cannot calc affinity -- not enough values" );
 
 	_2Real::Vec2 center( ( region.getP1() + region.getP0() ) * 0.5f );
 	_2Real::Vec2 size( region.getP1() - region.getP0() );
@@ -119,7 +119,7 @@ double Trajectory::calcAffinity( const _2Real::Space2D &region, double posWeight
 double Trajectory::calcCoherence( const _2Real::Space2D &region, double dirWeight, double velWeight, double sizeWeight, double time, double dirTolerance, double velTolerance, double sizeTolerance ) const
 {
 	if( !this->canCalcCoherence() )
-		throw std::exception( "cannot calc coherence -- not enough values" );
+		throw _2Real::Exception( "cannot calc coherence -- not enough values" );
 
 	_2Real::Vec2 center( ( region.getP1() + region.getP0() ) * 0.5f );
 	_2Real::Vec2 size( region.getP1() - region.getP0() );

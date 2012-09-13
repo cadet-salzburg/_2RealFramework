@@ -822,13 +822,13 @@ void setupFeatures()
 	faceFeatures = ftBundle.createBlockInstance( "FaceFeaturesBlock" );
 	faceFeatures.setUpdateRate( 30.0f );
 
-	InletHandle ffInImg = faceFeatures.getInletHandle( "image_in" );
+	InletHandle ffInImg = faceFeatures.getInletHandle( "ImageIn" );
 
-	faceFeatures.getInletHandle( "use_eyes" ).setValue( true );
-	faceFeatures.getInletHandle( "use_nose" ).setValue( true );
-	faceFeatures.getInletHandle( "use_mouth" ).setValue( true );
+	faceFeatures.getInletHandle( "UseEyes" ).setValue( true );
+	faceFeatures.getInletHandle( "UseNose" ).setValue( true );
+	faceFeatures.getInletHandle( "UseMouth" ).setValue( true );
 
-	faceFeatures.getInletHandle( "haar_detection_downscale" ).setValue( 0.5f );
+	faceFeatures.getInletHandle( "HaarDetectionDownscale" ).setValue( 0.5f );
 
 	ffInImg.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 
@@ -841,7 +841,7 @@ void setupFeatures()
 
 	receiver = new FaceFeatureReceiver();
 
-	faceFeatures.getOutletHandle( "face_out" ).registerToNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveFaces );
+	faceFeatures.getOutletHandle( "FaceOut" ).registerToNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveFaces );
 
 	camOutImg.registerToNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveImage );
 
@@ -874,8 +874,8 @@ void setupCast()
 	faceCast = ftBundle.createBlockInstance( "FaceCastBlock" );
 	faceCast.setUpdateRate( 30.0f );
 	
-	InletHandle fcInImg = faceCast.getInletHandle( "image_in" );
-	InletHandle fcInDepth = faceCast.getInletHandle( "depth_in" );
+	InletHandle fcInImg = faceCast.getInletHandle( "ImageIn" );
+	InletHandle fcInDepth = faceCast.getInletHandle( "DepthIn" );
 
 	fcInImg.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
 
@@ -897,7 +897,7 @@ void setupCast()
 
 	rgbOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveImage );
 	depthOutImg.registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveDepth );
-	faceCast.getOutletHandle( "face_out" ).registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveFaces );
+	faceCast.getOutletHandle( "FaceOut" ).registerToNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveFaces );
 
 	rgb.setup();
 	rgb.start();
@@ -925,12 +925,12 @@ void cleanup()
 	if( receiver )
 	{
 		if( faceFeatures.isValid() )
-			faceFeatures.getOutletHandle( "face_out" ).unregisterFromNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveFaces );
+			faceFeatures.getOutletHandle( "FaceOut" ).unregisterFromNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveFaces );
 		if( camOutImg.isValid() )
 			camOutImg.unregisterFromNewData( *( (FaceFeatureReceiver*)receiver ), &FaceFeatureReceiver::receiveImage );
 
 		if( faceCast.isValid() )
-			faceCast.getOutletHandle( "face_out" ).unregisterFromNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveFaces );
+			faceCast.getOutletHandle( "FaceOut" ).unregisterFromNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveFaces );
 		if( rgbOutImg.isValid() )
 			rgbOutImg.unregisterFromNewData( *( (FaceCastReceiver*)receiver ), &FaceCastReceiver::receiveImage );
 		if( depthOutImg.isValid() )

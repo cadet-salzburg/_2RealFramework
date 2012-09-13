@@ -33,11 +33,13 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
+		std::cout << "hallo" << std::endl;
+
 		info.setName( "FaceTrackingBundle" );
 		info.setDescription( "face tracking stuff" );
 		info.setAuthor( "roland aigner" );
 		info.setCategory( "image processing" );
-		info.setContact( "help@cadet.at" );
+		info.setContact( "support@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
 
@@ -56,113 +58,117 @@ void getBundleMetainfo( BundleMetainfo& info )
 		*/
 
 		BlockMetainfo faceCast = info.exportBlock< FaceCastBlock, WithoutContext>( "FaceCastBlock" );
-		faceCast.setDescription( "creates 3D vertex and normal data for faces find in an RGBD image stream" );
-		faceCast.setCategory( "" );
+		faceCast.setDescription( "Creates 3D vertex and normal data for faces find in an RGBD image stream" );
+		faceCast.setCategory( "image processing" );
 		//TODO: only rgb/greyscale allowed -- how to specify?
-		faceCast.addInlet< Image >( "image_in", initRGBImage );
-		faceCast.addInlet< Image >( "depth_in", initDepthImage );
+		faceCast.addInlet< Image >( "ImageIn", initRGBImage );
+		faceCast.addInlet< Image >( "DepthIn", initDepthImage );
 
-		faceCast.addInlet< unsigned int >( "res_x", 40 );
-		faceCast.addInlet< unsigned int >( "res_y", 40 );
+		faceCast.addInlet< unsigned int >( "ResX", 40 );
+		faceCast.addInlet< unsigned int >( "ResY", 40 );
 
-		faceCast.addInlet< double >( "face_scale_x", 1.35 );
-		faceCast.addInlet< double >( "face_scale_y", 1.6 );
+		faceCast.addInlet< double >( "FaceScaleX", 1.35 );
+		faceCast.addInlet< double >( "FaceScaleY", 1.6 );
 
-		faceCast.addInlet< double >( "depth_cutoff", 0.1 );
+		faceCast.addInlet< double >( "DepthCutoff", 0.1 );
 
 		//default values taken from Asus Xtion Pro
-		//faceCast.addInlet< double >( "fov_hor", 58.5907 );	//redundant, not used
-		faceCast.addInlet< double >( "fov_ver", 45.6427 );
+		//faceCast.addInlet< double >( "FovHor", 58.5907 );	//redundant, not used
+		faceCast.addInlet< double >( "FovVer", 45.6427 );
 
-		faceCast.addInlet< double >( "haar_detection_downscale", 0.75 );
+		faceCast.addInlet< double >( "HaarDetectionDownscale", 0.75 );
 
-		faceCast.addInlet< unsigned int >( "haar_min_neighbours_face", 3 );
-		faceCast.addInlet< Vec2 >( "haar_minSizeFace", Vec2( 0.0, 0.0 ) );
+		faceCast.addInlet< unsigned int >( "HaarMinNeighboursFace", 3 );
+		faceCast.addInlet< Vec2 >( "HaarMinSizeFace", Vec2( 0.0, 0.0 ) );
 
-		faceCast.addInlet< bool >( "haar_do_canny_pruning", false );
-		faceCast.addInlet< double >( "haar_scalefactor", 1.1 );
+		faceCast.addInlet< bool >( "HaarDoCannyPruning", false );
+		faceCast.addInlet< double >( "HaarScalefactor", 1.1 );
 
-		faceCast.addInlet< bool >( "equalize_histogram", false );
+		faceCast.addInlet< bool >( "EqualizeHistogram", false );
 
-		faceCast.addInlet< std::string >( "cascadefile_face", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
+		faceCast.addInlet< std::string >( "CascadefileFace", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
 
-		faceCast.addInlet< double >( "extrapolation_damping", 0.75 );
-		faceCast.addInlet< double >( "extrapolation_coherence_rise", 0.27 );
+		faceCast.addInlet< double >( "ExtrapolationDamping", 0.75 );
+		faceCast.addInlet< double >( "ExtrapolationCoherenceRise", 0.27 );
 
-		faceCast.addInlet< double >( "affinity_weight_pos", 0.6 );
-		faceCast.addInlet< double >( "affinity_weight_size", 0.4 );
+		faceCast.addInlet< double >( "AffinityWeightPos", 0.6 );
+		faceCast.addInlet< double >( "AffinityWeightSize", 0.4 );
 
-		faceCast.addInlet< double >( "coherence_weight_dir", 0.1 );
-		faceCast.addInlet< double >( "coherence_weight_vel", 0.5 );
-		faceCast.addInlet< double >( "coherence_weight_size", 0.4 );
+		faceCast.addInlet< double >( "CoherenceWeightDir", 0.1 );
+		faceCast.addInlet< double >( "CoherenceWeightVel", 0.5 );
+		faceCast.addInlet< double >( "CoherenceWeightSize", 0.4 );
 
-		faceCast.addInlet< double >( "coherence_tolerance_dir", 0.75 );
-		faceCast.addInlet< double >( "coherence_tolerance_vel", 0.75 );
-		faceCast.addInlet< double >( "coherence_tolerance_size", 0.75 );
+		faceCast.addInlet< double >( "CoherenceToleranceDir", 0.75 );
+		faceCast.addInlet< double >( "CoherenceToleranceVel", 0.75 );
+		faceCast.addInlet< double >( "CoherenceToleranceSize", 0.75 );
 
-		faceCast.addInlet< double >( "affinity_threshold", 1.0 );
-		faceCast.addInlet< double >( "coherence_threshold", 0.2 );
-		faceCast.addInlet< double >( "discard_threshold", 0.5 );
+		faceCast.addInlet< double >( "AffinityThreshold", 1.0 );
+		faceCast.addInlet< double >( "CoherenceThreshold", 0.2 );
+		faceCast.addInlet< double >( "DiscardThreshold", 0.5 );
 
-		faceCast.addOutlet< std::vector< FaceCast > >( "face_out" );
+		faceCast.addOutlet< std::vector< FaceCast > >( "FaceOut" );
 
 		BlockMetainfo faceFeatures = info.exportBlock< FaceFeaturesBlock, WithoutContext>( "FaceFeaturesBlock" );
-		faceFeatures.setDescription( "detects faces and face features in input image stream" );
-		faceFeatures.setCategory( "" );
+		faceFeatures.setDescription( "Detects faces and face features in input image stream" );
+		faceFeatures.setCategory( "image processing" );
 		// can handle any format
 		//TODO: only rgb/greyscale allowed -- how to specify?
-		faceFeatures.addInlet< Image >( "image_in", initRGBImage );
+		faceFeatures.addInlet< Image >( "ImageIn", initRGBImage );
 
-		faceFeatures.addInlet< double >( "haar_detection_downscale", 0.75 );
+		faceFeatures.addInlet< double >( "HaarDetectionDownscale", 0.75 );
 
-		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_face", 3 );
-		faceFeatures.addInlet< Vec2 >( "haar_minSizeFace", Vec2( 0.0, 0.0 ) );
+		faceFeatures.addInlet< unsigned int >( "HaarMinNeighboursFace", 3 );
+		faceFeatures.addInlet< Vec2 >( "HaarMinSizeFace", Vec2( 0.0, 0.0 ) );
 
-		faceFeatures.addInlet< bool >( "use_eyes", true );
-		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_eyes", 3 );
-		faceFeatures.addInlet< Vec2 >( "haar_min_size_eyes", Vec2( 0.0, 0.0 ) );
+		faceFeatures.addInlet< bool >( "UseEyes", true );
+		faceFeatures.addInlet< unsigned int >( "HaarMinNeighboursEyes", 3 );
+		faceFeatures.addInlet< Vec2 >( "HaarMinSizeEyes", Vec2( 0.0, 0.0 ) );
 
-		faceFeatures.addInlet< bool >( "use_nose", true );
-		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_nose", 3 );
-		faceFeatures.addInlet< Vec2 >( "haar_min_size_nose", Vec2( 0.0, 0.0 ) );
+		faceFeatures.addInlet< bool >( "UseNose", true );
+		faceFeatures.addInlet< unsigned int >( "HaarMinNeighboursNose", 3 );
+		faceFeatures.addInlet< Vec2 >( "HaarMinSizeNose", Vec2( 0.0, 0.0 ) );
 
-		faceFeatures.addInlet< bool >( "use_mouth", true );
-		faceFeatures.addInlet< unsigned int >( "haar_min_neighbours_mouth", 3 );
-		faceFeatures.addInlet< Vec2 >( "haar_min_size_mouth", Vec2( 0.0, 0.0 ) );
+		faceFeatures.addInlet< bool >( "UseMouth", true );
+		faceFeatures.addInlet< unsigned int >( "HaarMinNeighboursMouth", 3 );
+		faceFeatures.addInlet< Vec2 >( "HaarMinSizeMouth", Vec2( 0.0, 0.0 ) );
 
-		faceFeatures.addInlet< bool >( "haar_do_canny_pruning", false );
-		faceFeatures.addInlet< double >( "haar_scalefactor", 1.1 );
+		faceFeatures.addInlet< bool >( "HaarDoCannyPruning", false );
+		faceFeatures.addInlet< double >( "HaarScalefactor", 1.1 );
 
-		faceFeatures.addInlet< bool >( "equalize_histogram", false );
+		faceFeatures.addInlet< bool >( "EqualizeHistogram", false );
 
-		faceFeatures.addInlet< std::string >( "cascadefile_face", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
-		faceFeatures.addInlet< std::string >( "cascadefile_eyes", "ressources\\FaceTrackingBundle\\haarcascade_eye.xml" );
-		faceFeatures.addInlet< std::string >( "cascadefile_nose", "ressources\\FaceTrackingBundle\\haarcascade_mcs_nose.xml" );
-		faceFeatures.addInlet< std::string >( "cascadefile_mouth", "ressources\\FaceTrackingBundle\\haarcascade_mcs_mouth.xml" );
+		faceFeatures.addInlet< std::string >( "CascadefileFace", "ressources\\FaceTrackingBundle\\haarcascade_frontalface_alt2.xml" );
+		faceFeatures.addInlet< std::string >( "CascadefileEyes", "ressources\\FaceTrackingBundle\\haarcascade_eye.xml" );
+		faceFeatures.addInlet< std::string >( "CascadefileNose", "ressources\\FaceTrackingBundle\\haarcascade_mcs_nose.xml" );
+		faceFeatures.addInlet< std::string >( "CascadefileMouth", "ressources\\FaceTrackingBundle\\haarcascade_mcs_mouth.xml" );
 
-		faceFeatures.addInlet< double >( "extrapolation_damping", 0.75 );
-		faceFeatures.addInlet< double >( "extrapolation_coherence_rise", 0.27 );
+		faceFeatures.addInlet< double >( "Extrapolation_damping", 0.75 );
+		faceFeatures.addInlet< double >( "Extrapolation_coherence_rise", 0.27 );
 
-		faceFeatures.addInlet< double >( "affinity_weight_pos", 0.6 );
-		faceFeatures.addInlet< double >( "affinity_weight_size", 0.4 );
+		faceFeatures.addInlet< double >( "AffinityWeightPos", 0.6 );
+		faceFeatures.addInlet< double >( "AffinityWeightSize", 0.4 );
 
-		faceFeatures.addInlet< double >( "coherence_weight_dir", 0.1 );
-		faceFeatures.addInlet< double >( "coherence_weight_vel", 0.5 );
-		faceFeatures.addInlet< double >( "coherence_weight_size", 0.4 );
+		faceFeatures.addInlet< double >( "CoherenceWeightDir", 0.1 );
+		faceFeatures.addInlet< double >( "CoherenceWeightVel", 0.5 );
+		faceFeatures.addInlet< double >( "CoherenceWeightSize", 0.4 );
 
-		faceFeatures.addInlet< double >( "coherence_tolerance_dir", 0.75 );
-		faceFeatures.addInlet< double >( "coherence_tolerance_vel", 0.75 );
-		faceFeatures.addInlet< double >( "coherence_tolerance_size", 0.75 );
+		faceFeatures.addInlet< double >( "CoherenceToleranceDir", 0.75 );
+		faceFeatures.addInlet< double >( "CoherenceToleranceVel", 0.75 );
+		faceFeatures.addInlet< double >( "CoherenceToleranceSize", 0.75 );
 
-		faceFeatures.addInlet< double >( "affinity_threshold", 1.0 );
-		faceFeatures.addInlet< double >( "coherence_threshold", 0.2 );
-		faceFeatures.addInlet< double >( "discard_threshold", 0.5 );
+		faceFeatures.addInlet< double >( "AffinityThreshold", 1.0 );
+		faceFeatures.addInlet< double >( "CoherenceThreshold", 0.2 );
+		faceFeatures.addInlet< double >( "DiscardThreshold", 0.5 );
 
-		faceFeatures.addOutlet< std::vector< FaceDesc > >( "face_out" );
+		faceFeatures.addOutlet< std::vector< FaceDesc > >( "FaceOut" );
 	}
 	catch ( Exception &e )
 	{
 		std::cout << e.message() << std::endl;
 		e.rethrow();
+	}
+	catch ( std::exception &e )
+	{
+		std::cout << e.what() << std::endl;
 	}
 }
