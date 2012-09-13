@@ -35,22 +35,22 @@ namespace _2Real
 
 	std::string const& Parameter::getTypename() const
 	{
-		return m_Descriptor.getTypename();
+		return m_Descriptor.m_TypeName;
 	}
 
 	const std::string Parameter::getLongTypename() const
 	{
-		return m_Descriptor.getLongTypename();
+		return m_Descriptor.m_LongTypename;
 	}
 
 	Type const& Parameter::getType() const
 	{
-		return m_Descriptor.getType();
+		return m_Descriptor.m_Type;
 	}
 
 	TypeCategory const& Parameter::getTypeCategory() const
 	{
-		return m_Descriptor.getTypeCategory();
+		return m_Descriptor.m_TypeCategory;
 	}
 
 	void Parameter::setData( TimestampedData const& data )

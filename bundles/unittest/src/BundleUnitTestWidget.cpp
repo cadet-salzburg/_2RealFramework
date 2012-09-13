@@ -34,8 +34,8 @@ void BundleUnitTestWidget::setup(std::string strBundleName)
 	QComboBox *comboBox = new QComboBox();
 	for(int i=0; i < m_BlockInfos.size(); i++)
 	{
-		if(m_BlockInfos[i].getName().find("contextblock")==string::npos)
-			comboBox->addItem(QString::fromStdString(m_BlockInfos[i].getName()));
+		if(m_BlockInfos[i].name.find("contextblock")==string::npos)
+			comboBox->addItem(QString::fromStdString(m_BlockInfos[i].name));
 	}
 	layout->addWidget(comboBox,0,1,Qt::AlignTop);
 	// init string so we know what to initialise, be careful not to set it on contextblock which can't be initialized
@@ -43,7 +43,7 @@ void BundleUnitTestWidget::setup(std::string strBundleName)
 	{
 		for(int i=0; i<m_BlockInfos.size(); i++)
 		{
-			m_strBlockName = m_BlockInfos[i].getName();
+			m_strBlockName = m_BlockInfos[i].name;
 			if(m_strBlockName.find("contextblock")==string::npos)
 				break;
 		}
@@ -77,6 +77,7 @@ bool BundleUnitTestWidget::loadBundle(std::string strFile)
 	directories.push_back("../../experimental/bin/");
 	directories.push_back("../../core/bin/");
 	directories.push_back("../../tutorial/bin/");
+	directories.push_back("./");
 
 	QString curDir = QDir::currentPath();
 
@@ -106,7 +107,7 @@ bool BundleUnitTestWidget::loadBundle(std::string strFile)
 		m_BundleHandle = m_Engine.loadBundle( strFile );
 	
 		BundleInfo bundleInfo = m_BundleHandle.getBundleInfo();
-		m_BlockInfos = bundleInfo.getExportedBlocks();
+		m_BlockInfos = bundleInfo.exportedBlocks;
 		return true;
 	}
 	catch ( Exception &e )

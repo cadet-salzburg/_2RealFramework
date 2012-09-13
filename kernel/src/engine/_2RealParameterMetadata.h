@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "engine/_2RealInletPolicy.h"
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealOptions.h"
 
@@ -25,36 +26,28 @@
 
 namespace _2Real
 {
-
 	class TypeDescriptor;
 
-	class ParameterMetadata
+	struct InletMetadata
 	{
+		InletMetadata( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p, const bool m );
+		~InletMetadata();
 
-	public:
-
-		ParameterMetadata( std::string const& name, TypeDescriptor &descriptor, Any const& initialValue );
-		~ParameterMetadata();
-
-		std::string const&		getName() const;
-		std::string const&		getTypename() const;
-		const std::string		getLongTypename() const;
-		TypeDescriptor const&	getTypeDescriptor() const;
-		Any const&				getInitialValue() const;
-
-		void enableOptions( AnyOptionSet const& options );
-		bool hasOptions() const;
-		AnyOptionSet const& getOptions() const;
-
-		static void performParameterNameCheck( std::string const& name );
-
-	private:
-
-		TypeDescriptor			*m_TypeDescriptor;
-		std::string				m_Name;
-		Any						m_InitialValue;
-		AnyOptionSet			m_Options;
-
+		TypeDescriptor			const *const type;
+		std::string				const name;
+		Any						const initValue;
+		AnyOptionSet			const options;
+		InletPolicy				const defaultPolicy;
+		bool					const isMulti;
 	};
 
+	struct OutletMetadata
+	{
+		OutletMetadata( std::string const& n, TypeDescriptor const *const t, Any const& i );
+		~OutletMetadata();
+
+		TypeDescriptor			const *const type;
+		std::string				const name;
+		Any						const initValue;
+	};
 }

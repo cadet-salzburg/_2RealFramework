@@ -35,19 +35,19 @@ namespace _2Real
 		m_DiscardCurrent( false )
 	{
 		Parameter::m_Data = TimestampedData( emptyData, 0 );
-		Parameter::m_DataBuffer.cloneData( Parameter::m_Data );
+		Parameter::m_DataBuffer.cloneAnyFrom( Parameter::m_Data );
 	}
 
 	bool Outlet::synchronize()
 	{
 		if ( !m_DiscardCurrent )
 		{
-			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.getData(), m_Engine.getElapsedTime() );
+			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.anyValue, m_Engine.getElapsedTime() );
 			// shallow-copy written data into readable data
 			Parameter::synchronize();
 			// deep-copy readable data back into writeable data
 			// this way, outlet always holds the last written value
-			Parameter::m_DataBuffer.cloneData( Parameter::m_Data );
+			Parameter::m_DataBuffer.cloneAnyFrom( Parameter::m_Data );
 			return false;
 		}
 		else
@@ -59,7 +59,7 @@ namespace _2Real
 
 	Any & Outlet::getWriteableData()
 	{
-		return Parameter::m_DataBuffer.getData();
+		return Parameter::m_DataBuffer.anyValue;
 	}
 
 	void Outlet::discardCurrentUpdate()

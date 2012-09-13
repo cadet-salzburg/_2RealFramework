@@ -18,54 +18,83 @@
 
 #pragma once
 
-#include "engine/_2RealParameter.h"
 #include "bundle/_2RealInletHandle.h"
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
-#include "helpers/_2RealOptions.h"
-//#include "helpers/_2RealRange.h"
+#include "engine/_2RealTimestampedData.h"
 
 namespace _2Real
 {
-	class EngineImpl;
+	class BasicInlet;
 
-	class Inlet : private Parameter, private NonCopyable< Inlet >, private Identifiable< Inlet >, private Handleable< Inlet, bundle::InletHandle >
+	class AbstractInlet : private NonCopyable< AbstractInlet >, private Identifiable< AbstractInlet >, private Handleable< AbstractInlet, bundle::InletHandle >
 	{
 
 	public:
 
-		Inlet( AbstractUberBlock &owningBlock, std::string const& name, TypeDescriptor const& type );
-		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Options const& options );
-		//Inlet( AbstractUberBlock &owningBlock, std::string const& name, std::string const& longTypename, std::string const& type, Range const& range );
+		AbstractInlet( AbstractUberBlock &owningBlock, std::string const& name );
+		virtual ~AbstractInlet() {}
 
-		using Handleable< Inlet, bundle::InletHandle >::getHandle;
-		using Handleable< Inlet, bundle::InletHandle >::registerHandle;
-		using Handleable< Inlet, bundle::InletHandle >::unregisterHandle;
+		using Identifiable< AbstractInlet >::getFullName;
+		using Identifiable< AbstractInlet >::getName;
 
-		using Identifiable< Inlet >::getFullName;
-		using Identifiable< Inlet >::getName;
+		using Handleable< AbstractInlet, bundle::InletHandle >::getHandle;
+		using Handleable< AbstractInlet, bundle::InletHandle >::registerHandle;
+		using Handleable< AbstractInlet, bundle::InletHandle >::unregisterHandle;
 
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
-		using Parameter::getData;
-		using Parameter::getType;
-		using Parameter::getTypeCategory;
+		virtual BasicInlet &		operator[]( const unsigned int index ) = 0;
+		virtual bool				isMultiInlet() const = 0;
+		virtual unsigned int		getSize() const = 0;
 
-		void setDataAndSynchronize( TimestampedData const& data );
-		AbstractUberBlock & getOwningUberBlock();
+	};
 
-		bool hasUpdated() const;
-		bool hasChanged() const;
+	class BasicInlet : public AbstractInlet
+	{
 
-		//bool					hasOptions() const;
-		//bool					hasRange() const;
+	public:
+
+		BasicInlet( AbstractUberBlock &owningBlock, std::string const& name );
+
+		BasicInlet &				operator[]( const unsigned int index ) { return *this; }
+		bool						isMultiInlet() const { return false; }
+		unsigned int				getSize() const { return 1; }
+
+		TimestampedData const&		getCurrentData() const;
+		void						setData( TimestampedData const& data );
+		bool						hasUpdated() const;
+		bool						hasChanged() const;
 
 	private:
 
-		EngineImpl				&m_Engine;
-		AbstractUberBlock		&m_OwningUberBlock;
-		TimestampedData			m_LastData;
+		TimestampedData				m_LastData;
+		TimestampedData				m_CurrentData;
+
+	};
+
+	class MultiInlet : public AbstractInlet
+	{
+
+	public:
+
+		typedef std::vector< BasicInlet * >						BasicInlets;
+		typedef std::vector< BasicInlet * >::iterator			BasicInletIterator;
+		typedef std::vector< BasicInlet * >::const_iterator		BasicInletsConstInterator;
+
+		MultiInlet( AbstractUberBlock &owningBlock, std::string const& name );
+		~MultiInlet();
+
+		BasicInlet &				operator[]( const unsigned int index );
+		bool						isMultiInlet() const { return true; }
+		unsigned int				getSize() const { return m_Inlets.size(); }
+
+		void						addBasicInlet( BasicInlet &inlet );
+		void						removeBasicInlet( BasicInlet &inlet );
+
+	private:
+
+		// sync = done in inlet io class
+		BasicInlets					m_Inlets;
 
 	};
 }

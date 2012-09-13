@@ -13,8 +13,10 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\AudioFMODBundle.cpp" />
     <ClCompile Include="..\..\src\FMODContextManager.cpp" />
+    <ClCompile Include="..\..\src\FMODSoundrenderBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\FMODContextManager.h" />
+    <ClInclude Include="..\..\src\FMODSoundrenderBlock.h" />
   </ItemGroup>
 </Project>

@@ -29,10 +29,19 @@ void getBundleMetainfo( BundleMetainfo &info )
 		inout.addInlet< double >( "inout_inlet", 0. );
 		inout.addOutlet< double >( "inout_outlet" );
 
+		Options< int > inputOptions = Options< int >( 0, "zero" )( 1, "one" );
+
 		BlockMetainfo &in = info.exportBlock< In, WithoutContext >( "in" );
 		in.setDescription( "test" );
 		in.addInlet< string >( "in_msg", "undefined" );
-		in.addInlet< Number >( "in_inlet", Number( 0x0000 ) );
+		in.addInlet< int >( "in_inlet", 0 );
+		in.addInlet< int >( "in_inlet_options", 0, inputOptions );
+
+		BlockMetainfo &multiin = info.exportBlock< MultiIn, WithoutContext >( "multiin" );
+		multiin.setDescription( "test" );
+		multiin.addInlet< string >( "multiin_msg", "undefined" );
+		multiin.addMultiInlet< int >( "multiin_inlet", 0 );
+		multiin.addMultiInlet< int >( "multiin_inlet_options", 0, inputOptions );
 	}
 	catch ( Exception &e )
 	{

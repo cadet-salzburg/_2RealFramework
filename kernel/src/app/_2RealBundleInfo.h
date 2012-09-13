@@ -28,43 +28,23 @@ namespace _2Real
 {
 	namespace app
 	{
-		class BundleInfo
+		struct BundleInfo
 		{
-
-		public:
-
-			struct BundleData
-			{
-				std::string					name;
-				std::string					directory;
-				std::string					description;
-				std::string					author;
-				std::string					contact;
-				std::string					category;
-				Version						version;
-			};
-
 			typedef std::vector< BlockInfo >					BlockInfos;
 			typedef std::vector< BlockInfo >::iterator			BlockInfoIterator;
 			typedef std::vector< BlockInfo >::const_iterator	BlockInfoConstIterator;
 
-			BundleInfo();
-			BundleInfo( BundleData const& data, BlockInfos const& blocks );
+			BundleInfo() : exportedBlocks(), name( "undefined" ), directory( "undefined" ), description( "undefined" ),
+				author( "undefined" ), contact( "undefined" ), category( "undefined" ), version( 0, 0, 0 ) {}
 
-			BlockInfos const&			getExportedBlocks() const;
-			std::string const&			getInstallDirectory() const;
-			std::string const&			getDescription() const;
-			std::string const&			getAuthor() const;
-			std::string const&			getContact() const;
-			std::string const&			getName() const;
-			std::string const&			getCategory() const;
-			Version const&				getVersion() const;
-
-		private:
-
-			BundleData					m_BundleData;
-			BlockInfos					m_ExportedBlocks;
-
+			BlockInfos			exportedBlocks;
+			std::string			name;
+			std::string			directory;
+			std::string			description;
+			std::string			author;
+			std::string			contact;
+			std::string			category;
+			Version				version;
 		};
 	}
 }

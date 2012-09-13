@@ -301,7 +301,7 @@ namespace _2Real
 	{
 	}
 
-	bool RemoveOldest::insertData( TimestampedData const& data, InletBuffer::DataBuffer &buffer )
+	bool RemoveOldest::insertData( TimestampedData const& data, AbstractInletBuffer::DataBuffer &buffer )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
 
@@ -329,40 +329,66 @@ namespace _2Real
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	InletBuffer::InletBuffer( Any const& defaultData, AnyOptionSet const& options ) :
-		m_InsertionPolicy( new RemoveOldest( 1 ) ),
-		m_NotifyOnReceive( false ),								// initially, no notifications are allowed
+	AbstractInletBuffer::AbstractInletBuffer( AnyOptionSet const& options ) :
 		m_Engine( EngineImpl::instance() ),
-		m_Options( options ),
-		m_Counter( 0 )
+		m_Options( options )
 	{
-		m_DefaultData = TimestampedData( defaultData, 0, ++m_Counter );
-		m_TriggeringData = TimestampedData( defaultData, 0, m_DefaultData.getKey() );
 	}
 
-	InletBuffer::~InletBuffer()
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	BasicInletBuffer::BasicInletBuffer( Any const& initialValue, AnyOptionSet const& options ) :
+		AbstractInletBuffer( options ),
+		m_InsertionPolicy( new RemoveOldest( 1 ) ),
+		m_NotifyOnReceive( true ),
+		m_Counter( 0 ),
+		m_InitialValue( initialValue )
+	{
+	}
+
+	BasicInletBuffer::~BasicInletBuffer()
 	{
 		delete m_InsertionPolicy;
 	}
 
-	void InletBuffer::setDefaultValue( Any const& defaultValue )
+	void BasicInletBuffer::setInitialValue( Any const& initialValue )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
-		m_DefaultData = TimestampedData( defaultValue, m_Engine.getElapsedTime(), ++m_Counter );
+		Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
+		m_InitialValue = initialValue;
 	}
 
-	void InletBuffer::receiveData( Any const& data )
+	void BasicInletBuffer::setInitialValueToString( std::string const& dataAsString )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
+
+		Any data;
+		data.createNew( m_InitialValue );
+
+		stringstream s;
+		s << dataAsString;
+		data.readFrom( s );
+
+		m_InitialValue = data;
+	}
+
+	Any const& BasicInletBuffer::getInitialValue() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
+		return m_InitialValue;
+	}
+
+	void BasicInletBuffer::receiveData( Any const& data )
 	{
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
 
-	void InletBuffer::receiveData( std::string const& value )
+	void BasicInletBuffer::receiveData( std::string const& value )
 	{
 		Any data;
 
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
-			data.createNew( m_DefaultData.getData() );
+			Poco::ScopedLock< Poco::FastMutex > lock( m_InitialDataAccess );
+			data.createNew( m_InitialValue );
 		}
 
 		stringstream s;
@@ -372,32 +398,32 @@ namespace _2Real
 		receiveData( TimestampedData( data, m_Engine.getElapsedTime() ) );
 	}
 
-	void InletBuffer::receiveData( TimestampedData const& data )
+	void BasicInletBuffer::receiveData( TimestampedData const& data )
 	{
 		// perform conversion, if necessary //////////////////////////////////////////////////////
-		m_DefaultAccess.lock();
-		const Type tDst= data.getData().getType();
-		const TypeCategory cDst = m_DefaultData.getData().getTypeCategory();
-		m_DefaultAccess.unlock();
+		m_InitialDataAccess.lock();
+		const Type tDst= m_InitialValue.getType();
+		const TypeCategory cDst = m_InitialValue.getTypeCategory();
+		m_InitialDataAccess.unlock();
 
 		TimestampedData received;
-		const Type tSrc = data.getData().getType();
+		const Type tSrc = data.anyValue.getType();
 		if ( !( tSrc == tDst ) )
 		{
-			const TypeCategory cSrc = data.getData().getTypeCategory();
+			const TypeCategory cSrc = data.anyValue.getTypeCategory();
 			if ( cSrc == TypeCategory::ARITHMETHIC && cDst == TypeCategory::ARITHMETHIC )
 			{
-				Any converted = arithmethicConversion( data.getData(), tDst );
-				received = TimestampedData( converted, data.getTimestamp(), ++m_Counter );
+				Any converted = arithmethicConversion( data.anyValue, tDst );
+				received = TimestampedData( converted, data.timestamp, ++m_Counter );
 			}
 		}
-		else received = TimestampedData( data.getData(), data.getTimestamp(), ++m_Counter );
+		else received = TimestampedData( data.anyValue, data.timestamp, ++m_Counter );
 		/////////////////////////////////////////////////////////////////////////////////////////
 
 		// perform option check, if necessary ///////////////////////////////////////////////////
 		if ( !m_Options.isEmpty() )
 		{
-			Any const& value = received.getData();
+			Any const& value = received.anyValue;
 			if ( !m_Options.isOption( value ) )
 			{
 				// TODO: callback to app
@@ -418,7 +444,7 @@ namespace _2Real
 		m_NotificationAccess.unlock();
 	}
 
-	TimestampedData const& InletBuffer::getTriggeringData() const
+	TimestampedData const& BasicInletBuffer::getTriggeringData() const
 	{
 		return m_TriggeringData;
 	}
@@ -426,19 +452,18 @@ namespace _2Real
 	// called right before block setup, will clear all received data
 	// since m_Notify should be false, all data that is received afterwards will be buffered
 	// meaning the triggering data will stay on default
-	void InletBuffer::clearBufferedData()
+	void BasicInletBuffer::clearBufferedData()
 	{
 		m_BufferAccess.lock();
 		m_ReceivedDataItems.clear();
 		m_BufferAccess.unlock();
 
-		Poco::ScopedLock< Poco::FastMutex > lock( m_DefaultAccess );
-		m_TriggeringData = TimestampedData( m_DefaultData.getData(), m_DefaultData.getTimestamp(), m_DefaultData.getKey() );
+		m_TriggeringData = TimestampedData();
 	}
 
 	// called right after block update; re-enables triggering, then tries to fulfill the trigger cond with buffered data / last data / default data
 	// receiving data from other sources ( user input, outlets ) is blocked during this time
-	void InletBuffer::processBufferedData( const bool enableTriggering )
+	void BasicInletBuffer::processBufferedData( const bool enableTriggering )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
 		m_NotifyOnReceive = true;
@@ -463,42 +488,74 @@ namespace _2Real
 
 		m_TriggeringEvent.notify( m_TriggeringData );
 
-		Poco::ScopedLock< Poco::FastMutex > dLock( m_DefaultAccess );
-		m_TriggeringEvent.notify( m_DefaultData );
-
 		// should be false only in singlestep
 		if ( !enableTriggering ) m_NotifyOnReceive = false;
 	}
 
-	void InletBuffer::disableTriggering( TimestampedData const& data )
+	void BasicInletBuffer::disableTriggering( TimestampedData const& data )
 	{
 		m_NotifyOnReceive = false;
 		m_TriggeringData = data;
 	}
 
-	void InletBuffer::setBufferSize( const unsigned int size )
+	void BasicInletBuffer::setBufferSize( const unsigned int size )
 	{
 		m_InsertionPolicy->setMaxSize( size );
 	}
 
-	unsigned int InletBuffer::getBufferSize() const
+	unsigned int BasicInletBuffer::getBufferSize() const
 	{
 		return m_InsertionPolicy->getMaxSize();
 	}
 
-	void InletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
+	void BasicInletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{
 		m_TriggeringEvent.addListener( callback );
 	}
 
-	void InletBuffer::removeTrigger( AbstractCallback< TimestampedData const& > &callback )
+	void BasicInletBuffer::removeTrigger( AbstractCallback< TimestampedData const& > &callback )
 	{
 		m_TriggeringEvent.removeListener( callback );
 	}
 
-	AnyOptionSet const& InletBuffer::getOptionSet() const
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	MultiInletBuffer::MultiInletBuffer( Any const& initialData, AnyOptionSet const& options ) :
+		AbstractInletBuffer( options )
 	{
-		return m_Options;
+	}
+
+	MultiInletBuffer::~MultiInletBuffer()
+	{
+	}
+
+	BasicInletBuffer & MultiInletBuffer::operator[]( const unsigned int index )
+	{
+		try
+		{
+			return *m_Buffers.at( index );
+		}
+		catch ( std::out_of_range &e )
+		{
+			throw Exception( e.what() );
+		}
+	}
+
+	void MultiInletBuffer::addBasicBuffer( BasicInletBuffer &buffer )
+	{
+		m_Buffers.push_back( &buffer );
+	}
+
+	void MultiInletBuffer::removeBasicBuffer( BasicInletBuffer &buffer )
+	{
+		for ( BasicBufferIterator it = m_Buffers.begin(); it != m_Buffers.end(); ++it )
+		{
+			if ( &buffer == *it )
+			{
+				m_Buffers.erase( it );
+				break;
+			}
+		}
 	}
 
 }

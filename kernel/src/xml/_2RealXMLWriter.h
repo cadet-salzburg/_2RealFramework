@@ -36,16 +36,24 @@ namespace _2Real
 	{
 		struct BundleConfig
 		{
-			std::string					bundleName;
-			std::string					bundlePath;
+			std::string						bundleName;
+			std::string						bundlePath;
+		};
+
+		struct BasicInletConfig
+		{
+			std::string						inletId;
+			std::string						bufferSize;
+			std::string						updatePolicy;
+			std::string						initialValue;
+			std::string						bufferedValue;
 		};
 
 		struct InletConfig
 		{
-			std::string					inletId;
-			std::string					bufferSize;
-			std::string					updatePolicy;
-			std::string					value;
+			std::string						inletId;
+			bool							isMulti;
+			std::vector< BasicInletConfig >	basicInlets;
 		};
 
 		struct BlockConfig
@@ -62,6 +70,20 @@ namespace _2Real
 		{
 			std::string					blockInstanceId;
 			std::string					paramId;
+		};
+
+		struct InletHandleId
+		{
+			std::string					blockInstanceId;
+			std::string					inletId;
+
+			bool operator<( InletHandleId const& other ) const
+			{
+				if ( blockInstanceId < other.blockInstanceId ) return true;
+				if ( other.blockInstanceId < blockInstanceId ) return false;
+				if ( inletId < other.inletId ) return true;
+				return false;
+			}
 		};
 
 		class XMLConfig

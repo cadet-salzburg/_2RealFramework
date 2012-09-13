@@ -19,6 +19,7 @@
 #pragma once
 
 #include "engine/_2RealParameterMetadata.h"
+#include "engine/_2RealThreadingPolicy.h"
 
 #include <vector>
 #include <string>
@@ -30,9 +31,13 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< ParameterMetadata const* >					ParameterMetadatas;
-		typedef std::vector< ParameterMetadata const* >::iterator		ParameterMetadataIterator;
-		typedef std::vector< ParameterMetadata const* >::const_iterator	ParameterMetadataConstIterator;
+		typedef std::vector< InletMetadata const* >						InletMetadatas;
+		typedef std::vector< InletMetadata const* >::iterator			InletMetadataIterator;
+		typedef std::vector< InletMetadata const* >::const_iterator		InletMetadataConstIterator;
+
+		typedef std::vector< OutletMetadata const* >					OutletMetadatas;
+		typedef std::vector< OutletMetadata const* >::iterator			OutletMetadataIterator;
+		typedef std::vector< OutletMetadata const* >::const_iterator	OutletMetadataConstIterator;
 
 		BlockMetadata();
 		BlockMetadata( std::string const& name );
@@ -40,26 +45,29 @@ namespace _2Real
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addInlet( ParameterMetadata const& data );
-		void addOutlet( ParameterMetadata const& data );
+		void addInlet( InletMetadata const& data );
+		void addOutlet( OutletMetadata const& data );
+		void setThreadingPolicy( ThreadingPolicy const& policy );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 
-		ParameterMetadatas const& getInlets() const;
-		ParameterMetadatas const& getOutlets() const;
+		InletMetadatas const& getInlets() const;
+		OutletMetadatas const& getOutlets() const;
 
 		static void performBlockNameCheck( std::string const& name );
 
 	private:
 
+		ThreadingPolicy		m_ThreadingPolicy;
+
 		std::string			m_Name;
 		std::string			m_Description;
 		std::string			m_Category;
 
-		ParameterMetadatas	m_Inlets;
-		ParameterMetadatas	m_Outlets;
+		InletMetadatas		m_Inlets;
+		OutletMetadatas		m_Outlets;
 
 	};
 }

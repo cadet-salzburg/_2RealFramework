@@ -29,8 +29,8 @@ namespace _2Real
 
 	namespace app
 	{
-		class BlockInfo;
-		class BundleInfo;
+		struct BlockInfo;
+		struct BundleInfo;
 	}
 
 	class BundleMetadata

@@ -1,6 +1,5 @@
-#include "CameraDeviceManager.h"
-#include "CameraCaptureBlock.h"
-
+#include "FMODContextManager.h"
+#include "FMODSoundrenderBlock.h"
 #include "_2RealBundle.h"
 #include <sstream>
 #include <iostream>
@@ -8,7 +7,7 @@
 using namespace _2Real;
 
 using namespace _2Real::bundle;
-using			_2Real::Exception;
+using _2Real::Exception;
 using std::string;
 using std::cout;
 using std::endl;
@@ -17,25 +16,22 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName("CameraCaptureBundle");
-		info.setDescription( "Camera Capture" );
-		info.setAuthor( "Robert Praxmarer" );
+		info.setName("AudioFMODBundle");
+		info.setDescription( "FMOD Soundsystem handling audio in/output streams" );
+		info.setAuthor( "Robert Sommeregger" );
 		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
-		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
+		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock<FMODContextManager>();
+		BlockMetainfo metaInfo = info.exportBlock<FMODSoundrenderBlock, WithContext>( "FMODSoundrenderBlock" );
 
-		cameraCapture.addInlet<int>( "DeviceIndex", 0 );
-		cameraCapture.addInlet<int>( "Width", 320 );
-		cameraCapture.addInlet<int>( "Height", 240 );
-		cameraCapture.addInlet<int>( "Fps", 30 );
-		cameraCapture.addOutlet<Image>("ImageData");
-		cameraCapture.addOutlet<int>( "Width" );
-		cameraCapture.addOutlet<int>( "Height" );
+		metaInfo.addInlet<bool>( "Play", false );
+		metaInfo.addInlet<std::string>( "FilePath", "" );
+		metaInfo.addOutlet<bool>( "HasLoadedAudio" );
 
-		cameraCapture.setDescription( "Camera Capture" );
+
+		metaInfo.setDescription( "FMOD Sound System" );
 	}
 	catch ( Exception &e )
 	{

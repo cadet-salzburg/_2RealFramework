@@ -113,8 +113,10 @@ namespace _2Real
 	DECLARE_EXCEPTION( AlreadyExistsException, Exception )
 	DECLARE_EXCEPTION( TypeMismatchException, Exception )
 	DECLARE_EXCEPTION( UninitializedHandleException, Exception )
-	DECLARE_EXCEPTION( TimeOutException, Exception );
-	DECLARE_EXCEPTION( InvalidNameException, Exception );
-	DECLARE_EXCEPTION( XMLFormatException, Exception );
+	DECLARE_EXCEPTION( TimeOutException, Exception )
+	DECLARE_EXCEPTION( InvalidNameException, Exception )
+	DECLARE_EXCEPTION( XMLFormatException, Exception )
+	DECLARE_EXCEPTION( OutOfRangeException, Exception )
+	DECLARE_EXCEPTION( IllegalActionException, Exception )
 
 }

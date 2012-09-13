@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealAny.h"
 #include "datatypes/_2RealTypes.h"
+#include "engine/_2RealThreadingPolicy.h"
 
 #ifdef _UNIX
 	#include <typeinfo>
@@ -42,19 +43,17 @@ namespace _2Real
 			ContextBlockMetainfo( BlockMetadata &data );
 
 			void setDescription( std::string const& description );
+			void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			template< typename TData >
 			void addOutlet( std::string const& name )
 			{
-				TypeDescriptor *d = createTypeDescriptor< TData >();
-				TData data;
-				Any init( data );
-				addOutletInternal( name, *d, init );
+				addOutletInternal( name, createTypeDescriptor< TData >(), Any( TData() ) );
 			}
 
 		private:
 
-			void		addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
+			void addOutletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i );
 
 			BlockMetadata	&m_Impl;
 

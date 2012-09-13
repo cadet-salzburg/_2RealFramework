@@ -58,7 +58,7 @@ namespace _2Real
 		template< typename TType >
 		bool isDatatype() const
 		{
-			return m_TypeDescriptor->getTypeInfo() == typeid( TType );
+			return m_TypeDescriptor->m_TypeInfo == typeid( TType );
 		}
 
 		bool isEqualTo( Any const& any ) const;
@@ -74,7 +74,7 @@ namespace _2Real
 		TType & extract()
 		{
 			std::type_info const& info = typeid( TType );
-			if ( info == m_TypeDescriptor->getTypeInfo() )
+			if ( info == m_TypeDescriptor->m_TypeInfo )
 			{
 				AbstractAnyHolder *ptr = m_Content.get();
 				AnyHolder< TType > &holder = dynamic_cast< AnyHolder< TType > & >( *ptr );
@@ -84,7 +84,7 @@ namespace _2Real
 			{
 				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of data " << m_TypeDescriptor->getTypename() << " does not match the template parameter " << t->getTypename() << std::endl;
+				msg << "type of 0 data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}
@@ -93,7 +93,7 @@ namespace _2Real
 		TType const& extract() const
 		{
 			std::type_info const& info = typeid( TType );
-			if ( info == m_TypeDescriptor->getTypeInfo() )
+			if ( info == m_TypeDescriptor->m_TypeInfo )
 			{
 				AbstractAnyHolder *ptr = m_Content.get();
 				AnyHolder< TType > &holder = dynamic_cast< AnyHolder< TType > & >( *ptr );
@@ -103,7 +103,7 @@ namespace _2Real
 			{
 				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of data " << info.name() << " does not match the template parameter " << m_TypeDescriptor->getLongTypename() << std::endl;
+				msg << "type of 1 data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}

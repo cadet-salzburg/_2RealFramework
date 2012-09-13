@@ -62,7 +62,8 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options );
+		void							addBasicInlet( AbstractInletIO::InletInfo const& info );
+		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
 		void							addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name ) const;
@@ -80,8 +81,6 @@ namespace _2Real
 		void							updateInletBuffers( const bool enableTriggering );
 		void							clearInletBuffers();
 
-		unsigned int					getInletBufferSize( std::string const& inlet ) const;
-
 	private:
 
 		FunctionBlockStateManager		*m_StateManager;
@@ -92,9 +91,9 @@ namespace _2Real
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 
-		InletIO &						getInletIO( std::string const& name );
+		AbstractInletIO &				getInletIO( std::string const& name );
 		OutletIO &						getOutletIO( std::string const& name );
-		InletIO const&					getInletIO( std::string const& name ) const;
+		AbstractInletIO const&			getInletIO( std::string const& name ) const;
 		OutletIO const&					getOutletIO( std::string const& name ) const;
 
 		AppInletHandles					m_AppInletHandles;

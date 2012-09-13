@@ -30,7 +30,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return !newData.getData().isNull();
+			return !newData.anyValue.isNull();
 		}
 	};
 
@@ -38,7 +38,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return ( newData.getTimestamp() > oldData.getTimestamp() );
+			return ( newData.timestamp > oldData.timestamp );
 		}
 	};
 
@@ -47,7 +47,7 @@ namespace _2Real
 
 	public:
 
-		AbstractInletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr ) :
+		AbstractInletBasedTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr ) :
 			m_Condition( false ),
 			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
@@ -81,7 +81,7 @@ namespace _2Real
 	protected:
 
 		UpdateCondition			m_Condition;
-		InletBuffer				&m_Buffer;
+		BasicInletBuffer		&m_Buffer;
 		AbstractStateManager	&m_UpdateManager;
 		TimestampedData			m_LastData;
 
@@ -93,7 +93,7 @@ namespace _2Real
 
 	public:
 
-		InletBasedTrigger( InletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) :
+		InletBasedTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) :
 			AbstractInletBasedTrigger( buffer, mgr ),
 			m_IsOr( isOr )
 		{
@@ -109,6 +109,10 @@ namespace _2Real
 			AbstractCallback< TimestampedData const& > *cb =
 				new MemberCallback< InletBasedTrigger< TCond >, TimestampedData const& >( *this, &InletBasedTrigger< TCond >::tryTriggerUpdate );
 			m_Buffer.removeTrigger( *cb );
+
+			// this has to be done, otherwise removing a basic inlet from a multiinlet might lead to a deadlock
+			// if the block owning the inlet was shutdown already, nothing should happen
+			m_UpdateManager.tryTriggerInlet( *this );
 		}
 
 		void tryTriggerUpdate( TimestampedData const& data )

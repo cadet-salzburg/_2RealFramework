@@ -76,6 +76,7 @@
     <ClInclude Include="..\..\src\engine\_2RealInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealInletBasedTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealInletBuffer.h" />
+    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealLink.h" />
     <ClInclude Include="..\..\src\engine\_2RealLogger.h" />
     <ClInclude Include="..\..\src\engine\_2RealMetainfo.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="..\..\src\engine\_2RealParameterMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\engine\_2RealSystem.h" />
+    <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimer.h" />
@@ -348,6 +350,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
@@ -396,6 +399,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealThreadPool.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>

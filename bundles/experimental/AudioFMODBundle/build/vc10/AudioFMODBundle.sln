@@ -10,7 +10,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMODBundle", "AudioFMODBundle.vcxproj", "{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMODTest", "..\..\test\build\vc10\AudioFMODTest.vcxproj", "{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMODTest", "..\..\test\build\vc10\AudioFMODTest.vcxproj", "{DF3F7D8D-E670-41C0-8FDD-1507FC463816}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5} = {D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,12 +45,12 @@ Global
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Release|Win32.Build.0 = Release|Win32
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Release|x64.ActiveCfg = Release|x64
 		{D0696250-1C3A-48DB-BA51-04EFB1F1D9C5}.Release|x64.Build.0 = Release|x64
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|Win32.ActiveCfg = Debug|Win32
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|Win32.Build.0 = Debug|Win32
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Debug|x64.ActiveCfg = Debug|Win32
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|Win32.ActiveCfg = Release|Win32
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|Win32.Build.0 = Release|Win32
-		{94CCFD32-6DB5-4F15-BA4A-82CA8B12F827}.Release|x64.ActiveCfg = Release|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Debug|Win32.Build.0 = Debug|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Debug|x64.ActiveCfg = Debug|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Release|Win32.ActiveCfg = Release|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Release|Win32.Build.0 = Release|Win32
+		{DF3F7D8D-E670-41C0-8FDD-1507FC463816}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

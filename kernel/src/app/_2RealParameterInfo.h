@@ -18,30 +18,35 @@
 
 #pragma once
 
+#include "engine/_2RealInletPolicy.h"
+
 #include <string>
 
 namespace _2Real
 {
 	namespace app
 	{
-		class ParameterInfo
+		struct InletInfo
 		{
+			InletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ),
+				isMultiInlet( false ), hasOptionCheck( false ), hasRangeCheck( false ), defaultPolicy( InletPolicy::INVALID ) {}
 
-		public:
+			std::string		name;
+			std::string		typeName;
+			std::string		longTypename;
+			InletPolicy		defaultPolicy;
+			bool			isMultiInlet;
+			bool			hasOptionCheck;
+			bool			hasRangeCheck;
+		};
 
-			ParameterInfo();
-			ParameterInfo( std::string const& name, std::string const& typeName, std::string const& longTypename );
+		struct OutletInfo
+		{
+			OutletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ) {}
 
-			std::string const&	getName() const;
-			std::string const&	getLongTypename() const;
-			std::string const&	getTypename() const;
-
-		private:
-
-			std::string			m_Name;
-			std::string			m_Typename;
-			std::string			m_LongTypename;
-
+			std::string		name;
+			std::string		typeName;
+			std::string		longTypename;
 		};
 	}
 }

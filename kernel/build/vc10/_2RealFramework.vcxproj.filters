@@ -342,6 +342,12 @@
     <ClInclude Include="..\..\src\datatypes\_2RealAudioBuffer.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -520,6 +526,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
       <Filter>src\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

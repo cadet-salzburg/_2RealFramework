@@ -6,18 +6,16 @@
 */
 
 //--- Class declaration
-#include "fbsimpletcpip_client.h"
 #include "math.h"
 #include "winsock2.h"
 #include <mmsystem.h>
+#include "fbsimpletcpip_client.h"
 
 /************************************************
 *	Network client constructor.
 ************************************************/
 FBSimpleNetworkClient::FBSimpleNetworkClient()
 {
-	//get root program folder
-	GetCurrentDirectory(_MAX_PATH, rootProgramFolder);
 	for (int i=0;i<MAXHANDS;i++) {
 		m_shapeHands[i]=NULL;
 	}
@@ -575,7 +573,7 @@ bool FBSimpleNetworkClient::GetShapeHandData(FBTime &evaltime,SHAPEHAND_DATA *ha
 					hand_data->index[i][j]=mLShapehand[nActor_index]->index[i][j];
 					hand_data->middle[i][j]=mLShapehand[nActor_index]->middle[i][j];
 					hand_data->ring[i][j]=mLShapehand[nActor_index]->ring[i][j];
-					hand_data->small[i][j]=mLShapehand[nActor_index]->small[i][j];
+					hand_data->small_[i][j]=mLShapehand[nActor_index]->small_[i][j];
 				}
 			}
 			LeaveCriticalSection(m_shapehand_dataSect[nActor_index]);
@@ -610,7 +608,7 @@ bool FBSimpleNetworkClient::GetShapeHandData(FBTime &evaltime,SHAPEHAND_DATA *ha
 					hand_data->index[i][j]=mRShapehand[nActor_index]->index[i][j];
 					hand_data->middle[i][j]=mRShapehand[nActor_index]->middle[i][j];
 					hand_data->ring[i][j]=mRShapehand[nActor_index]->ring[i][j];
-					hand_data->small[i][j]=mRShapehand[nActor_index]->small[i][j];
+					hand_data->small_[i][j]=mRShapehand[nActor_index]->small_[i][j];
 				}
 			}
 			LeaveCriticalSection(m_shapehand_dataSect[nActor_index]);
@@ -772,7 +770,7 @@ void FBSimpleNetworkClient::CalculateLHandData(int &data_index, bool bShapeHand,
 		memcpy(mLShapehand[nActor_index]->index,&m_packetvals[nActor_index][data_index+16],12*sizeof(float));
 		memcpy(mLShapehand[nActor_index]->middle,&m_packetvals[nActor_index][data_index+28],12*sizeof(float));
 		memcpy(mLShapehand[nActor_index]->ring,&m_packetvals[nActor_index][data_index+40],12*sizeof(float));
-		memcpy(mLShapehand[nActor_index]->small,&m_packetvals[nActor_index][data_index+52],12*sizeof(float));
+		memcpy(mLShapehand[nActor_index]->small_,&m_packetvals[nActor_index][data_index+52],12*sizeof(float));
 		EnterCriticalSection(m_shapehand_dataSect[nActor_index]);
 		m_nLShapehand_available[nActor_index]++;
 		LeaveCriticalSection(m_shapehand_dataSect[nActor_index]);
@@ -852,7 +850,7 @@ void FBSimpleNetworkClient::CalculateRHandData(int &data_index, bool bShapeHand,
 		memcpy(mRShapehand[nActor_index]->index,&m_packetvals[nActor_index][data_index+16],12*sizeof(float));
 		memcpy(mRShapehand[nActor_index]->middle,&m_packetvals[nActor_index][data_index+28],12*sizeof(float));
 		memcpy(mRShapehand[nActor_index]->ring,&m_packetvals[nActor_index][data_index+40],12*sizeof(float));
-		memcpy(mRShapehand[nActor_index]->small,&m_packetvals[nActor_index][data_index+52],12*sizeof(float));
+		memcpy(mRShapehand[nActor_index]->small_,&m_packetvals[nActor_index][data_index+52],12*sizeof(float));
 		EnterCriticalSection(m_shapehand_dataSect[nActor_index]);
 		m_nRShapehand_available[nActor_index]++;
 		LeaveCriticalSection(m_shapehand_dataSect[nActor_index]);

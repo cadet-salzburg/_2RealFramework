@@ -36,7 +36,10 @@ void Out::update()
 {
 	try
 	{
-		++m_Out.getWriteableRef< long >();
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << ++m_Out.getWriteableRef< long >() << endl;
+		cout << msg.str();
+		//m_Out.getWriteableRef< long >();
 	}
 	catch ( Exception &e )
 	{
@@ -64,6 +67,9 @@ void InOut::update()
 {
 	try
 	{
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< double >() << endl;
+		cout << msg.str();
 		m_Out.getWriteableRef< double >() = m_In.getReadableRef< double >();
 	}
 	catch ( Exception &e)
@@ -78,6 +84,7 @@ void In::setup( BlockHandle &handle )
 	try
 	{
 		m_In = handle.getInletHandle( "in_inlet" );
+		m_InOptions = handle.getInletHandle( "in_inlet_options" );
 		m_Msg = handle.getInletHandle( "in_msg" );
 	}
 	catch ( Exception &e )
@@ -91,17 +98,47 @@ void In::update()
 {
 	try
 	{
-		if ( m_Msg.hasUpdated() )
+		ostringstream msg;
+		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< int >() << endl;
+		cout << msg.str();
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+void MultiIn::setup( BlockHandle &handle )
+{
+	try
+	{
+		m_In = handle.getInletHandle( "multiin_inlet" );
+		m_InOptions = handle.getInletHandle( "multiin_inlet_options" );
+		m_Msg = handle.getInletHandle( "multiin_msg" );
+	}
+	catch ( Exception &e )
+	{
+		cout << e.message() << endl;
+		e.rethrow();
+	}
+};
+
+void MultiIn::update()
+{
+	try
+	{
+		unsigned int sz = m_In.getSize();
+
+		int sum = 0;
+		for ( unsigned int i = 0; i<sz; ++i )
 		{
-			cout << m_Msg.getReadableRef< string >() << " msg updated" << endl;
-		}
-		else if ( m_Msg.hasChanged() )
-		{
-			cout << m_Msg.getReadableRef< string >() << " msg value changed" << endl;
+			sum += m_In.getReadableRef< int >();
 		}
 
 		ostringstream msg;
-		msg << m_Msg.getReadableRef< string >() << " " << m_In.getReadableRef< _2Real::Number >() << endl;
+		msg << m_Msg.getReadableRef< string >() << " nr of items is " << sz << endl;
+		msg << m_Msg.getReadableRef< string >() << " sum of items is " << sum << endl;
 		cout << msg.str();
 	}
 	catch ( Exception &e )

@@ -31,7 +31,7 @@ namespace _2Real
 		{
 		}
 
-		InletHandle::InletHandle( Inlet &inlet ) :
+		InletHandle::InletHandle( AbstractInlet &inlet ) :
 			m_Inlet( &inlet )
 		{
 			m_Inlet->registerHandle( *this );
@@ -75,26 +75,46 @@ namespace _2Real
 			return m_Inlet != nullptr;
 		}
 
-		Any InletHandle::getCurrentData() const
-		{
-			return m_Inlet->getData().getData();
-		}
-
 		void InletHandle::invalidate()
 		{
+			checkValidity( m_Inlet );
 			m_Inlet = nullptr;
+		}
+
+		InletHandle InletHandle::operator[]( const unsigned int index )
+		{
+			checkValidity( m_Inlet );
+			return ( *m_Inlet )[ index ].getHandle();
+		}
+
+		Any InletHandle::getCurrentData() const
+		{
+			checkValidity( m_Inlet );
+			return ( *m_Inlet )[ 0 ].getCurrentData().anyValue;
 		}
 
 		bool InletHandle::hasUpdated() const
 		{
 			checkValidity( m_Inlet );
-			return m_Inlet->hasUpdated();
+			return ( *m_Inlet )[ 0 ].hasUpdated();
 		}
 
 		bool InletHandle::hasChanged() const
 		{
 			checkValidity( m_Inlet );
-			return m_Inlet->hasChanged();
+			return ( *m_Inlet )[ 0 ].hasChanged();
+		}
+
+		bool InletHandle::isMultiInlet() const
+		{
+			checkValidity( m_Inlet );
+			return m_Inlet->isMultiInlet();
+		}
+
+		unsigned int InletHandle::getSize() const
+		{
+			checkValidity( m_Inlet );
+			return m_Inlet->getSize();
 		}
 	}
 }

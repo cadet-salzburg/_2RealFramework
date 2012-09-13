@@ -1,8 +1,10 @@
-#include "CameraDeviceManager.h"
-
+#include "FMODContextManager.h"
 #include <iostream>
-#include <string>
+#include <fmod_errors.h>
+#include <fmod_output.h>
+#include <sstream>
 
+using namespace _2Real::bundle;
 using _2Real::bundle::Block;
 using _2Real::bundle::BlockHandle;
 using _2Real::Exception;
@@ -10,200 +12,149 @@ using std::cout;
 using std::endl;
 using std::string;
 
+using namespace FMOD;
 
-CameraDeviceManager::CameraDeviceManager() : ContextBlock()
+FMODContextManager::FMODContextManager()
+	: ContextBlock(),
+	  m_System( nullptr ),
+	  m_FmodVersion( 0 ),
+	  m_NumDriver( -1 )
 {
-	// this is super weird, videoinputlib in multithreaded environment set coinitializeex for multithread mode and complain that another library already did
-	// neither _2Real nor Poco use com interfaces so not sure why this next line is needed but otherwise the whole thing won't work, sometimes I had coding ;-(
-	CoUninitialize();
-	m_VideoInputContoller = new videoInput();
+
 }
 
-CameraDeviceManager::~CameraDeviceManager()
+FMODContextManager::~FMODContextManager()
 {
-	delete m_VideoInputContoller;
+
 }
 
-void CameraDeviceManager::setup( BlockHandle &context )
+void FMODContextManager::setup( _2Real::bundle::BlockHandle &context )
 {
 	try
 	{
-		initDeviceList();
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-}
+		// Base fmod init in a special order recommended by fmod-forum http://www.fmod.org/forum/viewtopic.php?f=18&t=14604
+		checkFMODError( "Setup()", FMOD::System_Create( &m_System ) );
+		checkFMODError( "Setup()", m_System->getVersion( &m_FmodVersion ) );
 
-void CameraDeviceManager::update()
-{
-	try
-	{
-		rescanDeviceList();
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
-}
-
-void CameraDeviceManager::shutdown()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-	for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
-	{
-		if(m_DevicesInUse[i].m_bIsUsed)
-			m_VideoInputContoller->stopDevice( i );
-	}
-}
-
-void CameraDeviceManager::initDeviceList()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	m_iNumDevices = m_VideoInputContoller->listDevices();	// rescan devices silently (true==silent, no console output)
-
-	m_DevicesInUse.clear();
-	for(unsigned int i=0; i<m_iNumDevices; i++)
-	{
-		m_DevicesInUse.push_back(DeviceItem(m_VideoInputContoller->getDeviceName(i), false));
-	}
-}
-
-void CameraDeviceManager::rescanDeviceList()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	printf("rescanning\n");
-	int numDevices = m_VideoInputContoller->listDevices(true);	// rescan devices silently (true==silent, no console output)
-	if(numDevices != m_iNumDevices)
-	{
-		// stop all devices in the graph
-		for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
+		if( m_FmodVersion < FMOD_VERSION )
 		{
-			if(m_DevicesInUse[i].m_bIsUsed)
-				m_VideoInputContoller->stopDevice( i );
+			char msg[100];
+			sprintf( msg, "Setup(): Error, you are using an old version of FMOD %08x. This program requires %08x\n", m_FmodVersion, FMOD_VERSION );
+			throw FMODContextException( msg );
 		}
 
-		initDeviceList();		// reinit list
-		m_iNumDevices = numDevices;
+		// <3 Ömer
+		checkFMODError( "Setup()", m_System->getNumDrivers( &m_NumDriver ) );
+		// Skip EAX probe which can crash/corrupt some bad drivers.
+		checkFMODError( "Setup()", m_System->setHardwareChannels( 0 ) );  
+
+		if ( m_NumDriver == 0 )
+			checkFMODError( "Setup()", m_System->setOutput( FMOD_OUTPUTTYPE_NOSOUND ) );
+		else
+		{
+			checkFMODError( "Setup()", m_System->getDriverCaps( 0, &m_FmodCaps, 0, &m_Speakermode ) );
+			// Set the user selected speaker mode.
+			checkFMODError( "Setup()", m_System->setSpeakerMode( m_Speakermode ) );       
+
+			// The user has the 'Acceleration' slider set to off!  This is really bad for latency!.You might want to warn the user about this
+			if ( m_FmodCaps & FMOD_CAPS_HARDWARE_EMULATED ) 
+				checkFMODError( "Setup()", m_System->setDSPBufferSize( 1024, 10 ) );
+			
+			// Fetch name of device 
+			char name[256];
+			checkFMODError( "Setup()", m_System->getDriverInfo( 0, name, 256, 0 ) );
+			m_Name = std::string( name );
+
+			// Sigmatel sound devices crackle for some reason if the format is PCM 16bit. PCM floating point output seems to solve it.
+			if( strstr( name, "SigmaTel" ) )   
+				checkFMODError( "Setup()", m_System->setSoftwareFormat( 48000,
+																		FMOD_SOUND_FORMAT_PCMFLOAT,
+																		0,
+																		0,
+																		FMOD_DSP_RESAMPLER_LINEAR ) );
+		}
+
+		// Init System
+		// Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo...
+		if ( m_System->init( 100, FMOD_INIT_NORMAL, 0 ) == FMOD_ERR_OUTPUT_CREATEBUFFER )         
+		{
+			checkFMODError( "Setup()", m_System->setSpeakerMode( FMOD_SPEAKERMODE_STEREO ) );	
+			checkFMODError( "Setup()", m_System->init( 100, FMOD_INIT_NORMAL, 0 ) );/* ... and re-init. */
+		}
 	}
-}
-
-int	CameraDeviceManager::getFirstFreeDevices()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	for(unsigned int i=0; i<m_DevicesInUse.size(); i++)
+	catch ( FMODContextException& e )
 	{
-		if(!m_DevicesInUse[i].m_bIsUsed)
-			return i;
+		std::cout << "Error in FMODContextManager::setup: " << e.what() << std::endl;
 	}
-	return -1;	// no device is free
 }
 
-bool CameraDeviceManager::isDeviceRunning(const unsigned int deviceIdx)
+void FMODContextManager::update()
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	return m_VideoInputContoller->isDeviceSetup(deviceIdx);
+	m_System->update();
 }
 
-bool CameraDeviceManager::isNewFrameAvailable(const unsigned int deviceIdx)
+void FMODContextManager::shutdown()
 {
-	return m_VideoInputContoller->isFrameNew(deviceIdx);
-}
-
-bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)
-{
-	return  (deviceIdx < m_DevicesInUse.size());
-}
-
-bool CameraDeviceManager::isDeviceFree(const unsigned int deviceIdx)
-{
-	if(isDeviceAvailable(deviceIdx))
-		return  !m_DevicesInUse[deviceIdx].m_bIsUsed;
-	else
+	if( m_System )
 	{
-		return false;
+		m_System->close();
+		m_System->release();
 	}
+	m_System = nullptr;
 }
 
-bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h, int fps)
+bool FMODContextManager::bindDevice( const unsigned int deviceIdx, int w, int h, int fps/*=30*/ )
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return true;
+}
 
-	if(isDeviceFree(deviceIdx))
+void FMODContextManager::unbindDevice( const unsigned int deviceIdx )
+{
+
+}
+
+void FMODContextManager::checkFMODError( const char* method, const FMOD_RESULT& result ) const
+{
+	if( result != FMOD_OK )
 	{
-		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
-	}
-	else
-	{
-		return false;
+		std::stringstream string;
+		string << method << ": " << FMOD_ErrorString( result ) << std::endl;
+		throw FMODContextException( string.str().c_str() );
 	}
 }
 
-void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
+FMOD::Sound* FMODContextManager::CreateSound( std::string file, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo )
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	if(!isDeviceFree(deviceIdx))
-	{
-		m_VideoInputContoller->stopDevice( deviceIdx );
-		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
-	}
-}
-
-
-bool CameraDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, int h, int fps)
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	if(!isDeviceFree(deviceIdx))
-	{
-		m_VideoInputContoller->stopDevice( deviceIdx );
-		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
-	}
-	return false;
-}
-
-unsigned int CameraDeviceManager::getNumberOfConnectedDevices() 
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-	return m_iNumDevices;
-}
-
-
-_2Real::Image& CameraDeviceManager::getPixels( const unsigned int deviceIdx )
-{
-	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
 	try
 	{
-		unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
-		m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false,
-				m_VideoInputContoller->getWidth( deviceIdx ), 
-				m_VideoInputContoller->getHeight( deviceIdx ),
-				_2Real::ImageChannelOrder::RGB );
+		FMOD::Sound* sound = nullptr;
+		checkFMODError( "CreateSound()", m_System->createSound( file.c_str(), mode, exInfo, &sound ) );
+		return sound;
 	}
-	catch ( ... )
+	catch( FMODContextException& e )
 	{
-		std::cerr << "Couldn't get the pixels" << std::endl;
+		std::cout << "Error in FMODContextManager::CreateSound: " << e.what() << std::endl;
+		return nullptr;
 	}
-
-	return m_DevicesInUse[deviceIdx].m_Image;
 }
 
-int CameraDeviceManager::getVideoWidth( const unsigned int  deviceIdx )
+FMOD::Channel* FMODContextManager::PlaySound( FMOD::Sound* sound )
 {
-	return m_VideoInputContoller->getWidth( deviceIdx );
+	try
+	{
+		FMOD::Channel* channel;
+		checkFMODError( "PlaySound()", m_System->playSound( FMOD_CHANNEL_FREE, sound, false, &channel ) );
+		return channel;
+	}
+	catch (FMODContextException& e)
+	{
+		std::cout << "Error in FMODContextManager::PlaySound: " << e.what() << std::endl;
+		return nullptr;
+	}
 }
 
-int CameraDeviceManager::getVideoHeight( const unsigned int  deviceIdx )
+void FMODContextManager::CreateSoundExInfo( FMOD_CREATESOUNDEXINFO* outInfo, const uint32_t sizeDecodeBuffer,
+	const uint8_t numChannels, const int lengthPCM, const uint16_t defaultFrequenzy, const FMOD_SOUND_FORMAT format,
+	FMOD_SOUND_PCMREADCALLBACK callback )
 {
-	return m_VideoInputContoller->getHeight( deviceIdx );
 }

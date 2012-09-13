@@ -168,9 +168,9 @@ int main( int argc, char *argv[] )
 		InletHandle	isUnicastIn =natNetData.getInletHandle( "isUnicast" );;
 
 		// update-policy ??
-		serverIPIn.setUpdatePolicy( InletHandle::ALWAYS );
-		clientIPIn.setUpdatePolicy( InletHandle::ALWAYS );
-		isUnicastIn.setUpdatePolicy( InletHandle::ALWAYS );
+		serverIPIn.setUpdatePolicy( InletPolicy::ALWAYS );
+		clientIPIn.setUpdatePolicy( InletPolicy::ALWAYS );
+		isUnicastIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 		natNetData.getOutletHandle( "other_marker" ).registerToNewData( receiver, &Receiver::receiveOtherMarkers );
 		natNetData.getOutletHandle( "marker_set" ).registerToNewData( receiver, &Receiver::receiveMarkerSets );

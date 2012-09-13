@@ -20,10 +20,11 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealOptions.h"
+#include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
 {
-	class InletIO;
+	class AbstractInletIO;
 	class AnyOptionSet;
 
 	namespace app
@@ -36,15 +37,8 @@ namespace _2Real
 
 		public:
 
-			enum InletUpdatePolicy
-			{
-				ALWAYS,
-				OR_NEWER_DATA,
-				AND_NEWER_DATA,
-			};
-
 			InletHandle();
-			InletHandle( InletIO &inletIO );
+			InletHandle( AbstractInletIO &inletIO );
 			~InletHandle();
 			InletHandle( InletHandle const& other );
 			InletHandle& operator=( InletHandle const& other );
@@ -62,7 +56,17 @@ namespace _2Real
 			bool operator>( InletHandle const& other ) const;
 			bool operator>=( InletHandle const& other ) const;
 
-			void setUpdatePolicy( const InletUpdatePolicy policy );
+			struct InletState
+			{
+				std::string defaultValue;
+				std::string currentValue;
+				std::string updatePolicy;
+				std::string bufferSize;
+			};
+
+			InletState getCurrentState() const;
+
+			void setUpdatePolicy( InletPolicy const& policy );
 
 			bool link( OutletHandle &outletHandle );
 			bool linkWithConversion( OutletHandle &outletHandle );
@@ -82,6 +86,7 @@ namespace _2Real
 			}
 
 			void setValueToString( std::string const& value );
+			void setDefaultValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
@@ -96,6 +101,13 @@ namespace _2Real
 				return anyOptions.extract< TData >();
 			}
 
+			bool isMultiInlet() const;
+			unsigned int getSize() const;
+			InletHandle operator[]( const unsigned int index );
+
+			InletHandle add();
+			void remove( InletHandle &handle );
+
 		private:
 
 			friend class OutletHandle;
@@ -104,7 +116,7 @@ namespace _2Real
 
 			void				setValue( Any const& data );
 			void				setDefaultValue( Any const& data );
-			InletIO				*m_InletIO;
+			AbstractInletIO		*m_InletIO;
 
 		};
 	}
