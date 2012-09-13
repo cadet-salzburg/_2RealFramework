@@ -10,10 +10,10 @@ class NatNetBlock : public _2Real::bundle::Block
 public:
 
 	NatNetBlock();
-	~NatNetBlock();
-	void shutdown();
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
+	virtual ~NatNetBlock();
+	virtual void shutdown();
+	virtual void update();
+	virtual void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

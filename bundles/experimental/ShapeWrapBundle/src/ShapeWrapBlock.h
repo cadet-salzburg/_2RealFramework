@@ -1,6 +1,9 @@
 #pragma once
 
 #include "_2realblock.h"
+#include "engine//_2RealTimestampedData.h"
+
+class FBSimpleNetworkClient;
 
 /*
 class ShapeWrapBlock
@@ -11,7 +14,7 @@ class ShapeWrapBlock : public _2Real::bundle::Block
 {
 public:
 	ShapeWrapBlock( _2Real::bundle::ContextBlock & context );
-	~ShapeWrapBlock(void);
+	virtual ~ShapeWrapBlock(void);
 
 	// Virtual Methods
 	virtual void					update();
@@ -19,12 +22,15 @@ public:
 	virtual void					shutdown();
 
 private:
-	void							discardAllOutlets();
+	virtual void					discardAllOutlets();
 
 	// The Block Inlets 
 	_2Real::bundle::InletHandle	m_UDPPort;
+	_2Real::bundle::InletHandle	m_ActorId;
 
 	// The Block Outlets
 	_2Real::bundle::OutletHandle m_Skeleton;
 
+	FBSimpleNetworkClient* m_pNetworkClient;
+	_2Real::TimestampedData m_LastUpdate;
 };

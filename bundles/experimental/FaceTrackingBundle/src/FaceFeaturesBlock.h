@@ -12,10 +12,10 @@ class FaceFeaturesBlock : public _2Real::bundle::Block
 public:
 
 	FaceFeaturesBlock();
-	~FaceFeaturesBlock();
-	void shutdown();
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
+	virtual ~FaceFeaturesBlock();
+	virtual void shutdown();
+	virtual void update();
+	virtual void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

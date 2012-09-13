@@ -13,7 +13,7 @@ class SerialBlock : public _2Real::bundle::Block
 {
 public:
 	SerialBlock( _2Real::bundle::ContextBlock & context );
-	~SerialBlock(void);
+	virtual ~SerialBlock();
 
 	// Virtual Methods
 	virtual void					update();

@@ -8,10 +8,10 @@ class OcvGaussianBlurBlock : public _2Real::bundle::Block
 public:
 
 	OcvGaussianBlurBlock();
-	~OcvGaussianBlurBlock();
-	void shutdown();
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
+	virtual ~OcvGaussianBlurBlock();
+	virtual void shutdown();
+	virtual void update();
+	virtual void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

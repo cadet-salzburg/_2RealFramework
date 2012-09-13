@@ -53,6 +53,7 @@ namespace _2Real
 		void setId( int id )					{ m_Id = id; }
 		int getId() const						{ return m_Id; }
 		
+		// global means data the positional and rotational skeleton data is relative to a global coordinate system
 		void setGlobal( bool global)			{ m_Global = global; }
 		bool isGlobal() const					{ return m_Global; }
 		

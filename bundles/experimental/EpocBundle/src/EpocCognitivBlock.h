@@ -6,10 +6,10 @@ class EpocCognitivBlock : public _2Real::bundle::Block
 {
 public:
 	EpocCognitivBlock( _2Real::bundle::ContextBlock & context );
-	~EpocCognitivBlock();
-	void					shutdown();
-	void					update();
-	void					setup( _2Real::bundle::BlockHandle &context );
+	virtual ~EpocCognitivBlock();
+	virtual void					shutdown();
+	virtual void					update();
+	virtual void					setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

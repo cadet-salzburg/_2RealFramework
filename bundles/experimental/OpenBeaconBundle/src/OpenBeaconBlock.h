@@ -15,12 +15,14 @@ class OpenBeaconBlock : public _2Real::bundle::Block
 public:
 
 	OpenBeaconBlock();
-	~OpenBeaconBlock();
-	void shutdown();
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
+	virtual ~OpenBeaconBlock();
+	virtual void shutdown();
+	virtual void update();
+	virtual void setup( _2Real::bundle::BlockHandle &context );
 
 private:
+
+	virtual void discardAllOutlets();
 
 	_2Real::bundle::BlockHandle		m_Context;
 

@@ -10,10 +10,10 @@ class EpocDeviceManager : public _2Real::bundle::ContextBlock
 {
 public:
 	EpocDeviceManager();
-	~EpocDeviceManager();
-	void							setup( _2Real::bundle::BlockHandle &context );
-	void							update();
-	void							shutdown();
+	virtual ~EpocDeviceManager();
+	virtual void							setup( _2Real::bundle::BlockHandle &context );
+	virtual void							update();
+	virtual void							shutdown();
 
 	int getNumberOfConnectedDevices();
 	int getDeviceID();

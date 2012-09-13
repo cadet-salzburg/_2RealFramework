@@ -588,6 +588,11 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -612,7 +617,7 @@
       </LinkTimeCodeGeneration>
       <OutputFile>..\..\lib\_2RealFramework_64d.lib</OutputFile>
       <AdditionalDependencies>PocoFoundationd.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\$(_2REAL_DEPENDENCIES_DIR)\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -649,6 +654,11 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -676,7 +686,7 @@
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
       <OutputFile>..\..\lib\_2RealFramework_64.lib</OutputFile>
       <AdditionalDependencies>PocoFoundation.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\externalLibs\poco\lib64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\$(_2REAL_DEPENDENCIES_DIR)\poco\lib64</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

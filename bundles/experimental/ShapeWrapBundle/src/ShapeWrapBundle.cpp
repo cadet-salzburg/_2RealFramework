@@ -33,7 +33,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		ShapeWrap.setDescription( "ShapeWrap In and Out" );
 		ShapeWrap.setCategory( "Devices" );
 		
-		ShapeWrap.addInlet<int>("UDPport", 0);
+		ShapeWrap.addInlet<int>("UDPport", 0); // TODO set default port
+		ShapeWrap.addInlet<int>("ActorId", 0);
 		ShapeWrap.addOutlet<_2Real::Skeleton>("Skeleton");
 	}
 	catch ( Exception &e )

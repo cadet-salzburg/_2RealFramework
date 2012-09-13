@@ -6,10 +6,10 @@ class EpocAffectivBlock : public _2Real::bundle::Block
 {
 public:
 	EpocAffectivBlock( _2Real::bundle::ContextBlock & context );
-	~EpocAffectivBlock();
-	void					shutdown();
-	void					update();
-	void					setup( _2Real::bundle::BlockHandle &context );
+	virtual ~EpocAffectivBlock();
+	virtual void					shutdown();
+	virtual void					update();
+	virtual void					setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

@@ -8,10 +8,10 @@ class OcvSobelBlock : public _2Real::bundle::Block
 public:
 
 	OcvSobelBlock();
-	~OcvSobelBlock();
-	void shutdown();
-	void update();
-	void setup( _2Real::bundle::BlockHandle &context );
+	virtual ~OcvSobelBlock();
+	virtual void shutdown();
+	virtual void update();
+	virtual void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 

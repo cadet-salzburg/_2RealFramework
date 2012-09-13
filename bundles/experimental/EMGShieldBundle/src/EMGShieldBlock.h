@@ -11,7 +11,7 @@ class EMGShieldBlock : public _2Real::bundle::Block
 {
 public:
 	EMGShieldBlock( _2Real::bundle::ContextBlock & context );
-	~EMGShieldBlock(void);
+	virtual ~EMGShieldBlock(void);
 
 	// Virtual Methods
 	virtual void					update();
@@ -19,7 +19,7 @@ public:
 	virtual void					shutdown();
 
 private:
-	void							discardAllOutlets();
+	void					discardAllOutlets();
 
 	// The Block Inlets 
 	_2Real::bundle::OutletHandle m_Channel0Value;

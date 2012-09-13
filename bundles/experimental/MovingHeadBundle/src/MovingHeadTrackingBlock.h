@@ -11,7 +11,7 @@ class MovingHeadTrackingBlock : public _2Real::bundle::Block
 {
 public:
 	MovingHeadTrackingBlock( _2Real::bundle::ContextBlock & context );
-	~MovingHeadTrackingBlock(void);
+	virtual ~MovingHeadTrackingBlock(void);
 
 	// Virtual Methods
 	virtual void					update();

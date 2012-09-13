@@ -6,10 +6,10 @@ class EpocExpressivBlock : public _2Real::bundle::Block
 {
 public:
 	EpocExpressivBlock( _2Real::bundle::ContextBlock & context );
-	~EpocExpressivBlock();
-	void					shutdown();
-	void					update();
-	void					setup( _2Real::bundle::BlockHandle &context );
+	virtual ~EpocExpressivBlock();
+	virtual void					shutdown();
+	virtual void					update();
+	virtual void					setup( _2Real::bundle::BlockHandle &context );
 
 private:
 	_2Real::bundle::InletHandle							m_userIdIn;

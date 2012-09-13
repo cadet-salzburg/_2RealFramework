@@ -108,6 +108,11 @@ void OpenBeaconBlock::update()
 	}
 }
 
+void OpenBeaconBlock::discardAllOutlets()
+{
+	m_Tags.discard();
+}
+
 void OpenBeaconBlock::shutdown()
 {
 	delete m_pSocket;

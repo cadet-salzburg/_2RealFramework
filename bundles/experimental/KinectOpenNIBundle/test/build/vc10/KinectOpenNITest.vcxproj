@@ -42,8 +42,8 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(_2REAL_DIR)\bundles\test</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(_2REAL_DIR)\bundles\test</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(_2REAL_DIR)\bundles\bin</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(_2REAL_DIR)\bundles\bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -64,7 +64,7 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -87,7 +87,7 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\test
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -156,7 +156,7 @@ int main( int argc, char *argv[] )
 		Receiver receiver;
 
 		Engine &engine = Engine::instance();
-		engine.setBaseDirectory( "C:\\Users\\veronikapa\\Desktop\\Projekte\\CADET\\cadet_git\\trunk\\bundles\\bin" );
+	//	engine.setBaseDirectory( "C:\\Users\\veronikapa\\Desktop\\Projekte\\CADET\\cadet_git\\trunk\\bundles\\bin" );
 
 		BundleHandle nnBundle = engine.loadBundle( "NatNetBundle" );
 

@@ -116,9 +116,7 @@
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin
-copy  $(_2REAL_DIR)\bundles\bin\AudioFMODBundle_32d.pdb $(_2REAL_DIR)\bundles\test\AudioFMODBundle_32d.pdb
-copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>
@@ -135,14 +133,14 @@ copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\externalLibs\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>_2RealEngine_64d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -168,9 +166,7 @@ copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin
-copy  $(_2REAL_DIR)\bundles\bin\AudioFMODBundle_32d.pdb $(_2REAL_DIR)\bundles\test\AudioFMODBundle_32d.pdb
-copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\fmod\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -181,7 +177,7 @@ copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\..\..\..\externalLibs\poco\XML\include;..\..\..\..\..\..\..\externalLibs\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -190,7 +186,7 @@ copy  $(_2REAL_DIR)\bundles\bin\*.dll $(_2REAL_DIR)\bundles\test\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\..\..\..\..\externalLibs\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\$(_2REAL_DEPENDENCIES_DIR)\poco\lib64;..\..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>_2RealEngine_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -11,7 +11,7 @@ class MovingHeadBlock : public _2Real::bundle::Block
 {
 public:
 	MovingHeadBlock( _2Real::bundle::ContextBlock & context );
-	~MovingHeadBlock(void);
+	virtual ~MovingHeadBlock(void);
 
 	// Virtual Methods
 	virtual void					update();
