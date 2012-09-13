@@ -73,3 +73,4 @@ Ankh.NoLoad
 [Rr]elease*/
 /bundles/unittest/bin/EngineLog.txt
 /testing/build/EngineLog.txt
+/bundles/bin/*.tmp
