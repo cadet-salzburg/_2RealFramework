@@ -393,9 +393,7 @@ namespace _2Real
 		}
 		catch ( Exception &e )
 		{
-			m_StateAccess.lock();
 			handleStateChangeException( e );
-			m_StateAccess.unlock();
 		}
 	}
 
