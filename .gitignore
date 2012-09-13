@@ -72,3 +72,4 @@ Ankh.NoLoad
 [Dd]ebug*/
 [Rr]elease*/
 /bundles/unittest/bin/EngineLog.txt
+/testing/build/EngineLog.txt
