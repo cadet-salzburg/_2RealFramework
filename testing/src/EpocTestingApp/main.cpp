@@ -115,6 +115,16 @@ public:
 		m_Access.unlock();
 	}
 
+	void receiveLaugh( AppData const &data )
+	{
+		m_Access.lock();
+
+		double laugh = data.getData<double>();
+
+		std::cout << "received laugh: " << laugh << std::endl;
+
+		m_Access.unlock();
+	}
 
 	void receiveNeutral( AppData const &data )
 	{
@@ -396,18 +406,6 @@ public:
 		m_Access.unlock();
 	}
 
-	void receiveLaugh( AppData const &data )
-	{
-		m_Access.lock();
-
-		double clench = data.getData<double>();
-
-		std::cout << "received laugh: " << clench << std::endl;
-
-		m_Access.unlock();
-	}
-
-
 	void receiveX( AppData const &data )
 	{
 		m_Access.lock();
@@ -496,7 +494,6 @@ int main( int argc, char *argv[] )
 
 		expressivUserIdIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
-
 		expressivData.getOutletHandle( "blink" ).registerToNewData( receiver, &Receiver::receiveBlink );
 		expressivData.getOutletHandle( "right_wink" ).registerToNewData( receiver, &Receiver::receiveRightWink );
 		expressivData.getOutletHandle( "left_wink" ).registerToNewData( receiver, &Receiver::receiveLeftWink );
@@ -583,7 +580,7 @@ int main( int argc, char *argv[] )
 		gyroData.getOutletHandle( "gyro_x" ).unregisterFromNewData( receiver, &Receiver::receiveX );
 		gyroData.getOutletHandle( "gyro_y" ).unregisterFromNewData( receiver, &Receiver::receiveY );
 
-
+		
 		engine.safeConfig( "img_test.xml" );
 
 		ecBundle.unload();
