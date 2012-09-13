@@ -123,51 +123,51 @@ void FaceCastBlock::setup( BlockHandle &block )
 
 		m_Block = block;
 
-		m_imageIn = m_Block.getInletHandle( "image_in" );
-		m_depthIn = m_Block.getInletHandle( "depth_in" );
+		m_imageIn = m_Block.getInletHandle( "ImageIn" );
+		m_depthIn = m_Block.getInletHandle( "DepthIn" );
 
-		m_resXIn = m_Block.getInletHandle( "res_x" );
-		m_resYIn = m_Block.getInletHandle( "res_y" );
+		m_resXIn = m_Block.getInletHandle( "ResX" );
+		m_resYIn = m_Block.getInletHandle( "ResY" );
 
-		m_faceScaleXIn = m_Block.getInletHandle( "face_scale_x" );
-		m_faceScaleYIn = m_Block.getInletHandle( "face_scale_y" );
+		m_faceScaleXIn = m_Block.getInletHandle( "FaceScaleX" );
+		m_faceScaleYIn = m_Block.getInletHandle( "FaceScaleY" );
 
-		m_cutoffIn = m_Block.getInletHandle( "depth_cutoff" );
+		m_cutoffIn = m_Block.getInletHandle( "DepthCutoff" );
 
-		m_fovVerIn = m_Block.getInletHandle( "fov_ver" );
+		m_fovVerIn = m_Block.getInletHandle( "FovVer" );
 
-		m_haarDetectionDownscaleIn = m_Block.getInletHandle( "haar_detection_downscale" );
+		m_haarDetectionDownscaleIn = m_Block.getInletHandle( "HaarDetectionDownscale" );
 
-		m_haarMinNeighboursFaceIn = m_Block.getInletHandle( "haar_min_neighbours_face" );
+		m_haarMinNeighboursFaceIn = m_Block.getInletHandle( "HaarMinNeighboursFace" );
 
-		m_haarMinSizeFaceIn = m_Block.getInletHandle( "haar_minSizeFace" );
+		m_haarMinSizeFaceIn = m_Block.getInletHandle( "HaarMinSizeFace" );
 
-		m_haarDoCannyPruningIn = m_Block.getInletHandle( "haar_do_canny_pruning" );
-		m_haarScaleFactorIn = m_Block.getInletHandle( "haar_scalefactor" );
+		m_haarDoCannyPruningIn = m_Block.getInletHandle( "HaarDoCannyPruning" );
+		m_haarScaleFactorIn = m_Block.getInletHandle( "HaarScalefactor" );
 
-		m_equalizeHistogramIn = m_Block.getInletHandle( "equalize_histogram" );
+		m_equalizeHistogramIn = m_Block.getInletHandle( "EqualizeHistogram" );
 
-		m_cascFileFaceIn = m_Block.getInletHandle( "cascadefile_face" );
+		m_cascFileFaceIn = m_Block.getInletHandle( "CascadefileFace" );
 
-		m_extrapolationDampingIn = m_Block.getInletHandle( "extrapolation_damping" );
-		m_extrapolationCoherenceRiseIn = m_Block.getInletHandle( "extrapolation_coherence_rise" );
+		m_extrapolationDampingIn = m_Block.getInletHandle( "ExtrapolationDamping" );
+		m_extrapolationCoherenceRiseIn = m_Block.getInletHandle( "ExtrapolationCoherenceRise" );
 
-		m_affinityWeightPosIn = m_Block.getInletHandle( "affinity_weight_pos" );
-		m_affinityWeightSizeIn = m_Block.getInletHandle( "affinity_weight_size" );
-		m_coherenceWeightDirIn = m_Block.getInletHandle( "coherence_weight_dir" );
-		m_coherenceWeightVelIn = m_Block.getInletHandle( "coherence_weight_vel" );
-		m_coherenceWeightSizeIn = m_Block.getInletHandle( "coherence_weight_size" );
-		m_coherenceToleranceDirIn = m_Block.getInletHandle( "coherence_tolerance_dir" );
-		m_coherenceToleranceVelIn = m_Block.getInletHandle( "coherence_tolerance_vel" );
-		m_coherenceToleranceSizeIn = m_Block.getInletHandle( "coherence_tolerance_size" );
+		m_affinityWeightPosIn = m_Block.getInletHandle( "AffinityWeightPos" );
+		m_affinityWeightSizeIn = m_Block.getInletHandle( "AffinityWeightSize" );
+		m_coherenceWeightDirIn = m_Block.getInletHandle( "CoherenceWeightDir" );
+		m_coherenceWeightVelIn = m_Block.getInletHandle( "CoherenceWeightVel" );
+		m_coherenceWeightSizeIn = m_Block.getInletHandle( "CoherenceWeightSize" );
+		m_coherenceToleranceDirIn = m_Block.getInletHandle( "CoherenceToleranceDir" );
+		m_coherenceToleranceVelIn = m_Block.getInletHandle( "CoherenceToleranceVel" );
+		m_coherenceToleranceSizeIn = m_Block.getInletHandle( "CoherenceToleranceSize" );
 
-		m_affinityThresholdIn = m_Block.getInletHandle( "affinity_threshold" );
-		m_coherenceThresholdIn = m_Block.getInletHandle( "coherence_threshold" );
-		m_discardThresholdIn = m_Block.getInletHandle( "discard_threshold" );
+		m_affinityThresholdIn = m_Block.getInletHandle( "AffinityThreshold" );
+		m_coherenceThresholdIn = m_Block.getInletHandle( "CoherenceThreshold" );
+		m_discardThresholdIn = m_Block.getInletHandle( "DiscardThreshold" );
 
 		m_extrapolationMinSizeFace = Vec2( 0.0, 0.0 );
 
-		m_faceOut = m_Block.getOutletHandle( "face_out" );
+		m_faceOut = m_Block.getOutletHandle( "FaceOut" );
 
 		const Image &image = m_imageIn.getReadableRef< Image >();
 

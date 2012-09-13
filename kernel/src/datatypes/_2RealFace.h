@@ -20,6 +20,7 @@
 #pragma once
 
 #include "datatypes/_2RealSpace.h"
+#include "helpers/_2RealException.h"
 
 #include <vector>
 
@@ -188,7 +189,7 @@ namespace _2Real
 			if( m_vertices.size() != width * height ||
 				m_normals.size() != width * height ||
 				m_indices.size() != width * height )
-				throw std::runtime_error( "FaceCast: size of vectors not valid!" );
+				throw _2Real::Exception( "FaceCast: size of vectors not valid!" );
 		}
 
 		FaceCast( const FaceCast &rhs ) :
@@ -276,7 +277,7 @@ namespace _2Real
 		void add( const Vec3 &pos, const Vec3 &normal, int index )
 		{
 			if( m_cntr == m_vertices.size() )
-				throw std::runtime_error( "out of bounds in FaceCast::add" );
+				throw _2Real::Exception( "out of bounds in FaceCast::add" );
 
 			m_vertices[m_cntr] = pos;
 			m_normals[m_cntr] = normal;
