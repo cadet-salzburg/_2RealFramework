@@ -111,6 +111,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\NatNetSDK\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -159,6 +162,9 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <Command>
       </Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\NatNetSDK\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

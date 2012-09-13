@@ -25,7 +25,9 @@
 #include <deque>
 #include <vector>
 #ifndef _UNIX
+#ifdef _DEBUG
 	#include "vld.h"
+#endif
 #endif
 
 using namespace std;
@@ -35,7 +37,7 @@ using namespace _2Real::app;
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
-	testEngine.setBaseDirectory( "D:\\git\\trunk\\_2RealFramework\\testing\\bin" );
+	testEngine.setBaseDirectory( "." );
 
 	unsigned int count = 5;
 	std::vector< BlockHandle > blockInstances;
@@ -47,7 +49,8 @@ int main( int argc, char *argv[] )
 	try
 	{
 		BundleHandle testBundle = testEngine.loadBundle( "ThreadpoolTesting" );
-		testEngine.loadConfig( "threadpooltest.xml" );
+		
+		// testEngine.loadConfig( "threadpooltest.xml" ); // TODO File does not exist and program crashes here!!
 
 		//BundleInfo info = testBundle.getBundleInfo();
 		//BundleInfo::BlockInfos blocks = info.exportedBlocks;

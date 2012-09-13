@@ -106,7 +106,7 @@ int main( int argc, char *argv[] )
 		BlockHandle outHandle;
 		BlockHandle inHandle;
 
-		engine.setBaseDirectory( "D:\\cadet\\trunk\\_2RealFramework\\testing\\bin" );
+		engine.setBaseDirectory( "." );
 		BundleHandle bundleHandle = engine.loadBundle( "ContextTesting" );
 
 		BundleInfo const& bundleData = bundleHandle.getBundleInfo();

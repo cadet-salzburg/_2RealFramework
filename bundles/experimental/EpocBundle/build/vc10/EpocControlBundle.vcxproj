@@ -115,6 +115,9 @@
       <AdditionalDependencies>edk.lib;edk_utils.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\emotiv sdk\bin\*.*" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

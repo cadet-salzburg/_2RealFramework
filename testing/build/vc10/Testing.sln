@@ -2,12 +2,21 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageTestingApp", "ImageTestingApp\ImageTestingApp.vcxproj", "{AA9EA0F4-CC54-41A7-9185-26B071B23154}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EE72375C-A239-4FA3-86B8-547AB3A3F92A} = {EE72375C-A239-4FA3-86B8-547AB3A3F92A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadpoolTestingBundle", "ThreadpoolTestingBundle\ThreadpoolTestingBundle.vcxproj", "{926B4D59-E1F0-4AB9-8CBA-234D1F792EF0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadpoolTestingApp", "ThreadpoolTestingApp\ThreadpoolTestingApp.vcxproj", "{9F9FC436-A249-4E66-AB8B-3B16A69952E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{926B4D59-E1F0-4AB9-8CBA-234D1F792EF0} = {926B4D59-E1F0-4AB9-8CBA-234D1F792EF0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTestingApp", "ContextTestingApp\ContextTestingApp.vcxproj", "{AA0A6666-DD77-4A4F-B11D-4EF8631EFAE3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6197A090-9357-40D3-8C5B-289F5D8DE9B0} = {6197A090-9357-40D3-8C5B-289F5D8DE9B0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTestingBundle", "ContextTestingBundle\ContextTestingBundle.vcxproj", "{6197A090-9357-40D3-8C5B-289F5D8DE9B0}"
 EndProject

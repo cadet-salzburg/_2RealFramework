@@ -75,6 +75,10 @@
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
     </Lib>
+    <PreLinkEvent>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\vld\bin\win32\*.* ..\..\..\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\..\..\bin</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -104,6 +108,10 @@
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
+    <PreLinkEvent>
+      <Command>copy $(_2REAL_DEPENDENCIES_DIR)\vld\bin\win32\*.* ..\..\..\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.* ..\..\..\bin</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

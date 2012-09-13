@@ -801,7 +801,7 @@ void initSDLGL()
 
 void setupFeatures()
 {
-	engine.setBaseDirectory( "E:\\work\\source\\_2RealFramework\\bundles\\bin" );
+	engine.setBaseDirectory( "../../bundles/bin" );
 
 	camBundle = engine.loadBundle( "CameraCaptureBundle" );
 
@@ -854,7 +854,7 @@ void setupFeatures()
 
 void setupCast()
 {
-	engine.setBaseDirectory( "E:\\work\\source\\_2RealFramework\\bundles\\bin" );
+	engine.setBaseDirectory( "../../bundles/bin" );
 
 	oniBundle = engine.loadBundle( "KinectOpenNIBundle" );
 

@@ -186,7 +186,7 @@ int main( int argc, char *argv[] )
 		SDL_GL_SetSwapInterval( 1 );
 
 		Engine &testEngine = Engine::instance();
-		testEngine.setBaseDirectory( "D:\\git\\trunk\\_2RealFramework\\testing\\bin" );
+		testEngine.setBaseDirectory( "." );
 
 		BundleHandle testBundle = testEngine.loadBundle( "ImageTesting" );
 

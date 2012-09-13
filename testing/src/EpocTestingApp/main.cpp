@@ -442,7 +442,7 @@ int main( int argc, char *argv[] )
 		Receiver receiver;
 
 		Engine &engine = Engine::instance();
-		engine.setBaseDirectory( "C:\\Users\\veronikapa\\Desktop\\Projekte\\CADET\\cadet_git\\trunk\\bundles\\bin" );
+		engine.setBaseDirectory( "../../bundles/bin" );
 
 		BundleHandle ecBundle = engine.loadBundle( "EpocControlBundle" );
 

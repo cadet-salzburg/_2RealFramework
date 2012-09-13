@@ -125,6 +125,9 @@
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\OpenNI\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -167,6 +170,9 @@
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\OpenNI\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
