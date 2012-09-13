@@ -26,7 +26,6 @@
 
 namespace _2Real
 {
-	class ParameterMetadata;
 	class Version;
 	class Typetable;
 	class BlockMetadata;

@@ -2,8 +2,6 @@
 
 #include "_2realblock.h"
 
-#include "ShapeWrapDeviceManager.h"
-
 /*
 class ShapeWrapBlock
 
@@ -24,13 +22,9 @@ private:
 	void							discardAllOutlets();
 
 	// The Block Inlets 
-	_2Real::bundle::InletHandle	m_ShapeWrapPortInlet;
-	_2Real::bundle::InletHandle m_iBaudRateInlet;
-	_2Real::bundle::InletHandle m_ReadIntel;
+	_2Real::bundle::InletHandle	m_UDPPort;
 
 	// The Block Outlets
-	_2Real::bundle::OutletHandle m_WriteOutlet;
-	
-	// The ShapeWrapDevice Manager
-	ShapeWrapDeviceManager*		m_ShapeWrapDeviceManager;
+	_2Real::bundle::OutletHandle m_Skeleton;
+
 };

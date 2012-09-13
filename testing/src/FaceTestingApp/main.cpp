@@ -830,7 +830,7 @@ void setupFeatures()
 
 	faceFeatures.getInletHandle( "haar_detection_downscale" ).setValue( 0.5f );
 
-	ffInImg.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+	ffInImg.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
 	if ( !ffInImg.link( camOutImg ) )
 	{
@@ -877,7 +877,7 @@ void setupCast()
 	InletHandle fcInImg = faceCast.getInletHandle( "image_in" );
 	InletHandle fcInDepth = faceCast.getInletHandle( "depth_in" );
 
-	fcInImg.setUpdatePolicy( InletHandle::OR_NEWER_DATA );
+	fcInImg.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
 	if( !fcInImg.link( rgbOutImg ) )
 	{

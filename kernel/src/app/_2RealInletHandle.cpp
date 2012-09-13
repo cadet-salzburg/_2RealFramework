@@ -38,7 +38,7 @@ namespace _2Real
 		{
 		}
 
-		InletHandle::InletHandle( InletIO &inletIO ) :
+		InletHandle::InletHandle( AbstractInletIO &inletIO ) :
 			m_InletIO( &inletIO )
 		{
 			m_InletIO->registerHandle( *this );
@@ -82,6 +82,11 @@ namespace _2Real
 			return m_InletIO != nullptr;
 		}
 
+		void InletHandle::invalidate()
+		{
+			m_InletIO = nullptr;
+		}
+
 		bool InletHandle::operator==( InletHandle const& other ) const
 		{
 			return m_InletIO == other.m_InletIO;
@@ -115,95 +120,133 @@ namespace _2Real
 		AppData InletHandle::getCurrentInput() const
 		{
 			checkValidity( m_InletIO );
-			TimestampedData data = m_InletIO->m_Inlet->getData();
-			return AppData( data, m_InletIO->m_Inlet->getTypename(), m_InletIO->m_Inlet->getLongTypename(), m_InletIO->m_Inlet->getName() );
+			TimestampedData data = ( *m_InletIO )[ 0 ].getData();
+			return AppData( data, m_InletIO->info().type.m_TypeName, m_InletIO->info().type.m_LongTypename, ( *m_InletIO )[ 0 ].getName() );
 		}
 
 		bool InletHandle::link( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			return EngineImpl::instance().createLink( *m_InletIO, *( outlet.m_OutletIO ) );
+			return EngineImpl::instance().createLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
 		}
 
 		bool InletHandle::linkWithConversion( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			return EngineImpl::instance().createLinkWithConversion( *m_InletIO, *( outlet.m_OutletIO ) );
+			return EngineImpl::instance().createLinkWithConversion( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			EngineImpl::instance().destroyLink( *m_InletIO, *( outlet.m_OutletIO ) );
+			EngineImpl::instance().destroyLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
 		}
 
-		void InletHandle::setUpdatePolicy( const InletHandle::InletUpdatePolicy p )
+		void InletHandle::setUpdatePolicy( InletPolicy const& p )
 		{
 			checkValidity( m_InletIO );
-			if ( p == InletHandle::OR_NEWER_DATA )
-			{
-				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, true );
-			}
-			else if ( p == InletHandle::AND_NEWER_DATA )
-			{
-				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataNew( *m_InletIO, false );
-			}
-			else if ( p == InletHandle::ALWAYS )
-			{
-				m_InletIO->m_Inlet->getOwningUberBlock().updateWhenInletDataValid( *m_InletIO );
-			}
+			( *m_InletIO )[ 0 ].setUpdatePolicy( p );
 		}
 
 		void InletHandle::setValue( Any const& data )
 		{
 			checkValidity( m_InletIO );
-			m_InletIO->m_Buffer->receiveData( data );
+			( *m_InletIO )[ 0 ].receiveData( data );
 		}
 
 		void InletHandle::setDefaultValue( Any const& data )
 		{
 			checkValidity( m_InletIO );
-			m_InletIO->m_Buffer->setDefaultValue( data );
+			( *m_InletIO )[ 0 ].setInitialValue( data );
+		}
+
+		void InletHandle::setDefaultValueToString( std::string const& data )
+		{
+			checkValidity( m_InletIO );
+			( *m_InletIO )[ 0 ].setInitialValueToString( data );
 		}
 
 		void InletHandle::setValueToString( std::string const& data )
 		{
 			checkValidity( m_InletIO );
-			m_InletIO->m_Buffer->receiveData( data );
+			( *m_InletIO )[ 0 ].receiveData( data );
 		}
 
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
 			checkValidity( m_InletIO );
-			m_InletIO->m_Buffer->setBufferSize( size );
+			( *m_InletIO )[ 0 ].setBufferSize( size );
 		}
 
 		std::string const& InletHandle::getName() const
 		{
 			checkValidity( m_InletIO );
-			return m_InletIO->m_Inlet->getName();
+			return m_InletIO->info().baseName;
 		}
 
 		const std::string InletHandle::getLongTypename() const
 		{
 			checkValidity( m_InletIO );
-			return m_InletIO->m_Inlet->getLongTypename();
+			return m_InletIO->info().type.m_LongTypename;
 		}
 
 		std::string const& InletHandle::getTypename() const
 		{
 			checkValidity( m_InletIO );
-			return m_InletIO->m_Inlet->getTypename();
+			return m_InletIO->info().type.m_TypeName;
 		}
 
 		AnyOptionSet const& InletHandle::getOptionSet() const
 		{
-			return m_InletIO->m_Buffer->getOptionSet();
+			return m_InletIO->info().options;
 		}
 
-		void InletHandle::invalidate()
+		bool InletHandle::isMultiInlet() const
 		{
-			m_InletIO = nullptr;
+			checkValidity( m_InletIO );
+			return m_InletIO->isMultiInlet();
+		}
+
+		unsigned int InletHandle::getSize() const
+		{
+			checkValidity( m_InletIO );
+			return m_InletIO->getSize();
+		}
+
+		InletHandle InletHandle::operator[]( const unsigned int index )
+		{
+			checkValidity( m_InletIO );
+			return ( *m_InletIO )[ index ].getHandle();
+		}
+
+		InletHandle InletHandle::add()
+		{
+			checkValidity( m_InletIO );
+			return m_InletIO->addBasicInlet()->getHandle();
+		}
+
+		void InletHandle::remove( InletHandle &handle )
+		{
+			checkValidity( m_InletIO );
+
+			if ( handle.isValid() )
+			{
+				// TODO: check if this handle actually belongs to the inlet
+				m_InletIO->removeBasicInlet( handle.m_InletIO );
+			}
+		}
+
+		InletHandle::InletState InletHandle::getCurrentState() const
+		{
+			checkValidity( m_InletIO );
+
+			InletState res;
+			res.bufferSize = ( *m_InletIO )[ 0 ].getBufferSizeAsString();
+			res.currentValue = ( *m_InletIO )[ 0 ].getCurrentValueAsString();
+			res.defaultValue = ( *m_InletIO )[ 0 ].getInitialValueAsString();
+			res.updatePolicy = ( *m_InletIO )[ 0 ].getUpdatePolicyAsString();
+
+			return res;
 		}
 	}
 }

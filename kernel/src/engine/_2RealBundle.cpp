@@ -34,12 +34,11 @@ namespace _2Real
 
 	Bundle::Bundle( app::BundleInfo const& info, BundleManager &bundleManager ) :
 		NonCopyable< Bundle >(),
-		Identifiable< Bundle >( Ids(), info.getName() ),
+		Identifiable< Bundle >( Ids(), info.name ),
 		Handleable< Bundle, app::BundleHandle >( *this ),
 		m_BundleManager( bundleManager ),
 		m_ContextBlock( nullptr ),
 		m_BundleInfo( info )
-
 	{
 	}
 
@@ -82,7 +81,7 @@ namespace _2Real
 
 	string const& Bundle::getAbsPath() const
 	{
-		return m_BundleInfo.getInstallDirectory();
+		return m_BundleInfo.directory;
 	}
 
 	app::BundleInfo const& Bundle::getBundleInfo() const
@@ -92,10 +91,9 @@ namespace _2Real
 
 	bool Bundle::canCreate( std::string const& blockName ) const
 	{
-		app::BundleInfo::BlockInfos const& blocks = m_BundleInfo.getExportedBlocks();
-		for ( app::BundleInfo::BlockInfoConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+		for ( app::BundleInfo::BlockInfoConstIterator it = m_BundleInfo.exportedBlocks.begin(); it != m_BundleInfo.exportedBlocks.end(); ++it )
 		{
-			if ( toLower( it->getName() ) == toLower( blockName ) ) return true;
+			if ( toLower( it->name ) == toLower( blockName ) ) return true;
 		}
 
 		return false;

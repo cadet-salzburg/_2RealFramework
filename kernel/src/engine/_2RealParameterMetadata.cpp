@@ -23,61 +23,23 @@ using std::string;
 
 namespace _2Real
 {
-
-	ParameterMetadata::ParameterMetadata( string const& name, TypeDescriptor &descriptor, Any const& initialValue ) :
-		m_Name( name ),
-		m_TypeDescriptor( &descriptor ),
-		m_InitialValue( initialValue )
+	InletMetadata::InletMetadata( string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p, const bool m ) :
+		name( n ), type( t ), initValue( i ), options( o ), defaultPolicy( p ), isMulti( m )
 	{
 	}
 
-	ParameterMetadata::~ParameterMetadata()
+	InletMetadata::~InletMetadata()
 	{
-		delete m_TypeDescriptor;
+		delete type;
 	}
 
-	void ParameterMetadata::enableOptions( AnyOptionSet const& options )
-	{
-		m_Options = options;
-	}
-
-	bool ParameterMetadata::hasOptions() const
-	{
-		return !m_Options.isEmpty();
-	}
-
-	AnyOptionSet const& ParameterMetadata::getOptions() const
-	{
-		return m_Options;
-	}
-
-	string const& ParameterMetadata::getName() const
-	{
-		return m_Name;
-	}
-
-	TypeDescriptor const& ParameterMetadata::getTypeDescriptor() const
-	{
-		return *m_TypeDescriptor;
-	}
-
-	string const& ParameterMetadata::getTypename() const
-	{
-		return m_TypeDescriptor->getTypename();
-	}
-
-	const string ParameterMetadata::getLongTypename() const
-	{
-		return m_TypeDescriptor->getLongTypename();
-	}
-
-	Any const& ParameterMetadata::getInitialValue() const
-	{
-		return m_InitialValue;
-	}
-
-	void ParameterMetadata::performParameterNameCheck( std::string const& name )
+	OutletMetadata::OutletMetadata( string const& n, TypeDescriptor const *const t, Any const& i ) :
+		name( n ), type( t ), initValue( i )
 	{
 	}
 
+	OutletMetadata::~OutletMetadata()
+	{
+		delete type;
+	}
 }

@@ -31,7 +31,7 @@ namespace _2Real
 	namespace app
 	{
 		class OutletHandle;
-		class BlockInfo;
+		struct BlockInfo;
 
 		class ContextBlockHandle
 		{

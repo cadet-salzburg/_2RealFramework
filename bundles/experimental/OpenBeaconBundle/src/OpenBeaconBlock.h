@@ -2,6 +2,14 @@
 
 #include "_2RealBlock.h"
 
+namespace Poco
+{
+	namespace Net
+	{
+		class DatagramSocket;
+	}
+}
+
 class OpenBeaconBlock : public _2Real::bundle::Block
 {
 public:
@@ -14,8 +22,10 @@ public:
 
 private:
 
-	_2Real::bundle::BlockHandle		m_Block;
+	_2Real::bundle::BlockHandle		m_Context;
 
-	_2Real::bundle::InletHandle		m_dummyIn;
-	_2Real::bundle::OutletHandle	m_dummyOut;
+	_2Real::bundle::InletHandle		m_UDPPort;
+	_2Real::bundle::OutletHandle	m_Tags;
+
+	Poco::Net::DatagramSocket*		m_pSocket;
 };

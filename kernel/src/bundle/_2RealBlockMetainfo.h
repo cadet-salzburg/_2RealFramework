@@ -20,6 +20,8 @@
 
 #include "helpers/_2RealAny.h"
 #include "datatypes/_2RealTypes.h"
+#include "engine/_2RealInletPolicy.h"
+#include "engine/_2RealThreadingPolicy.h"
 #include "helpers/_2RealOptions.h"
 
 #ifdef _UNIX
@@ -44,41 +46,52 @@ namespace _2Real
 
 			void setDescription( std::string const& description );
 			void setCategory( std::string const& category );
+			void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			template< typename TData >
-			void addInlet( std::string const& name, TData initialValue )
+			void addInlet( std::string const& name, TData initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
 			{
-				TypeDescriptor *d = createTypeDescriptor< TData >();
-				addInletInternal( name, *d, Any( initialValue ) );
+				addInletInternal( name, createTypeDescriptor< TData >(), Any( initialValue ), AnyOptionSet(), defaultPolicy );
 			}
 
 			template< typename TData >
-			void addInlet( std::string const& name, TData initialValue, Options< TData > const& options );
+			void addInlet( std::string const& name, TData initialValue, Options< TData > const& options, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+
+			template< typename TData >
+			void addMultiInlet( std::string const& name, TData initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
+			{
+				addMultiInletInternal( name, createTypeDescriptor< TData >(), Any( initialValue ), AnyOptionSet(), defaultPolicy );
+			}
+
+			template< typename TData >
+			void addMultiInlet( std::string const& name, TData initialValue, Options< TData > const& options, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
 
 			template< typename TData >
 			void addOutlet( std::string const& name )
 			{
-				TypeDescriptor *d = createTypeDescriptor< TData >();
-				TData data;
-				Any init( data );
-				addOutletInternal( name, *d, init );
+				addOutletInternal( name, createTypeDescriptor< TData >(), Any( TData() ) );
 			}
 
 		private:
 
-			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
-			void		addInletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init, AnyOptionSet const& options );
-			void		addOutletInternal( std::string const& name, TypeDescriptor &descriptor, Any const& init );
+			void addInletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p );
+			void addMultiInletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p );
+			void addOutletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i );
 
 			BlockMetadata	&m_Impl;
 
 		};
 
 		template< >
-		inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, Options< int > const& options )
+		inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, Options< int > const& options, InletPolicy const& defaultPolicy )
 		{
-			TypeDescriptor *d = createTypeDescriptor< int >();
-			addInletInternal( name, *d, Any( initialValue ), AnyOptionSet( options ) );
+			addInletInternal( name, createTypeDescriptor< int >(), Any( initialValue ), AnyOptionSet( options ), defaultPolicy );
+		}
+
+		template< >
+		inline void BlockMetainfo::addMultiInlet< int >( std::string const& name, int initialValue, Options< int > const& options, InletPolicy const& defaultPolicy )
+		{
+			addMultiInletInternal( name, createTypeDescriptor< int >(), Any( initialValue ), AnyOptionSet( options ), defaultPolicy );
 		}
 	}
 }

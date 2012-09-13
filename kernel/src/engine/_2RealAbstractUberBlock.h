@@ -24,8 +24,26 @@
 namespace _2Real
 {
 
-	class InletIO;
+	class BasicInletIO;
 	class Exception;
+
+	class AbstractIOManager;
+	class AbstractStateManager;
+	class AbstractUpdatePolicy;
+	class EngineImpl;
+	class AbstractUberBlock;
+
+	struct Refs
+	{
+		Refs( EngineImpl &e, AbstractUberBlock &b, AbstractIOManager &i, AbstractStateManager &s, AbstractUpdatePolicy &p ) :
+			engine( e ), block( b ), ios( i ), states( s ), policies( p ) {}
+
+		EngineImpl				&engine;
+		AbstractUberBlock		&block;
+		AbstractIOManager		&ios;
+		AbstractStateManager	&states;
+		AbstractUpdatePolicy	&policies;
+	};
 
 	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
 	{
@@ -42,9 +60,6 @@ namespace _2Real
 
 		virtual void	prepareForShutDown() = 0;
 		virtual bool	shutDown( const long timeout ) = 0;
-
-		virtual void	updateWhenInletDataNew( InletIO &inletIO, const bool isSingleWeight ) = 0;
-		virtual void	updateWhenInletDataValid( InletIO &inletIO ) = 0;
 		virtual void	updateWithFixedRate( const double updatesPerSecond ) = 0;
 
 		virtual void	handleException( Exception &e ) = 0;

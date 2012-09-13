@@ -22,35 +22,35 @@ using std::string;
 
 namespace _2Real
 {
-	namespace app
-	{
-		ParameterInfo::ParameterInfo() :
-			m_Name( "undefined" ),
-			m_Typename( "undefined" ),
-			m_LongTypename( "undefined" )
-		{
-		}
+	//namespace app
+	//{
+		//ParameterInfo::ParameterInfo() :
+		//	m_Name( "undefined" ),
+		//	m_Typename( "undefined" ),
+		//	m_LongTypename( "undefined" )
+		//{
+		//}
 
-		ParameterInfo::ParameterInfo( string const& name, string const& typeName, string const& longTypename ) :
-			m_Name( name ),
-			m_Typename( typeName ),
-			m_LongTypename( longTypename )
-		{
-		}
+		//ParameterInfo::ParameterInfo( string const& name, string const& typeName, string const& longTypename ) :
+		//	m_Name( name ),
+		//	m_Typename( typeName ),
+		//	m_LongTypename( longTypename )
+		//{
+		//}
 
-		string const& ParameterInfo::getName() const
-		{
-			return m_Name;
-		}
+		//string const& ParameterInfo::getName() const
+		//{
+		//	return m_Name;
+		//}
 
-		string const& ParameterInfo::getTypename() const
-		{
-			return m_Typename;
-		}
+		//string const& ParameterInfo::getTypename() const
+		//{
+		//	return m_Typename;
+		//}
 
-		string const& ParameterInfo::getLongTypename() const
-		{
-			return m_LongTypename;
-		}
-	}
+		//string const& ParameterInfo::getLongTypename() const
+		//{
+		//	return m_LongTypename;
+		//}
+	//}
 }

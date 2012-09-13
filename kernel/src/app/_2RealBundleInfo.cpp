@@ -23,63 +23,63 @@ using std::ostream;
 
 namespace _2Real
 {
-	namespace app
-	{
-		BundleInfo::BundleInfo()
-		{
-			m_BundleData.name = "undefined";
-			m_BundleData.directory = "undefined";
-			m_BundleData.description = "undefined";
-			m_BundleData.author = "undefined";
-			m_BundleData.contact = "undefined";
-			m_BundleData.category = "undefined";
-			m_BundleData.version = Version( 0, 0, 0 );
-		}
+	//namespace app
+	//{
+	//	BundleInfo::BundleInfo()
+	//	{
+	//		m_BundleData.name = "undefined";
+	//		m_BundleData.directory = "undefined";
+	//		m_BundleData.description = "undefined";
+	//		m_BundleData.author = "undefined";
+	//		m_BundleData.contact = "undefined";
+	//		m_BundleData.category = "undefined";
+	//		m_BundleData.version = Version( 0, 0, 0 );
+	//	}
 
-		BundleInfo::BundleInfo( BundleData const& data, BlockInfos const& blocks ) :
-			m_BundleData( data ),
-			m_ExportedBlocks( blocks )
-		{
-		}
+	//	BundleInfo::BundleInfo( BundleData const& data, BlockInfos const& blocks ) :
+	//		m_BundleData( data ),
+	//		m_ExportedBlocks( blocks )
+	//	{
+	//	}
 
-		string const& BundleInfo::getName() const
-		{
-			return m_BundleData.name;
-		}
+	//	string const& BundleInfo::getName() const
+	//	{
+	//		return m_BundleData.name;
+	//	}
 
-		string const& BundleInfo::getInstallDirectory() const
-		{
-			return m_BundleData.directory;
-		}
+	//	string const& BundleInfo::getInstallDirectory() const
+	//	{
+	//		return m_BundleData.directory;
+	//	}
 
-		string const& BundleInfo::getDescription() const
-		{
-			return m_BundleData.description;
-		}
+	//	string const& BundleInfo::getDescription() const
+	//	{
+	//		return m_BundleData.description;
+	//	}
 
-		string const& BundleInfo::getAuthor() const
-		{
-			return m_BundleData.author;
-		}
+	//	string const& BundleInfo::getAuthor() const
+	//	{
+	//		return m_BundleData.author;
+	//	}
 
-		string const& BundleInfo::getContact() const
-		{
-			return m_BundleData.contact;
-		}
+	//	string const& BundleInfo::getContact() const
+	//	{
+	//		return m_BundleData.contact;
+	//	}
 
-		string const& BundleInfo::getCategory() const
-		{
-			return m_BundleData.category;
-		}
+	//	string const& BundleInfo::getCategory() const
+	//	{
+	//		return m_BundleData.category;
+	//	}
 
-		Version const& BundleInfo::getVersion() const
-		{
-			return m_BundleData.version;
-		}
+	//	Version const& BundleInfo::getVersion() const
+	//	{
+	//		return m_BundleData.version;
+	//	}
 
-		BundleInfo::BlockInfos const& BundleInfo::getExportedBlocks() const
-		{
-			return m_ExportedBlocks;
-		}
-	}
+	//	BundleInfo::BlockInfos const& BundleInfo::getExportedBlocks() const
+	//	{
+	//		return m_ExportedBlocks;
+	//	}
+	//}
 }

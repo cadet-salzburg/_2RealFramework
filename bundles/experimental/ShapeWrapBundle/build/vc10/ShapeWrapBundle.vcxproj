@@ -19,25 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\fbsimpletcpip_client.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\fbsimpletcpip_client.cxx" />
     <ClCompile Include="..\..\src\ShapeWrapBlock.cpp" />
     <ClCompile Include="..\..\src\ShapeWrapBundle.cpp" />
-    <ClCompile Include="..\..\src\ShapeWrapDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\fbsimpletcpip_client.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="..\..\src\fbsimpletcpip_client.h" />
     <ClInclude Include="..\..\src\ShapeWrapBlock.h" />
-    <ClInclude Include="..\..\src\ShapeWrapDeviceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5757653E-E563-42DE-8D5C-AACEB8C5D3CC}</ProjectGuid>
@@ -86,7 +74,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\..\bin</OutDir>
+    <OutDir>..\..\..\..\bin\</OutDir>
     <TargetName>$(ProjectName)_32d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -96,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\..\bin</OutDir>
+    <OutDir>..\..\..\..\bin\</OutDir>
     <TargetName>$(ProjectName)_32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -110,15 +98,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Setupapi.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;fbsdk.lib;Setupapi.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -128,7 +116,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -147,7 +135,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -156,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Setupapi.lib;_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -169,7 +157,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;..\..\..\..\..\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\poco\XML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>

@@ -16,18 +16,18 @@ void getBundleMetainfo( BundleMetainfo& info )
 	try
 	{
 		info.setName( "OpenBeaconBundle" );
-		info.setDescription( "mmmh, beacon... wait." );
-		info.setAuthor( "michael platz" );
-		info.setCategory( "" );
+		info.setDescription( "OpenBeacon life stream data bundle" );
+		info.setAuthor( "Michael Platz, Roland Haring" );
+		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
 		BlockMetainfo openBeacon = info.exportBlock< OpenBeaconBlock, WithoutContext>( "OpenBeaconBlock" );
-		openBeacon.setDescription( "creates 3D vertex and normal data for faces find in an RGBD image stream" );
-		openBeacon.setCategory( "" );	//TODO: set
+		openBeacon.setDescription( "OpenBeacon life stream data" );
+		openBeacon.setCategory( "Devices" );
 
-		openBeacon.addInlet< int >( "dummy_in", 0 );
-		openBeacon.addOutlet< int >( "dummy_out" );
+		openBeacon.addInlet< int >( "UDPport", 0 );
+		openBeacon.addOutlet< std::vector<Point> >( "tags" );
 	}
 	catch ( Exception &e )
 	{
