@@ -21,6 +21,7 @@ FBSimpleNetworkClient::FBSimpleNetworkClient()
 	}
 	//	Network internals
 	for (int i=0;i<MAX_NETWORK_CONNECT;i++) {
+		mTCP[i]					= NULL;
 		m_bChannelsexist[i]=false;
 		mSocket[i]				= -1;
 		mServerPort[i]			= 0;
@@ -95,6 +96,7 @@ FBSimpleNetworkClient::~FBSimpleNetworkClient()
 			for (int j=0;j<18;j++) if (mChannel[i][j]) delete mChannel[i][j];
 			m_bChannelsexist[i]=false;
 		}
+		if (mTCP[i]) delete mTCP[i];
 		if (mServerAddress[i]) delete [] mServerAddress[i];
 		if (mClientAddress[i]) delete [] mClientAddress[i];
 		if (mLHandData[i]) delete mLHandData[i];
@@ -110,10 +112,14 @@ FBSimpleNetworkClient::~FBSimpleNetworkClient()
 ************************************************/
 bool FBSimpleNetworkClient::Open(int nActor_index/*=0*/)
 {
-	if (!mTCP[nActor_index]) mTCP[nActor_index] = new FBTCPIP;
+	if (!mTCP[nActor_index]) 
+		mTCP[nActor_index] = new FBTCPIP;
+	else
+		mTCP[nActor_index]->CloseSocket(mSocket[nActor_index]);
 	// Create a non-blocking datagram socket
 	bool retval	= mTCP[nActor_index]->CreateSocket(mSocket[nActor_index],kFBTCPIP_DGRAM,"ip",true);
 	if (!retval) return false;
+	// Bind to specified client port
 	retval=mTCP[nActor_index]->Bind(mSocket[nActor_index],inet_addr(mClientAddress[nActor_index]),
 		mClientPort[nActor_index]);
 	return	retval;
@@ -250,8 +256,7 @@ bool FBSimpleNetworkClient::Close(int nActor_index/*=0*/)
 bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*=0*/)
 {
 	float*	channelPtr;
-
-
+	
 	int server_addr=0;
 	unsigned long server_port=0;
 	//get server_addr and server_port
@@ -319,6 +324,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 	//process incoming packet
 	channelPtr = (float *)&(mBuf[nActor_index][0]);
 
+	// copy all the float data from the binary buffer into an array of floats
 	for(long i=0;i<mNumDataItems[nActor_index];i++) {
 		m_packetvals[nActor_index][i] = *channelPtr;
 		channelPtr++;
@@ -329,9 +335,9 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 	float euler_rotation[3]={0.0,0.0,0.0};
 	if (m_datamask[nActor_index]&(LEFTARM_PRESENT|RIGHTARM_PRESENT|LEFTLEG_PRESENT|RIGHTLEG_PRESENT|HEAD_PRESENT|CHEST_PRESENT)) {
 		//hips data is present
-		mChannel[nActor_index][0]->SetPos(&m_packetvals[nActor_index][0]);
+		mChannel[nActor_index][HIPS]->SetPos(&m_packetvals[nActor_index][0]);
 		ConvertQuattoEuler(&m_packetvals[nActor_index][3],euler_rotation);
-		mChannel[nActor_index][0]->SetRot(euler_rotation);
+		mChannel[nActor_index][HIPS]->SetRot(euler_rotation);
 		data_index+=7;
 	}
 	if (m_datamask[nActor_index]&LEFTARM_PRESENT) {

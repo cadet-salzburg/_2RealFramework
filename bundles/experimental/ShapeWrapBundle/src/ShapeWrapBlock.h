@@ -25,12 +25,15 @@ private:
 	virtual void					discardAllOutlets();
 
 	// The Block Inlets 
-	_2Real::bundle::InletHandle	m_UDPPort;
-	_2Real::bundle::InletHandle	m_ActorId;
+	_2Real::bundle::InletHandle	m_ClientPort;
+	_2Real::bundle::InletHandle m_ClientAddress;
+	_2Real::bundle::InletHandle	m_ServerPort;
+	_2Real::bundle::InletHandle m_ServerAddress;
 
 	// The Block Outlets
 	_2Real::bundle::OutletHandle m_Skeleton;
 
 	FBSimpleNetworkClient* m_pNetworkClient;
 	_2Real::TimestampedData m_LastUpdate;
+	int m_ActorID;
 };
