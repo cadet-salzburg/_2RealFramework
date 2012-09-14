@@ -20,6 +20,7 @@ int main()
         {
             printf("TUIOBlockHandle OK!\n");
         }
+        tuioBlockHandle->getInletHandle("host").setValue("192.168.5.76");
         tuioBlockHandle->setup();
         tuioBlockHandle->setUpdateRate(30.f);
         tuioBlockHandle->start();

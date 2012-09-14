@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="../lib/LaserRangerBundleD" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../obj/Debug/" />
+				<Option object_output="../obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -17,7 +17,7 @@
 			</Target>
 			<Target title="Release">
 				<Option output="../lib/LaserRangerBundle" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../obj/Release/" />
+				<Option object_output="../obj/Release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -31,6 +31,7 @@
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="`pkg-config --cflags eigen2`" />
 			<Add option="-fPIC" />
 			<Add option="-D_UNIX" />
 			<Add directory="../src/urg" />
@@ -40,10 +41,10 @@
 			<Add directory="../src/urg/urg" />
 			<Add directory="../../../../kernel/src" />
 		</Compiler>
-		<Unit filename="../src/LaserRangerDevice.cpp" />
-		<Unit filename="../src/LaserRangerDevice.h" />
-		<Unit filename="../src/RangingImageBlock.cpp" />
-		<Unit filename="../src/RangingImageBlock.h" />
+		<Unit filename="../src/ILaserRangerDevice.h" />
+		<Unit filename="../src/LaserRangerBundle.cpp" />
+		<Unit filename="../src/LaserRangerHokuyo.cpp" />
+		<Unit filename="../src/LaserRangerHokuyo.h" />
 		<Unit filename="../src/urg/connection/ring_buffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
