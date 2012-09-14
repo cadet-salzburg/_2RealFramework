@@ -63,12 +63,9 @@ void OpenBeaconBlock::update()
 		}
 		
 		// read from udp port and update tags
-		char buffer[2048];
+		char buffer[2048] = {0};
 		Poco::Net::SocketAddress sender;
 		int n = m_pSocket->receiveFrom(buffer, sizeof(buffer)-1, sender);
-		buffer[n] = '\0';
-		
-		//std::cout << sender.toString() << ": " << buffer << std::endl;
 		
 		if (n > 0)
 		{

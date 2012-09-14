@@ -15,7 +15,7 @@
 #define MAX_MARKER				200		// Maximum number of markers
 #define TCP_BUFFER_SIZE			10000	// Buffer size
 #define MAX_DATA_ITEMS			300		//maximum number of items (float values) in incoming data stream
-#define MAX_NETWORK_CONNECT		5		// Maximum number of network connections
+#define MAX_NETWORK_CONNECT		1		// Maximum number of network connections
 #define MAXHANDS 4
 
 #define HIPS 0
@@ -36,6 +36,7 @@
 #define RTOE 15
 #define CHEST 16
 #define BUTTONS 17
+#define NUM_CHANNELS 18
 
 
 #define LEFTHAND_PRESENT 1
@@ -112,20 +113,20 @@ public:
 
 	
 	FBString			mName;				//!< Name of marker as displayed in the spreadsheet.
-	HFBAnimationNode	mTAnimNode;			//!< Position animation output node. 
-	HFBAnimationNode	mRAnimNode;			//!< Rotation animation output node.
+//	HFBAnimationNode	mTAnimNode;			//!< Position animation output node. 
+//	HFBAnimationNode	mRAnimNode;			//!< Rotation animation output node.
 
-	HFBModelTemplate	mModelTemplate;		//!< Marker model template driven by the data channel.
-	bool				mIsUsed;			//!< Set to true to confirm presence of this sensor/marker.
+//	HFBModelTemplate	mModelTemplate;		//!< Marker model template driven by the data channel.
+//	bool				mIsUsed;			//!< Set to true to confirm presence of this sensor/marker.
 
 	//! Constructor.
 	DataChannel() 
 	{ 
-		mTAnimNode	= NULL;
-		mRAnimNode	= NULL;
-		mModelTemplate	= NULL;
+//		mTAnimNode	= NULL;
+//		mRAnimNode	= NULL;
+//		mModelTemplate	= NULL;
 		mName       = "NoName";
-		mIsUsed		= false;
+//		mIsUsed		= false;
 		for (int i=0;i<3;i++)
 		{
 			mPos[i]=0;
@@ -336,7 +337,7 @@ private:
 	int					mMarkerCount[MAX_NETWORK_CONNECT];							//!< Number of markers.
 
 	//--- Server sends (X,Y,Z) data as separate channels of doubles (scalar)
-	DataChannel *	mChannel[MAX_NETWORK_CONNECT][17];								//!< Array of channels
+	DataChannel *	mChannel[MAX_NETWORK_CONNECT][NUM_CHANNELS];								//!< Array of channels
 	long					mNumDataItems[MAX_NETWORK_CONNECT];						    //!< Number of data items per packet.
 	bool					mIsConnectedToServer[MAX_NETWORK_CONNECT];					//!< Is connected to server?
 

@@ -158,6 +158,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenBeaconBundle", "..\..\b
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenBeaconTest", "..\..\bundles\experimental\OpenBeaconBundle\test\build\vc10\OpenBeaconTest.vcxproj", "{14F6BEDC-4D56-4187-B7FF-E19285793FEF}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6884C90A-A38B-4086-8DA1-EB786CC3C4CE} = {6884C90A-A38B-4086-8DA1-EB786CC3C4CE}
 		{156298E0-906B-4488-A690-02B223C22C13} = {156298E0-906B-4488-A690-02B223C22C13}
 	EndProjectSection
 EndProject
