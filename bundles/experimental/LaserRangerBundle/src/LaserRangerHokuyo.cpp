@@ -6,9 +6,12 @@ using _2Real::bundle::BlockHandle;
 using _2Real::Exception;
 using namespace std;
 
-LaserRangerHokuyo::LaserRangerHokuyo() : ILaserRangerDevice()
+LaserRangerHokuyo::LaserRangerHokuyo() 
+: ILaserRangerDevice()
+, maxVals (0)
+, connected(false)
 {
-
+	memset (&dev, 0, sizeof(dev));
 }
 
 LaserRangerHokuyo::~LaserRangerHokuyo()
@@ -18,8 +21,8 @@ LaserRangerHokuyo::~LaserRangerHokuyo()
 
 void LaserRangerHokuyo::shutdown()
 {
-    ILaserRangerDevice::shutdown();
-    disconnect();
+	ILaserRangerDevice::shutdown();
+	disconnect();
 }
 
 bool LaserRangerHokuyo::connect()

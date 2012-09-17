@@ -27,8 +27,8 @@
     <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\scip_handler.c" />
     <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_ctrl.c" />
     <ClCompile Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.c" />
-    <ClCompile Include="..\..\src\LaserRangerDevice.cpp" />
-    <ClCompile Include="..\..\src\RangingImageBlock.cpp" />
+    <ClCompile Include="..\..\src\LaserRangerBundle.cpp" />
+    <ClCompile Include="..\..\src\LaserRangerHokuyo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\connection\ring_buffer.h" />
@@ -47,8 +47,8 @@
     <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_errno.h" />
     <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_parameter_t.h" />
     <ClInclude Include="$(_2REAL_DEPENDENCIES_DIR)\urg\urg\urg_t.h" />
-    <ClInclude Include="..\..\src\LaserRangerDevice.h" />
-    <ClInclude Include="..\..\src\RangingImageBlock.h" />
+    <ClInclude Include="..\..\src\ILaserRangerDevice.h" />
+    <ClInclude Include="..\..\src\LaserRangerHokuyo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{45271BFB-A456-481B-A939-75360513794D}</ProjectGuid>

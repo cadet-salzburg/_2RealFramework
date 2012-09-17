@@ -18,6 +18,7 @@ private:
 
     bool connect();
     bool disconnect();
+
     urg_t dev;
     std::vector<long> dataVals;
     int maxVals;
