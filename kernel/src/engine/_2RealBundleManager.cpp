@@ -191,6 +191,11 @@ namespace _2Real
 			blockInfo.description = it->second->getDescription();
 			blockInfo.category = it->second->getCategory();
 
+			if ( it->second->getName() == "contextblock" )
+			{
+				continue;
+			}
+
 			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
 			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
