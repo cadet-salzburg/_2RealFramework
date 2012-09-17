@@ -442,7 +442,7 @@ int main( int argc, char *argv[] )
 		Engine &engine = Engine::instance();
 		engine.setBaseDirectory( "../../bundles/bin" );
 
-		BundleHandle ecBundle = engine.loadBundle( "EpocControlBundle" );
+		BundleHandle ecBundle = engine.loadBundle( "EpocBundle" );
 
 
 		BlockHandle &affectivData = ecBundle.createBlockInstance( "EpocAffectivBlock" );
