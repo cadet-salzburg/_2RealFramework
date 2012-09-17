@@ -101,8 +101,8 @@ namespace _2Real
 		long getSizeInBytes() const					{ return m_SizeInBytes; }
 		unsigned int getBitResolution() const		{ return m_BitResolution; }
 		double getPresentationTimestamp() const		{ return m_PresentationTimestamp; }
-		unsigned char const*const& getData() const	{ return m_Data; }
-		unsigned char *& getData()					{ return m_Data; }
+		unsigned char const* getData() const	    { return m_Data; }  	// NOTE: removed "const" before & to eliminate warnings. Didn't occur necessary to me (ottona)
+		unsigned char *& getData()      			{ return m_Data; }
 
 		bool operator==( AudioBuffer const& src ) const
 		{
