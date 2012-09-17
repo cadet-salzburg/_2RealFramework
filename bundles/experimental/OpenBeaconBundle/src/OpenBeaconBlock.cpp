@@ -93,6 +93,10 @@ void OpenBeaconBlock::update()
 				}
 			}
 		}
+		else
+		{
+			m_Tags.discard();
+		}
 	}
 	catch( Exception & e )
 	{
