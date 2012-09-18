@@ -45,20 +45,21 @@ namespace _2Real
 			return ( m_Label == other.m_Label && m_Id == other.m_Id && m_BoundingBoxLimit == other.m_BoundingBoxLimit && m_RigidBodies == other.m_RigidBodies );
 		}
 		
-		std::vector<_2Real::RigidBody>&	getRigidBodies()	{ return m_RigidBodies; }
+		void setRigidBodies(std::vector<_2Real::RigidBody>&	rigidBodies)	{ m_RigidBodies = rigidBodies; }
+		std::vector<_2Real::RigidBody>&	getRigidBodies()					{ return m_RigidBodies; }
 	
-		void setLabel( std::string const& l )	{ m_Label = l; }
-		std::string const& getLabel() const		{ return m_Label; }
+		void setLabel( std::string const& l )								{ m_Label = l; }
+		std::string const& getLabel() const									{ return m_Label; }
 		
-		void setId( int id )					{ m_Id = id; }
-		int getId() const						{ return m_Id; }
+		void setId( int id )												{ m_Id = id; }
+		int getId() const													{ return m_Id; }
 		
 		// global means data the positional and rotational skeleton data is relative to a global coordinate system
-		void setGlobal( bool global)			{ m_Global = global; }
-		bool isGlobal() const					{ return m_Global; }
+		void setGlobal( bool global)										{ m_Global = global; }
+		bool isGlobal() const												{ return m_Global; }
 		
-		void setLimit(_2Real::BoundingBox bb)							{ m_BoundingBoxLimit = bb; }
-		_2Real::BoundingBox getLimit()									{ return m_BoundingBoxLimit; }
+		void setLimit(_2Real::BoundingBox bb)								{ m_BoundingBoxLimit = bb; }
+		_2Real::BoundingBox getLimit()										{ return m_BoundingBoxLimit; }
 
 	private:
 

@@ -34,42 +34,45 @@ namespace _2Real
 
 	public:
 
-		RigidBody() {}
-		RigidBody( RigidBody const& src ) : m_Points( src.m_Points ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_ParentId( src.m_ParentId ), m_Position( src.m_Position ), m_Orientation ( src.m_Orientation ) {}
-		RigidBody( const std::vector<_2Real::Point> points ) : m_Points( points ), m_Label( "undefined" ), m_Id( -1 ), m_ParentId( -1 ), m_Position ( _2Real::Point() ), m_Orientation ( _2Real::Quaternion() ) {}	
-		RigidBody( const std::vector<_2Real::Point> points, std::string const& l, const unsigned int id, const unsigned int parentId, const _2Real::Point &position, const _2Real::Quaternion &orientation ) : m_Points( points ), m_Label( l ), m_Id( id ), m_ParentId( parentId ), m_Position( position ), m_Orientation( orientation ) {}
+		RigidBody() : m_hasPosition (false), m_hasOrientation (false), m_hasMarker (false) {}
+		RigidBody( RigidBody const& src ) : m_Marker( src.m_Marker ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_ParentId( src.m_ParentId ), m_Position( src.m_Position ), m_Orientation ( src.m_Orientation ), m_hasPosition (src.m_hasPosition), m_hasOrientation (src.m_hasOrientation), m_hasMarker(src.m_hasMarker) {}
+		RigidBody( const std::vector<_2Real::Point> marker, std::string const& l, const unsigned int id, const unsigned int parentId, const _2Real::Point &position, const _2Real::Quaternion &orientation ) : m_Marker( marker ), m_Label( l ), m_Id( id ), m_ParentId( parentId ), m_Position( position ), m_Orientation( orientation ) , m_hasPosition (true), m_hasOrientation (true), m_hasMarker (true) {}
 		
-		bool operator==( RigidBody const& other ) const
-		{
-			return ( m_Id == other.m_Id && m_ParentId == other.m_ParentId && m_Label == other.m_Label && m_Position == other.m_Position && m_Points == other.m_Points );
-		}
+		bool operator==( RigidBody const& other ) const;
 
-		std::vector<_2Real::Point>&	getPoints()	{ return m_Points; }
+		void setMarker(std::vector<_2Real::Point>&	marker);
+		std::vector<_2Real::Point>&	getMarker();
 
-		void setLabel( std::string const& l )	{ m_Label = l; }
-		std::string const& getLabel() const		{ return m_Label; }
+		void setLabel( std::string const& l );
+		std::string const& getLabel() const;
 		
-		void setId( int id )					{ m_Id = id; }
-		int getId() const						{ return m_Id; }
+		void setId( int id );
+		int getId() const;
 		
-		void setParentId( int id )				{ m_ParentId = id; }
-		int getParentId() const					{ return m_ParentId; }
+		void setParentId( int id );
+		int getParentId() const;
 		
-		void setPosition (Number x, Number y, Number z)	{ m_Position.setX(x); m_Position.setY(y); m_Position.setZ(z); }
-		_2Real::Point getPosition() const		{ return m_Position; }
+		void setPosition (Number x, Number y, Number z);
+		_2Real::Point getPosition() const;
 		
-		void setOrientation (Number x, Number y, Number z, Number w) { m_Orientation.x() = x; m_Orientation.y() = y; m_Orientation.z() = z; m_Orientation.w() = w; }
-		_2Real::Quaternion getOrientation() const { return m_Orientation; }
+		void setOrientation (Number x, Number y, Number z, Number w);
+		_2Real::Quaternion getOrientation() const;
 		
+		bool hasPosition() const;
+		bool hasOrientation() const;
+		bool hasMarker() const;
 		
 	private:
 
-		std::vector<_2Real::Point>		m_Points;
+		std::vector<_2Real::Point>		m_Marker;
 		std::string						m_Label;
 		int								m_Id;
 		int								m_ParentId;
 		_2Real::Point					m_Position;
 		_2Real::Quaternion				m_Orientation;
 
+		bool							m_hasPosition;
+		bool							m_hasOrientation;
+		bool							m_hasMarker;
 	};
 }
