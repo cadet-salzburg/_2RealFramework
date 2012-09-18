@@ -16,7 +16,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
-    <ProjectName>EpocControlTest</ProjectName>
+    <ProjectName>EpocTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

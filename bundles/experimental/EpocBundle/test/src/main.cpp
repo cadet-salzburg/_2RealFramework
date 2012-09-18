@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 
 	BundleUnitTestWidget testBundle;
-	testBundle.setup("EpocControlBundle");
+	testBundle.setup("EpocBundle");
 	
 	int iRet = a.exec();
 	return iRet;
