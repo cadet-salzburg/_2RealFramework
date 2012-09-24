@@ -324,7 +324,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 	//process incoming packet
 	channelPtr = (float *)&(mBuf[nActor_index][0]);
 
-	// copy all the float data from the binary buffer into an array of floats
+	// reference to all the float data in the binary buffer through an array of floats
 	for(long i=0;i<mNumDataItems[nActor_index];i++) {
 		m_packetvals[nActor_index][i] = *channelPtr;
 		channelPtr++;
@@ -685,6 +685,36 @@ void FBSimpleNetworkClient::ConvertQuattoEuler(float *quat, float *euler)
 	euler[0] = (float)eulerrots.mValue[0];
 	euler[1] = (float)eulerrots.mValue[1];
 	euler[2] = (float)eulerrots.mValue[2];
+}
+
+void FBSimpleNetworkClient::ConvertEulertoQuat(float *euler, float *quat)
+{
+#if 0
+	// code from http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+	// Assuming the angles are in radians
+
+	double c1 = cos(euler[0]/2);
+	double s1 = sin(euler[0]/2);
+	double c2 = cos(euler[1]/2);
+	double s2 = sin(euler[1]/2);
+	double c3 = cos(euler[2]/2);
+	double s3 = sin(euler[2]/2);
+	double c1c2 = c1*c2;
+	double s1s2 = s1*s2;
+	quat[3] = c1c2*c3 - s1s2*s3;
+	quat[0] = c1c2*s3 + s1s2*c3;
+	quat[1] = s1*c2*c3 + c1*s2*s3;
+	quat[2] = c1*s2*c3 - s1*c2*s3;
+#else
+
+	FBRVector FBeuler(euler[0], euler[1], euler[2]);
+	FBQuaternion FBquat;
+	FBRotationToQuaternion(FBquat,FBeuler);
+	for (int i = 0; i<4; i++)
+	{
+		quat[i] = FBquat.mValue[i];
+	}
+#endif
 }
 
 void FBSimpleNetworkClient::SetServerAddress(char *szIPAddress, int nActor_index/*=0*/) {

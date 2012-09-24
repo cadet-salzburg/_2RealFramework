@@ -35,6 +35,8 @@ public:
 	void							setMotorAngle(int deviceIdx, int angle);
 	int								getMotorAngle(int deviceIdx);
 
+	std::string&					OpenNIDeviceManager::getLabelForJoint(_2RealKinectWrapper::_2RealJointType joint);
+	
 private:
 	void							initDeviceList();
 	void							rescanDeviceList();

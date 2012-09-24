@@ -91,6 +91,7 @@ class DataChannel
 private:
 	float			mPos[3];				//!< Position array.
 	float			mRot[3];				//!< Rotation array.
+//	float			mQuat[4];				//!< Rotation as Quaternion array.
 
 public:
 	void  SetPos(float *pos) {	mPos[0] = pos[0]/10;//convert to cm
@@ -100,16 +101,22 @@ public:
 	mRot[1] = rot[1];
 	mRot[2] = rot[2];}
 
+//	void SetQuat(float *quat) { mQuat[0] = quat[0];
+//	mQuat[1] = quat[1];
+//	mQuat[2] = quat[2];
+//	mQuat[3] = quat[3];}
+
 	float GetXPos() { return mPos[0];}
 	float GetYPos() { return mPos[1];}
 	float GetZPos() { return mPos[2];}
 	float GetXRot() { return mRot[0];}
-	float GetYRot() { 
-		return mRot[1];
-	}
-	float GetZRot() {
-		return mRot[2];
-	}
+	float GetYRot() { return mRot[1];}
+	float GetZRot() { return mRot[2];}
+
+//	float GetXQuat() { return mQuat[0];}
+//	float GetYQuat() { return mQuat[1];}
+//	float GetZQuat() { return mQuat[2];}
+//	float GetWQuat() { return mQuat[3];}
 
 	
 	FBString			mName;				//!< Name of marker as displayed in the spreadsheet.
@@ -131,7 +138,9 @@ public:
 		{
 			mPos[i]=0;
 			mRot[i]=0;
+	//		mQuat[i]=0;
 		}
+	//	mQuat[3]=0;
 	}
 
 	//! Destructor.
@@ -284,6 +293,9 @@ public:
 
 	void *m_shapeHands[MAXHANDS];
 
+	void ConvertQuattoEuler(float *quat, float *euler);
+	void ConvertEulertoQuat(float *euler, float *quat);
+	
 private:
 
 	/** Blocking read used to get information packets in GetSetupInfo()
@@ -343,8 +355,6 @@ private:
 
 	//--- Buffer
 	char					mBuf[MAX_NETWORK_CONNECT][TCP_BUFFER_SIZE];					//!< Temporary storage buffer for data.
-protected:
-	void ConvertQuattoEuler(float *quat, float *euler);
 };
 
 #endif	/* _FB_SIMPLETCPIP_CLIENT_H_ */

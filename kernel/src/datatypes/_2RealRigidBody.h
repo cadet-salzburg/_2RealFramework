@@ -34,7 +34,9 @@ namespace _2Real
 
 	public:
 
-		RigidBody() : m_hasPosition (false), m_hasOrientation (false), m_hasMarker (false) {}
+		static const int INVALID_ID = -1;
+
+		RigidBody() : m_hasPosition (false), m_hasOrientation (false), m_hasMarker (false), m_Id (INVALID_ID), m_ParentId(INVALID_ID) {}
 		RigidBody( RigidBody const& src ) : m_Marker( src.m_Marker ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_ParentId( src.m_ParentId ), m_Position( src.m_Position ), m_Orientation ( src.m_Orientation ), m_hasPosition (src.m_hasPosition), m_hasOrientation (src.m_hasOrientation), m_hasMarker(src.m_hasMarker) {}
 		RigidBody( const std::vector<_2Real::Point> marker, std::string const& l, const unsigned int id, const unsigned int parentId, const _2Real::Point &position, const _2Real::Quaternion &orientation ) : m_Marker( marker ), m_Label( l ), m_Id( id ), m_ParentId( parentId ), m_Position( position ), m_Orientation( orientation ) , m_hasPosition (true), m_hasOrientation (true), m_hasMarker (true) {}
 		
@@ -61,6 +63,8 @@ namespace _2Real
 		bool hasPosition() const;
 		bool hasOrientation() const;
 		bool hasMarker() const;
+		bool hasParent() const;
+		bool hasId() const;
 		
 	private:
 

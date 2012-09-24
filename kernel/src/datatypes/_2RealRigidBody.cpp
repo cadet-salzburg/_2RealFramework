@@ -108,4 +108,14 @@ namespace _2Real
 	{
 		return m_hasMarker;
 	}
+
+	bool RigidBody::hasParent() const
+	{
+		return m_ParentId != INVALID_ID;
+	}
+
+	bool RigidBody::hasId() const
+	{
+		return m_Id != INVALID_ID;
+	}
 }

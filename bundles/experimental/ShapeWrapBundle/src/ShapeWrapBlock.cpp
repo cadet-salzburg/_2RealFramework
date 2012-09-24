@@ -102,8 +102,12 @@ void ShapeWrapBlock::update()
 					m_LastUpdate.timestamp = evaltime.Get();
 					_2Real::Skeleton skeleton = m_Skeleton.getWriteableRef<_2Real::Skeleton>(); 
 
-
+					std::vector<_2Real::RigidBody> rigidBodies;
 					
+
+					// TODO
+
+					skeleton.setRigidBodies(rigidBodies);
 				}
 			}
 		}
