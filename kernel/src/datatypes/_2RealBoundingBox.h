@@ -50,6 +50,9 @@ namespace _2Real
 		bool operator==(BoundingBox const& rhs) const { return (m_Min == rhs.m_Min && m_Max == rhs.m_Max); }
 		bool operator!=(BoundingBox const& rhs) const { return !(*this == rhs); }
 
+		// resets min and max of bounding box to max and min of Number
+		void reset() { m_Min = _2Real::Point(_2Real::Number::maxVal()); m_Max = _2Real::Point(_2Real::Number::minVal()); }
+
 	private:
 
 		_2Real::Point	m_Min;

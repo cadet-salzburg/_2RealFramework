@@ -36,11 +36,12 @@ namespace _2Real
 	public:
 
 		Point() : m_X( 0 ), m_Y( 0 ), m_Z( 0 ), m_Label( "undefined" ), m_Id( -1 ) {}
+		Point (Number const& val)  : m_X( val ), m_Y( val ), m_Z( val ), m_Label( "undefined" ), m_Id( -1 ) {}
 		Point( Number const& x, Number const& y, Number const& z ) : m_X( x ), m_Y( y ), m_Z( z ), m_Label( "undefined" ), m_Id( -1 ) {}
-		Point( Number const& x, Number const& y, Number const& z, std::string const& l, const unsigned int id ) : m_X( x ), m_Y( y ), m_Z( z ), m_Label( l ), m_Id( id ) {}
+		Point( Number const& x, Number const& y, Number const& z, std::string const& l, const int id = -1 ) : m_X( x ), m_Y( y ), m_Z( z ), m_Label( l ), m_Id( id ) {}
 		Point( Point const& src ) : m_X( src.m_X ), m_Y( src.m_Y ), m_Z( src.m_Z ), m_Label( src.m_Label ), m_Id( src.m_Id ) {}
 
-		void set(  Number const& x, Number const& y, Number const& z, std::string const& l, const unsigned int id )
+		void set(  Number const& x, Number const& y, Number const& z, std::string const& l, const int id )
 		{
 			m_X = x;
 			m_Y = y;

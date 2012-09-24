@@ -23,6 +23,9 @@ public:
 
 private:
 	virtual void					discardAllOutlets();
+	virtual _2Real::Quaternion		rot2Quat(float x, float y, float z);
+	virtual _2Real::RigidBody		toRigidBody(const std::string &l, int boneID, int parentID, int markerID);
+	virtual _2Real::RigidBody		toRigidBody(const std::string &l, int boneID, int parentID, float* quat);
 
 	// The Block Inlets 
 	_2Real::bundle::InletHandle	m_ClientPort;
@@ -31,7 +34,8 @@ private:
 	_2Real::bundle::InletHandle m_ServerAddress;
 
 	// The Block Outlets
-	_2Real::bundle::OutletHandle m_Skeleton;
+	_2Real::bundle::OutletHandle m_SkeletonHandle;
+	_2Real::Skeleton m_SkeletonData;
 
 	FBSimpleNetworkClient* m_pNetworkClient;
 	_2Real::TimestampedData m_LastUpdate;

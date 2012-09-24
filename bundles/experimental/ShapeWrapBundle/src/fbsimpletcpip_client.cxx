@@ -3,6 +3,7 @@
 *	Definition of a simple network client.
 *	Definition of the FBSimpleNetworkClient class, representing a 
 *	network client for the Measurand 5-Tape System
+*	Based on a code sample from Measurand Inc.
 */
 
 //--- Class declaration
@@ -248,6 +249,22 @@ bool FBSimpleNetworkClient::Close(int nActor_index/*=0*/)
 
 
 /************************************************
+*	check which data is available.
+************************************************/
+bool FBSimpleNetworkClient::IsPresent(BYTE dataMaskBit, int nActor_index/*=0*/)
+{
+	if (dataMaskBit == HIPS_PRESENT)
+	{
+		return m_datamask[nActor_index] & (LEFTARM_PRESENT|RIGHTARM_PRESENT|LEFTLEG_PRESENT|RIGHTLEG_PRESENT|HEAD_PRESENT|CHEST_PRESENT);
+	}
+	else
+	{
+		return m_datamask[nActor_index] & dataMaskBit;
+	}
+}
+
+
+/************************************************
 *	Fetch a data packet.
 * - is a non-blocking routine
 * - fills mChannel[] with a new data packet
@@ -256,7 +273,7 @@ bool FBSimpleNetworkClient::Close(int nActor_index/*=0*/)
 bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*=0*/)
 {
 	float*	channelPtr;
-	
+
 	int server_addr=0;
 	unsigned long server_port=0;
 	//get server_addr and server_port
@@ -341,6 +358,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 		data_index+=7;
 	}
 	if (m_datamask[nActor_index]&LEFTARM_PRESENT) {
+		//left arm is present
 		mChannel[nActor_index][LSHOULDER]->SetPos(&m_packetvals[nActor_index][data_index]);//left shoulder position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][LSHOULDER]->SetRot(euler_rotation); //left collarbone rotation (not used)
@@ -361,6 +379,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 		else data_index+=4;
 	}
 	if (m_datamask[nActor_index]&RIGHTARM_PRESENT) {
+		//right arm is present
 		mChannel[nActor_index][RSHOULDER]->SetPos(&m_packetvals[nActor_index][data_index]); //right shoulder position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][RSHOULDER]->SetRot(euler_rotation); //right collarbone rotation (not used)
@@ -381,12 +400,14 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 		else data_index+=4;
 	}
 	if (m_datamask[nActor_index]&HEAD_PRESENT) {
+		//head is present
 		mChannel[nActor_index][HEAD]->SetPos(&m_packetvals[nActor_index][data_index]); //head position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][HEAD]->SetRot(euler_rotation); //head rotation
 		data_index+=7;
 	}
 	if (m_datamask[nActor_index]&LEFTLEG_PRESENT) {
+		//left leg is present
 		mChannel[nActor_index][LKNEE]->SetPos(&m_packetvals[nActor_index][data_index]); //left knee position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][LKNEE]->SetRot(euler_rotation); //left shin rotation
@@ -401,6 +422,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 		data_index+=7;
 	}
 	if (m_datamask[nActor_index]&RIGHTLEG_PRESENT) {
+		//right leg is present
 		mChannel[nActor_index][RKNEE]->SetPos(&m_packetvals[nActor_index][data_index]); //right knee position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][RKNEE]->SetRot(euler_rotation); //right shin rotation
@@ -415,6 +437,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 		data_index+=7;
 	}
 	if (m_datamask[nActor_index]&CHEST_PRESENT) {
+		//chest leg is present
 		mChannel[nActor_index][CHEST]->SetPos(&m_packetvals[nActor_index][data_index]); //chest position
 		ConvertQuattoEuler(&m_packetvals[nActor_index][data_index+3],euler_rotation);
 		mChannel[nActor_index][CHEST]->SetRot(euler_rotation); //chest rotation
@@ -426,6 +449,7 @@ bool FBSimpleNetworkClient::FetchDataPacket(FBTime &evaltime, int nActor_index/*
 	if (m_datamask[nActor_index]&RIGHTHAND_PRESENT) {
 		CalculateRHandData(data_index,true,nActor_index);
 	}
+
 	//get time stamp
 	mTimeStamp[nActor_index] = *(DWORD *)channelPtr;
 	//TRACE("timestamp = %u, current_time = %u\n",mTimeStamp[nActor_index], timeGetTime());

@@ -8,6 +8,7 @@
 *	Declarations for the DataChannel class, representing a channel
 *	of information coming in from the hardware, as well as the 
 *	FBSimpleNetworkClient class, representing the hardware itself.
+*	Based on a code sample from Measurand Inc.
 */
 
 //--- Size & maximum defines
@@ -39,6 +40,7 @@
 #define NUM_CHANNELS 18
 
 
+#define HIPS_PRESENT 0
 #define LEFTHAND_PRESENT 1
 #define RIGHTHAND_PRESENT 2
 #define LEFTARM_PRESENT 4
@@ -91,7 +93,7 @@ class DataChannel
 private:
 	float			mPos[3];				//!< Position array.
 	float			mRot[3];				//!< Rotation array.
-//	float			mQuat[4];				//!< Rotation as Quaternion array.
+	//	float			mQuat[4];				//!< Rotation as Quaternion array.
 
 public:
 	void  SetPos(float *pos) {	mPos[0] = pos[0]/10;//convert to cm
@@ -101,10 +103,10 @@ public:
 	mRot[1] = rot[1];
 	mRot[2] = rot[2];}
 
-//	void SetQuat(float *quat) { mQuat[0] = quat[0];
-//	mQuat[1] = quat[1];
-//	mQuat[2] = quat[2];
-//	mQuat[3] = quat[3];}
+	//	void SetQuat(float *quat) { mQuat[0] = quat[0];
+	//	mQuat[1] = quat[1];
+	//	mQuat[2] = quat[2];
+	//	mQuat[3] = quat[3];}
 
 	float GetXPos() { return mPos[0];}
 	float GetYPos() { return mPos[1];}
@@ -113,34 +115,34 @@ public:
 	float GetYRot() { return mRot[1];}
 	float GetZRot() { return mRot[2];}
 
-//	float GetXQuat() { return mQuat[0];}
-//	float GetYQuat() { return mQuat[1];}
-//	float GetZQuat() { return mQuat[2];}
-//	float GetWQuat() { return mQuat[3];}
+	//	float GetXQuat() { return mQuat[0];}
+	//	float GetYQuat() { return mQuat[1];}
+	//	float GetZQuat() { return mQuat[2];}
+	//	float GetWQuat() { return mQuat[3];}
 
-	
+
 	FBString			mName;				//!< Name of marker as displayed in the spreadsheet.
-//	HFBAnimationNode	mTAnimNode;			//!< Position animation output node. 
-//	HFBAnimationNode	mRAnimNode;			//!< Rotation animation output node.
+	//	HFBAnimationNode	mTAnimNode;			//!< Position animation output node. 
+	//	HFBAnimationNode	mRAnimNode;			//!< Rotation animation output node.
 
-//	HFBModelTemplate	mModelTemplate;		//!< Marker model template driven by the data channel.
-//	bool				mIsUsed;			//!< Set to true to confirm presence of this sensor/marker.
+	//	HFBModelTemplate	mModelTemplate;		//!< Marker model template driven by the data channel.
+	//	bool				mIsUsed;			//!< Set to true to confirm presence of this sensor/marker.
 
 	//! Constructor.
 	DataChannel() 
 	{ 
-//		mTAnimNode	= NULL;
-//		mRAnimNode	= NULL;
-//		mModelTemplate	= NULL;
+		//		mTAnimNode	= NULL;
+		//		mRAnimNode	= NULL;
+		//		mModelTemplate	= NULL;
 		mName       = "NoName";
-//		mIsUsed		= false;
+		//		mIsUsed		= false;
 		for (int i=0;i<3;i++)
 		{
 			mPos[i]=0;
 			mRot[i]=0;
-	//		mQuat[i]=0;
+			//		mQuat[i]=0;
 		}
-	//	mQuat[3]=0;
+		//	mQuat[3]=0;
 	}
 
 	//! Destructor.
@@ -220,6 +222,7 @@ class FBSimpleNetworkClient
 public:
 	void Initialize(int nActor_index);
 	BYTE GetDataMask(int nActor_index=0);
+	bool IsPresent(BYTE dataMaskBit, int nActor_index=0);
 	FBSimpleNetworkClient();	//!< Constructor.
 	~FBSimpleNetworkClient();	//!< Destructor.
 
@@ -295,7 +298,7 @@ public:
 
 	void ConvertQuattoEuler(float *quat, float *euler);
 	void ConvertEulertoQuat(float *euler, float *quat);
-	
+
 private:
 
 	/** Blocking read used to get information packets in GetSetupInfo()

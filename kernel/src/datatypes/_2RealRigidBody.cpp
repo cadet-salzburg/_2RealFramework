@@ -26,7 +26,7 @@ namespace _2Real
 		return ( m_Id == other.m_Id && m_ParentId == other.m_ParentId && m_Label == other.m_Label && m_Position == other.m_Position && m_Marker == other.m_Marker );
 	}
 
-	void RigidBody::setMarker(std::vector<_2Real::Point>&	marker)	
+	void RigidBody::setMarker(std::vector<_2Real::Point>& marker)	
 	{ 
 		m_Marker = marker; 
 		m_hasMarker = true; 

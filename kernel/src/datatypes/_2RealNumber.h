@@ -47,6 +47,11 @@ namespace _2Real
 		Number( Number const& src );
 		Number & operator=( Number const& src );
 		bool operator==( Number const& rhs ) const;
+		bool operator!=( Number const& rhs ) const;
+		bool operator<( Number const& rhs ) const;
+		bool operator>( Number const& rhs ) const;
+		bool operator<=( Number const& rhs ) const;
+		bool operator>=( Number const& rhs ) const;
 
 		Number operator+( Number const& rhs ) const;
 		Number operator-( Number const& rhs ) const;
@@ -68,6 +73,9 @@ namespace _2Real
 		operator unsigned long() const;
 		operator float() const;
 		operator double() const;
+
+		static const double maxVal();
+		static const double minVal();
 
 	private:
 

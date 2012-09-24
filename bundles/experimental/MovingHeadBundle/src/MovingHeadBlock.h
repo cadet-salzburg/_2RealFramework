@@ -31,4 +31,6 @@ private:
 
 	// current active MovingHead identifier (empty string means none)
 	std::string m_MovingHeadIdentifer;
+
+	std::vector<unsigned char> m_SerialByteStream;
 };

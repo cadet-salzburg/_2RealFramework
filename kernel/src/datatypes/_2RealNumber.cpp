@@ -17,6 +17,7 @@
 */
 
 #include "datatypes/_2RealNumber.h"
+#include <limits>
 
 namespace _2Real
 {
@@ -46,7 +47,12 @@ namespace _2Real
 
 	Number::Number( Number const& src ) : m_Val( src.m_Val ) {}
 	Number & Number::operator=( Number const& src ) { m_Val = src.m_Val; return *this; }
-	bool Number::operator==(Number const& rhs) const { return (m_Val == rhs.m_Val); }
+	bool Number::operator==( Number const& rhs ) const { return (m_Val == rhs.m_Val); }
+	bool Number::operator!=( Number const& rhs ) const { return !(m_Val == rhs.m_Val); }
+	bool Number::operator<( Number const& rhs ) const { return (m_Val < rhs.m_Val); }
+	bool Number::operator>( Number const& rhs ) const { return (m_Val > rhs.m_Val); }
+	bool Number::operator<=( Number const& rhs ) const { return (m_Val <= rhs.m_Val); }
+	bool Number::operator>=( Number const& rhs ) const { return (m_Val >= rhs.m_Val); }
 
 	Number Number::operator+( Number const& rhs ) const { return Number( m_Val + rhs.m_Val ); }
 	Number Number::operator-( Number const& rhs ) const { return Number( m_Val - rhs.m_Val ); }
@@ -68,4 +74,7 @@ namespace _2Real
 	Number::operator unsigned long() const { return static_cast< unsigned long >( m_Val ); }
 	Number::operator float() const { return static_cast< float >( m_Val ); }
 	Number::operator double() const { return m_Val; }
+	
+	const double Number::maxVal() { return std::numeric_limits<double>::max(); }
+	const double Number::minVal() { return std::numeric_limits<double>::min(); }
 }
