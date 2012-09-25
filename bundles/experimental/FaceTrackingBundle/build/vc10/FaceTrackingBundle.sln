@@ -9,11 +9,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\..\..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTrackingBundle", "FaceTrackingBundle.vcxproj", "{6855388C-3AD5-416B-ADA1-EACAB038E6F6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTrackingTest", "..\..\test\build\vc10\FaceTrackingTest.vcxproj", "{CF4B25AE-BE71-4F19-A5EF-313D14905542}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTestingApp", "..\..\..\..\..\testing\build\FaceTestingApp.vcxproj", "{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceTestingApp", "..\..\..\..\..\testing\build\vc10\FaceTestingApp\FaceTestingApp.vcxproj", "{A0CB254B-2529-4BA2-8518-7FD58C0FFB88}"
 	ProjectSection(ProjectDependencies) = postProject
+		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
 		{6855388C-3AD5-416B-ADA1-EACAB038E6F6} = {6855388C-3AD5-416B-ADA1-EACAB038E6F6}
 	EndProjectSection
 EndProject

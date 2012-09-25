@@ -828,7 +828,8 @@ void setupFeatures()
 	faceFeatures.getInletHandle( "UseNose" ).setValue( true );
 	faceFeatures.getInletHandle( "UseMouth" ).setValue( true );
 
-	faceFeatures.getInletHandle( "HaarDetectionDownscale" ).setValue( 0.5f );
+	faceFeatures.getInletHandle( "HaarDetectionDownscale" ).setValue( 0.75f );
+	faceFeatures.getInletHandle( "EqualizeHistogram" ).setDefaultValue( true );
 
 	ffInImg.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 
@@ -987,8 +988,8 @@ int main( int argc, char *argv[] )
 	{
 		initSDLGL();
 
-		//setupFeatures();
-		setupCast();
+		setupFeatures();
+		//setupCast();
 
 		SDL_Event ev;
 		while( ::run )
