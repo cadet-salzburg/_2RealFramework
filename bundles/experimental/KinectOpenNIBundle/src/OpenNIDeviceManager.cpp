@@ -544,6 +544,18 @@ std::string& OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 	 return m_2RealKinect->getMotorAngle(deviceIdx);
  }
 
+double OpenNIDeviceManager::getFovH(int deviceIdx)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getFieldOfView(deviceIdx).horizontalFov;
+}
+
+double OpenNIDeviceManager::getFovV(int deviceIdx)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getFieldOfView(deviceIdx).verticalFov;
+}
+
 _2Real::Point OpenNIDeviceManager::getUsersCenterOfMass(int deviceIdx, int userId, bool bIsWorldCoordinates)
  {
 	try
