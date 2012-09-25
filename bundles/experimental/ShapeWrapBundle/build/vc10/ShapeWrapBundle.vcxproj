@@ -109,6 +109,9 @@
       <AdditionalDependencies>ws2_32.lib;fbsdk.lib;Setupapi.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,6 +151,9 @@
       <AdditionalDependencies>Setupapi.lib;_2RealFramework_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PreLinkEvent>
+      <Command>copy "$(_2REAL_DEPENDENCIES_DIR)\OpenRealitySDK\bin\*.dll" $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

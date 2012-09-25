@@ -18,6 +18,7 @@ SerialBlock::SerialBlock( ContextBlock & context )
 
 SerialBlock::~SerialBlock()
 {
+	m_SerialMessage.clear();
 }
 
 void SerialBlock::setup( BlockHandle &context )
@@ -91,9 +92,10 @@ void SerialBlock::update()
 			if (m_SerialDeviceManager->hasDataPending(m_SerialIdentifer) > 0)
 			{
 				// Retreive the Serial message and store it into a std::vector<unsigned char>
-				vector<unsigned char> serialMessage = m_SerialDeviceManager->getSerialMessage( m_SerialIdentifer );
+				m_SerialMessage.clear();
+				m_SerialMessage = m_SerialDeviceManager->getSerialMessage( m_SerialIdentifer );
 				// write it to block's output
-				m_DataOutOutlet.getWriteableRef<vector<unsigned char>>() = serialMessage;
+				m_DataOutOutlet.getWriteableRef<vector<unsigned char>>() = m_SerialMessage;
 			}
 
 			// 3b. write data

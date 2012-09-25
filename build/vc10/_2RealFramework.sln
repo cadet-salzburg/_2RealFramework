@@ -158,6 +158,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenBeaconBundle", "..\..\b
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenBeaconTest", "..\..\bundles\experimental\OpenBeaconBundle\test\build\vc10\OpenBeaconTest.vcxproj", "{14F6BEDC-4D56-4187-B7FF-E19285793FEF}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6884C90A-A38B-4086-8DA1-EB786CC3C4CE} = {6884C90A-A38B-4086-8DA1-EB786CC3C4CE}
 		{156298E0-906B-4488-A690-02B223C22C13} = {156298E0-906B-4488-A690-02B223C22C13}
 	EndProjectSection
 EndProject
@@ -200,22 +201,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LaserRangerTest", "..\..\bu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NatNet", "NatNet", "{FF3993F7-6618-447C-8165-A0E6D347CF76}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EpocControl", "EpocControl", "{FE5FEB17-CD8D-4EF1-8784-4BCCEA351290}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpocControlBundle", "..\..\bundles\experimental\EpocBundle\build\vc10\EpocControlBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Epoc", "Epoc", "{FE5FEB17-CD8D-4EF1-8784-4BCCEA351290}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NatNetBundle", "..\..\bundles\experimental\NatNetBundle\build\vc10\NatNetBundle.vcxproj", "{00AE6384-F8F5-43FF-918A-9326DE4DC893}"
 	ProjectSection(ProjectDependencies) = postProject
 		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpocControlTest", "..\..\bundles\experimental\EpocBundle\test\build\vc10\EpocControlTest.vcxproj", "{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB} = {08E2BB90-C063-4892-8DB1-F68145C6A1BB}
-		{156298E0-906B-4488-A690-02B223C22C13} = {156298E0-906B-4488-A690-02B223C22C13}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NatNetTest", "..\..\bundles\experimental\NatNetBundle\test\build\vc10\NatNetTest.vcxproj", "{2EC09C68-DC0F-4FFB-81F6-4D922F893344}"
@@ -234,6 +224,17 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EMGShieldTest", "..\..\bundles\experimental\EMGShieldBundle\test\build\vc10\EMGShieldTest.vcxproj", "{AE33ECF8-3A2D-4BD5-8D83-5812B5CEF289}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4C31F625-7AB3-4373-8772-459315FEA814} = {4C31F625-7AB3-4373-8772-459315FEA814}
+		{156298E0-906B-4488-A690-02B223C22C13} = {156298E0-906B-4488-A690-02B223C22C13}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpocBundle", "..\..\bundles\experimental\EpocBundle\build\vc10\EpocBundle.vcxproj", "{08E2BB90-C063-4892-8DB1-F68145C6A1BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91102D4C-49DE-485F-8AAD-A1216B09C070} = {91102D4C-49DE-485F-8AAD-A1216B09C070}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpocTest", "..\..\bundles\experimental\EpocBundle\test\build\vc10\EpocTest.vcxproj", "{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB} = {08E2BB90-C063-4892-8DB1-F68145C6A1BB}
 		{156298E0-906B-4488-A690-02B223C22C13} = {156298E0-906B-4488-A690-02B223C22C13}
 	EndProjectSection
 EndProject
@@ -455,14 +456,6 @@ Global
 		{B0BB0C7A-6DAB-494A-BBCD-0D1D4628AF47}.Release|Win32.ActiveCfg = Release|Win32
 		{B0BB0C7A-6DAB-494A-BBCD-0D1D4628AF47}.Release|Win32.Build.0 = Release|Win32
 		{B0BB0C7A-6DAB-494A-BBCD-0D1D4628AF47}.Release|x64.ActiveCfg = Release|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|x64.ActiveCfg = Debug|x64
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|x64.Build.0 = Debug|x64
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.ActiveCfg = Release|x64
-		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.Build.0 = Release|x64
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Debug|Win32.ActiveCfg = Debug|Win32
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Debug|Win32.Build.0 = Debug|Win32
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Debug|x64.ActiveCfg = Debug|x64
@@ -471,12 +464,6 @@ Global
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Release|Win32.Build.0 = Release|Win32
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Release|x64.ActiveCfg = Release|x64
 		{00AE6384-F8F5-43FF-918A-9326DE4DC893}.Release|x64.Build.0 = Release|x64
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|Win32.Build.0 = Debug|Win32
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|x64.ActiveCfg = Debug|Win32
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|Win32.ActiveCfg = Release|Win32
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|Win32.Build.0 = Release|Win32
-		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|x64.ActiveCfg = Release|Win32
 		{2EC09C68-DC0F-4FFB-81F6-4D922F893344}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2EC09C68-DC0F-4FFB-81F6-4D922F893344}.Debug|Win32.Build.0 = Debug|Win32
 		{2EC09C68-DC0F-4FFB-81F6-4D922F893344}.Debug|x64.ActiveCfg = Debug|Win32
@@ -497,6 +484,20 @@ Global
 		{AE33ECF8-3A2D-4BD5-8D83-5812B5CEF289}.Release|Win32.ActiveCfg = Release|Win32
 		{AE33ECF8-3A2D-4BD5-8D83-5812B5CEF289}.Release|Win32.Build.0 = Release|Win32
 		{AE33ECF8-3A2D-4BD5-8D83-5812B5CEF289}.Release|x64.ActiveCfg = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|Win32.Build.0 = Debug|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|x64.ActiveCfg = Debug|x64
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Debug|x64.Build.0 = Debug|x64
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.ActiveCfg = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|Win32.Build.0 = Release|Win32
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.ActiveCfg = Release|x64
+		{08E2BB90-C063-4892-8DB1-F68145C6A1BB}.Release|x64.Build.0 = Release|x64
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|Win32.Build.0 = Debug|Win32
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Debug|x64.ActiveCfg = Debug|Win32
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|Win32.ActiveCfg = Release|Win32
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|Win32.Build.0 = Release|Win32
+		{E033B3F3-E750-41E4-8A05-0C93B69E9ECF}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

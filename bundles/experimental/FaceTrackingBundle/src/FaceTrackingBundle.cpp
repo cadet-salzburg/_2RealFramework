@@ -33,6 +33,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
+		std::cout << "hallo" << std::endl;
+
 		info.setName( "FaceTrackingBundle" );
 		info.setDescription( "face tracking stuff" );
 		info.setAuthor( "roland aigner" );
@@ -40,18 +42,18 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "support@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-/*
-		unsigned char rgbChecker[640 * 480 * 3];
-		unsigned short depthChecker[640 * 480 * 1];
+		unsigned char *rgbChecker = new unsigned char[640 * 480 * 3];
+		unsigned short *depthChecker = new unsigned short[640 * 480 * 1];
 
 		fillChecker( rgbChecker, 640, 480, 3 );
 		fillChecker( depthChecker, 640, 480, 1 );
 
 		Image initRGBImage( rgbChecker, true, 640, 480, ImageChannelOrder::RGB );
 		Image initDepthImage( depthChecker, true, 640, 480, ImageChannelOrder::A );
-*/
+		/*
 		Image initRGBImage( (unsigned char*)NULL, false, 640, 480, ImageChannelOrder::RGB );
 		Image initDepthImage( (unsigned short*)NULL, false, 640, 480, ImageChannelOrder::A );
+		*/
 
 		BlockMetainfo faceCast = info.exportBlock< FaceCastBlock, WithoutContext>( "FaceCastBlock" );
 		faceCast.setDescription( "Creates 3D vertex and normal data for faces find in an RGBD image stream" );
@@ -138,8 +140,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		faceFeatures.addInlet< std::string >( "CascadefileNose", "ressources\\FaceTrackingBundle\\haarcascade_mcs_nose.xml" );
 		faceFeatures.addInlet< std::string >( "CascadefileMouth", "ressources\\FaceTrackingBundle\\haarcascade_mcs_mouth.xml" );
 
-		faceFeatures.addInlet< double >( "ExtrapolationDamping", 0.75 );
-		faceFeatures.addInlet< double >( "ExtrapolationCoherenceRise", 0.27 );
+		faceFeatures.addInlet< double >( "Extrapolation_damping", 0.75 );
+		faceFeatures.addInlet< double >( "Extrapolation_coherence_rise", 0.27 );
 
 		faceFeatures.addInlet< double >( "AffinityWeightPos", 0.6 );
 		faceFeatures.addInlet< double >( "AffinityWeightSize", 0.4 );

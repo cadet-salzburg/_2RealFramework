@@ -40,4 +40,6 @@ private:
 
 	// current active serial identifier (empty string means none)
 	std::string m_SerialIdentifer;
+
+	std::vector<unsigned char> m_SerialMessage;
 };

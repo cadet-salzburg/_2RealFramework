@@ -400,6 +400,9 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	Poco::Mutex::ScopedLock lock(m_Mutex);
 	try
 	{
+		_2Real::Skeleton skeleton;
+		skeleton.setGlobal(true);
+
 		_2RealKinectWrapper::_2RealPositionsVector3f positions;
 		std::vector<_2Real::RigidBody> jointPositions;
 		// don't regard confidence values for now, otherwise joints disappear and appear due to this faulty implementation of the confidence values, better to show them and the are not moving
@@ -427,19 +430,106 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 		{
 			if( m_2RealKinect->isJointAvailable( (_2RealJointType)i ))// && confidences[i].positionConfidence>0)		// only add if joint is available no confidence for now implemented see comment above
 			{
-				std::vector<_2Real::Point> joint;
-				joint.push_back(_2Real::Point(_2Real::Number(positions[i].x), _2Real::Number(positions[i].y), _2Real::Number(positions[i].z)));
-				jointPositions.push_back(_2Real::RigidBody( joint ) );
+				_2Real::RigidBody rigidBody;
+				rigidBody.setId(i);
+				rigidBody.setLabel(getLabelForJoint((_2RealJointType)i));
+				rigidBody.setPosition(_2Real::Number(positions[i].x), _2Real::Number(positions[i].y), _2Real::Number(positions[i].z));
+
+				jointPositions.push_back(rigidBody);
 			}
 		}
-
-		return _2Real::Skeleton( jointPositions );
+		
+		skeleton.setRigidBodies(jointPositions);
+		return skeleton;
 	}
 	catch ( _2RealKinectWrapper::_2RealException &e )
 	{
 		cout << e.what() << endl;
 		return _2Real::Skeleton(); 
 	}
+}
+
+std::string& OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
+{
+	std::string label("unknown");
+
+	switch (joint)
+	{
+	case _2RealJointType::JOINT_HEAD:
+		label = "head";
+		break;
+	case _2RealJointType::JOINT_NECK:
+		label = "neck";
+		break;
+	case _2RealJointType::JOINT_TORSO:
+		label = "torso";
+		break;
+	case _2RealJointType::JOINT_WAIST:
+		label = "waist";
+		break;
+	case _2RealJointType::JOINT_LEFT_COLLAR:
+		label = "left collar";
+		break;
+	case _2RealJointType::JOINT_LEFT_SHOULDER:
+		label = "left shoulder";
+		break;
+	case _2RealJointType::JOINT_LEFT_ELBOW:
+		label = "left ellbow";
+		break;
+	case _2RealJointType::JOINT_LEFT_WRIST:
+		label = "left wrist";
+		break;
+	case _2RealJointType::JOINT_LEFT_HAND:
+		label = "left hand";
+		break;
+	case _2RealJointType::JOINT_LEFT_FINGERTIP:
+		label = "left fingertip";
+		break;
+	case _2RealJointType::JOINT_RIGHT_COLLAR:
+		label = "right collar";
+		break;
+	case _2RealJointType::JOINT_RIGHT_SHOULDER:
+		label = "right shoulder";
+		break;
+	case _2RealJointType::JOINT_RIGHT_ELBOW:
+		label = "right ellbow";
+		break;
+	case _2RealJointType::JOINT_RIGHT_WRIST:
+		label = "right wrist";
+		break;
+	case _2RealJointType::JOINT_RIGHT_HAND:
+		label = "right hand";
+		break;
+	case _2RealJointType::JOINT_RIGHT_FINGERTIP:
+		label = "right fingertip";
+		break;
+	case _2RealJointType::JOINT_LEFT_HIP:
+		label = "left hip";
+		break;
+	case _2RealJointType::JOINT_LEFT_KNEE:
+		label = "left knee";
+		break;
+	case _2RealJointType::JOINT_LEFT_ANKLE:
+		label = "left ankle";
+		break;
+	case _2RealJointType::JOINT_LEFT_FOOT:
+		label = "left foot";
+		break;
+	case _2RealJointType::JOINT_RIGHT_HIP:
+		label = "right hip";
+		break;
+	case _2RealJointType::JOINT_RIGHT_KNEE:
+		label = "right knee";
+		break;
+	case _2RealJointType::JOINT_RIGHT_ANKLE:
+		label = "right ankle";
+		break;
+	case _2RealJointType::JOINT_RIGHT_FOOT:
+		label = "right foot";
+		break;
+	}
+
+	return label;
 }
 
  void OpenNIDeviceManager::setMotorAngle(int deviceIdx, int angle)

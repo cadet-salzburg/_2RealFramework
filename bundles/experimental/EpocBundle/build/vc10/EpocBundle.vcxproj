@@ -22,7 +22,7 @@
     <ClCompile Include="..\..\src\EpocAffecitivBlock.cpp" />
     <ClCompile Include="..\..\src\EpocCognitivBlock.cpp" />
     <ClCompile Include="..\..\src\EpocExpressivBlock.cpp" />
-    <ClCompile Include="..\..\src\EpocControlBundle.cpp" />
+    <ClCompile Include="..\..\src\EpocBundle.cpp" />
     <ClCompile Include="..\..\src\EpocDeviceManager.cpp" />
     <ClCompile Include="..\..\src\EpocGyroBlock.cpp" />
   </ItemGroup>
@@ -37,7 +37,7 @@
     <ProjectGuid>{08E2BB90-C063-4892-8DB1-F68145C6A1BB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ContextPlugin</RootNamespace>
-    <ProjectName>EpocControlBundle</ProjectName>
+    <ProjectName>EpocBundle</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

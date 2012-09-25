@@ -15,6 +15,7 @@ MovingHeadBlock::MovingHeadBlock( ContextBlock & context )
 
 MovingHeadBlock::~MovingHeadBlock()
 {
+	m_SerialByteStream.clear();
 }
 
 void MovingHeadBlock::setup( BlockHandle &context )
@@ -25,7 +26,7 @@ void MovingHeadBlock::setup( BlockHandle &context )
 		m_MotorIDInlet = context.getInletHandle( "MotorID" );
 		m_CommandInlet = context.getInletHandle( "Command" );
 		m_ValueInlet = context.getInletHandle( "Value" );
-		m_SerialOutlet = context.getOutletHandle( "SerialByteStream" );
+		m_SerialOutlet = context.getOutletHandle( "Serialm_SerialByteStream" );
 	}
 	catch ( Exception& e )
 	{
@@ -65,18 +66,18 @@ void MovingHeadBlock::update()
 			// for Speed the range is 1 to 1023 (114 rpm). 0 means maximim speed
 			// for LED Brightness the range is 0 (0V) to 1023 (5V)
 
-			std::vector<unsigned char> byteStream;
-			byteStream.push_back('X');
-			byteStream.push_back('X');
-			byteStream.push_back('0' + m_MotorIDInlet.getReadableRef<unsigned int>());
-			byteStream.push_back(m_CommandInlet.getReadableRef<unsigned char>());
+			m_SerialByteStream.clear();
+			m_SerialByteStream.push_back('X');
+			m_SerialByteStream.push_back('X');
+			m_SerialByteStream.push_back('0' + m_MotorIDInlet.getReadableRef<unsigned int>());
+			m_SerialByteStream.push_back(m_CommandInlet.getReadableRef<unsigned char>());
 			unsigned int value = m_ValueInlet.getReadableRef<unsigned int>();
-			byteStream.push_back('0' + (value % 10000) / 1000);
-			byteStream.push_back('0' + (value % 1000) / 100);
-			byteStream.push_back('0' + (value % 100) / 10);
-			byteStream.push_back('0' + (value % 10));
+			m_SerialByteStream.push_back('0' + (value % 10000) / 1000);
+			m_SerialByteStream.push_back('0' + (value % 1000) / 100);
+			m_SerialByteStream.push_back('0' + (value % 100) / 10);
+			m_SerialByteStream.push_back('0' + (value % 10));
 
-			m_SerialOutlet.getWriteableRef<vector<unsigned char>>() = byteStream;
+			m_SerialOutlet.getWriteableRef<vector<unsigned char>>() = m_SerialByteStream;
 		}
 	}
 	catch ( Exception& e )

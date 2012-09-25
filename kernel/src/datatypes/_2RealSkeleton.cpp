@@ -20,18 +20,26 @@
 
 namespace _2Real
 {
-	/*std::vector<_2Real::Point>&	Skeleton::getJointPositions()
-	{
-		return m_JointPositions;
-	}
 
-	std::vector<_2Real::Point>&	Skeleton::getJointOrientations()
+	void Skeleton::updateBoundingBox()
 	{
-		return m_JointOrientations;
-	}
+		m_BoundingBoxLimit.reset();
+		_2Real::Point min = m_BoundingBoxLimit.getMin();
+		_2Real::Point max = m_BoundingBoxLimit.getMax();
 
-	const int Skeleton::getNumberOfJoints() const
-	{
-		return m_JointPositions.size();
-	}*/
+		for (std::vector< _2Real::RigidBody >::const_iterator it = m_RigidBodies.begin(); it != m_RigidBodies.end(); it++)
+		{
+			const _2Real::RigidBody rb = *it;
+			const _2Real::Point pos = rb.getPosition();
+
+			if (pos.x() > max.x()) max.setX(pos.x());
+			if (pos.y() > max.y()) max.setY(pos.y());
+			if (pos.z() > max.z()) max.setZ(pos.z());
+
+			if (pos.x() < min.x()) min.setX(pos.x());
+			if (pos.y() < min.y()) min.setY(pos.y());
+			if (pos.z() < min.z()) min.setZ(pos.z());
+		}
+		m_BoundingBoxLimit.set(min, max);
+	}
 }

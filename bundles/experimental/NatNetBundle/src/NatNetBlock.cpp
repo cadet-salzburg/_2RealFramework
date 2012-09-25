@@ -107,14 +107,14 @@ public:
 
 			for(int iMarker=0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
 			{
-             if(data->RigidBodies[i].MarkerIDs && data->RigidBodies[i].Markers)
+			 if(data->RigidBodies[i].MarkerIDs && data->RigidBodies[i].Markers)
 				 markerSets.push_back(_2Real::Point(data->RigidBodies[i].Markers[iMarker][0],
-                    data->RigidBodies[i].Markers[iMarker][1],
-                    data->RigidBodies[i].Markers[iMarker][2],
+					data->RigidBodies[i].Markers[iMarker][1],
+					data->RigidBodies[i].Markers[iMarker][2],
 					"",
 					data->RigidBodies[i].MarkerIDs[iMarker]));
 			}
-			rigidBodies.push_back( _2Real::RigidBody( markerSets, "Frame "+ data->iFrame, data->RigidBodies[i].ID, 0, position, orientation ) );
+			rigidBodies.push_back( _2Real::RigidBody( "Frame "+ data->iFrame, data->RigidBodies[i].ID, 0, position, orientation, markerSets ) );
 		}
 
 		 // Skeletons
@@ -128,17 +128,17 @@ public:
 
 				_2Real::Point position(rbData.x, rbData.y, rbData.z);
 				_2Real::Quaternion orientation(rbData.qx, rbData.qy, rbData.qz, rbData.qw);
-								            
-            for(int iMarker=0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
-            {
-              markerSets.push_back(_2Real::Point(data->RigidBodies[i].Markers[iMarker][0],
-                    data->RigidBodies[i].Markers[iMarker][1],
-                    data->RigidBodies[i].Markers[iMarker][2],
+											
+			for(int iMarker=0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
+			{
+			  markerSets.push_back(_2Real::Point(data->RigidBodies[i].Markers[iMarker][0],
+					data->RigidBodies[i].Markers[iMarker][1],
+					data->RigidBodies[i].Markers[iMarker][2],
 					"",
 					data->RigidBodies[i].MarkerIDs[iMarker]));
 			}
-			rigidBodies.push_back( _2Real::RigidBody( markerSets, "Frame "+ data->iFrame, skData.RigidBodyData[j].ID, skData.skeletonID, position, orientation ) );
-        }
+			rigidBodies.push_back( _2Real::RigidBody( "Frame "+ data->iFrame, skData.RigidBodyData[j].ID, skData.skeletonID, position, orientation, markerSets ) );
+		}
 			skeletons.push_back( _2Real::Skeleton( rigidBodies, "Frame "+data->iFrame, skData.skeletonID, true ) );
 		}		
 

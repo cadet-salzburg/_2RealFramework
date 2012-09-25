@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		Skeleton() {}
+		Skeleton() : m_Label("undefined"), m_Id(-1), m_Global(true) {}
 		Skeleton( Skeleton const& src ) : m_RigidBodies( src.m_RigidBodies ), m_Label( src.m_Label ), m_Id( src.m_Id ), m_Global( src.m_Global ), m_BoundingBoxLimit(src.m_BoundingBoxLimit) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies, std::string const& l, const unsigned int id, const bool global ) : m_RigidBodies( rigidBodies ), m_Label( l ), m_Id ( id ), m_Global( global ) {}
 		Skeleton( const std::vector<_2Real::RigidBody> rigidBodies ) : m_RigidBodies( rigidBodies ), m_Label( "undefined" ), m_Id( -1 ), m_Global( true ) {}
@@ -45,20 +45,24 @@ namespace _2Real
 			return ( m_Label == other.m_Label && m_Id == other.m_Id && m_BoundingBoxLimit == other.m_BoundingBoxLimit && m_RigidBodies == other.m_RigidBodies );
 		}
 		
-		std::vector<_2Real::RigidBody>&	getRigidBodies()	{ return m_RigidBodies; }
+		void setRigidBodies(std::vector<_2Real::RigidBody>&	rigidBodies)	{ m_RigidBodies = rigidBodies; updateBoundingBox(); }
+		std::vector<_2Real::RigidBody>&	getRigidBodies()					{ return m_RigidBodies; }
 	
-		void setLabel( std::string const& l )	{ m_Label = l; }
-		std::string const& getLabel() const		{ return m_Label; }
+		void setLabel( std::string const& l )								{ m_Label = l; }
+		std::string const& getLabel() const									{ return m_Label; }
 		
-		void setId( int id )					{ m_Id = id; }
-		int getId() const						{ return m_Id; }
+		void setId( int id )												{ m_Id = id; }
+		int getId() const													{ return m_Id; }
 		
-		// global means data the positional and rotational skeleton data is relative to a global coordinate system
-		void setGlobal( bool global)			{ m_Global = global; }
-		bool isGlobal() const					{ return m_Global; }
+		// global means that the positional and rotational skeleton data is relative to a global coordinate system
+		void setGlobal( bool global)										{ m_Global = global; }
+		bool isGlobal() const												{ return m_Global; }
 		
-		void setLimit(_2Real::BoundingBox bb)							{ m_BoundingBoxLimit = bb; }
-		_2Real::BoundingBox getLimit()									{ return m_BoundingBoxLimit; }
+		void setLimit(_2Real::BoundingBox bb)								{ m_BoundingBoxLimit = bb; }
+		_2Real::BoundingBox getLimit()										{ return m_BoundingBoxLimit; }
+
+		// calculates the bounding box limits based on the rigid body positions
+		virtual void updateBoundingBox();
 
 	private:
 
@@ -66,8 +70,7 @@ namespace _2Real
 		std::string						m_Label;
 		int								m_Id;
 		bool							m_Global;
-		_2Real::BoundingBox				m_BoundingBoxLimit;			// space limits which describe e.g. for kinect the volume for world coordinates it's working, need this for the rendering in a 3d scene
-	
+		_2Real::BoundingBox				m_BoundingBoxLimit;			// space limits which describe e.g. for kinect the volume for world coordinates it's working, need this for the rendering in a 3d scen
 	};
 
 }

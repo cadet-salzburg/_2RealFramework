@@ -36,16 +36,33 @@ void QGlSkeletonWidget::draw()
 		std::vector<_2Real::RigidBody> rigidBodies = m_Skeletons[i].getRigidBodies();
 		for(int j=0; j<rigidBodies.size(); j++)
 		{
-			std::vector<_2Real::Point> joints = rigidBodies[j].getPoints();
+			std::vector<_2Real::Point> joints = rigidBodies[j].getMarker();
 			_2Real::Quaternion jointOrientation = rigidBodies[j].getOrientation();
+			
+			if (rigidBodies[j].hasPosition())
+			{
+				double x = -1.0 + 2.0 * double(rigidBodies[j].getPosition().x());
+				double y = -1.0 + 2.0 * double(rigidBodies[j].getPosition().y()); 
+				double z = double(rigidBodies[j].getPosition().z());
+
+				glPushMatrix();
+				glTranslatef(x,y,z);
+				glScalef(scaleX, scaleY, scaleZ);
+				glColor4f(0,1,0,1);
+				glBegin(GL_POINTS);
+					glVertex3f(0,0,0);
+				glEnd();
+				glColor4f(1,1,1,1);
+				drawAxis(0.07);
+				glPopMatrix();
+			}
 
 			for(int k=0; k<joints.size(); k++)
 			{
 				double x = -1.0 + 2.0 * (double(joints[k].x())); 
 				double y = -1.0 + 2.0 * (double(joints[k].y())); 
 				double z = double(joints[k].z());
-				
-			
+							
 				glPushMatrix();
 				glTranslatef(x,y,z);
 				
