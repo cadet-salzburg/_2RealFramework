@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NatNetTestingApp", "NatNetT
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpocTestingApp", "EpocTestingApp\EpocTestingApp.vcxproj", "{8BCA80C8-5621-4158-A25E-96130E3AED99}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MovingHeadTestingApp", "MovingHeadTestingApp\MovingHeadTestingApp.vcxproj", "{6C7B14A3-5942-4A35-AA8A-E8E9137897F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +72,10 @@ Global
 		{8BCA80C8-5621-4158-A25E-96130E3AED99}.Debug|Win32.Build.0 = Debug|Win32
 		{8BCA80C8-5621-4158-A25E-96130E3AED99}.Release|Win32.ActiveCfg = Release|Win32
 		{8BCA80C8-5621-4158-A25E-96130E3AED99}.Release|Win32.Build.0 = Release|Win32
+		{6C7B14A3-5942-4A35-AA8A-E8E9137897F0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C7B14A3-5942-4A35-AA8A-E8E9137897F0}.Debug|Win32.Build.0 = Debug|Win32
+		{6C7B14A3-5942-4A35-AA8A-E8E9137897F0}.Release|Win32.ActiveCfg = Release|Win32
+		{6C7B14A3-5942-4A35-AA8A-E8E9137897F0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

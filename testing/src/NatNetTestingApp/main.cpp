@@ -196,7 +196,7 @@ int main( int argc, char *argv[] )
 		natNetData.getOutletHandle( "rigid_body" ).unregisterFromNewData( receiver, &Receiver::receiveRigidBodies );
 		natNetData.getOutletHandle( "skeleton" ).unregisterFromNewData( receiver, &Receiver::receiveSkeletons );
 
-		engine.safeConfig( "img_test.xml" );
+		engine.safeConfig( "natnet_test.xml" );
 
 		nnBundle.unload();
 	}

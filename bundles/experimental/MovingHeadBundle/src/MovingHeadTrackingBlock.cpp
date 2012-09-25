@@ -53,15 +53,25 @@ void MovingHeadTrackingBlock::update()
 		// there is only something happening when a new value is provided!
 		if (m_CenterOfMassInlet.hasChanged())
 		{
-			_2Real::Point com = m_CenterOfMassInlet.getReadableRef<_2Real::Point>();
-
-
-			if(m_UserIDInlet.getReadableRef<unsigned int>() != com.getId())
+			int id = m_UserIDInlet.getReadableRef<int>();
+			_2Real::Point com;
+			std::vector<_2Real::Point> coms = m_CenterOfMassInlet.getReadableRef<std::vector<_2Real::Point>>();
+			std::vector<_2Real::Point>::const_iterator it = coms.begin();
+			while (it != coms.end())
+			{
+				com = *it;
+				if (id == _2Real::Point::INVALID_ID || id == com.getId())
+				{
+					break;
+				}
+				it++;
+			}
+			if (it == coms.end())
 			{
 				discardAllOutlets();
 				return;
 			}
-
+			
 			int x = com.x();
 			int y = com.y();
 			int z = com.z();
