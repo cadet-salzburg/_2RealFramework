@@ -449,7 +449,7 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	}
 }
 
-std::string& OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
+std::string OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 {
 	std::string label("unknown");
 
