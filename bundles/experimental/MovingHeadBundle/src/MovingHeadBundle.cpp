@@ -42,8 +42,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		BlockMetainfo MovingHeadTracking = info.exportBlock< MovingHeadTrackingBlock, WithContext >( "MovingHeadTrackingBlock" );
 				
 		MovingHeadTracking.addInlet<std::vector<_2Real::Point>>( "CentorOfMass", std::vector<_2Real::Point>() );
-		MovingHeadTracking.addInlet<unsigned int>( "MotorIdX", 0 );
-		MovingHeadTracking.addInlet<unsigned int>( "MotorIdY", 0 );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIDX", 0 );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIDY", 0 );
 		MovingHeadTracking.addInlet<int>( "UserID", _2Real::Point::INVALID_ID ); // INVALID_ID means any userid is accepted
 		MovingHeadTracking.addOutlet<unsigned int>( "MotorID" );
 		MovingHeadTracking.addOutlet<unsigned char>( "Command" );

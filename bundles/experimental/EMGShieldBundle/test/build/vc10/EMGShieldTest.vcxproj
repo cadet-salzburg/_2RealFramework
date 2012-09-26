@@ -66,7 +66,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin</Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,7 +89,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bi
     </Link>
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\videoinputlib\lib\*.dll $(_2REAL_DIR)\bundles\bin</Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

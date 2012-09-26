@@ -119,6 +119,10 @@ void SerialBlock::update()
 				}
 			}
 		}
+		else
+		{
+			m_DataOutOutlet.discard();
+		}
 	}
 	catch ( Exception& e )
 	{

@@ -24,9 +24,12 @@ private:
 	// The Block Inlets 
 	_2Real::bundle::InletHandle m_CenterOfMassInlet;
 	_2Real::bundle::InletHandle m_UserIDInlet;
+	_2Real::bundle::InletHandle m_MotorIDXInlet;
+	_2Real::bundle::InletHandle m_MotorIDYInlet;
 
-	_2Real::bundle::OutletHandle m_ValueXOutlet;
-	_2Real::bundle::OutletHandle m_ValueYOutlet;
+	_2Real::bundle::OutletHandle m_MotorIDOutlet;
+	_2Real::bundle::OutletHandle m_CommandOutlet;
+	_2Real::bundle::OutletHandle m_ValueOutlet;
 
 	// current active MovingHead identifier (empty string means none)
 	std::string m_MovingHeadIdentifer;

@@ -57,39 +57,52 @@ using namespace _2Real;
 
 bool run = true;
 
+
 class Receiver
 {
 public:
-	Receiver()
-	{
-	}
+	Receiver() 
+	: motorID(0)
+	, command(0)
+	, value(0)
+	{}
 
-	~Receiver()
-	{
-	}
+	~Receiver() {}
 
-	void receiveOtherMarkers( AppData const &data )
+	void receiveMotorID( AppData const &data )
 	{
 		m_Access.lock();
-		
-		//std::vector < Point > otherMarkers = data.getData<std::vector <_2Real::Point> >();
+		motorID = data.getData<unsigned int>();
+		m_Access.unlock();
+	}
 
-		//for(int i = 0; i<otherMarkers.size(); i++)
-		//{
-		//	std::cout
-		//		<< "Other Marker " << otherMarkers[i].getId()
-		//		<< ": x=" << otherMarkers[i].x()
-		//		<< "\ty=" << otherMarkers[i].y()
-		//		<< "\tz=" << otherMarkers[i].z()
-		//		<< "\t(" << otherMarkers[i].getLabel() << ")" << std::endl;
-		//}
+	void receiveCommand( AppData const &data )
+	{
+		m_Access.lock();
+		command = data.getData<unsigned char>();
+		m_Access.unlock();
+	}
 
+	void receiveValue( AppData const &data )
+	{
+		m_Access.lock();
+		value = data.getData<unsigned int>();
+		m_Access.unlock();
+	}
+
+	void printValues()
+	{
+		m_Access.lock();
+		cout << motorID << " " << command << " " << value << endl;
 		m_Access.unlock();
 	}
 
 private:
-
 	Poco::FastMutex			m_Access;
+
+	unsigned int motorID;
+	unsigned char command;
+	unsigned int value;
 };
 
 
@@ -115,35 +128,40 @@ int main( int argc, char *argv[] )
 		BlockHandle &koniBlock = koniBundle.createBlockInstance( "KinectOpenNIUserSkeletonBlock" );
 
 		// set update rates
-		koniBlock.setUpdateRate( 30.0f );
-		sBlock.setUpdateRate( 30.0f );
-		mhTBlock.setUpdateRate( 30.0f );
-		mhBlock.setUpdateRate( 30.0f );
-		
-		// get inlet handles
-
-		// register outlet handles
+		koniBlock.setUpdateRate( 27.0f );
+		sBlock.setUpdateRate( 17.0f );
+		mhTBlock.setUpdateRate( 19.0f );
+		mhBlock.setUpdateRate( 23.0f );
 
 		// link inlet with outlet handles
+		mhTBlock.getInletHandle("CentorOfMass").link(koniBlock.getOutletHandle("UsersCenterOfMass"));
+		mhBlock.getInletHandle("MotorID").link(mhTBlock.getOutletHandle("MotorID"));
+		mhBlock.getInletHandle("Value").link(mhTBlock.getOutletHandle("Value"));
+		mhBlock.getInletHandle("Command").link(mhTBlock.getOutletHandle("Command"));
+		sBlock.getInletHandle("Write").link(mhBlock.getOutletHandle("SerialByteStream"));
+		
+		// set inital inlet handle values
+		mhTBlock.getInletHandle("MotorIDX").setValue<unsigned int>(5); // set proper values here
+		mhTBlock.getInletHandle("MotorIDY").setValue<unsigned int>(15); // set proper values here
+		sBlock.getInletHandle("SerialPort").setValue<std::string>("COM4"); // set proper values here
+		sBlock.getInletHandle("BaudRate").setValue<unsigned int>(57600);
 
-/*
-		InletHandle	serverIPIn = mhBlock.getInletHandle( "server_ip" );
-		serverIPIn.setUpdatePolicy( InletPolicy::ALWAYS );
-		mhBlock.getOutletHandle( "other_marker" ).registerToNewData( receiver, &Receiver::receiveOtherMarkers );
-		mhBlock.getInletHandle( "server_ip" ).link(mhBlock.getOutletHandle( "other_marker" ));
-*/
+		// register outlet handles
+		mhTBlock.getOutletHandle("MotorID").registerToNewData(receiver, &Receiver::receiveMotorID);
+		mhTBlock.getOutletHandle("Command").registerToNewData(receiver, &Receiver::receiveCommand);
+		mhTBlock.getOutletHandle("Value").registerToNewData(receiver, &Receiver::receiveValue);
 
 		// setup blocks
-		mhBlock.setup();
-		mhTBlock.setup();
-		sBlock.setup();
 		koniBlock.setup();
+		mhTBlock.setup();
+		mhBlock.setup();
+		sBlock.setup();
 
 		// start blocks
-		mhBlock.start();
-		mhTBlock.start();
-		sBlock.start();
 		koniBlock.start();
+		mhTBlock.start();
+		mhBlock.start();
+		sBlock.start();
 
 		while( ::run )
 		{
@@ -151,7 +169,8 @@ int main( int argc, char *argv[] )
 				if( getch() == 'q' )
 					break;
 
-			Sleep( 10 );
+			receiver.printValues();
+			Sleep( 100 );
 		}
 
 		// stop blocks
@@ -159,10 +178,12 @@ int main( int argc, char *argv[] )
 		mhTBlock.stop();
 		sBlock.stop();
 		koniBlock.stop();
-
-		// unregister outlets
-//		mhBlock.getOutletHandle( "other_marker" ).unregisterFromNewData( receiver, &Receiver::receiveOtherMarkers );
 		
+		// unregister outlet handles
+		mhTBlock.getOutletHandle("MotorID").unregisterFromNewData(receiver, &Receiver::receiveMotorID);
+		mhTBlock.getOutletHandle("Command").unregisterFromNewData(receiver, &Receiver::receiveCommand);
+		mhTBlock.getOutletHandle("Value").unregisterFromNewData(receiver, &Receiver::receiveValue);
+
 		// save config		
 		engine.safeConfig( "movinghead_test.xml" );
 

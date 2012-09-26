@@ -26,7 +26,7 @@ void MovingHeadBlock::setup( BlockHandle &context )
 		m_MotorIDInlet = context.getInletHandle( "MotorID" );
 		m_CommandInlet = context.getInletHandle( "Command" );
 		m_ValueInlet = context.getInletHandle( "Value" );
-		m_SerialOutlet = context.getOutletHandle( "Serialm_SerialByteStream" );
+		m_SerialOutlet = context.getOutletHandle( "SerialByteStream" );
 	}
 	catch ( Exception& e )
 	{
