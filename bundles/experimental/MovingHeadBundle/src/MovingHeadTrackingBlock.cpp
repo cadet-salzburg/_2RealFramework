@@ -7,6 +7,10 @@ using namespace std;
 using namespace _2Real;
 using namespace _2Real::bundle;
 
+// max and min goal position of AX-12 servo motor, min position is 0 degrees and max position is 300 degrees
+#define MIN_POS	0x0000
+#define MAX_POS	0x03ff
+
 MovingHeadTrackingBlock::MovingHeadTrackingBlock( ContextBlock & context ) 
 : Block(), m_CurrentPosX( 0 ), m_CurrentPosY( 0 )
 {
@@ -109,6 +113,11 @@ void MovingHeadTrackingBlock::update()
 			{
 				newYPos = newYPos-beta*20;
 			}
+
+			if (newXPos < MIN_POS) newXPos = MIN_POS;
+			if (newXPos > MAX_POS) newXPos = MAX_POS;
+			if (newYPos < MIN_POS) newYPos = MIN_POS;
+			if (newYPos > MAX_POS) newYPos = MAX_POS;
 
 			int deltaX = abs(newXPos - m_CurrentPosX);
 			int deltaY = abs(newYPos - m_CurrentPosY);
