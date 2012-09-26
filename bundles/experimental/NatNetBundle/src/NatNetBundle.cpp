@@ -19,7 +19,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setDescription( "OptiTrack plugin" );
 		info.setAuthor( "Veronika Pauser" );
 		info.setCategory( "Tracking" );
-		info.setContact( "help@cadet.at" );
+		info.setContact( "support@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
 		BlockMetainfo natNet = info.exportBlock< NatNetBlock, WithoutContext>( "NatNetBlock" );

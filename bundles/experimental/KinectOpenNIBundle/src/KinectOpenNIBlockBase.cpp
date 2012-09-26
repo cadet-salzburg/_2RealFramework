@@ -2,7 +2,10 @@
 #include <string>
 #include <sstream>
 #include "KinectOpenNIBlockBase.h"
+#include <math.h>
 #include "_2RealDatatypes.h"
+
+#define PI 3.14159265
 
 using namespace _2Real;
 using _2Real::bundle::BlockHandle;
@@ -122,13 +125,13 @@ void KinectOpenNIBlockBase::update()
 
 			if(m_OpenNIDeviceManager->getFovH(m_iCurrentDevice) != m_dFovH)
 			{
-				m_dFovH = m_OpenNIDeviceManager->getFovH(m_iCurrentDevice);
+				m_dFovH = m_OpenNIDeviceManager->getFovH(m_iCurrentDevice) * 180.0/PI;
 				m_FovHorizontalHandle.getWriteableRef<double>() = m_dFovH;
 			}
 
 			if(m_OpenNIDeviceManager->getFovV(m_iCurrentDevice) != m_dFovV)
 			{
-				m_dFovV = m_OpenNIDeviceManager->getFovV(m_iCurrentDevice);
+				m_dFovV = m_OpenNIDeviceManager->getFovV(m_iCurrentDevice) * 180.0/PI;
 				m_FovVerticalHandle.getWriteableRef<double>() = m_dFovV;
 			}
 

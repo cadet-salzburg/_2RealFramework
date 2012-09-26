@@ -37,7 +37,7 @@ public:
 	double							getFovH(int deviceIdx);
 	double							getFovV(int deviceIdx);
 
-	std::string&					OpenNIDeviceManager::getLabelForJoint(_2RealKinectWrapper::_2RealJointType joint);
+	std::string					    getLabelForJoint(_2RealKinectWrapper::_2RealJointType joint);
 	
 private:
 	void							initDeviceList();
