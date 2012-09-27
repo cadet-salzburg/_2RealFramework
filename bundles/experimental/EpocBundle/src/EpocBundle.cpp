@@ -20,11 +20,11 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName("EpocControlBundle");
-		info.setDescription( "Emotiv Epoc BCI" );
+		info.setName("EpocBundle");
+		info.setDescription( "Connection to Emotiv Epoc BCI" );
 		info.setAuthor( "Veronika Pauser" );
 		info.setCategory( "Devices" );
-		info.setContact( "help@cadet.at" );
+		info.setContact( "support@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< EpocDeviceManager >();
