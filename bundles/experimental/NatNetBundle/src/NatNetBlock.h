@@ -23,7 +23,6 @@ private:
 	_2Real::bundle::InletHandle			m_clientIPIn;
 	_2Real::bundle::InletHandle			m_isUnicastIn;
 
-	_2Real::bundle::OutletHandle		m_markerSetOut;
 	_2Real::bundle::OutletHandle		m_otherMarkerOut;
 	_2Real::bundle::OutletHandle		m_rigidBodyOut;
 	_2Real::bundle::OutletHandle		m_skeletonOut;
