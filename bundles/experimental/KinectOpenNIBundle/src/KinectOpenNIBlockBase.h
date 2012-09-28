@@ -26,8 +26,12 @@ protected:
 	OutletHandle							m_ImageOutletHandle;
 	OutletHandle							m_WidthOutletHandle;
 	OutletHandle							m_HeightOutletHandle;
+	OutletHandle							m_FovHorizontalHandle;
+	OutletHandle							m_FovVerticalHandle;
 	OpenNIDeviceManager*					m_OpenNIDeviceManager;
 	_2RealKinectWrapper::_2RealGenerator	m_GeneratorType;
+	double									m_dFovH;
+	double									m_dFovV;
 	int										m_iCurrentDevice;
 	int										m_iWidth;
 	int										m_iHeight;

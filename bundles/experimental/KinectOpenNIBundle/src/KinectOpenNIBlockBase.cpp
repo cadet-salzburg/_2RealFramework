@@ -2,7 +2,10 @@
 #include <string>
 #include <sstream>
 #include "KinectOpenNIBlockBase.h"
+#include <math.h>
 #include "_2RealDatatypes.h"
+
+#define PI 3.14159265
 
 using namespace _2Real;
 using _2Real::bundle::BlockHandle;
@@ -46,11 +49,15 @@ void KinectOpenNIBlockBase::setup( BlockHandle &block )
 		m_ImageOutletHandle = block.getOutletHandle("ImageData" );
 		m_WidthOutletHandle = block.getOutletHandle("Width" );
 		m_HeightOutletHandle = block.getOutletHandle("Height" );
+		m_FovHorizontalHandle = block.getOutletHandle("FovHorizontal" );
+		m_FovVerticalHandle = block.getOutletHandle("FovVertical" );
 
 		m_WidthOutletHandle.getWriteableRef<int>() = 0;
 		m_HeightOutletHandle.getWriteableRef<int>() = 0;
 
 		m_iCurrentDevice = -1;	// no device set yet
+		m_dFovH = 0;
+		m_dFovV = 0;
 	}
 	catch ( Exception &e )
 	{
@@ -74,7 +81,7 @@ void KinectOpenNIBlockBase::update()
 		int h = m_HeightInletHandle.getReadableRef<int>();
 		int fps = m_FpsInletHandle.getReadableRef<int>();
 		bool bIsMirrored = m_IsMirroredInletHandle.getReadableRef<bool>();
-	
+		
 		// camera index changed
 		if(deviceIndex != m_iCurrentDevice)
 		{
@@ -114,6 +121,18 @@ void KinectOpenNIBlockBase::update()
 			{
 				m_OpenNIDeviceManager->setMirrored(m_iCurrentDevice, m_GeneratorType, bIsMirrored);
 				m_bIsMirrored = bIsMirrored;
+			}
+
+			if(m_OpenNIDeviceManager->getFovH(m_iCurrentDevice) != m_dFovH)
+			{
+				m_dFovH = m_OpenNIDeviceManager->getFovH(m_iCurrentDevice) * 180.0/PI;
+				m_FovHorizontalHandle.getWriteableRef<double>() = m_dFovH;
+			}
+
+			if(m_OpenNIDeviceManager->getFovV(m_iCurrentDevice) != m_dFovV)
+			{
+				m_dFovV = m_OpenNIDeviceManager->getFovV(m_iCurrentDevice) * 180.0/PI;
+				m_FovVerticalHandle.getWriteableRef<double>() = m_dFovV;
 			}
 
 			// set outlet

@@ -75,34 +75,16 @@ public:
 		
 		std::vector < Point > otherMarkers = data.getData<std::vector <_2Real::Point> >();
 
-		for(int i = 0; i<otherMarkers.size(); i++)
+		printf("Other Markers [Count=%d]\n", otherMarkers.size());
+		for(int i=0; i < otherMarkers.size(); i++)
 		{
-			std::cout
-				<< "Other Marker " << otherMarkers[i].getId()
-				<< ": x=" << otherMarkers[i].x()
-				<< "\ty=" << otherMarkers[i].y()
-				<< "\tz=" << otherMarkers[i].z()
-				<< "\t(" << otherMarkers[i].getLabel() << ")" << std::endl;
-		}
-
-		m_Access.unlock();
+		printf("Other Marker %d : %3.2f\t%3.2f\t%3.2f\t(%s)\n",
+			i,
+			otherMarkers[i].x(),
+			otherMarkers[i].y(),
+			otherMarkers[i].z(),
+			otherMarkers[i].getLabel());
 	}
-
-	void receiveMarkerSets( AppData const &data )
-	{
-		m_Access.lock();
-
-		std::vector < Point > markerSets = data.getData<std::vector <_2Real::Point> >();
-
-		for(int i = 0; i<markerSets.size(); i++)
-		{
-			std::cout 
-				<< "Marker Set " << markerSets[i].getId()
-				<< ": x=" << markerSets[i].x()
-				<< "\ty=" << markerSets[i].y()
-				<< "\tz=" << markerSets[i].z()
-				<< "\t(" << markerSets[i].getLabel() << ")" << std::endl;
-		}
 
 		m_Access.unlock();
 	}
@@ -112,18 +94,31 @@ public:
 		m_Access.lock();
 
 		std::vector < RigidBody > rigidBodies = data.getData<std::vector <_2Real::RigidBody> >();
-		for(int i = 0; i<rigidBodies.size(); i++)
+
+		printf("Rigid Bodies [Count=%d]\n", rigidBodies.size());
+		for(int i=0; i < rigidBodies.size(); i++)
 		{
-			std::cout
-				<< "Rigid Body" << rigidBodies[i].getId()
-				<< ": x=" << rigidBodies[i].getPosition().x()
-				<< "\ty=" << rigidBodies[i].getPosition().y()
-				<< "\tz=" << rigidBodies[i].getPosition().z()
-				<< "\tqx=" << rigidBodies[i].getOrientation().x()
-				<< "\tqy=" << rigidBodies[i].getOrientation().y()
-				<< "\tqz=" << rigidBodies[i].getOrientation().z()
-				<< "\tqw=" << rigidBodies[i].getOrientation().w()
-				<< "\t(" << rigidBodies[i].getLabel() << ")" << std::endl;
+			printf("Rigid Body [ID=%d, %s]\n", rigidBodies[i].getId(), rigidBodies[i].getLabel().c_str());
+			printf("\tx\ty\tz\tqx\tqy\tqz\tqw\n");
+			printf("\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
+				rigidBodies[i].getPosition().x(),
+				rigidBodies[i].getPosition().y(),
+				rigidBodies[i].getPosition().z(),
+				rigidBodies[i].getOrientation().x(),
+				rigidBodies[i].getOrientation().y(),
+				rigidBodies[i].getOrientation().z(),
+				rigidBodies[i].getOrientation().w());
+
+			printf("\tRigid body markers [Count=%d]\n", rigidBodies[i].getPoints().size());
+			for(int iMarker=0; iMarker < rigidBodies[i].getPoints().size(); iMarker++)
+			{
+				printf("\t\t");
+                printf("MarkerID:%d", rigidBodies[i].getPoints()[iMarker].getId());
+                printf("\tMarkerPos:%3.2f,%3.2f,%3.2f\n" ,
+                    rigidBodies[i].getPoints()[iMarker].x(),
+                    rigidBodies[i].getPoints()[iMarker].y(),
+                    rigidBodies[i].getPoints()[iMarker].z());
+			}
 		}
 
 		m_Access.unlock();
@@ -135,17 +130,31 @@ public:
 
 		std::vector < Skeleton > skeletons = data.getData<std::vector <_2Real::Skeleton> >();
 
-		for(int i = 0; i<skeletons.size(); i++)
+		 printf("Skeletons [Count=%d]\n", skeletons.size());
+	    for(int i=0; i < skeletons.size(); i++)
 		{
-			std::cout
-				<< "Skeleton" << skeletons[i].getId()
-				<< "\t(" << skeletons[i].getLabel() << ")" << std::endl;
+			printf("Skeleton [ID=%d, %s, Bone count=%d]\n", skeletons[i].getId(), skeletons[i].getLabel().c_str(), skeletons[i].getRigidBodies().size());
+			for(int j=0; j< skeletons[i].getRigidBodies().size(); j++)
+			{
+				printf("Bone %d\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
+                    skeletons[i].getRigidBodies()[j].getId(), skeletons[i].getRigidBodies()[j].getPosition().x(), skeletons[i].getRigidBodies()[j].getPosition().y(), skeletons[i].getRigidBodies()[j].getPosition().z(), skeletons[i].getRigidBodies()[j].getOrientation().x(), skeletons[i].getRigidBodies()[j].getOrientation().y(), skeletons[i].getRigidBodies()[j].getOrientation().z(), skeletons[i].getRigidBodies()[j].getOrientation().w() );
+    
+				printf("\tRigid body markers [Count=%d]\n", skeletons[i].getRigidBodies()[j].getPoints().size());
+				for(int iMarker=0; iMarker < skeletons[i].getRigidBodies()[j].getPoints().size(); iMarker++)
+				{
+					printf("\t\t");
+                    printf("MarkerID:%d", skeletons[i].getRigidBodies()[j].getPoints()[iMarker].getId());
+                    printf("\tMarkerPos:%3.2f,%3.2f,%3.2f\n" ,
+                    skeletons[i].getRigidBodies()[j].getPoints()[iMarker].x(),
+                    skeletons[i].getRigidBodies()[j].getPoints()[iMarker].y(),
+                    skeletons[i].getRigidBodies()[j].getPoints()[iMarker].z());
+				}
+			}
 		}
 		m_Access.unlock();
 	}
 
 private:
-
 	Poco::FastMutex			m_Access;
 };
 
@@ -161,19 +170,17 @@ int main( int argc, char *argv[] )
 		BundleHandle nnBundle = engine.loadBundle( "NatNetBundle" );
 
 		BlockHandle &natNetData = nnBundle.createBlockInstance( "NatNetBlock" );
-		natNetData.setUpdateRate( 30.0f ); // ???
+		natNetData.setUpdateRate( 1.0f );
 
 		InletHandle	serverIPIn = natNetData.getInletHandle( "server_ip" );;
 		InletHandle	clientIPIn = natNetData.getInletHandle( "client_ip" );;
 		InletHandle	isUnicastIn =natNetData.getInletHandle( "isUnicast" );;
 
-		// update-policy ??
 		serverIPIn.setUpdatePolicy( InletPolicy::ALWAYS );
 		clientIPIn.setUpdatePolicy( InletPolicy::ALWAYS );
 		isUnicastIn.setUpdatePolicy( InletPolicy::ALWAYS );
 
 		natNetData.getOutletHandle( "other_marker" ).registerToNewData( receiver, &Receiver::receiveOtherMarkers );
-		natNetData.getOutletHandle( "marker_set" ).registerToNewData( receiver, &Receiver::receiveMarkerSets );
 		natNetData.getOutletHandle( "rigid_body" ).registerToNewData( receiver, &Receiver::receiveRigidBodies );
 		natNetData.getOutletHandle( "skeleton" ).registerToNewData( receiver, &Receiver::receiveSkeletons );
 
@@ -192,11 +199,10 @@ int main( int argc, char *argv[] )
 		natNetData.stop();
 
 		natNetData.getOutletHandle( "other_marker" ).unregisterFromNewData( receiver, &Receiver::receiveOtherMarkers );
-		natNetData.getOutletHandle( "marker_set" ).unregisterFromNewData( receiver, &Receiver::receiveMarkerSets );
 		natNetData.getOutletHandle( "rigid_body" ).unregisterFromNewData( receiver, &Receiver::receiveRigidBodies );
 		natNetData.getOutletHandle( "skeleton" ).unregisterFromNewData( receiver, &Receiver::receiveSkeletons );
 
-		engine.safeConfig( "img_test.xml" );
+		engine.safeConfig( "natnet_test.xml" );
 
 		nnBundle.unload();
 	}

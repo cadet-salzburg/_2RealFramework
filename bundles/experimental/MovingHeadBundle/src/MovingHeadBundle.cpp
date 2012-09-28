@@ -36,21 +36,18 @@ void getBundleMetainfo( BundleMetainfo& info )
 		MovingHead.addInlet<unsigned char>( "Command", 0 );
 		MovingHead.addInlet<unsigned int>( "Value", 0 );
 		MovingHead.addOutlet<std::vector<unsigned char>>( "SerialByteStream" );
-
 		MovingHead.setDescription( "MovingHead Control" );
-
-
+		
 		// MovingHeadOutput Block information as well as In and Outlet definition
 		BlockMetainfo MovingHeadTracking = info.exportBlock< MovingHeadTrackingBlock, WithContext >( "MovingHeadTrackingBlock" );
 				
-		MovingHeadTracking.addInlet<_2Real::Point>( "CentorOfMass", _2Real::Point() );
-		MovingHeadTracking.addInlet<unsigned int>( "MotorIdX", 0 );
-		MovingHeadTracking.addInlet<unsigned int>( "MotorIdY", 0 );
-		MovingHeadTracking.addInlet<unsigned int>( "UserID", 0 );
+		MovingHeadTracking.addInlet<std::vector<_2Real::Point>>( "CentorOfMass", std::vector<_2Real::Point>() );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIDX", 0 );
+		MovingHeadTracking.addInlet<unsigned int>( "MotorIDY", 0 );
+		MovingHeadTracking.addInlet<int>( "UserID", _2Real::Point::INVALID_ID ); // INVALID_ID means any userid is accepted
 		MovingHeadTracking.addOutlet<unsigned int>( "MotorID" );
 		MovingHeadTracking.addOutlet<unsigned char>( "Command" );
 		MovingHeadTracking.addOutlet<unsigned int>( "Value" );
-
 		MovingHeadTracking.setDescription( "MovingHead Tracking" );
 	}
 	catch ( Exception &e )

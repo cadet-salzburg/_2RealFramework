@@ -117,11 +117,7 @@ void ShapeWrapBlock::update()
 		if (m_pNetworkClient->IsConnectedToServer(m_ActorID))
 		{
 			FBTime evaltime;
-			if (!m_pNetworkClient->FetchDataPacket(evaltime, m_ActorID))
-			{
-				cout << "failed to fetch Shapewrap data from recorder!" << endl;
-			}
-			else
+			if (m_pNetworkClient->FetchDataPacket(evaltime, m_ActorID))
 			{
 				// check if shapewrap data has been updated
 				if (evaltime.Get() > m_LastUpdate.timestamp)
@@ -292,7 +288,7 @@ void ShapeWrapBlock::update()
 						}
 					}
 					
-				if (m_pNetworkClient->IsPresent(LEFTHAND_PRESENT, m_ActorID))
+					if (m_pNetworkClient->IsPresent(LEFTHAND_PRESENT, m_ActorID))
 					{
 						SHAPEHAND_DATA handData;
 						if (m_pNetworkClient->GetShapeHandData(evaltime, &handData, true, m_ActorID))
@@ -366,6 +362,15 @@ void ShapeWrapBlock::update()
 					m_SkeletonData.setId(m_ActorID);
 					m_SkeletonHandle.getWriteableRef<_2Real::Skeleton>() = m_SkeletonData;
 				}
+				else
+				{
+					m_SkeletonHandle.discard();
+				}
+			}
+			else
+			{
+				cout << "failed to fetch Shapewrap data from recorder!" << endl;
+				m_SkeletonHandle.discard();
 			}
 		}
 	}

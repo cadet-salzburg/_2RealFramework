@@ -7,6 +7,10 @@ using namespace std;
 using namespace _2Real;
 using namespace _2Real::bundle;
 
+// max and min goal position of AX-12 servo motor, min position is 0 degrees and max position is 300 degrees
+#define MIN_POS	0x0000
+#define MAX_POS	0x03ff
+
 MovingHeadTrackingBlock::MovingHeadTrackingBlock( ContextBlock & context ) 
 : Block(), m_CurrentPosX( 0 ), m_CurrentPosY( 0 )
 {
@@ -24,10 +28,11 @@ void MovingHeadTrackingBlock::setup( BlockHandle &context )
 		// Get the handles to all needed In and Outlets
 		m_CenterOfMassInlet = context.getInletHandle( "CentorOfMass" );
 		m_UserIDInlet = context.getInletHandle( "UserID" );
-
-		m_ValueXOutlet = context.getOutletHandle( "ValueX" );
-		m_ValueYOutlet = context.getOutletHandle( "ValueY" );
-	
+		m_MotorIDXInlet = context.getInletHandle( "MotorIDX");
+		m_MotorIDYInlet = context.getInletHandle( "MotorIDY");
+		m_MotorIDOutlet = context.getOutletHandle( "MotorID" );
+		m_CommandOutlet = context.getOutletHandle( "Command" );
+		m_ValueOutlet = context.getOutletHandle( "Value" );
 	}
 	catch ( Exception& e )
 	{
@@ -42,8 +47,9 @@ void MovingHeadTrackingBlock::shutdown()
 
 void MovingHeadTrackingBlock::discardAllOutlets()
 {
-	m_ValueXOutlet.discard();
-	m_ValueYOutlet.discard();
+	m_MotorIDOutlet.discard();
+	m_CommandOutlet.discard();
+	m_ValueOutlet.discard();
 }
 
 void MovingHeadTrackingBlock::update()
@@ -53,15 +59,28 @@ void MovingHeadTrackingBlock::update()
 		// there is only something happening when a new value is provided!
 		if (m_CenterOfMassInlet.hasChanged())
 		{
-			_2Real::Point com = m_CenterOfMassInlet.getReadableRef<_2Real::Point>();
+			int newXPos = m_CurrentPosX;
+			int newYPos = m_CurrentPosY;
 
-
-			if(m_UserIDInlet.getReadableRef<unsigned int>() != com.getId())
+			int id = m_UserIDInlet.getReadableRef<int>();
+			_2Real::Point com;
+			std::vector<_2Real::Point> coms = m_CenterOfMassInlet.getReadableRef<std::vector<_2Real::Point>>();
+			std::vector<_2Real::Point>::const_iterator it = coms.begin();
+			while (it != coms.end())
+			{
+				com = *it;
+				if (id == _2Real::Point::INVALID_ID || id == com.getId())
+				{
+					break;
+				}
+				it++;
+			}
+			if (it == coms.end())
 			{
 				discardAllOutlets();
 				return;
 			}
-
+			
 			int x = com.x();
 			int y = com.y();
 			int z = com.z();
@@ -80,23 +99,44 @@ void MovingHeadTrackingBlock::update()
 
 			if(alpha > 0.005)
 			{
-				m_CurrentPosX = m_CurrentPosX+alpha*40;
+				newXPos = newXPos+alpha*40;
 			}
 			else if(alpha < -0.005)
 			{
-				m_CurrentPosX = m_CurrentPosX+alpha*40;
+				newXPos = newXPos+alpha*40;
 			}
 			if(beta > 0.005)
 			{
-				m_CurrentPosY = m_CurrentPosY-beta*20;
+				newYPos = newYPos-beta*20;
 			}
 				else if (beta < -0.005)
 			{
-				m_CurrentPosY = m_CurrentPosY-beta*20;
+				newYPos = newYPos-beta*20;
 			}
 
-			m_ValueXOutlet.getWriteableRef<unsigned int>() = m_CurrentPosX;
-			m_ValueYOutlet.getWriteableRef<unsigned int>() = m_CurrentPosY;
+			if (newXPos < MIN_POS) newXPos = MIN_POS;
+			if (newXPos > MAX_POS) newXPos = MAX_POS;
+			if (newYPos < MIN_POS) newYPos = MIN_POS;
+			if (newYPos > MAX_POS) newYPos = MAX_POS;
+
+			int deltaX = abs(newXPos - m_CurrentPosX);
+			int deltaY = abs(newYPos - m_CurrentPosY);
+
+			// as we can update only one motor per update cyclus we choose the more significant here
+			if (deltaX > 0 || deltaX > deltaY)
+			{
+				m_CurrentPosX = newXPos;
+				m_ValueOutlet.getWriteableRef<unsigned int>() = m_CurrentPosX;
+				m_MotorIDOutlet.getWriteableRef<unsigned int>() = m_MotorIDXInlet.getReadableRef<unsigned int>();
+				m_CommandOutlet.getWriteableRef<unsigned char>() = 'P';
+			}
+			else if (deltaY > 0)
+			{
+				m_CurrentPosY = newYPos;
+				m_ValueOutlet.getWriteableRef<unsigned int>() = m_CurrentPosY;
+				m_MotorIDOutlet.getWriteableRef<unsigned int>() = m_MotorIDYInlet.getReadableRef<unsigned int>();
+				m_CommandOutlet.getWriteableRef<unsigned char>() = 'P';
+			}
 		}
 	}
 	catch ( Exception& e )

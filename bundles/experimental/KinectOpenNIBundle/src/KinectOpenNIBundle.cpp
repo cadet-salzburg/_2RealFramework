@@ -39,6 +39,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		rgbBlockInfo.addOutlet< Image >("ImageData");
 		rgbBlockInfo.addOutlet<int>( "Width" );
 		rgbBlockInfo.addOutlet<int>( "Height" );
+		rgbBlockInfo.addOutlet<double>( "FovHorizontal" );
+		rgbBlockInfo.addOutlet<double>( "FovVertical" );
 		rgbBlockInfo.setDescription( "OpenNI Kinect Rgb Image Block" );
 
 		BlockMetainfo depthBlockInfo = info.exportBlock< KinectOpenNIDepthBlock, WithContext >( "KinectOpenNIDepthBlock" );
@@ -52,6 +54,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addOutlet< Image >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );
+		depthBlockInfo.addOutlet<double>( "FovHorizontal" );
+		depthBlockInfo.addOutlet<double>( "FovVertical" );
 		depthBlockInfo.setDescription( "OpenNI Kinect Depth Image Block" );
 
 		BlockMetainfo userSkeletonBlockInfo = info.exportBlock< KinectOpenNIUserSkeletonBlock, WithContext >( "KinectOpenNIUserSkeletonBlock" );
@@ -65,6 +69,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		userSkeletonBlockInfo.addOutlet< Image >("ImageData");
 		userSkeletonBlockInfo.addOutlet<int>( "Width" );
 		userSkeletonBlockInfo.addOutlet<int>( "Height" );
+		userSkeletonBlockInfo.addOutlet<double>( "FovHorizontal" );
+		userSkeletonBlockInfo.addOutlet<double>( "FovVertical" );
 		userSkeletonBlockInfo.addOutlet<std::vector<Point>>( "UsersCenterOfMass" );
 		userSkeletonBlockInfo.addOutlet< std::vector< Skeleton > >( "Skeletons" );
 		userSkeletonBlockInfo.addOutlet<int>( "NrOfUsers" );
@@ -81,6 +87,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		irBlockInfo.addOutlet< Image >("ImageData");
 		irBlockInfo.addOutlet<int>( "Width" );
 		irBlockInfo.addOutlet<int>( "Height" );
+		irBlockInfo.addOutlet<double>( "FovHorizontal" );
+		irBlockInfo.addOutlet<double>( "FovVertical" );
 		irBlockInfo.setDescription( "OpenNI Kinect Infrared Image Block" );
 
 		BlockMetainfo motorBlockInfo = info.exportBlock< KinectOpenNIMotorBlock, WithContext >( "KinectOpenNIMotorBlock" );

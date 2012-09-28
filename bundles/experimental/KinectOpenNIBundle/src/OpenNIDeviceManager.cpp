@@ -449,7 +449,7 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	}
 }
 
-std::string& OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
+std::string OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 {
 	std::string label("unknown");
 
@@ -543,6 +543,18 @@ std::string& OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 	 Poco::Mutex::ScopedLock lock(m_Mutex);
 	 return m_2RealKinect->getMotorAngle(deviceIdx);
  }
+
+double OpenNIDeviceManager::getFovH(int deviceIdx)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getFieldOfView(deviceIdx).horizontalFov;
+}
+
+double OpenNIDeviceManager::getFovV(int deviceIdx)
+{
+	Poco::Mutex::ScopedLock lock(m_Mutex);
+	return m_2RealKinect->getFieldOfView(deviceIdx).verticalFov;
+}
 
 _2Real::Point OpenNIDeviceManager::getUsersCenterOfMass(int deviceIdx, int userId, bool bIsWorldCoordinates)
  {

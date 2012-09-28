@@ -97,6 +97,10 @@ void SerialBlock::update()
 				// write it to block's output
 				m_DataOutOutlet.getWriteableRef<vector<unsigned char>>() = m_SerialMessage;
 			}
+			else
+			{
+				m_DataOutOutlet.discard();
+			}
 
 			// 3b. write data
 			if (m_DataInIntel.hasChanged())
@@ -114,6 +118,10 @@ void SerialBlock::update()
 #endif
 				}
 			}
+		}
+		else
+		{
+			m_DataOutOutlet.discard();
 		}
 	}
 	catch ( Exception& e )
