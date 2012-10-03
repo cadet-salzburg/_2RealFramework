@@ -20,7 +20,13 @@ private:
 
 	_2Real::bundle::InletHandle			m_depthImageIn;
 	_2Real::bundle::InletHandle			m_outputPathIn;
+	_2Real::bundle::InletHandle			m_countTimeIn;
+	_2Real::bundle::InletHandle			m_maxDistanceIn;
 	_2Real::bundle::InletHandle			m_saveIn;
+
+
+	bool saving;
+	int saveCounter;
 
 	ShapeRecordingBlockImpl	*m_blockImpl;
 };

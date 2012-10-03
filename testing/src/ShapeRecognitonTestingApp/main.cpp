@@ -74,16 +74,22 @@ public:
 		m_Access.lock();
 
 		result = data.getData<std::string>();
+
+		if(result!="")
+			std::cout << "Recognition Result: " << result << std::endl;
 		
 		m_Access.unlock();
 	}
 
-	void printValues()
+	void receiveProbability( AppData const &data )
 	{
 		m_Access.lock();
 
-		std::cout << "Recognition Result: " << result << std::endl;
+		probability = data.getData<double>();
 
+		if(result!="")
+			std::cout << "Probability: " << probability << std::endl;
+		
 		m_Access.unlock();
 	}
 
@@ -91,6 +97,7 @@ private:
 
 	Poco::FastMutex			m_Access;
 	string					result;
+	double					probability;
 };
 
 int main( int argc, char *argv[] )
@@ -121,41 +128,52 @@ int main( int argc, char *argv[] )
 		InletHandle recordingDepthImageIn = shapeRecordingBlock.getInletHandle( "depth_image");
 		InletHandle recognitionDepthImageIn = shapeRecognitionBlock.getInletHandle( "depth_image");
 
-		shapeRecordingBlock.getInletHandle( "depth_image").link(koniBlock.getOutletHandle("ImageData"));
 		shapeRecognitionBlock.getInletHandle( "depth_image").link(koniBlock.getOutletHandle("ImageData"));
+		shapeRecordingBlock.getInletHandle( "depth_image").link(koniBlock.getOutletHandle("ImageData"));
 
 		// set inital inlet handle values
-		shapeRecordingBlock.getInletHandle( "output_path").setValue< string >("./data"); /** pfad angeben **/
-		shapeRecordingBlock.getInletHandle( "save").setValue< bool >("false");
-
-		shapeRecognitionBlock.getInletHandle( "data_path" ).setValue< string >("./data" ); /** pfad angeben **/
+		shapeRecordingBlock.getInletHandle( "output_path" ).setValue< std::string >("../build/vc10/ShapeRecognitonTestingApp/data");
+		shapeRecordingBlock.getInletHandle( "count_time" ).setValue< int >(3);
+		shapeRecordingBlock.getInletHandle( "save" ).setValue< bool >(false);
 
 		// register outlet handles
 		shapeRecognitionBlock.getOutletHandle("file_name").registerToNewData( receiver, &Receiver::receiveResult );
+		shapeRecognitionBlock.getOutletHandle("probability").registerToNewData( receiver, &Receiver::receiveProbability );
 		
 		// setup blocks
 		koniBlock.setup();
 		shapeRecordingBlock.setup();
-		shapeRecognitionBlock.setup();
-						
+		shapeRecognitionBlock.setup();						
 
 		// start blocks
-		shapeRecognitionBlock.start();
 		shapeRecordingBlock.start();
 		koniBlock.start();
 
-
 		while( ::run )
 		{
+			shapeRecordingBlock.getInletHandle( "save").setValue< bool >( false ); 
 			if( kbhit() )
-				if( getch() == 'q' )
-					break;
-				else if( getch() == 's' )
-					shapeRecordingBlock.getInletHandle( "save" ).setValue< bool >( "true" );
+			{
+				char c = getch();
 
-			receiver.printValues();
+				switch(c) 
+				{
+					case 'q': return 0;
+
+					case 's':
+						shapeRecordingBlock.getInletHandle( "save" ).setValue< bool >( true );
+						break;
+
+					case 'c':
+						if(!shapeRecognitionBlock.isRunning())
+						{
+							shapeRecognitionBlock.start();
+							cout << "start comparing" << endl;
+						}
+						break;
+				}
+			}
 			Sleep( 100 );
-			shapeRecordingBlock.getInletHandle( "save").setValue< bool >("false"); 
 		}
 
 		// stop blocks
@@ -165,6 +183,7 @@ int main( int argc, char *argv[] )
 
 		// unregister outlet handles
 		shapeRecognitionBlock.getOutletHandle( "file_name" ).unregisterFromNewData( receiver, &Receiver::receiveResult );
+		shapeRecognitionBlock.getOutletHandle( "probability" ).unregisterFromNewData( receiver, &Receiver::receiveProbability );
 
 		// save config
 		engine.safeConfig( "img_test.xml" );

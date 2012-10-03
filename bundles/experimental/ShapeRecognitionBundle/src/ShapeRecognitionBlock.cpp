@@ -25,7 +25,8 @@ public:
 		m_comparison( 0 ),
 		m_oldFrame( 0 ),
 		m_minBlobSize( 10000 ),
-		m_counter( 0 )
+		m_counter( 0 ),
+		m_numberOfFiles( 0 )
 	{}
 
 	~ShapeRecognitionBlockImpl()
@@ -33,20 +34,48 @@ public:
 		if( !m_isShutDown )
 			this->shutdown();
 	}
-
+	
 	void setup(const _2Real::Image &img, const string &path)
 	{
 		m_image = cvCreateImage(cvSize( img.getWidth(), img.getHeight() ),IPL_DEPTH_8U, 1);
 		m_comparison = cvCreateImage(cvSize( img.getWidth(), img.getHeight() ),IPL_DEPTH_8U, 1);
 		m_oldFrame = cvCreateImage(cvSize( img.getWidth(), img.getHeight() ),IPL_DEPTH_8U, 1);
 
-		loadImages(path);
+		if(loadImages(path))
+			cout << "CAUTION! No poses for comparison found at \n" << path << endl;
 	}
 
-	void update(const _2Real::Image &img)
+	int update(const _2Real::Image &img, const char* path, int maxDistance, int minProbability, double &probability)
 	{
-		m_image->imageData = (char*)img.getData();
+		if(m_numberOfFiles != getNumberOfFiles(path, "png"))
+			loadImages(path);
+		
+		int imageNr = -1;
 
+		IplImage* one = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), img.getBitsPerChannel(), img.getNumberOfChannels());
+		IplImage* two = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), img.getBitsPerChannel(), img.getNumberOfChannels());
+
+		one->imageData = (char*)img.getData();
+
+		uchar* src = (uchar*) one->imageData;
+		uchar* dst = (uchar*) two->imageData;
+
+		float thresh = maxDistance/65535.f*255.f;
+
+		for (int j = 0; j < one->imageSize; j++)
+		{
+			float diff = src[j];		
+			
+			if (diff > thresh) diff = 0.f;
+
+            dst[j] = diff;		
+		}
+		
+		cvConvertScale(two, m_image);
+
+		cvReleaseImage(&one);
+		cvReleaseImage(&two);
+		
 		m_counter++;
 		
 		if(m_oldFrame->imageData && m_counter <30)
@@ -56,10 +85,12 @@ public:
 		}
 		else
 		{
-			comparingImages();
+			imageNr = comparingImages(minProbability, probability);
 			cvCopyImage(m_image, m_comparison);
 			m_counter = 0;
 		}
+
+		return imageNr;
 	}
 
 	void shutdown()
@@ -144,11 +175,16 @@ public:
 	/*
 	 *  Load all the poses saved as images in a certain folder and the appropriate line-data.
 	 */
-	void loadImages(string path)
+	int loadImages(string path)
 	{
-		int number = getNumberOfFiles(path.c_str(), "png");
+		m_allPoses.clear();
+		m_allLines->clear();
 
-		for (int i = 0; i < number; i++)
+		m_numberOfFiles = getNumberOfFiles(path.c_str(), "png");
+
+		if (m_numberOfFiles ==0) return 1;
+
+		for (int i = 0; i < m_numberOfFiles; i++)
 		{	
 			string filename = path;
 			filename.append("/pose");
@@ -167,6 +203,7 @@ public:
 
 			m_allLines->push_back(lines);
 		}
+		return 0;
 	}
 
 	/*
@@ -227,6 +264,11 @@ public:
 			}
 
 			cvResize(result, output);
+
+			cvReleaseImage(&temp);
+			cvReleaseImage(&temp2);
+			cvReleaseImage(&result);
+
 			return true;
 		}
 		else
@@ -295,7 +337,7 @@ public:
 	 *  Pixelwise comparison of two images.
 	 *  Correct an missing pixels are summed up to a result.
 	 */
-	int imageComparison(IplImage* comp, IplImage* current)
+	double imageComparison(IplImage* comp, IplImage* current)
 	{
 		IplImage* curr = cvCreateImage(cvGetSize(comp),IPL_DEPTH_8U, 1);
 	
@@ -307,8 +349,8 @@ public:
 
 		uchar* resultData;
 		resultData = (uchar *)(result->imageData);
-		int correct = 0;
-		int incorrect = 0;
+		double correct = 0;
+		double incorrect = 0;
 
 		for (int j = 0; j < cvGetSize(comp).height*cvGetSize(comp).width; j++)
 		{
@@ -316,9 +358,12 @@ public:
 			else if (resultData[j]==255)	incorrect++;
 		}
 
+		cvReleaseImage(&curr);
+		cvReleaseImage(&result);		
+
 		double all = correct+incorrect;
 
-		return (int) ((correct-incorrect)/all)*100;
+		return ((correct-incorrect)/all)*100;
 	}
 
 	//---------------------------------------------------------------------------
@@ -330,7 +375,7 @@ public:
 	 *  Dertermines which scan-line-list ist closest to the one of the current pose.
 	 *  Displays the resulting pose-image on the screen.
 	 */
-	void comparingImages()
+	int comparingImages(int minProbability, double &probability)
 	{
 		IplImage* temp = cvCreateImage(cvSize(200,200),IPL_DEPTH_8U, 1);
 		if(findBiggestBlobImage(m_comparison, 128, temp))
@@ -340,7 +385,6 @@ public:
 
 			int lineSum = getCurrentLines(lines, temp);
 
-			int probability = 0;
 			int biggestVal = -1;
 
 			int lineValue = 100000;
@@ -350,7 +394,7 @@ public:
 
 			for(int i=0; i<m_allPoses.size(); i++)
 			{
-				int result = imageComparison(m_allPoses[i], temp);
+				double result = imageComparison(m_allPoses[i], temp);
 
 				lineResult = lineComparison(m_allLines->at(i), lines);
 		
@@ -366,9 +410,12 @@ public:
 					lineValue = lineResult;
 				}
 			}
-			if((biggestVal == bestLinePose) && (probability > 20 && probability < 100)) // && lineValue < lineSum*5)
-				cvShowImage("Resulting Pose", m_allPoses[bestLinePose]);
+
+			cvReleaseImage(&temp);
+			if((biggestVal == bestLinePose) && (probability > minProbability && probability < 100))
+				return bestLinePose;
 		}
+		return -1;
 	}
 	
 private:
@@ -379,6 +426,7 @@ private:
 	vector <IplImage*> m_allPoses;
 	vector <int*> m_allLines[36];
 	int		m_counter;
+	int		m_numberOfFiles;
 	int		m_minBlobSize;
 };
 
@@ -404,13 +452,17 @@ void ShapeRecognitionBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		//std::cout << "ShapeRecognitionblock setup" << std::endl;
 		m_Block = block;
 
 		// inlet handles
 		m_depthImageIn = m_Block.getInletHandle("depth_image");
 		m_dataPathIn = m_Block.getInletHandle("data_path");
+		m_maxDistanceIn = m_Block.getInletHandle("max_distance");
+		m_minProbabilityIn = m_Block.getInletHandle("min_probability");
+
+		//outlet handles
 		m_fileNameOut =	m_Block.getOutletHandle("file_name");
+		m_probabilityOut = m_Block.getOutletHandle("probability");
 
 		const Image &image = m_depthImageIn.getReadableRef< Image >();
 		
@@ -436,16 +488,34 @@ void ShapeRecognitionBlock::update()
 {
 	try
 	{
-		//std::cout << "ShapeRecognitionblock update" << std::endl;
 		const Image &image = m_depthImageIn.getReadableRef< Image >();
+		string filename = m_dataPathIn.getReadableRef< std::string >();
+
+		int maxDist = m_maxDistanceIn.getReadableRef< int >();
+		int minProb = m_minProbabilityIn.getReadableRef< int >();
+
+		double probability = 0.0;
 
 		if( m_blockImpl )
 		{			
-			m_blockImpl->update(image);
-		}
-		else
-		{
-			
+			int fileNr = m_blockImpl->update(image, filename.c_str(), maxDist, minProb, probability);
+
+			if (fileNr >=0)
+			{
+				filename.append("/pose");
+				char buffer [33];
+				itoa(fileNr+1, buffer, 10);
+				filename.append(buffer);
+				filename.append(".png");
+
+				m_fileNameOut.getWriteableRef<std::string>() = filename;
+				m_probabilityOut.getWriteableRef<double>() = probability;
+			}
+			else
+			{
+				m_fileNameOut.discard();
+				m_probabilityOut.discard();
+			}
 		}
 	}
 	catch( Exception & e )
@@ -460,8 +530,6 @@ void ShapeRecognitionBlock::update()
 }
 
 void ShapeRecognitionBlock::shutdown() {
-	//std::cout << "ShapeRecognitionblock shutdown" << std::endl;
-
 	if( m_blockImpl )
 		m_blockImpl->shutdown();
 }

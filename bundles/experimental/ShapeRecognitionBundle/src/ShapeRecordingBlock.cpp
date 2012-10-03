@@ -86,6 +86,11 @@ public:
 			}
 
 			cvResize(result, output);
+
+			cvReleaseImage(&temp);
+			cvReleaseImage(&temp2);
+			cvReleaseImage(&result);
+
 			return true;
 		}
 		else
@@ -152,11 +157,29 @@ public:
 		return sum;
 	}
 
-	void saveImage(Image img, string path)
+	void saveImage(Image img, string path, int maxDistance)
 	{
-		IplImage* image = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), img.getBitsPerChannel(), img.getNumberOfChannels());
-	
-		image->imageData = (char*) img.getData();
+		IplImage* one = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), img.getBitsPerChannel(), img.getNumberOfChannels());
+		IplImage* two = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), img.getBitsPerChannel(), img.getNumberOfChannels());
+		IplImage* image = cvCreateImage(cvSize(img.getWidth(), img.getHeight()), IPL_DEPTH_8U, 1);
+
+		one->imageData = (char*)img.getData();
+
+		uchar* src = (uchar*) one->imageData;
+		uchar* dst = (uchar*) two->imageData;
+
+		float thresh = maxDistance/65535.f*255.f;
+
+		for (int j = 0; j < one->imageSize; j++)
+		{
+			float diff = src[j];		
+			
+			if (diff > thresh) diff = 0.f;
+
+            dst[j] = diff;		
+		}
+
+		cvConvertScale(two, image);
 
 		IplImage* blub = cvCreateImage(cvSize(200,200),IPL_DEPTH_8U, 1);
 
@@ -173,6 +196,7 @@ public:
 			itoa(number, buffer, 10);
 
 			string filename = path;
+			filename.append("/pose");
 			filename.append(buffer);
 			filename.append(".png");
 
@@ -196,8 +220,14 @@ public:
 			else cout << "Unable to open file";
 
 		printf("Image saved.\n");
+
+		cvReleaseImage(&one);
+		cvReleaseImage(&two);
+		cvReleaseImage(&image);
+		cvReleaseImage(&blub);
 		}
 		else printf("Unable to aquire the required data, please try again.\n");
+
 	}
 
 private:
@@ -207,7 +237,9 @@ private:
 
 ShapeRecordingBlock::ShapeRecordingBlock() : 
 Block(),
-	m_blockImpl( new ShapeRecordingBlockImpl() )
+	m_blockImpl( new ShapeRecordingBlockImpl() ),
+	saving ( false ),
+	saveCounter ( 0 )
 {
 	std::cout << "ShapeRecordingblock .ctor" << std::endl;
 }
@@ -227,12 +259,13 @@ void ShapeRecordingBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		//std::cout << "ShapeRecordingblock setup" << std::endl;
 		m_Block = block;
 
 		// inlet handles
 		m_depthImageIn = m_Block.getInletHandle("depth_image");
 		m_outputPathIn = m_Block.getInletHandle("output_path");
+		m_countTimeIn = m_Block.getInletHandle("count_time");
+		m_maxDistanceIn = m_Block.getInletHandle("max_distance");
 		m_saveIn =		 m_Block.getInletHandle("save");
 
 	}
@@ -253,17 +286,36 @@ void ShapeRecordingBlock::update()
 {
 	try
 	{
-		//std::cout << "ShapeRecordingblock update" << std::endl;		
-
 		if( m_depthImageIn.hasUpdated() && m_saveIn.hasChanged() && m_saveIn.getReadableRef< bool >())
 		{
+			saving = true;
+		}
 
+		int timer = m_countTimeIn.getReadableRef<int>();
+
+		if(saving)
+		{
+			saveCounter++;
+			if(saveCounter%30 == 0)
+			{
+				cout << saveCounter/30 << endl;
+			}
+		}
+
+		if(saveCounter >= timer*30)
+		{
 			const Image &image = m_depthImageIn.getReadableRef< Image >();
+
+			int maxDist = m_maxDistanceIn.getReadableRef< int >();
+
+			std::string path = m_outputPathIn.getReadableRef< string >();
 
 			if( m_blockImpl )
 			{			
-				m_blockImpl->saveImage(image, m_outputPathIn.getReadableRef< string >());
+				m_blockImpl->saveImage(image, path, maxDist);
 			}
+			saveCounter = 0;
+			saving = false;
 		}		
 	}
 	catch( Exception & e )
@@ -274,5 +326,5 @@ void ShapeRecordingBlock::update()
 }
 
 void ShapeRecordingBlock::shutdown() {
-	//std::cout << "ShapeRecordingblock shutdown" << std::endl;
+
 }
