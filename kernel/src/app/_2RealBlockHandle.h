@@ -106,6 +106,8 @@ namespace _2Real
 				unregisterFromNewDataInternal( *cb );
 			}
 
+			std::string const& getIdAsString() const;
+
 		private:
 
 			void registerToNewDataInternal( BlockCallback &cb ) const;

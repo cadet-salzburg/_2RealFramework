@@ -211,5 +211,11 @@ namespace _2Real
 			checkValidity( m_Block );
 			return m_Block->isRunning();
 		}
+
+		std::string const& BlockHandle::getIdAsString() const
+		{
+			checkValidity( m_Block );
+			return m_Block->getName();
+		}
 	}
 }
