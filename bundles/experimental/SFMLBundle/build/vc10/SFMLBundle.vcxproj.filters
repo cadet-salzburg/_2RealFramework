@@ -4,7 +4,25 @@
     <ClCompile Include="..\..\src\SFMLBundle.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\WindowBlock.cpp">
+    <ClCompile Include="..\..\src\RessourceManagerBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TextureGeneratorBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OffscreenRenderBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BufferGeneratorBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DisplayWindowBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenGl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Datatypes.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -20,7 +38,28 @@
     <None Include="..\..\docs\todo.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\WindowBlock.h">
+    <ClInclude Include="..\..\src\RessourceManagerBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TextureGeneratorBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\OffscreenRenderBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\BufferGeneratorBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DisplayWindowBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\OpenGl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Datatypes.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
