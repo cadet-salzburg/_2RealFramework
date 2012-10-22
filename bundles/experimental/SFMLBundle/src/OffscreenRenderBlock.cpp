@@ -145,7 +145,16 @@ void OffscreenRenderBlock::shutdown()
 {
 	try
 	{
+		std::cout << "offscreen renderer shutdown" << std::endl;
+
 		delete m_Context;
+		std::cout << "deleted context ( offscreen renderer )" << std::endl;
+
+		m_Texture.texture->destroy();
+		m_Positions.buffer->destroy();
+		m_TexCoords.buffer->destroy();
+
+		std::cout << "released ressources ( offscreen renderer )" << std::endl;
 	}
 	catch( Exception & e )
 	{
@@ -350,7 +359,18 @@ void ImageSubtractionBlock::shutdown()
 {
 	try
 	{
+		std::cout << "image subtraction shutdown" << std::endl;
+
 		delete m_Context;
+		std::cout << "deleted context ( image subtraction )" << std::endl;
+
+		m_Texture.texture->destroy();
+		m_Positions.buffer->destroy();
+		m_TexCoords.buffer->destroy();
+		m_PointPositions.buffer->destroy();
+		m_PointTexcoords.buffer->destroy();
+
+		std::cout << "released ressources ( image subtraction )" << std::endl;
 	}
 	catch( Exception & e )
 	{

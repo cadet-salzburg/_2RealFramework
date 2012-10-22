@@ -54,3 +54,35 @@ private:
 	_2Real::gl::RenderData::VertexAttribute	m_TexCoords;
 
 };
+
+//class RenderDataGeneratorBlock : public _2Real::bundle::Block
+//{
+//
+//public:
+//
+//	RenderDataGeneratorBlock( _2Real::bundle::ContextBlock &context );
+//	~RenderDataGeneratorBlock();
+//
+//	void shutdown();
+//	void update();
+//	void setup( _2Real::bundle::BlockHandle &context );
+//
+//private:
+//
+//	RessourceManagerBlock				&mManager;
+//
+//	_2Real::bundle::BlockHandle			mBlockHandle;
+//	_2Real::bundle::OutletHandle		mRenderDataOut;
+//	_2Real::bundle::InletHandle			mAttributesIn;
+//	_2Real::bundle::InletHandle			mTexturesIn;
+//	_2Real::bundle::InletHandle			mVertexShaderIn;
+//	_2Real::bundle::InletHandle			mFragmentShaderIn;
+//	_2Real::bundle::InletHandle			mGeometryShaderIn;
+//	_2Real::bundle::InletHandle			mUniformValuesIn;
+//	_2Real::bundle::InletHandle			mAttributeBindingsIn;
+//	_2Real::bundle::InletHandle			mFragDataBindingsIn;
+//
+//	gl::Program							mCurrentProgram;
+//
+//
+//};

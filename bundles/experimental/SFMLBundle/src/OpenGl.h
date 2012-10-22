@@ -18,36 +18,6 @@ namespace _2Real
 		template< > inline GLenum getGLEnumeration< int >()				{ return GL_INT; }
 		template< > inline GLenum getGLEnumeration< unsigned int >()	{ return GL_UNSIGNED_INT; }
 
-		//class PixelBuffers
-		//{
-		//public:
-
-		//	struct Info
-		//	{
-		//		bool			isTexture;		// texture or buffer?
-		//		unsigned int	width;
-		//		unsigned int	height;
-		//		GLenum			format;
-		//		GLenum			datatype;
-		//		//....
-		//	};
-
-		//	struct PBO
-		//	{
-		//		gl::Buffer		buffer;
-		//		Info			info;
-		//	};
-
-		//	PixelBuffers( const unsigned int sz ) : size( sz ), buffers( sz, PBO() )
-		//	{
-		//		current = buffers.begin();
-		//	}
-
-		//	std::vector< PBO >				buffers;
-		//	std::vector< PBO >::iterator	current;
-		//	unsigned int					const size;
-		//};
-
 		struct RenderSettings
 		{
 			std::string		title;
@@ -76,9 +46,9 @@ namespace _2Real
 			void cleanUp();
 
 			Texture createTexture( const GLenum target );
-			Buffer createBuffer( const GLenum usageHint );
-
 			void destroyTexture( TextureObj &texture );
+
+			Buffer createBuffer( const GLenum usageHint );
 			void destroyBuffer( BufferObj &buffer );
 
 			typedef std::pair< std::string, GLenum > ShaderSource;
@@ -93,10 +63,13 @@ namespace _2Real
 			RenderSettings				m_CreationSettings;
 			GlewContext					m_GlewContext;
 			sf::Context					m_SfContext;
+
 			std::list< TextureObj * >	m_Textures;
 			std::list< BufferObj * >	m_Buffers;
+			std::list< ProgramObj * >	m_Programs;
 			std::list< GLuint	>		m_DeletedTextures;
 			std::list< GLuint	>		m_DeletedBuffers;
+			std::list< GLuint >			m_DeletedPrograms;
 
 		};
 
@@ -113,10 +86,16 @@ namespace _2Real
 			
 			~BufferObj()
 			{
-				if ( m_IsValid )
-				{
-					m_Manager.destroyBuffer( *this );
-				}
+				std::cout << "deleting buffer obj" << std::endl;
+				if ( m_IsValid ) m_Manager.destroyBuffer( *this );
+				std::cout << "deleted buffer obj" << std::endl;
+			}
+
+			void destroy()
+			{
+				std::cout << "deleting buffer obj" << std::endl;
+				if ( m_IsValid ) m_Manager.destroyBuffer( *this );
+				std::cout << "deleted buffer obj" << std::endl;
 			}
 
 			void invalidate() { m_IsValid = false; }
@@ -269,17 +248,22 @@ namespace _2Real
 
 			~TextureObj()
 			{
-				if ( m_IsValid )
-				{
-					m_Manager.destroyTexture( *this );
-				}
+				std::cout << "deleting texture obj" << std::endl;
+				if ( m_IsValid ) m_Manager.destroyTexture( *this );
+				std::cout << "deleted texture obj" << std::endl;
+			}
+
+			void destroy()
+			{
+				std::cout << "deleting texture obj" << std::endl;
+				if ( m_IsValid ) m_Manager.destroyTexture( *this );
+				std::cout << "deleted texture obj" << std::endl;
 			}
 
 			void invalidate() { m_IsValid = false; }
 			bool isValid() const { return m_IsValid; }
 			bool isEmpty() const { return ( m_Width == 0 || m_Height == 0 ); }
 
-			// helper function, returns opengl data format ( incomplete! )
 			static GLenum getTextureFormat( const ImageChannelOrder order );
 
 		private:
@@ -360,47 +344,6 @@ namespace _2Real
 				glGenerateMipmap( GL_TEXTURE_2D );
 				glBindTexture( GL_TEXTURE_2D, 0 );		// not sure if this is necessary
 			}
-
-			//void updateTextureAsynchronously( Texture &tex, const GLenum i, const GLenum f, const GLenum t, const unsigned int w, const unsigned int h, TextureObj::Settings const& s ) const
-			//{
-			//	if ( tex->m_TextureTarget != GL_TEXTURE_2D )
-			//	{
-			//		throw std::exception( "texture object is not 2d!" );
-			//	}
-
-			//	bool createNewDataStore = false;
-			//	if ( w != tex->m_Width || h != tex->m_Height || f != tex->m_Format || i != tex->m_InternalFormat )
-			//	{
-			//		createNewDataStore = true;
-			//	}
-
-			//	// TODO: helper struct for tex data
-			//	tex->m_Width = w;
-			//	tex->m_Height = h;
-			//	tex->m_Format = f;
-			//	tex->m_InternalFormat = i;
-			//	tex->m_Datatype = t;
-
-			//	glActiveTexture( GL_TEXTURE0 + m_TextureUnit );
-			//	glBindTexture( GL_TEXTURE_2D, tex->m_Handle );
-			//	
-			//	if ( createNewDataStore )		glTexImage2D( GL_TEXTURE_2D, 0, i, w, h, 0, f, t, 0 );
-			//	else							glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, f, t, 0 );
-
-			//	if ( tex->m_Settings != s )
-			//	{
-			//		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s.wrapS );
-			//		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, s.wrapT );
-			//		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, s.wrapR );
-			//		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, s.minFilter );
-			//		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, s.magFilter );
-			//		tex->m_Settings = s;
-			//	}
-
-			//	// TODO: gen mipmaps based on settings!
-			//	glGenerateMipmap( GL_TEXTURE_2D );
-			//	glBindTexture( GL_TEXTURE_2D, 0 );		// not sure if this is necessary
-			//}
 
 			void updateTexture( Texture &texture, Image const& img, const GLenum internalFormat, TextureObj::Settings const& settings ) const
 			{
@@ -555,57 +498,6 @@ namespace _2Real
 
 				m_Programs[ name ] = prog;
 			}
-
-			//void updateTextureAsync( Texture &texture, Image const& img, PixelBuffers &pbos, const GLenum internalFormat, TextureObj::Settings const& settings = TextureObj::Settings() )
-			//{
-			//	GLenum datatype;
-			//	if ( img.getImageType() == ImageType::UNSIGNED_BYTE )			datatype = GL_UNSIGNED_BYTE;
-			//	else if ( img.getImageType() == ImageType::UNSIGNED_SHORT )		datatype = GL_UNSIGNED_SHORT;
-			//	else if ( img.getImageType() == ImageType::DOUBLE )				datatype = GL_DOUBLE;
-			//	else															datatype = GL_FLOAT;
-
-			//	m_BufferTargets[ UPLOAD_BUFFER ].bind( pbos.current->buffer );
-
-			//	m_TextureUnits[0].updateTextureAsynchronously( texture, internalFormat, pbos.current->info.format, pbos.current->info.datatype, pbos.current->info.width, pbos.current->info.height, settings );
-
-			//	++pbos.current;
-			//	if ( pbos.current == pbos.buffers.end() )
-			//	{
-			//		pbos.current = pbos.buffers.begin();
-			//	}
-
-			//	m_BufferTargets[ UPLOAD_BUFFER ].updateBuffer( pbos.current->buffer, img.getData(), img.getByteSize(), GL_STREAM_DRAW );
-
-			//	pbos.current->info.isTexture = true;
-			//	pbos.current->info.datatype = datatype;
-			//	pbos.current->info.format = TextureObj::getTextureFormat( img.getChannelOrder() );
-			//	pbos.current->info.width = img.getWidth();
-			//	pbos.current->info.height = img.getHeight();
-			//}
-
-			//template< typename T >
-			//void updateTextureAsync( Texture &texture, ImageT< T > const& img, PixelBuffers &pbos, const GLenum internalFormat, TextureObj::Settings const& settings = TextureObj::Settings() )
-			//{
-			//	GLenum datatype = getGLEnumeration< T >();
-
-			//	m_BufferTargets[ UPLOAD_BUFFER ].bind( pbos.current->buffer );
-
-			//	m_TextureUnits[0].updateTextureAsynchronously( texture, internalFormat, pbos.current->info.format, pbos.current->info.datatype, pbos.current->info.width, pbos.current->info.height, settings );
-
-			//	++pbos.current;
-			//	if ( pbos.current == pbos.buffers.end() )
-			//	{
-			//		pbos.current = pbos.buffers.begin();
-			//	}
-
-			//	m_BufferTargets[ UPLOAD_BUFFER ].updateBuffer( pbos.current->buffer, img.getData(), img.getWidth()*img.getHeight()*img.getNumberOfChannels()*sizeof( T ), GL_STREAM_DRAW );
-
-			//	pbos.current->info.isTexture = true;
-			//	pbos.current->info.datatype = datatype;
-			//	pbos.current->info.format = TextureObj::getTextureFormat( img.getChannelOrder() );
-			//	pbos.current->info.width = img.getWidth();
-			//	pbos.current->info.height = img.getHeight();
-			//}
 
 			void updateTexture( Texture &texture, Image const& img, const GLenum internalFormat, TextureObj::Settings const& settings = TextureObj::Settings() )
 			{

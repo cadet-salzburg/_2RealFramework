@@ -109,6 +109,8 @@ void DisplayWindowBlock::update()
 
 void DisplayWindowBlock::shutdown()
 {
+	std::cout << "display window shutdown" << std::endl;
+
 	try
 	{
 		delete m_Window;

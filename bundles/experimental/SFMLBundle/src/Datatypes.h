@@ -6,94 +6,6 @@ namespace _2Real
 {
 	namespace gl
 	{
-		class RenderData
-		{
-
-		public:
-
-			struct TextureBinding
-			{
-				gl::Texture			texture;
-				mutable GLuint		unit;			// holds the resolved tex unit
-			};
-
-			struct VertexAttribute
-			{
-				gl::Buffer			buffer;
-				mutable GLint		index;			// holds the resolved attribute name
-				GLuint				size;			// variables used to describe the vertex attribute - datatype comes from the buffer itself
-				GLuint				offset;
-				GLsizei				stride;
-				GLboolean			normalized;
-			};
-
-			RenderData() : m_PrimitiveType( GL_POINTS ), m_ElementCount( 0 ), m_DrawIndexed( false ) {}
-
-			RenderData( RenderData const& src ) :
-				m_Textures( src.m_Textures ),
-				m_Attributes( src.m_Attributes ),
-				m_PrimitiveType( src.m_PrimitiveType ),
-				m_ElementCount( src.m_ElementCount ),
-				m_DrawIndexed( src.m_DrawIndexed )
-			{
-			}
-
-			RenderData& operator=( RenderData const& src )
-			{
-				if ( this == &src ) return *this;
-
-				m_Textures = src.m_Textures;
-				m_Attributes = src.m_Attributes;
-				m_PrimitiveType = src.m_PrimitiveType;
-				m_ElementCount = src.m_ElementCount;
-				m_DrawIndexed = src.m_DrawIndexed;
-
-				return *this;
-			}
-
-			void addTextureAs( RenderData const& src, std::string const& srcTexName, std::string const& name )
-			{
-				std::map< std::string, TextureBinding >::const_iterator tIt = src.m_Textures.find( srcTexName );
-				if ( tIt == src.m_Textures.end() ) return;
-				m_Textures[ name ] = tIt->second;
-			}
-
-			void addAttributeAs( RenderData const& src, std::string const& srcAttribName, std::string const& name )
-			{
-				std::map< std::string, VertexAttribute >::const_iterator aIt = src.m_Attributes.find( srcAttribName );
-				if ( aIt == src.m_Attributes.end() ) return;
-				m_Attributes[ name ] = aIt->second;
-			}
-
-			bool operator==( RenderData const& other ) const { return false; }
-
-			void setNumberOfVertices( const unsigned int count )	{ m_ElementCount = count; }
-			void setPrimitiveType( const GLenum primType )			{ m_PrimitiveType = primType; }
-			unsigned int getNumberOfVertices() const				{ return m_ElementCount; }
-			GLenum getPrimitiveType() const							{ return m_PrimitiveType; }
-
-			void addAttribute( VertexAttribute const& attribute, std::string const& name )
-			{
-				m_Attributes[ name ] = attribute;
-			}
-
-			void addTexture( TextureBinding const& texture, std::string const& name )
-			{
-				m_Textures[ name ] = texture;
-			}
-
-		private:
-
-			friend class gl::Renderer;
-
-			std::map< std::string, TextureBinding >		m_Textures;
-			std::map< std::string, VertexAttribute >	m_Attributes;
-			GLenum										m_PrimitiveType;
-			unsigned int								m_ElementCount;
-			bool										m_DrawIndexed;
-
-		};
-
 		class ShaderObj
 		{
 
@@ -178,6 +90,115 @@ namespace _2Real
 			GLint					m_LinkStatus;
 			std::string				m_ProgramInfo;
 			UniformTable			m_ActiveUniforms;
+
+		};
+
+		class ShaderSetting
+		{
+			struct SamplerUniform
+			{
+				GLenum type;
+				std::string const& name;
+			};
+
+			struct Mat4x4Uniform
+			{
+			};
+
+			struct IntUniform
+			{
+			};
+
+		};
+
+		class RenderData
+		{
+
+		public:
+
+			struct TextureBinding
+			{
+				gl::Texture			texture;
+				mutable GLuint		unit;			// holds the resolved tex unit
+			};
+
+			struct VertexAttribute
+			{
+				gl::Buffer			buffer;
+				mutable GLint		index;			// holds the resolved attribute name
+				GLuint				size;			// variables used to describe the vertex attribute - datatype comes from the buffer itself
+				GLuint				offset;
+				GLsizei				stride;
+				GLboolean			normalized;
+			};
+
+			RenderData() : m_PrimitiveType( GL_POINTS ), m_ElementCount( 0 ), m_DrawIndexed( false ) {}
+
+			RenderData( RenderData const& src ) :
+				m_Textures( src.m_Textures ),
+				m_Attributes( src.m_Attributes ),
+				m_PrimitiveType( src.m_PrimitiveType ),
+				m_ElementCount( src.m_ElementCount ),
+				m_DrawIndexed( src.m_DrawIndexed )
+			{
+			}
+
+			RenderData& operator=( RenderData const& src )
+			{
+				if ( this == &src ) return *this;
+
+				m_Textures = src.m_Textures;
+				m_Attributes = src.m_Attributes;
+				m_PrimitiveType = src.m_PrimitiveType;
+				m_ElementCount = src.m_ElementCount;
+				m_DrawIndexed = src.m_DrawIndexed;
+
+				return *this;
+			}
+
+			void addTextureAs( RenderData const& src, std::string const& srcTexName, std::string const& name )
+			{
+				std::map< std::string, TextureBinding >::const_iterator tIt = src.m_Textures.find( srcTexName );
+				if ( tIt == src.m_Textures.end() ) return;
+				m_Textures[ name ] = tIt->second;
+			}
+
+			void addAttributeAs( RenderData const& src, std::string const& srcAttribName, std::string const& name )
+			{
+				std::map< std::string, VertexAttribute >::const_iterator aIt = src.m_Attributes.find( srcAttribName );
+				if ( aIt == src.m_Attributes.end() ) return;
+				m_Attributes[ name ] = aIt->second;
+			}
+
+			bool operator==( RenderData const& other ) const { return false; }
+
+			void setNumberOfVertices( const unsigned int count )	{ m_ElementCount = count; }
+			void setPrimitiveType( const GLenum primType )			{ m_PrimitiveType = primType; }
+			unsigned int getNumberOfVertices() const				{ return m_ElementCount; }
+			GLenum getPrimitiveType() const							{ return m_PrimitiveType; }
+
+			void addAttribute( VertexAttribute const& attribute, std::string const& name )
+			{
+				m_Attributes[ name ] = attribute;
+			}
+
+			void addTexture( TextureBinding const& texture, std::string const& name )
+			{
+				m_Textures[ name ] = texture;
+			}
+
+		private:
+
+			friend class gl::Renderer;
+
+			std::map< std::string, TextureBinding >		m_Textures;
+			std::map< std::string, VertexAttribute >	m_Attributes;
+			Program										m_Program;
+
+
+			GLenum										m_PrimitiveType;
+			unsigned int								m_ElementCount;
+			bool										m_DrawIndexed;
 
 		};
 	}

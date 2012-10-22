@@ -18,6 +18,10 @@
 
 #pragma once
 
+#include "datatypes/_2RealType.h"
+#include "datatypes/_2RealTypeCategory.h"
+#include "datatypes/_2RealTypes.h"
+
 #include "datatypes/_2RealFace.h"
 #include "datatypes/_2RealImage.h"
 #include "datatypes/_2RealImageT.h"

@@ -48,18 +48,15 @@ namespace _2Real
 		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
 		{
 			(*it)->prepareForShutDown();
-		}
-
-		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
-		{
-			(*it)->prepareForShutDown();
+			std::cout << "prepared " << ( *it )->getName() << " for shutdown" << std::endl;
 		}
 
 		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 10000 ) )
+			if ( (*it)->shutDown( 1000 ) )
 			{
 				readyBlocks.insert( *it );
+				std::cout << "shut down " << ( *it )->getName() << std::endl;
 			}
 			else
 			{
@@ -69,11 +66,19 @@ namespace _2Real
 			it = m_BlockInstances.erase( it );
 		}
 
+		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+		{
+			(*it)->prepareForShutDown();
+
+			std::cout << "prepared " << ( *it )->getName() << " for shutdown" << std::endl;
+		}
+
 		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 10000 ) )
+			if ( (*it)->shutDown( 1000 ) )
 			{
 				readyBlocks.insert( *it );
+				std::cout << "shut down " << ( *it )->getName() << std::endl;
 			}
 			else
 			{

@@ -71,17 +71,17 @@ int main( int argc, char *argv[] )
 
 		OutletHandle outImgSkel = skeletonBlock.getOutletHandle( "ImageData" );
 		InletHandle inImgTex0 = imgToTexture0.getInletHandle( "ImageData" );
-		inImgTex0.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+		//inImgTex0.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 		inImgTex0.link( outImgSkel );
 
 		OutletHandle outImgDepth = depthBlock.getOutletHandle( "ImageData" );
 		InletHandle inImgTex1 = imgToTexture1.getInletHandle( "ImageData" );
-		inImgTex1.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+		//inImgTex1.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 		inImgTex1.link( outImgDepth );
 
 		OutletHandle outImgRgb = rgbBlock.getOutletHandle( "ImageData" );
 		InletHandle inImgTex2 = imgToTexture2.getInletHandle( "ImageData" );
-		inImgTex2.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+		//inImgTex2.setUpdatePolicy( InletPolicy::OR_NEWER_DATA );
 		inImgTex2.link( outImgRgb );
 
 		InletHandle inRenderData = displayWindow.getInletHandle( "RenderData" );

@@ -92,6 +92,8 @@ void RessourceManagerBlock::shutdown()
 {
 	try
 	{
+		std::cout << "opengl ressource manager shutdown" << std::endl;
+
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
 
 		m_RessourceManager->setActive( true );

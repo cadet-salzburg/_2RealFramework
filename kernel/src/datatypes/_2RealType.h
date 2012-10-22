@@ -64,6 +64,8 @@ namespace _2Real
 			SPACE4D,
 			FACEDESC,
 			FACECAST,
+
+			RENDEROBJECT,
 		};
 
 		Type( Code const& code ) : m_Code( code ) {}

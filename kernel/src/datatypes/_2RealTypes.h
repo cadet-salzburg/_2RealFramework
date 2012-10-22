@@ -33,6 +33,7 @@
 #include "datatypes/_2RealQuaternion.h"
 #include "datatypes/_2RealFilePath.h"
 #include "datatypes/_2RealAudioBuffer.h"
+#include "datatypes/_2RealFace.h"
 
 #include <vector>
 #include <list>
