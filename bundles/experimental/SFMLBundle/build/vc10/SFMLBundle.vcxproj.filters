@@ -25,6 +25,12 @@
     <ClCompile Include="..\..\src\Datatypes.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\RessourceManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\RenderDataCombinerBlock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -60,6 +66,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Datatypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RessourceManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderDataCombinerBlock.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

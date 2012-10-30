@@ -1,9 +1,9 @@
 #include "_2RealBundle.h"
-#include "OpenGl.h"
 
 #include "RessourceManagerBlock.h"
 #include "DisplayWindowBlock.h"
-#include "OffscreenRenderBlock.h"
+//#include "OffscreenRenderBlock.h"
+#include "RenderDataCombinerBlock.h"
 #include "TextureGeneratorBlock.h"
 #include "BufferGeneratorBlock.h"
 
@@ -13,6 +13,7 @@
 using namespace _2Real;
 using namespace _2Real::bundle;
 using namespace _2Real::gl;
+using namespace std;
 
 template< typename TData >
 TData * makeCheckerboard( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz )
@@ -72,35 +73,39 @@ void getBundleMetainfo( BundleMetainfo& info )
 		displayWindow.addInlet< Vec4 >( "ClearColor", vecClear );
 		displayWindow.addInlet< std::string >( "WindowTitle", "display window" );
 		displayWindow.addMultiInlet< RenderData >( "RenderData", RenderData() );
-
-		BlockMetainfo offscreenRenderer = info.exportBlock< OffscreenRenderBlock, WithContext >( "OffscreenRenderBlock" );
-		offscreenRenderer.setDescription( "xxxx" );
-		offscreenRenderer.setCategory( "xxxx" );
-		offscreenRenderer.addInlet< Vec4 >( "ClearColor", vecClear );
-		offscreenRenderer.addMultiInlet< RenderData >( "RenderData", RenderData() );
-		offscreenRenderer.addOutlet< RenderData >( "RenderData" );
-
-		BlockMetainfo imgSubtractionBlock = info.exportBlock< ImageSubtractionBlock, WithContext >( "OffscreenImageSubtraction" );
-		imgSubtractionBlock.setDescription( "xxxx" );
-		imgSubtractionBlock.setCategory( "xxxx" );
-		imgSubtractionBlock.addInlet< std::string >( "VertexShaderSrc", "" );
-		imgSubtractionBlock.addInlet< std::string >( "FragmentShaderSrc", "" );
-		imgSubtractionBlock.addInlet< RenderData >( "Minuend", RenderData() );
-		imgSubtractionBlock.addInlet< RenderData >( "Subtrahend", RenderData() );
-		imgSubtractionBlock.addOutlet< RenderData >( "Difference" );
+		displayWindow.addInlet< bool >( "EnableMouseInteraction", true );
+		displayWindow.addInlet< bool >( "EnableKeyboardInteraction", true );
 
 		BlockMetainfo randTex2D = info.exportBlock< RandomTexture2DBlock, WithContext >( "RandomTexture2DBlock" );
-		randTex2D.setDescription( "test block, creates random texture" );
+		randTex2D.setDescription( "xxxx" );
 		randTex2D.setCategory( "xxxx" );
 		randTex2D.addInlet< unsigned int >( "TextureWidth", 4 );
 		randTex2D.addInlet< unsigned int >( "TextureHeight", 3 );
-		randTex2D.addOutlet< RenderData >( "RenderData" );
+		randTex2D.addOutlet< Texture >( "Texture" );
 
 		BlockMetainfo imageToTexture2D = info.exportBlock< ImageToTexture2DBlock, WithContext >( "ImageToTexture2DBlock" );
 		imageToTexture2D.setDescription( "xxxx" );
 		imageToTexture2D.setCategory( "xxxx" );
-		imageToTexture2D.addInlet< Image >( "ImageData", checkerImg );
-		imageToTexture2D.addOutlet< RenderData >( "RenderData" );
+		imageToTexture2D.addInlet< Image >( "TextureData", checkerImg );
+		imageToTexture2D.addOutlet< Texture >( "Texture" );
+
+		BlockMetainfo vectorToBuffer = info.exportBlock< VectorToBufferBlock, WithContext >( "VectorToBufferBlock" );
+		vectorToBuffer.setDescription( "xxxx" );
+		vectorToBuffer.setCategory( "xxxx" );
+		vectorToBuffer.addInlet< vector< float > >( "BufferData", vector< float >() );
+		vectorToBuffer.addOutlet< Buffer >( "Buffer" );
+
+		BlockMetainfo dataGenerator = info.exportBlock< RenderDataCombinerBlock, WithContext >( "RenderDataCombinerBlock" );
+		dataGenerator.setDescription( "xxxx" );
+		dataGenerator.setCategory( "xxxx" );
+		dataGenerator.addOutlet< RenderData >( "RenderData" );
+		dataGenerator.addMultiInlet< Buffer >( "Buffers", Buffer() );
+		dataGenerator.addMultiInlet< Texture >( "Textures", Texture() );
+		dataGenerator.addMultiInlet< string >( "UniformValues", string() );
+		dataGenerator.addMultiInlet< string >( "AttributeDescriptions", string() );
+		dataGenerator.addInlet< string >( "VertexShaderSource", string() );
+		dataGenerator.addInlet< string >( "GeometryShaderSource", string() );
+		dataGenerator.addInlet< string >( "FragmentShaderSource", string() );
 	}
 	catch ( Exception &e )
 	{

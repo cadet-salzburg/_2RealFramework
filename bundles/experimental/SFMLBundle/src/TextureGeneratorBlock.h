@@ -1,7 +1,8 @@
 #pragma once
 
-#include "OpenGl.h"
 #include "_2RealBlock.h"
+
+#include "gl.h"
 
 class RessourceManagerBlock;
 
@@ -19,14 +20,16 @@ public:
 
 private:
 
-	RessourceManagerBlock				&m_Manager;
-	_2Real::bundle::BlockHandle			m_BlockHandle;
-	_2Real::gl::RenderContext			*m_Context;
-	_2Real::gl::Renderer				*m_Renderer;
+	RessourceManagerBlock				&mManager;
+	_2Real::gl::Context					*mContext;
 
-	_2Real::gl::RenderData::TextureBinding	m_Texture;
-	_2Real::gl::RenderData::VertexAttribute	m_Positions;
-	_2Real::gl::RenderData::VertexAttribute	m_TexCoords;
+	_2Real::bundle::BlockHandle			mBlockHandle;
+	_2Real::bundle::InletHandle			mTextureWidthIn;
+	_2Real::bundle::InletHandle			mTextureHeightIn;
+	_2Real::bundle::OutletHandle		mTextureOut;
+
+	_2Real::gl::TextureObj				*mTextureObj;	// modifieable
+	_2Real::gl::Texture					mTexture;		// constant
 
 };
 
@@ -44,45 +47,14 @@ public:
 
 private:
 
-	RessourceManagerBlock				&m_Manager;
-	_2Real::bundle::BlockHandle			m_BlockHandle;
-	_2Real::gl::RenderContext			*m_Context;
-	_2Real::gl::Renderer				*m_Renderer;
+	RessourceManagerBlock				&mManager;
+	_2Real::gl::Context					*mContext;
 
-	_2Real::gl::RenderData::TextureBinding	m_Texture;
-	_2Real::gl::RenderData::VertexAttribute	m_Positions;
-	_2Real::gl::RenderData::VertexAttribute	m_TexCoords;
+	_2Real::bundle::BlockHandle			mBlockHandle;
+	_2Real::bundle::InletHandle			mTextureDataIn;
+	_2Real::bundle::OutletHandle		mTextureOut;
+
+	_2Real::gl::TextureObj				*mTextureObj;	// modifieable
+	_2Real::gl::Texture					mTexture;		// constant
 
 };
-
-//class RenderDataGeneratorBlock : public _2Real::bundle::Block
-//{
-//
-//public:
-//
-//	RenderDataGeneratorBlock( _2Real::bundle::ContextBlock &context );
-//	~RenderDataGeneratorBlock();
-//
-//	void shutdown();
-//	void update();
-//	void setup( _2Real::bundle::BlockHandle &context );
-//
-//private:
-//
-//	RessourceManagerBlock				&mManager;
-//
-//	_2Real::bundle::BlockHandle			mBlockHandle;
-//	_2Real::bundle::OutletHandle		mRenderDataOut;
-//	_2Real::bundle::InletHandle			mAttributesIn;
-//	_2Real::bundle::InletHandle			mTexturesIn;
-//	_2Real::bundle::InletHandle			mVertexShaderIn;
-//	_2Real::bundle::InletHandle			mFragmentShaderIn;
-//	_2Real::bundle::InletHandle			mGeometryShaderIn;
-//	_2Real::bundle::InletHandle			mUniformValuesIn;
-//	_2Real::bundle::InletHandle			mAttributeBindingsIn;
-//	_2Real::bundle::InletHandle			mFragDataBindingsIn;
-//
-//	gl::Program							mCurrentProgram;
-//
-//
-//};

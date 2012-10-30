@@ -326,11 +326,20 @@ namespace _2Real
 	};
 
 	template< >
+	struct traits< Mat2 >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( Mat2 ), Type::MATRIX2D, "2x2 matrix", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
 	struct traits< Mat3 >
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( Mat3 ), Type::VECTOR2D, "3x3 matrix", TypeCategory::UNIQUE );
+			return new TypeDescriptor( typeid( Mat3 ), Type::MATRIX3D, "3x3 matrix", TypeCategory::UNIQUE );
 		}
 	};
 
@@ -339,7 +348,7 @@ namespace _2Real
 	{
 		static TypeDescriptor *createTypeDescriptor()
 		{
-			return new TypeDescriptor( typeid( Mat4 ), Type::VECTOR3D, "4x4 matrix", TypeCategory::UNIQUE );
+			return new TypeDescriptor( typeid( Mat4 ), Type::MATRIX4D, "4x4 matrix", TypeCategory::UNIQUE );
 		}
 	};
 

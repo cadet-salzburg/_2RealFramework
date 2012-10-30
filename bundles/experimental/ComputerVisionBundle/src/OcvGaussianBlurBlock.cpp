@@ -17,7 +17,7 @@ void OcvGaussianBlurBlock::setup( BlockHandle &block )
 	try
 	{
 		m_Block = block;
-		Image &output = block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
+		Image &output = block.getOutletHandle( "OutImage" ).getWriteableRef< Image >();
 		output = Image();
 
 		m_OutWidth = output.getWidth();
@@ -42,7 +42,7 @@ void OcvGaussianBlurBlock::update()
 {
 	try
 	{
-		Image &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
+		Image &output = m_Block.getOutletHandle( "OutImage" ).getWriteableRef< Image >();
 
 		// inlets are accessible in the same order they were declared in the metadata
 		vector< InletHandle > inlets = m_Block.getAllInletHandles();
@@ -66,7 +66,7 @@ void OcvGaussianBlurBlock::update()
 			// (?) throwing an exception is not really a good idea in this case
 			// ( exc requires re-setup, and that really would not help )
 			// nonetheless, the user should be notified somehow?
-			m_Block.getOutletHandle( "image_out" ).discard();
+			m_Block.getOutletHandle( "OutImage" ).discard();
 			std::cout << "sigma invalid" << std::endl;
 			return;
 		}
@@ -77,21 +77,26 @@ void OcvGaussianBlurBlock::update()
 			// (?) throwing an exception is not really a good idea in this case
 			// ( exc requires re-setup, and that really would not help )
 			// nonetheless, the user should be notified somehow?
-			m_Block.getOutletHandle( "image_out" ).discard();
+			m_Block.getOutletHandle( "OutImage" ).discard();
 			std::cout << "kernel size invalid" << std::endl;
 			return;
 		}
 
-		if ( !( m_OutImageType == input.getImageType() && m_OutChannelOrder == input.getChannelOrder() ) || m_OutWidth != input.getWidth() || m_OutHeight != input.getHeight() )
+		if ( m_OutImageType != input.getImageType() || m_OutChannelOrder != input.getChannelOrder() || m_OutWidth != input.getWidth() || m_OutHeight != input.getHeight() )
 		{
-			cout << "creating new out image" << endl;
+			cout << "CREATING NEW OUT IMAGE" << endl;
 			output = input;	// this involves a copy of the data, thus making sure that the outlet has the correct datatype & channel order
 							// could, however, be more efficient as the memcpy that happens is not needed
 			m_OutWidth = output.getWidth();
 			m_OutHeight = output.getHeight();
 			m_OutChannelOrder = output.getChannelOrder();
+
 			m_OutImageType = output.getImageType();
 		}
+
+		cout << m_OutWidth << " " << m_OutHeight << endl;
+		cout << m_OutChannelOrder << endl;
+		cout << m_OutImageType << endl;
 
 		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
 		cv::Mat const* const matSrc = convertToCvMat( input );
@@ -114,3 +119,74 @@ void OcvGaussianBlurBlock::update()
 }
 
 void OcvGaussianBlurBlock::shutdown() {}
+
+OcvHistogramEqualizationBlock::OcvHistogramEqualizationBlock() : Block(), m_OutChannelOrder( ImageChannelOrder::RGB ), m_OutImageType( ImageType::UNSIGNED_BYTE ) {}
+OcvHistogramEqualizationBlock::~OcvHistogramEqualizationBlock() {}
+
+void OcvHistogramEqualizationBlock::setup( BlockHandle &block )
+{
+	try
+	{
+		m_Block = block;
+		Image &output = block.getOutletHandle( "ImageData" ).getWriteableRef< Image >();
+		output = Image();
+
+		m_OutWidth = output.getWidth();
+		m_OutHeight = output.getHeight();
+		m_OutChannelOrder = output.getChannelOrder();
+		m_OutImageType = output.getImageType();
+	}
+	catch( Exception & e )
+	{
+		cout << e.message() << " " << e.what() << endl;
+		e.rethrow();
+	}
+	catch( std::exception & e )
+	{
+		cout << e.what() << endl;
+		Exception exc( e.what() );
+		throw exc;
+	}
+}
+
+void OcvHistogramEqualizationBlock::update()
+{
+	try
+	{
+		Image &output = m_Block.getOutletHandle( "ImageData" ).getWriteableRef< Image >();
+
+		vector< InletHandle > inlets = m_Block.getAllInletHandles();
+		Image const& input = inlets[ 0 ].getReadableRef< Image>();
+
+		if ( m_OutImageType != input.getImageType() || m_OutChannelOrder != input.getChannelOrder() || m_OutWidth != input.getWidth() || m_OutHeight != input.getHeight() )
+		{
+			cout << "CREATING NEW OUT IMAGE" << endl;
+			output = input;	// this involves a copy of the data, thus making sure that the outlet has the correct datatype & channel order
+							// could, however, be more efficient as the memcpy that happens is not needed
+			m_OutWidth = output.getWidth();
+			m_OutHeight = output.getHeight();
+			m_OutChannelOrder = output.getChannelOrder();
+
+			m_OutImageType = output.getImageType();
+		}
+
+		cv::Mat const* const matSrc = convertToCvMat( input );
+		cv::Mat *const matDst = convertToCvMat( output );
+
+		cv::equalizeHist( *matSrc, *matDst );
+
+		delete matSrc;
+		delete matDst;
+	}
+	catch( Exception & e )
+	{
+		cout << e.message() << " " << e.what() << endl;
+		e.rethrow();
+	}
+	catch( std::exception & e )
+	{
+		cout << e.what() << endl;
+	}
+}
+
+void OcvHistogramEqualizationBlock::shutdown() {}

@@ -19,11 +19,17 @@ public:
 
 private:
 
-	sf::Clock							m_Clock;
-	double								m_Count;
-	RessourceManagerBlock				&m_Manager;
-	_2Real::gl::RenderWindow			*m_Window;
-	_2Real::gl::Renderer				*m_Renderer;
-	_2Real::bundle::BlockHandle			m_BlockHandle;
+	sf::Clock							mClock;
+	double								mCount;
+	RessourceManagerBlock				&mManager;
+	_2Real::gl::RenderWindow			*mWindow;
+	_2Real::gl::Renderer				*mRenderer;
+
+	_2Real::bundle::BlockHandle			mBlockHandle;
+	_2Real::bundle::InletHandle			mRenderDataMultiin;
+	_2Real::bundle::InletHandle			mClearColorIn;
+	_2Real::bundle::InletHandle			mWindowTitleIn;
+	_2Real::bundle::InletHandle			mIsKeyboardEnabled;
+	_2Real::bundle::InletHandle			mIsMouseEnabled;
 
 };

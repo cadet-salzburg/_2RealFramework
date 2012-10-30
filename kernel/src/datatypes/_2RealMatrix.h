@@ -29,8 +29,15 @@
 
 namespace _2Real
 {
-	typedef Eigen::Matrix3d Mat3;
-	typedef Eigen::Matrix4d Mat4;
+#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+	typedef Eigen::Matrix2d		Mat2;
+	typedef Eigen::Matrix3d		Mat3;
+	typedef Eigen::Matrix4d		Mat4;
+#else
+	typedef Eigen::Matrix2f		Mat2;
+	typedef Eigen::Matrix3f		Mat3;
+	typedef Eigen::Matrix4f		Mat4;
+#endif
 	//typedef std::vector< _2Real::Mat3, Eigen::aligned_allocator< _2Real::Mat3 > >	Mat3Vector;
 	//typedef std::list< _2Real::Mat3, Eigen::aligned_allocator< _2Real::Mat3 > >		Mat3List;
 	//typedef std::vector< _2Real::Mat4, Eigen::aligned_allocator< _2Real::Mat4 > >	Mat4Vector;

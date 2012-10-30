@@ -66,6 +66,12 @@ namespace _2Real
 			it = m_BlockInstances.erase( it );
 		}
 
+		for ( BlockIterator it = readyBlocks.begin(); it != readyBlocks.end(); /**/ )
+		{
+			delete *it;
+			it = readyBlocks.erase( it );
+		}
+
 		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
 		{
 			(*it)->prepareForShutDown();

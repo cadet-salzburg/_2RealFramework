@@ -92,18 +92,23 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			//std::cout << "8UC1" << std::endl;
 			cvType = CV_8UC1;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "YYYY 16UC1" << std::endl;
 			cvType = CV_16UC1;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC1" << std::endl;
 			cvType = CV_32FC1;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC1" << std::endl;
 			cvType = CV_64FC1;
 			break;
 		default:
+			std::cout << "default, 8UC1" << std::endl;
 			cvType = CV_8UC1;
 			break;
 		}
@@ -112,18 +117,23 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC2" << std::endl;
 			cvType = CV_8UC2;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC2" << std::endl;
 			cvType = CV_16UC2;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC2" << std::endl;
 			cvType = CV_32FC2;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC2" << std::endl;
 			cvType = CV_64FC2;
 			break;
 		default:
+			std::cout << "default, 8UC2" << std::endl;
 			cvType = CV_8UC2;
 			break;
 		}
@@ -132,18 +142,23 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC3" << std::endl;
 			cvType = CV_8UC3;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC3" << std::endl;
 			cvType = CV_16UC3;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC3" << std::endl;
 			cvType = CV_32FC3;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC3" << std::endl;
 			cvType = CV_64FC3;
 			break;
 		default:
+			std::cout << "default, 8UC3" << std::endl;
 			cvType = CV_8UC3;
 			break;
 		}
@@ -152,23 +167,29 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC4" << std::endl;
 			cvType = CV_8UC4;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC4" << std::endl;
 			cvType = CV_16UC4;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC4" << std::endl;
 			cvType = CV_32FC4;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC4" << std::endl;
 			cvType = CV_64FC4;
 			break;
 		default:
+			std::cout << "default, 8UC4" << std::endl;
 			cvType = CV_8UC4;
 			break;
 		}
 		break;
 	default:
+		std::cout << "default default, 8UC1" << std::endl;
 		cvType = CV_8UC1;
 		break;
 	}
@@ -199,18 +220,23 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			//std::cout << "8UC1" << std::endl;
 			cvType = CV_8UC1;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "XXXX 16UC1" << std::endl;
 			cvType = CV_16UC1;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC1" << std::endl;
 			cvType = CV_32FC1;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC1" << std::endl;
 			cvType = CV_64FC1;
 			break;
 		default:
+			std::cout << "default, 8UC1" << std::endl;
 			cvType = CV_8UC1;
 			break;
 		}
@@ -219,18 +245,23 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC2" << std::endl;
 			cvType = CV_8UC2;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC2" << std::endl;
 			cvType = CV_16UC2;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC2" << std::endl;
 			cvType = CV_32FC2;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC2" << std::endl;
 			cvType = CV_64FC2;
 			break;
 		default:
+			std::cout << "default, 8UC2" << std::endl;
 			cvType = CV_8UC2;
 			break;
 		}
@@ -239,18 +270,23 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC3" << std::endl;
 			cvType = CV_8UC3;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC3" << std::endl;
 			cvType = CV_16UC3;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC3" << std::endl;
 			cvType = CV_32FC3;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC3" << std::endl;
 			cvType = CV_64FC3;
 			break;
 		default:
+			std::cout << "default, 8UC3" << std::endl;
 			cvType = CV_8UC3;
 			break;
 		}
@@ -259,23 +295,29 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 		switch( type.getDatatype() )
 		{
 		case ImageType::UNSIGNED_BYTE:
+			std::cout << "8UC4" << std::endl;
 			cvType = CV_8UC4;
 			break;
 		case ImageType::UNSIGNED_SHORT:
+			std::cout << "16UC4" << std::endl;
 			cvType = CV_16UC4;
 			break;
 		case ImageType::FLOAT:
+			std::cout << "32FC4" << std::endl;
 			cvType = CV_32FC4;
 			break;
 		case ImageType::DOUBLE:
+			std::cout << "64FC4" << std::endl;
 			cvType = CV_64FC4;
 			break;
 		default:
+			std::cout << "default, 8UC4" << std::endl;
 			cvType = CV_8UC4;
 			break;
 		}
 		break;
 	default:
+		std::cout << "default default, 8UC1" << std::endl;
 		cvType = CV_8UC1;
 		break;
 	}

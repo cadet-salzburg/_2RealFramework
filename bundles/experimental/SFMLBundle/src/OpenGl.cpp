@@ -6,12 +6,12 @@ namespace _2Real
 {
 	namespace gl
 	{
-		GlRessourceManager::GlRessourceManager( RenderSettings const& s ) :
-			m_CreationSettings( s ),
-			m_SfContext( sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ), s.width, s.height ),
-			m_GlewContext( new GLEWContext() )
+		Context::Context( RenderSettings const& s, RessourceManager const& mgr ) :
+			mManager( mgr ),
+			mGlewContext( new GLEWContext ),
+			mSfContext( sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ), s.width, s.height )
 		{
-			GLenum success = glewContextInit( m_GlewContext.get() );
+			GLenum success = glewContextInit( mGlewContext.get() );
 			if ( success != GLEW_OK )
 			{
 				throw std::exception( "could not create GLEW context" );
@@ -26,174 +26,133 @@ namespace _2Real
 			}
 		}
 
-		void GlRessourceManager::cleanUp()
+		BufferObj * Context::createBufferObj() const
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-
-			for ( std::list< GLuint >::iterator it = m_DeletedTextures.begin(); it != m_DeletedTextures.end(); ++it )
-			{
-				GLuint tmp = *it;
-				for ( std::list< TextureObj* >::iterator tIt = m_Textures.begin(); tIt != m_Textures.end(); )
-				{
-					if ( ( *tIt )->m_Handle == tmp )
-					{
-						( *tIt )->invalidate();
-						tIt = m_Textures.erase( tIt );
-					}
-					else ++tIt;
-				}
-				glDeleteTextures( 1, &tmp );
-			}
-
-			m_DeletedTextures.clear();
-
-			for ( std::list< GLuint >::iterator it = m_DeletedBuffers.begin(); it != m_DeletedBuffers.end(); ++it )
-			{
-				GLuint tmp = *it;
-				for ( std::list< BufferObj* >::iterator bIt = m_Buffers.begin(); bIt != m_Buffers.end(); )
-				{
-					if ( ( *bIt )->m_Handle == tmp )
-					{
-						( *bIt )->invalidate();
-						bIt = m_Buffers.erase( bIt );
-					}
-					else ++bIt;
-				}
-				glDeleteBuffers( 1, &tmp );
-			}
-
-			m_DeletedBuffers.clear();
-		}
-
-		GlRessourceManager::~GlRessourceManager()
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-
-			for ( std::list< GLuint >::iterator it = m_DeletedTextures.begin(); it != m_DeletedTextures.end(); ++it )
-			{
-				GLuint tmp = *it;
-				for ( std::list< TextureObj* >::iterator tIt = m_Textures.begin(); tIt != m_Textures.end(); )
-				{
-					if ( ( *tIt )->m_Handle == tmp )
-					{
-						( *tIt )->invalidate();
-						tIt = m_Textures.erase( tIt );
-					}
-					else ++tIt;
-				}
-				glDeleteTextures( 1, &tmp );
-			}
-
-			m_DeletedTextures.clear();
-
-			for ( std::list< GLuint >::iterator it = m_DeletedBuffers.begin(); it != m_DeletedBuffers.end(); ++it )
-			{
-				GLuint tmp = *it;
-				for ( std::list< BufferObj* >::iterator bIt = m_Buffers.begin(); bIt != m_Buffers.end(); )
-				{
-					if ( ( *bIt )->m_Handle == tmp )
-					{
-						( *bIt )->invalidate();
-						bIt = m_Buffers.erase( bIt );
-					}
-					else ++bIt;
-				}
-				glDeleteBuffers( 1, &tmp );
-			}
-
-			m_DeletedBuffers.clear();
-
-			for ( std::list< TextureObj* >::iterator it = m_Textures.begin(); it != m_Textures.end(); ++it )
-			{
-				( *it )->invalidate();
-				glDeleteTextures( 1, &( ( *it )->m_Handle ) );
-			}
-
-			m_Textures.clear();
-
-			for ( std::list< BufferObj* >::iterator it = m_Buffers.begin(); it != m_Buffers.end(); ++it )
-			{
-				( *it )->invalidate();
-				glDeleteBuffers( 1, &( ( *it )->m_Handle ) );
-			}
-
-			m_Buffers.clear();
-		}
-
-		Texture GlRessourceManager::createTexture( const GLenum target )
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-
-			GLuint handle;
-			glGenTextures( 1, &handle );
-			Texture t( new TextureObj( *this, handle, target ) );
-			m_Textures.push_back( t.get() );
-			return t;
-		}
-
-		Buffer GlRessourceManager::createBuffer( const GLenum usageHint )
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-
-			GLuint handle;
-			glGenBuffers( 1, &handle );
-			Buffer b( new BufferObj( *this, handle, usageHint) );
-			m_Buffers.push_back( b.get() );
+			BufferObj *b = new BufferObj( mManager );
+			glGenBuffers( 1, &b->mHandle );
 			return b;
 		}
 
-		void GlRessourceManager::destroyTexture( TextureObj &texture )
+		ProgramObj * Context::createProgramObj() const
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-			m_DeletedTextures.push_back( texture.m_Handle );
+			ProgramObj *p = new ProgramObj( mManager );
+			p->mHandle = glCreateProgram();
+			return p;
 		}
 
-		void GlRessourceManager::destroyBuffer( BufferObj &buffer )
+		ShaderObj * Context::createShaderObj( const GLenum type, std::string const& src ) const
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-			m_DeletedBuffers.push_back( buffer.m_Handle );
+			ShaderObj *s = new ShaderObj( mManager );
+			s->mHandle = glCreateShader( type );
+
+			const char * shaderSrc = src.c_str();
+
+			s->mSource = src;
+			glShaderSource( s->mHandle, 1, &shaderSrc, nullptr );
+			glCompileShader( s->mHandle );
+
+			GLint compiled;
+			glGetShaderiv( s->mHandle, GL_COMPILE_STATUS, &compiled );
+
+			GLint size;
+			glGetShaderiv( s->mHandle, GL_INFO_LOG_LENGTH, &size );
+			if ( size > 0 )
+			{
+				char *buffer = new char[ size ];
+				glGetShaderInfoLog( s->mHandle, size, nullptr, buffer );
+				s->mInfoLog = buffer;
+				delete [] buffer;
+			}
+
+			return s;
+		}
+
+		TextureObj * Context::createTextureObj() const
+		{
+			TextureObj *t = new TextureObj( mManager );
+			glGenTextures( 1, &t->mHandle );
+			return t;
+		}
+
+		void Context::linkProgram( ProgramObj *p ) const
+		{
+			glLinkProgram( p->mHandle );
+
+			GLint linked;
+			glGetProgramiv( p->mHandle, GL_LINK_STATUS, &linked );
+
+			p->mIsLinked = static_cast< bool >( linked );
+
+			GLint logSize;
+			glGetProgramiv( p->mHandle, GL_INFO_LOG_LENGTH, &logSize );
+			if ( logSize > 0 )
+			{
+				char *buffer = new char[ logSize ];
+				glGetProgramInfoLog( p->mHandle, logSize, nullptr, buffer );
+				p->mInfoLog = buffer;
+				delete [] buffer;
+			}
+
+			GLint numAttribs, maxAttribLength, attribLocation, numUniforms, maxUniformLength, uniformLocation, size;
+			GLenum type;
+			std::string attribName, uniformName;
+
+			glGetProgramiv( p->mHandle, GL_ACTIVE_ATTRIBUTES, &numAttribs );
+			glGetProgramiv( p->mHandle, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttribLength );
+			glGetProgramiv( p->mHandle, GL_ACTIVE_UNIFORMS, &numUniforms );
+			glGetProgramiv( p->mHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLength );
+
+			char * buffer = new char[ max( maxAttribLength, maxUniformLength ) ];
+
+			for ( int i=0; i<numAttribs; ++i )
+			{
+				glGetActiveAttrib( p->mHandle, i, maxAttribLength, nullptr, &size, &type, buffer );
+				attribName = buffer;
+				attribLocation = glGetAttribLocation( p->mHandle, buffer );
+				std::cout << "ATTRIBUTE " << attribName << " " << attribLocation << std::endl;
+
+				p->mActiveAttributes[ attribName ] = ProgramObj::ActiveVar( attribLocation, size, type );
+			}
+
+			for ( int i=0; i<numUniforms; ++i )
+			{
+				glGetActiveUniform( p->mHandle, i, maxUniformLength, nullptr, &size, &type, buffer );
+				uniformName = buffer;
+				uniformLocation = glGetUniformLocation( p->mHandle, buffer );
+				std::cout << "UNIFORM: " << uniformName << " " << uniformLocation << " " << size << " " << type << std::endl;
+
+				p->mActiveUniforms[ uniformName ] = ProgramObj::ActiveVar( uniformLocation, size, type );
+			}
+
+			delete [] buffer;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		RenderWindow::RenderWindow( RenderSettings const& s ) :
-			m_CreationSettings( s ),
-			m_SfWindow( sf::VideoMode( s.width, s.height, s.colorBits ), s.title, sf::Style::Resize, sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ) ),
-			m_SfSettings( m_SfWindow.getSettings() ),
-			m_Renderer()
+		RenderWindow::RenderWindow( RenderSettings const& s, RessourceManager const& mgr ) :
+			mSfWindow( sf::VideoMode( s.width, s.height, s.colorBits ), s.title, sf::Style::Resize, sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ) ),
+			mSfSettings( mSfWindow.getSettings() ),
+			mRenderer( mgr )
 		{
-			//std::cout << "----------WINDOW SETTINGS----------" << std::endl;
-			//std::cout << "opengl version:\t\t" << m_SfSettings.majorVersion << "." << m_SfSettings.minorVersion << std::endl;
-			//std::cout << "antialiasing samples:\t" << m_SfSettings.antialiasingLevel << std::endl;
 		}
 
 		void RenderWindow::processEvents()
 		{
 			sf::Event ev;
-			while ( m_SfWindow.pollEvent( ev ) )
+			while ( mSfWindow.pollEvent( ev ) )
 			{
 				if ( ev.type == sf::Event::Resized )
 				{
-					m_Renderer.setViewport( ev.size.width, ev.size.height );
+					mRenderer.setViewport( ev.size.width, ev.size.height );
 				}
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		RenderContext::RenderContext( RenderSettings const& s ) :
-			m_CreationSettings( s ),
-			m_SfContext( sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ), s.width, s.height ),
-			m_Renderer( s.width, s.height )
+		Renderer::Renderer( RessourceManager const& mgr ) : mGlewContext( new GLEWContext ), mManager( mgr )
 		{
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		Renderer::Renderer() :
-			m_GlewContext( new GLEWContext )
-		{
-			GLenum success = glewContextInit( m_GlewContext.get() );
+			GLenum success = glewContextInit( mGlewContext.get() );
 			if ( success != GLEW_OK )
 			{
 				throw std::exception( "could not create GLEW context" );
@@ -205,134 +164,6 @@ namespace _2Real
 				{
 					throw std::exception( "could not initialize GLEW" );
 				}
-			}
-
-			// create tex units
-			GLint val = 0;
-			glGetIntegerv( GL_MAX_TEXTURE_COORDS, &val );		// TODO: not sure if this is the correct value to grab, the api doc is a bit unclear :/
-
-			for ( unsigned int i=0; i<=val; ++i )
-			{
-				m_TextureUnits.push_back( TextureUnit( i, m_GlewContext ) );
-			}
-
-			// create buffer targets
-			m_BufferTargets.push_back( BufferTarget( GL_ARRAY_BUFFER, m_GlewContext ) );
-			m_BufferTargets.push_back( BufferTarget( GL_ELEMENT_ARRAY_BUFFER, m_GlewContext ) );
-			m_BufferTargets.push_back( BufferTarget( GL_PIXEL_UNPACK_BUFFER, m_GlewContext ) );
-			m_BufferTargets.push_back( BufferTarget( GL_PIXEL_PACK_BUFFER, m_GlewContext ) );
-
-			// create simplest of shaders
-			// std::string vertexSrc = "#version 330 core\nin vec3 position;\nvoid main()\n{\ngl_Position = vec4( position.xyz, 1.0 );\n}\n";
-			// std::string fragmentSrc = "#version 330 core\nout vec4 fragColor;\nvoid main()\n{\nfragColor = vec4( 0.5, 0.5, 0.5, 1.0 );\n}\n";
-
-			std::string vertexSrc = "#version 330 core\nin vec3 position;\nin vec2 texcoord0;\nout vec2 fTexcoord0;\nvoid main()\n{\nfTexcoord0 = texcoord0;\ngl_Position = vec4( position.xyz, 1.0 );\n}\n";
-			std::string fragmentSrc = "#version 330 core\nuniform sampler2D texture0;\nin vec2 fTexcoord0;\nout vec4 fragColor;\nvoid main()\n{\nfragColor = texture( texture0, fTexcoord0 );\n}\n";
-
-			ShaderObj vertexShader( GL_VERTEX_SHADER, m_GlewContext, vertexSrc );
-			ShaderObj fragmentShader( GL_FRAGMENT_SHADER, m_GlewContext, fragmentSrc );
-
-			std::cout << vertexShader.getShaderInfo() << " " << fragmentShader.getShaderInfo() << std::endl;
-
-			ProgramObj *prog = new ProgramObj( m_GlewContext );
-			prog->attachShader( vertexShader );
-			prog->attachShader( fragmentShader );
-			prog->link();
-			prog->validate();
-
-			std::cout << prog->getProgramInfo() << std::endl;
-
-			m_Programs[ "default" ] = prog;
-
-			//GLchar const* vP = vert.c_str();
-			//GLchar const* fP = frag.c_str();
-
-			//GLuint prog;
-			//prog = glCreateProgram();
-
-			//GLuint v = glCreateShader( GL_VERTEX_SHADER );
-			//glShaderSource( v, 1, &vP, nullptr );
-			//glCompileShader( v );
-
-			//GLint vCompiled;
-			//glGetProgramiv( prog, GL_LINK_STATUS, &vCompiled );
-			//if ( vCompiled )
-			//{
-			//	std::cout << "vertex shader compiled" << std::endl;
-			//}
-			//else
-			//{
-			//	GLint logLength = 0;
-			//	GLsizei sz = 0;
-
-			//	glGetShaderiv( v, GL_INFO_LOG_LENGTH, &logLength );
-
-			//	if ( logLength > 1)
-			//	{
-			//		GLchar *log = new GLchar[ logLength ];
-			//		glGetShaderInfoLog ( v, logLength, &sz, log );
-			//		std::cout << "vertex shader log:\n" << log << std::endl;
-			//		delete [] log;
-			//	}
-			//}
-
-			//GLuint f = glCreateShader( GL_FRAGMENT_SHADER );
-			//glShaderSource( f, 1, &fP, nullptr );
-			//glCompileShader( f );
-
-			//GLint fCompiled;
-			//glGetProgramiv( prog, GL_LINK_STATUS, &fCompiled );
-			//if ( fCompiled )
-			//{
-			//	std::cout << "f compiled" << std::endl;
-			//}
-			//else
-			//{
-			//	GLint logLength = 0;
-			//	GLsizei sz = 0;
-
-			//	glGetShaderiv( f, GL_INFO_LOG_LENGTH, &logLength );
-
-			//	if ( logLength > 1)
-			//	{
-			//		GLchar *log = new GLchar[ logLength ];
-			//		glGetShaderInfoLog ( f, logLength, &sz, log );
-			//		std::cout << "vertex shader log:\n" << log << std::endl;
-			//		delete [] log;
-			//	}
-			//}
-
-			//glAttachShader( prog, v );
-			//glAttachShader( prog, f );
-
-			//glBindAttribLocation( prog, 0, "position" );
-
-			//glLinkProgram( prog );
-
-			//GLint linked;
-			//glGetProgramiv( prog, GL_LINK_STATUS, &linked );
-			//if ( linked )
-			//{
-			//	std::cout << "linked" << std::endl;
-			//}
-
-			//m_Shaders.push_back( prog );
-
-			//std::cout << "PROGS: " << m_Shaders[0] << " " << m_Shaders.size() << std::endl;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		GLenum TextureObj::getTextureFormat( const ImageChannelOrder order )
-		{
-			if ( order == ImageChannelOrder::RGBA )		return GL_RGBA;
-			else if ( order == ImageChannelOrder::RGB )	return GL_RGB;
-			else if ( order == ImageChannelOrder::R )	return GL_RED;
-			else if ( order == ImageChannelOrder::A )	return GL_RED;
-			else
-			{
-				std::cout << "unknown image channel order, defaulting to RGBA" << std::endl;
-				return GL_RGBA;
 			}
 		}
 	}

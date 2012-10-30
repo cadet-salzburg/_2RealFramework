@@ -2,6 +2,9 @@
 
 #include "gl.h"
 #include "Datatypes.h"
+#include "RessourceManager.h"
+
+#include <map>
 
 namespace _2Real
 {
@@ -31,431 +34,173 @@ namespace _2Real
 			unsigned int	colorBits;
 		};
 
-		class GlRessourceManager
+		class Context
 		{
 
 		public:
 
-			GlRessourceManager( RenderSettings const& settings );
-			~GlRessourceManager();
-
-			GlewContext const& getGlewContext() const { return m_GlewContext; }
-
-			void setActive( const bool active ) { m_SfContext.setActive( active ); }
-
-			void cleanUp();
-
-			Texture createTexture( const GLenum target );
-			void destroyTexture( TextureObj &texture );
-
-			Buffer createBuffer( const GLenum usageHint );
-			void destroyBuffer( BufferObj &buffer );
-
-			typedef std::pair< std::string, GLenum > ShaderSource;
-			typedef std::list< std::string, GLenum > ShaderSources;
-
-			Program createProgram( ShaderSources const& src );
-			void destroyProgram( ProgramObj &program );
-
-		private:
-
-			Poco::FastMutex				m_Mutex;
-			RenderSettings				m_CreationSettings;
-			GlewContext					m_GlewContext;
-			sf::Context					m_SfContext;
-
-			std::list< TextureObj * >	m_Textures;
-			std::list< BufferObj * >	m_Buffers;
-			std::list< ProgramObj * >	m_Programs;
-			std::list< GLuint	>		m_DeletedTextures;
-			std::list< GLuint	>		m_DeletedBuffers;
-			std::list< GLuint >			m_DeletedPrograms;
-
-		};
-
-		class BufferObj
-		{
-
-		public:
-
-			BufferObj( GlRessourceManager &mgr, const GLuint handle, const GLenum usageHint ) :
-				m_Manager( mgr ), m_Handle( handle ), m_IsValid( true ),
-				m_Size( 0 ), m_ElementCount( 0 ), m_UsageHint( usageHint )
-			{
-			}
-			
-			~BufferObj()
-			{
-				std::cout << "deleting buffer obj" << std::endl;
-				if ( m_IsValid ) m_Manager.destroyBuffer( *this );
-				std::cout << "deleted buffer obj" << std::endl;
-			}
-
-			void destroy()
-			{
-				std::cout << "deleting buffer obj" << std::endl;
-				if ( m_IsValid ) m_Manager.destroyBuffer( *this );
-				std::cout << "deleted buffer obj" << std::endl;
-			}
-
-			void invalidate() { m_IsValid = false; }
-
-			bool isValid() const { return m_IsValid; }
-			bool isEmpty() const { return m_Size == 0; }
-
-			const GLenum getDatatype() const { return m_Datatype; }
-
-		private:
-
-			friend class GlRessourceManager;
-			friend class Renderer;
-			friend class BufferTarget;
-			friend class TextureUnit;
-
-			GlRessourceManager		&m_Manager;
-			GLuint					m_Handle;
-			bool					m_IsValid;
-
-			size_t					m_Size;
-			unsigned int			m_ElementCount;
-			GLenum					m_Datatype;
-			GLenum					m_UsageHint;
-
-		};
-
-		class BufferTarget
-		{
-
-		public:
-
-			BufferTarget( const GLenum target, GlewContext &glewContext ) :
-				mGlewContext( glewContext ),
-				mBufferTarget( target )
-			{
-			}
+			Context( RenderSettings const& settings, RessourceManager const& mgr );
 
 			GlewContext const& getGlewContext() const { return mGlewContext; }
 
-			template< typename T >
-			void updateBuffer( Buffer &buffer, T const*const data, const size_t size, const GLenum usageHint ) const
+			void setActive( const bool active ) { mSfContext.setActive( active ); }
+			void finish() { glFinish(); }
+			void flush() { glFlush(); }
+
+			void useProgram( ProgramObj *p )
 			{
-				bool createNewDataStore = false;
+				glUseProgram( p->mHandle );
+			}
 
-				unsigned int elementCount = size / sizeof( T );
-				GLenum datatype = getGLEnumeration< T >();
+			void resetProgram()
+			{
+				glUseProgram( 0 );
+			}
 
-				if ( buffer->m_Size != size || buffer->m_UsageHint != usageHint )
-				{
-					createNewDataStore = true;
-				}
+			void setUniformSampler( const GLint location, const int unit )
+			{
+				glUniform1i( location, unit );
+			}
 
-				buffer->m_Datatype = datatype;
-				buffer->m_Size = size;
-				buffer->m_ElementCount = elementCount;
-				buffer->m_UsageHint = usageHint;
-
-				glBindBuffer( mBufferTarget, buffer->m_Handle );
-
-				if ( createNewDataStore )	glBufferData( mBufferTarget, size, data, usageHint );
-				else						glBufferSubData( mBufferTarget, 0, size, data );
-
-				glBindBuffer( mBufferTarget, 0 );
+			void setUniformMat4( const GLint location, Mat4 const& mat )
+			{
+				glUniformMatrix4fv( location, 1, true, mat.data() );
 			}
 
 			template< typename T >
-			void updateBuffer( Buffer &buffer, typename std::vector< T >::const_iterator const& start, typename std::vector< T >::const_iterator const& end, const GLenum usageHint ) const
+			void updateBuffer( BufferObj *& buffer, std::vector< T > const& data, const GLenum usageHint )
 			{
-				bool createNewDataStore = false;
+				const GLenum t = getGLEnumeration< T >();
+				const unsigned int e = data.size();
+				const size_t s = e * sizeof( T );
 
-				unsigned int elementCount = end - start;
-				size_t size = elementCount * sizeof( T );
-				GLenum datatype = getGLEnumeration< T >();
+				bool createNewStorage = ( ( t != buffer->mDatatype ) || ( e != buffer->mElementCount ) );
 
-				if ( buffer->m_Size != size || buffer->m_UsageHint != usageHint )
-				{
-					createNewDataStore = true;
-				}
+				glBindBuffer( buffer->mTarget, buffer->mHandle );
+				if ( createNewStorage )		glBufferData( buffer->mTarget, data.size() * sizeof( T ), &data[ 0 ], usageHint );
+				else						glBufferSubData( buffer->mTarget, 0, data.size() * sizeof( T ), &data[ 0 ] );
+				glBindBuffer( buffer->mTarget, 0 );
 
-				buffer->m_Datatype = datatype;
-				buffer->m_Size = size;
-				buffer->m_ElementCount = elementCount;
-				buffer->m_UsageHint = usageHint;
-
-				glBindBuffer( mBufferTarget, buffer->m_Handle );
-
-				if ( createNewDataStore )	glBufferData( mBufferTarget, size, &( *start ), usageHint );
-				else						glBufferSubData( mBufferTarget, 0, size, &( *start ) );
-
-				glBindBuffer( mBufferTarget, 0 );
+				buffer->mDatatype = t;
+				buffer->mElementCount = e;
+				buffer->mSizeInBytes = s;
 			}
 
-			void bind( Buffer const& buffer )
+			template< typename T >
+			void updateTexture( TextureObj *& texture, ImageT< T > const& img, const GLenum texTarget, TextureObj::Settings const& s = TextureObj::Settings() )
 			{
-				glBindBuffer( mBufferTarget, buffer->m_Handle );
-			}
-
-			void reset()
-			{
-				glBindBuffer( mBufferTarget, 0 );
-			}
-
-		private:
-
-			GlewContext		mGlewContext;
-			GLenum			mBufferTarget;
-
-		};
-
-		class TextureObj
-		{
-
-		public:
-
-			struct Settings
-			{
-				Settings()
-				{
-					wrapS = GL_REPEAT;
-					wrapT = GL_REPEAT;
-					wrapR = GL_REPEAT;
-					minFilter = GL_LINEAR;
-					magFilter = GL_LINEAR_MIPMAP_LINEAR;
-				}
-
-				bool operator==( Settings const& other ) const
-				{
-					return ( ( wrapS == other.wrapS ) && ( wrapT == other.wrapT ) && ( wrapR == other.wrapR ) &&
-								( minFilter == other.minFilter ) && ( magFilter == other.magFilter ) );
-				}
-
-				bool operator!=( Settings const& other ) const
-				{
-					return ( !( *this == other ) );
-				}
-
-				GLenum		wrapS;
-				GLenum		wrapT;
-				GLenum		wrapR;
-				GLenum		minFilter;
-				GLenum		magFilter;
-			};
-
-			TextureObj( GlRessourceManager &mgr, const GLuint handle, const GLenum target ) :
-				m_Manager( mgr ), m_Handle( handle ), m_IsValid( true ),
-				m_Width( 0 ), m_Height( 0 ), m_TextureTarget( target ), m_InternalFormat( GL_RGBA )
-			{
-			}
-
-			~TextureObj()
-			{
-				std::cout << "deleting texture obj" << std::endl;
-				if ( m_IsValid ) m_Manager.destroyTexture( *this );
-				std::cout << "deleted texture obj" << std::endl;
-			}
-
-			void destroy()
-			{
-				std::cout << "deleting texture obj" << std::endl;
-				if ( m_IsValid ) m_Manager.destroyTexture( *this );
-				std::cout << "deleted texture obj" << std::endl;
-			}
-
-			void invalidate() { m_IsValid = false; }
-			bool isValid() const { return m_IsValid; }
-			bool isEmpty() const { return ( m_Width == 0 || m_Height == 0 ); }
-
-			static GLenum getTextureFormat( const ImageChannelOrder order );
-
-		private:
-
-			friend class GlRessourceManager;
-			friend class Renderer;
-			friend class OffScreenRenderer;
-			friend class TextureUnit;
-
-			GlRessourceManager		&m_Manager;
-			GLuint					m_Handle;
-			bool					m_IsValid;
-
-			GLenum					m_TextureTarget;
-			unsigned int			m_Width;
-			unsigned int			m_Height;
-			GLenum					m_Format;
-			GLenum					m_Datatype;
-			GLenum					m_InternalFormat;
-			Settings				m_Settings;
-
-		};
-
-		class TextureUnit
-		{
-
-		public:
-
-			TextureUnit( const unsigned int unit, GlewContext &glewContext ) :
-				m_GlewContext( glewContext ),
-				m_TextureUnit( unit ),
-				m_ActiveTarget( GL_TEXTURE_2D )
-			{
-			}
-
-			GlewContext const& getGlewContext() const { return m_GlewContext; }
-
-			void set( Texture const& texture )
-			{
-				m_ActiveTarget = texture->m_TextureTarget;
-	
-				glActiveTexture( GL_TEXTURE0 + m_TextureUnit );
-				glBindTexture( m_ActiveTarget, texture->m_Handle );
-			}
-	
-			void reset()
-			{
-				glBindTexture( m_ActiveTarget, 0 );
-				glDisable( m_ActiveTarget );
-			}
-
-			void resizeTexture( Texture &tex, const GLenum i, const unsigned int w, const unsigned int h, TextureObj::Settings const& s ) const
-			{
-				if ( tex->m_TextureTarget != GL_TEXTURE_2D )
+				if ( texTarget != GL_TEXTURE_2D )
 				{
 					throw std::exception( "texture object is not 2d!" );
 				}
 
-				tex->m_Width = w;
-				tex->m_Height = h;
-				tex->m_InternalFormat = i;
+				const GLenum type = getGLEnumeration< T >();
+				const unsigned int w = img.getWidth();
+				const unsigned int h = img.getHeight();
+				const GLenum imageFormat = TextureObj::getTextureFormat( img.getChannelOrder() );
 
-				glActiveTexture( GL_TEXTURE0 + m_TextureUnit );
-				glBindTexture( GL_TEXTURE_2D, tex->m_Handle );
-				
-				glTexImage2D( GL_TEXTURE_2D, 0, i, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr );
+				bool createNewStorage = ( ( w != texture->mWidth ) || ( h != texture->mHeight ) || ( s.format != texture->mSettings.format ) );
 
-				if ( tex->m_Settings != s )
+				glBindTexture( GL_TEXTURE_2D, texture->mHandle );
+				if ( createNewStorage )
+				{
+					glTexImage2D( GL_TEXTURE_2D, 0, s.format, w, h, 0, imageFormat, type, img.getData() );
+				}
+				else
+				{
+					glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, imageFormat, type, img.getData() );
+				}
+
+				if ( texture->mSettings != s )
 				{
 					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s.wrapS );
 					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, s.wrapT );
 					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, s.wrapR );
 					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, s.minFilter );
 					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, s.magFilter );
-					tex->m_Settings = s;
+					texture->mSettings = s;
 				}
 
-				glGenerateMipmap( GL_TEXTURE_2D );
-				glBindTexture( GL_TEXTURE_2D, 0 );		// not sure if this is necessary
-			}
+				texture->mWidth = w;
+				texture->mHeight = h;
+				texture->mFormat = imageFormat;
+				texture->mDatatype = type;
 
-			void updateTexture( Texture &texture, Image const& img, const GLenum internalFormat, TextureObj::Settings const& settings ) const
-			{
-				if ( texture->m_TextureTarget != GL_TEXTURE_2D )
-				{
-					throw std::exception( "texture object is not 2d!" );
-				}
-
-				GLenum format = TextureObj::getTextureFormat( img.getChannelOrder() );
-				unsigned int w = img.getWidth();
-				unsigned int h = img.getHeight();
-
-				bool createNewDataStore = false;
-				if ( w != texture->m_Width || h != texture->m_Height || format != texture->m_Format || internalFormat != texture->m_InternalFormat )
-				{
-					createNewDataStore = true;
-				}
-
-				texture->m_Width = w;
-				texture->m_Height = h;
-				texture->m_Format = format;
-				texture->m_InternalFormat = internalFormat;
-
-				if ( img.getImageType() == ImageType::UNSIGNED_BYTE )			texture->m_Datatype = GL_UNSIGNED_BYTE;
-				else if ( img.getImageType() == ImageType::UNSIGNED_SHORT )		texture->m_Datatype = GL_UNSIGNED_SHORT;
-				else if ( img.getImageType() == ImageType::DOUBLE )				texture->m_Datatype = GL_DOUBLE;
-				else															texture->m_Datatype = GL_FLOAT;
-
-				glActiveTexture( GL_TEXTURE0 + m_TextureUnit );
-				glBindTexture( GL_TEXTURE_2D, texture->m_Handle );
-
-				if ( createNewDataStore )
-				{
-					glTexImage2D( GL_TEXTURE_2D, 0, internalFormat, img.getWidth(), img.getHeight(), 0, format, texture->m_Datatype, static_cast< GLvoid const* >( img.getData() ) );
-				}
-				else
-				{
-					glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, format, texture->m_Datatype, img.getData() );
-				}
-
-				if ( texture->m_Settings != settings )
-				{
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, settings.wrapS );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings.wrapT );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, settings.wrapR );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, settings.minFilter );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, settings.magFilter );
-
-					texture->m_Settings = settings;
-				}
-
-				glGenerateMipmap( GL_TEXTURE_2D );
-				glBindTexture( GL_TEXTURE_2D, 0 );
-			}
-
-			template< typename T >
-			void updateTexture( Texture &texture, ImageT< T > const& img, const GLenum internalFormat, TextureObj::Settings const& settings ) const
-			{
-				if ( texture->m_TextureTarget != GL_TEXTURE_2D )
-				{
-					throw std::exception( "texture object is not 2d!" );
-				}
-
-				GLenum format = TextureObj::getTextureFormat( img.getChannelOrder() );
-				unsigned int w = img.getWidth();
-				unsigned int h = img.getHeight();
-
-				bool createNewDataStore = false;
-				if ( w != texture->m_Width || h != texture->m_Height || format != texture->m_Format || internalFormat != texture->m_InternalFormat )
-				{
-					createNewDataStore = true;
-				}
-
-				texture->m_Width = w;
-				texture->m_Height = h;
-				texture->m_Format = format;
-				texture->m_InternalFormat = internalFormat;
-				texture->m_Datatype = getGLEnumeration< T >();
-
-				glActiveTexture( GL_TEXTURE0 + m_TextureUnit );
-				glBindTexture( GL_TEXTURE_2D, texture->m_Handle );
-
-				if ( createNewDataStore )
-				{
-					glTexImage2D( GL_TEXTURE_2D, 0, internalFormat, img.getWidth(), img.getHeight(), 0, format, texture->m_Datatype, img.getData() );
-				}
-				else
-				{
-					glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, format, texture->m_Datatype, img.getData() );
-				}
-
-				if ( texture->m_Settings != settings )
-				{
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, settings.wrapS );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings.wrapT );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, settings.wrapR );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, settings.minFilter );
-					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, settings.magFilter );
-
-					texture->m_Settings = settings;
-				}
-
+				// TODO: depending on min filter
 				glGenerateMipmap( GL_TEXTURE_2D );
 
 				glBindTexture( GL_TEXTURE_2D, 0 );
 			}
 
-		private :
+			void updateTexture( TextureObj *& texture, Image const& img, const GLenum texTarget, TextureObj::Settings const& s = TextureObj::Settings() )
+			{
+				if ( texTarget != GL_TEXTURE_2D )
+				{
+					throw std::exception( "texture object is not 2d!" );
+				}
 
-			GlewContext				m_GlewContext;
-			unsigned int			m_TextureUnit;
-			GLenum					m_ActiveTarget;
+				const _2Real::ImageType imageType = img.getImageType();
+				GLenum type = GL_UNSIGNED_BYTE;
+				if ( imageType == ImageType::UNSIGNED_BYTE )		type = GL_UNSIGNED_BYTE;
+				else if ( imageType == ImageType::UNSIGNED_SHORT )	type = GL_UNSIGNED_SHORT;
+				else if ( imageType == ImageType::FLOAT )			type = GL_FLOAT;
+				else if ( imageType == ImageType::DOUBLE )			type = GL_DOUBLE;
+
+				const unsigned int w = img.getWidth();
+				const unsigned int h = img.getHeight();
+				const GLenum imageFormat = TextureObj::getTextureFormat( img.getChannelOrder() );
+
+				bool createNewStorage = ( ( w != texture->mWidth ) || ( h != texture->mHeight ) || ( s.format != texture->mSettings.format ) );
+
+				glBindTexture( GL_TEXTURE_2D, texture->mHandle );
+				if ( createNewStorage )
+				{
+					glTexImage2D( GL_TEXTURE_2D, 0, s.format, w, h, 0, imageFormat, type, img.getData() );
+				}
+				else
+				{
+					glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, imageFormat, type, img.getData() );
+				}
+
+				if ( texture->mSettings != s )
+				{
+					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s.wrapS );
+					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, s.wrapT );
+					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, s.wrapR );
+					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, s.minFilter );
+					glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, s.magFilter );
+					texture->mSettings = s;
+				}
+
+				texture->mWidth = w;
+				texture->mHeight = h;
+				texture->mFormat = imageFormat;
+				texture->mDatatype = type;
+
+				// TODO: depending on min filter
+				glGenerateMipmap( GL_TEXTURE_2D );
+
+				glBindTexture( GL_TEXTURE_2D, 0 );
+			}
+
+			void attachShader( ProgramObj * p, ShaderObj * s ) const
+			{
+				glAttachShader( p->mHandle, s->mHandle );
+				p->mShaders.push_back( s );
+			}
+
+			void linkProgram( ProgramObj *p ) const;
+
+			BufferObj * createBufferObj() const;
+			ProgramObj * createProgramObj() const;
+			ShaderObj * createShaderObj( const GLenum type, std::string const& src ) const;
+			TextureObj *createTextureObj() const;
+
+		protected:
+
+			RessourceManager		const& mManager;
+			GlewContext				mGlewContext;
+			sf::Context				mSfContext;
 
 		};
 
@@ -464,66 +209,55 @@ namespace _2Real
 
 		public:
 
-			Renderer();
-			GlewContext const& getGlewContext() const { return m_GlewContext; }
+			Renderer( RessourceManager const& mgr );
+
+			GlewContext const& getGlewContext() const { return mGlewContext; }
 
 			void setViewport( const unsigned int w, const unsigned int h )
 			{
 				glViewport( 0, 0, w, h );
 			}
 
-			void setProgram( std::string const& name, std::string const& vertexSrc, std::string const& fragmentSrc, std::string const& geometrySrc = "" )
+			void render( RenderData const& data )
 			{
-				ProgramObj *prog = new ProgramObj( m_GlewContext );
+				glEnable( GL_DEPTH_TEST );
+				glDepthFunc( GL_LEQUAL );
 
-				ShaderObj vert( GL_VERTEX_SHADER, m_GlewContext, vertexSrc, false );
-				ShaderObj frag( GL_FRAGMENT_SHADER, m_GlewContext, fragmentSrc, false );
+				glEnable( GL_BLEND );
+				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-				std::cout << vert.getShaderInfo() << "\n" << frag.getShaderInfo() << std::endl;
+				glPointSize( 1.5f );
+				glEnable( GL_POINT_SMOOTH );
+				glHint( GL_POINT_SMOOTH_HINT, GL_NICEST );
 
-				prog->attachShader( vert );
-				prog->attachShader( frag );
+				glLineWidth( 0.5f );
+				glEnable( GL_LINE_SMOOTH );
+				glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
-				if ( !geometrySrc.empty() )
+				if ( data.mProgram.get() == nullptr ) return;
+
+				glUseProgram( data.mProgram->mHandle );
+
+				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
 				{
-					ShaderObj geo( GL_GEOMETRY_SHADER, m_GlewContext, geometrySrc, false );
-					std::cout << geo.getShaderInfo() << std::endl;
-					prog->attachShader( geo );
+					RenderData::VertexAttribute attrib = it->second;
+					glBindBuffer( GL_ARRAY_BUFFER, attrib.buffer->mHandle );
+					// TODO: attrib offset ( ? )
+					glVertexAttribPointer( it->first, attrib.size, attrib.buffer->mDatatype, attrib.normalized, attrib.stride, nullptr );
+					glEnableVertexAttribArray( it->first );
 				}
 
-				prog->link();
-				prog->validate();
+				for ( RenderData::Textures::const_iterator it = data.mTextures.begin(); it != data.mTextures.end(); ++it )
+				{
+					Texture tex = it->second;
+					glActiveTexture( GL_TEXTURE0 + it->first );
+					glBindTexture( GL_TEXTURE_2D, tex->mHandle );
+				}
 
-				std::cout << prog->getProgramInfo() << std::endl;
+				// TODO: indexed drawing ( ! ), offset into buffer ( ? )
+				glDrawArrays( data.mPrimitiveType, 0, data.mElementCount );
 
-				m_Programs[ name ] = prog;
-			}
-
-			void updateTexture( Texture &texture, Image const& img, const GLenum internalFormat, TextureObj::Settings const& settings = TextureObj::Settings() )
-			{
-				m_TextureUnits[0].updateTexture( texture, img, internalFormat, settings );
-			}
-
-			template< typename T >
-			void updateTexture( Texture &texture, ImageT< T > const& img, const GLenum internalFormat, TextureObj::Settings const& settings = TextureObj::Settings() )
-			{
-				m_TextureUnits[0].updateTexture< T >( texture, img, internalFormat, settings );
-			}
-
-			void resizeTexture( Texture &texture, const GLenum internalFormat, const unsigned int w, const unsigned int h, TextureObj::Settings const& settings = TextureObj::Settings() )
-			{
-				m_TextureUnits[0].resizeTexture( texture, internalFormat, w, h, settings );
-			}
-
-			template< typename T >
-			void updateBuffer( Buffer &buffer, std::vector< T > const& data )
-			{
-				m_BufferTargets[ ARRAY_BUFFER ].updateBuffer< T >( buffer, data.begin(), data.end(), buffer->m_UsageHint );
-			}
-
-			void finish()
-			{
-				glFinish();
+				glUseProgram( 0 );
 			}
 
 			void clear( Vec3 const& color, const float depth = 1.0f )
@@ -542,134 +276,10 @@ namespace _2Real
 				glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 			}
 
-			void render( gl::RenderData const& data, std::string const& program = "default" )
-			{
-				glEnable( GL_BLEND );
-				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-				glPointSize( 2.0 );
-				glEnable( GL_POINT_SMOOTH );
-				glHint( GL_POINT_SMOOTH_HINT, GL_NICEST );
-
-				ProgramObj *p = m_Programs[ program ];
-				p->bind();
-
-				std::map< std::string, gl::RenderData::TextureBinding > const& textures = data.m_Textures;
-				std::map< std::string, gl::RenderData::VertexAttribute > const& attribs = data.m_Attributes;
-
-				unsigned int currentUnit = 0;
-				for ( std::map< std::string, RenderData::TextureBinding >::const_iterator it = textures.begin(); it != textures.end(); ++it )
-				{
-					RenderData::TextureBinding const& tex = it->second;
-
-					tex.unit = currentUnit;
-					m_TextureUnits[ currentUnit ].set( tex.texture );
-
-					p->setUniformTexture( it->first, currentUnit );
-
-					currentUnit++;
-					if ( currentUnit >= m_TextureUnits.size() )
-					{
-						std::cout << "trying to bind more textures than available texunits!" << std::endl;
-						break;
-					}
-				}
-
-				for ( std::map< std::string, RenderData::VertexAttribute >::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
-				{
-					RenderData::VertexAttribute const& attrib = it->second;
-					m_BufferTargets[ ARRAY_BUFFER ].bind( attrib.buffer );
-
-					attrib.index = p->getAttributeLocation( it->first );
-
-					glVertexAttribPointer( attrib.index, attrib.size, attrib.buffer->m_Datatype, attrib.normalized, attrib.stride, static_cast< GLvoid const* >( nullptr ) );
-					glEnableVertexAttribArray( attrib.index );
-				}
-
-				if ( data.m_DrawIndexed )
-				{
-				}
-				else
-				{
-					glDrawArrays( data.m_PrimitiveType, 0, data.m_ElementCount );
-				}
-
-				for ( std::map< std::string, RenderData::VertexAttribute >::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
-				{
-					glDisableVertexAttribArray( it->second.index );
-				}
-
-				for ( std::map< std::string, RenderData::TextureBinding >::const_iterator it = textures.begin(); it != textures.end(); ++it )
-				{
-					m_TextureUnits[ it->second.unit ].reset();
-				}
-
-				glUseProgram( 0 );
-
-				glDisable( GL_BLEND );
-			}
-
 		protected:
 
-			GlewContext							m_GlewContext;
-			std::map< std::string, ProgramObj* >	m_Programs;
-			std::vector< TextureUnit >			m_TextureUnits;
-			std::vector< BufferTarget >			m_BufferTargets;
-
-		};
-
-		/**
-		*	TODO: resize!!!
-		*/
-		class OffScreenRenderer : public Renderer
-		{
-
-		public:
-
-			OffScreenRenderer( const unsigned int w, const unsigned int h ) : Renderer(), m_Width( w ), m_Height( h )
-			{
-				glGenFramebuffers( 1, &m_Framebuffer );
-				glGenRenderbuffers( 1, &m_Renderbuffer );
-				glBindRenderbuffer( GL_RENDERBUFFER, m_Renderbuffer );
-				glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h );
-				glBindRenderbuffer( GL_RENDERBUFFER, 0 );
-				glBindFramebuffer( GL_FRAMEBUFFER, m_Framebuffer );
-				glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_Renderbuffer );
-			}
-
-			void attachTexture( Texture &tex )
-			{
-				glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->m_Handle, 0 );
-			}
-
-			void detachTexture( Texture &tex )
-			{
-				glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0 );
-			}
-
-			void checkStatus()
-			{
-				GLenum status = glCheckFramebufferStatus( GL_FRAMEBUFFER );
-				if ( status != GL_FRAMEBUFFER_COMPLETE )
-				{
-					std::cout << "framebuffer is incomplete!" << std::endl;
-				}
-			}
-
-			~OffScreenRenderer()
-			{
-				glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-				glDeleteRenderbuffers( 1, &m_Renderbuffer );
-				glDeleteFramebuffers( 1, &m_Framebuffer );
-			}
-
-		private:
-
-			GLuint			m_Framebuffer;
-			GLuint			m_Renderbuffer;
-			GLuint			m_Texture;
-			unsigned int	m_Width;
-			unsigned int	m_Height;
+			GlewContext			mGlewContext;
+			RessourceManager	const& mManager;
 
 		};
 
@@ -678,41 +288,20 @@ namespace _2Real
 
 		public:
 
-			RenderWindow( RenderSettings const& settings );
+			RenderWindow( RenderSettings const& settings, RessourceManager const& mgr );
 
-			void setActive( const bool active ) { m_SfWindow.setActive( active ); }
-			void display() { m_SfWindow.display(); }
-
-			void setTitle( std::string const& title ) { m_SfWindow.setTitle( title ); }
+			void setActive( const bool active ) { mSfWindow.setActive( active ); }
+			void display() { mSfWindow.display(); }
+			void setTitle( std::string const& title ) { mSfWindow.setTitle( title ); }
 			void processEvents();
 
-			Renderer & getRenderer() { return m_Renderer; }
+			Renderer & getRenderer() { return mRenderer; }
 
 		private:
 
-			RenderSettings			m_CreationSettings;
-			sf::Window				m_SfWindow;
-			sf::ContextSettings		m_SfSettings;
-			Renderer				m_Renderer;
-
-		};
-
-		class RenderContext
-		{
-
-		public:
-
-			RenderContext( RenderSettings const& settings );
-
-			void setActive( const bool active ) { m_SfContext.setActive( active ); }
-
-			OffScreenRenderer & getRenderer() { return m_Renderer; }
-
-		private:
-
-			RenderSettings			m_CreationSettings;
-			sf::Context				m_SfContext;
-			OffScreenRenderer		m_Renderer;
+			sf::Window				mSfWindow;
+			sf::ContextSettings		mSfSettings;
+			Renderer				mRenderer;
 
 		};
 	}

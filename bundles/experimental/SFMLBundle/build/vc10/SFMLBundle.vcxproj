@@ -24,6 +24,8 @@
     <ClCompile Include="..\..\src\DisplayWindowBlock.cpp" />
     <ClCompile Include="..\..\src\OffscreenRenderBlock.cpp" />
     <ClCompile Include="..\..\src\OpenGl.cpp" />
+    <ClCompile Include="..\..\src\RenderDataCombinerBlock.cpp" />
+    <ClCompile Include="..\..\src\RessourceManager.cpp" />
     <ClCompile Include="..\..\src\RessourceManagerBlock.cpp" />
     <ClCompile Include="..\..\src\SFMLBundle.cpp" />
     <ClCompile Include="..\..\src\TextureGeneratorBlock.cpp" />
@@ -38,6 +40,8 @@
     <ClInclude Include="..\..\src\gl.h" />
     <ClInclude Include="..\..\src\OffscreenRenderBlock.h" />
     <ClInclude Include="..\..\src\OpenGl.h" />
+    <ClInclude Include="..\..\src\RenderDataCombinerBlock.h" />
+    <ClInclude Include="..\..\src\RessourceManager.h" />
     <ClInclude Include="..\..\src\RessourceManagerBlock.h" />
     <ClInclude Include="..\..\src\TextureGeneratorBlock.h" />
   </ItemGroup>

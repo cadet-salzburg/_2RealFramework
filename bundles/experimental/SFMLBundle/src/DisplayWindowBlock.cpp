@@ -2,7 +2,6 @@
 #include "RessourceManagerBlock.h"
 
 #include <iostream>
-#include <Windows.h>
 
 using namespace std;
 using namespace _2Real::bundle;
@@ -10,8 +9,8 @@ using namespace _2Real::gl;
 using namespace _2Real;
 
 DisplayWindowBlock::DisplayWindowBlock( ContextBlock &context ) :
-	Block(), m_Manager( dynamic_cast< RessourceManagerBlock & >( context ) ),
-	m_Window( nullptr ), m_Renderer( nullptr ), m_Clock(), m_Count( 0 )
+	Block(), mManager( dynamic_cast< RessourceManagerBlock & >( context ) ),
+	mWindow( nullptr ), mRenderer( nullptr ), mClock(), mCount( 0 )
 	{}
 
 DisplayWindowBlock::~DisplayWindowBlock() {}
@@ -20,13 +19,16 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_BlockHandle = block;
+		mBlockHandle = block;
+		mWindowTitleIn = mBlockHandle.getInletHandle( "WindowTitle" );
+		mClearColorIn = mBlockHandle.getInletHandle( "ClearColor" );
+		mRenderDataMultiin = mBlockHandle.getInletHandle( "RenderData" );
 
-		if ( m_Window == nullptr )
+		if ( mWindow == nullptr )
 		{
 			// TODO: add inlets for window settings
 			RenderSettings settings;
-			settings.title = m_BlockHandle.getInletHandle( "WindowTitle" ).getReadableRef< std::string >();
+			settings.title = mBlockHandle.getInletHandle( "WindowTitle" ).getReadableRef< std::string >();
 			settings.glMajor = 3;
 			settings.glMinor = 3;
 			settings.aaSamples = 16;
@@ -36,14 +38,14 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 			settings.width = 640;
 			settings.height = 480;
 
-			m_Window = new RenderWindow( settings );
-			m_Renderer = &( m_Window->getRenderer() );
-			m_Window->setActive( false );
+			mWindow = new RenderWindow( settings, mManager.getManager() );
+			mRenderer = &( mWindow->getRenderer() );
+			mWindow->setActive( false );
 
-			m_Clock.restart();
-			m_Count = 0;
+			mClock.restart();
+			mCount = 0;
 		}
-		// TODO: recreate window if settings change
+		// TODO: recreate window if settings change ( ? )
 		//else {}
 	}
 	catch( Exception & e )
@@ -51,7 +53,7 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 		cout << e.message() << " " << e.what() << endl;
 		e.rethrow();
 	}
-	catch( std::exception & e )
+	catch( exception & e )
 	{
 		cout << e.what() << endl;
 		Exception exc( e.what() );
@@ -63,65 +65,65 @@ void DisplayWindowBlock::update()
 {
 	try
 	{
-		m_Window->setActive( true );
-		m_Window->processEvents();
+		mWindow->setActive( true );
+		mWindow->processEvents();
 
-		++m_Count;
-		if ( m_Clock.getElapsedTime().asMicroseconds() > 1000000 )
+		++mCount;
+		if ( mClock.getElapsedTime().asMicroseconds() > 1000000 )
 		{
-			double microsPerUpdate = m_Clock.getElapsedTime().asMicroseconds() / m_Count;
+			double microsPerUpdate = mClock.getElapsedTime().asMicroseconds() / mCount;
 			double updatesPerSecond = 1000000 / microsPerUpdate;
 
 			std::ostringstream title;
-			title << m_BlockHandle.getInletHandle( "WindowTitle" ).getReadableRef< std::string >();
+			title << mWindowTitleIn.getReadableRef< string >();
 			title << " " << updatesPerSecond << " fps";
-			m_Window->setTitle( title.str() );
+			mWindow->setTitle( title.str() );
 
-			m_Clock.restart();
-			m_Count = 0;
+			mClock.restart();
+			mCount = 0;
 		}
 
-		Vec4 const& bgColor = m_BlockHandle.getInletHandle( "ClearColor" ).getReadableRef< Vec4 >();
-		m_Renderer->clear( bgColor );
+		Vec4 const& bgColor = mClearColorIn.getReadableRef< Vec4 >();
+		mRenderer->clear( bgColor );
 
-		unsigned int dataCount = m_BlockHandle.getInletHandle( "RenderData" ).getSize();
-		for ( unsigned int i=0; i<dataCount; ++i )
+		unsigned int renderDataCount = mRenderDataMultiin.getSize();
+		for ( unsigned int i=0; i<renderDataCount; ++i )
 		{
-			RenderData const& data = m_BlockHandle.getInletHandle( "RenderData" )[ i ].getReadableRef< RenderData >();
-			m_Renderer->render( data );
+			RenderData const& data = mRenderDataMultiin[ i ].getReadableRef< RenderData >();
+			mRenderer->render( data );
 		}
 
-		m_Renderer->finish();
-
-		m_Window->display();
-		m_Window->setActive( false );
+		mWindow->display();
+		mWindow->setActive( false );
 	}
 	catch( Exception & e )
 	{
 		cout << e.message() << " " << e.what() << endl;
 		e.rethrow();
 	}
-	catch( std::exception & e )
+	catch( exception & e )
 	{
 		cout << e.what() << endl;
+		Exception exc( e.what() );
+		throw exc;
 	}
 }
 
 void DisplayWindowBlock::shutdown()
 {
-	std::cout << "display window shutdown" << std::endl;
-
 	try
 	{
-		delete m_Window;
+		delete mWindow;
 	}
 	catch( Exception & e )
 	{
 		cout << e.message() << " " << e.what() << endl;
 		e.rethrow();
 	}
-	catch( std::exception & e )
+	catch( exception & e )
 	{
 		cout << e.what() << endl;
+		Exception exc( e.what() );
+		throw exc;
 	}
 }
