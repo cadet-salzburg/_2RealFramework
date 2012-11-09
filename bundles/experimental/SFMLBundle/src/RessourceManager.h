@@ -28,10 +28,13 @@ namespace _2Real
 			void destroyProgram( const GLuint handle ) const;
 			void destroyShader( const GLuint handle ) const;
 
+			RenderSettings const& getContextSettings() const { return mContextSettings; }
+
 		private:
 
-			GlewContext			mGlewContext;
-			sf::Context			mSfContext;
+			GlewContext					mGlewContext;
+			sf::Context					mSfContext;
+			RenderSettings				mContextSettings;
 
 			typedef std::list< GLuint >	Handles;
 
@@ -40,7 +43,6 @@ namespace _2Real
 			mutable Handles				mBuffersToDelete;
 			mutable Handles				mProgramsToDelete;
 			mutable Handles				mShadersToDelete;
-
 			bool						mIsEnabled;
 
 		};

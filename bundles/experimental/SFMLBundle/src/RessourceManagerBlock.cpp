@@ -16,7 +16,16 @@ RessourceManagerBlock::RessourceManagerBlock() :
 
 RessourceManagerBlock::~RessourceManagerBlock()
 {
-	cout << "ressource manager dtor" << endl;
+}
+
+RessourceManager const& RessourceManagerBlock::getManager() const
+{
+	return *mManager;
+}
+
+RenderSettings const& RessourceManagerBlock::getRenderSettings() const
+{
+	return mManager->getContextSettings();
 }
 
 void RessourceManagerBlock::setup( BlockHandle &block )

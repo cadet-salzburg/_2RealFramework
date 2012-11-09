@@ -1,61 +1,108 @@
 #pragma once
 
 #include "gl.h"
-#include "RessourceManager.h"
+#include "Poco/RWLock.h"
+
+#include "_2RealDatatypes.h"
+#include "datatypes/_2RealTypeStreamOperators.h"
+
+#include <fstream>
 
 namespace _2Real
 {
 	namespace gl
 	{
+		class RessourceManager;
+
+		struct ShaderSource
+		{
+			ShaderSource() : mFile( "" ), mSource( "" ) {}
+			ShaderSource( std::string const& file ) : mFile( file )
+			{
+				mSource = loadShaderSource( mFile );
+			}
+
+			bool operator==( ShaderSource const& other ) const { return mFile == other.mFile; }
+
+			std::string loadShaderSource( std::string const& filePath )
+			{
+				std::ifstream file( filePath.c_str() );
+				if ( !file.is_open() )
+				{
+					std::ostringstream msg;
+					std::cout << "could not open file: " << filePath << std::endl;
+					return "";
+				}
+
+				std::string source;
+				while ( !file.eof() )
+				{
+					std::string line;
+					std::getline( file, line );
+					source.append( line );
+					source.append( "\n" );
+				}
+				file.close();
+				return source;
+			}
+
+			std::string			mFile;
+			std::string			mSource;
+		};
+
 		struct ShaderObj
 		{
-			ShaderObj( RessourceManager const& mgr ) : mManager( mgr ), mHandle( 0 ) {}
-			~ShaderObj() { mManager.destroyShader( mHandle ); }
+			ShaderObj( RessourceManager const& mgr );
+			~ShaderObj();
 
-			RessourceManager			const& mManager;
-			GLuint						mHandle;
-			std::string					mSource;
-			std::string					mInfoLog;
+			RessourceManager	const& mManager;
+			GLuint				mHandle;
+			bool				mIsCompiled;
+			std::string			mSource;
+			std::string			mInfoLog;
 		};
 
 		struct ProgramObj
 		{
-			struct ActiveVar
-			{
-				ActiveVar() : location( -1 ), size( 1 ), type( GL_FLOAT ) {}
-				ActiveVar( const GLint l, const GLint sz, const GLenum t ) : location( l ), size( sz ), type( t ) {}
+			ProgramObj( RessourceManager const& mgr );
+			~ProgramObj();
 
-				GLint		location;
-				GLint		size;
-				GLenum		type;
+			struct ActiveInput
+			{
+				ActiveInput();
+				ActiveInput( const GLint l, const GLint sz, const GLenum t );
+
+				GLint			mLocation;
+				GLint			mSize;
+				GLenum			mType;
 			};
 
-			ProgramObj( RessourceManager const& mgr ) : mManager( mgr ), mHandle( 0 ), mIsLinked( false ) {}
-			~ProgramObj()
-			{
-				for ( std::list< ShaderObj * >::iterator it = mShaders.begin(); it != mShaders.end(); ++it ) delete ( *it );
-				mManager.destroyProgram( mHandle );
-			}
+			typedef std::map< std::string, ActiveInput >	ActiveInputs;
+			typedef std::list< ShaderObj * >				Shaders;
 
-			typedef std::map< std::string, ActiveVar >		ActiveVars;
-
-			RessourceManager			const& mManager;
-			GLuint						mHandle;
-			std::string					mInfoLog;
-			std::list< ShaderObj * >	mShaders;
-			ActiveVars					mActiveUniforms;
-			ActiveVars					mActiveAttributes;
-			bool						mIsLinked;
-
+			RessourceManager		const& mManager;
+			GLuint					mHandle;
+			bool					mIsLinked;
+			std::string				mInfoLog;
+			Shaders					mShaders;
+			ActiveInputs			mActiveUniforms;
+			ActiveInputs			mActiveAttributes;
+			mutable Poco::RWLock	mLock;
 		};
 
 		struct TextureObj
 		{
+			TextureObj( RessourceManager const& mgr );
+			~TextureObj();
+
+			bool isEmpty() const { return ( mWidth == 0 || mHeight == 0 ); }
+			static GLenum getTextureFormat( const ImageChannelOrder order );
+
 			struct Settings
 			{
-				Settings() : wrapS( GL_REPEAT ), wrapT( GL_REPEAT ), wrapR( GL_REPEAT ), minFilter( GL_LINEAR ), magFilter( GL_LINEAR_MIPMAP_LINEAR ), format( GL_RGBA ) {}
-				bool operator==( Settings const& o ) const { return ( ( wrapS == o.wrapS ) && ( wrapT == o.wrapT ) && ( wrapR == o.wrapR ) && ( minFilter == o.minFilter ) && ( magFilter == o.magFilter ) && ( format == o.format ) ); }
-				bool operator!=( Settings const& o ) const { return ( !( *this == o ) ); }
+				Settings();
+				bool operator==( Settings const& o ) const;
+				bool operator!=( Settings const& o ) const;
 
 				GLenum		wrapS;
 				GLenum		wrapT;
@@ -65,11 +112,6 @@ namespace _2Real
 				GLenum		format;
 			};
 
-			TextureObj( RessourceManager const& mgr ) : mManager( mgr ), mHandle( 0 ), mTarget( GL_TEXTURE_2D ), mWidth( 0 ), mHeight( 0 ), mDatatype( GL_FLOAT ), mFormat( GL_RGBA ) {}
-			~TextureObj() { mManager.destroyTexture( mHandle ); }
-
-			bool isEmpty() const { return ( mWidth == 0 || mHeight == 0 ); }
-
 			RessourceManager		const& mManager;
 			GLuint					mHandle;
 			GLenum					mTarget;
@@ -78,75 +120,26 @@ namespace _2Real
 			GLenum					mDatatype;
 			GLenum					mFormat;
 			Settings				mSettings;
-
-			static GLenum getTextureFormat( const ImageChannelOrder order )
-			{
-				if ( order == ImageChannelOrder::RGBA )		return GL_RGBA;
-				else if ( order == ImageChannelOrder::RGB )	return GL_RGB;
-				else if ( order == ImageChannelOrder::R )	return GL_RED;
-				else if ( order == ImageChannelOrder::A )	return GL_RED;
-				else
-				{
-					std::cout << "unknown image channel order, defaulting to RGBA" << std::endl;
-					return GL_RGBA;
-				}
-			}
+			mutable Poco::RWLock	mLock;
 		};
 
 		struct BufferObj
 		{
-			BufferObj( RessourceManager const& mgr ) : mManager( mgr ), mHandle( 0 ), mSizeInBytes( 0 ), mElementCount( 0 ), mDatatype( GL_FLOAT ), mTarget( GL_ARRAY_BUFFER ) {}
-			~BufferObj() { mManager.destroyBuffer( mHandle ); }
+			BufferObj( RessourceManager const& mgr );
+			~BufferObj();
 
-			RessourceManager		const& mManager;		// ressource manager ( for deletion )
-			GLuint					mHandle;				// handle
-			size_t					mSizeInBytes;			// size of data store in bytes
-			unsigned int			mElementCount;			// nr of elements in data store
-			GLenum					mDatatype;				// type of elements
-			GLenum					mTarget;				// buffer target
-		};
-
-		// TODO
-		struct UniformValue
-		{
-			bool operator==( UniformValue const& other ) const
-			{
-				return ( mName == other.mName );
-			}
-
-			std::string			mName;
-			int					mSampler;
-			int					mInt;
-			unsigned int		mUint;
-			float				mFloat;
-			//Vec2				mVec2;
-			//Vec3				mVec3;
-			//Vec4				mVec4;
-			//Mat3				mMat3;
-			//Mat4				mMat4;
+			RessourceManager		const& mManager;
+			GLuint					mHandle;
+			size_t					mSizeInBytes;
+			unsigned int			mElementCount;
+			GLenum					mDatatype;
+			GLenum					mTarget;
+			mutable Poco::RWLock	mLock;
 		};
 
 		struct RenderData
 		{
-
-			struct VertexAttribute
-			{
-				VertexAttribute() : buffer( nullptr ), size( 0 ), stride( 0 ), normalized( false ) {}
-
-				VertexAttribute( gl::Buffer const& b, const unsigned int sz, const size_t s, const bool n ) :
-					buffer( b ), size( sz ), stride( s ), normalized( n )
-				{
-				}
-
-				gl::Buffer			buffer;
-				GLuint				size;
-				//GLuint			offset;
-				GLsizei				stride;
-				GLboolean			normalized;
-			};
-
-			//RenderData() : m_PrimitiveType( GL_POINTS ), m_ElementCount( 0 ), m_DrawIndexed( false ) {}
-			RenderData() {}
+			RenderData();
 
 			//RenderData( RenderData const& src ) :
 			//	m_Textures( src.m_Textures ),
@@ -186,38 +179,36 @@ namespace _2Real
 
 			bool operator==( RenderData const& other ) const { return false; }
 
-			void addAttribute( const unsigned int index, VertexAttribute const& attribute )
+			struct VertexAttribute
 			{
-				mAttributes[ index ] = attribute;
-			}
+				VertexAttribute();
+				VertexAttribute( Buffer const& b, const unsigned int sz, const size_t s, const bool n );
 
-			void addTexture( const unsigned int unit, Texture const& texture )
-			{
-				mTextures[ unit ] = texture;
-			}
+				gl::Buffer			buffer;
+				GLuint				size;
+				GLsizei				stride;
+				GLboolean			normalized;
+			};
 
+			// index, description -> index is determined by render data combiner
 			typedef std::map< GLuint, VertexAttribute >		Attributes;
+			// tex unit, description -> unit is determined by render data combiner
 			typedef std::map< GLuint, Texture >				Textures;
 
-			Program				mProgram;
-			Attributes			mAttributes;
-			Textures			mTextures;
+			void addAttribute( const unsigned int index, VertexAttribute const& attribute );
+			void addTexture( const unsigned int unit, Texture const& texture );
+			void addIndices( Buffer const& b );
 
-			GLenum				mPrimitiveType;
-			unsigned int		mElementCount;
-			bool				mDrawIndexed;
+			Program					mProgram;
+			Attributes				mAttributes;
+			Buffer					mIndices;
+			Textures				mTextures;
+			GLenum					mPrimitiveType;
+			unsigned int			mElementCount;
+			bool					mDrawIndexed;
 
 		};
 	}
-
-	template< >
-	struct traits< _2Real::gl::UniformValue >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( gl::UniformValue ), Type::RENDEROBJECT, "render object", TypeCategory::UNIQUE );
-		}
-	};
 
 	template< >
 	struct traits< _2Real::gl::RenderData >
@@ -236,6 +227,29 @@ namespace _2Real
 			return new TypeDescriptor( typeid( gl::Buffer ), Type::RENDEROBJECT, "render object", TypeCategory::UNIQUE );
 		}
 	};
+
+	template< >
+	struct traits< _2Real::gl::ShaderSource >
+	{
+		static TypeDescriptor *createTypeDescriptor()
+		{
+			return new TypeDescriptor( typeid( gl::ShaderSource ), Type::RENDEROBJECT, "shader source", TypeCategory::UNIQUE );
+		}
+	};
+
+	template< >
+	inline void writeTo( std::ostream &out, gl::ShaderSource const& source )
+	{
+		out << source.mFile;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, gl::ShaderSource & s )
+	{
+		std::string file;
+		in >> file;
+		s = gl::ShaderSource( file );
+	}
 
 	template< >
 	struct traits< _2Real::gl::Texture >

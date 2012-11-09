@@ -4,6 +4,9 @@
 #include "Datatypes.h"
 #include "RessourceManager.h"
 
+#include "helpers\_2RealCallback.h"
+#include "helpers\_2RealEvent.h"
+
 #include <map>
 
 namespace _2Real
@@ -21,17 +24,48 @@ namespace _2Real
 		template< > inline GLenum getGLEnumeration< int >()				{ return GL_INT; }
 		template< > inline GLenum getGLEnumeration< unsigned int >()	{ return GL_UNSIGNED_INT; }
 
-		struct RenderSettings
+		class Camera
 		{
-			std::string		title;
-			unsigned int	width;
-			unsigned int	height;
-			unsigned int	glMajor;
-			unsigned int	glMinor;
-			unsigned int	depthBits;
-			unsigned int	stencilBits;
-			unsigned int	aaSamples;
-			unsigned int	colorBits;
+		public:
+			static Mat4 lookAt( Vec3 const& eye, Vec3 const& target, Vec3 const& up )
+			{
+				Vec3 f = target - eye;
+				f.normalize();
+
+				Vec3 u = up;
+				u.normalize();
+
+				Vec3 s = f.cross( u );
+				s.normalize();
+
+				u = s.cross( f );
+
+				float e0 = eye.dot( s );
+				float e1 = eye.dot( u );
+				float e2 = eye.dot( f );
+
+				Mat4 result;
+				result <<	s.x(),	u.x(),	-f.x(),	0, s.y(),	u.y(),	-f.y(),	0,
+							s.z(),	u.z(),	-f.z(),	0, -e0,	-e1,	e2,	1.0f;
+
+				return result;
+			}
+
+			static Mat4 perspective( const float fov, const float a, const float zn, const float zf )
+			{
+				float f = 1.0f /( tan( fov*M_PI/360.f ) );
+				float s1 = ( zf+zn ) / ( zn-zf );
+				float s2 = ( 2*zf*zn ) / ( zn-zf );
+
+				Mat4 perspective;
+
+				perspective <<	f/a,	0.0f,	0.0f,	0.0f,
+								0.0f,	f,		0.0f,	0.0f,
+								0.0f,	0.0f,	s1,		-1.0f,
+								0.0f,	0.0f,	s2,		0.0f;
+
+				return perspective;
+			}
 		};
 
 		class Context
@@ -67,6 +101,16 @@ namespace _2Real
 				glUniformMatrix4fv( location, 1, true, mat.data() );
 			}
 
+			void setUniformMat3( const GLint location, Mat3 const& mat )
+			{
+				glUniformMatrix3fv( location, 1, true, mat.data() );
+			}
+
+			void setUniformVec2( const GLint location, Vec2 const& vec )
+			{
+				glUniform2f( location, vec.x(), vec.y() );
+			}
+
 			template< typename T >
 			void updateBuffer( BufferObj *& buffer, std::vector< T > const& data, const GLenum usageHint )
 			{
@@ -79,6 +123,30 @@ namespace _2Real
 				glBindBuffer( buffer->mTarget, buffer->mHandle );
 				if ( createNewStorage )		glBufferData( buffer->mTarget, data.size() * sizeof( T ), &data[ 0 ], usageHint );
 				else						glBufferSubData( buffer->mTarget, 0, data.size() * sizeof( T ), &data[ 0 ] );
+				glBindBuffer( buffer->mTarget, 0 );
+
+				buffer->mDatatype = t;
+				buffer->mElementCount = e;
+				buffer->mSizeInBytes = s;
+			}
+
+			void updateBuffer( BufferObj *& buffer, Image const& img, const GLenum usageHint )
+			{
+				ImageType imageType = img.getImageType();
+				GLenum t = GL_UNSIGNED_BYTE;
+				if ( imageType == ImageType::UNSIGNED_BYTE )			t = GL_UNSIGNED_BYTE;
+				else if ( imageType == ImageType::UNSIGNED_SHORT )		t = GL_UNSIGNED_SHORT;
+				else if ( imageType == ImageType::FLOAT )				t = GL_FLOAT;
+				else if ( imageType == ImageType::DOUBLE )				t = GL_DOUBLE;
+
+				const unsigned int e = img.getWidth() * img.getHeight() * img.getNumberOfChannels();
+				const size_t s = img.getByteSize();
+
+				bool createNewStorage = ( ( t != buffer->mDatatype ) || ( e != buffer->mElementCount ) );
+
+				glBindBuffer( buffer->mTarget, buffer->mHandle );
+				if ( createNewStorage )		glBufferData( buffer->mTarget, s, img.getData(), usageHint );
+				else						glBufferSubData( buffer->mTarget, 0, s, img.getData() );
 				glBindBuffer( buffer->mTarget, 0 );
 
 				buffer->mDatatype = t;
@@ -141,10 +209,10 @@ namespace _2Real
 
 				const _2Real::ImageType imageType = img.getImageType();
 				GLenum type = GL_UNSIGNED_BYTE;
-				if ( imageType == ImageType::UNSIGNED_BYTE )		type = GL_UNSIGNED_BYTE;
-				else if ( imageType == ImageType::UNSIGNED_SHORT )	type = GL_UNSIGNED_SHORT;
-				else if ( imageType == ImageType::FLOAT )			type = GL_FLOAT;
-				else if ( imageType == ImageType::DOUBLE )			type = GL_DOUBLE;
+				if ( imageType == ImageType::UNSIGNED_BYTE )			type = GL_UNSIGNED_BYTE;
+				else if ( imageType == ImageType::UNSIGNED_SHORT )		type = GL_UNSIGNED_SHORT;
+				else if ( imageType == ImageType::FLOAT )				type = GL_FLOAT;
+				else if ( imageType == ImageType::DOUBLE )				type = GL_DOUBLE;
 
 				const unsigned int w = img.getWidth();
 				const unsigned int h = img.getHeight();
@@ -234,15 +302,18 @@ namespace _2Real
 				glEnable( GL_LINE_SMOOTH );
 				glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
+				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
 				if ( data.mProgram.get() == nullptr ) return;
 
+				data.mProgram->mLock.readLock();
 				glUseProgram( data.mProgram->mHandle );
 
 				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
 				{
 					RenderData::VertexAttribute attrib = it->second;
+					attrib.buffer->mLock.readLock();
 					glBindBuffer( GL_ARRAY_BUFFER, attrib.buffer->mHandle );
-					// TODO: attrib offset ( ? )
 					glVertexAttribPointer( it->first, attrib.size, attrib.buffer->mDatatype, attrib.normalized, attrib.stride, nullptr );
 					glEnableVertexAttribArray( it->first );
 				}
@@ -250,14 +321,37 @@ namespace _2Real
 				for ( RenderData::Textures::const_iterator it = data.mTextures.begin(); it != data.mTextures.end(); ++it )
 				{
 					Texture tex = it->second;
+					tex->mLock.readLock();
 					glActiveTexture( GL_TEXTURE0 + it->first );
 					glBindTexture( GL_TEXTURE_2D, tex->mHandle );
 				}
 
-				// TODO: indexed drawing ( ! ), offset into buffer ( ? )
-				glDrawArrays( data.mPrimitiveType, 0, data.mElementCount );
+				if ( data.mDrawIndexed )
+				{
+					data.mIndices->mLock.readLock();
+					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, data.mIndices->mHandle );
+					glDrawElements( data.mPrimitiveType, data.mElementCount, data.mIndices->mDatatype, 0 );
+					data.mIndices->mLock.unlock();
+				}
+				else
+				{
+					glDrawArrays( data.mPrimitiveType, 0, data.mElementCount );
+				}
+
+				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
+				{
+					RenderData::VertexAttribute attrib = it->second;
+					attrib.buffer->mLock.unlock();
+				}
+
+				for ( RenderData::Textures::const_iterator it = data.mTextures.begin(); it != data.mTextures.end(); ++it )
+				{
+					Texture tex = it->second;
+					tex->mLock.unlock();
+				}
 
 				glUseProgram( 0 );
+				data.mProgram->mLock.unlock();
 			}
 
 			void clear( Vec3 const& color, const float depth = 1.0f )
@@ -288,20 +382,55 @@ namespace _2Real
 
 		public:
 
+			enum Key
+			{
+				A,
+				R,
+				Q,
+				INVALID
+			};
+
 			RenderWindow( RenderSettings const& settings, RessourceManager const& mgr );
 
 			void setActive( const bool active ) { mSfWindow.setActive( active ); }
 			void display() { mSfWindow.display(); }
 			void setTitle( std::string const& title ) { mSfWindow.setTitle( title ); }
+
 			void processEvents();
 
 			Renderer & getRenderer() { return mRenderer; }
+
+			typedef _2Real::AbstractCallback< Key& >	KeyCallback;
+
+			void registerToKeyPressed( KeyCallback &cb )
+			{
+				mKeyEvent.addListener( cb );
+			}
+
+			static Key getKey( sf::Event const& ev )
+			{
+				switch( ev.key.code )
+				{
+				case sf::Keyboard::R:
+					return R;
+				case sf::Keyboard::Q:
+					return Q;
+				case sf::Keyboard::A:
+					return A;
+				default:
+					return INVALID;
+				}
+			}
 
 		private:
 
 			sf::Window				mSfWindow;
 			sf::ContextSettings		mSfSettings;
 			Renderer				mRenderer;
+			bool					mIsMouseEnabled;
+			bool					mIsKeyboardEnabled;
+
+			_2Real::CallbackEvent< Key& >	mKeyEvent;
 
 		};
 	}

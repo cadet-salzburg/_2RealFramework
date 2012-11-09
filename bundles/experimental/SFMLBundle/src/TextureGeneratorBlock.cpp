@@ -32,22 +32,9 @@ void RandomTexture2DBlock::setup( BlockHandle &block )
 
 		if ( mContext == nullptr )
 		{
-			RenderSettings settings;
-			settings.title = "";
-			settings.glMajor = 3;
-			settings.glMinor = 3;
-			settings.aaSamples = 16;
-			settings.colorBits = 32;
-			settings.depthBits = 16;
-			settings.stencilBits = 0;
-			settings.width = 640;
-			settings.height = 480;
-
-			mContext = new Context( settings, mManager.getManager() );
-
+			mContext = new Context( mManager.getRenderSettings(), mManager.getManager() );
 			mTextureObj = mContext->createTextureObj();
 			mTexture.reset( mTextureObj );
-
 			srand( static_cast< unsigned int >( time( NULL ) ) );
 		}
 	}
@@ -86,8 +73,10 @@ void RandomTexture2DBlock::update()
 		}
 
 		mContext->setActive( true );
+		mTextureObj->mLock.writeLock();
 		mContext->updateTexture( mTextureObj, textureData, GL_TEXTURE_2D );
 		mContext->finish();
+		mTextureObj->mLock.unlock();
 		mContext->setActive( false );
 
 		if ( !mTextureObj->isEmpty() )
@@ -151,18 +140,7 @@ void ImageToTexture2DBlock::setup( BlockHandle &block )
 
 		if ( mContext == nullptr )
 		{
-			RenderSettings settings;
-			settings.title = "";
-			settings.glMajor = 3;
-			settings.glMinor = 3;
-			settings.aaSamples = 16;
-			settings.colorBits = 32;
-			settings.depthBits = 16;
-			settings.stencilBits = 0;
-			settings.width = 640;
-			settings.height = 480;
-
-			mContext = new Context( settings, mManager.getManager() );
+			mContext = new Context( mManager.getRenderSettings(), mManager.getManager() );
 			mTextureObj = mContext->createTextureObj();
 			mTexture.reset( mTextureObj );
 		}
@@ -188,8 +166,10 @@ void ImageToTexture2DBlock::update()
 		Texture &t = mTextureOut.getWriteableRef< Texture >();
 
 		mContext->setActive( true );
+		mTextureObj->mLock.writeLock();
 		mContext->updateTexture( mTextureObj, textureData, GL_TEXTURE_2D );
 		mContext->finish();
+		mTextureObj->mLock.unlock();
 		mContext->setActive( false );
 
 		if ( !mTextureObj->isEmpty() )

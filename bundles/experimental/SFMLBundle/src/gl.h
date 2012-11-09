@@ -4,8 +4,6 @@
 
 #include "GL/glew.h"
 
-#include "_2RealDatatypes.h"
-
 #include "Poco/Mutex.h"
 
 #include <memory.h>
@@ -28,10 +26,21 @@ namespace _2Real
 		struct BufferObj;
 		struct ProgramObj;
 		struct ShaderObj;
-
 		struct RenderData;
 
-		struct RenderSettings;
+		struct RenderSettings
+		{
+			std::string		title;
+			unsigned int	width;
+			unsigned int	height;
+			unsigned int	glMajor;
+			unsigned int	glMinor;
+			unsigned int	depthBits;
+			unsigned int	stencilBits;
+			unsigned int	aaSamples;
+			unsigned int	colorBits;
+		};
+
 		class RessourceManager;
 		class RenderWindow;
 		class Renderer;

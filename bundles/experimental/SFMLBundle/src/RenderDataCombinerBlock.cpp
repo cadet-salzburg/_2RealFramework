@@ -13,7 +13,7 @@ using namespace _2Real::bundle;
 using namespace _2Real::gl;
 
 RenderDataCombinerBlock::RenderDataCombinerBlock( ContextBlock &context ) :
-	Block(), mManager( dynamic_cast< RessourceManagerBlock & >( context ) ), mContext( nullptr ) {}
+	Block(), mManager( dynamic_cast< RessourceManagerBlock & >( context ) ), mContext( nullptr ), mProgramObj( nullptr ) {}
 
 RenderDataCombinerBlock::~RenderDataCombinerBlock() {}
 
@@ -23,18 +23,7 @@ void RenderDataCombinerBlock::setup( BlockHandle &block )
 	{
 		if ( mContext == nullptr )
 		{
-			RenderSettings settings;
-			settings.title = "";
-			settings.glMajor = 3;
-			settings.glMinor = 3;
-			settings.aaSamples = 16;
-			settings.colorBits = 32;
-			settings.depthBits = 16;
-			settings.stencilBits = 0;
-			settings.width = 640;
-			settings.height = 480;
-
-			mContext = new Context( settings, mManager.getManager() );
+			mContext = new Context( mManager.getRenderSettings(), mManager.getManager() );
 
 			mBlockHandle = block;
 			mRenderDataOut = block.getOutletHandle( "RenderData" );
@@ -69,11 +58,12 @@ void RenderDataCombinerBlock::update()
 		bool isValidData = true;
 
 		mContext->setActive( true );
+
 		if ( mVertexShaderIn.hasChanged() || mFragmentShaderIn.hasChanged() || mGeometryShaderIn.hasChanged() )
 		{
-			string const& vertexSrc = mVertexShaderIn.getReadableRef< string >();
-			string const& geometrySrc = mGeometryShaderIn.getReadableRef< string >();
-			string const& fragmentSrc = mFragmentShaderIn.getReadableRef< string >();
+			string const& vertexSrc = mVertexShaderIn.getReadableRef< ShaderSource >().mSource;
+			string const& geometrySrc = mGeometryShaderIn.getReadableRef< ShaderSource >().mSource;
+			string const& fragmentSrc = mFragmentShaderIn.getReadableRef< ShaderSource >().mSource;
 
 			mProgramObj = mContext->createProgramObj();
 			if ( !vertexSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_VERTEX_SHADER, vertexSrc ) );
@@ -83,6 +73,7 @@ void RenderDataCombinerBlock::update()
 			mProgram.reset( mProgramObj );
 		}
 
+		mProgramObj->mLock.writeLock();
 		mContext->useProgram( mProgramObj );
 
 		const unsigned int numUniforms = mUniformsMultiin.getSize();
@@ -100,37 +91,46 @@ void RenderDataCombinerBlock::update()
 			stringstream sstr;
 			sstr << value;
 
-			ProgramObj::ActiveVars::const_iterator it = mProgramObj->mActiveUniforms.find( name );
+			ProgramObj::ActiveInputs::const_iterator it = mProgramObj->mActiveUniforms.find( name );
 			if ( it != mProgramObj->mActiveUniforms.end() )
 			{
-				ProgramObj::ActiveVar const& u = it->second;
-				if ( u.type == GL_SAMPLER_2D )
+				ProgramObj::ActiveInput const& u = it->second;
+				if ( u.mType == GL_SAMPLER_2D )
 				{
 					int unit;
 					sstr >> unit;
-					//cout << "setting uniform " << name << " of type sampler2D to\ntex unit " << unit << endl;
-
-					// currently, textures are assigned to units in ascending order -> multiinlet & tex unit are identical
-					mContext->setUniformSampler( u.location, unit );
+					mContext->setUniformSampler( u.mLocation, unit );
 				}
-				else if ( u.type == GL_FLOAT_MAT4 )
+				else if ( u.mType == GL_FLOAT_MAT4 )
 				{
 					Mat4 mat;
 					for ( unsigned int i=0; i<16; ++i ) sstr >> mat( i );
-
-					//cout << "setting uniform " << name << " of type mat4x4 to\n" << mat << endl;
-
-					mContext->setUniformMat4( u.location, mat );
+					mContext->setUniformMat4( u.mLocation, mat );
 				}
-				else cout << "found unsupported uniform type" << std::endl;
+				else if ( u.mType == GL_FLOAT_MAT3 )
+				{
+					Mat3 mat;
+					for ( unsigned int i=0; i<9; ++i ) sstr >> mat( i );
+					mContext->setUniformMat3( u.mLocation, mat );
+				}
+				else if ( u.mType == GL_FLOAT_VEC2 )
+				{
+					Vec2 vec;
+					for ( unsigned int i=0; i<2; ++i ) sstr >> vec[ i ];
+					mContext->setUniformVec2( u.mLocation, vec );
+				}
+				//else cout << "found unsupported uniform type" << std::endl;
 			}
+			//else cout << "found unknown uniform " << name << endl;
 		}
 
 		mContext->resetProgram();
 		mContext->finish();
+		mProgramObj->mLock.unlock();
 		mContext->setActive( false );
 
-		// parse attrib descriptions
+		isValidData &= mProgramObj->mIsLinked;
+
 		struct attr
 		{
 			std::string		name;
@@ -142,6 +142,8 @@ void RenderDataCombinerBlock::update()
 		typedef std::map< unsigned int, attr > AttribMap;
 		AttribMap attributes;
 
+		bool hasIndices = false;
+		unsigned int index = 0;
 		const unsigned int numAttribs = mAttributesMultiin.getSize();
 		for ( unsigned int i=0; i<numAttribs; ++i )
 		{
@@ -162,19 +164,21 @@ void RenderDataCombinerBlock::update()
 				size_t stride;
 				sstr >> size >> stride;
 
-				//cout << "found vertex attribute " << name << " , size: " << size << endl;
-
-				ProgramObj::ActiveVars::const_iterator it = mProgramObj->mActiveAttributes.find( name );
+				ProgramObj::ActiveInputs::const_iterator it = mProgramObj->mActiveAttributes.find( name );
 				if ( it != mProgramObj->mActiveAttributes.end() )
 				{
 					attr attrib;
 					attrib.name = name;
 					attrib.stride = stride;
 					attrib.size = size;
-					attrib.location = it->second.location;
+					attrib.location = it->second.mLocation;
 					attributes[ i ] = attrib;
 				}
-				//else cout << "unknown attribute " << name << std::endl;
+			}
+			else
+			{
+				hasIndices = true;
+				index = i;
 			}
 		}
 
@@ -182,27 +186,37 @@ void RenderDataCombinerBlock::update()
 
 		const unsigned int numBuffers = mBuffersMultiin.getSize();
 		unsigned int validAttribs =0;
+		unsigned int indexElements = 0;
 		for ( unsigned int i=0; i<numBuffers; ++i )
 		{
 			Buffer const& buffer = mBuffersMultiin[ i ].getReadableRef< Buffer >();
-			if ( buffer.get() == nullptr ) continue;
 
-			AttribMap::iterator it = attributes.find( i );
-			if ( it != attributes.end() )
+			if ( buffer.get() == nullptr )
 			{
-				attr a = attributes[ i ];
+				isValidData = false;
+				break;
+			}
 
-				out.addAttribute( a.location, RenderData::VertexAttribute( buffer, a.size, a.stride, false ) );
-				++validAttribs;
-
-				attribsPerBuffer.push_back( buffer->mElementCount / a.size );
+			if ( hasIndices && i == index )
+			{
+				out.addIndices( buffer );
+			}
+			else
+			{
+				AttribMap::iterator it = attributes.find( i );
+				if ( it != attributes.end() )
+				{
+					attr a = attributes[ i ];
+					out.addAttribute( a.location, RenderData::VertexAttribute( buffer, a.size, a.stride, false ) );
+					attribsPerBuffer.push_back( buffer->mElementCount / a.size );
+				}
 			}
 		}
 
 		unsigned int elementsToDraw;
+		//if ( hasIndices )						elementsToDraw = 
 		if ( attribsPerBuffer.empty() )	elementsToDraw = 0;
-		else							elementsToDraw = max< unsigned int >( 0, *min_element( attribsPerBuffer.begin(), attribsPerBuffer.end() ) );
-
+		else									elementsToDraw = max< unsigned int >( 0, *min_element( attribsPerBuffer.begin(), attribsPerBuffer.end() ) );
 
 		const unsigned int numTextures = mTexturesMultiin.getSize();
 		unsigned int validTextures = 0;
@@ -210,24 +224,30 @@ void RenderDataCombinerBlock::update()
 		{
 			Texture const& texture = mTexturesMultiin[ i ].getReadableRef< Texture >();
 			if ( texture.get() == nullptr ) continue;
-
-			// tex units: ascending order
 			out.addTexture( i, texture );
 			++validTextures;
 		}
 
-		out.mPrimitiveType = GL_POINTS;
-		out.mElementCount = elementsToDraw;
-		out.mProgram = mProgram;
-
-		// less than 1 attribute -> discard output data
-		isValidData &= ( validAttribs > 0 );
-		// invalid program obj -> discard output data
-		isValidData &= mProgramObj->mIsLinked;
-
 		if ( !isValidData )
 		{
 			mRenderDataOut.discard();
+		}
+		else
+		{
+			if ( !hasIndices )
+			{
+				out.mPrimitiveType = GL_POINTS;
+				out.mElementCount = elementsToDraw;
+				out.mDrawIndexed = false;
+			}
+			else
+			{
+				out.mPrimitiveType = GL_TRIANGLES;
+				//out.mElementCount = 100;
+				out.mDrawIndexed = true;
+			}
+
+			out.mProgram = mProgram;
 		}
 	}
 	catch( Exception & e )

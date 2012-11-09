@@ -458,7 +458,7 @@ namespace _2Real
 		m_ReceivedDataItems.clear();
 		m_BufferAccess.unlock();
 
-		m_TriggeringData = TimestampedData();
+		m_TriggeringData = m_InitialValue;
 	}
 
 	// called right after block update; re-enables triggering, then tries to fulfill the trigger cond with buffered data / last data / default data

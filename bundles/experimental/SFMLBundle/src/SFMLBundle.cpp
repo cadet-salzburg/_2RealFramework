@@ -3,6 +3,8 @@
 #include "RessourceManagerBlock.h"
 #include "DisplayWindowBlock.h"
 //#include "OffscreenRenderBlock.h"
+#include "ModelLoaderBlock.h"
+#include "GeometryBlock.h"
 #include "RenderDataCombinerBlock.h"
 #include "TextureGeneratorBlock.h"
 #include "BufferGeneratorBlock.h"
@@ -65,47 +67,111 @@ void getBundleMetainfo( BundleMetainfo& info )
 		Image checkerImg( init, true, 640, 480, ImageChannelOrder::RGB );
 
 		ContextBlockMetainfo mgr = info.exportContextBlock< RessourceManagerBlock >();
-		mgr.setDescription( "xxxx" );
+		mgr.setDescription( "opengl ressource mgr, responsible for deletion of opengl objects" );
 
+		/**
+		*	TODO: argh
+		*	-not only clear color, but also clear depth ( ? )
+		*	-allow user to specify size ( ! )
+		*	-allow user to specify context settings ( ? )
+		*	-interaction with window:	mouse, keyboard etc
+		*	-should this thing actually be capable of rendering, or should everything be done in offscreen renderer?
+		**/
 		BlockMetainfo displayWindow = info.exportBlock< DisplayWindowBlock, WithContext >( "DisplayWindowBlock" );
-		displayWindow.setDescription( "xxxx" );
-		displayWindow.setCategory( "xxxx" );
+		displayWindow.setDescription( "a simple display window, capable of rendering" );
+		displayWindow.setCategory( "rendering" );
 		displayWindow.addInlet< Vec4 >( "ClearColor", vecClear );
-		displayWindow.addInlet< std::string >( "WindowTitle", "display window" );
+		displayWindow.addInlet< string >( "WindowTitle", "display window" );
+		displayWindow.addInlet< unsigned int >( "WindowWidth", 640 );
+		displayWindow.addInlet< unsigned int >( "WindowHeight", 480 );
 		displayWindow.addMultiInlet< RenderData >( "RenderData", RenderData() );
 		displayWindow.addInlet< bool >( "EnableMouseInteraction", true );
 		displayWindow.addInlet< bool >( "EnableKeyboardInteraction", true );
+		displayWindow.addOutlet< string >( "TransformationMatrix" );
+		displayWindow.addOutlet< string >( "ViewMatrix" );
+		displayWindow.addOutlet< string >( "ProjectionMatrix" );
 
+		/**
+		*	TODO: offscreen renderer
+		**/
+		
+		/**
+		*	this is a debug block, basically
+		**/
 		BlockMetainfo randTex2D = info.exportBlock< RandomTexture2DBlock, WithContext >( "RandomTexture2DBlock" );
-		randTex2D.setDescription( "xxxx" );
-		randTex2D.setCategory( "xxxx" );
+		randTex2D.setDescription( "creates a random 2D texture of a specified size" );
+		randTex2D.setCategory( "rendering" );
 		randTex2D.addInlet< unsigned int >( "TextureWidth", 4 );
 		randTex2D.addInlet< unsigned int >( "TextureHeight", 3 );
 		randTex2D.addOutlet< Texture >( "Texture" );
 
+		/**
+		*	TODO: imageTs
+		**/
 		BlockMetainfo imageToTexture2D = info.exportBlock< ImageToTexture2DBlock, WithContext >( "ImageToTexture2DBlock" );
-		imageToTexture2D.setDescription( "xxxx" );
-		imageToTexture2D.setCategory( "xxxx" );
+		imageToTexture2D.setDescription( "transforms an image into a 2D texture" );
+		imageToTexture2D.setCategory( "rendering" );
 		imageToTexture2D.addInlet< Image >( "TextureData", checkerImg );
 		imageToTexture2D.addOutlet< Texture >( "Texture" );
 
-		BlockMetainfo vectorToBuffer = info.exportBlock< VectorToBufferBlock, WithContext >( "VectorToBufferBlock" );
-		vectorToBuffer.setDescription( "xxxx" );
-		vectorToBuffer.setCategory( "xxxx" );
-		vectorToBuffer.addInlet< vector< float > >( "BufferData", vector< float >() );
+		/**
+		*	TODO: not only vectors, but also other stuff? ( assimp returns pointers... )
+		**/
+		BlockMetainfo floatVectorToBuffer = info.exportBlock< VectorToBufferBlock< float >, WithContext >( "FloatVectorToBufferBlock" );
+		floatVectorToBuffer.setDescription( "transforms a std::vector of floats into a vertex buffer" );
+		floatVectorToBuffer.setCategory( "rendering" );
+		floatVectorToBuffer.addInlet< vector< float > >( "BufferData", vector< float >() );
+		floatVectorToBuffer.addOutlet< Buffer >( "Buffer" );
+
+		BlockMetainfo vectorToBuffer = info.exportBlock< VectorToBufferBlock< unsigned int >, WithContext >( "UintVectorToBufferBlock" );
+		vectorToBuffer.setDescription( "transforms a std::vector of uints into a vertex buffer" );
+		vectorToBuffer.setCategory( "rendering" );
+		vectorToBuffer.addInlet< vector< unsigned int > >( "BufferData", vector< unsigned int >() );
 		vectorToBuffer.addOutlet< Buffer >( "Buffer" );
 
+		BlockMetainfo imgToBuffer = info.exportBlock< ImageToBufferBlock, WithContext >( "ImageToBufferBlock" );
+		imgToBuffer.setDescription( "transforms an img of floats into a vertex buffer" );
+		imgToBuffer.setCategory( "rendering" );
+		imgToBuffer.addInlet< Image >( "BufferData", Image() );
+		imgToBuffer.addOutlet< Buffer >( "Buffer" );
+
+		/**
+		*	TODO: attrib & unforms are currently defined via strings...
+		**/
 		BlockMetainfo dataGenerator = info.exportBlock< RenderDataCombinerBlock, WithContext >( "RenderDataCombinerBlock" );
-		dataGenerator.setDescription( "xxxx" );
-		dataGenerator.setCategory( "xxxx" );
+		dataGenerator.setDescription( "combines buffers, textures & glsl code into a datatype that can be rendered by either a display window or an offscreen renderer" );
+		dataGenerator.setCategory( "rendering" );
 		dataGenerator.addOutlet< RenderData >( "RenderData" );
 		dataGenerator.addMultiInlet< Buffer >( "Buffers", Buffer() );
 		dataGenerator.addMultiInlet< Texture >( "Textures", Texture() );
 		dataGenerator.addMultiInlet< string >( "UniformValues", string() );
 		dataGenerator.addMultiInlet< string >( "AttributeDescriptions", string() );
-		dataGenerator.addInlet< string >( "VertexShaderSource", string() );
-		dataGenerator.addInlet< string >( "GeometryShaderSource", string() );
-		dataGenerator.addInlet< string >( "FragmentShaderSource", string() );
+		dataGenerator.addInlet< ShaderSource >( "VertexShaderSource", ShaderSource() );
+		dataGenerator.addInlet< ShaderSource >( "GeometryShaderSource", ShaderSource() );
+		dataGenerator.addInlet< ShaderSource >( "FragmentShaderSource", ShaderSource() );
+
+		/**
+		*	TODO: not even sure this should be in here?
+		*	filepath is currently a string -> switch to path class in future
+		**/
+		BlockMetainfo modelImporter = info.exportBlock< ModelLoaderBlock, WithContext >( "ModelImporterBlock" );
+		modelImporter.setDescription( "loads a model file via assimp" );
+		modelImporter.setCategory( "rendering" );
+		modelImporter.addInlet< string >( "FilePath", string() );
+		modelImporter.addOutlet< Buffer >( "Indices" );
+		modelImporter.addOutlet< Buffer >( "VertexPositions" );
+		modelImporter.addOutlet< Buffer >( "VertexNormals" );
+		modelImporter.addOutlet< unsigned int >( "NumberOfMeshes" );
+
+		BlockMetainfo fullscreenMeshGenerator = info.exportBlock< FullscreenMeshBlock, WithContext >( "FullscreenMeshBlock" );
+		fullscreenMeshGenerator.setDescription( "calculates a fullscrren mesh" );
+		fullscreenMeshGenerator.setCategory( "rendering" );
+		fullscreenMeshGenerator.addInlet< unsigned int >( "MeshWidth", 2 );
+		fullscreenMeshGenerator.addInlet< unsigned int >( "MeshHeight", 2 );
+		fullscreenMeshGenerator.addInlet< unsigned int >( "PrimitiveType", 1 );
+		fullscreenMeshGenerator.addOutlet< Buffer >( "VertexPositions" );
+		fullscreenMeshGenerator.addOutlet< Buffer >( "VertexTexcoords" );
+		fullscreenMeshGenerator.addOutlet< Buffer >( "Indices" );
 	}
 	catch ( Exception &e )
 	{

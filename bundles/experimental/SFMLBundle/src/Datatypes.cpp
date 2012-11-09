@@ -1,320 +1,120 @@
 #include "Datatypes.h"
-
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
-#include <algorithm>
+#include "RessourceManager.h"
 
 namespace _2Real
 {
 	namespace gl
 	{
-		//ShaderObj::ShaderObj( const GLenum type, GlewContext &glewContext ) :
-		//	mGlewContext( glewContext ),
-		//	mType( type ),
-		//	mShaderSource(),
-		//	mCompileStatus( GL_FALSE ),
-		//	mShaderInfo()
-		//{
-		//	mHandle = glCreateShader( type );
-		//}
+		ShaderObj::ShaderObj( RessourceManager const& mgr ) :
+			mManager( mgr ), mHandle( 0 ), mIsCompiled( false ), mSource(), mInfoLog()
+		{
+		}
 
-		//ShaderObj::ShaderObj( const GLenum type, GlewContext &glewContext, std::string const& source ) :
-		//	mGlewContext( glewContext ),
-		//	mType( type ),
-		//	mShaderSource( source ),
-		//	mCompileStatus( GL_FALSE ),
-		//	mShaderInfo()
-		//{
-		//	mHandle = glCreateShader( type );
-		//	compile();
-		//}
+		ShaderObj::~ShaderObj()
+		{
+			mManager.destroyShader( mHandle );
+		}
 
-		//ShaderObj::ShaderObj( ShaderObj const& src ) :
-		//	mType( src.mType ),
-		//	mShaderSource( src.mShaderSource ),
-		//	mCompileStatus( GL_FALSE ),
-		//	mShaderInfo()
-		//{
-		//	mHandle = glCreateShader( src.mType );
-		//	if ( !mShaderSource.empty() )
-		//	{
-		//		compile();
-		//	}
-		//}
+		ProgramObj::ProgramObj( RessourceManager const& mgr ) :
+			mManager( mgr ), mHandle( 0 ), mIsLinked( false ), mInfoLog(), mShaders(), mActiveUniforms(), mActiveAttributes()
+		{
+		}
 
-		//ShaderObj::~ShaderObj()
-		//{
-		//	mManager->destroyShader( mHandle );
-		//}
+		ProgramObj::~ProgramObj()
+		{
+			for ( std::list< ShaderObj * >::iterator it = mShaders.begin(); it != mShaders.end(); ++it ) delete ( *it );
+			mManager.destroyProgram( mHandle );
+		}
 
-		//void ShaderObj::compile()
-		//{
-		//	const char* source = mShaderSource.c_str();
-		//	glShaderSource( mHandle, 1, &source, 0 );
-		//	glCompileShader( mHandle );
+		ProgramObj::ActiveInput::ActiveInput() :
+			mLocation( -1 ), mSize( 1 ), mType( GL_FLOAT ) 
+		{
+		}
 
-		//	glGetShaderiv( mHandle, GL_COMPILE_STATUS, &mCompileStatus );
+		ProgramObj::ActiveInput::ActiveInput( const GLint loc, const GLint sz, const GLenum type ) :
+			mLocation( loc ), mSize( sz ), mType( type )
+		{
+		}
 
-		//	GLint sz = 0;
-		//	glGetShaderiv( mHandle, GL_INFO_LOG_LENGTH, &sz );
-		//	if (sz > 0)
-		//	{
-		//		char* buffer = new char[sz];
-		//		memset(buffer, 0, sz);
-		//		glGetShaderInfoLog( mHandle, sz, NULL, buffer );
-		//		mShaderInfo = buffer;
-		//		delete[] buffer;
-		//	}
-		//}
+		TextureObj::TextureObj( RessourceManager const& mgr ) :
+			mManager( mgr ), mHandle( 0 ), mTarget( GL_TEXTURE_2D ), mWidth( 0 ), mHeight( 0 ), mDatatype( GL_FLOAT ), mFormat( GL_RGBA )
+		{
+		}
 
-		//void ShaderObj::compileFromSourceString( std::string const& shaderSource )
-		//{
-		//	mShaderSource = shaderSource;
-		//	compile();
-		//}
+		TextureObj::~TextureObj()
+		{
+			mManager.destroyTexture( mHandle );
+		}
 
-		//ProgramObj::ProgramObj( GlewContext &glewContext ) :
-		//	mGlewContext( glewContext ),
-		//	mShaders(),
-		//	mLinkStatus( GL_FALSE ),
-		//	mProgramInfo()
-		//{
-		//	mHandle = glCreateProgram();
-		//}
+		GLenum TextureObj::getTextureFormat( const ImageChannelOrder order )
+		{
+			if ( order == ImageChannelOrder::RGBA )		return GL_RGBA;
+			else if ( order == ImageChannelOrder::RGB )	return GL_RGB;
+			else if ( order == ImageChannelOrder::R )	return GL_RED;
+			else if ( order == ImageChannelOrder::A )	return GL_RED;
+			else
+			{
+				std::cout << "unknown image channel order, defaulting to RGBA" << std::endl;
+				return GL_RGBA;
+			}
+		}
 
-		//ProgramObj::ProgramObj( ProgramObj const& src ) :
-		//	mGlewContext( src.mGlewContext ),
-		//	mShaders( src.mShaders ),
-		//	mLinkStatus( GL_FALSE ),
-		//	mProgramInfo()
-		//{
-		//	mHandle = glCreateProgram();
-		//	for ( std::list< GLuint >::iterator it = mShaders.begin(); it != mShaders.end(); ++it )
-		//	{
-		//		glAttachShader( mHandle, *it );
-		//	}
-		//}
+		TextureObj::Settings::Settings() :
+			wrapS( GL_REPEAT ), wrapT( GL_REPEAT ), wrapR( GL_REPEAT ),
+			minFilter( GL_LINEAR ), magFilter( GL_LINEAR_MIPMAP_LINEAR ), format( GL_RGBA )
+		{
+		}
 
-		//ProgramObj& ProgramObj::operator=( ProgramObj const& src )
-		//{
-		//	if (this == &src)
-		//	{
-		//		return *this;
-		//	}
+		bool TextureObj::Settings::operator==( Settings const& o ) const
+		{
+			return ( ( wrapS == o.wrapS ) && ( wrapT == o.wrapT ) && ( wrapR == o.wrapR ) &&
+				( minFilter == o.minFilter ) && ( magFilter == o.magFilter ) && ( format == o.format ) );
+		}
+		
+		bool TextureObj::Settings::operator!=( Settings const& o ) const
+		{
+			return ( !( *this == o ) );
+		}
 
-		//	for ( std::list< GLuint >::iterator it = mShaders.begin(); it != mShaders.end(); ++it )
-		//	{
-		//		glDetachShader( mHandle, *it );
-		//	}
+		BufferObj::BufferObj( RessourceManager const& mgr ) :
+			mManager( mgr ), mHandle( 0 ), mSizeInBytes( 0 ),
+			mElementCount( 0 ), mDatatype( GL_FLOAT ), mTarget( GL_ARRAY_BUFFER )
+		{
+		}
 
-		//	mShaders.clear();
-		//	mShaders = src.mShaders;
+		BufferObj::~BufferObj()
+		{
+			mManager.destroyBuffer( mHandle );
+		}
 
-		//	for ( std::list< GLuint >::iterator it = mShaders.begin(); it != mShaders.end(); ++it )
-		//	{
-		//		glAttachShader( mHandle, *it );
-		//	}
+		RenderData::RenderData() :
+			mPrimitiveType( GL_POINTS ), mElementCount( 0 ), mDrawIndexed( false )
+		{
+		}
 
-		//	return *this;
-		//}
+		void RenderData::addAttribute( const unsigned int index, VertexAttribute const& attribute )
+		{
+			mAttributes[ index ] = attribute;
+		}
 
-		//ProgramObj::~ProgramObj()
-		//{
-		//	mManager->destroyProgram( mHandle );
-		//}
+		void RenderData::addTexture( const unsigned int unit, Texture const& texture )
+		{
+			mTextures[ unit ] = texture;
+		}
 
-		//void ProgramObj::attachShader( ShaderObj const& shader )
-		//{
-		//	for ( std::list< GLuint >::iterator it = mShaders.begin(); it != mShaders.end(); ++it )
-		//	{
-		//		if ( *it == shader.mHandle )
-		//		{
-		//			return;
-		//		}
-		//	}
+		void RenderData::addIndices( Buffer const& i )
+		{
+			mIndices = i; mDrawIndexed = true; mElementCount = i->mElementCount;
+		}
 
-		//	glAttachShader( mHandle, shader.mHandle );
-		//	mShaders.push_back( shader.mHandle );
-		//}
+		RenderData::VertexAttribute::VertexAttribute() :
+			buffer( nullptr ), size( 0 ), stride( 0 ), normalized( false )
+		{
+		}
 
-		//void ProgramObj::detachShader( ShaderObj const& shader )
-		//{
-		//	std::list< GLuint >::iterator result = std::find( mShaders.begin(), mShaders.end(), shader.mHandle );
-		//	if ( result != mShaders.end() )
-		//	{
-		//		glDetachShader( mHandle, shader.mHandle );
-		//		mShaders.erase( result );
-		//	}
-		//}
-
-		//void ProgramObj::bind()
-		//{
-		//	glUseProgram( mHandle );
-		//}
-
-		//void ProgramObj::unbind()
-		//{
-		//	glUseProgram( 0 );
-		//}
-
-		//void ProgramObj::link()
-		//{
-		//	glLinkProgram( mHandle );
-		//	glGetProgramiv( mHandle, GL_LINK_STATUS, &mLinkStatus );
-
-		//	GLint sz = 0;
-		//	glGetProgramiv( mHandle, GL_INFO_LOG_LENGTH, &sz );
-		//	if (sz > 0)
-		//	{
-		//		char* buffer = new char[sz];
-		//		memset(buffer, 0, sz);
-		//		glGetProgramInfoLog( mHandle, sz, NULL, buffer );
-		//		mProgramInfo = buffer;
-		//		delete[] buffer;
-		//	}
-
-		//	getActiveUniforms();
-		//}
-
-		//bool ProgramObj::validate()
-		//{
-		//	glValidateProgram( mHandle );
-		//	GLint status;
-		//	glGetProgramiv( mHandle, GL_VALIDATE_STATUS, &status );
-
-		//	return ( status ? true : false );
-		//}
-
-		//void ProgramObj::getActiveUniforms()
-		//{
-		//	GLint count, maxLength;
-		//	glGetProgramiv( mHandle, GL_ACTIVE_UNIFORMS, &count );
-		//	glGetProgramiv( mHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength );
-
-		//	char* buffer = new char[maxLength];
-		//	memset(buffer, 0, maxLength);
-
-		//	GLsizei written;
-		//	GLenum type;
-		//	GLint size;
-
-		//	for (int i=0; i<count; i++)
-		//	{
-		//		std::ostringstream s;
-		//		glGetActiveUniform( mHandle, i, maxLength, &written, &size, &type, buffer );
-		//		s << buffer;
-		//		mActiveUniforms[s.str()] = std::make_pair< GLuint, GLenum >( i, type );
-
-		//		//std::cout << "active uniform: " << s.str() << std::endl;
-		//	}
-		//}
-
-		//void ProgramObj::setUniformTexture( std::string const& name, const int value )
-		//{
-		//	if ( mActiveUniforms.find( name ) == mActiveUniforms.end() ) return;
-
-		//	if (	mActiveUniforms[ name ].second != GL_SAMPLER_1D &&
-		//			mActiveUniforms[ name ].second != GL_SAMPLER_2D &&
-		//			mActiveUniforms[ name ].second != GL_SAMPLER_3D &&
-		//			mActiveUniforms[ name ].second != GL_SAMPLER_CUBE	)
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be a texture\n";
-		//		return;
-		//	}
-		//
-		//	glUniform1i( mActiveUniforms[ name ].first, value );
-		//}
-
-		//void ProgramObj::setUniformValue( std::string const& name, const int value )
-		//{
-		//	if ( mActiveUniforms.find( name ) == mActiveUniforms.end() ) return;
-
-		//	if ( mActiveUniforms[ name ].second != GL_INT )
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be a signed integer\n";
-		//		return;
-		//	}
-		//
-		//	glUniform1i( mActiveUniforms[ name ].first, value );
-		//}
-
-		//void ProgramObj::setUniformValue( std::string const& name, const unsigned int value )
-		//{
-		//	if ( mActiveUniforms.find( name ) == mActiveUniforms.end() ) return;
-
-		//	if ( mActiveUniforms[ name ].second != GL_UNSIGNED_INT )
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be an unsigned integer\n";
-		//		return;
-		//	}
-		//
-		//	glUniform1ui( mActiveUniforms[ name ].first, value );
-		//}
-
-		//void ProgramObj::setUniformValue( std::string const& name, const float value )
-		//{
-		//	if ( mActiveUniforms.find( name ) == mActiveUniforms.end() ) return;
-
-		//	if ( mActiveUniforms[ name ].second != GL_FLOAT )
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be a float\n";
-		//		return;
-		//	}
-		//
-		//	glUniform1f( mActiveUniforms[ name ].first, value );
-		//}
-
-		//void ProgramObj::setUniformMat2( std::string const& name, float const *mat, const bool transpose )
-		//{
-		//	if ( mActiveUniforms.find(name) == mActiveUniforms.end() )
-		//	{
-		//		return;
-		//	}
-
-		//	if ( mActiveUniforms.at(name).second != GL_FLOAT_MAT2 )
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be a 2x2 matrix\n";
-		//	}
-		//
-		//	glUniformMatrix2fv( mActiveUniforms.at(name).first, 1, transpose, mat );
-		//}
-
-		//void ProgramObj::setUniformMat4(std::string const& name, float const* mat, const bool transpose)
-		//{
-		//	if (mActiveUniforms.find(name) == mActiveUniforms.end())
-		//	{
-		//		return;
-		//	}
-
-		//	if ( mActiveUniforms[ name ].second != GL_FLOAT_MAT4 )
-		//	{
-		//		std::cout << "wrong datatype: uniform " << name << " should be a 4x4 matrix\n";
-		//		return;
-		//	}
-
-		//	glUniformMatrix4fv( mActiveUniforms[ name ].first, 1, transpose, mat );
-		//}
-
-		//void Program::bindAttribLocation( std::string const& name, const GLuint index )
-		//{
-		//	glBindAttribLocation( m_Handle, index, name.c_str() );
-		//}
-
-		//GLuint ProgramObj::getAttributeLocation( std::string const& attrib )
-		//{
-		//	return glGetAttribLocation( mHandle, attrib.c_str() );
-		//}
-
-		//void Program::bindFragDataLocation( std::string const& name, const GLuint index)
-		//{
-		//	glBindFragDataLocation( m_Handle, index, name.c_str() );
-		//}
-
-		//GLuint ProgramObj::getFragDataLocation( std::string const& fragData )
-		//{
-		//	return glGetFragDataLocation( mHandle, fragData.c_str() );
-		//}
+		RenderData::VertexAttribute::VertexAttribute( Buffer const& b, const unsigned int sz, const size_t s, const bool n ) :
+			buffer( b ), size( sz ), stride( s ), normalized( n )
+		{
+		}
 	}
 }

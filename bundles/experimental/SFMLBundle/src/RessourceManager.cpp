@@ -10,7 +10,8 @@ namespace _2Real
 	{
 		RessourceManager::RessourceManager( RenderSettings const& s ) :
 			mSfContext( sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ), s.width, s.height ),
-			mGlewContext( new GLEWContext() )
+			mGlewContext( new GLEWContext() ),
+			mContextSettings( s )
 		{
 			GLenum success = glewContextInit( mGlewContext.get() );
 			if ( success != GLEW_OK )

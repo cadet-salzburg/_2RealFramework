@@ -27,6 +27,9 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 
+#include "Poco/TextEncoding.h"
+#include "Poco/UTF8Encoding.h"
+
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -122,6 +125,10 @@ namespace _2Real
 			Element *blocks = getChildElementByName( BLOCK_INSTANCE_LIST, *root );
 			Element *links = getChildElementByName( LINK_LIST, *root );
 
+			/**
+			*	find the installed bundles
+			**/
+
 			map< string, app::BundleHandle > loadedBundles;
 			NodeList *installedBundles = bundles->childNodes();
 			for ( unsigned int i=0; i<installedBundles->length(); ++i )
@@ -138,12 +145,12 @@ namespace _2Real
 			}
 			installedBundles->release();
 
-			map< string, app::BlockHandle > blockInstances;
-			map< string, bool > blockStates;
-			NodeList *instancedBlocks = blocks->childNodes();
-
+			map< string, app::BlockHandle > blockInstances;					// holds a list of block instances & names in previous file
+			map< string, bool > blockStates;								// holds the state ( started or not started )
 			map< InletHandleId, app::InletHandle > inletHandles;
+			map< app::BlockHandle, vector< InletConfig > > inletConfigs;
 
+			NodeList *instancedBlocks = blocks->childNodes();
 			for ( unsigned int i=0; i<instancedBlocks->length(); ++i )
 			{
 				Node *blockInstance = instancedBlocks->item( i );
@@ -179,7 +186,7 @@ namespace _2Real
 					sFps << config.fps;
 					sFps >> updateRate;
 
-					blockHandle.setUpdateRate( updateRate );
+					//blockHandle.setUpdateRate( updateRate );
 
 					Element *inlets = getChildElementByName( INLET_CONFIGURATIONS, *settings );
 					NodeList *inletConfigurations = inlets->childNodes();
@@ -222,7 +229,23 @@ namespace _2Real
 										app::InletHandle subHandle;
 										subHandle = inletHandle.add();
 
-										if ( !basicConfig.initialValue.empty() ) subHandle.setDefaultValueToString( basicConfig.initialValue );
+										//if ( !basicConfig.initialValue.empty() )
+										//{
+										//	if ( inletHandle.getName() == "string" )
+										//	{
+										//		std::cout << "found string default value for " << subHandle.getName() << std::endl;
+										//		subHandle.setDefaultValue< string >( basicConfig.initialValue );
+										//	}
+										//	else if ( basicConfig.initialValue.find( "UNSTREAMABLE" ) != string::npos )
+										//	{
+										//		std::cout << "found unreadable default value for " << subHandle.getName() << std::endl;
+										//	}
+										//	else
+										//	{
+										//		std::cout << "found default value for " << subHandle.getName() << " " << basicConfig.initialValue << std::endl;
+										//		subHandle.setDefaultValueToString( basicConfig.initialValue );
+										//	}
+										//}
 
 										stringstream sBuffer;
 										unsigned int buffer;
@@ -257,7 +280,23 @@ namespace _2Real
 								inConfig.basicInlets.push_back( basicConfig );
 
 								app::InletHandle inletHandle = blockHandle.getInletHandle( basicConfig.inletId );
-								if ( !basicConfig.initialValue.empty() ) inletHandle.setDefaultValueToString( basicConfig.initialValue );
+								//if ( !basicConfig.initialValue.empty() )
+								//{
+								//	if ( inletHandle.getName() == "string" )
+								//	{
+								//		std::cout << "found string default value for " << inletHandle.getName() << std::endl;
+								//		inletHandle.setDefaultValue< string >( basicConfig.initialValue );
+								//	}
+								//	else if ( basicConfig.initialValue.find( "UNSTREAMABLE" ) != string::npos )
+								//	{
+								//		std::cout << "found unreadable default value for " << inletHandle.getName() << std::endl;
+								//	}
+								//	else
+								//	{
+								//		std::cout << "found default value for " << inletHandle.getName() << " " << basicConfig.initialValue << std::endl;
+								//		inletHandle.setDefaultValueToString( basicConfig.initialValue );
+								//	}
+								//}
 
 								stringstream sBuffer;
 								unsigned int buffer;
@@ -273,6 +312,8 @@ namespace _2Real
 								id.inletId = basicConfig.inletId;
 								inletHandles.insert( make_pair( id, inletHandle ) );
 							}
+
+							inletConfigs[ blockHandle ].push_back( inConfig );
 						}
 					}
 					inletConfigurations->release();
@@ -342,9 +383,85 @@ namespace _2Real
 			for ( map< string, app::BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
 			{
 				it->second.setup();
+				std::cout << "set up block: " << it->first << std::endl;
+			}
+
+			for ( map< string, app::BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
+			{
+				map< app::BlockHandle, vector< InletConfig > >::iterator iIt = inletConfigs.find( it->second );
+				if ( iIt != inletConfigs.end() )
+				{
+					for ( vector< InletConfig >::iterator cIt = iIt->second.begin(); cIt != iIt->second.end(); ++cIt )
+					{
+						app::InletHandle handle = it->second.getInletHandle( cIt->inletId );
+						vector< BasicInletConfig > subInlets = cIt->basicInlets;
+
+						if ( cIt->isMulti )
+						{
+							unsigned int i=0;
+							for ( vector< BasicInletConfig >::iterator bIt = subInlets.begin(); bIt != subInlets.end(); ++bIt )
+							{
+								if ( !bIt->bufferedValue.empty() )
+								{
+									if ( handle.getTypename() == "string" )
+									{
+										std::cout << "setting value of " << handle.getName() << " to " << bIt->bufferedValue << std::endl;
+										handle[ i ].setValue< string >( bIt->bufferedValue );
+									}
+									else if ( handle.getTypename().find( "vector" ) != std::string::npos )
+									{
+										//std::cout << "setting value of " << handle.getName() << " to " << config.bufferedValue << std::endl;
+										handle[ i ].setValueToString( bIt->bufferedValue );
+									}
+									else if ( bIt->bufferedValue.find( "UNSTREAMABLE" ) != string::npos )
+									{
+										std::cout << "found unreadable buffered value for " << handle.getName() << std::endl;
+									}
+									else
+									{
+										std::cout << "setting value of " << handle.getName() << " to " << bIt->bufferedValue << std::endl;
+										handle[ i ].setValueToString( bIt->bufferedValue );
+									}
+								}
+								++i;
+							}
+						}
+						else
+						{
+							BasicInletConfig config = subInlets.front();
+							if ( !config.bufferedValue.empty() )
+							{
+								if ( handle.getName() == "string" )
+								{
+									std::cout << "setting value of " << handle.getName() << " to " << config.bufferedValue << std::endl;
+									handle.setValue< string >( config.bufferedValue );
+								}
+								else if ( handle.getTypename().find( "vector" ) != std::string::npos )
+								{
+									//std::cout << "setting value of " << handle.getName() << " to " << config.bufferedValue << std::endl;
+									handle.setValueToString( config.bufferedValue );
+								}
+								else if ( config.bufferedValue.find( "UNSTREAMABLE" ) != string::npos )
+								{
+									std::cout << "found unreadable buffered value for " << handle.getName() << std::endl;
+								}
+								else
+								{
+									std::cout << "setting value of " << handle.getName() << " to " << config.bufferedValue << std::endl;
+									handle.setValueToString( config.bufferedValue );
+								}
+							}
+						}
+					}
+				}
+			}
+
+			for ( map< string, app::BlockHandle >::iterator it = blockInstances.begin(); it != blockInstances.end(); ++it )
+			{
 				if ( blockStates[ it->first ] )
 				{
 					it->second.start();
+					std::cout << "started block: " << it->first << std::endl;
 				}
 			}
 		}

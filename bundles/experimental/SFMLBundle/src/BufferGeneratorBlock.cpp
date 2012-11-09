@@ -12,16 +12,16 @@ using namespace _2Real;
 using namespace _2Real::bundle;
 using namespace _2Real::gl;
 
-VectorToBufferBlock::VectorToBufferBlock( ContextBlock &context ) :
+ImageToBufferBlock::ImageToBufferBlock( ContextBlock &context ) :
 	Block(), mManager( dynamic_cast< RessourceManagerBlock & >( context ) ), mContext( nullptr )
 {
 }
 
-VectorToBufferBlock::~VectorToBufferBlock()
+ImageToBufferBlock::~ImageToBufferBlock()
 {
 }
 
-void VectorToBufferBlock::setup( BlockHandle &block )
+void ImageToBufferBlock::setup( BlockHandle &block )
 {
 	try
 	{
@@ -29,22 +29,9 @@ void VectorToBufferBlock::setup( BlockHandle &block )
 		mBufferDataIn = mBlockHandle.getInletHandle( "BufferData" );
 		mBufferOut = mBlockHandle.getOutletHandle( "Buffer" );
 
-		// context = created on very first setup, never changes
 		if ( mContext == nullptr )
 		{
-			RenderSettings settings;
-			settings.title = "";
-			settings.glMajor = 3;
-			settings.glMinor = 3;
-			settings.aaSamples = 16;
-			settings.colorBits = 32;
-			settings.depthBits = 16;
-			settings.stencilBits = 0;
-			settings.width = 640;
-			settings.height = 480;
-
-			mContext = new Context( settings, mManager.getManager() );
-
+			mContext = new Context( mManager.getRenderSettings(), mManager.getManager() );
 			mBufferObj = mContext->createBufferObj();
 			mBuffer.reset( mBufferObj );
 		}
@@ -62,7 +49,7 @@ void VectorToBufferBlock::setup( BlockHandle &block )
 	}
 }
 
-void VectorToBufferBlock::update()
+void ImageToBufferBlock::update()
 {
 	try
 	{
@@ -70,7 +57,7 @@ void VectorToBufferBlock::update()
 
 		if ( mBufferDataIn.hasUpdated() )
 		{
-			vector< float > const& bufferData = mBufferDataIn.getReadableRef< vector< float > >();
+			Image const& bufferData = mBufferDataIn.getReadableRef< Image >();
 			mContext->setActive( true );
 			mContext->updateBuffer( mBufferObj, bufferData, GL_DYNAMIC_DRAW );
 			mContext->finish();
@@ -99,7 +86,7 @@ void VectorToBufferBlock::update()
 	}
 }
 
-void VectorToBufferBlock::shutdown()
+void ImageToBufferBlock::shutdown()
 {
 	try
 	{

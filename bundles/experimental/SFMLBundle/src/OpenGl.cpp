@@ -64,6 +64,8 @@ namespace _2Real
 				delete [] buffer;
 			}
 
+			std::cout << s->mInfoLog << std::endl;
+
 			return s;
 		}
 
@@ -93,6 +95,8 @@ namespace _2Real
 				delete [] buffer;
 			}
 
+			std::cout << p->mInfoLog << std::endl;
+
 			GLint numAttribs, maxAttribLength, attribLocation, numUniforms, maxUniformLength, uniformLocation, size;
 			GLenum type;
 			std::string attribName, uniformName;
@@ -109,9 +113,9 @@ namespace _2Real
 				glGetActiveAttrib( p->mHandle, i, maxAttribLength, nullptr, &size, &type, buffer );
 				attribName = buffer;
 				attribLocation = glGetAttribLocation( p->mHandle, buffer );
-				std::cout << "ATTRIBUTE " << attribName << " " << attribLocation << std::endl;
+				//std::cout << "ATTRIBUTE " << attribName << " " << attribLocation << std::endl;
 
-				p->mActiveAttributes[ attribName ] = ProgramObj::ActiveVar( attribLocation, size, type );
+				p->mActiveAttributes[ attribName ] = ProgramObj::ActiveInput( attribLocation, size, type );
 			}
 
 			for ( int i=0; i<numUniforms; ++i )
@@ -119,9 +123,9 @@ namespace _2Real
 				glGetActiveUniform( p->mHandle, i, maxUniformLength, nullptr, &size, &type, buffer );
 				uniformName = buffer;
 				uniformLocation = glGetUniformLocation( p->mHandle, buffer );
-				std::cout << "UNIFORM: " << uniformName << " " << uniformLocation << " " << size << " " << type << std::endl;
+				//std::cout << "UNIFORM: " << uniformName << " " << uniformLocation << " " << size << " " << type << std::endl;
 
-				p->mActiveUniforms[ uniformName ] = ProgramObj::ActiveVar( uniformLocation, size, type );
+				p->mActiveUniforms[ uniformName ] = ProgramObj::ActiveInput( uniformLocation, size, type );
 			}
 
 			delete [] buffer;
@@ -132,7 +136,7 @@ namespace _2Real
 		RenderWindow::RenderWindow( RenderSettings const& s, RessourceManager const& mgr ) :
 			mSfWindow( sf::VideoMode( s.width, s.height, s.colorBits ), s.title, sf::Style::Resize, sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ) ),
 			mSfSettings( mSfWindow.getSettings() ),
-			mRenderer( mgr )
+			mRenderer( mgr ), mIsKeyboardEnabled( false ), mIsMouseEnabled( false )
 		{
 		}
 
@@ -144,6 +148,14 @@ namespace _2Real
 				if ( ev.type == sf::Event::Resized )
 				{
 					mRenderer.setViewport( ev.size.width, ev.size.height );
+				}
+				else if ( ev.type == sf::Event::MouseMoved )
+				{
+				}
+				else if ( ev.type == sf::Event::KeyPressed )
+				{
+					Key k = getKey( ev );
+					mKeyEvent.notify( k );
 				}
 			}
 		}

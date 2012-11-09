@@ -1,7 +1,15 @@
 #pragma once
 
 #include "_2RealBlock.h"
-#include "Datatypes.h"
+
+namespace _2Real
+{
+	namespace gl
+	{
+		struct RenderSettings;
+		class RessourceManager;
+	}
+}
 
 class RessourceManagerBlock : public _2Real::bundle::ContextBlock
 {
@@ -15,7 +23,8 @@ public:
 	void update();
 	void setup( _2Real::bundle::BlockHandle &context );
 
-	_2Real::gl::RessourceManager const& getManager() { return *mManager; }
+	_2Real::gl::RessourceManager const& getManager() const;
+	_2Real::gl::RenderSettings const& getRenderSettings() const;
 
 private:
 
