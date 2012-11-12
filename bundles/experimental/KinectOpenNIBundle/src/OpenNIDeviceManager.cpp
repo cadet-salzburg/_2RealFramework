@@ -449,6 +449,11 @@ _2Real::Skeleton OpenNIDeviceManager::getSkeleton(const unsigned int deviceIdx, 
 	}
 }
 
+void OpenNIDeviceManager::projectiveToReal( const unsigned int deviceIdx, const unsigned int count, _2RealKinectWrapper::_2RealVector3f const* in, _2RealKinectWrapper::_2RealVector3f *out )
+{
+	m_2RealKinect->convertProjectiveToWorld( deviceIdx, count, in, out );
+}
+
 std::string OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 {
 	std::string label("unknown");

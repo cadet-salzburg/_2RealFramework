@@ -19,4 +19,6 @@ private:
 	InletHandle								m_Is16BitInletHandle;
 	bool									m_bIsAlignedToColor;
 	bool									m_bIs16Bit;
+	InletHandle								m_IsRealWorldInletHandle;
+	bool									m_bIsRealWorld;
 };

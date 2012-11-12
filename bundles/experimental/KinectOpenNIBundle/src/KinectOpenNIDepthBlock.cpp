@@ -18,6 +18,8 @@ void KinectOpenNIDepthBlock::setup( BlockHandle &block )
 	KinectOpenNIBlockBase::setup(block);
 	m_IsAlignedToColorInletHandle = block.getInletHandle("IsAlignedToColor");
 	m_Is16BitInletHandle = block.getInletHandle("Is16BitImage");
+	m_IsRealWorldInletHandle = block.getInletHandle("IsPointCloud");
+	m_bIsRealWorld = m_IsRealWorldInletHandle.getReadableRef<bool>();
 	m_bIsAlignedToColor = m_IsAlignedToColorInletHandle.getReadableRef<bool>();
 }
 
@@ -46,9 +48,14 @@ void KinectOpenNIDepthBlock::update()
 			m_bIs16Bit = bIs16Bit;
 		}
 
+		bool bIsRealWorld = m_IsRealWorldInletHandle.getReadableRef<bool>();
+		if( bIsRealWorld != m_bIsRealWorld )
+		{
+			m_bIsRealWorld = bIsRealWorld;
+		}
+
 		// call update of base class
 		KinectOpenNIBlockBase::update();
-
 	}
 	catch ( Exception &e )
 	{
@@ -60,12 +67,59 @@ void KinectOpenNIDepthBlock::update()
 
 void KinectOpenNIDepthBlock::updateImageOutlet()
 {
-	if(m_bIs16Bit)
+	if ( m_bIsRealWorld )
 	{
-		m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType, true );
+		Image &inImg = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType, true );
+
+		unsigned short * inIter = reinterpret_cast< unsigned short * >( inImg.getData() );
+
+		const unsigned int w = inImg.getWidth();
+		const unsigned int h = inImg.getHeight();
+		const unsigned int sz = w*h;
+
+		_2RealKinectWrapper::_2RealVector3f *proj = new _2RealKinectWrapper::_2RealVector3f[ sz ];
+		_2RealKinectWrapper::_2RealVector3f *projIter = proj;
+
+		for ( unsigned int i=0; i<h; ++i )
+		{
+			for ( unsigned int j=0; j<w; ++j )
+			{
+				*projIter = _2RealKinectWrapper::_2RealVector3f( float( j ), float( i ), float( *inIter ) );
+				++projIter;
+				++inIter;
+			}
+		}
+
+		_2RealKinectWrapper::_2RealVector3f *world = new _2RealKinectWrapper::_2RealVector3f[ sz ];
+		m_OpenNIDeviceManager->projectiveToReal( m_iCurrentDevice, sz, proj, world );
+
+		delete [] proj;
+
+		float *out = new float[ 3*sz ];
+		float *outIter = out;
+
+		_2RealKinectWrapper::_2RealVector3f *worldIter = world;
+
+		for ( unsigned int i=0; i<sz; ++i )
+		{
+			*outIter = worldIter->x / 1000.0f; ++outIter;
+			*outIter = worldIter->y / 1000.0f; ++outIter;
+			*outIter = worldIter->z / 1000.0f; ++outIter;
+			++worldIter;
+		}
+
+		delete [] world;
+
+		//float *out = static_cast< float * >( static_cast< void * >( world ) );
+
+		Image &outImg = m_ImageOutletHandle.getWriteableRef<_2Real::Image >();
+		// TODO: sth goes terribly wrong with assign
+		//outImg.assign( out, true, w, h, ImageChannelOrder::RGB );
+		outImg = Image( out, true, w, h, ImageChannelOrder::RGB );
 	}
 	else
 	{
-		m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
+		if( m_bIs16Bit )	m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType, true );
+		else				m_ImageOutletHandle.getWriteableRef<_2Real::Image >() = m_OpenNIDeviceManager->getImage( m_iCurrentDevice, m_GeneratorType );
 	}
 }

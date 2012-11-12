@@ -50,7 +50,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		depthBlockInfo.addInlet<int>( "Fps", 30 );
 		depthBlockInfo.addInlet<bool>( "IsMirrored", false );
 		depthBlockInfo.addInlet<bool>( "IsAlignedToColor", false );
+		// 8 bit, 16 bit or point cloud
 		depthBlockInfo.addInlet<bool>( "Is16BitImage", true );
+		depthBlockInfo.addInlet<bool>( "IsPointCloud", false );
 		depthBlockInfo.addOutlet< Image >("ImageData");
 		depthBlockInfo.addOutlet<int>( "Width" );
 		depthBlockInfo.addOutlet<int>( "Height" );

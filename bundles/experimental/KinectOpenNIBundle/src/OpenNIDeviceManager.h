@@ -37,8 +37,13 @@ public:
 	double							getFovH(int deviceIdx);
 	double							getFovV(int deviceIdx);
 
-	std::string					    getLabelForJoint(_2RealKinectWrapper::_2RealJointType joint);
-	
+	std::string						getLabelForJoint(_2RealKinectWrapper::_2RealJointType joint);
+
+	void							projectiveToReal( const unsigned int deviceIdx, const unsigned int count, _2RealKinectWrapper::_2RealVector3f const* in, _2RealKinectWrapper::_2RealVector3f *out );
+	//{
+	//	m_2RealKinect->convertProjectiveToWorld( deviceIdx, count, in, out );
+	//}
+
 private:
 	void							initDeviceList();
 	void							rescanDeviceList();

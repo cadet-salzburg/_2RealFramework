@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
 		depthData = depthToBuffer.getInletHandle( "BufferData" );
 
 		depth16Bit = depthImage.getInletHandle( "Is16BitImage" );
-		depthRealWorld = depthImage.getInletHandle( "IsRealWorld" );
+		depthRealWorld = depthImage.getInletHandle( "IsPointCloud" );
 		depthAligned = depthImage.getInletHandle( "IsAlignedToColor" );
 		userAligned = userSkeleton.getInletHandle( "IsAlignedToColor" );
 
