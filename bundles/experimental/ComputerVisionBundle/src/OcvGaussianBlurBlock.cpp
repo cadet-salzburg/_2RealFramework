@@ -63,9 +63,6 @@ void OcvGaussianBlurBlock::update()
 		// requires a range -> maye be checked by the fw in the future
 		if ( sigmaX < 0. || sigmaY < 0. )
 		{
-			// (?) throwing an exception is not really a good idea in this case
-			// ( exc requires re-setup, and that really would not help )
-			// nonetheless, the user should be notified somehow?
 			m_Block.getOutletHandle( "OutImage" ).discard();
 			std::cout << "sigma invalid" << std::endl;
 			return;
@@ -74,9 +71,6 @@ void OcvGaussianBlurBlock::update()
 		// kernel size must be odd. i don't think the framework should handle this
 		if ( kernelX%2 != 1 || kernelY%2 != 1 )
 		{
-			// (?) throwing an exception is not really a good idea in this case
-			// ( exc requires re-setup, and that really would not help )
-			// nonetheless, the user should be notified somehow?
 			m_Block.getOutletHandle( "OutImage" ).discard();
 			std::cout << "kernel size invalid" << std::endl;
 			return;
@@ -93,10 +87,6 @@ void OcvGaussianBlurBlock::update()
 
 			m_OutImageType = output.getImageType();
 		}
-
-		cout << m_OutWidth << " " << m_OutHeight << endl;
-		cout << m_OutChannelOrder << endl;
-		cout << m_OutImageType << endl;
 
 		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
 		cv::Mat const* const matSrc = convertToCvMat( input );
