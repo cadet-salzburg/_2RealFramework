@@ -479,7 +479,7 @@ std::string OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 		label = "left shoulder";
 		break;
 	case _2RealJointType::JOINT_LEFT_ELBOW:
-		label = "left ellbow";
+		label = "left elbow";
 		break;
 	case _2RealJointType::JOINT_LEFT_WRIST:
 		label = "left wrist";
@@ -497,7 +497,7 @@ std::string OpenNIDeviceManager::getLabelForJoint(_2RealJointType joint)
 		label = "right shoulder";
 		break;
 	case _2RealJointType::JOINT_RIGHT_ELBOW:
-		label = "right ellbow";
+		label = "right elbow";
 		break;
 	case _2RealJointType::JOINT_RIGHT_WRIST:
 		label = "right wrist";
