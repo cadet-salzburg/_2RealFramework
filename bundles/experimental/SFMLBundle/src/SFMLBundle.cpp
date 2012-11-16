@@ -135,12 +135,21 @@ void getBundleMetainfo( BundleMetainfo& info )
 		imgToBuffer.addInlet< Image >( "BufferData", Image() );
 		imgToBuffer.addOutlet< Buffer >( "Buffer" );
 
+		// vector of skeletons :/
+		BlockMetainfo skeletonsToBuffer = info.exportBlock< SkeletonsToBufferBlock, WithContext >( "SkeletonToBufferBlock" );
+		skeletonsToBuffer.setDescription( "transforms a vector of skeletons into a vertex buffer" );
+		skeletonsToBuffer.setCategory( "rendering" );
+		skeletonsToBuffer.addInlet< vector< Skeleton > >( "BufferData", vector< Skeleton >() );
+		skeletonsToBuffer.addOutlet< Buffer >( "VertexBuffer" );
+		skeletonsToBuffer.addOutlet< Buffer >( "BoneBuffer" );
+
 		/**
 		*	TODO: attrib & unforms are currently defined via strings...
 		**/
 		BlockMetainfo dataGenerator = info.exportBlock< RenderDataCombinerBlock, WithContext >( "RenderDataCombinerBlock" );
 		dataGenerator.setDescription( "combines buffers, textures & glsl code into a datatype that can be rendered by either a display window or an offscreen renderer" );
 		dataGenerator.setCategory( "rendering" );
+		dataGenerator.addInlet< int >( "PrimitiveType", 0, PrimitiveType::getPrimitiveOptions() );
 		dataGenerator.addOutlet< RenderData >( "RenderData" );
 		dataGenerator.addMultiInlet< Buffer >( "Buffers", Buffer() );
 		dataGenerator.addMultiInlet< Texture >( "Textures", Texture() );

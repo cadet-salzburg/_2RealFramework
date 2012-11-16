@@ -3,6 +3,7 @@
 #include "_2RealBlock.h"
 
 #include "gl.h"
+#include <array>
 
 class RessourceManagerBlock;
 
@@ -155,5 +156,41 @@ private:
 
 	_2Real::gl::BufferObj				*mBufferObj;	// modifieable
 	_2Real::gl::Buffer					mBuffer;		// constant
+
+};
+
+class SkeletonsToBufferBlock : public _2Real::bundle::Block
+{
+
+public:
+
+	SkeletonsToBufferBlock( _2Real::bundle::ContextBlock &context );
+	~SkeletonsToBufferBlock();
+
+	void shutdown();
+	void update();
+	void setup( _2Real::bundle::BlockHandle &context );
+
+private:
+
+	typedef std::pair< int, int > BoneIndices;
+
+	static BoneIndices findBoneIndices( std::vector< _2Real::RigidBody > const& rigidBodies, std::string const& l1, std::string const& l2 );
+
+	void updateBuffers( std::vector< _2Real::Skeleton > const& skeletons );
+
+	RessourceManagerBlock				&mManager;
+	_2Real::gl::Context					*mContext;
+
+	_2Real::bundle::BlockHandle			mBlockHandle;
+	_2Real::bundle::InletHandle			mBufferDataIn;
+	_2Real::bundle::OutletHandle		mVertexBufferOut;
+	_2Real::bundle::OutletHandle		mBoneBufferOut;
+
+	_2Real::gl::BufferObj				*mVertexBufferObj;	// modifieable
+	_2Real::gl::Buffer					mVertexBuffer;		// constant
+
+	_2Real::gl::BufferObj				*mBoneBufferObj;	// modifieable
+	_2Real::gl::Buffer					mBoneBuffer;		// constant
 
 };

@@ -6,6 +6,89 @@
 using namespace _2Real;
 
 template< typename TData >
+TData * makeCirclePattern( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz, float *black, float *white )
+{
+	float radius = 0.5f*sz;
+
+	TData *data = new TData[ width * height * channels ];
+	TData *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		unsigned int modI = i%sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			unsigned int modJ = j%sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				float x = modI - radius;
+				float y = modJ - radius;
+				float dist = sqrt( x*x + y*y );
+
+				if ( dist < radius )
+				{
+					for ( unsigned int k=0; k<channels; ++k )
+					{
+						*p = static_cast< TData >( black[ k ] );
+						++p;
+					}
+				}
+				else
+				{
+					for ( unsigned int k=0; k<channels; ++k )
+					{
+						*p = static_cast< TData >( white[ k ] );
+						++p;
+					}
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = static_cast< TData >( white[ k ] );
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
+template< typename TData >
+TData * makeColorCheckerboard( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz, float *black, float *white )
+{
+	TData *data = new TData[ width * height * channels ];
+	TData *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = static_cast< TData >( black[ k ] );
+					++p;
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = static_cast< TData >( white[ k ] );
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
+template< typename TData >
 TData * makeCheckerboard( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz )
 {
 	TData *data = new TData[ width * height * channels ];
@@ -80,7 +163,6 @@ inline cv::Mat *const convertToCvMat( Image &src )
 
 	if ( width == 0 || height == 0 )
 	{
-		
 	}
 
 	ImageType type = src.getImageType();
@@ -173,7 +255,8 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		break;
 	}
 
-	cv::Mat *result = new cv::Mat( src.getWidth(), src.getHeight(), cvType, d );
+	cv::Mat *result = new cv::Mat( src.getHeight(), src.getWidth(), cvType, d );
+
 	return result;
 }
 
@@ -187,7 +270,6 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 
 	if ( width == 0 || height == 0 )
 	{
-		
 	}
 
 	ImageType type = src.getImageType();
@@ -280,6 +362,7 @@ inline cv::Mat const* const convertToCvMat( Image const& src )
 		break;
 	}
 
-	cv::Mat *result = new cv::Mat( src.getWidth(), src.getHeight(), cvType, d );
+	cv::Mat *result = new cv::Mat( src.getHeight(), src.getWidth(), cvType, d );
+
 	return result;
 }

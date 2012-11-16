@@ -34,6 +34,7 @@ void RenderDataCombinerBlock::setup( BlockHandle &block )
 			mTexturesMultiin = block.getInletHandle( "Textures" );
 			mUniformsMultiin = block.getInletHandle( "UniformValues" );
 			mAttributesMultiin = block.getInletHandle( "AttributeDescriptions" );
+			mPrimitiveTypeIn = block.getInletHandle( "PrimitiveType" );
 		}
 	}
 	catch( Exception & e )
@@ -236,14 +237,15 @@ void RenderDataCombinerBlock::update()
 		{
 			if ( !hasIndices )
 			{
-				out.mPrimitiveType = GL_POINTS;
+				out.mPrimitiveType = PrimitiveType::getGLPrimitiveType( mPrimitiveTypeIn.getReadableRef< int >() );
 				out.mElementCount = elementsToDraw;
 				out.mDrawIndexed = false;
 			}
 			else
 			{
-				out.mPrimitiveType = GL_TRIANGLES;
-				//out.mElementCount = 100;
+				int primType = mPrimitiveTypeIn.getReadableRef< int >();
+				out.mPrimitiveType = PrimitiveType::getGLPrimitiveType( primType );
+				//out.mElementCount = 100; -->set in addIndices
 				out.mDrawIndexed = true;
 			}
 

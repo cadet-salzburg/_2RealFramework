@@ -135,6 +135,8 @@ int main( int argc, char *argv[] )
 		meshWidth = fullscreenMesh.getInletHandle( "MeshWidth" );
 		meshHeight = fullscreenMesh.getInletHandle( "MeshHeight" );
 
+		InletHandle pType = pointCloudCombiner.getInletHandle( "PrimitiveType" );
+
 		rgbData.link( rgbImageOut );
 		userData.link( userImageOut );
 		depthData.link( depthImageOut );
@@ -164,6 +166,7 @@ int main( int argc, char *argv[] )
 		depthRealWorld.setValue< bool >( true );
 		depthAligned.setValue< bool >( true );
 		userAligned.setValue< bool >( true );
+		pType.setValue< int >( 2 );
 
 		depthImage.start();
 		rgbImage.start();
@@ -210,3 +213,153 @@ int main( int argc, char *argv[] )
 
 	return 0;
 }
+
+//#include "_2RealBundlesUnitTest.h"
+//#include <iostream>
+//#include <fstream>
+//#include <sstream>
+//
+//#include "Eigen/Dense"
+//#include "Eigen/Geometry"
+//
+//#include "Poco/Mutex.h"
+//
+//#include <Windows.h>
+//
+//using namespace std;
+//using namespace _2Real;
+//using namespace _2Real::app;
+//
+//int main( int argc, char *argv[] )
+//{
+//	try
+//	{
+//		Engine &engine = Engine::instance();
+//		engine.setBaseDirectory( "..\\..\\bin" );
+//
+//		BundleHandle sfmlBundle = engine.loadBundle( "SFMLBundle" );
+//		BundleHandle kinectBundle = engine.loadBundle( "KinectOpenNIBundle" );
+//
+//		BlockHandle skeletonGenerator, boneCombiner;
+//		BlockHandle skeletonToBuffer;
+//		BlockHandle skeletonCombiner, displaySkeletons;
+//
+//		InletHandle skeletonBuffers;
+//		InletHandle skeletonTextures;
+//		InletHandle skeletonAttribs, skeletonAttribPosition;
+//		InletHandle skeletonUniforms;
+//		InletHandle skeletonVertexSrc, skeletonFragmentSrc, skeletonGeometrySrc;
+//		InletHandle skeletonsIn, renderDataIn;
+//		InletHandle skeletonDataIn, skeletonBufferIn;
+//		InletHandle bonesIn;
+//		InletHandle boneAttribs, boneAttribPosition, boneAttribIndices;
+//		InletHandle boneBuffers, pointBufferIn, boneBufferIn;
+//		InletHandle boneVertexSrc, boneFragmentSrc, boneGeometrySrc;
+//		InletHandle bonePrimType;
+//
+//		OutletHandle skeletonDataOut, skeletonBufferOut, skeletonsOut;
+//		OutletHandle boneBufferOut, bonesOut;
+//
+//		string attribIndices = "indices ()";
+//		string attribPosition = "position ( 3 0 )";
+//
+//		skeletonGenerator = kinectBundle.createBlockInstance( "KinectOpenNIUserSkeletonBlock" );
+//		skeletonToBuffer = sfmlBundle.createBlockInstance( "SkeletonToBufferBlock" );
+//		skeletonCombiner = sfmlBundle.createBlockInstance( "RenderDataCombinerBlock" );
+//		boneCombiner = sfmlBundle.createBlockInstance( "RenderDataCombinerBlock" );
+//		displaySkeletons = sfmlBundle.createBlockInstance( "DisplayWindowBlock" );
+//
+//		skeletonGenerator.setup();
+//		skeletonToBuffer.setup();
+//		skeletonCombiner.setup();
+//		boneCombiner.setup();
+//		displaySkeletons .setup();
+//
+//		skeletonDataIn = skeletonToBuffer.getInletHandle( "BufferData" );
+//
+//		skeletonBuffers = skeletonCombiner.getInletHandle( "Buffers" );
+//		skeletonBufferIn = skeletonBuffers.add();
+//		skeletonAttribs = skeletonCombiner.getInletHandle( "AttributeDescriptions" );
+//		skeletonAttribPosition = skeletonAttribs.add();
+//		skeletonVertexSrc = skeletonCombiner.getInletHandle( "VertexShaderSource" );
+//		skeletonFragmentSrc = skeletonCombiner.getInletHandle( "FragmentShaderSource" );
+//		skeletonGeometrySrc = skeletonCombiner.getInletHandle( "GeometryShaderSource" );
+//
+//		boneBuffers = boneCombiner.getInletHandle( "Buffers" );
+//		boneBufferIn = boneBuffers.add();
+//		pointBufferIn = boneBuffers.add();
+//		boneAttribs = boneCombiner.getInletHandle( "AttributeDescriptions" );
+//		boneAttribIndices = boneAttribs.add();
+//		boneAttribPosition = boneAttribs.add();
+//		boneVertexSrc = boneCombiner.getInletHandle( "VertexShaderSource" );
+//		boneFragmentSrc = boneCombiner.getInletHandle( "FragmentShaderSource" );
+//		boneGeometrySrc = boneCombiner.getInletHandle( "GeometryShaderSource" );
+//		bonePrimType = boneCombiner.getInletHandle( "PrimitiveType" );
+//
+//		renderDataIn = displaySkeletons.getInletHandle( "RenderData" );
+//		skeletonsIn = renderDataIn.add();
+//		bonesIn = renderDataIn.add();
+//
+//		skeletonDataOut = skeletonGenerator.getOutletHandle( "Skeletons" );
+//		skeletonBufferOut = skeletonToBuffer.getOutletHandle( "VertexBuffer" );
+//		boneBufferOut = skeletonToBuffer.getOutletHandle( "BoneBuffer" );
+//		skeletonsOut = skeletonCombiner.getOutletHandle( "RenderData" );
+//		bonesOut = boneCombiner.getOutletHandle( "RenderData" );
+//
+//		skeletonVertexSrc.setValueToString( "skeleton.vert" );
+//		skeletonFragmentSrc.setValueToString( "skeleton.frag" );
+//		skeletonAttribPosition.setValue( attribPosition );
+//
+//		boneVertexSrc.setValueToString( "skeleton.vert" );
+//		boneFragmentSrc.setValueToString( "skeleton.frag" );
+//		boneAttribIndices.setValue( attribIndices );
+//		boneAttribPosition.setValue( attribPosition );
+//		bonePrimType.setValue< int >( 1 );
+//
+//		skeletonDataIn.link( skeletonDataOut );
+//		skeletonBufferIn.link( skeletonBufferOut );
+//		skeletonsIn.link( skeletonsOut );
+//
+//		boneBufferIn.link( boneBufferOut );
+//		pointBufferIn.link( skeletonBufferOut );
+//		bonesIn.link( bonesOut );
+//
+//		skeletonGenerator.start();
+//		skeletonToBuffer.start();
+//		skeletonCombiner.start();
+//		boneCombiner.start();
+//		displaySkeletons.start();
+//
+//		while( 1 )
+//		{
+//			string line;
+//			char lineEnd = '\n';
+//			getline( cin, line, lineEnd );
+//			if ( line == "q" )
+//			{
+//				break;
+//			}
+//		}
+//	}
+//	catch( Exception &e )
+//	{
+//		cout << e.message() << endl;
+//	}
+//	catch ( ... )
+//	{
+//		cout << "unknown exception" << endl;
+//	}
+//
+//	while( 1 )
+//	{
+//		string line;
+//		char lineEnd = '\n';
+//		getline( cin, line, lineEnd );
+//		if ( line == "q" )
+//		{
+//			break;
+//		}
+//	}
+//
+//	return 0;
+//}

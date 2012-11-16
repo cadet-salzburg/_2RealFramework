@@ -120,14 +120,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ASSIMP_DIR)\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\assimp\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src;$(_2REAL_DEPENDENCIES_DIR)\opencv\include\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ASSIMP_DIR)\lib;$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\SFML\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\assimp\lib;$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\SFML\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>zlibd.lib;assimpd.lib;glew32mxd.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;_2RealFramework_32d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -167,7 +167,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ASSIMP_DIR)\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(_2REAL_DEPENDENCIES_DIR)\assimp\include;$(_2REAL_DEPENDENCIES_DIR)\eigen;$(_2REAL_DEPENDENCIES_DIR)\glew\include;$(_2REAL_DEPENDENCIES_DIR)\SFML\include;$(_2REAL_DEPENDENCIES_DIR)\poco\Foundation\include\;$(_2REAL_DIR)\kernel\src</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
@@ -176,7 +176,7 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ASSIMP_DIR)\lib;$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\SFML\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\assimp\lib;$(_2REAL_DEPENDENCIES_DIR)\glew\lib;$(_2REAL_DEPENDENCIES_DIR)\SFML\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp32.lib;glew32mx.lib;sfml-main.lib;sfml-system.lib;sfml-window.lib;_2RealFramework_32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
     </Link>

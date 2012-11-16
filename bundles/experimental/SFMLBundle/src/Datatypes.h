@@ -2,6 +2,7 @@
 
 #include "gl.h"
 #include "Poco/RWLock.h"
+#include "helpers/_2RealOptions.h"
 
 #include "_2RealDatatypes.h"
 #include "datatypes/_2RealTypeStreamOperators.h"
@@ -60,6 +61,26 @@ namespace _2Real
 			bool				mIsCompiled;
 			std::string			mSource;
 			std::string			mInfoLog;
+		};
+
+		struct PrimitiveType
+		{
+			static const int POINTS = 0;
+			static const int LINES = 1;
+			static const int TRIANGLES = 2;
+
+			static Options< int > getPrimitiveOptions()
+			{
+				Options< int > o = Options< int >( POINTS, "points" )( LINES, "lines" )( TRIANGLES, "triangles" );
+				return o;
+			}
+
+			static GLenum getGLPrimitiveType( const int code )
+			{
+				if ( code == TRIANGLES ) return GL_TRIANGLES;
+				else if ( code == LINES ) return GL_LINES;
+				else return GL_POINTS;
+			}
 		};
 
 		struct ProgramObj

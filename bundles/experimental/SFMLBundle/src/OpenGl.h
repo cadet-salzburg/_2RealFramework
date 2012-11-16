@@ -114,6 +114,8 @@ namespace _2Real
 			template< typename T >
 			void updateBuffer( BufferObj *& buffer, std::vector< T > const& data, const GLenum usageHint )
 			{
+				if ( data.empty() ) return;
+
 				const GLenum t = getGLEnumeration< T >();
 				const unsigned int e = data.size();
 				const size_t s = e * sizeof( T );
@@ -294,11 +296,11 @@ namespace _2Real
 				glEnable( GL_BLEND );
 				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-				glPointSize( 1.5f );
+				glPointSize( 10.0f );
 				glEnable( GL_POINT_SMOOTH );
 				glHint( GL_POINT_SMOOTH_HINT, GL_NICEST );
 
-				glLineWidth( 0.5f );
+				glLineWidth( 3.0f );
 				glEnable( GL_LINE_SMOOTH );
 				glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
@@ -331,6 +333,7 @@ namespace _2Real
 					data.mIndices->mLock.readLock();
 					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, data.mIndices->mHandle );
 					glDrawElements( data.mPrimitiveType, data.mElementCount, data.mIndices->mDatatype, 0 );
+					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 					data.mIndices->mLock.unlock();
 				}
 				else

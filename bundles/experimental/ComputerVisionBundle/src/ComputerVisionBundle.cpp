@@ -1,6 +1,6 @@
 #include "_2RealBundle.h"
 #include "OcvGaussianBlurBlock.h"
-#include "OcvSobelBlock.h"
+//#include "OcvSobelBlock.h"
 #include "ImageHelpers.h"
 #include <sstream>
 #include <iostream>
@@ -23,8 +23,11 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		unsigned char *init = makeCheckerboard< unsigned char >( 640, 480, 1, 6 );
-		Image checkerImg( init, true, 640, 480, ImageChannelOrder::R );
+		float blue[ 4 ] = { 0.2f, 0.1f, 0.7f, 1.0f };
+		float green[ 4 ] = { 0.1f, 0.7f, 0.2f, 1.0f };
+
+		float *init = makeCirclePattern< float >( 640, 480, 3, 60, blue, green );
+		Image checkerImg( init, true, 640, 480, ImageChannelOrder::RGB );
 		Options< int > borderOptions = Options< int >( 0, "constant" )( 1, "replicate" )( 2, "reflect" )( 4, "reflect_101" );
 
 		BlockMetainfo gauss = info.exportBlock< OcvGaussianBlurBlock, WithoutContext >( "OcvGaussianBlurBlock" );
@@ -33,8 +36,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		// can handle any format
 		gauss.addInlet< Image >( "InImage", checkerImg );
 		// must be odd
-		gauss.addInlet< unsigned char >( "kernel_x", 5 );
-		gauss.addInlet< unsigned char >( "kernel_y", 5 );
+		gauss.addInlet< unsigned char >( "kernel_x", 1 );
+		gauss.addInlet< unsigned char >( "kernel_y", 1 );
 		// must be positive
 		gauss.addInlet< double >( "sigma_x", 1.1 );
 		gauss.addInlet< double >( "sigma_y", 1.1 );
@@ -43,11 +46,11 @@ void getBundleMetainfo( BundleMetainfo& info )
 		// format out == format in
 		gauss.addOutlet< Image >( "OutImage" );
 
-		BlockMetainfo eq = info.exportBlock< OcvHistogramEqualizationBlock, WithoutContext >( "OcvHistogramEqualizationBlock" );
-		eq.setDescription( "xxx" );
-		eq.setCategory( "image filter" );
-		eq.addInlet< Image >( "ImageData", checkerImg );
-		eq.addOutlet< Image >( "ImageData" );
+		//BlockMetainfo eq = info.exportBlock< OcvHistogramEqualizationBlock, WithoutContext >( "OcvHistogramEqualizationBlock" );
+		//eq.setDescription( "xxx" );
+		//eq.setCategory( "image filter" );
+		//eq.addInlet< Image >( "ImageData", checkerImg );
+		//eq.addOutlet< Image >( "ImageData" );
 
 		////// either uchar in -> ushort out or float in - float out
 		//BlockMetainfo sobel = info.exportBlock< OcvSobelBlock, WithoutContext >( "OcvSobelBlock" );

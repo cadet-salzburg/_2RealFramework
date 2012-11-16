@@ -31,6 +31,7 @@ private:
 	_2Real::bundle::InletHandle			mGeometryShaderIn;
 	_2Real::bundle::InletHandle			mUniformsMultiin;
 	_2Real::bundle::InletHandle			mAttributesMultiin;
+	_2Real::bundle::InletHandle			mPrimitiveTypeIn;
 
 	_2Real::gl::ProgramObj				*mProgramObj;	// modifieable
 	_2Real::gl::Program					mProgram;		// constant
