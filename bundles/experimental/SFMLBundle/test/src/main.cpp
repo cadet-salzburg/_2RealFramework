@@ -23,9 +23,9 @@ int main( int argc, char *argv[] )
 
 		BundleHandle sfmlBundle = engine.loadBundle( "SFMLBundle" );
 
-		engine.loadConfig( "modelimport.xml" );
+		//engine.loadConfig( "modelimport.xml" );
 
-		/*string filePath = "D:\\opengl\\data\\Bunny.ply";
+		string filePath = "D:\\opengl\\data\\Bunny.ply";
 
 		string vertexSrcBunny = "model.vert";
 		string fragmentSrcBunny = "model.frag";
@@ -73,7 +73,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle bunnyData = bunnyDisplay.getInletHandle( "RenderData" );
 		InletHandle bunnyData0 = bunnyData.add();
-		bunnyData0.link( bunnyCombiner.getOutletHandle( "RenderData" ) );*/
+		bunnyData0.link( bunnyCombiner.getOutletHandle( "RenderData" ) );
 
 		while( 1 )
 		{

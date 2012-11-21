@@ -313,6 +313,9 @@ namespace _2Real
 				data.mProgram->mLock.readLock();
 				glUseProgram( data.mProgram->mHandle );
 
+				std::cout << "rendering; nr of attrs: " << data.mAttributes.size() << std::endl;
+				std::cout << "rendering; nr of textures: " << data.mTextures.size() << std::endl;
+
 				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
 				{
 					RenderData::VertexAttribute attrib = it->second;
@@ -332,6 +335,7 @@ namespace _2Real
 
 				if ( data.mDrawIndexed )
 				{
+					//std::cout << "rendering; nr of indices: " << data.mElementCount << std::endl;
 					data.mIndices->mLock.readLock();
 					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, data.mIndices->mHandle );
 					glDrawElements( data.mPrimitiveType, data.mElementCount, data.mIndices->mDatatype, 0 );
@@ -340,6 +344,7 @@ namespace _2Real
 				}
 				else
 				{
+					//std::cout << "rendering; nr of elements: " << data.mElementCount << std::endl;
 					glDrawArrays( data.mPrimitiveType, 0, data.mElementCount );
 				}
 

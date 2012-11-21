@@ -75,6 +75,11 @@ void RenderDataCombinerBlock::update()
 			string const& geometrySrc = mGeometryShaderIn.getReadableRef< ShaderSource >().mSource;
 			string const& fragmentSrc = mFragmentShaderIn.getReadableRef< ShaderSource >().mSource;
 
+			std::cout << "glsl program changed" << std::endl;
+			std::cout << vertexSrc << std::endl;
+			std::cout << geometrySrc << std::endl;
+			std::cout << fragmentSrc << std::endl;
+
 			mProgramObj = mContext->createProgramObj();
 			if ( !vertexSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_VERTEX_SHADER, vertexSrc ) );
 			if ( !fragmentSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_FRAGMENT_SHADER, fragmentSrc ) );
@@ -116,6 +121,8 @@ void RenderDataCombinerBlock::update()
 					Mat4 mat;
 					for ( unsigned int i=0; i<16; ++i ) sstr >> mat( i );
 					mContext->setUniformMat4( u.mLocation, mat );
+
+					std::cout << "set uniform of type mat4 to " << mat << std::endl;
 				}
 				else if ( u.mType == GL_FLOAT_MAT3 )
 				{
@@ -129,9 +136,9 @@ void RenderDataCombinerBlock::update()
 					for ( unsigned int i=0; i<2; ++i ) sstr >> vec[ i ];
 					mContext->setUniformVec2( u.mLocation, vec );
 				}
-				//else cout << "found unsupported uniform type" << std::endl;
+				else cout << "found unsupported uniform type" << std::endl;
 			}
-			//else cout << "found unknown uniform " << name << endl;
+			else cout << "found unknown uniform " << name << endl;
 		}
 
 		mContext->resetProgram();
@@ -158,6 +165,9 @@ void RenderDataCombinerBlock::update()
 		for ( unsigned int i=0; i<numAttribs; ++i )
 		{
 			string const& attrString = mAttributesMultiin[ i ].getReadableRef< string >();
+
+			std::cout << attrString << std::endl;
+
 			if ( attrString.empty() ) continue;
 
 			string name = attrString.substr( 0, attrString.find_first_of( " " ) );
@@ -174,6 +184,8 @@ void RenderDataCombinerBlock::update()
 				size_t stride;
 				sstr >> size >> stride;
 
+				std::cout << "found attrib " << name << " " << size << " " << stride << std::endl;
+
 				ProgramObj::ActiveInputs::const_iterator it = mProgramObj->mActiveAttributes.find( name );
 				if ( it != mProgramObj->mActiveAttributes.end() )
 				{
@@ -187,6 +199,7 @@ void RenderDataCombinerBlock::update()
 			}
 			else
 			{
+				std::cout << "found index buffer!" << std::endl;
 				hasIndices = true;
 				index = i;
 			}
@@ -196,23 +209,24 @@ void RenderDataCombinerBlock::update()
 
 		const unsigned int numBuffers = mBuffersMultiin.getSize();
 		unsigned int validAttribs =0;
+		bool foundIndex = false;
 		unsigned int indexElements = 0;
 		for ( unsigned int i=0; i<numBuffers; ++i )
 		{
 			Buffer const& buffer = mBuffersMultiin[ i ].getReadableRef< Buffer >();
 
-			if ( buffer.get() == nullptr )
-			{
-				isValidData = false;
-				break;
-			}
+			if ( buffer.get() == nullptr ) continue;
 
 			if ( hasIndices && i == index )
 			{
+				foundIndex = true;
 				out.addIndices( buffer );
+				std::cout << "index buffer has " << buffer->mElementCount << " elements" << std::endl;
 			}
 			else
 			{
+				++validAttribs;
+				std::cout << "attribute buffer has " << buffer->mElementCount << " elements" << std::endl;
 				AttribMap::iterator it = attributes.find( i );
 				if ( it != attributes.end() )
 				{
@@ -220,8 +234,12 @@ void RenderDataCombinerBlock::update()
 					out.addAttribute( a.location, RenderData::VertexAttribute( buffer, a.size, a.stride, false ) );
 					attribsPerBuffer.push_back( buffer->mElementCount / a.size );
 				}
+				else std::cout << "found unknown attribute" << std::endl;
 			}
 		}
+
+		if ( validAttribs == 0 ) isValidData = false;
+		if ( hasIndices && !foundIndex ) isValidData = false;
 
 		unsigned int elementsToDraw;
 		//if ( hasIndices )						elementsToDraw = 
@@ -240,6 +258,7 @@ void RenderDataCombinerBlock::update()
 
 		if ( !isValidData )
 		{
+			std::cout << "invalid render data!" << std::endl;
 			mRenderDataOut.discard();
 		}
 		else
@@ -254,7 +273,6 @@ void RenderDataCombinerBlock::update()
 			{
 				int primType = mPrimitiveTypeIn.getReadableRef< int >();
 				out.mPrimitiveType = PrimitiveType::getGLPrimitiveType( primType );
-				//out.mElementCount = 100; -->set in addIndices
 				out.mDrawIndexed = true;
 			}
 
