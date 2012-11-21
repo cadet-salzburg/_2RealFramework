@@ -50,8 +50,9 @@ void ModelLoaderBlock::update()
 
 			string file = mFilePathIn.getReadableRef< string >();
 
+			//mModelLoader.SetPropertyInteger( AI_CONFIG_PP_PTV_NORMALIZE , 1 );
 			mModelLoader.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE );
-			aiScene const* const scene = mModelLoader.ReadFile( file, aiProcess_JoinIdenticalVertices | aiProcess_FindDegenerates | aiProcess_SortByPType | aiProcess_Triangulate | aiProcess_RemoveComponent | aiProcess_ValidateDataStructure );
+			aiScene const* const scene = mModelLoader.ReadFile( file, /*aiProcess_PreTransformVertices | */aiProcess_JoinIdenticalVertices | aiProcess_FindDegenerates | aiProcess_SortByPType | aiProcess_Triangulate | aiProcess_RemoveComponent | aiProcess_ValidateDataStructure );
 
 			if ( scene == nullptr )		// d'oh
 			{

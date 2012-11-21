@@ -42,7 +42,7 @@ void FullscreenMeshBlock::setup( BlockHandle &block )
 		mContext->setActive( true );
 		calcAttribs(	mMeshWidthIn.getReadableRef< unsigned int >(),
 						mMeshHeightIn.getReadableRef< unsigned int >(),
-						mPrimitiveTypeIn.getReadableRef< unsigned int >()
+						mPrimitiveTypeIn.getReadableRef< int >()
 					);
 		mContext->finish();
 		mContext->setActive( false );
@@ -60,7 +60,7 @@ void FullscreenMeshBlock::setup( BlockHandle &block )
 	}
 }
 
-void FullscreenMeshBlock::calcAttribs( const unsigned int w, const unsigned int h, const unsigned int p )
+void FullscreenMeshBlock::calcAttribs( const unsigned int w, const unsigned int h, const int p )
 {
 	static unsigned int POINTS = 0;
 	static unsigned int TRIANGLES = 1;
@@ -70,8 +70,8 @@ void FullscreenMeshBlock::calcAttribs( const unsigned int w, const unsigned int 
 	size_t texcoordBufferSize = w * h * 2 * sizeof( float );
 	
 	size_t indexBufferSize;
-	if ( p == TRIANGLES )	indexBufferSize = 6 * ( w-1 ) * ( h-1 ) * sizeof( unsigned int );
-	else					indexBufferSize = w * h * sizeof( unsigned int );
+	if ( p == PrimitiveType::TRIANGLES )	indexBufferSize = 6 * ( w-1 ) * ( h-1 ) * sizeof( unsigned int );
+	else									indexBufferSize = w * h * sizeof( unsigned int );
 
 	if ( mVertexBufferObj == nullptr || mVertexBufferObj->mSizeInBytes != vertexBufferSize )
 	{
@@ -108,8 +108,8 @@ void FullscreenMeshBlock::calcAttribs( const unsigned int w, const unsigned int 
 		{
 			float u = j*stepU;
 			float v = i*stepV;
-			float x = j*stepX - 1.0;
-			float y = i*stepY - 1.0;
+			float x = j*stepX - 1.f;
+			float y = i*stepY - 1.f;
 			texcoords.push_back( u );
 			texcoords.push_back( v );
 			positions.push_back( x );
@@ -122,19 +122,19 @@ void FullscreenMeshBlock::calcAttribs( const unsigned int w, const unsigned int 
 	const unsigned int numTriangles = 2 * ( w-1 ) * ( h-1 );
 	const unsigned int numPoints = w*h;
 
-	if ( p == TRIANGLES )
+	if ( p == PrimitiveType::TRIANGLES )
 	{
 		const unsigned int numIndices = 3 * numTriangles;
 		indices.reserve( numIndices );
 
-		for ( unsigned int i=0; i<h-1; ++i )
+		for ( unsigned int i=0; i<h-1; i+=2 )
 		{
-			for ( unsigned int j=0; j<w-1; ++j )
+			for ( unsigned int j=0; j<w-1; j+=2 )
 			{
 				unsigned int i0 = i*w + j;
-				unsigned int i1 = i*w + ( j+1 );
-				unsigned int i2 = ( i+1 )*w + j;
-				unsigned int i3 = ( i+1 )*w + ( j+1 );
+				unsigned int i1 = i*w + ( j+2 );
+				unsigned int i2 = ( i+2 )*w + j;
+				unsigned int i3 = ( i+2 )*w + ( j+2 );
 
 				indices.push_back( i0 );
 				indices.push_back( i1 );
@@ -182,7 +182,7 @@ void FullscreenMeshBlock::update()
 			mContext->setActive( true );
 			const unsigned int w = mMeshWidthIn.getReadableRef< unsigned int >();
 			const unsigned int h = mMeshHeightIn.getReadableRef< unsigned int >();
-			const unsigned int primType = mPrimitiveTypeIn.getReadableRef< unsigned int >();
+			const int primType = mPrimitiveTypeIn.getReadableRef< int >();
 			calcAttribs( w, h, primType );
 			mContext->finish();
 			mContext->setActive( false );

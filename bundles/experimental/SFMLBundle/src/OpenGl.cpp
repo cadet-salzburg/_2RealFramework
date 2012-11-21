@@ -83,7 +83,7 @@ namespace _2Real
 			GLint linked;
 			glGetProgramiv( p->mHandle, GL_LINK_STATUS, &linked );
 
-			p->mIsLinked = static_cast< bool >( linked );
+			p->mIsLinked = ( linked == 1 );
 
 			GLint logSize;
 			glGetProgramiv( p->mHandle, GL_INFO_LOG_LENGTH, &logSize );
@@ -136,7 +136,8 @@ namespace _2Real
 		RenderWindow::RenderWindow( RenderSettings const& s, RessourceManager const& mgr ) :
 			mSfWindow( sf::VideoMode( s.width, s.height, s.colorBits ), s.title, sf::Style::Resize, sf::ContextSettings( s.depthBits, s.stencilBits, s.aaSamples, s.glMajor, s.glMinor ) ),
 			mSfSettings( mSfWindow.getSettings() ),
-			mRenderer( mgr ), mIsKeyboardEnabled( false ), mIsMouseEnabled( false )
+			mRenderer( mgr ), mIsKeyboardEnabled( false ), mIsMouseEnabled( false ),
+			mIsMiddleMouseButtonDown( false ), mIsLeftMouseButtonDown( false ), mIsRightMouseButtonDown( false )
 		{
 		}
 
@@ -148,13 +149,121 @@ namespace _2Real
 				if ( ev.type == sf::Event::Resized )
 				{
 					mRenderer.setViewport( ev.size.width, ev.size.height );
+					ResizeEvent r;
+					r.width = ev.size.width;
+					r.height = ev.size.height;
+					mResizeEvent.notify( r );
+				}
+				else if ( ev.type == sf::Event::MouseButtonPressed )
+				{
+					MouseEvent e;
+					e.x = ev.mouseButton.x;
+					e.y = ev.mouseButton.y;
+
+					if ( ev.mouseButton.button == sf::Mouse::Left )
+					{
+						e.action = LEFT_BUTTON_PRESSED;
+						mIsLeftMouseButtonDown = true;
+					}
+					else if ( ev.mouseButton.button == sf::Mouse::Right )
+					{
+						e.action = RIGHT_BUTTON_PRESSED;
+						mIsRightMouseButtonDown = true;
+					}
+					else if ( ev.mouseButton.button == sf::Mouse::Middle )
+					{
+						e.action = MIDDLE_BUTTON_PRESSED;
+						mIsMiddleMouseButtonDown = true;
+					}
+
+					mMouseEvent.notify( e );
+				}
+				else if ( ev.type == sf::Event::MouseButtonReleased )
+				{
+					MouseEvent e;
+					e.x = ev.mouseButton.x;
+					e.y = ev.mouseButton.y;
+
+					if ( ev.mouseButton.button == sf::Mouse::Left )
+					{
+						e.action = LEFT_BUTTON_RELEASED;
+						mIsLeftMouseButtonDown = false;
+					}
+					else if ( ev.mouseButton.button == sf::Mouse::Right )
+					{
+						e.action = RIGHT_BUTTON_RELEASED;
+						mIsRightMouseButtonDown = false;
+					}
+					else if ( ev.mouseButton.button == sf::Mouse::Middle )
+					{
+						e.action = MIDDLE_BUTTON_RELEASED;
+						mIsMiddleMouseButtonDown = false;
+					}
+
+					mMouseEvent.notify( e );
 				}
 				else if ( ev.type == sf::Event::MouseMoved )
+				{
+					MouseEvent e;
+					e.action = MOVED;
+					e.x = ev.mouseMove.x;
+					e.y = ev.mouseMove.y;
+
+					mMouseEvent.notify( e );
+
+					if ( mIsRightMouseButtonDown )
+					{
+						MouseEvent drag;
+						drag.action = RIGHT_DRAG;
+						drag.x = ev.mouseMove.x;
+						drag.y = ev.mouseMove.y;
+						mMouseEvent.notify( drag );
+					}
+					if ( mIsLeftMouseButtonDown )
+					{
+						MouseEvent drag;
+						drag.action = LEFT_DRAG;
+						drag.x = ev.mouseMove.x;
+						drag.y = ev.mouseMove.y;
+						mMouseEvent.notify( drag );
+					}
+					if ( mIsMiddleMouseButtonDown )
+					{
+						MouseEvent drag;
+						drag.action = MIDDLE_DRAG;
+						drag.x = ev.mouseMove.x;
+						drag.y = ev.mouseMove.y;
+						mMouseEvent.notify( drag );
+					}
+				}
+				else if ( ev.type == sf::Event::MouseWheelMoved )
+				{
+					MouseEvent e;
+					if ( ev.mouseWheel.delta > 0 ) e.action = WHEEL_UP;
+					else e.action = WHEEL_DOWN;
+					e.x = ev.mouseWheel.x;
+					e.y = ev.mouseWheel.y;
+
+					mMouseEvent.notify( e );
+				}
+				else if ( ev.type == sf::Event::MouseEntered )
+				{
+				}
+				else if ( ev.type == sf::Event::MouseLeft )
 				{
 				}
 				else if ( ev.type == sf::Event::KeyPressed )
 				{
-					Key k = getKey( ev );
+					KeyEvent k;
+					k.wasPressed = true;
+					k.key = getKey( ev );
+					mKeyEvent.notify( k );
+				}
+				else if ( ev.type == sf::Event::KeyReleased )
+				{
+					KeyEvent k;
+					k.wasPressed = false;
+					k.key = getKey( ev );
 					mKeyEvent.notify( k );
 				}
 			}

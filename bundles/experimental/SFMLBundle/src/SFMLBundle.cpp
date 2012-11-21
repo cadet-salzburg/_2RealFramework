@@ -82,8 +82,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		displayWindow.setCategory( "rendering" );
 		displayWindow.addInlet< Vec4 >( "ClearColor", vecClear );
 		displayWindow.addInlet< string >( "WindowTitle", "display window" );
-		displayWindow.addInlet< unsigned int >( "WindowWidth", 640 );
-		displayWindow.addInlet< unsigned int >( "WindowHeight", 480 );
+		displayWindow.addInlet< unsigned int >( "WindowWidth", 1200 );
+		displayWindow.addInlet< unsigned int >( "WindowHeight", 900 );
 		displayWindow.addMultiInlet< RenderData >( "RenderData", RenderData() );
 		displayWindow.addInlet< bool >( "EnableMouseInteraction", true );
 		displayWindow.addInlet< bool >( "EnableKeyboardInteraction", true );
@@ -177,7 +177,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		fullscreenMeshGenerator.setCategory( "rendering" );
 		fullscreenMeshGenerator.addInlet< unsigned int >( "MeshWidth", 2 );
 		fullscreenMeshGenerator.addInlet< unsigned int >( "MeshHeight", 2 );
-		fullscreenMeshGenerator.addInlet< unsigned int >( "PrimitiveType", 1 );
+		fullscreenMeshGenerator.addInlet< int >( "PrimitiveType", 0 );
 		fullscreenMeshGenerator.addOutlet< Buffer >( "VertexPositions" );
 		fullscreenMeshGenerator.addOutlet< Buffer >( "VertexTexcoords" );
 		fullscreenMeshGenerator.addOutlet< Buffer >( "Indices" );

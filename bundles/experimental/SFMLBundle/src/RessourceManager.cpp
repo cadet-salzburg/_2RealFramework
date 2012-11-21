@@ -36,7 +36,7 @@ namespace _2Real
 
 			for ( Handles::iterator it = mTexturesToDelete.begin(); it != mTexturesToDelete.end(); ++it )
 			{
-				std::cout << "ressource manager: deleting texture " << *it << std::endl;
+				//std::cout << "ressource manager: deleting texture " << *it << std::endl;
 				GLuint tmp = *it;
 				glDeleteTextures( 1, &tmp );
 			}
@@ -44,7 +44,7 @@ namespace _2Real
 
 			for ( Handles::iterator it = mBuffersToDelete.begin(); it != mBuffersToDelete.end(); ++it )
 			{
-				std::cout << "ressource manager: deleting buffer " << *it << std::endl;
+				//std::cout << "ressource manager: deleting buffer " << *it << std::endl;
 				GLuint tmp = *it;
 				glDeleteBuffers( 1, &tmp );
 			}
@@ -52,7 +52,7 @@ namespace _2Real
 
 			for ( Handles::iterator it = mProgramsToDelete.begin(); it != mProgramsToDelete.end(); ++it )
 			{
-				std::cout << "ressource manager: deleting program " << *it << std::endl;
+				//std::cout << "ressource manager: deleting program " << *it << std::endl;
 				GLuint tmp = *it;
 				glDeleteProgram( tmp );
 			}
@@ -60,7 +60,7 @@ namespace _2Real
 
 			for ( Handles::iterator it = mShadersToDelete.begin(); it != mShadersToDelete.end(); ++it )
 			{
-				std::cout << "ressource manager: deleting shader " << *it << std::endl;
+				//std::cout << "ressource manager: deleting shader " << *it << std::endl;
 				GLuint tmp = *it;
 				glDeleteShader( tmp );
 			}

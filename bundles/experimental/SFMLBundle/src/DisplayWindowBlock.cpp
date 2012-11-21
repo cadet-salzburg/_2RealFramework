@@ -2,6 +2,8 @@
 #include "RessourceManagerBlock.h"
 
 #include <iostream>
+#include <math.h>
+
 
 using namespace std;
 using namespace _2Real::bundle;
@@ -11,7 +13,8 @@ using namespace _2Real;
 DisplayWindowBlock::DisplayWindowBlock( ContextBlock &context ) :
 	Block(), mManager( dynamic_cast< RessourceManagerBlock & >( context ) ),
 	mWindow( nullptr ), mRenderer( nullptr ), mClock(), mCount( 0 ),
-	mTransformMatrix( Mat4::Identity() ), mViewMatrix( Mat4::Identity() ), mProjectionMatrix( Mat4::Identity() ), mAngle( 0.0f )
+	mTransformMatrix( Mat4::Identity() ), mViewMatrix( Mat4::Identity() ), mProjectionMatrix( Mat4::Identity() ),
+	mAngle( 0.0f ), mScale( 1.0f ), mEyePos( 0.0f, 0.0f, -5.0f ), mOrigin( 0.0f, 0.0f, 0.0f )
 	{}
 
 DisplayWindowBlock::~DisplayWindowBlock() {}
@@ -36,8 +39,8 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 		{
 			RenderSettings settings;// = mManager.getRenderSettings();
 			settings.title = "narf";//mWindowTitleIn.getReadableRef< string >();
-			settings.width = 640;//mWindowWidthIn.getReadableRef< unsigned int >();
-			settings.height = 480;//mWindowHeightIn.getReadableRef< unsigned int >();
+			settings.width = 800;//mWindowWidthIn.getReadableRef< unsigned int >();
+			settings.height = 600;//mWindowHeightIn.getReadableRef< unsigned int >();
 			settings.glMajor = 3;
 			settings.glMinor = 3;
 			settings.aaSamples = 16;
@@ -49,8 +52,18 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 			mRenderer = &( mWindow->getRenderer() );
 			mWindow->setActive( false );
 
-			RenderWindow::KeyCallback *keyPressedCb = new _2Real::MemberCallback< DisplayWindowBlock, RenderWindow::Key & >( *this, &DisplayWindowBlock::keyPressed );
+			RenderWindow::KeyCallback *keyPressedCb = new _2Real::MemberCallback< DisplayWindowBlock, RenderWindow::KeyEvent & >( *this, &DisplayWindowBlock::keyEvent );
 			mWindow->registerToKeyPressed( *keyPressedCb );
+
+			mArcball.setCenter( 400, 300 );
+			mArcball.setRadius( 400.f );
+			mArcball.setConstraintAxis( 0.f, 1.f, 0.f );
+			mArcball.enableConstraintAxis();
+			RenderWindow::MouseCallback *mouseEventCb = new _2Real::MemberCallback< DisplayWindowBlock, RenderWindow::MouseEvent & >( *this, &DisplayWindowBlock::mouseEvent );
+			mWindow->registerToMouseEvent( *mouseEventCb );
+
+			RenderWindow::ResizeCallback *resizeEventCb = new _2Real::MemberCallback< DisplayWindowBlock, RenderWindow::ResizeEvent & >( *this, &DisplayWindowBlock::resizeEvent );
+			mWindow->registerToResizeEvent( *resizeEventCb );
 
 			mClock.restart();
 			mCount = 0;
@@ -69,15 +82,69 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 	}
 }
 
-void DisplayWindowBlock::keyPressed( RenderWindow::Key &k )
+void DisplayWindowBlock::resizeEvent( RenderWindow::ResizeEvent &r )
 {
-	if ( k == RenderWindow::R )
+	mArcball.setCenter( 0.5f * r.width, 0.5f * r.height );
+	mArcball.setRadius( std::max< float >( 0.5f * r.width, 0.5f * r.height ) );
+}
+
+void DisplayWindowBlock::mouseEvent( RenderWindow::MouseEvent &e )
+{
+	switch ( e.action )
 	{
-		mAngle += M_PI/180.0f;
+	case RenderWindow::LEFT_BUTTON_PRESSED:
+		mArcball.mouseDown( e.x, e.y );
+		break;
+	case RenderWindow::RIGHT_BUTTON_PRESSED:
+		break;
+	case RenderWindow::MIDDLE_BUTTON_PRESSED:
+		break;
+	case RenderWindow::LEFT_BUTTON_RELEASED:
+		break;
+	case RenderWindow::RIGHT_BUTTON_RELEASED:
+		break;
+	case RenderWindow::MIDDLE_BUTTON_RELEASED:
+		break;
+	case RenderWindow::MOVED:
+		break;
+	case RenderWindow::LEFT_DRAG:
+		mArcball.mouseDrag( e.x, e.y );
+		mArcball.mouseDown( e.x, e.y );
+		break;
+	case RenderWindow::MIDDLE_DRAG:
+		break;
+	case RenderWindow::RIGHT_DRAG:
+		break;
+	case RenderWindow::WHEEL_UP:
+		mScale *= 2.0f;
+		break;
+	case RenderWindow::WHEEL_DOWN:
+		mScale /= 2.0f;
+		break;
+	default:
+		break;
 	}
-	else if ( k == RenderWindow::Q )
+}
+
+void DisplayWindowBlock::keyEvent( RenderWindow::KeyEvent &k )
+{
+	switch( k.key )
 	{
-		mAngle -= M_PI/180.0f;
+	case RenderWindow::X:
+		mArcball.setConstraintAxis( 1.f, 0.f, 0.f );
+		break;
+	case RenderWindow::Y:
+		mArcball.setConstraintAxis( 0.f, 1.f, 0.f );
+		break;
+	case RenderWindow::Z:
+		mArcball.setConstraintAxis( 0.f, 0.f, 1.f );
+		break;
+	case RenderWindow::C:
+		if ( k.wasPressed )
+			mArcball.enableConstraintAxis( !mArcball.isConstraintAxisEnabled() );
+		break;
+	default:
+		break;
 	}
 }
 
@@ -116,13 +183,32 @@ void DisplayWindowBlock::update()
 		mWindow->display();
 		mWindow->setActive( false );
 
-		mTransformMatrix << 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
+		mTransformMatrix << 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, mOrigin[0], mOrigin[1], mOrigin[2], 1.0;
 
-		Vec3 eye = Vec3( 0.0, 0.0, -2.0 );
 		Eigen::AngleAxis< float > rot( mAngle, Vec3( 0.0, 1.0, 0.0 ) );
-		Vec3 e = rot.toRotationMatrix()*eye;
-		mViewMatrix = Camera::lookAt( e, Vec3( 0.0, 0.0, 0.0 ), Vec3( 0.0, 1.0, 0.0 ) );
-		mProjectionMatrix = Camera::perspective( 45.f, 1.0f, 1.0f, 10.0f );
+
+		Eigen::Matrix4f rotationMatrix;
+		rotationMatrix << 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
+		Eigen::Matrix3f mat = rot.toRotationMatrix();
+
+		for ( unsigned int i=0; i<3; ++i )
+		{
+			for ( unsigned int j=0; j<3; ++j )
+			{
+				unsigned int m3 = i*3+j;
+				unsigned int m4 = i*4+j;
+
+				rotationMatrix( m4 ) = mat( m3 );
+			}
+		}
+
+		mTransformMatrix = mArcball.getRotation();
+
+		Mat4 scale;
+		scale << mScale, 0.f, 0.f, 0.f, 0.f, mScale, 0.f, 0.f, 0.f, 0.f, mScale, 0.f, 0.f, 0.f, 0.f, 1.f;
+		mTransformMatrix *= scale;
+		mViewMatrix = Camera::lookAt( mEyePos, Vec3( 0.0, 0.0, 0.0 ), Vec3( 0.0, 1.0, 0.0 ) );
+		mProjectionMatrix = Camera::perspective( 45.f, 1.0f, 1.0f, 20.0f );
 
 		stringstream modelStr;
 		modelStr << "matModel ( ";

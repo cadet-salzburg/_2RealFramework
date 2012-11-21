@@ -37,6 +37,9 @@
     <ClCompile Include="..\..\src\GeometryBlock.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Arcball.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -84,6 +87,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\GeometryBlock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Arcball.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

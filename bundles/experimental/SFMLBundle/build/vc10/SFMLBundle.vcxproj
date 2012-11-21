@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Arcball.cpp" />
     <ClCompile Include="..\..\src\BufferGeneratorBlock.cpp" />
     <ClCompile Include="..\..\src\Datatypes.cpp" />
     <ClCompile Include="..\..\src\DisplayWindowBlock.cpp" />
@@ -36,6 +37,7 @@
     <None Include="..\..\docs\todo.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\Arcball.h" />
     <ClInclude Include="..\..\src\BufferGeneratorBlock.h" />
     <ClInclude Include="..\..\src\Datatypes.h" />
     <ClInclude Include="..\..\src\DisplayWindowBlock.h" />

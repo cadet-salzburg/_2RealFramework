@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGl.h"
+#include "Arcball.h"
 #include "_2RealBlock.h"
 
 class RessourceManagerBlock;
@@ -17,7 +18,9 @@ public:
 	void update();
 	void setup( _2Real::bundle::BlockHandle &context );
 
-	void keyPressed( _2Real::gl::RenderWindow::Key &k );
+	void keyEvent( _2Real::gl::RenderWindow::KeyEvent &k );
+	void mouseEvent( _2Real::gl::RenderWindow::MouseEvent &ev );
+	void resizeEvent( _2Real::gl::RenderWindow::ResizeEvent &ev );
 
 private:
 
@@ -43,5 +46,10 @@ private:
 	_2Real::Mat4						mViewMatrix;
 	_2Real::Mat4						mProjectionMatrix;
 	float								mAngle;
+	float								mScale;
+	_2Real::Vec3						mEyePos;
+	_2Real::Vec3						mOrigin;
+
+	_2Real::gl::Arcball					mArcball;
 
 };

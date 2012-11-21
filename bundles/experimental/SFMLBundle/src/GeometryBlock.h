@@ -20,7 +20,7 @@ public:
 
 private:
 
-	void calcAttribs( const unsigned int w, const unsigned int h, const unsigned int p );
+	void calcAttribs( const unsigned int w, const unsigned int h, const int p );
 
 	RessourceManagerBlock				&mManager;
 	_2Real::gl::Context					*mContext;

@@ -77,9 +77,18 @@ namespace _2Real
 
 			static GLenum getGLPrimitiveType( const int code )
 			{
-				if ( code == TRIANGLES ) return GL_TRIANGLES;
-				else if ( code == LINES ) return GL_LINES;
-				else return GL_POINTS;
+				if ( code == TRIANGLES )
+				{
+					return GL_TRIANGLES;
+				}
+				else if ( code == LINES )
+				{
+					return GL_LINES;
+				}
+				else
+				{
+					return GL_POINTS;
+				}
 			}
 		};
 

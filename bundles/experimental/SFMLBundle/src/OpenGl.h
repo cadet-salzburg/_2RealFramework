@@ -45,24 +45,26 @@ namespace _2Real
 				float e2 = eye.dot( f );
 
 				Mat4 result;
-				result <<	s.x(),	u.x(),	-f.x(),	0, s.y(),	u.y(),	-f.y(),	0,
-							s.z(),	u.z(),	-f.z(),	0, -e0,	-e1,	e2,	1.0f;
+				result <<	s.x(),	u.x(),	f.x(),	0.f,
+							s.y(),	u.y(),	f.y(),	0.f,
+							s.z(),	u.z(),	f.z(),	0.f,
+							  -e0,	  -e1,	   e2,	1.f;
 
 				return result;
 			}
 
 			static Mat4 perspective( const float fov, const float a, const float zn, const float zf )
 			{
-				float f = 1.0f /( tan( fov*M_PI/360.f ) );
-				float s1 = ( zf+zn ) / ( zn-zf );
-				float s2 = ( 2*zf*zn ) / ( zn-zf );
+				float f = 1.0f / static_cast< float >( ( tan( fov*M_PI/360.f ) ) );
+				float s1 = -( zf+zn ) / ( zf-zn );
+				float s2 = -( 2*zf*zn ) / ( zf-zn );
 
 				Mat4 perspective;
 
-				perspective <<	f/a,	0.0f,	0.0f,	0.0f,
-								0.0f,	f,		0.0f,	0.0f,
+				perspective <<	f,		0.0f,	0.0f,	 0.0f,
+								0.0f,	f/a,	0.0f,	 0.0f,
 								0.0f,	0.0f,	s1,		-1.0f,
-								0.0f,	0.0f,	s2,		0.0f;
+								0.0f,	0.0f,	s2,		 0.0f;
 
 				return perspective;
 			}
@@ -296,15 +298,15 @@ namespace _2Real
 				glEnable( GL_BLEND );
 				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-				glPointSize( 10.0f );
+				glPointSize( 1.0f );
 				glEnable( GL_POINT_SMOOTH );
 				glHint( GL_POINT_SMOOTH_HINT, GL_NICEST );
 
-				glLineWidth( 3.0f );
+				glLineWidth( 1.0f );
 				glEnable( GL_LINE_SMOOTH );
 				glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
-				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+				//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 				if ( data.mProgram.get() == nullptr ) return;
 
@@ -387,10 +389,48 @@ namespace _2Real
 
 			enum Key
 			{
-				A,
-				R,
-				Q,
-				INVALID
+				A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P,
+				Q, R, S, T, U, V, W, X, Y, Z,
+				PLUS,
+				MINUS,
+				UNKNOWN
+			};
+
+			enum MouseAction
+			{
+				MOVED,
+				LEFT_BUTTON_PRESSED,
+				RIGHT_BUTTON_PRESSED,
+				MIDDLE_BUTTON_PRESSED,
+				LEFT_BUTTON_RELEASED,
+				RIGHT_BUTTON_RELEASED,
+				MIDDLE_BUTTON_RELEASED,
+				WHEEL_UP,
+				WHEEL_DOWN,
+				LEFT,
+				ENTERED,
+				LEFT_DRAG,
+				MIDDLE_DRAG,
+				RIGHT_DRAG
+			};
+
+			struct KeyEvent
+			{
+				Key				key;
+				bool			wasPressed;
+			};
+
+			struct MouseEvent
+			{
+				MouseAction		action;
+				unsigned int	x;
+				unsigned int	y;
+			};
+
+			struct ResizeEvent
+			{
+				unsigned int	width;
+				unsigned int	height;
 			};
 
 			RenderWindow( RenderSettings const& settings, RessourceManager const& mgr );
@@ -403,37 +443,76 @@ namespace _2Real
 
 			Renderer & getRenderer() { return mRenderer; }
 
-			typedef _2Real::AbstractCallback< Key& >	KeyCallback;
+			typedef _2Real::AbstractCallback< KeyEvent& >		KeyCallback;
+			typedef _2Real::AbstractCallback< MouseEvent& >		MouseCallback;
+			typedef _2Real::AbstractCallback< ResizeEvent& >	ResizeCallback;
 
 			void registerToKeyPressed( KeyCallback &cb )
 			{
 				mKeyEvent.addListener( cb );
 			}
 
+			void registerToMouseEvent( MouseCallback &cb )
+			{
+				mMouseEvent.addListener( cb );
+			}
+
+			void registerToResizeEvent( ResizeCallback &cb )
+			{
+				mResizeEvent.addListener( cb );
+			}
+
 			static Key getKey( sf::Event const& ev )
 			{
 				switch( ev.key.code )
 				{
-				case sf::Keyboard::R:
-					return R;
-				case sf::Keyboard::Q:
-					return Q;
 				case sf::Keyboard::A:
 					return A;
+				case sf::Keyboard::C:
+					return C;
+				case sf::Keyboard::D:
+					return D;
+				case sf::Keyboard::E:
+					return E;
+				case sf::Keyboard::F:
+					return F;
+				case sf::Keyboard::Q:
+					return Q;
+				case sf::Keyboard::R:
+					return R;
+				case sf::Keyboard::S:
+					return S;
+				case sf::Keyboard::W:
+					return W;
+				case sf::Keyboard::X:
+					return X;
+				case sf::Keyboard::Y:
+					return Y;
+				case sf::Keyboard::Z:
+					return Z;
+				case sf::Keyboard::Add:
+					return PLUS;
+				case sf::Keyboard::Subtract:
+					return MINUS;
 				default:
-					return INVALID;
+					return UNKNOWN;
 				}
 			}
 
 		private:
 
-			sf::Window				mSfWindow;
-			sf::ContextSettings		mSfSettings;
-			Renderer				mRenderer;
-			bool					mIsMouseEnabled;
-			bool					mIsKeyboardEnabled;
+			sf::Window								mSfWindow;
+			sf::ContextSettings						mSfSettings;
+			Renderer								mRenderer;
+			bool									mIsMouseEnabled;
+			bool									mIsKeyboardEnabled;
 
-			_2Real::CallbackEvent< Key& >	mKeyEvent;
+			_2Real::CallbackEvent< KeyEvent& >		mKeyEvent;
+			_2Real::CallbackEvent< MouseEvent& >	mMouseEvent;
+			_2Real::CallbackEvent< ResizeEvent& >	mResizeEvent;
+			bool									mIsMiddleMouseButtonDown;
+			bool									mIsRightMouseButtonDown;
+			bool									mIsLeftMouseButtonDown;
 
 		};
 	}
