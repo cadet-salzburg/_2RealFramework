@@ -23,15 +23,16 @@ int main( int argc, char *argv[] )
 
 		BundleHandle sfmlBundle = engine.loadBundle( "SFMLBundle" );
 
-		engine.loadConfig( "modelimport.xml" );
+		//engine.loadConfig( "modelimport.xml" );
 
-		/*string filePath = "D:\\opengl\\data\\Bunny.ply";
+		string filePath = "D:\\opengl\\data\\bunny.ply";
 
-		string vertexSrcBunny = "model.vert";
-		string fragmentSrcBunny = "model.frag";
+		string vertexSrcBunny = "modelshaded.vert";
+		string fragmentSrcBunny = "modelshaded.frag";
 
 		string attribIndices = "indices ()";
 		string attribPosition = "position ( 3 0 )";
+		string attribNormal = "normal ( 3 0 )";
 
 		BlockHandle bunnyImporter = sfmlBundle.createBlockInstance( "ModelImporterBlock" );
 		bunnyImporter.setup();
@@ -42,9 +43,9 @@ int main( int argc, char *argv[] )
 		BlockHandle bunnyCombiner = sfmlBundle.createBlockInstance( "RenderDataCombinerBlock" );
 		bunnyCombiner.setup();
 		bunnyCombiner.setUpdateRate( 30.0 );
-		bunnyCombiner.getInletHandle( "VertexShaderSource" ).setValueToString( vertexSrcBunny );
-		bunnyCombiner.getInletHandle( "FragmentShaderSource" ).setValueToString( fragmentSrcBunny );
 		bunnyCombiner.start();
+		bunnyCombiner.getInletHandle( "VertexShaderSource" ).setValue( vertexSrcBunny );
+		bunnyCombiner.getInletHandle( "FragmentShaderSource" ).setValue( fragmentSrcBunny );
 
 		BlockHandle bunnyDisplay = sfmlBundle.createBlockInstance( "DisplayWindowBlock" );
 		bunnyDisplay.setup();
@@ -56,12 +57,16 @@ int main( int argc, char *argv[] )
 		bunnyBuffers[ 0 ].link( bunnyImporter.getOutletHandle( "Indices" ) );
 		bunnyBuffers.add();
 		bunnyBuffers[ 1 ].link( bunnyImporter.getOutletHandle( "VertexPositions" ) );
+		bunnyBuffers.add();
+		bunnyBuffers[ 2 ].link( bunnyImporter.getOutletHandle( "VertexNormals" ) );
 
 		InletHandle bunnyAttribs = bunnyCombiner.getInletHandle( "AttributeDescriptions" );
 		bunnyAttribs.add();
 		bunnyAttribs[ 0 ].setValue( attribIndices );
 		bunnyAttribs.add();
 		bunnyAttribs[ 1 ].setValue( attribPosition );
+		bunnyAttribs.add();
+		bunnyAttribs[ 2 ].setValue( attribNormal );
 
 		InletHandle bunnyUniforms = bunnyCombiner.getInletHandle( "UniformValues" );
 		InletHandle bunnyMatModel = bunnyUniforms.add();
@@ -73,7 +78,7 @@ int main( int argc, char *argv[] )
 
 		InletHandle bunnyData = bunnyDisplay.getInletHandle( "RenderData" );
 		InletHandle bunnyData0 = bunnyData.add();
-		bunnyData0.link( bunnyCombiner.getOutletHandle( "RenderData" ) );*/
+		bunnyData0.link( bunnyCombiner.getOutletHandle( "RenderData" ) );
 
 		while( 1 )
 		{

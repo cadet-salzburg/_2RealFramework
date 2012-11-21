@@ -50,17 +50,14 @@ void ModelLoaderBlock::update()
 
 			string file = mFilePathIn.getReadableRef< string >();
 
-			//mModelLoader.SetPropertyInteger( AI_CONFIG_PP_PTV_NORMALIZE , 1 );
 			mModelLoader.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE );
 			aiScene const* const scene = mModelLoader.ReadFile( file, /*aiProcess_PreTransformVertices | */aiProcess_JoinIdenticalVertices | aiProcess_FindDegenerates | aiProcess_SortByPType | aiProcess_Triangulate | aiProcess_RemoveComponent | aiProcess_ValidateDataStructure );
 
-			if ( scene == nullptr )		// d'oh
-			{
-				cout << "file could not be loaded" << endl;
-			}
-			else						// yay
+			if ( scene == nullptr ) cout << "file could not be loaded" << endl;
+			else
 			{
 				Buffer &vertexPositions = mVertexPositionsOut.getWriteableRef< Buffer >();
+				Buffer &vertexNormals = mVertexNormalsOut.getWriteableRef< Buffer >();
 				Buffer &meshIndices = mIndicesOut.getWriteableRef< Buffer >();
 
 				aiMesh **meshes = scene->mMeshes;
@@ -92,10 +89,19 @@ void ModelLoaderBlock::update()
 					std::vector< float > vertices;
 					vertices.assign( verticesAsFloat, verticesAsFloat + elementCount );
 
-					BufferObj *b = mContext->createBufferObj();
-					mContext->updateBuffer( b, vertices, GL_STREAM_DRAW );
-					Buffer vertexBuffer( b );
+					float *normalsAsFloat = reinterpret_cast< float * >( mesh->mNormals );
+					std::vector< float > normals;
+					normals.assign( normalsAsFloat, normalsAsFloat + elementCount );
+
+					BufferObj *v = mContext->createBufferObj();
+					mContext->updateBuffer( v, vertices, GL_STREAM_DRAW );
+					Buffer vertexBuffer( v );
 					vertexPositions = vertexBuffer;
+
+					BufferObj *n = mContext->createBufferObj();
+					mContext->updateBuffer( n, normals, GL_STREAM_DRAW );
+					Buffer normalBuffer( n );
+					vertexNormals = normalBuffer;
 
 					vector< unsigned int > indices( indexCount, 0 );
 					vector< unsigned int >::iterator currIndex = indices.begin();
