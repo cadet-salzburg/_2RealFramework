@@ -126,7 +126,7 @@ void RenderDataCombinerBlock::update()
 					for ( unsigned int i=0; i<16; ++i ) sstr >> mat( i );
 					mContext->setUniformMat4( u.mLocation, mat );
 
-					std::cout << "set uniform of type mat4 to" << endl << mat << std::endl;
+					std::cout << "set uniform of type mat4 to " << mat << std::endl;
 				}
 				else if ( u.mType == GL_FLOAT_MAT3 )
 				{
