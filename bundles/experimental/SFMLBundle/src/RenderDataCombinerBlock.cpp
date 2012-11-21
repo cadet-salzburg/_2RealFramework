@@ -35,6 +35,15 @@ void RenderDataCombinerBlock::setup( BlockHandle &block )
 			mUniformsMultiin = block.getInletHandle( "UniformValues" );
 			mAttributesMultiin = block.getInletHandle( "AttributeDescriptions" );
 			mPrimitiveTypeIn = block.getInletHandle( "PrimitiveType" );
+
+			std::string vertexSrc = "version 330 core";
+			std::string fragmentSrc = "version 330 core";
+
+			mProgramObj = mContext->createProgramObj();
+			if ( !vertexSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_VERTEX_SHADER, vertexSrc ) );
+			if ( !fragmentSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_FRAGMENT_SHADER, fragmentSrc ) );
+			mContext->linkProgram( mProgramObj );
+			mProgram.reset( mProgramObj );
 		}
 	}
 	catch( Exception & e )
