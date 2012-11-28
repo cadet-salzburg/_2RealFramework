@@ -88,42 +88,42 @@ namespace _2Real
 
 		RessourceManager::~RessourceManager()
 		{
-			std::cout << "ressource manager: dtor" << std::endl;
+			//std::cout << "ressource manager: dtor" << std::endl;
 		}
 
 		void RessourceManager::destroyTexture( const GLuint handle ) const
 		{
-			std::cout << "ressource manager: destroy texture" << std::endl;
+			//std::cout << "ressource manager: destroy texture" << std::endl;
 			Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 			if ( !mIsEnabled ) return;
-			std::cout << "ressource manager: stored texture handle" << std::endl;
+			//std::cout << "ressource manager: stored texture handle" << std::endl;
 			mTexturesToDelete.push_back( handle );
 		}
 
 		void RessourceManager::destroyBuffer( const GLuint handle ) const
 		{
-			std::cout << "ressource manager: destroy buffer" << std::endl;
+			//std::cout << "ressource manager: destroy buffer" << std::endl;
 			Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 			if ( !mIsEnabled ) return;
-			std::cout << "ressource manager: stored buffer handle" << std::endl;
+			//std::cout << "ressource manager: stored buffer handle" << std::endl;
 			mBuffersToDelete.push_back( handle );
 		}
 
 		void RessourceManager::destroyProgram( const GLuint handle ) const
 		{
-			std::cout << "ressource manager: destroy program" << std::endl;
+			//std::cout << "ressource manager: destroy program" << std::endl;
 			Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 			if ( !mIsEnabled ) return;
-			std::cout << "ressource manager: stored program handle" << std::endl;
+			//std::cout << "ressource manager: stored program handle" << std::endl;
 			mProgramsToDelete.push_back( handle );
 		}
 
 		void RessourceManager::destroyShader( const GLuint handle ) const
 		{
-			std::cout << "ressource manager: destroy shader" << std::endl;
+			//std::cout << "ressource manager: destroy shader" << std::endl;
 			Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 			if ( !mIsEnabled ) return;
-			std::cout << "ressource manager: stored shader handle" << std::endl;
+			//std::cout << "ressource manager: stored shader handle" << std::endl;
 			mShadersToDelete.push_back( handle );
 		}
 	}

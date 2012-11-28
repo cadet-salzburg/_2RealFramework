@@ -330,8 +330,8 @@ namespace _2Real
 				data.mProgram->mLock.readLock();
 				glUseProgram( data.mProgram->mHandle );
 
-				std::cout << "rendering; nr of attrs: " << data.mAttributes.size() << std::endl;
-				std::cout << "rendering; nr of textures: " << data.mTextures.size() << std::endl;
+				//std::cout << "rendering; nr of attrs: " << data.mAttributes.size() << std::endl;
+				//std::cout << "rendering; nr of textures: " << data.mTextures.size() << std::endl;
 
 				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
 				{

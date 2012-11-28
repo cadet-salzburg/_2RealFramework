@@ -109,7 +109,7 @@ void RessourceManagerBlock::shutdown()
 
 		delete mManager;
 
-		std::cout << "bundle context shutdown - deleted ressource manager" << std::endl;
+		//std::cout << "bundle context shutdown - deleted ressource manager" << std::endl;
 	}
 	catch( Exception & e )
 	{
