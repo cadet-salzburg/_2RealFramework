@@ -55,7 +55,7 @@ void DisplayWindowBlock::setup( BlockHandle &block )
 		if ( mWindow == nullptr )
 		{
 			RenderSettings settings;// = mManager.getRenderSettings();
-			settings.title = "narf";//mWindowTitleIn.getReadableRef< string >();
+			settings.title = "display window";//mWindowTitleIn.getReadableRef< string >();
 			settings.width = 800;//mWindowWidthIn.getReadableRef< unsigned int >();
 			settings.height = 600;//mWindowHeightIn.getReadableRef< unsigned int >();
 			settings.glMajor = 3;
@@ -172,20 +172,20 @@ void DisplayWindowBlock::update()
 		mWindow->setActive( true );
 		mWindow->processEvents();
 
-		++mCount;
-		if ( mClock.getElapsedTime().asMicroseconds() > 1000000 )
-		{
-			double microsPerUpdate = mClock.getElapsedTime().asMicroseconds() / mCount;
-			double updatesPerSecond = 1000000 / microsPerUpdate;
+		//++mCount;
+		//if ( mClock.getElapsedTime().asMicroseconds() > 1000000 )
+		//{
+		//	double microsPerUpdate = mClock.getElapsedTime().asMicroseconds() / mCount;
+		//	double updatesPerSecond = 1000000 / microsPerUpdate + 20.0;
 
 			std::ostringstream title;
 			title << mWindowTitleIn.getReadableRef< string >();
-			title << " " << updatesPerSecond << " fps";
+			//title << " " << updatesPerSecond << " fps";
 			mWindow->setTitle( title.str() );
 
-			mClock.restart();
-			mCount = 0;
-		}
+		//	mClock.restart();
+		//	mCount = 0;
+		//}
 
 		Vec4 const& bgColor = mClearColorIn.getReadableRef< Vec4 >();
 		mRenderer->clear( bgColor );
