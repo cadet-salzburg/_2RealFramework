@@ -1,6 +1,23 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
 #include "_2RealBundle.h"
 #include "OcvGaussianBlurBlock.h"
-//#include "OcvSobelBlock.h"
+#include "OcvSobelBlock.h"
 #include "ImageHelpers.h"
 #include <sstream>
 #include <iostream>
@@ -52,7 +69,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		//eq.addInlet< Image >( "ImageData", checkerImg );
 		//eq.addOutlet< Image >( "ImageData" );
 
-		////// either uchar in -> ushort out or float in - float out
+		//// either uchar in -> ushort out or float in - float out
 		//BlockMetainfo sobel = info.exportBlock< OcvSobelBlock, WithoutContext >( "OcvSobelBlock" );
 		//sobel.setDescription( "applies sobel filter to input image" );
 		//sobel.setCategory( "image filter" );
