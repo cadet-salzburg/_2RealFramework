@@ -190,9 +190,13 @@ void DisplayWindowBlock::update()
 		Vec4 const& bgColor = mClearColorIn.getReadableRef< Vec4 >();
 		mRenderer->clear( bgColor );
 
+		mRenderer->clear( _2Real::Vec4( 1.f, 0.f, 0.f, 1.f ) );
+
 		unsigned int renderDataCount = mRenderDataMultiin.getSize();
 		for ( unsigned int i=0; i<renderDataCount; ++i )
 		{
+			//std::cout << "RENDERING: " << i << std::endl;
+
 			RenderData const& data = mRenderDataMultiin[ i ].getReadableRef< RenderData >();
 			mRenderer->render( data );
 		}

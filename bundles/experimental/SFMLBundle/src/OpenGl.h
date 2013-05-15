@@ -323,7 +323,7 @@ namespace _2Real
 				glEnable( GL_LINE_SMOOTH );
 				glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
-				//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 				if ( data.mProgram.get() == nullptr ) return;
 
@@ -331,16 +331,18 @@ namespace _2Real
 				glUseProgram( data.mProgram->mHandle );
 
 				//std::cout << "rendering; nr of attrs: " << data.mAttributes.size() << std::endl;
-				//std::cout << "rendering; nr of textures: " << data.mTextures.size() << std::endl;
 
 				for ( RenderData::Attributes::const_iterator it = data.mAttributes.begin(); it != data.mAttributes.end(); ++it )
 				{
 					RenderData::VertexAttribute attrib = it->second;
 					attrib.buffer->mLock.readLock();
 					glBindBuffer( GL_ARRAY_BUFFER, attrib.buffer->mHandle );
+					//std::cout << "attrib index" << it->first << " size " << attrib.size << " stride " << attrib.stride << std::endl;
 					glVertexAttribPointer( it->first, attrib.size, attrib.buffer->mDatatype, attrib.normalized, attrib.stride, nullptr );
 					glEnableVertexAttribArray( it->first );
 				}
+
+				//std::cout << "rendering; nr of textures: " << data.mTextures.size() << std::endl;
 
 				for ( RenderData::Textures::const_iterator it = data.mTextures.begin(); it != data.mTextures.end(); ++it )
 				{
@@ -354,8 +356,10 @@ namespace _2Real
 				{
 					//std::cout << "rendering; nr of indices: " << data.mElementCount << std::endl;
 					data.mIndices->mLock.readLock();
+
+					//std::cout << data.mIndices->mHandle << std::endl;
 					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, data.mIndices->mHandle );
-					glDrawElements( data.mPrimitiveType, data.mElementCount, data.mIndices->mDatatype, 0 );
+					glDrawElements( GL_TRIANGLES, data.mElementCount, GL_UNSIGNED_INT, 0 );
 					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 					data.mIndices->mLock.unlock();
 				}

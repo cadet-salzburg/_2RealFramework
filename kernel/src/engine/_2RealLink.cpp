@@ -40,6 +40,15 @@ namespace _2Real
 		else return new IOLink( inlet, outlet );
 	}
 
+	IOLink * IOLink::linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet )
+	{
+		return new IOLink( inlet, outlet );
+	}
+
+	IOLink::IOLink() : m_InletIO( nullptr ), m_OutletIO( nullptr )
+	{
+	}
+
 	bool IOLink::canAutoConvert( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		const Type tSrc = outlet.m_Outlet->getType();
@@ -76,33 +85,48 @@ namespace _2Real
 	}
 
 	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet ) :
-		m_InletIO( inlet ),
-		m_OutletIO( outlet )
+		m_InletIO( &inlet ),
+		m_OutletIO( &outlet )
 	{
 		// no more typechecking here
 	}
 
 	BasicInletIO const& IOLink::getInletIO() const
 	{
-		return m_InletIO;
+		return *m_InletIO;
 	}
 
 	OutletIO const& IOLink::getOutletIO() const
 	{
-		return m_OutletIO;
+		return *m_OutletIO;
+	}
+
+	BasicInletIO& IOLink::getInletIO()
+	{
+		return *m_InletIO;
+	}
+
+	OutletIO& IOLink::getOutletIO()
+	{
+		return *m_OutletIO;
+	}
+
+	bool IOLink::isValid() const
+	{
+		return ( m_InletIO && m_OutletIO );
 	}
 
 	bool IOLink::operator<( IOLink const& other )
 	{
-		if ( m_InletIO.getInletPtr() < other.m_InletIO.getInletPtr() ) return true;
-		if ( other.m_InletIO.getInletPtr() < m_InletIO.getInletPtr() ) return false;
-		if ( m_OutletIO.m_Outlet < other.m_OutletIO.m_Outlet ) return true;
+		if ( m_InletIO->getInletPtr() < other.m_InletIO->getInletPtr() ) return true;
+		if ( other.m_InletIO->getInletPtr() < m_InletIO->getInletPtr() ) return false;
+		if ( m_OutletIO->m_Outlet < other.m_OutletIO->m_Outlet ) return true;
 		return false;
 	}
 
 	bool IOLink::isInletInvolved( BasicInletIO const& i ) const
 	{
-		if ( &m_InletIO == &i )
+		if ( m_InletIO == &i )
 		{
 			return true;
 		}
@@ -111,11 +135,11 @@ namespace _2Real
 
 	bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
 	{
-		if ( m_InletIO.belongsToBlock( &b ) )
+		if ( m_InletIO->belongsToBlock( &b ) )
 		{
 			return true;
 		}
-		else if ( &m_OutletIO.m_Outlet->getOwningUberBlock() == &b )
+		else if ( &m_OutletIO->m_Outlet->getOwningUberBlock() == &b )
 		{
 			return true;
 		}
@@ -125,14 +149,14 @@ namespace _2Real
 
 	void IOLink::activate() 
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO.getBuffer(), &BasicInletBuffer::receiveData );
-		m_OutletIO.m_InletEvent->addListener( *cb );
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
+		m_OutletIO->m_InletEvent->addListener( *cb );
 	}
 
 	void IOLink::deactivate()
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO.getBuffer(), &BasicInletBuffer::receiveData );
-		m_OutletIO.m_InletEvent->removeListener( *cb );
+		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
+		m_OutletIO->m_InletEvent->removeListener( *cb );
 	}
 
 }

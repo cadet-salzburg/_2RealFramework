@@ -199,7 +199,28 @@ namespace _2Real
 		m_BundleManager->setBaseDirectory( directory );
 	}
 
-	app::BundleHandle & EngineImpl::loadLibrary( string const& libraryPath )
+	//app::BundleHandle & EngineImpl::loadLibrary( string const& libraryPath )
+	//{
+	//	string path = libraryPath;
+
+	//	if ( path.find( shared_library_suffix ) == string::npos )
+	//	{
+	//		path.append( shared_library_suffix );
+	//	}
+	//	return m_BundleManager->loadLibrary( path ).getHandle();
+	//}
+
+	//app::BundleHandle & EngineImpl::findBundleByName( string const& name ) const
+	//{
+	//	return m_BundleManager->findBundleByName( name ).getHandle();
+	//}
+
+	//app::BundleHandle & EngineImpl::findBundleByPath( string const& libraryPath ) const
+	//{
+	//	return m_BundleManager->findBundleByPath( libraryPath ).getHandle();
+	//}
+
+	Bundle & EngineImpl::loadLibrary( string const& libraryPath )
 	{
 		string path = libraryPath;
 
@@ -207,17 +228,17 @@ namespace _2Real
 		{
 			path.append( shared_library_suffix );
 		}
-		return m_BundleManager->loadLibrary( path ).getHandle();
+		return m_BundleManager->loadLibrary( path );
 	}
 
-	app::BundleHandle & EngineImpl::findBundleByName( string const& name ) const
+	Bundle & EngineImpl::findBundleByName( string const& name ) const
 	{
-		return m_BundleManager->findBundleByName( name ).getHandle();
+		return m_BundleManager->findBundleByName( name );
 	}
 
-	app::BundleHandle & EngineImpl::findBundleByPath( string const& libraryPath ) const
+	Bundle & EngineImpl::findBundleByPath( string const& libraryPath ) const
 	{
-		return m_BundleManager->findBundleByPath( libraryPath ).getHandle();
+		return m_BundleManager->findBundleByPath( libraryPath );
 	}
 
 	void EngineImpl::registerToException( app::BlockExcCallback &callback )
@@ -268,6 +289,11 @@ namespace _2Real
 		return result;
 	}
 
+	EngineImpl::Links& EngineImpl::getCurrentLinks()
+	{
+		return m_Links;
+	}
+
 	EngineImpl::Bundles const& EngineImpl::getCurrentBundles() const
 	{
 		return m_BundleManager->getBundles();
@@ -287,9 +313,11 @@ namespace _2Real
 		}
 	}
 
-	bool EngineImpl::createLink( BasicInletIO &inlet, OutletIO &outlet )
+	IOLink EngineImpl::createLink( BasicInletIO &inlet, OutletIO &outlet )
 	{
+		/* links are stored in a set, so I have to create a dummy link... sigh */
 		IOLink *link = IOLink::link( inlet, outlet );
+
 		if ( link != nullptr )
 		{
 			LinkIterator it = m_Links.find( link );
@@ -297,72 +325,76 @@ namespace _2Real
 			{
 				link->activate();
 				m_Links.insert( link );
+				return *link;
 			}
 			else
 			{
 				delete link;
+				return ( **it );
 			}
-
-			return true;
 		}
 		else
 		{
-			return false;
+			return IOLink();
 		}
 	}
 
-	bool EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
+	std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
 	{
 		if ( IOLink::canAutoConvert( inlet, outlet ) )
 		{
-			IOLink *link = new IOLink( inlet, outlet );
+			IOLink *link = IOLink::linkWithAutoConversion( inlet, outlet );
 			LinkIterator it = m_Links.find( link );
 			if ( it == m_Links.end() )
 			{
 				link->activate();
 				m_Links.insert( link );
+				return std::make_pair( *link, IOLink() );
 			}
 			else
 			{
 				delete link;
+				return std::make_pair( ( **it ), IOLink() );
 			}
-
-			return true;
 		}
 
-		const string conversionName = IOLink::findConversion( inlet, outlet );
-		Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
+		//const string conversionName = IOLink::findConversion( inlet, outlet );
+		//Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
 
-		if ( bundle.canCreate( conversionName ) )
-		{
-			app::BlockHandle &block = bundle.createBlockInstance( conversionName );
-			block.setUpdateRate( 0. );
-			app::InletHandle &in = block.getInletHandle( "src" );
-			in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
-			app::OutletHandle &out = block.getOutletHandle( "dst" );
+		//if ( bundle.canCreate( conversionName ) )
+		//{
+		//	app::BlockHandle &block = bundle.createBlockInstance( conversionName );
+		//	block.setUpdateRate( 0. );
+		//	app::InletHandle &in = block.getInletHandle( "src" );
+		//	in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+		//	app::OutletHandle &out = block.getOutletHandle( "dst" );
 
-			in.link( outlet.getHandle() );
-			out.link( inlet.getHandle() );
+		//	in.link( outlet.getHandle() );
+		//	out.link( inlet.getHandle() );
 
-			block.setup();
-			block.start();
-			return true;
-		}
+		//	block.setup();
+		//	block.start();
+		//	return true;
+		//}
 
-		return false;
+		return std::make_pair( IOLink(), IOLink() );
 	}
 
 	void EngineImpl::destroyLink( BasicInletIO &inlet, OutletIO &outlet )
 	{
-		IOLink *link = new IOLink( inlet, outlet );
-		LinkIterator it = m_Links.find( link );
-		if ( it != m_Links.end() )
-		{
-			link->deactivate();
-			delete *it;
-			m_Links.erase( it );
-		}
-		delete link;
+		//IOLink *link = new IOLink( inlet, outlet );
+		//LinkIterator it = m_Links.find( link );
+		//if ( it != m_Links.end() )
+		//{
+		//	link->deactivate();
+		//	delete *it;
+		//	m_Links.erase( it );
+		//}
+		//delete link;
+	}
+
+	void EngineImpl::getCurrentSystemState( app::SystemState &state ) const
+	{
 	}
 
 }

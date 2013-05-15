@@ -24,6 +24,7 @@
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealAbstractIOManager.h"
+#include "engine/_2RealFunctionBlock.h"
 
 #define checkValidity( obj )\
 	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );
@@ -121,13 +122,14 @@ namespace _2Real
 		bool OutletHandle::link( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
+			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO ).isValid();;
 		}
 
 		bool OutletHandle::linkWithConversion( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			return EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
+			std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
+			return links.first.isValid();
 		}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
@@ -183,6 +185,22 @@ namespace _2Real
 		void OutletHandle::invalidate()
 		{
 			m_OutletIO = nullptr;
+		}
+
+		app::BlockHandle OutletHandle::getOwningBlock()
+		{
+			checkValidity( m_OutletIO );
+
+			AbstractUberBlock *b = &( m_OutletIO->m_Outlet->getOwningUberBlock() );
+			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< BlockHandle > * >( b );
+			if ( nullptr != f )
+			{
+				return f->getHandle();
+			}
+			else
+			{
+				return app::BlockHandle();
+			}
 		}
 	}
 }

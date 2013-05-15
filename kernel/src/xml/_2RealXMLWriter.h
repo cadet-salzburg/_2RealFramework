@@ -27,89 +27,118 @@
 
 namespace _2Real
 {
+
 	namespace app
 	{
-		class Engine;
-	}
+		class BlockHandle;
+	};
 
-	namespace xml
+	class Bundle;
+	template< typename T >
+	class FunctionBlock;
+	class AbstractInletIO;
+	class BasicInletIO;
+
+	class Configuration
 	{
+
+	public:
+
 		struct BundleConfig
 		{
-			std::string						bundleName;
-			std::string						bundlePath;
+			std::string								bundleId;
+			Bundle									*bundle;
 		};
 
 		struct BasicInletConfig
 		{
-			std::string						inletId;
-			std::string						bufferSize;
-			std::string						updatePolicy;
-			std::string						initialValue;
-			std::string						bufferedValue;
+			std::string								inletId;
+			std::string								bufferSize;
+			std::string								updatePolicy;
+			std::string								initialValue;
+			std::string								bufferedValue;
+			BasicInletIO							*inlet;
 		};
 
 		struct InletConfig
 		{
-			std::string						inletId;
-			bool							isMulti;
-			std::vector< BasicInletConfig >	basicInlets;
+			std::string								inletId;
+			std::string								isMultiinlet;
+			std::vector< BasicInletConfig >			basicInlets;
+			AbstractInletIO							*inlet;
 		};
 
 		struct BlockConfig
 		{
-			std::string					bundleId;
-			std::string					blockId;
-			std::string					blockInstanceId;
-			std::string					fps;
-			std::vector< InletConfig >	inlets;
-			bool						isRunning;
+			std::string								bundleId;
+			std::string								blockId;
+			std::string								blockInstanceId;
+			std::string								fps;
+			std::string								isRunning;
+			std::map< std::string, InletConfig >	inlets;
+			FunctionBlock< app::BlockHandle >		*block;
 		};
 
 		struct ParamConfig
 		{
 			std::string					blockInstanceId;
 			std::string					paramId;
-		};
 
-		struct InletHandleId
-		{
-			std::string					blockInstanceId;
-			std::string					inletId;
-
-			bool operator<( InletHandleId const& other ) const
+			bool operator<( ParamConfig const& other ) const
 			{
 				if ( blockInstanceId < other.blockInstanceId ) return true;
 				if ( other.blockInstanceId < blockInstanceId ) return false;
-				if ( inletId < other.inletId ) return true;
+				if ( paramId < other.paramId ) return true;
 				return false;
 			}
 		};
 
-		class XMLConfig
-		{
+		typedef std::map< std::string, BundleConfig >		BundleConfigurations;
+		typedef std::map< std::string, BlockConfig >		BlockConfigurations;
+		typedef std::multimap< ParamConfig, ParamConfig >	LinkConfigurations;
 
-		public:
+		Configuration();
 
-			XMLConfig();
-			void addBundle( BundleConfig const& bundle );
-			void addBlockInstance( BlockConfig const& block );
-			void addLink( ParamConfig const& inlet, ParamConfig const& outlet );
-			void writeTo( std::string const& filePath ) const;
+		BundleConfigurations &bundleConfigs() { return mBundleConfigurations; }
+		BlockConfigurations &blockConfigs() { return mBlockConfigurations; }
+		LinkConfigurations &linkConfigs() { return mLinkConfigurations; }
 
-			static void loadConfig( app::Engine &engine, std::string const& filePath );
-			static std::list< std::string > tryConfig( app::Engine &engine, std::string const& filePath );
+		//void addBundle( BundleConfig const& bundle );
+		//void addBlockInstance( BlockConfig const& block );
+		//void addLink( ParamConfig const& inlet, ParamConfig const& outlet );
+		//void writeTo( std::string const& filePath ) const;
+		//static void loadConfig( app::Engine &engine, std::string const& filePath );
+		//static std::list< std::string > tryConfig( app::Engine &engine, std::string const& filePath );
+		//static app::SystemState * loadConfiguration( std::string const& dataSource, std::map< std::string, app::BundleHandle > &bundles, const bool startAll = true );
 
-		private:
+		static std::string trimmedValue( std::string const& name, Poco::XML::Node &node );
 
-			static Poco::XML::Element * getChildElementByName( std::string const& name, Poco::XML::Node &node );
+		static double toDouble( std::string const& str );
+		static float toFloat( std::string const& str );
+		static unsigned int toUnsignedInt( std::string const& str );
+		static bool toBool( std::string const& str );
 
-			Poco::AutoPtr< Poco::XML::Document >	m_Document;
-			Poco::AutoPtr< Poco::XML::Element >		m_Root;
-			Poco::AutoPtr< Poco::XML::Element >		m_Bundles;
-			Poco::AutoPtr< Poco::XML::Element >		m_Blocks;
-			Poco::AutoPtr< Poco::XML::Element >		m_Links;
+		static std::string toString( const bool b );
+		static std::string toString( const unsigned int u );
+		static std::string toString( const float f );
+		static std::string toString( const double d );
 
-		};
-	}
+		friend std::ostream& operator<<( std::ostream &out, Configuration const& config );
+		friend std::istream& operator>>( std::istream &in, Configuration &config );
+
+	private:
+
+		static Poco::XML::Element * getChildElementByName( std::string const& name, Poco::XML::Node &node );
+
+		BlockConfigurations						mBlockConfigurations;
+		LinkConfigurations						mLinkConfigurations;
+		BundleConfigurations					mBundleConfigurations;
+
+		Poco::AutoPtr< Poco::XML::Document >	mDocument;
+		Poco::AutoPtr< Poco::XML::Element >		mRoot;
+		Poco::AutoPtr< Poco::XML::Element >		mBundles;
+		Poco::AutoPtr< Poco::XML::Element >		mBlocks;
+		Poco::AutoPtr< Poco::XML::Element >		mLinks;
+
+	};
 }

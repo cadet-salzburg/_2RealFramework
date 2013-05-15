@@ -66,8 +66,8 @@ namespace _2Real
 		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
 		void							addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
 
-		app::InletHandle &				getAppInletHandle( std::string const& name ) const;
-		app::OutletHandle &				getAppOutletHandle( std::string const& name ) const;
+		app::InletHandle &				getAppInletHandle( std::string const& name );
+		app::OutletHandle &				getAppOutletHandle( std::string const& name );
 		bundle::InletHandle &			getBundleInletHandle( std::string const& name ) const;
 		bundle::OutletHandle &			getBundleOutletHandle( std::string const& name ) const;
 
@@ -81,6 +81,13 @@ namespace _2Real
 		void							updateInletBuffers( const bool enableTriggering );
 		void							clearInletBuffers();
 
+		/* moved to public 13/05/2013 - using this function might cause sync issues?? */
+
+		AbstractInletIO &				getInletIO( std::string const& name );
+		OutletIO &						getOutletIO( std::string const& name );
+		AbstractInletIO const&			getInletIO( std::string const& name ) const;
+		OutletIO const&					getOutletIO( std::string const& name ) const;
+
 	private:
 
 		FunctionBlockStateManager		*m_StateManager;
@@ -91,10 +98,10 @@ namespace _2Real
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 
-		AbstractInletIO &				getInletIO( std::string const& name );
-		OutletIO &						getOutletIO( std::string const& name );
-		AbstractInletIO const&			getInletIO( std::string const& name ) const;
-		OutletIO const&					getOutletIO( std::string const& name ) const;
+		//AbstractInletIO &				getInletIO( std::string const& name );
+		//OutletIO &						getOutletIO( std::string const& name );
+		//AbstractInletIO const&			getInletIO( std::string const& name ) const;
+		//OutletIO const&					getOutletIO( std::string const& name ) const;
 
 		AppInletHandles					m_AppInletHandles;
 		AppOutletHandles				m_AppOutletHandles;

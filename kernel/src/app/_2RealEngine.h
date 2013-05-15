@@ -38,6 +38,8 @@ namespace _2Real
 
 	namespace app
 	{
+		class SystemState;
+
 		class Engine
 		{
 
@@ -76,17 +78,17 @@ namespace _2Real
 
 			void setBaseDirectory( std::string const& directory );
 			app::BundleHandle & loadBundle( std::string const& libraryPath );
-			app::BundleHandle & findBundleByPath( std::string const& libraryPath ) const;
-			app::BundleHandle & findBundleByName( std::string const& name ) const;
+			app::BundleHandle & findBundleByPath( std::string const& libraryPath );
+			app::BundleHandle & findBundleByName( std::string const& name );
 
 			// either clears everything, incl bundles and contexts, or just the block instances
 			void clearAll();
 			void clearBlockInstances();
 
 			// these functions give information about the current state of the framework
-			Links			getCurrentLinks() const;
-			BlockHandles	getCurrentBlocks() const;		// these are only the block instances, not the contexts
-			BundleHandles	getCurrentBundles() const;
+			Links			getCurrentLinks();
+			BlockHandles	getCurrentBlocks();		// these are only the block instances, not the contexts
+			BundleHandles	getCurrentBundles();
 
 			// exception callback
 			void registerToException( BlockExceptionCallback callback, void *userData = nullptr );
@@ -124,9 +126,17 @@ namespace _2Real
 				unregisterFromExceptionInternal( *cb );
 			}
 
-			void safeConfig( std::string const& filePath );
-			std::list< std::string > tryConfig( std::string const& filePath );
-			void loadConfig( std::string const& filePath );
+			void saveConfig( std::string const& filePath );
+			//std::list< std::string > tryConfig( std::string const& filePath );
+			//void loadConfig( std::string const& filePath );
+
+			// new 02/05/13
+			void getCurrentSystemState( SystemState &state );
+			// this basically tests whether or not all bundles are there
+			// not doing this & just loading results in an exception
+			std::list< std::string > testConfiguration( std::string const& dataSource );
+			// returns the difference to the previous system state
+			SystemState *loadConfiguration( std::string const& dataSource );
 
 		private:
 

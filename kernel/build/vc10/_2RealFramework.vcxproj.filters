@@ -348,6 +348,9 @@
     <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h">
       <Filter>include\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\_2RealSystemState.h" />
+    <ClInclude Include="..\..\src\_2RealSystemStateImpl.h" />
+    <ClInclude Include="..\..\src\_2RealConfigLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -533,6 +536,9 @@
     <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealSystemState.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemStateImpl.cpp" />
+    <ClCompile Include="..\..\src\_2RealConfigLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\status.txt">

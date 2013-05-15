@@ -61,14 +61,18 @@ void ModelLoaderBlock::update()
 {
 	try
 	{
+		mContext->setActive( true );
+
 		if ( mFilePathIn.hasChanged() )
 		{
 			cout << "filepath has changed; reloading model" << endl;
 
 			string file = mFilePathIn.getReadableRef< string >();
 
+			cout << file << endl;
+
 			mModelLoader.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE );
-			aiScene const* const scene = mModelLoader.ReadFile( file, /*aiProcess_PreTransformVertices | */aiProcess_JoinIdenticalVertices | aiProcess_FindDegenerates | aiProcess_SortByPType | aiProcess_Triangulate | aiProcess_RemoveComponent | aiProcess_ValidateDataStructure );
+			aiScene const* const scene = mModelLoader.ReadFile( file, aiProcess_PreTransformVertices | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals );
 
 			if ( scene == nullptr ) cout << "file could not be loaded" << endl;
 			else
@@ -102,13 +106,27 @@ void ModelLoaderBlock::update()
 					for ( unsigned int j=0; j<AI_MAX_NUMBER_OF_COLOR_SETS; ++j )
 						if ( mesh->HasVertexColors( j ) )	cout << "mesh " << i << " has vertex colors " << j << endl;
 
-					float *verticesAsFloat = reinterpret_cast< float * >( mesh->mVertices );
+					//float *verticesAsFloat = reinterpret_cast< float * >( mesh->mVertices );
 					std::vector< float > vertices;
-					vertices.assign( verticesAsFloat, verticesAsFloat + elementCount );
+					for ( unsigned int i=0; i<vertexCount; ++i )
+					{
+						aiVector3D v = mesh->mVertices[ i ];
+						vertices.push_back( v.x );
+						vertices.push_back( v.y );
+						vertices.push_back( v.z );
+					}
+					//vertices.assign( verticesAsFloat, verticesAsFloat + elementCount );
 
-					float *normalsAsFloat = reinterpret_cast< float * >( mesh->mNormals );
+					//float *normalsAsFloat = reinterpret_cast< float * >( mesh->mNormals );
 					std::vector< float > normals;
-					normals.assign( normalsAsFloat, normalsAsFloat + elementCount );
+					for ( unsigned int i=0; i<vertexCount; ++i )
+					{
+						aiVector3D n = mesh->mNormals[ i ];
+						normals.push_back( n.x );
+						normals.push_back( n.y );
+						normals.push_back( n.z );
+					}
+					//normals.assign( normalsAsFloat, normalsAsFloat + elementCount );
 
 					BufferObj *v = mContext->createBufferObj();
 					mContext->updateBuffer( v, vertices, GL_STREAM_DRAW );
@@ -138,12 +156,17 @@ void ModelLoaderBlock::update()
 					Buffer indexBuffer( i );
 					meshIndices = indexBuffer;
 
+					std::cout << v->mHandle << std::endl;
+					std::cout << n->mHandle << std::endl;
+					std::cout << i->mHandle << std::endl;
+
 					mNumberOfMeshesOut.getWriteableRef< unsigned int >() = meshCount;
+
+					std::cout << "done loading the model" << std::endl;
 				}
 			}
 		}
 
-		mContext->setActive( true );
 		mContext->setActive( false );
 	}
 	catch( Exception & e )

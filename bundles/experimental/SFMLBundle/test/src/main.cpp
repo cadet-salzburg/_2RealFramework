@@ -348,10 +348,10 @@ int main( int argc, char *argv[] )
 
 		//engine.loadConfig( "modelimport.xml" );
 
-		string filePath = "D:\\opengl\\data\\dragon.ply";
+		string filePath = "D:\\cadet\\bunny.obj";
 
-		string vertexSrcBunny = "modelshaded.vert";
-		string fragmentSrcBunny = "modelshaded.frag";
+		string vertexSrcBunny = "D:\\cadet\\modelshaded.vert";
+		string fragmentSrcBunny = "D:\\cadet\\modelshaded.frag";
 
 		string attribIndices = "indices ()";
 		string attribPosition = "position ( 3 0 )";
@@ -414,7 +414,7 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		//engine.safeConfig( "modelimport.xml" );
+		//engine.saveConfig( "D:\\cadet\\modelimport.xml" );
 	}
 	catch( Exception &e )
 	{

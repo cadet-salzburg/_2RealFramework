@@ -31,7 +31,7 @@ namespace _2Real
 
 	public:
 
-		IOLink( BasicInletIO &inlet, OutletIO &outlet );
+		IOLink();	/* creates invalid link! */
 
 		void activate();
 		void deactivate();
@@ -39,18 +39,27 @@ namespace _2Real
 		BasicInletIO const& getInletIO() const;
 		OutletIO const& getOutletIO() const;
 
+		BasicInletIO& getInletIO();
+		OutletIO& getOutletIO();
+
 		bool operator<( IOLink const& other );
 		bool isBlockInvolved( AbstractUberBlock const& b ) const;
 		bool isInletInvolved( BasicInletIO const& inlet ) const;
 
+		bool isValid() const;
+
 		static IOLink * link( BasicInletIO &inlet, OutletIO &outlet );
+		static IOLink * linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet );
+
 		static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
 		static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
 
 	private:
 
-		BasicInletIO		&m_InletIO;
-		OutletIO			&m_OutletIO;
+		IOLink( BasicInletIO &inlet, OutletIO &outlet );
+
+		BasicInletIO		*m_InletIO;
+		OutletIO			*m_OutletIO;
 
 	};
 }

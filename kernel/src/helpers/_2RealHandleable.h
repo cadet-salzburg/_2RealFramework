@@ -54,7 +54,7 @@ namespace _2Real
 			}
 		}
 
-		THandle& getHandle() const
+		THandle& getHandle()
 		{
 			if ( m_Handle == nullptr )
 			{

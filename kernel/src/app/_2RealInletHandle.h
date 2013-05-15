@@ -31,6 +31,7 @@ namespace _2Real
 	{
 		class AppData;
 		class OutletHandle;
+		class BlockHandle;
 
 		class InletHandle
 		{
@@ -107,6 +108,9 @@ namespace _2Real
 
 			InletHandle add();
 			void remove( InletHandle &handle );
+
+			// new 06/05/13
+			BlockHandle getOwningBlock();
 
 		private:
 

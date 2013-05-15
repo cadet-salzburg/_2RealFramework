@@ -88,12 +88,12 @@ namespace _2Real
 		m_AppEvent.removeListener( cb );
 	}
 
-	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name ) const
+	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
 	{
 		return getInletIO( name ).getHandle();
 	}
 
-	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name ) const
+	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
 	{
 		return getOutletIO( name ).getHandle();
 	}

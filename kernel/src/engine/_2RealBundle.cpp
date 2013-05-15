@@ -99,7 +99,7 @@ namespace _2Real
 		return false;
 	}
 
-	app::BlockHandle & Bundle::createBlockInstance( std::string const& blockName )
+	FunctionBlock< app::BlockHandle > & Bundle::createBlockInstance( std::string const& blockName )
 	{
 		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName );
 
@@ -108,7 +108,7 @@ namespace _2Real
 		block->setName( name.str() );
 
 		m_BlockInstances.insert( make_pair( blockName, block ) );
-		return block->getHandle();
+		return *block;
 	}
 
 	void Bundle::removeBlockInstance( FunctionBlock< app::BlockHandle > &block )

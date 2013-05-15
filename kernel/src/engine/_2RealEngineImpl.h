@@ -25,6 +25,7 @@
 #include "helpers/_2RealPoco.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
+#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
 
 #include <set>
 #include <string>
@@ -35,6 +36,7 @@ namespace _2Real
 	namespace app
 	{
 		class BundleHandle;
+		class SystemState;
 	}
 
 	class Logger;
@@ -109,15 +111,22 @@ namespace _2Real
 		BlockInstances					getCurrentBlockInstances() const;
 		Bundles const&					getCurrentBundles() const;
 		Links const&					getCurrentLinks() const;
-		bool							createLink( BasicInletIO &inlet, OutletIO &outlet );
-		bool							createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
+		Links&							getCurrentLinks();
+
+		IOLink							createLink( BasicInletIO &inlet, OutletIO &outlet );
+		std::pair< IOLink, IOLink >		createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
 		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
 		void							clearLinksFor( BasicInletIO &inlet );
 
 		void							setBaseDirectory( std::string const& directory );
-		app::BundleHandle &				loadLibrary( std::string const& libraryPath );
-		app::BundleHandle &				findBundleByName( std::string const& name ) const;
-		app::BundleHandle &				findBundleByPath( std::string const& libraryPath ) const;
+		//app::BundleHandle &				loadLibrary( std::string const& libraryPath );
+		//app::BundleHandle &				findBundleByName( std::string const& name ) const;
+		//app::BundleHandle &				findBundleByPath( std::string const& libraryPath ) const;
+		Bundle &						loadLibrary( std::string const& libraryPath );
+		Bundle &						findBundleByName( std::string const& name ) const;
+		Bundle &						findBundleByPath( std::string const& libraryPath ) const;
+					
+		void							getCurrentSystemState( app::SystemState &state ) const;
 
 	private:
 

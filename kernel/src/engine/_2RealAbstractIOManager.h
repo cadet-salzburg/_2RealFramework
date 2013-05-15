@@ -94,6 +94,8 @@ namespace _2Real
 		virtual void						syncInletChanges() = 0;
 		virtual bundle::InletHandle &		getBundleInletHandle() const = 0;
 
+		AbstractUberBlock *					getOwningBlock();
+
 		InletInfo const&					info() const { return m_Info; }
 		bool								belongsToBlock( AbstractUberBlock const* const block ) const { return ( &m_OwningBlock == block ); }
 

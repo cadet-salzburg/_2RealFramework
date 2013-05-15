@@ -78,6 +78,9 @@ namespace _2Real
 				unregisterFromNewDataInternal( *cb );
 			}
 
+			// new 06/05/13
+			BlockHandle getOwningBlock();
+
 		private:
 
 			friend class InletHandle;

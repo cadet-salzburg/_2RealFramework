@@ -117,7 +117,10 @@
     <ClInclude Include="..\..\src\_2RealApplication.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
+    <ClInclude Include="..\..\src\_2RealConfigLoader.h" />
     <ClInclude Include="..\..\src\_2RealDatatypes.h" />
+    <ClInclude Include="..\..\src\_2RealSystemState.h" />
+    <ClInclude Include="..\..\src\_2RealSystemStateImpl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
@@ -456,6 +459,9 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\xml\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\xml\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealConfigLoader.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemState.cpp" />
+    <ClCompile Include="..\..\src\_2RealSystemStateImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\datatypes.txt" />

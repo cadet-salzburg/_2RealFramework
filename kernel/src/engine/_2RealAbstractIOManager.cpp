@@ -38,6 +38,11 @@ namespace _2Real
 	{
 	}
 
+	AbstractUberBlock * AbstractInletIO::getOwningBlock()
+	{
+		return &m_OwningBlock;
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	BasicInletIO::BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :

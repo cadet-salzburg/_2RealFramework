@@ -59,6 +59,9 @@ namespace _2Real
 
 		ShaderObj * Context::createShaderObj( const GLenum type, std::string const& src ) const
 		{
+			//std::cout << "---------------" << std::endl;
+			//std::cout << src << std::endl;
+
 			ShaderObj *s = new ShaderObj( mManager );
 			s->mHandle = glCreateShader( type );
 

@@ -36,7 +36,7 @@ namespace _2Real
 	class AnyOptionSet;
 
 	template< typename THandle >
-	class FunctionBlock :  public AbstractUberBlock, private Handleable< FunctionBlock< THandle >, THandle >
+	class FunctionBlock : public AbstractUberBlock, private Handleable< FunctionBlock< THandle >, THandle >
 	{
 
 	public:
@@ -67,6 +67,11 @@ namespace _2Real
 		AppOutletHandles const&		getAppOutletHandles() const;
 		BundleInletHandles const&	getBundleInletHandles() const;
 		BundleOutletHandles const&	getBundleOutletHandles() const;
+
+		/* added 13/05/2013 */
+
+		AbstractInletIO &			getInlet( std::string const& inletName );
+		OutletIO &					getOutlet( std::string const& outletName );
 
 		void						registerToNewData( app::BlockCallback &callback );
 		void						unregisterFromNewData( app::BlockCallback &callback );
@@ -287,6 +292,18 @@ namespace _2Real
 	void FunctionBlock< THandle >::handleException( Exception &e )
 	{
 		m_Engine.handleException( getHandle(), e );
+	}
+
+	template< typename THandle >
+	AbstractInletIO & FunctionBlock< THandle >::getInlet( std::string const& inletName )
+	{
+		return m_IOManager->getInletIO( inletName );
+	}
+
+	template< typename THandle >
+	OutletIO & FunctionBlock< THandle >::getOutlet( std::string const& outletName )
+	{
+		return m_IOManager->getOutletIO( outletName );
 	}
 
 }

@@ -38,6 +38,8 @@ void RenderDataCombinerBlock::setup( BlockHandle &block )
 {
 	try
 	{
+		std::cout << "SET UP RENDERDATA COMBINER" << std::endl;
+
 		if ( mContext == nullptr )
 		{
 			mContext = new Context( mManager.getRenderSettings(), mManager.getManager() );
@@ -53,8 +55,8 @@ void RenderDataCombinerBlock::setup( BlockHandle &block )
 			mAttributesMultiin = block.getInletHandle( "AttributeDescriptions" );
 			mPrimitiveTypeIn = block.getInletHandle( "PrimitiveType" );
 
-			std::string vertexSrc = "version 330 core";
-			std::string fragmentSrc = "version 330 core";
+			std::string vertexSrc = "#version 330 core\nin vec3 position;\nvoid main()\n{\ngl_Position=vec4(position, 1.0);\n}\n";
+			std::string fragmentSrc = "#version 330 core\nout vec4 outColor;\nvoid main()\n{\noutColor=vec4(1.0);\n}\n";
 
 			mProgramObj = mContext->createProgramObj();
 			if ( !vertexSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_VERTEX_SHADER, vertexSrc ) );
@@ -92,11 +94,15 @@ void RenderDataCombinerBlock::update()
 			string const& geometrySrc = mGeometryShaderIn.getReadableRef< string >();//.mSource;
 			string const& fragmentSrc = mFragmentShaderIn.getReadableRef< string >();//.mSource;
 
+			//std::cout << vertexSrc << std::endl;
+			//std::cout << geometrySrc << std::endl;
+			//std::cout << fragmentSrc << std::endl;
+
 			ShaderSource vertexShader = ShaderSource( vertexSrc );
 			ShaderSource fragmentShader = ShaderSource( fragmentSrc );
 			ShaderSource geometryShader = ShaderSource( geometrySrc );
 
-			//std::cout << "glsl program changed" << std::endl;
+			std::cout << "glsl program changed" << std::endl;
 
 			mProgramObj = mContext->createProgramObj();
 			if ( !vertexSrc.empty() ) mContext->attachShader( mProgramObj, mContext->createShaderObj( GL_VERTEX_SHADER, vertexShader.mSource ) );
@@ -256,8 +262,14 @@ void RenderDataCombinerBlock::update()
 			}
 		}
 
-		if ( validAttribs == 0 ) isValidData = false;
-		if ( hasIndices && !foundIndex ) isValidData = false;
+		if ( validAttribs == 0 )
+		{
+			isValidData = false;
+		}
+		if ( hasIndices && !foundIndex )
+		{
+			isValidData = false;
+		}
 
 		unsigned int elementsToDraw;
 		//if ( hasIndices )						elementsToDraw = 
@@ -276,7 +288,6 @@ void RenderDataCombinerBlock::update()
 
 		if ( !isValidData )
 		{
-			std::cout << "invalid render data!" << std::endl;
 			mRenderDataOut.discard();
 		}
 		else

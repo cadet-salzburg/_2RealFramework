@@ -69,7 +69,7 @@ namespace _2Real
 		app::ContextBlockHandle &	getContextBlockHandle() const;
 		bool						hasContext() const;
 		void						setContextBlock( FunctionBlock< app::ContextBlockHandle > &context );
-		app::BlockHandle &			createBlockInstance( std::string const& blockName );
+		FunctionBlock< app::BlockHandle > &						createBlockInstance( std::string const& blockName );
 		void						removeBlockInstance(  FunctionBlock< app::BlockHandle > &block );
 		bool canCreate( std::string const& blockName ) const;
 		BlockInstances &							getBlockInstances( BundleManager const& m );
