@@ -19,35 +19,37 @@
 #pragma once
 
 #include "engine/_2RealInletPolicy.h"
-#include "helpers/_2RealAny.h"
-#include "helpers/_2RealOptions.h"
+#include "datatypes/_2RealCustomData.h"
 
 #include <string>
 
 namespace _2Real
 {
-	class TypeDescriptor;
+	// the shared ptrs are copies of the init values, owned by the framework
 
 	struct InletMetadata
 	{
-		InletMetadata( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p, const bool m );
+		InletMetadata( std::string const& inlet, CustomType const& init, InletPolicy const& policy, const bool multi );
 		~InletMetadata();
 
-		TypeDescriptor			const *const type;
-		std::string				const name;
-		Any						const initValue;
-		AnyOptionSet			const options;
-		InletPolicy				const defaultPolicy;
-		bool					const isMulti;
+		std::string										const name;
+		std::shared_ptr< const CustomType >				initValue;
+		InletPolicy										const defaultPolicy;
+		bool											const isMulti;
 	};
 
 	struct OutletMetadata
 	{
-		OutletMetadata( std::string const& n, TypeDescriptor const *const t, Any const& i );
+		OutletMetadata( std::string const& outlet, CustomType const& init );
 		~OutletMetadata();
 
-		TypeDescriptor			const *const type;
-		std::string				const name;
-		Any						const initValue;
+		std::string										const name;
+		std::shared_ptr< const CustomType >				initValue;
 	};
+
+	//struct SetupParameterMetadata
+	//{
+	//	SetupParameterMetadata( std::string const& outlet, CustomType const& init );
+	//	~SetupParameterMetadata();
+	//};
 }

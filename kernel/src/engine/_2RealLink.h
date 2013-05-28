@@ -49,10 +49,10 @@ namespace _2Real
 		bool isValid() const;
 
 		static IOLink * link( BasicInletIO &inlet, OutletIO &outlet );
-		static IOLink * linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet );
+		//static IOLink * linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet );
 
-		static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
-		static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
+		//static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
+		//static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
 
 	private:
 

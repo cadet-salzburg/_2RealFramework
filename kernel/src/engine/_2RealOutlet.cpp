@@ -19,14 +19,15 @@
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealEngineImpl.h"
+#include "datatypes/_2RealCustomData.h"
 
 using std::string;
 using std::ostringstream;
 
 namespace _2Real
 {
-	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, TypeDescriptor const& type, Any const& emptyData ) :
-		Parameter( type ),
+	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, std::shared_ptr< const CustomType > initialValue ) :
+		Parameter(),
 		NonCopyable< Outlet >(),
 		Identifiable< Outlet >( owningBlock.getIds(), name ),
 		Handleable< Outlet, bundle::OutletHandle >( *this ),
@@ -34,20 +35,22 @@ namespace _2Real
 		m_OwningUberBlock( owningBlock ),
 		m_DiscardCurrent( false )
 	{
-		Parameter::m_Data = TimestampedData( emptyData, 0 );
-		Parameter::m_DataBuffer.cloneAnyFrom( Parameter::m_Data );
+		// the 'initialValue' is just a template, I now need to clone that twice
+		Parameter::m_Data->cloneFrom( *( initialValue.get() ) );
+		Parameter::m_DataBuffer->cloneFrom( *( initialValue.get() ) );
 	}
 
 	bool Outlet::synchronize()
 	{
 		if ( !m_DiscardCurrent )
 		{
-			Parameter::m_DataBuffer = TimestampedData( Parameter::m_DataBuffer.anyValue, m_Engine.getElapsedTime() );
-			// shallow-copy written data into readable data
+			// store time
+			m_Timestamp = m_Engine.getElapsedTime();
+			// data = buffer
 			Parameter::synchronize();
-			// deep-copy readable data back into writeable data
+			// clone readable data back into writeable data
 			// this way, outlet always holds the last written value
-			Parameter::m_DataBuffer.cloneAnyFrom( Parameter::m_Data );
+			Parameter::m_DataBuffer->cloneFrom( *( Parameter::m_Data.get() ) );
 			return false;
 		}
 		else
@@ -57,9 +60,9 @@ namespace _2Real
 		}
 	}
 
-	Any & Outlet::getWriteableData()
+	CustomType & Outlet::getWriteableData()
 	{
-		return Parameter::m_DataBuffer.anyValue;
+		return *( Parameter::m_DataBuffer.get() );
 	}
 
 	void Outlet::discardCurrentUpdate()

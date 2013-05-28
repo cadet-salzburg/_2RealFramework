@@ -30,7 +30,7 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return !newData.anyValue.isNull();
+			return !newData.value->isNull();
 		}
 	};
 
@@ -51,7 +51,7 @@ namespace _2Real
 			m_Condition( false ),
 			m_Buffer( buffer ),
 			m_UpdateManager( mgr ),
-			m_LastData( Any(), 0 )			// default data has timestamp 0 and thus will not fulfill the newer cond
+			m_LastData(/* std::shared_ptr< const CustomType >(), 0, -1 */)
 		{
 		}
 
@@ -72,7 +72,7 @@ namespace _2Real
 
 		void resetData()
 		{
-			m_LastData = TimestampedData( Any(), 0 );
+			m_LastData = TimestampedData(/* std::shared_ptr< const CustomType >(), 0, -1 */);
 		}
 
 		bool isFulfilled() const { return m_Condition.isFulfilled(); }
@@ -120,7 +120,7 @@ namespace _2Real
 			if ( !m_Condition.isFulfilled() && m_ConditionCheck( data, m_LastData ) )
 			{
 				m_Condition.set( true );
-				m_Buffer.disableTriggering( data );
+				m_Buffer.disableTriggering( data.value );
 				m_LastData = data;
 				m_UpdateManager.tryTriggerInlet( *this );
 			}

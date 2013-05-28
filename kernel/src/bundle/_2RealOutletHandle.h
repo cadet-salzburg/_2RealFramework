@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
+#include "datatypes/_2RealCustomData.h"
 #include "helpers/_2RealException.h"
 
 #include <sstream>
@@ -40,29 +40,17 @@ namespace _2Real
 			OutletHandle& operator=( OutletHandle const& other );
 			~OutletHandle();
 
-			template< typename TData >
-			TData & getWriteableRef()
-			{
-				if ( !m_Outlet )
-				{
-					std::ostringstream msg;
-					msg << "output handle not initialized";
-					throw UninitializedHandleException( msg.str() );
-				}
+			CustomType &	getWriteableRef();
 
-				Any &curr = getCurrentData();
-				TData &data = curr.extract< TData >();
-				return data;
-			}
-
+			// signals to the fw that this value should not be sent
 			void discard();
 
+			// handle related stuff, not sure if I even need this....
 			bool isValid() const;
 			void invalidate();
 
 		private:
 
-			Any &		getCurrentData();
 			Outlet				*m_Outlet;
 
 		};

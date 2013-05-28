@@ -24,19 +24,20 @@
 
 namespace _2Real
 {
+	// default values?
+
 	namespace app
 	{
 		struct InletInfo
 		{
 			InletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ),
-				isMultiInlet( false ), hasOptionCheck( false ), hasRangeCheck( false ), defaultPolicy( InletPolicy::INVALID ) {}
+				isMultiInlet( false ), hasRangeCheck( false ), defaultPolicy( InletPolicy::INVALID ) {}
 
 			std::string		name;
 			std::string		typeName;
 			std::string		longTypename;
 			InletPolicy		defaultPolicy;
 			bool			isMultiInlet;
-			bool			hasOptionCheck;
 			bool			hasRangeCheck;
 		};
 

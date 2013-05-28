@@ -118,12 +118,12 @@ namespace _2Real
 			return m_InletIO >= other.m_InletIO;
 		}
 
-		AppData InletHandle::getCurrentInput() const
-		{
-			checkValidity( m_InletIO );
-			TimestampedData data = ( *m_InletIO )[ 0 ].getData();
-			return AppData( data, m_InletIO->info().type.m_TypeName, m_InletIO->info().type.m_LongTypename, ( *m_InletIO )[ 0 ].getName() );
-		}
+		//AppData InletHandle::getCurrentInput() const
+		//{
+		//	checkValidity( m_InletIO );
+		//	TimestampedData data = ( *m_InletIO )[ 0 ].getData();
+		//	return AppData( data, m_InletIO->info().type.m_TypeName, m_InletIO->info().type.m_LongTypename, ( *m_InletIO )[ 0 ].getName() );
+		//}
 
 		bool InletHandle::link( OutletHandle &outlet )
 		{
@@ -131,12 +131,12 @@ namespace _2Real
 			return EngineImpl::instance().createLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) ).isValid();
 		}
 
-		bool InletHandle::linkWithConversion( OutletHandle &outlet )
-		{
-			checkValidity( m_InletIO );
-			std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
-			return links.first.isValid();
-		}
+		//bool InletHandle::linkWithConversion( OutletHandle &outlet )
+		//{
+		//	checkValidity( m_InletIO );
+		//	std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
+		//	return links.first.isValid();
+		//}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
@@ -150,29 +150,29 @@ namespace _2Real
 			( *m_InletIO )[ 0 ].setUpdatePolicy( p );
 		}
 
-		void InletHandle::setValue( Any const& data )
-		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].receiveData( data );
-		}
+		//void InletHandle::setValue( Any const& data )
+		//{
+		//	checkValidity( m_InletIO );
+		//	( *m_InletIO )[ 0 ].receiveData( data );
+		//}
 
-		void InletHandle::setDefaultValue( Any const& data )
-		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].setInitialValue( data );
-		}
+		//void InletHandle::setDefaultValue( Any const& data )
+		//{
+		//	checkValidity( m_InletIO );
+		//	( *m_InletIO )[ 0 ].setInitialValue( data );
+		//}
 
-		void InletHandle::setDefaultValueToString( std::string const& data )
-		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].setInitialValueToString( data );
-		}
+		//void InletHandle::setDefaultValueToString( std::string const& data )
+		//{
+		//	checkValidity( m_InletIO );
+		//	( *m_InletIO )[ 0 ].setInitialValueToString( data );
+		//}
 
-		void InletHandle::setValueToString( std::string const& data )
-		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].receiveData( data );
-		}
+		//void InletHandle::setValueToString( std::string const& data )
+		//{
+		//	checkValidity( m_InletIO );
+		//	( *m_InletIO )[ 0 ].receiveData( data );
+		//}
 
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
@@ -186,22 +186,22 @@ namespace _2Real
 			return m_InletIO->info().baseName;
 		}
 
-		const std::string InletHandle::getLongTypename() const
-		{
-			checkValidity( m_InletIO );
-			return m_InletIO->info().type.m_LongTypename;
-		}
+		//const std::string InletHandle::getLongTypename() const
+		//{
+		//	checkValidity( m_InletIO );
+		//	return m_InletIO->info().type.m_LongTypename;
+		//}
 
-		std::string const& InletHandle::getTypename() const
-		{
-			checkValidity( m_InletIO );
-			return m_InletIO->info().type.m_TypeName;
-		}
+		//std::string const& InletHandle::getTypename() const
+		//{
+		//	checkValidity( m_InletIO );
+		//	return m_InletIO->info().type.m_TypeName;
+		//}
 
-		AnyOptionSet const& InletHandle::getOptionSet() const
-		{
-			return m_InletIO->info().options;
-		}
+		//AnyOptionSet const& InletHandle::getOptionSet() const
+		//{
+		//	return m_InletIO->info().options;
+		//}
 
 		bool InletHandle::isMultiInlet() const
 		{
@@ -245,7 +245,7 @@ namespace _2Real
 			InletState res;
 			res.bufferSize = ( *m_InletIO )[ 0 ].getBufferSizeAsString();
 			res.currentValue = ( *m_InletIO )[ 0 ].getCurrentValueAsString();
-			res.defaultValue = ( *m_InletIO )[ 0 ].getInitialValueAsString();
+			//res.defaultValue = ( *m_InletIO )[ 0 ].getInitialValueAsString();
 			res.updatePolicy = ( *m_InletIO )[ 0 ].getUpdatePolicyAsString();
 
 			return res;

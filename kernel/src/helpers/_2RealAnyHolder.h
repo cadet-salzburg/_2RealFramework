@@ -46,6 +46,7 @@ namespace _2Real
 		virtual void readFrom( std::istream &in ) = 0;
 		virtual bool isEqualTo( AbstractAnyHolder const& other ) const = 0;
 		virtual bool isLessThan( AbstractAnyHolder const& other ) const = 0;
+
 	};
 
 	template< typename TData >
@@ -68,7 +69,7 @@ namespace _2Real
 		bool isEqualTo( AbstractAnyHolder const& other ) const;
 		bool isLessThan( AbstractAnyHolder const& other ) const;
 
-		TData		m_Data;
+		TData					m_Data;
 
 	private:
 
@@ -174,4 +175,36 @@ namespace _2Real
 		return new AnyHolder< TData >( m_Data );
 	}
 
+	//template< >
+	//class AnyHolder< std::string > : public AbstractAnyHolder
+	//{
+
+	//public:
+
+	//	AnyHolder() : m_Data() {}
+	//	explicit AnyHolder( std::string const& s ) : m_Data( s ) {}
+
+	//	const std::string getTypename() const;
+	//	std::type_info const& getTypeinfo() const;
+	//	AbstractAnyHolder * create() const;
+	//	AbstractAnyHolder * clone() const;
+
+	//	void writeTo( std::ostream &out ) const;
+	//	void readFrom( std::istream &in );
+
+	//	bool isEqualTo( AbstractAnyHolder const& other ) const;
+	//	bool isLessThan( AbstractAnyHolder const& other ) const;
+
+	//	// makes little sense for strings
+	//	// more sense would be a set of input values
+	//	bool rangeCheck() { return true; }
+
+	//	std::string				m_Data;
+
+	//private:
+
+	//	AnyHolder( AnyHolder< std::string > const& src );
+	//	AnyHolder& operator=( AnyHolder< std::string > const& src );
+
+	//};
 }

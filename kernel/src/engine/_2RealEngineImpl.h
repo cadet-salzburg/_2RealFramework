@@ -25,7 +25,7 @@
 #include "helpers/_2RealPoco.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
+//#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
 
 #include <set>
 #include <string>
@@ -114,7 +114,7 @@ namespace _2Real
 		Links&							getCurrentLinks();
 
 		IOLink							createLink( BasicInletIO &inlet, OutletIO &outlet );
-		std::pair< IOLink, IOLink >		createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
+		//std::pair< IOLink, IOLink >		createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
 		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
 		void							clearLinksFor( BasicInletIO &inlet );
 

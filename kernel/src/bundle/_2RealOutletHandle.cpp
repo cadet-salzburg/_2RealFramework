@@ -80,8 +80,9 @@ namespace _2Real
 			m_Outlet = nullptr;
 		}
 
-		Any & OutletHandle::getCurrentData()
+		CustomType & OutletHandle::getWriteableRef()
 		{
+			checkValidity( m_Outlet );
 			return m_Outlet->getWriteableData();
 		}
 

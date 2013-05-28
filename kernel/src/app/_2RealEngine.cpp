@@ -25,8 +25,8 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealSingletonHolder.h"
-#include "xml/_2RealXMLWriter.h"
-#include "_2RealConfigLoader.h"
+//#include "xml/_2RealXMLWriter.h"
+//#include "_2RealConfigLoader.h"
 
 using std::string;
 using std::list;
@@ -259,74 +259,74 @@ namespace _2Real
 		//	returnConfiguration::tryConfig( *this, filePath );
 		//}
 
-		SystemState * Engine::loadConfiguration( string const& dataSource )
-		{
-			std::map< std::string, app::BundleHandle > loadedBundles;
-			EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
-			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
-			{
-				loadedBundles.insert( std::make_pair( ( *it )->getBundleInfo().name, ( *it )->getHandle() ) );
-			}
+	//	SystemState * Engine::loadConfiguration( string const& dataSource )
+	//	{
+	//		std::map< std::string, app::BundleHandle > loadedBundles;
+	//		EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
+	//		for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
+	//		{
+	//			loadedBundles.insert( std::make_pair( ( *it )->getBundleInfo().name, ( *it )->getHandle() ) );
+	//		}
 
-			Configuration config;
+	//		Configuration config;
 
-			std::stringstream str;
-			str << dataSource;
-			str >> config;
+	//		std::stringstream str;
+	//		str << dataSource;
+	//		str >> config;
 
-			_2Real::ConfigurationLoader loader;
+	//		_2Real::ConfigurationLoader loader;
 
-			return loader.load( m_EngineImpl, config );
-		}
+	//		return loader.load( m_EngineImpl, config );
+	//	}
 
-		list< string > Engine::testConfiguration( string const& dataSource )
-		{
-			return list< string >();
-		}
+	//	list< string > Engine::testConfiguration( string const& dataSource )
+	//	{
+	//		return list< string >();
+	//	}
 
-		void Engine::getCurrentSystemState( SystemState &state )
-		{
-			EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
-			Engine::BundleHandles bundles;
-			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
-				bundles.push_back( ( *it )->getHandle() );
+	//	void Engine::getCurrentSystemState( SystemState &state )
+	//	{
+	//		EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
+	//		Engine::BundleHandles bundles;
+	//		for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
+	//			bundles.push_back( ( *it )->getHandle() );
 
-			EngineImpl::BlockInstances &currBlocks = m_EngineImpl.getCurrentBlockInstances();
-			Engine::BlockHandles blocks;
-			for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
-				blocks.push_back( ( *it )->getHandle() );
+	//		EngineImpl::BlockInstances &currBlocks = m_EngineImpl.getCurrentBlockInstances();
+	//		Engine::BlockHandles blocks;
+	//		for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
+	//			blocks.push_back( ( *it )->getHandle() );
 
-			EngineImpl::Links &currLinks = m_EngineImpl.getCurrentLinks();
-			Engine::Links links;
-			for ( EngineImpl::LinkConstIterator it = currLinks.begin(); it != currLinks.end(); ++it )
-				links.insert( Engine::Link( ( *it )->getInletIO().getHandle(), ( *it )->getOutletIO().getHandle() ) );
+	//		EngineImpl::Links &currLinks = m_EngineImpl.getCurrentLinks();
+	//		Engine::Links links;
+	//		for ( EngineImpl::LinkConstIterator it = currLinks.begin(); it != currLinks.end(); ++it )
+	//			links.insert( Engine::Link( ( *it )->getInletIO().getHandle(), ( *it )->getOutletIO().getHandle() ) );
 
-			//state.mBundles = bundles;
+	//		//state.mBundles = bundles;
 
-			// !!!!! might lead to a memory leak
-			state.mVertices.clear();
-			state.mEdges.clear();
+	//		// !!!!! might lead to a memory leak
+	//		state.mVertices.clear();
+	//		state.mEdges.clear();
 
-			for ( BlockHandles::const_iterator bIt = blocks.begin(); bIt != blocks.end(); ++bIt )
-			{
-				BlockHandle const& handle = ( *bIt );
-				state.mVertices.insert( std::make_pair( handle, new SystemState::Vertex( handle ) ) );
-			}
+	//		for ( BlockHandles::const_iterator bIt = blocks.begin(); bIt != blocks.end(); ++bIt )
+	//		{
+	//			BlockHandle const& handle = ( *bIt );
+	//			state.mVertices.insert( std::make_pair( handle, new SystemState::Vertex( handle ) ) );
+	//		}
 
-			for ( Links::iterator lIt = links.begin(); lIt != links.end(); ++lIt )
-			{
-				InletHandle inlet = ( *lIt ).first;
-				BlockHandle inletOwner = inlet.getOwningBlock();
-				OutletHandle outlet = ( *lIt ).second;
-				BlockHandle outletOwner = outlet.getOwningBlock();
+	//		for ( Links::iterator lIt = links.begin(); lIt != links.end(); ++lIt )
+	//		{
+	//			InletHandle inlet = ( *lIt ).first;
+	//			BlockHandle inletOwner = inlet.getOwningBlock();
+	//			OutletHandle outlet = ( *lIt ).second;
+	//			BlockHandle outletOwner = outlet.getOwningBlock();
 
-				// both blockHandles are now for sure in the graph's vertices
-				SystemState::Vertex *in = state.mVertices[ inletOwner ];
-				SystemState::Vertex *out = state.mVertices[ outletOwner ];
+	//			// both blockHandles are now for sure in the graph's vertices
+	//			SystemState::Vertex *in = state.mVertices[ inletOwner ];
+	//			SystemState::Vertex *out = state.mVertices[ outletOwner ];
 
-				SystemState::Edge *edge = new SystemState::Edge( *lIt, *in, *out );
-				state.mEdges.insert( edge );
-			}
-		};
+	//			SystemState::Edge *edge = new SystemState::Edge( *lIt, *in, *out );
+	//			state.mEdges.insert( edge );
+	//		}
+	//	};
 	}
 }

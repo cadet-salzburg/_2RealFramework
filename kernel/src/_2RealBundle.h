@@ -21,6 +21,7 @@
 #include "bundle/_2RealBundleMetainfo.h"
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealTypeMetainfo.h"
 #include "helpers/_2RealException.h"
 #include "_2RealDatatypes.h"
 

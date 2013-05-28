@@ -80,7 +80,7 @@ namespace _2Real
 	{
 		m_Timestamp.update();
 
-		m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
+		//m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
 	}
 
 	EngineImpl::~EngineImpl()
@@ -339,46 +339,46 @@ namespace _2Real
 		}
 	}
 
-	std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		if ( IOLink::canAutoConvert( inlet, outlet ) )
-		{
-			IOLink *link = IOLink::linkWithAutoConversion( inlet, outlet );
-			LinkIterator it = m_Links.find( link );
-			if ( it == m_Links.end() )
-			{
-				link->activate();
-				m_Links.insert( link );
-				return std::make_pair( *link, IOLink() );
-			}
-			else
-			{
-				delete link;
-				return std::make_pair( ( **it ), IOLink() );
-			}
-		}
+	//std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
+	//{
+	//	if ( IOLink::canAutoConvert( inlet, outlet ) )
+	//	{
+	//		IOLink *link = IOLink::linkWithAutoConversion( inlet, outlet );
+	//		LinkIterator it = m_Links.find( link );
+	//		if ( it == m_Links.end() )
+	//		{
+	//			link->activate();
+	//			m_Links.insert( link );
+	//			return std::make_pair( *link, IOLink() );
+	//		}
+	//		else
+	//		{
+	//			delete link;
+	//			return std::make_pair( ( **it ), IOLink() );
+	//		}
+	//	}
 
-		//const string conversionName = IOLink::findConversion( inlet, outlet );
-		//Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
+	//	//const string conversionName = IOLink::findConversion( inlet, outlet );
+	//	//Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
 
-		//if ( bundle.canCreate( conversionName ) )
-		//{
-		//	app::BlockHandle &block = bundle.createBlockInstance( conversionName );
-		//	block.setUpdateRate( 0. );
-		//	app::InletHandle &in = block.getInletHandle( "src" );
-		//	in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
-		//	app::OutletHandle &out = block.getOutletHandle( "dst" );
+	//	//if ( bundle.canCreate( conversionName ) )
+	//	//{
+	//	//	app::BlockHandle &block = bundle.createBlockInstance( conversionName );
+	//	//	block.setUpdateRate( 0. );
+	//	//	app::InletHandle &in = block.getInletHandle( "src" );
+	//	//	in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+	//	//	app::OutletHandle &out = block.getOutletHandle( "dst" );
 
-		//	in.link( outlet.getHandle() );
-		//	out.link( inlet.getHandle() );
+	//	//	in.link( outlet.getHandle() );
+	//	//	out.link( inlet.getHandle() );
 
-		//	block.setup();
-		//	block.start();
-		//	return true;
-		//}
+	//	//	block.setup();
+	//	//	block.start();
+	//	//	return true;
+	//	//}
 
-		return std::make_pair( IOLink(), IOLink() );
-	}
+	//	return std::make_pair( IOLink(), IOLink() );
+	//}
 
 	void EngineImpl::destroyLink( BasicInletIO &inlet, OutletIO &outlet )
 	{

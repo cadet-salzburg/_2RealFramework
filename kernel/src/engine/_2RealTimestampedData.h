@@ -18,29 +18,31 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
+#include "datatypes/_2RealCustomData.h"
 
 namespace _2Real
 {
+	// RENAME timestamped->unique or 'DataItem'
+	// represents a piece of data inside a queue
+	// timestamp + key are used to differentiate
 
 	class TimestampedData
 	{
 
 	public:
 
-		TimestampedData() : anyValue(), timestamp( -1 ), key( -1 ) {}
-		TimestampedData( Any const& a ) : anyValue( a ), timestamp( -1 ), key( -1 ) {}
-		TimestampedData( Any const& a, const long t ) : anyValue( a ), timestamp( t ), key( -1 ) {}
-		TimestampedData( Any const& a, const long t, const long k ) : anyValue( a ), timestamp( t ), key( k ) {}
+		TimestampedData() : value(), timestamp( 0 )/*, key( 0 )*/ {}
 
-		void cloneAnyFrom( TimestampedData const& src ) { anyValue.cloneFrom( src.anyValue ); }
-		void createAnyFrom( TimestampedData const& src ) { anyValue.createNew( src.anyValue ); }
-		bool operator>( TimestampedData const& other ) const { return timestamp > other.timestamp; }
+		// called at 2 places: receiveData - time = current, add inlet - time = 0
+		TimestampedData( std::shared_ptr< const CustomType > v, const long t ) : value( v ), timestamp( t )/*, key( 0 )*/ {}
 
-		Any		anyValue;
-		long	timestamp;
-		long	key;
+		// timestamped data means the data is already inside some inlet queue -> const, since inlets can write ( maybe in future? )
+		std::shared_ptr< const CustomType >		value;
+		unsigned long							timestamp;
+
+	private:
+
+		//unsigned long							key;
 
 	};
-
 }

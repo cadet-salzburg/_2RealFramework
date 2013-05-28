@@ -17,29 +17,22 @@
 */
 
 #include "engine/_2RealParameterMetadata.h"
-#include "helpers/_2RealTypeDescriptor.h"
 
 using std::string;
 
 namespace _2Real
 {
-	InletMetadata::InletMetadata( string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p, const bool m ) :
-		name( n ), type( t ), initValue( i ), options( o ), defaultPolicy( p ), isMulti( m )
+	InletMetadata::InletMetadata( string const& inlet, CustomType const& init, InletPolicy const& policy, const bool multi ) :
+		name( inlet ), defaultPolicy( policy ), isMulti( multi )
 	{
+		CustomType *t = new CustomType( init );
+		initValue.reset( t );
 	}
 
-	InletMetadata::~InletMetadata()
+	OutletMetadata::OutletMetadata( string const& outlet, CustomType const& init ) :
+		name( outlet )
 	{
-		delete type;
-	}
-
-	OutletMetadata::OutletMetadata( string const& n, TypeDescriptor const *const t, Any const& i ) :
-		name( n ), type( t ), initValue( i )
-	{
-	}
-
-	OutletMetadata::~OutletMetadata()
-	{
-		delete type;
+		CustomType *t = new CustomType( init );
+		initValue.reset( t );
 	}
 }

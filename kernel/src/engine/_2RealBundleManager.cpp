@@ -119,29 +119,29 @@ namespace _2Real
 			blockInfo.description = it->second->getDescription();
 			blockInfo.category = it->second->getCategory();
 
-			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
-			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
+			//BlockMetadata::InletMetadatas const& input = it->second->getInlets();
+			//BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
-			for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-			{
-				app::InletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMulti;
-				info.hasOptionCheck = !( *it )->options.isEmpty();
-				info.defaultPolicy = ( *it )->defaultPolicy;
-				blockInfo.inlets.push_back( info );
-			}
+		//	for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+		//	{
+		//		app::InletInfo info;
+		//		info.name = ( *it )->name;
+		//		info.typeName = ( *it )->type->m_TypeName;
+		//		info.longTypename = ( *it )->type->m_LongTypename;
+		//		info.isMultiInlet = ( *it )->isMulti;
+		//		info.hasOptionCheck = !( *it )->options.isEmpty();
+		//		info.defaultPolicy = ( *it )->defaultPolicy;
+		//		blockInfo.inlets.push_back( info );
+		//	}
 
-			for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-			{
-				app::OutletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				blockInfo.outlets.push_back( info );
-			}
+		//	for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+		//	{
+		//		app::OutletInfo info;
+		//		info.name = ( *it )->name;
+		//		info.typeName = ( *it )->type->m_TypeName;
+		//		info.longTypename = ( *it )->type->m_LongTypename;
+		//		blockInfo.outlets.push_back( info );
+		//	}
 
 			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
@@ -196,29 +196,29 @@ namespace _2Real
 				continue;
 			}
 
-			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
-			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
+			//BlockMetadata::InletMetadatas const& input = it->second->getInlets();
+			//BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
-			for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-			{
-				app::InletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMulti;
-				info.hasOptionCheck = !( *it )->options.isEmpty();
-				info.defaultPolicy = ( *it )->defaultPolicy;
-				blockInfo.inlets.push_back( info );
-			}
+			//for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+			//{
+			//	app::InletInfo info;
+			//	info.name = ( *it )->name;
+			//	info.typeName = ( *it )->type->m_TypeName;
+			//	info.longTypename = ( *it )->type->m_LongTypename;
+			//	info.isMultiInlet = ( *it )->isMulti;
+			//	info.hasOptionCheck = !( *it )->options.isEmpty();
+			//	info.defaultPolicy = ( *it )->defaultPolicy;
+			//	blockInfo.inlets.push_back( info );
+			//}
 
-			for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-			{
-				app::OutletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				blockInfo.outlets.push_back( info );
-			}
+			//for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+			//{
+			//	app::OutletInfo info;
+			//	info.name = ( *it )->name;
+			//	info.typeName = ( *it )->type->m_TypeName;
+			//	info.longTypename = ( *it )->type->m_LongTypename;
+			//	blockInfo.outlets.push_back( info );
+			//}
 
 			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
@@ -254,44 +254,45 @@ namespace _2Real
 			contextInfo.description = contextMetadata.getDescription();
 			contextInfo.category = contextMetadata.getCategory();
 
-			BlockMetadata::InletMetadatas const& inletMetadata = contextMetadata.getInlets();
-			BlockMetadata::OutletMetadatas const& outletMetadata = contextMetadata.getOutlets();
+			//BlockMetadata::InletMetadatas const& inletMetadata = contextMetadata.getInlets();
+			//BlockMetadata::OutletMetadatas const& outletMetadata = contextMetadata.getOutlets();
 
-			for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-			{
-				app::InletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				info.isMultiInlet = ( *it )->isMulti;
-				info.hasOptionCheck = !( *it )->options.isEmpty();
-				info.defaultPolicy = ( *it )->defaultPolicy;
-				contextInfo.inlets.push_back( info );
-			}
+			//for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			//{
+			//	app::InletInfo info;
+			//	info.name = ( *it )->name;
+			//	info.typeName = ( *it )->type->m_TypeName;
+			//	info.longTypename = ( *it )->type->m_LongTypename;
+			//	info.isMultiInlet = ( *it )->isMulti;
+			//	info.hasOptionCheck = !( *it )->options.isEmpty();
+			//	info.defaultPolicy = ( *it )->defaultPolicy;
+			//	contextInfo.inlets.push_back( info );
+			//}
 
-			for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-			{
-				app::OutletInfo info;
-				info.name = ( *it )->name;
-				info.typeName = ( *it )->type->m_TypeName;
-				info.longTypename = ( *it )->type->m_LongTypename;
-				contextInfo.outlets.push_back( info );
-			}
+			//for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			//{
+			//	app::OutletInfo info;
+			//	info.name = ( *it )->name;
+			//	info.typeName = ( *it )->type->m_TypeName;
+			//	info.longTypename = ( *it )->type->m_LongTypename;
+			//	contextInfo.outlets.push_back( info );
+			//}
 
 			bundle::Block & block = m_BundleLoader.createContext( absPath );
 			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( bundle, block, contextInfo );
 			bundle.setContextBlock( *contextBlock );
 			m_Engine.addBlock( *contextBlock );
 
+			/* NO INLETS */
 			//for ( BlockMetadata::ParameterMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 			//{
 			//	contextBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, false );
 			//}
 
-			for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-			{
-				contextBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
-			}
+			//for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+			//{
+			//	contextBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
+			//}
 
 			contextBlock->updateWithFixedRate( 30.0 );
 			contextBlock->setUp();
@@ -308,26 +309,26 @@ namespace _2Real
 		BlockMetadata::InletMetadatas const& inletMetadata = blockMetadata.getInlets();
 		BlockMetadata::OutletMetadatas const& outletMetadata = blockMetadata.getOutlets();
 
-		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-		{
-			app::InletInfo info;
-			info.name = ( *it )->name;
-			info.typeName = ( *it )->type->m_TypeName;
-			info.longTypename = ( *it )->type->m_LongTypename;
-			info.isMultiInlet = ( *it )->isMulti;
-			info.hasOptionCheck = !( *it )->options.isEmpty();
-			info.defaultPolicy = ( *it )->defaultPolicy;
-			blockInfo.inlets.push_back( info );
-		}
+		//for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+		//{
+		//	app::InletInfo info;
+		//	info.name = ( *it )->name;
+		//	info.typeName = ( *it )->type->m_TypeName;
+		//	info.longTypename = ( *it )->type->m_LongTypename;
+		//	info.isMultiInlet = ( *it )->isMulti;
+		//	info.hasOptionCheck = !( *it )->options.isEmpty();
+		//	info.defaultPolicy = ( *it )->defaultPolicy;
+		//	blockInfo.inlets.push_back( info );
+		//}
 
-		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-		{
-			app::OutletInfo info;
-			info.name = ( *it )->name;
-			info.typeName = ( *it )->type->m_TypeName;
-			info.longTypename = ( *it )->type->m_LongTypename;
-			blockInfo.outlets.push_back( info );
-		}
+		//for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		//{
+		//	app::OutletInfo info;
+		//	info.name = ( *it )->name;
+		//	info.typeName = ( *it )->type->m_TypeName;
+		//	info.longTypename = ( *it )->type->m_LongTypename;
+		//	blockInfo.outlets.push_back( info );
+		//}
 
 		app::BlockInfo info( blockInfo );
 
@@ -336,15 +337,12 @@ namespace _2Real
 		m_Engine.addBlock( *functionBlock );
 
 		// adding inlets & outlets
-		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-		{
-			functionBlock->addInlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue, ( *it )->options, ( *it )->defaultPolicy, ( *it )->isMulti );
-		}
 
-		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-		{
-			functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
-		}
+		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+			functionBlock->addInlet( **it );
+
+		//for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		//	functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
 
 		return *functionBlock;
 	}

@@ -40,7 +40,10 @@ namespace _2Real
 
 	public:
 
+		// NullType
 		Any();
+
+		// shared prt copy & assignemnt
 		Any( Any const& src );
 		Any& operator=( Any const& src );
 
@@ -51,22 +54,30 @@ namespace _2Real
 			m_TypeDescriptor.reset( createTypeDescriptor< TType >() );
 		}
 
+		// true if type is nulltype
 		bool isNull() const;
+
+		// argh
 		Type const& getType() const;
 		TypeCategory const& getTypeCategory() const;
 
+		// true if type stored inside any is TType
 		template< typename TType >
 		bool isDatatype() const
 		{
 			return m_TypeDescriptor->m_TypeInfo == typeid( TType );
 		}
 
+		// calls the type's equal and copmparison opertaor ( each type must have that thingy )
 		bool isEqualTo( Any const& any ) const;
 		bool isLessThan( Any const& any ) const;
 
+		// creates any w. same type, makes a copy of content
 		void cloneFrom( Any const& src );
+		// creates new any w. same type, but default constructed
 		void createNew( Any const& src );
 
+		// calls << and >> operators
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
 
@@ -84,7 +95,7 @@ namespace _2Real
 			{
 				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of 0 data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
+				msg << "type of data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}
@@ -103,7 +114,21 @@ namespace _2Real
 			{
 				TypeDescriptor *t = createTypeDescriptor< TType >();
 				std::ostringstream msg;
-				msg << "type of 1 data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
+				msg << "type of data " << m_TypeDescriptor->m_TypeName << " does not match template parameter " << t->m_TypeName << std::endl;
+				throw TypeMismatchException( msg.str() );
+			}
+		}
+
+		void set( Any const& other )
+		{
+			if ( m_TypeDescriptor->m_Type == other.getType() )
+			{
+				m_Content = other.m_Content;
+			}
+			else
+			{
+				std::ostringstream msg;
+				msg << "type of any " << m_TypeDescriptor->m_TypeName << " does not match other any " << other.m_TypeDescriptor->m_TypeName << std::endl;
 				throw TypeMismatchException( msg.str() );
 			}
 		}

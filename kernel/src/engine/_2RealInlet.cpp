@@ -33,28 +33,25 @@ namespace _2Real
 
 	BasicInlet::BasicInlet( AbstractUberBlock &owningBlock, string const& name ) :
 		AbstractInlet( owningBlock, name )
+		, mLastData()
+		, mCurrentData()
 	{
 	}
 
-	TimestampedData const& BasicInlet::getCurrentData() const
+	std::shared_ptr< const CustomType > BasicInlet::getCurrentData() const
 	{
-		return m_CurrentData;
-	}
-
-	bool BasicInlet::hasUpdated() const
-	{
-		return ( m_CurrentData.key != m_LastData.key );
+		return mCurrentData;
 	}
 
 	bool BasicInlet::hasChanged() const
 	{
-		return ( !m_CurrentData.anyValue.isEqualTo( m_LastData.anyValue ) );
+		return ( !mCurrentData->isEqualTo( *( mLastData.get() ) ) );
 	}
 
-	void BasicInlet::setData( TimestampedData const& data )
+	void BasicInlet::setData( std::shared_ptr< const CustomType > const& data )
 	{
-		m_LastData = m_CurrentData;
-		m_CurrentData = data;
+		mLastData = mCurrentData;
+		mCurrentData = data;
 	}
 
 	MultiInlet::MultiInlet( AbstractUberBlock &owningBlock, string const& name ) :

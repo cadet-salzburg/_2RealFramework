@@ -68,15 +68,13 @@ namespace _2Real
 
 		struct InletInfo
 		{
-			InletInfo( AbstractUberBlock &b, std::string const& n, TypeDescriptor const& t, AnyOptionSet const& o, Any const& i, InletPolicy const& p ) :
-				type( t ), options( o ), baseName( n ), initValue( i ), policy( p ), owner( b ) {}
+			InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > const& i ) :
+				baseName( n ), initValue( i ), policy( p ), owner( b ) {}
 
-			TypeDescriptor			const& type;
-			AnyOptionSet			const& options;
-			std::string				baseName;
-			TimestampedData			initValue;
-			InletPolicy				policy;
-			AbstractUberBlock		&owner;
+			std::string								baseName;
+			std::shared_ptr< const CustomType >		initValue;
+			InletPolicy								policy;
+			AbstractUberBlock						&owner;
 		};
 
 		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
@@ -129,21 +127,18 @@ namespace _2Real
 		BasicInletBuffer * getBufferPtr()	{ return m_Buffer; }
 
 		std::string const&					getName() const;
-		TimestampedData const&				getData() const;
 		void								setBufferSize( const unsigned int size );
 		void								setUpdatePolicy( InletPolicy const& p );
-		void								receiveData( Any const& dataAsAny );
-		void								receiveData( std::string const& dataAsString );
-		void								setInitialValue( Any const& any );
-		void								setInitialValueToString( std::string const& dataAsString );
+
+		//void								receiveData( std::string const& dataAsString );
+
+		void								receiveData( std::shared_ptr< const CustomType > data );
 		void								syncInletData();
 		void								processBufferedData( const bool enableTriggering );
-		void								clearBufferedData();
 
 		const std::string					getBufferSizeAsString() const;
 		const std::string					getUpdatePolicyAsString() const;
 		const std::string					getCurrentValueAsString() const;
-		const std::string					getInitialValueAsString() const;
 
 	private:
 
@@ -201,7 +196,7 @@ namespace _2Real
 		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
 		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue );
+		OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initValue );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;

@@ -31,6 +31,7 @@ namespace _2Real
 	{
 		class BlockMetainfo;
 		class ContextBlockMetainfo;
+		class TypeMetainfo;
 
 		class BundleMetainfo
 		{
@@ -59,6 +60,9 @@ namespace _2Real
 			void setAuthor( std::string const& author );
 			void setContact( std::string const& contact );
 			void setCategory( std::string const& category );
+
+			// added 
+			TypeMetainfo & exportCustomType( std::string const& name );
 
 		private:
 

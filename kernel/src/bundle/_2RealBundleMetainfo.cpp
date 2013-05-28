@@ -70,5 +70,11 @@ namespace _2Real
 			checkChars( toLower( trim( blockName ) ) );
 			return m_Impl.setBlockCreator( trim( blockName ), obj );
 		}
+
+		TypeMetainfo & BundleMetainfo::exportCustomType( std::string const& name )
+		{
+			checkChars( toLower( trim( name ) ) );
+			return m_Impl.addCustomType( name );
+		}
 	}
 }

@@ -112,12 +112,12 @@ namespace _2Real
 			return m_OutletIO >= other.m_OutletIO;
 		}
 
-		AppData OutletHandle::getLastOutput() const
-		{
-			checkValidity( m_OutletIO );
-			TimestampedData data = m_OutletIO->m_Outlet->getData();
-			return AppData( data, m_OutletIO->m_Outlet->getTypename(), m_OutletIO->m_Outlet->getLongTypename(), m_OutletIO->m_Outlet->getName() );
-		}
+		//AppData OutletHandle::getLastOutput() const
+		//{
+		//	checkValidity( m_OutletIO );
+		//	TimestampedData data = m_OutletIO->m_Outlet->getData();
+		//	return AppData( data, m_OutletIO->m_Outlet->getTypename(), m_OutletIO->m_Outlet->getLongTypename(), m_OutletIO->m_Outlet->getName() );
+		//}
 
 		bool OutletHandle::link( InletHandle &inlet )
 		{
@@ -125,12 +125,12 @@ namespace _2Real
 			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO ).isValid();;
 		}
 
-		bool OutletHandle::linkWithConversion( InletHandle &inlet )
-		{
-			checkValidity( m_OutletIO );
-			std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
-			return links.first.isValid();
-		}
+		//bool OutletHandle::linkWithConversion( InletHandle &inlet )
+		//{
+		//	checkValidity( m_OutletIO );
+		//	std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
+		//	return links.first.isValid();
+		//}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
@@ -170,17 +170,17 @@ namespace _2Real
 			return m_OutletIO->m_Outlet->getName();
 		}
 
-		const std::string OutletHandle::getLongTypename() const
-		{
-			checkValidity( m_OutletIO );
-			return m_OutletIO->m_Outlet->getLongTypename();
-		}
+		//const std::string OutletHandle::getLongTypename() const
+		//{
+		//	checkValidity( m_OutletIO );
+		//	return m_OutletIO->m_Outlet->getLongTypename();
+		//}
 
-		std::string const& OutletHandle::getTypename() const
-		{
-			checkValidity( m_OutletIO );
-			return m_OutletIO->m_Outlet->getTypename();
-		}
+		//std::string const& OutletHandle::getTypename() const
+		//{
+		//	checkValidity( m_OutletIO );
+		//	return m_OutletIO->m_Outlet->getTypename();
+		//}
 
 		void OutletHandle::invalidate()
 		{

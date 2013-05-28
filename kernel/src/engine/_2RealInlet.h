@@ -24,6 +24,8 @@
 #include "helpers/_2RealIdentifiable.h"
 #include "engine/_2RealTimestampedData.h"
 
+#include "datatypes/_2RealCustomData.h"
+
 namespace _2Real
 {
 	class BasicInlet;
@@ -55,20 +57,22 @@ namespace _2Real
 	public:
 
 		BasicInlet( AbstractUberBlock &owningBlock, std::string const& name );
+		virtual ~BasicInlet() {}
 
 		BasicInlet &				operator[]( const unsigned int index ) { return *this; }
 		bool						isMultiInlet() const { return false; }
 		unsigned int				getSize() const { return 1; }
 
-		TimestampedData const&		getCurrentData() const;
-		void						setData( TimestampedData const& data );
-		bool						hasUpdated() const;
-		bool						hasChanged() const;
+		std::shared_ptr< const CustomType >		getCurrentData() const;
+		void									setData( std::shared_ptr< const CustomType > const& data );
+
+		bool									hasChanged() const;
 
 	private:
 
-		TimestampedData				m_LastData;
-		TimestampedData				m_CurrentData;
+		// last data is kept around in case user wants to make == comp
+		std::shared_ptr< const CustomType >		mLastData;
+		std::shared_ptr< const CustomType >		mCurrentData;
 
 	};
 

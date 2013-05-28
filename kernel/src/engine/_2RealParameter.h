@@ -21,10 +21,12 @@
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealPoco.h"
 
-#include <string>
-
 namespace _2Real
 {
+
+	// base class for inlets & outlets
+	// will also be base class for new setup param
+	// 'parameter' is probably stupid name, what was i thinking
 
 	class AbstractUberBlock;
 
@@ -33,23 +35,20 @@ namespace _2Real
 
 	protected:
 
-		Parameter( TypeDescriptor const& type );
+		Parameter() {}
+		virtual ~Parameter() {}
 
-		std::string const&			getTypename() const;
-		const std::string			getLongTypename() const;
-		Type const&					getType() const;
-		TypeCategory const&			getTypeCategory() const;
+		// sets the buffer - not sure why this is needed, maybe setup p?
+		//	void						setData( std::shared_ptr< CustomType > data );
 
-		void						setData( TimestampedData const& data );
-		void						synchronize();		// syncs data & write data
-		TimestampedData				getData() const;	// must return a copy, b/c could change anytime
+		// data = buffer
+		void									synchronize();
+		// this is for reading only ( app, inlet queues ) -> const
+		std::shared_ptr< const CustomType >		getData() const;
 
-	protected:
-
-		TypeDescriptor		const& m_Descriptor;
-		mutable Poco::FastMutex		m_DataAccess;
-		TimestampedData				m_Data;
-		TimestampedData				m_DataBuffer;
+		mutable Poco::FastMutex			m_DataAccess;
+		std::shared_ptr< CustomType >	m_Data;
+		std::shared_ptr< CustomType >	m_DataBuffer;
 
 	};
 

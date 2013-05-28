@@ -33,7 +33,7 @@ namespace _2Real
 
 	public:
 
-		Outlet( AbstractUberBlock &owningBlock, std::string const& name, TypeDescriptor const& type, Any const& emptyData );
+		Outlet( AbstractUberBlock &owningBlock, std::string const& name, std::shared_ptr< const CustomType > initialValue );
 
 		using Handleable< Outlet, bundle::OutletHandle >::getHandle;
 		using Handleable< Outlet, bundle::OutletHandle >::registerHandle;
@@ -42,18 +42,21 @@ namespace _2Real
 		using Identifiable< Outlet >::getFullName;
 		using Identifiable< Outlet >::getName;
 
-		using Parameter::getTypename;
-		using Parameter::getLongTypename;
+		//using Parameter::getTypename;
+		//using Parameter::getLongTypename;
 		using Parameter::getData;
-		using Parameter::getType;
-		using Parameter::getTypeCategory;
+		//using Parameter::getType;
+		//using Parameter::getTypeCategory;
 
-		bool			synchronize();
-		Any &			getWriteableData();
-		void			discardCurrentUpdate();
-		AbstractUberBlock & getOwningUberBlock();
+		bool					synchronize();
+		// returns a reference, since it can only be used during 'update' -> data does not change
+		CustomType &			getWriteableData();
+		void					discardCurrentUpdate();
+		AbstractUberBlock&		getOwningUberBlock();
 
 	private:
+
+		unsigned long			m_Timestamp;
 
 		EngineImpl				&m_Engine;
 		AbstractUberBlock		&m_OwningUberBlock;

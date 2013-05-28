@@ -37,12 +37,6 @@
     <Filter Include="src\helpers">
       <UniqueIdentifier>{3a6c8ffc-700a-4516-bfef-74db6db3baa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\xml">
-      <UniqueIdentifier>{841b9ae2-d9a1-4824-a8d1-87e6a6164b2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\xml">
-      <UniqueIdentifier>{e41e60c2-e6df-4603-a707-bb0f9a05a527}</UniqueIdentifier>
-    </Filter>
     <Filter Include="docs">
       <UniqueIdentifier>{15f9d992-1b23-4ce1-bc76-bc64cf0ed99b}</UniqueIdentifier>
     </Filter>
@@ -72,9 +66,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
@@ -89,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h">
       <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealImageT.h">
-      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h">
       <Filter>include\engine</Filter>
@@ -258,35 +246,8 @@
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\xml\_2RealXML.h">
-      <Filter>include\xml</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xml\_2RealXMLWriter.h">
-      <Filter>include\xml</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealImage.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealOptions.h">
       <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealSkeleton.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealNumber.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealPoint.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealQuaternion.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealRigidBody.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealFilePath.h">
-      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h">
       <Filter>include\internal_bundles</Filter>
@@ -327,30 +288,30 @@
     <ClInclude Include="..\..\src\datatypes\_2RealVector.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealBoundingBox.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealSpace.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealMatrix.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealFace.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealAudioBuffer.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h">
       <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\_2RealSystemState.h" />
-    <ClInclude Include="..\..\src\_2RealSystemStateImpl.h" />
-    <ClInclude Include="..\..\src\_2RealConfigLoader.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetadata.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealRange.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -500,30 +461,6 @@
     <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\xml\_2RealXMLWriter.cpp">
-      <Filter>src\xml</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealSkeleton.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealImageT.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealNumber.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealPoint.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealRigidBody.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealQuaternion.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealTypeDescriptor.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
@@ -536,9 +473,21 @@
     <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealSystemState.cpp" />
-    <ClCompile Include="..\..\src\_2RealSystemStateImpl.cpp" />
-    <ClCompile Include="..\..\src\_2RealConfigLoader.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealCustomData.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealTypeMetainfo.cpp">
+      <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeMetadata.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptor.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealRange.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\status.txt">

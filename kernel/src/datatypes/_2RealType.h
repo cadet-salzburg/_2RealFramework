@@ -39,36 +39,12 @@ namespace _2Real
 			ULONG,
 			FLOAT,
 			DOUBLE,
-			NUMBER,
 
 			BOOL,
 
 			STRING,
-			
-			FILEPATH,
-			VECTOR,
-			LIST,
-			IMAGE,
 
-			AUDIO,
-
-			POINT,
-			SKELETON,
-			RIGIDBODY,
-			QUATERNION,
-			VECTOR2D,
-			VECTOR3D,
-			VECTOR4D,
-			MATRIX2D,
-			MATRIX3D,
-			MATRIX4D,
-			SPACE2D,
-			SPACE3D,
-			SPACE4D,
-			FACEDESC,
-			FACECAST,
-
-			RENDEROBJECT,
+			//VECTOR,
 		};
 
 		Type( Code const& code ) : m_Code( code ) {}

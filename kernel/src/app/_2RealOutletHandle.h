@@ -43,8 +43,8 @@ namespace _2Real
 			OutletHandle& operator=( OutletHandle const& other );
 
 			std::string const&	getName() const;
-			const std::string	getLongTypename() const;
-			std::string const&	getTypename() const;
+			//const std::string	getLongTypename() const;
+			//std::string const&	getTypename() const;
 
 			bool isValid() const;
 			void invalidate();
@@ -56,10 +56,10 @@ namespace _2Real
 			bool operator>=( OutletHandle const& other ) const;
 
 			bool link( InletHandle &inletHandle );
-			bool linkWithConversion( InletHandle &inletHandle );
+			//bool linkWithConversion( InletHandle &inletHandle );
 			void unlinkFrom( InletHandle &inletHandle );
 
-			AppData				getLastOutput() const;
+			//AppData				getLastOutput() const;
 
 			void registerToNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;

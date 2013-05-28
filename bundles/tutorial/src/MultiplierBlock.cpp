@@ -22,37 +22,37 @@ MultiplierBlock::~MultiplierBlock()
 
 void MultiplierBlock::setup( BlockHandle &block )
 {
-	try
-	{
-		// inlet handles
-		m_NumberAInletHandle = block.getInletHandle("NumberA");
-		m_NumberBInletHandle = block.getInletHandle("NumberB");
-	
-		// outlet handles
-		m_ResultOutletHandle = block.getOutletHandle("Result" );
+	//try
+	//{
+	//	// inlet handles
+	//	m_NumberAInletHandle = block.getInletHandle("NumberA");
+	//	m_NumberBInletHandle = block.getInletHandle("NumberB");
+	//
+	//	// outlet handles
+	//	m_ResultOutletHandle = block.getOutletHandle("Result" );
 
-		// set default for output, when block isn't started yet and no update had happend
-		m_ResultOutletHandle.getWriteableRef<int>() = 0;
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
+	//	// set default for output, when block isn't started yet and no update had happend
+	//	m_ResultOutletHandle.getWriteableRef<int>() = 0;
+	//}
+	//catch ( Exception &e )
+	//{
+	//	cout << e.message() << endl;
+	//	e.rethrow();
+	//}
 }
 
 void MultiplierBlock::update()
 {
-	try
-	{
-		// multiply the values of two integer inlets and write it to an integer outlet
-		m_ResultOutletHandle.getWriteableRef<int>() = m_NumberAInletHandle.getReadableRef<int>() * m_NumberBInletHandle.getReadableRef<int>();
-	}
-	catch ( Exception &e )
-	{
-		cout << e.message() << endl;
-		e.rethrow();
-	}
+	//try
+	//{
+	//	// multiply the values of two integer inlets and write it to an integer outlet
+	//	m_ResultOutletHandle.getWriteableRef<int>() = m_NumberAInletHandle.getReadableRef<int>() * m_NumberBInletHandle.getReadableRef<int>();
+	//}
+	//catch ( Exception &e )
+	//{
+	//	cout << e.message() << endl;
+	//	e.rethrow();
+	//}
 }
 
 void MultiplierBlock::shutdown()

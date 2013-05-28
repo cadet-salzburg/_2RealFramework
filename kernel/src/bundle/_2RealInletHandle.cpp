@@ -87,16 +87,10 @@ namespace _2Real
 			return ( *m_Inlet )[ index ].getHandle();
 		}
 
-		Any InletHandle::getCurrentData() const
+		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
 		{
 			checkValidity( m_Inlet );
-			return ( *m_Inlet )[ 0 ].getCurrentData().anyValue;
-		}
-
-		bool InletHandle::hasUpdated() const
-		{
-			checkValidity( m_Inlet );
-			return ( *m_Inlet )[ 0 ].hasUpdated();
+			return ( *m_Inlet )[ 0 ].getCurrentData();
 		}
 
 		bool InletHandle::hasChanged() const

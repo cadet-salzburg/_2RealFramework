@@ -21,20 +21,6 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealTypeDescriptor.h"
 
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealImageT.h"
-#include "datatypes/_2RealPoint.h"
-#include "datatypes/_2RealSpace.h"
-#include "datatypes/_2RealVector.h"
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealMatrix.h"
-#include "datatypes/_2RealSkeleton.h"
-#include "datatypes/_2RealRigidBody.h"
-#include "datatypes/_2RealQuaternion.h"
-#include "datatypes/_2RealFilePath.h"
-#include "datatypes/_2RealAudioBuffer.h"
-#include "datatypes/_2RealFace.h"
-
 #include <vector>
 #include <list>
 #include <string>
@@ -64,14 +50,14 @@ namespace _2Real
 		}
 	};
 
-	template< typename T >
-	struct traits< std::vector< T, Eigen::aligned_allocator< T > > >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( std::vector< T, Eigen::aligned_allocator< T > > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
-		}
-	};
+	//template< typename T >
+	//struct traits< std::vector< T, Eigen::aligned_allocator< T > > >
+	//{
+	//	static TypeDescriptor *createTypeDescriptor()
+	//	{
+	//		return new TypeDescriptor( typeid( std::vector< T, Eigen::aligned_allocator< T > > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
+	//	}
+	//};
 
 	template< typename T >
 	struct traits< std::list< T > >
@@ -182,15 +168,6 @@ namespace _2Real
 	};
 
 	template< >
-	struct traits< Number >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Number ), Type::NUMBER, "number", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
 	struct traits< bool >
 	{
 		static TypeDescriptor *createTypeDescriptor()
@@ -205,204 +182,6 @@ namespace _2Real
 		static TypeDescriptor *createTypeDescriptor()
 		{
 			return new TypeDescriptor( typeid( std::string ), Type::STRING, "string", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< FilePath >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( FilePath ), Type::FILEPATH, "filepath", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Image8U >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Image8U ), Type::IMAGE, "image", traits< unsigned char >::createTypeDescriptor() );
-		}
-	};
-
-	template< >
-	struct traits< Image16U >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Image16U ), Type::IMAGE, "image", traits< unsigned short >::createTypeDescriptor() );
-		}
-	};
-
-	template< >
-	struct traits< Image32F >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Image32F ), Type::IMAGE, "image", traits< float >::createTypeDescriptor() );
-		}
-	};
-
-	template< >
-	struct traits< Image64F >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Image64F ), Type::IMAGE, "image", traits< double >::createTypeDescriptor() );
-		}
-	};
-
-	template< >
-	struct traits< Image >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Image ), Type::IMAGE, "image", traits< Number >::createTypeDescriptor() );
-		}
-	};
-
-	template< >
-	struct traits< Point >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Point ), Type::POINT, "point", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Skeleton >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Skeleton ), Type::SKELETON, "skeleton", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Quaternion >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Quaternion ), Type::QUATERNION, "quaternion", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< RigidBody >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( RigidBody ), Type::RIGIDBODY, "rigid body", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Vec2 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Vec2 ), Type::VECTOR2D, "vector 2D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< Vec3 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Vec3 ), Type::VECTOR3D, "vector 3D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< Vec4 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Vec4 ), Type::VECTOR4D, "vector 4D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< Mat2 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Mat2 ), Type::MATRIX2D, "2x2 matrix", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Mat3 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Mat3 ), Type::MATRIX3D, "3x3 matrix", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Mat4 >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Mat4 ), Type::MATRIX4D, "4x4 matrix", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< Space2D >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Space2D ), Type::SPACE2D, "space 2D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< Space3D >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Space3D ), Type::SPACE3D, "space 3D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< Space4D >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( Space4D ), Type::SPACE4D, "space 4D", TypeCategory::ARITHMETHIC );
-		}
-	};
-
-	template< >
-	struct traits< FaceDesc >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( FaceDesc ), Type::FACEDESC, "face description", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< FaceCast >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( FaceCast ), Type::FACECAST, "face depth cast", TypeCategory::UNIQUE );
-		}
-	};
-
-	template< >
-	struct traits< AudioBuffer >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( AudioBuffer ), Type::AUDIO, "audio buffer", TypeCategory::UNIQUE );
 		}
 	};
 

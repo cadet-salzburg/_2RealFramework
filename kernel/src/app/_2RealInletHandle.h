@@ -19,7 +19,6 @@
 #pragma once
 
 #include "helpers/_2RealAny.h"
-#include "helpers/_2RealOptions.h"
 #include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
@@ -59,7 +58,7 @@ namespace _2Real
 
 			struct InletState
 			{
-				std::string defaultValue;
+				//std::string defaultValue;
 				std::string currentValue;
 				std::string updatePolicy;
 				std::string bufferSize;
@@ -70,24 +69,24 @@ namespace _2Real
 			void setUpdatePolicy( InletPolicy const& policy );
 
 			bool link( OutletHandle &outletHandle );
-			bool linkWithConversion( OutletHandle &outletHandle );
+			//bool linkWithConversion( OutletHandle &outletHandle );
 			void unlinkFrom( OutletHandle &outletHandle );
 
 			// if the inlet is linked, the value might be overwritten of course
-			template< typename TData >
-			void setValue( TData const& value )
-			{
-				setValue( Any( value ) );
-			}
+			//template< typename TData >
+			//void setValue( TData const& value )
+			//{
+			//	setValue( Any( value ) );
+			//}
 
-			template< typename TData >
-			void setDefaultValue( TData const& value )
-			{
-				setDefaultValue( Any( value ) );
-			}
+			//template< typename TData >
+			//void setDefaultValue( TData const& value )
+			//{
+			//	setDefaultValue( Any( value ) );
+			//}
 
-			void setValueToString( std::string const& value );
-			void setDefaultValueToString( std::string const& value );
+			//void setValueToString( std::string const& value );
+			//void setDefaultValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
@@ -95,12 +94,12 @@ namespace _2Real
 
 			void				setBufferSize( const unsigned int size );
 
-			template< typename TData >
-			std::set< Option< TData > > getOptionMapping() const
-			{
-				AnyOptionSet const& anyOptions = this->getOptionSet();
-				return anyOptions.extract< TData >();
-			}
+			//template< typename TData >
+			//std::set< Option< TData > > getOptionMapping() const
+			//{
+			//	AnyOptionSet const& anyOptions = this->getOptionSet();
+			//	return anyOptions.extract< TData >();
+			//}
 
 			bool isMultiInlet() const;
 			unsigned int getSize() const;

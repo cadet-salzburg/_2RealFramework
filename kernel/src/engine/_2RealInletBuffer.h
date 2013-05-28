@@ -21,7 +21,8 @@
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealEvent.h"
 #include "helpers/_2RealPoco.h"
-#include "helpers/_2RealOptions.h"
+
+#include "datatypes/_2RealCustomData.h"
 
 #include <list>
 
@@ -71,16 +72,14 @@ namespace _2Real
 		typedef std::list< TimestampedData >			DataBuffer;
 		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
 
-		AbstractInletBuffer( AnyOptionSet const& options );
+		AbstractInletBuffer();
 		virtual ~AbstractInletBuffer() {}
 
 		virtual BasicInletBuffer & operator[]( const unsigned int index ) = 0;
-		AnyOptionSet const& getOptionSet() const { return m_Options; }
 
 	protected:
 
 		EngineImpl										&m_Engine;
-		AnyOptionSet									m_Options;
 
 	};
 
@@ -89,43 +88,32 @@ namespace _2Real
 
 	public:
 
-		BasicInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		BasicInletBuffer();
 		~BasicInletBuffer();
 
+		// yeah, not pretty
 		BasicInletBuffer & operator[]( const unsigned int index ) { return *this; }
 
-		void receiveData( Any const& data );
-		void receiveData( std::string const& data );
 		void processBufferedData( const bool enableTriggering );
-		void clearBufferedData();
-		AnyOptionSet const& getOptionSet() const;
+		std::shared_ptr< const CustomType > getTriggeringData() const;
 
-		void setInitialValue( Any const& initialValue );
-		void setInitialValueToString( std::string const& dataAsString );
-		Any const& getInitialValue() const;
-
-		TimestampedData const& getTriggeringData() const;
 		void setBufferSize( const unsigned int size );
 		unsigned int getBufferSize() const;
 
-		// direct linking is based on basic buffers
 		void receiveData( TimestampedData const& data );
 
 		// triggers is based on basic buffers only
 		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
 		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
-		void disableTriggering( TimestampedData const& data );
+		void disableTriggering( std::shared_ptr< const CustomType > const& data );
 
 	private:
 
-		unsigned long									m_Counter;
 		DataBuffer										m_ReceivedDataItems;	// holds all received data items
-		TimestampedData									m_TriggeringData;		// holds the data item which first triggered the update condition
+		std::shared_ptr< const CustomType >				m_TriggeringData;		// holds the data item which first triggered the update condition
 		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
 		volatile bool									m_NotifyOnReceive;		// if true: try triggering
 
-		Any												m_InitialValue;
-		mutable Poco::FastMutex							m_InitialDataAccess;
 		mutable Poco::FastMutex							m_BufferAccess;
 		mutable Poco::FastMutex							m_NotificationAccess;
 		AbstractInsertionPolicy							*m_InsertionPolicy;
@@ -141,7 +129,7 @@ namespace _2Real
 		typedef std::vector< BasicInletBuffer * >::iterator				BasicBufferIterator;
 		typedef std::vector< BasicInletBuffer * >::const_iterator		BasicBufferConstInterator;
 
-		MultiInletBuffer( Any const& initialData, AnyOptionSet const& options );
+		MultiInletBuffer( std::shared_ptr< const CustomType > initialData );
 		~MultiInletBuffer();
 
 		BasicInletBuffer & operator[]( const unsigned int index );
@@ -151,6 +139,7 @@ namespace _2Real
 	private:
 
 		BasicBuffers				m_Buffers;
+		std::shared_ptr< const CustomType >				m_InitialValue;
 
 	};
 

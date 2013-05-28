@@ -22,5 +22,5 @@
 
 namespace _2Real
 {
-	const std::string strTypeConversions = "TypeConversions";
+	//const std::string strTypeConversions = "TypeConversions";
 }

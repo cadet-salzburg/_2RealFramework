@@ -33,56 +33,58 @@ namespace _2Real
 {
 	IOLink * IOLink::link( BasicInletIO &inlet, OutletIO &outlet )
 	{
-		if ( inlet.info().type.m_LongTypename != outlet.m_Outlet->getLongTypename() )
+		// ARGH typename
+
+/*		if ( inlet.info().type.m_LongTypename != outlet.m_Outlet->getLongTypename() )
 		{
 			return nullptr;
 		}
-		else return new IOLink( inlet, outlet );
+		else */return new IOLink( inlet, outlet );
 	}
 
-	IOLink * IOLink::linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		return new IOLink( inlet, outlet );
-	}
+	//IOLink * IOLink::linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet )
+	//{
+	//	return new IOLink( inlet, outlet );
+	//}
 
 	IOLink::IOLink() : m_InletIO( nullptr ), m_OutletIO( nullptr )
 	{
 	}
 
-	bool IOLink::canAutoConvert( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		const Type tSrc = outlet.m_Outlet->getType();
-		const Type tDst = inlet.info().type.m_Type;
-		if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
-		{
-			const TypeCategory cSrc = outlet.m_Outlet->getTypeCategory();
-			const TypeCategory cDst = inlet.info().type.m_TypeCategory;
-			if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	//bool IOLink::canAutoConvert( BasicInletIO &inlet, OutletIO &outlet )
+	//{
+	//	const Type tSrc = outlet.m_Outlet->getType();
+	//	const Type tDst = inlet.info().type.m_Type;
+	//	if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
+	//	{
+	//		const TypeCategory cSrc = outlet.m_Outlet->getTypeCategory();
+	//		const TypeCategory cDst = inlet.info().type.m_TypeCategory;
+	//		if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
+	//		{
+	//			return true;
+	//		}
+	//	}
+	//	return false;
+	//}
 
-	const std::string IOLink::findConversion( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		std::string inType = inlet.info().type.m_TypeName;
-		std::string outType = outlet.m_Outlet->getTypename();
+	//const std::string IOLink::findConversion( BasicInletIO &inlet, OutletIO &outlet )
+	//{
+	//	std::string inType = inlet.info().type.m_TypeName;
+	//	std::string outType = outlet.m_Outlet->getTypename();
 
-		for ( unsigned int i = 0; i<inType.length(); ++i )
-		{
-			if ( inType[i] == ' ' ) inType[i] = '_';
-		}
-		for ( unsigned int i = 0; i<outType.length(); ++i )
-		{
-			if ( outType[i] == ' ' ) outType[i] = '_';
-		}
+	//	for ( unsigned int i = 0; i<inType.length(); ++i )
+	//	{
+	//		if ( inType[i] == ' ' ) inType[i] = '_';
+	//	}
+	//	for ( unsigned int i = 0; i<outType.length(); ++i )
+	//	{
+	//		if ( outType[i] == ' ' ) outType[i] = '_';
+	//	}
 
-		std::string conversion = outType + "_to_" + inType;
+	//	std::string conversion = outType + "_to_" + inType;
 
-		return conversion;
-	}
+	//	return conversion;
+	//}
 
 	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet ) :
 		m_InletIO( &inlet ),

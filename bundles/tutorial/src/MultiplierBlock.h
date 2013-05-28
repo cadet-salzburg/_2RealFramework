@@ -12,9 +12,9 @@ public:
 	void					update();
 	void					setup( BlockHandle &context );
 
-private:
-
-	InletHandle							m_NumberAInletHandle;
-	InletHandle							m_NumberBInletHandle;
-	OutletHandle						m_ResultOutletHandle;
+//private:
+//
+//	InletHandle							m_NumberAInletHandle;
+//	InletHandle							m_NumberBInletHandle;
+//	OutletHandle						m_ResultOutletHandle;
 };

@@ -64,7 +64,7 @@ namespace _2Real
 
 		void							addBasicInlet( AbstractInletIO::InletInfo const& info );
 		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
-		void							addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
+		void							addOutlet( std::string const& name, std::shared_ptr< const CustomType > initialValue );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name );
 		app::OutletHandle &				getAppOutletHandle( std::string const& name );
@@ -79,7 +79,7 @@ namespace _2Real
 		void							updateInletData();
 		void							updateOutletData();
 		void							updateInletBuffers( const bool enableTriggering );
-		void							clearInletBuffers();
+		//void							clearInletBuffers();
 
 		/* moved to public 13/05/2013 - using this function might cause sync issues?? */
 

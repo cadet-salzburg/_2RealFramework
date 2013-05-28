@@ -171,8 +171,8 @@ namespace _2Real
 	void FunctionBlockIOManager::addBasicInlet( AbstractInletIO::InletInfo const& info )
 	{
 		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
-		io->syncInletData();
-		m_UpdatePolicy->addInlet( *io, info.policy );
+		m_UpdatePolicy->addInlet( *io, info.policy );					// creates a trigger and adds it
+		io->receiveData( info.initValue );								// receive the first data item
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
@@ -186,9 +186,9 @@ namespace _2Real
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue )
+	void FunctionBlockIOManager::addOutlet( std::string const& name, std::shared_ptr< const CustomType > initialValue )
 	{
-		OutletIO *io = new OutletIO( m_Owner, name, type, initialValue );
+		OutletIO *io = new OutletIO( m_Owner, name, initialValue );
 		io->m_Outlet->synchronize();
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );
@@ -215,33 +215,29 @@ namespace _2Real
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			Outlet &outlet = *( ( *it )->m_Outlet );
+
+			// ARGH this could be better
+			// synchronize & append to app data list or sth??
 			bool wasDiscarded = outlet.Outlet::synchronize();
 
 			if ( !wasDiscarded )
 			{
-				TimestampedData lastData = outlet.getData();
-				( *it )->m_InletEvent->notify( lastData );
-				app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getLongTypename(), outlet.getName() );
-				( *it )->m_AppEvent->notify( out );
-				data.push_back( out );
+				std::shared_ptr< const CustomType > data = outlet.getData();
+				// make shit unique within system right now?
+				// i.e. create a unique key... sigh
+				TimestampedData tmp( data, EngineImpl::instance().getElapsedTime() );
+				( *it )->m_InletEvent->notify( tmp );
+
+				// this is also quite silly
+				//app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getLongTypename(), outlet.getName() );
+				//	( *it )->m_AppEvent->notify( out );
+				//	data.push_back( out );
 			}
 		}
 
 		if ( data.size() > 0 )
 		{
 			m_AppEvent.notify( data );
-		}
-	}
-
-	void FunctionBlockIOManager::clearInletBuffers()
-	{
-		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
-			{
-				BasicInletIO &inletIO = ( **it )[ i ];
-				inletIO.clearBufferedData();
-			}
 		}
 	}
 

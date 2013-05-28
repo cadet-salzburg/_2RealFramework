@@ -23,7 +23,10 @@
 #include "engine/_2RealBlockMetadata.h"
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealParameterMetadata.h"
+
+#include "_2RealTypeMetadata.h"
 
 #include <sstream>
 #include <assert.h>
@@ -98,6 +101,26 @@ namespace _2Real
 	void Metainfo::setName( string const& name )
 	{
 		m_BundleData.setName( name );
+	}
+
+	bundle::TypeMetainfo & Metainfo::addCustomType( std::string const& name )
+	{
+		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
+		{
+			if ( toLower( it->first ) == toLower( name ) )
+			{
+				ostringstream msg;
+				msg << "type " << name << " is already defined in bundle " << m_BundleData.getName();
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
+		TypeMetadata *m = new TypeMetadata();
+		m_TypeInfos[ name ].data = m;
+		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m );
+		m_TypeInfos[ name ].meta = i;
+
+		return *i;
 	}
 
 	bundle::ContextBlockMetainfo & Metainfo::setContextBlockCreator( bundle::AbstractBlockCreator &obj )

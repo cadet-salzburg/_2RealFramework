@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
+#include "datatypes/_2RealCustomData.h"
 
 #include <sstream>
 
@@ -85,7 +86,7 @@ namespace _2Real
 
 		private:
 
-			Any					getCurrentData() const;
+			std::shared_ptr< const CustomType >				getCurrentData() const;
 			AbstractInlet		*m_Inlet;
 
 		};

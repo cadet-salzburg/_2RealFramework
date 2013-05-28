@@ -48,7 +48,7 @@ namespace _2Real
 	BasicInletIO::BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
 		AbstractInletIO( owner, policy, info ),
 		m_Inlet( new BasicInlet( owner, info.baseName ) ),
-		m_Buffer( new BasicInletBuffer( info.initValue.anyValue, info.options ) )
+		m_Buffer( new BasicInletBuffer() )
 	{
 	}
 
@@ -68,11 +68,6 @@ namespace _2Real
 		return m_Info.baseName;
 	}
 
-	TimestampedData const& BasicInletIO::getData() const
-	{
-		return m_Inlet->getCurrentData();
-	}
-
 	void BasicInletIO::setBufferSize( const unsigned int size )
 	{
 		m_Buffer->setBufferSize( size );
@@ -84,25 +79,20 @@ namespace _2Real
 		m_Policy.setInletPolicy( *this, p );
 	}
 
-	void BasicInletIO::receiveData( Any const& dataAsAny )
+	void BasicInletIO::receiveData( std::shared_ptr< const CustomType > data )
 	{
-		m_Buffer->receiveData( dataAsAny );
+		m_Buffer->receiveData( TimestampedData( data, EngineImpl::instance().getElapsedTime() ) );
 	}
 
-	void BasicInletIO::receiveData( std::string const& dataAsString )
-	{
-		m_Buffer->receiveData( dataAsString );
-	}
+	//void BasicInletIO::receiveData( Any const& dataAsAny )
+	//{
+	//	m_Buffer->receiveData( dataAsAny );
+	//}
 
-	void BasicInletIO::setInitialValueToString( std::string const& dataAsString )
-	{
-		m_Buffer->setInitialValueToString( dataAsString );
-	}
-
-	void BasicInletIO::setInitialValue( Any const& any )
-	{
-		m_Buffer->setInitialValue( any );
-	}
+	//void BasicInletIO::receiveData( std::string const& dataAsString )
+	//{
+	//	m_Buffer->receiveData( dataAsString );
+	//}
 
 	void BasicInletIO::syncInletData()
 	{
@@ -112,12 +102,6 @@ namespace _2Real
 	void BasicInletIO::processBufferedData( const bool enableTriggering )
 	{
 		m_Buffer->processBufferedData( enableTriggering );
-	}
-
-	void BasicInletIO::clearBufferedData()
-	{
-		m_Buffer->clearBufferedData();
-		m_Buffer->receiveData( m_Buffer->getInitialValue() );
 	}
 
 	const std::string BasicInletIO::getBufferSizeAsString() const
@@ -136,14 +120,9 @@ namespace _2Real
 	const std::string BasicInletIO::getCurrentValueAsString() const
 	{
 		std::ostringstream str;
-		m_Inlet->getCurrentData().anyValue.writeTo( str );
-		return str.str();
-	}
-
-	const std::string BasicInletIO::getInitialValueAsString() const
-	{
-		std::ostringstream str;
-		m_Buffer->getInitialValue().writeTo( str );
+		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentData();
+		if ( data.get() == nullptr ) str << "empty" << std::endl;
+		else data->writeTo( str );
 		return str.str();
 	}
 
@@ -152,7 +131,7 @@ namespace _2Real
 	MultiInletIO::MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
 		AbstractInletIO( owner, policy, info ),
 		m_Inlet( new MultiInlet( owner, info.baseName ) ),
-		m_Buffer( new MultiInletBuffer( info.initValue.anyValue, info.options ) )
+		m_Buffer( new MultiInletBuffer( info.initValue ) )
 	{
 		//adding the very first inlet
 		//addBasicInlet();
@@ -205,7 +184,7 @@ namespace _2Real
 		m_InletIOs.push_back( IO( io ) );
 		// causes inlet to be added to the policy
 		m_Policy.addInlet( *io, info.policy );
-		io->receiveData( m_Info.initValue.anyValue );
+		//io->receiveData( m_Info.initValue.anyValue );		// ARGH not sure if this is right
 
 		return io;
 	}
@@ -268,9 +247,9 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, TypeDescriptor const& type, Any const& initialValue ) :
+	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initialValue ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
-		m_Outlet( new Outlet( owner, name, type, initialValue ) ),
+		m_Outlet( new Outlet( owner, name, initialValue ) ),
 		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
 		m_InletEvent( new CallbackEvent< TimestampedData const& >() )
 	{

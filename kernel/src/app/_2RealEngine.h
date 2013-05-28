@@ -126,17 +126,17 @@ namespace _2Real
 				unregisterFromExceptionInternal( *cb );
 			}
 
-			void saveConfig( std::string const& filePath );
+			//void saveConfig( std::string const& filePath );
 			//std::list< std::string > tryConfig( std::string const& filePath );
 			//void loadConfig( std::string const& filePath );
 
 			// new 02/05/13
-			void getCurrentSystemState( SystemState &state );
+			//void getCurrentSystemState( SystemState &state );
 			// this basically tests whether or not all bundles are there
 			// not doing this & just loading results in an exception
-			std::list< std::string > testConfiguration( std::string const& dataSource );
+			//std::list< std::string > testConfiguration( std::string const& dataSource );
 			// returns the difference to the previous system state
-			SystemState *loadConfiguration( std::string const& dataSource );
+			//SystemState *loadConfiguration( std::string const& dataSource );
 
 		private:
 

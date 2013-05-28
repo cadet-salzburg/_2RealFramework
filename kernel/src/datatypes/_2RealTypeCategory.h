@@ -28,8 +28,8 @@ namespace _2Real
 
 		enum Category
 		{
-			ARITHMETHIC,		// byte - unsigned long, Number
-			LOGICAL,			// bool
+			ARITHMETHIC,
+			LOGICAL,
 			CONTAINER,			// vector / list / string / image
 			UNIQUE,				// everything else
 			EIGEN_TYPE			// stuff taken from the eigen lib
