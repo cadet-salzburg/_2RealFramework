@@ -88,10 +88,9 @@ namespace _2Real
 
 		void						handleException( Exception &e );
 
-		//void						addInlet( std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > const& i, const bool isMulti );
-		void						addInlet( InletMetadata const& meta );
-		//void						addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue );
-		void						addOutlet( OutletMetadata const& meta );
+
+		void						addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer );
+		void						addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer );
 
 	private:
 
@@ -161,30 +160,18 @@ namespace _2Real
 		return str.str();
 	}
 
-	//template< typename THandle >
-	//void FunctionBlock< THandle >::addInlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue, AnyOptionSet const& options, InletPolicy const& p, const bool isMulti )
-	//{
-	//	AbstractInletIO::InletInfo info( *this, name, type, options, initialValue, p );
-	//	isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
-	//}
-
 	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( InletMetadata const& meta )
+	void FunctionBlock< THandle >::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer )
 	{
-		AbstractInletIO::InletInfo info( *this, meta.name, meta.defaultPolicy, meta.initValue );
+		AbstractInletIO::InletInfo info( *this, meta.name, meta.defaultPolicy, initializer );
 		meta.isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}
 
-	//template< typename THandle >
-	//void FunctionBlock< THandle >::addOutlet( std::string const& name, TypeDescriptor const& type, Any const& initialValue )
-	//{
-	//	m_IOManager->addOutlet( name, type, initialValue );
-	//}
-
 	template< typename THandle >
-	void FunctionBlock< THandle >::addOutlet( OutletMetadata const& meta )
+	void FunctionBlock< THandle >::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer  )
 	{
-		m_IOManager->addOutlet( meta.name, meta.initValue );
+		OutletIO::OutletInfo info( *this, meta.name, initializer );
+		m_IOManager->addOutlet( info );
 	}
 
 	template< typename THandle >

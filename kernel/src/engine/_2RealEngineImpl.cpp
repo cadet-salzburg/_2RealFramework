@@ -21,6 +21,7 @@
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealTimer.h"
 #include "engine/_2RealThreadPool.h"
+#include "datatypes/_2RealTypeRegistry.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealSystem.h"
 #include "engine/_2RealFunctionBlock.h"
@@ -74,8 +75,9 @@ namespace _2Real
 	EngineImpl::EngineImpl() :
 		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer( *m_Logger ) ),
+		m_TypeRegistry( new TypeRegistry ),
 		m_ThreadPool( new ThreadPool( *this, 3, 0, "2Real threadpool" ) ),
-		m_BundleManager( new BundleManager( *this ) ),
+		m_BundleManager( new BundleManager( *this, *m_TypeRegistry ) ),
 		m_System( new System( *m_Logger ) )
 	{
 		m_Timestamp.update();
@@ -92,6 +94,7 @@ namespace _2Real
 			delete m_System;
 			delete m_BundleManager;
 			delete m_ThreadPool;
+			delete m_TypeRegistry;
 			m_Logger->stop();
 			delete m_Logger;
 			delete m_Timer;

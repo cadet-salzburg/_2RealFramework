@@ -40,19 +40,13 @@ namespace _2Real
 			m_Impl.setThreadingPolicy( policy );
 		}
 
-		//void ContextBlockMetainfo::addOutletInternal( std::string const& outletName, TypeDescriptor const *const descriptor, Any const& init )
-		//{
-		//	checkChars( toLower( trim( outletName ) ) );
-		//	OutletMetadata *data = new OutletMetadata( trim( outletName ), descriptor, init );
-		//	m_Impl.addOutlet( *data );
-		//}
-		void ContextBlockMetainfo::addOutlet( std::string const& name, std::string const& customName, CustomType const& initialValue )
+		void ContextBlockMetainfo::addOutlet( std::string const& name, std::string const& typeName )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
 			// check the existence of the type ( pre-defined, as well as self registered types are possible )
-			OutletMetadata *data = new OutletMetadata( trimmed, initialValue );
+			OutletMetadata *data = new OutletMetadata( trimmed, typeName );
 			m_Impl.addOutlet( *data );
 		}
 	}

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,37 +19,34 @@
 
 #pragma once
 
-#include "datatypes/_2RealFieldDescriptor.h"
-
 #include <string>
+#include <map>
 
 namespace _2Real
 {
 	class TypeMetadata;
 
-	namespace bundle
+	class TypeRegistry
 	{
-		class TypeMetainfo
-		{
 
-		public:
+	public:
 
-			TypeMetainfo( TypeMetadata &meta );
-			~TypeMetainfo();
+		TypeRegistry() {}
+		~TypeRegistry() { mTypes.clear(); }
 
-			template< typename TType >
-			void addField( std::string const& name )
-			{
-				addFieldInternal( name, new FieldDescriptor_t< TType >( init< TType >::defaultValue() ) );
-			}
+		void registerType( std::string const& bundle, std::string const& name, TypeMetadata &meta );
+		void unregisterType( std::string const& bundle, std::string const& name, TypeMetadata &meta );
+		TypeMetadata const& getType( std::string const& bundle, std::string const& name ) const;
 
-		private:
+	private:
 
-			friend class CustomType;
-			TypeMetadata		&mImpl;
+		TypeRegistry( TypeRegistry const& other );
+		TypeRegistry& operator=( TypeRegistry const& other );
 
-			void addFieldInternal( std::string const& name, FieldDescriptor *desc );
+		typedef std::pair< std::string, std::string >	TypeKey;
+		typedef std::map< TypeKey, TypeMetadata * >		Types;
 
-		};
-	}
+		Types			mTypes;
+
+	};
 }

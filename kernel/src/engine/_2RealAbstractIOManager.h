@@ -68,13 +68,13 @@ namespace _2Real
 
 		struct InletInfo
 		{
-			InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > const& i ) :
-				baseName( n ), initValue( i ), policy( p ), owner( b ) {}
+			InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > i ) :
+				owner( b ), baseName( n ), initializer( i ), policy( p ) {}
 
-			std::string								baseName;
-			std::shared_ptr< const CustomType >		initValue;
-			InletPolicy								policy;
 			AbstractUberBlock						&owner;
+			std::string								baseName;
+			std::shared_ptr< const CustomType >		initializer;
+			InletPolicy								policy;
 		};
 
 		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
@@ -192,11 +192,21 @@ namespace _2Real
 
 	public:
 
+		struct OutletInfo
+		{
+			OutletInfo( AbstractUberBlock &b, std::string const& n, std::shared_ptr< const CustomType > i ) :
+				owner( b ), baseName( n ), initializer( i ) {}
+
+			AbstractUberBlock						&owner;
+			std::string								baseName;
+			std::shared_ptr< const CustomType >		initializer;
+		};
+
 		using Handleable< OutletIO, app::OutletHandle >::getHandle;
 		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
 		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initValue );
+		OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initializer );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;

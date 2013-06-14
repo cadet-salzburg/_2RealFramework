@@ -20,18 +20,39 @@
 
 namespace _2Real
 {
+	Parameter::Parameter( std::shared_ptr< const CustomType > initializer ) :
+		m_Data( new CustomType( *( initializer.get() ) ) ),
+		m_DataBuffer( new CustomType( *( initializer.get() ) ) )
+	{
+#ifdef _DEBUG
+		assert( m_DataBuffer.get() && m_Data.get() );
+#endif
+	}
+
 	void Parameter::synchronize()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
-		// m_Data now points at the same data as buffer
-		// the data item before is deleted unless it's inside a queue
+#ifdef _DEBUG
+		assert( m_DataBuffer.get() && m_Data.get() );
+#endif
 		m_Data = m_DataBuffer;
 	}
 
 	std::shared_ptr< const CustomType > Parameter::getData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+#ifdef _DEBUG
+		assert( m_Data.get() );
+#endif
 		return m_Data;
+	}
+
+	CustomType & Parameter::getWriteableData()
+	{
+#ifdef _DEBUG
+		assert( m_DataBuffer.get() );
+#endif
+		return *( m_DataBuffer.get() );
 	}
 
 }

@@ -115,10 +115,10 @@ namespace _2Real
 
 			friend class OutletHandle;
 
-			AnyOptionSet const& getOptionSet() const;
+			//AnyOptionSet const& getOptionSet() const;
 
-			void				setValue( Any const& data );
-			void				setDefaultValue( Any const& data );
+			//void				setValue( Any const& data );
+			//void				setDefaultValue( Any const& data );
 			AbstractInletIO		*m_InletIO;
 
 		};

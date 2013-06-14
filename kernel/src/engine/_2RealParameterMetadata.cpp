@@ -22,17 +22,30 @@ using std::string;
 
 namespace _2Real
 {
-	InletMetadata::InletMetadata( string const& inlet, CustomType const& init, InletPolicy const& policy, const bool multi ) :
-		name( inlet ), defaultPolicy( policy ), isMulti( multi )
+	InletMetadata::InletMetadata( string const& inlet, std::string const& type, CustomType const& init, InletPolicy const& policy, const bool multi ) :
+		name( inlet ), customName( type ), defaultPolicy( policy ), isMulti( multi )
 	{
+		// NOFORGET - copy appropriate?
+		// will be passed on to the inlet buffer of each inlet created!
 		CustomType *t = new CustomType( init );
 		initValue.reset( t );
 	}
 
-	OutletMetadata::OutletMetadata( string const& outlet, CustomType const& init ) :
-		name( outlet )
+	InletMetadata::InletMetadata( string const& inlet, std::string const& type, InletPolicy const& policy, const bool multi ) :
+		name( inlet ), customName( type ), defaultPolicy( policy ), isMulti( multi )
 	{
-		CustomType *t = new CustomType( init );
-		initValue.reset( t );
+	}
+
+	InletMetadata::~InletMetadata()
+	{
+	}
+
+	OutletMetadata::OutletMetadata( string const& outlet, std::string const& type ) :
+		name( outlet ), customName( type )
+	{
+	}
+
+	OutletMetadata::~OutletMetadata()
+	{
 	}
 }

@@ -25,14 +25,14 @@
 
 namespace _2Real
 {
-	// the shared ptrs are copies of the init values, owned by the framework
-
 	struct InletMetadata
 	{
-		InletMetadata( std::string const& inlet, CustomType const& init, InletPolicy const& policy, const bool multi );
+		InletMetadata( std::string const& inlet, std::string const& customName, CustomType const& init, InletPolicy const& policy, const bool multi );
+		InletMetadata( std::string const& inlet, std::string const& customName, InletPolicy const& policy, const bool multi );
 		~InletMetadata();
 
 		std::string										const name;
+		std::string										const customName;
 		std::shared_ptr< const CustomType >				initValue;
 		InletPolicy										const defaultPolicy;
 		bool											const isMulti;
@@ -40,11 +40,11 @@ namespace _2Real
 
 	struct OutletMetadata
 	{
-		OutletMetadata( std::string const& outlet, CustomType const& init );
+		OutletMetadata( std::string const& outlet, std::string const& customName );
 		~OutletMetadata();
 
 		std::string										const name;
-		std::shared_ptr< const CustomType >				initValue;
+		std::string										const customName;
 	};
 
 	//struct SetupParameterMetadata

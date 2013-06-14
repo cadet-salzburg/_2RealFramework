@@ -24,6 +24,7 @@
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
 #include "engine/_2RealEngineImpl.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 #include <sstream>
 #include <assert.h>
@@ -35,10 +36,11 @@ using std::make_pair;
 namespace _2Real
 {
 
-	BundleManager::BundleManager( EngineImpl &engine ) :
+	BundleManager::BundleManager( EngineImpl &engine, TypeRegistry &registry ) :
 		m_Engine( engine ),
+		m_Registry( registry ),
 		m_BaseDirectory( Poco::Path() ),
-		m_BundleLoader()
+		m_BundleLoader( registry )
 	{
 	}
 
@@ -196,29 +198,27 @@ namespace _2Real
 				continue;
 			}
 
-			//BlockMetadata::InletMetadatas const& input = it->second->getInlets();
-			//BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
+			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
+			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
 
-			//for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-			//{
-			//	app::InletInfo info;
-			//	info.name = ( *it )->name;
-			//	info.typeName = ( *it )->type->m_TypeName;
-			//	info.longTypename = ( *it )->type->m_LongTypename;
-			//	info.isMultiInlet = ( *it )->isMulti;
-			//	info.hasOptionCheck = !( *it )->options.isEmpty();
-			//	info.defaultPolicy = ( *it )->defaultPolicy;
-			//	blockInfo.inlets.push_back( info );
-			//}
+			for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
+			{
+				app::InletInfo info;
+				info.name = ( *it )->name;
+				info.customName = ( *it )->customName;
+				info.isMultiInlet = ( *it )->isMulti;
+				info.defaultPolicy = ( *it )->defaultPolicy;
+				info.initValue = ( *it )->initValue;
+				blockInfo.inlets.push_back( info );
+			}
 
-			//for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-			//{
-			//	app::OutletInfo info;
-			//	info.name = ( *it )->name;
-			//	info.typeName = ( *it )->type->m_TypeName;
-			//	info.longTypename = ( *it )->type->m_LongTypename;
-			//	blockInfo.outlets.push_back( info );
-			//}
+			for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
+			{
+				app::OutletInfo info;
+				info.name = ( *it )->name;
+				info.customName = ( *it )->customName;
+				blockInfo.outlets.push_back( info );
+			}
 
 			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
@@ -336,13 +336,26 @@ namespace _2Real
 		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( bundle, block, info );
 		m_Engine.addBlock( *functionBlock );
 
-		// adding inlets & outlets
-
 		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-			functionBlock->addInlet( **it );
+		{
+			std::shared_ptr< const CustomType > initializer;
+			if ( ( **it ).initValue.get() == nullptr )
+			{
+				// may throw
+				TypeMetadata const& meta = m_Registry.getType( bundleMetadata.getName(), ( **it ).customName );
+				initializer.reset( new CustomType( meta ) );
+			}
+			else initializer = ( **it ).initValue;
+			functionBlock->addInlet( **it, initializer );
+		}
 
-		//for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-		//	functionBlock->addOutlet( ( *it )->name, *( ( *it )->type ), ( *it )->initValue );
+		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		{
+			std::shared_ptr< const CustomType > initializer;
+			TypeMetadata const& meta = m_Registry.getType( bundleMetadata.getName(), ( **it ).customName );
+			initializer.reset( new CustomType( meta ) );
+			functionBlock->addOutlet( **it, initializer );
+		}
 
 		return *functionBlock;
 	}

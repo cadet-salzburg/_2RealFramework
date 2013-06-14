@@ -25,6 +25,7 @@
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealParameterMetadata.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 #include "_2RealTypeMetadata.h"
 
@@ -121,6 +122,14 @@ namespace _2Real
 		m_TypeInfos[ name ].meta = i;
 
 		return *i;
+	}
+
+	void Metainfo::registerTypes( TypeRegistry &registry )
+	{
+		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
+		{
+			registry.registerType( m_BundleData.getName(), it->first, *( it->second.data ) );
+		}
 	}
 
 	bundle::ContextBlockMetainfo & Metainfo::setContextBlockCreator( bundle::AbstractBlockCreator &obj )

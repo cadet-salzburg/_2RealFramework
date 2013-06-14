@@ -64,7 +64,7 @@ namespace _2Real
 
 		void							addBasicInlet( AbstractInletIO::InletInfo const& info );
 		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
-		void							addOutlet( std::string const& name, std::shared_ptr< const CustomType > initialValue );
+		void							addOutlet( OutletIO::OutletInfo const& info );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name );
 		app::OutletHandle &				getAppOutletHandle( std::string const& name );

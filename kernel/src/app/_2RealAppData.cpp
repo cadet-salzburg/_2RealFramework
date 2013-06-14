@@ -27,43 +27,43 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	namespace app
-	{
-		AppData::AppData() :
-			m_Data(),
-			m_Typename( "void" ),
-			m_Name( "undefined" )
-		{
-		}
+	//namespace app
+	//{
+	//	AppData::AppData() :
+	//		m_Data(),
+	//		m_Typename( "void" ),
+	//		m_Name( "undefined" )
+	//	{
+	//	}
 
-		AppData::AppData( TimestampedData const& data, string const& typeName, std::string const& longTypename, string const& name ) :
-			m_Data( /*data.anyValue */),
-			m_Typename( typeName ),
-			m_LongTypename( longTypename ),
-			m_Name( name )
-		{
-		}
+	//	AppData::AppData( TimestampedData const& data, string const& typeName, std::string const& longTypename, string const& name ) :
+	//		m_Data( /*data.anyValue */),
+	//		m_Typename( typeName ),
+	//		m_LongTypename( longTypename ),
+	//		m_Name( name )
+	//	{
+	//	}
 
-		const string AppData::getLongTypename() const
-		{
-			return m_LongTypename;
-		}
+	//	const string AppData::getLongTypename() const
+	//	{
+	//		return m_LongTypename;
+	//	}
 
-		string const& AppData::getName() const
-		{
-			return m_Name;
-		}
+	//	string const& AppData::getName() const
+	//	{
+	//		return m_Name;
+	//	}
 
-		string const& AppData::getTypename() const
-		{
-			return m_Typename;
-		}
+	//	string const& AppData::getTypename() const
+	//	{
+	//		return m_Typename;
+	//	}
 
-		const string AppData::getDataAsString() const
-		{
-			ostringstream str;
-			m_Data.writeTo( str );
-			return str.str();
-		}
-	}
+	//	const string AppData::getDataAsString() const
+	//	{
+	//		ostringstream str;
+	//		m_Data.writeTo( str );
+	//		return str.str();
+	//	}
+	//}
 }

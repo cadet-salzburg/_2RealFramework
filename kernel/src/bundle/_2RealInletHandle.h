@@ -41,35 +41,35 @@ namespace _2Real
 			InletHandle& operator=( InletHandle const& src );
 			~InletHandle();
 
-			template< typename TData >
-			TData const& getReadableRef() const
-			{
-				if ( m_Inlet == nullptr )
-				{
-					std::ostringstream msg;
-					msg << "input handle not initialized";
-					throw UninitializedHandleException( msg.str() );
-				}
+			//template< typename TData >
+			//TData const& getReadableRef() const
+			//{
+			//	if ( m_Inlet == nullptr )
+			//	{
+			//		std::ostringstream msg;
+			//		msg << "input handle not initialized";
+			//		throw UninitializedHandleException( msg.str() );
+			//	}
 
-				Any curr = getCurrentData();
-				TData const& data = curr.extract< TData >();
-				return data;
-			}
+			//	Any curr = getCurrentData();
+			//	TData const& data = curr.extract< TData >();
+			//	return data;
+			//}
 
-			template< typename TData >
-			TData * getWriteableCopy()
-			{
-				if ( m_Inlet == nullptr )
-				{
-					std::ostringstream msg;
-					msg << "input handle not initialized";
-					throw UninitializedHandleException( msg.str() );
-				}
+			//template< typename TData >
+			//TData * getWriteableCopy()
+			//{
+			//	if ( m_Inlet == nullptr )
+			//	{
+			//		std::ostringstream msg;
+			//		msg << "input handle not initialized";
+			//		throw UninitializedHandleException( msg.str() );
+			//	}
 
-				Any curr = getCurrentData();
-				TData const& data = curr.extract< TData >();
-				return new TData( data );
-			}
+			//	Any curr = getCurrentData();
+			//	TData const& data = curr.extract< TData >();
+			//	return new TData( data );
+			//}
 
 			bool isValid() const;
 			void invalidate();
@@ -84,9 +84,11 @@ namespace _2Real
 
 			InletHandle operator[]( const unsigned int index );
 
+			CustomType const& getReadableRef() const;
+			void getWriteableCopy( CustomType &type ) const;
+
 		private:
 
-			std::shared_ptr< const CustomType >				getCurrentData() const;
 			AbstractInlet		*m_Inlet;
 
 		};

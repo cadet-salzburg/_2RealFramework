@@ -40,13 +40,48 @@ namespace _2Real
 		virtual ~AbstractAnyHolder() {}
 		virtual const std::string getTypename() const = 0;
 		virtual std::type_info const& getTypeinfo() const = 0;
-		virtual AbstractAnyHolder* clone() const = 0;
-		virtual AbstractAnyHolder* create() const = 0;
 		virtual void writeTo( std::ostream &out ) const = 0;
 		virtual void readFrom( std::istream &in ) = 0;
 		virtual bool isEqualTo( AbstractAnyHolder const& other ) const = 0;
 		virtual bool isLessThan( AbstractAnyHolder const& other ) const = 0;
 
+		virtual AbstractAnyHolder* clone() const = 0;
+		virtual AbstractAnyHolder* create() const = 0;
+		virtual void set( AbstractAnyHolder const& other ) = 0;
+
+		template< typename TType >
+		TType & extract()
+		{
+			AnyHolder< TType > *ptr = dynamic_cast< AnyHolder< TType > * >( this );
+			if ( ptr )
+			{
+				return ptr->mData;
+			}
+			else
+			{
+				TypeDescriptor *t = createTypeDescriptor< TType >();
+				std::ostringstream msg;
+				msg << "type of data does not match template parameter" << std::endl;
+				throw TypeMismatchException( msg.str() );
+			}
+		}
+
+		template< typename TType >
+		TType const& extract() const
+		{
+			AnyHolder< TType > const* ptr = dynamic_cast< AnyHolder< TType > const* >( this );
+			if ( ptr )
+			{
+				return ptr->mData;
+			}
+			else
+			{
+				TypeDescriptor *t = createTypeDescriptor< TType >();
+				std::ostringstream msg;
+				msg << "type of data does not match template parameter" << std::endl;
+				throw TypeMismatchException( msg.str() );
+			}
+		}
 	};
 
 	template< typename TData >
@@ -62,6 +97,7 @@ namespace _2Real
 		std::type_info const& getTypeinfo() const;
 		AbstractAnyHolder * create() const;
 		AbstractAnyHolder * clone() const;
+		void set( AbstractAnyHolder const& other );
 
 		void writeTo( std::ostream &out ) const;
 		void readFrom( std::istream &in );
@@ -69,7 +105,7 @@ namespace _2Real
 		bool isEqualTo( AbstractAnyHolder const& other ) const;
 		bool isLessThan( AbstractAnyHolder const& other ) const;
 
-		TData					m_Data;
+		TData					mData;
 
 	private:
 
@@ -80,33 +116,46 @@ namespace _2Real
 
 	template< typename TData >
 	AnyHolder< TData >::AnyHolder() :
-		m_Data()
+		mData()
 	{
 	}
 
 	template< typename TData >
 	AnyHolder< TData >::AnyHolder( TData const& value ) :
-		m_Data( value )
+		mData( value )
 	{
 	}
 
-	template< typename TData >
-	AnyHolder< TData >::AnyHolder( AnyHolder< TData > const& src ) :
-		m_Data( src.m_Data )
-	{
-	}
+	//template< typename TData >
+	//AnyHolder< TData >::AnyHolder( AnyHolder< TData > const& src ) :
+	//	m_Data( src.m_Data )
+	//{
+	//}
+
+	//template< typename TData >
+	//AnyHolder< TData >& AnyHolder< TData >::operator=( AnyHolder< TData > const& src )
+	//{
+	//	if ( this == &src )
+	//	{
+	//		return *this;
+	//	}
+
+	//	m_Data = src.m_Data;
+
+	//	return *this;
+	//}
 
 	template< typename TData >
-	AnyHolder< TData >& AnyHolder< TData >::operator=( AnyHolder< TData > const& src )
+	void AnyHolder< TData >::set( AbstractAnyHolder const& other )
 	{
-		if ( this == &src )
+		try
 		{
-			return *this;
+			AnyHolder< TData > const& o = dynamic_cast< AnyHolder< TData > const& >( other );
+			mData = o.mData;
 		}
-
-		m_Data = src.m_Data;
-
-		return *this;
+		catch ( std::bad_cast const& e )
+		{
+		}
 	}
 
 	template< typename TData >
@@ -127,7 +176,7 @@ namespace _2Real
 		if ( other.getTypename() == this->getTypename() )
 		{
 			AnyHolder< TData > const& holder = dynamic_cast< AnyHolder< TData > const& >( other );
-			return m_Data == holder.m_Data;
+			return mData == holder.mData;
 		}
 		else
 		{
@@ -141,7 +190,7 @@ namespace _2Real
 		if ( other.getTypename() == this->getTypename() )
 		{
 			AnyHolder< TData > const& holder = dynamic_cast< AnyHolder< TData > const& >( other );
-			return isLess( m_Data, holder.m_Data );
+			return isLess( mData, holder.mData );
 		}
 		else
 		{
@@ -154,13 +203,13 @@ namespace _2Real
 	template< typename TData >
 	void AnyHolder< TData >::writeTo( std::ostream &out ) const
 	{
-		_2Real::writeTo( out, m_Data );
+		_2Real::writeTo( out, mData );
 	}
 
 	template< typename TData >
 	void AnyHolder< TData >::readFrom( std::istream &in )
 	{
-		_2Real::readFrom( in, m_Data );
+		_2Real::readFrom( in, mData );
 	}
 
 	template< typename TData >
@@ -172,39 +221,6 @@ namespace _2Real
 	template< typename TData >
 	AbstractAnyHolder * AnyHolder< TData >::clone() const
 	{
-		return new AnyHolder< TData >( m_Data );
+		return new AnyHolder< TData >( mData );
 	}
-
-	//template< >
-	//class AnyHolder< std::string > : public AbstractAnyHolder
-	//{
-
-	//public:
-
-	//	AnyHolder() : m_Data() {}
-	//	explicit AnyHolder( std::string const& s ) : m_Data( s ) {}
-
-	//	const std::string getTypename() const;
-	//	std::type_info const& getTypeinfo() const;
-	//	AbstractAnyHolder * create() const;
-	//	AbstractAnyHolder * clone() const;
-
-	//	void writeTo( std::ostream &out ) const;
-	//	void readFrom( std::istream &in );
-
-	//	bool isEqualTo( AbstractAnyHolder const& other ) const;
-	//	bool isLessThan( AbstractAnyHolder const& other ) const;
-
-	//	// makes little sense for strings
-	//	// more sense would be a set of input values
-	//	bool rangeCheck() { return true; }
-
-	//	std::string				m_Data;
-
-	//private:
-
-	//	AnyHolder( AnyHolder< std::string > const& src );
-	//	AnyHolder& operator=( AnyHolder< std::string > const& src );
-
-	//};
 }

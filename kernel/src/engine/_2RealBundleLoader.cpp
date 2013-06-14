@@ -22,6 +22,7 @@
 #include "engine/_2RealMetainfo.h"
 #include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealEngineImpl.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 #include <sstream>
 
@@ -32,7 +33,7 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	BundleLoader::BundleLoader()
+	BundleLoader::BundleLoader( TypeRegistry &registry ) : m_Registry( registry )
 	{
 	}
 
@@ -194,6 +195,8 @@ namespace _2Real
 				throw NotFoundException( msg.str() );
 			}
 
+			// may throw
+			info->registerTypes( m_Registry );
 			return meta;
 		}
 		else

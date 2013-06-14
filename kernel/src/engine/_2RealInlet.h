@@ -63,9 +63,11 @@ namespace _2Real
 		bool						isMultiInlet() const { return false; }
 		unsigned int				getSize() const { return 1; }
 
+		// called only from within an update: no change
 		std::shared_ptr< const CustomType >		getCurrentData() const;
 		void									setData( std::shared_ptr< const CustomType > const& data );
 
+		// compares last to current
 		bool									hasChanged() const;
 
 	private:

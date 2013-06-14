@@ -172,7 +172,7 @@ namespace _2Real
 	{
 		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
 		m_UpdatePolicy->addInlet( *io, info.policy );					// creates a trigger and adds it
-		io->receiveData( info.initValue );								// receive the first data item
+		io->receiveData( info.initializer );							// receive the first data item
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
@@ -186,9 +186,11 @@ namespace _2Real
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( std::string const& name, std::shared_ptr< const CustomType > initialValue )
+	void FunctionBlockIOManager::addOutlet( OutletIO::OutletInfo const& info )
 	{
-		OutletIO *io = new OutletIO( m_Owner, name, initialValue );
+		// TODO: lookup type name -> create two type copies: buffer & init
+
+		OutletIO *io = new OutletIO( info.owner, info.baseName, info.initializer );
 		io->m_Outlet->synchronize();
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );
@@ -211,7 +213,7 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateOutletData()
 	{
-		list< app::AppData > data;
+		//list< app::AppData > data;
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			Outlet &outlet = *( ( *it )->m_Outlet );
@@ -235,10 +237,10 @@ namespace _2Real
 			}
 		}
 
-		if ( data.size() > 0 )
-		{
-			m_AppEvent.notify( data );
-		}
+		//if ( data.size() > 0 )
+		//{
+		//	m_AppEvent.notify( data );
+		//}
 	}
 
 	void FunctionBlockIOManager::updateInletBuffers( const bool enableTriggering )

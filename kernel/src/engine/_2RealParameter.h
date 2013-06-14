@@ -35,7 +35,7 @@ namespace _2Real
 
 	protected:
 
-		Parameter() {}
+		Parameter( std::shared_ptr< const CustomType > initializer );
 		virtual ~Parameter() {}
 
 		// sets the buffer - not sure why this is needed, maybe setup p?
@@ -45,6 +45,7 @@ namespace _2Real
 		void									synchronize();
 		// this is for reading only ( app, inlet queues ) -> const
 		std::shared_ptr< const CustomType >		getData() const;
+		CustomType &							getWriteableData();
 
 		mutable Poco::FastMutex			m_DataAccess;
 		std::shared_ptr< CustomType >	m_Data;

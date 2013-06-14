@@ -30,7 +30,8 @@ namespace _2Real
 	{
 		bool operator()( TimestampedData const& newData, TimestampedData const& oldData )
 		{
-			return !newData.value->isNull();
+			// nullptr in timestamped data -> not valid, return false
+			return ( newData.value.get() != nullptr );
 		}
 	};
 

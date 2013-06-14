@@ -52,35 +52,12 @@ namespace _2Real
 			// this represents a shortcut for adding some kinds of inlets
 			// like char, int, string etc... internally, everything is going to be a custom type
 			// overload manually
-			template< typename TType >
-			void addInlet( std::string const& name, TType initialValue = init< TType >(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+			//template< typename TType >
+			//void addInlet( std::string const& name, TType initialValue = init< TType >(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
 
-			void addInlet( std::string const& name, std::string const& customName, CustomType const& initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
-			void addOutlet( std::string const& name, std::string const& customName, CustomType const& initialValue );
-
-			//template< typename TData >
-			//void addInlet( std::string const& name, TData initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
-			//{
-			//	addInletInternal( name, createTypeDescriptor< TData >(), Any( initialValue ), AnyOptionSet(), defaultPolicy );
-			//}
-
-			//template< typename TData >
-			//void addInlet( std::string const& name, TData initialValue, Options< TData > const& options, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
-
-			//template< typename TData >
-			//void addMultiInlet( std::string const& name, TData initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
-			//{
-			//	addMultiInletInternal( name, createTypeDescriptor< TData >(), Any( initialValue ), AnyOptionSet(), defaultPolicy );
-			//}
-
-			//template< typename TData >
-			//void addMultiInlet( std::string const& name, TData initialValue, Options< TData > const& options, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
-
-			//template< typename TData >
-			//void addOutlet( std::string const& name )
-			//{
-			//	addOutletInternal( name, createTypeDescriptor< TData >(), Any( TData() ) );
-			//}
+			void addInlet( std::string const& name, std::string const& typeName, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+			void addInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+			void addOutlet( std::string const& name, std::string const& typeName );
 
 		private:
 
@@ -91,29 +68,5 @@ namespace _2Real
 			BlockMetadata	&m_Impl;
 
 		};
-
-		template< >
-		inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, InletPolicy const& defaultPolicy )
-		{
-			// so: create custom type
-			// with a single int field
-			// init it to 'initialValue'
-			//CustomType c( initialValue );
-
-			// create integer type metainfo
-			// add an inlet based of the integer type
-		}
-
-		//template< >
-		//inline void BlockMetainfo::addInlet< int >( std::string const& name, int initialValue, Options< int > const& options, InletPolicy const& defaultPolicy )
-		//{
-		//	addInletInternal( name, createTypeDescriptor< int >(), Any( initialValue ), AnyOptionSet( options ), defaultPolicy );
-		//}
-
-		//template< >
-		//inline void BlockMetainfo::addMultiInlet< int >( std::string const& name, int initialValue, Options< int > const& options, InletPolicy const& defaultPolicy )
-		//{
-		//	addMultiInletInternal( name, createTypeDescriptor< int >(), Any( initialValue ), AnyOptionSet( options ), defaultPolicy );
-		//}
 	}
 }

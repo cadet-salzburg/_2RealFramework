@@ -22,50 +22,50 @@
 
 namespace _2Real
 {
-	class TimestampedData;
+	//class TimestampedData;
 
-	namespace app
-	{
-		class AppData
-		{
+	//namespace app
+	//{
+	//	class AppData
+	//	{
 
-		public:
+	//	public:
 
-			AppData();
-			AppData( TimestampedData const& data, std::string const& typeName, std::string const& longTypename, std::string const& name );
+	//		AppData();
+	//		AppData( TimestampedData const& data, std::string const& typeName, std::string const& longTypename, std::string const& name );
 
-			const std::string getLongTypename() const;
-			std::string const& getTypename() const;
-			std::string const& getName() const;
-			const std::string getDataAsString() const;
+	//		const std::string getLongTypename() const;
+	//		std::string const& getTypename() const;
+	//		std::string const& getName() const;
+	//		const std::string getDataAsString() const;
 
-			template< typename T >
-			bool isDatatype() const
-			{
-				return m_Data.isDatatype< T >();
-			}
+	//		template< typename T >
+	//		bool isDatatype() const
+	//		{
+	//			return m_Data.isDatatype< T >();
+	//		}
 
-			template< typename T >
-			T const& getData() const
-			{
-				T const& data = m_Data.extract< T >();
-				return data;
-			}
+	//		template< typename T >
+	//		T const& getData() const
+	//		{
+	//			T const& data = m_Data.extract< T >();
+	//			return data;
+	//		}
 
-			template< typename T >
-			void copyData( T &val )
-			{
-				T const& data = m_Data.extract< T >();
-				val = data;
-			}
+	//		template< typename T >
+	//		void copyData( T &val )
+	//		{
+	//			T const& data = m_Data.extract< T >();
+	//			val = data;
+	//		}
 
-		private:
+	//	private:
 
-			std::string		m_Name;
-			Any				m_Data;
-			std::string		m_Typename;
-			std::string		m_LongTypename;
+	//		std::string		m_Name;
+	//		Any				m_Data;
+	//		std::string		m_Typename;
+	//		std::string		m_LongTypename;
 
-		};
-	}
+	//	};
+	//}
 }

@@ -31,6 +31,7 @@ namespace _2Real
 	template< typename T >
 	class FunctionBlock;
 	class EngineImpl;
+	class TypeRegistry;
 
 	namespace app
 	{
@@ -51,7 +52,7 @@ namespace _2Real
 		typedef std::set< Bundle * >::iterator			BundleIterator;
 		typedef std::set< Bundle * >::const_iterator	BundleConstIterator;
 
-		BundleManager( EngineImpl &engine );
+		BundleManager( EngineImpl &engine, TypeRegistry &registry );
 		~BundleManager();
 
 		void clear();
@@ -71,6 +72,7 @@ namespace _2Real
 		const Poco::Path								makeAbsolutePath( Poco::Path const& path ) const;
 
 		EngineImpl										&m_Engine;
+		TypeRegistry									&m_Registry;
 		Poco::Path										m_BaseDirectory;
 		Bundles											m_Bundles;
 		BundleLoader									m_BundleLoader;

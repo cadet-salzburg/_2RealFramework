@@ -45,6 +45,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealVector.h" />
@@ -219,6 +220,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealRange.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealAbstractIOManager.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>

@@ -113,12 +113,12 @@ namespace _2Real
 
 	const std::string BasicInletIO::getUpdatePolicyAsString() const
 	{
-		// sync not needed since setting is done by app interf
 		return InletPolicy::getPolicyAsString( m_Info.policy.getPolicy() );
 	}
 
 	const std::string BasicInletIO::getCurrentValueAsString() const
 	{
+		// SYNC must be sure that there's no update happening right now
 		std::ostringstream str;
 		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentData();
 		if ( data.get() == nullptr ) str << "empty" << std::endl;
@@ -131,7 +131,7 @@ namespace _2Real
 	MultiInletIO::MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
 		AbstractInletIO( owner, policy, info ),
 		m_Inlet( new MultiInlet( owner, info.baseName ) ),
-		m_Buffer( new MultiInletBuffer( info.initValue ) )
+		m_Buffer( new MultiInletBuffer( info.initializer ) )
 	{
 		//adding the very first inlet
 		//addBasicInlet();

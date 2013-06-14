@@ -27,6 +27,8 @@
 namespace _2Real
 {
 
+	class TypeMetadata;
+
 	// this alone won't work... i need to be able to create shit from the app side
 	namespace bundle
 	{
@@ -38,39 +40,52 @@ namespace _2Real
 
 	public:
 
+		// creation -> allocate new ptrs
 		explicit CustomType( bundle::TypeMetainfo const& meta );
+		explicit CustomType( TypeMetadata const& meta );
+	//private:
+		// copy -> same ptrs as other obj
 		CustomType( CustomType const& other );
-		CustomType& operator=( CustomType const& other );
+	public:
+		// clone -> allocate new ptrs
+		void cloneFrom( CustomType const& other );
 
 		template< typename TType >
 		void set( std::string const& field, TType const& value )
 		{
 			// makes a copy of the value!
-			setValueInternal( field, Any( value ) );
+			setValueInternal( field, new AnyHolder< TType >( value ) );
 		}
 
-		//	TODO: set + range
-		//	TODO: set + set of valid values
+		template< typename TType >
+		TType const& get( std::string const& field ) const
+		{
+			AbstractAnyHolder const* value = getValueInternal( field );
+			// may throw
+			TType const& result = value->extract< TType >();
+			return result;
+		}
 
-		// todo: extract ( inlet handle no longer extracts, since all inlets / oulets now hold CustomTypes )
-
-		bool isNull() const;
-
+		// called by getCurrentValueAsString on an inlet -> what the fuck
 		void writeTo( std::ostringstream &out ) const;
-
+		// called by hasChanged() on inlet handles
 		bool isEqualTo( CustomType const& other ) const;
-		void cloneFrom( CustomType const& other );
+
+		unsigned int size() const { return mDataFields.size(); }
 
 	private:
 
-		typedef std::map< std::string, Any >		DataFields;
-		DataFields									mDataFields;
+		CustomType& operator=( CustomType const& other );
 
-		void initField( std::string const& name, Any &init );
+		typedef std::map< std::string, AbstractAnyHolder * >		DataFields;
+		DataFields													mDataFields;
+
+		void initField( std::string const& name, AbstractAnyHolder *init );
 		DataFields::iterator iter( std::string const& name );
 		DataFields::const_iterator constIter( std::string const& name ) const;
 
-		void setValueInternal( std::string const& field, Any &any );
+		void setValueInternal( std::string const& field, AbstractAnyHolder *value );
+		AbstractAnyHolder const* getValueInternal( std::string const& field ) const;
 
 	};
 }

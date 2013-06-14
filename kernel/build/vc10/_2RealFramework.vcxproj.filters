@@ -312,6 +312,9 @@
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -486,6 +489,9 @@
       <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealRange.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>

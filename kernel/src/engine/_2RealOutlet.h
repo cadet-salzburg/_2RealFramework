@@ -45,12 +45,13 @@ namespace _2Real
 		//using Parameter::getTypename;
 		//using Parameter::getLongTypename;
 		using Parameter::getData;
+		using Parameter::getWriteableData;
 		//using Parameter::getType;
 		//using Parameter::getTypeCategory;
 
 		bool					synchronize();
 		// returns a reference, since it can only be used during 'update' -> data does not change
-		CustomType &			getWriteableData();
+		//CustomType &			getWriteableData();
 		void					discardCurrentUpdate();
 		AbstractUberBlock&		getOwningUberBlock();
 

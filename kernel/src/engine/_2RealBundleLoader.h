@@ -26,6 +26,7 @@ namespace _2Real
 {
 	class BundleMetadata;
 	class Metainfo;
+	class TypeRegistry;
 	
 	namespace bundle
 	{
@@ -38,7 +39,7 @@ namespace _2Real
 	
 	public:
 
-		BundleLoader();
+		BundleLoader( TypeRegistry &registry );
 		~BundleLoader();
 
 		void clear();
@@ -66,6 +67,7 @@ namespace _2Real
 		typedef std::map< std::string, BundleInfo >::iterator			BundleInfoIterator;
 		typedef std::map< std::string, BundleInfo >::const_iterator		BundleInfoConstIterator;
 		BundleInfos														m_LoadedBundles;
+		TypeRegistry													&m_Registry;
 
 	};
 

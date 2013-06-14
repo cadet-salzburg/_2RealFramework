@@ -46,44 +46,33 @@ namespace _2Real
 			m_Impl.setThreadingPolicy( policy );
 		}
 
-		//void BlockMetainfo::addInletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init, AnyOptionSet const& options, InletPolicy const& defaultPolicy )
-		//{
-		//	checkChars( toLower( trim( name ) ) );
-		//	InletMetadata *data = new InletMetadata( trim( name ), descriptor, init, options, defaultPolicy, false );
-		//	m_Impl.addInlet( *data );
-		//}
-
-		//void BlockMetainfo::addMultiInletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init, AnyOptionSet const& options, InletPolicy const& defaultPolicy )
-		//{
-		//	checkChars( toLower( trim( name ) ) );
-		//	//InletMetadata *data = new InletMetadata( trim( name ), descriptor, init, options, defaultPolicy, true );
-		//	//m_Impl.addInlet( *data );
-		//}
-
-		//void BlockMetainfo::addOutletInternal( std::string const& name, TypeDescriptor const *const descriptor, Any const& init )
-		//{
-		//	checkChars( toLower( trim( name ) ) );
-		//	//OutletMetadata *data = new OutletMetadata( trim( name ), descriptor, init );
-		//	//m_Impl.addOutlet( *data );
-		//}
-
-		void BlockMetainfo::addInlet( std::string const& name, std::string const& customName, CustomType const& initialValue, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::addInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
 			// check the existence of the type ( pre-defined, as well as self registered types are possible )
-			InletMetadata *data = new InletMetadata( trimmed, initialValue, defaultPolicy, false );
+			InletMetadata *data = new InletMetadata( trimmed, typeName, initialValue, defaultPolicy, false );
 			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addOutlet( std::string const& name, std::string const& customName, CustomType const& initialValue )
+		void BlockMetainfo::addInlet( std::string const& name, std::string const& typeName, InletPolicy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
 			// check the existence of the type ( pre-defined, as well as self registered types are possible )
-			OutletMetadata *data = new OutletMetadata( trimmed, initialValue );
+			InletMetadata *data = new InletMetadata( trimmed, typeName, defaultPolicy, false );
+			m_Impl.addInlet( *data );
+		}
+
+		void BlockMetainfo::addOutlet( std::string const& name, std::string const& typeName )
+		{
+			std::string trimmed = trim( name );
+			checkChars( toLower( trimmed ) );
+
+			// check the existence of the type ( pre-defined, as well as self registered types are possible )
+			OutletMetadata *data = new OutletMetadata( trimmed, typeName );
 			m_Impl.addOutlet( *data );
 		}
 	}

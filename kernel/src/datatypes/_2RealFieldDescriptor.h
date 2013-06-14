@@ -30,26 +30,34 @@ namespace _2Real
 {
 	// ARGH move to 'TypeInitializers.h'
 
+	template< typename T > struct init;
+
+	template< >
+	struct init< int >
+	{
+		static int defaultValue()
+		{
+			return 0;
+		}
+	};
+
+	template< >
+	struct init< std::string >
+	{
+		static std::string defaultValue()
+		{
+			return std::string();
+		}
+	};
+
 	template< typename TType >
-	TType init();
-
-	template< >
-	inline int init< int >()
+	struct init< std::vector< TType > >
 	{
-		return 0;
-	}
-
-	template< >
-	inline std::string init< std::string >()
-	{
-		return std::string( "" );
-	}
-
-	template< >
-	inline float init< float >()
-	{
-		return 0.f;
-	}
+		static std::vector< TType > defaultValue()
+		{
+			return std::vector< TType >();
+		}
+	};
 
 	///////////////////////////////////////////////////////////////
 

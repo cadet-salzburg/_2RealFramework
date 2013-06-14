@@ -31,6 +31,7 @@ namespace _2Real
 	class BlockMetadata;
 	class TypeMetadata;
 	class Any;
+	class TypeRegistry;
 
 	namespace bundle
 	{
@@ -69,6 +70,7 @@ namespace _2Real
 		void removeContextBlock();
 
 		bundle::TypeMetainfo & addCustomType( std::string const& name );
+		void registerTypes( TypeRegistry &registry );
 
 		BundleMetadata const& getBundleData() const;
 

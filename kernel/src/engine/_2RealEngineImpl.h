@@ -41,7 +41,7 @@ namespace _2Real
 
 	class Logger;
 	class Timer;
-	class Typetable;
+	class TypeRegistry;
 	class ThreadPool;
 	class BundleManager;
 	class AbstractUberBlock;
@@ -138,6 +138,7 @@ namespace _2Real
 
 		Logger					*m_Logger;
 		Timer					*m_Timer;
+		TypeRegistry			*m_TypeRegistry;
 		ThreadPool				*m_ThreadPool;
 		BundleManager			*m_BundleManager;
 		System					*m_System;

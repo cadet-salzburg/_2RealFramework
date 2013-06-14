@@ -21,76 +21,76 @@
 
 namespace _2Real
 {
-	Any::Any() :
-		m_Content( new AnyHolder< NullType >() ),
-		m_TypeDescriptor( createTypeDescriptor< NullType >() )
-	{
-	}
+	//Any::Any() :
+	//	m_Content( new AnyHolder< NullType >() ),
+	//	m_TypeDescriptor( createTypeDescriptor< NullType >() )
+	//{
+	//}
 
-	Any::Any( Any const& src ) :
-		m_Content( src.m_Content ),
-		m_TypeDescriptor( src.m_TypeDescriptor )
-	{
-	}
+	//Any::Any( Any const& src ) :
+	//	m_Content( src.m_Content ),
+	//	m_TypeDescriptor( src.m_TypeDescriptor )
+	//{
+	//}
 
-	Any& Any::operator=( Any const& src )
-	{
-		if (this == &src)
-		{
-			return *this;
-		}
+	//Any& Any::operator=( Any const& src )
+	//{
+	//	if (this == &src)
+	//	{
+	//		return *this;
+	//	}
 
-		m_Content = src.m_Content;
-		m_TypeDescriptor = src.m_TypeDescriptor;
+	//	m_Content = src.m_Content;
+	//	m_TypeDescriptor = src.m_TypeDescriptor;
 
-		return *this;
-	}
+	//	return *this;
+	//}
 
-	bool Any::isNull() const
-	{
-		return isDatatype< NullType >();
-	}
+	//bool Any::isNull() const
+	//{
+	//	return isDatatype< NullType >();
+	//}
 
-	bool Any::isEqualTo( Any const& any ) const
-	{
-		return m_Content->isEqualTo( *any.m_Content.get() );
-	}
+	//bool Any::isEqualTo( Any const& any ) const
+	//{
+	//	return m_Content->isEqualTo( *any.m_Content.get() );
+	//}
 
-	bool Any::isLessThan( Any const& any ) const
-	{
-		return m_Content->isLessThan( *any.m_Content.get() );
-	}
+	//bool Any::isLessThan( Any const& any ) const
+	//{
+	//	return m_Content->isLessThan( *any.m_Content.get() );
+	//}
 
-	void Any::writeTo(std::ostream &out) const
-	{
-		m_Content->writeTo(out);
-	}
+	//void Any::writeTo(std::ostream &out) const
+	//{
+	//	m_Content->writeTo(out);
+	//}
 
-	void Any::readFrom(std::istream &in)
-	{
-		m_Content->readFrom(in);
-	}
+	//void Any::readFrom(std::istream &in)
+	//{
+	//	m_Content->readFrom(in);
+	//}
 
-	Type const& Any::getType() const
-	{
-		return m_TypeDescriptor->m_Type;
-	}
+	//Type const& Any::getType() const
+	//{
+	//	return m_TypeDescriptor->m_Type;
+	//}
 
-	TypeCategory const& Any::getTypeCategory() const
-	{
-		return m_TypeDescriptor->m_TypeCategory;
-	}
+	//TypeCategory const& Any::getTypeCategory() const
+	//{
+	//	return m_TypeDescriptor->m_TypeCategory;
+	//}
 
-	void Any::cloneFrom( Any const& src )
-	{
-		m_Content.reset( src.m_Content->clone() );
-		m_TypeDescriptor = src.m_TypeDescriptor;
-	}
+	//void Any::cloneFrom( Any const& src )
+	//{
+	//	m_Content.reset( src.m_Content->clone() );
+	//	m_TypeDescriptor = src.m_TypeDescriptor;
+	//}
 
-	void Any::createNew( Any const& src )
-	{
-		m_Content.reset( src.m_Content->create() );
-		m_TypeDescriptor = src.m_TypeDescriptor;
-	}
+	//void Any::createNew( Any const& src )
+	//{
+	//	m_Content.reset( src.m_Content->create() );
+	//	m_TypeDescriptor = src.m_TypeDescriptor;
+	//}
 
 }

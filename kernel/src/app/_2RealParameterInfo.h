@@ -19,35 +19,34 @@
 #pragma once
 
 #include "engine/_2RealInletPolicy.h"
+#include "datatypes/_2RealCustomData.h"
 
 #include <string>
 
 namespace _2Real
 {
-	// default values?
+	// TODO: this object is now after the rewrite more or less identical to inlet metadata....
 
 	namespace app
 	{
 		struct InletInfo
 		{
-			InletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ),
-				isMultiInlet( false ), hasRangeCheck( false ), defaultPolicy( InletPolicy::INVALID ) {}
+			InletInfo() : name( "undefined" ), customName( "undefined" ),
+				isMultiInlet( false ), defaultPolicy( InletPolicy::INVALID ), initValue() {}
 
-			std::string		name;
-			std::string		typeName;
-			std::string		longTypename;
-			InletPolicy		defaultPolicy;
-			bool			isMultiInlet;
-			bool			hasRangeCheck;
+			std::string								name;
+			std::string								customName;
+			InletPolicy								defaultPolicy;
+			bool									isMultiInlet;
+			std::shared_ptr< const CustomType >		initValue;
 		};
 
 		struct OutletInfo
 		{
-			OutletInfo() : name( "undefined" ), typeName( "undefined" ), longTypename( "undefined" ) {}
+			OutletInfo() : name( "undefined" ), customName( "undefined" ) {}
 
-			std::string		name;
-			std::string		typeName;
-			std::string		longTypename;
+			std::string								name;
+			std::string								customName;
 		};
 	}
 }

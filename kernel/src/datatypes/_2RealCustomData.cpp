@@ -22,22 +22,63 @@
 
 namespace _2Real
 {
+	// this is how every custom type is created
 	CustomType::CustomType( bundle::TypeMetainfo const& meta )
 	{
 		TypeMetadata const& metadata = meta.mImpl;
+		std::cout << metadata.mFields.size() << std::endl;
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
+			std::cout << "adding field: " << it->first << std::endl;
 			// create an any of appropriate type
-			Any init = ( it->second )->createAny();
+			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
 			// add it to map ( or whatever structure is used )
 			this->initField( it->first, init );
 		}
 	}
 
-	void CustomType::initField( std::string const& name, Any &any )
+	// created from within bundle manager
+	CustomType::CustomType( TypeMetadata const& metadata )
+	{
+		std::cout << metadata.mFields.size() << std::endl;
+		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
+		{
+			std::cout << "adding field: " << it->first << std::endl;
+			// create an any of appropriate type
+			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
+			// add it to map ( or whatever structure is used )
+			this->initField( it->first, init );
+		}
+	}
+
+	CustomType::CustomType( CustomType const& other )
+	{
+		( void )( other );
+
+		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
+		{
+			std::string name = it->first;
+			AbstractAnyHolder * value = it->second->clone();
+			mDataFields[ name ] = value;
+		}
+	}
+
+	void CustomType::cloneFrom( CustomType const& other )
+	{
+		mDataFields.clear();
+
+		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
+		{
+			std::string name = it->first;
+			AbstractAnyHolder * value = it->second->clone();
+			mDataFields[ name ] = value;
+		}
+	}
+
+	void CustomType::initField( std::string const& name, AbstractAnyHolder *init )
 	{
 #ifdef _DEBUG
-		if ( any.isNull() )
+		if ( !init )
 		{
 			// TODO ASSERT
 		}
@@ -46,11 +87,10 @@ namespace _2Real
 		{
 			// TODO ASSERT
 		}
-#else
+#endif
 		// ONLY here, in the init field method, assignment operator may be used
 		// for all later operations, set must be used instead ( involves a typecheck! )
-		mDataFields[ name ] = any;
-#endif
+		mDataFields[ name ] = init;
 	}
 
 	CustomType::DataFields::iterator CustomType::iter( std::string const& name )
@@ -58,7 +98,10 @@ namespace _2Real
 		DataFields::iterator dataIter = mDataFields.find( name );
 		if ( dataIter == mDataFields.end() )
 		{
-			// TODO exception
+			// TODO name of type & type of exception
+			std::ostringstream msg;
+			msg << "field " << name << " not defined in datat type " << "XXXX";
+			throw _2Real::Exception( msg.str() );
 		}
 			
 		return dataIter;
@@ -69,17 +112,36 @@ namespace _2Real
 		DataFields::const_iterator dataIter = mDataFields.find( name );
 		if ( dataIter == mDataFields.end() )
 		{
-			// TODO exception
+			// TODO name of type & type of exception
+			std::ostringstream msg;
+			msg << "field " << name << " not defined in datat type " << "XXXX";
+			throw _2Real::Exception( msg.str() );
 		}
 			
 		return dataIter;
 	}
 
-	void CustomType::setValueInternal( std::string const& field, Any &val/*, Range &range*/)
+	void CustomType::setValueInternal( std::string const& field, AbstractAnyHolder *value )
 	{
-		// may throw
+		// may throw if not found
 		DataFields::iterator it = iter( field );
 		// may also throw
-		( it->second ).set( val/*, range*/ );
+		( it->second )->set( *value );
+	}
+
+	AbstractAnyHolder const* CustomType::getValueInternal( std::string const& field ) const
+	{
+		// may throw if not found
+		DataFields::const_iterator it = constIter( field );
+		return it->second;
+	}
+
+	void CustomType::writeTo( std::ostringstream &out ) const
+	{
+	}
+
+	bool CustomType::isEqualTo( CustomType const& other ) const
+	{
+		return false;
 	}
 }

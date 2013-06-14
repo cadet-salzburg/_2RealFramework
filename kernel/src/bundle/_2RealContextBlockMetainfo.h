@@ -47,17 +47,10 @@ namespace _2Real
 			void setDescription( std::string const& description );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
-			//template< typename TData >
-			//void addOutlet( std::string const& name )
-			//{
-			//	addOutletInternal( name, createTypeDescriptor< TData >(), Any( TData() ) );
-			//}
-
-			void addOutlet( std::string const& name, std::string const& customName, CustomType const& initialValue );
+			void addOutlet( std::string const& name, std::string const& typeName );
+			// shortcutes for fund. types?
 
 		private:
-
-			//void addOutletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i );
 
 			BlockMetadata	&m_Impl;
 
