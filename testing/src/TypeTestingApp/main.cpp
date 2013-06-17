@@ -108,6 +108,13 @@ int main( int argc, char *argv[] )
 		t->set< int >( "test int", ++cnt );
 		i00.receiveData( t );
 
+		app::TypeMetainfo info = i00.getType();
+		TypeMetainfo::FieldDesc d = info.getFieldInfo();
+		for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
+		{
+			std::cout << *it << std::endl;
+		}
+
 		std::cout << "NARF" << std::endl;
 
 		string line;

@@ -39,7 +39,7 @@ namespace _2Real
 			template< typename TType >
 			void addField( std::string const& name )
 			{
-				addFieldInternal( name, new FieldDescriptor_t< TType >( init< TType >::defaultValue() ) );
+				addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
 			}
 
 		private:

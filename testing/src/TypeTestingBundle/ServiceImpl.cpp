@@ -46,7 +46,7 @@ void Test::update()
 
 		CustomType const& i0 = in0.getReadableRef();
 		int i = i0.get< int >( "test int" );
-		if ( mNumber == 1 ) cout << mNumber << " " << i << endl;
+		//if ( mNumber == 1 ) cout << mNumber << " " << i << endl;
 		int o = i + ( ++mCounter );
 
 		OutletHandle out0 = mHandle.getOutletHandle( "customOutlet0" );

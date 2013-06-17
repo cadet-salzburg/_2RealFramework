@@ -30,10 +30,10 @@ namespace _2Real
 {
 	// ARGH move to 'TypeInitializers.h'
 
-	template< typename T > struct init;
+	template< typename T > struct Init;
 
 	template< >
-	struct init< int >
+	struct Init< int >
 	{
 		static int defaultValue()
 		{
@@ -42,7 +42,7 @@ namespace _2Real
 	};
 
 	template< >
-	struct init< std::string >
+	struct Init< std::string >
 	{
 		static std::string defaultValue()
 		{
@@ -51,13 +51,52 @@ namespace _2Real
 	};
 
 	template< typename TType >
-	struct init< std::vector< TType > >
+	struct Init< std::vector< TType > >
 	{
 		static std::vector< TType > defaultValue()
 		{
 			return std::vector< TType >();
 		}
 	};
+
+	template< typename T > struct Name;
+
+	template< >
+	struct Name< int >
+	{
+		static std::string humanReadableName()
+		{
+			return "int";
+		}
+	};
+
+	template< >
+	struct Name< float >
+	{
+		static std::string humanReadableName()
+		{
+			return "float";
+		}
+	};
+
+	template< >
+	struct Name< std::string >
+	{
+		static std::string humanReadableName()
+		{
+			return "string";
+		}
+	};
+
+	template< typename TType >
+	struct Name< std::vector< TType > >
+	{
+		static std::string humanReadableName()
+		{
+			return std::string( "vector of " ).append( Name< TType >::humanReadableName() );
+		}
+	};
+
 
 	///////////////////////////////////////////////////////////////
 
@@ -67,6 +106,8 @@ namespace _2Real
 		FieldDescriptor() {}
 		virtual ~FieldDescriptor() {}
 		virtual AbstractAnyHolder * createAnyHolder() const = 0;
+		virtual std::string getTypename() const = 0;
+		//virtual std::type_info getTypeinfo() const = 0;
 	};
 
 	// this is like an any holder
@@ -85,6 +126,16 @@ namespace _2Real
 			// TODO: range
 			return new AnyHolder< TType >( mInitValue );
 		}
+
+		std::string getTypename() const
+		{
+			return Name< TType >::humanReadableName();
+		}
+
+		//std::type_info getTypeinfo() const
+		//{
+		//	return typeid( TType );
+		//}
 
 	private:
 

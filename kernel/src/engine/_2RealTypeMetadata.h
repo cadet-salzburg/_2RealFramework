@@ -30,6 +30,10 @@ namespace _2Real
 	class TypeMetadata
 	{
 
+	private:
+
+		typedef std::map< std::string, FieldDescriptor * >		Fields;
+
 	public:
 
 		TypeMetadata() : mFields() {}
@@ -44,6 +48,20 @@ namespace _2Real
 		{
 			// do a check here??
 			mFields[ name ] = &desc;
+		}
+
+		unsigned int getNumFields() const
+		{
+			return mFields.size();
+		}
+
+		typedef std::vector< std::string > FieldDesc;
+
+		void getFields( FieldDesc &f ) const
+		{
+			f.clear(); f.reserve( mFields.size() );
+			for ( Fields::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
+				f.push_back( it->second->getTypename() );
 		}
 
 	private:

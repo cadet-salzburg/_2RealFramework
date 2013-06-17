@@ -22,6 +22,8 @@
 #include "datatypes/_2RealCustomData.h"
 #include "engine/_2RealAbstractIOManager.h"
 
+#include "engine/_2RealTypeMetadata.h"
+
 #include <string>
 
 namespace _2Real
@@ -37,7 +39,29 @@ namespace _2Real
 		class TypeMetainfo
 		{
 		public:
+
+			struct FieldMetainfo
+			{
+				std::string			name;
+				std::string			type;
+			};
+
 			TypeMetainfo( _2Real::TypeMetadata const& impl ) : mImpl( &impl ) {}
+
+			unsigned int getNumFields() const
+			{
+				return mImpl->getNumFields();
+			}
+
+			typedef std::vector< std::string > FieldDesc;
+			FieldDesc getFieldInfo() const
+			{
+				FieldDesc f;
+				mImpl->getFields( f );
+				return f;
+			}
+
+
 		private:
 			friend class CustomType;
 			_2Real::TypeMetadata					const* mImpl;
