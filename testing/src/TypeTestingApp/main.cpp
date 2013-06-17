@@ -40,7 +40,7 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	InletHandle i10, i20;
+	InletHandle i00, i10, i20;
 
 	try
 	{
@@ -67,7 +67,7 @@ int main( int argc, char *argv[] )
 		BlockHandle testBlock1 = testBundle.createBlockInstance( "TypeTestingBlock" );
 		BlockHandle testBlock2 = testBundle.createBlockInstance( "TypeTestingBlock" );
 
-		InletHandle i00 = testBlock0.getInletHandle( "customInlet0" );
+		i00 = testBlock0.getInletHandle( "customInlet0" );
 		InletHandle i01 = testBlock0.getInletHandle( "customInlet1" );
 		OutletHandle o0 = testBlock0.getOutletHandle( "customOutlet0" );
 
@@ -96,16 +96,17 @@ int main( int argc, char *argv[] )
 		cout << e.what() << " " << e.message() << endl;
 	}
 
+	int cnt = 0;
+
 	while( 1 )
 	{
 		std::shared_ptr< const CustomType > data = i10.getCurrentData();
 		std::cout << "YARR" << data->get< int >( "test int" ) << std::endl;
 
-
-		CustomType t( i10.getType() );
-		std::cout << t.size() << std::endl;
-		t.set< int >( "test int", 10 );
-		//i10.receiveValue( t );
+		std::shared_ptr< CustomType > t = i00.makeData();
+		std::cout << t->size() << std::endl;
+		t->set< int >( "test int", ++cnt );
+		i00.receiveData( t );
 
 		std::cout << "NARF" << std::endl;
 

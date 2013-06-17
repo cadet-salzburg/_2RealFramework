@@ -159,15 +159,23 @@ namespace _2Real
 			return app::TypeMetainfo( m_InletIO->info().type );
 		}
 
+		std::shared_ptr< CustomType > InletHandle::makeData() const
+		{
+			checkValidity( m_InletIO );
+			return std::shared_ptr< CustomType >( new CustomType( m_InletIO->info().type ) );
+		}
+
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
 		{
 			checkValidity( m_InletIO );
 			return ( *m_InletIO )[ 0 ].getCurrentData();
 		}
 
-		//std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
-		//{
-		//}
+		void InletHandle::receiveData( std::shared_ptr< const CustomType > data )
+		{
+			checkValidity( m_InletIO );
+			( *m_InletIO )[ 0 ].receiveData( data );
+		}
 
 		void InletHandle::setUpdatePolicy( InletPolicy const& p )
 		{

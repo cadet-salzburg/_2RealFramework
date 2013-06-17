@@ -51,11 +51,11 @@ namespace _2Real
 			bool operator>( InletHandle const& other ) const;
 			bool operator>=( InletHandle const& other ) const;
 
-			//_2Real::app::InletInfo			getInletInfo() const;
 			std::string const&				getName() const;
-			//TypeMetainfo const&				getTypeMetainfo() const;
 			BlockHandle						getOwningBlock();
 			app::TypeMetainfo				getType() const;
+
+			std::shared_ptr< CustomType >	makeData() const;
 
 			void				setUpdatePolicy( InletPolicy const& policy );
 			void				setBufferSize( const unsigned int size );
@@ -64,19 +64,7 @@ namespace _2Real
 			void				unlinkFrom( OutletHandle &outletHandle );
 
 			std::shared_ptr< const CustomType >		getCurrentData() const;
-
-			// if the inlet is linked, the value might be overwritten of course
-			//template< typename TData >
-			//void setValue( TData const& value )
-			//{
-			//	setValue( Any( value ) );
-			//}
-
-			//void setValueToString( std::string const& value );
-
-			// returns the inlet's most recent input data
-			// updates right before an update() -> stays the same until next update()
-			//AppData				getCurrentInput() const;
+			void									receiveData( std::shared_ptr< const CustomType > data );
 
 			// multi-inlet related stuff -> each of those functions has a chance of failing
 
@@ -89,8 +77,6 @@ namespace _2Real
 		private:
 
 			friend class OutletHandle;
-
-			//void				setValue( Any const& data );
 			AbstractInletIO		*m_InletIO;
 
 		};
