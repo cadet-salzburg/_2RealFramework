@@ -43,6 +43,12 @@ namespace _2Real
 		return mCurrentData;
 	}
 
+	std::shared_ptr< const CustomType > BasicInlet::getCurrentDataThreadSafe() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mCurrentData;
+	}
+
 	bool BasicInlet::hasChanged() const
 	{
 		return ( !mCurrentData->isEqualTo( *( mLastData.get() ) ) );
@@ -50,6 +56,7 @@ namespace _2Real
 
 	void BasicInlet::setData( std::shared_ptr< const CustomType > const& data )
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		mLastData = mCurrentData;
 		mCurrentData = data;
 	}

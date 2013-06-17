@@ -86,17 +86,17 @@ namespace _2Real
 		}
 	}
 
-	template< >
-	inline void writeTo( std::ostream &out, Number const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Number const& v )
+	//{
+	//	out << v;
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Point const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Point const& v )
+	//{
+	//	out << v;
+	//}
 
 	template< >
 	inline void writeTo( std::ostream &out, char const& v )
@@ -158,11 +158,11 @@ namespace _2Real
 		out << v;
 	}
 
-	template< >
-	inline void writeTo( std::ostream &out, FilePath const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, FilePath const& v )
+	//{
+	//	out << v;
+	//}
 
 	template< >
 	inline void writeTo( std::ostream &out, float const& v )
@@ -176,41 +176,41 @@ namespace _2Real
 		out << v;
 	}
 
-	template< >
-	inline void writeTo( std::ostream &out, Vec2 const& v )
-	{
-		out << v[ 0 ] << " " << v[ 1 ];
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Vec2 const& v )
+	//{
+	//	out << v[ 0 ] << " " << v[ 1 ];
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Vec3 const& v )
-	{
-		out << v[ 0 ] << " " << v[ 1 ] << " " << v[ 2 ];
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Vec3 const& v )
+	//{
+	//	out << v[ 0 ] << " " << v[ 1 ] << " " << v[ 2 ];
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Vec4 const& v )
-	{
-		out << v[ 0 ] << " " << v[ 1 ] << " " << v[ 2 ] << " " << v[ 3 ];
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Vec4 const& v )
+	//{
+	//	out << v[ 0 ] << " " << v[ 1 ] << " " << v[ 2 ] << " " << v[ 3 ];
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Mat2 const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Mat2 const& v )
+	//{
+	//	out << v;
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Mat3 const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Mat3 const& v )
+	//{
+	//	out << v;
+	//}
 
-	template< >
-	inline void writeTo( std::ostream &out, Mat4 const& v )
-	{
-		out << v;
-	}
+	//template< >
+	//inline void writeTo( std::ostream &out, Mat4 const& v )
+	//{
+	//	out << v;
+	//}
 
 	template< typename TData >
 	inline void readFrom( std::istream &in, TData &v )
@@ -258,17 +258,17 @@ namespace _2Real
 		}
 	}
 
-	template< >
-	inline void readFrom( std::istream &in, Number &v )
-	{
-		in >> v;
-	}
+	//template< >
+	//inline void readFrom( std::istream &in, Number &v )
+	//{
+	//	in >> v;
+	//}
 
-	template< >
-	inline void readFrom( std::istream &in, Point &v )
-	{
-		in >> v;
-	}
+	//template< >
+	//inline void readFrom( std::istream &in, Point &v )
+	//{
+	//	in >> v;
+	//}
 
 	template< >
 	inline void readFrom( std::istream &in, char &v )
@@ -330,11 +330,11 @@ namespace _2Real
 		in >> v;
 	}
 
-	template< >
-	inline void readFrom( std::istream &in, FilePath &v )
-	{
-		in >> v;
-	}
+	//template< >
+	//inline void readFrom( std::istream &in, FilePath &v )
+	//{
+	//	in >> v;
+	//}
 
 
 	template< >
@@ -349,123 +349,123 @@ namespace _2Real
 		in >> v;
 	}
 
-	template< >
-	inline void readFrom( std::istream &in, Mat2 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<4; ++i )
-		{
-			in >> d;
-			v( i ) = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<4; ++i )
-		{
-			in >> f;
-			v( i ) = f;
-		}
-#endif
-	}
-
-	template< >
-	inline void readFrom( std::istream &in, Mat3 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<9; ++i )
-		{
-			in >> d;
-			v( i ) = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<9; ++i )
-		{
-			in >> f;
-			v( i ) = f;
-		}
-#endif
-	}
-
-	template< >
-	inline void readFrom( std::istream &in, Mat4 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<16; ++i )
-		{
-			in >> d;
-			v( i ) = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<16; ++i )
-		{
-			in >> f;
-			v( i ) = f;
-		}
-#endif
-	}
-
-	template< >
-	inline void readFrom( std::istream &in, Vec2 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<2; ++i )
-		{
-			in >> d;
-			v[ i ] = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<2; ++i )
-		{
-			in >> f;
-			v[ i ] = f;
-		}
-#endif
-	}
-
-	template< >
-	inline void readFrom( std::istream &in, Vec3 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<3; ++i )
-		{
-			in >> d;
-			v[ i ] = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<3; ++i )
-		{
-			in >> f;
-			v[ i ] = f;
-		}
-#endif
-	}
-
-	template< >
-	inline void readFrom( std::istream &in, Vec4 &v )
-	{
-#ifdef _2REAL_BLAS_DOUBLE_PRECISION
-		double d;
-		for ( unsigned int i=0; i<4; ++i )
-		{
-			in >> d;
-			v[ i ] = d;
-		}
-#else
-		float f;
-		for ( unsigned int i=0; i<4; ++i )
-		{
-			in >> f;
-			v[ i ] = f;
-		}
-#endif
-	}
+//	template< >
+//	inline void readFrom( std::istream &in, Mat2 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<4; ++i )
+//		{
+//			in >> d;
+//			v( i ) = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<4; ++i )
+//		{
+//			in >> f;
+//			v( i ) = f;
+//		}
+//#endif
+//	}
+//
+//	template< >
+//	inline void readFrom( std::istream &in, Mat3 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<9; ++i )
+//		{
+//			in >> d;
+//			v( i ) = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<9; ++i )
+//		{
+//			in >> f;
+//			v( i ) = f;
+//		}
+//#endif
+//	}
+//
+//	template< >
+//	inline void readFrom( std::istream &in, Mat4 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<16; ++i )
+//		{
+//			in >> d;
+//			v( i ) = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<16; ++i )
+//		{
+//			in >> f;
+//			v( i ) = f;
+//		}
+//#endif
+//	}
+//
+//	template< >
+//	inline void readFrom( std::istream &in, Vec2 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<2; ++i )
+//		{
+//			in >> d;
+//			v[ i ] = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<2; ++i )
+//		{
+//			in >> f;
+//			v[ i ] = f;
+//		}
+//#endif
+//	}
+//
+//	template< >
+//	inline void readFrom( std::istream &in, Vec3 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<3; ++i )
+//		{
+//			in >> d;
+//			v[ i ] = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<3; ++i )
+//		{
+//			in >> f;
+//			v[ i ] = f;
+//		}
+//#endif
+//	}
+//
+//	template< >
+//	inline void readFrom( std::istream &in, Vec4 &v )
+//	{
+//#ifdef _2REAL_BLAS_DOUBLE_PRECISION
+//		double d;
+//		for ( unsigned int i=0; i<4; ++i )
+//		{
+//			in >> d;
+//			v[ i ] = d;
+//		}
+//#else
+//		float f;
+//		for ( unsigned int i=0; i<4; ++i )
+//		{
+//			in >> f;
+//			v[ i ] = f;
+//		}
+//#endif
+//	}
 }

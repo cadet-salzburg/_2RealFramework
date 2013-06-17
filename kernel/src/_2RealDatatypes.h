@@ -18,21 +18,5 @@
 
 #pragma once
 
-#include "datatypes/_2RealType.h"
-#include "datatypes/_2RealTypeCategory.h"
-#include "datatypes/_2RealTypes.h"
-
-#include "datatypes/_2RealFace.h"
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealImageT.h"
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealPoint.h"
-#include "datatypes/_2RealSpace.h"
-#include "datatypes/_2RealVector.h"
-#include "datatypes/_2RealFilePath.h"
-#include "datatypes/_2RealMatrix.h"
-#include "datatypes/_2RealSkeleton.h"
-#include "datatypes/_2RealRigidBody.h"
-#include "datatypes/_2RealQuaternion.h"
-#include "datatypes/_2RealAudioBuffer.h"
-#include "helpers/_2RealException.h"
+//#include "datatypes/_2RealCustomData.h"
+//#include "helpers/_2RealException.h"

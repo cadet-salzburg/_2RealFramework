@@ -37,9 +37,6 @@
     <Filter Include="src\helpers">
       <UniqueIdentifier>{3a6c8ffc-700a-4516-bfef-74db6db3baa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="docs">
-      <UniqueIdentifier>{15f9d992-1b23-4ce1-bc76-bc64cf0ed99b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\internal_bundles">
       <UniqueIdentifier>{23dd44ce-47d7-4fc3-860a-c05d5bd722fa}</UniqueIdentifier>
     </Filter>
@@ -488,19 +485,8 @@
     <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptor.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealRange.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\docs\status.txt">
-      <Filter>docs</Filter>
-    </None>
-    <None Include="..\..\..\docs\datatypes.txt">
-      <Filter>docs</Filter>
-    </None>
   </ItemGroup>
 </Project>

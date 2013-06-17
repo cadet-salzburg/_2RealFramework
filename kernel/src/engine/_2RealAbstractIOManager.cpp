@@ -120,10 +120,17 @@ namespace _2Real
 	{
 		// SYNC must be sure that there's no update happening right now
 		std::ostringstream str;
-		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentData();
+		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentDataThreadSafe();
 		if ( data.get() == nullptr ) str << "empty" << std::endl;
 		else data->writeTo( str );
 		return str.str();
+	}
+
+	std::shared_ptr< const CustomType > BasicInletIO::getCurrentData() const
+	{
+		// SYNC must be sure that there's no update happening right now
+		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentDataThreadSafe();
+		return data;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

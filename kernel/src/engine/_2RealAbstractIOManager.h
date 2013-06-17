@@ -140,6 +140,8 @@ namespace _2Real
 		const std::string					getUpdatePolicyAsString() const;
 		const std::string					getCurrentValueAsString() const;
 
+		std::shared_ptr< const CustomType >		getCurrentData() const;
+
 	private:
 
 		BasicInlet							*m_Inlet;

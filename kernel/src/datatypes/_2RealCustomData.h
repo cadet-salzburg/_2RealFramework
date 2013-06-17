@@ -19,17 +19,13 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
 #include "helpers/_2RealAnyHolder.h"
-
 #include <map>
 
 namespace _2Real
 {
-
 	class TypeMetadata;
 
-	// this alone won't work... i need to be able to create shit from the app side
 	namespace bundle
 	{
 		class TypeMetainfo;
@@ -77,8 +73,8 @@ namespace _2Real
 
 		CustomType& operator=( CustomType const& other );
 
-		typedef std::map< std::string, AbstractAnyHolder * >		DataFields;
-		DataFields													mDataFields;
+		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
+		DataFields															mDataFields;
 
 		void initField( std::string const& name, AbstractAnyHolder *init );
 		DataFields::iterator iter( std::string const& name );

@@ -30,11 +30,6 @@
 #include "helpers/_2RealSingletonHolder.h"
 #include "helpers/_2RealHelpers.h"
 
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealSkeleton.h"
-#include "datatypes/_2RealNumber.h"
-#include "datatypes/_2RealPoint.h"
-
 #include "internal_bundles/_2RealConversionBundle.h"
 
 #include <sstream>

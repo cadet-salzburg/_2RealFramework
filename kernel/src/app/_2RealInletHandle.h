@@ -18,17 +18,15 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
+#include "datatypes/_2RealCustomData.h"
 #include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
 {
 	class AbstractInletIO;
-	class AnyOptionSet;
 
 	namespace app
 	{
-		class AppData;
 		class OutletHandle;
 		class BlockHandle;
 
@@ -43,10 +41,6 @@ namespace _2Real
 			InletHandle( InletHandle const& other );
 			InletHandle& operator=( InletHandle const& other );
 
-			std::string const&	getName() const;
-			const std::string	getLongTypename() const;
-			std::string const&	getTypename() const;
-
 			bool isValid() const;
 			void invalidate();
 			bool operator==( InletHandle const& other ) const;
@@ -56,21 +50,16 @@ namespace _2Real
 			bool operator>( InletHandle const& other ) const;
 			bool operator>=( InletHandle const& other ) const;
 
-			struct InletState
-			{
-				//std::string defaultValue;
-				std::string currentValue;
-				std::string updatePolicy;
-				std::string bufferSize;
-			};
+			std::string const&	getName() const;
+			BlockHandle			getOwningBlock();
 
-			InletState getCurrentState() const;
+			void				setUpdatePolicy( InletPolicy const& policy );
+			void				setBufferSize( const unsigned int size );
 
-			void setUpdatePolicy( InletPolicy const& policy );
+			bool				link( OutletHandle &outletHandle );
+			void				unlinkFrom( OutletHandle &outletHandle );
 
-			bool link( OutletHandle &outletHandle );
-			//bool linkWithConversion( OutletHandle &outletHandle );
-			void unlinkFrom( OutletHandle &outletHandle );
+			std::shared_ptr< const CustomType >		getCurrentData() const;
 
 			// if the inlet is linked, the value might be overwritten of course
 			//template< typename TData >
@@ -79,46 +68,25 @@ namespace _2Real
 			//	setValue( Any( value ) );
 			//}
 
-			//template< typename TData >
-			//void setDefaultValue( TData const& value )
-			//{
-			//	setDefaultValue( Any( value ) );
-			//}
-
 			//void setValueToString( std::string const& value );
-			//void setDefaultValueToString( std::string const& value );
 
 			// returns the inlet's most recent input data
 			// updates right before an update() -> stays the same until next update()
-			AppData				getCurrentInput() const;
+			//AppData				getCurrentInput() const;
 
-			void				setBufferSize( const unsigned int size );
-
-			//template< typename TData >
-			//std::set< Option< TData > > getOptionMapping() const
-			//{
-			//	AnyOptionSet const& anyOptions = this->getOptionSet();
-			//	return anyOptions.extract< TData >();
-			//}
+			// multi-inlet related stuff -> each of those functions has a chance of failing
 
 			bool isMultiInlet() const;
 			unsigned int getSize() const;
 			InletHandle operator[]( const unsigned int index );
-
 			InletHandle add();
 			void remove( InletHandle &handle );
-
-			// new 06/05/13
-			BlockHandle getOwningBlock();
 
 		private:
 
 			friend class OutletHandle;
 
-			//AnyOptionSet const& getOptionSet() const;
-
 			//void				setValue( Any const& data );
-			//void				setDefaultValue( Any const& data );
 			AbstractInletIO		*m_InletIO;
 
 		};

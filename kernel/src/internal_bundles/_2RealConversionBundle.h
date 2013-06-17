@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "datatypes/_2RealImage.h"
-#include "datatypes/_2RealImageT.h"
 #include "datatypes/_2RealTypes.h"
 #include "../_2RealBundle.h"
 #include "internal_bundles/_2RealInternalBundles.h"

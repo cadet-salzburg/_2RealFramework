@@ -42,10 +42,6 @@ namespace _2Real
 			OutletHandle( OutletHandle const& other );
 			OutletHandle& operator=( OutletHandle const& other );
 
-			std::string const&	getName() const;
-			//const std::string	getLongTypename() const;
-			//std::string const&	getTypename() const;
-
 			bool isValid() const;
 			void invalidate();
 			bool operator==( OutletHandle const& other ) const;
@@ -55,11 +51,11 @@ namespace _2Real
 			bool operator>( OutletHandle const& other ) const;
 			bool operator>=( OutletHandle const& other ) const;
 
-			bool link( InletHandle &inletHandle );
-			//bool linkWithConversion( InletHandle &inletHandle );
-			void unlinkFrom( InletHandle &inletHandle );
+			std::string const&		getName() const;
+			BlockHandle				getOwningBlock();
 
-			//AppData				getLastOutput() const;
+			bool					link( InletHandle &inletHandle );
+			void					unlinkFrom( InletHandle &inletHandle );
 
 			void registerToNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;
@@ -77,9 +73,6 @@ namespace _2Real
 				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
-
-			// new 06/05/13
-			BlockHandle getOwningBlock();
 
 		private:
 

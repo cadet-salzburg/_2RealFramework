@@ -25,6 +25,7 @@
 #include "engine/_2RealTimestampedData.h"
 
 #include "datatypes/_2RealCustomData.h"
+#include "helpers/_2RealPoco.h"
 
 namespace _2Real
 {
@@ -65,8 +66,10 @@ namespace _2Real
 
 		// called only from within an update: no change
 		std::shared_ptr< const CustomType >		getCurrentData() const;
+		// called from application side
+		std::shared_ptr< const CustomType >		getCurrentDataThreadSafe() const;
+		// called from application side
 		void									setData( std::shared_ptr< const CustomType > const& data );
-
 		// compares last to current
 		bool									hasChanged() const;
 
@@ -75,6 +78,7 @@ namespace _2Real
 		// last data is kept around in case user wants to make == comp
 		std::shared_ptr< const CustomType >		mLastData;
 		std::shared_ptr< const CustomType >		mCurrentData;
+		mutable Poco::FastMutex					mAccess;
 
 	};
 
