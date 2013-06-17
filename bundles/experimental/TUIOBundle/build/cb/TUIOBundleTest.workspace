@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<CodeBlocks_workspace_file>
-	<Workspace title="TUIOBundleTest">
-		<Project filename="TUIOBundleTest.cbp" />
-		<Project filename="TUIOBundle.cbp" />
-		<Project filename="../../../../../kernel/build/CB/_2RealFramework.cbp" />
-	</Workspace>
-</CodeBlocks_workspace_file>
