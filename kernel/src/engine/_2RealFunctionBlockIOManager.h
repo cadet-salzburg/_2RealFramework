@@ -62,9 +62,9 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addBasicInlet( AbstractInletIO::InletInfo const& info );
-		void							addMultiInlet( AbstractInletIO::InletInfo const& info );
-		void							addOutlet( OutletIO::OutletInfo const& info );
+		void							addBasicInlet( InletInfo const& info );
+		void							addMultiInlet( InletInfo const& info );
+		void							addOutlet( OutletInfo const& info );
 
 		app::InletHandle &				getAppInletHandle( std::string const& name );
 		app::OutletHandle &				getAppOutletHandle( std::string const& name );

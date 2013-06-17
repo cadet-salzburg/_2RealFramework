@@ -19,6 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealCustomData.h"
+#include "app/_2RealParameterInfo.h"
 #include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
@@ -50,8 +51,11 @@ namespace _2Real
 			bool operator>( InletHandle const& other ) const;
 			bool operator>=( InletHandle const& other ) const;
 
-			std::string const&	getName() const;
-			BlockHandle			getOwningBlock();
+			//_2Real::app::InletInfo			getInletInfo() const;
+			std::string const&				getName() const;
+			//TypeMetainfo const&				getTypeMetainfo() const;
+			BlockHandle						getOwningBlock();
+			app::TypeMetainfo				getType() const;
 
 			void				setUpdatePolicy( InletPolicy const& policy );
 			void				setBufferSize( const unsigned int size );

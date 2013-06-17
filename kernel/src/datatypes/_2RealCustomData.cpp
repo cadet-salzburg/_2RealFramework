@@ -19,13 +19,35 @@
 #include "datatypes/_2RealCustomData.h"
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealTypeMetadata.h"
+#include "app/_2RealParameterInfo.h"
 
 namespace _2Real
 {
-	// this is how every custom type is created
+	CustomType::~CustomType()
+	{
+		for ( DataFields::iterator it = mDataFields.begin(); it != mDataFields.end(); ++it )
+		{
+			delete it->second;
+		}
+	}
+
 	CustomType::CustomType( bundle::TypeMetainfo const& meta )
 	{
 		TypeMetadata const& metadata = meta.mImpl;
+		std::cout << metadata.mFields.size() << std::endl;
+		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
+		{
+			std::cout << "adding field: " << it->first << std::endl;
+			// create an any of appropriate type
+			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
+			// add it to map ( or whatever structure is used )
+			this->initField( it->first, init );
+		}
+	}
+
+	CustomType::CustomType( app::TypeMetainfo const& meta )
+	{
+		TypeMetadata const& metadata = *( meta.mImpl );
 		std::cout << metadata.mFields.size() << std::endl;
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
@@ -127,6 +149,7 @@ namespace _2Real
 		DataFields::iterator it = iter( field );
 		// may also throw
 		( it->second )->set( *value );
+		delete value;
 	}
 
 	AbstractAnyHolder const* CustomType::getValueInternal( std::string const& field ) const

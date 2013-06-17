@@ -337,6 +337,11 @@ namespace _2Real
 		}
 	}
 
+	TypeMetadata const& EngineImpl::getType( std::string const& bundle, std::string const& name ) const
+	{
+		return m_TypeRegistry->getType( bundle, name );
+	}
+
 	//std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
 	//{
 	//	if ( IOLink::canAutoConvert( inlet, outlet ) )

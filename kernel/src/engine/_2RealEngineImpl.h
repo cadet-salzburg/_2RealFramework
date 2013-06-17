@@ -49,6 +49,7 @@ namespace _2Real
 	class AbstractInletIO;
 	class OutletIO;
 	class Bundle;
+	class TypeMetadata;
 
 	template< typename T >
 	class FunctionBlock;
@@ -127,6 +128,8 @@ namespace _2Real
 		Bundle &						findBundleByPath( std::string const& libraryPath ) const;
 					
 		void							getCurrentSystemState( app::SystemState &state ) const;
+
+		TypeMetadata const&				getType( std::string const& bundle, std::string const& name ) const;
 
 	private:
 

@@ -168,7 +168,7 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addBasicInlet( AbstractInletIO::InletInfo const& info )
+	void FunctionBlockIOManager::addBasicInlet( InletInfo const& info )
 	{
 		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
 		m_UpdatePolicy->addInlet( *io, info.policy );					// creates a trigger and adds it
@@ -178,7 +178,7 @@ namespace _2Real
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
 	}
 
-	void FunctionBlockIOManager::addMultiInlet( AbstractInletIO::InletInfo const& info )
+	void FunctionBlockIOManager::addMultiInlet( InletInfo const& info )
 	{
 		MultiInletIO *io = new MultiInletIO( m_Owner, *m_UpdatePolicy, info );
 		m_Inlets.push_back( io );
@@ -186,7 +186,7 @@ namespace _2Real
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( OutletIO::OutletInfo const& info )
+	void FunctionBlockIOManager::addOutlet( OutletInfo const& info )
 	{
 		// TODO: lookup type name -> create two type copies: buffer & init
 

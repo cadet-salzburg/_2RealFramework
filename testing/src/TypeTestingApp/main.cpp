@@ -56,11 +56,11 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
 			}
-			BlockInfo::OutletInfos outlets = it->outlets;
-			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			{
-				std::cout << "-o\t" << oIt->name << std::endl;
-			}
+			//BlockInfo::OutletInfos outlets = it->outlets;
+			//for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+			//{
+			//	std::cout << "-o\t" << oIt->name << std::endl;
+			//}
 		}
 
 		BlockHandle testBlock0 = testBundle.createBlockInstance( "TypeTestingBlock" );
@@ -100,6 +100,12 @@ int main( int argc, char *argv[] )
 	{
 		std::shared_ptr< const CustomType > data = i10.getCurrentData();
 		std::cout << "YARR" << data->get< int >( "test int" ) << std::endl;
+
+
+		CustomType t( i10.getType() );
+		std::cout << t.size() << std::endl;
+		t.set< int >( "test int", 10 );
+		//i10.receiveValue( t );
 
 		std::cout << "NARF" << std::endl;
 

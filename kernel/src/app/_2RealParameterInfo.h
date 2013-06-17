@@ -20,6 +20,7 @@
 
 #include "engine/_2RealInletPolicy.h"
 #include "datatypes/_2RealCustomData.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 #include <string>
 
@@ -27,8 +28,43 @@ namespace _2Real
 {
 	// TODO: this object is now after the rewrite more or less identical to inlet metadata....
 
+	class TypeMetadata;
+	struct InletInfo;
+	struct OutletInfo;
+
 	namespace app
 	{
+		class TypeMetainfo
+		{
+		public:
+			TypeMetainfo( _2Real::TypeMetadata const& impl ) : mImpl( &impl ) {}
+		private:
+			friend class CustomType;
+			_2Real::TypeMetadata					const* mImpl;
+		};
+
+		//class InletInfo
+		//{
+		//public:
+		//	InletInfo( _2Real::InletInfo const& impl ) : mImpl( &impl ) {}
+		//	//std::string getName() const { return mImpl->baseName; }
+		//	//bool isMultiinlet() const { return mImpl->isMuliinlet; }
+		//private:
+		//	_2Real::InletInfo						const* mImpl;
+		//};
+
+		//class OutletInfo
+		//{
+		//public:
+		//	OutletInfo( _2Real::OutletInfo const& impl ) : mImpl( &impl ) {}
+		//private:
+		//	_2Real::OutletInfo						const* mImpl;
+		//};
+
+		//class ParameterInfo
+		//{
+		//};
+
 		struct InletInfo
 		{
 			InletInfo() : name( "undefined" ), customName( "undefined" ),

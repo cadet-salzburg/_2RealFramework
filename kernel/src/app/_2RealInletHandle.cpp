@@ -18,6 +18,7 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterInfo.h"
 //#include "app/_2RealAppData.h"
 #include "engine/_2RealEngineImpl.h"
 //#include "engine/_2RealInlet.h"
@@ -150,6 +151,12 @@ namespace _2Real
 			{
 				return app::BlockHandle();
 			}
+		}
+
+		app::TypeMetainfo InletHandle::getType() const
+		{
+			checkValidity( m_InletIO );
+			return app::TypeMetainfo( m_InletIO->info().type );
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const

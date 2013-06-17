@@ -23,6 +23,7 @@
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
+#include "engine/_2RealParameterMetadata.h"
 
 using std::string;
 

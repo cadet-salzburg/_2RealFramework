@@ -25,7 +25,6 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		// create custom type of the template
 		CustomType initialValue( testType );
-		// TODO this name should be invalid
 		initialValue.set< int >( "test int", 0 );
 		initialValue.set< std::string >( "test string", "NARF" );
 

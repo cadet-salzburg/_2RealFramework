@@ -61,21 +61,23 @@ namespace _2Real
 	class TypeDescriptor;
 	class AbstractUpdatePolicy;
 
+	struct InletInfo
+	{
+		InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
+			owner( b ), baseName( n ), initializer( i ), type( t ), policy( p ) {}
+
+		AbstractUberBlock						&owner;
+		std::string								baseName;
+		std::shared_ptr< const CustomType >		initializer;
+		TypeMetadata							const& type;
+		InletPolicy								policy;
+
+	};
+
 	class AbstractInletIO : private NonCopyable< AbstractInletIO >, private Handleable< AbstractInletIO, app::InletHandle >
 	{
 
 	public:
-
-		struct InletInfo
-		{
-			InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > i ) :
-				owner( b ), baseName( n ), initializer( i ), policy( p ) {}
-
-			AbstractUberBlock						&owner;
-			std::string								baseName;
-			std::shared_ptr< const CustomType >		initializer;
-			InletPolicy								policy;
-		};
 
 		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
 		using Handleable< AbstractInletIO, app::InletHandle >::registerHandle;
@@ -92,9 +94,9 @@ namespace _2Real
 		virtual void						syncInletChanges() = 0;
 		virtual bundle::InletHandle &		getBundleInletHandle() const = 0;
 
+		InletInfo const&					info() const { return m_Info; }
 		AbstractUberBlock *					getOwningBlock();
 
-		InletInfo const&					info() const { return m_Info; }
 		bool								belongsToBlock( AbstractUberBlock const* const block ) const { return ( &m_OwningBlock == block ); }
 
 	protected:
@@ -188,21 +190,21 @@ namespace _2Real
 
 	};
 
+	struct OutletInfo
+	{
+		OutletInfo( AbstractUberBlock &b, std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
+			owner( b ), baseName( n ), initializer( i ), type( t ) {}
+
+		AbstractUberBlock						&owner;
+		std::string								baseName;
+		std::shared_ptr< const CustomType >		initializer;
+		TypeMetadata							const& type;
+	};
 
 	class OutletIO : private NonCopyable< OutletIO >, private Handleable< OutletIO, app::OutletHandle >
 	{
 
 	public:
-
-		struct OutletInfo
-		{
-			OutletInfo( AbstractUberBlock &b, std::string const& n, std::shared_ptr< const CustomType > i ) :
-				owner( b ), baseName( n ), initializer( i ) {}
-
-			AbstractUberBlock						&owner;
-			std::string								baseName;
-			std::shared_ptr< const CustomType >		initializer;
-		};
 
 		using Handleable< OutletIO, app::OutletHandle >::getHandle;
 		using Handleable< OutletIO, app::OutletHandle >::registerHandle;

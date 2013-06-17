@@ -31,6 +31,11 @@ namespace _2Real
 		class TypeMetainfo;
 	}
 
+	namespace app
+	{
+		class TypeMetainfo;
+	}
+
 	class CustomType
 	{
 
@@ -38,11 +43,14 @@ namespace _2Real
 
 		// creation -> allocate new ptrs
 		explicit CustomType( bundle::TypeMetainfo const& meta );
+		explicit CustomType( app::TypeMetainfo const& meta );
 		explicit CustomType( TypeMetadata const& meta );
-	//private:
+
 		// copy -> same ptrs as other obj
 		CustomType( CustomType const& other );
-	public:
+
+		~CustomType();
+
 		// clone -> allocate new ptrs
 		void cloneFrom( CustomType const& other );
 
