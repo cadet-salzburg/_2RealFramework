@@ -21,6 +21,8 @@
 #include "engine/_2RealTypeMetadata.h"
 #include "app/_2RealParameterInfo.h"
 
+#include <assert.h>
+
 namespace _2Real
 {
 	CustomType::~CustomType()
@@ -33,11 +35,10 @@ namespace _2Real
 
 	CustomType::CustomType( bundle::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = meta.mImpl;
+		TypeMetadata const& metadata = meta.mImpl; mMeta = &metadata;
 		std::cout << metadata.mFields.size() << std::endl;
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
-			std::cout << "adding field: " << it->first << std::endl;
 			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
 			// add it to map ( or whatever structure is used )
@@ -47,11 +48,10 @@ namespace _2Real
 
 	CustomType::CustomType( app::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = *( meta.mImpl );
+		TypeMetadata const& metadata = *( meta.mImpl ); mMeta = &metadata;
 		std::cout << metadata.mFields.size() << std::endl;
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
-			std::cout << "adding field: " << it->first << std::endl;
 			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
 			// add it to map ( or whatever structure is used )
@@ -62,10 +62,9 @@ namespace _2Real
 	// created from within bundle manager
 	CustomType::CustomType( TypeMetadata const& metadata )
 	{
-		std::cout << metadata.mFields.size() << std::endl;
+		mMeta = &metadata;
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
-			std::cout << "adding field: " << it->first << std::endl;
 			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
 			// add it to map ( or whatever structure is used )
@@ -75,8 +74,6 @@ namespace _2Real
 
 	CustomType::CustomType( CustomType const& other )
 	{
-		( void )( other );
-
 		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
 		{
 			std::string name = it->first;
@@ -100,15 +97,8 @@ namespace _2Real
 	void CustomType::initField( std::string const& name, AbstractAnyHolder *init )
 	{
 #ifdef _DEBUG
-		if ( !init )
-		{
-			// TODO ASSERT
-		}
-
-		if ( mDataFields.find( name ) != mDataFields.end() )
-		{
-			// TODO ASSERT
-		}
+		assert( init != nullptr );
+		assert( mDataFields.find( name ) == mDataFields.end() );
 #endif
 		// ONLY here, in the init field method, assignment operator may be used
 		// for all later operations, set must be used instead ( involves a typecheck! )

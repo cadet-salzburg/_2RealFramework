@@ -22,11 +22,19 @@ void getBundleMetainfo( BundleMetainfo &info )
 		testType.addField< int >( "test int" );
 		testType.addField< std::string >( "test string" );
 		testType.addField< std::vector< float > >( "test float array" );
+		testType.addField< Image >( "test image" );
 
 		// create custom type of the template
 		CustomType initialValue( testType );
 		initialValue.set< int >( "test int", 0 );
 		initialValue.set< std::string >( "test string", "NARF" );
+		Image image;
+		std::vector< unsigned char > init;
+		init.push_back( 0 ); init.push_back( 0 ); //init.push_back( 10 ); init.push_back( 20 );
+		image.CustomType::set< std::vector< unsigned char > >( "data", init );
+		image.CustomType::set< unsigned int >( "width", 2 );
+		image.CustomType::set< unsigned int >( "height", 1 );
+		initialValue.set< Image >( "test image", image );
 
 		// this would create a 'custom' type containing only one field, an integer
 		// but luckily, there's a shortcut ;)

@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
-#include "helpers/_2RealAnyHolder.h"
+#include "datatypes/_2RealAnyHolder.h"
 #include "datatypes/_2RealFieldDescriptor.h"
 
 #include <map>

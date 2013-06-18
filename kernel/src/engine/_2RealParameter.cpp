@@ -17,12 +17,13 @@
 */
 
 #include "engine/_2RealParameter.h"
+#include <assert.h>
 
 namespace _2Real
 {
 	Parameter::Parameter( std::shared_ptr< const CustomType > initializer ) :
-		m_Data( new CustomType( *( initializer.get() ) ) ),
-		m_DataBuffer( new CustomType( *( initializer.get() ) ) )
+		m_Data( new CustomType( *( initializer.get() ) ) ),			// clone
+		m_DataBuffer( new CustomType( *( initializer.get() ) ) )	// clone
 	{
 #ifdef _DEBUG
 		assert( m_DataBuffer.get() && m_Data.get() );

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
 #include "helpers/_2RealException.h"
 #include "datatypes/_2RealCustomData.h"
 
@@ -41,8 +40,8 @@ namespace _2Real
 			InletHandle& operator=( InletHandle const& src );
 			~InletHandle();
 
-			//template< typename TData >
-			//TData const& getReadableRef() const
+			//template< typename TType >
+			//TType const& getReadableRef() const
 			//{
 			//	if ( m_Inlet == nullptr )
 			//	{
@@ -52,12 +51,12 @@ namespace _2Real
 			//	}
 
 			//	Any curr = getCurrentData();
-			//	TData const& data = curr.extract< TData >();
+			//	TType const& data = curr.extract< TType >();
 			//	return data;
 			//}
 
-			//template< typename TData >
-			//TData * getWriteableCopy()
+			//template< typename TType >
+			//TType * getWriteableCopy()
 			//{
 			//	if ( m_Inlet == nullptr )
 			//	{
@@ -67,8 +66,8 @@ namespace _2Real
 			//	}
 
 			//	Any curr = getCurrentData();
-			//	TData const& data = curr.extract< TData >();
-			//	return new TData( data );
+			//	TType const& data = curr.extract< TType >();
+			//	return new TType( data );
 			//}
 
 			bool isValid() const;

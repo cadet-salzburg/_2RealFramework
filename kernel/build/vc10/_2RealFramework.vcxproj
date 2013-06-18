@@ -38,17 +38,13 @@
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealAbstractAnyHolder.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealRange.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealType.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealVector.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractStateManager.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractUberBlock.h" />
@@ -84,8 +80,6 @@
     <ClInclude Include="..\..\src\engine\_2RealTimestampedData.h" />
     <ClInclude Include="..\..\src\engine\_2RealTypeMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealAny.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
@@ -99,7 +93,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealTypeDescriptor.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
@@ -219,7 +212,9 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealTypes.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealAbstractIOManager.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
@@ -394,7 +389,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>
@@ -419,7 +413,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\helpers\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealTypeDescriptor.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\helpers\</ObjectFileName>

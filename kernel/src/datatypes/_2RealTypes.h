@@ -18,187 +18,425 @@
 
 #pragma once
 
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealTypeDescriptor.h"
+#include "helpers/_2RealStringHelpers.h"
+
+#include <assert.h>
 
 #include <vector>
-#include <list>
 #include <string>
-#include <sstream>
-
-#ifdef _UNIX
-	#include <typeinfo>
-#else
-	#include <typeinfo.h>
-#endif
 
 namespace _2Real
 {
-	struct NullType
-	{
-		bool operator==( NullType const& other ) const { return false; }
-	};
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	template< typename T > struct traits;
+	template< typename T > struct Init;
 
-	template< typename T >
-	struct traits< std::vector< T > >
+	template< >
+	struct Init< char >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static int defaultValue()
 		{
-			return new TypeDescriptor( typeid( std::vector< T > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
-		}
-	};
-
-	//template< typename T >
-	//struct traits< std::vector< T, Eigen::aligned_allocator< T > > >
-	//{
-	//	static TypeDescriptor *createTypeDescriptor()
-	//	{
-	//		return new TypeDescriptor( typeid( std::vector< T, Eigen::aligned_allocator< T > > ), Type::VECTOR, "vector", traits< T >::createTypeDescriptor() );
-	//	}
-	//};
-
-	template< typename T >
-	struct traits< std::list< T > >
-	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( std::list< T > ), Type::LIST, "list", traits< T >::createTypeDescriptor() );
+			return static_cast< char >( 0 );
 		}
 	};
 
 	template< >
-	struct traits< NullType >
+	struct Init< unsigned char >
 	{
-		static TypeDescriptor * createTypeDescriptor()
+		static int defaultValue()
 		{
-			return new TypeDescriptor( typeid( NullType ), Type::EMPTY, "void", TypeCategory::UNIQUE );
+			return static_cast< char >( 0 );
 		}
 	};
 
 	template< >
-	struct traits< char >
+	struct Init< unsigned int >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static int defaultValue()
 		{
-			return new TypeDescriptor( typeid( char ), Type::BYTE, "char", TypeCategory::ARITHMETHIC );
+			return static_cast< unsigned int >( 0 );
 		}
 	};
 
 	template< >
-	struct traits< unsigned char >
+	struct Init< int >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static int defaultValue()
 		{
-			return new TypeDescriptor( typeid( unsigned char ), Type::UBYTE, "unsigned char", TypeCategory::ARITHMETHIC );
+			return 0;
 		}
 	};
 
 	template< >
-	struct traits< short >
+	struct Init< std::string >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string defaultValue()
 		{
-			return new TypeDescriptor( typeid( short ), Type::SHORT, "short", TypeCategory::ARITHMETHIC );
+			return std::string();
+		}
+	};
+
+	template< typename TType >
+	struct Init< std::vector< TType > >
+	{
+		static std::vector< TType > defaultValue()
+		{
+			return std::vector< TType >();
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	template< typename T > struct Name;
+
+	template< >
+	struct Name< char >
+	{
+		static std::string humanReadableName()
+		{
+			return "char";
 		}
 	};
 
 	template< >
-	struct traits< unsigned short >
+	struct Name< unsigned char >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( unsigned short ), Type::USHORT, "unsigned short", TypeCategory::ARITHMETHIC );
+			return "uchar";
 		}
 	};
 
 	template< >
-	struct traits< int >
+	struct Name< int >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( int ), Type::INT, "int", TypeCategory::ARITHMETHIC );
+			return "int";
 		}
 	};
 
 	template< >
-	struct traits< unsigned int >
+	struct Name< unsigned int >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( unsigned int ), Type::UINT, "unsigned int", TypeCategory::ARITHMETHIC );
+			return "uint";
 		}
 	};
 
 	template< >
-	struct traits< long >
+	struct Name< float >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( long ), Type::LONG, "long", TypeCategory::ARITHMETHIC );
+			return "float";
 		}
 	};
 
 	template< >
-	struct traits< unsigned long >
+	struct Name< double >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( unsigned long ), Type::ULONG, "unsigned long", TypeCategory::ARITHMETHIC );
+			return "double";
 		}
 	};
 
 	template< >
-	struct traits< float >
+	struct Name< std::string >
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		static std::string humanReadableName()
 		{
-			return new TypeDescriptor( typeid( float ), Type::FLOAT, "float", TypeCategory::ARITHMETHIC );
+			return "string";
 		}
 	};
+
+	template< typename TType >
+	struct Name< std::vector< TType > >
+	{
+		static std::string humanReadableName()
+		{
+			return std::string( "vector of " ).append( Name< TType >::humanReadableName() );
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	template< typename TType >
+	inline void writeTo( std::ostream &out, TType const& v )
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+		out << "UNSERIALIZABLE TYPE";
+	}
+
+	template< typename TType >
+	inline void writeTo( std::ostream &out, typename std::vector< TType > const& v )
+	{
+		if ( v.empty() ) return;
+
+		typename std::vector< TType >::const_iterator it = v.begin();
+		writeTo( out, *it );
+		++it;
+		for ( ; it != v.end(); ++it )
+		{
+			out << ", ";
+			writeTo( out, *it );
+		}
+	}
 
 	template< >
-	struct traits< double >
+	inline void writeTo( std::ostream &out, char const& v )
 	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( double ), Type::DOUBLE, "double", TypeCategory::ARITHMETHIC );
-		}
-	};
+		out << static_cast< int >( v );
+	}
 
 	template< >
-	struct traits< bool >
+	inline void writeTo( std::ostream &out, unsigned char const& v )
 	{
-		static TypeDescriptor *createTypeDescriptor()
-		{
-			return new TypeDescriptor( typeid( bool ), Type::BOOL, "bool", TypeCategory::LOGICAL );
-		}
-	};
+		out << static_cast< int >( v );
+	}
 
 	template< >
-	struct traits< std::string >
+	inline void writeTo( std::ostream &out, short const& v )
 	{
-		static TypeDescriptor *createTypeDescriptor()
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, unsigned short const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, int const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, unsigned int const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, long const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, unsigned long const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, bool const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, std::string const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, float const& v )
+	{
+		out << v;
+	}
+
+	template< >
+	inline void writeTo( std::ostream &out, double const& v )
+	{
+		out << v;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	template< typename TType >
+	inline void readFrom( std::istream &in, TType &v )
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+	}
+
+	template< typename TType >
+	inline void readFrom( std::istream &in, typename std::vector< TType > &v )
+	{
+		std::string element;
+
+		while ( getline( in, element, ',' ) )
 		{
-			return new TypeDescriptor( typeid( std::string ), Type::STRING, "string", TypeCategory::UNIQUE );
+			trim( element );
+			TType tmp;
+			std::stringstream stream;
+			stream << element;
+			readFrom( stream, tmp );
+			v.push_back( tmp );
 		}
-	};
+	}
 
-	//template< typename T >
-	//struct traits
-	//{
-	//	static TypeDescriptor *createTypeDescriptor()
-	//	{
-	//		std::ostringstream msg;
-	//		msg << typeid( T ).name() << " is not a valid type";
-	//		throw InvalidTypeException( msg.str() );
-	//	}
-	//};
-
-	template< typename T >
-	TypeDescriptor * createTypeDescriptor()
+	template< >
+	inline void readFrom( std::istream &in, char &v )
 	{
-		return traits< T >::createTypeDescriptor();
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned char &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, short &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned short &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, int &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned int &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, long &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, unsigned long &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, bool &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, std::string &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, float &v )
+	{
+		in >> v;
+	}
+
+	template< >
+	inline void readFrom( std::istream &in, double &v )
+	{
+		in >> v;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	template< typename TType >
+	inline bool isLess( TType const& v1, TType const& v2 )
+	{
+#ifdef _DEBUG
+		assert( NULL );
+#endif
+		return false;
+	}
+
+	template < >
+	inline bool isLess( char const& v1, char const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( unsigned char const& v1, unsigned char const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( short const& v1, short const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( unsigned short const& v1, unsigned short const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( int const& v1, int const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( unsigned int const& v1, unsigned int const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( long const& v1, long const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( unsigned long const& v1, unsigned long const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( bool const& v1, bool const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( std::string const& v1, std::string const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( float const& v1, float const& v2 )
+	{
+		return ( v1 < v2 );
+	}
+
+	template < >
+	inline bool isLess( double const& v1, double const& v2 )
+	{
+		return ( v1 < v2 );
 	}
 }

@@ -18,5 +18,6 @@
 
 #pragma once
 
-//#include "datatypes/_2RealCustomData.h"
-//#include "helpers/_2RealException.h"
+#include "datatypes/_2RealCustomData.h"
+#include "datatypes/_2RealImage.h"
+#include "helpers/_2RealException.h"

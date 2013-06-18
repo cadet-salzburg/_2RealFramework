@@ -19,6 +19,7 @@
 #include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealParameterMetadata.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStringHelpers.h"
 
 #include <sstream>
 

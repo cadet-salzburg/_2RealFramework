@@ -42,12 +42,16 @@ void Test::update()
 	{
 		//cout << "UPDATE BEGIN " << mNumber << endl;
 		InletHandle in0 = mHandle.getInletHandle( "customInlet0" );
-		InletHandle in1 = mHandle.getInletHandle( "customInlet1" );
 
 		CustomType const& i0 = in0.getReadableRef();
 		int i = i0.get< int >( "test int" );
-		//if ( mNumber == 1 ) cout << mNumber << " " << i << endl;
 		int o = i + ( ++mCounter );
+
+		if ( mNumber == 1 )
+		{
+			_2Real::Image const& img= i0.get< _2Real::Image >( "test image" );
+			std::cout << "image dims: " << img.getWidth() << " " << img.getHeight() << std::endl;
+		}
 
 		OutletHandle out0 = mHandle.getOutletHandle( "customOutlet0" );
 		CustomType &o0 = out0.getWriteableRef();

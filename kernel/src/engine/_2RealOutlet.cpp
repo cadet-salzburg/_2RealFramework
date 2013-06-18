@@ -50,7 +50,7 @@ namespace _2Real
 			Parameter::synchronize();
 			// clone readable data back into writeable data
 			// this way, outlet always holds the last written value
-			Parameter::m_DataBuffer.reset( new CustomType( *Parameter::m_Data.get() ) );
+			Parameter::m_DataBuffer.reset( new CustomType( *Parameter::m_Data.get() ) );		// clone
 			return false;
 		}
 		else

@@ -27,7 +27,7 @@ namespace _2Real
 	{
 		// NOFORGET - copy appropriate?
 		// will be passed on to the inlet buffer of each inlet created!
-		CustomType *t = new CustomType( init );
+		CustomType *t = new CustomType( init ); // clone
 		initValue.reset( t );
 	}
 

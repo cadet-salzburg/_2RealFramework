@@ -104,20 +104,28 @@ int main( int argc, char *argv[] )
 		std::shared_ptr< const CustomType > o0data = o0.getCurrentData();
 		std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
 
+		//Image &oImg = o0data->get< Image >( "test image" );
+		//oImg.set( data, 2, 2 );
+
 		// this receives o0s outputs. it's extremely unlikely that it would ever be higher than o0
 		std::shared_ptr< const CustomType > i10data = i10.getCurrentData();
 		std::cout << "i10: " << i10data->get< int >( "test int" ) << std::endl;
 
 		std::shared_ptr< CustomType > t = i00.makeData();
 		t->set< int >( "test int", ++cnt );
+		Image img;
+		std::vector< unsigned char > data;
+		data.push_back( 10 ); data.push_back( 20 ); data.push_back( 10 ); data.push_back( 20 );
+		img.set( data, cnt, cnt );
+		t->set< Image >( "test image", img );
 		i00.receiveData( t );
 
 		app::TypeMetainfo info = i00.getType();
 		TypeMetainfo::FieldDesc d = info.getFieldInfo();
-		//for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
-		//{
-		//	std::cout << *it << std::endl;
-		//}
+		for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
+		{
+			std::cout << *it << std::endl;
+		}
 
 		string line;
 		char lineEnd = '\n';

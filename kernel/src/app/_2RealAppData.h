@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "helpers/_2RealAny.h"
-
 namespace _2Real
 {
 	//class TimestampedData;

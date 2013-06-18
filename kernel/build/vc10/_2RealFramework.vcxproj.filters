@@ -252,38 +252,11 @@
     <ClInclude Include="..\..\src\internal_bundles\_2RealInternalBundles.h">
       <Filter>include\internal_bundles</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealAny.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealTypeDescriptor.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealAnyHolder.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealType.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeCategory.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeComparisons.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeInitializers.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealTypeStreamOperators.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h">
       <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealVector.h">
-      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h">
       <Filter>include\engine</Filter>
@@ -303,13 +276,19 @@
     <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealRange.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealImage.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealAnyHolder.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealAbstractAnyHolder.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -461,12 +440,6 @@
     <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealTypeDescriptor.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helpers\_2RealAny.cpp">
-      <Filter>src\helpers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
@@ -486,6 +459,12 @@
       <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealTypes.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>

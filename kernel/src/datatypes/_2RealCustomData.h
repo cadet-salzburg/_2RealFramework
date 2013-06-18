@@ -19,7 +19,8 @@
 
 #pragma once
 
-#include "helpers/_2RealAnyHolder.h"
+#include "datatypes/_2RealAnyHolder.h"
+#include "datatypes/_2RealAbstractAnyHolder.h"
 #include <map>
 
 namespace _2Real
@@ -46,10 +47,14 @@ namespace _2Real
 		explicit CustomType( app::TypeMetainfo const& meta );
 		explicit CustomType( TypeMetadata const& meta );
 
-		// copy -> same ptrs as other obj
+		virtual ~CustomType();
+
+		// clones
 		CustomType( CustomType const& other );
 
-		~CustomType();
+		//CustomType& operator=( CustomType const& other );
+
+	public:
 
 		// clone -> allocate new ptrs
 		void cloneFrom( CustomType const& other );
@@ -66,7 +71,16 @@ namespace _2Real
 		{
 			AbstractAnyHolder const* value = getValueInternal( field );
 			// may throw
-			TType const& result = value->extract< TType >();
+			TType const& result = extract< TType >( *value );
+			return result;
+		}
+
+		template< typename TType >
+		TType & get( std::string const& field )
+		{
+			AbstractAnyHolder *value = getValueInternal( field );
+			// may throw
+			TType &result = extract< TType >( *value );
 			return result;
 		}
 
@@ -75,21 +89,25 @@ namespace _2Real
 		// called by hasChanged() on inlet handles
 		bool isEqualTo( CustomType const& other ) const;
 
-		unsigned int size() const { return mDataFields.size(); }
+	protected:
+
+		CustomType() {}
+		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
+
+		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
+		DataFields															mDataFields;
+
+		DataFields::iterator iter( std::string const& name );
+		DataFields::const_iterator constIter( std::string const& name ) const;
 
 	private:
 
 		CustomType& operator=( CustomType const& other );
 
-		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
-		DataFields															mDataFields;
-
-		void initField( std::string const& name, AbstractAnyHolder *init );
-		DataFields::iterator iter( std::string const& name );
-		DataFields::const_iterator constIter( std::string const& name ) const;
-
 		void setValueInternal( std::string const& field, AbstractAnyHolder *value );
 		AbstractAnyHolder const* getValueInternal( std::string const& field ) const;
+
+		TypeMetadata const* mMeta;
 
 	};
 }

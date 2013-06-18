@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,42 +18,42 @@
 
 #pragma once
 
-#include "datatypes/_2RealAnyHolder.h"
-#include "datatypes/_2RealTypes.h"
+#include "datatypes/_2RealCustomData.h"
+#include <vector>
 
 namespace _2Real
 {
-	class FieldDescriptor
+	class Image : public CustomType
 	{
+
 	public:
-		FieldDescriptor() {}
-		virtual ~FieldDescriptor() {}
-		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		virtual std::string getTypename() const = 0;
+
+		Image();
+		Image& operator=( Image const& other );
+		bool operator==( Image const& other ) const;
+
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
+
+		void set( std::vector< unsigned char > const& data, const unsigned int w, const unsigned int h );
+
 	};
 
-	template< typename TType >
-	class FieldDescriptor_t : public FieldDescriptor
+	template< >
+	struct Init< Image >
 	{
-
-	public:
-
-		FieldDescriptor_t() : FieldDescriptor(), mInitValue() {}
-		FieldDescriptor_t( TType const& initValue ) : FieldDescriptor(), mInitValue( initValue ) {}
-
-		AbstractAnyHolder * createAnyHolder() const
+		static Image defaultValue()
 		{
-			return new AnyHolder< TType >( mInitValue );
+			return Image();
 		}
+	};
 
-		std::string getTypename() const
+	template< >
+	struct Name< Image >
+	{
+		static std::string humanReadableName()
 		{
-			return Name< TType >::humanReadableName();
+			return "image";
 		}
-
-	private:
-
-		TType				mInitValue;
-
 	};
 }

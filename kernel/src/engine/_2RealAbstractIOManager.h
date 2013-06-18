@@ -25,6 +25,7 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "engine/_2RealTimestampedData.h"
+#include "helpers/_2RealException.h"
 
 #include <list>
 #include <vector>
