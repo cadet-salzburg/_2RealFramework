@@ -31,9 +31,6 @@
 #include "../_2RealBlock.h"
 #include "engine/_2RealParameterMetadata.h"
 
-#include "engine/_2RealEngineImpl.h"
-#include "datatypes/_2RealTypeRegistry.h"
-
 namespace _2Real
 {
 
@@ -92,8 +89,8 @@ namespace _2Real
 		void						handleException( Exception &e );
 
 
-		void						addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer );
-		void						addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer );
+		void						addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
+		void						addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
 
 	private:
 
@@ -164,19 +161,16 @@ namespace _2Real
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer )
+	void FunctionBlock< THandle >::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
 	{
-		EngineImpl &e = EngineImpl::instance();
-		TypeMetadata const& type = e.getType( m_Bundle.getBundleInfo().name, meta.customName );
-		InletInfo info( *this, meta.name, meta.defaultPolicy, initializer, type );
+		InletInfo info( meta.name, meta.defaultPolicy, initializer, type );
 		meta.isMulti ? m_IOManager->addMultiInlet( info ) : m_IOManager->addBasicInlet( info );
 	}
 
 	template< typename THandle >
-	void FunctionBlock< THandle >::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer  )
+	void FunctionBlock< THandle >::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
 	{
-		TypeMetadata const& type = EngineImpl::instance().getType( m_Bundle.getBundleInfo().name, meta.customName );
-		OutletInfo info( *this, meta.name, initializer, type );
+		OutletInfo info( meta.name, initializer, type );
 		m_IOManager->addOutlet( info );
 	}
 

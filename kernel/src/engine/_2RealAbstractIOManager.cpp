@@ -255,12 +255,19 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	OutletIO::OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initialValue ) :
+	OutletIO::OutletIO( AbstractUberBlock &owner, OutletInfo const& info ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
-		m_Outlet( new Outlet( owner, name, initialValue ) ),
+		m_Outlet( new Outlet( owner, info.baseName, info.initializer ) ),
 		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
-		m_InletEvent( new CallbackEvent< TimestampedData const& >() )
+		m_InletEvent( new CallbackEvent< TimestampedData const& >() ),
+		m_OwningBlock( owner ),
+		m_Info( info )
 	{
+	}
+
+	std::shared_ptr< const CustomType > OutletIO::getCurrentData() const
+	{
+		return m_Outlet->getData();
 	}
 
 	OutletIO::~OutletIO()

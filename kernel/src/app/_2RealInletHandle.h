@@ -57,6 +57,8 @@ namespace _2Real
 
 			std::shared_ptr< CustomType >	makeData() const;
 
+			// MISSING: function for querying update policy, current state, buffer size
+
 			void				setUpdatePolicy( InletPolicy const& policy );
 			void				setBufferSize( const unsigned int size );
 

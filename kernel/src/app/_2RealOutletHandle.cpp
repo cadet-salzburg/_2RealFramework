@@ -82,6 +82,11 @@ namespace _2Real
 			return m_OutletIO != nullptr;
 		}
 
+		void OutletHandle::invalidate()
+		{
+			m_OutletIO = nullptr;
+		}
+
 		bool OutletHandle::operator==( OutletHandle const& other ) const
 		{
 			return m_OutletIO == other.m_OutletIO;
@@ -125,13 +130,6 @@ namespace _2Real
 			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO ).isValid();;
 		}
 
-		//bool OutletHandle::linkWithConversion( InletHandle &inlet )
-		//{
-		//	checkValidity( m_OutletIO );
-		//	std::pair< IOLink, IOLink > links = EngineImpl::instance().createLinkWithConversion( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
-		//	return links.first.isValid();
-		//}
-
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
@@ -170,23 +168,6 @@ namespace _2Real
 			return m_OutletIO->m_Outlet->getName();
 		}
 
-		//const std::string OutletHandle::getLongTypename() const
-		//{
-		//	checkValidity( m_OutletIO );
-		//	return m_OutletIO->m_Outlet->getLongTypename();
-		//}
-
-		//std::string const& OutletHandle::getTypename() const
-		//{
-		//	checkValidity( m_OutletIO );
-		//	return m_OutletIO->m_Outlet->getTypename();
-		//}
-
-		void OutletHandle::invalidate()
-		{
-			m_OutletIO = nullptr;
-		}
-
 		app::BlockHandle OutletHandle::getOwningBlock()
 		{
 			checkValidity( m_OutletIO );
@@ -201,6 +182,24 @@ namespace _2Real
 			{
 				return app::BlockHandle();
 			}
+		}
+
+		app::TypeMetainfo OutletHandle::getType() const
+		{
+			checkValidity( m_OutletIO );
+			return app::TypeMetainfo( m_OutletIO->info().type );
+		}
+
+		std::shared_ptr< CustomType > OutletHandle::makeData() const
+		{
+			checkValidity( m_OutletIO );
+			return std::shared_ptr< CustomType >( new CustomType( m_OutletIO->info().type ) );
+		}
+
+		std::shared_ptr< const CustomType > OutletHandle::getCurrentData() const
+		{
+			checkValidity( m_OutletIO );
+			return m_OutletIO->getCurrentData();
 		}
 	}
 }

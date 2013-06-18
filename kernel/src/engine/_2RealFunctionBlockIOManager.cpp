@@ -190,7 +190,7 @@ namespace _2Real
 	{
 		// TODO: lookup type name -> create two type copies: buffer & init
 
-		OutletIO *io = new OutletIO( info.owner, info.baseName, info.initializer );
+		OutletIO *io = new OutletIO( m_Owner, info );
 		io->m_Outlet->synchronize();
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );

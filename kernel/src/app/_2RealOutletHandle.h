@@ -53,9 +53,14 @@ namespace _2Real
 
 			std::string const&		getName() const;
 			BlockHandle				getOwningBlock();
+			app::TypeMetainfo		getType() const;
+
+			std::shared_ptr< CustomType >	makeData() const;
 
 			bool					link( InletHandle &inletHandle );
 			void					unlinkFrom( InletHandle &inletHandle );
+
+			std::shared_ptr< const CustomType >		getCurrentData() const;
 
 			void registerToNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;

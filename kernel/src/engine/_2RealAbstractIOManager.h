@@ -63,10 +63,9 @@ namespace _2Real
 
 	struct InletInfo
 	{
-		InletInfo( AbstractUberBlock &b, std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
-			owner( b ), baseName( n ), initializer( i ), type( t ), policy( p ) {}
+		InletInfo( std::string const& n, InletPolicy const& p, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
+			baseName( n ), initializer( i ), type( t ), policy( p ) {}
 
-		AbstractUberBlock						&owner;
 		std::string								baseName;
 		std::shared_ptr< const CustomType >		initializer;
 		TypeMetadata							const& type;
@@ -192,10 +191,9 @@ namespace _2Real
 
 	struct OutletInfo
 	{
-		OutletInfo( AbstractUberBlock &b, std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
-			owner( b ), baseName( n ), initializer( i ), type( t ) {}
+		OutletInfo( std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
+			baseName( n ), initializer( i ), type( t ) {}
 
-		AbstractUberBlock						&owner;
 		std::string								baseName;
 		std::shared_ptr< const CustomType >		initializer;
 		TypeMetadata							const& type;
@@ -210,11 +208,21 @@ namespace _2Real
 		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
 		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
-		OutletIO( AbstractUberBlock &owner, std::string const& name, std::shared_ptr< const CustomType > initializer );
+		OutletIO( AbstractUberBlock &owner, OutletInfo const& info );
 		~OutletIO();
 		Outlet													*m_Outlet;
 		CallbackEvent< app::AppData const& >					*m_AppEvent;
 		CallbackEvent< TimestampedData const& >					*m_InletEvent;
+
+		OutletInfo const&					info() const { return m_Info; }
+		AbstractUberBlock *					getOwningBlock() { return &m_OwningBlock; }
+
+		bool								belongsToBlock( AbstractUberBlock const* const block ) const { return ( &m_OwningBlock == block ); }
+
+		std::shared_ptr< const CustomType >		getCurrentData() const;
+
+		OutletInfo							m_Info;
+		AbstractUberBlock					&m_OwningBlock;
 
 	};
 

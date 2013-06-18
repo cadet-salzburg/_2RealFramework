@@ -28,9 +28,36 @@
 
 namespace _2Real
 {
-	// ARGH move to 'TypeInitializers.h'
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template< typename T > struct Init;
+
+	template< >
+	struct Init< char >
+	{
+		static int defaultValue()
+		{
+			return static_cast< char >( 0 );
+		}
+	};
+
+	template< >
+	struct Init< unsigned char >
+	{
+		static int defaultValue()
+		{
+			return static_cast< char >( 0 );
+		}
+	};
+
+	template< >
+	struct Init< unsigned int >
+	{
+		static int defaultValue()
+		{
+			return static_cast< unsigned int >( 0 );
+		}
+	};
 
 	template< >
 	struct Init< int >
@@ -59,7 +86,27 @@ namespace _2Real
 		}
 	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	template< typename T > struct Name;
+
+	template< >
+	struct Name< char >
+	{
+		static std::string humanReadableName()
+		{
+			return "char";
+		}
+	};
+
+	template< >
+	struct Name< unsigned char >
+	{
+		static std::string humanReadableName()
+		{
+			return "uchar";
+		}
+	};
 
 	template< >
 	struct Name< int >
@@ -71,11 +118,29 @@ namespace _2Real
 	};
 
 	template< >
+	struct Name< unsigned int >
+	{
+		static std::string humanReadableName()
+		{
+			return "uint";
+		}
+	};
+
+	template< >
 	struct Name< float >
 	{
 		static std::string humanReadableName()
 		{
 			return "float";
+		}
+	};
+
+	template< >
+	struct Name< double >
+	{
+		static std::string humanReadableName()
+		{
+			return "double";
 		}
 	};
 
@@ -97,8 +162,7 @@ namespace _2Real
 		}
 	};
 
-
-	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	class FieldDescriptor
 	{
@@ -107,11 +171,7 @@ namespace _2Real
 		virtual ~FieldDescriptor() {}
 		virtual AbstractAnyHolder * createAnyHolder() const = 0;
 		virtual std::string getTypename() const = 0;
-		//virtual std::type_info getTypeinfo() const = 0;
 	};
-
-	// this is like an any holder
-	// maybe i should not create a new one each time?
 
 	template< typename TType >
 	class FieldDescriptor_t : public FieldDescriptor
@@ -131,11 +191,6 @@ namespace _2Real
 		{
 			return Name< TType >::humanReadableName();
 		}
-
-		//std::type_info getTypeinfo() const
-		//{
-		//	return typeid( TType );
-		//}
 
 	private:
 

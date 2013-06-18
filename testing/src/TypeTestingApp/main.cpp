@@ -41,6 +41,7 @@ int main( int argc, char *argv[] )
 	testEngine.setBaseDirectory( "." );
 
 	InletHandle i00, i10, i20;
+	OutletHandle o0, o1, o2;
 
 	try
 	{
@@ -56,11 +57,11 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
 			}
-			//BlockInfo::OutletInfos outlets = it->outlets;
-			//for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			//{
-			//	std::cout << "-o\t" << oIt->name << std::endl;
-			//}
+			BlockInfo::OutletInfos outlets = it->outlets;
+			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+			{
+				std::cout << "-o\t" << oIt->name << std::endl;
+			}
 		}
 
 		BlockHandle testBlock0 = testBundle.createBlockInstance( "TypeTestingBlock" );
@@ -69,15 +70,15 @@ int main( int argc, char *argv[] )
 
 		i00 = testBlock0.getInletHandle( "customInlet0" );
 		InletHandle i01 = testBlock0.getInletHandle( "customInlet1" );
-		OutletHandle o0 = testBlock0.getOutletHandle( "customOutlet0" );
+		o0 = testBlock0.getOutletHandle( "customOutlet0" );
 
 		i10 = testBlock1.getInletHandle( "customInlet0" );
 		InletHandle i11 = testBlock1.getInletHandle( "customInlet1" );
-		OutletHandle o1 = testBlock1.getOutletHandle( "customOutlet0" );
+		o1 = testBlock1.getOutletHandle( "customOutlet0" );
 
 		i20 = testBlock2.getInletHandle( "customInlet0" );
 		InletHandle i21 = testBlock2.getInletHandle( "customInlet1" );
-		OutletHandle o2 = testBlock2.getOutletHandle( "customOutlet0" );
+		o2 = testBlock2.getOutletHandle( "customOutlet0" );
 
 		o0.link( i10 );
 		o1.link( i20 );
@@ -100,22 +101,23 @@ int main( int argc, char *argv[] )
 
 	while( 1 )
 	{
-		std::shared_ptr< const CustomType > data = i10.getCurrentData();
-		std::cout << "YARR" << data->get< int >( "test int" ) << std::endl;
+		std::shared_ptr< const CustomType > o0data = o0.getCurrentData();
+		std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
+
+		// this receives o0s outputs. it's extremely unlikely that it would ever be higher than o0
+		std::shared_ptr< const CustomType > i10data = i10.getCurrentData();
+		std::cout << "i10: " << i10data->get< int >( "test int" ) << std::endl;
 
 		std::shared_ptr< CustomType > t = i00.makeData();
-		std::cout << t->size() << std::endl;
 		t->set< int >( "test int", ++cnt );
 		i00.receiveData( t );
 
 		app::TypeMetainfo info = i00.getType();
 		TypeMetainfo::FieldDesc d = info.getFieldInfo();
-		for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
-		{
-			std::cout << *it << std::endl;
-		}
-
-		std::cout << "NARF" << std::endl;
+		//for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
+		//{
+		//	std::cout << *it << std::endl;
+		//}
 
 		string line;
 		char lineEnd = '\n';
