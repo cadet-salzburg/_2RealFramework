@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,31 +17,23 @@
 	limitations under the License.
 */
 
-#include "bundle/_2RealTypeMetainfo.h"
-#include "engine/_2RealTypeMetadata.h"
+#pragma once
+
+#include <string>
+#include <vector>
 
 namespace _2Real
 {
-	namespace bundle
+	class AbstractAnyHolder;
+	class Field;
+
+	class FieldDescriptor
 	{
-		TypeMetainfo::TypeMetainfo( TypeMetadata &meta, std::map< std::string, TypeMetadata * > const& types ) : mImpl( meta ), mBundleTypes( types )
-		{
-		}
-
-		TypeMetainfo::~TypeMetainfo()
-		{
-		}
-
-		void TypeMetainfo::addFieldInternal( std::string const& name, FieldDescriptor *desc )
-		{
-			mImpl.addField( name, *desc );
-		}
-
-		void TypeMetainfo::addField( std::string const& name, std::string const& type )
-		{
-			std::map< std::string, TypeMetadata * >::const_iterator it = mBundleTypes.find( type );
-			if ( it != mBundleTypes.end() )
-				mImpl.addField( name, type, it->second );
-		}
-	}
+	public:
+		FieldDescriptor() {}
+		virtual ~FieldDescriptor() {}
+		virtual AbstractAnyHolder * createAnyHolder() const = 0;
+		//virtual void getTypenames( std::vector< std::string > &names ) const = 0;
+		virtual Field * getField() = 0;
+	};
 }

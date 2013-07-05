@@ -20,4 +20,5 @@
 
 #include "datatypes/_2RealCustomData.h"
 #include "datatypes/_2RealImage.h"
+#include "datatypes/_2RealFields.h"
 #include "helpers/_2RealException.h"

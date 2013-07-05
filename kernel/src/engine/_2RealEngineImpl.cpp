@@ -31,6 +31,9 @@
 #include "helpers/_2RealHelpers.h"
 
 #include "internal_bundles/_2RealConversionBundle.h"
+#include "datatypes/_2RealBaseTypes.h"
+#include "datatypes/_2RealDerivedTypes.h"
+#include "datatypes/_2RealImage.h"
 
 #include <sstream>
 #include <iostream>
@@ -77,6 +80,8 @@ namespace _2Real
 	{
 		m_Timestamp.update();
 
+		m_TypeRegistry->registerType( "KnownTypes", "image", *( CustomDerivedType< Image >::getTypeMetadata() ) );
+		m_TypeRegistry->registerType( "KnownTypes", "int", *( ToCustomType< int >::getTypeMetadata() ) );
 		//m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
 	}
 

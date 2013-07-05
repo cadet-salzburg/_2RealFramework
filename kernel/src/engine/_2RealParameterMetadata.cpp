@@ -31,10 +31,15 @@ namespace _2Real
 		initValue.reset( t );
 	}
 
-	InletMetadata::InletMetadata( string const& inlet, std::string const& type, InletPolicy const& policy, const bool multi ) :
-		name( inlet ), customName( type ), defaultPolicy( policy ), isMulti( multi )
+	InletMetadata::InletMetadata( string const& inlet, std::string const& type, CustomType const* init, InletPolicy const& policy, const bool multi ) :
+		name( inlet ), customName( type ), initValue( init ), defaultPolicy( policy ), isMulti( multi )
 	{
 	}
+
+	//InletMetadata::InletMetadata( string const& inlet, std::string const& type, InletPolicy const& policy, const bool multi ) :
+	//	name( inlet ), customName( type ), defaultPolicy( policy ), isMulti( multi )
+	//{
+	//}
 
 	InletMetadata::~InletMetadata()
 	{

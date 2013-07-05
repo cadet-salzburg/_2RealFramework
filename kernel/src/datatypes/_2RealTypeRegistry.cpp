@@ -16,11 +16,18 @@
 	limitations under the License.
 */
 
+#include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealTypeRegistry.h"
 #include <assert.h>
 
 namespace _2Real
 {
+	TypeRegistry::~TypeRegistry()
+	{
+		for ( Types::iterator it = mTypes.begin(); it != mTypes.end(); ++it )
+			delete it->second;
+	}
+
 	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata &meta )
 	{
 		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
@@ -39,11 +46,19 @@ namespace _2Real
 
 	TypeMetadata const& TypeRegistry::getType( std::string const& bundle, std::string const& name ) const
 	{
-		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
-		Types::const_iterator it = mTypes.find( key );
-#ifdef _DEBUG
-		assert( it != mTypes.end() );
-#endif
-		return *( it->second );
+		Types::const_iterator baseIt = mTypes.find( std::make_pair( "KnownTypes", name ) );
+		if ( baseIt != mTypes.end() )
+		{
+			return *( baseIt->second );
+		}
+		else
+		{
+			std::pair< std::string, std::string > key = std::make_pair( bundle, name );
+			Types::const_iterator it = mTypes.find( key );
+	#ifdef _DEBUG
+			assert( it != mTypes.end() );
+	#endif
+			return *( it->second );
+		}
 	}
 }

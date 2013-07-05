@@ -42,19 +42,22 @@ namespace _2Real
 
 	public:
 
-		// creation -> allocate new ptrs
 		explicit CustomType( bundle::TypeMetainfo const& meta );
 		explicit CustomType( app::TypeMetainfo const& meta );
 		explicit CustomType( TypeMetadata const& meta );
 
 		virtual ~CustomType();
 
-		// clones
+		CustomType() {}
 		CustomType( CustomType const& other );
-
-		//CustomType& operator=( CustomType const& other );
+		CustomType& operator=( CustomType const& other )
+		{
+			return *this;
+		};
 
 	public:
+
+		void initFrom( TypeMetadata const& meta );
 
 		// clone -> allocate new ptrs
 		void cloneFrom( CustomType const& other );
@@ -89,9 +92,10 @@ namespace _2Real
 		// called by hasChanged() on inlet handles
 		bool isEqualTo( CustomType const& other ) const;
 
+		bool operator==( CustomType const& other ) const { return false; }
+
 	protected:
 
-		CustomType() {}
 		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
 
 		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
@@ -102,12 +106,27 @@ namespace _2Real
 
 	private:
 
-		CustomType& operator=( CustomType const& other );
-
 		void setValueInternal( std::string const& field, AbstractAnyHolder *value );
 		AbstractAnyHolder const* getValueInternal( std::string const& field ) const;
+		AbstractAnyHolder * getValueInternal( std::string const& field );
 
-		TypeMetadata const* mMeta;
+	};
 
+	template< >
+	struct Name< CustomType >
+	{
+		static std::string humanReadableName()
+		{
+			return "CustomType";
+		}
+	};
+
+	template< >
+	struct Init< CustomType >
+	{
+		static CustomType defaultValue()
+		{
+			return CustomType();
+		}
 	};
 }

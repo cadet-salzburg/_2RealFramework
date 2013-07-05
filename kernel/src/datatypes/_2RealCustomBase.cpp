@@ -16,31 +16,8 @@
 	limitations under the License.
 */
 
-#include "bundle/_2RealTypeMetainfo.h"
-#include "engine/_2RealTypeMetadata.h"
+#include "datatypes/_2RealCustomBase.h"
 
 namespace _2Real
 {
-	namespace bundle
-	{
-		TypeMetainfo::TypeMetainfo( TypeMetadata &meta, std::map< std::string, TypeMetadata * > const& types ) : mImpl( meta ), mBundleTypes( types )
-		{
-		}
-
-		TypeMetainfo::~TypeMetainfo()
-		{
-		}
-
-		void TypeMetainfo::addFieldInternal( std::string const& name, FieldDescriptor *desc )
-		{
-			mImpl.addField( name, *desc );
-		}
-
-		void TypeMetainfo::addField( std::string const& name, std::string const& type )
-		{
-			std::map< std::string, TypeMetadata * >::const_iterator it = mBundleTypes.find( type );
-			if ( it != mBundleTypes.end() )
-				mImpl.addField( name, type, it->second );
-		}
-	}
 }

@@ -16,8 +16,43 @@
 	limitations under the License.
 */
 
+#include "datatypes/_2RealFieldDescriptor.h"
 #include "_2RealTypeMetadata.h"
 
 namespace _2Real
 {
+	TypeMetadata::~TypeMetadata()
+	{
+		for ( Fields::iterator fieldIter = mFields.begin(); fieldIter != mFields.end(); ++fieldIter )
+			delete fieldIter->second;
+	}
+
+	void TypeMetadata::addField( std::string const& name, FieldDescriptor &desc )
+	{
+		// do a check here??
+		mFields[ name ] = &desc;
+	}
+
+	void TypeMetadata::addField( std::string const& name, std::string const& type, TypeMetadata *meta )
+	{
+		FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
+		mFields[ name ] = f;
+	}
+
+	unsigned int TypeMetadata::getNumFields() const
+	{
+		return mFields.size();
+	}
+
+	void TypeMetadata::getFields( _2Real::Fields &fields ) const
+	{
+		//f.clear(); f.reserve( mFields.size() );
+		for ( TypeMetadata::Fields::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
+		{
+			//_2Real::Fields f;
+			Field *field = it->second->getField();
+			field->setName( it->first );
+			fields.push_back( field );
+		}
+	}
 }

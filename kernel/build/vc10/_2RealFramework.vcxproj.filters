@@ -291,6 +291,24 @@
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractAnyHolder.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealBaseTypes.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealCustomBase.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealDerivedTypes.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealFields.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealOption.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -465,6 +483,21 @@
       <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealTypes.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealCustomBase.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealBaseTypes.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealDerivedTypes.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealFields.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,12 +7,6 @@
     <ClCompile Include="..\..\src\OcvGaussianBlurBlock.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ImageHelpers.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\OcvSobelBlock.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -30,9 +24,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ImageHelpers.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\OcvSobelBlock.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

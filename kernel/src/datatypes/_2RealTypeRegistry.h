@@ -32,7 +32,7 @@ namespace _2Real
 	public:
 
 		TypeRegistry() {}
-		~TypeRegistry() { mTypes.clear(); }
+		~TypeRegistry();
 
 		void registerType( std::string const& bundle, std::string const& name, TypeMetadata &meta );
 		void unregisterType( std::string const& bundle, std::string const& name, TypeMetadata &meta );

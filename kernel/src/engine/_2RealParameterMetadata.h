@@ -28,7 +28,9 @@ namespace _2Real
 	struct InletMetadata
 	{
 		InletMetadata( std::string const& inlet, std::string const& customName, CustomType const& init, InletPolicy const& policy, const bool multi );
-		InletMetadata( std::string const& inlet, std::string const& customName, InletPolicy const& policy, const bool multi );
+		// called when
+		InletMetadata( std::string const& inlet, std::string const& customName, CustomType const* init, InletPolicy const& policy, const bool multi );
+		//InletMetadata( std::string const& inlet, std::string const& customName, InletPolicy const& policy, const bool multi );
 		~InletMetadata();
 
 		std::string										const name;

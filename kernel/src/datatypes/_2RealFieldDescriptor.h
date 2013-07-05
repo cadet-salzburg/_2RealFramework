@@ -19,19 +19,19 @@
 
 #pragma once
 
-#include "datatypes/_2RealAnyHolder.h"
+#include "datatypes/_2RealAbstractFieldDescriptor.h"
+//#include "datatypes/_2RealAnyHolder.h"
 #include "datatypes/_2RealTypes.h"
+#include "datatypes/_2RealBaseTypes.h"
+#include "datatypes/_2RealCustomData.h"
+#include "datatypes/_2RealCustomBase.h"
+#include "datatypes/_2RealFields.h"
+#include "engine/_2RealTypeMetadata.h"
 
 namespace _2Real
 {
-	class FieldDescriptor
-	{
-	public:
-		FieldDescriptor() {}
-		virtual ~FieldDescriptor() {}
-		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		virtual std::string getTypename() const = 0;
-	};
+	class TypeMetadata;
+	class AbstractAnyHolder;
 
 	template< typename TType >
 	class FieldDescriptor_t : public FieldDescriptor
@@ -39,22 +39,96 @@ namespace _2Real
 
 	public:
 
-		FieldDescriptor_t() : FieldDescriptor(), mInitValue() {}
-		FieldDescriptor_t( TType const& initValue ) : FieldDescriptor(), mInitValue( initValue ) {}
+		FieldDescriptor_t( TType const& initValue ) :
+			FieldDescriptor(),
+			mInitValue ( new TType( initValue ) ),
+			mMetadata( nullptr )
+		{
+			if ( BaseType< TType >::isBaseType() )
+				mMetadata = nullptr;
+			else
+			{
+				mMetadata = CustomDerivedType< TType >::getTypeMetadata();
+			}
+		}
+
+		~FieldDescriptor_t()
+		{
+			delete mMetadata;
+			delete mInitValue;
+		}
+
+		// this should nerver ever be called :/
+		FieldDescriptor_t( TypeMetadata *metadata ) : FieldDescriptor(), mMetadata( metadata ) { assert( NULL ); }
 
 		AbstractAnyHolder * createAnyHolder() const
 		{
-			return new AnyHolder< TType >( mInitValue );
+			return new AnyHolder< TType >( *mInitValue );
 		}
 
-		std::string getTypename() const
+		Field * getField()
 		{
-			return Name< TType >::humanReadableName();
+			if ( BaseType< TType >::isBaseType() )
+			{
+				SimpleField *f = new SimpleField;
+				f->mType = Name< TType >::humanReadableName();
+				return f;
+			}
+			else if ( CustomDerivedType< TType >::isCustomDerived() )
+			{
+				ComplexField *f = new ComplexField;
+				f->mType = Name< TType >::humanReadableName();
+				mMetadata->getFields( f->mFields );
+				return f;
+			}
+			else
+			{
+				assert( NULL );
+			}
+
+			return nullptr;
 		}
 
 	private:
 
-		TType				mInitValue;
+		TypeMetadata					*mMetadata;
+		TType							*mInitValue;
+
+	};
+
+	template< >
+	class FieldDescriptor_t< CustomType > : public FieldDescriptor
+	{
+
+	public:
+
+		//FieldDescriptor_t() : FieldDescriptor(), mInitValue( ) {}
+		//FieldDescriptor_t( CustomType const& initValue ) : FieldDescriptor(), mInitValue( nullptr ), mMetadata( nullptr ) {}
+		FieldDescriptor_t( TypeMetadata *metadata ) : FieldDescriptor(), mInitValue( new CustomType( *metadata ) ), mMetadata( metadata ) {}
+
+		~FieldDescriptor_t()
+		{
+			delete mMetadata;
+			delete mInitValue;
+		}
+
+		AbstractAnyHolder * createAnyHolder() const
+		{
+			return new AnyHolder< CustomType >( *mInitValue );
+		}
+
+		Field * getField()
+		{
+			ComplexField *f = new ComplexField;
+			f->mType = "CustomType";		// NOT GOOD!!!
+			mMetadata->getFields( f->mFields );
+			return f;
+		}
+
+	private:
+
+		TypeMetadata					*mMetadata;
+		CustomType						*mInitValue;
 
 	};
 }

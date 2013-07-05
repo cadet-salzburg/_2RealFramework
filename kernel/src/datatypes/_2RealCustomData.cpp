@@ -35,34 +35,23 @@ namespace _2Real
 
 	CustomType::CustomType( bundle::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = meta.mImpl; mMeta = &metadata;
-		std::cout << metadata.mFields.size() << std::endl;
-		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
-		{
-			// create an any of appropriate type
-			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
-			// add it to map ( or whatever structure is used )
-			this->initField( it->first, init );
-		}
+		TypeMetadata const& metadata = meta.mImpl; 
+		initFrom( metadata );
 	}
 
 	CustomType::CustomType( app::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = *( meta.mImpl ); mMeta = &metadata;
-		std::cout << metadata.mFields.size() << std::endl;
-		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
-		{
-			// create an any of appropriate type
-			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
-			// add it to map ( or whatever structure is used )
-			this->initField( it->first, init );
-		}
+		TypeMetadata const& metadata = *( meta.mImpl );
+		initFrom( metadata );
 	}
 
-	// created from within bundle manager
 	CustomType::CustomType( TypeMetadata const& metadata )
 	{
-		mMeta = &metadata;
+		initFrom( metadata );
+	}
+
+	void CustomType::initFrom( TypeMetadata const& metadata )
+	{
 		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
 		{
 			// create an any of appropriate type
@@ -146,6 +135,13 @@ namespace _2Real
 	{
 		// may throw if not found
 		DataFields::const_iterator it = constIter( field );
+		return it->second;
+	}
+
+	AbstractAnyHolder * CustomType::getValueInternal( std::string const& field )
+	{
+		// may throw if not found
+		DataFields::iterator it = iter( field );
 		return it->second;
 	}
 

@@ -22,9 +22,14 @@ namespace _2Real
 {
 	Image::Image() : CustomType()
 	{
-		initField( "data", new AnyHolder< std::vector< unsigned char > >() );
-		initField( "width", new AnyHolder< unsigned int >() );
-		initField( "height", new AnyHolder< unsigned int >() ); 
+		//initField( "data", new AnyHolder< std::vector< unsigned char > >() );
+		//initField( "width", new AnyHolder< unsigned int >() );
+		//initField( "height", new AnyHolder< unsigned int >() );
+		//initField( "datatype", new AnyHolder< Image::Datatype >() );
+		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
+		//initField( "datatype", new AnyHolder< Image::Datatype >() );
+		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
+		initFrom( *( CustomDerivedType< Image >::getTypeMetadata() ) );
 	}
 
 	Image& Image::operator=( Image const& other )
@@ -32,9 +37,13 @@ namespace _2Real
 		if ( this == &other )
 			return *this;
 
-		iter( "data" )->second = other.constIter( "data" )->second->clone();
-		iter( "width" )->second = other.constIter( "width" )->second->clone();
-		iter( "height" )->second = other.constIter( "height" )->second->clone();
+		//iter( "data" )->second = other.constIter( "data" )->second->clone();
+		//iter( "width" )->second = other.constIter( "width" )->second->clone();
+		//iter( "height" )->second = other.constIter( "height" )->second->clone();
+		//iter( "datatype" )->second = other.constIter( "datatype" )->second->clone();
+		//iter( "format" )->second = other.constIter( "format" )->second->clone();
+
+		CustomType::operator=( other );
 
 		return *this;
 	}
@@ -45,6 +54,8 @@ namespace _2Real
 		equal &= constIter( "data" )->second->isEqualTo( *( other.constIter( "data" )->second ) );
 		equal &= constIter( "width" )->second->isEqualTo( *( other.constIter( "width" )->second ) );
 		equal &= constIter( "height" )->second->isEqualTo( *( other.constIter( "height" )->second ) );
+		equal &= constIter( "datatype" )->second->isEqualTo( *( other.constIter( "datatype" )->second ) );
+		equal &= constIter( "format" )->second->isEqualTo( *( other.constIter( "format" )->second ) );
 		return equal;
 	}
 
@@ -58,10 +69,81 @@ namespace _2Real
 		return get< unsigned int >( "height" );
 	}
 
-	void Image::set( std::vector< unsigned char > const& data, const unsigned int w, const unsigned int h )
+	unsigned char const* Image::getPixels() const
 	{
-		CustomType::set< std::vector< unsigned char > >( "data", data );
-		CustomType::set< unsigned int >( "width", w );
-		CustomType::set< unsigned int >( "height", h );
+		return &( get< std::vector< unsigned char > >( "data" ) )[ 0 ];
 	}
+
+	std::string const& Image::getChannelOrder() const
+	{
+		return get< std::string >( "format" );
+	}
+
+	std::string const& Image::getDatatype() const
+	{
+		return get< std::string >( "datatype" );
+	}
+
+	//void Image::setInternal( std::vector< unsigned char > const& data, const unsigned int w, const unsigned int h, const Image::Datatype type, const Image::ChannelOrder format )
+	//{
+	//	CustomType::set< std::vector< unsigned char > >( "data", data );
+	//	CustomType::set< unsigned int >( "width", w );
+	//	CustomType::set< unsigned int >( "height", h );
+	//	CustomType::set< Image::Datatype >( "datatype", Image::Datatype( Image::Datatype::UINT8 ) );
+	//}
+
+	//Image::Datatype::Datatype( const Type t ) : Option( t ), mType( t )
+	//{
+	//}
+
+	//Image::Datatype::operator Type() const
+	//{
+	//	return mType;
+	//}
+
+	//Image::Datatype::operator std::string() const
+	//{
+	//	return "THIS IS A TODO :)";
+	//}
+
+	//Image::Datatype& Image::Datatype::operator=( Image::Datatype const& other )
+	//{
+	//	if ( this == &other )
+	//		return *this;
+
+	//	Option::operator=( other );
+	//	mType = other.mType;
+
+	//	return *this;
+	//}
+
+	//bool Image::Datatype::operator==( Image::Datatype const& other ) const
+	//{
+	//	return mType == other.mType;
+	//}
+
+	//Image::ChannelOrder::ChannelOrder( const Type t )
+	//{
+	//}
+
+	//Image::ChannelOrder::operator Type() const
+	//{
+	//	return UNDEFINED;
+	//}
+
+	//Image::ChannelOrder::operator std::string() const
+	//{
+	//	return "undefined";
+	//}
+
+	//Image::ChannelOrder& Image::ChannelOrder::operator=( Image::ChannelOrder const& other )
+	//{
+	//	return *this;
+	//}
+
+	//bool Image::ChannelOrder::operator==( Image::ChannelOrder const& other )
+	//{
+	//	return false;
+	//}
+
 }

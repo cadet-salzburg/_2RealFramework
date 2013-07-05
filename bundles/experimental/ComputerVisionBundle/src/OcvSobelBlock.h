@@ -1,4 +1,4 @@
-/*
+*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
 		http://www.cadet.at

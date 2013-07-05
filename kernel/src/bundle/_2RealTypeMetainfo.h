@@ -21,6 +21,7 @@
 #include "datatypes/_2RealFieldDescriptor.h"
 
 #include <string>
+#include <map>
 
 namespace _2Real
 {
@@ -28,24 +29,40 @@ namespace _2Real
 
 	namespace bundle
 	{
+		class Types;
+
 		class TypeMetainfo
 		{
 
 		public:
 
-			TypeMetainfo( TypeMetadata &meta );
+			TypeMetainfo( TypeMetadata &meta, std::map< std::string, TypeMetadata * > const& mTypes );
 			~TypeMetainfo();
 
 			template< typename TType >
 			void addField( std::string const& name )
 			{
-				addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
+				if ( BaseType< TType >::isBaseType() )
+				{
+					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue ) );
+				}
+				else if ( CustomDerivedType< TType >::isCustomDerived() )
+				{
+					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue ) );
+				}
+				else
+				{
+					// argh
+				}
 			}
+
+			void addField( std::string const& name, std::string const& type );
 
 		private:
 
 			friend class CustomType;
-			TypeMetadata		&mImpl;
+			TypeMetadata								&mImpl;
+			std::map< std::string, TypeMetadata * >		mBundleTypes;
 
 			void addFieldInternal( std::string const& name, FieldDescriptor *desc );
 

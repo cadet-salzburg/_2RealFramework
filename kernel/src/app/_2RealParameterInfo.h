@@ -53,12 +53,9 @@ namespace _2Real
 				return mImpl->getNumFields();
 			}
 
-			typedef std::vector< std::string > FieldDesc;
-			FieldDesc getFieldInfo() const
+			void getFieldInfo( Fields &f ) const
 			{
-				FieldDesc f;
 				mImpl->getFields( f );
-				return f;
 			}
 
 

@@ -19,10 +19,13 @@
 #pragma once
 
 #include "datatypes/_2RealTypes.h"
+#include "datatypes/_2RealBaseTypes.h"
+#include "datatypes/_2RealCustomBase.h"
+#include "datatypes/_2RealCustomData.h"
+
 #include "engine/_2RealInletPolicy.h"
 #include "engine/_2RealThreadingPolicy.h"
 
-#include "datatypes/_2RealCustomData.h"
 
 #ifdef _UNIX
 	#include <typeinfo>
@@ -48,22 +51,22 @@ namespace _2Real
 			void setCategory( std::string const& category );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
-			// this represents a shortcut for adding some kinds of inlets
-			// like char, int, string etc... internally, everything is going to be a custom type
-			// overload manually
-			//template< typename TType >
-			//void addInlet( std::string const& name, TType initialValue = init< TType >(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+			// for BaseTypes and CustomDerivedTypes
+			template< typename TType >
+			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
+			{
+				privateAddInlet( name, Name< TType >::humanReadableName(), ToCustomType< TType >( initialValue ), defaultPolicy );
+			}
 
-			void addInlet( std::string const& name, std::string const& typeName, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+			// for everything, but mainly user defined types
 			void addInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+
+
 			void addOutlet( std::string const& name, std::string const& typeName );
 
 		private:
 
-			//void addInletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p );
-			//void addMultiInletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i, AnyOptionSet const& o, InletPolicy const& p );
-			//void addOutletInternal( std::string const& n, TypeDescriptor const *const t, Any const& i );
-
+			void privateAddInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy );
 			BlockMetadata	&m_Impl;
 
 		};

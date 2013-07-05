@@ -116,9 +116,15 @@ namespace _2Real
 			}
 		}
 
+		std::map< std::string, TypeMetadata * > types;
+		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
+		{
+			types[ it->first ] = it->second.data;
+		}
+
 		TypeMetadata *m = new TypeMetadata();
 		m_TypeInfos[ name ].data = m;
-		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m );
+		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m, types );
 		m_TypeInfos[ name ].meta = i;
 
 		return *i;

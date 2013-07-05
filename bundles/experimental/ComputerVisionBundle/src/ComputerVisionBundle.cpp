@@ -17,7 +17,6 @@
 */
 #include "_2RealBundle.h"
 #include "OcvGaussianBlurBlock.h"
-#include "OcvSobelBlock.h"
 #include "ImageHelpers.h"
 #include <sstream>
 #include <iostream>
@@ -42,42 +41,40 @@ void getBundleMetainfo( BundleMetainfo& info )
 
 		float blue[ 4 ] = { 0.2f, 0.1f, 0.7f, 1.0f };
 		float green[ 4 ] = { 0.1f, 0.7f, 0.2f, 1.0f };
+		float black[ 4 ] = { 0.f, 0.f, 0.f, 1.0f };
+		float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		float *init = makeCirclePattern< float >( 640, 480, 3, 60, blue, green );
-		Image checkerImg( init, true, 640, 480, ImageChannelOrder::RGB );
-		Options< int > borderOptions = Options< int >( 0, "constant" )( 1, "replicate" )( 2, "reflect" )( 4, "reflect_101" );
+		float *initA = makeCirclePattern< float >( 640, 480, 3, 60, blue, green );
+		float *initB = makeColorCheckerboard< float >( 640, 480, 3, 40, white, black );
+
+		_2Real::Image circleImg;
+		_2Real::Image checkerImg;
+		// makes a copy!!
+		checkerImg.setImagedata( initB, 640, 480, "float32", "rgb" );
+		checkerImg.setImagedata( initB, 640, 480, "float32", "rgb" );
+
+		delete initA;
+		delete initB;
 
 		BlockMetainfo gauss = info.exportBlock< OcvGaussianBlurBlock, WithoutContext >( "OcvGaussianBlurBlock" );
 		gauss.setDescription( "applies gaussian blur to input image" );
 		gauss.setCategory( "image filter" );
-		// can handle any format
-		gauss.addInlet< Image >( "InImage", checkerImg );
-		// must be odd
-		gauss.addInlet< unsigned char >( "kernel_x", 1 );
-		gauss.addInlet< unsigned char >( "kernel_y", 1 );
-		// must be positive
-		gauss.addInlet< double >( "sigma_x", 1.1 );
-		gauss.addInlet< double >( "sigma_y", 1.1 );
-		// those are the border interpolation options available for this function
-		gauss.addInlet< int >( "boder_interpolation", 0, borderOptions );
-		// format out == format in
-		gauss.addOutlet< Image >( "OutImage" );
 
-		//BlockMetainfo eq = info.exportBlock< OcvHistogramEqualizationBlock, WithoutContext >( "OcvHistogramEqualizationBlock" );
-		//eq.setDescription( "xxx" );
-		//eq.setCategory( "image filter" );
-		//eq.addInlet< Image >( "ImageData", checkerImg );
-		//eq.addOutlet< Image >( "ImageData" );
+		gauss.addInlet( "InImageA", "image", checkerImg );
+		gauss.addInlet< Image >( "InImageB", circleImg );
+		gauss.addInlet< int >( "InKernelX", 10 );
+		gauss.addInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
 
-		//// either uchar in -> ushort out or float in - float out
-		//BlockMetainfo sobel = info.exportBlock< OcvSobelBlock, WithoutContext >( "OcvSobelBlock" );
-		//sobel.setDescription( "applies sobel filter to input image" );
-		//sobel.setCategory( "image filter" );
-		//sobel.addInlet< Image >( "image_in", checkerImg );
-		//sobel.addInlet< unsigned char>( "order_x", 1 );
-		//sobel.addInlet< unsigned char >( "order_y", 1 );
-		//sobel.addInlet< unsigned char >( "aperture", 3 );
-		//sobel.addOutlet< Image >( "image_out" );
+
+
+		//gauss.addInlet< int >( "InInt", "int", 10 );
+		//gauss.addInlet( "OutImage", "Image" );
+		//gauss.addInlet< unsigned char >( "kernel_x", 1 );
+		//gauss.addInlet< unsigned char >( "kernel_y", 1 );
+		//gauss.addInlet< double >( "sigma_x", 1.1 );
+		//gauss.addInlet< double >( "sigma_y", 1.1 );
+		//gauss.addInlet< int >( "boder_interpolation", 0, borderOptions );
+		//gauss.addOutlet< Image >( "OutImage" );
 	}
 	catch ( Exception &e )
 	{
