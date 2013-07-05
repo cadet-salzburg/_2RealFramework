@@ -35,6 +35,22 @@ using namespace std;
 using namespace _2Real;
 using namespace _2Real::app;
 
+ostream& operator<<( ostream &out, _2Real::Fields const& fields )
+{
+	for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+	{
+		_2Real::Field const& f = **it;
+		out << f.getName() << " " << f.getTypename() << std::endl;
+		if ( !f.getSubFields().empty() )
+		{
+			out << "---" << endl;
+			out << f.getSubFields();
+			out << "---" << endl;
+		}
+	}
+	return out;
+}
+
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
@@ -97,35 +113,31 @@ int main( int argc, char *argv[] )
 		cout << e.what() << " " << e.message() << endl;
 	}
 
-	int cnt = 0;
+	unsigned int cnt = 0;
 
 	while( 1 )
 	{
 		std::shared_ptr< const CustomType > o0data = o0.getCurrentData();
 		std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
-
-		//Image &oImg = o0data->get< Image >( "test image" );
-		//oImg.set( data, 2, 2 );
-
-		// this receives o0s outputs. it's extremely unlikely that it would ever be higher than o0
 		std::shared_ptr< const CustomType > i10data = i10.getCurrentData();
 		std::cout << "i10: " << i10data->get< int >( "test int" ) << std::endl;
 
-		std::shared_ptr< CustomType > t = i00.makeData();
-		t->set< int >( "test int", ++cnt );
+		std::shared_ptr< CustomType > testData = i00.makeData();
+		testData->set< int >( "test int", ++cnt );
 		Image img;
 		std::vector< unsigned char > data;
 		data.push_back( 10 ); data.push_back( 20 ); data.push_back( 10 ); data.push_back( 20 );
-		img.set( data, cnt, cnt );
-		t->set< Image >( "test image", img );
-		i00.receiveData( t );
+		img.setImagedata( &data[ 0 ], 2, 2, "narf", "tralalala" );
+		testData->set< Image >( "test image", img );
+		i00.receiveData( testData );
 
 		app::TypeMetainfo info = i00.getType();
-		TypeMetainfo::FieldDesc d = info.getFieldInfo();
-		for ( TypeMetainfo::FieldDesc::const_iterator it = d.begin(); it != d.end(); ++it )
-		{
-			std::cout << *it << std::endl;
-		}
+		_2Real::Fields fields; info.getFieldInfo( fields );
+		std::cout << fields << std::endl;
+
+		// TODO: shared ptrs or something
+		for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+			delete *it;
 
 		string line;
 		char lineEnd = '\n';

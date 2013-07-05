@@ -44,11 +44,11 @@ namespace _2Real
 			{
 				if ( BaseType< TType >::isBaseType() )
 				{
-					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue ) );
+					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
 				}
 				else if ( CustomDerivedType< TType >::isCustomDerived() )
 				{
-					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue ) );
+					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
 				}
 				else
 				{
