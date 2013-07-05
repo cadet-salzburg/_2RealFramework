@@ -48,9 +48,7 @@ namespace _2Real
 
 	public:
 
-		// todo: remove bundle:: classes from this one, the bundleMetainfo should care about those
-
-		Metainfo();
+		Metainfo( TypeRegistry const& init );
 		~Metainfo();
 
 		void setAuthor( std::string const& author );
@@ -96,29 +94,32 @@ namespace _2Real
 			bundle::ContextBlockMetainfo	*meta;
 		};
 
-		struct TypeInfo
-		{
-			TypeInfo() : data( nullptr ), meta( nullptr ) {}
-			TypeInfo( TypeInfo const& src ) : data( src.data ), meta( src.meta ) {}
-			// no ctor needed
-			TypeMetadata					*data;
-			bundle::TypeMetainfo			*meta;		// why is the meta even kept around?
-		};
+		//struct TypeInfo
+		//{
+		//	TypeInfo() : data( nullptr ), meta( nullptr ) {}
+		//	TypeInfo( TypeInfo const& src ) : data( src.data ), meta( src.meta ) {}
+		//	// no ctor needed
+		//	TypeMetadata					*data;
+		//	bundle::TypeMetainfo			*meta;		// why is the meta even kept around?
+		//};
 
 		typedef std::map< std::string, BlockInfo >					BlockInfos;
 		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
 		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
 
-		typedef std::map< std::string, TypeInfo >					TypeInfos;
-		typedef std::map< std::string, TypeInfo >::iterator			TypeInfoIterator;
-		typedef std::map< std::string, TypeInfo >::const_iterator	TypeInfoConstIterator;
+		//typedef std::map< std::string, TypeInfo >					TypeInfos;
+		//typedef std::map< std::string, TypeInfo >::iterator			TypeInfoIterator;
+		//typedef std::map< std::string, TypeInfo >::const_iterator	TypeInfoConstIterator;
 
 		bool										m_HasContext;
 		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
 		BundleMetadata								m_BundleData;
 		//
-		TypeInfos									m_TypeInfos;
+		//TypeInfos									m_TypeInfos;
+
+		// all types registered by a bundle
+		TypeRegistry								*mTypes;
 
 	};
 }

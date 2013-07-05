@@ -18,37 +18,8 @@
 
 #pragma once
 
-#include "datatypes/_2RealFields.h"
-
-#include <map>
-#include <vector>
-#include <string>
-
 namespace _2Real
 {
-	class FieldDescriptor;
-	class CustomType;
-
-	class TypeMetadata
-	{
-
-	public:
-
-		TypeMetadata( std::string const& name );
-		~TypeMetadata();
-		void addField( std::string const& name, FieldDescriptor const* descriptor );
-		unsigned int getNumFields() const;
-		void getFields( _2Real::Fields &fields ) const;
-
-	private:
-
-		TypeMetadata( TypeMetadata const& other );
-		TypeMetadata& operator=( TypeMetadata const& other );
-
-		friend class CustomType;
-		typedef std::map< std::string, FieldDescriptor const* >		Fields;
-		Fields				mFields;
-		std::string			mName;
-
-	};
+	template< typename TType >
+	void UNUSED( TType const& arg ) { ( void )( arg ); }
 }

@@ -80,8 +80,36 @@ namespace _2Real
 	{
 		m_Timestamp.update();
 
-		m_TypeRegistry->registerType( "KnownTypes", "image", *( CustomDerivedType< Image >::getTypeMetadata() ) );
-		m_TypeRegistry->registerType( "KnownTypes", "int", *( ToCustomType< int >::getTypeMetadata() ) );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes, 
+			Name< Image >::humanReadableName(), CustomDerivedType< Image >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< int >::humanReadableName(), ToCustomType< int >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< unsigned int >::humanReadableName(), ToCustomType< unsigned int >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< char >::humanReadableName(), ToCustomType< char >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< unsigned char >::humanReadableName(), ToCustomType< unsigned char >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< float >::humanReadableName(), ToCustomType< float >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< double >::humanReadableName(), ToCustomType< double >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::string >::humanReadableName(), ToCustomType< std::string >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< int > >::humanReadableName(), ToCustomType< std::vector< int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< unsigned int > >::humanReadableName(), ToCustomType< std::vector< unsigned int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< char > >::humanReadableName(), ToCustomType< std::vector< char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< unsigned char > >::humanReadableName(), ToCustomType< std::vector< unsigned char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< float > >::humanReadableName(), ToCustomType< std::vector< float > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< double > >::humanReadableName(), ToCustomType< std::vector< double > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+			Name< std::vector< std::string > >::humanReadableName(), ToCustomType< std::vector< std::string > >::getTypeMetadata(), new Deleter< TypeMetadata > );
 		//m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
 	}
 
@@ -342,10 +370,10 @@ namespace _2Real
 		}
 	}
 
-	TypeMetadata const& EngineImpl::getType( std::string const& bundle, std::string const& name ) const
-	{
-		return m_TypeRegistry->getType( bundle, name );
-	}
+	//TypeMetadata const& EngineImpl::getType( std::string const& bundle, std::string const& name ) const
+	//{
+	//	return m_TypeRegistry->getType( bundle, name );
+	//}
 
 	//std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
 	//{

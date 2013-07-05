@@ -18,12 +18,13 @@
 
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealTypeMetadata.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		TypeMetainfo::TypeMetainfo( TypeMetadata &meta, std::map< std::string, TypeMetadata * > const& types ) : mImpl( meta ), mBundleTypes( types )
+		TypeMetainfo::TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types ) : mImpl( meta ), mBundleTypes( types )
 		{
 		}
 
@@ -31,16 +32,31 @@ namespace _2Real
 		{
 		}
 
-		void TypeMetainfo::addFieldInternal( std::string const& name, FieldDescriptor *desc )
+		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor *desc )
 		{
-			mImpl.addField( name, *desc );
+			// will check if the type is actually within the framework
+			// otherwise, it would be possible to wirte the CustomDerived<> stuff for any type & call the template shit
+			TypeMetadata const* meta = mBundleTypes.get( "", type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << type << "is not known";
+				throw NotFoundException( msg.str() );
+			}
+			mImpl.addField( name, desc );
 		}
 
 		void TypeMetainfo::addField( std::string const& name, std::string const& type )
 		{
-			std::map< std::string, TypeMetadata * >::const_iterator it = mBundleTypes.find( type );
-			if ( it != mBundleTypes.end() )
-				mImpl.addField( name, type, it->second );
+			TypeMetadata const* meta = mBundleTypes.get( "", type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << type << "is not known";
+				throw NotFoundException( msg.str() );
+			}
+			FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
+			mImpl.addField( name, f );
 		}
 	}
 }

@@ -16,25 +16,44 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealTypeRegistry.h"
+#include "engine/_2RealTypeMetadata.h"
 #include <assert.h>
 
 namespace _2Real
 {
+	const std::string TypeRegistry::sFrameworkTypes = "FrameworkType";
+
+	TypeRegistry::TypeRegistry()
+	{
+	}
+
 	TypeRegistry::~TypeRegistry()
 	{
 		for ( Types::iterator it = mTypes.begin(); it != mTypes.end(); ++it )
-			delete it->second;
+		{
+			delete ( it->second );
+		}
 	}
 
-	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata &meta )
+	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata *data, ADeleter< TypeMetadata > *del )
 	{
+#ifdef _DEBUG
+		assert( data );
+		assert( del );
+#endif
 		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
-		mTypes[ key ] = &meta;
+#ifdef _DEBUG
+		Types::const_iterator it = mTypes.find( key );
+		assert( mTypes.end() == it );
+#endif
+		RegisteredType *reg = new RegisteredType();
+		mTypes[ key ] = reg;
+		reg->del = del;
+		reg->data = data;
 	}
 
-	void TypeRegistry::unregisterType( std::string const& bundle, std::string const& name, TypeMetadata &meta )
+	void TypeRegistry::unregisterType( std::string const& bundle, std::string const& name )
 	{
 		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
 		Types::iterator it = mTypes.find( key );
@@ -44,21 +63,33 @@ namespace _2Real
 		mTypes.erase( it );
 	}
 
-	TypeMetadata const& TypeRegistry::getType( std::string const& bundle, std::string const& name ) const
+	TypeMetadata const* TypeRegistry::get( std::string const& bundle, std::string const& name ) const
 	{
-		Types::const_iterator baseIt = mTypes.find( std::make_pair( "KnownTypes", name ) );
-		if ( baseIt != mTypes.end() )
+		Types::const_iterator fwIt = mTypes.find( std::make_pair( TypeRegistry::sFrameworkTypes, name ) );
+		if ( fwIt != mTypes.end() )
 		{
-			return *( baseIt->second );
+			return fwIt->second->data;
 		}
 		else
 		{
-			std::pair< std::string, std::string > key = std::make_pair( bundle, name );
-			Types::const_iterator it = mTypes.find( key );
-	#ifdef _DEBUG
-			assert( it != mTypes.end() );
-	#endif
-			return *( it->second );
+			Types::const_iterator userIt = mTypes.find( std::make_pair( bundle, name ) );
+			if ( userIt != mTypes.end() )
+				return userIt->second->data;
+			else
+				return nullptr;
+		}
+	}
+
+	void TypeRegistry::merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias )
+	{
+		for ( Types::const_iterator it = other.mTypes.begin(); it != other.mTypes.end(); ++it )
+		{
+			if ( it->first.first == bundle )
+			{
+				// const gets lost here, but that's good
+				RegisteredType const* t = it->second;
+				registerType( alias, it->first.second, t->data, new NullDeleter< TypeMetadata > );
+			}
 		}
 	}
 }

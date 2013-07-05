@@ -41,8 +41,8 @@ namespace _2Real
 			if ( BaseType< TType >::isBaseType() )
 			{
 				FieldDescriptor *field = new FieldDescriptor_t< TType >( Init< TType >::defaultValue() );
-				result = new TypeMetadata();
-				result->addField( "default", *field );
+				result = new TypeMetadata( Name< TType >::humanReadableName() );
+				result->addField( "default", field );
 			}
 			else if ( CustomDerivedType< TType >::isCustomDerived() )
 			{

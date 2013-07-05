@@ -19,6 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealFieldDescriptor.h"
+#include "helpers/_2RealException.h"
 
 #include <string>
 #include <map>
@@ -26,45 +27,42 @@
 namespace _2Real
 {
 	class TypeMetadata;
+	class TypeRegistry;
 
 	namespace bundle
 	{
-		class Types;
-
 		class TypeMetainfo
 		{
 
 		public:
 
-			TypeMetainfo( TypeMetadata &meta, std::map< std::string, TypeMetadata * > const& mTypes );
+			TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types );
 			~TypeMetainfo();
 
 			template< typename TType >
-			void addField( std::string const& name )
+			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
 				if ( BaseType< TType >::isBaseType() )
-				{
-					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
-				}
+					addFieldInternal( name, Name< TType >::humanReadableName(), new FieldDescriptor_t< TType >( init ) );
 				else if ( CustomDerivedType< TType >::isCustomDerived() )
-				{
-					addFieldInternal( name, new FieldDescriptor_t< TType >( Init< TType >::defaultValue() ) );
-				}
+					addFieldInternal( name, Name< TType >::humanReadableName(), new FieldDescriptor_t< TType >( init ) );
 				else
-				{
-					// argh
-				}
+					throw Exception( "this type is not allowed as a field" );
 			}
 
+			// type:must be name of a custom type that is already known in the framework
 			void addField( std::string const& name, std::string const& type );
 
 		private:
 
+			TypeMetainfo& operator=( TypeMetainfo const& other );
+			TypeMetainfo( TypeMetainfo const& other );
+
 			friend class CustomType;
 			TypeMetadata								&mImpl;
-			std::map< std::string, TypeMetadata * >		mBundleTypes;
+			TypeRegistry								const& mBundleTypes;
 
-			void addFieldInternal( std::string const& name, FieldDescriptor *desc );
+			void addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor *desc );
 
 		};
 	}

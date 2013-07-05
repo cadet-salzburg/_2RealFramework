@@ -29,7 +29,8 @@ namespace _2Real
 		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
 		//initField( "datatype", new AnyHolder< Image::Datatype >() );
 		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
-		initFrom( *( CustomDerivedType< Image >::getTypeMetadata() ) );
+		std::shared_ptr< TypeMetadata > init( CustomDerivedType< Image >::getTypeMetadata() );
+		initFrom( *( init.get() ) );
 	}
 
 	Image& Image::operator=( Image const& other )
@@ -37,13 +38,13 @@ namespace _2Real
 		if ( this == &other )
 			return *this;
 
-		//iter( "data" )->second = other.constIter( "data" )->second->clone();
-		//iter( "width" )->second = other.constIter( "width" )->second->clone();
-		//iter( "height" )->second = other.constIter( "height" )->second->clone();
-		//iter( "datatype" )->second = other.constIter( "datatype" )->second->clone();
-		//iter( "format" )->second = other.constIter( "format" )->second->clone();
+		iter( "data" )->second = other.constIter( "data" )->second->clone();
+		iter( "width" )->second = other.constIter( "width" )->second->clone();
+		iter( "height" )->second = other.constIter( "height" )->second->clone();
+		iter( "datatype" )->second = other.constIter( "datatype" )->second->clone();
+		iter( "format" )->second = other.constIter( "format" )->second->clone();
 
-		CustomType::operator=( other );
+		//CustomType::operator=( other );
 
 		return *this;
 	}

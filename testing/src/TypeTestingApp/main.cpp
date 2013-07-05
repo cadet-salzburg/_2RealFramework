@@ -56,7 +56,7 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	InletHandle i00, i10, i20;
+	InletHandle i00, i10, i20, i01, i11, i21;
 	OutletHandle o0, o1, o2;
 
 	try
@@ -82,35 +82,36 @@ int main( int argc, char *argv[] )
 
 		BlockHandle testBlock0 = testBundle.createBlockInstance( "TypeTestingBlock" );
 		BlockHandle testBlock1 = testBundle.createBlockInstance( "TypeTestingBlock" );
-		BlockHandle testBlock2 = testBundle.createBlockInstance( "TypeTestingBlock" );
+		//BlockHandle testBlock2 = testBundle.createBlockInstance( "TypeTestingBlock" );
 
 		i00 = testBlock0.getInletHandle( "customInlet0" );
-		InletHandle i01 = testBlock0.getInletHandle( "customInlet1" );
+		i01 = testBlock0.getInletHandle( "customInlet1" );
 		o0 = testBlock0.getOutletHandle( "customOutlet0" );
 
 		i10 = testBlock1.getInletHandle( "customInlet0" );
-		InletHandle i11 = testBlock1.getInletHandle( "customInlet1" );
+		i11 = testBlock1.getInletHandle( "customInlet1" );
 		o1 = testBlock1.getOutletHandle( "customOutlet0" );
 
-		i20 = testBlock2.getInletHandle( "customInlet0" );
-		InletHandle i21 = testBlock2.getInletHandle( "customInlet1" );
-		o2 = testBlock2.getOutletHandle( "customOutlet0" );
+		//i20 = testBlock2.getInletHandle( "customInlet0" );
+		//InletHandle i21 = testBlock2.getInletHandle( "customInlet1" );
+		//o2 = testBlock2.getOutletHandle( "customOutlet0" );
 
 		o0.link( i10 );
-		o1.link( i20 );
+	//	o1.link( i20 );
 
 		testBlock0.setup();
+		//testBlock0.setUpdateRate( 0.2 );
 		testBlock0.start();
 
 		testBlock1.setup();
 		testBlock1.start();
 
-		testBlock2.setup();
-		testBlock2.start();
+	//	testBlock2.setup();
+	//	testBlock2.start();
 	}
 	catch ( Exception &e )
 	{
-		cout << e.what() << " " << e.message() << endl;
+	cout << e.what() << " " << e.message() << endl;
 	}
 
 	unsigned int cnt = 0;
@@ -118,10 +119,15 @@ int main( int argc, char *argv[] )
 	while( 1 )
 	{
 		std::shared_ptr< const CustomType > o0data = o0.getCurrentData();
-		std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
+		if ( o0data.get() )
+		{
+			std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
+		}
 		std::shared_ptr< const CustomType > i10data = i10.getCurrentData();
-		std::cout << "i10: " << i10data->get< int >( "test int" ) << std::endl;
-
+		if ( i10data.get() )
+		{
+			std::cout << "i10: " << i10data->get< int >( "test int" ) << std::endl;
+		}
 		std::shared_ptr< CustomType > testData = i00.makeData();
 		testData->set< int >( "test int", ++cnt );
 		Image img;
@@ -129,13 +135,15 @@ int main( int argc, char *argv[] )
 		data.push_back( 10 ); data.push_back( 20 ); data.push_back( 10 ); data.push_back( 20 );
 		img.setImagedata( &data[ 0 ], 2, 2, "narf", "tralalala" );
 		testData->set< Image >( "test image", img );
+		Image &i = testData->get< Image >( "test image" );
+
 		i00.receiveData( testData );
 
 		app::TypeMetainfo info = i00.getType();
 		_2Real::Fields fields; info.getFieldInfo( fields );
 		std::cout << fields << std::endl;
 
-		// TODO: shared ptrs or something
+		//// TODO: shared ptrs or something
 		for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
 			delete *it;
 

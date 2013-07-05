@@ -87,6 +87,7 @@
     <ClInclude Include="..\..\src\engine\_2RealTypeMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealDeleter.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealUnusedArg.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />

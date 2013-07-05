@@ -46,7 +46,7 @@ namespace _2Real
 
 	FunctionBlockUpdatePolicy::~FunctionBlockUpdatePolicy()
 	{
-		safeDelete( m_TimeTrigger );
+		delete m_TimeTrigger;
 
 		for ( InletPolicyIterator it = m_InletPolicies.begin(); it != m_InletPolicies.end(); /**/ )
 		{
@@ -117,7 +117,7 @@ namespace _2Real
 
 		if ( m_TimeChanged )
 		{
-			safeDelete( m_TimeTrigger );
+			delete m_TimeTrigger; m_TimeTrigger = nullptr;
 			if ( m_UpdateTime > 0 )
 			{
 				m_TimeTrigger = new TimeBasedTrigger( *m_StateManager, m_UpdateTime );

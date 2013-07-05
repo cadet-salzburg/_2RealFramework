@@ -68,6 +68,24 @@ namespace _2Real
 	};
 
 	template< >
+	struct Init< float >
+	{
+		static float defaultValue()
+		{
+			return 0.f;
+		}
+	};
+
+	template< >
+	struct Init< double >
+	{
+		static double defaultValue()
+		{
+			return 0.0;
+		}
+	};
+
+	template< >
 	struct Init< std::string >
 	{
 		static std::string defaultValue()

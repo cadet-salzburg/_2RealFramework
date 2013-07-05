@@ -21,23 +21,33 @@
 
 namespace _2Real
 {
+	TypeMetadata::TypeMetadata( std::string const& name ) : mFields(), mName( name )
+	{
+	}
+
 	TypeMetadata::~TypeMetadata()
 	{
 		for ( Fields::iterator fieldIter = mFields.begin(); fieldIter != mFields.end(); ++fieldIter )
 			delete fieldIter->second;
 	}
 
-	void TypeMetadata::addField( std::string const& name, FieldDescriptor &desc )
+	void TypeMetadata::addField( std::string const& name, FieldDescriptor const* desc )
 	{
-		// do a check here??
-		mFields[ name ] = &desc;
+		Fields::iterator it = mFields.find( name );
+		if ( it != mFields.end() )
+		{
+			std::ostringstream msg;
+			msg << "field: " << name << " already exists in type " << mName << std::endl;
+			throw AlreadyExistsException( msg.str() );
+		}
+		mFields[ name ] = desc;
 	}
 
-	void TypeMetadata::addField( std::string const& name, std::string const& type, TypeMetadata *meta )
-	{
-		FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
-		mFields[ name ] = f;
-	}
+	//void TypeMetadata::addField( std::string const& name, std::string const& type, TypeMetadata const* meta )
+	//{
+	//	FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
+	//	mFields[ name ] = f;
+	//}
 
 	unsigned int TypeMetadata::getNumFields() const
 	{

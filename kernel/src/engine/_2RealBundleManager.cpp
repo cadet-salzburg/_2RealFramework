@@ -339,22 +339,21 @@ namespace _2Real
 		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > initializer;
-			// may throw
-			TypeMetadata const& meta = m_Registry.getType( bundleMetadata.getName(), ( **it ).customName );
+			TypeMetadata const* meta = m_Registry.get( bundleMetadata.getName(), ( **it ).customName );
 			if ( ( **it ).initValue.get() == nullptr )
 			{
-				initializer.reset( new CustomType( meta ) );
+				initializer.reset( new CustomType( *meta ) );
 			}
 			else initializer = ( **it ).initValue;
-			functionBlock->addInlet( **it, initializer, meta );
+			functionBlock->addInlet( **it, initializer, *meta );
 		}
 
 		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > initializer;
-			TypeMetadata const& meta = m_Registry.getType( bundleMetadata.getName(), ( **it ).customName );
-			initializer.reset( new CustomType( meta ) );
-			functionBlock->addOutlet( **it, initializer, meta );
+			TypeMetadata const *meta = m_Registry.get( bundleMetadata.getName(), ( **it ).customName );
+			initializer.reset( new CustomType( *meta ) );
+			functionBlock->addOutlet( **it, initializer, *meta );
 		}
 
 		return *functionBlock;

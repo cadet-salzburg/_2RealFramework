@@ -50,7 +50,7 @@ void Test::update()
 		if ( mNumber == 1 )
 		{
 			_2Real::Image const& img= i0.get< _2Real::Image >( "test image" );
-			std::cout << "image dims: " << img.getWidth() << " " << img.getHeight() << std::endl;
+			//std::cout << "image dims: " << img.getWidth() << " " << img.getHeight() << std::endl;
 		}
 
 		OutletHandle out0 = mHandle.getOutletHandle( "customOutlet0" );

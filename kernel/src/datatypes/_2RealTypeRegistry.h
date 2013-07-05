@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "helpers/_2RealDeleter.h"
+
 #include <string>
 #include <map>
 
@@ -31,12 +33,29 @@ namespace _2Real
 
 	public:
 
-		TypeRegistry() {}
+		const static std::string sFrameworkTypes;
+
+		class RegisteredType
+		{
+		public:
+			~RegisteredType() { del->operator()( data ); delete del; }
+			TypeMetadata				*data;
+			ADeleter< TypeMetadata >	*del;
+		};
+
+		TypeRegistry();
 		~TypeRegistry();
 
-		void registerType( std::string const& bundle, std::string const& name, TypeMetadata &meta );
-		void unregisterType( std::string const& bundle, std::string const& name, TypeMetadata &meta );
-		TypeMetadata const& getType( std::string const& bundle, std::string const& name ) const;
+		// called after loading a bundle to register all types
+		void registerType( std::string const& bundle, std::string const& name, TypeMetadata *meta, ADeleter< TypeMetadata > *del );
+
+		// called when unloading a bundle to unregister all types
+		void unregisterType( std::string const& bundle, std::string const& name );
+
+		// called when creating inlets & outlets
+		TypeMetadata const* get( std::string const& bundle, std::string const& name ) const;
+
+		void merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias );
 
 	private:
 
@@ -44,9 +63,13 @@ namespace _2Real
 		TypeRegistry& operator=( TypeRegistry const& other );
 
 		typedef std::pair< std::string, std::string >	TypeKey;
-		typedef std::map< TypeKey, TypeMetadata * >		Types;
+		typedef std::map< TypeKey, RegisteredType* >	Types;
 
-		Types			mTypes;
+		Types											mTypes;
 
+		void test()
+		{
+			std::shared_ptr< TypeMetadata > testy( nullptr, Deleter< TypeMetadata >() );
+		}
 	};
 }

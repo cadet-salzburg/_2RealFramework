@@ -33,7 +33,6 @@ namespace _2Real
 		FieldDescriptor() {}
 		virtual ~FieldDescriptor() {}
 		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		//virtual void getTypenames( std::vector< std::string > &names ) const = 0;
-		virtual Field * getField() = 0;
+		virtual Field * getField() const = 0;
 	};
 }

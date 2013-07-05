@@ -190,14 +190,14 @@ namespace _2Real
 
 		static TypeMetadata *getTypeMetadata()
 		{
-			TypeMetadata *meta = new TypeMetadata();
-			meta->addField( "width",		*( new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) ) );
-			meta->addField( "height",		*( new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) ) );
-			meta->addField( "data",			*( new FieldDescriptor_t< std::vector< unsigned char > >( std::vector< unsigned char >() ) ) );
+			TypeMetadata *meta = new TypeMetadata( Name< Image >::humanReadableName() );
+			meta->addField( "width",	new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) );
+			meta->addField( "height",	new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) );
+			meta->addField( "data",		new FieldDescriptor_t< std::vector< unsigned char > >( std::vector< unsigned char >() ) );
 			//meta->addField( "format",		*( new FieldDescriptor_t< Image::ChannelOrder >( Init< Image::ChannelOrder >::defaultValue() ) ) );
 			//meta->addField( "datatype",		*( new FieldDescriptor_t< Image::Datatype >( Init< Image::Datatype >::defaultValue() ) ) );
-			meta->addField( "format",		*( new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) ) );
-			meta->addField( "datatype",		*( new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) ) );
+			meta->addField( "format",	new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) );
+			meta->addField( "datatype",	new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) );
 			return meta;
 		}
 	};

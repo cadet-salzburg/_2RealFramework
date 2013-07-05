@@ -41,15 +41,12 @@ namespace _2Real
 
 		FieldDescriptor_t( TType const& initValue ) :
 			FieldDescriptor(),
-			mInitValue ( new TType( initValue ) ),
-			mMetadata( nullptr )
+			mInitValue ( new TType( initValue ) )
 		{
 			if ( BaseType< TType >::isBaseType() )
 				mMetadata = nullptr;
 			else
-			{
 				mMetadata = CustomDerivedType< TType >::getTypeMetadata();
-			}
 		}
 
 		~FieldDescriptor_t()
@@ -58,15 +55,12 @@ namespace _2Real
 			delete mInitValue;
 		}
 
-		// this should nerver ever be called :/
-		FieldDescriptor_t( TypeMetadata *metadata ) : FieldDescriptor(), mMetadata( metadata ) { assert( NULL ); }
-
 		AbstractAnyHolder * createAnyHolder() const
 		{
 			return new AnyHolder< TType >( *mInitValue );
 		}
 
-		Field * getField()
+		Field * getField() const
 		{
 			if ( BaseType< TType >::isBaseType() )
 			{
@@ -81,17 +75,16 @@ namespace _2Real
 				mMetadata->getFields( f->mFields );
 				return f;
 			}
-			else
-			{
-				assert( NULL );
-			}
 
+#ifdef _DEBUG
+			assert( NULL );
+#endif
 			return nullptr;
 		}
 
 	private:
 
-		TypeMetadata					*mMetadata;
+		TypeMetadata					const* mMetadata;
 		TType							*mInitValue;
 
 	};
@@ -102,13 +95,15 @@ namespace _2Real
 
 	public:
 
-		//FieldDescriptor_t() : FieldDescriptor(), mInitValue( ) {}
-		//FieldDescriptor_t( CustomType const& initValue ) : FieldDescriptor(), mInitValue( nullptr ), mMetadata( nullptr ) {}
-		FieldDescriptor_t( TypeMetadata *metadata ) : FieldDescriptor(), mInitValue( new CustomType( *metadata ) ), mMetadata( metadata ) {}
+		FieldDescriptor_t( TypeMetadata const* metadata ) :
+			FieldDescriptor(),
+			mInitValue( new CustomType( *metadata ) ),
+			mMetadata( metadata )
+		{
+		}
 
 		~FieldDescriptor_t()
 		{
-			delete mMetadata;
 			delete mInitValue;
 		}
 
@@ -117,17 +112,17 @@ namespace _2Real
 			return new AnyHolder< CustomType >( *mInitValue );
 		}
 
-		Field * getField()
+		Field * getField() const
 		{
 			ComplexField *f = new ComplexField;
-			f->mType = "CustomType";		// NOT GOOD!!!
+			f->mType = "CustomType";				// not good
 			mMetadata->getFields( f->mFields );
 			return f;
 		}
 
 	private:
 
-		TypeMetadata					*mMetadata;
+		TypeMetadata					const* mMetadata;
 		CustomType						*mInitValue;
 
 	};

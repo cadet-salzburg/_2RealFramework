@@ -20,15 +20,4 @@
 
 namespace _2Real
 {
-	template< class T > void safeDelete( T*& pVal )
-	{
-		delete pVal;
-		pVal = nullptr;
-	}
-
-	template< class T > void safeDeleteArray( T*& pVal )
-	{
-		delete[] pVal;
-		pVal = nullptr;
-	}
 }

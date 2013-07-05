@@ -309,6 +309,12 @@
     <ClInclude Include="..\..\src\datatypes\_2RealOption.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealDeleter.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealUnusedArg.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">

@@ -40,23 +40,27 @@ using std::map;
 namespace _2Real
 {
 
-	Metainfo::Metainfo() :
-		m_HasContext( false )
+	Metainfo::Metainfo( TypeRegistry const& init ) :
+		m_HasContext( false ), mTypes( new TypeRegistry() )
 	{
+		// get all framework types into the registry
+		mTypes->merge( init, TypeRegistry::sFrameworkTypes, TypeRegistry::sFrameworkTypes );
 	}
 
 	Metainfo::~Metainfo()
 	{
 		for ( BlockInfoIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
-			safeDelete( it->second.ctor );
-			safeDelete( it->second.data );
-			safeDelete( it->second.meta );
+			delete it->second.ctor;
+			delete it->second.data;
+			delete it->second.meta;
 		}
 
-		safeDelete( m_ContextInfo.ctor );
-		safeDelete( m_ContextInfo.data );
-		safeDelete( m_ContextInfo.meta );
+		delete m_ContextInfo.ctor;
+		delete m_ContextInfo.data;
+		delete m_ContextInfo.meta;
+
+		delete mTypes;
 	}
 
 	bool Metainfo::hasContext() const
@@ -106,36 +110,38 @@ namespace _2Real
 
 	bundle::TypeMetainfo & Metainfo::addCustomType( std::string const& name )
 	{
-		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
-		{
-			if ( toLower( it->first ) == toLower( name ) )
-			{
-				ostringstream msg;
-				msg << "type " << name << " is already defined in bundle " << m_BundleData.getName();
-				throw AlreadyExistsException( msg.str() );
-			}
-		}
+		//for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
+		//{
+		//	if ( toLower( it->first ) == toLower( name ) )
+		//	{
+		//		ostringstream msg;
+		//		msg << "type " << name << " is already defined in bundle " << m_BundleData.getName();
+		//		throw AlreadyExistsException( msg.str() );
+		//	}
+		//}
 
-		std::map< std::string, TypeMetadata * > types;
-		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
-		{
-			types[ it->first ] = it->second.data;
-		}
+		//std::map< std::string, TypeMetadata * > types;
+		//for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
+		//{
+		//	types[ it->first ] = it->second.data;
+		//}
 
-		TypeMetadata *m = new TypeMetadata();
-		m_TypeInfos[ name ].data = m;
-		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m, types );
-		m_TypeInfos[ name ].meta = i;
+		TypeMetadata *m = new TypeMetadata( name );
+		//m_TypeInfos[ name ].data = m;
+		//m_TypeInfos[ name ].meta = i;
+
+		//return *i;
+
+		mTypes->registerType( "", name, m, new Deleter< TypeMetadata > );
+		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m, *mTypes );
 
 		return *i;
 	}
 
 	void Metainfo::registerTypes( TypeRegistry &registry )
 	{
-		for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
-		{
-			registry.registerType( m_BundleData.getName(), it->first, *( it->second.data ) );
-		}
+		// at this time, the name of the bundle is known
+		registry.merge( *mTypes, "", m_BundleData.getName() );
 	}
 
 	bundle::ContextBlockMetainfo & Metainfo::setContextBlockCreator( bundle::AbstractBlockCreator &obj )

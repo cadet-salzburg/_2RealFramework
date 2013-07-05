@@ -126,8 +126,11 @@ namespace _2Real
 	{
 		// may throw if not found
 		DataFields::iterator it = iter( field );
+
+		AbstractAnyHolder *h = it->second;
+
 		// may also throw
-		( it->second )->set( *value );
+		h->set( *value );
 		delete value;
 	}
 
