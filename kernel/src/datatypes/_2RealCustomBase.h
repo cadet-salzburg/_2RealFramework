@@ -25,14 +25,10 @@
 namespace _2Real
 {
 	template< typename TType >
-	class ToCustomType : public CustomType
+	class ToCustomType
 	{
 
 	public:
-
-		ToCustomType() : CustomType()
-		{
-		}
 
 		static TypeMetadata * getTypeMetadata()
 		{
@@ -40,19 +36,20 @@ namespace _2Real
 
 			if ( BaseType< TType >::isBaseType() )
 			{
-				FieldDescriptor *field = new FieldDescriptor_t< TType >( Init< TType >::defaultValue() );
+				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( Init< TType >::defaultValue() );
 				result = new TypeMetadata( Name< TType >::humanReadableName() );
-				result->addField( "default", field );
+				result->addField( "default", desc );
 			}
 			else if ( CustomDerivedType< TType >::isCustomDerived() )
 			{
+				std::cout << "----FUCK FUCK FUCK----" << std::endl;
 				result = CustomDerivedType< TType >::getTypeMetadata();
 			}
 
 			return result;
 		}
 
-		ToCustomType( TType const& value ) : CustomType()
+		ToCustomType( TType const& value ) : mData()
 		{
 			std::shared_ptr< TypeMetadata > metadata( ToCustomType::getTypeMetadata() );
 			if ( metadata.get() == nullptr )
@@ -63,9 +60,29 @@ namespace _2Real
 			}
 			else
 			{
-				CustomType::initFrom( *( metadata.get() ) );
+				if ( BaseType< TType >::isBaseType() )
+				{
+					CustomType *t = new CustomType;
+					t->initFrom( *( metadata.get() ) );
+					t->set( "default", value );
+					mData.reset( t );
+				}
+				else
+				{
+					std::cout << "FUCK FUCK FUCK" << std::endl;
+					mData.reset( new CustomType );
+				}
 			}
 		}
+
+		operator std::shared_ptr< const CustomType > () const
+		{
+			return mData;
+		}
+
+	private:
+
+		std::shared_ptr< const CustomType >		mData;
 
 	};
 }

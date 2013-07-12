@@ -342,6 +342,7 @@ namespace _2Real
 			TypeMetadata const* meta = m_Registry.get( bundleMetadata.getName(), ( **it ).customName );
 			if ( ( **it ).initValue.get() == nullptr )
 			{
+				std::cout << "no init value" << std::endl;
 				initializer.reset( new CustomType( *meta ) );
 			}
 			else initializer = ( **it ).initValue;

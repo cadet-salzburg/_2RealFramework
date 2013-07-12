@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "datatypes/_2RealFieldDescriptor.h"
-#include "engine/_2RealTypeMetadata.h"
+#include <string>
+#include <vector>
 
 namespace _2Real
 {
@@ -33,11 +33,6 @@ namespace _2Real
 		{
 			return true;
 		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< int >( Init< int >::defaultValue() );
-		//}
 	};
 
 	template< >
@@ -47,11 +42,6 @@ namespace _2Real
 		{
 			return true;
 		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< unsigned int >( Init< unsigned int >::defaultValue() );
-		//}
 	};
 
 	template< >
@@ -61,11 +51,6 @@ namespace _2Real
 		{
 			return true;
 		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< int >( Init< int >::defaultValue() );
-		//}
 	};
 
 	template< >
@@ -75,11 +60,6 @@ namespace _2Real
 		{
 			return true;
 		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< unsigned int >( Init< unsigned int >::defaultValue() );
-		//}
 	};
 
 	template< >
@@ -100,20 +80,6 @@ namespace _2Real
 		}
 	};
 
-	template< typename TType >
-	struct BaseType< std::vector< TType > >
-	{
-		static bool isBaseType()
-		{
-			return BaseType< TType >::isBaseType();
-		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< std::vector< TType > >( Init< std::vector< TType > >::defaultValue() );
-		//}
-	};
-
 	template< >
 	struct BaseType< std::string >
 	{
@@ -121,11 +87,15 @@ namespace _2Real
 		{
 			return true;
 		}
+	};
 
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return new FieldDescriptor_t< std::vector< TType > >( Init< std::vector< TType > >::defaultValue() );
-		//}
+	template< typename TType >
+	struct BaseType< std::vector< TType > >
+	{
+		static bool isBaseType()
+		{
+			return BaseType< TType >::isBaseType();
+		}
 	};
 
 	template< typename TType >
@@ -135,10 +105,5 @@ namespace _2Real
 		{
 			return false;
 		}
-
-		//static FieldDescriptor *getFieldDescriptor()
-		//{
-		//	return nullptr;
-		//}
 	};
 }

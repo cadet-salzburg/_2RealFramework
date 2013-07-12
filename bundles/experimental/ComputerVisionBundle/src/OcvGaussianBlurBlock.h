@@ -32,6 +32,7 @@ public:
 
 private:
 
-	_2Real::bundle::BlockHandle			m_Block;
+	_2Real::bundle::BlockHandle			mBlock;
+	unsigned int						mInstanceNumber;
 
 };

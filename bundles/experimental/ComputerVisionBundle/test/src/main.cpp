@@ -14,13 +14,22 @@ using namespace std;
 using namespace _2Real;
 using namespace _2Real::app;
 
+void receivedData( void *, std::shared_ptr< const CustomType > data )
+{
+	if ( !data.get() )
+		std::cout << "received null" << std::endl;
+
+	std::shared_ptr< const Image > img = Image::asImage( data );
+	std::cout << "received: " << img->getWidth() << " " << img->getHeight() <<  std::endl;
+}
+
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	InletHandle i0, i1, i2;
-	OutletHandle o0, o1, o2;
+	InletHandle i0A, i0B, i1A, i1B;
+	OutletHandle o0, o1;
 
 	try
 	{
@@ -44,22 +53,26 @@ int main( int argc, char *argv[] )
 		}
 
 		BlockHandle testBlock0 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-		BlockHandle testBlock1 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
+		//BlockHandle testBlock1 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
 
-		i0 = testBlock0.getInletHandle( "InImageA" );
-		//o0 = testBlock0.getOutletHandle( "customOutlet0" );
+		i0A = testBlock0.getInletHandle( "InImageA" );
+		i0B = testBlock0.getInletHandle( "InImageB" );
+		o0 = testBlock0.getOutletHandle( "OutImage" );
 
-		i1 = testBlock1.getInletHandle( "InImageA" );
-		//o1 = testBlock1.getOutletHandle( "customOutlet0" );
+		//i1A = testBlock1.getInletHandle( "InImageA" );
+		//i1B = testBlock1.getInletHandle( "InImageB" );
+		//o1 = testBlock1.getOutletHandle( "OutImage" );
 
-		//o0.link( i10 );
-		//o1.link( i20 );
+		//o0.link( i1A );
 
 		testBlock0.setup();
+		testBlock0.setUpdateRate( 0.1 );
 		testBlock0.start();
 
-		testBlock1.setup();
-		testBlock1.start();
+		o0.registerToNewData( &receivedData, nullptr );
+
+		//testBlock1.setup();
+		//testBlock1.start();
 	}
 	catch ( Exception &e )
 	{
@@ -72,38 +85,47 @@ int main( int argc, char *argv[] )
 
 	while( 1 )
 	{
-		//std::shared_ptr< const CustomType > o0data = o0.getCurrentData();
-		//std::cout << "o0: " << o0data->get< int >( "test int" ) << std::endl;
+		std::shared_ptr< const CustomType > i0Adata = i0A.getCurrentData();
+		//if ( i0Adata.get() == nullptr )
+		//	std::cout << "shared i0Adata is null" << std::endl;
 
-		//Image &oImg = o0data->get< Image >( "test image" );
-		//oImg.set( data, 2, 2 );
+		std::shared_ptr< const CustomType > i0Bdata = i0B.getCurrentData();
+		//if ( i0Bdata.get() == nullptr )
+		//	std::cout << "shared i0Bdata is null" << std::endl;
 
-		// this receives o0s outputs. it's extremely unlikely that it would ever be higher than o0
-		std::shared_ptr< const CustomType > i1data = i1.getCurrentData();
-		///Image const& i1Img = i1data->get< Image >( "default" );
+		// getCurrentData() will return nullptrs until the first update happens
+		if ( i0Adata.get() == nullptr || i0Bdata.get() == nullptr )
+			continue;
 
-		std::cout << i1data->get< unsigned int >( "width" ) << std::endl;
-		//std::cout << i1Img.getHeight() << std::endl;
+		std::shared_ptr< const Image > img0A = Image::asImage( i0Adata );
+		std::shared_ptr< const Image > img0B = Image::asImage( i0Bdata );
+		std::cout << "img A: " << img0A->getWidth() << " " << img0A->getHeight() << std::endl;
+		std::cout << "img B: " << img0B->getWidth() << " " << img0B->getHeight() << std::endl;
 
-		std::shared_ptr< CustomType > t = i0.makeData();
-		//t->set< int >( "test int", ++cnt );
-		//Image img;
-		//std::vector< unsigned char > data;
-		//data.push_back( 10 ); data.push_back( 20 ); data.push_back( 10 ); data.push_back( 20 );
-		//img.set( data, cnt, cnt );
-		//t->set< Image >( "test image", img );
-		//i00.receiveData( t );
+		float num = 32 * 24 * 3;
+		float *data = new float[ 32 * 24 * 3 ];
+		for ( unsigned int i=0; i<num; ++i )
+			data[ i ] = 0.5f;
+		std::shared_ptr< CustomType > t = i0A.makeData();
+		t->set( Image::FIELD_WIDTH, unsigned int( 32 ) );
+		t->set( Image::FIELD_HEIGHT, unsigned int( 24 ) );
+		t->set( Image::FIELD_DATA, std::vector< unsigned char >( ( unsigned char * )data, ( unsigned char * )data+32*24*3*4 ) );
+		t->set< int >( Image::FIELD_CHANNELS, Image::ChannelOrder::RGB );
+		t->set< int >( Image::FIELD_DATATYPE, Image::Datatype::FLOAT32 );
+		i0A.receiveData( t );
+		std::cout << "set: " << t->get< unsigned int >( Image::FIELD_WIDTH ) << " " << t->get< unsigned int >( Image::FIELD_HEIGHT ) << std::endl;
+		delete [] data;
 
-		app::TypeMetainfo info = i0.getType();
-		_2Real::Fields fields; info.getFieldInfo( fields );
-		for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-		{
-			std::cout << ( *it )->getName() << " " << ( *it )->getTypename() << std::endl;
-		}
-		for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-		{
-			delete *it;
-		}
+		//app::TypeMetainfo info = i0A.getType();
+		//_2Real::Fields fields; info.getFieldInfo( fields );
+		//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+		//{
+		//	std::cout << ( *it )->getName() << " " << ( *it )->getTypename() << std::endl;
+		//}
+		//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+		//{
+		//	delete *it;
+		//}
 
 		string line;
 		char lineEnd = '\n';

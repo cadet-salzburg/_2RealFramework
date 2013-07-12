@@ -258,7 +258,7 @@ namespace _2Real
 	OutletIO::OutletIO( AbstractUberBlock &owner, OutletInfo const& info ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
 		m_Outlet( new Outlet( owner, info.baseName, info.initializer ) ),
-		m_AppEvent( new CallbackEvent< app::AppData const& >() ),
+		m_AppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
 		m_InletEvent( new CallbackEvent< TimestampedData const& >() ),
 		m_OwningBlock( owner ),
 		m_Info( info )

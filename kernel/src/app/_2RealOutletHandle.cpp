@@ -18,7 +18,6 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealAppData.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealTimestampedData.h"
@@ -139,14 +138,14 @@ namespace _2Real
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_OutletIO );
-			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
+			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
 			m_OutletIO->m_AppEvent->addListener( *cb );
 		}
 
 		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_OutletIO );
-			OutletCallback *cb = new FunctionCallback< AppData const& >( callback, userData );
+			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
 			m_OutletIO->m_AppEvent->removeListener( *cb );
 		}
 

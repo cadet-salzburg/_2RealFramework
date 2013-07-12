@@ -45,7 +45,7 @@ namespace _2Real
 		void									synchronize();
 		// this is for reading only ( app, inlet queues ) -> const
 		std::shared_ptr< const CustomType >		getData() const;
-		CustomType &							getWriteableData();
+		std::shared_ptr< CustomType >			getWriteableData();
 
 		mutable Poco::FastMutex			m_DataAccess;
 		std::shared_ptr< CustomType >	m_Data;

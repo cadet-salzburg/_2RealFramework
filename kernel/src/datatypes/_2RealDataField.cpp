@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include <string>
-#include <vector>
+#include "datatypes/_2RealDataField.h"
 
 namespace _2Real
 {
-	class AbstractAnyHolder;
-	class Field;
-
-	class FieldDescriptor
-	{
-	public:
-		virtual ~FieldDescriptor() {}
-		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		virtual Field * getField() const = 0;
-	};
 }

@@ -28,7 +28,6 @@ namespace _2Real
 
 	namespace app
 	{
-		class AppData;
 		class InletHandle;
 
 		class OutletHandle
@@ -66,16 +65,16 @@ namespace _2Real
 			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 
 			template< typename TCallable >
-			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) ) const
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const CustomType > ) ) const
 			{
-				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
+				OutletCallback *cb = new MemberCallback< TCallable, std::shared_ptr< const CustomType > >( callable, callback );
 				registerToNewDataInternal( *cb );
 			}
 
 			template< typename TCallable >
-			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( AppData const& ) ) const
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const CustomType > ) ) const
 			{
-				OutletCallback *cb = new MemberCallback< TCallable, AppData const& >( callable, callback );
+				OutletCallback *cb = new MemberCallback< TCallable, std::shared_ptr< const CustomType > >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
 

@@ -83,7 +83,7 @@ namespace _2Real
 
 			InletHandle operator[]( const unsigned int index );
 
-			CustomType const& getReadableRef() const;
+			std::shared_ptr< const CustomType > getReadableRef() const;
 			void getWriteableCopy( CustomType &type ) const;
 
 		private:

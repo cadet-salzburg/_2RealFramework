@@ -86,6 +86,15 @@ namespace _2Real
 	};
 
 	template< >
+	struct Init< bool >
+	{
+		static bool defaultValue()
+		{
+			return false;
+		}
+	};
+
+	template< >
 	struct Init< std::string >
 	{
 		static std::string defaultValue()
@@ -158,6 +167,15 @@ namespace _2Real
 		static std::string humanReadableName()
 		{
 			return "double";
+		}
+	};
+
+	template< >
+	struct Name< bool >
+	{
+		static std::string humanReadableName()
+		{
+			return "bool";
 		}
 	};
 

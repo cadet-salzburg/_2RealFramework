@@ -23,144 +23,114 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealBaseTypes.h"
 #include "datatypes/_2RealCustomBase.h"
+#include "engine/_2RealTypeMetadata.h"
+#include "datatypes/_2RealDataField.h"
 
 #include <vector>
 #include <string>
 
 namespace _2Real
 {
-	class Image : public CustomType
+	class Image
 	{
 
 	public:
 
-		//class Datatype : public Option
-		//{
-		//public:
-
-		//	//TODO
-		//	enum Type { UNDEFINED = 0x0000, FLOAT32 = 0x0001, UINT8 = 0x0002 };
-		//	Datatype( const Type t );
-		//	operator Type() const;
-		//	operator std::string() const;
-		//	Datatype& operator=( Datatype const& other );
-		//	bool operator==( Datatype const& other ) const;
-
-		//private:
-
-		//	Type		mType;
-
-		//};
-
-		//class ChannelOrder : public CustomType
-		//{
-		//public:
-
-		//	//TODO
-		//	enum Type { UNDEFINED, RGB, BGR };
-		//	ChannelOrder( const Type t );
-		//	operator Type() const;
-		//	operator std::string() const;
-		//	ChannelOrder& operator=( ChannelOrder const& other );
-		//	bool operator==( ChannelOrder const& other );
-
-		//private:
-
-		//	Type		mValue;
-
-		//};
-
+		// empty
 		Image();
-		Image& operator=( Image const& other );
-		bool operator==( Image const& other ) const;
+		// deep copy
+		Image( Image const& other );
+		static std::shared_ptr< Image >			asImage( std::shared_ptr< CustomType > data );
+		static std::shared_ptr< const Image >	asImage( std::shared_ptr< const CustomType > data );
 
-		unsigned int getWidth() const;
-		unsigned int getHeight() const;
-		unsigned char const* getPixels() const;
-		//Image::Datatype getDatatype() const;
-		//unsigned int getFormat() const;
+		static const std::string FIELD_WIDTH;
+		static const std::string FIELD_HEIGHT;
+		static const std::string FIELD_DATA;
+		static const std::string FIELD_CHANNELS;
+		static const std::string FIELD_DATATYPE;
 
-		std::string const& getChannelOrder() const;
-		std::string const& getDatatype() const;
+		class ChannelOrder
+		{
+		public:
+			enum Code
+			{
+				RGB = 0,
+				BGR = 1,
+				RGBA = 2,
+				BGRA = 3,
+				UNDEFINED = 0xFF
+			};
+			ChannelOrder( const Code );
+			explicit ChannelOrder( const int );
+			explicit ChannelOrder( std::string const& );
+			operator int() const;
+			operator std::string() const;
+			bool operator==( ChannelOrder const& other );
+			unsigned int getNumberOfChannels() const;
+		private:
+			Code	mCode;
+		};
 
-		//template< typename T >
-		//void set( std::vector< T > const& data, const unsigned int w, const unsigned int h );
+		class Datatype
+		{
+		public:
+			enum Code
+			{
+				UINT32 = 0,
+				UINT16 = 1,
+				UINT8 = 2,
+				FLOAT32 = 3,
+				UNDEFINED = 0xFF
+			};
+			Datatype( const Code );
+			explicit Datatype( const int );
+			explicit Datatype( std::string const& );
+			operator int() const;
+			operator std::string() const;
+			bool operator==( Datatype const& other );
+			size_t getBytesPerPixel() const;
+		private:
+			Code	mCode;
+		};
+
+		unsigned int					getWidth() const;
+		unsigned int					getHeight() const;
+		unsigned char const*			getPixels() const;
+		unsigned char*					getPixels();
+		Image::ChannelOrder				getChannelOrder() const;
+		Image::Datatype					getDatatype() const;
+
+		void createImagedata( const unsigned int w, const unsigned int h, const Image::ChannelOrder channels, const Image::Datatype type );
 
 		template< typename T >
-		void setImagedata( T const* data, const unsigned int w, const unsigned int h, std::string const& type, std::string const& format/*const Image::Datatype type, const Image::ChannelOrder format*/ )
+		void setImagedata( T const* data, const unsigned int w, const unsigned int h, const Image::ChannelOrder channels, const Image::Datatype type )
 		{
-			unsigned int sz = w*h;
+			// TODO: some checks, if the format matches etc
 			unsigned int bsz = w*h*sizeof( T ) / sizeof( unsigned char );
 
-			std::vector< unsigned char > &v = CustomType::get< std::vector< unsigned char > >( "data" );
+			std::vector< unsigned char > &v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
 			v.resize( bsz );
 			memcpy( &v[ 0 ], data, bsz );
 
-			CustomType::set< unsigned int >( "width", w );
-			CustomType::set< unsigned int >( "height", w );
-			//CustomType::set< Image::Datatype >( "datatype", type );
-			//CustomType::set< Image::ChannelOrder >( "format", format );
-			CustomType::set< std::string >( "datatype", type );
-			CustomType::set< std::string >( "format", format );
+			mData->set< unsigned int >( FIELD_WIDTH, w );
+			mData->set< unsigned int >( FIELD_HEIGHT, h );
+			mData->set< int >( FIELD_DATATYPE, type );
+			mData->set< int >( FIELD_CHANNELS, channels );
 		}
 
-		class Format
-		{
-
-		public:
-
-			const static unsigned int UNDEFINED = 0;
-			const static unsigned int FLOAT32 = 1;
-			const static unsigned int FLOAT64 = 2;
-			const static unsigned int UINT8 = 3;
-			const static unsigned int UINT16 = 4;
-
-			static std::string getFormatString( const unsigned int t )
-			{
-				return "TODO";
-			}
-
-		};
+		std::shared_ptr< CustomType > toCustomType();
+		std::shared_ptr< const CustomType > toCustomType() const;
+		operator std::shared_ptr< CustomType > ();
+		operator std::shared_ptr< const CustomType > () const;
 
 	private:
 
+		Image( std::shared_ptr< CustomType > );
+		Image& operator=( Image const& other );
+
+		std::shared_ptr< CustomType >			mData;
+
 	};
-
-	//template< >
-	//struct Init< Image::ChannelOrder >
-	//{
-	//	static Image::ChannelOrder defaultValue()
-	//	{
-	//		return Image::ChannelOrder( Image::ChannelOrder::UNDEFINED );
-	//	}
-	//};
-
-	//template< >
-	//struct Name< Image::ChannelOrder >
-	//{
-	//	static std::string humanReadableName()
-	//	{
-	//		return "image channel order";
-	//	}
-	//};
-
-	//template< >
-	//struct Init< Image::Datatype >
-	//{
-	//	static Image::Datatype defaultValue()
-	//	{
-	//		return Image::Datatype( Image::Datatype::UNDEFINED );
-	//	}
-	//};
-
-	//template< >
-	//struct Name< Image::Datatype >
-	//{
-	//	static std::string humanReadableName()
-	//	{
-	//		return "image datatype";
-	//	}
-	//};
 
 	template< >
 	struct Init< Image >
@@ -191,45 +161,12 @@ namespace _2Real
 		static TypeMetadata *getTypeMetadata()
 		{
 			TypeMetadata *meta = new TypeMetadata( Name< Image >::humanReadableName() );
-			meta->addField( "width",	new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) );
-			meta->addField( "height",	new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) );
-			meta->addField( "data",		new FieldDescriptor_t< std::vector< unsigned char > >( std::vector< unsigned char >() ) );
-			//meta->addField( "format",		*( new FieldDescriptor_t< Image::ChannelOrder >( Init< Image::ChannelOrder >::defaultValue() ) ) );
-			//meta->addField( "datatype",		*( new FieldDescriptor_t< Image::Datatype >( Init< Image::Datatype >::defaultValue() ) ) );
-			meta->addField( "format",	new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) );
-			meta->addField( "datatype",	new FieldDescriptor_t< std::string >( Init< std::string >::defaultValue() ) );
+			meta->addField( Image::FIELD_WIDTH,			DataField< unsigned int >::createFieldDescriptor( 0 ) );
+			meta->addField( Image::FIELD_HEIGHT,		DataField< unsigned int >::createFieldDescriptor( 0 ) );
+			meta->addField( Image::FIELD_DATA,			DataField< std::vector< unsigned char > >::createFieldDescriptor( std::vector< unsigned char >() ) );
+			meta->addField( Image::FIELD_DATATYPE,		DataField< int >::createFieldDescriptor( Image::Datatype( Image::Datatype::UNDEFINED ) ) );
+			meta->addField( Image::FIELD_CHANNELS,		DataField< int >::createFieldDescriptor( Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
 			return meta;
 		}
 	};
-
-	//template< >
-	//struct CustomDerivedType< Image::ChannelOrder >
-	//{
-	//	static bool isCustomDerived()
-	//	{
-	//		return true;
-	//	}
-
-	//	static TypeMetadata *getTypeMetadata()
-	//	{
-	//		TypeMetadata *meta = new TypeMetadata();
-	//		meta->addField( "value",		*( new FieldDescriptor_t< unsigned int >( unsigned int( 0 ) ) ) );
-	//		return meta;
-	//	}
-	//};
-
-	//template< >
-	//struct CustomDerivedType< Image::Datatype >
-	//{
-	//	static bool isCustomDerived()
-	//	{
-	//		return true;
-	//	}
-
-	//	static TypeMetadata *getTypeMetadata()
-	//	{
-	//		TypeMetadata *meta = new TypeMetadata();
-	//		return meta;
-	//	}
-	//};
 }

@@ -101,7 +101,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in datat type " << "XXXX";
+			msg << "field " << name << " not defined in data type " << "XXXX";
 			throw _2Real::Exception( msg.str() );
 		}
 			
@@ -115,7 +115,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in datat type " << "XXXX";
+			msg << "field " << name << " not defined in data type " << "XXXX";
 			throw _2Real::Exception( msg.str() );
 		}
 			

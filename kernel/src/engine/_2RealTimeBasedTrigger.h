@@ -50,7 +50,7 @@ namespace _2Real
 			m_UpdateManager.removeTrigger( *this );
 		}
 
-		void tryTriggerUpdate( long &time )
+		void tryTriggerUpdate( long time )
 		{
 			m_ElapsedTime += time;
 			if ( !m_Condition.isFulfilled() && m_ElapsedTime >= m_DesiredTime )

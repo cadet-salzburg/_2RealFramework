@@ -105,10 +105,10 @@ namespace _2Real
 			return m_Inlet->getSize();
 		}
 
-		CustomType const& InletHandle::getReadableRef() const
+		std::shared_ptr< const CustomType > InletHandle::getReadableRef() const
 		{
 			checkValidity( m_Inlet );
-			return *( ( *m_Inlet )[ 0 ].getCurrentData().get() );
+			return ( *m_Inlet )[ 0 ].getCurrentData();
 		}
 
 		void InletHandle::getWriteableCopy( CustomType &writeable ) const

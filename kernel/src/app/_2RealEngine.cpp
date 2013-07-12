@@ -17,7 +17,6 @@
 */
 
 #include "app/_2RealEngine.h"
-#include "app/_2RealAppData.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLink.h"
 #include "engine/_2RealInlet.h"
@@ -87,13 +86,13 @@ namespace _2Real
 
 		void Engine::registerToException( BlockExceptionCallback callback, void *userData )
 		{
-			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > const& >( callback, userData );
+			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > >( callback, userData );
 			m_EngineImpl.registerToException( *cb );
 		}
 
 		void Engine::unregisterFromException( BlockExceptionCallback callback, void *userData )
 		{
-			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > const& >( callback, userData );
+			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > >( callback, userData );
 			m_EngineImpl.unregisterFromException( *cb );
 		}
 
@@ -119,13 +118,13 @@ namespace _2Real
 
 		void Engine::registerToException( ContextBlockExceptionCallback callback, void *userData )
 		{
-			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > const& >( callback, userData );
+			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > >( callback, userData );
 			m_EngineImpl.registerToException( *cb );
 		}
 
 		void Engine::unregisterFromException( ContextBlockExceptionCallback callback, void *userData )
 		{
-			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > const& >( callback, userData );
+			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > >( callback, userData );
 			m_EngineImpl.unregisterFromException( *cb );
 		}
 

@@ -26,14 +26,25 @@ using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
 
-OcvGaussianBlurBlock::OcvGaussianBlurBlock() : Block() {}
+#define VERBOSE
+
+unsigned int cnt = 0;
+
+OcvGaussianBlurBlock::OcvGaussianBlurBlock() :
+	Block()
+  , mInstanceNumber( ++cnt )
+	{}
+
 OcvGaussianBlurBlock::~OcvGaussianBlurBlock() {}
 
 void OcvGaussianBlurBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_Block = block;
+		mBlock = block;
+#ifdef VERBOSE
+		std::cout << "setup: " << mInstanceNumber << std::endl;
+#endif
 	}
 	catch( Exception & e )
 	{
@@ -52,6 +63,43 @@ void OcvGaussianBlurBlock::update()
 {
 	try
 	{
+#ifdef VERBOSE
+		std::cout << "updating: " << mInstanceNumber << std::endl;
+#endif
+		InletHandle inA = mBlock.getInletHandle( "InImageA" );
+		InletHandle inB = mBlock.getInletHandle( "InImageB" );
+		OutletHandle out = mBlock.getOutletHandle( "OutImage" );
+
+		std::shared_ptr< const CustomType > inputA = inA.getReadableRef();
+		std::shared_ptr< const CustomType > inputB = inB.getReadableRef();
+		std::shared_ptr< CustomType > output = out.getWriteableRef();
+
+		std::shared_ptr< const Image > imgA = Image::asImage( inputA );
+		std::shared_ptr< const Image > imgB = Image::asImage( inputB );
+		std::shared_ptr< Image > imgOut = Image::asImage( output );
+
+		unsigned int szA = imgA->getWidth() * imgA->getHeight();
+		unsigned int szB = imgB->getWidth() * imgB->getHeight();
+
+		unsigned int wOut = std::min< unsigned int >( imgA->getWidth(), imgB->getWidth() );
+		unsigned int hOut = std::min< unsigned int >( imgA->getHeight(), imgB->getHeight() );
+
+		imgOut->createImagedata( wOut, hOut, Image::ChannelOrder::RGB, Image::Datatype::FLOAT32 );
+
+		std::cout << "created: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
+
+		float *f = reinterpret_cast< float * >( imgOut->getPixels() );
+		float const *a = reinterpret_cast< float const* >( imgA->getPixels() );
+		float const *b = reinterpret_cast< float const* >( imgB->getPixels() );
+		for ( unsigned int y=0; y<hOut; ++y )
+		{
+			for ( unsigned int x=0; x<wOut; ++x )
+			{
+				const unsigned int index = y * wOut + x;
+				//std::cout << index << std::endl;
+				f[ index ] = a[ index ] - b[ index ];
+			}
+		}
 	}
 	catch( Exception & e )
 	{
@@ -68,6 +116,9 @@ void OcvGaussianBlurBlock::shutdown()
 {
 	try
 	{
+#ifdef VERBOSE
+		std::cout << "shutdown: " << mInstanceNumber << std::endl;
+#endif
 	}
 	catch( Exception & e )
 	{

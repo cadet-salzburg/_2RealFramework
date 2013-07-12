@@ -80,7 +80,7 @@ namespace _2Real
 			m_Outlet = nullptr;
 		}
 
-		CustomType & OutletHandle::getWriteableRef()
+		std::shared_ptr< CustomType > OutletHandle::getWriteableRef()
 		{
 			checkValidity( m_Outlet );
 			return m_Outlet->getWriteableData();

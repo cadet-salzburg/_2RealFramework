@@ -20,131 +20,334 @@
 
 namespace _2Real
 {
-	Image::Image() : CustomType()
+	const std::string Image::FIELD_WIDTH = "width";
+	const std::string Image::FIELD_HEIGHT = "height";
+	const std::string Image::FIELD_DATA = "data";
+	const std::string Image::FIELD_CHANNELS = "channelorder";
+	const std::string Image::FIELD_DATATYPE = "datatype";
+
+	std::shared_ptr< Image > Image::asImage( std::shared_ptr< CustomType > data )
 	{
-		//initField( "data", new AnyHolder< std::vector< unsigned char > >() );
-		//initField( "width", new AnyHolder< unsigned int >() );
-		//initField( "height", new AnyHolder< unsigned int >() );
-		//initField( "datatype", new AnyHolder< Image::Datatype >() );
-		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
-		//initField( "datatype", new AnyHolder< Image::Datatype >() );
-		//initField( "format", new AnyHolder< Image::ChannelOrder >() );
+		Image *img = new Image;
+		img->mData = data;
+		return std::shared_ptr< Image >( img );
+	}
+
+	std::shared_ptr< const Image > Image::asImage( std::shared_ptr< const CustomType > data )
+	{
+		Image *img = new Image;
+		img->mData = std::const_pointer_cast< CustomType >( data );
+		return std::shared_ptr< const Image >( img );
+	}
+
+	Image::Image() : mData( new CustomType )
+	{
 		std::shared_ptr< TypeMetadata > init( CustomDerivedType< Image >::getTypeMetadata() );
-		initFrom( *( init.get() ) );
+		mData->initFrom( *( init.get() ) );
 	}
 
-	Image& Image::operator=( Image const& other )
+	Image::Image( Image const& other ) : mData()
 	{
-		if ( this == &other )
-			return *this;
-
-		iter( "data" )->second = other.constIter( "data" )->second->clone();
-		iter( "width" )->second = other.constIter( "width" )->second->clone();
-		iter( "height" )->second = other.constIter( "height" )->second->clone();
-		iter( "datatype" )->second = other.constIter( "datatype" )->second->clone();
-		iter( "format" )->second = other.constIter( "format" )->second->clone();
-
-		//CustomType::operator=( other );
-
-		return *this;
+		if ( other.mData.get() )
+		{
+			mData.reset( new CustomType( *( other.mData.get() ) ) );
+		}
 	}
 
-	bool Image::operator==( Image const& other ) const
+	void Image::createImagedata( const unsigned int w, const unsigned int h, const Image::ChannelOrder channels, const Image::Datatype type )
 	{
-		bool equal = true;
-		equal &= constIter( "data" )->second->isEqualTo( *( other.constIter( "data" )->second ) );
-		equal &= constIter( "width" )->second->isEqualTo( *( other.constIter( "width" )->second ) );
-		equal &= constIter( "height" )->second->isEqualTo( *( other.constIter( "height" )->second ) );
-		equal &= constIter( "datatype" )->second->isEqualTo( *( other.constIter( "datatype" )->second ) );
-		equal &= constIter( "format" )->second->isEqualTo( *( other.constIter( "format" )->second ) );
-		return equal;
+		size_t bsz = w*h*channels.getNumberOfChannels()*type.getBytesPerPixel();
+		std::vector< unsigned char > &v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
+		v.resize( bsz );
+		memset( &v[ 0 ], 0, bsz );
+
+		mData->set< unsigned int >( FIELD_WIDTH, w );
+		mData->set< unsigned int >( FIELD_HEIGHT, h );
+		mData->set< int >( FIELD_DATATYPE, type );
+		mData->set< int >( FIELD_CHANNELS, channels );
+	}
+
+	std::shared_ptr< CustomType > Image::toCustomType()
+	{
+		return mData;
+	}
+
+	std::shared_ptr< const CustomType > Image::toCustomType() const
+	{
+		return mData;
+	}
+
+	Image::operator std::shared_ptr< CustomType > ()
+	{
+		return mData;
+	}
+
+	Image::operator std::shared_ptr< const CustomType > () const
+	{
+		return mData;
 	}
 
 	unsigned int Image::getWidth() const
 	{
-		return get< unsigned int >( "width" );
+		return mData->get< unsigned int >( Image::FIELD_WIDTH );
 	}
 
 	unsigned int Image::getHeight() const
 	{
-		return get< unsigned int >( "height" );
+		return mData->get< unsigned int >( Image::FIELD_HEIGHT );
 	}
 
 	unsigned char const* Image::getPixels() const
 	{
-		return &( get< std::vector< unsigned char > >( "data" ) )[ 0 ];
+		return &( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ) )[ 0 ];
 	}
 
-	std::string const& Image::getChannelOrder() const
+	unsigned char* Image::getPixels()
 	{
-		return get< std::string >( "format" );
+		return &( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ) )[ 0 ];
 	}
 
-	std::string const& Image::getDatatype() const
+	Image::ChannelOrder Image::getChannelOrder() const
 	{
-		return get< std::string >( "datatype" );
+		return Image::ChannelOrder( mData->get< int >( Image::FIELD_CHANNELS ) );
 	}
 
-	//void Image::setInternal( std::vector< unsigned char > const& data, const unsigned int w, const unsigned int h, const Image::Datatype type, const Image::ChannelOrder format )
-	//{
-	//	CustomType::set< std::vector< unsigned char > >( "data", data );
-	//	CustomType::set< unsigned int >( "width", w );
-	//	CustomType::set< unsigned int >( "height", h );
-	//	CustomType::set< Image::Datatype >( "datatype", Image::Datatype( Image::Datatype::UINT8 ) );
-	//}
+	Image::Datatype Image::getDatatype() const
+	{
+		return Image::Datatype( mData->get< int >( Image::FIELD_DATATYPE ) );
+	}
 
-	//Image::Datatype::Datatype( const Type t ) : Option( t ), mType( t )
-	//{
-	//}
+	Image::ChannelOrder::ChannelOrder( const Code c ) : mCode( c )
+	{
+	}
 
-	//Image::Datatype::operator Type() const
-	//{
-	//	return mType;
-	//}
+	Image::ChannelOrder::ChannelOrder( const int i )
+	{
+		switch( i )
+		{
+		case 0:
+			mCode = RGB;
+			break;
+		case 1:
+			mCode = BGR;
+			break;
+		case 2:
+			mCode = RGBA;
+			break;
+		case 3:
+			mCode = BGRA;
+			break;
+		default:
+			mCode = UNDEFINED;
+		}
+	}
 
-	//Image::Datatype::operator std::string() const
-	//{
-	//	return "THIS IS A TODO :)";
-	//}
+	Image::ChannelOrder::ChannelOrder( std::string const& s )
+	{
+		if ( s == "rgb" )
+		{
+			mCode = RGB;
+		}
+		else if ( s == "bgr" )
+		{
+			mCode = BGR;
+		}
+		else if ( s == "rgba" )
+		{
+			mCode = RGBA;
+		}
+		else if ( s == "bgra" )
+		{
+			mCode = BGRA;
+		}
+		else
+		{
+			mCode = UNDEFINED;
+		}
+	}
 
-	//Image::Datatype& Image::Datatype::operator=( Image::Datatype const& other )
-	//{
-	//	if ( this == &other )
-	//		return *this;
+	Image::ChannelOrder::operator int() const
+	{
+		switch( mCode )
+		{
+		case RGB:
+			return 0;
+			break;
+		case BGR:
+			return 1;
+			break;
+		case RGBA:
+			return 2;
+			break;
+		case BGRA:
+			return 3;
+			break;
+		default:
+			return -1;
+		}
+	}
 
-	//	Option::operator=( other );
-	//	mType = other.mType;
+	Image::ChannelOrder::operator std::string() const
+	{
+		switch( mCode )
+		{
+		case RGB:
+			return "rgb";
+			break;
+		case BGR:
+			return "bgr";
+			break;
+		case RGBA:
+			return "rgba";
+			break;
+		case BGRA:
+			return "bgra";
+			break;
+		default:
+			return "undefined";
+		}
+	}
 
-	//	return *this;
-	//}
+	bool Image::ChannelOrder::operator==( ChannelOrder const& other )
+	{
+		return mCode == other.mCode;
+	}
 
-	//bool Image::Datatype::operator==( Image::Datatype const& other ) const
-	//{
-	//	return mType == other.mType;
-	//}
+	unsigned int Image::ChannelOrder::getNumberOfChannels() const
+	{
+		switch( mCode )
+		{
+		case RGB:
+			return 3;
+			break;
+		case BGR:
+			return 3;
+			break;
+		case RGBA:
+			return 4;
+			break;
+		case BGRA:
+			return 4;
+			break;
+		default:
+			return 0;
+		}
+	}
 
-	//Image::ChannelOrder::ChannelOrder( const Type t )
-	//{
-	//}
+	Image::Datatype::Datatype( const Code c ) : mCode( c )
+	{
+	}
 
-	//Image::ChannelOrder::operator Type() const
-	//{
-	//	return UNDEFINED;
-	//}
+	Image::Datatype::Datatype( const int i )
+	{
+		switch( i )
+		{
+		case 0:
+			mCode = UINT8;
+			break;
+		case 1:
+			mCode = UINT16;
+			break;
+		case 2:
+			mCode = UINT32;
+			break;
+		case 3:
+			mCode = FLOAT32;
+			break;
+		default:
+			mCode = UNDEFINED;
+		}
+	}
 
-	//Image::ChannelOrder::operator std::string() const
-	//{
-	//	return "undefined";
-	//}
+	Image::Datatype::Datatype( std::string const& s )
+	{
+		if ( s == "uint8" )
+		{
+			mCode = UINT8;
+		}
+		else if ( s == "uint16" )
+		{
+			mCode = UINT16;
+		}
+		else if ( s == "uint32" )
+		{
+			mCode = UINT32;
+		}
+		else if ( s == "float32" )
+		{
+			mCode = FLOAT32;
+		}
+		else
+		{
+			mCode = UNDEFINED;
+		}
+	}
 
-	//Image::ChannelOrder& Image::ChannelOrder::operator=( Image::ChannelOrder const& other )
-	//{
-	//	return *this;
-	//}
+	Image::Datatype::operator int() const
+	{
+		switch( mCode )
+		{
+		case UINT8:
+			return 0;
+			break;
+		case UINT16:
+			return 1;
+			break;
+		case UINT32:
+			return 2;
+			break;
+		case FLOAT32:
+			return 3;
+			break;
+		default:
+			return -1;
+		}
+	}
 
-	//bool Image::ChannelOrder::operator==( Image::ChannelOrder const& other )
-	//{
-	//	return false;
-	//}
+	Image::Datatype::operator std::string() const
+	{
+		switch( mCode )
+		{
+		case UINT8:
+			return "uint8";
+			break;
+		case UINT16:
+			return "uint16";
+			break;
+		case UINT32:
+			return "uint32";
+			break;
+		case FLOAT32:
+			return "float32";
+			break;
+		default:
+			return "undefined";
+		}
+	}
 
+	bool Image::Datatype::operator==( Datatype const& other )
+	{
+		return mCode == other.mCode;
+	}
+
+	size_t Image::Datatype::getBytesPerPixel() const
+	{
+		switch( mCode )
+		{
+		case UINT8:
+			return 1;
+			break;
+		case UINT16:
+			return 2;
+			break;
+		case UINT32:
+			return 4;
+			break;
+		case FLOAT32:
+			return 4;
+			break;
+		default:
+			return 0;
+		}
+	}
 }

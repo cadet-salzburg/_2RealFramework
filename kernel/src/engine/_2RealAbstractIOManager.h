@@ -42,7 +42,6 @@ namespace _2Real
 
 	namespace app
 	{
-		class AppData;
 		class InletHandle;
 		class OutletHandle;
 	}
@@ -212,7 +211,7 @@ namespace _2Real
 		OutletIO( AbstractUberBlock &owner, OutletInfo const& info );
 		~OutletIO();
 		Outlet													*m_Outlet;
-		CallbackEvent< app::AppData const& >					*m_AppEvent;
+		CallbackEvent< std::shared_ptr< const CustomType > >					*m_AppEvent;
 		CallbackEvent< TimestampedData const& >					*m_InletEvent;
 
 		OutletInfo const&					info() const { return m_Info; }
@@ -264,7 +263,7 @@ namespace _2Real
 
 		AbstractUberBlock											&m_Owner;
 		Poco::FastMutex												m_IOAccess;
-		CallbackEvent< std::list< app::AppData > const& >			m_AppEvent;
+		CallbackEvent< std::vector< std::shared_ptr< const CustomType > > >			m_AppEvent;
 
 	};
 

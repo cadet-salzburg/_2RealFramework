@@ -23,7 +23,6 @@
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
-#include "app/_2RealAppData.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "bundle/_2RealInletHandle.h"
@@ -78,12 +77,12 @@ namespace _2Real
 		return m_BundleOutletHandles;
 	}
 
-	void FunctionBlockIOManager::registerToNewData( AbstractCallback< list< app::AppData > const& > &cb )
+	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::vector< std::shared_ptr< const CustomType > > > &cb )
 	{
 		m_AppEvent.addListener( cb );
 	}
 
-	void FunctionBlockIOManager::unregisterFromNewData( AbstractCallback< list< app::AppData > const& > &cb )
+	void FunctionBlockIOManager::unregisterFromNewData( AbstractCallback< std::vector< std::shared_ptr< const CustomType > > > &cb )
 	{
 		m_AppEvent.removeListener( cb );
 	}
@@ -213,7 +212,7 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateOutletData()
 	{
-		//list< app::AppData > data;
+		std::vector< std::shared_ptr< const CustomType > > blockData;
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			Outlet &outlet = *( ( *it )->m_Outlet );
@@ -230,17 +229,13 @@ namespace _2Real
 				TimestampedData tmp( data, EngineImpl::instance().getElapsedTime() );
 				( *it )->m_InletEvent->notify( tmp );
 
-				// this is also quite silly
-				//app::AppData out = app::AppData( lastData, outlet.getTypename(), outlet.getLongTypename(), outlet.getName() );
-				//	( *it )->m_AppEvent->notify( out );
-				//	data.push_back( out );
+				( *it )->m_AppEvent->notify( data );
+				blockData.push_back( data );
 			}
 		}
 
-		//if ( data.size() > 0 )
-		//{
-		//	m_AppEvent.notify( data );
-		//}
+		if ( !blockData.empty() )
+			m_AppEvent.notify( blockData );
 	}
 
 	void FunctionBlockIOManager::updateInletBuffers( const bool enableTriggering )

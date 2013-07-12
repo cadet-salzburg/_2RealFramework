@@ -166,14 +166,14 @@ namespace _2Real
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_Block );
-			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
 			m_Block->registerToNewData( *cb );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_Block );
-			BlockCallback *cb = new FunctionCallback< std::list< AppData > const& >( callback, userData );
+			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
 			m_Block->unregisterFromNewData( *cb);
 		}
 

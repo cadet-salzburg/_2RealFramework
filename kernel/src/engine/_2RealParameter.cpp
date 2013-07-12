@@ -48,12 +48,12 @@ namespace _2Real
 		return m_Data;
 	}
 
-	CustomType & Parameter::getWriteableData()
+	std::shared_ptr< CustomType > Parameter::getWriteableData()
 	{
 #ifdef _DEBUG
 		assert( m_DataBuffer.get() );
 #endif
-		return *( m_DataBuffer.get() );
+		return m_DataBuffer;
 	}
 
 }

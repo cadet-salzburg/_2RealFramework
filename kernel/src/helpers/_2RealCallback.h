@@ -40,7 +40,7 @@ namespace _2Real
 		}
 
 		virtual ~AbstractCallback() {};
-		virtual void invoke( TArg &arg ) = 0;
+		virtual void invoke( TArg arg ) = 0;
 
 		bool operator<( AbstractCallback< TArg > const& other )
 		{
@@ -71,7 +71,7 @@ namespace _2Real
 
 	public:
 
-		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( TArg & );
+		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( TArg );
 
 		MemberCallback( TCallable &callable, Callback method ) :
 			AbstractCallback< TArg >( &callable ),
@@ -80,7 +80,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke( TArg &arg )
+		void invoke( TArg arg )
 		{
 			( m_Callable.*m_Method )( arg );
 		}
@@ -98,7 +98,7 @@ namespace _2Real
 
 	public:
 
-		typedef void ( _2REAL_CALLBACK *CallbackFunction )( void *, TArg & );
+		typedef void ( _2REAL_CALLBACK *CallbackFunction )( void *, TArg );
 
 		FunctionCallback( CallbackFunction func, void *userData ) :
 			AbstractCallback< TArg >( (void*)func ),
@@ -107,7 +107,7 @@ namespace _2Real
 		{
 		}
 
-		void invoke( TArg &arg )
+		void invoke( TArg arg )
 		{
 			( m_Function )( m_UserData, arg );
 		}

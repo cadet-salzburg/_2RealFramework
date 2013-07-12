@@ -48,7 +48,7 @@ namespace _2Real
 
 		PooledThread * requestUniqueThread();
 
-		void update( long &time );
+		void update( long time );
 		void scheduleRequest( ThreadExecRequest &request, PooledThread *thread );
 		void executeCleanUp();
 

@@ -20,6 +20,8 @@
 #include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealTypeRegistry.h"
 
+#include <sstream>
+
 namespace _2Real
 {
 	namespace bundle
@@ -55,8 +57,9 @@ namespace _2Real
 				msg << "type: " << type << "is not known";
 				throw NotFoundException( msg.str() );
 			}
-			FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
-			mImpl.addField( name, f );
+			FieldDescriptor *desc = DataField< CustomType >::createFieldDescriptor( Init< CustomType >::defaultValue() );
+			//FieldDescriptor *f = new FieldDescriptor_t< CustomType >( CustomType(), meta );
+			mImpl.addField( name, desc );
 		}
 	}
 }

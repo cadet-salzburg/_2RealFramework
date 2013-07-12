@@ -20,26 +20,26 @@
 
 #include "helpers/_2RealCallback.h"
 
-#include <list>
+#include <vector>
 
 namespace _2Real
 {
 	class Exception;
+	class CustomType;
 
 	namespace app
 	{
-		class AppData;
 		class BlockHandle;
 		class ContextBlockHandle;
 
-		typedef void ( _2REAL_CALLBACK *BlockExceptionCallback )( void *, std::pair< Exception, BlockHandle > const& );
-		typedef void ( _2REAL_CALLBACK *ContextBlockExceptionCallback )( void *, std::pair< Exception, ContextBlockHandle > const& );
-		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, AppData const& );
-		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::list< AppData > const& );
+		typedef void ( _2REAL_CALLBACK *BlockExceptionCallback )( void *, std::pair< Exception, BlockHandle > );
+		typedef void ( _2REAL_CALLBACK *ContextBlockExceptionCallback )( void *, std::pair< Exception, ContextBlockHandle > );
+		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, std::shared_ptr< const CustomType > );
+		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::vector< std::shared_ptr< const CustomType > > );
 
-		typedef _2Real::AbstractCallback< std::list< app::AppData > const& >					BlockCallback;
-		typedef _2Real::AbstractCallback< app::AppData const& >									OutletCallback;
-		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > const& >			BlockExcCallback;
-		typedef _2Real::AbstractCallback< std::pair< Exception, ContextBlockHandle > const& >	ContextBlockExcCallback;
+		typedef _2Real::AbstractCallback< std::vector< std::shared_ptr< const CustomType > > >			BlockCallback;
+		typedef _2Real::AbstractCallback< std::shared_ptr< const CustomType > >							OutletCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > >					BlockExcCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, ContextBlockHandle > >			ContextBlockExcCallback;
 	}
 }

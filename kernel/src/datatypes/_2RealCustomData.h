@@ -57,6 +57,11 @@ namespace _2Real
 
 	public:
 
+		//virtual CustomType * copy() const
+		//{
+		//	return new CustomType( *this );
+		//}
+
 		void initFrom( TypeMetadata const& meta );
 
 		// clone -> allocate new ptrs

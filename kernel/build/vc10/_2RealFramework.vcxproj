@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\app\_2RealAppData.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
@@ -44,6 +43,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealBaseTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomBase.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealDerivedTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFields.h" />
@@ -112,12 +112,6 @@
     <ClInclude Include="..\..\src\_2RealDatatypes.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
@@ -219,6 +213,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealDerivedTypes.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptor.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>

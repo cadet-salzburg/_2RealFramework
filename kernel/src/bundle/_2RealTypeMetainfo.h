@@ -20,6 +20,7 @@
 
 #include "datatypes/_2RealFieldDescriptor.h"
 #include "helpers/_2RealException.h"
+#include "datatypes/_2RealDataField.h"
 
 #include <string>
 #include <map>
@@ -39,15 +40,15 @@ namespace _2Real
 			TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types );
 			~TypeMetainfo();
 
+			// might be called with base types or tpyes like Image etc
 			template< typename TType >
 			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
-				if ( BaseType< TType >::isBaseType() )
-					addFieldInternal( name, Name< TType >::humanReadableName(), new FieldDescriptor_t< TType >( init ) );
-				else if ( CustomDerivedType< TType >::isCustomDerived() )
-					addFieldInternal( name, Name< TType >::humanReadableName(), new FieldDescriptor_t< TType >( init ) );
-				else
+				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( init );
+				if ( desc == nullptr )
 					throw Exception( "this type is not allowed as a field" );
+				else
+					addFieldInternal( name, Name< TType >::humanReadableName(), desc );
 			}
 
 			// type:must be name of a custom type that is already known in the framework

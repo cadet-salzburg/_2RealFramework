@@ -93,16 +93,16 @@ namespace _2Real
 
 			// callback registration for member functions
 			template< typename TCallable >
-			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
+			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::vector< std::shared_ptr< const CustomType > > ) ) const
 			{
-				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				BlockCallback *cb = new MemberCallback< TCallable, std::vector< std::shared_ptr< const CustomType > > >( callable, callback );
 				registerToNewDataInternal( *cb );
 			}
 
 			template< typename TCallable >
-			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::list< AppData > const& ) ) const
+			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::vector< std::shared_ptr< const CustomType > > ) ) const
 			{
-				BlockCallback *cb = new MemberCallback< TCallable, std::list< AppData > const& >( callable, callback );
+				BlockCallback *cb = new MemberCallback< TCallable, std::vector< std::shared_ptr< const CustomType > > >( callable, callback );
 				unregisterFromNewDataInternal( *cb );
 			}
 

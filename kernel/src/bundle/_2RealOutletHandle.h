@@ -40,7 +40,7 @@ namespace _2Real
 			OutletHandle& operator=( OutletHandle const& other );
 			~OutletHandle();
 
-			CustomType &	getWriteableRef();
+			std::shared_ptr< CustomType >	getWriteableRef();
 
 			// signals to the fw that this value should not be sent
 			void discard();

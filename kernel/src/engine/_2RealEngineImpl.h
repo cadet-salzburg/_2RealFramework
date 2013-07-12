@@ -29,6 +29,7 @@
 
 #include <set>
 #include <string>
+#include <list>
 
 namespace _2Real
 {
@@ -151,8 +152,8 @@ namespace _2Real
 		typedef std::pair< Exception, app::ContextBlockHandle >		ContextBlockException;
 
 		Links														m_Links;
-		CallbackEvent< BlockException const& >						m_BlockExceptionEvent;
-		CallbackEvent< ContextBlockException const& >				m_ContextBlockExceptionEvent;
+		CallbackEvent< BlockException >						m_BlockExceptionEvent;
+		CallbackEvent< ContextBlockException >				m_ContextBlockExceptionEvent;
 
 	};
 

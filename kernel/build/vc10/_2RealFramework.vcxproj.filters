@@ -108,9 +108,6 @@
     <ClInclude Include="..\..\src\engine\_2RealFunctionBlockUpdatePolicy.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealAppData.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h">
       <Filter>include\app</Filter>
     </ClInclude>
@@ -315,6 +312,9 @@
     <ClInclude Include="..\..\src\helpers\_2RealUnusedArg.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -358,9 +358,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealFunctionBlockUpdatePolicy.cpp">
       <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealAppData.cpp">
-      <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
       <Filter>src\app</Filter>
@@ -504,6 +501,9 @@
       <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealFields.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>

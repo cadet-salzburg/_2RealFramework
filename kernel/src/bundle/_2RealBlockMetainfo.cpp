@@ -46,34 +46,31 @@ namespace _2Real
 			m_Impl.setThreadingPolicy( policy );
 		}
 
-		void BlockMetainfo::addInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
 		{
-			//CustomType *owned = new CustomType( initialValue );
-			privateAddInlet( name, typeName, initialValue, defaultPolicy );
+			//std::string trimmed = trim( name );
+			//checkChars( toLower( trimmed ) );
+
+			//// ARGH ARGH better be safe
+			//CustomType initialValue( init );
+
+			//InletMetadata *data = new InletMetadata( trimmed, typeName, initialValue, defaultPolicy, false );
+			//m_Impl.addInlet( *data );
+
+			privateAddInlet( name, typeName, init, defaultPolicy );
 		}
 
-		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			CustomType *owned = new CustomType( initialValue );
+			// ARGH ARGH better be safe
+			CustomType initialValue( *( init.get() ) );
 
-			// TODO:
-			// check the existence of the type ( pre-defined, as well as self registered types are possible )
 			InletMetadata *data = new InletMetadata( trimmed, typeName, initialValue, defaultPolicy, false );
 			m_Impl.addInlet( *data );
 		}
-
-		//void BlockMetainfo::addInlet( std::string const& name, std::string const& typeName, InletPolicy const& defaultPolicy )
-		//{
-		//	std::string trimmed = trim( name );
-		//	checkChars( toLower( trimmed ) );
-
-		//	// check the existence of the type ( pre-defined, as well as self registered types are possible )
-		//	InletMetadata *data = new InletMetadata( trimmed, typeName, defaultPolicy, false );
-		//	m_Impl.addInlet( *data );
-		//}
 
 		void BlockMetainfo::addOutlet( std::string const& name, std::string const& typeName )
 		{

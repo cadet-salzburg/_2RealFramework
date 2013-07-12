@@ -51,22 +51,25 @@ namespace _2Real
 			void setCategory( std::string const& category );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
-			// for BaseTypes and CustomDerivedTypes
+			void addCustomTypeInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
+
+			template< typename TType >
+			void addInlet( std::string const& name, std::shared_ptr< const CustomType > value, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
+			{
+				privateAddInlet( name, Name< TType >::humanReadableName(), value, defaultPolicy );
+			}
+
 			template< typename TType >
 			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
 			{
 				privateAddInlet( name, Name< TType >::humanReadableName(), ToCustomType< TType >( initialValue ), defaultPolicy );
 			}
 
-			// for everything, but mainly user defined types
-			void addInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
-
-
 			void addOutlet( std::string const& name, std::string const& typeName );
 
 		private:
 
-			void privateAddInlet( std::string const& name, std::string const& typeName, CustomType const& initialValue, InletPolicy const& defaultPolicy );
+			void privateAddInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy );
 			BlockMetadata	&m_Impl;
 
 		};

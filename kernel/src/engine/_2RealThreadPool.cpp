@@ -85,7 +85,7 @@ namespace _2Real
 		m_RequestQueueAccess.unlock();
 	}
 
-	void ThreadPool::update(long &time)
+	void ThreadPool::update( long time )
 	{
 		m_Elapsed += time;
 		if ( m_Elapsed >= 5000000 )
