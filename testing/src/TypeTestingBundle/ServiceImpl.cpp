@@ -12,6 +12,7 @@
 using namespace _2Real::bundle;
 using _2Real::Exception;
 using _2Real::CustomType;
+using _2Real::Image;
 
 using namespace std;
 
@@ -40,23 +41,28 @@ void Test::update()
 {
 	try
 	{
-		//cout << "UPDATE BEGIN " << mNumber << endl;
 		InletHandle in0 = mHandle.getInletHandle( "customInlet0" );
+		InletHandle in1 = mHandle.getInletHandle( "customInlet1" );
+		std::shared_ptr< const CustomType > i0 = in0.getReadableRef();
+		std::shared_ptr< const CustomType > i1 = in1.getReadableRef();
 
-		CustomType const& i0 = in0.getReadableRef();
-		int i = i0.get< int >( "test int" );
-		int o = i + ( ++mCounter );
-
-		if ( mNumber == 1 )
+		if ( !i0.get() ) std::cout << "ARGH " << mNumber << std::endl;
+		if ( !i1.get() ) std::cout << "ARGH " << mNumber << std::endl;
+		else
 		{
-			_2Real::Image const& img= i0.get< _2Real::Image >( "test image" );
-			//std::cout << "image dims: " << img.getWidth() << " " << img.getHeight() << std::endl;
+			std::shared_ptr< const Image > img0 = Image::asImage( i0->get< CustomType >( "test image" ) );
+			//std::cout << img0->getWidth() << " " << img0->getHeight() << std::endl;
 		}
 
+
+		std::shared_ptr< const int > i = i0->get< int >( "test int" );
+		int num = *( i.get() ) + ( ++mCounter );
+
 		OutletHandle out0 = mHandle.getOutletHandle( "customOutlet0" );
-		CustomType &o0 = out0.getWriteableRef();
-		o0.set< int >( "test int", o );
-		//cout << "UPDATE DONE " << mNumber << endl;
+		std::shared_ptr< CustomType > o = out0.getWriteableRef();
+		o->set< int >( "test int", num );
+		std::shared_ptr< Image > outImg = Image::asImage( o->get< CustomType >( "test image" ) );
+		outImg->createImagedata( 10, 10, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
 	}
 	catch ( Exception &e )
 	{

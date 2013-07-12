@@ -122,9 +122,9 @@ namespace _2Real
 	struct DataField< CustomType >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( CustomType const& init )
+		static FieldDescriptor * createFieldDescriptor( CustomType const& init, TypeMetadata const* meta )
 		{
-			return new FieldDescriptor_t< CustomType >( init, nullptr );
+			return new FieldDescriptor_t< CustomType >( init, meta );
 		}
 	};
 

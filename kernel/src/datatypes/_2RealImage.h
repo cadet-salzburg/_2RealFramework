@@ -108,9 +108,9 @@ namespace _2Real
 			// TODO: some checks, if the format matches etc
 			unsigned int bsz = w*h*sizeof( T ) / sizeof( unsigned char );
 
-			std::vector< unsigned char > &v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
-			v.resize( bsz );
-			memcpy( &v[ 0 ], data, bsz );
+			std::shared_ptr< std::vector< unsigned char > > v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
+			v->resize( bsz );
+			memcpy( &( *v.get() )[ 0 ], data, bsz );
 
 			mData->set< unsigned int >( FIELD_WIDTH, w );
 			mData->set< unsigned int >( FIELD_HEIGHT, h );

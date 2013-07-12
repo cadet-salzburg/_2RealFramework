@@ -46,7 +46,6 @@ namespace _2Real
 		virtual AbstractAnyHolder* clone() const = 0;
 		virtual AbstractAnyHolder* create() const = 0;
 		virtual void set( AbstractAnyHolder const& other ) = 0;
-		//virtual FieldDescriptor *getFieldDescriptor() = 0;
 
 	};
 }

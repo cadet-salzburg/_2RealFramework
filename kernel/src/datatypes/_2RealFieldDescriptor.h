@@ -42,7 +42,7 @@ namespace _2Real
 
 		~FieldDescriptor_t()
 		{
-			delete mMetadata;
+			//delete mMetadata;
 		}
 
 		AbstractAnyHolder * createAnyHolder() const

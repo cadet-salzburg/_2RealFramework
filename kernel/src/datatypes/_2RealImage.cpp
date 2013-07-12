@@ -57,9 +57,9 @@ namespace _2Real
 	void Image::createImagedata( const unsigned int w, const unsigned int h, const Image::ChannelOrder channels, const Image::Datatype type )
 	{
 		size_t bsz = w*h*channels.getNumberOfChannels()*type.getBytesPerPixel();
-		std::vector< unsigned char > &v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
-		v.resize( bsz );
-		memset( &v[ 0 ], 0, bsz );
+		std::shared_ptr< std::vector< unsigned char > > data = mData->get< std::vector< unsigned char > >( FIELD_DATA );
+		data->resize( bsz );
+		memset( &( *data.get() )[ 0 ], 0, bsz );
 
 		mData->set< unsigned int >( FIELD_WIDTH, w );
 		mData->set< unsigned int >( FIELD_HEIGHT, h );
@@ -89,32 +89,32 @@ namespace _2Real
 
 	unsigned int Image::getWidth() const
 	{
-		return mData->get< unsigned int >( Image::FIELD_WIDTH );
+		return *( mData->get< unsigned int >( Image::FIELD_WIDTH ).get() );
 	}
 
 	unsigned int Image::getHeight() const
 	{
-		return mData->get< unsigned int >( Image::FIELD_HEIGHT );
+		return *( mData->get< unsigned int >( Image::FIELD_HEIGHT ).get() );
 	}
 
 	unsigned char const* Image::getPixels() const
 	{
-		return &( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ) )[ 0 ];
+		return &( *( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ).get() ) )[ 0 ];
 	}
 
 	unsigned char* Image::getPixels()
 	{
-		return &( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ) )[ 0 ];
+		return &( *( mData->get< std::vector< unsigned char > >( Image::FIELD_DATA ).get() ) )[ 0 ];
 	}
 
 	Image::ChannelOrder Image::getChannelOrder() const
 	{
-		return Image::ChannelOrder( mData->get< int >( Image::FIELD_CHANNELS ) );
+		return Image::ChannelOrder( *( mData->get< int >( Image::FIELD_CHANNELS ).get() ) );
 	}
 
 	Image::Datatype Image::getDatatype() const
 	{
-		return Image::Datatype( mData->get< int >( Image::FIELD_DATATYPE ) );
+		return Image::Datatype( *( mData->get< int >( Image::FIELD_DATATYPE ).get() ) );
 	}
 
 	Image::ChannelOrder::ChannelOrder( const Code c ) : mCode( c )

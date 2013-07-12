@@ -22,35 +22,21 @@ void getBundleMetainfo( BundleMetainfo &info )
 		testType.addField< int >( "test int" );
 		testType.addField< std::string >( "test string" );
 		testType.addField< std::vector< float > >( "test float array" );
-		testType.addField< Image >( "test image" );
+		testType.addCustomTypeField( "test image", "image" );
 
-		// create custom type of the template
-		CustomType initialValue( testType );
-		initialValue.set< int >( "test int", 0 );
-		initialValue.set< std::string >( "test string", "NARF" );
+		std::shared_ptr< CustomType > initialValue( new CustomType( testType ) );
+		initialValue->set< int >( "test int", 0 );
+		initialValue->set< std::string >( "test string", "NARF" );
+		initialValue->set< std::vector< float > >( "test float array", std::vector< float >( 10, 0.5f ) );
 		Image image;
-		std::vector< unsigned char > init;
-		init.push_back( 0 ); init.push_back( 0 ); //init.push_back( 10 ); init.push_back( 20 );
-		image.CustomType::set< std::vector< unsigned char > >( "data", init );
-		image.CustomType::set< unsigned int >( "width", 2 );
-		image.CustomType::set< unsigned int >( "height", 1 );
-		initialValue.set< Image >( "test image", image );
-
-		// this would create a 'custom' type containing only one field, an integer
-		// but luckily, there's a shortcut ;)
-		//CustomType customIntType( metainfo< int >() );
-		//customIntType.set< int >( "default", 0 );
-		//customIntType.setRange( "default", Range_t< int >( -1000, -10 ) );
+		std::vector< unsigned char > init( 16, 0 );
+		image.setImagedata( &init[ 0 ], 2, 2, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
+		initialValue->set< CustomType >( "test image", *( image.toCustomType().get() ) );
 
 		BlockMetainfo &testBlock = info.exportBlock< Test, WithoutContext >( "TypeTestingBlock" );
 		testBlock.setDescription( "block for custom type testing" );
-		//customTypeBlock.addInlet< int >( "int inlet 0" );										// no default, no range
-		//customTypeBlock.addInlet< int >( "int inlet 1", 10 );									// default, no range
-		//customTypeBlock.addInlet< int >( "int inlet 2", 10, Range_t< int >( -2, 10 ) );			// default + range
-		//customTypeBlock.addInlet( "int inlet 3", "int", customIntType );						// default val & range are stored in 'customIntType'
-		testBlock.addInlet( "customInlet0", "testtype", initialValue );									// make the type explicit, to avoid confusion
-		testBlock.addInlet( "customInlet1", "testtype", initialValue );					// range & values for all fiels are stored in the initialValue
-
+		testBlock.addCustomTypeInlet( "customInlet0", "testtype", initialValue );
+		testBlock.addCustomTypeInlet( "customInlet1", "testtype", initialValue );
 		testBlock.addOutlet( "customOutlet0", "testtype" );
 	}
 	catch ( Exception &e )

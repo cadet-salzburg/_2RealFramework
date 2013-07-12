@@ -50,21 +50,16 @@ namespace _2Real
 
 		CustomType() {}
 		CustomType( CustomType const& other );
-		CustomType& operator=( CustomType const& other )
-		{
-			return *this;
-		};
+		//CustomType& operator=( CustomType const& other )
+		//{
+		//	return *this;
+		//};
+
+
 
 	public:
 
-		//virtual CustomType * copy() const
-		//{
-		//	return new CustomType( *this );
-		//}
-
 		void initFrom( TypeMetadata const& meta );
-
-		// clone -> allocate new ptrs
 		void cloneFrom( CustomType const& other );
 
 		template< typename TType >
@@ -75,20 +70,20 @@ namespace _2Real
 		}
 
 		template< typename TType >
-		TType const& get( std::string const& field ) const
+		std::shared_ptr< const TType > get( std::string const& field ) const
 		{
 			AbstractAnyHolder const* value = getValueInternal( field );
 			// may throw
-			TType const& result = extract< TType >( *value );
+			std::shared_ptr< const TType > result = extract< TType >( *value );
 			return result;
 		}
 
 		template< typename TType >
-		TType & get( std::string const& field )
+		std::shared_ptr< TType > get( std::string const& field )
 		{
 			AbstractAnyHolder *value = getValueInternal( field );
 			// may throw
-			TType &result = extract< TType >( *value );
+			std::shared_ptr< TType > result = extract< TType >( *value );
 			return result;
 		}
 
@@ -98,6 +93,7 @@ namespace _2Real
 		bool isEqualTo( CustomType const& other ) const;
 
 		bool operator==( CustomType const& other ) const { return false; }
+		bool operator<( CustomType const& other ) const { return false; }
 
 	protected:
 

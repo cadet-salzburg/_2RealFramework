@@ -28,8 +28,8 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	InletHandle i0A, i0B, i1A, i1B;
-	OutletHandle o0, o1;
+	InletHandle i0A, i0B;
+	OutletHandle o0;
 
 	try
 	{
@@ -53,26 +53,15 @@ int main( int argc, char *argv[] )
 		}
 
 		BlockHandle testBlock0 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-		//BlockHandle testBlock1 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
 
 		i0A = testBlock0.getInletHandle( "InImageA" );
 		i0B = testBlock0.getInletHandle( "InImageB" );
 		o0 = testBlock0.getOutletHandle( "OutImage" );
 
-		//i1A = testBlock1.getInletHandle( "InImageA" );
-		//i1B = testBlock1.getInletHandle( "InImageB" );
-		//o1 = testBlock1.getOutletHandle( "OutImage" );
-
-		//o0.link( i1A );
-
 		testBlock0.setup();
-		testBlock0.setUpdateRate( 0.1 );
 		testBlock0.start();
 
 		o0.registerToNewData( &receivedData, nullptr );
-
-		//testBlock1.setup();
-		//testBlock1.start();
 	}
 	catch ( Exception &e )
 	{
@@ -86,12 +75,7 @@ int main( int argc, char *argv[] )
 	while( 1 )
 	{
 		std::shared_ptr< const CustomType > i0Adata = i0A.getCurrentData();
-		//if ( i0Adata.get() == nullptr )
-		//	std::cout << "shared i0Adata is null" << std::endl;
-
 		std::shared_ptr< const CustomType > i0Bdata = i0B.getCurrentData();
-		//if ( i0Bdata.get() == nullptr )
-		//	std::cout << "shared i0Bdata is null" << std::endl;
 
 		// getCurrentData() will return nullptrs until the first update happens
 		if ( i0Adata.get() == nullptr || i0Bdata.get() == nullptr )
@@ -113,7 +97,7 @@ int main( int argc, char *argv[] )
 		t->set< int >( Image::FIELD_CHANNELS, Image::ChannelOrder::RGB );
 		t->set< int >( Image::FIELD_DATATYPE, Image::Datatype::FLOAT32 );
 		i0A.receiveData( t );
-		std::cout << "set: " << t->get< unsigned int >( Image::FIELD_WIDTH ) << " " << t->get< unsigned int >( Image::FIELD_HEIGHT ) << std::endl;
+		std::cout << "set: " << *( t->get< unsigned int >( Image::FIELD_WIDTH ).get() ) << " " << *( t->get< unsigned int >( Image::FIELD_HEIGHT ).get() ) << std::endl;
 		delete [] data;
 
 		//app::TypeMetainfo info = i0A.getType();

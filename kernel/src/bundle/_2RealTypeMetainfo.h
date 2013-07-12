@@ -40,7 +40,6 @@ namespace _2Real
 			TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types );
 			~TypeMetainfo();
 
-			// might be called with base types or tpyes like Image etc
 			template< typename TType >
 			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
@@ -51,8 +50,7 @@ namespace _2Real
 					addFieldInternal( name, Name< TType >::humanReadableName(), desc );
 			}
 
-			// type:must be name of a custom type that is already known in the framework
-			void addField( std::string const& name, std::string const& type );
+			void addCustomTypeField( std::string const& name, std::string const& type );
 
 		private:
 

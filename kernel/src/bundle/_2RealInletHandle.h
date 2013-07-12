@@ -40,36 +40,6 @@ namespace _2Real
 			InletHandle& operator=( InletHandle const& src );
 			~InletHandle();
 
-			//template< typename TType >
-			//TType const& getReadableRef() const
-			//{
-			//	if ( m_Inlet == nullptr )
-			//	{
-			//		std::ostringstream msg;
-			//		msg << "input handle not initialized";
-			//		throw UninitializedHandleException( msg.str() );
-			//	}
-
-			//	Any curr = getCurrentData();
-			//	TType const& data = curr.extract< TType >();
-			//	return data;
-			//}
-
-			//template< typename TType >
-			//TType * getWriteableCopy()
-			//{
-			//	if ( m_Inlet == nullptr )
-			//	{
-			//		std::ostringstream msg;
-			//		msg << "input handle not initialized";
-			//		throw UninitializedHandleException( msg.str() );
-			//	}
-
-			//	Any curr = getCurrentData();
-			//	TType const& data = curr.extract< TType >();
-			//	return new TType( data );
-			//}
-
 			bool isValid() const;
 			void invalidate();
 

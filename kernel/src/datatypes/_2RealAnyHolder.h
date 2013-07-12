@@ -46,7 +46,7 @@ namespace _2Real
 		bool isEqualTo( AbstractAnyHolder const& other ) const;
 		bool isLessThan( AbstractAnyHolder const& other ) const;
 
-		TType					mData;
+		std::shared_ptr< TType >		mData;
 
 	private:
 
@@ -56,19 +56,20 @@ namespace _2Real
 	};
 
 	template< typename TType >
-	AnyHolder< TType >::AnyHolder() : mData( Init< TType >::defaultValue() )
+	AnyHolder< TType >::AnyHolder() :
+		mData( new TType( Init< TType >::defaultValue() ) )
 	{
 	}
 
 	template< typename TType >
 	AnyHolder< TType >::AnyHolder( TType const& value ) :
-		mData( value )
+		mData( new TType( value ) )
 	{
 	}
 
 	template< typename TType >
 	AnyHolder< TType >::AnyHolder( AnyHolder< TType > const& src ) :
-		mData( src.mData )
+		mData( new TType( *( src.mData.get() ) ) )
 	{
 	}
 
@@ -77,7 +78,7 @@ namespace _2Real
 	{
 		if ( this == &src )
 			return *this;
-		mData = src.mData;
+		mData.reset( new TType( *( src.mData.get() ) ) );
 		return *this;
 	}
 
@@ -85,7 +86,7 @@ namespace _2Real
 	void AnyHolder< TType >::set( AbstractAnyHolder const& other )
 	{
 		AnyHolder< TType > const& o = dynamic_cast< AnyHolder< TType > const& >( other );
-		mData = o.mData;
+		mData.reset( new TType( *( o.mData.get() ) ) );
 	}
 
 	template< typename TType >
@@ -106,7 +107,7 @@ namespace _2Real
 		if ( other.getTypeinfo() == this->getTypeinfo() )
 		{
 			AnyHolder< TType > const& holder = dynamic_cast< AnyHolder< TType > const& >( other );
-			return mData == holder.mData;
+			return *( mData.get() ) == *( holder.mData.get() );
 		}
 		else
 		{
@@ -122,7 +123,7 @@ namespace _2Real
 		if ( other.getTypeinfo() == this->getTypeinfo() )
 		{
 			AnyHolder< TType > const& holder = dynamic_cast< AnyHolder< TType > const& >( other );
-			return isLess( mData, holder.mData );
+			return *( mData.get() ) < *( holder.mData.get() );
 		}
 		else
 		{
@@ -135,13 +136,13 @@ namespace _2Real
 	template< typename TType >
 	void AnyHolder< TType >::writeTo( std::ostream &out ) const
 	{
-		_2Real::writeTo( out, mData );
+		_2Real::writeTo( out, *( mData.get() ) );
 	}
 
 	template< typename TType >
 	void AnyHolder< TType >::readFrom( std::istream &in )
 	{
-		_2Real::readFrom( in, mData );
+		_2Real::readFrom( in, *( mData.get() ) );
 	}
 
 	template< typename TType >
@@ -153,11 +154,11 @@ namespace _2Real
 	template< typename TType >
 	AbstractAnyHolder * AnyHolder< TType >::clone() const
 	{
-		return new AnyHolder< TType >( mData );
+		return new AnyHolder< TType >( *( mData.get() ) );
 	}
 
 	template< typename TType >
-	TType & extract( AbstractAnyHolder &holder )
+	std::shared_ptr< TType > extract( AbstractAnyHolder &holder )
 	{
 		try
 		{
@@ -175,7 +176,7 @@ namespace _2Real
 	}
 
 	template< typename TType >
-	TType const& extract( AbstractAnyHolder const& holder )
+	std::shared_ptr< const TType > extract( AbstractAnyHolder const& holder )
 	{
 		try
 		{
