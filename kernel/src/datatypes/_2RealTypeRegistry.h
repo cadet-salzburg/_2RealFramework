@@ -39,7 +39,7 @@ namespace _2Real
 		{
 		public:
 			~RegisteredType() { del->operator()( data ); delete del; }
-			TypeMetadata				*data;
+			TypeMetadata				const* data;
 			ADeleter< TypeMetadata >	*del;
 		};
 
@@ -47,7 +47,7 @@ namespace _2Real
 		~TypeRegistry();
 
 		// called after loading a bundle to register all types
-		void registerType( std::string const& bundle, std::string const& name, TypeMetadata *meta, ADeleter< TypeMetadata > *del );
+		void registerType( std::string const& bundle, std::string const& name, TypeMetadata const* meta, ADeleter< TypeMetadata > *del );
 
 		// called when unloading a bundle to unregister all types
 		void unregisterType( std::string const& bundle, std::string const& name );
@@ -66,10 +66,5 @@ namespace _2Real
 		typedef std::map< TypeKey, RegisteredType* >	Types;
 
 		Types											mTypes;
-
-		void test()
-		{
-			std::shared_ptr< TypeMetadata > testy( nullptr, Deleter< TypeMetadata >() );
-		}
 	};
 }

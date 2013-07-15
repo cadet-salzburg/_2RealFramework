@@ -22,7 +22,6 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealFieldDescriptor.h"
 #include "datatypes/_2RealCustomData.h"
-#include "datatypes/_2RealTypeRegistry.h"
 
 namespace _2Real
 {
@@ -33,9 +32,11 @@ namespace _2Real
 	struct DataField< char >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const char init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const char init )
 		{
-			return new FieldDescriptor_t< char >( init );
+			Field *f = new SimpleField( name, Name< char >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< char >( init, field );
 		}
 	};
 
@@ -43,9 +44,11 @@ namespace _2Real
 	struct DataField< unsigned char >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const unsigned char init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const unsigned char init )
 		{
-			return new FieldDescriptor_t< unsigned char >( init );
+			Field *f = new SimpleField( name, Name< unsigned char >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< unsigned char >( init, field );
 		}
 	};
 
@@ -53,9 +56,11 @@ namespace _2Real
 	struct DataField< int >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const int init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const int init )
 		{
-			return new FieldDescriptor_t< int >( init );
+			Field *f = new SimpleField( name, Name< int >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< int >( init, field );
 		}
 	};
 
@@ -63,9 +68,11 @@ namespace _2Real
 	struct DataField< unsigned int >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const unsigned int init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const unsigned int init )
 		{
-			return new FieldDescriptor_t< unsigned int >( init );
+			Field *f = new SimpleField( name, Name< unsigned int >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< unsigned int >( init, field );
 		}
 	};
 
@@ -73,9 +80,11 @@ namespace _2Real
 	struct DataField< float >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const float init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const float init )
 		{
-			return new FieldDescriptor_t< float >( init );
+			Field *f = new SimpleField( name, Name< float >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< float >( init, field );
 		}
 	};
 
@@ -83,9 +92,11 @@ namespace _2Real
 	struct DataField< double >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const double init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const double init )
 		{
-			return new FieldDescriptor_t< double >( init );
+			Field *f = new SimpleField( name, Name< double >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< double >( init, field );
 		}
 	};
 
@@ -93,9 +104,11 @@ namespace _2Real
 	struct DataField< bool >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( const bool init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, const bool init )
 		{
-			return new FieldDescriptor_t< bool >( init );
+			Field *f = new SimpleField( name, Name< bool >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< bool >( init, field );
 		}
 	};
 
@@ -103,9 +116,11 @@ namespace _2Real
 	struct DataField< std::string >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::string const& init )
 		{
-			return new FieldDescriptor_t< std::string >( init );
+			Field *f = new SimpleField( name, Name< std::string >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< std::string >( init, field );
 		}
 	};
 
@@ -113,9 +128,11 @@ namespace _2Real
 	struct DataField< std::vector< TType > >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( std::vector< TType > const& init )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::vector< TType > const& init )
 		{
-			return new FieldDescriptor_t< std::vector< TType > >( init );
+			Field *f = new SimpleField( name, Name< std::vector< TType > >::humanReadableName() );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< std::vector< TType > >( init, field );
 		}
 	};
 
@@ -123,19 +140,11 @@ namespace _2Real
 	struct DataField< CustomType >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( CustomType const& init, TypeMetadata const* meta )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::string const& type, CustomType const& init, Fields const& fields )
 		{
-			return new FieldDescriptor_t< CustomType >( init, meta );
-		}
-	};
-
-	template< typename TType >
-	struct DataField
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( TType const& init )
-		{
-			return nullptr;
+			Field *f = new ComplexField( name, type, fields );
+			std::shared_ptr< const Field > field( f );
+			return new FieldDescriptor_t< CustomType >( init, field );
 		}
 	};
 }

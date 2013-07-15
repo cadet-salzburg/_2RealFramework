@@ -18,20 +18,12 @@
 
 #pragma once
 
-#include "datatypes/_2RealOption.h"
 #include "datatypes/_2RealCustomData.h"
-#include "datatypes/_2RealTypes.h"
-#include "datatypes/_2RealBaseTypes.h"
-#include "datatypes/_2RealCustomBase.h"
-#include "engine/_2RealTypeMetadata.h"
-#include "datatypes/_2RealDataField.h"
-#include "datatypes/_2RealDerivedTypes.h"
-
-#include <vector>
-#include <string>
 
 namespace _2Real
 {
+	class TypeMetadata;
+
 	class Image
 	{
 
@@ -41,14 +33,18 @@ namespace _2Real
 		Image();
 		// deep copy
 		Image( Image const& other );
+
 		static std::shared_ptr< Image >			asImage( std::shared_ptr< CustomType > data );
 		static std::shared_ptr< const Image >	asImage( std::shared_ptr< const CustomType > data );
 
+		static const std::string TYPENAME;
 		static const std::string FIELD_WIDTH;
 		static const std::string FIELD_HEIGHT;
 		static const std::string FIELD_DATA;
 		static const std::string FIELD_CHANNELS;
 		static const std::string FIELD_DATATYPE;
+
+		static TypeMetadata const* getTypeMetadata();
 
 		class ChannelOrder
 		{
@@ -121,8 +117,6 @@ namespace _2Real
 
 		std::shared_ptr< CustomType > toCustomType();
 		std::shared_ptr< const CustomType > toCustomType() const;
-		operator std::shared_ptr< CustomType > ();
-		operator std::shared_ptr< const CustomType > () const;
 
 	private:
 
@@ -131,43 +125,5 @@ namespace _2Real
 
 		std::shared_ptr< CustomType >			mData;
 
-	};
-
-	template< >
-	struct Init< Image >
-	{
-		static Image defaultValue()
-		{
-			return Image();
-		}
-	};
-
-	template< >
-	struct Name< Image >
-	{
-		static std::string humanReadableName()
-		{
-			return "image";
-		}
-	};
-
-	template< >
-	struct CustomDerivedType< Image >
-	{
-		static bool isCustomDerived()
-		{
-			return true;
-		}
-
-		static TypeMetadata *getTypeMetadata()
-		{
-			TypeMetadata *meta = new TypeMetadata( Name< Image >::humanReadableName() );
-			meta->addField( Image::FIELD_WIDTH,			DataField< unsigned int >::createFieldDescriptor( 0 ) );
-			meta->addField( Image::FIELD_HEIGHT,		DataField< unsigned int >::createFieldDescriptor( 0 ) );
-			meta->addField( Image::FIELD_DATA,			DataField< std::vector< unsigned char > >::createFieldDescriptor( std::vector< unsigned char >() ) );
-			meta->addField( Image::FIELD_DATATYPE,		DataField< int >::createFieldDescriptor( Image::Datatype( Image::Datatype::UNDEFINED ) ) );
-			meta->addField( Image::FIELD_CHANNELS,		DataField< int >::createFieldDescriptor( Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
-			return meta;
-		}
 	};
 }

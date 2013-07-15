@@ -32,6 +32,6 @@ namespace _2Real
 	public:
 		virtual ~FieldDescriptor() {}
 		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		virtual Field * getField() const = 0;
+		virtual std::shared_ptr< const Field > getField() const = 0;
 	};
 }

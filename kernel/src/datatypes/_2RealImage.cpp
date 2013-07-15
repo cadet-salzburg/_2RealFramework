@@ -17,14 +17,28 @@
 */
 
 #include "datatypes/_2RealImage.h"
+#include "datatypes/_2RealDataField.h"
+#include "engine/_2RealTypeMetadata.h"
 
 namespace _2Real
 {
+	const std::string Image::TYPENAME = "image";
 	const std::string Image::FIELD_WIDTH = "width";
 	const std::string Image::FIELD_HEIGHT = "height";
 	const std::string Image::FIELD_DATA = "data";
 	const std::string Image::FIELD_CHANNELS = "channelorder";
 	const std::string Image::FIELD_DATATYPE = "datatype";
+
+	TypeMetadata const* Image::getTypeMetadata()
+	{
+		TypeMetadata *meta = new TypeMetadata( Image::TYPENAME );
+		meta->addField( Image::FIELD_WIDTH,			DataField< unsigned int >::createFieldDescriptor( Image::FIELD_WIDTH, 0 ) );
+		meta->addField( Image::FIELD_HEIGHT,		DataField< unsigned int >::createFieldDescriptor( Image::FIELD_HEIGHT, 0 ) );
+		meta->addField( Image::FIELD_DATA,			DataField< std::vector< unsigned char > >::createFieldDescriptor( Image::FIELD_DATA, std::vector< unsigned char >() ) );
+		meta->addField( Image::FIELD_DATATYPE,		DataField< int >::createFieldDescriptor( Image::FIELD_DATATYPE, Image::Datatype( Image::Datatype::UNDEFINED ) ) );
+		meta->addField( Image::FIELD_CHANNELS,		DataField< int >::createFieldDescriptor( Image::FIELD_CHANNELS, Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
+		return meta;
+	}
 
 	std::shared_ptr< Image > Image::asImage( std::shared_ptr< CustomType > data )
 	{
@@ -42,8 +56,9 @@ namespace _2Real
 
 	Image::Image() : mData( new CustomType( nullptr ) )
 	{
-		std::shared_ptr< TypeMetadata > init( CustomDerivedType< Image >::getTypeMetadata() );
-		mData->initFrom( init.get() );
+		TypeMetadata const* meta = Image::getTypeMetadata();
+		mData->initFrom( meta );
+		delete meta;
 	}
 
 	Image::Image( Image const& other ) : mData()
@@ -73,16 +88,6 @@ namespace _2Real
 	}
 
 	std::shared_ptr< const CustomType > Image::toCustomType() const
-	{
-		return mData;
-	}
-
-	Image::operator std::shared_ptr< CustomType > ()
-	{
-		return mData;
-	}
-
-	Image::operator std::shared_ptr< const CustomType > () const
 	{
 		return mData;
 	}

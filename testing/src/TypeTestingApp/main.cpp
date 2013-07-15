@@ -141,8 +141,6 @@ int main( int argc, char *argv[] )
 				app::TypeMetainfo info = b.inlets[ 0 ].getType();
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
-				for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-					delete *it;
 			}
 
 			std::cout << std::endl;
@@ -193,8 +191,8 @@ int main( int argc, char *argv[] )
 				app::TypeMetainfo info = b.inlets[ 2 ].getType();
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
-				for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-					delete *it;
+				//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+				//	delete *it;
 			}
 
 			std::cout << std::endl;
@@ -279,8 +277,8 @@ int main( int argc, char *argv[] )
 				app::TypeMetainfo info = b.inlets[ 4 ].getType();
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
-				for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-					delete *it;
+				//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+				//	delete *it;
 			}
 
 			std::cout << std::endl;

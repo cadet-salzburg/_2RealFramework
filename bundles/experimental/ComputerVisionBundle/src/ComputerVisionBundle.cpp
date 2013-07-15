@@ -59,8 +59,9 @@ void getBundleMetainfo( BundleMetainfo& info )
 		gauss.setDescription( "applies gaussian blur to input image" );
 		gauss.setCategory( "image filter" );
 
-		gauss.addCustomTypeInlet( "InImageA", "image", imgA );
-		gauss.addInlet< Image >( "InImageB", imgB.toCustomType() );
+		gauss.addCustomTypeInlet( "InImageA", "image", imgA.toCustomType() );
+		gauss.addCustomTypeInlet( "InImageB", "image", imgB.toCustomType() );
+		//gauss.addInlet< Image >( "InImageB", imgB.toCustomType() );
 		//gauss.addInlet< int >( "InKernelX", 10 );
 		//gauss.addCustomTypeInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
 		gauss.addOutlet( "OutImage", "image" );

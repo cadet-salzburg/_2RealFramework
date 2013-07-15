@@ -43,7 +43,7 @@ namespace _2Real
 			template< typename TType >
 			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
-				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( init );
+				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( name, init );
 				if ( desc == nullptr )
 					throw Exception( "this type is not allowed as a field" );
 				else

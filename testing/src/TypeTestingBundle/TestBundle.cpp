@@ -27,7 +27,6 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		// okay, so they it works right now is a bit shakey
 
-
 		// TODO: initial value & range for all fields
 		// TODO: sth clever with options, maybe?
 

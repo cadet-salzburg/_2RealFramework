@@ -19,7 +19,6 @@
 #pragma once
 
 #include "datatypes/_2RealTypes.h"
-#include "datatypes/_2RealBaseTypes.h"
 #include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
 
@@ -52,12 +51,6 @@ namespace _2Real
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			void addCustomTypeInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > initialValue, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS );
-
-			//template< typename TType >
-			//void addInlet( std::string const& name, std::shared_ptr< const CustomType > value, InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )
-			//{
-			//	privateAddInlet( name, Name< TType >::humanReadableName(), value, nullptr, defaultPolicy );
-			//}
 
 			template< typename TType >
 			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), InletPolicy const& defaultPolicy = InletPolicy::ALWAYS )

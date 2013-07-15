@@ -36,7 +36,7 @@ namespace _2Real
 		}
 	}
 
-	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata *data, ADeleter< TypeMetadata > *del )
+	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata const* data, ADeleter< TypeMetadata > *del )
 	{
 #ifdef _DEBUG
 		assert( data );

@@ -48,14 +48,7 @@ namespace _2Real
 
 		virtual ~CustomType();
 
-		//CustomType() {}
 		CustomType( CustomType const& other );
-		//CustomType& operator=( CustomType const& other )
-		//{
-		//	return *this;
-		//};
-
-
 
 	public:
 

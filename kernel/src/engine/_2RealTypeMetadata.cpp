@@ -56,13 +56,10 @@ namespace _2Real
 
 	void TypeMetadata::getFields( _2Real::Fields &fields ) const
 	{
-		//f.clear(); f.reserve( mFields.size() );
+		fields.clear(); fields.reserve( mFields.size() );
 		for ( TypeMetadata::Fields::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
 		{
-			//_2Real::Fields f;
-			Field *field = it->second->getField();
-			field->setName( it->first );
-			fields.push_back( field );
+			fields.push_back( it->second->getField() );
 		}
 	}
 }

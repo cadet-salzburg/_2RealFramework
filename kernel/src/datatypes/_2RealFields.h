@@ -25,8 +25,8 @@
 namespace _2Real
 {
 	class Field;
-
-	typedef std::vector< Field * > Fields;
+	typedef std::shared_ptr< const Field >	FieldRef;
+	typedef std::vector< const FieldRef >	Fields;
 
 	class Field
 	{
@@ -36,17 +36,16 @@ namespace _2Real
 		virtual std::string getName() const = 0;
 		virtual std::string getTypename() const = 0;
 		virtual Fields getSubFields() const = 0;
-		virtual void setName( std::string const& name ) = 0;
 	};
 
 	class SimpleField : public Field
 	{
 	public:
+		SimpleField( std::string const& name, std::string const& type ) : mName( name ), mType( type ) {}
 		std::string getName() const { return mName; }
 		std::string getTypename() const { return mType; }
 		Fields getSubFields() const { return Fields(); }
-		void setName( std::string const& name ) { mName = name; }
-	//private:
+	private:
 		std::string					mName;
 		std::string					mType;
 	};
@@ -54,13 +53,14 @@ namespace _2Real
 	class ComplexField : public Field
 	{
 	public:
+		ComplexField( std::string const& name, std::string const& type, Fields const& fields ) : mName( name ), mType( type ), mFields( fields ) {}
 		std::string getName() const { return mName; }
 		std::string getTypename() const { return mType; }
 		Fields getSubFields() const { return mFields; }
-		void setName( std::string const& name ) { mName = name; }
-	//private:
+	private:
 		std::string					mName;
 		std::string					mType;
 		Fields						mFields;
 	};
+
 }

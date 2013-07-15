@@ -48,7 +48,11 @@ namespace _2Real
 				msg << "type: " << type << "is not known";
 				throw NotFoundException( msg.str() );
 			}
-			FieldDescriptor *desc = DataField< CustomType >::createFieldDescriptor( CustomType( meta ), meta );
+
+			_2Real::Fields fields;
+			meta->getFields( fields );
+
+			FieldDescriptor *desc = DataField< CustomType >::createFieldDescriptor( name, type, CustomType( meta ), fields );
 			mImpl->addField( name, desc );
 		}
 	}

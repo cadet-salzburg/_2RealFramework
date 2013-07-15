@@ -29,7 +29,7 @@ namespace _2Real
 	{
 	public:
 		virtual ~ADeleter() {}
-		virtual void operator()( TType *& val ) = 0;
+		virtual void operator()( TType const*& val ) = 0;
 		virtual ADeleter * clone() const = 0;
 	};
 
@@ -37,7 +37,7 @@ namespace _2Real
 	class NullDeleter : public ADeleter< TType >
 	{
 	public:
-		void operator()( TType *& val )
+		void operator()( TType const*& val )
 		{
 			UNUSED( val );
 		}
@@ -51,7 +51,7 @@ namespace _2Real
 	class Deleter : public ADeleter< TType >
 	{
 	public:
-		void operator()( TType *& val )
+		void operator()( TType const*& val )
 		{
 			delete val;
 			val = nullptr;
@@ -66,7 +66,7 @@ namespace _2Real
 	class ArrayDeleter : public ADeleter< TType >
 	{
 	public:
-		void operator()( TType *& val )
+		void operator()( TType const*& val )
 		{
 			delete [] val;
 			val = nullptr;

@@ -19,7 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealCustomData.h"
-#include "datatypes/_2RealBaseTypes.h"
+#include "engine/_2RealTypeMetadata.h"
 
 #include <iostream>
 
@@ -35,19 +35,18 @@ namespace _2Real
 		{
 			TypeMetadata *result = nullptr;
 
-			if ( BaseType< TType >::isBaseType() )
-			{
-				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( Init< TType >::defaultValue() );
-				result = new TypeMetadata( Name< TType >::humanReadableName() );
-				result->addField( "default", desc );
-				return result;
-			}
-			else
+			FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( "default", Init< TType >::defaultValue() );
+
+			if ( !desc )
 			{
 				std::stringstream msg;
-				msg << typeid( TType ).name() << " is not a framework base type, thus no metadata can be derived" << std::endl;
+				msg << typeid( TType ).name() << " is not a framework base type, thus no conversion to a custom type exists" << std::endl;
 				throw _2Real::Exception( msg.str() );
 			}
+
+			result = new TypeMetadata( Name< TType >::humanReadableName() );
+			result->addField( "default", desc );
+			return result;
 		}
 
 		BaseToCustomType( TType const& value ) : mData( nullptr )
@@ -64,6 +63,10 @@ namespace _2Real
 	private:
 
 		std::shared_ptr< const CustomType >		mData;
+
+		TypeMetadata * getTypeMetadataInternal();
+		void initInternal();
+
 
 	};
 }

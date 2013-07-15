@@ -40,11 +40,9 @@
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractAnyHolder.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealAnyHolder.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealBaseTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomBase.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealDataField.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealDerivedTypes.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFields.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
@@ -207,14 +205,12 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.cpp" />
-    <ClCompile Include="..\..\src\datatypes\_2RealBaseTypes.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealCustomBase.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealCustomData.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp" />
-    <ClCompile Include="..\..\src\datatypes\_2RealDerivedTypes.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptor.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
