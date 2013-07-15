@@ -20,12 +20,13 @@
 
 #include "datatypes/_2RealCustomData.h"
 #include "datatypes/_2RealBaseTypes.h"
-#include "datatypes/_2RealDerivedTypes.h"
+
+#include <iostream>
 
 namespace _2Real
 {
 	template< typename TType >
-	class ToCustomType
+	class BaseToCustomType
 	{
 
 	public:
@@ -39,46 +40,26 @@ namespace _2Real
 				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( Init< TType >::defaultValue() );
 				result = new TypeMetadata( Name< TType >::humanReadableName() );
 				result->addField( "default", desc );
-			}
-			else if ( CustomDerivedType< TType >::isCustomDerived() )
-			{
-				std::cout << "----FUCK FUCK FUCK----" << std::endl;
-				result = CustomDerivedType< TType >::getTypeMetadata();
-			}
-
-			return result;
-		}
-
-		ToCustomType( TType const& value ) : mData()
-		{
-			std::shared_ptr< TypeMetadata > metadata( ToCustomType::getTypeMetadata() );
-			if ( metadata.get() == nullptr )
-			{
-				std::ostringstream msg;
-				msg << "invalid type: " << typeid( TType ).name() << " is neither framework base type nor custom type derived";
-				throw _2Real::Exception( msg.str() );
+				return result;
 			}
 			else
 			{
-				if ( BaseType< TType >::isBaseType() )
-				{
-					CustomType *t = new CustomType;
-					t->initFrom( *( metadata.get() ) );
-					t->set( "default", value );
-					mData.reset( t );
-				}
-				else
-				{
-					std::cout << "FUCK FUCK FUCK" << std::endl;
-					mData.reset( new CustomType );
-				}
+				std::stringstream msg;
+				msg << typeid( TType ).name() << " is not a framework base type, thus no metadata can be derived" << std::endl;
+				throw _2Real::Exception( msg.str() );
 			}
 		}
 
-		operator std::shared_ptr< const CustomType > () const
+		BaseToCustomType( TType const& value ) : mData( nullptr )
 		{
-			return mData;
+			TypeMetadata *meta( BaseToCustomType< TType >::getTypeMetadata() );
+			CustomType *t = new CustomType( meta );
+			t->set( "default", value );
+			mData.reset( t );
+			delete meta;
 		}
+
+		operator std::shared_ptr< const CustomType > () const { return mData; }
 
 	private:
 

@@ -40,10 +40,10 @@ namespace _2Real
 		return std::shared_ptr< const Image >( img );
 	}
 
-	Image::Image() : mData( new CustomType )
+	Image::Image() : mData( new CustomType( nullptr ) )
 	{
 		std::shared_ptr< TypeMetadata > init( CustomDerivedType< Image >::getTypeMetadata() );
-		mData->initFrom( *( init.get() ) );
+		mData->initFrom( init.get() );
 	}
 
 	Image::Image( Image const& other ) : mData()

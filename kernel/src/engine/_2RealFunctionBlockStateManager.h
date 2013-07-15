@@ -55,7 +55,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockStateManager( AbstractUberBlock &owner );
+		FunctionBlockStateManager( AbstractUberBlock &owner, const bool thread );
 		~FunctionBlockStateManager();
 
 		void setUp();

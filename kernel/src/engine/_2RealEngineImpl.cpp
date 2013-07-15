@@ -74,7 +74,7 @@ namespace _2Real
 		m_Logger( new Logger( "EngineLog.txt" ) ),
 		m_Timer( new Timer( *m_Logger ) ),
 		m_TypeRegistry( new TypeRegistry ),
-		m_ThreadPool( new ThreadPool( *this, 3, 0, "2Real threadpool" ) ),
+		m_ThreadPool( new ThreadPool( *this, 12, 0, "2Real threadpool" ) ),
 		m_BundleManager( new BundleManager( *this, *m_TypeRegistry ) ),
 		m_System( new System( *m_Logger ) )
 	{
@@ -82,34 +82,36 @@ namespace _2Real
 
 		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes, 
 			Name< Image >::humanReadableName(), CustomDerivedType< Image >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< int >::humanReadableName(), ToCustomType< int >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< unsigned int >::humanReadableName(), ToCustomType< unsigned int >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< char >::humanReadableName(), ToCustomType< char >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< unsigned char >::humanReadableName(), ToCustomType< unsigned char >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< float >::humanReadableName(), ToCustomType< float >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< double >::humanReadableName(), ToCustomType< double >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::string >::humanReadableName(), ToCustomType< std::string >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< int > >::humanReadableName(), ToCustomType< std::vector< int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< unsigned int > >::humanReadableName(), ToCustomType< std::vector< unsigned int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< char > >::humanReadableName(), ToCustomType< std::vector< char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< unsigned char > >::humanReadableName(), ToCustomType< std::vector< unsigned char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< float > >::humanReadableName(), ToCustomType< std::vector< float > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< double > >::humanReadableName(), ToCustomType< std::vector< double > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-			Name< std::vector< std::string > >::humanReadableName(), ToCustomType< std::vector< std::string > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< int >::humanReadableName(), ToCustomType< int >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< unsigned int >::humanReadableName(), ToCustomType< unsigned int >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< char >::humanReadableName(), ToCustomType< char >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< unsigned char >::humanReadableName(), ToCustomType< unsigned char >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< float >::humanReadableName(), ToCustomType< float >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< double >::humanReadableName(), ToCustomType< double >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::string >::humanReadableName(), ToCustomType< std::string >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< bool >::humanReadableName(), ToCustomType< bool >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< int > >::humanReadableName(), ToCustomType< std::vector< int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< unsigned int > >::humanReadableName(), ToCustomType< std::vector< unsigned int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< char > >::humanReadableName(), ToCustomType< std::vector< char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< unsigned char > >::humanReadableName(), ToCustomType< std::vector< unsigned char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< float > >::humanReadableName(), ToCustomType< std::vector< float > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< double > >::humanReadableName(), ToCustomType< std::vector< double > >::getTypeMetadata(), new Deleter< TypeMetadata > );
+		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
+		//	Name< std::vector< std::string > >::humanReadableName(), ToCustomType< std::vector< std::string > >::getTypeMetadata(), new Deleter< TypeMetadata > );
 		//m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
 	}
 

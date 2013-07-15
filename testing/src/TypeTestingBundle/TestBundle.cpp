@@ -11,33 +11,102 @@ void getBundleMetainfo( BundleMetainfo &info )
 {
 	try
 	{
-		info.setName( "threadpool test" );
+		Image imgInit;
+		unsigned int imgW = 16;
+		unsigned int imgH = 16;
+		unsigned int imgC = 4;
+		std::vector< unsigned char > init( imgW*imgH*imgC, 0 );
+		imgInit.setImagedata( &init[ 0 ], imgW, imgH, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
+
+		info.setName( "datatypes test" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "testing" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		TypeMetainfo &testType = info.exportCustomType( "testtype" );
-		testType.addField< int >( "test int" );
-		testType.addField< std::string >( "test string" );
-		testType.addField< std::vector< float > >( "test float array" );
-		testType.addCustomTypeField( "test image", "image" );
+		// okay, so they it works right now is a bit shakey
 
-		std::shared_ptr< CustomType > initialValue( new CustomType( testType ) );
-		initialValue->set< int >( "test int", 0 );
-		initialValue->set< std::string >( "test string", "NARF" );
-		initialValue->set< std::vector< float > >( "test float array", std::vector< float >( 10, 0.5f ) );
-		Image image;
-		std::vector< unsigned char > init( 16, 0 );
-		image.setImagedata( &init[ 0 ], 2, 2, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
-		initialValue->set< CustomType >( "test image", *( image.toCustomType().get() ) );
+
+		// TODO: initial value & range for all fields
+		// TODO: sth clever with options, maybe?
+
+		// base types only
+		TypeMetainfo &allType = info.exportCustomType( "basetype" );
+		allType.addField< char >( "char" );
+		allType.addField< unsigned char >( "uchar" );
+		allType.addField< int >( "int" );
+		allType.addField< unsigned int >( "uint" );
+		allType.addField< double >( "double" );
+		allType.addField< float >( "float" );
+		allType.addField< std::string >( "string" );
+		allType.addField< bool >( "bool" );
+		allType.addField< std::vector< int > >( "int vector" );
+		allType.addField< std::vector< std::vector< int > > >( "int vector vector" );
+
+		// simple custom type
+		TypeMetainfo &simpleType = info.exportCustomType( "simpletype" );
+		simpleType.addField< int >( "int" );
+		simpleType.addField< float >( "float" );
+
+		// base fields, framework defined fields, user defined fields
+		TypeMetainfo &complexType = info.exportCustomType( "complextype" );
+		complexType.addField< int >( "int" );
+		complexType.addField< std::string >( "string" );
+		complexType.addField< std::vector< float > >( "float vector" );
+		complexType.addCustomTypeField( "image", "image" );
+		complexType.addCustomTypeField( "simpletype", "simpletype" );
+		complexType.addCustomTypeField( "basetype", "basetype" );
+
+		// oooooh, a type that contains itsself
+		//TypeMetainfo &recursiveType = info.exportCustomType( "recursivetype" );
+		//recursiveType.addCustomTypeField( "simpletype", "simpletype" );
+		//recursiveType.addCustomTypeField( "recursivetype", "recursivetype" );
+
+		std::shared_ptr< CustomType > allInit( new CustomType( allType ) );
+		allInit->set< char >( "char", 100 );
+		allInit->set< unsigned char >( "uchar", 100U );
+		allInit->set< int >( "int", 100 );
+		allInit->set< unsigned int >( "uint", 100U );
+		allInit->set< double >( "double", 100.0 );
+		allInit->set< float >( "float", 100.f );
+		allInit->set< std::string >( "string", "100" );
+		allInit->set< bool >( "bool", true );
+		allInit->set< std::vector< int > >( "int vector", std::vector< int >( 100, 100 ) );
+		allInit->set< std::vector< std::vector< int > > >( "int vector vector", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
+
+		std::shared_ptr< CustomType > simpleInit( new CustomType( simpleType ) );
+		simpleInit->set< int >( "int", 555 );
+		simpleInit->set< float >( "float", 555.f );
+
+		std::shared_ptr< CustomType > complexInit( new CustomType( complexType ) );
+		complexInit->set< int >( "int", 222 );
+		complexInit->set< std::string >( "string", "222" );
+		complexInit->set< std::vector< float > >( "float vector", std::vector< float >( 222, 222.f ) );
+		complexInit->set< CustomType >( "image", *( imgInit.toCustomType().get() ) );
+		complexInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );
+		complexInit->set< CustomType >( "basetype", *( allInit.get() ) );
+
+		//std::shared_ptr< CustomType > recursiveInit( new CustomType( recursiveType ) );
+		//recursiveInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );
+		//recursiveInit->set< CustomType >( "recursivetype", *( recursiveInit.get() ) );
 
 		BlockMetainfo &testBlock = info.exportBlock< Test, WithoutContext >( "TypeTestingBlock" );
 		testBlock.setDescription( "block for custom type testing" );
-		testBlock.addCustomTypeInlet( "customInlet0", "testtype", initialValue );
-		testBlock.addCustomTypeInlet( "customInlet1", "testtype", initialValue );
-		testBlock.addOutlet( "customOutlet0", "testtype" );
+		testBlock.addCustomTypeInlet( "i0", "basetype", allInit );
+		testBlock.addCustomTypeInlet( "i1", "basetype", std::shared_ptr< CustomType >() ); // no initializer!
+		testBlock.addCustomTypeInlet( "i2", "complextype", complexInit );
+		testBlock.addCustomTypeInlet( "i3", "complextype", std::shared_ptr< CustomType >() );
+		testBlock.addCustomTypeInlet( "i4", "simpletype", simpleInit );
+		testBlock.addCustomTypeInlet( "i5", "simpletype", std::shared_ptr< CustomType >() );
+		testBlock.addInlet< std::vector< int > >( "i6", std::vector< int >( 100, 100 ) );
+		testBlock.addInlet< std::vector< std::vector< int > > >( "i7", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
+		//testBlock.addCustomTypeInlet( "i8", "recursivetype", recursiveInit );
+		//testBlock.addCustomTypeInlet( "i9", "recursivetype", std::shared_ptr< CustomType >() );
+		// TODO: template functions for base types
+		testBlock.addOutlet( "o0", "basetype" );
+		testBlock.addOutlet( "o1", "complextype" );
+		testBlock.addOutlet( "o2", "simpletype" );
 	}
 	catch ( Exception &e )
 	{

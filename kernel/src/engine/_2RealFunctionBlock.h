@@ -108,6 +108,21 @@ namespace _2Real
 	};
 
 	template< typename THandle >
+	bool dedicatedThread();
+
+	template< >
+	inline bool dedicatedThread< app::ContextBlockHandle >()
+	{
+		return true;
+	}
+
+	template< >
+	inline bool dedicatedThread< app::BlockHandle >()
+	{
+		return false;
+	}
+
+	template< typename THandle >
 	FunctionBlock< THandle >::FunctionBlock( Bundle const& owningBundle, bundle::Block &block, app::BlockInfo const& info ) :
 		AbstractUberBlock( owningBundle.getIds(), info.name ),
 		Handleable< FunctionBlock< THandle >, THandle >( *this ),
@@ -117,7 +132,7 @@ namespace _2Real
 		m_BlockInfo( info ),
 		m_UpdatePolicy( new FunctionBlockUpdatePolicy( *this ) ),
 		m_IOManager( new FunctionBlockIOManager( *this ) ),
-		m_StateManager( new FunctionBlockStateManager( *this ) ),
+		m_StateManager( new FunctionBlockStateManager( *this, dedicatedThread< THandle >() ) ),
 		m_Refs( m_Engine, *this, *m_IOManager, *m_StateManager, *m_UpdatePolicy )
 	{
 		m_StateManager->m_FunctionBlock = &block;

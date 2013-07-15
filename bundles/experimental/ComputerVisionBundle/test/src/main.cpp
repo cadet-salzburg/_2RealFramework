@@ -1,26 +1,33 @@
 #include "_2RealApplication.h"
 #include "_2RealDatatypes.h"
-
-#include <windows.h>
 #include <iostream>
 #include <list>
-#include <deque>
 #include <vector>
 #ifdef _DEBUG
 	#include "vld.h"
 #endif
 
-using namespace std;
+#include <SFML\OpenGL.hpp>
+#include <SFML\Window.hpp>
+#include <SFML\Graphics.hpp>
+
 using namespace _2Real;
 using namespace _2Real::app;
 
+Poco::FastMutex mutex;
+
+std::shared_ptr< const Image > outty( nullptr );
+
 void receivedData( void *, std::shared_ptr< const CustomType > data )
 {
-	if ( !data.get() )
-		std::cout << "received null" << std::endl;
+	// must never be null
+	assert( data.get() );
 
-	std::shared_ptr< const Image > img = Image::asImage( data );
-	std::cout << "received: " << img->getWidth() << " " << img->getHeight() <<  std::endl;
+	mutex.lock();
+	outty = Image::asImage( data );
+	mutex.unlock();
+
+	//std::cout << "received: " << outty->getWidth() << " " << outty->getHeight() <<  std::endl;
 }
 
 int main( int argc, char *argv[] )
@@ -30,6 +37,17 @@ int main( int argc, char *argv[] )
 
 	InletHandle i0A, i0B;
 	OutletHandle o0;
+
+	unsigned int w = 600;
+	unsigned int h = 600;
+	sf::Window window( sf::VideoMode( w, h, 32 ), "geometry shader stuff", sf::Style::Default, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
+
+	GLuint tex;
+	glGenTextures( 1, &tex );
+	glBindTexture( GL_TEXTURE_2D, tex );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 480, 480, 0, GL_RGBA, GL_FLOAT, nullptr );
+	glBindTexture( GL_TEXTURE_2D, 0 );
 
 	try
 	{
@@ -58,6 +76,13 @@ int main( int argc, char *argv[] )
 		i0B = testBlock0.getInletHandle( "InImageB" );
 		o0 = testBlock0.getOutletHandle( "OutImage" );
 
+		for ( unsigned int i=0; i<20; ++i )
+		{
+			BlockHandle b = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
+			b.setup();
+			b.start();
+		}
+
 		testBlock0.setup();
 		testBlock0.start();
 
@@ -65,40 +90,81 @@ int main( int argc, char *argv[] )
 	}
 	catch ( Exception &e )
 	{
-		cout << e.what() << " " << e.message() << endl;
+		std::cout << e.what() << " " << e.message() << std::endl;
 	}
-
-	int cnt = 0;
-
-	Sleep( 1000 );
 
 	while( 1 )
 	{
+		bool exit = false;
+		sf::Event ev;
+		while ( window.pollEvent( ev ) )
+		{
+			if ( sf::Event::Closed == ev.type )
+			{
+				exit = true;
+				break;
+			}
+			else if ( sf::Event::Resized == ev.type )
+			{
+				w = ev.size.width;
+				h = ev.size.height;
+			}
+		}
+		if ( exit ) break;
+
 		std::shared_ptr< const CustomType > i0Adata = i0A.getCurrentData();
 		std::shared_ptr< const CustomType > i0Bdata = i0B.getCurrentData();
 
-		// getCurrentData() will return nullptrs until the first update happens
+		// getCurrentData will return nullptrs until the first update happens, so just keep looping
 		if ( i0Adata.get() == nullptr || i0Bdata.get() == nullptr )
 			continue;
 
 		std::shared_ptr< const Image > img0A = Image::asImage( i0Adata );
 		std::shared_ptr< const Image > img0B = Image::asImage( i0Bdata );
-		std::cout << "img A: " << img0A->getWidth() << " " << img0A->getHeight() << std::endl;
-		std::cout << "img B: " << img0B->getWidth() << " " << img0B->getHeight() << std::endl;
+		std::shared_ptr< const Image > imgOut = Image::asImage( o0.getCurrentData() );
+		//std::cout << "img A: " << img0A->getWidth() << " " << img0A->getHeight() << std::endl;
+		//std::cout << "img B: " << img0B->getWidth() << " " << img0B->getHeight() << std::endl;
+		//std::cout << "img O: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
 
-		float num = 32 * 24 * 3;
-		float *data = new float[ 32 * 24 * 3 ];
-		for ( unsigned int i=0; i<num; ++i )
-			data[ i ] = 0.5f;
-		std::shared_ptr< CustomType > t = i0A.makeData();
-		t->set( Image::FIELD_WIDTH, unsigned int( 32 ) );
-		t->set( Image::FIELD_HEIGHT, unsigned int( 24 ) );
-		t->set( Image::FIELD_DATA, std::vector< unsigned char >( ( unsigned char * )data, ( unsigned char * )data+32*24*3*4 ) );
-		t->set< int >( Image::FIELD_CHANNELS, Image::ChannelOrder::RGB );
-		t->set< int >( Image::FIELD_DATATYPE, Image::Datatype::FLOAT32 );
-		i0A.receiveData( t );
-		std::cout << "set: " << *( t->get< unsigned int >( Image::FIELD_WIDTH ).get() ) << " " << *( t->get< unsigned int >( Image::FIELD_HEIGHT ).get() ) << std::endl;
-		delete [] data;
+		//float num = 32 * 24 * 4;
+		//float *data = new float[ 32 * 24 * 4 ];
+		//for ( unsigned int i=0; i<num; ++i )
+		//	data[ i ] = 0.5f;
+		//std::shared_ptr< CustomType > t = i0A.makeData();
+		//t->set( Image::FIELD_WIDTH, unsigned int( 32 ) );
+		//t->set( Image::FIELD_HEIGHT, unsigned int( 24 ) );
+		//t->set( Image::FIELD_DATA, std::vector< unsigned char >( ( unsigned char * )data, ( unsigned char * )data+32*24*4*4 ) );
+		//t->set< int >( Image::FIELD_CHANNELS, Image::ChannelOrder::RGB );
+		//t->set< int >( Image::FIELD_DATATYPE, Image::Datatype::FLOAT32 );
+		//i0A.receiveData( t );
+		//delete [] data;
+
+		glViewport( 0, 0, w, h );
+
+		glBindTexture( GL_TEXTURE_2D, tex );
+
+		mutex.lock();
+		if ( outty.get() )
+			glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 480, 480, GL_RGBA, GL_FLOAT, outty->getPixels() );
+		mutex.unlock();
+
+		glEnable( GL_TEXTURE_2D );
+
+		glColor3f( 1.f, 1.f, 1.f );
+		glBegin( GL_QUADS );
+		glTexCoord2f( 0.f, 1.f );
+		glVertex2f( -1.f,  1.f );
+		glTexCoord2f( 0.f, 0.f );
+		glVertex2f( -1.f, -1.f );
+		glTexCoord2f( 1.f, 0.f );
+		glVertex2f(  1.f, -1.f );
+		glTexCoord2f( 1.f, 1.f );
+		glVertex2f(  1.f,  1.f );
+		glEnd();
+
+		glDisable( GL_TEXTURE_2D );
+
+		glBindTexture( GL_TEXTURE_2D, 0 );
 
 		//app::TypeMetainfo info = i0A.getType();
 		//_2Real::Fields fields; info.getFieldInfo( fields );
@@ -111,13 +177,7 @@ int main( int argc, char *argv[] )
 		//	delete *it;
 		//}
 
-		string line;
-		char lineEnd = '\n';
-		getline( cin, line, lineEnd );
-		if ( line == "q" )
-		{
-			break;
-		}
+		window.display();
 	}
 
 	return 0;

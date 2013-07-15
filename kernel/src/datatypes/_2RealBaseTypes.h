@@ -89,6 +89,15 @@ namespace _2Real
 		}
 	};
 
+	template< >
+	struct BaseType< bool >
+	{
+		static bool isBaseType()
+		{
+			return true;
+		}
+	};
+
 	template< typename TType >
 	struct BaseType< std::vector< TType > >
 	{

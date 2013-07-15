@@ -35,24 +35,27 @@ namespace _2Real
 
 	CustomType::CustomType( bundle::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = meta.mImpl; 
+		TypeMetadata const* metadata = meta.mImpl;
 		initFrom( metadata );
 	}
 
 	CustomType::CustomType( app::TypeMetainfo const& meta )
 	{
-		TypeMetadata const& metadata = *( meta.mImpl );
+		TypeMetadata const* metadata = meta.mImpl;
 		initFrom( metadata );
 	}
 
-	CustomType::CustomType( TypeMetadata const& metadata )
+	CustomType::CustomType( TypeMetadata const* metadata )
 	{
 		initFrom( metadata );
 	}
 
-	void CustomType::initFrom( TypeMetadata const& metadata )
+	void CustomType::initFrom( TypeMetadata const* metadata )
 	{
-		for ( TypeMetadata::Fields::const_iterator it = metadata.mFields.begin(); it != metadata.mFields.end(); ++it )
+		if ( metadata == nullptr )
+			return;
+
+		for ( TypeMetadata::Fields::const_iterator it = metadata->mFields.begin(); it != metadata->mFields.end(); ++it )
 		{
 			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();

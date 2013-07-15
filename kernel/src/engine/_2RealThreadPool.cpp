@@ -52,14 +52,14 @@ namespace _2Real
 			m_Threads[ thread ] = q;
 		}
 
-		for ( unsigned int i=0; i<capacity; ++i )
-		{
-			PooledThread *thread = new PooledThread( *this, m_StackSize );
-			ThreadQueue q;
-			q.isReserved = true;
-			q.isUnique = false;
-			m_Threads[ thread ] = q;
-		}
+		//for ( unsigned int i=0; i<capacity; ++i )
+		//{
+		//	PooledThread *thread = new PooledThread( *this, m_StackSize );
+		//	ThreadQueue q;
+		//	q.isReserved = true;
+		//	q.isUnique = false;
+		//	m_Threads[ thread ] = q;
+		//}
 	}
 
 	ThreadPool::~ThreadPool()
@@ -142,6 +142,24 @@ namespace _2Real
 						it->first->run( Poco::Thread::PRIO_NORMAL, *req );
 					}
 				}
+				else
+				{
+					m_RequestQueueAccess.lock();
+					if ( m_RequestQueue.empty() )
+					{
+						m_RequestQueueAccess.unlock();
+						continue;															// thread queue acc. is unlocked outside of while loop
+					}
+					else
+					{
+						ThreadExecRequest *req = m_RequestQueue.front();
+						m_RequestQueue.pop_front();
+						m_RequestQueueAccess.unlock();
+
+						it->first->reactivate();
+						it->first->run( Poco::Thread::PRIO_NORMAL, *req );
+					}
+				}
 				//else if ( it->second.isReserved && !it->second.localQueue.empty() )		// if reserved, favor own queue.. else, use common requests
 				//{
 				//	std::cout << "free reserved thread!" << std::endl;
@@ -186,6 +204,8 @@ namespace _2Real
 
 	PooledThread * ThreadPool::requestUniqueThread()
 	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_ThreadQueuesAccess );
+
 		PooledThread *thread = new PooledThread( *this, m_StackSize );
 		ThreadQueue q;
 		q.isReserved = false;

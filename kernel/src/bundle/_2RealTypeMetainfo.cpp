@@ -26,7 +26,7 @@ namespace _2Real
 {
 	namespace bundle
 	{
-		TypeMetainfo::TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types ) : mImpl( meta ), mBundleTypes( types )
+		TypeMetainfo::TypeMetainfo( TypeMetadata *meta, TypeRegistry const* types ) : mImpl( meta ), mBundleTypes( types )
 		{
 		}
 
@@ -36,27 +36,20 @@ namespace _2Real
 
 		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor *desc )
 		{
-			TypeMetadata const* meta = mBundleTypes.get( "", type );
-			if ( nullptr == meta )
-			{
-				std::stringstream msg;
-				msg << "type: " << type << "is not known";
-				throw NotFoundException( msg.str() );
-			}
-			mImpl.addField( name, desc );
+			mImpl->addField( name, desc );
 		}
 
 		void TypeMetainfo::addCustomTypeField( std::string const& name, std::string const& type )
 		{
-			TypeMetadata const* meta = mBundleTypes.get( "", type );
+			TypeMetadata const* meta = mBundleTypes->get( "", type );
 			if ( nullptr == meta )
 			{
 				std::stringstream msg;
 				msg << "type: " << type << "is not known";
 				throw NotFoundException( msg.str() );
 			}
-			FieldDescriptor *desc = DataField< CustomType >::createFieldDescriptor( CustomType( *meta ), meta );
-			mImpl.addField( name, desc );
+			FieldDescriptor *desc = DataField< CustomType >::createFieldDescriptor( CustomType( meta ), meta );
+			mImpl->addField( name, desc );
 		}
 	}
 }

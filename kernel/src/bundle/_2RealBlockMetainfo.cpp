@@ -46,39 +46,31 @@ namespace _2Real
 			m_Impl.setThreadingPolicy( policy );
 		}
 
-		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
 		{
-			//std::string trimmed = trim( name );
-			//checkChars( toLower( trimmed ) );
-
-			//// ARGH ARGH better be safe
-			//CustomType initialValue( init );
-
-			//InletMetadata *data = new InletMetadata( trimmed, typeName, initialValue, defaultPolicy, false );
-			//m_Impl.addInlet( *data );
-
-			privateAddInlet( name, typeName, init, defaultPolicy );
+			privateAddInlet( name, type, init, nullptr, defaultPolicy );
 		}
 
-		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& typeName, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta, InletPolicy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			// ARGH ARGH better be safe
-			CustomType initialValue( *( init.get() ) );
+			// copy for safety reasons
+			std::shared_ptr< const CustomType > copied;
+			if ( init.get() )
+				copied.reset( new CustomType( *( init.get() ) ) );
 
-			InletMetadata *data = new InletMetadata( trimmed, typeName, initialValue, defaultPolicy, false );
+			InletMetadata *data = new InletMetadata( trimmed, type, copied, meta, defaultPolicy, false );
 			m_Impl.addInlet( *data );
 		}
 
-		void BlockMetainfo::addOutlet( std::string const& name, std::string const& typeName )
+		void BlockMetainfo::addOutlet( std::string const& name, std::string const& type )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			// check the existence of the type ( pre-defined, as well as self registered types are possible )
-			OutletMetadata *data = new OutletMetadata( trimmed, typeName );
+			OutletMetadata *data = new OutletMetadata( trimmed, type );
 			m_Impl.addOutlet( *data );
 		}
 	}

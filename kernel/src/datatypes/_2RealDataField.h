@@ -22,6 +22,7 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealFieldDescriptor.h"
 #include "datatypes/_2RealCustomData.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 namespace _2Real
 {
@@ -32,7 +33,7 @@ namespace _2Real
 	struct DataField< char >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( char init )
+		static FieldDescriptor * createFieldDescriptor( const char init )
 		{
 			return new FieldDescriptor_t< char >( init );
 		}
@@ -42,7 +43,7 @@ namespace _2Real
 	struct DataField< unsigned char >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( unsigned char init )
+		static FieldDescriptor * createFieldDescriptor( const unsigned char init )
 		{
 			return new FieldDescriptor_t< unsigned char >( init );
 		}
@@ -52,7 +53,7 @@ namespace _2Real
 	struct DataField< int >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( int init )
+		static FieldDescriptor * createFieldDescriptor( const int init )
 		{
 			return new FieldDescriptor_t< int >( init );
 		}
@@ -62,7 +63,7 @@ namespace _2Real
 	struct DataField< unsigned int >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( unsigned int init )
+		static FieldDescriptor * createFieldDescriptor( const unsigned int init )
 		{
 			return new FieldDescriptor_t< unsigned int >( init );
 		}
@@ -72,7 +73,7 @@ namespace _2Real
 	struct DataField< float >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( float init )
+		static FieldDescriptor * createFieldDescriptor( const float init )
 		{
 			return new FieldDescriptor_t< float >( init );
 		}
@@ -82,7 +83,7 @@ namespace _2Real
 	struct DataField< double >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( double init )
+		static FieldDescriptor * createFieldDescriptor( const double init )
 		{
 			return new FieldDescriptor_t< double >( init );
 		}
@@ -92,7 +93,7 @@ namespace _2Real
 	struct DataField< bool >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( bool init )
+		static FieldDescriptor * createFieldDescriptor( const bool init )
 		{
 			return new FieldDescriptor_t< bool >( init );
 		}

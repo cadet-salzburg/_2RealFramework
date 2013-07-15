@@ -26,8 +26,6 @@ using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
 
-#define VERBOSE
-
 unsigned int cnt = 0;
 
 OcvGaussianBlurBlock::OcvGaussianBlurBlock() :
@@ -84,22 +82,30 @@ void OcvGaussianBlurBlock::update()
 		unsigned int wOut = std::min< unsigned int >( imgA->getWidth(), imgB->getWidth() );
 		unsigned int hOut = std::min< unsigned int >( imgA->getHeight(), imgB->getHeight() );
 
-		imgOut->createImagedata( wOut, hOut, Image::ChannelOrder::RGB, Image::Datatype::FLOAT32 );
+		imgOut->createImagedata( wOut, hOut, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
 
-		std::cout << "created: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
+		//std::cout << "created: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
 
 		float *f = reinterpret_cast< float * >( imgOut->getPixels() );
 		float const *a = reinterpret_cast< float const* >( imgA->getPixels() );
 		float const *b = reinterpret_cast< float const* >( imgB->getPixels() );
-		for ( unsigned int y=0; y<hOut; ++y )
-		{
-			for ( unsigned int x=0; x<wOut; ++x )
-			{
-				const unsigned int index = y * wOut + x;
-				//std::cout << index << std::endl;
-				f[ index ] = a[ index ] - b[ index ];
-			}
-		}
+		unsigned int sz = hOut * wOut * 4;
+		for ( unsigned int i=0; i<sz; ++i )
+			f[ i ] = abs( a[ i ] - b[ i ] );
+		//for ( unsigned int y=0; y<hOut; ++y )
+		//{
+		//	for ( unsigned int x=0; x<wOut; x+=4 )
+		//	{
+		//		const unsigned int index = y * wOut * 4 + x;
+		//		float *tmp = &( f[ index ] );
+		//		float const* pa = &( a[ index ] );
+		//		float const* tb = &( b[ index ] );
+		//		for ( unsigned int i=0; i<4; ++i )
+		//		{
+		//			tmp[ i ] = pa[ i ];
+		//		}
+		//	}
+		//}
 	}
 	catch( Exception & e )
 	{

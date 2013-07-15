@@ -37,7 +37,7 @@ namespace _2Real
 
 		public:
 
-			TypeMetainfo( TypeMetadata &meta, TypeRegistry const& types );
+			TypeMetainfo( TypeMetadata *meta, TypeRegistry const* types );
 			~TypeMetainfo();
 
 			template< typename TType >
@@ -58,8 +58,8 @@ namespace _2Real
 			TypeMetainfo( TypeMetainfo const& other );
 
 			friend class CustomType;
-			TypeMetadata								&mImpl;
-			TypeRegistry								const& mBundleTypes;
+			TypeMetadata								*mImpl;
+			TypeRegistry								const* mBundleTypes;
 
 			void addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor *desc );
 

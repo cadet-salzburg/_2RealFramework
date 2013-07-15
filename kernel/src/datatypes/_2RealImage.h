@@ -25,6 +25,7 @@
 #include "datatypes/_2RealCustomBase.h"
 #include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealDataField.h"
+#include "datatypes/_2RealDerivedTypes.h"
 
 #include <vector>
 #include <string>
@@ -106,7 +107,7 @@ namespace _2Real
 		void setImagedata( T const* data, const unsigned int w, const unsigned int h, const Image::ChannelOrder channels, const Image::Datatype type )
 		{
 			// TODO: some checks, if the format matches etc
-			unsigned int bsz = w*h*sizeof( T ) / sizeof( unsigned char );
+			unsigned int bsz = w*h*channels.getNumberOfChannels()*sizeof( T ) / sizeof( unsigned char );
 
 			std::shared_ptr< std::vector< unsigned char > > v = mData->get< std::vector< unsigned char > >( FIELD_DATA );
 			v->resize( bsz );

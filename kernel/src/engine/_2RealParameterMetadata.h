@@ -25,19 +25,19 @@
 
 namespace _2Real
 {
+	class TypeMetadata;
+
 	struct InletMetadata
 	{
-		InletMetadata( std::string const& inlet, std::string const& customName, CustomType const& init, InletPolicy const& policy, const bool multi );
-		// called when
-		InletMetadata( std::string const& inlet, std::string const& customName, CustomType const* init, InletPolicy const& policy, const bool multi );
-		//InletMetadata( std::string const& inlet, std::string const& customName, InletPolicy const& policy, const bool multi );
+		InletMetadata( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const*, InletPolicy const&, const bool );
 		~InletMetadata();
 
-		std::string										const name;
-		std::string										const customName;
+		std::string										name;
+		std::string										type;
+		TypeMetadata									const* metadata;
 		std::shared_ptr< const CustomType >				initValue;
-		InletPolicy										const defaultPolicy;
-		bool											const isMulti;
+		InletPolicy										defaultPolicy;
+		bool											isMulti;
 	};
 
 	struct OutletMetadata
@@ -45,8 +45,8 @@ namespace _2Real
 		OutletMetadata( std::string const& outlet, std::string const& customName );
 		~OutletMetadata();
 
-		std::string										const name;
-		std::string										const customName;
+		std::string										name;
+		std::string										customName;
 	};
 
 	//struct SetupParameterMetadata

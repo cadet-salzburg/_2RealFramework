@@ -205,7 +205,7 @@ namespace _2Real
 			{
 				app::InletInfo info;
 				info.name = ( *it )->name;
-				info.customName = ( *it )->customName;
+				info.customName = ( *it )->type;
 				info.isMultiInlet = ( *it )->isMulti;
 				info.defaultPolicy = ( *it )->defaultPolicy;
 				info.initValue = ( *it )->initValue;
@@ -339,7 +339,7 @@ namespace _2Real
 		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > initializer;
-			TypeMetadata const* meta = m_Registry.get( bundleMetadata.getName(), ( **it ).customName );
+			TypeMetadata const* meta = m_Registry.get( bundleMetadata.getName(), ( **it ).type );
 			if ( ( **it ).initValue.get() == nullptr )
 			{
 				std::cout << "no init value" << std::endl;

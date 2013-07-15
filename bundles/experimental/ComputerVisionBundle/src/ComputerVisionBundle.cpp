@@ -44,14 +44,13 @@ void getBundleMetainfo( BundleMetainfo& info )
 		float black[ 4 ] = { 0.f, 0.f, 0.f, 1.0f };
 		float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		float *initA = makeCirclePattern< float >( 64, 48, 3, 6, blue, green );
-		float *initB = makeColorCheckerboard< float >( 64, 48, 3, 4, white, black );
+		float *initA = makeCirclePattern< float >( 480, 480, 4, 20, white, green );
+		float *initB = makeCirclePattern< float >( 480, 480, 4, 40, blue, black );
 
-		_2Real::Image circleImg;
-		_2Real::Image checkerImg;
-		// makes a copy!!
-		checkerImg.setImagedata( initB, 64, 48, Image::ChannelOrder::RGB, Image::Datatype::FLOAT32 );
-		circleImg.setImagedata( initB, 64, 48, Image::ChannelOrder::RGB, Image::Datatype::FLOAT32 );
+		_2Real::Image imgA;
+		_2Real::Image imgB;
+		imgA.setImagedata( initA, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
+		imgB.setImagedata( initB, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
 
 		delete initA;
 		delete initB;
@@ -60,10 +59,10 @@ void getBundleMetainfo( BundleMetainfo& info )
 		gauss.setDescription( "applies gaussian blur to input image" );
 		gauss.setCategory( "image filter" );
 
-		gauss.addCustomTypeInlet( "InImageA", "image", checkerImg );
-		gauss.addInlet< Image >( "InImageB", circleImg.toCustomType() );
-		gauss.addInlet< int >( "InKernelX", 10 );
-		gauss.addCustomTypeInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
+		gauss.addCustomTypeInlet( "InImageA", "image", imgA );
+		gauss.addInlet< Image >( "InImageB", imgB.toCustomType() );
+		//gauss.addInlet< int >( "InKernelX", 10 );
+		//gauss.addCustomTypeInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
 		gauss.addOutlet( "OutImage", "image" );
 
 		//gauss.addInlet< int >( "InInt", "int", 10 );

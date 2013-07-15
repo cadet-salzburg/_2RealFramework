@@ -44,11 +44,11 @@ namespace _2Real
 
 		explicit CustomType( bundle::TypeMetainfo const& meta );
 		explicit CustomType( app::TypeMetainfo const& meta );
-		explicit CustomType( TypeMetadata const& meta );
+		explicit CustomType( TypeMetadata const* meta );
 
 		virtual ~CustomType();
 
-		CustomType() {}
+		//CustomType() {}
 		CustomType( CustomType const& other );
 		//CustomType& operator=( CustomType const& other )
 		//{
@@ -59,7 +59,7 @@ namespace _2Real
 
 	public:
 
-		void initFrom( TypeMetadata const& meta );
+		void initFrom( TypeMetadata const* meta );
 		void cloneFrom( CustomType const& other );
 
 		template< typename TType >
@@ -127,7 +127,8 @@ namespace _2Real
 	{
 		static CustomType defaultValue()
 		{
-			return CustomType();
+			TypeMetadata *meta = nullptr;
+			return CustomType( meta );
 		}
 	};
 }

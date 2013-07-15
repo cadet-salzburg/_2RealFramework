@@ -133,7 +133,7 @@ namespace _2Real
 		//return *i;
 
 		mTypes->registerType( "", name, m, new Deleter< TypeMetadata > );
-		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( *m, *mTypes );
+		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( m, mTypes );
 
 		return *i;
 	}

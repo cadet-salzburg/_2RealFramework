@@ -31,7 +31,7 @@ using std::string;
 namespace _2Real
 {
 
-	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner ) :
+	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner, const bool thread ) :
 		AbstractStateManager( owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_IsTriggeringEnabled( false ),
@@ -46,7 +46,7 @@ namespace _2Real
 		m_HasException( false ),
 		m_Exception( "" )
 	{
-		m_Thread = m_Threads.requestUniqueThread();
+		if ( thread ) m_Thread = m_Threads.requestUniqueThread();
 	}
 
 	FunctionBlockStateManager::~FunctionBlockStateManager()
