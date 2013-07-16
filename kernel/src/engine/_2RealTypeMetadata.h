@@ -28,17 +28,18 @@ namespace _2Real
 {
 	class FieldDescriptor;
 	class CustomType;
+	class TypeRegistry;
 
 	class TypeMetadata
 	{
 
 	public:
 
-		TypeMetadata( std::string const& name );
+		TypeMetadata( std::string const& name, TypeRegistry const* reg );
 		~TypeMetadata();
-		void addField( std::string const& name, FieldDescriptor const* descriptor );
-		unsigned int getNumFields() const;
-		void getFields( _2Real::Fields &fields ) const;
+		void addField( std::string const& name, std::string const& type, FieldDescriptor const* desc );
+		void getFields( Fields &fields ) const;
+		std::string const& getName() const { return mName; }
 
 	private:
 
@@ -47,8 +48,9 @@ namespace _2Real
 
 		friend class CustomType;
 		typedef std::map< std::string, FieldDescriptor const* >		Fields;
-		Fields				mFields;
-		std::string			mName;
+		Fields														mFields;
+		std::string													mName;
+		TypeRegistry												const* mRegistry;
 
 	};
 }

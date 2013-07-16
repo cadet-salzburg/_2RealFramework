@@ -48,11 +48,6 @@ namespace _2Real
 
 			TypeMetainfo( _2Real::TypeMetadata const& impl ) : mImpl( &impl ) {}
 
-			unsigned int getNumFields() const
-			{
-				return mImpl->getNumFields();
-			}
-
 			void getFieldInfo( Fields &f ) const
 			{
 				mImpl->getFields( f );

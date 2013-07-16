@@ -20,6 +20,7 @@
 #include "engine/_2RealParameterMetadata.h"
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 #include <sstream>
 
@@ -29,19 +30,21 @@ using std::string;
 namespace _2Real
 {
 
-	BlockMetadata::BlockMetadata() :
+	BlockMetadata::BlockMetadata( TypeRegistry const* reg ) :
 		m_Name( "undefined" ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" ),
-		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD )
+		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
+		mRegistry( reg )
 	{
 	}
 
-	BlockMetadata::BlockMetadata( string const& name ) :
+	BlockMetadata::BlockMetadata( string const& name, TypeRegistry const* reg ) :
 		m_Name( name ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" ),
-		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD )
+		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
+		mRegistry( reg )
 	{
 	}
 
@@ -88,34 +91,51 @@ namespace _2Real
 		m_ThreadingPolicy = policy;
 	}
 
-	void BlockMetadata::addInlet( InletMetadata const& data )
+	void BlockMetadata::addInlet( InletMetadata *data )
 	{
+		// check if metadata is null, get it from the regstry otherwise
+		if ( nullptr == data->metadata )
+		{
+#ifdef _DEBUG
+			assert( mRegistry );
+#endif
+			TypeMetadata const* meta = mRegistry->get( "", data->type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << data->type << "is not known";
+				throw NotFoundException( msg.str() );
+			}
+
+			data->metadata = meta;
+		}
+
 		for ( BlockMetadata::InletMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).name ) == toLower( data.name ) )
+			if ( toLower( ( **it ).name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
-				msg << "inlet named " << data.name << " is already defined in block " << getName() << std::endl;
+				msg << "inlet named " << data->name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
 
-		m_Inlets.push_back( &data );
+		m_Inlets.push_back( data );
 	}
 
-	void BlockMetadata::addOutlet( OutletMetadata const& data )
+	void BlockMetadata::addOutlet( OutletMetadata *data )
 	{
 		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).name ) == toLower( data.name ) )
+			if ( toLower( ( **it ).name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
-				msg << "outlet named " << data.name << " is already defined in block " << getName() << std::endl;
+				msg << "outlet named " << data->name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
 
-		m_Outlets.push_back( &data );
+		m_Outlets.push_back( data );
 	}
 
 	BlockMetadata::InletMetadatas const& BlockMetadata::getInlets() const

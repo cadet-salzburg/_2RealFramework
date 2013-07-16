@@ -37,13 +37,13 @@ namespace _2Real
 
 		public:
 
-			TypeMetainfo( TypeMetadata *meta, TypeRegistry const* types );
+			TypeMetainfo( TypeMetadata *meta );
 			~TypeMetainfo();
 
 			template< typename TType >
 			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
-				FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( name, init );
+				FieldDescriptor const* desc = DataField< TType >::createFieldDescriptor( name, init );
 				if ( desc == nullptr )
 					throw Exception( "this type is not allowed as a field" );
 				else
@@ -59,9 +59,8 @@ namespace _2Real
 
 			friend class CustomType;
 			TypeMetadata								*mImpl;
-			TypeRegistry								const* mBundleTypes;
 
-			void addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor *desc );
+			void addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor const* desc );
 
 		};
 	}

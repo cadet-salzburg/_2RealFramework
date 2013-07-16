@@ -339,13 +339,17 @@ namespace _2Real
 		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > initializer;
-			TypeMetadata const* meta = m_Registry.get( bundleMetadata.getName(), ( **it ).type );
+
+			TypeMetadata const* meta = ( **it ).metadata;
+			if ( nullptr == meta )
+				meta = m_Registry.get( bundleMetadata.getName(), ( **it ).type );
+
 			if ( ( **it ).initValue.get() == nullptr )
 			{
-				std::cout << "no init value" << std::endl;
 				initializer.reset( new CustomType( *meta ) );
 			}
 			else initializer = ( **it ).initValue;
+
 			functionBlock->addInlet( **it, initializer, *meta );
 		}
 

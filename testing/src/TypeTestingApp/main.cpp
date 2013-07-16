@@ -191,8 +191,6 @@ int main( int argc, char *argv[] )
 				app::TypeMetainfo info = b.inlets[ 2 ].getType();
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
-				//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-				//	delete *it;
 			}
 
 			std::cout << std::endl;
@@ -277,8 +275,6 @@ int main( int argc, char *argv[] )
 				app::TypeMetainfo info = b.inlets[ 4 ].getType();
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
-				//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-				//	delete *it;
 			}
 
 			std::cout << std::endl;
@@ -302,6 +298,16 @@ int main( int argc, char *argv[] )
 			}
 
 			std::cout << std::endl;
+			std::cout << "--------- type metainfo of int vector -----------------------------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				app::TypeMetainfo info = b.inlets[ 6 ].getType();
+				_2Real::Fields fields; info.getFieldInfo( fields );
+				printout( std::cout, fields, 0 );
+			}
+
+			std::cout << std::endl;
 			std::cout << "--------- current data of i6 ( int vector ) ------------------" << std::endl;
 			std::cout << std::endl;
 
@@ -312,11 +318,41 @@ int main( int argc, char *argv[] )
 			}
 
 			std::cout << std::endl;
-			std::cout << "--------- current data of i7 ( int vector vector ) ----------------" << std::endl;
+			std::cout << "--------- current data of i7 ( int vector ) ------------------" << std::endl;
 			std::cout << std::endl;
 
 			{
 				std::shared_ptr< const CustomType > d = b.inlets[ 7 ].getCurrentData();
+				std::vector< int > const& vi = *( d->get< std::vector< int > >( "default" ).get() );
+				std::cout << "int vector:\t\t" << "size " << vi.size() << std::endl;
+			}
+
+			std::cout << std::endl;
+			std::cout << "--------- type metainfo of int vector vector -----------------------------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				app::TypeMetainfo info = b.inlets[ 6 ].getType();
+				_2Real::Fields fields; info.getFieldInfo( fields );
+				printout( std::cout, fields, 0 );
+			}
+
+			std::cout << std::endl;
+			std::cout << "--------- current data of i8 ( int vector vector ) ----------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				std::shared_ptr< const CustomType > d = b.inlets[ 8 ].getCurrentData();
+				std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "default" ).get() );
+				std::cout << "int vector:\t\t" << "size " << vvi.size() << std::endl;
+			}
+
+			std::cout << std::endl;
+			std::cout << "--------- current data of i9 ( int vector vector ) ----------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				std::shared_ptr< const CustomType > d = b.inlets[ 9 ].getCurrentData();
 				std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "default" ).get() );
 				std::cout << "int vector:\t\t" << "size " << vvi.size() << std::endl;
 			}

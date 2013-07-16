@@ -17,12 +17,15 @@
 */
 
 #include "datatypes/_2RealFieldDescriptor.h"
+#include "datatypes/_2RealTypeRegistry.h"
+#include "datatypes/_2RealDataField.h"
 #include "_2RealTypeMetadata.h"
 
 namespace _2Real
 {
-	TypeMetadata::TypeMetadata( std::string const& name ) : mFields(), mName( name )
+	TypeMetadata::TypeMetadata( std::string const& name, TypeRegistry const* reg ) : mFields(), mName( name ), mRegistry( reg )
 	{
+		// reg could be nullptr - it's only needed if custom types are accessed, i.e. image does not need it
 	}
 
 	TypeMetadata::~TypeMetadata()
@@ -31,8 +34,9 @@ namespace _2Real
 			delete fieldIter->second;
 	}
 
-	void TypeMetadata::addField( std::string const& name, FieldDescriptor const* desc )
+	void TypeMetadata::addField( std::string const& name, std::string const& type, FieldDescriptor const* desc )
 	{
+		// make sure field name is unique
 		Fields::iterator it = mFields.find( name );
 		if ( it != mFields.end() )
 		{
@@ -40,18 +44,29 @@ namespace _2Real
 			msg << "field: " << name << " already exists in type " << mName << std::endl;
 			throw AlreadyExistsException( msg.str() );
 		}
-		mFields[ name ] = desc;
-	}
 
-	//void TypeMetadata::addField( std::string const& name, std::string const& type, TypeMetadata const* meta )
-	//{
-	//	FieldDescriptor *f = new FieldDescriptor_t< CustomType >( meta );
-	//	mFields[ name ] = f;
-	//}
+		// if desc == null, it's a custom type, so get the metadata
+		if ( nullptr == desc )
+		{
+#ifdef _DEBUG
+			assert( mRegistry );
+#endif
+			TypeMetadata const* meta = mRegistry->get( "", type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << type << "is not known";
+				throw NotFoundException( msg.str() );
+			}
 
-	unsigned int TypeMetadata::getNumFields() const
-	{
-		return mFields.size();
+			_2Real::Fields fields;
+			meta->getFields( fields );
+
+			FieldDescriptor const *d = DataField< CustomType >::createFieldDescriptor( name, type, CustomType( meta ), fields );
+			mFields[ name ] = d;
+		}
+		else
+			mFields[ name ] = desc;
 	}
 
 	void TypeMetadata::getFields( _2Real::Fields &fields ) const

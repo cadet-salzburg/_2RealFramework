@@ -31,12 +31,12 @@ namespace _2Real
 
 	TypeMetadata const* Image::getTypeMetadata()
 	{
-		TypeMetadata *meta = new TypeMetadata( Image::TYPENAME );
-		meta->addField( Image::FIELD_WIDTH,			DataField< unsigned int >::createFieldDescriptor( Image::FIELD_WIDTH, 0 ) );
-		meta->addField( Image::FIELD_HEIGHT,		DataField< unsigned int >::createFieldDescriptor( Image::FIELD_HEIGHT, 0 ) );
-		meta->addField( Image::FIELD_DATA,			DataField< std::vector< unsigned char > >::createFieldDescriptor( Image::FIELD_DATA, std::vector< unsigned char >() ) );
-		meta->addField( Image::FIELD_DATATYPE,		DataField< int >::createFieldDescriptor( Image::FIELD_DATATYPE, Image::Datatype( Image::Datatype::UNDEFINED ) ) );
-		meta->addField( Image::FIELD_CHANNELS,		DataField< int >::createFieldDescriptor( Image::FIELD_CHANNELS, Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
+		TypeMetadata *meta = new TypeMetadata( Image::TYPENAME, nullptr );
+		meta->addField( Image::FIELD_WIDTH, Name< unsigned int >::humanReadableName(), DataField< unsigned int >::createFieldDescriptor( Image::FIELD_WIDTH, 0 ) );
+		meta->addField( Image::FIELD_HEIGHT, Name< unsigned int >::humanReadableName(), DataField< unsigned int >::createFieldDescriptor( Image::FIELD_HEIGHT, 0 ) );
+		meta->addField( Image::FIELD_DATA, Name< unsigned char >::humanReadableName(), DataField< std::vector< unsigned char > >::createFieldDescriptor( Image::FIELD_DATA, std::vector< unsigned char >() ) );
+		meta->addField( Image::FIELD_DATATYPE, Name< int >::humanReadableName(), DataField< int >::createFieldDescriptor( Image::FIELD_DATATYPE, Image::Datatype( Image::Datatype::UNDEFINED ) ) );
+		meta->addField( Image::FIELD_CHANNELS, Name< int >::humanReadableName(), DataField< int >::createFieldDescriptor( Image::FIELD_CHANNELS, Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
 		return meta;
 	}
 

@@ -52,8 +52,12 @@ namespace _2Real
 
 	void CustomType::initFrom( TypeMetadata const* metadata )
 	{
+		mName = "undefined";
+
 		if ( metadata == nullptr )
 			return;
+
+		mName = metadata->getName();
 
 		for ( TypeMetadata::Fields::const_iterator it = metadata->mFields.begin(); it != metadata->mFields.end(); ++it )
 		{
@@ -104,7 +108,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in data type " << "XXXX";
+			msg << "field " << name << " not defined in data type " << mName;
 			throw _2Real::Exception( msg.str() );
 		}
 			

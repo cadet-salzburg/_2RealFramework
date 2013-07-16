@@ -25,10 +25,11 @@ void getBundleMetainfo( BundleMetainfo &info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 0, 0 );
 
-		// okay, so they it works right now is a bit shakey
-
 		// TODO: initial value & range for all fields
 		// TODO: sth clever with options, maybe?
+
+
+		// TODO: just create a type metadata, exporting finalizes it :=
 
 		// base types only
 		TypeMetainfo &allType = info.exportCustomType( "basetype" );
@@ -99,7 +100,9 @@ void getBundleMetainfo( BundleMetainfo &info )
 		testBlock.addCustomTypeInlet( "i4", "simpletype", simpleInit );
 		testBlock.addCustomTypeInlet( "i5", "simpletype", std::shared_ptr< CustomType >() );
 		testBlock.addInlet< std::vector< int > >( "i6", std::vector< int >( 100, 100 ) );
-		testBlock.addInlet< std::vector< std::vector< int > > >( "i7", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
+		testBlock.addInlet< std::vector< int > >( "i7" );
+		testBlock.addInlet< std::vector< std::vector< int > > >( "i8", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
+		testBlock.addInlet< std::vector< std::vector< int > > >( "i9" );
 		//testBlock.addCustomTypeInlet( "i8", "recursivetype", recursiveInit );
 		//testBlock.addCustomTypeInlet( "i9", "recursivetype", std::shared_ptr< CustomType >() );
 		// TODO: template functions for base types

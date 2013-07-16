@@ -47,7 +47,7 @@ namespace _2Real
 
 			// check the existence of the type ( pre-defined, as well as self registered types are possible )
 			OutletMetadata *data = new OutletMetadata( trimmed, typeName );
-			m_Impl.addOutlet( *data );
+			m_Impl.addOutlet( data );
 		}
 	}
 }

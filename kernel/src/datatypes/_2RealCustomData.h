@@ -46,7 +46,7 @@ namespace _2Real
 		explicit CustomType( app::TypeMetainfo const& meta );
 		explicit CustomType( TypeMetadata const* meta );
 
-		virtual ~CustomType();
+		~CustomType();
 
 		CustomType( CustomType const& other );
 
@@ -88,17 +88,16 @@ namespace _2Real
 		bool operator==( CustomType const& other ) const { return false; }
 		bool operator<( CustomType const& other ) const { return false; }
 
-	protected:
+	private:
 
 		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
 
 		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
 		DataFields															mDataFields;
+		std::string															mName;
 
 		DataFields::iterator iter( std::string const& name );
 		DataFields::const_iterator constIter( std::string const& name ) const;
-
-	private:
 
 		void setValueInternal( std::string const& field, AbstractAnyHolder *value );
 		AbstractAnyHolder const* getValueInternal( std::string const& field ) const;

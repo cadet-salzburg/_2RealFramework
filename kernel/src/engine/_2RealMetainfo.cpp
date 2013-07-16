@@ -126,14 +126,14 @@ namespace _2Real
 		//	types[ it->first ] = it->second.data;
 		//}
 
-		TypeMetadata *m = new TypeMetadata( name );
+		TypeMetadata *m = new TypeMetadata( name, mTypes );
 		//m_TypeInfos[ name ].data = m;
 		//m_TypeInfos[ name ].meta = i;
 
 		//return *i;
 
 		mTypes->registerType( "", name, m, new Deleter< TypeMetadata > );
-		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( m, mTypes );
+		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( m );
 
 		return *i;
 	}
@@ -154,7 +154,7 @@ namespace _2Real
 		}
 
 		m_ContextInfo.ctor = &obj;
-		m_ContextInfo.data = new BlockMetadata( "contextblock" );
+		m_ContextInfo.data = new BlockMetadata( "contextblock", mTypes );
 		m_ContextInfo.data->setDescription( "context block" );
 		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data );
 
@@ -176,7 +176,7 @@ namespace _2Real
 		}
 
 		m_BlockInfos[ blockName ].ctor = &obj;
-		BlockMetadata *data = new BlockMetadata( blockName );
+		BlockMetadata *data = new BlockMetadata( blockName, mTypes );
 		m_BlockInfos[ blockName ].data = data;
 		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data );
 		m_BlockInfos[ blockName ].meta = meta;

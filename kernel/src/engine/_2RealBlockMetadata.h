@@ -26,6 +26,9 @@
 
 namespace _2Real
 {
+
+	class TypeRegistry;
+
 	class BlockMetadata
 	{
 
@@ -39,14 +42,14 @@ namespace _2Real
 		typedef std::vector< OutletMetadata const* >::iterator			OutletMetadataIterator;
 		typedef std::vector< OutletMetadata const* >::const_iterator	OutletMetadataConstIterator;
 
-		BlockMetadata();
-		BlockMetadata( std::string const& name );
+		BlockMetadata( TypeRegistry const* reg );
+		BlockMetadata( std::string const& name, TypeRegistry const* reg );
 		~BlockMetadata();
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addInlet( InletMetadata const& data );
-		void addOutlet( OutletMetadata const& data );
+		void addInlet( InletMetadata *data );
+		void addOutlet( OutletMetadata *data );
 		void setThreadingPolicy( ThreadingPolicy const& policy );
 
 		std::string const& getName() const;
@@ -68,6 +71,8 @@ namespace _2Real
 
 		InletMetadatas		m_Inlets;
 		OutletMetadatas		m_Outlets;
+
+		TypeRegistry		const* mRegistry;
 
 	};
 }

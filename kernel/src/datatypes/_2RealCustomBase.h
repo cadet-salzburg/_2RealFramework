@@ -44,8 +44,8 @@ namespace _2Real
 				throw _2Real::Exception( msg.str() );
 			}
 
-			result = new TypeMetadata( Name< TType >::humanReadableName() );
-			result->addField( "default", desc );
+			result = new TypeMetadata( Name< TType >::humanReadableName(), nullptr );
+			result->addField( "default", Name< TType >::humanReadableName(), desc );
 			return result;
 		}
 

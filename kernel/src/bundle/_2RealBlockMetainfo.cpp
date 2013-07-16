@@ -62,7 +62,7 @@ namespace _2Real
 				copied.reset( new CustomType( *( init.get() ) ) );
 
 			InletMetadata *data = new InletMetadata( trimmed, type, copied, meta, defaultPolicy, false );
-			m_Impl.addInlet( *data );
+			m_Impl.addInlet( data );
 		}
 
 		void BlockMetainfo::addOutlet( std::string const& name, std::string const& type )
@@ -71,7 +71,7 @@ namespace _2Real
 			checkChars( toLower( trimmed ) );
 
 			OutletMetadata *data = new OutletMetadata( trimmed, type );
-			m_Impl.addOutlet( *data );
+			m_Impl.addOutlet( data );
 		}
 	}
 }
