@@ -18,6 +18,7 @@
 
 #include "datatypes/_2RealImage.h"
 #include "datatypes/_2RealDataField.h"
+#include "datatypes/_2RealTypeRegistry.h"
 #include "engine/_2RealTypeMetadata.h"
 
 namespace _2Real
@@ -31,12 +32,12 @@ namespace _2Real
 
 	TypeMetadata const* Image::getTypeMetadata()
 	{
-		TypeMetadata *meta = new TypeMetadata( Image::TYPENAME, nullptr );
-		meta->addField( Image::FIELD_WIDTH, Name< unsigned int >::humanReadableName(), DataField< unsigned int >::createFieldDescriptor( Image::FIELD_WIDTH, 0 ) );
-		meta->addField( Image::FIELD_HEIGHT, Name< unsigned int >::humanReadableName(), DataField< unsigned int >::createFieldDescriptor( Image::FIELD_HEIGHT, 0 ) );
-		meta->addField( Image::FIELD_DATA, Name< unsigned char >::humanReadableName(), DataField< std::vector< unsigned char > >::createFieldDescriptor( Image::FIELD_DATA, std::vector< unsigned char >() ) );
-		meta->addField( Image::FIELD_DATATYPE, Name< int >::humanReadableName(), DataField< int >::createFieldDescriptor( Image::FIELD_DATATYPE, Image::Datatype( Image::Datatype::UNDEFINED ) ) );
-		meta->addField( Image::FIELD_CHANNELS, Name< int >::humanReadableName(), DataField< int >::createFieldDescriptor( Image::FIELD_CHANNELS, Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) );
+		TypeMetadata *meta = new TypeMetadata( TypeMetadata::TypeId( TypeRegistry::sFrameworkTypes, Image::TYPENAME ), nullptr );
+		meta->addField( Image::FIELD_WIDTH, TypeMetadata::TypeId( "", Name< unsigned int >::humanReadableName() ), std::shared_ptr< const FieldDescriptor >( DataField< unsigned int >::createFieldDescriptor( Image::FIELD_WIDTH, 0 ) ) );
+		meta->addField( Image::FIELD_HEIGHT, TypeMetadata::TypeId( "", Name< unsigned int >::humanReadableName() ), std::shared_ptr< const FieldDescriptor >( DataField< unsigned int >::createFieldDescriptor( Image::FIELD_HEIGHT, 0 ) ) );
+		meta->addField( Image::FIELD_DATA, TypeMetadata::TypeId( "", Name< std::vector< unsigned char > >::humanReadableName() ), std::shared_ptr< const FieldDescriptor >( DataField< std::vector< unsigned char > >::createFieldDescriptor( Image::FIELD_DATA, std::vector< unsigned char >() ) ) );
+		meta->addField( Image::FIELD_DATATYPE, TypeMetadata::TypeId( "", Name< int >::humanReadableName() ), std::shared_ptr< const FieldDescriptor >( DataField< int >::createFieldDescriptor( Image::FIELD_DATATYPE, Image::Datatype( Image::Datatype::UNDEFINED ) ) ) );
+		meta->addField( Image::FIELD_CHANNELS, TypeMetadata::TypeId( "", Name< int >::humanReadableName() ), std::shared_ptr< const FieldDescriptor >( DataField< int >::createFieldDescriptor( Image::FIELD_CHANNELS, Image::ChannelOrder( Image::ChannelOrder::UNDEFINED ) ) ) );
 		return meta;
 	}
 

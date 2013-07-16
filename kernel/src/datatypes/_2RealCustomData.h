@@ -90,11 +90,13 @@ namespace _2Real
 
 	private:
 
+		friend class TypeConverter;
+
 		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
 
 		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
 		DataFields															mDataFields;
-		std::string															mName;
+		std::pair< std::string, std::string >								mTypeId;
 
 		DataFields::iterator iter( std::string const& name );
 		DataFields::const_iterator constIter( std::string const& name ) const;

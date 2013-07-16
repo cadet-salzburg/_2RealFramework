@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingBundle", "TypeTe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingBundle", "TypeTestingBundle2\TypeTestingBundle2.vcxproj", "{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -35,6 +37,12 @@ Global
 		{91102D4C-49DE-485F-8AAD-A1216B09C070}.Release|Win32.Build.0 = Release|Win32
 		{91102D4C-49DE-485F-8AAD-A1216B09C070}.Release|x64.ActiveCfg = Release|x64
 		{91102D4C-49DE-485F-8AAD-A1216B09C070}.Release|x64.Build.0 = Release|x64
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Debug|Win32.Build.0 = Debug|Win32
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Debug|x64.ActiveCfg = Debug|Win32
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|Win32.ActiveCfg = Release|Win32
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|Win32.Build.0 = Release|Win32
+		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

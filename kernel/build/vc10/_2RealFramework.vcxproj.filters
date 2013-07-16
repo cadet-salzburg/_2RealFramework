@@ -309,6 +309,9 @@
     <ClInclude Include="..\..\src\datatypes\_2RealDataField.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeConverter.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -492,6 +495,9 @@
       <Filter>src\datatypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealTypeConverter.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
   </ItemGroup>

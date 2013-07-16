@@ -48,7 +48,7 @@ namespace _2Real
 
 	public:
 
-		Metainfo( TypeRegistry const& init );
+		Metainfo( std::string const& id, TypeRegistry const& init );
 		~Metainfo();
 
 		void setAuthor( std::string const& author );
@@ -120,6 +120,7 @@ namespace _2Real
 
 		// all types registered by a bundle
 		TypeRegistry								*mTypes;
+		std::string									mBundleId;
 
 	};
 }

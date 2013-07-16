@@ -18,20 +18,26 @@
 
 #pragma once
 
+#include "datatypes/_2RealCustomData.h"
 #include <string>
+#include <map>
 
 namespace _2Real
 {
-	class Option
+	class TypeConverter
 	{
 
 	public:
 
-		virtual ~Option();
-		operator unsigned int() const;
-		Option& operator=( Option const& other );
-		bool operator==( Option const& other );
-		virtual operator std::string() const = 0;
+		TypeConverter();
+		~TypeConverter();
+
+		std::shared_ptr< const CustomType > convert( std::shared_ptr< const CustomType > ) const;
+
+	private:
+
+		std::pair< std::string, std::string >		mTypeId;
+		std::map< std::string, std::string >		mLookupTable;
 
 	};
 }

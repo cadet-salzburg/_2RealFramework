@@ -34,6 +34,8 @@ namespace _2Real
 
 	public:
 
+		typedef std::pair< std::string, std::string > BlockId;
+
 		typedef std::vector< InletMetadata const* >						InletMetadatas;
 		typedef std::vector< InletMetadata const* >::iterator			InletMetadataIterator;
 		typedef std::vector< InletMetadata const* >::const_iterator		InletMetadataConstIterator;
@@ -42,8 +44,8 @@ namespace _2Real
 		typedef std::vector< OutletMetadata const* >::iterator			OutletMetadataIterator;
 		typedef std::vector< OutletMetadata const* >::const_iterator	OutletMetadataConstIterator;
 
-		BlockMetadata( TypeRegistry const* reg );
-		BlockMetadata( std::string const& name, TypeRegistry const* reg );
+		//BlockMetadata( TypeRegistry const* reg );
+		BlockMetadata( BlockId const& id, TypeRegistry const* reg );
 		~BlockMetadata();
 
 		void setDescription( std::string const& description );
@@ -65,7 +67,8 @@ namespace _2Real
 
 		ThreadingPolicy		m_ThreadingPolicy;
 
-		std::string			m_Name;
+		//std::string			m_Name;
+		BlockId				mBlockId;
 		std::string			m_Description;
 		std::string			m_Category;
 

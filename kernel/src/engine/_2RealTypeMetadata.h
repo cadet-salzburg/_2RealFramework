@@ -23,6 +23,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <set>
 
 namespace _2Real
 {
@@ -30,27 +31,51 @@ namespace _2Real
 	class CustomType;
 	class TypeRegistry;
 
+	class TypeMatch;
+	class TypeConverter;
+
 	class TypeMetadata
 	{
 
 	public:
 
-		TypeMetadata( std::string const& name, TypeRegistry const* reg );
-		~TypeMetadata();
-		void addField( std::string const& name, std::string const& type, FieldDescriptor const* desc );
+		typedef std::pair< std::string, std::string > TypeId;
+
+		class TypeMatchSetting
+		{
+		public:
+			enum Type { PERFECT_MATCH,/*, FIELD_MATCH_1ON1, FIELD_MATCH*/ };
+			TypeMatchSetting( const Type c );
+			TypeMatch const* createMatch( TypeMetadata const& a, TypeMetadata const& b ) const;
+		private:
+			Type		mCode;
+		};
+
+		TypeMetadata( TypeId const& id, TypeRegistry const* reg );
+
+		TypeId const& getTypeId() const { return mTypeId; }
+
+		void addField( std::string const& name, TypeId const& id, std::shared_ptr< const FieldDescriptor > desc );
+
+		bool matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, TypeConverter const*& cvAB, TypeConverter const*& cvBA ) const;
+
 		void getFields( Fields &fields ) const;
-		std::string const& getName() const { return mName; }
 
 	private:
 
 		TypeMetadata( TypeMetadata const& other );
 		TypeMetadata& operator=( TypeMetadata const& other );
 
+		typedef std::shared_ptr< const FieldDescriptor >			FieldDescriptorRef;
+		typedef std::pair< std::string, FieldDescriptorRef >		FieldDescription;		// name / desc
+		typedef std::vector< FieldDescription >						FieldDescriptions;
+
 		friend class CustomType;
-		typedef std::map< std::string, FieldDescriptor const* >		Fields;
-		Fields														mFields;
-		std::string													mName;
-		TypeRegistry												const* mRegistry;
+		//typedef std::map< std::string, FieldDescriptor const* >		Fields;
+
+		TypeId						mTypeId;
+		FieldDescriptions			mFields;
+		TypeRegistry				const* mRegistry;
 
 	};
 }

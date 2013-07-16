@@ -30,17 +30,17 @@ using std::string;
 namespace _2Real
 {
 
-	BlockMetadata::BlockMetadata( TypeRegistry const* reg ) :
-		m_Name( "undefined" ),
-		m_Description( "undefined" ),
-		m_Category( "undefined" ),
-		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
-		mRegistry( reg )
-	{
-	}
+	//BlockMetadata::BlockMetadata( TypeRegistry const* reg ) :
+	//	m_Name( "undefined" ),
+	//	m_Description( "undefined" ),
+	//	m_Category( "undefined" ),
+	//	m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
+	//	mRegistry( reg )
+	//{
+	//}
 
-	BlockMetadata::BlockMetadata( string const& name, TypeRegistry const* reg ) :
-		m_Name( name ),
+	BlockMetadata::BlockMetadata( BlockId const& name, TypeRegistry const* reg ) :
+		mBlockId( name ),
 		m_Description( "undefined" ),
 		m_Category( "undefined" ),
 		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
@@ -63,7 +63,7 @@ namespace _2Real
 
 	string const& BlockMetadata::getName() const
 	{
-		return m_Name;
+		return mBlockId.second;
 	}
 
 	string const& BlockMetadata::getDescription() const
@@ -99,11 +99,11 @@ namespace _2Real
 #ifdef _DEBUG
 			assert( mRegistry );
 #endif
-			TypeMetadata const* meta = mRegistry->get( "", data->type );
+			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
 			if ( nullptr == meta )
 			{
 				std::stringstream msg;
-				msg << "type: " << data->type << "is not known";
+				msg << "type: " << data->type << " is not known";
 				throw NotFoundException( msg.str() );
 			}
 
@@ -115,7 +115,7 @@ namespace _2Real
 			if ( toLower( ( **it ).name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
-				msg << "inlet named " << data->name << " is already defined in block " << getName() << std::endl;
+				msg << "inlet: " << data->name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -125,12 +125,29 @@ namespace _2Real
 
 	void BlockMetadata::addOutlet( OutletMetadata *data )
 	{
+		// check if metadata is null, get it from the regstry otherwise
+		if ( nullptr == data->metadata )
+		{
+#ifdef _DEBUG
+			assert( mRegistry );
+#endif
+			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << data->type << " is not known";
+				throw NotFoundException( msg.str() );
+			}
+
+			data->metadata = meta;
+		}
+
 		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
 			if ( toLower( ( **it ).name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
-				msg << "outlet named " << data->name << " is already defined in block " << getName() << std::endl;
+				msg << "outlet: " << data->name << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}

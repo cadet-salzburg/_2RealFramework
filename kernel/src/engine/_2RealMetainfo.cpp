@@ -40,10 +40,12 @@ using std::map;
 namespace _2Real
 {
 
-	Metainfo::Metainfo( TypeRegistry const& init ) :
-		m_HasContext( false ), mTypes( new TypeRegistry() )
+	Metainfo::Metainfo( std::string const& id, TypeRegistry const& init ) :
+		m_HasContext( false ), mTypes( new TypeRegistry() ), mBundleId( id )
 	{
 		// get all framework types into the registry
+		// they will be known as framework types
+		// bundle types will instead be added with the bundle id....
 		mTypes->merge( init, TypeRegistry::sFrameworkTypes, TypeRegistry::sFrameworkTypes );
 	}
 
@@ -110,29 +112,16 @@ namespace _2Real
 
 	bundle::TypeMetainfo & Metainfo::addCustomType( std::string const& name )
 	{
-		//for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
-		//{
-		//	if ( toLower( it->first ) == toLower( name ) )
-		//	{
-		//		ostringstream msg;
-		//		msg << "type " << name << " is already defined in bundle " << m_BundleData.getName();
-		//		throw AlreadyExistsException( msg.str() );
-		//	}
-		//}
+		TypeMetadata const* test = mTypes->get( TypeRegistry::sFrameworkTypes, name );
+		if ( nullptr != test )
+		{
+			ostringstream msg;
+			msg << "type name " << name << " is reserved!" << std::endl;
+			throw AlreadyExistsException( msg.str() );
+		}
 
-		//std::map< std::string, TypeMetadata * > types;
-		//for ( TypeInfoConstIterator it = m_TypeInfos.begin(); it != m_TypeInfos.end(); ++it )
-		//{
-		//	types[ it->first ] = it->second.data;
-		//}
-
-		TypeMetadata *m = new TypeMetadata( name, mTypes );
-		//m_TypeInfos[ name ].data = m;
-		//m_TypeInfos[ name ].meta = i;
-
-		//return *i;
-
-		mTypes->registerType( "", name, m, new Deleter< TypeMetadata > );
+		TypeMetadata *m = new TypeMetadata( TypeMetadata::TypeId( mBundleId, name ), mTypes );
+		mTypes->registerType( mBundleId, name, m, new Deleter< TypeMetadata > );
 		bundle::TypeMetainfo *i = new bundle::TypeMetainfo( m );
 
 		return *i;
@@ -141,7 +130,8 @@ namespace _2Real
 	void Metainfo::registerTypes( TypeRegistry &registry )
 	{
 		// at this time, the name of the bundle is known
-		registry.merge( *mTypes, "", m_BundleData.getName() );
+		// so merge evertyhing that
+		registry.merge( *mTypes, mBundleId, mBundleId );
 	}
 
 	bundle::ContextBlockMetainfo & Metainfo::setContextBlockCreator( bundle::AbstractBlockCreator &obj )
@@ -154,7 +144,7 @@ namespace _2Real
 		}
 
 		m_ContextInfo.ctor = &obj;
-		m_ContextInfo.data = new BlockMetadata( "contextblock", mTypes );
+		m_ContextInfo.data = new BlockMetadata( BlockMetadata::BlockId( mBundleId, "contextblock" ), mTypes );
 		m_ContextInfo.data->setDescription( "context block" );
 		m_ContextInfo.meta = new bundle::ContextBlockMetainfo( *m_ContextInfo.data );
 
@@ -176,7 +166,7 @@ namespace _2Real
 		}
 
 		m_BlockInfos[ blockName ].ctor = &obj;
-		BlockMetadata *data = new BlockMetadata( blockName, mTypes );
+		BlockMetadata *data = new BlockMetadata( BlockMetadata::BlockId( mBundleId, blockName ), mTypes );
 		m_BlockInfos[ blockName ].data = data;
 		bundle::BlockMetainfo *meta = new bundle::BlockMetainfo( *data );
 		m_BlockInfos[ blockName ].meta = meta;

@@ -52,14 +52,14 @@ namespace _2Real
 
 	void CustomType::initFrom( TypeMetadata const* metadata )
 	{
-		mName = "undefined";
+		mTypeId = TypeMetadata::TypeId( "undefined", "undefined" );
 
 		if ( metadata == nullptr )
 			return;
 
-		mName = metadata->getName();
+		mTypeId = metadata->getTypeId();
 
-		for ( TypeMetadata::Fields::const_iterator it = metadata->mFields.begin(); it != metadata->mFields.end(); ++it )
+		for ( TypeMetadata::FieldDescriptions::const_iterator it = metadata->mFields.begin(); it != metadata->mFields.end(); ++it )
 		{
 			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
@@ -108,7 +108,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in data type " << mName;
+			msg << "field " << name << " not defined in data type::" << mTypeId.first << "::" << mTypeId.second;
 			throw _2Real::Exception( msg.str() );
 		}
 			

@@ -140,7 +140,7 @@ namespace _2Real
 	struct DataField< CustomType >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::string const& type, CustomType const& init, Fields const& fields )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::pair< std::string, std::string > const& type, CustomType const& init, Fields const& fields )
 		{
 			Field *f = new ComplexField( name, type, fields );
 			std::shared_ptr< const Field > field( f );

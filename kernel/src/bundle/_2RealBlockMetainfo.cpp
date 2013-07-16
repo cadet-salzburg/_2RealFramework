@@ -65,12 +65,17 @@ namespace _2Real
 			m_Impl.addInlet( data );
 		}
 
-		void BlockMetainfo::addOutlet( std::string const& name, std::string const& type )
+		void BlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
+		{
+			privateAddOutlet( name, type, nullptr );
+		}
+
+		void BlockMetainfo::privateAddOutlet( std::string const& name, std::string const& type, TypeMetadata const* meta )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			OutletMetadata *data = new OutletMetadata( trimmed, type );
+			OutletMetadata *data = new OutletMetadata( trimmed, type, meta );
 			m_Impl.addOutlet( data );
 		}
 	}

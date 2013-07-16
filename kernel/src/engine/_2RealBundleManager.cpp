@@ -216,7 +216,7 @@ namespace _2Real
 			{
 				app::OutletInfo info;
 				info.name = ( *it )->name;
-				info.customName = ( *it )->customName;
+				info.customName = ( *it )->type;
 				blockInfo.outlets.push_back( info );
 			}
 
@@ -345,9 +345,7 @@ namespace _2Real
 				meta = m_Registry.get( bundleMetadata.getName(), ( **it ).type );
 
 			if ( ( **it ).initValue.get() == nullptr )
-			{
 				initializer.reset( new CustomType( *meta ) );
-			}
 			else initializer = ( **it ).initValue;
 
 			functionBlock->addInlet( **it, initializer, *meta );
@@ -356,8 +354,13 @@ namespace _2Real
 		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > initializer;
-			TypeMetadata const *meta = m_Registry.get( bundleMetadata.getName(), ( **it ).customName );
+
+			TypeMetadata const* meta = ( **it ).metadata;
+			if ( nullptr == meta )
+				meta = m_Registry.get( bundleMetadata.getName(), ( **it ).type );
+
 			initializer.reset( new CustomType( *meta ) );
+
 			functionBlock->addOutlet( **it, initializer, *meta );
 		}
 

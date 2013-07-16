@@ -18,9 +18,11 @@
 
 #pragma once
 
-#include "engine/_2RealThreadingPolicy.h"
-
+#include "datatypes/_2RealTypes.h"
+#include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
+
+#include "engine/_2RealThreadingPolicy.h"
 
 #ifdef _UNIX
 	#include <typeinfo>
@@ -45,10 +47,17 @@ namespace _2Real
 			void setDescription( std::string const& description );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
-			void addOutlet( std::string const& name, std::string const& typeName );
-			// shortcutes for fund. types?
+			template< typename TType >
+			void addOutlet( std::string const& name )
+			{
+				privateAddOutlet( name, Name< TType >::humanReadableName(), BaseToCustomType< TType >::getTypeMetadata() );
+			}
+
+			void addCustomTypeOutlet( std::string const& name, std::string const& type );
 
 		private:
+
+			void privateAddOutlet( std::string const&, std::string const&, TypeMetadata const* );
 
 			BlockMetadata	&m_Impl;
 

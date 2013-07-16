@@ -18,12 +18,10 @@
 
 #include "engine/_2RealParameterMetadata.h"
 
-using std::string;
-
 namespace _2Real
 {
 	InletMetadata::InletMetadata( std::string const& n, std::string const& t, std::shared_ptr< const CustomType > i, TypeMetadata const* m, InletPolicy const& p, const bool b ) :
-		name( n ), type( t ), defaultPolicy( p ), initValue( i ), metadata( m ), isMulti( b )
+		name( n ), type( t ), metadata( m ), initValue( i ), defaultPolicy( p ), isMulti( b )
 	{
 	}
 
@@ -31,8 +29,8 @@ namespace _2Real
 	{
 	}
 
-	OutletMetadata::OutletMetadata( string const& outlet, std::string const& type ) :
-		name( outlet ), customName( type )
+	OutletMetadata::OutletMetadata( std::string const& n, std::string const& t, TypeMetadata const*m ) :
+		name( n ), type( t ), metadata( m )
 	{
 	}
 

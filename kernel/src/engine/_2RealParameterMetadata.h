@@ -42,11 +42,12 @@ namespace _2Real
 
 	struct OutletMetadata
 	{
-		OutletMetadata( std::string const& outlet, std::string const& customName );
+		OutletMetadata( std::string const&, std::string const&, TypeMetadata const* );
 		~OutletMetadata();
 
 		std::string										name;
-		std::string										customName;
+		std::string										type;
+		TypeMetadata									const* metadata;
 	};
 
 	//struct SetupParameterMetadata

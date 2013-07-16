@@ -111,7 +111,7 @@ namespace _2Real
 
 	BundleMetadata const& BundleLoader::createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) )
 	{
-		Metainfo *info = new Metainfo( m_Registry );
+		Metainfo *info = new Metainfo( path, m_Registry );
 
 		try
 		{
@@ -162,7 +162,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		Metainfo *info = new Metainfo( m_Registry );
+		Metainfo *info = new Metainfo( path, m_Registry );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{

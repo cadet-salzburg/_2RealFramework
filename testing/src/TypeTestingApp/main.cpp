@@ -48,7 +48,7 @@ void printout( ostream &out, _2Real::Fields const& fields, const unsigned int of
 			out << f.getName() << "\t\t";
 		else
 			out << f.getName() << "\t\t\t";
-		std::cout << f.getTypename() << std::endl;
+		std::cout << f.getTypename().first << "::" << f.getTypename().second << std::endl;
 		if ( !f.getSubFields().empty() )
 		{
 			printout( out, f.getSubFields(), offset+1 );
@@ -74,6 +74,7 @@ int main( int argc, char *argv[] )
 	try
 	{
 		BundleHandle testBundle = testEngine.loadBundle( "TypeTesting" );
+		//BundleHandle testBundleB = testEngine.loadBundle( "TypeTesting2" );
 
 		BundleInfo info = testBundle.getBundleInfo();
 		BundleInfo::BlockInfos blocks = info.exportedBlocks;
@@ -113,6 +114,8 @@ int main( int argc, char *argv[] )
 			blockInstances[ i ].outlets[ 0 ].link( blockInstances[ i+1 ].inlets[ 0 ] );
 			blockInstances[ i ].outlets[ 1 ].link( blockInstances[ i+1 ].inlets[ 2 ] );
 			blockInstances[ i ].outlets[ 2 ].link( blockInstances[ i+1 ].inlets[ 4 ] );
+			blockInstances[ i ].outlets[ 3 ].link( blockInstances[ i+1 ].inlets[ 6 ] );
+			blockInstances[ i ].outlets[ 4 ].link( blockInstances[ i+1 ].inlets[ 8 ] );
 		}
 	}
 	catch ( Exception &e )

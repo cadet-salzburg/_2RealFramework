@@ -34,14 +34,14 @@ namespace _2Real
 		{
 		}
 
-		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, FieldDescriptor const* desc )
+		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, std::shared_ptr< const FieldDescriptor > desc )
 		{
-			mImpl->addField( name, type, desc );
+			mImpl->addField( name, TypeMetadata::TypeId( mImpl->getTypeId().first, type ), desc );
 		}
 
 		void TypeMetainfo::addCustomTypeField( std::string const& name, std::string const& type )
 		{
-			mImpl->addField( name, type, nullptr );
+			mImpl->addField( name, TypeMetadata::TypeId( mImpl->getTypeId().first, type ), nullptr );
 		}
 	}
 }

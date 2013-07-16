@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "engine/_2RealTimestampedData.h"
+
 #include <string>
 
 namespace _2Real
@@ -25,6 +27,7 @@ namespace _2Real
 	class BasicInletIO;
 	class OutletIO;
 	class AbstractUberBlock;
+	class TypeConverter;
 
 	class IOLink
 	{
@@ -32,6 +35,7 @@ namespace _2Real
 	public:
 
 		IOLink();	/* creates invalid link! */
+		~IOLink();
 
 		void activate();
 		void deactivate();
@@ -54,12 +58,15 @@ namespace _2Real
 		//static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
 		//static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
 
+		void receiveData( TimestampedData const& );
+
 	private:
 
-		IOLink( BasicInletIO &inlet, OutletIO &outlet );
+		IOLink( BasicInletIO &inlet, OutletIO &outlet, TypeConverter const* cv );
 
 		BasicInletIO		*m_InletIO;
 		OutletIO			*m_OutletIO;
+		TypeConverter		const* mConverter;
 
 	};
 }

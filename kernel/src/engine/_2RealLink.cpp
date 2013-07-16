@@ -24,6 +24,7 @@
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
+#include "datatypes/_2RealTypeConverter.h"
 
 #include <sstream>
 
@@ -33,64 +34,34 @@ namespace _2Real
 {
 	IOLink * IOLink::link( BasicInletIO &inlet, OutletIO &outlet )
 	{
-		// ARGH typename
+		TypeMetadata const& in = inlet.info().type;
+		TypeMetadata const& out = outlet.info().type;
 
-/*		if ( inlet.info().type.m_LongTypename != outlet.m_Outlet->getLongTypename() )
-		{
-			return nullptr;
-		}
-		else */return new IOLink( inlet, outlet );
+		IOLink *l = nullptr;
+		TypeConverter const* converterInOut = nullptr;
+		TypeConverter const* converterOutIn = nullptr;
+		if ( in.matches( out, TypeMetadata::TypeMatchSetting::PERFECT_MATCH, converterInOut, converterOutIn ) )
+			l = new IOLink( inlet, outlet, converterOutIn );
+
+		delete converterInOut;
+
+		return l;
 	}
-
-	//IOLink * IOLink::linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet )
-	//{
-	//	return new IOLink( inlet, outlet );
-	//}
 
 	IOLink::IOLink() : m_InletIO( nullptr ), m_OutletIO( nullptr )
 	{
 	}
 
-	//bool IOLink::canAutoConvert( BasicInletIO &inlet, OutletIO &outlet )
-	//{
-	//	const Type tSrc = outlet.m_Outlet->getType();
-	//	const Type tDst = inlet.info().type.m_Type;
-	//	if ( !( tSrc == tDst ) && !( ( tSrc == Type::VECTOR ) || ( tDst == Type::VECTOR ) || ( tSrc == Type::LIST ) || ( tDst == Type::LIST ) ) )
-	//	{
-	//		const TypeCategory cSrc = outlet.m_Outlet->getTypeCategory();
-	//		const TypeCategory cDst = inlet.info().type.m_TypeCategory;
-	//		if ( cSrc == cDst && cSrc == TypeCategory::ARITHMETHIC )
-	//		{
-	//			return true;
-	//		}
-	//	}
-	//	return false;
-	//}
-
-	//const std::string IOLink::findConversion( BasicInletIO &inlet, OutletIO &outlet )
-	//{
-	//	std::string inType = inlet.info().type.m_TypeName;
-	//	std::string outType = outlet.m_Outlet->getTypename();
-
-	//	for ( unsigned int i = 0; i<inType.length(); ++i )
-	//	{
-	//		if ( inType[i] == ' ' ) inType[i] = '_';
-	//	}
-	//	for ( unsigned int i = 0; i<outType.length(); ++i )
-	//	{
-	//		if ( outType[i] == ' ' ) outType[i] = '_';
-	//	}
-
-	//	std::string conversion = outType + "_to_" + inType;
-
-	//	return conversion;
-	//}
-
-	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet ) :
-		m_InletIO( &inlet ),
-		m_OutletIO( &outlet )
+	IOLink::~IOLink()
 	{
-		// no more typechecking here
+		delete mConverter;
+	}
+
+	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet, TypeConverter const* cv ) :
+		m_InletIO( &inlet ),
+		m_OutletIO( &outlet ),
+		mConverter( cv )
+	{
 	}
 
 	BasicInletIO const& IOLink::getInletIO() const
@@ -151,14 +122,41 @@ namespace _2Real
 
 	void IOLink::activate() 
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
-		m_OutletIO->m_InletEvent->addListener( *cb );
+		// directly link inlet & outlet
+		if ( mConverter == nullptr )
+		{
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
+			m_OutletIO->m_InletEvent->addListener( *cb );
+		}
+		else
+		{
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< IOLink, TimestampedData const& >( *this, &IOLink::receiveData );
+			m_OutletIO->m_InletEvent->addListener( *cb );
+		}
+	}
+
+	void IOLink::receiveData( TimestampedData const& data ) 
+	{
+#ifdef _DEBUG
+		assert( mConverter );
+#endif
+		std::shared_ptr< const CustomType > t = data.value;
+		std::shared_ptr< const CustomType > cv = mConverter->convert( t );
+		m_InletIO->getBuffer().receiveData( TimestampedData( cv, data.timestamp ) );
 	}
 
 	void IOLink::deactivate()
 	{
-		AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
-		m_OutletIO->m_InletEvent->removeListener( *cb );
+		if ( mConverter == nullptr )
+		{
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
+			m_OutletIO->m_InletEvent->removeListener( *cb );
+		}
+		else
+		{
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< IOLink, TimestampedData const& >( *this, &IOLink::receiveData );
+			m_OutletIO->m_InletEvent->removeListener( *cb );
+		}
 	}
 
 }

@@ -34,32 +34,32 @@ namespace _2Real
 		Field() {}
 		virtual ~Field() {}
 		virtual std::string getName() const = 0;
-		virtual std::string getTypename() const = 0;
+		virtual std::pair< std::string, std::string > getTypename() const = 0;
 		virtual Fields getSubFields() const = 0;
 	};
 
 	class SimpleField : public Field
 	{
 	public:
-		SimpleField( std::string const& name, std::string const& type ) : mName( name ), mType( type ) {}
+		SimpleField( std::string const& name,  std::string const& type ) : mName( name ), mType( "basic type", type ) {}
 		std::string getName() const { return mName; }
-		std::string getTypename() const { return mType; }
+		std::pair< std::string, std::string > getTypename() const { return mType; }
 		Fields getSubFields() const { return Fields(); }
 	private:
-		std::string					mName;
-		std::string					mType;
+		std::string									mName;
+		std::pair< std::string, std::string >		mType;
 	};
 
 	class ComplexField : public Field
 	{
 	public:
-		ComplexField( std::string const& name, std::string const& type, Fields const& fields ) : mName( name ), mType( type ), mFields( fields ) {}
+		ComplexField( std::string const& name, std::pair< std::string, std::string > const& type, Fields const& fields ) : mName( name ), mType( type ), mFields( fields ) {}
 		std::string getName() const { return mName; }
-		std::string getTypename() const { return mType; }
+		std::pair< std::string, std::string > getTypename() const { return mType; }
 		Fields getSubFields() const { return mFields; }
 	private:
 		std::string					mName;
-		std::string					mType;
+		std::pair< std::string, std::string >					mType;
 		Fields						mFields;
 	};
 

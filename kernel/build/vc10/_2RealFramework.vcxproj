@@ -47,6 +47,7 @@
     <ClInclude Include="..\..\src\datatypes\_2RealFields.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealOption.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealTypeConverter.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractIOManager.h" />
@@ -217,6 +218,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealFields.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp" />
+    <ClCompile Include="..\..\src\datatypes\_2RealTypeConverter.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealTypeRegistry.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealTypes.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealAbstractIOManager.cpp">

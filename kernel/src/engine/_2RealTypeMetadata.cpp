@@ -19,30 +19,97 @@
 #include "datatypes/_2RealFieldDescriptor.h"
 #include "datatypes/_2RealTypeRegistry.h"
 #include "datatypes/_2RealDataField.h"
+#include "datatypes/_2RealTypeConverter.h"
 #include "_2RealTypeMetadata.h"
 
 namespace _2Real
 {
-	TypeMetadata::TypeMetadata( std::string const& name, TypeRegistry const* reg ) : mFields(), mName( name ), mRegistry( reg )
+	class TypeMatch
 	{
-		// reg could be nullptr - it's only needed if custom types are accessed, i.e. image does not need it
-	}
+	public:
+		virtual ~TypeMatch() {}
+		virtual bool canConvert() const = 0;
+		virtual TypeConverter const* getConverterAtoB() const = 0;
+		virtual TypeConverter const* getConverterBtoA() const = 0;
+	};
 
-	TypeMetadata::~TypeMetadata()
+	class TypeMatchPerfect : public TypeMatch
 	{
-		for ( Fields::iterator fieldIter = mFields.begin(); fieldIter != mFields.end(); ++fieldIter )
-			delete fieldIter->second;
-	}
+	public:
+		TypeMatchPerfect( TypeMetadata const& a, TypeMetadata const& b );
+		bool canConvert() const;
+		TypeConverter const* getConverterAtoB() const;
+		TypeConverter const* getConverterBtoA() const;
+	private:
+		Fields		mFa;
+		Fields		mFb;
+		bool		mIsPerfectMatch;
+	};
 
-	void TypeMetadata::addField( std::string const& name, std::string const& type, FieldDescriptor const* desc )
+	TypeMatchPerfect::TypeMatchPerfect( TypeMetadata const& ta, TypeMetadata const& tb ) : mIsPerfectMatch( false )
 	{
-		// make sure field name is unique
-		Fields::iterator it = mFields.find( name );
-		if ( it != mFields.end() )
+		ta.getFields( mFa );
+		tb.getFields( mFb );
+
+		bool fieldMatch = false;
+		if ( mFa.size() == mFb.size() )
 		{
-			std::ostringstream msg;
-			msg << "field: " << name << " already exists in type " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
+			fieldMatch = true;
+			for ( Fields::iterator ita = mFa.begin(), itb = mFb.begin(); ita != mFa.end(), itb != mFb.end(); ++ita, ++itb )
+			{
+				if ( ( *ita )->getTypename() != ( *itb )->getTypename() )
+					fieldMatch = false;
+			}
+		}
+
+		mIsPerfectMatch = fieldMatch;
+	}
+
+	bool TypeMatchPerfect::canConvert() const
+	{
+		return mIsPerfectMatch;
+	}
+
+	TypeConverter const* TypeMatchPerfect::getConverterAtoB() const
+	{
+		return nullptr;
+	}
+
+	TypeConverter const* TypeMatchPerfect::getConverterBtoA() const
+	{
+		return nullptr;
+	}
+
+	TypeMetadata::TypeMatchSetting::TypeMatchSetting( const Type t ) : mCode( t )
+	{
+	}
+
+	TypeMatch const* TypeMetadata::TypeMatchSetting::createMatch( TypeMetadata const& a, TypeMetadata const& b ) const
+	{
+		switch( mCode )
+		{
+		case PERFECT_MATCH:
+			return new TypeMatchPerfect( a, b );
+		default:
+			return nullptr;
+		}
+	}
+
+	TypeMetadata::TypeMetadata( TypeId const& id, TypeRegistry const* reg ) : mTypeId( id ), mRegistry( reg ) {}
+
+	void TypeMetadata::addField( std::string const& name, TypeId const& id, FieldDescriptorRef desc )
+	{
+		// fields: added with type id instead of just type name
+
+		// make sure field name is unique
+		for ( FieldDescriptions::iterator it = mFields.begin(); it != mFields.end(); ++it )
+		{
+			if ( name == it->first )
+			{
+				std::ostringstream msg;
+				msg << "field: " << name << " already exists in type::" << mTypeId.first << "::" << mTypeId.second << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
 		}
 
 		// if desc == null, it's a custom type, so get the metadata
@@ -51,30 +118,52 @@ namespace _2Real
 #ifdef _DEBUG
 			assert( mRegistry );
 #endif
-			TypeMetadata const* meta = mRegistry->get( "", type );
+			TypeMetadata const* meta = mRegistry->get( TypeRegistry::sFrameworkTypes, id.second );
 			if ( nullptr == meta )
 			{
-				std::stringstream msg;
-				msg << "type: " << type << "is not known";
-				throw NotFoundException( msg.str() );
+				meta = mRegistry->get( mTypeId.first, id.second );
+				if ( nullptr == meta )
+				{
+					std::stringstream msg;
+					msg << "type::" << mTypeId.first << "::" << id.second << " is not known";
+					throw NotFoundException( msg.str() );
+				}
+
+				_2Real::Fields fields;
+				meta->getFields( fields );
+
+				FieldDescriptorRef d( DataField< CustomType >::createFieldDescriptor( name, id, CustomType( meta ), fields ) );
+				mFields.push_back( std::make_pair( name, d ) );
 			}
+			else
+			{
+				_2Real::Fields fields;
+				meta->getFields( fields );
 
-			_2Real::Fields fields;
-			meta->getFields( fields );
-
-			FieldDescriptor const *d = DataField< CustomType >::createFieldDescriptor( name, type, CustomType( meta ), fields );
-			mFields[ name ] = d;
+				FieldDescriptorRef d( DataField< CustomType >::createFieldDescriptor( name, TypeId( TypeRegistry::sFrameworkTypes, id.second ), CustomType( meta ), fields ) );
+				mFields.push_back( std::make_pair( name, d ) );
+			}
 		}
 		else
-			mFields[ name ] = desc;
+			mFields.push_back( std::make_pair( name, desc ) );
 	}
 
 	void TypeMetadata::getFields( _2Real::Fields &fields ) const
 	{
 		fields.clear(); fields.reserve( mFields.size() );
-		for ( TypeMetadata::Fields::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
+		for ( FieldDescriptions::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
 		{
 			fields.push_back( it->second->getField() );
 		}
+	}
+
+	bool TypeMetadata::matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, TypeConverter const*& cvAB, TypeConverter const*& cvBA ) const
+	{
+		TypeMatch const* m = desiredMatch.createMatch( *this, other );
+
+		cvAB = m->getConverterAtoB();
+		cvBA = m->getConverterBtoA();
+
+		return m->canConvert();
 	}
 }

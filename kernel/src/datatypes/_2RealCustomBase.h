@@ -20,6 +20,7 @@
 
 #include "datatypes/_2RealCustomData.h"
 #include "engine/_2RealTypeMetadata.h"
+#include "datatypes/_2RealTypeRegistry.h"
 
 #include <iostream>
 
@@ -35,7 +36,7 @@ namespace _2Real
 		{
 			TypeMetadata *result = nullptr;
 
-			FieldDescriptor *desc = DataField< TType >::createFieldDescriptor( "default", Init< TType >::defaultValue() );
+			std::shared_ptr< const FieldDescriptor > desc( DataField< TType >::createFieldDescriptor( "default", Init< TType >::defaultValue() ) );
 
 			if ( !desc )
 			{
@@ -44,8 +45,8 @@ namespace _2Real
 				throw _2Real::Exception( msg.str() );
 			}
 
-			result = new TypeMetadata( Name< TType >::humanReadableName(), nullptr );
-			result->addField( "default", Name< TType >::humanReadableName(), desc );
+			result = new TypeMetadata( TypeMetadata::TypeId( "basic type", Name< TType >::humanReadableName() ), nullptr );
+			result->addField( "default", TypeMetadata::TypeId( "", Name< TType >::humanReadableName() ), desc );
 			return result;
 		}
 
