@@ -20,36 +20,47 @@
 
 namespace _2Real
 {
-	TypeConverter::TypeConverter()
+	std::shared_ptr< CustomType > TypeConverter::convert( std::shared_ptr< const CustomType > data ) const
 	{
-	}
-
-	TypeConverter::~TypeConverter()
-	{
-	}
-
-	std::shared_ptr< const CustomType > TypeConverter::convert( std::shared_ptr< const CustomType > data ) const
-	{
-		// empty custom type
-		CustomType *t = new CustomType( nullptr );
+		// create empty custom type
+		std::shared_ptr< CustomType > newtype( new CustomType( nullptr ) );
 
 		// set name to other type name
-		t->mTypeId = mTypeId;
+		newtype->mTypeId = mTypeId;
 		// change all fields
 		for ( CustomType::DataFields::const_iterator it = data->mDataFields.begin(); it != data->mDataFields.end(); ++it )
 		{
-			std::string oldname = it->first;
-			// check how the field should be named
-			std::map< std::string, std::string >::const_iterator lit = mLookupTable.find( oldname );
+			// argh
+			AbstractAnyHolder *value = it->second;
+			std::string name = it->first;
+
+			std::map< std::string, Conversion >::const_iterator lookupIt = mLookupTable.find( name );
 #ifdef _DEBUG
-			assert( lit != mLookupTable.end() );
+			assert( lookupIt != mLookupTable.end() );
 #endif
-			std::string newname = lit->second;
-			// insert under new field name
-			t->mDataFields[ newname ] = it->second;
+
+			// might have new name, might have entirely new type
+			Conversion conversion = lookupIt->second;
+			if ( nullptr == conversion.second.get() )
+			{
+				// if no converter, i know that this is a simple field
+				// so just change the name
+				AbstractAnyHolder *copied = value->copy_create();
+				newtype->mDataFields[ conversion.first ] = copied;
+			}
+			else
+			{
+				// so it's a complex type....
+				AbstractAnyHolder *copied = value->copy_create();
+				std::shared_ptr< const CustomType > subfield = extract< CustomType >( *copied );
+				std::shared_ptr< CustomType > converted = conversion.second->convert( subfield );
+				AbstractAnyHolder *a = new AnyHolder< CustomType >( converted );
+				newtype->mDataFields[ conversion.first ] = a;
+				delete copied;
+			}
 		}
 
-		return std::shared_ptr< const CustomType >( t );
+		return newtype;
 	}
 
 }

@@ -96,14 +96,15 @@ void Test::update()
 			OutletHandle o = mInstance.outlets[ 1 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
 			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "image" ) );
-			img->createImagedata( 10, 10, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
+			img->createImagedata( 15, 5, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
+			std::shared_ptr< int > i = data->get< int >( "int" );
+			*i.get() = mCounter++;
 		}
 
 		{
 			OutletHandle o = mInstance.outlets[ 2 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
 		}
-
 	}
 	catch ( Exception &e )
 	{

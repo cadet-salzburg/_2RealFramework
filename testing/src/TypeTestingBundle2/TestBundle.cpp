@@ -18,7 +18,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 		std::vector< unsigned char > init( imgW*imgH*imgC, 0 );
 		imgInit.setImagedata( &init[ 0 ], imgW, imgH, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
 
-		info.setName( "datatypes test" );
+		info.setName( "datatypes test 2" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "testing" );
@@ -48,12 +48,12 @@ void getBundleMetainfo( BundleMetainfo &info )
 
 		// base fields, framework defined fields, user defined fields
 		TypeMetainfo &complexType = info.exportCustomType( "complextype" );
-		complexType.addField< int >( "int" );
-		complexType.addField< std::string >( "string" );
-		complexType.addField< std::vector< float > >( "float vector" );
-		complexType.addCustomTypeField( "image", "image" );
-		complexType.addCustomTypeField( "simpletype", "simpletype" );
-		complexType.addCustomTypeField( "basetype", "basetype" );
+		complexType.addField< int >( "test int" );
+		complexType.addField< std::string >( "test string" );
+		complexType.addField< std::vector< float > >( "test float vector" );
+		complexType.addCustomTypeField( "test image", "image" );
+		complexType.addCustomTypeField( "test simpletype", "simpletype" );
+		complexType.addCustomTypeField( "test basetype", "basetype" );
 
 		// oooooh, a type that contains itsself
 		//TypeMetainfo &recursiveType = info.exportCustomType( "recursivetype" );
@@ -77,12 +77,12 @@ void getBundleMetainfo( BundleMetainfo &info )
 		simpleInit->set< float >( "float", 555.f );
 
 		std::shared_ptr< CustomType > complexInit( new CustomType( complexType ) );
-		complexInit->set< int >( "int", 222 );
-		complexInit->set< std::string >( "string", "222" );
-		complexInit->set< std::vector< float > >( "float vector", std::vector< float >( 222, 222.f ) );
-		complexInit->set< CustomType >( "image", *( imgInit.toCustomType().get() ) );
-		complexInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );
-		complexInit->set< CustomType >( "basetype", *( allInit.get() ) );
+		complexInit->set< int >( "test int", 222 );
+		complexInit->set< std::string >( "test string", "222" );
+		complexInit->set< std::vector< float > >( "test float vector", std::vector< float >( 222, 222.f ) );
+		complexInit->set< CustomType >( "test image", *( imgInit.toCustomType().get() ) );
+		complexInit->set< CustomType >( "test simpletype", *( simpleInit.get() ) );
+		complexInit->set< CustomType >( "test basetype", *( allInit.get() ) );
 
 		//std::shared_ptr< CustomType > recursiveInit( new CustomType( recursiveType ) );
 		//recursiveInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );

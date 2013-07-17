@@ -338,7 +338,7 @@ namespace _2Real
 
 	BasicInletBuffer::BasicInletBuffer() :
 		AbstractInletBuffer(),
-		m_InsertionPolicy( new RemoveOldest( 1 ) ),
+		m_InsertionPolicy( new RemoveOldest( 5 ) ),
 		m_NotifyOnReceive( true )
 	{
 	}

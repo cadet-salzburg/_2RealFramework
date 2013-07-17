@@ -62,11 +62,12 @@ namespace _2Real
 
 	private:
 
-		IOLink( BasicInletIO &inlet, OutletIO &outlet, TypeConverter const* cv );
+		IOLink( BasicInletIO &inlet, OutletIO &outlet, std::shared_ptr< const TypeConverter > fcv, std::shared_ptr< const TypeConverter > bcv );
 
-		BasicInletIO		*m_InletIO;
-		OutletIO			*m_OutletIO;
-		TypeConverter		const* mConverter;
+		BasicInletIO							*m_InletIO;
+		OutletIO								*m_OutletIO;
+		std::shared_ptr< const TypeConverter >	mForwardConverter;
+		std::shared_ptr< const TypeConverter >	mReverseConverter;
 
 	};
 }

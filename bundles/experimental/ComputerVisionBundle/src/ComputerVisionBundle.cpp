@@ -64,7 +64,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		//gauss.addInlet< Image >( "InImageB", imgB.toCustomType() );
 		//gauss.addInlet< int >( "InKernelX", 10 );
 		//gauss.addCustomTypeInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
-		gauss.addOutlet( "OutImage", "image" );
+		gauss.addCustomTypeOutlet( "OutImage", "image" );
 
 		//gauss.addInlet< int >( "InInt", "int", 10 );
 		//gauss.addInlet( "OutImage", "Image" );

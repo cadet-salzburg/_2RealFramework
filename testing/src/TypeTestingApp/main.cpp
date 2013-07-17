@@ -69,34 +69,53 @@ int main( int argc, char *argv[] )
 	};
 
 	const unsigned int numInstances = 3;
-	std::vector< BlockInstance > blockInstances( numInstances );
+	std::vector< BlockInstance > blockInstancesA( numInstances );
+	std::vector< BlockInstance > blockInstancesB( numInstances );
 
 	try
 	{
-		BundleHandle testBundle = testEngine.loadBundle( "TypeTesting" );
-		//BundleHandle testBundleB = testEngine.loadBundle( "TypeTesting2" );
+		BundleHandle testBundleA = testEngine.loadBundle( "TypeTesting" );
+		BundleHandle testBundleB = testEngine.loadBundle( "TypeTesting2" );
 
-		BundleInfo info = testBundle.getBundleInfo();
-		BundleInfo::BlockInfos blocks = info.exportedBlocks;
-		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+		// get bundle info
+
+		//BundleInfo info = testBundleA.getBundleInfo();
+		//BundleInfo::BlockInfos blocks = info.exportedBlocks;
+		//for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+		//{
+		//	std::cout << "-b\t" << it->name << std::endl;
+		//	BlockInfo::InletInfos inlets = it->inlets;
+		//	for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		//	{
+		//		std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
+		//	}
+		//	BlockInfo::OutletInfos outlets = it->outlets;
+		//	for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		//	{
+		//		std::cout << "-o\t" << oIt->name << std::endl;
+		//	}
+		//}
+
+		for ( unsigned int i=0; i<numInstances; ++i )
 		{
-			std::cout << "-b\t" << it->name << std::endl;
-			BlockInfo::InletInfos inlets = it->inlets;
-			for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-			{
-				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
-			}
-			BlockInfo::OutletInfos outlets = it->outlets;
-			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			{
-				std::cout << "-o\t" << oIt->name << std::endl;
-			}
+			BlockInstance &b = blockInstancesA[ i ];
+			b.block = testBundleA.createBlockInstance( "TypeTestingBlock" );
+
+			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
+			for ( unsigned int i=0; i<inlets.size(); ++i )
+				b.inlets.push_back( inlets[ i ] );
+			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
+			for ( unsigned int o=0; o<outlets.size(); ++o )
+				b.outlets.push_back( outlets[ o ] );
+
+			b.block.setup();
+			b.block.start();
 		}
 
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
-			BlockInstance &b = blockInstances[ i ];
-			b.block = testBundle.createBlockInstance( "TypeTestingBlock" );
+			BlockInstance &b = blockInstancesB[ i ];
+			b.block = testBundleB.createBlockInstance( "TypeTestingBlock" );
 
 			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
 			for ( unsigned int i=0; i<inlets.size(); ++i )
@@ -111,12 +130,26 @@ int main( int argc, char *argv[] )
 
 		for ( unsigned int i=0; i<numInstances-1; ++i )
 		{
-			blockInstances[ i ].outlets[ 0 ].link( blockInstances[ i+1 ].inlets[ 0 ] );
-			blockInstances[ i ].outlets[ 1 ].link( blockInstances[ i+1 ].inlets[ 2 ] );
-			blockInstances[ i ].outlets[ 2 ].link( blockInstances[ i+1 ].inlets[ 4 ] );
-			blockInstances[ i ].outlets[ 3 ].link( blockInstances[ i+1 ].inlets[ 6 ] );
-			blockInstances[ i ].outlets[ 4 ].link( blockInstances[ i+1 ].inlets[ 8 ] );
+			blockInstancesA[ i ].outlets[ 0 ].link( blockInstancesA[ i+1 ].inlets[ 0 ] );
+			blockInstancesA[ i ].outlets[ 1 ].link( blockInstancesA[ i+1 ].inlets[ 2 ] );
+			blockInstancesA[ i ].outlets[ 2 ].link( blockInstancesA[ i+1 ].inlets[ 4 ] );
+			blockInstancesA[ i ].outlets[ 3 ].link( blockInstancesA[ i+1 ].inlets[ 6 ] );
+			blockInstancesA[ i ].outlets[ 4 ].link( blockInstancesA[ i+1 ].inlets[ 8 ] );
 		}
+
+		for ( unsigned int i=0; i<numInstances-1; ++i )
+		{
+			blockInstancesB[ i ].outlets[ 0 ].link( blockInstancesB[ i+1 ].inlets[ 0 ] );
+			blockInstancesB[ i ].outlets[ 1 ].link( blockInstancesB[ i+1 ].inlets[ 2 ] );
+			blockInstancesB[ i ].outlets[ 2 ].link( blockInstancesB[ i+1 ].inlets[ 4 ] );
+			blockInstancesB[ i ].outlets[ 3 ].link( blockInstancesB[ i+1 ].inlets[ 6 ] );
+			blockInstancesB[ i ].outlets[ 4 ].link( blockInstancesB[ i+1 ].inlets[ 8 ] );
+		}
+
+		//blockInstancesA[ numInstances-1 ].outlets[ 1 ].link( blockInstancesB[ 0 ].inlets[ 2 ] );
+		// complextype to complextype
+		blockInstancesA[ 0 ].outlets[ 1 ].link( blockInstancesB[ 2 ].inlets[ 2 ] );
+		//blockInstancesA[ 0 ].outlets[ 4 ].link( blockInstancesB[ 0 ].inlets[ 8 ] );
 	}
 	catch ( Exception &e )
 	{
@@ -134,7 +167,7 @@ int main( int argc, char *argv[] )
 		}
 		else if ( line == "p" )
 		{
-			BlockInstance &b = blockInstances[ 1 ];
+			BlockInstance &b = blockInstancesB[ 0 ];
 
 			std::cout << std::endl;
 			std::cout << "--------- type metainfo of basetype ------------------------------------" << std::endl;
@@ -202,18 +235,18 @@ int main( int argc, char *argv[] )
 
 			{
 				std::shared_ptr< const CustomType > d = b.inlets[ 2 ].getCurrentData();
-				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
-				std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
-				std::vector< float > const& vf = *( d->get< std::vector< float > >( "float vector" ).get() );
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
 				std::cout << "float vector:\t\t" << "size " << vf.size() << std::endl;
-				std::shared_ptr< const CustomType > i = d->get< CustomType >( "image" );
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
 				std::shared_ptr< const Image > img = Image::asImage( i );
 				std::cout << "image:" << std::endl;
 				std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
 				std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
 				std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
 				std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
-				std::shared_ptr< const CustomType > b = d->get< CustomType >( "basetype" );
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
 				std::cout << "basetype:" << std::endl;
 				std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
 				std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
@@ -227,7 +260,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
 				std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
 				std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
-				std::shared_ptr< const CustomType > s = d->get< CustomType >( "simpletype" );
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
 				std::cout << "simpletype:" << std::endl;
 				std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
 				std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
@@ -239,18 +272,18 @@ int main( int argc, char *argv[] )
 
 			{
 				std::shared_ptr< const CustomType > d = b.inlets[ 3 ].getCurrentData();
-				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
-				std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
-				std::vector< float > const& vf = *( d->get< std::vector< float > >( "float vector" ).get() );
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
 				std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
-				std::shared_ptr< const CustomType > i = d->get< CustomType >( "image" );
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
 				std::shared_ptr< const Image > img = Image::asImage( i );
 				std::cout << "image:" << std::endl;
 				std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
 				std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
 				std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
 				std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
-				std::shared_ptr< const CustomType > b = d->get< CustomType >( "basetype" );
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
 				std::cout << "basetype:" << std::endl;
 				std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
 				std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
@@ -264,7 +297,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
 				std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
 				std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
-				std::shared_ptr< const CustomType > s = d->get< CustomType >( "simpletype" );
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
 				std::cout << "simpletype:" << std::endl;
 				std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
 				std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;

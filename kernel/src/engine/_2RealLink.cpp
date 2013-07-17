@@ -38,12 +38,13 @@ namespace _2Real
 		TypeMetadata const& out = outlet.info().type;
 
 		IOLink *l = nullptr;
-		TypeConverter const* converterInOut = nullptr;
-		TypeConverter const* converterOutIn = nullptr;
-		if ( in.matches( out, TypeMetadata::TypeMatchSetting::PERFECT_MATCH, converterInOut, converterOutIn ) )
-			l = new IOLink( inlet, outlet, converterOutIn );
+		std::shared_ptr< const TypeConverter > converterInOut;
+		std::shared_ptr< const TypeConverter > converterOutIn;
 
-		delete converterInOut;
+		if ( in.matches( out, TypeMetadata::TypeMatchSetting::PERFECT_TYPE_MATCH, converterInOut, converterOutIn ) )
+		{
+			l = new IOLink( inlet, outlet, converterOutIn, converterInOut );
+		}
 
 		return l;
 	}
@@ -54,13 +55,13 @@ namespace _2Real
 
 	IOLink::~IOLink()
 	{
-		delete mConverter;
 	}
 
-	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet, TypeConverter const* cv ) :
+	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet, std::shared_ptr< const TypeConverter > forward, std::shared_ptr< const TypeConverter > reverse ) :
 		m_InletIO( &inlet ),
 		m_OutletIO( &outlet ),
-		mConverter( cv )
+		mForwardConverter( forward ),
+		mReverseConverter( reverse )
 	{
 	}
 
@@ -123,7 +124,7 @@ namespace _2Real
 	void IOLink::activate() 
 	{
 		// directly link inlet & outlet
-		if ( mConverter == nullptr )
+		if ( mForwardConverter.get() == nullptr )
 		{
 			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
 			m_OutletIO->m_InletEvent->addListener( *cb );
@@ -138,16 +139,16 @@ namespace _2Real
 	void IOLink::receiveData( TimestampedData const& data ) 
 	{
 #ifdef _DEBUG
-		assert( mConverter );
+		assert( mForwardConverter.get() );
 #endif
 		std::shared_ptr< const CustomType > t = data.value;
-		std::shared_ptr< const CustomType > cv = mConverter->convert( t );
+		std::shared_ptr< const CustomType > cv = mForwardConverter->convert( t );
 		m_InletIO->getBuffer().receiveData( TimestampedData( cv, data.timestamp ) );
 	}
 
 	void IOLink::deactivate()
 	{
-		if ( mConverter == nullptr )
+		if ( mForwardConverter.get() == nullptr )
 		{
 			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletBuffer, TimestampedData const& >( m_InletIO->getBuffer(), &BasicInletBuffer::receiveData );
 			m_OutletIO->m_InletEvent->removeListener( *cb );

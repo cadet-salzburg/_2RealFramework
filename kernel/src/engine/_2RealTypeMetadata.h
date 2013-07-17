@@ -44,21 +44,19 @@ namespace _2Real
 		class TypeMatchSetting
 		{
 		public:
-			enum Type { PERFECT_MATCH,/*, FIELD_MATCH_1ON1, FIELD_MATCH*/ };
+			enum Type { IDENTICAL_MATCH = 0, PERFECT_TYPE_MATCH = 1 };
 			TypeMatchSetting( const Type c );
 			TypeMatch const* createMatch( TypeMetadata const& a, TypeMetadata const& b ) const;
+			Type getCode() const { return mCode; }
+			static Type sPriorities[ 2 ];
 		private:
 			Type		mCode;
 		};
 
 		TypeMetadata( TypeId const& id, TypeRegistry const* reg );
-
-		TypeId const& getTypeId() const { return mTypeId; }
-
+		TypeId const& getTypeId() const;
 		void addField( std::string const& name, TypeId const& id, std::shared_ptr< const FieldDescriptor > desc );
-
-		bool matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, TypeConverter const*& cvAB, TypeConverter const*& cvBA ) const;
-
+		bool matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const;
 		void getFields( Fields &fields ) const;
 
 	private:

@@ -26,18 +26,19 @@ namespace _2Real
 {
 	class TypeConverter
 	{
-
 	public:
 
-		TypeConverter();
-		~TypeConverter();
+		typedef std::pair< std::string, std::shared_ptr< const TypeConverter > > Conversion;
 
-		std::shared_ptr< const CustomType > convert( std::shared_ptr< const CustomType > ) const;
+		// convert a type
+		std::shared_ptr< CustomType > convert( std::shared_ptr< const CustomType > ) const;
 
-	private:
-
-		std::pair< std::string, std::string >		mTypeId;
-		std::map< std::string, std::string >		mLookupTable;
+		// for each field in the type:
+		//		either a new name ( simple field )
+		//		or another type converter ( complex field )
+		std::map< std::string, Conversion >		mLookupTable;
+		// must also rename the custom type
+		std::pair < std::string, std::string >	mTypeId;
 
 	};
 }

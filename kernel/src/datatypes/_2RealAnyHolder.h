@@ -31,6 +31,7 @@ namespace _2Real
 	public:
 
 		AnyHolder();
+		explicit AnyHolder( std::shared_ptr< TType > value );
 		explicit AnyHolder( TType const& value );
 
 		std::string getHumanReadableName() const;
@@ -38,6 +39,8 @@ namespace _2Real
 
 		AbstractAnyHolder * create() const;
 		AbstractAnyHolder * clone() const;
+		AbstractAnyHolder * copy_create() const;
+
 		void set( AbstractAnyHolder const& other );
 
 		void writeTo( std::ostream &out ) const;
@@ -58,6 +61,12 @@ namespace _2Real
 	template< typename TType >
 	AnyHolder< TType >::AnyHolder() :
 		mData( new TType( Init< TType >::defaultValue() ) )
+	{
+	}
+
+	template< typename TType >
+	AnyHolder< TType >::AnyHolder( std::shared_ptr< TType > value ) :
+		mData( value )
 	{
 	}
 
@@ -155,6 +164,12 @@ namespace _2Real
 	AbstractAnyHolder * AnyHolder< TType >::clone() const
 	{
 		return new AnyHolder< TType >( *( mData.get() ) );
+	}
+
+	template< typename TType >
+	AbstractAnyHolder * AnyHolder< TType >::copy_create() const
+	{
+		return new AnyHolder< TType >( mData );
 	}
 
 	template< typename TType >

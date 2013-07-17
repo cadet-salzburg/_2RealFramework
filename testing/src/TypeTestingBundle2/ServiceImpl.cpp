@@ -53,20 +53,20 @@ void Test::update()
 
 		//InletHandle i2 = mInstance.inlets[ 2 ];
 		//{
-		//	std::shared_ptr< const CustomType > d = i2.getCurrentData();
-		//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
-		//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
-		//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "float vector" ).get() );
-		//	std::cout << "float vector:\t\t" << "size " << vf.size() << std::endl;
-		//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "image" );
+		//	std::shared_ptr< const CustomType > d = i2.getReadableRef();
+		//	std::cout << "test int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+		//	std::cout << "test string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+		//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
+		//	std::cout << "test float vector:\t\t" << "size " << vf.size() << std::endl;
+		//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
 		//	std::shared_ptr< const Image > img = Image::asImage( i );
-		//	std::cout << "image:" << std::endl;
+		//	std::cout << "test image:" << std::endl;
 		//	std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
 		//	std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
 		//	std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
 		//	std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
-		//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "basetype" );
-		//	std::cout << "basetype:" << std::endl;
+		//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
+		//	std::cout << "test basetype:" << std::endl;
 		//	std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
 		//	std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
 		//	std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
@@ -79,8 +79,8 @@ void Test::update()
 		//	std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
 		//	std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
 		//	std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
-		//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "simpletype" );
-		//	std::cout << "simpletype:" << std::endl;
+		//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
+		//	std::cout << "test simpletype:" << std::endl;
 		//	std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
 		//	std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
 		//}
@@ -95,7 +95,7 @@ void Test::update()
 		{
 			OutletHandle o = mInstance.outlets[ 1 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "image" ) );
+			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "test image" ) );
 			img->createImagedata( 10, 10, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
 		}
 
@@ -103,7 +103,6 @@ void Test::update()
 			OutletHandle o = mInstance.outlets[ 2 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
 		}
-
 	}
 	catch ( Exception &e )
 	{
