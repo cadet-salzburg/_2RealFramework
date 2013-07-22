@@ -79,22 +79,23 @@ int main( int argc, char *argv[] )
 
 		// get bundle info
 
-		//BundleInfo info = testBundleA.getBundleInfo();
-		//BundleInfo::BlockInfos blocks = info.exportedBlocks;
-		//for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
-		//{
-		//	std::cout << "-b\t" << it->name << std::endl;
-		//	BlockInfo::InletInfos inlets = it->inlets;
-		//	for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-		//	{
-		//		std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
-		//	}
-		//	BlockInfo::OutletInfos outlets = it->outlets;
-		//	for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-		//	{
-		//		std::cout << "-o\t" << oIt->name << std::endl;
-		//	}
-		//}
+		BundleInfo info = testBundleA.getBundleInfo();
+		BundleInfo::BlockInfos blocks = info.exportedBlocks;
+		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+		{
+			std::cout << "-b\t" << it->name << std::endl;
+			BlockInfo::InletInfos inlets = it->inlets;
+			for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+			{
+				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " );
+				std::cout << "t: " << iIt->customName << std::endl;
+			}
+			BlockInfo::OutletInfos outlets = it->outlets;
+			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+			{
+				std::cout << "-o\t" << oIt->name << std::endl;
+			}
+		}
 
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
@@ -175,6 +176,7 @@ int main( int argc, char *argv[] )
 
 			{
 				app::TypeMetainfo info = b.inlets[ 0 ].getType();
+				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
 			}
@@ -225,6 +227,7 @@ int main( int argc, char *argv[] )
 
 			{
 				app::TypeMetainfo info = b.inlets[ 2 ].getType();
+				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
 			}
@@ -309,6 +312,7 @@ int main( int argc, char *argv[] )
 
 			{
 				app::TypeMetainfo info = b.inlets[ 4 ].getType();
+				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
 			}
@@ -339,6 +343,7 @@ int main( int argc, char *argv[] )
 
 			{
 				app::TypeMetainfo info = b.inlets[ 6 ].getType();
+				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
 			}
@@ -369,6 +374,7 @@ int main( int argc, char *argv[] )
 
 			{
 				app::TypeMetainfo info = b.inlets[ 6 ].getType();
+				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
 				_2Real::Fields fields; info.getFieldInfo( fields );
 				printout( std::cout, fields, 0 );
 			}

@@ -53,6 +53,11 @@ namespace _2Real
 				mImpl->getFields( f );
 			}
 
+			std::pair< std::string, std::string > getTypename() const
+			{
+				return mImpl->getTypeId();
+			}
+
 
 		private:
 			friend class CustomType;

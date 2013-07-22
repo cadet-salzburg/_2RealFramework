@@ -76,12 +76,12 @@ int main( int argc, char *argv[] )
 		i0B = testBlock0.getInletHandle( "InImageB" );
 		o0 = testBlock0.getOutletHandle( "OutImage" );
 
-		for ( unsigned int i=0; i<20; ++i )
-		{
-			BlockHandle b = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-			b.setup();
-			b.start();
-		}
+		//for ( unsigned int i=0; i<2; ++i )
+		//{
+		//	BlockHandle b = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
+		//	b.setup();
+		//	b.start();
+		//}
 
 		testBlock0.setup();
 		testBlock0.start();
