@@ -69,7 +69,13 @@ void OcvGaussianBlurBlock::update()
 		std::shared_ptr< const Image > inImage = Image::asImage( inData );
 		Image const& in = *inImage.get();
 
-		//std::cout << in.getWidth() << " " << in.getHeight() << " " << ( std::string ) in.getDatatype() << " " << ( std::string ) in.getChannelOrder() << std::endl;
+		int format = getCvImageDepth( in );
+		if ( format < 0 )
+		{
+			std::cout << "wrong input image format" << std::endl;
+			hOutImage.discard();
+			return;
+		}
 
 		std::shared_ptr< CustomType > outData = hOutImage.getWriteableRef();
 		std::shared_ptr< Image > outImage = Image::asImage( outData );
@@ -88,8 +94,6 @@ void OcvGaussianBlurBlock::update()
 
 		std::shared_ptr< const CustomType > syData = hParamSy.getReadableRef();
 		double sy = *( syData->get< double >( "default" ).get() );
-
-		//std::cout << ( int ) kx << " " << ( int ) ky << " " << sx << " " << sy << std::endl;
 
 		cv::Mat const* const matSrc = convertToCvMat( in );
 		cv::Mat *const matDst = convertToCvMat( out );

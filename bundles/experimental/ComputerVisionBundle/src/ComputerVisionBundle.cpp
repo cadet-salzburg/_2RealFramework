@@ -18,6 +18,7 @@
 #include "_2RealBundle.h"
 #include "OcvGaussianBlurBlock.h"
 #include "OcvSobelBlock.h"
+#include "OcvHistogramNormalizationBlock.h"
 #include "ImageHelpers.h"
 #include <sstream>
 #include <iostream>
@@ -83,8 +84,8 @@ void getBundleMetainfo( BundleMetainfo& info )
 		gauss.addCustomTypeInlet( "in_image", "image", imgF3.toCustomType() );
 		gauss.addParameter< unsigned char >( "param_kernel_x", 7 );
 		gauss.addParameter< unsigned char >( "param_kernel_y", 7 );
-		gauss.addParameter< double >( "param_sigma_x", 1.1 );
-		gauss.addParameter< double >( "param_sigma_y", 1.1 );
+		gauss.addParameter< double >( "param_sigma_x", 2.1 );
+		gauss.addParameter< double >( "param_sigma_y", 2.1 );
 		//gauss.addInlet< int >( "boder_interpolation", 0, borderOptions );
 		gauss.addCustomTypeOutlet( "out_image", "image" );
 
@@ -94,8 +95,15 @@ void getBundleMetainfo( BundleMetainfo& info )
 		sobel.addCustomTypeInlet( "in_image", "image", imgU3.toCustomType() );
 		sobel.addParameter< unsigned char >( "param_order_x", 1 );
 		sobel.addParameter< unsigned char >( "param_order_y", 1 );
-		sobel.addParameter< unsigned char >( "param_aperture", 5 );
+		sobel.addParameter< unsigned char >( "param_aperture", 1 );
+		//sobel.addInlet< int >( "boder_interpolation", 0, borderOptions );
 		sobel.addCustomTypeOutlet( "out_image", "image" );
+
+		BlockMetainfo equalize = info.exportBlock< OcvEqualizeHistogramBlock, WithoutContext >( "OcvEqualizeHistogramBlock" );
+		equalize.setDescription( "applies histogram normalization to input image" );
+		equalize.setCategory( "image filter" );
+		equalize.addCustomTypeInlet( "in_image", "image", imgF1.toCustomType() );
+		equalize.addCustomTypeOutlet( "out_image", "image" );
 	}
 	catch ( Exception &e )
 	{

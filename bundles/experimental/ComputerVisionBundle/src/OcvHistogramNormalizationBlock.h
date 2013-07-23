@@ -19,13 +19,13 @@
 
 #include "_2RealBlock.h"
 
-class OcvHistogramNormalizationBlock : public _2Real::bundle::Block
+class OcvEqualizeHistogramBlock : public _2Real::bundle::Block
 {
 
 public:
 
-	OcvHistogramNormalizationBlock();
-	~OcvHistogramNormalizationBlock();
+	OcvEqualizeHistogramBlock();
+	~OcvEqualizeHistogramBlock();
 	void shutdown();
 	void update();
 	void setup( _2Real::bundle::BlockHandle &context );

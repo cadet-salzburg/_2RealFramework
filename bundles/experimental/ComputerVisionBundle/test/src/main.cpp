@@ -14,6 +14,89 @@
 using namespace _2Real;
 using namespace _2Real::app;
 
+template< typename TData >
+TData * makeCirclePattern( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz, TData *black, TData *white )
+{
+	float radius = 0.5f*sz;
+
+	TData *data = new TData[ width * height * channels ];
+	TData *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		unsigned int modI = i%sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			unsigned int modJ = j%sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				float x = modI - radius;
+				float y = modJ - radius;
+				float dist = sqrt( x*x + y*y );
+
+				if ( dist < radius )
+				{
+					for ( unsigned int k=0; k<channels; ++k )
+					{
+						*p = black[ k ];
+						++p;
+					}
+				}
+				else
+				{
+					for ( unsigned int k=0; k<channels; ++k )
+					{
+						*p = white[ k ];
+						++p;
+					}
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = white[ k ];
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
+template< typename TData >
+TData * makeCheckerPattern( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz, TData *black, TData *white )
+{
+	TData *data = new TData[ width * height * channels ];
+	TData *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = black[ k ];
+					++p;
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = white[ k ];
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
 class OutletReceiver
 {
 public:
@@ -43,28 +126,35 @@ private:
 	_2Real::app::OutletHandle			mOutlet;
 };
 
-struct BlockInstance
-{
-	typedef std::pair< OutletHandle, OutletReceiver * > OutletHandler;
-
-	~BlockInstance()
-	{
-		for ( std::vector< BlockInstance::OutletHandler >::iterator it = outlets.begin(); it != outlets.end(); ++it )
-			delete it->second;
-	}
-
-	BlockHandle block;
-	std::vector< InletHandle >		inlets;
-	std::vector< OutletHandler >	outlets;
-	std::vector< ParameterHandle >	parameters;
-};
-
 struct Texture
 {
 	Texture() : handle( 0 ), width( 0 ), height( 0 ) {}
 
 	GLuint handle;
 	unsigned int width, height;
+};
+
+struct BlockInstance
+{
+	typedef std::pair< OutletHandle, OutletReceiver * > OutletHandler;
+
+	BlockInstance() : wasClosed( false ), window( nullptr ) {}
+
+	~BlockInstance()
+	{
+		for ( std::vector< BlockInstance::OutletHandler >::iterator it = outlets.begin(); it != outlets.end(); ++it )
+			delete it->second;
+
+		delete window;
+	}
+
+	BlockHandle block;
+	std::vector< InletHandle >		inlets;
+	std::vector< OutletHandler >	outlets;
+	std::vector< ParameterHandle >	parameters;
+	sf::Window						*window;
+	Texture							texture;
+	bool							wasClosed;
 };
 
 void imageToTexture( Texture &tex, std::shared_ptr< const Image > img )
@@ -183,38 +273,52 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	const unsigned int numInstances = 1;
-	std::vector< BlockInstance > blocks( numInstances );
+	unsigned int numInstances = 1;
+	unsigned int numBlocks = 0;
+	std::vector< std::vector< BlockInstance > > blocks;
 
-	unsigned int w = 600;
-	unsigned int h = 600;
-	sf::Window window( sf::VideoMode( w, h, 32 ), "computer vision test", sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
-
-	Texture texture;
+	sf::Image img;
+	if ( !img.loadFromFile( "test.jpg" ) )
+		std::cout << "could not read image!" << std::endl;
+	else
+		std::cout << img.getSize().x << " " << img.getSize().y << std::endl;
 
 	try
 	{
-		BundleHandle cvBundle = testEngine.loadBundle( "ComputerVisionBundle" );
+		BundleHandle bundle = testEngine.loadBundle( "ComputerVisionBundle" );
+		printBundleInfo( bundle );
+		numBlocks = bundle.getBundleInfo().exportedBlocks.size();
+		blocks = std::vector< std::vector< BlockInstance > >( numBlocks, std::vector< BlockInstance >( numInstances ) );
 
-		printBundleInfo( cvBundle );
-
-		for ( unsigned int i = 0; i<numInstances; ++i )
+		for ( unsigned int b=0; b<numBlocks; ++b )
 		{
-			BlockInstance &b = blocks[ i ];
+			for ( unsigned int i=0; i<numInstances; ++i )
+			{
+				BlockInstance &instance = blocks[ b ][ i ];
+				std::string instanceName =  bundle.getBundleInfo().exportedBlocks[ b ].name;
 
-			b.block = cvBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
-			for ( unsigned int i=0; i<inlets.size(); ++i )
-				b.inlets.push_back( inlets[ i ] );
-			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
-			for ( unsigned int o=0; o<outlets.size(); ++o )
-				b.outlets.push_back( std::make_pair( outlets[ o ], new OutletReceiver( outlets[ o ] ) ) );
-			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
-			for ( unsigned int p=0; p<parameters.size(); ++p )
-				b.parameters.push_back( parameters[ p ] );
+				instance.window = new sf::Window( sf::VideoMode( 512, 512, 32 ), instanceName, sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
 
-			b.block.setup();
-			b.block.start();
+				instance.block = bundle.createBlockInstance( instanceName );
+				std::vector< InletHandle > const& inlets = instance.block.getAllInletHandles();
+				for ( unsigned int i=0; i<inlets.size(); ++i )
+					instance.inlets.push_back( inlets[ i ] );
+				std::vector< OutletHandle > const& outlets = instance.block.getAllOutletHandles();
+				for ( unsigned int o=0; o<outlets.size(); ++o )
+					instance.outlets.push_back( std::make_pair( outlets[ o ], new OutletReceiver( outlets[ o ] ) ) );
+				std::vector< ParameterHandle > const& parameters = instance.block.getAllParameterHandles();
+				for ( unsigned int p=0; p<parameters.size(); ++p )
+					instance.parameters.push_back( parameters[ p ] );
+
+				instance.block.setup();
+				instance.block.start();
+
+				std::shared_ptr< CustomType > inData = instance.inlets[ 0 ].makeData();
+				std::shared_ptr< Image > inImage = Image::asImage( inData );
+				Image &in = *inImage.get();
+				in.setImagedata( img.getPixelsPtr(), img.getSize().x, img.getSize().y, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
+				instance.inlets[ 0 ].receiveData( inData );
+			}
 		}
 	}
 	catch ( Exception &e )
@@ -224,49 +328,67 @@ int main( int argc, char *argv[] )
 
 	while( 1 )
 	{
-		bool exit = false;
-		sf::Event ev;
-		while ( window.pollEvent( ev ) )
+		bool allWindowsClosed = true;
+
+		for ( unsigned int b=0; b<numBlocks; ++b )
 		{
-			if ( sf::Event::Closed == ev.type )
+			for ( unsigned int i=0; i<numInstances; ++i )
 			{
-				exit = true;
-				break;
+				BlockInstance &instance = blocks[ b ][ i ];
+
+				allWindowsClosed &= instance.wasClosed;
+				if ( instance.wasClosed ) continue;
+
+				sf::Window *win = instance.window;
+				win->setActive( true );
+
+				bool exit = false;
+				sf::Event ev;
+				while ( win->pollEvent( ev ) )
+				{
+					if ( sf::Event::Closed == ev.type )
+					{
+						exit = true;
+						break;
+					}
+				}
+				if ( exit )
+				{
+					instance.wasClosed = true;
+					win->close();
+				}
+
+				std::shared_ptr< const CustomType > d = instance.outlets[ 0 ].second->getData();
+				if ( d.get() )
+				{
+					std::shared_ptr< const Image > img = Image::asImage( d );
+					imageToTexture( instance.texture, img );
+				}
+
+				glViewport( 0, 0, 600, 600 );
+				glBindTexture( GL_TEXTURE_2D, instance.texture.handle );
+				glEnable( GL_TEXTURE_2D );
+				glColor3f( 1.f, 1.f, 1.f );
+				glBegin( GL_QUADS );
+				glTexCoord2f( 0.f, 1.f );
+				glVertex2f( -1.f,  1.f );
+				glTexCoord2f( 0.f, 0.f );
+				glVertex2f( -1.f, -1.f );
+				glTexCoord2f( 1.f, 0.f );
+				glVertex2f(  1.f, -1.f );
+				glTexCoord2f( 1.f, 1.f );
+				glVertex2f(  1.f,  1.f );
+				glEnd();
+				glDisable( GL_TEXTURE_2D );
+				glBindTexture( GL_TEXTURE_2D, 0 );
+
+				win->display();
+				win->setActive( false );
 			}
 		}
-		if ( exit ) break;
 
-		std::shared_ptr< const CustomType > d = blocks[ 0 ].outlets[ 0 ].second->getData();
-		if ( d.get() )
-		{
-			std::shared_ptr< const Image > img = Image::asImage( d );
-			//glBindTexture( GL_TEXTURE_2D, tex );
-			//glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, img->getWidth(), img->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, img->getPixels() );
-			imageToTexture( texture, img );
-		}
-
-		glViewport( 0, 0, w, h );
-		glBindTexture( GL_TEXTURE_2D, texture.handle );
-
-		glEnable( GL_TEXTURE_2D );
-
-		glColor3f( 1.f, 1.f, 1.f );
-		glBegin( GL_QUADS );
-		glTexCoord2f( 0.f, 1.f );
-		glVertex2f( -1.f,  1.f );
-		glTexCoord2f( 0.f, 0.f );
-		glVertex2f( -1.f, -1.f );
-		glTexCoord2f( 1.f, 0.f );
-		glVertex2f(  1.f, -1.f );
-		glTexCoord2f( 1.f, 1.f );
-		glVertex2f(  1.f,  1.f );
-		glEnd();
-
-		glDisable( GL_TEXTURE_2D );
-
-		glBindTexture( GL_TEXTURE_2D, 0 );
-
-		window.display();
+		if ( allWindowsClosed )
+			break;
 	}
 
 	blocks.clear();
