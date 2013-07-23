@@ -145,6 +145,12 @@ namespace _2Real
 			return m_Block->getAppInletHandle( trim( name ) );
 		}
 
+		ParameterHandle & BlockHandle::getParameterHandle( string const& name ) const
+		{
+			checkValidity( m_Block );
+			return m_Block->getAppParameterHandle( trim( name ) );
+		}
+
 		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
@@ -155,6 +161,12 @@ namespace _2Real
 		{
 			checkValidity( m_Block );
 			return m_Block->getAppInletHandles();
+		}
+
+		BlockHandle::ParameterHandles const& BlockHandle::getAllParameterHandles() const
+		{
+			checkValidity( m_Block );
+			return m_Block->getAppParameterHandles();
 		}
 
 		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const

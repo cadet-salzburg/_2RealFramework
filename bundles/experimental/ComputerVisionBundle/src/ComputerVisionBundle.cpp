@@ -17,6 +17,7 @@
 */
 #include "_2RealBundle.h"
 #include "OcvGaussianBlurBlock.h"
+#include "OcvSobelBlock.h"
 #include "ImageHelpers.h"
 #include <sstream>
 #include <iostream>
@@ -39,41 +40,62 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
-		float blue[ 4 ] = { 0.2f, 0.1f, 0.7f, 1.0f };
-		float green[ 4 ] = { 0.1f, 0.7f, 0.2f, 1.0f };
-		float black[ 4 ] = { 0.f, 0.f, 0.f, 1.0f };
-		float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float fblue[ 4 ] =	{ 0.2f, 0.1f, 0.7f, 1.0f };
+		float fgreen[ 4 ] =	{ 0.1f, 0.7f, 0.2f, 1.0f };
+		float fblack[ 4 ] =	{  0.f,  0.f,  0.f, 1.0f };
+		float fwhite[ 4 ] =	{ 1.0f, 1.0f, 1.0f, 1.0f };
+		unsigned char ublue[ 4 ] =	{ 100,  50, 200, 255 };
+		unsigned char ugreen[ 4 ] =	{  50, 200, 100, 255 };
+		unsigned char ublack[ 4 ] =	{   0,   0,   0, 255 };
+		unsigned char uwhite[ 4 ] =	{ 255, 255, 255, 255 };
 
-		float *initA = makeCirclePattern< float >( 480, 480, 4, 20, white, green );
-		float *initB = makeCirclePattern< float >( 480, 480, 4, 40, blue, black );
+		float * initF1 = makeCirclePattern< float >( 480, 480, 1, 40, fwhite, fgreen );
+		float * initF2 = makeCirclePattern< float >( 480, 480, 2, 40, fwhite, fgreen );
+		float * initF3 = makeCirclePattern< float >( 480, 480, 3, 40, fwhite, fgreen );
+		float * initF4 = makeCirclePattern< float >( 480, 480, 4, 40, fwhite, fgreen );
+		unsigned char * initU1 = makeCirclePattern< unsigned char >( 480, 480, 1, 40, ublue, ublack );
+		unsigned char * initU2 = makeCirclePattern< unsigned char >( 480, 480, 2, 40, ublue, ublack );
+		unsigned char * initU3 = makeCirclePattern< unsigned char >( 480, 480, 3, 40, ublue, ublack );
+		unsigned char * initU4 = makeCirclePattern< unsigned char >( 480, 480, 4, 40, ublue, ublack );
 
-		_2Real::Image imgA;
-		_2Real::Image imgB;
-		imgA.setImagedata( initA, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
-		imgB.setImagedata( initB, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
+		_2Real::Image imgF1, imgF2, imgF3, imgF4, imgU1, imgU2, imgU3, imgU4;
+		imgF1.setImagedata( initF1, 480, 480, Image::ChannelOrder::SINGLECHANNEL, Image::Datatype::FLOAT32 );
+		imgF2.setImagedata( initF2, 480, 480, Image::ChannelOrder::DUALCHANNEL, Image::Datatype::FLOAT32 );
+		imgF3.setImagedata( initF3, 480, 480, Image::ChannelOrder::RGB, Image::Datatype::FLOAT32 );
+		imgF4.setImagedata( initF4, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
+		imgU1.setImagedata( initU1, 480, 480, Image::ChannelOrder::SINGLECHANNEL, Image::Datatype::UINT8 );
+		imgU2.setImagedata( initU2, 480, 480, Image::ChannelOrder::DUALCHANNEL, Image::Datatype::UINT8 );
+		imgU3.setImagedata( initU3, 480, 480, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
+		imgU4.setImagedata( initU4, 480, 480, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
 
-		delete initA;
-		delete initB;
+		delete [] initF1;
+		delete [] initF2;
+		delete [] initF3;
+		delete [] initF4;
+		delete [] initU1;
+		delete [] initU2;
+		delete [] initU3;
+		delete [] initU4;
 
 		BlockMetainfo gauss = info.exportBlock< OcvGaussianBlurBlock, WithoutContext >( "OcvGaussianBlurBlock" );
 		gauss.setDescription( "applies gaussian blur to input image" );
 		gauss.setCategory( "image filter" );
-
-		gauss.addCustomTypeInlet( "InImageA", "image", imgA.toCustomType() );
-		gauss.addCustomTypeInlet( "InImageB", "image", imgB.toCustomType() );
-		//gauss.addInlet< Image >( "InImageB", imgB.toCustomType() );
-		//gauss.addInlet< int >( "InKernelX", 10 );
-		//gauss.addCustomTypeInlet( "InKernelY", "int", ToCustomType< int >( 10 ) );
-		gauss.addCustomTypeOutlet( "OutImage", "image" );
-
-		//gauss.addInlet< int >( "InInt", "int", 10 );
-		//gauss.addInlet( "OutImage", "Image" );
-		//gauss.addInlet< unsigned char >( "kernel_x", 1 );
-		//gauss.addInlet< unsigned char >( "kernel_y", 1 );
-		//gauss.addInlet< double >( "sigma_x", 1.1 );
-		//gauss.addInlet< double >( "sigma_y", 1.1 );
+		gauss.addCustomTypeInlet( "in_image", "image", imgF3.toCustomType() );
+		gauss.addParameter< unsigned char >( "param_kernel_x", 7 );
+		gauss.addParameter< unsigned char >( "param_kernel_y", 7 );
+		gauss.addParameter< double >( "param_sigma_x", 1.1 );
+		gauss.addParameter< double >( "param_sigma_y", 1.1 );
 		//gauss.addInlet< int >( "boder_interpolation", 0, borderOptions );
-		//gauss.addOutlet< Image >( "OutImage" );
+		gauss.addCustomTypeOutlet( "out_image", "image" );
+
+		BlockMetainfo sobel = info.exportBlock< OcvSobelBlock, WithoutContext >( "OcvSobelBlock" );
+		sobel.setDescription( "applies sobel to input image" );
+		sobel.setCategory( "image filter" );
+		sobel.addCustomTypeInlet( "in_image", "image", imgU3.toCustomType() );
+		sobel.addParameter< unsigned char >( "param_order_x", 1 );
+		sobel.addParameter< unsigned char >( "param_order_y", 1 );
+		sobel.addParameter< unsigned char >( "param_aperture", 5 );
+		sobel.addCustomTypeOutlet( "out_image", "image" );
 	}
 	catch ( Exception &e )
 	{

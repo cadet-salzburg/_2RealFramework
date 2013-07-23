@@ -19,8 +19,9 @@ private:
 
 	struct BlockInstance
 	{
-		std::vector< _2Real::bundle::InletHandle > inlets;
-		std::vector< _2Real::bundle::OutletHandle > outlets;
+		std::vector< _2Real::bundle::InletHandle >		inlets;
+		std::vector< _2Real::bundle::OutletHandle >		outlets;
+		std::vector< _2Real::bundle::ParameterHandle >	parameters;
 		_2Real::bundle::BlockHandle block;
 	};
 

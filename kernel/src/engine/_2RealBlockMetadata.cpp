@@ -59,6 +59,11 @@ namespace _2Real
 		{
 			delete *it;
 		}
+
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			delete *it;
+		}
 	}
 
 	string const& BlockMetadata::getName() const
@@ -123,6 +128,38 @@ namespace _2Real
 		m_Inlets.push_back( data );
 	}
 
+	void BlockMetadata::addParameter( ParameterMetadata *data )
+	{
+		// check if metadata is null, get it from the regstry otherwise
+		if ( nullptr == data->metadata )
+		{
+#ifdef _DEBUG
+			assert( mRegistry );
+#endif
+			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
+			if ( nullptr == meta )
+			{
+				std::stringstream msg;
+				msg << "type: " << data->type << " is not known";
+				throw NotFoundException( msg.str() );
+			}
+
+			data->metadata = meta;
+		}
+
+		for ( BlockMetadata::ParameterMetadataIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			if ( toLower( ( **it ).name ) == toLower( data->name ) )
+			{
+				ostringstream msg;
+				msg << "parameter: " << data->name << " is already defined in block " << getName() << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
+		m_Parameters.push_back( data );
+	}
+
 	void BlockMetadata::addOutlet( OutletMetadata *data )
 	{
 		// check if metadata is null, get it from the regstry otherwise
@@ -163,6 +200,11 @@ namespace _2Real
 	BlockMetadata::OutletMetadatas const& BlockMetadata::getOutlets() const
 	{
 		return m_Outlets;
+	}
+
+	BlockMetadata::ParameterMetadatas const& BlockMetadata::getParameters() const
+	{
+		return m_Parameters;
 	}
 
 	void BlockMetadata::performBlockNameCheck( string const& name )

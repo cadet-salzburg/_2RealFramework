@@ -30,6 +30,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
+		class ParameterHandle;
 
 		class BlockHandle
 		{
@@ -44,6 +45,10 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
+			typedef std::vector< ParameterHandle >					ParameterHandles;
+			typedef std::vector< ParameterHandle >::iterator		ParameterHandleIterator;
+			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
+
 			BlockHandle();
 			BlockHandle( FunctionBlockIOManager &block );
 			BlockHandle( BlockHandle const& src );
@@ -52,8 +57,10 @@ namespace _2Real
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			ParameterHandle &		getParameterHandle( std::string const& name ) const;
 			InletHandles const&		getAllInletHandles() const;
 			OutletHandles const&	getAllOutletHandles() const;
+			ParameterHandles const&	getAllParameterHandles() const;
 
 			bool isValid() const;
 			void invalidate();

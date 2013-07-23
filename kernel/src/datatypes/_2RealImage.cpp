@@ -143,6 +143,15 @@ namespace _2Real
 		case 3:
 			mCode = BGRA;
 			break;
+		case 4:
+			mCode = ARGB;
+			break;
+		case 5:
+			mCode = SINGLECHANNEL;
+			break;
+		case 6:
+			mCode = DUALCHANNEL;
+			break;
 		default:
 			mCode = UNDEFINED;
 		}
@@ -166,6 +175,18 @@ namespace _2Real
 		{
 			mCode = BGRA;
 		}
+		else if ( s == "argb" )
+		{
+			mCode = ARGB;
+		}
+		else if ( s == "singlechannel" )
+		{
+			mCode = SINGLECHANNEL;
+		}
+		else if ( s == "dualchannel" )
+		{
+			mCode = DUALCHANNEL;
+		}
 		else
 		{
 			mCode = UNDEFINED;
@@ -188,6 +209,15 @@ namespace _2Real
 		case BGRA:
 			return 3;
 			break;
+		case ARGB:
+			return 4;
+			break;
+		case SINGLECHANNEL:
+			return 5;
+			break;
+		case DUALCHANNEL:
+			return 6;
+			break;
 		default:
 			return -1;
 		}
@@ -209,6 +239,15 @@ namespace _2Real
 		case BGRA:
 			return "bgra";
 			break;
+		case ARGB:
+			return "argb";
+			break;
+		case SINGLECHANNEL:
+			return "singlechannel";
+			break;
+		case DUALCHANNEL:
+			return "dualchannel";
+			break;
 		default:
 			return "undefined";
 		}
@@ -217,6 +256,11 @@ namespace _2Real
 	bool Image::ChannelOrder::operator==( ChannelOrder const& other )
 	{
 		return mCode == other.mCode;
+	}
+
+	Image::ChannelOrder::Code Image::ChannelOrder::getCode() const
+	{
+		return mCode;
 	}
 
 	unsigned int Image::ChannelOrder::getNumberOfChannels() const
@@ -234,6 +278,15 @@ namespace _2Real
 			break;
 		case BGRA:
 			return 4;
+			break;
+		case ARGB:
+			return 4;
+			break;
+		case SINGLECHANNEL:
+			return 1;
+			break;
+		case DUALCHANNEL:
+			return 2;
 			break;
 		default:
 			return 0;
@@ -258,7 +311,19 @@ namespace _2Real
 			mCode = UINT32;
 			break;
 		case 3:
+			mCode = INT8;
+			break;
+		case 4:
+			mCode = INT16;
+			break;
+		case 5:
+			mCode = INT32;
+			break;
+		case 6:
 			mCode = FLOAT32;
+			break;
+		case 7:
+			mCode = FLOAT64;
 			break;
 		default:
 			mCode = UNDEFINED;
@@ -268,25 +333,23 @@ namespace _2Real
 	Image::Datatype::Datatype( std::string const& s )
 	{
 		if ( s == "uint8" )
-		{
 			mCode = UINT8;
-		}
 		else if ( s == "uint16" )
-		{
 			mCode = UINT16;
-		}
 		else if ( s == "uint32" )
-		{
 			mCode = UINT32;
-		}
+		else if ( s == "int8" )
+			mCode = INT8;
+		else if ( s == "int16" )
+			mCode = INT16;
+		else if ( s == "int32" )
+			mCode = INT32;
 		else if ( s == "float32" )
-		{
 			mCode = FLOAT32;
-		}
+		else if ( s == "float64" )
+			mCode = FLOAT64;
 		else
-		{
 			mCode = UNDEFINED;
-		}
 	}
 
 	Image::Datatype::operator int() const
@@ -302,8 +365,20 @@ namespace _2Real
 		case UINT32:
 			return 2;
 			break;
-		case FLOAT32:
+		case INT8:
 			return 3;
+			break;
+		case INT16:
+			return 4;
+			break;
+		case INT32:
+			return 5;
+			break;
+		case FLOAT32:
+			return 6;
+			break;
+		case FLOAT64:
+			return 7;
 			break;
 		default:
 			return -1;
@@ -323,8 +398,20 @@ namespace _2Real
 		case UINT32:
 			return "uint32";
 			break;
+		case INT8:
+			return "int8";
+			break;
+		case INT16:
+			return "int16";
+			break;
+		case INT32:
+			return "int32";
+			break;
 		case FLOAT32:
 			return "float32";
+			break;
+		case FLOAT64:
+			return "float64";
 			break;
 		default:
 			return "undefined";
@@ -334,6 +421,11 @@ namespace _2Real
 	bool Image::Datatype::operator==( Datatype const& other )
 	{
 		return mCode == other.mCode;
+	}
+
+	Image::Datatype::Code Image::Datatype::getCode() const
+	{
+		return mCode;
 	}
 
 	size_t Image::Datatype::getBytesPerPixel() const

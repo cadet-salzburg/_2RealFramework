@@ -18,6 +18,10 @@
 
 #pragma once
 
+#include "bundle/_2RealParameterHandle.h"
+#include "helpers/_2RealHandleable.h"
+#include "helpers/_2RealNonCopyable.h"
+#include "helpers/_2RealIdentifiable.h"
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealPoco.h"
 
@@ -38,9 +42,6 @@ namespace _2Real
 		Parameter( std::shared_ptr< const CustomType > initializer );
 		virtual ~Parameter() {}
 
-		// sets the buffer - not sure why this is needed, maybe setup p?
-		//	void						setData( std::shared_ptr< CustomType > data );
-
 		// data = buffer
 		void									synchronize();
 		// this is for reading only ( app, inlet queues ) -> const
@@ -48,8 +49,40 @@ namespace _2Real
 		std::shared_ptr< CustomType >			getWriteableData();
 
 		mutable Poco::FastMutex			m_DataAccess;
-		std::shared_ptr< CustomType >	m_Data;
-		std::shared_ptr< CustomType >	m_DataBuffer;
+		std::shared_ptr< const CustomType >	m_Data;
+		std::shared_ptr< CustomType >		m_DataBuffer;
+
+	};
+
+	class InputParameter : private NonCopyable< InputParameter >, private Identifiable< InputParameter >, private Handleable< InputParameter, bundle::ParameterHandle >
+	{
+		
+	public:
+
+		InputParameter( AbstractUberBlock &owningBlock, std::string const& name, std::shared_ptr< const CustomType > initialValue );
+
+		using Handleable< InputParameter, bundle::ParameterHandle >::getHandle;
+		using Handleable< InputParameter, bundle::ParameterHandle >::registerHandle;
+		using Handleable< InputParameter, bundle::ParameterHandle >::unregisterHandle;
+
+		using Identifiable< InputParameter >::getFullName;
+		using Identifiable< InputParameter >::getName;
+
+		std::shared_ptr< const CustomType >		getData() const;
+		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
+		void									setData( std::shared_ptr< const CustomType > data );
+		bool									hasChanged() const;
+		void									synchronize();
+
+		AbstractUberBlock&		getOwningUberBlock();
+
+	private:
+
+		AbstractUberBlock						&m_OwningUberBlock;
+		mutable Poco::FastMutex					m_DataAccess;
+		std::shared_ptr< const CustomType >		m_Data;
+		std::shared_ptr< const CustomType >		m_DataBuffer;
+		std::shared_ptr< const CustomType >		m_LastData;
 
 	};
 

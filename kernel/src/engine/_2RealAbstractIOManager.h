@@ -24,6 +24,7 @@
 #include "helpers/_2RealHandleable.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
 #include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealException.h"
 
@@ -38,12 +39,14 @@ namespace _2Real
 		class BlockHandle;
 		class InletHandle;
 		class OutletHandle;
+		class ParameterHandle;
 	}
 
 	namespace app
 	{
 		class InletHandle;
 		class OutletHandle;
+		class ParameterHandle;
 	}
 
 	class AbstractIOManager;
@@ -55,10 +58,9 @@ namespace _2Real
 	class MultiInletBuffer;
 	class BasicInletIO;
 	class Outlet;
+	class InputParameter;
 	class TimestampedData;
 	class AbstractUberBlock;
-	class AnyOptionSet;
-	class TypeDescriptor;
 	class AbstractUpdatePolicy;
 
 	struct InletInfo
@@ -211,7 +213,7 @@ namespace _2Real
 		OutletIO( AbstractUberBlock &owner, OutletInfo const& info );
 		~OutletIO();
 		Outlet													*m_Outlet;
-		CallbackEvent< std::shared_ptr< const CustomType > >					*m_AppEvent;
+		CallbackEvent< std::shared_ptr< const CustomType > >	*m_AppEvent;
 		CallbackEvent< TimestampedData const& >					*m_InletEvent;
 
 		OutletInfo const&					info() const { return m_Info; }
@@ -226,6 +228,39 @@ namespace _2Real
 
 	};
 
+	struct ParameterInfo
+	{
+		ParameterInfo( std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t ) :
+			baseName( n ), initializer( i ), type( t ) {}
+
+		std::string								baseName;
+		std::shared_ptr< const CustomType >		initializer;
+		TypeMetadata							const& type;
+	};
+
+	class ParameterIO : private NonCopyable< ParameterIO >, private Handleable< ParameterIO, app::ParameterHandle >
+	{
+
+	public:
+
+		using Handleable< ParameterIO, app::ParameterHandle >::getHandle;
+		using Handleable< ParameterIO, app::ParameterHandle >::registerHandle;
+		using Handleable< ParameterIO, app::ParameterHandle >::unregisterHandle;
+
+		ParameterIO( AbstractUberBlock &owner, ParameterInfo const& info );
+		~ParameterIO();
+
+		ParameterInfo const&				info() const { return m_Info; }
+		AbstractUberBlock *					getOwningBlock() { return &m_OwningBlock; }
+
+		bool								belongsToBlock( AbstractUberBlock const* const block ) const { return ( &m_OwningBlock == block ); }
+
+		ParameterInfo						m_Info;
+		AbstractUberBlock					&m_OwningBlock;
+		InputParameter						*m_Parameter;
+
+	};
+
 	typedef std::vector< app::InletHandle >							AppInletHandles;
 	typedef std::vector< app::InletHandle >::iterator				AppInletHandleIterator;
 	typedef std::vector< app::InletHandle >::const_iterator			AppInletHandleConstIterator;
@@ -234,6 +269,10 @@ namespace _2Real
 	typedef std::vector< app::OutletHandle >::iterator				AppOutletHandleIterator;
 	typedef std::vector< app::OutletHandle >::const_iterator		AppOutletHandleConstIterator;
 
+	typedef std::vector< app::ParameterHandle >						AppParameterHandles;
+	typedef std::vector< app::ParameterHandle >::iterator			AppParameterHandleIterator;
+	typedef std::vector< app::ParameterHandle >::const_iterator		AppParameterHandleConstIterator;
+
 	typedef std::vector< bundle::InletHandle >						BundleInletHandles;
 	typedef std::vector< bundle::InletHandle >::iterator			BundleInletHandleIterator;
 	typedef std::vector< bundle::InletHandle >::const_iterator		BundleInletHandleConstIterator;
@@ -241,6 +280,10 @@ namespace _2Real
 	typedef std::vector< bundle::OutletHandle >						BundleOutletHandles;
 	typedef std::vector< bundle::OutletHandle >::iterator			BundleOutletHandleIterator;
 	typedef std::vector< bundle::OutletHandle >::const_iterator		BundleOutletHandleConstIterator;
+
+	typedef std::vector< bundle::ParameterHandle >					BundleParameterHandles;
+	typedef std::vector< bundle::ParameterHandle >::iterator		BundleParameterHandleIterator;
+	typedef std::vector< bundle::ParameterHandle >::const_iterator	BundleParameterHandleConstIterator;
 
 	class AbstractIOManager : private NonCopyable< AbstractIOManager >
 	{
@@ -254,6 +297,10 @@ namespace _2Real
 		typedef std::vector< OutletIO * >							OutletVector;
 		typedef std::vector< OutletIO * >::iterator					OutletIterator;
 		typedef std::vector< OutletIO * >::const_iterator			OutletConstIterator;
+
+		typedef std::vector< ParameterIO * >						ParameterVector;
+		typedef std::vector< ParameterIO * >::iterator				ParameterIterator;
+		typedef std::vector< ParameterIO * >::const_iterator		ParameterConstIterator;
 
 		AbstractIOManager( AbstractUberBlock &owner );
 		virtual ~AbstractIOManager();

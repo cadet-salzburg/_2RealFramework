@@ -29,6 +29,7 @@ namespace _2Real
 	class Outlet;
 	class Bundle;
 	class AbstractUberBlock;
+	class InputParameter;
 
 	class AbstractIdentifiable
 	{
@@ -90,6 +91,13 @@ namespace _2Real
 	{
 	protected:
 		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "inlet", name ) {}
+	};
+
+	template< >
+	class Identifiable< InputParameter > : public AbstractIdentifiable
+	{
+	protected:
+		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "parameter", name ) {}
 	};
 
 }

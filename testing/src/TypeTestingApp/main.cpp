@@ -56,6 +56,35 @@ void printout( ostream &out, _2Real::Fields const& fields, const unsigned int of
 	}
 }
 
+void printBundleInfo( app::BundleHandle const& h )
+{
+	BundleInfo info = h.getBundleInfo();
+	BundleInfo::BlockInfos blocks = info.exportedBlocks;
+	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+	{
+		std::cout << "-b\t" << it->name << std::endl;
+		BlockInfo::InletInfos inlets = it->inlets;
+		for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		{
+			std::cout << "-i\t" << iIt->name;
+			std::cout << "\tt: " << iIt->customName;
+			std::cout << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
+		}
+		BlockInfo::OutletInfos outlets = it->outlets;
+		for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		{
+			std::cout << "-o\t" << oIt->name;
+			std::cout << "\tt: " << oIt->customName << std::endl;
+		}
+		BlockInfo::ParameterInfos params = it->parameters;
+		for ( BlockInfo::ParameterInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		{
+			std::cout << "-o\t" << pIt->name;
+			std::cout << "\tt: " << pIt->customName << std::endl;
+		}
+	}
+}
+
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
@@ -63,8 +92,9 @@ int main( int argc, char *argv[] )
 
 	struct BlockInstance
 	{
-		std::vector< InletHandle > inlets;
-		std::vector< OutletHandle > outlets;
+		std::vector< InletHandle >			inlets;
+		std::vector< OutletHandle >			outlets;
+		std::vector< ParameterHandle >		parameters;
 		BlockHandle block;
 	};
 
@@ -79,23 +109,17 @@ int main( int argc, char *argv[] )
 
 		// get bundle info
 
-		BundleInfo info = testBundleA.getBundleInfo();
-		BundleInfo::BlockInfos blocks = info.exportedBlocks;
-		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
-		{
-			std::cout << "-b\t" << it->name << std::endl;
-			BlockInfo::InletInfos inlets = it->inlets;
-			for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-			{
-				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " );
-				std::cout << "t: " << iIt->customName << std::endl;
-			}
-			BlockInfo::OutletInfos outlets = it->outlets;
-			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			{
-				std::cout << "-o\t" << oIt->name << std::endl;
-			}
-		}
+		std::cout << std::endl;
+		std::cout << "--------- bundle info of bundle a ------------------------------------" << std::endl;
+		std::cout << std::endl;
+
+		printBundleInfo( testBundleA );
+
+		std::cout << std::endl;
+		std::cout << "--------- bundle info of bundle b ------------------------------------" << std::endl;
+		std::cout << std::endl;
+
+		printBundleInfo( testBundleB );
 
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
@@ -108,6 +132,9 @@ int main( int argc, char *argv[] )
 			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
 			for ( unsigned int o=0; o<outlets.size(); ++o )
 				b.outlets.push_back( outlets[ o ] );
+			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
+			for ( unsigned int p=0; p<parameters.size(); ++p )
+				b.parameters.push_back( parameters[ p ] );
 
 			b.block.setup();
 			b.block.start();
@@ -124,6 +151,9 @@ int main( int argc, char *argv[] )
 			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
 			for ( unsigned int o=0; o<outlets.size(); ++o )
 				b.outlets.push_back( outlets[ o ] );
+			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
+			for ( unsigned int p=0; p<parameters.size(); ++p )
+				b.parameters.push_back( parameters[ p ] );
 
 			b.block.setup();
 			b.block.start();
@@ -275,6 +305,80 @@ int main( int argc, char *argv[] )
 
 			{
 				std::shared_ptr< const CustomType > d = b.inlets[ 3 ].getCurrentData();
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
+				std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
+				std::shared_ptr< const Image > img = Image::asImage( i );
+				std::cout << "image:" << std::endl;
+				std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+				std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+				std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+				std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
+				std::cout << "basetype:" << std::endl;
+				std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+				std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+				std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+				std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+				std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+				std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+				std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+				std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
+				std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+				std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+				std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
+				std::cout << "simpletype:" << std::endl;
+				std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
+			}
+
+			std::cout << std::endl;
+			std::cout << "--------- current data of p2 ( complextype ) ----------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				std::shared_ptr< const CustomType > d = b.parameters[ 2 ].getCurrentData();
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
+				std::cout << "float vector:\t\t" << "size " << vf.size() << std::endl;
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
+				std::shared_ptr< const Image > img = Image::asImage( i );
+				std::cout << "image:" << std::endl;
+				std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+				std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+				std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+				std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
+				std::cout << "basetype:" << std::endl;
+				std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+				std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+				std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+				std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+				std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+				std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+				std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+				std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
+				std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+				std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+				std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
+				std::cout << "simpletype:" << std::endl;
+				std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
+			}
+
+			std::cout << std::endl;
+			std::cout << "--------- current data of p3 ( complextype ) ----------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				std::shared_ptr< const CustomType > d = b.parameters[ 3 ].getCurrentData();
 				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
 				std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
 				std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );

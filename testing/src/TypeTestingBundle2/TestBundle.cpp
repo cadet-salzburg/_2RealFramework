@@ -108,6 +108,16 @@ void getBundleMetainfo( BundleMetainfo &info )
 		testBlock.addOutlet< std::vector< int > >( "o3" );
 		testBlock.addOutlet< std::vector< std::vector< int > > >( "o4" );
 		/*testBlock.addCustomTypeOutlet( "o5", "recursivetype" );*/
+		testBlock.addCustomTypeParameter( "p0", "basetype", allInit );
+		testBlock.addCustomTypeParameter( "p1", "basetype", std::shared_ptr< CustomType >() );
+		testBlock.addCustomTypeParameter( "p2", "complextype", complexInit );
+		testBlock.addCustomTypeParameter( "p3", "complextype", std::shared_ptr< CustomType >() );
+		testBlock.addCustomTypeParameter( "p4", "simpletype", simpleInit );
+		testBlock.addCustomTypeParameter( "p5", "simpletype", std::shared_ptr< CustomType >() );
+		testBlock.addParameter< std::vector< int > >( "p6", std::vector< int >( 50, 50 )  );
+		testBlock.addParameter< std::vector< int > >( "p7" );
+		testBlock.addParameter< std::vector< std::vector< int > > >( "p8", std::vector< std::vector< int > >( 10, std::vector< int >( 10, 10 ) ) );
+		testBlock.addParameter< std::vector< std::vector< int > > >( "p9" );
 	}
 	catch ( Exception &e )
 	{

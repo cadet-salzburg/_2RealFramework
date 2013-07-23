@@ -124,10 +124,7 @@ namespace _2Real
 
 		try
 		{
-			//m_IOManager->clearInletBuffers();
-			//m_IOManager->updateInletData();
-
-			// ARGH sync setup params
+			m_IOManager->updateSetupParameters();
 
 			bundle::BlockHandle &h = m_IOManager->getHandle();
 			m_FunctionBlock->setup( h );
@@ -172,6 +169,7 @@ namespace _2Real
 	{
 		try
 		{
+			m_IOManager->updateSetupParameters();
 			m_IOManager->updateInletData();
 			m_FunctionBlock->update();
 			m_IOManager->updateOutletData();

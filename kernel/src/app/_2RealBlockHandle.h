@@ -38,6 +38,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
+		class ParameterHandle;
 		struct BlockInfo;
 
 		class BlockHandle
@@ -52,6 +53,10 @@ namespace _2Real
 			typedef std::vector< OutletHandle >					OutletHandles;
 			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
+
+			typedef std::vector< ParameterHandle >					ParameterHandles;
+			typedef std::vector< ParameterHandle >::iterator		ParameterHandleIterator;
+			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
 
 			BlockHandle();
 			BlockHandle( FunctionBlock< BlockHandle > &block );
@@ -81,8 +86,10 @@ namespace _2Real
 
 			InletHandle &			getInletHandle( std::string const& name ) const;
 			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			ParameterHandle &		getParameterHandle( std::string const& name ) const;
 			InletHandles const&		getAllInletHandles() const;
 			OutletHandles const&	getAllOutletHandles() const;
+			ParameterHandles const&	getAllParameterHandles() const;
 
 			// true if block was started ( but not if singlestep was called )
 			bool isRunning() const;

@@ -33,6 +33,9 @@ void Test::setup( BlockHandle &handle )
 		std::vector< OutletHandle > const& outlets = handle.getAllOutletHandles();
 		for ( unsigned int o=0; o<outlets.size(); ++o )
 			mInstance.outlets.push_back( outlets[ o ] );
+		std::vector< ParameterHandle > const& params = handle.getAllParameterHandles();
+		for ( unsigned int p=0; p<params.size(); ++p )
+			mInstance.parameters.push_back( params[ p ] );
 	}
 	catch ( Exception &e )
 	{
@@ -49,6 +52,12 @@ void Test::update()
 		{
 			std::shared_ptr< const CustomType > data = mInstance.inlets[ i ].getReadableRef();
 			if ( !data.get() ) std::cout << "DATA FOR INLET " << i<< " IS MISSING!" << mNumber << std::endl;
+		}
+
+		for ( unsigned int i=0; i<mInstance.parameters.size(); ++i )
+		{
+			std::shared_ptr< const CustomType > data = mInstance.parameters[ i ].getReadableRef();
+			if ( !data.get() ) std::cout << "DATA FOR PARAMETER " << i<< " IS MISSING!" << mNumber << std::endl;
 		}
 
 		//InletHandle i2 = mInstance.inlets[ 2 ];

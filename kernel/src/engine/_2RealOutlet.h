@@ -42,12 +42,8 @@ namespace _2Real
 		using Identifiable< Outlet >::getFullName;
 		using Identifiable< Outlet >::getName;
 
-		//using Parameter::getTypename;
-		//using Parameter::getLongTypename;
 		using Parameter::getData;
 		using Parameter::getWriteableData;
-		//using Parameter::getType;
-		//using Parameter::getTypeCategory;
 
 		bool					synchronize();
 		// returns a reference, since it can only be used during 'update' -> data does not change
@@ -62,6 +58,7 @@ namespace _2Real
 		EngineImpl				&m_Engine;
 		AbstractUberBlock		&m_OwningUberBlock;
 		bool					m_DiscardCurrent;
+		std::shared_ptr< const CustomType > mInit;
 
 	};
 }

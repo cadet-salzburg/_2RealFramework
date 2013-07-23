@@ -14,20 +14,168 @@
 using namespace _2Real;
 using namespace _2Real::app;
 
-Poco::FastMutex mutex;
-
-std::shared_ptr< const Image > outty( nullptr );
-
-void receivedData( void *, std::shared_ptr< const CustomType > data )
+class OutletReceiver
 {
-	// must never be null
-	assert( data.get() );
+public:
+	OutletReceiver( OutletHandle out ) : mOutlet( out )
+	{
+		mOutlet.registerToNewData( *this, &OutletReceiver::receiveData );
+	}
+	~OutletReceiver()
+	{
+		mOutlet.unregisterFromNewData( *this, &OutletReceiver::receiveData );
+	}
+	void receiveData( std::shared_ptr< const CustomType > data )
+	{
+		// must never be null
+		assert( data.get() );
+		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
+		mData = data;
+	}
+	std::shared_ptr< const CustomType > getData() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
+		return mData;
+	}
+private:
+	mutable Poco::FastMutex				mMutex;
+	std::shared_ptr< const CustomType >	mData;
+	_2Real::app::OutletHandle			mOutlet;
+};
 
-	mutex.lock();
-	outty = Image::asImage( data );
-	mutex.unlock();
+struct BlockInstance
+{
+	typedef std::pair< OutletHandle, OutletReceiver * > OutletHandler;
 
-	//std::cout << "received: " << outty->getWidth() << " " << outty->getHeight() <<  std::endl;
+	~BlockInstance()
+	{
+		for ( std::vector< BlockInstance::OutletHandler >::iterator it = outlets.begin(); it != outlets.end(); ++it )
+			delete it->second;
+	}
+
+	BlockHandle block;
+	std::vector< InletHandle >		inlets;
+	std::vector< OutletHandler >	outlets;
+	std::vector< ParameterHandle >	parameters;
+};
+
+struct Texture
+{
+	Texture() : handle( 0 ), width( 0 ), height( 0 ) {}
+
+	GLuint handle;
+	unsigned int width, height;
+};
+
+void imageToTexture( Texture &tex, std::shared_ptr< const Image > img )
+{
+	if ( 0 == tex.handle )
+	{
+		// uninitialized: create texture handle & set filters
+		glGenTextures( 1, &tex.handle );
+		glBindTexture( GL_TEXTURE_2D, tex.handle );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	}
+	else
+		glBindTexture( GL_TEXTURE_2D, tex.handle );
+
+	GLenum uploadFormat = GL_RGBA;
+	GLenum uploadType = GL_UNSIGNED_BYTE;
+
+	const unsigned int w = img->getWidth();
+	const unsigned int h = img->getHeight();
+	const Image::ChannelOrder channels = img->getChannelOrder();
+	const Image::Datatype type = img->getDatatype();
+
+	// note that i ignore the bgr vs rgb thing for testing
+	switch ( channels.getNumberOfChannels() )
+	{
+	case 4:
+		uploadFormat = GL_RGBA;
+		break;
+	case 3:
+		uploadFormat = GL_RGB;
+		break;
+	default:
+		// for some reason GL_RG is not recognized ( probably need glew )
+		uploadFormat = GL_RED;
+		break;
+	}
+
+	switch ( type.getCode() )
+	{
+	case Image::Datatype::UINT8:
+		uploadType = GL_UNSIGNED_BYTE;
+		break;
+	case Image::Datatype::UINT16:
+		uploadType = GL_UNSIGNED_SHORT;
+		break;
+	case Image::Datatype::UINT32:
+		uploadType = GL_UNSIGNED_INT;
+		break;
+	case Image::Datatype::INT8:
+		uploadType = GL_BYTE;
+		break;
+	case Image::Datatype::INT16:
+		uploadType = GL_SHORT;
+		break;
+	case Image::Datatype::INT32:
+		uploadType = GL_INT;
+		break;
+	case Image::Datatype::FLOAT32:
+		uploadType = GL_FLOAT;
+		break;
+	case Image::Datatype::FLOAT64:
+		// in this case,assume float - it won't work properly, but then, nothing will
+		uploadType = GL_UNSIGNED_BYTE;
+		break;
+	default:
+		uploadType = GL_UNSIGNED_BYTE;
+		break;
+	}
+
+	if ( w != tex.width || h != tex.height )
+	{
+		tex.width = w;
+		tex.height = h;
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, uploadFormat, uploadType, ( const GLvoid * )img->getPixels() );
+	}
+	else
+	{
+		glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, uploadFormat, uploadType, ( const GLvoid * )img->getPixels() );
+	}
+
+	glBindTexture( GL_TEXTURE_2D, 0 );
+}
+
+void printBundleInfo( app::BundleHandle const& h )
+{
+	BundleInfo info = h.getBundleInfo();
+	BundleInfo::BlockInfos blocks = info.exportedBlocks;
+	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+	{
+		std::cout << "-b\t" << it->name << std::endl;
+		BlockInfo::InletInfos inlets = it->inlets;
+		for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		{
+			std::cout << "-i\t" << iIt->name;
+			std::cout << "\tt: " << iIt->customName;
+			std::cout << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
+		}
+		BlockInfo::OutletInfos outlets = it->outlets;
+		for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		{
+			std::cout << "-o\t" << oIt->name;
+			std::cout << "\tt: " << oIt->customName << std::endl;
+		}
+		BlockInfo::ParameterInfos params = it->parameters;
+		for ( BlockInfo::ParameterInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		{
+			std::cout << "-o\t" << pIt->name;
+			std::cout << "\tt: " << pIt->customName << std::endl;
+		}
+	}
 }
 
 int main( int argc, char *argv[] )
@@ -35,58 +183,39 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	testEngine.setBaseDirectory( "." );
 
-	InletHandle i0A, i0B;
-	OutletHandle o0;
+	const unsigned int numInstances = 1;
+	std::vector< BlockInstance > blocks( numInstances );
 
 	unsigned int w = 600;
 	unsigned int h = 600;
-	sf::Window window( sf::VideoMode( w, h, 32 ), "geometry shader stuff", sf::Style::Default, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
+	sf::Window window( sf::VideoMode( w, h, 32 ), "computer vision test", sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
 
-	GLuint tex;
-	glGenTextures( 1, &tex );
-	glBindTexture( GL_TEXTURE_2D, tex );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 480, 480, 0, GL_RGBA, GL_FLOAT, nullptr );
-	glBindTexture( GL_TEXTURE_2D, 0 );
+	Texture texture;
 
 	try
 	{
-		BundleHandle testBundle = testEngine.loadBundle( "ComputerVisionBundle" );
+		BundleHandle cvBundle = testEngine.loadBundle( "ComputerVisionBundle" );
 
-		BundleInfo info = testBundle.getBundleInfo();
-		BundleInfo::BlockInfos blocks = info.exportedBlocks;
-		for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+		printBundleInfo( cvBundle );
+
+		for ( unsigned int i = 0; i<numInstances; ++i )
 		{
-			std::cout << "-b\t" << it->name << std::endl;
-			BlockInfo::InletInfos inlets = it->inlets;
-			for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
-			{
-				std::cout << "-i\t" << iIt->name << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
-			}
-			BlockInfo::OutletInfos outlets = it->outlets;
-			for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
-			{
-				std::cout << "-o\t" << oIt->name << std::endl;
-			}
+			BlockInstance &b = blocks[ i ];
+
+			b.block = cvBundle.createBlockInstance( "OcvGaussianBlurBlock" );
+			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
+			for ( unsigned int i=0; i<inlets.size(); ++i )
+				b.inlets.push_back( inlets[ i ] );
+			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
+			for ( unsigned int o=0; o<outlets.size(); ++o )
+				b.outlets.push_back( std::make_pair( outlets[ o ], new OutletReceiver( outlets[ o ] ) ) );
+			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
+			for ( unsigned int p=0; p<parameters.size(); ++p )
+				b.parameters.push_back( parameters[ p ] );
+
+			b.block.setup();
+			b.block.start();
 		}
-
-		BlockHandle testBlock0 = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-
-		i0A = testBlock0.getInletHandle( "InImageA" );
-		i0B = testBlock0.getInletHandle( "InImageB" );
-		o0 = testBlock0.getOutletHandle( "OutImage" );
-
-		//for ( unsigned int i=0; i<2; ++i )
-		//{
-		//	BlockHandle b = testBundle.createBlockInstance( "OcvGaussianBlurBlock" );
-		//	b.setup();
-		//	b.start();
-		//}
-
-		testBlock0.setup();
-		testBlock0.start();
-
-		o0.registerToNewData( &receivedData, nullptr );
 	}
 	catch ( Exception &e )
 	{
@@ -104,49 +233,20 @@ int main( int argc, char *argv[] )
 				exit = true;
 				break;
 			}
-			else if ( sf::Event::Resized == ev.type )
-			{
-				w = ev.size.width;
-				h = ev.size.height;
-			}
 		}
 		if ( exit ) break;
 
-		std::shared_ptr< const CustomType > i0Adata = i0A.getCurrentData();
-		std::shared_ptr< const CustomType > i0Bdata = i0B.getCurrentData();
-
-		// getCurrentData will return nullptrs until the first update happens, so just keep looping
-		if ( i0Adata.get() == nullptr || i0Bdata.get() == nullptr )
-			continue;
-
-		std::shared_ptr< const Image > img0A = Image::asImage( i0Adata );
-		std::shared_ptr< const Image > img0B = Image::asImage( i0Bdata );
-		std::shared_ptr< const Image > imgOut = Image::asImage( o0.getCurrentData() );
-		//std::cout << "img A: " << img0A->getWidth() << " " << img0A->getHeight() << std::endl;
-		//std::cout << "img B: " << img0B->getWidth() << " " << img0B->getHeight() << std::endl;
-		//std::cout << "img O: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
-
-		//float num = 32 * 24 * 4;
-		//float *data = new float[ 32 * 24 * 4 ];
-		//for ( unsigned int i=0; i<num; ++i )
-		//	data[ i ] = 0.5f;
-		//std::shared_ptr< CustomType > t = i0A.makeData();
-		//t->set( Image::FIELD_WIDTH, unsigned int( 32 ) );
-		//t->set( Image::FIELD_HEIGHT, unsigned int( 24 ) );
-		//t->set( Image::FIELD_DATA, std::vector< unsigned char >( ( unsigned char * )data, ( unsigned char * )data+32*24*4*4 ) );
-		//t->set< int >( Image::FIELD_CHANNELS, Image::ChannelOrder::RGB );
-		//t->set< int >( Image::FIELD_DATATYPE, Image::Datatype::FLOAT32 );
-		//i0A.receiveData( t );
-		//delete [] data;
+		std::shared_ptr< const CustomType > d = blocks[ 0 ].outlets[ 0 ].second->getData();
+		if ( d.get() )
+		{
+			std::shared_ptr< const Image > img = Image::asImage( d );
+			//glBindTexture( GL_TEXTURE_2D, tex );
+			//glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, img->getWidth(), img->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, img->getPixels() );
+			imageToTexture( texture, img );
+		}
 
 		glViewport( 0, 0, w, h );
-
-		glBindTexture( GL_TEXTURE_2D, tex );
-
-		mutex.lock();
-		if ( outty.get() )
-			glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 480, 480, GL_RGBA, GL_FLOAT, outty->getPixels() );
-		mutex.unlock();
+		glBindTexture( GL_TEXTURE_2D, texture.handle );
 
 		glEnable( GL_TEXTURE_2D );
 
@@ -166,19 +266,10 @@ int main( int argc, char *argv[] )
 
 		glBindTexture( GL_TEXTURE_2D, 0 );
 
-		//app::TypeMetainfo info = i0A.getType();
-		//_2Real::Fields fields; info.getFieldInfo( fields );
-		//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-		//{
-		//	std::cout << ( *it )->getName() << " " << ( *it )->getTypename() << std::endl;
-		//}
-		//for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
-		//{
-		//	delete *it;
-		//}
-
 		window.display();
 	}
+
+	blocks.clear();
 
 	return 0;
 }

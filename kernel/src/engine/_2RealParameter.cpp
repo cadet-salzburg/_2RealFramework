@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealParameter.h"
+#include "engine/_2RealAbstractUberBlock.h"
 #include <assert.h>
 
 namespace _2Real
@@ -54,6 +55,48 @@ namespace _2Real
 		assert( m_DataBuffer.get() );
 #endif
 		return m_DataBuffer;
+	}
+
+	InputParameter::InputParameter( AbstractUberBlock &owningBlock, std::string const& name, std::shared_ptr< const CustomType > initializer ) :
+		NonCopyable< InputParameter >(),
+		Identifiable< InputParameter >( owningBlock.getIds(), name ),
+		Handleable< InputParameter, bundle::ParameterHandle >( *this ),
+		m_OwningUberBlock( owningBlock ),
+		m_Data( new CustomType( *( initializer.get() ) ) ),			// clone
+		m_DataBuffer( new CustomType( *( initializer.get() ) ) ),	// clone
+		m_LastData()
+	{
+		( void )( name );
+	}
+
+	bool InputParameter::hasChanged() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		return ( *m_Data.get() == *m_LastData.get() );
+	}
+
+	void InputParameter::synchronize()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_LastData = m_Data;
+		m_Data = m_DataBuffer;
+	}
+
+	std::shared_ptr< const CustomType > InputParameter::getData() const
+	{
+		return m_Data;
+	}
+
+	std::shared_ptr< const CustomType >InputParameter::getDataThreadsafe() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		return m_Data;
+	}
+
+	void InputParameter::setData( std::shared_ptr< const CustomType > data )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( m_DataAccess );
+		m_DataBuffer = data;
 	}
 
 }

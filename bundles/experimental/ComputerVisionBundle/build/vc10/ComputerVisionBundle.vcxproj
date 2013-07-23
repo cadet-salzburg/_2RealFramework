@@ -19,15 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\ComputerVisionBundle.cpp" />
-    <ClCompile Include="..\..\src\OcvGaussianBlurBlock.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\docs\todo.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ImageHelpers.h" />
     <ClInclude Include="..\..\src\OcvGaussianBlurBlock.h" />
+    <ClInclude Include="..\..\src\OcvHistogramNormalizationBlock.h" />
+    <ClInclude Include="..\..\src\OcvSobelBlock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ComputerVisionBundle.cpp" />
+    <ClCompile Include="..\..\src\ImageHelpers.cpp" />
+    <ClCompile Include="..\..\src\OcvGaussianBlurBlock.cpp" />
+    <ClCompile Include="..\..\src\OcvHistogramNormalizationBlock.cpp" />
+    <ClCompile Include="..\..\src\OcvSobelBlock.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E17C616B-6931-4F9A-87D8-EB57BB78FEE4}</ProjectGuid>

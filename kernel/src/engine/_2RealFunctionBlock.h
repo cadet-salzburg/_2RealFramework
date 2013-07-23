@@ -61,13 +61,17 @@ namespace _2Real
 
 		bundle::InletHandle &		getBundleInletHandle( std::string const& inletName ) const;
 		bundle::OutletHandle &		getBundleOutletHandle( std::string const& outletName ) const;
+		bundle::ParameterHandle &		getBundleParameterHandle( std::string const& paramName ) const;
 		app::InletHandle &			getAppInletHandle( std::string const& inletName ) const;
 		app::OutletHandle &			getAppOutletHandle( std::string const& outletName ) const;
+		app::ParameterHandle &			getAppParameterHandle( std::string const& paramName ) const;
 
 		AppInletHandles const&		getAppInletHandles() const;
 		AppOutletHandles const&		getAppOutletHandles() const;
+		AppParameterHandles const&		getAppParameterHandles() const;
 		BundleInletHandles const&	getBundleInletHandles() const;
 		BundleOutletHandles const&	getBundleOutletHandles() const;
+		BundleParameterHandles const&	getBundleParameterHandles() const;
 
 		/* added 13/05/2013 */
 
@@ -91,6 +95,7 @@ namespace _2Real
 
 		void						addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
 		void						addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
+		void						addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
 
 	private:
 
@@ -190,6 +195,13 @@ namespace _2Real
 	}
 
 	template< typename THandle >
+	void FunctionBlock< THandle >::addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
+	{
+		ParameterInfo info( meta.name, initializer, type );
+		m_IOManager->addParameter( info );
+	}
+
+	template< typename THandle >
 	app::BlockInfo const& FunctionBlock< THandle >::getBlockInfo()
 	{
 		return m_BlockInfo;
@@ -199,6 +211,12 @@ namespace _2Real
 	app::InletHandle & FunctionBlock< THandle >::getAppInletHandle( std::string const& name ) const
 	{
 		return m_IOManager->getAppInletHandle( name );
+	}
+
+	template< typename THandle >
+	app::ParameterHandle & FunctionBlock< THandle >::getAppParameterHandle( std::string const& name ) const
+	{
+		return m_IOManager->getAppParameterHandle( name );
 	}
 
 	template< typename THandle >
@@ -220,6 +238,12 @@ namespace _2Real
 	}
 
 	template< typename THandle >
+	bundle::ParameterHandle & FunctionBlock< THandle >::getBundleParameterHandle( std::string const& name ) const
+	{
+		return m_IOManager->getBundleParameterHandle( name );
+	}
+
+	template< typename THandle >
 	AppInletHandles const& FunctionBlock< THandle >::getAppInletHandles() const
 	{
 		return m_IOManager->getAppInletHandles();
@@ -232,6 +256,12 @@ namespace _2Real
 	}
 
 	template< typename THandle >
+	AppParameterHandles const& FunctionBlock< THandle >::getAppParameterHandles() const
+	{
+		return m_IOManager->getAppParameterHandles();
+	}
+
+	template< typename THandle >
 	BundleInletHandles const& FunctionBlock< THandle >::getBundleInletHandles() const
 	{
 		return m_IOManager->getBundleInletHandles();
@@ -241,6 +271,12 @@ namespace _2Real
 	BundleOutletHandles const& FunctionBlock< THandle >::getBundleOutletHandles() const
 	{
 		return m_IOManager->getBundleOutletHandles();
+	}
+
+	template< typename THandle >
+	BundleParameterHandles const& FunctionBlock< THandle >::getBundleParameterHandles() const
+	{
+		return m_IOManager->getBundleParameterHandles();
 	}
 
 	template< typename THandle >

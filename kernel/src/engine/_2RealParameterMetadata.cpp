@@ -37,4 +37,13 @@ namespace _2Real
 	OutletMetadata::~OutletMetadata()
 	{
 	}
+
+	ParameterMetadata::ParameterMetadata( std::string const& n, std::string const& t, std::shared_ptr< const CustomType > i, TypeMetadata const*m ) :
+		name( n ), type( t ), initValue( i ), metadata( m )
+	{
+	}
+
+	ParameterMetadata::~ParameterMetadata()
+	{
+	}
 }

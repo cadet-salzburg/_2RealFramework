@@ -1,4 +1,4 @@
-*
+/*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
 		http://www.cadet.at
@@ -25,17 +25,13 @@ class OcvSobelBlock : public _2Real::bundle::Block
 public:
 
 	OcvSobelBlock();
-	virtual ~OcvSobelBlock();
-	virtual void shutdown();
-	virtual void update();
-	virtual void setup( _2Real::bundle::BlockHandle &context );
+	~OcvSobelBlock();
+	void shutdown();
+	void update();
+	void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 
-	_2Real::bundle::BlockHandle			m_Block;
-	unsigned int						m_OutWidth;
-	unsigned int						m_OutHeight;
-	_2Real::ImageType					m_OutImageType;
-	_2Real::ImageChannelOrder			m_OutChannelOrder;
+	_2Real::bundle::BlockHandle			mBlock;
 
 };

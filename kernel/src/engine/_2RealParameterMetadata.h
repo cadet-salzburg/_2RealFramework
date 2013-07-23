@@ -27,6 +27,8 @@ namespace _2Real
 {
 	class TypeMetadata;
 
+	// TODO: replace by object....
+
 	struct InletMetadata
 	{
 		InletMetadata( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const*, InletPolicy const&, const bool );
@@ -50,9 +52,14 @@ namespace _2Real
 		TypeMetadata									const* metadata;
 	};
 
-	//struct SetupParameterMetadata
-	//{
-	//	SetupParameterMetadata( std::string const& outlet, CustomType const& init );
-	//	~SetupParameterMetadata();
-	//};
+	struct ParameterMetadata
+	{
+		ParameterMetadata( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const* );
+		~ParameterMetadata();
+
+		std::string										name;
+		std::string										type;
+		TypeMetadata									const* metadata;
+		std::shared_ptr< const CustomType >				initValue;
+	};
 }

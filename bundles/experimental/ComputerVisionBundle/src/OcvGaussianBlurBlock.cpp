@@ -26,23 +26,20 @@ using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
 
-unsigned int cnt = 0;
-
 OcvGaussianBlurBlock::OcvGaussianBlurBlock() :
 	Block()
-  , mInstanceNumber( ++cnt )
-	{}
+{
+}
 
-OcvGaussianBlurBlock::~OcvGaussianBlurBlock() {}
+OcvGaussianBlurBlock::~OcvGaussianBlurBlock()
+{
+}
 
 void OcvGaussianBlurBlock::setup( BlockHandle &block )
 {
 	try
 	{
 		mBlock = block;
-#ifdef VERBOSE
-		std::cout << "setup: " << mInstanceNumber << std::endl;
-#endif
 	}
 	catch( Exception & e )
 	{
@@ -61,51 +58,46 @@ void OcvGaussianBlurBlock::update()
 {
 	try
 	{
-#ifdef VERBOSE
-		std::cout << "updating: " << mInstanceNumber << std::endl;
-#endif
-		InletHandle inA = mBlock.getInletHandle( "InImageA" );
-		InletHandle inB = mBlock.getInletHandle( "InImageB" );
-		OutletHandle out = mBlock.getOutletHandle( "OutImage" );
+		InletHandle hInImage = mBlock.getInletHandle( "in_image" );
+		ParameterHandle hParamKx  = mBlock.getParameterHandle( "param_kernel_x" );
+		ParameterHandle hParamKy  = mBlock.getParameterHandle( "param_kernel_y" );
+		ParameterHandle hParamSx  = mBlock.getParameterHandle( "param_sigma_x" );
+		ParameterHandle hParamSy  = mBlock.getParameterHandle( "param_sigma_y" );
+		OutletHandle hOutImage = mBlock.getOutletHandle( "out_image" );
 
-		std::shared_ptr< const CustomType > inputA = inA.getReadableRef();
-		std::shared_ptr< const CustomType > inputB = inB.getReadableRef();
-		std::shared_ptr< CustomType > output = out.getWriteableRef();
+		std::shared_ptr< const CustomType > inData = hInImage.getReadableRef();
+		std::shared_ptr< const Image > inImage = Image::asImage( inData );
+		Image const& in = *inImage.get();
 
-		std::shared_ptr< const Image > imgA = Image::asImage( inputA );
-		std::shared_ptr< const Image > imgB = Image::asImage( inputB );
-		std::shared_ptr< Image > imgOut = Image::asImage( output );
+		//std::cout << in.getWidth() << " " << in.getHeight() << " " << ( std::string ) in.getDatatype() << " " << ( std::string ) in.getChannelOrder() << std::endl;
 
-		unsigned int szA = imgA->getWidth() * imgA->getHeight();
-		unsigned int szB = imgB->getWidth() * imgB->getHeight();
+		std::shared_ptr< CustomType > outData = hOutImage.getWriteableRef();
+		std::shared_ptr< Image > outImage = Image::asImage( outData );
+		Image &out = *outImage.get();
 
-		unsigned int wOut = std::min< unsigned int >( imgA->getWidth(), imgB->getWidth() );
-		unsigned int hOut = std::min< unsigned int >( imgA->getHeight(), imgB->getHeight() );
+		out.createImagedata( in.getWidth(), in.getHeight(), in.getChannelOrder(), in.getDatatype() );
 
-		imgOut->createImagedata( wOut, hOut, Image::ChannelOrder::RGBA, Image::Datatype::FLOAT32 );
+		std::shared_ptr< const CustomType > kxData = hParamKx.getReadableRef();
+		unsigned char kx = *( kxData->get< unsigned char >( "default" ).get() );
 
-		//std::cout << "created: " << imgOut->getWidth() << " " << imgOut->getHeight() << std::endl;
+		std::shared_ptr< const CustomType > kyData = hParamKy.getReadableRef();
+		unsigned char ky = *( kyData->get< unsigned char >( "default" ).get() );
 
-		float *f = reinterpret_cast< float * >( imgOut->getPixels() );
-		float const *a = reinterpret_cast< float const* >( imgA->getPixels() );
-		float const *b = reinterpret_cast< float const* >( imgB->getPixels() );
-		unsigned int sz = hOut * wOut * 4;
-		for ( unsigned int i=0; i<sz; ++i )
-			f[ i ] = abs( a[ i ] - b[ i ] );
-		//for ( unsigned int y=0; y<hOut; ++y )
-		//{
-		//	for ( unsigned int x=0; x<wOut; x+=4 )
-		//	{
-		//		const unsigned int index = y * wOut * 4 + x;
-		//		float *tmp = &( f[ index ] );
-		//		float const* pa = &( a[ index ] );
-		//		float const* tb = &( b[ index ] );
-		//		for ( unsigned int i=0; i<4; ++i )
-		//		{
-		//			tmp[ i ] = pa[ i ];
-		//		}
-		//	}
-		//}
+		std::shared_ptr< const CustomType > sxData = hParamSx.getReadableRef();
+		double sx = *( sxData->get< double >( "default" ).get() );
+
+		std::shared_ptr< const CustomType > syData = hParamSy.getReadableRef();
+		double sy = *( syData->get< double >( "default" ).get() );
+
+		//std::cout << ( int ) kx << " " << ( int ) ky << " " << sx << " " << sy << std::endl;
+
+		cv::Mat const* const matSrc = convertToCvMat( in );
+		cv::Mat *const matDst = convertToCvMat( out );
+
+		cv::GaussianBlur( *matSrc, *matDst, cv::Size( kx, ky ), sx, sy, 4 );
+
+		delete matSrc;
+		delete matDst;
 	}
 	catch( Exception & e )
 	{
@@ -122,9 +114,6 @@ void OcvGaussianBlurBlock::shutdown()
 {
 	try
 	{
-#ifdef VERBOSE
-		std::cout << "shutdown: " << mInstanceNumber << std::endl;
-#endif
 	}
 	catch( Exception & e )
 	{

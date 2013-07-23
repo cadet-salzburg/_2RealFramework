@@ -23,6 +23,7 @@
 #include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealBundleInfo.h"
 #include "app/_2RealBlockInfo.h"

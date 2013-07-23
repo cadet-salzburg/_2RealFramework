@@ -26,21 +26,19 @@ using namespace _2Real::bundle;
 using namespace _2Real;
 using namespace std;
 
-OcvSobelBlock::OcvSobelBlock() : Block(), m_OutChannelOrder( ImageChannelOrder::RGB ), m_OutImageType( ImageType::UNSIGNED_BYTE ) {}
-OcvSobelBlock::~OcvSobelBlock() {}
+OcvSobelBlock::OcvSobelBlock() : Block()
+{
+}
+
+OcvSobelBlock::~OcvSobelBlock()
+{
+}
 
 void OcvSobelBlock::setup( BlockHandle &block )
 {
 	try
 	{
-		m_Block = block;
-		Image &output = block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
-		output = Image();
-
-		m_OutWidth = output.getWidth();
-		m_OutHeight = output.getHeight();
-		m_OutChannelOrder = output.getChannelOrder();
-		m_OutImageType = output.getImageType();
+		mBlock = block;
 	}
 	catch( Exception & e )
 	{
@@ -59,41 +57,46 @@ void OcvSobelBlock::update()
 {
 	try
 	{
-		Image &output = m_Block.getOutletHandle( "image_out" ).getWriteableRef< Image >();
+		InletHandle hInImage =			mBlock.getInletHandle( "in_image" );
+		ParameterHandle hParamOx =		mBlock.getParameterHandle( "param_order_x" );
+		ParameterHandle hParamOy =		mBlock.getParameterHandle( "param_order_y" );
+		ParameterHandle hParamA =		mBlock.getParameterHandle( "param_aperture" );
+		OutletHandle hOutImage =		mBlock.getOutletHandle( "out_image" );
 
-		vector< InletHandle > inlets = m_Block.getAllInletHandles();
+		std::shared_ptr< const CustomType > inData = hInImage.getReadableRef();
+		std::shared_ptr< const Image > inImage = Image::asImage( inData );
+		Image const& in = *inImage.get();
 
-		// inlets are accessible in the same order they were declared in the metadata
-		Image const& input = inlets[ 0 ].getReadableRef< Image >();
-		unsigned char orderX = inlets[ 1 ].getReadableRef< unsigned char >();
-		unsigned char orderY = inlets[ 2 ].getReadableRef< unsigned char >();
-		unsigned char aperture = inlets[ 3 ].getReadableRef< unsigned char >();
-
-		if ( aperture != 1 && aperture != 3 && aperture != 5 && aperture != 7 )
+		int ddepth = getCvImageDepth( in );
+		if ( ddepth < 0 )
 		{
-			// (?) throwing an exception is not really a good idea in this case
-			// ( exc requires re-setup, and that really would not help )
-			// nonetheless, the user should be notified somehow?
-			m_Block.getOutletHandle( "image_out" ).discard();
+			std::cout << "wrong input image format" << std::endl;
+			hOutImage.discard();
 			return;
 		}
 
-		if ( !( m_OutImageType == input.getImageType() && m_OutChannelOrder == input.getChannelOrder() ) || m_OutWidth != input.getWidth() || m_OutHeight != input.getHeight() )
-		{
-			cout << "creating new out image" << endl;
-			output = input;	// this involves a copy of the data, thus making sure that the outlet has the correct datatype & channel order
-							// could, however, be more efficient as the memcpy that happens is not needed
-			m_OutWidth = output.getWidth();
-			m_OutHeight = output.getHeight();
-			m_OutChannelOrder = output.getChannelOrder();
-			m_OutImageType = output.getImageType();
-		}
+		//std::cout << in.getWidth() << " " << in.getHeight() << " " << ( std::string ) in.getDatatype() << " " << ( std::string ) in.getChannelOrder() << std::endl;
 
-		// no copies or anything involved here, this just allows 'viewing' the imagesource as cv mat
-		cv::Mat const* const matSrc = convertToCvMat( input );
-		cv::Mat *const matDst = convertToCvMat( output );
+		std::shared_ptr< CustomType > outData = hOutImage.getWriteableRef();
+		std::shared_ptr< Image > outImage = Image::asImage( outData );
+		Image &out = *outImage.get();
 
-		cv::Sobel( *matSrc, *matDst, 2, orderX, orderY );
+		out.createImagedata( in.getWidth(), in.getHeight(), in.getChannelOrder(), in.getDatatype() );
+
+		std::shared_ptr< const CustomType > oxData = hParamOx.getReadableRef();
+		unsigned char ox = *( oxData->get< unsigned char >( "default" ).get() );
+
+		std::shared_ptr< const CustomType > oyData = hParamOy.getReadableRef();
+		unsigned char oy = *( oyData->get< unsigned char >( "default" ).get() );
+
+		std::shared_ptr< const CustomType > sxData = hParamA.getReadableRef();
+		unsigned char a = *( sxData->get< unsigned char >( "default" ).get() );
+
+		//std::cout << ( int )ox << " " << ( int )oy << " " << a << std::endl;
+
+		cv::Mat const* const matSrc = convertToCvMat( in );
+		cv::Mat *const matDst = convertToCvMat( out );
+		cv::Sobel( *matSrc, *matDst, ddepth, ox, oy, a );
 
 		delete matSrc;
 		delete matDst;
@@ -109,4 +112,18 @@ void OcvSobelBlock::update()
 	}
 }
 
-void OcvSobelBlock::shutdown() {}
+void OcvSobelBlock::shutdown()
+{
+	try
+	{
+	}
+	catch( Exception & e )
+	{
+		cout << e.message() << " " << e.what() << endl;
+		e.rethrow();
+	}
+	catch( std::exception & e )
+	{
+		cout << e.what() << endl;
+	}
+}

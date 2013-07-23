@@ -33,7 +33,8 @@ namespace _2Real
 		Handleable< Outlet, bundle::OutletHandle >( *this ),
 		m_Engine( EngineImpl::instance() ),
 		m_OwningUberBlock( owningBlock ),
-		m_DiscardCurrent( false )
+		m_DiscardCurrent( false ),
+		mInit( initialValue )
 	{
 		// the 'initialValue' is just a template, I now need to clone that twice
 		//Parameter::m_Data->cloneFrom( *( initialValue.get() ) );
@@ -50,7 +51,8 @@ namespace _2Real
 			Parameter::synchronize();
 			// clone readable data back into writeable data
 			// this way, outlet always holds the last written value
-			Parameter::m_DataBuffer.reset( new CustomType( *Parameter::m_Data.get() ) );		// clone
+			//Parameter::m_DataBuffer.reset( new CustomType( *Parameter::m_Data.get() ) );		// clone
+			Parameter::m_DataBuffer.reset( new CustomType( *mInit.get() ) );		// clone
 			return false;
 		}
 		else

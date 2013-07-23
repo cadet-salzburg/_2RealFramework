@@ -312,6 +312,12 @@
     <ClInclude Include="..\..\src\datatypes\_2RealTypeConverter.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h">
+      <Filter>include\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
@@ -499,6 +505,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealTypeConverter.cpp">
       <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
+      <Filter>src\bundle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

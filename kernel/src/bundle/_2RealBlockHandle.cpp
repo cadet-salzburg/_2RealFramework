@@ -95,6 +95,12 @@ namespace _2Real
 			return m_IO->getBundleOutletHandle( trim ( name ) );
 		}
 
+		ParameterHandle & BlockHandle::getParameterHandle( string const& name ) const
+		{
+			checkValidity( m_IO );
+			return m_IO->getBundleParameterHandle( trim ( name ) );
+		}
+
 		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
 		{
 			checkValidity( m_IO );
@@ -105,6 +111,12 @@ namespace _2Real
 		{
 			checkValidity( m_IO );
 			return m_IO->getBundleOutletHandles();
+		}
+
+		BlockHandle::ParameterHandles const& BlockHandle::getAllParameterHandles() const
+		{
+			checkValidity( m_IO );
+			return m_IO->getBundleParameterHandles();
 		}
 	}
 }

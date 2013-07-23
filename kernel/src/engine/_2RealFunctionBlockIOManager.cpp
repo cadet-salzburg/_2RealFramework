@@ -55,6 +55,11 @@ namespace _2Real
 		{
 			delete *it;
 		}
+
+		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			delete *it;
+		}
 	}
 
 	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const
@@ -67,6 +72,11 @@ namespace _2Real
 		return m_AppOutletHandles;
 	}
 
+	AppParameterHandles const& FunctionBlockIOManager::getAppParameterHandles() const
+	{
+		return m_AppParameterHandles;
+	}
+
 	BundleInletHandles const& FunctionBlockIOManager::getBundleInletHandles() const
 	{
 		return m_BundleInletHandles;
@@ -75,6 +85,11 @@ namespace _2Real
 	BundleOutletHandles const& FunctionBlockIOManager::getBundleOutletHandles() const
 	{
 		return m_BundleOutletHandles;
+	}
+
+	BundleParameterHandles const& FunctionBlockIOManager::getBundleParameterHandles() const
+	{
+		return m_BundleParameterHandles;
 	}
 
 	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::vector< std::shared_ptr< const CustomType > > > &cb )
@@ -97,6 +112,11 @@ namespace _2Real
 		return getOutletIO( name ).getHandle();
 	}
 
+	app::ParameterHandle & FunctionBlockIOManager::getAppParameterHandle( string const& name )
+	{
+		return getParameterIO( name ).getHandle();
+	}
+
 	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
 	{
 		return getInletIO( name ).getBundleInletHandle();
@@ -105,6 +125,11 @@ namespace _2Real
 	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
 	{
 		return getOutletIO( name ).m_Outlet->getHandle();
+	}
+
+	bundle::ParameterHandle & FunctionBlockIOManager::getBundleParameterHandle( string const& name ) const
+	{
+		return getParameterIO( name ).m_Parameter->getHandle();
 	}
 
 	AbstractInletIO & FunctionBlockIOManager::getInletIO( string const& name )
@@ -134,6 +159,21 @@ namespace _2Real
 
 		ostringstream msg;
 		msg << "outlet " << name<< " not found in" << m_Owner.getFullName();
+		throw NotFoundException( msg.str() );
+	}
+
+	ParameterIO & FunctionBlockIOManager::getParameterIO( string const& name )
+	{
+		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			if ( toLower( ( *it )->m_Parameter->getName() ) == toLower( name ) )
+			{
+				return **it;
+			}
+		}
+
+		ostringstream msg;
+		msg << "parameter " << name<< " not found in" << m_Owner.getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -167,6 +207,21 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
+	ParameterIO const& FunctionBlockIOManager::getParameterIO( string const& name ) const
+	{
+		for ( ParameterConstIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			if ( toLower( ( *it )->m_Parameter->getName() ) == toLower( name ) )
+			{
+				return **it;
+			}
+		}
+
+		ostringstream msg;
+		msg << "parameter " << name<< " not found in" << m_Owner.getFullName();
+		throw NotFoundException( msg.str() );
+	}
+
 	void FunctionBlockIOManager::addBasicInlet( InletInfo const& info )
 	{
 		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
@@ -183,6 +238,15 @@ namespace _2Real
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
 		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
+	}
+
+	void FunctionBlockIOManager::addParameter( ParameterInfo const& info )
+	{
+		ParameterIO *io = new ParameterIO( m_Owner, info );
+		io->m_Parameter->synchronize();
+		m_Parameters.push_back( io );
+		m_AppParameterHandles.push_back( io->getHandle() );
+		m_BundleParameterHandles.push_back( io->m_Parameter->getHandle() );
 	}
 
 	void FunctionBlockIOManager::addOutlet( OutletInfo const& info )
@@ -207,6 +271,14 @@ namespace _2Real
 				BasicInletIO &inletIO = ( **it )[ i ];
 				inletIO.syncInletData();		// makes changed data visible
 			}
+		}
+	}
+
+	void FunctionBlockIOManager::updateSetupParameters()
+	{
+		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		{
+			( *it )->m_Parameter->synchronize();		// makes changes to visible
 		}
 	}
 

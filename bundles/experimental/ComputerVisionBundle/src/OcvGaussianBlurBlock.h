@@ -25,14 +25,13 @@ class OcvGaussianBlurBlock : public _2Real::bundle::Block
 public:
 
 	OcvGaussianBlurBlock();
-	virtual ~OcvGaussianBlurBlock();
-	virtual void shutdown();
-	virtual void update();
-	virtual void setup( _2Real::bundle::BlockHandle &context );
+	~OcvGaussianBlurBlock();
+	void shutdown();
+	void update();
+	void setup( _2Real::bundle::BlockHandle &context );
 
 private:
 
 	_2Real::bundle::BlockHandle			mBlock;
-	unsigned int						mInstanceNumber;
 
 };

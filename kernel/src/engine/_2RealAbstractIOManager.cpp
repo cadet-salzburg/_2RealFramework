@@ -255,6 +255,30 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	ParameterIO::ParameterIO( AbstractUberBlock &owner, ParameterInfo const& info ) :
+		Handleable< ParameterIO, app::ParameterHandle >( *this ),
+		m_Parameter( new InputParameter( owner, info.baseName, info.initializer ) ),
+		//m_AppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
+		//m_InletEvent( new CallbackEvent< TimestampedData const& >() ),
+		m_OwningBlock( owner ),
+		m_Info( info )
+	{
+	}
+
+	//std::shared_ptr< const CustomType > ParameterIO::getCurrentData() const
+	//{
+	//	return m_Outlet->getData();
+	//}
+
+	ParameterIO::~ParameterIO()
+	{
+		delete m_Parameter;
+		//delete m_AppEvent;
+		//delete m_InletEvent;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	OutletIO::OutletIO( AbstractUberBlock &owner, OutletInfo const& info ) :
 		Handleable< OutletIO, app::OutletHandle >( *this ),
 		m_Outlet( new Outlet( owner, info.baseName, info.initializer ) ),

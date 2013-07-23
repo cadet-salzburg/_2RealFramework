@@ -51,11 +51,14 @@ namespace _2Real
 		public:
 			enum Code
 			{
-				RGB = 0,
-				BGR = 1,
-				RGBA = 2,
-				BGRA = 3,
-				UNDEFINED = 0xFF
+				RGB,
+				BGR,
+				RGBA,
+				BGRA,
+				ARGB,
+				SINGLECHANNEL,
+				DUALCHANNEL,
+				UNDEFINED,
 			};
 			ChannelOrder( const Code );
 			explicit ChannelOrder( const int );
@@ -64,6 +67,7 @@ namespace _2Real
 			operator std::string() const;
 			bool operator==( ChannelOrder const& other );
 			unsigned int getNumberOfChannels() const;
+			Code getCode() const;
 		private:
 			Code	mCode;
 		};
@@ -73,11 +77,15 @@ namespace _2Real
 		public:
 			enum Code
 			{
-				UINT32 = 0,
-				UINT16 = 1,
-				UINT8 = 2,
-				FLOAT32 = 3,
-				UNDEFINED = 0xFF
+				UINT8,
+				UINT16,
+				UINT32,
+				INT8,
+				INT16,
+				INT32,
+				FLOAT32,
+				FLOAT64,
+				UNDEFINED,
 			};
 			Datatype( const Code );
 			explicit Datatype( const int );
@@ -86,6 +94,7 @@ namespace _2Real
 			operator std::string() const;
 			bool operator==( Datatype const& other );
 			size_t getBytesPerPixel() const;
+			Code getCode() const;
 		private:
 			Code	mCode;
 		};

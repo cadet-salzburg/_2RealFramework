@@ -35,6 +35,9 @@ namespace _2Real
 			typedef std::vector< OutletInfo >					OutletInfos;
 			typedef std::vector< OutletInfo >::iterator			OutletInfoIterator;
 			typedef std::vector< OutletInfo >::const_iterator	OutletInfoConstIterator;
+			typedef std::vector< ParameterInfo >					ParameterInfos;
+			typedef std::vector< ParameterInfo >::iterator			ParameterInfoIterator;
+			typedef std::vector< ParameterInfo >::const_iterator	ParameterInfoConstIterator;
 
 			BlockInfo() : name( "undefined" ), description( "undefined" ), category( "undefined" ), inlets(), outlets() {}
 
@@ -43,6 +46,7 @@ namespace _2Real
 			std::string			category;
 			InletInfos			inlets;
 			OutletInfos			outlets;
+			ParameterInfos		parameters;
 		};
 	}
 }

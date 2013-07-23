@@ -65,6 +65,25 @@ namespace _2Real
 			m_Impl.addInlet( data );
 		}
 
+		void BlockMetainfo::addCustomTypeParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init )
+		{
+			privateAddParameter( name, type, init, nullptr );
+		}
+
+		void BlockMetainfo::privateAddParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta )
+		{
+			std::string trimmed = trim( name );
+			checkChars( toLower( trimmed ) );
+
+			// copy for safety reasons
+			std::shared_ptr< const CustomType > copied;
+			if ( init.get() )
+				copied.reset( new CustomType( *( init.get() ) ) );
+
+			ParameterMetadata *data = new ParameterMetadata( trimmed, type, copied, meta );
+			m_Impl.addParameter( data );
+		}
+
 		void BlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
 		{
 			privateAddOutlet( name, type, nullptr );

@@ -64,28 +64,6 @@ namespace _2Real
 			_2Real::TypeMetadata					const* mImpl;
 		};
 
-		//class InletInfo
-		//{
-		//public:
-		//	InletInfo( _2Real::InletInfo const& impl ) : mImpl( &impl ) {}
-		//	//std::string getName() const { return mImpl->baseName; }
-		//	//bool isMultiinlet() const { return mImpl->isMuliinlet; }
-		//private:
-		//	_2Real::InletInfo						const* mImpl;
-		//};
-
-		//class OutletInfo
-		//{
-		//public:
-		//	OutletInfo( _2Real::OutletInfo const& impl ) : mImpl( &impl ) {}
-		//private:
-		//	_2Real::OutletInfo						const* mImpl;
-		//};
-
-		//class ParameterInfo
-		//{
-		//};
-
 		struct InletInfo
 		{
 			InletInfo() : name( "undefined" ), customName( "undefined" ),
@@ -104,6 +82,15 @@ namespace _2Real
 
 			std::string								name;
 			std::string								customName;
+		};
+
+		struct ParameterInfo
+		{
+			ParameterInfo() : name( "undefined" ), customName( "undefined" ), initValue() {}
+
+			std::string								name;
+			std::string								customName;
+			std::shared_ptr< const CustomType >		initValue;
 		};
 	}
 }
