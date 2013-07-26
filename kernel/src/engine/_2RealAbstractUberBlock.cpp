@@ -18,13 +18,17 @@
 
 #include "engine/_2RealAbstractUberBlock.h"
 
-using std::string;
+#include <assert.h>
 
 namespace _2Real
 {
-	AbstractUberBlock::AbstractUberBlock( Ids const& ids, std::string const& name ) :
-		Identifiable< AbstractUberBlock >( ids, name )
+	AbstractUberBlock::AbstractUberBlock( EngineImpl *engine, Ids const& ids, std::string const& name ) :
+		Identifiable< AbstractUberBlock >( ids, name ),
+		mEngineImpl( engine )
 	{
+#ifdef _DEBUG
+		assert( mEngineImpl );
+#endif;
 	}
 
 	AbstractUberBlock::~AbstractUberBlock()

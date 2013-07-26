@@ -271,7 +271,7 @@ void printBundleInfo( app::BundleHandle const& h )
 int main( int argc, char *argv[] )
 {
 	Engine &testEngine = Engine::instance();
-	testEngine.setBaseDirectory( "." );
+	//testEngine.setBaseDirectory( "." );
 
 	unsigned int numInstances = 1;
 	unsigned int numBlocks = 0;

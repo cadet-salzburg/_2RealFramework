@@ -186,7 +186,7 @@ namespace _2Real
 		return m_ContextInfo.ctor->create( nullptr );
 	}
 
-	bundle::Block & Metainfo::createBlock( string const& blockName ) const
+	bundle::Block & Metainfo::createBlock( string const& blockName, std::string const& name ) const
 	{
 		bundle::ContextBlock *context = nullptr;
 

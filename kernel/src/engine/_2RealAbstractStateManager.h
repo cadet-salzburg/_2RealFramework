@@ -25,21 +25,23 @@
 
 namespace _2Real
 {
+	class EngineImpl;
 	class TimeBasedTrigger;
 	class AbstractInletBasedTrigger;
 	class AbstractUberBlock;
+	class EngineImpl;
 
 	class AbstractStateManager : private NonCopyable< AbstractStateManager >
 	{
 
 	public:
 
-		AbstractStateManager( AbstractUberBlock &owner );
+		AbstractStateManager( EngineImpl *engine, AbstractUberBlock *owner );
 		virtual ~AbstractStateManager();
-		const std::string getName() const;
+		std::string getName() const;
 
-		virtual void tryTriggerInlet( AbstractInletBasedTrigger &trigger ) = 0;
-		virtual void tryTriggerTime( TimeBasedTrigger &trigger ) = 0;
+		virtual void tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */) = 0;
+		virtual void tryTriggerTime(/* TimeBasedTrigger &trigger */) = 0;
 		virtual void addTrigger( TimeBasedTrigger &trigger ) = 0;
 		virtual void removeTrigger( TimeBasedTrigger &trigger ) = 0;
 		virtual void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr ) = 0;
@@ -51,7 +53,8 @@ namespace _2Real
 		typedef std::set< AbstractInletBasedTrigger * >::iterator			InletTriggerIterator;
 		typedef std::set< AbstractInletBasedTrigger * >::const_iterator		InletTriggerConstIterator;
 
-		AbstractUberBlock		&m_Owner;
+		EngineImpl				*const mEngineImpl;
+		AbstractUberBlock		*const mOwner;
 
 	};
 

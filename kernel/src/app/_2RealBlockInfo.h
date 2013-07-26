@@ -29,12 +29,12 @@ namespace _2Real
 	{
 		struct BlockInfo
 		{
-			typedef std::vector< InletInfo >					InletInfos;
-			typedef std::vector< InletInfo >::iterator			InletInfoIterator;
-			typedef std::vector< InletInfo >::const_iterator	InletInfoConstIterator;
-			typedef std::vector< OutletInfo >					OutletInfos;
-			typedef std::vector< OutletInfo >::iterator			OutletInfoIterator;
-			typedef std::vector< OutletInfo >::const_iterator	OutletInfoConstIterator;
+			typedef std::vector< InletInfo >						InletInfos;
+			typedef std::vector< InletInfo >::iterator				InletInfoIterator;
+			typedef std::vector< InletInfo >::const_iterator		InletInfoConstIterator;
+			typedef std::vector< OutletInfo >						OutletInfos;
+			typedef std::vector< OutletInfo >::iterator				OutletInfoIterator;
+			typedef std::vector< OutletInfo >::const_iterator		OutletInfoConstIterator;
 			typedef std::vector< ParameterInfo >					ParameterInfos;
 			typedef std::vector< ParameterInfo >::iterator			ParameterInfoIterator;
 			typedef std::vector< ParameterInfo >::const_iterator	ParameterInfoConstIterator;

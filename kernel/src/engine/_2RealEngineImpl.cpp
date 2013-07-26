@@ -62,69 +62,33 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	EngineImpl & EngineImpl::instance()
-	{
-		static SingletonHolder< EngineImpl > holder;
-		return holder.instance();
-	}
-
 	EngineImpl::EngineImpl() :
-		m_Logger( new Logger( "EngineLog.txt" ) ),
-		m_Timer( new Timer( *m_Logger ) ),
-		m_TypeRegistry( new TypeRegistry ),
-		m_ThreadPool( new ThreadPool( *this, 12, 0, "2Real threadpool" ) ),
-		m_BundleManager( new BundleManager( *this, *m_TypeRegistry ) ),
-		m_System( new System( *m_Logger ) )
+		mLogger( new Logger( "EngineLog.txt" ) ),
+		mTimer( new Timer( *mLogger ) ),
+		mTypeRegistry( new TypeRegistry ),
+		mThreadPool( new ThreadPool( *this, 12, 0, "2Real threadpool" ) ),
+		mBundleManager( new BundleManager( this ) ),
+		mSystem( new System( *mLogger ) ),
+		mTimestamp( new Poco::Timestamp )
 	{
-		m_Timestamp.update();
-
-		m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< int >::humanReadableName(), ToCustomType< int >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< unsigned int >::humanReadableName(), ToCustomType< unsigned int >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< char >::humanReadableName(), ToCustomType< char >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< unsigned char >::humanReadableName(), ToCustomType< unsigned char >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< float >::humanReadableName(), ToCustomType< float >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< double >::humanReadableName(), ToCustomType< double >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::string >::humanReadableName(), ToCustomType< std::string >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< bool >::humanReadableName(), ToCustomType< bool >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< int > >::humanReadableName(), ToCustomType< std::vector< int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< unsigned int > >::humanReadableName(), ToCustomType< std::vector< unsigned int > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< char > >::humanReadableName(), ToCustomType< std::vector< char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< unsigned char > >::humanReadableName(), ToCustomType< std::vector< unsigned char > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< float > >::humanReadableName(), ToCustomType< std::vector< float > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< double > >::humanReadableName(), ToCustomType< std::vector< double > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_TypeRegistry->registerType( TypeRegistry::sFrameworkTypes,
-		//	Name< std::vector< std::string > >::humanReadableName(), ToCustomType< std::vector< std::string > >::getTypeMetadata(), new Deleter< TypeMetadata > );
-		//m_BundleManager->createBundleEx( "internal\\TypeConversions", &getMetainfoForConversions );
+		mTimestamp->update();
+		mTypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata(), new Deleter< TypeMetadata > );
 	}
 
 	EngineImpl::~EngineImpl()
 	{
 		try
 		{
-			m_Logger->addLine( "ENGINE SHUTDOWN" );
+			mLogger->addLine( "ENGINE SHUTDOWN" );
 			clearFully();
-			delete m_System;
-			delete m_BundleManager;
-			delete m_ThreadPool;
-			delete m_TypeRegistry;
-			m_Logger->stop();
-			delete m_Logger;
-			delete m_Timer;
+			delete mSystem;
+			delete mBundleManager;
+			delete mThreadPool;
+			delete mTypeRegistry;
+			mLogger->stop();
+			delete mLogger;
+			delete mTimer;
+			delete mTimestamp;
 		}
 		catch ( std::exception &e )
 		{
@@ -134,121 +98,82 @@ namespace _2Real
 
 	void EngineImpl::clearFully()
 	{
-		for ( EngineImpl::LinkIterator it = m_Links.begin(); it != m_Links.end(); ++it )
+		for ( EngineImpl::LinkIterator it = mLinks.begin(); it != mLinks.end(); ++it )
 		{
 			( *it )->deactivate();
 			delete *it;
 		}
-		m_Links.clear();
-		m_System->clearAll();
-		m_BundleManager->clear();
+		mLinks.clear();
+		mSystem->clearAll();
+		mBundleManager->clear();
 	}
 
 	void EngineImpl::clearBlockInstances()
 	{
-		for ( EngineImpl::LinkIterator it = m_Links.begin(); it != m_Links.end(); ++it )
+		for ( EngineImpl::LinkIterator it = mLinks.begin(); it != mLinks.end(); ++it )
 		{
 			( *it )->deactivate();
 			delete *it;
 		}
-		m_Links.clear();
-		m_System->clearBlockInstances();
+		mLinks.clear();
+		mSystem->clearBlockInstances();
 	}
 
 	void EngineImpl::addBlock( FunctionBlock< app::BlockHandle > &block )
 	{
-		m_System->addBlock( block );
+		mSystem->addBlock( block );
 	}
 
 	void EngineImpl::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
 	{
-		Bundle &b = m_BundleManager->findBundleByName( block.getBundleName() );
-		b.removeBlockInstance( block );
-		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		Bundle *b = block.getOwningBundle();
+		b->removeBlockInstance( block );
+		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
 		{
 			if ( ( *it )->isBlockInvolved( block ) )
 			{
 				( *it )->deactivate();
 				delete *it;
-				it = m_Links.erase( it );
+				it = mLinks.erase( it );
 			}
 			else ++it;
 		}
-		m_System->removeBlock( block, timeout );
+		mSystem->removeBlock( block, timeout );
 
-		if ( b.hasContext() && b.getBlockInstances( *m_BundleManager ).empty() )
+		if ( b->hasContext() && b->getBlockInstances( *mBundleManager ).empty() )
 		{
-			FunctionBlock< app::ContextBlockHandle > & context = b.getContextBlock( *m_BundleManager );
-			m_System->removeBlock( context, timeout );
-			b.contextBlockRemoved();
+			FunctionBlock< app::ContextBlockHandle > & context = b->getContextBlock( *mBundleManager );
+			mSystem->removeBlock( context, timeout );
+			b->contextBlockRemoved();
 		}
 	}
 
 	void EngineImpl::addBlock( FunctionBlock< app::ContextBlockHandle > &block )
 	{
-		m_System->addBlock( block );
+		mSystem->addBlock( block );
 	}
 
 	void EngineImpl::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
 	{
-		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
 		{
 			if ( ( *it )->isBlockInvolved( block ) )
 			{
 				( *it )->deactivate();
 				delete *it;
-				it = m_Links.erase( it );
+				it = mLinks.erase( it );
 			}
 			else ++it;
 		}
-		m_System->removeBlock( block, timeout );
+		mSystem->removeBlock( block, timeout );
 	}
 
 	const long EngineImpl::getElapsedTime() const
 	{
-		return static_cast< long >( m_Timestamp.elapsed() );
+		return static_cast< long >( mTimestamp->elapsed() );
 	}
 
-	Timer & EngineImpl::getTimer()
-	{
-		return *m_Timer;
-	}
-
-	Logger & EngineImpl::getLogger()
-	{
-		return *m_Logger;
-	}
-
-	ThreadPool & EngineImpl::getThreadPool()
-	{
-		return *m_ThreadPool;
-	}
-
-	void EngineImpl::setBaseDirectory( string const& directory )
-	{
-		m_BundleManager->setBaseDirectory( directory );
-	}
-
-	//app::BundleHandle & EngineImpl::loadLibrary( string const& libraryPath )
-	//{
-	//	string path = libraryPath;
-
-	//	if ( path.find( shared_library_suffix ) == string::npos )
-	//	{
-	//		path.append( shared_library_suffix );
-	//	}
-	//	return m_BundleManager->loadLibrary( path ).getHandle();
-	//}
-
-	//app::BundleHandle & EngineImpl::findBundleByName( string const& name ) const
-	//{
-	//	return m_BundleManager->findBundleByName( name ).getHandle();
-	//}
-
-	//app::BundleHandle & EngineImpl::findBundleByPath( string const& libraryPath ) const
-	//{
-	//	return m_BundleManager->findBundleByPath( libraryPath ).getHandle();
-	//}
+// ---------------------------------- bundle loading
 
 	Bundle & EngineImpl::loadLibrary( string const& libraryPath )
 	{
@@ -258,86 +183,87 @@ namespace _2Real
 		{
 			path.append( shared_library_suffix );
 		}
-		return m_BundleManager->loadLibrary( path );
+		return mBundleManager->loadLibrary( path );
 	}
 
-	Bundle & EngineImpl::findBundleByName( string const& name ) const
+	std::string EngineImpl::getBundleDirectory() const
 	{
-		return m_BundleManager->findBundleByName( name );
+		return mBundleManager->getBundleDirectory();
 	}
 
-	Bundle & EngineImpl::findBundleByPath( string const& libraryPath ) const
-	{
-		return m_BundleManager->findBundleByPath( libraryPath );
-	}
+// ---------------------------------- bundle loading
+
+// ---------------------------------- exception handling
 
 	void EngineImpl::registerToException( app::BlockExcCallback &callback )
 	{
-		m_BlockExceptionEvent.addListener( callback );
+		mBlockExceptionEvent.addListener( callback );
 	}
 
 	void EngineImpl::unregisterFromException( app::ContextBlockExcCallback &callback )
 	{
-		m_ContextBlockExceptionEvent.removeListener( callback );
+		mContextBlockExceptionEvent.removeListener( callback );
 	}
 
 	void EngineImpl::registerToException( app::ContextBlockExcCallback &callback )
 	{
-		m_ContextBlockExceptionEvent.addListener( callback );
+		mContextBlockExceptionEvent.addListener( callback );
 	}
 
 	void EngineImpl::unregisterFromException( app::BlockExcCallback &callback )
 	{
-		m_BlockExceptionEvent.removeListener( callback );
+		mBlockExceptionEvent.removeListener( callback );
 	}
 
 	void EngineImpl::handleException( app::BlockHandle &block, Exception const& exception ) const
 	{
-		m_BlockExceptionEvent.notify( make_pair( exception, block ) );
+		mBlockExceptionEvent.notify( make_pair( exception, block ) );
 	}
 
 	void EngineImpl::handleException( app::ContextBlockHandle &block, Exception const& exception ) const
 	{
-		m_ContextBlockExceptionEvent.notify( make_pair( exception, block ) );
+		mContextBlockExceptionEvent.notify( make_pair( exception, block ) );
 	}
 
-	EngineImpl::Links const& EngineImpl::getCurrentLinks() const
-	{
-		return m_Links;
-	}
+// ---------------------------------- exception handling
 
-	EngineImpl::BlockInstances EngineImpl::getCurrentBlockInstances() const
-	{
-		System::Blocks const& blocks = m_System->getBlockInstances();
-		EngineImpl::BlockInstances result;
+	//EngineImpl::Links const& EngineImpl::getCurrentLinks() const
+	//{
+	//	return m_Links;
+	//}
 
-		for ( System::BlockConstIterator it = blocks.begin(); it != blocks.end(); ++it )
-		{
-			FunctionBlock< app::BlockHandle > *instance = static_cast< FunctionBlock< app::BlockHandle > * >( *it );
-			result.push_back( instance );
-		}
-		return result;
-	}
+	//EngineImpl::BlockInstances EngineImpl::getCurrentBlockInstances() const
+	//{
+	//	System::Blocks const& blocks = m_System->getBlockInstances();
+	//	EngineImpl::BlockInstances result;
 
-	EngineImpl::Links& EngineImpl::getCurrentLinks()
-	{
-		return m_Links;
-	}
+	//	for ( System::BlockConstIterator it = blocks.begin(); it != blocks.end(); ++it )
+	//	{
+	//		FunctionBlock< app::BlockHandle > *instance = static_cast< FunctionBlock< app::BlockHandle > * >( *it );
+	//		result.push_back( instance );
+	//	}
+	//	return result;
+	//}
 
-	EngineImpl::Bundles const& EngineImpl::getCurrentBundles() const
-	{
-		return m_BundleManager->getBundles();
-	}
+	//EngineImpl::Links& EngineImpl::getCurrentLinks()
+	//{
+	//	return m_Links;
+	//}
+
+	//EngineImpl::Bundles const& EngineImpl::getCurrentBundles() const
+	//{
+	//	return m_BundleManager->getBundles();
+	//}
 
 	void EngineImpl::clearLinksFor( BasicInletIO &inlet )
 	{
-		for ( LinkIterator it = m_Links.begin(); it != m_Links.end(); )
+		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
 		{
 			if ( ( *it )->isInletInvolved( inlet ) )
 			{
 				( *it )->deactivate();
 				delete *it;
-				it = m_Links.erase( it );
+				it = mLinks.erase( it );
 			}
 			else ++it;
 		}
@@ -350,11 +276,11 @@ namespace _2Real
 
 		if ( link != nullptr )
 		{
-			LinkIterator it = m_Links.find( link );
-			if ( it == m_Links.end() )
+			LinkIterator it = mLinks.find( link );
+			if ( it == mLinks.end() )
 			{
 				link->activate();
-				m_Links.insert( link );
+				mLinks.insert( link );
 				return *link;
 			}
 			else
@@ -401,7 +327,7 @@ namespace _2Real
 	//	//	app::BlockHandle &block = bundle.createBlockInstance( conversionName );
 	//	//	block.setUpdateRate( 0. );
 	//	//	app::InletHandle &in = block.getInletHandle( "src" );
-	//	//	in.setUpdatePolicy( InletPolicy::AND_NEWER_DATA );
+	//	//	in.setUpdatePolicy( Policy::AND_NEWER_DATA );
 	//	//	app::OutletHandle &out = block.getOutletHandle( "dst" );
 
 	//	//	in.link( outlet.getHandle() );
@@ -426,10 +352,6 @@ namespace _2Real
 		//	m_Links.erase( it );
 		//}
 		//delete link;
-	}
-
-	void EngineImpl::getCurrentSystemState( app::SystemState &state ) const
-	{
 	}
 
 }

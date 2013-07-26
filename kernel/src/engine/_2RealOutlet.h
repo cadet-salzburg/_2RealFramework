@@ -18,47 +18,66 @@
 
 #pragma once
 
-#include "engine/_2RealParameter.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
-#include "helpers/_2RealIdentifiable.h"
+#include "helpers/_2RealPoco.h"
 
 namespace _2Real
 {
-	class EngineImpl;
 
-	class Outlet : private Parameter, private NonCopyable< Outlet >, private Identifiable< Outlet >, private Handleable< Outlet, bundle::OutletHandle >
+	// OutletIO: owns both outlet & outlet buffer
+
+	class OutletIO;
+
+	// outlet buffer: holds most recently written data of an outlet
+
+	class OutletBuffer : private NonCopyable< OutletBuffer >
 	{
 
 	public:
 
-		Outlet( AbstractUberBlock &owningBlock, std::string const& name, std::shared_ptr< const CustomType > initialValue );
+		OutletBuffer( OutletIO *owner );
+
+		// called by outlet io after update
+		void setData( std::shared_ptr< const CustomType > );
+		// called by application - anytime
+		std::shared_ptr< const CustomType > getData() const;
+
+	private:
+
+		OutletIO								*const mOwner;
+		mutable Poco::FastMutex					mAccess;
+		std::shared_ptr< const CustomType >		mData;
+
+	};
+
+	// outlet: readable from the bundle side of things
+	// after each update, is reset to a clone of the init value
+
+	class Outlet : private NonCopyable< Outlet >, private Handleable< Outlet, bundle::OutletHandle >
+	{
+
+	public:
+
+		Outlet( OutletIO *owner );
 
 		using Handleable< Outlet, bundle::OutletHandle >::getHandle;
 		using Handleable< Outlet, bundle::OutletHandle >::registerHandle;
 		using Handleable< Outlet, bundle::OutletHandle >::unregisterHandle;
 
-		using Identifiable< Outlet >::getFullName;
-		using Identifiable< Outlet >::getName;
-
-		using Parameter::getData;
-		using Parameter::getWriteableData;
-
-		bool					synchronize();
-		// returns a reference, since it can only be used during 'update' -> data does not change
-		//CustomType &			getWriteableData();
-		void					discardCurrentUpdate();
-		AbstractUberBlock&		getOwningUberBlock();
+		// called by outlet io after update, synced
+		std::shared_ptr< const CustomType > update( std::shared_ptr< CustomType > );
+		// called by bundle::outlethandle during update, synced
+		std::shared_ptr< CustomType >		getWriteableData();
+		// called by bundle::outlethandle during update, synced
+		void								discard();
 
 	private:
 
-		unsigned long			m_Timestamp;
-
-		EngineImpl				&m_Engine;
-		AbstractUberBlock		&m_OwningUberBlock;
-		bool					m_DiscardCurrent;
-		std::shared_ptr< const CustomType > mInit;
+		OutletIO								*const mOwner;
+		bool									mWasDiscarded;
+		std::shared_ptr< CustomType >			mData;
 
 	};
 }

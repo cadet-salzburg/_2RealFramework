@@ -21,68 +21,56 @@
 #include "bundle/_2RealParameterHandle.h"
 #include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
-#include "helpers/_2RealIdentifiable.h"
-#include "engine/_2RealTimestampedData.h"
 #include "helpers/_2RealPoco.h"
 
 namespace _2Real
 {
 
-	// base class for inlets & outlets
-	// will also be base class for new setup param
-	// 'parameter' is probably stupid name, what was i thinking
+	class ParameterIO;
 
-	class AbstractUberBlock;
-
-	class Parameter
+	class ParameterBuffer
 	{
+	public:
 
-	protected:
+		ParameterBuffer( ParameterIO *owner );
 
-		Parameter( std::shared_ptr< const CustomType > initializer );
-		virtual ~Parameter() {}
+		// called by papplication - anytime
+		void setData( std::shared_ptr< const CustomType > );
+		// not sure that this is ever needed
+		std::shared_ptr< const CustomType > getData() const;
 
-		// data = buffer
-		void									synchronize();
-		// this is for reading only ( app, inlet queues ) -> const
-		std::shared_ptr< const CustomType >		getData() const;
-		std::shared_ptr< CustomType >			getWriteableData();
+	private:
 
-		mutable Poco::FastMutex			m_DataAccess;
-		std::shared_ptr< const CustomType >	m_Data;
-		std::shared_ptr< CustomType >		m_DataBuffer;
-
+		ParameterIO								*const mOwner;
+		mutable Poco::FastMutex					mAccess;
+		std::shared_ptr< const CustomType >		mData;
 	};
 
-	class InputParameter : private NonCopyable< InputParameter >, private Identifiable< InputParameter >, private Handleable< InputParameter, bundle::ParameterHandle >
+	class Parameter : private NonCopyable< Parameter >, private Handleable< Parameter, bundle::ParameterHandle >
 	{
 		
 	public:
 
-		InputParameter( AbstractUberBlock &owningBlock, std::string const& name, std::shared_ptr< const CustomType > initialValue );
+		Parameter( ParameterIO *owner );
 
-		using Handleable< InputParameter, bundle::ParameterHandle >::getHandle;
-		using Handleable< InputParameter, bundle::ParameterHandle >::registerHandle;
-		using Handleable< InputParameter, bundle::ParameterHandle >::unregisterHandle;
+		using Handleable< Parameter, bundle::ParameterHandle >::getHandle;
+		using Handleable< Parameter, bundle::ParameterHandle >::registerHandle;
+		using Handleable< Parameter, bundle::ParameterHandle >::unregisterHandle;
 
-		using Identifiable< InputParameter >::getFullName;
-		using Identifiable< InputParameter >::getName;
-
-		std::shared_ptr< const CustomType >		getData() const;
 		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
-		void									setData( std::shared_ptr< const CustomType > data );
+		// called by bundle during update or setup
+		std::shared_ptr< const CustomType >		getData() const;
+		// called by bundle during setup or update
 		bool									hasChanged() const;
-		void									synchronize();
-
-		AbstractUberBlock&		getOwningUberBlock();
+		// called by parameter io  before an update
+		void									update( std::shared_ptr< const CustomType > );
 
 	private:
 
-		AbstractUberBlock						&m_OwningUberBlock;
-		mutable Poco::FastMutex					m_DataAccess;
-		std::shared_ptr< const CustomType >		m_Data;
-		std::shared_ptr< const CustomType >		m_DataBuffer;
-		std::shared_ptr< const CustomType >		m_LastData;
+		ParameterIO								*const mOwner;
+		std::shared_ptr< const CustomType >		mData;
+		std::shared_ptr< const CustomType >		mLastData;
+		mutable Poco::FastMutex					mAccess;
 
 	};
 

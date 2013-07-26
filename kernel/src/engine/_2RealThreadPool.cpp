@@ -34,8 +34,8 @@ namespace _2Real
 {
 
 	ThreadPool::ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
-		m_Timer( engine.getTimer() ),
-		m_Logger( engine.getLogger() ),
+		m_Timer( *( engine.getTimer() ) ),
+		m_Logger( *( engine.getLogger() ) ),
 		m_Name( name ),
 		m_StackSize( stackSize ),
 		m_Elapsed( 0 )

@@ -17,295 +17,44 @@
 */
 
 #include "engine/_2RealInletBuffer.h"
-#include "engine/_2RealEngineImpl.h"
-
-#include <assert.h>
-#include <sstream>
 
 using std::stringstream;
 
 namespace _2Real
 {
-//
-//	Any arithmethicConversion( Any const& src, const Type tDst )
-//	{
-//		const Type::Code cSrc = src.getType().getCode();
-//		const Type::Code cDst = tDst.getCode();
-//		switch ( cSrc )
-//		{
-//		case Type::BYTE:
-//		{
-//			char val = src.extract< char >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::UBYTE:
-//		{
-//			unsigned char val = src.extract< unsigned char >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::SHORT:
-//		{
-//			short val = src.extract< short >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::USHORT:
-//		{
-//			unsigned short val = src.extract< unsigned short >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::INT:
-//		{
-//			int val = src.extract< int >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::UINT:
-//		{
-//			unsigned int val = src.extract< unsigned int >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::LONG:
-//		{
-//			long val = src.extract< long >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::ULONG:
-//		{
-//			unsigned long val = src.extract< unsigned long >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::FLOAT:
-//		{
-//			float val = src.extract< float >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::DOUBLE:
-//		{
-//			double val = src.extract< double >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		case Type::NUMBER:
-//		{
-//			Number val = src.extract< Number >();
-//			switch ( cDst )
-//			{
-//			case Type::BYTE:		return Any( static_cast< char >( val ) );
-//			case Type::UBYTE:		return Any( static_cast< unsigned char >( val ) );
-//			case Type::SHORT:		return Any( static_cast< short >( val ) );
-//			case Type::USHORT:		return Any( static_cast< unsigned short >( val ) );
-//			case Type::INT:			return Any( static_cast< int >( val ) );
-//			case Type::UINT:		return Any( static_cast< unsigned int >( val ) );
-//			case Type::LONG:		return Any( static_cast< long >( val ) );
-//			case Type::ULONG:		return Any( static_cast< unsigned long >( val ) );
-//			case Type::FLOAT:		return Any( static_cast< float >( val ) );
-//			case Type::DOUBLE:		return Any( static_cast< double >( val ) );
-//			case Type::NUMBER:		return Any( static_cast< Number >( val ) );
-//			default:
-//#ifdef _DEBUG
-//		assert( NULL );
-//#endif
-//			return Any();
-//			}
-//		}
-//		default:
-//#ifdef _DEBUG
-//			assert( NULL );
-//#endif
-//		return Any();
-//		}
-//	}
-//
+	class AbstractInsertionPolicy
+	{
+	public:
+		virtual ~AbstractInsertionPolicy() {};
+		virtual bool				insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer ) = 0;
+		virtual void				setMaxCapacity( const unsigned int max ) = 0;
+		virtual unsigned int		getMaxCapacity() const = 0;
+	};
+
+	class RemoveOldest : public AbstractInsertionPolicy
+	{
+	public:
+		RemoveOldest( const unsigned int max );
+		bool						insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer );
+		void						setMaxCapacity( const unsigned int max );
+		unsigned int				getMaxCapacity() const;
+	private:
+		mutable Poco::FastMutex		mAccess;
+		unsigned int				mMaxCapacity;
+	};
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	RemoveOldest::RemoveOldest( const unsigned int max ) :
-		m_Max( max )
+		mMaxCapacity( max )
 	{
 	}
 
-	bool RemoveOldest::insertData( TimestampedData const& data, AbstractInletBuffer::DataBuffer &buffer )
+	bool RemoveOldest::insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 
-		while ( buffer.size() >= m_Max && !buffer.empty() )
+		while ( buffer.size() >= mMaxCapacity && !buffer.empty() )
 		{
 			// TODO: some sort of overflow cb for the app i guess
 			buffer.pop_front();
@@ -315,163 +64,58 @@ namespace _2Real
 		return true;
 	}
 
-	void RemoveOldest::setMaxSize( const unsigned int max )
+	void RemoveOldest::setMaxCapacity( const unsigned int max )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-		m_Max = max;
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mMaxCapacity = max;
 	}
 
-	unsigned int RemoveOldest::getMaxSize() const
+	unsigned int RemoveOldest::getMaxCapacity() const
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
-		return m_Max;
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	AbstractInletBuffer::AbstractInletBuffer() :
-		m_Engine( EngineImpl::instance() )
-	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mMaxCapacity;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	BasicInletBuffer::BasicInletBuffer() :
-		AbstractInletBuffer(),
-		m_InsertionPolicy( new RemoveOldest( 5 ) ),
-		m_NotifyOnReceive( true )
+	DataQueue::DataQueue( AbstractInletIO *owner, const unsigned int capacity ) :
+		mOwner( owner ),
+		mInsertionPolicy( new RemoveOldest( capacity ) )
 	{
 	}
 
-	BasicInletBuffer::~BasicInletBuffer()
+	DataQueue::~DataQueue()
 	{
-		delete m_InsertionPolicy;
+		delete mInsertionPolicy;
 	}
 
-	// can ( from buffers' POV ) be called at any time
-	void BasicInletBuffer::receiveData( TimestampedData const& data )
+	void DataQueue::storeDataItem( TimestampedData const& data )
 	{
-		m_NotificationAccess.lock();
-		// m_NotifyOnReceive: processBufferedData was called, meaning an update cycle was finished OR start was called
-		if ( m_NotifyOnReceive )		m_TriggeringEvent.notify( data );
-		// otherwise: move data into buffer
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mInsertionPolicy->insertData( data, mBuffer );
+	}
+
+	bool DataQueue::getDataItem( TimestampedData &data )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		if ( mBuffer.empty() )
+			return false;
 		else
 		{
-			Poco::ScopedLock< Poco::FastMutex > lock( m_BufferAccess );
-			m_InsertionPolicy->insertData( data, m_ReceivedDataItems );
-		}
-		m_NotificationAccess.unlock();
-	}
-
-	// no mutexes, because this is for sure called after processBufferedData ( see below )
-	std::shared_ptr< const CustomType > BasicInletBuffer::getTriggeringData() const
-	{
-		return m_TriggeringData;
-	}
-
-	// called right after block update; re-enables triggering, then tries to fulfill the trigger cond with buffered data / last data / default data
-	// receiving data from other sources ( user input, outlets ) is blocked during this time
-	void BasicInletBuffer::processBufferedData( const bool enableTriggering )
-	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_NotificationAccess );
-		m_NotifyOnReceive = true;
-
-		m_BufferAccess.lock();
-		for ( DataBufferIterator dIt = m_ReceivedDataItems.begin(); dIt != m_ReceivedDataItems.end(); /**/ )
-		{
-			TimestampedData d = *dIt;
-
-			// calls the trigger -> this may change the m_NotifyOnReceive value via BasicInletBuffer::disableTriggering()
-			m_TriggeringEvent.notify( d );
-
-			// if this is no longer true, a value that fulfills the trigger cond has been found & written into m_TriggeringData
-			if ( !m_NotifyOnReceive )
-			{
-				dIt = m_ReceivedDataItems.erase( dIt );
-				break;
-			}
-			else
-			{
-				dIt = m_ReceivedDataItems.erase( dIt );
-			}
-		}
-		m_BufferAccess.unlock();
-
-		// ARGH in case everything else failed, try triggering with the last available data?
-		// this is quite weird, should basically only fulfill 'any' condition -> timestamp 0
-		m_TriggeringEvent.notify( TimestampedData( m_TriggeringData, 0 ) );
-
-		// the 'enableTriggering' value should be false only in singlestep
-		if ( !enableTriggering ) m_NotifyOnReceive = false;
-	}
-
-	// only called from within processBufferedData, no locking mutexes b/c everything should already be locked ( see above )
-	void BasicInletBuffer::disableTriggering( std::shared_ptr< const CustomType > const& data )
-	{
-		m_NotifyOnReceive = false;
-		m_TriggeringData = data;
-	}
-
-	void BasicInletBuffer::setBufferSize( const unsigned int size )
-	{
-		m_InsertionPolicy->setMaxSize( size );
-	}
-
-	unsigned int BasicInletBuffer::getBufferSize() const
-	{
-		return m_InsertionPolicy->getMaxSize();
-	}
-
-	void BasicInletBuffer::setTrigger( AbstractCallback< TimestampedData const& > &callback )
-	{
-		m_TriggeringEvent.addListener( callback );
-	}
-
-	void BasicInletBuffer::removeTrigger( AbstractCallback< TimestampedData const& > &callback )
-	{
-		m_TriggeringEvent.removeListener( callback );
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	MultiInletBuffer::MultiInletBuffer( std::shared_ptr< const CustomType > initialValue ) : m_InitialValue( initialValue )
-	{
-	}
-
-	MultiInletBuffer::~MultiInletBuffer()
-	{
-	}
-
-	BasicInletBuffer & MultiInletBuffer::operator[]( const unsigned int index )
-	{
-		try
-		{
-			return *m_Buffers.at( index );
-		}
-		catch ( std::out_of_range &e )
-		{
-			throw Exception( e.what() );
+			data = mBuffer.front();
+			mBuffer.pop_front();
+			return true;
 		}
 	}
 
-	void MultiInletBuffer::addBasicBuffer( BasicInletBuffer &buffer )
+	void DataQueue::setMaxCapacity( const unsigned int size )
 	{
-		m_Buffers.push_back( &buffer );
-		// ARGH timestamp & key??
-		// adds the initial value to the inlet
-		buffer.receiveData( TimestampedData( m_InitialValue, 0 ) );
+		mInsertionPolicy->setMaxCapacity( size );
 	}
 
-	void MultiInletBuffer::removeBasicBuffer( BasicInletBuffer &buffer )
+	unsigned int DataQueue::getMaxCapacity() const
 	{
-		for ( BasicBufferIterator it = m_Buffers.begin(); it != m_Buffers.end(); ++it )
-		{
-			if ( &buffer == *it )
-			{
-				m_Buffers.erase( it );
-				break;
-			}
-		}
+		return mInsertionPolicy->getMaxCapacity();
 	}
 
 }

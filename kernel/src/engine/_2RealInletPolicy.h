@@ -22,12 +22,12 @@
 
 namespace _2Real
 {
-	class InletPolicy
+	class Policy
 	{
 
 	public:
 
-		enum Policy
+		enum Code
 		{
 			ALWAYS,
 			OR_NEWER_DATA,
@@ -35,20 +35,20 @@ namespace _2Real
 			INVALID
 		};
 
-		InletPolicy( Policy const& p ) : m_Policy( p ) {}
-		Policy getPolicy() const { return m_Policy; }
-		bool operator==( InletPolicy const& rhs ) const { return m_Policy == rhs.m_Policy; }
-		bool operator!=( InletPolicy const& rhs ) const { return m_Policy != rhs.m_Policy; }
+		Policy( Code const& p ) : m_Policy( p ) {}
+		Code getPolicy() const { return m_Policy; }
+		bool operator==( Policy const& rhs ) const { return m_Policy == rhs.m_Policy; }
+		bool operator!=( Policy const& rhs ) const { return m_Policy != rhs.m_Policy; }
 
-		static const std::string getPolicyAsString( Policy const& p )
+		static const std::string getPolicyAsString( const Code p )
 		{
-			if ( p == ALWAYS )				return "valid_data";
+			if ( p == ALWAYS )					return "valid_data";
 			else if ( p == OR_NEWER_DATA )		return "or_newer_data";
 			else if ( p == AND_NEWER_DATA )		return "and_newer_data";
 			else								return "invalid";
 		}
 
-		static const Policy getPolicyFromString( std::string const& p )
+		static const Code getPolicyFromString( std::string const& p )
 		{
 			if ( p == "valid_data" )			return ALWAYS;
 			else if ( p == "or_newer_data" )	return OR_NEWER_DATA;
@@ -58,7 +58,7 @@ namespace _2Real
 
 	private:
 
-		Policy		m_Policy;
+		Code		m_Policy;
 
 	};
 }

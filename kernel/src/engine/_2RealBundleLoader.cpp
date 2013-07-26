@@ -33,7 +33,7 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	BundleLoader::BundleLoader( TypeRegistry &registry ) : m_Registry( registry )
+	BundleLoader::BundleLoader( TypeRegistry *const registry ) : m_Registry( registry )
 	{
 	}
 
@@ -111,7 +111,7 @@ namespace _2Real
 
 	BundleMetadata const& BundleLoader::createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) )
 	{
-		Metainfo *info = new Metainfo( path, m_Registry );
+		Metainfo *info = new Metainfo( path, *m_Registry );
 
 		try
 		{
@@ -162,7 +162,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		Metainfo *info = new Metainfo( path, m_Registry );
+		Metainfo *info = new Metainfo( path, *m_Registry );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{
@@ -196,7 +196,7 @@ namespace _2Real
 			}
 
 			// may throw
-			info->registerTypes( m_Registry );
+			info->registerTypes( *m_Registry );
 			return meta;
 		}
 		else
@@ -238,7 +238,7 @@ namespace _2Real
 		return it->second.metainfo->getBundleData();
 	}
 
-	bundle::Block& BundleLoader::createBlockInstance( std::string const& path, std::string const& blockName ) const
+	bundle::Block& BundleLoader::createBlockInstance( std::string const& path, std::string const& blockName, std::string const& name ) const
 	{
 		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
@@ -249,7 +249,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		return it->second.metainfo->createBlock( blockName );
+		return it->second.metainfo->createBlock( blockName, name );
 	}
 
 }

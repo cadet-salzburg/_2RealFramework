@@ -19,83 +19,91 @@
 #include "engine/_2RealInlet.h"
 #include "bundle/_2RealInletHandle.h"
 #include "engine/_2RealAbstractUberBlock.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 using std::string;
 
 namespace _2Real
 {
-	AbstractInlet::AbstractInlet( AbstractUberBlock &owningBlock, string const& name ) :
+	BasicInletBuffer::BasicInletBuffer( AbstractInletIO *owner ) :
+		mOwner( owner )
+	{
+	}
+
+	void BasicInletBuffer::setData( std::shared_ptr< const CustomType > data )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mData = data;
+	}
+
+	std::shared_ptr< const CustomType > BasicInletBuffer::getData() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mData;
+	}
+
+	AbstractInlet::AbstractInlet() :
 		NonCopyable< AbstractInlet >(),
-		Identifiable< AbstractInlet >( owningBlock.getIds(),  name ),
 		Handleable< AbstractInlet, bundle::InletHandle >( *this )
 	{
 	}
 
-	BasicInlet::BasicInlet( AbstractUberBlock &owningBlock, string const& name ) :
-		AbstractInlet( owningBlock, name )
-		, mLastData()
-		, mCurrentData()
+	BasicInlet::BasicInlet( AbstractInletIO *owner ) :
+		mOwner( owner )
 	{
 	}
 
-	std::shared_ptr< const CustomType > BasicInlet::getCurrentData() const
+	BasicInlet & BasicInlet::operator[]( const unsigned int index )
 	{
-		return mCurrentData;
+		return *this;
 	}
 
-	std::shared_ptr< const CustomType > BasicInlet::getCurrentDataThreadSafe() const
+	bool BasicInlet::isMultiInlet() const { return false; }
+	
+	unsigned int BasicInlet::getSize() const
+	{
+		return 1;
+	}
+
+	std::shared_ptr< const CustomType > BasicInlet::getData() const
+	{
+		return mData;
+	}
+
+	std::shared_ptr< const CustomType > BasicInlet::getDataThreadsafe() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
-		return mCurrentData;
+		return mData;
 	}
 
 	bool BasicInlet::hasChanged() const
 	{
-		return ( !mCurrentData->isEqualTo( *( mLastData.get() ) ) );
+		if ( ( mData.get() == nullptr ) ^ ( mLastData.get() == nullptr ) ) return true;
+		else if ( ( mData.get() == nullptr ) || ( mLastData.get() == nullptr ) ) return false;
+		else return !( mData->isEqualTo( *( mLastData.get() ) ) );
 	}
 
-	void BasicInlet::setData( std::shared_ptr< const CustomType > const& data )
+	void BasicInlet::update( std::shared_ptr< const CustomType > data )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
-		mLastData = mCurrentData;
-		mCurrentData = data;
+		mLastData = mData;
+		mData = data;
 	}
 
-	MultiInlet::MultiInlet( AbstractUberBlock &owningBlock, string const& name ) :
-		AbstractInlet( owningBlock, name )
-	{
-	}
-
-	MultiInlet::~MultiInlet()
+	MultiInlet::MultiInlet( AbstractInletIO *owner ) :
+		mOwner( owner )
 	{
 	}
 
 	BasicInlet & MultiInlet::operator[]( const unsigned int index )
 	{
-		try
-		{
-			return *m_Inlets.at( index );
-		}
-		catch ( std::out_of_range &e )
-		{
-			throw _2Real::Exception( e.what() );
-		}
+		return mOwner->operator[]( index ).getInlet();
 	}
 
-	void MultiInlet::addBasicInlet( BasicInlet &inlet )
+	bool MultiInlet::isMultiInlet() const { return true; }
+	
+	unsigned int MultiInlet::getSize() const
 	{
-		m_Inlets.push_back( &inlet );
-	}
-
-	void MultiInlet::removeBasicInlet( BasicInlet &inlet )
-	{
-		for ( BasicInletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			if ( &inlet == *it )
-			{
-				m_Inlets.erase( it );
-				break;
-			}
-		}
+		return mOwner->getSize();
 	}
 }

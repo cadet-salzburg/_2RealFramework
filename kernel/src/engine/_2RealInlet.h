@@ -29,26 +29,43 @@
 
 namespace _2Real
 {
+	class AbstractInletIO;
 	class BasicInlet;
 
-	class AbstractInlet : private NonCopyable< AbstractInlet >, private Identifiable< AbstractInlet >, private Handleable< AbstractInlet, bundle::InletHandle >
+	// same interface as parameterbuffer!!!!!!
+
+	class BasicInletBuffer : private NonCopyable< BasicInletBuffer >
+	{
+	public:
+
+		BasicInletBuffer( AbstractInletIO *owner );
+
+		void setData( std::shared_ptr< const CustomType > );
+		std::shared_ptr< const CustomType > getData() const;
+
+	private:
+
+		AbstractInletIO							*const mOwner;
+		mutable Poco::FastMutex					mAccess;
+		std::shared_ptr< const CustomType >		mData;
+
+	};
+
+	class AbstractInlet : private NonCopyable< AbstractInlet >, private Handleable< AbstractInlet, bundle::InletHandle >
 	{
 
 	public:
 
-		AbstractInlet( AbstractUberBlock &owningBlock, std::string const& name );
+		AbstractInlet();
 		virtual ~AbstractInlet() {}
-
-		using Identifiable< AbstractInlet >::getFullName;
-		using Identifiable< AbstractInlet >::getName;
 
 		using Handleable< AbstractInlet, bundle::InletHandle >::getHandle;
 		using Handleable< AbstractInlet, bundle::InletHandle >::registerHandle;
 		using Handleable< AbstractInlet, bundle::InletHandle >::unregisterHandle;
 
-		virtual BasicInlet &		operator[]( const unsigned int index ) = 0;
-		virtual bool				isMultiInlet() const = 0;
-		virtual unsigned int		getSize() const = 0;
+		virtual BasicInlet &					operator[]( const unsigned int index ) = 0;
+		virtual bool							isMultiInlet() const = 0;
+		virtual unsigned int					getSize() const = 0;
 
 	};
 
@@ -57,27 +74,22 @@ namespace _2Real
 
 	public:
 
-		BasicInlet( AbstractUberBlock &owningBlock, std::string const& name );
-		virtual ~BasicInlet() {}
+		BasicInlet( AbstractInletIO *owner );
 
-		BasicInlet &				operator[]( const unsigned int index ) { return *this; }
-		bool						isMultiInlet() const { return false; }
-		unsigned int				getSize() const { return 1; }
+		BasicInlet &							operator[]( const unsigned int index );
+		bool									isMultiInlet() const;
+		unsigned int							getSize() const;
 
-		// called only from within an update: no change
-		std::shared_ptr< const CustomType >		getCurrentData() const;
-		// called from application side
-		std::shared_ptr< const CustomType >		getCurrentDataThreadSafe() const;
-		// called from application side
-		void									setData( std::shared_ptr< const CustomType > const& data );
-		// compares last to current
+		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
+		std::shared_ptr< const CustomType >		getData() const;
 		bool									hasChanged() const;
+		void									update( std::shared_ptr< const CustomType > );
 
 	private:
 
-		// last data is kept around in case user wants to make == comp
+		AbstractInletIO							*const mOwner;
 		std::shared_ptr< const CustomType >		mLastData;
-		std::shared_ptr< const CustomType >		mCurrentData;
+		std::shared_ptr< const CustomType >		mData;
 		mutable Poco::FastMutex					mAccess;
 
 	};
@@ -87,24 +99,15 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< BasicInlet * >						BasicInlets;
-		typedef std::vector< BasicInlet * >::iterator			BasicInletIterator;
-		typedef std::vector< BasicInlet * >::const_iterator		BasicInletsConstInterator;
+		MultiInlet( AbstractInletIO *owner );
 
-		MultiInlet( AbstractUberBlock &owningBlock, std::string const& name );
-		~MultiInlet();
-
-		BasicInlet &				operator[]( const unsigned int index );
-		bool						isMultiInlet() const { return true; }
-		unsigned int				getSize() const { return m_Inlets.size(); }
-
-		void						addBasicInlet( BasicInlet &inlet );
-		void						removeBasicInlet( BasicInlet &inlet );
+		BasicInlet &							operator[]( const unsigned int index );
+		bool									isMultiInlet() const;
+		unsigned int							getSize() const;
 
 	private:
 
-		// sync = done in inlet io class
-		BasicInlets					m_Inlets;
+		AbstractInletIO							*const mOwner;
 
 	};
 }

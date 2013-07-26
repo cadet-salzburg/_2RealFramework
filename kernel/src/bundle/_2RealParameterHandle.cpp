@@ -20,7 +20,7 @@
 #include "engine/_2RealParameter.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -31,7 +31,7 @@ namespace _2Real
 		{
 		}
 
-		ParameterHandle::ParameterHandle( InputParameter &param ) :
+		ParameterHandle::ParameterHandle( Parameter &param ) :
 			m_Parameter( &param )
 		{
 			m_Parameter->registerHandle( *this );

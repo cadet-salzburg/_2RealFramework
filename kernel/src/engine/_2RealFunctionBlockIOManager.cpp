@@ -28,6 +28,7 @@
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealStringHelpers.h"
+#include "engine/_2RealParameter.h"
 
 #include <sstream>
 
@@ -38,28 +39,20 @@ using std::ostringstream;
 namespace _2Real
 {
 
-	FunctionBlockIOManager::FunctionBlockIOManager( AbstractUberBlock &owner ) :
+	FunctionBlockIOManager::FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner ) :
 		Handleable< FunctionBlockIOManager, bundle::BlockHandle >( *this ),
-		AbstractIOManager( owner )
+		AbstractIOManager( engine, owner )
 	{
 	}
 
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
 			delete *it;
-		}
-
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-		{
 			delete *it;
-		}
-
 		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
 			delete *it;
-		}
 	}
 
 	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const
@@ -102,48 +95,48 @@ namespace _2Real
 		m_AppEvent.removeListener( cb );
 	}
 
-	app::InletHandle & FunctionBlockIOManager::getAppInletHandle( string const& name )
+	app::InletHandle FunctionBlockIOManager::getAppInletHandle( string const& name )
 	{
 		return getInletIO( name ).getHandle();
 	}
 
-	app::OutletHandle & FunctionBlockIOManager::getAppOutletHandle( string const& name )
+	app::OutletHandle FunctionBlockIOManager::getAppOutletHandle( string const& name )
 	{
 		return getOutletIO( name ).getHandle();
 	}
 
-	app::ParameterHandle & FunctionBlockIOManager::getAppParameterHandle( string const& name )
+	app::ParameterHandle FunctionBlockIOManager::getAppParameterHandle( string const& name )
 	{
 		return getParameterIO( name ).getHandle();
 	}
 
-	bundle::InletHandle & FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
+	bundle::InletHandle FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
 	{
-		return getInletIO( name ).getBundleInletHandle();
+		return getInletIO( name ).getBundleHandle();
 	}
 
-	bundle::OutletHandle & FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
+	bundle::OutletHandle FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
 	{
-		return getOutletIO( name ).m_Outlet->getHandle();
+		return getOutletIO( name ).getBundleHandle();
 	}
 
-	bundle::ParameterHandle & FunctionBlockIOManager::getBundleParameterHandle( string const& name ) const
+	bundle::ParameterHandle FunctionBlockIOManager::getBundleParameterHandle( string const& name ) const
 	{
-		return getParameterIO( name ).m_Parameter->getHandle();
+		return getParameterIO( name ).getBundleHandle();
 	}
 
 	AbstractInletIO & FunctionBlockIOManager::getInletIO( string const& name )
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->info().baseName ) == toLower( name ) )
+			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "inlet " << name<< " not found in" << m_Owner.getFullName();
+		msg << "inlet " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -151,14 +144,14 @@ namespace _2Real
 	{
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Outlet->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "outlet " << name<< " not found in" << m_Owner.getFullName();
+		msg << "outlet " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -166,14 +159,14 @@ namespace _2Real
 	{
 		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Parameter->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "parameter " << name<< " not found in" << m_Owner.getFullName();
+		msg << "parameter " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -181,14 +174,14 @@ namespace _2Real
 	{
 		for ( InletConstIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->info().baseName ) == toLower( name ) )
+			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "inlet " << name<< " not found in" << m_Owner.getFullName();
+		msg << "inlet " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -196,14 +189,14 @@ namespace _2Real
 	{
 		for ( OutletConstIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Outlet->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "outlet " << name<< " not found in" << m_Owner.getFullName();
+		msg << "outlet " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
@@ -211,75 +204,69 @@ namespace _2Real
 	{
 		for ( ParameterConstIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
 		{
-			if ( toLower( ( *it )->m_Parameter->getName() ) == toLower( name ) )
+			if ( toLower( ( *it )->getName() ) == toLower( name ) )
 			{
 				return **it;
 			}
 		}
 
 		ostringstream msg;
-		msg << "parameter " << name<< " not found in" << m_Owner.getFullName();
+		msg << "parameter " << name<< " not found in" << mOwner->getFullName();
 		throw NotFoundException( msg.str() );
 	}
 
-	void FunctionBlockIOManager::addBasicInlet( InletInfo const& info )
+	void FunctionBlockIOManager::addBasicInlet( IOInfo *info )
 	{
-		BasicInletIO *io = new BasicInletIO( m_Owner, *m_UpdatePolicy, info );
-		m_UpdatePolicy->addInlet( *io, info.policy );					// creates a trigger and adds it
-		io->receiveData( info.initializer );							// receive the first data item
+		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
+		m_UpdatePolicy->addInlet( *io, info->policy );					// creates a trigger
+		io->setData( info->initializer );								// set buffer to init value
+		io->synchronizeData();											// inlet now holds initl value
+		io->synchronizeData();											// hasChanged() == false
+		io->receiveData( TimestampedData( info->initializer, -1 ) );	// write data into queue as well -> initializes the cond
+																		// first timestamp = 0, b/c this way all regularly sent items ar newer
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
-		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
+		m_BundleInletHandles.push_back( io->getBundleHandle() );
 	}
 
-	void FunctionBlockIOManager::addMultiInlet( InletInfo const& info )
+	void FunctionBlockIOManager::addMultiInlet( IOInfo *info )
 	{
-		MultiInletIO *io = new MultiInletIO( m_Owner, *m_UpdatePolicy, info );
+		MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
 		m_Inlets.push_back( io );
 		m_AppInletHandles.push_back( io->getHandle() );
-		m_BundleInletHandles.push_back( io->getBundleInletHandle() );
+		m_BundleInletHandles.push_back( io->getBundleHandle() );
 	}
 
-	void FunctionBlockIOManager::addParameter( ParameterInfo const& info )
+	void FunctionBlockIOManager::addParameter( IOInfo *info )
 	{
-		ParameterIO *io = new ParameterIO( m_Owner, info );
-		io->m_Parameter->synchronize();
+		ParameterIO *io = new ParameterIO( mEngineImpl, mOwner, info );
+		io->setData( info->initializer );								// buffer now holds init value
+		io->synchronizeData();											// parameter data now holds value
+		io->synchronizeData();											// parameter now will retun hasChanged() -> false
 		m_Parameters.push_back( io );
 		m_AppParameterHandles.push_back( io->getHandle() );
-		m_BundleParameterHandles.push_back( io->m_Parameter->getHandle() );
+		m_BundleParameterHandles.push_back( io->getBundleHandle() );
 	}
 
-	void FunctionBlockIOManager::addOutlet( OutletInfo const& info )
+	void FunctionBlockIOManager::addOutlet( IOInfo *info )
 	{
-		// TODO: lookup type name -> create two type copies: buffer & init
-
-		OutletIO *io = new OutletIO( m_Owner, info );
-		io->m_Outlet->synchronize();
+		OutletIO *io = new OutletIO( mEngineImpl, mOwner, info );
+		io->synchronizeData();											// now outlet holds a clone of the init value, while buffer is empty
 		m_Outlets.push_back( io );
 		m_AppOutletHandles.push_back( io->getHandle() );
-		m_BundleOutletHandles.push_back( io->m_Outlet->getHandle() );
+		m_BundleOutletHandles.push_back( io->getBundleHandle() );
 	}
 
 	void FunctionBlockIOManager::updateInletData()
 	{
 		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			( *it )->syncInletChanges();		// makes changes to multiinlet visible
-
-			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
-			{
-				BasicInletIO &inletIO = ( **it )[ i ];
-				inletIO.syncInletData();		// makes changed data visible
-			}
-		}
+			( *it )->synchronizeData();
 	}
 
-	void FunctionBlockIOManager::updateSetupParameters()
+	void FunctionBlockIOManager::updateParameterData()
 	{
 		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			( *it )->m_Parameter->synchronize();		// makes changes to visible
-		}
+			( *it )->synchronizeData();
 	}
 
 	void FunctionBlockIOManager::updateOutletData()
@@ -287,23 +274,8 @@ namespace _2Real
 		std::vector< std::shared_ptr< const CustomType > > blockData;
 		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
 		{
-			Outlet &outlet = *( ( *it )->m_Outlet );
-
-			// ARGH this could be better
-			// synchronize & append to app data list or sth??
-			bool wasDiscarded = outlet.Outlet::synchronize();
-
-			if ( !wasDiscarded )
-			{
-				std::shared_ptr< const CustomType > data = outlet.getData();
-				// make shit unique within system right now?
-				// i.e. create a unique key... sigh
-				TimestampedData tmp( data, EngineImpl::instance().getElapsedTime() );
-				( *it )->m_InletEvent->notify( tmp );
-
-				( *it )->m_AppEvent->notify( data );
-				blockData.push_back( data );
-			}
+			std::shared_ptr< const CustomType > data = ( *it )->synchronizeData();
+			if ( data.get() ) blockData.push_back( data );
 		}
 
 		if ( !blockData.empty() )
@@ -317,7 +289,7 @@ namespace _2Real
 			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
 			{
 				BasicInletIO &inletIO = ( **it )[ i ];
-				inletIO.processBufferedData( enableTriggering );
+				inletIO.processQueue();
 			}
 		}
 	}

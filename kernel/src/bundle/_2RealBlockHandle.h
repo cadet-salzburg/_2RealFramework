@@ -55,9 +55,9 @@ namespace _2Real
 			BlockHandle& operator=( BlockHandle const& src );
 			~BlockHandle();
 
-			InletHandle &			getInletHandle( std::string const& name ) const;
-			OutletHandle &			getOutletHandle( std::string const& name ) const;
-			ParameterHandle &		getParameterHandle( std::string const& name ) const;
+			InletHandle				getInletHandle( std::string const& name ) const;
+			OutletHandle			getOutletHandle( std::string const& name ) const;
+			ParameterHandle			getParameterHandle( std::string const& name ) const;
 			InletHandles const&		getAllInletHandles() const;
 			OutletHandles const&	getAllOutletHandles() const;
 			ParameterHandles const&	getAllParameterHandles() const;

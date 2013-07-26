@@ -52,28 +52,28 @@ namespace _2Real
 		typedef std::set< Bundle * >::iterator			BundleIterator;
 		typedef std::set< Bundle * >::const_iterator	BundleConstIterator;
 
-		BundleManager( EngineImpl &engine, TypeRegistry &registry );
+		BundleManager( EngineImpl *engine );
 		~BundleManager();
 
 		void clear();
-		void											createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
-		void											setBaseDirectory( std::string const& path );
+		//void											createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
 		Bundle &										loadLibrary( std::string const& libraryPath );
 		bool											isLibraryLoaded( Poco::Path const& path ) const;
-		FunctionBlock< app::BlockHandle > &				createBlockInstance( Bundle &bundle, std::string const& blockName );
+		FunctionBlock< app::BlockHandle > &				createBlockInstance( Bundle &bundle, std::string const& blockName, std::string const& name );
 		Bundles const&									getBundles() const;
-		Bundle &										findBundleByName( std::string const& name ) const;
-		Bundle &										findBundleByPath( std::string const& libraryPath ) const;
+		//Bundle &										findBundleByName( std::string const& name ) const;
+		Bundle *										findBundleByPath( std::string const& libraryPath ) const;
 		void											destroyBundle( Bundle &bundle, const long timeout );
 		void											removeContextBlock( Bundle const& bundle );
+		std::string										getBundleDirectory() const;
 
 	private:
 
 		const Poco::Path								makeAbsolutePath( Poco::Path const& path ) const;
 
-		EngineImpl										&m_Engine;
-		TypeRegistry									&m_Registry;
-		Poco::Path										m_BaseDirectory;
+		EngineImpl										*const m_EngineImpl;
+		TypeRegistry									*const m_Registry;
+		Poco::Path										m_BundleDirectory;
 		Bundles											m_Bundles;
 		BundleLoader									m_BundleLoader;
 

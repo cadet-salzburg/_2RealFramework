@@ -19,127 +19,39 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-#include "helpers/_2RealEvent.h"
 #include "helpers/_2RealPoco.h"
 
-#include "datatypes/_2RealCustomData.h"
-
-#include <list>
+#include <deque>
 
 namespace _2Real
 {
+	class AbstractInletIO;
+	class AbstractInsertionPolicy;
 
-	template< typename T >
-	class AbstractCallback;
+	// data queues, currently used only for inlets
 
-	class AbstractInsertionPolicy
+	class DataQueue
 	{
 
 	public:
 
-		virtual bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer ) = 0;
-		virtual ~AbstractInsertionPolicy() {};
-		virtual void setMaxSize( const unsigned int max ) = 0;
-		virtual unsigned int getMaxSize() const = 0;
+		typedef std::deque< TimestampedData >				DataBuffer;
+		typedef std::deque< TimestampedData >::iterator		DataBufferIterator;
 
-	};
+		DataQueue( AbstractInletIO *owner, const unsigned int capacity );
+		~DataQueue();
 
-	class RemoveOldest : public AbstractInsertionPolicy
-	{
-
-	public:
-
-		RemoveOldest( const unsigned int max );
-		bool insertData( TimestampedData const& data, std::list< TimestampedData > &buffer );
-		void setMaxSize( const unsigned int max );
-		unsigned int getMaxSize() const;
+		void				setMaxCapacity( const unsigned int size );
+		unsigned int		getMaxCapacity() const;
+		void				storeDataItem( TimestampedData const& data );
+		bool				getDataItem( TimestampedData &data );
 
 	private:
 
-		mutable Poco::FastMutex		m_Mutex;
-		unsigned int				m_Max;
-
-	};
-
-	class EngineImpl;
-	class BasicInletBuffer;
-
-	class AbstractInletBuffer
-	{
-
-	public:
-
-		typedef std::list< TimestampedData >			DataBuffer;
-		typedef std::list< TimestampedData >::iterator	DataBufferIterator;
-
-		AbstractInletBuffer();
-		virtual ~AbstractInletBuffer() {}
-
-		virtual BasicInletBuffer & operator[]( const unsigned int index ) = 0;
-
-	protected:
-
-		EngineImpl										&m_Engine;
-
-	};
-
-	class BasicInletBuffer : public AbstractInletBuffer
-	{
-
-	public:
-
-		BasicInletBuffer();
-		~BasicInletBuffer();
-
-		// yeah, not pretty
-		BasicInletBuffer & operator[]( const unsigned int index ) { return *this; }
-
-		void processBufferedData( const bool enableTriggering );
-		std::shared_ptr< const CustomType > getTriggeringData() const;
-
-		void setBufferSize( const unsigned int size );
-		unsigned int getBufferSize() const;
-
-		void receiveData( TimestampedData const& data );
-
-		// triggers is based on basic buffers only
-		void setTrigger( AbstractCallback< TimestampedData const& > &callback );
-		void removeTrigger( AbstractCallback< TimestampedData const& > &callback );
-		void disableTriggering( std::shared_ptr< const CustomType > const& data );
-
-	private:
-
-		DataBuffer										m_ReceivedDataItems;	// holds all received data items
-		std::shared_ptr< const CustomType >				m_TriggeringData;		// holds the data item which first triggered the update condition
-		CallbackEvent< TimestampedData const& >			m_TriggeringEvent;
-		volatile bool									m_NotifyOnReceive;		// if true: try triggering
-
-		mutable Poco::FastMutex							m_BufferAccess;
-		mutable Poco::FastMutex							m_NotificationAccess;
-		AbstractInsertionPolicy							*m_InsertionPolicy;
-
-	};
-
-	class MultiInletBuffer : public AbstractInletBuffer
-	{
-
-	public:
-
-		typedef std::vector< BasicInletBuffer * >						BasicBuffers;
-		typedef std::vector< BasicInletBuffer * >::iterator				BasicBufferIterator;
-		typedef std::vector< BasicInletBuffer * >::const_iterator		BasicBufferConstInterator;
-
-		MultiInletBuffer( std::shared_ptr< const CustomType > initialData );
-		~MultiInletBuffer();
-
-		BasicInletBuffer & operator[]( const unsigned int index );
-		void addBasicBuffer( BasicInletBuffer &buffer );
-		void removeBasicBuffer( BasicInletBuffer &buffer );
-
-	private:
-
-		BasicBuffers				m_Buffers;
-		std::shared_ptr< const CustomType >				m_InitialValue;
+		DataBuffer										mBuffer;
+		mutable Poco::FastMutex							mAccess;
+		AbstractInsertionPolicy							*mInsertionPolicy;
+		AbstractInletIO									*const mOwner;
 
 	};
 

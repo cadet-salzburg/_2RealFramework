@@ -22,7 +22,7 @@
 #include "helpers/_2RealStringHelpers.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 using std::string;
 
@@ -139,19 +139,25 @@ namespace _2Real
 			m_Block->stop( true, timeout );
 		}
 
-		InletHandle & BlockHandle::getInletHandle( string const& name ) const
+		void BlockHandle::destroy( const long timeout )
+		{
+			checkValidity( m_Block );
+			m_Block->suicide( timeout );
+		}
+
+		InletHandle BlockHandle::getInletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
 			return m_Block->getAppInletHandle( trim( name ) );
 		}
 
-		ParameterHandle & BlockHandle::getParameterHandle( string const& name ) const
+		ParameterHandle BlockHandle::getParameterHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
 			return m_Block->getAppParameterHandle( trim( name ) );
 		}
 
-		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
+		OutletHandle BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
 			return m_Block->getAppOutletHandle( trim( name ) );
@@ -201,33 +207,27 @@ namespace _2Real
 			m_Block->unregisterFromNewData( cb );
 		}
 
-		void BlockHandle::kill( const long timeout )
-		{
-			checkValidity( m_Block );
-			EngineImpl::instance().removeBlock( *m_Block, timeout );
-		}
-
-		void BlockHandle::singleStep()
-		{
-			checkValidity( m_Block );
-			m_Block->singleStep();
-		}
+		//void BlockHandle::singleStep()
+		//{
+		//	checkValidity( m_Block );
+		//	m_Block->singleStep();
+		//}
 
 		void BlockHandle::invalidate()
 		{
 			m_Block = nullptr;
 		}
 
-		bool BlockHandle::isRunning() const
-		{
-			checkValidity( m_Block );
-			return m_Block->isRunning();
-		}
+		//bool BlockHandle::isRunning() const
+		//{
+		//	checkValidity( m_Block );
+		//	return m_Block->isRunning();
+		//}
 
-		std::string const& BlockHandle::getIdAsString() const
-		{
-			checkValidity( m_Block );
-			return m_Block->getName();
-		}
+		//std::string const& BlockHandle::getIdAsString() const
+		//{
+		//	checkValidity( m_Block );
+		//	return m_Block->getName();
+		//}
 	}
 }

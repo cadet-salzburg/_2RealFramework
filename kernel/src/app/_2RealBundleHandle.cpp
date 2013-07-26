@@ -25,7 +25,7 @@
 #include "engine/_2RealFunctionBlock.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "bundle handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {

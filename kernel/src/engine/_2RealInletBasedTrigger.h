@@ -22,7 +22,7 @@
 #include "engine/_2RealAbstractUpdateTrigger.h"
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealAbstractStateManager.h"
-#include "engine/_2RealInletBuffer.h"
+#include "engine/_2RealAbstractIOManager.h"
 
 namespace _2Real
 {
@@ -48,43 +48,44 @@ namespace _2Real
 
 	public:
 
-		AbstractInletBasedTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr ) :
-			m_Condition( false ),
-			m_Buffer( buffer ),
-			m_UpdateManager( mgr ),
-			m_LastData(/* std::shared_ptr< const CustomType >(), 0, -1 */)
+		AbstractInletBasedTrigger( BasicInletIO *inlet, AbstractStateManager *mgr ) :
+			mCondition( false ),
+			mInletIO( inlet ),
+			mUpdateManager( mgr ),
+			mLastData()
 		{
 		}
 
 		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& src )
 		{
-			m_LastData = src.m_LastData;
+			mLastData = src.mLastData;
 			return *this;
 		}
 
 		bool operator==( AbstractInletBasedTrigger const& other ) const
 		{
-			return ( &m_Buffer == &other.m_Buffer );
+			return ( mInletIO == other.mInletIO );
 		}
 
 		virtual ~AbstractInletBasedTrigger() {}
 
-		virtual void tryTriggerUpdate( TimestampedData const& data ) = 0;
+		virtual bool tryFulfillCondition( TimestampedData const& data ) = 0;
+		virtual void tryTriggerUpdate() = 0;
 
 		void resetData()
 		{
-			m_LastData = TimestampedData(/* std::shared_ptr< const CustomType >(), 0, -1 */);
+			mLastData = TimestampedData();
 		}
 
-		bool isFulfilled() const { return m_Condition.isFulfilled(); }
-		void set( const bool fulfilled ) { m_Condition.set( fulfilled ); }
+		bool isFulfilled() const { return mCondition.isFulfilled(); }
+		void set( const bool fulfilled ) { mCondition.set( fulfilled ); }
 
 	protected:
 
-		UpdateCondition			m_Condition;
-		BasicInletBuffer		&m_Buffer;
-		AbstractStateManager	&m_UpdateManager;
-		TimestampedData			m_LastData;
+		UpdateCondition			mCondition;
+		BasicInletIO			*const mInletIO;
+		AbstractStateManager	*const mUpdateManager;
+		TimestampedData			mLastData;
 
 	};
 
@@ -94,43 +95,45 @@ namespace _2Real
 
 	public:
 
-		InletBasedTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isOr ) :
-			AbstractInletBasedTrigger( buffer, mgr ),
-			m_IsOr( isOr )
+		InletBasedTrigger( BasicInletIO *inlet, AbstractStateManager *mgr, const bool isOr ) :
+			AbstractInletBasedTrigger( inlet, mgr ),
+			mIsOr( isOr )
 		{
-			mgr.addTrigger( *this, isOr );
-			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond >, TimestampedData const& >( *this, &InletBasedTrigger< TCond >::tryTriggerUpdate );
-			buffer.setTrigger( *cb );
+			mUpdateManager->addTrigger( *this, mIsOr );
+			mInletIO->setTrigger( this );
 		}
 
 		~InletBasedTrigger()
 		{
-			m_UpdateManager.removeTrigger( *this, m_IsOr );
-			AbstractCallback< TimestampedData const& > *cb =
-				new MemberCallback< InletBasedTrigger< TCond >, TimestampedData const& >( *this, &InletBasedTrigger< TCond >::tryTriggerUpdate );
-			m_Buffer.removeTrigger( *cb );
+			mUpdateManager->removeTrigger( *this, mIsOr );
+			mInletIO->removeTrigger( this );
 
 			// this has to be done, otherwise removing a basic inlet from a multiinlet might lead to a deadlock
 			// if the block owning the inlet was shutdown already, nothing should happen
-			m_UpdateManager.tryTriggerInlet( *this );
+			mUpdateManager->tryTriggerInlet();
 		}
 
-		void tryTriggerUpdate( TimestampedData const& data )
+		bool tryFulfillCondition( TimestampedData const& data )
 		{
-			if ( !m_Condition.isFulfilled() && m_ConditionCheck( data, m_LastData ) )
+			if ( !mCondition.isFulfilled() && mConditionCheck( data, mLastData ) )
 			{
-				m_Condition.set( true );
-				m_Buffer.disableTriggering( data.value );
-				m_LastData = data;
-				m_UpdateManager.tryTriggerInlet( *this );
+				mCondition.set( true );
+				mLastData = data;
+				return true;
 			}
+			else return false;
+		}
+
+		void tryTriggerUpdate()
+		{
+			if ( mCondition.isFulfilled() )
+				mUpdateManager->tryTriggerInlet();
 		}
 
 	private:
 
-		bool				m_IsOr;
-		TCond				m_ConditionCheck;
+		bool				mIsOr;
+		TCond				mConditionCheck;
 
 	};
 

@@ -45,8 +45,6 @@ namespace _2Real
 			BundleHandle( BundleHandle const& other );
 			BundleHandle& operator=( BundleHandle const& other );
 
-			BundleInfo const& getBundleInfo() const;
-
 			bool isValid() const;
 			void invalidate();
 			bool operator==( BundleHandle const& other ) const;
@@ -56,9 +54,9 @@ namespace _2Real
 			bool operator>( BundleHandle const& other ) const;
 			bool operator>=( BundleHandle const& other ) const;
 
+			BundleInfo const& getBundleInfo() const;
 			ContextBlockHandle & getContextBlock() const;
-			BlockHandle & createBlockInstance( std::string const& blockName );
-
+			BlockHandle & createBlockInstance( std::string const& );
 			void unload( const long blockTimeout = LONG_MAX );
 
 		private:

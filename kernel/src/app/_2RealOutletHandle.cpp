@@ -26,7 +26,7 @@
 #include "engine/_2RealFunctionBlock.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -116,63 +116,56 @@ namespace _2Real
 			return m_OutletIO >= other.m_OutletIO;
 		}
 
-		//AppData OutletHandle::getLastOutput() const
-		//{
-		//	checkValidity( m_OutletIO );
-		//	TimestampedData data = m_OutletIO->m_Outlet->getData();
-		//	return AppData( data, m_OutletIO->m_Outlet->getTypename(), m_OutletIO->m_Outlet->getLongTypename(), m_OutletIO->m_Outlet->getName() );
-		//}
-
 		bool OutletHandle::link( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			return EngineImpl::instance().createLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO ).isValid();;
+			return m_OutletIO->linkTo( inlet.m_InletIO->operator[]( 0 ) );
 		}
 
 		void OutletHandle::unlinkFrom( InletHandle &inlet )
 		{
 			checkValidity( m_OutletIO );
-			EngineImpl::instance().destroyLink( inlet.m_InletIO->operator[]( 0 ), *m_OutletIO );
+			m_OutletIO->unlinkFrom( inlet.m_InletIO->operator[]( 0 ) );
 		}
 
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
-			m_OutletIO->m_AppEvent->addListener( *cb );
+			m_OutletIO->mAppEvent->addListener( *cb );
 		}
 
 		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData ) const
 		{
 			checkValidity( m_OutletIO );
 			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
-			m_OutletIO->m_AppEvent->removeListener( *cb );
+			m_OutletIO->mAppEvent->removeListener( *cb );
 		}
 
 		void OutletHandle::registerToNewDataInternal( OutletCallback &cb ) const
 		{
 			checkValidity( m_OutletIO );
-			m_OutletIO->m_AppEvent->addListener( cb );
+			m_OutletIO->mAppEvent->addListener( cb );
 		}
 
 		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb ) const
 		{
 			checkValidity( m_OutletIO );
-			m_OutletIO->m_AppEvent->removeListener( cb );
+			m_OutletIO->mAppEvent->removeListener( cb );
 		}
 
 		std::string const& OutletHandle::getName() const
 		{
 			checkValidity( m_OutletIO );
-			return m_OutletIO->m_Outlet->getName();
+			return m_OutletIO->getName();
 		}
 
 		app::BlockHandle OutletHandle::getOwningBlock()
 		{
 			checkValidity( m_OutletIO );
 
-			AbstractUberBlock *b = &( m_OutletIO->m_Outlet->getOwningUberBlock() );
-			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< BlockHandle > * >( b );
+			AbstractUberBlock *b = m_OutletIO->getOwningBlock();
+			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< app::BlockHandle > * >( b );
 			if ( nullptr != f )
 			{
 				return f->getHandle();
@@ -186,19 +179,19 @@ namespace _2Real
 		app::TypeMetainfo OutletHandle::getType() const
 		{
 			checkValidity( m_OutletIO );
-			return app::TypeMetainfo( m_OutletIO->info().type );
+			return app::TypeMetainfo( m_OutletIO->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > OutletHandle::makeData() const
 		{
 			checkValidity( m_OutletIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_OutletIO->info().type ) );
+			return std::shared_ptr< CustomType >( new CustomType( m_OutletIO->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > OutletHandle::getCurrentData() const
 		{
 			checkValidity( m_OutletIO );
-			return m_OutletIO->getCurrentData();
+			return m_OutletIO->getCurrentDataThreadsafe();
 		}
 	}
 }

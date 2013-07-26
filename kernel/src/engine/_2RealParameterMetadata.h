@@ -31,14 +31,14 @@ namespace _2Real
 
 	struct InletMetadata
 	{
-		InletMetadata( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const*, InletPolicy const&, const bool );
+		InletMetadata( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const*, Policy const&, const bool );
 		~InletMetadata();
 
 		std::string										name;
 		std::string										type;
 		TypeMetadata									const* metadata;
 		std::shared_ptr< const CustomType >				initValue;
-		InletPolicy										defaultPolicy;
+		Policy										defaultPolicy;
 		bool											isMulti;
 	};
 

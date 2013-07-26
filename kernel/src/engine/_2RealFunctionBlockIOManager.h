@@ -50,7 +50,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockIOManager( AbstractUberBlock &owner );
+		FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner );
 		~FunctionBlockIOManager();
 
 		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::getHandle;
@@ -62,30 +62,29 @@ namespace _2Real
 		void							registerToNewData( app::BlockCallback &cb );
 		void							unregisterFromNewData( app::BlockCallback &cb );
 
-		void							addBasicInlet( InletInfo const& info );
-		void							addMultiInlet( InletInfo const& info );
-		void							addOutlet( OutletInfo const& info );
-		void							addParameter( ParameterInfo const& info );
+		void							addBasicInlet( IOInfo * );
+		void							addMultiInlet( IOInfo * );
+		void							addOutlet( IOInfo * );
+		void							addParameter( IOInfo * );
 
-		app::InletHandle &				getAppInletHandle( std::string const& name );
-		app::OutletHandle &				getAppOutletHandle( std::string const& name );
-		app::ParameterHandle &				getAppParameterHandle( std::string const& name );
-		bundle::InletHandle &			getBundleInletHandle( std::string const& name ) const;
-		bundle::OutletHandle &			getBundleOutletHandle( std::string const& name ) const;
-		bundle::ParameterHandle &			getBundleParameterHandle( std::string const& name ) const;
+		app::InletHandle				getAppInletHandle( std::string const& name );
+		app::OutletHandle				getAppOutletHandle( std::string const& name );
+		app::ParameterHandle			getAppParameterHandle( std::string const& name );
+		bundle::InletHandle				getBundleInletHandle( std::string const& name ) const;
+		bundle::OutletHandle			getBundleOutletHandle( std::string const& name ) const;
+		bundle::ParameterHandle			getBundleParameterHandle( std::string const& name ) const;
 
 		AppInletHandles const&			getAppInletHandles() const;
 		AppOutletHandles const&			getAppOutletHandles() const;
-		AppParameterHandles const&			getAppParameterHandles() const;
+		AppParameterHandles const&		getAppParameterHandles() const;
 		BundleInletHandles const&		getBundleInletHandles() const;
 		BundleOutletHandles const&		getBundleOutletHandles() const;
-		BundleParameterHandles const&		getBundleParameterHandles() const;
+		BundleParameterHandles const&	getBundleParameterHandles() const;
 
 		void							updateInletData();
+		void							updateParameterData();
 		void							updateOutletData();
-		//void							clearInletBuffers();
 		void							updateInletBuffers( const bool enableTriggering );
-		void							updateSetupParameters();
 
 		/* moved to public 13/05/2013 - using this function might cause sync issues?? */
 
@@ -104,14 +103,10 @@ namespace _2Real
 		mutable Poco::FastMutex			m_InletAccess;
 		mutable Poco::FastMutex			m_OutletAccess;
 		mutable Poco::FastMutex			m_ParameterAccess;
+
 		InletVector						m_Inlets;
 		OutletVector					m_Outlets;
 		ParameterVector					m_Parameters;
-
-		//AbstractInletIO &				getInletIO( std::string const& name );
-		//OutletIO &						getOutletIO( std::string const& name );
-		//AbstractInletIO const&			getInletIO( std::string const& name ) const;
-		//OutletIO const&					getOutletIO( std::string const& name ) const;
 
 		AppInletHandles					m_AppInletHandles;
 		AppOutletHandles				m_AppOutletHandles;
@@ -119,6 +114,9 @@ namespace _2Real
 		BundleInletHandles				m_BundleInletHandles;
 		BundleOutletHandles				m_BundleOutletHandles;
 		BundleParameterHandles			m_BundleParameterHandles;
+
+		Poco::FastMutex																m_IOAccess;
+		CallbackEvent< std::vector< std::shared_ptr< const CustomType > > >			m_AppEvent;
 	};
 
 }

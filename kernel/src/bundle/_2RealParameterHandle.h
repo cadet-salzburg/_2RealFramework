@@ -25,7 +25,7 @@
 
 namespace _2Real
 {
-	class InputParameter;
+	class Parameter;
 
 	namespace bundle
 	{
@@ -35,7 +35,7 @@ namespace _2Real
 		public:
 
 			ParameterHandle();
-			ParameterHandle( InputParameter &param );
+			ParameterHandle( Parameter &param );
 			ParameterHandle( ParameterHandle const& src );
 			ParameterHandle& operator=( ParameterHandle const& src );
 			~ParameterHandle();
@@ -51,7 +51,7 @@ namespace _2Real
 
 		private:
 
-			InputParameter		*m_Parameter;
+			Parameter		*m_Parameter;
 
 		};
 	}

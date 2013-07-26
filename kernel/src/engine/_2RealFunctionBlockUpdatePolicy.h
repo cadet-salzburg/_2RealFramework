@@ -39,7 +39,7 @@ namespace _2Real
 	class AbstractInletTriggerCtor
 	{
 	public:
-		virtual AbstractInletBasedTrigger * createTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isSingleWeight ) = 0;
+		virtual AbstractInletBasedTrigger * createTrigger( BasicInletIO *inlet, AbstractStateManager *mgr, const bool isSingleWeight ) = 0;
 		virtual ~AbstractInletTriggerCtor() {};
 	};
 
@@ -47,9 +47,9 @@ namespace _2Real
 	class InletTriggerCtor : public AbstractInletTriggerCtor
 	{
 	public:
-		AbstractInletBasedTrigger * createTrigger( BasicInletBuffer &buffer, AbstractStateManager &mgr, const bool isSingleWeight )
+		AbstractInletBasedTrigger * createTrigger( BasicInletIO *inlet, AbstractStateManager *mgr, const bool isSingleWeight )
 		{
-			return new InletBasedTrigger< Condition >( buffer, mgr, isSingleWeight );
+			return new InletBasedTrigger< Condition >( inlet, mgr, isSingleWeight );
 		}
 	};
 
@@ -58,11 +58,11 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockUpdatePolicy( AbstractUberBlock &owner );
+		FunctionBlockUpdatePolicy( EngineImpl *engine, AbstractUberBlock *owner );
 		~FunctionBlockUpdatePolicy();
 
 		// update policy has no concept of multiinlets
-		void addInlet( BasicInletIO &io, InletPolicy const& p );
+		void addInlet( BasicInletIO &io, Policy const& p );
 		void removeInlet( BasicInletIO &io );
 
 		void syncChanges();
@@ -70,7 +70,7 @@ namespace _2Real
 		void setNewUpdateRate( const double rate );
 		double getUpdateRate() const;
 
-		void setInletPolicy( BasicInletIO &io, InletPolicy const& p );
+		void setInletPolicy( BasicInletIO &io, Policy const& p );
 
 	private:
 
@@ -78,13 +78,13 @@ namespace _2Real
 		{
 			InletPolicyInfo( AbstractInletTriggerCtor *c, AbstractInletBasedTrigger *t, const bool w ) :
 				wasPolicyChanged( true ), isSingleWeight( w ),
-				policy( InletPolicy::ALWAYS ), ctor( c ), trigger( t ) {}
+				policy( Policy::ALWAYS ), ctor( c ), trigger( t ) {}
 
 			~InletPolicyInfo() { delete ctor; delete trigger; }
 
 			bool						wasPolicyChanged;
 			bool						isSingleWeight;
-			InletPolicy					policy;
+			Policy						policy;
 			AbstractInletTriggerCtor	*ctor;
 			AbstractInletBasedTrigger	*trigger;
 		};
@@ -96,7 +96,6 @@ namespace _2Real
 		template< typename T >
 		friend class FunctionBlock;
 
-		EngineImpl						&m_Engine;
 		FunctionBlockStateManager		*m_StateManager;
 		FunctionBlockIOManager			*m_IOManager;
 

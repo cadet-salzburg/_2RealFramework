@@ -24,6 +24,7 @@
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
+#include "helpers/_2RealNonCopyable.h"
 
 #include <string>
 #include <set>
@@ -34,13 +35,12 @@ namespace _2Real
 
 	template< typename T >
 	class SingletonHolder;
-	class EngineImpl;
 
 	namespace app
 	{
 		class SystemState;
 
-		class Engine
+		class Engine : private NonCopyable< Engine >
 		{
 
 			template< typename T >
@@ -60,8 +60,6 @@ namespace _2Real
 				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
 			};
 
-			// (?) chose set here only b/c of the sorting advantage
-			// maybe should be vector, too
 			typedef std::set< Link, SortByOutlet >						Links;
 			typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
 			typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
@@ -76,21 +74,19 @@ namespace _2Real
 
 			static Engine& instance();
 
-			void setBaseDirectory( std::string const& directory );
-			app::BundleHandle & loadBundle( std::string const& libraryPath );
-			app::BundleHandle & findBundleByPath( std::string const& libraryPath );
-			app::BundleHandle & findBundleByName( std::string const& name );
+			//--------------------- bundle loading
+			// returns the absolute path to the bundle directory
+			std::string getBundleDirectory() const;
+			// loads a bundle, path must be relative to bundle dir
+			app::BundleHandle & loadBundle( std::string const& relativePath );
+			//--------------------- bundle loading
 
-			// either clears everything, incl bundles and contexts, or just the block instances
+			// clears the whole framework - i.e. all bundles, context blocks & blocks
 			void clearAll();
+			// clears just the block instances
 			void clearBlockInstances();
 
-			// these functions give information about the current state of the framework
-			Links			getCurrentLinks();
-			BlockHandles	getCurrentBlocks();		// these are only the block instances, not the contexts
-			BundleHandles	getCurrentBundles();
-
-			// exception callback
+			//--------------------- exception callbacks
 			void registerToException( BlockExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( BlockExceptionCallback callback, void *userData = nullptr );
 
@@ -107,8 +103,9 @@ namespace _2Real
 				BlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, BlockHandle > const& >( callable, callback );
 				unregisterFromExceptionInternal( *cb );
 			}
+			//--------------------- exception callbacks
 
-			// context block exception callback
+			//--------------------- context block exception callbacks
 			void registerToException( ContextBlockExceptionCallback callback, void *userData = nullptr );
 			void unregisterFromException( ContextBlockExceptionCallback callback, void *userData = nullptr );
 
@@ -125,11 +122,9 @@ namespace _2Real
 				ContextBlockExcCallback *cb = new MemberCallback< TCallable, std::pair< Exception, ContextBlockHandle > const& >( callable, callback );
 				unregisterFromExceptionInternal( *cb );
 			}
+			//--------------------- context block exception callbacks
 
-			//void saveConfig( std::string const& filePath );
-			//std::list< std::string > tryConfig( std::string const& filePath );
-			//void loadConfig( std::string const& filePath );
-
+			//--------------------- loading / saving
 			// new 02/05/13
 			//void getCurrentSystemState( SystemState &state );
 			// this basically tests whether or not all bundles are there
@@ -137,18 +132,22 @@ namespace _2Real
 			//std::list< std::string > testConfiguration( std::string const& dataSource );
 			// returns the difference to the previous system state
 			//SystemState *loadConfiguration( std::string const& dataSource );
+			//--------------------- loading / saving
 
 		private:
 
-			void registerToExceptionInternal( BlockExcCallback &cb );
-			void unregisterFromExceptionInternal( BlockExcCallback &cb );
-			void registerToExceptionInternal( ContextBlockExcCallback &cb );
-			void unregisterFromExceptionInternal( ContextBlockExcCallback &cb );
+			void registerToExceptionInternal( BlockExcCallback & );
+			void unregisterFromExceptionInternal( BlockExcCallback & );
+			void registerToExceptionInternal( ContextBlockExcCallback & );
+			void unregisterFromExceptionInternal( ContextBlockExcCallback & );
 
 			Engine();
-			Engine( Engine const& src );
+			~Engine();
 
-			EngineImpl		&m_EngineImpl;
+			Engine( Engine const& src );
+			Engine& operator=( Engine const& other );
+
+			EngineImpl		*const mImpl;
 
 		};
 	}

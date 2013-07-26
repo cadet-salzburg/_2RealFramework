@@ -55,7 +55,7 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockStateManager( AbstractUberBlock &owner, const bool thread );
+		FunctionBlockStateManager( EngineImpl *engine, AbstractUberBlock *owner, const bool thread );
 		~FunctionBlockStateManager();
 
 		void setUp();
@@ -72,8 +72,8 @@ namespace _2Real
 
 		bool isRunning() const;
 
-		void tryTriggerInlet( AbstractInletBasedTrigger &trigger );
-		void tryTriggerTime( TimeBasedTrigger &trigger );
+		void tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */);
+		void tryTriggerTime(/* TimeBasedTrigger &trigger */);
 
 		void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );
 		void removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );

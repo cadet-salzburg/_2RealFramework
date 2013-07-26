@@ -22,106 +22,189 @@
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
+#include "engine/_2RealParameter.h"
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealParameterMetadata.h"
+#include "engine/_2RealInletBasedTrigger.h"
+#include "engine/_2RealLogger.h"
+#include "engine/_2RealEngineImpl.h"
+
+#include <assert.h>
 
 using std::string;
 
 namespace _2Real
 {
 
-	AbstractInletIO::AbstractInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
+	AbstractInletIO::AbstractInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, IOInfo *info ) :
 		NonCopyable< AbstractInletIO >(),
+		Identifiable< AbstractInletIO >( owner->getIds(), info->name ),
 		Handleable< AbstractInletIO, app::InletHandle >( *this ),
-		m_Info( info ),
-		m_OwningBlock( owner ),
-		m_Policy( policy )
+		mEngineImpl( engine ),
+		mOwningBlock( owner ),
+		mPolicy( policy ),
+		mInfo( info )
 	{
+#ifdef _DEBUG
+		assert( mEngineImpl );
+		assert( mOwningBlock );
+		assert( mPolicy );
+#endif
+	}
+
+	IOInfo * AbstractInletIO::getInfo()
+	{
+		return mInfo;
 	}
 
 	AbstractUberBlock * AbstractInletIO::getOwningBlock()
 	{
-		return &m_OwningBlock;
+		return mOwningBlock;
+	}
+
+	bool AbstractInletIO::belongsToBlock( AbstractUberBlock const* block ) const
+	{
+		return mOwningBlock == block;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	BasicInletIO::BasicInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
-		AbstractInletIO( owner, policy, info ),
-		m_Inlet( new BasicInlet( owner, info.baseName ) ),
-		m_Buffer( new BasicInletBuffer() )
+	BasicInletIO::BasicInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, IOInfo *info ) :
+		AbstractInletIO( engine, owner, policy, info ),
+		mInlet( new BasicInlet( this ) ),
+		mBuffer( new BasicInletBuffer( this ) ),
+		mQueue( new DataQueue( this, 10 ) ),
+		mUpdateTrigger( nullptr ),					// will be initialized later on ( POSSIBLE CRASH!!! )
+		mNotifyOnReceive( false )					// in the beginning, everything will be written into the buffer
 	{
 	}
 
 	BasicInletIO::~BasicInletIO()
 	{
-		delete m_Inlet;
-		delete m_Buffer;
+		delete mInlet;
+		delete mBuffer;
+		delete mQueue;
+		delete mInfo;
 	}
 
-	bundle::InletHandle & BasicInletIO::getBundleInletHandle() const
+	bundle::InletHandle & BasicInletIO::getBundleHandle() const
 	{
-		return m_Inlet->getHandle();
-	}
-	
-	std::string const& BasicInletIO::getName() const
-	{
-		return m_Info.baseName;
+		return mInlet->getHandle();
 	}
 
-	void BasicInletIO::setBufferSize( const unsigned int size )
+	void BasicInletIO::setQueueSize( const unsigned int size )
 	{
-		m_Buffer->setBufferSize( size );
+		mQueue->setMaxCapacity( size );
 	}
 
-	void BasicInletIO::setUpdatePolicy( InletPolicy const& p )
+	void BasicInletIO::setUpdatePolicy( Policy const& p )
 	{
-		m_Info.policy = p;
-		m_Policy.setInletPolicy( *this, p );
+		mInfo->policy = p;
+		mPolicy->setInletPolicy( *this, p );
+	}
+
+	void BasicInletIO::setData( std::shared_ptr< const CustomType > data )
+	{
+		mBuffer->setData( data );
 	}
 
 	void BasicInletIO::receiveData( std::shared_ptr< const CustomType > data )
 	{
-		m_Buffer->receiveData( TimestampedData( data, EngineImpl::instance().getElapsedTime() ) );
+		receiveData( TimestampedData( data, mEngineImpl->getElapsedTime() ) );
 	}
 
-	//void BasicInletIO::receiveData( Any const& dataAsAny )
-	//{
-	//	m_Buffer->receiveData( dataAsAny );
-	//}
-
-	//void BasicInletIO::receiveData( std::string const& dataAsString )
-	//{
-	//	m_Buffer->receiveData( dataAsString );
-	//}
-
-	void BasicInletIO::syncInletData()
+	void BasicInletIO::receiveData( TimestampedData const& data )
 	{
-		m_Inlet->setData( m_Buffer->getTriggeringData() );
+		mEngineImpl->getLogger()->addLine( getFullName() + "\treceived data" );
+
+		mAccess.lock();
+		if ( !mNotifyOnReceive )
+		{
+			mAccess.unlock();
+			mQueue->storeDataItem( data );
+			mEngineImpl->getLogger()->addLine( getFullName() + "\tqueued data" );
+		}
+		else
+		{
+			mEngineImpl->getLogger()->addLine( getFullName() + "\ttry" );
+
+			bool wasTriggered = mUpdateTrigger->tryFulfillCondition( data );	// test the update condition
+																				// if update cond fulfilled, trigger will:
+																				//	-set its status to 'fulfilled'
+																				//	-store the data, for the next trigger attempt
+
+			if ( wasTriggered )
+			{
+				mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
+				mBuffer->setData( data.value );
+				mNotifyOnReceive = false;
+				mUpdateTrigger->tryTriggerUpdate();
+			}
+			mAccess.unlock();
+		}
 	}
 
-	void BasicInletIO::processBufferedData( const bool enableTriggering )
+	void BasicInletIO::synchronizeData()
 	{
-		m_Buffer->processBufferedData( enableTriggering );
+		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------synchronizing-----" );
+		std::shared_ptr< const CustomType > newData = mBuffer->getData();
+		mInlet->update( newData );
+		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------synchronized------" );
 	}
 
-	const std::string BasicInletIO::getBufferSizeAsString() const
+	void BasicInletIO::processQueue()
+	{
+		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------processing queue-----" );
+
+		// at this point, mNotifyOnReceive is still false so no mutex is needed - incoming data is just written into the buffer
+		bool wasTriggered = false;
+		TimestampedData data;
+		while( mQueue->getDataItem( data ) )
+		{
+			wasTriggered = mUpdateTrigger->tryFulfillCondition( data );			// test the update condition
+																				// if update cond fulfilled, trigger will:
+																				//	-set its status to 'fulfilled'
+																				//	-store the data, for the next trigger attempt
+			if ( wasTriggered ) break;
+		}
+
+		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------processed queue------" );
+
+		// if no buffered data item managed to trigger, enable mNotifyOnReceive
+		if ( !wasTriggered )
+		{
+			mAccess.lock();
+			mNotifyOnReceive = true;
+			mAccess.unlock();
+			mEngineImpl->getLogger()->addLine( getFullName() + "\tdid not fulfill cond from queue, try with last value" );
+
+			// try trigger with data of last update: -1 makes sure that 'newer timestamp' can never be fulfilled, but 'valid data' will be
+			receiveData( TimestampedData( mBuffer->getData(), -1 ) );
+		}
+		else
+		{
+			mBuffer->setData( data.value );
+			mEngineImpl->getLogger()->addLine( getFullName() + "\tdid fulfill cond from queue, try trigger" );
+			mUpdateTrigger->tryTriggerUpdate();
+		}
+	}
+
+	const std::string BasicInletIO::getQueueSizeAsString() const
 	{
 		std::ostringstream str;
-		str << m_Buffer->getBufferSize();
+		str << mQueue->getMaxCapacity();
 		return str.str();
 	}
 
 	const std::string BasicInletIO::getUpdatePolicyAsString() const
 	{
-		return InletPolicy::getPolicyAsString( m_Info.policy.getPolicy() );
+		return Policy::getPolicyAsString( mInfo->policy.getPolicy() );
 	}
 
-	const std::string BasicInletIO::getCurrentValueAsString() const
+	const std::string BasicInletIO::getCurrentDataAsString() const
 	{
-		// SYNC must be sure that there's no update happening right now
 		std::ostringstream str;
-		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentDataThreadSafe();
+		std::shared_ptr< const CustomType > data = mInlet->getDataThreadsafe();
 		if ( data.get() == nullptr ) str << "empty" << std::endl;
 		else data->writeTo( str );
 		return str.str();
@@ -129,41 +212,56 @@ namespace _2Real
 
 	std::shared_ptr< const CustomType > BasicInletIO::getCurrentData() const
 	{
-		// SYNC must be sure that there's no update happening right now
-		std::shared_ptr< const CustomType > data = m_Inlet->getCurrentDataThreadSafe();
+		std::shared_ptr< const CustomType > data = mInlet->getDataThreadsafe();
 		return data;
+	}
+
+	bool BasicInletIO::linkTo( OutletIO *outlet )
+	{
+		return mEngineImpl->createLink( *this, *outlet ).isValid();
+	}
+
+	void BasicInletIO::unlinkFrom( OutletIO *outlet )
+	{
+		mEngineImpl->destroyLink( *this, *outlet );
+	}
+
+	void BasicInletIO::setTrigger( AbstractInletBasedTrigger *trigger )
+	{
+		mUpdateTrigger = trigger;
+	}
+
+	void BasicInletIO::removeTrigger( AbstractInletBasedTrigger *trigger )
+	{
+		mUpdateTrigger = nullptr;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	MultiInletIO::MultiInletIO( AbstractUberBlock &owner, AbstractUpdatePolicy &policy, InletInfo const& info ) :
-		AbstractInletIO( owner, policy, info ),
-		m_Inlet( new MultiInlet( owner, info.baseName ) ),
-		m_Buffer( new MultiInletBuffer( info.initializer ) )
+	MultiInletIO::MultiInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, IOInfo *info ) :
+		AbstractInletIO( engine, owner, policy, info ),
+		mInlet( new MultiInlet( this ) )
 	{
-		//adding the very first inlet
-		//addBasicInlet();
 	}
 
 	MultiInletIO::~MultiInletIO()
 	{
-		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
-		{
-			IO io = *it;
-			delete io.io;
-		}
+		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
+			delete ( *it ).io;
 
-		delete m_Inlet;
-		delete m_Buffer;
+		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
+			delete *it;
+
+		delete mInlet;
+		delete mInfo;
 	}
 
-	BasicInletIO &  MultiInletIO::operator[]( const unsigned int index )
+	BasicInletIO & MultiInletIO::operator[]( const unsigned int index )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		try
 		{
-			return *( m_InletIOs.at( index ).io );
+			return *( mBasicInletIOs.at( index ).io );
 		}
 		catch ( std::out_of_range &e )
 		{
@@ -171,140 +269,218 @@ namespace _2Real
 		}
 	}
 
-	bundle::InletHandle & MultiInletIO::getBundleInletHandle() const
+	bundle::InletHandle & MultiInletIO::getBundleHandle() const
 	{
-		return m_Inlet->getHandle();
+		return mInlet->getHandle();
 	}
 
 	AbstractInletIO * MultiInletIO::addBasicInlet()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-
-		// basic inlets still need unique names
-		// however, they do not necessarily correspond to the order within the vector
-		unsigned int size = m_InletIOs.size();
-		std::ostringstream name;
-		name << m_Info.baseName << ":" << size;
-		// basic inlet is created & stored, but not yed added to the multiinlet - the owning block might be in update / setup
-		InletInfo info( m_Info );
-		info.baseName = name.str();
-		BasicInletIO *io = new BasicInletIO( m_OwningBlock, m_Policy, info );
-		m_InletIOs.push_back( IO( io ) );
-		// causes inlet to be added to the policy
-		m_Policy.addInlet( *io, info.policy );
-		//io->receiveData( m_Info.initValue.anyValue );		// ARGH not sure if this is right
-
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		IOInfo *info = new IOInfo( *mInfo );
+		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwningBlock, mPolicy, info );
+		mTemporaryInletIOs.push_back( io );
+		mPolicy->addInlet( *io, info->policy );		// why?
 		return io;
 	}
 
 	void MultiInletIO::removeBasicInlet( AbstractInletIO *io )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 
-		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
+		// check tmp list first
+		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
 		{
-			if ( io == ( *it ).io )
+			if ( io == *it )
 			{
-				//if ( m_InletIOs.size() == 1 )	throw IllegalActionException( "cannot remove last inlet from multiinlet" );
-
-				// kill all links involving this inlet
-				EngineImpl::instance().clearLinksFor( *( ( *it ).io ) );
-
-				// once the app programmer calls 'remove', the inlet should not influence the update policy any more, so remove it
-				m_Policy.removeInlet( *( *it ).io );
-
-				// basic inlet must stay in the multiinlet, since owning block might be in update /setup & thus the inlet might be accessed
-				( *it ).todoRemove = true;
-
-				// done - basic inlets are unique within the multiinlet
+				it = mTemporaryInletIOs.erase( it );
+				mPolicy->removeInlet( **it );
 				return;
 			}
 		}
 
-		// ( ? ) not found exc if abstr inlet does not belong to multiinlet?
+		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
+		{
+			if ( io == ( *it ).io )
+			{
+				mEngineImpl->clearLinksFor( *( ( *it ).io ) );	// kill all links involving this inlet
+				mPolicy->removeInlet( *( *it ).io );			// inlet should not influence updates any more
+				( *it ).wasRemoved = true;						// but inlet must stay alive, since it might still be accessed
+				return;
+			}
+		}
 	}
 
-	void MultiInletIO::syncInletChanges()
+	void MultiInletIO::synchronizeData()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 
-		for ( BasicIOIterator it = m_InletIOs.begin(); it != m_InletIOs.end(); ++it )
+		// move tmp inlets over
+		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
 		{
-			if ( ( *it ).todoAdd &! ( *it ).todoRemove )
-			{
-				BasicInletIO *io = ( *it ).io;
-				m_Inlet->addBasicInlet( io->getInlet() );
-				m_Buffer->addBasicBuffer( io->getBuffer() );
+			BasicInletIO *io = *it;
+			std::ostringstream name;
+			name << mInfo->name << "::" << mBasicInletIOs.size();
+			io->getInfo()->name = name.str();
+			mBasicInletIOs.push_back( IO( io ) );
+		}
 
-				( *it ).todoAdd = false;
-			}
-			else if ( ( *it ).todoAdd && ( *it ).todoRemove ) {}		// added & removed again in same cycle
-			else if ( ( *it ).todoRemove )
-			{
-				BasicInletIO *io = ( *it ).io;
-				m_Inlet->removeBasicInlet( io->getInlet() );
-				m_Buffer->removeBasicBuffer( io->getBuffer() );
+		mTemporaryInletIOs.clear();
 
+		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
+		{
+			BasicInletIO *io = ( *it ).io;
+			if ( ( *it ).wasRemoved )
+			{
 				delete io;
-
-				it = m_InletIOs.erase( it );
+				io = nullptr;
+				// argh
 			}
-			else {}														// nothing
+			else
+				io->synchronizeData();
 		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	ParameterIO::ParameterIO( AbstractUberBlock &owner, ParameterInfo const& info ) :
+	ParameterIO::ParameterIO( EngineImpl *engine, AbstractUberBlock *owner, IOInfo *info ) :
+		Identifiable< ParameterIO >( owner->getIds(), info->name ),
 		Handleable< ParameterIO, app::ParameterHandle >( *this ),
-		m_Parameter( new InputParameter( owner, info.baseName, info.initializer ) ),
-		//m_AppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
-		//m_InletEvent( new CallbackEvent< TimestampedData const& >() ),
-		m_OwningBlock( owner ),
-		m_Info( info )
+		mEngineImpl( engine ),
+		mOwningBlock( owner ),
+		mParameter( new Parameter( this ) ),
+		mBuffer( new ParameterBuffer( this ) ),
+		mInfo( info )
 	{
 	}
 
-	//std::shared_ptr< const CustomType > ParameterIO::getCurrentData() const
-	//{
-	//	return m_Outlet->getData();
-	//}
-
 	ParameterIO::~ParameterIO()
 	{
-		delete m_Parameter;
-		//delete m_AppEvent;
-		//delete m_InletEvent;
+		delete mParameter;
+		delete mBuffer;
+		delete mInfo;
+	}
+
+	IOInfo * ParameterIO::getInfo()
+	{
+		return mInfo;
+	}
+
+	AbstractUberBlock * ParameterIO::getOwningBlock()
+	{
+		return mOwningBlock;
+	}
+
+	bool ParameterIO::belongsToBlock( AbstractUberBlock const* block ) const
+	{
+		return mOwningBlock == block;
+	}
+
+	std::shared_ptr< const CustomType > ParameterIO::getCurrentDataThreadsafe() const
+	{
+		// called from app, always reads the buffer + mutex
+		return mParameter->getDataThreadsafe();
+	}
+
+	void ParameterIO::setData( std::shared_ptr< const CustomType > newData )
+	{
+		// called from app, always reads the buffer + mutex
+		return mBuffer->setData( newData );
+	}
+
+	void ParameterIO::synchronizeData()
+	{
+		std::shared_ptr< const CustomType > newData = mBuffer->getData();
+		mParameter->update( newData );
+	}
+
+	bundle::ParameterHandle ParameterIO::getBundleHandle() const
+	{
+		return mParameter->getHandle();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	OutletIO::OutletIO( AbstractUberBlock &owner, OutletInfo const& info ) :
+	OutletIO::OutletIO( EngineImpl *engine, AbstractUberBlock *owner, IOInfo *info ) :
+		Identifiable< OutletIO >( owner->getIds(), info->name ),
 		Handleable< OutletIO, app::OutletHandle >( *this ),
-		m_Outlet( new Outlet( owner, info.baseName, info.initializer ) ),
-		m_AppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
-		m_InletEvent( new CallbackEvent< TimestampedData const& >() ),
-		m_OwningBlock( owner ),
-		m_Info( info )
+		mEngineImpl( engine ),
+		mOwningBlock( owner ),
+		mOutlet( new Outlet( this ) ),
+		mBuffer( new OutletBuffer( this ) ),
+		mInfo( info ),
+		mAppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
+		mInletEvent( new CallbackEvent< TimestampedData const& >() )
 	{
-	}
-
-	std::shared_ptr< const CustomType > OutletIO::getCurrentData() const
-	{
-		return m_Outlet->getData();
 	}
 
 	OutletIO::~OutletIO()
 	{
-		delete m_Outlet;
-		delete m_AppEvent;
-		delete m_InletEvent;
+		delete mOutlet;
+		delete mBuffer;
+		delete mAppEvent;
+		delete mInletEvent;
+		delete mInfo;
+	}
+
+	IOInfo * OutletIO::getInfo()
+	{
+		return mInfo;
+	}
+
+	AbstractUberBlock * OutletIO::getOwningBlock()
+	{
+		return mOwningBlock;
+	}
+
+	bool OutletIO::belongsToBlock( AbstractUberBlock const* block ) const
+	{
+		return mOwningBlock == block;
+	}
+
+	std::shared_ptr< const CustomType > OutletIO::getCurrentDataThreadsafe() const
+	{
+		// called from app, always reads the buffer + mutex
+		return mBuffer->getData();
+	}
+
+	std::shared_ptr< const CustomType > OutletIO::synchronizeData()
+	{
+		// clone initializer
+		std::shared_ptr< CustomType > newData( new CustomType( *( mInfo->initializer.get() ) ) ) ;
+		// retrieve old data from outlet & set new data
+		std::shared_ptr< const CustomType > recentData = mOutlet->update( newData );
+		// store old data in buffer
+		mBuffer->setData( recentData );
+		// notify: only if not empty
+		if ( recentData.get() )
+		{
+			mInletEvent->notify( TimestampedData( recentData, mEngineImpl->getElapsedTime() ) );
+			mAppEvent->notify( recentData );
+		}
+		return recentData;
+	}
+
+	bool OutletIO::linkTo( BasicInletIO &inlet )
+	{
+		return mEngineImpl->createLink( inlet, *this ).isValid();
+	}
+
+	void OutletIO::unlinkFrom( BasicInletIO &inlet )
+	{
+		mEngineImpl->destroyLink( inlet, *this );
+	}
+
+	bundle::OutletHandle OutletIO::getBundleHandle() const
+	{
+		return mOutlet->getHandle();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	AbstractIOManager::AbstractIOManager( AbstractUberBlock &owner ) :
-		m_Owner( owner )
+	AbstractIOManager::AbstractIOManager( EngineImpl *engine, AbstractUberBlock *owner ) :
+		mEngineImpl( engine ),
+		mOwner( owner )
 	{
 	}
 
@@ -312,9 +488,9 @@ namespace _2Real
 	{
 	}
 
-	const string AbstractIOManager::getName() const
+	std::string AbstractIOManager::getName() const
 	{
-		return m_Owner.getFullName();
+		return mOwner->getFullName();
 	}
 
 }

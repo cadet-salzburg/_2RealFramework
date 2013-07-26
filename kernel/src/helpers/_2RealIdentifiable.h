@@ -25,11 +25,11 @@
 namespace _2Real
 {
 
-	class AbstractInlet;
-	class Outlet;
+	class AbstractInletIO;
+	class OutletIO;
 	class Bundle;
 	class AbstractUberBlock;
-	class InputParameter;
+	class ParameterIO;
 
 	class AbstractIdentifiable
 	{
@@ -80,21 +80,21 @@ namespace _2Real
 	};
 
 	template< >
-	class Identifiable< Outlet > : public AbstractIdentifiable
+	class Identifiable< OutletIO > : public AbstractIdentifiable
 	{
 	protected:
 		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "outlet", name ) {}
 	};
 
 	template< >
-	class Identifiable< AbstractInlet > : public AbstractIdentifiable
+	class Identifiable< AbstractInletIO > : public AbstractIdentifiable
 	{
 	protected:
 		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "inlet", name ) {}
 	};
 
 	template< >
-	class Identifiable< InputParameter > : public AbstractIdentifiable
+	class Identifiable< ParameterIO > : public AbstractIdentifiable
 	{
 	protected:
 		Identifiable( Ids const& ids, std::string const& name ) : AbstractIdentifiable( ids, "parameter", name ) {}

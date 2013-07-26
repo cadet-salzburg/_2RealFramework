@@ -33,9 +33,8 @@ using std::greater;
 namespace _2Real
 {
 
-	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( AbstractUberBlock &owner ) :
-		AbstractUpdatePolicy( owner ),
-		m_Engine( EngineImpl::instance() ),
+	FunctionBlockUpdatePolicy::FunctionBlockUpdatePolicy( EngineImpl *engine, AbstractUberBlock *owner ) :
+		AbstractUpdatePolicy( engine, owner ),
 		m_TimeChanged( false ),
 		m_InletPoliciesChanged( false ),
 		m_TimeTrigger( nullptr ),
@@ -55,7 +54,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, InletPolicy const& policy )
+	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, Policy const& policy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 #ifdef _DEBUG
@@ -65,28 +64,26 @@ namespace _2Real
 		}
 #endif
 
-		BasicInletBuffer *buffer = inletIO.getBufferPtr();
-
 		AbstractInletTriggerCtor *c;
 		AbstractInletBasedTrigger *t;
 		bool s;
 
-		if ( policy == InletPolicy::ALWAYS )
+		if ( policy == Policy::ALWAYS )
 		{
 			c = new InletTriggerCtor< ValidData >();
-			t = c->createTrigger( *buffer, *m_StateManager, false );
+			t = c->createTrigger( &inletIO, m_StateManager, false );
 			s = false;
 		}
-		else if ( policy == InletPolicy::OR_NEWER_DATA )
+		else if ( policy == Policy::OR_NEWER_DATA )
 		{
 			c = new InletTriggerCtor< NewerTimestamp >();
-			t = c->createTrigger( *buffer, *m_StateManager, true );
+			t = c->createTrigger( &inletIO, m_StateManager, true );
 			s = true;
 		}
-		else if ( policy == InletPolicy::AND_NEWER_DATA )
+		else if ( policy == Policy::AND_NEWER_DATA )
 		{
 			c = new InletTriggerCtor< NewerTimestamp >();
-			t = c->createTrigger( *buffer, *m_StateManager, false );
+			t = c->createTrigger( &inletIO, m_StateManager, false );
 			s = false;
 		}
 
@@ -120,7 +117,7 @@ namespace _2Real
 			delete m_TimeTrigger; m_TimeTrigger = nullptr;
 			if ( m_UpdateTime > 0 )
 			{
-				m_TimeTrigger = new TimeBasedTrigger( *m_StateManager, m_UpdateTime );
+				m_TimeTrigger = new TimeBasedTrigger( mEngineImpl->getTimer(), m_StateManager, m_UpdateTime );
 			}
 
 			m_TimeChanged = false;
@@ -134,10 +131,9 @@ namespace _2Real
 
 				if ( policy->wasPolicyChanged )
 				{
-					BasicInletBuffer *buffer = it->first->getBufferPtr();
 					AbstractInletTriggerCtor *ctor = it->second->ctor;
 					AbstractInletBasedTrigger *currTrigger = it->second->trigger;
-					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( *buffer, *m_StateManager, it->second->isSingleWeight );
+					AbstractInletBasedTrigger *newTrigger = ctor->createTrigger( it->first, m_StateManager, it->second->isSingleWeight );
 
 					if ( currTrigger != nullptr )
 					{
@@ -170,7 +166,7 @@ namespace _2Real
 		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setInletPolicy( BasicInletIO &io, InletPolicy const& p )
+	void FunctionBlockUpdatePolicy::setInletPolicy( BasicInletIO &io, Policy const& p )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_InletPoliciesChanged = true;
@@ -180,17 +176,17 @@ namespace _2Real
 			it->second->wasPolicyChanged = true;
 			delete it->second->ctor;
 
-			if ( p == InletPolicy::ALWAYS )
+			if ( p == Policy::ALWAYS )
 			{
 				it->second->ctor = new InletTriggerCtor< ValidData >();
 				it->second->isSingleWeight = false;
 			}
-			else if ( p == InletPolicy::OR_NEWER_DATA )
+			else if ( p == Policy::OR_NEWER_DATA )
 			{
 				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
 				it->second->isSingleWeight = true;
 			}
-			else if ( p == InletPolicy::AND_NEWER_DATA )
+			else if ( p == Policy::AND_NEWER_DATA )
 			{
 				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
 				it->second->isSingleWeight = false;

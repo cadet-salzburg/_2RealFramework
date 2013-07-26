@@ -57,6 +57,11 @@ namespace _2Real
 		return ( m_ContextBlock != nullptr );
 	}
 
+	bool Bundle::operator==( Bundle const& other ) const
+	{
+		return ( this->m_BundleInfo.directory == other.m_BundleInfo.directory );
+	}
+
 	void Bundle::contextBlockRemoved()
 	{
 		m_ContextBlock = nullptr;
@@ -101,11 +106,12 @@ namespace _2Real
 
 	FunctionBlock< app::BlockHandle > & Bundle::createBlockInstance( std::string const& blockName )
 	{
-		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName );
+		ostringstream nameStr;
+		nameStr << blockName << "_" << getBlockInstanceCount( blockName );
 
-		ostringstream name;
-		name << blockName << "_" << getBlockInstanceCount( blockName );
-		block->setName( name.str() );
+		std::string name = nameStr.str();
+
+		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName, name );
 
 		m_BlockInstances.insert( make_pair( blockName, block ) );
 		return *block;

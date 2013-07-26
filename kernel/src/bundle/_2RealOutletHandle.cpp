@@ -20,7 +20,7 @@
 #include "engine/_2RealOutlet.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "outlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -89,7 +89,7 @@ namespace _2Real
 		void OutletHandle::discard()
 		{
 			checkValidity( m_Outlet );
-			m_Outlet->discardCurrentUpdate();
+			m_Outlet->discard();
 		}
 	}
 }

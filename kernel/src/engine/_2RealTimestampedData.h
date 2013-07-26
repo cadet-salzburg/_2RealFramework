@@ -20,29 +20,20 @@
 
 #include "datatypes/_2RealCustomData.h"
 
+#include <limits.h>
+
 namespace _2Real
 {
-	// RENAME timestamped->unique or 'DataItem'
-	// represents a piece of data inside a queue
-	// timestamp + key are used to differentiate
-
 	class TimestampedData
 	{
 
 	public:
 
-		TimestampedData() : value(), timestamp( 0 )/*, key( 0 )*/ {}
+		TimestampedData() : value(), timestamp( ( std::numeric_limits< long >::min )() ) {}
+		TimestampedData( std::shared_ptr< const CustomType > v, const long t ) : value( v ), timestamp( t ) {}
 
-		// called at 2 places: receiveData - time = current, add inlet - time = 0
-		TimestampedData( std::shared_ptr< const CustomType > v, const long t ) : value( v ), timestamp( t )/*, key( 0 )*/ {}
-
-		// timestamped data means the data is already inside some inlet queue -> const, since inlets can write ( maybe in future? )
 		std::shared_ptr< const CustomType >		value;
-		unsigned long							timestamp;
-
-	private:
-
-		//unsigned long							key;
+		long									timestamp;
 
 	};
 }

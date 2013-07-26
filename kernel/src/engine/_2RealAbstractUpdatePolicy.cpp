@@ -19,21 +19,26 @@
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealAbstractUberBlock.h"
 
-using std::string;
+#include <assert.h>
 
 namespace _2Real
 {
-	AbstractUpdatePolicy::AbstractUpdatePolicy( AbstractUberBlock &owner ) :
-		m_Owner( owner )
+	AbstractUpdatePolicy::AbstractUpdatePolicy( EngineImpl *engine, AbstractUberBlock *owner ) :
+		mEngineImpl( engine ),
+		mOwner( owner )
 	{
+#ifdef _DEBUG
+		assert( mEngineImpl );
+		assert( mOwner );
+#endif;
 	}
 
 	AbstractUpdatePolicy::~AbstractUpdatePolicy()
 	{
 	}
 
-	const string AbstractUpdatePolicy::getName() const
+	std::string AbstractUpdatePolicy::getName() const
 	{
-		return m_Owner.getFullName();
+		return mOwner->getFullName();
 	}
 }

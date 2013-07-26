@@ -24,8 +24,6 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealSingletonHolder.h"
-//#include "xml/_2RealXMLWriter.h"
-//#include "_2RealConfigLoader.h"
 
 using std::string;
 using std::list;
@@ -34,10 +32,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		class ConfigAccess
-		{
-		};
-
 		Engine & Engine::instance()
 		{
 			static SingletonHolder< Engine > holder;
@@ -45,125 +39,127 @@ namespace _2Real
 		}
 
 		Engine::Engine() :
-			m_EngineImpl( EngineImpl::instance() )
+			mImpl( new EngineImpl )
 		{
 		}
 
-		Engine::Engine( Engine const& src ) :
-			m_EngineImpl( EngineImpl::instance() )
+		Engine::~Engine()
 		{
+			delete mImpl;
 		}
 
-		void Engine::setBaseDirectory( std::string const& directory )
-		{
-			m_EngineImpl.setBaseDirectory( directory );
-		}
+// ---------------------------------- clearing
 
 		void Engine::clearAll()
 		{
-			m_EngineImpl.clearFully();
+			mImpl->clearFully();
 		}
 
 		void Engine::clearBlockInstances()
 		{
-			m_EngineImpl.clearBlockInstances();
+			mImpl->clearBlockInstances();
+		}
+
+// ---------------------------------- clearing
+
+// ---------------------------------- bundle loading
+
+		std::string Engine::getBundleDirectory() const
+		{
+			return mImpl->getBundleDirectory();
 		}
 
 		BundleHandle & Engine::loadBundle( string const& libraryPath )
 		{
-			return m_EngineImpl.loadLibrary( libraryPath ).getHandle();
+			return mImpl->loadLibrary( libraryPath ).getHandle();
 		}
 
-		BundleHandle & Engine::findBundleByName( string const& name )
-		{
-			return m_EngineImpl.findBundleByName( name ).getHandle();
-		}
+// ---------------------------------- bundle loading
 
-		BundleHandle & Engine::findBundleByPath( string const& libraryPath )
-		{
-			return m_EngineImpl.findBundleByPath( libraryPath ).getHandle();
-		}
+// ---------------------------------- exception callbacks
 
 		void Engine::registerToException( BlockExceptionCallback callback, void *userData )
 		{
 			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > >( callback, userData );
-			m_EngineImpl.registerToException( *cb );
+			mImpl->registerToException( *cb );
 		}
 
 		void Engine::unregisterFromException( BlockExceptionCallback callback, void *userData )
 		{
 			BlockExcCallback *cb = new FunctionCallback< std::pair< Exception, BlockHandle > >( callback, userData );
-			m_EngineImpl.unregisterFromException( *cb );
+			mImpl->unregisterFromException( *cb );
 		}
 
 		void Engine::registerToExceptionInternal( BlockExcCallback &cb )
 		{
-			m_EngineImpl.registerToException( cb );
+			mImpl->registerToException( cb );
 		}
 
 		void Engine::unregisterFromExceptionInternal( BlockExcCallback &cb )
 		{
-			m_EngineImpl.unregisterFromException( cb );
+			mImpl->unregisterFromException( cb );
 		}
 
 		void Engine::registerToExceptionInternal( ContextBlockExcCallback &cb )
 		{
-			m_EngineImpl.registerToException( cb );
+			mImpl->registerToException( cb );
 		}
 
 		void Engine::unregisterFromExceptionInternal( ContextBlockExcCallback &cb )
 		{
-			m_EngineImpl.unregisterFromException( cb );
+			mImpl->unregisterFromException( cb );
 		}
 
 		void Engine::registerToException( ContextBlockExceptionCallback callback, void *userData )
 		{
 			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > >( callback, userData );
-			m_EngineImpl.registerToException( *cb );
+			mImpl->registerToException( *cb );
 		}
 
 		void Engine::unregisterFromException( ContextBlockExceptionCallback callback, void *userData )
 		{
 			ContextBlockExcCallback *cb = new FunctionCallback< std::pair< Exception, ContextBlockHandle > >( callback, userData );
-			m_EngineImpl.unregisterFromException( *cb );
+			mImpl->unregisterFromException( *cb );
 		}
 
-		Engine::Links Engine::getCurrentLinks()
-		{
-			EngineImpl::Links &currLinks = m_EngineImpl.getCurrentLinks();
-			Engine::Links links;
-			for ( EngineImpl::LinkIterator it = currLinks.begin(); it != currLinks.end(); ++it )
-			{
-				Engine::Link link( ( *it )->getInletIO().getHandle(), ( *it )->getOutletIO().getHandle() );
-				links.insert( link );
-			}
+// ---------------------------------- exception callbacks
 
-			return links;
-		}
+		//Engine::Links Engine::getCurrentLinks()
+		//{
+		//	EngineImpl::Links &currLinks = m_EngineImpl.getCurrentLinks();
+		//	Engine::Links links;
+		//	for ( EngineImpl::LinkIterator it = currLinks.begin(); it != currLinks.end(); ++it )
+		//	{
+		//		Engine::Link link( ( *it )->getInletIO().getHandle(), ( *it )->getOutletIO().getHandle() );
+		//		links.insert( link );
+		//	}
 
-		Engine::BlockHandles Engine::getCurrentBlocks()
-		{
-			EngineImpl::BlockInstances const& currBlocks = m_EngineImpl.getCurrentBlockInstances();
-			Engine::BlockHandles blocks;
-			for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
-			{
-				blocks.push_back( ( *it )->getHandle() );
-			}
+		//	return links;
+		//}
 
-			return blocks;
-		}
+		//Engine::BlockHandles Engine::getCurrentBlocks()
+		//{
+		//	EngineImpl::BlockInstances const& currBlocks = m_EngineImpl.getCurrentBlockInstances();
+		//	Engine::BlockHandles blocks;
+		//	for ( EngineImpl::BlockInstanceConstIterator it = currBlocks.begin(); it != currBlocks.end(); ++it )
+		//	{
+		//		blocks.push_back( ( *it )->getHandle() );
+		//	}
 
-		Engine::BundleHandles Engine::getCurrentBundles()
-		{
-			EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
-			Engine::BundleHandles bundles;
-			for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
-			{
-				bundles.push_back( ( *it )->getHandle() );
-			}
+		//	return blocks;
+		//}
 
-			return bundles;
-		}
+		//Engine::BundleHandles Engine::getCurrentBundles()
+		//{
+		//	EngineImpl::Bundles const& currBundles = m_EngineImpl.getCurrentBundles();
+		//	Engine::BundleHandles bundles;
+		//	for ( EngineImpl::BundleConstIterator it = currBundles.begin(); it != currBundles.end(); ++it )
+		//	{
+		//		bundles.push_back( ( *it )->getHandle() );
+		//	}
+
+		//	return bundles;
+		//}
 
 		//void Engine::saveConfig( string const& filePath )
 		//{

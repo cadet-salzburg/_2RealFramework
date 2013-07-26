@@ -32,49 +32,51 @@ namespace _2Real
 
 	public:
 
-		TimeBasedTrigger( AbstractStateManager &mgr, const long timeslice ) :
-			m_Condition( false ),
-			m_UpdateManager( mgr ),
-			m_DesiredTime( timeslice ),
-			m_ElapsedTime( 0 )
+		TimeBasedTrigger( Timer *timer, AbstractStateManager *mgr, const long timeslice ) :
+			mTimer( timer ),
+			mUpdateManager( mgr ),
+			mCondition( false ),
+			mDesiredTime( timeslice ),
+			mElapsedTime( 0 )
 		{
+#ifdef _DEBUG
+			assert( mTimer );
+			assert( mUpdateManager );
+#endif
 			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger, long >( *this, &TimeBasedTrigger::tryTriggerUpdate );
-			EngineImpl::instance().getTimer().registerToTimerSignal( *cb );
-			m_UpdateManager.addTrigger( *this );
+			mTimer->registerToTimerSignal( *cb );
+			mUpdateManager->addTrigger( *this );
 		}
 
 		~TimeBasedTrigger()
 		{
 			AbstractCallback< long > *cb = new MemberCallback< TimeBasedTrigger, long >( *this, &TimeBasedTrigger::tryTriggerUpdate );
-			EngineImpl::instance().getTimer().unregisterFromTimerSignal( *cb );
-			m_UpdateManager.removeTrigger( *this );
+			mTimer->unregisterFromTimerSignal( *cb );
+			mUpdateManager->removeTrigger( *this );
 		}
 
 		void tryTriggerUpdate( long time )
 		{
-			m_ElapsedTime += time;
-			if ( !m_Condition.isFulfilled() && m_ElapsedTime >= m_DesiredTime )
+			mElapsedTime += time;
+			if ( !mCondition.isFulfilled() && mElapsedTime >= mDesiredTime )
 			{
-				m_ElapsedTime = 0;
-				m_Condition.set( true );
-				m_UpdateManager.tryTriggerTime( *this );
+				mElapsedTime = 0;
+				mCondition.set( true );
+				mUpdateManager->tryTriggerTime();
 			}
 		}
 
-		void resetTime()
-		{
-			m_ElapsedTime = 0;
-		}
-
-		bool isFulfilled() const { return m_Condition.isFulfilled(); }
-		void set( const bool fulfilled ) { m_Condition.set( fulfilled ); }
+		void resetTime() { mElapsedTime = 0; }
+		bool isFulfilled() const { return mCondition.isFulfilled(); }
+		void set( const bool fulfilled ) { mCondition.set( fulfilled ); }
 
 	private:
 
-		AbstractStateManager	&m_UpdateManager;
-		UpdateCondition			m_Condition;
-		long					m_DesiredTime;
-		long					m_ElapsedTime;
+		Timer						*const mTimer;
+		AbstractStateManager		*const mUpdateManager;
+		UpdateCondition				mCondition;
+		long						mDesiredTime;
+		long						mElapsedTime;
 
 	};
 

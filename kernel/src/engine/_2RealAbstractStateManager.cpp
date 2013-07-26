@@ -19,21 +19,26 @@
 #include "engine/_2RealAbstractStateManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
 
-using std::string;
+#include <assert.h>
 
 namespace _2Real
 {
-	AbstractStateManager::AbstractStateManager( AbstractUberBlock &owner ) : 
-		m_Owner( owner )
+	AbstractStateManager::AbstractStateManager( EngineImpl *engine, AbstractUberBlock *owner ) :
+		mEngineImpl( engine ),
+		mOwner( owner )
 	{
+#ifdef _DEBUG
+		assert( mEngineImpl );
+		assert( mOwner );
+#endif
 	}
 
 	AbstractStateManager::~AbstractStateManager()
 	{
 	}
 
-	const string AbstractStateManager::getName() const
+	std::string AbstractStateManager::getName() const
 	{
-		return m_Owner.getFullName();
+		return mOwner->getFullName();
 	}
 }

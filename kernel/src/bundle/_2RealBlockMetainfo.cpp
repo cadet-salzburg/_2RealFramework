@@ -46,12 +46,12 @@ namespace _2Real
 			m_Impl.setThreadingPolicy( policy );
 		}
 
-		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, Policy const& defaultPolicy )
 		{
 			privateAddInlet( name, type, init, nullptr, defaultPolicy );
 		}
 
-		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta, InletPolicy const& defaultPolicy )
+		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta, Policy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );

@@ -67,11 +67,11 @@ namespace _2Real
 		struct InletInfo
 		{
 			InletInfo() : name( "undefined" ), customName( "undefined" ),
-				isMultiInlet( false ), defaultPolicy( InletPolicy::INVALID ), initValue() {}
+				isMultiInlet( false ), defaultPolicy( Policy::INVALID ), initValue() {}
 
 			std::string								name;
 			std::string								customName;
-			InletPolicy								defaultPolicy;
+			Policy									defaultPolicy;
 			bool									isMultiInlet;
 			std::shared_ptr< const CustomType >		initValue;
 		};

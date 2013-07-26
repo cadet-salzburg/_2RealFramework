@@ -39,7 +39,7 @@ namespace _2Real
 	
 	public:
 
-		BundleLoader( TypeRegistry &registry );
+		BundleLoader( TypeRegistry *registry );
 		~BundleLoader();
 
 		void clear();
@@ -49,7 +49,7 @@ namespace _2Real
 		BundleMetadata const& loadLibrary( std::string const& path );
 		void unloadLibrary( std::string const& path );
 		bundle::Block& createContext( std::string const& absPath ) const;
-		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName ) const;
+		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName, std::string const& name ) const;
 		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;
 		void removeContextBlock( std::string const& absPath );
 
@@ -67,7 +67,7 @@ namespace _2Real
 		typedef std::map< std::string, BundleInfo >::iterator			BundleInfoIterator;
 		typedef std::map< std::string, BundleInfo >::const_iterator		BundleInfoConstIterator;
 		BundleInfos														m_LoadedBundles;
-		TypeRegistry													&m_Registry;
+		TypeRegistry													*const m_Registry;
 
 	};
 

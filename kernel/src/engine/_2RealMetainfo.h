@@ -63,7 +63,7 @@ namespace _2Real
 		bundle::BlockMetainfo & setBlockCreator( std::string const& blockName, bundle::AbstractBlockCreator &obj );
 
 		bool hasContext() const;
-		bundle::Block & createBlock( std::string const& blockName ) const;
+		bundle::Block & createBlock( std::string const& blockName, std::string const& name ) const;
 		bundle::Block & createContextBlock() const;
 		void removeContextBlock();
 

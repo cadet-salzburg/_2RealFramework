@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 #include "bundle/_2RealBlockHandle.h"
 #include "engine/_2RealFunctionBlockIOManager.h"
 #include "helpers/_2RealStringHelpers.h"
@@ -23,7 +26,7 @@
 using std::string;
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "block handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -83,19 +86,19 @@ namespace _2Real
 			m_IO = nullptr;
 		}
 
-		InletHandle & BlockHandle::getInletHandle( string const& name ) const
+		InletHandle BlockHandle::getInletHandle( string const& name ) const
 		{
 			checkValidity( m_IO );
 			return m_IO->getBundleInletHandle( trim ( name ) );
 		}
 
-		OutletHandle & BlockHandle::getOutletHandle( string const& name ) const
+		OutletHandle BlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_IO );
 			return m_IO->getBundleOutletHandle( trim ( name ) );
 		}
 
-		ParameterHandle & BlockHandle::getParameterHandle( string const& name ) const
+		ParameterHandle BlockHandle::getParameterHandle( string const& name ) const
 		{
 			checkValidity( m_IO );
 			return m_IO->getBundleParameterHandle( trim ( name ) );

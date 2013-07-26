@@ -46,14 +46,12 @@ namespace _2Real
 
 		public:
 
-			typedef std::vector< InletHandle >					InletHandles;
-			typedef std::vector< InletHandle >::iterator		InletHandleIterator;
-			typedef std::vector< InletHandle >::const_iterator	InletHandleConstIterator;
-
-			typedef std::vector< OutletHandle >					OutletHandles;
-			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
-			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
-
+			typedef std::vector< InletHandle >						InletHandles;
+			typedef std::vector< InletHandle >::iterator			InletHandleIterator;
+			typedef std::vector< InletHandle >::const_iterator		InletHandleConstIterator;
+			typedef std::vector< OutletHandle >						OutletHandles;
+			typedef std::vector< OutletHandle >::iterator			OutletHandleIterator;
+			typedef std::vector< OutletHandle >::const_iterator		OutletHandleConstIterator;
 			typedef std::vector< ParameterHandle >					ParameterHandles;
 			typedef std::vector< ParameterHandle >::iterator		ParameterHandleIterator;
 			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
@@ -75,30 +73,23 @@ namespace _2Real
 
 			BlockInfo const& getBlockInfo() const;
 
-			// negative or zero: no time based update at all
-			void setUpdateRate( const double updatesPerSecond );
+			void setUpdateRate( const double updatesPerSecond );	// negative or zero: no time based update at all
 
-			void setup();										// will stop the block and then set it up -> a new start is needed
+			void setup();											// will stop the block and then set it up -> a new start is needed
 			void start();
-			void stop( const long timeout = NO_TIMEOUT );		// um, yeah. no timeout is probably a bad idea :)
-			void kill( const long timeout = NO_TIMEOUT );		// see above
-			void singleStep();									// if block was not stopped before, this will not do anything at all
+			void stop( const long timeout = NO_TIMEOUT );
+			void destroy( const long timeout = NO_TIMEOUT );
 
-			InletHandle &			getInletHandle( std::string const& name ) const;
-			OutletHandle &			getOutletHandle( std::string const& name ) const;
-			ParameterHandle &		getParameterHandle( std::string const& name ) const;
-			InletHandles const&		getAllInletHandles() const;
-			OutletHandles const&	getAllOutletHandles() const;
-			ParameterHandles const&	getAllParameterHandles() const;
+			InletHandle					getInletHandle( std::string const& ) const;
+			OutletHandle				getOutletHandle( std::string const& ) const;
+			ParameterHandle				getParameterHandle( std::string const& ) const;
+			InletHandles const&			getAllInletHandles() const;
+			OutletHandles const&		getAllOutletHandles() const;
+			ParameterHandles const&		getAllParameterHandles() const;
 
-			// true if block was started ( but not if singlestep was called )
-			bool isRunning() const;
-
-			// callback registration for free functions
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 
-			// callback registration for member functions
 			template< typename TCallable >
 			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::vector< std::shared_ptr< const CustomType > > ) ) const
 			{
@@ -113,7 +104,10 @@ namespace _2Real
 				unregisterFromNewDataInternal( *cb );
 			}
 
-			std::string const& getIdAsString() const;
+			// true if block was started ( but not if singlestep was called )
+			//bool isRunning() const;
+			//std::string const& getIdAsString() const;
+			//void singleStep();									// if block was not stopped before, this will not do anything at all
 
 		private:
 

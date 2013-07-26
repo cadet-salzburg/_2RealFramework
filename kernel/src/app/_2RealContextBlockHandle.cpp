@@ -24,7 +24,7 @@
 using std::string;
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "context block handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -120,7 +120,7 @@ namespace _2Real
 			return m_Block->getBlockInfo();
 		}
 
-		OutletHandle & ContextBlockHandle::getOutletHandle( string const& name ) const
+		OutletHandle ContextBlockHandle::getOutletHandle( string const& name ) const
 		{
 			checkValidity( m_Block );
 			return m_Block->getAppOutletHandle( trim( name ) );

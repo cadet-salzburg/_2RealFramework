@@ -20,7 +20,7 @@
 #include "engine/_2RealInlet.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -108,13 +108,13 @@ namespace _2Real
 		std::shared_ptr< const CustomType > InletHandle::getReadableRef() const
 		{
 			checkValidity( m_Inlet );
-			return ( *m_Inlet )[ 0 ].getCurrentData();
+			return ( *m_Inlet )[ 0 ].getData();
 		}
 
 		void InletHandle::getWriteableCopy( CustomType &writeable ) const
 		{
 			checkValidity( m_Inlet );
-			writeable.cloneFrom( *( *m_Inlet )[ 0 ].getCurrentData().get() );
+			writeable.cloneFrom( *( *m_Inlet )[ 0 ].getData().get() );
 		}
 	}
 }

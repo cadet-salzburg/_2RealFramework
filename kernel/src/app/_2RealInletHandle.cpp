@@ -19,17 +19,11 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterInfo.h"
-//#include "app/_2RealAppData.h"
-#include "engine/_2RealEngineImpl.h"
-//#include "engine/_2RealInlet.h"
-//#include "engine/_2RealInletBuffer.h"
-//#include "engine/_2RealTimestampedData.h"
-//#include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -122,19 +116,21 @@ namespace _2Real
 		bool InletHandle::link( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			return EngineImpl::instance().createLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) ).isValid();
+			checkValidity( outlet.m_OutletIO );
+			return ( *m_InletIO )[ 0 ].linkTo( outlet.m_OutletIO );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle &outlet )
 		{
 			checkValidity( m_InletIO );
-			EngineImpl::instance().destroyLink( ( *m_InletIO )[ 0 ], *( outlet.m_OutletIO ) );
+			checkValidity( outlet.m_OutletIO );
+			( *m_InletIO )[ 0 ].unlinkFrom( outlet.m_OutletIO );
 		}
 
 		std::string const& InletHandle::getName() const
 		{
 			checkValidity( m_InletIO );
-			return m_InletIO->info().baseName;
+			return m_InletIO->getInfo()->name;
 		}
 
 		app::BlockHandle InletHandle::getOwningBlock()
@@ -156,13 +152,13 @@ namespace _2Real
 		app::TypeMetainfo InletHandle::getType() const
 		{
 			checkValidity( m_InletIO );
-			return app::TypeMetainfo( m_InletIO->info().type );
+			return app::TypeMetainfo( m_InletIO->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > InletHandle::makeData() const
 		{
 			checkValidity( m_InletIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_InletIO->info().type ) );
+			return std::shared_ptr< CustomType >( new CustomType( m_InletIO->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
@@ -177,7 +173,7 @@ namespace _2Real
 			( *m_InletIO )[ 0 ].receiveData( data );
 		}
 
-		void InletHandle::setUpdatePolicy( InletPolicy const& p )
+		void InletHandle::setUpdatePolicy( Policy const& p )
 		{
 			checkValidity( m_InletIO );
 			( *m_InletIO )[ 0 ].setUpdatePolicy( p );
@@ -186,7 +182,7 @@ namespace _2Real
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
 			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].setBufferSize( size );
+			( *m_InletIO )[ 0 ].setQueueSize( size );
 		}
 
 		bool InletHandle::isMultiInlet() const

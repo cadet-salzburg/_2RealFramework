@@ -59,7 +59,7 @@ namespace _2Real
 			bool operator>( ContextBlockHandle const& other ) const;
 			bool operator>=( ContextBlockHandle const& other ) const;
 
-			OutletHandle &			getOutletHandle( std::string const& name ) const;
+			OutletHandle			getOutletHandle( std::string const& name ) const;
 			OutletHandles const&	getAllOutletHandles() const;
 
 			// callback registration for free functions

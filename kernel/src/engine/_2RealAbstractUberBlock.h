@@ -23,34 +23,31 @@
 
 namespace _2Real
 {
-
-	class BasicInletIO;
+	//class AbstractIOManager;
+	//class AbstractStateManager;
+	//class AbstractUpdatePolicy;
+	//class AbstractUberBlock;
+	class EngineImpl;
 	class Exception;
 
-	class AbstractIOManager;
-	class AbstractStateManager;
-	class AbstractUpdatePolicy;
-	class EngineImpl;
-	class AbstractUberBlock;
+	//struct Refs
+	//{
+	//	Refs( EngineImpl *const e, AbstractUberBlock *const b, AbstractIOManager *const i, AbstractStateManager *const s, AbstractUpdatePolicy *const p ) :
+	//		engine( e ), block( b ), ios( i ), states( s ), policies( p ) {}
 
-	struct Refs
-	{
-		Refs( EngineImpl &e, AbstractUberBlock &b, AbstractIOManager &i, AbstractStateManager &s, AbstractUpdatePolicy &p ) :
-			engine( e ), block( b ), ios( i ), states( s ), policies( p ) {}
-
-		EngineImpl				&engine;
-		AbstractUberBlock		&block;
-		AbstractIOManager		&ios;
-		AbstractStateManager	&states;
-		AbstractUpdatePolicy	&policies;
-	};
+	//	EngineImpl				*const engine;
+	//	AbstractUberBlock		*const block;
+	//	AbstractIOManager		*const ios;
+	//	AbstractStateManager	*const states;
+	//	AbstractUpdatePolicy	*const policies;
+	//};
 
 	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
 	{
 
 	public:
 
-		AbstractUberBlock( Ids const& ids, std::string const& name );
+		AbstractUberBlock( EngineImpl *engine, Ids const& ids, std::string const& name );
 		virtual ~AbstractUberBlock();
 
 		using Identifiable< AbstractUberBlock >::getFullName;
@@ -63,6 +60,10 @@ namespace _2Real
 		virtual void	updateWithFixedRate( const double updatesPerSecond ) = 0;
 
 		virtual void	handleException( Exception &e ) = 0;
+
+	protected:
+
+		EngineImpl					*const mEngineImpl;
 
 	};
 

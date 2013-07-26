@@ -87,8 +87,17 @@ void printBundleInfo( app::BundleHandle const& h )
 
 int main( int argc, char *argv[] )
 {
+	char * bundleDir = nullptr;
+	bundleDir = std::getenv( "_2REAL_BUNDLE_DIR" );
+
+	if ( bundleDir )
+	{
+		std::string bundleDirectory = bundleDir;
+		std::cout << "bundle directory " << bundleDirectory << std::endl;
+	}
+
 	Engine &testEngine = Engine::instance();
-	testEngine.setBaseDirectory( "." );
+	//testEngine.setBaseDirectory( "." );
 
 	struct BlockInstance
 	{
@@ -177,10 +186,7 @@ int main( int argc, char *argv[] )
 			blockInstancesB[ i ].outlets[ 4 ].link( blockInstancesB[ i+1 ].inlets[ 8 ] );
 		}
 
-		//blockInstancesA[ numInstances-1 ].outlets[ 1 ].link( blockInstancesB[ 0 ].inlets[ 2 ] );
-		// complextype to complextype
-		blockInstancesA[ 0 ].outlets[ 1 ].link( blockInstancesB[ 2 ].inlets[ 2 ] );
-		//blockInstancesA[ 0 ].outlets[ 4 ].link( blockInstancesB[ 0 ].inlets[ 8 ] );
+		blockInstancesA[ 0 ].outlets[ 1 ].link( blockInstancesB[ 0 ].inlets[ 2 ] );
 	}
 	catch ( Exception &e )
 	{

@@ -23,7 +23,7 @@
 #include "engine/_2RealAbstractIOManager.h"
 
 #define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "inlet handle not initialized" );
+	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
 
 namespace _2Real
 {
@@ -116,7 +116,7 @@ namespace _2Real
 		std::string const& ParameterHandle::getName() const
 		{
 			checkValidity( m_ParameterIO );
-			return m_ParameterIO->info().baseName;
+			return m_ParameterIO->getInfo()->name;
 		}
 
 		app::BlockHandle ParameterHandle::getOwningBlock()
@@ -138,25 +138,25 @@ namespace _2Real
 		app::TypeMetainfo ParameterHandle::getType() const
 		{
 			checkValidity( m_ParameterIO );
-			return app::TypeMetainfo( m_ParameterIO->info().type );
+			return app::TypeMetainfo( m_ParameterIO->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::makeData() const
 		{
 			checkValidity( m_ParameterIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_ParameterIO->info().type ) );
+			return std::shared_ptr< CustomType >( new CustomType( m_ParameterIO->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getCurrentData() const
 		{
 			checkValidity( m_ParameterIO );
-			return m_ParameterIO->m_Parameter->getDataThreadsafe();
+			return m_ParameterIO->getCurrentDataThreadsafe();
 		}
 
 		void ParameterHandle::setData( std::shared_ptr< const CustomType > data )
 		{
 			checkValidity( m_ParameterIO );
-			m_ParameterIO->m_Parameter->setData( data );
+			m_ParameterIO->setData( data );
 		}
 	}
 }

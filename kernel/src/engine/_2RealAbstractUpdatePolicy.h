@@ -27,24 +27,26 @@ namespace _2Real
 
 	class AbstractUberBlock;
 	class BasicInletIO;
-	class InletPolicy;
+	class Policy;
+	class EngineImpl;
 
 	class AbstractUpdatePolicy : private NonCopyable< AbstractUpdatePolicy >
 	{
 
 	public:
 
-		AbstractUpdatePolicy( AbstractUberBlock &owner );
+		AbstractUpdatePolicy( EngineImpl *engine, AbstractUberBlock *owner );
 		virtual ~AbstractUpdatePolicy();
-		const std::string getName() const;
+		std::string getName() const;
 
-		virtual void addInlet( BasicInletIO &io, InletPolicy const& p ) = 0;
+		virtual void addInlet( BasicInletIO &io, Policy const& p ) = 0;
 		virtual void removeInlet( BasicInletIO &io ) = 0;
-		virtual void setInletPolicy( BasicInletIO &io, InletPolicy const& p ) = 0;
+		virtual void setInletPolicy( BasicInletIO &io, Policy const& p ) = 0;
 
 	protected:
 
-		AbstractUberBlock					&m_Owner;
+		EngineImpl							*const mEngineImpl;
+		AbstractUberBlock					*const mOwner;
 
 	};
 

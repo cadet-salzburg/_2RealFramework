@@ -17,63 +17,52 @@
 */
 
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealAbstractUberBlock.h"
-#include "engine/_2RealEngineImpl.h"
 #include "datatypes/_2RealCustomData.h"
-
-using std::string;
-using std::ostringstream;
 
 namespace _2Real
 {
-	Outlet::Outlet( AbstractUberBlock &owningBlock, string const& name, std::shared_ptr< const CustomType > initialValue ) :
-		Parameter( initialValue ),
+	OutletBuffer::OutletBuffer( OutletIO *owner ) :
+		NonCopyable< OutletBuffer >(),
+		mOwner( owner )
+	{
+	}
+
+	std::shared_ptr< const CustomType > OutletBuffer::getData() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mData;
+	}
+
+	void OutletBuffer::setData( std::shared_ptr< const CustomType > newData )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mData = newData;
+	}
+
+	Outlet::Outlet( OutletIO *owner ) :
 		NonCopyable< Outlet >(),
-		Identifiable< Outlet >( owningBlock.getIds(), name ),
 		Handleable< Outlet, bundle::OutletHandle >( *this ),
-		m_Engine( EngineImpl::instance() ),
-		m_OwningUberBlock( owningBlock ),
-		m_DiscardCurrent( false ),
-		mInit( initialValue )
+		mOwner( owner ),
+		mWasDiscarded( false )
 	{
-		// the 'initialValue' is just a template, I now need to clone that twice
-		//Parameter::m_Data->cloneFrom( *( initialValue.get() ) );
-		//Parameter::m_DataBuffer->cloneFrom( *( initialValue.get() ) );
 	}
 
-	bool Outlet::synchronize()
+	std::shared_ptr< const CustomType > Outlet::update( std::shared_ptr< CustomType > newData )
 	{
-		if ( !m_DiscardCurrent )
-		{
-			// store time
-			m_Timestamp = m_Engine.getElapsedTime();
-			// data = buffer, protected by mutex ( could be read by client right now )
-			Parameter::synchronize();
-			// clone readable data back into writeable data
-			// this way, outlet always holds the last written value
-			//Parameter::m_DataBuffer.reset( new CustomType( *Parameter::m_Data.get() ) );		// clone
-			Parameter::m_DataBuffer.reset( new CustomType( *mInit.get() ) );		// clone
-			return false;
-		}
-		else
-		{
-			m_DiscardCurrent = false;
-			return true;
-		}
+		std::shared_ptr< const CustomType > oldData = mWasDiscarded ? std::shared_ptr< const CustomType >() : mData;
+		mData = newData;
+		mWasDiscarded = false;
+		return oldData;
 	}
 
-	//CustomType & Outlet::getWriteableData()
-	//{
-	//	return Parameter::getWriteableData();
-	//}
-
-	void Outlet::discardCurrentUpdate()
+	std::shared_ptr< CustomType > Outlet::getWriteableData()
 	{
-		m_DiscardCurrent = true;
+		return mData;
 	}
 
-	AbstractUberBlock & Outlet::getOwningUberBlock()
+	void Outlet::discard()
 	{
-		return m_OwningUberBlock;
+		mWasDiscarded = true;
 	}
+
 }

@@ -63,6 +63,8 @@ namespace _2Real
 
 		std::string const& getAbsPath() const;
 
+		bool operator==( Bundle const& other ) const;
+
 		void						clear();
 		void						unload( const long timeout );
 		app::BundleInfo const&		getBundleInfo() const;

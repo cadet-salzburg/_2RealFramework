@@ -25,6 +25,7 @@
 #include "helpers/_2RealPoco.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
+#include "helpers/_2RealNonCopyable.h"
 //#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
 
 #include <set>
@@ -36,6 +37,7 @@ namespace _2Real
 
 	namespace app
 	{
+		class Engine;
 		class BundleHandle;
 		class SystemState;
 	}
@@ -55,11 +57,8 @@ namespace _2Real
 	template< typename T >
 	class FunctionBlock;
 
-	class EngineImpl
+	class EngineImpl : private NonCopyable< EngineImpl >
 	{
-
-		template< typename T >
-		friend class SingletonHolder;
 
 	public:
 
@@ -87,11 +86,10 @@ namespace _2Real
 		typedef std::set< Bundle * >::iterator											BundleIterator;
 		typedef std::set< Bundle * >::const_iterator									BundleConstIterator;
 
-		static EngineImpl & instance();
-
-		Timer&							getTimer();
-		Logger&							getLogger();
-		ThreadPool &					getThreadPool();
+		TypeRegistry *					getTypeRegistry()	{ return mTypeRegistry; }
+		Timer *							getTimer()			{ return mTimer; }
+		Logger *						getLogger()			{ return mLogger; }
+		ThreadPool *					getThreadpool()		{ return mThreadPool; }
 
 		const long						getElapsedTime() const;
 
@@ -110,29 +108,22 @@ namespace _2Real
 		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
 		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
 
-		BlockInstances					getCurrentBlockInstances() const;
-		Bundles const&					getCurrentBundles() const;
-		Links const&					getCurrentLinks() const;
-		Links&							getCurrentLinks();
+		//BlockInstances				getCurrentBlockInstances() const;
+		//Bundles const&				getCurrentBundles() const;
+		//Links const&					getCurrentLinks() const;
+		//Links&						getCurrentLinks();
 
 		IOLink							createLink( BasicInletIO &inlet, OutletIO &outlet );
-		//std::pair< IOLink, IOLink >		createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
+		//std::pair< IOLink, IOLink >	createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
 		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
 		void							clearLinksFor( BasicInletIO &inlet );
 
-		void							setBaseDirectory( std::string const& directory );
-		//app::BundleHandle &				loadLibrary( std::string const& libraryPath );
-		//app::BundleHandle &				findBundleByName( std::string const& name ) const;
-		//app::BundleHandle &				findBundleByPath( std::string const& libraryPath ) const;
-		Bundle &						loadLibrary( std::string const& libraryPath );
-		Bundle &						findBundleByName( std::string const& name ) const;
-		Bundle &						findBundleByPath( std::string const& libraryPath ) const;
-					
-		void							getCurrentSystemState( app::SystemState &state ) const;
-
-		TypeMetadata const&				getType( std::string const& bundle, std::string const& name ) const;
+		Bundle &						loadLibrary( std::string const& path );
+		std::string						getBundleDirectory() const;
 
 	private:
+
+		friend class app::Engine;
 
 		EngineImpl();
 		~EngineImpl();
@@ -140,20 +131,22 @@ namespace _2Real
 		// whatever you do. do not change the ordering of member variables here!
 		// ( unless you absolutely have to, in which case, good luck )
 
-		Logger					*m_Logger;
-		Timer					*m_Timer;
-		TypeRegistry			*m_TypeRegistry;
-		ThreadPool				*m_ThreadPool;
-		BundleManager			*m_BundleManager;
-		System					*m_System;
-		Poco::Timestamp			m_Timestamp;
+		Logger					*const mLogger;
+		Timer					*const mTimer;
+		TypeRegistry			*const mTypeRegistry;
+		ThreadPool				*const mThreadPool;
+		BundleManager			*const mBundleManager;
+		System					*const mSystem;
+		Poco::Timestamp			*const mTimestamp;
+
+		// TODO: exception handler / link handler class
 
 		typedef std::pair< Exception, app::BlockHandle >			BlockException;
 		typedef std::pair< Exception, app::ContextBlockHandle >		ContextBlockException;
 
-		Links														m_Links;
-		CallbackEvent< BlockException >						m_BlockExceptionEvent;
-		CallbackEvent< ContextBlockException >				m_ContextBlockExceptionEvent;
+		Links												mLinks;
+		CallbackEvent< BlockException >						mBlockExceptionEvent;
+		CallbackEvent< ContextBlockException >				mContextBlockExceptionEvent;
 
 	};
 

@@ -31,16 +31,16 @@ using std::string;
 namespace _2Real
 {
 
-	FunctionBlockStateManager::FunctionBlockStateManager( AbstractUberBlock &owner, const bool thread ) :
-		AbstractStateManager( owner ),
+	FunctionBlockStateManager::FunctionBlockStateManager( EngineImpl *engine, AbstractUberBlock *owner, const bool thread ) :
+		AbstractStateManager( engine, owner ),
 		m_CurrentState( new FunctionBlockStateCreated() ),
 		m_IsTriggeringEnabled( false ),
 		m_IsFlaggedForHalting( false ),
 		m_IsFlaggedForShutdown( false ),
 		m_IOManager( nullptr ),
 		m_UpdatePolicy( nullptr ),
-		m_Threads( EngineImpl::instance().getThreadPool() ),
-		m_Logger( EngineImpl::instance().getLogger() ),
+		m_Threads( *( engine->getThreadpool() ) ),
+		m_Logger( *( engine->getLogger() ) ),
 		m_TimeTrigger( nullptr ),
 		m_Thread( nullptr ),
 		m_HasException( false ),
@@ -105,7 +105,7 @@ namespace _2Real
 			m_StateAccess.unlock();
 			// state change /////////////////////////////////////////
 
-			m_Owner.handleException( m_Exception );
+			mOwner->handleException( m_Exception );
 		}
 		else
 		{
@@ -124,7 +124,7 @@ namespace _2Real
 
 		try
 		{
-			m_IOManager->updateSetupParameters();
+			m_IOManager->updateParameterData();
 
 			bundle::BlockHandle &h = m_IOManager->getHandle();
 			m_FunctionBlock->setup( h );
@@ -169,7 +169,7 @@ namespace _2Real
 	{
 		try
 		{
-			m_IOManager->updateSetupParameters();
+			m_IOManager->updateParameterData();
 			m_IOManager->updateInletData();
 			m_FunctionBlock->update();
 			m_IOManager->updateOutletData();
@@ -206,7 +206,7 @@ namespace _2Real
 			m_CurrentState = new FunctionBlockStateError();
 			m_StateAccess.unlock();
 
-			m_Owner.handleException( m_Exception );
+			mOwner->handleException( m_Exception );
 		}
 		else if ( m_IsFlaggedForHalting.isSet() )
 		{
@@ -265,7 +265,7 @@ namespace _2Real
 			m_CurrentState = new FunctionBlockStateError();
 			m_StateAccess.unlock();
 
-			m_Owner.handleException( m_Exception );
+			mOwner->handleException( m_Exception );
 		}
 		else
 		{
@@ -359,7 +359,7 @@ namespace _2Real
 				m_StateAccess.unlock();
 				// state change /////////////////////////////////////////
 
-				m_Owner.handleException( m_Exception );
+				mOwner->handleException( m_Exception );
 			}
 			else
 			{
@@ -397,7 +397,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockStateManager::tryTriggerInlet( AbstractInletBasedTrigger &trigger )
+	void FunctionBlockStateManager::tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */)
 	{
 		m_EnabledAccess.lock();
 
@@ -437,18 +437,18 @@ namespace _2Real
 			// schedule request /////////////////////////////////////////
 			else
 			{
-				//m_Logger.addLine( std::string( getName() + " recvd inlet trigger but no update" ) );
+				m_Logger.addLine( std::string( getName() + " rec inlet trigger but no update" ) );
 			}
 		}
 		else
 		{
-			//m_Logger.addLine( std::string( getName() + " recvd inlet trigger while disabled" ) );
+			m_Logger.addLine( std::string( getName() + " rec inlet trigger while disabled" ) );
 		}
 
 		m_EnabledAccess.unlock();
 	}
 
-	void FunctionBlockStateManager::tryTriggerTime( TimeBasedTrigger &trigger )
+	void FunctionBlockStateManager::tryTriggerTime(/* TimeBasedTrigger &trigger */)
 	{
 		m_EnabledAccess.lock();
 
@@ -489,12 +489,12 @@ namespace _2Real
 			// schedule request /////////////////////////////////////////
 			else
 			{
-				//m_Logger.addLine( std::string( getName() + " recvd time trigger but no update" ) );
+				m_Logger.addLine( std::string( getName() + " rec time trigger but no update" ) );
 			}
 		}
 		else
 		{
-			//m_Logger.addLine( std::string( getName() + " recvd time trigger while disabled" ) );
+			m_Logger.addLine( std::string( getName() + " rec time trigger while disabled" ) );
 		}
 
 		m_EnabledAccess.unlock();

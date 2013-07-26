@@ -20,7 +20,7 @@
 
 namespace _2Real
 {
-	InletMetadata::InletMetadata( std::string const& n, std::string const& t, std::shared_ptr< const CustomType > i, TypeMetadata const* m, InletPolicy const& p, const bool b ) :
+	InletMetadata::InletMetadata( std::string const& n, std::string const& t, std::shared_ptr< const CustomType > i, TypeMetadata const* m, Policy const& p, const bool b ) :
 		name( n ), type( t ), metadata( m ), initValue( i ), defaultPolicy( p ), isMulti( b )
 	{
 	}

@@ -59,7 +59,7 @@ namespace _2Real
 
 			// MISSING: function for querying update policy, current state, buffer size
 
-			void				setUpdatePolicy( InletPolicy const& policy );
+			void				setUpdatePolicy( Policy const& policy );
 			void				setBufferSize( const unsigned int size );
 
 			bool				link( OutletHandle &outletHandle );

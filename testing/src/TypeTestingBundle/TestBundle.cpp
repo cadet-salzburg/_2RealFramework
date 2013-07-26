@@ -18,7 +18,7 @@ void getBundleMetainfo( BundleMetainfo &info )
 		std::vector< unsigned char > init( imgW*imgH*imgC, 0 );
 		imgInit.setImagedata( &init[ 0 ], imgW, imgH, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
 
-		info.setName( "datatypes test" );
+		info.setName( "ARGH" );
 		info.setDescription( "bla bla bla" );
 		info.setAuthor( "help@cadet.at" );
 		info.setCategory( "testing" );
