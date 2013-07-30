@@ -18,144 +18,79 @@
 
 #include "app/_2RealContextBlockHandle.h"
 #include "engine/_2RealFunctionBlock.h"
+#include "app/_2RealOutletHandle.h"
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 
 using std::string;
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+	{
+		std::shared_ptr< TObj > locked = handle.lock();
+		if ( locked.get() == nullptr )
+		{
+			std::stringstream msg;
+			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+		}
+
+		return locked;
+	}
+
 	namespace app
 	{
 		ContextBlockHandle::ContextBlockHandle() :
-			m_Block( nullptr )
+			mImpl()
 		{
 		}
 
-		ContextBlockHandle::ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block ) :
-			m_Block( &block )
+		ContextBlockHandle::ContextBlockHandle( std::shared_ptr< FunctionBlock > block ) :
+			mImpl( block )
 		{
-			m_Block->registerHandle( *this );
-		}
-
-		ContextBlockHandle::~ContextBlockHandle()
-		{
-			if ( isValid() ) m_Block->unregisterHandle( *this );
-		}
-
-		ContextBlockHandle::ContextBlockHandle( ContextBlockHandle const& other ) :
-			m_Block( other.m_Block )
-		{
-			if ( isValid() ) m_Block->registerHandle( *this );
-		}
-
-		ContextBlockHandle& ContextBlockHandle::operator=( ContextBlockHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_Block->unregisterHandle( *this );
-			}
-
-			m_Block = other.m_Block;
-
-			if ( isValid() )
-			{
-				m_Block->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool ContextBlockHandle::isValid() const
 		{
-			return m_Block != nullptr;
-		}
-
-		bool ContextBlockHandle::operator==( ContextBlockHandle const& other ) const
-		{
-			return m_Block == other.m_Block;
-		}
-
-		bool ContextBlockHandle::operator!=( ContextBlockHandle const& other ) const
-		{
-			return m_Block != other.m_Block;
-		}
-
-		bool ContextBlockHandle::operator<( ContextBlockHandle const& other ) const
-		{
-			return m_Block < other.m_Block;
-		}
-
-		bool ContextBlockHandle::operator<=( ContextBlockHandle const& other ) const
-		{
-			return m_Block <= other.m_Block;
-		}
-
-		bool ContextBlockHandle::operator>( ContextBlockHandle const& other ) const
-		{
-			return m_Block > other.m_Block;
-		}
-
-		bool ContextBlockHandle::operator>=( ContextBlockHandle const& other ) const
-		{
-			return m_Block >= other.m_Block;
-		}
-
-		void ContextBlockHandle::invalidate()
-		{
-			m_Block = nullptr;
+			std::shared_ptr< FunctionBlock > block = mImpl.lock();
+			return ( block.get() != nullptr );
 		}
 
 		BlockInfo const& ContextBlockHandle::getBlockInfo() const
 		{
-			checkValidity( m_Block );
-			return m_Block->getBlockInfo();
+			std::shared_ptr< FunctionBlock > block = checkValidity( mImpl, "context block" );
+			return block->getBlockInfo();
 		}
 
-		OutletHandle ContextBlockHandle::getOutletHandle( string const& name ) const
+		OutletHandle ContextBlockHandle::getOutletHandle( string const& name )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( trim( name ) );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			return OutletHandle( block->getOutlet( name ) );
 		}
 
-		ContextBlockHandle::OutletHandles const& ContextBlockHandle::getAllOutletHandles() const
+		void ContextBlockHandle::getAllOutletHandles( OutletHandles &handles )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppOutletHandles();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			FunctionBlock::Outlets &outlets = block->getAllOutlets();
+			handles.clear();
+			for ( FunctionBlock::Outlets::iterator it = outlets.begin(); it != outlets.end(); ++it )
+				handles.push_back( OutletHandle( *it ) );
 		}
 
 		void ContextBlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_Block );
+			std::shared_ptr< FunctionBlock > block = checkValidity( mImpl, "context block" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
-			m_Block->registerToNewData( *cb );
+			block->registerToNewData( *cb );
 		}
 
 		void ContextBlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_Block );
+			std::shared_ptr< FunctionBlock > block = checkValidity( mImpl, "context block" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
-			m_Block->unregisterFromNewData( *cb);
+			block->unregisterFromNewData( *cb );
 		}
 
-		void ContextBlockHandle::registerToNewDataInternal( BlockCallback &cb ) const
-		{
-			checkValidity( m_Block );
-			m_Block->registerToNewData( cb );
-		}
-
-		void ContextBlockHandle::unregisterFromNewDataInternal( BlockCallback &cb ) const
-		{
-			checkValidity( m_Block );
-			m_Block->unregisterFromNewData( cb );
-		}
 	}
 }

@@ -69,9 +69,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealHandleable.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
@@ -228,15 +225,6 @@
     <ClInclude Include="..\..\src\engine\_2RealMetainfo.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealBundleInfo.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealBlockInfo.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealParameterInfo.h">
-      <Filter>include\app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
@@ -316,6 +304,9 @@
       <Filter>include\bundle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealInfo.h">
       <Filter>include\app</Filter>
     </ClInclude>
   </ItemGroup>
@@ -452,15 +443,6 @@
     <ClCompile Include="..\..\src\engine\_2RealMetainfo.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterInfo.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBlockInfo.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleInfo.cpp">
-      <Filter>src\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
       <Filter>src\helpers</Filter>
     </ClCompile>
@@ -511,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
       <Filter>src\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInfo.cpp">
+      <Filter>src\app</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

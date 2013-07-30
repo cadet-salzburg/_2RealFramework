@@ -30,7 +30,7 @@ namespace _2Real
 		public:
 
 			virtual ~AbstractBlockCreator() {}
-			virtual Block & create( ContextBlock *const context ) = 0;
+			virtual std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context ) = 0;
 			virtual void reset() {}
 
 		};
@@ -42,7 +42,7 @@ namespace _2Real
 		public:
 
 			virtual ~CreationPolicy() {}
-			virtual Block & create( ContextBlock *const context ) = 0;
+			virtual std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context ) = 0;
 			virtual void reset() {}
 
 		};
@@ -53,7 +53,10 @@ namespace _2Real
 
 		public:
 
-			Block & create ( ContextBlock *const context ) { return *( new BlockDerived( *context ) ); }
+			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
+			{
+				return std::shared_ptr< _2Real::bundle::Block >( new BlockDerived( *( context.get() ) ) );
+			}
 
 		};
 
@@ -63,7 +66,10 @@ namespace _2Real
 
 		public:
 
-			Block & create ( ContextBlock *const context ) { return *( new BlockDerived() ); }
+			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
+			{
+				return std::shared_ptr< _2Real::bundle::Block >( new BlockDerived );
+			}
 
 		};
 
@@ -74,22 +80,34 @@ namespace _2Real
 
 		public:
 
-			CreateContext() : m_Obj( nullptr )		{}
+			CreateContext() : mObj(/* nullptr */)		{}
 
-			Block & create( ContextBlock *const context )
+			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
-				if ( m_Obj == nullptr )
+				//if ( m_Obj == nullptr )
+				//{
+				//	m_Obj = new ContextBlockDerived();
+				//}
+				//return *m_Obj;;
+				if ( mObj.expired() )
 				{
-					m_Obj = new ContextBlockDerived();
+					std::shared_ptr< ContextBlockDerived > shared( new ContextBlockDerived );
+					mObj = shared;
+					return shared;
 				}
-				return *m_Obj;
+				else
+				{
+					std::shared_ptr< ContextBlockDerived > shared = mObj.lock();
+					return shared;
+				}
 			}
 
-			void reset() { m_Obj = nullptr; }
+			//void reset() { m_Obj = nullptr; }
 
 		private:
 
-			ContextBlockDerived			*m_Obj;
+			//ContextBlockDerived			*m_Obj;
+			std::weak_ptr< ContextBlockDerived >		mObj;
 
 		};
 
@@ -99,7 +117,11 @@ namespace _2Real
 
 		public:
 
-			Block & create( ContextBlock *const context ) { return m_Policy.create( context ); }
+			std::shared_ptr< _2Real::bundle::Block > create( std::shared_ptr< _2Real::bundle::ContextBlock > context )
+			{
+				return m_Policy.create( context );
+			}
+
 			void reset() { m_Policy.reset(); }
 
 		private:

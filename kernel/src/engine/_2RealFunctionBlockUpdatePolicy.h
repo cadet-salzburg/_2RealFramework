@@ -93,11 +93,10 @@ namespace _2Real
 		typedef std::map< BasicInletIO *, InletPolicyInfo * >::iterator				InletPolicyIterator;
 		typedef std::map< BasicInletIO *, InletPolicyInfo * >::const_iterator		InletPolicyConstIterator;
 
-		template< typename T >
 		friend class FunctionBlock;
 
-		FunctionBlockStateManager		*m_StateManager;
-		FunctionBlockIOManager			*m_IOManager;
+		FunctionBlockStateManager						*m_StateManager;
+		std::shared_ptr< FunctionBlockIOManager >		m_IOManager;
 
 		mutable Poco::FastMutex			m_Access;
 		bool							m_TimeChanged;

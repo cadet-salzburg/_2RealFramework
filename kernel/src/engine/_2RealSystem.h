@@ -19,49 +19,48 @@
 
 #pragma once
 
-#include <set>
+#include <map>
+#include <memory>
+#include <string>
 
 namespace _2Real
 {
 
-	class Logger;
+	class EngineImpl;
 	class AbstractUberBlock;
-	template< typename T >
 	class FunctionBlock;
-
-	namespace app
-	{
-		class BlockHandle;
-		class ContextBlockHandle;
-	}
+	class Bundle;
 
 	class System
 	{
 
 	public:
 
-		typedef std::set< AbstractUberBlock * >						Blocks;
-		typedef std::set< AbstractUberBlock * >::iterator			BlockIterator;
-		typedef std::set< AbstractUberBlock * >::const_iterator		BlockConstIterator;
+		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >					Blocks;
+		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >::iterator		BlockIterator;
+		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >::const_iterator	BlockConstIterator;
+		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >						ContextBlocks;
+		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >::iterator				ContextBlockIterator;
+		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >::const_iterator		ContextBlockConstIterator;
 
-		System( Logger &logger );
+		System( EngineImpl * );
 		~System();
 
-		void			clearAll();
-		void			clearBlockInstances();
+		void			clear();
 
-		void			addBlock( FunctionBlock< app::BlockHandle > &block );
-		void			addBlock( FunctionBlock< app::ContextBlockHandle > &block );
-		void			removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout );
-		void			removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout );
-		Blocks const&	getBlockInstances() const;
-		Blocks const&	getBundleContexts() const;
+		void			addRegularBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
+		void			addContextBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
+
+		void								destroyBlocks( Bundle *bundle );
+		unsigned int						getBlockInstanceCount( Bundle const* bundle, std::string const& );
+		std::shared_ptr< FunctionBlock >	getContextBlock( Bundle const* bundle );
+
 
 	private:
 
-		Logger			&m_Logger;
-		Blocks			m_BlockInstances;
-		Blocks			m_ContextBlocks;
+		EngineImpl		*const mEngineImpl;
+		Blocks			mBlockInstances;
+		ContextBlocks	mContextBlocks;
 
 	};
 

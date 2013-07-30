@@ -35,13 +35,9 @@ namespace _2Real
 		public:
 
 			ParameterHandle();
-			ParameterHandle( Parameter &param );
-			ParameterHandle( ParameterHandle const& src );
-			ParameterHandle& operator=( ParameterHandle const& src );
-			~ParameterHandle();
+			explicit ParameterHandle( std::shared_ptr< Parameter > );
 
 			bool isValid() const;
-			void invalidate();
 
 			bool hasUpdated() const;
 			bool hasChanged() const;
@@ -51,7 +47,7 @@ namespace _2Real
 
 		private:
 
-			Parameter		*m_Parameter;
+			std::weak_ptr< Parameter >		mImpl;
 
 		};
 	}

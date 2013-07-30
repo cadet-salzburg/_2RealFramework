@@ -43,7 +43,7 @@ namespace _2Real
 
 	public:
 
-		ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name );
+		ThreadPool( EngineImpl *engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name );
 		~ThreadPool();
 
 		PooledThread * requestUniqueThread();
@@ -70,8 +70,8 @@ namespace _2Real
 		typedef std::map< PooledThread *, ThreadQueue >::iterator			ThreadQueueIterator;
 		typedef std::map< PooledThread *, ThreadQueue >::const_iterator		ThreadQueueConstIterator;
 
-		Timer								&m_Timer;
-		Logger								&m_Logger;
+		Timer								*const m_Timer;
+		Logger								*const m_Logger;
 
 		std::string							m_Name;
 		unsigned int						m_StackSize;

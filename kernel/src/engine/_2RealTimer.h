@@ -34,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		Timer( Logger &logger );
+		Timer( Logger *logger );
 		~Timer();
 
 		void receiveTimerSignal( Poco::Timer &t );
@@ -47,7 +47,7 @@ namespace _2Real
 		Poco::Timer							m_Timer;
 		Poco::Timestamp						m_Timestamp;
 
-		Logger								&m_Logger;
+		Logger								*const m_Logger;
 
 		mutable Poco::FastMutex				m_Access;
 		CallbackEvent< long >				m_TimerSignal;

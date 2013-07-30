@@ -18,125 +18,69 @@
 
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
-#include "app/_2RealBundleInfo.h"
+#include "app/_2RealInfo.h"
 #include "engine/_2RealBundle.h"
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 #include "engine/_2RealFunctionBlock.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
+template< typename TObj >
+std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+{
+	std::shared_ptr< TObj > locked = handle.lock();
+	if ( locked.get() == nullptr )
+	{
+		std::stringstream msg;
+		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+	}
+
+	return locked;
+}
 
 namespace _2Real
 {
 	namespace app
 	{
 		BundleHandle::BundleHandle() :
-			m_Bundle( nullptr )
+			mImpl()
 		{
 		}
 
-		BundleHandle::BundleHandle( Bundle &bundle ) :
-			m_Bundle( &bundle )
+		BundleHandle::BundleHandle( std::shared_ptr< Bundle > bundle ) :
+			mImpl( bundle )
 		{
-			m_Bundle->registerHandle( *this );
-		}
-
-		BundleHandle::~BundleHandle()
-		{
-			if ( isValid() ) m_Bundle->unregisterHandle( *this );
-		}
-
-		BundleHandle::BundleHandle( BundleHandle const& other ) :
-			m_Bundle( other.m_Bundle )
-		{
-			if ( isValid() ) m_Bundle->registerHandle( *this );
-		}
-
-		BundleHandle& BundleHandle::operator=( BundleHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_Bundle->unregisterHandle( *this );
-			}
-
-			m_Bundle = other.m_Bundle;
-
-			if ( isValid() )
-			{
-				m_Bundle->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool BundleHandle::isValid() const
 		{
-			return m_Bundle != nullptr;
-		}
-
-		bool BundleHandle::operator==( BundleHandle const& other ) const
-		{
-			return m_Bundle == other.m_Bundle;
-		}
-
-		bool BundleHandle::operator!=( BundleHandle const& other ) const
-		{
-			return m_Bundle != other.m_Bundle;
-		}
-
-		bool BundleHandle::operator<( BundleHandle const& other ) const
-		{
-			return m_Bundle < other.m_Bundle;
-		}
-
-		bool BundleHandle::operator<=( BundleHandle const& other ) const
-		{
-			return m_Bundle <= other.m_Bundle;
-		}
-
-		bool BundleHandle::operator>( BundleHandle const& other ) const
-		{
-			return m_Bundle > other.m_Bundle;
-		}
-
-		bool BundleHandle::operator>=( BundleHandle const& other ) const
-		{
-			return m_Bundle >= other.m_Bundle;
+			std::shared_ptr< Bundle > bundle = mImpl.lock();
+			return ( nullptr != bundle.get() );
 		}
 
 		BundleInfo const& BundleHandle::getBundleInfo() const
 		{
-			checkValidity( m_Bundle );
-			return m_Bundle->getBundleInfo();
+			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
+			return bundle->getBundleInfo();
 		}
 
-		ContextBlockHandle & BundleHandle::getContextBlock() const
+		ContextBlockHandle BundleHandle::getContextBlock() const
 		{
-			checkValidity( m_Bundle );
-			return m_Bundle->getContextBlockHandle();
+			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
+			std::shared_ptr< FunctionBlock > block = bundle->getContextBlock();
+			return ContextBlockHandle( block );
 		}
 
-		BlockHandle & BundleHandle::createBlockInstance( std::string const& blockName )
+		BlockHandle BundleHandle::createBlockInstance( std::string const& name )
 		{
-			checkValidity( m_Bundle );
-			return m_Bundle->createBlockInstance( trim( blockName ) ).getHandle();
-		}
-
-		void BundleHandle::invalidate()
-		{
-			m_Bundle = nullptr;
+			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
+			std::shared_ptr< FunctionBlock > block = bundle->createBlockInstance( name );
+			return BlockHandle( block );
 		}
 
 		void BundleHandle::unload( const long blockTimeout )
 		{
-			checkValidity( m_Bundle );
-			m_Bundle->unload( blockTimeout );
+			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
+			bundle->unload( blockTimeout );
 		}
 	}
 }

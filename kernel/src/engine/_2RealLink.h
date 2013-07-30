@@ -34,38 +34,28 @@ namespace _2Real
 
 	public:
 
-		IOLink();	/* creates invalid link! */
-		~IOLink();
+		// dummy link!
+		IOLink( std::shared_ptr< BasicInletIO > i, std::shared_ptr< OutletIO > o ) : mInletIO( i ), mOutletIO( o ) {}
+
+		static std::shared_ptr< IOLink > link( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
 
 		void activate();
 		void deactivate();
 
-		BasicInletIO const& getInletIO() const;
-		OutletIO const& getOutletIO() const;
-
-		BasicInletIO& getInletIO();
-		OutletIO& getOutletIO();
-
 		bool operator<( IOLink const& other );
-		bool isBlockInvolved( AbstractUberBlock const& b ) const;
-		bool isInletInvolved( BasicInletIO const& inlet ) const;
+		//bool isBlockInvolved( AbstractUberBlock const& b ) const;
+		//bool isInletInvolved( BasicInletIO const& inlet ) const;
 
-		bool isValid() const;
-
-		static IOLink * link( BasicInletIO &inlet, OutletIO &outlet );
-		//static IOLink * linkWithAutoConversion( BasicInletIO &inlet, OutletIO &outlet );
-
-		//static const std::string findConversion( BasicInletIO &inlet, OutletIO &outlet );
-		//static bool canAutoConvert( BasicInletIO &inlet, OutletIO &outlet );
+		//bool isValid() const;
 
 		void receiveData( TimestampedData const& );
 
 	private:
 
-		IOLink( BasicInletIO &inlet, OutletIO &outlet, std::shared_ptr< const TypeConverter > fcv, std::shared_ptr< const TypeConverter > bcv );
+		IOLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO >, std::shared_ptr< const TypeConverter >, std::shared_ptr< const TypeConverter > );
 
-		BasicInletIO							*const m_InletIO;
-		OutletIO								*const m_OutletIO;
+		std::shared_ptr< BasicInletIO >			mInletIO;
+		std::shared_ptr< OutletIO >				mOutletIO;
 		std::shared_ptr< const TypeConverter >	mForwardConverter;
 		std::shared_ptr< const TypeConverter >	mReverseConverter;
 

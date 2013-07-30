@@ -43,8 +43,7 @@ namespace _2Real
 	}
 
 	AbstractInlet::AbstractInlet() :
-		NonCopyable< AbstractInlet >(),
-		Handleable< AbstractInlet, bundle::InletHandle >( *this )
+		NonCopyable< AbstractInlet >()
 	{
 	}
 
@@ -53,9 +52,14 @@ namespace _2Real
 	{
 	}
 
-	BasicInlet & BasicInlet::operator[]( const unsigned int index )
+	void BasicInlet::setSelfRef( std::shared_ptr< BasicInlet > ref )
 	{
-		return *this;
+		mSelfRef = ref;
+	}
+
+	std::shared_ptr< BasicInlet > BasicInlet::operator[]( const unsigned int index )
+	{
+		return mSelfRef.lock();
 	}
 
 	bool BasicInlet::isMultiInlet() const { return false; }
@@ -95,9 +99,9 @@ namespace _2Real
 	{
 	}
 
-	BasicInlet & MultiInlet::operator[]( const unsigned int index )
+	std::shared_ptr< BasicInlet > MultiInlet::operator[]( const unsigned int index )
 	{
-		return mOwner->operator[]( index ).getInlet();
+		return std::dynamic_pointer_cast< BasicInlet, AbstractInlet >( mOwner->operator[]( index )->getInlet() );
 	}
 
 	bool MultiInlet::isMultiInlet() const { return true; }

@@ -18,11 +18,9 @@
 
 #pragma once
 
-#ifdef _UNIX
-	#include <limits.h> // for the limits defs
-#endif
-
 #include <string>
+#include <limits>
+#include <memory>
 
 namespace _2Real
 {
@@ -40,28 +38,18 @@ namespace _2Real
 		public:
 
 			BundleHandle();
-			BundleHandle( Bundle &bundle );
-			~BundleHandle();
-			BundleHandle( BundleHandle const& other );
-			BundleHandle& operator=( BundleHandle const& other );
+			BundleHandle( std::shared_ptr< Bundle > );
 
 			bool isValid() const;
-			void invalidate();
-			bool operator==( BundleHandle const& other ) const;
-			bool operator!=( BundleHandle const& other ) const;
-			bool operator<( BundleHandle const& other ) const;
-			bool operator<=( BundleHandle const& other ) const;
-			bool operator>( BundleHandle const& other ) const;
-			bool operator>=( BundleHandle const& other ) const;
 
-			BundleInfo const& getBundleInfo() const;
-			ContextBlockHandle & getContextBlock() const;
-			BlockHandle & createBlockInstance( std::string const& );
-			void unload( const long blockTimeout = LONG_MAX );
+			BundleInfo const&		getBundleInfo() const;
+			ContextBlockHandle		getContextBlock() const;
+			BlockHandle				createBlockInstance( std::string const& );
+			void					unload( const long blockTimeout = ( std::numeric_limits< long >::max )() );
 
 		private:
 
-			Bundle		*m_Bundle;
+			std::weak_ptr< Bundle >		mImpl;
 
 		};
 

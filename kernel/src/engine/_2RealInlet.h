@@ -19,7 +19,6 @@
 #pragma once
 
 #include "bundle/_2RealInletHandle.h"
-#include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
 #include "engine/_2RealTimestampedData.h"
@@ -51,7 +50,7 @@ namespace _2Real
 
 	};
 
-	class AbstractInlet : private NonCopyable< AbstractInlet >, private Handleable< AbstractInlet, bundle::InletHandle >
+	class AbstractInlet : private NonCopyable< AbstractInlet >
 	{
 
 	public:
@@ -59,11 +58,7 @@ namespace _2Real
 		AbstractInlet();
 		virtual ~AbstractInlet() {}
 
-		using Handleable< AbstractInlet, bundle::InletHandle >::getHandle;
-		using Handleable< AbstractInlet, bundle::InletHandle >::registerHandle;
-		using Handleable< AbstractInlet, bundle::InletHandle >::unregisterHandle;
-
-		virtual BasicInlet &					operator[]( const unsigned int index ) = 0;
+		virtual std::shared_ptr< BasicInlet >	operator[]( const unsigned int ) = 0;
 		virtual bool							isMultiInlet() const = 0;
 		virtual unsigned int					getSize() const = 0;
 
@@ -76,10 +71,11 @@ namespace _2Real
 
 		BasicInlet( AbstractInletIO *owner );
 
-		BasicInlet &							operator[]( const unsigned int index );
+		std::shared_ptr< BasicInlet >			operator[]( const unsigned int );
 		bool									isMultiInlet() const;
 		unsigned int							getSize() const;
 
+		void									setSelfRef( std::shared_ptr< BasicInlet > );
 		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
 		std::shared_ptr< const CustomType >		getData() const;
 		bool									hasChanged() const;
@@ -91,6 +87,7 @@ namespace _2Real
 		std::shared_ptr< const CustomType >		mLastData;
 		std::shared_ptr< const CustomType >		mData;
 		mutable Poco::FastMutex					mAccess;
+		std::weak_ptr< BasicInlet >				mSelfRef;
 
 	};
 
@@ -101,7 +98,7 @@ namespace _2Real
 
 		MultiInlet( AbstractInletIO *owner );
 
-		BasicInlet &							operator[]( const unsigned int index );
+		std::shared_ptr< BasicInlet >			operator[]( const unsigned int );
 		bool									isMultiInlet() const;
 		unsigned int							getSize() const;
 

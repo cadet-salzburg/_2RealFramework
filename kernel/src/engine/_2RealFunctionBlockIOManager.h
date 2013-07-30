@@ -19,33 +19,17 @@
 #pragma once
 
 #include "engine/_2RealAbstractIOManager.h"
-#include "helpers/_2RealHandleable.h"
 #include "app/_2RealCallbacks.h"
 #include "bundle/_2RealBlockHandle.h"
 
 namespace _2Real
 {
-	namespace app
-	{
-		class InletHandle;
-		class OutletHandle;
-	}
-
-	namespace bundle
-	{
-		class InletHandle;
-		class OutletHandle;
-		class BlockHandle;
-	}
-	
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
-	class TypeDescriptor;
 
-	class FunctionBlockIOManager : private AbstractIOManager, private Handleable< FunctionBlockIOManager, bundle::BlockHandle >
+	class FunctionBlockIOManager : private AbstractIOManager
 	{
 
-		template< typename T >
 		friend class FunctionBlock;
 
 	public:
@@ -53,47 +37,33 @@ namespace _2Real
 		FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner );
 		~FunctionBlockIOManager();
 
-		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::getHandle;
-		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::registerHandle;
-		using Handleable< FunctionBlockIOManager, bundle::BlockHandle >::unregisterHandle;
+		void										clear();
 
-		void							clear();
+		void										registerToNewData( app::BlockCallback &cb );
+		void										unregisterFromNewData( app::BlockCallback &cb );
 
-		void							registerToNewData( app::BlockCallback &cb );
-		void							unregisterFromNewData( app::BlockCallback &cb );
+		void										addInlet( IOInfo * );
+		void										addOutlet( IOInfo * );
+		void										addParameter( IOInfo * );
 
-		void							addBasicInlet( IOInfo * );
-		void							addMultiInlet( IOInfo * );
-		void							addOutlet( IOInfo * );
-		void							addParameter( IOInfo * );
+		std::shared_ptr< AbstractInletIO >			getInlet( std::string const& );
+		std::shared_ptr< const AbstractInletIO >	getInlet( std::string const& ) const;
+		std::shared_ptr< OutletIO >					getOutlet( std::string const& );
+		std::shared_ptr< const OutletIO >			getOutlet( std::string const& ) const;
+		std::shared_ptr< ParameterIO >				getParameter( std::string const& );
+		std::shared_ptr< const ParameterIO >		getParameter( std::string const& ) const;
 
-		app::InletHandle				getAppInletHandle( std::string const& name );
-		app::OutletHandle				getAppOutletHandle( std::string const& name );
-		app::ParameterHandle			getAppParameterHandle( std::string const& name );
-		bundle::InletHandle				getBundleInletHandle( std::string const& name ) const;
-		bundle::OutletHandle			getBundleOutletHandle( std::string const& name ) const;
-		bundle::ParameterHandle			getBundleParameterHandle( std::string const& name ) const;
+		InletVector &								getAllInlets();
+		OutletVector &								getAllOutlets();
+		ParameterVector &							getAllParameters();
+		InletVector const&							getAllInlets() const;
+		OutletVector const&							getAllOutlets() const;
+		ParameterVector const&						getAllParameters() const;
 
-		AppInletHandles const&			getAppInletHandles() const;
-		AppOutletHandles const&			getAppOutletHandles() const;
-		AppParameterHandles const&		getAppParameterHandles() const;
-		BundleInletHandles const&		getBundleInletHandles() const;
-		BundleOutletHandles const&		getBundleOutletHandles() const;
-		BundleParameterHandles const&	getBundleParameterHandles() const;
-
-		void							updateInletData();
-		void							updateParameterData();
-		void							updateOutletData();
-		void							updateInletBuffers( const bool enableTriggering );
-
-		/* moved to public 13/05/2013 - using this function might cause sync issues?? */
-
-		AbstractInletIO &				getInletIO( std::string const& name );
-		OutletIO &						getOutletIO( std::string const& name );
-		ParameterIO &					getParameterIO( std::string const& name );
-		AbstractInletIO const&			getInletIO( std::string const& name ) const;
-		OutletIO const&					getOutletIO( std::string const& name ) const;
-		ParameterIO const&				getParameterIO( std::string const& name ) const;
+		void										updateInletData();
+		void										updateParameterData();
+		void										updateOutletData();
+		void										updateInletBuffers( const bool enableTriggering );
 
 	private:
 
@@ -104,19 +74,13 @@ namespace _2Real
 		mutable Poco::FastMutex			m_OutletAccess;
 		mutable Poco::FastMutex			m_ParameterAccess;
 
-		InletVector						m_Inlets;
-		OutletVector					m_Outlets;
-		ParameterVector					m_Parameters;
-
-		AppInletHandles					m_AppInletHandles;
-		AppOutletHandles				m_AppOutletHandles;
-		AppParameterHandles				m_AppParameterHandles;
-		BundleInletHandles				m_BundleInletHandles;
-		BundleOutletHandles				m_BundleOutletHandles;
-		BundleParameterHandles			m_BundleParameterHandles;
+		InletVector						mInlets;
+		OutletVector					mOutlets;
+		ParameterVector					mParameters;
 
 		Poco::FastMutex																m_IOAccess;
 		CallbackEvent< std::vector< std::shared_ptr< const CustomType > > >			m_AppEvent;
+
 	};
 
 }

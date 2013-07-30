@@ -33,16 +33,18 @@ public:
 private:
 	void					discardOutlets();
 
-	InletHandle							m_DeviceIndexInletHandle;
-	InletHandle							m_WidthInletHandle;
-	InletHandle							m_HeightInletHandle;
-	InletHandle							m_FpsInletHandle;
-	OutletHandle						m_ImageOutletHandle;
-	OutletHandle						m_WidthOutletHandle;
-	OutletHandle						m_HeightOutletHandle;
-	CameraDeviceManager*				m_CameraDeviceManager;
-	int									m_iCurrentCamera;
-	int									m_iWidth;
-	int									m_iHeight;
-	int									m_iFps;
+	ParameterHandle						mDeviceIn;
+	ParameterHandle						mWidthIn;
+	ParameterHandle						mHeightIn;
+	ParameterHandle						mFpsIn;
+
+	OutletHandle						mImageOut;
+	OutletHandle						mWidthOut;
+	OutletHandle						mHeightOut;
+
+	CameraDeviceManager					&mDeviceManager;
+	int									mDevice;
+	int									mWidth;
+	int									mHeight;
+	int									mFps;
 };

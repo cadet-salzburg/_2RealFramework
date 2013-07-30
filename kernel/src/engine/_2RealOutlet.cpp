@@ -41,7 +41,6 @@ namespace _2Real
 
 	Outlet::Outlet( OutletIO *owner ) :
 		NonCopyable< Outlet >(),
-		Handleable< Outlet, bundle::OutletHandle >( *this ),
 		mOwner( owner ),
 		mWasDiscarded( false )
 	{
@@ -64,5 +63,4 @@ namespace _2Real
 	{
 		mWasDiscarded = true;
 	}
-
 }

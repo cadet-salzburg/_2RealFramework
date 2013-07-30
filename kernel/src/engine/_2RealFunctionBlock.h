@@ -26,116 +26,94 @@
 #include "engine/_2RealBundle.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "app/_2RealBlockInfo.h"
-#include "helpers/_2RealHandleable.h"
 #include "../_2RealBlock.h"
 #include "engine/_2RealParameterMetadata.h"
 
 namespace _2Real
 {
-	template< typename THandle >
-	class FunctionBlock : public AbstractUberBlock, private Handleable< FunctionBlock< THandle >, THandle >
+	class FunctionBlock : public AbstractUberBlock
 	{
 
 	public:
 
-		FunctionBlock( EngineImpl *engine, Bundle *owningBundle, bundle::Block *blockInstance, app::BlockInfo const& info );
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >					Inlets;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::iterator			InletIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::const_iterator	InletConstIterator;
+
+		typedef std::vector< std::shared_ptr< OutletIO > >							Outlets;
+		typedef std::vector< std::shared_ptr< OutletIO > >::iterator				OutletIterator;
+		typedef std::vector< std::shared_ptr< OutletIO > >::const_iterator			OutletConstIterator;
+
+		typedef std::vector< std::shared_ptr< ParameterIO > >						Parameters;
+		typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
+		typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
+
+		FunctionBlock( EngineImpl *, std::shared_ptr< Bundle >, std::shared_ptr< bundle::Block >, app::BlockInfo const& );
 		~FunctionBlock();
 
-		using Handleable< FunctionBlock< THandle >, THandle >::getHandle;
-		using Handleable< FunctionBlock< THandle >, THandle >::registerHandle;
-		using Handleable< FunctionBlock< THandle >, THandle >::unregisterHandle;
-
-		using AbstractUberBlock::setName;
 		using AbstractUberBlock::getName;
 		using AbstractUberBlock::getFullName;
 
-		Bundle *						getOwningBundle() { return mBundle; }
-		const std::string				getUpdateRateAsString() const;
-		bool							isRunning() const;
+		//std::shared_ptr< Bundle >		getOwningBundle();
+		//std::string					getUpdateRateAsString() const;
+		//bool							isRunning() const;
 
-		app::BlockInfo const&			getBlockInfo();
+		app::BlockInfo const&					getBlockInfo();
 
-		app::InletHandle				getAppInletHandle( std::string const& inletName ) const;
-		app::OutletHandle				getAppOutletHandle( std::string const& outletName ) const;
-		app::ParameterHandle			getAppParameterHandle( std::string const& paramName ) const;
-		AppInletHandles const&			getAppInletHandles() const;
-		AppOutletHandles const&			getAppOutletHandles() const;
-		AppParameterHandles const&		getAppParameterHandles() const;
+		std::shared_ptr< AbstractInletIO >		getInlet( std::string const& );
+		std::shared_ptr< OutletIO >				getOutlet( std::string const& );
+		std::shared_ptr< ParameterIO >			getParameter( std::string const& );
 
-		/* added 13/05/2013 */
+		Inlets &								getAllInlets();
+		Outlets &								getAllOutlets();
+		Parameters &							getAllParameters();
 
-		AbstractInletIO &				getInlet( std::string const& inletName );
-		OutletIO &						getOutlet( std::string const& outletName );
+		void									registerToNewData( app::BlockCallback &callback );
+		void									unregisterFromNewData( app::BlockCallback &callback );
 
-		void							registerToNewData( app::BlockCallback &callback );
-		void							unregisterFromNewData( app::BlockCallback &callback );
+		void									setUp();
+		void									start();
+		void									stop( const bool blocking, const long timeout );
+		void									prepareForShutDown();
+		bool									shutDown( const long timeout );
+		void									singleStep();
+		void									suicide( const long timeout );
 
-		void							setUp();
-		void							start();
-		void							stop( const bool blocking, const long timeout );
-		void							prepareForShutDown();
-		bool							shutDown( const long timeout );
-		void							singleStep();
+		void									updateWithFixedRate( const double updatesPerSecond );
 
-		void							updateWithFixedRate( const double updatesPerSecond );
+		void									handleException( Exception &e );
 
-		void							handleException( Exception &e );
-
-		void							addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
-		void							addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
-		void							addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
-
-		void suicide( const long timeout ) {}
+		void									addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
+		void									addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
+		void									addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
 
 	private:
 
-		EngineImpl					*const mEngineImpl;
-		FunctionBlockUpdatePolicy	*const mUpdatePolicy;
-		FunctionBlockIOManager		*const mIOManager;
-		FunctionBlockStateManager	*const mStateManager;
+		EngineImpl												*const mEngineImpl;
 
-		Bundle						*const mBundle;
-		bundle::Block				*const mBlock;
-		app::BlockInfo				mBlockInfo;
+		FunctionBlockUpdatePolicy								*mUpdatePolicy;
+		std::shared_ptr< FunctionBlockIOManager >				mIOManager;			// handled by bundle::block handle
+		FunctionBlockStateManager								*mStateManager;
+
+		std::weak_ptr< Bundle >									mBundle;			// weak ptr b/c of circualr referencing
+
+		std::shared_ptr< bundle::Block >						mBlock;		// the only pointer to the actual block instance....
+		app::BlockInfo											mBlockInfo;
 
 	};
 
-	template< typename THandle >
-	bool dedicatedThread();
-
-	template< >
-	inline bool dedicatedThread< app::ContextBlockHandle >()
-	{
-		return true;
-	}
-
-	template< >
-	inline bool dedicatedThread< app::BlockHandle >()
-	{
-		return false;
-	}
-
-	template< typename THandle >
-	FunctionBlock< THandle >::FunctionBlock( EngineImpl *engine, Bundle *bundle, bundle::Block *blockInstance, app::BlockInfo const& info ) :
+	inline FunctionBlock::FunctionBlock( EngineImpl *engine, std::shared_ptr< Bundle > bundle, std::shared_ptr< bundle::Block > instance, app::BlockInfo const& info ) :
 		AbstractUberBlock( engine, bundle->getIds(), info.name ),
-		Handleable< FunctionBlock< THandle >, THandle >( *this ),
 		mEngineImpl( engine ),
 		mUpdatePolicy( new FunctionBlockUpdatePolicy( engine, this ) ),
 		mIOManager( new FunctionBlockIOManager( engine, this ) ),
-		mStateManager( new FunctionBlockStateManager( engine, this, dedicatedThread< THandle >() ) ),
+		mStateManager( new FunctionBlockStateManager( engine, this, true ) ),
 		mBundle( bundle ),
-		mBlock( blockInstance ),
+		mBlock( instance ),
 		mBlockInfo( info )
 	{
-#ifdef _DEBUG
-		assert( mEngineImpl );
-		assert( mBundle );
-		assert( mBlock );
-#endif
-
 		// stae manager: does not do anything, b/c no triggers exist yet
-		mStateManager->m_FunctionBlock = blockInstance;
+		mStateManager->m_FunctionBlock = instance;
 		mStateManager->m_IOManager = mIOManager;
 		mStateManager->m_UpdatePolicy = mUpdatePolicy;
 
@@ -148,160 +126,98 @@ namespace _2Real
 		mIOManager->m_UpdatePolicy = mUpdatePolicy;
 	}
 
-	template< typename THandle >
-	FunctionBlock< THandle >::~FunctionBlock()
+	inline FunctionBlock::~FunctionBlock()
 	{
 		delete mUpdatePolicy;
-		delete mIOManager;
-		delete mStateManager;
-		delete mBlock;				// deletes the block!!!!!!!
+		delete mStateManager;		// must go second
 	}
 
-	//template< typename THandle >
-	//std::string const& FunctionBlock< THandle >::getBundleName() const
+	//inline bool FunctionBlock::isRunning() const
 	//{
-	//	return mBundle->getName();
+	//	return mStateManager->isRunning();
 	//}
 
-	template< typename THandle >
-	bool FunctionBlock< THandle >::isRunning() const
+	//inline std::string FunctionBlock::getUpdateRateAsString() const
+	//{
+	//	std::ostringstream str;
+	//	str << mUpdatePolicy->getUpdateRate();
+	//	return str.str();
+	//}
+
+	inline void FunctionBlock::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
 	{
-		return mStateManager->isRunning();
+		IOInfo *info = new IOInfo( meta.name, initializer, type, meta.defaultPolicy, meta.isMulti );
+		mIOManager->addInlet( info );
 	}
 
-	template< typename THandle >
-	const std::string FunctionBlock< THandle >::getUpdateRateAsString() const
+	inline void FunctionBlock::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
 	{
-		std::ostringstream str;
-		str << mUpdatePolicy->getUpdateRate();
-		return str.str();
-	}
-
-	template< typename THandle >
-	void FunctionBlock< THandle >::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
-	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, meta.defaultPolicy );
-		meta.isMulti ? mIOManager->addMultiInlet( info ) : mIOManager->addBasicInlet( info );
-	}
-
-	template< typename THandle >
-	void FunctionBlock< THandle >::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
-	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID );
+		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID, false );
 		mIOManager->addOutlet( info );
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
+	inline void FunctionBlock::addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
 	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID );
+		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID, false );
 		mIOManager->addParameter( info );
 	}
 
-	template< typename THandle >
-	app::BlockInfo const& FunctionBlock< THandle >::getBlockInfo()
+	inline app::BlockInfo const& FunctionBlock::getBlockInfo()
 	{
 		return mBlockInfo;
 	}
 
-	template< typename THandle >
-	app::InletHandle FunctionBlock< THandle >::getAppInletHandle( std::string const& name ) const
+	inline std::shared_ptr< AbstractInletIO > FunctionBlock::getInlet( std::string const& name )
 	{
-		return mIOManager->getAppInletHandle( name );
+		return mIOManager->getInlet( name );
 	}
 
-	template< typename THandle >
-	app::ParameterHandle FunctionBlock< THandle >::getAppParameterHandle( std::string const& name ) const
+	inline std::shared_ptr< OutletIO > FunctionBlock::getOutlet( std::string const& name )
 	{
-		return mIOManager->getAppParameterHandle( name );
+		return mIOManager->getOutlet( name );
 	}
 
-	template< typename THandle >
-	app::OutletHandle FunctionBlock< THandle >::getAppOutletHandle( std::string const& name ) const
+	inline std::shared_ptr< ParameterIO > FunctionBlock::getParameter( std::string const& name )
 	{
-		return mIOManager->getAppOutletHandle( name );
+		return mIOManager->getParameter( name );
 	}
 
-	//template< typename THandle >
-	//bundle::InletHandle FunctionBlock< THandle >::getBundleInletHandle( std::string const& name ) const
-	//{
-	//	return mIOManager->getBundleInletHandle( name );
-	//}
-
-	//template< typename THandle >
-	//bundle::OutletHandle FunctionBlock< THandle >::getBundleOutletHandle( std::string const& name ) const
-	//{
-	//	return mIOManager->getBundleOutletHandle( name );
-	//}
-
-	//template< typename THandle >
-	//bundle::ParameterHandle FunctionBlock< THandle >::getBundleParameterHandle( std::string const& name ) const
-	//{
-	//	return mIOManager->getBundleParameterHandle( name );
-	//}
-
-	template< typename THandle >
-	AppInletHandles const& FunctionBlock< THandle >::getAppInletHandles() const
+	inline FunctionBlock::Inlets & FunctionBlock::getAllInlets()
 	{
-		return mIOManager->getAppInletHandles();
+		return mIOManager->mInlets;
 	}
 
-	template< typename THandle >
-	AppOutletHandles const& FunctionBlock< THandle >::getAppOutletHandles() const
+	inline FunctionBlock::Parameters & FunctionBlock::getAllParameters()
 	{
-		return mIOManager->getAppOutletHandles();
+		return mIOManager->mParameters;
 	}
 
-	template< typename THandle >
-	AppParameterHandles const& FunctionBlock< THandle >::getAppParameterHandles() const
+	inline FunctionBlock::Outlets & FunctionBlock::getAllOutlets()
 	{
-		return mIOManager->getAppParameterHandles();
+		return mIOManager->mOutlets;
 	}
 
-	//template< typename THandle >
-	//BundleInletHandles const& FunctionBlock< THandle >::getBundleInletHandles() const
-	//{
-	//	return mIOManager->getBundleInletHandles();
-	//}
-
-	//template< typename THandle >
-	//BundleOutletHandles const& FunctionBlock< THandle >::getBundleOutletHandles() const
-	//{
-	//	return mIOManager->getBundleOutletHandles();
-	//}
-
-	//template< typename THandle >
-	//BundleParameterHandles const& FunctionBlock< THandle >::getBundleParameterHandles() const
-	//{
-	//	return mIOManager->getBundleParameterHandles();
-	//}
-
-	template< typename THandle >
-	void FunctionBlock< THandle >::registerToNewData( app::BlockCallback &callback )
+	inline void FunctionBlock::registerToNewData( app::BlockCallback &callback )
 	{
 		mIOManager->registerToNewData( callback );
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::unregisterFromNewData( app::BlockCallback &callback )
+	inline void FunctionBlock::unregisterFromNewData( app::BlockCallback &callback )
 	{
 		mIOManager->unregisterFromNewData( callback );
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::setUp()
+	inline void FunctionBlock::setUp()
 	{
 		mStateManager->setUp();
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::start()
+	inline void FunctionBlock::start()
 	{
 		mStateManager->start();
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::stop( const bool blocking, const long timeout )
+	inline void FunctionBlock::stop( const bool blocking, const long timeout )
 	{
 		Poco::Event & ev = mStateManager->stop();
 		if ( blocking )
@@ -315,49 +231,33 @@ namespace _2Real
 		}
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::prepareForShutDown()
+	inline void FunctionBlock::prepareForShutDown()
 	{
 		mStateManager->prepareForShutDown();
 	}
 
-	template< typename THandle >
-	bool FunctionBlock< THandle >::shutDown( const long timeout )
+	inline bool FunctionBlock::shutDown( const long timeout )
 	{
 		return mStateManager->shutDown( timeout );
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::singleStep()
+	inline void FunctionBlock::singleStep()
 	{
 		mStateManager->singleStep();
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::updateWithFixedRate( const double updatesPerSecond )
+	inline void FunctionBlock::updateWithFixedRate( const double updatesPerSecond )
 	{
 		mUpdatePolicy->setNewUpdateRate( updatesPerSecond );
 	}
 
-	template< typename THandle >
-	void FunctionBlock< THandle >::handleException( Exception &e )
+	inline void FunctionBlock::handleException( Exception &e )
 	{
-		mEngineImpl->handleException( getHandle(), e );
+		//mEngineImpl->handleException( getHandle(), e );
 	}
 
-	template< typename THandle >
-	AbstractInletIO & FunctionBlock< THandle >::getInlet( std::string const& inletName )
+	inline void FunctionBlock::suicide( const long timeout )
 	{
-		return mIOManager->getInletIO( inletName );
 	}
-
-	template< typename THandle >
-	OutletIO & FunctionBlock< THandle >::getOutlet( std::string const& outletName )
-	{
-		return mIOManager->getOutletIO( outletName );
-	}
-
-	typedef FunctionBlock< app::BlockHandle >			BlockInstance;
-	typedef FunctionBlock< app::ContextBlockHandle >	ContextBlockInstance;
 
 }

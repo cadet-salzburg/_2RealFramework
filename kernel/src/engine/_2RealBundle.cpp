@@ -19,135 +19,60 @@
 
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealBundleManager.h"
-#include "engine/_2RealFunctionBlock.h"
-
-#include "app/_2RealBundleHandle.h"
+#include "engine/_2RealSystem.h"
+#include "engine/_2RealEngineImpl.h"
 
 #include <sstream>
-
-using std::string;
-using std::ostringstream;
-using std::make_pair;
 
 namespace _2Real
 {
 
-	Bundle::Bundle( app::BundleInfo const& info, BundleManager &bundleManager ) :
+	Bundle::Bundle( EngineImpl *engine, app::BundleInfo const& info ) :
 		NonCopyable< Bundle >(),
 		Identifiable< Bundle >( Ids(), info.name ),
-		Handleable< Bundle, app::BundleHandle >( *this ),
-		m_BundleManager( bundleManager ),
-		m_ContextBlock( nullptr ),
-		m_BundleInfo( info )
+		mEngineImpl( engine ),
+		mBundleInfo( info )
 	{
-	}
-
-	Bundle::~Bundle()
-	{
-		clear();
-	}
-
-	void Bundle::clear()
-	{
-		m_BlockInstances.clear();
-	}
-
-	bool Bundle::hasContext() const
-	{
-		return ( m_ContextBlock != nullptr );
-	}
-
-	bool Bundle::operator==( Bundle const& other ) const
-	{
-		return ( this->m_BundleInfo.directory == other.m_BundleInfo.directory );
-	}
-
-	void Bundle::contextBlockRemoved()
-	{
-		m_ContextBlock = nullptr;
-		m_BundleManager.removeContextBlock( *this );
-	}
-
-	void Bundle::unload( const long timeout )
-	{
-		m_BundleManager.destroyBundle( *this, timeout );
-		delete this;
-	}
-
-	Bundle::BlockInstances & Bundle::getBlockInstances( BundleManager const& m )
-	{
-		return m_BlockInstances;
-	}
-
-	FunctionBlock< app::ContextBlockHandle > & Bundle::getContextBlock( BundleManager const& m )
-	{
-		return *m_ContextBlock;
-	}
-
-	string const& Bundle::getAbsPath() const
-	{
-		return m_BundleInfo.directory;
 	}
 
 	app::BundleInfo const& Bundle::getBundleInfo() const
 	{
-		return m_BundleInfo;
+		return mBundleInfo;
 	}
 
-	bool Bundle::canCreate( std::string const& blockName ) const
+	std::string const& Bundle::getAbsPath() const
 	{
-		for ( app::BundleInfo::BlockInfoConstIterator it = m_BundleInfo.exportedBlocks.begin(); it != m_BundleInfo.exportedBlocks.end(); ++it )
-		{
-			if ( toLower( it->name ) == toLower( blockName ) ) return true;
-		}
-
-		return false;
+		return mBundleInfo.directory;
 	}
 
-	FunctionBlock< app::BlockHandle > & Bundle::createBlockInstance( std::string const& blockName )
+	void Bundle::unload( const long timeout )
 	{
-		ostringstream nameStr;
-		nameStr << blockName << "_" << getBlockInstanceCount( blockName );
-
-		std::string name = nameStr.str();
-
-		FunctionBlock< app::BlockHandle > *block = &m_BundleManager.createBlockInstance( *this, blockName, name );
-
-		m_BlockInstances.insert( make_pair( blockName, block ) );
-		return *block;
+		// kill all blocks ( regular, context )  where this bundle is involved
+		mEngineImpl->getBlockManager()->destroyBlocks( this );
+		// unload the bundle -> kills this object
+		mEngineImpl->getBundleManager()->unloadBundle( this, timeout );
 	}
 
-	void Bundle::removeBlockInstance( FunctionBlock< app::BlockHandle > &block )
+	std::shared_ptr< FunctionBlock > Bundle::getContextBlock()
 	{
-		for ( BlockInstanceIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
-		{
-			if ( it->second->getName() == block.getName() )
-			{
-				m_BlockInstances.erase( it );
-				break;
-			}
-		}
+		return mEngineImpl->getBlockManager()->getContextBlock( this );
 	}
 
-	app::ContextBlockHandle & Bundle::getContextBlockHandle() const
+	std::shared_ptr< FunctionBlock > Bundle::createBlockInstance( std::string const& blockName )
 	{
-		return m_ContextBlock->getHandle();
-	}
+		// name
+		const unsigned int cnt = mEngineImpl->getBlockManager()->getBlockInstanceCount( this, blockName );
+		std::ostringstream name;
+		name << blockName << "_" << cnt;
 
-	unsigned int Bundle::getBlockInstanceCount( string const& blockName ) const
-	{
-		unsigned int counter = 0;
-		std::pair< BlockInstanceConstIterator, BlockInstanceConstIterator > range = m_BlockInstances.equal_range( blockName );
-		for ( BlockInstanceConstIterator it = range.first; it != range.second; ++it )
-		{
-			++counter;
-		}
+		// get context block, if needed ( otherwise null is returned )
+		std::shared_ptr< FunctionBlock > context = mEngineImpl->getBundleManager()->createContextBlockConditionally( this, blockName );
+		if ( context.get() != nullptr )
+			mEngineImpl->getBlockManager()->addContextBlockInstance( this, context );
 
-		return counter;
-	}
-
-	void Bundle::setContextBlock( FunctionBlock< app::ContextBlockHandle > &context )
-	{
-		m_ContextBlock = &context;
+		// create block & return
+		std::shared_ptr< FunctionBlock > block = mEngineImpl->getBundleManager()->createBlockInstance( this, blockName, name.str() );
+		mEngineImpl->getBlockManager()->addRegularBlockInstance( this, block );
+		return block;
 	}
 }

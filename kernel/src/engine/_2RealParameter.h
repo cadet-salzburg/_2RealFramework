@@ -19,7 +19,6 @@
 #pragma once
 
 #include "bundle/_2RealParameterHandle.h"
-#include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealPoco.h"
 
@@ -46,16 +45,12 @@ namespace _2Real
 		std::shared_ptr< const CustomType >		mData;
 	};
 
-	class Parameter : private NonCopyable< Parameter >, private Handleable< Parameter, bundle::ParameterHandle >
+	class Parameter : private NonCopyable< Parameter >
 	{
 		
 	public:
 
 		Parameter( ParameterIO *owner );
-
-		using Handleable< Parameter, bundle::ParameterHandle >::getHandle;
-		using Handleable< Parameter, bundle::ParameterHandle >::registerHandle;
-		using Handleable< Parameter, bundle::ParameterHandle >::unregisterHandle;
 
 		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
 		// called by bundle during update or setup

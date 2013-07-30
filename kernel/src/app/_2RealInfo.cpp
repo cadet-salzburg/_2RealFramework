@@ -16,39 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "datatypes/_2RealCustomData.h"
+#include "app/_2RealInfo.h"
 
 namespace _2Real
 {
-	class ParameterIO;
-
-	namespace app
-	{
-		class BlockHandle;
-
-		class ParameterHandle
-		{
-
-		public:
-
-			ParameterHandle();
-			ParameterHandle( std::shared_ptr< ParameterIO > );
-
-			bool isValid() const;
-
-			std::string const&				getName() const;
-			app::TypeMetainfo				getType() const;
-
-			std::shared_ptr< CustomType >	makeData() const;
-			std::shared_ptr< const CustomType > getCurrentData() const;
-			void setData( std::shared_ptr< const CustomType > );
-
-		private:
-
-			std::weak_ptr< ParameterIO >		mImpl;
-
-		};
-	}
 }

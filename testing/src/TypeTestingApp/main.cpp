@@ -63,49 +63,39 @@ void printBundleInfo( app::BundleHandle const& h )
 	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
 	{
 		std::cout << "-b\t" << it->name << std::endl;
-		BlockInfo::InletInfos inlets = it->inlets;
-		for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		BlockInfo::IOInfos inlets = it->inlets;
+		for ( BlockInfo::IOInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
 			std::cout << "-i\t" << iIt->name;
-			std::cout << "\tt: " << iIt->customName;
-			std::cout << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
+			//std::cout << ( iIt->isMulti ? "\t+m " : "\t-m " );
+			std::cout << "\tt " << iIt->typeName << std::endl;
 		}
-		BlockInfo::OutletInfos outlets = it->outlets;
-		for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		BlockInfo::IOInfos outlets = it->outlets;
+		for ( BlockInfo::IOInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
 			std::cout << "-o\t" << oIt->name;
-			std::cout << "\tt: " << oIt->customName << std::endl;
+			std::cout << "\tt " << oIt->typeName << std::endl;
 		}
-		BlockInfo::ParameterInfos params = it->parameters;
-		for ( BlockInfo::ParameterInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		BlockInfo::IOInfos params = it->parameters;
+		for ( BlockInfo::IOInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
 		{
-			std::cout << "-o\t" << pIt->name;
-			std::cout << "\tt: " << pIt->customName << std::endl;
+			std::cout << "-p\t" << pIt->name;
+			std::cout << "\tt " << pIt->typeName << std::endl;
 		}
 	}
 }
 
+struct BlockInstance
+{
+	std::vector< InletHandle >			inlets;
+	std::vector< OutletHandle >			outlets;
+	std::vector< ParameterHandle >		parameters;
+	BlockHandle block;
+};
+
 int main( int argc, char *argv[] )
 {
-	char * bundleDir = nullptr;
-	bundleDir = std::getenv( "_2REAL_BUNDLE_DIR" );
-
-	if ( bundleDir )
-	{
-		std::string bundleDirectory = bundleDir;
-		std::cout << "bundle directory " << bundleDirectory << std::endl;
-	}
-
 	Engine &testEngine = Engine::instance();
-	//testEngine.setBaseDirectory( "." );
-
-	struct BlockInstance
-	{
-		std::vector< InletHandle >			inlets;
-		std::vector< OutletHandle >			outlets;
-		std::vector< ParameterHandle >		parameters;
-		BlockHandle block;
-	};
 
 	const unsigned int numInstances = 3;
 	std::vector< BlockInstance > blockInstancesA( numInstances );
@@ -119,31 +109,27 @@ int main( int argc, char *argv[] )
 		// get bundle info
 
 		std::cout << std::endl;
-		std::cout << "--------- bundle info of bundle a ------------------------------------" << std::endl;
+		std::cout << "--------- bundle infos -----------------------------------------------" << std::endl;
 		std::cout << std::endl;
-
+		std::cout << "--------- bundle info of bundle a ( type testing 1 ) -----------------" << std::endl;
+		std::cout << std::endl;
 		printBundleInfo( testBundleA );
-
 		std::cout << std::endl;
-		std::cout << "--------- bundle info of bundle b ------------------------------------" << std::endl;
+		std::cout << "--------- bundle info of bundle b ( type testing 2 ) -----------------" << std::endl;
 		std::cout << std::endl;
-
 		printBundleInfo( testBundleB );
+		std::cout << std::endl;
+		std::cout << "--------- bundle infos -----------------------------------------------" << std::endl;
+		std::cout << std::endl;
 
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
 			BlockInstance &b = blockInstancesA[ i ];
 			b.block = testBundleA.createBlockInstance( "TypeTestingBlock" );
 
-			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
-			for ( unsigned int i=0; i<inlets.size(); ++i )
-				b.inlets.push_back( inlets[ i ] );
-			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
-			for ( unsigned int o=0; o<outlets.size(); ++o )
-				b.outlets.push_back( outlets[ o ] );
-			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
-			for ( unsigned int p=0; p<parameters.size(); ++p )
-				b.parameters.push_back( parameters[ p ] );
+			b.block.getAllInletHandles( b.inlets );
+			b.block.getAllOutletHandles( b.outlets );
+			b.block.getAllParameterHandles( b.parameters );
 
 			b.block.setup();
 			b.block.start();
@@ -154,15 +140,9 @@ int main( int argc, char *argv[] )
 			BlockInstance &b = blockInstancesB[ i ];
 			b.block = testBundleB.createBlockInstance( "TypeTestingBlock" );
 
-			std::vector< InletHandle > const& inlets = b.block.getAllInletHandles();
-			for ( unsigned int i=0; i<inlets.size(); ++i )
-				b.inlets.push_back( inlets[ i ] );
-			std::vector< OutletHandle > const& outlets = b.block.getAllOutletHandles();
-			for ( unsigned int o=0; o<outlets.size(); ++o )
-				b.outlets.push_back( outlets[ o ] );
-			std::vector< ParameterHandle > const& parameters = b.block.getAllParameterHandles();
-			for ( unsigned int p=0; p<parameters.size(); ++p )
-				b.parameters.push_back( parameters[ p ] );
+			b.block.getAllInletHandles( b.inlets );
+			b.block.getAllOutletHandles( b.outlets );
+			b.block.getAllParameterHandles( b.parameters );
 
 			b.block.setup();
 			b.block.start();
@@ -566,6 +546,10 @@ int main( int argc, char *argv[] )
 		{
 		}
 	}
+
+	std::cout << "----------- full clear ----------------" << std::endl;
+	testEngine.clearAll();
+	std::cout << "----------- full clear ----------------" << std::endl;
 
 	return 0;
 }

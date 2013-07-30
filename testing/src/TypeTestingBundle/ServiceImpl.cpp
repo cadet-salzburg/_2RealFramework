@@ -27,15 +27,9 @@ void Test::setup( BlockHandle &handle )
 	try
 	{
 		mInstance.block = handle;
-		std::vector< InletHandle > const& inlets = handle.getAllInletHandles();
-		for ( unsigned int i=0; i<inlets.size(); ++i )
-			mInstance.inlets.push_back( inlets[ i ] );
-		std::vector< OutletHandle > const& outlets = handle.getAllOutletHandles();
-		for ( unsigned int o=0; o<outlets.size(); ++o )
-			mInstance.outlets.push_back( outlets[ o ] );
-		std::vector< ParameterHandle > const& params = handle.getAllParameterHandles();
-		for ( unsigned int p=0; p<params.size(); ++p )
-			mInstance.parameters.push_back( params[ p ] );
+		handle.getAllInletHandles( mInstance.inlets );
+		handle.getAllOutletHandles( mInstance.outlets );
+		handle.getAllParameterHandles( mInstance.parameters );
 	}
 	catch ( Exception &e )
 	{

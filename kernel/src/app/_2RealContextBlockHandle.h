@@ -18,14 +18,14 @@
 
 #pragma once
 
+#include "app/_2RealCallbacks.h"
+
 #include <vector>
 #include <string>
-
-#include "app/_2RealCallbacks.h"
+#include <memory>
 
 namespace _2Real
 {
-	template< typename T >
 	class FunctionBlock;
 
 	namespace app
@@ -43,52 +43,34 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
 			ContextBlockHandle();
-			ContextBlockHandle( FunctionBlock< ContextBlockHandle > &block );
-			~ContextBlockHandle();
-			ContextBlockHandle( ContextBlockHandle const& other );
-			ContextBlockHandle& operator=( ContextBlockHandle const& other );
+			ContextBlockHandle( std::shared_ptr< FunctionBlock > );
 
-			BlockInfo const& getBlockInfo() const;
+			bool					isValid() const;
 
-			bool isValid() const;
-			void invalidate();
-			bool operator==( ContextBlockHandle const& other ) const;
-			bool operator!=( ContextBlockHandle const& other ) const;
-			bool operator<( ContextBlockHandle const& other ) const;
-			bool operator<=( ContextBlockHandle const& other ) const;
-			bool operator>( ContextBlockHandle const& other ) const;
-			bool operator>=( ContextBlockHandle const& other ) const;
+			BlockInfo const&		getBlockInfo() const;
 
-			OutletHandle			getOutletHandle( std::string const& name ) const;
-			OutletHandles const&	getAllOutletHandles() const;
+			OutletHandle			getOutletHandle( std::string const& );
+			void					getAllOutletHandles( OutletHandles & );
 
-			// callback registration for free functions
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 
-			// callback registration for member functions
 			template< typename TCallable >
 			void registerToNewData( TCallable &callable, void ( TCallable::*callback )( std::vector< std::shared_ptr< const CustomType > > ) ) const
 			{
-				BlockCallback *cb = new MemberCallback< TCallable, std::vector< std::shared_ptr< const CustomType > > >( callable, callback );
-				registerToNewDataInternal( *cb );
+				mHandle.registerToNewData< TCallable >( callable, callback );
 			}
 
 			template< typename TCallable >
 			void unregisterFromNewData( TCallable &callable, void ( TCallable::*callback )( std::vector< std::shared_ptr< const CustomType > > ) ) const
 			{
-				BlockCallback *cb = new MemberCallback< TCallable, std::vector< std::shared_ptr< const CustomType > > >( callable, callback );
-				unregisterFromNewDataInternal( *cb );
+				mHandle.registerToNewData< TCallable >( callable, callback );
 			}
 
 		private:
 
-			void registerToNewDataInternal( BlockCallback &cb ) const;
-			void unregisterFromNewDataInternal( BlockCallback &cb ) const;
-
-			FunctionBlock< ContextBlockHandle >		*m_Block;
+			std::weak_ptr< FunctionBlock >		mImpl;
 
 		};
-
 	}
 }

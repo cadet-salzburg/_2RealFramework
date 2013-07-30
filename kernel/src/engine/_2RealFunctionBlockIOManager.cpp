@@ -32,57 +32,29 @@
 
 #include <sstream>
 
-using std::list;
-using std::string;
-using std::ostringstream;
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > findByName( std::vector< std::shared_ptr< TObj > > const& collection, std::string const& name, std::string const& what )
+	{
+		for ( std::vector< std::shared_ptr< TObj > >::const_iterator it = collection.begin(); it != collection.end(); ++it )
+		{
+			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
+				return *it;
+		}
+
+		std::ostringstream msg;
+		msg << what << " " << name<< " was not found";// in" << mOwner->getFullName();
+		throw NotFoundException( msg.str() );
+	}
 
 	FunctionBlockIOManager::FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner ) :
-		Handleable< FunctionBlockIOManager, bundle::BlockHandle >( *this ),
 		AbstractIOManager( engine, owner )
 	{
 	}
 
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
-		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-			delete *it;
-		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-			delete *it;
-		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-			delete *it;
-	}
-
-	AppInletHandles const& FunctionBlockIOManager::getAppInletHandles() const
-	{
-		return m_AppInletHandles;
-	}
-
-	AppOutletHandles const& FunctionBlockIOManager::getAppOutletHandles() const
-	{
-		return m_AppOutletHandles;
-	}
-
-	AppParameterHandles const& FunctionBlockIOManager::getAppParameterHandles() const
-	{
-		return m_AppParameterHandles;
-	}
-
-	BundleInletHandles const& FunctionBlockIOManager::getBundleInletHandles() const
-	{
-		return m_BundleInletHandles;
-	}
-
-	BundleOutletHandles const& FunctionBlockIOManager::getBundleOutletHandles() const
-	{
-		return m_BundleOutletHandles;
-	}
-
-	BundleParameterHandles const& FunctionBlockIOManager::getBundleParameterHandles() const
-	{
-		return m_BundleParameterHandles;
 	}
 
 	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::vector< std::shared_ptr< const CustomType > > > &cb )
@@ -95,184 +67,122 @@ namespace _2Real
 		m_AppEvent.removeListener( cb );
 	}
 
-	app::InletHandle FunctionBlockIOManager::getAppInletHandle( string const& name )
+	AbstractIOManager::InletVector & FunctionBlockIOManager::getAllInlets()
 	{
-		return getInletIO( name ).getHandle();
+		return mInlets;
 	}
 
-	app::OutletHandle FunctionBlockIOManager::getAppOutletHandle( string const& name )
+	AbstractIOManager::OutletVector & FunctionBlockIOManager::getAllOutlets()
 	{
-		return getOutletIO( name ).getHandle();
+		return mOutlets;
 	}
 
-	app::ParameterHandle FunctionBlockIOManager::getAppParameterHandle( string const& name )
+	AbstractIOManager::ParameterVector & FunctionBlockIOManager::getAllParameters()
 	{
-		return getParameterIO( name ).getHandle();
+		return mParameters;
 	}
 
-	bundle::InletHandle FunctionBlockIOManager::getBundleInletHandle( string const& name ) const
+	AbstractIOManager::InletVector const& FunctionBlockIOManager::getAllInlets() const
 	{
-		return getInletIO( name ).getBundleHandle();
+		return mInlets;
 	}
 
-	bundle::OutletHandle FunctionBlockIOManager::getBundleOutletHandle( string const& name ) const
+	AbstractIOManager::OutletVector const& FunctionBlockIOManager::getAllOutlets() const
 	{
-		return getOutletIO( name ).getBundleHandle();
+		return mOutlets;
 	}
 
-	bundle::ParameterHandle FunctionBlockIOManager::getBundleParameterHandle( string const& name ) const
+	AbstractIOManager::ParameterVector const& FunctionBlockIOManager::getAllParameters() const
 	{
-		return getParameterIO( name ).getBundleHandle();
+		return mParameters;
 	}
 
-	AbstractInletIO & FunctionBlockIOManager::getInletIO( string const& name )
+	std::shared_ptr< AbstractInletIO > FunctionBlockIOManager::getInlet( std::string const& name )
 	{
-		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		return findByName< AbstractInletIO >( mInlets, name, "inlet" );
+	}
+
+	std::shared_ptr< OutletIO > FunctionBlockIOManager::getOutlet( std::string const& name )
+	{
+		return findByName< OutletIO >( mOutlets, name, "outlet" );
+	}
+
+	std::shared_ptr< ParameterIO > FunctionBlockIOManager::getParameter( std::string const& name )
+	{
+		return findByName< ParameterIO >( mParameters, name, "parameter" );
+	}
+
+	std::shared_ptr< const AbstractInletIO > FunctionBlockIOManager::getInlet( std::string const& name ) const
+	{
+		return findByName< AbstractInletIO >( mInlets, name, "inlet" );
+	}
+
+	std::shared_ptr< const OutletIO > FunctionBlockIOManager::getOutlet( std::string const& name ) const
+	{
+		return findByName< OutletIO >( mOutlets, name, "outlet" );
+	}
+
+	std::shared_ptr< const ParameterIO > FunctionBlockIOManager::getParameter( std::string const& name ) const
+	{
+		return findByName< ParameterIO >( mParameters, name, "parameter" );
+	}
+
+	void FunctionBlockIOManager::addInlet( IOInfo *info )
+	{
+		if ( info->isMulti )
 		{
-			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
-			{
-				return **it;
-			}
+			MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
+			std::shared_ptr< AbstractInletIO > shared( io );
+			mInlets.push_back( shared );
 		}
-
-		ostringstream msg;
-		msg << "inlet " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	OutletIO & FunctionBlockIOManager::getOutletIO( string const& name )
-	{
-		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		else
 		{
-			if ( toLower( ( *it )->getName() ) == toLower( name ) )
-			{
-				return **it;
-			}
+			BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
+			std::shared_ptr< AbstractInletIO > shared( io );
+			io->setSelfRef( std::static_pointer_cast< BasicInletIO >( shared ) );
+			m_UpdatePolicy->addInlet( *io, info->policy );					// creates a trigger
+			io->setData( info->initializer );								// set buffer to init value
+			io->synchronizeData();											// inlet now holds initl value
+			io->synchronizeData();											// hasChanged() == false
+			io->receiveData( TimestampedData( info->initializer, -1 ) );	// write data into queue as well -> initializes the cond
+																			// first timestamp = 0, b/c this way all regularly sent items ar newer
+			mInlets.push_back( std::shared_ptr< AbstractInletIO >( shared ) );
 		}
-
-		ostringstream msg;
-		msg << "outlet " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	ParameterIO & FunctionBlockIOManager::getParameterIO( string const& name )
-	{
-		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			if ( toLower( ( *it )->getName() ) == toLower( name ) )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "parameter " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	AbstractInletIO const& FunctionBlockIOManager::getInletIO( string const& name ) const
-	{
-		for ( InletConstIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "inlet " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	OutletIO const& FunctionBlockIOManager::getOutletIO( string const& name ) const
-	{
-		for ( OutletConstIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-		{
-			if ( toLower( ( *it )->getName() ) == toLower( name ) )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "outlet " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	ParameterIO const& FunctionBlockIOManager::getParameterIO( string const& name ) const
-	{
-		for ( ParameterConstIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			if ( toLower( ( *it )->getName() ) == toLower( name ) )
-			{
-				return **it;
-			}
-		}
-
-		ostringstream msg;
-		msg << "parameter " << name<< " not found in" << mOwner->getFullName();
-		throw NotFoundException( msg.str() );
-	}
-
-	void FunctionBlockIOManager::addBasicInlet( IOInfo *info )
-	{
-		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
-		m_UpdatePolicy->addInlet( *io, info->policy );					// creates a trigger
-		io->setData( info->initializer );								// set buffer to init value
-		io->synchronizeData();											// inlet now holds initl value
-		io->synchronizeData();											// hasChanged() == false
-		io->receiveData( TimestampedData( info->initializer, -1 ) );	// write data into queue as well -> initializes the cond
-																		// first timestamp = 0, b/c this way all regularly sent items ar newer
-		m_Inlets.push_back( io );
-		m_AppInletHandles.push_back( io->getHandle() );
-		m_BundleInletHandles.push_back( io->getBundleHandle() );
-	}
-
-	void FunctionBlockIOManager::addMultiInlet( IOInfo *info )
-	{
-		MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
-		m_Inlets.push_back( io );
-		m_AppInletHandles.push_back( io->getHandle() );
-		m_BundleInletHandles.push_back( io->getBundleHandle() );
 	}
 
 	void FunctionBlockIOManager::addParameter( IOInfo *info )
 	{
-		ParameterIO *io = new ParameterIO( mEngineImpl, mOwner, info );
+		std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, info ) );
 		io->setData( info->initializer );								// buffer now holds init value
 		io->synchronizeData();											// parameter data now holds value
 		io->synchronizeData();											// parameter now will retun hasChanged() -> false
-		m_Parameters.push_back( io );
-		m_AppParameterHandles.push_back( io->getHandle() );
-		m_BundleParameterHandles.push_back( io->getBundleHandle() );
+		mParameters.push_back( io );
 	}
 
 	void FunctionBlockIOManager::addOutlet( IOInfo *info )
 	{
-		OutletIO *io = new OutletIO( mEngineImpl, mOwner, info );
+		std::shared_ptr< OutletIO > io( new OutletIO( mEngineImpl, mOwner, info ) );
+		io->setSelfRef( io );
 		io->synchronizeData();											// now outlet holds a clone of the init value, while buffer is empty
-		m_Outlets.push_back( io );
-		m_AppOutletHandles.push_back( io->getHandle() );
-		m_BundleOutletHandles.push_back( io->getBundleHandle() );
+		mOutlets.push_back( io );
 	}
 
 	void FunctionBlockIOManager::updateInletData()
 	{
-		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		for ( InletIterator it = mInlets.begin(); it != mInlets.end(); ++it )
 			( *it )->synchronizeData();
 	}
 
 	void FunctionBlockIOManager::updateParameterData()
 	{
-		for ( ParameterIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		for ( ParameterIterator it = mParameters.begin(); it != mParameters.end(); ++it )
 			( *it )->synchronizeData();
 	}
 
 	void FunctionBlockIOManager::updateOutletData()
 	{
 		std::vector< std::shared_ptr< const CustomType > > blockData;
-		for ( OutletIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		for ( OutletIterator it = mOutlets.begin(); it != mOutlets.end(); ++it )
 		{
 			std::shared_ptr< const CustomType > data = ( *it )->synchronizeData();
 			if ( data.get() ) blockData.push_back( data );
@@ -284,12 +194,12 @@ namespace _2Real
 
 	void FunctionBlockIOManager::updateInletBuffers( const bool enableTriggering )
 	{
-		for ( InletIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		for ( InletIterator it = mInlets.begin(); it != mInlets.end(); ++it )
 		{
 			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
 			{
-				BasicInletIO &inletIO = ( **it )[ i ];
-				inletIO.processQueue();
+				std::shared_ptr< BasicInletIO > io = ( **it )[ i ];
+				io->processQueue();
 			}
 		}
 	}

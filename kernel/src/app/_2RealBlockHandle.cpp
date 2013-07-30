@@ -21,213 +21,162 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
-
-using std::string;
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+	{
+		std::shared_ptr< TObj > locked = handle.lock();
+		if ( locked.get() == nullptr )
+		{
+			std::stringstream msg;
+			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+		}
+
+		return locked;
+	}
+
 	namespace app
 	{
 		BlockHandle::BlockHandle() :
-			m_Block( nullptr )
+			mImpl()
 		{
 		}
 
-		BlockHandle::BlockHandle( FunctionBlock< BlockHandle > &block ) :
-			m_Block( &block )
+		BlockHandle::BlockHandle( std::shared_ptr< FunctionBlock > block ) :
+			mImpl( block )
 		{
-			m_Block->registerHandle( *this );
-		}
-
-		BlockHandle::~BlockHandle()
-		{
-			if ( isValid() ) m_Block->unregisterHandle( *this );
-		}
-
-		BlockHandle::BlockHandle( BlockHandle const& other ) :
-			m_Block( other.m_Block )
-		{
-			if ( isValid() ) m_Block->registerHandle( *this );
-		}
-
-		BlockHandle& BlockHandle::operator=( BlockHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_Block->unregisterHandle( *this );
-			}
-
-			m_Block = other.m_Block;
-
-			if ( isValid() )
-			{
-				m_Block->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool BlockHandle::isValid() const
 		{
-			return m_Block != nullptr;
-		}
-
-		bool BlockHandle::operator==( BlockHandle const& other ) const
-		{
-			return m_Block == other.m_Block;
-		}
-
-		bool BlockHandle::operator!=( BlockHandle const& other ) const
-		{
-			return m_Block != other.m_Block;
-		}
-
-		bool BlockHandle::operator<( BlockHandle const& other ) const
-		{
-			return m_Block < other.m_Block;
-		}
-
-		bool BlockHandle::operator<=( BlockHandle const& other ) const
-		{
-			return m_Block <= other.m_Block;
-		}
-
-		bool BlockHandle::operator>( BlockHandle const& other ) const
-		{
-			return m_Block > other.m_Block;
-		}
-
-		bool BlockHandle::operator>=( BlockHandle const& other ) const
-		{
-			return m_Block >= other.m_Block;
+			std::shared_ptr< FunctionBlock > block = mImpl.lock();
+			return ( block.get() != nullptr );
 		}
 
 		BlockInfo const& BlockHandle::getBlockInfo() const
 		{
-			checkValidity( m_Block );
-			return m_Block->getBlockInfo();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			return block->getBlockInfo();
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )
 		{
-			checkValidity( m_Block );
-			m_Block->updateWithFixedRate( updatesPerSecond );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->updateWithFixedRate( updatesPerSecond );
 		}
 
 		void BlockHandle::setup()
 		{
-			checkValidity( m_Block );
-			m_Block->setUp();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->setUp();
 		}
 
 		void BlockHandle::start()
 		{
-			checkValidity( m_Block );
-			m_Block->start();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->start();
 		}
 
 		void BlockHandle::stop( const long timeout )
 		{
-			checkValidity( m_Block );
-			m_Block->stop( true, timeout );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->stop( true, timeout );
 		}
 
 		void BlockHandle::destroy( const long timeout )
 		{
-			checkValidity( m_Block );
-			m_Block->suicide( timeout );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->suicide( timeout );
 		}
 
-		InletHandle BlockHandle::getInletHandle( string const& name ) const
+		InletHandle BlockHandle::getInletHandle( std::string const& name )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppInletHandle( trim( name ) );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			return InletHandle( block->getInlet( trim( name ) ) );
 		}
 
-		ParameterHandle BlockHandle::getParameterHandle( string const& name ) const
+		ParameterHandle BlockHandle::getParameterHandle( std::string const& name )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppParameterHandle( trim( name ) );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			return ParameterHandle( block->getParameter( trim( name ) ) );
 		}
 
-		OutletHandle BlockHandle::getOutletHandle( string const& name ) const
+		OutletHandle BlockHandle::getOutletHandle( std::string const& name )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppOutletHandle( trim( name ) );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			return OutletHandle( block->getOutlet( trim( name ) ) );
 		}
 
-		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
+		void BlockHandle::getAllInletHandles( InletHandles &handles )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppInletHandles();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			FunctionBlock::Inlets &inlets = block->getAllInlets();
+			handles.clear();
+			for ( FunctionBlock::Inlets::iterator it = inlets.begin(); it != inlets.end(); ++it )
+				handles.push_back( InletHandle( *it ) );
 		}
 
-		BlockHandle::ParameterHandles const& BlockHandle::getAllParameterHandles() const
+		void BlockHandle::getAllParameterHandles( ParameterHandles &handles )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppParameterHandles();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			FunctionBlock::Parameters &parameters = block->getAllParameters();
+			handles.clear();
+			for ( FunctionBlock::Parameters::iterator it = parameters.begin(); it != parameters.end(); ++it )
+				handles.push_back( ParameterHandle( *it ) );
 		}
 
-		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
+		void BlockHandle::getAllOutletHandles( OutletHandles &handles )
 		{
-			checkValidity( m_Block );
-			return m_Block->getAppOutletHandles();
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			FunctionBlock::Outlets &outlets = block->getAllOutlets();
+			handles.clear();
+			for ( FunctionBlock::Outlets::iterator it = outlets.begin(); it != outlets.end(); ++it )
+				handles.push_back( OutletHandle( *it ) );
 		}
 
 		void BlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_Block );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
-			m_Block->registerToNewData( *cb );
+			block->registerToNewData( *cb );
 		}
 
 		void BlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_Block );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
-			m_Block->unregisterFromNewData( *cb);
+			block->unregisterFromNewData( *cb);
 		}
 
 		void BlockHandle::registerToNewDataInternal( BlockCallback &cb ) const
 		{
-			checkValidity( m_Block );
-			m_Block->registerToNewData( cb );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->registerToNewData( cb );
 		}
 
 		void BlockHandle::unregisterFromNewDataInternal( BlockCallback &cb ) const
 		{
-			checkValidity( m_Block );
-			m_Block->unregisterFromNewData( cb );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+			block->unregisterFromNewData( cb );
 		}
 
 		//void BlockHandle::singleStep()
 		//{
-		//	checkValidity( m_Block );
-		//	m_Block->singleStep();
+		//	checkValidity( mImpl );
+		//	mImpl->singleStep();
 		//}
-
-		void BlockHandle::invalidate()
-		{
-			m_Block = nullptr;
-		}
 
 		//bool BlockHandle::isRunning() const
 		//{
-		//	checkValidity( m_Block );
-		//	return m_Block->isRunning();
+		//	checkValidity( mImpl );
+		//	return mImpl->isRunning();
 		//}
 
 		//std::string const& BlockHandle::getIdAsString() const
 		//{
-		//	checkValidity( m_Block );
-		//	return m_Block->getName();
+		//	checkValidity( mImpl );
+		//	return mImpl->getName();
 		//}
 	}
 }

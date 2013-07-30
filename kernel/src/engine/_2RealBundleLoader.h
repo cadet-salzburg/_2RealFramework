@@ -48,10 +48,10 @@ namespace _2Real
 		bool hasContext( std::string const& absPath ) const;
 		BundleMetadata const& loadLibrary( std::string const& path );
 		void unloadLibrary( std::string const& path );
-		bundle::Block& createContext( std::string const& absPath ) const;
-		bundle::Block& createBlockInstance( std::string const& absPath, std::string const& blockName, std::string const& name ) const;
+		std::shared_ptr< bundle::Block > createContext( std::string const& absPath ) const;
+		std::shared_ptr< bundle::Block > createBlockInstance( std::string const& absPath, std::string const& ) const;
 		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;
-		void removeContextBlock( std::string const& absPath );
+		//void resetContextBlock( std::string const& absPath );
 
 	private:
 

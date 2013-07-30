@@ -35,13 +35,9 @@ namespace _2Real
 		public:
 
 			InletHandle();
-			InletHandle( AbstractInlet &inlet );
-			InletHandle( InletHandle const& src );
-			InletHandle& operator=( InletHandle const& src );
-			~InletHandle();
+			explicit InletHandle( std::shared_ptr< AbstractInlet > );
 
 			bool isValid() const;
-			void invalidate();
 
 			// true if inlet was declared as mutli inlet according to metadata
 			bool isMultiInlet() const;
@@ -58,7 +54,7 @@ namespace _2Real
 
 		private:
 
-			AbstractInlet		*m_Inlet;
+			std::weak_ptr< AbstractInlet >		mImpl;
 
 		};
 	}

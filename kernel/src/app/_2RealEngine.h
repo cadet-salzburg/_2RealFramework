@@ -36,6 +36,8 @@ namespace _2Real
 	template< typename T >
 	class SingletonHolder;
 
+	class EngineImpl;
+
 	namespace app
 	{
 		class SystemState;
@@ -48,21 +50,21 @@ namespace _2Real
 
 		public:
 
-			typedef std::pair< InletHandle, OutletHandle >				Link;
+			//typedef std::pair< InletHandle, OutletHandle >				Link;
 
-			struct SortByInlet
-			{
-				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.first < l2.first ); }
-			};
+			//struct SortByInlet
+			//{
+			//	bool operator()( Link const& l1, Link const& l2 ) { return ( l1.first < l2.first ); }
+			//};
 
-			struct SortByOutlet
-			{
-				bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
-			};
+			//struct SortByOutlet
+			//{
+			//	bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
+			//};
 
-			typedef std::set< Link, SortByOutlet >						Links;
-			typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
-			typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
+			//typedef std::set< Link, SortByOutlet >						Links;
+			//typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
+			//typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
 
 			typedef std::vector< BundleHandle >							BundleHandles;
 			typedef std::vector< BundleHandle >::iterator				BundleHandleIterator;
@@ -78,7 +80,7 @@ namespace _2Real
 			// returns the absolute path to the bundle directory
 			std::string getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir
-			app::BundleHandle & loadBundle( std::string const& relativePath );
+			app::BundleHandle loadBundle( std::string const& relativePath );
 			//--------------------- bundle loading
 
 			// clears the whole framework - i.e. all bundles, context blocks & blocks

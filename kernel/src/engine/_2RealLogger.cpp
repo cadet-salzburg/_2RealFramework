@@ -45,6 +45,13 @@ namespace _2Real
 
 	Logger::~Logger()
 	{
+		{
+			Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+			m_KeepRunning = false;
+		}
+
+		m_StopEvent.wait();
+
 		m_File.close();
 
 		delete m_CurrLines;
@@ -84,15 +91,5 @@ namespace _2Real
 		}
 
 		m_StopEvent.set();
-	}
-
-	void Logger::stop()
-	{
-		{
-			Poco::ScopedLock< Poco::FastMutex > lock(m_Access);
-			m_KeepRunning = false;
-		}
-
-		m_StopEvent.wait();
 	}
 }

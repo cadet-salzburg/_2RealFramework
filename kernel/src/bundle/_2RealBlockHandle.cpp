@@ -23,103 +23,82 @@
 #include "engine/_2RealFunctionBlockIOManager.h"
 #include "helpers/_2RealStringHelpers.h"
 
-using std::string;
-
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+	{
+		std::shared_ptr< TObj > locked = handle.lock();
+		if ( locked.get() == nullptr )
+		{
+			std::stringstream msg;
+			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+		}
+
+		return locked;
+	}
+
 	namespace bundle
 	{
 		BlockHandle::BlockHandle() :
-			m_IO( nullptr )
+			mImpl()
 		{
 		}
 
-		BlockHandle::BlockHandle( FunctionBlockIOManager &io ) :
-			m_IO( &io )
+		BlockHandle::BlockHandle( std::shared_ptr< FunctionBlockIOManager > io ) :
+			mImpl( io )
 		{
-			m_IO->registerHandle( *this );
-		}
-
-		BlockHandle::~BlockHandle()
-		{
-			if ( isValid() ) m_IO->unregisterHandle( *this );
-		}
-
-		BlockHandle::BlockHandle( BlockHandle const& other ) :
-			m_IO( other.m_IO )
-		{
-			if ( isValid() ) m_IO->registerHandle( *this );
-		}
-
-		BlockHandle& BlockHandle::operator=( BlockHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_IO->unregisterHandle( *this );
-			}
-
-			m_IO = other.m_IO;
-
-			if ( isValid() )
-			{
-				m_IO->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool BlockHandle::isValid() const
 		{
-			return m_IO != nullptr;
+			std::shared_ptr< FunctionBlockIOManager > mgr = mImpl.lock();
+			return ( mgr.get() != nullptr );
 		}
 
-		void BlockHandle::invalidate()
+		InletHandle BlockHandle::getInletHandle( std::string const& name )
 		{
-			m_IO = nullptr;
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			return InletHandle( mgr->getInlet( trim ( name ) )->getInlet() );
 		}
 
-		InletHandle BlockHandle::getInletHandle( string const& name ) const
+		OutletHandle BlockHandle::getOutletHandle( std::string const& name )
 		{
-			checkValidity( m_IO );
-			return m_IO->getBundleInletHandle( trim ( name ) );
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			return OutletHandle( mgr->getOutlet( trim( name ) )->getOutlet() );
 		}
 
-		OutletHandle BlockHandle::getOutletHandle( string const& name ) const
+		ParameterHandle BlockHandle::getParameterHandle( std::string const& name )
 		{
-			checkValidity( m_IO );
-			return m_IO->getBundleOutletHandle( trim ( name ) );
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			return ParameterHandle( mgr->getParameter( trim ( name ) )->getParameter() );
 		}
 
-		ParameterHandle BlockHandle::getParameterHandle( string const& name ) const
+		void BlockHandle::getAllInletHandles( InletHandles &handles )
 		{
-			checkValidity( m_IO );
-			return m_IO->getBundleParameterHandle( trim ( name ) );
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			AbstractIOManager::InletVector &inlets = mgr->getAllInlets();
+			handles.clear();
+			for ( AbstractIOManager::InletVector::iterator it = inlets.begin(); it != inlets.end(); ++it )
+				handles.push_back( InletHandle( ( *it )->getInlet() ) );
 		}
 
-		BlockHandle::InletHandles const& BlockHandle::getAllInletHandles() const
+		void BlockHandle::getAllOutletHandles( OutletHandles &handles )
 		{
-			checkValidity( m_IO );
-			return m_IO->getBundleInletHandles();
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			AbstractIOManager::OutletVector &outlets = mgr->getAllOutlets();
+			handles.clear();
+			for ( AbstractIOManager::OutletVector::iterator it = outlets.begin(); it != outlets.end(); ++it )
+				handles.push_back( OutletHandle( ( *it )->getOutlet() ) );
 		}
 
-		BlockHandle::OutletHandles const& BlockHandle::getAllOutletHandles() const
+		void BlockHandle::getAllParameterHandles( ParameterHandles &handles )
 		{
-			checkValidity( m_IO );
-			return m_IO->getBundleOutletHandles();
-		}
-
-		BlockHandle::ParameterHandles const& BlockHandle::getAllParameterHandles() const
-		{
-			checkValidity( m_IO );
-			return m_IO->getBundleParameterHandles();
+			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
+			AbstractIOManager::ParameterVector &parameters = mgr->getAllParameters();
+			handles.clear();
+			for ( AbstractIOManager::ParameterVector::iterator it = parameters.begin(); it != parameters.end(); ++it )
+				handles.push_back( ParameterHandle( ( *it )->getParameter() ) );
 		}
 	}
 }

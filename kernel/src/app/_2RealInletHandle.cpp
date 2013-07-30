@@ -18,206 +18,127 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealParameterInfo.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
+template< typename TObj >
+std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+{
+	std::shared_ptr< TObj > locked = handle.lock();
+	if ( locked.get() == nullptr )
+	{
+		std::stringstream msg;
+		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+	}
+
+	return locked;
+}
 
 namespace _2Real
 {
 	namespace app
 	{
 		InletHandle::InletHandle() :
-			m_InletIO( nullptr )
+			mImpl()
 		{
 		}
 
-		InletHandle::InletHandle( AbstractInletIO &inletIO ) :
-			m_InletIO( &inletIO )
+		InletHandle::InletHandle( std::shared_ptr< AbstractInletIO > inlet ) :
+			mImpl( inlet )
 		{
-			m_InletIO->registerHandle( *this );
-		}
-
-		InletHandle::~InletHandle()
-		{
-			if ( isValid() ) m_InletIO->unregisterHandle( *this );
-		}
-
-		InletHandle::InletHandle( InletHandle const& other ) :
-			m_InletIO( other.m_InletIO )
-		{
-			if ( isValid() ) m_InletIO->registerHandle( *this );
-		}
-
-		InletHandle& InletHandle::operator=( InletHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_InletIO->unregisterHandle( *this );
-			}
-
-			m_InletIO = other.m_InletIO;
-
-			if ( isValid() )
-			{
-				m_InletIO->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool InletHandle::isValid() const
 		{
-			return m_InletIO != nullptr;
+			std::shared_ptr< AbstractInletIO > inlet = mImpl.lock();
+			return ( inlet.get() != nullptr );
 		}
 
-		void InletHandle::invalidate()
+		bool InletHandle::link( OutletHandle o )
 		{
-			m_InletIO = nullptr;
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( o.mImpl, "outlet" );
+			return ( inlet->operator[]( 0 ) )->linkTo( outlet );
 		}
 
-		bool InletHandle::operator==( InletHandle const& other ) const
+		void InletHandle::unlinkFrom( OutletHandle o )
 		{
-			return m_InletIO == other.m_InletIO;
-		}
-
-		bool InletHandle::operator!=( InletHandle const& other ) const
-		{
-			return m_InletIO != other.m_InletIO;
-		}
-
-		bool InletHandle::operator<( InletHandle const& other ) const
-		{
-			return m_InletIO < other.m_InletIO;
-		}
-
-		bool InletHandle::operator<=( InletHandle const& other ) const
-		{
-			return m_InletIO <= other.m_InletIO;
-		}
-
-		bool InletHandle::operator>( InletHandle const& other ) const
-		{
-			return m_InletIO > other.m_InletIO;
-		}
-
-		bool InletHandle::operator>=( InletHandle const& other ) const
-		{
-			return m_InletIO >= other.m_InletIO;
-		}
-
-		bool InletHandle::link( OutletHandle &outlet )
-		{
-			checkValidity( m_InletIO );
-			checkValidity( outlet.m_OutletIO );
-			return ( *m_InletIO )[ 0 ].linkTo( outlet.m_OutletIO );
-		}
-
-		void InletHandle::unlinkFrom( OutletHandle &outlet )
-		{
-			checkValidity( m_InletIO );
-			checkValidity( outlet.m_OutletIO );
-			( *m_InletIO )[ 0 ].unlinkFrom( outlet.m_OutletIO );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( o.mImpl, "outlet" );
+			return ( inlet->operator[]( 0 ) )->unlinkFrom( outlet );
 		}
 
 		std::string const& InletHandle::getName() const
 		{
-			checkValidity( m_InletIO );
-			return m_InletIO->getInfo()->name;
-		}
-
-		app::BlockHandle InletHandle::getOwningBlock()
-		{
-			checkValidity( m_InletIO );
-
-			AbstractUberBlock *b = m_InletIO->getOwningBlock();
-			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< BlockHandle > * >( b );
-			if ( nullptr != f )
-			{
-				return f->getHandle();
-			}
-			else
-			{
-				return app::BlockHandle();
-			}
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return inlet->getInfo()->name;
 		}
 
 		app::TypeMetainfo InletHandle::getType() const
 		{
-			checkValidity( m_InletIO );
-			return app::TypeMetainfo( m_InletIO->getInfo()->type );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return app::TypeMetainfo( inlet->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > InletHandle::makeData() const
 		{
-			checkValidity( m_InletIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_InletIO->getInfo()->type ) );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return std::shared_ptr< CustomType >( new CustomType( inlet->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
 		{
-			checkValidity( m_InletIO );
-			return ( *m_InletIO )[ 0 ].getCurrentData();
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return ( inlet->operator[]( 0 ) )->getCurrentData();
 		}
 
 		void InletHandle::receiveData( std::shared_ptr< const CustomType > data )
 		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].receiveData( data );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			( inlet->operator[]( 0 ) )->receiveData( data );
 		}
 
 		void InletHandle::setUpdatePolicy( Policy const& p )
 		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].setUpdatePolicy( p );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			( inlet->operator[]( 0 ) )->setUpdatePolicy( p );
 		}
 
 		void InletHandle::setBufferSize( const unsigned int size )
 		{
-			checkValidity( m_InletIO );
-			( *m_InletIO )[ 0 ].setQueueSize( size );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			( inlet->operator[]( 0 ) )->setQueueSize( size );
 		}
 
 		bool InletHandle::isMultiInlet() const
 		{
-			checkValidity( m_InletIO );
-			return m_InletIO->isMultiInlet();
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return inlet->isMultiInlet();
 		}
 
 		unsigned int InletHandle::getSize() const
 		{
-			checkValidity( m_InletIO );
-			return m_InletIO->getSize();
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return inlet->getSize();
 		}
 
 		InletHandle InletHandle::operator[]( const unsigned int index )
 		{
-			checkValidity( m_InletIO );
-			return ( *m_InletIO )[ index ].getHandle();
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return InletHandle( inlet->operator[]( index ) );
 		}
 
 		InletHandle InletHandle::add()
 		{
-			checkValidity( m_InletIO );
-			return m_InletIO->addBasicInlet()->getHandle();
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			return InletHandle( inlet->addBasicInlet() );
 		}
 
-		void InletHandle::remove( InletHandle &handle )
+		void InletHandle::remove( InletHandle handle )
 		{
-			checkValidity( m_InletIO );
-
-			if ( handle.isValid() )
-			{
-				// TODO: check if this handle actually belongs to the inlet
-				m_InletIO->removeBasicInlet( handle.m_InletIO );
-			}
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			std::shared_ptr< AbstractInletIO > other = checkValidity< AbstractInletIO >( handle.mImpl, "inlet" );
+			inlet->removeBasicInlet( other );
 		}
 	}
 }

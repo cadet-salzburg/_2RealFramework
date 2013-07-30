@@ -35,10 +35,7 @@ namespace _2Real
 		public:
 
 			OutletHandle();
-			OutletHandle( Outlet &outlet );
-			OutletHandle( OutletHandle const& other );
-			OutletHandle& operator=( OutletHandle const& other );
-			~OutletHandle();
+			explicit OutletHandle( std::shared_ptr< Outlet > );
 
 			std::shared_ptr< CustomType >	getWriteableRef();
 
@@ -47,11 +44,10 @@ namespace _2Real
 
 			// handle related stuff, not sure if I even need this....
 			bool isValid() const;
-			void invalidate();
 
 		private:
 
-			Outlet				*m_Outlet;
+			std::weak_ptr< Outlet >		mImpl;
 
 		};
 	}

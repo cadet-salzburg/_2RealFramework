@@ -22,141 +22,67 @@
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealAbstractIOManager.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
+template< typename TObj >
+std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+{
+	std::shared_ptr< TObj > locked = handle.lock();
+	if ( locked.get() == nullptr )
+	{
+		std::stringstream msg;
+		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+	}
+
+	return locked;
+}
 
 namespace _2Real
 {
 	namespace app
 	{
 		ParameterHandle::ParameterHandle() :
-			m_ParameterIO( nullptr )
+			mImpl()
 		{
 		}
 
-		ParameterHandle::ParameterHandle( ParameterIO &paramIO ) :
-			m_ParameterIO( &paramIO )
+		ParameterHandle::ParameterHandle( std::shared_ptr< ParameterIO > parameter ) :
+			mImpl( parameter )
 		{
-			m_ParameterIO->registerHandle( *this );
-		}
-
-		ParameterHandle::~ParameterHandle()
-		{
-			if ( isValid() ) m_ParameterIO->unregisterHandle( *this );
-		}
-
-		ParameterHandle::ParameterHandle( ParameterHandle const& other ) :
-			m_ParameterIO( other.m_ParameterIO )
-		{
-			if ( isValid() ) m_ParameterIO->registerHandle( *this );
-		}
-
-		ParameterHandle& ParameterHandle::operator=( ParameterHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_ParameterIO->unregisterHandle( *this );
-			}
-
-			m_ParameterIO = other.m_ParameterIO;
-
-			if ( isValid() )
-			{
-				m_ParameterIO->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool ParameterHandle::isValid() const
 		{
-			return m_ParameterIO != nullptr;
-		}
-
-		void ParameterHandle::invalidate()
-		{
-			m_ParameterIO = nullptr;
-		}
-
-		bool ParameterHandle::operator==( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO == other.m_ParameterIO;
-		}
-
-		bool ParameterHandle::operator!=( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO != other.m_ParameterIO;
-		}
-
-		bool ParameterHandle::operator<( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO < other.m_ParameterIO;
-		}
-
-		bool ParameterHandle::operator<=( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO <= other.m_ParameterIO;
-		}
-
-		bool ParameterHandle::operator>( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO > other.m_ParameterIO;
-		}
-
-		bool ParameterHandle::operator>=( ParameterHandle const& other ) const
-		{
-			return m_ParameterIO >= other.m_ParameterIO;
+			std::shared_ptr< ParameterIO > parameter = mImpl.lock();
+			return ( parameter.get() == nullptr );
 		}
 
 		std::string const& ParameterHandle::getName() const
 		{
-			checkValidity( m_ParameterIO );
-			return m_ParameterIO->getInfo()->name;
-		}
-
-		app::BlockHandle ParameterHandle::getOwningBlock()
-		{
-			checkValidity( m_ParameterIO );
-
-			AbstractUberBlock *b = m_ParameterIO->getOwningBlock();
-			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< BlockHandle > * >( b );
-			if ( nullptr != f )
-			{
-				return f->getHandle();
-			}
-			else
-			{
-				return app::BlockHandle();
-			}
+			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			return parameter->getInfo()->name;
 		}
 
 		app::TypeMetainfo ParameterHandle::getType() const
 		{
-			checkValidity( m_ParameterIO );
-			return app::TypeMetainfo( m_ParameterIO->getInfo()->type );
+			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			return app::TypeMetainfo( parameter->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::makeData() const
 		{
-			checkValidity( m_ParameterIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_ParameterIO->getInfo()->type ) );
+			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			return std::shared_ptr< CustomType >( new CustomType( parameter->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getCurrentData() const
 		{
-			checkValidity( m_ParameterIO );
-			return m_ParameterIO->getCurrentDataThreadsafe();
+			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			return parameter->getCurrentDataThreadsafe();
 		}
 
 		void ParameterHandle::setData( std::shared_ptr< const CustomType > data )
 		{
-			checkValidity( m_ParameterIO );
-			m_ParameterIO->setData( data );
+			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			parameter->setData( data );
 		}
 	}
 }

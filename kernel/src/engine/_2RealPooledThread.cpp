@@ -94,7 +94,14 @@ namespace _2Real
 
 		while (true)
 		{
-			m_TargetReady.wait();
+			try
+			{
+				m_TargetReady.wait();
+			}
+			catch ( ... )
+			{
+				std::cout << "ARGH" << std::endl;
+			}
 
 			m_Mutex.lock();
 			if ( m_Request )										// if the request is ever null & targetReady is signalled, the thread will kill itself

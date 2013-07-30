@@ -22,60 +22,46 @@
 #include "engine/_2RealBundleLoader.h"
 #include "helpers/_2RealPoco.h"
 
-#include <set>
+#include <map>
 #include <string>
+#include <memory>
 
 namespace _2Real
 {
 	class Bundle;
-	template< typename T >
 	class FunctionBlock;
 	class EngineImpl;
-	class TypeRegistry;
-
-	namespace app
-	{
-		class BlockHandle;
-	}
-
-	namespace bundle
-	{
-		class BundleMetainfo;
-	}
 
 	class BundleManager
 	{
 	
 	public:
 
-		typedef std::set< Bundle * >					Bundles;
-		typedef std::set< Bundle * >::iterator			BundleIterator;
-		typedef std::set< Bundle * >::const_iterator	BundleConstIterator;
+		static const std::string						sContextBlock;
 
 		BundleManager( EngineImpl *engine );
 		~BundleManager();
 
 		void clear();
-		//void											createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
-		Bundle &										loadLibrary( std::string const& libraryPath );
-		bool											isLibraryLoaded( Poco::Path const& path ) const;
-		FunctionBlock< app::BlockHandle > &				createBlockInstance( Bundle &bundle, std::string const& blockName, std::string const& name );
-		Bundles const&									getBundles() const;
-		//Bundle &										findBundleByName( std::string const& name ) const;
-		Bundle *										findBundleByPath( std::string const& libraryPath ) const;
-		void											destroyBundle( Bundle &bundle, const long timeout );
-		void											removeContextBlock( Bundle const& bundle );
+		std::shared_ptr< Bundle > 						loadBundle( std::string const& );
+		std::shared_ptr< Bundle > 						findBundleByPath( std::string const& ) const;
+		std::shared_ptr< FunctionBlock >				createContextBlockConditionally( Bundle *, std::string const& );
+		std::shared_ptr< FunctionBlock >				createBlockInstance( Bundle *, std::string const&, std::string const& );
+		void											unloadBundle( Bundle *, const long timeout );
 		std::string										getBundleDirectory() const;
 
 	private:
 
+		typedef std::map< std::string, std::shared_ptr< Bundle > >					Bundles;
+		typedef std::map< std::string, std::shared_ptr< Bundle > >::iterator		BundleIterator;
+		typedef std::map< std::string, std::shared_ptr< Bundle > >::const_iterator	BundleConstIterator;
+
 		const Poco::Path								makeAbsolutePath( Poco::Path const& path ) const;
 
-		EngineImpl										*const m_EngineImpl;
-		TypeRegistry									*const m_Registry;
-		Poco::Path										m_BundleDirectory;
-		Bundles											m_Bundles;
-		BundleLoader									m_BundleLoader;
+		EngineImpl										*const mEngineImpl;
+		BundleLoader									mBundleLoader;
+		Poco::Path										mBundleDirectory;
+		Bundles											mBundles;
 
 	};
 }

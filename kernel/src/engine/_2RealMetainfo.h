@@ -27,10 +27,8 @@
 namespace _2Real
 {
 	class Version;
-	class Typetable;
 	class BlockMetadata;
 	class TypeMetadata;
-	class Any;
 	class TypeRegistry;
 
 	namespace bundle
@@ -63,9 +61,8 @@ namespace _2Real
 		bundle::BlockMetainfo & setBlockCreator( std::string const& blockName, bundle::AbstractBlockCreator &obj );
 
 		bool hasContext() const;
-		bundle::Block & createBlock( std::string const& blockName, std::string const& name ) const;
-		bundle::Block & createContextBlock() const;
-		void removeContextBlock();
+		std::shared_ptr< _2Real::bundle::Block > createBlock( std::string const& ) const;
+		std::shared_ptr< _2Real::bundle::Block > createContextBlock() const;
 
 		bundle::TypeMetainfo & addCustomType( std::string const& name );
 		void registerTypes( TypeRegistry &registry );
@@ -94,31 +91,14 @@ namespace _2Real
 			bundle::ContextBlockMetainfo	*meta;
 		};
 
-		//struct TypeInfo
-		//{
-		//	TypeInfo() : data( nullptr ), meta( nullptr ) {}
-		//	TypeInfo( TypeInfo const& src ) : data( src.data ), meta( src.meta ) {}
-		//	// no ctor needed
-		//	TypeMetadata					*data;
-		//	bundle::TypeMetainfo			*meta;		// why is the meta even kept around?
-		//};
-
 		typedef std::map< std::string, BlockInfo >					BlockInfos;
 		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
 		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
-
-		//typedef std::map< std::string, TypeInfo >					TypeInfos;
-		//typedef std::map< std::string, TypeInfo >::iterator			TypeInfoIterator;
-		//typedef std::map< std::string, TypeInfo >::const_iterator	TypeInfoConstIterator;
 
 		bool										m_HasContext;
 		BlockInfos									m_BlockInfos;
 		ContextBlockInfo							m_ContextInfo;
 		BundleMetadata								m_BundleData;
-		//
-		//TypeInfos									m_TypeInfos;
-
-		// all types registered by a bundle
 		TypeRegistry								*mTypes;
 		std::string									mBundleId;
 

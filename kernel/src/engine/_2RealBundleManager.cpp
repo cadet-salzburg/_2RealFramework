@@ -36,26 +36,21 @@ using std::make_pair;
 
 namespace _2Real
 {
+	const std::string BundleManager::sContextBlock = "contextblock";
 
 	BundleManager::BundleManager( EngineImpl *engine ) :
-		m_EngineImpl( engine ),
-		m_Registry( engine->getTypeRegistry() ),
-		m_BundleLoader( engine->getTypeRegistry() )
+		mEngineImpl( engine ),
+		mBundleLoader( engine->getTypeRegistry() )
 	{
-#ifdef _DEBUG
-		assert( m_EngineImpl );
-		assert( m_Registry );
-#endif
-
 		//char * dir = std::getenv( "_2REAL_BUNDLE_DIR" );
 		//if ( nullptr != dir )
 		//	m_BundleDirectory = Poco::Path( dir );
 
-		m_BundleDirectory.makeAbsolute();
+		mBundleDirectory.makeAbsolute();
 
 		std::ostringstream msg;
-		msg << "bundle directory: " << m_BundleDirectory.toString();
-		m_EngineImpl->getLogger()->addLine( msg.str() );
+		msg << "---- bundle directory: " << mBundleDirectory.toString() << " ----";
+		mEngineImpl->getLogger()->addLine( msg.str() );
 	}
 
 	BundleManager::~BundleManager()
@@ -65,126 +60,45 @@ namespace _2Real
 
 	void BundleManager::clear()
 	{
-		for ( BundleIterator it = m_Bundles.begin(); it != m_Bundles.end(); /**/ )
+		// only ever called after links & blocks have been destroied
+		for ( BundleIterator it = mBundles.begin(); it != mBundles.end(); /**/ )
 		{
-			delete *it;
-			it = m_Bundles.erase( it );
+			mBundleLoader.unloadLibrary( it->first );
+			it = mBundles.erase( it );
 		}
 	}
 
-	void BundleManager::destroyBundle( Bundle &bundle, const long timeout )
+	void BundleManager::unloadBundle( Bundle *bundle, const long timeout )
 	{
-		BundleIterator it = m_Bundles.find( &bundle );
+		std::string const& absPath = bundle->getAbsPath();
+
+		BundleIterator it = mBundles.find( absPath );
 #ifdef _DEBUG
-		if ( it == m_Bundles.end() )
-		{
+		if ( it == mBundles.end() )
 			assert( NULL );
-		}
 #endif
-
-		Bundle::BlockInstances & blocks = bundle.getBlockInstances( *this );
-		//for ( Bundle::BlockInstanceIterator it = blocks.begin(); it != blocks.end(); ++it )
-		//{
-		//	m_Engine.removeBlock( *it->second, timeout );
-		//}
-
-		while ( !blocks.empty() )
-		{
-			Bundle::BlockInstanceIterator it = blocks.begin();
-			m_EngineImpl->removeBlock( *it->second, timeout );
-		}
-
-		if ( bundle.hasContext() )
-		{
-			FunctionBlock< app::ContextBlockHandle > &context = bundle.getContextBlock( *this );
-			m_EngineImpl->removeBlock( context, timeout );
-		}
-
-		m_BundleLoader.unloadLibrary( bundle.getAbsPath() );
-		m_Bundles.erase( it );
-	}
-
-	BundleManager::Bundles const& BundleManager::getBundles() const
-	{
-		return m_Bundles;
+		mBundleLoader.unloadLibrary( absPath );
+		mBundles.erase( it );
 	}
 
 	std::string BundleManager::getBundleDirectory() const
 	{
-		return m_BundleDirectory.toString();
+		return mBundleDirectory.toString();
 	}
 
-	//void BundleManager::setBaseDirectory( string const& directory )
-	//{
-	//	m_BundleDirectory = Poco::Path( directory );
-	//}
-
-	//void BundleManager::createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) )
-	//{
-	//	BundleMetadata const& bundleData = m_BundleLoader.createBundleEx( path, MetainfoFunc );
-
-	//	app::BundleInfo bundleInfo;
-	//	bundleInfo.name = bundleData.getName();
-	//	bundleInfo.directory = bundleData.getInstallDirectory();
-	//	bundleInfo.description = bundleData.getDescription();
-	//	bundleInfo.contact = bundleData.getContact();
-	//	bundleInfo.author = bundleData.getAuthor();
-	//	bundleInfo.category = bundleData.getCategory();
-
-	//	BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
-
-	//	for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
-	//	{
-	//		app::BlockInfo blockInfo;
-	//		blockInfo.name = it->second->getName();
-	//		blockInfo.description = it->second->getDescription();
-	//		blockInfo.category = it->second->getCategory();
-
-	//		//BlockMetadata::InletMetadatas const& input = it->second->getInlets();
-	//		//BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
-
-	//	//	for ( BlockMetadata::InletMetadataConstIterator it = input.begin(); it != input.end(); ++it )
-	//	//	{
-	//	//		app::InletInfo info;
-	//	//		info.name = ( *it )->name;
-	//	//		info.typeName = ( *it )->type->m_TypeName;
-	//	//		info.longTypename = ( *it )->type->m_LongTypename;
-	//	//		info.isMultiInlet = ( *it )->isMulti;
-	//	//		info.hasOptionCheck = !( *it )->options.isEmpty();
-	//	//		info.defaultPolicy = ( *it )->defaultPolicy;
-	//	//		blockInfo.inlets.push_back( info );
-	//	//	}
-
-	//	//	for ( BlockMetadata::OutletMetadataConstIterator it = output.begin(); it != output.end(); ++it )
-	//	//	{
-	//	//		app::OutletInfo info;
-	//	//		info.name = ( *it )->name;
-	//	//		info.typeName = ( *it )->type->m_TypeName;
-	//	//		info.longTypename = ( *it )->type->m_LongTypename;
-	//	//		blockInfo.outlets.push_back( info );
-	//	//	}
-
-	//		bundleInfo.exportedBlocks.push_back( blockInfo );
-	//	}
-	//	Bundle *bundle = new Bundle( bundleInfo, *this );
-	//	m_Bundles.insert( bundle );
-	//}
-
-	Bundle & BundleManager::loadLibrary( string const& libraryPath )
+	std::shared_ptr< Bundle > BundleManager::loadBundle( string const& libraryPath )
 	{
-		// libraryPath: relative to bundle dir
-
 		// TODO: this could could be a lot shorter :)
 
 		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
-		if ( m_BundleLoader.isLibraryLoaded( absPath ) )
+		if ( mBundleLoader.isLibraryLoaded( absPath ) )
 		{
 			ostringstream msg;
 			msg << "shared library " << absPath << " is already loaded";
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		BundleMetadata const& bundleData = m_BundleLoader.loadLibrary( absPath );
+		BundleMetadata const& bundleData = mBundleLoader.loadLibrary( absPath );
 
 		// TODO: argh, are all those different 'infos' really needed?
 		// here, i build the app::BundleInfo from the bundle metadata.
@@ -195,17 +109,6 @@ namespace _2Real
 		bundleInfo.contact = bundleData.getContact();
 		bundleInfo.author = bundleData.getAuthor();
 		bundleInfo.category = bundleData.getCategory();
-
-		//comment this in to force unique bundle names
-		//for ( BundleConstIterator it = m_Bundles.begin(); it != m_Bundles.end(); ++it )
-		//{
-		//	if ( ( *it )->getName() == bundleInfo.name )
-		//	{
-		//		ostringstream msg;
-		//		msg << "a bundle named" << bundleInfo.name << " is already loaded";
-		//		throw AlreadyExistsException( msg.str() );
-		//	}
-		//}
 
 		BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
 
@@ -222,81 +125,80 @@ namespace _2Real
 
 			for ( BlockMetadata::OutletMetadataConstIterator oit = output.begin(); oit != output.end(); ++oit )
 			{
-				app::OutletInfo info;
+				app::IOInfo info;
 				info.name = ( *oit )->name;
-				info.customName = ( *oit )->type;
+				info.typeName = ( *oit )->type;
 				blockInfo.outlets.push_back( info );
 			}
 
-			if ( it->second->getName() == "contextblock" )
+			if ( it->second->getName() == sContextBlock )
 			{
 				continue;
 			}
 
 			for ( BlockMetadata::InletMetadataConstIterator iit = input.begin(); iit != input.end(); ++iit )
 			{
-				app::InletInfo info;
+				app::IOInfo info;
 				info.name = ( *iit )->name;
-				info.customName = ( *iit )->type;
-				info.isMultiInlet = ( *iit )->isMulti;
+				info.typeName = ( *iit )->type;
+				info.isMulti = ( *iit )->isMulti;
 				info.defaultPolicy = ( *iit )->defaultPolicy;
-				info.initValue = ( *iit )->initValue;
 				blockInfo.inlets.push_back( info );
 			}
 
 			for ( BlockMetadata::ParameterMetadataConstIterator pit = params.begin(); pit != params.end(); ++pit )
 			{
-				app::ParameterInfo info;
+				app::IOInfo info;
 				info.name = ( *pit )->name;
-				info.customName = ( *pit )->type;
-				info.initValue = ( *pit )->initValue;
+				info.typeName = ( *pit )->type;
 				blockInfo.parameters.push_back( info );
 			}
 
 			bundleInfo.exportedBlocks.push_back( blockInfo );
 		}
 
-		Bundle *bundle = new Bundle( bundleInfo, *this );
-		m_Bundles.insert( bundle );
-
-		return *bundle;
+		std::shared_ptr< Bundle > bundle( new Bundle( mEngineImpl, bundleInfo ) );
+		mBundles.insert( std::make_pair( absPath, bundle ) );
+		return bundle;
 	}
 
-	bool BundleManager::isLibraryLoaded( Poco::Path const& path ) const
+	std::shared_ptr< FunctionBlock > BundleManager::createContextBlockConditionally( Bundle *b, std::string const& blockName )
 	{
-		Poco::Path abs = makeAbsolutePath( path );
-		return m_BundleLoader.isLibraryLoaded( abs.toString() );
-	}
-
-	void BundleManager::removeContextBlock( Bundle const& bundle )
-	{
-		m_BundleLoader.removeContextBlock( bundle.getAbsPath() );
-	}
-
-	FunctionBlock< app::BlockHandle > & BundleManager::createBlockInstance( Bundle &bundle, std::string const &blockName, std::string const& name )
-	{
-		std::string absPath = bundle.getAbsPath();
-		BundleMetadata const& bundleMetadata = m_BundleLoader.getBundleMetadata( bundle.getAbsPath() );
-
-		if ( !bundle.hasContext() && m_BundleLoader.hasContext( absPath ) )
+		std::string absPath = b->getAbsPath();
+		if ( ( b->getContextBlock() == nullptr ) && mBundleLoader.hasContext( absPath ) )
 		{
-			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( "contextblock" );
+			// need the shared ptr
+			std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
+
+			BundleMetadata const& bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
+			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( sContextBlock );
 
 			app::BlockInfo contextInfo;
 			contextInfo.name = contextMetadata.getName();
 			contextInfo.description = contextMetadata.getDescription();
 			contextInfo.category = contextMetadata.getCategory();
 
-			bundle::Block & block = m_BundleLoader.createContext( absPath );
-			FunctionBlock< app::ContextBlockHandle > *contextBlock = new FunctionBlock< app::ContextBlockHandle >( m_EngineImpl, &bundle, &block, contextInfo );
-			bundle.setContextBlock( *contextBlock );
-			m_EngineImpl->addBlock( *contextBlock );
+			std::shared_ptr< bundle::Block > block = mBundleLoader.createContext( absPath );
+			std::shared_ptr< FunctionBlock > contextBlock( new FunctionBlock( mEngineImpl, bundle, block, contextInfo ) );
 
 			contextBlock->updateWithFixedRate( 30.0 );
 			contextBlock->setUp();
 			contextBlock->start();
+
+			return contextBlock;
 		}
 
+		return std::shared_ptr< FunctionBlock >();
+	}
+
+	std::shared_ptr< FunctionBlock > BundleManager::createBlockInstance( Bundle *b, std::string const &blockName, std::string const& name )
+	{
+		// need the shared ptr
+		std::string absPath = b->getAbsPath();
+
+		std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
+
+		BundleMetadata const& bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
 		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
 
 		app::BlockInfo blockInfo;
@@ -304,16 +206,15 @@ namespace _2Real
 		blockInfo.description = blockMetadata.getDescription();
 		blockInfo.category = blockMetadata.getCategory();
 
-		BlockMetadata::InletMetadatas const& inletMetadata = blockMetadata.getInlets();
-		BlockMetadata::OutletMetadatas const& outletMetadata = blockMetadata.getOutlets();
-		BlockMetadata::ParameterMetadatas const& parameterMetadata = blockMetadata.getParameters();
-
 		app::BlockInfo info( blockInfo );
 		info.name = name;
 
-		bundle::Block & block = m_BundleLoader.createBlockInstance( bundle.getAbsPath(), blockName, name );
-		FunctionBlock< app::BlockHandle > *functionBlock = new FunctionBlock< app::BlockHandle >( m_EngineImpl, &bundle, &block, info );
-		m_EngineImpl->addBlock( *functionBlock );
+		std::shared_ptr< bundle::Block > block = mBundleLoader.createBlockInstance( absPath, blockName );
+		std::shared_ptr< FunctionBlock > functionBlock( new FunctionBlock( mEngineImpl, bundle, block, info ) );
+
+		BlockMetadata::InletMetadatas const& inletMetadata = blockMetadata.getInlets();
+		BlockMetadata::OutletMetadatas const& outletMetadata = blockMetadata.getOutlets();
+		BlockMetadata::ParameterMetadatas const& parameterMetadata = blockMetadata.getParameters();
 
 		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
@@ -321,7 +222,7 @@ namespace _2Real
 
 			TypeMetadata const* meta = ( **it ).metadata;
 			if ( nullptr == meta )
-				meta = m_Registry->get( bundleMetadata.getName(), ( **it ).type );
+				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
 
 			if ( ( **it ).initValue.get() == nullptr )
 				initializer.reset( new CustomType( *meta ) );
@@ -336,7 +237,7 @@ namespace _2Real
 
 			TypeMetadata const* meta = ( **it ).metadata;
 			if ( nullptr == meta )
-				meta = m_Registry->get( bundleMetadata.getName(), ( **it ).type );
+				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
 
 			if ( ( **it ).initValue.get() == nullptr )
 				initializer.reset( new CustomType( *meta ) );
@@ -351,7 +252,7 @@ namespace _2Real
 
 			TypeMetadata const* meta = ( **it ).metadata;
 			if ( nullptr == meta )
-				meta = m_Registry->get( bundleMetadata.getName(), ( **it ).type );
+				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
 
 			initializer.reset( new CustomType( *meta ) );
 
@@ -360,50 +261,31 @@ namespace _2Real
 
 		functionBlock->updateWithFixedRate( 30.0 );
 
-		return *functionBlock;
+		return functionBlock;
 	}
 
-	//Bundle & BundleManager::findBundleByName( string const& name ) const
-	//{
-	//	for ( BundleConstIterator it = m_Bundles.begin(); it != m_Bundles.end(); ++it )
-	//	{
-	//		if ( ( *it )->getName() == name )
-	//		{
-	//			return **it;
-	//		}
-	//	}
-
-	//	ostringstream msg;
-	//	msg << "bundle " << name << " is not loaded";
-	//	throw NotFoundException( msg.str() );
-	//}
-
-	Bundle * BundleManager::findBundleByPath( string const& libraryPath ) const
+	std::shared_ptr< Bundle > BundleManager::findBundleByPath( std::string const& libraryPath ) const
 	{
 		Poco::Path abs = makeAbsolutePath( libraryPath );
 
-		for ( BundleConstIterator it = m_Bundles.begin(); it != m_Bundles.end(); ++it )
+		BundleConstIterator it  = mBundles.find( abs.toString() );
+		if ( mBundles.end() == it )
 		{
-			if ( ( *it )->getAbsPath() == abs.toString() )
-			{
-				return *it;
-			}
+			ostringstream msg;
+			msg << "bundle at " << libraryPath << " is not loaded";
+			throw NotFoundException( msg.str() );
 		}
 
-		ostringstream msg;
-		msg << "bundle at " << libraryPath << " is not loaded";
-		throw NotFoundException( msg.str() );
+		return it->second;
 	}
 
 	const Poco::Path BundleManager::makeAbsolutePath( Poco::Path const& path ) const
 	{
 		if ( path.isAbsolute() )
-		{
 			return path;
-		}
 		else
 		{
-			Poco::Path abs = m_BundleDirectory.absolute().append( path );
+			Poco::Path abs = mBundleDirectory.absolute().append( path );
 			return abs;
 		}
 	}

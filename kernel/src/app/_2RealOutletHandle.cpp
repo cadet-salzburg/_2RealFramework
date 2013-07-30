@@ -25,173 +25,101 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlock.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
+template< typename TObj >
+std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+{
+	std::shared_ptr< TObj > locked = handle.lock();
+	if ( locked.get() == nullptr )
+	{
+		std::stringstream msg;
+		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+	}
+
+	return locked;
+}
 
 namespace _2Real
 {
 	namespace app
 	{
 		OutletHandle::OutletHandle() :
-			m_OutletIO( nullptr )
+			mImpl()
 		{
 		}
 
-		OutletHandle::OutletHandle( OutletIO &outletIO ) :
-			m_OutletIO( &outletIO )
+		OutletHandle::OutletHandle( std::shared_ptr< OutletIO > outlet ) :
+			mImpl( outlet )
 		{
-			m_OutletIO->registerHandle( *this );
-		}
-
-		OutletHandle::~OutletHandle()
-		{
-			if ( isValid() ) m_OutletIO->unregisterHandle( *this );
-		}
-
-		OutletHandle::OutletHandle( OutletHandle const& other ) :
-			m_OutletIO( other.m_OutletIO )
-		{
-			if ( isValid() ) m_OutletIO->registerHandle( *this );
-		}
-
-		OutletHandle& OutletHandle::operator=( OutletHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_OutletIO->unregisterHandle( *this );
-			}
-
-			m_OutletIO = other.m_OutletIO;
-
-			if ( isValid() )
-			{
-				m_OutletIO->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool OutletHandle::isValid() const
 		{
-			return m_OutletIO != nullptr;
+			std::shared_ptr< OutletIO > outlet = mImpl.lock();
+			return ( outlet.get() != nullptr );
 		}
 
-		void OutletHandle::invalidate()
+		bool OutletHandle::link( InletHandle i )
 		{
-			m_OutletIO = nullptr;
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( i.mImpl, "inlet" );
+			return outlet->linkTo( inlet->operator[]( 0 ) );
 		}
 
-		bool OutletHandle::operator==( OutletHandle const& other ) const
+		void OutletHandle::unlinkFrom( InletHandle i )
 		{
-			return m_OutletIO == other.m_OutletIO;
-		}
-
-		bool OutletHandle::operator!=( OutletHandle const& other ) const
-		{
-			return m_OutletIO != other.m_OutletIO;
-		}
-
-		bool OutletHandle::operator<( OutletHandle const& other ) const
-		{
-			return m_OutletIO < other.m_OutletIO;
-		}
-
-		bool OutletHandle::operator<=( OutletHandle const& other ) const
-		{
-			return m_OutletIO <= other.m_OutletIO;
-		}
-
-		bool OutletHandle::operator>( OutletHandle const& other ) const
-		{
-			return m_OutletIO > other.m_OutletIO;
-		}
-
-		bool OutletHandle::operator>=( OutletHandle const& other ) const
-		{
-			return m_OutletIO >= other.m_OutletIO;
-		}
-
-		bool OutletHandle::link( InletHandle &inlet )
-		{
-			checkValidity( m_OutletIO );
-			return m_OutletIO->linkTo( inlet.m_InletIO->operator[]( 0 ) );
-		}
-
-		void OutletHandle::unlinkFrom( InletHandle &inlet )
-		{
-			checkValidity( m_OutletIO );
-			m_OutletIO->unlinkFrom( inlet.m_InletIO->operator[]( 0 ) );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( i.mImpl, "inlet" );
+			return outlet->unlinkFrom( inlet->operator[]( 0 ) );
 		}
 
 		void OutletHandle::registerToNewData( OutletDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_OutletIO );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
 			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
-			m_OutletIO->mAppEvent->addListener( *cb );
+			outlet->mAppEvent->addListener( *cb );
 		}
 
 		void OutletHandle::unregisterFromNewData( OutletDataCallback callback, void *userData ) const
 		{
-			checkValidity( m_OutletIO );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
 			OutletCallback *cb = new FunctionCallback< std::shared_ptr< const CustomType > >( callback, userData );
-			m_OutletIO->mAppEvent->removeListener( *cb );
+			outlet->mAppEvent->removeListener( *cb );
 		}
 
 		void OutletHandle::registerToNewDataInternal( OutletCallback &cb ) const
 		{
-			checkValidity( m_OutletIO );
-			m_OutletIO->mAppEvent->addListener( cb );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			outlet->mAppEvent->addListener( cb );
 		}
 
 		void OutletHandle::unregisterFromNewDataInternal( OutletCallback &cb ) const
 		{
-			checkValidity( m_OutletIO );
-			m_OutletIO->mAppEvent->removeListener( cb );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			outlet->mAppEvent->removeListener( cb );
 		}
 
 		std::string const& OutletHandle::getName() const
 		{
-			checkValidity( m_OutletIO );
-			return m_OutletIO->getName();
-		}
-
-		app::BlockHandle OutletHandle::getOwningBlock()
-		{
-			checkValidity( m_OutletIO );
-
-			AbstractUberBlock *b = m_OutletIO->getOwningBlock();
-			FunctionBlock< BlockHandle > *f = dynamic_cast< FunctionBlock< app::BlockHandle > * >( b );
-			if ( nullptr != f )
-			{
-				return f->getHandle();
-			}
-			else
-			{
-				return app::BlockHandle();
-			}
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			return outlet->getInfo()->name;
 		}
 
 		app::TypeMetainfo OutletHandle::getType() const
 		{
-			checkValidity( m_OutletIO );
-			return app::TypeMetainfo( m_OutletIO->getInfo()->type );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			return app::TypeMetainfo( outlet->getInfo()->type );
 		}
 
 		std::shared_ptr< CustomType > OutletHandle::makeData() const
 		{
-			checkValidity( m_OutletIO );
-			return std::shared_ptr< CustomType >( new CustomType( m_OutletIO->getInfo()->type ) );
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			return std::shared_ptr< CustomType >( new CustomType( outlet->getInfo()->type ) );
 		}
 
 		std::shared_ptr< const CustomType > OutletHandle::getCurrentData() const
 		{
-			checkValidity( m_OutletIO );
-			return m_OutletIO->getCurrentDataThreadsafe();
+			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
+			return outlet->getCurrentDataThreadsafe();
 		}
 	}
 }

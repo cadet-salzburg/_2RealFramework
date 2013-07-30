@@ -82,7 +82,6 @@ namespace _2Real
 
 	private:
 
-		template< typename T >
 		friend class FunctionBlock;
 
 		void handleStateChangeException( Exception &e );
@@ -90,9 +89,9 @@ namespace _2Real
 
 		ThreadPool							&m_Threads;
 		Logger								&m_Logger;
-		FunctionBlockIOManager				*m_IOManager;
+		std::shared_ptr< FunctionBlockIOManager >				m_IOManager;
 		FunctionBlockUpdatePolicy			*m_UpdatePolicy;
-		bundle::Block						*m_FunctionBlock;
+		std::shared_ptr< bundle::Block >	m_FunctionBlock;
 
 		mutable Poco::FastMutex				m_TriggerAccess;
 		InletTriggers						m_GroupInletTriggers;

@@ -37,37 +37,33 @@ namespace _2Real
 
 		public:
 
-			typedef std::vector< InletHandle >					InletHandles;
-			typedef std::vector< InletHandle >::iterator		InletHandleIterator;
-			typedef std::vector< InletHandle >::const_iterator	InletHandleConstIterator;
+			typedef std::vector< InletHandle >						InletHandles;
+			typedef std::vector< InletHandle >::iterator			InletHandleIterator;
+			typedef std::vector< InletHandle >::const_iterator		InletHandleConstIterator;
 
-			typedef std::vector< OutletHandle >					OutletHandles;
-			typedef std::vector< OutletHandle >::iterator		OutletHandleIterator;
-			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
+			typedef std::vector< OutletHandle >						OutletHandles;
+			typedef std::vector< OutletHandle >::iterator			OutletHandleIterator;
+			typedef std::vector< OutletHandle >::const_iterator		OutletHandleConstIterator;
 
 			typedef std::vector< ParameterHandle >					ParameterHandles;
 			typedef std::vector< ParameterHandle >::iterator		ParameterHandleIterator;
 			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
 
 			BlockHandle();
-			BlockHandle( FunctionBlockIOManager &block );
-			BlockHandle( BlockHandle const& src );
-			BlockHandle& operator=( BlockHandle const& src );
-			~BlockHandle();
-
-			InletHandle				getInletHandle( std::string const& name ) const;
-			OutletHandle			getOutletHandle( std::string const& name ) const;
-			ParameterHandle			getParameterHandle( std::string const& name ) const;
-			InletHandles const&		getAllInletHandles() const;
-			OutletHandles const&	getAllOutletHandles() const;
-			ParameterHandles const&	getAllParameterHandles() const;
+			explicit BlockHandle( std::shared_ptr< FunctionBlockIOManager > );
 
 			bool isValid() const;
-			void invalidate();
+
+			InletHandle				getInletHandle( std::string const& );
+			OutletHandle			getOutletHandle( std::string const&);
+			ParameterHandle			getParameterHandle( std::string const& );
+			void					getAllInletHandles( InletHandles & );
+			void					getAllOutletHandles( OutletHandles & );
+			void					getAllParameterHandles( ParameterHandles & );
 
 		private:
 
-			FunctionBlockIOManager	*m_IO;
+			std::weak_ptr< FunctionBlockIOManager >		mImpl;
 
 		};
 	}

@@ -61,17 +61,53 @@ using std::ostringstream;
 
 namespace _2Real
 {
+	LinkCollection::LinkCollection( EngineImpl *engine ) :
+		mEngineImpl( engine )
+	{
+	}
+
+	LinkCollection::~LinkCollection()
+	{
+		clear();
+	}
+
+	void LinkCollection::clear()
+	{
+		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); ++it )
+			( *it )->deactivate();
+		mLinks.clear();
+	}
+	
+	std::shared_ptr< IOLink > LinkCollection::createLink( std::shared_ptr< BasicInletIO > inlet, std::shared_ptr< OutletIO > outlet )
+	{
+		// find out if those 2 are already linked, if yes, return already existing link
+		std::shared_ptr< IOLink > dummy( new IOLink( inlet, outlet ) );
+		LinkIterator it = mLinks.find( dummy );
+		if ( it != mLinks.end() )
+			return *it;
+		dummy.reset();
+
+		// try linking, w. conversion if neccessary
+		std::shared_ptr< IOLink > link = IOLink::link( inlet, outlet );
+		if ( link.get() != nullptr )
+		{
+			mLinks.insert( link );
+			link->activate();
+		}
+
+		return link;
+	}
 
 	EngineImpl::EngineImpl() :
 		mLogger( new Logger( "EngineLog.txt" ) ),
-		mTimer( new Timer( *mLogger ) ),
+		mTimer( new Timer( mLogger ) ),
 		mTypeRegistry( new TypeRegistry ),
-		mThreadPool( new ThreadPool( *this, 12, 0, "2Real threadpool" ) ),
+		mThreadPool( new ThreadPool( this, 1, 0, "2Real threadpool" ) ),
 		mBundleManager( new BundleManager( this ) ),
-		mSystem( new System( *mLogger ) ),
-		mTimestamp( new Poco::Timestamp )
+		mSystem( new System( this ) ),
+		mLinkManager( new LinkCollection( this ) )
 	{
-		mTimestamp->update();
+		mTimestamp.update();
 		mTypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata(), new Deleter< TypeMetadata > );
 	}
 
@@ -81,16 +117,17 @@ namespace _2Real
 		{
 			mLogger->addLine( "ENGINE SHUTDOWN" );
 			clearFully();
+			mLogger->addLine( "ENGINE CLEARED" );
+
+			delete mLinkManager;
 			delete mSystem;
 			delete mBundleManager;
 			delete mThreadPool;
 			delete mTypeRegistry;
-			mLogger->stop();
-			delete mLogger;
 			delete mTimer;
-			delete mTimestamp;
+			delete mLogger;
 		}
-		catch ( std::exception &e )
+		catch ( std::exception const& e )
 		{
 			std::cout << e.what() << std::endl;
 		}
@@ -98,84 +135,25 @@ namespace _2Real
 
 	void EngineImpl::clearFully()
 	{
-		for ( EngineImpl::LinkIterator it = mLinks.begin(); it != mLinks.end(); ++it )
-		{
-			( *it )->deactivate();
-			delete *it;
-		}
-		mLinks.clear();
-		mSystem->clearAll();
+		mLinkManager->clear();
+		mSystem->clear();
 		mBundleManager->clear();
 	}
 
 	void EngineImpl::clearBlockInstances()
 	{
-		for ( EngineImpl::LinkIterator it = mLinks.begin(); it != mLinks.end(); ++it )
-		{
-			( *it )->deactivate();
-			delete *it;
-		}
-		mLinks.clear();
-		mSystem->clearBlockInstances();
-	}
-
-	void EngineImpl::addBlock( FunctionBlock< app::BlockHandle > &block )
-	{
-		mSystem->addBlock( block );
-	}
-
-	void EngineImpl::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
-	{
-		Bundle *b = block.getOwningBundle();
-		b->removeBlockInstance( block );
-		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
-		{
-			if ( ( *it )->isBlockInvolved( block ) )
-			{
-				( *it )->deactivate();
-				delete *it;
-				it = mLinks.erase( it );
-			}
-			else ++it;
-		}
-		mSystem->removeBlock( block, timeout );
-
-		if ( b->hasContext() && b->getBlockInstances( *mBundleManager ).empty() )
-		{
-			FunctionBlock< app::ContextBlockHandle > & context = b->getContextBlock( *mBundleManager );
-			mSystem->removeBlock( context, timeout );
-			b->contextBlockRemoved();
-		}
-	}
-
-	void EngineImpl::addBlock( FunctionBlock< app::ContextBlockHandle > &block )
-	{
-		mSystem->addBlock( block );
-	}
-
-	void EngineImpl::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
-	{
-		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
-		{
-			if ( ( *it )->isBlockInvolved( block ) )
-			{
-				( *it )->deactivate();
-				delete *it;
-				it = mLinks.erase( it );
-			}
-			else ++it;
-		}
-		mSystem->removeBlock( block, timeout );
+		mLinkManager->clear();
+		mSystem->clear();
 	}
 
 	const long EngineImpl::getElapsedTime() const
 	{
-		return static_cast< long >( mTimestamp->elapsed() );
+		return static_cast< long >( mTimestamp.elapsed() );
 	}
 
 // ---------------------------------- bundle loading
 
-	Bundle & EngineImpl::loadLibrary( string const& libraryPath )
+	std::shared_ptr< Bundle > EngineImpl::loadLibrary( string const& libraryPath )
 	{
 		string path = libraryPath;
 
@@ -183,7 +161,7 @@ namespace _2Real
 		{
 			path.append( shared_library_suffix );
 		}
-		return mBundleManager->loadLibrary( path );
+		return mBundleManager->loadBundle( path );
 	}
 
 	std::string EngineImpl::getBundleDirectory() const
@@ -226,132 +204,5 @@ namespace _2Real
 	}
 
 // ---------------------------------- exception handling
-
-	//EngineImpl::Links const& EngineImpl::getCurrentLinks() const
-	//{
-	//	return m_Links;
-	//}
-
-	//EngineImpl::BlockInstances EngineImpl::getCurrentBlockInstances() const
-	//{
-	//	System::Blocks const& blocks = m_System->getBlockInstances();
-	//	EngineImpl::BlockInstances result;
-
-	//	for ( System::BlockConstIterator it = blocks.begin(); it != blocks.end(); ++it )
-	//	{
-	//		FunctionBlock< app::BlockHandle > *instance = static_cast< FunctionBlock< app::BlockHandle > * >( *it );
-	//		result.push_back( instance );
-	//	}
-	//	return result;
-	//}
-
-	//EngineImpl::Links& EngineImpl::getCurrentLinks()
-	//{
-	//	return m_Links;
-	//}
-
-	//EngineImpl::Bundles const& EngineImpl::getCurrentBundles() const
-	//{
-	//	return m_BundleManager->getBundles();
-	//}
-
-	void EngineImpl::clearLinksFor( BasicInletIO &inlet )
-	{
-		for ( LinkIterator it = mLinks.begin(); it != mLinks.end(); )
-		{
-			if ( ( *it )->isInletInvolved( inlet ) )
-			{
-				( *it )->deactivate();
-				delete *it;
-				it = mLinks.erase( it );
-			}
-			else ++it;
-		}
-	}
-
-	IOLink EngineImpl::createLink( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		/* links are stored in a set, so I have to create a dummy link... sigh */
-		IOLink *link = IOLink::link( inlet, outlet );
-
-		if ( link != nullptr )
-		{
-			LinkIterator it = mLinks.find( link );
-			if ( it == mLinks.end() )
-			{
-				link->activate();
-				mLinks.insert( link );
-				return *link;
-			}
-			else
-			{
-				delete link;
-				return ( **it );
-			}
-		}
-		else
-		{
-			return IOLink();
-		}
-	}
-
-	//TypeMetadata const& EngineImpl::getType( std::string const& bundle, std::string const& name ) const
-	//{
-	//	return m_TypeRegistry->getType( bundle, name );
-	//}
-
-	//std::pair< IOLink, IOLink > EngineImpl::createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet )
-	//{
-	//	if ( IOLink::canAutoConvert( inlet, outlet ) )
-	//	{
-	//		IOLink *link = IOLink::linkWithAutoConversion( inlet, outlet );
-	//		LinkIterator it = m_Links.find( link );
-	//		if ( it == m_Links.end() )
-	//		{
-	//			link->activate();
-	//			m_Links.insert( link );
-	//			return std::make_pair( *link, IOLink() );
-	//		}
-	//		else
-	//		{
-	//			delete link;
-	//			return std::make_pair( ( **it ), IOLink() );
-	//		}
-	//	}
-
-	//	//const string conversionName = IOLink::findConversion( inlet, outlet );
-	//	//Bundle &bundle = m_BundleManager->findBundleByName( strTypeConversions );
-
-	//	//if ( bundle.canCreate( conversionName ) )
-	//	//{
-	//	//	app::BlockHandle &block = bundle.createBlockInstance( conversionName );
-	//	//	block.setUpdateRate( 0. );
-	//	//	app::InletHandle &in = block.getInletHandle( "src" );
-	//	//	in.setUpdatePolicy( Policy::AND_NEWER_DATA );
-	//	//	app::OutletHandle &out = block.getOutletHandle( "dst" );
-
-	//	//	in.link( outlet.getHandle() );
-	//	//	out.link( inlet.getHandle() );
-
-	//	//	block.setup();
-	//	//	block.start();
-	//	//	return true;
-	//	//}
-
-	//	return std::make_pair( IOLink(), IOLink() );
-	//}
-
-	void EngineImpl::destroyLink( BasicInletIO &inlet, OutletIO &outlet )
-	{
-		//IOLink *link = new IOLink( inlet, outlet );
-		//LinkIterator it = m_Links.find( link );
-		//if ( it != m_Links.end() )
-		//{
-		//	link->deactivate();
-		//	delete *it;
-		//	m_Links.erase( it );
-		//}
-		//delete link;
-	}
 
 }

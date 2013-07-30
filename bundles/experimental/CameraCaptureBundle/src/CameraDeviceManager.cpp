@@ -28,29 +28,36 @@ using std::endl;
 using std::string;
 
 
-CameraDeviceManager::CameraDeviceManager() : ContextBlock()
+CameraDeviceManager::CameraDeviceManager() :
+	ContextBlock(),
+	mVideoInputController( nullptr )
 {
 	// this is super weird, videoinputlib in multithreaded environment set coinitializeex for multithread mode and complain that another library already did
 	// neither _2Real nor Poco use com interfaces so not sure why this next line is needed but otherwise the whole thing won't work, sometimes I had coding ;-(
-	CoUninitialize();
-	m_VideoInputContoller = new videoInput();
+	//CoUninitialize();
 }
 
 CameraDeviceManager::~CameraDeviceManager()
 {
-	delete m_VideoInputContoller;
 }
 
 void CameraDeviceManager::setup( BlockHandle &context )
 {
 	try
 	{
-		initDeviceList();
+		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
+
+		if ( !mVideoInputController )
+			mVideoInputController = new videoInput();
+
+		mNumDevices = mVideoInputController->listDevices( false );
+		mDevices.clear();
+		for( unsigned int i=0; i<mNumDevices; ++i )
+			mDevices.push_back( Device( mVideoInputController->getDeviceName( i ), false ) );
 	}
-	catch ( Exception &e )
+	catch ( ... )
 	{
-		cout << e.message() << endl;
-		e.rethrow();
+		throw _2Real::Exception( "setup error" );
 	}
 }
 
@@ -58,169 +65,149 @@ void CameraDeviceManager::update()
 {
 	try
 	{
-		rescanDeviceList();
+		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
+
+		int numDevices = mVideoInputController->listDevices( false );
+		if ( numDevices != mNumDevices )
+		{
+			for( unsigned int i = 0; i<mDevices.size(); ++i )
+			{
+				if( mDevices[ i ].mIsUsed )
+					mVideoInputController->stopDevice( i );
+			}
+			mDevices.clear();
+			for( unsigned int i=0; i<mNumDevices; ++i )
+				mDevices.push_back( Device( mVideoInputController->getDeviceName( i ), false ) );
+			mNumDevices = numDevices;
+		}
 	}
-	catch ( Exception &e )
+	catch ( ... )
 	{
-		cout << e.message() << endl;
-		e.rethrow();
+		throw _2Real::Exception( "update error" );
 	}
 }
 
 void CameraDeviceManager::shutdown()
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-	for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
+	try
 	{
-		if(m_DevicesInUse[i].m_bIsUsed)
-			m_VideoInputContoller->stopDevice( i );
-	}
-}
+		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 
-void CameraDeviceManager::initDeviceList()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	m_iNumDevices = m_VideoInputContoller->listDevices();	// rescan devices silently (true==silent, no console output)
-
-	m_DevicesInUse.clear();
-	for(unsigned int i=0; i<m_iNumDevices; i++)
-	{
-		m_DevicesInUse.push_back(DeviceItem(m_VideoInputContoller->getDeviceName(i), false));
-	}
-}
-
-void CameraDeviceManager::rescanDeviceList()
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	//printf("rescanning\n");
-	int numDevices = m_VideoInputContoller->listDevices(true);	// rescan devices silently (true==silent, no console output)
-	if(numDevices != m_iNumDevices)
-	{
-		// stop all devices in the graph
-		for( unsigned int i = 0; i<m_DevicesInUse.size(); i++)
+		for( unsigned int i = 0; i<mDevices.size(); ++i )
 		{
-			if(m_DevicesInUse[i].m_bIsUsed)
-				m_VideoInputContoller->stopDevice( i );
+			if( mDevices[ i ].mIsUsed )
+				mVideoInputController->stopDevice( i );
 		}
 
-		initDeviceList();		// reinit list
-		m_iNumDevices = numDevices;
+		delete mVideoInputController;
+	}
+	catch ( ... )
+	{
+		throw _2Real::Exception( "shutdown error" );
 	}
 }
 
-int	CameraDeviceManager::getFirstFreeDevices()
+int CameraDeviceManager::getFirstFreeDevice() const
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
+	Poco::FastMutex::ScopedLock lock( mMutex );
 
-	for(unsigned int i=0; i<m_DevicesInUse.size(); i++)
+	for( unsigned int i=0; i<mDevices.size(); ++i )
 	{
-		if(!m_DevicesInUse[i].m_bIsUsed)
+		if( !mDevices[ i ].mIsUsed )
 			return i;
 	}
-	return -1;	// no device is free
+	return -1;
 }
 
-bool CameraDeviceManager::isDeviceRunning(const unsigned int deviceIdx)
+bool CameraDeviceManager::isDeviceRunning( const unsigned int device ) const
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	return m_VideoInputContoller->isDeviceSetup(deviceIdx);
+	return mVideoInputController->isDeviceSetup( device );
 }
 
-bool CameraDeviceManager::isNewFrameAvailable(const unsigned int deviceIdx)
+bool CameraDeviceManager::isNewFrameAvailable( const unsigned int device ) const
 {
-	return m_VideoInputContoller->isFrameNew(deviceIdx);
+	return mVideoInputController->isFrameNew( device );
 }
 
-bool CameraDeviceManager::isDeviceAvailable(const unsigned int deviceIdx)
+bool CameraDeviceManager::isDeviceAvailable( const unsigned int device ) const
 {
-	return  (deviceIdx < m_DevicesInUse.size());
+	Poco::FastMutex::ScopedLock lock( mMutex );
+
+	return ( device < mDevices.size() );
 }
 
-bool CameraDeviceManager::isDeviceFree(const unsigned int deviceIdx)
+bool CameraDeviceManager::isDeviceFree( const unsigned int device ) const
 {
-	if(isDeviceAvailable(deviceIdx))
-		return  !m_DevicesInUse[deviceIdx].m_bIsUsed;
+	Poco::FastMutex::ScopedLock lock( mMutex );
+
+	if ( isDeviceAvailable( device ) )
+		return !mDevices[ device ].mIsUsed;
 	else
-	{
 		return false;
-	}
 }
 
-bool CameraDeviceManager::bindDevice(const unsigned int deviceIdx, int w, int h, int fps)
+bool CameraDeviceManager::bindDevice( const unsigned int device, const unsigned int width, const unsigned int height, const unsigned int fps )
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
+	Poco::FastMutex::ScopedLock lock( mMutex );
 
-	if(isDeviceFree(deviceIdx))
+	if ( isDeviceFree( device ) )
 	{
-		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
+		mVideoInputController->setIdealFramerate( device, fps );
+		return mDevices[ device ].mIsUsed = mVideoInputController->setupDevice( device, width, height );
 	}
 	else
-	{
 		return false;
+}
+
+void CameraDeviceManager::unbindDevice( const unsigned int device )
+{
+	Poco::FastMutex::ScopedLock lock( mMutex );
+
+	if( !isDeviceFree( device ) )
+	{
+		mVideoInputController->stopDevice( device );
+		mDevices[ device ].mIsUsed = false;
 	}
 }
 
-void CameraDeviceManager::unbindDevice(const unsigned int deviceIdx)
+bool CameraDeviceManager::setCameraParams( const unsigned int device, const unsigned int width, const unsigned int height, const unsigned int fps )
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
+	Poco::FastMutex::ScopedLock lock( mMutex );
 
-	if(!isDeviceFree(deviceIdx))
+	if ( !isDeviceFree( device ) )
 	{
-		m_VideoInputContoller->stopDevice( deviceIdx );
-		m_DevicesInUse[deviceIdx].m_bIsUsed = false;
-	}
-}
-
-
-bool CameraDeviceManager::setCameraParams(const unsigned int deviceIdx, int w, int h, int fps)
-{
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-
-	if(!isDeviceFree(deviceIdx))
-	{
-		m_VideoInputContoller->stopDevice( deviceIdx );
-		m_VideoInputContoller->setIdealFramerate(deviceIdx, fps);
-		return m_DevicesInUse[deviceIdx].m_bIsUsed = m_VideoInputContoller->setupDevice( deviceIdx, w, h );
+		mVideoInputController->stopDevice( device );
+		mVideoInputController->setIdealFramerate( device, fps );
+		return mDevices[ device ].mIsUsed = mVideoInputController->setupDevice( device, width, height );
 	}
 	return false;
 }
 
-unsigned int CameraDeviceManager::getNumberOfConnectedDevices() 
+unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
 {
-	Poco::Mutex::ScopedLock lock(m_Mutex);
-	return m_iNumDevices;
+	Poco::FastMutex::ScopedLock lock( mMutex );
+	return mNumDevices;
 }
 
-
-_2Real::Image& CameraDeviceManager::getPixels( const unsigned int deviceIdx )
+unsigned char * CameraDeviceManager::getPixels( const unsigned int device ) const
 {
 	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
 	try
 	{
-		unsigned char *pixels = m_VideoInputContoller->getPixels( deviceIdx, true, true );
-		m_DevicesInUse[deviceIdx].m_Image = _2Real::Image( pixels, false,
-				m_VideoInputContoller->getWidth( deviceIdx ), 
-				m_VideoInputContoller->getHeight( deviceIdx ),
-				_2Real::ImageChannelOrder::RGB );
+		return mVideoInputController->getPixels( device, true, true );
 	}
 	catch ( ... )
 	{
-		std::cerr << "Couldn't get the pixels" << std::endl;
+		std::cout << "couldn't get the pixels" << std::endl;
 	}
-
-	return m_DevicesInUse[deviceIdx].m_Image;
 }
 
-int CameraDeviceManager::getVideoWidth( const unsigned int  deviceIdx )
+unsigned int CameraDeviceManager::getVideoWidth( const unsigned int device ) const
 {
-	return m_VideoInputContoller->getWidth( deviceIdx );
+	return mVideoInputController->getWidth( device );
 }
 
-int CameraDeviceManager::getVideoHeight( const unsigned int  deviceIdx )
+unsigned int CameraDeviceManager::getVideoHeight( const unsigned int device ) const
 {
-	return m_VideoInputContoller->getHeight( deviceIdx );
+	return mVideoInputController->getHeight( device );
 }

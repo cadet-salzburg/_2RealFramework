@@ -38,68 +38,63 @@ namespace _2Real
 	namespace app
 	{
 		class Engine;
-		class BundleHandle;
-		class SystemState;
+		//class SystemState;
 	}
+
+	class EngineImpl;
 
 	class Logger;
 	class Timer;
 	class TypeRegistry;
 	class ThreadPool;
 	class BundleManager;
-	class AbstractUberBlock;
 	class System;
-	class AbstractInletIO;
-	class OutletIO;
+	class LinkCollection;
 	class Bundle;
-	class TypeMetadata;
 
-	template< typename T >
-	class FunctionBlock;
+	class LinkCollection
+	{
+	public:
+		LinkCollection( EngineImpl * );
+		~LinkCollection();
+		void clear();
+		std::shared_ptr< IOLink > createLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
+		/*std::shared_ptr< IOLink > createLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );*/
+	private:
+		struct LinkCmp
+		{
+			bool operator()( std::shared_ptr< IOLink > const& l1, std::shared_ptr< IOLink > const& l2 )
+			{
+				return ( *( l1.get() ) < *( l2.get() ) );
+			}
+		};
+		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >							Links;
+		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >::iterator				LinkIterator;
+		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >::const_iterator			LinkConstIterator;
+
+		EngineImpl		*const mEngineImpl;
+		Links			mLinks;
+	};
 
 	class EngineImpl : private NonCopyable< EngineImpl >
 	{
 
 	public:
 
-		struct LinkCmp
-		{
-			bool operator()( IOLink *l1, IOLink *l2 )
-			{
-				return ( *l1 < *l2 );
-			}
-		};
-
-		typedef std::set< IOLink *, LinkCmp >											Links;
-		typedef std::set< IOLink *, LinkCmp >::iterator									LinkIterator;
-		typedef std::set< IOLink *, LinkCmp >::const_iterator							LinkConstIterator;
-
-		typedef std::list< FunctionBlock< app::BlockHandle > * >						BlockInstances;
-		typedef std::list< FunctionBlock< app::BlockHandle > * >::iterator				BlockInstanceIterator;
-		typedef std::list< FunctionBlock< app::BlockHandle > * >::const_iterator		BlockInstanceConstIterator;
-
-		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >					BundleContexts;
-		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >::iterator		BundleContextIterator;
-		typedef std::list< FunctionBlock< app::ContextBlockHandle > * >::const_iterator	BundleContextConstIterator;
-
-		typedef std::set< Bundle * >													Bundles;
-		typedef std::set< Bundle * >::iterator											BundleIterator;
-		typedef std::set< Bundle * >::const_iterator									BundleConstIterator;
-
-		TypeRegistry *					getTypeRegistry()	{ return mTypeRegistry; }
-		Timer *							getTimer()			{ return mTimer; }
 		Logger *						getLogger()			{ return mLogger; }
+		Timer *							getTimer()			{ return mTimer; }
+		TypeRegistry *					getTypeRegistry()	{ return mTypeRegistry; }
 		ThreadPool *					getThreadpool()		{ return mThreadPool; }
-
+		BundleManager *					getBundleManager()	{ return mBundleManager; }
+		System *						getBlockManager()	{ return mSystem; }
+		LinkCollection *				getLinkManager()	{ return mLinkManager; }
 		const long						getElapsedTime() const;
 
 		void							clearFully();
 		void							clearBlockInstances();
 
-		void							addBlock( FunctionBlock< app::BlockHandle > &block );
-		void							addBlock( FunctionBlock< app::ContextBlockHandle > &block );
-		void							removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout );
-		void							removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout );
+		std::shared_ptr< Bundle > 		loadLibrary( std::string const& path );
+		std::string						getBundleDirectory() const;
 
 		void							registerToException( app::BlockExcCallback &callback );
 		void							unregisterFromException( app::BlockExcCallback &callback );
@@ -107,19 +102,6 @@ namespace _2Real
 		void							unregisterFromException( app::ContextBlockExcCallback &callback );
 		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
 		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
-
-		//BlockInstances				getCurrentBlockInstances() const;
-		//Bundles const&				getCurrentBundles() const;
-		//Links const&					getCurrentLinks() const;
-		//Links&						getCurrentLinks();
-
-		IOLink							createLink( BasicInletIO &inlet, OutletIO &outlet );
-		//std::pair< IOLink, IOLink >	createLinkWithConversion( BasicInletIO &inlet, OutletIO &outlet );
-		void							destroyLink( BasicInletIO &inlet, OutletIO &outlet );
-		void							clearLinksFor( BasicInletIO &inlet );
-
-		Bundle &						loadLibrary( std::string const& path );
-		std::string						getBundleDirectory() const;
 
 	private:
 
@@ -137,16 +119,15 @@ namespace _2Real
 		ThreadPool				*const mThreadPool;
 		BundleManager			*const mBundleManager;
 		System					*const mSystem;
-		Poco::Timestamp			*const mTimestamp;
+		LinkCollection			*const mLinkManager;
 
-		// TODO: exception handler / link handler class
+		Poco::Timestamp			mTimestamp;
 
+		// TODO: exception handler class per block :)
 		typedef std::pair< Exception, app::BlockHandle >			BlockException;
 		typedef std::pair< Exception, app::ContextBlockHandle >		ContextBlockException;
-
-		Links												mLinks;
-		CallbackEvent< BlockException >						mBlockExceptionEvent;
-		CallbackEvent< ContextBlockException >				mContextBlockExceptionEvent;
+		CallbackEvent< BlockException >								mBlockExceptionEvent;
+		CallbackEvent< ContextBlockException >						mContextBlockExceptionEvent;
 
 	};
 

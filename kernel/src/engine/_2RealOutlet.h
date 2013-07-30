@@ -19,7 +19,6 @@
 #pragma once
 
 #include "bundle/_2RealOutletHandle.h"
-#include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealPoco.h"
 
@@ -55,16 +54,12 @@ namespace _2Real
 	// outlet: readable from the bundle side of things
 	// after each update, is reset to a clone of the init value
 
-	class Outlet : private NonCopyable< Outlet >, private Handleable< Outlet, bundle::OutletHandle >
+	class Outlet : private NonCopyable< Outlet >
 	{
 
 	public:
 
 		Outlet( OutletIO *owner );
-
-		using Handleable< Outlet, bundle::OutletHandle >::getHandle;
-		using Handleable< Outlet, bundle::OutletHandle >::registerHandle;
-		using Handleable< Outlet, bundle::OutletHandle >::unregisterHandle;
 
 		// called by outlet io after update, synced
 		std::shared_ptr< const CustomType > update( std::shared_ptr< CustomType > );

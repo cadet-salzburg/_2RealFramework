@@ -19,7 +19,7 @@
 #include "datatypes/_2RealCustomData.h"
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealTypeMetadata.h"
-#include "app/_2RealParameterInfo.h"
+#include "app/_2RealInfo.h"
 
 #include <assert.h>
 

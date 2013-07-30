@@ -19,77 +19,49 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "engine/_2RealOutlet.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+	{
+		std::shared_ptr< TObj > locked = handle.lock();
+		if ( locked.get() == nullptr )
+		{
+			std::stringstream msg;
+			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+		}
+
+		return locked;
+	}
+
 	namespace bundle
 	{
 		OutletHandle::OutletHandle() :
-			m_Outlet( nullptr )
+			mImpl()
 		{
 		}
 
-		OutletHandle::OutletHandle( Outlet &outlet ) :
-			m_Outlet( &outlet )
+		OutletHandle::OutletHandle( std::shared_ptr< Outlet > outlet ) :
+			mImpl( outlet )
 		{
-			outlet.registerHandle( *this );
-		}
-
-		OutletHandle::~OutletHandle()
-		{
-			if ( isValid() ) m_Outlet->unregisterHandle( *this );
-		}
-
-		OutletHandle::OutletHandle( OutletHandle const& src ) :
-			m_Outlet( src.m_Outlet )
-		{
-			if ( isValid() ) m_Outlet->registerHandle( *this );
-		}
-
-		OutletHandle& OutletHandle::operator=( OutletHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_Outlet->unregisterHandle( *this );
-			}
-
-			m_Outlet = other.m_Outlet;
-
-			if ( isValid() )
-			{
-				m_Outlet->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool OutletHandle::isValid() const
 		{
-			return m_Outlet != nullptr;
-		}
-
-		void OutletHandle::invalidate()
-		{
-			m_Outlet = nullptr;
+			std::shared_ptr< Outlet > outlet = mImpl.lock();
+			return ( outlet.get() != nullptr );
 		}
 
 		std::shared_ptr< CustomType > OutletHandle::getWriteableRef()
 		{
-			checkValidity( m_Outlet );
-			return m_Outlet->getWriteableData();
+			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
+			return outlet->getWriteableData();
 		}
 
 		void OutletHandle::discard()
 		{
-			checkValidity( m_Outlet );
-			m_Outlet->discard();
+			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
+			outlet->discard();
 		}
 	}
 }

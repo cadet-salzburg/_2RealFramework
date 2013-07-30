@@ -19,7 +19,6 @@
 #pragma once
 
 #include "datatypes/_2RealCustomData.h"
-#include "app/_2RealParameterInfo.h"
 #include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
@@ -37,36 +36,25 @@ namespace _2Real
 		public:
 
 			InletHandle();
-			InletHandle( AbstractInletIO &inletIO );
-			~InletHandle();
-			InletHandle( InletHandle const& other );
-			InletHandle& operator=( InletHandle const& other );
+			InletHandle( std::shared_ptr< AbstractInletIO > );
 
 			bool isValid() const;
-			void invalidate();
-			bool operator==( InletHandle const& other ) const;
-			bool operator!=( InletHandle const& other ) const;
-			bool operator<( InletHandle const& other ) const;
-			bool operator<=( InletHandle const& other ) const;
-			bool operator>( InletHandle const& other ) const;
-			bool operator>=( InletHandle const& other ) const;
 
 			std::string const&				getName() const;
-			BlockHandle						getOwningBlock();
 			app::TypeMetainfo				getType() const;
 
 			std::shared_ptr< CustomType >	makeData() const;
 
 			// MISSING: function for querying update policy, current state, buffer size
 
-			void				setUpdatePolicy( Policy const& policy );
-			void				setBufferSize( const unsigned int size );
+			void				setUpdatePolicy( Policy const& );
+			void				setBufferSize( const unsigned int );
 
-			bool				link( OutletHandle &outletHandle );
-			void				unlinkFrom( OutletHandle &outletHandle );
+			bool				link( OutletHandle );
+			void				unlinkFrom( OutletHandle );
 
 			std::shared_ptr< const CustomType >		getCurrentData() const;
-			void									receiveData( std::shared_ptr< const CustomType > data );
+			void									receiveData( std::shared_ptr< const CustomType > );
 
 			// multi-inlet related stuff -> each of those functions has a chance of failing
 
@@ -74,12 +62,13 @@ namespace _2Real
 			unsigned int getSize() const;
 			InletHandle operator[]( const unsigned int index );
 			InletHandle add();
-			void remove( InletHandle &handle );
+			void remove( InletHandle handle );
 
 		private:
 
 			friend class OutletHandle;
-			AbstractInletIO		*m_InletIO;
+
+			std::weak_ptr< AbstractInletIO >		mImpl;
 
 		};
 	}

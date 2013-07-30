@@ -30,13 +30,45 @@ using std::string;
 using std::cout;
 using std::endl;
 
+template< typename TData >
+TData * makeCheckerPattern( const unsigned int width, const unsigned int height, const unsigned char channels, const unsigned char sz, TData *black, TData *white )
+{
+	TData *data = new TData[ width * height * channels ];
+	TData *p = data;
+	for ( unsigned int i=0; i<height; ++i )
+	{
+		unsigned int divI = i/sz;
+		for ( unsigned int j=0; j<width; ++j )
+		{
+			unsigned int divJ = j/sz;
+			if ( ( divJ%2 == 0 ) ^ ( divI%2 == 0 ) )
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = black[ k ];
+					++p;
+				}
+			}
+			else
+			{
+				for ( unsigned int k=0; k<channels; ++k )
+				{
+					*p = white[ k ];
+					++p;
+				}
+			}
+		}
+	}
+	return data;
+}
+
 void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
 		info.setName("CameraCaptureBundle");
 		info.setDescription( "Camera Capture" );
-		info.setAuthor( "Robert Praxmarer" );
+		info.setAuthor( "The Grandmaster" );
 		info.setCategory( "Devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
@@ -44,13 +76,14 @@ void getBundleMetainfo( BundleMetainfo& info )
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
 		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
 
-		cameraCapture.addInlet<int>( "DeviceIndex", 0 );
-		cameraCapture.addInlet<int>( "Width", 640 );
-		cameraCapture.addInlet<int>( "Height", 480 );
-		cameraCapture.addInlet<int>( "Fps", 30 );
-		cameraCapture.addOutlet<Image>("ImageData");
-		cameraCapture.addOutlet<int>( "Width" );
-		cameraCapture.addOutlet<int>( "Height" );
+		cameraCapture.addParameter< unsigned int >( "device", 0 );
+		cameraCapture.addParameter< unsigned int >( "width", 640 );
+		cameraCapture.addParameter< unsigned int >( "height", 480 );
+		cameraCapture.addParameter< unsigned int >( "fps", 30 );
+
+		cameraCapture.addCustomTypeOutlet( "image", "image" );
+		cameraCapture.addOutlet< unsigned int >( "width" );
+		cameraCapture.addOutlet< unsigned int >( "height" );
 
 		cameraCapture.setDescription( "Camera Capture" );
 	}

@@ -76,19 +76,19 @@ namespace _2Real
 		it = m_LoadedBundles.erase( it );
 	}
 
-	void BundleLoader::removeContextBlock( std::string const& absPath )
-	{
-		BundleInfoIterator it = m_LoadedBundles.find( absPath );
+	//void BundleLoader::resetContextBlock( std::string const& absPath )
+	//{
+	//	BundleInfoIterator it = m_LoadedBundles.find( absPath );
 
-		if ( it == m_LoadedBundles.end() )
-		{
-			ostringstream msg;
-			msg << "shared library " << absPath << " not found";
-			throw NotFoundException( msg.str() );
-		}
+	//	if ( it == m_LoadedBundles.end() )
+	//	{
+	//		ostringstream msg;
+	//		msg << "shared library " << absPath << " not found";
+	//		throw NotFoundException( msg.str() );
+	//	}
 
-		it->second.metainfo->removeContextBlock();
-	}
+	//	it->second.metainfo->removeContextBlock();
+	//}
 
 	bool BundleLoader::isLibraryLoaded( string const& path ) const
 	{
@@ -210,7 +210,7 @@ namespace _2Real
 		}
 	}
 
-	bundle::Block& BundleLoader::createContext( std::string const& path ) const
+	std::shared_ptr< bundle::Block > BundleLoader::createContext( std::string const& path ) const
 	{
 		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
@@ -238,7 +238,7 @@ namespace _2Real
 		return it->second.metainfo->getBundleData();
 	}
 
-	bundle::Block& BundleLoader::createBlockInstance( std::string const& path, std::string const& blockName, std::string const& name ) const
+	std::shared_ptr< bundle::Block > BundleLoader::createBlockInstance( std::string const& path, std::string const& blockName ) const
 	{
 		BundleInfoConstIterator it = m_LoadedBundles.find( path );
 
@@ -249,7 +249,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		return it->second.metainfo->createBlock( blockName, name );
+		return it->second.metainfo->createBlock( blockName );
 	}
 
 }

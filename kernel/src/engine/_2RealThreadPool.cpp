@@ -33,15 +33,15 @@
 namespace _2Real
 {
 
-	ThreadPool::ThreadPool( EngineImpl &engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
-		m_Timer( *( engine.getTimer() ) ),
-		m_Logger( *( engine.getLogger() ) ),
+	ThreadPool::ThreadPool( EngineImpl *engine, const unsigned int capacity, const unsigned int stackSize, std::string const& name ) :
+		m_Timer( engine->getTimer() ),
+		m_Logger( engine->getLogger() ),
 		m_Name( name ),
 		m_StackSize( stackSize ),
 		m_Elapsed( 0 )
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
-		m_Timer.registerToTimerSignal( *callback );
+		m_Timer->registerToTimerSignal( *callback );
 
 		for ( unsigned int i=0; i<capacity; ++i )
 		{
@@ -51,21 +51,12 @@ namespace _2Real
 			q.isUnique = false;
 			m_Threads[ thread ] = q;
 		}
-
-		//for ( unsigned int i=0; i<capacity; ++i )
-		//{
-		//	PooledThread *thread = new PooledThread( *this, m_StackSize );
-		//	ThreadQueue q;
-		//	q.isReserved = true;
-		//	q.isUnique = false;
-		//	m_Threads[ thread ] = q;
-		//}
 	}
 
 	ThreadPool::~ThreadPool()
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
-		m_Timer.unregisterFromTimerSignal( *callback );
+		m_Timer->unregisterFromTimerSignal( *callback );
 
 		m_ThreadQueuesAccess.lock();
 		for ( ThreadQueueIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )

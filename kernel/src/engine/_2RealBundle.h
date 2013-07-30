@@ -19,73 +19,39 @@
 
 #pragma once
 
-#include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
-#include "app/_2RealBundleInfo.h"
-#include "app/_2RealBundleHandle.h"
+#include "app/_2RealInfo.h"
 
-#include <map>
 #include <string>
 
 namespace _2Real
 {
 
-	namespace app
-	{
-		class BundleHandle;
-		class BlockHandle;
-		class ContextBlockHandle;
-	}
-
+	class EngineImpl;
 	class BundleManager;
-	template< typename T >
 	class FunctionBlock;
 
-	class Bundle : private NonCopyable< Bundle >, private Identifiable< Bundle >, private Handleable< Bundle, app::BundleHandle >
+	class Bundle : private NonCopyable< Bundle >, private Identifiable< Bundle >
 	{
 
 	public:
 
-		Bundle( app::BundleInfo const& info, BundleManager &bundleManager );
-		~Bundle();
-
-		using Handleable< Bundle, app::BundleHandle >::getHandle;
-		using Handleable< Bundle, app::BundleHandle >::registerHandle;
-		using Handleable< Bundle, app::BundleHandle >::unregisterHandle;
-
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >					BlockInstances;
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::iterator			BlockInstanceIterator;
-		typedef std::multimap< std::string, FunctionBlock< app::BlockHandle > * >::const_iterator	BlockInstanceConstIterator;
+		Bundle( EngineImpl *, app::BundleInfo const& );
 
 		using Identifiable< Bundle >::getIds;
 		using Identifiable< Bundle >::getName;
 
-		std::string const& getAbsPath() const;
-
-		bool operator==( Bundle const& other ) const;
-
-		void						clear();
-		void						unload( const long timeout );
-		app::BundleInfo const&		getBundleInfo() const;
-		app::ContextBlockHandle &	getContextBlockHandle() const;
-		bool						hasContext() const;
-		void						setContextBlock( FunctionBlock< app::ContextBlockHandle > &context );
-		FunctionBlock< app::BlockHandle > &						createBlockInstance( std::string const& blockName );
-		void						removeBlockInstance(  FunctionBlock< app::BlockHandle > &block );
-		bool canCreate( std::string const& blockName ) const;
-		BlockInstances &							getBlockInstances( BundleManager const& m );
-		FunctionBlock< app::ContextBlockHandle > &	getContextBlock( BundleManager const& m );
-		void contextBlockRemoved();
+		std::string const&						getAbsPath() const;
+		app::BundleInfo const&					getBundleInfo() const;
+		void									unload( const long );
+		std::shared_ptr< FunctionBlock >		createBlockInstance( std::string const& );
+		std::shared_ptr< FunctionBlock >		getContextBlock();
 
 	private:
 
-		unsigned int				getBlockInstanceCount( std::string const& blockName ) const;
-
-		BundleManager									&m_BundleManager;
-		FunctionBlock< app::ContextBlockHandle >		*m_ContextBlock;
-		BlockInstances									m_BlockInstances;
-		app::BundleInfo									m_BundleInfo;
+		EngineImpl								*const mEngineImpl;
+		app::BundleInfo							mBundleInfo;
 
 	};
 

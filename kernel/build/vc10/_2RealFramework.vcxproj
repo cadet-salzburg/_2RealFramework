@@ -20,16 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealBlockInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealBundleInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealCallbacks.h" />
     <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealEngine.h" />
+    <ClInclude Include="..\..\src\app\_2RealInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
-    <ClInclude Include="..\..\src\app\_2RealParameterInfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
@@ -91,7 +89,6 @@
     <ClInclude Include="..\..\src\helpers\_2RealDeleter.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealHandleable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
     <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h" />
@@ -120,21 +117,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
       <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBlockInfo.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
-    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleInfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
@@ -155,6 +138,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
       <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInfo.cpp" />
     <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
@@ -173,13 +157,6 @@
       <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterInfo.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\app\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
-      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBlockHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>

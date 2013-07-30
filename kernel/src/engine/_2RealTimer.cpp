@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	Timer::Timer( Logger &logger ) :
+	Timer::Timer( Logger *logger ) :
 		m_Callback( nullptr ),
 		m_Timer( 0, 1 ),				//attempt to get the best resolution possible, even if this won't work in practice
 		m_Logger( logger ),
@@ -61,7 +61,7 @@ namespace _2Real
 			msg << "TIMER: skipped " << m_SkippedCount << " times" << std::endl;
 			msg << "TIMER: elapsed: " << m_DebugTime.elapsed() << std::endl;
 			msg << "-------------------------------------------------------------------------";
-			m_Logger.addLine( msg.str() );
+			m_Logger->addLine( msg.str() );
 
 			m_UpdateCount = 0;
 			m_SkippedCount = 0;

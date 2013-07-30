@@ -25,6 +25,7 @@
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealInletBuffer.h"
 #include "datatypes/_2RealTypeConverter.h"
+#include "engine/_2RealTypeMetadata.h"
 
 #include <sstream>
 
@@ -32,98 +33,68 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	IOLink * IOLink::link( BasicInletIO &inlet, OutletIO &outlet )
+	std::shared_ptr< IOLink > IOLink::link( std::shared_ptr< BasicInletIO > inlet, std::shared_ptr< OutletIO >outlet )
 	{
-		TypeMetadata const& in = inlet.getInfo()->type;
-		TypeMetadata const& out = outlet.getInfo()->type;
+		TypeMetadata const& in = inlet->getInfo()->type;
+		TypeMetadata const& out = outlet->getInfo()->type;
 
-		IOLink *l = nullptr;
+		std::shared_ptr< IOLink > result;
 		std::shared_ptr< const TypeConverter > converterInOut;
 		std::shared_ptr< const TypeConverter > converterOutIn;
 
 		if ( in.matches( out, TypeMetadata::TypeMatchSetting::PERFECT_TYPE_MATCH, converterInOut, converterOutIn ) )
-		{
-			l = new IOLink( inlet, outlet, converterOutIn, converterInOut );
-		}
+			result.reset( new IOLink( inlet, outlet, converterOutIn, converterInOut ) );
 
-		return l;
+		return result;
 	}
 
-	IOLink::IOLink() : m_InletIO( nullptr ), m_OutletIO( nullptr )
-	{
-	}
-
-	IOLink::~IOLink()
-	{
-	}
-
-	IOLink::IOLink( BasicInletIO &inlet, OutletIO &outlet, std::shared_ptr< const TypeConverter > forward, std::shared_ptr< const TypeConverter > reverse ) :
-		m_InletIO( &inlet ),
-		m_OutletIO( &outlet ),
+	IOLink::IOLink( std::shared_ptr< BasicInletIO > i, std::shared_ptr< OutletIO > o, std::shared_ptr< const TypeConverter > forward, std::shared_ptr< const TypeConverter > reverse ) :
+		mInletIO( i ),
+		mOutletIO( o ),
 		mForwardConverter( forward ),
 		mReverseConverter( reverse )
 	{
 	}
 
-	BasicInletIO const& IOLink::getInletIO() const
-	{
-		return *m_InletIO;
-	}
-
-	OutletIO const& IOLink::getOutletIO() const
-	{
-		return *m_OutletIO;
-	}
-
-	BasicInletIO& IOLink::getInletIO()
-	{
-		return *m_InletIO;
-	}
-
-	OutletIO& IOLink::getOutletIO()
-	{
-		return *m_OutletIO;
-	}
-
-	bool IOLink::isValid() const
-	{
-		return ( m_InletIO && m_OutletIO );
-	}
+	//bool IOLink::isValid() const
+	//{
+	//	return ( ( mInletIO.get() != nullptr ) && ( mOutletIO.get() != nullptr ) );
+	//}
 
 	bool IOLink::operator<( IOLink const& other )
 	{
-		if ( m_InletIO < other.m_InletIO )		return true;
-		if ( other.m_InletIO < m_InletIO )		return false;
-		if ( m_OutletIO < other.m_OutletIO )	return true;
+		if ( mInletIO < other.mInletIO )		return true;
+		if ( other.mInletIO < mInletIO )		return false;
+		if ( mOutletIO < other.mOutletIO )		return true;
 		return false;
 	}
 
-	bool IOLink::isInletInvolved( BasicInletIO const& i ) const
-	{
-		if ( m_InletIO == &i )
-		{
-			return true;
-		}
-		return false;
-	}
+	//bool IOLink::isInletInvolved( BasicInletIO const& i ) const
+	//{
+	//	if ( m_InletIO == &i )
+	//	{
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
-	bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
-	{
-		return ( m_InletIO->belongsToBlock( &b ) || m_OutletIO->belongsToBlock( &b ) );
-	}
+	//bool IOLink::isBlockInvolved( AbstractUberBlock const& b ) const
+	//{
+	//	return ( mInletIO->belongsToBlock( &b ) || mOutletIO->belongsToBlock( &b ) );
+	//}
 
 	void IOLink::activate() 
 	{
 		// directly link inlet & outlet
 		if ( mForwardConverter.get() == nullptr )
 		{
-			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletIO, TimestampedData const& >( *m_InletIO, &BasicInletIO::receiveData );
-			m_OutletIO->mInletEvent->addListener( *cb );
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletIO, TimestampedData const& >( *( mInletIO.get() ), &BasicInletIO::receiveData );
+			mOutletIO->mInletEvent->addListener( *cb );
 		}
 		else
 		{
 			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< IOLink, TimestampedData const& >( *this, &IOLink::receiveData );
-			m_OutletIO->mInletEvent->addListener( *cb );
+			mOutletIO->mInletEvent->addListener( *cb );
 		}
 	}
 
@@ -134,20 +105,20 @@ namespace _2Real
 #endif
 		std::shared_ptr< const CustomType > t = data.value;
 		std::shared_ptr< const CustomType > cv = mForwardConverter->convert( t );
-		m_InletIO->receiveData( TimestampedData( cv, data.timestamp ) );
+		mInletIO->receiveData( TimestampedData( cv, data.timestamp ) );
 	}
 
 	void IOLink::deactivate()
 	{
 		if ( mForwardConverter.get() == nullptr )
 		{
-			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletIO, TimestampedData const& >( *m_InletIO, &BasicInletIO::receiveData );
-			m_OutletIO->mInletEvent->removeListener( *cb );
+			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< BasicInletIO, TimestampedData const& >( *( mInletIO.get() ), &BasicInletIO::receiveData );
+			mOutletIO->mInletEvent->removeListener( *cb );
 		}
 		else
 		{
 			AbstractCallback< TimestampedData const& > *cb = new MemberCallback< IOLink, TimestampedData const& >( *this, &IOLink::receiveData );
-			m_OutletIO->mInletEvent->removeListener( *cb );
+			mOutletIO->mInletEvent->removeListener( *cb );
 		}
 	}
 

@@ -21,7 +21,6 @@
 #include "helpers/_2RealEvent.h"
 #include "helpers/_2RealPoco.h"
 #include "helpers/_2RealNonCopyable.h"
-#include "helpers/_2RealHandleable.h"
 #include "helpers/_2RealIdentifiable.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
@@ -83,24 +82,21 @@ namespace _2Real
 
 	struct IOInfo
 	{
-		IOInfo( std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t, Policy const& p ) :
-			name( n ), initializer( i ), type( t ), policy( p ) {}
+		IOInfo( std::string const& n, std::shared_ptr< const CustomType > i, TypeMetadata const& t, Policy const& p, const bool m ) :
+			name( n ), initializer( i ), type( t ), policy( p ), isMulti( m ) {}
 
 		std::string								name;
 		std::shared_ptr< const CustomType >		initializer;
 		TypeMetadata							const& type;
 		Policy									policy;
+		bool									isMulti;
 
 	};
 
-	class AbstractInletIO : private NonCopyable< AbstractInletIO >, private Identifiable< AbstractInletIO >, private Handleable< AbstractInletIO, app::InletHandle >
+	class AbstractInletIO : private NonCopyable< AbstractInletIO >, private Identifiable< AbstractInletIO >
 	{
 
 	public:
-
-		using Handleable< AbstractInletIO, app::InletHandle >::getHandle;
-		using Handleable< AbstractInletIO, app::InletHandle >::registerHandle;
-		using Handleable< AbstractInletIO, app::InletHandle >::unregisterHandle;
 
 		using Identifiable< AbstractInletIO >::getFullName;
 		using Identifiable< AbstractInletIO >::getName;
@@ -108,18 +104,20 @@ namespace _2Real
 		AbstractInletIO( EngineImpl *, AbstractUberBlock *, AbstractUpdatePolicy *, IOInfo * );
 		virtual ~AbstractInletIO() {}
 
-		virtual bool						isMultiInlet() const = 0;
-		virtual unsigned int				getSize() const = 0;
-		virtual BasicInletIO &				operator[]( const unsigned int ) = 0;
-		virtual AbstractInletIO *			addBasicInlet() = 0;
-		virtual void						removeBasicInlet( AbstractInletIO * ) = 0;
+		virtual bool									isMultiInlet() const = 0;
+		virtual unsigned int							getSize() const = 0;
+		virtual std::shared_ptr< BasicInletIO >			operator[]( const unsigned int ) = 0;
+		virtual std::shared_ptr< AbstractInletIO >		addBasicInlet() = 0;
+		virtual void									removeBasicInlet( std::shared_ptr< AbstractInletIO > ) = 0;
 
-		virtual void						synchronizeData() = 0;
-		virtual bundle::InletHandle &		getBundleHandle() const = 0;
+		virtual void									synchronizeData() = 0;
 
-		IOInfo *							getInfo();
-		AbstractUberBlock *					getOwningBlock();
-		bool								belongsToBlock( AbstractUberBlock const* ) const;
+		virtual std::shared_ptr< AbstractInlet >		getInlet() = 0;
+		virtual std::shared_ptr< const AbstractInlet >	getInlet() const = 0;
+
+		IOInfo *										getInfo();
+		AbstractUberBlock *								getOwningBlock();
+		bool											belongsToBlock( AbstractUberBlock const* ) const;
 
 	protected:
 
@@ -138,17 +136,32 @@ namespace _2Real
 		BasicInletIO( EngineImpl *, AbstractUberBlock *, AbstractUpdatePolicy *, IOInfo * );
 		~BasicInletIO();
 
-		bool								isMultiInlet() const { return false; }
-		unsigned int						getSize() const { return 1; }
-		BasicInletIO &						operator[]( const unsigned int index ) { return *this; }
-		AbstractInletIO *					addBasicInlet() { throw Exception( "not a multiinlet" ); }
-		void								removeBasicInlet( AbstractInletIO *io ){ throw Exception( "not a multiinlet" ); }
-		void								syncInletChanges() {}
+		bool										isMultiInlet() const { return false; }
+		unsigned int								getSize() const { return 1; }
 
-		bundle::InletHandle &				getBundleHandle() const;
-		void								synchronizeData();
+		void										setSelfRef( std::shared_ptr< BasicInletIO > ref ) { mSelfRef = ref; }
+		std::shared_ptr< BasicInletIO >				getSelfRef();
+		std::shared_ptr< const BasicInletIO >		getSelfRef() const;
+		std::shared_ptr< BasicInletIO >				operator[]( const unsigned int index )
+		{
+			( void )( index );
+			std::shared_ptr< BasicInletIO > locked = mSelfRef.lock();
+			return locked;
+		}
 
-		BasicInlet &						getInlet() { return *mInlet; }
+		std::shared_ptr< AbstractInletIO >			addBasicInlet() { throw Exception( "not a multiinlet" ); }
+		void										removeBasicInlet( std::shared_ptr< AbstractInletIO > io )
+		{
+			( void )( io );
+			throw Exception( "not a multiinlet" );
+		}
+
+		void										syncInletChanges() {}
+
+		void										synchronizeData();
+
+		std::shared_ptr< AbstractInlet >				getInlet();
+		std::shared_ptr< const AbstractInlet >			getInlet() const;
 
 		void								setQueueSize( const unsigned int size );
 		void								setUpdatePolicy( Policy const& p );
@@ -164,17 +177,20 @@ namespace _2Real
 
 		std::shared_ptr< const CustomType >	getCurrentData() const;
 
-		bool								linkTo( OutletIO * );
-		void								unlinkFrom( OutletIO * );
+		bool								linkTo( std::shared_ptr< OutletIO > );
+		void								unlinkFrom( std::shared_ptr< OutletIO > );
 
 		void								setTrigger( AbstractInletBasedTrigger * );
 		void								removeTrigger( AbstractInletBasedTrigger * );
 
 	private:
 
-		BasicInlet							*const mInlet;
+		//BasicInlet							*const mInlet;
+		std::shared_ptr< BasicInlet >		mInlet;
 		BasicInletBuffer					*const mBuffer;
 		DataQueue							*const mQueue;
+
+		std::weak_ptr< BasicInletIO >		mSelfRef;
 
 		mutable Poco::FastMutex				mAccess;
 		AbstractInletBasedTrigger			*mUpdateTrigger;
@@ -190,46 +206,51 @@ namespace _2Real
 		// holds inletios for all subinlets + update flags ( remove y/n )
 		struct IO
 		{
-			IO( BasicInletIO *io ) : io( io ), wasRemoved( false ) {}
+			IO( std::shared_ptr< BasicInletIO > io ) : io( io ), wasRemoved( false ) {}
 
-			BasicInletIO	*io;
-			bool			wasRemoved;
+			std::shared_ptr< BasicInletIO > 	io;
+			bool								wasRemoved;
 		};
 
 		MultiInletIO( EngineImpl *, AbstractUberBlock *, AbstractUpdatePolicy *, IOInfo * );
 		~MultiInletIO();
 
-		bool isMultiInlet()						const { return true; }
-		unsigned int getSize()					const { return mBasicInletIOs.size(); }
-		BasicInletIO &							operator[]( const unsigned int index );
-		AbstractInletIO *						addBasicInlet();
-		void									removeBasicInlet( AbstractInletIO *io );
-		void									synchronizeData();
-		bundle::InletHandle &					getBundleHandle() const;
+		bool isMultiInlet()								const { return true; }
+		unsigned int getSize()							const { return mBasicInletIOs.size(); }
+		std::shared_ptr< BasicInletIO >					operator[]( const unsigned int );
+		std::shared_ptr< AbstractInletIO >				addBasicInlet();
+		void											removeBasicInlet( std::shared_ptr< AbstractInletIO > );
+		void											synchronizeData();
+
+		std::shared_ptr< AbstractInlet >				getInlet();
+		std::shared_ptr< const AbstractInlet >			getInlet() const;
 
 	private:
 
-		MultiInlet								*const mInlet;
-		std::vector< IO >						mBasicInletIOs;
-		std::list< BasicInletIO * >				mTemporaryInletIOs;		// store outside?
-		mutable Poco::FastMutex					mAccess;
+		std::shared_ptr< MultiInlet >					mInlet;
+		std::vector< IO >								mBasicInletIOs;
+		std::list< std::shared_ptr< BasicInletIO > >	mTemporaryInletIOs;		// TODO: store outside of class
+		mutable Poco::FastMutex							mAccess;
 
 	};
 
-	class OutletIO : private NonCopyable< OutletIO >, private Identifiable< OutletIO >, private Handleable< OutletIO, app::OutletHandle >
+	class OutletIO : private NonCopyable< OutletIO >, private Identifiable< OutletIO >
 	{
 
 	public:
-
-		using Handleable< OutletIO, app::OutletHandle >::getHandle;
-		using Handleable< OutletIO, app::OutletHandle >::registerHandle;
-		using Handleable< OutletIO, app::OutletHandle >::unregisterHandle;
 
 		using Identifiable< OutletIO >::getFullName;
 		using Identifiable< OutletIO >::getName;
 
 		OutletIO( EngineImpl *, AbstractUberBlock *, IOInfo * );
 		~OutletIO();
+
+		void									setSelfRef( std::shared_ptr< OutletIO > ref ) { mSelfRef = ref; }
+		std::shared_ptr< OutletIO >				getSelfRef();
+		std::shared_ptr< const OutletIO >		getSelfRef() const;
+
+		std::shared_ptr< Outlet >				getOutlet();
+		std::shared_ptr< const Outlet >			getOutlet() const;
 
 		IOInfo *								getInfo();
 		AbstractUberBlock *						getOwningBlock();
@@ -238,18 +259,18 @@ namespace _2Real
 		std::shared_ptr< const CustomType >		getCurrentDataThreadsafe() const;
 		std::shared_ptr< const CustomType >		synchronizeData();
 
-		bool									linkTo( BasicInletIO & );
-		void									unlinkFrom( BasicInletIO & );
-
-		bundle::OutletHandle					getBundleHandle() const;
+		bool									linkTo( std::shared_ptr< BasicInletIO > );
+		void									unlinkFrom( std::shared_ptr< BasicInletIO > );
 
 	private:
 
 		EngineImpl								*const mEngineImpl;
 		AbstractUberBlock						*const mOwningBlock;
-		Outlet									*const mOutlet;
+		std::shared_ptr< Outlet >				mOutlet;
 		OutletBuffer							*const mBuffer;
 		IOInfo									*const mInfo;
+
+		std::weak_ptr< OutletIO >				mSelfRef;
 
 	public: // listener set / remove functions missing!!!!
 
@@ -258,14 +279,10 @@ namespace _2Real
 
 	};
 
-	class ParameterIO : private NonCopyable< ParameterIO >, private Identifiable< ParameterIO >, private Handleable< ParameterIO, app::ParameterHandle >
+	class ParameterIO : private NonCopyable< ParameterIO >, private Identifiable< ParameterIO >
 	{
 
 	public:
-
-		using Handleable< ParameterIO, app::ParameterHandle >::getHandle;
-		using Handleable< ParameterIO, app::ParameterHandle >::registerHandle;
-		using Handleable< ParameterIO, app::ParameterHandle >::unregisterHandle;
 
 		using Identifiable< ParameterIO >::getFullName;
 		using Identifiable< ParameterIO >::getName;
@@ -277,17 +294,18 @@ namespace _2Real
 		AbstractUberBlock *						getOwningBlock();
 		bool									belongsToBlock( AbstractUberBlock const* ) const;
 
+		std::shared_ptr< Parameter >			getParameter();
+		std::shared_ptr< const Parameter >		getParameter() const;
+
 		std::shared_ptr< const CustomType >		getCurrentDataThreadsafe() const;
 		void									synchronizeData();
 		void									setData( std::shared_ptr< const CustomType > );
-
-		bundle::ParameterHandle					getBundleHandle() const;
 
 	private:
 
 		EngineImpl								*const mEngineImpl;
 		AbstractUberBlock						*const mOwningBlock;
-		Parameter								*const mParameter;
+		std::shared_ptr< Parameter >			mParameter;
 		ParameterBuffer							*const mBuffer;
 		IOInfo									*const mInfo;
 
@@ -322,23 +340,23 @@ namespace _2Real
 
 	public:
 
-		typedef std::vector< AbstractInletIO * >					InletVector;
-		typedef std::vector< AbstractInletIO * >::iterator			InletIterator;
-		typedef std::vector< AbstractInletIO * >::const_iterator	InletConstIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >					InletVector;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::iterator			InletIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::const_iterator	InletConstIterator;
 
-		typedef std::vector< OutletIO * >							OutletVector;
-		typedef std::vector< OutletIO * >::iterator					OutletIterator;
-		typedef std::vector< OutletIO * >::const_iterator			OutletConstIterator;
+		typedef std::vector< std::shared_ptr< OutletIO > >							OutletVector;
+		typedef std::vector< std::shared_ptr< OutletIO > >::iterator				OutletIterator;
+		typedef std::vector< std::shared_ptr< OutletIO > >::const_iterator			OutletConstIterator;
 
-		typedef std::vector< ParameterIO * >						ParameterVector;
-		typedef std::vector< ParameterIO * >::iterator				ParameterIterator;
-		typedef std::vector< ParameterIO * >::const_iterator		ParameterConstIterator;
+		typedef std::vector< std::shared_ptr< ParameterIO > >						ParameterVector;
+		typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
+		typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
 
 
 		AbstractIOManager( EngineImpl *, AbstractUberBlock * );
 		virtual ~AbstractIOManager();
 
-		std::string						getName() const;
+		std::string						getName() const;		// shortcut for owner's name
 
 	protected:
 

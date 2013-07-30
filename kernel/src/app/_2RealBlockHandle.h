@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #ifdef _UNIX
 	#include <limits.h>
@@ -31,7 +32,6 @@
 
 namespace _2Real
 {
-	template< typename T >
 	class FunctionBlock;
 
 	namespace app
@@ -57,19 +57,9 @@ namespace _2Real
 			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
 
 			BlockHandle();
-			BlockHandle( FunctionBlock< BlockHandle > &block );
-			~BlockHandle();
-			BlockHandle( BlockHandle const& other );
-			BlockHandle& operator=( BlockHandle const& other );
+			BlockHandle( std::shared_ptr< FunctionBlock > );
 
 			bool isValid() const;
-			void invalidate();
-			bool operator==( BlockHandle const& other ) const;
-			bool operator!=( BlockHandle const& other ) const;
-			bool operator<( BlockHandle const& other ) const;
-			bool operator<=( BlockHandle const& other ) const;
-			bool operator>( BlockHandle const& other ) const;
-			bool operator>=( BlockHandle const& other ) const;
 
 			BlockInfo const& getBlockInfo() const;
 
@@ -80,12 +70,12 @@ namespace _2Real
 			void stop( const long timeout = NO_TIMEOUT );
 			void destroy( const long timeout = NO_TIMEOUT );
 
-			InletHandle					getInletHandle( std::string const& ) const;
-			OutletHandle				getOutletHandle( std::string const& ) const;
-			ParameterHandle				getParameterHandle( std::string const& ) const;
-			InletHandles const&			getAllInletHandles() const;
-			OutletHandles const&		getAllOutletHandles() const;
-			ParameterHandles const&		getAllParameterHandles() const;
+			InletHandle					getInletHandle( std::string const& );
+			OutletHandle				getOutletHandle( std::string const& );
+			ParameterHandle				getParameterHandle( std::string const& );
+			void						getAllInletHandles( InletHandles & );
+			void						getAllOutletHandles( OutletHandles & );
+			void						getAllParameterHandles( ParameterHandles & );
 
 			void registerToNewData( BlockDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( BlockDataCallback callback, void *userData = nullptr ) const;
@@ -114,7 +104,7 @@ namespace _2Real
 			void registerToNewDataInternal( BlockCallback &cb ) const;
 			void unregisterFromNewDataInternal( BlockCallback &cb ) const;
 
-			FunctionBlock< BlockHandle >		*m_Block;
+			std::weak_ptr< FunctionBlock >		mImpl;
 
 		};
 	}

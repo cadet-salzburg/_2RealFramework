@@ -36,7 +36,6 @@ namespace _2Real
 
 		void run();
 		void addLine( std::string const& line );
-		void stop();
 
 	private:
 

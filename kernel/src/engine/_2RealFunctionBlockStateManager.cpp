@@ -126,8 +126,8 @@ namespace _2Real
 		{
 			m_IOManager->updateParameterData();
 
-			bundle::BlockHandle &h = m_IOManager->getHandle();
-			m_FunctionBlock->setup( h );
+			bundle::BlockHandle handle( m_IOManager );
+			m_FunctionBlock->setup( handle );
 			m_Logger.addLine( std::string( getName() + " carried out setup" ) );
 		}
 		catch ( Exception &e )

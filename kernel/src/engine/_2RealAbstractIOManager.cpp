@@ -39,17 +39,11 @@ namespace _2Real
 	AbstractInletIO::AbstractInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, IOInfo *info ) :
 		NonCopyable< AbstractInletIO >(),
 		Identifiable< AbstractInletIO >( owner->getIds(), info->name ),
-		Handleable< AbstractInletIO, app::InletHandle >( *this ),
 		mEngineImpl( engine ),
 		mOwningBlock( owner ),
 		mPolicy( policy ),
 		mInfo( info )
 	{
-#ifdef _DEBUG
-		assert( mEngineImpl );
-		assert( mOwningBlock );
-		assert( mPolicy );
-#endif
 	}
 
 	IOInfo * AbstractInletIO::getInfo()
@@ -77,19 +71,36 @@ namespace _2Real
 		mUpdateTrigger( nullptr ),					// will be initialized later on ( POSSIBLE CRASH!!! )
 		mNotifyOnReceive( false )					// in the beginning, everything will be written into the buffer
 	{
+		mInlet->setSelfRef( mInlet );
 	}
 
 	BasicInletIO::~BasicInletIO()
 	{
-		delete mInlet;
 		delete mBuffer;
 		delete mQueue;
 		delete mInfo;
 	}
 
-	bundle::InletHandle & BasicInletIO::getBundleHandle() const
+	std::shared_ptr< BasicInletIO > BasicInletIO::getSelfRef()
 	{
-		return mInlet->getHandle();
+		std::shared_ptr< BasicInletIO > locked = mSelfRef.lock();
+		return locked;
+	}
+
+	std::shared_ptr< const BasicInletIO > BasicInletIO::getSelfRef() const
+	{
+		std::shared_ptr< BasicInletIO > locked = mSelfRef.lock();
+		return locked;
+	}
+
+	std::shared_ptr< AbstractInlet > BasicInletIO::getInlet()
+	{
+		return mInlet;
+	}
+
+	std::shared_ptr< const AbstractInlet > BasicInletIO::getInlet() const
+	{
+		return mInlet;
 	}
 
 	void BasicInletIO::setQueueSize( const unsigned int size )
@@ -216,14 +227,14 @@ namespace _2Real
 		return data;
 	}
 
-	bool BasicInletIO::linkTo( OutletIO *outlet )
+	bool BasicInletIO::linkTo( std::shared_ptr< OutletIO > outlet )
 	{
-		return mEngineImpl->createLink( *this, *outlet ).isValid();
+		std::shared_ptr< IOLink > link = mEngineImpl->getLinkManager()->createLink( getSelfRef(), outlet );
+		return ( link.get() != nullptr );
 	}
 
-	void BasicInletIO::unlinkFrom( OutletIO *outlet )
+	void BasicInletIO::unlinkFrom( std::shared_ptr< OutletIO > outlet )
 	{
-		mEngineImpl->destroyLink( *this, *outlet );
 	}
 
 	void BasicInletIO::setTrigger( AbstractInletBasedTrigger *trigger )
@@ -246,106 +257,105 @@ namespace _2Real
 
 	MultiInletIO::~MultiInletIO()
 	{
-		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
-			delete ( *it ).io;
-
-		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
-			delete *it;
-
-		delete mInlet;
 		delete mInfo;
 	}
 
-	BasicInletIO & MultiInletIO::operator[]( const unsigned int index )
+	std::shared_ptr< BasicInletIO > MultiInletIO::operator[]( const unsigned int index )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		try
 		{
-			return *( mBasicInletIOs.at( index ).io );
+			return mBasicInletIOs.at( index ).io;
 		}
-		catch ( std::out_of_range &e )
+		catch ( std::out_of_range const& e )
 		{
 			throw Exception( e.what() );
 		}
 	}
 
-	bundle::InletHandle & MultiInletIO::getBundleHandle() const
-	{
-		return mInlet->getHandle();
-	}
-
-	AbstractInletIO * MultiInletIO::addBasicInlet()
+	std::shared_ptr< AbstractInletIO > MultiInletIO::addBasicInlet()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		IOInfo *info = new IOInfo( *mInfo );
-		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwningBlock, mPolicy, info );
-		mTemporaryInletIOs.push_back( io );
+		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwningBlock, mPolicy, info);
+		std::shared_ptr< BasicInletIO > shared( io );
+		io->setSelfRef( shared );
+		mTemporaryInletIOs.push_back( shared );
 		mPolicy->addInlet( *io, info->policy );		// why?
-		return io;
+		return std::static_pointer_cast< AbstractInletIO, BasicInletIO >( shared );
 	}
 
-	void MultiInletIO::removeBasicInlet( AbstractInletIO *io )
+	std::shared_ptr< AbstractInlet > MultiInletIO::getInlet()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mInlet;
+	}
 
-		// check tmp list first
-		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
-		{
-			if ( io == *it )
-			{
-				it = mTemporaryInletIOs.erase( it );
-				mPolicy->removeInlet( **it );
-				return;
-			}
-		}
+	std::shared_ptr< const AbstractInlet > MultiInletIO::getInlet() const
+	{
+		return mInlet;
+	}
 
-		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
-		{
-			if ( io == ( *it ).io )
-			{
-				mEngineImpl->clearLinksFor( *( ( *it ).io ) );	// kill all links involving this inlet
-				mPolicy->removeInlet( *( *it ).io );			// inlet should not influence updates any more
-				( *it ).wasRemoved = true;						// but inlet must stay alive, since it might still be accessed
-				return;
-			}
-		}
+	void MultiInletIO::removeBasicInlet( std::shared_ptr< AbstractInletIO > io )
+	{
+		//Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+
+		//// check tmp list first
+		//for ( std::list< std::shared_ptr< BasicInletIO > >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
+		//{
+		//	if ( io == ( *it ) )
+		//	{
+		//		it = mTemporaryInletIOs.erase( it );
+		//		mPolicy->removeInlet( **it );
+		//		return;
+		//	}
+		//}
+
+		//for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
+		//{
+		//	if ( io == ( *it ).io )
+		//	{
+		//		mEngineImpl->clearLinksFor( *( ( *it ).io ) );	// kill all links involving this inlet
+		//		mPolicy->removeInlet( *( *it ).io );			// inlet should not influence updates any more
+		//		( *it ).wasRemoved = true;						// but inlet must stay alive, since it might still be accessed
+		//		return;
+		//	}
+		//}
 	}
 
 	void MultiInletIO::synchronizeData()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		//Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 
-		// move tmp inlets over
-		for ( std::list< BasicInletIO * >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
-		{
-			BasicInletIO *io = *it;
-			std::ostringstream name;
-			name << mInfo->name << "::" << mBasicInletIOs.size();
-			io->getInfo()->name = name.str();
-			mBasicInletIOs.push_back( IO( io ) );
-		}
+		//// move tmp inlets over
+		//for ( std::list< std::shared_ptr< BasicInletIO > >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
+		//{
+		//	BasicInletIO *io = *it;
+		//	std::ostringstream name;
+		//	name << mInfo->name << "::" << mBasicInletIOs.size();
+		//	io->getInfo()->name = name.str();
+		//	mBasicInletIOs.push_back( IO( io ) );
+		//}
 
-		mTemporaryInletIOs.clear();
+		//mTemporaryInletIOs.clear();
 
-		for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
-		{
-			BasicInletIO *io = ( *it ).io;
-			if ( ( *it ).wasRemoved )
-			{
-				delete io;
-				io = nullptr;
-				// argh
-			}
-			else
-				io->synchronizeData();
-		}
+		//for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
+		//{
+		//	BasicInletIO *io = ( *it ).io;
+		//	if ( ( *it ).wasRemoved )
+		//	{
+		//		delete io;
+		//		io = nullptr;
+		//		// argh
+		//	}
+		//	else
+		//		io->synchronizeData();
+		//}
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	ParameterIO::ParameterIO( EngineImpl *engine, AbstractUberBlock *owner, IOInfo *info ) :
 		Identifiable< ParameterIO >( owner->getIds(), info->name ),
-		Handleable< ParameterIO, app::ParameterHandle >( *this ),
 		mEngineImpl( engine ),
 		mOwningBlock( owner ),
 		mParameter( new Parameter( this ) ),
@@ -356,7 +366,6 @@ namespace _2Real
 
 	ParameterIO::~ParameterIO()
 	{
-		delete mParameter;
 		delete mBuffer;
 		delete mInfo;
 	}
@@ -394,16 +403,20 @@ namespace _2Real
 		mParameter->update( newData );
 	}
 
-	bundle::ParameterHandle ParameterIO::getBundleHandle() const
+	std::shared_ptr< Parameter > ParameterIO::getParameter()
 	{
-		return mParameter->getHandle();
+		return mParameter;
+	}
+
+	std::shared_ptr< const Parameter > ParameterIO::getParameter() const
+	{
+		return mParameter;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	OutletIO::OutletIO( EngineImpl *engine, AbstractUberBlock *owner, IOInfo *info ) :
 		Identifiable< OutletIO >( owner->getIds(), info->name ),
-		Handleable< OutletIO, app::OutletHandle >( *this ),
 		mEngineImpl( engine ),
 		mOwningBlock( owner ),
 		mOutlet( new Outlet( this ) ),
@@ -416,11 +429,22 @@ namespace _2Real
 
 	OutletIO::~OutletIO()
 	{
-		delete mOutlet;
 		delete mBuffer;
 		delete mAppEvent;
 		delete mInletEvent;
 		delete mInfo;
+	}
+
+	std::shared_ptr< OutletIO > OutletIO::getSelfRef()
+	{
+		std::shared_ptr< OutletIO > locked = mSelfRef.lock();
+		return locked;
+	}
+
+	std::shared_ptr< const OutletIO > OutletIO::getSelfRef() const
+	{
+		std::shared_ptr< OutletIO > locked = mSelfRef.lock();
+		return locked;
 	}
 
 	IOInfo * OutletIO::getInfo()
@@ -461,19 +485,24 @@ namespace _2Real
 		return recentData;
 	}
 
-	bool OutletIO::linkTo( BasicInletIO &inlet )
+	bool OutletIO::linkTo( std::shared_ptr< BasicInletIO > inlet )
 	{
-		return mEngineImpl->createLink( inlet, *this ).isValid();
+		std::shared_ptr< IOLink > link = mEngineImpl->getLinkManager()->createLink( inlet, getSelfRef() );
+		return ( link.get() != nullptr );
 	}
 
-	void OutletIO::unlinkFrom( BasicInletIO &inlet )
+	void OutletIO::unlinkFrom( std::shared_ptr< BasicInletIO > inlet )
 	{
-		mEngineImpl->destroyLink( inlet, *this );
 	}
 
-	bundle::OutletHandle OutletIO::getBundleHandle() const
+	std::shared_ptr< Outlet > OutletIO::getOutlet()
 	{
-		return mOutlet->getHandle();
+		return mOutlet;
+	}
+
+	std::shared_ptr< const Outlet > OutletIO::getOutlet() const
+	{
+		return mOutlet;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

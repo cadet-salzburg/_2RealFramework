@@ -1,5 +1,6 @@
 #include "_2RealApplication.h"
 #include "_2RealDatatypes.h"
+#include "helpers/_2RealPoco.h"
 #include <iostream>
 #include <list>
 #include <vector>
@@ -246,24 +247,24 @@ void printBundleInfo( app::BundleHandle const& h )
 	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
 	{
 		std::cout << "-b\t" << it->name << std::endl;
-		BlockInfo::InletInfos inlets = it->inlets;
-		for ( BlockInfo::InletInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		BlockInfo::IOInfos inlets = it->inlets;
+		for ( BlockInfo::IOInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
 			std::cout << "-i\t" << iIt->name;
-			std::cout << "\tt: " << iIt->customName;
-			std::cout << ( iIt->isMultiInlet ? "\t+m " : "\t-m " ) << std::endl;
+			//std::cout << ( iIt->isMulti ? "\t+m " : "\t-m " );
+			std::cout << "\tt " << iIt->typeName << std::endl;
 		}
-		BlockInfo::OutletInfos outlets = it->outlets;
-		for ( BlockInfo::OutletInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		BlockInfo::IOInfos outlets = it->outlets;
+		for ( BlockInfo::IOInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
 			std::cout << "-o\t" << oIt->name;
-			std::cout << "\tt: " << oIt->customName << std::endl;
+			std::cout << "\tt " << oIt->typeName << std::endl;
 		}
-		BlockInfo::ParameterInfos params = it->parameters;
-		for ( BlockInfo::ParameterInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		BlockInfo::IOInfos params = it->parameters;
+		for ( BlockInfo::IOInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
 		{
-			std::cout << "-o\t" << pIt->name;
-			std::cout << "\tt: " << pIt->customName << std::endl;
+			std::cout << "-p\t" << pIt->name;
+			std::cout << "\tt " << pIt->typeName << std::endl;
 		}
 	}
 }
@@ -300,15 +301,12 @@ int main( int argc, char *argv[] )
 				instance.window = new sf::Window( sf::VideoMode( 512, 512, 32 ), instanceName, sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
 
 				instance.block = bundle.createBlockInstance( instanceName );
-				std::vector< InletHandle > const& inlets = instance.block.getAllInletHandles();
-				for ( unsigned int i=0; i<inlets.size(); ++i )
-					instance.inlets.push_back( inlets[ i ] );
-				std::vector< OutletHandle > const& outlets = instance.block.getAllOutletHandles();
-				for ( unsigned int o=0; o<outlets.size(); ++o )
-					instance.outlets.push_back( std::make_pair( outlets[ o ], new OutletReceiver( outlets[ o ] ) ) );
-				std::vector< ParameterHandle > const& parameters = instance.block.getAllParameterHandles();
-				for ( unsigned int p=0; p<parameters.size(); ++p )
-					instance.parameters.push_back( parameters[ p ] );
+				instance.block.getAllInletHandles( instance.inlets );
+				instance.block.getAllParameterHandles( instance.parameters );
+				std::vector< OutletHandle > handles;
+				instance.block.getAllOutletHandles( handles );
+				for ( unsigned int o=0; o<handles.size(); ++o )
+					instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ] ) ) );
 
 				instance.block.setup();
 				instance.block.start();

@@ -29,6 +29,7 @@ namespace _2Real
 	namespace app
 	{
 		class InletHandle;
+		class TypeMetainfo;
 
 		class OutletHandle
 		{
@@ -36,28 +37,17 @@ namespace _2Real
 		public:
 
 			OutletHandle();
-			OutletHandle( OutletIO &outletIO );
-			~OutletHandle();
-			OutletHandle( OutletHandle const& other );
-			OutletHandle& operator=( OutletHandle const& other );
+			OutletHandle( std::shared_ptr< OutletIO > );
 
 			bool isValid() const;
-			void invalidate();
-			bool operator==( OutletHandle const& other ) const;
-			bool operator!=( OutletHandle const& other ) const;
-			bool operator<( OutletHandle const& other ) const;
-			bool operator<=( OutletHandle const& other ) const;
-			bool operator>( OutletHandle const& other ) const;
-			bool operator>=( OutletHandle const& other ) const;
 
 			std::string const&		getName() const;
-			BlockHandle				getOwningBlock();
 			app::TypeMetainfo		getType() const;
 
 			std::shared_ptr< CustomType >	makeData() const;
 
-			bool					link( InletHandle &inletHandle );
-			void					unlinkFrom( InletHandle &inletHandle );
+			bool					link( InletHandle );
+			void					unlinkFrom( InletHandle );
 
 			std::shared_ptr< const CustomType >		getCurrentData() const;
 
@@ -85,7 +75,7 @@ namespace _2Real
 			void registerToNewDataInternal( OutletCallback &cb ) const;
 			void unregisterFromNewDataInternal( OutletCallback &cb ) const;
 
-			OutletIO			*m_OutletIO;
+			std::weak_ptr< OutletIO >		mImpl;
 
 		};
 	}

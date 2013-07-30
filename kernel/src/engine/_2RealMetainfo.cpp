@@ -174,55 +174,36 @@ namespace _2Real
 		return *meta;
 	}
 
-	bundle::Block & Metainfo::createContextBlock() const
+	std::shared_ptr< bundle::Block > Metainfo::createContextBlock() const
 	{
 #ifdef _DEBUG
 		if ( m_ContextInfo.ctor == nullptr )
-		{
 			assert( NULL );
-		}
 #endif
 
 		return m_ContextInfo.ctor->create( nullptr );
 	}
 
-	bundle::Block & Metainfo::createBlock( string const& blockName, std::string const& name ) const
+	std::shared_ptr< bundle::Block > Metainfo::createBlock( string const& name ) const
 	{
-		bundle::ContextBlock *context = nullptr;
+		std::shared_ptr< bundle::ContextBlock > context;
 
 		if ( m_HasContext )
 		{
-			context = dynamic_cast< bundle::ContextBlock * > ( &( m_ContextInfo.ctor->create( nullptr ) ) );
+			context = std::dynamic_pointer_cast< _2Real::bundle::ContextBlock >( m_ContextInfo.ctor->create( nullptr ) );
 		}
-
-		//BlockInfoConstIterator it = m_BlockInfos.find( blockName );
-		//if ( it != m_BlockInfos.end() )
-		//{
-		//	return it->second.ctor->create( context );
-		//}
-		//else
-		//{
-		//	ostringstream msg;
-		//	msg << "block " << blockName << " is not exported by " << m_BundleData.getName();
-		//	throw NotFoundException( msg.str() );
-		//}
 
 		for ( BlockInfoConstIterator it = m_BlockInfos.begin(); it != m_BlockInfos.end(); ++it )
 		{
-			if ( toLower( it->first ) == toLower( blockName ) )
+			if ( toLower( it->first ) == toLower( name ) )
 			{
 				return it->second.ctor->create( context );
 			}
 		}
 
 		ostringstream msg;
-		msg << "block " << blockName << " is not exported by " << m_BundleData.getName();
+		msg << "block " << name << " is not exported by " << m_BundleData.getName();
 		throw NotFoundException( msg.str() );
-	}
-
-	void Metainfo::removeContextBlock()
-	{
-		m_ContextInfo.ctor->reset();
 	}
 
 	void Metainfo::cleanup()

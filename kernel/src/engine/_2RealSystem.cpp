@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealSystem.h"
+#include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealException.h"
@@ -31,177 +32,163 @@ using std::string;
 namespace _2Real
 {
 
-	System::System( Logger &logger ) :
-		m_Logger( logger )
+	System::System( EngineImpl *engine ) :
+		mEngineImpl( engine )
 	{
 	}
 
 	System::~System()
 	{
-		clearAll();
+		clear();
 	}
 
-	void System::clearAll()
+	void System::clear()
 	{
-		Blocks readyBlocks;
-
-		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
+		for ( BlockIterator it = mBlockInstances.begin(); it != mBlockInstances.end(); ++it )
 		{
-			(*it)->prepareForShutDown();
-			std::cout << "prepared " << ( *it )->getName() << " for shutdown" << std::endl;
+			it->second->prepareForShutDown();
+			std::cout << "prepared " << it->second->getName() << " for shutdown" << std::endl;
 		}
 
-		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
+		for ( BlockIterator it = mBlockInstances.begin(); it != mBlockInstances.end(); /**/ )
 		{
-			if ( (*it)->shutDown( 1000 ) )
+			if ( it->second->shutDown( 1000 ) )
 			{
-				readyBlocks.insert( *it );
-				std::cout << "shut down " << ( *it )->getName() << std::endl;
+				std::cout << "shut down " << it->second->getName() << std::endl;
+				it = mBlockInstances.erase( it );
 			}
 			else
 			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
+				mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
+				++it;
 			}
-
-			it = m_BlockInstances.erase( it );
 		}
 
-		for ( BlockIterator it = readyBlocks.begin(); it != readyBlocks.end(); /**/ )
+		for ( ContextBlockIterator it = mContextBlocks.begin(); it != mContextBlocks.end(); ++it )
 		{
-			delete *it;
-			it = readyBlocks.erase( it );
+			it->second->prepareForShutDown();
+			std::cout << "prepared " << it->second->getName() << " for shutdown" << std::endl;
 		}
 
-		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
+		for ( ContextBlockIterator it = mContextBlocks.begin(); it != mContextBlocks.end(); /**/ )
 		{
-			(*it)->prepareForShutDown();
-
-			std::cout << "prepared " << ( *it )->getName() << " for shutdown" << std::endl;
-		}
-
-		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); /**/ )
-		{
-			if ( (*it)->shutDown( 1000 ) )
+			if ( it->second->shutDown( 1000 ) )
 			{
-				readyBlocks.insert( *it );
-				std::cout << "shut down " << ( *it )->getName() << std::endl;
+				std::cout << "shut down " << it->second->getName() << std::endl;
+				it = mContextBlocks.erase( it );
 			}
 			else
 			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
+				mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
+				++it;
 			}
-
-			it = m_ContextBlocks.erase( it );
-		}
-
-		for ( BlockIterator it = readyBlocks.begin(); it != readyBlocks.end(); /**/ )
-		{
-			delete *it;
-			it = readyBlocks.erase( it );
 		}
 	}
 
-	void System::clearBlockInstances()
+	void System::addContextBlockInstance( Bundle *bundle, std::shared_ptr< FunctionBlock > block )
 	{
-		Blocks ready;
+		mContextBlocks.insert( std::make_pair( bundle->getAbsPath(), block ) );
+	}
 
-		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
+	void System::addRegularBlockInstance( Bundle *bundle, std::shared_ptr< FunctionBlock > block )
+	{
+		mBlockInstances.insert( std::make_pair( bundle->getAbsPath(), block ) );
+	}
+
+	void System::destroyBlocks( Bundle *bundle )
+	{
+		std::pair< BlockIterator, BlockIterator > range = mBlockInstances.equal_range( bundle->getAbsPath() );
+
+		for ( BlockIterator it = range.first; it != range.second; ++it )
 		{
-			(*it)->prepareForShutDown();
+			it->second->prepareForShutDown();
+			std::cout << "prepared " << it->second->getName() << " for shutdown" << std::endl;
 		}
 
-		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); /**/ )
+		for ( BlockIterator it = range.first; it != range.second; )
 		{
-			if ( (*it)->shutDown( 10000 ) )
-			{
-				ready.insert( *it );
-			}
+			if ( it->second->shutDown( 3000 ) )
+				std::cout << "shut down " << it->second->getName() << std::endl;
 			else
-			{
-				m_Logger.addLine( string( "failed to shut down ").append( ( *it )->getFullName() ) );
-			}
+				mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
 
-			it = m_BlockInstances.erase( it );
+			it = mBlockInstances.erase( it );
 		}
+	}
 
-		for ( BlockIterator it = ready.begin(); it != ready.end(); /**/ )
+	unsigned int System::getBlockInstanceCount( Bundle const* bundle, std::string const& name )
+	{
+		std::pair< BlockIterator, BlockIterator > range = mBlockInstances.equal_range( bundle->getAbsPath() );
+
+		unsigned int cnt = 0;
+
+		for ( BlockIterator it = range.first; it != range.second; ++it )
 		{
-			delete *it;
-			it = ready.erase( it );
+			if ( it->second->getName() == name )
+				++cnt;
 		}
+
+		return cnt;
 	}
 
-	void System::addBlock( FunctionBlock< app::ContextBlockHandle > &block )
+	std::shared_ptr< FunctionBlock > System::getContextBlock( Bundle const* bundle )
 	{
-		m_ContextBlocks.insert( &block );
+		ContextBlockIterator it = mContextBlocks.find( bundle->getAbsPath() );
+		if ( it == mContextBlocks.end() )
+			return std::shared_ptr< FunctionBlock >();
+		else
+			return std::dynamic_pointer_cast< FunctionBlock >( it->second );
 	}
 
-	void System::addBlock( FunctionBlock< app::BlockHandle > &block )
-	{
-		m_BlockInstances.insert( &block );
-	}
-
-	void System::removeBlock( FunctionBlock< app::BlockHandle > &block, const long timeout )
-	{
-		for ( BlockIterator it = m_BlockInstances.begin(); it != m_BlockInstances.end(); ++it )
-		{
-			if ( *it == &block )
-			{
-				( *it )->prepareForShutDown();
-				if ( (*it)->shutDown( timeout ) )
-				{
-					delete *it;
-					m_BlockInstances.erase( it );
-					return;
-				}
-				else
-				{
-					m_BlockInstances.erase( it );
-					ostringstream msg;
-					msg << " timeout reached on shutdown of " << block.getFullName();
-					throw TimeOutException( msg.str() );
-				}
-			}
-		}
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	void System::removeBlock( FunctionBlock< app::ContextBlockHandle > &block, const long timeout )
-	{
-		for ( BlockIterator it = m_ContextBlocks.begin(); it != m_ContextBlocks.end(); ++it )
-		{
-			if ( *it == &block )
-			{
-				( *it )->prepareForShutDown();
-				if ( (*it)->shutDown( timeout ) )
-				{
-					delete *it;
-					m_ContextBlocks.erase( it );
-					return;
-				}
-				else
-				{
-					m_ContextBlocks.erase( it );
-					ostringstream msg;
-					throw TimeOutException( msg.str() );
-				}
-			}
-		}
-#ifdef _DEBUG
-		assert( NULL );
-#endif
-	}
-
-	System::Blocks const& System::getBlockInstances() const
-	{
-		return m_BlockInstances;
-	}
-
-	System::Blocks const& System::getBundleContexts() const
-	{
-		return m_ContextBlocks;
-	}
-
+//	void System::removeRegularBlockInstance( std::shared_ptr< FunctionBlock > block, const long timeout )
+//	{
+//		for ( BlockIterator it = mBlockInstances.begin(); it != mBlockInstances.end(); ++it )
+//		{
+//			if ( *it == block )
+//			{
+//				( *it )->prepareForShutDown();
+//				if ( ( *it )->shutDown( timeout ) )
+//				{
+//					mBlockInstances.erase( it );
+//					return;
+//				}
+//				else
+//				{
+//					//mBlockInstances.erase( it );
+//					ostringstream msg;
+//					msg << " timeout reached on shutdown of " << block->getFullName();
+//					throw TimeOutException( msg.str() );
+//				}
+//			}
+//		}
+//#ifdef _DEBUG
+//		assert( NULL );
+//#endif
+//	}
+//
+//	void System::removeContextBlockInstance( std::shared_ptr< FunctionBlock > block, const long timeout )
+//	{
+//		for ( BlockIterator it = mContextBlocks.begin(); it != mContextBlocks.end(); ++it )
+//		{
+//			if ( *it == block )
+//			{
+//				( *it )->prepareForShutDown();
+//				if ( ( *it )->shutDown( timeout ) )
+//				{
+//					mContextBlocks.erase( it );
+//					return;
+//				}
+//				else
+//				{
+//					//mContextBlocks.erase( it );
+//					ostringstream msg;
+//					msg << " timeout reached on shutdown of " << block->getFullName();
+//					throw TimeOutException( msg.str() );
+//				}
+//			}
+//		}
+//#ifdef _DEBUG
+//		assert( NULL );
+//#endif
+//	}
 }

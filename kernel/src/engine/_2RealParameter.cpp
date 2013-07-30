@@ -39,7 +39,6 @@ namespace _2Real
 
 	Parameter::Parameter( ParameterIO *owner ) :
 		NonCopyable< Parameter >(),
-		Handleable< Parameter, bundle::ParameterHandle >( *this ),
 		mOwner( owner )
 	{
 	}
@@ -68,5 +67,4 @@ namespace _2Real
 		mLastData = mData;
 		mData = newData;
 	}
-
 }

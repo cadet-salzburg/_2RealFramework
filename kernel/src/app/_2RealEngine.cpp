@@ -69,9 +69,10 @@ namespace _2Real
 			return mImpl->getBundleDirectory();
 		}
 
-		BundleHandle & Engine::loadBundle( string const& libraryPath )
+		BundleHandle Engine::loadBundle( string const& libraryPath )
 		{
-			return mImpl->loadLibrary( libraryPath ).getHandle();
+			std::shared_ptr< Bundle > result = mImpl->loadLibrary( libraryPath );
+			return BundleHandle( result );
 		}
 
 // ---------------------------------- bundle loading

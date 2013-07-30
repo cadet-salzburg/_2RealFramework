@@ -19,84 +19,55 @@
 #include "bundle/_2RealParameterHandle.h"
 #include "engine/_2RealParameter.h"
 
-#define checkValidity( obj )\
-	if ( obj == nullptr ) throw UninitializedHandleException( "handle not initialized" );
-
 namespace _2Real
 {
+	template< typename TObj >
+	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+	{
+		std::shared_ptr< TObj > locked = handle.lock();
+		if ( locked.get() == nullptr )
+		{
+			std::stringstream msg;
+			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
+		}
+
+		return locked;
+	}
+
 	namespace bundle
 	{
 		ParameterHandle::ParameterHandle() :
-			m_Parameter( nullptr )
+			mImpl()
 		{
 		}
 
-		ParameterHandle::ParameterHandle( Parameter &param ) :
-			m_Parameter( &param )
+		ParameterHandle::ParameterHandle( std::shared_ptr< Parameter > parameter ) :
+			mImpl( parameter )
 		{
-			m_Parameter->registerHandle( *this );
-		}
-
-		ParameterHandle::~ParameterHandle()
-		{
-			if ( isValid() ) m_Parameter->unregisterHandle( *this );
-		}
-
-		ParameterHandle::ParameterHandle( ParameterHandle const& other ) :
-			m_Parameter( other.m_Parameter )
-		{
-			if ( isValid() ) m_Parameter->registerHandle( *this );
-		}
-
-		ParameterHandle& ParameterHandle::operator=( ParameterHandle const& other )
-		{
-			if ( this == &other )
-			{
-				return *this;
-			}
-
-			if ( isValid() )
-			{
-				m_Parameter->unregisterHandle( *this );
-			}
-
-			m_Parameter = other.m_Parameter;
-
-			if ( isValid() )
-			{
-				m_Parameter->registerHandle( *this );
-			}
-
-			return *this;
 		}
 
 		bool ParameterHandle::isValid() const
 		{
-			return m_Parameter != nullptr;
-		}
-
-		void ParameterHandle::invalidate()
-		{
-			checkValidity( m_Parameter );
-			m_Parameter = nullptr;
+			std::shared_ptr< Parameter > parameter = mImpl.lock();
+			return ( parameter.get() != nullptr );
 		}
 
 		bool ParameterHandle::hasChanged() const
 		{
-			checkValidity( m_Parameter );
-			return m_Parameter->hasChanged();
+			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
+			return parameter->hasChanged();
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getReadableRef() const
 		{
-			checkValidity( m_Parameter );
-			return m_Parameter->getData();
+			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
+			return parameter->getData();
 		}
 
 		void ParameterHandle::getWriteableCopy( CustomType &writeable ) const
 		{
-			checkValidity( m_Parameter );
-			writeable.cloneFrom( *( m_Parameter->getData().get() ) );
+			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
+			writeable.cloneFrom( *( parameter->getData().get() ) );
 		}
 	}
 }
