@@ -18,71 +18,56 @@
 
 #pragma once
 
-#include "engine/_2RealParameterMetadata.h"
-#include "engine/_2RealThreadingPolicy.h"
-
-#include <vector>
-#include <string>
+#include "engine/_2RealIOMetadata.h"
+#include "policies/_2RealThreadingPolicy.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-
 	class TypeRegistry;
 
 	class BlockMetadata
 	{
-
 	public:
 
 		typedef std::pair< std::string, std::string > BlockId;
 
-		typedef std::vector< InletMetadata const* >						InletMetadatas;
-		typedef std::vector< InletMetadata const* >::iterator			InletMetadataIterator;
-		typedef std::vector< InletMetadata const* >::const_iterator		InletMetadataConstIterator;
+		typedef std::vector< std::shared_ptr< IOMetadata > >						IOMetadatas;
+		typedef std::vector< std::shared_ptr< IOMetadata > >::iterator				IOMetadataIterator;
+		typedef std::vector< std::shared_ptr< IOMetadata > >::const_iterator		IOMetadataConstIterator;
 
-		typedef std::vector< OutletMetadata const* >					OutletMetadatas;
-		typedef std::vector< OutletMetadata const* >::iterator			OutletMetadataIterator;
-		typedef std::vector< OutletMetadata const* >::const_iterator	OutletMetadataConstIterator;
-
-		typedef std::vector< ParameterMetadata const* >					ParameterMetadatas;
-		typedef std::vector< ParameterMetadata const* >::iterator		ParameterMetadataIterator;
-		typedef std::vector< ParameterMetadata const* >::const_iterator	ParameterMetadataConstIterator;
-
-		//BlockMetadata( TypeRegistry const* reg );
-		BlockMetadata( BlockId const& id, TypeRegistry const* reg );
-		~BlockMetadata();
+		BlockMetadata( BlockId const&, TypeRegistry *, bool isContext, bool needsContext );
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
-		void addInlet( InletMetadata *data );
-		void addOutlet( OutletMetadata *data );
-		void addParameter( ParameterMetadata *data );
+		void addInlet( std::shared_ptr< IOMetadata >, std::string const& );
+		void addOutlet( std::shared_ptr< IOMetadata >, std::string const& );
+		void addParameter( std::shared_ptr< IOMetadata >, std::string const& );
 		void setThreadingPolicy( ThreadingPolicy const& policy );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
-
-		InletMetadatas const& getInlets() const;
-		OutletMetadatas const& getOutlets() const;
-		ParameterMetadatas const& getParameters() const;
-
-		static void performBlockNameCheck( std::string const& name );
+		bool isContext() const;
+		bool needsContext() const;
+		ThreadingPolicy getThreadingPolicy() const;
+		IOMetadatas const& getInlets() const;
+		IOMetadatas const& getOutlets() const;
+		IOMetadatas const& getParameters() const;
 
 	private:
 
-		ThreadingPolicy		m_ThreadingPolicy;
-
-		//std::string			m_Name;
 		BlockId				mBlockId;
-		std::string			m_Description;
-		std::string			m_Category;
+		std::string			mDescription;
+		std::string			mCategory;
+		bool				mIsContext;
+		bool				mNeedsContext;
+		ThreadingPolicy		mThreadingPolicy;
 
-		InletMetadatas		m_Inlets;
-		OutletMetadatas		m_Outlets;
-		ParameterMetadatas	m_Parameters;
+		IOMetadatas			mInlets;
+		IOMetadatas			mOutlets;
+		IOMetadatas			mParameters;
 
 		TypeRegistry		const* mRegistry;
-
 	};
 }

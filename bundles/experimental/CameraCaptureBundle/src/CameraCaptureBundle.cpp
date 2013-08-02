@@ -74,7 +74,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		info.setVersion( 0, 1, 0 );
 
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
-		BlockMetainfo cameraCapture = info.exportBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
+		FunctionBlockMetainfo cameraCapture = info.exportFunctionBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
 
 		cameraCapture.addParameter< unsigned int >( "device", 0 );
 		cameraCapture.addParameter< unsigned int >( "width", 640 );

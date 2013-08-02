@@ -19,132 +19,39 @@
 
 #pragma once
 
-#include "datatypes/_2RealTypes.h"
-#include "datatypes/_2RealFieldDescriptor.h"
-#include "datatypes/_2RealCustomData.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	template< typename TType >
-	struct DataField;
+	class DataField;
+	typedef std::shared_ptr< const DataField >	DataFieldRef;
+	typedef std::vector< const DataFieldRef >	DataFields;
 
-	template< >
-	struct DataField< char >
+	typedef std::pair< std::string, std::string >	TypeName;
+
+	class DataField
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const char init )
+		DataField( std::string const& name, TypeName const& type, DataFields const& subfields ) :
+			mFieldName( name ), mTypeName( type ), mSubFields( subfields )
 		{
-			Field *f = new SimpleField( name, Name< char >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< char >( init, field );
 		}
-	};
-
-	template< >
-	struct DataField< unsigned char >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const unsigned char init )
+		~DataField() {}
+		std::string					getName() const { return mFieldName; }
+		TypeName					getTypename() const { return mTypeName; }
+		DataFields					getSubFields() const { return mSubFields; }
+		static DataFieldRef			createSimpleField( std::string const& name, std::string const& type )
 		{
-			Field *f = new SimpleField( name, Name< unsigned char >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< unsigned char >( init, field );
+			return DataFieldRef( new DataField( name, TypeName( sBasicTypeName, type ), DataFields() ) );
 		}
-	};
-
-	template< >
-	struct DataField< int >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const int init )
+		static DataFieldRef			createComplexField( std::string const& name, TypeName const& type, DataFields const& subfields )
 		{
-			Field *f = new SimpleField( name, Name< int >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< int >( init, field );
+			return DataFieldRef( new DataField( name, type, subfields ) );
 		}
-	};
-
-	template< >
-	struct DataField< unsigned int >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const unsigned int init )
-		{
-			Field *f = new SimpleField( name, Name< unsigned int >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< unsigned int >( init, field );
-		}
-	};
-
-	template< >
-	struct DataField< float >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const float init )
-		{
-			Field *f = new SimpleField( name, Name< float >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< float >( init, field );
-		}
-	};
-
-	template< >
-	struct DataField< double >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const double init )
-		{
-			Field *f = new SimpleField( name, Name< double >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< double >( init, field );
-		}
-	};
-
-	template< >
-	struct DataField< bool >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, const bool init )
-		{
-			Field *f = new SimpleField( name, Name< bool >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< bool >( init, field );
-		}
-	};
-
-	template< >
-	struct DataField< std::string >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::string const& init )
-		{
-			Field *f = new SimpleField( name, Name< std::string >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< std::string >( init, field );
-		}
-	};
-
-	template< typename TType >
-	struct DataField< std::vector< TType > >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::vector< TType > const& init )
-		{
-			Field *f = new SimpleField( name, Name< std::vector< TType > >::humanReadableName() );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< std::vector< TType > >( init, field );
-		}
-	};
-
-	template< >
-	struct DataField< CustomType >
-	{
-	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::pair< std::string, std::string > const& type, CustomType const& init, Fields const& fields )
-		{
-			Field *f = new ComplexField( name, type, fields );
-			std::shared_ptr< const Field > field( f );
-			return new FieldDescriptor_t< CustomType >( init, field );
-		}
+		static const std::string sBasicTypeName;
+	private:
+		std::string					mFieldName;
+		TypeName					mTypeName;
+		DataFields					mSubFields;
 	};
 }

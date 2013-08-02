@@ -18,22 +18,24 @@
 
 #pragma once
 
+#include "helpers/_2RealStdIncludes.h"
+
 namespace _2Real
 {
 
-	template< typename T >
+	template< typename TType >
 	class NonCopyable
 	{
 
 	protected:
 
-		NonCopyable () {}
-		~NonCopyable () {}
+		NonCopyable() {}
+		~NonCopyable() {}
 	
 	private:
 
-		NonCopyable ( NonCopyable const& src );
-		T & operator= ( T const& src );
+		NonCopyable( NonCopyable const& other );
+		TType & operator= ( TType const& other );
 
 	};
 

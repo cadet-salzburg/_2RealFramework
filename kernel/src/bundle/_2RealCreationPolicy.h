@@ -26,73 +26,70 @@ namespace _2Real
 	{
 		class AbstractBlockCreator
 		{
-
 		public:
-
 			virtual ~AbstractBlockCreator() {}
 			virtual std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context ) = 0;
-			virtual void reset() {}
-
+			virtual unsigned int getCreationCount() const = 0;
+			virtual bool needsContext() const = 0;
 		};
 
 		template< typename BlockDerived >
 		class CreationPolicy
 		{
-
 		public:
-
 			virtual ~CreationPolicy() {}
 			virtual std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context ) = 0;
-			virtual void reset() {}
-
+			virtual unsigned int getCreationCount() const = 0;
+			virtual bool needsContext() const = 0;
 		};
 
 		template< typename BlockDerived >
 		class WithContext : public CreationPolicy< BlockDerived >
 		{
-
 		public:
-
+			WithContext() : mCreationCount( 0 ) {}
 			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
+#ifdef _DEBUG
+				assert( context.get() );
+#endif
+				++mCreationCount;
 				return std::shared_ptr< _2Real::bundle::Block >( new BlockDerived( *( context.get() ) ) );
 			}
-
+			unsigned int getCreationCount() const { return mCreationCount; }
+			bool needsContext() const { return true; }
+		private:
+			unsigned int mCreationCount;
 		};
 
 		template< typename BlockDerived >
 		class WithoutContext : public CreationPolicy< BlockDerived >
 		{
-
 		public:
-
-			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
+			WithoutContext() : mCreationCount( 0 ) {}
+			std::shared_ptr< _2Real::bundle::Block > create( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
+				++mCreationCount;
 				return std::shared_ptr< _2Real::bundle::Block >( new BlockDerived );
 			}
-
+			unsigned int getCreationCount() const { return mCreationCount; }
+			bool needsContext() const { return false; }
+		private:
+			unsigned int mCreationCount;
 		};
 
-		// not threadsafe!
 		template< typename ContextBlockDerived >
 		class CreateContext : public CreationPolicy< ContextBlockDerived >
 		{
-
 		public:
-
-			CreateContext() : mObj(/* nullptr */)		{}
-
-			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
+			CreateContext() : mObj(), mCreationCount( 0 ) {}
+			std::shared_ptr< _2Real::bundle::Block > create( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
-				//if ( m_Obj == nullptr )
-				//{
-				//	m_Obj = new ContextBlockDerived();
-				//}
-				//return *m_Obj;;
 				if ( mObj.expired() )
 				{
 					std::shared_ptr< ContextBlockDerived > shared( new ContextBlockDerived );
 					mObj = shared;
+					++mCreationCount;
 					return shared;
 				}
 				else
@@ -101,33 +98,25 @@ namespace _2Real
 					return shared;
 				}
 			}
-
-			//void reset() { m_Obj = nullptr; }
-
+			unsigned int getCreationCount() const { return mCreationCount; }
+			bool needsContext() const { return false; }
 		private:
-
-			//ContextBlockDerived			*m_Obj;
 			std::weak_ptr< ContextBlockDerived >		mObj;
-
+			unsigned int								mCreationCount;
 		};
 
 		template< typename BlockDerived, template < typename BlockDerived > class CreationPolicy >
 		class BlockCreator : public AbstractBlockCreator
 		{
-
 		public:
-
 			std::shared_ptr< _2Real::bundle::Block > create( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
-				return m_Policy.create( context );
+				return mPolicy.create( context );
 			}
-
-			void reset() { m_Policy.reset(); }
-
+			unsigned int getCreationCount() const { return mPolicy.getCreationCount(); }
+			bool needsContext() const { return mPolicy.needsContext(); }
 		private:
-
-			CreationPolicy< BlockDerived >	m_Policy;
-
+			CreationPolicy< BlockDerived >	mPolicy;
 		};
 	}
 }

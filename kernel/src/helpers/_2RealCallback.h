@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "helpers/_2RealStdIncludes.h"
+
 #ifdef _2REAL_WINDOWS
 	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall

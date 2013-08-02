@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "helpers/_2RealPoco.h"
-#include <map>
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -43,14 +43,14 @@ namespace _2Real
 		~BundleLoader();
 
 		void clear();
-		BundleMetadata const& createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
+		//BundleMetadata const& createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
 		bool isLibraryLoaded( std::string const& absPath ) const;
-		bool hasContext( std::string const& absPath ) const;
-		BundleMetadata const& loadLibrary( std::string const& path );
+		bool exportsContext( std::string const& absPath ) const;
+		std::shared_ptr< const BundleMetadata > loadLibrary( std::string const& path );
 		void unloadLibrary( std::string const& path );
 		std::shared_ptr< bundle::Block > createContext( std::string const& absPath ) const;
 		std::shared_ptr< bundle::Block > createBlockInstance( std::string const& absPath, std::string const& ) const;
-		BundleMetadata const& getBundleMetadata( std::string const& absPath ) const;
+		std::shared_ptr< const BundleMetadata > getBundleMetadata( std::string const& absPath ) const;
 		//void resetContextBlock( std::string const& absPath );
 
 	private:

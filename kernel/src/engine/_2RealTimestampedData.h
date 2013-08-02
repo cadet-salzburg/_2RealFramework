@@ -19,8 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealCustomData.h"
-
-#include <limits.h>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

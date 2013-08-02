@@ -19,19 +19,18 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
+#include "datatypes/_2RealDataField.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 	class AbstractAnyHolder;
-	class Field;
 
 	class FieldDescriptor
 	{
 	public:
 		virtual ~FieldDescriptor() {}
 		virtual AbstractAnyHolder * createAnyHolder() const = 0;
-		virtual std::shared_ptr< const Field > getField() const = 0;
+		virtual DataFieldRef getField() const = 0;
 	};
 }

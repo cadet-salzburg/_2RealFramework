@@ -19,16 +19,13 @@
 #pragma once
 
 #include "datatypes/_2RealFieldDescriptor.h"
+#include "datatypes/_2RealFieldDescriptors.h"
 #include "helpers/_2RealException.h"
-#include "datatypes/_2RealDataField.h"
-
-#include <string>
-#include <map>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 	class TypeMetadata;
-	class TypeRegistry;
 
 	namespace bundle
 	{
@@ -37,13 +34,12 @@ namespace _2Real
 
 		public:
 
-			TypeMetainfo( TypeMetadata *meta );
-			~TypeMetainfo();
+			TypeMetainfo( std::shared_ptr< TypeMetadata > meta );
 
 			template< typename TType >
 			void addField( std::string const& name, TType const& init = Init< TType >::defaultValue() )
 			{
-				std::shared_ptr< const FieldDescriptor > desc( DataField< TType >::createFieldDescriptor( name, init ) );
+				std::shared_ptr< const FieldDescriptor > desc( FieldDesc< TType >::createFieldDescriptor( name, init ) );
 				if ( desc == nullptr )
 					throw Exception( "this type is not allowed as a field" );
 				else
@@ -52,13 +48,11 @@ namespace _2Real
 
 			void addCustomTypeField( std::string const& name, std::string const& type );
 
+			std::shared_ptr< CustomType > makeData();
+
 		private:
 
-			TypeMetainfo& operator=( TypeMetainfo const& other );
-			TypeMetainfo( TypeMetainfo const& other );
-
-			friend class CustomType;
-			TypeMetadata								*mImpl;
+			std::weak_ptr< TypeMetadata >	mImpl;
 
 			void addFieldInternal( std::string const& name, std::string const& type, std::shared_ptr< const FieldDescriptor > desc );
 

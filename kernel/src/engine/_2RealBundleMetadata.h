@@ -19,36 +19,25 @@
 #pragma once
 
 #include "helpers/_2RealVersion.h"
-
-#include <map>
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class BlockMetadata;
-
-	namespace app
+	namespace bundle
 	{
-		struct BlockInfo;
-		struct BundleInfo;
+		class AbstractBlockCreator;
 	}
+
+	class Metainfo;
+	class BlockMetadata;
+	class TypeMetadata;
 
 	class BundleMetadata
 	{
 
 	public:
 
-		typedef std::map< std::string, BlockMetadata const* >					BlockMetadatas;
-		typedef std::map< std::string, BlockMetadata const* >::iterator			BlockMetadataIterator;
-		typedef std::map< std::string, BlockMetadata const* >::const_iterator	BlockMetadataConstIterator;
-
-		BundleMetadata();
-
-		app::BundleInfo				getBundleInfo() const;
-
-		void						addBlockData( BlockMetadata const& data );
-		BlockMetadata const&		getBlockData( std::string const& blockName ) const;
-		BlockMetadatas const&		getExportedBlocks() const;
+		BundleMetadata( Metainfo * );
 
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );
@@ -66,16 +55,30 @@ namespace _2Real
 		std::string const&			getCategory() const;
 		Version const&				getVersion() const;
 
+		std::shared_ptr< const BlockMetadata >		getFunctionBlockMetadata( std::string const& name ) const;
+		std::shared_ptr< const BlockMetadata >		getContextBlockMetadata() const;
+
+		void						getBlockMetadata( std::vector< std::shared_ptr< const BlockMetadata > > & ) const;
+
+		std::shared_ptr< BlockMetadata >	exportFunctionBlock( bundle::AbstractBlockCreator *, std::string const& );
+		std::shared_ptr< BlockMetadata >	exportContextBlock( bundle::AbstractBlockCreator * );
+		std::shared_ptr< TypeMetadata >		exportCustomType( std::string const& );
+	
+		bool						exportsContext() const;
+		bool						hasContext() const;
+		unsigned int				getCreationCount( std::string const& ) const;
+
 	private:
 
-		std::string					m_Name;
-		std::string					m_InstallDirectory;
-		std::string					m_Description;
-		std::string					m_Author;
-		std::string					m_Contact;
-		std::string					m_Category;
-		Version						m_Version;
-		BlockMetadatas				m_ExportedBlocks;
+		Metainfo					*const mOwner;
+
+		std::string					mName;
+		std::string					mInstallDirectory;
+		std::string					mDescription;
+		std::string					mAuthor;
+		std::string					mContact;
+		std::string					mCategory;
+		Version						mVersion;
 
 	};
 }

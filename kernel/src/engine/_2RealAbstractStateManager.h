@@ -19,9 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealNonCopyable.h"
-
-#include <string>
-#include <set>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

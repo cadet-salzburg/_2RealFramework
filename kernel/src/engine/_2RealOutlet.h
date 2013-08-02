@@ -20,7 +20,8 @@
 
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealNonCopyable.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

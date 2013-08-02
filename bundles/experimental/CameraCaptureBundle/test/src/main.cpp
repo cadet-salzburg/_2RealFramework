@@ -1,6 +1,6 @@
 #include "_2RealApplication.h"
 #include "_2RealDatatypes.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
 #include <iostream>
 #include <list>
 #include <vector>
@@ -240,53 +240,88 @@ void imageToTexture( Texture &tex, std::shared_ptr< const Image > img )
 	glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
+void printout( std::ostream &out, DataFields const& fields, const unsigned int offset )
+{
+	for ( DataFields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+	{
+		DataFieldRef f = *it;
+		for ( unsigned int i=0; i<offset; ++ i ) out << "\t";
+		std::string name = f->getName();
+		if ( name.length() >= 16 )
+			out << f->getName() << "\t";
+		else if ( name.length() >= 8 )
+			out << f->getName() << "\t\t";
+		else
+			out << f->getName() << "\t\t\t";
+		std::cout << f->getTypename().first << "::" << f->getTypename().second << std::endl;
+		if ( !f->getSubFields().empty() )
+		{
+			printout( out, f->getSubFields(), offset+1 );
+		}
+	}
+}
+
 void printBundleInfo( app::BundleHandle const& h )
 {
-	BundleInfo info = h.getBundleInfo();
-	BundleInfo::BlockInfos blocks = info.exportedBlocks;
-	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+	BundleMetainfo info = h.getBundleMetainfo();
+
+	std::vector< BlockMetainfo > blocks;
+	info.getExportedBlocks( blocks );
+
+	for ( std::vector< BlockMetainfo >::const_iterator it = blocks.begin(); it != blocks.end(); ++it )
 	{
-		std::cout << "-b\t" << it->name << std::endl;
-		BlockInfo::IOInfos inlets = it->inlets;
-		for ( BlockInfo::IOInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		BlockMetainfo block = *it;
+
+		std::vector< InputMetainfo > inlets;		block.getInletMetainfo( inlets );
+		std::vector< OutputMetainfo > outlets;		block.getOutletMetainfo( outlets );
+		std::vector< InputMetainfo > parameters;	block.getParameterMetainfo( parameters );
+
+		std::cout << "---------------------" << std::endl;
+		std::cout << "-b\t" << block.getName() << " " << ( block.isContext() ? "context" : "regular" ) << std::endl;
+		std::cout << "\t" << block.getDescription() << ", needs context: " << std::boolalpha << block.needsContext() << std::endl;
+		std::cout << "---------------------" << std::endl;
+		std::cout << "inlets:" << std::endl;
+		for ( std::vector< InputMetainfo >::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
-			std::cout << "-i\t" << iIt->name;
-			//std::cout << ( iIt->isMulti ? "\t+m " : "\t-m " );
-			std::cout << "\tt " << iIt->typeName << std::endl;
+			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName().first << "::" << iIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -b " << iIt->isBuffered() << " -l " << iIt->canLink() << " -m " << iIt->canExpand() << std::endl;
 		}
-		BlockInfo::IOInfos outlets = it->outlets;
-		for ( BlockInfo::IOInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		std::cout << "parameters:" << std::endl;
+		for ( std::vector< InputMetainfo >::const_iterator pIt = parameters.begin(); pIt != parameters.end(); ++pIt )
 		{
-			std::cout << "-o\t" << oIt->name;
-			std::cout << "\tt " << oIt->typeName << std::endl;
+			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName().first << "::" << pIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -b " << pIt->isBuffered() << " -l " << pIt->canLink() << " -m " << pIt->canExpand() << std::endl;
 		}
-		BlockInfo::IOInfos params = it->parameters;
-		for ( BlockInfo::IOInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		std::cout << "outlets:" << std::endl;
+		for ( std::vector< OutputMetainfo >::const_iterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
-			std::cout << "-p\t" << pIt->name;
-			std::cout << "\tt " << pIt->typeName << std::endl;
+			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName().first << "::" << oIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -l " << oIt->canLink() << " -m " << oIt->canExpand() << std::endl;
 		}
 	}
 }
 
 int main( int argc, char *argv[] )
 {
-	sf::Window *window = new sf::Window( sf::VideoMode( 800, 300, 32 ), "display", sf::Style::Default, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
+	sf::Window *window = new sf::Window( sf::VideoMode( 800, 600, 32 ), "display", sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
 
 	Engine &testEngine = Engine::instance();
 
 	unsigned int numInstances = 2;
-	std::vector< BlockInstance > blocks( numInstances );
+	std::vector< BlockInstance > camBlocks( numInstances );
+	std::vector< BlockInstance > cvBlocks( numInstances );
 
 	try
 	{
-		BundleHandle bundle = testEngine.loadBundle( "CameraCaptureBundle" );
-		printBundleInfo( bundle );
+		BundleHandle camBundle = testEngine.loadBundle( "CameraCaptureBundle" );
+		printBundleInfo( camBundle );
+		BundleHandle cvBundle = testEngine.loadBundle( "ComputerVisionBundle" );
+		printBundleInfo( cvBundle );
 
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
-			BlockInstance &instance = blocks[ i ];
-			instance.block = bundle.createBlockInstance( "CameraCaptureBlock" );
+			BlockInstance &instance = camBlocks[ i ];
+			instance.block = camBundle.createFunctionBlockInstance( "CameraCaptureBlock" );
 
 			instance.block.getAllInletHandles( instance.inlets );
 			instance.block.getAllParameterHandles( instance.parameters );
@@ -301,6 +336,34 @@ int main( int argc, char *argv[] )
 			unsigned int &id = *( d->get< unsigned int >( "default" ).get() );
 			id = i;
 			instance.parameters[ 0 ].setData( d );
+		}
+
+		for ( unsigned int i=0; i<numInstances; ++i )
+		{
+			BlockInstance &instance = cvBlocks[ i ];
+			instance.block = cvBundle.createFunctionBlockInstance( "OcvEqualizeHistogramBlock" );
+
+			instance.block.getAllInletHandles( instance.inlets );
+			instance.block.getAllParameterHandles( instance.parameters );
+			std::vector< OutletHandle > handles;
+			instance.block.getAllOutletHandles( handles );
+			for ( unsigned int o=0; o<handles.size(); ++o )
+				instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ] ) ) );
+
+			instance.block.setup();
+			instance.block.start();
+		}
+
+		for ( unsigned int i=0; i<numInstances; ++i )
+		{
+			BlockInstance &cam = camBlocks[ i ];
+			BlockInstance &gauss = cvBlocks[ i ];
+
+			LinkHandle link = cam.outlets[ 0 ].first.link( gauss.inlets[ 0 ] );
+			if ( !link.isValid() )
+			{
+				std::cout << "argh!" << std::endl;
+			}
 		}
 	}
 	catch ( Exception &e )
@@ -326,52 +389,91 @@ int main( int argc, char *argv[] )
 
 			window->setActive( true );
 
-			glClearColor( 1.f, 0.f, 0.f, 1.f );
-			glClear( GL_COLOR_BUFFER_BIT );
-
-			std::shared_ptr< const CustomType > d0 = blocks[ 0 ].outlets[ 0 ].second->getData();
+			std::shared_ptr< const CustomType > d0 = cvBlocks[ 0 ].outlets[ 0 ].second->getData();
 			if ( d0.get() )
 			{
 				std::shared_ptr< const Image > img = Image::asImage( d0 );
 				//std::cout << img->getWidth() << " " << img->getHeight() << std::endl;
-				imageToTexture( blocks[ 0 ].texture, img );
+				imageToTexture( cvBlocks[ 0 ].texture, img );
 			}
 
-			std::shared_ptr< const CustomType > d1 = blocks[ 1 ].outlets[ 0 ].second->getData();
+			std::shared_ptr< const CustomType > d1 = cvBlocks[ 1 ].outlets[ 0 ].second->getData();
 			if ( d1.get() )
 			{
 				std::shared_ptr< const Image > img = Image::asImage( d1 );
 				//std::cout << img->getWidth() << " " << img->getHeight() << std::endl;
-				imageToTexture( blocks[ 0 ].texture, img );
+				imageToTexture( cvBlocks[ 1 ].texture, img );
 			}
 
-			glViewport( 0, 0, 800, 300 );
+			std::shared_ptr< const CustomType > d2 = camBlocks[ 0 ].outlets[ 0 ].second->getData();
+			if ( d2.get() )
+			{
+				std::shared_ptr< const Image > img = Image::asImage( d2 );
+				//std::cout << img->getWidth() << " " << img->getHeight() << std::endl;
+				imageToTexture( camBlocks[ 0 ].texture, img );
+			}
+
+			std::shared_ptr< const CustomType > d3 = camBlocks[ 1 ].outlets[ 0 ].second->getData();
+			if ( d3.get() )
+			{
+				std::shared_ptr< const Image > img = Image::asImage( d3 );
+				//std::cout << img->getWidth() << " " << img->getHeight() << std::endl;
+				imageToTexture( camBlocks[ 1 ].texture, img );
+			}
+
+			glViewport( 0, 0, 800, 600 );
+			glClearColor( 0.f, 0.f, 0.f, 1.f );
+			glClear( GL_COLOR_BUFFER_BIT );
 			glColor3f( 1.f, 1.f, 1.f );
 			glEnable( GL_TEXTURE_2D );
-			glBindTexture( GL_TEXTURE_2D, blocks[ 0 ].texture.handle );
+
+			glBindTexture( GL_TEXTURE_2D, cvBlocks[ 0 ].texture.handle );
 			glBegin( GL_QUADS );
-			glTexCoord2f( 0.f, 0.f );
-			glVertex2f( -1.f,  1.f );
-			glTexCoord2f( 0.f, 1.f );
+				glTexCoord2f( 0.f, 0.f );
+			glVertex2f( -1.f,  0.f );
+				glTexCoord2f( 0.f, 1.f );
 			glVertex2f( -1.f, -1.f );
-			glTexCoord2f( 1.f, 1.f );
+				glTexCoord2f( 1.f, 1.f );
 			glVertex2f(  0.f, -1.f );
-			glTexCoord2f( 1.f, 0.f );
+				glTexCoord2f( 1.f, 0.f );
+			glVertex2f(  0.f,  0.f );
+			glEnd();
+			glBindTexture( GL_TEXTURE_2D, cvBlocks[ 1 ].texture.handle );
+			glBegin( GL_QUADS );
+				glTexCoord2f( 0.f, 0.f );
+			glVertex2f(  0.f,  0.f );
+				glTexCoord2f( 0.f, 1.f );
+			glVertex2f(  0.f, -1.f );
+				glTexCoord2f( 1.f, 1.f );
+			glVertex2f(  1.f, -1.f );
+				glTexCoord2f( 1.f, 0.f );
+			glVertex2f(  1.f,  0.f );
+			glEnd();
+			glBindTexture( GL_TEXTURE_2D, camBlocks[ 0 ].texture.handle );
+			glBegin( GL_QUADS );
+				glTexCoord2f( 0.f, 0.f );
+			glVertex2f( -1.f,  1.f );
+				glTexCoord2f( 0.f, 1.f );
+			glVertex2f( -1.f,  0.f );
+				glTexCoord2f( 1.f, 1.f );
+			glVertex2f(  0.f,  0.f );
+				glTexCoord2f( 1.f, 0.f );
 			glVertex2f(  0.f,  1.f );
 			glEnd();
+			glBindTexture( GL_TEXTURE_2D, camBlocks[ 1 ].texture.handle );
 			glBegin( GL_QUADS );
-			glBindTexture( GL_TEXTURE_2D, blocks[ 1 ].texture.handle );
-			glTexCoord2f( 0.f, 0.f );
+				glTexCoord2f( 0.f, 0.f );
 			glVertex2f(  0.f,  1.f );
-			glTexCoord2f( 0.f, 1.f );
-			glVertex2f(  0.f, -1.f );
-			glTexCoord2f( 1.f, 1.f );
-			glVertex2f(  1.f, -1.f );
-			glTexCoord2f( 1.f, 0.f );
+				glTexCoord2f( 0.f, 1.f );
+			glVertex2f(  0.f,  0.f );
+				glTexCoord2f( 1.f, 1.f );
+			glVertex2f(  1.f,  0.f );
+				glTexCoord2f( 1.f, 0.f );
 			glVertex2f(  1.f,  1.f );
 			glEnd();
-			glDisable( GL_TEXTURE_2D );
 			glBindTexture( GL_TEXTURE_2D, 0 );
+
+			glDisable( GL_TEXTURE_2D );
 
 			window->display();
 		}
@@ -390,7 +492,8 @@ int main( int argc, char *argv[] )
 	}
 
 	delete window;
-	blocks.clear();
+	cvBlocks.clear();
+	camBlocks.clear();
 
 	return 0;
 }

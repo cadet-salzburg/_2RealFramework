@@ -20,8 +20,7 @@
 
 #include "helpers/_2RealException.h"
 #include "datatypes/_2RealCustomData.h"
-
-#include <sstream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -29,6 +28,8 @@ namespace _2Real
 
 	namespace bundle
 	{
+		// in the current state, the parameter handle is a subset of the inlet handle
+
 		class ParameterHandle
 		{
 
@@ -43,7 +44,7 @@ namespace _2Real
 			bool hasChanged() const;
 
 			std::shared_ptr< const CustomType > getReadableRef() const;
-			void getWriteableCopy( CustomType &type ) const;
+			std::shared_ptr< CustomType > getWriteableCopy() const;
 
 		private:
 

@@ -18,11 +18,9 @@
 
 #pragma once
 
+#include "app/_2RealCommon.h"
 #include "app/_2RealCallbacks.h"
-
-#include <vector>
-#include <string>
-#include <memory>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -30,8 +28,8 @@ namespace _2Real
 
 	namespace app
 	{
+		class BlockMetainfo;
 		class OutletHandle;
-		struct BlockInfo;
 
 		class ContextBlockHandle
 		{
@@ -43,11 +41,11 @@ namespace _2Real
 			typedef std::vector< OutletHandle >::const_iterator	OutletHandleConstIterator;
 
 			ContextBlockHandle();
-			ContextBlockHandle( std::shared_ptr< FunctionBlock > );
+			explicit ContextBlockHandle( std::shared_ptr< FunctionBlock > );
 
 			bool					isValid() const;
 
-			BlockInfo const&		getBlockInfo() const;
+			BlockMetainfo			getBlockMetainfo() const;
 
 			OutletHandle			getOutletHandle( std::string const& );
 			void					getAllOutletHandles( OutletHandles & );

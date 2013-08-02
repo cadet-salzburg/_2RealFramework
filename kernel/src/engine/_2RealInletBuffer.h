@@ -19,9 +19,8 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-#include "helpers/_2RealPoco.h"
-
-#include <deque>
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

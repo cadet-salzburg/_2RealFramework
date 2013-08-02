@@ -19,15 +19,14 @@
 #pragma once
 
 #include "helpers/_2RealNonCopyable.h"
-
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 
 	class AbstractUberBlock;
 	class BasicInletIO;
-	class Policy;
+	class UpdatePolicy;
 	class EngineImpl;
 
 	class AbstractUpdatePolicy : private NonCopyable< AbstractUpdatePolicy >
@@ -39,9 +38,9 @@ namespace _2Real
 		virtual ~AbstractUpdatePolicy();
 		std::string getName() const;
 
-		virtual void addInlet( BasicInletIO &io, Policy const& p ) = 0;
+		virtual void addInlet( BasicInletIO &io, UpdatePolicy const& p ) = 0;
 		virtual void removeInlet( BasicInletIO &io ) = 0;
-		virtual void setInletPolicy( BasicInletIO &io, Policy const& p ) = 0;
+		virtual void setInletPolicy( BasicInletIO &io, UpdatePolicy const& p ) = 0;
 
 	protected:
 

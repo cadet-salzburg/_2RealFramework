@@ -16,8 +16,34 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealFields.h"
+#pragma once
+
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+	class IOLink;
+
+	namespace app
+	{
+		class LinkHandle
+		{
+
+		public:
+
+			LinkHandle();
+			explicit LinkHandle( std::shared_ptr< IOLink > );
+
+			bool isValid() const;
+
+			void activate();
+			void deactivate();
+
+		private:
+
+			std::weak_ptr< IOLink >		mImpl;
+
+		};
+	}
 }

@@ -21,11 +21,13 @@
 #include "engine/_2RealAbstractIOManager.h"
 #include "app/_2RealCallbacks.h"
 #include "bundle/_2RealBlockHandle.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 	class FunctionBlockStateManager;
 	class FunctionBlockUpdatePolicy;
+	class IOMetadata;
 
 	class FunctionBlockIOManager : private AbstractIOManager
 	{
@@ -42,9 +44,9 @@ namespace _2Real
 		void										registerToNewData( app::BlockCallback &cb );
 		void										unregisterFromNewData( app::BlockCallback &cb );
 
-		void										addInlet( IOInfo * );
-		void										addOutlet( IOInfo * );
-		void										addParameter( IOInfo * );
+		void										addInlet( std::shared_ptr< const IOMetadata > );
+		void										addOutlet( std::shared_ptr< const IOMetadata > );
+		void										addParameter( std::shared_ptr< const IOMetadata > );
 
 		std::shared_ptr< AbstractInletIO >			getInlet( std::string const& );
 		std::shared_ptr< const AbstractInletIO >	getInlet( std::string const& ) const;

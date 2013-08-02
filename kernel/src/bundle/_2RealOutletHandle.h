@@ -20,8 +20,7 @@
 
 #include "datatypes/_2RealCustomData.h"
 #include "helpers/_2RealException.h"
-
-#include <sstream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

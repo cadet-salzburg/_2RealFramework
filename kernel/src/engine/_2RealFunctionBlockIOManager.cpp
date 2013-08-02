@@ -29,8 +29,7 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealStringHelpers.h"
 #include "engine/_2RealParameter.h"
-
-#include <sstream>
+#include "engine/_2RealIOMetadata.h"
 
 namespace _2Real
 {
@@ -127,41 +126,35 @@ namespace _2Real
 		return findByName< ParameterIO >( mParameters, name, "parameter" );
 	}
 
-	void FunctionBlockIOManager::addInlet( IOInfo *info )
+	void FunctionBlockIOManager::addInlet( std::shared_ptr< const IOMetadata > meta )
 	{
-		if ( info->isMulti )
+		if ( meta->canExpand )
 		{
-			MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
+			MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
 			std::shared_ptr< AbstractInletIO > shared( io );
 			mInlets.push_back( shared );
 		}
 		else
 		{
-			BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, info );
+			BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
 			std::shared_ptr< AbstractInletIO > shared( io );
 			io->setSelfRef( std::static_pointer_cast< BasicInletIO >( shared ) );
-			m_UpdatePolicy->addInlet( *io, info->policy );					// creates a trigger
-			io->setData( info->initializer );								// set buffer to init value
-			io->synchronizeData();											// inlet now holds initl value
-			io->synchronizeData();											// hasChanged() == false
-			io->receiveData( TimestampedData( info->initializer, -1 ) );	// write data into queue as well -> initializes the cond
-																			// first timestamp = 0, b/c this way all regularly sent items ar newer
 			mInlets.push_back( std::shared_ptr< AbstractInletIO >( shared ) );
 		}
 	}
 
-	void FunctionBlockIOManager::addParameter( IOInfo *info )
+	void FunctionBlockIOManager::addParameter( std::shared_ptr< const IOMetadata > meta )
 	{
-		std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, info ) );
-		io->setData( info->initializer );								// buffer now holds init value
+		std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, meta ) );
+		io->setData( meta->initializer );								// buffer now holds init value
 		io->synchronizeData();											// parameter data now holds value
 		io->synchronizeData();											// parameter now will retun hasChanged() -> false
 		mParameters.push_back( io );
 	}
 
-	void FunctionBlockIOManager::addOutlet( IOInfo *info )
+	void FunctionBlockIOManager::addOutlet( std::shared_ptr< const IOMetadata > meta )
 	{
-		std::shared_ptr< OutletIO > io( new OutletIO( mEngineImpl, mOwner, info ) );
+		std::shared_ptr< OutletIO > io( new OutletIO( mEngineImpl, mOwner, meta ) );
 		io->setSelfRef( io );
 		io->synchronizeData();											// now outlet holds a clone of the init value, while buffer is empty
 		mOutlets.push_back( io );
@@ -196,7 +189,7 @@ namespace _2Real
 	{
 		for ( InletIterator it = mInlets.begin(); it != mInlets.end(); ++it )
 		{
-			for ( unsigned int i = 0; i<( *it )->getSize(); ++i )
+			for ( unsigned int i = 0; i<( *it )->getSubInletCount(); ++i )
 			{
 				std::shared_ptr< BasicInletIO > io = ( **it )[ i ];
 				io->processQueue();

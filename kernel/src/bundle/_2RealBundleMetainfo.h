@@ -19,16 +19,17 @@
 #pragma once
 
 #include "bundle/_2RealCreationPolicy.h"
-
-#include <string>
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class Metainfo;
+	class BundleMetadata;
 
 	namespace bundle
 	{
-		class BlockMetainfo;
+		class FunctionBlockMetainfo;
 		class ContextBlockMetainfo;
 		class TypeMetainfo;
 
@@ -37,21 +38,7 @@ namespace _2Real
 
 		public:
 
-			BundleMetainfo( Metainfo &info );
-
-			template< typename ContextDerived >
-			ContextBlockMetainfo & exportContextBlock()
-			{
-				AbstractBlockCreator *obj = new BlockCreator< ContextDerived, CreateContext >();
-				return exportContextBlockInternal( *obj );
-			}
-
-			template< typename BlockDerived, template < typename BlockDerived > class Policy >
-			BlockMetainfo & exportBlock( std::string const& blockName )
-			{
-				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Policy >();
-				return exportBlockInternal( *obj, blockName ); 
-			}
+			explicit BundleMetainfo( std::shared_ptr< BundleMetadata > );
 
 			void setName( std::string const& name );
 			void setDescription( std::string const& description );
@@ -60,14 +47,34 @@ namespace _2Real
 			void setContact( std::string const& contact );
 			void setCategory( std::string const& category );
 
-			// added 
-			TypeMetainfo & exportCustomType( std::string const& name );
+			template< typename ContextDerived >
+			ContextBlockMetainfo exportContextBlock()
+			{
+				AbstractBlockCreator *obj = new BlockCreator< ContextDerived, CreateContext >();
+				return exportContextBlockInternal( obj );
+			}
+
+			template< typename BlockDerived >
+			FunctionBlockMetainfo exportFunctionBlock( std::string const& name )
+			{
+				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, WithoutContext >();
+				return exportFunctionBlockInternal( obj, name ); 
+			}
+
+			template< typename BlockDerived, template < typename BlockDerived > class Policy >
+			FunctionBlockMetainfo exportFunctionBlock( std::string const& name )
+			{
+				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Policy >();
+				return exportFunctionBlockInternal( obj, name ); 
+			}
+
+			TypeMetainfo exportCustomType( std::string const& name );
 
 		private:
 
-			ContextBlockMetainfo &	exportContextBlockInternal( AbstractBlockCreator &obj );
-			BlockMetainfo &			exportBlockInternal( AbstractBlockCreator &obj, std::string const& blockName );
-			Metainfo				&m_Impl;
+			ContextBlockMetainfo	exportContextBlockInternal( AbstractBlockCreator *obj );
+			FunctionBlockMetainfo	exportFunctionBlockInternal( AbstractBlockCreator *obj, std::string const& );
+			std::weak_ptr< BundleMetadata >		mImpl;
 
 		};
 	}

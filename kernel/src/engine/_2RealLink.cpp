@@ -26,8 +26,7 @@
 #include "engine/_2RealInletBuffer.h"
 #include "datatypes/_2RealTypeConverter.h"
 #include "engine/_2RealTypeMetadata.h"
-
-#include <sstream>
+#include "engine/_2RealIOMetadata.h"
 
 using std::ostringstream;
 
@@ -35,14 +34,14 @@ namespace _2Real
 {
 	std::shared_ptr< IOLink > IOLink::link( std::shared_ptr< BasicInletIO > inlet, std::shared_ptr< OutletIO >outlet )
 	{
-		TypeMetadata const& in = inlet->getInfo()->type;
-		TypeMetadata const& out = outlet->getInfo()->type;
+		std::shared_ptr< const TypeMetadata > in = inlet->getInfo()->typeMetadata;
+		std::shared_ptr< const TypeMetadata > out = outlet->getInfo()->typeMetadata;
 
 		std::shared_ptr< IOLink > result;
 		std::shared_ptr< const TypeConverter > converterInOut;
 		std::shared_ptr< const TypeConverter > converterOutIn;
 
-		if ( in.matches( out, TypeMetadata::TypeMatchSetting::PERFECT_TYPE_MATCH, converterInOut, converterOutIn ) )
+		if ( in->matches( out.get(), TypeMetadata::TypeMatchSetting::PERFECT_TYPE_MATCH, converterInOut, converterOutIn ) )
 			result.reset( new IOLink( inlet, outlet, converterOutIn, converterInOut ) );
 
 		return result;

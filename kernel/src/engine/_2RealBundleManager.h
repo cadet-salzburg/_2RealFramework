@@ -20,11 +20,8 @@
 #pragma once
 
 #include "engine/_2RealBundleLoader.h"
-#include "helpers/_2RealPoco.h"
-
-#include <map>
-#include <string>
-#include <memory>
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -45,7 +42,7 @@ namespace _2Real
 		void clear();
 		std::shared_ptr< Bundle > 						loadBundle( std::string const& );
 		std::shared_ptr< Bundle > 						findBundleByPath( std::string const& ) const;
-		std::shared_ptr< FunctionBlock >				createContextBlockConditionally( Bundle *, std::string const& );
+		std::shared_ptr< FunctionBlock >				createContextBlockInstance( Bundle * );
 		std::shared_ptr< FunctionBlock >				createBlockInstance( Bundle *, std::string const&, std::string const& );
 		void											unloadBundle( Bundle *, const long timeout );
 		std::string										getBundleDirectory() const;

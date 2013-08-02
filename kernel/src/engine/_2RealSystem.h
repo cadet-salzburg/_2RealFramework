@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include <map>
-#include <memory>
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -36,31 +34,20 @@ namespace _2Real
 
 	public:
 
-		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >					Blocks;
-		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >::iterator		BlockIterator;
-		typedef std::multimap< std::string, std::shared_ptr< AbstractUberBlock > >::const_iterator	BlockConstIterator;
-		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >						ContextBlocks;
-		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >::iterator				ContextBlockIterator;
-		typedef std::map< std::string, std::shared_ptr< AbstractUberBlock > >::const_iterator		ContextBlockConstIterator;
-
 		System( EngineImpl * );
 		~System();
 
-		void			clear();
-
-		void			addRegularBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
-		void			addContextBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
-
+		void								clear();
+		void								addBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
 		void								destroyBlocks( Bundle *bundle );
-		unsigned int						getBlockInstanceCount( Bundle const* bundle, std::string const& );
-		std::shared_ptr< FunctionBlock >	getContextBlock( Bundle const* bundle );
-
+		std::shared_ptr< FunctionBlock >	findContextBlockInstance( Bundle *b );
+		void								removeBlockInstance( Bundle *, std::shared_ptr< FunctionBlock >, const long );
 
 	private:
 
-		EngineImpl		*const mEngineImpl;
-		Blocks			mBlockInstances;
-		ContextBlocks	mContextBlocks;
+		EngineImpl						*const mEngineImpl;
+		std::multimap< std::string, std::shared_ptr< FunctionBlock > >	mBlockInstances;
+		std::vector< std::shared_ptr< FunctionBlock > >					mFailedBlockInstances;
 
 	};
 

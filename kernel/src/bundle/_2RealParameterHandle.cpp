@@ -64,10 +64,10 @@ namespace _2Real
 			return parameter->getData();
 		}
 
-		void ParameterHandle::getWriteableCopy( CustomType &writeable ) const
+		std::shared_ptr< CustomType > ParameterHandle::getWriteableCopy() const
 		{
 			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
-			writeable.cloneFrom( *( parameter->getData().get() ) );
+			return std::shared_ptr< CustomType >( new CustomType( *( parameter->getData().get() ) ) );
 		}
 	}
 }

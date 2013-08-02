@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <string.h>
-
+#include "app/_2RealCommon.h"
 #include "app/_2RealCallbacks.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -30,6 +30,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class TypeMetainfo;
+		class LinkHandle;
 
 		class OutletHandle
 		{
@@ -37,19 +38,18 @@ namespace _2Real
 		public:
 
 			OutletHandle();
-			OutletHandle( std::shared_ptr< OutletIO > );
+			explicit OutletHandle( std::shared_ptr< OutletIO > );
 
-			bool isValid() const;
+			// check this if you're unsure if the underlying inlet still exists
+			bool									isValid() const;
 
-			std::string const&		getName() const;
-			app::TypeMetainfo		getType() const;
+			std::string const&						getName() const;
+			TypeMetainfo							getType() const;
 
-			std::shared_ptr< CustomType >	makeData() const;
+			LinkHandle								link( InletHandle );
+			void									unlinkFrom( InletHandle );
 
-			bool					link( InletHandle );
-			void					unlinkFrom( InletHandle );
-
-			std::shared_ptr< const CustomType >		getCurrentData() const;
+			std::shared_ptr< CustomType >			makeData() const;
 
 			void registerToNewData( OutletDataCallback callback, void *userData = nullptr ) const;
 			void unregisterFromNewData( OutletDataCallback callback, void *userData = nullptr ) const;
@@ -72,10 +72,10 @@ namespace _2Real
 
 			friend class InletHandle;
 
-			void registerToNewDataInternal( OutletCallback &cb ) const;
-			void unregisterFromNewDataInternal( OutletCallback &cb ) const;
+			void registerToNewDataInternal( OutletCallback & ) const;
+			void unregisterFromNewDataInternal( OutletCallback & ) const;
 
-			std::weak_ptr< OutletIO >		mImpl;
+			std::weak_ptr< OutletIO >				mImpl;
 
 		};
 	}

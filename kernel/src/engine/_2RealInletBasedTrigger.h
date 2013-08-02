@@ -23,6 +23,7 @@
 #include "engine/_2RealTimestampedData.h"
 #include "engine/_2RealAbstractStateManager.h"
 #include "engine/_2RealAbstractIOManager.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -56,9 +57,9 @@ namespace _2Real
 		{
 		}
 
-		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& src )
+		AbstractInletBasedTrigger& operator=( AbstractInletBasedTrigger const& other )
 		{
-			mLastData = src.mLastData;
+			mLastData = other.mLastData;
 			return *this;
 		}
 
@@ -69,7 +70,7 @@ namespace _2Real
 
 		virtual ~AbstractInletBasedTrigger() {}
 
-		virtual bool tryFulfillCondition( TimestampedData const& data ) = 0;
+		virtual bool tryFulfillCondition( TimestampedData const&, const bool ) = 0;
 		virtual void tryTriggerUpdate() = 0;
 
 		void resetData()
@@ -113,9 +114,10 @@ namespace _2Real
 			mUpdateManager->tryTriggerInlet();
 		}
 
-		bool tryFulfillCondition( TimestampedData const& data )
+		bool tryFulfillCondition( TimestampedData const& data, const bool reTry )
 		{
-			if ( !mCondition.isFulfilled() && mConditionCheck( data, mLastData ) )
+			// if retry flag->ignore cond, else: check cond
+			if ( ( reTry || !mCondition.isFulfilled() ) && mConditionCheck( data, mLastData ) )
 			{
 				mCondition.set( true );
 				mLastData = data;

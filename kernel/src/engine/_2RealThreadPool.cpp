@@ -26,10 +26,6 @@
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
 
-#include <sstream>
-#include <algorithm>
-#include <assert.h>
-
 namespace _2Real
 {
 

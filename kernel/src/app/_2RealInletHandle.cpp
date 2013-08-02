@@ -18,21 +18,10 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealInfo.h"
+#include "app/_2RealLinkHandle.h"
 #include "engine/_2RealAbstractIOManager.h"
-#include "engine/_2RealFunctionBlock.h"
-
-template< typename TObj >
-std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-{
-	std::shared_ptr< TObj > locked = handle.lock();
-	if ( locked.get() == nullptr )
-	{
-		std::stringstream msg;
-		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-	}
-
-	return locked;
-}
+#include "engine/_2RealIOMetadata.h"
 
 namespace _2Real
 {
@@ -54,11 +43,11 @@ namespace _2Real
 			return ( inlet.get() != nullptr );
 		}
 
-		bool InletHandle::link( OutletHandle o )
+		LinkHandle InletHandle::link( OutletHandle o )
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
 			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( o.mImpl, "outlet" );
-			return ( inlet->operator[]( 0 ) )->linkTo( outlet );
+			return LinkHandle( ( inlet->operator[]( 0 ) )->linkTo( outlet ) );
 		}
 
 		void InletHandle::unlinkFrom( OutletHandle o )
@@ -74,16 +63,16 @@ namespace _2Real
 			return inlet->getInfo()->name;
 		}
 
-		app::TypeMetainfo InletHandle::getType() const
+		TypeMetainfo InletHandle::getType() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return app::TypeMetainfo( inlet->getInfo()->type );
+			return TypeMetainfo( inlet->getInfo()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > InletHandle::makeData() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return std::shared_ptr< CustomType >( new CustomType( inlet->getInfo()->type ) );
+			return std::shared_ptr< CustomType >( new CustomType( inlet->getInfo()->typeMetadata ) );
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const
@@ -98,7 +87,13 @@ namespace _2Real
 			( inlet->operator[]( 0 ) )->receiveData( data );
 		}
 
-		void InletHandle::setUpdatePolicy( Policy const& p )
+		void InletHandle::setData( std::shared_ptr< const CustomType > data )
+		{
+			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+			( inlet->operator[]( 0 ) )->setData( data );
+		}
+
+		void InletHandle::setUpdatePolicy( UpdatePolicy const& p )
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
 			( inlet->operator[]( 0 ) )->setUpdatePolicy( p );
@@ -110,16 +105,16 @@ namespace _2Real
 			( inlet->operator[]( 0 ) )->setQueueSize( size );
 		}
 
-		bool InletHandle::isMultiInlet() const
+		bool InletHandle::canExpand() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return inlet->isMultiInlet();
+			return inlet->canExpand();
 		}
 
-		unsigned int InletHandle::getSize() const
+		unsigned int InletHandle::getSubInletCount() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return inlet->getSize();
+			return inlet->getSubInletCount();
 		}
 
 		InletHandle InletHandle::operator[]( const unsigned int index )
@@ -131,14 +126,14 @@ namespace _2Real
 		InletHandle InletHandle::add()
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return InletHandle( inlet->addBasicInlet() );
+			return InletHandle( inlet->addSubInlet() );
 		}
 
 		void InletHandle::remove( InletHandle handle )
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
 			std::shared_ptr< AbstractInletIO > other = checkValidity< AbstractInletIO >( handle.mImpl, "inlet" );
-			inlet->removeBasicInlet( other );
+			inlet->removeSubInlet( other );
 		}
 	}
 }

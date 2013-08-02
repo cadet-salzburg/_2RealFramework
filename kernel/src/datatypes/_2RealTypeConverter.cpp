@@ -23,7 +23,7 @@ namespace _2Real
 	std::shared_ptr< CustomType > TypeConverter::convert( std::shared_ptr< const CustomType > data ) const
 	{
 		// create empty custom type
-		std::shared_ptr< CustomType > newtype( new CustomType( nullptr ) );
+		std::shared_ptr< CustomType > newtype( new CustomType() );
 
 		// set name to other type name
 		newtype->mTypeId = mTypeId;

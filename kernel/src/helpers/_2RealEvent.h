@@ -18,11 +18,9 @@
 
 #pragma once
 
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
 #include "helpers/_2RealCallback.h"
-
-#include <set>
-#include <iostream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

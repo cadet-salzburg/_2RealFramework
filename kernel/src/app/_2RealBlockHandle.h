@@ -18,17 +18,9 @@
 
 #pragma once
 
+#include "app/_2RealCommon.h"
 #include "app/_2RealCallbacks.h"
-
-#include <vector>
-#include <string>
-#include <memory>
-
-#ifdef _UNIX
-	#include <limits.h>
-#endif
-
-#define NO_TIMEOUT	LONG_MAX
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -36,10 +28,10 @@ namespace _2Real
 
 	namespace app
 	{
+		class BlockMetainfo;
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
-		struct BlockInfo;
 
 		class BlockHandle
 		{
@@ -57,11 +49,11 @@ namespace _2Real
 			typedef std::vector< ParameterHandle >::const_iterator	ParameterHandleConstIterator;
 
 			BlockHandle();
-			BlockHandle( std::shared_ptr< FunctionBlock > );
+			explicit BlockHandle( std::shared_ptr< FunctionBlock > );
 
 			bool isValid() const;
 
-			BlockInfo const& getBlockInfo() const;
+			BlockMetainfo getBlockMetainfo() const;
 
 			void setUpdateRate( const double updatesPerSecond );	// negative or zero: no time based update at all
 

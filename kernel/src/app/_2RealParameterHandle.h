@@ -18,15 +18,17 @@
 
 #pragma once
 
-#include "datatypes/_2RealCustomData.h"
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 	class ParameterIO;
+	class CustomType;
 
 	namespace app
 	{
-		class BlockHandle;
+		class TypeMetainfo;
 
 		class ParameterHandle
 		{
@@ -34,20 +36,20 @@ namespace _2Real
 		public:
 
 			ParameterHandle();
-			ParameterHandle( std::shared_ptr< ParameterIO > );
+			explicit ParameterHandle( std::shared_ptr< ParameterIO > );
 
-			bool isValid() const;
+			bool									isValid() const;
 
-			std::string const&				getName() const;
-			app::TypeMetainfo				getType() const;
+			std::string const&						getName() const;
+			TypeMetainfo							getType() const;
 
-			std::shared_ptr< CustomType >	makeData() const;
-			std::shared_ptr< const CustomType > getCurrentData() const;
-			void setData( std::shared_ptr< const CustomType > );
+			std::shared_ptr< CustomType >			makeData() const;
+			std::shared_ptr< const CustomType >		getCurrentData() const;
+			void									setData( std::shared_ptr< const CustomType > );
 
 		private:
 
-			std::weak_ptr< ParameterIO >		mImpl;
+			std::weak_ptr< ParameterIO >			mImpl;
 
 		};
 	}

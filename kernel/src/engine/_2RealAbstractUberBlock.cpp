@@ -18,8 +18,6 @@
 
 #include "engine/_2RealAbstractUberBlock.h"
 
-#include <assert.h>
-
 namespace _2Real
 {
 	AbstractUberBlock::AbstractUberBlock( EngineImpl *engine, Ids const& ids, std::string const& name ) :

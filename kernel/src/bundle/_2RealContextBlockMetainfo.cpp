@@ -18,26 +18,28 @@
 
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "engine/_2RealBlockMetadata.h"
-#include "engine/_2RealParameterMetadata.h"
+#include "engine/_2RealIOMetadata.h"
 #include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ContextBlockMetainfo::ContextBlockMetainfo( BlockMetadata &data ) :
-			m_Impl( data )
+		ContextBlockMetainfo::ContextBlockMetainfo( std::shared_ptr< BlockMetadata > meta ) :
+			mImpl( meta )
 		{
 		}
 
 		void ContextBlockMetainfo::setDescription( std::string const& description )
 		{
-			m_Impl.setDescription( description );
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->setDescription( description );
 		}
 
 		void ContextBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
 		{
-			m_Impl.setThreadingPolicy( policy );
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->setThreadingPolicy( policy );
 		}
 
 		void ContextBlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
@@ -45,13 +47,28 @@ namespace _2Real
 			privateAddOutlet( name, type, nullptr );
 		}
 
-		void ContextBlockMetainfo::privateAddOutlet( std::string const& name, std::string const& type, TypeMetadata const* meta )
+		void ContextBlockMetainfo::privateAddOutlet( std::string const& name, std::string const& type, std::shared_ptr< const TypeMetadata > meta )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			OutletMetadata *data = new OutletMetadata( trimmed, type, meta );
-			m_Impl.addOutlet( data );
+			std::shared_ptr< IOMetadata > data( new IOMetadata );
+
+			data->name = trimmed;
+			data->typeMetadata = meta;
+			//data->initializer = copied;
+			data->canExpand = false;
+			data->expansionSize = 0;
+			data->canLink = true;
+			data->isBuffered = false;
+			data->bufferSize = 0;
+			data->canTriggerUpdates = false;
+			data->updatePolicy = UpdatePolicy::INVALID;
+			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
+			data->typeMetadata = meta;
+
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->addOutlet( data, type );
 		}
 	}
 }

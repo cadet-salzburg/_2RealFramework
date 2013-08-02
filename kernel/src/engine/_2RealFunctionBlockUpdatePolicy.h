@@ -19,13 +19,12 @@
 
 #pragma once
 
-#include "engine/_2RealInletPolicy.h"
+#include "policies/_2RealUpdatePolicy.h"
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealTimeBasedTrigger.h"
-#include "helpers/_2RealPoco.h"
-
-#include <map>
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -62,7 +61,7 @@ namespace _2Real
 		~FunctionBlockUpdatePolicy();
 
 		// update policy has no concept of multiinlets
-		void addInlet( BasicInletIO &io, Policy const& p );
+		void addInlet( BasicInletIO &io, UpdatePolicy const& p );
 		void removeInlet( BasicInletIO &io );
 
 		void syncChanges();
@@ -70,7 +69,7 @@ namespace _2Real
 		void setNewUpdateRate( const double rate );
 		double getUpdateRate() const;
 
-		void setInletPolicy( BasicInletIO &io, Policy const& p );
+		void setInletPolicy( BasicInletIO &io, UpdatePolicy const& p );
 
 	private:
 
@@ -78,13 +77,13 @@ namespace _2Real
 		{
 			InletPolicyInfo( AbstractInletTriggerCtor *c, AbstractInletBasedTrigger *t, const bool w ) :
 				wasPolicyChanged( true ), isSingleWeight( w ),
-				policy( Policy::ALWAYS ), ctor( c ), trigger( t ) {}
+				policy( UpdatePolicy::ALWAYS ), ctor( c ), trigger( t ) {}
 
 			~InletPolicyInfo() { delete ctor; delete trigger; }
 
 			bool						wasPolicyChanged;
 			bool						isSingleWeight;
-			Policy						policy;
+			UpdatePolicy				policy;
 			AbstractInletTriggerCtor	*ctor;
 			AbstractInletBasedTrigger	*trigger;
 		};

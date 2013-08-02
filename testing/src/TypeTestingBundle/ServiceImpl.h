@@ -26,9 +26,6 @@ private:
 	};
 
 	BlockInstance					mInstance;
-
-	// not pretty, but good enough for testing...
-	unsigned int					mNumber;
-	unsigned int					mCounter;
+	unsigned long					mCounter;
 
 };

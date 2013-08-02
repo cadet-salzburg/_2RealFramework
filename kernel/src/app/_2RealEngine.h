@@ -20,15 +20,6 @@
 #pragma once
 
 #include "app/_2RealCallbacks.h"
-#include "app/_2RealInletHandle.h"
-#include "app/_2RealOutletHandle.h"
-#include "app/_2RealBundleHandle.h"
-#include "app/_2RealBlockHandle.h"
-#include "helpers/_2RealNonCopyable.h"
-
-#include <string>
-#include <set>
-#include <vector>
 
 namespace _2Real
 {
@@ -40,9 +31,9 @@ namespace _2Real
 
 	namespace app
 	{
-		class SystemState;
+		class BundleHandle;
 
-		class Engine : private NonCopyable< Engine >
+		class Engine
 		{
 
 			template< typename T >
@@ -50,31 +41,12 @@ namespace _2Real
 
 		public:
 
-			//typedef std::pair< InletHandle, OutletHandle >				Link;
-
-			//struct SortByInlet
-			//{
-			//	bool operator()( Link const& l1, Link const& l2 ) { return ( l1.first < l2.first ); }
-			//};
-
-			//struct SortByOutlet
-			//{
-			//	bool operator()( Link const& l1, Link const& l2 ) { return ( l1.second < l2.second ); }
-			//};
-
-			//typedef std::set< Link, SortByOutlet >						Links;
-			//typedef std::set< Link, SortByOutlet >::iterator			LinkIterator;
-			//typedef std::set< Link, SortByOutlet >::const_iterator		LinkConstIterator;
-
-			typedef std::vector< BundleHandle >							BundleHandles;
-			typedef std::vector< BundleHandle >::iterator				BundleHandleIterator;
-			typedef std::vector< BundleHandle >::const_iterator			BundleHandleConstIterator;
-
-			typedef std::vector< BlockHandle >							BlockHandles;
-			typedef std::vector< BlockHandle >::iterator				BlockHandleIterator;
-			typedef std::vector< BlockHandle >::const_iterator			BlockHandleConstIterator;
-
 			static Engine& instance();
+
+			//--------------------- constants
+			//std::string getBasicTypePrefix() const;
+			//std::string getFrameworkExportedTypePrefix() const;
+			//--------------------- constants
 
 			//--------------------- bundle loading
 			// returns the absolute path to the bundle directory
@@ -127,12 +99,8 @@ namespace _2Real
 			//--------------------- context block exception callbacks
 
 			//--------------------- loading / saving
-			// new 02/05/13
 			//void getCurrentSystemState( SystemState &state );
-			// this basically tests whether or not all bundles are there
-			// not doing this & just loading results in an exception
 			//std::list< std::string > testConfiguration( std::string const& dataSource );
-			// returns the difference to the previous system state
 			//SystemState *loadConfiguration( std::string const& dataSource );
 			//--------------------- loading / saving
 
@@ -145,7 +113,6 @@ namespace _2Real
 
 			Engine();
 			~Engine();
-
 			Engine( Engine const& src );
 			Engine& operator=( Engine const& other );
 

@@ -17,23 +17,9 @@
 */
 
 #include "app/_2RealParameterHandle.h"
-#include "app/_2RealBlockHandle.h"
-#include "engine/_2RealFunctionBlock.h"
-#include "engine/_2RealParameter.h"
+#include "app/_2RealInfo.h"
 #include "engine/_2RealAbstractIOManager.h"
-
-template< typename TObj >
-std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-{
-	std::shared_ptr< TObj > locked = handle.lock();
-	if ( locked.get() == nullptr )
-	{
-		std::stringstream msg;
-		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-	}
-
-	return locked;
-}
+#include "engine/_2RealIOMetadata.h"
 
 namespace _2Real
 {
@@ -61,16 +47,16 @@ namespace _2Real
 			return parameter->getInfo()->name;
 		}
 
-		app::TypeMetainfo ParameterHandle::getType() const
+		TypeMetainfo ParameterHandle::getType() const
 		{
 			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
-			return app::TypeMetainfo( parameter->getInfo()->type );
+			return TypeMetainfo( parameter->getInfo()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::makeData() const
 		{
 			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
-			return std::shared_ptr< CustomType >( new CustomType( parameter->getInfo()->type ) );
+			return std::shared_ptr< CustomType >( new CustomType( parameter->getInfo()->typeMetadata ) );
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getCurrentData() const

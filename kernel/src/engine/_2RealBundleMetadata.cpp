@@ -17,120 +17,137 @@
 */
 
 #include "engine/_2RealBundleMetadata.h"
-#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealExportMetainfo.h"
 #include "helpers/_2RealException.h"
-
-#include <sstream>
-
-using std::ostringstream;
 
 namespace _2Real
 {
 
-	BundleMetadata::BundleMetadata() :
-		m_Name( "undefined" ),
-		m_Description( "undefined" ),
-		m_Author( "undefined" ),
-		m_Contact( "undefined" ),
-		m_InstallDirectory( "undefined" ),
-		m_Category( "undefined" ),
-		m_Version( 0, 0, 0 )
+	BundleMetadata::BundleMetadata( Metainfo *info ) :
+		mOwner( info ),
+		mName( "undefined" ),
+		mDescription( "undefined" ),
+		mAuthor( "undefined" ),
+		mContact( "undefined" ),
+		mInstallDirectory( "undefined" ),
+		mCategory( "undefined" ),
+		mVersion( 0, 0, 0 )
 	{
 	}
 
 	void BundleMetadata::setInstallDirectory( std::string const& dir )
 	{
-		m_InstallDirectory = dir;
+		mInstallDirectory = dir;
 	}
 
 	void BundleMetadata::setDescription( std::string const& desc )
 	{
-		m_Description = desc;
+		mDescription = desc;
 	}
 
 	void BundleMetadata::setVersion( Version const& version )
 	{
-		m_Version = version;
+		mVersion = version;
 	}
 
 	void BundleMetadata::setAuthor( std::string const& author )
 	{
-		m_Author = author;
+		mAuthor = author;
 	}
 
 	void BundleMetadata::setContact( std::string const& contact )
 	{
-		m_Contact = contact;
+		mContact = contact;
 	}
 
 	void BundleMetadata::setName( std::string const& name )
 	{
-		m_Name = name;
+		mName = name;
 	}
 
 	void BundleMetadata::setCategory( std::string const& category )
 	{
-		m_Category = category;
+		mCategory = category;
 	}
 
 	std::string const& BundleMetadata::getName() const
 	{
-		return m_Name;
+		return mName;
 	}
 
 	std::string const& BundleMetadata::getInstallDirectory() const
 	{
-		return m_InstallDirectory;
+		return mInstallDirectory;
 	}
 
 	std::string const& BundleMetadata::getDescription() const
 	{
-		return m_Description;
+		return mDescription;
 	}
 
 	std::string const& BundleMetadata::getAuthor() const
 	{
-		return m_Author;
+		return mAuthor;
 	}
 
 	std::string const& BundleMetadata::getContact() const
 	{
-		return m_Contact;
+		return mContact;
 	}
 
 	std::string const& BundleMetadata::getCategory() const
 	{
-		return m_Category;
+		return mCategory;
 	}
 
 	Version const& BundleMetadata::getVersion() const
 	{
-		return m_Version;
+		return mVersion;
 	}
 
-	BlockMetadata const& BundleMetadata::getBlockData( std::string const& name ) const
+	std::shared_ptr< BlockMetadata > BundleMetadata::exportFunctionBlock( bundle::AbstractBlockCreator *ctor, std::string const& name )
 	{
-		BundleMetadata::BlockMetadataConstIterator it = m_ExportedBlocks.find( name );
-
-		if ( it == m_ExportedBlocks.end() )
-		{
-			ostringstream msg;
-			msg << "block " << name << " not found";
-			throw NotFoundException( msg.str() );
-		}
-
-		return *it->second;
+		return mOwner->exportFunctionBlock( ctor, name );
 	}
 
-	void BundleMetadata::addBlockData( BlockMetadata const& data )
+	std::shared_ptr< BlockMetadata > BundleMetadata::exportContextBlock( bundle::AbstractBlockCreator *ctor )
 	{
-		std::string blockName = data.getName();
-		m_ExportedBlocks[ blockName ] = &data;
+		return mOwner->exportContextBlock( ctor );
 	}
 
-	BundleMetadata::BlockMetadatas const& BundleMetadata::getExportedBlocks() const
+	std::shared_ptr< TypeMetadata > BundleMetadata::exportCustomType( std::string const& name )
 	{
-		return m_ExportedBlocks;
+		return mOwner->exportCustomType( name );
+	}
+
+	std::shared_ptr< const BlockMetadata > BundleMetadata::getContextBlockMetadata() const
+	{
+		return mOwner->getContextBlockMetadata();
+	}
+
+	std::shared_ptr< const BlockMetadata > BundleMetadata::getFunctionBlockMetadata( std::string const& name ) const
+	{
+		return mOwner->getFunctionBlockMetadata( name );
+	}
+
+	void BundleMetadata::getBlockMetadata( std::vector< std::shared_ptr< const BlockMetadata > > &blocks ) const
+	{
+		return mOwner->getExportedBlocks( blocks );
+	}
+
+	bool BundleMetadata::exportsContext() const
+	{
+		return mOwner->exportsContext();
+	}
+
+	bool BundleMetadata::hasContext() const
+	{
+		return mOwner->hasContext();
+	}
+
+	unsigned int BundleMetadata::getCreationCount( std::string const& name ) const
+	{
+		return mOwner->getCreationCount( name );
 	}
 
 }

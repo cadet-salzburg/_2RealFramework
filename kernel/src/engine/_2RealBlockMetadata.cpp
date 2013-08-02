@@ -17,53 +17,35 @@
 */
 
 #include "engine/_2RealBlockMetadata.h"
-#include "engine/_2RealParameterMetadata.h"
+#include "engine/_2RealIOMetadata.h"
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 #include "datatypes/_2RealTypeRegistry.h"
-
-#include <sstream>
 
 using std::ostringstream;
 using std::string;
 
 namespace _2Real
 {
-
-	//BlockMetadata::BlockMetadata( TypeRegistry const* reg ) :
-	//	m_Name( "undefined" ),
-	//	m_Description( "undefined" ),
-	//	m_Category( "undefined" ),
-	//	m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
-	//	mRegistry( reg )
-	//{
-	//}
-
-	BlockMetadata::BlockMetadata( BlockId const& name, TypeRegistry const* reg ) :
+	BlockMetadata::BlockMetadata( BlockId const& name, TypeRegistry *reg, const bool isContext, const bool needsContext ) :
 		mBlockId( name ),
-		m_Description( "undefined" ),
-		m_Category( "undefined" ),
-		m_ThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
+		mDescription( "undefined" ),
+		mCategory( "undefined" ),
+		mIsContext( isContext ),
+		mNeedsContext( needsContext ),
+		mThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
 		mRegistry( reg )
 	{
 	}
 
-	BlockMetadata::~BlockMetadata()
+	bool BlockMetadata::isContext() const
 	{
-		for ( BlockMetadata::InletMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
-		{
-			delete *it;
-		}
+		return mIsContext;
+	}
 
-		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
-		{
-			delete *it;
-		}
-
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
-		{
-			delete *it;
-		}
+	bool BlockMetadata::needsContext() const
+	{
+		return mNeedsContext;
 	}
 
 	string const& BlockMetadata::getName() const
@@ -73,51 +55,51 @@ namespace _2Real
 
 	string const& BlockMetadata::getDescription() const
 	{
-		return m_Description;
+		return mDescription;
 	}
 
 	void BlockMetadata::setDescription( string const& description )
 	{
-		m_Description = description;
+		mDescription = description;
 	}
 
 	std::string const& BlockMetadata::getCategory() const
 	{
-		return m_Category;
+		return mCategory;
 	}
 
 	void BlockMetadata::setCategory( string const& category )
 	{
-		m_Category = category;
+		mCategory = category;
 	}
 
 	void BlockMetadata::setThreadingPolicy( ThreadingPolicy const& policy )
 	{
-		m_ThreadingPolicy = policy;
+		mThreadingPolicy = policy;
 	}
 
-	void BlockMetadata::addInlet( InletMetadata *data )
+	void BlockMetadata::addInlet( std::shared_ptr< IOMetadata > data, std::string const& type )
 	{
-		// check if metadata is null, get it from the regstry otherwise
-		if ( nullptr == data->metadata )
+		// check if metadata is null, get it from the registry otherwise
+		if ( nullptr == data->typeMetadata.get() )
 		{
-#ifdef _DEBUG
-			assert( mRegistry );
-#endif
-			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
-			if ( nullptr == meta )
+			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			if ( nullptr == meta.get() )
 			{
 				std::stringstream msg;
-				msg << "type: " << data->type << " is not known";
+				msg << "type: " << type << " is not known";
 				throw NotFoundException( msg.str() );
 			}
 
-			data->metadata = meta;
+			data->typeMetadata = meta;
 		}
 
-		for ( BlockMetadata::InletMetadataIterator it = m_Inlets.begin(); it != m_Inlets.end(); ++it )
+		if ( data->initializer.get() == nullptr )
+			data->initializer.reset( new CustomType( data->typeMetadata ) );
+
+		for ( BlockMetadata::IOMetadataIterator it = mInlets.begin(); it != mInlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
 				msg << "inlet: " << data->name << " is already defined in block " << getName() << std::endl;
@@ -125,31 +107,31 @@ namespace _2Real
 			}
 		}
 
-		m_Inlets.push_back( data );
+		mInlets.push_back( data );
 	}
 
-	void BlockMetadata::addParameter( ParameterMetadata *data )
+	void BlockMetadata::addParameter( std::shared_ptr< IOMetadata > data, std::string const& type )
 	{
 		// check if metadata is null, get it from the regstry otherwise
-		if ( nullptr == data->metadata )
+		if ( nullptr == data->typeMetadata.get() )
 		{
-#ifdef _DEBUG
-			assert( mRegistry );
-#endif
-			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
-			if ( nullptr == meta )
+			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			if ( nullptr == meta.get() )
 			{
 				std::stringstream msg;
-				msg << "type: " << data->type << " is not known";
+				msg << "type: " << type << " is not known";
 				throw NotFoundException( msg.str() );
 			}
 
-			data->metadata = meta;
+			data->typeMetadata = meta;
 		}
 
-		for ( BlockMetadata::ParameterMetadataIterator it = m_Parameters.begin(); it != m_Parameters.end(); ++it )
+		if ( data->initializer.get() == nullptr )
+			data->initializer.reset( new CustomType( data->typeMetadata ) );
+
+		for ( BlockMetadata::IOMetadataIterator it = mParameters.begin(); it != mParameters.end(); ++it )
 		{
-			if ( toLower( ( **it ).name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
 				msg << "parameter: " << data->name << " is already defined in block " << getName() << std::endl;
@@ -157,31 +139,31 @@ namespace _2Real
 			}
 		}
 
-		m_Parameters.push_back( data );
+		mParameters.push_back( data );
 	}
 
-	void BlockMetadata::addOutlet( OutletMetadata *data )
+	void BlockMetadata::addOutlet( std::shared_ptr< IOMetadata > data, std::string const& type )
 	{
 		// check if metadata is null, get it from the regstry otherwise
-		if ( nullptr == data->metadata )
+		if ( nullptr == data->typeMetadata.get() )
 		{
-#ifdef _DEBUG
-			assert( mRegistry );
-#endif
-			TypeMetadata const* meta = mRegistry->get( mBlockId.first, data->type );
-			if ( nullptr == meta )
+			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			if ( nullptr == meta.get() )
 			{
 				std::stringstream msg;
-				msg << "type: " << data->type << " is not known";
+				msg << "type: " << type << " is not known";
 				throw NotFoundException( msg.str() );
 			}
 
-			data->metadata = meta;
+			data->typeMetadata = meta;
 		}
 
-		for ( BlockMetadata::OutletMetadataIterator it = m_Outlets.begin(); it != m_Outlets.end(); ++it )
+		if ( data->initializer.get() == nullptr )
+			data->initializer.reset( new CustomType( data->typeMetadata ) );
+
+		for ( BlockMetadata::IOMetadataIterator it = mOutlets.begin(); it != mOutlets.end(); ++it )
 		{
-			if ( toLower( ( **it ).name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->name ) == toLower( data->name ) )
 			{
 				ostringstream msg;
 				msg << "outlet: " << data->name << " is already defined in block " << getName() << std::endl;
@@ -189,26 +171,22 @@ namespace _2Real
 			}
 		}
 
-		m_Outlets.push_back( data );
+		mOutlets.push_back( data );
 	}
 
-	BlockMetadata::InletMetadatas const& BlockMetadata::getInlets() const
+	BlockMetadata::IOMetadatas const& BlockMetadata::getInlets() const
 	{
-		return m_Inlets;
+		return mInlets;
 	}
 
-	BlockMetadata::OutletMetadatas const& BlockMetadata::getOutlets() const
+	BlockMetadata::IOMetadatas const& BlockMetadata::getOutlets() const
 	{
-		return m_Outlets;
+		return mOutlets;
 	}
 
-	BlockMetadata::ParameterMetadatas const& BlockMetadata::getParameters() const
+	BlockMetadata::IOMetadatas const& BlockMetadata::getParameters() const
 	{
-		return m_Parameters;
-	}
-
-	void BlockMetadata::performBlockNameCheck( string const& name )
-	{
+		return mParameters;
 	}
 
 }

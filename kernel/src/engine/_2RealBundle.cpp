@@ -18,31 +18,32 @@
 */
 
 #include "engine/_2RealBundle.h"
+#include "engine/_2RealBlockMetadata.h"
 #include "engine/_2RealBundleManager.h"
 #include "engine/_2RealSystem.h"
 #include "engine/_2RealEngineImpl.h"
 
-#include <sstream>
+#include "_2RealConstants.h"
 
 namespace _2Real
 {
 
-	Bundle::Bundle( EngineImpl *engine, app::BundleInfo const& info ) :
+	Bundle::Bundle( EngineImpl *engine, std::shared_ptr< const BundleMetadata > meta ) :
 		NonCopyable< Bundle >(),
-		Identifiable< Bundle >( Ids(), info.name ),
+		Identifiable< Bundle >( Ids(), meta->getName() ),
 		mEngineImpl( engine ),
-		mBundleInfo( info )
+		mBundleMetadata( meta )
 	{
 	}
 
-	app::BundleInfo const& Bundle::getBundleInfo() const
+	std::shared_ptr< const BundleMetadata > Bundle::getBundleMetadata() const
 	{
-		return mBundleInfo;
+		return mBundleMetadata;
 	}
 
 	std::string const& Bundle::getAbsPath() const
 	{
-		return mBundleInfo.directory;
+		return mBundleMetadata->getInstallDirectory();
 	}
 
 	void Bundle::unload( const long timeout )
@@ -53,26 +54,38 @@ namespace _2Real
 		mEngineImpl->getBundleManager()->unloadBundle( this, timeout );
 	}
 
-	std::shared_ptr< FunctionBlock > Bundle::getContextBlock()
+	std::shared_ptr< FunctionBlock > Bundle::getContextBlockInstance()
 	{
-		return mEngineImpl->getBlockManager()->getContextBlock( this );
+		std::shared_ptr< FunctionBlock > context;
+		if ( mBundleMetadata->exportsContext() )
+		{
+			context = mEngineImpl->getBlockManager()->findContextBlockInstance( this );
+			if ( context.get() == nullptr )
+			{
+				context = mEngineImpl->getBundleManager()->createContextBlockInstance( this );
+				mEngineImpl->getBlockManager()->addBlockInstance( this, context );
+			}
+		}
+
+		return context;
 	}
 
-	std::shared_ptr< FunctionBlock > Bundle::createBlockInstance( std::string const& blockName )
+	std::shared_ptr< FunctionBlock > Bundle::createFunctionBlockInstance( std::string const& blockName )
 	{
 		// name
-		const unsigned int cnt = mEngineImpl->getBlockManager()->getBlockInstanceCount( this, blockName );
+		const unsigned int cnt = mBundleMetadata->getCreationCount( blockName );
 		std::ostringstream name;
 		name << blockName << "_" << cnt;
 
-		// get context block, if needed ( otherwise null is returned )
-		std::shared_ptr< FunctionBlock > context = mEngineImpl->getBundleManager()->createContextBlockConditionally( this, blockName );
-		if ( context.get() != nullptr )
-			mEngineImpl->getBlockManager()->addContextBlockInstance( this, context );
+		std::shared_ptr< const BlockMetadata > blockMetadata = mBundleMetadata->getFunctionBlockMetadata( blockName );
+		if ( blockMetadata->needsContext() )
+		{
+			std::shared_ptr< FunctionBlock > context = getContextBlockInstance();
+		}
 
 		// create block & return
 		std::shared_ptr< FunctionBlock > block = mEngineImpl->getBundleManager()->createBlockInstance( this, blockName, name.str() );
-		mEngineImpl->getBlockManager()->addRegularBlockInstance( this, block );
+		mEngineImpl->getBlockManager()->addBlockInstance( this, block );
 		return block;
 	}
 }

@@ -22,15 +22,12 @@
 #include "app/_2RealCallbacks.h"
 #include "engine/_2RealLink.h"
 #include "helpers/_2RealEvent.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
 #include "helpers/_2RealNonCopyable.h"
 //#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
-
-#include <set>
-#include <string>
-#include <list>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -58,8 +55,8 @@ namespace _2Real
 		LinkCollection( EngineImpl * );
 		~LinkCollection();
 		void clear();
-		std::shared_ptr< IOLink > createLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
-		/*std::shared_ptr< IOLink > createLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );*/
+		std::shared_ptr< IOLink >	createLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
+		void						destroyLink( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
 	private:
 		struct LinkCmp
 		{

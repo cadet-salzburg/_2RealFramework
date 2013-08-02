@@ -21,8 +21,7 @@
 #include "datatypes/_2RealCustomData.h"
 #include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealTypeRegistry.h"
-
-#include <iostream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -32,31 +31,32 @@ namespace _2Real
 
 	public:
 
-		static TypeMetadata * getTypeMetadata()
+		static std::shared_ptr< TypeMetadata > getTypeMetadata()
 		{
-			TypeMetadata *result = nullptr;
-
-			std::shared_ptr< const FieldDescriptor > desc( DataField< TType >::createFieldDescriptor( "default", Init< TType >::defaultValue() ) );
-
-			if ( !desc )
+			static std::shared_ptr< TypeMetadata > meta;
+			if ( meta.get() == nullptr )
 			{
-				std::stringstream msg;
-				msg << typeid( TType ).name() << " is not a framework base type, thus no conversion to a custom type exists" << std::endl;
-				throw _2Real::Exception( msg.str() );
-			}
+				std::shared_ptr< const FieldDescriptor > desc( FieldDesc< TType >::createFieldDescriptor( "default", Init< TType >::defaultValue() ) );
 
-			result = new TypeMetadata( TypeMetadata::TypeId( "basic type", Name< TType >::humanReadableName() ), nullptr );
-			result->addField( "default", TypeMetadata::TypeId( "", Name< TType >::humanReadableName() ), desc );
-			return result;
+				if ( !desc )
+				{
+					std::stringstream msg;
+					msg << typeid( TType ).name() << " is not a framework base type, thus no conversion to a custom type exists" << std::endl;
+					throw _2Real::Exception( msg.str() );
+				}
+
+				meta.reset( new TypeMetadata( TypeMetadata::TypeId( DataField::sBasicTypeName, Name< TType >::humanReadableName() ), nullptr ) );
+				meta->addField( "default", TypeMetadata::TypeId( DataField::sBasicTypeName, Name< TType >::humanReadableName() ), desc );
+			}
+			return meta;
 		}
 
 		BaseToCustomType( TType const& value ) : mData( nullptr )
 		{
-			TypeMetadata *meta( BaseToCustomType< TType >::getTypeMetadata() );
+			std::shared_ptr< TypeMetadata > meta = BaseToCustomType< TType >::getTypeMetadata();
 			CustomType *t = new CustomType( meta );
 			t->set( "default", value );
 			mData.reset( t );
-			delete meta;
 		}
 
 		operator std::shared_ptr< const CustomType > () const { return mData; }

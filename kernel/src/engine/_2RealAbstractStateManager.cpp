@@ -19,8 +19,6 @@
 #include "engine/_2RealAbstractStateManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
 
-#include <assert.h>
-
 namespace _2Real
 {
 	AbstractStateManager::AbstractStateManager( EngineImpl *engine, AbstractUberBlock *owner ) :

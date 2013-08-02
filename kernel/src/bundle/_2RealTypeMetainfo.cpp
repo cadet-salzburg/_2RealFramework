@@ -20,28 +20,30 @@
 #include "engine/_2RealTypeMetadata.h"
 #include "datatypes/_2RealTypeRegistry.h"
 
-#include <sstream>
-
 namespace _2Real
 {
 	namespace bundle
 	{
-		TypeMetainfo::TypeMetainfo( TypeMetadata *meta ) : mImpl( meta )
-		{
-		}
-
-		TypeMetainfo::~TypeMetainfo()
+		TypeMetainfo::TypeMetainfo( std::shared_ptr< TypeMetadata > meta ) : mImpl( meta )
 		{
 		}
 
 		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, std::shared_ptr< const FieldDescriptor > desc )
 		{
-			mImpl->addField( name, TypeMetadata::TypeId( mImpl->getTypeId().first, type ), desc );
+			std::shared_ptr< TypeMetadata > locked = mImpl.lock();
+			locked->addField( name, TypeMetadata::TypeId( locked->getTypeId().first, type ), desc );
 		}
 
 		void TypeMetainfo::addCustomTypeField( std::string const& name, std::string const& type )
 		{
-			mImpl->addField( name, TypeMetadata::TypeId( mImpl->getTypeId().first, type ), nullptr );
+			std::shared_ptr< TypeMetadata > locked = mImpl.lock();
+			locked->addField( name, TypeMetadata::TypeId( locked->getTypeId().first, type ), nullptr );
+		}
+
+		std::shared_ptr< CustomType > TypeMetainfo::makeData()
+		{
+			std::shared_ptr< TypeMetadata > locked = mImpl.lock();
+			return std::shared_ptr< CustomType >( new CustomType( locked ) );
 		}
 	}
 }

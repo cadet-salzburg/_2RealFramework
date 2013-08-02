@@ -19,8 +19,7 @@
 #pragma once
 
 #include "engine/_2RealTimestampedData.h"
-
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -37,16 +36,14 @@ namespace _2Real
 		// dummy link!
 		IOLink( std::shared_ptr< BasicInletIO > i, std::shared_ptr< OutletIO > o ) : mInletIO( i ), mOutletIO( o ) {}
 
+		// creates real link
 		static std::shared_ptr< IOLink > link( std::shared_ptr< BasicInletIO >, std::shared_ptr< OutletIO > );
 
 		void activate();
 		void deactivate();
 
+		// y?
 		bool operator<( IOLink const& other );
-		//bool isBlockInvolved( AbstractUberBlock const& b ) const;
-		//bool isInletInvolved( BasicInletIO const& inlet ) const;
-
-		//bool isValid() const;
 
 		void receiveData( TimestampedData const& );
 

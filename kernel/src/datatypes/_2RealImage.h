@@ -19,6 +19,7 @@
 #pragma once
 
 #include "datatypes/_2RealCustomData.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -44,7 +45,7 @@ namespace _2Real
 		static const std::string FIELD_CHANNELS;
 		static const std::string FIELD_DATATYPE;
 
-		static TypeMetadata const* getTypeMetadata();
+		static std::shared_ptr< const TypeMetadata > getTypeMetadata();
 
 		class ChannelOrder
 		{

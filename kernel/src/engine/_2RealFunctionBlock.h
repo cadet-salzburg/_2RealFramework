@@ -24,10 +24,10 @@
 #include "engine/_2RealFunctionBlockStateManager.h"
 #include "engine/_2RealFunctionBlockUpdatePolicy.h"
 #include "engine/_2RealBundle.h"
-#include "app/_2RealBlockHandle.h"
-#include "app/_2RealContextBlockHandle.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealIOMetadata.h"
+
 #include "../_2RealBlock.h"
-#include "engine/_2RealParameterMetadata.h"
 
 namespace _2Real
 {
@@ -48,17 +48,15 @@ namespace _2Real
 		typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
 		typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
 
-		FunctionBlock( EngineImpl *, std::shared_ptr< Bundle >, std::shared_ptr< bundle::Block >, app::BlockInfo const& );
+		FunctionBlock( EngineImpl *, std::shared_ptr< Bundle >, std::shared_ptr< bundle::Block >, std::shared_ptr< const BlockMetadata > );
 		~FunctionBlock();
 
 		using AbstractUberBlock::getName;
 		using AbstractUberBlock::getFullName;
 
-		//std::shared_ptr< Bundle >		getOwningBundle();
-		//std::string					getUpdateRateAsString() const;
-		//bool							isRunning() const;
+		bool									isContext() const;
 
-		app::BlockInfo const&					getBlockInfo();
+		std::shared_ptr< const BlockMetadata >	getBlockMetadata() const;
 
 		std::shared_ptr< AbstractInletIO >		getInlet( std::string const& );
 		std::shared_ptr< OutletIO >				getOutlet( std::string const& );
@@ -83,9 +81,9 @@ namespace _2Real
 
 		void									handleException( Exception &e );
 
-		void									addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
-		void									addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
-		void									addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type  );
+		void									addInlet( std::shared_ptr< const IOMetadata > );
+		void									addOutlet( std::shared_ptr< const IOMetadata > );
+		void									addParameter( std::shared_ptr< const IOMetadata > );
 
 	private:
 
@@ -97,20 +95,20 @@ namespace _2Real
 
 		std::weak_ptr< Bundle >									mBundle;			// weak ptr b/c of circualr referencing
 
-		std::shared_ptr< bundle::Block >						mBlock;		// the only pointer to the actual block instance....
-		app::BlockInfo											mBlockInfo;
+		std::shared_ptr< bundle::Block >						mBlock;				// the only pointer to the actual block instance....
+		std::shared_ptr< const BlockMetadata >					mBlockMetadata;
 
 	};
 
-	inline FunctionBlock::FunctionBlock( EngineImpl *engine, std::shared_ptr< Bundle > bundle, std::shared_ptr< bundle::Block > instance, app::BlockInfo const& info ) :
-		AbstractUberBlock( engine, bundle->getIds(), info.name ),
+	inline FunctionBlock::FunctionBlock( EngineImpl *engine, std::shared_ptr< Bundle > bundle, std::shared_ptr< bundle::Block > instance, std::shared_ptr< const BlockMetadata > meta ) :
+		AbstractUberBlock( engine, bundle->getIds(), meta->getName() ),
 		mEngineImpl( engine ),
 		mUpdatePolicy( new FunctionBlockUpdatePolicy( engine, this ) ),
 		mIOManager( new FunctionBlockIOManager( engine, this ) ),
 		mStateManager( new FunctionBlockStateManager( engine, this, true ) ),
 		mBundle( bundle ),
 		mBlock( instance ),
-		mBlockInfo( info )
+		mBlockMetadata( meta )
 	{
 		// stae manager: does not do anything, b/c no triggers exist yet
 		mStateManager->m_FunctionBlock = instance;
@@ -132,39 +130,29 @@ namespace _2Real
 		delete mStateManager;		// must go second
 	}
 
-	//inline bool FunctionBlock::isRunning() const
-	//{
-	//	return mStateManager->isRunning();
-	//}
-
-	//inline std::string FunctionBlock::getUpdateRateAsString() const
-	//{
-	//	std::ostringstream str;
-	//	str << mUpdatePolicy->getUpdateRate();
-	//	return str.str();
-	//}
-
-	inline void FunctionBlock::addInlet( InletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
+	inline bool FunctionBlock::isContext() const
 	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, meta.defaultPolicy, meta.isMulti );
-		mIOManager->addInlet( info );
+		return mBlockMetadata->isContext();
 	}
 
-	inline void FunctionBlock::addOutlet( OutletMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
+	inline void FunctionBlock::addInlet( std::shared_ptr< const IOMetadata > meta )
 	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID, false );
-		mIOManager->addOutlet( info );
+		mIOManager->addInlet( meta );
 	}
 
-	inline void FunctionBlock::addParameter( ParameterMetadata const& meta, std::shared_ptr< const CustomType > initializer, TypeMetadata const& type )
+	inline void FunctionBlock::addOutlet( std::shared_ptr< const IOMetadata > meta )
 	{
-		IOInfo *info = new IOInfo( meta.name, initializer, type, Policy::INVALID, false );
-		mIOManager->addParameter( info );
+		mIOManager->addOutlet( meta );
 	}
 
-	inline app::BlockInfo const& FunctionBlock::getBlockInfo()
+	inline void FunctionBlock::addParameter( std::shared_ptr< const IOMetadata > meta )
 	{
-		return mBlockInfo;
+		mIOManager->addParameter( meta );
+	}
+
+	inline std::shared_ptr< const BlockMetadata > FunctionBlock::getBlockMetadata() const
+	{
+		return mBlockMetadata;
 	}
 
 	inline std::shared_ptr< AbstractInletIO > FunctionBlock::getInlet( std::string const& name )
@@ -253,11 +241,13 @@ namespace _2Real
 
 	inline void FunctionBlock::handleException( Exception &e )
 	{
+		assert( NULL );
 		//mEngineImpl->handleException( getHandle(), e );
 	}
 
 	inline void FunctionBlock::suicide( const long timeout )
 	{
+		assert( NULL );
 	}
 
 }

@@ -22,9 +22,9 @@
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
 #include "engine/_2RealTimestampedData.h"
-
 #include "datatypes/_2RealCustomData.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -59,8 +59,8 @@ namespace _2Real
 		virtual ~AbstractInlet() {}
 
 		virtual std::shared_ptr< BasicInlet >	operator[]( const unsigned int ) = 0;
-		virtual bool							isMultiInlet() const = 0;
-		virtual unsigned int					getSize() const = 0;
+		virtual bool							canExpand() const = 0;
+		virtual unsigned int					getSubInletCount() const = 0;
 
 	};
 
@@ -72,8 +72,8 @@ namespace _2Real
 		BasicInlet( AbstractInletIO *owner );
 
 		std::shared_ptr< BasicInlet >			operator[]( const unsigned int );
-		bool									isMultiInlet() const;
-		unsigned int							getSize() const;
+		bool									canExpand() const;
+		unsigned int							getSubInletCount() const;
 
 		void									setSelfRef( std::shared_ptr< BasicInlet > );
 		std::shared_ptr< const CustomType >		getDataThreadsafe() const;
@@ -99,8 +99,8 @@ namespace _2Real
 		MultiInlet( AbstractInletIO *owner );
 
 		std::shared_ptr< BasicInlet >			operator[]( const unsigned int );
-		bool									isMultiInlet() const;
-		unsigned int							getSize() const;
+		bool									canExpand() const;
+		unsigned int							getSubInletCount() const;
 
 	private:
 

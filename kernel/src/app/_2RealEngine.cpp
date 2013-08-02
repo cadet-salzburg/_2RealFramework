@@ -17,16 +17,9 @@
 */
 
 #include "app/_2RealEngine.h"
+#include "app/_2RealBundleHandle.h"
 #include "engine/_2RealEngineImpl.h"
-#include "engine/_2RealLink.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealOutlet.h"
-#include "engine/_2RealAbstractIOManager.h"
-#include "engine/_2RealFunctionBlock.h"
-#include "helpers/_2RealSingletonHolder.h"
-
-using std::string;
-using std::list;
+#include "helpers/_2RealSingleton.h"
 
 namespace _2Real
 {
@@ -69,7 +62,7 @@ namespace _2Real
 			return mImpl->getBundleDirectory();
 		}
 
-		BundleHandle Engine::loadBundle( string const& libraryPath )
+		BundleHandle Engine::loadBundle( std::string const& libraryPath )
 		{
 			std::shared_ptr< Bundle > result = mImpl->loadLibrary( libraryPath );
 			return BundleHandle( result );

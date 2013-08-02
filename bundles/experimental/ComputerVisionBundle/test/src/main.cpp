@@ -1,6 +1,6 @@
 #include "_2RealApplication.h"
 #include "_2RealDatatypes.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
 #include <iostream>
 #include <list>
 #include <vector>
@@ -240,31 +240,63 @@ void imageToTexture( Texture &tex, std::shared_ptr< const Image > img )
 	glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
+void printout( std::ostream &out, DataFields const& fields, const unsigned int offset )
+{
+	for ( DataFields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+	{
+		DataFieldRef f = *it;
+		for ( unsigned int i=0; i<offset; ++ i ) out << "\t";
+		std::string name = f->getName();
+		if ( name.length() >= 16 )
+			out << f->getName() << "\t";
+		else if ( name.length() >= 8 )
+			out << f->getName() << "\t\t";
+		else
+			out << f->getName() << "\t\t\t";
+		std::cout << f->getTypename().first << "::" << f->getTypename().second << std::endl;
+		if ( !f->getSubFields().empty() )
+		{
+			printout( out, f->getSubFields(), offset+1 );
+		}
+	}
+}
+
 void printBundleInfo( app::BundleHandle const& h )
 {
-	BundleInfo info = h.getBundleInfo();
-	BundleInfo::BlockInfos blocks = info.exportedBlocks;
-	for ( BundleInfo::BlockInfoIterator it = blocks.begin(); it != blocks.end(); ++it )
+	BundleMetainfo info = h.getBundleMetainfo();
+
+	std::vector< BlockMetainfo > blocks;
+	info.getExportedBlocks( blocks );
+
+	for ( std::vector< BlockMetainfo >::const_iterator it = blocks.begin(); it != blocks.end(); ++it )
 	{
-		std::cout << "-b\t" << it->name << std::endl;
-		BlockInfo::IOInfos inlets = it->inlets;
-		for ( BlockInfo::IOInfoIterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
+		BlockMetainfo block = *it;
+
+		std::vector< InputMetainfo > inlets;		block.getInletMetainfo( inlets );
+		std::vector< OutputMetainfo > outlets;		block.getOutletMetainfo( outlets );
+		std::vector< InputMetainfo > parameters;	block.getParameterMetainfo( parameters );
+
+		std::cout << "---------------------" << std::endl;
+		std::cout << "-b\t" << block.getName() << " " << ( block.isContext() ? "regular" : "context" ) << std::endl;
+		std::cout << "\t" << block.getDescription() << ", needs context: " << " unknown" << std::endl;
+		std::cout << "---------------------" << std::endl;
+		std::cout << "inlets:" << std::endl;
+		for ( std::vector< InputMetainfo >::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
-			std::cout << "-i\t" << iIt->name;
-			//std::cout << ( iIt->isMulti ? "\t+m " : "\t-m " );
-			std::cout << "\tt " << iIt->typeName << std::endl;
+			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName().first << "::" << iIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -b " << iIt->isBuffered() << " -l " << iIt->canLink() << " -m " << iIt->canExpand() << std::endl;
 		}
-		BlockInfo::IOInfos outlets = it->outlets;
-		for ( BlockInfo::IOInfoIterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
+		std::cout << "parameters:" << std::endl;
+		for ( std::vector< InputMetainfo >::const_iterator pIt = parameters.begin(); pIt != parameters.end(); ++pIt )
 		{
-			std::cout << "-o\t" << oIt->name;
-			std::cout << "\tt " << oIt->typeName << std::endl;
+			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName().first << "::" << pIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -b " << pIt->isBuffered() << " -l " << pIt->canLink() << " -m " << pIt->canExpand() << std::endl;
 		}
-		BlockInfo::IOInfos params = it->parameters;
-		for ( BlockInfo::IOInfoIterator pIt = params.begin(); pIt != params.end(); ++pIt )
+		std::cout << "outlets:" << std::endl;
+		for ( std::vector< OutputMetainfo >::const_iterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
-			std::cout << "-p\t" << pIt->name;
-			std::cout << "\tt " << pIt->typeName << std::endl;
+			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName().first << "::" << oIt->getTypeName().second << std::endl;
+			std::cout << "\t" << std::boolalpha << " -l " << oIt->canLink() << " -m " << oIt->canExpand() << std::endl;
 		}
 	}
 }
@@ -288,7 +320,11 @@ int main( int argc, char *argv[] )
 	{
 		BundleHandle bundle = testEngine.loadBundle( "ComputerVisionBundle" );
 		printBundleInfo( bundle );
-		numBlocks = bundle.getBundleInfo().exportedBlocks.size();
+
+		BundleMetainfo bundleMetainfo = bundle.getBundleMetainfo();
+		std::vector< BlockMetainfo > exportedBlocks;
+		bundleMetainfo.getExportedBlocks( exportedBlocks );
+		numBlocks = exportedBlocks.size();
 		blocks = std::vector< std::vector< BlockInstance > >( numBlocks, std::vector< BlockInstance >( numInstances ) );
 
 		for ( unsigned int b=0; b<numBlocks; ++b )
@@ -296,11 +332,11 @@ int main( int argc, char *argv[] )
 			for ( unsigned int i=0; i<numInstances; ++i )
 			{
 				BlockInstance &instance = blocks[ b ][ i ];
-				std::string instanceName =  bundle.getBundleInfo().exportedBlocks[ b ].name;
+				std::string instanceName = exportedBlocks[ b ].getName();
 
 				instance.window = new sf::Window( sf::VideoMode( 512, 512, 32 ), instanceName, sf::Style::Close, sf::ContextSettings( 0, 0, 0, 2, 1 ) );
 
-				instance.block = bundle.createBlockInstance( instanceName );
+				instance.block = bundle.createFunctionBlockInstance( instanceName );
 				instance.block.getAllInletHandles( instance.inlets );
 				instance.block.getAllParameterHandles( instance.parameters );
 				std::vector< OutletHandle > handles;

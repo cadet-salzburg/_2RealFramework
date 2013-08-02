@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include <string>
-#include <limits>
-#include <memory>
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -28,23 +27,22 @@ namespace _2Real
 
 	namespace app
 	{
+		class BundleMetainfo;
 		class BlockHandle;
 		class ContextBlockHandle;
-		struct BundleInfo;
 
 		class BundleHandle
 		{
-
 		public:
 
 			BundleHandle();
-			BundleHandle( std::shared_ptr< Bundle > );
+			explicit BundleHandle( std::shared_ptr< Bundle > );
 
 			bool isValid() const;
 
-			BundleInfo const&		getBundleInfo() const;
-			ContextBlockHandle		getContextBlock() const;
-			BlockHandle				createBlockInstance( std::string const& );
+			BundleMetainfo			getBundleMetainfo() const;
+			ContextBlockHandle		createContextBlockInstance() const;			// otherwise, will be created when first block that needs it is created
+			BlockHandle				createFunctionBlockInstance( std::string const& );
 			void					unload( const long blockTimeout = ( std::numeric_limits< long >::max )() );
 
 		private:

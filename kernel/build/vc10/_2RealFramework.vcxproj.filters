@@ -40,15 +40,12 @@
     <Filter Include="include\internal_bundles">
       <UniqueIdentifier>{23dd44ce-47d7-4fc3-860a-c05d5bd722fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\policies">
+      <UniqueIdentifier>{d0dbb70a-a048-4ff5-8a52-b3c964985023}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\helpers\_2RealException.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealHelpers.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealPoco.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h">
@@ -57,19 +54,7 @@
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h">
@@ -219,16 +204,7 @@
     <ClInclude Include="..\..\src\engine\_2RealBlockMetadata.h">
       <Filter>include\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealParameterMetadata.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealMetainfo.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealOptions.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h">
@@ -239,15 +215,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h">
       <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h">
-      <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h">
-      <Filter>include\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h">
-      <Filter>include\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h">
       <Filter>include\datatypes</Filter>
@@ -282,20 +249,11 @@
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.h">
       <Filter>include\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealFields.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealOption.h">
-      <Filter>include\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealDeleter.h">
       <Filter>include\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealUnusedArg.h">
       <Filter>include\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h">
-      <Filter>include\datatypes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\datatypes\_2RealTypeConverter.h">
       <Filter>include\datatypes</Filter>
@@ -308,6 +266,48 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealInfo.h">
       <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealLinkHandle.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealCommon.h">
+      <Filter>include\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptors.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h">
+      <Filter>include\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealIOMetadata.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealExportMetainfo.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetadataRef.h">
+      <Filter>include\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealConstants.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealSingleton.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealStdIncludes.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealPocoIncludes.h">
+      <Filter>include\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policies\_2RealThreadingPolicy.h">
+      <Filter>include\policies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policies\_2RealUpdatePolicy.h">
+      <Filter>include\policies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,9 +401,6 @@
     <ClCompile Include="..\..\src\engine\_2RealInlet.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealInletBuffer.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
@@ -431,26 +428,14 @@
     <ClCompile Include="..\..\src\engine\_2RealTimestampedData.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealParameterMetadata.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleMetadata.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBlockMetadata.cpp">
       <Filter>src\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealMetainfo.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealStringHelpers.cpp">
       <Filter>src\helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp">
-      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealCustomData.cpp">
       <Filter>src\datatypes</Filter>
@@ -476,15 +461,6 @@
     <ClCompile Include="..\..\src\datatypes\_2RealCustomBase.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealFields.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp">
-      <Filter>src\datatypes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealTypeConverter.cpp">
       <Filter>src\datatypes</Filter>
     </ClCompile>
@@ -496,6 +472,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealInfo.cpp">
       <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealLinkHandle.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptors.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp">
+      <Filter>src\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealIOMetadata.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealExportMetainfo.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletBuffer.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

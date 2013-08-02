@@ -21,12 +21,13 @@
 
 #include "datatypes/_2RealAbstractFieldDescriptor.h"
 #include "datatypes/_2RealAnyHolder.h"
-#include "datatypes/_2RealFields.h"
+#include "datatypes/_2RealDataField.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	template< typename TTyp >
-	struct DataField;
+	template< typename TType >
+	struct FieldDesc;
 
 	template< typename TType >
 	class FieldDescriptor_t : public FieldDescriptor
@@ -36,21 +37,21 @@ namespace _2Real
 
 		~FieldDescriptor_t() {}
 		AbstractAnyHolder * createAnyHolder() const { return new AnyHolder< TType >( mInitValue ); }
-		std::shared_ptr< const Field > getField() const { return mField; }
+		DataFieldRef getField() const { return mField; }
 
 	private:
 
-		friend struct DataField< TType >;
+		friend struct FieldDesc< TType >;
 
-		FieldDescriptor_t( TType const& initValue, std::shared_ptr< const Field > field ) :
+		FieldDescriptor_t( TType const& initValue, DataFieldRef field ) :
 			FieldDescriptor(),
 			mInitValue( initValue ),
 			mField( field )
 		{
 		}
 
-		std::shared_ptr< const Field >	mField;
-		TType							mInitValue;
+		DataFieldRef				mField;
+		TType						mInitValue;
 
 	};
 }

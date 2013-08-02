@@ -19,8 +19,6 @@
 #include "engine/_2RealAbstractUpdatePolicy.h"
 #include "engine/_2RealAbstractUberBlock.h"
 
-#include <assert.h>
-
 namespace _2Real
 {
 	AbstractUpdatePolicy::AbstractUpdatePolicy( EngineImpl *engine, AbstractUberBlock *owner ) :

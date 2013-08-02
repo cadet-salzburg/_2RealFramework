@@ -24,12 +24,7 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterHandle.h"
+#include "app/_2RealLinkHandle.h"
 #include "app/_2RealCallbacks.h"
 #include "app/_2RealInfo.h"
 #include "app/_2RealEngine.h"
-
-#include "helpers/_2RealVersion.h"
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealHelpers.h"
-
-#include "_2RealDatatypes.h"

@@ -21,9 +21,12 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealAbstractAnyHolder.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+	// TODO: maybe specialize for custom type
+
 	template< typename TType >
 	class AnyHolder : public AbstractAnyHolder
 	{

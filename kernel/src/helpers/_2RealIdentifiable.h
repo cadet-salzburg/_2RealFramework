@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include <list>
-#include <string>
-#include <sstream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

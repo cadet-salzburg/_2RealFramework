@@ -64,16 +64,16 @@ namespace _2Real
 			return inlet->operator[]( 0 )->hasChanged();
 		}
 
-		bool InletHandle::isMultiInlet() const
+		bool InletHandle::canExpand() const
 		{
 			std::shared_ptr< AbstractInlet > inlet = checkValidity< AbstractInlet >( mImpl, "inlet" );
-			return inlet->isMultiInlet();
+			return inlet->canExpand();
 		}
 
-		unsigned int InletHandle::getSize() const
+		unsigned int InletHandle::getSubInletCount() const
 		{
 			std::shared_ptr< AbstractInlet > inlet = checkValidity< AbstractInlet >( mImpl, "inlet" );
-			return inlet->getSize();
+			return inlet->getSubInletCount();
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getReadableRef() const
@@ -82,10 +82,10 @@ namespace _2Real
 			return inlet->operator[]( 0 )->getData();
 		}
 
-		void InletHandle::getWriteableCopy( CustomType &writeable ) const
+		std::shared_ptr< CustomType > InletHandle::getWriteableCopy() const
 		{
 			std::shared_ptr< AbstractInlet > inlet = checkValidity< AbstractInlet >( mImpl, "inlet" );
-			writeable.cloneFrom( *( inlet->operator[]( 0 )->getData() ).get() );
+			return std::shared_ptr< CustomType >( new CustomType( *( inlet->operator[]( 0 )->getData().get() ) ) );
 		}
 	}
 }

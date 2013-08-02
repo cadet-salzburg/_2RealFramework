@@ -20,8 +20,6 @@
 #include "helpers/_2RealException.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
 
-#include <assert.h>
-
 namespace _2Real
 {
 

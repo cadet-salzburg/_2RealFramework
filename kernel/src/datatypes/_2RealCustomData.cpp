@@ -21,66 +21,37 @@
 #include "engine/_2RealTypeMetadata.h"
 #include "app/_2RealInfo.h"
 
-#include <assert.h>
-
 namespace _2Real
 {
-	CustomType::~CustomType()
+	CustomType::CustomType() :
+		mTypeId( "undefined", "undefined" )
 	{
-		for ( DataFields::iterator it = mDataFields.begin(); it != mDataFields.end(); ++it )
-		{
-			delete it->second;
-		}
 	}
 
-	CustomType::CustomType( bundle::TypeMetainfo const& meta )
+	CustomType::CustomType( std::shared_ptr< const TypeMetadata > meta ) :
+		mTypeId( "undefined", "undefined" ),
+		mMetadata( meta )
 	{
-		TypeMetadata const* metadata = meta.mImpl;
-		initFrom( metadata );
-	}
-
-	CustomType::CustomType( app::TypeMetainfo const& meta )
-	{
-		TypeMetadata const* metadata = meta.mImpl;
-		initFrom( metadata );
-	}
-
-	CustomType::CustomType( TypeMetadata const* metadata )
-	{
-		initFrom( metadata );
-	}
-
-	void CustomType::initFrom( TypeMetadata const* metadata )
-	{
-		mTypeId = TypeMetadata::TypeId( "undefined", "undefined" );
-
-		if ( metadata == nullptr )
+		if ( meta.get() == nullptr )
 			return;
 
-		mTypeId = metadata->getTypeId();
-
-		for ( TypeMetadata::FieldDescriptions::const_iterator it = metadata->mFields.begin(); it != metadata->mFields.end(); ++it )
+		mTypeId = meta->getTypeId();
+		for ( TypeMetadata::FieldDescriptions::const_iterator it = meta->mFields.begin(); it != meta->mFields.end(); ++it )
 		{
-			// create an any of appropriate type
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
-			// add it to map ( or whatever structure is used )
 			this->initField( it->first, init );
 		}
 	}
 
-	CustomType::CustomType( CustomType const& other )
+	CustomType::~CustomType()
 	{
-		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
-		{
-			std::string name = it->first;
-			AbstractAnyHolder * value = it->second->clone();
-			mDataFields[ name ] = value;
-		}
+		for ( DataFields::iterator it = mDataFields.begin(); it != mDataFields.end(); ++it )
+			delete it->second;
 	}
 
-	void CustomType::cloneFrom( CustomType const& other )
+	CustomType::CustomType( CustomType const& other )
 	{
-		mDataFields.clear();
+		mTypeId = other.mTypeId;
 
 		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
 		{

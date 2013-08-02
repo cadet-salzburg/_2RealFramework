@@ -18,24 +18,10 @@
 
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
+#include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealInfo.h"
 #include "engine/_2RealBundle.h"
-#include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
-#include "engine/_2RealFunctionBlock.h"
-
-template< typename TObj >
-std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-{
-	std::shared_ptr< TObj > locked = handle.lock();
-	if ( locked.get() == nullptr )
-	{
-		std::stringstream msg;
-		msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-	}
-
-	return locked;
-}
 
 namespace _2Real
 {
@@ -57,23 +43,23 @@ namespace _2Real
 			return ( nullptr != bundle.get() );
 		}
 
-		BundleInfo const& BundleHandle::getBundleInfo() const
+		BundleMetainfo BundleHandle::getBundleMetainfo() const
 		{
 			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			return bundle->getBundleInfo();
+			return BundleMetainfo( bundle->getBundleMetadata() );
 		}
 
-		ContextBlockHandle BundleHandle::getContextBlock() const
+		ContextBlockHandle BundleHandle::createContextBlockInstance() const
 		{
 			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			std::shared_ptr< FunctionBlock > block = bundle->getContextBlock();
+			std::shared_ptr< FunctionBlock > block = bundle->getContextBlockInstance();
 			return ContextBlockHandle( block );
 		}
 
-		BlockHandle BundleHandle::createBlockInstance( std::string const& name )
+		BlockHandle BundleHandle::createFunctionBlockInstance( std::string const& name )
 		{
 			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			std::shared_ptr< FunctionBlock > block = bundle->createBlockInstance( name );
+			std::shared_ptr< FunctionBlock > block = bundle->createFunctionBlockInstance( name );
 			return BlockHandle( block );
 		}
 

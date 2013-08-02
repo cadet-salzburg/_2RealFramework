@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\sfml\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;$(_2REAL_DIR)\bundles\unittest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(_2REAL_DEPENDENCIES_DIR)\sfml\lib;$(_2REAL_DEPENDENCIES_DIR)\poco\lib;$(_2REAL_DIR)\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>

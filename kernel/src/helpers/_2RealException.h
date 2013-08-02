@@ -18,12 +18,7 @@
 
 #pragma once
 
-#include <stdexcept>
-#ifdef _UNIX
-	#include <typeinfo>
-#else
-	#include <typeinfo.h>
-#endif
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

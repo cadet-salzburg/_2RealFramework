@@ -21,15 +21,8 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
-
-#include "engine/_2RealThreadingPolicy.h"
-
-#ifdef _UNIX
-	#include <typeinfo>
-#else
-	#include <typeinfo.h>
-#endif
-#include <string>
+#include "policies/_2RealThreadingPolicy.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -42,7 +35,7 @@ namespace _2Real
 
 		public:
 
-			ContextBlockMetainfo( BlockMetadata &data );
+			ContextBlockMetainfo( std::shared_ptr< BlockMetadata > );
 
 			void setDescription( std::string const& description );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
@@ -57,9 +50,8 @@ namespace _2Real
 
 		private:
 
-			void privateAddOutlet( std::string const&, std::string const&, TypeMetadata const* );
-
-			BlockMetadata	&m_Impl;
+			void privateAddOutlet( std::string const&, std::string const&, std::shared_ptr< const TypeMetadata > );
+			std::weak_ptr< BlockMetadata >		mImpl;
 
 		};
 	}

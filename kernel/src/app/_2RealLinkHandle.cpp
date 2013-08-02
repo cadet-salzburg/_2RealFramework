@@ -16,8 +16,39 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealInletPolicy.h"
+#include "app/_2RealLinkHandle.h"
+#include "engine/_2RealLink.h"
 
 namespace _2Real
 {
+	namespace app
+	{
+		LinkHandle::LinkHandle() :
+			mImpl()
+		{
+		}
+
+		LinkHandle::LinkHandle( std::shared_ptr< IOLink > link ) :
+			mImpl( link )
+		{
+		}
+
+		bool LinkHandle::isValid() const
+		{
+			std::shared_ptr< IOLink > link = mImpl.lock();
+			return ( nullptr != link.get() );
+		}
+
+		void LinkHandle::activate()
+		{
+			std::shared_ptr< IOLink > link = mImpl.lock();
+			link->activate();
+		}
+
+		void LinkHandle::deactivate()
+		{
+			std::shared_ptr< IOLink > link = mImpl.lock();
+			link->deactivate();
+		}
+	}
 }

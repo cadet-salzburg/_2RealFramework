@@ -20,45 +20,25 @@
 #pragma once
 
 #include "datatypes/_2RealAnyHolder.h"
-#include "datatypes/_2RealAbstractAnyHolder.h"
-#include <map>
+#include "engine/_2RealTypeMetadataRef.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class TypeMetadata;
-
-	namespace bundle
-	{
-		class TypeMetainfo;
-	}
-
-	namespace app
-	{
-		class TypeMetainfo;
-	}
-
 	class CustomType
 	{
 
 	public:
 
-		explicit CustomType( bundle::TypeMetainfo const& meta );
-		explicit CustomType( app::TypeMetainfo const& meta );
-		explicit CustomType( TypeMetadata const* meta );
-
+		CustomType();											// invalid
+		explicit CustomType( TypeMetadataConstRef );			// valid unless nullptr
+		CustomType( CustomType const& other );					// deep copy
 		~CustomType();
 
-		CustomType( CustomType const& other );
-
-	public:
-
-		void initFrom( TypeMetadata const* meta );
-		void cloneFrom( CustomType const& other );
-
+		// urgh, this involves a copy -> for custom types composed of other custom types, get shared ptr w / get & the set on those
 		template< typename TType >
 		void set( std::string const& field, TType const& value )
 		{
-			// makes a copy of the value!
 			setValueInternal( field, new AnyHolder< TType >( value ) );
 		}
 
@@ -66,7 +46,7 @@ namespace _2Real
 		std::shared_ptr< const TType > get( std::string const& field ) const
 		{
 			AbstractAnyHolder const* value = getValueInternal( field );
-			// may throw
+
 			std::shared_ptr< const TType > result = extract< TType >( *value );
 			return result;
 		}
@@ -75,7 +55,6 @@ namespace _2Real
 		std::shared_ptr< TType > get( std::string const& field )
 		{
 			AbstractAnyHolder *value = getValueInternal( field );
-			// may throw
 			std::shared_ptr< TType > result = extract< TType >( *value );
 			return result;
 		}
@@ -95,8 +74,10 @@ namespace _2Real
 		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
 
 		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
-		DataFields															mDataFields;
-		std::pair< std::string, std::string >								mTypeId;
+		DataFields													mDataFields;
+		std::pair< std::string, std::string >						mTypeId;
+		// meta may have been killed when type is still around
+		std::weak_ptr< const TypeMetadata >							mMetadata;
 
 		DataFields::iterator iter( std::string const& name );
 		DataFields::const_iterator constIter( std::string const& name ) const;
@@ -106,6 +87,8 @@ namespace _2Real
 		AbstractAnyHolder * getValueInternal( std::string const& field );
 
 	};
+
+	//------------ since field are custom types, names & init have to be given.....
 
 	template< >
 	struct Name< CustomType >
@@ -121,8 +104,7 @@ namespace _2Real
 	{
 		static CustomType defaultValue()
 		{
-			TypeMetadata *meta = nullptr;
-			return CustomType( meta );
+			return CustomType();
 		}
 	};
 }

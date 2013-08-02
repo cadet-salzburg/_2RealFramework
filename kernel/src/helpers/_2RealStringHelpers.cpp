@@ -16,10 +16,7 @@
 	limitations under the License.
 */
 
-#include "helpers/_2RealHelpers.h"
 #include "helpers/_2RealException.h"
-
-#include <sstream>
 
 using std::string;
 using std::ostringstream;

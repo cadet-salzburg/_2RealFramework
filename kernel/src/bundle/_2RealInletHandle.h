@@ -20,8 +20,7 @@
 
 #include "helpers/_2RealException.h"
 #include "datatypes/_2RealCustomData.h"
-
-#include <sstream>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -40,9 +39,9 @@ namespace _2Real
 			bool isValid() const;
 
 			// true if inlet was declared as mutli inlet according to metadata
-			bool isMultiInlet() const;
-			// if not multi: returns 1
-			unsigned int getSize() const;
+			bool canExpand() const;
+			// if not multi: returns 0
+			unsigned int getSubInletCount() const;
 
 			bool hasUpdated() const;
 			bool hasChanged() const;
@@ -50,7 +49,7 @@ namespace _2Real
 			InletHandle operator[]( const unsigned int index );
 
 			std::shared_ptr< const CustomType > getReadableRef() const;
-			void getWriteableCopy( CustomType &type ) const;
+			std::shared_ptr< CustomType > getWriteableCopy() const;
 
 		private:
 

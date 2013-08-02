@@ -24,8 +24,6 @@
 #include "engine/_2RealLogger.h"
 #include "../_2RealBlock.h"
 
-#include <iostream>
-
 using std::string;
 
 namespace _2Real

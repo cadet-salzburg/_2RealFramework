@@ -22,13 +22,11 @@
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealFunctionBlockStateManager.h"
-#include "helpers/_2RealHelpers.h"
+#include "policies/_2RealUpdatePolicy.h"
 
 using std::string;
 using std::make_pair;
 using std::greater;
-
-#include <assert.h>
 
 namespace _2Real
 {
@@ -54,7 +52,7 @@ namespace _2Real
 		}
 	}
 
-	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, Policy const& policy )
+	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, UpdatePolicy const& policy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 #ifdef _DEBUG
@@ -64,27 +62,32 @@ namespace _2Real
 		}
 #endif
 
-		AbstractInletTriggerCtor *c;
-		AbstractInletBasedTrigger *t;
-		bool s;
+		AbstractInletTriggerCtor *c = nullptr;
+		AbstractInletBasedTrigger *t = nullptr;
+		bool s = false;
 
-		if ( policy == Policy::ALWAYS )
+		if ( policy == UpdatePolicy::ALWAYS )
 		{
 			c = new InletTriggerCtor< ValidData >();
 			t = c->createTrigger( &inletIO, m_StateManager, false );
 			s = false;
 		}
-		else if ( policy == Policy::OR_NEWER_DATA )
+		else if ( policy == UpdatePolicy::OR_NEWER_DATA )
 		{
 			c = new InletTriggerCtor< NewerTimestamp >();
 			t = c->createTrigger( &inletIO, m_StateManager, true );
 			s = true;
 		}
-		else if ( policy == Policy::AND_NEWER_DATA )
+		else if ( policy == UpdatePolicy::AND_NEWER_DATA )
 		{
 			c = new InletTriggerCtor< NewerTimestamp >();
 			t = c->createTrigger( &inletIO, m_StateManager, false );
 			s = false;
+		}
+		else
+		{
+			std::cout << static_cast< std::string >( policy ) << std::endl;
+			assert( NULL );
 		}
 
 		InletPolicyInfo *p = new InletPolicyInfo( c, t, s );
@@ -166,7 +169,7 @@ namespace _2Real
 		m_UpdateRate = rate;
 	}
 
-	void FunctionBlockUpdatePolicy::setInletPolicy( BasicInletIO &io, Policy const& p )
+	void FunctionBlockUpdatePolicy::setInletPolicy( BasicInletIO &io, UpdatePolicy const& p )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
 		m_InletPoliciesChanged = true;
@@ -176,17 +179,17 @@ namespace _2Real
 			it->second->wasPolicyChanged = true;
 			delete it->second->ctor;
 
-			if ( p == Policy::ALWAYS )
+			if ( p == UpdatePolicy::ALWAYS )
 			{
 				it->second->ctor = new InletTriggerCtor< ValidData >();
 				it->second->isSingleWeight = false;
 			}
-			else if ( p == Policy::OR_NEWER_DATA )
+			else if ( p == UpdatePolicy::OR_NEWER_DATA )
 			{
 				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
 				it->second->isSingleWeight = true;
 			}
-			else if ( p == Policy::AND_NEWER_DATA )
+			else if ( p == UpdatePolicy::AND_NEWER_DATA )
 			{
 				it->second->ctor = new InletTriggerCtor< NewerTimestamp >();
 				it->second->isSingleWeight = false;

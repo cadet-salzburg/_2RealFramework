@@ -80,8 +80,6 @@ void CameraCaptureBlock::update()
 			std::shared_ptr< const CustomType > fpsData = mFpsIn.getReadableRef();
 			unsigned int fps  = *( fpsData->get< unsigned int >( "default" ).get() );
 
-			std::cout << device << std::endl;
-
 			// handle change of camera
 			if ( device != mDevice )
 			{
@@ -99,8 +97,6 @@ void CameraCaptureBlock::update()
 					mFps = fps;
 				}
 			}
-
-			std::cout << mDevice << std::endl;
 
 			if ( mDevice >=0 )
 			{

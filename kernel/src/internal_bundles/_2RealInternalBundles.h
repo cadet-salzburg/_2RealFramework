@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

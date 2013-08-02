@@ -20,9 +20,7 @@
 #pragma once
 
 #include "helpers/_2RealDeleter.h"
-
-#include <string>
-#include <map>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -35,25 +33,12 @@ namespace _2Real
 
 		const static std::string sFrameworkTypes;
 
-		class RegisteredType
-		{
-		public:
-			~RegisteredType() { del->operator()( data ); delete del; }
-			TypeMetadata				const* data;
-			ADeleter< TypeMetadata >	*del;
-		};
-
 		TypeRegistry();
 		~TypeRegistry();
 
-		// called after loading a bundle to register all types
-		void registerType( std::string const& bundle, std::string const& name, TypeMetadata const* meta, ADeleter< TypeMetadata > *del );
-
-		// called when unloading a bundle to unregister all types
+		void registerType( std::string const& bundle, std::string const& name, std::shared_ptr< const TypeMetadata >/*, ADeleter< TypeMetadata > *del*/ );
 		void unregisterType( std::string const& bundle, std::string const& name );
-
-		// called when creating inlets & outlets
-		TypeMetadata const* get( std::string const& bundle, std::string const& name ) const;
+		std::shared_ptr< const TypeMetadata > get( std::string const& bundle, std::string const& name ) const;
 
 		void merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias );
 
@@ -62,9 +47,9 @@ namespace _2Real
 		TypeRegistry( TypeRegistry const& other );
 		TypeRegistry& operator=( TypeRegistry const& other );
 
-		typedef std::pair< std::string, std::string >	TypeKey;
-		typedef std::map< TypeKey, RegisteredType* >	Types;
+		typedef std::pair< std::string, std::string >						TypeKey;
+		typedef std::map< TypeKey, std::shared_ptr< const TypeMetadata > >	Types;
 
-		Types											mTypes;
+		Types																mTypes;
 	};
 }

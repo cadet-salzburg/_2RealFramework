@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

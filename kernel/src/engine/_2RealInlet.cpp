@@ -62,11 +62,11 @@ namespace _2Real
 		return mSelfRef.lock();
 	}
 
-	bool BasicInlet::isMultiInlet() const { return false; }
+	bool BasicInlet::canExpand() const { return false; }
 	
-	unsigned int BasicInlet::getSize() const
+	unsigned int BasicInlet::getSubInletCount() const
 	{
-		return 1;
+		return 0;
 	}
 
 	std::shared_ptr< const CustomType > BasicInlet::getData() const
@@ -104,10 +104,10 @@ namespace _2Real
 		return std::dynamic_pointer_cast< BasicInlet, AbstractInlet >( mOwner->operator[]( index )->getInlet() );
 	}
 
-	bool MultiInlet::isMultiInlet() const { return true; }
+	bool MultiInlet::canExpand() const { return true; }
 	
-	unsigned int MultiInlet::getSize() const
+	unsigned int MultiInlet::getSubInletCount() const
 	{
-		return mOwner->getSize();
+		return mOwner->getSubInletCount();
 	}
 }

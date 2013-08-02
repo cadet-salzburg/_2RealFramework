@@ -17,41 +17,44 @@
 */
 
 #include "bundle/_2RealBlockMetainfo.h"
-#include "engine/_2RealBlockMetadata.h"
-#include "engine/_2RealParameterMetadata.h"
-#include "helpers/_2RealStringHelpers.h"
 #include "bundle/_2RealTypeMetainfo.h"
+#include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealIOMetadata.h"
+#include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		BlockMetainfo::BlockMetainfo( BlockMetadata &data ) :
-			m_Impl( data )
+		FunctionBlockMetainfo::FunctionBlockMetainfo( std::shared_ptr< BlockMetadata > meta ) :
+			mImpl( meta )
 		{
 		}
 
-		void BlockMetainfo::setDescription( std::string const& description )
+		void FunctionBlockMetainfo::setDescription( std::string const& description )
 		{
-			m_Impl.setDescription( description );
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->setDescription( description );
 		}
 
-		void BlockMetainfo::setCategory( std::string const& category )
+		void FunctionBlockMetainfo::setCategory( std::string const& category )
 		{
-			m_Impl.setDescription( category );
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->setDescription( category );
 		}
 
-		void BlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		void FunctionBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
 		{
-			m_Impl.setThreadingPolicy( policy );
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->setThreadingPolicy( policy );
 		}
 
-		void BlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, Policy const& defaultPolicy )
+		void FunctionBlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, UpdatePolicy const& defaultPolicy )
 		{
 			privateAddInlet( name, type, init, nullptr, defaultPolicy );
 		}
 
-		void BlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta, Policy const& defaultPolicy )
+		void FunctionBlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, std::shared_ptr< const TypeMetadata > meta, UpdatePolicy const& defaultPolicy )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
@@ -61,16 +64,30 @@ namespace _2Real
 			if ( init.get() )
 				copied.reset( new CustomType( *( init.get() ) ) );
 
-			InletMetadata *data = new InletMetadata( trimmed, type, copied, meta, defaultPolicy, false );
-			m_Impl.addInlet( data );
+			std::shared_ptr< IOMetadata > data( new IOMetadata );
+
+			data->name = trimmed;
+			data->typeMetadata = meta;
+			data->initializer = copied;
+			data->canExpand = false;
+			data->expansionSize = 0;
+			data->canLink = true;
+			data->isBuffered = true;
+			data->bufferSize = 10;
+			data->canTriggerUpdates = true;
+			data->updatePolicy = defaultPolicy;
+			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
+
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->addInlet( data, type );
 		}
 
-		void BlockMetainfo::addCustomTypeParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init )
+		void FunctionBlockMetainfo::addCustomTypeParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init )
 		{
 			privateAddParameter( name, type, init, nullptr );
 		}
 
-		void BlockMetainfo::privateAddParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, TypeMetadata const* meta )
+		void FunctionBlockMetainfo::privateAddParameter( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, std::shared_ptr< const TypeMetadata > meta )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
@@ -80,22 +97,50 @@ namespace _2Real
 			if ( init.get() )
 				copied.reset( new CustomType( *( init.get() ) ) );
 
-			ParameterMetadata *data = new ParameterMetadata( trimmed, type, copied, meta );
-			m_Impl.addParameter( data );
+			std::shared_ptr< IOMetadata > data( new IOMetadata );
+
+			data->name = trimmed;
+			data->typeMetadata = meta;
+			data->initializer = copied;
+			data->canExpand = false;
+			data->expansionSize = 0;
+			data->canLink = false;
+			data->isBuffered = false;
+			data->bufferSize = 0;
+			data->canTriggerUpdates = false;
+			data->updatePolicy = UpdatePolicy::INVALID;
+			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
+
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->addParameter( data, type );
 		}
 
-		void BlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
+		void FunctionBlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
 		{
 			privateAddOutlet( name, type, nullptr );
 		}
 
-		void BlockMetainfo::privateAddOutlet( std::string const& name, std::string const& type, TypeMetadata const* meta )
+		void FunctionBlockMetainfo::privateAddOutlet( std::string const& name, std::string const& type, std::shared_ptr< const TypeMetadata > meta )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
 
-			OutletMetadata *data = new OutletMetadata( trimmed, type, meta );
-			m_Impl.addOutlet( data );
+			std::shared_ptr< IOMetadata > data( new IOMetadata );
+
+			data->name = trimmed;
+			data->typeMetadata = meta;
+			//data->initializer = copied;
+			data->canExpand = false;
+			data->expansionSize = 0;
+			data->canLink = true;
+			data->isBuffered = false;
+			data->bufferSize = 0;
+			data->canTriggerUpdates = false;
+			data->updatePolicy = UpdatePolicy::INVALID;
+			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
+
+			std::shared_ptr< BlockMetadata > block = mImpl.lock();
+			block->addOutlet( data, type );
 		}
 	}
 }

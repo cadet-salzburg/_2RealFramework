@@ -18,7 +18,6 @@
 
 #include "datatypes/_2RealTypeRegistry.h"
 #include "engine/_2RealTypeMetadata.h"
-#include <assert.h>
 
 namespace _2Real
 {
@@ -30,27 +29,17 @@ namespace _2Real
 
 	TypeRegistry::~TypeRegistry()
 	{
-		for ( Types::iterator it = mTypes.begin(); it != mTypes.end(); ++it )
-		{
-			delete ( it->second );
-		}
+		mTypes.clear();
 	}
 
-	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, TypeMetadata const* data, ADeleter< TypeMetadata > *del )
+	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, std::shared_ptr< const TypeMetadata > data )
 	{
-#ifdef _DEBUG
-		assert( data );
-		assert( del );
-#endif
 		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
 #ifdef _DEBUG
 		Types::const_iterator it = mTypes.find( key );
 		assert( mTypes.end() == it );
 #endif
-		RegisteredType *reg = new RegisteredType();
-		mTypes[ key ] = reg;
-		reg->del = del;
-		reg->data = data;
+		mTypes[ key ] = data;
 	}
 
 	void TypeRegistry::unregisterType( std::string const& bundle, std::string const& name )
@@ -63,18 +52,18 @@ namespace _2Real
 		mTypes.erase( it );
 	}
 
-	TypeMetadata const* TypeRegistry::get( std::string const& bundle, std::string const& name ) const
+	std::shared_ptr< const TypeMetadata > TypeRegistry::get( std::string const& bundle, std::string const& name ) const
 	{
 		Types::const_iterator fwIt = mTypes.find( std::make_pair( TypeRegistry::sFrameworkTypes, name ) );
 		if ( fwIt != mTypes.end() )
 		{
-			return fwIt->second->data;
+			return fwIt->second;
 		}
 		else
 		{
 			Types::const_iterator userIt = mTypes.find( std::make_pair( bundle, name ) );
 			if ( userIt != mTypes.end() )
-				return userIt->second->data;
+				return userIt->second;
 			else
 				return nullptr;
 		}
@@ -86,9 +75,8 @@ namespace _2Real
 		{
 			if ( it->first.first == bundle )
 			{
-				// const gets lost here, but that's good
-				RegisteredType const* t = it->second;
-				registerType( alias, it->first.second, t->data, new NullDeleter< TypeMetadata > );
+				std::shared_ptr< const TypeMetadata > m = it->second;
+				registerType( alias, it->first.second, m );
 			}
 		}
 	}

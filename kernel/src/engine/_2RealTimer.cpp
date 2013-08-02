@@ -20,8 +20,6 @@
 #include "engine/_2RealTimer.h"
 #include "engine/_2RealLogger.h"
 
-#include <sstream>
-
 namespace _2Real
 {
 	Timer::Timer( Logger *logger ) :

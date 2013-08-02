@@ -18,102 +18,102 @@
 
 #pragma once
 
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealVersion.h"
-#include "engine/_2RealInletPolicy.h"
-#include "engine/_2RealTypeMetadata.h"
-
-#include <vector>
-#include <string>
+#include "policies/_2RealUpdatePolicy.h"
+#include "datatypes/_2RealDataField.h"
 
 namespace _2Real
 {
+	class CustomType;
+	class TypeMetadata;
+	class BundleMetadata;
+	class BlockMetadata;
+	class IOMetadata;
+
 	namespace app
 	{
-
 		class TypeMetainfo
 		{
-
 		public:
-
-			struct FieldMetainfo
-			{
-				std::string			name;
-				std::string			type;
-			};
-
-			TypeMetainfo( _2Real::TypeMetadata const& impl ) : mImpl( &impl ) {}
-
-			void getFieldInfo( Fields &f ) const
-			{
-				mImpl->getFields( f );
-			}
-
-			std::pair< std::string, std::string > getTypename() const
-			{
-				return mImpl->getTypeId();
-			}
-
+			TypeMetainfo();
+			explicit TypeMetainfo( std::shared_ptr< const TypeMetadata > );
+			bool isValid() const;
+			void									getDataFields( DataFields &fields ) const;
+			std::pair< std::string, std::string >	getTypename() const;
+			std::shared_ptr< CustomType >			makeData() const;
 		private:
-
-			friend class CustomType;
-			_2Real::TypeMetadata					const* mImpl;
-
+			std::weak_ptr< const TypeMetadata >			mImpl;
 		};
 
-		struct IOInfo
+		class InputMetainfo
 		{
-			IOInfo() : name( "undefined" ), typeName( "undefined" ), defaultPolicy( Policy::INVALID ), isMulti( false ) {}
-
-			std::string								name;
-			std::string								typeName;
-			Policy									defaultPolicy;
-			bool									isMulti;
+		public:
+			InputMetainfo();
+			explicit InputMetainfo( std::shared_ptr< const IOMetadata > );
+			bool isValid() const;
+			std::string		const& getName() const;
+			std::pair< std::string, std::string > const& getTypeName() const;
+			TypeMetainfo	getTypeMetainfo() const;
+			bool			canExpand() const;
+			bool			canLink() const;
+			bool			isBuffered() const;
+			bool			canTrigger() const;
+		private:
+			std::weak_ptr< const IOMetadata >			mImpl;
 		};
 
-		struct BlockInfo
+		class OutputMetainfo
 		{
-			typedef std::vector< IOInfo >						IOInfos;
-			typedef std::vector< IOInfo >::iterator				IOInfoIterator;
-			typedef std::vector< IOInfo >::const_iterator		IOInfoConstIterator;
-
-			BlockInfo() : name( "undefined" ), description( "undefined" ), category( "undefined" ),
-				inlets(), outlets(), parameters() {}
-
-			~BlockInfo()
-			{
-				parameters.clear();
-				outlets.clear();
-				inlets.clear();
-				category.clear();
-				description.clear();
-				name.clear();
-			}
-
-			std::string			name;
-			std::string			description;
-			std::string			category;
-			IOInfos				inlets;
-			IOInfos				outlets;
-			IOInfos				parameters;
+		public:
+			OutputMetainfo();
+			explicit OutputMetainfo( std::shared_ptr< const IOMetadata > );
+			bool isValid() const;
+			std::string		const& getName() const;
+			std::pair< std::string, std::string > const& getTypeName() const;
+			TypeMetainfo	getTypeMetainfo() const;
+			bool			canExpand() const;
+			bool			canLink() const;
+		private:
+			std::weak_ptr< const IOMetadata >			mImpl;
 		};
 
-		struct BundleInfo
+		class BlockMetainfo
 		{
-			typedef std::vector< BlockInfo >						BlockInfos;
-			typedef std::vector< BlockInfo >::iterator				BlockInfoIterator;
-			typedef std::vector< BlockInfo >::const_iterator		BlockInfoConstIterator;
+		public:
+			BlockMetainfo();
+			explicit BlockMetainfo( std::shared_ptr< const BlockMetadata > );
+			bool isValid() const;
+			std::string const&		getName() const;
+			std::string const&		getDescription() const;
+			std::string const&		getCategory() const;
+			bool					isContext() const;
+			bool					needsContext() const;
+			void getInletMetainfo( std::vector< InputMetainfo > & ) const;
+			void getParameterMetainfo( std::vector< InputMetainfo > & ) const;
+			void getOutletMetainfo( std::vector< OutputMetainfo > & ) const;
+		private:
+			std::weak_ptr< const BlockMetadata >		mImpl;
+		};
 
-			BundleInfo() : exportedBlocks(), name( "undefined" ), directory( "undefined" ), description( "undefined" ),
-				author( "undefined" ), contact( "undefined" ), category( "undefined" ), version( 0, 0, 0 ) {}
-
-			BlockInfos			exportedBlocks;
-			std::string			name;
-			std::string			directory;
-			std::string			description;
-			std::string			author;
-			std::string			contact;
-			std::string			category;
-			Version				version;
+		class BundleMetainfo
+		{
+		public:
+			BundleMetainfo();
+			explicit BundleMetainfo( std::shared_ptr< const BundleMetadata > );
+			bool isValid() const;
+			std::string const&		getName() const;
+			std::string const&		getInstallDirectory() const;
+			std::string const&		getDescription() const;
+			std::string const&		getAuthor() const;
+			std::string const&		getContact() const;
+			std::string const&		getCategory() const;
+			Version const&			getVersion() const;
+			bool					exportsContext() const;						// if the bundle exports a context
+			void getExportedBlocks( std::vector< BlockMetainfo > & ) const;
+		private:
+			std::weak_ptr< const BundleMetadata >		mImpl;
 		};
 	}
 }

@@ -22,13 +22,10 @@
 #include "engine/_2RealFunctionBlock.h"
 #include "engine/_2RealBundleMetadata.h"
 #include "engine/_2RealBlockMetadata.h"
-#include "engine/_2RealParameterMetadata.h"
+#include "engine/_2RealIOMetadata.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLogger.h"
 #include "datatypes/_2RealTypeRegistry.h"
-
-#include <sstream>
-#include <assert.h>
 
 using std::ostringstream;
 using std::string;
@@ -98,88 +95,31 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		BundleMetadata const& bundleData = mBundleLoader.loadLibrary( absPath );
-
-		// TODO: argh, are all those different 'infos' really needed?
-		// here, i build the app::BundleInfo from the bundle metadata.
-		app::BundleInfo bundleInfo;
-		bundleInfo.name = bundleData.getName();
-		bundleInfo.directory = bundleData.getInstallDirectory();
-		bundleInfo.description = bundleData.getDescription();
-		bundleInfo.contact = bundleData.getContact();
-		bundleInfo.author = bundleData.getAuthor();
-		bundleInfo.category = bundleData.getCategory();
-
-		BundleMetadata::BlockMetadatas const& blockMetadata = bundleData.getExportedBlocks();
-
-		for ( BundleMetadata::BlockMetadataConstIterator it = blockMetadata.begin(); it != blockMetadata.end(); ++it )
-		{
-			app::BlockInfo blockInfo;
-			blockInfo.name = it->second->getName();
-			blockInfo.description = it->second->getDescription();
-			blockInfo.category = it->second->getCategory();
-
-			BlockMetadata::InletMetadatas const& input = it->second->getInlets();
-			BlockMetadata::OutletMetadatas const& output = it->second->getOutlets();
-			BlockMetadata::ParameterMetadatas const& params = it->second->getParameters();
-
-			for ( BlockMetadata::OutletMetadataConstIterator oit = output.begin(); oit != output.end(); ++oit )
-			{
-				app::IOInfo info;
-				info.name = ( *oit )->name;
-				info.typeName = ( *oit )->type;
-				blockInfo.outlets.push_back( info );
-			}
-
-			if ( it->second->getName() == sContextBlock )
-			{
-				continue;
-			}
-
-			for ( BlockMetadata::InletMetadataConstIterator iit = input.begin(); iit != input.end(); ++iit )
-			{
-				app::IOInfo info;
-				info.name = ( *iit )->name;
-				info.typeName = ( *iit )->type;
-				info.isMulti = ( *iit )->isMulti;
-				info.defaultPolicy = ( *iit )->defaultPolicy;
-				blockInfo.inlets.push_back( info );
-			}
-
-			for ( BlockMetadata::ParameterMetadataConstIterator pit = params.begin(); pit != params.end(); ++pit )
-			{
-				app::IOInfo info;
-				info.name = ( *pit )->name;
-				info.typeName = ( *pit )->type;
-				blockInfo.parameters.push_back( info );
-			}
-
-			bundleInfo.exportedBlocks.push_back( blockInfo );
-		}
-
-		std::shared_ptr< Bundle > bundle( new Bundle( mEngineImpl, bundleInfo ) );
+		std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.loadLibrary( absPath );
+		std::shared_ptr< Bundle > bundle( new Bundle( mEngineImpl, bundleMetadata ) );
 		mBundles.insert( std::make_pair( absPath, bundle ) );
 		return bundle;
 	}
 
-	std::shared_ptr< FunctionBlock > BundleManager::createContextBlockConditionally( Bundle *b, std::string const& blockName )
+	std::shared_ptr< FunctionBlock > BundleManager::createContextBlockInstance( Bundle *b )
 	{
 		std::string absPath = b->getAbsPath();
-		if ( ( b->getContextBlock() == nullptr ) && mBundleLoader.hasContext( absPath ) )
+		if ( mBundleLoader.exportsContext( absPath ) )
 		{
 			// need the shared ptr
 			std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
 
-			BundleMetadata const& bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
-			BlockMetadata const& contextMetadata = bundleMetadata.getBlockData( sContextBlock );
-
-			app::BlockInfo contextInfo;
-			contextInfo.name = contextMetadata.getName();
-			contextInfo.description = contextMetadata.getDescription();
-			contextInfo.category = contextMetadata.getCategory();
-
+			std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
+			std::shared_ptr< const BlockMetadata > blockMetadata = bundleMetadata->getContextBlockMetadata();
 			std::shared_ptr< bundle::Block > block = mBundleLoader.createContext( absPath );
-			std::shared_ptr< FunctionBlock > contextBlock( new FunctionBlock( mEngineImpl, bundle, block, contextInfo ) );
+			std::shared_ptr< FunctionBlock > contextBlock( new FunctionBlock( mEngineImpl, bundle, block, blockMetadata ) );
+
+			BlockMetadata::IOMetadatas const& inletMetadata = blockMetadata->getInlets();
+			BlockMetadata::IOMetadatas const& outletMetadata = blockMetadata->getOutlets();
+			BlockMetadata::IOMetadatas const& parameterMetadata = blockMetadata->getParameters();
+
+			for ( BlockMetadata::IOMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+				contextBlock->addOutlet( *it );
 
 			contextBlock->updateWithFixedRate( 30.0 );
 			contextBlock->setUp();
@@ -198,65 +138,41 @@ namespace _2Real
 
 		std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
 
-		BundleMetadata const& bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
-		BlockMetadata const& blockMetadata = bundleMetadata.getBlockData( blockName );
-
-		app::BlockInfo blockInfo;
-		blockInfo.name = blockMetadata.getName();
-		blockInfo.description = blockMetadata.getDescription();
-		blockInfo.category = blockMetadata.getCategory();
-
-		app::BlockInfo info( blockInfo );
-		info.name = name;
+		std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
+		std::shared_ptr< const BlockMetadata > blockMetadata = bundleMetadata->getFunctionBlockMetadata( blockName );
 
 		std::shared_ptr< bundle::Block > block = mBundleLoader.createBlockInstance( absPath, blockName );
-		std::shared_ptr< FunctionBlock > functionBlock( new FunctionBlock( mEngineImpl, bundle, block, info ) );
+		std::shared_ptr< FunctionBlock > functionBlock( new FunctionBlock( mEngineImpl, bundle, block, blockMetadata ) );
 
-		BlockMetadata::InletMetadatas const& inletMetadata = blockMetadata.getInlets();
-		BlockMetadata::OutletMetadatas const& outletMetadata = blockMetadata.getOutlets();
-		BlockMetadata::ParameterMetadatas const& parameterMetadata = blockMetadata.getParameters();
+		BlockMetadata::IOMetadatas const& inletMetadata = blockMetadata->getInlets();
+		BlockMetadata::IOMetadatas const& outletMetadata = blockMetadata->getOutlets();
+		BlockMetadata::IOMetadatas const& parameterMetadata = blockMetadata->getParameters();
 
-		for ( BlockMetadata::InletMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
+		for ( BlockMetadata::IOMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
 		{
-			std::shared_ptr< const CustomType > initializer;
+			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
+			if ( nullptr == meta.get() )
+				assert( NULL );
 
-			TypeMetadata const* meta = ( **it ).metadata;
-			if ( nullptr == meta )
-				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
-
-			if ( ( **it ).initValue.get() == nullptr )
-				initializer.reset( new CustomType( *meta ) );
-			else initializer = ( **it ).initValue;
-
-			functionBlock->addInlet( **it, initializer, *meta );
+			functionBlock->addInlet( *it );
 		}
 
-		for ( BlockMetadata::ParameterMetadataConstIterator it = parameterMetadata.begin(); it != parameterMetadata.end(); ++it )
+		for ( BlockMetadata::IOMetadataConstIterator it = parameterMetadata.begin(); it != parameterMetadata.end(); ++it )
 		{
-			std::shared_ptr< const CustomType > initializer;
+			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
+			if ( nullptr == meta.get() )
+				assert( NULL );
 
-			TypeMetadata const* meta = ( **it ).metadata;
-			if ( nullptr == meta )
-				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
-
-			if ( ( **it ).initValue.get() == nullptr )
-				initializer.reset( new CustomType( *meta ) );
-			else initializer = ( **it ).initValue;
-
-			functionBlock->addParameter( **it, initializer, *meta );
+			functionBlock->addParameter( *it );
 		}
 
-		for ( BlockMetadata::OutletMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
+		for ( BlockMetadata::IOMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 		{
-			std::shared_ptr< const CustomType > initializer;
+			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
+			if ( nullptr == meta.get() )
+				assert( NULL );
 
-			TypeMetadata const* meta = ( **it ).metadata;
-			if ( nullptr == meta )
-				meta = mEngineImpl->getTypeRegistry()->get( bundleMetadata.getName(), ( **it ).type );
-
-			initializer.reset( new CustomType( *meta ) );
-
-			functionBlock->addOutlet( **it, initializer, *meta );
+			functionBlock->addOutlet( *it );
 		}
 
 		functionBlock->updateWithFixedRate( 30.0 );

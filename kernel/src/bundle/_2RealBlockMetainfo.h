@@ -22,16 +22,10 @@
 #include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
 
-#include "engine/_2RealInletPolicy.h"
-#include "engine/_2RealThreadingPolicy.h"
+#include "policies/_2RealUpdatePolicy.h"
+#include "policies/_2RealThreadingPolicy.h"
 
-
-#ifdef _UNIX
-	#include <typeinfo>
-#else
-	#include <typeinfo.h>
-#endif
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -39,24 +33,24 @@ namespace _2Real
 
 	namespace bundle
 	{
-		class BlockMetainfo
+		class FunctionBlockMetainfo
 		{
 
 		public:
 
-			BlockMetainfo( BlockMetadata &data );
+			FunctionBlockMetainfo( std::shared_ptr< BlockMetadata > );
 
 			void setDescription( std::string const& description );
 			void setCategory( std::string const& category );
 			void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			template< typename TType >
-			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), Policy const& defaultPolicy = Policy::ALWAYS )
+			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), UpdatePolicy const& defaultPolicy = UpdatePolicy::ALWAYS )
 			{
 				privateAddInlet( name, Name< TType >::humanReadableName(), BaseToCustomType< TType >( initialValue ), BaseToCustomType< TType >::getTypeMetadata(), defaultPolicy );
 			}
 
-			void addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, Policy const& defaultPolicy = Policy::ALWAYS );
+			void addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, UpdatePolicy const& defaultPolicy = UpdatePolicy::ALWAYS );
 
 			template< typename TType >
 			void addParameter( std::string const& name, TType initialValue = Init< TType >::defaultValue() )
@@ -76,10 +70,10 @@ namespace _2Real
 
 		private:
 
-			void privateAddInlet( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const*, Policy const& );
-			void privateAddParameter( std::string const&, std::string const&, std::shared_ptr< const CustomType >, TypeMetadata const* );
-			void privateAddOutlet( std::string const&, std::string const&, TypeMetadata const* );
-			BlockMetadata	&m_Impl;
+			void privateAddInlet( std::string const&, std::string const&, std::shared_ptr< const CustomType >, std::shared_ptr< const TypeMetadata >, UpdatePolicy const& );
+			void privateAddParameter( std::string const&, std::string const&, std::shared_ptr< const CustomType >, std::shared_ptr< const TypeMetadata > );
+			void privateAddOutlet( std::string const&, std::string const&, std::shared_ptr< const TypeMetadata > );
+			std::weak_ptr< BlockMetadata >		mImpl;
 
 		};
 	}

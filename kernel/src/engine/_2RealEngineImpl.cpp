@@ -27,14 +27,9 @@
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealCallback.h"
 #include "helpers/_2RealEvent.h"
-#include "helpers/_2RealSingletonHolder.h"
-#include "helpers/_2RealHelpers.h"
 
 #include "internal_bundles/_2RealConversionBundle.h"
 #include "datatypes/_2RealImage.h"
-
-#include <sstream>
-#include <iostream>
 
 #ifdef _2REAL_WINDOWS
 	#ifndef _DEBUG
@@ -98,17 +93,30 @@ namespace _2Real
 		return link;
 	}
 
+	void LinkCollection::destroyLink( std::shared_ptr< BasicInletIO > inlet, std::shared_ptr< OutletIO > outlet )
+	{
+		std::shared_ptr< IOLink > dummy( new IOLink( inlet, outlet ) );
+		LinkIterator it = mLinks.find( dummy );
+		dummy.reset();
+
+		if ( it != mLinks.end() )
+		{
+			( *it )->deactivate();
+			mLinks.erase( it );
+		}
+	}
+
 	EngineImpl::EngineImpl() :
 		mLogger( new Logger( "EngineLog.txt" ) ),
 		mTimer( new Timer( mLogger ) ),
 		mTypeRegistry( new TypeRegistry ),
-		mThreadPool( new ThreadPool( this, 1, 0, "2Real threadpool" ) ),
+		mThreadPool( new ThreadPool( this, 10, 0, "2Real threadpool" ) ),
 		mBundleManager( new BundleManager( this ) ),
 		mSystem( new System( this ) ),
 		mLinkManager( new LinkCollection( this ) )
 	{
 		mTimestamp.update();
-		mTypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata(), new Deleter< TypeMetadata > );
+		mTypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata()/*, new Deleter< TypeMetadata > */);
 	}
 
 	EngineImpl::~EngineImpl()

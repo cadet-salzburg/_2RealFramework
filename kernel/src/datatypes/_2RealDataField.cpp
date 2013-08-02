@@ -20,4 +20,5 @@
 
 namespace _2Real
 {
+	const std::string DataField::sBasicTypeName = "BasicType";
 }

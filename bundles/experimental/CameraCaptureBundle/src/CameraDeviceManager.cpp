@@ -50,7 +50,7 @@ void CameraDeviceManager::setup( BlockHandle &context )
 		if ( !mVideoInputController )
 			mVideoInputController = new videoInput();
 
-		mNumDevices = mVideoInputController->listDevices( false );
+		mNumDevices = mVideoInputController->listDevices( true );
 		mDevices.clear();
 		for( unsigned int i=0; i<mNumDevices; ++i )
 			mDevices.push_back( Device( mVideoInputController->getDeviceName( i ), false ) );
@@ -67,7 +67,7 @@ void CameraDeviceManager::update()
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mMutex );
 
-		int numDevices = mVideoInputController->listDevices( false );
+		int numDevices = mVideoInputController->listDevices( true );
 		if ( numDevices != mNumDevices )
 		{
 			for( unsigned int i = 0; i<mDevices.size(); ++i )
@@ -192,14 +192,18 @@ unsigned int CameraDeviceManager::getNumberOfConnectedDevices() const
 unsigned char * CameraDeviceManager::getPixels( const unsigned int device ) const
 {
 	// this seems to be locked anyway by videoinput lib, and every device in our case is just grabbed by a single block
+	unsigned char *result = nullptr;
+
 	try
 	{
-		return mVideoInputController->getPixels( device, true, true );
+		result = mVideoInputController->getPixels( device, true, true );
 	}
 	catch ( ... )
 	{
 		std::cout << "couldn't get the pixels" << std::endl;
 	}
+
+	return result;
 }
 
 unsigned int CameraDeviceManager::getVideoWidth( const unsigned int device ) const

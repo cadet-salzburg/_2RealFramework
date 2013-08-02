@@ -23,6 +23,7 @@
 #include "engine/_2RealAbstractStateManager.h"
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealTimer.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

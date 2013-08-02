@@ -18,17 +18,20 @@
 
 #pragma once
 
-#include "datatypes/_2RealCustomData.h"
-#include "engine/_2RealInletPolicy.h"
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
 	class AbstractInletIO;
+	class CustomType;
+	class UpdatePolicy;
 
 	namespace app
 	{
+		class TypeMetainfo;
 		class OutletHandle;
-		class BlockHandle;
+		class LinkHandle;
 
 		class InletHandle
 		{
@@ -38,36 +41,39 @@ namespace _2Real
 			InletHandle();
 			InletHandle( std::shared_ptr< AbstractInletIO > );
 
-			bool isValid() const;
+			// check this if you're unsure if the underlying inlet still exists
+			bool									isValid() const;
 
-			std::string const&				getName() const;
-			app::TypeMetainfo				getType() const;
+			std::string const&						getName() const;
+			TypeMetainfo							getType() const;
 
-			std::shared_ptr< CustomType >	makeData() const;
+			// missing: query this stuff
+			void									setUpdatePolicy( UpdatePolicy const& );
+			void									setBufferSize( const unsigned int );
 
-			// MISSING: function for querying update policy, current state, buffer size
+			// linking
+			LinkHandle								link( OutletHandle );
+			void									unlinkFrom( OutletHandle );
 
-			void				setUpdatePolicy( Policy const& );
-			void				setBufferSize( const unsigned int );
-
-			bool				link( OutletHandle );
-			void				unlinkFrom( OutletHandle );
-
+			// creates a writeable data item
+			std::shared_ptr< CustomType >			makeData() const;
 			std::shared_ptr< const CustomType >		getCurrentData() const;
+			// bypasses the buffer, sets data directly...
+			// this makes very little sense when the inlet is linked to sth else
+			void									setData( std::shared_ptr< const CustomType > );
+			// inserts data into buffer
 			void									receiveData( std::shared_ptr< const CustomType > );
 
 			// multi-inlet related stuff -> each of those functions has a chance of failing
-
-			bool isMultiInlet() const;
-			unsigned int getSize() const;
-			InletHandle operator[]( const unsigned int index );
-			InletHandle add();
-			void remove( InletHandle handle );
+			bool									canExpand() const;
+			unsigned int							getSubInletCount() const;
+			InletHandle								operator[]( const unsigned int );
+			InletHandle								add();
+			void									remove( InletHandle handle );
 
 		private:
 
 			friend class OutletHandle;
-
 			std::weak_ptr< AbstractInletIO >		mImpl;
 
 		};

@@ -20,8 +20,9 @@
 
 #include "engine/_2RealAbstractStateManager.h"
 #include "helpers/_2RealSynchronizedBool.h"
-#include "helpers/_2RealPoco.h"
+#include "helpers/_2RealPocoIncludes.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

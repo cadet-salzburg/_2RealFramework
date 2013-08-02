@@ -18,7 +18,7 @@
 
 #include "datatypes/_2RealFieldDescriptor.h"
 #include "datatypes/_2RealTypeRegistry.h"
-#include "datatypes/_2RealDataField.h"
+#include "datatypes/_2RealFieldDescriptors.h"
 #include "datatypes/_2RealTypeConverter.h"
 #include "_2RealTypeMetadata.h"
 
@@ -37,37 +37,37 @@ namespace _2Real
 	class TypeMatchIdentity : public TypeMatch
 	{
 	public:
-		TypeMatchIdentity( TypeMetadata const& a, TypeMetadata const& b );
+		TypeMatchIdentity( TypeMetadata const* a, TypeMetadata const* b );
 		std::shared_ptr< const TypeConverter >  getConverterAtoB() const;
 		std::shared_ptr< const TypeConverter >  getConverterBtoA() const;
-		bool computeMatch( Fields const&, Fields const& );
+		bool computeMatch( DataFields const&, DataFields const& );
 		bool canConvert() const;
 	private:
-		Fields		mFa;
-		Fields		mFb;
+		DataFields		mFa;
+		DataFields		mFb;
 		bool		mIsIdenticalMatch;
 	};
 
 	class TypeMatchPerfect : public TypeMatch
 	{
 	public:
-		TypeMatchPerfect( TypeMetadata const& a, TypeMetadata const& b );
+		TypeMatchPerfect( TypeMetadata const* a, TypeMetadata const* b );
 		std::shared_ptr< const TypeConverter >  getConverterAtoB() const;
 		std::shared_ptr< const TypeConverter >  getConverterBtoA() const;
-		bool computeMatch( Fields const&, Fields const&, std::shared_ptr< TypeConverter >, std::shared_ptr< TypeConverter > );
+		bool computeMatch( DataFields const&, DataFields const&, std::shared_ptr< TypeConverter >, std::shared_ptr< TypeConverter > );
 		bool canConvert() const;
 	private:
-		Fields			mFa;
-		Fields			mFb;
+		DataFields			mFa;
+		DataFields			mFb;
 		bool			mIsPerfectMatch;
 		std::shared_ptr< TypeConverter > mAB;
 		std::shared_ptr< TypeConverter > mBA;
 	};
 
-	TypeMatchIdentity::TypeMatchIdentity( TypeMetadata const& ta, TypeMetadata const& tb ) : mIsIdenticalMatch( false )
+	TypeMatchIdentity::TypeMatchIdentity( TypeMetadata const* ta, TypeMetadata const* tb ) : mIsIdenticalMatch( false )
 	{
-		ta.getFields( mFa );
-		tb.getFields( mFb );
+		ta->getDataFields( mFa );
+		tb->getDataFields( mFb );
 		mIsIdenticalMatch = computeMatch( mFa, mFb );
 	}
 
@@ -76,16 +76,16 @@ namespace _2Real
 		return mIsIdenticalMatch;
 	}
 
-	bool TypeMatchIdentity::computeMatch( Fields const& a, Fields const& b )
+	bool TypeMatchIdentity::computeMatch( DataFields const& a, DataFields const& b )
 	{
 		bool match;
 		if ( a.size() == b.size() )
 		{
 			match = true;
-			for ( Fields::const_iterator ita = a.begin(), itb = b.begin(); ita != a.end(), itb !=b.end(); ++ita, ++itb )
+			for ( DataFields::const_iterator ita = a.begin(), itb = b.begin(); ita != a.end(), itb !=b.end(); ++ita, ++itb )
 			{
-				FieldRef a = *ita;
-				FieldRef b = *itb;
+				DataFieldRef a = *ita;
+				DataFieldRef b = *itb;
 
 				match &= ( a->getTypename() == b->getTypename() );
 
@@ -108,12 +108,12 @@ namespace _2Real
 		return std::shared_ptr< const TypeConverter >();
 	}
 
-	TypeMatchPerfect::TypeMatchPerfect( TypeMetadata const& ta, TypeMetadata const& tb ) : mIsPerfectMatch( false )
+	TypeMatchPerfect::TypeMatchPerfect( TypeMetadata const* ta, TypeMetadata const* tb ) : mIsPerfectMatch( false )
 	{
-		ta.getFields( mFa );
-		tb.getFields( mFb );
-		mAB.reset( new TypeConverter ); mAB->mTypeId = tb.getTypeId();
-		mBA.reset( new TypeConverter ); mBA->mTypeId = ta.getTypeId();
+		ta->getDataFields( mFa );
+		tb->getDataFields( mFb );
+		mAB.reset( new TypeConverter ); mAB->mTypeId = tb->getTypeId();
+		mBA.reset( new TypeConverter ); mBA->mTypeId = ta->getTypeId();
 		mIsPerfectMatch = computeMatch( mFa, mFb, mAB, mBA );
 	}
 
@@ -122,17 +122,17 @@ namespace _2Real
 		return mIsPerfectMatch;
 	}
 
-	bool TypeMatchPerfect::computeMatch( Fields const& a, Fields const& b, std::shared_ptr< TypeConverter > aToB, std::shared_ptr< TypeConverter > bToA )
+	bool TypeMatchPerfect::computeMatch( DataFields const& a, DataFields const& b, std::shared_ptr< TypeConverter > aToB, std::shared_ptr< TypeConverter > bToA )
 	{
 		bool match;
 		if ( a.size() == b.size() )
 		{
 			match = true;
-			for ( Fields::const_iterator ita = a.begin(), itb = b.begin(); ita != a.end(), itb !=b.end(); ++ita, ++itb )
+			for ( DataFields::const_iterator ita = a.begin(), itb = b.begin(); ita != a.end(), itb !=b.end(); ++ita, ++itb )
 			{
-				FieldRef fa = *ita;
-				FieldRef fb = *itb;
-				if ( fa->getTypename().first == "basic type" && fb->getTypename().first == "basic type" )
+				DataFieldRef fa = *ita;
+				DataFieldRef fb = *itb;
+				if ( fa->getTypename().first == DataField::sBasicTypeName && fb->getTypename().first == DataField::sBasicTypeName )
 				{
 					// reached a simple field -> just rename
 					match &= ( fa->getTypename().second == fb->getTypename().second );
@@ -176,7 +176,7 @@ namespace _2Real
 
 	TypeMetadata::TypeMatchSetting::Type TypeMetadata::TypeMatchSetting::sPriorities[ 2 ] = { IDENTICAL_MATCH, PERFECT_TYPE_MATCH };
 
-	TypeMatch const* TypeMetadata::TypeMatchSetting::createMatch( TypeMetadata const& a, TypeMetadata const& b ) const
+	TypeMatch const* TypeMetadata::TypeMatchSetting::createMatch( TypeMetadata const* a, TypeMetadata const* b ) const
 	{
 		switch( mCode )
 		{
@@ -189,11 +189,19 @@ namespace _2Real
 		}
 	}
 
-	TypeMetadata::TypeMetadata( TypeId const& id, TypeRegistry const* reg ) : mTypeId( id ), mRegistry( reg ) {}
+	TypeMetadata::TypeMetadata( TypeId const& id, TypeRegistry const* reg ) : mTypeId( id ), mRegistry( reg )
+	{
+		std::cout << "ctor " << mTypeId.first << " " << mTypeId.second << std::endl;
+	}
 
 	TypeMetadata::TypeId const& TypeMetadata::getTypeId() const
 	{
 		return mTypeId;
+	}
+
+	TypeMetadata::~TypeMetadata()
+	{
+		std::cout << "del: " << mTypeId.first << " " << mTypeId.second << std::endl;
 	}
 
 	void TypeMetadata::addField( std::string const& name, TypeId const& id, FieldDescriptorRef desc )
@@ -217,29 +225,29 @@ namespace _2Real
 #ifdef _DEBUG
 			assert( mRegistry );
 #endif
-			TypeMetadata const* meta = mRegistry->get( TypeRegistry::sFrameworkTypes, id.second );
-			if ( nullptr == meta )
+			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( TypeRegistry::sFrameworkTypes, id.second );
+			if ( nullptr == meta.get() )
 			{
 				meta = mRegistry->get( mTypeId.first, id.second );
-				if ( nullptr == meta )
+				if ( nullptr == meta.get() )
 				{
 					std::stringstream msg;
 					msg << "type::" << mTypeId.first << "::" << id.second << " is not known";
 					throw NotFoundException( msg.str() );
 				}
 
-				_2Real::Fields fields;
-				meta->getFields( fields );
+				_2Real::DataFields fields;
+				meta->getDataFields( fields );
 
-				FieldDescriptorRef d( DataField< CustomType >::createFieldDescriptor( name, id, CustomType( meta ), fields ) );
+				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, id, CustomType( meta ), fields ) );
 				mFields.push_back( std::make_pair( name, d ) );
 			}
 			else
 			{
-				_2Real::Fields fields;
-				meta->getFields( fields );
+				_2Real::DataFields fields;
+				meta->getDataFields( fields );
 
-				FieldDescriptorRef d( DataField< CustomType >::createFieldDescriptor( name, TypeId( TypeRegistry::sFrameworkTypes, id.second ), CustomType( meta ), fields ) );
+				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, TypeId( TypeRegistry::sFrameworkTypes, id.second ), CustomType( meta ), fields ) );
 				mFields.push_back( std::make_pair( name, d ) );
 			}
 		}
@@ -247,7 +255,7 @@ namespace _2Real
 			mFields.push_back( std::make_pair( name, desc ) );
 	}
 
-	void TypeMetadata::getFields( _2Real::Fields &fields ) const
+	void TypeMetadata::getDataFields( DataFields &fields ) const
 	{
 		fields.clear(); fields.reserve( mFields.size() );
 		for ( FieldDescriptions::const_iterator it = mFields.begin(); it != mFields.end(); ++it )
@@ -256,12 +264,12 @@ namespace _2Real
 		}
 	}
 
-	bool TypeMetadata::matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const
+	bool TypeMetadata::matches( TypeMetadata const* other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const
 	{
 		for ( unsigned int i=0; i<=desiredMatch.getCode(); ++i )
 		{
 			TypeMatchSetting currentSetting = TypeMatchSetting::sPriorities[ i ];
-			TypeMatch const* m = currentSetting.createMatch( *this, other );
+			TypeMatch const* m = currentSetting.createMatch( this, other );
 
 			if ( m->canConvert() )
 			{

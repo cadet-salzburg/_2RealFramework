@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {

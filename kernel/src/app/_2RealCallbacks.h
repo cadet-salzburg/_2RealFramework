@@ -18,28 +18,27 @@
 
 #pragma once
 
+#include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealCallback.h"
-
-#include <vector>
 
 namespace _2Real
 {
-	class Exception;
 	class CustomType;
+	class Exception;
 
 	namespace app
 	{
 		class BlockHandle;
 		class ContextBlockHandle;
 
-		typedef void ( _2REAL_CALLBACK *BlockExceptionCallback )( void *, std::pair< Exception, BlockHandle > );
-		typedef void ( _2REAL_CALLBACK *ContextBlockExceptionCallback )( void *, std::pair< Exception, ContextBlockHandle > );
-		typedef void ( _2REAL_CALLBACK *OutletDataCallback )( void *, std::shared_ptr< const CustomType > );
-		typedef void ( _2REAL_CALLBACK *BlockDataCallback )( void *, std::vector< std::shared_ptr< const CustomType > > );
+		typedef void ( _2REAL_CALLBACK *BlockExceptionCallback )			( void *, std::pair< Exception, BlockHandle > );
+		typedef void ( _2REAL_CALLBACK *ContextBlockExceptionCallback )		( void *, std::pair< Exception, ContextBlockHandle > );
+		typedef void ( _2REAL_CALLBACK *OutletDataCallback )				( void *, std::shared_ptr< const CustomType > );
+		typedef void ( _2REAL_CALLBACK *BlockDataCallback )					( void *, std::vector< std::shared_ptr< const CustomType > > );
 
-		typedef _2Real::AbstractCallback< std::vector< std::shared_ptr< const CustomType > > >			BlockCallback;
-		typedef _2Real::AbstractCallback< std::shared_ptr< const CustomType > >							OutletCallback;
-		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > >					BlockExcCallback;
-		typedef _2Real::AbstractCallback< std::pair< Exception, ContextBlockHandle > >			ContextBlockExcCallback;
+		typedef _2Real::AbstractCallback< std::vector< std::shared_ptr< const CustomType > > >		BlockCallback;
+		typedef _2Real::AbstractCallback< std::shared_ptr< const CustomType > >						OutletCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, BlockHandle > >						BlockExcCallback;
+		typedef _2Real::AbstractCallback< std::pair< Exception, ContextBlockHandle > >				ContextBlockExcCallback;
 	}
 }

@@ -271,7 +271,7 @@ inline cv::Mat *const convertToCvMat( Image &src )
 		throw std::exception( "unknown image format" );
 	}
 
-	cv::Mat *result = new cv::Mat( w, h, cvType, d );
+	cv::Mat *result = new cv::Mat( h, w, cvType, d );
 	return result;
 }
 

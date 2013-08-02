@@ -16,9 +16,7 @@ using _2Real::Image;
 
 using namespace std;
 
-unsigned int creationCount = 0;
-
-Test::Test() : Block(), mCounter( 0 ), mNumber( ++ creationCount )
+Test::Test() : Block(), mCounter( 0 )
 {
 }
 
@@ -45,7 +43,13 @@ void Test::update()
 		for ( unsigned int i=0; i<mInstance.inlets.size(); ++i )
 		{
 			std::shared_ptr< const CustomType > data = mInstance.inlets[ i ].getReadableRef();
-			if ( !data.get() ) std::cout << "DATA FOR INLET " << i<< " IS MISSING!" << mNumber << std::endl;
+			if ( !data.get() ) std::cout << "DATA FOR INLET " << i<< " IS MISSING!" << std::endl;
+		}
+
+		for ( unsigned int i=0; i<mInstance.parameters.size(); ++i )
+		{
+			std::shared_ptr< const CustomType > data = mInstance.parameters[ i ].getReadableRef();
+			if ( !data.get() ) std::cout << "DATA FOR PARAMETER " << i<< " IS MISSING!" << std::endl;
 		}
 
 		//InletHandle i2 = mInstance.inlets[ 2 ];
@@ -83,20 +87,23 @@ void Test::update()
 		//}
 
 		{
+			// basetype
 			OutletHandle o = mInstance.outlets[ 0 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			data->set< int >( "int", ++mCounter );
-			data->set< std::vector< std::vector< int > > >( "int vector vector", std::vector< std::vector< int > >( 10, std::vector< int >( 5, 5 ) ) );
+			data->set< int >( "--B-- int", ++mCounter );
+			data->set< std::vector< std::vector< int > > >( "--B-- int vector vector", std::vector< std::vector< int > >( 10, std::vector< int >( 5, 5 ) ) );
 		}
 
 		{
+			// complextype
 			OutletHandle o = mInstance.outlets[ 1 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "test image" ) );
+			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "--B-- image" ) );
 			img->createImagedata( 10, 10, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
 		}
 
 		{
+			// simpletype
 			OutletHandle o = mInstance.outlets[ 2 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
 		}
@@ -112,7 +119,6 @@ void Test::shutdown()
 {
 	try
 	{
-		cout << "SHUTDOWN " << mNumber << endl;
 	}
 	catch ( Exception &e )
 	{
@@ -123,5 +129,4 @@ void Test::shutdown()
 
 Test::~Test()
 {
-	cout << "DTOR " << mNumber << endl;
 }

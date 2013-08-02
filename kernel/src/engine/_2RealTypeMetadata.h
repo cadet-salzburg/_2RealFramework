@@ -18,12 +18,8 @@
 
 #pragma once
 
-#include "datatypes/_2RealFields.h"
-
-#include <map>
-#include <vector>
-#include <string>
-#include <set>
+#include "datatypes/_2RealDataField.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -41,12 +37,14 @@ namespace _2Real
 
 		typedef std::pair< std::string, std::string > TypeId;
 
+		~TypeMetadata();
+
 		class TypeMatchSetting
 		{
 		public:
 			enum Type { IDENTICAL_MATCH = 0, PERFECT_TYPE_MATCH = 1 };
 			TypeMatchSetting( const Type c );
-			TypeMatch const* createMatch( TypeMetadata const& a, TypeMetadata const& b ) const;
+			TypeMatch const* createMatch( TypeMetadata const* a, TypeMetadata const* b ) const;
 			Type getCode() const { return mCode; }
 			static Type sPriorities[ 2 ];
 		private:
@@ -56,8 +54,8 @@ namespace _2Real
 		TypeMetadata( TypeId const& id, TypeRegistry const* reg );
 		TypeId const& getTypeId() const;
 		void addField( std::string const& name, TypeId const& id, std::shared_ptr< const FieldDescriptor > desc );
-		bool matches( TypeMetadata const& other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const;
-		void getFields( Fields &fields ) const;
+		bool matches( TypeMetadata const* other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const;
+		void getDataFields( DataFields &fields ) const;
 
 	private:
 
@@ -69,7 +67,6 @@ namespace _2Real
 		typedef std::vector< FieldDescription >						FieldDescriptions;
 
 		friend class CustomType;
-		//typedef std::map< std::string, FieldDescriptor const* >		Fields;
 
 		TypeId						mTypeId;
 		FieldDescriptions			mFields;

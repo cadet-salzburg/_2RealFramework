@@ -19,11 +19,10 @@
 
 #pragma once
 
+#include "engine/_2RealBundleMetadata.h"
 #include "helpers/_2RealNonCopyable.h"
 #include "helpers/_2RealIdentifiable.h"
-#include "app/_2RealInfo.h"
-
-#include <string>
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
@@ -37,21 +36,21 @@ namespace _2Real
 
 	public:
 
-		Bundle( EngineImpl *, app::BundleInfo const& );
+		Bundle( EngineImpl *, std::shared_ptr< const BundleMetadata > );
 
 		using Identifiable< Bundle >::getIds;
 		using Identifiable< Bundle >::getName;
 
-		std::string const&						getAbsPath() const;
-		app::BundleInfo const&					getBundleInfo() const;
-		void									unload( const long );
-		std::shared_ptr< FunctionBlock >		createBlockInstance( std::string const& );
-		std::shared_ptr< FunctionBlock >		getContextBlock();
+		std::string const&							getAbsPath() const;
+		std::shared_ptr< const BundleMetadata >		getBundleMetadata() const;
+		void										unload( const long );
+		std::shared_ptr< FunctionBlock >			createFunctionBlockInstance( std::string const& );
+		std::shared_ptr< FunctionBlock >			getContextBlockInstance();
 
 	private:
 
-		EngineImpl								*const mEngineImpl;
-		app::BundleInfo							mBundleInfo;
+		EngineImpl									*const mEngineImpl;
+		std::shared_ptr< const BundleMetadata >		mBundleMetadata;
 
 	};
 

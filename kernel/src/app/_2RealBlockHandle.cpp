@@ -17,25 +17,12 @@
 */
 
 #include "app/_2RealBlockHandle.h"
+#include "app/_2RealInfo.h"
 #include "engine/_2RealFunctionBlock.h"
-#include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
-	template< typename TObj >
-	std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-	{
-		std::shared_ptr< TObj > locked = handle.lock();
-		if ( locked.get() == nullptr )
-		{
-			std::stringstream msg;
-			msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-		}
-
-		return locked;
-	}
-
 	namespace app
 	{
 		BlockHandle::BlockHandle() :
@@ -54,10 +41,10 @@ namespace _2Real
 			return ( block.get() != nullptr );
 		}
 
-		BlockInfo const& BlockHandle::getBlockInfo() const
+		BlockMetainfo BlockHandle::getBlockMetainfo() const
 		{
 			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
-			return block->getBlockInfo();
+			return BlockMetainfo( block->getBlockMetadata() );
 		}
 
 		void BlockHandle::setUpdateRate( const double updatesPerSecond )

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\_2RealCommon.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealCallbacks.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="..\..\src\app\_2RealEngine.h" />
     <ClInclude Include="..\..\src\app\_2RealInfo.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealLinkHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockHandle.h" />
@@ -38,15 +40,14 @@
     <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractAnyHolder.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealAnyHolder.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomBase.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealCustomData.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealDataField.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptor.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealFields.h" />
+    <ClInclude Include="..\..\src\datatypes\_2RealFieldDescriptors.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealImage.h" />
-    <ClInclude Include="..\..\src\datatypes\_2RealOption.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeConverter.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypeRegistry.h" />
     <ClInclude Include="..\..\src\datatypes\_2RealTypes.h" />
@@ -69,44 +70,42 @@
     <ClInclude Include="..\..\src\engine\_2RealInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealInletBasedTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealInletBuffer.h" />
-    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealLink.h" />
     <ClInclude Include="..\..\src\engine\_2RealLogger.h" />
-    <ClInclude Include="..\..\src\engine\_2RealMetainfo.h" />
+    <ClInclude Include="..\..\src\engine\_2RealExportMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealParameter.h" />
-    <ClInclude Include="..\..\src\engine\_2RealParameterMetadata.h" />
+    <ClInclude Include="..\..\src\engine\_2RealIOMetadata.h" />
     <ClInclude Include="..\..\src\engine\_2RealPooledThread.h" />
     <ClInclude Include="..\..\src\engine\_2RealSystem.h" />
-    <ClInclude Include="..\..\src\engine\_2RealThreadingPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealThreadPool.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimeBasedTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimer.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimestampedData.h" />
     <ClInclude Include="..\..\src\engine\_2RealTypeMetadata.h" />
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetadataRef.h" />
     <ClInclude Include="..\..\src\engine\_2RealUberBlockBasedTrigger.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback.h" />
     <ClInclude Include="..\..\src\helpers\_2RealDeleter.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealIdentifiable.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealListInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealNonCopyable.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealOptions.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealPoco.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealPocoIncludes.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealSingleton.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealStdIncludes.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStringHelpers.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSynchronizedBool.h" />
     <ClInclude Include="..\..\src\helpers\_2RealUnusedArg.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealVectorFunctions.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealVectorInitializer.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
     <ClInclude Include="..\..\src\internal_bundles\_2RealConversionBundle.h" />
     <ClInclude Include="..\..\src\internal_bundles\_2RealInternalBundles.h" />
+    <ClInclude Include="..\..\src\policies\_2RealThreadingPolicy.h" />
+    <ClInclude Include="..\..\src\policies\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\_2RealApplication.h" />
     <ClInclude Include="..\..\src\_2RealBlock.h" />
     <ClInclude Include="..\..\src\_2RealBundle.h" />
+    <ClInclude Include="..\..\src\_2RealConstants.h" />
     <ClInclude Include="..\..\src\_2RealDatatypes.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +145,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\app\</ObjectFileName>
       <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AssemblerListingLocation>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealLinkHandle.cpp" />
     <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
@@ -202,10 +202,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealAbstractFieldDescriptor.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealCustomBase.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
@@ -214,18 +211,11 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealDataField.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptor.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\datatypes\_2RealFields.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\src\datatypes\_2RealFieldDescriptors.cpp" />
     <ClCompile Include="..\..\src\datatypes\_2RealImage.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\datatypes\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\datatypes\</ObjectFileName>
@@ -338,16 +328,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealInletBuffer.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletBuffer.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
@@ -360,7 +341,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealMetainfo.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealExportMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
@@ -378,7 +359,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealParameterMetadata.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealIOMetadata.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
@@ -395,10 +376,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\engine\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\engine\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealThreadingPolicy.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealThreadPool.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
