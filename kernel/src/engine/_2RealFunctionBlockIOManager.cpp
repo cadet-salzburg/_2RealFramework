@@ -106,9 +106,9 @@ namespace _2Real
 		return findByName< OutletIO >( mOutlets, name, "outlet" );
 	}
 
-	std::shared_ptr< ParameterIO > FunctionBlockIOManager::getParameter( std::string const& name )
+	std::shared_ptr< AbstractInletIO > FunctionBlockIOManager::getParameter( std::string const& name )
 	{
-		return findByName< ParameterIO >( mParameters, name, "parameter" );
+		return findByName< AbstractInletIO >( mParameters, name, "parameter" );
 	}
 
 	std::shared_ptr< const AbstractInletIO > FunctionBlockIOManager::getInlet( std::string const& name ) const
@@ -121,9 +121,9 @@ namespace _2Real
 		return findByName< OutletIO >( mOutlets, name, "outlet" );
 	}
 
-	std::shared_ptr< const ParameterIO > FunctionBlockIOManager::getParameter( std::string const& name ) const
+	std::shared_ptr< const AbstractInletIO > FunctionBlockIOManager::getParameter( std::string const& name ) const
 	{
-		return findByName< ParameterIO >( mParameters, name, "parameter" );
+		return findByName< AbstractInletIO >( mParameters, name, "parameter" );
 	}
 
 	void FunctionBlockIOManager::addInlet( std::shared_ptr< const IOMetadata > meta )
@@ -145,11 +145,16 @@ namespace _2Real
 
 	void FunctionBlockIOManager::addParameter( std::shared_ptr< const IOMetadata > meta )
 	{
-		std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, meta ) );
-		io->setData( meta->initializer );								// buffer now holds init value
-		io->synchronizeData();											// parameter data now holds value
-		io->synchronizeData();											// parameter now will retun hasChanged() -> false
-		mParameters.push_back( io );
+		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
+		std::shared_ptr< AbstractInletIO > shared( io );
+		io->setSelfRef( std::static_pointer_cast< BasicInletIO >( shared ) );
+		mParameters.push_back( std::shared_ptr< AbstractInletIO >( shared ) );
+
+		//std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, meta ) );
+		//io->setData( meta->initializer );								// buffer now holds init value
+		//io->synchronizeData();											// parameter data now holds value
+		//io->synchronizeData();											// parameter now will retun hasChanged() -> false
+		//mParameters.push_back( io );
 	}
 
 	void FunctionBlockIOManager::addOutlet( std::shared_ptr< const IOMetadata > meta )

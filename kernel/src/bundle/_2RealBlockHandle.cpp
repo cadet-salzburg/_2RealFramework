@@ -71,7 +71,7 @@ namespace _2Real
 		ParameterHandle BlockHandle::getParameterHandle( std::string const& name )
 		{
 			std::shared_ptr< FunctionBlockIOManager > mgr = checkValidity< FunctionBlockIOManager >( mImpl, "block" );
-			return ParameterHandle( mgr->getParameter( trim ( name ) )->getParameter() );
+			return ParameterHandle( mgr->getParameter( trim ( name ) )->getInlet() );
 		}
 
 		void BlockHandle::getAllInletHandles( InletHandles &handles )
@@ -98,7 +98,7 @@ namespace _2Real
 			AbstractIOManager::ParameterVector &parameters = mgr->getAllParameters();
 			handles.clear();
 			for ( AbstractIOManager::ParameterVector::iterator it = parameters.begin(); it != parameters.end(); ++it )
-				handles.push_back( ParameterHandle( ( *it )->getParameter() ) );
+				handles.push_back( ParameterHandle( ( *it )->getInlet() ) );
 		}
 	}
 }

@@ -44,9 +44,12 @@ namespace _2Real
 		typedef std::vector< std::shared_ptr< OutletIO > >::iterator				OutletIterator;
 		typedef std::vector< std::shared_ptr< OutletIO > >::const_iterator			OutletConstIterator;
 
-		typedef std::vector< std::shared_ptr< ParameterIO > >						Parameters;
-		typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
-		typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >						Parameters;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >						Parameters;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::iterator				ParameterIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::const_iterator		ParameterConstIterator;
 
 		FunctionBlock( EngineImpl *, std::shared_ptr< Bundle >, std::shared_ptr< bundle::Block >, std::shared_ptr< const BlockMetadata > );
 		~FunctionBlock();
@@ -60,7 +63,7 @@ namespace _2Real
 
 		std::shared_ptr< AbstractInletIO >		getInlet( std::string const& );
 		std::shared_ptr< OutletIO >				getOutlet( std::string const& );
-		std::shared_ptr< ParameterIO >			getParameter( std::string const& );
+		std::shared_ptr< AbstractInletIO >		getParameter( std::string const& );
 
 		Inlets &								getAllInlets();
 		Outlets &								getAllOutlets();
@@ -165,7 +168,7 @@ namespace _2Real
 		return mIOManager->getOutlet( name );
 	}
 
-	inline std::shared_ptr< ParameterIO > FunctionBlock::getParameter( std::string const& name )
+	inline std::shared_ptr< AbstractInletIO > FunctionBlock::getParameter( std::string const& name )
 	{
 		return mIOManager->getParameter( name );
 	}

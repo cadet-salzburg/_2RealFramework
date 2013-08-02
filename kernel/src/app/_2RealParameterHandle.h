@@ -23,6 +23,7 @@
 
 namespace _2Real
 {
+	class AbstractInletIO;
 	class ParameterIO;
 	class CustomType;
 
@@ -36,7 +37,7 @@ namespace _2Real
 		public:
 
 			ParameterHandle();
-			explicit ParameterHandle( std::shared_ptr< ParameterIO > );
+			explicit ParameterHandle( std::shared_ptr< AbstractInletIO > );
 
 			bool									isValid() const;
 
@@ -49,7 +50,7 @@ namespace _2Real
 
 		private:
 
-			std::weak_ptr< ParameterIO >			mImpl;
+			std::weak_ptr< AbstractInletIO >			mImpl;
 
 		};
 	}

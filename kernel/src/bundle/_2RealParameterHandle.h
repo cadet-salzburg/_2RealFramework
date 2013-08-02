@@ -24,7 +24,7 @@
 
 namespace _2Real
 {
-	class Parameter;
+	class AbstractInlet;
 
 	namespace bundle
 	{
@@ -36,7 +36,7 @@ namespace _2Real
 		public:
 
 			ParameterHandle();
-			explicit ParameterHandle( std::shared_ptr< Parameter > );
+			explicit ParameterHandle( std::shared_ptr< AbstractInlet > );
 
 			bool isValid() const;
 
@@ -48,7 +48,7 @@ namespace _2Real
 
 		private:
 
-			std::weak_ptr< Parameter >		mImpl;
+			std::weak_ptr< AbstractInlet >		mImpl;
 
 		};
 	}

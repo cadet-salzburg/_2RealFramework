@@ -60,16 +60,19 @@ namespace _2Real
 		AbstractInletIO( engine, owner, policy, meta ),
 		mInlet( new BasicInlet( this ) ),
 		mBuffer( new BasicInletBuffer( this ) ),
-		mQueue( new DataQueue( this, 10 ) ),
+		mQueue( nullptr ),
 		mUpdateTrigger( nullptr ),					// will be initialized later on ( POSSIBLE CRASH!!! )
 		mNotifyOnReceive( false )					// in the beginning, everything will be written into the buffer
 	{
-		policy->addInlet( *this, meta->updatePolicy );				// creates a trigger
-		setData( meta->initializer );								// set buffer to init value
-		synchronizeData();											// inlet now holds init value
-		synchronizeData();											// hasChanged() == false
-		//receiveData( TimestampedData( meta->initializer, -1 ) );	// write data into queue as well -> initializes the cond
-		//															// first timestamp = 0, b/c this way all regularly sent items ar newer
+		if ( meta->canTriggerUpdates )
+			policy->addInlet( *this, meta->updatePolicy );					// adds -> this will set the trigger
+
+		if ( meta->isBuffered )
+			mQueue.reset( new DataQueue( this, meta->expansionSize ) );
+
+		setData( meta->initializer );										// set buffer to init value, try triggering
+		synchronizeData();													// inlet now holds init value
+		synchronizeData();													// hasChanged() == false
 
 		mInlet->setSelfRef( mInlet );
 	}
@@ -160,11 +163,19 @@ namespace _2Real
 		TimestampedData data;
 		while( mQueue->getDataItem( data ) )
 		{
-			wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
+			if ( canTriggerUpdates() )
+			{
+				wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
 																				// if update cond fulfilled, trigger will:
 																				//	-set its status to 'fulfilled'
 																				//	-store the data, for the next trigger attempt
-			if ( wasTriggered ) break;
+				if ( wasTriggered ) break;
+			}
+			else		// if inlet can't trigger, first data item should be processed, then exit
+			{
+				wasTriggered = true;
+				break;
+			}
 		}
 
 		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------processed queue------" );
@@ -184,7 +195,7 @@ namespace _2Real
 		{
 			mBuffer->setData( data.value );
 			mEngineImpl->getLogger()->addLine( getFullName() + "\tdid fulfill cond from queue, try trigger" );
-			mUpdateTrigger->tryTriggerUpdate();
+			if ( canTriggerUpdates() ) mUpdateTrigger->tryTriggerUpdate();
 		}
 	}
 
@@ -231,25 +242,41 @@ namespace _2Real
 		if ( !mNotifyOnReceive )
 		{
 			mAccess.unlock();
-			mQueue->storeDataItem( data );
-			mEngineImpl->getLogger()->addLine( getFullName() + "\tqueued data" );
+			if ( isBuffered() )		// only store if buffered
+			{
+				mQueue->storeDataItem( data );
+				mEngineImpl->getLogger()->addLine( getFullName() + "\tqueued data" );
+			}
+			else					// data will be lost
+			{
+				mEngineImpl->getLogger()->addLine( getFullName() + "\tdiscarded data" );
+			}
 		}
 		else
 		{
-			mEngineImpl->getLogger()->addLine( getFullName() + "\ttry" );
-
-			bool wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
-																					// if update cond fulfilled, trigger will:
-																					//	-set its status to 'fulfilled'
-																					//	-store the data, for the next trigger attempt
-
-			if ( wasTriggered )
+			if ( canTriggerUpdates() )
 			{
-				mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
-				mBuffer->setData( data.value );
-				mNotifyOnReceive = false;
-				mUpdateTrigger->tryTriggerUpdate();
+				mEngineImpl->getLogger()->addLine( getFullName() + "\ttry to fulfill cond" );
+
+				bool wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
+																						// if update cond fulfilled, trigger will:
+																						//	-set its status to 'fulfilled'
+																						//	-store the data, for the next trigger attempt
+
+				if ( wasTriggered )
+				{
+					mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
+					mNotifyOnReceive = false;
+					mUpdateTrigger->tryTriggerUpdate();
+					mBuffer->setData( data.value );
+				}
 			}
+			else
+			{
+				mEngineImpl->getLogger()->addLine( getFullName() + "\toverwriting current data" );
+				mBuffer->setData( data.value );
+			}
+
 			mAccess.unlock();
 		}
 	}
@@ -260,18 +287,20 @@ namespace _2Real
 		mEngineImpl->getLogger()->addLine( getFullName() + "\tset data" );
 
 		mAccess.lock();
-		bool wasTriggered = mUpdateTrigger->tryFulfillCondition( timestamped, true );		// test the update condition
+		if ( canTriggerUpdates() )
+		{
+			bool wasTriggered = mUpdateTrigger->tryFulfillCondition( timestamped, true );		// test the update condition
 																							// if update cond fulfilled, trigger will:
 																							//	-set its status to 'fulfilled'
 																							//	-store the data, for the next trigger attempt
 
-		if ( wasTriggered )
-		{
-			mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
-			mNotifyOnReceive = false;
-			mUpdateTrigger->tryTriggerUpdate();
+			if ( wasTriggered )
+			{
+				mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
+				mNotifyOnReceive = false;
+				mUpdateTrigger->tryTriggerUpdate();
+			}
 		}
-
 		mBuffer->setData( data );
 		mAccess.unlock();
 	}

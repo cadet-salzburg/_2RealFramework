@@ -17,7 +17,7 @@
 */
 
 #include "bundle/_2RealParameterHandle.h"
-#include "engine/_2RealParameter.h"
+#include "engine/_2RealInlet.h"
 
 namespace _2Real
 {
@@ -41,33 +41,33 @@ namespace _2Real
 		{
 		}
 
-		ParameterHandle::ParameterHandle( std::shared_ptr< Parameter > parameter ) :
+		ParameterHandle::ParameterHandle( std::shared_ptr< AbstractInlet > parameter ) :
 			mImpl( parameter )
 		{
 		}
 
 		bool ParameterHandle::isValid() const
 		{
-			std::shared_ptr< Parameter > parameter = mImpl.lock();
+			std::shared_ptr< AbstractInlet > parameter = mImpl.lock();
 			return ( parameter.get() != nullptr );
 		}
 
 		bool ParameterHandle::hasChanged() const
 		{
-			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
-			return parameter->hasChanged();
+			std::shared_ptr< AbstractInlet > parameter = checkValidity( mImpl, "parameter" );
+			return ( parameter->operator[]( 0 ) )->hasChanged();
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getReadableRef() const
 		{
-			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
-			return parameter->getData();
+			std::shared_ptr< AbstractInlet > parameter = checkValidity( mImpl, "parameter" );
+			return ( parameter->operator[]( 0 ) )->getData();
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::getWriteableCopy() const
 		{
-			std::shared_ptr< Parameter > parameter = checkValidity( mImpl, "parameter" );
-			return std::shared_ptr< CustomType >( new CustomType( *( parameter->getData().get() ) ) );
+			std::shared_ptr< AbstractInlet > parameter = checkValidity( mImpl, "parameter" );
+			return std::shared_ptr< CustomType >( new CustomType( *( parameter->operator[]( 0 ) )->getData().get() ) );
 		}
 	}
 }

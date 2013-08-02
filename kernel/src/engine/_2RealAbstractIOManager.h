@@ -278,9 +278,12 @@ namespace _2Real
 		typedef std::vector< std::shared_ptr< OutletIO > >::iterator				OutletIterator;
 		typedef std::vector< std::shared_ptr< OutletIO > >::const_iterator			OutletConstIterator;
 
-		typedef std::vector< std::shared_ptr< ParameterIO > >						ParameterVector;
-		typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
-		typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >						ParameterVector;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >::iterator				ParameterIterator;
+		//typedef std::vector< std::shared_ptr< ParameterIO > >::const_iterator		ParameterConstIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >						ParameterVector;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::iterator				ParameterIterator;
+		typedef std::vector< std::shared_ptr< AbstractInletIO > >::const_iterator		ParameterConstIterator;
 
 
 		AbstractIOManager( EngineImpl *, AbstractUberBlock * );

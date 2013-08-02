@@ -30,45 +30,45 @@ namespace _2Real
 		{
 		}
 
-		ParameterHandle::ParameterHandle( std::shared_ptr< ParameterIO > parameter ) :
+		ParameterHandle::ParameterHandle( std::shared_ptr< AbstractInletIO > parameter ) :
 			mImpl( parameter )
 		{
 		}
 
 		bool ParameterHandle::isValid() const
 		{
-			std::shared_ptr< ParameterIO > parameter = mImpl.lock();
+			std::shared_ptr< AbstractInletIO > parameter = mImpl.lock();
 			return ( parameter.get() == nullptr );
 		}
 
 		std::string const& ParameterHandle::getName() const
 		{
-			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
 			return parameter->getInfo()->name;
 		}
 
 		TypeMetainfo ParameterHandle::getType() const
 		{
-			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
 			return TypeMetainfo( parameter->getInfo()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::makeData() const
 		{
-			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
+			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
 			return std::shared_ptr< CustomType >( new CustomType( parameter->getInfo()->typeMetadata ) );
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getCurrentData() const
 		{
-			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
-			return parameter->getCurrentDataThreadsafe();
+			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
+			return ( parameter->operator[]( 0 ) )->getCurrentData();
 		}
 
 		void ParameterHandle::setData( std::shared_ptr< const CustomType > data )
 		{
-			std::shared_ptr< ParameterIO > parameter = checkValidity< ParameterIO >( mImpl, "parameter" );
-			parameter->setData( data );
+			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
+			( parameter->operator[]( 0 ) )->setData( data );
 		}
 	}
 }

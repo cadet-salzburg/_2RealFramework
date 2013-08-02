@@ -55,12 +55,6 @@ namespace _2Real
 	void FunctionBlockUpdatePolicy::addInlet( BasicInletIO &inletIO, UpdatePolicy const& policy )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
-#ifdef _DEBUG
-		if ( m_InletPolicies.find( &inletIO ) != m_InletPolicies.end() )
-		{
-			assert( NULL );
-		}
-#endif
 
 		AbstractInletTriggerCtor *c = nullptr;
 		AbstractInletBasedTrigger *t = nullptr;
@@ -93,7 +87,6 @@ namespace _2Real
 		InletPolicyInfo *p = new InletPolicyInfo( c, t, s );
 		m_InletPolicies.insert( make_pair( &inletIO, p ) );
 	}
-
 
 	void FunctionBlockUpdatePolicy::removeInlet( BasicInletIO &inletIO )
 	{

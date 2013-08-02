@@ -52,8 +52,8 @@ namespace _2Real
 		std::shared_ptr< const AbstractInletIO >	getInlet( std::string const& ) const;
 		std::shared_ptr< OutletIO >					getOutlet( std::string const& );
 		std::shared_ptr< const OutletIO >			getOutlet( std::string const& ) const;
-		std::shared_ptr< ParameterIO >				getParameter( std::string const& );
-		std::shared_ptr< const ParameterIO >		getParameter( std::string const& ) const;
+		std::shared_ptr< AbstractInletIO >			getParameter( std::string const& );
+		std::shared_ptr< const AbstractInletIO >	getParameter( std::string const& ) const;
 
 		InletVector &								getAllInlets();
 		OutletVector &								getAllOutlets();
