@@ -57,12 +57,15 @@ namespace _2Real
 			std::pair< std::string, std::string > const& getTypeName() const;
 			TypeMetainfo	getTypeMetainfo() const;
 			bool			canExpand() const;
-			bool			canLink() const;
-			bool			isBuffered() const;
-			bool			canTrigger() const;
+			//bool			canLink() const;
+			//bool			isBuffered() const;
+			//bool			canTrigger() const;
 		private:
 			std::weak_ptr< const IOMetadata >			mImpl;
 		};
+
+		typedef InputMetainfo InletMetainfo;
+		typedef InputMetainfo ParameterMetainfo;
 
 		class OutputMetainfo
 		{
@@ -73,11 +76,13 @@ namespace _2Real
 			std::string		const& getName() const;
 			std::pair< std::string, std::string > const& getTypeName() const;
 			TypeMetainfo	getTypeMetainfo() const;
-			bool			canExpand() const;
-			bool			canLink() const;
+			//bool			canExpand() const;
+			//bool			canLink() const;
 		private:
 			std::weak_ptr< const IOMetadata >			mImpl;
 		};
+
+		typedef OutputMetainfo OutletMetainfo;
 
 		class BlockMetainfo
 		{

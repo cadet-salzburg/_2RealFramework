@@ -47,9 +47,9 @@ namespace _2Real
 			std::string const&						getName() const;
 			TypeMetainfo							getType() const;
 
-			// missing: query this stuff
-			void									setUpdatePolicy( UpdatePolicy const& );
-			void									setBufferSize( const unsigned int );
+			// don't use until some other things are sorted out
+			//void									setUpdatePolicy( UpdatePolicy const& );
+			//void									setBufferSize( const unsigned int );
 
 			// linking
 			LinkHandle								link( OutletHandle );

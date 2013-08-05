@@ -93,17 +93,17 @@ namespace _2Real
 			( inlet->operator[]( 0 ) )->setData( data );
 		}
 
-		void InletHandle::setUpdatePolicy( UpdatePolicy const& p )
-		{
-			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			( inlet->operator[]( 0 ) )->setUpdatePolicy( p );
-		}
+		//void InletHandle::setUpdatePolicy( UpdatePolicy const& p )
+		//{
+		//	std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+		//	( inlet->operator[]( 0 ) )->setUpdatePolicy( p );
+		//}
 
-		void InletHandle::setBufferSize( const unsigned int size )
-		{
-			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			( inlet->operator[]( 0 ) )->setQueueSize( size );
-		}
+		//void InletHandle::setBufferSize( const unsigned int size )
+		//{
+		//	std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
+		//	( inlet->operator[]( 0 ) )->setQueueSize( size );
+		//}
 
 		bool InletHandle::canExpand() const
 		{

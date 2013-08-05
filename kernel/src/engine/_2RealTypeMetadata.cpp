@@ -191,7 +191,7 @@ namespace _2Real
 
 	TypeMetadata::TypeMetadata( TypeId const& id, TypeRegistry const* reg ) : mTypeId( id ), mRegistry( reg )
 	{
-		std::cout << "ctor " << mTypeId.first << " " << mTypeId.second << std::endl;
+		//std::cout << "ctor " << mTypeId.first << " " << mTypeId.second << std::endl;
 	}
 
 	TypeMetadata::TypeId const& TypeMetadata::getTypeId() const
@@ -201,7 +201,7 @@ namespace _2Real
 
 	TypeMetadata::~TypeMetadata()
 	{
-		std::cout << "del: " << mTypeId.first << " " << mTypeId.second << std::endl;
+		//std::cout << "del: " << mTypeId.first << " " << mTypeId.second << std::endl;
 	}
 
 	void TypeMetadata::addField( std::string const& name, TypeId const& id, FieldDescriptorRef desc )

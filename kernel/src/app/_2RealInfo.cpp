@@ -105,17 +105,17 @@ namespace _2Real
 			return meta->canExpand;
 		}
 
-		bool InputMetainfo::canLink() const
-		{
-			std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
-			return meta->canLink;
-		}
+		//bool InputMetainfo::canLink() const
+		//{
+		//	std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
+		//	return meta->canLink;
+		//}
 
-		bool InputMetainfo::isBuffered() const
-		{
-			std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
-			return meta->isBuffered;
-		}
+		//bool InputMetainfo::isBuffered() const
+		//{
+		//	std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
+		//	return meta->isBuffered;
+		//}
 
 		OutputMetainfo::OutputMetainfo() :
 			mImpl()
@@ -151,17 +151,17 @@ namespace _2Real
 			return TypeMetainfo( meta->typeMetadata );
 		}
 
-		bool OutputMetainfo::canExpand() const
-		{
-			std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
-			return false;
-		}
+		//bool OutputMetainfo::canExpand() const
+		//{
+		//	std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
+		//	return false;
+		//}
 
-		bool OutputMetainfo::canLink() const
-		{
-			std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
-			return true;
-		}
+		//bool OutputMetainfo::canLink() const
+		//{
+		//	std::shared_ptr< const IOMetadata > meta = checkValidity< const IOMetadata  >( mImpl, "input metainfo" );
+		//	return true;
+		//}
 
 		BlockMetainfo::BlockMetainfo() :
 			mImpl()
