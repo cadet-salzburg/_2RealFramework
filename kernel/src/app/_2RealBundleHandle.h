@@ -43,7 +43,7 @@ namespace _2Real
 			BundleMetainfo			getBundleMetainfo() const;
 			ContextBlockHandle		createContextBlockInstance() const;			// otherwise, will be created when first block that needs it is created
 			BlockHandle				createFunctionBlockInstance( std::string const& );
-			void					unload( const long blockTimeout = ( std::numeric_limits< long >::max )() );
+			void					unload( const long = NO_TIMEOUT );
 
 		private:
 

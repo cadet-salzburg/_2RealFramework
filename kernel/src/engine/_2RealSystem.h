@@ -38,14 +38,14 @@ namespace _2Real
 		~System();
 
 		void								clear();
-		void								addBlockInstance( Bundle *, std::shared_ptr< FunctionBlock > );
-		void								destroyBlocks( Bundle *bundle );
-		std::shared_ptr< FunctionBlock >	findContextBlockInstance( Bundle *b );
-		void								removeBlockInstance( Bundle *, std::shared_ptr< FunctionBlock >, const long );
+		void								addBlockInstance( std::shared_ptr< const Bundle >, std::shared_ptr< FunctionBlock > );
+		void								destroyBlocks( std::shared_ptr< const Bundle > );
+		std::shared_ptr< FunctionBlock >	findContextBlockInstance( std::shared_ptr< const Bundle > );
+		void								removeBlockInstance( std::shared_ptr< const Bundle >, std::shared_ptr< FunctionBlock >, const long );
 
 	private:
 
-		EngineImpl						*const mEngineImpl;
+		EngineImpl														*const mEngineImpl;
 		std::multimap< std::string, std::shared_ptr< FunctionBlock > >	mBlockInstances;
 		std::vector< std::shared_ptr< FunctionBlock > >					mFailedBlockInstances;
 

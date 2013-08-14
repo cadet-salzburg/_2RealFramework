@@ -68,9 +68,28 @@ namespace _2Real
 		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >							Links;
 		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >::iterator				LinkIterator;
 		typedef std::set< std::shared_ptr< IOLink >, LinkCmp >::const_iterator			LinkConstIterator;
-
 		EngineImpl		*const mEngineImpl;
 		Links			mLinks;
+	};
+
+	class TimerCollection
+	{
+	public:
+		TimerCollection( EngineImpl * );
+		~TimerCollection();
+		void clear();
+		std::shared_ptr< Timer >	createTimer( const unsigned long resolution );
+		void						destroyTimer( std::shared_ptr< Timer > );
+		std::shared_ptr< Timer >	getDefaultTimer();
+		std::shared_ptr< Timer >	getNullTimer();
+	private:
+		typedef std::set< std::shared_ptr< Timer > >									Timers;
+		typedef std::set< std::shared_ptr< Timer > >::iterator							TimerIterator;
+		typedef std::set< std::shared_ptr< Timer > >::const_iterator					TimerConstIterator;
+		EngineImpl		*const mEngineImpl;
+		Timers						mTimers;
+		std::shared_ptr< Timer >	mDefaultTimer;
+		std::shared_ptr< Timer >	mNullTimer;
 	};
 
 	class EngineImpl : private NonCopyable< EngineImpl >
@@ -85,6 +104,7 @@ namespace _2Real
 		BundleManager *					getBundleManager()	{ return mBundleManager; }
 		System *						getBlockManager()	{ return mSystem; }
 		LinkCollection *				getLinkManager()	{ return mLinkManager; }
+		TimerCollection *				getTimerManager()	{ return mTimerManager; }
 		const long						getElapsedTime() const;
 
 		void							clearFully();
@@ -93,12 +113,15 @@ namespace _2Real
 		std::shared_ptr< Bundle > 		loadLibrary( std::string const& path );
 		std::string						getBundleDirectory() const;
 
+		std::shared_ptr< Timer > 		addTimer( const double );
+		void							removeTimer( std::shared_ptr< Timer > );
+
 		void							registerToException( app::BlockExcCallback &callback );
 		void							unregisterFromException( app::BlockExcCallback &callback );
 		void							registerToException( app::ContextBlockExcCallback &callback );
 		void							unregisterFromException( app::ContextBlockExcCallback &callback );
-		void							handleException( app::BlockHandle &block, Exception const& exception ) const;
-		void							handleException( app::ContextBlockHandle &block, Exception const& exception ) const;
+
+		void							handleException( std::shared_ptr< FunctionBlock >, Exception const& exception ) const;
 
 	private:
 
@@ -117,6 +140,7 @@ namespace _2Real
 		BundleManager			*const mBundleManager;
 		System					*const mSystem;
 		LinkCollection			*const mLinkManager;
+		TimerCollection			*const mTimerManager;
 
 		Poco::Timestamp			mTimestamp;
 

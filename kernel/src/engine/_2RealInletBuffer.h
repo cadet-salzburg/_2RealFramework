@@ -43,7 +43,10 @@ namespace _2Real
 		void				setMaxCapacity( const unsigned int size );
 		unsigned int		getMaxCapacity() const;
 		void				storeDataItem( TimestampedData const& data );
-		bool				getDataItem( TimestampedData &data );
+		bool				getDataItem( TimestampedData &data, const bool );
+
+		const static bool KEEP = true;
+		const static bool DISCARD = false;
 
 	private:
 

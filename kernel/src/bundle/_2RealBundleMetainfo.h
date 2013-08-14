@@ -40,7 +40,6 @@ namespace _2Real
 
 			explicit BundleMetainfo( std::shared_ptr< BundleMetadata > );
 
-			void setName( std::string const& name );
 			void setDescription( std::string const& description );
 			void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
 			void setAuthor( std::string const& author );

@@ -34,11 +34,12 @@ namespace _2Real
 	class ThreadPool;
 	class Logger;
 	class Exception;
-	class FunctionBlockUpdatePolicy;
+	class FunctionBlockUpdateManager;
 	class AbstractFunctionBlockState;
 	class FunctionBlockIOManager;
 	class PooledThread;
 	class FunctionBlockStateManager;
+	class FunctionBlock;
 
 	typedef void ( FunctionBlockStateManager::*FunctionToExecute )();
 
@@ -56,54 +57,42 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockStateManager( EngineImpl *engine, AbstractUberBlock *owner, const bool thread );
+		FunctionBlockStateManager( EngineImpl *engine, FunctionBlock *owner, const bool thread );
 		~FunctionBlockStateManager();
+
+		std::string const&							getFullHumanReadableName() const;
+		std::string const&							getHumanReadableName() const;
+		//std::string const&							getCode() const;
 
 		void setUp();
 		void start();
 		Poco::Event & stop();
 		void prepareForShutDown();
 		bool shutDown( const long timeout );
-		void singleStep();
+		//void singleStep();
 
 		void updateFunctionBlock();
 		void singleStepFunctionBlock();
 		void setupFunctionBlock();
 		void shutdownFunctionBlock();
 
-		bool isRunning() const;
-
-		void tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */);
-		void tryTriggerTime(/* TimeBasedTrigger &trigger */);
-
-		void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );
-		void removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr );
-		void addTrigger( TimeBasedTrigger &trigger );
-		void removeTrigger( TimeBasedTrigger &trigger );
+		void scheduleUpdate();
 
 	private:
 
 		friend class FunctionBlock;
 
 		void handleStateChangeException( Exception &e );
-		void setTriggers( const bool fulfilled );
 
-		ThreadPool							&m_Threads;
-		Logger								&m_Logger;
-		std::shared_ptr< FunctionBlockIOManager >				m_IOManager;
-		FunctionBlockUpdatePolicy			*m_UpdatePolicy;
-		std::shared_ptr< bundle::Block >	m_FunctionBlock;
+		EngineImpl									*const mEngineImpl;
+		FunctionBlock								*const mOwningBlock;
 
-		mutable Poco::FastMutex				m_TriggerAccess;
-		InletTriggers						m_GroupInletTriggers;
-		InletTriggers						m_SingleInletTriggers;
-		TimeBasedTrigger					*m_TimeTrigger;
+		std::weak_ptr< FunctionBlockIOManager >		mIOManager;
+		std::weak_ptr< FunctionBlockUpdateManager >	mUpdateManager;
+		std::weak_ptr< bundle::Block >				mFunctionBlock;
 
 		mutable Poco::FastMutex				m_StateAccess;
 		AbstractFunctionBlockState			*m_CurrentState;
-
-		mutable Poco::FastMutex				m_EnabledAccess;
-		bool								m_IsTriggeringEnabled;
 
 		SynchronizedBool					m_IsFlaggedForHalting;			// if set, block will stop after current update cycle
 		SynchronizedBool					m_IsFlaggedForShutdown;			// if set, block will shut itself doen after current update cycle

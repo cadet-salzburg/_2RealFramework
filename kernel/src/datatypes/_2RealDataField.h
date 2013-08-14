@@ -20,38 +20,38 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealConstants.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 	class DataField;
+
 	typedef std::shared_ptr< const DataField >	DataFieldRef;
 	typedef std::vector< const DataFieldRef >	DataFields;
 
-	typedef std::pair< std::string, std::string >	TypeName;
-
 	class DataField
 	{
+
 	public:
-		DataField( std::string const& name, TypeName const& type, DataFields const& subfields ) :
-			mFieldName( name ), mTypeName( type ), mSubFields( subfields )
-		{
-		}
-		~DataField() {}
-		std::string					getName() const { return mFieldName; }
-		TypeName					getTypename() const { return mTypeName; }
-		DataFields					getSubFields() const { return mSubFields; }
-		static DataFieldRef			createSimpleField( std::string const& name, std::string const& type )
-		{
-			return DataFieldRef( new DataField( name, TypeName( sBasicTypeName, type ), DataFields() ) );
-		}
-		static DataFieldRef			createComplexField( std::string const& name, TypeName const& type, DataFields const& subfields )
-		{
-			return DataFieldRef( new DataField( name, type, subfields ) );
-		}
-		static const std::string sBasicTypeName;
+
+		std::string const&			getName() const;
+		std::string const&			getExportingBundle() const;
+		std::string const&			getTypename() const;
+		bool						isBasicType() const;
+		bool						isFrameworkType() const;
+		DataFields					getSubFields() const;
+
+		static DataFieldRef			createSimpleField( std::string const&, std::string const& );
+		static DataFieldRef			createComplexField( std::string const&, std::string const&, std::string const&, DataFields const& );
+
 	private:
+
+		DataField( std::string const&, std::string const&, std::string const&, DataFields const& );
+
 		std::string					mFieldName;
-		TypeName					mTypeName;
+		std::string					mExportingBundle;
+		std::string					mTypeName;
 		DataFields					mSubFields;
 	};
 }

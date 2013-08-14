@@ -18,61 +18,37 @@
 
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealAbstractUberBlock.h"
-#include "engine/_2RealFunctionBlockUpdatePolicy.h"
-#include "engine/_2RealAbstractUpdatePolicy.h"
+#include "engine/_2RealFunctionBlockUpdateManager.h"
+#include "engine/_2RealAbstractUpdateManager.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealParameter.h"
 #include "engine/_2RealInletBuffer.h"
 #include "engine/_2RealIOMetadata.h"
-#include "engine/_2RealInletBasedTrigger.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealEngineImpl.h"
+#include "engine/_2RealAbstractDataCondition.h"
 
 using std::string;
 
 namespace _2Real
 {
 
-	AbstractInletIO::AbstractInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, std::shared_ptr< const IOMetadata > meta ) :
-		NonCopyable< AbstractInletIO >(),
-		Identifiable< AbstractInletIO >( owner->getIds(), meta->name ),
-		mEngineImpl( engine ),
-		mOwningBlock( owner ),
-		mPolicy( policy ),
-		mMetadata( meta )
-	{
-	}
-
-	std::shared_ptr< const IOMetadata > AbstractInletIO::getInfo() const
-	{
-		return mMetadata;
-	}
-
-	bool AbstractInletIO::belongsToBlock( AbstractUberBlock const* block ) const
-	{
-		return mOwningBlock == block;
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	BasicInletIO::BasicInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, std::shared_ptr< const IOMetadata > meta ) :
-		AbstractInletIO( engine, owner, policy, meta ),
+	BasicInletIO::BasicInletIO( EngineImpl *engine, std::shared_ptr< InstanceId > id, AbstractUberBlock *owner, std::shared_ptr< AbstractUpdateManager > updateMgr, std::shared_ptr< const IOMetadata > meta ) :
+		AbstractInletIO(),
 		mInlet( new BasicInlet( this ) ),
 		mBuffer( new BasicInletBuffer( this ) ),
 		mQueue( nullptr ),
-		mUpdateTrigger( nullptr ),					// will be initialized later on ( POSSIBLE CRASH!!! )
-		mNotifyOnReceive( false )					// in the beginning, everything will be written into the buffer
+		mEngineImpl( engine ),
+		mUpdateManager( updateMgr ),
+		mOwningBlock( owner ),
+		mMetadata( meta ),
+		mIdentifier( id ),
+		mClearBuffer( false )
 	{
-		if ( meta->canTriggerUpdates )
-			policy->addInlet( *this, meta->updatePolicy );					// adds -> this will set the trigger
-
 		if ( meta->isBuffered )
 			mQueue.reset( new DataQueue( this, meta->expansionSize ) );
-
-		setData( meta->initializer );										// set buffer to init value, try triggering
-		synchronizeData();													// inlet now holds init value
-		synchronizeData();													// hasChanged() == false
+		else
+			mQueue.reset( new DataQueue( this, 1 ) );
 
 		mInlet->setSelfRef( mInlet );
 	}
@@ -93,6 +69,21 @@ namespace _2Real
 		std::shared_ptr< BasicInletIO > locked = mSelfRef.lock();
 		return locked;
 	}
+
+	std::string const& BasicInletIO::getFullHumanReadableName() const
+	{
+		return mIdentifier->getFullHumanReadableName();
+	}
+
+	std::string const& BasicInletIO::getHumanReadableName() const
+	{
+		return mIdentifier->getHumanReadableName();
+	}
+
+	//std::string const& BasicInletIO::getCode() const
+	//{
+	//	return mIdentifier.getCode();
+	//}
 
 	////--------------------- multiinlet
 
@@ -123,10 +114,6 @@ namespace _2Real
 		( void )( io );
 	}
 
-	void BasicInletIO::syncInletChanges()
-	{
-	}
-
 	////--------------------- multiinlet
 
 	std::shared_ptr< AbstractInlet > BasicInletIO::getInlet()
@@ -137,6 +124,16 @@ namespace _2Real
 	std::shared_ptr< const AbstractInlet > BasicInletIO::getInlet() const
 	{
 		return mInlet;
+	}
+
+	std::shared_ptr< const IOMetadata > BasicInletIO::getMetadata() const
+	{
+		return mMetadata;
+	}
+
+	bool BasicInletIO::belongsToBlock( AbstractUberBlock const* block ) const
+	{
+		return mOwningBlock == block;
 	}
 
 	////--------------------- queue
@@ -152,53 +149,6 @@ namespace _2Real
 			mQueue->setMaxCapacity( size );
 	}
 
-	void BasicInletIO::processQueue()
-	{
-		if ( !isBuffered() ) return;
-
-		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------processing queue-----" );
-
-		// at this point, mNotifyOnReceive is still false so no mutex is needed - incoming data is just written into the buffer
-		bool wasTriggered = false;
-		TimestampedData data;
-		while( mQueue->getDataItem( data ) )
-		{
-			if ( canTriggerUpdates() )
-			{
-				wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
-																				// if update cond fulfilled, trigger will:
-																				//	-set its status to 'fulfilled'
-																				//	-store the data, for the next trigger attempt
-				if ( wasTriggered ) break;
-			}
-			else		// if inlet can't trigger, first data item should be processed, then exit
-			{
-				wasTriggered = true;
-				break;
-			}
-		}
-
-		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------processed queue------" );
-
-		// if no buffered data item managed to trigger, enable mNotifyOnReceive
-		if ( !wasTriggered )
-		{
-			mAccess.lock();
-			mNotifyOnReceive = true;
-			mAccess.unlock();
-			mEngineImpl->getLogger()->addLine( getFullName() + "\tdid not fulfill cond from queue, try with last value" );
-
-			// try trigger with data of last update: -1 makes sure that 'newer timestamp' can never be fulfilled, but 'valid data' will be
-			receiveData( TimestampedData( mBuffer->getData(), -1 ) );
-		}
-		else
-		{
-			mBuffer->setData( data.value );
-			mEngineImpl->getLogger()->addLine( getFullName() + "\tdid fulfill cond from queue, try trigger" );
-			if ( canTriggerUpdates() ) mUpdateTrigger->tryTriggerUpdate();
-		}
-	}
-
 	////--------------------- queue
 
 	////--------------------- triggering
@@ -208,21 +158,82 @@ namespace _2Real
 		return mMetadata->canTriggerUpdates;
 	}
 
-	void BasicInletIO::setUpdatePolicy( UpdatePolicy const& p )
+	bool BasicInletIO::canFulfillCondition( std::shared_ptr< ADataCondition > cond ) const
 	{
-		if ( canTriggerUpdates() )
-			mPolicy->setInletPolicy( *this, p );
+		//Poco::ScopedLock< Poco::FastMutex > lock( mBufferAccess );
+
+		// try with the data in the buffer itself
+		TimestampedData data = mBuffer->getData();
+		if ( cond->canFulfill( data ) )
+		{
+			return true;
+		}
+
+		// then with the queue
+		while ( mQueue->getDataItem( data, DataQueue::KEEP ) )
+		{
+			if ( cond->canFulfill( data ) )
+			{
+				return true;
+			}
+		}
+
+		// then with the last daat
+		if ( cond->canFulfill( mLastData ) )
+		{
+			return true;
+		}
+
+		// then, with the default value
+		data.timestamp = ( std::numeric_limits< long >::min )();
+		data.value = mMetadata->initializer;
+		if ( cond->canFulfill( data ) )
+		{
+			return true;
+		}
+
+		return false;
 	}
 
-	void BasicInletIO::setTrigger( AbstractInletBasedTrigger *trigger )
+	// only called if I know for sure that the inlets can fullfill their respective conditions
+	// however, this might still fail, because the user might have something in the meanwhile
+	bool BasicInletIO::tryFulfillCondition( std::shared_ptr< ADataCondition > cond )
 	{
-		if ( canTriggerUpdates() )
-			mUpdateTrigger = trigger;
-	}
+		//Poco::ScopedLock< Poco::FastMutex > lock( mBufferAccess );
 
-	void BasicInletIO::removeTrigger( AbstractInletBasedTrigger *trigger )
-	{
-		mUpdateTrigger = nullptr;
+		TimestampedData data = mBuffer->getData();
+		if ( cond->tryFulfill( data, true ) )
+		{
+			mBuffer->setData( data );
+			return true;
+		}
+
+		while ( mQueue->getDataItem( data, DataQueue::DISCARD ) )
+		{
+			if ( cond->tryFulfill( data, true ) )
+			{
+				mBuffer->setData( data );
+				return true;
+			}
+		}
+
+		if ( cond->tryFulfill( mLastData, true ) )
+		{
+			mClearBuffer = true;
+			mBuffer->setData( mLastData );
+			return true;
+		}
+
+		data.timestamp = ( std::numeric_limits< long >::min )();
+		data.value = mMetadata->initializer;
+		if ( cond->tryFulfill( data, true ) )
+		{
+			mClearBuffer = true;
+			mBuffer->setData( data );
+			return true;
+		}
+
+		return false;
 	}
 
 	////--------------------- triggering
@@ -236,81 +247,25 @@ namespace _2Real
 
 	void BasicInletIO::receiveData( TimestampedData const& data )
 	{
-		mEngineImpl->getLogger()->addLine( getFullName() + "\treceived data" );
+		//Poco::ScopedLock< Poco::FastMutex > lock( mBufferAccess );
 
-		mAccess.lock();
-		if ( !mNotifyOnReceive )
-		{
-			mAccess.unlock();
-			if ( isBuffered() )		// only store if buffered
-			{
-				mQueue->storeDataItem( data );
-				mEngineImpl->getLogger()->addLine( getFullName() + "\tqueued data" );
-			}
-			else					// data will be lost
-			{
-				mEngineImpl->getLogger()->addLine( getFullName() + "\tdiscarded data" );
-			}
-		}
-		else
-		{
-			if ( canTriggerUpdates() )
-			{
-				mEngineImpl->getLogger()->addLine( getFullName() + "\ttry to fulfill cond" );
-
-				bool wasTriggered = mUpdateTrigger->tryFulfillCondition( data, false );	// test the update condition
-																						// if update cond fulfilled, trigger will:
-																						//	-set its status to 'fulfilled'
-																						//	-store the data, for the next trigger attempt
-
-				if ( wasTriggered )
-				{
-					mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
-					mNotifyOnReceive = false;
-					mUpdateTrigger->tryTriggerUpdate();
-					mBuffer->setData( data.value );
-				}
-			}
-			else
-			{
-				mEngineImpl->getLogger()->addLine( getFullName() + "\toverwriting current data" );
-				mBuffer->setData( data.value );
-			}
-
-			mAccess.unlock();
-		}
+		mQueue->storeDataItem( data );
+		if ( canTriggerUpdates() ) mUpdateManager.lock()->inletChanged();
 	}
 
 	void BasicInletIO::setData( std::shared_ptr< const CustomType > data )
 	{
 		TimestampedData timestamped( data, mEngineImpl->getElapsedTime() );
-		mEngineImpl->getLogger()->addLine( getFullName() + "\tset data" );
-
-		mAccess.lock();
-		if ( canTriggerUpdates() )
-		{
-			bool wasTriggered = mUpdateTrigger->tryFulfillCondition( timestamped, true );		// test the update condition
-																							// if update cond fulfilled, trigger will:
-																							//	-set its status to 'fulfilled'
-																							//	-store the data, for the next trigger attempt
-
-			if ( wasTriggered )
-			{
-				mEngineImpl->getLogger()->addLine( getFullName() + "\tfulfilled cond" );
-				mNotifyOnReceive = false;
-				mUpdateTrigger->tryTriggerUpdate();
-			}
-		}
-		mBuffer->setData( data );
-		mAccess.unlock();
+		mBuffer->setData( timestamped );
+		if ( canTriggerUpdates() ) mUpdateManager.lock()->inletChanged();
 	}
 
-	void BasicInletIO::synchronizeData()
+	void BasicInletIO::synchronize()
 	{
-		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------synchronizing-----" );
-		std::shared_ptr< const CustomType > newData = mBuffer->getData();
+		std::shared_ptr< const CustomType > newData = mBuffer->getData().value;
 		mInlet->update( newData );
-		mEngineImpl->getLogger()->addLine( getFullName() + "\t-------synchronized------" );
+		mLastData = mBuffer->getData();
+		mBuffer->clearData();
 	}
 
 	std::shared_ptr< const CustomType > BasicInletIO::getCurrentData() const
@@ -345,15 +300,31 @@ namespace _2Real
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	MultiInletIO::MultiInletIO( EngineImpl *engine, AbstractUberBlock *owner, AbstractUpdatePolicy *policy, std::shared_ptr< const IOMetadata > meta ) :
-		AbstractInletIO( engine, owner, policy, meta ),
-		mInlet( new MultiInlet( this ) )
+	MultiInletIO::MultiInletIO( EngineImpl *engine, std::shared_ptr< InstanceId > id, AbstractUberBlock *owner, std::shared_ptr< AbstractUpdateManager > updateMgr, std::shared_ptr< const IOMetadata > meta ) :
+		AbstractInletIO(),
+		mInlet( new MultiInlet( this ) ),
+		mEngineImpl( engine ),
+		mUpdateManager( updateMgr ),
+		mOwningBlock( owner ),
+		mMetadata( meta ),
+		mIdentifier( id )
 	{
 	}
 
-	MultiInletIO::~MultiInletIO()
+	std::string const& MultiInletIO::getFullHumanReadableName() const
 	{
+		return mIdentifier->getFullHumanReadableName();
 	}
+
+	std::string const& MultiInletIO::getHumanReadableName() const
+	{
+		return mIdentifier->getHumanReadableName();
+	}
+
+	//std::string const& MultiInletIO::getCode() const
+	//{
+	//	return mIdentifier.getCode();
+	//}
 
 	std::shared_ptr< BasicInletIO > MultiInletIO::operator[]( const unsigned int index )
 	{
@@ -370,14 +341,7 @@ namespace _2Real
 
 	std::shared_ptr< AbstractInletIO > MultiInletIO::addSubInlet()
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
-		std::shared_ptr< IOMetadata > meta( new IOMetadata( *mMetadata.get() ) );
-		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwningBlock, mPolicy, meta );
-		std::shared_ptr< BasicInletIO > shared( io );
-		io->setSelfRef( shared );
-		mTemporaryInletIOs.push_back( shared );
-		mPolicy->addInlet( *io, meta->updatePolicy );		// why?
-		return std::static_pointer_cast< AbstractInletIO, BasicInletIO >( shared );
+		return std::shared_ptr< AbstractInletIO >();
 	}
 
 	std::shared_ptr< AbstractInlet > MultiInletIO::getInlet()
@@ -390,129 +354,37 @@ namespace _2Real
 		return mInlet;
 	}
 
+	std::shared_ptr< const IOMetadata > MultiInletIO::getMetadata() const
+	{
+		return mMetadata;
+	}
+
+	bool MultiInletIO::belongsToBlock( AbstractUberBlock const* block ) const
+	{
+		return ( mOwningBlock == block );
+	}
+
 	void MultiInletIO::removeSubInlet( std::shared_ptr< AbstractInletIO > io )
 	{
-		//Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
-
-		//// check tmp list first
-		//for ( std::list< std::shared_ptr< BasicInletIO > >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
-		//{
-		//	if ( io == ( *it ) )
-		//	{
-		//		it = mTemporaryInletIOs.erase( it );
-		//		mPolicy->removeInlet( **it );
-		//		return;
-		//	}
-		//}
-
-		//for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
-		//{
-		//	if ( io == ( *it ).io )
-		//	{
-		//		mEngineImpl->clearLinksFor( *( ( *it ).io ) );	// kill all links involving this inlet
-		//		mPolicy->removeInlet( *( *it ).io );			// inlet should not influence updates any more
-		//		( *it ).wasRemoved = true;						// but inlet must stay alive, since it might still be accessed
-		//		return;
-		//	}
-		//}
+		assert( NULL );
 	}
 
-	void MultiInletIO::synchronizeData()
+	void MultiInletIO::synchronize()
 	{
-		//Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
-
-		//// move tmp inlets over
-		//for ( std::list< std::shared_ptr< BasicInletIO > >::iterator it = mTemporaryInletIOs.begin(); it != mTemporaryInletIOs.end(); ++it )
-		//{
-		//	BasicInletIO *io = *it;
-		//	std::ostringstream name;
-		//	name << mInfo->name << "::" << mBasicInletIOs.size();
-		//	io->getInfo()->name = name.str();
-		//	mBasicInletIOs.push_back( IO( io ) );
-		//}
-
-		//mTemporaryInletIOs.clear();
-
-		//for ( std::vector< IO >::iterator it = mBasicInletIOs.begin(); it != mBasicInletIOs.end(); ++it )
-		//{
-		//	BasicInletIO *io = ( *it ).io;
-		//	if ( ( *it ).wasRemoved )
-		//	{
-		//		delete io;
-		//		io = nullptr;
-		//		// argh
-		//	}
-		//	else
-		//		io->synchronizeData();
-		//}
+		assert( NULL );
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	ParameterIO::ParameterIO( EngineImpl *engine, AbstractUberBlock *owner, std::shared_ptr< const IOMetadata > meta ) :
-		Identifiable< ParameterIO >( owner->getIds(), meta->name ),
-		mEngineImpl( engine ),
-		mOwningBlock( owner ),
-		mParameter( new Parameter( this ) ),
-		mBuffer( new ParameterBuffer( this ) ),
-		mInfo( meta )
-	{
-	}
-
-	ParameterIO::~ParameterIO()
-	{
-		delete mBuffer;
-	}
-
-	std::shared_ptr< const IOMetadata > ParameterIO::getInfo() const
-	{
-		return mInfo;
-	}
-
-	bool ParameterIO::belongsToBlock( AbstractUberBlock const* block ) const
-	{
-		return mOwningBlock == block;
-	}
-
-	std::shared_ptr< const CustomType > ParameterIO::getCurrentDataThreadsafe() const
-	{
-		// called from app, always reads the buffer + mutex
-		return mParameter->getDataThreadsafe();
-	}
-
-	void ParameterIO::setData( std::shared_ptr< const CustomType > newData )
-	{
-		// called from app, always reads the buffer + mutex
-		return mBuffer->setData( newData );
-	}
-
-	void ParameterIO::synchronizeData()
-	{
-		std::shared_ptr< const CustomType > newData = mBuffer->getData();
-		mParameter->update( newData );
-	}
-
-	std::shared_ptr< Parameter > ParameterIO::getParameter()
-	{
-		return mParameter;
-	}
-
-	std::shared_ptr< const Parameter > ParameterIO::getParameter() const
-	{
-		return mParameter;
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	OutletIO::OutletIO( EngineImpl *engine, AbstractUberBlock *owner, std::shared_ptr< const IOMetadata > meta ) :
-		Identifiable< OutletIO >( owner->getIds(), meta->name ),
+	OutletIO::OutletIO( EngineImpl *engine, std::shared_ptr< InstanceId > id, AbstractUberBlock *owner, std::shared_ptr< const IOMetadata > meta ) :
 		mEngineImpl( engine ),
 		mOwningBlock( owner ),
 		mOutlet( new Outlet( this ) ),
 		mBuffer( new OutletBuffer( this ) ),
-		mInfo( meta ),
+		mMetadata( meta ),
 		mAppEvent( new CallbackEvent< std::shared_ptr< const CustomType > >() ),
-		mInletEvent( new CallbackEvent< TimestampedData const& >() )
+		mInletEvent( new CallbackEvent< TimestampedData const& >() ),
+		mIdentifier( id )
 	{
 	}
 
@@ -522,6 +394,21 @@ namespace _2Real
 		delete mAppEvent;
 		delete mInletEvent;
 	}
+
+	std::string const& OutletIO::getFullHumanReadableName() const
+	{
+		return mIdentifier->getFullHumanReadableName();
+	}
+
+	std::string const& OutletIO::getHumanReadableName() const
+	{
+		return mIdentifier->getHumanReadableName();
+	}
+
+	//std::string const& OutletIO::getCode() const
+	//{
+	//	return mIdentifier.getCode();
+	//}
 
 	std::shared_ptr< OutletIO > OutletIO::getSelfRef()
 	{
@@ -535,9 +422,9 @@ namespace _2Real
 		return locked;
 	}
 
-	std::shared_ptr< const IOMetadata > OutletIO::getInfo() const
+	std::shared_ptr< const IOMetadata > OutletIO::getMetadata() const
 	{
-		return mInfo;
+		return mMetadata;
 	}
 
 	bool OutletIO::belongsToBlock( AbstractUberBlock const* block ) const
@@ -554,7 +441,7 @@ namespace _2Real
 	std::shared_ptr< const CustomType > OutletIO::synchronizeData()
 	{
 		// clone initializer
-		std::shared_ptr< CustomType > newData( new CustomType( *( mInfo->initializer.get() ) ) ) ;
+		std::shared_ptr< CustomType > newData( new CustomType( *( mMetadata->initializer.get() ) ) ) ;
 		// retrieve old data from outlet & set new data
 		std::shared_ptr< const CustomType > recentData = mOutlet->update( newData );
 		// store old data in buffer
@@ -587,23 +474,6 @@ namespace _2Real
 	std::shared_ptr< const Outlet > OutletIO::getOutlet() const
 	{
 		return mOutlet;
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	AbstractIOManager::AbstractIOManager( EngineImpl *engine, AbstractUberBlock *owner ) :
-		mEngineImpl( engine ),
-		mOwner( owner )
-	{
-	}
-
-	AbstractIOManager::~AbstractIOManager()
-	{
-	}
-
-	std::string AbstractIOManager::getName() const
-	{
-		return mOwner->getFullName();
 	}
 
 }

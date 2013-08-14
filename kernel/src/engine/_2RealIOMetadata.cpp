@@ -20,4 +20,18 @@
 
 namespace _2Real
 {
+	IOMetadata::IOMetadata() :
+		identifier( nullptr ),
+		typeMetadata(),
+		initializer(),
+		canExpand( false ),
+		expansionSize( 0 ),
+		canLink( false ),
+		isBuffered( false ),
+		bufferSize( 0 ),
+		canTriggerUpdates( false ),
+		updatePolicy( UpdatePolicy::INVALID ),
+		synchronizationFlags( NO_SYNC )
+	{}
+
 }

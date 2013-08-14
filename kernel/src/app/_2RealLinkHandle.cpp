@@ -41,13 +41,13 @@ namespace _2Real
 
 		void LinkHandle::activate()
 		{
-			std::shared_ptr< IOLink > link = mImpl.lock();
+			std::shared_ptr< IOLink > link = checkValidity< IOLink >( mImpl, "link" );
 			link->activate();
 		}
 
 		void LinkHandle::deactivate()
 		{
-			std::shared_ptr< IOLink > link = mImpl.lock();
+			std::shared_ptr< IOLink > link = checkValidity< IOLink >( mImpl, "link" );
 			link->deactivate();
 		}
 	}

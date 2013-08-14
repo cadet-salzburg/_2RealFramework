@@ -20,5 +20,51 @@
 
 namespace _2Real
 {
-	const std::string DataField::sBasicTypeName = "BasicType";
+	DataField::DataField( std::string const& name, std::string const& bundle, std::string const& typeName, DataFields const& subfields ) :
+		mFieldName( name ),
+		mExportingBundle( bundle ),
+		mTypeName( typeName ),
+		mSubFields( subfields )
+	{
+	}
+
+	std::string const& DataField::getName() const
+	{
+		return mFieldName;
+	}
+
+	std::string const& DataField::getTypename() const
+	{
+		return mTypeName;
+	}
+
+	std::string const& DataField::getExportingBundle() const
+	{
+		return mExportingBundle;
+	}
+
+	DataFields DataField::getSubFields() const
+	{
+		return mSubFields;
+	}
+
+	bool DataField::isBasicType() const
+	{
+		return ( mExportingBundle == Constants::BasicTypename );
+	}
+
+	bool DataField::isFrameworkType() const
+	{
+		return ( mExportingBundle == Constants::FrameworkTypename );
+	}
+
+	DataFieldRef DataField::createSimpleField( std::string const& name, std::string const& type )
+	{
+		return DataFieldRef( new DataField( name, Constants::BasicTypename, name, DataFields() ) );
+	}
+
+	DataFieldRef DataField::createComplexField( std::string const& name, std::string const& bundle, std::string const& typeName, DataFields const& subfields )
+	{
+		return DataFieldRef( new DataField( name, bundle, typeName, subfields ) );
+	}
 }

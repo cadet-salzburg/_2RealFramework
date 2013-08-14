@@ -17,9 +17,14 @@
 */
 
 #include "app/_2RealBlockHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+#include "app/_2RealTimerHandle.h"
+#include "app/_2RealBlockMetainfo.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealStringHelpers.h"
+#include "app/_2RealLinkHandle.h"
 
 namespace _2Real
 {
@@ -47,10 +52,17 @@ namespace _2Real
 			return BlockMetainfo( block->getBlockMetadata() );
 		}
 
-		void BlockHandle::setUpdateRate( const double updatesPerSecond )
+		//void BlockHandle::setUpdateRate( const double updatesPerSecond )
+		//{
+		//	std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
+		//	block->updateWithFixedRate( updatesPerSecond );
+		//}
+
+		void BlockHandle::setUpdateTimer( TimerHandle timer )
 		{
 			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
-			block->updateWithFixedRate( updatesPerSecond );
+			std::shared_ptr< Timer > t = checkValidity< Timer >( timer.mImpl, "timer" );
+			block->setUpdateTimer( t );
 		}
 
 		void BlockHandle::setup()
@@ -147,23 +159,5 @@ namespace _2Real
 			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "regular block" );
 			block->unregisterFromNewData( cb );
 		}
-
-		//void BlockHandle::singleStep()
-		//{
-		//	checkValidity( mImpl );
-		//	mImpl->singleStep();
-		//}
-
-		//bool BlockHandle::isRunning() const
-		//{
-		//	checkValidity( mImpl );
-		//	return mImpl->isRunning();
-		//}
-
-		//std::string const& BlockHandle::getIdAsString() const
-		//{
-		//	checkValidity( mImpl );
-		//	return mImpl->getName();
-		//}
 	}
 }

@@ -73,7 +73,7 @@ namespace _2Real
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( m_Mutex );
 
-		m_Thread.setName( request.block.getName() );
+		m_Thread.setName( request.block.getHumanReadableName() );
 		m_Thread.setPriority( priority );
 		m_Request = &request;
 

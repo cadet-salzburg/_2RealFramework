@@ -20,8 +20,9 @@
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLogger.h"
 #include "engine/_2RealFunctionBlock.h"
+#include "engine/_2RealBundle.h"
 #include "helpers/_2RealException.h"
-#include "_2RealConstants.h"
+#include "helpers/_2RealConstants.h"
 
 using std::ostringstream;
 using std::string;
@@ -49,17 +50,22 @@ namespace _2Real
 
 		for ( std::multimap< std::string, std::shared_ptr< FunctionBlock > >::iterator it = mBlockInstances.begin(); it != mBlockInstances.end(); /**/ )
 		{
-			if ( it->second->isContext() ) ++it;
+			if ( it->second->isContext() )
+			{
+				++it;
+			}
 			else
 			{
 				if ( it->second->shutDown( 1000 ) )
 				{
-					std::cout << "shut down " << it->second->getName() << std::endl;
+					std::cout << "successfully shut down " << it->second->getHumanReadableName() << std::endl;
+					mEngineImpl->getLogger()->addLine( string( "successfully shut down ").append( it->second->getHumanReadableName() ) );
 					it = mBlockInstances.erase( it );
 				}
 				else
 				{
-					mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
+					std::cout << "failed to shut down " << it->second->getHumanReadableName() << std::endl;
+					mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getHumanReadableName() ) );
 					mFailedBlockInstances.push_back( it->second );
 					it = mBlockInstances.erase( it );
 				}
@@ -73,24 +79,26 @@ namespace _2Real
 		{
 			if ( it->second->shutDown( 1000 ) )
 			{
-				std::cout << "shut down " << it->second->getName() << std::endl;
+				std::cout << "successfully shut down " << it->second->getHumanReadableName() << std::endl;
+				mEngineImpl->getLogger()->addLine( string( "successfully shut down ").append( it->second->getHumanReadableName() ) );
 				it = mBlockInstances.erase( it );
 			}
 			else
 			{
-				mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
+				std::cout << "failed to shut down " << it->second->getHumanReadableName() << std::endl;
+				mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getHumanReadableName() ) );
 				mFailedBlockInstances.push_back( it->second );
 				it = mBlockInstances.erase( it );
 			}
 		}
 	}
 
-	void System::destroyBlocks( Bundle *bundle )
+	void System::destroyBlocks( std::shared_ptr< const Bundle > bundle )
 	{
 		typedef std::multimap< std::string, std::shared_ptr< FunctionBlock > >::iterator iter;
 		
 		iter context;
-		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getAbsPath() );
+		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getBundleMetadata()->getInstallDirectory() );
 		for ( iter it = range.first; it != range.second; ++it )
 		{
 			if ( it->second->isContext() ) context = it;
@@ -104,12 +112,12 @@ namespace _2Real
 			{
 				if ( it->second->shutDown( 1000 ) )
 				{
-					std::cout << "shut down " << it->second->getName() << std::endl;
+					std::cout << "shut down " << it->second->getHumanReadableName() << std::endl;
 					mBlockInstances.erase( it );
 				}
 				else
 				{
-					mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getFullName() ) );
+					mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( it->second->getHumanReadableName() ) );
 					mFailedBlockInstances.push_back( it->second );
 					it = mBlockInstances.erase( it );
 				}
@@ -119,26 +127,26 @@ namespace _2Real
 		context->second->prepareForShutDown();
 		if ( context->second->shutDown( 1000 ) )
 		{
-			std::cout << "shut down " << context->second->getName() << std::endl;
+			std::cout << "shut down " << context->second->getHumanReadableName() << std::endl;
 			mBlockInstances.erase( context );
 		}
 		else
 		{
-			mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( context->second->getFullName() ) );
+			mEngineImpl->getLogger()->addLine( string( "failed to shut down ").append( context->second->getHumanReadableName() ) );
 			mFailedBlockInstances.push_back( context->second );
 			mBlockInstances.erase( context );
 		}
 	}
 
-	void System::addBlockInstance( Bundle *bundle, std::shared_ptr< FunctionBlock > block )
+	void System::addBlockInstance( std::shared_ptr< const Bundle > bundle, std::shared_ptr< FunctionBlock > block )
 	{
-		mBlockInstances.insert( std::make_pair( bundle->getAbsPath(), block ) );
+		mBlockInstances.insert( std::make_pair( bundle->getBundleMetadata()->getInstallDirectory(), block ) );
 	}
 
-	std::shared_ptr< FunctionBlock > System::findContextBlockInstance( Bundle *bundle )
+	std::shared_ptr< FunctionBlock > System::findContextBlockInstance( std::shared_ptr< const Bundle > bundle )
 	{
 		typedef std::multimap< std::string, std::shared_ptr< FunctionBlock > >::iterator iter;
-		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getAbsPath() );
+		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getBundleMetadata()->getInstallDirectory() );
 		for ( iter it = range.first; it != range.second; ++it )
 		{
 			if ( it->second->isContext() ) return it->second;
@@ -147,11 +155,10 @@ namespace _2Real
 		return std::shared_ptr< FunctionBlock >();
 	}
 
-	void System::removeBlockInstance( Bundle *bundle, std::shared_ptr< FunctionBlock > block, const long timeout )
+	void System::removeBlockInstance( std::shared_ptr< const Bundle > bundle, std::shared_ptr< FunctionBlock > block, const long timeout )
 	{
-
 		typedef std::multimap< std::string, std::shared_ptr< FunctionBlock > >::iterator iter;
-		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getAbsPath() );
+		std::pair< iter, iter > range = mBlockInstances.equal_range( bundle->getBundleMetadata()->getInstallDirectory() );
 		for ( iter it = range.first; it != range.second; ++it )
 		{
 			if ( it->second == block )
@@ -164,15 +171,11 @@ namespace _2Real
 				}
 				else
 				{
-					//mBlockInstances.erase( it );
-					ostringstream msg;
-					msg << " timeout reached on shutdown of " << block->getFullName();
+					std::ostringstream msg;
+					msg << " timeout reached on shutdown of " << block->getFullHumanReadableName();
 					throw TimeOutException( msg.str() );
 				}
 			}
 		}
-#ifdef _DEBUG
-		assert( NULL );
-#endif
 	}
 }

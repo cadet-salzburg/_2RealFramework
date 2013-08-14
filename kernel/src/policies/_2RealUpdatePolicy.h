@@ -29,9 +29,8 @@ namespace _2Real
 
 		enum Code
 		{
-			ALWAYS,
-			OR_NEWER_DATA,
-			AND_NEWER_DATA,
+			VALID_DATA,
+			NEWER_DATA,
 			INVALID
 		};
 
@@ -40,9 +39,8 @@ namespace _2Real
 		UpdatePolicy( std::string const& str ) :
 			mCode( INVALID )
 		{
-			if ( str == "valid_data" )				mCode = ALWAYS;
-			else if ( str == "or_newer_data" )		mCode = OR_NEWER_DATA;
-			else if ( str == "and_newer_data" )		mCode = AND_NEWER_DATA;
+			if ( str == "ValidData" )				mCode = VALID_DATA;
+			else if ( str == "NewerData" )			mCode = NEWER_DATA;
 			else									mCode = INVALID;
 		}
 
@@ -50,30 +48,13 @@ namespace _2Real
 
 		operator std::string() const
 		{
-			if ( mCode == ALWAYS )					return "valid_data";
-			else if ( mCode == OR_NEWER_DATA )		return "or_newer_data";
-			else if ( mCode == AND_NEWER_DATA )		return "and_newer_data";
+			if ( mCode == VALID_DATA )				return "ValidData";
+			else if ( mCode == NEWER_DATA )			return "NewerData";
 			else									return "invalid";
 		}
 
 		bool operator==( UpdatePolicy const& other ) const { return mCode == other.mCode; }
 		bool operator!=( UpdatePolicy const& other ) const { return mCode != other.mCode; }
-
-		//static const std::string getPolicyAsString( const Code p )
-		//{
-		//	if ( p == ALWAYS )					return "valid_data";
-		//	else if ( p == OR_NEWER_DATA )		return "or_newer_data";
-		//	else if ( p == AND_NEWER_DATA )		return "and_newer_data";
-		//	else								return "invalid";
-		//}
-
-		//static const Code getPolicyFromString( std::string const& p )
-		//{
-		//	if ( p == "valid_data" )			return ALWAYS;
-		//	else if ( p == "or_newer_data" )	return OR_NEWER_DATA;
-		//	else if ( p == "and_newer_data" )	return AND_NEWER_DATA;
-		//	else								return INVALID;
-		//}
 
 	private:
 

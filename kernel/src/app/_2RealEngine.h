@@ -32,6 +32,7 @@ namespace _2Real
 	namespace app
 	{
 		class BundleHandle;
+		class TimerHandle;
 
 		class Engine
 		{
@@ -52,13 +53,15 @@ namespace _2Real
 			// returns the absolute path to the bundle directory
 			std::string getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir
-			app::BundleHandle loadBundle( std::string const& relativePath );
+			BundleHandle loadBundle( std::string const& relativePath );
 			//--------------------- bundle loading
 
 			// clears the whole framework - i.e. all bundles, context blocks & blocks
 			void clearAll();
 			// clears just the block instances
 			void clearBlockInstances();
+
+			TimerHandle addTimer( const double );
 
 			//--------------------- exception callbacks
 			void registerToException( BlockExceptionCallback callback, void *userData = nullptr );

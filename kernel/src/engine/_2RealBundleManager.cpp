@@ -26,6 +26,8 @@
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLogger.h"
 #include "datatypes/_2RealTypeRegistry.h"
+#include "engine/_2RealEngineImpl.h"
+#include "engine/_2RealSystem.h"
 
 using std::ostringstream;
 using std::string;
@@ -33,11 +35,10 @@ using std::make_pair;
 
 namespace _2Real
 {
-	const std::string BundleManager::sContextBlock = "contextblock";
-
 	BundleManager::BundleManager( EngineImpl *engine ) :
 		mEngineImpl( engine ),
-		mBundleLoader( engine->getTypeRegistry() )
+		mBundleLoader( engine->getTypeRegistry() ),
+		mIdCounter( -1 )
 	{
 		//char * dir = std::getenv( "_2REAL_BUNDLE_DIR" );
 		//if ( nullptr != dir )
@@ -67,13 +68,9 @@ namespace _2Real
 
 	void BundleManager::unloadBundle( Bundle *bundle, const long timeout )
 	{
-		std::string const& absPath = bundle->getAbsPath();
+		std::string const& absPath = bundle->getBundleMetadata()->getInstallDirectory();
 
 		BundleIterator it = mBundles.find( absPath );
-#ifdef _DEBUG
-		if ( it == mBundles.end() )
-			assert( NULL );
-#endif
 		mBundleLoader.unloadLibrary( absPath );
 		mBundles.erase( it );
 	}
@@ -87,7 +84,8 @@ namespace _2Real
 	{
 		// TODO: this could could be a lot shorter :)
 
-		string absPath = makeAbsolutePath( Poco::Path( libraryPath ) ).toString();
+		Poco::Path relativePath = Poco::Path( libraryPath );
+		string absPath = makeAbsolutePath( relativePath ).toString();
 		if ( mBundleLoader.isLibraryLoaded( absPath ) )
 		{
 			ostringstream msg;
@@ -95,24 +93,27 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.loadLibrary( absPath );
+		std::shared_ptr< TemplateId > bundleId = IdGenerator::makeBundleId( relativePath );
+		std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.loadLibrary( absPath, bundleId );
 		std::shared_ptr< Bundle > bundle( new Bundle( mEngineImpl, bundleMetadata ) );
+		bundle->setSelfRef( bundle );
 		mBundles.insert( std::make_pair( absPath, bundle ) );
 		return bundle;
 	}
 
 	std::shared_ptr< FunctionBlock > BundleManager::createContextBlockInstance( Bundle *b )
 	{
-		std::string absPath = b->getAbsPath();
+		std::string absPath = b->getBundleMetadata()->getInstallDirectory();
 		if ( mBundleLoader.exportsContext( absPath ) )
 		{
-			// need the shared ptr
 			std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
 
 			std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleLoader.getBundleMetadata( absPath );
 			std::shared_ptr< const BlockMetadata > blockMetadata = bundleMetadata->getContextBlockMetadata();
 			std::shared_ptr< bundle::Block > block = mBundleLoader.createContext( absPath );
-			std::shared_ptr< FunctionBlock > contextBlock( new FunctionBlock( mEngineImpl, bundle, block, blockMetadata ) );
+			std::shared_ptr< InstanceId > blockId = IdGenerator::makeBlockInstanceId( blockMetadata->getIdentifier(), 0 );
+			std::shared_ptr< FunctionBlock > contextBlock( new FunctionBlock( mEngineImpl, blockId, bundle, block, blockMetadata ) );
+			contextBlock->setSelfRef( contextBlock );
 
 			BlockMetadata::IOMetadatas const& inletMetadata = blockMetadata->getInlets();
 			BlockMetadata::IOMetadatas const& outletMetadata = blockMetadata->getOutlets();
@@ -121,7 +122,8 @@ namespace _2Real
 			for ( BlockMetadata::IOMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
 				contextBlock->addOutlet( *it );
 
-			contextBlock->updateWithFixedRate( 30.0 );
+			contextBlock->setUpdateTimer( mEngineImpl->getTimerManager()->getDefaultTimer() );
+
 			contextBlock->setUp();
 			contextBlock->start();
 
@@ -131,10 +133,10 @@ namespace _2Real
 		return std::shared_ptr< FunctionBlock >();
 	}
 
-	std::shared_ptr< FunctionBlock > BundleManager::createBlockInstance( Bundle *b, std::string const &blockName, std::string const& name )
+	std::shared_ptr< FunctionBlock > BundleManager::createBlockInstance( Bundle *b, std::string const &blockName, const unsigned int cnt )
 	{
 		// need the shared ptr
-		std::string absPath = b->getAbsPath();
+		std::string absPath = b->getBundleMetadata()->getInstallDirectory();
 
 		std::shared_ptr< Bundle > bundle = findBundleByPath( absPath );
 
@@ -142,40 +144,24 @@ namespace _2Real
 		std::shared_ptr< const BlockMetadata > blockMetadata = bundleMetadata->getFunctionBlockMetadata( blockName );
 
 		std::shared_ptr< bundle::Block > block = mBundleLoader.createBlockInstance( absPath, blockName );
-		std::shared_ptr< FunctionBlock > functionBlock( new FunctionBlock( mEngineImpl, bundle, block, blockMetadata ) );
+		std::shared_ptr< InstanceId > blockId = IdGenerator::makeBlockInstanceId( blockMetadata->getIdentifier(), cnt );
+		std::shared_ptr< FunctionBlock > functionBlock( new FunctionBlock( mEngineImpl, blockId, bundle, block, blockMetadata ) );
+		functionBlock->setSelfRef( functionBlock );
 
 		BlockMetadata::IOMetadatas const& inletMetadata = blockMetadata->getInlets();
 		BlockMetadata::IOMetadatas const& outletMetadata = blockMetadata->getOutlets();
 		BlockMetadata::IOMetadatas const& parameterMetadata = blockMetadata->getParameters();
 
 		for ( BlockMetadata::IOMetadataConstIterator it = inletMetadata.begin(); it != inletMetadata.end(); ++it )
-		{
-			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
-			if ( nullptr == meta.get() )
-				assert( NULL );
-
 			functionBlock->addInlet( *it );
-		}
 
 		for ( BlockMetadata::IOMetadataConstIterator it = parameterMetadata.begin(); it != parameterMetadata.end(); ++it )
-		{
-			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
-			if ( nullptr == meta.get() )
-				assert( NULL );
-
 			functionBlock->addParameter( *it );
-		}
 
 		for ( BlockMetadata::IOMetadataConstIterator it = outletMetadata.begin(); it != outletMetadata.end(); ++it )
-		{
-			std::shared_ptr< const TypeMetadata > meta = ( *it )->typeMetadata;
-			if ( nullptr == meta.get() )
-				assert( NULL );
-
 			functionBlock->addOutlet( *it );
-		}
 
-		functionBlock->updateWithFixedRate( 30.0 );
+		functionBlock->setUpdateTimer( mEngineImpl->getTimerManager()->getDefaultTimer() );
 
 		return functionBlock;
 	}

@@ -22,28 +22,33 @@
 #include "bundle/_2RealCreationPolicy.h"
 #include "helpers/_2RealException.h"
 #include "datatypes/_2RealTypeRegistry.h"
+#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
-	const std::string Metainfo::sContextBlockName = "ContextBlock";
-
-	Metainfo::Metainfo( std::string const& id, TypeRegistry *init ) :
-		mBundleId( id ),
+	Metainfo::Metainfo( TypeRegistry *init, Poco::Path const& p, std::shared_ptr< TemplateId > id ) :
 		mBundleMetadata( new BundleMetadata( this ) ),
-		mTypes( new TypeRegistry() ),
-		mFrameworkTypes( init )
+		mExportedTypes( new TypeRegistry ),
+		mFrameworkTypes( init ),
+		mIdentifier( id )
 	{
 		// get all framework types into the registry
 		// they will be known as framework types
 		// bundle types will instead be added with the bundle id....
-		mTypes->merge( *init, TypeRegistry::sFrameworkTypes, TypeRegistry::sFrameworkTypes );
+		mBundleMetadata->setInstallDirectory( p );
+		//mTypes->merge( *init, Constants::FrameworkTypename, Constants::FrameworkTypename );
 	}
 
 	Metainfo::~Metainfo()
 	{
 		for ( BlockInfoIterator it = mBlockMetadata.begin(); it != mBlockMetadata.end(); ++it )
 			delete it->second.ctor;
-		delete mTypes;
+		delete mExportedTypes;
+	}
+
+	std::shared_ptr< const TemplateId > Metainfo::getIdentifier() const
+	{
+		return mIdentifier;
 	}
 
 	std::shared_ptr< BundleMetadata > Metainfo::getBundleMetadata()
@@ -53,100 +58,84 @@ namespace _2Real
 
 	bool Metainfo::exportsContext() const
 	{
-		return ( mBlockMetadata.find( sContextBlockName ) != mBlockMetadata.end() );
+		return ( mBlockMetadata.find( Constants::ContextBlockName ) != mBlockMetadata.end() );
 	}
 
 	bool Metainfo::hasContext() const
 	{
-		BlockInfos::const_iterator it = mBlockMetadata.find( sContextBlockName );
+		BlockInfos::const_iterator it = mBlockMetadata.find( Constants::ContextBlockName );
 		if ( it == mBlockMetadata.end() )	return false;
 		else								return ( it->second.ctor->getCreationCount() > 0 );
 	}
 
 	unsigned int Metainfo::getCreationCount( std::string const& name ) const
 	{
-		BlockInfos::const_iterator bIt = mBlockMetadata.end();
-		for ( BlockInfoConstIterator it = mBlockMetadata.begin(); it != mBlockMetadata.end(); ++it )
-		{
-			if ( toLower( it->first ) == toLower( name ) )
-				bIt = it;
-		}
-
-		if ( bIt == mBlockMetadata.end() )
+		BlockInfos::const_iterator it = mBlockMetadata.find( name );
+		if ( it == mBlockMetadata.end() )
 		{
 			std::ostringstream msg;
 			msg << "block " << name << " is not exported by " << mBundleMetadata->getName();
 			throw NotFoundException( msg.str() );
 		}
 
-		return bIt->second.ctor->getCreationCount();
+		return it->second.ctor->getCreationCount();
 	}
 
 	std::shared_ptr< TypeMetadata > Metainfo::exportCustomType( std::string const& name )
 	{
-		std::shared_ptr< const TypeMetadata > test = mFrameworkTypes->get( TypeRegistry::sFrameworkTypes, name );
-		if ( nullptr != test )
+		std::shared_ptr< TemplateId > typeId = IdGenerator::makeExportedTypeId( mIdentifier, name );
+
+		std::shared_ptr< const TypeMetadata > test = mFrameworkTypes->get( name );
+		if ( nullptr != test.get() )
 		{
 			std::ostringstream msg;
 			msg << "type name " << name << " is reserved for a framework type" << std::endl;
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< TypeMetadata > m( new TypeMetadata( TypeMetadata::TypeId( mBundleId, name ), mTypes ) );
-		mTypes->registerType( mBundleId, name, m );
-		return m;
+		std::shared_ptr< TypeMetadata > meta( new TypeMetadata( typeId, mFrameworkTypes, mExportedTypes ) );
+		mExportedTypes->registerType( meta );
+		return meta;
 	}
 
 	std::shared_ptr< BlockMetadata > Metainfo::exportContextBlock( bundle::AbstractBlockCreator *obj )
 	{
-		return exportFunctionBlock( obj, sContextBlockName );
+		return exportFunctionBlock( obj, Constants::ContextBlockName );
 	}
 
 	std::shared_ptr< BlockMetadata > Metainfo::exportFunctionBlock( bundle::AbstractBlockCreator *obj, std::string const& name )
 	{
-		for ( BlockInfoConstIterator it = mBlockMetadata.begin(); it != mBlockMetadata.end(); ++it )
+		BlockInfos::const_iterator it = mBlockMetadata.find( name );
+		if ( it != mBlockMetadata.end() )
 		{
-			if ( toLower( it->first ) == toLower( name ) )
-			{
-				std::ostringstream msg;
-				msg << "block " << name << " is already defined in bundle " << mBundleMetadata->getName();
-				throw AlreadyExistsException( msg.str() );
-			}
+			std::ostringstream msg;
+			msg << "block " << name << " is already defined in bundle " << mBundleMetadata->getName();
+			throw AlreadyExistsException( msg.str() );
 		}
 
-		bool isContext = ( name == sContextBlockName );
+		bool isContext = ( name == Constants::ContextBlockName );
 		bool needsContext = obj->needsContext();
 
 		BlockInfo b;
 		b.ctor = obj;
-		b.metadata.reset( new BlockMetadata( BlockMetadata::BlockId( mBundleId, name ), mTypes, isContext, needsContext ) );
+		std::shared_ptr< TemplateId > blockId = IdGenerator::makeExportedBlockId( mIdentifier, name );
+		b.metadata.reset( new BlockMetadata( blockId, this, mFrameworkTypes, mExportedTypes, isContext, needsContext ) );
 
-		mBlockMetadata[ name ] = b;
+		mBlockMetadata[ blockId->getObjectName() ] = b;
 
 		return b.metadata;
 	}
 
 	std::shared_ptr< bundle::Block > Metainfo::createContextBlock() const
 	{
-		BlockInfos::const_iterator it = mBlockMetadata.find( sContextBlockName );
-#ifdef _DEBUG
-		if ( it == mBlockMetadata.end() )
-			assert( NULL );
-#endif
-
+		BlockInfos::const_iterator it = mBlockMetadata.find( Constants::ContextBlockName );
 		return it->second.ctor->create( nullptr );
 	}
 
 	std::shared_ptr< bundle::Block > Metainfo::createFunctionBlock( std::string const& name ) const
 	{
-		BlockInfos::const_iterator bIt = mBlockMetadata.end();
-		for ( BlockInfoConstIterator it = mBlockMetadata.begin(); it != mBlockMetadata.end(); ++it )
-		{
-			if ( toLower( it->first ) == toLower( name ) )
-				bIt = it;
-		}
-
-		if ( bIt == mBlockMetadata.end() )
+		BlockInfos::const_iterator it = mBlockMetadata.find( name );
+		if ( it == mBlockMetadata.end() )
 		{
 			std::ostringstream msg;
 			msg << "block " << name << " is not exported by " << mBundleMetadata->getName();
@@ -154,13 +143,13 @@ namespace _2Real
 		}
 
 		std::shared_ptr< bundle::ContextBlock > context;
-		BlockInfos::const_iterator cIt = mBlockMetadata.find( sContextBlockName );
+		BlockInfos::const_iterator cIt = mBlockMetadata.find( Constants::ContextBlockName );
 		if ( cIt != mBlockMetadata.end() )
 		{
 			context = std::dynamic_pointer_cast< _2Real::bundle::ContextBlock >( cIt->second.ctor->create( nullptr ) );
 		}
 
-		return bIt->second.ctor->create( context );
+		return it->second.ctor->create( context );
 	}
 
 	void Metainfo::getExportedBlocks( std::vector< std::shared_ptr< const BlockMetadata > > &meta ) const
@@ -170,19 +159,9 @@ namespace _2Real
 			meta.push_back( it->second.metadata );
 	}
 
-	void Metainfo::postLoading( TypeRegistry *registry )
-	{
-		if ( mBundleMetadata->getName().empty() )
-		{
-			throw NotFoundException( "bundle has no name" );
-		}
-
-		//registry->merge( *mTypes, mBundleId, mBundleId );
-	}
-
 	std::shared_ptr< const BlockMetadata > Metainfo::getContextBlockMetadata() const
 	{
-		BlockInfoConstIterator it = mBlockMetadata.find( sContextBlockName );
+		BlockInfoConstIterator it = mBlockMetadata.find( Constants::ContextBlockName );
 		if ( it == mBlockMetadata.end() )
 			return nullptr;
 		else return it->second.metadata;
@@ -190,22 +169,13 @@ namespace _2Real
 
 	std::shared_ptr< const BlockMetadata > Metainfo::getFunctionBlockMetadata( std::string const& name ) const
 	{
-		BlockInfoConstIterator bIt = mBlockMetadata.end();
-		for ( BlockInfoConstIterator it = mBlockMetadata.begin(); it != mBlockMetadata.end(); ++it )
-		{
-			if ( toLower( it->first ) == toLower( name ) )
-			{
-				bIt = it;
-				break;
-			}
-		}
-
-		if ( bIt == mBlockMetadata.end() )
+		BlockInfos::const_iterator it = mBlockMetadata.find( name );
+		if ( it == mBlockMetadata.end() )
 		{
 			std::ostringstream msg;
 			msg << "block " << name << " is not exported by " << mBundleMetadata->getName();
 			throw NotFoundException( msg.str() );
 		}
-		else return bIt->second.metadata;
+		return it->second.metadata;
 	}
 }

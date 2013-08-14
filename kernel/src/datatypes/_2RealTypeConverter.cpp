@@ -20,13 +20,15 @@
 
 namespace _2Real
 {
+	TypeConverter::TypeConverter()
+	{
+	}
+
 	std::shared_ptr< CustomType > TypeConverter::convert( std::shared_ptr< const CustomType > data ) const
 	{
 		// create empty custom type
 		std::shared_ptr< CustomType > newtype( new CustomType() );
 
-		// set name to other type name
-		newtype->mTypeId = mTypeId;
 		// change all fields
 		for ( CustomType::DataFields::const_iterator it = data->mDataFields.begin(); it != data->mDataFields.end(); ++it )
 		{
@@ -35,9 +37,6 @@ namespace _2Real
 			std::string name = it->first;
 
 			std::map< std::string, Conversion >::const_iterator lookupIt = mLookupTable.find( name );
-#ifdef _DEBUG
-			assert( lookupIt != mLookupTable.end() );
-#endif
 
 			// might have new name, might have entirely new type
 			Conversion conversion = lookupIt->second;

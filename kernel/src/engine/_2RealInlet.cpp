@@ -30,16 +30,22 @@ namespace _2Real
 	{
 	}
 
-	void BasicInletBuffer::setData( std::shared_ptr< const CustomType > data )
+	void BasicInletBuffer::setData( TimestampedData const& data )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		mData = data;
 	}
 
-	std::shared_ptr< const CustomType > BasicInletBuffer::getData() const
+	TimestampedData const& BasicInletBuffer::getData() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		return mData;
+	}
+
+	void BasicInletBuffer::clearData()
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mData = TimestampedData();
 	}
 
 	AbstractInlet::AbstractInlet() :

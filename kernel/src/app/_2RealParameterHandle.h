@@ -29,6 +29,7 @@ namespace _2Real
 
 	namespace app
 	{
+		class InputMetainfo;
 		class TypeMetainfo;
 
 		class ParameterHandle
@@ -41,8 +42,8 @@ namespace _2Real
 
 			bool									isValid() const;
 
-			std::string const&						getName() const;
-			TypeMetainfo							getType() const;
+			InputMetainfo							getParameterMetainfo() const;
+			TypeMetainfo							getTypeMetainfo() const;
 
 			std::shared_ptr< CustomType >			makeData() const;
 			std::shared_ptr< const CustomType >		getCurrentData() const;

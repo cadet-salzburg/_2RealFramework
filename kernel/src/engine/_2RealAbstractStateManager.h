@@ -34,25 +34,25 @@ namespace _2Real
 
 	public:
 
-		AbstractStateManager( EngineImpl *engine, AbstractUberBlock *owner );
-		virtual ~AbstractStateManager();
-		std::string getName() const;
+		virtual ~AbstractStateManager() {}
 
-		virtual void tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */) = 0;
-		virtual void tryTriggerTime(/* TimeBasedTrigger &trigger */) = 0;
-		virtual void addTrigger( TimeBasedTrigger &trigger ) = 0;
-		virtual void removeTrigger( TimeBasedTrigger &trigger ) = 0;
-		virtual void addTrigger( AbstractInletBasedTrigger &trigger, const bool isOr ) = 0;
-		virtual void removeTrigger( AbstractInletBasedTrigger &trigger, const bool isOr ) = 0;
+		virtual std::string const&			getFullHumanReadableName() const = 0;
+		virtual std::string const&			getHumanReadableName() const = 0;
+		//virtual std::string const&			getCode() const = 0;
 
-	protected:
+		//virtual void triggerTime( long ) = 0;
+		////virtual void triggerInlets() = 0;
+		//virtual void tryTriggerInlet(/* AbstractInletBasedTrigger &trigger */) = 0;
+		//virtual void addTrigger( AbstractInletBasedTrigger &trigger ) = 0;
+		//virtual void removeTrigger( AbstractInletBasedTrigger &trigger ) = 0;
 
-		typedef std::set< AbstractInletBasedTrigger * >						InletTriggers;
-		typedef std::set< AbstractInletBasedTrigger * >::iterator			InletTriggerIterator;
-		typedef std::set< AbstractInletBasedTrigger * >::const_iterator		InletTriggerConstIterator;
+		//virtual void scheduleUpdate() = 0;
 
-		EngineImpl				*const mEngineImpl;
-		AbstractUberBlock		*const mOwner;
+	//protected:
+
+	//	typedef std::set< AbstractInletBasedTrigger * >						InletTriggers;
+	//	typedef std::set< AbstractInletBasedTrigger * >::iterator			InletTriggerIterator;
+	//	typedef std::set< AbstractInletBasedTrigger * >::const_iterator		InletTriggerConstIterator;
 
 	};
 

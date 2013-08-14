@@ -27,6 +27,7 @@ namespace _2Real
 {
 
 	class Logger;
+	class EngineImpl;
 	template< typename T >
 	class Callback;
 
@@ -35,27 +36,32 @@ namespace _2Real
 
 	public:
 
-		Timer( Logger *logger );
+		Timer( EngineImpl *, const unsigned long, const bool = false );
 		~Timer();
 
+		void start();
+		void stop();
+
 		void receiveTimerSignal( Poco::Timer &t );
-		void registerToTimerSignal( AbstractCallback< long > &callback );
-		void unregisterFromTimerSignal( AbstractCallback< long > &callback );
+		void registerToTimerSignal( AbstractCallback< long > *callback );
+		void unregisterFromTimerSignal( AbstractCallback< long > *callback );
 
 	private:
 
-		Poco::AbstractTimerCallback			*m_Callback;
-		Poco::Timer							m_Timer;
-		Poco::Timestamp						m_Timestamp;
+		Poco::AbstractTimerCallback			*mCallback;
+		Poco::Timer							mTimer;
+		Poco::Timestamp						mTimestamp;
 
-		Logger								*const m_Logger;
+		EngineImpl							*const mEngineImpl;
 
-		mutable Poco::FastMutex				m_Access;
-		CallbackEvent< long >				m_TimerSignal;
+		mutable Poco::FastMutex				mAccess;
+		CallbackEvent< long >				mTimerSignal;
 
-		long								m_UpdateCount;
-		long								m_SkippedCount;
-		Poco::Timestamp						m_DebugTime;
+		long								mUpdateCount;
+		long								mSkippedCount;
+		Poco::Timestamp						mDebugTime;
+
+		bool								mLog;
 
 	};
 }

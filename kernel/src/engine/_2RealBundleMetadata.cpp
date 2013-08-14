@@ -19,6 +19,7 @@
 #include "engine/_2RealBundleMetadata.h"
 #include "engine/_2RealExportMetainfo.h"
 #include "helpers/_2RealException.h"
+#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
@@ -35,9 +36,17 @@ namespace _2Real
 	{
 	}
 
-	void BundleMetadata::setInstallDirectory( std::string const& dir )
+	void BundleMetadata::setInstallDirectory( Poco::Path const& p )
 	{
-		mInstallDirectory = dir;
+		mInstallDirectory = p.toString();
+		std::string file = p.getFileName();
+		std::string::size_type sz = file.find_first_of( Constants::SharedLibrarySuffix );
+		mName = file.substr( 0, file.length() - Constants::SharedLibrarySuffix.length() );
+	}
+
+	std::shared_ptr< const TemplateId > BundleMetadata::getIdentifier() const
+	{
+		return mOwner->getIdentifier();
 	}
 
 	void BundleMetadata::setDescription( std::string const& desc )
@@ -58,11 +67,6 @@ namespace _2Real
 	void BundleMetadata::setContact( std::string const& contact )
 	{
 		mContact = contact;
-	}
-
-	void BundleMetadata::setName( std::string const& name )
-	{
-		mName = name;
 	}
 
 	void BundleMetadata::setCategory( std::string const& category )

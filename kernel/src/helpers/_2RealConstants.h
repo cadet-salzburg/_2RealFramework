@@ -16,8 +16,17 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealCustomBase.h"
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+	struct Constants
+	{
+		static const std::string BasicTypename;
+		static const std::string FrameworkTypename;
+		static const std::string ContextBlockName;
+		static const std::string SharedLibrarySuffix;
+	};
 }

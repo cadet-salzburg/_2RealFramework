@@ -18,7 +18,8 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealOutletMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealLinkHandle.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealIOMetadata.h"
@@ -83,22 +84,22 @@ namespace _2Real
 			outlet->mAppEvent->removeListener( cb );
 		}
 
-		std::string const& OutletHandle::getName() const
+		OutputMetainfo OutletHandle::getOutletMetainfo() const
 		{
 			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
-			return outlet->getInfo()->name;
+			return OutletMetainfo( outlet->getMetadata() );
 		}
 
-		TypeMetainfo OutletHandle::getType() const
+		TypeMetainfo OutletHandle::getTypeMetainfo() const
 		{
 			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
-			return TypeMetainfo( outlet->getInfo()->typeMetadata );
+			return TypeMetainfo( outlet->getMetadata()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > OutletHandle::makeData() const
 		{
 			std::shared_ptr< OutletIO > outlet = checkValidity< OutletIO >( mImpl, "outlet" );
-			return std::shared_ptr< CustomType >( new CustomType( outlet->getInfo()->typeMetadata ) );
+			return std::shared_ptr< CustomType >( new CustomType( outlet->getMetadata()->typeMetadata ) );
 		}
 	}
 }

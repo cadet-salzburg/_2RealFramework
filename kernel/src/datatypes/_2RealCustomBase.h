@@ -45,8 +45,9 @@ namespace _2Real
 					throw _2Real::Exception( msg.str() );
 				}
 
-				meta.reset( new TypeMetadata( TypeMetadata::TypeId( DataField::sBasicTypeName, Name< TType >::humanReadableName() ), nullptr ) );
-				meta->addField( "default", TypeMetadata::TypeId( DataField::sBasicTypeName, Name< TType >::humanReadableName() ), desc );
+				std::shared_ptr< TemplateId > typeId = IdGenerator::makeBasicTypeId( Name< TType >::humanReadableName() );
+				meta.reset( new TypeMetadata( typeId, nullptr, nullptr ) );
+				meta->addField( "default", "", desc );
 			}
 			return meta;
 		}

@@ -4,8 +4,10 @@
 #include <iostream>
 #include <list>
 #include <vector>
-#ifdef _DEBUG
-	#include "vld.h"
+#ifndef _UNIX
+	#ifdef _DEBUG
+		#include "vld.h"
+	#endif
 #endif
 
 #include <SFML\OpenGL.hpp>
@@ -253,7 +255,7 @@ void printout( std::ostream &out, DataFields const& fields, const unsigned int o
 			out << f->getName() << "\t\t";
 		else
 			out << f->getName() << "\t\t\t";
-		std::cout << f->getTypename().first << "::" << f->getTypename().second << std::endl;
+		std::cout << f->getTypename() << std::endl;
 		if ( !f->getSubFields().empty() )
 		{
 			printout( out, f->getSubFields(), offset+1 );
@@ -267,6 +269,8 @@ void printBundleInfo( app::BundleHandle const& h )
 
 	std::vector< BlockMetainfo > blocks;
 	info.getExportedBlocks( blocks );
+
+	std::cout << info.getName() << " " << info.getInstallDirectory() << std::endl;
 
 	for ( std::vector< BlockMetainfo >::const_iterator it = blocks.begin(); it != blocks.end(); ++it )
 	{
@@ -283,19 +287,19 @@ void printBundleInfo( app::BundleHandle const& h )
 		std::cout << "inlets:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
-			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName().first << "::" << iIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << iIt->isBuffered() << " -l " << iIt->canLink() << " -m " << iIt->canExpand() << std::endl;
 		}
 		std::cout << "parameters:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator pIt = parameters.begin(); pIt != parameters.end(); ++pIt )
 		{
-			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName().first << "::" << pIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << pIt->isBuffered() << " -l " << pIt->canLink() << " -m " << pIt->canExpand() << std::endl;
 		}
 		std::cout << "outlets:" << std::endl;
 		for ( std::vector< OutputMetainfo >::const_iterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
-			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName().first << "::" << oIt->getTypeName().second << std::endl;
+			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -l " << oIt->canLink() << " -m " << oIt->canExpand() << std::endl;
 		}
 	}
@@ -306,15 +310,13 @@ int main( int argc, char *argv[] )
 	Engine &testEngine = Engine::instance();
 	//testEngine.setBaseDirectory( "." );
 
-	unsigned int numInstances = 1;
+	unsigned int numInstances = 3;
 	unsigned int numBlocks = 0;
 	std::vector< std::vector< BlockInstance > > blocks;
 
 	sf::Image img;
 	if ( !img.loadFromFile( "test.jpg" ) )
 		std::cout << "could not read image!" << std::endl;
-	else
-		std::cout << img.getSize().x << " " << img.getSize().y << std::endl;
 
 	try
 	{
@@ -351,7 +353,7 @@ int main( int argc, char *argv[] )
 				std::shared_ptr< Image > inImage = Image::asImage( inData );
 				Image &in = *inImage.get();
 				in.setImagedata( img.getPixelsPtr(), img.getSize().x, img.getSize().y, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
-				instance.inlets[ 0 ].receiveData( inData );
+				instance.inlets[ 0 ].setData( inData );
 			}
 		}
 	}

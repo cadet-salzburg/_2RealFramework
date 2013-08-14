@@ -18,7 +18,8 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealInletMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealLinkHandle.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealIOMetadata.h"
@@ -57,22 +58,22 @@ namespace _2Real
 			return ( inlet->operator[]( 0 ) )->unlinkFrom( outlet );
 		}
 
-		std::string const& InletHandle::getName() const
+		InputMetainfo InletHandle::getInletMetainfo() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return inlet->getInfo()->name;
+			return InletMetainfo( inlet->getMetadata() );
 		}
 
-		TypeMetainfo InletHandle::getType() const
+		TypeMetainfo InletHandle::getTypeMetainfo() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return TypeMetainfo( inlet->getInfo()->typeMetadata );
+			return TypeMetainfo( inlet->getMetadata()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > InletHandle::makeData() const
 		{
 			std::shared_ptr< AbstractInletIO > inlet = checkValidity< AbstractInletIO >( mImpl, "inlet" );
-			return std::shared_ptr< CustomType >( new CustomType( inlet->getInfo()->typeMetadata ) );
+			return std::shared_ptr< CustomType >( new CustomType( inlet->getMetadata()->typeMetadata ) );
 		}
 
 		std::shared_ptr< const CustomType > InletHandle::getCurrentData() const

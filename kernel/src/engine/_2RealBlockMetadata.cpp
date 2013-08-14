@@ -21,20 +21,23 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealStringHelpers.h"
 #include "datatypes/_2RealTypeRegistry.h"
+#include "engine/_2RealExportMetainfo.h"
 
 using std::ostringstream;
 using std::string;
 
 namespace _2Real
 {
-	BlockMetadata::BlockMetadata( BlockId const& name, TypeRegistry *reg, const bool isContext, const bool needsContext ) :
-		mBlockId( name ),
+	BlockMetadata::BlockMetadata( std::shared_ptr< TemplateId > id, Metainfo *owner, TypeRegistry *fw, TypeRegistry *exp, const bool isContext, const bool needsContext ) :
+		mIdentifier( id ),
 		mDescription( "undefined" ),
 		mCategory( "undefined" ),
 		mIsContext( isContext ),
 		mNeedsContext( needsContext ),
 		mThreadingPolicy( ThreadingPolicy::ANY_THREAD ),
-		mRegistry( reg )
+		mOwner( owner ),
+		mExportedTypes( exp ),
+		mFrameworkTypes( fw )
 	{
 	}
 
@@ -48,9 +51,14 @@ namespace _2Real
 		return mNeedsContext;
 	}
 
-	string const& BlockMetadata::getName() const
+	std::string const& BlockMetadata::getName() const
 	{
-		return mBlockId.second;
+		return mIdentifier->getObjectName();
+	}
+
+	std::shared_ptr< const TemplateId >  BlockMetadata::getIdentifier() const
+	{
+		return mIdentifier;
 	}
 
 	string const& BlockMetadata::getDescription() const
@@ -83,12 +91,17 @@ namespace _2Real
 		// check if metadata is null, get it from the registry otherwise
 		if ( nullptr == data->typeMetadata.get() )
 		{
-			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			std::shared_ptr< const TypeMetadata > meta = mFrameworkTypes->get( type );
 			if ( nullptr == meta.get() )
 			{
-				std::stringstream msg;
-				msg << "type: " << type << " is not known";
-				throw NotFoundException( msg.str() );
+				meta = mExportedTypes->get( type );
+				if ( nullptr == meta.get() )
+				{
+					std::stringstream msg;
+					msg << "type: " << type << " is not known";
+					throw NotFoundException( msg.str() );
+				
+				}
 			}
 
 			data->typeMetadata = meta;
@@ -99,10 +112,10 @@ namespace _2Real
 
 		for ( BlockMetadata::IOMetadataIterator it = mInlets.begin(); it != mInlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->identifier->getObjectName() ) == toLower( data->identifier->getObjectName() ) )
 			{
 				ostringstream msg;
-				msg << "inlet: " << data->name << " is already defined in block " << getName() << std::endl;
+				msg << "inlet: " << data->identifier->getObjectName() << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -115,12 +128,17 @@ namespace _2Real
 		// check if metadata is null, get it from the regstry otherwise
 		if ( nullptr == data->typeMetadata.get() )
 		{
-			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			std::shared_ptr< const TypeMetadata > meta = mFrameworkTypes->get( type );
 			if ( nullptr == meta.get() )
 			{
-				std::stringstream msg;
-				msg << "type: " << type << " is not known";
-				throw NotFoundException( msg.str() );
+				meta = mExportedTypes->get( type );
+				if ( nullptr == meta.get() )
+				{
+					std::stringstream msg;
+					msg << "type: " << type << " is not known";
+					throw NotFoundException( msg.str() );
+				
+				}
 			}
 
 			data->typeMetadata = meta;
@@ -131,10 +149,10 @@ namespace _2Real
 
 		for ( BlockMetadata::IOMetadataIterator it = mParameters.begin(); it != mParameters.end(); ++it )
 		{
-			if ( toLower( ( *it )->name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->identifier->getObjectName() ) == toLower( data->identifier->getObjectName() ) )
 			{
 				ostringstream msg;
-				msg << "parameter: " << data->name << " is already defined in block " << getName() << std::endl;
+				msg << "parameter: " << data->identifier->getObjectName() << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -147,12 +165,17 @@ namespace _2Real
 		// check if metadata is null, get it from the regstry otherwise
 		if ( nullptr == data->typeMetadata.get() )
 		{
-			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( mBlockId.first, type );
+			std::shared_ptr< const TypeMetadata > meta = mFrameworkTypes->get( type );
 			if ( nullptr == meta.get() )
 			{
-				std::stringstream msg;
-				msg << "type: " << type << " is not known";
-				throw NotFoundException( msg.str() );
+				meta = mExportedTypes->get( type );
+				if ( nullptr == meta.get() )
+				{
+					std::stringstream msg;
+					msg << "type: " << type << " is not known";
+					throw NotFoundException( msg.str() );
+				
+				}
 			}
 
 			data->typeMetadata = meta;
@@ -163,10 +186,10 @@ namespace _2Real
 
 		for ( BlockMetadata::IOMetadataIterator it = mOutlets.begin(); it != mOutlets.end(); ++it )
 		{
-			if ( toLower( ( *it )->name ) == toLower( data->name ) )
+			if ( toLower( ( *it )->identifier->getObjectName() ) == toLower( data->identifier->getObjectName() ) )
 			{
 				ostringstream msg;
-				msg << "outlet: " << data->name << " is already defined in block " << getName() << std::endl;
+				msg << "outlet: " << data->identifier->getObjectName() << " is already defined in block " << getName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}

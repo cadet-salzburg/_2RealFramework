@@ -21,22 +21,22 @@
 #include "engine/_2RealIOMetadata.h"
 #include "policies/_2RealThreadingPolicy.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 	class TypeRegistry;
+	class Metainfo;
 
 	class BlockMetadata
 	{
 	public:
 
-		typedef std::pair< std::string, std::string > BlockId;
-
 		typedef std::vector< std::shared_ptr< IOMetadata > >						IOMetadatas;
 		typedef std::vector< std::shared_ptr< IOMetadata > >::iterator				IOMetadataIterator;
 		typedef std::vector< std::shared_ptr< IOMetadata > >::const_iterator		IOMetadataConstIterator;
 
-		BlockMetadata( BlockId const&, TypeRegistry *, bool isContext, bool needsContext );
+		BlockMetadata( std::shared_ptr< TemplateId > , Metainfo *, TypeRegistry *, TypeRegistry *, bool isContext, bool needsContext );
 
 		void setDescription( std::string const& description );
 		void setCategory( std::string const& category );
@@ -46,6 +46,7 @@ namespace _2Real
 		void setThreadingPolicy( ThreadingPolicy const& policy );
 
 		std::string const& getName() const;
+		std::shared_ptr< const TemplateId >  getIdentifier() const;
 		std::string const& getDescription() const;
 		std::string const& getCategory() const;
 		bool isContext() const;
@@ -57,7 +58,7 @@ namespace _2Real
 
 	private:
 
-		BlockId				mBlockId;
+		std::shared_ptr< TemplateId > 		mIdentifier;
 		std::string			mDescription;
 		std::string			mCategory;
 		bool				mIsContext;
@@ -68,6 +69,8 @@ namespace _2Real
 		IOMetadatas			mOutlets;
 		IOMetadatas			mParameters;
 
-		TypeRegistry		const* mRegistry;
+		Metainfo			*const mOwner;
+		TypeRegistry		const* mExportedTypes;
+		TypeRegistry		const* mFrameworkTypes;
 	};
 }

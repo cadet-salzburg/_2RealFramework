@@ -4,8 +4,10 @@
 #include <iostream>
 #include <list>
 #include <vector>
-//#ifdef _DEBUG
-//	#include "vld.h"
+//#ifndef _UNIX
+//	#ifdef _DEBUG
+//		#include "vld.h"
+//	#endif
 //#endif
 
 #include <SFML\OpenGL.hpp>
@@ -101,7 +103,7 @@ TData * makeCheckerPattern( const unsigned int width, const unsigned int height,
 class OutletReceiver
 {
 public:
-	OutletReceiver( OutletHandle out ) : mOutlet( out )
+	OutletReceiver( OutletHandle out, BlockHandle b ) : mOutlet( out ), mBlock( b )
 	{
 		mOutlet.registerToNewData( *this, &OutletReceiver::receiveData );
 	}
@@ -125,6 +127,7 @@ private:
 	mutable Poco::FastMutex				mMutex;
 	std::shared_ptr< const CustomType >	mData;
 	_2Real::app::OutletHandle			mOutlet;
+	_2Real::app::BlockHandle			mBlock;
 };
 
 struct Texture
@@ -253,7 +256,7 @@ void printout( std::ostream &out, DataFields const& fields, const unsigned int o
 			out << f->getName() << "\t\t";
 		else
 			out << f->getName() << "\t\t\t";
-		std::cout << f->getTypename().first << "::" << f->getTypename().second << std::endl;
+		std::cout << f->getTypename() << std::endl;
 		if ( !f->getSubFields().empty() )
 		{
 			printout( out, f->getSubFields(), offset+1 );
@@ -283,19 +286,19 @@ void printBundleInfo( app::BundleHandle const& h )
 		std::cout << "inlets:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
-			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName().first << "::" << iIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << iIt->isBuffered() << " -l " << iIt->canLink() << " -m " << iIt->canExpand() << std::endl;
 		}
 		std::cout << "parameters:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator pIt = parameters.begin(); pIt != parameters.end(); ++pIt )
 		{
-			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName().first << "::" << pIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << pIt->isBuffered() << " -l " << pIt->canLink() << " -m " << pIt->canExpand() << std::endl;
 		}
 		std::cout << "outlets:" << std::endl;
 		for ( std::vector< OutputMetainfo >::const_iterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
-			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName().first << "::" << oIt->getTypeName().second << std::endl;
+			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -l " << oIt->canLink() << " -m " << oIt->canExpand() << std::endl;
 		}
 	}
@@ -311,6 +314,8 @@ int main( int argc, char *argv[] )
 	std::vector< BlockInstance > camBlocks( numInstances );
 	std::vector< BlockInstance > cvBlocks( numInstances );
 
+	TimerHandle tCam, tCv;
+
 	try
 	{
 		BundleHandle camBundle = testEngine.loadBundle( "CameraCaptureBundle" );
@@ -318,19 +323,25 @@ int main( int argc, char *argv[] )
 		BundleHandle cvBundle = testEngine.loadBundle( "ComputerVisionBundle" );
 		printBundleInfo( cvBundle );
 
+		tCam = testEngine.addTimer( 60.0 );
+		tCv = testEngine.addTimer( 0.0 );
+
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
 			BlockInstance &instance = camBlocks[ i ];
-			instance.block = camBundle.createFunctionBlockInstance( "CameraCaptureBlock" );
+			instance.block = camBundle.createFunctionBlockInstance( "CameraCapture" );
 
 			instance.block.getAllInletHandles( instance.inlets );
 			instance.block.getAllParameterHandles( instance.parameters );
 			std::vector< OutletHandle > handles;
 			instance.block.getAllOutletHandles( handles );
 			for ( unsigned int o=0; o<handles.size(); ++o )
-				instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ] ) ) );
+				instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ], instance.block ) ) );
+
 			instance.block.setup();
 			instance.block.start();
+
+			instance.block.setUpdateTimer( tCam );
 
 			std::shared_ptr< CustomType > d = instance.parameters[ 0 ].makeData();
 			unsigned int &id = *( d->get< unsigned int >( "default" ).get() );
@@ -341,17 +352,19 @@ int main( int argc, char *argv[] )
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
 			BlockInstance &instance = cvBlocks[ i ];
-			instance.block = cvBundle.createFunctionBlockInstance( "OcvEqualizeHistogramBlock" );
+			instance.block = cvBundle.createFunctionBlockInstance( "OcvEqualizeHistogram" );
 
 			instance.block.getAllInletHandles( instance.inlets );
 			instance.block.getAllParameterHandles( instance.parameters );
 			std::vector< OutletHandle > handles;
 			instance.block.getAllOutletHandles( handles );
 			for ( unsigned int o=0; o<handles.size(); ++o )
-				instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ] ) ) );
+				instance.outlets.push_back( std::make_pair( handles[ o ], new OutletReceiver( handles[ o ], instance.block ) ) );
 
 			instance.block.setup();
 			instance.block.start();
+
+			instance.block.setUpdateTimer( tCv );
 		}
 
 		for ( unsigned int i=0; i<numInstances; ++i )

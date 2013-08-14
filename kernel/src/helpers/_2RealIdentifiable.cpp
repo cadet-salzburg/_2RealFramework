@@ -20,49 +20,5 @@
 
 namespace _2Real
 {
-	AbstractIdentifiable::AbstractIdentifiable( Ids const& ids, std::string const& type, std::string const& name ) :
-		m_Ids( ids ),
-		m_Name( name ),
-		m_Type( type )
-	{
-	}
-
-	AbstractIdentifiable::~AbstractIdentifiable()
-	{
-	}
-
-	const AbstractIdentifiable::Ids AbstractIdentifiable::getIds() const
-	{
-		Ids result = m_Ids;
-		result.push_back( this );
-		return result;
-	}
-
-	const std::string AbstractIdentifiable::getFullName() const
-	{
-		std::ostringstream name;
-		for ( IdConstIterator it = m_Ids.begin(); it != m_Ids.end(); ++it )
-		{
-			//name << ( **it ).getType() << ": " << ( **it ).getName() << " - ";
-			name << ( **it ).getName() << "::";
-		}
-		//name << m_Type << " : " << m_Name;
-		name << m_Name;
-		return name.str();
-	}
-
-	std::string const& AbstractIdentifiable::getName() const
-	{
-		return m_Name;
-	}
-
-	std::string const& AbstractIdentifiable::getType() const
-	{
-		return m_Type;
-	}
-
-	void AbstractIdentifiable::setName( std::string const& name )
-	{
-		m_Name = name;
-	}
+	const std::string IdGenerator::sIdStrings[ 8 ] = { "BU", "B", "T", "BL", "I", "O", "P", "D" };
 }

@@ -22,6 +22,7 @@
 #include "datatypes/_2RealAnyHolder.h"
 #include "engine/_2RealTypeMetadataRef.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
@@ -30,9 +31,9 @@ namespace _2Real
 
 	public:
 
-		CustomType();											// invalid
-		explicit CustomType( TypeMetadataConstRef );			// valid unless nullptr
-		CustomType( CustomType const& other );					// deep copy
+		CustomType();
+		explicit CustomType( TypeMetadataConstRef );
+		CustomType( CustomType const& other );
 		~CustomType();
 
 		// urgh, this involves a copy -> for custom types composed of other custom types, get shared ptr w / get & the set on those
@@ -74,10 +75,9 @@ namespace _2Real
 		void initField( std::string const& name, _2Real::AbstractAnyHolder *init );
 
 		typedef std::map< std::string, _2Real::AbstractAnyHolder * >		DataFields;
-		DataFields													mDataFields;
-		std::pair< std::string, std::string >						mTypeId;
-		// meta may have been killed when type is still around
-		std::weak_ptr< const TypeMetadata >							mMetadata;
+
+		DataFields									mDataFields;
+		std::shared_ptr< const TypeMetadata >		mMetadata;
 
 		DataFields::iterator iter( std::string const& name );
 		DataFields::const_iterator constIter( std::string const& name ) const;

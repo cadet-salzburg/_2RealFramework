@@ -32,6 +32,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 		class ParameterHandle;
+		class TimerHandle;
 
 		class BlockHandle
 		{
@@ -55,12 +56,13 @@ namespace _2Real
 
 			BlockMetainfo getBlockMetainfo() const;
 
-			void setUpdateRate( const double updatesPerSecond );	// negative or zero: no time based update at all
+			void setUpdateTimer( TimerHandle );
+			TimerHandle getUpdateTimer();
 
 			void setup();											// will stop the block and then set it up -> a new start is needed
 			void start();
-			void stop( const long timeout = NO_TIMEOUT );
-			void destroy( const long timeout = NO_TIMEOUT );
+			void stop( const long = NO_TIMEOUT );
+			void destroy( const long = NO_TIMEOUT );
 
 			InletHandle					getInletHandle( std::string const& );
 			OutletHandle				getOutletHandle( std::string const& );
@@ -86,9 +88,6 @@ namespace _2Real
 				unregisterFromNewDataInternal( *cb );
 			}
 
-			// true if block was started ( but not if singlestep was called )
-			//bool isRunning() const;
-			//std::string const& getIdAsString() const;
 			//void singleStep();									// if block was not stopped before, this will not do anything at all
 
 		private:

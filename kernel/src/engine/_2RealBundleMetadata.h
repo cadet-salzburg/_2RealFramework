@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealVersion.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealPocoIncludes.h"
 
 namespace _2Real
 {
@@ -28,6 +29,7 @@ namespace _2Real
 		class AbstractBlockCreator;
 	}
 
+	class TemplateId;
 	class Metainfo;
 	class BlockMetadata;
 	class TypeMetadata;
@@ -42,8 +44,7 @@ namespace _2Real
 		void						setDescription( std::string const& description );
 		void						setAuthor( std::string const& author );
 		void						setContact( std::string const& contact );
-		void						setName( std::string const& name );
-		void						setInstallDirectory( std::string const& directory );
+		void						setInstallDirectory( Poco::Path const& p );
 		void						setCategory( std::string const& category );
 		void						setVersion( Version const& version );
 
@@ -54,6 +55,7 @@ namespace _2Real
 		std::string const&			getName() const;
 		std::string const&			getCategory() const;
 		Version const&				getVersion() const;
+		std::shared_ptr< const TemplateId > getIdentifier() const;
 
 		std::shared_ptr< const BlockMetadata >		getFunctionBlockMetadata( std::string const& name ) const;
 		std::shared_ptr< const BlockMetadata >		getContextBlockMetadata() const;

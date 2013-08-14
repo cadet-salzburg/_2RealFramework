@@ -18,67 +18,66 @@ void getBundleMetainfo( BundleMetainfo &info )
 		std::vector< unsigned char > init( imgW*imgH*imgC, 0 );
 		imgInit.setImagedata( &init[ 0 ], imgW, imgH, Image::ChannelOrder::RGBA, Image::Datatype::UINT8 );
 
-		info.setName( "--B--" );
 		info.setCategory( "testing" );
 		info.setVersion( 0, 0, 0 );
 
 		TypeMetainfo allType = info.exportCustomType( "--B-- basetype" );
-		allType.addField< char >( "--B-- char" );
-		allType.addField< unsigned char >( "--B-- uchar" );
-		allType.addField< int >( "--B-- int" );
-		allType.addField< unsigned int >( "--B-- uint" );
-		allType.addField< double >( "--B-- double" );
-		allType.addField< float >( "--B-- float" );
-		allType.addField< std::string >( "--B-- string" );
-		allType.addField< bool >( "--B-- bool" );
-		allType.addField< std::vector< int > >( "--B-- int vector" );
-		allType.addField< std::vector< std::vector< int > > >( "--B-- int vector vector" );
+		allType.addField< char >( "char" );
+		allType.addField< unsigned char >( "uchar" );
+		allType.addField< int >( "int" );
+		allType.addField< unsigned int >( "uint" );
+		allType.addField< double >( "double" );
+		allType.addField< float >( "float" );
+		allType.addField< std::string >( "string" );
+		allType.addField< bool >( "bool" );
+		allType.addField< std::vector< int > >( "int vector" );
+		allType.addField< std::vector< std::vector< int > > >( "int vector vector" );
 
 		TypeMetainfo simpleType = info.exportCustomType( "--B-- simpletype" );
-		simpleType.addField< int >( "--B-- int" );
-		simpleType.addField< float >( "--B-- float" );
+		simpleType.addField< int >( "int" );
+		simpleType.addField< float >( "float" );
 
 		TypeMetainfo complexType = info.exportCustomType( "--B-- complextype" );
-		complexType.addField< int >( "--B-- int" );
-		complexType.addField< std::string >( "--B-- string" );
-		complexType.addField< std::vector< float > >( "--B-- float vector" );
-		complexType.addCustomTypeField( "--B-- image", "image" );
-		complexType.addCustomTypeField( "--B-- simpletype", "--B-- simpletype" );
-		complexType.addCustomTypeField( "--B-- basetype", "--B-- basetype" );
+		complexType.addField< int >( "int" );
+		complexType.addField< std::string >( "string" );
+		complexType.addField< std::vector< float > >( "float vector" );
+		complexType.addCustomTypeField( "image", "image" );
+		complexType.addCustomTypeField( "simpletype", "--B-- simpletype" );
+		complexType.addCustomTypeField( "basetype", "--B-- basetype" );
 
 		//TypeMetainfo &recursiveType = info.exportCustomType( "recursivetype" );
 		//recursiveType.addCustomTypeField( "simpletype", "simpletype" );
 		//recursiveType.addCustomTypeField( "recursivetype", "recursivetype" );
 
 		std::shared_ptr< CustomType > allInit = allType.makeData();
-		allInit->set< char >( "--B-- char", 100 );
-		allInit->set< unsigned char >( "--B-- uchar", 100U );
-		allInit->set< int >( "--B-- int", 100 );
-		allInit->set< unsigned int >( "--B-- uint", 100U );
-		allInit->set< double >( "--B-- double", 100.0 );
-		allInit->set< float >( "--B-- float", 100.f );
-		allInit->set< std::string >( "--B-- string", "100" );
-		allInit->set< bool >( "--B-- bool", true );
-		allInit->set< std::vector< int > >( "--B-- int vector", std::vector< int >( 100, 100 ) );
-		allInit->set< std::vector< std::vector< int > > >( "--B-- int vector vector", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
+		allInit->set< char >( "char", 100 );
+		allInit->set< unsigned char >( "uchar", 100U );
+		allInit->set< int >( "int", 100 );
+		allInit->set< unsigned int >( "uint", 100U );
+		allInit->set< double >( "double", 100.0 );
+		allInit->set< float >( "float", 100.f );
+		allInit->set< std::string >( "string", "100" );
+		allInit->set< bool >( "bool", true );
+		allInit->set< std::vector< int > >( "int vector", std::vector< int >( 100, 100 ) );
+		allInit->set< std::vector< std::vector< int > > >( "int vector vector", std::vector< std::vector< int > >( 100, std::vector< int >( 100, 100 ) ) );
 
 		std::shared_ptr< CustomType > simpleInit = simpleType.makeData();
-		simpleInit->set< int >( "--B-- int", 555 );
-		simpleInit->set< float >( "--B-- float", 555.f );
+		simpleInit->set< int >( "int", 555 );
+		simpleInit->set< float >( "float", 555.f );
 
 		std::shared_ptr< CustomType > complexInit = complexType.makeData();
-		complexInit->set< int >( "--B-- int", 222 );
-		complexInit->set< std::string >( "--B-- string", "222" );
-		complexInit->set< std::vector< float > >( "--B-- float vector", std::vector< float >( 222, 222.f ) );
-		complexInit->set< CustomType >( "--B-- image", *( imgInit.toCustomType().get() ) );
-		complexInit->set< CustomType >( "--B-- simpletype", *( simpleInit.get() ) );
-		complexInit->set< CustomType >( "--B-- basetype", *( allInit.get() ) );
+		complexInit->set< int >( "int", 222 );
+		complexInit->set< std::string >( "string", "222" );
+		complexInit->set< std::vector< float > >( "float vector", std::vector< float >( 222, 222.f ) );
+		complexInit->set< CustomType >( "image", *( imgInit.toCustomType().get() ) );
+		complexInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );
+		complexInit->set< CustomType >( "basetype", *( allInit.get() ) );
 
 		//std::shared_ptr< CustomType > recursiveInit( new CustomType( recursiveType ) );
 		//recursiveInit->set< CustomType >( "simpletype", *( simpleInit.get() ) );
 		//recursiveInit->set< CustomType >( "recursivetype", *( recursiveInit.get() ) );
 
-		FunctionBlockMetainfo testBlock = info.exportFunctionBlock< Test, WithoutContext >( "TypeTestingBlock" );
+		FunctionBlockMetainfo testBlock = info.exportFunctionBlock< Test, WithoutContext >( "TypeTesting" );
 		testBlock.setDescription( "type testing" );
 
 		testBlock.addCustomTypeInlet( "i0", "--B-- basetype", allInit );

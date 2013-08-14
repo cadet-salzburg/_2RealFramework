@@ -19,7 +19,7 @@
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealContextBlockHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealBundleMetainfo.h"
 #include "engine/_2RealBundle.h"
 #include "helpers/_2RealStringHelpers.h"
 

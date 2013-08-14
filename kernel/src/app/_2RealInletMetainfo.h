@@ -18,10 +18,39 @@
 
 #pragma once
 
+#include "app/_2RealCommon.h"
 #include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	const std::string cBasicTypeName = "";
-	const std::string cFrameworkTypeName = "";
+	class IOMetadata;
+
+	namespace app
+	{
+		class TypeMetainfo;
+
+		class InputMetainfo
+		{
+
+		public:
+
+			InputMetainfo();
+			explicit InputMetainfo( std::shared_ptr< const IOMetadata > );
+			bool isValid() const;
+			std::string const& getName() const;
+			std::string const& getTypeName() const;
+			TypeMetainfo	getTypeMetainfo() const;
+			bool			canExpand() const;
+			//bool			canLink() const;
+			//bool			isBuffered() const;
+			//bool			canTrigger() const;
+
+		private:
+
+			std::weak_ptr< const IOMetadata >			mImpl;
+
+		};
+
+		typedef InputMetainfo InletMetainfo;
+	}
 }

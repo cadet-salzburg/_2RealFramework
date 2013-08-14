@@ -27,6 +27,7 @@ namespace _2Real
 	class BundleMetadata;
 	class Metainfo;
 	class TypeRegistry;
+	class TemplateId;
 	
 	namespace bundle
 	{
@@ -39,14 +40,14 @@ namespace _2Real
 	
 	public:
 
-		BundleLoader( TypeRegistry *registry );
+		BundleLoader( TypeRegistry * );
 		~BundleLoader();
 
 		void clear();
 		//BundleMetadata const& createBundleEx( std::string const& path, void ( *MetainfoFunc )( bundle::BundleMetainfo & ) );
 		bool isLibraryLoaded( std::string const& absPath ) const;
 		bool exportsContext( std::string const& absPath ) const;
-		std::shared_ptr< const BundleMetadata > loadLibrary( std::string const& path );
+		std::shared_ptr< const BundleMetadata > loadLibrary( std::string const& path, std::shared_ptr< TemplateId >  );
 		void unloadLibrary( std::string const& path );
 		std::shared_ptr< bundle::Block > createContext( std::string const& absPath ) const;
 		std::shared_ptr< bundle::Block > createBlockInstance( std::string const& absPath, std::string const& ) const;

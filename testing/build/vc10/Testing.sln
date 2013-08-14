@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingApp", "TypeTestingApp\TypeTestingApp.vcxproj", "{5AE09921-B53B-4D20-8D04-168AE4923B25}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingBundle", "TypeTestingBundle\TypeTestingBundle.vcxproj", "{2D18AC1C-6DDB-4F9F-850B-735A1FE7FFF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingABundle", "TypeTestingBundle\TypeTestingBundle.vcxproj", "{2D18AC1C-6DDB-4F9F-850B-735A1FE7FFF0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\kernel\build\vc10\_2RealFramework.vcxproj", "{91102D4C-49DE-485F-8AAD-A1216B09C070}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingBundle", "TypeTestingBundle2\TypeTestingBundle2.vcxproj", "{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingBBundle", "TypeTestingBundle2\TypeTestingBundle2.vcxproj", "{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StateTestingApp", "StateTestingApp\StateTestingApp.vcxproj", "{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TypeTestingABundle", "StateTestingBundle\StateTestingBundle.vcxproj", "{C97CEB05-A37A-47AC-A863-43CFBB37FEED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,18 @@ Global
 		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|Win32.ActiveCfg = Release|Win32
 		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|Win32.Build.0 = Release|Win32
 		{9BDC7A5E-2E83-4D7A-972B-F2E9A33F91CE}.Release|x64.ActiveCfg = Release|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Debug|Win32.Build.0 = Debug|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Debug|x64.ActiveCfg = Debug|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Release|Win32.ActiveCfg = Release|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Release|Win32.Build.0 = Release|Win32
+		{291BFD55-AD6D-4BA7-B385-B093CCB9B95E}.Release|x64.ActiveCfg = Release|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Debug|Win32.Build.0 = Debug|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Debug|x64.ActiveCfg = Debug|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Release|Win32.ActiveCfg = Release|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Release|Win32.Build.0 = Release|Win32
+		{C97CEB05-A37A-47AC-A863-43CFBB37FEED}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

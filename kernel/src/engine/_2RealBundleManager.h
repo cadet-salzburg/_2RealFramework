@@ -34,8 +34,6 @@ namespace _2Real
 	
 	public:
 
-		static const std::string						sContextBlock;
-
 		BundleManager( EngineImpl *engine );
 		~BundleManager();
 
@@ -43,7 +41,7 @@ namespace _2Real
 		std::shared_ptr< Bundle > 						loadBundle( std::string const& );
 		std::shared_ptr< Bundle > 						findBundleByPath( std::string const& ) const;
 		std::shared_ptr< FunctionBlock >				createContextBlockInstance( Bundle * );
-		std::shared_ptr< FunctionBlock >				createBlockInstance( Bundle *, std::string const&, std::string const& );
+		std::shared_ptr< FunctionBlock >				createBlockInstance( Bundle *, std::string const&, const unsigned int );
 		void											unloadBundle( Bundle *, const long timeout );
 		std::string										getBundleDirectory() const;
 
@@ -59,6 +57,18 @@ namespace _2Real
 		BundleLoader									mBundleLoader;
 		Poco::Path										mBundleDirectory;
 		Bundles											mBundles;
+
+		template< typename TId >
+		class IdCounter
+		{
+		public:
+			IdCounter( TId const& init ) : mCounter( init ) {}
+			TId getNextId() { return ++mCounter; }
+		private:
+			TId		mCounter;
+		};
+
+		IdCounter< int >								mIdCounter;
 
 	};
 }

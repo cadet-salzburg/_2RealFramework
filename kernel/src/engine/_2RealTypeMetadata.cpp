@@ -112,8 +112,8 @@ namespace _2Real
 	{
 		ta->getDataFields( mFa );
 		tb->getDataFields( mFb );
-		mAB.reset( new TypeConverter ); mAB->mTypeId = tb->getTypeId();
-		mBA.reset( new TypeConverter ); mBA->mTypeId = ta->getTypeId();
+		mAB.reset( new TypeConverter ); mAB->mIdentifier = tb->getIdentifier();
+		mBA.reset( new TypeConverter ); mBA->mIdentifier = ta->getIdentifier();
 		mIsPerfectMatch = computeMatch( mFa, mFb, mAB, mBA );
 	}
 
@@ -132,10 +132,10 @@ namespace _2Real
 			{
 				DataFieldRef fa = *ita;
 				DataFieldRef fb = *itb;
-				if ( fa->getTypename().first == DataField::sBasicTypeName && fb->getTypename().first == DataField::sBasicTypeName )
+				if ( fa->isBasicType() && fb->isBasicType() )
 				{
 					// reached a simple field -> just rename
-					match &= ( fa->getTypename().second == fb->getTypename().second );
+					match &= ( fa->getTypename() == fb->getTypename() );
 					aToB->mLookupTable[ fa->getName() ] = TypeConverter::Conversion( fb->getName(), nullptr );
 					bToA->mLookupTable[ fb->getName() ] = TypeConverter::Conversion( fa->getName(), nullptr );
 				}
@@ -145,8 +145,8 @@ namespace _2Real
 					std::shared_ptr< TypeConverter > ab( new TypeConverter );
 					std::shared_ptr< TypeConverter > ba( new TypeConverter );
 					match &= computeMatch( fa->getSubFields(), fb->getSubFields(), ab, ba );
-					ab->mTypeId = fb->getTypename();
-					ba->mTypeId = fa->getTypename();
+					//ab->mIdentifier = fb->getIdentifier();
+					//ba->mIdentifier = fa->getIdentifier();
 					aToB->mLookupTable[ fa->getName() ] = TypeConverter::Conversion( fb->getName(), ab );
 					bToA->mLookupTable[ fb->getName() ] = TypeConverter::Conversion( fa->getName(), ba );
 				}
@@ -189,14 +189,29 @@ namespace _2Real
 		}
 	}
 
-	TypeMetadata::TypeMetadata( TypeId const& id, TypeRegistry const* reg ) : mTypeId( id ), mRegistry( reg )
+	TypeMetadata::TypeMetadata( std::shared_ptr< TemplateId > id, TypeRegistry const* fw, TypeRegistry const* exp ) : mIdentifier( id ), mFrameworkTypes( fw ), mExportedTypes( exp )
 	{
 		//std::cout << "ctor " << mTypeId.first << " " << mTypeId.second << std::endl;
 	}
 
-	TypeMetadata::TypeId const& TypeMetadata::getTypeId() const
+	std::shared_ptr< const TemplateId >  TypeMetadata::getIdentifier() const
 	{
-		return mTypeId;
+		return mIdentifier;
+	}
+
+	//std::string const& TypeMetadata::getCode() const
+	//{
+	//	return mIdentifier.getCode();
+	//}
+
+	std::string const& TypeMetadata::getHumanReadableName() const
+	{
+		return mIdentifier->getHumanReadableName();
+	}
+
+	std::string const& TypeMetadata::getFullHumanReadableName() const
+	{
+		return mIdentifier->getFullHumanReadableName();
 	}
 
 	TypeMetadata::~TypeMetadata()
@@ -204,7 +219,7 @@ namespace _2Real
 		//std::cout << "del: " << mTypeId.first << " " << mTypeId.second << std::endl;
 	}
 
-	void TypeMetadata::addField( std::string const& name, TypeId const& id, FieldDescriptorRef desc )
+	void TypeMetadata::addField( std::string const& name, std::string const& typeName, FieldDescriptorRef desc )
 	{
 		// fields: added with type id instead of just type name
 
@@ -214,7 +229,7 @@ namespace _2Real
 			if ( name == it->first )
 			{
 				std::ostringstream msg;
-				msg << "field: " << name << " already exists in type::" << mTypeId.first << "::" << mTypeId.second << std::endl;
+				msg << "field: " << name << " already exists in type" << mIdentifier->getHumanReadableName() << std::endl;
 				throw AlreadyExistsException( msg.str() );
 			}
 		}
@@ -222,24 +237,21 @@ namespace _2Real
 		// if desc == null, it's a custom type, so get the metadata
 		if ( nullptr == desc )
 		{
-#ifdef _DEBUG
-			assert( mRegistry );
-#endif
-			std::shared_ptr< const TypeMetadata > meta = mRegistry->get( TypeRegistry::sFrameworkTypes, id.second );
+			std::shared_ptr< const TypeMetadata > meta = mFrameworkTypes->get( typeName );
 			if ( nullptr == meta.get() )
 			{
-				meta = mRegistry->get( mTypeId.first, id.second );
+				meta = mExportedTypes->get( typeName );
 				if ( nullptr == meta.get() )
 				{
 					std::stringstream msg;
-					msg << "type::" << mTypeId.first << "::" << id.second << " is not known";
+					msg << "unknown type: " << typeName;
 					throw NotFoundException( msg.str() );
 				}
 
 				_2Real::DataFields fields;
 				meta->getDataFields( fields );
 
-				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, id, CustomType( meta ), fields ) );
+				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, mIdentifier->getParentObjectName(), typeName, CustomType( meta ), fields ) );
 				mFields.push_back( std::make_pair( name, d ) );
 			}
 			else
@@ -247,7 +259,7 @@ namespace _2Real
 				_2Real::DataFields fields;
 				meta->getDataFields( fields );
 
-				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, TypeId( TypeRegistry::sFrameworkTypes, id.second ), CustomType( meta ), fields ) );
+				FieldDescriptorRef d( FieldDesc< CustomType >::createFieldDescriptor( name, Constants::FrameworkTypename, typeName, CustomType( meta ), fields ) );
 				mFields.push_back( std::make_pair( name, d ) );
 			}
 		}
@@ -266,7 +278,7 @@ namespace _2Real
 
 	bool TypeMetadata::matches( TypeMetadata const* other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const
 	{
-		for ( unsigned int i=0; i<=desiredMatch.getCode(); ++i )
+		for ( int i=0; i<=desiredMatch.getCode(); ++i )
 		{
 			TypeMatchSetting currentSetting = TypeMatchSetting::sPriorities[ i ];
 			TypeMatch const* m = currentSetting.createMatch( this, other );

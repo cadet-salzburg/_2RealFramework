@@ -18,6 +18,7 @@
 
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"
+#include "app/_2RealTimerHandle.h"		// timer!
 #include "engine/_2RealEngineImpl.h"
 #include "helpers/_2RealSingleton.h"
 
@@ -69,6 +70,12 @@ namespace _2Real
 		}
 
 // ---------------------------------- bundle loading
+
+		TimerHandle Engine::addTimer( const double updatesPerSecond )
+		{
+			std::shared_ptr< Timer > result = mImpl->addTimer( updatesPerSecond );
+			return TimerHandle( result );
+		}
 
 // ---------------------------------- exception callbacks
 

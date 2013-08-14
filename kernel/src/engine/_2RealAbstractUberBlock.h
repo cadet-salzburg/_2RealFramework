@@ -19,53 +19,28 @@
 #pragma once
 
 #include "helpers/_2RealNonCopyable.h"
-#include "helpers/_2RealIdentifiable.h"
 #include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	//class AbstractIOManager;
-	//class AbstractStateManager;
-	//class AbstractUpdatePolicy;
-	//class AbstractUberBlock;
-	class EngineImpl;
+	/*	interface for all types of blocks
+	*	currently, only function blocks exist...
+	*/
+
 	class Exception;
+	class Identifier;
 
-	//struct Refs
-	//{
-	//	Refs( EngineImpl *const e, AbstractUberBlock *const b, AbstractIOManager *const i, AbstractStateManager *const s, AbstractUpdatePolicy *const p ) :
-	//		engine( e ), block( b ), ios( i ), states( s ), policies( p ) {}
-
-	//	EngineImpl				*const engine;
-	//	AbstractUberBlock		*const block;
-	//	AbstractIOManager		*const ios;
-	//	AbstractStateManager	*const states;
-	//	AbstractUpdatePolicy	*const policies;
-	//};
-
-	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >, private Identifiable< AbstractUberBlock >
+	class AbstractUberBlock : private NonCopyable< AbstractUberBlock >
 	{
 
 	public:
 
-		AbstractUberBlock( EngineImpl *engine, Ids const& ids, std::string const& name );
-		virtual ~AbstractUberBlock();
+		virtual ~AbstractUberBlock() {}
 
-		using Identifiable< AbstractUberBlock >::getFullName;
-		using Identifiable< AbstractUberBlock >::getIds;
-		using Identifiable< AbstractUberBlock >::setName;
-		using Identifiable< AbstractUberBlock >::getName;
+		virtual std::string const&			getFullHumanReadableName() const = 0;
+		virtual std::string const&			getHumanReadableName() const = 0;
 
-		virtual void	prepareForShutDown() = 0;
-		virtual bool	shutDown( const long timeout ) = 0;
-		virtual void	updateWithFixedRate( const double updatesPerSecond ) = 0;
-
-		virtual void	handleException( Exception &e ) = 0;
-
-	protected:
-
-		EngineImpl					*const mEngineImpl;
+		virtual void						handleException( Exception const& ) = 0;
 
 	};
-
 }

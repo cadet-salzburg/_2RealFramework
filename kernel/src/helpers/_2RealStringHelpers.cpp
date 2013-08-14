@@ -23,7 +23,7 @@ using std::ostringstream;
 
 namespace _2Real
 {
-	const string toLower( string const& s )
+	string toLower( string const& s )
 	{
 		std::string result;
 		result.clear();
@@ -34,7 +34,7 @@ namespace _2Real
 		return result;
 	}
 
-	const string trim( string const& s, string const& whitespaces )
+	string trim( string const& s, string const& whitespaces )
 	{
 		const size_t beginStr = s.find_first_not_of( whitespaces );
 		if ( beginStr == string::npos )

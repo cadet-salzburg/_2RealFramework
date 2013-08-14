@@ -18,7 +18,7 @@
 
 #include "app/_2RealContextBlockHandle.h"
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealBlockMetainfo.h"
 #include "engine/_2RealFunctionBlock.h"
 #include "helpers/_2RealStringHelpers.h"
 
@@ -44,19 +44,19 @@ namespace _2Real
 
 		BlockMetainfo ContextBlockHandle::getBlockMetainfo() const
 		{
-			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context" );
 			return BlockMetainfo( block->getBlockMetadata() );
 		}
 
 		OutletHandle ContextBlockHandle::getOutletHandle( std::string const& name )
 		{
-			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context" );
 			return OutletHandle( block->getOutlet( name ) );
 		}
 
 		void ContextBlockHandle::getAllOutletHandles( OutletHandles &handles )
 		{
-			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context" );
 			FunctionBlock::Outlets &outlets = block->getAllOutlets();
 			handles.clear();
 			for ( FunctionBlock::Outlets::iterator it = outlets.begin(); it != outlets.end(); ++it )
@@ -65,14 +65,14 @@ namespace _2Real
 
 		void ContextBlockHandle::registerToNewData( BlockDataCallback callback, void *userData ) const
 		{
-			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
 			block->registerToNewData( *cb );
 		}
 
 		void ContextBlockHandle::unregisterFromNewData( BlockDataCallback callback, void *userData ) const
 		{
-			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context block" );
+			std::shared_ptr< FunctionBlock > block = checkValidity< FunctionBlock >( mImpl, "context" );
 			BlockCallback *cb = new FunctionCallback< std::vector< std::shared_ptr< const CustomType > > >( callback, userData );
 			block->unregisterFromNewData( *cb );
 		}

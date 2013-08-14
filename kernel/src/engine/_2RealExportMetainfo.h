@@ -21,6 +21,7 @@
 #include "engine/_2RealBundleMetadata.h"
 #include "engine/_2RealBlockMetadata.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
@@ -41,7 +42,7 @@ namespace _2Real
 
 	public:
 
-		Metainfo( BundleId const&, TypeRegistry * );
+		Metainfo( TypeRegistry *, Poco::Path const&, std::shared_ptr< TemplateId >  );
 		~Metainfo();
 
 		bool hasContext() const;
@@ -62,7 +63,7 @@ namespace _2Real
 
 		void getExportedBlocks( std::vector< std::shared_ptr< const BlockMetadata > > & ) const;
 
-		void postLoading( TypeRegistry * );
+		std::shared_ptr< const TemplateId >  getIdentifier() const;
 
 	private:
 
@@ -74,18 +75,16 @@ namespace _2Real
 			std::shared_ptr< BlockMetadata >	metadata;
 		};
 
-		static const std::string sContextBlockName;
+		typedef std::map< std::string, BlockInfo, LowercaseCmp >					BlockInfos;
+		typedef std::map< std::string, BlockInfo, LowercaseCmp >::iterator			BlockInfoIterator;
+		typedef std::map< std::string, BlockInfo, LowercaseCmp >::const_iterator	BlockInfoConstIterator;
 
-		typedef std::map< std::string, BlockInfo >					BlockInfos;
-		typedef std::map< std::string, BlockInfo >::iterator		BlockInfoIterator;
-		typedef std::map< std::string, BlockInfo >::const_iterator	BlockInfoConstIterator;
+		BlockInfos											mBlockMetadata;
+		std::shared_ptr< BundleMetadata	>					mBundleMetadata;
+		std::shared_ptr< TemplateId > 		mIdentifier;
 
-		BlockInfos									mBlockMetadata;
-		std::shared_ptr< BundleMetadata	>			mBundleMetadata;
-		BundleId									mBundleId;
-
-		TypeRegistry								*const mTypes;
-		TypeRegistry								*const mFrameworkTypes;
+		TypeRegistry										*const mExportedTypes;
+		TypeRegistry										*const mFrameworkTypes;
 
 	};
 }

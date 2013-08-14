@@ -34,6 +34,7 @@ namespace _2Real
 		{
 			CREATED,
 			INITIALIZED,
+			WAITING,
 			UPDATING,
 			STOPPED,
 			SHUTDOWN,
@@ -43,10 +44,11 @@ namespace _2Real
 		AbstractFunctionBlockState( const StateCode state ) : m_State( state ) {}
 		virtual ~AbstractFunctionBlockState() {}
 
-		virtual void setUp( FunctionBlockStateManager &states ) const = 0;
-		virtual void start( FunctionBlockStateManager &states ) const = 0;
-		virtual bool tryHalt( FunctionBlockStateManager &states ) const = 0;
-		virtual bool tryStop( FunctionBlockStateManager &states ) const = 0;
+		virtual void setUp( FunctionBlockStateManager & ) const = 0;
+		virtual void start( FunctionBlockStateManager & ) const = 0;
+		virtual bool scheduleUpdate( FunctionBlockStateManager & ) const = 0;
+		virtual bool tryHalt( FunctionBlockStateManager & ) const = 0;
+		virtual bool tryStop( FunctionBlockStateManager & ) const = 0;
 
 		bool operator==( const StateCode state ) const { return m_State == state; }
 
@@ -65,6 +67,7 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 
@@ -79,6 +82,22 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
+		bool tryHalt( FunctionBlockStateManager &states ) const;
+		bool tryStop( FunctionBlockStateManager &states ) const;
+
+	};
+
+	class FunctionBlockStateWaiting : public AbstractFunctionBlockState
+	{
+
+	public:
+
+		FunctionBlockStateWaiting() : AbstractFunctionBlockState( WAITING ) {}
+
+		void setUp( FunctionBlockStateManager &states ) const;
+		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 
@@ -93,6 +112,7 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 
@@ -107,6 +127,7 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 
@@ -121,6 +142,7 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 
@@ -135,6 +157,7 @@ namespace _2Real
 
 		void setUp( FunctionBlockStateManager &states ) const;
 		void start( FunctionBlockStateManager &states ) const;
+		bool scheduleUpdate( FunctionBlockStateManager & ) const;
 		bool tryHalt( FunctionBlockStateManager &states ) const;
 		bool tryStop( FunctionBlockStateManager &states ) const;
 

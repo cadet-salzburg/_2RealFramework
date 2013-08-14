@@ -31,12 +31,6 @@ namespace _2Real
 		{
 		}
 
-		void BundleMetainfo::setName( std::string const& name )
-		{
-			std::shared_ptr< BundleMetadata > bundle = mImpl.lock();
-			bundle->setName( trim( name ) );
-		}
-
 		void BundleMetainfo::setDescription( std::string const& description )
 		{
 			std::shared_ptr< BundleMetadata > bundle = mImpl.lock();

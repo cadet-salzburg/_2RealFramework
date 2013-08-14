@@ -21,7 +21,6 @@
 #include "datatypes/_2RealTypes.h"
 #include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
-#include "policies/_2RealThreadingPolicy.h"
 #include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
@@ -38,7 +37,7 @@ namespace _2Real
 			ContextBlockMetainfo( std::shared_ptr< BlockMetadata > );
 
 			void setDescription( std::string const& description );
-			void setThreadingPolicy( ThreadingPolicy const& policy );
+			//void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			template< typename TType >
 			void addOutlet( std::string const& name )

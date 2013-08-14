@@ -32,6 +32,11 @@ namespace _2Real
 		throw InvalidStateChangeException( "state change: created -> start" );
 	}
 
+	bool FunctionBlockStateCreated::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
 	bool FunctionBlockStateCreated::tryHalt( FunctionBlockStateManager &states ) const
 	{
 		throw InvalidStateChangeException( "state change: created -> stop" );
@@ -52,12 +57,42 @@ namespace _2Real
 	{
 	}
 
+	bool FunctionBlockStateInitialized::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
+	}
+
 	bool FunctionBlockStateInitialized::tryHalt( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
 
 	bool FunctionBlockStateInitialized::tryStop( FunctionBlockStateManager &states ) const
+	{
+		return true;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	void FunctionBlockStateWaiting::setUp( FunctionBlockStateManager &states ) const
+	{
+	}
+
+	void FunctionBlockStateWaiting::start( FunctionBlockStateManager &states ) const
+	{
+	}
+
+	bool FunctionBlockStateWaiting::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return true;
+	}
+
+	bool FunctionBlockStateWaiting::tryHalt( FunctionBlockStateManager &states ) const
+	{
+		return true;
+	}
+
+	bool FunctionBlockStateWaiting::tryStop( FunctionBlockStateManager &states ) const
 	{
 		return true;
 	}
@@ -72,6 +107,11 @@ namespace _2Real
 	void FunctionBlockStateUpdating::start( FunctionBlockStateManager &states ) const
 	{
 		throw InvalidStateChangeException( "state change: updating -> start" );
+	}
+
+	bool FunctionBlockStateUpdating::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	bool FunctionBlockStateUpdating::tryHalt( FunctionBlockStateManager &states ) const
@@ -98,7 +138,12 @@ namespace _2Real
 
 	bool FunctionBlockStateStopped::tryHalt( FunctionBlockStateManager &states ) const
 	{
-		throw InvalidStateChangeException( "state change: stopped halting -> stop" );
+		throw InvalidStateChangeException( "state change: shut down -> stop" );
+	}
+
+	bool FunctionBlockStateStopped::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	bool FunctionBlockStateStopped::tryStop( FunctionBlockStateManager &states ) const
@@ -116,6 +161,11 @@ namespace _2Real
 	void FunctionBlockStateShutDown::start( FunctionBlockStateManager &states ) const
 	{
 		throw InvalidStateChangeException( "state change: shut down -> start" );
+	}
+
+	bool FunctionBlockStateShutDown::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	bool FunctionBlockStateShutDown::tryHalt( FunctionBlockStateManager &states ) const
@@ -137,6 +187,11 @@ namespace _2Real
 	void FunctionBlockStateError::start( FunctionBlockStateManager &states ) const
 	{
 		throw InvalidStateChangeException( "state change: error -> start" );
+	}
+
+	bool FunctionBlockStateError::scheduleUpdate( FunctionBlockStateManager &states ) const
+	{
+		return false;
 	}
 
 	bool FunctionBlockStateError::tryHalt( FunctionBlockStateManager &states ) const

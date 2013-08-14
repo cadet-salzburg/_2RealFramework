@@ -19,23 +19,19 @@
 #include "datatypes/_2RealCustomData.h"
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealTypeMetadata.h"
-#include "app/_2RealInfo.h"
 
 namespace _2Real
 {
-	CustomType::CustomType() :
-		mTypeId( "undefined", "undefined" )
+	CustomType::CustomType()
 	{
 	}
 
 	CustomType::CustomType( std::shared_ptr< const TypeMetadata > meta ) :
-		mTypeId( "undefined", "undefined" ),
 		mMetadata( meta )
 	{
 		if ( meta.get() == nullptr )
 			return;
 
-		mTypeId = meta->getTypeId();
 		for ( TypeMetadata::FieldDescriptions::const_iterator it = meta->mFields.begin(); it != meta->mFields.end(); ++it )
 		{
 			AbstractAnyHolder *init = ( it->second )->createAnyHolder();
@@ -51,7 +47,7 @@ namespace _2Real
 
 	CustomType::CustomType( CustomType const& other )
 	{
-		mTypeId = other.mTypeId;
+		mMetadata = other.mMetadata;
 
 		for ( DataFields::const_iterator it = other.mDataFields.begin(); it != other.mDataFields.end(); ++it )
 		{
@@ -63,10 +59,6 @@ namespace _2Real
 
 	void CustomType::initField( std::string const& name, AbstractAnyHolder *init )
 	{
-#ifdef _DEBUG
-		assert( init != nullptr );
-		assert( mDataFields.find( name ) == mDataFields.end() );
-#endif
 		// ONLY here, in the init field method, assignment operator may be used
 		// for all later operations, set must be used instead ( involves a typecheck! )
 		mDataFields[ name ] = init;
@@ -79,7 +71,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in data type::" << mTypeId.first << "::" << mTypeId.second;
+			msg << "field " << name << " not defined" << std::endl;
 			throw _2Real::Exception( msg.str() );
 		}
 			
@@ -93,7 +85,7 @@ namespace _2Real
 		{
 			// TODO name of type & type of exception
 			std::ostringstream msg;
-			msg << "field " << name << " not defined in data type " << "XXXX";
+			msg << "field " << name << " not defined" << std::endl;
 			throw _2Real::Exception( msg.str() );
 		}
 			

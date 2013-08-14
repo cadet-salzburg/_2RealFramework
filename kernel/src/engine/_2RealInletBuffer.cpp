@@ -27,7 +27,7 @@ namespace _2Real
 	public:
 		virtual ~AbstractInsertionPolicy() {};
 		virtual bool				insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer ) = 0;
-		virtual void				setMaxCapacity( const unsigned int max ) = 0;
+		virtual void				setMaxCapacity( const unsigned int max, DataQueue::DataBuffer &buffer ) = 0;
 		virtual unsigned int		getMaxCapacity() const = 0;
 	};
 
@@ -36,7 +36,19 @@ namespace _2Real
 	public:
 		RemoveOldest( const unsigned int max );
 		bool						insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer );
-		void						setMaxCapacity( const unsigned int max );
+		void						setMaxCapacity( const unsigned int max, DataQueue::DataBuffer &buffer );
+		unsigned int				getMaxCapacity() const;
+	private:
+		mutable Poco::FastMutex		mAccess;
+		unsigned int				mMaxCapacity;
+	};
+
+	class FailSilently : public AbstractInsertionPolicy
+	{
+	public:
+		FailSilently( const unsigned int max );
+		bool						insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer );
+		void						setMaxCapacity( const unsigned int max, DataQueue::DataBuffer &buffer );
 		unsigned int				getMaxCapacity() const;
 	private:
 		mutable Poco::FastMutex		mAccess;
@@ -64,13 +76,46 @@ namespace _2Real
 		return true;
 	}
 
-	void RemoveOldest::setMaxCapacity( const unsigned int max )
+	void RemoveOldest::setMaxCapacity( const unsigned int max, DataQueue::DataBuffer &buffer )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		mMaxCapacity = max;
+		( void )( buffer );
 	}
 
 	unsigned int RemoveOldest::getMaxCapacity() const
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		return mMaxCapacity;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	FailSilently::FailSilently( const unsigned int max ) :
+		mMaxCapacity( max )
+	{
+	}
+
+	bool FailSilently::insertData( TimestampedData const& data, DataQueue::DataBuffer &buffer )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+
+		if ( buffer.size() < mMaxCapacity )
+			buffer.push_back( data );
+
+		return true;
+	}
+
+	void FailSilently::setMaxCapacity( const unsigned int max, DataQueue::DataBuffer &buffer )
+	{
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
+		mMaxCapacity = max;
+
+		while ( buffer.size() >= mMaxCapacity && !buffer.empty() )
+			buffer.pop_back();
+	}
+
+	unsigned int FailSilently::getMaxCapacity() const
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		return mMaxCapacity;
@@ -95,7 +140,7 @@ namespace _2Real
 		mInsertionPolicy->insertData( data, mBuffer );
 	}
 
-	bool DataQueue::getDataItem( TimestampedData &data )
+	bool DataQueue::getDataItem( TimestampedData &data, const bool keep )
 	{
 		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 		if ( mBuffer.empty() )
@@ -103,14 +148,14 @@ namespace _2Real
 		else
 		{
 			data = mBuffer.front();
-			mBuffer.pop_front();
+			if ( !keep ) mBuffer.pop_front();
 			return true;
 		}
 	}
 
 	void DataQueue::setMaxCapacity( const unsigned int size )
 	{
-		mInsertionPolicy->setMaxCapacity( size );
+		mInsertionPolicy->setMaxCapacity( size, mBuffer );
 	}
 
 	unsigned int DataQueue::getMaxCapacity() const

@@ -43,18 +43,18 @@ namespace _2Real
 			block->setDescription( category );
 		}
 
-		void FunctionBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		//void FunctionBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		//{
+		//	std::shared_ptr< BlockMetadata > block = mImpl.lock();
+		//	block->setThreadingPolicy( policy );
+		//}
+
+		void FunctionBlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init )
 		{
-			std::shared_ptr< BlockMetadata > block = mImpl.lock();
-			block->setThreadingPolicy( policy );
+			privateAddInlet( name, type, init, nullptr );
 		}
 
-		void FunctionBlockMetainfo::addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, UpdatePolicy const& defaultPolicy )
-		{
-			privateAddInlet( name, type, init, nullptr, defaultPolicy );
-		}
-
-		void FunctionBlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, std::shared_ptr< const TypeMetadata > meta, UpdatePolicy const& defaultPolicy )
+		void FunctionBlockMetainfo::privateAddInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, std::shared_ptr< const TypeMetadata > meta )
 		{
 			std::string trimmed = trim( name );
 			checkChars( toLower( trimmed ) );
@@ -66,7 +66,7 @@ namespace _2Real
 
 			std::shared_ptr< IOMetadata > data( new IOMetadata );
 
-			data->name = trimmed;
+			data->identifier = IdGenerator::makeExportedInletId( mImpl.lock()->getIdentifier(), trimmed );
 			data->typeMetadata = meta;
 			data->initializer = copied;
 			data->canExpand = false;
@@ -75,7 +75,7 @@ namespace _2Real
 			data->isBuffered = true;
 			data->bufferSize = 10;
 			data->canTriggerUpdates = true;
-			data->updatePolicy = defaultPolicy;
+			data->updatePolicy = UpdatePolicy::VALID_DATA;
 			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
 
 			std::shared_ptr< BlockMetadata > block = mImpl.lock();
@@ -99,7 +99,7 @@ namespace _2Real
 
 			std::shared_ptr< IOMetadata > data( new IOMetadata );
 
-			data->name = trimmed;
+			data->identifier = IdGenerator::makeExportedParameterId( mImpl.lock()->getIdentifier(), trimmed );
 			data->typeMetadata = meta;
 			data->initializer = copied;
 			data->canExpand = false;
@@ -108,7 +108,7 @@ namespace _2Real
 			data->isBuffered = false;
 			data->bufferSize = 0;
 			data->canTriggerUpdates = false;
-			data->updatePolicy = UpdatePolicy::INVALID;
+			data->updatePolicy = UpdatePolicy::VALID_DATA;
 			data->synchronizationFlags = IOMetadata::SYNC_ON_UPDATE;
 
 			std::shared_ptr< BlockMetadata > block = mImpl.lock();
@@ -127,7 +127,7 @@ namespace _2Real
 
 			std::shared_ptr< IOMetadata > data( new IOMetadata );
 
-			data->name = trimmed;
+			data->identifier = IdGenerator::makeExportedOutletId( mImpl.lock()->getIdentifier(), name );
 			data->typeMetadata = meta;
 			//data->initializer = copied;
 			data->canExpand = false;

@@ -34,7 +34,6 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName( "ComputerVisionBundle" );
 		info.setDescription( "computer vision stuff" );
 		info.setAuthor( "gerlinde emsenhuber" );
 		info.setCategory( "image processing" );
@@ -78,7 +77,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		delete [] initU3;
 		delete [] initU4;
 
-		FunctionBlockMetainfo gauss = info.exportFunctionBlock< OcvGaussianBlurBlock >( "OcvGaussianBlurBlock" );
+		FunctionBlockMetainfo gauss = info.exportFunctionBlock< OcvGaussianBlurBlock >( "OcvGaussianBlur" );
 		gauss.setDescription( "applies gaussian blur to input image" );
 		gauss.setCategory( "image filter" );
 		gauss.addCustomTypeInlet( "in_image", "image", imgF3.toCustomType() );
@@ -89,7 +88,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		//gauss.addInlet< int >( "boder_interpolation", 0, borderOptions );
 		gauss.addCustomTypeOutlet( "out_image", "image" );
 
-		FunctionBlockMetainfo sobel = info.exportFunctionBlock< OcvSobelBlock >( "OcvSobelBlock" );
+		FunctionBlockMetainfo sobel = info.exportFunctionBlock< OcvSobelBlock >( "OcvSobel" );
 		sobel.setDescription( "applies sobel to input image" );
 		sobel.setCategory( "image filter" );
 		sobel.addCustomTypeInlet( "in_image", "image", imgU3.toCustomType() );
@@ -99,7 +98,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		//sobel.addInlet< int >( "boder_interpolation", 0, borderOptions );
 		sobel.addCustomTypeOutlet( "out_image", "image" );
 
-		FunctionBlockMetainfo equalize = info.exportFunctionBlock< OcvEqualizeHistogramBlock >( "OcvEqualizeHistogramBlock" );
+		FunctionBlockMetainfo equalize = info.exportFunctionBlock< OcvEqualizeHistogramBlock >( "OcvEqualizeHistogram" );
 		equalize.setDescription( "applies histogram normalization to input image" );
 		equalize.setCategory( "image filter" );
 		equalize.addCustomTypeInlet( "in_image", "image", imgF1.toCustomType() );

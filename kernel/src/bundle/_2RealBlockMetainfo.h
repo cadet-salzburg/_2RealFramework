@@ -22,9 +22,6 @@
 #include "datatypes/_2RealCustomBase.h"
 #include "datatypes/_2RealCustomData.h"
 
-#include "policies/_2RealUpdatePolicy.h"
-#include "policies/_2RealThreadingPolicy.h"
-
 #include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
@@ -42,15 +39,15 @@ namespace _2Real
 
 			void setDescription( std::string const& description );
 			void setCategory( std::string const& category );
-			void setThreadingPolicy( ThreadingPolicy const& policy );
+			//void setThreadingPolicy( ThreadingPolicy const& policy );
 
 			template< typename TType >
-			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue(), UpdatePolicy const& defaultPolicy = UpdatePolicy::ALWAYS )
+			void addInlet( std::string const& name, TType initialValue = Init< TType >::defaultValue() )
 			{
-				privateAddInlet( name, Name< TType >::humanReadableName(), BaseToCustomType< TType >( initialValue ), BaseToCustomType< TType >::getTypeMetadata(), defaultPolicy );
+				privateAddInlet( name, Name< TType >::humanReadableName(), BaseToCustomType< TType >( initialValue ), BaseToCustomType< TType >::getTypeMetadata() );
 			}
 
-			void addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init, UpdatePolicy const& defaultPolicy = UpdatePolicy::ALWAYS );
+			void addCustomTypeInlet( std::string const& name, std::string const& type, std::shared_ptr< const CustomType > init );
 
 			template< typename TType >
 			void addParameter( std::string const& name, TType initialValue = Init< TType >::defaultValue() )
@@ -70,7 +67,7 @@ namespace _2Real
 
 		private:
 
-			void privateAddInlet( std::string const&, std::string const&, std::shared_ptr< const CustomType >, std::shared_ptr< const TypeMetadata >, UpdatePolicy const& );
+			void privateAddInlet( std::string const&, std::string const&, std::shared_ptr< const CustomType >, std::shared_ptr< const TypeMetadata > );
 			void privateAddParameter( std::string const&, std::string const&, std::shared_ptr< const CustomType >, std::shared_ptr< const TypeMetadata > );
 			void privateAddOutlet( std::string const&, std::string const&, std::shared_ptr< const TypeMetadata > );
 			std::weak_ptr< BlockMetadata >		mImpl;

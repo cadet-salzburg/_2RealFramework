@@ -32,6 +32,7 @@ namespace _2Real
 		class TypeMetainfo;
 		class OutletHandle;
 		class LinkHandle;
+		class InputMetainfo;
 
 		class InletHandle
 		{
@@ -44,8 +45,8 @@ namespace _2Real
 			// check this if you're unsure if the underlying inlet still exists
 			bool									isValid() const;
 
-			std::string const&						getName() const;
-			TypeMetainfo							getType() const;
+			InputMetainfo							getInletMetainfo() const;
+			TypeMetainfo							getTypeMetainfo() const;
 
 			// don't use until some other things are sorted out
 			//void									setUpdatePolicy( UpdatePolicy const& );

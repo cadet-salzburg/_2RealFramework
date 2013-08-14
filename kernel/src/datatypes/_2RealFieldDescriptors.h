@@ -132,9 +132,9 @@ namespace _2Real
 	struct FieldDesc< CustomType >
 	{
 	public:
-		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::pair< std::string, std::string > const& type, CustomType const& init, DataFields const& fields )
+		static FieldDescriptor * createFieldDescriptor( std::string const& name, std::string const& bundle, std::string const& type, CustomType const& init, DataFields const& fields )
 		{
-			DataFieldRef field =  DataField::createComplexField( name, type, fields );
+			DataFieldRef field =  DataField::createComplexField( name, bundle, type, fields );
 			return new FieldDescriptor_t< CustomType >( init, field );
 		}
 	};

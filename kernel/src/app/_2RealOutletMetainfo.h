@@ -16,8 +16,34 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealDataField.h"
+#pragma once
+
+#include "app/_2RealCommon.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+	class IOMetadata;
+
+	namespace app
+	{
+		class TypeMetainfo;
+
+		class OutputMetainfo
+		{
+		public:
+			OutputMetainfo();
+			explicit OutputMetainfo( std::shared_ptr< const IOMetadata > );
+			bool isValid() const;
+			std::string		const& getName() const;
+			std::string		const& getTypeName() const;
+			TypeMetainfo	getTypeMetainfo() const;
+			//bool			canExpand() const;
+			//bool			canLink() const;
+		private:
+			std::weak_ptr< const IOMetadata >			mImpl;
+		};
+
+		typedef OutputMetainfo OutletMetainfo;
+	}
 }

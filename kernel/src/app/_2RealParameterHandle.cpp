@@ -17,7 +17,8 @@
 */
 
 #include "app/_2RealParameterHandle.h"
-#include "app/_2RealInfo.h"
+#include "app/_2RealParameterMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
 #include "engine/_2RealAbstractIOManager.h"
 #include "engine/_2RealIOMetadata.h"
 
@@ -41,22 +42,22 @@ namespace _2Real
 			return ( parameter.get() == nullptr );
 		}
 
-		std::string const& ParameterHandle::getName() const
+		InputMetainfo ParameterHandle::getParameterMetainfo() const
 		{
 			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
-			return parameter->getInfo()->name;
+			return ParameterMetainfo( parameter->getMetadata() );
 		}
 
-		TypeMetainfo ParameterHandle::getType() const
+		TypeMetainfo ParameterHandle::getTypeMetainfo() const
 		{
 			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
-			return TypeMetainfo( parameter->getInfo()->typeMetadata );
+			return TypeMetainfo( parameter->getMetadata()->typeMetadata );
 		}
 
 		std::shared_ptr< CustomType > ParameterHandle::makeData() const
 		{
 			std::shared_ptr< AbstractInletIO > parameter = checkValidity< AbstractInletIO >( mImpl, "parameter" );
-			return std::shared_ptr< CustomType >( new CustomType( parameter->getInfo()->typeMetadata ) );
+			return std::shared_ptr< CustomType >( new CustomType( parameter->getMetadata()->typeMetadata ) );
 		}
 
 		std::shared_ptr< const CustomType > ParameterHandle::getCurrentData() const

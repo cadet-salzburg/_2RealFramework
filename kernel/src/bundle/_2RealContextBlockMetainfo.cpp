@@ -36,11 +36,11 @@ namespace _2Real
 			block->setDescription( description );
 		}
 
-		void ContextBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
-		{
-			std::shared_ptr< BlockMetadata > block = mImpl.lock();
-			block->setThreadingPolicy( policy );
-		}
+		//void ContextBlockMetainfo::setThreadingPolicy( ThreadingPolicy const& policy )
+		//{
+		//	std::shared_ptr< BlockMetadata > block = mImpl.lock();
+		//	block->setThreadingPolicy( policy );
+		//}
 
 		void ContextBlockMetainfo::addCustomTypeOutlet( std::string const& name, std::string const& type )
 		{
@@ -54,7 +54,7 @@ namespace _2Real
 
 			std::shared_ptr< IOMetadata > data( new IOMetadata );
 
-			data->name = trimmed;
+			data->identifier = IdGenerator::makeExportedOutletId( mImpl.lock()->getIdentifier(), name );
 			data->typeMetadata = meta;
 			//data->initializer = copied;
 			data->canExpand = false;

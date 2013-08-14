@@ -119,7 +119,8 @@
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_imgproc242d.dll $(_2REAL_DIR)\bundles\bin
 copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_core242d.dll $(_2REAL_DIR)\bundles\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin</Command>
+copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,7 +169,8 @@ copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb_debug.dll $(_2REAL_DIR)\bundles\bin<
     <PostBuildEvent>
       <Command>copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_imgproc242.dll $(_2REAL_DIR)\bundles\bin
 copy $(_2REAL_DEPENDENCIES_DIR)\opencv\lib\vc10\bin\opencv_core242.dll $(_2REAL_DIR)\bundles\bin
-copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb.dll $(_2REAL_DIR)\bundles\bin</Command>
+copy $(_2REAL_DEPENDENCIES_DIR)\tbb\bin\tbb.dll $(_2REAL_DIR)\bundles\bin
+copy $(_2REAL_DEPENDENCIES_DIR)\poco\bin\*.dll $(_2REAL_DIR)\bundles\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -31,13 +31,13 @@ namespace _2Real
 		void TypeMetainfo::addFieldInternal( std::string const& name, std::string const& type, std::shared_ptr< const FieldDescriptor > desc )
 		{
 			std::shared_ptr< TypeMetadata > locked = mImpl.lock();
-			locked->addField( name, TypeMetadata::TypeId( locked->getTypeId().first, type ), desc );
+			locked->addField( name, type, desc );
 		}
 
 		void TypeMetainfo::addCustomTypeField( std::string const& name, std::string const& type )
 		{
 			std::shared_ptr< TypeMetadata > locked = mImpl.lock();
-			locked->addField( name, TypeMetadata::TypeId( locked->getTypeId().first, type ), nullptr );
+			locked->addField( name, type, nullptr );
 		}
 
 		std::shared_ptr< CustomType > TypeMetainfo::makeData()

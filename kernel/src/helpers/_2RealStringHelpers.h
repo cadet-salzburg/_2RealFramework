@@ -19,9 +19,19 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+
 namespace _2Real
 {
-	const std::string toLower( std::string const& s );
-	const std::string trim( std::string const& s, std::string const& whitespaces = " \t\n" );
+	std::string toLower( std::string const& s );
+	std::string trim( std::string const& s, std::string const& whitespaces = " \t\n" );
 	void checkChars( std::string const& s, std::string const& validChars = "abcedefghijklmnopqrstuvwxyz_0123456789- " );
+
+	struct LowercaseCmp
+	{
+		bool operator()( std::string const& s0, std::string const& s1 ) const
+		{
+			return ( toLower( s0 ) < toLower( s1 ) );
+		}
+	};
+
 }

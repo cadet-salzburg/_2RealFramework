@@ -37,7 +37,7 @@ namespace _2Real
 		m_Elapsed( 0 )
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
-		m_Timer->registerToTimerSignal( *callback );
+		m_Timer->registerToTimerSignal( callback );
 
 		for ( unsigned int i=0; i<capacity; ++i )
 		{
@@ -52,7 +52,7 @@ namespace _2Real
 	ThreadPool::~ThreadPool()
 	{
 		AbstractCallback< long > *callback = new MemberCallback< ThreadPool, long >( *this, &ThreadPool::update );
-		m_Timer->unregisterFromTimerSignal( *callback );
+		m_Timer->unregisterFromTimerSignal( callback );
 
 		m_ThreadQueuesAccess.lock();
 		for ( ThreadQueueIterator it = m_Threads.begin(); it != m_Threads.end(); ++it )

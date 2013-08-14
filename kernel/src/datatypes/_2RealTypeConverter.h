@@ -20,12 +20,15 @@
 
 #include "datatypes/_2RealCustomData.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
 	class TypeConverter
 	{
 	public:
+
+		TypeConverter();
 
 		typedef std::pair< std::string, std::shared_ptr< const TypeConverter > > Conversion;
 
@@ -37,7 +40,7 @@ namespace _2Real
 		//		or another type converter ( complex field )
 		std::map< std::string, Conversion >		mLookupTable;
 		// must also rename the custom type
-		std::pair < std::string, std::string >	mTypeId;
+		std::shared_ptr< const TemplateId >  mIdentifier;
 
 	};
 }

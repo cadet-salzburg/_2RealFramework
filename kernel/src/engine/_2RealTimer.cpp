@@ -18,62 +18,76 @@
 */
 
 #include "engine/_2RealTimer.h"
+#include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealLogger.h"
 
 namespace _2Real
 {
-	Timer::Timer( Logger *logger ) :
-		m_Callback( nullptr ),
-		m_Timer( 0, 1 ),				//attempt to get the best resolution possible, even if this won't work in practice
-		m_Logger( logger ),
-		m_UpdateCount( 0 ),
-		m_SkippedCount( 0 ),
-		m_DebugTime()
+	Timer::Timer( EngineImpl *engine, const unsigned long resolution, const bool verbose ) :
+		mCallback( new Poco::TimerCallback< Timer >( *this, &Timer::receiveTimerSignal ) ),
+		mTimer( 0, resolution ),
+		mEngineImpl( engine ),
+		mUpdateCount( 0 ),
+		mSkippedCount( 0 ),
+		mDebugTime(),
+		mLog( verbose )
 	{
-		m_Callback = new Poco::TimerCallback< Timer >( *this, &Timer::receiveTimerSignal );
-		m_Timer.start( *m_Callback, Poco::Thread::PRIO_HIGHEST );
 	}
 
 	Timer::~Timer()
 	{
-		m_Timer.stop();
-		delete m_Callback;
+		mTimer.stop();
+		delete mCallback;
+	}
+
+	void Timer::start()
+	{
+		mTimer.start( *mCallback, Poco::Thread::PRIO_NORMAL );
+	}
+
+	void Timer::stop()
+	{
+		mTimer.stop();
 	}
 
 	void Timer::receiveTimerSignal( Poco::Timer &t )
 	{
-		Poco::ScopedLock< Poco::FastMutex > lock( m_Access );
+		Poco::ScopedLock< Poco::FastMutex > lock( mAccess );
 
-		long elapsed = ( long )m_Timestamp.elapsed();
-		m_TimerSignal.notify( elapsed );
-		m_Timestamp.update();
+		long elapsed = ( long )mTimestamp.elapsed();
+		mTimerSignal.notify( elapsed );
+		mTimestamp.update();
 
-		m_UpdateCount++;
-		m_SkippedCount += t.skipped();
-		if ( ( m_UpdateCount + m_SkippedCount ) >= 20000 )
+		if ( mLog )
 		{
-			std::ostringstream msg;
-			msg << std::endl;
-			msg << "-------------------------------------------------------------------------\n";
-			msg << "TIMER: updated " << m_UpdateCount << " times" << std::endl;
-			msg << "TIMER: skipped " << m_SkippedCount << " times" << std::endl;
-			msg << "TIMER: elapsed: " << m_DebugTime.elapsed() << std::endl;
-			msg << "-------------------------------------------------------------------------";
-			m_Logger->addLine( msg.str() );
+			mUpdateCount++;
+			mSkippedCount += t.skipped();
+			//if ( ( mUpdateCount + mSkippedCount ) >= 20000 )
+			//{
+				std::ostringstream msg;
+				msg << std::endl;
+				msg << "-------------------------------------------------------------------------\n";
+				msg << "TIMER: interval " << t.getPeriodicInterval() << std::endl;
+				msg << "TIMER: updated " << mUpdateCount << " times" << std::endl;
+				msg << "TIMER: skipped " << mSkippedCount << " times" << std::endl;
+				msg << "TIMER: elapsed: " << mDebugTime.elapsed() << std::endl;
+				msg << "-------------------------------------------------------------------------";
+				mEngineImpl->getLogger()->addLine( msg.str() );
 
-			m_UpdateCount = 0;
-			m_SkippedCount = 0;
-			m_DebugTime.update();
+				mUpdateCount = 0;
+				mSkippedCount = 0;
+				mDebugTime.update();
+			//}
 		}
 	}
 
-	void Timer::registerToTimerSignal( AbstractCallback< long > &callback )
+	void Timer::registerToTimerSignal( AbstractCallback< long > *callback )
 	{
-		m_TimerSignal.addListener( callback );
+		mTimerSignal.addListener( *callback );
 	}
 
-	void Timer::unregisterFromTimerSignal( AbstractCallback< long > &callback )
+	void Timer::unregisterFromTimerSignal( AbstractCallback< long > *callback )
 	{
-		m_TimerSignal.removeListener( callback );
+		mTimerSignal.removeListener( *callback );
 	}
 }

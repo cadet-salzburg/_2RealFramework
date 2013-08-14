@@ -66,15 +66,14 @@ void getBundleMetainfo( BundleMetainfo& info )
 {
 	try
 	{
-		info.setName("CameraCaptureBundle");
-		info.setDescription( "Camera Capture" );
-		info.setAuthor( "The Grandmaster" );
-		info.setCategory( "Devices" );
+		info.setDescription( "camera capture, using videoinput lib" );
+		info.setAuthor( "robschi" );
+		info.setCategory( "devices" );
 		info.setContact( "help@cadet.at" );
 		info.setVersion( 0, 1, 0 );
 
 		ContextBlockMetainfo contextBlockInfo = info.exportContextBlock< CameraDeviceManager >();
-		FunctionBlockMetainfo cameraCapture = info.exportFunctionBlock< CameraCaptureBlock, WithContext >( "CameraCaptureBlock" );
+		FunctionBlockMetainfo cameraCapture = info.exportFunctionBlock< CameraCaptureBlock, WithContext >( "CameraCapture" );
 
 		cameraCapture.addParameter< unsigned int >( "device", 0 );
 		cameraCapture.addParameter< unsigned int >( "width", 640 );
@@ -85,7 +84,7 @@ void getBundleMetainfo( BundleMetainfo& info )
 		cameraCapture.addOutlet< unsigned int >( "width" );
 		cameraCapture.addOutlet< unsigned int >( "height" );
 
-		cameraCapture.setDescription( "Camera Capture" );
+		cameraCapture.setDescription( "wraps a single device" );
 	}
 	catch ( Exception &e )
 	{

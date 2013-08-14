@@ -20,7 +20,10 @@
 
 #include "helpers/_2RealStdIncludes.h"
 
-#ifdef _2REAL_WINDOWS
+#ifdef _WIN32
+	#define _2REAL_CALLBACK __cdecl
+	#define _2REAL_MEMBER_CALLBACK __thiscall
+#elif _WIN64
 	#define _2REAL_CALLBACK __cdecl
 	#define _2REAL_MEMBER_CALLBACK __thiscall
 #else

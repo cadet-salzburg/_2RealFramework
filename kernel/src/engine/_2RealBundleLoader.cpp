@@ -138,7 +138,7 @@ namespace _2Real
 	//	return meta;
 	//}
 
-	std::shared_ptr< const BundleMetadata > BundleLoader::loadLibrary( string const& path )
+	std::shared_ptr< const BundleMetadata > BundleLoader::loadLibrary( string const& path, std::shared_ptr< TemplateId > id )
 	{
 		if ( isLibraryLoaded( path ) )
 		{
@@ -160,7 +160,7 @@ namespace _2Real
 			throw NotFoundException( msg.str() );
 		}
 
-		Metainfo *info = new Metainfo( path, m_Registry );
+		Metainfo *info = new Metainfo( m_Registry, path, id );
 		std::shared_ptr< BundleMetadata > bundleMetadata = info->getBundleMetadata();
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
@@ -170,14 +170,10 @@ namespace _2Real
 				BundleInfo bundleInfo;
 				MetainfoFunc func = ( MetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
 
-				bundleMetadata->setInstallDirectory( path );
-
 				bundle::BundleMetainfo metainfo( bundleMetadata );
 				func( metainfo );
 				bundleInfo.library = lib;
 				bundleInfo.metainfo = info;
-
-				info->postLoading( m_Registry );
 
 				m_LoadedBundles.insert( make_pair( path, bundleInfo ) );
 			}

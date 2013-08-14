@@ -90,21 +90,29 @@ void Test::update()
 			// basetype
 			OutletHandle o = mInstance.outlets[ 0 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			data->set< int >( "--B-- int", ++mCounter );
-			data->set< std::vector< std::vector< int > > >( "--B-- int vector vector", std::vector< std::vector< int > >( 10, std::vector< int >( 5, 5 ) ) );
 		}
 
 		{
 			// complextype
 			OutletHandle o = mInstance.outlets[ 1 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "--B-- image" ) );
-			img->createImagedata( 10, 10, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
 		}
 
 		{
 			// simpletype
 			OutletHandle o = mInstance.outlets[ 2 ];
+			std::shared_ptr< CustomType > data = o.getWriteableRef();
+		}
+
+		{
+			// vector
+			OutletHandle o = mInstance.outlets[ 3 ];
+			std::shared_ptr< CustomType > data = o.getWriteableRef();
+		}
+
+		{
+			// vector of vectors
+			OutletHandle o = mInstance.outlets[ 4 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
 		}
 	}

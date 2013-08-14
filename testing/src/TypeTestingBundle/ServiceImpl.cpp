@@ -90,17 +90,17 @@ void Test::update()
 			// basetype
 			OutletHandle o = mInstance.outlets[ 0 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			data->set< int >( "--A-- int", ++mCounter );
-			data->set< std::vector< std::vector< int > > >( "--A-- int vector vector", std::vector< std::vector< int > >( 10, std::vector< int >( 5, 5 ) ) );
+			data->set< int >( "int", ++mCounter );
+			data->set< std::vector< std::vector< int > > >( "int vector vector", std::vector< std::vector< int > >( 10, std::vector< int >( 5, 5 ) ) );
 		}
 
 		{
 			// complextype
 			OutletHandle o = mInstance.outlets[ 1 ];
 			std::shared_ptr< CustomType > data = o.getWriteableRef();
-			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "--A-- image" ) );
+			std::shared_ptr< Image > img = Image::asImage( data->get< CustomType >( "image" ) );
 			img->createImagedata( 15, 5, Image::ChannelOrder::RGB, Image::Datatype::UINT8 );
-			std::shared_ptr< int > i = data->get< int >( "--A-- int" );
+			std::shared_ptr< int > i = data->get< int >( "int" );
 			*i.get() = mCounter++;
 		}
 

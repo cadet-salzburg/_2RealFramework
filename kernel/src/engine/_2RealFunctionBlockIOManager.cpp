@@ -17,7 +17,7 @@
 */
 
 #include "engine/_2RealFunctionBlockIOManager.h"
-#include "engine/_2RealFunctionBlockUpdatePolicy.h"
+#include "engine/_2RealFunctionBlockUpdateManager.h"
 #include "helpers/_2RealException.h"
 #include "engine/_2RealAbstractUberBlock.h"
 #include "engine/_2RealInlet.h"
@@ -28,8 +28,8 @@
 #include "bundle/_2RealInletHandle.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "helpers/_2RealStringHelpers.h"
-#include "engine/_2RealParameter.h"
 #include "engine/_2RealIOMetadata.h"
+#include "engine/_2RealFunctionBlock.h"
 
 namespace _2Real
 {
@@ -38,7 +38,7 @@ namespace _2Real
 	{
 		for ( std::vector< std::shared_ptr< TObj > >::const_iterator it = collection.begin(); it != collection.end(); ++it )
 		{
-			if ( toLower( ( *it )->getInfo()->name ) == toLower( name ) )
+			if ( toLower( ( *it )->getMetadata()->identifier->getObjectName() ) == toLower( name ) )
 				return *it;
 		}
 
@@ -47,14 +47,31 @@ namespace _2Real
 		throw NotFoundException( msg.str() );
 	}
 
-	FunctionBlockIOManager::FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner ) :
-		AbstractIOManager( engine, owner )
+	FunctionBlockIOManager::FunctionBlockIOManager( EngineImpl *engine, FunctionBlock *owner ) :
+		AbstractIOManager(),
+		mEngineImpl( engine ),
+		mOwningBlock( owner )
 	{
 	}
 
 	FunctionBlockIOManager::~FunctionBlockIOManager()
 	{
 	}
+
+	std::string const& FunctionBlockIOManager::getFullHumanReadableName() const
+	{
+		return mOwningBlock->getFullHumanReadableName();
+	}
+
+	std::string const& FunctionBlockIOManager::getHumanReadableName() const
+	{
+		return mOwningBlock->getHumanReadableName();
+	}
+
+	//std::string const& FunctionBlockIOManager::getCode() const
+	//{
+	//	return mOwningBlock->getCode();
+	//}
 
 	void FunctionBlockIOManager::registerToNewData( AbstractCallback< std::vector< std::shared_ptr< const CustomType > > > &cb )
 	{
@@ -130,36 +147,39 @@ namespace _2Real
 	{
 		if ( meta->canExpand )
 		{
-			MultiInletIO *io = new MultiInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
-			std::shared_ptr< AbstractInletIO > shared( io );
-			mInlets.push_back( shared );
+			assert( NULL );
+			//Identifier id = Identifier::makeInletId( mOwningBlock->getIdentifier(), meta->name, mInlets.size() );
+			//MultiInletIO *io = new MultiInletIO( mEngineImpl, id, mOwningBlock, mUpdatePolicy, meta );
+			//std::shared_ptr< AbstractInletIO > shared( io );
+			//mInlets.push_back( shared );
 		}
 		else
 		{
-			BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
+			std::shared_ptr< InstanceId > id = IdGenerator::makeInletId( meta->identifier, mOwningBlock->getIdentifier() );
+			BasicInletIO *io = new BasicInletIO( mEngineImpl, id, mOwningBlock, mUpdateManager.lock(), meta );
 			std::shared_ptr< AbstractInletIO > shared( io );
-			io->setSelfRef( std::static_pointer_cast< BasicInletIO >( shared ) );
-			mInlets.push_back( std::shared_ptr< AbstractInletIO >( shared ) );
+			std::shared_ptr< BasicInletIO > basic = std::static_pointer_cast< BasicInletIO >( shared );
+			io->setSelfRef( basic );
+			mInlets.push_back( shared );
+			mUpdateManager.lock()->inletAdded( basic, meta->updatePolicy );
 		}
 	}
 
 	void FunctionBlockIOManager::addParameter( std::shared_ptr< const IOMetadata > meta )
 	{
-		BasicInletIO *io = new BasicInletIO( mEngineImpl, mOwner, m_UpdatePolicy, meta );
+		std::shared_ptr< InstanceId > id = IdGenerator::makeParameterId( meta->identifier, mOwningBlock->getIdentifier() );
+		BasicInletIO *io = new BasicInletIO( mEngineImpl, id, mOwningBlock, mUpdateManager.lock(), meta );
 		std::shared_ptr< AbstractInletIO > shared( io );
-		io->setSelfRef( std::static_pointer_cast< BasicInletIO >( shared ) );
-		mParameters.push_back( std::shared_ptr< AbstractInletIO >( shared ) );
-
-		//std::shared_ptr< ParameterIO > io( new ParameterIO( mEngineImpl, mOwner, meta ) );
-		//io->setData( meta->initializer );								// buffer now holds init value
-		//io->synchronizeData();											// parameter data now holds value
-		//io->synchronizeData();											// parameter now will retun hasChanged() -> false
-		//mParameters.push_back( io );
+		std::shared_ptr< BasicInletIO > basic = std::static_pointer_cast< BasicInletIO >( shared );
+		io->setSelfRef( basic );
+		mParameters.push_back( shared );
+		mUpdateManager.lock()->inletAdded( basic, meta->updatePolicy );
 	}
 
 	void FunctionBlockIOManager::addOutlet( std::shared_ptr< const IOMetadata > meta )
 	{
-		std::shared_ptr< OutletIO > io( new OutletIO( mEngineImpl, mOwner, meta ) );
+		std::shared_ptr< InstanceId > id = IdGenerator::makeOutletId( meta->identifier, mOwningBlock->getIdentifier() );
+		std::shared_ptr< OutletIO > io( new OutletIO( mEngineImpl, id, mOwningBlock, meta ) );
 		io->setSelfRef( io );
 		io->synchronizeData();											// now outlet holds a clone of the init value, while buffer is empty
 		mOutlets.push_back( io );
@@ -168,13 +188,13 @@ namespace _2Real
 	void FunctionBlockIOManager::updateInletData()
 	{
 		for ( InletIterator it = mInlets.begin(); it != mInlets.end(); ++it )
-			( *it )->synchronizeData();
+			( *it )->synchronize();
 	}
 
 	void FunctionBlockIOManager::updateParameterData()
 	{
 		for ( ParameterIterator it = mParameters.begin(); it != mParameters.end(); ++it )
-			( *it )->synchronizeData();
+			( *it )->synchronize();
 	}
 
 	void FunctionBlockIOManager::updateOutletData()
@@ -188,18 +208,6 @@ namespace _2Real
 
 		if ( !blockData.empty() )
 			m_AppEvent.notify( blockData );
-	}
-
-	void FunctionBlockIOManager::updateInletBuffers( const bool enableTriggering )
-	{
-		for ( InletIterator it = mInlets.begin(); it != mInlets.end(); ++it )
-		{
-			for ( unsigned int i = 0; i<( *it )->getSubInletCount(); ++i )
-			{
-				std::shared_ptr< BasicInletIO > io = ( **it )[ i ];
-				io->processQueue();
-			}
-		}
 	}
 
 }

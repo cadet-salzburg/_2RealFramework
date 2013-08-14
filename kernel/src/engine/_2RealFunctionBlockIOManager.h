@@ -26,8 +26,9 @@
 namespace _2Real
 {
 	class FunctionBlockStateManager;
-	class FunctionBlockUpdatePolicy;
+	class FunctionBlockUpdateManager;
 	class IOMetadata;
+	class FunctionBlock;
 
 	class FunctionBlockIOManager : private AbstractIOManager
 	{
@@ -36,8 +37,12 @@ namespace _2Real
 
 	public:
 
-		FunctionBlockIOManager( EngineImpl *engine, AbstractUberBlock *owner );
+		FunctionBlockIOManager( EngineImpl *engine, FunctionBlock *owner );
 		~FunctionBlockIOManager();
+
+		std::string const&							getFullHumanReadableName() const;
+		std::string const&							getHumanReadableName() const;
+		//std::string const&							getCode() const;
 
 		void										clear();
 
@@ -65,12 +70,13 @@ namespace _2Real
 		void										updateInletData();
 		void										updateParameterData();
 		void										updateOutletData();
-		void										updateInletBuffers( const bool enableTriggering );
 
 	private:
 
-		FunctionBlockStateManager		*m_StateManager;
-		FunctionBlockUpdatePolicy		*m_UpdatePolicy;
+		EngineImpl						*const mEngineImpl;
+		FunctionBlock					*const mOwningBlock;
+
+		std::weak_ptr< FunctionBlockUpdateManager >		mUpdateManager;
 
 		mutable Poco::FastMutex			m_InletAccess;
 		mutable Poco::FastMutex			m_OutletAccess;

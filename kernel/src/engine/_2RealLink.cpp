@@ -34,8 +34,8 @@ namespace _2Real
 {
 	std::shared_ptr< IOLink > IOLink::link( std::shared_ptr< BasicInletIO > inlet, std::shared_ptr< OutletIO >outlet )
 	{
-		std::shared_ptr< const TypeMetadata > in = inlet->getInfo()->typeMetadata;
-		std::shared_ptr< const TypeMetadata > out = outlet->getInfo()->typeMetadata;
+		std::shared_ptr< const TypeMetadata > in = inlet->getMetadata()->typeMetadata;
+		std::shared_ptr< const TypeMetadata > out = outlet->getMetadata()->typeMetadata;
 
 		std::shared_ptr< IOLink > result;
 		std::shared_ptr< const TypeConverter > converterInOut;
@@ -99,9 +99,6 @@ namespace _2Real
 
 	void IOLink::receiveData( TimestampedData const& data ) 
 	{
-#ifdef _DEBUG
-		assert( mForwardConverter.get() );
-#endif
 		std::shared_ptr< const CustomType > t = data.value;
 		std::shared_ptr< const CustomType > cv = mForwardConverter->convert( t );
 		mInletIO->receiveData( TimestampedData( cv, data.timestamp ) );

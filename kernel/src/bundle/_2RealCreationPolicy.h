@@ -50,9 +50,6 @@ namespace _2Real
 			WithContext() : mCreationCount( 0 ) {}
 			std::shared_ptr< _2Real::bundle::Block > create ( std::shared_ptr< _2Real::bundle::ContextBlock > context )
 			{
-#ifdef _DEBUG
-				assert( context.get() );
-#endif
 				++mCreationCount;
 				return std::shared_ptr< _2Real::bundle::Block >( new BlockDerived( *( context.get() ) ) );
 			}

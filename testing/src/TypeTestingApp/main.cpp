@@ -25,10 +25,11 @@
 #include <list>
 #include <deque>
 #include <vector>
+
 #ifndef _UNIX
-#ifdef _DEBUG
-	#include "vld.h"
-#endif
+	#ifdef _DEBUG
+		#include "vld.h"
+	#endif
 #endif
 
 using namespace std;
@@ -48,7 +49,7 @@ void printout( ostream &out, DataFields const& fields, const unsigned int offset
 			out << f->getName() << "\t\t";
 		else
 			out << f->getName() << "\t\t\t";
-		std::cout << f->getTypename().first << "::" << f->getTypename().second << std::endl;
+		std::cout << f->getTypename() << std::endl;
 		if ( !f->getSubFields().empty() )
 		{
 			printout( out, f->getSubFields(), offset+1 );
@@ -72,25 +73,25 @@ void printBundleInfo( app::BundleHandle const& h )
 		std::vector< InputMetainfo > parameters;	block.getParameterMetainfo( parameters );
 
 		std::cout << "---------------------" << std::endl;
-		std::cout << "-b\t" << block.getName() << " " << ( block.isContext() ? "regular" : "context" ) << std::endl;
-		std::cout << "\t" << block.getDescription() << ", needs context: " << " unknown" << std::endl;
+		std::cout << "-b\t" << block.getName() << " " << ( block.isContext() ? "context" : "regular" ) << std::endl;
+		std::cout << "\t" << block.getDescription() << ", needs context: " << ( block.needsContext() ? " y" : "n" ) << std::endl;
 		std::cout << "---------------------" << std::endl;
 		std::cout << "inlets:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator iIt = inlets.begin(); iIt != inlets.end(); ++iIt )
 		{
-			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName().first << "::" << iIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << iIt->getName() << " " << iIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << iIt->isBuffered() << " -l " << iIt->canLink() << " -m " << iIt->canExpand() << std::endl;
 		}
 		std::cout << "parameters:" << std::endl;
 		for ( std::vector< InputMetainfo >::const_iterator pIt = parameters.begin(); pIt != parameters.end(); ++pIt )
 		{
-			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName().first << "::" << pIt->getTypeName().second << std::endl;
+			std::cout << "-i\t" << pIt->getName() << " " << pIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -b " << pIt->isBuffered() << " -l " << pIt->canLink() << " -m " << pIt->canExpand() << std::endl;
 		}
 		std::cout << "outlets:" << std::endl;
 		for ( std::vector< OutputMetainfo >::const_iterator oIt = outlets.begin(); oIt != outlets.end(); ++oIt )
 		{
-			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName().first << "::" << oIt->getTypeName().second << std::endl;
+			std::cout << "-o\t" << oIt->getName() << " " << oIt->getTypeName() << std::endl;
 			//std::cout << "\t" << std::boolalpha << " -l " << oIt->canLink() << " -m " << oIt->canExpand() << std::endl;
 		}
 	}
@@ -138,7 +139,7 @@ int main( int argc, char *argv[] )
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
 			BlockInstance &b = blockInstancesA[ i ];
-			b.block = testBundleA.createFunctionBlockInstance( "TypeTestingBlock" );
+			b.block = testBundleA.createFunctionBlockInstance( "TypeTesting" );
 
 			b.block.getAllInletHandles( b.inlets );
 			b.block.getAllOutletHandles( b.outlets );
@@ -151,7 +152,7 @@ int main( int argc, char *argv[] )
 		for ( unsigned int i=0; i<numInstances; ++i )
 		{
 			BlockInstance &b = blockInstancesB[ i ];
-			b.block = testBundleB.createFunctionBlockInstance( "TypeTestingBlock" );
+			b.block = testBundleB.createFunctionBlockInstance( "TypeTesting" );
 
 			b.block.getAllInletHandles( b.inlets );
 			b.block.getAllOutletHandles( b.outlets );
@@ -161,35 +162,39 @@ int main( int argc, char *argv[] )
 			b.block.start();
 		}
 
-		for ( unsigned int i=0; i<numInstances-1; ++i )
-		{
-			blockInstancesA[ i ].outlets[ 0 ].link( blockInstancesA[ i+1 ].inlets[ 0 ] );
-			blockInstancesA[ i ].outlets[ 1 ].link( blockInstancesA[ i+1 ].inlets[ 2 ] );
-			blockInstancesA[ i ].outlets[ 2 ].link( blockInstancesA[ i+1 ].inlets[ 4 ] );
-			blockInstancesA[ i ].outlets[ 3 ].link( blockInstancesA[ i+1 ].inlets[ 6 ] );
-			blockInstancesA[ i ].outlets[ 4 ].link( blockInstancesA[ i+1 ].inlets[ 8 ] );
-		}
+		//for ( unsigned int i=0; i<numInstances-1; ++i )
+		//{
+		//	blockInstancesA[ i ].outlets[ 0 ].link( blockInstancesA[ i+1 ].inlets[ 0 ] );
+		//	blockInstancesA[ i ].outlets[ 1 ].link( blockInstancesA[ i+1 ].inlets[ 2 ] );
+		//	blockInstancesA[ i ].outlets[ 2 ].link( blockInstancesA[ i+1 ].inlets[ 4 ] );
+		//	blockInstancesA[ i ].outlets[ 3 ].link( blockInstancesA[ i+1 ].inlets[ 6 ] );
+		//	blockInstancesA[ i ].outlets[ 4 ].link( blockInstancesA[ i+1 ].inlets[ 8 ] );
+		//}
 
-		for ( unsigned int i=0; i<numInstances-1; ++i )
-		{
-			blockInstancesB[ i ].outlets[ 0 ].link( blockInstancesB[ i+1 ].inlets[ 0 ] );
-			blockInstancesB[ i ].outlets[ 1 ].link( blockInstancesB[ i+1 ].inlets[ 2 ] );
-			blockInstancesB[ i ].outlets[ 2 ].link( blockInstancesB[ i+1 ].inlets[ 4 ] );
-			blockInstancesB[ i ].outlets[ 3 ].link( blockInstancesB[ i+1 ].inlets[ 6 ] );
-			blockInstancesB[ i ].outlets[ 4 ].link( blockInstancesB[ i+1 ].inlets[ 8 ] );
-		}
-
+		//for ( unsigned int i=0; i<numInstances-1; ++i )
+		//{
+		//	blockInstancesB[ i ].outlets[ 0 ].link( blockInstancesB[ i+1 ].inlets[ 0 ] );
+		//	blockInstancesB[ i ].outlets[ 1 ].link( blockInstancesB[ i+1 ].inlets[ 2 ] );
+		//	blockInstancesB[ i ].outlets[ 2 ].link( blockInstancesB[ i+1 ].inlets[ 4 ] );
+		//	blockInstancesB[ i ].outlets[ 3 ].link( blockInstancesB[ i+1 ].inlets[ 6 ] );
+		//	blockInstancesB[ i ].outlets[ 4 ].link( blockInstancesB[ i+1 ].inlets[ 8 ] );
+		//}
 
 		// linking of base types
-		blockInstancesA[ 0 ].outlets[ 0 ].link( blockInstancesB[ 0 ].inlets[ 0 ] );
+		if ( !blockInstancesA[ 0 ].outlets[ 0 ].link( blockInstancesB[ 0 ].inlets[ 0 ] ).isValid() )
+			std::cout << "link failed base to base" << std::endl;
 		// linking of complex types
-		blockInstancesA[ 0 ].outlets[ 1 ].link( blockInstancesB[ 0 ].inlets[ 2 ] );
+		if ( !blockInstancesA[ 0 ].outlets[ 1 ].link( blockInstancesB[ 0 ].inlets[ 2 ] ).isValid() )
+			std::cout << "1ink failed complex to complex" << std::endl;
 		// linking of simple types
-		blockInstancesA[ 0 ].outlets[ 2 ].link( blockInstancesB[ 0 ].inlets[ 4 ] );
+		if ( !blockInstancesA[ 0 ].outlets[ 2 ].link( blockInstancesB[ 0 ].inlets[ 4 ] ).isValid() )
+			std::cout << "link failed simple to simple" << std::endl;;
 		// linking of vectors
-		blockInstancesA[ 0 ].outlets[ 3 ].link( blockInstancesB[ 0 ].inlets[ 6 ] );
+		if ( !blockInstancesA[ 0 ].outlets[ 3 ].link( blockInstancesB[ 0 ].inlets[ 6 ] ).isValid() )
+			std::cout << "link failed vector to vector" << std::endl;;
 		// linking of vector vectors
-		blockInstancesA[ 0 ].outlets[ 4 ].link( blockInstancesB[ 0 ].inlets[ 8 ] );
+		if ( !blockInstancesA[ 0 ].outlets[ 4 ].link( blockInstancesB[ 0 ].inlets[ 8 ] ).isValid() )
+			std::cout << "link failed vector-of-vector to vector-of-vector" << std::endl;;
 	}
 	catch ( Exception &e )
 	{
@@ -213,16 +218,16 @@ int main( int argc, char *argv[] )
 		{
 			BlockInstance &b = blockInstancesB[ 0 ];
 
-			std::cout << std::endl;
-			std::cout << "--------- type metainfo of --B-- basetype ------------------------------------" << std::endl;
-			std::cout << std::endl;
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of --B-- basetype ------------------------------------" << std::endl;
+			//std::cout << std::endl;
 
-			{
-				TypeMetainfo info = b.inlets[ 0 ].getType();
-				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
-				DataFields fields; info.getDataFields( fields );
-				printout( std::cout, fields, 0 );
-			}
+			//{
+			//	TypeMetainfo info = b.inlets[ 0 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
 
 			//std::cout << std::endl;
 			//std::cout << "--------- current data of i0 ( basetype ) ----------------" << std::endl;
@@ -269,8 +274,8 @@ int main( int argc, char *argv[] )
 			std::cout << std::endl;
 
 			{
-				TypeMetainfo info = b.inlets[ 2 ].getType();
-				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
+				TypeMetainfo info = b.inlets[ 2 ].getTypeMetainfo();
+				std::cout << info.getTypename() << std::endl;
 				DataFields fields; info.getDataFields( fields );
 				printout( std::cout, fields, 0 );
 			}
@@ -281,73 +286,73 @@ int main( int argc, char *argv[] )
 
 			{
 				std::shared_ptr< const CustomType > d = b.inlets[ 2 ].getCurrentData();
-				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "--B-- int" ).get() ) << std::endl;
-				std::cout << "string:\t\t\t" << *( d->get< std::string >( "--B-- string" ).get() ) << std::endl;
-				std::vector< float > const& vf = *( d->get< std::vector< float > >( "--B-- float vector" ).get() );
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "float vector" ).get() );
 				std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
-				std::shared_ptr< const CustomType > i = d->get< CustomType >( "--B-- image" );
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "image" );
 					std::shared_ptr< const Image > img = Image::asImage( i );
 					std::cout << "image:" << std::endl;
 					std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
 					std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
 					std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
 					std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
-				std::shared_ptr< const CustomType > b = d->get< CustomType >( "--B-- basetype" );
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "basetype" );
 					std::cout << "basetype:" << std::endl;
-					std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "--B-- char" ).get() ) << std::endl;
-					std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "--B-- uchar" ).get() ) << std::endl;
-					std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "--B-- int" ).get() ) << std::endl;
-					std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "--B-- uint" ).get() ) << std::endl;
-					std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "--B-- float" ).get() ) << std::endl;
-					std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "--B-- double" ).get() ) << std::endl;
-					std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "--B-- string" ).get() ) << std::endl;
-					std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "--B-- bool" ).get() ) << std::endl;
-					std::vector< int > const& vi = *( b->get< std::vector< int > >( "--B-- int vector" ).get() );
+					std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+					std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+					std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+					std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+					std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+					std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+					std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+					std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+					std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
 					std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
-					std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "--B-- int vector vector" ).get() );
+					std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
 					std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
-				std::shared_ptr< const CustomType > s = d->get< CustomType >( "--B-- simpletype" );
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "simpletype" );
 					std::cout << "simpletype:" << std::endl;
-					std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "--B-- int" ).get() ) << std::endl;
-					std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "--B-- float" ).get() ) << std::endl;
+					std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+					std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
 			}
 
-			std::cout << std::endl;
-			std::cout << "--------- current data of i3 (  --B-- complextype ) ----------------" << std::endl;
-			std::cout << std::endl;
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i3 (  --B-- complextype ) ----------------" << std::endl;
+			//std::cout << std::endl;
 
-			{
-				std::shared_ptr< const CustomType > d = b.inlets[ 3 ].getCurrentData();
-				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "--B-- int" ).get() ) << std::endl;
-				std::cout << "string:\t\t\t" << *( d->get< std::string >( "--B-- string" ).get() ) << std::endl;
-				std::vector< float > const& vf = *( d->get< std::vector< float > >( "--B-- float vector" ).get() );
-				std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
-				std::shared_ptr< const CustomType > i = d->get< CustomType >( "--B-- image" );
-					std::shared_ptr< const Image > img = Image::asImage( i );
-					std::cout << "image:" << std::endl;
-					std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
-					std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
-					std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
-					std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
-				std::shared_ptr< const CustomType > b = d->get< CustomType >( "--B-- basetype" );
-					std::cout << "basetype:" << std::endl;
-					std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "--B-- char" ).get() ) << std::endl;
-					std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "--B-- uchar" ).get() ) << std::endl;
-					std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "--B-- int" ).get() ) << std::endl;
-					std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "--B-- uint" ).get() ) << std::endl;
-					std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "--B-- float" ).get() ) << std::endl;
-					std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "--B-- double" ).get() ) << std::endl;
-					std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "--B-- string" ).get() ) << std::endl;
-					std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "--B-- bool" ).get() ) << std::endl;
-					std::vector< int > const& vi = *( b->get< std::vector< int > >( "--B-- int vector" ).get() );
-					std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
-					std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "--B-- int vector vector" ).get() );
-					std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
-				std::shared_ptr< const CustomType > s = d->get< CustomType >( "--B-- simpletype" );
-					std::cout << "simpletype:" << std::endl;
-					std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "--B-- int" ).get() ) << std::endl;
-					std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "--B-- float" ).get() ) << std::endl;
-			}
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 3 ].getCurrentData();
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "--B-- int" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "--B-- string" ).get() ) << std::endl;
+			//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "--B-- float vector" ).get() );
+			//	std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
+			//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "--B-- image" );
+			//		std::shared_ptr< const Image > img = Image::asImage( i );
+			//		std::cout << "image:" << std::endl;
+			//		std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+			//		std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+			//		std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+			//		std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+			//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "--B-- basetype" );
+			//		std::cout << "basetype:" << std::endl;
+			//		std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "--B-- char" ).get() ) << std::endl;
+			//		std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "--B-- uchar" ).get() ) << std::endl;
+			//		std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "--B-- int" ).get() ) << std::endl;
+			//		std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "--B-- uint" ).get() ) << std::endl;
+			//		std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "--B-- float" ).get() ) << std::endl;
+			//		std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "--B-- double" ).get() ) << std::endl;
+			//		std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "--B-- string" ).get() ) << std::endl;
+			//		std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "--B-- bool" ).get() ) << std::endl;
+			//		std::vector< int > const& vi = *( b->get< std::vector< int > >( "--B-- int vector" ).get() );
+			//		std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+			//		std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "--B-- int vector vector" ).get() );
+			//		std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+			//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "--B-- simpletype" );
+			//		std::cout << "simpletype:" << std::endl;
+			//		std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "--B-- int" ).get() ) << std::endl;
+			//		std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "--B-- float" ).get() ) << std::endl;
+			//}
 
 			//std::cout << std::endl;
 			//std::cout << "--------- current data of p2 ( complextype ) ----------------" << std::endl;
@@ -423,16 +428,16 @@ int main( int argc, char *argv[] )
 			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
 			//}
 
-			std::cout << std::endl;
-			std::cout << "--------- type metainfo of --B-- simpletype -----------------------------------" << std::endl;
-			std::cout << std::endl;
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of --B-- simpletype -----------------------------------" << std::endl;
+			//std::cout << std::endl;
 
-			{
-				TypeMetainfo info = b.inlets[ 4 ].getType();
-				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
-				DataFields fields; info.getDataFields( fields );
-				printout( std::cout, fields, 0 );
-			}
+			//{
+			//	TypeMetainfo info = b.inlets[ 4 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
 
 			//std::cout << std::endl;
 			//std::cout << "--------- current data of i4 ( simpletype ) ----------------" << std::endl;
@@ -454,16 +459,16 @@ int main( int argc, char *argv[] )
 			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( d->get< float >( "float" ).get() ) << std::endl;
 			//}
 
-			std::cout << std::endl;
-			std::cout << "--------- type metainfo of int vector -----------------------------------" << std::endl;
-			std::cout << std::endl;
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of int vector -----------------------------------" << std::endl;
+			//std::cout << std::endl;
 
-			{
-				TypeMetainfo info = b.inlets[ 6 ].getType();
-				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
-				DataFields fields; info.getDataFields( fields );
-				printout( std::cout, fields, 0 );
-			}
+			//{
+			//	TypeMetainfo info = b.inlets[ 6 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
 
 			//std::cout << std::endl;
 			//std::cout << "--------- current data of i6 ( int vector ) ------------------" << std::endl;
@@ -485,16 +490,376 @@ int main( int argc, char *argv[] )
 			//	std::cout << "int vector:\t\t" << "size " << vi.size() << std::endl;
 			//}
 
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of int vector vector -----------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	TypeMetainfo info = b.inlets[ 6 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i8 ( int vector vector ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 8 ].getCurrentData();
+			//	std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "default" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " << vvi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i9 ( int vector vector ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 9 ].getCurrentData();
+			//	std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "default" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " << vvi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of recursivetype ------------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	app::TypeMetainfo info = b.inlets[ 8 ].getType();
+			//	_2Real::Fields fields; info.getFieldInfo( fields );
+			//	printout( std::cout, fields, 0 );
+			//	for ( _2Real::Fields::const_iterator it = fields.begin(); it != fields.end(); ++it )
+			//		delete *it;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i8 ( recursivetype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 8 ].getCurrentData();
+			//	//std::cout << "char:\t\t\t" << ( int ) *( d->get< char >( "char" ).get() ) << std::endl;
+			//	//std::cout << "uchar:\t\t\t" << ( int ) *( d->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	//std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	//std::cout << "uint:\t\t\t" << ( int ) *( d->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	//std::cout << "float:\t\t\t" << *( d->get< float >( "float" ).get() ) << std::endl;
+			//	//std::cout << "double:\t\t\t" << *( d->get< double >( "double" ).get() ) << std::endl;
+			//	//std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+			//	//std::cout << "bool:\t\t\t" << std::boolalpha << *( d->get< bool >( "bool" ).get() ) << std::endl;
+			//	//std::vector< int > const& vi = *( d->get< std::vector< int > >( "int vector" ).get() );
+			//	//std::cout << "int vector:\t\t" << "size " <<  vi.size() << std::endl;
+			//	//std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	//std::cout << "int vector vector:\t" << "size " <<  vvi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i9 ( recursivetype ) ---------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 9 ].getCurrentData();
+			//	//std::cout << "char:\t\t\t" << ( int ) *( d->get< char >( "char" ).get() ) << std::endl;
+			//	//std::cout << "uchar:\t\t\t" << ( int ) *( d->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	//std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	//std::cout << "uint:\t\t\t" << ( int ) *( d->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	//std::cout << "float:\t\t\t" << *( d->get< float >( "float" ).get() ) << std::endl;
+			//	//std::cout << "double:\t\t\t" << *( d->get< double >( "double" ).get() ) << std::endl;
+			//	//std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+			//	//std::cout << "bool:\t\t\t" << std::boolalpha << *( d->get< bool >( "bool" ).get() ) << std::endl;
+			//	//std::vector< int > const& vi = *( d->get< std::vector< int > >( "int vector" ).get() );
+			//	//std::cout << "int vector:\t\t" << "size " <<  vi.size() << std::endl;
+			//	//std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	//std::cout << "int vector vector:\t" << "size " <<  vvi.size() << std::endl;
+			//}
+
+		}
+		else if ( line == "out A 0" )
+		{
+			BlockInstance &b = blockInstancesA[ 0 ];
+
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of --B-- basetype ------------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	TypeMetainfo info = b.inlets[ 0 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i0 ( basetype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 0 ].getCurrentData();
+			//	std::cout << "char:\t\t\t" << ( int ) *( d->get< char >( "char" ).get() ) << std::endl;
+			//	std::cout << "uchar:\t\t\t" << ( int ) *( d->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "uint:\t\t\t" << ( int ) *( d->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	std::cout << "float:\t\t\t" << *( d->get< float >( "float" ).get() ) << std::endl;
+			//	std::cout << "double:\t\t\t" << *( d->get< double >( "double" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+			//	std::cout << "bool:\t\t\t" << std::boolalpha << *( d->get< bool >( "bool" ).get() ) << std::endl;
+			//	std::vector< int > const& vi = *( d->get< std::vector< int > >( "int vector" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " <<  vi.size() << std::endl;
+			//	std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	std::cout << "int vector vector:\t" << "size " <<  vvi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i1 ( basetype ) ---------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 1 ].getCurrentData();
+			//	std::cout << "char:\t\t\t" << ( int ) *( d->get< char >( "char" ).get() ) << std::endl;
+			//	std::cout << "uchar:\t\t\t" << ( int ) *( d->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "uint:\t\t\t" << ( int ) *( d->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	std::cout << "float:\t\t\t" << *( d->get< float >( "float" ).get() ) << std::endl;
+			//	std::cout << "double:\t\t\t" << *( d->get< double >( "double" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+			//	std::cout << "bool:\t\t\t" << std::boolalpha << *( d->get< bool >( "bool" ).get() ) << std::endl;
+			//	std::vector< int > const& vi = *( d->get< std::vector< int > >( "int vector" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " <<  vi.size() << std::endl;
+			//	std::vector< std::vector< int > > const& vvi = *( d->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	std::cout << "int vector vector:\t" << "size " <<  vvi.size() << std::endl;
+			//}
+
 			std::cout << std::endl;
-			std::cout << "--------- type metainfo of int vector vector -----------------------------------" << std::endl;
+			std::cout << "--------- type metainfo of --A-- complextype -----------------------------------" << std::endl;
 			std::cout << std::endl;
 
 			{
-				TypeMetainfo info = b.inlets[ 6 ].getType();
-				std::cout << info.getTypename().first << " " << info.getTypename().second << std::endl;
+				TypeMetainfo info = b.inlets[ 2 ].getTypeMetainfo();
+				std::cout << info.getTypename() << std::endl;
 				DataFields fields; info.getDataFields( fields );
 				printout( std::cout, fields, 0 );
 			}
+
+			std::cout << std::endl;
+			std::cout << "--------- current data of i2 (  --A-- complextype ) ----------------" << std::endl;
+			std::cout << std::endl;
+
+			{
+				std::shared_ptr< const CustomType > d = b.inlets[ 2 ].getCurrentData();
+				std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+				std::cout << "string:\t\t\t" << *( d->get< std::string >( "string" ).get() ) << std::endl;
+				std::vector< float > const& vf = *( d->get< std::vector< float > >( "float vector" ).get() );
+				std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
+				std::shared_ptr< const CustomType > i = d->get< CustomType >( "image" );
+					std::shared_ptr< const Image > img = Image::asImage( i );
+					std::cout << "image:" << std::endl;
+					std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+					std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+					std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+					std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+				std::shared_ptr< const CustomType > b = d->get< CustomType >( "basetype" );
+					std::cout << "basetype:" << std::endl;
+					std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+					std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+					std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+					std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+					std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+					std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+					std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+					std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+					std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
+					std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+					std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+					std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+				std::shared_ptr< const CustomType > s = d->get< CustomType >( "simpletype" );
+					std::cout << "simpletype:" << std::endl;
+					std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+					std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
+			}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i3 (  --B-- complextype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 3 ].getCurrentData();
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "--B-- int" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "--B-- string" ).get() ) << std::endl;
+			//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "--B-- float vector" ).get() );
+			//	std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
+			//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "--B-- image" );
+			//		std::shared_ptr< const Image > img = Image::asImage( i );
+			//		std::cout << "image:" << std::endl;
+			//		std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+			//		std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+			//		std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+			//		std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+			//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "--B-- basetype" );
+			//		std::cout << "basetype:" << std::endl;
+			//		std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "--B-- char" ).get() ) << std::endl;
+			//		std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "--B-- uchar" ).get() ) << std::endl;
+			//		std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "--B-- int" ).get() ) << std::endl;
+			//		std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "--B-- uint" ).get() ) << std::endl;
+			//		std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "--B-- float" ).get() ) << std::endl;
+			//		std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "--B-- double" ).get() ) << std::endl;
+			//		std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "--B-- string" ).get() ) << std::endl;
+			//		std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "--B-- bool" ).get() ) << std::endl;
+			//		std::vector< int > const& vi = *( b->get< std::vector< int > >( "--B-- int vector" ).get() );
+			//		std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+			//		std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "--B-- int vector vector" ).get() );
+			//		std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+			//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "--B-- simpletype" );
+			//		std::cout << "simpletype:" << std::endl;
+			//		std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "--B-- int" ).get() ) << std::endl;
+			//		std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "--B-- float" ).get() ) << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of p2 ( complextype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.parameters[ 2 ].getCurrentData();
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+			//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
+			//	std::cout << "float vector:\t\t" << "size " << vf.size() << std::endl;
+			//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
+			//	std::shared_ptr< const Image > img = Image::asImage( i );
+			//	std::cout << "image:" << std::endl;
+			//	std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+			//	std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+			//	std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+			//	std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+			//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
+			//	std::cout << "basetype:" << std::endl;
+			//	std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+			//	std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+			//	std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+			//	std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+			//	std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+			//	std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
+			//	std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+			//	std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+			//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
+			//	std::cout << "simpletype:" << std::endl;
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of p3 ( complextype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.parameters[ 3 ].getCurrentData();
+			//	std::cout << "int:\t\t\t" << ( int ) *( d->get< int >( "test int" ).get() ) << std::endl;
+			//	std::cout << "string:\t\t\t" << *( d->get< std::string >( "test string" ).get() ) << std::endl;
+			//	std::vector< float > const& vf = *( d->get< std::vector< float > >( "test float vector" ).get() );
+			//	std::cout << "float vector:\t\t" << "size " <<  vf.size() << std::endl;
+			//	std::shared_ptr< const CustomType > i = d->get< CustomType >( "test image" );
+			//	std::shared_ptr< const Image > img = Image::asImage( i );
+			//	std::cout << "image:" << std::endl;
+			//	std::cout << "\twidth:\t\t\t" << img->getWidth() << std::endl;
+			//	std::cout << "\theight:\t\t\t" << img->getHeight() << std::endl;
+			//	std::cout << "\tchannel order:\t\t" << ( std::string ) img->getChannelOrder() << std::endl;
+			//	std::cout << "\tformat:\t\t\t" << ( std::string ) img->getDatatype() << std::endl;
+			//	std::shared_ptr< const CustomType > b = d->get< CustomType >( "test basetype" );
+			//	std::cout << "basetype:" << std::endl;
+			//	std::cout << "\tchar:\t\t\t" << ( int ) *( b->get< char >( "char" ).get() ) << std::endl;
+			//	std::cout << "\tuchar:\t\t\t" << ( int ) *( b->get< unsigned char >( "uchar" ).get() ) << std::endl;
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( b->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tuint:\t\t\t" << ( int ) *( b->get< unsigned int >( "uint" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << *( b->get< float >( "float" ).get() ) << std::endl;
+			//	std::cout << "\tdouble:\t\t\t" << *( b->get< double >( "double" ).get() ) << std::endl;
+			//	std::cout << "\tstring:\t\t\t" << *( b->get< std::string >( "string" ).get() ) << std::endl;
+			//	std::cout << "\tbool:\t\t\t" << std::boolalpha << *( b->get< bool >( "bool" ).get() ) << std::endl;
+			//	std::vector< int > const& vi = *( b->get< std::vector< int > >( "int vector" ).get() );
+			//	std::cout << "\tint vector:\t\t" << "size " << vi.size() << std::endl;
+			//	std::vector< std::vector< int > > const& vvi = *( b->get< std::vector< std::vector< int > > >( "int vector vector" ).get() );
+			//	std::cout << "\tint vector vector:\t" << "size " << vvi.size() << std::endl;
+			//	std::shared_ptr< const CustomType > s = d->get< CustomType >( "test simpletype" );
+			//	std::cout << "simpletype:" << std::endl;
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( s->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( s->get< float >( "float" ).get() ) << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of --B-- simpletype -----------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	TypeMetainfo info = b.inlets[ 4 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i4 ( simpletype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 4 ].getCurrentData();
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( d->get< float >( "float" ).get() ) << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i5 ( simpletype ) ----------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 5 ].getCurrentData();
+			//	std::cout << "\tint:\t\t\t" << ( int ) *( d->get< int >( "int" ).get() ) << std::endl;
+			//	std::cout << "\tfloat:\t\t\t" << ( int ) *( d->get< float >( "float" ).get() ) << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of int vector -----------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	TypeMetainfo info = b.inlets[ 6 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i6 ( int vector ) ------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 6 ].getCurrentData();
+			//	std::vector< int > const& vi = *( d->get< std::vector< int > >( "default" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " << vi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- current data of i7 ( int vector ) ------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	std::shared_ptr< const CustomType > d = b.inlets[ 7 ].getCurrentData();
+			//	std::vector< int > const& vi = *( d->get< std::vector< int > >( "default" ).get() );
+			//	std::cout << "int vector:\t\t" << "size " << vi.size() << std::endl;
+			//}
+
+			//std::cout << std::endl;
+			//std::cout << "--------- type metainfo of int vector vector -----------------------------------" << std::endl;
+			//std::cout << std::endl;
+
+			//{
+			//	TypeMetainfo info = b.inlets[ 6 ].getTypeMetainfo();
+			//	std::cout << info.getTypename() << std::endl;
+			//	DataFields fields; info.getDataFields( fields );
+			//	printout( std::cout, fields, 0 );
+			//}
 
 			//std::cout << std::endl;
 			//std::cout << "--------- current data of i8 ( int vector vector ) ----------------" << std::endl;

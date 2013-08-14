@@ -20,6 +20,7 @@
 
 #include "datatypes/_2RealDataField.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
@@ -35,8 +36,6 @@ namespace _2Real
 
 	public:
 
-		typedef std::pair< std::string, std::string > TypeId;
-
 		~TypeMetadata();
 
 		class TypeMatchSetting
@@ -51,9 +50,12 @@ namespace _2Real
 			Type		mCode;
 		};
 
-		TypeMetadata( TypeId const& id, TypeRegistry const* reg );
-		TypeId const& getTypeId() const;
-		void addField( std::string const& name, TypeId const& id, std::shared_ptr< const FieldDescriptor > desc );
+		TypeMetadata( std::shared_ptr< TemplateId > , TypeRegistry const*, TypeRegistry const* );
+		std::shared_ptr< const TemplateId > getIdentifier() const;
+		//std::string const& getCode() const;
+		std::string const& getHumanReadableName() const;
+		std::string const& getFullHumanReadableName() const;
+		void addField( std::string const&, std::string const&, std::shared_ptr< const FieldDescriptor > );
 		bool matches( TypeMetadata const* other, TypeMatchSetting const& desiredMatch, std::shared_ptr< const TypeConverter > &cvAB, std::shared_ptr< const TypeConverter > &cvBA ) const;
 		void getDataFields( DataFields &fields ) const;
 
@@ -68,9 +70,10 @@ namespace _2Real
 
 		friend class CustomType;
 
-		TypeId						mTypeId;
+		std::shared_ptr< TemplateId > 		mIdentifier;
 		FieldDescriptions			mFields;
-		TypeRegistry				const* mRegistry;
+		TypeRegistry				const* mFrameworkTypes;
+		TypeRegistry				const* mExportedTypes;
 
 	};
 }

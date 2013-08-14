@@ -31,22 +31,21 @@ namespace _2Real
 	class AbstractInletIO;
 	class BasicInlet;
 
-	// same interface as parameterbuffer!!!!!!
-
 	class BasicInletBuffer : private NonCopyable< BasicInletBuffer >
 	{
 	public:
 
 		BasicInletBuffer( AbstractInletIO *owner );
 
-		void setData( std::shared_ptr< const CustomType > );
-		std::shared_ptr< const CustomType > getData() const;
+		void setData( TimestampedData const& );
+		TimestampedData const& getData() const;
+		void clearData();
 
 	private:
 
 		AbstractInletIO							*const mOwner;
 		mutable Poco::FastMutex					mAccess;
-		std::shared_ptr< const CustomType >		mData;
+		TimestampedData							mData;
 
 	};
 

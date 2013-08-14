@@ -19,21 +19,56 @@
 
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealBlockMetadata.h"
+#include "engine/_2RealBundleMetadata.h"
 #include "engine/_2RealBundleManager.h"
 #include "engine/_2RealSystem.h"
 #include "engine/_2RealEngineImpl.h"
 
-#include "_2RealConstants.h"
+#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
 
 	Bundle::Bundle( EngineImpl *engine, std::shared_ptr< const BundleMetadata > meta ) :
 		NonCopyable< Bundle >(),
-		Identifiable< Bundle >( Ids(), meta->getName() ),
 		mEngineImpl( engine ),
 		mBundleMetadata( meta )
 	{
+	}
+
+	std::string const& Bundle::getFullHumanReadableName() const
+	{
+		return mBundleMetadata->getIdentifier()->getFullHumanReadableName();
+	}
+
+	std::string const& Bundle::getHumanReadableName() const
+	{
+		return mBundleMetadata->getIdentifier()->getHumanReadableName();
+	}
+
+	//std::string const& Bundle::getCode() const
+	//{
+	//	return mIdentifier.getCode();
+	//}
+
+	std::shared_ptr< const TemplateId >  Bundle::getIdentifier() const
+	{
+		return mBundleMetadata->getIdentifier();
+	}
+
+	void Bundle::setSelfRef( std::shared_ptr< Bundle > ref )
+	{
+		mSelfRef = ref;
+	}
+
+	std::shared_ptr< Bundle > Bundle::getSelfRef()
+	{
+		return mSelfRef.lock();
+	}
+
+	std::shared_ptr< const Bundle > Bundle::getSelfRef() const
+	{
+		return mSelfRef.lock();
 	}
 
 	std::shared_ptr< const BundleMetadata > Bundle::getBundleMetadata() const
@@ -41,15 +76,15 @@ namespace _2Real
 		return mBundleMetadata;
 	}
 
-	std::string const& Bundle::getAbsPath() const
-	{
-		return mBundleMetadata->getInstallDirectory();
-	}
+	//std::string const& Bundle::getAbsPath() const
+	//{
+	//	return mBundleMetadata->getInstallDirectory();
+	//}
 
 	void Bundle::unload( const long timeout )
 	{
 		// kill all blocks ( regular, context )  where this bundle is involved
-		mEngineImpl->getBlockManager()->destroyBlocks( this );
+		mEngineImpl->getBlockManager()->destroyBlocks( getSelfRef() );
 		// unload the bundle -> kills this object
 		mEngineImpl->getBundleManager()->unloadBundle( this, timeout );
 	}
@@ -59,11 +94,11 @@ namespace _2Real
 		std::shared_ptr< FunctionBlock > context;
 		if ( mBundleMetadata->exportsContext() )
 		{
-			context = mEngineImpl->getBlockManager()->findContextBlockInstance( this );
+			context = mEngineImpl->getBlockManager()->findContextBlockInstance( getSelfRef() );
 			if ( context.get() == nullptr )
 			{
 				context = mEngineImpl->getBundleManager()->createContextBlockInstance( this );
-				mEngineImpl->getBlockManager()->addBlockInstance( this, context );
+				mEngineImpl->getBlockManager()->addBlockInstance( getSelfRef(), context );
 			}
 		}
 
@@ -74,8 +109,6 @@ namespace _2Real
 	{
 		// name
 		const unsigned int cnt = mBundleMetadata->getCreationCount( blockName );
-		std::ostringstream name;
-		name << blockName << "_" << cnt;
 
 		std::shared_ptr< const BlockMetadata > blockMetadata = mBundleMetadata->getFunctionBlockMetadata( blockName );
 		if ( blockMetadata->needsContext() )
@@ -84,8 +117,8 @@ namespace _2Real
 		}
 
 		// create block & return
-		std::shared_ptr< FunctionBlock > block = mEngineImpl->getBundleManager()->createBlockInstance( this, blockName, name.str() );
-		mEngineImpl->getBlockManager()->addBlockInstance( this, block );
+		std::shared_ptr< FunctionBlock > block = mEngineImpl->getBundleManager()->createBlockInstance( this, blockName, cnt );
+		mEngineImpl->getBlockManager()->addBlockInstance( getSelfRef(), block );
 		return block;
 	}
 }

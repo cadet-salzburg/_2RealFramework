@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "helpers/_2RealDeleter.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealStringHelpers.h"
 
 namespace _2Real
 {
@@ -31,25 +31,22 @@ namespace _2Real
 
 	public:
 
-		const static std::string sFrameworkTypes;
+		TypeRegistry() {}
 
-		TypeRegistry();
-		~TypeRegistry();
+		void registerType( std::shared_ptr< const TypeMetadata > );
+		//void unregisterType( std::string const& name );
+		std::shared_ptr< const TypeMetadata > get( std::string const& name ) const;
 
-		void registerType( std::string const& bundle, std::string const& name, std::shared_ptr< const TypeMetadata >/*, ADeleter< TypeMetadata > *del*/ );
-		void unregisterType( std::string const& bundle, std::string const& name );
-		std::shared_ptr< const TypeMetadata > get( std::string const& bundle, std::string const& name ) const;
-
-		void merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias );
+		//void merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias );
 
 	private:
 
 		TypeRegistry( TypeRegistry const& other );
 		TypeRegistry& operator=( TypeRegistry const& other );
 
-		typedef std::pair< std::string, std::string >						TypeKey;
-		typedef std::map< TypeKey, std::shared_ptr< const TypeMetadata > >	Types;
+		typedef std::map< std::string, std::shared_ptr< const TypeMetadata >, LowercaseCmp >	Types;
 
-		Types																mTypes;
+		Types			mTypes;
+
 	};
 }

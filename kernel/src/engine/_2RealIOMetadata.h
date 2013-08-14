@@ -22,6 +22,7 @@
 #include "datatypes/_2RealCustomData.h"
 #include "engine/_2RealTypeMetadata.h"
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealIdentifiable.h"
 
 namespace _2Real
 {
@@ -38,21 +39,9 @@ namespace _2Real
 			SYNC_ON_SHUTDOWN	= 0x0100,
 		};
 
-		IOMetadata() :
-			name( "undefined" ),
-			typeMetadata(),
-			initializer(),
-			canExpand( false ),
-			expansionSize( 0 ),
-			canLink( false ),
-			isBuffered( false ),
-			bufferSize( 0 ),
-			canTriggerUpdates( false ),
-			updatePolicy( UpdatePolicy::INVALID ),
-			synchronizationFlags( NO_SYNC )
-		{}
+		IOMetadata();
 
-		std::string										name;
+		std::shared_ptr< TemplateId > 					identifier;
 		std::shared_ptr< const TypeMetadata >			typeMetadata;
 		std::shared_ptr< const CustomType >				initializer;
 		bool											canExpand;

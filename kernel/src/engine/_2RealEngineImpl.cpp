@@ -31,25 +31,7 @@
 #include "internal_bundles/_2RealConversionBundle.h"
 #include "datatypes/_2RealImage.h"
 
-#ifdef _2REAL_WINDOWS
-	#ifndef _DEBUG
-		#define shared_library_suffix "_32.dll"
-	#else
-		#define shared_library_suffix "_32d.dll"
-	#endif
-#elif _2REAL_UNIX
-	#ifndef _DEBUG
-		#define shared_library_suffix ".so"
-	#else
-		#define shared_library_suffix "_d.so"
-	#endif
-#elif _2REAL_MAC
-	#ifndef _DEBUG
-		#define shared_library_suffix ".dylib"
-	#else
-		#define shared_library_suffix "_d.dylib"
-	#endif
-#endif
+#include "helpers/_2RealConstants.h"
 
 using std::string;
 using std::ostringstream;
@@ -106,17 +88,62 @@ namespace _2Real
 		}
 	}
 
+	TimerCollection::TimerCollection( EngineImpl *engine ) :
+		mEngineImpl( engine ),
+		mDefaultTimer( new Timer( mEngineImpl, 33, false ) ),
+		mNullTimer( new Timer( mEngineImpl, ( std::numeric_limits< long >::max )(), false ) )
+	{
+		mDefaultTimer->start();
+	}
+
+	TimerCollection::~TimerCollection()
+	{
+		clear();
+	}
+
+	void TimerCollection::clear()
+	{
+		mTimers.clear();
+	}
+	
+	std::shared_ptr< Timer > TimerCollection::createTimer( const unsigned long resolution )
+	{
+		std::shared_ptr< Timer > timer( new Timer( mEngineImpl, resolution, false ) );
+		mTimers.insert( timer );
+		timer->start();
+		return timer;
+	}
+
+	std::shared_ptr< Timer > TimerCollection::getDefaultTimer()
+	{
+		return mDefaultTimer;
+	}
+
+	std::shared_ptr< Timer > TimerCollection::getNullTimer()
+	{
+		return mNullTimer;
+	}
+
+	void TimerCollection::destroyTimer( std::shared_ptr< Timer > timer )
+	{
+		TimerIterator it = mTimers.find( timer );
+		if ( it != mTimers.end() )
+			mTimers.erase( it );
+	}
+
 	EngineImpl::EngineImpl() :
 		mLogger( new Logger( "EngineLog.txt" ) ),
-		mTimer( new Timer( mLogger ) ),
+		mTimer( new Timer( this, 1, false ) ),
 		mTypeRegistry( new TypeRegistry ),
-		mThreadPool( new ThreadPool( this, 10, 0, "2Real threadpool" ) ),
+		mThreadPool( new ThreadPool( this, 10, 0, "" ) ),
 		mBundleManager( new BundleManager( this ) ),
 		mSystem( new System( this ) ),
-		mLinkManager( new LinkCollection( this ) )
+		mLinkManager( new LinkCollection( this ) ),
+		mTimerManager( new TimerCollection( this ) )
 	{
 		mTimestamp.update();
-		mTypeRegistry->registerType( TypeRegistry::sFrameworkTypes, Image::TYPENAME, Image::getTypeMetadata()/*, new Deleter< TypeMetadata > */);
+		mTypeRegistry->registerType( Image::getTypeMetadata() );
+		mTimer->start();
 	}
 
 	EngineImpl::~EngineImpl()
@@ -127,6 +154,7 @@ namespace _2Real
 			clearFully();
 			mLogger->addLine( "ENGINE CLEARED" );
 
+			delete mTimerManager;
 			delete mLinkManager;
 			delete mSystem;
 			delete mBundleManager;
@@ -165,9 +193,9 @@ namespace _2Real
 	{
 		string path = libraryPath;
 
-		if ( path.find( shared_library_suffix ) == string::npos )
+		if ( path.find( Constants::SharedLibrarySuffix ) == string::npos )
 		{
-			path.append( shared_library_suffix );
+			path.append( Constants::SharedLibrarySuffix );
 		}
 		return mBundleManager->loadBundle( path );
 	}
@@ -178,6 +206,20 @@ namespace _2Real
 	}
 
 // ---------------------------------- bundle loading
+
+	std::shared_ptr< Timer > EngineImpl::addTimer( const double updatesPerSecond )
+	{
+		if ( updatesPerSecond <= 0. )
+			return mTimerManager->getNullTimer();
+
+		double millis = 1000/updatesPerSecond;
+		return mTimerManager->createTimer( static_cast< long >( millis ) );
+	}
+
+	void EngineImpl::removeTimer( std::shared_ptr< Timer > timer )
+	{
+		mTimerManager->destroyTimer( timer );
+	}
 
 // ---------------------------------- exception handling
 
@@ -201,14 +243,12 @@ namespace _2Real
 		mBlockExceptionEvent.removeListener( callback );
 	}
 
-	void EngineImpl::handleException( app::BlockHandle &block, Exception const& exception ) const
+	void EngineImpl::handleException( std::shared_ptr< FunctionBlock > block, Exception const& exception ) const
 	{
-		mBlockExceptionEvent.notify( make_pair( exception, block ) );
-	}
-
-	void EngineImpl::handleException( app::ContextBlockHandle &block, Exception const& exception ) const
-	{
-		mContextBlockExceptionEvent.notify( make_pair( exception, block ) );
+		if ( block->isContext() )
+			mContextBlockExceptionEvent.notify( std::make_pair( exception, app::ContextBlockHandle( block ) ) );
+		else
+			mBlockExceptionEvent.notify( std::make_pair( exception, app::BlockHandle( block ) ) );
 	}
 
 // ---------------------------------- exception handling

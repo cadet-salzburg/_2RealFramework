@@ -18,66 +18,39 @@
 
 #include "datatypes/_2RealTypeRegistry.h"
 #include "engine/_2RealTypeMetadata.h"
+#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
-	const std::string TypeRegistry::sFrameworkTypes = "FrameworkType";
-
-	TypeRegistry::TypeRegistry()
+	void TypeRegistry::registerType( std::shared_ptr< const TypeMetadata > data )
 	{
+		mTypes[ data->getIdentifier()->getObjectName() ] = data;
 	}
 
-	TypeRegistry::~TypeRegistry()
-	{
-		mTypes.clear();
-	}
+	//void TypeRegistry::unregisterType( std::string const& name )
+	//{
+	//	Types::iterator it = mTypes.find( name );
+	//	mTypes.erase( it );
+	//}
 
-	void TypeRegistry::registerType( std::string const& bundle, std::string const& name, std::shared_ptr< const TypeMetadata > data )
+	std::shared_ptr< const TypeMetadata > TypeRegistry::get( std::string const& name ) const
 	{
-		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
-#ifdef _DEBUG
-		Types::const_iterator it = mTypes.find( key );
-		assert( mTypes.end() == it );
-#endif
-		mTypes[ key ] = data;
-	}
-
-	void TypeRegistry::unregisterType( std::string const& bundle, std::string const& name )
-	{
-		std::pair< std::string, std::string > key = std::make_pair( bundle, name );
-		Types::iterator it = mTypes.find( key );
-#ifdef _DEBUG
-		assert( it != mTypes.end() );
-#endif
-		mTypes.erase( it );
-	}
-
-	std::shared_ptr< const TypeMetadata > TypeRegistry::get( std::string const& bundle, std::string const& name ) const
-	{
-		Types::const_iterator fwIt = mTypes.find( std::make_pair( TypeRegistry::sFrameworkTypes, name ) );
-		if ( fwIt != mTypes.end() )
-		{
-			return fwIt->second;
-		}
+		Types::const_iterator userIt = mTypes.find( name );
+		if ( userIt != mTypes.end() )
+			return userIt->second;
 		else
-		{
-			Types::const_iterator userIt = mTypes.find( std::make_pair( bundle, name ) );
-			if ( userIt != mTypes.end() )
-				return userIt->second;
-			else
-				return nullptr;
-		}
+			return nullptr;
 	}
 
-	void TypeRegistry::merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias )
-	{
-		for ( Types::const_iterator it = other.mTypes.begin(); it != other.mTypes.end(); ++it )
-		{
-			if ( it->first.first == bundle )
-			{
-				std::shared_ptr< const TypeMetadata > m = it->second;
-				registerType( alias, it->first.second, m );
-			}
-		}
-	}
+	//void TypeRegistry::merge( TypeRegistry const& other, std::string const& bundle, std::string const& alias )
+	//{
+	//	for ( Types::const_iterator it = other.mTypes.begin(); it != other.mTypes.end(); ++it )
+	//	{
+	//		if ( it->first.first == bundle )
+	//		{
+	//			std::shared_ptr< const TypeMetadata > m = it->second;
+	//			registerType( alias, it->first.second, m );
+	//		}
+	//	}
+	//}
 }

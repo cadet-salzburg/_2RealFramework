@@ -16,8 +16,29 @@
 	limitations under the License.
 */
 
-#include "datatypes/_2RealFieldDescriptor.h"
+#pragma once
+
+#include "helpers/_2RealNonCopyable.h"
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+
+	class BasicInletIO;
+
+	class AbstractUpdateManager : private NonCopyable< AbstractUpdateManager >
+	{
+
+	public:
+
+		virtual ~AbstractUpdateManager() {}
+
+		virtual std::string const&			getFullHumanReadableName() const = 0;
+		virtual std::string const&			getHumanReadableName() const = 0;
+		//virtual std::string const&			getCode() const = 0;
+
+		virtual void inletChanged() = 0;
+
+	};
+
 }

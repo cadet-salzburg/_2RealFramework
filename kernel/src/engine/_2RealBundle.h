@@ -31,17 +31,22 @@ namespace _2Real
 	class BundleManager;
 	class FunctionBlock;
 
-	class Bundle : private NonCopyable< Bundle >, private Identifiable< Bundle >
+	class Bundle : private NonCopyable< Bundle >
 	{
 
 	public:
 
 		Bundle( EngineImpl *, std::shared_ptr< const BundleMetadata > );
 
-		using Identifiable< Bundle >::getIds;
-		using Identifiable< Bundle >::getName;
+		std::string const&							getFullHumanReadableName() const;
+		std::string const&							getHumanReadableName() const;
+		//std::string const&							getCode() const;
+		std::shared_ptr< const TemplateId > 		getIdentifier() const;
 
-		std::string const&							getAbsPath() const;
+		void										setSelfRef( std::shared_ptr< Bundle > );
+		std::shared_ptr< Bundle >					getSelfRef();
+		std::shared_ptr< const Bundle >				getSelfRef() const;
+
 		std::shared_ptr< const BundleMetadata >		getBundleMetadata() const;
 		void										unload( const long );
 		std::shared_ptr< FunctionBlock >			createFunctionBlockInstance( std::string const& );
@@ -51,6 +56,7 @@ namespace _2Real
 
 		EngineImpl									*const mEngineImpl;
 		std::shared_ptr< const BundleMetadata >		mBundleMetadata;
+		std::weak_ptr< Bundle >						mSelfRef;
 
 	};
 
