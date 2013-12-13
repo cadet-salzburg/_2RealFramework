@@ -34,9 +34,11 @@ namespace _2Real
 		void		loadImpl( Path const& path);
 		void		unloadImpl();
 		bool		isLoadedImpl() const;
-		void *		findSymbolImpl( std::string const& name) const;
+		void *		findSymbolImpl( std::string const& name ) const;
 
 	private:
+
+		void		*mHandle;
 
 	};
 

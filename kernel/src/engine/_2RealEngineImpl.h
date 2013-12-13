@@ -19,21 +19,11 @@
 
 #pragma once
 
-//#include "app/_2RealCallbacks.h"
-//#include "engine/_2RealLink.h"
-//#include "helpers/_2RealEvent.h"
-//#include "helpers/_2RealPocoIncludes.h"
-//#include "app/_2RealBlockHandle.h"
-//#include "app/_2RealContextBlockHandle.h"
-//#include "helpers/_2RealNonCopyable.h"
-//#include "_2RealSystemState.h"			// MOVE TO APP FOLDER
-//#include "_2RealBundleManager.h"
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealPath.h"
 
 namespace _2Real
 {
-
 	namespace app
 	{
 		class Engine;
@@ -41,15 +31,9 @@ namespace _2Real
 
 	class EngineImpl;
 
-	//class Logger;
-	//class Timer;
 	class TypeRegistry;
-	//class ThreadPool;
 	class BundleCollection;
-	//class System;
-	//class LinkCollection;
 	class Bundle;
-	//class TimerCollection;
 
 	/*
 	class LinkCollection
@@ -105,31 +89,8 @@ namespace _2Real
 
 		~EngineImpl();
 
-		//Logger *						getLogger()			{ return mLogger; }
-		//Timer *							getTimer()			{ return mTimer; }
-		//TypeRegistry *					getTypeRegistry()	{ return mTypeRegistry; }
-		//ThreadPool *					getThreadpool()		{ return mThreadPool; }
-		//std::shared_ptr< BundleManager >	getBundleManager()	{ return mBundleManager; }
-		//System *						getBlockManager()	{ return mSystem; }
-		//LinkCollection *				getLinkManager()	{ return mLinkManager; }
-		//TimerCollection *				getTimerManager()	{ return mTimerManager; }
-		//const long						getElapsedTime() const;
-
-		//void							clearFully();
-		//void							clearBlockInstances();
-
-		std::shared_ptr< Bundle > 		loadLibrary( Path const& path );
+		std::shared_ptr< Bundle > 		loadLibrary( std::string const& filename );
 		Path const&						getBundleDirectory() const;
-
-		//std::shared_ptr< Timer > 		addTimer( const double );
-		//void							removeTimer( std::shared_ptr< Timer > );
-
-		//void							registerToException( app::BlockExcCallback &callback );
-		//void							unregisterFromException( app::BlockExcCallback &callback );
-		//void							registerToException( app::ContextBlockExcCallback &callback );
-		//void							unregisterFromException( app::ContextBlockExcCallback &callback );
-
-		//void							handleException( std::shared_ptr< FunctionBlock >, Exception const& exception ) const;
 
 	private:
 

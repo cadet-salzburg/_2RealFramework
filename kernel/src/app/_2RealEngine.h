@@ -22,7 +22,6 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealPath.h"
-#include "helpers/_2RealBoost.h"
 
 namespace _2Real
 {
@@ -49,8 +48,8 @@ namespace _2Real
 	//--------------------- bundle loading
 			// returns the absolute path to the bundle directory
 			Path const& getBundleDirectory() const;
-			// loads a bundle, path must be relative to bundle dir
-			BundleHandle loadBundle( Path const& path );
+			// loads a bundle, path must be relative to bundle dir, with or without the suffix
+			BundleHandle loadBundle( std::string const& libname );
 	//--------------------- bundle loading
 
 		private:

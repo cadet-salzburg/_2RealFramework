@@ -38,6 +38,38 @@ int main( int argc, char *argv[] )
 	try
 	{
 		_2Real::app::Engine &testEngine = _2Real::app::Engine::instance();
+
+		// testing the bundle directory from environment vars
+		std::cout << "testing bundle directory: " << testEngine.getBundleDirectory() << std::endl;
+
+		// testing dll without required metainfo function
+		// exception should state this, otherwise sth else went wrong! ( i.e., dll not found at all :) )
+		{
+			try
+			{
+				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_NoMetainfo" );
+				std::cout << "testing malformed bundle: FAILED" << std::endl;
+			}
+			catch( _2Real::Exception &e )
+			{
+				std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
+			}
+		}
+
+		// testing dll with metainfo function, but no info
+		// exception should state this ( incomplete metainfo ), otherwise sth else went wrong! ( i.e., dll not found at all :) )
+		{
+			try
+			{
+				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_EmptyMetainfo" );
+				std::cout << "testing malformed bundle: FAILED" << std::endl;
+			}
+			catch( _2Real::Exception &e )
+			{
+				std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
+			}
+		}
+
 	}
 	catch ( _2Real::Exception &e )
 	{

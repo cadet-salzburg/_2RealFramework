@@ -12,35 +12,50 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp" />
+    <ClCompile Include="..\..\src\app\_2RealBundleMetainfo.cpp" />
     <ClCompile Include="..\..\src\app\_2RealEngine.cpp" />
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary.cpp" />
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary_UNIX.cpp" />
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary_WIN.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBundle.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBundleImporter.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBundleCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibraryMetainfo.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_UNIX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_WIN.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealConstants.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp" />
+    <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealBundleMetainfo.h" />
     <ClInclude Include="..\..\src\app\_2RealEngine.h" />
     <ClInclude Include="..\..\src\app\_2RealHandleValidity.h" />
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary.h" />
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary_UNIX.h" />
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary_WIN.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundle.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleImporter.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h" />
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary.h" />
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibraryMetainfo.h" />
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_UNIX.h" />
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_WIN.h" />
     <ClInclude Include="..\..\src\helpers\_2RealBoost.h" />
     <ClInclude Include="..\..\src\helpers\_2RealConstants.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPath.h" />
     <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder_T.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStdIncludes.h" />
+    <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
     <ClInclude Include="..\..\src\_2RealApplication.h" />
+    <ClInclude Include="..\..\src\_2RealBundle.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="boost.txt" />

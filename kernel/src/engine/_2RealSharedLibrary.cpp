@@ -45,14 +45,4 @@ namespace _2Real
 		else			throw NotFoundException( name );
 	}
 
-	//const std::string& SharedLibrary::getPath() const
-	//{
-	//	return getPathImpl();
-	//}
-
-	//std::string SharedLibrary::suffix()
-	//{
-	//	return suffixImpl();
-	//}
-
 } 

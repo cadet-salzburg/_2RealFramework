@@ -18,62 +18,30 @@
 
 #pragma once
 
-#include "bundle/_2RealCreationPolicy.h"
-#include "bundle/_2RealBlockMetainfo.h"
-#include "bundle/_2RealContextBlockMetainfo.h"
 #include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class BundleMetadata;
+	class SharedLibraryMetainfo;
 
 	namespace bundle
 	{
-		class FunctionBlockMetainfo;
-		class ContextBlockMetainfo;
 		class TypeMetainfo;
+		class BlockMetainfo;
 
 		class BundleMetainfo
 		{
 
 		public:
 
-			explicit BundleMetainfo( std::shared_ptr< BundleMetadata > );
+			explicit BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > );
 
-			void setDescription( std::string const& description );
-			void setVersion( unsigned int major, unsigned int minor, unsigned int revision );
-			void setAuthor( std::string const& author );
-			void setContact( std::string const& contact );
-			void setCategory( std::string const& category );
-
-			template< typename ContextDerived >
-			ContextBlockMetainfo exportContextBlock()
-			{
-				AbstractBlockCreator *obj = new BlockCreator< ContextDerived, CreateContext >();
-				return exportContextBlockInternal( obj );
-			}
-
-			template< typename BlockDerived >
-			FunctionBlockMetainfo exportFunctionBlock( std::string const& name )
-			{
-				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, WithoutContext >();
-				return exportFunctionBlockInternal( obj, name ); 
-			}
-
-			template< typename BlockDerived, template < typename BlockDerived > class Policy >
-			FunctionBlockMetainfo exportFunctionBlock( std::string const& name )
-			{
-				AbstractBlockCreator *obj = new BlockCreator< BlockDerived, Policy >();
-				return exportFunctionBlockInternal( obj, name ); 
-			}
-
-			TypeMetainfo exportCustomType( std::string const& name );
+			TypeMetainfo createTypeMetainfo( std::string const& name );
+			BlockMetainfo createBlockMetainfo( std::string const& name );
 
 		private:
 
-			ContextBlockMetainfo	exportContextBlockInternal( AbstractBlockCreator *obj );
-			FunctionBlockMetainfo	exportFunctionBlockInternal( AbstractBlockCreator *obj, std::string const& );
-			std::weak_ptr< BundleMetadata >		mImpl;
+			std::weak_ptr< SharedLibraryMetainfo >		mImpl;
 
 		};
 	}

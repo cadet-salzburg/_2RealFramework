@@ -102,14 +102,13 @@ namespace _2Real
 		throw *this;								\
 	}
 
-	DECLARE_EXCEPTION( LibraryLoadException, Exception )
-	DECLARE_EXCEPTION( LibraryAlreadyLoadedException, Exception )
+	DECLARE_EXCEPTION( BundleImportException, Exception )
 	//DECLARE_EXCEPTION( InvalidStateChangeException, Exception )
 	//DECLARE_EXCEPTION( InvalidTypeException, Exception )
 	DECLARE_EXCEPTION( NotFoundException, Exception )
 	DECLARE_EXCEPTION( AlreadyExistsException, Exception )
 	//DECLARE_EXCEPTION( TypeMismatchException, Exception )
-	DECLARE_EXCEPTION( UninitializedHandleException, Exception )
+	DECLARE_EXCEPTION( HandleAccessException, Exception )
 	//DECLARE_EXCEPTION( TimeOutException, Exception )
 	//DECLARE_EXCEPTION( InvalidNameException, Exception )
 	//DECLARE_EXCEPTION( XMLFormatException, Exception )

@@ -27,7 +27,7 @@ namespace _2Real
 	class BundleMetadata;
 	class TypeRegistry;
 	class SharedLibrary;
-	class Metainfo;
+	class SharedLibraryMetainfo;
 
 	namespace bundle
 	{
@@ -44,15 +44,18 @@ namespace _2Real
 
 		void clear();
 		bool isLibraryLoaded( Path const& path ) const;
-		std::shared_ptr< const BundleMetadata > importLibrary( Path const& path );
+		std::shared_ptr< const SharedLibraryMetainfo > importLibrary( Path const& path );
 		void unimportLibrary( Path const& path );
 
 	private:
 
+		BundleImporter( BundleImporter const& );
+		BundleImporter& operator=( BundleImporter const& );
+
 		struct SharedLibraryImportData
 		{
-			std::shared_ptr< SharedLibrary >		library;
-			std::shared_ptr< Metainfo >				metainfo;
+			std::shared_ptr< SharedLibrary >				library;
+			std::shared_ptr< SharedLibraryMetainfo >		metainfo;
 		};
 		typedef std::map< Path, SharedLibraryImportData >	ImportData;
 

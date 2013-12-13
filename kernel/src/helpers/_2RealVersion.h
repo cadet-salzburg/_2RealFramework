@@ -22,27 +22,30 @@
 
 namespace _2Real
 {
-	class Bundle;
-
-	namespace app
+	class Version
 	{
-		class BundleHandle
-		{
 
-		public:
+	public:
 
-			BundleHandle();
-			explicit BundleHandle( std::shared_ptr< Bundle > );
+		Version();
+		Version( unsigned int major, unsigned int minor, unsigned int revision );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
-			bool					isValid() const;
-			// no timeout could cause the app to block forever
-			void					unload( const long timeout = 1000 );
+		bool operator==( Version const& );
+		bool operator<( Version const& );
 
-		private:
+		friend std::ostream& operator<<( std::ostream &, Version const& );
 
-			std::weak_ptr< Bundle >		mImpl;
+		std::string string() const;
 
-		};
-	}
+		unsigned int major() const;
+		unsigned int minor() const;
+		unsigned int revision() const;
+
+	private:
+
+		unsigned int		mMajor;
+		unsigned int		mMinor;
+		unsigned int		mRevision;
+
+	};
 }

@@ -27,6 +27,12 @@
     <Filter Include="Source Files\helpers">
       <UniqueIdentifier>{75e92035-44f0-43f1-9a22-ea84d4fcc940}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\bundle">
+      <UniqueIdentifier>{68736fcd-01b8-4be1-9e00-fa1984ea0643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bundle">
+      <UniqueIdentifier>{3573c3ea-bdff-4b39-a887-aef4c10bd7ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\engine\_2RealBundle.cpp">
@@ -53,13 +59,25 @@
     <ClCompile Include="..\..\src\engine\_2RealBundleImporter.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary_WIN.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibraryMetainfo.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary.cpp">
+    <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealSharedLibrary_UNIX.cpp">
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_UNIX.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_WIN.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,13 +124,28 @@
     <ClInclude Include="..\..\src\engine\_2RealBundleImporter.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary.h">
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibraryMetainfo.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary_UNIX.h">
+    <ClInclude Include="..\..\src\_2RealBundle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleMetainfo.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helpers\_2RealVersion.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealSharedLibrary_WIN.h">
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_WIN.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_UNIX.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>

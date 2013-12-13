@@ -18,26 +18,25 @@
 
 #pragma once
 
-#include "app/_2RealCommon.h"
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealVersion.h"
 
 namespace _2Real
 {
-	class BundleMetadata;
+	class SharedLibraryMetainfo;
 
 	namespace app
 	{
-		class BlockMetainfo;
-
 		class BundleMetainfo
 		{
 
 		public:
 
 			BundleMetainfo();
-			explicit BundleMetainfo( std::shared_ptr< const BundleMetadata > );
+			explicit BundleMetainfo( std::shared_ptr< const SharedLibraryMetainfo > );
+
 			bool isValid() const;
+
 			std::string const&		getName() const;
 			std::string const&		getInstallDirectory() const;
 			std::string const&		getDescription() const;
@@ -45,12 +44,10 @@ namespace _2Real
 			std::string const&		getContact() const;
 			std::string const&		getCategory() const;
 			Version const&			getVersion() const;
-			bool					exportsContext() const;
-			void getExportedBlocks( std::vector< BlockMetainfo > & ) const;
 
 		private:
 
-			std::weak_ptr< const BundleMetadata >		mImpl;
+			std::weak_ptr< const SharedLibraryMetainfo >		mImpl;
 
 		};
 	}

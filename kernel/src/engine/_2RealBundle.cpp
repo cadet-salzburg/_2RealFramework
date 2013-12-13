@@ -17,17 +17,11 @@
 */
 
 #include "engine/_2RealBundle.h"
-//#include "engine/_2RealBlockMetadata.h"
-//#include "engine/_2RealBundleMetadata.h"
 #include "engine/_2RealBundleCollection.h"
-//#include "engine/_2RealSystem.h"
-//#include "engine/_2RealEngineImpl.h"
-//
-//#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
-	Bundle::Bundle( std::shared_ptr< BundleCollection > collection, std::shared_ptr< const BundleMetadata > meta ) :
+	Bundle::Bundle( std::shared_ptr< BundleCollection > collection, std::shared_ptr< const SharedLibraryMetainfo > meta ) :
 		enable_shared_from_this< Bundle >(),
 		mBundleCollection( collection ),
 		mBundleMetadata( meta )
@@ -39,6 +33,6 @@ namespace _2Real
 		// kill all blocks ( regular, context )  where this bundle is involved
 		// mEngineImpl->getBlockManager()->destroyBlocks( shared_from_this() );
 		// unload the bundle -> kills this object
-		mBundleCollection->unloadBundle( shared_from_this(), timeout );
+		mBundleCollection.lock()->unloadBundle( shared_from_this(), timeout );
 	}
 }

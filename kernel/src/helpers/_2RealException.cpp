@@ -83,14 +83,13 @@ namespace _2Real
 		m_Message = message;
 	}
 
-	IMPLEMENT_EXCEPTION( LibraryLoadException, Exception, "library load exception" )
-	IMPLEMENT_EXCEPTION( LibraryAlreadyLoadedException, Exception, "library already loaded exception" )
+	IMPLEMENT_EXCEPTION( BundleImportException, Exception, "library load exception" )
 	//IMPLEMENT_EXCEPTION( InvalidStateChangeException, Exception, "invalid state change exception" )
 	//IMPLEMENT_EXCEPTION( InvalidTypeException, Exception, "invalid type exception" )
 	IMPLEMENT_EXCEPTION( NotFoundException, Exception, "not found exception" )
 	IMPLEMENT_EXCEPTION( AlreadyExistsException, Exception, "already exists exception" )
 	//IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
-	IMPLEMENT_EXCEPTION( UninitializedHandleException, Exception, "uninitialized handle exception" )
+	IMPLEMENT_EXCEPTION( HandleAccessException, Exception, "uninitialized handle exception" )
 	//IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
 	//IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
 	//IMPLEMENT_EXCEPTION( XMLFormatException, Exception, "xml format exception" )

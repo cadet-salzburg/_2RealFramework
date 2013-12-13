@@ -20,6 +20,7 @@
 #include "app/_2RealBundleHandle.h"
 #include "engine/_2RealEngineImpl.h"
 #include "helpers/_2RealSingletonHolder_T.h"
+#include "helpers/_2RealBoost.h"
 
 namespace _2Real
 {
@@ -43,9 +44,9 @@ namespace _2Real
 			return mImpl->getBundleDirectory();
 		}
 
-		BundleHandle Engine::loadBundle( Path const& path )
+		BundleHandle Engine::loadBundle( std::string const& libname )
 		{
-			std::shared_ptr< Bundle > result = mImpl->loadLibrary( path );
+			std::shared_ptr< Bundle > result = mImpl->loadLibrary( libname );
 			return BundleHandle( result );
 		}
 

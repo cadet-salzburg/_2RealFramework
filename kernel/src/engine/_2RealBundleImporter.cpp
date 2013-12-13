@@ -17,14 +17,11 @@
 	limitations under the License.
 */
 
+#include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealBundleImporter.h"
 #include "engine/_2RealSharedLibrary.h"
-
+#include "engine/_2RealSharedLibraryMetainfo.h"
 #include "helpers/_2RealException.h"
-//#include "engine/_2RealExportMetainfo.h"
-//#include "bundle/_2RealBundleMetainfo.h"
-//#include "engine/_2RealEngineImpl.h"
-//#include "datatypes/_2RealTypeRegistry.h"
 
 namespace _2Real
 {
@@ -59,45 +56,47 @@ namespace _2Real
 		return ( mImportData.find( path ) != mImportData.end() );
 	}
 
-	std::shared_ptr< const BundleMetadata > BundleImporter::importLibrary( Path const& path )
+	std::shared_ptr< const SharedLibraryMetainfo > BundleImporter::importLibrary( Path const& path )
 	{
-		std::shared_ptr< const BundleMetadata > bundleMetadata;
-
-		// fail-silent bhaviour on reload / just return bundle
 		if ( isLibraryLoaded( path ) )
 		{
 			auto it = mImportData.find( path );
-			//return it->second.metainfo->getBundleMetadata();
+			return it->second.metainfo;
 		}
+
+		typedef void ( *MetainfoFunc )( bundle::BundleMetainfo &info );
 
 		// may throw libraryloadexception
 		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( path ) );
-
-		typedef void ( *MetainfoFunc )( bundle::BundleMetainfo &info );
-		std::shared_ptr< Metainfo > meta;//( new Metainfo( m_Registry, path, id ) );
-	//	std::shared_ptr< BundleMetadata > bundleMetadata = info->getBundleMetadata();
+		std::shared_ptr< SharedLibraryMetainfo > info( new SharedLibraryMetainfo );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{
-			SharedLibraryImportData importData;
 			MetainfoFunc func = ( MetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
 
-			bundle::BundleMetainfo metainfo( bundleMetadata );
-			func( metainfo );
+			bundle::BundleMetainfo bundleMetainfo( info );
+			func( bundleMetainfo );
+
+			// exported services, exported types
+			bool isOk = info->performExport();
+			if ( !isOk )
+				throw BundleImportException( "library metainfo is malformed" );
+
+			SharedLibraryImportData importData;
 			importData.library = lib;
 			importData.metainfo = info;
 			mImportData[ path ] = importData;
 
-			return bundleMetadata;
+			return info;
 		}
 		else
 		{
 			lib.reset();
-			meta.reset();
+			info.reset();
 
 			std::ostringstream msg;
 			msg << "shared library " << path << " does not export required function \'getBundleMetainfo\'";
-			throw NotFoundException( msg.str() );
+			throw BundleImportException( msg.str() );
 		}
 	}
 

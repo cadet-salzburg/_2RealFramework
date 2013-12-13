@@ -50,26 +50,14 @@ namespace _2Real
 
 		void updateBundleDirectory();
 
-		//typedef std::map< std::string, std::shared_ptr< Bundle > >					Bundles;
+		typedef std::map< Path, std::shared_ptr< Bundle > >		Bundles;
 
-		/*std::weak_ptr< EngineImpl >						mEngineImpl;*/
-		// responsible for loading bundles, duh
+		// responsible for loading bundles
 		BundleImporter								mBundleImporter;
 		// initialized on contruction by querying an env variable; can't change during runtime
 		Path										mBundleDirectory;
-		//Bundles											mBundles;
-
-		//template< typename TId >
-		//class IdCounter
-		//{
-		//public:
-		//	IdCounter( TId const& init ) : mCounter( init ) {}
-		//	TId getNextId() { return ++mCounter; }
-		//private:
-		//	TId		mCounter;
-		//};
-
-		//IdCounter< int >								mIdCounter;
+		// the bundles
+		Bundles										mBundles;
 
 	};
 }

@@ -25,30 +25,29 @@ namespace _2Real
 {
 
 	class BundleCollection;
-	class BundleMetadata;
-	//class FunctionBlock;
+	class SharedLibraryMetainfo;
 
 	class Bundle : public std::enable_shared_from_this< Bundle >
 	{
 
 	public:
 
-		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const BundleMetadata > );
+		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const SharedLibraryMetainfo > );
 
 		void										unload( const long timeout );
-
-	//	std::shared_ptr< const BundleMetadata >		getBundleMetadata() const;
-	//	std::shared_ptr< FunctionBlock >			createFunctionBlockInstance( std::string const& );
-	//	std::shared_ptr< FunctionBlock >			getContextBlockInstance();
 
 	private:
 
 		Bundle( Bundle const& other );
 		Bundle operator=( Bundle const& other );
 
-		std::shared_ptr< BundleCollection >			mBundleCollection;
-		std::shared_ptr< const BundleMetadata >		mBundleMetadata;
+		std::weak_ptr< BundleCollection >				mBundleCollection;
+		std::shared_ptr< const SharedLibraryMetainfo >	mBundleMetadata;
 
 	};
 
 }
+
+/*
+*	TODO: bundle should maybe manage both lib & lib metainfo? -> makes bundle importer useless
+*/

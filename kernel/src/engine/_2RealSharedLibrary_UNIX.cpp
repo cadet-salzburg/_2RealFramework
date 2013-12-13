@@ -20,57 +20,49 @@
 #include "_2RealSharedLibrary_UNIX.h"
 #include "helpers/_2RealException.h"
 
+#include <dlfcn.h>
+
 namespace _2Real
 {
-	//FastMutex SharedLibraryImpl::_mutex;
 
-	//SharedLibraryImpl::SharedLibraryImpl()
-	//{
-	//	_handle = 0;
-	//}
+	SharedLibraryImpl::SharedLibraryImpl() :
+		mHandle( nullptr )
+	{
+	}
 
-	//void SharedLibraryImpl::loadImpl(const std::string& path)
-	//{
-	//	FastMutex::ScopedLock lock(_mutex);
-	//
-	//	if (_handle) throw LibraryAlreadyLoadedException(path);
-	//	_handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
-	//	if (!_handle)
-	//	{
-	//		const char* err = dlerror();
-	//		throw LibraryLoadException(err ? std::string(err) : path);
-	//	}
-	//	_path = path;
-	//}
+	void SharedLibraryImpl::loadImpl( Path const& path)
+	{
+		std::string p = path.string();
 
-	//void SharedLibraryImpl::unloadImpl()
-	//{
-	//	FastMutex::ScopedLock lock(_mutex);
-	//
-	//	if (_handle)
-	//	{
-	//		dlclose(_handle);
-	//		_handle = 0;
-	//	}
-	//}
+		if ( mHandle ) throw BundleImportException( path.string() );
+		mHandle = dlopen( path.c_str(), RTLD_LAZY | RTLD_GLOBAL );
+		if ( !mHandle )
+		{
+			const char* err = dlerror();
+			throw BundleImportException( path.string() );
+		}
+	}
 
-	//bool SharedLibraryImpl::isLoadedImpl() const
-	//{
-	//	return _handle != 0; 
-	//}
+	void SharedLibraryImpl::unloadImpl()
+	{
+		if ( mHandle )
+		{
+			dlclose( mHandle );
+			mHandle = nullptr;
+		}
+	}
 
-	//void* SharedLibraryImpl::findSymbolImpl(const std::string& name) const
-	//{
-	//	FastMutex::ScopedLock lock(_mutex);
-	//
-	//	void* result = 0;
-	//	if (_handle)
-	//	{
-	//		result = dlsym(_handle, name.c_str());
-	//	}
-	//	return result;
-	//}
-	//
-	//
+	bool SharedLibraryImpl::isLoadedImpl() const
+	{
+		return ( mHandle != nullptr ); 
+	}
+
+	void * SharedLibraryImpl::findSymbolImpl( std::string const& name ) const
+	{
+		if ( mHandle )
+			return ( void * ) dlsym( mHandle, name.c_str() );
+		else
+			return nullptr;
+	}
 
 }

@@ -39,12 +39,6 @@ namespace _2Real
 
 		bool hasSymbol( std::string const& name ) const;
 		void * getSymbol( std::string const& name );
-
-		//const std::string& getPath() const;
-		//static std::string suffix();
-
-		// debug methods
-		void enumerateSymbols();
 		
 	private:
 

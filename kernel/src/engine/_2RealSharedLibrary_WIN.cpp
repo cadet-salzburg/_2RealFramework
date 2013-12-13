@@ -35,11 +35,11 @@ namespace _2Real
 	{
 		std::string p = path.string();
 
-		if ( mHandle ) throw LibraryAlreadyLoadedException( path.string() );
+		if ( mHandle ) throw BundleImportException( path.string() );
 		DWORD flags = path.is_absolute() ? LOAD_WITH_ALTERED_SEARCH_PATH : 0x00000000;
 		mHandle = LoadLibraryExA( p.c_str(), 0, flags );
 		if ( !mHandle )
-			throw LibraryLoadException( p.c_str() );
+			throw BundleImportException( path.string() );
 	}
 
 	void SharedLibraryImpl::unloadImpl()

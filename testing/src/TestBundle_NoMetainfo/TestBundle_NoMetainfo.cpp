@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2011 Fachhochschule Salzburg GmbH
+	Copyright 2012 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,30 +17,4 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
-
-namespace _2Real
-{
-
-	class SharedLibraryImpl
-	{
-
-	protected:
-
-		SharedLibraryImpl();
-
-		void		loadImpl( Path const& path);
-		void		unloadImpl();
-		bool		isLoadedImpl() const;
-		void *		findSymbolImpl( std::string const& name ) const;
-
-	private:
-
-		void		*mHandle;
-
-	};
-
-}
+#include "_2RealBundle.h"

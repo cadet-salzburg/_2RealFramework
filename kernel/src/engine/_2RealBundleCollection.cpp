@@ -21,6 +21,7 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealConstants.h"
 
+#include "engine/_2RealBundle.h"
 #include "engine/_2RealBundleCollection.h"
 
 #include <boost/log/sources/basic_logger.hpp>
@@ -41,12 +42,7 @@ namespace _2Real
 
 	void BundleCollection::clear()
 	{
-	//	// only ever called after links & blocks have been destroied
-	//	for ( BundleIterator it = mBundles.begin(); it != mBundles.end(); )
-	//	{
-	//		mBundleLoader.unloadLibrary( it->first );
-	//		it = mBundles.erase( it );
-	//	}
+		// TODO
 	}
 
 	Path const& BundleCollection::getBundleDirectory() const
@@ -67,28 +63,27 @@ namespace _2Real
 
 	std::shared_ptr< Bundle > BundleCollection::loadBundle( Path const& path )
 	{
-		if ( mBundleImporter.isLibraryLoaded( path ) )
+		Path absPath = mBundleDirectory / path;
+
+		if ( mBundleImporter.isLibraryLoaded( absPath ) )
 		{
 			std::ostringstream msg;
-			msg << "shared library " << path.string() << " is already loaded";
+			msg << "shared library " << absPath.string() << " is already loaded";
 			throw AlreadyExistsException( msg.str() );
 		}
 
-	//	std::shared_ptr< TemplateId > bundleId = IdGenerator::makeBundleId( relativePath );
-		std::shared_ptr< const BundleMetadata > bundleMetadata = mBundleImporter.importLibrary( path );
-	//	std::shared_ptr< Bundle > bundle( new Bundle( mEngineImpl, bundleMetadata ) );
-	//	bundle->setSelfRef( bundle );
-	//	mBundles.insert( std::make_pair( absPath, bundle ) );
-	//	return bundle;
+		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
+		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info ) );
+		mBundles[ absPath ] = bundle;
+		return bundle;
 	}
 
 	void BundleCollection::unloadBundle( std::shared_ptr< Bundle >, const long timeout )
 	{
-	//	std::string const& absPath = bundle->getBundleMetadata()->getInstallDirectory();
-
-	//	BundleIterator it = mBundles.find( absPath );
-	//	mBundleLoader.unloadLibrary( absPath );
-	//	mBundles.erase( it );
+		// TODO
+		//mBundleLoader.unloadLibrary( bundle->getPath() );
+		//auto it = mBundles.find( bundle->getPath() );
+		//mBundles.erase( it );
 	}
 
 }

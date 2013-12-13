@@ -16,33 +16,31 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealSharedLibraryMetainfo.h"
 
 namespace _2Real
 {
-	class Bundle;
 
-	namespace app
+	SharedLibraryMetainfo::SharedLibraryMetainfo() :
+		std::enable_shared_from_this< SharedLibraryMetainfo >(),
+		mName(), mCategory(), mDescription(), mAuthor(), mContact(), mVersion( 0, 0, 0 )
 	{
-		class BundleHandle
-		{
-
-		public:
-
-			BundleHandle();
-			explicit BundleHandle( std::shared_ptr< Bundle > );
-
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
-			bool					isValid() const;
-			// no timeout could cause the app to block forever
-			void					unload( const long timeout = 1000 );
-
-		private:
-
-			std::weak_ptr< Bundle >		mImpl;
-
-		};
 	}
+
+	SharedLibraryMetainfo::~SharedLibraryMetainfo()
+	{
+	}
+
+	bool SharedLibraryMetainfo::isBasicDataOk() const
+	{
+	}
+
+	bool SharedLibraryMetainfo::isServiceDataOk() const
+	{
+	}
+
+	bool SharedLibraryMetainfo::isTypeDataOk() const
+	{
+	}
+
 }
