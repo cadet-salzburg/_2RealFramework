@@ -1,0 +1,12 @@
+todo list
+
+dlls
+
+get dll loading working on MSW ( just going to take some code from poco )
+get bundle loading working
+write test bundle ( without datatypes ) & get bundle metatdata working
+
+datatypes
+
+write test bundle + datatypes
+

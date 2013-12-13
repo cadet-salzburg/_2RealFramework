@@ -1,0 +1,11 @@
+boost:
+
+- version 1.55
+
+- build cmd: bjam link=shared runtime-link=shared threading=multi
+
+- include dir = $(BOOST) -> all includes start with "boost/"
+
+- lib dir = $(BOOST_DIR)/stage/lib -> created by bjam, includes dll files as well as lib files
+
+- #define BOOST_ALL_DYN_LINK for dynamic linking, otherwise linker looks for static libraries ( error msg: "libboost*.lib" vs "boost*.lib" )
