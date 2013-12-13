@@ -1,3 +1,0 @@
-testing the sfml as base for render bundle
-
-the window block will occasionally crash, might be framework issue?

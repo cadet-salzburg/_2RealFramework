@@ -1,4 +1,0 @@
-issues 
-------
-* ps3 camera driver can cause crash
-
