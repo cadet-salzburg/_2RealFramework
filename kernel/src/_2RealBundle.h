@@ -19,6 +19,8 @@
 #pragma once
 
 #include "bundle/_2RealBundleMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealTypeMetainfo.h"
 #include "helpers/_2RealException.h"
 
 #if defined( _WIN32 )

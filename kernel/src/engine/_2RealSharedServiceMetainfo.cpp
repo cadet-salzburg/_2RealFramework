@@ -16,29 +16,36 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
+#include "engine/_2RealSharedServiceMetainfo.h"
 
 namespace _2Real
 {
-	namespace app
+
+	SharedServiceMetainfo::SharedServiceMetainfo( std::string const& name ) :
+		std::enable_shared_from_this< SharedServiceMetainfo >(),
+		mIsFinal( false ),
+		mName( name )
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
-
-			return locked;
-		}
 	}
-}
 
-// TODO: move to helpers
+	SharedServiceMetainfo::~SharedServiceMetainfo()
+	{
+	}
+
+	std::string const& SharedServiceMetainfo::getName() const
+	{
+		return mName;
+	}
+
+	bool SharedServiceMetainfo::finalize()
+	{
+		mIsFinal = true;
+		return true;
+	}
+
+	bool SharedServiceMetainfo::performExport()
+	{
+		return true;
+	}
+
+}

@@ -107,7 +107,7 @@ namespace _2Real
 	//DECLARE_EXCEPTION( InvalidTypeException, Exception )
 	DECLARE_EXCEPTION( NotFoundException, Exception )
 	DECLARE_EXCEPTION( AlreadyExistsException, Exception )
-	//DECLARE_EXCEPTION( TypeMismatchException, Exception )
+	DECLARE_EXCEPTION( TypeMismatchException, Exception )
 	DECLARE_EXCEPTION( HandleAccessException, Exception )
 	//DECLARE_EXCEPTION( TimeOutException, Exception )
 	//DECLARE_EXCEPTION( InvalidNameException, Exception )

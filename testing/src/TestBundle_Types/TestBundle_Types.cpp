@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2011 Fachhochschule Salzburg GmbH
+	Copyright 2012 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +17,8 @@
 	limitations under the License.
 */
 
-#pragma once
+#include "_2RealBundle.h"
 
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
-
-namespace _2Real
+void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 {
-	namespace app
-	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
-
-			return locked;
-		}
-	}
 }
-
-// TODO: move to helpers

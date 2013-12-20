@@ -38,17 +38,12 @@ namespace _2Real
 
 	void BundleImporter::clear()
 	{
-		//for ( BundleInfoIterator it = m_LoadedBundles.begin(); it != m_LoadedBundles.end(); )
-		//{
-		//	std::string t = it->second.metainfo->getBundleMetadata()->getName();
-		//	delete it->second.metainfo;
-		//	if ( it->second.library != nullptr )
-		//	{
-		//		it->second.library->unload();
-		//		delete it->second.library;
-		//	}
-		//	it = m_LoadedBundles.erase( it );
-		//}
+		for ( auto it = mImportData.begin(); it != mImportData.end(); )
+		{
+			it->second.metainfo.reset();
+			it->second.library.reset();
+			it = mImportData.erase( it );
+		}
 	}
 
 	bool BundleImporter::isLibraryLoaded( Path const& path ) const
@@ -68,7 +63,7 @@ namespace _2Real
 
 		// may throw libraryloadexception
 		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( path ) );
-		std::shared_ptr< SharedLibraryMetainfo > info( new SharedLibraryMetainfo );
+		std::shared_ptr< SharedLibraryMetainfo > info( new SharedLibraryMetainfo( path ) );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{
@@ -102,21 +97,19 @@ namespace _2Real
 
 	void BundleImporter::unimportLibrary( Path const& path )
 	{
-	//	BundleInfoConstIterator it = m_LoadedBundles.find( path );
+		auto it = mImportData.find( path );
 
-	//	if ( it == m_LoadedBundles.end() )
-	//	{
-	//		ostringstream msg;
-	//		throw NotFoundException( msg.str() );
-	//	}
+		if ( it == mImportData.end() )
+		{
+			std::ostringstream msg;
+			msg << "could not find library" << path.string() << std::endl;
+			throw NotFoundException( msg.str() );
+		}
 
-	//	delete it->second.metainfo;
-	//	if ( it->second.library != nullptr )
-	//	{
-	//		it->second.library->unload();
-	//		delete it->second.library;
-	//	}
-	//	it = m_LoadedBundles.erase( it );
+		// delete ? calls dtor
+		it->second.metainfo.reset();
+		it->second.library.reset();
+		mImportData.erase( it );
 	}
 
 }

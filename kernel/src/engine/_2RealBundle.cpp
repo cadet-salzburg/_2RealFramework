@@ -17,22 +17,37 @@
 */
 
 #include "engine/_2RealBundle.h"
-#include "engine/_2RealBundleCollection.h"
+#include "engine/_2RealSharedLibraryMetainfo.h"
 
 namespace _2Real
 {
-	Bundle::Bundle( std::shared_ptr< BundleCollection > collection, std::shared_ptr< const SharedLibraryMetainfo > meta ) :
+
+	Bundle::Bundle( std::shared_ptr< const SharedLibraryMetainfo > meta ) :
 		enable_shared_from_this< Bundle >(),
-		mBundleCollection( collection ),
-		mBundleMetadata( meta )
+		mMetadata( meta ), mUnloadNotifier()
 	{
 	}
 
 	void Bundle::unload( const long timeout )
 	{
-		// kill all blocks ( regular, context )  where this bundle is involved
-		// mEngineImpl->getBlockManager()->destroyBlocks( shared_from_this() );
-		// unload the bundle -> kills this object
-		mBundleCollection.lock()->unloadBundle( shared_from_this(), timeout );
+		// hold the ptr to the bundle until everything is cleared
+		std::shared_ptr< Bundle > tmp = shared_from_this();
+
+		// causes the bundle collection to release the bundle
+		// unless the call to unload was issued by the collection itesself
+		mUnloadNotifier.notify( shared_from_this() );
+		mUnloadNotifier.clear();
+
+		// TODO: kill child blocks etc.
+		( void ) ( timeout );
+
+		// this should kill the bundle, finally
+		tmp.reset();
 	}
+
+	Path const& Bundle::getFilePath() const
+	{
+		return mMetadata->getFilePath();
+	}
+
 }

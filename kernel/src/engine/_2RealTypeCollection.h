@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,26 +20,36 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	namespace app
+	class SharedTypeMetainfo;
+
+	/*
+	*	collection of all shared types exported by a shared library
+	*/
+	class TypeCollection : public std::enable_shared_from_this< TypeCollection >
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
 
-			return locked;
-		}
-	}
+	public:
+
+		TypeCollection();
+		~TypeCollection();
+
+		void clear();
+		void addType( std::shared_ptr< SharedTypeMetainfo > );
+		void typeRemoved( std::shared_ptr< const SharedTypeMetainfo > );
+
+		std::shared_ptr< const SharedTypeMetainfo > get( std::string const& name ) const;
+
+	private:
+
+		TypeCollection( TypeCollection const& other );
+		TypeCollection& operator=( TypeCollection const& other );
+
+		typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		Types;
+
+		Types	mTypes;
+
+	};
 }
-
-// TODO: move to helpers

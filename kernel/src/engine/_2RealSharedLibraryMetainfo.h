@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealVersion.h"
+#include "helpers/_2RealPath.h"
 
 namespace _2Real
 {
@@ -32,27 +33,27 @@ namespace _2Real
 
 	public:
 
-		SharedLibraryMetainfo();
+		SharedLibraryMetainfo( Path const& absPath );
 		~SharedLibraryMetainfo();
 
 		std::string const&		getName() const;
+		Path const&				getFilePath() const;
 		std::string const&		getDescription() const;
 		std::string const&		getAuthor() const;
 		std::string const&		getContact() const;
 		std::string const&		getCategory() const;
 		Version const&			getVersion() const;
 
-		void					setName();
-		void					setDescription();
-		void					setAuthor();
-		void					setContact();
-		void					setCategory();
-		void					setVersion();
+		void					setDescription( std::string const& );
+		void					setAuthor( std::string const& );
+		void					setContact( std::string const& );
+		void					setCategory( std::string const& );
+		void					setVersion( Version const& );
 
-		std::shared_ptr< SharedServiceMetainfo > createService();
+		std::shared_ptr< SharedServiceMetainfo > createService( std::string const& name );
 		void exportService( std::shared_ptr< SharedServiceMetainfo > );
 
-		std::shared_ptr< SharedTypeMetainfo > createType();
+		std::shared_ptr< SharedTypeMetainfo > createType( std::string const& name );
 		void exportType( std::shared_ptr< SharedTypeMetainfo > );
 
 		bool performExport();
@@ -74,8 +75,13 @@ namespace _2Real
 		std::string mAuthor;
 		std::string mContact;
 		Version mVersion;
+		Path mPath;
 
-		//typedef std::map< std::string, std::shared_ptr< BlockMetainfo > >
+		typedef std::map< std::string, std::shared_ptr< SharedServiceMetainfo > >	ServiceMetainfos;
+		typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		TypeMetainfos;
+
+		ServiceMetainfos		mServices;
+		TypeMetainfos			mTypes;
 
 	};
 

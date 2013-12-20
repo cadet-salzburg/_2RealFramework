@@ -16,29 +16,39 @@
 	limitations under the License.
 */
 
-#include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealTypeMetainfo.h"
-#include "engine/_2RealSharedLibraryMetainfo.h"
+#include "engine/_2RealSharedTypeMetainfo.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
 
-		BundleMetainfo::BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > metainfo ) :
-			mImpl( metainfo )
+		TypeMetainfo::TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > metadata ) :
+			mImpl( metadata )
 		{
 		}
 
-		TypeMetainfo BundleMetainfo::createTypeMetainfo( std::string const& name )
+		void TypeMetainfo::addFieldInternal( std::string const& fieldName, std::string const& typeName, std::shared_ptr< const AbstractFieldDescriptor > desc )
 		{
-			// TODO: name checking
-			return TypeMetainfo( mImpl.lock()->createType( name ) );
+			mImpl.lock()->addField( fieldName, typeName, desc );
 		}
 
-		//BlockMetainfo BundleMetainfo::createBlockMetainfo( std::string const& name )
-		//{
-		//}
+		void TypeMetainfo::addField( std::string const& fieldName, std::string const& typeName )
+		{
+			mImpl.lock()->addField( fieldName, typeName, nullptr );
+		}
+
+		// creates actual data
+		std::shared_ptr< CustomData > TypeMetainfo::makeData()
+		{
+			return mImpl.lock()->makeData();
+		}
+
+		void TypeMetainfo::exportType()
+		{
+			mImpl.lock()->finalize();
+		}
+
 	}
 }

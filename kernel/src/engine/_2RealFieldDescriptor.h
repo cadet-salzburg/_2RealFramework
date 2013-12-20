@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,27 +19,30 @@
 
 #pragma once
 
+#include "engine/_2RealAnyHolder_T.h"
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	namespace app
+	class AbstractFieldDescriptor
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
+	public:
+		virtual ~AbstractFieldDescriptor();
+		virtual std::shared_ptr< AbstractAnyHolder > makeAny() const = 0;
+		virtual void enumerateFields() = 0;
+	};
 
-			return locked;
-		}
-	}
+	template< typename TType >
+	class FieldDescriptor_T
+	{
+	public:
+		FieldDescriptor_T( TType const& init ) : mInit( init ) {}
+		std::shared_ptr< AbstractAnyHolder > makeAny() const { return std::shared_ptr< AbstractAnyHolder >( new AnyHolder_T< TType >( *mInit.get() ) ); }
+		void enumerateFields() {}
+	private:
+		FieldDescriptor_T( FieldDescriptor_T const& other );
+		FieldDescriptor_T& operator=( FieldDescriptor_T const& other );
+		std::shared_ptr< TType > mInit;
+		// TODO: shared ptr?
+	};
 }
-
-// TODO: move to helpers

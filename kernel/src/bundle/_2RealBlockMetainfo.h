@@ -19,26 +19,24 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	namespace app
-	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
+	class BlockMetadata;
 
-			return locked;
-		}
+	namespace bundle
+	{
+		class BlockMetainfo
+		{
+
+		public:
+
+			explicit BlockMetainfo( std::shared_ptr< BlockMetadata > );
+
+		private:
+
+			std::weak_ptr< BlockMetadata >		mImpl;
+
+		};
 	}
 }
-
-// TODO: move to helpers

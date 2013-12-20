@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealVersion.h"
+#include "helpers/_2RealPath.h"
 
 namespace _2Real
 {
@@ -38,7 +39,7 @@ namespace _2Real
 			bool isValid() const;
 
 			std::string const&		getName() const;
-			std::string const&		getInstallDirectory() const;
+			Path const&				getFilePath() const;
 			std::string const&		getDescription() const;
 			std::string const&		getAuthor() const;
 			std::string const&		getContact() const;

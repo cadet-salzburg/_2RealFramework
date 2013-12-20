@@ -38,10 +38,11 @@ namespace _2Real
 		BundleCollection( std::shared_ptr< TypeRegistry > registry );
 		~BundleCollection();
 
-		void										clear();
 		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle );
-		void										unloadBundle( std::shared_ptr< Bundle >, const long timeout );
 		Path const&									getBundleDirectory() const;
+
+		void										clear( const unsigned long timeout );
+		void										bundleUnloaded( std::shared_ptr< const Bundle > );
 
 	private:
 

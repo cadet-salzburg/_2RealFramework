@@ -37,7 +37,10 @@ namespace _2Real
 			explicit BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > );
 
 			TypeMetainfo createTypeMetainfo( std::string const& name );
-			BlockMetainfo createBlockMetainfo( std::string const& name );
+			//BlockMetainfo createBlockMetainfo( std::string const& name );
+
+			void exportType( TypeMetainfo const& );
+			//void exportBlock( BlockMetainfo const& );
 
 		private:
 

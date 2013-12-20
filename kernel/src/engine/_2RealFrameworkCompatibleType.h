@@ -19,26 +19,33 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	namespace app
+	template< typename T > struct FrameworkCompatibleType;
+
+	template< >
+	struct FrameworkCompatibleType< int >
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
+		static int defaultValue()
 		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
-
-			return locked;
+			return static_cast< int >( 0 );
 		}
-	}
-}
 
-// TODO: move to helpers
+		static std::string humanReadableName()
+		{
+			return "int";
+		}
+
+		static void writeTo( std::ostream &out, int v )
+		{
+			out << v;
+		}
+
+		static void readFrom( std::istream &in, int &v )
+		{
+			in >> v;
+		}
+	};
+
+}

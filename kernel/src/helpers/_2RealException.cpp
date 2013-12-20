@@ -88,7 +88,7 @@ namespace _2Real
 	//IMPLEMENT_EXCEPTION( InvalidTypeException, Exception, "invalid type exception" )
 	IMPLEMENT_EXCEPTION( NotFoundException, Exception, "not found exception" )
 	IMPLEMENT_EXCEPTION( AlreadyExistsException, Exception, "already exists exception" )
-	//IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
+	IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
 	IMPLEMENT_EXCEPTION( HandleAccessException, Exception, "uninitialized handle exception" )
 	//IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
 	//IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )

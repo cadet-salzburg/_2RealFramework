@@ -46,10 +46,10 @@ namespace _2Real
 			return meta->getName();
 		}
 
-		std::string const& BundleMetainfo::getInstallDirectory() const
+		Path const& BundleMetainfo::getFilePath() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			return meta->getInstallDirectory();
+			return meta->getFilePath();
 		}
 
 		std::string const& BundleMetainfo::getDescription() const

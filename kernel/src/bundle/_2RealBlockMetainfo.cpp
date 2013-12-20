@@ -16,29 +16,16 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
+#include "bundle/_2RealBlockMetainfo.h"
 
 namespace _2Real
 {
-	namespace app
+	namespace bundle
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
 
-			return locked;
+		BlockMetainfo::BlockMetainfo( std::shared_ptr< BlockMetadata > metadata ) :
+			mImpl( metadata )
+		{
 		}
 	}
 }
-
-// TODO: move to helpers

@@ -19,26 +19,33 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	namespace app
+
+	class SharedServiceMetainfo : public std::enable_shared_from_this< SharedServiceMetainfo >
 	{
-		template< typename TObj >
-		std::shared_ptr< TObj > checkValidity( std::weak_ptr< TObj > handle, std::string const& what )
-		{
-			std::shared_ptr< TObj > locked = handle.lock();
-			if ( locked.get() == nullptr )
-			{
-				std::stringstream msg;
-				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
-			}
 
-			return locked;
-		}
-	}
+	public:
+
+		SharedServiceMetainfo( std::string const& name );
+		~SharedServiceMetainfo();
+
+		std::string const&		getName() const;
+
+		// inlets, outlets, params, can create?, description, name
+
+		bool performExport();
+		bool finalize();
+
+	private:
+
+		SharedServiceMetainfo( SharedServiceMetainfo const& );
+		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& );
+
+		bool				mIsFinal;
+		std::string			mName;
+
+	};
+
 }
-
-// TODO: move to helpers
