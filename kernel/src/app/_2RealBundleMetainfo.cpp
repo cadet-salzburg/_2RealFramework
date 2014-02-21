@@ -17,6 +17,8 @@
 */
 
 #include "app/_2RealBundleMetainfo.h"
+#include "app/_2RealBlockMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealHandleValidity.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
 
@@ -46,7 +48,7 @@ namespace _2Real
 			return meta->getName();
 		}
 
-		Path const& BundleMetainfo::getFilePath() const
+		Path const& BundleMetainfo::getFilepath() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getFilePath();
@@ -80,6 +82,22 @@ namespace _2Real
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getVersion();
+		}
+
+		void BundleMetainfo::getExportedBlocks( std::vector< BlockMetainfo > &blocks ) const
+		{
+			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
+			std::vector< std::shared_ptr< const SharedServiceMetainfo > > tmp;
+			meta->getServiceMetainfos( tmp );
+			for ( auto it : tmp ) blocks.push_back( BlockMetainfo( it ) );
+		}
+
+		void BundleMetainfo::getExportedTypes( std::vector< TypeMetainfo > &types ) const
+		{
+			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
+			std::vector< std::shared_ptr< const SharedTypeMetainfo > > tmp;
+			meta->getTypeMetainfos( tmp );
+			for ( auto it : tmp ) types.push_back( TypeMetainfo( it ) );
 		}
 	}
 }

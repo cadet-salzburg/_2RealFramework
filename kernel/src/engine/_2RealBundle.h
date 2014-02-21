@@ -28,6 +28,9 @@ namespace _2Real
 {
 
 	class SharedLibraryMetainfo;
+	class SharedServiceMetainfo;
+	class AbstractSharedServiceLifetimeManager;
+	class Block;
 
 	class Bundle : public std::enable_shared_from_this< Bundle >
 	{
@@ -36,10 +39,19 @@ namespace _2Real
 
 		Bundle( std::shared_ptr< const SharedLibraryMetainfo > );
 
+		~Bundle();
+
+		void init();
+		void initServices();
+
 		// return file path ( from metainfo )
 		Path const&									getFilePath() const;
 		// unload function, via app::bundle handle
 		void										unload( const long timeout );
+
+		std::shared_ptr< Block >					createBlock( std::string const& name );
+
+		std::shared_ptr< const SharedLibraryMetainfo >	getMetainfo() const;
 
 		// unload listener.... bundle collection registers here
 		///////////////////////////////////////////////////////
@@ -62,8 +74,17 @@ namespace _2Real
 		Bundle( Bundle const& other );
 		Bundle operator=( Bundle const& other );
 
-		std::shared_ptr< const SharedLibraryMetainfo >			mMetadata;
+		std::shared_ptr< const SharedLibraryMetainfo >			mMetainfo;
 		Event_T< std::shared_ptr< const Bundle > >				mUnloadNotifier;
+
+		typedef std::pair< std::shared_ptr< AbstractSharedServiceLifetimeManager >, std::shared_ptr< const SharedServiceMetainfo > > ServiceInfo;
+		typedef std::map< std::string, ServiceInfo >			ServiceMap;
+
+		ServiceMap												mServices;
+
+		typedef std::vector< std::shared_ptr< Block > >			ServiceInstances;
+
+		ServiceInstances										mServiceInstances;
 
 	};
 

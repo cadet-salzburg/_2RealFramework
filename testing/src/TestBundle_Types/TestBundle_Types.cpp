@@ -19,6 +19,74 @@
 
 #include "_2RealBundle.h"
 
+class TestObj
+{
+public:
+	TestObj() { std::cout << "TEST OBJ CREATED" << std::endl; }
+	~TestObj() { std::cout << "TEST OBJ CREATED" << std::endl; }
+	void setup() {}
+	void update() {}
+	void shutdown() {}
+private:
+	int i;
+};
+
 void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 {
+	info.setAuthor( "fhs33223" );
+	info.setDescription( "test bundle" );
+	info.setCategory( "testing" );
+	info.setContact( "fhs33223@fh-salzburg.ac.at" );
+	info.setVersion( 0, 0, 0 );
+
+	//_2Real::bundle::TypeMetainfo simple = info.createTypeMetainfo( "testtype_simple" );
+	//simple.addBasicField< int >( "int_field", 0 );
+	//simple.addBasicField< std::string >( "string_field", "" );
+	//simple.exportType();
+
+	//std::shared_ptr< _2Real::CustomData > instanceOfSimple = simple.makeData();
+
+	//_2Real::bundle::TypeMetainfo complex = info.createTypeMetainfo( "testtype_complex" );
+	//complex.addField( "testtype_simple_field", "testtype_simple" );
+	//complex.addBasicField< float >( "float_field", 10.5f );
+
+	_2Real::bundle::FunctionBlockMetainfo blockinfo = info.createFunctionBlockMetainfo( "blockA" );
+
+	blockinfo.setBlockClass< TestObj >();
+	blockinfo.setDescription( "the first test block" );
+	blockinfo.setDependencies( { "name1", "name2", "name3" } );
+
+	std::vector< std::string > test1 = { "a", "b", "c" };
+	std::vector< std::vector< std::string > > test2 = { { "a0", "b0", "c0" }, { "a1", "b1", "c1" } };
+
+	std::vector< std::vector< std::string > > params = { { "paramA", "paramB" } };
+
+	blockinfo.setDefaultSetupPolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW( { { "paramA", "paramB" } } ) ) );
+	blockinfo.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+
+	_2Real::bundle::InletMetainfo inA = blockinfo.createInlet( "inA" );
+	inA.setDescription( "the first inlet" );
+	inA.setMultiInlet( false );
+	inA.setDatatype( "int" );
+	_2Real::bundle::InletMetainfo inB = blockinfo.createInlet( "inB" );
+	inB.setDescription( "the second inlet" );
+	inB.setMultiInlet( false );
+	inB.setDatatype( "float" );
+	_2Real::bundle::InletMetainfo inC = blockinfo.createInlet( "inC" );
+	inC.setDescription( "the third inlet" );
+	inC.setMultiInlet( true );
+	inC.setDatatype( "string vector" );
+	_2Real::bundle::OutletMetainfo outA = blockinfo.createOutlet( "outA" );
+	outA.setDescription( "the first outlet" );
+	outA.setDatatype( "bool" );
+	_2Real::bundle::OutletMetainfo outB = blockinfo.createOutlet( "outB" );
+	outB.setDescription( "the second outlet" );
+	outB.setDatatype( "int" );
+	_2Real::bundle::ParameterMetainfo paramA = blockinfo.createParameter( "paramA" );
+	paramA.setDescription( "the first parameter" );
+	paramA.setDatatype( "unsigned int" );
+	_2Real::bundle::ParameterMetainfo paramB = blockinfo.createParameter( "paramB" );
+	paramB.setDescription( "the second parameter" );
+	paramB.setDatatype( "unsigned int" );
+
 }

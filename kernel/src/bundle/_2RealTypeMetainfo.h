@@ -35,15 +35,15 @@ namespace _2Real
 
 			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
 
-			// function for adding basic types
+			// add fields of basic types
 			template< typename TType >
 			void addBasicField( std::string const& fieldName, TType const& init = FrameworkCompatibleType< TType >::defaultValue() )
 			{
-				std::shared_ptr< const AbstractFieldDescriptor > desc( new FieldDescriptor_T( init ) );
+				std::shared_ptr< const AbstractFieldDescriptor > desc( new FieldDescriptor_T< TType >( init ) );
 				addFieldInternal( fieldName, FrameworkCompatibleType< TType >::humanReadableName(), desc );
 			}
 
-			// ok.... this can add fields of custom types
+			// add fields of custom types
 			void addField( std::string const& fieldName, std::string const& typeName );
 
 			// creates actual data

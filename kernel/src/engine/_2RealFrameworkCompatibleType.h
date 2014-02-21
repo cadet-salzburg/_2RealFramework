@@ -48,4 +48,51 @@ namespace _2Real
 		}
 	};
 
+	template< >
+	struct FrameworkCompatibleType< float >
+	{
+		static float defaultValue()
+		{
+			return 0.f;
+		}
+
+		static std::string humanReadableName()
+		{
+			return "float";
+		}
+
+		static void writeTo( std::ostream &out, float v )
+		{
+			out << v;
+		}
+
+		static void readFrom( std::istream &in, float &v )
+		{
+			in >> v;
+		}
+	};
+
+	template< >
+	struct FrameworkCompatibleType< std::string >
+	{
+		static std::string defaultValue()
+		{
+			return "";
+		}
+
+		static std::string humanReadableName()
+		{
+			return "string";
+		}
+
+		static void writeTo( std::ostream &out, std::string const& v )
+		{
+			out << v;
+		}
+
+		static void readFrom( std::istream &in, std::string &v )
+		{
+			in >> v;
+		}
+	};
 }

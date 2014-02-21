@@ -35,7 +35,6 @@ namespace _2Real
 	{
 		for ( auto it = mTypes.begin(); it != mTypes.end(); )
 		{
-			std::cout << it->first << std::endl;
 			it->second->unregisterFromRemove( *this, &TypeCollection::typeRemoved );
 			it = mTypes.erase( it );
 			// careful... type may be stored in more than one collection, i.e. local & global

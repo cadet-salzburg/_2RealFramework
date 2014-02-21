@@ -58,6 +58,31 @@ namespace _2Real
 
 	};
 
+	template<>
+	class AbstractCallback_T< void >
+	{
+
+	public:
+
+		AbstractCallback_T( void *target ) :
+			mTarget( target )
+		{
+		}
+
+		virtual ~AbstractCallback_T() {};
+		virtual void invoke() = 0;
+
+		bool operator<( AbstractCallback_T< void > const& other )
+		{
+			return ( mTarget < other.mTarget );
+		}
+
+	private:
+
+		void		*mTarget;
+
+	};
+
 	template< typename TCallable, typename TArg >
 	class MemberCallback_T : public AbstractCallback_T< TArg >
 	{
@@ -88,6 +113,36 @@ namespace _2Real
 
 	};
 
+	template< typename TCallable >
+	class MemberCallback_T< TCallable, void > : public AbstractCallback_T< void >
+	{
+
+	public:
+
+		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( void );
+
+		MemberCallback_T( TCallable &callable, Callback method ) :
+			AbstractCallback_T< void >( &callable ),
+			mCallable( callable ),
+			mMethod( method )
+		{
+		}
+
+		void invoke()
+		{
+			( mCallable.*mMethod )();
+		}
+
+	private:
+
+		MemberCallback_T( MemberCallback_T const& other );
+		MemberCallback_T& operator=( MemberCallback_T const& other );
+
+		TCallable			&mCallable;
+		Callback			mMethod;
+
+	};
+
 	template< typename TArg >
 	class FunctionCallback_T : public AbstractCallback_T< TArg >
 	{
@@ -106,6 +161,36 @@ namespace _2Real
 		void invoke( TArg arg )
 		{
 			( mFunction )( mUserData, arg );
+		}
+
+	private:
+
+		FunctionCallback_T( FunctionCallback_T const& other );
+		FunctionCallback_T& operator=( FunctionCallback_T const& other );
+
+		CallbackFunction	mFunction;
+		void				*mUserData;
+
+	};
+
+	template<>
+	class FunctionCallback_T< void > : public AbstractCallback_T< void >
+	{
+
+	public:
+
+		typedef void ( _2REAL_CALLBACK *CallbackFunction )( void * );
+
+		FunctionCallback_T( CallbackFunction func, void *userData ) :
+			AbstractCallback_T< void >( (void*)func ),
+			mFunction( func ),
+			mUserData( userData )
+		{
+		}
+
+		void invoke()
+		{
+			( mFunction )( mUserData );
 		}
 
 	private:

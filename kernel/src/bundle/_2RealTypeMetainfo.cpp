@@ -39,7 +39,6 @@ namespace _2Real
 			mImpl.lock()->addField( fieldName, typeName, nullptr );
 		}
 
-		// creates actual data
 		std::shared_ptr< CustomData > TypeMetainfo::makeData()
 		{
 			return mImpl.lock()->makeData();

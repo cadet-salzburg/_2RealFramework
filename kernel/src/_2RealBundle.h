@@ -19,8 +19,15 @@
 #pragma once
 
 #include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealFunctionBlockMetainfo.h"
 #include "bundle/_2RealTypeMetainfo.h"
+#include "bundle/_2RealInletMetainfo.h"
+#include "bundle/_2RealOutletMetainfo.h"
+#include "bundle/_2RealParameterMetainfo.h"
+
+#include "bundle/_2RealInSlotPolicy.h"
+
 #include "helpers/_2RealException.h"
 
 #if defined( _WIN32 )

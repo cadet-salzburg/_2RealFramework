@@ -44,29 +44,138 @@ int main( int argc, char *argv[] )
 
 		// testing dll without required metainfo function
 		// exception should state this, otherwise sth else went wrong! ( i.e., dll not found at all :) )
-		{
-			try
-			{
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_NoMetainfo" );
-				std::cout << "testing malformed bundle: FAILED" << std::endl;
-			}
-			catch( _2Real::Exception &e )
-			{
-				std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
-			}
-		}
+		//{
+		//	try
+		//	{
+		//		std::cout << "testing empty bundle" << std::endl;
+		//		_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_NoMetainfo" );
+		//		std::cout << "testing malformed bundle: FAILED" << std::endl;
+		//	}
+		//	catch( _2Real::Exception &e )
+		//	{
+		//		std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
+		//	}
+		//}
 
 		// testing dll with metainfo function, but no info
 		// exception should state this ( incomplete metainfo ), otherwise sth else went wrong! ( i.e., dll not found at all :) )
+		//{
+		//	try
+		//	{
+		//		std::cout << "testing bundle w. malformed metainfo" << std::endl;
+		//		_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_EmptyMetainfo" );
+		//		std::cout << "testing malformed bundle: FAILED" << std::endl;
+		//	}
+		//	catch( _2Real::Exception &e )
+		//	{
+		//		std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
+		//	}
+		//}
+
+		//{
+		//	try
+		//	{
+		//		std::cout << "testing bundle w. metainfo" << std::endl;
+		//		_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_FullMetainfo" );
+		//		std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
+		//	}
+		//	catch ( _2Real::Exception &e )
+		//	{
+		//		std::cout << "testing valid bundle: " << e.what() << " " << e.message() << std::endl;
+		//	}
+		//}
+
+		//{
+		//	try
+		//	{
+		//		std::cout << "testing bundle w. types" << std::endl;
+		//		_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_Types" );
+		//		std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
+		//	}
+		//	catch ( _2Real::Exception &e )
+		//	{
+		//		std::cout << "testing valid bundle: " << e.what() << " " << e.message() << std::endl;
+		//	}
+		//}
+
 		{
 			try
 			{
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_EmptyMetainfo" );
-				std::cout << "testing malformed bundle: FAILED" << std::endl;
+				std::cout << "testing bundle w. blocks" << std::endl;
+				_2Real::app::BundleHandle bundle = testEngine.loadBundle( "TestBundle_Types" );
+				std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
+
+				// -------print the block metainfo---------
+
+				_2Real::app::BundleMetainfo bundleinfo = bundle.getMetainfo();
+
+				std::cout << "basic bundle info" << std::endl;
+				std::cout << "name " << bundleinfo.getName() << std::endl;
+				std::cout << "description " << bundleinfo.getDescription() << std::endl;
+				std::cout << "category " << bundleinfo.getCategory() << std::endl;
+				std::cout << "author " << bundleinfo.getAuthor() << std::endl;
+				std::cout << "contact " << bundleinfo.getContact() << std::endl;
+				std::cout << "version " << bundleinfo.getVersion() << std::endl;
+				std::cout << "filepath " << bundleinfo.getFilepath() << std::endl;
+
+				std::vector< _2Real::app::BlockMetainfo > blockinfos;
+				bundleinfo.getExportedBlocks( blockinfos );
+				std::cout << "exported blocks " << blockinfos.size() << std::endl;
+				for ( auto it : blockinfos )
+				{
+					std::cout << "\t" << it.getName() << std::endl;
+					std::cout << "\t" << it.getDescription() << std::endl;
+					std::cout << "\tis singleton " << std::boolalpha << it.isContext() << std::endl;
+					std::vector< std::string > dependencies;
+					it.getDependencies( dependencies );
+					std::cout << "\tdependencies\t";
+					for ( auto it : dependencies ) std::cout << it << " ";
+					std::cout << std::endl;
+
+					std::vector< _2Real::app::InletMetainfo > inletinfos;
+					it.getInletMetainfos( inletinfos );
+
+					std::cout << "\tinlets " << inletinfos.size() << std::endl;
+					for ( auto it : inletinfos )
+					{
+						std::cout << "\t\tname " << it.getName() << std::endl;
+						std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+						std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+						std::cout << "\t\tis multi " << std::boolalpha << it.isMultiInlet() << std::endl;
+					}
+
+					std::vector< _2Real::app::OutletMetainfo > outletinfos;
+					it.getOutletMetainfos( outletinfos );
+
+					std::cout << "\toutlets "  << outletinfos.size() << std::endl;
+					for ( auto it : outletinfos )
+					{
+						std::cout << "\t\tname " << it.getName() << std::endl;
+						std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+						std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+					}
+
+					std::vector< _2Real::app::ParameterMetainfo > paraminfos;
+					it.getParameterMetainfos( paraminfos );
+
+					std::cout << "\tparameters " << paraminfos.size() << std::endl;
+					for ( auto it : paraminfos )
+					{
+						std::cout << "\t\tname " << it.getName() << std::endl;
+						std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+						std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+					}
+
+					std::cout << blockinfos.front().getName() << std::endl;
+
+					// could be the context! -> check
+					_2Real::app::FunctionBlockHandle block = bundle.createBlock( blockinfos.front().getName() );
+
+				}
 			}
-			catch( _2Real::Exception &e )
+			catch ( _2Real::Exception &e )
 			{
-				std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
+				std::cout << "testing valid bundle: " << e.what() << " " << e.message() << std::endl;
 			}
 		}
 

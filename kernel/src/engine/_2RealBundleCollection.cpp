@@ -42,21 +42,28 @@ namespace _2Real
 
 	void BundleCollection::clear( const unsigned long timeout )
 	{
-		std::cout << "clearing bundles" << std::endl;
-
 		for ( auto it = mBundles.begin(); it != mBundles.end(); )
 		{
-			std::cout << it->first.string() << std::endl;
-			std::cout << "unregsitering" << std::endl;
+			std::cout << "clearing bundle " << it->first.string() << std::endl;
+			
 			it->second->unregisterFromUnload( *this, &BundleCollection::bundleUnloaded );
-			std::cout << "unloading" << std::endl;
-			mBundleImporter.unimportLibrary( it->first );
-			it->second->unload( timeout );
-			std::cout << "unloaded!!!" << std::endl;
-			it = mBundles.erase( it );
-		}
 
-		std::cout << "done" << std::endl;
+			/*
+			*	kills blocks
+			*/
+			it->second->unload( timeout );
+
+			/*
+			*	calls dtor, removes exported service & types, deletes bundle metainfo
+			*/
+			_2Real::Path id = it->first;
+			it = mBundles.erase( it );
+
+			/*
+			*	unloads dll
+			*/
+			mBundleImporter.unimportLibrary( id );
+		}
 	}
 
 	Path const& BundleCollection::getBundleDirectory() const
@@ -89,18 +96,17 @@ namespace _2Real
 		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
 		std::shared_ptr< Bundle > bundle( new Bundle( info ) );
 		bundle->registerToUnload( *this, &BundleCollection::bundleUnloaded );
+		bundle->init();
 		mBundles[ absPath ] = bundle;
 		return bundle;
 	}
 
 	void BundleCollection::bundleUnloaded( std::shared_ptr< const Bundle > bundle )
 	{
-		std::cout << "unload msg!" << std::endl;
-
-		mBundleImporter.unimportLibrary( bundle->getFilePath() );
 		auto it = mBundles.find( bundle->getFilePath() );
 		if ( it != mBundles.end() )
 			mBundles.erase( it );
+		mBundleImporter.unimportLibrary( bundle->getFilePath() );
 	}
 
 }

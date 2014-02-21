@@ -66,7 +66,6 @@ namespace _2Real
 		{
 			std::lock_guard< std::mutex > lock( mListenerAccess );
 			EventListeners::iterator it = mListeners.find( listener );
-			std::cout << mListeners.size() << std::endl;
 			if ( it != mListeners.end() )
 				mListeners.erase( it );
 		}
@@ -76,6 +75,68 @@ namespace _2Real
 			std::lock_guard< std::mutex > lock( mListenerAccess );
 			for ( auto it : mListeners )
 				( *it ).invoke( arg );
+		}
+
+	private:
+
+		Event_T( Event_T const& other );
+		Event_T& operator=( Event_T const& other );
+
+		mutable std::mutex		mListenerAccess;
+		EventListeners			mListeners;
+
+	};
+
+	template<>
+	class Event_T< void >
+	{
+
+	public:
+
+		struct Compare
+		{
+			bool operator()( std::shared_ptr< AbstractCallback_T< void > > a, std::shared_ptr< AbstractCallback_T< void > > b )
+			{
+#ifdef _DEBUG
+				assert( a.get() );
+				assert( b.get() );
+#endif
+				return ( *a.get() < *b.get() );
+			}
+		};
+
+		typedef std::set< std::shared_ptr< AbstractCallback_T< void > >, Compare > EventListeners;
+
+		Event_T() {}
+		~Event_T() { clear(); }
+
+		void clear()
+		{
+			std::lock_guard< std::mutex > lock( mListenerAccess );
+			mListeners.clear();
+		}
+
+		void addListener( std::shared_ptr< AbstractCallback_T< void > > listener )
+		{
+			std::lock_guard< std::mutex > lock( mListenerAccess );
+			EventListeners::iterator it = mListeners.find( listener );
+			if ( it == mListeners.end() )
+				mListeners.insert( listener );
+		}
+
+		void removeListener( std::shared_ptr< AbstractCallback_T< void > > listener )
+		{
+			std::lock_guard< std::mutex > lock( mListenerAccess );
+			EventListeners::iterator it = mListeners.find( listener );
+			if ( it != mListeners.end() )
+				mListeners.erase( it );
+		}
+
+		void notify() const
+		{
+			std::lock_guard< std::mutex > lock( mListenerAccess );
+			for ( auto it : mListeners )
+				( *it ).invoke();
 		}
 
 	private:

@@ -34,11 +34,13 @@ namespace _2Real
 
 	SharedTypeMetainfo::~SharedTypeMetainfo()
 	{
+		std::cout << "deleting shared type metainfo " << mName << std::endl;
 	}
 
 	std::shared_ptr< CustomData > SharedTypeMetainfo::makeData() const
 	{
 		std::shared_ptr< CustomData > data( new CustomData );
+		data->mMetainfo = shared_from_this();
 		for ( auto it : mFields )
 		{
 			data->mDataFields[ it.first ] = it.second->makeData();

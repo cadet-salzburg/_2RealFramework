@@ -50,20 +50,20 @@ namespace _2Real
 		void					setCategory( std::string const& );
 		void					setVersion( Version const& );
 
-		std::shared_ptr< SharedServiceMetainfo > createService( std::string const& name );
-		void exportService( std::shared_ptr< SharedServiceMetainfo > );
+		void					getServiceMetainfos( std::vector< std::shared_ptr< const SharedServiceMetainfo > > &infos ) const;
+		void					getTypeMetainfos( std::vector< std::shared_ptr< const SharedTypeMetainfo > > &infos ) const;
 
+		std::shared_ptr< SharedServiceMetainfo > createService( std::string const& name, const bool isSingleton );
 		std::shared_ptr< SharedTypeMetainfo > createType( std::string const& name );
-		void exportType( std::shared_ptr< SharedTypeMetainfo > );
 
 		bool performExport();
 
 	private:
 
 		// called by perform export
-		bool isBasicDataOk() const;
-		bool isServiceDataOk() const;
-		bool isTypeDataOk() const;
+		//bool isBasicDataOk() const;
+		//bool isServiceDataOk() const;
+		//bool isTypeDataOk() const;
 
 		SharedLibraryMetainfo( SharedLibraryMetainfo const& );
 		SharedLibraryMetainfo& operator=( SharedLibraryMetainfo const& );

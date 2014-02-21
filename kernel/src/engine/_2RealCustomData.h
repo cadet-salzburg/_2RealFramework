@@ -75,7 +75,7 @@ namespace _2Real
 		typedef std::map< std::string, std::shared_ptr< _2Real::AbstractAnyHolder > >	DataFields;
 
 		DataFields										mDataFields;
-		//std::weak_ptr< const SharedTypeMetainfo >		mMetainfo;
+		std::weak_ptr< const SharedTypeMetainfo >		mMetainfo;	// could be gone!
 
 		void										setValueInternal( std::string const& fieldName, std::shared_ptr< AbstractAnyHolder > );
 		std::shared_ptr< const AbstractAnyHolder >	getValueInternal( std::string const& fieldName ) const;

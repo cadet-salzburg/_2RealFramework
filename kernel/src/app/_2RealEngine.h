@@ -52,6 +52,11 @@ namespace _2Real
 			BundleHandle loadBundle( std::string const& libname );
 	//--------------------- bundle loading
 
+	//---- debug info
+#ifdef _DEBUGINFO
+			void printTypeCollection();
+#endif
+
 		private:
 
 			Engine();

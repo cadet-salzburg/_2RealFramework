@@ -67,7 +67,6 @@ namespace _2Real
 		SharedTypeMetainfo( SharedTypeMetainfo const& );
 		SharedTypeMetainfo& operator=( SharedTypeMetainfo const& );
 
-		// these are weak ptrs.. i.e., it is very much possible that a fiel is gone
 		typedef std::vector< std::pair< std::string, std::shared_ptr< const AbstractDataFieldMetainfo > > >		FieldDescriptions;
 
 		// type name, as set by the bundle

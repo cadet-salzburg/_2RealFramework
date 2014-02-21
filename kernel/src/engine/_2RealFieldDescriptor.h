@@ -27,16 +27,16 @@ namespace _2Real
 	class AbstractFieldDescriptor
 	{
 	public:
-		virtual ~AbstractFieldDescriptor();
+		virtual ~AbstractFieldDescriptor() {}
 		virtual std::shared_ptr< AbstractAnyHolder > makeAny() const = 0;
 		virtual void enumerateFields() = 0;
 	};
 
 	template< typename TType >
-	class FieldDescriptor_T
+	class FieldDescriptor_T : public AbstractFieldDescriptor
 	{
 	public:
-		FieldDescriptor_T( TType const& init ) : mInit( init ) {}
+		FieldDescriptor_T( TType const& init ) : mInit( new TType( init ) ) {}
 		std::shared_ptr< AbstractAnyHolder > makeAny() const { return std::shared_ptr< AbstractAnyHolder >( new AnyHolder_T< TType >( *mInit.get() ) ); }
 		void enumerateFields() {}
 	private:

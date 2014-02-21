@@ -27,7 +27,8 @@ namespace _2Real
 	namespace bundle
 	{
 		class TypeMetainfo;
-		class BlockMetainfo;
+		class FunctionBlockMetainfo;
+		class ContextBlockMetainfo;
 
 		class BundleMetainfo
 		{
@@ -36,11 +37,15 @@ namespace _2Real
 
 			explicit BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > );
 
-			TypeMetainfo createTypeMetainfo( std::string const& name );
-			//BlockMetainfo createBlockMetainfo( std::string const& name );
+			void setAuthor( std::string const& );
+			void setDescription( std::string const& );
+			void setContact( std::string const& );
+			void setCategory( std::string const& );
+			void setVersion( const unsigned int, const unsigned int, const unsigned int );
 
-			void exportType( TypeMetainfo const& );
-			//void exportBlock( BlockMetainfo const& );
+			TypeMetainfo createTypeMetainfo( std::string const& name );
+			FunctionBlockMetainfo createFunctionBlockMetainfo( std::string const& name );
+			ContextBlockMetainfo createContextBlockMetainfo( std::string const& name );
 
 		private:
 
@@ -49,3 +54,7 @@ namespace _2Real
 		};
 	}
 }
+
+/*
+*	TODO: name checking
+*/

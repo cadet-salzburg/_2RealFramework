@@ -28,6 +28,9 @@ namespace _2Real
 
 	namespace app
 	{
+		class BlockMetainfo;
+		class TypeMetainfo;
+
 		class BundleMetainfo
 		{
 
@@ -39,12 +42,15 @@ namespace _2Real
 			bool isValid() const;
 
 			std::string const&		getName() const;
-			Path const&				getFilePath() const;
+			Path const&				getFilepath() const;
 			std::string const&		getDescription() const;
 			std::string const&		getAuthor() const;
 			std::string const&		getContact() const;
 			std::string const&		getCategory() const;
 			Version const&			getVersion() const;
+
+			void getExportedBlocks( std::vector< BlockMetainfo > & ) const;
+			void getExportedTypes( std::vector< TypeMetainfo > & ) const;
 
 		private:
 

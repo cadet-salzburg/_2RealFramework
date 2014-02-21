@@ -40,7 +40,7 @@ namespace _2Real
 	{
 		for ( auto it = mImportData.begin(); it != mImportData.end(); )
 		{
-			it->second.metainfo.reset();
+			//it->second.metainfo.reset();
 			it->second.library.reset();
 			it = mImportData.erase( it );
 		}
@@ -56,7 +56,8 @@ namespace _2Real
 		if ( isLibraryLoaded( path ) )
 		{
 			auto it = mImportData.find( path );
-			return it->second.metainfo;
+			//return it->second.metainfo;
+			return nullptr;
 		}
 
 		typedef void ( *MetainfoFunc )( bundle::BundleMetainfo &info );
@@ -79,7 +80,7 @@ namespace _2Real
 
 			SharedLibraryImportData importData;
 			importData.library = lib;
-			importData.metainfo = info;
+			//importData.metainfo = info;
 			mImportData[ path ] = importData;
 
 			return info;
@@ -107,7 +108,7 @@ namespace _2Real
 		}
 
 		// delete ? calls dtor
-		it->second.metainfo.reset();
+		/*it->second.metainfo.reset();*/
 		it->second.library.reset();
 		mImportData.erase( it );
 	}

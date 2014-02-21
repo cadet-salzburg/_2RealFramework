@@ -55,7 +55,7 @@ namespace _2Real
 		struct SharedLibraryImportData
 		{
 			std::shared_ptr< SharedLibrary >				library;
-			std::shared_ptr< SharedLibraryMetainfo >		metainfo;
+			//std::shared_ptr< SharedLibraryMetainfo >		metainfo;
 		};
 		typedef std::map< Path, SharedLibraryImportData >	ImportData;
 

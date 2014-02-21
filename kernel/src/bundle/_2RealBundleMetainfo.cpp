@@ -17,7 +17,8 @@
 */
 
 #include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealFunctionBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
 #include "bundle/_2RealTypeMetainfo.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
 
@@ -33,12 +34,42 @@ namespace _2Real
 
 		TypeMetainfo BundleMetainfo::createTypeMetainfo( std::string const& name )
 		{
-			// TODO: name checking
 			return TypeMetainfo( mImpl.lock()->createType( name ) );
 		}
 
-		//BlockMetainfo BundleMetainfo::createBlockMetainfo( std::string const& name )
-		//{
-		//}
+		FunctionBlockMetainfo BundleMetainfo::createFunctionBlockMetainfo( std::string const& name )
+		{
+			return FunctionBlockMetainfo( mImpl.lock()->createService( name, false ) );
+		}
+
+		ContextBlockMetainfo BundleMetainfo::createContextBlockMetainfo( std::string const& name )
+		{
+			return ContextBlockMetainfo( mImpl.lock()->createService( name, true ) );
+		}
+
+		void BundleMetainfo::setAuthor( std::string const& author )
+		{
+			mImpl.lock()->setAuthor( author );
+		}
+
+		void BundleMetainfo::setDescription( std::string const& description )
+		{
+			mImpl.lock()->setDescription( description );
+		}
+
+		void BundleMetainfo::setContact( std::string const& contact )
+		{
+			mImpl.lock()->setContact( contact );
+		}
+
+		void BundleMetainfo::setCategory( std::string const& category )
+		{
+			mImpl.lock()->setCategory( category );
+		}
+
+		void BundleMetainfo::setVersion( const unsigned int major, const unsigned int minor, const unsigned int revision )
+		{
+			mImpl.lock()->setVersion( Version( major, minor, revision ) );
+		}
 	}
 }

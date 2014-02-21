@@ -32,9 +32,12 @@ namespace _2Real
 
 	SharedLibraryMetainfo::~SharedLibraryMetainfo()
 	{
+		std::cout << "deleting shared library metainfo " << mName << std::endl;
+		mServices.clear();
+		mTypes.clear();
 	}
 
-	std::shared_ptr< SharedServiceMetainfo > SharedLibraryMetainfo::createService( std::string const& name )
+	std::shared_ptr< SharedServiceMetainfo > SharedLibraryMetainfo::createService( std::string const& name, const bool isSingleton )
 	{
 		if ( mServices.find( name ) != mServices.end() )
 		{
@@ -43,17 +46,10 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		mServices[ name ] = nullptr;
-
-		return std::shared_ptr< SharedServiceMetainfo >( new SharedServiceMetainfo( name ) );
-	}
-
-	void SharedLibraryMetainfo::exportService( std::shared_ptr< SharedServiceMetainfo > info )
-	{
-		if ( info->finalize() )
-			mServices[ info->getName() ] = info;
-
-		// TODO: exception
+		std::shared_ptr< SharedServiceMetainfo > result( new SharedServiceMetainfo( name ) );
+		result->setSingleton( isSingleton );
+		mServices[ name ] = result;
+		return result;
 	}
 
 	std::shared_ptr< SharedTypeMetainfo > SharedLibraryMetainfo::createType( std::string const& name )
@@ -65,47 +61,35 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		mServices[ name ] = nullptr;
-
-		return std::shared_ptr< SharedTypeMetainfo >( new SharedTypeMetainfo( name ) );
-	}
-
-	void SharedLibraryMetainfo::exportType( std::shared_ptr< SharedTypeMetainfo > info )
-	{
-		if ( info->finalize() )
-			mTypes[ info->getName() ] = info;
-
-		// TODO: exception
+		std::shared_ptr< SharedTypeMetainfo > result( new SharedTypeMetainfo( name ) );
+		mTypes[ name ] = result;
+		return result;
 	}
 
 	bool SharedLibraryMetainfo::performExport()
 	{
-		bool ok = isBasicDataOk();
-		ok &= isTypeDataOk();
-		ok &= isServiceDataOk();
-		return ok;
-	}
+		//bool ok = isBasicDataOk();
+		//ok &= isTypeDataOk();
+		//ok &= isServiceDataOk();
+		//return ok;
 
-	bool SharedLibraryMetainfo::isBasicDataOk() const
-	{
 		return true;
 	}
 
-	bool SharedLibraryMetainfo::isServiceDataOk() const
-	{
-		bool ok = true;
-		for ( auto it : mServices )
-			ok &= it.second->performExport();
-		return ok;
-	}
+	//bool SharedLibraryMetainfo::isBasicDataOk() const
+	//{
+	//	return true;
+	//}
 
-	bool SharedLibraryMetainfo::isTypeDataOk() const
-	{
-		bool ok = true;
-		for ( auto it : mTypes )
-			ok &= it.second->performExport();
-		return ok;
-	}
+	//bool SharedLibraryMetainfo::isServiceDataOk() const
+	//{
+	//	return true;
+	//}
+
+	//bool SharedLibraryMetainfo::isTypeDataOk() const
+	//{
+	//	return true;
+	//}
 
 	Path const& SharedLibraryMetainfo::getFilePath() const
 	{
@@ -165,6 +149,22 @@ namespace _2Real
 	void SharedLibraryMetainfo::setVersion( Version const& version )
 	{
 		mVersion = version;
+	}
+
+	void SharedLibraryMetainfo::getServiceMetainfos( std::vector< std::shared_ptr< const SharedServiceMetainfo > > &infos ) const
+	{
+		infos.clear();
+		infos.reserve( mServices.size() );
+		for ( auto it : mServices )
+			infos.push_back( it.second );
+	}
+
+	void SharedLibraryMetainfo::getTypeMetainfos( std::vector< std::shared_ptr< const SharedTypeMetainfo > > &infos ) const
+	{
+		infos.clear();
+		infos.resize( mTypes.size() );
+		for ( auto it : mTypes )
+			infos.push_back( it.second );
 	}
 
 }
