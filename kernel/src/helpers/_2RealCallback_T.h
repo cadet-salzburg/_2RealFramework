@@ -91,8 +91,8 @@ namespace _2Real
 
 		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( TArg );
 
-		MemberCallback_T( TCallable &callable, Callback method ) :
-			AbstractCallback_T< TArg >( &callable ),
+		MemberCallback_T( TCallable *callable, Callback method ) :
+			AbstractCallback_T< TArg >( callable ),
 			mCallable( callable ),
 			mMethod( method )
 		{
@@ -100,7 +100,7 @@ namespace _2Real
 
 		void invoke( TArg arg )
 		{
-			( mCallable.*mMethod )( arg );
+			( mCallable->*mMethod )( arg );
 		}
 
 	private:
@@ -108,7 +108,7 @@ namespace _2Real
 		MemberCallback_T( MemberCallback_T const& other );
 		MemberCallback_T& operator=( MemberCallback_T const& other );
 
-		TCallable			&mCallable;
+		TCallable			*mCallable;
 		Callback			mMethod;
 
 	};
@@ -121,8 +121,8 @@ namespace _2Real
 
 		typedef void ( _2REAL_MEMBER_CALLBACK TCallable::*Callback )( void );
 
-		MemberCallback_T( TCallable &callable, Callback method ) :
-			AbstractCallback_T< void >( &callable ),
+		MemberCallback_T( TCallable *callable, Callback method ) :
+			AbstractCallback_T< void >( callable ),
 			mCallable( callable ),
 			mMethod( method )
 		{
@@ -130,7 +130,7 @@ namespace _2Real
 
 		void invoke()
 		{
-			( mCallable.*mMethod )();
+			( mCallable->*mMethod )();
 		}
 
 	private:
@@ -138,7 +138,7 @@ namespace _2Real
 		MemberCallback_T( MemberCallback_T const& other );
 		MemberCallback_T& operator=( MemberCallback_T const& other );
 
-		TCallable			&mCallable;
+		TCallable			*mCallable;
 		Callback			mMethod;
 
 	};
@@ -202,4 +202,22 @@ namespace _2Real
 		void				*mUserData;
 
 	};
+
+	template< typename TCallable, typename TArg >
+	std::shared_ptr< AbstractCallback_T< TArg > > makeCallback( TCallable *callable, void ( __thiscall TCallable::*callback )( TArg ) )
+	{
+		return std::shared_ptr< AbstractCallback_T< TArg > >( new MemberCallback_T< TCallable, TArg >( callable, callback ) );
+	}
+
+	//template< typename TCallable, void >
+	//std::shared_ptr< AbstractCallback_T< void > > makeCallback( TCallable *callable, void ( TCallable::*callback )( void ) )
+	//{
+	//	return std::shared_ptr< AbstractCallback_t< void > >( new MemberCallback_T< TCallable, void >( callable, callback ) );
+	//}
+
+	//template< typename TArg >
+	//std::shared_ptr< AbstractCallback_T< TArg > > makeCallback( void ( *callback )( void ), void *userData = nullptr )
+	//{
+	//	return std::shared_ptr< AbstractCallback_t< TArg > >( new FunctionCallback_T< TArg >( callback, userData ) );
+	//}
 }

@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealBundle.h"
+#include "engine/_2RealBundleCollection.h"
 #include "engine/_2RealBlock.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
 #include "engine/_2RealSharedServiceMetainfo.h"
@@ -27,8 +28,9 @@
 namespace _2Real
 {
 
-	Bundle::Bundle( std::shared_ptr< const SharedLibraryMetainfo > meta ) :
+	Bundle::Bundle( std::shared_ptr< BundleCollection > bundles, std::shared_ptr< const SharedLibraryMetainfo > meta ) :
 		enable_shared_from_this< Bundle >(),
+		mBundleCollection( bundles ),
 		mMetainfo( meta ), mUnloadNotifier()
 	{
 	}
@@ -116,8 +118,14 @@ namespace _2Real
 				createBlock( dependency );
 		}
 
+		std::weak_ptr< Threadpool > threads;
+		if ( info->isSingleton() )
+			threads = mBundleCollection.lock()->getThreadsForSingletonBlock();
+		else
+			threads = mBundleCollection.lock()->getThreadsForRegularBlock();
+
 		auto obj = ctor->create();
-		std::shared_ptr< Block > instance( new Block( info, obj ) );
+		std::shared_ptr< Block > instance( new Block( threads.lock(), info, obj ) );
 		instance->init();
 		mServiceInstances.push_back( instance );
 

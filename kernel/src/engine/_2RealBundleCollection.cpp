@@ -28,9 +28,11 @@
 
 namespace _2Real
 {
-	BundleCollection::BundleCollection( std::shared_ptr< TypeRegistry > registry ) :
+	BundleCollection::BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool > ded, std::shared_ptr< Threadpool > threads ) :
 		std::enable_shared_from_this< BundleCollection >(),
-		mBundleImporter( registry )
+		mBundleImporter( registry ),
+		mThreadsDedicated( ded ),
+		mThreads( threads )
 	{
 		updateBundleDirectory();
 	}
@@ -46,7 +48,7 @@ namespace _2Real
 		{
 			std::cout << "clearing bundle " << it->first.string() << std::endl;
 			
-			it->second->unregisterFromUnload( *this, &BundleCollection::bundleUnloaded );
+			it->second->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
 
 			/*
 			*	kills blocks
@@ -94,8 +96,8 @@ namespace _2Real
 		}
 
 		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
-		std::shared_ptr< Bundle > bundle( new Bundle( info ) );
-		bundle->registerToUnload( *this, &BundleCollection::bundleUnloaded );
+		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info ) );
+		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
 		bundle->init();
 		mBundles[ absPath ] = bundle;
 		return bundle;

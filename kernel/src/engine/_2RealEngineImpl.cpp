@@ -18,6 +18,7 @@
 
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealBundleCollection.h"
+#include "engine/_2RealThreadpool.h"
 #include "helpers/_2RealConstants.h"
 
 namespace _2Real
@@ -31,26 +32,14 @@ namespace _2Real
 
 	EngineImpl::EngineImpl() :
 		enable_shared_from_this< EngineImpl >()
-		//mLogger( new Logger( "EngineLog.txt" ) ),
-		//mTimer( new Timer( this, 1, false ) ),
-		//mTypeRegistry( new TypeRegistry ),
-		//mThreadPool( new ThreadPool( this, 10, 0, "" ) ),
-		//mBundleCollection( new BundleCollection( /*shared_from_this()*/ ) )
-		//mSystem( new System( this ) ),
-		//mLinkManager( new LinkCollection( this ) ),
-		//mTimerManager( new TimerCollection( this ) )
 	{
-		//mTimestamp.update();
-		//mTypeRegistry->registerType( Image::getTypeMetadata() );
-		//mTimer->start();
-
 		std::cout << "engine created" << std::endl;
 	}
 
 	EngineImpl::~EngineImpl()
 	{
-		//try
-		//{
+		try
+		{
 		//	mLogger->addLine( "ENGINE SHUTDOWN" );
 		//	clearFully();
 		//	mLogger->addLine( "ENGINE CLEARED" );
@@ -63,17 +52,21 @@ namespace _2Real
 		//	delete mTypeRegistry;
 		//	delete mTimer;
 		//	delete mLogger;
-		//}
-		//catch ( std::exception const& e )
-		//{
-		//	std::cout << e.what() << std::endl;
-		//}
+		}
+		catch ( std::exception const& e )
+		{
+			std::cout << e.what() << std::endl;
+		}
 	}
 
 	void EngineImpl::privateInit()
 	{
 		// order matters -> see order of member vars
-		mBundleCollection.reset( new BundleCollection( mTypeRegistry ) );
+
+		mThreadsDedicated.reset( new Threadpool( 0, std::numeric_limits< unsigned int >::max() ) );
+		mThreads.reset( new Threadpool( 4, 8 ) );
+
+		mBundleCollection.reset( new BundleCollection( mTypeRegistry, mThreads, mThreadsDedicated ) );
 		std::cout << "engine initialized" << std::endl;
 	}
 

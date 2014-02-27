@@ -1,0 +1,63 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealStateData.h"
+
+namespace _2Real
+{
+	struct SignalResponse;
+	template< typename TArg >
+	class AbstractCallback_T;
+
+	class AbstractBlockState : public std::enable_shared_from_this< AbstractBlockState >
+	{
+
+	public:
+
+		static std::shared_ptr< AbstractBlockState > create( const State::Id );
+
+		virtual ~AbstractBlockState();
+
+		State::Id getId() const;
+
+		virtual std::shared_ptr< SignalResponse > onStartRunning( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onStopRunning( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onUpdateSignalReceived() = 0;
+
+		virtual std::shared_ptr< SignalResponse > onSetupSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onShutdownSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+
+		virtual std::shared_ptr< SignalResponse > onEngineShutdownReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+
+	protected:
+
+		explicit AbstractBlockState( const State::Id );
+		State::Id mId;
+
+	private:
+
+		AbstractBlockState( AbstractBlockState const& other );
+		AbstractBlockState& operator=( AbstractBlockState const& other );
+
+	};
+}

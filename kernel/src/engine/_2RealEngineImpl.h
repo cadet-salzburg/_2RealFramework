@@ -33,6 +33,7 @@ namespace _2Real
 
 	class TypeRegistry;
 	class BundleCollection;
+	class Threadpool;
 	class Bundle;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
@@ -58,6 +59,8 @@ namespace _2Real
 
 		std::shared_ptr< TypeRegistry >		mTypeRegistry;
 		std::shared_ptr< BundleCollection >	mBundleCollection;
+		std::shared_ptr< Threadpool >		mThreadsDedicated;
+		std::shared_ptr< Threadpool >		mThreads;
 
 	};
 

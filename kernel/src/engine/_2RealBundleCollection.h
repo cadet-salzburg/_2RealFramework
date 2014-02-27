@@ -26,16 +26,15 @@
 namespace _2Real
 {
 	class Bundle;
-	class FunctionBlock;
-	class EngineImpl;
 	class TypeRegistry;
+	class Threadpool;
 
 	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
 	{
 	
 	public:
 
-		BundleCollection( std::shared_ptr< TypeRegistry > registry );
+		BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
 		~BundleCollection();
 
 		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle );
@@ -43,6 +42,9 @@ namespace _2Real
 
 		void										clear( const unsigned long timeout );
 		void										bundleUnloaded( std::shared_ptr< const Bundle > );
+
+		std::weak_ptr< Threadpool >					getThreadsForSingletonBlock();
+		std::weak_ptr< Threadpool >					getThreadsForRegularBlock();
 
 	private:
 
@@ -59,6 +61,13 @@ namespace _2Real
 		Path										mBundleDirectory;
 		// the bundles
 		Bundles										mBundles;
+
+		// ? not sure where these should be handled
+		// ultimately, should each bundle collection. have its own threads??
+		// maybe we'll reintroduce the concepts of systems some time?
+		// currently, the threadpools are managed by the engine...
+		std::weak_ptr< Threadpool >					mThreadsDedicated;
+		std::weak_ptr< Threadpool >					mThreads;
 
 	};
 }

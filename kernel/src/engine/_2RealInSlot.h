@@ -38,14 +38,14 @@ namespace _2Real
 		using IoSlot::getMetainfo;
 
 		template< typename TCallable >
-		void registerToValueUpdated( TCallable &callable, void ( TCallable::*callback )( const unsigned int ) )
+		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( const unsigned int ) )
 		{
 			std::shared_ptr< AbstractCallback_T< const unsigned int > > listener( new MemberCallback_T< TCallable, const unsigned int >( callable, callback ) );
 			mValueUpdatedEvent.addListener( listener );
 		}
 
 		template< typename TCallable >
-		void unregisterFromValueUpdated( TCallable &callable, void ( TCallable::*callback )( const unsigned int ) )
+		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( const unsigned int ) )
 		{
 			std::shared_ptr< AbstractCallback_T< const unsigned int > > listener( new MemberCallback_T< TCallable, const unsigned int >( callable, callback ) );
 			mValueUpdatedEvent.removeListener( listener );

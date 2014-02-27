@@ -31,13 +31,14 @@ namespace _2Real
 	class SharedServiceMetainfo;
 	class AbstractSharedServiceLifetimeManager;
 	class Block;
+	class BundleCollection;
 
 	class Bundle : public std::enable_shared_from_this< Bundle >
 	{
 
 	public:
 
-		Bundle( std::shared_ptr< const SharedLibraryMetainfo > );
+		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const SharedLibraryMetainfo > );
 
 		~Bundle();
 
@@ -56,13 +57,13 @@ namespace _2Real
 		// unload listener.... bundle collection registers here
 		///////////////////////////////////////////////////////
 		template< typename TCallable >
-		void registerToUnload( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const Bundle > ) )
+		void registerToUnload( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const Bundle > ) )
 		{
 			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const Bundle > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const Bundle > >( callable, callback ) );
 			mUnloadNotifier.addListener( listener );
 		}
 		template< typename TCallable >
-		void unregisterFromUnload( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const Bundle > ) )
+		void unregisterFromUnload( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const Bundle > ) )
 		{
 			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const Bundle > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const Bundle > >( callable, callback ) );
 			mUnloadNotifier.removeListener( listener );
@@ -73,6 +74,8 @@ namespace _2Real
 
 		Bundle( Bundle const& other );
 		Bundle operator=( Bundle const& other );
+
+		std::weak_ptr< BundleCollection >						mBundleCollection;
 
 		std::shared_ptr< const SharedLibraryMetainfo >			mMetainfo;
 		Event_T< std::shared_ptr< const Bundle > >				mUnloadNotifier;

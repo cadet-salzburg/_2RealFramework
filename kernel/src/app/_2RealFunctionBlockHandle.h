@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "app/_2RealCallback.h"
 
 namespace _2Real
 {
@@ -28,6 +29,7 @@ namespace _2Real
 	{
 		class InletHandle;
 		class OutletHandle;
+		class TimerHandle;
 		class BlockMetainfo;
 
 		class FunctionBlockHandle
@@ -35,11 +37,24 @@ namespace _2Real
 
 		public:
 
+			typedef Callback_T< void >  StateFinalizedCallback;
+
 			FunctionBlockHandle();
 			explicit FunctionBlockHandle( std::shared_ptr< Block > );
 
 			bool				isValid() const;
 			BlockMetainfo		getMetainfo() const;
+
+			// no further call state change calls will have any effect until the function has been carried out
+			void				setup( StateFinalizedCallback const& );
+			void				singlestep( StateFinalizedCallback const& );
+			void				shutdown( StateFinalizedCallback const& );
+
+			void				startUpdating( TimerHandle );
+			//void				startUpdating( UpdatePolicyHandle );
+
+			// again, no further calls will have any effect until the cb has been called!
+			void				stopUpdating( StateFinalizedCallback const& cb );
 
 		private:
 

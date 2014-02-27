@@ -49,13 +49,13 @@ namespace _2Real
 		// remove listener.... removal renders all types invalid
 		///////////////////////////////////////////////////////
 		template< typename TCallable >
-		void registerToRemove( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
+		void registerToRemove( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
 		{
 			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const SharedTypeMetainfo > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const SharedTypeMetainfo > >( callable, callback ) );
 			mRemoveNotifier.addListener( listener );
 		}
 		template< typename TCallable >
-		void unregisterFromRemove( TCallable &callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
+		void unregisterFromRemove( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
 		{
 			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const SharedTypeMetainfo > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const SharedTypeMetainfo > >( callable, callback ) );
 			mRemoveNotifier.removeListener( listener );
