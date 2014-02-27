@@ -20,4 +20,18 @@
 
 namespace _2Real
 {
+	Threadpool( const unsigned int numThreads, const unsigned int maxThreads, const Policy::Code p ) :
+		mThreadMgr( AssignmentPolicy::create( ) )
+	{
+		// init?
+		// create all threads?
+		// the max capacity is kind of dependent on the policy...
+
+		for ( unsigned int i = 0; i<numThreads; ++i )
+		{
+			// mThreadMgr->addThread
+		}
+	}
+
+
 }
