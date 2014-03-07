@@ -17,28 +17,24 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealCondition.h"
+#include "engine/_2RealTimerCollection.h"
+#include "engine/_2RealTimer.h"
 
 namespace _2Real
 {
-	class InSlot;
-
-	class ValuesCondition : public Condition
+	TimerCollection::TimerCollection() :
+		std::enable_shared_from_this< TimerCollection >()
 	{
+	}
 
-	public:
+	TimerCollection::~TimerCollection()
+	{
+	}
 
-		void init( std::vector< std::shared_ptr< InSlot > > inputs, std::vector< std::vector< std::string > > &disjunction );
-		void cleanup( std::vector< std::shared_ptr< InSlot > > inputs );
-		void newValueReceived( const unsigned int id );
-
-	private:
-
-		std::vector< std::vector< unsigned int > >	mDisjunction;
-		std::vector< bool >							mFlags;
-
-	};
+	std::shared_ptr< Timer > TimerCollection::createTimer( const double fps )
+	{
+		std::shared_ptr< Timer > timer( new Timer( fps ) );
+		mTimers.insert( timer );
+		return timer;
+	}
 }

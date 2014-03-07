@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +17,11 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealUserInputCondition.h"
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
+	enum class ThreadpoolPolicy : uint8_t { FIFO, DEDICATED };
 }

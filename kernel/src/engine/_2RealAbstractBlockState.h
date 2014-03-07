@@ -22,42 +22,43 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealStateData.h"
 
+#include "enums/_2RealBlockState.h"
+
 namespace _2Real
 {
 	struct SignalResponse;
-	template< typename TArg >
-	class AbstractCallback_T;
 
 	class AbstractBlockState : public std::enable_shared_from_this< AbstractBlockState >
 	{
 
 	public:
 
-		static std::shared_ptr< AbstractBlockState > create( const State::Id );
+		static std::shared_ptr< AbstractBlockState > create( const BlockState );
 
 		virtual ~AbstractBlockState();
 
-		State::Id getId() const;
+		BlockState getId() const;
 
-		virtual std::shared_ptr< SignalResponse > onStartRunning( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-		virtual std::shared_ptr< SignalResponse > onStopRunning( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onStartRunning() = 0;
+		virtual std::shared_ptr< SignalResponse > onStopRunning() = 0;
 		virtual std::shared_ptr< SignalResponse > onUpdateSignalReceived() = 0;
-
-		virtual std::shared_ptr< SignalResponse > onSetupSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-		virtual std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-		virtual std::shared_ptr< SignalResponse > onShutdownSignalReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-
-		virtual std::shared_ptr< SignalResponse > onEngineShutdownReceived( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
+		virtual std::shared_ptr< SignalResponse > onSetupSignalReceived() = 0;
+		virtual std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived() = 0;
+		virtual std::shared_ptr< SignalResponse > onShutdownSignalReceived() = 0;
+		virtual std::shared_ptr< SignalResponse > onEngineShutdownReceived() = 0;
 
 	protected:
 
-		explicit AbstractBlockState( const State::Id );
-		State::Id mId;
+		explicit AbstractBlockState( const BlockState );
+
+		static std::shared_ptr< SignalResponse > makeResponse( const Action, const BlockState, const bool );
+	
+		BlockState mId;
 
 	private:
 
-		AbstractBlockState( AbstractBlockState const& other );
-		AbstractBlockState& operator=( AbstractBlockState const& other );
+		AbstractBlockState( AbstractBlockState const& other ) = delete;
+		AbstractBlockState& operator=( AbstractBlockState const& other ) = delete;
 
 	};
 }

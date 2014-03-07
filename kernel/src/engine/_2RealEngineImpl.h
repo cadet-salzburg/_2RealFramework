@@ -22,18 +22,17 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealPath.h"
 
+#include "enums/_2RealThreadpoolPolicy.h"
+
 namespace _2Real
 {
-	namespace app
-	{
-		class Engine;
-	}
-
-	class EngineImpl;
-
-	class TypeRegistry;
+	class TypeCollection;
 	class BundleCollection;
+	class ThreadpoolCollection;
+	class TimerCollection;
+
 	class Threadpool;
+	class Timer;
 	class Bundle;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
@@ -41,27 +40,32 @@ namespace _2Real
 
 	public:
 
-		static std::shared_ptr< EngineImpl > create();
-
+		EngineImpl();
 		~EngineImpl();
 
-		std::shared_ptr< Bundle > 		loadLibrary( std::string const& filename );
-		Path const&						getBundleDirectory() const;
+		std::shared_ptr< Bundle > 			loadLibrary( std::string const& filename );
+		Path const&							getBundleDirectory() const;
+
+		std::shared_ptr< Timer >			createTimer( const double fps );
+
+		std::shared_ptr< Threadpool >		createThreadpool( const ThreadpoolPolicy );
 
 	private:
 
-		// sets up connections for objects that need it
-		void privateInit();
+		EngineImpl( EngineImpl const& other ) = delete;
+		EngineImpl& operator=( EngineImpl const& other ) = delete;
 
-		EngineImpl();
-		EngineImpl( EngineImpl const& other );
-		EngineImpl& operator=( EngineImpl const& other );
+		// --- members already in correct order
 
-		std::shared_ptr< TypeRegistry >		mTypeRegistry;
-		std::shared_ptr< BundleCollection >	mBundleCollection;
-		std::shared_ptr< Threadpool >		mThreadsDedicated;
-		std::shared_ptr< Threadpool >		mThreads;
-
+		std::shared_ptr< ThreadpoolCollection >		mThreadpoolCollection;
+		// keep around here, for the time being
+		// maybe some time in the future, threadpools will be created at user request
+		std::weak_ptr< Threadpool >					mStdThreads;		// owned by threadpool collection
+		std::weak_ptr< Threadpool >					mCtxtThreads;		// owned by threadpool collection
+		std::shared_ptr< TypeCollection >			mTypeCollection;
+		std::shared_ptr< BundleCollection >			mBundleCollection;
+		std::shared_ptr< TimerCollection >			mTimerCollection;
+		
 	};
 
 }

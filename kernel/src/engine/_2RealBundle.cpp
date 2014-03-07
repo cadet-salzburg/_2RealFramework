@@ -28,10 +28,11 @@
 namespace _2Real
 {
 
-	Bundle::Bundle( std::shared_ptr< BundleCollection > bundles, std::shared_ptr< const SharedLibraryMetainfo > meta ) :
+	Bundle::Bundle( std::shared_ptr< BundleCollection > bundles, std::shared_ptr< const SharedLibraryMetainfo > meta, std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads ) :
 		enable_shared_from_this< Bundle >(),
 		mBundleCollection( bundles ),
-		mMetainfo( meta ), mUnloadNotifier()
+		mMetainfo( meta ), mUnloadNotifier(),
+		mStdThreads( stdthreads ), mCtxtThreads( ctxtthreads )
 	{
 	}
 
@@ -110,22 +111,22 @@ namespace _2Real
 		// for all dependencies:	check if instance already was created
 		//							if not, create instance
 
-		std::vector< std::string > dependencies;
-		info->getDependencies( dependencies );
-		for ( auto dependency : dependencies )
-		{
-			//if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )
-				createBlock( dependency );
-		}
+		//std::vector< std::string > dependencies;
+		//info->getDependencies( dependencies );
+		//for ( auto dependency : dependencies )
+		//{
+		//	//if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )
+		//		createBlock( dependency );
+		//}
 
-		std::weak_ptr< Threadpool > threads;
+		std::shared_ptr< Threadpool > threads;
 		if ( info->isSingleton() )
-			threads = mBundleCollection.lock()->getThreadsForSingletonBlock();
+			threads = mCtxtThreads.lock();
 		else
-			threads = mBundleCollection.lock()->getThreadsForRegularBlock();
+			threads = mStdThreads.lock();
 
 		auto obj = ctor->create();
-		std::shared_ptr< Block > instance( new Block( threads.lock(), info, obj ) );
+		std::shared_ptr< Block > instance( new Block( threads, info, obj ) );
 		instance->init();
 		mServiceInstances.push_back( instance );
 

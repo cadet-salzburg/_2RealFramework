@@ -24,35 +24,46 @@
 
 namespace _2Real
 {
-	std::shared_ptr< AbstractBlockState > AbstractBlockState::create( const State::Id id )
+	std::shared_ptr< AbstractBlockState > AbstractBlockState::create( const BlockState id )
 	{
 		switch ( id )
 		{
-		case State::PRE_SETUP:
+		case BlockState::PRE_SETUP:
 			return std::shared_ptr< AbstractBlockState >( new PreSetupState( id ) );
-		case State::POST_SETUP:
+		case BlockState::POST_SETUP:
 			return std::shared_ptr< AbstractBlockState >( new PostSetupState( id ) );
-		case State::POST_SETUP_RUNNING:
+		case BlockState::POST_SETUP_RUNNING:
 			return std::shared_ptr< AbstractBlockState >( new PostSetupState_Running( id ) );
-		case State::POST_SHUTDOWN:
+		case BlockState::POST_SHUTDOWN:
 			return std::shared_ptr< AbstractBlockState >( new PostShutdownState( id ) );
 		default:
 			return std::shared_ptr< AbstractBlockState >( new PostShutdownState( id ) );
 		}
 	}
 
+	AbstractBlockState::AbstractBlockState( const BlockState id ) :
+		std::enable_shared_from_this< AbstractBlockState >(),
+		mId( id )
+	{
+	}
+
 	AbstractBlockState::~AbstractBlockState()
 	{
 	}
 
-	State::Id AbstractBlockState::getId() const
-	{
-		return mId;
+	std::shared_ptr< SignalResponse > AbstractBlockState::makeResponse( const Action action, const BlockState state, const bool wait )
+	{	
+		std::shared_ptr< SignalResponse > response( new SignalResponse );
+		response->action = action;
+		response->followupState = state;
+		response->shouldWait = wait;
+		//response->onFininshed = nullptr;
+		response->updateTrigger = nullptr;
+		return response;
 	}
 
-	AbstractBlockState::AbstractBlockState( const State::Id id ) :
-		std::enable_shared_from_this< AbstractBlockState >(),
-		mId( id )
+	BlockState AbstractBlockState::getId() const
 	{
+		return mId;
 	}
 }

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +17,24 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealTimerCondition.h"
+#include "engine/_2RealThreadpoolCollection.h"
+#include "engine/_2RealThreadpool.h"
 
 namespace _2Real
 {
+	ThreadpoolCollection::ThreadpoolCollection() :
+		std::enable_shared_from_this< ThreadpoolCollection >()
+	{
+	}
+
+	ThreadpoolCollection::~ThreadpoolCollection()
+	{
+	}
+
+	std::shared_ptr< Threadpool > ThreadpoolCollection::createThreadpool( const ThreadpoolPolicy p )
+	{
+		auto threadpool = Threadpool::create( p );
+		mThreadpools.insert( threadpool );
+		return threadpool;
+	}
 }

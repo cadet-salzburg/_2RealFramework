@@ -24,21 +24,31 @@
 
 namespace _2Real
 {
+	/*
+	*	base class for timer & update policy
+	*/
+
 	class UpdateTrigger
 	{
 
 	public:
+
+		virtual ~UpdateTrigger();
 
 		void registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > );
 		void unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > );
 
 	protected:
 
+		UpdateTrigger();
 		void fire();
 
 	private:
 
-		Event_T< void >		mTriggerEvent;
+		UpdateTrigger( UpdateTrigger const& other ) = delete;
+		UpdateTrigger& operator=( UpdateTrigger const& other ) = delete;
+
+		/*Signal_T< std::mutex, void >		mTrigger;*/
 
 	};
 }

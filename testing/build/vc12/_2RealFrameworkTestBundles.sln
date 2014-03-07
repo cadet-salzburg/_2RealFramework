@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_Types", "TestBun
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_FullMetainfo", "TestBundle_FullMetainfo\TestBundle_FullMetainfo.vcxproj", "{9FC7A0FC-CA00-473E-8E11-9C284316AEFB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_SimpleService", "TestBundle_SimpleService\TestBundle_SimpleService.vcxproj", "{F397D961-7DF8-45C5-B4FD-61539B40573A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{9FC7A0FC-CA00-473E-8E11-9C284316AEFB}.Debug|Win32.Build.0 = Debug|Win32
 		{9FC7A0FC-CA00-473E-8E11-9C284316AEFB}.Release|Win32.ActiveCfg = Release|Win32
 		{9FC7A0FC-CA00-473E-8E11-9C284316AEFB}.Release|Win32.Build.0 = Release|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Debug|Win32.Build.0 = Debug|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Release|Win32.ActiveCfg = Release|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

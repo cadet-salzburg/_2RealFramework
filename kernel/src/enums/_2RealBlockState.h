@@ -20,19 +20,8 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealCondition.h"
 
 namespace _2Real
 {
-	class UserInputCondition : public Condition
-	{
-
-	public:
-
-		void userInputReceived()
-		{
-			Condition::isFulfilled();
-		}
-
-	};
+	enum class BlockState : uint8_t { PRE_SETUP, POST_SETUP, POST_SETUP_RUNNING, POST_SHUTDOWN };
 }

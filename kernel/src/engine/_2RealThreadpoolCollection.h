@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,27 +17,33 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealUpdateTrigger.h"
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
+#include "enums/_2RealThreadpoolPolicy.h"
 
 namespace _2Real
 {
-	UpdateTrigger::UpdateTrigger()
-	{
-	}
+	class Threadpool;
 
-	UpdateTrigger::~UpdateTrigger()
+	class ThreadpoolCollection : public std::enable_shared_from_this< ThreadpoolCollection >
 	{
-	}
+	
+	public:
 
-	void UpdateTrigger::registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-	}
+		ThreadpoolCollection();
+		~ThreadpoolCollection();
 
-	void UpdateTrigger::unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-	}
+		std::shared_ptr< Threadpool >	createThreadpool( const ThreadpoolPolicy );
 
-	void UpdateTrigger::fire()
-	{
-	}
+	private:
+
+		ThreadpoolCollection( ThreadpoolCollection const& other ) = delete;
+		ThreadpoolCollection& operator=( ThreadpoolCollection const& other ) = delete;
+
+		typedef std::set< std::shared_ptr< Threadpool > >		Threadpools;
+
+		Threadpools				mThreadpools;
+
+	};
 }

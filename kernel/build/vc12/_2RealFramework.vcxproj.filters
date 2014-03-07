@@ -33,6 +33,9 @@
     <Filter Include="Source Files\bundle">
       <UniqueIdentifier>{3573c3ea-bdff-4b39-a887-aef4c10bd7ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\enums">
+      <UniqueIdentifier>{972f47d4-23e1-47a4-bdc9-362134fdbc68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\engine\_2RealBundle.cpp">
@@ -194,28 +197,10 @@
     <ClCompile Include="..\..\src\engine\_2RealCondition.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealTimerCondition.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealUserInputCondition.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealValuesCondition.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealConditionFactory.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealStateMachine.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealStateChangeTrigger.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealThreadpool.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealStateData.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealPreSetupState.cpp">
@@ -242,6 +227,15 @@
     <ClCompile Include="..\..\src\engine\_2RealPostSetupState.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\engine\_2RealBundle.h">
@@ -260,9 +254,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealException.h">
-      <Filter>Header Files\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder_T.h">
       <Filter>Header Files\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\helpers\_2RealPath.h">
@@ -457,21 +448,6 @@
     <ClInclude Include="..\..\src\engine\_2RealCondition.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealValuesCondition.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealUserInputCondition.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealTimerCondition.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealConditionFactory.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealStateChangeTrigger.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealStateMachine.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
@@ -507,6 +483,24 @@
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealPostSetupState.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealSystemHandle.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolPolicy.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTimerCollection.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolCollection.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\enums\_2RealThreadpoolPolicy.h">
+      <Filter>Header Files\enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\enums\_2RealBlockState.h">
+      <Filter>Header Files\enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

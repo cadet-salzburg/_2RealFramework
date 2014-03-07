@@ -34,7 +34,7 @@ namespace _2Real
 		enable_shared_from_this< Block >(),
 		mMetainfo( meta ),
 		mInstance( instance ),
-		mStateMachine( threads )
+		mStateMachine( threads, instance )
 	{
 	}
 
@@ -98,37 +98,54 @@ namespace _2Real
 		return mMetainfo.lock();
 	}
 
-	void Block::setup( std::shared_ptr< StateCallback > cb )
+	/*
+	void Block::setup( std::function< void() > const& cb )
 	{
 		mStateMachine.setup( cb );
 	}
 
-	void Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger, std::shared_ptr< StateCallback > cb )
+	void Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger, std::function< void() > const& cb )
 	{
 		mStateMachine.startRunning( trigger, cb );
 	}
 
-	void Block::stopUpdating( std::shared_ptr< StateCallback > cb )
+	void Block::stopUpdating( std::function< void() > const& cb )
 	{
 		mStateMachine.stopRunning( cb );
 	}
 
-	void Block::singleUpdate( std::shared_ptr< StateCallback > cb )
+	void Block::singleUpdate( std::function< void() > const& cb )
 	{
 		mStateMachine.singleUpdate( cb );
 	}
 
-	void Block::shutdown( std::shared_ptr< StateCallback > cb )
+	void Block::shutdown( std::function< void() > const& cb )
 	{
 		mStateMachine.shutdown( cb );
 	}
 
-	void Block::destroy( std::shared_ptr< StateCallback > cb )
+	void Block::destroy( std::function< void() > const& cb )
 	{
 		// TODO: immediately unregister the state machine from
 		// all triggers
 
 		// mUpdateTrigger->unregisterFromSignal()
+	}
+	*/
+
+	std::future< BlockState > Block::setup()
+	{
+		return mStateMachine.setup();
+	}
+
+	std::future< BlockState > Block::singlestep()
+	{
+		return mStateMachine.singlestep();
+	}
+
+	std::future< BlockState > Block::shutdown()
+	{
+		return mStateMachine.shutdown();
 	}
 
 }

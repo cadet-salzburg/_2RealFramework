@@ -26,7 +26,7 @@
 namespace _2Real
 {
 	class Bundle;
-	class TypeCollection;
+	class TypeRegistry;
 	class Threadpool;
 
 	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
@@ -34,7 +34,7 @@ namespace _2Real
 	
 	public:
 
-		BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
+		BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
 		~BundleCollection();
 
 		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle );
@@ -43,10 +43,21 @@ namespace _2Real
 		void										clear( const unsigned long timeout );
 		void										bundleUnloaded( std::shared_ptr< const Bundle > );
 
+		// TODO: let user create threadpools?
+		std::weak_ptr< Threadpool >					getThreadsForSingletonBlock()
+		{
+			return mThreadsDedicated;
+		}
+
+		std::weak_ptr< Threadpool >					getThreadsForRegularBlock()
+		{
+			return mThreads;
+		}
+
 	private:
 
-		BundleCollection( BundleCollection const& other ) = delete;
-		BundleCollection& operator=( BundleCollection const& other ) = delete;
+		BundleCollection( BundleCollection const& other );
+		BundleCollection& operator=( BundleCollection const& other );
 
 		void updateBundleDirectory();
 
@@ -61,8 +72,8 @@ namespace _2Real
 
 		// ? not sure where these should be handled ?
 		// currently, these 2 threadpools are managed by the engine...
-		std::weak_ptr< Threadpool >					mStdThreads;
-		std::weak_ptr< Threadpool >					mCtxtThreads;
+		std::weak_ptr< Threadpool >					mThreadsDedicated;
+		std::weak_ptr< Threadpool >					mThreads;
 
 	};
 }

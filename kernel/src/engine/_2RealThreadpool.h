@@ -22,22 +22,91 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealCallback_T.h"
 
+#include "enums/_2RealThreadpoolPolicy.h"
+
+#include <thread>
+#include <atomic>
+#include <condition_variable>
+
 namespace _2Real
 {
-	class Thread;
-
 	class Threadpool
 	{
 
+	protected:
+
+		typedef std::function< void() > JobPtr;
+		typedef std::function< void() > CbPtr;
+
+		struct Job
+		{
+			JobPtr			doWork;
+			CbPtr			isDone;
+		};
+
 	public:
+
+		static std::shared_ptr< Threadpool > create( const ThreadpoolPolicy p );
 
 		class Id
 		{
 		public:
-			Id( const unsigned int i ) : mVal( i )
+			virtual ~Id() {}
+		};
+
+		virtual ~Threadpool() {}
+
+		virtual Id createId() = 0;
+		virtual void enqueueJob( Threadpool::Id const&, JobPtr, CbPtr ) = 0;
+
+	};
+
+	class FifoThreadpool : public Threadpool
+	{
+
+	public:
+
+		class NullId : public Threadpool::Id
+		{
+		};
+
+		FifoThreadpool( const size_t numThreads );
+		~FifoThreadpool();
+
+		Threadpool::Id createId();
+		void enqueueJob( Threadpool::Id const&, JobPtr, CbPtr );
+
+	private:
+
+		void loop();
+
+		struct Job
+		{
+			JobPtr			doWork;
+			CbPtr			isDone;
+		};
+
+		std::mutex										mJobsAccess;
+		std::condition_variable							mNewJob;
+		std::atomic<bool>								mShouldTerminate;
+
+		std::vector< std::unique_ptr< std::thread > >	mWorkerThreads;
+		std::deque< Job >								mJobs;
+
+	};
+
+	class UniqueThreadpool : public Threadpool
+	{
+
+	public:
+
+		class UniqueId : public Threadpool::Id
+		{
+		public:
+			UniqueId( const unsigned int i ) : mVal( i )
 			{
 			}
-			bool operator<( Id const& other ) const
+			bool operator<( UniqueId const& other ) const
 			{
 				return mVal < other.mVal;
 			}
@@ -48,70 +117,41 @@ namespace _2Real
 		class IdGenerator
 		{
 		public:
-			IdGenerator() : mCounter( 0 )
-			{
-			}
-			Id genId()
+			IdGenerator() : mCounter( 0 ) {}
+			UniqueId genId() const
 			{
 				unsigned int id = mCounter;
 				mCounter+=1;
-				return Id( id );
+				return UniqueId( id );
 			}
 		private:
-			unsigned int mCounter;
+			mutable unsigned int mCounter;
 		};
 
-		class Policy
-		{
-		public:
-			enum Code { FIFO, DEDICATED };
-		};
+		UniqueThreadpool();
+		~UniqueThreadpool();
 
-		// this shit is responsible for actually giving out threads, yay
-		class AssignmentPolicy
-		{
-		public:
-			virtual ~AssignmentPolicy() {}
-
-			static std::shared_ptr< AssignmentPolicy > create();
-
-			virtual void addThread() = 0;
-			virtual void getThread( Threadpool::Id ) = 0;
-		};
-
-		class FifoPolicy : public AssignmentPolicy
-		{
-		public:
-		};
-
-		class DedPolicy : public AssignmentPolicy
-		{
-		public:
-		};
-
-		Threadpool( const unsigned int numThreads, const unsigned int maxThreads, const Policy::Code p );
-
-		// basically, an obj. needs an id so that the thread pool can decide
-		// how to assign threads
-		// currently, this uses a void ptr. as it's basically a counter, that does not
-		// care about type in the slightest
-		// in the future, more sophisticated methods might be possible?
-		Threadpool::Id getId( void * );
-
-		void registerToThreadAvailable( const Threadpool::Id, std::shared_ptr< AbstractCallback_T< std::shared_ptr< Thread > > > );
-		void releaseThread( const Threadpool::Id, std::shared_ptr< Thread > );
+		Threadpool::Id createId();
+		void enqueueJob( Threadpool::Id const&, JobPtr, CbPtr );
 
 	private:
 
-		IdGenerator			mGenerator;
+		void loop( UniqueId const& );
 
-		unsigned int		mMaxCapacity;
-		unsigned int		mCurrent;
-		unsigned int		mInc;
+		struct PerWorker
+		{
+			std::unique_ptr< std::thread >	thread;
+			std::condition_variable			hasWork;
+			std::mutex						mutex;
+			Job								job;
+		};
 
-		// available thread
-		// used threads, stored by map?
-		AssignmentPolicy	mThreadMgr;
+		IdGenerator							mGenerator;
+
+		std::mutex							mMutex;
+		std::atomic<bool>					mShouldTerminate;
+
+		std::map< UniqueId, PerWorker >		mWorkerThreads;
 
 	};
 }

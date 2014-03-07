@@ -18,26 +18,26 @@
 
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"
+#include "app/_2RealTimerHandle.h"
+#include "app/_2RealSystemHandle.h"
+#include "enums/_2RealThreadpoolPolicy.h"
 #include "engine/_2RealEngineImpl.h"
-#include "helpers/_2RealSingletonHolder_T.h"
 #include "helpers/_2RealBoost.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		Engine & Engine::instance()
-		{
-			static SingletonHolder_T< Engine > holder;
-			return holder.instance();
-		}
-
 		Engine::Engine() :
-			mImpl( EngineImpl::create() )
+			mImpl( new EngineImpl )
 		{
 		}
 
-	// ---------------------------------- bundle loading
+		Engine::~Engine()
+		{
+		}
+
+	// ---------------------------------- bundle
 
 		Path const& Engine::getBundleDirectory() const
 		{
@@ -46,11 +46,31 @@ namespace _2Real
 
 		BundleHandle Engine::loadBundle( std::string const& libname )
 		{
-			std::shared_ptr< Bundle > result = mImpl->loadLibrary( libname );
-			return BundleHandle( result );
+			auto bundle = mImpl->loadLibrary( libname );
+			return BundleHandle( bundle );
 		}
 
-	// ---------------------------------- bundle loading
+	// ---------------------------------- bundle
+
+	// ---------------------------------- timer
+
+		TimerHandle Engine::createTimer( const double fps )
+		{
+			auto timer = mImpl->createTimer( fps );
+			return TimerHandle( timer );
+		}
+
+	// ---------------------------------- timer
+
+	// ---------------------------------- threadpool
+
+		SystemHandle Engine::createSystem( const ThreadpoolPolicy policy )
+		{
+			auto system = mImpl->createThreadpool( policy );
+			return SystemHandle( system );
+		}
+
+	// ---------------------------------- threadpool
 
 	}
 }

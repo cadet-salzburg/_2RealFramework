@@ -37,7 +37,7 @@ int main( int argc, char *argv[] )
 {
 	try
 	{
-		_2Real::app::Engine &testEngine = _2Real::app::Engine::instance();
+		_2Real::app::Engine testEngine;
 	}
 	catch ( _2Real::Exception &e )
 	{

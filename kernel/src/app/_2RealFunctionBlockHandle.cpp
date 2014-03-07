@@ -49,10 +49,11 @@ namespace _2Real
 			return BlockMetainfo( block->getMetainfo() );
 		}
 
-		void FunctionBlockHandle::setup( StateFinalizedCallback const& cb )
+		/*
+		void FunctionBlockHandle::setup( std::function< void() > const& cb )
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->setup( static_cast< std::shared_ptr< AbstractCallback_T< void > > >( cb ) );
+			block->setup( cb );
 		}
 
 		void FunctionBlockHandle::startUpdating( TimerHandle handle )
@@ -61,22 +62,53 @@ namespace _2Real
 			block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ), nullptr );
 		}
 
-		void FunctionBlockHandle::stopUpdating( StateFinalizedCallback const& cb )
+		void FunctionBlockHandle::stopUpdating( std::function< void() > const& cb )
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
 			block->stopUpdating( cb );
 		}
 
-		void FunctionBlockHandle::singlestep( StateFinalizedCallback const& cb )
+		void FunctionBlockHandle::singlestep( std::function< void() > const& cb )
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
 			block->singleUpdate( cb );
 		}
 
-		void FunctionBlockHandle::shutdown( StateFinalizedCallback const& cb )
+		void FunctionBlockHandle::shutdown( std::function< void() > const& cb )
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
 			block->shutdown( cb );
+		}
+		*/
+
+		std::future< BlockState > FunctionBlockHandle::setup()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			return block->setup();
+		}
+
+		std::future< BlockState > FunctionBlockHandle::singlestep()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			return block->singlestep();
+		}
+
+		std::future< BlockState > FunctionBlockHandle::shutdown()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			return block->shutdown();
+		}
+
+		std::future< BlockState > FunctionBlockHandle::startUpdating( TimerHandle handle )
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ) );
+		}
+
+		std::future< BlockState > FunctionBlockHandle::stopUpdating()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			block->stopUpdating();
 		}
 	}
 }

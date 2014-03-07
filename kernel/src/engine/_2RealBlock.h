@@ -20,9 +20,10 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealCallback_T.h"
 #include "engine/_2RealStateMachine.h"
-#include "engine/_2RealStateChangeTrigger.h"
+
+#include <future>
+#include "enums/_2RealBlockState.h"
 
 namespace _2Real
 {
@@ -37,8 +38,6 @@ namespace _2Real
 
 	public:
 
-		typedef AbstractCallback_T< void > StateCallback;
-
 		Block( std::shared_ptr< Threadpool > threads, std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< AbstractSharedService > );
 		~Block();
 
@@ -46,14 +45,20 @@ namespace _2Real
 
 		std::shared_ptr< const SharedServiceMetainfo >	getMetainfo() const;
 
-		void setup( std::shared_ptr< StateCallback > );
-		void startUpdating( std::shared_ptr< UpdateTrigger >, std::shared_ptr< StateCallback > );
-		void stopUpdating( std::shared_ptr< StateCallback > );
-		void singleUpdate( std::shared_ptr< StateCallback > );
-		void shutdown( std::shared_ptr< StateCallback > );
+		/*
+		void setup( std::function< void() > const& );
+		void startUpdating( std::shared_ptr< UpdateTrigger >, std::function< void() > const& );
+		void stopUpdating( std::function< void() > const& );
+		void singleUpdate( std::function< void() > const& );
+		void shutdown( std::function< void() > const& );
 		
 		// called by engine
-		void destroy( std::shared_ptr< StateCallback > );
+		void destroy( std::function< void() > const& );
+		*/
+
+		std::future< BlockState > setup();
+		std::future< BlockState > singlestep();
+		std::future< BlockState > shutdown();
 
 	private:
 
@@ -64,9 +69,6 @@ namespace _2Real
 		std::shared_ptr< AbstractSharedService >			mInstance;
 
 		StateMachine										mStateMachine;
-		StateChangeTrigger									mSetupTrigger;
-		StateChangeTrigger									mUpdateTrigger;
-		StateChangeTrigger									mShutdownTrigger;
 
 	};
 

@@ -19,20 +19,32 @@
 
 #pragma once
 
+#include "engine/_2RealBundleImporter.h"
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealCondition.h"
+#include "helpers/_2RealPath.h"
 
 namespace _2Real
 {
-	class TimerCondition : public Condition
-	{
+	class Timer;
 
+	class TimerCollection : public std::enable_shared_from_this< TimerCollection >
+	{
+	
 	public:
 
-		void timerSignalReceived()
-		{
-			Condition::isFulfilled();
-		}
+		TimerCollection();
+		~TimerCollection();
+
+		std::shared_ptr< Timer >	createTimer( const double fps );
+
+	private:
+
+		TimerCollection( TimerCollection const& other ) = delete;
+		TimerCollection& operator=( TimerCollection const& other ) = delete;
+
+		typedef std::set< std::shared_ptr< Timer > >		Timers;
+
+		Timers		mTimers;
 
 	};
 }

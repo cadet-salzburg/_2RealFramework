@@ -20,18 +20,164 @@
 
 namespace _2Real
 {
-	Threadpool( const unsigned int numThreads, const unsigned int maxThreads, const Policy::Code p ) :
-		mThreadMgr( AssignmentPolicy::create( ) )
+	std::shared_ptr< Threadpool > Threadpool::create( const ThreadpoolPolicy p )
 	{
-		// init?
-		// create all threads?
-		// the max capacity is kind of dependent on the policy...
-
-		for ( unsigned int i = 0; i<numThreads; ++i )
+		std::shared_ptr< Threadpool > result;
+		switch ( p )
 		{
-			// mThreadMgr->addThread
+		case ThreadpoolPolicy::FIFO:
+			result.reset( new FifoThreadpool( 8 ) );
+			break;
+		case ThreadpoolPolicy::DEDICATED:
+			result.reset( new UniqueThreadpool );
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+
+	FifoThreadpool::FifoThreadpool( const size_t numThreads ) :
+		Threadpool(),
+		mWorkerThreads( numThreads )
+	{
+		for ( std::unique_ptr< std::thread > &worker : mWorkerThreads )
+		{
+			worker.reset( new std::thread( &FifoThreadpool::loop, this ) );
 		}
 	}
 
+	FifoThreadpool::~FifoThreadpool()
+	{
+		{
+			std::unique_lock< std::mutex > lock( mJobsAccess );
+			mShouldTerminate = true;
+			mNewJob.notify_all();		// all blocking threads are now notified
+										// and will attempt to lock, one after another
+										// to lock the mutex
+										// the termination cond is true, which causes the function to exit
+		}
 
+		for ( std::unique_ptr< std::thread > &worker: mWorkerThreads )
+		{
+			worker->join();
+		}
+	}
+
+	Threadpool::Id FifoThreadpool::createId()
+	{
+		std::cout << "threadpool: create id" << std::endl;
+		return NullId();
+	}
+
+	void FifoThreadpool::enqueueJob( Threadpool::Id const&, JobPtr j, CbPtr cb )
+	{
+		std::lock_guard< std::mutex > lock( mJobsAccess );
+		Job job;
+		job.doWork = j;
+		job.isDone = cb;
+		mJobs.push_back( job );		// done
+		std::cout << "threadpool: job enqueued" << std::endl;
+		mNewJob.notify_one();		// now, let's notify one of the worker threads that there's a new job
+	}
+
+	void FifoThreadpool::loop()
+	{
+		Job job;
+
+		for ( ;; )
+		{
+			{
+				std::unique_lock< std::mutex > lock( mJobsAccess );
+
+				for ( ;; )
+				{
+					if ( mShouldTerminate )
+					{
+						return;
+					}
+
+					if ( !mJobs.empty() )
+					{
+						job = mJobs.front();
+						mJobs.pop_front();
+						break;
+					}
+
+					mNewJob.wait( lock );
+				}
+			}
+
+			// job execution
+			std::cout << "threadpool: executing job" << std::endl;
+			job.doWork();
+			std::cout << "threadpool: on finished" << std::endl;
+			job.isDone();
+		}
+	}
+
+	UniqueThreadpool::UniqueThreadpool() :
+		Threadpool(),
+		mGenerator()
+	{
+	}
+
+	UniqueThreadpool::~UniqueThreadpool()
+	{
+		// TODO!
+	}
+
+	Threadpool::Id UniqueThreadpool::createId()
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+
+		UniqueId id = mGenerator.genId();
+		PerWorker &worker = mWorkerThreads[ id ];
+		worker.thread.reset( new std::thread( &UniqueThreadpool::loop, this, id ) );
+		return id;
+	}
+
+	void UniqueThreadpool::enqueueJob( Threadpool::Id const& id, JobPtr work, CbPtr callback )
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+
+		try
+		{
+			UniqueId const& uniqueId = dynamic_cast< UniqueId const& >( id );
+			PerWorker &worker = mWorkerThreads[ uniqueId ];
+			std::unique_lock< std::mutex > lock( worker.mutex );
+			worker.job.doWork = work;
+			worker.job.isDone = callback;
+			worker.hasWork.notify_one();
+		}
+		catch ( std::bad_cast const& e )
+		{
+		}
+		catch ( std::exception const& e )
+		{
+		}
+	}
+
+	void UniqueThreadpool::loop( UniqueId const& id )
+	{
+		PerWorker &worker = mWorkerThreads[ id ];
+
+		for ( ;; )
+		{
+			{
+				std::unique_lock< std::mutex > lock( worker.mutex );
+
+				for ( ;; )
+				{
+					if ( mShouldTerminate )
+						return;
+
+					worker.hasWork.wait( lock );
+				}
+			}
+
+			worker.job.doWork();
+			worker.job.isDone();
+		}
+	}
 }

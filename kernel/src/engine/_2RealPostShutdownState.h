@@ -24,24 +24,20 @@
 
 namespace _2Real
 {
-	class StateData;
-
 	class PostShutdownState : public AbstractBlockState
 	{
 
 	public:
 
-		PostShutdownState( const State::Id );
+		PostShutdownState( const BlockState );
 
-		std::shared_ptr< SignalResponse > onStartRunning( std::shared_ptr< AbstractCallback_T< void > > );
-		std::shared_ptr< SignalResponse > onStopRunning( std::shared_ptr< AbstractCallback_T< void > > );
-		std::shared_ptr< SignalResponse > onUpdateSignalReceived();
-
-		std::shared_ptr< SignalResponse > onSetupSignalReceived( std::shared_ptr< AbstractCallback_T< void > > );
-		std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived( std::shared_ptr< AbstractCallback_T< void > > );
-		std::shared_ptr< SignalResponse > onShutdownSignalReceived( std::shared_ptr< AbstractCallback_T< void > > );
-
-		std::shared_ptr< SignalResponse > onEngineShutdownReceived( std::shared_ptr< AbstractCallback_T< void > > );
+		std::shared_ptr< SignalResponse > onStartRunning() override;
+		std::shared_ptr< SignalResponse > onStopRunning() override;
+		std::shared_ptr< SignalResponse > onUpdateSignalReceived() override;
+		std::shared_ptr< SignalResponse > onSetupSignalReceived() override;
+		std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived() override;
+		std::shared_ptr< SignalResponse > onShutdownSignalReceived() override;
+		std::shared_ptr< SignalResponse > onEngineShutdownReceived() override;
 
 	};
 }

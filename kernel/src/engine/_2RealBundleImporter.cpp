@@ -26,8 +26,8 @@
 namespace _2Real
 {
 
-	BundleImporter::BundleImporter( std::shared_ptr< TypeRegistry > registry ) :
-		mTypeRegistry( registry )
+	BundleImporter::BundleImporter( std::shared_ptr< TypeCollection > registry ) :
+		mTypeCollection( registry )
 	{
 	}
 

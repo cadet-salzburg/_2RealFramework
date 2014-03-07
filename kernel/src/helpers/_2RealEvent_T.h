@@ -148,4 +148,168 @@ namespace _2Real
 		EventListeners			mListeners;
 
 	};
+
+	template< typename TLockable, typename... TArgs >
+	class Signal_T;
+
+	class AbstractConnection
+	{
+	public:
+		virtual ~AbstractConnection() {}
+		virtual void disconnect() = 0;
+	};
+
+	template< typename TLockable, typename... TArgs >
+	class Connection_T;
+
+	template< typename TLockable, typename... TArgs >
+	class Connection_T : public AbstractConnection
+	{
+
+	public:
+
+		using signal_type = Signal_T< TLockable, TArgs... >;
+		using callback_type = std::function< void( TArgs... ) >;
+
+		Connection_T( signal_type *signal ) : mSignal( signal )
+		{
+		}
+
+		bool operator<( Connection_T< TLockable, TArgs... > const& other ) const
+		{
+			return true;
+		}
+
+		void disconnect() override
+		{
+		}
+
+	private:
+
+		signal_type			*mSignal;
+
+	};
+
+	class Connection
+	{
+
+	public:
+
+		void disconnect()
+		{
+			c->disconnect();
+		}
+
+	private:
+
+		AbstractConnection *c;
+
+	};
+
+	template< typename TLockable, typename... TArgs >
+	class Signal_T
+	{
+
+	public:
+
+		using connection_type = Connection_T< TLockable, TArgs... >;
+		using callback_type = std::function< void( TArgs... ) >;
+
+		typedef std::map< connection_type, callback_type > Connections;
+
+		Signal_T() {}
+		~Signal_T() { clear(); }
+
+		void clear()
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			mConnections.clear();
+		}
+
+		connection_type connect( callback_type const& listener )
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			connection_type connection;
+			return connection;
+		}
+
+		void disconnect( connection_type connection )
+		{
+			std::lock_guard< TLockable > lock( mLock );
+
+			auto it = mConnections.find( connection );
+			if ( it != mConnections.end() )
+				mConnections.erase( it );
+		}
+
+		void trigger( TArgs... args ) const
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			for ( auto connection : mConnections )
+				( *connection.second )( args );
+		}
+
+	private:
+
+		Signal_T( Signal_T const& other ) = delete;
+		Signal_T& operator=( Signal_T const& other ) = delete;
+
+		mutable TLockable		mLock;
+		Connections				mConnections;
+
+	};
+
+	template< typename TLockable >
+	class Signal_T< TLockable, void >
+	{
+
+	public:
+
+		using connection_type = Connection_T< TLockable, void >;
+		using callback_type = std::function< void() >;
+
+		typedef std::map< connection_type, callback_type > Connections;
+
+		Signal_T() {}
+		~Signal_T() { clear(); }
+
+		void clear()
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			mConnections.clear();
+		}
+
+		connection_type connect( callback_type const& listener )
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			connection_type connection;
+			return connection;
+		}
+
+		void disconnect( connection_type connection )
+		{
+			std::lock_guard< TLockable > lock( mLock );
+
+			auto it = mConnections.find( connection );
+			if ( it != mConnections.end() )
+				mConnections.erase( it );
+		}
+
+		void trigger() const
+		{
+			std::lock_guard< TLockable > lock( mLock );
+			for ( auto connection : mConnections )
+				( *connection.second )();
+		}
+
+	private:
+
+		Signal_T( Signal_T const& other ) = delete;
+		Signal_T& operator=( Signal_T const& other ) = delete;
+
+		mutable TLockable		mLock;
+		Connections				mConnections;
+
+	};
+
 }

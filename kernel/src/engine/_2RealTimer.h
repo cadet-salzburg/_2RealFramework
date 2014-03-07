@@ -29,6 +29,8 @@ namespace _2Real
 
 	public:
 
+		Timer( const double fps ) : UpdateTrigger() {}
+
 	};
 
 }

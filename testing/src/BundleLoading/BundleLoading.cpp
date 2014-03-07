@@ -37,7 +37,7 @@ int main( int argc, char *argv[] )
 {
 	try
 	{
-		_2Real::app::Engine &testEngine = _2Real::app::Engine::instance();
+		_2Real::app::Engine testEngine;
 
 		// testing the bundle directory from environment vars
 		std::cout << "testing bundle directory: " << testEngine.getBundleDirectory() << std::endl;
@@ -168,9 +168,46 @@ int main( int argc, char *argv[] )
 
 					std::cout << blockinfos.front().getName() << std::endl;
 
-					// could be the context! -> check
-					_2Real::app::FunctionBlockHandle block = bundle.createBlock( blockinfos.front().getName() );
+					std::vector< _2Real::app::FunctionBlockHandle > blockHandles;
+					for ( auto it : blockinfos )
+					{
+						if ( !it.isContext() )
+						{
+							auto handle = bundle.createBlock( blockinfos.front().getName() );
+							blockHandles.push_back( handle );
+						}
+					}
 
+					_2Real::app::FunctionBlockHandle testHandle;
+					if ( !blockHandles.empty() )
+					{
+						testHandle = blockHandles.front();
+						std::cout << testHandle.isValid() << std::endl;
+
+						struct TestStruct
+						{
+							static void done()
+							{
+								std::cout << "done!" << std::endl;
+							}
+						};
+
+						std::function< void() > cb = std::bind( TestStruct::done );
+
+						std::future< _2Real::BlockState > setup = testHandle.setup();
+						std::future< _2Real::BlockState > testy = testHandle.setup();
+						setup.wait();
+						testy.wait();
+
+
+
+						std::cout << "SINGLESTEP!" << std::endl;
+
+						std::future< _2Real::BlockState > singlestep = testHandle.singlestep();
+
+						singlestep.wait();
+
+					}
 				}
 			}
 			catch ( _2Real::Exception &e )

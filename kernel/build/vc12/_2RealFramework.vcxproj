@@ -53,6 +53,7 @@
     <ClCompile Include="..\..\src\app\_2RealIoSlotMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp" />
     <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp" />
     <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
@@ -93,7 +94,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealCondition.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealConditionFactory.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealCustomData.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataFieldMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp" />
@@ -135,16 +135,13 @@
     <ClCompile Include="..\..\src\engine\_2RealSharedTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealStateChangeTrigger.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealStateData.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealStateMachine.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealThreadpool.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealTimer.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealTimerCondition.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealUpdateTrigger.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealUserInputCondition.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealValuesCondition.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealConstants.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
     </ClCompile>
@@ -172,6 +169,7 @@
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterMetainfo.h" />
     <ClInclude Include="..\..\src\app\_2RealIoSlotMetainfo.h" />
+    <ClInclude Include="..\..\src\app\_2RealSystemHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealTimerHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealTypeMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealFunctionBlockMetainfo.h" />
@@ -191,7 +189,6 @@
     <ClInclude Include="..\..\src\engine\_2RealAnyHolder_T.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlock.h" />
     <ClInclude Include="..\..\src\engine\_2RealCondition.h" />
-    <ClInclude Include="..\..\src\engine\_2RealConditionFactory.h" />
     <ClInclude Include="..\..\src\engine\_2RealDefaultPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealFieldDescriptor.h" />
     <ClInclude Include="..\..\src\engine\_2RealFrameworkCompatibleType.h" />
@@ -223,23 +220,23 @@
     <ClInclude Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedServiceIoSlotMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedTypeMetainfo.h" />
-    <ClInclude Include="..\..\src\engine\_2RealStateChangeTrigger.h" />
     <ClInclude Include="..\..\src\engine\_2RealStateData.h" />
     <ClInclude Include="..\..\src\engine\_2RealStateMachine.h" />
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealThreadpool.h" />
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimer.h" />
-    <ClInclude Include="..\..\src\engine\_2RealTimerCondition.h" />
+    <ClInclude Include="..\..\src\engine\_2RealTimerCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealTypeCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealUpdateTrigger.h" />
-    <ClInclude Include="..\..\src\engine\_2RealUserInputCondition.h" />
-    <ClInclude Include="..\..\src\engine\_2RealValuesCondition.h" />
+    <ClInclude Include="..\..\src\enums\_2RealBlockState.h" />
+    <ClInclude Include="..\..\src\enums\_2RealThreadpoolPolicy.h" />
     <ClInclude Include="..\..\src\helpers\_2RealBoost.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback_T.h" />
     <ClInclude Include="..\..\src\helpers\_2RealConstants.h" />
     <ClInclude Include="..\..\src\helpers\_2RealEvent_T.h" />
     <ClInclude Include="..\..\src\helpers\_2RealException.h" />
     <ClInclude Include="..\..\src\helpers\_2RealPath.h" />
-    <ClInclude Include="..\..\src\helpers\_2RealSingletonHolder_T.h" />
     <ClInclude Include="..\..\src\helpers\_2RealStdIncludes.h" />
     <ClInclude Include="..\..\src\helpers\_2RealVersion.h" />
     <ClInclude Include="..\..\src\_2RealApplication.h" />

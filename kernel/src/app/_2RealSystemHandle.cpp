@@ -16,27 +16,29 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealUpdateTrigger.h"
+#include "app/_2RealSystemHandle.h"
+#include "app/_2RealHandleValidity.h"
+#include "engine/_2RealThreadpool.h"
 
 namespace _2Real
 {
-	UpdateTrigger::UpdateTrigger()
+	namespace app
 	{
-	}
+		SystemHandle::SystemHandle() :
+			mImpl()
+		{
+		}
 
-	UpdateTrigger::~UpdateTrigger()
-	{
-	}
+		SystemHandle::SystemHandle( std::shared_ptr< Threadpool > timer ) :
+			mImpl( timer )
+		{
+		}
 
-	void UpdateTrigger::registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-	}
-
-	void UpdateTrigger::unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-	}
-
-	void UpdateTrigger::fire()
-	{
+		bool SystemHandle::isValid() const
+		{
+			std::shared_ptr< Threadpool > timer = mImpl.lock();
+			return ( nullptr != timer.get() );
+		}
 	}
 }
+	

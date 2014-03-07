@@ -20,4 +20,50 @@
 
 namespace _2Real
 {
+	PostShutdownState::PostShutdownState( const BlockState state ) :
+		AbstractBlockState( state )
+	{
+	}
+
+// ----- loop
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onStartRunning()
+	{
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onStopRunning()
+	{	
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onUpdateSignalReceived()
+	{
+		assert( NULL );
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+// ----- user input
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onSetupSignalReceived()
+	{	
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onSingleUpdateSignalReceived()
+	{
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onShutdownSignalReceived()
+	{
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
+
+// ----- shutdown
+
+	std::shared_ptr< SignalResponse > PostShutdownState::onEngineShutdownReceived()
+	{
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+	}
 }

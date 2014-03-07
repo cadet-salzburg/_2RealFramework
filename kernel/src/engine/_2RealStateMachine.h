@@ -21,14 +21,18 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealStateData.h"
+#include "engine/_2RealThreadpool.h"
+
+#include <future>
+#include "enums/_2RealBlockState.h"
 
 namespace _2Real
 {
 	class AbstractBlockState;
 	class UpdateTrigger;
-	class ActionRequest;
 	class Threadpool;
 	struct SignalResponse;
+	class AbstractSharedService;
 
 	/*
 	*	the state machine is a bit weird, and i know this.
@@ -41,33 +45,45 @@ namespace _2Real
 
 	public:
 
-		StateMachine( std::shared_ptr< Threadpool > );
+		StateMachine( std::shared_ptr< Threadpool >, std::shared_ptr< AbstractSharedService > );
 
+		~StateMachine();
+
+		/*
 		// user signals
-		void startRunning( std::shared_ptr< UpdateTrigger >, CbPtr );
-		void stopRunning( CbPtr );
-		void setup( CbPtr );
-		void singleUpdate( CbPtr );
-		void shutdown( CbPtr );
+		void startRunning( std::shared_ptr< UpdateTrigger >, std::function< void() > const& );
+		void stopRunning( std::function< void() > const& );
+		void setup( std::function< void() > const& );
+		void singleUpdate( std::function< void() > const& );
+		void shutdown( std::function< void() > const& );
 
 		// trigger of some sort
 		void update(); 
 		
 		// shutdown
-		void destroy( CbPtr );
+		void destroy( std::function< void() > const& );
+		*/
 
-		void onActionRequestComplete();
+		std::future< BlockState > setup();
+		std::future< BlockState > singlestep();
+		std::future< BlockState > shutdown();
+
+		void onActionComplete();
+
+		void noop() {}
 
 	private:
 
-		void carryOut( std::shared_ptr< SignalResponse > );
-		void onActionComplete();
-		void finalizeTransition();
+		// these functions are called when the mutex mMutex is locked
+		std::future< BlockState > carryOut( std::shared_ptr< SignalResponse > );
+		void finalizeStateTransition();
+		
+		// for this one, the mutex is unlocked
+		void startAction( const Action );
 
 		std::weak_ptr< Threadpool >						mThreads;
 
 		std::shared_ptr< AbstractBlockState >			mState;
-		std::shared_ptr< ActionRequest >				mRequest;
 		std::shared_ptr< SignalResponse >				mResponse;
 
 		std::shared_ptr< UpdateTrigger >				mUpdateTrigger;
@@ -75,6 +91,9 @@ namespace _2Real
 		bool											mIsActionInProcess;
 		std::deque< std::shared_ptr< SignalResponse > >	mQueuedResponses;	
 		mutable std::mutex								mMutex;
+
+		std::shared_ptr< AbstractSharedService >		mServiceObj;	
+		Threadpool::Id									mId;
 
 	};
 }

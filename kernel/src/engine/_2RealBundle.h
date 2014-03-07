@@ -32,13 +32,14 @@ namespace _2Real
 	class AbstractSharedServiceLifetimeManager;
 	class Block;
 	class BundleCollection;
+	class Threadpool;
 
 	class Bundle : public std::enable_shared_from_this< Bundle >
 	{
 
 	public:
 
-		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const SharedLibraryMetainfo > );
+		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const SharedLibraryMetainfo >, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
 
 		~Bundle();
 
@@ -88,6 +89,9 @@ namespace _2Real
 		typedef std::vector< std::shared_ptr< Block > >			ServiceInstances;
 
 		ServiceInstances										mServiceInstances;
+
+		std::weak_ptr< Threadpool >					mStdThreads;
+		std::weak_ptr< Threadpool >					mCtxtThreads;
 
 	};
 

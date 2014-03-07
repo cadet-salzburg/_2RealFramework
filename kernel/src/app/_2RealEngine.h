@@ -23,47 +23,51 @@
 #include "helpers/_2RealException.h"
 #include "helpers/_2RealPath.h"
 
+#include "enums/_2RealThreadpoolPolicy.h"
+
 namespace _2Real
 {
-
-	template< typename THeld >
-	class SingletonHolder_T;
-
 	class EngineImpl;
 
 	namespace app
 	{
 		class BundleHandle;
+		class TimerHandle;
+		class SystemHandle;
 
 		class Engine
 		{
 
-			template< typename THeld >
-			friend class _2Real::SingletonHolder_T;
-
 		public:
 
-			static Engine& instance();
+			Engine();
+			~Engine();
 
-	//--------------------- bundle loading
+	//--------------------- bundle
 			// returns the absolute path to the bundle directory
 			Path const& getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
 			BundleHandle loadBundle( std::string const& libname );
-	//--------------------- bundle loading
+	//--------------------- bundle
 
-	//---- debug info
-#ifdef _DEBUGINFO
-			void printTypeCollection();
-#endif
+	//--------------------- threadpool
+			SystemHandle createSystem( const ThreadpoolPolicy );
+			// TODO: remove ( behaviour? )
+			// all systems destroyed on engine destruction
+	//--------------------- threadpool
+
+	//--------------------- timer
+			TimerHandle createTimer( const double fps );
+			// TODO: remove ( behaviour? )
+			// all timers destroyed on engine destruction
+	//--------------------- timer
 
 		private:
 
-			Engine();
-			Engine( Engine const& src );
-			Engine& operator=( Engine const& other );
+			Engine( Engine const& src ) = delete;
+			Engine& operator=( Engine const& other ) = delete;
 
-			std::shared_ptr< EngineImpl > mImpl;
+			std::unique_ptr< EngineImpl > mImpl;
 
 		};
 	}

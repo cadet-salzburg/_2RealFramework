@@ -44,8 +44,8 @@ namespace _2Real
 
 	private:
 
-		TypeCollection( TypeCollection const& other );
-		TypeCollection& operator=( TypeCollection const& other );
+		TypeCollection( TypeCollection const& other ) = delete;
+		TypeCollection& operator=( TypeCollection const& other ) = delete;
 
 		typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		Types;
 

@@ -20,6 +20,9 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "app/_2RealCallback.h"
+#include "enums/_2RealBlockState.h"
+
+#include <future>
 
 namespace _2Real
 {
@@ -37,24 +40,48 @@ namespace _2Real
 
 		public:
 
-			typedef Callback_T< void >  StateFinalizedCallback;
-
 			FunctionBlockHandle();
 			explicit FunctionBlockHandle( std::shared_ptr< Block > );
 
 			bool				isValid() const;
 			BlockMetainfo		getMetainfo() const;
 
-			// no further call state change calls will have any effect until the function has been carried out
-			void				setup( StateFinalizedCallback const& );
-			void				singlestep( StateFinalizedCallback const& );
-			void				shutdown( StateFinalizedCallback const& );
+			/*
+			*	none of the following functions should be called while
+			*	there's still an unfulfilled std::future object around
+			*	( from the same block, of course: different blocks are fine )
+			*/
 
+			/*
+			*	the functions here are not finalized yet
+			*	personally, i really like the std::future based approach
+			*	as it allows programmers to block whenever it makes sense for their applications
+			*	- yet without further testing it's impossible to tell how useful it is in practice
+			*/
+
+			/*
+			*	on the subject of futures, maybe a boolean success / failure result would be more useful
+			*	than the block state: from the enum, you can't tell if anything was done to the block...
+			*/
+
+			std::future< BlockState >		setup();
+			std::future< BlockState >		singlestep();
+			std::future< BlockState >		shutdown();
+			std::future< BlockState >		startUpdating( TimerHandle );
+			//std::future< BlockState >		startUpdating( UpdatePolicyHandle );
+			std::future< BlockState >		stopUpdating();
+
+			/*
+				old functions: these were based on async callbacks
+			*/
+			/*
+			void				setup( std::function< void() > const& );
+			void				singlestep( std::function< void() > const& );
+			void				shutdown( std::function< void() > const& );
 			void				startUpdating( TimerHandle );
-			//void				startUpdating( UpdatePolicyHandle );
-
-			// again, no further calls will have any effect until the cb has been called!
-			void				stopUpdating( StateFinalizedCallback const& cb );
+			void				startUpdating( UpdatePolicyHandle );
+			void				stopUpdating( std::function< void() > const& );
+			*/
 
 		private:
 

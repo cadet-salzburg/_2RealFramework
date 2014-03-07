@@ -11,12 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\TestBundle_NoMetainfo\TestBundle_NoMetainfo.cpp" />
+    <ClCompile Include="..\..\..\src\TestBundle_SimpleService\TestBundle_SimpleBlock.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{238F087D-0685-4BD6-B088-B432036BC2D6}</ProjectGuid>
+    <ProjectGuid>{F397D961-7DF8-45C5-B4FD-61539B40573A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
+    <ProjectName>TestBundle_SimpleBlock</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

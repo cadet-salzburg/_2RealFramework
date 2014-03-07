@@ -25,7 +25,7 @@
 namespace _2Real
 {
 	class BundleMetadata;
-	class TypeRegistry;
+	class TypeCollection;
 	class SharedLibrary;
 	class SharedLibraryMetainfo;
 
@@ -39,7 +39,7 @@ namespace _2Real
 	
 	public:
 
-		BundleImporter( std::shared_ptr< TypeRegistry > registry );
+		BundleImporter( std::shared_ptr< TypeCollection > registry );
 		~BundleImporter();
 
 		void clear();
@@ -60,7 +60,7 @@ namespace _2Real
 		typedef std::map< Path, SharedLibraryImportData >	ImportData;
 
 		ImportData									mImportData;
-		std::weak_ptr< TypeRegistry >				mTypeRegistry;
+		std::weak_ptr< TypeCollection >				mTypeCollection;
 
 	};
 

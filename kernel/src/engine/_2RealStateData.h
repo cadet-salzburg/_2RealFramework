@@ -22,73 +22,22 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealCallback_T.h"
 
+#include <future>
+#include "enums/_2RealBlockState.h"
+
 namespace _2Real
 {
 	class UpdateTrigger;
 
-	class Action
-	{
-	public:
-		enum Id { DO_SETUP, DO_UPDATE, DO_SHUTDOWN, DO_NOTHING };		
-	};
-
-	class Signal
-	{
-	public:
-		enum Id { SETUP, SHUTDOWN, UPDATE, START_RUNNING, STOP_RUNNING, ENGINE_SHUTDOWN };
-	};
-
-	class State
-	{
-	public:
-		enum Id { PRE_SETUP, POST_SETUP, POST_SETUP_RUNNING, POST_SHUTDOWN };
-	};
-
-	typedef std::shared_ptr< AbstractCallback_T< void > > CbPtr;
+	enum class Action : uint8_t { DO_SETUP, DO_UPDATE, DO_SHUTDOWN, DO_NOTHING };		
+	//enum class State : uint8_t { PRE_SETUP, POST_SETUP, POST_SETUP_RUNNING, POST_SHUTDOWN };
 
 	struct SignalResponse
 	{
-		Action::Id							action;
-		State::Id							followupState;
+		Action								action;
+		BlockState							followupState;
 		bool								shouldWait;		// alternative: ignore
-		CbPtr								onFininshed;	
+		std::promise< BlockState >			isFinished;
 		std::shared_ptr< UpdateTrigger >	updateTrigger;
 	};
-
-	////////////////////////////////////////////
-	// Thread!!!
-	////////////////////////////////////////////
-
-	class Thread
-	{
-	};
-
-	class Threadpool
-	{
-
-	public:
-
-		// nonblocking
-		void requestThread( std::shared_ptr< AbstractCallback_T< std::shared_ptr< Thread > > > );
-
-	};
-
-	class ActionRequest
-	{
-
-	public:
-
-		void start( /*service and function*/ std::shared_ptr< Threadpool >, CbPtr );
-		void onThreadReady( std::shared_ptr< Thread > );
-
-	private:
-
-		// oh dear, now we need the fucking threadpool
-
-		Action::Id						mAction;
-		CbPtr							mCallback;
-		std::shared_ptr< Thread >		mThread;
-
-	};
-
 }

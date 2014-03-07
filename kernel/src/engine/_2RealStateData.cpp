@@ -20,18 +20,4 @@
 
 namespace _2Real
 {
-	void ActionRequest::start( std::shared_ptr< Threadpool > threads, CbPtr cb )
-	{
-		mCallback = cb;
-		threads->requestThread( makeCallback( this, &ActionRequest::onThreadReady ) );
-	}
-
-	void ActionRequest::onThreadReady( std::shared_ptr< Thread > thread )
-	{
-		// this thread will be kept alive
-		mThread = thread;
-
-		// TODO
-		// mThread->run( Block, appropriate function, mCallback );
-	}
 }

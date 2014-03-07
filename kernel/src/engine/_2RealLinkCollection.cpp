@@ -24,13 +24,15 @@
 #include "engine/_2RealBundle.h"
 #include "engine/_2RealBundleCollection.h"
 
+#include <boost/log/sources/basic_logger.hpp>
+
 namespace _2Real
 {
-	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads ) :
+	BundleCollection::BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool > ded, std::shared_ptr< Threadpool > threads ) :
 		std::enable_shared_from_this< BundleCollection >(),
 		mBundleImporter( registry ),
-		mStdThreads( stdthreads ),
-		mCtxtThreads( ctxtthreads )
+		mThreadsDedicated( ded ),
+		mThreads( threads )
 	{
 		updateBundleDirectory();
 	}
@@ -94,7 +96,7 @@ namespace _2Real
 		}
 
 		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
-		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info, mStdThreads.lock(), mCtxtThreads.lock() ) );
+		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info ) );
 		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
 		bundle->init();
 		mBundles[ absPath ] = bundle;

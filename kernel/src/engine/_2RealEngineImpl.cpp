@@ -18,59 +18,33 @@
 
 #include "engine/_2RealEngineImpl.h"
 #include "engine/_2RealBundleCollection.h"
-#include "engine/_2RealThreadpool.h"
+#include "engine/_2RealTimerCollection.h"
+#include "engine/_2RealThreadpoolCollection.h"
 #include "helpers/_2RealConstants.h"
+#include "helpers/_2RealException.h"
 
 namespace _2Real
 {
-	std::shared_ptr< EngineImpl > EngineImpl::create()
-	{
-		std::shared_ptr< EngineImpl > result( new EngineImpl );
-		result->privateInit();
-		return result;
-	}
-
 	EngineImpl::EngineImpl() :
-		enable_shared_from_this< EngineImpl >()
+		std::enable_shared_from_this< EngineImpl >(),
+		mThreadpoolCollection( new ThreadpoolCollection ),
+		mStdThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::FIFO ) ),
+		mCtxtThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::DEDICATED ) ),
+		mTypeCollection( nullptr ),
+		mBundleCollection( new BundleCollection( mTypeCollection, mStdThreads.lock(), mCtxtThreads.lock() ) ),
+		mTimerCollection( new TimerCollection )
 	{
-		std::cout << "engine created" << std::endl;
+		std::cout << "engine constructor: done" << std::endl;
 	}
 
 	EngineImpl::~EngineImpl()
 	{
-		try
-		{
-		//	mLogger->addLine( "ENGINE SHUTDOWN" );
-		//	clearFully();
-		//	mLogger->addLine( "ENGINE CLEARED" );
+		mBundleCollection.reset();
+		mTypeCollection.reset();
+		mThreadpoolCollection.reset();
 
-		//	delete mTimerManager;
-		//	delete mLinkManager;
-		//	delete mSystem;
-		//	delete mBundleManager;
-		//	delete mThreadPool;
-		//	delete mTypeRegistry;
-		//	delete mTimer;
-		//	delete mLogger;
-		}
-		catch ( std::exception const& e )
-		{
-			std::cout << e.what() << std::endl;
-		}
+		std::cout << "engine destructor: done" << std::endl;
 	}
-
-	void EngineImpl::privateInit()
-	{
-		// order matters -> see order of member vars
-
-		mThreadsDedicated.reset( new Threadpool( 0, std::numeric_limits< unsigned int >::max() ) );
-		mThreads.reset( new Threadpool( 4, 8 ) );
-
-		mBundleCollection.reset( new BundleCollection( mTypeRegistry, mThreads, mThreadsDedicated ) );
-		std::cout << "engine initialized" << std::endl;
-	}
-
-// ---------------------------------- bundle loading
 
 	std::shared_ptr< Bundle > EngineImpl::loadLibrary( std::string const& filename )
 	{
@@ -84,5 +58,15 @@ namespace _2Real
 	Path const& EngineImpl::getBundleDirectory() const
 	{
 		return mBundleCollection->getBundleDirectory();
+	}
+
+	std::shared_ptr< Timer > EngineImpl::createTimer( const double fps )
+	{
+		return mTimerCollection->createTimer( fps );
+	}
+
+	std::shared_ptr< Threadpool > EngineImpl::createThreadpool( const ThreadpoolPolicy policy )
+	{
+		return mThreadpoolCollection->createThreadpool( policy );
 	}
 }
