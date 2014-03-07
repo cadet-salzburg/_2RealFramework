@@ -328,4 +328,8 @@ namespace _2Real
 		mResponse->isFinished.set_value( next );
 		mResponse.reset();		// obj no longer needed
 	}
+
+	void StateMachine::startAction( const Action action )
+	{
+	}
 }
