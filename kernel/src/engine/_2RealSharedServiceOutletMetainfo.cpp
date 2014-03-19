@@ -30,4 +30,14 @@ namespace _2Real
 	{
 	}
 
+	std::shared_ptr< SharedServiceOutletMetainfo > SharedServiceOutletMetainfo::clone() const
+	{
+		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( getName() ) );
+
+		result->setDatatype( getDatatype() );
+		result->setDescription( getDescription() );
+
+		return result;
+	}
+
 }

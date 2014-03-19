@@ -27,23 +27,33 @@ namespace _2Real
 {
 	EngineImpl::EngineImpl() :
 		std::enable_shared_from_this< EngineImpl >(),
+		mTimerCollection( new TimerCollection ),
 		mThreadpoolCollection( new ThreadpoolCollection ),
 		mStdThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::FIFO ) ),
 		mCtxtThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::DEDICATED ) ),
 		mTypeCollection( nullptr ),
-		mBundleCollection( new BundleCollection( mTypeCollection, mStdThreads.lock(), mCtxtThreads.lock() ) ),
-		mTimerCollection( new TimerCollection )
+		mBundleCollection( new BundleCollection( mTypeCollection, mStdThreads.lock(), mCtxtThreads.lock() ) )
 	{
-		std::cout << "engine constructor: done" << std::endl;
 	}
 
 	EngineImpl::~EngineImpl()
 	{
+	}
+
+	void EngineImpl::clear()
+	{
+		mStdThreads.reset();
+		mCtxtThreads.reset();
+
+		//mBundleCollection.clear();
+		//mTypeCollection.clear();
+		//mTimerCollection.clear();
+		//mThreadpoolCollection.clear();
+
 		mBundleCollection.reset();
 		mTypeCollection.reset();
+		mTimerCollection.reset();
 		mThreadpoolCollection.reset();
-
-		std::cout << "engine destructor: done" << std::endl;
 	}
 
 	std::shared_ptr< Bundle > EngineImpl::loadLibrary( std::string const& filename )

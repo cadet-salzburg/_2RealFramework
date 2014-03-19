@@ -31,5 +31,10 @@ namespace _2Real
 		{
 			return std::shared_ptr< SharedService_T< TBlock > >( new SharedService_T< TBlock >() );
 		}
+
+		std::shared_ptr< AbstractSharedServiceFactory > clone() const
+		{
+			return std::shared_ptr< AbstractSharedServiceFactory >( new SharedServiceFactory_T< TBlock > );
+		}
 	};
 }

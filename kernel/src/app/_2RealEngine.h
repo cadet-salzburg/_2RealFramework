@@ -43,6 +43,8 @@ namespace _2Real
 			Engine();
 			~Engine();
 
+			void clear();
+
 	//--------------------- bundle
 			// returns the absolute path to the bundle directory
 			Path const& getBundleDirectory() const;

@@ -89,7 +89,11 @@ namespace _2Real
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			std::vector< std::shared_ptr< const SharedServiceMetainfo > > tmp;
 			meta->getServiceMetainfos( tmp );
-			for ( auto it : tmp ) blocks.push_back( BlockMetainfo( it ) );
+			for ( auto it : tmp )
+			{
+				std::shared_ptr< const SharedServiceMetainfo > s = it;
+				blocks.push_back( BlockMetainfo( s ) );
+			}
 		}
 
 		void BundleMetainfo::getExportedTypes( std::vector< TypeMetainfo > &types ) const

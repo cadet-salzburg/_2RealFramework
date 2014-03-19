@@ -18,6 +18,59 @@
 
 #include "engine/_2RealTimer.h"
 
+#include <boost/bind.hpp>
+
 namespace _2Real
 {
+	Timer::Timer( boost::asio::io_service &service, const uint64_t period ) :
+		UpdateTrigger(),
+		mPeriod( period ),
+		mTimer( service ),
+		mShouldUpdate( false )
+	{
+	}
+
+	Timer::~Timer()
+	{
+	}
+
+	void Timer::start()
+	{
+		mMutex.lock();
+		if ( !mShouldUpdate )
+		{
+			std::cout << "timer: start" << std::endl;
+			mShouldUpdate = true;
+			mMutex.unlock();
+
+			mTimer.expires_from_now( boost::posix_time::milliseconds( mPeriod ) );
+			mTimer.async_wait( boost::bind( &Timer::update, this ) );
+		}
+		else
+			mMutex.unlock();
+	}
+
+	void Timer::stop()
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		std::cout << "timer: stop" << std::endl;
+		mShouldUpdate = false;
+		mTimer.cancel();
+	}
+
+	void Timer::update()
+	{
+		mMutex.lock();
+		if ( mShouldUpdate )
+		{
+			UpdateTrigger::fire();
+			mMutex.unlock();
+
+			mTimer.expires_at( mTimer.expires_at() + boost::posix_time::milliseconds( mPeriod ) );
+			mTimer.async_wait( boost::bind( &Timer::update, this ) );
+		}
+		else
+			mMutex.unlock();
+	}
+
 }

@@ -49,25 +49,19 @@ namespace _2Real
 
 		~StateMachine();
 
-		/*
-		// user signals
-		void startRunning( std::shared_ptr< UpdateTrigger >, std::function< void() > const& );
-		void stopRunning( std::function< void() > const& );
-		void setup( std::function< void() > const& );
-		void singleUpdate( std::function< void() > const& );
-		void shutdown( std::function< void() > const& );
-
-		// trigger of some sort
-		void update(); 
-		
-		// shutdown
-		void destroy( std::function< void() > const& );
-		*/
-
+		// user input
 		std::future< BlockState > setup();
 		std::future< BlockState > singlestep();
 		std::future< BlockState > shutdown();
+		std::future< BlockState > startRunning( std::shared_ptr< UpdateTrigger > );
+		std::future< BlockState > stopRunning();
 
+		// trigger of some sort
+		void update(); 	
+		// shutdown
+		std::future< BlockState > destroy();
+
+		// thread pool
 		void onActionComplete();
 
 		void noop() {}
@@ -77,9 +71,6 @@ namespace _2Real
 		// these functions are called when the mutex mMutex is locked
 		std::future< BlockState > carryOut( std::shared_ptr< SignalResponse > );
 		void finalizeStateTransition();
-		
-		// for this one, the mutex is unlocked
-		void startAction( const Action );
 
 		std::weak_ptr< Threadpool >						mThreads;
 
@@ -94,6 +85,9 @@ namespace _2Real
 
 		std::shared_ptr< AbstractSharedService >		mServiceObj;	
 		Threadpool::Id									mId;
+
+		uint64_t										mSkippedCounter;
+		uint64_t										mUpdatedCounter;
 
 	};
 }

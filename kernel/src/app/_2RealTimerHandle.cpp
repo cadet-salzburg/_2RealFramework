@@ -40,6 +40,18 @@ namespace _2Real
 			return ( nullptr != timer.get() );
 		}
 
+		void TimerHandle::start()
+		{
+			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );
+			timer->start();
+		}
+
+		void TimerHandle::stop()
+		{
+			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );
+			timer->stop();
+		}
+
 		TimerHandle::operator std::shared_ptr< UpdateTrigger > ()
 		{
 			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );

@@ -68,4 +68,21 @@ namespace _2Real
 		return mInlets;
 	}
 
+	std::shared_ptr< DefaultPolicy > DefaultPolicy::clone() const
+	{
+		std::shared_ptr< DefaultPolicy > result( new DefaultPolicy( mCode ) );
+
+		for ( auto it : mInlets )
+		{
+			std::vector< std::string > tmp;
+			for ( auto p : it )
+			{
+				tmp.push_back( p );
+			}
+			result->mInlets.push_back( tmp );
+		}
+
+		return result;
+	}
+
 }

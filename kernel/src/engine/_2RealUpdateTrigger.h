@@ -48,6 +48,8 @@ namespace _2Real
 		UpdateTrigger( UpdateTrigger const& other ) = delete;
 		UpdateTrigger& operator=( UpdateTrigger const& other ) = delete;
 
+		Event_T< void >			mEvent;
+
 		/*Signal_T< std::mutex, void >		mTrigger;*/
 
 	};

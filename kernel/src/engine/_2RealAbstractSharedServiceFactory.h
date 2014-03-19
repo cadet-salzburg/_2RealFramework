@@ -28,5 +28,7 @@ namespace _2Real
 	public:
 		virtual ~AbstractSharedServiceFactory() {};
 		virtual std::shared_ptr< AbstractSharedService > create() const = 0;
+		// needed for copying the data
+		virtual std::shared_ptr< AbstractSharedServiceFactory > clone() const = 0;
 	};
 }

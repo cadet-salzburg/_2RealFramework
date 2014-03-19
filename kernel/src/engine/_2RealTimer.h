@@ -20,7 +20,11 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "helpers/_2RealBoost.h"
 #include "engine/_2RealUpdateTrigger.h"
+
+#include <boost/asio.hpp>
+#include <atomic>
 
 namespace _2Real
 {
@@ -29,8 +33,20 @@ namespace _2Real
 
 	public:
 
-		Timer( const double fps ) : UpdateTrigger() {}
+		Timer( boost::asio::io_service &service, const uint64_t period );
+		~Timer();
+
+		void start();		
+		void stop();
+
+		void update();
+
+	private:
+
+		uint64_t						mPeriod;
+		boost::asio::deadline_timer		mTimer;
+		bool							mShouldUpdate;
+		mutable std::mutex				mMutex;
 
 	};
-
 }

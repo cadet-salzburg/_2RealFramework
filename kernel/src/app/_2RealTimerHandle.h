@@ -37,6 +37,9 @@ namespace _2Real
 
 			bool isValid() const;
 
+			void start();
+			void stop();
+
 			operator std::shared_ptr< UpdateTrigger > ();
 
 		private:

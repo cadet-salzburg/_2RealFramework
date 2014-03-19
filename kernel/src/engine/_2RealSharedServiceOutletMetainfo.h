@@ -37,6 +37,8 @@ namespace _2Real
 		using SharedServiceIoSlotMetainfo::getName;
 		using SharedServiceIoSlotMetainfo::getDatatype;
 
+		std::shared_ptr< SharedServiceOutletMetainfo > clone() const;
+
 	private:
 
 		SharedServiceOutletMetainfo( SharedServiceOutletMetainfo const& );

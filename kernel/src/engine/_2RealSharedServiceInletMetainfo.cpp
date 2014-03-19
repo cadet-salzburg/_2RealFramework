@@ -41,4 +41,15 @@ namespace _2Real
 		return mIsMultiInlet;
 	}
 
+	std::shared_ptr< SharedServiceInletMetainfo > SharedServiceInletMetainfo::clone() const
+	{
+		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( getName() ) );
+
+		result->setDatatype( getDatatype() );
+		result->setDescription( getDescription() );
+		result->mIsMultiInlet = mIsMultiInlet;
+
+		return result;
+	}
+
 }

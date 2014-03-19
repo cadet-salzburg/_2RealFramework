@@ -102,13 +102,13 @@ namespace _2Real
 		std::future< BlockState > FunctionBlockHandle::startUpdating( TimerHandle handle )
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ) );
+			return block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ) );
 		}
 
 		std::future< BlockState > FunctionBlockHandle::stopUpdating()
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->stopUpdating();
+			return block->stopUpdating();
 		}
 	}
 }

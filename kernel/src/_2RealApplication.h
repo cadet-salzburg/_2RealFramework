@@ -27,6 +27,8 @@
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealMultiInletHandle.h"
 
+#include "app/_2RealTimerHandle.h"
+
 #include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealBlockMetainfo.h"
 #include "app/_2RealInletMetainfo.h"

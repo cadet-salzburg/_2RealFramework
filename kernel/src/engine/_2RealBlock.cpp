@@ -148,4 +148,14 @@ namespace _2Real
 		return mStateMachine.shutdown();
 	}
 
+	std::future< BlockState > Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger )
+	{
+		return mStateMachine.startRunning( trigger );
+	}
+
+	std::future< BlockState > Block::stopUpdating()
+	{
+		return mStateMachine.stopRunning();
+	}
+
 }

@@ -31,7 +31,9 @@ namespace _2Real
 		mUpdateTrigger( nullptr ),
 		mIsActionInProcess( false ),
 		mServiceObj( service ),
-		mId( threads->createId() )
+		mId( threads->createId() ),
+		mSkippedCounter( 0 ),
+		mUpdatedCounter( 0 )
 	{
 	}
 
@@ -39,70 +41,19 @@ namespace _2Real
 	{
 	}
 
-	/*
-	void StateMachine::startRunning( std::shared_ptr< UpdateTrigger > trigger, std::function< void() > const& cb )
-	{
-#ifdef _DEBUG
-		assert( trigger );
-#endif
-
-		mMutex.lock();
-		std::shared_ptr< SignalResponse > response = mState->onStartRunning();
-		response->onFininshed = cb;
-		response->updateTrigger = trigger; // store trigger for later
-		carryOut( response );
-	}
-
-	void StateMachine::stopRunning( std::function< void() > const& cb )
-	{
-		mMutex.lock();
-		std::shared_ptr< SignalResponse > response = mState->onStopRunning();
-		response->onFininshed = cb;
-		carryOut( response );
-	}
-
 	void StateMachine::update()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onUpdateSignalReceived();
-		// !no callback to execute here!
 		carryOut( response );
 	}
 
-	void StateMachine::setup( std::function< void() > const& cb )
-	{
-		mMutex.lock();
-		std::shared_ptr< SignalResponse > response = mState->onSetupSignalReceived();
-		response->onFininshed = cb;
-
-		std::cout << "carrying out the response" << std::endl;
-		carryOut( response );
-	}
-
-	void StateMachine::singleUpdate( std::function< void() > const& cb )
-	{
-		mMutex.lock();
-		std::shared_ptr< SignalResponse > response = mState->onSingleUpdateSignalReceived();
-		response->onFininshed = cb;
-		carryOut( response );
-	}
-
-	void StateMachine::shutdown( std::function< void() > const& cb )
-	{
-		mMutex.lock();
-		std::shared_ptr< SignalResponse > response = mState->onShutdownSignalReceived();
-		response->onFininshed = cb;
-		carryOut( response );
-	}
-
-	void StateMachine::destroy( std::function< void() > const& cb )
+	std::future< BlockState > StateMachine::destroy()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onEngineShutdownReceived();
-		response->onFininshed = cb;
-		carryOut( response );
+		return carryOut( response );
 	}
-	*/
 
 	std::future< BlockState > StateMachine::setup()
 	{
@@ -125,6 +76,26 @@ namespace _2Real
 		mMutex.lock();
 		std::cout << "SM: shutdown" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onShutdownSignalReceived();
+		return carryOut( response );
+	}
+
+	std::future< BlockState > StateMachine::startRunning( std::shared_ptr< UpdateTrigger > trigger )
+	{
+#ifdef _DEBUG
+		assert( trigger );
+#endif
+		mMutex.lock();
+		std::cout << "SM: start running" << std::endl;
+		std::shared_ptr< SignalResponse > response = mState->onStartRunning();
+		response->updateTrigger = trigger; // store trigger for later
+		return carryOut( response );
+	}
+
+	std::future< BlockState > StateMachine::stopRunning()
+	{
+		mMutex.lock();
+		std::cout << "SM: stop running" << std::endl;
+		std::shared_ptr< SignalResponse > response = mState->onStopRunning();
 		return carryOut( response );
 	}
 
@@ -158,15 +129,15 @@ namespace _2Real
 			{
 			case Action::DO_SETUP:
 				std::cout << "SM: queued action is setup" << std::endl;
-				job = std::bind( &AbstractSharedService::setup, mServiceObj );
+				job = std::bind( &AbstractSharedService::setup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
 				std::cout << "SM: queued action is update" << std::endl;
-				job = std::bind( &AbstractSharedService::update, mServiceObj );
+				job = std::bind( &AbstractSharedService::update, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
 				std::cout << "SM: queued action is shutdown" << std::endl;
-				job = std::bind( &AbstractSharedService::shutdown, mServiceObj );
+				job = std::bind( &AbstractSharedService::shutdown, mServiceObj.get() );
 				break;
 			default:
 				std::cout << "SM: queued action is no-op" << std::endl;
@@ -197,26 +168,38 @@ namespace _2Real
 
 		if ( mIsActionInProcess )
 		{
-			std::cout << "SM: action in progress, storing response for later" << std::endl;
-
 			// store for later, if the shouldWait flag is set
 			// else: immediately set the promise to the current state
 			// then unlock mutex & stop
 			if ( response->shouldWait )
 				mQueuedResponses.push_back( response );
 			else
+			{
+				// store the amount of skipped updates
+				if ( response->action == Action::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
+				{
+					++mSkippedCounter;
+					//std::cout << "SM: skipped " << mSkippedCounter << std::endl;
+				}
+
 				response->isFinished.set_value( mState->getId() );
+			}
 
 			mMutex.unlock();
 		}
 		else
 		{
-			std::cout << "SM: no action in progress, immediately processing response" << std::endl;
-
 			// keep the response around, since it holds the std::promise
 			mResponse = response;
 			// allright, now there's definitely an action in process
 			mIsActionInProcess = true;
+
+			// store the amount of executed updates
+			if ( response->action == Action::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
+			{
+				++mUpdatedCounter;
+				//std::cout << "SM: skipped " << mUpdatedCounter << std::endl;
+			}
 
 			mMutex.unlock();
 
@@ -226,15 +209,15 @@ namespace _2Real
 			{
 			case Action::DO_SETUP:
 				std::cout << "SM: new action is setup" << std::endl;
-				job = std::bind( &AbstractSharedService::setup, mServiceObj );
+				job = std::bind( &AbstractSharedService::setup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
 				std::cout << "SM: new action is update" << std::endl;
-				job = std::bind( &AbstractSharedService::update, mServiceObj );
+				job = std::bind( &AbstractSharedService::update, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
 				std::cout << "SM: new action is shutdown" << std::endl;
-				job = std::bind( &AbstractSharedService::shutdown, mServiceObj );
+				job = std::bind( &AbstractSharedService::shutdown, mServiceObj.get() );
 				break;
 			default:
 				std::cout << "SM: new action is no-op" << std::endl;
@@ -303,33 +286,24 @@ namespace _2Real
 		}
 		else
 		{
+			if ( mUpdateTrigger )
+			{
+				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
+				mUpdateTrigger->unregisterFromUpdate( cb );
+				mUpdateTrigger.reset();
+			}
+
+			if ( mResponse->updateTrigger )
+			{
+				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
+				mUpdateTrigger = mResponse->updateTrigger;
+				mUpdateTrigger->registerToUpdate( cb );
+			}
+
 			mState = AbstractBlockState::create( next );
 		}
 
-/////		// TMP disable
-		//else if ( current == BlockState::RUNNING )
-		//{
-		//	std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
-		//	mUpdateTrigger->unregisterFromUpdate( cb );
-		//	mUpdateTrigger.reset();
-
-		//	mState = AbstractBlockState::create( next );
-		//}
-		//else if ( next == BlockState::RUNNING )
-		//{
-		//	mUpdateTrigger = mResponse->updateTrigger;
-		//	std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
-		//	mUpdateTrigger->registerToUpdate( cb );
-
-		//	mState = AbstractBlockState::create( next );
-		//}
-/////		// TMP disable
-
 		mResponse->isFinished.set_value( next );
 		mResponse.reset();		// obj no longer needed
-	}
-
-	void StateMachine::startAction( const Action action )
-	{
 	}
 }

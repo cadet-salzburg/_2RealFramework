@@ -30,13 +30,16 @@ namespace _2Real
 
 	void UpdateTrigger::registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
 	{
+		mEvent.addListener( cb );
 	}
 
 	void UpdateTrigger::unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
 	{
+		mEvent.removeListener( cb );
 	}
 
 	void UpdateTrigger::fire()
 	{
+		mEvent.notify();
 	}
 }

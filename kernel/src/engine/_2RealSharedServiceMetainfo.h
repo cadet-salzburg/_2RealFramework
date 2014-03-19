@@ -34,6 +34,8 @@ namespace _2Real
 
 		SharedServiceMetainfo( std::string const& name );
 		~SharedServiceMetainfo();
+		
+		void cloneFrom( SharedServiceMetainfo const& other );
 
 		void setSingleton( const bool );
 		void setDescription( std::string const& );
@@ -63,8 +65,8 @@ namespace _2Real
 
 	private:
 
-		SharedServiceMetainfo( SharedServiceMetainfo const& );
-		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& );
+		SharedServiceMetainfo( SharedServiceMetainfo const& other );
+		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& ) = delete;
 
 		typedef std::map< std::string, std::shared_ptr< SharedServiceInletMetainfo > >		Inlets;
 		typedef std::map< std::string, std::shared_ptr< SharedServiceOutletMetainfo > >		Outlets;

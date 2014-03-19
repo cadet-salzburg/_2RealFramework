@@ -37,6 +37,11 @@ namespace _2Real
 		{
 		}
 
+		void Engine::clear()
+		{
+			mImpl->clear();
+		}
+
 	// ---------------------------------- bundle
 
 		Path const& Engine::getBundleDirectory() const

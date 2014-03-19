@@ -23,17 +23,39 @@
 namespace _2Real
 {
 	TimerCollection::TimerCollection() :
-		std::enable_shared_from_this< TimerCollection >()
+		std::enable_shared_from_this< TimerCollection >(),
+		mIoService(),
+		mWork( new boost::asio::io_service::work( mIoService ) ),
+		mThread( &TimerCollection::run, this )
 	{
+		
 	}
 
 	TimerCollection::~TimerCollection()
 	{
+		std::cout << "cleaning up timers" << std::endl;
+
+		for ( auto it : mTimers )
+		{
+			it->stop();
+			it.reset();
+		}
+
+		mWork.reset();
+		mThread.join();
+
+		std::cout << "cleaned up timers" << std::endl;
+	}
+
+	void TimerCollection::run()
+	{
+		mIoService.run();
 	}
 
 	std::shared_ptr< Timer > TimerCollection::createTimer( const double fps )
 	{
-		std::shared_ptr< Timer > timer( new Timer( fps ) );
+		uint64_t period = static_cast< uint64_t >( 1000 / fps );
+		std::shared_ptr< Timer > timer( new Timer( mIoService, period ) );
 		mTimers.insert( timer );
 		return timer;
 	}

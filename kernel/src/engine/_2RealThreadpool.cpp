@@ -45,10 +45,13 @@ namespace _2Real
 		{
 			worker.reset( new std::thread( &FifoThreadpool::loop, this ) );
 		}
+
+		std::cout << "created fifo pool" << std::endl;
 	}
 
 	FifoThreadpool::~FifoThreadpool()
 	{
+		std::cout << "destroying fifo pool" << std::endl;
 		{
 			std::unique_lock< std::mutex > lock( mJobsAccess );
 			mShouldTerminate = true;
@@ -58,9 +61,16 @@ namespace _2Real
 										// the termination cond is true, which causes the function to exit
 		}
 
-		for ( std::unique_ptr< std::thread > &worker: mWorkerThreads )
+		try
 		{
-			worker->join();
+			for ( std::unique_ptr< std::thread > &worker: mWorkerThreads )
+			{
+				worker->join();
+			}
+		}
+		catch( std::system_error const& e )
+		{
+			std::cout << "SYSERROR" << std::endl;
 		}
 	}
 
@@ -120,11 +130,12 @@ namespace _2Real
 		Threadpool(),
 		mGenerator()
 	{
+		std::cout << "created unique pool" << std::endl;
 	}
 
 	UniqueThreadpool::~UniqueThreadpool()
 	{
-		// TODO!
+		std::cout << "destroying unique pool" << std::endl;
 	}
 
 	Threadpool::Id UniqueThreadpool::createId()
@@ -132,52 +143,52 @@ namespace _2Real
 		std::lock_guard< std::mutex > lock( mMutex );
 
 		UniqueId id = mGenerator.genId();
-		PerWorker &worker = mWorkerThreads[ id ];
-		worker.thread.reset( new std::thread( &UniqueThreadpool::loop, this, id ) );
+		//PerWorker &worker = mWorkerThreads[ id ];
+		//worker.thread.reset( new std::thread( &UniqueThreadpool::loop, this, id ) );
 		return id;
 	}
 
 	void UniqueThreadpool::enqueueJob( Threadpool::Id const& id, JobPtr work, CbPtr callback )
 	{
-		std::lock_guard< std::mutex > lock( mMutex );
+		//std::lock_guard< std::mutex > lock( mMutex );
 
-		try
-		{
-			UniqueId const& uniqueId = dynamic_cast< UniqueId const& >( id );
-			PerWorker &worker = mWorkerThreads[ uniqueId ];
-			std::unique_lock< std::mutex > lock( worker.mutex );
-			worker.job.doWork = work;
-			worker.job.isDone = callback;
-			worker.hasWork.notify_one();
-		}
-		catch ( std::bad_cast const& e )
-		{
-		}
-		catch ( std::exception const& e )
-		{
-		}
+		//try
+		//{
+		//	UniqueId const& uniqueId = dynamic_cast< UniqueId const& >( id );
+		//	PerWorker &worker = mWorkerThreads[ uniqueId ];
+		//	std::unique_lock< std::mutex > lock( worker.mutex );
+		//	worker.job.doWork = work;
+		//	worker.job.isDone = callback;
+		//	worker.hasWork.notify_one();
+		//}
+		//catch ( std::bad_cast const& e )
+		//{
+		//}
+		//catch ( std::exception const& e )
+		//{
+		//}
 	}
 
 	void UniqueThreadpool::loop( UniqueId const& id )
 	{
-		PerWorker &worker = mWorkerThreads[ id ];
+		//PerWorker &worker = mWorkerThreads[ id ];
 
-		for ( ;; )
-		{
-			{
-				std::unique_lock< std::mutex > lock( worker.mutex );
+		//for ( ;; )
+		//{
+		//	{
+		//		std::unique_lock< std::mutex > lock( worker.mutex );
 
-				for ( ;; )
-				{
-					if ( mShouldTerminate )
-						return;
+		//		for ( ;; )
+		//		{
+		//			if ( mShouldTerminate )
+		//				return;
 
-					worker.hasWork.wait( lock );
-				}
-			}
+		//			worker.hasWork.wait( lock );
+		//		}
+		//	}
 
-			worker.job.doWork();
-			worker.job.isDone();
-		}
+		//	worker.job.doWork();
+		//	worker.job.isDone();
+		//}
 	}
 }

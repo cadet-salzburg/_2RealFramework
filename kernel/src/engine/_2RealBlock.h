@@ -60,6 +60,9 @@ namespace _2Real
 		std::future< BlockState > singlestep();
 		std::future< BlockState > shutdown();
 
+		std::future< BlockState > startUpdating( std::shared_ptr< UpdateTrigger > );
+		std::future< BlockState > stopUpdating();
+
 	private:
 
 		Block( Block const& other );

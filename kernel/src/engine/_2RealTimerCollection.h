@@ -23,6 +23,9 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "helpers/_2RealPath.h"
 
+#include <boost/asio.hpp>
+#include <thread>
+
 namespace _2Real
 {
 	class Timer;
@@ -37,6 +40,8 @@ namespace _2Real
 
 		std::shared_ptr< Timer >	createTimer( const double fps );
 
+		void run();
+
 	private:
 
 		TimerCollection( TimerCollection const& other ) = delete;
@@ -45,6 +50,10 @@ namespace _2Real
 		typedef std::set< std::shared_ptr< Timer > >		Timers;
 
 		Timers		mTimers;
+
+		boost::asio::io_service								mIoService;
+		std::shared_ptr< boost::asio::io_service::work >	mWork;
+		std::thread											mThread;
 
 	};
 }

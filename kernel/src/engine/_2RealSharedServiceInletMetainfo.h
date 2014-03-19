@@ -39,6 +39,8 @@ namespace _2Real
 		void setMultiInlet( const bool );
 		bool isMultiInlet() const;
 
+		std::shared_ptr< SharedServiceInletMetainfo > clone() const;
+
 	private:
 
 		SharedServiceInletMetainfo( SharedServiceInletMetainfo const& );

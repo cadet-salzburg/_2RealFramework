@@ -29,6 +29,11 @@ namespace _2Real
 
 	ThreadpoolCollection::~ThreadpoolCollection()
 	{
+		for ( auto it : mThreadpools )	
+		{
+			std::cout << "killing a threadpool" << std::endl;
+			it.reset();
+		}
 	}
 
 	std::shared_ptr< Threadpool > ThreadpoolCollection::createThreadpool( const ThreadpoolPolicy p )

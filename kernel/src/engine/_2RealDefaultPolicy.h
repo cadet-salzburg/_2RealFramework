@@ -35,6 +35,8 @@ namespace _2Real
 		bool resolve( std::vector< std::string > const& inlets );
 		std::vector< std::vector< std::string > > const& getStringRep() const;
 
+		std::shared_ptr< DefaultPolicy > clone() const;
+
 	private:
 
 		Code										mCode;

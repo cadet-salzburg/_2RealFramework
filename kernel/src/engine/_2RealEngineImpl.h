@@ -43,6 +43,8 @@ namespace _2Real
 		EngineImpl();
 		~EngineImpl();
 
+		void clear();
+
 		std::shared_ptr< Bundle > 			loadLibrary( std::string const& filename );
 		Path const&							getBundleDirectory() const;
 
@@ -57,6 +59,7 @@ namespace _2Real
 
 		// --- members already in correct order
 
+		std::shared_ptr< TimerCollection >			mTimerCollection;
 		std::shared_ptr< ThreadpoolCollection >		mThreadpoolCollection;
 		// keep around here, for the time being
 		// maybe some time in the future, threadpools will be created at user request
@@ -64,7 +67,6 @@ namespace _2Real
 		std::weak_ptr< Threadpool >					mCtxtThreads;		// owned by threadpool collection
 		std::shared_ptr< TypeCollection >			mTypeCollection;
 		std::shared_ptr< BundleCollection >			mBundleCollection;
-		std::shared_ptr< TimerCollection >			mTimerCollection;
 		
 	};
 

@@ -38,6 +38,38 @@ namespace _2Real
 	{
 	}
 
+	void SharedServiceMetainfo::cloneFrom( SharedServiceMetainfo const& other )
+	{
+		mDescription = other.mDescription;
+		mIsSingleton = other.mIsSingleton;
+
+		for ( auto it : other.mDependencies )
+			mDependencies.push_back( it );
+
+		// not sure if cloning the factory is really necessary, after all, it don't hand out handles to it
+		mFactory = other.mFactory->clone();
+
+		mDefaultUpdatePolicy = other.mDefaultUpdatePolicy->clone();
+
+		for ( auto it : other.mInlets )
+		{
+			std::string name = it.first;
+			mInlets[ name ] = it.second->clone();
+		}
+
+		for ( auto it : other.mParameters )
+		{
+			std::string name = it.first;
+			mParameters[ name ] = it.second->clone();
+		}
+
+		for ( auto it : other.mOutlets )
+		{
+			std::string name = it.first;
+			mOutlets[ name ] = it.second->clone();
+		}
+	}
+
 	void SharedServiceMetainfo::setSingleton( const bool isSingleton )
 	{
 		mIsSingleton = isSingleton;

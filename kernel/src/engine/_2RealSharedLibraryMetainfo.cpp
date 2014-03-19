@@ -73,6 +73,30 @@ namespace _2Real
 		//ok &= isServiceDataOk();
 		//return ok;
 
+		// ok, i will now make a copy of everything.... aaaaaaaargh
+
+		//for ( auto it : mTypes )
+		//{
+		//}
+
+		std::cout << "EXPORT" << std::endl;
+
+		mTypes.clear();
+
+		ServiceMetainfos tmp = mServices;
+		mServices.clear();
+
+		for ( auto it : tmp )
+		{
+			//std::shared_ptr< SharedServiceMetainfo > oldInfo = it.second;
+			std::string name = it.first;
+			std::cout << name << std::endl;
+
+			std::shared_ptr< SharedServiceMetainfo > newInfo( new SharedServiceMetainfo( name ) );
+			newInfo->cloneFrom( *it.second.get() );
+			mServices[ name ] = newInfo;
+		}
+
 		return true;
 	}
 
