@@ -38,6 +38,7 @@ namespace _2Real
 			using IoSlotMetainfo::isValid;
 			using IoSlotMetainfo::getName;
 			using IoSlotMetainfo::getDatatype;
+			using IoSlotMetainfo::getInitialValue;
 			using IoSlotMetainfo::getDescription;
 			
 		private:

@@ -34,7 +34,7 @@ namespace _2Real
 	{
 		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( getName() ) );
 
-		result->setDatatype( getDatatype() );
+		result->setDatatypeAndInitialValue( getInitialValue() );
 		result->setDescription( getDescription() );
 
 		return result;

@@ -23,12 +23,22 @@ namespace _2Real
 {
 
 	Parameter::Parameter( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		InSlot( meta )
+		InSlot(),
+		mMetainfo( meta )
 	{
+		// initialize the tmp value for the very first update
+		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
+		InSlot::setTmpValue( initValue );
 	}
 
-	void Parameter::init()
+	std::string const& Parameter::getName() const
 	{
+		return mMetainfo->getName();
+	}
+
+	std::shared_ptr< const SharedServiceInletMetainfo > Parameter::getMetainfo() const
+	{
+		return mMetainfo;
 	}
 
 }

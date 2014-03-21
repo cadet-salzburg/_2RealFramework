@@ -40,5 +40,11 @@ namespace _2Real
 			std::shared_ptr< Inlet > inlet = mImpl.lock();
 			return ( nullptr != inlet.get() );
 		}
+
+		void InletHandle::setValue( DataItem const& item )
+		{
+			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
+			//inlet->setValue( item );
+		}
 	}
 }

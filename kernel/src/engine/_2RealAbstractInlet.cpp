@@ -23,9 +23,23 @@ namespace _2Real
 {
 
 	AbstractInlet::AbstractInlet( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		InSlot( meta ),
 		mMetainfo( meta )
 	{
+	}
+
+	bool AbstractInlet::isMultiInlet() const
+	{
+		return mMetainfo->isMultiInlet();
+	}
+
+	std::string const& AbstractInlet::getName() const
+	{
+		return mMetainfo->getName();
+	}
+
+	std::shared_ptr< const SharedServiceInletMetainfo > AbstractInlet::getMetainfo() const
+	{
+		return mMetainfo;
 	}
 
 }

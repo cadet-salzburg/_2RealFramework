@@ -95,11 +95,11 @@ namespace _2Real
 
 		SingletonLifetimeManager( std::shared_ptr< const AbstractSharedServiceFactory > factory ) : mFactory( factory ), mCreationCount( 0 ) {}
 
-		std::shared_ptr< AbstractSharedService > create()
+		std::shared_ptr< AbstractSharedService > create( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr<_2Real::bundle::AbstractBlock > > const& dependencies )
 		{
 			if ( 0 == mCreationCount )
 			{
-				mObject = mFactory->create();
+				mObject = mFactory->create( io, dependencies );
 				++mCreationCount;
 			}
 			
@@ -132,9 +132,9 @@ namespace _2Real
 
 		ServiceLifetimeManager( std::shared_ptr< const AbstractSharedServiceFactory > factory ) : mFactory( factory ), mCreationCount( 0 ) {}
 
-		std::shared_ptr< AbstractSharedService > create()
+		std::shared_ptr< AbstractSharedService > create( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr<_2Real::bundle::AbstractBlock > > const& dependencies )
 		{
-			std::shared_ptr< AbstractSharedService > result = mFactory->create();
+			std::shared_ptr< AbstractSharedService > result = mFactory->create( io, dependencies );
 			++mCreationCount;
 			return result;
 		}

@@ -19,69 +19,29 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealCallback_T.h"
-#include "helpers/_2RealEvent_T.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class CustomData;
-	class TypeCollection;
-	class AbstractDataFieldMetainfo;
-	class AbstractFieldDescriptor;
-
 	class SharedTypeMetainfo : public std::enable_shared_from_this< SharedTypeMetainfo >
 	{
 
 	public:
 
 		SharedTypeMetainfo( std::string const& name );
-		~SharedTypeMetainfo();
 
-		std::shared_ptr< CustomData > makeData() const;
+		std::shared_ptr< CustomDataItem > makeData() const;
 
-		std::string const&		getName() const;
-
-		void addField( std::string const& fieldName, std::string const& typeName, std::shared_ptr< const AbstractFieldDescriptor > );
-
-		bool performExport();
-		bool finalize();
-
-		// remove listener.... removal renders all types invalid
-		///////////////////////////////////////////////////////
-		template< typename TCallable >
-		void registerToRemove( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const SharedTypeMetainfo > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const SharedTypeMetainfo > >( callable, callback ) );
-			mRemoveNotifier.addListener( listener );
-		}
-		template< typename TCallable >
-		void unregisterFromRemove( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const SharedTypeMetainfo > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const SharedTypeMetainfo > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const SharedTypeMetainfo > >( callable, callback ) );
-			mRemoveNotifier.removeListener( listener );
-		}
-		///////////////////////////////////////////////////////
+		// TODO: missing default value as default argument for value
+		void addField( std::string const& fieldName, DataItem const& value );
 
 	private:
 
-		SharedTypeMetainfo( SharedTypeMetainfo const& );
-		SharedTypeMetainfo& operator=( SharedTypeMetainfo const& );
+		SharedTypeMetainfo( SharedTypeMetainfo const& ) = delete;
+		SharedTypeMetainfo& operator=( SharedTypeMetainfo const& ) = delete;
 
-		typedef std::vector< std::pair< std::string, std::shared_ptr< const AbstractDataFieldMetainfo > > >		FieldDescriptions;
-
-		// type name, as set by the bundle
-		std::string												mName;
-		// the datafields
-		FieldDescriptions										mFields;
-		// once this flag becomes true, it isno longer possible to change the type
-		bool													mIsFinal;
-		// the 'global' type registry w. framework types
-		std::weak_ptr< TypeCollection >							mGlobalTypes;
-		// the local type registry, w. library-specific types
-		std::weak_ptr< TypeCollection >							mLocalTypes;
-		// notifies all listeners when the type is removed ( lib unloaded )
-		Event_T< std::shared_ptr< const SharedTypeMetainfo > >	mRemoveNotifier;
+		CustomDataItem								mTemplate;
+		//std::shared_ptr< CustomTypeDescriptor >		mTypeDescriptor;
 
 	};
-
 }

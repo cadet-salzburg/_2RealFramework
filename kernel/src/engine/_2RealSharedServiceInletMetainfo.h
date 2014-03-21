@@ -32,8 +32,9 @@ namespace _2Real
 		~SharedServiceInletMetainfo();
 
 		using SharedServiceIoSlotMetainfo::setName;
-		using SharedServiceIoSlotMetainfo::setDatatype;	
+		using SharedServiceIoSlotMetainfo::setDatatypeAndInitialValue;	
 		using SharedServiceIoSlotMetainfo::getName;
+		using SharedServiceIoSlotMetainfo::getInitialValue;
 		using SharedServiceIoSlotMetainfo::getDatatype;
 
 		void setMultiInlet( const bool );

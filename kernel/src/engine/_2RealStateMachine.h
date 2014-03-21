@@ -32,7 +32,6 @@ namespace _2Real
 	class UpdateTrigger;
 	class Threadpool;
 	struct SignalResponse;
-	class AbstractSharedService;
 
 	/*
 	*	the state machine is a bit weird, and i know this.
@@ -40,12 +39,14 @@ namespace _2Real
 	*	seing how ease of finding multi-threading related errors > design
 	*/
 
+	class BlockIo;
+
 	class StateMachine
 	{
 
 	public:
 
-		StateMachine( std::shared_ptr< Threadpool >, std::shared_ptr< AbstractSharedService > );
+		StateMachine( std::shared_ptr< Threadpool >, std::shared_ptr< BlockIo > );
 
 		~StateMachine();
 
@@ -64,8 +65,6 @@ namespace _2Real
 		// thread pool
 		void onActionComplete();
 
-		void noop() {}
-
 	private:
 
 		// these functions are called when the mutex mMutex is locked
@@ -83,7 +82,7 @@ namespace _2Real
 		std::deque< std::shared_ptr< SignalResponse > >	mQueuedResponses;	
 		mutable std::mutex								mMutex;
 
-		std::shared_ptr< AbstractSharedService >		mServiceObj;	
+		std::shared_ptr< BlockIo >						mServiceObj;	
 		Threadpool::Id									mId;
 
 		uint64_t										mSkippedCounter;

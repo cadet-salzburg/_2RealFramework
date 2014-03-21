@@ -22,34 +22,34 @@
 
 namespace _2Real
 {
-	class AbstractAnyHolder;
-	class AbstractFieldDescriptor;
-	class SharedTypeMetainfo;
+	//class AbstractAnyHolder;
+	//class AbstractFieldDescriptor;
+	//class SharedTypeMetainfo;
 
-	class AbstractDataFieldMetainfo
-	{
-	public:
-		virtual ~AbstractDataFieldMetainfo() {};
-		virtual std::shared_ptr< AbstractAnyHolder >	makeData() const = 0;
-		//virtual void enumerateFields() = 0;
-	};
+	//class AbstractDataFieldMetainfo
+	//{
+	//public:
+	//	virtual ~AbstractDataFieldMetainfo() {};
+	//	virtual std::shared_ptr< AbstractAnyHolder >	makeData() const = 0;
+	//	//virtual void enumerateFields() = 0;
+	//};
 
-	class BasicDataFieldMetainfo : public AbstractDataFieldMetainfo
-	{
-	public:
-		BasicDataFieldMetainfo( std::shared_ptr< const AbstractFieldDescriptor > info ) : mMetainfo( info ) {}
-		std::shared_ptr< AbstractAnyHolder >			makeData() const;
-	private:
-		std::shared_ptr< const AbstractFieldDescriptor >		mMetainfo;
-	};
+	//class BasicDataFieldMetainfo : public AbstractDataFieldMetainfo
+	//{
+	//public:
+	//	BasicDataFieldMetainfo( std::shared_ptr< const AbstractFieldDescriptor > info ) : mMetainfo( info ) {}
+	//	std::shared_ptr< AbstractAnyHolder >			makeData() const;
+	//private:
+	//	std::shared_ptr< const AbstractFieldDescriptor >		mMetainfo;
+	//};
 
-	class ComplexDataFieldMetainfo : public AbstractDataFieldMetainfo
-	{
-	public:
-		ComplexDataFieldMetainfo( std::shared_ptr< const SharedTypeMetainfo > info ) : mMetainfo( info ) {}
-		std::shared_ptr< AbstractAnyHolder >			makeData() const;
-	private:
-		std::weak_ptr< const SharedTypeMetainfo >				mMetainfo;
-	};
+	//class ComplexDataFieldMetainfo : public AbstractDataFieldMetainfo
+	//{
+	//public:
+	//	ComplexDataFieldMetainfo( std::shared_ptr< const SharedTypeMetainfo > info ) : mMetainfo( info ) {}
+	//	std::shared_ptr< AbstractAnyHolder >			makeData() const;
+	//private:
+	//	std::weak_ptr< const SharedTypeMetainfo >				mMetainfo;
+	//};
 
 }

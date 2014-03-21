@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
@@ -34,7 +35,7 @@ namespace _2Real
 			virtual ~IoSlotMetainfo();
 
 			void setDescription( std::string const& description );
-			void setDatatype( std::string const& name );
+			void setDatatypeAndInitialValue( DataItem const& initialValue );
 
 		protected:
 

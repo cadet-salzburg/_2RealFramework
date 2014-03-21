@@ -16,26 +16,12 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealInlet.h"
 #include "engine/_2RealIoSlot.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 
 namespace _2Real
 {
-
-	IoSlot::IoSlot( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		mMetainfo( meta )
+	IoSlot::IoSlot() :
+		std::enable_shared_from_this< IoSlot >()
 	{
 	}
-
-	std::string const& IoSlot::getName()
-	{
-		return mMetainfo->getName();
-	}
-
-	std::shared_ptr< const SharedServiceIoSlotMetainfo > IoSlot::getMetainfo()
-	{
-		return mMetainfo;
-	}
-
 }

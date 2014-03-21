@@ -35,7 +35,7 @@ namespace _2Real
 			explicit ParameterMetainfo( std::shared_ptr< SharedServiceInletMetainfo > );
 
 			using IoSlotMetainfo::setDescription;
-			using IoSlotMetainfo::setDatatype;
+			using IoSlotMetainfo::setDatatypeAndInitialValue;
 
 		private:
 

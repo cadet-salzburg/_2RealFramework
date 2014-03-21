@@ -19,11 +19,11 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealFieldDescriptor.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class CustomData;
+	class CustomDataItem;
 	class SharedTypeMetainfo;
 
 	namespace bundle
@@ -35,25 +35,11 @@ namespace _2Real
 
 			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
 
-			// add fields of basic types
-			template< typename TType >
-			void addBasicField( std::string const& fieldName, TType const& init = FrameworkCompatibleType< TType >::defaultValue() )
-			{
-				std::shared_ptr< const AbstractFieldDescriptor > desc( new FieldDescriptor_T< TType >( init ) );
-				addFieldInternal( fieldName, FrameworkCompatibleType< TType >::humanReadableName(), desc );
-			}
+			void addField( std::string const& fieldName, DataItem const& value );
 
-			// add fields of custom types
-			void addField( std::string const& fieldName, std::string const& typeName );
-
-			// creates actual data
-			std::shared_ptr< CustomData > makeData();
-
-			void exportType();
+			std::shared_ptr< CustomDataItem > makeData();
 
 		private:
-
-			void addFieldInternal( std::string const& fieldName, std::string const& typeName, std::shared_ptr< const AbstractFieldDescriptor > );
 
 			std::weak_ptr< SharedTypeMetainfo >		mImpl;
 

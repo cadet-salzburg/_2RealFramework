@@ -17,17 +17,40 @@
 */
 
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealSharedServiceOutletMetainfo.h"
 
 namespace _2Real
 {
 
-	Outlet::Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > meta )
+	Outlet::Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > meta ) :
+		IoSlot(),
+		mMetainfo( meta )
 	{
 	}
 
-	void Outlet::init()
+	std::string const& Outlet::getName() const
 	{
+		return mMetainfo->getName();
 	}
 
+	std::shared_ptr< const SharedServiceOutletMetainfo > Outlet::getMetainfo() const
+	{
+		return mMetainfo;
+	}
+
+	DataItem & Outlet::getValue()
+	{
+		return *mValue.get();
+	}
+
+	std::shared_ptr< const DataItem > Outlet::getTmpValue() const
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		return mTmpValue;
+	}
+
+	void Outlet::update()
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+	}
 }

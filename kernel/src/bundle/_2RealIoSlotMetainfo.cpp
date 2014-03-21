@@ -37,9 +37,9 @@ namespace _2Real
 			mImpl.lock()->setDescription( desc );
 		}
 
-		void IoSlotMetainfo::setDatatype( std::string const& name )
+		void IoSlotMetainfo::setDatatypeAndInitialValue( DataItem const& initialValue )
 		{
-			mImpl.lock()->setDatatype( name );
+			mImpl.lock()->setDatatypeAndInitialValue( initialValue );
 		}
 	}
 }

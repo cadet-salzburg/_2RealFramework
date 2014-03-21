@@ -16,23 +16,17 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealDataFieldMetainfo.h"
-#include "engine/_2RealCustomData.h"
-#include "engine/_2RealAnyHolder_T.h"
-#include "engine/_2RealSharedTypeMetainfo.h"
-#include "engine/_2RealFieldDescriptor.h"
-
 namespace _2Real
 {
-	std::shared_ptr< AbstractAnyHolder > BasicDataFieldMetainfo::makeData() const
-	{
-		return mMetainfo->makeAny();
-	}
+	//std::shared_ptr< AbstractAnyHolder > BasicDataFieldMetainfo::makeData() const
+	//{
+	//	return mMetainfo->makeAny();
+	//}
 
-	std::shared_ptr< AbstractAnyHolder > ComplexDataFieldMetainfo::makeData() const
-	{
-		std::shared_ptr< CustomData > data = mMetainfo.lock()->makeData();
-		AnyHolder_T< CustomData > *any = new AnyHolder_T< CustomData >( data );
-		return std::shared_ptr< AbstractAnyHolder >( any );
-	}
+	//std::shared_ptr< AbstractAnyHolder > ComplexDataFieldMetainfo::makeData() const
+	//{
+	//	std::shared_ptr< CustomData > data = mMetainfo.lock()->makeData();
+	//	AnyHolder_T< CustomData > *any = new AnyHolder_T< CustomData >( data );
+	//	return std::shared_ptr< AbstractAnyHolder >( any );
+	//}
 }

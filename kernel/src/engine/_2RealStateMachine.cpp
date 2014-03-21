@@ -21,10 +21,11 @@
 #include "engine/_2RealStateData.h"
 #include "engine/_2RealUpdateTrigger.h"
 #include "engine/_2RealSharedService.h"
+#include "engine/_2RealBlock.h"
 
 namespace _2Real
 {
-	StateMachine::StateMachine( std::shared_ptr< Threadpool > threads, std::shared_ptr< AbstractSharedService > service ) :
+	StateMachine::StateMachine( std::shared_ptr< Threadpool > threads, std::shared_ptr< BlockIo > service ) :
 		mThreads( threads ),
 		mState( AbstractBlockState::create( BlockState::PRE_SETUP ) ),
 		mResponse( nullptr ),
@@ -129,19 +130,19 @@ namespace _2Real
 			{
 			case Action::DO_SETUP:
 				std::cout << "SM: queued action is setup" << std::endl;
-				job = std::bind( &AbstractSharedService::setup, mServiceObj.get() );
+				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
 				std::cout << "SM: queued action is update" << std::endl;
-				job = std::bind( &AbstractSharedService::update, mServiceObj.get() );
+				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
 				std::cout << "SM: queued action is shutdown" << std::endl;
-				job = std::bind( &AbstractSharedService::shutdown, mServiceObj.get() );
+				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
 				break;
 			default:
 				std::cout << "SM: queued action is no-op" << std::endl;
-				job = std::bind( &StateMachine::noop, this );
+				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
 				break;
 			}
 
@@ -208,20 +209,20 @@ namespace _2Real
 			switch ( mResponse->action )
 			{
 			case Action::DO_SETUP:
-				std::cout << "SM: new action is setup" << std::endl;
-				job = std::bind( &AbstractSharedService::setup, mServiceObj.get() );
+				std::cout << "SM: queued action is setup" << std::endl;
+				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
-				std::cout << "SM: new action is update" << std::endl;
-				job = std::bind( &AbstractSharedService::update, mServiceObj.get() );
+				std::cout << "SM: queued action is update" << std::endl;
+				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
-				std::cout << "SM: new action is shutdown" << std::endl;
-				job = std::bind( &AbstractSharedService::shutdown, mServiceObj.get() );
+				std::cout << "SM: queued action is shutdown" << std::endl;
+				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
 				break;
 			default:
-				std::cout << "SM: new action is no-op" << std::endl;
-				job = std::bind( &StateMachine::noop, this );
+				std::cout << "SM: queued action is no-op" << std::endl;
+				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
 				break;
 			}
 

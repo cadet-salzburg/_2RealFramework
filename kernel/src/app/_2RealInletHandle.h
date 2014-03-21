@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "app/_2RealAbstractInletHandle.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
@@ -39,6 +40,12 @@ namespace _2Real
 			bool					isValid() const;
 
 			std::string	const&		getDescription() const;
+
+			// hm. set value function:
+			// this should definitely throw an exception in case of a datatype mismatch
+			void setValue( DataItem const& value );
+
+
 
 		private:
 

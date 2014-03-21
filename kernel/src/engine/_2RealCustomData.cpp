@@ -22,94 +22,94 @@
 
 namespace _2Real
 {
-	CustomData::CustomData()
-	{
-	}
+	//CustomData::CustomData()
+	//{
+	//}
 
-	CustomData::~CustomData()
-	{
-	}
+	//CustomData::~CustomData()
+	//{
+	//}
 
-	CustomData::CustomData( CustomData const& other )
-	{
-		for ( auto it : other.mDataFields )
-		{
-			std::string name = it.first;
-			std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
-			mDataFields[ name ] = value;
-		}
-	}
+	//CustomData::CustomData( CustomData const& other )
+	//{
+	//	for ( auto it : other.mDataFields )
+	//	{
+	//		std::string name = it.first;
+	//		std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
+	//		mDataFields[ name ] = value;
+	//	}
+	//}
 
-	CustomData& CustomData::operator=( CustomData const& other )
-	{
-		if ( this == &other )
-			return *this;
+	//CustomData& CustomData::operator=( CustomData const& other )
+	//{
+	//	if ( this == &other )
+	//		return *this;
 
-		mDataFields.clear();
+	//	mDataFields.clear();
 
-		for ( auto it : other.mDataFields )
-		{
-			std::string name = it.first;
-			std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
-			mDataFields[ name ] = value;
-		}
+	//	for ( auto it : other.mDataFields )
+	//	{
+	//		std::string name = it.first;
+	//		std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
+	//		mDataFields[ name ] = value;
+	//	}
 
-		return *this;
-	}
+	//	return *this;
+	//}
 
-	void CustomData::setValueInternal( std::string const& fieldName, std::shared_ptr< AbstractAnyHolder > value )
-	{
-		auto it = mDataFields.find( fieldName );
-		if ( it == mDataFields.end() )
-		{
-			std::ostringstream msg;
-			msg << "no field called " << fieldName << " found in custom data" << std::endl;
-			throw NotFoundException( msg.str() );
-		}
+	//void CustomData::setValueInternal( std::string const& fieldName, std::shared_ptr< AbstractAnyHolder > value )
+	//{
+	//	auto it = mDataFields.find( fieldName );
+	//	if ( it == mDataFields.end() )
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
+	//		throw NotFoundException( msg.str() );
+	//	}
 
-		it->second = value;
+	//	it->second = value;
 
-		// ok... old code sets the already existing any holder? wtf
-		// i leave this here, in case there are problems....
-		//AbstractAnyHolder *h = it->second;
-		//h->set( *value );
-		//delete value;
-	}
+	//	// ok... old code sets the already existing any holder? wtf
+	//	// i leave this here, in case there are problems....
+	//	//AbstractAnyHolder *h = it->second;
+	//	//h->set( *value );
+	//	//delete value;
+	//}
 
-	std::shared_ptr< const AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName ) const
-	{
-		auto it = mDataFields.find( fieldName );
-		if ( it == mDataFields.end() )
-		{
-			std::ostringstream msg;
-			msg << "no field called " << fieldName << " found in custom data" << std::endl;
-			throw NotFoundException( msg.str() );
-		}
+	//std::shared_ptr< const AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName ) const
+	//{
+	//	auto it = mDataFields.find( fieldName );
+	//	if ( it == mDataFields.end() )
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
+	//		throw NotFoundException( msg.str() );
+	//	}
 
-		return it->second;
-	}
+	//	return it->second;
+	//}
 
-	std::shared_ptr< AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName )
-	{
-		auto it = mDataFields.find( fieldName );
-		if ( it == mDataFields.end() )
-		{
-			std::ostringstream msg;
-			msg << "no field called " << fieldName << " found in custom data" << std::endl;
-			throw NotFoundException( msg.str() );
-		}
+	//std::shared_ptr< AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName )
+	//{
+	//	auto it = mDataFields.find( fieldName );
+	//	if ( it == mDataFields.end() )
+	//	{
+	//		std::ostringstream msg;
+	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
+	//		throw NotFoundException( msg.str() );
+	//	}
 
-		return it->second;
-	}
+	//	return it->second;
+	//}
 
-	bool CustomData::operator==( CustomData const& other )
-	{
-		return false;
-	}
+	//bool CustomData::operator==( CustomData const& other )
+	//{
+	//	return false;
+	//}
 
-	bool CustomData::operator<( CustomData const& other )
-	{
-		return false;
-	}
+	//bool CustomData::operator<( CustomData const& other )
+	//{
+	//	return false;
+	//}
 
 }

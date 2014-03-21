@@ -23,26 +23,21 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
-
 	class IoSlot : std::enable_shared_from_this< IoSlot >
 	{
 
 	public:
 
-		IoSlot( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
-
+		IoSlot();
 		virtual ~IoSlot() {}
 
-		std::string const& getName();	
-		std::shared_ptr< const SharedServiceIoSlotMetainfo > getMetainfo();
+		virtual std::string const& getName() const = 0;	
+		virtual void update() = 0;
 
 	private:
 
-		IoSlot( IoSlot const& other );
-		IoSlot operator=( IoSlot const& other );
-
-		std::shared_ptr< const SharedServiceIoSlotMetainfo >	mMetainfo;
+		IoSlot( IoSlot const& other ) = delete;
+		IoSlot& operator=( IoSlot const& other ) = delete;
 
 	};
 }

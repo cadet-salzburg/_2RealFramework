@@ -23,12 +23,10 @@ namespace _2Real
 {
 
 	Inlet::Inlet( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		AbstractInlet( meta )
+		AbstractInlet( meta ), InSlot()
 	{
-	}
-
-	void Inlet::init()
-	{
+		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
+		InSlot::setTmpValue( initValue );
 	}
 
 }

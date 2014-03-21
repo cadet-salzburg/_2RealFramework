@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
@@ -38,6 +39,7 @@ namespace _2Real
 			std::string const& getName() const;
 			std::string const& getDescription() const;
 			std::string const& getDatatype() const;
+			DataItem const& getInitialValue() const;
 	
 		protected:
 

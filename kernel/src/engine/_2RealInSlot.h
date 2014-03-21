@@ -21,21 +21,29 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealIoSlot.h"
+#include "engine/_2RealData.h"
 #include "helpers/_2RealEvent_T.h"
+
+#include <mutex>
 
 namespace _2Real
 {
+	/*
+	*	base for parameters & ( normal ) inlets
+	*	implements listeners & values
+	*/
 	class InSlot : public IoSlot
 	{
 
 	public:
 
-		InSlot( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
-
+		InSlot();
 		virtual ~InSlot() {}
 
-		using IoSlot::getName;
-		using IoSlot::getMetainfo;
+		void setTmpValue( std::shared_ptr< DataItem > );
+		std::shared_ptr< const DataItem > getTmpValue() const;
+		DataItem & getValue();
+		DataItem const& getValue() const;
 
 		template< typename TCallable >
 		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( const unsigned int ) )
@@ -51,10 +59,13 @@ namespace _2Real
 			mValueUpdatedEvent.removeListener( listener );
 		}
 
+		void update();
+
 	private:
 
-		InSlot( InSlot const& other );
-		InSlot operator=( InSlot const& other );
+		mutable std::mutex					mMutex;
+		std::shared_ptr< DataItem >			mTmpValue;
+		std::shared_ptr< DataItem >			mValue;
 
 		Event_T< const unsigned int >		mValueUpdatedEvent;
 

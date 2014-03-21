@@ -29,24 +29,14 @@ namespace _2Real
 		{
 		}
 
-		void TypeMetainfo::addFieldInternal( std::string const& fieldName, std::string const& typeName, std::shared_ptr< const AbstractFieldDescriptor > desc )
+		void TypeMetainfo::addField( std::string const& fieldName, DataItem const& value )
 		{
-			mImpl.lock()->addField( fieldName, typeName, desc );
+			mImpl.lock()->addField( fieldName, value );
 		}
 
-		void TypeMetainfo::addField( std::string const& fieldName, std::string const& typeName )
-		{
-			mImpl.lock()->addField( fieldName, typeName, nullptr );
-		}
-
-		std::shared_ptr< CustomData > TypeMetainfo::makeData()
+		std::shared_ptr< CustomDataItem > TypeMetainfo::makeData()
 		{
 			return mImpl.lock()->makeData();
-		}
-
-		void TypeMetainfo::exportType()
-		{
-			mImpl.lock()->finalize();
 		}
 
 	}

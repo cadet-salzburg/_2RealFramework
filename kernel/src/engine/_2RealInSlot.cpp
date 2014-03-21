@@ -20,10 +20,38 @@
 
 namespace _2Real
 {
-
-	InSlot::InSlot( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		IoSlot( meta )
+	InSlot::InSlot() :
+		IoSlot()
 	{
 	}
 
+	void InSlot::setTmpValue( std::shared_ptr< DataItem > value )
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		mTmpValue = value;
+	}
+
+	std::shared_ptr< const DataItem > InSlot::getTmpValue() const
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		return mTmpValue;
+	}
+
+	DataItem & InSlot::getValue()
+	{	
+		assert( mValue );
+		return *mValue.get();
+	}
+
+	DataItem const& InSlot::getValue() const
+	{
+		assert( mValue );
+		return *mValue.get();
+	}
+
+	void InSlot::update()
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		mValue = mTmpValue;
+	}
 }

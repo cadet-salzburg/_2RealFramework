@@ -21,25 +21,23 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealAbstractInlet.h"
+#include "engine/_2RealInSlot.h"
 
 namespace _2Real
 {
 	class SharedServiceInletMetainfo;
 
-	class Inlet : public AbstractInlet
+	class Inlet : public AbstractInlet, public InSlot
 	{
 
 	public:
 
-		Inlet( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit Inlet( std::shared_ptr< const SharedServiceInletMetainfo > );
 
-		void init();
+		using AbstractInlet::isMultiInlet;
+		using AbstractInlet::getMetainfo;
 
-	private:
-
-		Inlet( Inlet const& other );
-		Inlet operator=( Inlet const& other );
-
+		std::string const& getName() const { return AbstractInlet::getName(); }
+		void update() { InSlot::update(); }
 	};
-
 }

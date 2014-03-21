@@ -21,20 +21,27 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealAbstractSharedServiceFactory.h"
 
+#include "bundle/_2RealBlockIo.h"
+#include "bundle/_2RealAbstractBlock.h"
+
 namespace _2Real
 {
 	template< typename TBlock >
 	class SharedServiceFactory_T : public AbstractSharedServiceFactory
 	{
+
 	public:
-		std::shared_ptr< AbstractSharedService > create() const
+
+		std::shared_ptr< AbstractSharedService > create( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr<_2Real::bundle::AbstractBlock > > const& dependencies ) const
 		{
-			return std::shared_ptr< SharedService_T< TBlock > >( new SharedService_T< TBlock >() );
+			/*return std::shared_ptr< SharedService_T< TBlock > >( new SharedService_T< TBlock >() );*/
+			return std::shared_ptr< AbstractSharedService >( new TBlock( io, dependencies ) );
 		}
 
 		std::shared_ptr< AbstractSharedServiceFactory > clone() const
 		{
 			return std::shared_ptr< AbstractSharedServiceFactory >( new SharedServiceFactory_T< TBlock > );
 		}
+
 	};
 }

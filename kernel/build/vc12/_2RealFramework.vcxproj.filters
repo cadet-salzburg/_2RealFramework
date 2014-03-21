@@ -236,6 +236,24 @@
     <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockIo.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealAbstractInletHandle.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\engine\_2RealBundle.h">
@@ -501,6 +519,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\enums\_2RealBlockState.h">
       <Filter>Header Files\enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealData.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealAbstractBlock.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockIo.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealAbstractInletHandle.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealMultiInletHandle.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
+      <Filter>Header Files\bundle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,36 +25,43 @@
 #include <future>
 #include "enums/_2RealBlockState.h"
 
+#include "engine/_2RealSharedService.h"
+
 namespace _2Real
 {
 
 	class SharedServiceMetainfo;
-	class AbstractSharedService;
 	class UpdateTrigger;
 	class Threadpool;
+
+	class BlockIo
+	{
+	public:
+		std::vector< std::shared_ptr< AbstractInlet > >		mInlets;
+		std::vector< std::shared_ptr< Parameter > >			mParameters;
+		std::vector< std::shared_ptr< Outlet > >			mOutlets;
+		std::shared_ptr< AbstractSharedService >			mBlockObj;	
+
+		void doSetup();
+		void doUpdate();
+		void doShutdown();
+		void doNothing();
+	};
 
 	class Block : public std::enable_shared_from_this< Block >
 	{
 
 	public:
 
-		Block( std::shared_ptr< Threadpool > threads, std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< AbstractSharedService > );
+		Block( std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< Threadpool >, std::shared_ptr< BlockIo > );
 		~Block();
-
-		void init();
 
 		std::shared_ptr< const SharedServiceMetainfo >	getMetainfo() const;
 
-		/*
-		void setup( std::function< void() > const& );
-		void startUpdating( std::shared_ptr< UpdateTrigger >, std::function< void() > const& );
-		void stopUpdating( std::function< void() > const& );
-		void singleUpdate( std::function< void() > const& );
-		void shutdown( std::function< void() > const& );
-		
+		static void createIo( std::shared_ptr< const SharedServiceMetainfo >, std::vector< std::shared_ptr< Parameter > > &, std::vector< std::shared_ptr< AbstractInlet > > &, std::vector< std::shared_ptr< Outlet > > & );
+
 		// called by engine
-		void destroy( std::function< void() > const& );
-		*/
+		//void destroy( std::function< void() > const& );
 
 		std::future< BlockState > setup();
 		std::future< BlockState > singlestep();
@@ -65,12 +72,10 @@ namespace _2Real
 
 	private:
 
-		Block( Block const& other );
-		Block operator=( Block const& other );
+		Block( Block const& other ) = delete;
+		Block operator=( Block const& other ) = delete;
 
 		std::weak_ptr< const SharedServiceMetainfo >		mMetainfo;
-		std::shared_ptr< AbstractSharedService >			mInstance;
-
 		StateMachine										mStateMachine;
 
 	};

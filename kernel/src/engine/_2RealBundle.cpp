@@ -24,6 +24,13 @@
 #include "engine/_2RealAbstractSharedServiceFactory.h"
 #include "engine/_2RealSharedServiceLifetimeMgr.h"
 #include "helpers/_2RealException.h"
+#include "engine/_2RealAbstractInlet.h"
+
+#include "bundle/_2RealBlockIo.h"
+
+#include "engine/_2RealAbstractInlet.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealMultiInlet.h"
 
 namespace _2Real
 {
@@ -110,27 +117,59 @@ namespace _2Real
 		// get dependencies
 		// for all dependencies:	check if instance already was created
 		//							if not, create instance
-
-		//std::vector< std::string > dependencies;
-		//info->getDependencies( dependencies );
-		//for ( auto dependency : dependencies )
-		//{
-		//	//if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )
+		std::vector< std::shared_ptr< AbstractSharedService > > dependencies;
+		std::vector< std::string > dependenciesByName;
+		info->getDependencies( dependenciesByName );
+		for ( auto dependency : dependenciesByName )
+		{
+		//	if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )
 		//		createBlock( dependency );
-		//}
+		}
 
+		/*
+		*	TODO: io slots should know which block they belong to ( otherwise, how would i check for self links? ).
+		*	-> identifier or something?
+		*	-> or maybe 'setUnderlyingObj' on block ....
+		*/
+
+		_2Real::bundle::BlockIo bundleio;
+		std::shared_ptr< _2Real::BlockIo > io( new BlockIo );
+		Block::createIo( info, io->mParameters, io->mInlets, io->mOutlets );
+
+		// anyway, now let's create handles for the inlets
+		// ... need to know if the inlet in question is a multiinlet
+		for ( auto it : io->mInlets )
+		{
+			if ( it->isMultiInlet() )
+			{
+				std::shared_ptr< MultiInlet > inlet = std::dynamic_pointer_cast< MultiInlet, AbstractInlet >( it );
+				bundleio.mInlets.push_back( _2Real::bundle::MultiInletHandle( inlet ) );
+			}
+			else
+			{
+				std::shared_ptr< Inlet > inlet = std::dynamic_pointer_cast< Inlet, AbstractInlet >( it );
+				bundleio.mInlets.push_back( _2Real::bundle::InletHandle( inlet ) );
+			}		
+		}
+
+		for ( auto it : io->mOutlets )
+			bundleio.mOutlets.push_back( _2Real::bundle::OutletHandle( it ) );	
+
+		for ( auto it : io->mParameters )
+			bundleio.mParameters.push_back( _2Real::bundle::ParameterHandle( it ) );	
+		
+		// acquire correct threadpool
 		std::shared_ptr< Threadpool > threads;
 		if ( info->isSingleton() )
 			threads = mCtxtThreads.lock();
 		else
 			threads = mStdThreads.lock();
 
-		auto obj = ctor->create();
-		std::shared_ptr< Block > instance( new Block( threads, info, obj ) );
-		instance->init();
-		mServiceInstances.push_back( instance );
+		// create the underlying object
+		io->mBlockObj = ctor->create( bundleio, dependencies );
 
-		// setup the block? that's a more general question...
+		std::shared_ptr< Block > instance( new Block( info, threads, io ) );
+		mServiceInstances.push_back( instance );
 
 		return instance;
 	}

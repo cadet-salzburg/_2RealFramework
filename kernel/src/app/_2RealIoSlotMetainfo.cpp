@@ -61,5 +61,11 @@ namespace _2Real
 			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getDatatype();
 		}
+
+		DataItem const& IoSlotMetainfo::getInitialValue() const
+		{
+			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
+			return meta->getInitialValue();
+		}
 	}
 }

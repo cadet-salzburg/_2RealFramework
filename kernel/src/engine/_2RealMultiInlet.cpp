@@ -17,19 +17,26 @@
 */
 
 #include "engine/_2RealMultiInlet.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealInlet.h"
 
 namespace _2Real
 {
 
 	MultiInlet::MultiInlet( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		AbstractInlet( meta )
+		AbstractInlet( meta ), IoSlot()
 	{
 	}
 
-	void MultiInlet::init()
+	void MultiInlet::update()
 	{
-		// get initial value
+		/*
+		*	TODO: lock this shit!
+		*/
+
+		for ( auto it : mInlets )
+		{
+			it->update();
+		}
 	}
 
 }

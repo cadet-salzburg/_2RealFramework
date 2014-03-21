@@ -35,7 +35,7 @@ namespace _2Real
 			explicit OutletMetainfo( std::shared_ptr< SharedServiceOutletMetainfo > );
 
 			using IoSlotMetainfo::setDescription;
-			using IoSlotMetainfo::setDatatype;
+			using IoSlotMetainfo::setDatatypeAndInitialValue;
 
 		private:
 

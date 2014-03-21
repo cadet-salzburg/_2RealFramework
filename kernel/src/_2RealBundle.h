@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include "bundle/_2RealAbstractBlock.h"
+
+#include "bundle/_2RealBlockIo.h"
 #include "bundle/_2RealBundleMetainfo.h"
 #include "bundle/_2RealContextBlockMetainfo.h"
 #include "bundle/_2RealFunctionBlockMetainfo.h"

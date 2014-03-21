@@ -30,11 +30,39 @@
 
 namespace _2Real
 {
-	Block::Block( std::shared_ptr< Threadpool > threads, std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< AbstractSharedService > instance ) :
+
+	void BlockIo::doNothing()
+	{
+	}
+
+	void BlockIo::doUpdate()
+	{
+		for ( auto it : mInlets )
+		{
+			std::cout << "pre update inlet " << it->getName() << std::endl;
+			it->update();
+		}
+
+		mBlockObj->update();
+	}
+
+	void BlockIo::doSetup()
+	{
+		for ( auto it : mParameters )
+			it->update();
+
+		mBlockObj->setup();
+	}
+
+	void BlockIo::doShutdown()
+	{
+		mBlockObj->shutdown();
+	}
+
+	Block::Block( std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< Threadpool > threads, std::shared_ptr< BlockIo > io ) :
 		enable_shared_from_this< Block >(),
 		mMetainfo( meta ),
-		mInstance( instance ),
-		mStateMachine( threads, instance )
+		mStateMachine( threads, io )
 	{
 	}
 
@@ -42,55 +70,20 @@ namespace _2Real
 	{
 	}
 
-	void Block::init()
+	void Block::createIo( std::shared_ptr< const SharedServiceMetainfo > info, std::vector< std::shared_ptr< Parameter > > &parameters, std::vector< std::shared_ptr< AbstractInlet > > &inlets, std::vector< std::shared_ptr< Outlet > > &outlets )
 	{
-		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > inlets; mMetainfo.lock()->getInletMetainfos( inlets );
-		std::vector< std::shared_ptr< const SharedServiceOutletMetainfo > > outlets; mMetainfo.lock()->getOutletMetainfos( outlets );
-		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > parameters; mMetainfo.lock()->getParameterMetainfos( parameters );
+		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > inletinfos;		info->getInletMetainfos( inletinfos );
+		std::vector< std::shared_ptr< const SharedServiceOutletMetainfo > > outletinfos;	info->getOutletMetainfos( outletinfos );
+		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > parameterinfos;	info->getParameterMetainfos( parameterinfos );
 
-		std::vector< std::shared_ptr< AbstractInlet > > mInlets;
-		std::vector< std::shared_ptr< InSlot > > inletSlots;
-		std::vector< std::shared_ptr< Outlet > > mOutlets;
-		std::vector< std::shared_ptr< Parameter > > mParameters;
-		std::vector< std::shared_ptr< InSlot > > paramSlots;
+		for ( auto it : inletinfos )
+			inlets.push_back( it->isMultiInlet() ? std::shared_ptr< AbstractInlet >( new MultiInlet( it ) ) : std::shared_ptr< AbstractInlet >( new Inlet( it ) ) );
 
-		for ( auto it : inlets )
-		{
-			std::shared_ptr< AbstractInlet > inlet;
-			if ( it->isMultiInlet() )
-				inlet.reset( new MultiInlet( it ) );
-			else
-				inlet.reset( new Inlet( it ) );
+		for ( auto it : outletinfos )
+			outlets.push_back( std::shared_ptr< Outlet >( new Outlet( it ) ) );
 
-			inlet->init();
-
-			mInlets.push_back( inlet );
-			inletSlots.push_back( inlet );
-		}
-
-		for ( auto it : outlets )
-		{
-			std::shared_ptr< Outlet > outlet( new Outlet( it ) );
-			outlet->init();
-
-			mOutlets.push_back( outlet );
-		}
-
-		for ( auto it : inlets )
-		{
-			std::shared_ptr< Parameter > param( new Parameter( it ) );
-			param->init();
-
-			mParameters.push_back( param );
-			paramSlots.push_back( param );
-		}
-
-		// ------ functions
-
-		//std::vector< std::vector< std::string > > updatePolicy; mMetainfo.lock()->getDefaultUpdatePolicy( updatePolicy );
-		//std::vector< std::vector< std::string > > setupPolicy; mMetainfo.lock()->getDefaultUpdatePolicy( setupPolicy );
-		//mSetupTrigger.addCondition( ConditionFactory::createValuesCondition( paramSlots, setupPolicy ) );
-		//mUpdateTrigger.addCondition( ConditionFactory::createValuesCondition( inletSlots, updatePolicy ) );
+		for ( auto it : parameterinfos )
+			parameters.push_back( std::shared_ptr< Parameter >( new Parameter( it ) ) );
 	}
 
 	std::shared_ptr< const SharedServiceMetainfo > Block::getMetainfo() const
@@ -99,31 +92,6 @@ namespace _2Real
 	}
 
 	/*
-	void Block::setup( std::function< void() > const& cb )
-	{
-		mStateMachine.setup( cb );
-	}
-
-	void Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger, std::function< void() > const& cb )
-	{
-		mStateMachine.startRunning( trigger, cb );
-	}
-
-	void Block::stopUpdating( std::function< void() > const& cb )
-	{
-		mStateMachine.stopRunning( cb );
-	}
-
-	void Block::singleUpdate( std::function< void() > const& cb )
-	{
-		mStateMachine.singleUpdate( cb );
-	}
-
-	void Block::shutdown( std::function< void() > const& cb )
-	{
-		mStateMachine.shutdown( cb );
-	}
-
 	void Block::destroy( std::function< void() > const& cb )
 	{
 		// TODO: immediately unregister the state machine from

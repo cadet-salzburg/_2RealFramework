@@ -24,9 +24,9 @@ namespace _2Real
 	SharedServiceIoSlotMetainfo::SharedServiceIoSlotMetainfo( std::string const& name ) :
 		std::enable_shared_from_this< SharedServiceIoSlotMetainfo >(),
 		mName( name ),
-		mDescription( "" ),
-		mDatatype( "undefined" )
+		mDescription( "" )
 	{
+		mDatatype = boost::apply_visitor( HumanReadableNameVisitor(), mInitialValue );
 	}
 
 	SharedServiceIoSlotMetainfo::~SharedServiceIoSlotMetainfo()
@@ -43,9 +43,10 @@ namespace _2Real
 		mDescription = description;
 	}
 
-	void SharedServiceIoSlotMetainfo::setDatatype( std::string const& datatype )
+	void SharedServiceIoSlotMetainfo::setDatatypeAndInitialValue( DataItem const& initialValue )
 	{
-		mDatatype = datatype;
+		mDatatype = boost::apply_visitor( HumanReadableNameVisitor(), initialValue );
+		mInitialValue = initialValue;
 	}
 
 	std::string const& SharedServiceIoSlotMetainfo::getName() const
@@ -56,6 +57,11 @@ namespace _2Real
 	std::string const& SharedServiceIoSlotMetainfo::getDescription() const
 	{
 		return mDescription;
+	}
+
+	DataItem const& SharedServiceIoSlotMetainfo::getInitialValue() const
+	{
+		return mInitialValue;
 	}
 
 	std::string const& SharedServiceIoSlotMetainfo::getDatatype() const

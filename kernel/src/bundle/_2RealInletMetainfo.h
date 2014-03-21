@@ -35,7 +35,7 @@ namespace _2Real
 			explicit InletMetainfo( std::shared_ptr< SharedServiceInletMetainfo > );
 
 			using IoSlotMetainfo::setDescription;
-			using IoSlotMetainfo::setDatatype;
+			using IoSlotMetainfo::setDatatypeAndInitialValue;
 
 			void setMultiInlet( const bool isMulti );
 

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
@@ -33,10 +34,11 @@ namespace _2Real
 
 		void setName( std::string const& );
 		void setDescription( std::string const& );
-		void setDatatype( std::string const& );
+		void setDatatypeAndInitialValue( DataItem const& value );
 
 		std::string const& getName() const;
 		std::string const& getDescription() const;
+		DataItem const& getInitialValue() const;
 		std::string const& getDatatype() const;
 
 	private:
@@ -44,9 +46,10 @@ namespace _2Real
 		SharedServiceIoSlotMetainfo( SharedServiceIoSlotMetainfo const& );
 		SharedServiceIoSlotMetainfo& operator=( SharedServiceIoSlotMetainfo const& );
 
-		std::string			mName;
-		std::string			mDescription;
-		std::string			mDatatype;
+		std::string							mName;
+		std::string							mDescription;
+		DataItem							mInitialValue;
+		std::string							mDatatype;
 
 	};
 

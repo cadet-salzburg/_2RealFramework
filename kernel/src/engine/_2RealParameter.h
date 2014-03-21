@@ -31,14 +31,16 @@ namespace _2Real
 
 	public:
 
-		Parameter( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit Parameter( std::shared_ptr< const SharedServiceInletMetainfo > );
 
-		void init();
+		std::string const& getName() const;
+		std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
+
+		using InSlot::update;
 
 	private:
 
-		Parameter( Parameter const& other );
-		Parameter operator=( Parameter const& other );
+		std::shared_ptr< const SharedServiceInletMetainfo >	mMetainfo;
 
 	};
 }

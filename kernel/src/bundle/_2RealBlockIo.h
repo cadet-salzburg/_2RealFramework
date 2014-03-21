@@ -18,34 +18,25 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealIoSlotMetainfo.h"
+#include <vector>
+#include "bundle/_2RealAbstractInletHandle.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealMultiInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
-
-	namespace app
+	namespace bundle
 	{
-		class InletMetainfo : public IoSlotMetainfo
+		class BlockIo
 		{
 
 		public:
 
-			InletMetainfo();
-			explicit InletMetainfo( std::shared_ptr< const SharedServiceInletMetainfo > );
-
-			using IoSlotMetainfo::isValid;
-			using IoSlotMetainfo::getName;
-			using IoSlotMetainfo::getDatatype;
-			using IoSlotMetainfo::getInitialValue;
-			using IoSlotMetainfo::getDescription;
-
-			bool isMultiInlet() const;
-			
-		private:
-
-			std::weak_ptr< const SharedServiceInletMetainfo >		mImpl;
+			std::vector< ParameterHandle >		mParameters;
+			std::vector< AbstractInletHandle >	mInlets;
+			std::vector< OutletHandle >			mOutlets;
 
 		};
 	}

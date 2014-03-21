@@ -21,14 +21,24 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealSharedService.h"
 
+#include "engine/_2RealSharedService.h"
+
 namespace _2Real
 {
+	namespace bundle
+	{
+		class BlockIo;
+	}
+
 	class AbstractSharedServiceLifetimeManager
 	{
+
 	public:
+
 		virtual ~AbstractSharedServiceLifetimeManager() {}
-		virtual std::shared_ptr< AbstractSharedService > create() = 0;
+		virtual std::shared_ptr< AbstractSharedService > create( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr<_2Real::bundle::AbstractBlock > > const& ) = 0;
 		virtual void destroy( std::weak_ptr< AbstractSharedService > obj ) = 0;
 		virtual unsigned int getCreationCount() const = 0;
+
 	};
 }

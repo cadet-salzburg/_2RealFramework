@@ -16,37 +16,23 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealIoSlotMetainfo.h"
+#include "bundle/_2RealInletHandle.h"
+#include "engine/_2RealInlet.h"
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
-
-	namespace app
+	namespace bundle
 	{
-		class InletMetainfo : public IoSlotMetainfo
+		InletHandle::InletHandle( std::shared_ptr< Inlet > inlet ) :
+			AbstractInletHandle( inlet ),
+			mImpl( inlet )
 		{
+		}
 
-		public:
-
-			InletMetainfo();
-			explicit InletMetainfo( std::shared_ptr< const SharedServiceInletMetainfo > );
-
-			using IoSlotMetainfo::isValid;
-			using IoSlotMetainfo::getName;
-			using IoSlotMetainfo::getDatatype;
-			using IoSlotMetainfo::getInitialValue;
-			using IoSlotMetainfo::getDescription;
-
-			bool isMultiInlet() const;
-			
-		private:
-
-			std::weak_ptr< const SharedServiceInletMetainfo >		mImpl;
-
-		};
+		DataItem const& InletHandle::getValue() const
+		{
+			assert( mImpl.get() );
+			return mImpl->getValue();
+		}
 	}
 }

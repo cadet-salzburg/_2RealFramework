@@ -33,31 +33,31 @@ namespace _2Real
 
 	void TypeCollection::clear()
 	{
-		for ( auto it = mTypes.begin(); it != mTypes.end(); )
-		{
-			it->second->unregisterFromRemove( this, &TypeCollection::typeRemoved );
-			it = mTypes.erase( it );
-			// careful... type may be stored in more than one collection, i.e. local & global
-		}
+		//for ( auto it = mTypes.begin(); it != mTypes.end(); )
+		//{
+		//	it->second->unregisterFromRemove( this, &TypeCollection::typeRemoved );
+		//	it = mTypes.erase( it );
+		//	// careful... type may be stored in more than one collection, i.e. local & global
+		//}
 	}
 
-	void TypeCollection::addType( std::shared_ptr< SharedTypeMetainfo > info )
-	{
-		mTypes[ info->getName() ] = info;
-	}
+	//void TypeCollection::addType( std::shared_ptr< SharedTypeMetainfo > info )
+	//{
+	//	mTypes[ info->getName() ] = info;
+	//}
 
-	void TypeCollection::typeRemoved( std::shared_ptr< const SharedTypeMetainfo > info )
-	{
-		Types::iterator it = mTypes.find( info->getName() );
-		mTypes.erase( it );
-	}
+	//void TypeCollection::typeRemoved( std::shared_ptr< const SharedTypeMetainfo > info )
+	//{
+	//	Types::iterator it = mTypes.find( info->getName() );
+	//	mTypes.erase( it );
+	//}
 
-	std::shared_ptr< const SharedTypeMetainfo > TypeCollection::get( std::string const& name ) const
-	{
-		auto it = mTypes.find( name );
-		if ( it != mTypes.end() )
-			return it->second;
-		else
-			return nullptr;
-	}
+	//std::shared_ptr< const SharedTypeMetainfo > TypeCollection::get( std::string const& name ) const
+	//{
+	//	auto it = mTypes.find( name );
+	//	if ( it != mTypes.end() )
+	//		return it->second;
+	//	else
+	//		return nullptr;
+	//}
 }

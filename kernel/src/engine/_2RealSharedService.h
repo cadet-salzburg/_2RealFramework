@@ -18,34 +18,38 @@
 
 #pragma once
 
+#include "bundle/_2RealAbstractBlock.h"
+
 namespace _2Real
 {
 
-	class AbstractSharedService
-	{
-	public:
-		virtual ~AbstractSharedService() {};
-		virtual void setup() = 0;
-		virtual void update() = 0;
-		virtual void shutdown() = 0;
-	};
+	typedef _2Real::bundle::AbstractBlock AbstractSharedService;
 
-	template< typename TType >
-	class SharedService_T : public AbstractSharedService
-	{
-	public:
+	//class AbstractSharedService
+	//{
+	//public:
+	//	virtual ~AbstractSharedService() {};
+	//	virtual void setup() = 0;
+	//	virtual void update() = 0;
+	//	virtual void shutdown() = 0;
+	//};
 
-		SharedService_T() { mObject = new TType; }
-		~SharedService_T() { delete mObject; }
+	//template< typename TType >
+	//class SharedService_T : public AbstractSharedService
+	//{
+	//public:
 
-		void setup() { mObject->setup(); }
-		void update() { mObject->update(); }
-		void shutdown() { mObject->shutdown(); }
+	//	SharedService_T() { mObject = new TType; }
+	//	~SharedService_T() { delete mObject; }
 
-	private:
+	//	void setup() { mObject->setup(); }
+	//	void update() { mObject->update(); }
+	//	void shutdown() { mObject->shutdown(); }
 
-		TType					*mObject;
+	//private:
 
-	};
+	//	TType					*mObject;
+
+	//};
 
 }

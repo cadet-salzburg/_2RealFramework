@@ -37,10 +37,10 @@ namespace _2Real
 		~TypeCollection();
 
 		void clear();
-		void addType( std::shared_ptr< SharedTypeMetainfo > );
-		void typeRemoved( std::shared_ptr< const SharedTypeMetainfo > );
+		//void addType( std::shared_ptr< SharedTypeMetainfo > );
+		//void typeRemoved( std::shared_ptr< const SharedTypeMetainfo > );
 
-		std::shared_ptr< const SharedTypeMetainfo > get( std::string const& name ) const;
+		//std::shared_ptr< const SharedTypeMetainfo > get( std::string const& name ) const;
 
 	private:
 

@@ -20,21 +20,24 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealInSlot.h"
 
 namespace _2Real
 {
 	class SharedServiceInletMetainfo;
 
-	class AbstractInlet : public InSlot
+	class AbstractInlet
 	{
 
 	public:
 
-		AbstractInlet( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit AbstractInlet( std::shared_ptr< const SharedServiceInletMetainfo > );
 		virtual ~AbstractInlet() {}
 
-		virtual void init() = 0;
+		bool isMultiInlet() const;
+		std::string const& getName() const;
+		std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
+
+		virtual void update() = 0;
 
 	protected:
 
@@ -42,7 +45,8 @@ namespace _2Real
 
 	private:
 
-		AbstractInlet( AbstractInlet const& other );
+		AbstractInlet( AbstractInlet const& other ) = delete;
+		AbstractInlet& operator=( AbstractInlet const& other ) = delete;
 
 	};
 }

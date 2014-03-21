@@ -18,34 +18,42 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealIoSlotMetainfo.h"
+#include <vector>
+#include <memory>
+
+#include "bundle/_2RealBlockIo.h"
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
-
-	namespace app
+	namespace bundle
 	{
-		class InletMetainfo : public IoSlotMetainfo
+		class AbstractBlock
 		{
 
 		public:
 
-			InletMetainfo();
-			explicit InletMetainfo( std::shared_ptr< const SharedServiceInletMetainfo > );
+			virtual ~AbstractBlock() {}
 
-			using IoSlotMetainfo::isValid;
-			using IoSlotMetainfo::getName;
-			using IoSlotMetainfo::getDatatype;
-			using IoSlotMetainfo::getInitialValue;
-			using IoSlotMetainfo::getDescription;
+			AbstractBlock( BlockIo const& io, std::vector< std::shared_ptr< AbstractBlock > > const& dependencies ) :
+				mIo( io ),
+				mDependencies( dependencies )
+			{
+			}
 
-			bool isMultiInlet() const;
-			
+			virtual void setup() = 0;
+			virtual void update() = 0;
+			virtual void shutdown() = 0;
+
+		protected:
+
+			BlockIo												mIo;
+			std::vector< std::shared_ptr< AbstractBlock > >		mDependencies;
+
 		private:
 
-			std::weak_ptr< const SharedServiceInletMetainfo >		mImpl;
+			AbstractBlock( AbstractBlock const& other ) = delete;
+			AbstractBlock& operator=( AbstractBlock const& other ) = delete;
+			AbstractBlock() = delete;
 
 		};
 	}
