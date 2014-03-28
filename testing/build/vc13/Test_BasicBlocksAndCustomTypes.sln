@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_BasicBlocksAndCustomTypes", "TestApp_BasicBlocksAndCustomTypes\TestApp_BasicBlocksAndCustomTypes.vcxproj", "{5647C345-7B2D-4595-B03E-8686DC1C9EB4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_BasicBlocksAndCustomTypes", "TestBundle_BasicBlocksAndCustomTypes\TestBundle_BasicBlocksAndCustomTypes.vcxproj", "{F397D961-7DF8-45C5-B4FD-61539B40573A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5647C345-7B2D-4595-B03E-8686DC1C9EB4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5647C345-7B2D-4595-B03E-8686DC1C9EB4}.Debug|Win32.Build.0 = Debug|Win32
+		{5647C345-7B2D-4595-B03E-8686DC1C9EB4}.Release|Win32.ActiveCfg = Release|Win32
+		{5647C345-7B2D-4595-B03E-8686DC1C9EB4}.Release|Win32.Build.0 = Release|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Debug|Win32.Build.0 = Debug|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Release|Win32.ActiveCfg = Release|Win32
+		{F397D961-7DF8-45C5-B4FD-61539B40573A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
