@@ -39,5 +39,29 @@ namespace _2Real
 			std::shared_ptr< Parameter > param = mImpl.lock();
 			return ( nullptr != param.get() );
 		}
+
+		std::string ParameterHandle::getName() const
+		{
+			std::shared_ptr< Parameter > parameter = checkValidity< Parameter >( mImpl, "parameter" );
+			return parameter->getName();
+		}
+
+		//DataItem ParameterHandle::getValue() const
+		//{
+		//	std::shared_ptr< Parameter > parameter = checkValidity< Parameter >( mImpl, "parameter" );
+		//	return *( parameter->getTmpValue().get() );
+		//}
+
+		//DataItem ParameterHandle::getCurrentValue() const
+		//{
+		//	std::shared_ptr< Parameter > parameter = checkValidity< Parameter >( mImpl, "parameter" );
+		//	return parameter->getValue();
+		//}
+
+		//void ParameterHandle::setValue( DataItem && value )
+		//{
+		//	std::shared_ptr< Parameter > parameter = checkValidity< Parameter >( mImpl, "parameter" );
+		//	parameter->setTmpValue( std::move( value ) );
+		//}
 	}
 }

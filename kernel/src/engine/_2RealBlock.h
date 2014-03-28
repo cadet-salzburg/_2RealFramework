@@ -70,6 +70,8 @@ namespace _2Real
 		std::future< BlockState > startUpdating( std::shared_ptr< UpdateTrigger > );
 		std::future< BlockState > stopUpdating();
 
+		std::shared_ptr< BlockIo > getBlockIo();
+
 	private:
 
 		Block( Block const& other ) = delete;
@@ -77,6 +79,7 @@ namespace _2Real
 
 		std::weak_ptr< const SharedServiceMetainfo >		mMetainfo;
 		StateMachine										mStateMachine;
+		std::shared_ptr< BlockIo >							mIo;
 
 	};
 

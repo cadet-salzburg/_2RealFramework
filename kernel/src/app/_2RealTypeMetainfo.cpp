@@ -24,20 +24,29 @@ namespace _2Real
 {
 	namespace app
 	{
-		TypeMetainfo::TypeMetainfo() :
-			mImpl()
-		{
-		}
 
-		TypeMetainfo::TypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > meta ) :
+		TypeMetainfo::TypeMetainfo( std::shared_ptr< const TMetainfo > meta ) :
 			mImpl( meta )
 		{
 		}
 
 		bool TypeMetainfo::isValid() const
 		{
-			std::shared_ptr< const SharedTypeMetainfo > meta = mImpl.lock();
+			std::shared_ptr< const TMetainfo > meta = mImpl.lock();
 			return ( meta.get() != nullptr );
 		}
+
+		bool TypeMetainfo::isBasicType() const
+		{
+			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
+			return meta->isBasicType();
+		}
+
+		DataItem TypeMetainfo::makeData() const
+		{
+			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
+			return meta->makeData();
+		}
+
 	}
 }

@@ -23,7 +23,7 @@ namespace _2Real
 {
 
 	Parameter::Parameter( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		InSlot(),
+		InSlot(), std::enable_shared_from_this< Parameter >(),
 		mMetainfo( meta )
 	{
 		// initialize the tmp value for the very first update
@@ -36,9 +36,9 @@ namespace _2Real
 		return mMetainfo->getName();
 	}
 
-	std::shared_ptr< const SharedServiceInletMetainfo > Parameter::getMetainfo() const
-	{
-		return mMetainfo;
-	}
+	//std::shared_ptr< const SharedServiceInletMetainfo > Parameter::getMetainfo() const
+	//{
+	//	return mMetainfo;
+	//}
 
 }

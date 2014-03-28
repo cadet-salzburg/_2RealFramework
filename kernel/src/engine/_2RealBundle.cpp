@@ -45,7 +45,6 @@ namespace _2Real
 
 	Bundle::~Bundle()
 	{
-		std::cout << "deleting shared library " << mMetainfo->getName() << std::endl;
 		mServices.clear();
 		mServiceInstances.clear();
 		mMetainfo.reset();
@@ -136,27 +135,12 @@ namespace _2Real
 		std::shared_ptr< _2Real::BlockIo > io( new BlockIo );
 		Block::createIo( info, io->mParameters, io->mInlets, io->mOutlets );
 
-		// anyway, now let's create handles for the inlets
-		// ... need to know if the inlet in question is a multiinlet
 		for ( auto it : io->mInlets )
-		{
-			if ( it->isMultiInlet() )
-			{
-				std::shared_ptr< MultiInlet > inlet = std::dynamic_pointer_cast< MultiInlet, AbstractInlet >( it );
-				bundleio.mInlets.push_back( _2Real::bundle::MultiInletHandle( inlet ) );
-			}
-			else
-			{
-				std::shared_ptr< Inlet > inlet = std::dynamic_pointer_cast< Inlet, AbstractInlet >( it );
-				bundleio.mInlets.push_back( _2Real::bundle::InletHandle( inlet ) );
-			}		
-		}
-
+			bundleio.mInlets.push_back( it->isMultiInlet() ? ( _2Real::bundle::AbstractInletHandle * )new _2Real::bundle::MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) : new _2Real::bundle::InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) );
 		for ( auto it : io->mOutlets )
-			bundleio.mOutlets.push_back( _2Real::bundle::OutletHandle( it ) );	
-
+			bundleio.mOutlets.push_back( new _2Real::bundle::OutletHandle( it ) );	
 		for ( auto it : io->mParameters )
-			bundleio.mParameters.push_back( _2Real::bundle::ParameterHandle( it ) );	
+			bundleio.mParameters.push_back( new _2Real::bundle::ParameterHandle( it ) );	
 		
 		// acquire correct threadpool
 		std::shared_ptr< Threadpool > threads;

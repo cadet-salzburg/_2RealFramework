@@ -19,6 +19,7 @@
 #include "engine/_2RealSharedLibraryMetainfo.h"
 #include "engine/_2RealSharedServiceMetainfo.h"
 #include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealTypeCollection.h"
 #include "helpers/_2RealException.h"
 
 namespace _2Real
@@ -26,15 +27,15 @@ namespace _2Real
 
 	SharedLibraryMetainfo::SharedLibraryMetainfo( Path const& absPath ) :
 		std::enable_shared_from_this< SharedLibraryMetainfo >(),
-		mName(), mCategory(), mDescription(), mAuthor(), mContact(), mVersion( 0, 0, 0 ), mPath( absPath )
+		mName(), mCategory(), mDescription(), mAuthor(), mContact(), mVersion( 0, 0, 0 ), mPath( absPath ),
+		mTypes( new TypeCollection )
 	{
 	}
 
 	SharedLibraryMetainfo::~SharedLibraryMetainfo()
 	{
-		std::cout << "deleting shared library metainfo " << mName << std::endl;
 		mServices.clear();
-		mTypes.clear();
+		mTypes->clear();
 	}
 
 	std::shared_ptr< SharedServiceMetainfo > SharedLibraryMetainfo::createService( std::string const& name, const bool isSingleton )
@@ -46,7 +47,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< SharedServiceMetainfo > result( new SharedServiceMetainfo( name ) );
+		std::shared_ptr< SharedServiceMetainfo > result( new SharedServiceMetainfo( name, mTypes ) );
 		result->setSingleton( isSingleton );
 		mServices[ name ] = result;
 		return result;
@@ -54,50 +55,52 @@ namespace _2Real
 
 	std::shared_ptr< SharedTypeMetainfo > SharedLibraryMetainfo::createType( std::string const& name )
 	{
-		if ( mTypes.find( name ) != mTypes.end() )
-		{
-			std::ostringstream msg;
-			msg << "a type named " << name << " was already exported by bundle " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
-		}
+		//if ( mTypes.find( name ) != mTypes.end() )
+		//{
+		//	std::ostringstream msg;
+		//	msg << "a type named " << name << " was already exported by bundle " << mName << std::endl;
+		//	throw AlreadyExistsException( msg.str() );
+		//}
 
 		std::shared_ptr< SharedTypeMetainfo > result( new SharedTypeMetainfo( name ) );
-		mTypes[ name ] = result;
+		mTypes->addType( result );
+		//mTypes[ name ] = result;
 		return result;
 	}
 
 	bool SharedLibraryMetainfo::performExport()
 	{
-		//bool ok = isBasicDataOk();
-		//ok &= isTypeDataOk();
-		//ok &= isServiceDataOk();
-		//return ok;
+		bool ok = true;//isBasicDataOk();
 
-		// ok, i will now make a copy of everything.... aaaaaaaargh
+		//TypeMetainfos tmpTypes = mTypes;
+		//mTypes.clear();
 
-		//for ( auto it : mTypes )
+		//for ( auto it : tmpTypes )
 		//{
+		//	std::string name = it.first;
+		//	std::cout << "cloning type metainfo " << name << std::endl;
+		//	std::shared_ptr< SharedTypeMetainfo > newInfo( new SharedTypeMetainfo( name ) );
+		//	newInfo->cloneFrom( *it.second.get() );
+		//	mTypes[ name ] = newInfo;
 		//}
 
-		std::cout << "EXPORT" << std::endl;
+		//ok &= isTypeDataOk();
 
-		mTypes.clear();
-
-		ServiceMetainfos tmp = mServices;
+		ServiceMetainfos tmpServices = mServices;
 		mServices.clear();
 
-		for ( auto it : tmp )
+		for ( auto it : tmpServices )
 		{
-			//std::shared_ptr< SharedServiceMetainfo > oldInfo = it.second;
 			std::string name = it.first;
-			std::cout << name << std::endl;
-
+			std::cout << "cloning block metainfo " << name << std::endl;
 			std::shared_ptr< SharedServiceMetainfo > newInfo( new SharedServiceMetainfo( name ) );
 			newInfo->cloneFrom( *it.second.get() );
 			mServices[ name ] = newInfo;
 		}
 
-		return true;
+		//ok &= isServiceDataOk();
+
+		return ok;
 	}
 
 	//bool SharedLibraryMetainfo::isBasicDataOk() const
@@ -186,9 +189,9 @@ namespace _2Real
 	void SharedLibraryMetainfo::getTypeMetainfos( std::vector< std::shared_ptr< const SharedTypeMetainfo > > &infos ) const
 	{
 		infos.clear();
-		infos.resize( mTypes.size() );
-		for ( auto it : mTypes )
-			infos.push_back( it.second );
+		//infos.reserve( mTypes.size() );
+		//for ( auto it : mTypes )
+		//	infos.push_back( it.second );
 	}
 
 }

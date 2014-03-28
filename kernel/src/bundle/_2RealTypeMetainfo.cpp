@@ -29,14 +29,19 @@ namespace _2Real
 		{
 		}
 
-		void TypeMetainfo::addField( std::string const& fieldName, DataItem const& value )
+		void TypeMetainfo::setDescription( std::string description )
 		{
-			mImpl.lock()->addField( fieldName, value );
+			mImpl.lock()->setDescription( description );
 		}
 
-		std::shared_ptr< CustomDataItem > TypeMetainfo::makeData()
+		void TypeMetainfo::addField( std::string const& fieldName, DataItem value )
 		{
-			return mImpl.lock()->makeData();
+			mImpl.lock()->addField( fieldName, std::move( value ) );
+		}
+
+		CustomDataItem TypeMetainfo::makeData()
+		{
+			return mImpl.lock()->makeCustomData();
 		}
 
 	}

@@ -20,8 +20,11 @@
 
 namespace _2Real
 {
-	IoSlot::IoSlot() :
-		std::enable_shared_from_this< IoSlot >()
+	IoSlot::IoSlot()
+	{
+	}
+
+	IoSlot::~IoSlot()
 	{
 	}
 }

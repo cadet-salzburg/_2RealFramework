@@ -33,6 +33,11 @@ namespace _2Real
 		{
 		}
 
+		std::string const& AbstractInletHandle::getName() const
+		{
+			return mImpl->getName();
+		}
+
 		bool AbstractInletHandle::isMultiInlet() const
 		{
 			assert( mImpl.get() );

@@ -28,7 +28,7 @@ namespace _2Real
 
 	public:
 
-		SharedServiceInletMetainfo( std::string const& name );
+		SharedServiceInletMetainfo( std::string const& name, std::shared_ptr< TypeCollection > );
 		~SharedServiceInletMetainfo();
 
 		using SharedServiceIoSlotMetainfo::setName;
@@ -36,6 +36,7 @@ namespace _2Real
 		using SharedServiceIoSlotMetainfo::getName;
 		using SharedServiceIoSlotMetainfo::getInitialValue;
 		using SharedServiceIoSlotMetainfo::getDatatype;
+		using SharedServiceIoSlotMetainfo::getTypeMetainfo;
 
 		void setMultiInlet( const bool );
 		bool isMultiInlet() const;

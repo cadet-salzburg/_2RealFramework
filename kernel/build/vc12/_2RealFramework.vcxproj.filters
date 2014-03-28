@@ -44,9 +44,6 @@
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealEngine.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealException.cpp">
       <Filter>Source Files\helpers</Filter>
     </ClCompile>
@@ -56,17 +53,11 @@
     <ClCompile Include="..\..\src\helpers\_2RealConstants.cpp">
       <Filter>Source Files\helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleImporter.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBundleMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\helpers\_2RealVersion.cpp">
       <Filter>Source Files\helpers</Filter>
@@ -113,35 +104,14 @@
     <ClCompile Include="..\..\src\bundle\_2RealOutletMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealFunctionBlockHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBlock.cpp">
       <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealBlockMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealContextBlockHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSharedServiceInletMetainfo.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.cpp">
       <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealAbstractInletHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealMultiInletHandle.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealInlet.cpp">
       <Filter>Source Files\engine</Filter>
@@ -155,23 +125,8 @@
     <ClCompile Include="..\..\src\bundle\_2RealParameterMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp">
       <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealInletMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealOutletMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealParameterMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealIoSlotMetainfo.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealInSlotPolicy.cpp">
       <Filter>Source Files\bundle</Filter>
@@ -215,9 +170,6 @@
     <ClCompile Include="..\..\src\engine\_2RealTimer.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealUpdateTrigger.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
@@ -226,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealPostSetupState.cpp">
       <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp">
       <Filter>Source Files\engine</Filter>
@@ -253,6 +202,81 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp">
       <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealAbstractInletHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealContextBlockHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealEngine.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealFunctionBlockHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInletMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealIoSlotMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealMultiInletHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutletMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealLinkHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealDataSink.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealDataSource.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealData.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealCustomTypeMetainfo.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealId.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -543,6 +567,33 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
       <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockIo.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealOutletHandle.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealLinkHandle.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealDataSink.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealDataSource.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealLink.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealCustomTypeMetainfo.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealCloneableMetainfo.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealId.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -45,13 +45,10 @@ namespace _2Real
 		{
 			worker.reset( new std::thread( &FifoThreadpool::loop, this ) );
 		}
-
-		std::cout << "created fifo pool" << std::endl;
 	}
 
 	FifoThreadpool::~FifoThreadpool()
 	{
-		std::cout << "destroying fifo pool" << std::endl;
 		{
 			std::unique_lock< std::mutex > lock( mJobsAccess );
 			mShouldTerminate = true;
@@ -76,7 +73,6 @@ namespace _2Real
 
 	Threadpool::Id FifoThreadpool::createId()
 	{
-		std::cout << "threadpool: create id" << std::endl;
 		return NullId();
 	}
 
@@ -87,7 +83,6 @@ namespace _2Real
 		job.doWork = j;
 		job.isDone = cb;
 		mJobs.push_back( job );		// done
-		std::cout << "threadpool: job enqueued" << std::endl;
 		mNewJob.notify_one();		// now, let's notify one of the worker threads that there's a new job
 	}
 
@@ -119,9 +114,7 @@ namespace _2Real
 			}
 
 			// job execution
-			std::cout << "threadpool: executing job" << std::endl;
 			job.doWork();
-			std::cout << "threadpool: on finished" << std::endl;
 			job.isDone();
 		}
 	}
@@ -130,12 +123,10 @@ namespace _2Real
 		Threadpool(),
 		mGenerator()
 	{
-		std::cout << "created unique pool" << std::endl;
 	}
 
 	UniqueThreadpool::~UniqueThreadpool()
 	{
-		std::cout << "destroying unique pool" << std::endl;
 	}
 
 	Threadpool::Id UniqueThreadpool::createId()

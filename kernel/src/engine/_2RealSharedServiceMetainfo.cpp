@@ -26,11 +26,12 @@
 namespace _2Real
 {
 
-	SharedServiceMetainfo::SharedServiceMetainfo( std::string const& name ) :
+	SharedServiceMetainfo::SharedServiceMetainfo( std::string const& name, std::shared_ptr< TypeCollection > types ) :
 		std::enable_shared_from_this< SharedServiceMetainfo >(),
 		mName( name ),
 		mDescription( "" ),
-		mIsSingleton( false )
+		mIsSingleton( false ),
+		mTypes( types )
 	{
 	}
 
@@ -104,7 +105,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name ) );
+		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name, mTypes ) );
 		mInlets[ name ] = result;
 		return result;
 	}
@@ -118,7 +119,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( name ) );
+		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( name, mTypes ) );
 		mOutlets[ name ] = result;
 		return result;
 	}
@@ -132,7 +133,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name ) );
+		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name, mTypes ) );
 		mParameters[ name ] = result;
 		return result;
 	}

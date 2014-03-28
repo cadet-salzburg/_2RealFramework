@@ -34,8 +34,11 @@ namespace _2Real
 			AbstractInletHandle();
 			explicit AbstractInletHandle( std::shared_ptr< AbstractInlet > );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
+			virtual ~AbstractInletHandle();
+
 			bool					isValid() const;
+			std::string				getName() const;
+			bool					isMultiInlet() const;
 
 		private:
 

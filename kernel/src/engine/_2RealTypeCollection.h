@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
+	class TMetainfo;
 
 	/*
 	*	collection of all shared types exported by a shared library
@@ -37,17 +37,17 @@ namespace _2Real
 		~TypeCollection();
 
 		void clear();
-		//void addType( std::shared_ptr< SharedTypeMetainfo > );
-		//void typeRemoved( std::shared_ptr< const SharedTypeMetainfo > );
+		void addType( std::shared_ptr< const TMetainfo > );
+		void typeRemoved( std::shared_ptr< const TMetainfo > );
 
-		//std::shared_ptr< const SharedTypeMetainfo > get( std::string const& name ) const;
+		std::shared_ptr< const TMetainfo > getTypeMetainfo( std::string const& name ) const;
 
 	private:
 
 		TypeCollection( TypeCollection const& other ) = delete;
 		TypeCollection& operator=( TypeCollection const& other ) = delete;
 
-		typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		Types;
+		typedef std::map< std::string, std::shared_ptr< const TMetainfo > >		Types;
 
 		Types	mTypes;
 

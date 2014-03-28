@@ -23,8 +23,11 @@ namespace _2Real
 {
 
 	Outlet::Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > meta ) :
-		IoSlot(),
-		mMetainfo( meta )
+		DataSource(),
+		std::enable_shared_from_this< Outlet >(),
+		mMetainfo( meta ),
+		mTmpValue( new DataItem( meta->getInitialValue() ) ),
+		mValue( new DataItem( meta->getInitialValue() ) )
 	{
 	}
 
@@ -33,24 +36,16 @@ namespace _2Real
 		return mMetainfo->getName();
 	}
 
-	std::shared_ptr< const SharedServiceOutletMetainfo > Outlet::getMetainfo() const
-	{
-		return mMetainfo;
-	}
-
 	DataItem & Outlet::getValue()
 	{
 		return *mValue.get();
 	}
 
-	std::shared_ptr< const DataItem > Outlet::getTmpValue() const
-	{
-		std::lock_guard< std::mutex > lock( mMutex );
-		return mTmpValue;
-	}
-
 	void Outlet::update()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
+		mTmpValue = mValue;
+		mValue.reset( new DataItem( mMetainfo->getInitialValue() ) );
+		DataSource::notify( mTmpValue );
 	}
 }

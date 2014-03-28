@@ -21,8 +21,8 @@
 namespace _2Real
 {
 
-	SharedServiceInletMetainfo::SharedServiceInletMetainfo( std::string const& name ) :
-		SharedServiceIoSlotMetainfo( name ),
+	SharedServiceInletMetainfo::SharedServiceInletMetainfo( std::string const& name, std::shared_ptr< TypeCollection > types ) :
+		SharedServiceIoSlotMetainfo( name, types ),
 		mIsMultiInlet( false )
 	{
 	}
@@ -43,7 +43,7 @@ namespace _2Real
 
 	std::shared_ptr< SharedServiceInletMetainfo > SharedServiceInletMetainfo::clone() const
 	{
-		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( getName() ) );
+		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( getName(), mTypes ) );
 
 		result->setDatatypeAndInitialValue( getInitialValue() );
 		result->setDescription( getDescription() );

@@ -28,7 +28,7 @@ namespace _2Real
 	class Inlet;
 	class SharedServiceInletMetainfo;
 
-	class MultiInlet : public AbstractInlet, public IoSlot
+	class MultiInlet : public AbstractInlet, public std::enable_shared_from_this< MultiInlet >
 	{
 
 		typedef std::deque< std::shared_ptr< Inlet > > Inlets;
@@ -37,21 +37,23 @@ namespace _2Real
 
 		explicit MultiInlet( std::shared_ptr< const SharedServiceInletMetainfo > );
 
-		//Inlets::size_type size() const;
-		//std::shared_ptr< Inlet > operator[]( const Inlets::size_type index );
-		//std::shared_ptr< Inlet > add_front();
-		//std::shared_ptr< Inlet > add_back();
+		uint32_t getSize() const;
+		bool isEmpty() const;
+		std::shared_ptr< Inlet > operator[]( const uint32_t );
+		std::shared_ptr< Inlet > add_front();
+		std::shared_ptr< Inlet > add_back();
 
+		using AbstractInlet::getName;
 		using AbstractInlet::isMultiInlet;
-		using AbstractInlet::getMetainfo;
-		
-		std::string const& getName() const { return AbstractInlet::getName(); }
+		//using AbstractInlet::getMetainfo;
 
 		void update();
 
 	private:
 
-		Inlets	mInlets;
+		mutable std::mutex									mMutex;
+		Inlets												mInlets;
+		std::shared_ptr< SharedServiceInletMetainfo >		mInfo;
 
 	};
 

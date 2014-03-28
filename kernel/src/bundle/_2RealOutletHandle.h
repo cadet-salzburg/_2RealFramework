@@ -18,7 +18,10 @@
 
 #pragma once
 
+#include "engine/_2RealData.h"
+
 #include <memory>
+#include <string>
 
 namespace _2Real
 {
@@ -32,6 +35,10 @@ namespace _2Real
 		public:
 
 			explicit OutletHandle( std::shared_ptr< Outlet > );
+
+			std::string const& getName() const;
+
+			DataItem & getValue();
 
 		private:
 

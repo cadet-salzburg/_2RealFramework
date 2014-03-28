@@ -17,6 +17,7 @@
 */
 
 #include "bundle/_2RealMultiInletHandle.h"
+#include "bundle/_2RealInletHandle.h"
 #include "engine/_2RealMultiInlet.h"
 
 namespace _2Real
@@ -27,6 +28,21 @@ namespace _2Real
 			AbstractInletHandle( inlet ),
 			mImpl( inlet )
 		{
+		}
+	
+		uint32_t MultiInletHandle::getSize() const
+		{
+			return mImpl->getSize();
+		}
+
+		bool MultiInletHandle::isEmpty() const
+		{
+			return mImpl->isEmpty();
+		}
+
+		InletHandle MultiInletHandle::operator[]( const uint32_t id )
+		{
+			return InletHandle( mImpl->operator[]( id ) );
 		}
 	}
 }

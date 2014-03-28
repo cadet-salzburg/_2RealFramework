@@ -28,6 +28,8 @@ namespace _2Real
 
 	namespace bundle
 	{
+		class InletHandle;
+
 		class MultiInletHandle : public AbstractInletHandle
 		{
 
@@ -35,6 +37,10 @@ namespace _2Real
 
 			explicit MultiInletHandle( std::shared_ptr< MultiInlet > );
 
+			uint32_t getSize() const;
+			bool isEmpty() const;
+			InletHandle operator[]( const uint32_t );
+		
 		private:
 
 			std::shared_ptr< MultiInlet >	mImpl;

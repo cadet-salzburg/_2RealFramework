@@ -18,9 +18,10 @@
 
 #pragma once
 
-#include <memory>
-
 #include "engine/_2RealData.h"
+
+#include <memory>
+#include <string>
 
 namespace _2Real
 {
@@ -34,6 +35,8 @@ namespace _2Real
 		public:
 
 			explicit ParameterHandle( std::shared_ptr< const Parameter > );
+
+			std::string const& getName() const;
 
 			DataItem const& getValue() const;
 

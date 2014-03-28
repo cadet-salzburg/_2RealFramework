@@ -25,9 +25,14 @@
 namespace _2Real
 {
 	class Inlet;
+	class DataSink;
+	class DataSource;
 
 	namespace app
 	{
+		class LinkHandle;
+		class TypeMetainfo;
+
 		class InletHandle : public AbstractInletHandle
 		{
 
@@ -36,16 +41,16 @@ namespace _2Real
 			InletHandle();
 			explicit InletHandle( std::shared_ptr< Inlet > );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
-			bool					isValid() const;
+			// TODO: these should definitely throw an exception in case of a datatype mismatch
+			//void setValue( DataItem && value );
+			//void setValue( std::shared_ptr< DataItem > value );
+			//void setValue( DataItem const& value );
 
-			std::string	const&		getDescription() const;
+			TypeMetainfo getTypeMetainfo() const;
 
-			// hm. set value function:
-			// this should definitely throw an exception in case of a datatype mismatch
-			void setValue( DataItem const& value );
+			LinkHandle linkTo( std::shared_ptr< DataSource > );
 
-
+			operator std::shared_ptr< DataSink > ();
 
 		private:
 

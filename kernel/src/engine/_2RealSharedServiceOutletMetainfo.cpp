@@ -21,8 +21,8 @@
 namespace _2Real
 {
 
-	SharedServiceOutletMetainfo::SharedServiceOutletMetainfo( std::string const& name ) :
-		SharedServiceIoSlotMetainfo( name )
+	SharedServiceOutletMetainfo::SharedServiceOutletMetainfo( std::string const& name, std::shared_ptr< TypeCollection > types ) :
+		SharedServiceIoSlotMetainfo( name, types )
 	{
 	}
 
@@ -32,7 +32,7 @@ namespace _2Real
 
 	std::shared_ptr< SharedServiceOutletMetainfo > SharedServiceOutletMetainfo::clone() const
 	{
-		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( getName() ) );
+		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( getName(), mTypes ) );
 
 		result->setDatatypeAndInitialValue( getInitialValue() );
 		result->setDescription( getDescription() );

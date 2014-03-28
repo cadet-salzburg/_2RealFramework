@@ -20,34 +20,77 @@
 
 namespace _2Real
 {
-	SharedTypeMetainfo::SharedTypeMetainfo( std::string const& name )/* :
-		mTypeDescriptor( new CustomTypeDescriptor )*/
+
+	BasicTypeMetainfo::BasicTypeMetainfo( DataItem val ) :
+		mTemplate( val ),
+		mTypeDescriptor()
 	{
-		( void )( name );
 	}
 
-	std::shared_ptr< CustomDataItem > SharedTypeMetainfo::makeData() const
+	DataItem BasicTypeMetainfo::makeData() const
 	{
-		// this will copy all fields & default values
-		CustomDataItem *item = new CustomDataItem( mTemplate/*, *mTypeDescriptor.get()*/ );
-		return std::shared_ptr< CustomDataItem >( item );
+		return mTemplate;
 	}
 
-	// TODO: missing default value as default argument for value
-	void SharedTypeMetainfo::addField( std::string const& fieldName, DataItem const& value )
+	bool BasicTypeMetainfo::isBasicType() const
 	{
-		DataField field;
-		field.mFieldName = fieldName;
-		field.mValue = value;
-
-		// TODO: missing recursion!
-		//DataFieldDescriptor fieldDescriptor;
-		//fieldDescriptor.mFieldName = fieldName;
-		// custom type can only be instantiated once name & fields are known
-		//fieldDescriptor.mHumanReadableName = boost::apply_visitor( HumanReadableNameVisitor(), value );
-		//boost::apply_visitor( SubFieldsVisitor(), value, fieldDescriptor.mFields );
-
-		mTemplate.mDataFields.push_back( field );
-		//mTypeDescriptor->mFields.push_back( fieldDescriptor );
+		return true;
 	}
+
+	////////////////////////////////////
+
+	SharedTypeMetainfo::SharedTypeMetainfo( const std::string name ) :
+		mName( name ),
+		mDescription( "no description available" ),
+		mTemplate(),
+		mTypeDescriptor()
+	{
+	}
+
+	bool SharedTypeMetainfo::isBasicType() const
+	{
+		return false;
+	}
+
+	std::string SharedTypeMetainfo::getName() const
+	{
+		return mName;
+	}
+
+	std::string SharedTypeMetainfo::getDescription() const
+	{
+		return mDescription;
+	}
+
+	DataItem SharedTypeMetainfo::makeData() const
+	{
+		return mTemplate;
+	}
+
+	CustomDataItem SharedTypeMetainfo::makeCustomData() const
+	{
+		return CustomDataItem( mTemplate );
+	}
+
+	void SharedTypeMetainfo::setDescription( const std::string description )
+	{
+		mDescription = description;
+	}
+
+	void SharedTypeMetainfo::addField( std::string fieldName, DataItem value )
+	{
+		mTemplate.addField( DataField( std::move( fieldName ), std::move( value ) ) );
+		// TODO: update descr.
+	}
+
+	void SharedTypeMetainfo::cloneFrom( SharedTypeMetainfo const& other )
+	{
+		if ( this == &other )
+			return;
+
+		mDescription = other.mDescription;
+		mTemplate = other.mTemplate;
+		mTypeDescriptor->cloneFrom( *other.mTypeDescriptor.get() );
+	}
+
 }

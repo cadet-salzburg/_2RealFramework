@@ -31,7 +31,6 @@ namespace _2Real
 	{
 		for ( auto it : mThreadpools )	
 		{
-			std::cout << "killing a threadpool" << std::endl;
 			it.reset();
 		}
 	}

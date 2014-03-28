@@ -39,7 +39,6 @@ namespace _2Real
 		mMutex.lock();
 		if ( !mShouldUpdate )
 		{
-			std::cout << "timer: start" << std::endl;
 			mShouldUpdate = true;
 			mMutex.unlock();
 
@@ -53,7 +52,6 @@ namespace _2Real
 	void Timer::stop()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
-		std::cout << "timer: stop" << std::endl;
 		mShouldUpdate = false;
 		mTimer.cancel();
 	}

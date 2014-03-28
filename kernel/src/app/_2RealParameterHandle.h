@@ -20,6 +20,7 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "app/_2RealAbstractInletHandle.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
@@ -35,8 +36,16 @@ namespace _2Real
 			ParameterHandle();
 			explicit ParameterHandle( std::shared_ptr< Parameter > );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
 			bool					isValid() const;
+			std::string				getName() const;
+
+			//DataItem				getValue() const;
+			//DataItem				getCurrentValue() const;
+
+			// TODO: these should definitely throw an exception in case of a datatype mismatch
+			//void setValue( DataItem && value );
+			//void setValue( std::shared_ptr< DataItem > value );
+			//void setValue( DataItem const& value );
 
 		private:
 

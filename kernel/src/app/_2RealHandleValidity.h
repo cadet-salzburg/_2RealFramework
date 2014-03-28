@@ -40,5 +40,3 @@ namespace _2Real
 		}
 	}
 }
-
-// TODO: move to helpers

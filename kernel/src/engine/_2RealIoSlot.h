@@ -23,13 +23,13 @@
 
 namespace _2Real
 {
-	class IoSlot : std::enable_shared_from_this< IoSlot >
+	class IoSlot
 	{
 
 	public:
 
 		IoSlot();
-		virtual ~IoSlot() {}
+		virtual ~IoSlot();
 
 		virtual std::string const& getName() const = 0;	
 		virtual void update() = 0;

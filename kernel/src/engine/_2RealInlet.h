@@ -22,22 +22,43 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealAbstractInlet.h"
 #include "engine/_2RealInSlot.h"
+#include "engine/_2RealDataSink.h"
 
 namespace _2Real
 {
 	class SharedServiceInletMetainfo;
+	class Link;
+	class DataSource;
+	class TMetainfo;
 
-	class Inlet : public AbstractInlet, public InSlot
+	class Inlet : private InSlot, public AbstractInlet, public DataSink, public std::enable_shared_from_this< Inlet >
 	{
 
 	public:
 
 		explicit Inlet( std::shared_ptr< const SharedServiceInletMetainfo > );
 
+		// just for the sake of readability; these are public anyway
+		using AbstractInlet::getName;
 		using AbstractInlet::isMultiInlet;
-		using AbstractInlet::getMetainfo;
 
-		std::string const& getName() const { return AbstractInlet::getName(); }
-		void update() { InSlot::update(); }
+		// virtual method of AbstractInlet
+		void update();
+
+		// virtual method of DataSink
+		void receiveData( std::shared_ptr< const DataItem > );
+
+		// exposed methods of InSlot
+		using InSlot::getValue;
+
+		// linking, yay
+		std::shared_ptr< Link > linkTo( std::shared_ptr< DataSource > );
+
+		std::shared_ptr< const TMetainfo > getTypeMetainfo() const;
+
+	private:
+
+		std::shared_ptr< Link >	mLink;
+
 	};
 }

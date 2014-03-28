@@ -17,6 +17,7 @@
 */
 
 #include "app/_2RealMultiInletHandle.h"
+#include "app/_2RealInletHandle.h"
 #include "app/_2RealHandleValidity.h"
 #include "engine/_2RealMultiInlet.h"
 
@@ -24,6 +25,7 @@ namespace _2Real
 {
 	namespace app
 	{
+
 		MultiInletHandle::MultiInletHandle() :
 			AbstractInletHandle(),
 			mImpl()
@@ -36,10 +38,23 @@ namespace _2Real
 		{
 		}
 
-		bool MultiInletHandle::isValid() const
+		InletHandle MultiInletHandle::operator[]( const uint32_t index )
 		{
-			std::shared_ptr< MultiInlet > inlet = mImpl.lock();
-			return ( nullptr != inlet.get() );
+			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			return InletHandle( inlet->operator[]( index ) );
 		}
+
+		uint32_t MultiInletHandle::getSize() const
+		{
+			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			return inlet->getSize();
+		}
+
+		bool MultiInletHandle::isEmpty() const
+		{
+			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			return inlet->isEmpty();
+		}
+
 	}
 }

@@ -27,6 +27,8 @@
 
 #include <boost/variant.hpp>
 
+#include "engine/_2RealCloneableMetainfo.h"
+
 namespace _2Real
 {
 	class CustomDataItem;
@@ -46,17 +48,100 @@ namespace _2Real
 							bool,// std::vector< bool >,
 							boost::recursive_wrapper< CustomDataItem >//, std::vector< boost::recursive_wrapper< CustomType > > >
 							> DataItem;
-
-
 	/*
-	*	custom data item consists of data fields
+	*	helper
 	*/
+	typedef boost::variant< uint8_t,// std::vector< uint8_t >,
+							int8_t,// std::vector< int8_t >,
+							uint32_t,// std::vector< uint32_t >,
+							int32_t,// std::vector< int32_t >,
+							uint64_t,// std::vector< uint64_t >,
+							int64_t,// std::vector< int64_t >,
+							double,// std::vector< double >,
+							float,// std::vector< float >,
+							std::string,// std::vector< std::string >,
+							bool// std::vector< bool >,
+							> BasicDataItem;
+
+
+
 	class DataField
 	{
 
 	public:
 
-		std::string		mFieldName;
+		DataField( std::string fieldName, DataItem value ) :
+			mName( std::move( fieldName ) ),
+			mValue( std::move( value ) )
+		{ 
+			//std::cout << "data field init ctor" << std::endl;
+		}
+
+		DataField( DataField const& other ) :
+			mName( other.mName ),
+			mValue( other.mValue )
+		{ 
+			//std::cout << "data field copy ctor" << std::endl;
+		}
+
+		DataField( DataField && other ) :
+			mName( std::move( other.mName ) ),
+			mValue( std::move( other.mValue ) )
+		{
+			//std::cout << "data field move ctor" << std::endl;
+		}
+
+		DataField& operator=( DataField const& other )
+		{
+			if ( this == &other )
+				return *this;
+
+			mName = other.mName;
+			mValue = other.mValue;
+
+			//std::cout << "data field copy assignment" << std::endl;
+
+			return *this;
+		}
+
+		DataField& operator=( DataField && other )
+		{
+			if ( this == &other )
+				return *this;
+
+			mName = std::move( other.mName );
+			mValue = std::move( other.mValue );
+
+			//std::cout << "data field move assignment" << std::endl;
+
+			return *this;
+		}
+
+		~DataField() = default;
+
+		std::string const& getName() const
+		{
+			return mName;
+		}
+
+		DataItem const& getValue() const
+		{
+			return mValue;
+		}
+
+		DataItem & getValue()
+		{
+			return mValue;
+		}
+
+		void setValue( DataItem value )
+		{
+			mValue = std::move( value );
+		}
+
+	private:
+
+		std::string		mName;
 		DataItem		mValue;
 
 	};
@@ -64,51 +149,44 @@ namespace _2Real
 	class CustomDataItem
 	{
 
-	public:
+	private:
 
+		std::string								mTypename;
 		typedef std::vector< DataField >		DataFields;
 		DataFields								mDataFields;
-		std::string								mTypename;
 
-		CustomDataItem& operator=( CustomDataItem const& other )
-		{
-			return *this;
-		}
+	public:
 
-		// everything else can be solved with the visitor pattern
-		std::string const& getHumanReadableName() const
-		{
-			return  mTypename;
-		}
+		CustomDataItem();
+		CustomDataItem( CustomDataItem const& other );
+		CustomDataItem( CustomDataItem && other );
+		CustomDataItem& operator=( CustomDataItem const& other );
+		CustomDataItem& operator=( CustomDataItem && other );
+		~CustomDataItem() = default;
 
-		friend std::ostream& operator<<( std::ostream& out, CustomDataItem const& val )
-		{
-			for ( auto it : val.mDataFields )
-				// TODO: visitor b/c of formatting
-				out << it.mFieldName << " is " << std::boolalpha << it.mValue << std::endl;
-			return out;
-		}
+		std::string const& getName() const;
+		void set( std::string const& fieldName, DataItem value );
+		void addField( DataField field );
+
+		friend std::ostream& operator<<( std::ostream& out, CustomDataItem const& val );
 
 		template< typename TData >
 		TData const& getValue( std::string const& fieldName ) const
 		{
 			try
 			{
-				for ( auto it : mFields )
+				for ( auto &it : mDataFields )
 				{
-					if ( it.mName == fieldName )
-					{
-						TData const& result = boost::get< TData >( it.mValue );
-						return result;
-					}
+					if ( it.getName() == fieldName )
+						return boost::get< TData >( it.getValue() );
 				}
+
+				throw _2Real::NotFoundException( fieldName );
 			}
 			catch ( boost::bad_get const& e )
 			{
-				throw e;
+				throw _2Real::TypeMismatchException( fieldName );
 			}
-
-			throw _2Real::NotFoundException( fieldName );
 		}
 
 		template< typename TData >
@@ -116,24 +194,103 @@ namespace _2Real
 		{
 			try
 			{
-				for ( auto it : mFields )
+				for ( auto &it : mDataFields )
 				{
-					if ( it.mName == fieldName )
-					{
-						TData & result = boost::get< TData >( it.mValue );
-						return result;
-					}
+					if ( it.getName() == fieldName )
+						return boost::get< TData >( it.getValue() );
 				}
+
+				throw _2Real::NotFoundException( fieldName );
 			}
 			catch ( boost::bad_get const& e )
 			{
-				throw e;
+				throw _2Real::TypeMismatchException( fieldName );
 			}
-
-			throw _2Real::NotFoundException( fieldName );
 		}
 
 	};
+
+	class TypeDescriptor;
+
+	class FieldDescriptor
+	{
+
+	public:
+
+		std::string							mName;
+		std::shared_ptr< TypeDescriptor >	mDescription;
+
+	};
+
+	class TypeDescriptor
+	{
+
+	public:
+
+		virtual ~TypeDescriptor() {}
+
+		virtual bool isBasicType() const = 0;
+		//virtual std::shared_ptr< DataItem >	makeData() const = 0;
+		//virtual std::string const& getTypeName() const = 0;
+
+	};
+
+	class BasicTypeDescriptor
+	{
+
+	public:
+
+		bool isBasicType() const
+		{
+			return true;
+		}
+
+		std::string const& getDatatype() const
+		{
+			return mTypename;
+		}
+
+	private:
+
+		std::string		mTypename;
+
+	};
+
+	class CustomTypeDescriptor// : public CloneableMetainfo< CustomTypeDescriptor >
+	{
+
+	private:
+
+		typedef std::vector< std::shared_ptr< FieldDescriptor > >	Fields;
+		Fields														mFields;
+
+	public:
+
+		bool isBasicType() const
+		{
+			return false;
+		}
+
+		std::vector< std::shared_ptr< FieldDescriptor > > const& getFields() const
+		{
+			return mFields;
+		}
+
+		void cloneFrom( CustomTypeDescriptor const& other )
+		{
+			if ( this == &other )
+				return;
+
+			mTypename = other.mTypename;
+		}
+
+	private:
+
+		std::string		mTypename;
+
+	};
+
+
 //}
 //
 //#include "engine/_2RealCustomData.h"
@@ -208,9 +365,83 @@ namespace _2Real
 
 		std::string operator()( _2Real::CustomDataItem const& val ) const
 		{
-			return val.getHumanReadableName();
+			return val.getName();
 		}
 
 	};
+
+
+
+	//class InitialValueVisitor : public boost::static_visitor< std::string >
+	//{
+
+	//public:
+
+	//	std::string operator()( const uint8_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "unsigned char";
+	//	}
+
+	//	std::string operator()( const int8_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "char";
+	//	}
+
+	//	std::string operator()( const uint32_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "unsigned int";
+	//	}
+
+	//	std::string operator()( const int32_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "int";
+	//	}
+
+	//	std::string operator()( const uint64_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "unsigned long";
+	//	}
+
+	//	std::string operator()( const int64_t val ) const
+	//	{
+	//		( void )( val );
+	//		return "long";
+	//	}
+
+	//	std::string operator()( double const& val ) const
+	//	{
+	//		( void )( val );
+	//		return "double";
+	//	}
+
+	//	std::string operator()( const float val ) const
+	//	{
+	//		( void )( val );
+	//		return "float";
+	//	}
+
+	//	std::string operator()( std::string const& val ) const
+	//	{
+	//		( void )( val );
+	//		return "string";
+	//	}
+
+	//	std::string operator()( const bool val ) const
+	//	{
+	//		( void )( val );
+	//		return "bool";
+	//	}
+
+	//	std::string operator()( _2Real::CustomDataItem const& val ) const
+	//	{
+	//		return val.getHumanReadableName();
+	//	}
+
+	//};
 
 }

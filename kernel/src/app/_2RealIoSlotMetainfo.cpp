@@ -44,25 +44,25 @@ namespace _2Real
 			return ( meta.get() != nullptr );
 		}
 
-		std::string const& IoSlotMetainfo::getName() const
+		std::string IoSlotMetainfo::getName() const
 		{
 			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getName();
 		}
 
-		std::string const& IoSlotMetainfo::getDescription() const
+		std::string IoSlotMetainfo::getDescription() const
 		{
 			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getDescription();
 		}
 
-		std::string const& IoSlotMetainfo::getDatatype() const
+		std::string IoSlotMetainfo::getDatatype() const
 		{
 			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getDatatype();
 		}
 
-		DataItem const& IoSlotMetainfo::getInitialValue() const
+		DataItem IoSlotMetainfo::getInitialValue() const
 		{
 			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getInitialValue();

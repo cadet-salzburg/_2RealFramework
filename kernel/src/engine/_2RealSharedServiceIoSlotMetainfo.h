@@ -24,12 +24,15 @@
 namespace _2Real
 {
 
+	class TMetainfo;
+	class TypeCollection;
+
 	class SharedServiceIoSlotMetainfo : public std::enable_shared_from_this< SharedServiceIoSlotMetainfo >
 	{
 
 	public:
 
-		SharedServiceIoSlotMetainfo( std::string const& name );
+		SharedServiceIoSlotMetainfo( std::string const& name, std::shared_ptr< TypeCollection > );
 		virtual ~SharedServiceIoSlotMetainfo();
 
 		void setName( std::string const& );
@@ -41,15 +44,20 @@ namespace _2Real
 		DataItem const& getInitialValue() const;
 		std::string const& getDatatype() const;
 
+		std::shared_ptr< const TMetainfo >	getTypeMetainfo() const;
+
+	protected:
+
+		std::string									mName;
+		std::string									mDescription;
+		DataItem									mInitialValue;
+		std::string									mDatatype;		// stored, so that I don't have to look it up all the time
+		std::shared_ptr< TypeCollection >			mTypes;			// used to look up the type metadata
+
 	private:
 
 		SharedServiceIoSlotMetainfo( SharedServiceIoSlotMetainfo const& );
 		SharedServiceIoSlotMetainfo& operator=( SharedServiceIoSlotMetainfo const& );
-
-		std::string							mName;
-		std::string							mDescription;
-		DataItem							mInitialValue;
-		std::string							mDatatype;
 
 	};
 

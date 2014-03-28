@@ -44,7 +44,7 @@ namespace _2Real
 
 	// ---------------------------------- bundle
 
-		Path const& Engine::getBundleDirectory() const
+		Path Engine::getBundleDirectory() const
 		{
 			return mImpl->getBundleDirectory();
 		}

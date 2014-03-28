@@ -20,14 +20,14 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealIoSlot.h"
+#include "engine/_2RealDataSource.h"
 #include "engine/_2RealData.h"
 
 namespace _2Real
 {
 	class SharedServiceOutletMetainfo;
 
-	class Outlet : public IoSlot
+	class Outlet : public DataSource, public std::enable_shared_from_this< Outlet >
 	{
 
 	public:
@@ -35,11 +35,8 @@ namespace _2Real
 		explicit Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > );
 
 		std::string const& getName() const;
-		std::shared_ptr< const SharedServiceOutletMetainfo > getMetainfo() const;
 
 		DataItem & getValue();
-
-		std::shared_ptr< const DataItem > getTmpValue() const;
 
 		void update();
 

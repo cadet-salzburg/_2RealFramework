@@ -26,6 +26,9 @@
 #include "app/_2RealAbstractInletHandle.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealMultiInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+#include "app/_2RealBlockIo.h"
 
 #include "app/_2RealTimerHandle.h"
 
@@ -34,6 +37,7 @@
 #include "app/_2RealInletMetainfo.h"
 #include "app/_2RealOutletMetainfo.h"
 #include "app/_2RealParameterMetainfo.h"
+#include "app/_2RealCustomTypeMetainfo.h"
 #include "app/_2RealTypeMetainfo.h"
 
 #include "helpers/_2RealException.h"

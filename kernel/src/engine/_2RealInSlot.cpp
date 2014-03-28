@@ -20,34 +20,45 @@
 
 namespace _2Real
 {
-	InSlot::InSlot() :
-		IoSlot()
+	InSlot::InSlot()
 	{
 	}
 
-	void InSlot::setTmpValue( std::shared_ptr< DataItem > value )
+	InSlot::~InSlot()
+	{
+	}
+
+	void InSlot::setTmpValue( std::shared_ptr< const DataItem > value )
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 		mTmpValue = value;
 	}
 
-	std::shared_ptr< const DataItem > InSlot::getTmpValue() const
-	{
-		std::lock_guard< std::mutex > lock( mMutex );
-		return mTmpValue;
-	}
+	//void InSlot::setTmpValue( DataItem &&value )
+	//{
+	//	std::lock_guard< std::mutex > lock( mMutex );
 
-	DataItem & InSlot::getValue()
-	{	
-		assert( mValue );
-		return *mValue.get();
-	}
+	//	// can't move the value directly into mTmpValue, as this would overwrite
+	//	// a value that might be shared by several inlets
+	//	// -> create a new shared ptr and move the data in there instead!
+	//	std::shared_ptr< DataItem > tmp( new DataItem );
+	//	*tmp.get() = std::move( value );
+	//	mTmpValue = tmp;
+	//}
 
 	DataItem const& InSlot::getValue() const
 	{
+#ifdef _DEBUG
 		assert( mValue );
+#endif
 		return *mValue.get();
 	}
+
+	//std::shared_ptr< DataItem > InSlot::getTmpValue() const
+	//{
+	//	std::lock_guard< std::mutex > lock( mMutex );
+	//	return mTmpValue;
+	//}
 
 	void InSlot::update()
 	{

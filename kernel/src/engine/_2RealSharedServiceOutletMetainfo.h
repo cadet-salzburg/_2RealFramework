@@ -29,7 +29,7 @@ namespace _2Real
 
 	public:
 
-		SharedServiceOutletMetainfo( std::string const& name );
+		SharedServiceOutletMetainfo( std::string const& name, std::shared_ptr< TypeCollection > );
 		~SharedServiceOutletMetainfo();
 
 		using SharedServiceIoSlotMetainfo::setName;

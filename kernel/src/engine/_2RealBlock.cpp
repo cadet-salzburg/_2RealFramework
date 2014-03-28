@@ -39,7 +39,6 @@ namespace _2Real
 	{
 		for ( auto it : mInlets )
 		{
-			std::cout << "pre update inlet " << it->getName() << std::endl;
 			it->update();
 		}
 
@@ -62,7 +61,8 @@ namespace _2Real
 	Block::Block( std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< Threadpool > threads, std::shared_ptr< BlockIo > io ) :
 		enable_shared_from_this< Block >(),
 		mMetainfo( meta ),
-		mStateMachine( threads, io )
+		mStateMachine( threads, io ),
+		mIo( io )
 	{
 	}
 
@@ -124,6 +124,11 @@ namespace _2Real
 	std::future< BlockState > Block::stopUpdating()
 	{
 		return mStateMachine.stopRunning();
+	}
+
+	std::shared_ptr< BlockIo > Block::getBlockIo()
+	{
+		return mIo;
 	}
 
 }

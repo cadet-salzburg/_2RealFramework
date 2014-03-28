@@ -22,33 +22,27 @@
 
 namespace _2Real
 {
-	class Bundle;
+	class Outlet;
+	class DataSource;
 
 	namespace app
 	{
-		class FunctionBlockHandle;
-		class BundleMetainfo;
-
-		class BundleHandle
+		class OutletHandle
 		{
 
 		public:
 
-			BundleHandle();
-			explicit BundleHandle( std::shared_ptr< Bundle > );
+			OutletHandle();
+			explicit OutletHandle( std::shared_ptr< Outlet > );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
 			bool					isValid() const;
-			// no timeout could cause the app to block forever
-			void					unload( const long timeout = 1000 );
-			// metainfo
-			BundleMetainfo			getMetainfo() const;
-			// creates a block instance. state: before setup?
-			FunctionBlockHandle		createBlock( std::string const& name );
+			std::string				getName() const;
+
+			operator std::shared_ptr< DataSource > ();
 
 		private:
 
-			std::weak_ptr< Bundle >		mImpl;
+			std::weak_ptr< Outlet >		mImpl;
 
 		};
 	}

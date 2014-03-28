@@ -41,8 +41,8 @@ namespace _2Real
 			bool isValid() const;
 
 			bool isContext() const;
-			std::string const& getName() const;
-			std::string const& getDescription() const;
+			std::string getName() const;
+			std::string getDescription() const;
 			void getDependencies( std::vector< std::string > & ) const;
 			
 			void getInletMetainfos( std::vector< InletMetainfo > & );

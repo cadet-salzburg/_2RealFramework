@@ -47,7 +47,7 @@ namespace _2Real
 
 	//--------------------- bundle
 			// returns the absolute path to the bundle directory
-			Path const& getBundleDirectory() const;
+			Path		 getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
 			BundleHandle loadBundle( std::string const& libname );
 	//--------------------- bundle

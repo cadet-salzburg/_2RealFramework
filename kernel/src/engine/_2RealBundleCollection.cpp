@@ -44,8 +44,6 @@ namespace _2Real
 	{
 		for ( auto it = mBundles.begin(); it != mBundles.end(); )
 		{
-			std::cout << "clearing bundle " << it->first.string() << std::endl;
-			
 			it->second->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
 
 			/*

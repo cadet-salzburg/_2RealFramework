@@ -19,29 +19,83 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealCloneableMetainfo.h"
 #include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo : public std::enable_shared_from_this< SharedTypeMetainfo >
+
+	/*
+	*	base class for basic type metainfo & user defined type metainfo
+	*/
+	class TMetainfo
 	{
 
 	public:
 
-		SharedTypeMetainfo( std::string const& name );
+		TMetainfo() = default;
+		virtual ~TMetainfo() = default;
 
-		std::shared_ptr< CustomDataItem > makeData() const;
+		TMetainfo( TMetainfo const& ) = delete;
+		TMetainfo& operator=( TMetainfo const& ) = delete;
+		TMetainfo( TMetainfo && ) = delete;
+		TMetainfo& operator=( TMetainfo && ) = delete;
 
-		// TODO: missing default value as default argument for value
-		void addField( std::string const& fieldName, DataItem const& value );
+		virtual DataItem makeData() const = 0;
+		virtual bool isBasicType() const = 0;
+
+		//virtual std::shared_ptr< TypeDescriptor > getTypeDescriptor() = 0;
+
+	};
+
+	class BasicTypeMetainfo : public TMetainfo, public std::enable_shared_from_this< BasicTypeMetainfo >
+	{
+
+	public:
+
+		BasicTypeMetainfo() = delete;
+		explicit BasicTypeMetainfo( DataItem );
+
+		DataItem makeData() const;
+		bool isBasicType() const;
 
 	private:
 
-		SharedTypeMetainfo( SharedTypeMetainfo const& ) = delete;
-		SharedTypeMetainfo& operator=( SharedTypeMetainfo const& ) = delete;
-
-		CustomDataItem								mTemplate;
-		//std::shared_ptr< CustomTypeDescriptor >		mTypeDescriptor;
+		DataItem									mTemplate;
+		std::shared_ptr< BasicTypeDescriptor >		mTypeDescriptor;
 
 	};
+
+	class SharedTypeMetainfo : public TMetainfo, /*public CloneableMetainfo< SharedTypeMetainfo >,*/ public std::enable_shared_from_this< SharedTypeMetainfo >
+	{
+
+	public:
+
+		SharedTypeMetainfo() = delete;
+		explicit SharedTypeMetainfo( const std::string );
+
+		DataItem makeData() const;
+		bool isBasicType() const;
+
+		CustomDataItem makeCustomData() const;
+
+		std::string getName() const;
+		std::string getDescription() const;
+
+		void setDescription( const std::string );
+
+		// TODO: missing default value as default argument for value
+		void addField( std::string fieldName, DataItem value );
+
+		void cloneFrom( SharedTypeMetainfo const& other );
+
+	private:
+
+		std::string									mName;
+		std::string									mDescription;
+		CustomDataItem								mTemplate;
+		std::shared_ptr< CustomTypeDescriptor >		mTypeDescriptor;
+
+	};
+
 }

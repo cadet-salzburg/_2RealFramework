@@ -30,10 +30,8 @@ namespace _2Real
 
 	namespace app
 	{
-		class InletHandle;
-		class OutletHandle;
 		class TimerHandle;
-		class BlockMetainfo;
+		class BlockIo;
 
 		class FunctionBlockHandle
 		{
@@ -44,7 +42,6 @@ namespace _2Real
 			explicit FunctionBlockHandle( std::shared_ptr< Block > );
 
 			bool				isValid() const;
-			BlockMetainfo		getMetainfo() const;
 
 			/*
 			*	none of the following functions should be called while
@@ -71,17 +68,9 @@ namespace _2Real
 			//std::future< BlockState >		startUpdating( UpdatePolicyHandle );
 			std::future< BlockState >		stopUpdating();
 
-			/*
-				old functions: these were based on async callbacks
-			*/
-			/*
-			void				setup( std::function< void() > const& );
-			void				singlestep( std::function< void() > const& );
-			void				shutdown( std::function< void() > const& );
-			void				startUpdating( TimerHandle );
-			void				startUpdating( UpdatePolicyHandle );
-			void				stopUpdating( std::function< void() > const& );
-			*/
+			// --------- io slots
+
+			BlockIo getBlockIo();
 
 		private:
 

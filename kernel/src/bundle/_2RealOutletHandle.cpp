@@ -17,6 +17,7 @@
 */
 
 #include "bundle/_2RealOutletHandle.h"
+#include "engine/_2RealOutlet.h"
 
 namespace _2Real
 {
@@ -25,6 +26,16 @@ namespace _2Real
 		OutletHandle::OutletHandle( std::shared_ptr< Outlet > outlet ) :
 			mImpl( outlet )
 		{
+		}
+
+		std::string const& OutletHandle::getName() const
+		{
+			return mImpl->getName();
+		}
+		
+		DataItem & OutletHandle::getValue()
+		{
+			return mImpl->getValue();
 		}
 	}
 }

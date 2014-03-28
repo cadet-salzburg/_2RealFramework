@@ -16,48 +16,41 @@
 	limitations under the License.
 */
 
-#include "app/_2RealBundleHandle.h"
-#include "app/_2RealFunctionBlockHandle.h"
-#include "app/_2RealBundleMetainfo.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealOutletMetainfo.h"
 #include "app/_2RealHandleValidity.h"
-#include "engine/_2RealBundle.h"
+#include "engine/_2RealOutlet.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		BundleHandle::BundleHandle() :
+		OutletHandle::OutletHandle() :
 			mImpl()
 		{
 		}
 
-		BundleHandle::BundleHandle( std::shared_ptr< Bundle > bundle ) :
-			mImpl( bundle )
+		OutletHandle::OutletHandle( std::shared_ptr< Outlet > outlet ) :
+			mImpl( outlet )
 		{
 		}
 
-		bool BundleHandle::isValid() const
+		bool OutletHandle::isValid() const
 		{
-			std::shared_ptr< Bundle > bundle = mImpl.lock();
-			return ( nullptr != bundle.get() );
+			std::shared_ptr< Outlet > outlet = mImpl.lock();
+			return ( nullptr != outlet.get() );
 		}
 
-		void BundleHandle::unload( const long blockTimeout )
+		std::string OutletHandle::getName() const
 		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			bundle->unload( blockTimeout );
+			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
+			return outlet->getName();
 		}
 
-		BundleMetainfo BundleHandle::getMetainfo() const
+		OutletHandle::operator std::shared_ptr< DataSource > ()
 		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			return BundleMetainfo( bundle->getMetainfo() );
-		}
-
-		FunctionBlockHandle BundleHandle::createBlock( std::string const& name )
-		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			return FunctionBlockHandle( bundle->createBlock( name ) );
+			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
+			return std::static_pointer_cast< DataSource >( outlet );
 		}
 	}
 }

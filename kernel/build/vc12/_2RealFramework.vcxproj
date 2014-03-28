@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\_2RealCustomTypeMetainfo.cpp" />
     <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
@@ -38,7 +39,11 @@
     <ClCompile Include="..\..\src\app\_2RealInletMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealLinkHandle.cpp" />
     <ClCompile Include="..\..\src\app\_2RealMultiInletHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealOutletMetainfo.cpp">
@@ -53,13 +58,21 @@
     <ClCompile Include="..\..\src\app\_2RealIoSlotMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp" />
-    <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp" />
+    <ClCompile Include="..\..\src\app\_2RealSystemHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealAbstractInletHandle.cpp" />
-    <ClCompile Include="..\..\src\bundle\_2RealBlockIo.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealAbstractInletHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockIo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealFunctionBlockMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
@@ -69,18 +82,30 @@
     <ClCompile Include="..\..\src\bundle\_2RealContextBlockMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealInletMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealInSlotPolicy.cpp" />
-    <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp" />
-    <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp" />
-    <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealInSlotPolicy.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealOutletMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealParameterMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
@@ -101,14 +126,19 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealCondition.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealCustomData.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealData.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataFieldMetainfo.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealDataSink.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealDataSource.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealId.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealInlet.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealInSlot.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealIoSlot.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealLink.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealMultiInlet.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealOutlet.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealParameter.cpp" />
@@ -159,7 +189,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\_2RealBlockIo.h" />
     <ClInclude Include="..\..\src\app\_2RealCallback.h" />
+    <ClInclude Include="..\..\src\app\_2RealCustomTypeMetainfo.h" />
     <ClInclude Include="..\..\src\app\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealBlockMetainfo.h" />
     <ClInclude Include="..\..\src\app\_2RealContextBlockHandle.h" />
@@ -170,7 +202,9 @@
     <ClInclude Include="..\..\src\app\_2RealHandleValidity.h" />
     <ClInclude Include="..\..\src\app\_2RealAbstractInletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealInletMetainfo.h" />
+    <ClInclude Include="..\..\src\app\_2RealLinkHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealMultiInletHandle.h" />
+    <ClInclude Include="..\..\src\app\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealOutletMetainfo.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealParameterMetainfo.h" />
@@ -202,7 +236,10 @@
     <ClInclude Include="..\..\src\engine\_2RealAnyHolder_T.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlock.h" />
     <ClInclude Include="..\..\src\engine\_2RealCondition.h" />
+    <ClInclude Include="..\..\src\engine\_2RealCloneableMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealData.h" />
+    <ClInclude Include="..\..\src\engine\_2RealDataSink.h" />
+    <ClInclude Include="..\..\src\engine\_2RealDataSource.h" />
     <ClInclude Include="..\..\src\engine\_2RealDefaultPolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealFieldDescriptor.h" />
     <ClInclude Include="..\..\src\engine\_2RealFrameworkCompatibleType.h" />
@@ -212,9 +249,11 @@
     <ClInclude Include="..\..\src\engine\_2RealCustomData.h" />
     <ClInclude Include="..\..\src\engine\_2RealDataFieldMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h" />
+    <ClInclude Include="..\..\src\engine\_2RealId.h" />
     <ClInclude Include="..\..\src\engine\_2RealInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealInSlot.h" />
     <ClInclude Include="..\..\src\engine\_2RealIoSlot.h" />
+    <ClInclude Include="..\..\src\engine\_2RealLink.h" />
     <ClInclude Include="..\..\src\engine\_2RealMultiInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealOutlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealParameter.h" />

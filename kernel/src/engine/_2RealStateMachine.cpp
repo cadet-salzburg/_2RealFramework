@@ -59,7 +59,7 @@ namespace _2Real
 	std::future< BlockState > StateMachine::setup()
 	{
 		mMutex.lock();
-		std::cout << "SM: setup" << std::endl;
+		//std::cout << "SM: setup" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onSetupSignalReceived();
 		return carryOut( response );
 	}
@@ -67,7 +67,7 @@ namespace _2Real
 	std::future< BlockState > StateMachine::singlestep()
 	{	
 		mMutex.lock();
-		std::cout << "SM: update" << std::endl;
+		//std::cout << "SM: update" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onSingleUpdateSignalReceived();
 		return carryOut( response );
 	}
@@ -75,7 +75,7 @@ namespace _2Real
 	std::future< BlockState > StateMachine::shutdown()
 	{
 		mMutex.lock();
-		std::cout << "SM: shutdown" << std::endl;
+		//std::cout << "SM: shutdown" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onShutdownSignalReceived();
 		return carryOut( response );
 	}
@@ -86,7 +86,7 @@ namespace _2Real
 		assert( trigger );
 #endif
 		mMutex.lock();
-		std::cout << "SM: start running" << std::endl;
+		//std::cout << "SM: start running" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onStartRunning();
 		response->updateTrigger = trigger; // store trigger for later
 		return carryOut( response );
@@ -95,7 +95,7 @@ namespace _2Real
 	std::future< BlockState > StateMachine::stopRunning()
 	{
 		mMutex.lock();
-		std::cout << "SM: stop running" << std::endl;
+		//std::cout << "SM: stop running" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onStopRunning();
 		return carryOut( response );
 	}
@@ -103,13 +103,10 @@ namespace _2Real
 	void StateMachine::onActionComplete()
 	{
 		mMutex.lock();
-
-		std::cout << "SM: action complete" << std::endl;
 		// now there's definitely no more action in process
 		mIsActionInProcess = false;
 		// this is where the state change takes place
 		finalizeStateTransition();
-		std::cout << "SM: state transitioned" << std::endl;
 
 		// immediately process the next action
 		// ( this might be critical if an engine shutdown gets delayed inifitely ? )
@@ -117,7 +114,6 @@ namespace _2Real
 		// a 'stopRunning', which is a no-operation
 		if ( !mQueuedResponses.empty() )
 		{
-			std::cout << "SM: processing queued actions" << std::endl;
 			mResponse = mQueuedResponses.front();
 			mQueuedResponses.pop_front();
 			// as of now, an action is in process
@@ -129,19 +125,15 @@ namespace _2Real
 			switch ( mResponse->action )
 			{
 			case Action::DO_SETUP:
-				std::cout << "SM: queued action is setup" << std::endl;
 				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
-				std::cout << "SM: queued action is update" << std::endl;
 				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
-				std::cout << "SM: queued action is shutdown" << std::endl;
 				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
 				break;
 			default:
-				std::cout << "SM: queued action is no-op" << std::endl;
 				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
 				break;
 			}
@@ -152,11 +144,9 @@ namespace _2Real
 			assert( threads );
 #endif
 			threads->enqueueJob( mId, job, callback );
-			std::cout << "SM: queued job enqueued" << std::endl;
 		}
 		else
 		{
-			std::cout << "SM: no queued actions, returning" << std::endl;
 			mMutex.unlock();
 		}
 	}
@@ -209,19 +199,15 @@ namespace _2Real
 			switch ( mResponse->action )
 			{
 			case Action::DO_SETUP:
-				std::cout << "SM: queued action is setup" << std::endl;
 				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
 				break;
 			case Action::DO_UPDATE:
-				std::cout << "SM: queued action is update" << std::endl;
 				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
 				break;
 			case Action::DO_SHUTDOWN:
-				std::cout << "SM: queued action is shutdown" << std::endl;
 				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
 				break;
 			default:
-				std::cout << "SM: queued action is no-op" << std::endl;
 				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
 				break;
 			}
@@ -235,8 +221,6 @@ namespace _2Real
 			assert( threads );
 #endif
 			threads->enqueueJob( mId, job, callback );
-
-			std::cout << "SM: new job enqueued" << std::endl;
 		}
 
 		return response->isFinished.get_future();
@@ -249,37 +233,37 @@ namespace _2Real
 		BlockState current = mState->getId();
 		BlockState next = mResponse->followupState;
 
-		switch ( current )
-		{
-		case _2Real::BlockState::PRE_SETUP:
-			std::cout << "current is pre setup state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SETUP:
-			std::cout << "current is post setup state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SETUP_RUNNING:
-			std::cout << "current is post setup - running state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SHUTDOWN:
-			std::cout << "current is post shutdown state" << std::endl;
-			break;
-		}
+		//switch ( current )
+		//{
+		//case _2Real::BlockState::PRE_SETUP:
+		//	std::cout << "current is pre setup state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SETUP:
+		//	std::cout << "current is post setup state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SETUP_RUNNING:
+		//	std::cout << "current is post setup - running state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SHUTDOWN:
+		//	std::cout << "current is post shutdown state" << std::endl;
+		//	break;
+		//}
 
-		switch ( next )
-		{
-		case _2Real::BlockState::PRE_SETUP:
-			std::cout << "next is pre setup state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SETUP:
-			std::cout << "next is post setup state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SETUP_RUNNING:
-			std::cout << "next is post setup - running state" << std::endl;
-			break;
-		case _2Real::BlockState::POST_SHUTDOWN:
-			std::cout << "next is post shutdown state" << std::endl;
-			break;
-		}
+		//switch ( next )
+		//{
+		//case _2Real::BlockState::PRE_SETUP:
+		//	std::cout << "next is pre setup state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SETUP:
+		//	std::cout << "next is post setup state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SETUP_RUNNING:
+		//	std::cout << "next is post setup - running state" << std::endl;
+		//	break;
+		//case _2Real::BlockState::POST_SHUTDOWN:
+		//	std::cout << "next is post shutdown state" << std::endl;
+		//	break;
+		//}
 
 		if ( current == next )
 		{

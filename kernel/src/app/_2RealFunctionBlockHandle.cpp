@@ -18,10 +18,18 @@
 
 #include "app/_2RealFunctionBlockHandle.h"
 #include "app/_2RealHandleValidity.h"
-#include "app/_2RealBlockMetainfo.h"
 #include "app/_2RealTimerHandle.h"
+#include "app/_2RealBlockIo.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+
 #include "engine/_2RealBlock.h"
 #include "engine/_2RealTimer.h"
+#include "engine/_2RealAbstractInlet.h"
+#include "engine/_2RealInlet.h"
+#include "engine/_2RealMultiInlet.h"
+#include "engine/_2RealOutlet.h"
+#include "engine/_2RealParameter.h"
 
 namespace _2Real
 {
@@ -42,44 +50,6 @@ namespace _2Real
 			std::shared_ptr< Block > block = mImpl.lock();
 			return ( nullptr != block.get() );
 		}
-
-		BlockMetainfo FunctionBlockHandle::getMetainfo() const
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			return BlockMetainfo( block->getMetainfo() );
-		}
-
-		/*
-		void FunctionBlockHandle::setup( std::function< void() > const& cb )
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->setup( cb );
-		}
-
-		void FunctionBlockHandle::startUpdating( TimerHandle handle )
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ), nullptr );
-		}
-
-		void FunctionBlockHandle::stopUpdating( std::function< void() > const& cb )
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->stopUpdating( cb );
-		}
-
-		void FunctionBlockHandle::singlestep( std::function< void() > const& cb )
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->singleUpdate( cb );
-		}
-
-		void FunctionBlockHandle::shutdown( std::function< void() > const& cb )
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			block->shutdown( cb );
-		}
-		*/
 
 		std::future< BlockState > FunctionBlockHandle::setup()
 		{
@@ -109,6 +79,20 @@ namespace _2Real
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
 			return block->stopUpdating();
+		}
+
+		BlockIo FunctionBlockHandle::getBlockIo()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			std::shared_ptr< _2Real::BlockIo > io = block->getBlockIo();
+			BlockIo result;
+			for ( auto it : io->mInlets )
+				result.mInlets.push_back( it->isMultiInlet() ? ( AbstractInletHandle * )new MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) : new InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) );
+			for ( auto it : io->mParameters )
+				result.mParameters.push_back( new ParameterHandle( it ) );
+			for ( auto it : io->mOutlets )
+				result.mOutlets.push_back( new OutletHandle( it ) );
+			return result;
 		}
 	}
 }

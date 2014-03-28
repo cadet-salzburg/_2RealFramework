@@ -50,13 +50,13 @@ namespace _2Real
 			return meta->isSingleton();
 		}
 
-		std::string const& BlockMetainfo::getName() const
+		std::string BlockMetainfo::getName() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 			return meta->getName();
 		}
 
-		std::string const& BlockMetainfo::getDescription() const
+		std::string BlockMetainfo::getDescription() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 			return meta->getDescription();

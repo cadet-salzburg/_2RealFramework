@@ -20,29 +20,32 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealIoSlot.h"
 #include "engine/_2RealData.h"
 #include "helpers/_2RealEvent_T.h"
-
-#include <mutex>
 
 namespace _2Real
 {
 	/*
 	*	base for parameters & ( normal ) inlets
-	*	implements listeners & values
+	*	implements listeners & value sync
 	*/
-	class InSlot : public IoSlot
+	class InSlot
 	{
 
 	public:
 
 		InSlot();
-		virtual ~InSlot() {}
+		virtual ~InSlot();
 
-		void setTmpValue( std::shared_ptr< DataItem > );
-		std::shared_ptr< const DataItem > getTmpValue() const;
-		DataItem & getValue();
+		// used by client app setter -> move
+		//void setTmpValue( DataItem && );
+
+		// used internally to avoid copies
+		void setTmpValue( std::shared_ptr< const DataItem > );
+
+		//std::shared_ptr< DataItem > getTmpValue() const;
+
+		// used from bundle
 		DataItem const& getValue() const;
 
 		template< typename TCallable >
@@ -63,9 +66,12 @@ namespace _2Real
 
 	private:
 
+		InSlot( InSlot const& other ) = delete;
+		InSlot& operator=( InSlot const& other ) = delete;
+
 		mutable std::mutex					mMutex;
-		std::shared_ptr< DataItem >			mTmpValue;
-		std::shared_ptr< DataItem >			mValue;
+		std::shared_ptr< const DataItem >	mTmpValue;
+		std::shared_ptr< const DataItem >	mValue;
 
 		Event_T< const unsigned int >		mValueUpdatedEvent;
 

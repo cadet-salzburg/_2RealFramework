@@ -27,6 +27,7 @@ namespace _2Real
 
 	class SharedTypeMetainfo;
 	class SharedServiceMetainfo;
+	class TypeCollection;
 
 	class SharedLibraryMetainfo : public std::enable_shared_from_this< SharedLibraryMetainfo >
 	{
@@ -78,10 +79,11 @@ namespace _2Real
 		Path mPath;
 
 		typedef std::map< std::string, std::shared_ptr< SharedServiceMetainfo > >	ServiceMetainfos;
-		typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		TypeMetainfos;
+		//typedef std::map< std::string, std::shared_ptr< SharedTypeMetainfo > >		TypeMetainfos;
+		std::shared_ptr< TypeCollection > mTypes;
 
 		ServiceMetainfos		mServices;
-		TypeMetainfos			mTypes;
+		//TypeMetainfos			mTypes;
 
 	};
 

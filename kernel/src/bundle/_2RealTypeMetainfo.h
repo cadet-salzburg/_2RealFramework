@@ -23,7 +23,6 @@
 
 namespace _2Real
 {
-	class CustomDataItem;
 	class SharedTypeMetainfo;
 
 	namespace bundle
@@ -35,9 +34,10 @@ namespace _2Real
 
 			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
 
-			void addField( std::string const& fieldName, DataItem const& value );
+			void setDescription( std::string );
+			void addField( std::string const& fieldName, DataItem value );
 
-			std::shared_ptr< CustomDataItem > makeData();
+			CustomDataItem makeData();
 
 		private:
 

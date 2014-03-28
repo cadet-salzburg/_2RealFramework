@@ -18,9 +18,10 @@
 
 #include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealBlockMetainfo.h"
-#include "app/_2RealTypeMetainfo.h"
+#include "app/_2RealCustomTypeMetainfo.h"
 #include "app/_2RealHandleValidity.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
+#include "engine/_2RealSharedTypeMetainfo.h"
 
 namespace _2Real
 {
@@ -42,43 +43,43 @@ namespace _2Real
 			return ( meta.get() != nullptr );
 		}
 
-		std::string const& BundleMetainfo::getName() const
+		std::string BundleMetainfo::getName() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getName();
 		}
 
-		Path const& BundleMetainfo::getFilepath() const
+		Path BundleMetainfo::getFilepath() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getFilePath();
 		}
 
-		std::string const& BundleMetainfo::getDescription() const
+		std::string BundleMetainfo::getDescription() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getDescription();
 		}
 
-		std::string const& BundleMetainfo::getAuthor() const
+		std::string BundleMetainfo::getAuthor() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getAuthor();
 		}
 
-		std::string const& BundleMetainfo::getContact() const
+		std::string BundleMetainfo::getContact() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getContact();
 		}
 
-		std::string const& BundleMetainfo::getCategory() const
+		std::string BundleMetainfo::getCategory() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getCategory();
 		}
 
-		Version const& BundleMetainfo::getVersion() const
+		Version BundleMetainfo::getVersion() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			return meta->getVersion();
@@ -96,12 +97,12 @@ namespace _2Real
 			}
 		}
 
-		void BundleMetainfo::getExportedTypes( std::vector< TypeMetainfo > &types ) const
+		void BundleMetainfo::getExportedTypes( std::vector< CustomTypeMetainfo > &types ) const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
 			std::vector< std::shared_ptr< const SharedTypeMetainfo > > tmp;
 			meta->getTypeMetainfos( tmp );
-			for ( auto it : tmp ) types.push_back( TypeMetainfo( it ) );
+			for ( auto it : tmp ) types.push_back( CustomTypeMetainfo( it ) );
 		}
 	}
 }

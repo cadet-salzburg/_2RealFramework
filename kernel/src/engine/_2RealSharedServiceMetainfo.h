@@ -26,13 +26,14 @@ namespace _2Real
 	class SharedServiceOutletMetainfo;
 	class DefaultPolicy;
 	class AbstractSharedServiceFactory;
+	class TypeCollection;
 
 	class SharedServiceMetainfo : public std::enable_shared_from_this< SharedServiceMetainfo >
 	{
 
 	public:
 
-		SharedServiceMetainfo( std::string const& name );
+		SharedServiceMetainfo( std::string const& name, std::shared_ptr< TypeCollection > );
 		~SharedServiceMetainfo();
 		
 		void cloneFrom( SharedServiceMetainfo const& other );
@@ -81,9 +82,10 @@ namespace _2Real
 
 		std::shared_ptr< AbstractSharedServiceFactory >		mFactory;
 
-		Inlets				mInlets;
-		Inlets				mParameters;
-		Outlets				mOutlets;
+		Inlets									mInlets;
+		Inlets									mParameters;
+		Outlets									mOutlets;
+		std::shared_ptr< TypeCollection >		mTypes;
 
 	};
 

@@ -35,18 +35,13 @@ namespace _2Real
 
 		bool isMultiInlet() const;
 		std::string const& getName() const;
-		std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
+		//std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
 
 		virtual void update() = 0;
 
 	protected:
 
 		std::shared_ptr< const SharedServiceInletMetainfo >	mMetainfo;
-
-	private:
-
-		AbstractInlet( AbstractInlet const& other ) = delete;
-		AbstractInlet& operator=( AbstractInlet const& other ) = delete;
 
 	};
 }

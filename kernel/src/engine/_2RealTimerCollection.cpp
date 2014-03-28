@@ -33,8 +33,6 @@ namespace _2Real
 
 	TimerCollection::~TimerCollection()
 	{
-		std::cout << "cleaning up timers" << std::endl;
-
 		for ( auto it : mTimers )
 		{
 			it->stop();
@@ -43,8 +41,6 @@ namespace _2Real
 
 		mWork.reset();
 		mThread.join();
-
-		std::cout << "cleaned up timers" << std::endl;
 	}
 
 	void TimerCollection::run()

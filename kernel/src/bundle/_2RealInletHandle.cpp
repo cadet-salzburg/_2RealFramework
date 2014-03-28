@@ -31,7 +31,6 @@ namespace _2Real
 
 		DataItem const& InletHandle::getValue() const
 		{
-			assert( mImpl.get() );
 			return mImpl->getValue();
 		}
 	}

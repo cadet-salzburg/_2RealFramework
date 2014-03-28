@@ -37,9 +37,9 @@ namespace _2Real
 		return mMetainfo->getName();
 	}
 
-	std::shared_ptr< const SharedServiceInletMetainfo > AbstractInlet::getMetainfo() const
-	{
-		return mMetainfo;
-	}
+	//std::shared_ptr< const SharedServiceInletMetainfo > AbstractInlet::getMetainfo() const
+	//{
+	//	return mMetainfo;
+	//}
 
 }

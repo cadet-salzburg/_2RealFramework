@@ -36,10 +36,10 @@ namespace _2Real
 
 			bool isValid() const;
 
-			std::string const& getName() const;
-			std::string const& getDescription() const;
-			std::string const& getDatatype() const;
-			DataItem const& getInitialValue() const;
+			std::string		getName() const;
+			std::string		getDescription() const;
+			std::string		getDatatype() const;
+			DataItem		getInitialValue() const;
 	
 		protected:
 

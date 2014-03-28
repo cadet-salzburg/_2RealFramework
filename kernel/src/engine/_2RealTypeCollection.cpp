@@ -52,12 +52,12 @@ namespace _2Real
 	//	mTypes.erase( it );
 	//}
 
-	//std::shared_ptr< const SharedTypeMetainfo > TypeCollection::get( std::string const& name ) const
-	//{
-	//	auto it = mTypes.find( name );
-	//	if ( it != mTypes.end() )
-	//		return it->second;
-	//	else
-	//		return nullptr;
-	//}
+	std::shared_ptr< const TMetainfo > TypeCollection::getTypeMetainfo( std::string const& name ) const
+	{
+		auto it = mTypes.find( name );
+		if ( it != mTypes.end() )
+			return it->second;
+		else
+			return nullptr;
+	}
 }

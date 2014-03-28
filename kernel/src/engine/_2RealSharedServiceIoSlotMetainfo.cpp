@@ -17,14 +17,109 @@
 */
 
 #include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealTypeCollection.h"
 
 namespace _2Real
 {
 
-	SharedServiceIoSlotMetainfo::SharedServiceIoSlotMetainfo( std::string const& name ) :
+	class MetainfoVisitor : public boost::static_visitor< std::shared_ptr< const TMetainfo > >
+	{
+
+	public:
+
+		MetainfoVisitor() = delete;
+
+		explicit MetainfoVisitor( std::shared_ptr< TypeCollection > types ) : mTypes( types )
+		{
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const uint8_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( uint8_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const int8_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( int8_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const uint32_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( uint32_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const int32_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( int32_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const uint64_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( uint64_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const int64_t val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( ( int64_t )0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( double const& val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( 0.0 ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const float val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( 0.f ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( std::string const& val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( std::string() ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( const bool val ) const
+		{
+			( void )( val );
+			std::shared_ptr< const TMetainfo > result( new BasicTypeMetainfo( false ) );
+			return result;
+		}
+
+		std::shared_ptr< const TMetainfo > operator()( _2Real::CustomDataItem const& val ) const
+		{
+			return mTypes->getTypeMetainfo( val.getName() );
+		}
+
+	private:
+
+		std::shared_ptr< TypeCollection > mTypes;
+
+	};
+
+	SharedServiceIoSlotMetainfo::SharedServiceIoSlotMetainfo( std::string const& name, std::shared_ptr< TypeCollection > types ) :
 		std::enable_shared_from_this< SharedServiceIoSlotMetainfo >(),
 		mName( name ),
-		mDescription( "" )
+		mDescription( "" ),
+		mTypes( types )
 	{
 		mDatatype = boost::apply_visitor( HumanReadableNameVisitor(), mInitialValue );
 	}
@@ -67,6 +162,11 @@ namespace _2Real
 	std::string const& SharedServiceIoSlotMetainfo::getDatatype() const
 	{
 		return mDatatype;
+	}
+
+	std::shared_ptr< const TMetainfo > SharedServiceIoSlotMetainfo::getTypeMetainfo() const
+	{
+		return boost::apply_visitor( MetainfoVisitor( mTypes ), mInitialValue );
 	}
 
 }

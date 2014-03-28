@@ -19,12 +19,11 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealVersion.h"
-#include "helpers/_2RealPath.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
+	class TMetainfo;
 
 	namespace app
 	{
@@ -33,14 +32,17 @@ namespace _2Real
 
 		public:
 
-			TypeMetainfo();
-			explicit TypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > );
+			TypeMetainfo() = default;
+			explicit TypeMetainfo( std::shared_ptr< const TMetainfo > );
+			virtual ~TypeMetainfo() = default;
 
 			bool isValid() const;
+			bool isBasicType() const;
+			DataItem makeData() const;
 
 		private:
 
-			std::weak_ptr< const SharedTypeMetainfo >		mImpl;
+			std::weak_ptr< const TMetainfo >		mImpl;
 
 		};
 	}

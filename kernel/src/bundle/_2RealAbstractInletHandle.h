@@ -19,6 +19,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 namespace _2Real
 {
@@ -32,10 +33,10 @@ namespace _2Real
 		public:
 
 			explicit AbstractInletHandle( std::shared_ptr< AbstractInlet > );
-
 			virtual ~AbstractInletHandle();
 
 			bool isMultiInlet() const;
+			std::string const& getName() const;
 
 		private:
 

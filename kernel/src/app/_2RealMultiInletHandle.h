@@ -37,15 +37,9 @@ namespace _2Real
 			MultiInletHandle();
 			explicit MultiInletHandle( std::shared_ptr< MultiInlet > );
 
-			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
-			bool					isValid() const;
-
-			//InletHandle				pushFront();
-			//InletHandle				pushBack();
-			//void					remove( InletHandle const& handle );
-			//InletHandle				at( const unsigned int index );
-			//unsigned int			size() const;
-			//bool					isEmpty() const;
+			InletHandle			operator[]( const uint32_t );
+			uint32_t			getSize() const;
+			bool				isEmpty() const;
 
 		private:
 
